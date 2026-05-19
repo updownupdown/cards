@@ -140,7 +140,7 @@ export default function FirstBobaTeaShopInLondon() {
 
   return (
     <View style={styles.container}>
-      <HomeButton />
+      <HomeButton ended={game.ended} won={game.won} />
 
       <View style={styles.headerRow}>
         <Text style={styles.title}>The First Boba Tea Shop in London</Text>

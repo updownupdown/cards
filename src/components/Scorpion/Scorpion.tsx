@@ -201,7 +201,7 @@ export default function Scorpion() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <HomeButton />
+      <HomeButton ended={game.ended} won={game.won} />
 
       <View style={styles.headerRow}>
         <Text style={styles.title}>Scorpion</Text>

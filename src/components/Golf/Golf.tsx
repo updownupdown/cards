@@ -127,7 +127,7 @@ export default function Golf() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <HomeButton />
+      <HomeButton ended={game.ended} won={game.won} />
 
       <View style={styles.headerRow}>
         <Text style={styles.title}>Golf Solitaire</Text>

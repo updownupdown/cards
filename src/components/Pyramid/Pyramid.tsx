@@ -460,7 +460,7 @@ export default function Pyramid() {
 
   return (
     <View ref={boardRef} onLayout={updateBoardOrigin} style={styles.container}>
-      <HomeButton />
+      <HomeButton ended={won} won={won} />
       <View style={styles.headerRow}>
         <Text style={styles.title}>Pyramid</Text>
         <Pressable style={styles.button} onPress={resetGame}>

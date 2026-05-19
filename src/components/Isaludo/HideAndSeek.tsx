@@ -224,7 +224,7 @@ export default function HideAndSeek() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <HomeButton />
+      <HomeButton ended={game.ended} won={won} />
 
       <View style={styles.headerRow}>
         <Text style={styles.title}>Hide and Seek</Text>

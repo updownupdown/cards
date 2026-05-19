@@ -331,7 +331,7 @@ export default function DeadCenter() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <HomeButton />
+      <HomeButton ended={game.ended} won={game.won} />
 
       <View style={styles.headerRow}>
         <Text style={styles.title}>Dead Center</Text>

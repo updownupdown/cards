@@ -328,7 +328,7 @@ export default function Canfield() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <HomeButton />
+      <HomeButton ended={game.ended} won={game.won} />
       <View style={styles.headerRow}>
         <Text style={styles.title}>Canfield</Text>
         <Pressable style={styles.button} onPress={reset}>

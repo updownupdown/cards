@@ -259,7 +259,7 @@ export default function TriPeaks() {
 
   return (
     <View ref={boardRef} onLayout={updateBoardOrigin} style={styles.container}>
-      <HomeButton />
+      <HomeButton ended={won} won={won} />
 
       <View style={styles.headerRow}>
         <Text style={styles.title}>TriPeaks</Text>

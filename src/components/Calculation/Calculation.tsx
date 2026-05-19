@@ -140,7 +140,7 @@ export default function Calculation() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <HomeButton />
+      <HomeButton ended={game.ended} won={game.won} />
 
       <View style={styles.headerRow}>
         <Text style={styles.title}>Calculation</Text>

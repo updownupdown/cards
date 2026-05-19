@@ -191,7 +191,7 @@ export default function FortyThieves() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <HomeButton />
+      <HomeButton ended={game.ended} won={game.won} />
       <View style={styles.headerRow}>
         <Text style={styles.title}>Forty Thieves</Text>
         <Pressable style={styles.button} onPress={reset}>

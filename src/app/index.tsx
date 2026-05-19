@@ -1,86 +1,86 @@
-import { ScrollView, StyleSheet, View } from "react-native";
+import { Link, type Href } from "expo-router";
+import { useEffect, useMemo, useState } from "react";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { Link } from "expo-router";
+import {
+  HOME_GAME_ENTRIES,
+  loadFavoriteGames,
+  sortHomeGames,
+  toggleFavoriteGame,
+} from "../components/Home/game-menu";
 
 export default function HomeScreen() {
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    let cancelled = false;
+    loadFavoriteGames().then((loaded) => {
+      if (!cancelled) setFavorites(loaded);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const orderedGames = useMemo(
+    () => sortHomeGames(HOME_GAME_ENTRIES, favorites),
+    [favorites],
+  );
+  const favoriteGames = useMemo(
+    () => orderedGames.filter((game) => favorites.has(game.path)),
+    [orderedGames, favorites],
+  );
+  const nonFavoriteGames = useMemo(
+    () => orderedGames.filter((game) => !favorites.has(game.path)),
+    [orderedGames, favorites],
+  );
+
+  async function onToggleFavorite(path: string) {
+    const updated = await toggleFavoriteGame(path);
+    setFavorites(new Set(updated));
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContent}>
       <View style={styles.linkCol}>
-        <Link href="/aces-up" style={styles.linkText}>
-          Aces Up
-        </Link>
-        <Link href="/solitaire" style={styles.linkText}>
-          Solitaire
-        </Link>
-        <Link href="/freecell" style={styles.linkText}>
-          FreeCell
-        </Link>
-        <Link href="/spider-solitaire" style={styles.linkText}>
-          Spider Solitaire
-        </Link>
-        <Link href="/pyramid" style={styles.linkText}>
-          Pyramid
-        </Link>
-        <Link href="/tripeaks" style={styles.linkText}>
-          TriPeaks
-        </Link>
-        <Link href="/golf" style={styles.linkText}>
-          Golf Solitaire
-        </Link>
-        <Link href="/clock" style={styles.linkText}>
-          Clock Solitaire
-        </Link>
-        <Link href="/monte-carlo" style={styles.linkText}>
-          Monte Carlo
-        </Link>
-        <Link href="/accordion" style={styles.linkText}>
-          Accordion
-        </Link>
-        <Link href="/calculation" style={styles.linkText}>
-          Calculation
-        </Link>
-        <Link href="/scorpion" style={styles.linkText}>
-          Scorpion
-        </Link>
-        <Link href="/canfield" style={styles.linkText}>
-          Canfield
-        </Link>
-        <Link href="/penguin" style={styles.linkText}>
-          Penguin
-        </Link>
-        <Link href="/forty-thieves" style={styles.linkText}>
-          Forty Thieves
-        </Link>
-        <Link href="/skyway" style={styles.linkText}>
-          Skyway
-        </Link>
-        <Link href="/the-sandwich-guy" style={styles.linkText}>
-          The Sandwich Guy
-        </Link>
-        <Link href="/area-52" style={styles.linkText}>
-          Area 52
-        </Link>
-        <Link href="/dead-center" style={styles.linkText}>
-          Dead Center
-        </Link>
-        <Link href="/the-first-boba-tea-shop-in-london" style={styles.linkText}>
-          The First Boba Tea Shop in London
-        </Link>
-        <Link href="/foursquare" style={styles.linkText}>
-          Foursquare
-        </Link>
-        <Link href="/loot-the-loop" style={styles.linkText}>
-          Loot the Loop
-        </Link>
-        <Link href="/syndicate" style={styles.linkText}>
-          Syndicate
-        </Link>
-        <Link href="/hide-and-seek" style={styles.linkText}>
-          Hide and Seek
-        </Link>
-        <Link href="/the-emissary" style={styles.linkText}>
-          The Emissary
-        </Link>
+        {favoriteGames.length > 0 ? (
+          <>
+            <View style={styles.sectionHeaderRow}>
+              <Text style={styles.sectionHeader}>Favourites</Text>
+            </View>
+            {favoriteGames.map((game) => (
+              <View key={game.path} style={styles.row}>
+                <Link href={game.path as Href} style={styles.linkText}>
+                  {game.label}
+                </Link>
+                <Pressable
+                  style={[styles.starBtn, styles.starBtnOn]}
+                  onPress={() => onToggleFavorite(game.path)}
+                >
+                  <Text style={styles.starBtnText}>Unstar</Text>
+                </Pressable>
+              </View>
+            ))}
+          </>
+        ) : null}
+
+        <View style={styles.sectionHeaderRow}>
+          <Text style={styles.sectionHeader}>All Games</Text>
+        </View>
+        {nonFavoriteGames.map((game) => (
+          <View key={game.path} style={styles.row}>
+            <Link href={game.path as Href} style={styles.linkText}>
+              {game.label}
+            </Link>
+            <Pressable
+              style={styles.starBtn}
+              onPress={() => onToggleFavorite(game.path)}
+            >
+              <Text style={styles.starBtnText}>Star</Text>
+            </Pressable>
+          </View>
+        ))}
       </View>
     </ScrollView>
   );
@@ -93,21 +93,53 @@ const styles = StyleSheet.create({
   linkCol: {
     flexDirection: "column",
     justifyContent: "flex-start",
-    alignItems: "center",
+    alignItems: "stretch",
     gap: 6,
     minHeight: "100%",
     width: "100%",
     paddingHorizontal: 12,
-    borderWidth: 1,
-    borderColor: "pink",
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  sectionHeaderRow: {
+    marginTop: 8,
+    marginBottom: 2,
+    paddingBottom: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: "#cbd5e1",
+  },
+  sectionHeader: {
+    fontSize: 13,
+    letterSpacing: 0.8,
+    textTransform: "uppercase",
+    color: "#334155",
+    fontFamily: "Outfit_600SemiBold",
   },
   linkText: {
     fontSize: 16,
     backgroundColor: "#aaa",
-    paddingVertical: 16,
-    alignSelf: "stretch",
+    paddingVertical: 14,
+    flex: 1,
     textAlign: "center",
     boxShadow: "1px 2px 4px rgba(0,0,0,.1), 2px 4px 20px rgba(0,0,0,.1)",
     fontFamily: "Outfit_300Light",
+  },
+  starBtn: {
+    width: 74,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    borderRadius: 8,
+    backgroundColor: "#d1d5db",
+  },
+  starBtnOn: {
+    backgroundColor: "#f59e0b",
+  },
+  starBtnText: {
+    fontFamily: "Outfit_500Medium",
+    color: "#111827",
   },
 });

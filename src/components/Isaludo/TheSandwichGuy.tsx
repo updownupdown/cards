@@ -166,7 +166,7 @@ export default function TheSandwichGuy() {
 
   return (
     <View style={styles.container}>
-      <HomeButton />
+      <HomeButton ended={game.ended} won={won} />
 
       <View style={styles.headerRow}>
         <Text style={styles.title}>The Sandwich Guy</Text>
