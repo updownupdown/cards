@@ -12,7 +12,7 @@ import {
   Outfit_700Bold,
 } from "@expo-google-fonts/outfit";
 import { useFonts } from "expo-font";
-import { Slot } from "expo-router";
+import { Stack } from "expo-router";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -32,7 +32,13 @@ export default function Layout() {
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
-        <Slot />
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            gestureEnabled: false,
+            fullScreenGestureEnabled: false,
+          }}
+        />
       </SafeAreaView>
     </View>
   );
@@ -49,11 +55,10 @@ const styles = StyleSheet.create({
     flex: 1,
     flexGrow: 1,
     paddingHorizontal: Spacing.four,
-    alignItems: "center",
+    alignItems: "stretch",
     alignSelf: "center",
     gap: Spacing.three,
     paddingBottom: BottomTabInset + Spacing.three,
-
     backgroundColor: "#ddd",
     borderWidth: 1,
     borderColor: "green",

@@ -1,4 +1,4 @@
-import AcesUp from "@/components/acesup/aces-up";
+import AcesUp from "@/components/AcesUp/AcesUp";
 
 export default function AcesUpRoute() {
   return <AcesUp />;

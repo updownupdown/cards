@@ -5,11 +5,11 @@ import { Link } from "expo-router";
 export default function HomeScreen() {
   return (
     <View style={styles.linkCol}>
-      <Link href="/" style={styles.linkText}>
-        Home
-      </Link>
       <Link href="/aces-up" style={styles.linkText}>
         Aces Up
+      </Link>
+      <Link href="/solitaire" style={styles.linkText}>
+        Solitaire
       </Link>
     </View>
   );
@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 6,
+    flex: 1,
     width: "100%",
     height: "100%",
     borderWidth: 1,

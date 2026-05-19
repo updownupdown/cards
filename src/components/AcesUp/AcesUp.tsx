@@ -1,13 +1,18 @@
 import { StyleSheet, Text, View } from "react-native";
-import HomeButton from "../home/home-button";
-import { Card } from "../cards/Card";
-import { Deck } from "../cards/Deck";
+import HomeButton from "../Home/HomeButton";
+import { Card } from "../Cards/Card";
+import { Deck } from "../Cards/Deck";
+import { Icon } from "@/components/icons";
 
 export default function AcesUp() {
   return (
     <View style={styles.container}>
       <HomeButton />
       <Text>Aces Up!</Text>
+
+      <Icon name="sword" size={40} color="#ff3b30" />
+      <Icon name="fist" size={32} />
+      <Icon name="dungeon" color="green" />
 
       <View style={styles.cardRow}>
         <Card suit="clubs" rank="5" widthRatio={5} />
