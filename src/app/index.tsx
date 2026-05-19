@@ -24,6 +24,33 @@ export default function HomeScreen() {
         <Link href="/tripeaks" style={styles.linkText}>
           TriPeaks
         </Link>
+        <Link href="/golf" style={styles.linkText}>
+          Golf Solitaire
+        </Link>
+        <Link href="/clock" style={styles.linkText}>
+          Clock Solitaire
+        </Link>
+        <Link href="/monte-carlo" style={styles.linkText}>
+          Monte Carlo
+        </Link>
+        <Link href="/accordion" style={styles.linkText}>
+          Accordion
+        </Link>
+        <Link href="/calculation" style={styles.linkText}>
+          Calculation
+        </Link>
+        <Link href="/scorpion" style={styles.linkText}>
+          Scorpion
+        </Link>
+        <Link href="/canfield" style={styles.linkText}>
+          Canfield
+        </Link>
+        <Link href="/penguin" style={styles.linkText}>
+          Penguin
+        </Link>
+        <Link href="/forty-thieves" style={styles.linkText}>
+          Forty Thieves
+        </Link>
         <Link href="/skyway" style={styles.linkText}>
           Skyway
         </Link>
