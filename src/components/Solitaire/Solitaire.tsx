@@ -13,6 +13,10 @@ import { useNavigation } from "expo-router";
 
 import { Card, type CardRank, type CardSuit } from "../Cards/Card";
 import { Deck } from "../Cards/Deck";
+import {
+  DRAG_CAPTURE_THRESHOLD,
+  DRAG_MOVE_THRESHOLD,
+} from "../Games/card-utils";
 import HomeButton from "../Home/HomeButton";
 
 type StandardRank = Exclude<CardRank, "Joker" | "Back">;
@@ -253,6 +257,7 @@ export default function Solitaire() {
     null,
   );
   const [dragGhost, setDragGhost] = useState<DragGhost | null>(null);
+  const [hoverTarget, setHoverTarget] = useState<DropTarget | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [boardOrigin, setBoardOrigin] = useState({ x: 0, y: 0 });
 
@@ -297,7 +302,19 @@ export default function Solitaire() {
 
   function clearDragGhost() {
     setDragGhost(null);
+    setHoverTarget(null);
     dragTranslate.setValue({ x: 0, y: 0 });
+  }
+
+  function sameDropTarget(a: DropTarget | null, b: DropTarget | null) {
+    if (!a || !b) return a === b;
+    if (a.zone !== b.zone) return false;
+    if (a.zone === "tableau" && b.zone === "tableau") {
+      return a.pileIndex === b.pileIndex;
+    }
+    return (
+      a.zone === "foundation" && b.zone === "foundation" && a.suit === b.suit
+    );
   }
 
   function applyGameUpdate(updater: (prev: GameState) => GameState) {
@@ -721,11 +738,43 @@ export default function Solitaire() {
     return null;
   }
 
+  function canDropOnTarget(
+    source: MoveSource,
+    target: DropTarget,
+    snapshot = game,
+  ) {
+    if (target.zone === "foundation") {
+      return canMoveSourceToFoundation(source, target.suit, snapshot);
+    }
+
+    const movingCards = getSourceCards(source, snapshot);
+    if (movingCards.length === 0) return false;
+    if (source.zone === "tableau" && !isValidTableauRun(movingCards))
+      return false;
+
+    const destinationPile = snapshot.tableau[target.pileIndex];
+    const destinationTop = destinationPile[destinationPile.length - 1];
+    return canPlaceOnTableau(movingCards[0], destinationTop);
+  }
+
+  async function updateHoverTarget(
+    source: MoveSource,
+    pageX: number,
+    pageY: number,
+  ) {
+    const target = await findDropTarget(pageX, pageY);
+    const validTarget =
+      target && canDropOnTarget(source, target) ? target : null;
+    setHoverTarget((current) =>
+      sameDropTarget(current, validTarget) ? current : validTarget,
+    );
+  }
+
   async function handleDrop(source: MoveSource, event: GestureResponderEvent) {
     const { pageX, pageY } = event.nativeEvent;
     const target = await findDropTarget(pageX, pageY);
 
-    if (!target) return;
+    if (!target || !canDropOnTarget(source, target)) return;
 
     if (target.zone === "foundation") {
       await moveSourceToFoundation(source, target.suit);
@@ -740,17 +789,20 @@ export default function Solitaire() {
       onStartShouldSetPanResponder: () => true,
       onStartShouldSetPanResponderCapture: () => true,
       onMoveShouldSetPanResponder: (_, gesture) =>
-        Math.abs(gesture.dx) + Math.abs(gesture.dy) > 8,
+        Math.abs(gesture.dx) + Math.abs(gesture.dy) > DRAG_MOVE_THRESHOLD,
       onMoveShouldSetPanResponderCapture: (_, gesture) =>
-        Math.abs(gesture.dx) + Math.abs(gesture.dy) > 6,
+        Math.abs(gesture.dx) + Math.abs(gesture.dy) > DRAG_CAPTURE_THRESHOLD,
       onPanResponderGrant: (event) => {
         startGhostDrag(source, event);
       },
       onPanResponderMove: (_, gesture) => {
         dragTranslate.setValue({ x: gesture.dx, y: gesture.dy });
+        const sourceForHover = dragGhost?.source ?? source;
+        void updateHoverTarget(sourceForHover, gesture.moveX, gesture.moveY);
       },
       onPanResponderRelease: (event, gesture) => {
-        const moved = Math.abs(gesture.dx) + Math.abs(gesture.dy) > 8;
+        const moved =
+          Math.abs(gesture.dx) + Math.abs(gesture.dy) > DRAG_MOVE_THRESHOLD;
 
         if (!moved) {
           clearDragGhost();
@@ -886,6 +938,10 @@ export default function Solitaire() {
                   style={[
                     styles.cardSlot,
                     selectedFoundation ? styles.selectedSlot : null,
+                    hoverTarget?.zone === "foundation" &&
+                    hoverTarget.suit === suit
+                      ? styles.dropHintSlot
+                      : null,
                     dragGhost?.source.zone === "foundation" &&
                     dragGhost.source.suit === suit
                       ? styles.draggingSlot
@@ -932,7 +988,14 @@ export default function Solitaire() {
                 }}
                 collapsable={false}
                 onPress={() => onEmptyTableauPress(pileIndex)}
-                style={[styles.tableauPile, { minHeight: pileHeight }]}
+                style={[
+                  styles.tableauPile,
+                  { minHeight: pileHeight },
+                  hoverTarget?.zone === "tableau" &&
+                  hoverTarget.pileIndex === pileIndex
+                    ? styles.dropHintPile
+                    : null,
+                ]}
               >
                 {pile.length === 0 && (
                   <View style={[styles.emptyPileSlot, styles.cardSlot]} />
@@ -1096,6 +1159,12 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     borderWidth: 2,
   },
+  dropHintSlot: {
+    borderColor: "#0f766e",
+    borderStyle: "solid",
+    borderWidth: 2,
+    backgroundColor: "rgba(16, 185, 129, 0.18)",
+  },
   draggingSlot: {
     opacity: 0.7,
     borderColor: "#7c3aed",
@@ -1120,6 +1189,12 @@ const styles = StyleSheet.create({
   tableauPile: {
     width: 52,
     position: "relative",
+    borderRadius: 8,
+  },
+  dropHintPile: {
+    borderWidth: 2,
+    borderColor: "#0f766e",
+    backgroundColor: "rgba(16, 185, 129, 0.12)",
   },
   emptyPileSlot: {
     position: "absolute",
