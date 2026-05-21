@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Card } from "../Cards/Card";
-import HomeButton from "../Home/HomeButton";
+import MenuButton from "../Home/HomeButton";
 import {
   RANK_VALUE,
   createDeck,
@@ -10,6 +10,8 @@ import {
   shuffle,
   type PlayingCard,
 } from "../Games/card-utils";
+import { GameHeader } from "../common/GameHeader";
+import { layoutStyles } from "@/styles/layoutStyles";
 
 type AreaState = {
   defenderDeck: PlayingCard[];
@@ -223,91 +225,94 @@ export default function Area52() {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <HomeButton ended={game.ended} won={game.won} />
+    <>
+      <GameHeader
+        gameTitle="Area 52"
+        ended={game.ended}
+        won={game.won}
+        reset={reset}
+      />
 
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>Area 52</Text>
-        <Pressable style={styles.button} onPress={reset}>
-          <Text style={styles.buttonText}>New Game</Text>
-        </Pressable>
-      </View>
+      <View style={layoutStyles.gameArea}>
+        <Text style={styles.metaText}>Wave: {game.wave}</Text>
+        <Text style={styles.metaText}>
+          Defender deck: {game.defenderDeck.length}
+        </Text>
+        <Text style={styles.metaText}>Alien deck: {game.alienDeck.length}</Text>
+        <Text style={styles.metaText}>Message: {message}</Text>
 
-      <Text style={styles.metaText}>Wave: {game.wave}</Text>
-      <Text style={styles.metaText}>
-        Defender deck: {game.defenderDeck.length}
-      </Text>
-      <Text style={styles.metaText}>Alien deck: {game.alienDeck.length}</Text>
-      <Text style={styles.metaText}>Message: {message}</Text>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Current attackers</Text>
-        <View style={styles.attackersRow}>
-          {game.attackerQueue.map((card, idx) => (
-            <View
-              key={card.id}
-              style={idx === 0 ? styles.currentAttacker : null}
-            >
-              <Card suit={card.suit} rank={card.rank} widthRatio={10} />
-            </View>
-          ))}
-          {game.attackerQueue.length === 0 ? (
-            <Text style={styles.metaText}>No active attackers</Text>
-          ) : null}
-        </View>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Defenders (select 1-2)</Text>
-        <View style={styles.defendersWrap}>
-          {game.defenders.map((card, index) => {
-            const selected = selectedDefenders.includes(index);
-            return (
-              <Pressable
-                key={`${card.id}-${index}`}
-                onPress={() => toggleDefender(index)}
-                style={[
-                  styles.defenderCard,
-                  selected ? styles.selectedCard : null,
-                ]}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Current attackers</Text>
+          <View style={styles.attackersRow}>
+            {game.attackerQueue.map((card, idx) => (
+              <View
+                key={card.id}
+                style={idx === 0 ? styles.currentAttacker : null}
               >
-                <Card suit={card.suit} rank={card.rank} widthRatio={10} />
-              </Pressable>
-            );
-          })}
+                <Card suit={card.suit} rank={card.rank} widthPerc={25} />
+              </View>
+            ))}
+            {game.attackerQueue.length === 0 ? (
+              <Text style={styles.metaText}>No active attackers</Text>
+            ) : null}
+          </View>
         </View>
-      </View>
 
-      <View style={styles.actionsRow}>
-        <Pressable style={styles.actionBtn} onPress={() => applyAction("dual")}>
-          <Text style={styles.actionText}>Dual Attack</Text>
-        </Pressable>
-        <Pressable
-          style={styles.actionBtn}
-          onPress={() => applyAction("single")}
-        >
-          <Text style={styles.actionText}>Single Attack</Text>
-        </Pressable>
-        <Pressable
-          style={styles.actionBtn}
-          onPress={() => applyAction("sacrifice")}
-        >
-          <Text style={styles.actionText}>Sacrifice</Text>
-        </Pressable>
-      </View>
-
-      {game.ended ? (
-        <View style={styles.resultBox}>
-          <Text style={styles.resultTitle}>
-            {game.won ? "You won!" : "You lost"}
-          </Text>
-          <Text style={styles.metaText}>
-            Score: {score ?? 0}{" "}
-            {game.won ? "(higher is better)" : "(closer to zero is better)"}
-          </Text>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Defenders (select 1-2)</Text>
+          <View style={styles.defendersWrap}>
+            {game.defenders.map((card, index) => {
+              const selected = selectedDefenders.includes(index);
+              return (
+                <Pressable
+                  key={`${card.id}-${index}`}
+                  onPress={() => toggleDefender(index)}
+                  style={[
+                    styles.defenderCard,
+                    selected ? styles.selectedCard : null,
+                  ]}
+                >
+                  <Card suit={card.suit} rank={card.rank} widthPerc={25} />
+                </Pressable>
+              );
+            })}
+          </View>
         </View>
-      ) : null}
-    </ScrollView>
+
+        <View style={styles.actionsRow}>
+          <Pressable
+            style={styles.actionBtn}
+            onPress={() => applyAction("dual")}
+          >
+            <Text style={styles.actionText}>Dual Attack</Text>
+          </Pressable>
+          <Pressable
+            style={styles.actionBtn}
+            onPress={() => applyAction("single")}
+          >
+            <Text style={styles.actionText}>Single Attack</Text>
+          </Pressable>
+          <Pressable
+            style={styles.actionBtn}
+            onPress={() => applyAction("sacrifice")}
+          >
+            <Text style={styles.actionText}>Sacrifice</Text>
+          </Pressable>
+        </View>
+
+        {game.ended ? (
+          <View style={styles.resultBox}>
+            <Text style={styles.resultTitle}>
+              {game.won ? "You won!" : "You lost"}
+            </Text>
+            <Text style={styles.metaText}>
+              Score: {score ?? 0}{" "}
+              {game.won ? "(higher is better)" : "(closer to zero is better)"}
+            </Text>
+          </View>
+        ) : null}
+      </View>
+    </>
   );
 }
 

@@ -2,13 +2,19 @@ import { useMemo, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Card } from "../Cards/Card";
-import HomeButton from "../Home/HomeButton";
+import MenuButton from "../Home/HomeButton";
 import {
   RANK_VALUE,
   createDeck,
   shuffle,
   type PlayingCard,
 } from "../Games/card-utils";
+import { flexStyles, layoutStyles } from "@/styles/layoutStyles";
+import { textStyles } from "@/styles/textStyles";
+import { DeckDown } from "../Cards/Deck";
+import { cardStyles } from "@/styles/cardStyles";
+import { buttonStyles } from "@/styles/buttonStyles";
+import { GameHeader } from "../common/GameHeader";
 
 type GolfState = {
   tableau: PlayingCard[][];
@@ -126,160 +132,86 @@ export default function Golf() {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <HomeButton ended={game.ended} won={game.won} />
+    <>
+      <GameHeader
+        gameTitle="Golf Solitaire"
+        ended={game.ended}
+        won={game.won}
+        reset={reset}
+      />
 
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>Golf Solitaire</Text>
-        <Pressable onPress={reset} style={styles.button}>
-          <Text style={styles.buttonText}>New Game</Text>
-        </Pressable>
-      </View>
+      <View style={layoutStyles.gameArea}>
+        <Text style={textStyles.default}>Message: {message}</Text>
 
-      <Text style={styles.metaText}>Tableau cards: {tableauCount}</Text>
-      <Text style={styles.metaText}>Stock: {game.stock.length}</Text>
-      <Text style={styles.metaText}>Message: {message}</Text>
+        <View style={cardStyles.cardsRows}>
+          {game.tableau.map((col, colIndex) => (
+            <View key={`g-col-${colIndex}`} style={cardStyles.cardsCols}>
+              {col.map((card, cardIndex) => (
+                <Pressable
+                  key={card.id}
+                  onPress={() => playCard(colIndex, cardIndex)}
+                  disabled={game.ended || cardIndex !== col.length - 1}
+                >
+                  <Card
+                    suit={card.suit}
+                    rank={card.rank}
+                    widthPerc={100 / 7}
+                    // cardSize="small"
+                  />
+                </Pressable>
+              ))}
+            </View>
+          ))}
+        </View>
 
-      <View style={styles.tableauWrap}>
-        {game.tableau.map((col, colIndex) => (
-          <View key={`g-col-${colIndex}`} style={styles.col}>
-            {col.map((card, cardIndex) => (
-              <Pressable
-                key={card.id}
-                onPress={() => playCard(colIndex, cardIndex)}
-                disabled={game.ended || cardIndex !== col.length - 1}
-                style={styles.cardPressable}
-              >
-                <Card suit={card.suit} rank={card.rank} widthRatio={11.5} />
-              </Pressable>
-            ))}
+        <View
+          style={[
+            flexStyles.rowCentered,
+            flexStyles.fullWidth,
+            flexStyles.justifyEvenly,
+          ]}
+        >
+          <View style={flexStyles.colCentered}>
+            <DeckDown showCount widthPerc={100 / 7} count={game.stock.length} />
           </View>
-        ))}
-      </View>
 
-      <View style={styles.bottomRow}>
-        <View style={styles.zone}>
-          <Text style={styles.smallText}>Waste</Text>
-          {game.waste.length > 0 ? (
-            <Card
-              suit={game.waste[game.waste.length - 1].suit}
-              rank={game.waste[game.waste.length - 1].rank}
-              widthRatio={9.5}
-            />
-          ) : (
-            <View style={styles.emptySlot} />
-          )}
+          <View style={flexStyles.colCentered}>
+            <Text style={textStyles.default}>Waste</Text>
+            {game.waste.length > 0 ? (
+              <Card
+                suit={game.waste[game.waste.length - 1].suit}
+                rank={game.waste[game.waste.length - 1].rank}
+                widthPerc={100 / 4}
+                cardSize="regular"
+              />
+            ) : (
+              <Card isPlaceholder cardSize="regular" />
+            )}
+          </View>
+
+          <View style={flexStyles.colCentered}>
+            <Text style={textStyles.default}>Stock</Text>
+            <Pressable
+              onPress={drawFromStock}
+              disabled={game.stock.length === 0 || game.ended}
+              style={[
+                buttonStyles.button,
+                game.stock.length > 0 && !game.ended
+                  ? undefined
+                  : buttonStyles.buttonDisabled,
+              ]}
+            >
+              <Text style={buttonStyles.buttonText}>Draw</Text>
+            </Pressable>
+          </View>
         </View>
 
-        <View style={styles.zone}>
-          <Text style={styles.smallText}>Stock</Text>
-          <Pressable
-            onPress={drawFromStock}
-            disabled={game.stock.length === 0 || game.ended}
-            style={[
-              styles.drawButton,
-              game.stock.length > 0 && !game.ended
-                ? styles.drawEnabled
-                : styles.drawDisabled,
-            ]}
-          >
-            <Text style={styles.buttonText}>Draw</Text>
-          </Pressable>
-        </View>
+        {game.ended ? (
+          <Text style={game.won ? textStyles.default : textStyles.default}>
+            {game.won ? "You cleared the tableau." : "No more playable cards."}
+          </Text>
+        ) : null}
       </View>
-
-      {game.ended ? (
-        <Text style={game.won ? styles.winText : styles.loseText}>
-          {game.won ? "You cleared the tableau." : "No more playable cards."}
-        </Text>
-      ) : null}
-    </ScrollView>
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 56,
-    paddingHorizontal: 10,
-    paddingBottom: 24,
-    gap: 10,
-  },
-  headerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 24,
-    color: "#1f2937",
-    fontFamily: "Outfit_600SemiBold",
-  },
-  button: {
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    backgroundColor: "#1d4ed8",
-  },
-  buttonText: {
-    color: "#fff",
-    fontFamily: "Outfit_500Medium",
-  },
-  metaText: {
-    color: "#334155",
-    fontFamily: "Outfit_400Regular",
-  },
-  tableauWrap: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 6,
-  },
-  col: {
-    flex: 1,
-    gap: 4,
-    alignItems: "center",
-  },
-  cardPressable: {
-    borderRadius: 8,
-  },
-  bottomRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 6,
-  },
-  zone: {
-    flex: 1,
-    alignItems: "center",
-    gap: 6,
-  },
-  smallText: {
-    fontSize: 12,
-    color: "#334155",
-  },
-  drawButton: {
-    borderRadius: 8,
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-  },
-  drawEnabled: {
-    backgroundColor: "#0f766e",
-  },
-  drawDisabled: {
-    backgroundColor: "#94a3b8",
-  },
-  emptySlot: {
-    width: 88,
-    height: 128,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "rgba(15,23,42,0.2)",
-    backgroundColor: "rgba(255,255,255,0.2)",
-  },
-  winText: {
-    color: "#065f46",
-    fontFamily: "Outfit_600SemiBold",
-  },
-  loseText: {
-    color: "#991b1b",
-    fontFamily: "Outfit_600SemiBold",
-  },
-});

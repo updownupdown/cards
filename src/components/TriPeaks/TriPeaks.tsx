@@ -10,7 +10,7 @@ import {
 import type { GestureResponderEvent, View as RNView } from "react-native";
 
 import { Card } from "../Cards/Card";
-import HomeButton from "../Home/HomeButton";
+import MenuButton from "../Home/HomeButton";
 import {
   DRAG_CAPTURE_THRESHOLD,
   DRAG_MOVE_THRESHOLD,
@@ -259,7 +259,7 @@ export default function TriPeaks() {
 
   return (
     <View ref={boardRef} onLayout={updateBoardOrigin} style={styles.container}>
-      <HomeButton ended={won} won={won} />
+      <MenuButton ended={won} won={won} />
 
       <View style={styles.headerRow}>
         <Text style={styles.title}>TriPeaks</Text>

@@ -1,17 +1,7 @@
-import {
-  StyleSheet,
-  View,
-  useWindowDimensions,
-  type StyleProp,
-  type ViewStyle,
-} from "react-native";
-import {
-  DEFAULT_CARD_WIDTH_RATIO,
-  Card,
-  getCardDimensions,
-  type CardRank,
-  type CardSuit,
-} from "./Card";
+import { cardStyles } from "@/styles/cardStyles";
+import { Text, View } from "react-native";
+import { CardRank, CardSuit } from "../Games/card-utils";
+import { Card } from "./Card";
 
 export type DeckCard = {
   suit: CardSuit;
@@ -21,10 +11,7 @@ export type DeckCard = {
 export const DEFAULT_FRONT_OVERLAP = 0.7;
 export const DEFAULT_BACK_OVERLAP = 0.9;
 
-function clamp(value: number, min: number, max: number) {
-  return Math.min(Math.max(value, min), max);
-}
-
+/*
 export type DeckDirection = "horizontal" | "vertical";
 
 type DeckProps = {
@@ -60,7 +47,7 @@ export function Deck({
   );
 
   const isBackDeck = backCount !== undefined;
-  const cardCount = isBackDeck ? backCount : (cards?.length ?? 0);
+  const cardCount = isBackDeck ? Math.min(backCount, 5) : (cards?.length ?? 0);
 
   const overlap = clamp(isBackDeck ? backOverlap : frontOverlap, 0, 0.99);
 
@@ -91,23 +78,29 @@ export function Deck({
 
   return (
     <View
-      style={[styles.deck, { width: deckWidth, height: deckHeight }, style]}
+      style={[cardStyles.deck, { width: deckWidth, height: deckHeight }, style]}
     >
       {Array.from({ length: cardCount }, (_, index) => {
         const cardStyle = {
           position: "absolute" as const,
           left: offsetX * index - minX,
           top: offsetY * index - minY,
+          width: cardWidth,
+          bottom: 0,
           zIndex: index,
         };
 
         if (isBackDeck) {
           return (
-            <View key={`back-${index}`} style={cardStyle}>
+            <View
+              key={`back-${index}`}
+              // style={[cardStyle, cardStyles.cardWrapWidth4]}
+              style={[cardStyle]}
+            >
               <Card
                 suit={backSuit ?? "hearts"}
                 isBack
-                widthRatio={widthRatio}
+                // style={[cardStyles.cardWidth4]}
               />
             </View>
           );
@@ -118,17 +111,59 @@ export function Deck({
         const card = cards[index];
 
         return (
-          <View key={`${card.suit}-${card.rank}-${index}`} style={cardStyle}>
-            <Card suit={card.suit} rank={card.rank} widthRatio={widthRatio} />
+          <View
+            key={`${card.suit}-${card.rank}-${index}`}
+            // style={[cardStyle, cardStyles.cardWrapWidth4]}
+          >
+            <Card
+              suit={card.suit}
+              rank={card.rank}
+              // style={[cardStyles.cardWidth4]}
+            />
           </View>
         );
       })}
     </View>
   );
 }
+*/
 
-const styles = StyleSheet.create({
-  deck: {
-    position: "relative",
-  },
-});
+type DeckDownProps = {
+  count: number;
+  widthPerc: number;
+  showCount?: boolean;
+};
+
+export function DeckDown({ count, showCount, widthPerc }: DeckDownProps) {
+  const numCards = Math.min(count, 3);
+
+  return (
+    <View style={[cardStyles.deck]}>
+      {showCount && (
+        <View style={cardStyles.deckCount}>
+          <Text style={cardStyles.deckCountText}>{count}</Text>
+        </View>
+      )}
+
+      {numCards === 0 && <Card isPlaceholder widthPerc={widthPerc} />}
+
+      {Array.from({ length: numCards }, (_, index) => {
+        return (
+          <Card
+            key={`back-${index}`}
+            widthPerc={widthPerc}
+            isBack
+            omitShadow={index !== 0}
+            style={[
+              cardStyles.deckCard,
+              index === 0 && cardStyles.deckCardBottom,
+              {
+                transform: `translateX(${8 * index}%)`,
+              },
+            ]}
+          />
+        );
+      })}
+    </View>
+  );
+}

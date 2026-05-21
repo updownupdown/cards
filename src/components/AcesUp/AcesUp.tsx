@@ -1,8 +1,11 @@
 import { useMemo, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import HomeButton from "../Home/HomeButton";
+import MenuButton from "../Home/HomeButton";
 import { Card } from "../Cards/Card";
 import { createDeck, shuffle, type PlayingCard } from "../Games/card-utils";
+import { GameHeader } from "../common/GameHeader";
+import { flexStyles, layoutStyles } from "@/styles/layoutStyles";
+import { buttonStyles } from "@/styles/buttonStyles";
 
 type AcesUpState = {
   stock: PlayingCard[];
@@ -203,102 +206,92 @@ export default function AcesUp() {
   const remaining = game.piles.flat().length + game.stock.length;
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <HomeButton ended={game.ended} won={game.won} />
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>Aces Up</Text>
-        <Pressable style={styles.button} onPress={reset}>
-          <Text style={styles.buttonText}>New Game</Text>
+    <>
+      <GameHeader
+        gameTitle="Aces Up"
+        ended={game.ended}
+        won={game.won}
+        reset={reset}
+      />
+
+      <View style={layoutStyles.gameArea}>
+        <View
+          style={[
+            flexStyles.rowCentered,
+            flexStyles.fullWidth,
+            flexStyles.justifyEvenly,
+          ]}
+        >
+          <Text style={styles.metaText}>Stock: {game.stock.length}</Text>
+          <Text style={styles.metaText}>Discarded: {game.discard.length}</Text>
+          <Text style={styles.metaText}>Cards remaining: {remaining}</Text>
+        </View>
+
+        <Text style={styles.metaText}>Message: {message}</Text>
+
+        <View style={styles.pilesRow}>
+          {game.piles.map((pile, idx) => {
+            const top = topCard(pile);
+            const isSelected = selectedPile === idx;
+            const canDiscard = discardable.has(idx);
+
+            return (
+              <View key={`pile-${idx}`} style={styles.pileCol}>
+                <Pressable
+                  onPress={() => onPilePress(idx)}
+                  style={[
+                    styles.pileSlot,
+                    isSelected ? styles.pileSelected : null,
+                  ]}
+                >
+                  {top ? (
+                    <Card suit={top.suit} rank={top.rank} widthPerc={25} />
+                  ) : (
+                    <Card isPlaceholder />
+                  )}
+                </Pressable>
+
+                <Text style={styles.smallText}>Count: {pile.length}</Text>
+
+                <Pressable
+                  onPress={() => discardTop(idx)}
+                  disabled={!canDiscard}
+                  style={[
+                    buttonStyles.button,
+                    canDiscard ? undefined : buttonStyles.buttonDisabled,
+                  ]}
+                >
+                  <Text style={buttonStyles.buttonText}>Discard</Text>
+                </Pressable>
+              </View>
+            );
+          })}
+        </View>
+
+        <Pressable
+          style={[
+            buttonStyles.button,
+            canDeal ? undefined : buttonStyles.buttonDisabled,
+          ]}
+          onPress={dealFour}
+          disabled={!canDeal}
+        >
+          <Text style={buttonStyles.buttonText}>Deal 4</Text>
         </Pressable>
+
+        {game.ended ? (
+          <Text style={game.won ? styles.winText : styles.loseText}>
+            {game.won
+              ? "You won. Only four aces remain!"
+              : "No legal moves remain with stock empty."}
+          </Text>
+        ) : null}
       </View>
-
-      <Text style={styles.metaText}>Stock: {game.stock.length}</Text>
-      <Text style={styles.metaText}>Discarded: {game.discard.length}</Text>
-      <Text style={styles.metaText}>Cards remaining: {remaining}</Text>
-      <Text style={styles.metaText}>Message: {message}</Text>
-
-      <View style={styles.pilesRow}>
-        {game.piles.map((pile, idx) => {
-          const top = topCard(pile);
-          const isSelected = selectedPile === idx;
-          const canDiscard = discardable.has(idx);
-
-          return (
-            <View key={`pile-${idx}`} style={styles.pileCol}>
-              <Pressable
-                onPress={() => onPilePress(idx)}
-                style={[
-                  styles.pileSlot,
-                  isSelected ? styles.pileSelected : null,
-                ]}
-              >
-                {top ? (
-                  <Card suit={top.suit} rank={top.rank} widthRatio={8.8} />
-                ) : (
-                  <Text style={styles.emptyText}>Empty</Text>
-                )}
-              </Pressable>
-
-              <Text style={styles.smallText}>Pile {idx + 1}</Text>
-              <Text style={styles.smallText}>Count: {pile.length}</Text>
-
-              <Pressable
-                onPress={() => discardTop(idx)}
-                disabled={!canDiscard}
-                style={[
-                  styles.discardButton,
-                  canDiscard
-                    ? styles.discardButtonEnabled
-                    : styles.discardButtonDisabled,
-                ]}
-              >
-                <Text style={styles.discardButtonText}>Discard Top</Text>
-              </Pressable>
-            </View>
-          );
-        })}
-      </View>
-
-      <Pressable
-        style={[
-          styles.button,
-          canDeal ? styles.dealEnabled : styles.dealDisabled,
-        ]}
-        onPress={dealFour}
-        disabled={!canDeal}
-      >
-        <Text style={styles.buttonText}>Deal 4</Text>
-      </Pressable>
-
-      {game.ended ? (
-        <Text style={game.won ? styles.winText : styles.loseText}>
-          {game.won
-            ? "You won. Only four aces remain!"
-            : "No legal moves remain with stock empty."}
-        </Text>
-      ) : null}
-    </ScrollView>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingTop: 56,
-    paddingHorizontal: 10,
-    paddingBottom: 24,
-    width: "100%",
-    gap: 10,
-  },
-  headerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 24,
-    fontFamily: "Outfit_600SemiBold",
-    color: "#1f2937",
-  },
   button: {
     borderRadius: 8,
     paddingVertical: 10,
@@ -317,7 +310,6 @@ const styles = StyleSheet.create({
   pilesRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    gap: 6,
   },
   pileCol: {
     flex: 1,
@@ -326,14 +318,8 @@ const styles = StyleSheet.create({
   },
   pileSlot: {
     width: "100%",
-    minHeight: 120,
-    borderWidth: 1,
-    borderColor: "rgba(15,23,42,0.2)",
-    borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "rgba(255,255,255,0.35)",
-    paddingVertical: 4,
   },
   pileSelected: {
     borderColor: "#0f766e",

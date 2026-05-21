@@ -2,8 +2,10 @@ import { useMemo, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Card } from "../Cards/Card";
-import HomeButton from "../Home/HomeButton";
+import MenuButton from "../Home/HomeButton";
 import { createDeck, shuffle, type PlayingCard } from "../Games/card-utils";
+import { GameHeader } from "../common/GameHeader";
+import { flexStyles, layoutStyles } from "@/styles/layoutStyles";
 
 type ClockState = {
   piles: PlayingCard[][];
@@ -130,79 +132,98 @@ export default function Clock() {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <HomeButton ended={game.ended} won={game.won} />
+    <>
+      <GameHeader
+        gameTitle="Clock Solitaire"
+        ended={game.ended}
+        won={game.won}
+        reset={reset}
+      />
 
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>Clock Solitaire</Text>
-        <Pressable style={styles.button} onPress={reset}>
-          <Text style={styles.buttonText}>New Game</Text>
-        </Pressable>
-      </View>
-
-      <Text style={styles.metaText}>Revealed: {game.revealedCount}/52</Text>
-      <Text style={styles.metaText}>Kings revealed: {kingsCaptured}/4</Text>
-      <Text style={styles.metaText}>
-        Active pile: {pileLabel(game.currentSource)}
-      </Text>
-      <Text style={styles.metaText}>Message: {message}</Text>
-
-      <View style={styles.revealRow}>
-        <Pressable
+      <View style={layoutStyles.gameArea}>
+        <View
           style={[
-            styles.revealButton,
-            game.ended ? styles.revealDisabled : styles.revealEnabled,
+            flexStyles.rowCentered,
+            flexStyles.fullWidth,
+            flexStyles.justifyEvenly,
           ]}
-          onPress={revealStep}
-          disabled={game.ended}
         >
-          <Text style={styles.buttonText}>Reveal Next</Text>
-        </Pressable>
-
-        <View style={styles.lastCardWrap}>
-          <Text style={styles.smallText}>Last revealed</Text>
-          {game.lastRevealed ? (
-            <Card
-              suit={game.lastRevealed.suit}
-              rank={game.lastRevealed.rank}
-              widthRatio={10.5}
-            />
-          ) : (
-            <View style={styles.placeholder} />
-          )}
+          <Text style={styles.metaText}>
+            Revealed:
+            <br />
+            {game.revealedCount}/52
+          </Text>
+          <Text style={styles.metaText}>
+            Kings revealed:
+            <br />
+            {kingsCaptured}/4
+          </Text>
+          <Text style={styles.metaText}>
+            Active pile:
+            <br />
+            {pileLabel(game.currentSource)}
+          </Text>
         </View>
-      </View>
 
-      <View style={styles.grid}>
-        {Array.from({ length: 13 }).map((_, idx) => (
-          <View
-            key={`clock-pile-${idx}`}
+        <Text style={styles.metaText}>Message: {message}</Text>
+
+        <View style={styles.revealRow}>
+          <Pressable
             style={[
-              styles.pileBox,
-              idx === game.currentSource && !game.ended
-                ? styles.activePile
-                : null,
+              styles.revealButton,
+              game.ended ? styles.revealDisabled : styles.revealEnabled,
             ]}
+            onPress={revealStep}
+            disabled={game.ended}
           >
-            <Text style={styles.smallText}>{pileLabel(idx)}</Text>
-            <Text style={styles.smallText}>
-              Hidden: {game.piles[idx].length}
-            </Text>
-            <Text style={styles.smallText}>
-              Captured: {game.captured[idx].length}
-            </Text>
-          </View>
-        ))}
-      </View>
+            <Text style={styles.buttonText}>Reveal Next</Text>
+          </Pressable>
 
-      {game.ended ? (
-        <Text style={game.won ? styles.winText : styles.loseText}>
-          {game.won
-            ? "You revealed all 52 cards."
-            : "The fourth king appeared before all cards were revealed."}
-        </Text>
-      ) : null}
-    </ScrollView>
+          <View style={styles.lastCardWrap}>
+            <Text style={styles.smallText}>Last revealed</Text>
+            {game.lastRevealed ? (
+              <Card
+                suit={game.lastRevealed.suit}
+                rank={game.lastRevealed.rank}
+                widthPerc={20}
+              />
+            ) : (
+              <View style={styles.placeholder} />
+            )}
+          </View>
+        </View>
+
+        <View style={styles.grid}>
+          {Array.from({ length: 13 }).map((_, idx) => (
+            <View
+              key={`clock-pile-${idx}`}
+              style={[
+                styles.pileBox,
+                idx === game.currentSource && !game.ended
+                  ? styles.activePile
+                  : null,
+              ]}
+            >
+              <Text style={styles.smallText}>{pileLabel(idx)}</Text>
+              <Text style={styles.smallText}>
+                Hidden: {game.piles[idx].length}
+              </Text>
+              <Text style={styles.smallText}>
+                Captured: {game.captured[idx].length}
+              </Text>
+            </View>
+          ))}
+        </View>
+
+        {game.ended ? (
+          <Text style={game.won ? styles.winText : styles.loseText}>
+            {game.won
+              ? "You revealed all 52 cards."
+              : "The fourth king appeared before all cards were revealed."}
+          </Text>
+        ) : null}
+      </View>
+    </>
   );
 }
 

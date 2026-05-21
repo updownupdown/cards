@@ -2,8 +2,10 @@ import { useMemo, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Card } from "../Cards/Card";
-import HomeButton from "../Home/HomeButton";
+import MenuButton from "../Home/HomeButton";
 import { createDeck, shuffle, type PlayingCard } from "../Games/card-utils";
+import { GameHeader } from "../common/GameHeader";
+import { flexStyles, layoutStyles } from "@/styles/layoutStyles";
 
 type Cell = PlayingCard | null;
 type Selection = { row: number; col: number } | null;
@@ -195,63 +197,72 @@ export default function MonteCarlo() {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <HomeButton ended={game.ended} won={game.won} />
+    <>
+      <GameHeader
+        gameTitle="Monte Carlo"
+        ended={game.ended}
+        won={game.won}
+        reset={reset}
+      />
 
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>Monte Carlo</Text>
-        <Pressable style={styles.button} onPress={reset}>
-          <Text style={styles.buttonText}>New Game</Text>
+      <View style={layoutStyles.gameArea}>
+        <View
+          style={[
+            flexStyles.rowCentered,
+            flexStyles.fullWidth,
+            flexStyles.justifyEvenly,
+          ]}
+        >
+          <Text style={styles.metaText}>Cards on grid: {cardsOnGrid}</Text>
+          <Text style={styles.metaText}>Stock: {game.stock.length}</Text>
+          <Text style={styles.metaText}>Removed: {game.removed}</Text>
+        </View>
+
+        <Text style={styles.metaText}>Message: {message}</Text>
+
+        <View style={styles.grid}>
+          {game.grid.map((row, r) =>
+            row.map((cell, c) => {
+              const isSelected = selected?.row === r && selected?.col === c;
+              return (
+                <Pressable
+                  key={`mc-${r}-${c}`}
+                  style={[styles.cell, isSelected ? styles.selectedCell : null]}
+                  onPress={() => selectCell(r, c)}
+                  disabled={game.ended}
+                >
+                  {cell ? (
+                    <Card suit={cell.suit} rank={cell.rank} widthPerc={15} />
+                  ) : (
+                    <Card isPlaceholder widthPerc={15} />
+                  )}
+                </Pressable>
+              );
+            }),
+          )}
+        </View>
+
+        <Pressable
+          style={[
+            styles.button,
+            styles.dealButton,
+            canConsolidate ? styles.dealEnabled : styles.dealDisabled,
+          ]}
+          onPress={consolidateAndDeal}
+          disabled={!canConsolidate || game.ended}
+        >
+          <Text style={styles.buttonText}>Consolidate / Deal</Text>
         </Pressable>
+
+        {game.ended ? (
+          <Text style={game.won ? styles.winText : styles.loseText}>
+            {game.won
+              ? "You cleared all cards."
+              : "No adjacent pairs and stock is empty."}
+          </Text>
+        ) : null}
       </View>
-
-      <Text style={styles.metaText}>Cards on grid: {cardsOnGrid}</Text>
-      <Text style={styles.metaText}>Stock: {game.stock.length}</Text>
-      <Text style={styles.metaText}>Removed: {game.removed}</Text>
-      <Text style={styles.metaText}>Message: {message}</Text>
-
-      <View style={styles.grid}>
-        {game.grid.map((row, r) =>
-          row.map((cell, c) => {
-            const isSelected = selected?.row === r && selected?.col === c;
-            return (
-              <Pressable
-                key={`mc-${r}-${c}`}
-                style={[styles.cell, isSelected ? styles.selectedCell : null]}
-                onPress={() => selectCell(r, c)}
-                disabled={game.ended}
-              >
-                {cell ? (
-                  <Card suit={cell.suit} rank={cell.rank} widthRatio={11.6} />
-                ) : (
-                  <View style={styles.emptyCell} />
-                )}
-              </Pressable>
-            );
-          }),
-        )}
-      </View>
-
-      <Pressable
-        style={[
-          styles.button,
-          styles.dealButton,
-          canConsolidate ? styles.dealEnabled : styles.dealDisabled,
-        ]}
-        onPress={consolidateAndDeal}
-        disabled={!canConsolidate || game.ended}
-      >
-        <Text style={styles.buttonText}>Consolidate / Deal</Text>
-      </Pressable>
-
-      {game.ended ? (
-        <Text style={game.won ? styles.winText : styles.loseText}>
-          {game.won
-            ? "You cleared all cards."
-            : "No adjacent pairs and stock is empty."}
-        </Text>
-      ) : null}
-    </ScrollView>
+    </>
   );
 }
 

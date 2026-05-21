@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Card } from "../Cards/Card";
-import HomeButton from "../Home/HomeButton";
+import MenuButton from "../Home/HomeButton";
 import {
   RANK_VALUE,
   SUITS,
@@ -232,7 +232,7 @@ export default function Skyway() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <HomeButton ended={game.ended} won={won} />
+      <MenuButton ended={game.ended} won={won} />
 
       <View style={styles.headerRow}>
         <Text style={styles.title}>Skyway</Text>

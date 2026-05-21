@@ -1,5 +1,22 @@
-import type { CardRank, CardSuit } from "../Cards/Card";
 import type { View as RNView } from "react-native";
+
+export type CardSuit = "clubs" | "diamonds" | "hearts" | "spades";
+export type CardRank =
+  | "A"
+  | "2"
+  | "3"
+  | "4"
+  | "5"
+  | "6"
+  | "7"
+  | "8"
+  | "9"
+  | "10"
+  | "J"
+  | "Q"
+  | "K"
+  | "Joker"
+  | "Back";
 
 export type StandardRank = Exclude<CardRank, "Joker" | "Back">;
 
@@ -11,6 +28,7 @@ export type PlayingCard = {
 };
 
 export const SUITS: CardSuit[] = ["clubs", "diamonds", "hearts", "spades"];
+
 export const RANKS: StandardRank[] = [
   "A",
   "2",

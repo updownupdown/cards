@@ -1,9 +1,4 @@
-import {
-  BottomTabInset,
-  MaxContentHeight,
-  MaxContentWidth,
-  Spacing,
-} from "@/constants/theme";
+import { layoutStyles } from "@/styles/layoutStyles";
 import {
   Outfit_300Light,
   Outfit_400Regular,
@@ -13,7 +8,7 @@ import {
 } from "@expo-google-fonts/outfit";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-import { StyleSheet, View } from "react-native";
+import { ImageBackground, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Layout() {
@@ -30,8 +25,13 @@ export default function Layout() {
   }
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
+    // <ImageBackground
+    //   source={require("@/assets/images/blue-felt.jpg")}
+    //   resizeMode="repeat"
+    //   style={layoutStyles.background}
+    // >
+    <View style={layoutStyles.appView}>
+      <SafeAreaView style={layoutStyles.safeArea}>
         <Stack
           screenOptions={{
             headerShown: false,
@@ -41,30 +41,6 @@ export default function Layout() {
         />
       </SafeAreaView>
     </View>
+    // </ImageBackground>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
-    flex: 1,
-    backgroundColor: "#eee",
-    fontFamily: "Outfit_500Medium",
-  },
-  safeArea: {
-    flex: 1,
-    flexGrow: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: "stretch",
-    alignSelf: "center",
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    backgroundColor: "#ddd",
-    borderWidth: 1,
-    borderColor: "green",
-    width: "100%",
-    height: "100%",
-    maxWidth: MaxContentWidth,
-    maxHeight: MaxContentHeight,
-  },
-});

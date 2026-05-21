@@ -10,14 +10,15 @@ import {
 } from "react-native";
 import type { GestureResponderEvent, View as RNView } from "react-native";
 import { useNavigation } from "expo-router";
-
-import { Card, type CardRank, type CardSuit } from "../Cards/Card";
-import { Deck } from "../Cards/Deck";
+import { Card } from "../Cards/Card";
 import {
+  CardRank,
+  CardSuit,
   DRAG_CAPTURE_THRESHOLD,
   DRAG_MOVE_THRESHOLD,
 } from "../Games/card-utils";
-import HomeButton from "../Home/HomeButton";
+import { DeckDown } from "../Cards/Deck";
+import { GameHeader } from "../common/GameHeader";
 
 type StandardRank = Exclude<CardRank, "Joker" | "Back">;
 
@@ -832,10 +833,14 @@ export default function Solitaire() {
 
   return (
     <View ref={boardRef} onLayout={updateBoardOrigin} style={styles.container}>
-      <HomeButton ended={won} won={won} />
+      <GameHeader
+        gameTitle="Solitaire"
+        ended={won}
+        won={won}
+        reset={resetGame}
+      />
 
       <View style={styles.headerRow}>
-        <Text style={styles.title}>Solitaire</Text>
         <View style={styles.headerButtonRow}>
           <Pressable
             onPress={undoMove}
@@ -868,11 +873,13 @@ export default function Solitaire() {
         <View style={styles.stockWasteRow}>
           <Pressable onPress={drawFromStock} style={styles.cardSlot}>
             {game.stock.length > 0 ? (
-              <Deck
-                backCount={Math.min(game.stock.length, 8)}
-                widthRatio={widthRatio}
-                backOverlap={0.95}
-                frontOverlap={0.95}
+              <DeckDown
+                count={Math.min(game.stock.length, 8)}
+                // widthRatio={widthRatio}
+                widthPerc={100 / 7}
+
+                // backOverlap={0.95}
+                // frontOverlap={0.95}
               />
             ) : (
               <Text style={styles.slotLabel}>Recycle</Text>
@@ -902,7 +909,7 @@ export default function Solitaire() {
                   <Card
                     suit={wasteTop.suit}
                     rank={wasteTop.rank}
-                    widthRatio={widthRatio}
+                    widthPerc={100 / 7}
                   />
                 </View>
               ) : (
@@ -960,7 +967,7 @@ export default function Solitaire() {
                       <Card
                         suit={top.suit}
                         rank={top.rank}
-                        widthRatio={widthRatio}
+                        widthPerc={100 / 7}
                       />
                     </View>
                   ) : (
@@ -1044,7 +1051,7 @@ export default function Solitaire() {
                           suit={card.suit}
                           rank={card.rank}
                           isBack={!card.faceUp}
-                          widthRatio={widthRatio}
+                          widthPerc={100 / 7}
                         />
                       </View>
                     </View>
@@ -1076,7 +1083,7 @@ export default function Solitaire() {
                 { top: index * TABLEAU_GAP, zIndex: index + 1 },
               ]}
             >
-              <Card suit={card.suit} rank={card.rank} widthRatio={widthRatio} />
+              <Card suit={card.suit} rank={card.rank} widthPerc={100 / 7} />
             </View>
           ))}
         </Animated.View>

@@ -20,8 +20,12 @@ import {
   type GameStats,
   type GameStatsMap,
 } from "./game-menu";
+import { buttonStyles } from "@/styles/buttonStyles";
+import { Icon } from "../icons";
+import { Colors, MaxContentHeight, MaxContentWidth } from "@/constants/theme";
+import { textStyles } from "@/styles/textStyles";
 
-type HomeButtonProps = {
+type MenuButtonProps = {
   ended?: boolean;
   won?: boolean;
 };
@@ -32,9 +36,7 @@ const EMPTY_STATS: GameStats = {
   losses: 0,
 };
 
-export default function HomeButton({ ended, won }: HomeButtonProps) {
-  const insets = useSafeAreaInsets();
-  const router = useRouter();
+export default function MenuButton({ ended, won }: MenuButtonProps) {
   const pathname = normalizeGamePath(usePathname());
   const info = getGameInfo(pathname);
 
@@ -100,22 +102,14 @@ export default function HomeButton({ ended, won }: HomeButtonProps) {
     };
   }, [ended, won, pathname]);
 
-  function goHomeFromMenu() {
-    setMenuOpen(false);
-    router.push("/");
-  }
-
   return (
     <>
-      <View style={[styles.menuBtnWrap, { top: insets.top + 8 }]}>
-        <Pressable style={styles.menuBtn} onPress={() => setMenuOpen(true)}>
-          <View style={styles.hamburgerIcon}>
-            <View style={styles.hamburgerBar} />
-            <View style={styles.hamburgerBar} />
-            <View style={styles.hamburgerBar} />
-          </View>
-        </Pressable>
-      </View>
+      <Pressable
+        style={buttonStyles.headerButton}
+        onPress={() => setMenuOpen(true)}
+      >
+        <Icon name="menu" />
+      </Pressable>
 
       <Modal
         visible={menuOpen}
@@ -124,54 +118,51 @@ export default function HomeButton({ ended, won }: HomeButtonProps) {
         onRequestClose={() => setMenuOpen(false)}
       >
         <View style={styles.modalBackdrop}>
-          <View style={[styles.modalCard, { marginTop: insets.top + 12 }]}>
+          <View style={[styles.modalCard]}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Menu</Text>
+              <Text style={textStyles.title}>{info.title}</Text>
+
               <Pressable
                 style={styles.closeBtn}
                 onPress={() => setMenuOpen(false)}
               >
-                <Text style={styles.closeBtnText}>Close</Text>
+                <Icon name="close" />
               </Pressable>
             </View>
 
             <ScrollView contentContainerStyle={styles.modalContent}>
-              <Pressable style={styles.homeActionBtn} onPress={goHomeFromMenu}>
-                <Text style={styles.homeActionText}>Home</Text>
-              </Pressable>
-
               <View style={styles.sectionCard}>
-                <Text style={styles.sectionTitle}>
-                  How to Play: {info.title}
-                </Text>
+                <Text style={textStyles.title}>How to Play</Text>
                 {info.howToPlay.map((line) => (
-                  <Text key={line} style={styles.ruleLine}>
+                  <Text key={line} style={textStyles.default}>
                     - {line}
                   </Text>
                 ))}
               </View>
 
               <View style={styles.sectionCard}>
-                <Text style={styles.sectionTitle}>Statistics</Text>
-                <Text style={styles.statsHeadline}>Current game</Text>
-                <Text style={styles.statsLine}>
+                <Text style={textStyles.title}>Statistics</Text>
+                <Text style={textStyles.default}>
                   Attempts: {currentStats.attempts}
                 </Text>
-                <Text style={styles.statsLine}>Wins: {currentStats.wins}</Text>
-                <Text style={styles.statsLine}>
+                <Text style={textStyles.default}>
+                  Wins: {currentStats.wins}
+                </Text>
+                <Text style={textStyles.default}>
                   Losses: {currentStats.losses}
                 </Text>
-                <Text style={styles.statsLine}>
+                <Text style={textStyles.default}>
                   Win rate: {calculateWinRate(currentStats)}
                 </Text>
 
-                <Text style={styles.statsHeadline}>All games</Text>
+                {/* Stats for ALL games */}
+                {/* <Text style={textStyles.default}>All games</Text>
                 {orderedStatsRows.map((row) => (
-                  <Text key={row.path} style={styles.statsLine}>
+                  <Text key={row.path} style={textStyles.default}>
                     {row.title}: {row.stats.attempts} attempts, {row.stats.wins}
                     W/{row.stats.losses}L ({calculateWinRate(row.stats)})
                   </Text>
-                ))}
+                ))} */}
               </View>
             </ScrollView>
           </View>
@@ -182,31 +173,6 @@ export default function HomeButton({ ended, won }: HomeButtonProps) {
 }
 
 const styles = StyleSheet.create({
-  menuBtnWrap: {
-    position: "absolute",
-    left: 8,
-    zIndex: 100,
-    elevation: 4,
-  },
-  menuBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 8,
-    backgroundColor: "#ececec",
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "#c6c6c6",
-  },
-  hamburgerIcon: {
-    width: 20,
-    gap: 3,
-  },
-  hamburgerBar: {
-    height: 2,
-    borderRadius: 1,
-    backgroundColor: "#222",
-  },
   modalBackdrop: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.5)",
@@ -216,12 +182,11 @@ const styles = StyleSheet.create({
   },
   modalCard: {
     width: "100%",
-    maxWidth: 860,
-    height: "88%",
-    backgroundColor: "#f3f3f3",
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#cecece",
+    maxWidth: MaxContentWidth,
+    height: "100%",
+    maxHeight: MaxContentHeight,
+    backgroundColor: Colors.K100,
+    borderRadius: 8,
     overflow: "hidden",
   },
   modalHeader: {
@@ -230,24 +195,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#d7d7d7",
-    backgroundColor: "#e9e9e9",
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: "700",
   },
   closeBtn: {
-    borderWidth: 1,
-    borderColor: "#b5b5b5",
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    backgroundColor: "#f7f7f7",
-  },
-  closeBtnText: {
-    fontWeight: "600",
+    padding: 12,
   },
   modalContent: {
     padding: 14,
@@ -268,30 +218,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   sectionCard: {
-    backgroundColor: "#ffffff",
+    backgroundColor: Colors.white,
     borderWidth: 1,
-    borderColor: "#dfdfdf",
-    borderRadius: 10,
+    borderColor: Colors.K200,
+    borderRadius: 8,
     padding: 12,
     gap: 6,
-  },
-  sectionTitle: {
-    fontSize: 17,
-    fontWeight: "700",
-    marginBottom: 2,
-  },
-  ruleLine: {
-    fontSize: 14,
-    lineHeight: 20,
-    color: "#202020",
-  },
-  statsHeadline: {
-    marginTop: 6,
-    fontSize: 15,
-    fontWeight: "700",
-  },
-  statsLine: {
-    fontSize: 14,
-    lineHeight: 20,
   },
 });

@@ -1,8 +1,8 @@
-import { useMemo, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useEffect, useMemo, useState } from "react";
+import { Pressable, StyleSheet, Text, View, ViewStyle } from "react-native";
 
 import { Card } from "../Cards/Card";
-import HomeButton from "../Home/HomeButton";
+import MenuButton from "../Home/HomeButton";
 import {
   RANK_VALUE,
   createDeck,
@@ -10,10 +10,16 @@ import {
   shuffle,
   type PlayingCard,
 } from "../Games/card-utils";
+import { layoutStyles } from "@/styles/layoutStyles";
+import { textStyles } from "@/styles/textStyles";
+import { buttonStyles } from "@/styles/buttonStyles";
+import { cardStyles } from "@/styles/cardStyles";
+import { DeckDown } from "../Cards/Deck";
+import { GameHeader } from "../common/GameHeader";
 
 type SandwichState = {
   deck: PlayingCard[];
-  hand: PlayingCard[];
+  hand: (PlayingCard | null)[];
   discard: PlayingCard[];
   wonByDeckingOut: boolean;
   ended: boolean;
@@ -21,6 +27,7 @@ type SandwichState = {
 
 function initState(): SandwichState {
   const deck = shuffle(createDeck({ faceUp: true }));
+
   return {
     hand: deck.slice(0, 8),
     deck: deck.slice(8),
@@ -55,11 +62,13 @@ function isValidSandwich(cards: PlayingCard[]) {
   });
 }
 
-function hasAnyValidSandwich(hand: PlayingCard[]) {
-  for (let i = 0; i < hand.length; i += 1) {
-    for (let j = i + 1; j < hand.length; j += 1) {
-      for (let k = j + 1; k < hand.length; k += 1) {
-        if (isValidSandwich([hand[i], hand[j], hand[k]])) {
+function hasAnyValidSandwich(hand: (PlayingCard | null)[]) {
+  const nonNullHand = hand.filter((card) => card !== null);
+
+  for (let i = 0; i < nonNullHand.length; i++) {
+    for (let j = i + 1; j < nonNullHand.length; j++) {
+      for (let k = j + 1; k < nonNullHand.length; k++) {
+        if (isValidSandwich([nonNullHand[i], nonNullHand[j], nonNullHand[k]])) {
           return true;
         }
       }
@@ -83,14 +92,26 @@ function replacementCount(cards: PlayingCard[]) {
 export default function TheSandwichGuy() {
   const [game, setGame] = useState<SandwichState>(initState);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [invalidSandwichSelected, setInvalidSandwichSelected] = useState(false);
   const [message, setMessage] = useState(
     "Pick three cards to make a sandwich.",
   );
 
   const selectedCards = useMemo(
-    () => game.hand.filter((card) => selectedIds.includes(card.id)),
+    () =>
+      game.hand
+        .filter((card) => card !== null)
+        .filter((card) => selectedIds.includes(card.id)),
     [game.hand, selectedIds],
   );
+
+  useEffect(() => {
+    if (selectedCards.length !== 3) {
+      setInvalidSandwichSelected(false);
+    } else {
+      setInvalidSandwichSelected(!isValidSandwich(selectedCards));
+    }
+  }, [selectedCards]);
 
   const score = game.hand.length;
 
@@ -111,16 +132,6 @@ export default function TheSandwichGuy() {
     });
   }
 
-  function endIfLocked(next: SandwichState) {
-    if (hasAnyValidSandwich(next.hand)) return next;
-
-    if (next.wonByDeckingOut) {
-      return { ...next, ended: true };
-    }
-
-    return { ...next, ended: true };
-  }
-
   function commitSandwich() {
     if (selectedCards.length !== 3) return;
     if (!isValidSandwich(selectedCards)) {
@@ -130,93 +141,114 @@ export default function TheSandwichGuy() {
       return;
     }
 
+    const replacement = replacementCount(selectedCards);
+
     setGame((prev) => {
       if (prev.ended) return prev;
 
-      const replacement = replacementCount(selectedCards);
-      const hand = prev.hand.filter((card) => !selectedIds.includes(card.id));
+      const hand = prev.hand.map((card) =>
+        card && selectedIds.includes(card.id) ? null : card,
+      ); // Replace selected cards with null
       const discard = [...prev.discard, ...selectedCards];
       const deck = [...prev.deck];
 
       for (let i = 0; i < replacement; i += 1) {
-        if (hand.length >= 8) break;
         const drawn = deck.shift();
-        if (!drawn) break;
-        hand.push(drawn);
+        const emptyIndex = hand.indexOf(null);
+        if (!drawn || emptyIndex === -1) break;
+        hand[emptyIndex] = drawn; // Replace null with the drawn card
       }
 
       const wonByDeckingOut = prev.wonByDeckingOut || deck.length === 0;
       const next = {
         ...prev,
-        hand,
+        hand: hand.map((card) => card || null), // Fill nulls with placeholders
         deck,
         discard,
         wonByDeckingOut,
       };
 
-      return endIfLocked(next);
+      if (!hasAnyValidSandwich(next.hand)) {
+        return { ...next, ended: true };
+      }
+
+      return next;
     });
 
     setSelectedIds([]);
-    setMessage("Sandwich served.");
+    setMessage("Sandwich served (" + replacement + " new cards)");
   }
 
   const won = game.ended && game.wonByDeckingOut;
   const lost = game.ended && !game.wonByDeckingOut;
 
   return (
-    <View style={styles.container}>
-      <HomeButton ended={game.ended} won={won} />
+    <>
+      <GameHeader
+        gameTitle="The Sandwich Guy"
+        ended={game.ended}
+        won={won}
+        reset={reset}
+      />
 
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>The Sandwich Guy</Text>
-        <Pressable style={styles.button} onPress={reset}>
-          <Text style={styles.buttonText}>New Game</Text>
+      <View style={layoutStyles.gameArea}>
+        <DeckDown showCount widthPerc={25} count={game.deck.length} />
+
+        <Text style={textStyles.default}>{message}</Text>
+
+        <View style={cardStyles.cardsRows}>
+          {game.hand.map((card, index) => {
+            const selected = !!(card && selectedIds.includes(card.id));
+
+            return (
+              <Pressable
+                key={card ? card.id : "placeholder" + index}
+                onPress={() => {
+                  if (card) {
+                    toggleSelect(card.id);
+                  }
+                }}
+              >
+                <Card
+                  isSelected={selected}
+                  isSelectedInvalid={selected && invalidSandwichSelected}
+                  widthPerc={25}
+                  isPlaceholder={!card}
+                  suit={card?.suit}
+                  rank={card?.rank}
+                />
+              </Pressable>
+            );
+          })}
+        </View>
+
+        <Pressable
+          style={[
+            buttonStyles.button,
+            invalidSandwichSelected || selectedCards.length !== 3
+              ? buttonStyles.buttonDisabled
+              : null,
+          ]}
+          onPress={commitSandwich}
+          disabled={selectedCards.length !== 3 || invalidSandwichSelected}
+        >
+          <Text style={styles.commitText}>Serve Selected Sandwich</Text>
         </Pressable>
+
+        {won ? (
+          <Text style={styles.winText}>
+            You won by drawing out the deck. Final score (lower is better):{" "}
+            {score}
+          </Text>
+        ) : null}
+
+        {lost ? (
+          <Text style={styles.loseText}>
+            No valid sandwich available. You lose.
+          </Text>
+        ) : null}
       </View>
-
-      <Text style={styles.metaText}>Deck: {game.deck.length}</Text>
-      <Text style={styles.metaText}>Hand: {game.hand.length} / 8</Text>
-      <Text style={styles.metaText}>Message: {message}</Text>
-
-      <View style={styles.handWrap}>
-        {game.hand.map((card) => {
-          const selected = selectedIds.includes(card.id);
-          return (
-            <Pressable
-              key={card.id}
-              onPress={() => toggleSelect(card.id)}
-              style={[styles.cardWrap, selected ? styles.selectedCard : null]}
-            >
-              <Card suit={card.suit} rank={card.rank} widthRatio={10} />
-            </Pressable>
-          );
-        })}
-      </View>
-
-      <Pressable
-        style={[
-          styles.commitButton,
-          selectedCards.length === 3 ? null : styles.commitButtonDisabled,
-        ]}
-        onPress={commitSandwich}
-      >
-        <Text style={styles.commitText}>Discard Selected Sandwich</Text>
-      </Pressable>
-
-      {won ? (
-        <Text style={styles.winText}>
-          You won by drawing out the deck. Final score (lower is better):{" "}
-          {score}
-        </Text>
-      ) : null}
-
-      {lost ? (
-        <Text style={styles.loseText}>
-          No valid sandwich available. You lose.
-        </Text>
-      ) : null}
-    </View>
+    </>
   );
 }
 
@@ -232,25 +264,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-  },
-  title: {
-    fontSize: 24,
-    fontFamily: "Outfit_600SemiBold",
-    color: "#1f2937",
-  },
-  button: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-    backgroundColor: "#1d4ed8",
-  },
-  buttonText: {
-    color: "#fff",
-    fontFamily: "Outfit_500Medium",
-  },
-  metaText: {
-    color: "#334155",
-    fontFamily: "Outfit_400Regular",
   },
   handWrap: {
     flexDirection: "row",

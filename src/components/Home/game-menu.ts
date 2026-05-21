@@ -157,7 +157,7 @@ export const GAME_MENU_INFO: Record<string, GameMenuInfo> = {
     ],
   },
   "/golf": {
-    title: "Golf",
+    title: "Golf Solitaire",
     howToPlay: [
       "Play only top tableau cards one rank up or down from waste top.",
       "Use stock draws when no tableau play is possible.",
@@ -250,10 +250,7 @@ export const HOME_GAME_ENTRIES: HomeGameEntry[] = [
   { path: "/the-sandwich-guy", label: "The Sandwich Guy" },
   { path: "/area-52", label: "Area 52" },
   { path: "/dead-center", label: "Dead Center" },
-  {
-    path: "/the-first-boba-tea-shop-in-london",
-    label: "The First Boba Tea Shop in London",
-  },
+  { path: "/boba-shop", label: "The First Boba Tea Shop in London" },
   { path: "/foursquare", label: "Foursquare" },
   { path: "/loot-the-loop", label: "Loot the Loop" },
   { path: "/syndicate", label: "Syndicate" },
