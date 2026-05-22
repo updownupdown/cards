@@ -1,5 +1,6 @@
 import { layoutStyles } from "@/styles/layoutStyles";
 import {
+  Outfit_200ExtraLight,
   Outfit_300Light,
   Outfit_400Regular,
   Outfit_500Medium,
@@ -8,11 +9,12 @@ import {
 } from "@expo-google-fonts/outfit";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-import { ImageBackground, View } from "react-native";
+import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Layout() {
   const [fontsLoaded] = useFonts({
+    Outfit_200ExtraLight,
     Outfit_300Light,
     Outfit_400Regular,
     Outfit_500Medium,
@@ -25,11 +27,6 @@ export default function Layout() {
   }
 
   return (
-    // <ImageBackground
-    //   source={require("@/assets/images/blue-felt.jpg")}
-    //   resizeMode="repeat"
-    //   style={layoutStyles.background}
-    // >
     <View style={layoutStyles.appView}>
       <SafeAreaView style={layoutStyles.safeArea}>
         <Stack
@@ -41,6 +38,5 @@ export default function Layout() {
         />
       </SafeAreaView>
     </View>
-    // </ImageBackground>
   );
 }

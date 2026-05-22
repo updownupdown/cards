@@ -1,9 +1,10 @@
 import {
   Colors,
   ContentSidePadding,
+  FontWeight,
   MaxContentHeight,
   MaxContentWidth,
-} from "@/constants/theme";
+} from "@/styles/styles";
 import { StyleSheet } from "react-native";
 
 export const flexStyles = StyleSheet.create({
@@ -32,6 +33,30 @@ export const flexStyles = StyleSheet.create({
   justifyEvenly: {
     justifyContent: "space-evenly",
   },
+  flex1: {
+    flex: 1,
+  },
+  gap2: {
+    gap: 2,
+  },
+  gap4: {
+    gap: 4,
+  },
+  gap6: {
+    gap: 6,
+  },
+  gap8: {
+    gap: 8,
+  },
+  gap10: {
+    gap: 10,
+  },
+  gap12: {
+    gap: 12,
+  },
+  gap20: {
+    gap: 20,
+  },
 });
 
 export const layoutStyles = StyleSheet.create({
@@ -40,7 +65,7 @@ export const layoutStyles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     fontFamily: "Outfit_500Medium",
-    backgroundColor: Colors.K200,
+    backgroundColor: Colors.K900,
   },
   safeArea: {
     ...flexStyles.fullWidthHeight,
@@ -51,9 +76,9 @@ export const layoutStyles = StyleSheet.create({
     padding: ContentSidePadding,
     maxWidth: MaxContentWidth + ContentSidePadding * 2,
     maxHeight: MaxContentHeight + ContentSidePadding * 2,
-    backgroundColor: Colors.K100,
+    backgroundColor: Colors.K850,
     borderRadius: 30,
-    boxShadow: "1px 2px 4px rgba(0,0,0,.1), 2px 4px 16px rgba(0,0,0,.1)",
+    boxShadow: `1px 2px 4px ${Colors.black}1A, 2px 4px 16px ${Colors.black}1A`,
   },
   background: {
     width: "100%",
@@ -64,12 +89,29 @@ export const layoutStyles = StyleSheet.create({
     ...flexStyles.rowCentered,
     justifyContent: "space-between",
     width: "100%",
-    backgroundColor: Colors.K100,
+    backgroundColor: Colors.K850,
   },
   gameArea: {
     ...flexStyles.colCentered,
     flex: 1,
     justifyContent: "space-evenly",
-    backgroundColor: Colors.K100,
+    backgroundColor: Colors.K850,
+    gap: 20,
+    paddingVertical: 20,
+  },
+  gameMessageBox: {
+    ...flexStyles.colCentered,
+    width: "100%",
+    minHeight: 80,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    backgroundColor: Colors.K900,
+  },
+  gameMessageText: {
+    fontSize: 15,
+    fontFamily: FontWeight[300],
+    color: Colors.K200,
+    textAlign: "center",
   },
 });

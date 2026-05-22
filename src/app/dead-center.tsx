@@ -1,4 +1,4 @@
-import DeadCenter from "@/components/Isaludo/DeadCenter";
+import DeadCenter from "@/components/Games/DeadCenter";
 
 export default function DeadCenterRoute() {
   return <DeadCenter />;

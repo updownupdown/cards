@@ -1,4 +1,4 @@
-import HideAndSeek from "@/components/Isaludo/HideAndSeek";
+import HideAndSeek from "@/components/Games/HideAndSeek";
 
 export default function HideAndSeekRoute() {
   return <HideAndSeek />;

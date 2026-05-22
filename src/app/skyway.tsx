@@ -1,4 +1,4 @@
-import Skyway from "@/components/Isaludo/Skyway";
+import Skyway from "@/components/Games/Skyway";
 
 export default function SkywayRoute() {
   return <Skyway />;

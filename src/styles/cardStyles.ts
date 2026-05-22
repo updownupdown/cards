@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import { flexStyles } from "./layoutStyles";
-import { Colors } from "@/constants/theme";
+import { Colors, FontWeight } from "@/styles/styles";
 
 export const cardStyles = StyleSheet.create({
   cardsCols: {
@@ -11,8 +11,7 @@ export const cardStyles = StyleSheet.create({
   cardsRows: {
     ...flexStyles.rowCentered,
     flexWrap: "wrap",
-    // width: "100%",
-    justifyContent: "flex-start",
+    alignItems: "flex-start",
   },
   // Card itself
   card: {
@@ -33,6 +32,11 @@ export const cardStyles = StyleSheet.create({
   deckCardBottom: {
     position: "relative",
   },
+  deckCardTop: {},
+  deckCardTopOnly: {
+    position: "relative",
+    transform: "unset",
+  },
   deckCount: {
     ...flexStyles.colCentered,
     position: "absolute",
@@ -40,14 +44,19 @@ export const cardStyles = StyleSheet.create({
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.deckRed,
     padding: 6,
     borderRadius: 4,
+    gap: 0,
   },
-  deckCountText: {
+  deckCountTitle: {
+    fontSize: 13,
+    fontFamily: FontWeight[500],
+    color: Colors.white,
+  },
+  deckCountValue: {
     fontSize: 18,
-    lineHeight: 24,
-    fontFamily: "Outfit_500Medium",
-    color: Colors.K800,
+    fontFamily: FontWeight[500],
+    color: Colors.white,
   },
 });

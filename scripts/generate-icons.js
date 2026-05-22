@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 
 const projectRoot = path.resolve(__dirname, "..");
-const iconsDir = path.join(projectRoot, "src", "components", "icons");
+const iconsDir = path.join(projectRoot, "src", "icons");
 const outputFile = path.join(iconsDir, "generated.ts");
 
 function toPascalCase(fileName) {
@@ -81,7 +81,6 @@ function main() {
   const generated = buildGeneratedFile(svgFiles);
 
   fs.writeFileSync(outputFile, generated, "utf8");
-  console.log(`Generated ${path.relative(projectRoot, outputFile)} with ${svgFiles.length} icons.`);
 }
 
 main();

@@ -1,4 +1,4 @@
-import Penguin from "@/components/Penguin/Penguin";
+import Penguin from "@/components/Games/Penguin";
 
 export default function PenguinRoute() {
   return <Penguin />;

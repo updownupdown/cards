@@ -1,4 +1,4 @@
-import Solitaire from "@/components/Solitaire/Solitaire";
+import Solitaire from "@/components/Games/Solitaire";
 
 export default function SolitaireRoute() {
   return <Solitaire />;

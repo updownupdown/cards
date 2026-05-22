@@ -1,4 +1,4 @@
-import Calculation from "@/components/Calculation/Calculation";
+import Calculation from "@/components/Games/Calculation";
 
 export default function CalculationRoute() {
   return <Calculation />;

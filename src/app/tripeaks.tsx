@@ -1,4 +1,4 @@
-import TriPeaks from "@/components/TriPeaks/TriPeaks";
+import TriPeaks from "@/components/Games/TriPeaks";
 
 export default function TriPeaksRoute() {
   return <TriPeaks />;

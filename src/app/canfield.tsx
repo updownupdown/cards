@@ -1,4 +1,4 @@
-import Canfield from "@/components/Canfield/Canfield";
+import Canfield from "@/components/Games/Canfield";
 
 export default function CanfieldRoute() {
   return <Canfield />;

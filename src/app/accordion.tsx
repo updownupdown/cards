@@ -1,4 +1,4 @@
-import Accordion from "@/components/Accordion/Accordion";
+import Accordion from "@/components/Games/Accordion";
 
 export default function AccordionRoute() {
   return <Accordion />;

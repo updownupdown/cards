@@ -1,4 +1,4 @@
-import Foursquare from "@/components/Isaludo/Foursquare";
+import Foursquare from "@/components/Games/Foursquare";
 
 export default function FoursquareRoute() {
   return <Foursquare />;

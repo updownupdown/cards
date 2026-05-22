@@ -1,4 +1,4 @@
-import Scorpion from "@/components/Scorpion/Scorpion";
+import Scorpion from "@/components/Games/Scorpion";
 
 export default function ScorpionRoute() {
   return <Scorpion />;

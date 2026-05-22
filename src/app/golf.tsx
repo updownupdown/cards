@@ -1,4 +1,4 @@
-import Golf from "@/components/Golf/Golf";
+import Golf from "@/components/Games/Golf";
 
 export default function GolfRoute() {
   return <Golf />;
