@@ -317,7 +317,11 @@ export default function TheEmissary() {
               >
                 <Text style={styles.kingdomText}>K#{k.id + 1}</Text>
                 <Text style={styles.smallText}>Need: {k.requiredWins}</Text>
-                <Card suit={k.ruler.suit} rank={k.ruler.rank} widthRatio={18} />
+                <Card
+                  suit={k.ruler.suit}
+                  rank={k.ruler.rank}
+                  cardsPerRow={18}
+                />
               </Pressable>
             ))}
           </View>
@@ -339,7 +343,7 @@ export default function TheEmissary() {
             <Card
               suit={game.visit.rulerCard.suit}
               rank={game.visit.rulerCard.rank}
-              widthRatio={11}
+              cardsPerRow={11}
             />
           ) : null}
 
@@ -347,7 +351,7 @@ export default function TheEmissary() {
           <View style={styles.handWrap}>
             {game.visit.hand.map((card) => (
               <Pressable key={card.id} onPress={() => playDebate(card.id)}>
-                <Card suit={card.suit} rank={card.rank} widthRatio={13} />
+                <Card suit={card.suit} rank={card.rank} cardsPerRow={13} />
               </Pressable>
             ))}
           </View>

@@ -1,3 +1,4 @@
+import { AnimationProvider } from "@/components/Animations/Animations";
 import { layoutStyles } from "@/styles/layoutStyles";
 import {
   Outfit_200ExtraLight,
@@ -27,16 +28,18 @@ export default function Layout() {
   }
 
   return (
-    <View style={layoutStyles.appView}>
-      <SafeAreaView style={layoutStyles.safeArea}>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            gestureEnabled: false,
-            fullScreenGestureEnabled: false,
-          }}
-        />
-      </SafeAreaView>
-    </View>
+    <AnimationProvider>
+      <View style={layoutStyles.appView}>
+        <SafeAreaView style={layoutStyles.safeArea}>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              gestureEnabled: false,
+              fullScreenGestureEnabled: false,
+            }}
+          />
+        </SafeAreaView>
+      </View>
+    </AnimationProvider>
   );
 }

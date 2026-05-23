@@ -16,6 +16,9 @@ import { textStyles } from "@/styles/textStyles";
 import { Button } from "../Button/Button";
 import { MessageBox } from "../common/MessageBox";
 import { CardButton } from "../Cards/CardButton";
+import { cardStyles } from "@/styles/cardStyles";
+
+const localCardPerRow = 4;
 
 type AreaState = {
   defenderDeck: PlayingCard[];
@@ -264,7 +267,11 @@ export default function Area52() {
                 key={card.id}
                 style={idx === 0 ? styles.currentAttacker : null}
               >
-                <Card suit={card.suit} rank={card.rank} cardsPerRow={4} />
+                <Card
+                  suit={card.suit}
+                  rank={card.rank}
+                  cardsPerRow={localCardPerRow}
+                />
               </View>
             ))}
             {game.attackerQueue.length === 0 ? (
@@ -275,7 +282,7 @@ export default function Area52() {
 
         <View style={styles.section}>
           <Text style={textStyles.default}>Defenders (select 1-2)</Text>
-          <View style={styles.defendersWrap}>
+          <View style={cardStyles.row}>
             {game.defenders.map((card, index) => {
               const selected = selectedDefenders.includes(index);
               return (
@@ -284,7 +291,8 @@ export default function Area52() {
                   onPress={() => toggleDefender(index)}
                   suit={card.suit}
                   rank={card.rank}
-                  cardsPerRow={4}
+                  cardsPerRow={localCardPerRow}
+                  hasTopMargin={index > localCardPerRow - 1}
                   isSelected={selected}
                 />
               );

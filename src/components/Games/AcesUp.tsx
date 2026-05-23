@@ -1,7 +1,7 @@
 import { cardStyles } from "@/styles/cardStyles";
 import { flexStyles, layoutStyles } from "@/styles/layoutStyles";
 import { textStyles } from "@/styles/textStyles";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useRef } from "react";
 import { Text, View } from "react-native";
 import { Button } from "../Button/Button";
 import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
@@ -9,6 +9,7 @@ import { CardButton } from "../Cards/CardButton";
 import { Deck } from "../Cards/Deck";
 import { GameHeader } from "../common/GameHeader";
 import { MessageBox } from "../common/MessageBox";
+import { useAnimations } from "../Animations/Animations";
 
 type AcesUpState = {
   stock: PlayingCard[];
@@ -102,12 +103,23 @@ export default function AcesUp() {
     "Discard lower cards of same suit, move cards to empty piles, then deal when blocked.",
   );
 
+  const { animateCards, measureRef, isAnimating, setIsAnimating } =
+    useAnimations();
+  const [isDiscarding, setIsDiscarding] = useState<number | undefined>(
+    undefined,
+  );
+
+  const stockRef = useRef<View>(null);
+  const discardRef = useRef<View>(null);
+  const pileRefsCurrent = useRef<(View | null)[]>([]);
+  const pileRefsNext = useRef<(View | null)[]>([]);
+
   const discardable = useMemo(
     () => getDiscardablePileIndexes(game.piles),
     [game.piles],
   );
 
-  // For now, always allow dealing
+  // Always allow dealing, for now.
   // const canDeal = useMemo(() => {
   //   if (game.ended || game.stock.length < 4) return false;
   //   if (discardable.size > 0) return false;
@@ -122,10 +134,46 @@ export default function AcesUp() {
     );
   }
 
-  function dealFour() {
+  async function dealFour() {
+    if (game.ended || game.stock.length < 4 || isAnimating) return;
+    setIsAnimating(true);
+
+    const stockPos = await measureRef(stockRef);
+    if (stockPos) {
+      const stock = [...game.stock];
+      const cardsToDeal = stock.slice(0, 4);
+      const anims = [];
+
+      for (let i = 0; i < 4; i += 1) {
+        const pileEl = pileRefsNext.current[i];
+        if (!pileEl) continue;
+        const pilePos = await measureRef({ current: pileEl });
+        if (pilePos) {
+          anims.push({
+            id: `deal-${i}`,
+            cardInfo: {
+              rank: cardsToDeal[i].rank,
+              suit: cardsToDeal[i].suit,
+              isBack: false,
+              cardsPerRow: 4,
+            },
+            to: { ...pilePos, zIndex: 200 - i },
+            from: { ...stockPos, zIndex: 200 - i },
+            delay: i * 150,
+            flip: "toFace" as const,
+          });
+        }
+      }
+
+      if (anims.length > 0) {
+        await animateCards(anims);
+      }
+    }
+
     setGame((prev) => {
       if (prev.ended || prev.stock.length < 4) return prev;
 
+      // For now, always allow dealing
       // const blockedByDiscard = getDiscardablePileIndexes(prev.piles).size > 0;
       // if (blockedByDiscard) return prev;
 
@@ -142,10 +190,48 @@ export default function AcesUp() {
     });
 
     setSelectedPile(null);
+    setIsAnimating(false);
     setMessage("Dealt one card to each pile.");
   }
 
-  function discardTop(pileIndex: number) {
+  async function discardTop(pileIndex: number) {
+    if (game.ended || isAnimating) return;
+    const allowed = getDiscardablePileIndexes(game.piles);
+    if (!allowed.has(pileIndex)) return;
+
+    setIsAnimating(true);
+
+    // Avoid disappearing card flash; give animation time to kick in
+    setTimeout(() => {
+      setIsDiscarding(pileIndex);
+    }, 10);
+
+    const pileEl = pileRefsCurrent.current[pileIndex];
+    if (pileEl) {
+      const pilePos = await measureRef({ current: pileEl });
+      const discardPos = await measureRef(discardRef);
+
+      if (pilePos && discardPos) {
+        const pile = game.piles[pileIndex];
+        const cardToDiscard = pile[pile.length - 1];
+
+        await animateCards([
+          {
+            id: `discard-${Date.now()}`,
+            cardInfo: {
+              rank: cardToDiscard.rank,
+              suit: cardToDiscard.suit,
+              isBack: false,
+              cardsPerRow: 4,
+            },
+            flip: "toBack" as const,
+            from: pilePos,
+            to: discardPos,
+          },
+        ]);
+      }
+    }
+
     setGame((prev) => {
       if (prev.ended) return prev;
       const allowed = getDiscardablePileIndexes(prev.piles);
@@ -162,36 +248,44 @@ export default function AcesUp() {
     });
 
     setSelectedPile(null);
+    setIsAnimating(false);
     setMessage("Discarded top card.");
+    setIsDiscarding(undefined);
   }
 
   function onPilePress(pileIndex: number) {
+    if (isAnimating) return;
     setGame((prev) => {
       if (prev.ended) return prev;
 
       const piles = prev.piles.map((pile) => [...pile]);
-      const clicked = piles[pileIndex];
+      const clickedEmptyPile = piles[pileIndex].length === 0;
 
       if (selectedPile === null) {
-        if (clicked.length > 0) {
+        // Select first source card
+        if (!clickedEmptyPile) {
           setSelectedPile(pileIndex);
           setMessage(
             "Selected a source pile. Tap an empty pile to move its top card.",
           );
         }
         return prev;
-      }
-
-      if (selectedPile === pileIndex) {
+      } else if (selectedPile === pileIndex) {
+        // Unselect pile
         setSelectedPile(null);
         setMessage("Selection cleared.");
         return prev;
+      } else if (!clickedEmptyPile) {
+        // Switch to another source card
+        setSelectedPile(pileIndex);
+        return prev;
       }
 
+      // Check if clicked an empty pile after having a card selected
       const source = piles[selectedPile];
       const target = piles[pileIndex];
+
       if (source.length === 0 || target.length !== 0) {
-        setSelectedPile(null);
         return prev;
       }
 
@@ -238,6 +332,7 @@ export default function AcesUp() {
           ]}
         >
           <Deck
+            refTopCurrent={discardRef}
             backCount={game.discard.length}
             cardsPerRow={4}
             fan="horizontalRight"
@@ -246,6 +341,7 @@ export default function AcesUp() {
           />
 
           <Deck
+            refTopCurrent={stockRef}
             backCount={game.stock.length}
             cardsPerRow={4}
             fan="horizontalRight"
@@ -254,45 +350,46 @@ export default function AcesUp() {
           />
         </View>
 
-        <View style={[cardStyles.row, flexStyles.flex1]}>
+        <View
+          style={[
+            cardStyles.row,
+            cardStyles.rowAlignDown,
+            flexStyles.fullHeight,
+            flexStyles.flex1,
+          ]}
+        >
           {game.piles.map((pile, idx) => {
-            const top = topCard(pile);
             const isSelected = selectedPile === idx;
             const canDiscard = discardable.has(idx);
 
-            const cardsBelowTop = pile.slice(0, -1).map((card) => {
-              return { rank: card.rank, suit: card.suit };
-            });
-
             return (
-              <View
-                key={`pile-${idx}`}
-                style={[cardStyles.colUpwards, flexStyles.gap12]}
-              >
+              <View key={`pile-${idx}`} style={[cardStyles.colUpwards]}>
                 <Deck
                   cardsPerRow={4}
                   fan="verticalUp"
                   largeFan="progressive"
-                  cards={cardsBelowTop}
-                >
-                  <CardButton
-                    onPress={() => {
-                      if (canDiscard) {
-                        discardTop(idx);
-                      } else {
-                        onPilePress(idx);
-                      }
-                    }}
-                    suit={top ? top.suit : undefined}
-                    rank={top ? top.rank : undefined}
-                    isPlaceholder={!top}
-                    cardsPerRow={4}
-                    isSelected={isSelected}
-                    disabled={!canDiscard && !hasEmptyPile}
-                  />
-                </Deck>
-
-                <Text style={textStyles.default}>{pile.length}</Text>
+                  cards={pile}
+                  hideTopCard={isDiscarding === idx}
+                  refTopCurrent={(el) => {
+                    pileRefsCurrent.current[idx] = el;
+                  }}
+                  refTopNext={(el) => {
+                    pileRefsNext.current[idx] = el;
+                  }}
+                  onPress={() => {
+                    if (canDiscard) {
+                      discardTop(idx);
+                    } else {
+                      onPilePress(idx);
+                    }
+                  }}
+                  isSelected={isSelected}
+                  isDisabled={
+                    (!canDiscard && !hasEmptyPile) ||
+                    isAnimating ||
+                    (pile.length === 0 && !selectedPile)
+                  }
+                />
               </View>
             );
           })}
@@ -300,8 +397,8 @@ export default function AcesUp() {
 
         <Button
           onPress={dealFour}
-          // For now, allow user to deal even if some cards can be removed
-          // disabled={!canDeal}
+          // disabled={!canDeal | isAnimating}
+          disabled={isAnimating}
           text="Deal"
         />
       </View>

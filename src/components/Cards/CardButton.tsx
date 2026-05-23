@@ -1,9 +1,10 @@
 import { Pressable, ViewStyle } from "react-native";
 import { CardRank, CardSuit } from "./card-utils";
 import { Card } from "./Card";
+import { cardStyles } from "@/styles/cardStyles";
 
 interface Props {
-  buttonStyle?: ViewStyle | ViewStyle[];
+  style?: (ViewStyle | false)[];
   suit?: CardSuit;
   rank?: CardRank;
   isPlaceholder?: boolean;
@@ -11,7 +12,9 @@ interface Props {
   isSelectedInvalid?: boolean;
   disabled?: boolean;
   cardsPerRow?: number;
-  onPress: () => void;
+  hasTopMargin?: boolean;
+  isBack?: boolean;
+  onPress?: () => void;
 }
 
 export const CardButton = ({
@@ -21,20 +24,28 @@ export const CardButton = ({
   disabled,
   isSelected,
   isSelectedInvalid,
-  buttonStyle,
+  style,
   cardsPerRow = 5,
+  hasTopMargin,
+  isBack,
   onPress,
 }: Props) => {
   return (
-    <Pressable onPress={onPress} style={buttonStyle} disabled={disabled}>
+    <Pressable
+      onPress={onPress}
+      style={[style, cardStyles.transition]}
+      disabled={disabled || !onPress}
+    >
       <Card
         suit={suit}
         rank={rank}
         isPlaceholder={isPlaceholder}
-        cardsPerRow={cardsPerRow}
-        isSelectable={!disabled}
+        isSelectable={!disabled && onPress !== undefined}
         isSelected={isSelected}
         isSelectedInvalid={isSelectedInvalid}
+        cardsPerRow={cardsPerRow}
+        hasTopMargin={hasTopMargin}
+        isBack={isBack}
       />
     </Pressable>
   );

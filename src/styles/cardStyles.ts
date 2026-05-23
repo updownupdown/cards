@@ -2,6 +2,12 @@ import { StyleSheet } from "react-native";
 import { flexStyles } from "./layoutStyles";
 import { Colors, FontWeight } from "@/styles/styles";
 
+const cardTransition = {
+  transitionDuration: "0.5s",
+  transitionProperty: "all",
+  transitionTimingFunction: "ease",
+};
+
 export const cardStyles = StyleSheet.create({
   row: {
     ...flexStyles.rowCentered,
@@ -9,6 +15,9 @@ export const cardStyles = StyleSheet.create({
     flexWrap: "wrap",
     alignItems: "flex-start",
     justifyContent: "space-between",
+  },
+  rowAlignDown: {
+    alignContent: "flex-end",
   },
   rowGap4: {
     gap: 10,
@@ -23,34 +32,30 @@ export const cardStyles = StyleSheet.create({
   colUpwards: {
     ...flexStyles.colCentered,
     flex: 1,
-    height: "100%",
     alignItems: "center",
     justifyContent: "flex-end",
   },
-
+  transition: {
+    ...cardTransition,
+  },
   // Card itself
   card: {
-    transitionDuration: "0.2s",
-    transitionProperty: "all",
-    transitionTimingFunction: "ease",
-    height: "auto",
+    overflow: "hidden",
+    ...cardTransition,
   },
   // Deck
   deck: {
     position: "relative",
+    backgroundColor: Colors.K900,
   },
   deckCard: {
     position: "absolute",
-    top: 0,
-    left: 0,
   },
-  deckCardBottom: {
-    position: "relative",
+  animHide: {
+    opacity: 0,
+    pointerEvents: "none",
   },
-  // deckCardTopOnly: {
-  //   position: "relative",
-  //   transform: "unset",
-  // },
+  // Deck count
   deckCount: {
     ...flexStyles.colCentered,
     position: "absolute",
