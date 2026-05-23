@@ -1,19 +1,23 @@
 import { cardStyles } from "@/styles/cardStyles";
-import { Text, View, ViewStyle } from "react-native";
-import { Card } from "./Card";
 import React from "react";
+import { Text, View } from "react-native";
+import { Card } from "./Card";
 import { CardRank, CardSuit } from "./card-utils";
+import { clamp } from "@/utils/utils";
 
 export const DEFAULT_FRONT_OVERLAP = 0.7;
 export const DEFAULT_BACK_OVERLAP = 0.9;
+
+const minFanSize = 9;
+const maxFanSize = 24;
+const fanSizeDelta = maxFanSize - minFanSize;
+const progressFanProximityThreshold = 4;
+const maxBackDeckSize = 3;
 
 type DeckCard = {
   rank: CardRank;
   suit: CardSuit;
 };
-
-const minFanSize = 8;
-const maxFanSize = 20;
 
 type DeckProps = {
   backCount?: number;
@@ -25,7 +29,7 @@ type DeckProps = {
     | "verticalDown"
     | undefined;
   largeFan?: "all" | "progressive";
-  widthPerc?: number;
+  cardsPerRow?: number;
   showCount?: boolean;
   title?: string;
   children?: React.ReactNode;
@@ -37,14 +41,14 @@ export function Deck({
   showCount,
   fan = "horizontalRight",
   largeFan,
-  widthPerc = 25,
+  cardsPerRow = 5,
   title,
   children,
 }: DeckProps) {
   let deckSize = 0;
 
   if (backCount) {
-    deckSize = Math.min(backCount, 6);
+    deckSize = Math.min(backCount, maxBackDeckSize);
     if (children !== undefined && backCount > 0) deckSize -= 1;
   }
 
@@ -58,19 +62,38 @@ export function Deck({
     let fanSize = minFanSize;
 
     if (largeFan === "all") {
-      fanSize = maxFanSize;
+      fanSize = maxFanSize * index;
     } else if (largeFan === "progressive") {
-      fanSize = Math.max(maxFanSize - index * 2, minFanSize);
+      let offsetTally = 0;
+
+      for (let i = 1; i <= index; i++) {
+        // Always add min offset
+        let addOffset = minFanSize;
+
+        // Add offset proportional to how close card is to top of deck,
+        // if card is close to the top
+        const distanceFromTopCard = deckSize - i;
+        if (distanceFromTopCard < progressFanProximityThreshold) {
+          const proximityToTop = (deckSize - distanceFromTopCard) / deckSize;
+          addOffset += proximityToTop * fanSizeDelta;
+        }
+
+        offsetTally += clamp(addOffset, minFanSize, maxFanSize);
+      }
+
+      fanSize = offsetTally;
+    } else {
+      fanSize = minFanSize * index;
     }
 
     if (fan === "horizontalRight") {
-      return `translateX(${fanSize * index}%)`;
+      return `translateX(${fanSize}%)`;
     } else if (fan === "horizontalLeft") {
-      return `translateX(${-fanSize * index}%)`;
+      return `translateX(${-fanSize}%)`;
     } else if (fan === "verticalUp") {
-      return `translateY(${-fanSize * index}%)`;
+      return `translateY(${-fanSize}%)`;
     } else if (fan === "verticalDown") {
-      return `translateY(${fanSize * index}%)`;
+      return `translateY(${fanSize}%)`;
     }
   }
 
@@ -87,42 +110,39 @@ export function Deck({
       )}
 
       {deckSize === 0 && !children && (
-        <Card isPlaceholder widthPerc={widthPerc} />
+        <Card isPlaceholder cardsPerRow={cardsPerRow} />
       )}
 
       {deckSize !== 0 &&
         Array.from({ length: deckSize }, (_, index) => {
-          const fanStyle: ViewStyle = {
-            transform: cardOffset(index),
-          };
-
           return (
             <Card
               key={`back-${index}`}
-              widthPerc={widthPerc}
+              cardsPerRow={cardsPerRow}
               isBack={backCount !== undefined}
-              omitShadow={index !== 0}
+              // omitShadow={index !== 0}
               suit={cards && cards[index].suit}
               rank={cards && cards[index].rank}
               style={[
                 cardStyles.deckCard,
                 index === 0 && cardStyles.deckCardBottom,
-                fanStyle,
+                { transform: cardOffset(index) },
               ]}
             />
           );
         })}
 
-      <View
-        style={[
-          cardStyles.deckCard,
-          cardStyles.deckCardTop,
-          { transform: cardOffset(deckSize - (cards?.length !== 0 ? 1 : 0)) },
-          deckSize === 0 && cardStyles.deckCardTopOnly,
-        ]}
-      >
-        {children}
-      </View>
+      {children && (
+        <View
+          style={[
+            cardStyles.deckCard,
+            { transform: cardOffset(deckSize) },
+            deckSize === 0 && cardStyles.deckCardBottom,
+          ]}
+        >
+          {children}
+        </View>
+      )}
     </View>
   );
 }

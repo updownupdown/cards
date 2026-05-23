@@ -1,7 +1,6 @@
 import {
   Colors,
   ContentSidePadding,
-  FontWeight,
   MaxContentHeight,
   MaxContentWidth,
 } from "@/styles/styles";
@@ -98,20 +97,5 @@ export const layoutStyles = StyleSheet.create({
     backgroundColor: Colors.K850,
     gap: 20,
     paddingVertical: 20,
-  },
-  gameMessageBox: {
-    ...flexStyles.colCentered,
-    width: "100%",
-    minHeight: 80,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 20,
-    backgroundColor: Colors.K900,
-  },
-  gameMessageText: {
-    fontSize: 15,
-    fontFamily: FontWeight[300],
-    color: Colors.K200,
-    textAlign: "center",
   },
 });

@@ -186,7 +186,7 @@ export default function Clock() {
               <Card
                 suit={game.lastRevealed.suit}
                 rank={game.lastRevealed.rank}
-                widthPerc={20}
+                cardsPerRow={5}
               />
             ) : (
               <View style={styles.placeholder} />

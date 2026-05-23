@@ -253,7 +253,7 @@ export default function Scorpion() {
                     suit={card.suit}
                     rank={card.rank}
                     isBack={!card.faceUp}
-                    widthPerc={20}
+                    cardsPerRow={5}
                   />
                 </Pressable>
               );

@@ -264,7 +264,7 @@ export default function Area52() {
                 key={card.id}
                 style={idx === 0 ? styles.currentAttacker : null}
               >
-                <Card suit={card.suit} rank={card.rank} widthPerc={25} />
+                <Card suit={card.suit} rank={card.rank} cardsPerRow={4} />
               </View>
             ))}
             {game.attackerQueue.length === 0 ? (
@@ -284,7 +284,7 @@ export default function Area52() {
                   onPress={() => toggleDefender(index)}
                   suit={card.suit}
                   rank={card.rank}
-                  widthPerc={25}
+                  cardsPerRow={4}
                   isSelected={selected}
                 />
               );

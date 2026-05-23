@@ -197,9 +197,21 @@ export default function TheSandwichGuy() {
       <View style={layoutStyles.gameArea}>
         <MessageBox message={message} />
 
-        <Deck showCount widthPerc={25} backCount={game.deck.length} />
+        {game.ended && (
+          <MessageBox
+            message={
+              won
+                ? `You won by drawing out the deck. Final score (lower is better):{" "}
+            ${score}`
+                : "No valid sandwich available. You lose."
+            }
+            messageType={won ? "win" : "lose"}
+          />
+        )}
 
-        <View style={cardStyles.cardsRows}>
+        <Deck showCount cardsPerRow={4} backCount={game.deck.length} />
+
+        <View style={[cardStyles.row, cardStyles.rowGap4]}>
           {game.hand.map((card, index) => {
             const selected = !!(card && selectedIds.includes(card.id));
 
@@ -213,7 +225,7 @@ export default function TheSandwichGuy() {
                 }}
                 isSelected={selected}
                 isSelectedInvalid={selected && invalidSandwichSelected}
-                widthPerc={25}
+                cardsPerRow={4}
                 isPlaceholder={!card}
                 suit={card?.suit}
                 rank={card?.rank}
@@ -225,72 +237,9 @@ export default function TheSandwichGuy() {
         <Button
           onPress={commitSandwich}
           disabled={selectedCards.length !== 3 || invalidSandwichSelected}
-          text="Serve Selected Sandwich"
+          text="Serve Sandwich"
         />
-
-        {won ? (
-          <Text style={styles.winText}>
-            You won by drawing out the deck. Final score (lower is better):{" "}
-            {score}
-          </Text>
-        ) : null}
-
-        {lost ? (
-          <Text style={styles.loseText}>
-            No valid sandwich available. You lose.
-          </Text>
-        ) : null}
       </View>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: "100%",
-    paddingTop: 56,
-    paddingHorizontal: 10,
-    gap: 10,
-  },
-  headerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  handWrap: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 6,
-    alignItems: "flex-start",
-  },
-  cardWrap: {
-    borderRadius: 8,
-  },
-  selectedCard: {
-    transform: [{ translateY: -4 }],
-    backgroundColor: "rgba(37,99,235,0.15)",
-  },
-  commitButton: {
-    alignSelf: "flex-start",
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 8,
-    backgroundColor: "#0f766e",
-  },
-  commitButtonDisabled: {
-    opacity: 0.55,
-  },
-  commitText: {
-    color: "#fff",
-    fontFamily: "Outfit_500Medium",
-  },
-  winText: {
-    color: "#065f46",
-    fontFamily: "Outfit_600SemiBold",
-  },
-  loseText: {
-    color: "#991b1b",
-    fontFamily: "Outfit_600SemiBold",
-  },
-});

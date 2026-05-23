@@ -128,7 +128,7 @@ export default function Accordion() {
                 isSelected ? styles.cardSelected : null,
               ]}
             >
-              <Card suit={card.suit} rank={card.rank} widthPerc={20} />
+              <Card suit={card.suit} rank={card.rank} cardsPerRow={5} />
               <Text style={styles.smallText}>{idx + 1}</Text>
             </Pressable>
           );

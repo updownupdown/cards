@@ -346,7 +346,7 @@ export default function SpiderSolitaire() {
       <View style={styles.stockRow}>
         <View style={styles.stockSlot}>
           {game.stock.length > 0 ? (
-            <Card suit="spades" rank="Back" widthPerc={20} isBack />
+            <Card suit="spades" rank="Back" cardsPerRow={5} isBack />
           ) : (
             <Text style={styles.slotLabel}>Empty</Text>
           )}
@@ -397,7 +397,7 @@ export default function SpiderSolitaire() {
                     <Card
                       suit={card.suit}
                       rank={card.rank}
-                      widthPerc={20}
+                      cardsPerRow={5}
                       isBack={!card.faceUp}
                     />
                   </View>
@@ -422,7 +422,7 @@ export default function SpiderSolitaire() {
           <Card
             suit={dragGhost.card.suit}
             rank={dragGhost.card.rank}
-            widthPerc={20}
+            cardsPerRow={5}
           />
         </Animated.View>
       ) : null}

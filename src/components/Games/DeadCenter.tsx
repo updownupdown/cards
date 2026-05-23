@@ -359,7 +359,7 @@ export default function DeadCenter() {
                 ? "Joker"
                 : game.currentDraw.rank
             }
-            widthPerc={20}
+            cardsPerRow={5}
           />
         </View>
       ) : null}
@@ -383,7 +383,7 @@ export default function DeadCenter() {
                 <Card
                   suit={top.suit}
                   rank={top.rank === "Joker" ? "Joker" : top.rank}
-                  widthPerc={20}
+                  cardsPerRow={5}
                 />
                 <Text style={styles.pileDepth}>x{pile.length}</Text>
               </Pressable>
@@ -424,10 +424,10 @@ export default function DeadCenter() {
                   <Card
                     suit={z.card.suit}
                     rank={z.card.rank === "Joker" ? "Joker" : z.card.rank}
-                    widthPerc={20}
+                    cardsPerRow={5}
                   />
                 ) : (
-                  <Card suit={z.card.suit} isBack widthPerc={20} />
+                  <Card suit={z.card.suit} isBack cardsPerRow={5} />
                 )}
               </Pressable>
             );

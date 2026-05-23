@@ -233,9 +233,9 @@ export default function MonteCarlo() {
                   disabled={game.ended}
                 >
                   {cell ? (
-                    <Card suit={cell.suit} rank={cell.rank} widthPerc={15} />
+                    <Card suit={cell.suit} rank={cell.rank} cardsPerRow={5} />
                   ) : (
-                    <Card isPlaceholder widthPerc={15} />
+                    <Card isPlaceholder cardsPerRow={5} />
                   )}
                 </Pressable>
               );

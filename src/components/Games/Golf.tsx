@@ -146,9 +146,9 @@ export default function Golf() {
       <View style={layoutStyles.gameArea}>
         <MessageBox message={message} />
 
-        <View style={[cardStyles.cardsRows, flexStyles.flex1]}>
+        <View style={[cardStyles.row, flexStyles.flex1]}>
           {game.tableau.map((col, colIndex) => (
-            <View key={`g-col-${colIndex}`} style={cardStyles.cardsCols}>
+            <View key={`g-col-${colIndex}`} style={cardStyles.colDownwards}>
               {col.map((card, cardIndex) => (
                 <CardButton
                   key={card.id}
@@ -156,7 +156,7 @@ export default function Golf() {
                   disabled={game.ended || cardIndex !== col.length - 1}
                   suit={card.suit}
                   rank={card.rank}
-                  widthPerc={100 / 7}
+                  cardsPerRow={7}
                 />
               ))}
             </View>
@@ -171,20 +171,30 @@ export default function Golf() {
           ]}
         >
           <View style={flexStyles.colCentered}>
-            <Deck showCount widthPerc={100 / 7} backCount={game.stock.length} />
+            <Deck showCount backCount={game.stock.length} cardsPerRow={4} />
           </View>
 
           <View style={flexStyles.colCentered}>
-            {game.waste.length > 0 ? (
+            <Deck
+              backCount={game.stock.length}
+              showCount
+              fan="horizontalRight"
+              cardsPerRow={4}
+            >
               <Card
-                suit={game.waste[game.waste.length - 1].suit}
-                rank={game.waste[game.waste.length - 1].rank}
-                widthPerc={100 / 4}
-                cardSize="regular"
+                suit={
+                  game.waste.length
+                    ? game.waste[game.waste.length - 1].suit
+                    : undefined
+                }
+                rank={
+                  game.waste.length
+                    ? game.waste[game.waste.length - 1].rank
+                    : undefined
+                }
+                cardsPerRow={4}
               />
-            ) : (
-              <Card isPlaceholder cardSize="regular" />
-            )}
+            </Deck>
           </View>
 
           <View style={flexStyles.colCentered}>

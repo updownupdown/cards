@@ -1,15 +1,13 @@
-import { useMemo, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import InfoModal from "../Modals/InfoModal";
-import { Card } from "../Cards/Card";
-import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
-import { GameHeader } from "../common/GameHeader";
+import { cardStyles } from "@/styles/cardStyles";
 import { flexStyles, layoutStyles } from "@/styles/layoutStyles";
-import { buttonStyles } from "@/styles/buttonStyles";
-import { Button } from "../Button/Button";
 import { textStyles } from "@/styles/textStyles";
+import { useMemo, useState } from "react";
+import { Text, View } from "react-native";
+import { Button } from "../Button/Button";
+import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
 import { CardButton } from "../Cards/CardButton";
 import { Deck } from "../Cards/Deck";
+import { GameHeader } from "../common/GameHeader";
 import { MessageBox } from "../common/MessageBox";
 
 type AcesUpState = {
@@ -109,11 +107,12 @@ export default function AcesUp() {
     [game.piles],
   );
 
-  const canDeal = useMemo(() => {
-    if (game.ended || game.stock.length < 4) return false;
-    if (discardable.size > 0) return false;
-    return true;
-  }, [discardable, game.ended, game.piles, game.stock.length]);
+  // For now, always allow dealing
+  // const canDeal = useMemo(() => {
+  //   if (game.ended || game.stock.length < 4) return false;
+  //   if (discardable.size > 0) return false;
+  //   return true;
+  // }, [discardable, game.ended, game.piles, game.stock.length]);
 
   function reset() {
     setGame(setup());
@@ -222,6 +221,15 @@ export default function AcesUp() {
       <View style={layoutStyles.gameArea}>
         <MessageBox message={message} />
 
+        {game.ended ? (
+          <MessageBox
+            messageType={game.won ? "win" : "lose"}
+            message={
+              game.won ? "You won!" : "No legal moves remain with stock empty."
+            }
+          />
+        ) : null}
+
         <View
           style={[
             flexStyles.rowCentered,
@@ -231,7 +239,7 @@ export default function AcesUp() {
         >
           <Deck
             backCount={game.discard.length}
-            widthPerc={25}
+            cardsPerRow={4}
             fan="horizontalRight"
             title="Discard"
             showCount
@@ -239,14 +247,14 @@ export default function AcesUp() {
 
           <Deck
             backCount={game.stock.length}
-            widthPerc={25}
+            cardsPerRow={4}
             fan="horizontalRight"
             title="Stock"
             showCount
           />
         </View>
 
-        <View style={[localStyles.row, flexStyles.flex1]}>
+        <View style={[cardStyles.row, flexStyles.flex1]}>
           {game.piles.map((pile, idx) => {
             const top = topCard(pile);
             const isSelected = selectedPile === idx;
@@ -257,13 +265,14 @@ export default function AcesUp() {
             });
 
             return (
-              <View key={`pile-${idx}`} style={[localStyles.col]}>
-                <Text style={textStyles.default}>Count: {pile.length}</Text>
-
+              <View
+                key={`pile-${idx}`}
+                style={[cardStyles.colUpwards, flexStyles.gap12]}
+              >
                 <Deck
-                  widthPerc={25}
-                  fan="verticalDown"
-                  largeFan="all"
+                  cardsPerRow={4}
+                  fan="verticalUp"
+                  largeFan="progressive"
                   cards={cardsBelowTop}
                 >
                   <CardButton
@@ -277,11 +286,13 @@ export default function AcesUp() {
                     suit={top ? top.suit : undefined}
                     rank={top ? top.rank : undefined}
                     isPlaceholder={!top}
-                    widthPerc={25}
+                    cardsPerRow={4}
                     isSelected={isSelected}
                     disabled={!canDiscard && !hasEmptyPile}
                   />
                 </Deck>
+
+                <Text style={textStyles.default}>{pile.length}</Text>
               </View>
             );
           })}
@@ -289,28 +300,11 @@ export default function AcesUp() {
 
         <Button
           onPress={dealFour}
+          // For now, allow user to deal even if some cards can be removed
           // disabled={!canDeal}
-          text="Deal 4"
+          text="Deal"
         />
-
-        {game.ended ? (
-          <Text style={textStyles.default}>
-            {game.won
-              ? "You won. Only four aces remain!"
-              : "No legal moves remain with stock empty."}
-          </Text>
-        ) : null}
       </View>
     </>
   );
 }
-
-const localStyles = StyleSheet.create({
-  row: {
-    ...flexStyles.rowCentered,
-    alignItems: "flex-start",
-  },
-  col: {
-    ...flexStyles.colCentered,
-  },
-});

@@ -218,7 +218,7 @@ export default function LootTheLoop() {
               suit={top.suit}
               rank={top.rank === "Joker" ? "Joker" : top.rank}
               isBack={!top.faceUp}
-              widthPerc={20}
+              cardsPerRow={5}
             />
           ) : null}
           {second ? (
@@ -226,7 +226,7 @@ export default function LootTheLoop() {
               suit={second.suit}
               rank={second.rank === "Joker" ? "Joker" : second.rank}
               isBack={!second.faceUp}
-              widthPerc={20}
+              cardsPerRow={5}
             />
           ) : null}
         </View>

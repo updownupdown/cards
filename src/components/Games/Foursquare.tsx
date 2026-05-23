@@ -259,7 +259,7 @@ export default function Foursquare() {
           <Card
             suit={game.current.suit}
             rank={game.current.rank}
-            widthPerc={20}
+            cardsPerRow={5}
           />
         </View>
       ) : null}
@@ -284,7 +284,7 @@ export default function Foursquare() {
                     suit={top(pile).suit}
                     rank={top(pile).rank}
                     isBack={!top(pile).faceUp}
-                    widthPerc={20}
+                    cardsPerRow={5}
                   />
                 ) : (
                   <Text style={styles.cellHint}>{isLegal ? "Drop" : ""}</Text>

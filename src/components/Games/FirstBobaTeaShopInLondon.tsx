@@ -167,7 +167,7 @@ export default function FirstBobaTeaShopInLondon() {
                 key={card.id}
                 style={{ marginTop: i === 0 ? 0 : -44, zIndex: i + 1 }}
               >
-                <Card suit={card.suit} rank={card.rank} widthPerc={20} />
+                <Card suit={card.suit} rank={card.rank} cardsPerRow={5} />
               </View>
             ))}
           </Pressable>

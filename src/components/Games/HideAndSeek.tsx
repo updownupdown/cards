@@ -251,7 +251,7 @@ export default function HideAndSeek() {
                 suit={card.suit}
                 rank={card.rank}
                 isBack={!game.revealed[idx]}
-                widthPerc={20}
+                cardsPerRow={5}
               />
             </Pressable>
           ))}
@@ -271,7 +271,7 @@ export default function HideAndSeek() {
                   <Card
                     suit={slot.card.suit}
                     rank={slot.card.rank}
-                    widthPerc={20}
+                    cardsPerRow={5}
                   />
                 ) : (
                   <Text style={styles.slotHint}>Place</Text>

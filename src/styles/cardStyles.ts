@@ -3,19 +3,34 @@ import { flexStyles } from "./layoutStyles";
 import { Colors, FontWeight } from "@/styles/styles";
 
 export const cardStyles = StyleSheet.create({
-  cardsCols: {
-    ...flexStyles.colCentered,
-    flex: 1,
-    justifyContent: "center",
-  },
-  cardsRows: {
+  row: {
     ...flexStyles.rowCentered,
+    width: "100%",
     flexWrap: "wrap",
     alignItems: "flex-start",
+    justifyContent: "space-between",
   },
+  rowGap4: {
+    gap: 10,
+  },
+  colDownwards: {
+    ...flexStyles.colCentered,
+    flex: 1,
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  colUpwards: {
+    ...flexStyles.colCentered,
+    flex: 1,
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "flex-end",
+  },
+
   // Card itself
   card: {
-    transitionDuration: "0.1s",
+    transitionDuration: "0.2s",
     transitionProperty: "all",
     transitionTimingFunction: "ease",
     height: "auto",
@@ -32,11 +47,10 @@ export const cardStyles = StyleSheet.create({
   deckCardBottom: {
     position: "relative",
   },
-  deckCardTop: {},
-  deckCardTopOnly: {
-    position: "relative",
-    transform: "unset",
-  },
+  // deckCardTopOnly: {
+  //   position: "relative",
+  //   transform: "unset",
+  // },
   deckCount: {
     ...flexStyles.colCentered,
     position: "absolute",

@@ -1,4 +1,6 @@
+import { useNavigation } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { GestureResponderEvent, View as RNView } from "react-native";
 import {
   Animated,
   Easing,
@@ -8,32 +10,30 @@ import {
   Text,
   View,
 } from "react-native";
-import type { GestureResponderEvent, View as RNView } from "react-native";
-import { useNavigation } from "expo-router";
 import { Card } from "../Cards/Card";
 import {
-  CardRank,
   CardSuit,
   DRAG_CAPTURE_THRESHOLD,
   DRAG_MOVE_THRESHOLD,
+  isRed,
+  PlayingCard,
+  RANK_VALUE,
+  RANKS,
+  shuffle,
+  SUITS,
 } from "../Cards/card-utils";
 import { Deck } from "../Cards/Deck";
 import { GameHeader } from "../common/GameHeader";
-
-type StandardRank = Exclude<CardRank, "Joker" | "Back">;
-
-type SolitaireCard = {
-  id: string;
-  suit: CardSuit;
-  rank: StandardRank;
-  faceUp: boolean;
-};
+import { flexStyles, layoutStyles } from "@/styles/layoutStyles";
+import { Button } from "../Button/Button";
+import { MessageBox } from "../common/MessageBox";
+import { cardStyles } from "@/styles/cardStyles";
 
 type GameState = {
-  tableau: SolitaireCard[][];
-  stock: SolitaireCard[];
-  waste: SolitaireCard[];
-  foundations: Record<CardSuit, SolitaireCard[]>;
+  tableau: PlayingCard[][];
+  stock: PlayingCard[];
+  waste: PlayingCard[];
+  foundations: Record<CardSuit, PlayingCard[]>;
 };
 
 type Selection =
@@ -57,57 +57,12 @@ type Rect = {
 
 type DragGhost = {
   source: MoveSource;
-  cards: SolitaireCard[];
+  cards: PlayingCard[];
   origin: { x: number; y: number };
-};
-
-const SUITS: CardSuit[] = ["clubs", "diamonds", "hearts", "spades"];
-const RANKS: StandardRank[] = [
-  "A",
-  "2",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9",
-  "10",
-  "J",
-  "Q",
-  "K",
-];
-const RANK_VALUE: Record<StandardRank, number> = {
-  A: 1,
-  "2": 2,
-  "3": 3,
-  "4": 4,
-  "5": 5,
-  "6": 6,
-  "7": 7,
-  "8": 8,
-  "9": 9,
-  "10": 10,
-  J: 11,
-  Q: 12,
-  K: 13,
 };
 
 const TABLEAU_GAP = 18;
 const DOUBLE_TAP_MS = 300;
-
-function isRed(suit: CardSuit) {
-  return suit === "hearts" || suit === "diamonds";
-}
-
-function shuffle<T>(items: T[]) {
-  const next = [...items];
-  for (let i = next.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [next[i], next[j]] = [next[j], next[i]];
-  }
-  return next;
-}
 
 function cloneGameState(prev: GameState): GameState {
   return {
@@ -135,7 +90,7 @@ function createInitialState(): GameState {
     ),
   );
 
-  const tableau: SolitaireCard[][] = Array.from({ length: 7 }, () => []);
+  const tableau: PlayingCard[][] = Array.from({ length: 7 }, () => []);
   let cursor = 0;
 
   for (let pile = 0; pile < 7; pile += 1) {
@@ -161,10 +116,7 @@ function createInitialState(): GameState {
   };
 }
 
-function canPlaceOnTableau(
-  card: SolitaireCard,
-  destinationTop?: SolitaireCard,
-) {
+function canPlaceOnTableau(card: PlayingCard, destinationTop?: PlayingCard) {
   if (!destinationTop) {
     return card.rank === "K";
   }
@@ -175,10 +127,7 @@ function canPlaceOnTableau(
   );
 }
 
-function canPlaceOnFoundation(
-  card: SolitaireCard,
-  destinationTop?: SolitaireCard,
-) {
+function canPlaceOnFoundation(card: PlayingCard, destinationTop?: PlayingCard) {
   if (!destinationTop) {
     return card.rank === "A";
   }
@@ -189,7 +138,7 @@ function canPlaceOnFoundation(
   );
 }
 
-function isValidTableauRun(cards: SolitaireCard[]) {
+function isValidTableauRun(cards: PlayingCard[]) {
   if (cards.length <= 1) return true;
 
   for (let i = 0; i < cards.length - 1; i += 1) {
@@ -203,7 +152,7 @@ function isValidTableauRun(cards: SolitaireCard[]) {
   return true;
 }
 
-function revealLastIfNeeded(pile: SolitaireCard[]) {
+function revealLastIfNeeded(pile: PlayingCard[]) {
   if (pile.length === 0) return pile;
   const last = pile[pile.length - 1];
   if (last.faceUp) return pile;
@@ -275,7 +224,6 @@ export default function Solitaire() {
   const tableauRefs = useRef<Array<RNView | null>>([]);
   const tableauCardRefs = useRef<Record<string, RNView | null>>({});
 
-  const widthRatio = 9;
   const wasteTop = game.waste[game.waste.length - 1];
 
   const won = useMemo(
@@ -508,7 +456,7 @@ export default function Solitaire() {
 
     applyGameUpdate((prev) => {
       const next = cloneGameState(prev);
-      let moving: SolitaireCard | null = null;
+      let moving: PlayingCard | null = null;
 
       if (source.zone === "waste") {
         moving = next.waste[next.waste.length - 1] ?? null;
@@ -553,7 +501,7 @@ export default function Solitaire() {
 
     applyGameUpdate((prev) => {
       const next = cloneGameState(prev);
-      let movingCards: SolitaireCard[] = [];
+      let movingCards: PlayingCard[] = [];
 
       if (source.zone === "waste") {
         const top = next.waste[next.waste.length - 1];
@@ -599,7 +547,7 @@ export default function Solitaire() {
   }
 
   async function tryAutoFoundation(source: MoveSource) {
-    let sourceCard: SolitaireCard | undefined;
+    let sourceCard: PlayingCard | undefined;
 
     if (source.zone === "waste") {
       sourceCard = game.waste[game.waste.length - 1];
@@ -832,158 +780,155 @@ export default function Solitaire() {
   const ghostTop = dragGhost ? dragGhost.origin.y - boardOrigin.y : 0;
 
   return (
-    <View ref={boardRef} onLayout={updateBoardOrigin} style={styles.container}>
+    <>
       <GameHeader
         gameTitle="Solitaire"
         ended={won}
         won={won}
         reset={resetGame}
       />
+      <View
+        ref={boardRef}
+        onLayout={updateBoardOrigin}
+        style={layoutStyles.gameArea}
+      >
+        {won && <MessageBox messageType="win" message="You won!" />}
 
-      <View style={styles.headerRow}>
-        <View style={styles.headerButtonRow}>
-          <Pressable
+        <View
+          style={[
+            flexStyles.rowCentered,
+            flexStyles.justifyEvenly,
+            flexStyles.fullWidth,
+          ]}
+        >
+          <Button
             onPress={undoMove}
             disabled={history.length === 0 || !!dragGhost || isAnimating}
-            style={[
-              styles.button,
-              history.length === 0 || !!dragGhost || isAnimating
-                ? styles.buttonDisabled
-                : null,
-            ]}
-          >
-            <Text style={styles.buttonText}>Undo</Text>
-          </Pressable>
-          <Pressable
+            text="Undo"
+          />
+          <Button
             onPress={resetGame}
             disabled={!!dragGhost || isAnimating}
-            style={[
-              styles.button,
-              dragGhost || isAnimating ? styles.buttonDisabled : null,
-            ]}
-          >
-            <Text style={styles.buttonText}>New Game</Text>
-          </Pressable>
+            text="New game"
+          />
         </View>
-      </View>
 
-      {won && <Text style={styles.winText}>You won!</Text>}
-
-      <View style={styles.topRow}>
-        <View style={styles.stockWasteRow}>
-          <Pressable onPress={drawFromStock} style={styles.cardSlot}>
-            {game.stock.length > 0 ? (
-              <Deck
-                backCount={Math.min(game.stock.length, 8)}
-                // widthRatio={widthRatio}
-                widthPerc={100 / 7}
-
-                // backOverlap={0.95}
-                // frontOverlap={0.95}
-              />
-            ) : (
-              <Text style={styles.slotLabel}>Recycle</Text>
-            )}
-          </Pressable>
-
-          <View
-            ref={wasteRef}
-            collapsable={false}
-            {...(wasteDragHandlers ?? {})}
-          >
-            <Pressable
-              style={[
-                styles.cardSlot,
-                selected?.zone === "waste" ? styles.selectedSlot : null,
-                dragGhost?.source.zone === "waste" ? styles.draggingSlot : null,
-              ]}
-            >
-              {wasteTop ? (
-                <View
-                  style={
-                    dragGhost?.source.zone === "waste"
-                      ? styles.hiddenDuringDrag
-                      : undefined
-                  }
-                >
-                  <Card
-                    suit={wasteTop.suit}
-                    rank={wasteTop.rank}
-                    widthPerc={100 / 7}
-                  />
-                </View>
+        <View
+          style={[
+            flexStyles.rowCentered,
+            flexStyles.fullWidth,
+            flexStyles.justifyEvenly,
+          ]}
+        >
+          <View style={[flexStyles.rowCentered, flexStyles.gap10]}>
+            <Pressable onPress={drawFromStock} style={styles.cardSlot}>
+              {game.stock.length > 0 ? (
+                <Deck
+                  backCount={Math.min(game.stock.length, 8)}
+                  cardsPerRow={7}
+                />
               ) : (
-                <Text style={styles.slotLabel}>Waste</Text>
+                <Text style={styles.slotLabel}>Recycle</Text>
               )}
             </Pressable>
+
+            <View
+              ref={wasteRef}
+              collapsable={false}
+              {...(wasteDragHandlers ?? {})}
+            >
+              <Pressable
+                style={[
+                  styles.cardSlot,
+                  selected?.zone === "waste" ? styles.selectedSlot : null,
+                  dragGhost?.source.zone === "waste"
+                    ? styles.draggingSlot
+                    : null,
+                ]}
+              >
+                {wasteTop ? (
+                  <View
+                    style={
+                      dragGhost?.source.zone === "waste"
+                        ? styles.hiddenDuringDrag
+                        : undefined
+                    }
+                  >
+                    <Card
+                      suit={wasteTop.suit}
+                      rank={wasteTop.rank}
+                      cardsPerRow={7}
+                    />
+                  </View>
+                ) : (
+                  <Text style={styles.slotLabel}>Waste</Text>
+                )}
+              </Pressable>
+            </View>
+          </View>
+
+          <View
+            style={[flexStyles.rowCentered, flexStyles.gap10, flexStyles.flex1]}
+          >
+            {SUITS.map((suit) => {
+              const top =
+                game.foundations[suit][game.foundations[suit].length - 1];
+              const selectedFoundation =
+                selected?.zone === "foundation" && selected.suit === suit;
+              const foundationDragHandlers =
+                top && !selectedFoundation
+                  ? makeDragHandlers({ zone: "foundation", suit }, () =>
+                      onFoundationPress(suit),
+                    )
+                  : null;
+
+              return (
+                <View
+                  key={suit}
+                  ref={(node) => {
+                    foundationRefs.current[suit] = node;
+                  }}
+                  collapsable={false}
+                  {...(foundationDragHandlers ?? {})}
+                >
+                  <Pressable
+                    style={[
+                      styles.cardSlot,
+                      selectedFoundation ? styles.selectedSlot : null,
+                      hoverTarget?.zone === "foundation" &&
+                      hoverTarget.suit === suit
+                        ? styles.dropHintSlot
+                        : null,
+                      dragGhost?.source.zone === "foundation" &&
+                      dragGhost.source.suit === suit
+                        ? styles.draggingSlot
+                        : null,
+                    ]}
+                  >
+                    {top ? (
+                      <View
+                        style={
+                          dragGhost?.source.zone === "foundation" &&
+                          dragGhost.source.suit === suit
+                            ? styles.hiddenDuringDrag
+                            : undefined
+                        }
+                      >
+                        <Card suit={top.suit} rank={top.rank} cardsPerRow={7} />
+                      </View>
+                    ) : (
+                      <Text style={styles.slotLabel}>
+                        {suit[0].toUpperCase()}
+                      </Text>
+                    )}
+                  </Pressable>
+                </View>
+              );
+            })}
           </View>
         </View>
 
-        <View style={styles.foundationRow}>
-          {SUITS.map((suit) => {
-            const top =
-              game.foundations[suit][game.foundations[suit].length - 1];
-            const selectedFoundation =
-              selected?.zone === "foundation" && selected.suit === suit;
-            const foundationDragHandlers =
-              top && !selectedFoundation
-                ? makeDragHandlers({ zone: "foundation", suit }, () =>
-                    onFoundationPress(suit),
-                  )
-                : null;
-
-            return (
-              <View
-                key={suit}
-                ref={(node) => {
-                  foundationRefs.current[suit] = node;
-                }}
-                collapsable={false}
-                {...(foundationDragHandlers ?? {})}
-              >
-                <Pressable
-                  style={[
-                    styles.cardSlot,
-                    selectedFoundation ? styles.selectedSlot : null,
-                    hoverTarget?.zone === "foundation" &&
-                    hoverTarget.suit === suit
-                      ? styles.dropHintSlot
-                      : null,
-                    dragGhost?.source.zone === "foundation" &&
-                    dragGhost.source.suit === suit
-                      ? styles.draggingSlot
-                      : null,
-                  ]}
-                >
-                  {top ? (
-                    <View
-                      style={
-                        dragGhost?.source.zone === "foundation" &&
-                        dragGhost.source.suit === suit
-                          ? styles.hiddenDuringDrag
-                          : undefined
-                      }
-                    >
-                      <Card
-                        suit={top.suit}
-                        rank={top.rank}
-                        widthPerc={100 / 7}
-                      />
-                    </View>
-                  ) : (
-                    <Text style={styles.slotLabel}>
-                      {suit[0].toUpperCase()}
-                    </Text>
-                  )}
-                </Pressable>
-              </View>
-            );
-          })}
-        </View>
-      </View>
-
-      <View style={styles.tableauScrollContent}>
-        <View style={styles.tableauRow}>
+        <View style={[cardStyles.row, flexStyles.flex1]}>
           {game.tableau.map((pile, pileIndex) => {
             const pileHeight = Math.max(200, pile.length * TABLEAU_GAP + 180);
 
@@ -1051,7 +996,7 @@ export default function Solitaire() {
                           suit={card.suit}
                           rank={card.rank}
                           isBack={!card.faceUp}
-                          widthPerc={100 / 7}
+                          cardsPerRow={7}
                         />
                       </View>
                     </View>
@@ -1061,93 +1006,41 @@ export default function Solitaire() {
             );
           })}
         </View>
-      </View>
 
-      {dragGhost && (
-        <Animated.View
-          style={[
-            styles.ghostLayer,
-            styles.ghostNoPointerEvents,
-            {
-              left: ghostLeft,
-              top: ghostTop,
-              transform: dragTranslate.getTranslateTransform(),
-            },
-          ]}
-        >
-          {dragGhost.cards.map((card, index) => (
-            <View
-              key={`ghost-${card.id}`}
-              style={[
-                styles.ghostCard,
-                { top: index * TABLEAU_GAP, zIndex: index + 1 },
-              ]}
-            >
-              <Card suit={card.suit} rank={card.rank} widthPerc={100 / 7} />
-            </View>
-          ))}
-        </Animated.View>
-      )}
-    </View>
+        {dragGhost && (
+          <Animated.View
+            style={[
+              styles.ghostLayer,
+              styles.ghostNoPointerEvents,
+              {
+                left: ghostLeft,
+                top: ghostTop,
+                transform: dragTranslate.getTranslateTransform(),
+              },
+            ]}
+          >
+            {dragGhost.cards.map((card, index) => (
+              <View
+                key={`ghost-${card.id}`}
+                style={[
+                  styles.ghostCard,
+                  { top: index * TABLEAU_GAP, zIndex: index + 1 },
+                ]}
+              >
+                <Card suit={card.suit} rank={card.rank} cardsPerRow={7} />
+              </View>
+            ))}
+          </Animated.View>
+        )}
+      </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: "100%",
-    paddingVertical: 12,
-    gap: 12,
-  },
-  headerRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-    paddingHorizontal: 8,
-    marginTop: 40,
-  },
-  headerButtonRow: {
-    flexDirection: "row",
-    gap: 8,
-  },
-  title: {
-    fontSize: 24,
-    fontFamily: "Outfit_600SemiBold",
-    color: "#1f2937",
-  },
-  button: {
-    backgroundColor: "#1d4ed8",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  buttonDisabled: {
-    opacity: 0.45,
-  },
-  buttonText: {
-    color: "#fff",
-    fontFamily: "Outfit_500Medium",
-  },
-  winText: {
-    color: "#047857",
-    fontFamily: "Outfit_600SemiBold",
-    paddingHorizontal: 8,
-  },
-  topRow: {
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 8,
-    paddingLeft: 18,
-  },
   stockWasteRow: {
     flexDirection: "row",
     gap: 8,
-  },
-  foundationRow: {
-    flexDirection: "row",
-    gap: 6,
   },
   cardSlot: {
     borderWidth: 1,
@@ -1185,13 +1078,6 @@ const styles = StyleSheet.create({
   },
   tableauScrollContent: {
     paddingBottom: 20,
-  },
-  tableauRow: {
-    flexDirection: "row",
-    gap: 6,
-    alignItems: "flex-start",
-    paddingLeft: 2,
-    paddingRight: 4,
   },
   tableauPile: {
     width: 52,

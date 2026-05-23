@@ -265,7 +265,7 @@ export default function Skyway() {
                   key={card.id}
                   style={{ marginTop: i === 0 ? 0 : -48, zIndex: i + 1 }}
                 >
-                  <Card suit={card.suit} rank={card.rank} widthPerc={20} />
+                  <Card suit={card.suit} rank={card.rank} cardsPerRow={5} />
                 </View>
               ))}
             </Pressable>
@@ -300,7 +300,7 @@ export default function Skyway() {
                     zIndex: i + 1,
                   }}
                 >
-                  <Card suit={card.suit} rank={card.rank} widthPerc={20} />
+                  <Card suit={card.suit} rank={card.rank} cardsPerRow={5} />
                 </View>
               ))}
             </Pressable>

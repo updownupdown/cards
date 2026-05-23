@@ -12,7 +12,7 @@ export type CardProps = Omit<SvgProps, "width" | "height" | "style"> & {
   isBack?: boolean;
   isPlaceholder?: boolean;
   style?: (ViewStyle | false)[];
-  widthPerc?: number;
+  cardsPerRow?: number;
   omitShadow?: boolean;
   isSelectable?: boolean;
   isSelected?: boolean;
@@ -26,7 +26,7 @@ export function Card({
   suit,
   isBack,
   isPlaceholder,
-  widthPerc = 25,
+  cardsPerRow = 5,
   omitShadow,
   isSelectable,
   isSelected,
@@ -55,17 +55,16 @@ export function Card({
 
   const contentWidth = Math.min(windowWidth, MaxContentWidth);
 
-  const paddingRatio = 0.1;
-
-  const cardAndPaddingWidth = (widthPerc / 100) * contentWidth;
-  const paddingWidth = cardAndPaddingWidth * paddingRatio;
-  const cardWidth = cardAndPaddingWidth - paddingWidth * 2;
+  const widthRatio = 0.82;
+  const cardWidthRequested = (100 / cardsPerRow / 100) * contentWidth;
+  const cardWidth = cardWidthRequested * widthRatio;
+  const cardVerticalMargin = cardWidthRequested * (1 - widthRatio);
 
   const cardStyle: ViewStyle = {};
 
   cardStyle.width = cardWidth;
-  cardStyle.margin = paddingWidth;
   cardStyle.borderRadius = cardWidth * 0.08;
+  cardStyle.marginTop = cardVerticalMargin;
 
   const shadowUnit = cardWidth * 0.01;
 

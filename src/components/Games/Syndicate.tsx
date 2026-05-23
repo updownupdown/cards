@@ -246,7 +246,7 @@ export default function Syndicate() {
                       : undefined
                   }
                 >
-                  <Card suit={card.suit} rank={card.rank} widthPerc={20} />
+                  <Card suit={card.suit} rank={card.rank} cardsPerRow={5} />
                 </Pressable>
               ))
             ) : (
@@ -297,7 +297,7 @@ export default function Syndicate() {
                     }}
                     style={selected ? styles.selectedCard : undefined}
                   >
-                    <Card suit={card.suit} rank={card.rank} widthPerc={20} />
+                    <Card suit={card.suit} rank={card.rank} cardsPerRow={5} />
                   </Pressable>
                 );
               })}
@@ -312,7 +312,7 @@ export default function Syndicate() {
                   key={card.id}
                   suit={card.suit}
                   rank={card.rank}
-                  widthPerc={20}
+                  cardsPerRow={5}
                 />
               ))}
             </View>

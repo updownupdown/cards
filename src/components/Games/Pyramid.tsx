@@ -478,7 +478,7 @@ export default function Pyramid() {
       <View style={styles.stockWasteRow}>
         <Pressable style={styles.cardSlot} onPress={drawCard}>
           {game.stock.length > 0 ? (
-            <Card suit="spades" rank="Back" widthPerc={20} isBack />
+            <Card suit="spades" rank="Back" cardsPerRow={5} isBack />
           ) : (
             <Text style={styles.slotLabel}>Stock</Text>
           )}
@@ -504,7 +504,7 @@ export default function Pyramid() {
                 <Card
                   suit={wasteTop.suit}
                   rank={wasteTop.rank}
-                  widthPerc={20}
+                  cardsPerRow={5}
                 />
               </View>
             ) : (
@@ -559,7 +559,7 @@ export default function Pyramid() {
                     {...(dragHandlers ?? {})}
                   >
                     {!card.removed ? (
-                      <Card suit={card.suit} rank={card.rank} widthPerc={20} />
+                      <Card suit={card.suit} rank={card.rank} cardsPerRow={5} />
                     ) : (
                       <View style={styles.removedPlaceholder} />
                     )}
@@ -585,7 +585,7 @@ export default function Pyramid() {
           <Card
             suit={dragGhost.card.suit}
             rank={dragGhost.card.rank}
-            widthPerc={20}
+            cardsPerRow={5}
           />
         </Animated.View>
       ) : null}

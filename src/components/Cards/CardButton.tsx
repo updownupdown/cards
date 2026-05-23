@@ -10,7 +10,7 @@ interface Props {
   isSelected?: boolean;
   isSelectedInvalid?: boolean;
   disabled?: boolean;
-  widthPerc?: number;
+  cardsPerRow?: number;
   onPress: () => void;
 }
 
@@ -22,7 +22,7 @@ export const CardButton = ({
   isSelected,
   isSelectedInvalid,
   buttonStyle,
-  widthPerc = 25,
+  cardsPerRow = 5,
   onPress,
 }: Props) => {
   return (
@@ -31,7 +31,7 @@ export const CardButton = ({
         suit={suit}
         rank={rank}
         isPlaceholder={isPlaceholder}
-        widthPerc={widthPerc}
+        cardsPerRow={cardsPerRow}
         isSelectable={!disabled}
         isSelected={isSelected}
         isSelectedInvalid={isSelectedInvalid}

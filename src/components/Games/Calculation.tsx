@@ -171,7 +171,7 @@ export default function Calculation() {
               <Text style={styles.smallText}>+{STEPS[i]}</Text>
               <Text style={styles.smallText}>Count: {foundation.length}</Text>
               {top ? (
-                <Card suit={top.suit} rank={top.rank} widthPerc={20} />
+                <Card suit={top.suit} rank={top.rank} cardsPerRow={5} />
               ) : (
                 <View style={styles.emptySlot} />
               )}
@@ -184,7 +184,7 @@ export default function Calculation() {
         <View style={styles.zone}>
           <Text style={styles.smallText}>Waste top</Text>
           {wasteTop ? (
-            <Card suit={wasteTop.suit} rank={wasteTop.rank} widthPerc={20} />
+            <Card suit={wasteTop.suit} rank={wasteTop.rank} cardsPerRow={5} />
           ) : (
             <View style={styles.emptySlot} />
           )}
