@@ -13,6 +13,7 @@ interface Props {
   disabled?: boolean;
   cardsPerRow?: number;
   hasTopMargin?: boolean;
+  altSelectableColor?: string;
   isBack?: boolean;
   onPress?: () => void;
 }
@@ -27,6 +28,7 @@ export const CardButton = ({
   style,
   cardsPerRow = 5,
   hasTopMargin,
+  altSelectableColor,
   isBack,
   onPress,
 }: Props) => {
@@ -46,6 +48,7 @@ export const CardButton = ({
         cardsPerRow={cardsPerRow}
         hasTopMargin={hasTopMargin}
         isBack={isBack}
+        altSelectableColor={altSelectableColor}
       />
     </Pressable>
   );

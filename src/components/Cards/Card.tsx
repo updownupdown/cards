@@ -45,6 +45,7 @@ export type CardProps = Omit<SvgProps, "width" | "height" | "style"> & {
   omitShadow?: boolean;
   isSelectable?: boolean;
   isSelected?: boolean;
+  altSelectableColor?: string;
   isSelectedInvalid?: boolean;
   hasTopMargin?: boolean;
   cardSize?: "small" | "regular";
@@ -62,6 +63,7 @@ export const Card = forwardRef<any, CardProps>(
       cardsPerRow = 5,
       omitShadow,
       isSelectable,
+      altSelectableColor,
       isSelected,
       isSelectedInvalid,
       cardSize,
@@ -101,17 +103,16 @@ export const Card = forwardRef<any, CardProps>(
 
     const shadowUnit = width * cardShadowRadio;
 
-    if (isPlaceholder) {
-      cardStyle.boxShadow = `inset ${shadowUnit}px ${shadowUnit * 2}px ${shadowUnit * 14}px ${rgba(Colors.black, 0.4)}`;
-      cardStyle.backgroundColor = Colors.K900;
-    }
-
     if (isSelectedInvalid) {
       cardStyle.boxShadow = `0 0 0 ${shadowUnit * 8}px ${rgba(Colors.cardSelecteInvalid, 0.7)}`;
     } else if (isSelected) {
       cardStyle.boxShadow = `0 0 0 ${shadowUnit * 8}px ${rgba(Colors.cardSelected, 0.8)}`;
     } else if (isSelectable) {
-      cardStyle.boxShadow = `0 0 0 ${shadowUnit * 5}px ${rgba(Colors.cardSelectable, 0.7)}`;
+      if (altSelectableColor) {
+        cardStyle.boxShadow = `0 0 0 ${shadowUnit * 5}px ${rgba(altSelectableColor, 0.7)}`;
+      } else {
+        cardStyle.boxShadow = `0 0 0 ${shadowUnit * 5}px ${rgba(Colors.cardSelectable, 0.7)}`;
+      }
     } else if (!isPlaceholder && !omitShadow) {
       cardStyle.boxShadow = `${shadowUnit}px ${shadowUnit * 2}px ${shadowUnit * 8}px rgba(0,0,0,.1), ${shadowUnit * 2}px ${shadowUnit * 4}px ${shadowUnit * 16}px rgba(0,0,0,.1)`;
     }

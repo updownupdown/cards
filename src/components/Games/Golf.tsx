@@ -1,23 +1,21 @@
+import { cardStyles } from "@/styles/cardStyles";
+import { layoutStyles } from "@/styles/layoutStyles";
+import { textStyles } from "@/styles/textStyles";
 import { useMemo, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-
+import { Text, View } from "react-native";
+import { Button } from "../Button/Button";
 import { Card } from "../Cards/Card";
-import InfoModal from "../Modals/InfoModal";
 import {
   RANK_VALUE,
   createDeck,
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { flexStyles, layoutStyles } from "@/styles/layoutStyles";
-import { textStyles } from "@/styles/textStyles";
+import { CardButton } from "../Cards/CardButton";
 import { Deck } from "../Cards/Deck";
-import { cardStyles } from "@/styles/cardStyles";
-import { buttonStyles } from "@/styles/buttonStyles";
 import { GameHeader } from "../common/GameHeader";
 import { MessageBox } from "../common/MessageBox";
-import { CardButton } from "../Cards/CardButton";
-import { Button } from "../Button/Button";
+import { flexStyles } from "@/styles/flexStyles";
 
 type GolfState = {
   tableau: PlayingCard[][];
@@ -175,7 +173,7 @@ export default function Golf() {
           </View>
 
           <View style={flexStyles.colCentered}>
-            <Deck
+            {/* <Deck
               backCount={game.stock.length}
               showCount
               fan="horizontalRight"
@@ -194,7 +192,7 @@ export default function Golf() {
                 }
                 cardsPerRow={4}
               />
-            </Deck>
+            </Deck> */}
           </View>
 
           <View style={flexStyles.colCentered}>

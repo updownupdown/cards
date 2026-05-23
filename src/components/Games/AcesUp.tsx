@@ -1,15 +1,15 @@
 import { cardStyles } from "@/styles/cardStyles";
-import { flexStyles, layoutStyles } from "@/styles/layoutStyles";
-import { textStyles } from "@/styles/textStyles";
-import { useMemo, useState, useRef } from "react";
-import { Text, View } from "react-native";
+import { layoutStyles } from "@/styles/layoutStyles";
+import { useMemo, useRef, useState } from "react";
+import { View } from "react-native";
+import { useAnimations } from "../Animations/Animations";
 import { Button } from "../Button/Button";
 import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
-import { CardButton } from "../Cards/CardButton";
 import { Deck } from "../Cards/Deck";
 import { GameHeader } from "../common/GameHeader";
 import { MessageBox } from "../common/MessageBox";
-import { useAnimations } from "../Animations/Animations";
+import { flexStyles } from "@/styles/flexStyles";
+import { Colors } from "@/styles/styles";
 
 type AcesUpState = {
   stock: PlayingCard[];
@@ -120,11 +120,11 @@ export default function AcesUp() {
   );
 
   // Always allow dealing, for now.
-  // const canDeal = useMemo(() => {
-  //   if (game.ended || game.stock.length < 4) return false;
-  //   if (discardable.size > 0) return false;
-  //   return true;
-  // }, [discardable, game.ended, game.piles, game.stock.length]);
+  const canDeal = useMemo(() => {
+    if (game.ended || game.stock.length < 4) return false;
+    if (discardable.size > 0) return false;
+    return true;
+  }, [discardable, game.ended, game.piles, game.stock.length]);
 
   function reset() {
     setGame(setup());
@@ -332,12 +332,13 @@ export default function AcesUp() {
           ]}
         >
           <Deck
-            refTopCurrent={discardRef}
+            refTopNext={discardRef}
             backCount={game.discard.length}
             cardsPerRow={4}
             fan="horizontalRight"
-            title="Discard"
             showCount
+            countPosition="left"
+            iconName="delete"
           />
 
           <Deck
@@ -345,8 +346,11 @@ export default function AcesUp() {
             backCount={game.stock.length}
             cardsPerRow={4}
             fan="horizontalRight"
-            title="Stock"
             showCount
+            countPosition="left"
+            iconName="draw"
+            onPress={dealFour}
+            isDisabled={game.stock.length === 0 || !canDeal || isAnimating}
           />
         </View>
 
@@ -383,6 +387,13 @@ export default function AcesUp() {
                       onPilePress(idx);
                     }
                   }}
+                  altSelectableColor={
+                    pile.length === 0
+                      ? Colors.cardSelectedDarker
+                      : canDiscard
+                        ? Colors.cardSelectableRed
+                        : Colors.cardSelectable
+                  }
                   isSelected={isSelected}
                   isDisabled={
                     (!canDiscard && !hasEmptyPile) ||
@@ -396,10 +407,11 @@ export default function AcesUp() {
         </View>
 
         <Button
-          onPress={dealFour}
-          // disabled={!canDeal | isAnimating}
-          disabled={isAnimating}
           text="Deal"
+          size="large"
+          onPress={dealFour}
+          fullWidth
+          disabled={!canDeal || isAnimating}
         />
       </View>
     </>

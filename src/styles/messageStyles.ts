@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
-import { flexStyles } from "./layoutStyles";
 import { Colors, FontWeight, rgba } from "@/styles/styles";
+import { flexStyles } from "./flexStyles";
 
 export const messageStyles = StyleSheet.create({
   box: {

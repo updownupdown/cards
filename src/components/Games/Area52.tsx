@@ -1,8 +1,10 @@
+import { cardStyles } from "@/styles/cardStyles";
+import { layoutStyles } from "@/styles/layoutStyles";
+import { textStyles } from "@/styles/textStyles";
 import { useMemo, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-
+import { StyleSheet, Text, View } from "react-native";
+import { Button } from "../Button/Button";
 import { Card } from "../Cards/Card";
-import InfoModal from "../Modals/InfoModal";
 import {
   RANK_VALUE,
   createDeck,
@@ -10,13 +12,10 @@ import {
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { GameHeader } from "../common/GameHeader";
-import { flexStyles, layoutStyles } from "@/styles/layoutStyles";
-import { textStyles } from "@/styles/textStyles";
-import { Button } from "../Button/Button";
-import { MessageBox } from "../common/MessageBox";
 import { CardButton } from "../Cards/CardButton";
-import { cardStyles } from "@/styles/cardStyles";
+import { GameHeader } from "../common/GameHeader";
+import { MessageBox } from "../common/MessageBox";
+import { flexStyles } from "@/styles/flexStyles";
 
 const localCardPerRow = 4;
 

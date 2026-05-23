@@ -1,10 +1,10 @@
 import { StyleSheet } from "react-native";
-import { flexStyles } from "./layoutStyles";
 import { Colors, FontWeight } from "@/styles/styles";
+import { flexStyles } from "./flexStyles";
 
 const cardTransition = {
   transitionDuration: "0.5s",
-  transitionProperty: "all",
+  transitionProperty: "box-shadow, border-color, border-width",
   transitionTimingFunction: "ease",
 };
 
@@ -43,10 +43,31 @@ export const cardStyles = StyleSheet.create({
     overflow: "hidden",
     ...cardTransition,
   },
+  // Deck wrap
+  deckWrap: {
+    display: "flex",
+    backgroundColor: Colors.K900,
+  },
+  deckWrapCountOver: {},
+  deckWrapCountAbove: {
+    alignItems: "center",
+    flexDirection: "column",
+  },
+  deckWrapCountBelow: {
+    alignItems: "center",
+    flexDirection: "column-reverse",
+  },
+  deckWrapCountLeft: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  deckWrapCountRight: {
+    flexDirection: "row-reverse",
+    justifyContent: "center",
+  },
   // Deck
   deck: {
     position: "relative",
-    backgroundColor: Colors.K900,
   },
   deckCard: {
     position: "absolute",
@@ -55,27 +76,71 @@ export const cardStyles = StyleSheet.create({
     opacity: 0,
     pointerEvents: "none",
   },
+
   // Deck count
   deckCount: {
+    zIndex: 100,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+    gap: 8,
+    maxWidth: "100%",
+  },
+  // To the side
+  deckCountAbove: {
+    ...flexStyles.rowCentered,
+    left: "50%",
+    transform: "translateX(-50%)",
+    flexDirection: "row",
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+  },
+  deckCountBelow: {
+    ...flexStyles.rowCentered,
+    left: "50%",
+    transform: "translateX(-50%)",
+    flexDirection: "row",
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+  },
+  deckCountLeft: {
+    ...flexStyles.colCentered,
+    flexDirection: "column",
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0,
+  },
+  deckCountRight: {
+    ...flexStyles.colCentered,
+    flexDirection: "column",
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
+  },
+
+  // Over
+  deckCountOver: {
     ...flexStyles.colCentered,
     position: "absolute",
-    zIndex: 100,
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     backgroundColor: Colors.deckRed,
-    padding: 6,
-    borderRadius: 4,
-    gap: 0,
   },
   deckCountTitle: {
     fontSize: 13,
     fontFamily: FontWeight[500],
-    color: Colors.white,
+    color: Colors.K300,
+  },
+  deckCountIcon: {
+    width: 24,
+    height: 24,
+    flexShrink: 0,
   },
   deckCountValue: {
     fontSize: 18,
     fontFamily: FontWeight[500],
-    color: Colors.white,
+    color: Colors.K300,
   },
 });

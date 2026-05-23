@@ -8,6 +8,8 @@ import type { SvgProps } from "react-native-svg";
 import ArrowBackIcon from "./ArrowBack.svg";
 import ArrowForwardIcon from "./ArrowForward.svg";
 import CloseIcon from "./Close.svg";
+import DeleteIcon from "./Delete.svg";
+import DrawIcon from "./Draw.svg";
 import DungeonIcon from "./Dungeon.svg";
 import FistIcon from "./Fist.svg";
 import HelpOutlineIcon from "./HelpOutline.svg";
@@ -24,6 +26,8 @@ export type IconName =
   | "arrow-back"
   | "arrow-forward"
   | "close"
+  | "delete"
+  | "draw"
   | "dungeon"
   | "fist"
   | "help-outline"
@@ -40,6 +44,8 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "arrow-back": ArrowBackIcon,
   "arrow-forward": ArrowForwardIcon,
   "close": CloseIcon,
+  "delete": DeleteIcon,
+  "draw": DrawIcon,
   "dungeon": DungeonIcon,
   "fist": FistIcon,
   "help-outline": HelpOutlineIcon,

@@ -24,10 +24,11 @@ import {
 } from "../Cards/card-utils";
 import { Deck } from "../Cards/Deck";
 import { GameHeader } from "../common/GameHeader";
-import { flexStyles, layoutStyles } from "@/styles/layoutStyles";
+import { layoutStyles } from "@/styles/layoutStyles";
 import { Button } from "../Button/Button";
 import { MessageBox } from "../common/MessageBox";
 import { cardStyles } from "@/styles/cardStyles";
+import { flexStyles } from "@/styles/flexStyles";
 
 type GameState = {
   tableau: PlayingCard[][];

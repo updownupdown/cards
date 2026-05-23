@@ -5,8 +5,9 @@ import { Card } from "../Cards/Card";
 import InfoModal from "../Modals/InfoModal";
 import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
 import { GameHeader } from "../common/GameHeader";
-import { flexStyles, layoutStyles } from "@/styles/layoutStyles";
+import { layoutStyles } from "@/styles/layoutStyles";
 import { textStyles } from "@/styles/textStyles";
+import { flexStyles } from "@/styles/flexStyles";
 
 type ClockState = {
   piles: PlayingCard[][];

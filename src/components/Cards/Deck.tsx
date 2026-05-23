@@ -5,6 +5,10 @@ import { Text, View, ViewStyle } from "react-native";
 import { useCardSize } from "./Card";
 import { CardRank, CardSuit } from "./card-utils";
 import { CardButton } from "./CardButton";
+import { Icon, IconName } from "@/icons";
+import { Colors } from "@/styles/styles";
+import { flexStyles } from "@/styles/flexStyles";
+import { debugStyles } from "@/styles/debugStyles";
 
 export const DEFAULT_FRONT_OVERLAP = 0.7;
 export const DEFAULT_BACK_OVERLAP = 0.9;
@@ -33,6 +37,9 @@ type DeckProps = {
   largeFan?: "all" | "progressive";
   cardsPerRow?: number;
   showCount?: boolean;
+  altSelectableColor?: string;
+  countPosition?: "over" | "above" | "left" | "right" | "below";
+  iconName?: IconName;
   hideTopCard?: boolean;
   isSelected?: boolean;
   isDisabled?: boolean;
@@ -47,10 +54,13 @@ export const Deck = ({
   backCount,
   cards,
   showCount,
+  altSelectableColor,
+  countPosition = "above",
   fan = "horizontalRight",
   largeFan,
   cardsPerRow = 5,
   title,
+  iconName,
   hideTopCard,
   isSelected,
   isDisabled,
@@ -67,24 +77,40 @@ export const Deck = ({
     deckSize += cards.length;
   }
 
-  function cardOffsetStyle(index: number, isAnimRef?: boolean) {
-    const adjustedDeckSize = isAnimRef ? deckSize + 1 : deckSize;
+  function cardOffsetStyle(index: number, nextCardPos?: boolean) {
+    let adjustedDeckSize = deckSize;
+    // Prevent current pos ref from being -1
+    let adjustedIndex = Math.max(0, index);
+
+    if (nextCardPos) {
+      // Look for next position in deck; need to mock deck being larger by 1
+      adjustedDeckSize += 1;
+
+      if (backCount !== undefined) {
+        // Prevent going to larger deck size than will be generated
+        adjustedDeckSize = Math.min(adjustedDeckSize, maxBackDeckSize);
+
+        if (index >= maxBackDeckSize) {
+          adjustedIndex -= 1;
+        }
+      }
+    }
 
     let offsetStyle: ViewStyle = {
       top: 0,
       left: 0,
     };
 
-    if (index === 0) return offsetStyle;
+    if (adjustedIndex === 0) return offsetStyle;
 
     let fanSize = minFanSize;
 
     if (largeFan === "all") {
-      fanSize = maxFanSize * index;
+      fanSize = maxFanSize * adjustedIndex;
     } else if (largeFan === "progressive") {
       let offsetTally = 0;
 
-      for (let i = 1; i <= index; i++) {
+      for (let i = 1; i <= adjustedIndex; i++) {
         // Always add min offset
         let addOffset = minFanSize;
 
@@ -102,7 +128,7 @@ export const Deck = ({
 
       fanSize = offsetTally;
     } else {
-      fanSize = minFanSize * index;
+      fanSize = minFanSize * adjustedIndex;
     }
 
     if (fan === "horizontalRight") {
@@ -124,84 +150,110 @@ export const Deck = ({
   return (
     <View
       style={[
-        cardStyles.deck,
-        style,
-        { width, height, borderRadius, boxShadow: placeholderShadow },
+        cardStyles.deckWrap,
+        countPosition === "over" && cardStyles.deckWrapCountOver,
+        countPosition === "above" && cardStyles.deckWrapCountAbove,
+        countPosition === "left" && cardStyles.deckWrapCountLeft,
+        countPosition === "right" && cardStyles.deckWrapCountRight,
+        countPosition === "below" && cardStyles.deckWrapCountBelow,
+        { borderRadius, boxShadow: placeholderShadow },
       ]}
-      collapsable={false}
     >
-      {/* Anchor Views for refs, used for animations */}
-      <View
-        ref={refTopCurrent}
-        style={[
-          cardStyles.card,
-          cardStyles.deckCard,
-          cardOffsetStyle(Math.max(deckSize - 1)),
-          cardStyles.animHide,
-          { width, height },
-        ]}
-        collapsable={false}
-      />
-      <View
-        ref={refTopNext}
-        style={[
-          cardStyles.card,
-          cardStyles.deckCard,
-          cardOffsetStyle(deckSize, true),
-          cardStyles.animHide,
-          { width, height },
-        ]}
-        collapsable={false}
-      />
-
       {/* Count */}
       {(showCount || title) && (
-        <View style={cardStyles.deckCount}>
+        <View
+          style={[
+            cardStyles.deckCount,
+            countPosition === "over" && cardStyles.deckCountOver,
+            countPosition === "above" && cardStyles.deckCountAbove,
+            countPosition === "left" && cardStyles.deckCountLeft,
+            countPosition === "right" && cardStyles.deckCountRight,
+            countPosition === "below" && cardStyles.deckCountBelow,
+          ]}
+        >
+          {iconName && (
+            <Icon
+              name={iconName}
+              color={Colors.K300}
+              style={cardStyles.deckCountIcon}
+            />
+          )}
           {title && <Text style={cardStyles.deckCountTitle}>{title}</Text>}
-
           {showCount && (
             <Text style={cardStyles.deckCountValue}>{backCount}</Text>
           )}
         </View>
       )}
 
-      {/* Placeholder at bottom of deck; sometimes pressable */}
-      <CardButton
-        onPress={deckSize === 0 ? onPress : undefined}
-        cardsPerRow={cardsPerRow}
-        isPlaceholder
-        style={[cardStyles.deckCard]}
-        disabled={isDisabled}
-      />
+      {/* Deck */}
+      <View
+        style={[cardStyles.deck, style, { width, height }]}
+        collapsable={false}
+      >
+        {/* Anchor Views for refs, used for animations */}
+        <View
+          ref={refTopCurrent}
+          style={[
+            // Used as a relative positioned card
+            cardStyles.card,
+            cardOffsetStyle(deckSize - 1),
+            cardStyles.animHide,
+            { width, height },
+          ]}
+          collapsable={false}
+        />
+        <View
+          ref={refTopNext}
+          style={[
+            cardStyles.card,
+            flexStyles.positionAbsolute,
+            cardOffsetStyle(deckSize, true),
+            cardStyles.animHide,
+            { width, height },
+          ]}
+          collapsable={false}
+        />
 
-      {Array.from({ length: deckSize }, (_, index) => {
-        const suit = cards?.[index].suit;
-        const rank = cards?.[index].rank;
-        const isBack = !suit || !rank;
-        const isTopCard = index === deckSize - 1;
+        {/* Placeholder at bottom of deck; sometimes pressable */}
+        <CardButton
+          onPress={deckSize === 0 ? onPress : undefined}
+          cardsPerRow={cardsPerRow}
+          isPlaceholder
+          style={[cardStyles.deckCard]}
+          disabled={isDisabled}
+          altSelectableColor={altSelectableColor}
+        />
 
-        return (
-          <CardButton
-            key={`back-${index}`}
-            // Top card props
-            onPress={isTopCard && onPress ? onPress : undefined}
-            isSelected={isTopCard && isSelected}
-            disabled={isTopCard && isDisabled}
-            // Other
-            cardsPerRow={cardsPerRow}
-            isBack={isBack}
-            suit={suit}
-            rank={rank}
-            style={[
-              cardStyles.deckCard,
-              hideTopCard === true &&
-                index === deckSize - 1 &&
-                cardStyles.animHide,
-              cardOffsetStyle(index),
-            ]}
-          />
-        );
-      })}
+        {Array.from({ length: deckSize }, (_, index) => {
+          const suit = cards?.[index].suit;
+          const rank = cards?.[index].rank;
+          const isBack = !suit || !rank;
+          const isTopCard = index === deckSize - 1;
+
+          return (
+            <CardButton
+              key={`back-${index}`}
+              // Top card props
+              onPress={isTopCard && onPress ? onPress : undefined}
+              isSelected={isTopCard && isSelected}
+              disabled={isTopCard && isDisabled}
+              // Other
+              cardsPerRow={cardsPerRow}
+              isBack={isBack}
+              suit={suit}
+              rank={rank}
+              style={[
+                cardStyles.deckCard,
+                cardOffsetStyle(index),
+                hideTopCard === true &&
+                  index === deckSize - 1 &&
+                  cardStyles.animHide,
+              ]}
+              altSelectableColor={altSelectableColor}
+            />
+          );
+        })}
+      </View>
     </View>
   );
 };

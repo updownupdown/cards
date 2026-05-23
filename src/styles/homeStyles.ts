@@ -1,7 +1,7 @@
-import { Colors, FontWeight, rgba } from "@/styles/styles";
+import { Colors } from "@/styles/styles";
 import { StyleSheet } from "react-native";
-import { flexStyles } from "./layoutStyles";
 import { buttonStyles } from "./buttonStyles";
+import { flexStyles } from "./flexStyles";
 
 export const homeStyles = StyleSheet.create({
   scrollContent: {

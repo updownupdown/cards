@@ -88,7 +88,7 @@ export default function InfoModal({ ended, won }: Props) {
       <Button
         style={[buttonStyles.headerButton]}
         onPress={() => setMenuOpen(true)}
-        iconName="info-outline"
+        iconName="menu"
         iconColor={Colors.K400}
       />
 

@@ -5,7 +5,9 @@ import { Pressable, Text, ViewStyle } from "react-native";
 
 interface Props {
   style?: ViewStyle | ViewStyle[];
+  size?: "small" | "medium" | "large";
   disabled?: boolean;
+  fullWidth?: boolean;
   onPress: () => void;
   text?: string;
   iconName?: IconName;
@@ -14,7 +16,9 @@ interface Props {
 
 export const Button = ({
   style,
+  size = "medium",
   disabled,
+  fullWidth,
   text,
   iconName,
   iconColor,
@@ -24,7 +28,11 @@ export const Button = ({
     <Pressable
       style={[
         buttonStyles.button,
-        disabled && buttonStyles.buttonDisabled,
+        size === "small" && buttonStyles.sizeSmall,
+        size === "medium" && buttonStyles.sizeMedium,
+        size === "large" && buttonStyles.sizeLarge,
+        fullWidth && buttonStyles.fullWidth,
+        disabled && buttonStyles.disabled,
         style,
       ]}
       onPress={onPress}
@@ -39,7 +47,13 @@ export const Button = ({
       )}
       {text && (
         <Text
-          style={[buttonStyles.text, disabled && buttonStyles.textDisabled]}
+          style={[
+            buttonStyles.text,
+            size === "small" && buttonStyles.textSizeSmall,
+            size === "medium" && buttonStyles.textSizeMedium,
+            size === "large" && buttonStyles.textSizeLarge,
+            disabled && buttonStyles.textDisabled,
+          ]}
         >
           {text}
         </Text>
