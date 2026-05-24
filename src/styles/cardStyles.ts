@@ -92,6 +92,7 @@ export const cardStyles = StyleSheet.create({
   // To the side
   deckCountAbove: {
     ...flexStyles.rowCentered,
+    width: "100%",
     left: "50%",
     transform: "translateX(-50%)",
     flexDirection: "row",
@@ -100,6 +101,7 @@ export const cardStyles = StyleSheet.create({
   },
   deckCountBelow: {
     ...flexStyles.rowCentered,
+    width: "100%",
     left: "50%",
     transform: "translateX(-50%)",
     flexDirection: "row",

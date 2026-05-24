@@ -1,37 +1,26 @@
+import { EMPTY_STATS } from "@/components/Modals/InfoModal";
+import { GAMES_DATA } from "@/data/games-data";
 import { Icon } from "@/icons";
 import { homeStyles } from "@/styles/homeStyles";
+import { Colors } from "@/styles/styles";
+import { textStyles } from "@/styles/textStyles";
 import { Link, type Href } from "expo-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import {
   calculateWinRate,
-  GAME_MENU_INFO,
   GameStatsMap,
-  getGameInfo,
-  HOME_GAME_ENTRIES,
+  homeGameList,
   loadFavoriteGames,
   loadStatsMap,
   sortHomeGames,
   toggleFavoriteGame,
 } from "../../data/game-menu";
-import { textStyles } from "@/styles/textStyles";
-import { EMPTY_STATS } from "@/components/Modals/InfoModal";
-import { Colors } from "@/styles/styles";
+import { Button } from "../Button/Button";
+import { StatsModal } from "./StatsModal";
 
 export default function Home() {
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
-
-  const [statsMap, setStatsMap] = useState<GameStatsMap>({});
-
-  useEffect(() => {
-    let cancelled = false;
-    loadStatsMap().then((loaded) => {
-      if (!cancelled) setStatsMap(loaded);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -46,7 +35,7 @@ export default function Home() {
   }, []);
 
   const orderedGames = useMemo(
-    () => sortHomeGames(HOME_GAME_ENTRIES, favorites),
+    () => sortHomeGames(homeGameList, favorites),
     [favorites],
   );
   const favoriteGames = useMemo(
@@ -63,76 +52,67 @@ export default function Home() {
     setFavorites(new Set(updated));
   }
 
-  const orderedStatsRows = useMemo(
-    () =>
-      Object.entries(GAME_MENU_INFO)
-        .map(([path, gameInfo]) => ({
-          path,
-          title: gameInfo.title,
-          stats: statsMap[path] ?? EMPTY_STATS,
-        }))
-        .sort((a, b) => a.title.localeCompare(b.title)),
-    [statsMap],
-  );
+  const [showStatsModal, setShowStatsModal] = useState(false);
 
   return (
-    <ScrollView contentContainerStyle={homeStyles.scrollContent}>
-      <View style={homeStyles.linkCol}>
-        {favoriteGames.length > 0 ? (
-          <>
-            {/* "Favorites" Header */}
-            <View style={homeStyles.sectionHeaderRow}>
-              <Text style={homeStyles.sectionHeader}>Favorites</Text>
-            </View>
+    <>
+      {showStatsModal && (
+        <StatsModal onClose={() => setShowStatsModal(false)} />
+      )}
 
-            {/* Favourites */}
-            {favoriteGames.map((game) => (
-              <View key={game.path} style={homeStyles.gameRow}>
-                <Link href={game.path as Href} style={homeStyles.gameButton}>
-                  {game.label}
-                </Link>
-                <Pressable
-                  style={[homeStyles.starBtn, homeStyles.starBtnOn]}
-                  onPress={() => onToggleFavorite(game.path)}
-                >
-                  <Icon name="star" color={Colors.accentOrange} />
-                </Pressable>
+      <ScrollView contentContainerStyle={homeStyles.scrollContent}>
+        <Button
+          onPress={() => setShowStatsModal(true)}
+          text="View all game stats"
+          size="text"
+        />
+
+        <View style={homeStyles.linkCol}>
+          {favoriteGames.length > 0 ? (
+            <>
+              {/* "Favorites" Header */}
+              <View style={homeStyles.sectionHeaderRow}>
+                <Text style={homeStyles.sectionHeader}>Favorites</Text>
               </View>
-            ))}
-          </>
-        ) : null}
 
-        {/* "All Games" Heading */}
-        <View style={homeStyles.sectionHeaderRow}>
-          <Text style={homeStyles.sectionHeader}>All Games</Text>
-        </View>
+              {/* Favourites */}
+              {favoriteGames.map((game) => (
+                <View key={game.path} style={homeStyles.gameRow}>
+                  <Link href={game.path as Href} style={homeStyles.gameButton}>
+                    {game.title}
+                  </Link>
+                  <Pressable
+                    style={[homeStyles.starBtn, homeStyles.starBtnOn]}
+                    onPress={() => onToggleFavorite(game.path)}
+                  >
+                    <Icon name="star" color={Colors.accentOrange} />
+                  </Pressable>
+                </View>
+              ))}
+            </>
+          ) : null}
 
-        {/* Other Games */}
-        {nonFavoriteGames.map((game) => (
-          <View key={game.path} style={homeStyles.gameRow}>
-            <Link href={game.path as Href} style={homeStyles.gameButton}>
-              {game.label}
-            </Link>
-            <Pressable
-              style={homeStyles.starBtn}
-              onPress={() => onToggleFavorite(game.path)}
-            >
-              <Icon name="star-outline" color={Colors.K500} />
-            </Pressable>
+          {/* "All Games" Heading */}
+          <View style={homeStyles.sectionHeaderRow}>
+            <Text style={homeStyles.sectionHeader}>All Games</Text>
           </View>
-        ))}
-      </View>
 
-      {/* Stats for ALL games */}
-      <View style={homeStyles.gameStats}>
-        <Text style={textStyles.h3}>Games Stats</Text>
-        {orderedStatsRows.map((row) => (
-          <Text key={row.path} style={textStyles.default}>
-            {row.title}: A: {row.stats.attempts}, W: {row.stats.wins}, L:{" "}
-            {row.stats.losses}, ({calculateWinRate(row.stats)})
-          </Text>
-        ))}
-      </View>
-    </ScrollView>
+          {/* Other Games */}
+          {nonFavoriteGames.map((game) => (
+            <View key={game.path} style={homeStyles.gameRow}>
+              <Link href={game.path as Href} style={homeStyles.gameButton}>
+                {game.title}
+              </Link>
+              <Pressable
+                style={homeStyles.starBtn}
+                onPress={() => onToggleFavorite(game.path)}
+              >
+                <Icon name="star-outline" color={Colors.K500} />
+              </Pressable>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+    </>
   );
 }

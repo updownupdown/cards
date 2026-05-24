@@ -13,9 +13,12 @@ import {
 } from "../Cards/card-utils";
 import { CardButton } from "../Cards/CardButton";
 import { Deck } from "../Cards/Deck";
-import { GameHeader } from "../common/GameHeader";
+import { GameMenus } from "../common/GameMenus";
 import { MessageBox } from "../common/MessageBox";
 import { flexStyles } from "@/styles/flexStyles";
+
+const localCardPerRowSmall = 7;
+const localCardPerRowMedium = 4;
 
 type GolfState = {
   tableau: PlayingCard[][];
@@ -134,12 +137,12 @@ export default function Golf() {
 
   return (
     <>
-      <GameHeader
+      {/* <GameMenus
         gameTitle="Golf Solitaire"
         ended={game.ended}
         won={game.won}
         reset={reset}
-      />
+      /> */}
 
       <View style={layoutStyles.gameArea}>
         <MessageBox message={message} />
@@ -154,7 +157,8 @@ export default function Golf() {
                   disabled={game.ended || cardIndex !== col.length - 1}
                   suit={card.suit}
                   rank={card.rank}
-                  cardsPerRow={7}
+                  cardsPerRow={localCardPerRowSmall}
+                  hasTopMargin={cardIndex > 0}
                 />
               ))}
             </View>
@@ -168,40 +172,37 @@ export default function Golf() {
             flexStyles.justifyEvenly,
           ]}
         >
-          <View style={flexStyles.colCentered}>
-            <Deck showCount backCount={game.stock.length} cardsPerRow={4} />
-          </View>
+          <Deck
+            iconName="delete"
+            showCount
+            backCount={game.stock.length}
+            cardsPerRow={localCardPerRowMedium}
+            limitFan
+          />
 
-          <View style={flexStyles.colCentered}>
-            {/* <Deck
-              backCount={game.stock.length}
-              showCount
-              fan="horizontalRight"
-              cardsPerRow={4}
-            >
-              <Card
-                suit={
-                  game.waste.length
-                    ? game.waste[game.waste.length - 1].suit
-                    : undefined
-                }
-                rank={
-                  game.waste.length
-                    ? game.waste[game.waste.length - 1].rank
-                    : undefined
-                }
-                cardsPerRow={4}
-              />
-            </Deck> */}
-          </View>
+          <Button
+            onPress={drawFromStock}
+            disabled={game.stock.length === 0 || game.ended}
+            text="Draw"
+          />
 
-          <View style={flexStyles.colCentered}>
-            <Button
-              onPress={drawFromStock}
-              disabled={game.stock.length === 0 || game.ended}
-              text="Draw"
-            />
-          </View>
+          <Deck
+            iconName="draw"
+            showCount
+            fan="horizontalRight"
+            cardsPerRow={localCardPerRowMedium}
+            cards={Array.from({ length: game.stock.length }, (_, i) => {
+              if (i === game.stock.length - 1) {
+                return {
+                  suit: game.waste[game.waste.length - 1].suit,
+                  rank: game.waste[game.waste.length - 1].rank,
+                };
+              } else {
+                return "back";
+              }
+            })}
+            limitFan
+          />
         </View>
 
         {game.ended ? (

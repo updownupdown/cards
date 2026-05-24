@@ -23,7 +23,7 @@ import {
   SUITS,
 } from "../Cards/card-utils";
 import { Deck } from "../Cards/Deck";
-import { GameHeader } from "../common/GameHeader";
+import { GameMenus } from "../common/GameMenus";
 import { layoutStyles } from "@/styles/layoutStyles";
 import { Button } from "../Button/Button";
 import { MessageBox } from "../common/MessageBox";
@@ -782,12 +782,12 @@ export default function Solitaire() {
 
   return (
     <>
-      <GameHeader
+      {/* <GameMenus
         gameTitle="Solitaire"
         ended={won}
         won={won}
         reset={resetGame}
-      />
+      /> */}
       <View
         ref={boardRef}
         onLayout={updateBoardOrigin}

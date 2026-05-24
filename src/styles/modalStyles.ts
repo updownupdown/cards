@@ -1,10 +1,21 @@
-import { Colors, MaxContentHeight, MaxContentWidth } from "@/styles/styles";
+import {
+  Colors,
+  FontWeight,
+  MaxContentHeight,
+  MaxContentWidth,
+  rgba,
+} from "@/styles/styles";
 import { StyleSheet } from "react-native";
+import { flexStyles } from "./flexStyles";
+
+export const modalBorderRadius = 20;
+
+const modalSidePadding = 30;
 
 export const modalStyles = StyleSheet.create({
   modalBackdrop: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: rgba(Colors.K800, 0.2),
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 14,
@@ -14,8 +25,8 @@ export const modalStyles = StyleSheet.create({
     maxWidth: MaxContentWidth,
     height: "100%",
     maxHeight: MaxContentHeight,
-    backgroundColor: Colors.K850,
-    borderRadius: 8,
+    backgroundColor: rgba(Colors.K900, 1),
+    borderRadius: modalBorderRadius,
     overflow: "hidden",
   },
   modalHeader: {
@@ -25,32 +36,51 @@ export const modalStyles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  closeBtn: {
-    padding: 12,
+  modalFooter: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: modalSidePadding,
   },
-  modalContent: {
-    padding: 14,
-    gap: 12,
-    paddingBottom: 32,
+  scrollContent: {
+    flex: 1,
+    padding: modalSidePadding,
+    gap: 30,
   },
-  homeActionBtn: {
-    alignSelf: "flex-start",
-    borderRadius: 10,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    backgroundColor: "#dedede",
-    borderWidth: 1,
-    borderColor: "#bcbcbc",
+
+  // Stats and favourite
+  statsAndFav: {
+    ...flexStyles.rowCentered,
+    ...flexStyles.fullWidth,
+    justifyContent: "space-between",
+    gap: 20,
   },
-  homeActionText: {
-    fontWeight: "700",
-    fontSize: 16,
+  stats: {
+    ...flexStyles.rowCentered,
+    gap: 20,
   },
-  sectionCard: {
-    borderWidth: 1,
-    borderColor: Colors.K900,
-    borderRadius: 8,
-    padding: 20,
-    gap: 6,
+  stat: {
+    ...flexStyles.colCentered,
+  },
+  statsTextLabel: {
+    fontSize: 14,
+    color: Colors.K400,
+    fontFamily: FontWeight[400],
+  },
+  statsTextValue: {
+    fontSize: 20,
+    color: Colors.K400,
+    fontFamily: FontWeight[400],
+  },
+  rules: {
+    ...flexStyles.colCentered,
+    ...flexStyles.fullWidth,
+    alignItems: "flex-start",
+    gap: 20,
+  },
+  rulesText: {
+    fontSize: 15,
+    fontFamily: FontWeight[300],
+    color: Colors.K200,
   },
 });

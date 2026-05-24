@@ -9,24 +9,19 @@ export const buttonStyles = StyleSheet.create({
     transitionDuration: "0.1s",
     transitionProperty: "all",
     transitionTimingFunction: "ease",
-
+    display: "flex",
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    gap: 6,
 
-    backgroundColor: rgba(Colors.accentBlueDark, 0.2),
-    boxShadow: `inset 0 1px 1px ${rgba(Colors.accentBluePale, 0.3)},
-            inset 1px 2px 10px ${rgba(Colors.accentBlue, 0.2)},
-            inset 2px 4px 30px ${rgba(Colors.K700, 0.6)},
-            -2px -2px 12px ${rgba(Colors.accentBlueDark, 0.6)},
-            2px 2px 12px ${rgba(Colors.K950, 0.4)}`,
-
-    fontFamily: FontWeight[300],
-    color: Colors.accentBluePale,
-    textAlign: "center",
-    textTransform: "uppercase",
+    backgroundColor: Colors.accentBlue,
   },
 
   // Sizes
+  sizeText: {
+    backgroundColor: "unset",
+  },
   sizeSmall: {
     height: 34,
     borderRadius: 17,
@@ -42,16 +37,30 @@ export const buttonStyles = StyleSheet.create({
     borderRadius: 30,
     paddingHorizontal: 28,
   },
+
+  // Text sizes
+  text: {
+    textAlign: "center",
+    fontFamily: FontWeight[400],
+  },
+  textSizeText: {
+    fontSize: 16,
+    color: Colors.accentBlue,
+  },
   textSizeSmall: {
     fontSize: 12,
-    fontFamily: FontWeight[400],
+    textTransform: "uppercase",
+    color: Colors.K900,
   },
   textSizeMedium: {
     fontSize: 16,
-    fontFamily: FontWeight[600],
+    textTransform: "uppercase",
+    color: Colors.K900,
   },
   textSizeLarge: {
     fontSize: 18,
+    textTransform: "uppercase",
+    color: Colors.K900,
     fontFamily: FontWeight[600],
   },
 
@@ -75,9 +84,9 @@ export const buttonStyles = StyleSheet.create({
     width: 44,
     height: 44,
     boxShadow: "unset",
+    backgroundColor: "unset",
   },
-  icon: {},
-  text: {
-    color: Colors.accentBluePale,
+  icon: {
+    flexShrink: 0,
   },
 });

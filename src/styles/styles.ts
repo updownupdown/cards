@@ -3,6 +3,8 @@ import "@/styles/global.css";
 import { Platform } from "react-native";
 
 export const Colors = {
+  win: "#03B491",
+  lose: "#CE3566",
   accentBluePale: "#a8f2ff",
   accentBlue: "#6fe9ff",
   accentBlueDark: "#343f49",

@@ -15,33 +15,33 @@ export const textStyles = StyleSheet.create({
     color: Colors.K200,
   },
   h1: {
-    fontSize: 32,
-    fontFamily: FontWeight[300],
-    color: Colors.accentBlue,
+    fontSize: 24,
+    fontFamily: FontWeight[500],
+    color: Colors.K100,
   },
   h2: {
     fontSize: 28,
     fontFamily: FontWeight[300],
-    color: Colors.accentBlue,
+    color: Colors.K200,
   },
   h3: {
     fontSize: 24,
     fontFamily: FontWeight[300],
-    color: Colors.accentBlue,
+    color: Colors.K200,
   },
   h4: {
     fontSize: 20,
     fontFamily: FontWeight[300],
-    color: Colors.accentBlue,
+    color: Colors.K200,
   },
   h5: {
     fontSize: 16,
     fontFamily: FontWeight[300],
-    color: Colors.accentBlue,
+    color: Colors.K200,
   },
   h6: {
     fontSize: 14,
     fontFamily: FontWeight[300],
-    color: Colors.accentBlue,
+    color: Colors.K200,
   },
 });

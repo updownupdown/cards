@@ -1,9 +1,10 @@
 import { buttonStyles } from "@/styles/buttonStyles";
 import { modalStyles } from "@/styles/modalStyles";
+import { Colors } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
-import { usePathname } from "expo-router";
+import { router, usePathname } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Modal, Pressable, ScrollView, Text, View } from "react-native";
+import { Modal, ScrollView, Text, View } from "react-native";
 import {
   calculateWinRate,
   getGameInfo,
@@ -11,12 +12,12 @@ import {
   normalizeGamePath,
   recordAttempt,
   recordResult,
+  toggleFavoriteGame,
   type GameStats,
   type GameStatsMap,
 } from "../../data/game-menu";
-import { Icon } from "../../icons";
 import { Button } from "../Button/Button";
-import { Colors } from "@/styles/styles";
+import ModalFull from "./ModalFull";
 
 export const EMPTY_STATS: GameStats = {
   attempts: 0,
@@ -25,120 +26,79 @@ export const EMPTY_STATS: GameStats = {
 };
 
 type Props = {
-  ended?: boolean;
-  won?: boolean;
+  onClose: () => void;
+  currentStats: GameStats;
 };
 
-export default function InfoModal({ ended, won }: Props) {
+export default function InfoModal({ currentStats, onClose }: Props) {
   const pathname = normalizeGamePath(usePathname());
   const info = getGameInfo(pathname);
 
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [statsMap, setStatsMap] = useState<GameStatsMap>({});
-  const attemptedPathRef = useRef<string | null>(null);
-  const prevEndedRef = useRef(false);
+  const rules = info.rules ?? info.howToPlay;
 
-  const currentStats = statsMap[pathname] ?? EMPTY_STATS;
-
-  useEffect(() => {
-    let cancelled = false;
-    loadStatsMap().then((loaded) => {
-      if (!cancelled) setStatsMap(loaded);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  useEffect(() => {
-    prevEndedRef.current = false;
-  }, [pathname]);
-
-  useEffect(() => {
-    if (attemptedPathRef.current === pathname) return;
-    attemptedPathRef.current = pathname;
-
-    let cancelled = false;
-    recordAttempt(pathname).then((nextMap) => {
-      if (!cancelled) setStatsMap(nextMap);
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [pathname]);
-
-  useEffect(() => {
-    if (!ended || prevEndedRef.current) return;
-    prevEndedRef.current = true;
-    if (typeof won !== "boolean") return;
-
-    let cancelled = false;
-    recordResult(pathname, won).then((nextMap) => {
-      if (!cancelled) setStatsMap(nextMap);
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [ended, won, pathname]);
+  async function onToggleFavorite(path: string) {
+    const updated = await toggleFavoriteGame(path);
+    // setFavorites(new Set(updated));
+  }
 
   return (
     <>
-      <Button
-        style={[buttonStyles.headerButton]}
-        onPress={() => setMenuOpen(true)}
-        iconName="menu"
-        iconColor={Colors.K400}
-      />
+      <ModalFull onClose={onClose} showHomeButton>
+        {/* Scroll view */}
+        <ScrollView contentContainerStyle={modalStyles.scrollContent}>
+          {/* Title */}
+          <Text style={textStyles.h1}>{info.title}</Text>
 
-      <Modal
-        visible={menuOpen}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setMenuOpen(false)}
-      >
-        <View style={modalStyles.modalBackdrop}>
-          <View style={[modalStyles.modalCard]}>
-            <View style={modalStyles.modalHeader}>
-              <Text style={textStyles.h3}>{info.title}</Text>
+          {/* Stats and favourite */}
+          <View style={modalStyles.statsAndFav}>
+            <View style={modalStyles.stats}>
+              <View style={modalStyles.stat}>
+                <Text style={modalStyles.statsTextLabel}>Attempts</Text>
+                <Text style={modalStyles.statsTextValue}>
+                  {currentStats.attempts}
+                </Text>
+              </View>
 
-              <Button
-                style={buttonStyles.headerButton}
-                onPress={() => setMenuOpen(false)}
-                iconName="close"
-              />
+              <View style={modalStyles.stat}>
+                <Text style={modalStyles.statsTextLabel}>Wins</Text>
+                <Text style={modalStyles.statsTextValue}>
+                  {currentStats.wins}
+                </Text>
+              </View>
+
+              <View style={modalStyles.stat}>
+                <Text style={modalStyles.statsTextLabel}>Lost</Text>
+                <Text style={modalStyles.statsTextValue}>
+                  {currentStats.losses}
+                </Text>
+              </View>
+
+              <View style={modalStyles.stat}>
+                <Text style={modalStyles.statsTextLabel}>Win rate</Text>
+                <Text style={modalStyles.statsTextValue}>
+                  {calculateWinRate(currentStats)}
+                </Text>
+              </View>
             </View>
 
-            <ScrollView contentContainerStyle={modalStyles.modalContent}>
-              <View style={modalStyles.sectionCard}>
-                <Text style={textStyles.h3}>How to Play</Text>
-                {info.howToPlay.map((line) => (
-                  <Text key={line} style={textStyles.default}>
-                    - {line}
-                  </Text>
-                ))}
-              </View>
-
-              <View style={modalStyles.sectionCard}>
-                <Text style={textStyles.h3}>Statistics</Text>
-                <Text style={textStyles.default}>
-                  Attempts: {currentStats.attempts}
-                </Text>
-                <Text style={textStyles.default}>
-                  Wins: {currentStats.wins}
-                </Text>
-                <Text style={textStyles.default}>
-                  Losses: {currentStats.losses}
-                </Text>
-                <Text style={textStyles.default}>
-                  Win rate: {calculateWinRate(currentStats)}
-                </Text>
-              </View>
-            </ScrollView>
+            <Button onPress={() => {}} iconName="star-outline" size="text" />
           </View>
+
+          {/* Rules */}
+          <View style={modalStyles.rules}>
+            {rules.map((line) => (
+              <Text key={line} style={modalStyles.rulesText}>
+                {line}
+              </Text>
+            ))}
+          </View>
+        </ScrollView>
+
+        {/* Play button */}
+        <View style={modalStyles.modalFooter}>
+          <Button onPress={onClose} size="large" text="Play" fullWidth />
         </View>
-      </Modal>
+      </ModalFull>
     </>
   );
 }

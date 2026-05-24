@@ -1,4 +1,4 @@
-import { Colors } from "@/styles/styles";
+import { Colors, FontWeight } from "@/styles/styles";
 import { StyleSheet } from "react-native";
 import { buttonStyles } from "./buttonStyles";
 import { flexStyles } from "./flexStyles";
@@ -30,12 +30,16 @@ export const homeStyles = StyleSheet.create({
     letterSpacing: 0.8,
     textTransform: "uppercase",
     color: Colors.K200,
-    fontFamily: "Outfit_600SemiBold",
+    fontFamily: FontWeight[600],
   },
   gameButton: {
     ...buttonStyles.button,
-    flex: 1,
+    ...buttonStyles.sizeMedium,
+    ...buttonStyles.fullWidth,
+    ...buttonStyles.textSizeMedium,
+    // flex: 1,
     textTransform: "none",
+    fontFamily: FontWeight[400],
   },
   starBtn: {
     width: 44,
@@ -50,13 +54,5 @@ export const homeStyles = StyleSheet.create({
   },
   starBtnOnSvg: {
     color: Colors.accentOrange,
-  },
-  gameStats: {
-    ...flexStyles.colCentered,
-    // justifyContent: "flex-start",
-    alignItems: "flex-start",
-    padding: 20,
-    textAlign: "left",
-    gap: 8,
   },
 });

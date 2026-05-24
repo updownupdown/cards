@@ -1,12 +1,12 @@
 import { cardStyles } from "@/styles/cardStyles";
 import { layoutStyles } from "@/styles/layoutStyles";
-import { useMemo, useRef, useState } from "react";
-import { View } from "react-native";
+import { useMemo, useRef, useState, useEffect } from "react";
+import { View, ActivityIndicator } from "react-native";
 import { useAnimations } from "../Animations/Animations";
 import { Button } from "../Button/Button";
 import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
 import { Deck } from "../Cards/Deck";
-import { GameHeader } from "../common/GameHeader";
+import { GameMenus } from "../common/GameMenus";
 import { MessageBox } from "../common/MessageBox";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors } from "@/styles/styles";
@@ -97,10 +97,17 @@ function evaluateEndState(stock: PlayingCard[], piles: PlayingCard[][]) {
 }
 
 export default function AcesUp() {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    // Delay rendering so the UI can mount and fade in first.
+    const timer = setTimeout(() => setIsLoaded(true), 50);
+    return () => clearTimeout(timer);
+  }, []);
+
   const [game, setGame] = useState<AcesUpState>(setup);
-  const [selectedPile, setSelectedPile] = useState<number | null>(null);
-  const [message, setMessage] = useState(
-    "Discard lower cards of same suit, move cards to empty piles, then deal when blocked.",
+  const [selectedPile, setSelectedPile] = useState<number | undefined>(
+    undefined,
   );
 
   const { animateCards, measureRef, isAnimating, setIsAnimating } =
@@ -128,13 +135,14 @@ export default function AcesUp() {
 
   function reset() {
     setGame(setup());
-    setSelectedPile(null);
-    setMessage(
-      "Discard lower cards of same suit, move cards to empty piles, then deal when blocked.",
-    );
+    setSelectedPile(undefined);
   }
 
   async function dealFour() {
+    setGame((prev) => {
+      return { ...prev, ended: true, won: true };
+    });
+
     if (game.ended || game.stock.length < 4 || isAnimating) return;
     setIsAnimating(true);
 
@@ -189,9 +197,8 @@ export default function AcesUp() {
       return { ...prev, stock, piles, ended, won };
     });
 
-    setSelectedPile(null);
+    setSelectedPile(undefined);
     setIsAnimating(false);
-    setMessage("Dealt one card to each pile.");
   }
 
   async function discardTop(pileIndex: number) {
@@ -247,9 +254,8 @@ export default function AcesUp() {
       return { ...prev, piles, discard, ended, won };
     });
 
-    setSelectedPile(null);
+    setSelectedPile(undefined);
     setIsAnimating(false);
-    setMessage("Discarded top card.");
     setIsDiscarding(undefined);
   }
 
@@ -261,19 +267,15 @@ export default function AcesUp() {
       const piles = prev.piles.map((pile) => [...pile]);
       const clickedEmptyPile = piles[pileIndex].length === 0;
 
-      if (selectedPile === null) {
+      if (selectedPile === undefined) {
         // Select first source card
         if (!clickedEmptyPile) {
           setSelectedPile(pileIndex);
-          setMessage(
-            "Selected a source pile. Tap an empty pile to move its top card.",
-          );
         }
         return prev;
       } else if (selectedPile === pileIndex) {
         // Unselect pile
-        setSelectedPile(null);
-        setMessage("Selection cleared.");
+        setSelectedPile(undefined);
         return prev;
       } else if (!clickedEmptyPile) {
         // Switch to another source card
@@ -294,8 +296,7 @@ export default function AcesUp() {
       target.push(moving);
 
       const { ended, won } = evaluateEndState(prev.stock, piles);
-      setSelectedPile(null);
-      setMessage("Moved top card to an empty pile.");
+      setSelectedPile(undefined);
 
       return { ...prev, piles, ended, won };
     });
@@ -305,25 +306,14 @@ export default function AcesUp() {
 
   return (
     <>
-      <GameHeader
-        gameTitle="Aces Up"
+      <GameMenus
         ended={game.ended}
         won={game.won}
         reset={reset}
+        isLoaded={isLoaded}
       />
 
       <View style={layoutStyles.gameArea}>
-        <MessageBox message={message} />
-
-        {game.ended ? (
-          <MessageBox
-            messageType={game.won ? "win" : "lose"}
-            message={
-              game.won ? "You won!" : "No legal moves remain with stock empty."
-            }
-          />
-        ) : null}
-
         <View
           style={[
             flexStyles.rowCentered,
@@ -335,6 +325,7 @@ export default function AcesUp() {
             refTopNext={discardRef}
             backCount={game.discard.length}
             cardsPerRow={4}
+            limitFan
             fan="horizontalRight"
             showCount
             countPosition="left"
@@ -345,6 +336,7 @@ export default function AcesUp() {
             refTopCurrent={stockRef}
             backCount={game.stock.length}
             cardsPerRow={4}
+            limitFan
             fan="horizontalRight"
             showCount
             countPosition="left"
@@ -398,7 +390,7 @@ export default function AcesUp() {
                   isDisabled={
                     (!canDiscard && !hasEmptyPile) ||
                     isAnimating ||
-                    (pile.length === 0 && !selectedPile)
+                    (pile.length === 0 && selectedPile === undefined)
                   }
                 />
               </View>

@@ -13,7 +13,7 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { CardButton } from "../Cards/CardButton";
-import { GameHeader } from "../common/GameHeader";
+import { GameMenus } from "../common/GameMenus";
 import { MessageBox } from "../common/MessageBox";
 import { flexStyles } from "@/styles/flexStyles";
 
@@ -232,12 +232,12 @@ export default function Area52() {
 
   return (
     <>
-      <GameHeader
+      {/* <GameMenus
         gameTitle="Area 52"
         ended={game.ended}
         won={game.won}
         reset={reset}
-      />
+      /> */}
 
       <View style={layoutStyles.gameArea}>
         <MessageBox message={message} />

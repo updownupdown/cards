@@ -27,7 +27,8 @@ type DeckCard = {
 type DeckProps = {
   style?: ViewStyle[];
   backCount?: number;
-  cards?: DeckCard[];
+  limitFan?: boolean;
+  cards?: (DeckCard | "back")[];
   fan?:
     | "horizontalRight"
     | "horizontalLeft"
@@ -57,6 +58,7 @@ export const Deck = ({
   altSelectableColor,
   countPosition = "above",
   fan = "horizontalRight",
+  limitFan,
   largeFan,
   cardsPerRow = 5,
   title,
@@ -68,17 +70,18 @@ export const Deck = ({
   refTopNext,
   onPress,
 }: DeckProps) => {
-  let deckSize = 0;
+  let trueDeckSize = backCount ?? cards?.length ?? 0;
+  let limitedDeckSize = trueDeckSize;
+  let skipFirstCards = 0;
 
-  if (backCount !== undefined) {
-    deckSize += Math.min(backCount, maxBackDeckSize);
-  }
-  if (cards?.length) {
-    deckSize += cards.length;
+  if (limitFan) {
+    const targetDeckSize = Math.min(limitedDeckSize, maxBackDeckSize);
+    skipFirstCards = limitedDeckSize - targetDeckSize;
+    limitedDeckSize = targetDeckSize;
   }
 
   function cardOffsetStyle(index: number, nextCardPos?: boolean) {
-    let adjustedDeckSize = deckSize;
+    let adjustedDeckSize = limitedDeckSize;
     // Prevent current pos ref from being -1
     let adjustedIndex = Math.max(0, index);
 
@@ -180,7 +183,7 @@ export const Deck = ({
           )}
           {title && <Text style={cardStyles.deckCountTitle}>{title}</Text>}
           {showCount && (
-            <Text style={cardStyles.deckCountValue}>{backCount}</Text>
+            <Text style={cardStyles.deckCountValue}>{trueDeckSize}</Text>
           )}
         </View>
       )}
@@ -196,7 +199,7 @@ export const Deck = ({
           style={[
             // Used as a relative positioned card
             cardStyles.card,
-            cardOffsetStyle(deckSize - 1),
+            cardOffsetStyle(limitedDeckSize - 1),
             cardStyles.animHide,
             { width, height },
           ]}
@@ -207,7 +210,7 @@ export const Deck = ({
           style={[
             cardStyles.card,
             flexStyles.positionAbsolute,
-            cardOffsetStyle(deckSize, true),
+            cardOffsetStyle(limitedDeckSize, true),
             cardStyles.animHide,
             { width, height },
           ]}
@@ -216,7 +219,7 @@ export const Deck = ({
 
         {/* Placeholder at bottom of deck; sometimes pressable */}
         <CardButton
-          onPress={deckSize === 0 ? onPress : undefined}
+          onPress={limitedDeckSize === 0 ? onPress : undefined}
           cardsPerRow={cardsPerRow}
           isPlaceholder
           style={[cardStyles.deckCard]}
@@ -224,11 +227,19 @@ export const Deck = ({
           altSelectableColor={altSelectableColor}
         />
 
-        {Array.from({ length: deckSize }, (_, index) => {
-          const suit = cards?.[index].suit;
-          const rank = cards?.[index].rank;
+        {Array.from({ length: limitedDeckSize }, (_, index) => {
+          const adjustedIndex = index + skipFirstCards;
+
+          const suit =
+            cards?.[adjustedIndex] !== "back"
+              ? cards?.[adjustedIndex].suit
+              : undefined;
+          const rank =
+            cards?.[adjustedIndex] !== "back"
+              ? cards?.[adjustedIndex].rank
+              : undefined;
           const isBack = !suit || !rank;
-          const isTopCard = index === deckSize - 1;
+          const isTopCard = adjustedIndex === limitedDeckSize - 1;
 
           return (
             <CardButton
@@ -246,7 +257,7 @@ export const Deck = ({
                 cardStyles.deckCard,
                 cardOffsetStyle(index),
                 hideTopCard === true &&
-                  index === deckSize - 1 &&
+                  adjustedIndex === limitedDeckSize - 1 &&
                   cardStyles.animHide,
               ]}
               altSelectableColor={altSelectableColor}

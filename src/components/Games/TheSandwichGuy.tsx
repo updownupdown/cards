@@ -15,7 +15,7 @@ import { textStyles } from "@/styles/textStyles";
 import { buttonStyles } from "@/styles/buttonStyles";
 import { cardStyles } from "@/styles/cardStyles";
 import { Deck } from "../Cards/Deck";
-import { GameHeader } from "../common/GameHeader";
+import { GameMenus } from "../common/GameMenus";
 import { MessageBox } from "../common/MessageBox";
 import { CardButton } from "../Cards/CardButton";
 import { Button } from "../Button/Button";
@@ -187,12 +187,12 @@ export default function TheSandwichGuy() {
 
   return (
     <>
-      <GameHeader
+      {/* <GameMenus
         gameTitle="The Sandwich Guy"
         ended={game.ended}
         won={won}
         reset={reset}
-      />
+      /> */}
 
       <View style={layoutStyles.gameArea}>
         <MessageBox message={message} />

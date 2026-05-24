@@ -4,7 +4,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Card } from "../Cards/Card";
 import InfoModal from "../Modals/InfoModal";
 import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
-import { GameHeader } from "../common/GameHeader";
+import { GameMenus } from "../common/GameMenus";
 import { layoutStyles } from "@/styles/layoutStyles";
 import { textStyles } from "@/styles/textStyles";
 import { flexStyles } from "@/styles/flexStyles";
@@ -135,12 +135,12 @@ export default function Clock() {
 
   return (
     <>
-      <GameHeader
+      {/* <GameMenus
         gameTitle="Clock Solitaire"
         ended={game.ended}
         won={game.won}
         reset={reset}
-      />
+      /> */}
 
       <View style={layoutStyles.gameArea}>
         <View

@@ -1,11 +1,12 @@
 import { Icon, IconName } from "@/icons";
 import { buttonStyles } from "@/styles/buttonStyles";
 import { Colors } from "@/styles/styles";
-import { Pressable, Text, ViewStyle } from "react-native";
+import { Pressable, Text, TextStyle, ViewStyle } from "react-native";
 
 interface Props {
   style?: ViewStyle | ViewStyle[];
-  size?: "small" | "medium" | "large";
+  textStyle?: TextStyle | TextStyle[];
+  size?: "text" | "small" | "medium" | "large";
   disabled?: boolean;
   fullWidth?: boolean;
   onPress: () => void;
@@ -16,6 +17,7 @@ interface Props {
 
 export const Button = ({
   style,
+  textStyle,
   size = "medium",
   disabled,
   fullWidth,
@@ -28,6 +30,7 @@ export const Button = ({
     <Pressable
       style={[
         buttonStyles.button,
+        size === "text" && buttonStyles.sizeText,
         size === "small" && buttonStyles.sizeSmall,
         size === "medium" && buttonStyles.sizeMedium,
         size === "large" && buttonStyles.sizeLarge,
@@ -49,10 +52,12 @@ export const Button = ({
         <Text
           style={[
             buttonStyles.text,
+            size === "text" && buttonStyles.textSizeText,
             size === "small" && buttonStyles.textSizeSmall,
             size === "medium" && buttonStyles.textSizeMedium,
             size === "large" && buttonStyles.textSizeLarge,
             disabled && buttonStyles.textDisabled,
+            textStyle,
           ]}
         >
           {text}
