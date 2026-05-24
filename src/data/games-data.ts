@@ -11,6 +11,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Discard a top card when a higher card of the same suit is showing.",
       "Move a top card into an empty pile to create new options.",
       "Win by ending with only the four Aces.",
+      // Discard lower cards of same suit, move cards to empty piles, then deal when blocked.
     ],
     rules: [
       "These are the full rules!",

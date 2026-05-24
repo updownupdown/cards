@@ -1,4 +1,5 @@
 import { cardStyles } from "@/styles/cardStyles";
+import { useGameLoading } from "@/hooks/useGameLoading";
 import { layoutStyles } from "@/styles/layoutStyles";
 import { textStyles } from "@/styles/textStyles";
 import { useMemo, useState } from "react";
@@ -79,6 +80,8 @@ function evaluateEnd(state: GolfState) {
 }
 
 export default function Golf() {
+  const isLoaded = useGameLoading();
+
   const [game, setGame] = useState<GolfState>(setup);
   const [message, setMessage] = useState(
     "Tap a tableau card one rank above/below waste top. Draw from stock when blocked.",
@@ -137,12 +140,7 @@ export default function Golf() {
 
   return (
     <>
-      {/* <GameMenus
-        gameTitle="Golf Solitaire"
-        ended={game.ended}
-        won={game.won}
-        reset={reset}
-      /> */}
+      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
 
       <View style={layoutStyles.gameArea}>
         <MessageBox message={message} />

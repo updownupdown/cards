@@ -1,23 +1,18 @@
-import { EMPTY_STATS } from "@/components/Modals/InfoModal";
-import { GAMES_DATA } from "@/data/games-data";
 import { Icon } from "@/icons";
 import { homeStyles } from "@/styles/homeStyles";
 import { Colors } from "@/styles/styles";
-import { textStyles } from "@/styles/textStyles";
 import { Link, type Href } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import {
-  calculateWinRate,
-  GameStatsMap,
   homeGameList,
   loadFavoriteGames,
-  loadStatsMap,
   sortHomeGames,
   toggleFavoriteGame,
 } from "../../data/game-menu";
 import { Button } from "../Button/Button";
 import { StatsModal } from "./StatsModal";
+import { SettingsModal } from "./SettingsModal";
 
 export default function Home() {
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
@@ -53,19 +48,32 @@ export default function Home() {
   }
 
   const [showStatsModal, setShowStatsModal] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   return (
     <>
       {showStatsModal && (
         <StatsModal onClose={() => setShowStatsModal(false)} />
       )}
+      {showSettingsModal && (
+        <SettingsModal onClose={() => setShowSettingsModal(false)} />
+      )}
 
       <ScrollView contentContainerStyle={homeStyles.scrollContent}>
-        <Button
-          onPress={() => setShowStatsModal(true)}
-          text="View all game stats"
-          size="text"
-        />
+        <View style={{ gap: 10, width: "100%", marginBottom: 10 }}>
+          <Button
+            onPress={() => setShowStatsModal(true)}
+            text="View all game stats"
+            size="text"
+            fullWidth
+          />
+          <Button
+            onPress={() => setShowSettingsModal(true)}
+            text="App Settings"
+            size="text"
+            fullWidth
+          />
+        </View>
 
         <View style={homeStyles.linkCol}>
           {favoriteGames.length > 0 ? (

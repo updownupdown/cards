@@ -7,6 +7,8 @@ import type { SvgProps } from "react-native-svg";
 
 import ArrowBackIcon from "./ArrowBack.svg";
 import ArrowForwardIcon from "./ArrowForward.svg";
+import CheckBoxOffIcon from "./CheckBoxOff.svg";
+import CheckBoxOnIcon from "./CheckBoxOn.svg";
 import ChevronLeftIcon from "./ChevronLeft.svg";
 import CloseIcon from "./Close.svg";
 import DeleteIcon from "./Delete.svg";
@@ -26,6 +28,8 @@ import SwordIcon from "./Sword.svg";
 export type IconName =
   | "arrow-back"
   | "arrow-forward"
+  | "check-box-off"
+  | "check-box-on"
   | "chevron-left"
   | "close"
   | "delete"
@@ -45,6 +49,8 @@ export type IconName =
 export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "arrow-back": ArrowBackIcon,
   "arrow-forward": ArrowForwardIcon,
+  "check-box-off": CheckBoxOffIcon,
+  "check-box-on": CheckBoxOnIcon,
   "chevron-left": ChevronLeftIcon,
   "close": CloseIcon,
   "delete": DeleteIcon,

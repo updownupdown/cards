@@ -1,4 +1,5 @@
 import { useNavigation } from "expo-router";
+import { useGameLoading } from "@/hooks/useGameLoading";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { GestureResponderEvent, View as RNView } from "react-native";
 import {
@@ -199,6 +200,8 @@ function runTiming(
 }
 
 export default function Solitaire() {
+  const isLoaded = useGameLoading();
+
   const navigation = useNavigation();
 
   const [game, setGame] = useState<GameState>(createInitialState);
@@ -782,12 +785,7 @@ export default function Solitaire() {
 
   return (
     <>
-      {/* <GameMenus
-        gameTitle="Solitaire"
-        ended={won}
-        won={won}
-        reset={resetGame}
-      /> */}
+      <GameMenus ended={won} won={won} reset={resetGame} isLoaded={isLoaded} />
       <View
         ref={boardRef}
         onLayout={updateBoardOrigin}

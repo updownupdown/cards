@@ -1,4 +1,6 @@
 import { useMemo, useRef, useState } from "react";
+import { GameMenus } from "../common/GameMenus";
+import { useGameLoading } from "@/hooks/useGameLoading";
 import {
   Animated,
   PanResponder,
@@ -8,9 +10,7 @@ import {
   View,
 } from "react-native";
 import type { GestureResponderEvent, View as RNView } from "react-native";
-
 import { Card } from "../Cards/Card";
-import InfoModal from "../Modals/InfoModal";
 import {
   DRAG_CAPTURE_THRESHOLD,
   DRAG_MOVE_THRESHOLD,
@@ -80,6 +80,8 @@ function tryCollectRun(pile: PlayingCard[]) {
 }
 
 export default function SpiderSolitaire() {
+  const isLoaded = useGameLoading();
+
   const [game, setGame] = useState<GameState>(createInitialState);
   const [selected, setSelected] = useState<Selection>(null);
   const [dragGhost, setDragGhost] = useState<DragGhost | null>(null);
@@ -324,7 +326,7 @@ export default function SpiderSolitaire() {
 
   return (
     <View ref={boardRef} onLayout={updateBoardOrigin} style={styles.container}>
-      <InfoModal ended={won} won={won} />
+      <GameMenus ended={won} won={won} reset={resetGame} isLoaded={isLoaded} />
 
       <View style={styles.headerRow}>
         <Text style={styles.title}>Spider Solitaire</Text>

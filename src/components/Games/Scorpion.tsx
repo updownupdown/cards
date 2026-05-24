@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
+import { GameMenus } from "../common/GameMenus";
+import { useGameLoading } from "@/hooks/useGameLoading";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Card } from "../Cards/Card";
-import InfoModal from "../Modals/InfoModal";
 import {
   CardRank,
   RANK_VALUE,
@@ -110,6 +111,8 @@ function evaluate(state: ScorpionState) {
 type Selection = { column: number; index: number } | null;
 
 export default function Scorpion() {
+  const isLoaded = useGameLoading();
+
   const [game, setGame] = useState<ScorpionState>(setup);
   const [selected, setSelected] = useState<Selection>(null);
   const [message, setMessage] = useState(
@@ -203,14 +206,9 @@ export default function Scorpion() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <InfoModal ended={game.ended} won={game.won} />
+      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
 
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>Scorpion</Text>
-        <Pressable style={styles.button} onPress={reset}>
-          <Text style={styles.buttonText}>New Game</Text>
-        </Pressable>
-      </View>
+      
 
       <Text style={textStyles.default}>Reserve cards: {game.stock.length}</Text>
       <Text style={textStyles.default}>

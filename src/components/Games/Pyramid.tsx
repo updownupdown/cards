@@ -1,4 +1,6 @@
 import { useMemo, useRef, useState } from "react";
+import { GameMenus } from "../common/GameMenus";
+import { useGameLoading } from "@/hooks/useGameLoading";
 import {
   Animated,
   PanResponder,
@@ -10,7 +12,6 @@ import {
 import type { GestureResponderEvent, View as RNView } from "react-native";
 
 import { Card } from "../Cards/Card";
-import InfoModal from "../Modals/InfoModal";
 import {
   DRAG_CAPTURE_THRESHOLD,
   DRAG_MOVE_THRESHOLD,
@@ -88,6 +89,8 @@ function cardValue(card: PlayingCard) {
 }
 
 export default function Pyramid() {
+  const isLoaded = useGameLoading();
+
   const [game, setGame] = useState<GameState>(createInitialState);
   const [selected, setSelected] = useState<Selection>(null);
   const [dragGhost, setDragGhost] = useState<DragGhost | null>(null);
@@ -462,13 +465,8 @@ export default function Pyramid() {
 
   return (
     <View ref={boardRef} onLayout={updateBoardOrigin} style={styles.container}>
-      <InfoModal ended={won} won={won} />
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>Pyramid</Text>
-        <Pressable style={styles.button} onPress={resetGame}>
-          <Text style={styles.buttonText}>New Game</Text>
-        </Pressable>
-      </View>
+      <GameMenus ended={won} won={won} reset={resetGame} isLoaded={isLoaded} />
+      
 
       <Text style={textStyles.default}>
         Clear all pyramid cards by making 13.

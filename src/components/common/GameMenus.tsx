@@ -1,21 +1,21 @@
-import { buttonStyles } from "@/styles/buttonStyles";
-import { layoutStyles } from "@/styles/layoutStyles";
-import { textStyles } from "@/styles/textStyles";
-import { router, usePathname } from "expo-router";
-import { ActivityIndicator, Animated, Easing, Text, View } from "react-native";
-import { Button } from "../Button/Button";
-import InfoModal, { EMPTY_STATS } from "../Modals/InfoModal";
-import { Colors } from "@/styles/styles";
-import { useEffect, useRef, useState } from "react";
-import { menuStyles } from "@/styles/menuStyles";
 import {
-  GameStatsMap,
   getGameInfo,
-  loadStatsMap,
   normalizeGamePath,
   recordAttempt,
   recordResult,
 } from "@/data/game-menu";
+import { useGameSettings } from "@/hooks/useGameSettings";
+import { buttonStyles } from "@/styles/buttonStyles";
+import { layoutStyles } from "@/styles/layoutStyles";
+import { menuStyles } from "@/styles/menuStyles";
+import { Colors } from "@/styles/styles";
+import { textStyles } from "@/styles/textStyles";
+import { router, usePathname } from "expo-router";
+import { useEffect, useRef, useState } from "react";
+import { ActivityIndicator, Animated, Easing, Text, View } from "react-native";
+import { Button } from "../Button/Button";
+import GameModal from "../Modals/GameModal";
+import { SettingControl } from "./SettingControl";
 
 interface Props {
   isLoaded?: boolean;
@@ -26,9 +26,20 @@ interface Props {
 
 export const GameMenus = ({ isLoaded, ended, won, reset }: Props) => {
   const pathname = normalizeGamePath(usePathname());
+  const gameInfo = getGameInfo(pathname);
+
+  // Settings
+  const { settings: gameSettings, updateSettings: updateGameSettings } =
+    useGameSettings(pathname);
+
   const [showIntro, setShowIntro] = useState(true);
   const [showMenu, setShowMenu] = useState(false);
-  const gameInfo = getGameInfo(pathname);
+
+  useEffect(() => {
+    if (!isLoaded && !gameSettings.showIntro) {
+      setShowIntro(false);
+    }
+  }, [gameSettings.showIntro]);
 
   // Loading overlay
   const [showLoadingOverlay, setShowLoadingOverlay] = useState(!isLoaded);
@@ -104,21 +115,6 @@ export const GameMenus = ({ isLoaded, ended, won, reset }: Props) => {
   // Record stats
   const prevEndedRef = useRef(false);
   const attemptedPathRef = useRef<string | null>(null);
-  const [statsMap, setStatsMap] = useState<GameStatsMap>({});
-
-  const currentStats = statsMap[pathname] ?? EMPTY_STATS;
-
-  // console.log(statsMap);
-
-  useEffect(() => {
-    let cancelled = false;
-    loadStatsMap().then((loaded) => {
-      if (!cancelled) setStatsMap(loaded);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   useEffect(() => {
     prevEndedRef.current = false;
@@ -128,14 +124,7 @@ export const GameMenus = ({ isLoaded, ended, won, reset }: Props) => {
     if (attemptedPathRef.current === pathname) return;
     attemptedPathRef.current = pathname;
 
-    let cancelled = false;
-    recordAttempt(pathname).then((nextMap) => {
-      if (!cancelled) setStatsMap(nextMap);
-    });
-
-    return () => {
-      cancelled = true;
-    };
+    recordAttempt(pathname).catch(() => {});
   }, [pathname]);
 
   useEffect(() => {
@@ -143,14 +132,7 @@ export const GameMenus = ({ isLoaded, ended, won, reset }: Props) => {
     prevEndedRef.current = true;
     if (typeof won !== "boolean") return;
 
-    let cancelled = false;
-    recordResult(pathname, won).then((nextMap) => {
-      if (!cancelled) setStatsMap(nextMap);
-    });
-
-    return () => {
-      cancelled = true;
-    };
+    recordResult(pathname, won).catch(() => {});
   }, [ended, won, pathname]);
 
   const gameIntroElement = (
@@ -178,11 +160,30 @@ export const GameMenus = ({ isLoaded, ended, won, reset }: Props) => {
       </View>
 
       <Button
-        onPress={() => fadeOutIntro()}
+        onPress={() => {
+          fadeOutIntro();
+        }}
         size="large"
         text="Play"
         fullWidth
       />
+
+      <View style={{ width: "100%", paddingHorizontal: 16 }}>
+        <SettingControl
+          label="Show this intro screen next time"
+          type="boolean"
+          booleanType="checkbox"
+          value={gameSettings.showIntro}
+          onChange={(val) => updateGameSettings({ showIntro: val })}
+        />
+        <SettingControl
+          label="Show this intro screen next time"
+          type="boolean"
+          // booleanType="checkbox"
+          value={gameSettings.showIntro}
+          onChange={(val) => updateGameSettings({ showIntro: val })}
+        />
+      </View>
     </Animated.View>
   );
 
@@ -238,12 +239,7 @@ export const GameMenus = ({ isLoaded, ended, won, reset }: Props) => {
       {ended && winLoseMessageElement(won, 500)}
 
       {/* Game menu */}
-      {showMenu && (
-        <InfoModal
-          currentStats={currentStats}
-          onClose={() => setShowMenu(false)}
-        />
-      )}
+      {showMenu && <GameModal onClose={() => setShowMenu(false)} />}
 
       <View style={layoutStyles.gameHeader}>
         <Button

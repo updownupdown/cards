@@ -16,6 +16,7 @@ import { CardButton } from "../Cards/CardButton";
 import { GameMenus } from "../common/GameMenus";
 import { MessageBox } from "../common/MessageBox";
 import { flexStyles } from "@/styles/flexStyles";
+import { useGameLoading } from "@/hooks/useGameLoading";
 
 const localCardPerRow = 4;
 
@@ -117,6 +118,7 @@ function calcWinScore(state: AreaState) {
 }
 
 export default function Area52() {
+  const isLoaded = useGameLoading();
   const [game, setGame] = useState<AreaState>(() => ensureQueue(initState()));
   const [selectedDefenders, setSelectedDefenders] = useState<number[]>([]);
   const [message, setMessage] = useState(
@@ -232,12 +234,12 @@ export default function Area52() {
 
   return (
     <>
-      {/* <GameMenus
-        gameTitle="Area 52"
+      <GameMenus
         ended={game.ended}
         won={game.won}
         reset={reset}
-      /> */}
+        isLoaded={isLoaded}
+      />
 
       <View style={layoutStyles.gameArea}>
         <MessageBox message={message} />

@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
+import { GameMenus } from "../common/GameMenus";
+import { useGameLoading } from "@/hooks/useGameLoading";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Card } from "../Cards/Card";
-import InfoModal from "../Modals/InfoModal";
 import {
   CardSuit,
   RANK_VALUE,
@@ -98,6 +99,8 @@ function hasAnyLegalMove(state: FortyState) {
 }
 
 export default function FortyThieves() {
+  const isLoaded = useGameLoading();
+
   const [game, setGame] = useState<FortyState>(setup);
   const [message, setMessage] = useState(
     "Tap waste/tableau tops to auto-place; draw from stock to continue.",
@@ -193,13 +196,8 @@ export default function FortyThieves() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <InfoModal ended={game.ended} won={game.won} />
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>Forty Thieves</Text>
-        <Pressable style={styles.button} onPress={reset}>
-          <Text style={styles.buttonText}>New Game</Text>
-        </Pressable>
-      </View>
+      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
+      
 
       <Text style={textStyles.default}>Foundations: {foundCount}/104</Text>
       <Text style={textStyles.default}>Stock: {game.stock.length}</Text>

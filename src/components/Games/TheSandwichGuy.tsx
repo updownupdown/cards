@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
+import { useGameLoading } from "@/hooks/useGameLoading";
 import { Pressable, StyleSheet, Text, View, ViewStyle } from "react-native";
 
 import { Card } from "../Cards/Card";
-import InfoModal from "../Modals/InfoModal";
 import {
   RANK_VALUE,
   createDeck,
@@ -93,6 +93,8 @@ function replacementCount(cards: PlayingCard[]) {
 }
 
 export default function TheSandwichGuy() {
+  const isLoaded = useGameLoading();
+
   const [game, setGame] = useState<SandwichState>(initState);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [invalidSandwichSelected, setInvalidSandwichSelected] = useState(false);
@@ -187,12 +189,7 @@ export default function TheSandwichGuy() {
 
   return (
     <>
-      {/* <GameMenus
-        gameTitle="The Sandwich Guy"
-        ended={game.ended}
-        won={won}
-        reset={reset}
-      /> */}
+      <GameMenus ended={game.ended} won={won} reset={reset} isLoaded={isLoaded} />
 
       <View style={layoutStyles.gameArea}>
         <MessageBox message={message} />

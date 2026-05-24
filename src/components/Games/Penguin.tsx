@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
+import { GameMenus } from "../common/GameMenus";
+import { useGameLoading } from "@/hooks/useGameLoading";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Card } from "../Cards/Card";
-import InfoModal from "../Modals/InfoModal";
 import {
   CardSuit,
   RANK_VALUE,
@@ -147,6 +148,8 @@ function totalFoundations(foundations: Foundations) {
 }
 
 export default function Penguin() {
+  const isLoaded = useGameLoading();
+
   const [game, setGame] = useState<PenguinState>(setup);
   const [selected, setSelected] = useState<Selection>(null);
   const [message, setMessage] = useState(
@@ -241,13 +244,8 @@ export default function Penguin() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <InfoModal ended={game.ended} won={game.won} />
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>Penguin</Text>
-        <Pressable style={styles.button} onPress={reset}>
-          <Text style={styles.buttonText}>New Game</Text>
-        </Pressable>
-      </View>
+      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
+      
 
       <Text style={textStyles.default}>Beak rank: {game.beakRank}</Text>
       <Text style={textStyles.default}>Foundations: {foundationsCount}/52</Text>

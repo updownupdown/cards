@@ -1,20 +1,14 @@
-import { buttonStyles } from "@/styles/buttonStyles";
+import { useGameSettings } from "@/hooks/useGameSettings";
+import { SettingControl } from "../common/SettingControl";
 import { modalStyles } from "@/styles/modalStyles";
-import { Colors } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
-import { router, usePathname } from "expo-router";
-import { useEffect, useRef, useState } from "react";
-import { Modal, ScrollView, Text, View } from "react-native";
+import { usePathname } from "expo-router";
+import { ScrollView, Text, View } from "react-native";
 import {
   calculateWinRate,
   getGameInfo,
-  loadStatsMap,
   normalizeGamePath,
-  recordAttempt,
-  recordResult,
-  toggleFavoriteGame,
   type GameStats,
-  type GameStatsMap,
 } from "../../data/game-menu";
 import { Button } from "../Button/Button";
 import ModalFull from "./ModalFull";
@@ -27,19 +21,16 @@ export const EMPTY_STATS: GameStats = {
 
 type Props = {
   onClose: () => void;
-  currentStats: GameStats;
 };
 
-export default function InfoModal({ currentStats, onClose }: Props) {
+export default function GameModal({ onClose }: Props) {
   const pathname = normalizeGamePath(usePathname());
   const info = getGameInfo(pathname);
+  const { settings, updateSettings, isLoading } = useGameSettings(pathname);
 
   const rules = info.rules ?? info.howToPlay;
 
-  async function onToggleFavorite(path: string) {
-    const updated = await toggleFavoriteGame(path);
-    // setFavorites(new Set(updated));
-  }
+  if (isLoading) return null;
 
   return (
     <>
@@ -55,33 +46,39 @@ export default function InfoModal({ currentStats, onClose }: Props) {
               <View style={modalStyles.stat}>
                 <Text style={modalStyles.statsTextLabel}>Attempts</Text>
                 <Text style={modalStyles.statsTextValue}>
-                  {currentStats.attempts}
+                  {settings.stats.attempts}
                 </Text>
               </View>
 
               <View style={modalStyles.stat}>
                 <Text style={modalStyles.statsTextLabel}>Wins</Text>
                 <Text style={modalStyles.statsTextValue}>
-                  {currentStats.wins}
+                  {settings.stats.wins}
                 </Text>
               </View>
 
               <View style={modalStyles.stat}>
                 <Text style={modalStyles.statsTextLabel}>Lost</Text>
                 <Text style={modalStyles.statsTextValue}>
-                  {currentStats.losses}
+                  {settings.stats.losses}
                 </Text>
               </View>
 
               <View style={modalStyles.stat}>
                 <Text style={modalStyles.statsTextLabel}>Win rate</Text>
                 <Text style={modalStyles.statsTextValue}>
-                  {calculateWinRate(currentStats)}
+                  {calculateWinRate(settings.stats)}
                 </Text>
               </View>
             </View>
 
-            <Button onPress={() => {}} iconName="star-outline" size="text" />
+            <Button
+              onPress={() =>
+                updateSettings({ isFavorite: !settings.isFavorite })
+              }
+              iconName={settings.isFavorite ? "star" : "star-outline"}
+              size="text"
+            />
           </View>
 
           {/* Rules */}
@@ -91,6 +88,31 @@ export default function InfoModal({ currentStats, onClose }: Props) {
                 {line}
               </Text>
             ))}
+          </View>
+
+          {/* Settings */}
+          <View style={{ width: "100%", paddingVertical: 20 }}>
+            <Text style={textStyles.h3}>Game Settings</Text>
+
+            <SettingControl
+              label="Difficulty"
+              value={settings.difficulty}
+              type="string"
+              options={[
+                { label: "Easy", value: "easy" },
+                { label: "Difficult", value: "difficult" },
+              ]}
+              onChange={(val) =>
+                updateSettings({ difficulty: val as "easy" | "difficult" })
+              }
+            />
+
+            <SettingControl
+              label="Show intro screen for this game"
+              value={settings.showIntro}
+              type="boolean"
+              onChange={(val) => updateSettings({ showIntro: val })}
+            />
           </View>
         </ScrollView>
 

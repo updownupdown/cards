@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
+import { useGameLoading } from "@/hooks/useGameLoading";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Card } from "../Cards/Card";
-import InfoModal from "../Modals/InfoModal";
 import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
 import { GameMenus } from "../common/GameMenus";
 import { layoutStyles } from "@/styles/layoutStyles";
@@ -58,6 +58,8 @@ function setup(): ClockState {
 }
 
 export default function Clock() {
+  const isLoaded = useGameLoading();
+
   const [game, setGame] = useState<ClockState>(setup);
   const [message, setMessage] = useState(
     "Reveal next card from the active pile. Its rank selects the next active pile.",
@@ -135,12 +137,7 @@ export default function Clock() {
 
   return (
     <>
-      {/* <GameMenus
-        gameTitle="Clock Solitaire"
-        ended={game.ended}
-        won={game.won}
-        reset={reset}
-      /> */}
+      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
 
       <View style={layoutStyles.gameArea}>
         <View

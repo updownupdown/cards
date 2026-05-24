@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
+import { GameMenus } from "../common/GameMenus";
+import { useGameLoading } from "@/hooks/useGameLoading";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Card, type CardSuit } from "../Cards/Card";
-import InfoModal from "../Modals/InfoModal";
 import {
   RANK_VALUE,
   createDeck,
@@ -131,6 +132,8 @@ function drawWithRecycle(
 }
 
 export default function TheEmissary() {
+  const isLoaded = useGameLoading();
+
   const [game, setGame] = useState<EmissaryState>(setup);
   const [message, setMessage] = useState(
     "Choose an unvisited kingdom, then play debates to hit the exact required wins.",
@@ -285,14 +288,9 @@ export default function TheEmissary() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <InfoModal ended={game.ended} won={game.won} />
+      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
 
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>The Emissary</Text>
-        <Pressable style={styles.button} onPress={reset}>
-          <Text style={styles.buttonText}>New Game</Text>
-        </Pressable>
-      </View>
+      
 
       <Text style={textStyles.default}>Kingdoms won: {kingdomsWon}/8</Text>
       <Text style={textStyles.default}>Score: {score}/16</Text>

@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
+import { useGameLoading } from "@/hooks/useGameLoading";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Card } from "../Cards/Card";
-import InfoModal from "../Modals/InfoModal";
 import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
 import { GameMenus } from "../common/GameMenus";
 import { layoutStyles } from "@/styles/layoutStyles";
@@ -113,6 +113,8 @@ function compactGrid(grid: Cell[][]) {
 }
 
 export default function MonteCarlo() {
+  const isLoaded = useGameLoading();
+
   const [game, setGame] = useState<MonteCarloState>(setup);
   const [selected, setSelected] = useState<Selection>(null);
   const [message, setMessage] = useState(
@@ -200,12 +202,7 @@ export default function MonteCarlo() {
 
   return (
     <>
-      {/* <GameMenus
-        gameTitle="Monte Carlo"
-        ended={game.ended}
-        won={game.won}
-        reset={reset}
-      /> */}
+      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
 
       <View style={layoutStyles.gameArea}>
         <View

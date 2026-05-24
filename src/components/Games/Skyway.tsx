@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
+import { GameMenus } from "../common/GameMenus";
+import { useGameLoading } from "@/hooks/useGameLoading";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Card } from "../Cards/Card";
-import InfoModal from "../Modals/InfoModal";
 import {
   RANK_VALUE,
   SUITS,
@@ -175,6 +176,8 @@ function computeScore(grid: PlayingCard[][]): ScoreBySuit {
 }
 
 export default function Skyway() {
+  const isLoaded = useGameLoading();
+
   const [game, setGame] = useState<SkywayState>(initState);
   const [selectedMarket, setSelectedMarket] = useState<number | null>(null);
 
@@ -233,14 +236,9 @@ export default function Skyway() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <InfoModal ended={game.ended} won={won} />
+      <GameMenus ended={game.ended} won={won} reset={reset} isLoaded={isLoaded} />
 
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>Skyway</Text>
-        <Pressable style={styles.button} onPress={reset}>
-          <Text style={styles.buttonText}>New Game</Text>
-        </Pressable>
-      </View>
+      
 
       <Text style={textStyles.default}>Round {game.round} / 3</Text>
       <Text style={textStyles.default}>

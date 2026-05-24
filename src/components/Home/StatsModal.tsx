@@ -1,14 +1,13 @@
-import { EMPTY_STATS } from "@/components/Modals/InfoModal";
+import { EMPTY_STATS } from "@/data/game-menu";
 import { GAMES_DATA } from "@/data/games-data";
-import { homeStyles } from "@/styles/homeStyles";
 import { textStyles } from "@/styles/textStyles";
 import { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import {
   calculateWinRate,
-  GameStatsMap,
-  loadStatsMap,
-} from "../../data/game-menu";
+  loadGameSettingsMap,
+  type GameSettingsMap,
+} from "@/data/game-menu";
 import ModalFull from "../Modals/ModalFull";
 import { modalStyles } from "@/styles/modalStyles";
 import { flexStyles } from "@/styles/flexStyles";
@@ -18,12 +17,12 @@ interface Props {
 }
 
 export const StatsModal = ({ onClose }: Props) => {
-  const [statsMap, setStatsMap] = useState<GameStatsMap>({});
+  const [settingsMap, setSettingsMap] = useState<GameSettingsMap>({});
 
   useEffect(() => {
     let cancelled = false;
-    loadStatsMap().then((loaded) => {
-      if (!cancelled) setStatsMap(loaded);
+    loadGameSettingsMap().then((loaded) => {
+      if (!cancelled) setSettingsMap(loaded);
     });
     return () => {
       cancelled = true;
@@ -36,10 +35,10 @@ export const StatsModal = ({ onClose }: Props) => {
         .map(([path, gameInfo]) => ({
           path,
           title: gameInfo.title,
-          stats: statsMap[path] ?? EMPTY_STATS,
+          stats: settingsMap[path]?.stats ?? EMPTY_STATS,
         }))
         .sort((a, b) => a.title.localeCompare(b.title)),
-    [statsMap],
+    [settingsMap],
   );
 
   return (

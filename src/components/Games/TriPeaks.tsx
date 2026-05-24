@@ -1,4 +1,6 @@
 import { useMemo, useRef, useState } from "react";
+import { GameMenus } from "../common/GameMenus";
+import { useGameLoading } from "@/hooks/useGameLoading";
 import {
   Animated,
   PanResponder,
@@ -10,7 +12,6 @@ import {
 import type { GestureResponderEvent, View as RNView } from "react-native";
 
 import { Card } from "../Cards/Card";
-import InfoModal from "../Modals/InfoModal";
 import {
   DRAG_CAPTURE_THRESHOLD,
   DRAG_MOVE_THRESHOLD,
@@ -99,6 +100,8 @@ function isExposed(card: TableauCard, tableau: TableauCard[]) {
 }
 
 export default function TriPeaks() {
+  const isLoaded = useGameLoading();
+
   const [game, setGame] = useState<GameState>(createInitialState);
   const [dragGhost, setDragGhost] = useState<DragGhost | null>(null);
   const [isWasteDropActive, setIsWasteDropActive] = useState(false);
@@ -260,14 +263,9 @@ export default function TriPeaks() {
 
   return (
     <View ref={boardRef} onLayout={updateBoardOrigin} style={styles.container}>
-      <InfoModal ended={won} won={won} />
+      <GameMenus ended={won} won={won} reset={resetGame} isLoaded={isLoaded} />
 
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>TriPeaks</Text>
-        <Pressable style={styles.button} onPress={resetGame}>
-          <Text style={styles.buttonText}>New Game</Text>
-        </Pressable>
-      </View>
+      
 
       <Text style={textStyles.default}>
         Remove exposed cards adjacent to waste rank.

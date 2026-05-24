@@ -1,15 +1,15 @@
+import { useGameLoading } from "@/hooks/useGameLoading";
 import { cardStyles } from "@/styles/cardStyles";
+import { flexStyles } from "@/styles/flexStyles";
 import { layoutStyles } from "@/styles/layoutStyles";
-import { useMemo, useRef, useState, useEffect } from "react";
-import { View, ActivityIndicator } from "react-native";
+import { Colors } from "@/styles/styles";
+import { useMemo, useRef, useState } from "react";
+import { View } from "react-native";
 import { useAnimations } from "../Animations/Animations";
 import { Button } from "../Button/Button";
 import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
 import { Deck } from "../Cards/Deck";
 import { GameMenus } from "../common/GameMenus";
-import { MessageBox } from "../common/MessageBox";
-import { flexStyles } from "@/styles/flexStyles";
-import { Colors } from "@/styles/styles";
 
 type AcesUpState = {
   stock: PlayingCard[];
@@ -97,14 +97,7 @@ function evaluateEndState(stock: PlayingCard[], piles: PlayingCard[][]) {
 }
 
 export default function AcesUp() {
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    // Delay rendering so the UI can mount and fade in first.
-    const timer = setTimeout(() => setIsLoaded(true), 50);
-    return () => clearTimeout(timer);
-  }, []);
-
+  const isLoaded = useGameLoading();
   const [game, setGame] = useState<AcesUpState>(setup);
   const [selectedPile, setSelectedPile] = useState<number | undefined>(
     undefined,
@@ -139,10 +132,6 @@ export default function AcesUp() {
   }
 
   async function dealFour() {
-    setGame((prev) => {
-      return { ...prev, ended: true, won: true };
-    });
-
     if (game.ended || game.stock.length < 4 || isAnimating) return;
     setIsAnimating(true);
 

@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
+import { GameMenus } from "../common/GameMenus";
+import { useGameLoading } from "@/hooks/useGameLoading";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Card } from "../Cards/Card";
-import InfoModal from "../Modals/InfoModal";
 import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
 import { textStyles } from "@/styles/textStyles";
 
@@ -115,6 +116,8 @@ function playmatePos(index: number) {
 }
 
 export default function HideAndSeek() {
+  const isLoaded = useGameLoading();
+
   const [game, setGame] = useState<GameState>(setup);
   const [message, setMessage] = useState(
     "Place guesses, reveal playmates, and withdraw bad guesses when needed.",
@@ -225,14 +228,9 @@ export default function HideAndSeek() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <InfoModal ended={game.ended} won={won} />
+      <GameMenus ended={game.ended} won={won} reset={reset} isLoaded={isLoaded} />
 
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>Hide and Seek</Text>
-        <Pressable style={styles.button} onPress={reset}>
-          <Text style={styles.buttonText}>New Game</Text>
-        </Pressable>
-      </View>
+      
 
       <Text style={textStyles.default}>Deck: {game.deck.length}</Text>
       <Text style={textStyles.default}>Score pile: {score}</Text>

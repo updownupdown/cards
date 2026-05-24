@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
+import { GameMenus } from "../common/GameMenus";
+import { useGameLoading } from "@/hooks/useGameLoading";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { Card } from "../Cards/Card";
-import InfoModal from "../Modals/InfoModal";
 import {
   RANK_VALUE,
   createDeck,
@@ -59,6 +60,8 @@ function totalInQueues(queues: PlayingCard[][]) {
 }
 
 export default function FirstBobaTeaShopInLondon() {
+  const isLoaded = useGameLoading();
+
   const [game, setGame] = useState<BobaState>(setup);
   const [message, setMessage] = useState(
     "Choose a queue first, then draw and resolve the customer.",
@@ -141,14 +144,9 @@ export default function FirstBobaTeaShopInLondon() {
 
   return (
     <View style={styles.container}>
-      <InfoModal ended={game.ended} won={game.won} />
+      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
 
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>The First Boba Tea Shop in London</Text>
-        <Pressable style={styles.button} onPress={reset}>
-          <Text style={styles.buttonText}>New Game</Text>
-        </Pressable>
-      </View>
+      
 
       <Text style={textStyles.default}>Deck: {game.deck.length}</Text>
       <Text style={textStyles.default}>Discard: {game.discard.length}</Text>

@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
+import { GameMenus } from "../common/GameMenus";
+import { useGameLoading } from "@/hooks/useGameLoading";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Card } from "../Cards/Card";
-import InfoModal from "../Modals/InfoModal";
 import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
 import { textStyles } from "@/styles/textStyles";
 
@@ -35,6 +36,8 @@ function hasAnyMove(line: PlayingCard[]) {
 }
 
 export default function Accordion() {
+  const isLoaded = useGameLoading();
+
   const [game, setGame] = useState<AccordionState>(setup);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [message, setMessage] = useState(
@@ -100,14 +103,9 @@ export default function Accordion() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <InfoModal ended={game.ended} won={game.won} />
+      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
 
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>Accordion</Text>
-        <Pressable style={styles.button} onPress={reset}>
-          <Text style={styles.buttonText}>New Game</Text>
-        </Pressable>
-      </View>
+      
 
       <Text style={textStyles.default}>
         Cards remaining: {game.line.length}

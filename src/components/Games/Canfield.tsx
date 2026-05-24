@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
+import { GameMenus } from "../common/GameMenus";
+import { useGameLoading } from "@/hooks/useGameLoading";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Card } from "../Cards/Card";
-import InfoModal from "../Modals/InfoModal";
 import {
   CardSuit,
   RANK_VALUE,
@@ -190,6 +191,8 @@ function totalOnFoundations(foundations: Foundations) {
 }
 
 export default function Canfield() {
+  const isLoaded = useGameLoading();
+
   const [game, setGame] = useState<CanfieldState>(setup);
   const [message, setMessage] = useState(
     "Tap reserve/waste/tableau tops to auto-place. Draw when needed.",
@@ -330,13 +333,8 @@ export default function Canfield() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <InfoModal ended={game.ended} won={game.won} />
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>Canfield</Text>
-        <Pressable style={styles.button} onPress={reset}>
-          <Text style={styles.buttonText}>New Game</Text>
-        </Pressable>
-      </View>
+      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
+      
 
       <Text style={textStyles.default}>Base rank: {game.baseRank}</Text>
       <Text style={textStyles.default}>Foundations: {foundationCount}/52</Text>
