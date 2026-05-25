@@ -89,7 +89,7 @@ export const Deck = ({
       // Look for next position in deck; need to mock deck being larger by 1
       adjustedDeckSize += 1;
 
-      if (backCount !== undefined) {
+      if (limitFan) {
         // Prevent going to larger deck size than will be generated
         adjustedDeckSize = Math.min(adjustedDeckSize, maxBackDeckSize);
 
@@ -194,28 +194,32 @@ export const Deck = ({
         collapsable={false}
       >
         {/* Anchor Views for refs, used for animations */}
-        <View
-          ref={refTopCurrent}
-          style={[
-            // Used as a relative positioned card
-            cardStyles.card,
-            cardOffsetStyle(limitedDeckSize - 1),
-            cardStyles.animHide,
-            { width, height },
-          ]}
-          collapsable={false}
-        />
-        <View
-          ref={refTopNext}
-          style={[
-            cardStyles.card,
-            flexStyles.positionAbsolute,
-            cardOffsetStyle(limitedDeckSize, true),
-            cardStyles.animHide,
-            { width, height },
-          ]}
-          collapsable={false}
-        />
+        {refTopCurrent && (
+          <View
+            ref={refTopCurrent}
+            style={[
+              // Used as a relative positioned card
+              cardStyles.card,
+              cardOffsetStyle(limitedDeckSize - 1),
+              cardStyles.animHide,
+              { width, height },
+            ]}
+            collapsable={false}
+          />
+        )}
+        {refTopNext && (
+          <View
+            ref={refTopNext}
+            style={[
+              cardStyles.card,
+              flexStyles.positionAbsolute,
+              cardOffsetStyle(limitedDeckSize, true),
+              cardStyles.animHide,
+              { width, height },
+            ]}
+            collapsable={false}
+          />
+        )}
 
         {/* Placeholder at bottom of deck; sometimes pressable */}
         <CardButton

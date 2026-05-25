@@ -129,7 +129,7 @@ const AnimatedCard = ({
         { rotateZ: `${rotationZ}deg` },
         { rotateY: `${rotationY}deg` },
       ],
-      transformOrigin: "center center",
+      transformOrigin: flip === undefined ? "top left" : "center center",
       zIndex:
         progress.value > 0.5
           ? (to.zIndex ?? from.zIndex ?? 100)

@@ -2,9 +2,9 @@ import { useMemo, useState } from "react";
 import { GameMenus } from "../common/GameMenus";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-
-import { Card, type CardSuit } from "../Cards/Card";
+import { Card } from "../Cards/Card";
 import {
+  CardSuit,
   RANK_VALUE,
   createDeck,
   shuffle,
@@ -194,7 +194,7 @@ export default function TheEmissary() {
 
       const visit = { ...prev.visit, hand: [...prev.visit.hand] };
       const idx = visit.hand.findIndex((c) => c.id === handCardId);
-      if (idx < 0) return prev;
+      if (idx < 0 || visit.rulerCard === null) return prev;
 
       const chosen = visit.hand[idx];
       const leadSuit = visit.rulerCard.suit;
@@ -288,9 +288,12 @@ export default function TheEmissary() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
-
-      
+      <GameMenus
+        ended={game.ended}
+        won={game.won}
+        reset={reset}
+        isLoaded={isLoaded}
+      />
 
       <Text style={textStyles.default}>Kingdoms won: {kingdomsWon}/8</Text>
       <Text style={textStyles.default}>Score: {score}/16</Text>

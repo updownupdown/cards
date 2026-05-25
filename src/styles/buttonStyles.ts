@@ -6,7 +6,7 @@ export const buttonStyles = StyleSheet.create({
     width: "100%",
   },
   button: {
-    transitionDuration: "0.1s",
+    transitionDuration: "0.4s",
     transitionProperty: "all",
     transitionTimingFunction: "ease",
     display: "flex",
@@ -21,6 +21,10 @@ export const buttonStyles = StyleSheet.create({
   // Sizes
   sizeText: {
     backgroundColor: "unset",
+  },
+  sizeTextLarge: {
+    backgroundColor: "unset",
+    padding: 20,
   },
   sizeSmall: {
     height: 34,
@@ -40,12 +44,21 @@ export const buttonStyles = StyleSheet.create({
 
   // Text sizes
   text: {
+    transitionDuration: "0.4s",
+    transitionProperty: "all",
+    transitionTimingFunction: "ease",
     textAlign: "center",
     fontFamily: FontWeight[400],
   },
   textSizeText: {
     fontSize: 16,
     color: Colors.accentBlue,
+  },
+  textSizeTextLarge: {
+    fontSize: 15,
+    color: Colors.accentBlue,
+    textTransform: "uppercase",
+    fontFamily: FontWeight[500],
   },
   textSizeSmall: {
     fontSize: 12,
@@ -66,7 +79,6 @@ export const buttonStyles = StyleSheet.create({
 
   // Disabled
   disabled: {
-    opacity: 0.5,
     color: Colors.K900,
     backgroundColor: Colors.K800,
     boxShadow: "unset",

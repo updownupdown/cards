@@ -2,7 +2,7 @@ import { cardStyles } from "@/styles/cardStyles";
 import { layoutStyles } from "@/styles/layoutStyles";
 import { textStyles } from "@/styles/textStyles";
 import { useMemo, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { Button } from "../Button/Button";
 import { Card } from "../Cards/Card";
 import {
@@ -14,11 +14,11 @@ import {
 } from "../Cards/card-utils";
 import { CardButton } from "../Cards/CardButton";
 import { GameMenus } from "../common/GameMenus";
-import { MessageBox } from "../common/MessageBox";
 import { flexStyles } from "@/styles/flexStyles";
 import { useGameLoading } from "@/hooks/useGameLoading";
+import { Deck } from "../Cards/Deck";
 
-const localCardPerRow = 4;
+const localCardPerRow = 5;
 
 type AreaState = {
   defenderDeck: PlayingCard[];
@@ -92,13 +92,19 @@ function refillDefenders(state: AreaState): AreaState {
   const defenders = [...state.defenders];
   const defenderDeck = [...state.defenderDeck];
 
-  while (defenders.length < 6 && defenderDeck.length > 0) {
-    const next = defenderDeck.shift();
-    if (!next) break;
-    defenders.push(next);
+  for (let i = 0; i < defenders.length; i++) {
+    if (!defenders[i]) {
+      const next = defenderDeck.shift();
+      if (next) {
+        defenders[i] = next;
+      }
+    }
   }
 
-  return { ...state, defenders, defenderDeck };
+  // If there are still empty spots but deck is empty, filter out nulls
+  const finalDefenders = defenders.filter(Boolean) as PlayingCard[];
+
+  return { ...state, defenders: finalDefenders, defenderDeck };
 }
 
 function nextAttacker(state: AreaState): AreaState {
@@ -121,19 +127,15 @@ export default function Area52() {
   const isLoaded = useGameLoading();
   const [game, setGame] = useState<AreaState>(() => ensureQueue(initState()));
   const [selectedDefenders, setSelectedDefenders] = useState<number[]>([]);
-  const [message, setMessage] = useState(
-    "Choose action to handle current attacker.",
-  );
 
   const currentAttacker = game.attackerQueue[0] ?? null;
   const score = useMemo(() => {
-    if (!game.ended) return null;
+    if (!game.ended) return undefined;
     return game.won ? calcWinScore(game) : calcLoseScore(game);
   }, [game]);
 
   function reset() {
     setSelectedDefenders([]);
-    setMessage("Choose action to handle current attacker.");
     setGame(ensureQueue(initState()));
   }
 
@@ -161,7 +163,7 @@ export default function Area52() {
 
       if (action === "dual") {
         if (selectedDefenders.length !== 2) {
-          setMessage("Dual attack needs exactly two defenders.");
+          // setMessage("Dual attack needs exactly two defenders.");
           return prev;
         }
 
@@ -172,14 +174,18 @@ export default function Area52() {
 
         const sum = RANK_VALUE[a.rank] + RANK_VALUE[b.rank];
         if (sum !== RANK_VALUE[attacker.rank]) {
-          setMessage("Dual attack must sum exactly to attacker value.");
+          // setMessage("Dual attack must sum exactly to attacker value.");
           return prev;
         }
+
+        // Keep spaces empty initially so when we drop in replacements they match index
+        (defenders as any)[aIdx] = null;
+        (defenders as any)[bIdx] = null;
 
         alienDiscard.push(attacker);
       } else if (action === "single") {
         if (selectedDefenders.length !== 1) {
-          setMessage("Single attack needs exactly one defender.");
+          // setMessage("Single attack needs exactly one defender.");
           return prev;
         }
 
@@ -192,23 +198,27 @@ export default function Area52() {
           isRed(defender.suit) !== isRed(attacker.suit);
 
         if (!valid) {
-          setMessage(
-            "Single attack needs higher value defender with opposite color.",
-          );
+          // setMessage(
+          //   "Single attack needs higher value defender with opposite color.",
+          // );
           return prev;
         }
 
         defenders[index] = attacker;
       } else {
         if (selectedDefenders.length !== 1) {
-          setMessage("Sacrifice needs exactly one defender.");
+          // setMessage("Sacrifice needs exactly one defender.");
           return prev;
         }
 
         const [index] = selectedDefenders;
         if (!defenders[index]) return prev;
 
-        defenders.splice(index, 1);
+        // Rather than removing and shifting elements, replace it with null explicitly
+        // to maintain structural positions until refill or rendering skips it
+        // We assert any to bypass strict PlayingCard array checks, or we can handle it safely:
+        (defenders as any)[index] = null;
+
         alienDeck = [...alienDeck, attacker];
       }
 
@@ -229,7 +239,6 @@ export default function Area52() {
     });
 
     setSelectedDefenders([]);
-    setMessage("Action resolved.");
   }
 
   return (
@@ -239,65 +248,125 @@ export default function Area52() {
         won={game.won}
         reset={reset}
         isLoaded={isLoaded}
+        score={score}
       />
 
-      <View style={layoutStyles.gameArea}>
-        <MessageBox message={message} />
+      {/* {game.ended ? (
+          <View style={flexStyles.rowCentered}>
+            <Text style={textStyles.default}>
+              {game.won ? "You won!" : "You lost"}
+            </Text>
+            <Text style={textStyles.default}>
+              Score: {score  }{" "}
+              {game.won ? "(higher is better)" : "(closer to zero is better)"}
+            </Text>
+          </View>
+        ) : null} */}
 
+      <View style={layoutStyles.gameArea}>
+        {/* Attackers */}
         <View
           style={[
-            flexStyles.rowCentered,
-            flexStyles.justifyEvenly,
+            flexStyles.colCentered,
+            flexStyles.spaceBetween,
             flexStyles.fullWidth,
+            flexStyles.gap24,
           ]}
         >
-          <Text style={textStyles.default}>Wave: {game.wave}</Text>
-          <Text style={textStyles.default}>
-            Defender deck: {game.defenderDeck.length}
-          </Text>
-          <Text style={textStyles.default}>
-            Alien deck: {game.alienDeck.length}
-          </Text>
-        </View>
+          <Text style={textStyles.h4}>Attackers (Wave {game.wave})</Text>
+          <View
+            style={[
+              flexStyles.rowCentered,
+              flexStyles.fullWidth,
+              flexStyles.gap30,
+              { alignItems: "flex-start" },
+            ]}
+          >
+            <Deck
+              // title="Attackers"
+              backCount={game.alienDeck.length}
+              showCount
+              countPosition="below"
+              limitFan
+            />
 
-        <View style={styles.section}>
-          <Text style={textStyles.default}>Current attackers</Text>
-          <View style={styles.attackersRow}>
-            {game.attackerQueue.map((card, idx) => (
-              <View
-                key={card.id}
-                style={idx === 0 ? styles.currentAttacker : null}
-              >
-                <Card
-                  suit={card.suit}
-                  rank={card.rank}
-                  cardsPerRow={localCardPerRow}
-                />
-              </View>
-            ))}
+            <View
+              style={[
+                { display: "flex", flexDirection: "row-reverse", gap: 10 },
+              ]}
+            >
+              {game.attackerQueue.map((card, idx) => (
+                <View
+                  key={card.id}
+                  style={[idx === 0 && { transform: [{ translateY: 12 }] }]}
+                >
+                  <Card
+                    suit={card.suit}
+                    rank={card.rank}
+                    cardsPerRow={localCardPerRow}
+                  />
+                </View>
+              ))}
+            </View>
+
             {game.attackerQueue.length === 0 ? (
               <Text style={textStyles.default}>No active attackers</Text>
             ) : null}
           </View>
         </View>
 
-        <View style={styles.section}>
-          <Text style={textStyles.default}>Defenders (select 1-2)</Text>
-          <View style={cardStyles.row}>
-            {game.defenders.map((card, index) => {
-              const selected = selectedDefenders.includes(index);
-              return (
-                <CardButton
-                  key={`${card.id}-${index}`}
-                  onPress={() => toggleDefender(index)}
-                  suit={card.suit}
-                  rank={card.rank}
-                  cardsPerRow={localCardPerRow}
-                  hasTopMargin={index > localCardPerRow - 1}
-                  isSelected={selected}
-                />
-              );
-            })}
+        {/* Defenders */}
+        <View
+          style={[
+            flexStyles.colCentered,
+            flexStyles.spaceBetween,
+            flexStyles.fullWidth,
+            flexStyles.gap24,
+          ]}
+        >
+          <Text style={textStyles.h4}>Defenders</Text>
+
+          <View
+            style={[
+              flexStyles.rowCentered,
+              flexStyles.fullWidth,
+              flexStyles.gap30,
+              { alignItems: "flex-start" },
+            ]}
+          >
+            <Deck
+              // title="Defenders"
+              backCount={game.defenderDeck.length}
+              showCount
+              countPosition="below"
+              limitFan
+            />
+
+            <View
+              style={[
+                cardStyles.row,
+                {
+                  width: `${(100 / localCardPerRow) * 3}%`,
+                  alignSelf: "center",
+                },
+              ]}
+            >
+              {game.defenders.map((card, index) => {
+                const selected = selectedDefenders.includes(index);
+
+                return (
+                  <CardButton
+                    key={`${card.id}-${index}`}
+                    onPress={() => toggleDefender(index)}
+                    suit={card.suit}
+                    rank={card.rank}
+                    cardsPerRow={localCardPerRow}
+                    hasTopMargin={index > 2}
+                    isSelected={selected}
+                  />
+                );
+              })}
+            </View>
           </View>
         </View>
 
@@ -306,112 +375,30 @@ export default function Area52() {
             flexStyles.rowCentered,
             flexStyles.fullWidth,
             flexStyles.justifyEvenly,
+            flexStyles.gap12,
           ]}
         >
-          <Button onPress={() => applyAction("single")} text="Single Attack" />
-          <Button onPress={() => applyAction("dual")} text="Dual Attack" />
-          <Button onPress={() => applyAction("sacrifice")} text="Sacrifice" />
+          <Button
+            onPress={() => applyAction("sacrifice")}
+            text="Sacrifice"
+            size="large"
+            disabled={selectedDefenders.length !== 1}
+          />
+          <Button
+            onPress={() => {
+              if (selectedDefenders.length === 1) {
+                applyAction("single");
+              } else if (selectedDefenders.length === 2) {
+                applyAction("dual");
+              }
+            }}
+            text={`Attack${selectedDefenders.length === 2 ? " x2" : ""}`}
+            size="large"
+            style={[flexStyles.flex1]}
+            disabled={selectedDefenders.length < 1}
+          />
         </View>
-
-        {game.ended ? (
-          <View style={flexStyles.rowCentered}>
-            <Text style={textStyles.default}>
-              {game.won ? "You won!" : "You lost"}
-            </Text>
-            <Text style={textStyles.default}>
-              Score: {score ?? 0}{" "}
-              {game.won ? "(higher is better)" : "(closer to zero is better)"}
-            </Text>
-          </View>
-        ) : null}
       </View>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 56,
-    paddingHorizontal: 10,
-    paddingBottom: 24,
-    gap: 10,
-  },
-  headerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 24,
-    fontFamily: "Outfit_600SemiBold",
-    color: "#1f2937",
-  },
-  button: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-    backgroundColor: "#1d4ed8",
-  },
-  buttonText: {
-    color: "#fff",
-    fontFamily: "Outfit_500Medium",
-  },
-  metaText: {
-    color: "#334155",
-    fontFamily: "Outfit_400Regular",
-  },
-  section: {
-    gap: 8,
-  },
-  sectionTitle: {
-    fontFamily: "Outfit_600SemiBold",
-    color: "#111827",
-  },
-  attackersRow: {
-    flexDirection: "row",
-    gap: 8,
-    alignItems: "center",
-  },
-  currentAttacker: {
-    transform: [{ translateY: 12 }],
-  },
-  defendersWrap: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 6,
-  },
-  defenderCard: {
-    borderRadius: 8,
-  },
-  selectedCard: {
-    backgroundColor: "rgba(37,99,235,0.15)",
-    transform: [{ translateY: -12 }],
-  },
-  actionsRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
-  },
-  actionBtn: {
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    backgroundColor: "#0f766e",
-  },
-  actionText: {
-    color: "#fff",
-    fontFamily: "Outfit_500Medium",
-  },
-  resultBox: {
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "rgba(15, 23, 42, 0.2)",
-    backgroundColor: "rgba(16,185,129,0.12)",
-    padding: 10,
-    gap: 4,
-  },
-  resultTitle: {
-    fontFamily: "Outfit_600SemiBold",
-    color: "#065f46",
-  },
-});

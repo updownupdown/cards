@@ -29,6 +29,9 @@ export const flexStyles = StyleSheet.create({
   justifyEvenly: {
     justifyContent: "space-evenly",
   },
+  spaceBetween: {
+    justifyContent: "space-between",
+  },
   flex1: {
     flex: 1,
   },
@@ -52,5 +55,14 @@ export const flexStyles = StyleSheet.create({
   },
   gap20: {
     gap: 20,
+  },
+  gap24: {
+    gap: 24,
+  },
+  gap30: {
+    gap: 30,
+  },
+  gap40: {
+    gap: 40,
   },
 });

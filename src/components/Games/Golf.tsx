@@ -1,11 +1,12 @@
-import { cardStyles } from "@/styles/cardStyles";
 import { useGameLoading } from "@/hooks/useGameLoading";
+import { cardStyles } from "@/styles/cardStyles";
+import { flexStyles } from "@/styles/flexStyles";
 import { layoutStyles } from "@/styles/layoutStyles";
 import { textStyles } from "@/styles/textStyles";
-import { useMemo, useState } from "react";
+import { useState, useRef } from "react";
 import { Text, View } from "react-native";
+import { useAnimations } from "../Animations/Animations";
 import { Button } from "../Button/Button";
-import { Card } from "../Cards/Card";
 import {
   RANK_VALUE,
   createDeck,
@@ -15,8 +16,6 @@ import {
 import { CardButton } from "../Cards/CardButton";
 import { Deck } from "../Cards/Deck";
 import { GameMenus } from "../common/GameMenus";
-import { MessageBox } from "../common/MessageBox";
-import { flexStyles } from "@/styles/flexStyles";
 
 const localCardPerRowSmall = 7;
 const localCardPerRowMedium = 4;
@@ -81,48 +80,117 @@ function evaluateEnd(state: GolfState) {
 
 export default function Golf() {
   const isLoaded = useGameLoading();
-
   const [game, setGame] = useState<GolfState>(setup);
-  const [message, setMessage] = useState(
-    "Tap a tableau card one rank above/below waste top. Draw from stock when blocked.",
-  );
+  const { animateCards, measureRef, isAnimating, setIsAnimating } =
+    useAnimations();
+  const [animatingCard, setAnimatingCard] = useState<{
+    col: number;
+    row: number;
+  } | null>(null);
 
-  const tableauCount = useMemo(
-    () => game.tableau.reduce((sum, col) => sum + col.length, 0),
-    [game.tableau],
-  );
+  const tableauRefs = useRef<(View | null)[][]>([[], [], [], [], [], [], []]);
+  const wasteRef = useRef<View>(null);
+  const stockRef = useRef<View>(null);
+  const [isDrawing, setIsDrawing] = useState(false);
 
   function reset() {
     setGame(setup());
-    setMessage(
-      "Tap a tableau card one rank above/below waste top. Draw from stock when blocked.",
-    );
   }
 
-  function playCard(colIndex: number, cardIndex: number) {
+  async function playCard(colIndex: number, cardIndex: number) {
+    if (game.ended || isAnimating) return;
+
+    const col = game.tableau[colIndex];
+    const card = col?.[cardIndex];
+    if (!card) return;
+    if (cardIndex !== col.length - 1) return;
+
+    const wasteTop = game.waste[game.waste.length - 1] ?? null;
+    if (!canPlayOnWaste(card, wasteTop)) return;
+
+    setIsAnimating(true);
+
+    // Avoid disappearing card flash; give animation time to kick in
+    setTimeout(() => {
+      setAnimatingCard({ col: colIndex, row: cardIndex });
+    }, 10);
+
+    const cardEl = tableauRefs.current[colIndex][cardIndex];
+    if (cardEl) {
+      const cardPos = await measureRef({ current: cardEl });
+      const wastePos = await measureRef(wasteRef);
+
+      if (cardPos && wastePos) {
+        await animateCards([
+          {
+            id: `play-${Date.now()}`,
+            cardInfo: {
+              rank: card.rank,
+              suit: card.suit,
+              isBack: false,
+              cardsPerRow: localCardPerRowSmall,
+            },
+            from: cardPos,
+            to: wastePos,
+            duration: 500,
+          },
+        ]);
+      }
+    }
+
     setGame((prev) => {
       if (prev.ended) return prev;
       const tableau = prev.tableau.map((col) => [...col]);
-      const col = tableau[colIndex];
-      const card = col?.[cardIndex];
-      if (!card) return prev;
-      if (cardIndex !== col.length - 1) return prev;
+      const prevCol = tableau[colIndex];
+      const prevCard = prevCol?.[cardIndex];
+      if (!prevCard) return prev;
+      if (cardIndex !== prevCol.length - 1) return prev;
 
-      const wasteTop = prev.waste[prev.waste.length - 1] ?? null;
-      if (!canPlayOnWaste(card, wasteTop)) return prev;
+      const prevWasteTop = prev.waste[prev.waste.length - 1] ?? null;
+      if (!canPlayOnWaste(prevCard, prevWasteTop)) return prev;
 
-      col.splice(cardIndex, 1);
-      const waste = [...prev.waste, card];
+      prevCol.splice(cardIndex, 1);
+      const waste = [...prev.waste, prevCard];
 
       const next = { ...prev, tableau, waste };
       const end = evaluateEnd(next);
       return { ...next, ...end };
     });
 
-    setMessage("Played to waste.");
+    setAnimatingCard(null);
+    setIsAnimating(false);
   }
 
-  function drawFromStock() {
+  async function drawFromStock() {
+    if (game.ended || game.stock.length === 0 || isAnimating) return;
+    setIsAnimating(true);
+
+    setTimeout(() => {
+      setIsDrawing(true);
+    }, 10);
+
+    const stockPos = await measureRef(stockRef);
+    const wastePos = await measureRef(wasteRef);
+
+    if (stockPos && wastePos) {
+      const nextCard = game.stock[0];
+      await animateCards([
+        {
+          id: `draw-${Date.now()}`,
+          cardInfo: {
+            rank: nextCard.rank,
+            suit: nextCard.suit,
+            isBack: false,
+            cardsPerRow: localCardPerRowMedium,
+          },
+          from: stockPos,
+          to: wastePos,
+          flip: "toFace",
+          duration: 500,
+        },
+      ]);
+    }
+
     setGame((prev) => {
       if (prev.ended || prev.stock.length === 0) return prev;
       const stock = [...prev.stock];
@@ -135,24 +203,37 @@ export default function Golf() {
       return { ...next, ...end };
     });
 
-    setMessage("Drew from stock.");
+    setIsDrawing(false);
+    setIsAnimating(false);
   }
 
   return (
     <>
-      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
+      <GameMenus
+        ended={game.ended}
+        won={game.won}
+        reset={reset}
+        isLoaded={isLoaded}
+      />
 
       <View style={layoutStyles.gameArea}>
-        <MessageBox message={message} />
-
         <View style={[cardStyles.row, flexStyles.flex1]}>
           {game.tableau.map((col, colIndex) => (
             <View key={`g-col-${colIndex}`} style={cardStyles.colDownwards}>
               {col.map((card, cardIndex) => (
                 <CardButton
                   key={card.id}
+                  ref={(el) => {
+                    tableauRefs.current[colIndex][cardIndex] = el;
+                  }}
+                  style={[
+                    animatingCard?.col === colIndex &&
+                      animatingCard?.row === cardIndex && { opacity: 0 },
+                  ]}
                   onPress={() => playCard(colIndex, cardIndex)}
-                  disabled={game.ended || cardIndex !== col.length - 1}
+                  disabled={
+                    game.ended || cardIndex !== col.length - 1 || isAnimating
+                  }
                   suit={card.suit}
                   rank={card.rank}
                   cardsPerRow={localCardPerRowSmall}
@@ -171,35 +252,37 @@ export default function Golf() {
           ]}
         >
           <Deck
-            iconName="delete"
-            showCount
-            backCount={game.stock.length}
+            refTopCurrent={stockRef}
+            iconName="draw"
             cardsPerRow={localCardPerRowMedium}
+            backCount={game.stock.length}
+            hideTopCard={isDrawing}
             limitFan
+            showCount
+            countPosition="above"
+            fan="horizontalRight"
           />
 
           <Button
             onPress={drawFromStock}
-            disabled={game.stock.length === 0 || game.ended}
+            disabled={game.stock.length === 0 || game.ended || isAnimating}
             text="Draw"
           />
 
           <Deck
-            iconName="draw"
-            showCount
-            fan="horizontalRight"
-            cardsPerRow={localCardPerRowMedium}
-            cards={Array.from({ length: game.stock.length }, (_, i) => {
-              if (i === game.stock.length - 1) {
-                return {
-                  suit: game.waste[game.waste.length - 1].suit,
-                  rank: game.waste[game.waste.length - 1].rank,
-                };
-              } else {
-                return "back";
-              }
+            refTopNext={wasteRef}
+            iconName="delete"
+            cards={Array.from({ length: game.waste.length }, (_, i) => {
+              return {
+                suit: game.waste[i].suit,
+                rank: game.waste[i].rank,
+              };
             })}
+            cardsPerRow={localCardPerRowMedium}
             limitFan
+            showCount
+            countPosition="above"
+            fan="horizontalLeft"
           />
         </View>
 

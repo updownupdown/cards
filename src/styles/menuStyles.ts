@@ -32,6 +32,23 @@ export const menuStyles = StyleSheet.create({
     maxWidth: 300,
   },
 
+  // Restart game
+  restartConfirm: {
+    ...flexStyles.rowCentered,
+    justifyContent: "space-between",
+    position: "absolute",
+    zIndex: 10,
+    top: 60,
+    right: 0,
+    left: 0,
+
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+
+    borderRadius: modalBorderRadius,
+    backgroundColor: rgba(Colors.K900, 0.97),
+  },
+
   // Win/lose message
   wlmOverlay: {
     position: "absolute",

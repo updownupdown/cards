@@ -1,4 +1,5 @@
-import { Pressable, ViewStyle } from "react-native";
+import { forwardRef } from "react";
+import { Pressable, ViewStyle, View } from "react-native";
 import { CardRank, CardSuit } from "./card-utils";
 import { Card } from "./Card";
 import { cardStyles } from "@/styles/cardStyles";
@@ -16,6 +17,7 @@ interface Props {
   altSelectableColor?: string;
   isBack?: boolean;
   onPress?: () => void;
+  ref?: React.Ref<View>;
 }
 
 export const CardButton = ({
@@ -31,9 +33,11 @@ export const CardButton = ({
   altSelectableColor,
   isBack,
   onPress,
+  ref,
 }: Props) => {
   return (
     <Pressable
+      ref={ref}
       onPress={onPress}
       style={[style, cardStyles.transition]}
       disabled={disabled || !onPress}

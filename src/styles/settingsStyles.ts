@@ -7,11 +7,11 @@ export const settingsStyles = StyleSheet.create({
     ...flexStyles.rowCentered,
     justifyContent: "space-between",
     width: "100%",
-    paddingVertical: 12,
   },
   containerCol: {
+    ...flexStyles.rowCentered,
+    justifyContent: "space-between",
     width: "100%",
-    paddingVertical: 12,
     gap: 12,
   },
   toggleWrap: {

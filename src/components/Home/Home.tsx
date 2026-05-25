@@ -11,8 +11,8 @@ import {
   toggleFavoriteGame,
 } from "../../data/game-menu";
 import { Button } from "../Button/Button";
-import { StatsModal } from "./StatsModal";
-import { SettingsModal } from "./SettingsModal";
+import { StatsModal } from "../Modals/StatsModal";
+import { SettingsModal } from "../Modals/SettingsModal";
 
 export default function Home() {
   const [favorites, setFavorites] = useState<Set<string>>(new Set());

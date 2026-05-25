@@ -8,7 +8,7 @@ import { useGameSettings } from "@/hooks/useGameSettings";
 import { buttonStyles } from "@/styles/buttonStyles";
 import { layoutStyles } from "@/styles/layoutStyles";
 import { menuStyles } from "@/styles/menuStyles";
-import { Colors } from "@/styles/styles";
+import { Colors, rgba } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
 import { router, usePathname } from "expo-router";
 import { useEffect, useRef, useState } from "react";
@@ -16,15 +16,17 @@ import { ActivityIndicator, Animated, Easing, Text, View } from "react-native";
 import { Button } from "../Button/Button";
 import GameModal from "../Modals/GameModal";
 import { SettingControl } from "./SettingControl";
+import { flexStyles } from "@/styles/flexStyles";
 
 interface Props {
   isLoaded?: boolean;
   ended: boolean;
   won: boolean;
+  score?: number;
   reset: () => void;
 }
 
-export const GameMenus = ({ isLoaded, ended, won, reset }: Props) => {
+export const GameMenus = ({ isLoaded, ended, won, score, reset }: Props) => {
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);
 
@@ -34,6 +36,7 @@ export const GameMenus = ({ isLoaded, ended, won, reset }: Props) => {
 
   const [showIntro, setShowIntro] = useState(true);
   const [showMenu, setShowMenu] = useState(false);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   useEffect(() => {
     if (!isLoaded && !gameSettings.showIntro) {
@@ -136,39 +139,45 @@ export const GameMenus = ({ isLoaded, ended, won, reset }: Props) => {
   }, [ended, won, pathname]);
 
   const gameIntroElement = (
-    <Animated.View style={[menuStyles.intro, { opacity: introOpacity }]}>
-      <View style={[menuStyles.introHowToPlay]}>
-        <Text style={textStyles.h1}>How to Play</Text>
+    <>
+      {/* Overlay */}
+      <Animated.View
+        style={[menuStyles.wlmOverlay, { opacity: introOpacity }]}
+      />
 
-        {gameInfo.howToPlay.map((info, key) => (
-          <Text
-            key={`info-${key}`}
-            style={[textStyles.default, menuStyles.introHowToPlayText]}
-          >
-            {info}
-          </Text>
-        ))}
+      {/* Intro box */}
+      <Animated.View style={[menuStyles.intro, { opacity: introOpacity }]}>
+        <View style={[menuStyles.introHowToPlay]}>
+          <Text style={textStyles.h1}>How to Play</Text>
+
+          {gameInfo.howToPlay.map((info, key) => (
+            <Text
+              key={`info-${key}`}
+              style={[textStyles.default, menuStyles.introHowToPlayText]}
+            >
+              {info}
+            </Text>
+          ))}
+
+          <Button
+            onPress={() => {
+              fadeOutIntro();
+              setShowMenu(true);
+            }}
+            text="Read detailed rules"
+            size="text"
+          />
+        </View>
 
         <Button
           onPress={() => {
             fadeOutIntro();
-            setShowMenu(true);
           }}
-          text="Read detailed rules"
-          size="text"
+          size="large"
+          text="Play"
+          fullWidth
         />
-      </View>
 
-      <Button
-        onPress={() => {
-          fadeOutIntro();
-        }}
-        size="large"
-        text="Play"
-        fullWidth
-      />
-
-      <View style={{ width: "100%", paddingHorizontal: 16 }}>
         <SettingControl
           label="Show this intro screen next time"
           type="boolean"
@@ -176,15 +185,8 @@ export const GameMenus = ({ isLoaded, ended, won, reset }: Props) => {
           value={gameSettings.showIntro}
           onChange={(val) => updateGameSettings({ showIntro: val })}
         />
-        <SettingControl
-          label="Show this intro screen next time"
-          type="boolean"
-          // booleanType="checkbox"
-          value={gameSettings.showIntro}
-          onChange={(val) => updateGameSettings({ showIntro: val })}
-        />
-      </View>
-    </Animated.View>
+      </Animated.View>
+    </>
   );
 
   const winLoseMessageElement = (win: boolean, score?: number) => (
@@ -221,6 +223,26 @@ export const GameMenus = ({ isLoaded, ended, won, reset }: Props) => {
     </>
   );
 
+  const resetConfirmElement = () => (
+    <Animated.View style={menuStyles.restartConfirm}>
+      <Button
+        onPress={() => setShowResetConfirm(false)}
+        text="Cancel"
+        size="textLarge"
+        textStyle={{ color: Colors.K400 }}
+      />
+      <Button
+        onPress={() => {
+          setShowResetConfirm(false);
+          reset();
+        }}
+        text="Reset game"
+        size="textLarge"
+        textStyle={{ color: Colors.accentBlue }}
+      />
+    </Animated.View>
+  );
+
   return (
     <>
       {/* Loading overlay */}
@@ -236,7 +258,7 @@ export const GameMenus = ({ isLoaded, ended, won, reset }: Props) => {
       {showIntro && gameIntroElement}
 
       {/* Win/lose message */}
-      {ended && winLoseMessageElement(won, 500)}
+      {ended && winLoseMessageElement(won, score)}
 
       {/* Game menu */}
       {showMenu && <GameModal onClose={() => setShowMenu(false)} />}
@@ -255,7 +277,8 @@ export const GameMenus = ({ isLoaded, ended, won, reset }: Props) => {
 
         <Button
           style={[buttonStyles.headerButton]}
-          onPress={reset}
+          // onPress={() => setShowResetConfirm(true)}
+          onPress={() => reset()}
           iconName="reset"
           iconColor={Colors.K400}
         />
@@ -268,6 +291,9 @@ export const GameMenus = ({ isLoaded, ended, won, reset }: Props) => {
           iconColor={Colors.K400}
         />
       </View>
+
+      {/* Reset Confirm */}
+      {showResetConfirm && resetConfirmElement()}
     </>
   );
 };
