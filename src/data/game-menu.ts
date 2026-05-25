@@ -9,6 +9,7 @@ export type GameStats = {
 
 export type GameSettings = {
   showIntro: boolean;
+  showCardHints: boolean;
   isFavorite: boolean;
   difficulty: "easy" | "difficult";
   stats: GameStats;
@@ -38,6 +39,7 @@ export const DEFAULT_GLOBAL_SETTINGS: GlobalSettings = {
 
 export const DEFAULT_GAME_SETTINGS: GameSettings = {
   showIntro: true,
+  showCardHints: true,
   isFavorite: false,
   difficulty: "easy",
   stats: {

@@ -1,7 +1,6 @@
-import { forwardRef } from "react";
 import { Pressable, ViewStyle, View } from "react-native";
 import { CardRank, CardSuit } from "./card-utils";
-import { Card } from "./Card";
+import { Card, CardSelectColor } from "./Card";
 import { cardStyles } from "@/styles/cardStyles";
 
 interface Props {
@@ -14,7 +13,7 @@ interface Props {
   disabled?: boolean;
   cardsPerRow?: number;
   hasTopMargin?: boolean;
-  altSelectableColor?: string;
+  selectColor?: CardSelectColor;
   isBack?: boolean;
   onPress?: () => void;
   ref?: React.Ref<View>;
@@ -30,7 +29,7 @@ export const CardButton = ({
   style,
   cardsPerRow = 5,
   hasTopMargin,
-  altSelectableColor,
+  selectColor,
   isBack,
   onPress,
   ref,
@@ -52,7 +51,7 @@ export const CardButton = ({
         cardsPerRow={cardsPerRow}
         hasTopMargin={hasTopMargin}
         isBack={isBack}
-        altSelectableColor={altSelectableColor}
+        selectColor={selectColor}
       />
     </Pressable>
   );

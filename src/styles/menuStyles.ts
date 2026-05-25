@@ -33,20 +33,26 @@ export const menuStyles = StyleSheet.create({
   },
 
   // Restart game
-  restartConfirm: {
+  resetHint: {
     ...flexStyles.rowCentered,
-    justifyContent: "space-between",
+    justifyContent: "center",
     position: "absolute",
     zIndex: 10,
     top: 60,
     right: 0,
     left: 0,
 
-    paddingHorizontal: 10,
-    paddingVertical: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 20,
 
-    borderRadius: modalBorderRadius,
-    backgroundColor: rgba(Colors.K900, 0.97),
+    borderRadius: 20,
+    backgroundColor: rgba(Colors.K900, 0.94),
+  },
+  resetHintText: {
+    color: Colors.K100,
+    fontSize: 17,
+    fontFamily: FontWeight[300],
+    textAlign: "center",
   },
 
   // Win/lose message

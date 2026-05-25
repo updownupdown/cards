@@ -15,6 +15,9 @@ export const settingsStyles = StyleSheet.create({
     gap: 12,
   },
   toggleWrap: {
+    ...flexStyles.rowCentered,
+    ...flexStyles.fullWidth,
+    justifyContent: "space-between",
     padding: 4,
   },
   toggleBg: {
@@ -26,14 +29,14 @@ export const settingsStyles = StyleSheet.create({
     paddingHorizontal: 2,
   },
   toggleBgOn: {
-    backgroundColor: Colors.accentBlue,
+    backgroundColor: Colors.win,
   },
   toggleKnob: {
     transitionDuration: "0.5s",
     transitionProperty: "all",
     transitionTimingFunction: "ease",
-    width: 20,
-    height: 20,
+    width: 18,
+    height: 18,
     borderRadius: 10,
     backgroundColor: Colors.white,
     transform: [{ translateX: 0 }],
@@ -43,6 +46,11 @@ export const settingsStyles = StyleSheet.create({
   },
   checkboxWrap: {
     padding: 4,
+    flexDirection: "row-reverse",
+    gap: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
   },
   checkboxBg: {
     width: 24,

@@ -93,7 +93,7 @@ export default function Home() {
                     style={[homeStyles.starBtn, homeStyles.starBtnOn]}
                     onPress={() => onToggleFavorite(game.path)}
                   >
-                    <Icon name="star" color={Colors.accentOrange} />
+                    <Icon name="star" color={Colors.favoriteStar} />
                   </Pressable>
                 </View>
               ))}

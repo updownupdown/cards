@@ -1,14 +1,18 @@
 import { Colors, FontWeight, rgba } from "@/styles/styles";
 import { StyleSheet } from "react-native";
 
+const buttonTransition = {
+  transitionDuration: "0.4s",
+  transitionProperty: "all",
+  transitionTimingFunction: "ease",
+};
+
 export const buttonStyles = StyleSheet.create({
   fullWidth: {
     width: "100%",
   },
   button: {
-    transitionDuration: "0.4s",
-    transitionProperty: "all",
-    transitionTimingFunction: "ease",
+    ...buttonTransition,
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
@@ -96,9 +100,14 @@ export const buttonStyles = StyleSheet.create({
     width: 44,
     height: 44,
     boxShadow: "unset",
+    borderRadius: 22,
     backgroundColor: "unset",
   },
+  closeModalButton: {
+    backgroundColor: Colors.K850,
+  },
   icon: {
+    ...buttonTransition,
     flexShrink: 0,
   },
 });

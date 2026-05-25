@@ -10,9 +10,14 @@ interface Props {
   disabled?: boolean;
   fullWidth?: boolean;
   onPress: () => void;
+  onLongPress?: () => void;
+  delayLongPress?: number;
+  onPressIn?: () => void;
+  onPressOut?: () => void;
   text?: string;
   iconName?: IconName;
   iconColor?: string;
+  iconSize?: number;
 }
 
 export const Button = ({
@@ -24,7 +29,12 @@ export const Button = ({
   text,
   iconName,
   iconColor,
+  iconSize,
   onPress,
+  onLongPress,
+  delayLongPress,
+  onPressIn,
+  onPressOut,
 }: Props) => {
   return (
     <Pressable
@@ -40,6 +50,10 @@ export const Button = ({
         style,
       ]}
       onPress={onPress}
+      onLongPress={onLongPress}
+      delayLongPress={delayLongPress}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
       disabled={disabled}
     >
       {iconName && (
@@ -47,6 +61,7 @@ export const Button = ({
           name={iconName}
           style={buttonStyles.icon}
           color={iconColor ?? Colors.K100}
+          size={iconSize ?? 24}
         />
       )}
       {text && (

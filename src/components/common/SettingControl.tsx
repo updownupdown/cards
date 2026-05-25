@@ -27,8 +27,7 @@ export function SettingControl<T>({
     const isTrue = Boolean(value);
 
     return (
-      <View style={settingsStyles.container}>
-        <Text style={textStyles.default}>{label}</Text>
+      <View style={[settingsStyles.container]}>
         <Pressable
           style={
             booleanType === "toggle"
@@ -37,6 +36,7 @@ export function SettingControl<T>({
           }
           onPress={() => onChange(!value as any)}
         >
+          <Text style={textStyles.default}>{label}</Text>
           {booleanType === "toggle" ? (
             <View
               style={[

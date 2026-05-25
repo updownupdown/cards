@@ -53,6 +53,6 @@ export const homeStyles = StyleSheet.create({
     // backgroundColor: Colors.accentOrange,
   },
   starBtnOnSvg: {
-    color: Colors.accentOrange,
+    color: Colors.favoriteStar,
   },
 });

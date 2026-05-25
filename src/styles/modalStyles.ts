@@ -64,23 +64,32 @@ export const modalStyles = StyleSheet.create({
   },
   statsTextLabel: {
     fontSize: 14,
-    color: Colors.K400,
-    fontFamily: FontWeight[400],
+    color: Colors.K300,
+    fontFamily: FontWeight[300],
   },
   statsTextValue: {
     fontSize: 20,
-    color: Colors.K400,
-    fontFamily: FontWeight[400],
+    color: Colors.K100,
+    fontFamily: FontWeight[500],
   },
   rules: {
     ...flexStyles.colCentered,
     ...flexStyles.fullWidth,
     alignItems: "flex-start",
+    paddingVertical: 12,
     gap: 20,
   },
   rulesText: {
-    fontSize: 15,
+    fontSize: 17,
     fontFamily: FontWeight[300],
     color: Colors.K200,
+  },
+
+  // Settings
+  gameSettings: {
+    ...flexStyles.colCentered,
+    ...flexStyles.fullWidth,
+    alignItems: "flex-start",
+    gap: 12,
   },
 });

@@ -2,7 +2,7 @@ import { cardStyles } from "@/styles/cardStyles";
 import { clamp } from "@/utils/utils";
 import React from "react";
 import { Text, View, ViewStyle } from "react-native";
-import { useCardSize } from "./Card";
+import { CardSelectColor, useCardSize } from "./Card";
 import { CardRank, CardSuit } from "./card-utils";
 import { CardButton } from "./CardButton";
 import { Icon, IconName } from "@/icons";
@@ -38,7 +38,7 @@ type DeckProps = {
   largeFan?: "all" | "progressive";
   cardsPerRow?: number;
   showCount?: boolean;
-  altSelectableColor?: string;
+  selectColor?: CardSelectColor;
   countPosition?: "over" | "above" | "left" | "right" | "below";
   iconName?: IconName;
   hideTopCard?: boolean;
@@ -55,7 +55,7 @@ export const Deck = ({
   backCount,
   cards,
   showCount,
-  altSelectableColor,
+  selectColor,
   countPosition = "above",
   fan = "horizontalRight",
   limitFan,
@@ -228,7 +228,7 @@ export const Deck = ({
           isPlaceholder
           style={[cardStyles.deckCard]}
           disabled={isDisabled}
-          altSelectableColor={altSelectableColor}
+          selectColor={selectColor}
         />
 
         {Array.from({ length: limitedDeckSize }, (_, index) => {
@@ -264,7 +264,7 @@ export const Deck = ({
                   adjustedIndex === limitedDeckSize - 1 &&
                   cardStyles.animHide,
               ]}
-              altSelectableColor={altSelectableColor}
+              selectColor={selectColor}
             />
           );
         })}

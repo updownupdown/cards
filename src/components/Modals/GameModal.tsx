@@ -12,6 +12,7 @@ import {
 } from "../../data/game-menu";
 import { Button } from "../Button/Button";
 import ModalFull from "./ModalFull";
+import { Colors } from "@/styles/styles";
 
 export const EMPTY_STATS: GameStats = {
   attempts: 0,
@@ -78,6 +79,10 @@ export default function GameModal({ onClose }: Props) {
               }
               iconName={settings.isFavorite ? "star" : "star-outline"}
               size="text"
+              iconSize={42}
+              iconColor={
+                settings.isFavorite ? Colors.favoriteStar : Colors.accentBlue
+              }
             />
           </View>
 
@@ -91,10 +96,10 @@ export default function GameModal({ onClose }: Props) {
           </View>
 
           {/* Settings */}
-          <View style={{ width: "100%", paddingVertical: 20 }}>
-            <Text style={textStyles.h3}>Game Settings</Text>
+          <View style={[modalStyles.gameSettings]}>
+            <Text style={textStyles.h4}>Game Settings</Text>
 
-            <SettingControl
+            {/* <SettingControl
               label="Difficulty"
               value={settings.difficulty}
               type="string"
@@ -105,13 +110,20 @@ export default function GameModal({ onClose }: Props) {
               onChange={(val) =>
                 updateSettings({ difficulty: val as "easy" | "difficult" })
               }
-            />
+            /> */}
 
             <SettingControl
-              label="Show intro screen for this game"
+              label="Show intro"
               value={settings.showIntro}
               type="boolean"
               onChange={(val) => updateSettings({ showIntro: val })}
+            />
+
+            <SettingControl
+              label="Show colored card interaction hints"
+              value={settings.showCardHints}
+              type="boolean"
+              onChange={(val) => updateSettings({ showCardHints: val })}
             />
           </View>
         </ScrollView>

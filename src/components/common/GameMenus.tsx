@@ -5,18 +5,26 @@ import {
   recordResult,
 } from "@/data/game-menu";
 import { useGameSettings } from "@/hooks/useGameSettings";
+import { useFade } from "@/hooks/useFade";
 import { buttonStyles } from "@/styles/buttonStyles";
 import { layoutStyles } from "@/styles/layoutStyles";
 import { menuStyles } from "@/styles/menuStyles";
-import { Colors, rgba } from "@/styles/styles";
+import { Colors } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
 import { router, usePathname } from "expo-router";
-import { useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Animated, Easing, Text, View } from "react-native";
+import Svg, { Circle } from "react-native-svg";
 import { Button } from "../Button/Button";
 import GameModal from "../Modals/GameModal";
 import { SettingControl } from "./SettingControl";
-import { flexStyles } from "@/styles/flexStyles";
+
+const AnimatedCircle = Animated.createAnimatedComponent(
+  forwardRef((props: any, ref) => {
+    const { collapsable, ...rest } = props;
+    return <Circle ref={ref} {...rest} />;
+  }),
+);
 
 interface Props {
   isLoaded?: boolean;
@@ -36,7 +44,45 @@ export const GameMenus = ({ isLoaded, ended, won, score, reset }: Props) => {
 
   const [showIntro, setShowIntro] = useState(true);
   const [showMenu, setShowMenu] = useState(false);
-  const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [showResetHint, setShowResetHint] = useState(false);
+  const { isRendered: renderResetHint, opacity: hintOpacity } = useFade(
+    showResetHint,
+    300,
+  );
+  const hintTimeoutRef = useRef<number | null>(null);
+
+  const displayResetHint = () => {
+    setShowResetHint(true);
+    if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
+    hintTimeoutRef.current = setTimeout(() => {
+      setShowResetHint(false);
+    }, 2000);
+  };
+
+  // Reset Progress Animation
+  const resetProgress = useRef(new Animated.Value(0)).current;
+  const [isResetPressed, setIsResetPressed] = useState(false);
+
+  const onPressInReset = () => {
+    setIsResetPressed(true);
+    resetProgress.setValue(0);
+    Animated.timing(resetProgress, {
+      toValue: 1,
+      duration: 1000,
+      easing: Easing.linear,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  const onPressOutReset = () => {
+    setIsResetPressed(false);
+    Animated.timing(resetProgress, {
+      toValue: 0,
+      duration: 150,
+      easing: Easing.linear,
+      useNativeDriver: false,
+    }).start();
+  };
 
   useEffect(() => {
     if (!isLoaded && !gameSettings.showIntro) {
@@ -46,42 +92,28 @@ export const GameMenus = ({ isLoaded, ended, won, score, reset }: Props) => {
 
   // Loading overlay
   const [showLoadingOverlay, setShowLoadingOverlay] = useState(!isLoaded);
-  const loadingOpacity = useRef(new Animated.Value(1)).current;
+  const { isRendered: renderLoadingOverlay, opacity: loadingOpacity } = useFade(
+    showLoadingOverlay,
+    300,
+  );
 
-  const fadeOutLoading = () => {
-    Animated.timing(loadingOpacity, {
-      toValue: 0,
-      duration: 300,
-      easing: Easing.inOut(Easing.ease),
-      useNativeDriver: false,
-    }).start(() => {
-      setShowLoadingOverlay(false);
-    });
-  };
+  // Reset Button animation
+  const { isRendered: renderResetButton, opacity: resetButtonOpacity } =
+    useFade(!!isLoaded, 300);
+
+  console.log({ isLoaded, renderResetButton, resetButtonOpacity });
 
   useEffect(() => {
-    isLoaded && fadeOutLoading();
+    if (isLoaded) {
+      setShowLoadingOverlay(false);
+    }
   }, [isLoaded]);
 
   // Intro animation
-  const introOpacity = useRef(new Animated.Value(1)).current;
-
-  const fadeOutIntro = () => {
-    Animated.timing(introOpacity, {
-      toValue: 0,
-      duration: 300,
-      easing: Easing.inOut(Easing.ease),
-      useNativeDriver: false,
-    }).start(() => {
-      setShowIntro(false);
-    });
-  };
-
-  useEffect(() => {
-    if (!showIntro) {
-      fadeOutIntro();
-    }
-  }, [showIntro]);
+  const { isRendered: renderIntro, opacity: introOpacity } = useFade(
+    showIntro,
+    300,
+  );
 
   // Win/lose animations
   const wlmAnim = useRef(new Animated.Value(0)).current;
@@ -100,8 +132,8 @@ export const GameMenus = ({ isLoaded, ended, won, score, reset }: Props) => {
       duration: 400,
       easing: Easing.inOut(Easing.ease),
       useNativeDriver: false,
-    }).start(() => {
-      if (actionAfterFadeout) {
+    }).start(({ finished }) => {
+      if (finished && actionAfterFadeout) {
         actionAfterFadeout();
       }
     });
@@ -161,7 +193,7 @@ export const GameMenus = ({ isLoaded, ended, won, score, reset }: Props) => {
 
           <Button
             onPress={() => {
-              fadeOutIntro();
+              setShowIntro(false);
               setShowMenu(true);
             }}
             text="Read detailed rules"
@@ -171,7 +203,7 @@ export const GameMenus = ({ isLoaded, ended, won, score, reset }: Props) => {
 
         <Button
           onPress={() => {
-            fadeOutIntro();
+            setShowIntro(false);
           }}
           size="large"
           text="Play"
@@ -179,11 +211,11 @@ export const GameMenus = ({ isLoaded, ended, won, score, reset }: Props) => {
         />
 
         <SettingControl
-          label="Show this intro screen next time"
+          label="Skip intro next time"
           type="boolean"
           booleanType="checkbox"
-          value={gameSettings.showIntro}
-          onChange={(val) => updateGameSettings({ showIntro: val })}
+          value={!gameSettings.showIntro}
+          onChange={(val) => updateGameSettings({ showIntro: !val })}
         />
       </Animated.View>
     </>
@@ -223,30 +255,18 @@ export const GameMenus = ({ isLoaded, ended, won, score, reset }: Props) => {
     </>
   );
 
-  const resetConfirmElement = () => (
-    <Animated.View style={menuStyles.restartConfirm}>
-      <Button
-        onPress={() => setShowResetConfirm(false)}
-        text="Cancel"
-        size="textLarge"
-        textStyle={{ color: Colors.K400 }}
-      />
-      <Button
-        onPress={() => {
-          setShowResetConfirm(false);
-          reset();
-        }}
-        text="Reset game"
-        size="textLarge"
-        textStyle={{ color: Colors.accentBlue }}
-      />
+  const resetHintElement = () => (
+    <Animated.View style={[menuStyles.resetHint, { opacity: hintOpacity }]}>
+      <Text style={menuStyles.resetHintText}>
+        Press and hold to reset game.
+      </Text>
     </Animated.View>
   );
 
   return (
     <>
       {/* Loading overlay */}
-      {showLoadingOverlay && (
+      {renderLoadingOverlay && (
         <Animated.View
           style={[layoutStyles.gameLoadingOverlay, { opacity: loadingOpacity }]}
         >
@@ -255,7 +275,7 @@ export const GameMenus = ({ isLoaded, ended, won, score, reset }: Props) => {
       )}
 
       {/* Game intro */}
-      {showIntro && gameIntroElement}
+      {renderIntro && gameIntroElement}
 
       {/* Win/lose message */}
       {ended && winLoseMessageElement(won, score)}
@@ -275,13 +295,52 @@ export const GameMenus = ({ isLoaded, ended, won, score, reset }: Props) => {
 
         <Text style={textStyles.gameHeaderTitle}>{gameInfo.title}</Text>
 
-        <Button
-          style={[buttonStyles.headerButton]}
-          // onPress={() => setShowResetConfirm(true)}
-          onPress={() => reset()}
-          iconName="reset"
-          iconColor={Colors.K400}
-        />
+        {renderResetButton ? (
+          <Animated.View
+            style={{
+              opacity: resetButtonOpacity,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Svg height="44" width="44" style={{ position: "absolute" }}>
+              <AnimatedCircle
+                cx="22"
+                cy="22"
+                r="20"
+                stroke={Colors.accentRed}
+                strokeWidth="2"
+                fill="none"
+                strokeDasharray={125.66}
+                strokeDashoffset={resetProgress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [125.66, 0],
+                })}
+                transform="rotate(-90 22 22)"
+              />
+            </Svg>
+            <Button
+              style={[buttonStyles.headerButton]}
+              onPress={() => displayResetHint()}
+              onLongPress={() => {
+                setShowResetHint(false);
+                reset();
+              }}
+              onPressIn={onPressInReset}
+              onPressOut={onPressOutReset}
+              delayLongPress={1000}
+              iconName="reset"
+              iconColor={isResetPressed ? Colors.accentRed : Colors.K400}
+            />
+          </Animated.View>
+        ) : (
+          <View
+            style={[
+              buttonStyles.headerButton,
+              { backgroundColor: "transparent" },
+            ]}
+          />
+        )}
 
         <Button
           style={[buttonStyles.headerButton]}
@@ -292,8 +351,8 @@ export const GameMenus = ({ isLoaded, ended, won, score, reset }: Props) => {
         />
       </View>
 
-      {/* Reset Confirm */}
-      {showResetConfirm && resetConfirmElement()}
+      {/* Reset Hint */}
+      {renderResetHint && resetHintElement()}
     </>
   );
 };

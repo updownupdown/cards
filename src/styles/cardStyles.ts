@@ -41,7 +41,16 @@ export const cardStyles = StyleSheet.create({
   // Card itself
   card: {
     overflow: "hidden",
+    position: "relative",
     ...cardTransition,
+  },
+  cardSelectOverlay: {
+    ...cardTransition,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   // Deck wrap
   deckWrap: {

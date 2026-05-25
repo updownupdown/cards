@@ -368,12 +368,8 @@ export default function AcesUp() {
                       onPilePress(idx);
                     }
                   }}
-                  altSelectableColor={
-                    pile.length === 0
-                      ? Colors.cardSelectedDarker
-                      : canDiscard
-                        ? Colors.cardSelectableRed
-                        : Colors.cardSelectable
+                  selectColor={
+                    pile.length === 0 ? "blue" : canDiscard ? "green" : "blue"
                   }
                   isSelected={isSelected}
                   isDisabled={

@@ -31,7 +31,7 @@ export const textStyles = StyleSheet.create({
   },
   h4: {
     fontSize: 20,
-    fontFamily: FontWeight[300],
+    fontFamily: FontWeight[400],
     color: Colors.K200,
   },
   h5: {

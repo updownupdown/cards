@@ -31,17 +31,23 @@ export default function ModalFull({
                     router.push("/");
                   }}
                   iconName={"chevron-left"}
-                  iconColor={Colors.K400}
+                  iconColor={Colors.accentBlue}
                   text="Home"
                   size="text"
+                  iconSize={28}
                 />
               )}
 
               {/* Close button */}
               <Button
-                style={buttonStyles.headerButton}
+                style={[
+                  buttonStyles.headerButton,
+                  buttonStyles.closeModalButton,
+                ]}
                 onPress={onClose}
                 iconName="close"
+                iconSize={28}
+                iconColor={Colors.K300}
               />
             </View>
 

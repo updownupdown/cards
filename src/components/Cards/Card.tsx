@@ -6,6 +6,17 @@ import { cardStyles } from "@/styles/cardStyles";
 import { useWindowDimensions, View, ViewStyle } from "react-native";
 import type { SvgProps } from "react-native-svg";
 import { CardRank, CardSuit } from "./card-utils";
+import { useGameSettings } from "@/hooks/useGameSettings";
+import { normalizeGamePath } from "@/data/game-menu";
+import { usePathname } from "expo-router";
+
+export type CardSelectColor =
+  | "blue"
+  | "green"
+  | "orange"
+  | "purple"
+  | "yellow"
+  | "pink";
 
 const cardDefaultWidth = 250;
 const cardDefaultHeight = 350;
@@ -42,10 +53,9 @@ export type CardProps = Omit<SvgProps, "width" | "height" | "style"> & {
   isAnimRef?: boolean;
   style?: (ViewStyle | false)[];
   cardsPerRow?: number;
-  omitShadow?: boolean;
   isSelectable?: boolean;
   isSelected?: boolean;
-  altSelectableColor?: string;
+  selectColor?: CardSelectColor;
   isSelectedInvalid?: boolean;
   hasTopMargin?: boolean;
   cardSize?: "small" | "regular";
@@ -61,9 +71,8 @@ export const Card = forwardRef<any, CardProps>(
       isPlaceholder,
       isAnimRef,
       cardsPerRow = 5,
-      omitShadow,
       isSelectable,
-      altSelectableColor,
+      selectColor,
       isSelected,
       isSelectedInvalid,
       cardSize,
@@ -72,6 +81,9 @@ export const Card = forwardRef<any, CardProps>(
     },
     ref,
   ) => {
+    const pathname = normalizeGamePath(usePathname());
+    const { settings } = useGameSettings(pathname);
+
     const cardFiles = cardSize === "small" ? CardsSmall : CardsRegular;
 
     let cardName = "Placeholder";
@@ -103,18 +115,48 @@ export const Card = forwardRef<any, CardProps>(
 
     const shadowUnit = width * cardShadowRadio;
 
-    if (isSelectedInvalid) {
-      cardStyle.boxShadow = `0 0 0 ${shadowUnit * 8}px ${rgba(Colors.cardSelecteInvalid, 0.7)}`;
-    } else if (isSelected) {
-      cardStyle.boxShadow = `0 0 0 ${shadowUnit * 8}px ${rgba(Colors.cardSelected, 0.8)}`;
-    } else if (isSelectable) {
-      if (altSelectableColor) {
-        cardStyle.boxShadow = `0 0 0 ${shadowUnit * 5}px ${rgba(altSelectableColor, 0.7)}`;
-      } else {
-        cardStyle.boxShadow = `0 0 0 ${shadowUnit * 5}px ${rgba(Colors.cardSelectable, 0.7)}`;
+    let color: string = Colors.cardSelectBlue;
+
+    if (selectColor) {
+      switch (selectColor) {
+        case "blue":
+          color = Colors.cardSelectBlue;
+          break;
+        case "green":
+          color = Colors.cardSelectGreen;
+          break;
+        case "orange":
+          color = Colors.cardSelectOrange;
+          break;
+        case "purple":
+          color = Colors.cardSelectPurple;
+          break;
+        case "yellow":
+          color = Colors.cardSelectYellow;
+          break;
+        case "pink":
+          color = Colors.cardSelectPink;
+          break;
       }
-    } else if (!isPlaceholder && !omitShadow) {
-      cardStyle.boxShadow = `${shadowUnit}px ${shadowUnit * 2}px ${shadowUnit * 8}px rgba(0,0,0,.1), ${shadowUnit * 2}px ${shadowUnit * 4}px ${shadowUnit * 16}px rgba(0,0,0,.1)`;
+    }
+
+    function shadow(size: number, opacity: number, invalid?: boolean) {
+      return `0 0 0 1px ${rgba(Colors.K900, 0.2)}, 0 0 0 ${shadowUnit * size}px ${rgba(invalid ? Colors.cardSelectInvalid : color, opacity)}`;
+    }
+
+    const shadowSizeUnselected = 5;
+    const shadowSizeSelected = 8;
+
+    cardStyle.boxShadow = shadow(shadowSizeUnselected, 0);
+
+    if (settings.showCardHints !== false) {
+      if (isSelectedInvalid) {
+        cardStyle.boxShadow = shadow(shadowSizeSelected, 0.7, true);
+      } else if (isSelected) {
+        cardStyle.boxShadow = shadow(shadowSizeSelected, 0.8);
+      } else if (isSelectable) {
+        cardStyle.boxShadow = shadow(shadowSizeUnselected, 0.8);
+      }
     }
 
     return (
@@ -128,6 +170,12 @@ export const Card = forwardRef<any, CardProps>(
           style,
         ]}
       >
+        <View
+          style={[
+            cardStyles.cardSelectOverlay,
+            { backgroundColor: color, opacity: isSelected ? 0.17 : 0 },
+          ]}
+        />
         <SvgCard {...svgProps} width="100%" height="100%" />
       </View>
     );
