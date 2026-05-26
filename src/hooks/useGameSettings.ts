@@ -9,7 +9,7 @@ import {
 } from "@/data/game-menu";
 
 export function useGameSettings(pathname: string) {
-  const [settings, setSettings] = useState<GameSettings>(DEFAULT_GAME_SETTINGS);
+  const [settings, setSettings] = useState<GameSettings | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
 
   const normalizedPath = normalizeGamePath(pathname);
@@ -30,7 +30,7 @@ export function useGameSettings(pathname: string) {
 
   const updateSettings = async (updates: Partial<GameSettings>) => {
     // Optimistic UI update
-    const nextSettings = { ...settings, ...updates };
+    const nextSettings = { ...DEFAULT_GAME_SETTINGS, ...settings, ...updates };
     setSettings(nextSettings);
 
     // Background save

@@ -31,7 +31,7 @@ export default function GameModal({ onClose }: Props) {
 
   const rules = info.rules ?? info.howToPlay;
 
-  if (isLoading) return null;
+  if (isLoading || settings === undefined) return null;
 
   return (
     <>
@@ -98,6 +98,9 @@ export default function GameModal({ onClose }: Props) {
           {/* Settings */}
           <View style={[modalStyles.gameSettings]}>
             <Text style={textStyles.h4}>Game Settings</Text>
+            <Text style={textStyles.default}>
+              Setting changes apply to the next game
+            </Text>
 
             {/* <SettingControl
               label="Difficulty"

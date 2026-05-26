@@ -33,7 +33,14 @@ export const Sparks = ({ active }: { active: boolean }) => {
   if (!show) return null;
 
   return (
-    <View style={StyleSheet.absoluteFill} pointerEvents="none">
+    <View
+      style={[
+        StyleSheet.absoluteFill,
+        {
+          pointerEvents: "none",
+        },
+      ]}
+    >
       {particles.map((p, i) => {
         const translateX = anim.interpolate({
           inputRange: [0, 1],

@@ -7,6 +7,8 @@ const buttonTransition = {
   transitionTimingFunction: "ease",
 };
 
+export const headerButtonSize = 44;
+
 export const buttonStyles = StyleSheet.create({
   fullWidth: {
     width: "100%",
@@ -20,6 +22,7 @@ export const buttonStyles = StyleSheet.create({
     gap: 6,
 
     backgroundColor: Colors.accentBlue,
+    outlineWidth: 0,
   },
 
   // Sizes
@@ -97,14 +100,15 @@ export const buttonStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 0,
-    width: 44,
-    height: 44,
+    width: headerButtonSize,
+    height: headerButtonSize,
     boxShadow: "unset",
-    borderRadius: 22,
+    borderRadius: "unset",
     backgroundColor: "unset",
   },
   closeModalButton: {
     backgroundColor: Colors.K850,
+    borderRadius: headerButtonSize / 2,
   },
   icon: {
     ...buttonTransition,

@@ -248,20 +248,8 @@ export default function Area52() {
         won={game.won}
         reset={reset}
         isLoaded={isLoaded}
-        score={score}
+        score={`${score} (${game.won ? "higher is better" : "closer to zero is better"})`}
       />
-
-      {/* {game.ended ? (
-          <View style={flexStyles.rowCentered}>
-            <Text style={textStyles.default}>
-              {game.won ? "You won!" : "You lost"}
-            </Text>
-            <Text style={textStyles.default}>
-              Score: {score  }{" "}
-              {game.won ? "(higher is better)" : "(closer to zero is better)"}
-            </Text>
-          </View>
-        ) : null} */}
 
       <View style={layoutStyles.gameArea}>
         {/* Attackers */}

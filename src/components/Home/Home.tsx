@@ -43,17 +43,20 @@ function TabButton({
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<TabName>("games");
-  const [isAnimationComplete, setIsAnimationComplete] = useState(false);
 
   return (
     <View style={homeStyles.container}>
-      <SplashHeader onAnimationComplete={() => setIsAnimationComplete(true)}>
+      <SplashHeader>
         {({ isLoaded, contentOpacity, tabTranslate }) => (
           <>
             {/* Content Area */}
             <View
-              style={homeStyles.content}
-              pointerEvents={isLoaded ? "auto" : "none"}
+              style={[
+                homeStyles.content,
+                {
+                  pointerEvents: isLoaded ? "auto" : "none",
+                },
+              ]}
             >
               <Animated.View style={[{ flex: 1, opacity: contentOpacity }]}>
                 {activeTab === "games" && <GamesTab />}
@@ -69,9 +72,9 @@ export default function Home() {
                 {
                   opacity: contentOpacity,
                   transform: [{ translateY: tabTranslate }],
+                  pointerEvents: isLoaded ? "auto" : "none",
                 },
               ]}
-              pointerEvents={isLoaded ? "auto" : "none"}
             >
               <TabButton
                 iconName="games"

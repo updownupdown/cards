@@ -2,6 +2,7 @@ import { Colors, FontWeight, rgba } from "@/styles/styles";
 import { StyleSheet } from "react-native";
 import { flexStyles } from "./flexStyles";
 import { modalBorderRadius } from "./modalStyles";
+import { headerButtonSize } from "./buttonStyles";
 
 export const menuStyles = StyleSheet.create({
   // Intro
@@ -30,29 +31,6 @@ export const menuStyles = StyleSheet.create({
     ...flexStyles.fullWidth,
     alignItems: "flex-start",
     maxWidth: 300,
-  },
-
-  // Restart game
-  resetHint: {
-    ...flexStyles.rowCentered,
-    justifyContent: "center",
-    position: "absolute",
-    zIndex: 10,
-    top: 60,
-    right: 0,
-    left: 0,
-
-    paddingHorizontal: 12,
-    paddingVertical: 20,
-
-    borderRadius: 20,
-    backgroundColor: rgba(Colors.K900, 0.94),
-  },
-  resetHintText: {
-    color: Colors.K100,
-    fontSize: 17,
-    fontFamily: FontWeight[300],
-    textAlign: "center",
   },
 
   // Win/lose message

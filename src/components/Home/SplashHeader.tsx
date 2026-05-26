@@ -5,7 +5,6 @@ import React, { useEffect, useRef } from "react";
 import { ActivityIndicator, Animated, StyleSheet, View } from "react-native";
 
 interface Props {
-  onAnimationComplete: () => void;
   children: (animationState: {
     isLoaded: boolean;
     contentOpacity: Animated.AnimatedInterpolation<number>;
@@ -15,7 +14,7 @@ interface Props {
 
 let hasAppLoadedInitially = false;
 
-export const SplashHeader = ({ onAnimationComplete, children }: Props) => {
+export const SplashHeader = ({ children }: Props) => {
   const [isLoaded, setIsLoaded] = React.useState(hasAppLoadedInitially);
   const fadeAnim = useRef(
     new Animated.Value(hasAppLoadedInitially ? 1 : 0),
@@ -23,7 +22,6 @@ export const SplashHeader = ({ onAnimationComplete, children }: Props) => {
 
   useEffect(() => {
     if (hasAppLoadedInitially) {
-      onAnimationComplete();
       return;
     }
 
@@ -35,12 +33,11 @@ export const SplashHeader = ({ onAnimationComplete, children }: Props) => {
       }).start(() => {
         hasAppLoadedInitially = true;
         setIsLoaded(true);
-        onAnimationComplete();
       });
     }, 600);
 
     return () => clearTimeout(timer);
-  }, [fadeAnim, onAnimationComplete]);
+  }, [fadeAnim]);
 
   const contentOpacity = fadeAnim;
 
@@ -66,8 +63,10 @@ export const SplashHeader = ({ onAnimationComplete, children }: Props) => {
 
       {!isLoaded && (
         <Animated.View
-          style={[styles.loadingContainer, { opacity: loadingOpacity }]}
-          pointerEvents="none"
+          style={[
+            styles.loadingContainer,
+            { opacity: loadingOpacity, pointerEvents: "none" },
+          ]}
         >
           <ActivityIndicator size="large" color={Colors.accentBlue} />
         </Animated.View>

@@ -175,7 +175,6 @@ export function calculateWinRate(stats: GameStats) {
 }
 
 // Stats functions directly update Game Settings
-
 export async function updateGameSettings(
   pathname: string,
   updater: (settings: GameSettings) => GameSettings,

@@ -149,7 +149,7 @@ export const Card = forwardRef<any, CardProps>(
 
     cardStyle.boxShadow = shadow(shadowSizeUnselected, 0);
 
-    if (settings.showCardHints !== false) {
+    if (settings?.showCardHints !== false) {
       if (isSelectedInvalid) {
         cardStyle.boxShadow = shadow(shadowSizeSelected, 0.7, true);
       } else if (isSelected) {

@@ -7,6 +7,8 @@ import {
 } from "@/styles/styles";
 import { StyleSheet } from "react-native";
 import { flexStyles } from "./flexStyles";
+import { debugStyles } from "./debugStyles";
+import { headerButtonSize } from "./buttonStyles";
 
 export const layoutStyles = StyleSheet.create({
   // App
@@ -45,6 +47,7 @@ export const layoutStyles = StyleSheet.create({
     ...flexStyles.rowCentered,
     justifyContent: "space-between",
     width: "100%",
+    height: headerButtonSize,
     backgroundColor: Colors.K850,
   },
   gameLoadingOverlay: {
