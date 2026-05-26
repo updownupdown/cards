@@ -14,6 +14,9 @@ export const layoutStyles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     fontFamily: "Outfit_500Medium",
+    backgroundColor: Colors.K850,
+  },
+  appViewWide: {
     backgroundColor: Colors.K900,
   },
   safeArea: {
@@ -26,6 +29,8 @@ export const layoutStyles = StyleSheet.create({
     maxWidth: MaxContentWidth + ContentSidePadding * 2,
     maxHeight: MaxContentHeight + ContentSidePadding * 2,
     backgroundColor: Colors.K850,
+  },
+  safeAreaWide: {
     borderRadius: 30,
     boxShadow: `1px 2px 4px ${rgba(Colors.black, 0.3)}, 2px 4px 16px ${rgba(Colors.black, 0.3)}`,
   },

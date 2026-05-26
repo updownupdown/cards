@@ -38,6 +38,7 @@
       ]
     ],
     "experiments": {
+      "baseUrl": "/cards",
       "typedRoutes": true,
       "reactCompiler": true
     },

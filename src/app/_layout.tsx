@@ -10,10 +10,13 @@ import {
 } from "@expo-google-fonts/outfit";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-import { View } from "react-native";
+import { useWindowDimensions, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Layout() {
+  const { width: windowWidth } = useWindowDimensions();
+  const wideWidth = windowWidth > 480;
+
   const [fontsLoaded] = useFonts({
     Outfit_200ExtraLight,
     Outfit_300Light,
@@ -29,8 +32,15 @@ export default function Layout() {
 
   return (
     <AnimationProvider>
-      <View style={layoutStyles.appView}>
-        <SafeAreaView style={layoutStyles.safeArea}>
+      <View
+        style={[layoutStyles.appView, wideWidth && layoutStyles.appViewWide]}
+      >
+        <SafeAreaView
+          style={[
+            layoutStyles.safeArea,
+            wideWidth && layoutStyles.safeAreaWide,
+          ]}
+        >
           <Stack
             screenOptions={{
               headerShown: false,

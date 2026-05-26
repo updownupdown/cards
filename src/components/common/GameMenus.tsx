@@ -49,7 +49,7 @@ export const GameMenus = ({ isLoaded, ended, won, score, reset }: Props) => {
     showResetHint,
     300,
   );
-  const hintTimeoutRef = useRef<number | null>(null);
+  const hintTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const displayResetHint = () => {
     setShowResetHint(true);

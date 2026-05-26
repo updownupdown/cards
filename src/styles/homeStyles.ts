@@ -55,4 +55,38 @@ export const homeStyles = StyleSheet.create({
   starBtnOnSvg: {
     color: Colors.favoriteStar,
   },
+
+  // Tabs
+  container: {
+    flex: 1,
+    backgroundColor: Colors.K850,
+  },
+  content: {
+    flex: 1,
+  },
+  tabBar: {
+    flexDirection: "row",
+    backgroundColor: Colors.K850,
+    paddingVertical: 12,
+    justifyContent: "space-around",
+    alignItems: "center",
+    boxShadow: `0 0 4px ${Colors.K850}, 0 0 18px ${Colors.K850}`,
+  },
+  tabButton: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 4,
+  },
+  iconContainer: {
+    width: 24,
+    height: 24,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  iconAbsolute: {
+    position: "absolute",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
