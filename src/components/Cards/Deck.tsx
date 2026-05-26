@@ -150,6 +150,37 @@ export const Deck = ({
   const { width, height, borderRadius, placeholderShadow } =
     useCardSize(cardsPerRow);
 
+  // Calculate max fan offset for container sizing
+  let maxFanOffset = 0;
+  if (limitedDeckSize > 1) {
+    if (largeFan === "all") {
+      maxFanOffset = maxFanSize * (limitedDeckSize - 1);
+    } else if (largeFan === "progressive") {
+      let offsetTally = 0;
+      for (let i = 1; i < limitedDeckSize; i++) {
+        let addOffset = minFanSize;
+        const distanceFromTop = limitedDeckSize - i;
+        if (distanceFromTop < progressFanProximityThreshold) {
+          const proximityToTop =
+            (limitedDeckSize - distanceFromTop) / limitedDeckSize;
+          addOffset += proximityToTop * fanSizeDelta;
+        }
+        offsetTally += clamp(addOffset, minFanSize, maxFanSize);
+      }
+      maxFanOffset = offsetTally;
+    } else {
+      maxFanOffset = minFanSize * (limitedDeckSize - 1);
+    }
+  }
+
+  // Compute container size
+  let deckContainerStyle: ViewStyle = { width, height };
+  if (fan === "horizontalRight" || fan === "horizontalLeft") {
+    deckContainerStyle.width = width + (width * maxFanOffset) / 100;
+  } else if (fan === "verticalUp" || fan === "verticalDown") {
+    deckContainerStyle.height = height + (height * maxFanOffset) / 100;
+  }
+
   return (
     <View
       style={[
@@ -190,7 +221,7 @@ export const Deck = ({
 
       {/* Deck */}
       <View
-        style={[cardStyles.deck, style, { width, height }]}
+        style={[cardStyles.deck, style, deckContainerStyle]}
         collapsable={false}
       >
         {/* Anchor Views for refs, used for animations */}

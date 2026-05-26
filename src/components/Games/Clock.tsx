@@ -3,6 +3,7 @@ import { useGameLoading } from "@/hooks/useGameLoading";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Card } from "../Cards/Card";
+import { Deck } from "../Cards/Deck";
 import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
 import { GameMenus } from "../common/GameMenus";
 import { layoutStyles } from "@/styles/layoutStyles";
@@ -137,7 +138,12 @@ export default function Clock() {
 
   return (
     <>
-      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
+      <GameMenus
+        ended={game.ended}
+        won={game.won}
+        reset={reset}
+        isLoaded={isLoaded}
+      />
 
       <View style={layoutStyles.gameArea}>
         <View
@@ -192,26 +198,39 @@ export default function Clock() {
           </View>
         </View>
 
-        <View style={styles.grid}>
-          {Array.from({ length: 13 }).map((_, idx) => (
-            <View
-              key={`clock-pile-${idx}`}
-              style={[
-                styles.pileBox,
-                idx === game.currentSource && !game.ended
-                  ? styles.activePile
-                  : null,
-              ]}
-            >
-              <Text style={styles.smallText}>{pileLabel(idx)}</Text>
-              <Text style={styles.smallText}>
-                Hidden: {game.piles[idx].length}
-              </Text>
-              <Text style={styles.smallText}>
-                Captured: {game.captured[idx].length}
-              </Text>
-            </View>
-          ))}
+        <View style={styles.clockContainer}>
+          {Array.from({ length: 13 }).map((_, idx) => {
+            let style = {};
+            if (idx !== 12) {
+              const angle = ((idx + 1) % 12) * 30;
+              style = {
+                position: "absolute",
+                transform: [{ rotate: `${angle}deg` }, { translateY: -140 }],
+              };
+            } else {
+              style = { position: "absolute" }; // Center pile
+            }
+
+            const deckCards = [
+              ...Array(game.piles[idx].length).fill("back"),
+              ...game.captured[idx],
+            ] as any;
+
+            return (
+              <View key={`clock-pile-${idx}`} style={[styles.clockPile, style]}>
+                <Deck
+                  cards={deckCards}
+                  cardsPerRow={8}
+                  isSelected={idx === game.currentSource && !game.ended}
+                  onPress={
+                    idx === game.currentSource && !game.ended
+                      ? revealStep
+                      : undefined
+                  }
+                />
+              </View>
+            );
+          })}
         </View>
 
         {game.ended ? (
@@ -285,23 +304,16 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: "rgba(255,255,255,0.2)",
   },
-  grid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 6,
+  clockContainer: {
+    height: 380,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 10,
   },
-  pileBox: {
-    width: "23%",
-    borderWidth: 1,
-    borderColor: "rgba(15,23,42,0.2)",
-    borderRadius: 8,
-    padding: 6,
-    backgroundColor: "rgba(255,255,255,0.35)",
-    gap: 2,
-  },
-  activePile: {
-    borderColor: "#0f766e",
-    backgroundColor: "rgba(15,118,110,0.16)",
+  clockPile: {
+    alignItems: "center",
+    justifyContent: "center",
   },
   smallText: {
     fontSize: 11,

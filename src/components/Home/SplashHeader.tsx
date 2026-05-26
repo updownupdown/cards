@@ -2,14 +2,7 @@ import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
 import React, { useEffect, useRef } from "react";
-import {
-  ActivityIndicator,
-  Animated,
-  Easing,
-  StyleSheet,
-  View,
-  useWindowDimensions,
-} from "react-native";
+import { ActivityIndicator, Animated, StyleSheet, View } from "react-native";
 
 interface Props {
   onAnimationComplete: () => void;
@@ -20,80 +13,65 @@ interface Props {
   }) => React.ReactNode;
 }
 
+let hasAppLoadedInitially = false;
+
 export const SplashHeader = ({ onAnimationComplete, children }: Props) => {
-  const [isLoaded, setIsLoaded] = React.useState(false);
-  const splashAnim = useRef(new Animated.Value(0)).current;
-  const { height: screenHeight } = useWindowDimensions();
+  const [isLoaded, setIsLoaded] = React.useState(hasAppLoadedInitially);
+  const fadeAnim = useRef(
+    new Animated.Value(hasAppLoadedInitially ? 1 : 0),
+  ).current;
 
   useEffect(() => {
-    Animated.sequence([
-      Animated.timing(splashAnim, {
-        toValue: 1,
-        duration: 700,
-        easing: Easing.out(Easing.back(1.5)),
-        useNativeDriver: false,
-      }),
-      Animated.delay(1000),
-      Animated.timing(splashAnim, {
-        toValue: 2,
-        duration: 700,
-        easing: Easing.inOut(Easing.ease),
-        useNativeDriver: false,
-      }),
-    ]).start(() => {
-      setIsLoaded(true);
+    if (hasAppLoadedInitially) {
       onAnimationComplete();
-    });
-  }, [splashAnim, onAnimationComplete]);
+      return;
+    }
 
-  const topSpacer = splashAnim.interpolate({
-    inputRange: [0, 1, 2],
-    outputRange: [screenHeight * 0.35, screenHeight * 0.35, 10],
-  });
+    const timer = setTimeout(() => {
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: false,
+      }).start(() => {
+        hasAppLoadedInitially = true;
+        setIsLoaded(true);
+        onAnimationComplete();
+      });
+    }, 600);
 
-  const headerScale = splashAnim.interpolate({
-    inputRange: [0, 1, 2],
-    outputRange: [1.8, 1.8, 1],
-  });
+    return () => clearTimeout(timer);
+  }, [fadeAnim, onAnimationComplete]);
 
-  const contentOpacity = splashAnim.interpolate({
-    inputRange: [1, 1.5, 2],
-    outputRange: [0, 0, 1],
-  });
+  const contentOpacity = fadeAnim;
 
-  const tabTranslate = splashAnim.interpolate({
-    inputRange: [1, 2],
+  const tabTranslate = fadeAnim.interpolate({
+    inputRange: [0, 1],
     outputRange: [50, 0],
     extrapolate: "clamp",
   });
 
-  const indicatorOpacity = splashAnim.interpolate({
-    inputRange: [0, 1, 1.5],
-    outputRange: [1, 1, 0],
+  const loadingOpacity = fadeAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 0],
     extrapolate: "clamp",
   });
 
   return (
     <>
-      {/* Header / Splash */}
-      <Animated.View style={[styles.headerWrapper, { paddingTop: topSpacer }]}>
-        <Animated.View
-          style={[
-            flexStyles.colCentered,
-            { transform: [{ scale: headerScale }] },
-          ]}
-        >
+      <View style={styles.headerWrapper}>
+        <View style={flexStyles.colCentered}>
           <Animated.Text style={styles.appTitle}>Solo Suite</Animated.Text>
+        </View>
+      </View>
 
-          {!isLoaded && (
-            <Animated.View
-              style={[styles.loadingContainer, { opacity: indicatorOpacity }]}
-            >
-              <ActivityIndicator size="large" color={Colors.accentBlue} />
-            </Animated.View>
-          )}
+      {!isLoaded && (
+        <Animated.View
+          style={[styles.loadingContainer, { opacity: loadingOpacity }]}
+          pointerEvents="none"
+        >
+          <ActivityIndicator size="large" color={Colors.accentBlue} />
         </Animated.View>
-      </Animated.View>
+      )}
 
       {children({ isLoaded, contentOpacity, tabTranslate })}
     </>
@@ -106,8 +84,9 @@ const styles = StyleSheet.create({
     width: "100%",
     zIndex: 10,
     backgroundColor: Colors.K850,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
-
   appTitle: {
     ...textStyles.h2,
     color: Colors.K200,
@@ -116,7 +95,8 @@ const styles = StyleSheet.create({
     fontFamily: FontWeight[300],
   },
   loadingContainer: {
-    top: "10%",
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "center",
     alignItems: "center",
     zIndex: 20,
   },

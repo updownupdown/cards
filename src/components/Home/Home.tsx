@@ -3,9 +3,9 @@ import { homeStyles } from "@/styles/homeStyles";
 import { Colors } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
 import { useState } from "react";
-import { Pressable, Text, View, StyleSheet, Animated } from "react-native";
-import { SettingsTab } from "../Modals/SettingsTab";
-import { StatsTab } from "../Modals/StatsTab";
+import { Pressable, Text, View, Animated } from "react-native";
+import { SettingsTab } from "./SettingsTab";
+import { StatsTab } from "./StatsTab";
 import { GamesTab } from "./GamesTab";
 import { SplashHeader } from "./SplashHeader";
 

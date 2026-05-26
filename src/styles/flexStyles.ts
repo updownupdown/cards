@@ -1,5 +1,21 @@
 import { StyleSheet } from "react-native";
 
+export const transition01s = {
+  transitionDuration: "0.1s",
+  transitionProperty: "all",
+  transitionTimingFunction: "ease",
+};
+export const transition02s = {
+  transitionDuration: "0.2s",
+  transitionProperty: "all",
+  transitionTimingFunction: "ease",
+};
+export const transition05s = {
+  transitionDuration: "0.5s",
+  transitionProperty: "all",
+  transitionTimingFunction: "ease",
+};
+
 export const flexStyles = StyleSheet.create({
   positionAbsolute: {
     position: "absolute",

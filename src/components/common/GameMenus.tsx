@@ -101,8 +101,6 @@ export const GameMenus = ({ isLoaded, ended, won, score, reset }: Props) => {
   const { isRendered: renderResetButton, opacity: resetButtonOpacity } =
     useFade(!!isLoaded, 300);
 
-  console.log({ isLoaded, renderResetButton, resetButtonOpacity });
-
   useEffect(() => {
     if (isLoaded) {
       setShowLoadingOverlay(false);
