@@ -11,6 +11,9 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { textStyles } from "@/styles/textStyles";
+import { GameWrapper } from "../common/GameWrapper";
+
+const cardsPerRow = 10;
 
 type Kingdom = {
   id: number;
@@ -287,17 +290,19 @@ export default function TheEmissary() {
   const score = kingdomsWon * 2;
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <GameMenus
-        ended={game.ended}
-        won={game.won}
-        reset={reset}
-        isLoaded={isLoaded}
-      />
-
-      <Text style={textStyles.default}>Kingdoms won: {kingdomsWon}/8</Text>
-      <Text style={textStyles.default}>Score: {score}/16</Text>
-      <Text style={textStyles.default}>Message: {message}</Text>
+    <GameWrapper
+      ended={game.ended}
+      won={game.won}
+      reset={reset}
+      isLoaded={isLoaded}
+    >
+      <Text style={textStyles.default}>
+        Kingdoms won: {kingdomsWon}/8
+        <br />
+        Score: {score}/16
+        <br />
+        Message: {message}
+      </Text>
 
       {!game.visit ? (
         <View style={styles.section}>
@@ -321,7 +326,7 @@ export default function TheEmissary() {
                 <Card
                   suit={k.ruler.suit}
                   rank={k.ruler.rank}
-                  cardsPerRow={18}
+                  cardsPerRow={cardsPerRow}
                 />
               </Pressable>
             ))}
@@ -329,7 +334,7 @@ export default function TheEmissary() {
         </View>
       ) : (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>
+          <Text style={textStyles.default}>
             Visiting K#{game.visit.kingdomId + 1} | Trump: {game.visit.trump}
           </Text>
           <Text style={textStyles.default}>
@@ -339,20 +344,24 @@ export default function TheEmissary() {
             Debates left: {game.visit.debatesLeft}
           </Text>
 
-          <Text style={styles.smallText}>Ruler topic card</Text>
+          <Text style={textStyles.default}>Ruler topic card</Text>
           {game.visit.rulerCard ? (
             <Card
               suit={game.visit.rulerCard.suit}
               rank={game.visit.rulerCard.rank}
-              cardsPerRow={11}
+              cardsPerRow={cardsPerRow}
             />
           ) : null}
 
-          <Text style={styles.smallText}>Your hand (tap to play)</Text>
+          <Text style={textStyles.default}>Your hand (tap to play)</Text>
           <View style={styles.handWrap}>
             {game.visit.hand.map((card) => (
               <Pressable key={card.id} onPress={() => playDebate(card.id)}>
-                <Card suit={card.suit} rank={card.rank} cardsPerRow={13} />
+                <Card
+                  suit={card.suit}
+                  rank={card.rank}
+                  cardsPerRow={cardsPerRow}
+                />
               </Pressable>
             ))}
           </View>
@@ -366,7 +375,7 @@ export default function TheEmissary() {
             : "A kingdom ended without exact required debate wins."}
         </Text>
       ) : null}
-    </ScrollView>
+    </GameWrapper>
   );
 }
 

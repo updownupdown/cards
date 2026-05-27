@@ -13,6 +13,7 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { textStyles } from "@/styles/textStyles";
+import { GameWrapper } from "../common/GameWrapper";
 
 type Foundations = Record<CardSuit, PlayingCard[]>;
 
@@ -332,15 +333,24 @@ export default function Canfield() {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
-      
-
-      <Text style={textStyles.default}>Base rank: {game.baseRank}</Text>
-      <Text style={textStyles.default}>Foundations: {foundationCount}/52</Text>
-      <Text style={textStyles.default}>Reserve: {game.reserve.length}</Text>
-      <Text style={textStyles.default}>Stock: {game.stock.length}</Text>
-      <Text style={textStyles.default}>Message: {message}</Text>
+    <GameWrapper
+      ended={game.ended}
+      won={game.won}
+      reset={reset}
+      isLoaded={isLoaded}
+    >
+      <Text style={textStyles.default}>
+        Base rank: {game.baseRank}
+        <br />
+        Foundations: {foundationCount}/52
+      </Text>
+      <Text style={textStyles.default}>
+        Reserve: {game.reserve.length}
+        <br />
+        Stock: {game.stock.length}
+        <br />
+        Message: {message}
+      </Text>
 
       <View style={styles.row}>
         {(Object.keys(game.foundations) as CardSuit[]).map((suit) => {
@@ -441,7 +451,7 @@ export default function Canfield() {
             : "No legal moves remain."}
         </Text>
       ) : null}
-    </ScrollView>
+    </GameWrapper>
   );
 }
 

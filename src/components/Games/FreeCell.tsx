@@ -24,6 +24,7 @@ import {
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
+import { GameWrapper } from "../common/GameWrapper";
 
 type GameState = {
   cascades: PlayingCard[][];
@@ -408,187 +409,196 @@ export default function FreeCell() {
   const ghostTop = dragGhost ? dragGhost.origin.y - boardOrigin.y : 0;
 
   return (
-    <View ref={boardRef} onLayout={updateBoardOrigin} style={styles.container}>
-      <GameMenus ended={won} won={won} reset={resetGame} isLoaded={isLoaded} />
-      
+    <GameWrapper ended={won} won={won} reset={resetGame} isLoaded={isLoaded}>
+      <View
+        ref={boardRef}
+        onLayout={updateBoardOrigin}
+        style={styles.container}
+      >
+        {won && <Text style={styles.winText}>You won!</Text>}
 
-      {won && <Text style={styles.winText}>You won!</Text>}
+        <View style={styles.topRow}>
+          <View style={styles.freeRow}>
+            {game.freeCells.map((card, index) => {
+              const isSelected =
+                selected?.zone === "free" && selected.slotIndex === index;
+              const dragHandlers = card
+                ? makeDragHandlers({ zone: "free", slotIndex: index }, () =>
+                    onFreeCellPress(index),
+                  )
+                : null;
+              const hiddenByDrag =
+                dragGhost?.source.zone === "free" &&
+                dragGhost.source.slotIndex === index;
 
-      <View style={styles.topRow}>
-        <View style={styles.freeRow}>
-          {game.freeCells.map((card, index) => {
-            const isSelected =
-              selected?.zone === "free" && selected.slotIndex === index;
-            const dragHandlers = card
-              ? makeDragHandlers({ zone: "free", slotIndex: index }, () =>
-                  onFreeCellPress(index),
+              return (
+                <View
+                  key={`free-${index}`}
+                  ref={(node) => {
+                    freeRefs.current[index] = node;
+                    if (card) {
+                      freeCardRefs.current[index] = node;
+                    }
+                  }}
+                  collapsable={false}
+                  {...(dragHandlers ?? {})}
+                >
+                  <Pressable
+                    onPress={() => onFreeCellPress(index)}
+                    style={[
+                      styles.cardSlot,
+                      isSelected ? styles.selectedSlot : null,
+                      hoverTarget?.zone === "free" &&
+                      hoverTarget.slotIndex === index
+                        ? styles.dropHintSlot
+                        : null,
+                    ]}
+                  >
+                    {card ? (
+                      <View
+                        style={
+                          hiddenByDrag ? styles.hiddenDuringDrag : undefined
+                        }
+                      >
+                        <Card
+                          suit={card.suit}
+                          rank={card.rank}
+                          cardsPerRow={9}
+                        />
+                      </View>
+                    ) : (
+                      <Text style={styles.slotLabel}>Free</Text>
+                    )}
+                  </Pressable>
+                </View>
+              );
+            })}
+          </View>
+
+          <View style={styles.foundationRow}>
+            {SUITS.map((suit) => {
+              const top =
+                game.foundations[suit][game.foundations[suit].length - 1];
+
+              return (
+                <View
+                  key={suit}
+                  ref={(node) => {
+                    foundationRefs.current[suit] = node;
+                  }}
+                  collapsable={false}
+                >
+                  <Pressable
+                    onPress={() => onFoundationPress(suit)}
+                    style={[
+                      styles.cardSlot,
+                      hoverTarget?.zone === "foundation" &&
+                      hoverTarget.suit === suit
+                        ? styles.dropHintSlot
+                        : null,
+                    ]}
+                  >
+                    {top ? (
+                      <Card suit={top.suit} rank={top.rank} cardsPerRow={9} />
+                    ) : (
+                      <Text style={styles.slotLabel}>
+                        {suit[0].toUpperCase()}
+                      </Text>
+                    )}
+                  </Pressable>
+                </View>
+              );
+            })}
+          </View>
+        </View>
+
+        <View style={styles.cascadeRow}>
+          {game.cascades.map((pile, pileIndex) => {
+            const pileHeight = Math.max(220, pile.length * 16 + 140);
+            const topCard = pile[pile.length - 1];
+            const topDragHandlers = topCard
+              ? makeDragHandlers({ zone: "cascade", pileIndex }, () =>
+                  onCascadePress(pileIndex),
                 )
               : null;
-            const hiddenByDrag =
-              dragGhost?.source.zone === "free" &&
-              dragGhost.source.slotIndex === index;
 
             return (
-              <View
-                key={`free-${index}`}
+              <Pressable
+                key={`cascade-${pileIndex}`}
                 ref={(node) => {
-                  freeRefs.current[index] = node;
-                  if (card) {
-                    freeCardRefs.current[index] = node;
-                  }
+                  cascadeRefs.current[pileIndex] = node;
                 }}
                 collapsable={false}
-                {...(dragHandlers ?? {})}
+                onPress={() => onCascadePress(pileIndex)}
+                style={[
+                  styles.cascadePile,
+                  { minHeight: pileHeight },
+                  hoverTarget?.zone === "cascade" &&
+                  hoverTarget.pileIndex === pileIndex
+                    ? styles.dropHintPile
+                    : null,
+                ]}
               >
-                <Pressable
-                  onPress={() => onFreeCellPress(index)}
-                  style={[
-                    styles.cardSlot,
-                    isSelected ? styles.selectedSlot : null,
-                    hoverTarget?.zone === "free" &&
-                    hoverTarget.slotIndex === index
-                      ? styles.dropHintSlot
-                      : null,
-                  ]}
-                >
-                  {card ? (
+                {pile.length === 0 ? (
+                  <View style={[styles.cardSlot, styles.emptyPileSlot]} />
+                ) : null}
+
+                {pile.map((card, cardIndex) => {
+                  const isTop = cardIndex === pile.length - 1;
+                  const isSelected =
+                    selected?.zone === "cascade" &&
+                    selected.pileIndex === pileIndex;
+                  const hiddenByDrag =
+                    isTop &&
+                    dragGhost?.source.zone === "cascade" &&
+                    dragGhost.source.pileIndex === pileIndex;
+
+                  return (
                     <View
-                      style={hiddenByDrag ? styles.hiddenDuringDrag : undefined}
+                      key={card.id}
+                      ref={(node) => {
+                        if (isTop) {
+                          cascadeTopCardRefs.current[card.id] = node;
+                        }
+                      }}
+                      collapsable={false}
+                      style={[
+                        styles.cascadeCard,
+                        { top: cardIndex * 16, zIndex: cardIndex + 1 },
+                        isTop && isSelected ? styles.selectedCard : null,
+                        hiddenByDrag ? styles.hiddenDuringDrag : null,
+                      ]}
+                      {...(isTop ? topDragHandlers : {})}
                     >
                       <Card suit={card.suit} rank={card.rank} cardsPerRow={9} />
                     </View>
-                  ) : (
-                    <Text style={styles.slotLabel}>Free</Text>
-                  )}
-                </Pressable>
-              </View>
+                  );
+                })}
+              </Pressable>
             );
           })}
         </View>
 
-        <View style={styles.foundationRow}>
-          {SUITS.map((suit) => {
-            const top =
-              game.foundations[suit][game.foundations[suit].length - 1];
-
-            return (
-              <View
-                key={suit}
-                ref={(node) => {
-                  foundationRefs.current[suit] = node;
-                }}
-                collapsable={false}
-              >
-                <Pressable
-                  onPress={() => onFoundationPress(suit)}
-                  style={[
-                    styles.cardSlot,
-                    hoverTarget?.zone === "foundation" &&
-                    hoverTarget.suit === suit
-                      ? styles.dropHintSlot
-                      : null,
-                  ]}
-                >
-                  {top ? (
-                    <Card suit={top.suit} rank={top.rank} cardsPerRow={9} />
-                  ) : (
-                    <Text style={styles.slotLabel}>
-                      {suit[0].toUpperCase()}
-                    </Text>
-                  )}
-                </Pressable>
-              </View>
-            );
-          })}
-        </View>
+        {dragGhost ? (
+          <Animated.View
+            style={[
+              styles.ghostLayer,
+              {
+                left: ghostLeft,
+                top: ghostTop,
+                transform: dragTranslate.getTranslateTransform(),
+              },
+            ]}
+          >
+            <Card
+              suit={dragGhost.card.suit}
+              rank={dragGhost.card.rank}
+              cardsPerRow={9}
+            />
+          </Animated.View>
+        ) : null}
       </View>
-
-      <View style={styles.cascadeRow}>
-        {game.cascades.map((pile, pileIndex) => {
-          const pileHeight = Math.max(220, pile.length * 16 + 140);
-          const topCard = pile[pile.length - 1];
-          const topDragHandlers = topCard
-            ? makeDragHandlers({ zone: "cascade", pileIndex }, () =>
-                onCascadePress(pileIndex),
-              )
-            : null;
-
-          return (
-            <Pressable
-              key={`cascade-${pileIndex}`}
-              ref={(node) => {
-                cascadeRefs.current[pileIndex] = node;
-              }}
-              collapsable={false}
-              onPress={() => onCascadePress(pileIndex)}
-              style={[
-                styles.cascadePile,
-                { minHeight: pileHeight },
-                hoverTarget?.zone === "cascade" &&
-                hoverTarget.pileIndex === pileIndex
-                  ? styles.dropHintPile
-                  : null,
-              ]}
-            >
-              {pile.length === 0 ? (
-                <View style={[styles.cardSlot, styles.emptyPileSlot]} />
-              ) : null}
-
-              {pile.map((card, cardIndex) => {
-                const isTop = cardIndex === pile.length - 1;
-                const isSelected =
-                  selected?.zone === "cascade" &&
-                  selected.pileIndex === pileIndex;
-                const hiddenByDrag =
-                  isTop &&
-                  dragGhost?.source.zone === "cascade" &&
-                  dragGhost.source.pileIndex === pileIndex;
-
-                return (
-                  <View
-                    key={card.id}
-                    ref={(node) => {
-                      if (isTop) {
-                        cascadeTopCardRefs.current[card.id] = node;
-                      }
-                    }}
-                    collapsable={false}
-                    style={[
-                      styles.cascadeCard,
-                      { top: cardIndex * 16, zIndex: cardIndex + 1 },
-                      isTop && isSelected ? styles.selectedCard : null,
-                      hiddenByDrag ? styles.hiddenDuringDrag : null,
-                    ]}
-                    {...(isTop ? topDragHandlers : {})}
-                  >
-                    <Card suit={card.suit} rank={card.rank} cardsPerRow={9} />
-                  </View>
-                );
-              })}
-            </Pressable>
-          );
-        })}
-      </View>
-
-      {dragGhost ? (
-        <Animated.View
-          style={[
-            styles.ghostLayer,
-            {
-              left: ghostLeft,
-              top: ghostTop,
-              transform: dragTranslate.getTranslateTransform(),
-            },
-          ]}
-        >
-          <Card
-            suit={dragGhost.card.suit}
-            rank={dragGhost.card.rank}
-            cardsPerRow={9}
-          />
-        </Animated.View>
-      ) : null}
-    </View>
+    </GameWrapper>
   );
 }
 

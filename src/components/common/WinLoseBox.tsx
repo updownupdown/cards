@@ -6,11 +6,18 @@ import { Button } from "../Button/Button";
 interface Props {
   gameEnded: boolean;
   score?: string | number;
+  message?: string;
   won: boolean;
   reset: () => void;
 }
 
-export const WinLoseBox = ({ score, won, gameEnded, reset }: Props) => {
+export const WinLoseBox = ({
+  score,
+  message,
+  won,
+  gameEnded,
+  reset,
+}: Props) => {
   // Win/lose animations
   const wlmAnim = useRef(new Animated.Value(0)).current;
 
@@ -43,7 +50,7 @@ export const WinLoseBox = ({ score, won, gameEnded, reset }: Props) => {
     }
   }, [gameEnded]);
 
-  return (
+  return gameEnded ? (
     <>
       <Animated.View style={[menuStyles.wlmOverlay, { opacity: wlmAnim }]} />
 
@@ -64,6 +71,8 @@ export const WinLoseBox = ({ score, won, gameEnded, reset }: Props) => {
           <Text style={menuStyles.wlmTitle}>
             {won ? "You won!" : "You lost"}
           </Text>
+
+          {message && <Text style={menuStyles.wlmScore}>{message}</Text>}
           {score && <Text style={menuStyles.wlmScore}>Score: {score}</Text>}
         </View>
 
@@ -75,5 +84,5 @@ export const WinLoseBox = ({ score, won, gameEnded, reset }: Props) => {
         />
       </Animated.View>
     </>
-  );
+  ) : null;
 };

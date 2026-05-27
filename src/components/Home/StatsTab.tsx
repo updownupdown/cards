@@ -38,7 +38,10 @@ export const StatsTab = () => {
   );
 
   return (
-    <ScrollView contentContainerStyle={homeStyles.scrollContent}>
+    <ScrollView
+      contentContainerStyle={homeStyles.scrollContent}
+      showsVerticalScrollIndicator={false}
+    >
       {/* Stats for ALL games */}
       <View style={styles.gameStats}>
         <View style={styles.table}>

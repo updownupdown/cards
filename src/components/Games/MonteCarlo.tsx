@@ -1,13 +1,15 @@
-import { useMemo, useState } from "react";
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-
-import { Card } from "../Cards/Card";
-import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
-import { GameMenus } from "../common/GameMenus";
-import { layoutStyles } from "@/styles/layoutStyles";
-import { textStyles } from "@/styles/textStyles";
+import { cardStyles } from "@/styles/cardStyles";
 import { flexStyles } from "@/styles/flexStyles";
+import { textStyles } from "@/styles/textStyles";
+import { useMemo, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { Button } from "../Button/Button";
+import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
+import { CardButton } from "../Cards/CardButton";
+import { GameWrapper } from "../common/GameWrapper";
+
+const cardsPerRow = 5.5;
 
 type Cell = PlayingCard | null;
 type Selection = { row: number; col: number } | null;
@@ -117,9 +119,6 @@ export default function MonteCarlo() {
 
   const [game, setGame] = useState<MonteCarloState>(setup);
   const [selected, setSelected] = useState<Selection>(null);
-  const [message, setMessage] = useState(
-    "Remove adjacent pairs of equal rank. Consolidate/deal when useful.",
-  );
 
   const cardsOnGrid = useMemo(() => countCards(game.grid), [game.grid]);
   const canConsolidate = useMemo(() => !hasPair(game.grid), [game.grid]);
@@ -127,9 +126,6 @@ export default function MonteCarlo() {
   function reset() {
     setGame(setup());
     setSelected(null);
-    setMessage(
-      "Remove adjacent pairs of equal rank. Consolidate/deal when useful.",
-    );
   }
 
   function selectCell(row: number, col: number) {
@@ -170,14 +166,12 @@ export default function MonteCarlo() {
       setSelected(null);
       return { ...next, ...end };
     });
-
-    setMessage("Selection updated.");
   }
 
   function consolidateAndDeal() {
     setGame((prev) => {
       if (prev.ended) return prev;
-      if (hasPair(prev.grid)) return prev;
+      // if (hasPair(prev.grid)) return prev;
 
       let grid = compactGrid(prev.grid);
       const stock = [...prev.stock];
@@ -197,144 +191,74 @@ export default function MonteCarlo() {
     });
 
     setSelected(null);
-    setMessage("Consolidated grid and dealt into empty spaces.");
   }
 
   return (
-    <>
-      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
-
-      <View style={layoutStyles.gameArea}>
-        <View
-          style={[
-            flexStyles.rowCentered,
-            flexStyles.fullWidth,
-            flexStyles.justifyEvenly,
-          ]}
-        >
-          <Text style={textStyles.default}>Cards on grid: {cardsOnGrid}</Text>
-          <Text style={textStyles.default}>Stock: {game.stock.length}</Text>
-          <Text style={textStyles.default}>Removed: {game.removed}</Text>
-        </View>
-
-        <Text style={textStyles.default}>Message: {message}</Text>
-
-        <View style={styles.grid}>
-          {game.grid.map((row, r) =>
-            row.map((cell, c) => {
-              const isSelected = selected?.row === r && selected?.col === c;
-              return (
-                <Pressable
-                  key={`mc-${r}-${c}`}
-                  style={[styles.cell, isSelected ? styles.selectedCell : null]}
-                  onPress={() => selectCell(r, c)}
-                  disabled={game.ended}
-                >
-                  {cell ? (
-                    <Card suit={cell.suit} rank={cell.rank} cardsPerRow={5} />
-                  ) : (
-                    <Card isPlaceholder cardsPerRow={5} />
-                  )}
-                </Pressable>
-              );
-            }),
-          )}
-        </View>
-
-        <Pressable
-          style={[
-            styles.button,
-            styles.dealButton,
-            canConsolidate ? styles.dealEnabled : styles.dealDisabled,
-          ]}
-          onPress={consolidateAndDeal}
-          disabled={!canConsolidate || game.ended}
-        >
-          <Text style={styles.buttonText}>Consolidate / Deal</Text>
-        </Pressable>
-
-        {game.ended ? (
-          <Text style={game.won ? styles.winText : styles.loseText}>
-            {game.won
-              ? "You cleared all cards."
-              : "No adjacent pairs and stock is empty."}
-          </Text>
-        ) : null}
+    <GameWrapper
+      ended={game.ended}
+      won={game.won}
+      reset={reset}
+      isLoaded={isLoaded}
+      winLoseMessage={
+        game.won
+          ? "You cleared all cards!"
+          : "No adjacent pairs, and stock is empty."
+      }
+    >
+      <View
+        style={[
+          flexStyles.rowCentered,
+          flexStyles.fullWidth,
+          flexStyles.justifyEvenly,
+        ]}
+      >
+        <Text style={textStyles.default}>
+          Cards on grid: {cardsOnGrid} - Stock: {game.stock.length} - Removed:{" "}
+          {game.removed}
+        </Text>
       </View>
-    </>
+
+      <View style={[{ ...cardStyles.row }]}>
+        {game.grid.map((row, r) => {
+          return (
+            <View key={`row-${r}`} style={[{ ...flexStyles.colCentered }]}>
+              {row.map((cell, c) => {
+                const isSelected = selected?.row === r && selected?.col === c;
+                return (
+                  <CardButton
+                    key={`mc-${r}-${c}`}
+                    onPress={() => selectCell(r, c)}
+                    disabled={!cell?.suit || !cell?.rank || game.ended}
+                    suit={cell?.suit}
+                    rank={cell?.rank}
+                    cardsPerRow={cardsPerRow}
+                    isSelected={isSelected}
+                    hasTopMargin={c > 0}
+                  />
+                );
+              })}
+            </View>
+          );
+        })}
+      </View>
+
+      <Button
+        onPress={consolidateAndDeal}
+        // disabled={!canConsolidate || game.ended}
+        disabled={game.ended}
+        text="Consolidate / Deal"
+        fullWidth
+        size="large"
+      />
+    </GameWrapper>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingTop: 56,
-    paddingHorizontal: 10,
-    paddingBottom: 24,
-    gap: 10,
-  },
-  headerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 24,
-    color: "#1f2937",
-    fontFamily: "Outfit_600SemiBold",
-  },
-  button: {
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    backgroundColor: "#1d4ed8",
-    alignSelf: "flex-start",
-  },
-  dealButton: {
-    backgroundColor: "#0f766e",
-  },
-  dealEnabled: {
-    backgroundColor: "#0f766e",
-  },
-  dealDisabled: {
-    backgroundColor: "#94a3b8",
-  },
-  buttonText: {
-    color: "#fff",
-    fontFamily: "Outfit_500Medium",
-  },
-  metaText: {
-    color: "#334155",
-    fontFamily: "Outfit_400Regular",
-  },
-  grid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    gap: 6,
-  },
   cell: {
     width: "18%",
     alignItems: "center",
     borderRadius: 8,
     paddingVertical: 2,
-  },
-  selectedCell: {
-    backgroundColor: "rgba(37,99,235,0.16)",
-  },
-  emptyCell: {
-    width: 62,
-    height: 90,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "rgba(15,23,42,0.2)",
-    backgroundColor: "rgba(255,255,255,0.2)",
-  },
-  winText: {
-    color: "#065f46",
-    fontFamily: "Outfit_600SemiBold",
-  },
-  loseText: {
-    color: "#991b1b",
-    fontFamily: "Outfit_600SemiBold",
   },
 });

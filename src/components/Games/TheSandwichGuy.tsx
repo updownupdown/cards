@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { Pressable, StyleSheet, Text, View, ViewStyle } from "react-native";
-
-import { Card } from "../Cards/Card";
+import { cardStyles } from "@/styles/cardStyles";
+import { flexStyles } from "@/styles/flexStyles";
+import { useEffect, useMemo, useState } from "react";
+import { View } from "react-native";
+import { Button } from "../Button/Button";
 import {
   RANK_VALUE,
   createDeck,
@@ -10,15 +11,12 @@ import {
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { layoutStyles } from "@/styles/layoutStyles";
-import { textStyles } from "@/styles/textStyles";
-import { buttonStyles } from "@/styles/buttonStyles";
-import { cardStyles } from "@/styles/cardStyles";
-import { Deck } from "../Cards/Deck";
-import { GameMenus } from "../common/GameMenus";
-import { MessageBox } from "../common/MessageBox";
 import { CardButton } from "../Cards/CardButton";
-import { Button } from "../Button/Button";
+import { Deck } from "../Cards/Deck";
+import { GameWrapper } from "../common/GameWrapper";
+import { MessageBox } from "../common/MessageBox";
+
+const cardsPerRow = 4;
 
 type SandwichState = {
   deck: PlayingCard[];
@@ -151,9 +149,10 @@ export default function TheSandwichGuy() {
     setGame((prev) => {
       if (prev.ended) return prev;
 
+      // Replace selected cards with null
       const hand = prev.hand.map((card) =>
         card && selectedIds.includes(card.id) ? null : card,
-      ); // Replace selected cards with null
+      );
       const discard = [...prev.discard, ...selectedCards];
       const deck = [...prev.deck];
 
@@ -167,7 +166,8 @@ export default function TheSandwichGuy() {
       const wonByDeckingOut = prev.wonByDeckingOut || deck.length === 0;
       const next = {
         ...prev,
-        hand: hand.map((card) => card || null), // Fill nulls with placeholders
+        // Fill nulls with placeholders
+        hand: hand.map((card) => card || null),
         deck,
         discard,
         wonByDeckingOut,
@@ -185,58 +185,74 @@ export default function TheSandwichGuy() {
   }
 
   const won = game.ended && game.wonByDeckingOut;
-  const lost = game.ended && !game.wonByDeckingOut;
+
+  function selectColor(selected: boolean) {
+    if (selected && invalidSandwichSelected) {
+      return "red";
+    } else if (selectedIds.length === 3 && selected) {
+      return "green";
+    } else {
+      return "blue";
+    }
+  }
 
   return (
-    <>
-      <GameMenus ended={game.ended} won={won} reset={reset} isLoaded={isLoaded} />
-
-      <View style={layoutStyles.gameArea}>
-        <MessageBox message={message} />
-
-        {game.ended && (
-          <MessageBox
-            message={
-              won
-                ? `You won by drawing out the deck. Final score (lower is better):{" "}
+    <GameWrapper
+      ended={game.ended}
+      won={won}
+      reset={reset}
+      isLoaded={isLoaded}
+      winLoseMessage={
+        won
+          ? `You won by drawing out the deck. Final score (lower is better):{" "}
             ${score}`
-                : "No valid sandwich available. You lose."
-            }
-            messageType={won ? "win" : "lose"}
-          />
-        )}
+          : "No valid sandwich available. You lose."
+      }
+    >
+      <MessageBox message={message} />
 
-        <Deck showCount cardsPerRow={4} backCount={game.deck.length} />
-
-        <View style={[cardStyles.row, cardStyles.rowGap4]}>
-          {game.hand.map((card, index) => {
-            const selected = !!(card && selectedIds.includes(card.id));
-
-            return (
-              <CardButton
-                key={card ? card.id : "placeholder" + index}
-                onPress={() => {
-                  if (card) {
-                    toggleSelect(card.id);
-                  }
-                }}
-                isSelected={selected}
-                isSelectedInvalid={selected && invalidSandwichSelected}
-                cardsPerRow={4}
-                isPlaceholder={!card}
-                suit={card?.suit}
-                rank={card?.rank}
-              />
-            );
-          })}
-        </View>
-
-        <Button
-          onPress={commitSandwich}
-          disabled={selectedCards.length !== 3 || invalidSandwichSelected}
-          text="Serve Sandwich"
+      <View style={[flexStyles.rowCentered]}>
+        <Deck
+          showCount
+          limitFan
+          cardsPerRow={cardsPerRow}
+          countPosition="right"
+          backCount={game.deck.length}
+          iconName="draw"
         />
       </View>
-    </>
+
+      <View style={[cardStyles.row, cardStyles.rowGap4]}>
+        {game.hand.map((card, index) => {
+          const selected = !!(card && selectedIds.includes(card.id));
+
+          return (
+            <CardButton
+              key={card ? card.id : "placeholder" + index}
+              onPress={() => {
+                if (card) {
+                  toggleSelect(card.id);
+                }
+              }}
+              isSelected={selected}
+              cardsPerRow={cardsPerRow}
+              isPlaceholder={!card}
+              suit={card?.suit}
+              rank={card?.rank}
+              hasTopMargin={index > cardsPerRow - 1}
+              selectColor={selectColor(selected)}
+            />
+          );
+        })}
+      </View>
+
+      <Button
+        onPress={commitSandwich}
+        disabled={selectedCards.length !== 3 || invalidSandwichSelected}
+        text="Serve Sandwich"
+        size="large"
+        fullWidth
+      />
+    </GameWrapper>
   );
 }

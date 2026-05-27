@@ -29,6 +29,8 @@ export type PlayingCard = {
 
 export const SUITS: CardSuit[] = ["clubs", "diamonds", "hearts", "spades"];
 
+export const numRanks = 13;
+
 export const RANKS: StandardRank[] = [
   "A",
   "2",
@@ -45,7 +47,7 @@ export const RANKS: StandardRank[] = [
   "K",
 ];
 
-export const RANK_VALUE: Record<StandardRank, number> = {
+export const RANK_VALUE: Record<StandardRank | "Joker", number> = {
   A: 1,
   "2": 2,
   "3": 3,
@@ -59,10 +61,40 @@ export const RANK_VALUE: Record<StandardRank, number> = {
   J: 11,
   Q: 12,
   K: 13,
+  Joker: 14,
 };
+
+export function areRanksConsecutive(
+  rank1: number,
+  rank2: number,
+  looping: boolean,
+) {
+  if (rank1 === 1) {
+    if (looping) {
+      return rank2 === 2 || rank2 === 13;
+    } else {
+      return rank2 === 2;
+    }
+  } else if (rank1 === 13) {
+    if (looping) {
+      return rank2 === 1 || rank2 === 12;
+    } else {
+      return rank2 === 12;
+    }
+  } else {
+    return Math.abs(rank1 - rank2) === 1;
+  }
+}
 
 export function isRed(suit: CardSuit) {
   return suit === "hearts" || suit === "diamonds";
+}
+
+export function isSameColor(card1: PlayingCard, card2: PlayingCard) {
+  const card1Red = isRed(card1.suit) ? "red" : "black";
+  const card2Red = isRed(card2.suit) ? "red" : "black";
+
+  return card1Red === card2Red;
 }
 
 export function shuffle<T>(items: T[]) {

@@ -64,7 +64,10 @@ export const GamesTab = () => {
   }
 
   return (
-    <ScrollView contentContainerStyle={homeStyles.scrollContent}>
+    <ScrollView
+      contentContainerStyle={homeStyles.scrollContent}
+      showsVerticalScrollIndicator={false}
+    >
       <View style={homeStyles.linkCol}>
         {orderedGames.map((game) => {
           const isFav = favorites.has(game.path);

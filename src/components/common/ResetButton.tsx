@@ -2,13 +2,12 @@ import { Button } from "@/components/Button/Button";
 import { useFade } from "@/hooks/useFade";
 import { buttonStyles, headerButtonSize } from "@/styles/buttonStyles";
 import { flexStyles } from "@/styles/flexStyles";
-import { menuStyles } from "@/styles/menuStyles";
-import { Colors, FontWeight, rgba } from "@/styles/styles";
+import { Colors, ContentSidePadding, FontWeight, rgba } from "@/styles/styles";
 import React, { useRef, useState } from "react";
 import { Animated, Easing, StyleSheet, Text, View } from "react-native";
 
-const minDisplayDuration = 1000;
-const holdToResetDuration = 1000;
+const holdToResetDuration = 900;
+const minDisplayDuration = holdToResetDuration;
 
 interface Props {
   reset: () => void;
@@ -120,9 +119,9 @@ export const styles = StyleSheet.create({
     overflow: "hidden",
     position: "absolute",
     zIndex: 20,
-    top: 0,
-    left: 0,
-    right: headerButtonSize * 2 + 8,
+    top: ContentSidePadding / 2,
+    left: ContentSidePadding,
+    right: headerButtonSize * 2 + 8 + ContentSidePadding,
     height: headerButtonSize,
 
     borderRadius: headerButtonSize / 2,

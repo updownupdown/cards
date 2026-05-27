@@ -3,25 +3,33 @@ import "@/styles/global.css";
 import { Platform } from "react-native";
 
 export const Colors = {
+  buttonColor: "#6fe9ff",
+  buttonColorDisabled: "#494F55",
+
   // Accents
   accentBlue: "#6fe9ff",
   accentRed: "#CE3566",
   accentGreen: "#26ff93",
 
   // Card select colours
+  cardSelectRed: "#e0485c",
   cardSelectBlue: "#7bd5ff",
   cardSelectPurple: "#bb55ff",
   cardSelectPink: "#ff52b1",
   cardSelectOrange: "#ff8b2d",
   cardSelectYellow: "#ffea2d",
   cardSelectGreen: "#26ff93",
-  cardSelectInvalid: "#CD3D50",
 
   // Misc
   win: "#03B491",
   lose: "#CE3566",
   favoriteStar: "#ff922d",
-  deckRed: "#CD3D50",
+  suitsRed: "#CD3D50",
+  suitsBlack: "#CD3D50",
+  suitsColoredDiamonds: "#E68036",
+  suitsColoredHearts: "#CD3D50",
+  suitsColoredClubs: "#397189",
+  suitsColoredSpades: "#413419",
 
   // Greys
   black: "#000000",

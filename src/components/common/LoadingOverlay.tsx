@@ -21,13 +21,11 @@ export const LoadingOverlay = ({ isLoaded }: Props) => {
     }
   }, [isLoaded]);
 
-  return (
-    renderLoadingOverlay && (
-      <Animated.View
-        style={[layoutStyles.gameLoadingOverlay, { opacity: loadingOpacity }]}
-      >
-        <ActivityIndicator size="large" color={Colors.K400} />
-      </Animated.View>
-    )
-  );
+  return showLoadingOverlay && renderLoadingOverlay ? (
+    <Animated.View
+      style={[layoutStyles.gameLoadingOverlay, { opacity: loadingOpacity }]}
+    >
+      <ActivityIndicator size="large" color={Colors.K400} />
+    </Animated.View>
+  ) : null;
 };

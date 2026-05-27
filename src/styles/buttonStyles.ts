@@ -1,4 +1,4 @@
-import { Colors, FontWeight, rgba } from "@/styles/styles";
+import { Colors, FontWeight } from "@/styles/styles";
 import { StyleSheet } from "react-native";
 
 const buttonTransition = {
@@ -21,7 +21,7 @@ export const buttonStyles = StyleSheet.create({
     alignItems: "center",
     gap: 6,
 
-    backgroundColor: Colors.accentBlue,
+    backgroundColor: Colors.buttonColor,
     outlineWidth: 0,
   },
 
@@ -60,34 +60,40 @@ export const buttonStyles = StyleSheet.create({
   textSizeText: {
     fontSize: 16,
     color: Colors.accentBlue,
+    lineHeight: 16,
   },
   textSizeTextLarge: {
     fontSize: 15,
     color: Colors.accentBlue,
     textTransform: "uppercase",
     fontFamily: FontWeight[500],
+    lineHeight: 15,
   },
   textSizeSmall: {
     fontSize: 12,
     textTransform: "uppercase",
     color: Colors.K900,
+    lineHeight: 12,
   },
   textSizeMedium: {
     fontSize: 16,
     textTransform: "uppercase",
     color: Colors.K900,
+    fontFamily: FontWeight[500],
+    lineHeight: 16,
   },
   textSizeLarge: {
     fontSize: 18,
     textTransform: "uppercase",
     color: Colors.K900,
     fontFamily: FontWeight[600],
+    lineHeight: 18,
   },
 
   // Disabled
   disabled: {
     color: Colors.K900,
-    backgroundColor: Colors.K800,
+    backgroundColor: Colors.buttonColorDisabled,
     boxShadow: "unset",
   },
   textDisabled: {

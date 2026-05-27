@@ -11,6 +11,7 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { textStyles } from "@/styles/textStyles";
+import { GameWrapper } from "../common/GameWrapper";
 
 type RankBand = {
   members: PlayingCard[];
@@ -219,11 +220,12 @@ export default function Syndicate() {
   const score = game.dead.length;
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
-
-      
-
+    <GameWrapper
+      ended={game.ended}
+      won={game.won}
+      reset={reset}
+      isLoaded={isLoaded}
+    >
       <Text style={textStyles.default}>
         Dead cards (lower is better): {score}
       </Text>
@@ -331,7 +333,7 @@ export default function Syndicate() {
       ) : null}
 
       <Text style={textStyles.default}>Progress marker: {kingdomsWon}</Text>
-    </ScrollView>
+    </GameWrapper>
   );
 }
 

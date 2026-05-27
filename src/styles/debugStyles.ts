@@ -2,24 +2,31 @@ import { StyleSheet } from "react-native";
 
 export const debugStyles = StyleSheet.create({
   borderBlue: {
-    boxShadow: "0 0 0 2px  blue",
+    opacity: 1,
+    boxShadow: "0 0 0 1px blue, inset 0 0 0 1px blue",
   },
   borderGreen: {
-    boxShadow: "0 0 0 2px  green",
+    opacity: 1,
+    boxShadow: "0 0 0 1px green, inset 0 0 0 1px green",
   },
   borderRed: {
-    boxShadow: "0 0 0 2px  red",
+    opacity: 1,
+    boxShadow: "0 0 0 1px red, inset 0 0 0 1px red",
   },
   borderYellow: {
-    boxShadow: "0 0 0 2px  yellow",
+    opacity: 1,
+    boxShadow: "0 0 0 1px yellow, inset 0 0 0 1px yellow",
   },
   borderOrange: {
-    boxShadow: "0 0 0 2px  orange",
+    opacity: 1,
+    boxShadow: "0 0 0 1px orange, inset 0 0 0 1px orange",
   },
   borderPink: {
-    boxShadow: "0 0 0 2px  hotpink",
+    opacity: 1,
+    boxShadow: "0 0 0 1px pink, inset 0 0 0 1px pink",
   },
   borderBeige: {
-    boxShadow: "0 0 0 2px  beiege",
+    opacity: 1,
+    boxShadow: "0 0 0 1px beige, inset 0 0 0 1px beige",
   },
 });

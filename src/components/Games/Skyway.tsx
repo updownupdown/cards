@@ -1,10 +1,9 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { useMemo, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import Svg, { Line } from "react-native-svg";
-import { GameMenus } from "../common/GameMenus";
 import { layoutStyles } from "@/styles/layoutStyles";
 import { textStyles } from "@/styles/textStyles";
+import { useMemo, useState } from "react";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import Svg, { Line } from "react-native-svg";
 import { Deck } from "../Cards/Deck";
 import {
   RANK_VALUE,
@@ -13,18 +12,30 @@ import {
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
-
+import { GameMenus } from "../common/GameMenus";
 import { Icon } from "@/icons";
-import { flexStyles, transition02s } from "@/styles/flexStyles";
-import { Colors, FontWeight, rgba } from "@/styles/styles";
-import { cardStyles } from "@/styles/cardStyles";
+import { flexStyles, transitionStyles } from "@/styles/flexStyles";
+import { Colors, FontWeight, MaxContentHeight, rgba } from "@/styles/styles";
+import { GameWrapper } from "../common/GameWrapper";
+
+const cardsPerRow = 6;
+const svgCellSize = MaxContentHeight;
+const svgGridSize = svgCellSize * 3;
+
+// Map grid index to (x, y) center in SVG overlay
+function getCellCenter(idx: number) {
+  const cx = svgCellSize / 2 + (idx % 3) * svgCellSize;
+  const cy = svgCellSize / 2 + Math.floor(idx / 3) * svgCellSize;
+
+  return { cx, cy };
+}
 
 // Shared color mapping for suit paths and icons
 const SUIT_PATH_COLORS: Record<string, string> = {
-  diamonds: Colors.accentGreen,
-  hearts: Colors.accentBlue,
-  spades: Colors.accentRed,
-  clubs: Colors.favoriteStar,
+  diamonds: Colors.suitsColoredDiamonds,
+  hearts: Colors.suitsColoredHearts,
+  spades: Colors.suitsColoredSpades,
+  clubs: Colors.suitsColoredClubs,
 };
 
 type SkywayState = {
@@ -257,275 +268,241 @@ export default function Skyway() {
     return paths;
   }, [game.grid]);
 
-  // Map grid index to (x, y) center in SVG overlay
-  function getCellCenter(
-    idx: number,
-    gridLayout: { x: number; y: number; width: number; height: number }[],
-  ) {
-    const { x, y, width, height } = gridLayout[idx];
-    return { cx: x + width / 2, cy: y + height / 2 };
-  }
-
-  // State to store grid cell layouts
-  const [gridLayout, setGridLayout] = useState<
-    { x: number; y: number; width: number; height: number }[]
-  >([]);
-
   return (
-    <>
-      <GameMenus
-        ended={game.ended}
-        won={won}
-        reset={reset}
-        isLoaded={isLoaded}
-      />
-
-      <View style={layoutStyles.gameArea}>
-        <View
+    <GameWrapper
+      ended={game.ended}
+      won={won}
+      reset={reset}
+      isLoaded={isLoaded}
+      winLoseMessage={
+        won
+          ? "All four suits reached at least a 5-card path."
+          : "5 cards for each suit path needed to win."
+      }
+    >
+      {/* Paths info */}
+      <View style={styles.gameInfo}>
+        <Text
           style={[
-            flexStyles.colCentered,
-            flexStyles.fullWidth,
-            flexStyles.gap12,
+            textStyles.default,
+            { color: Colors.K700, fontFamily: FontWeight[400] },
           ]}
         >
-          <Text style={textStyles.default}>
-            Market (Round {game.round} of 3)
-          </Text>
-          <View style={styles.marketRow}>
-            {game.market.map((pile, index) => (
-              <Pressable
-                key={`market-${index}`}
+          Longest paths
+          <br />
+          (Total: {totalScore})
+        </Text>
+        <View
+          style={[
+            flexStyles.rowCentered,
+            flexStyles.justifyEvenly,
+            flexStyles.flex1,
+          ]}
+        >
+          {SUITS.map((suit) => (
+            <View key={suit} style={[flexStyles.rowCentered, flexStyles.gap6]}>
+              <Icon name={suit} color={SUIT_PATH_COLORS[suit]} size={24} />
+              <Text
                 style={[
-                  styles.marketPile,
-                  selectedMarket === index ? styles.selectedPile : null,
-                ]}
-                onPress={() => setSelectedMarket(index)}
-              >
-                <Deck cards={pile} largeFan="all" cardsPerRow={5} />
-              </Pressable>
-            ))}
-          </View>
-        </View>
-
-        <View style={[flexStyles.colCentered, flexStyles.fullWidth]}>
-          <View style={styles.grid}>
-            {/* SVG overlay for suit paths */}
-            {gridLayout.length === 9 && (
-              <Svg
-                style={{
-                  position: "absolute",
-                  zIndex: 1,
-                  left: 0,
-                  top: 0,
-                  width: "100%",
-                  height: "100%",
-                  pointerEvents: "none",
-                }}
-              >
-                {SUITS.map((suit, suitIdx) => {
-                  const color = SUIT_PATH_COLORS[suit];
-                  const path = suitPaths[suit];
-                  // Draw lines between consecutive cells in the path
-                  return path.length > 1
-                    ? path.slice(1).map((cell, i) => {
-                        const prev = path[i];
-                        // Offset lines for multiple suits between same cells
-                        const offset = (suitIdx - 1.5) * 6; // space out lines
-                        const { cx: x1, cy: y1 } = getCellCenter(
-                          prev,
-                          gridLayout,
-                        );
-                        const { cx: x2, cy: y2 } = getCellCenter(
-                          cell,
-                          gridLayout,
-                        );
-                        // Perpendicular offset
-                        const dx = y2 - y1;
-                        const dy = x1 - x2;
-                        const mag = Math.sqrt(dx * dx + dy * dy) || 1;
-                        const ox = (dx / mag) * offset;
-                        const oy = (dy / mag) * offset;
-                        return (
-                          <Line
-                            key={`${suit}-${prev}-${cell}`}
-                            x1={x1 + ox}
-                            y1={y1 + oy}
-                            x2={x2 + ox}
-                            y2={y2 + oy}
-                            stroke={color}
-                            strokeWidth={3}
-                            strokeLinecap="round"
-                          />
-                        );
-                      })
-                    : null;
-                })}
-              </Svg>
-            )}
-            {/* Render grid cells and capture layout */}
-            {game.grid.map((stack, index) => (
-              <Pressable
-                key={`cell-${index}`}
-                style={[
-                  styles.gridCell,
-                  selectedMarket !== null ? styles.dropReady : null,
+                  textStyles.default,
                   {
-                    position: "relative",
-                    zIndex: 2,
+                    color: SUIT_PATH_COLORS[suit],
+                    fontSize: 18,
+                    fontFamily: FontWeight[600],
                   },
                 ]}
-                onPress={() => draftToCell(index)}
-                onLayout={(e) => {
-                  setGridLayout((prev) => {
-                    const next = [...prev];
-                    next[index] = e.nativeEvent.layout;
-                    return next.length === 9
-                      ? next
-                      : Array(9)
-                          .fill({ x: 0, y: 0, width: 0, height: 0 })
-                          .map((v, i) => next[i] || v);
-                  });
-                }}
               >
-                <Deck cards={stack} cardsPerRow={5} largeFan="all" />
-                {stack.length === 0 ? (
-                  <Text style={styles.cellHint}>Empty</Text>
-                ) : null}
-              </Pressable>
-            ))}
-          </View>
+                {score[suit]}
+              </Text>
+            </View>
+          ))}
         </View>
+      </View>
 
+      {/* Market */}
+      <View
+        style={[flexStyles.colCentered, flexStyles.fullWidth, flexStyles.gap8]}
+      >
+        <Text style={textStyles.default}>Market (Round {game.round} of 3)</Text>
         <View
           style={[
-            flexStyles.colCentered,
+            flexStyles.rowCentered,
             flexStyles.fullWidth,
-            flexStyles.gap12,
+            flexStyles.gap8,
           ]}
         >
-          <Text style={textStyles.default}>
-            Longest paths - total score: {totalScore}
-          </Text>
-          <View
-            style={[
-              flexStyles.rowCentered,
-              flexStyles.fullWidth,
-              flexStyles.justifyEvenly,
-            ]}
-          >
-            {SUITS.map((suit) => (
-              <View
-                key={suit}
-                style={[flexStyles.rowCentered, flexStyles.gap8]}
-              >
-                <Icon name={suit} color={SUIT_PATH_COLORS[suit]} size={32} />
-                <Text
-                  style={[
-                    textStyles.default,
-                    { color: SUIT_PATH_COLORS[suit] },
-                  ]}
-                >
-                  {score[suit]}
-                </Text>
-              </View>
-            ))}
-          </View>
+          {game.market.map((pile, index) => (
+            <Pressable
+              key={`market-${index}`}
+              style={[
+                styles.marketPile,
+                selectedMarket === index && styles.marketPileSelected,
+              ]}
+              onPress={() => {
+                if (selectedMarket === index) {
+                  setSelectedMarket(null);
+                } else {
+                  setSelectedMarket(index);
+                }
+              }}
+            >
+              <Deck
+                cards={pile}
+                largeFan="extra-wide"
+                fan="horizontalLeft"
+                cardsPerRow={cardsPerRow}
+                cardSize="small-colored"
+              />
+            </Pressable>
+          ))}
         </View>
-
-        {game.ended ? (
-          <View style={styles.resultBox}>
-            <Text style={styles.resultTitle}>
-              {won ? "You won!" : "Game over"}
-            </Text>
-            <Text style={textStyles.default}>
-              {won
-                ? "All four suits reached at least a 5-card increasing path."
-                : "You need at least 5 cards for each suit path to win."}
-            </Text>
-          </View>
-        ) : null}
       </View>
-    </>
+
+      {/* Grid and paths */}
+      <View style={styles.gridAndPathsWrap}>
+        {/* Paths */}
+        <Svg
+          style={[
+            {
+              position: "absolute",
+              zIndex: 1,
+              left: 0,
+              top: 0,
+              width: "100%",
+              height: "100%",
+              pointerEvents: "none",
+            },
+          ]}
+          width={svgGridSize}
+          height={svgGridSize}
+          viewBox={`0 0 ${svgGridSize} ${svgGridSize}`}
+        >
+          {SUITS.map((suit, suitIdx) => {
+            const color = SUIT_PATH_COLORS[suit];
+            const path = suitPaths[suit];
+            // Draw lines between consecutive cells in the path
+            return path.length > 1
+              ? path.slice(1).map((cell, i) => {
+                  const prev = path[i];
+                  // Offset lines for multiple suits between same cells
+                  const offset = (suitIdx - 1.5) * 6; // space out lines
+                  const { cx: x1, cy: y1 } = getCellCenter(prev);
+                  const { cx: x2, cy: y2 } = getCellCenter(cell);
+                  // Perpendicular offset
+                  const dx = y2 - y1;
+                  const dy = x1 - x2;
+                  const mag = Math.sqrt(dx * dx + dy * dy) || 1;
+                  const ox = (dx / mag) * offset;
+                  const oy = (dy / mag) * offset;
+                  return (
+                    <Line
+                      key={`${suit}-${prev}-${cell}`}
+                      x1={x1 + ox}
+                      y1={y1 + oy}
+                      x2={x2 + ox}
+                      y2={y2 + oy}
+                      stroke={color}
+                      strokeWidth={20}
+                      strokeLinecap="round"
+                    />
+                  );
+                })
+              : null;
+          })}
+        </Svg>
+
+        {/* Grid  */}
+        {game.grid.map((stack, index) => (
+          <View key={`cell-${index}`} style={styles.gridCellWrap}>
+            <Pressable
+              key={`cell-${index}`}
+              style={[
+                styles.gridCell,
+                selectedMarket !== null && styles.gridCellDropReady,
+              ]}
+              onPress={() => draftToCell(index)}
+            >
+              <Deck
+                cards={stack}
+                cardsPerRow={cardsPerRow}
+                largeFan="extra-wide"
+                fan="horizontalLeft"
+                cardSize="small-colored"
+                invisibleWhenEmpty
+              />
+            </Pressable>
+          </View>
+        ))}
+      </View>
+    </GameWrapper>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingTop: 56,
-    paddingHorizontal: 10,
-    paddingBottom: 24,
-    gap: 10,
-  },
-  headerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 24,
-    fontFamily: FontWeight[400],
-    color: Colors.K800,
-  },
-  section: {
-    gap: 8,
-  },
-  marketRow: {
+  // Game Info
+  gameInfo: {
     ...flexStyles.rowCentered,
     ...flexStyles.fullWidth,
-    ...flexStyles.gap20,
+    ...flexStyles.gap12,
+    backgroundColor: Colors.white,
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
   },
+
+  // Market
   marketPile: {
     ...flexStyles.rowCentered,
-    ...transition02s,
+    ...transitionStyles.sec05,
     flex: 1,
-    minHeight: 120,
+    paddingVertical: 12,
     borderRadius: 12,
-    backgroundColor: rgba(Colors.K100, 0.1),
-    boxShadow: `inset 0 0 0 2px ${rgba(Colors.accentBlue, 0.3)}`,
+    backgroundColor: `${rgba(Colors.accentBlue, 0.1)}`,
+    boxShadow: `inset 0 0 0 2px ${rgba(Colors.accentBlue, 0.6)}`,
     padding: 6,
     alignItems: "center",
   },
-  selectedPile: {
-    boxShadow: `inset 0 0 0 5px ${rgba(Colors.accentBlue, 1)}`,
-    backgroundColor: rgba(Colors.accentBlue, 0.1),
+  marketPileSelected: {
+    backgroundColor: `${rgba(Colors.accentGreen, 0.2)}`,
+    boxShadow: `inset 0 0 0 3px ${rgba(Colors.accentGreen, 1)}`,
   },
-  grid: {
+
+  // Grid and Paths wrap
+  gridAndPathsWrap: {
     ...flexStyles.rowCentered,
     ...flexStyles.fullWidth,
+    position: "relative",
     flexWrap: "wrap",
-    gap: 8,
+    aspectRatio: 1,
+    borderRadius: 16,
+    padding: 4,
+    backgroundColor: rgba(Colors.black, 0.2),
+  },
+
+  // Grid
+  gridCellWrap: {
+    ...flexStyles.rowCentered,
+    position: "relative",
+    width: "33.33%",
+    zIndex: 2,
+    padding: 2,
   },
   gridCell: {
-    ...transition02s,
-    width: "31%",
+    ...flexStyles.rowCentered,
+    ...flexStyles.fullWidth,
+    ...transitionStyles.sec05,
+    position: "relative",
+    zIndex: 2,
     aspectRatio: 1,
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: rgba(Colors.K100, 0.2),
-    backgroundColor: rgba(Colors.K100, 0.1),
-    position: "relative",
     overflow: "hidden",
     justifyContent: "center",
     alignItems: "center",
+
+    // backgroundColor: rgba(Colors.black, 0.2),
+    boxShadow: `inset 0 0 0 2px ${rgba(Colors.K100, 0.1)}`,
   },
-  dropReady: {
-    boxShadow: `inset 0 0 0 2px ${rgba(Colors.accentBlue, 0.3)}`,
-  },
-  cellHint: {
-    color: Colors.K400,
-    fontSize: 11,
-  },
-  resultBox: {
-    marginTop: 4,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: Colors.K400,
-    backgroundColor: Colors.K800,
-    padding: 10,
-    gap: 4,
-  },
-  resultTitle: {
-    fontFamily: FontWeight[400],
-    color: Colors.accentBlue,
+  gridCellDropReady: {
+    boxShadow: `inset 0 0 0 2px ${rgba(Colors.accentGreen, 0.4)}`,
   },
 });

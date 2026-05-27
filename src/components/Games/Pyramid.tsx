@@ -23,6 +23,9 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { textStyles } from "@/styles/textStyles";
+import { GameWrapper } from "../common/GameWrapper";
+
+const cardsPerRow = 7;
 
 type PyramidCard = PlayingCard & {
   row: number;
@@ -464,130 +467,146 @@ export default function Pyramid() {
   const ghostTop = dragGhost ? dragGhost.origin.y - boardOrigin.y : 0;
 
   return (
-    <View ref={boardRef} onLayout={updateBoardOrigin} style={styles.container}>
-      <GameMenus ended={won} won={won} reset={resetGame} isLoaded={isLoaded} />
-      
+    <GameWrapper ended={won} won={won} reset={resetGame} isLoaded={isLoaded}>
+      <View
+        ref={boardRef}
+        onLayout={updateBoardOrigin}
+        style={styles.container}
+      >
+        <Text style={textStyles.default}>
+          Clear all pyramid cards by making 13.
+        </Text>
+        {won && <Text style={styles.winText}>You won!</Text>}
 
-      <Text style={textStyles.default}>
-        Clear all pyramid cards by making 13.
-      </Text>
-      {won && <Text style={styles.winText}>You won!</Text>}
-
-      <View style={styles.stockWasteRow}>
-        <Pressable style={styles.cardSlot} onPress={drawCard}>
-          {game.stock.length > 0 ? (
-            <Card suit="spades" rank="Back" cardsPerRow={5} isBack />
-          ) : (
-            <Text style={styles.slotLabel}>Stock</Text>
-          )}
-        </Pressable>
-
-        <View ref={wasteRef} collapsable={false} {...(wasteDragHandlers ?? {})}>
-          <Pressable
-            style={[
-              styles.cardSlot,
-              selected?.zone === "waste" ? styles.selectedSlot : null,
-              hoverTarget?.zone === "waste" ? styles.dropHintSlot : null,
-            ]}
-            onPress={onWastePress}
-          >
-            {wasteTop ? (
-              <View
-                style={
-                  dragGhost?.source?.zone === "waste"
-                    ? styles.hiddenDuringDrag
-                    : undefined
-                }
-              >
-                <Card
-                  suit={wasteTop.suit}
-                  rank={wasteTop.rank}
-                  cardsPerRow={5}
-                />
-              </View>
+        <View style={styles.stockWasteRow}>
+          <Pressable style={styles.cardSlot} onPress={drawCard}>
+            {game.stock.length > 0 ? (
+              <Card
+                suit="spades"
+                rank="Back"
+                cardsPerRow={cardsPerRow}
+                isBack
+              />
             ) : (
-              <Text style={styles.slotLabel}>Waste</Text>
+              <Text style={styles.slotLabel}>Stock</Text>
             )}
           </Pressable>
+
+          <View
+            ref={wasteRef}
+            collapsable={false}
+            {...(wasteDragHandlers ?? {})}
+          >
+            <Pressable
+              style={[
+                styles.cardSlot,
+                selected?.zone === "waste" ? styles.selectedSlot : null,
+                hoverTarget?.zone === "waste" ? styles.dropHintSlot : null,
+              ]}
+              onPress={onWastePress}
+            >
+              {wasteTop ? (
+                <View
+                  style={
+                    dragGhost?.source?.zone === "waste"
+                      ? styles.hiddenDuringDrag
+                      : undefined
+                  }
+                >
+                  <Card
+                    suit={wasteTop.suit}
+                    rank={wasteTop.rank}
+                    cardsPerRow={cardsPerRow}
+                  />
+                </View>
+              ) : (
+                <Text style={styles.slotLabel}>Waste</Text>
+              )}
+            </Pressable>
+          </View>
         </View>
+
+        <View style={styles.pyramidWrap}>
+          {Array.from({ length: 7 }, (_, row) => {
+            const rowCards = game.pyramid.filter((card) => card.row === row);
+
+            return (
+              <View key={`row-${row}`} style={styles.pyramidRow}>
+                {rowCards.map((card) => {
+                  const index = game.pyramid.findIndex(
+                    (entry) => entry.id === card.id,
+                  );
+                  const exposed = isCardExposed(card, game.pyramid);
+                  const isSelected =
+                    selected?.zone === "pyramid" && selected.index === index;
+                  const dragHandlers =
+                    exposed && !card.removed
+                      ? makeDragHandlers({ zone: "pyramid", index }, () =>
+                          onPyramidPress(index),
+                        )
+                      : null;
+                  const hiddenByDrag =
+                    dragGhost?.source?.zone === "pyramid" &&
+                    dragGhost.source.index === index;
+
+                  return (
+                    <Pressable
+                      key={card.id}
+                      ref={(node) => {
+                        pyramidRefs.current[card.id] = node;
+                      }}
+                      collapsable={false}
+                      onPress={() => onPyramidPress(index)}
+                      style={[
+                        styles.pyramidCard,
+                        isSelected ? styles.selectedCard : null,
+                        hoverTarget?.zone === "pyramid" &&
+                        hoverTarget.index === index
+                          ? styles.dropHintCard
+                          : null,
+                        card.removed ? styles.removedCard : null,
+                        hiddenByDrag ? styles.hiddenDuringDrag : null,
+                      ]}
+                      disabled={card.removed || !exposed}
+                      {...(dragHandlers ?? {})}
+                    >
+                      {!card.removed ? (
+                        <Card
+                          suit={card.suit}
+                          rank={card.rank}
+                          cardsPerRow={cardsPerRow}
+                        />
+                      ) : (
+                        <View style={styles.removedPlaceholder} />
+                      )}
+                    </Pressable>
+                  );
+                })}
+              </View>
+            );
+          })}
+        </View>
+
+        {dragGhost ? (
+          <Animated.View
+            style={[
+              styles.ghostLayer,
+              {
+                left: ghostLeft,
+                top: ghostTop,
+                transform: dragTranslate.getTranslateTransform(),
+              },
+            ]}
+          >
+            <Card
+              suit={dragGhost.card.suit}
+              rank={dragGhost.card.rank}
+              cardsPerRow={cardsPerRow}
+            />
+          </Animated.View>
+        ) : null}
       </View>
-
-      <View style={styles.pyramidWrap}>
-        {Array.from({ length: 7 }, (_, row) => {
-          const rowCards = game.pyramid.filter((card) => card.row === row);
-
-          return (
-            <View key={`row-${row}`} style={styles.pyramidRow}>
-              {rowCards.map((card) => {
-                const index = game.pyramid.findIndex(
-                  (entry) => entry.id === card.id,
-                );
-                const exposed = isCardExposed(card, game.pyramid);
-                const isSelected =
-                  selected?.zone === "pyramid" && selected.index === index;
-                const dragHandlers =
-                  exposed && !card.removed
-                    ? makeDragHandlers({ zone: "pyramid", index }, () =>
-                        onPyramidPress(index),
-                      )
-                    : null;
-                const hiddenByDrag =
-                  dragGhost?.source?.zone === "pyramid" &&
-                  dragGhost.source.index === index;
-
-                return (
-                  <Pressable
-                    key={card.id}
-                    ref={(node) => {
-                      pyramidRefs.current[card.id] = node;
-                    }}
-                    collapsable={false}
-                    onPress={() => onPyramidPress(index)}
-                    style={[
-                      styles.pyramidCard,
-                      isSelected ? styles.selectedCard : null,
-                      hoverTarget?.zone === "pyramid" &&
-                      hoverTarget.index === index
-                        ? styles.dropHintCard
-                        : null,
-                      card.removed ? styles.removedCard : null,
-                      hiddenByDrag ? styles.hiddenDuringDrag : null,
-                    ]}
-                    disabled={card.removed || !exposed}
-                    {...(dragHandlers ?? {})}
-                  >
-                    {!card.removed ? (
-                      <Card suit={card.suit} rank={card.rank} cardsPerRow={5} />
-                    ) : (
-                      <View style={styles.removedPlaceholder} />
-                    )}
-                  </Pressable>
-                );
-              })}
-            </View>
-          );
-        })}
-      </View>
-
-      {dragGhost ? (
-        <Animated.View
-          style={[
-            styles.ghostLayer,
-            {
-              left: ghostLeft,
-              top: ghostTop,
-              transform: dragTranslate.getTranslateTransform(),
-            },
-          ]}
-        >
-          <Card
-            suit={dragGhost.card.suit}
-            rank={dragGhost.card.rank}
-            cardsPerRow={5}
-          />
-        </Animated.View>
-      ) : null}
-    </View>
+    </GameWrapper>
   );
 }
 

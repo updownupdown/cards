@@ -17,6 +17,7 @@ import { GameMenus } from "../common/GameMenus";
 import { flexStyles } from "@/styles/flexStyles";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { Deck } from "../Cards/Deck";
+import { GameWrapper } from "../common/GameWrapper";
 
 const localCardPerRow = 5;
 
@@ -242,151 +243,145 @@ export default function Area52() {
   }
 
   return (
-    <>
-      <GameMenus
-        ended={game.ended}
-        won={game.won}
-        reset={reset}
-        isLoaded={isLoaded}
-        score={`${score} (${game.won ? "higher is better" : "closer to zero is better"})`}
-      />
-
-      <View style={layoutStyles.gameArea}>
-        {/* Attackers */}
+    <GameWrapper
+      ended={game.ended}
+      won={game.won}
+      reset={reset}
+      isLoaded={isLoaded}
+      score={`${score} (${game.won ? "higher is better" : "closer to zero is better"})`}
+    >
+      {/* Attackers */}
+      <View
+        style={[
+          flexStyles.colCentered,
+          flexStyles.spaceBetween,
+          flexStyles.fullWidth,
+          flexStyles.gap24,
+        ]}
+      >
+        <Text style={textStyles.h4}>Attackers (Wave {game.wave})</Text>
         <View
           style={[
-            flexStyles.colCentered,
-            flexStyles.spaceBetween,
+            flexStyles.rowCentered,
             flexStyles.fullWidth,
-            flexStyles.gap24,
+            flexStyles.gap30,
+            { alignItems: "flex-start" },
           ]}
         >
-          <Text style={textStyles.h4}>Attackers (Wave {game.wave})</Text>
-          <View
-            style={[
-              flexStyles.rowCentered,
-              flexStyles.fullWidth,
-              flexStyles.gap30,
-              { alignItems: "flex-start" },
-            ]}
-          >
-            <Deck
-              // title="Attackers"
-              backCount={game.alienDeck.length}
-              showCount
-              countPosition="below"
-              limitFan
-            />
-
-            <View
-              style={[
-                { display: "flex", flexDirection: "row-reverse", gap: 10 },
-              ]}
-            >
-              {game.attackerQueue.map((card, idx) => (
-                <View
-                  key={card.id}
-                  style={[idx === 0 && { transform: [{ translateY: 12 }] }]}
-                >
-                  <Card
-                    suit={card.suit}
-                    rank={card.rank}
-                    cardsPerRow={localCardPerRow}
-                  />
-                </View>
-              ))}
-            </View>
-
-            {game.attackerQueue.length === 0 ? (
-              <Text style={textStyles.default}>No active attackers</Text>
-            ) : null}
-          </View>
-        </View>
-
-        {/* Defenders */}
-        <View
-          style={[
-            flexStyles.colCentered,
-            flexStyles.spaceBetween,
-            flexStyles.fullWidth,
-            flexStyles.gap24,
-          ]}
-        >
-          <Text style={textStyles.h4}>Defenders</Text>
+          <Deck
+            // title="Attackers"
+            backCount={game.alienDeck.length}
+            showCount
+            countPosition="below"
+            limitFan
+          />
 
           <View
-            style={[
-              flexStyles.rowCentered,
-              flexStyles.fullWidth,
-              flexStyles.gap30,
-              { alignItems: "flex-start" },
-            ]}
+            style={[{ display: "flex", flexDirection: "row-reverse", gap: 10 }]}
           >
-            <Deck
-              // title="Defenders"
-              backCount={game.defenderDeck.length}
-              showCount
-              countPosition="below"
-              limitFan
-            />
-
-            <View
-              style={[
-                cardStyles.row,
-                {
-                  width: `${(100 / localCardPerRow) * 3}%`,
-                  alignSelf: "center",
-                },
-              ]}
-            >
-              {game.defenders.map((card, index) => {
-                const selected = selectedDefenders.includes(index);
-
-                return (
-                  <CardButton
-                    key={`${card.id}-${index}`}
-                    onPress={() => toggleDefender(index)}
-                    suit={card.suit}
-                    rank={card.rank}
-                    cardsPerRow={localCardPerRow}
-                    hasTopMargin={index > 2}
-                    isSelected={selected}
-                  />
-                );
-              })}
-            </View>
+            {game.attackerQueue.map((card, idx) => (
+              <View
+                key={card.id}
+                style={[idx === 0 && { transform: [{ translateY: 12 }] }]}
+              >
+                <Card
+                  suit={card.suit}
+                  rank={card.rank}
+                  cardsPerRow={localCardPerRow}
+                />
+              </View>
+            ))}
           </View>
+
+          {game.attackerQueue.length === 0 ? (
+            <Text style={textStyles.default}>No active attackers</Text>
+          ) : null}
         </View>
+      </View>
+
+      {/* Defenders */}
+      <View
+        style={[
+          flexStyles.colCentered,
+          flexStyles.spaceBetween,
+          flexStyles.fullWidth,
+          flexStyles.gap24,
+        ]}
+      >
+        <Text style={textStyles.h4}>Defenders</Text>
 
         <View
           style={[
             flexStyles.rowCentered,
             flexStyles.fullWidth,
-            flexStyles.justifyEvenly,
-            flexStyles.gap12,
+            flexStyles.gap30,
+            { alignItems: "flex-start" },
           ]}
         >
-          <Button
-            onPress={() => applyAction("sacrifice")}
-            text="Sacrifice"
-            size="large"
-            disabled={selectedDefenders.length !== 1}
+          <Deck
+            // title="Defenders"
+            backCount={game.defenderDeck.length}
+            showCount
+            countPosition="below"
+            limitFan
           />
-          <Button
-            onPress={() => {
-              if (selectedDefenders.length === 1) {
-                applyAction("single");
-              } else if (selectedDefenders.length === 2) {
-                applyAction("dual");
-              }
-            }}
-            text={`Attack${selectedDefenders.length === 2 ? " x2" : ""}`}
-            size="large"
-            style={[flexStyles.flex1]}
-            disabled={selectedDefenders.length < 1}
-          />
+
+          <View
+            style={[
+              cardStyles.row,
+              {
+                width: `${(100 / localCardPerRow) * 3}%`,
+                alignSelf: "center",
+              },
+            ]}
+          >
+            {game.defenders.map((card, index) => {
+              const selected = selectedDefenders.includes(index);
+
+              return (
+                <CardButton
+                  key={`${card.id}-${index}`}
+                  onPress={() => toggleDefender(index)}
+                  suit={card.suit}
+                  rank={card.rank}
+                  cardsPerRow={localCardPerRow}
+                  hasTopMargin={index > 2}
+                  isSelected={selected}
+                />
+              );
+            })}
+          </View>
         </View>
       </View>
-    </>
+
+      <View
+        style={[
+          flexStyles.rowCentered,
+          flexStyles.fullWidth,
+          flexStyles.justifyEvenly,
+          flexStyles.gap12,
+        ]}
+      >
+        <Button
+          onPress={() => applyAction("sacrifice")}
+          text="Sacrifice"
+          size="large"
+          disabled={selectedDefenders.length !== 1}
+        />
+        <Button
+          onPress={() => {
+            if (selectedDefenders.length === 1) {
+              applyAction("single");
+            } else if (selectedDefenders.length === 2) {
+              applyAction("dual");
+            }
+          }}
+          text={`Attack${selectedDefenders.length === 2 ? " x2" : ""}`}
+          size="large"
+          style={[flexStyles.flex1]}
+          disabled={selectedDefenders.length < 1}
+        />
+      </View>
+    </GameWrapper>
   );
 }

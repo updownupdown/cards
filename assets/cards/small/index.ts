@@ -1,4 +1,4 @@
-import React from "react";
+import { SvgProps } from "react-native-svg";
 import Card10C from "./10C.svg";
 import Card10D from "./10D.svg";
 import Card10H from "./10H.svg";
@@ -60,7 +60,6 @@ import CardBackD from "./BackD.svg";
 import CardBackH from "./BackH.svg";
 import CardBackS from "./BackS.svg";
 import CardPlaceholder from "./Placeholder.svg";
-import { SvgProps } from "react-native-svg";
 
 export const CardComponents: Record<string, React.FC<SvgProps>> = {
   "10C": Card10C,

@@ -1,10 +1,10 @@
 import { StyleSheet } from "react-native";
-import { Colors, FontWeight } from "@/styles/styles";
 import { flexStyles } from "./flexStyles";
 
 const cardTransition = {
   transitionDuration: "0.5s",
-  transitionProperty: "box-shadow, border-color, border-width",
+  transitionProperty:
+    "box-shadow, border-color, border-width, bottom, left, right, top",
   transitionTimingFunction: "ease",
 };
 
@@ -17,6 +17,7 @@ export const cardStyles = StyleSheet.create({
     justifyContent: "space-between",
   },
   rowAlignDown: {
+    alignItems: "flex-end",
     alignContent: "flex-end",
   },
   rowGap4: {
@@ -40,9 +41,10 @@ export const cardStyles = StyleSheet.create({
   },
   // Card itself
   card: {
+    ...cardTransition,
     overflow: "hidden",
     position: "relative",
-    ...cardTransition,
+    outlineWidth: 0,
   },
   cardSelectOverlay: {
     ...cardTransition,
@@ -52,106 +54,8 @@ export const cardStyles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
-  // Deck wrap
-  deckWrap: {
-    display: "flex",
-    backgroundColor: Colors.K900,
-  },
-  deckWrapCountOver: {},
-  deckWrapCountAbove: {
-    alignItems: "center",
-    flexDirection: "column",
-  },
-  deckWrapCountBelow: {
-    alignItems: "center",
-    flexDirection: "column-reverse",
-  },
-  deckWrapCountLeft: {
-    flexDirection: "row",
-    justifyContent: "center",
-  },
-  deckWrapCountRight: {
-    flexDirection: "row-reverse",
-    justifyContent: "center",
-  },
-  // Deck
-  deck: {
-    position: "relative",
-  },
-  deckCard: {
-    position: "absolute",
-  },
   animHide: {
     opacity: 0,
     pointerEvents: "none",
-  },
-
-  // Deck count
-  deckCount: {
-    zIndex: 100,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 8,
-    gap: 8,
-    maxWidth: "100%",
-  },
-  // To the side
-  deckCountAbove: {
-    ...flexStyles.rowCentered,
-    width: "100%",
-    left: "50%",
-    transform: "translateX(-50%)",
-    flexDirection: "row",
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-  },
-  deckCountBelow: {
-    ...flexStyles.rowCentered,
-    width: "100%",
-    left: "50%",
-    transform: "translateX(-50%)",
-    flexDirection: "row",
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
-  },
-  deckCountLeft: {
-    ...flexStyles.colCentered,
-    flexDirection: "column",
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
-  },
-  deckCountRight: {
-    ...flexStyles.colCentered,
-    flexDirection: "column",
-    borderTopLeftRadius: 0,
-    borderBottomLeftRadius: 0,
-  },
-
-  // Over
-  deckCountOver: {
-    ...flexStyles.colCentered,
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    backgroundColor: Colors.deckRed,
-  },
-  deckCountTitle: {
-    fontSize: 13,
-    fontFamily: FontWeight[500],
-    color: Colors.K300,
-  },
-  deckCountIcon: {
-    width: 24,
-    height: 24,
-    flexShrink: 0,
-  },
-  deckCountValue: {
-    fontSize: 18,
-    fontFamily: FontWeight[500],
-    color: Colors.K300,
   },
 });

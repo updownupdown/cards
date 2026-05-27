@@ -23,10 +23,18 @@ interface Props {
   ended: boolean;
   won: boolean;
   score?: number | string;
+  winLoseMessage?: string;
   reset: () => void;
 }
 
-export const GameMenus = ({ isLoaded, ended, won, score, reset }: Props) => {
+export const GameMenus = ({
+  isLoaded,
+  ended,
+  won,
+  score,
+  winLoseMessage,
+  reset,
+}: Props) => {
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);
 
@@ -61,7 +69,13 @@ export const GameMenus = ({ isLoaded, ended, won, score, reset }: Props) => {
 
       <GameIntro setShowMenu={setShowMenu} isLoaded={!!isLoaded} />
 
-      <WinLoseBox gameEnded={ended} won={won} score={score} reset={reset} />
+      <WinLoseBox
+        gameEnded={ended}
+        won={won}
+        score={score}
+        reset={reset}
+        message={winLoseMessage}
+      />
 
       {showMenu && <GameModal onClose={() => setShowMenu(false)} />}
 

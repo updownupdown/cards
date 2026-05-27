@@ -11,6 +11,7 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { textStyles } from "@/styles/textStyles";
+import { GameWrapper } from "../common/GameWrapper";
 
 type Pile = {
   x: number;
@@ -244,13 +245,18 @@ export default function Foursquare() {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
+    <GameWrapper
+      ended={game.ended}
+      won={game.won}
+      reset={reset}
+      isLoaded={isLoaded}
+    >
+      <Text style={textStyles.default}>
+        Deck remaining: {game.deck.length}
+        <br />
+        Message: {message}
+      </Text>
 
-      
-
-      <Text style={textStyles.default}>Deck remaining: {game.deck.length}</Text>
-      <Text style={textStyles.default}>Message: {message}</Text>
       {game.current ? (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Current card</Text>
@@ -300,7 +306,7 @@ export default function Foursquare() {
             : "You lost: grid constraints, closures, or draw exhaustion ended the game."}
         </Text>
       ) : null}
-    </ScrollView>
+    </GameWrapper>
   );
 }
 

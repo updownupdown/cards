@@ -10,6 +10,8 @@ import { Button } from "../Button/Button";
 import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
 import { Deck } from "../Cards/Deck";
 import { GameMenus } from "../common/GameMenus";
+import { GameWrapper } from "../common/GameWrapper";
+import { debugStyles } from "@/styles/debugStyles";
 
 type AcesUpState = {
   stock: PlayingCard[];
@@ -294,103 +296,88 @@ export default function AcesUp() {
   const hasEmptyPile = !!game.piles.find((p) => p.length === 0);
 
   return (
-    <>
-      <GameMenus
-        ended={game.ended}
-        won={game.won}
-        reset={reset}
-        isLoaded={isLoaded}
-      />
+    <GameWrapper
+      ended={game.ended}
+      won={game.won}
+      reset={reset}
+      isLoaded={isLoaded}
+    >
+      <View style={[flexStyles.rowCentered, flexStyles.justifyEvenly]}>
+        {/* Discard pile */}
+        <Deck
+          refTopNext={discardRef}
+          backCount={game.discard.length}
+          cardsPerRow={4}
+          limitFan
+          fan="horizontalLeft"
+          showCount
+          countPosition="left"
+          iconName="delete"
+        />
 
-      <View style={layoutStyles.gameArea}>
-        <View
-          style={[
-            flexStyles.rowCentered,
-            flexStyles.fullWidth,
-            flexStyles.justifyEvenly,
-          ]}
-        >
-          <Deck
-            refTopNext={discardRef}
-            backCount={game.discard.length}
-            cardsPerRow={4}
-            limitFan
-            fan="horizontalRight"
-            showCount
-            countPosition="left"
-            iconName="delete"
-          />
-
-          <Deck
-            refTopCurrent={stockRef}
-            backCount={game.stock.length}
-            cardsPerRow={4}
-            limitFan
-            fan="horizontalRight"
-            showCount
-            countPosition="left"
-            iconName="draw"
-            onPress={dealFour}
-            isDisabled={game.stock.length === 0 || !canDeal || isAnimating}
-          />
-        </View>
-
-        <View
-          style={[
-            cardStyles.row,
-            cardStyles.rowAlignDown,
-            flexStyles.fullHeight,
-            flexStyles.flex1,
-          ]}
-        >
-          {game.piles.map((pile, idx) => {
-            const isSelected = selectedPile === idx;
-            const canDiscard = discardable.has(idx);
-
-            return (
-              <View key={`pile-${idx}`} style={[cardStyles.colUpwards]}>
-                <Deck
-                  cardsPerRow={4}
-                  fan="verticalUp"
-                  largeFan="progressive"
-                  cards={pile}
-                  hideTopCard={isDiscarding === idx}
-                  refTopCurrent={(el) => {
-                    pileRefsCurrent.current[idx] = el;
-                  }}
-                  refTopNext={(el) => {
-                    pileRefsNext.current[idx] = el;
-                  }}
-                  onPress={() => {
-                    if (canDiscard) {
-                      discardTop(idx);
-                    } else {
-                      onPilePress(idx);
-                    }
-                  }}
-                  selectColor={
-                    pile.length === 0 ? "blue" : canDiscard ? "green" : "blue"
-                  }
-                  isSelected={isSelected}
-                  isDisabled={
-                    (!canDiscard && !hasEmptyPile) ||
-                    isAnimating ||
-                    (pile.length === 0 && selectedPile === undefined)
-                  }
-                />
-              </View>
-            );
-          })}
-        </View>
-
-        <Button
-          text="Deal"
-          size="large"
+        {/* Stock pile */}
+        <Deck
+          refTopCurrent={stockRef}
+          backCount={game.stock.length}
+          cardsPerRow={4}
+          limitFan
+          showCount
+          fan="horizontalRight"
+          countPosition="right"
+          iconName="draw"
           onPress={dealFour}
-          fullWidth
-          disabled={!canDeal || isAnimating}
+          isDisabled={game.stock.length === 0 || !canDeal || isAnimating}
         />
       </View>
-    </>
+
+      <View style={[cardStyles.row, cardStyles.rowAlignDown, flexStyles.flex1]}>
+        {game.piles.map((pile, idx) => {
+          const isSelected = selectedPile === idx;
+          const canDiscard = discardable.has(idx);
+
+          return (
+            <View key={`pile-${idx}`} style={[cardStyles.colUpwards]}>
+              <Deck
+                cardsPerRow={4}
+                fan="verticalUp"
+                largeFan="progressive"
+                cards={pile}
+                hideTopCard={isDiscarding === idx}
+                refTopCurrent={(el) => {
+                  pileRefsCurrent.current[idx] = el;
+                }}
+                refTopNext={(el) => {
+                  pileRefsNext.current[idx] = el;
+                }}
+                onPress={() => {
+                  if (canDiscard) {
+                    discardTop(idx);
+                  } else {
+                    onPilePress(idx);
+                  }
+                }}
+                selectColor={
+                  pile.length === 0 ? "blue" : canDiscard ? "green" : "blue"
+                }
+                isSelected={isSelected}
+                isDisabled={
+                  (!canDiscard && !hasEmptyPile) ||
+                  isAnimating ||
+                  (pile.length === 0 && selectedPile === undefined)
+                }
+              />
+            </View>
+          );
+        })}
+      </View>
+
+      <Button
+        text="Deal"
+        size="large"
+        onPress={dealFour}
+        fullWidth
+        disabled={!canDeal || isAnimating}
+      />
+    </GameWrapper>
   );
 }

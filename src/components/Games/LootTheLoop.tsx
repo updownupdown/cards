@@ -1,7 +1,14 @@
 import { useMemo, useState } from "react";
 import { GameMenus } from "../common/GameMenus";
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from "react-native";
 
 import { Card } from "../Cards/Card";
 import {
@@ -12,8 +19,13 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { textStyles } from "@/styles/textStyles";
+import { GameWrapper } from "../common/GameWrapper";
+import { Button } from "../Button/Button";
+import { CardButton } from "../Cards/CardButton";
+import { flexStyles } from "@/styles/flexStyles";
+import { debugStyles } from "@/styles/debugStyles";
 
-type LoopRank = PlayingCard["rank"] | "Joker";
+export type LoopRank = PlayingCard["rank"] | "Joker";
 
 type LoopCard = {
   id: string;
@@ -24,7 +36,7 @@ type LoopCard = {
 
 type LoopState = {
   deck: LoopCard[];
-  notes: number[];
+  notes: LoopCard[];
   scorePile: LoopCard[];
   ended: boolean;
   won: boolean;
@@ -66,7 +78,14 @@ function setup(): LoopState {
     { id: "joker-loop", suit: "spades", rank: "Joker", faceUp: false },
   ];
 
-  const deck = shuffle(withJoker);
+  let deck: LoopCard[];
+  // Ensure first two cards are not both face cards
+  do {
+    deck = shuffle(withJoker);
+  } while (
+    (isFace(deck[0]) && isFace(deck[1])) ||
+    (deck[0].rank === "Joker" && deck[1].rank === "Joker")
+  );
 
   return {
     deck,
@@ -120,174 +139,222 @@ export default function LootTheLoop() {
   const isLoaded = useGameLoading();
 
   const [game, setGame] = useState<LoopState>(setup);
-  const [message, setMessage] = useState(
-    "Use Look Around to reveal information, then Explore to traverse the loop.",
-  );
 
-  const top = game.deck[0] ?? null;
-  const second = game.deck[1] ?? null;
   const aceCount = useMemo(() => countAces(game.scorePile), [game.scorePile]);
 
+  const [selectedCardIndex, setSelectedCardIndex] = useState<
+    number | undefined
+  >(undefined);
+
   function reset() {
+    setSelectedCardIndex(undefined);
     setGame(setup());
-    setMessage(
-      "Use Look Around to reveal information, then Explore to traverse the loop.",
-    );
   }
 
+  // Look around
   function lookAround() {
     setGame((prev) => {
       if (prev.ended || prev.deck.length === 0) return prev;
-      if (prev.deck[0].faceUp) return prev;
-
       const deck = [...prev.deck];
       deck[0] = { ...deck[0], faceUp: true };
+      deck[1] = { ...deck[1], faceUp: true };
       return { ...prev, deck };
     });
-    setMessage("Top card revealed.");
+    setSelectedCardIndex(0);
   }
 
-  function markPath() {
+  // Mark path
+  function markPath(selectedCardIndex: number) {
+    const pathToMark = game.deck[selectedCardIndex];
+    if (
+      game.ended ||
+      game.notes.length >= 3 ||
+      game.deck.length === 0 ||
+      !pathToMark.faceUp ||
+      !isNumber(pathToMark)
+    ) {
+      return;
+    }
+
+    setSelectedCardIndex(undefined);
+
     setGame((prev) => {
-      if (prev.ended || prev.notes.length >= 3 || prev.deck.length === 0)
-        return prev;
-      const t = prev.deck[0];
-      if (!t.faceUp || !isNumber(t)) return prev;
-
-      const notes = [...prev.notes, rankValue(t)];
-      const deck = rotate(prev.deck, 1);
-      return { ...prev, notes, deck };
+      return {
+        ...prev,
+        notes: [...prev.notes, pathToMark],
+        deck: [...prev.deck.toSpliced(selectedCardIndex, 1)],
+      };
     });
-    setMessage("Path marked and loop advanced by one.");
   }
 
-  function explore(usingSecond: boolean) {
+  // Explore
+  function explore(selectedCardIndex: number) {
     setGame((prev) => {
       if (prev.ended || prev.deck.length === 0) return prev;
 
-      const card = usingSecond ? prev.deck[1] : prev.deck[0];
+      const card = prev.deck[selectedCardIndex];
       if (!card || !card.faceUp || !isNumber(card)) return prev;
 
       const moved = rotate(prev.deck, rankValue(card));
       return resolveLanding({ ...prev, deck: moved });
     });
-
-    setMessage("Exploration resolved.");
   }
 
-  function returnToMarked(index: number) {
+  function returnToMarked(pathCard: LoopCard, indexOfPathCard: number) {
     setGame((prev) => {
-      if (prev.ended || index < 0 || index >= prev.notes.length) return prev;
-      const amount = prev.notes[index];
-      const notes = prev.notes.filter((_, i) => i !== index);
-      const moved = rotate(prev.deck, amount);
-      return resolveLanding({ ...prev, notes, deck: moved });
+      if (prev.ended) return prev;
+      const notes = prev.notes.filter((_, i) => i !== indexOfPathCard);
+      return { ...prev, notes, deck: [pathCard, ...prev.deck] };
     });
-
-    setMessage("Returned to a marked path.");
   }
-
-  const canLookAround = !!top && !top.faceUp;
-  const canExploreTop = !!top && top.faceUp && isNumber(top);
-  const canExploreSecond = !!second && second.faceUp && isNumber(second);
-  const canMark = !!top && top.faceUp && isNumber(top) && game.notes.length < 3;
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
-
-      
-
-      <Text style={textStyles.default}>Deck size: {game.deck.length}</Text>
-      <Text style={textStyles.default}>
-        Notes: {game.notes.join(", ") || "none"}
-      </Text>
-      <Text style={textStyles.default}>
-        Looted cards: {game.scorePile.length}
-      </Text>
-      <Text style={textStyles.default}>Jewels (Aces): {aceCount}/4</Text>
-      <Text style={textStyles.default}>Message: {message}</Text>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Top of loop</Text>
-        <View style={styles.topRow}>
-          {top ? (
-            <Card
-              suit={top.suit}
-              rank={top.rank === "Joker" ? "Joker" : top.rank}
-              isBack={!top.faceUp}
-              cardsPerRow={5}
-            />
-          ) : null}
-          {second ? (
-            <Card
-              suit={second.suit}
-              rank={second.rank === "Joker" ? "Joker" : second.rank}
-              isBack={!second.faceUp}
-              cardsPerRow={5}
-            />
-          ) : null}
+    <GameWrapper
+      ended={game.ended}
+      won={game.won}
+      reset={reset}
+      isLoaded={isLoaded}
+      winLoseMessage={
+        game.won
+          ? "You escaped with all four jewels."
+          : "You were trapped or hit a revealed trap."
+      }
+    >
+      <View
+        style={[
+          flexStyles.rowCentered,
+          flexStyles.fullWidth,
+          flexStyles.gap2,
+          {
+            position: "relative",
+            aspectRatio: 1,
+          },
+        ]}
+      >
+        <View
+          style={[
+            {
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+            },
+          ]}
+        >
+          <Text style={textStyles.default}>
+            Looted cards: {game.scorePile.length}
+            <br />
+            Jewels (Aces): {aceCount}/4
+          </Text>
         </View>
+
+        {game.deck.map((card, index) => {
+          let angle = index * 6 - 180;
+          const topCardAngleIncrease = 8;
+
+          if (index === 0) {
+            angle -= topCardAngleIncrease;
+          } else if (index === 1) {
+            // angle -= topCardAngleIncrease;
+          }
+
+          const style: ViewStyle = {
+            position: "absolute",
+            transform: [{ rotate: `${angle}deg` }, { translateY: -210 }],
+            zIndex: 100 - index,
+          };
+
+          const onPressFn = () => {
+            if (index > 1) return undefined;
+
+            if (!card.faceUp) {
+              if (index === 0) {
+                return lookAround;
+              }
+
+              return undefined;
+            } else {
+              return () =>
+                setSelectedCardIndex(
+                  selectedCardIndex === index ? undefined : index,
+                );
+            }
+          };
+
+          return (
+            <CardButton
+              key={`deck-${index}`}
+              onPress={onPressFn()}
+              suit={card.faceUp ? card.suit : undefined}
+              rank={card.faceUp ? card.rank : undefined}
+              style={[style]}
+              isSelected={selectedCardIndex === index}
+            />
+          );
+        })}
       </View>
 
-      <View style={styles.actions}>
-        <Pressable
-          style={[styles.actionBtn, canLookAround ? null : styles.disabledBtn]}
+      <View
+        style={[flexStyles.rowCentered, flexStyles.fullWidth, flexStyles.gap12]}
+      >
+        <Button
+          text="Explore"
+          onPress={() => {
+            if (selectedCardIndex !== undefined) {
+              explore(selectedCardIndex);
+            }
+          }}
+          disabled={
+            selectedCardIndex === undefined ||
+            !isNumber(game.deck[selectedCardIndex]) ||
+            !game.deck[selectedCardIndex].faceUp
+          }
+          // size="large"
+          style={[flexStyles.flex1]}
+        />
+
+        <Button
+          text="Mark Path"
+          onPress={() => {
+            if (selectedCardIndex !== undefined) {
+              markPath(selectedCardIndex);
+            }
+          }}
+          disabled={
+            selectedCardIndex === undefined ||
+            !isNumber(game.deck[selectedCardIndex]) ||
+            !game.deck[selectedCardIndex].faceUp ||
+            game.notes.length >= 3
+          }
+          // size="large"
+          style={[flexStyles.flex1]}
+        />
+
+        <Button
+          text="Look Around"
           onPress={lookAround}
-        >
-          <Text style={styles.actionText}>Look Around</Text>
-        </Pressable>
-
-        <Pressable
-          style={[styles.actionBtn, canExploreTop ? null : styles.disabledBtn]}
-          onPress={() => explore(false)}
-        >
-          <Text style={styles.actionText}>Explore (Top)</Text>
-        </Pressable>
-
-        <Pressable
-          style={[
-            styles.actionBtn,
-            canExploreSecond ? null : styles.disabledBtn,
-          ]}
-          onPress={() => explore(true)}
-        >
-          <Text style={styles.actionText}>Explore (Second)</Text>
-        </Pressable>
-
-        <Pressable
-          style={[styles.actionBtn, canMark ? null : styles.disabledBtn]}
-          onPress={markPath}
-        >
-          <Text style={styles.actionText}>Mark a Path</Text>
-        </Pressable>
+          disabled={game.ended || game.deck.length === 0 || game.deck[0].faceUp}
+          // size="large"
+          style={[flexStyles.flex1]}
+        />
       </View>
 
       {game.notes.length > 0 ? (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Return to Marked Path</Text>
           <View style={styles.notesRow}>
-            {game.notes.map((value, idx) => (
-              <Pressable
-                key={`note-${idx}-${value}`}
-                style={styles.noteBtn}
-                onPress={() => returnToMarked(idx)}
-              >
-                <Text style={styles.noteText}>{value}</Text>
-              </Pressable>
+            {game.notes.map((card, idx) => (
+              <CardButton
+                key={`note-${idx}-${card}`}
+                onPress={() => returnToMarked(card, idx)}
+                cardsPerRow={8}
+                suit={card.suit}
+                rank={card.rank}
+              />
             ))}
           </View>
         </View>
       ) : null}
-
-      {game.ended ? (
-        <Text style={game.won ? styles.winText : styles.loseText}>
-          {game.won
-            ? "You escaped with all four jewels."
-            : "You were trapped or hit a revealed trap."}
-        </Text>
-      ) : null}
-    </ScrollView>
+    </GameWrapper>
   );
 }
 

@@ -13,6 +13,7 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { textStyles } from "@/styles/textStyles";
+import { GameWrapper } from "../common/GameWrapper";
 
 type DeadRank = PlayingCard["rank"] | "Joker";
 
@@ -335,17 +336,21 @@ export default function DeadCenter() {
       : null;
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
-
-      
-
-      <Text style={textStyles.default}>Draw pile: {game.draw.length}</Text>
+    <GameWrapper
+      ended={game.ended}
+      won={game.won}
+      reset={reset}
+      isLoaded={isLoaded}
+    >
       <Text style={textStyles.default}>
+        Draw pile: {game.draw.length}
+        <br />
         Zombies left: {aliveCount(game.zombies)}
+        <br />
+        Phase: {game.phase}
+        <br />
+        Message: {message}
       </Text>
-      <Text style={textStyles.default}>Phase: {game.phase}</Text>
-      <Text style={textStyles.default}>Message: {message}</Text>
 
       {game.currentDraw ? (
         <View style={styles.section}>
@@ -443,7 +448,7 @@ export default function DeadCenter() {
         <Text style={styles.winText}>You won!</Text>
       ) : null}
       {loseText ? <Text style={styles.loseText}>{loseText}</Text> : null}
-    </ScrollView>
+    </GameWrapper>
   );
 }
 

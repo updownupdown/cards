@@ -1,7 +1,13 @@
 import React, { forwardRef } from "react";
 import { CardComponents as CardsRegular } from "@/assets/cards/regular";
 import { CardComponents as CardsSmall } from "@/assets/cards/small";
-import { Colors, MaxContentWidth, rgba } from "@/styles/styles";
+import { CardComponents as CardsSmallColored } from "@/assets/cards/small-colored";
+import {
+  Colors,
+  ContentSidePadding,
+  MaxContentWidth,
+  rgba,
+} from "@/styles/styles";
 import { cardStyles } from "@/styles/cardStyles";
 import { useWindowDimensions, View, ViewStyle } from "react-native";
 import type { SvgProps } from "react-native-svg";
@@ -11,6 +17,8 @@ import { normalizeGamePath } from "@/data/game-menu";
 import { usePathname } from "expo-router";
 
 export type CardSelectColor =
+  | "none"
+  | "red"
   | "blue"
   | "green"
   | "orange"
@@ -26,7 +34,6 @@ const cardShadowRadio = 0.01;
 
 export const useCardSize = (cardsPerRow = 5) => {
   const { width: windowWidth } = useWindowDimensions();
-
   const contentWidth = Math.min(windowWidth, MaxContentWidth);
   const cardWidthRequested = (100 / cardsPerRow / 100) * contentWidth;
   const width = cardWidthRequested * cardWidthRatio;
@@ -34,7 +41,7 @@ export const useCardSize = (cardsPerRow = 5) => {
   const height = width / cardAspectRatio;
   const borderRadius = width * 0.08;
   const shadowUnit = width * cardShadowRadio;
-  const placeholderShadow = `inset ${shadowUnit}px ${shadowUnit * 2}px ${shadowUnit * 14}px ${rgba(Colors.black, 0.4)}`;
+  const placeholderShadow = `inset ${shadowUnit}px ${shadowUnit * 2}px ${shadowUnit * 14}px ${rgba(Colors.black, 0.3)}`;
 
   return {
     width,
@@ -44,6 +51,8 @@ export const useCardSize = (cardsPerRow = 5) => {
     placeholderShadow,
   };
 };
+
+export type CardSizes = "small" | "regular" | "small-colored";
 
 export type CardProps = Omit<SvgProps, "width" | "height" | "style"> & {
   rank?: CardRank;
@@ -56,9 +65,9 @@ export type CardProps = Omit<SvgProps, "width" | "height" | "style"> & {
   isSelectable?: boolean;
   isSelected?: boolean;
   selectColor?: CardSelectColor;
-  isSelectedInvalid?: boolean;
   hasTopMargin?: boolean;
-  cardSize?: "small" | "regular";
+  customTopMarginPerc?: number;
+  cardSize?: CardSizes;
 };
 
 export const Card = forwardRef<any, CardProps>(
@@ -74,9 +83,9 @@ export const Card = forwardRef<any, CardProps>(
       isSelectable,
       selectColor,
       isSelected,
-      isSelectedInvalid,
       cardSize,
       hasTopMargin,
+      customTopMarginPerc,
       ...svgProps
     },
     ref,
@@ -84,7 +93,12 @@ export const Card = forwardRef<any, CardProps>(
     const pathname = normalizeGamePath(usePathname());
     const { settings } = useGameSettings(pathname);
 
-    const cardFiles = cardSize === "small" ? CardsSmall : CardsRegular;
+    const cardFiles =
+      cardSize === "small"
+        ? CardsSmall
+        : cardSize === "small-colored"
+          ? CardsSmallColored
+          : CardsRegular;
 
     let cardName = "Placeholder";
 
@@ -109,53 +123,58 @@ export const Card = forwardRef<any, CardProps>(
     cardStyle.height = height;
     cardStyle.borderRadius = borderRadius;
 
-    if (hasTopMargin) {
+    if (customTopMarginPerc !== undefined) {
+      cardStyle.marginTop = customTopMarginPerc * height;
+    } else if (hasTopMargin) {
       cardStyle.marginTop = topMargin;
     }
 
-    const shadowUnit = width * cardShadowRadio;
+    const shadowUnit = Math.max(width * cardShadowRadio, 0.7);
 
-    let color: string = Colors.cardSelectBlue;
+    let colorValue: string = Colors.cardSelectBlue;
 
     if (selectColor) {
       switch (selectColor) {
+        case "red":
+          colorValue = Colors.cardSelectRed;
+          break;
         case "blue":
-          color = Colors.cardSelectBlue;
+          colorValue = Colors.cardSelectBlue;
           break;
         case "green":
-          color = Colors.cardSelectGreen;
+          colorValue = Colors.cardSelectGreen;
           break;
         case "orange":
-          color = Colors.cardSelectOrange;
+          colorValue = Colors.cardSelectOrange;
           break;
         case "purple":
-          color = Colors.cardSelectPurple;
+          colorValue = Colors.cardSelectPurple;
           break;
         case "yellow":
-          color = Colors.cardSelectYellow;
+          colorValue = Colors.cardSelectYellow;
           break;
         case "pink":
-          color = Colors.cardSelectPink;
+          colorValue = Colors.cardSelectPink;
           break;
       }
     }
 
-    function shadow(size: number, opacity: number, invalid?: boolean) {
-      return `0 0 0 1px ${rgba(Colors.K900, 0.2)}, 0 0 0 ${shadowUnit * size}px ${rgba(invalid ? Colors.cardSelectInvalid : color, opacity)}`;
+    function shadow(size: number, opacity: number, customColor?: string) {
+      return `0 0 0 1px ${rgba(Colors.K900, 0.2)}, 0 0 0 ${shadowUnit * size}px ${rgba(customColor ?? colorValue, opacity)}`;
     }
 
-    const shadowSizeUnselected = 5;
+    const shadowSizeUnselected = 4;
     const shadowSizeSelected = 8;
 
     cardStyle.boxShadow = shadow(shadowSizeUnselected, 0);
 
     if (settings?.showCardHints !== false) {
-      if (isSelectedInvalid) {
-        cardStyle.boxShadow = shadow(shadowSizeSelected, 0.7, true);
-      } else if (isSelected) {
+      if (isSelected) {
         cardStyle.boxShadow = shadow(shadowSizeSelected, 0.8);
-      } else if (isSelectable) {
+      } else if (isSelectable && selectColor !== "none") {
         cardStyle.boxShadow = shadow(shadowSizeUnselected, 0.8);
+      } else {
+        cardStyle.boxShadow = `0 0 0 1px ${rgba(Colors.K900, 0.2)}, 0 0  ${shadowUnit * 4}px 0 ${rgba(Colors.K900, 0.5)}`;
       }
     }
 
@@ -173,7 +192,7 @@ export const Card = forwardRef<any, CardProps>(
         <View
           style={[
             cardStyles.cardSelectOverlay,
-            { backgroundColor: color, opacity: isSelected ? 0.17 : 0 },
+            { backgroundColor: colorValue, opacity: isSelected ? 0.17 : 0 },
           ]}
         />
         <SvgCard {...svgProps} width="100%" height="100%" />

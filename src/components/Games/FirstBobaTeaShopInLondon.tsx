@@ -11,6 +11,7 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { textStyles } from "@/styles/textStyles";
+import { GameWrapper } from "../common/GameWrapper";
 
 type BobaState = {
   deck: PlayingCard[];
@@ -143,14 +144,19 @@ export default function FirstBobaTeaShopInLondon() {
   }
 
   return (
-    <View style={styles.container}>
-      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
-
-      
-
-      <Text style={textStyles.default}>Deck: {game.deck.length}</Text>
-      <Text style={textStyles.default}>Discard: {game.discard.length}</Text>
-      <Text style={textStyles.default}>Message: {message}</Text>
+    <GameWrapper
+      ended={game.ended}
+      won={game.won}
+      reset={reset}
+      isLoaded={isLoaded}
+    >
+      <Text style={textStyles.default}>
+        Deck: {game.deck.length}
+        <br />
+        Discard: {game.discard.length}
+        <br />
+        Message: {message}
+      </Text>
 
       <View style={styles.queuesRow}>
         {game.queues.map((queue, index) => (
@@ -175,7 +181,7 @@ export default function FirstBobaTeaShopInLondon() {
       <View style={styles.rankGrid}>
         {(Object.keys(game.discardByRank) as Array<PlayingCard["rank"]>).map(
           (rank) => (
-            <Text key={rank} style={styles.rankText}>
+            <Text key={rank} style={textStyles.default}>
               {rank}: {game.discardByRank[rank]}
             </Text>
           ),
@@ -189,7 +195,7 @@ export default function FirstBobaTeaShopInLondon() {
             : "You lost: discarded the fourth card of a rank."}
         </Text>
       ) : null}
-    </View>
+    </GameWrapper>
   );
 }
 

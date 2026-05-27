@@ -12,6 +12,11 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { textStyles } from "@/styles/textStyles";
+import { GameWrapper } from "../common/GameWrapper";
+import { CardButton } from "../Cards/CardButton";
+import { Button } from "../Button/Button";
+
+const cardsPerRow = 8;
 
 type TableauCard = PlayingCard & { faceUp: boolean };
 
@@ -205,110 +210,60 @@ export default function Scorpion() {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
-
-      
-
-      <Text style={textStyles.default}>Reserve cards: {game.stock.length}</Text>
+    <GameWrapper
+      ended={game.ended}
+      won={game.won}
+      reset={reset}
+      isLoaded={isLoaded}
+      winLoseMessage={
+        game.won ? "All four suit stacks are complete." : "No further progress."
+      }
+    >
       <Text style={textStyles.default}>
+        Reserve cards: {game.stock.length}
+        <br />
         Completed suit stacks: {completedStacks}/4
+        <br />
+        Message: {message}
       </Text>
-      <Text style={textStyles.default}>Message: {message}</Text>
 
-      <Pressable
-        style={[
-          styles.button,
-          game.stock.length > 0 ? styles.dealEnabled : styles.dealDisabled,
-        ]}
+      <Button
         onPress={dealStock}
         disabled={game.stock.length === 0 || game.ended}
-      >
-        <Text style={styles.buttonText}>Deal Reserve</Text>
-      </Pressable>
+        text="Deal Reserve"
+      />
 
       <View style={styles.columnsWrap}>
         {game.columns.map((column, colIdx) => (
           <View key={`sc-col-${colIdx}`} style={styles.column}>
             {column.length === 0 ? (
               <View style={styles.emptySlot}>
-                <Text style={styles.smallText}>Empty</Text>
+                <Text style={textStyles.default}>Empty</Text>
               </View>
             ) : null}
             {column.map((card, idx) => {
               const isSelected =
                 selected?.column === colIdx && selected?.index === idx;
               return (
-                <Pressable
+                <CardButton
                   key={card.id}
                   onPress={() => onCardPress(colIdx, idx)}
-                  style={[
-                    styles.cardPressable,
-                    isSelected ? styles.cardSelected : null,
-                  ]}
-                >
-                  <Card
-                    suit={card.suit}
-                    rank={card.rank}
-                    isBack={!card.faceUp}
-                    cardsPerRow={5}
-                  />
-                </Pressable>
+                  suit={card.suit}
+                  rank={card.rank}
+                  isBack={!card.faceUp}
+                  cardsPerRow={cardsPerRow}
+                  isSelected={isSelected}
+                />
               );
             })}
           </View>
         ))}
       </View>
-
-      {game.ended ? (
-        <Text style={game.won ? styles.winText : styles.loseText}>
-          {game.won
-            ? "All four suit stacks are complete."
-            : "No further progress."}
-        </Text>
-      ) : null}
-    </ScrollView>
+    </GameWrapper>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingTop: 56,
-    paddingHorizontal: 10,
-    paddingBottom: 24,
-    gap: 10,
-  },
-  headerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 24,
-    color: "#1f2937",
-    fontFamily: "Outfit_600SemiBold",
-  },
-  button: {
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    backgroundColor: "#1d4ed8",
-    alignSelf: "flex-start",
-  },
-  dealEnabled: {
-    backgroundColor: "#0f766e",
-  },
-  dealDisabled: {
-    backgroundColor: "#94a3b8",
-  },
-  buttonText: {
-    color: "#fff",
-    fontFamily: "Outfit_500Medium",
-  },
-  metaText: {
-    color: "#334155",
-    fontFamily: "Outfit_400Regular",
-  },
   columnsWrap: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -319,12 +274,7 @@ const styles = StyleSheet.create({
     gap: 4,
     alignItems: "center",
   },
-  cardPressable: {
-    borderRadius: 8,
-  },
-  cardSelected: {
-    backgroundColor: "rgba(37,99,235,0.16)",
-  },
+
   emptySlot: {
     width: "100%",
     minHeight: 60,
@@ -334,17 +284,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "rgba(255,255,255,0.2)",
-  },
-  smallText: {
-    fontSize: 11,
-    color: "#334155",
-  },
-  winText: {
-    color: "#065f46",
-    fontFamily: "Outfit_600SemiBold",
-  },
-  loseText: {
-    color: "#991b1b",
-    fontFamily: "Outfit_600SemiBold",
   },
 });

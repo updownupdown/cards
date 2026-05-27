@@ -12,6 +12,9 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { textStyles } from "@/styles/textStyles";
+import { GameWrapper } from "../common/GameWrapper";
+
+const cardsPerRow = 8;
 
 type Foundations = Record<CardSuit, PlayingCard[]>;
 
@@ -243,13 +246,19 @@ export default function Penguin() {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
-      
-
-      <Text style={textStyles.default}>Beak rank: {game.beakRank}</Text>
-      <Text style={textStyles.default}>Foundations: {foundationsCount}/52</Text>
-      <Text style={textStyles.default}>Message: {message}</Text>
+    <GameWrapper
+      ended={game.ended}
+      won={game.won}
+      reset={reset}
+      isLoaded={isLoaded}
+    >
+      <Text style={textStyles.default}>
+        Beak rank: {game.beakRank}
+        <br />
+        Foundations: {foundationsCount}/52
+        <br />
+        Message: {message}
+      </Text>
 
       <View style={styles.foundationsRow}>
         {(Object.keys(game.foundations) as CardSuit[]).map((suit) => {
@@ -259,7 +268,11 @@ export default function Penguin() {
             <View key={`p-found-${suit}`} style={styles.zone}>
               <Text style={styles.smallText}>{suit}</Text>
               {top ? (
-                <Card suit={top.suit} rank={top.rank} cardsPerRow={5} />
+                <Card
+                  suit={top.suit}
+                  rank={top.rank}
+                  cardsPerRow={cardsPerRow}
+                />
               ) : (
                 <View style={styles.empty} />
               )}
@@ -285,7 +298,11 @@ export default function Penguin() {
                     disabled={game.ended}
                     style={isSelected ? styles.selectedCard : undefined}
                   >
-                    <Card suit={card.suit} rank={card.rank} cardsPerRow={5} />
+                    <Card
+                      suit={card.suit}
+                      rank={card.rank}
+                      cardsPerRow={cardsPerRow}
+                    />
                   </Pressable>
                 );
               })}
@@ -301,7 +318,7 @@ export default function Penguin() {
             : "No legal moves remain."}
         </Text>
       ) : null}
-    </ScrollView>
+    </GameWrapper>
   );
 }
 

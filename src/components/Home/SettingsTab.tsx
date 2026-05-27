@@ -15,7 +15,10 @@ export const SettingsTab = () => {
   }
 
   return (
-    <ScrollView contentContainerStyle={homeStyles.scrollContent}>
+    <ScrollView
+      contentContainerStyle={homeStyles.scrollContent}
+      showsVerticalScrollIndicator={false}
+    >
       <View style={styles.settingsSection}>
         <Text style={textStyles.h3}>Global Settings</Text>
 

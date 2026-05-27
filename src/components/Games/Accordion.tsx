@@ -1,11 +1,20 @@
-import { useMemo, useState } from "react";
-import { GameMenus } from "../common/GameMenus";
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-
-import { Card } from "../Cards/Card";
-import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
+import { useMemo, useState } from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { GameMenus } from "../common/GameMenus";
+import { layoutStyles } from "@/styles/layoutStyles";
 import { textStyles } from "@/styles/textStyles";
+import {
+  createDeck,
+  isSameColor,
+  shuffle,
+  type PlayingCard,
+} from "../Cards/card-utils";
+import { CardButton } from "../Cards/CardButton";
+import { flexStyles } from "@/styles/flexStyles";
+import { CardSelectColor } from "../Cards/Card";
+import { debugStyles } from "@/styles/debugStyles";
+import { GameWrapper } from "../common/GameWrapper";
 
 type AccordionState = {
   line: PlayingCard[];
@@ -40,18 +49,12 @@ export default function Accordion() {
 
   const [game, setGame] = useState<AccordionState>(setup);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const [message, setMessage] = useState(
-    "Select a card, then tap a valid target 1 or 3 positions to the left.",
-  );
 
   const moveCount = useMemo(() => 52 - game.line.length, [game.line.length]);
 
   function reset() {
     setGame(setup());
     setSelectedIndex(null);
-    setMessage(
-      "Select a card, then tap a valid target 1 or 3 positions to the left.",
-    );
   }
 
   function onCardPress(index: number) {
@@ -90,7 +93,6 @@ export default function Accordion() {
       const won = line.length === 1;
       const ended = won || !hasAnyMove(line);
       setSelectedIndex(null);
-      setMessage("Move completed.");
 
       return {
         ...prev,
@@ -101,103 +103,69 @@ export default function Accordion() {
     });
   }
 
+  function selectColor(idx: number): string {
+    if (selectedIndex === idx) {
+      // Current card
+      return "green";
+    } else if (
+      selectedIndex &&
+      (idx === selectedIndex - 3 ||
+        (selectedIndex && idx === selectedIndex - 1))
+    ) {
+      // Card 1 or 3 to the left
+      return game.line[idx].suit === game.line[selectedIndex].suit
+        ? "green"
+        : "orange";
+    } else {
+      // Other cards
+      return "none";
+    }
+  }
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
-
-      
-
+    <GameWrapper
+      ended={game.ended}
+      won={game.won}
+      reset={reset}
+      isLoaded={isLoaded}
+      winLoseMessage={
+        game.won
+          ? "You compressed the deck to one card."
+          : "No legal moves remain."
+      }
+    >
       <Text style={textStyles.default}>
-        Cards remaining: {game.line.length}
+        Progress: {moveCount} of {moveCount + game.line.length}
       </Text>
-      <Text style={textStyles.default}>Moves made: {moveCount}</Text>
-      <Text style={textStyles.default}>Message: {message}</Text>
 
-      <View style={styles.lineWrap}>
+      <View
+        style={[
+          {
+            ...flexStyles.rowCentered,
+            ...flexStyles.fullWidth,
+            flexWrap: "wrap",
+            padding: 10,
+            gap: 12,
+          },
+        ]}
+      >
         {game.line.map((card, idx) => {
-          const isSelected = selectedIndex === idx;
           return (
-            <Pressable
+            <CardButton
               key={card.id}
               onPress={() => onCardPress(idx)}
               disabled={game.ended}
-              style={[
-                styles.cardPressable,
-                isSelected ? styles.cardSelected : null,
-              ]}
-            >
-              <Card suit={card.suit} rank={card.rank} cardsPerRow={5} />
-              <Text style={styles.smallText}>{idx + 1}</Text>
-            </Pressable>
+              isSelected={selectedIndex === idx}
+              selectColor={selectColor(idx) as CardSelectColor}
+              suit={card.suit}
+              rank={card.rank}
+              cardsPerRow={8}
+              // customTopMarginPerc={idx > 5 ? -0.4 : undefined}
+              cardSize="small"
+            />
           );
         })}
       </View>
-
-      {game.ended ? (
-        <Text style={game.won ? styles.winText : styles.loseText}>
-          {game.won
-            ? "You compressed the deck to one card."
-            : "No legal moves remain."}
-        </Text>
-      ) : null}
-    </ScrollView>
+    </GameWrapper>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 56,
-    paddingHorizontal: 10,
-    paddingBottom: 24,
-    gap: 10,
-  },
-  headerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 24,
-    color: "#1f2937",
-    fontFamily: "Outfit_600SemiBold",
-  },
-  button: {
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    backgroundColor: "#1d4ed8",
-  },
-  buttonText: {
-    color: "#fff",
-    fontFamily: "Outfit_500Medium",
-  },
-  metaText: {
-    color: "#334155",
-    fontFamily: "Outfit_400Regular",
-  },
-  lineWrap: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 6,
-  },
-  cardPressable: {
-    borderRadius: 8,
-    alignItems: "center",
-    padding: 2,
-  },
-  cardSelected: {
-    backgroundColor: "rgba(37,99,235,0.16)",
-  },
-  smallText: {
-    fontSize: 11,
-    color: "#334155",
-  },
-  winText: {
-    color: "#065f46",
-    fontFamily: "Outfit_600SemiBold",
-  },
-  loseText: {
-    color: "#991b1b",
-    fontFamily: "Outfit_600SemiBold",
-  },
-});

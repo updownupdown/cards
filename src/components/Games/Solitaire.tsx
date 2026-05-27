@@ -30,6 +30,7 @@ import { Button } from "../Button/Button";
 import { MessageBox } from "../common/MessageBox";
 import { cardStyles } from "@/styles/cardStyles";
 import { flexStyles } from "@/styles/flexStyles";
+import { GameWrapper } from "../common/GameWrapper";
 
 type GameState = {
   tableau: PlayingCard[][];
@@ -784,15 +785,12 @@ export default function Solitaire() {
   const ghostTop = dragGhost ? dragGhost.origin.y - boardOrigin.y : 0;
 
   return (
-    <>
-      <GameMenus ended={won} won={won} reset={resetGame} isLoaded={isLoaded} />
+    <GameWrapper ended={won} won={won} reset={resetGame} isLoaded={isLoaded}>
       <View
         ref={boardRef}
         onLayout={updateBoardOrigin}
         style={layoutStyles.gameArea}
       >
-        {won && <MessageBox messageType="win" message="You won!" />}
-
         <View
           style={[
             flexStyles.rowCentered,
@@ -1032,7 +1030,7 @@ export default function Solitaire() {
           </Animated.View>
         )}
       </View>
-    </>
+    </GameWrapper>
   );
 }
 

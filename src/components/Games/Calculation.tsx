@@ -12,6 +12,12 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { textStyles } from "@/styles/textStyles";
+import { GameWrapper } from "../common/GameWrapper";
+import { Button } from "../Button/Button";
+import { flexStyles } from "@/styles/flexStyles";
+import { Deck } from "../Cards/Deck";
+
+const cardsPerRow = 5;
 
 type CalculationState = {
   foundations: PlayingCard[][];
@@ -91,9 +97,6 @@ export default function Calculation() {
   const isLoaded = useGameLoading();
 
   const [game, setGame] = useState<CalculationState>(setup);
-  const [message, setMessage] = useState(
-    "Build foundations by step: +1, +2, +3, +4 (wrapping after King).",
-  );
 
   const wasteTop = game.waste[game.waste.length - 1] ?? null;
   const foundationsCount = useMemo(
@@ -103,9 +106,6 @@ export default function Calculation() {
 
   function reset() {
     setGame(setup());
-    setMessage(
-      "Build foundations by step: +1, +2, +3, +4 (wrapping after King).",
-    );
   }
 
   function draw() {
@@ -118,8 +118,6 @@ export default function Calculation() {
       const waste = [...prev.waste, card];
       return evaluate({ ...prev, stock, waste });
     });
-
-    setMessage("Drew to waste.");
   }
 
   function playWasteToFoundation(foundationIndex: number) {
@@ -139,24 +137,60 @@ export default function Calculation() {
 
       return evaluate({ ...prev, foundations, waste });
     });
-
-    setMessage("Moved waste to foundation.");
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
+    <GameWrapper
+      ended={game.ended}
+      won={game.won}
+      reset={reset}
+      isLoaded={isLoaded}
+      winLoseMessage={
+        game.won
+          ? "All 52 cards are on the foundations."
+          : "No legal moves remain."
+      }
+    >
+      <View
+        style={[
+          flexStyles.rowCentered,
+          flexStyles.fullWidth,
+          flexStyles.spaceBetween,
+        ]}
+      >
+        <Deck
+          backCount={game.stock.length}
+          showCount
+          countPosition="left"
+          iconName="draw"
+          limitFan
+          fan="horizontalLeft"
+        />
 
-      
+        <Text style={[textStyles.default, { textAlign: "center" }]}>
+          On foundations:
+          <br />
+          {foundationsCount}/52
+        </Text>
 
-      <Text style={textStyles.default}>Stock: {game.stock.length}</Text>
-      <Text style={textStyles.default}>Waste: {game.waste.length}</Text>
-      <Text style={textStyles.default}>
-        On foundations: {foundationsCount}/52
-      </Text>
-      <Text style={textStyles.default}>Message: {message}</Text>
+        <Deck
+          showCount
+          countPosition="right"
+          iconName="delete"
+          limitFan
+          fan="horizontalLeft"
+          cards={game.waste}
+          cardsPerRow={cardsPerRow}
+        />
+      </View>
 
-      <View style={styles.foundationRow}>
+      <View
+        style={[
+          flexStyles.rowCentered,
+          flexStyles.fullWidth,
+          styles.foundationRow,
+        ]}
+      >
         {game.foundations.map((foundation, i) => {
           const top = foundation[foundation.length - 1] ?? null;
           return (
@@ -166,10 +200,14 @@ export default function Calculation() {
               onPress={() => playWasteToFoundation(i)}
               disabled={game.ended || !wasteTop}
             >
-              <Text style={styles.smallText}>+{STEPS[i]}</Text>
-              <Text style={styles.smallText}>Count: {foundation.length}</Text>
+              <Text style={textStyles.default}>+{STEPS[i]}</Text>
+              <Text style={textStyles.default}>Count: {foundation.length}</Text>
               {top ? (
-                <Card suit={top.suit} rank={top.rank} cardsPerRow={5} />
+                <Card
+                  suit={top.suit}
+                  rank={top.rank}
+                  cardsPerRow={cardsPerRow}
+                />
               ) : (
                 <View style={styles.emptySlot} />
               )}
@@ -178,78 +216,26 @@ export default function Calculation() {
         })}
       </View>
 
-      <View style={styles.bottomRow}>
+      <View
+        style={[
+          flexStyles.rowCentered,
+          flexStyles.fullWidth,
+          flexStyles.spaceBetween,
+        ]}
+      >
         <View style={styles.zone}>
-          <Text style={styles.smallText}>Waste top</Text>
-          {wasteTop ? (
-            <Card suit={wasteTop.suit} rank={wasteTop.rank} cardsPerRow={5} />
-          ) : (
-            <View style={styles.emptySlot} />
-          )}
-        </View>
-
-        <View style={styles.zone}>
-          <Pressable
-            style={[
-              styles.button,
-              game.stock.length > 0 ? styles.drawEnabled : styles.drawDisabled,
-            ]}
+          <Button
             onPress={draw}
             disabled={game.stock.length === 0 || game.ended}
-          >
-            <Text style={styles.buttonText}>Draw</Text>
-          </Pressable>
+            text="Draw"
+          />
         </View>
       </View>
-
-      {game.ended ? (
-        <Text style={game.won ? styles.winText : styles.loseText}>
-          {game.won
-            ? "All 52 cards are on the foundations."
-            : "No legal moves remain."}
-        </Text>
-      ) : null}
-    </ScrollView>
+    </GameWrapper>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingTop: 56,
-    paddingHorizontal: 10,
-    paddingBottom: 24,
-    gap: 10,
-  },
-  headerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 24,
-    color: "#1f2937",
-    fontFamily: "Outfit_600SemiBold",
-  },
-  button: {
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    backgroundColor: "#1d4ed8",
-  },
-  drawEnabled: {
-    backgroundColor: "#0f766e",
-  },
-  drawDisabled: {
-    backgroundColor: "#94a3b8",
-  },
-  buttonText: {
-    color: "#fff",
-    fontFamily: "Outfit_500Medium",
-  },
-  metaText: {
-    color: "#334155",
-    fontFamily: "Outfit_400Regular",
-  },
   foundationRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -265,10 +251,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     backgroundColor: "rgba(255,255,255,0.35)",
   },
-  smallText: {
-    fontSize: 11,
-    color: "#334155",
-  },
+
   emptySlot: {
     width: 80,
     height: 116,

@@ -12,6 +12,7 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { textStyles } from "@/styles/textStyles";
+import { GameWrapper } from "../common/GameWrapper";
 
 type FoundationPile = {
   suit: CardSuit | null;
@@ -195,14 +196,21 @@ export default function FortyThieves() {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <GameMenus ended={game.ended} won={game.won} reset={reset} isLoaded={isLoaded} />
-      
-
-      <Text style={textStyles.default}>Foundations: {foundCount}/104</Text>
-      <Text style={textStyles.default}>Stock: {game.stock.length}</Text>
-      <Text style={textStyles.default}>Waste: {game.waste.length}</Text>
-      <Text style={textStyles.default}>Message: {message}</Text>
+    <GameWrapper
+      ended={game.ended}
+      won={game.won}
+      reset={reset}
+      isLoaded={isLoaded}
+    >
+      <Text style={textStyles.default}>
+        Foundations: {foundCount}/104
+        <br />
+        Stock: {game.stock.length}
+        <br />
+        Waste: {game.waste.length}
+        <br />
+        Message: {message}
+      </Text>
 
       <View style={styles.foundationsRow}>
         {game.foundations.map((pile, i) => {
@@ -284,7 +292,7 @@ export default function FortyThieves() {
             : "No legal moves remain."}
         </Text>
       ) : null}
-    </ScrollView>
+    </GameWrapper>
   );
 }
 

@@ -22,6 +22,7 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { textStyles } from "@/styles/textStyles";
+import { GameWrapper } from "../common/GameWrapper";
 
 type GameState = {
   tableau: PlayingCard[][];
@@ -325,110 +326,116 @@ export default function SpiderSolitaire() {
   const ghostTop = dragGhost ? dragGhost.origin.y - boardOrigin.y : 0;
 
   return (
-    <View ref={boardRef} onLayout={updateBoardOrigin} style={styles.container}>
-      <GameMenus ended={won} won={won} reset={resetGame} isLoaded={isLoaded} />
-
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>Spider Solitaire</Text>
-        <View style={styles.headerButtons}>
-          <Pressable style={styles.button} onPress={drawFromStock}>
-            <Text style={styles.buttonText}>Deal Row</Text>
-          </Pressable>
-          <Pressable style={styles.button} onPress={resetGame}>
-            <Text style={styles.buttonText}>New Game</Text>
-          </Pressable>
-        </View>
-      </View>
-
-      <Text style={textStyles.default}>
-        Runs completed: {game.completedRuns}/8
-      </Text>
-      {won && <Text style={styles.winText}>You won!</Text>}
-
-      <View style={styles.stockRow}>
-        <View style={styles.stockSlot}>
-          {game.stock.length > 0 ? (
-            <Card suit="spades" rank="Back" cardsPerRow={5} isBack />
-          ) : (
-            <Text style={styles.slotLabel}>Empty</Text>
-          )}
-        </View>
-        <Text style={textStyles.default}>Stock: {game.stock.length}</Text>
-      </View>
-
-      <View style={styles.tableauRow}>
-        {game.tableau.map((pile, pileIndex) => {
-          const pileHeight = Math.max(230, pile.length * 16 + 140);
-          const isSelected = selected?.pileIndex === pileIndex;
-          const topCard = pile[pile.length - 1];
-          const topHandlers = topCard?.faceUp
-            ? makeDragHandlers(pileIndex)
-            : null;
-
-          return (
-            <Pressable
-              key={`spider-pile-${pileIndex}`}
-              ref={(node) => {
-                pileRefs.current[pileIndex] = node;
-              }}
-              collapsable={false}
-              onPress={() => onPilePress(pileIndex)}
-              style={[
-                styles.tableauPile,
-                { minHeight: pileHeight },
-                hoverPile === pileIndex ? styles.dropHintPile : null,
-              ]}
-            >
-              {pile.length === 0 ? <View style={styles.emptyPileSlot} /> : null}
-              {pile.map((card, cardIndex) => {
-                const isTop = cardIndex === pile.length - 1;
-                const hiddenByDrag =
-                  isTop && dragGhost?.sourcePile === pileIndex;
-
-                return (
-                  <View
-                    key={card.id}
-                    style={[
-                      styles.tableauCard,
-                      { top: cardIndex * 16, zIndex: cardIndex + 1 },
-                      isSelected && isTop ? styles.selectedCard : null,
-                      hiddenByDrag ? styles.hiddenDuringDrag : null,
-                    ]}
-                    {...(isTop ? topHandlers : {})}
-                  >
-                    <Card
-                      suit={card.suit}
-                      rank={card.rank}
-                      cardsPerRow={5}
-                      isBack={!card.faceUp}
-                    />
-                  </View>
-                );
-              })}
+    <GameWrapper ended={won} won={won} reset={resetGame} isLoaded={isLoaded}>
+      <View
+        ref={boardRef}
+        onLayout={updateBoardOrigin}
+        style={styles.container}
+      >
+        <View style={styles.headerRow}>
+          <Text style={styles.title}>Spider Solitaire</Text>
+          <View style={styles.headerButtons}>
+            <Pressable style={styles.button} onPress={drawFromStock}>
+              <Text style={styles.buttonText}>Deal Row</Text>
             </Pressable>
-          );
-        })}
-      </View>
+            <Pressable style={styles.button} onPress={resetGame}>
+              <Text style={styles.buttonText}>New Game</Text>
+            </Pressable>
+          </View>
+        </View>
 
-      {dragGhost ? (
-        <Animated.View
-          style={[
-            styles.ghostLayer,
-            {
-              left: ghostLeft,
-              top: ghostTop,
-              transform: dragTranslate.getTranslateTransform(),
-            },
-          ]}
-        >
-          <Card
-            suit={dragGhost.card.suit}
-            rank={dragGhost.card.rank}
-            cardsPerRow={5}
-          />
-        </Animated.View>
-      ) : null}
-    </View>
+        <Text style={textStyles.default}>
+          Runs completed: {game.completedRuns}/8
+        </Text>
+        {won && <Text style={styles.winText}>You won!</Text>}
+
+        <View style={styles.stockRow}>
+          <View style={styles.stockSlot}>
+            {game.stock.length > 0 ? (
+              <Card suit="spades" rank="Back" cardsPerRow={5} isBack />
+            ) : (
+              <Text style={styles.slotLabel}>Empty</Text>
+            )}
+          </View>
+          <Text style={textStyles.default}>Stock: {game.stock.length}</Text>
+        </View>
+
+        <View style={styles.tableauRow}>
+          {game.tableau.map((pile, pileIndex) => {
+            const pileHeight = Math.max(230, pile.length * 16 + 140);
+            const isSelected = selected?.pileIndex === pileIndex;
+            const topCard = pile[pile.length - 1];
+            const topHandlers = topCard?.faceUp
+              ? makeDragHandlers(pileIndex)
+              : null;
+
+            return (
+              <Pressable
+                key={`spider-pile-${pileIndex}`}
+                ref={(node) => {
+                  pileRefs.current[pileIndex] = node;
+                }}
+                collapsable={false}
+                onPress={() => onPilePress(pileIndex)}
+                style={[
+                  styles.tableauPile,
+                  { minHeight: pileHeight },
+                  hoverPile === pileIndex ? styles.dropHintPile : null,
+                ]}
+              >
+                {pile.length === 0 ? (
+                  <View style={styles.emptyPileSlot} />
+                ) : null}
+                {pile.map((card, cardIndex) => {
+                  const isTop = cardIndex === pile.length - 1;
+                  const hiddenByDrag =
+                    isTop && dragGhost?.sourcePile === pileIndex;
+
+                  return (
+                    <View
+                      key={card.id}
+                      style={[
+                        styles.tableauCard,
+                        { top: cardIndex * 16, zIndex: cardIndex + 1 },
+                        isSelected && isTop ? styles.selectedCard : null,
+                        hiddenByDrag ? styles.hiddenDuringDrag : null,
+                      ]}
+                      {...(isTop ? topHandlers : {})}
+                    >
+                      <Card
+                        suit={card.suit}
+                        rank={card.rank}
+                        cardsPerRow={5}
+                        isBack={!card.faceUp}
+                      />
+                    </View>
+                  );
+                })}
+              </Pressable>
+            );
+          })}
+        </View>
+
+        {dragGhost ? (
+          <Animated.View
+            style={[
+              styles.ghostLayer,
+              {
+                left: ghostLeft,
+                top: ghostTop,
+                transform: dragTranslate.getTranslateTransform(),
+              },
+            ]}
+          >
+            <Card
+              suit={dragGhost.card.suit}
+              rank={dragGhost.card.rank}
+              cardsPerRow={5}
+            />
+          </Animated.View>
+        ) : null}
+      </View>
+    </GameWrapper>
   );
 }
 

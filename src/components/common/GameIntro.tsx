@@ -29,13 +29,12 @@ export function GameIntro({ isLoaded, setShowMenu }: Props) {
   );
 
   useEffect(() => {
-    console.log(gameSettings);
     if (gameSettings?.showIntro) {
       setShowIntro(true);
     }
   }, [gameSettings]);
 
-  return (
+  return showIntro && renderIntro ? (
     <>
       {/* Overlay */}
       <Animated.View
@@ -84,5 +83,5 @@ export function GameIntro({ isLoaded, setShowMenu }: Props) {
         />
       </Animated.View>
     </>
-  );
+  ) : null;
 }

@@ -1,20 +1,22 @@
+import { Icon, IconName } from "@/icons";
 import { cardStyles } from "@/styles/cardStyles";
+import { flexStyles } from "@/styles/flexStyles";
+import { Colors, FontWeight } from "@/styles/styles";
 import { clamp } from "@/utils/utils";
 import React from "react";
-import { Text, View, ViewStyle } from "react-native";
-import { CardSelectColor, useCardSize } from "./Card";
+import { StyleSheet, Text, View, ViewStyle } from "react-native";
+import { CardSelectColor, CardSizes, useCardSize } from "./Card";
 import { CardRank, CardSuit } from "./card-utils";
 import { CardButton } from "./CardButton";
-import { Icon, IconName } from "@/icons";
-import { Colors } from "@/styles/styles";
-import { flexStyles } from "@/styles/flexStyles";
-import { debugStyles } from "@/styles/debugStyles";
 
 export const DEFAULT_FRONT_OVERLAP = 0.7;
 export const DEFAULT_BACK_OVERLAP = 0.9;
 
+// Fan sizes, in percentage of width or height of that card
 const minFanSize = 9;
 const maxFanSize = 24;
+const maxFanSizeExtraWide = 46;
+
 const fanSizeDelta = maxFanSize - minFanSize;
 const progressFanProximityThreshold = 4;
 const maxBackDeckSize = 3;
@@ -35,7 +37,7 @@ type DeckProps = {
     | "verticalUp"
     | "verticalDown"
     | undefined;
-  largeFan?: "all" | "progressive";
+  largeFan?: "all" | "progressive" | "extra-wide";
   cardsPerRow?: number;
   showCount?: boolean;
   selectColor?: CardSelectColor;
@@ -44,10 +46,12 @@ type DeckProps = {
   hideTopCard?: boolean;
   isSelected?: boolean;
   isDisabled?: boolean;
+  invisibleWhenEmpty?: boolean;
   title?: string;
   refTopCurrent?: React.Ref<View>;
   refTopNext?: React.Ref<View>;
   onPress?: () => void;
+  cardSize?: CardSizes;
 };
 
 export const Deck = ({
@@ -66,17 +70,22 @@ export const Deck = ({
   hideTopCard,
   isSelected,
   isDisabled,
+  invisibleWhenEmpty,
   refTopCurrent,
   refTopNext,
+  cardSize,
   onPress,
 }: DeckProps) => {
+  const { width, height, borderRadius, placeholderShadow } =
+    useCardSize(cardsPerRow);
+
   let trueDeckSize = backCount ?? cards?.length ?? 0;
   let limitedDeckSize = trueDeckSize;
-  let skipFirstCards = 0;
+  let numSkipCards = 0;
 
   if (limitFan) {
     const targetDeckSize = Math.min(limitedDeckSize, maxBackDeckSize);
-    skipFirstCards = limitedDeckSize - targetDeckSize;
+    numSkipCards = limitedDeckSize - targetDeckSize;
     limitedDeckSize = targetDeckSize;
   }
 
@@ -99,16 +108,13 @@ export const Deck = ({
       }
     }
 
-    let offsetStyle: ViewStyle = {
-      top: 0,
-      left: 0,
-    };
+    let offsetSize = 0;
 
-    if (adjustedIndex === 0) return offsetStyle;
+    let fanSize = adjustedIndex === 0 ? 0 : minFanSize;
 
-    let fanSize = minFanSize;
-
-    if (largeFan === "all") {
+    if (largeFan === "extra-wide") {
+      fanSize = maxFanSizeExtraWide * adjustedIndex;
+    } else if (largeFan === "all") {
       fanSize = maxFanSize * adjustedIndex;
     } else if (largeFan === "progressive") {
       let offsetTally = 0;
@@ -134,94 +140,85 @@ export const Deck = ({
       fanSize = minFanSize * adjustedIndex;
     }
 
-    if (fan === "horizontalRight") {
-      offsetStyle.left = `${fanSize}%`;
-    } else if (fan === "horizontalLeft") {
-      offsetStyle.left = `${-fanSize}%`;
-    } else if (fan === "verticalUp") {
-      offsetStyle.top = `${-fanSize}%`;
-    } else if (fan === "verticalDown") {
-      offsetStyle.top = `${fanSize}%`;
+    if (["horizontalLeft", "horizontalRight"].includes(fan)) {
+      offsetSize = (fanSize * width) / 100;
+    } else {
+      offsetSize = (fanSize * height) / 100;
     }
 
-    return offsetStyle;
-  }
-
-  const { width, height, borderRadius, placeholderShadow } =
-    useCardSize(cardsPerRow);
-
-  // Calculate max fan offset for container sizing
-  let maxFanOffset = 0;
-  if (limitedDeckSize > 1) {
-    if (largeFan === "all") {
-      maxFanOffset = maxFanSize * (limitedDeckSize - 1);
-    } else if (largeFan === "progressive") {
-      let offsetTally = 0;
-      for (let i = 1; i < limitedDeckSize; i++) {
-        let addOffset = minFanSize;
-        const distanceFromTop = limitedDeckSize - i;
-        if (distanceFromTop < progressFanProximityThreshold) {
-          const proximityToTop =
-            (limitedDeckSize - distanceFromTop) / limitedDeckSize;
-          addOffset += proximityToTop * fanSizeDelta;
-        }
-        offsetTally += clamp(addOffset, minFanSize, maxFanSize);
-      }
-      maxFanOffset = offsetTally;
+    if (fan === "horizontalLeft") {
+      return { left: offsetSize };
+    } else if (fan === "horizontalRight") {
+      return { right: offsetSize };
+    } else if (fan === "verticalUp") {
+      return { bottom: offsetSize };
     } else {
-      maxFanOffset = minFanSize * (limitedDeckSize - 1);
+      return { top: offsetSize };
     }
   }
 
   // Compute container size
+  const largestOffset = cardOffsetStyle(limitedDeckSize - 1);
+
   let deckContainerStyle: ViewStyle = { width, height };
-  if (fan === "horizontalRight" || fan === "horizontalLeft") {
-    deckContainerStyle.width = width + (width * maxFanOffset) / 100;
-  } else if (fan === "verticalUp" || fan === "verticalDown") {
-    deckContainerStyle.height = height + (height * maxFanOffset) / 100;
+
+  if (fan === "horizontalLeft") {
+    deckContainerStyle.width = width + Number(largestOffset.left);
+  } else if (fan === "horizontalRight") {
+    deckContainerStyle.width = width + Number(largestOffset.right);
+  } else if (fan === "verticalUp") {
+    deckContainerStyle.height = height + Number(largestOffset.bottom);
+  } else {
+    deckContainerStyle.height = height + Number(largestOffset.top);
   }
 
   return (
     <View
       style={[
-        cardStyles.deckWrap,
-        countPosition === "over" && cardStyles.deckWrapCountOver,
-        countPosition === "above" && cardStyles.deckWrapCountAbove,
-        countPosition === "left" && cardStyles.deckWrapCountLeft,
-        countPosition === "right" && cardStyles.deckWrapCountRight,
-        countPosition === "below" && cardStyles.deckWrapCountBelow,
+        styles.deckWrap,
+        countPosition === "over" && styles.deckWrapCountOver,
+        countPosition === "above" && styles.deckWrapCountAbove,
+        countPosition === "left" && styles.deckWrapCountLeft,
+        countPosition === "right" && styles.deckWrapCountRight,
+        countPosition === "below" && styles.deckWrapCountBelow,
         { borderRadius, boxShadow: placeholderShadow },
+        invisibleWhenEmpty && styles.deckWrapInvisibleWhenEmpty,
       ]}
     >
       {/* Count */}
       {(showCount || title) && (
         <View
           style={[
-            cardStyles.deckCount,
-            countPosition === "over" && cardStyles.deckCountOver,
-            countPosition === "above" && cardStyles.deckCountAbove,
-            countPosition === "left" && cardStyles.deckCountLeft,
-            countPosition === "right" && cardStyles.deckCountRight,
-            countPosition === "below" && cardStyles.deckCountBelow,
+            styles.deckCount,
+            countPosition === "over" && styles.deckCountOver,
+            countPosition === "above" && styles.deckCountAbove,
+            countPosition === "left" && styles.deckCountLeft,
+            countPosition === "right" && styles.deckCountRight,
+            countPosition === "below" && styles.deckCountBelow,
           ]}
         >
           {iconName && (
             <Icon
               name={iconName}
               color={Colors.K300}
-              style={cardStyles.deckCountIcon}
+              style={styles.deckCountIcon}
             />
           )}
-          {title && <Text style={cardStyles.deckCountTitle}>{title}</Text>}
+          {title && <Text style={styles.deckCountTitle}>{title}</Text>}
           {showCount && (
-            <Text style={cardStyles.deckCountValue}>{trueDeckSize}</Text>
+            <Text style={styles.deckCountValue}>{trueDeckSize}</Text>
           )}
         </View>
       )}
 
       {/* Deck */}
       <View
-        style={[cardStyles.deck, style, deckContainerStyle]}
+        style={[
+          styles.deck,
+          style,
+          deckContainerStyle,
+          // debugStyles.borderYellow,
+        ]}
         collapsable={false}
       >
         {/* Anchor Views for refs, used for animations */}
@@ -231,9 +228,11 @@ export const Deck = ({
             style={[
               // Used as a relative positioned card
               cardStyles.card,
-              cardOffsetStyle(limitedDeckSize - 1),
+              flexStyles.positionAbsolute,
+
+              { width, height, ...cardOffsetStyle(limitedDeckSize - 1) },
               cardStyles.animHide,
-              { width, height },
+              // debugStyles.borderBlue,
             ]}
             collapsable={false}
           />
@@ -244,26 +243,29 @@ export const Deck = ({
             style={[
               cardStyles.card,
               flexStyles.positionAbsolute,
-              cardOffsetStyle(limitedDeckSize, true),
+              { width, height, ...cardOffsetStyle(limitedDeckSize, true) },
               cardStyles.animHide,
-              { width, height },
+              // debugStyles.borderPink,
             ]}
             collapsable={false}
           />
         )}
 
-        {/* Placeholder at bottom of deck; sometimes pressable */}
-        <CardButton
-          onPress={limitedDeckSize === 0 ? onPress : undefined}
-          cardsPerRow={cardsPerRow}
-          isPlaceholder
-          style={[cardStyles.deckCard]}
-          disabled={isDisabled}
-          selectColor={selectColor}
-        />
+        {/* Placeholder at top of deck; sometimes pressable */}
+        {limitedDeckSize === 0 && onPress && (
+          <CardButton
+            onPress={onPress}
+            cardsPerRow={cardsPerRow}
+            isPlaceholder
+            style={[styles.deckCard]}
+            disabled={isDisabled}
+            selectColor={selectColor}
+            cardSize={cardSize}
+          />
+        )}
 
         {Array.from({ length: limitedDeckSize }, (_, index) => {
-          const adjustedIndex = index + skipFirstCards;
+          const adjustedIndex = index + numSkipCards;
 
           const suit =
             cards?.[adjustedIndex] !== "back"
@@ -289,13 +291,14 @@ export const Deck = ({
               suit={suit}
               rank={rank}
               style={[
-                cardStyles.deckCard,
-                cardOffsetStyle(index),
+                styles.deckCard,
+                { ...cardOffsetStyle(index) },
                 hideTopCard === true &&
                   adjustedIndex === limitedDeckSize - 1 &&
                   cardStyles.animHide,
               ]}
               selectColor={selectColor}
+              cardSize={cardSize}
             />
           );
         })}
@@ -304,3 +307,111 @@ export const Deck = ({
   );
 };
 Deck.displayName = "Deck";
+
+export const styles = StyleSheet.create({
+  deckWrap: {
+    display: "flex",
+    backgroundColor: Colors.K875,
+  },
+  deckWrapInvisibleWhenEmpty: {
+    backgroundColor: "unset",
+    boxShadow: "unset",
+  },
+  deckWrapCountOver: {},
+  deckWrapCountAbove: {
+    alignItems: "center",
+    flexDirection: "column",
+  },
+  deckWrapCountBelow: {
+    alignItems: "center",
+    flexDirection: "column-reverse",
+  },
+  deckWrapCountLeft: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  deckWrapCountRight: {
+    flexDirection: "row-reverse",
+    justifyContent: "center",
+  },
+  // Deck
+  deck: {
+    position: "relative",
+  },
+  deckCard: {
+    position: "absolute",
+  },
+  animHide: {
+    opacity: 0,
+    pointerEvents: "none",
+  },
+
+  // Deck count
+  deckCount: {
+    zIndex: 100,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+    gap: 8,
+    maxWidth: "100%",
+  },
+  // To the side
+  deckCountAbove: {
+    ...flexStyles.rowCentered,
+    width: "100%",
+    left: "50%",
+    transform: "translateX(-50%)",
+    flexDirection: "row",
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+  },
+  deckCountBelow: {
+    ...flexStyles.rowCentered,
+    width: "100%",
+    left: "50%",
+    transform: "translateX(-50%)",
+    flexDirection: "row",
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+  },
+  deckCountLeft: {
+    ...flexStyles.colCentered,
+    flexDirection: "column",
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0,
+  },
+  deckCountRight: {
+    ...flexStyles.colCentered,
+    flexDirection: "column",
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
+  },
+
+  // Over
+  deckCountOver: {
+    ...flexStyles.colCentered,
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    backgroundColor: Colors.suitsRed,
+  },
+  deckCountTitle: {
+    fontSize: 13,
+    fontFamily: FontWeight[500],
+    color: Colors.K300,
+  },
+  deckCountIcon: {
+    width: 24,
+    height: 24,
+    flexShrink: 0,
+  },
+  deckCountValue: {
+    fontSize: 18,
+    fontFamily: FontWeight[500],
+    color: Colors.K300,
+  },
+});

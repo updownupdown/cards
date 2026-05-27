@@ -6,6 +6,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Card } from "../Cards/Card";
 import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
 import { textStyles } from "@/styles/textStyles";
+import { GameWrapper } from "../common/GameWrapper";
 
 type GuessSlot = {
   id: string;
@@ -227,17 +228,17 @@ export default function HideAndSeek() {
   const won = allRevealed && score >= 20;
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <GameMenus ended={game.ended} won={won} reset={reset} isLoaded={isLoaded} />
-
-      
-
-      <Text style={textStyles.default}>Deck: {game.deck.length}</Text>
-      <Text style={textStyles.default}>Score pile: {score}</Text>
-      <Text style={textStyles.default}>Message: {message}</Text>
+    <GameWrapper ended={game.ended} won={won} reset={reset} isLoaded={isLoaded}>
+      <Text style={textStyles.default}>
+        Deck: {game.deck.length}
+        <br />
+        Score pile: {score}
+        <br />
+        Message: {message}
+      </Text>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Playground (3x4)</Text>
+        <Text style={textStyles.default}>Playground (3x4)</Text>
         <View style={styles.grid}>
           {game.playmates.map((card, idx) => (
             <Pressable
@@ -293,7 +294,7 @@ export default function HideAndSeek() {
             : `Game ended with ${score} points. Need 20+ to win.`}
         </Text>
       ) : null}
-    </ScrollView>
+    </GameWrapper>
   );
 }
 

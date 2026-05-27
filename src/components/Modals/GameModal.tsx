@@ -37,7 +37,10 @@ export default function GameModal({ onClose }: Props) {
     <>
       <ModalFull onClose={onClose} showHomeButton>
         {/* Scroll view */}
-        <ScrollView contentContainerStyle={modalStyles.scrollContent}>
+        <ScrollView
+          contentContainerStyle={modalStyles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
           {/* Title */}
           <Text style={textStyles.h1}>{info.title}</Text>
 
