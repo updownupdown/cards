@@ -1,8 +1,9 @@
-import { useMemo, useState } from "react";
-import { GameMenus } from "../common/GameMenus";
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-
+import { flexStyles } from "@/styles/flexStyles";
+import { textStyles } from "@/styles/textStyles";
+import { useMemo, useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Button } from "../Button/Button";
 import { Card } from "../Cards/Card";
 import {
   CardRank,
@@ -11,13 +12,12 @@ import {
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { textStyles } from "@/styles/textStyles";
-import { GameWrapper } from "../common/GameWrapper";
-import { Button } from "../Button/Button";
-import { flexStyles } from "@/styles/flexStyles";
 import { Deck } from "../Cards/Deck";
+import { GameWrapper } from "../common/GameWrapper";
+import { Colors } from "@/styles/styles";
+import { cardStyles } from "@/styles/cardStyles";
 
-const cardsPerRow = 5;
+const cardsPerRow = 4;
 
 type CalculationState = {
   foundations: PlayingCard[][];
@@ -99,10 +99,6 @@ export default function Calculation() {
   const [game, setGame] = useState<CalculationState>(setup);
 
   const wasteTop = game.waste[game.waste.length - 1] ?? null;
-  const foundationsCount = useMemo(
-    () => game.foundations.reduce((sum, pile) => sum + pile.length, 0),
-    [game.foundations],
-  );
 
   function reset() {
     setGame(setup());
@@ -155,7 +151,8 @@ export default function Calculation() {
         style={[
           flexStyles.rowCentered,
           flexStyles.fullWidth,
-          flexStyles.spaceBetween,
+          flexStyles.justifyEvenly,
+          flexStyles.flex1,
         ]}
       >
         <Deck
@@ -165,13 +162,8 @@ export default function Calculation() {
           iconName="draw"
           limitFan
           fan="horizontalLeft"
+          cardsPerRow={cardsPerRow}
         />
-
-        <Text style={[textStyles.default, { textAlign: "center" }]}>
-          On foundations:
-          <br />
-          {foundationsCount}/52
-        </Text>
 
         <Deck
           showCount
@@ -184,33 +176,29 @@ export default function Calculation() {
         />
       </View>
 
-      <View
-        style={[
-          flexStyles.rowCentered,
-          flexStyles.fullWidth,
-          styles.foundationRow,
-        ]}
-      >
+      <View style={[flexStyles.rowCentered, flexStyles.fullWidth]}>
         {game.foundations.map((foundation, i) => {
-          const top = foundation[foundation.length - 1] ?? null;
           return (
             <Pressable
               key={`calc-found-${i}`}
-              style={styles.foundationCol}
+              style={[
+                cardStyles.colUpwards,
+                flexStyles.gap10,
+                flexStyles.fullHeight,
+              ]}
               onPress={() => playWasteToFoundation(i)}
               disabled={game.ended || !wasteTop}
             >
-              <Text style={textStyles.default}>+{STEPS[i]}</Text>
-              <Text style={textStyles.default}>Count: {foundation.length}</Text>
-              {top ? (
-                <Card
-                  suit={top.suit}
-                  rank={top.rank}
-                  cardsPerRow={cardsPerRow}
-                />
-              ) : (
-                <View style={styles.emptySlot} />
-              )}
+              <Deck
+                cards={foundation}
+                cardsPerRow={cardsPerRow}
+                fan="verticalUp"
+                limitFan
+                showCount
+                countPosition="below"
+              />
+
+              <Text style={textStyles.h3}>+{STEPS[i]}</Text>
             </Pressable>
           );
         })}
@@ -228,6 +216,8 @@ export default function Calculation() {
             onPress={draw}
             disabled={game.stock.length === 0 || game.ended}
             text="Draw"
+            size="large"
+            fullWidth
           />
         </View>
       </View>
@@ -236,29 +226,13 @@ export default function Calculation() {
 }
 
 const styles = StyleSheet.create({
-  foundationRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 6,
-  },
-  foundationCol: {
-    flex: 1,
-    alignItems: "center",
-    gap: 4,
-    borderWidth: 1,
-    borderColor: "rgba(15,23,42,0.2)",
-    borderRadius: 8,
-    paddingVertical: 6,
-    backgroundColor: "rgba(255,255,255,0.35)",
-  },
-
   emptySlot: {
     width: 80,
     height: 116,
     borderWidth: 1,
-    borderColor: "rgba(15,23,42,0.2)",
+    borderColor: Colors.K700,
     borderRadius: 8,
-    backgroundColor: "rgba(255,255,255,0.2)",
+    backgroundColor: Colors.K900,
   },
   bottomRow: {
     flexDirection: "row",

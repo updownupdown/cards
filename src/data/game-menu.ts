@@ -55,11 +55,11 @@ export const EMPTY_STATS: GameStats = {
   losses: 0,
 };
 
-export const homeGameList: HomeGameEntry[] = Object.entries(GAMES_DATA).map(
-  ([path, gameData]) => {
+export const homeGameList: HomeGameEntry[] = Object.entries(GAMES_DATA)
+  .filter(([key, game]) => game.enabled !== false)
+  .map(([path, gameData]) => {
     return { path, title: gameData.title };
-  },
-);
+  });
 
 export function normalizeGamePath(pathname: string) {
   if (pathname === "/") return pathname;

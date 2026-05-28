@@ -7,6 +7,7 @@ interface Props {
   style?: ViewStyle | ViewStyle[];
   textStyle?: TextStyle | TextStyle[];
   size?: "text" | "textLarge" | "small" | "medium" | "large";
+  theme?: "blue" | "purple" | "orange" | "red" | "yellow" | "green";
   disabled?: boolean;
   fullWidth?: boolean;
   onPress: () => void;
@@ -29,6 +30,7 @@ export const Button = ({
   text,
   iconName,
   iconColor,
+  theme,
   iconSize,
   onPress,
   onLongPress,
@@ -40,6 +42,13 @@ export const Button = ({
     <Pressable
       style={[
         buttonStyles.button,
+        theme === undefined && buttonStyles.themeBlue,
+        theme === "blue" && buttonStyles.themeBlue,
+        theme === "red" && buttonStyles.themeRed,
+        theme === "orange" && buttonStyles.themeOrange,
+        theme === "purple" && buttonStyles.themePurple,
+        theme === "yellow" && buttonStyles.themeYellow,
+        theme === "green" && buttonStyles.themeGreen,
         size === "text" && buttonStyles.sizeText,
         size === "textLarge" && buttonStyles.sizeTextLarge,
         size === "small" && buttonStyles.sizeSmall,
@@ -73,6 +82,13 @@ export const Button = ({
             size === "small" && buttonStyles.textSizeSmall,
             size === "medium" && buttonStyles.textSizeMedium,
             size === "large" && buttonStyles.textSizeLarge,
+            theme === undefined && buttonStyles.themeTextBlue,
+            theme === "blue" && buttonStyles.themeTextBlue,
+            theme === "red" && buttonStyles.themeTextRed,
+            theme === "orange" && buttonStyles.themeTextOrange,
+            theme === "purple" && buttonStyles.themeTextPurple,
+            theme === "yellow" && buttonStyles.themeTextYellow,
+            theme === "green" && buttonStyles.themeTextGreen,
             disabled && buttonStyles.textDisabled,
             textStyle,
           ]}

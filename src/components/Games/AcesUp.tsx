@@ -1,17 +1,13 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { cardStyles } from "@/styles/cardStyles";
 import { flexStyles } from "@/styles/flexStyles";
-import { layoutStyles } from "@/styles/layoutStyles";
-import { Colors } from "@/styles/styles";
 import { useMemo, useRef, useState } from "react";
 import { View } from "react-native";
 import { useAnimations } from "../Animations/Animations";
 import { Button } from "../Button/Button";
 import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
 import { Deck } from "../Cards/Deck";
-import { GameMenus } from "../common/GameMenus";
 import { GameWrapper } from "../common/GameWrapper";
-import { debugStyles } from "@/styles/debugStyles";
 
 type AcesUpState = {
   stock: PlayingCard[];

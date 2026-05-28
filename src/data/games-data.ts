@@ -1,12 +1,22 @@
 export type GameMenuInfo = {
   title: string;
+  enabled?: boolean;
   howToPlay: string[];
   rules?: string[];
 };
 
 export const GAMES_DATA: Record<string, GameMenuInfo> = {
+  "/accordion": {
+    title: "Accordion",
+    howToPlay: [
+      "Move a card onto one 1-left or 3-left if suit or rank matches.",
+      "Each move compresses the row and changes future options.",
+      "Win by reducing to one card.",
+    ],
+  },
   "/aces-up": {
     title: "Aces Up",
+    enabled: true,
     howToPlay: [
       "Discard a top card when a higher card of the same suit is showing.",
       "Move a top card into an empty pile to create new options.",
@@ -20,16 +30,33 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Win by ending with only the four Aces.",
     ],
   },
-  "/solitaire": {
-    title: "Solitaire",
+  "/area-52": {
+    title: "Area 52",
     howToPlay: [
-      "Move all cards to the four foundations by suit from Ace to King.",
-      "Build tableau piles in descending rank with alternating colors.",
-      "Only Kings can fill an empty tableau column.",
+      "Survive each wave by placing cards according to the scenario rule.",
+      "Use limited actions efficiently before drawing deeper into the deck.",
+      "Clear all required wave objectives to win.",
+    ],
+  },
+  "/calculation": {
+    title: "Calculation",
+    howToPlay: [
+      "Build four foundations with step intervals 1, 2, 3, and 4.",
+      "Draw from stock to waste and play waste onto legal foundation.",
+      "Win by placing all cards on foundations.",
+    ],
+  },
+  "/clock": {
+    title: "Clock Solitaire",
+    howToPlay: [
+      "Place revealed cards to matching clock positions by rank.",
+      "Continue turns by revealing from the pile at each destination.",
+      "Losing occurs if the fourth King appears before completion.",
     ],
   },
   "/freecell": {
     title: "FreeCell",
+    enabled: false,
     howToPlay: [
       "Move all cards to the foundations from Ace up to King by suit.",
       "Build tableau columns down by alternating colors.",
@@ -38,6 +65,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   "/spider-solitaire": {
     title: "Spider Solitaire",
+    enabled: false,
     howToPlay: [
       "Build cards down by rank in tableau columns.",
       "Complete full King to Ace suit runs to clear them.",
@@ -46,18 +74,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   "/pyramid": {
     title: "Pyramid",
+    enabled: false,
     howToPlay: [
       "Clear the pyramid by pairing exposed cards that total 13.",
       "Kings are worth 13 and can be removed alone.",
       "Use stock and waste cards to make needed pairs.",
-    ],
-  },
-  "/tripeaks": {
-    title: "TriPeaks",
-    howToPlay: [
-      "Remove exposed cards that are one rank higher or lower than waste top.",
-      "Aces and Kings wrap in sequence for moves.",
-      "Draw from stock when no legal tableau move is available.",
     ],
   },
   "/skyway": {
@@ -76,16 +97,18 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "A round ends when no legal chain can continue.",
     ],
   },
-  "/area-52": {
-    title: "Area 52",
+  "/tripeaks": {
+    title: "TriPeaks",
+    enabled: false,
     howToPlay: [
-      "Survive each wave by placing cards according to the scenario rule.",
-      "Use limited actions efficiently before drawing deeper into the deck.",
-      "Clear all required wave objectives to win.",
+      "Remove exposed cards that are one rank higher or lower than waste top.",
+      "Aces and Kings wrap in sequence for moves.",
+      "Draw from stock when no legal tableau move is available.",
     ],
   },
   "/dead-center": {
     title: "Dead Center",
+    enabled: false,
     howToPlay: [
       "Resolve threats in center lanes before they overwhelm the board.",
       "Use tactical placements to keep the draw sequence alive.",
@@ -94,6 +117,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   "/the-first-boba-tea-shop-in-london": {
     title: "The First Boba Tea Shop in London",
+    enabled: false,
     howToPlay: [
       "Play cards into valid stacks to satisfy order constraints.",
       "Plan around blocked stacks so you do not run out of legal moves.",
@@ -102,10 +126,20 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   "/foursquare": {
     title: "Foursquare",
+    enabled: false,
     howToPlay: [
       "Manage four zones with distinct placement constraints.",
       "Sequence cards so each zone can continue progressing.",
       "Complete all target zone conditions before deck lockout.",
+    ],
+  },
+  "/solitaire": {
+    title: "Solitaire",
+    enabled: false,
+    howToPlay: [
+      "Move all cards to the four foundations by suit from Ace to King.",
+      "Build tableau piles in descending rank with alternating colors.",
+      "Only Kings can fill an empty tableau column.",
     ],
   },
   "/loot-the-loop": {
@@ -118,6 +152,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   "/syndicate": {
     title: "Syndicate",
+    enabled: false,
     howToPlay: [
       "Build and convert stacks under syndicate rank restrictions.",
       "Use timing windows to secure high-value conversions.",
@@ -126,6 +161,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   "/hide-and-seek": {
     title: "Hide and Seek",
+    enabled: false,
     howToPlay: [
       "Reveal hidden cards through legal uncover moves.",
       "Avoid locking hidden cards under unusable stacks.",
@@ -134,6 +170,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   "/the-emissary": {
     title: "The Emissary",
+    enabled: false,
     howToPlay: [
       "Progress through kingdoms by completing each local objective.",
       "Balance risk and board control between kingdoms.",
@@ -148,14 +185,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Clear all tableau cards to win.",
     ],
   },
-  "/clock": {
-    title: "Clock Solitaire",
-    howToPlay: [
-      "Place revealed cards to matching clock positions by rank.",
-      "Continue turns by revealing from the pile at each destination.",
-      "Losing occurs if the fourth King appears before completion.",
-    ],
-  },
+
   "/monte-carlo": {
     title: "Monte Carlo",
     howToPlay: [
@@ -164,24 +194,9 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Win by clearing all cards.",
     ],
   },
-  "/accordion": {
-    title: "Accordion",
-    howToPlay: [
-      "Move a card onto one 1-left or 3-left if suit or rank matches.",
-      "Each move compresses the row and changes future options.",
-      "Win by reducing to one card.",
-    ],
-  },
-  "/calculation": {
-    title: "Calculation",
-    howToPlay: [
-      "Build four foundations with step intervals 1, 2, 3, and 4.",
-      "Draw from stock to waste and play waste onto legal foundation.",
-      "Win by placing all cards on foundations.",
-    ],
-  },
   "/scorpion": {
     title: "Scorpion",
+    enabled: false,
     howToPlay: [
       "Build same-suit descending runs in tableau columns.",
       "Move face-up sequences as a stack to legal destinations.",
@@ -190,6 +205,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   "/canfield": {
     title: "Canfield",
+    enabled: false,
     howToPlay: [
       "Build foundations by suit from the starting base rank.",
       "Build tableau down by alternating color with wraparound allowed.",
@@ -198,6 +214,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   "/penguin": {
     title: "Penguin",
+    enabled: false,
     howToPlay: [
       "Build foundations by suit upward from the beak rank.",
       "Build tableau down by suit, filling empties with valid continuation cards.",
@@ -206,6 +223,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   "/forty-thieves": {
     title: "Forty Thieves",
+    enabled: false,
     howToPlay: [
       "Build foundations up by suit from Ace.",
       "Build tableau down by suit and move one card at a time.",

@@ -1,6 +1,10 @@
 import { Button } from "@/components/Button/Button";
 import { useFade } from "@/hooks/useFade";
-import { buttonStyles, headerButtonSize } from "@/styles/buttonStyles";
+import {
+  buttonStyles,
+  headerButtonIconSize,
+  headerButtonSize,
+} from "@/styles/buttonStyles";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, ContentSidePadding, FontWeight, rgba } from "@/styles/styles";
 import React, { useRef, useState } from "react";
@@ -98,6 +102,7 @@ export function ResetButton({ reset, isLoaded }: Props) {
             delayLongPress={holdToResetDuration}
             iconName="reset"
             iconColor={isResetPressed ? Colors.accentRed : Colors.K400}
+            iconSize={headerButtonIconSize}
           />
         </Animated.View>
       ) : (

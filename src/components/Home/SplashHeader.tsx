@@ -1,5 +1,5 @@
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, FontWeight } from "@/styles/styles";
+import { Colors, ContentSidePadding, FontWeight } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
 import React, { useEffect, useRef } from "react";
 import { ActivityIndicator, Animated, StyleSheet, View } from "react-native";
@@ -83,8 +83,8 @@ const styles = StyleSheet.create({
     width: "100%",
     zIndex: 10,
     backgroundColor: Colors.K850,
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingTop: ContentSidePadding,
+    paddingBottom: ContentSidePadding,
   },
   appTitle: {
     ...textStyles.h2,

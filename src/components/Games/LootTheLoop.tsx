@@ -1,29 +1,24 @@
-import { useMemo, useState } from "react";
-import { GameMenus } from "../common/GameMenus";
 import { useGameLoading } from "@/hooks/useGameLoading";
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  ViewStyle,
-} from "react-native";
-
-import { Card } from "../Cards/Card";
+import { flexStyles } from "@/styles/flexStyles";
+import { ContentSidePadding, MaxContentWidth } from "@/styles/styles";
+import { useEffect, useMemo, useState } from "react";
+import { useWindowDimensions, View, ViewStyle } from "react-native";
+import { Button } from "../Button/Button";
+import { CardSelectColor } from "../Cards/Card";
 import {
   CardSuit,
-  RANK_VALUE,
   createDeck,
+  isNumberRank,
+  RANK_VALUE,
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { textStyles } from "@/styles/textStyles";
-import { GameWrapper } from "../common/GameWrapper";
-import { Button } from "../Button/Button";
 import { CardButton } from "../Cards/CardButton";
-import { flexStyles } from "@/styles/flexStyles";
-import { debugStyles } from "@/styles/debugStyles";
+import { Deck } from "../Cards/Deck";
+import { GameWrapper } from "../common/GameWrapper";
+
+const maxMarkedPaths = 3;
+const exploreTransitionInMs = 1200;
 
 export type LoopRank = PlayingCard["rank"] | "Joker";
 
@@ -36,6 +31,7 @@ type LoopCard = {
 
 type LoopState = {
   deck: LoopCard[];
+  deckPos: number;
   notes: LoopCard[];
   scorePile: LoopCard[];
   ended: boolean;
@@ -45,25 +41,21 @@ type LoopState = {
 function isFace(card: LoopCard) {
   return card.rank === "J" || card.rank === "Q" || card.rank === "K";
 }
-
-function isNumber(card: LoopCard) {
-  return (
-    typeof card.rank === "string" &&
-    ["2", "3", "4", "5", "6", "7", "8", "9", "10"].includes(card.rank)
-  );
-}
-
 function isAce(card: LoopCard) {
   return card.rank === "A";
 }
-
 function isJoker(card: LoopCard) {
   return card.rank === "Joker";
 }
-
 function rankValue(card: LoopCard) {
   if (card.rank === "Joker") return 0;
   return RANK_VALUE[card.rank];
+}
+function countAces(score: LoopCard[]) {
+  return score.filter(isAce).length;
+}
+function isBadStartCard(card: LoopCard) {
+  return isJoker(card) || isAce(card) || isFace(card);
 }
 
 function setup(): LoopState {
@@ -82,13 +74,11 @@ function setup(): LoopState {
   // Ensure first two cards are not both face cards
   do {
     deck = shuffle(withJoker);
-  } while (
-    (isFace(deck[0]) && isFace(deck[1])) ||
-    (deck[0].rank === "Joker" && deck[1].rank === "Joker")
-  );
+  } while (isBadStartCard(deck[0]) && isBadStartCard(deck[1]));
 
   return {
     deck,
+    deckPos: 0,
     notes: [],
     scorePile: [],
     ended: false,
@@ -96,55 +86,41 @@ function setup(): LoopState {
   };
 }
 
-function rotate(deck: LoopCard[], amount: number) {
-  if (deck.length === 0) return deck;
-  const n = Math.max(0, amount % deck.length);
-  return [...deck.slice(n), ...deck.slice(0, n)];
-}
-
-function countAces(score: LoopCard[]) {
-  return score.filter(isAce).length;
-}
-
-function resolveLanding(state: LoopState): LoopState {
-  if (state.deck.length === 0) return { ...state, ended: true, won: false };
-
-  const top = state.deck[0];
-  const deck = [...state.deck];
-  const scorePile = [...state.scorePile];
-
-  if (top.faceUp && isFace(top)) {
-    return { ...state, deck, scorePile, ended: true, won: false };
-  }
-
-  if (top.faceUp && isJoker(top)) {
-    if (countAces(scorePile) >= 4) {
-      return { ...state, deck, scorePile, ended: true, won: true };
-    }
-    return { ...state, deck, scorePile };
-  }
-
-  if (top.faceUp && (isAce(top) || isNumber(top))) {
-    scorePile.push(top);
-    deck.shift();
-    if (deck.length === 0) {
-      return { ...state, deck, scorePile, ended: true, won: false };
-    }
-  }
-
-  return { ...state, deck, scorePile };
-}
-
 export default function LootTheLoop() {
   const isLoaded = useGameLoading();
+  const { width: windowWidth } = useWindowDimensions();
+  const loopRadius = useMemo(
+    () => (Math.min(windowWidth, MaxContentWidth) - ContentSidePadding) / 2,
+    [windowWidth],
+  );
 
   const [game, setGame] = useState<LoopState>(setup);
-
-  const aceCount = useMemo(() => countAces(game.scorePile), [game.scorePile]);
 
   const [selectedCardIndex, setSelectedCardIndex] = useState<
     number | undefined
   >(undefined);
+
+  const [selectedNoteIndex, setSelectedNoteIndex] = useState<
+    { card: LoopCard; index: number } | undefined
+  >(undefined);
+
+  const [selectedRevealedRank, setSelectedRevealedRank] = useState<
+    number | undefined
+  >(undefined);
+
+  useEffect(() => {
+    const selectedRevealedIsNumber = !!(
+      selectedCardIndex !== undefined &&
+      game.deck[selectedCardIndex].faceUp &&
+      isNumberRank(game.deck[selectedCardIndex].rank)
+    );
+
+    setSelectedRevealedRank(
+      selectedRevealedIsNumber
+        ? RANK_VALUE[game.deck[selectedCardIndex].rank]
+        : undefined,
+    );
+  }, [selectedCardIndex]);
 
   function reset() {
     setSelectedCardIndex(undefined);
@@ -154,24 +130,28 @@ export default function LootTheLoop() {
   // Look around
   function lookAround() {
     setGame((prev) => {
-      if (prev.ended || prev.deck.length === 0) return prev;
-      const deck = [...prev.deck];
-      deck[0] = { ...deck[0], faceUp: true };
-      deck[1] = { ...deck[1], faceUp: true };
-      return { ...prev, deck };
+      // Turn two cards up in current and next position
+      const updated = prev;
+
+      const index0 = prev.deckPos;
+      const index1 = (prev.deckPos + 1) % prev.deck.length;
+
+      updated.deck[index0] = { ...updated.deck[index0], faceUp: true };
+      updated.deck[index1] = { ...updated.deck[index1], faceUp: true };
+
+      return updated;
     });
-    setSelectedCardIndex(0);
+
+    setSelectedCardIndex(game.deckPos);
   }
 
   // Mark path
   function markPath(selectedCardIndex: number) {
     const pathToMark = game.deck[selectedCardIndex];
     if (
-      game.ended ||
-      game.notes.length >= 3 ||
-      game.deck.length === 0 ||
+      game.notes.length >= maxMarkedPaths ||
       !pathToMark.faceUp ||
-      !isNumber(pathToMark)
+      !isNumberRank(pathToMark.rank)
     ) {
       return;
     }
@@ -187,25 +167,101 @@ export default function LootTheLoop() {
     });
   }
 
+  const [isExploring, setIsExploring] = useState(false);
+
+  useEffect(() => {
+    if (isExploring && selectedCardIndex !== undefined) {
+      explore(selectedCardIndex);
+    }
+  }, [isExploring]);
+
   // Explore
   function explore(selectedCardIndex: number) {
+    setSelectedCardIndex(undefined);
     setGame((prev) => {
-      if (prev.ended || prev.deck.length === 0) return prev;
+      const selectedCard = prev.deck[selectedCardIndex];
 
-      const card = prev.deck[selectedCardIndex];
-      if (!card || !card.faceUp || !isNumber(card)) return prev;
+      // Can't explore
+      if (
+        !selectedCard ||
+        !selectedCard.faceUp ||
+        !isNumberRank(selectedCard.rank)
+      ) {
+        return prev;
+      }
 
-      const moved = rotate(prev.deck, rankValue(card));
-      return resolveLanding({ ...prev, deck: moved });
+      const updated = prev;
+
+      // const cardsInDeck = updated.deck.length;
+      const movedBy = rankValue(selectedCard);
+      const newDeckPos = prev.deckPos + movedBy;
+
+      // Moved deck post...
+      updated.deckPos = newDeckPos;
+
+      const newTopCard = updated.deck[prev.deckPos];
+      const deck = prev.deck;
+      // const scorePile = updated.scorePile;
+
+      if (newTopCard.faceUp && isFace(newTopCard)) {
+        // Lose due to landing on face card
+        return { ...updated, ended: true, won: false };
+      } else if (newTopCard.faceUp && isJoker(newTopCard)) {
+        // Win by having all aces and landing on joker/exit
+        if (countAces(updated.scorePile) === 4) {
+          return { ...updated, ended: true, won: true };
+        } else {
+          // Landing on joker without all aces does nothing
+          return updated;
+        }
+      } else if (
+        newTopCard.faceUp &&
+        (isAce(newTopCard) || isNumberRank(newTopCard.rank))
+      ) {
+        // Add newTopCard to scorePile, and remove from deck
+        const newScorePile = [...updated.scorePile, newTopCard];
+        updated.deck = updated.deck.toSpliced(newDeckPos, 1);
+
+        if (deck.length === 0) {
+          return {
+            ...updated,
+            scorePile: newScorePile,
+            ended: true,
+            won: false,
+          };
+        }
+      }
+
+      return updated;
     });
+
+    setTimeout(() => {
+      setIsExploring(false);
+    }, exploreTransitionInMs);
   }
 
   function returnToMarked(pathCard: LoopCard, indexOfPathCard: number) {
+    setSelectedCardIndex(undefined);
+
     setGame((prev) => {
-      if (prev.ended) return prev;
+      // Remove cards from notes
       const notes = prev.notes.filter((_, i) => i !== indexOfPathCard);
-      return { ...prev, notes, deck: [pathCard, ...prev.deck] };
+
+      // Insert path card in deck
+      const deck = prev.deck.toSpliced(prev.deckPos, 0, pathCard);
+
+      // Selected newly inserted card
+      setSelectedCardIndex(prev.deckPos);
+
+      return { ...prev, deck, notes };
     });
+  }
+
+  function returnToSelectedMarkedPath() {
+    if (selectedNoteIndex !== undefined) {
+      setSelectedNoteIndex(undefined);
+      returnToMarked(selectedNoteIndex.card, selectedNoteIndex.index);
+    }
   }
 
   return (
@@ -233,6 +289,8 @@ export default function LootTheLoop() {
       >
         <View
           style={[
+            flexStyles.colCentered,
+            flexStyles.gap20,
             {
               position: "absolute",
               top: "50%",
@@ -241,44 +299,131 @@ export default function LootTheLoop() {
             },
           ]}
         >
-          <Text style={textStyles.default}>
-            Looted cards: {game.scorePile.length}
-            <br />
-            Jewels (Aces): {aceCount}/4
-          </Text>
+          <View style={[flexStyles.rowCentered, flexStyles.gap20]}>
+            <Deck
+              cards={game.scorePile.filter((card) => card.rank !== "A")}
+              cardsPerRow={7}
+              showCount
+              countPosition="left"
+              limitFan
+              fan="horizontalRight"
+            />
+            <Deck
+              cards={game.scorePile.filter((card) => card.rank === "A")}
+              cardsPerRow={7}
+              showCount
+              countPosition="right"
+              limitFan
+              fan="horizontalLeft"
+            />
+          </View>
+
+          <View style={[flexStyles.rowCentered, flexStyles.gap12]}>
+            {Array.from({ length: maxMarkedPaths }, (_, index) => {
+              const noteCard: LoopCard | undefined = game.notes[index];
+              const isSelected = selectedNoteIndex?.index === index;
+
+              return (
+                <CardButton
+                  key={`note-${index}`}
+                  onPress={() => {
+                    if (noteCard !== undefined) {
+                      setSelectedNoteIndex(
+                        selectedNoteIndex?.index === index
+                          ? undefined
+                          : { card: noteCard, index },
+                      );
+                    }
+                  }}
+                  cardsPerRow={5}
+                  suit={noteCard?.suit}
+                  rank={noteCard?.rank}
+                  isPlaceholder={!noteCard}
+                  selectColor={isSelected ? "green" : "blue"}
+                  isSelected={isSelected}
+                />
+              );
+            })}
+          </View>
         </View>
 
         {game.deck.map((card, index) => {
-          let angle = index * 6 - 180;
-          const topCardAngleIncrease = 8;
+          const deckLength = game.deck.length;
+          const isSelected = selectedCardIndex === index;
+          const isLookAround = index === game.deckPos && !card.faceUp;
+          const isExploreTarget = !!(
+            selectedRevealedRank !== undefined &&
+            selectedCardIndex !== undefined &&
+            index === (selectedCardIndex + selectedRevealedRank) % deckLength
+          );
+          const isPotentialPathTarget = !!(
+            selectedNoteIndex?.index !== undefined &&
+            index ===
+              (RANK_VALUE[selectedNoteIndex.card.rank] + game.deckPos - 1) %
+                deckLength
+          );
 
-          if (index === 0) {
+          // Style
+          const topCardAngleIncrease = 10;
+          const gapAngle = 42;
+          const eachCardAngle = (360 - gapAngle) / deckLength;
+          let angle =
+            index * eachCardAngle - 180 - game.deckPos * eachCardAngle;
+          const translate = isSelected || isExploreTarget ? 14 : 0;
+          let zIndex = 100 - index;
+
+          if (index < game.deckPos) {
+            angle -= gapAngle;
+            zIndex -= deckLength + index;
+          }
+
+          if (index === game.deckPos) {
             angle -= topCardAngleIncrease;
-          } else if (index === 1) {
-            // angle -= topCardAngleIncrease;
+          } else if (index === game.deckPos + 1) {
+            angle -= topCardAngleIncrease * 0.2;
           }
 
           const style: ViewStyle = {
             position: "absolute",
-            transform: [{ rotate: `${angle}deg` }, { translateY: -210 }],
-            zIndex: 100 - index,
+            transform: [
+              { rotate: `${angle}deg` },
+              { translateY: loopRadius * -1 + translate },
+            ],
+            zIndex,
+            transitionDuration: isExploring
+              ? `${exploreTransitionInMs / 1000}s`
+              : "0.5s",
           };
 
           const onPressFn = () => {
-            if (index > 1) return undefined;
+            if (index !== game.deckPos && index !== game.deckPos + 1) {
+              return undefined;
+            }
 
             if (!card.faceUp) {
-              if (index === 0) {
+              if (index === game.deckPos) {
                 return lookAround;
               }
-
               return undefined;
-            } else {
-              return () =>
-                setSelectedCardIndex(
-                  selectedCardIndex === index ? undefined : index,
-                );
             }
+
+            return () =>
+              setSelectedCardIndex(
+                selectedCardIndex === index ? undefined : index,
+              );
+          };
+
+          const selectedColor = () => {
+            if (isLookAround) {
+              return "blue" as CardSelectColor;
+            } else if (index === selectedCardIndex) {
+              return "blue" as CardSelectColor;
+            } else if (isExploreTarget) {
+              return "purple" as CardSelectColor;
+            } else if (isPotentialPathTarget) {
+              return "green" as CardSelectColor;
+            }
+            return "blue" as CardSelectColor;
           };
 
           return (
@@ -288,10 +433,37 @@ export default function LootTheLoop() {
               suit={card.faceUp ? card.suit : undefined}
               rank={card.faceUp ? card.rank : undefined}
               style={[style]}
-              isSelected={selectedCardIndex === index}
+              isSelected={isSelected}
+              selectColor={selectedColor()}
+              forceSelectColor={isExploreTarget || isPotentialPathTarget}
+              forceOverlay={
+                isExploreTarget || isPotentialPathTarget || isLookAround
+              }
             />
           );
         })}
+
+        {selectedNoteIndex !== undefined && (
+          <CardButton
+            onPress={returnToSelectedMarkedPath}
+            suit={selectedNoteIndex.card.suit}
+            rank={selectedNoteIndex.card.rank}
+            style={[
+              {
+                opacity: 0.75,
+                position: "absolute",
+                transform: [
+                  { rotate: `155deg` },
+                  { translateY: loopRadius * -1 },
+                ],
+                zIndex: 1000,
+              },
+            ]}
+            selectColor={"green"}
+            forceSelectColor
+            forceOverlay
+          />
+        )}
       </View>
 
       <View
@@ -301,16 +473,16 @@ export default function LootTheLoop() {
           text="Explore"
           onPress={() => {
             if (selectedCardIndex !== undefined) {
-              explore(selectedCardIndex);
+              setIsExploring(true);
             }
           }}
           disabled={
             selectedCardIndex === undefined ||
-            !isNumber(game.deck[selectedCardIndex]) ||
+            !isNumberRank(game.deck[selectedCardIndex].rank) ||
             !game.deck[selectedCardIndex].faceUp
           }
-          // size="large"
           style={[flexStyles.flex1]}
+          theme={"purple"}
         />
 
         <Button
@@ -322,124 +494,34 @@ export default function LootTheLoop() {
           }}
           disabled={
             selectedCardIndex === undefined ||
-            !isNumber(game.deck[selectedCardIndex]) ||
+            !isNumberRank(game.deck[selectedCardIndex].rank) ||
             !game.deck[selectedCardIndex].faceUp ||
-            game.notes.length >= 3
+            game.notes.length >= maxMarkedPaths
           }
-          // size="large"
           style={[flexStyles.flex1]}
+          theme={"green"}
+        />
+
+        <Button
+          text="Return to Path"
+          onPress={returnToSelectedMarkedPath}
+          disabled={selectedNoteIndex === undefined}
+          style={[flexStyles.flex1]}
+          theme={"green"}
         />
 
         <Button
           text="Look Around"
           onPress={lookAround}
-          disabled={game.ended || game.deck.length === 0 || game.deck[0].faceUp}
-          // size="large"
+          disabled={
+            game.ended ||
+            game.deck.length === 0 ||
+            game.deck[game.deckPos].faceUp
+          }
           style={[flexStyles.flex1]}
+          theme={"green"}
         />
       </View>
-
-      {game.notes.length > 0 ? (
-        <View style={styles.section}>
-          <View style={styles.notesRow}>
-            {game.notes.map((card, idx) => (
-              <CardButton
-                key={`note-${idx}-${card}`}
-                onPress={() => returnToMarked(card, idx)}
-                cardsPerRow={8}
-                suit={card.suit}
-                rank={card.rank}
-              />
-            ))}
-          </View>
-        </View>
-      ) : null}
     </GameWrapper>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 56,
-    paddingHorizontal: 10,
-    paddingBottom: 24,
-    gap: 10,
-  },
-  headerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 24,
-    fontFamily: "Outfit_600SemiBold",
-    color: "#1f2937",
-  },
-  button: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-    backgroundColor: "#1d4ed8",
-  },
-  buttonText: {
-    color: "#fff",
-    fontFamily: "Outfit_500Medium",
-  },
-  metaText: {
-    color: "#334155",
-    fontFamily: "Outfit_400Regular",
-  },
-  section: {
-    gap: 8,
-  },
-  sectionTitle: {
-    fontFamily: "Outfit_600SemiBold",
-    color: "#111827",
-  },
-  topRow: {
-    flexDirection: "row",
-    gap: 8,
-  },
-  actions: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
-  },
-  actionBtn: {
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 9,
-    backgroundColor: "#0f766e",
-  },
-  disabledBtn: {
-    opacity: 0.5,
-  },
-  actionText: {
-    color: "#fff",
-    fontFamily: "Outfit_500Medium",
-  },
-  notesRow: {
-    flexDirection: "row",
-    gap: 8,
-  },
-  noteBtn: {
-    minWidth: 36,
-    alignItems: "center",
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    borderRadius: 8,
-    backgroundColor: "#334155",
-  },
-  noteText: {
-    color: "#fff",
-    fontFamily: "Outfit_600SemiBold",
-  },
-  winText: {
-    color: "#065f46",
-    fontFamily: "Outfit_600SemiBold",
-  },
-  loseText: {
-    color: "#991b1b",
-    fontFamily: "Outfit_600SemiBold",
-  },
-});

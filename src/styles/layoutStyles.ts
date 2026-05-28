@@ -6,9 +6,8 @@ import {
   rgba,
 } from "@/styles/styles";
 import { StyleSheet } from "react-native";
-import { flexStyles } from "./flexStyles";
-import { debugStyles } from "./debugStyles";
 import { headerButtonSize } from "./buttonStyles";
+import { flexStyles } from "./flexStyles";
 
 export const layoutStyles = StyleSheet.create({
   // App

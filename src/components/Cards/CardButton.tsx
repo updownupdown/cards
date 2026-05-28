@@ -18,6 +18,8 @@ interface Props {
   onPress?: () => void;
   ref?: React.Ref<View>;
   cardSize?: CardSizes;
+  forceSelectColor?: boolean;
+  forceOverlay?: boolean;
 }
 
 export const CardButton = ({
@@ -34,13 +36,15 @@ export const CardButton = ({
   isBack,
   cardSize,
   onPress,
+  forceSelectColor,
+  forceOverlay,
   ref,
 }: Props) => {
   return (
     <Pressable
       ref={ref}
       onPress={onPress}
-      style={[style, cardStyles.transition]}
+      style={[cardStyles.transition, style]}
       disabled={disabled || !onPress}
     >
       <Card
@@ -55,6 +59,8 @@ export const CardButton = ({
         isBack={isBack}
         selectColor={selectColor}
         cardSize={cardSize}
+        forceSelectColor={forceSelectColor}
+        forceOverlay={forceOverlay}
       />
     </Pressable>
   );

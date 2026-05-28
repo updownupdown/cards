@@ -1,10 +1,11 @@
+import { useGameLoading } from "@/hooks/useGameLoading";
 import { cardStyles } from "@/styles/cardStyles";
-import { layoutStyles } from "@/styles/layoutStyles";
+import { flexStyles } from "@/styles/flexStyles";
 import { textStyles } from "@/styles/textStyles";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Text, View } from "react-native";
 import { Button } from "../Button/Button";
-import { Card } from "../Cards/Card";
+import { Card, CardSelectColor, useCardSize } from "../Cards/Card";
 import {
   RANK_VALUE,
   createDeck,
@@ -13,13 +14,11 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { CardButton } from "../Cards/CardButton";
-import { GameMenus } from "../common/GameMenus";
-import { flexStyles } from "@/styles/flexStyles";
-import { useGameLoading } from "@/hooks/useGameLoading";
 import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
 
-const localCardPerRow = 5;
+const cardsPerRow = 5;
+const cardGap = 15;
 
 type AreaState = {
   defenderDeck: PlayingCard[];
@@ -128,6 +127,7 @@ export default function Area52() {
   const isLoaded = useGameLoading();
   const [game, setGame] = useState<AreaState>(() => ensureQueue(initState()));
   const [selectedDefenders, setSelectedDefenders] = useState<number[]>([]);
+  const { width: cardWidth } = useCardSize(cardsPerRow);
 
   const currentAttacker = game.attackerQueue[0] ?? null;
   const score = useMemo(() => {
@@ -242,6 +242,35 @@ export default function Area52() {
     setSelectedDefenders([]);
   }
 
+  const [canAttack, setCanAttack] = useState(false);
+
+  useEffect(() => {
+    console.log(selectedDefenders);
+    if (selectedDefenders.length === 0) setCanAttack(false);
+
+    const enemy = game.attackerQueue[0];
+    const enemyValue = RANK_VALUE[enemy.rank];
+
+    if (selectedDefenders.length === 1) {
+      const defender = game.defenders[selectedDefenders[0]];
+      const defenderValue = RANK_VALUE[defender.rank];
+      const oppositeColor = isRed(defender.suit) !== isRed(enemy.suit);
+
+      setCanAttack(defenderValue > enemyValue && oppositeColor);
+    } else if (selectedDefenders.length !== 0) {
+      let defenderValue = 0;
+
+      Array.from({ length: selectedDefenders.length }, (_, index) => {
+        defenderValue +=
+          RANK_VALUE[game.defenders[selectedDefenders[index]].rank];
+      });
+
+      setCanAttack(defenderValue === enemyValue);
+    }
+  }, [selectedDefenders]);
+
+  console.log(game);
+
   return (
     <GameWrapper
       ended={game.ended}
@@ -277,7 +306,9 @@ export default function Area52() {
           />
 
           <View
-            style={[{ display: "flex", flexDirection: "row-reverse", gap: 10 }]}
+            style={[
+              { display: "flex", flexDirection: "row-reverse", gap: cardGap },
+            ]}
           >
             {game.attackerQueue.map((card, idx) => (
               <View
@@ -287,7 +318,10 @@ export default function Area52() {
                 <Card
                   suit={card.suit}
                   rank={card.rank}
-                  cardsPerRow={localCardPerRow}
+                  cardsPerRow={cardsPerRow}
+                  selectColor="red"
+                  forceOverlay={idx === 0}
+                  forceSelectColor={idx === 0}
                 />
               </View>
             ))}
@@ -330,13 +364,32 @@ export default function Area52() {
             style={[
               cardStyles.row,
               {
-                width: `${(100 / localCardPerRow) * 3}%`,
+                gap: cardGap,
+                width: cardWidth * 3 + cardGap * 2,
                 alignSelf: "center",
               },
             ]}
           >
             {game.defenders.map((card, index) => {
-              const selected = selectedDefenders.includes(index);
+              const isSelected = selectedDefenders.includes(index);
+
+              const selectedColor = () => {
+                if (!isSelected) {
+                  return "blue" as CardSelectColor;
+                } else if (selectedDefenders.length === 2) {
+                  if (canAttack) {
+                    return "purple" as CardSelectColor;
+                  } else {
+                    return "orange" as CardSelectColor;
+                  }
+                } else {
+                  if (canAttack) {
+                    return "green" as CardSelectColor;
+                  } else {
+                    return "red" as CardSelectColor;
+                  }
+                }
+              };
 
               return (
                 <CardButton
@@ -344,9 +397,9 @@ export default function Area52() {
                   onPress={() => toggleDefender(index)}
                   suit={card.suit}
                   rank={card.rank}
-                  cardsPerRow={localCardPerRow}
-                  hasTopMargin={index > 2}
-                  isSelected={selected}
+                  cardsPerRow={cardsPerRow}
+                  isSelected={isSelected}
+                  selectColor={selectedColor()}
                 />
               );
             })}
@@ -367,6 +420,7 @@ export default function Area52() {
           text="Sacrifice"
           size="large"
           disabled={selectedDefenders.length !== 1}
+          theme="red"
         />
         <Button
           onPress={() => {
@@ -379,7 +433,8 @@ export default function Area52() {
           text={`Attack${selectedDefenders.length === 2 ? " x2" : ""}`}
           size="large"
           style={[flexStyles.flex1]}
-          disabled={selectedDefenders.length < 1}
+          disabled={!canAttack || selectedDefenders.length < 1}
+          theme={selectedDefenders.length === 2 ? "purple" : "green"}
         />
       </View>
     </GameWrapper>

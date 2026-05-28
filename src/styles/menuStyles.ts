@@ -1,8 +1,7 @@
-import { Colors, FontWeight, rgba } from "@/styles/styles";
+import { Colors, ContentSidePadding, FontWeight, rgba } from "@/styles/styles";
 import { StyleSheet } from "react-native";
 import { flexStyles } from "./flexStyles";
 import { modalBorderRadius } from "./modalStyles";
-import { headerButtonSize } from "./buttonStyles";
 
 export const menuStyles = StyleSheet.create({
   // Intro
@@ -15,6 +14,7 @@ export const menuStyles = StyleSheet.create({
     left: 0,
     minHeight: 200,
 
+    margin: ContentSidePadding,
     padding: 30,
     gap: 30,
 
@@ -30,7 +30,9 @@ export const menuStyles = StyleSheet.create({
     ...flexStyles.colCentered,
     ...flexStyles.fullWidth,
     alignItems: "flex-start",
-    maxWidth: 300,
+    fontSize: 18,
+    fontFamily: FontWeight[400],
+    color: Colors.K200,
   },
 
   // Win/lose message
@@ -46,14 +48,12 @@ export const menuStyles = StyleSheet.create({
   winLoseMessage: {
     position: "absolute",
     zIndex: 500,
+    margin: ContentSidePadding,
+    paddingHorizontal: 12,
     bottom: 0,
     right: 0,
     left: 0,
-    gap: 30,
-
-    ...flexStyles.rowCentered,
-    justifyContent: "space-between",
-
+    ...flexStyles.colCentered,
     borderRadius: modalBorderRadius,
     backgroundColor: rgba(Colors.K900, 0.97),
   },
@@ -67,25 +67,22 @@ export const menuStyles = StyleSheet.create({
   },
   winLoseMessageLeft: {
     ...flexStyles.colCentered,
-    paddingHorizontal: 24,
-    paddingVertical: 20,
-    alignItems: "flex-start",
+    paddingTop: 20,
     gap: 2,
   },
   wlmTitle: {
     fontSize: 24,
-    fontFamily: FontWeight[300],
+    fontFamily: FontWeight[400],
     color: Colors.white,
   },
   wlmScore: {
-    fontSize: 18,
-    fontFamily: FontWeight[500],
+    fontSize: 16,
+    fontFamily: FontWeight[300],
     color: Colors.white,
   },
   playBtn: {
     textTransform: "uppercase",
-    paddingHorizontal: 30,
-    paddingVertical: 20,
+    paddingVertical: 30,
     fontSize: 18,
     color: Colors.white,
     fontFamily: FontWeight[500],

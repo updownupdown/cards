@@ -8,6 +8,8 @@ export const textStyles = StyleSheet.create({
     color: Colors.K400,
     flex: 1,
     textAlign: "center",
+    overflow: "hidden",
+    paddingHorizontal: 10,
   },
   default: {
     fontSize: 16,

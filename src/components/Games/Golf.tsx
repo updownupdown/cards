@@ -1,12 +1,11 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { cardStyles } from "@/styles/cardStyles";
 import { flexStyles } from "@/styles/flexStyles";
-import { layoutStyles } from "@/styles/layoutStyles";
-import { textStyles } from "@/styles/textStyles";
-import { useState, useRef, useEffect } from "react";
-import { Text, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { View } from "react-native";
 import { useAnimations } from "../Animations/Animations";
 import { Button } from "../Button/Button";
+import { CardSelectColor } from "../Cards/Card";
 import {
   RANK_VALUE,
   StandardRank,
@@ -17,8 +16,6 @@ import {
 } from "../Cards/card-utils";
 import { CardButton } from "../Cards/CardButton";
 import { Deck } from "../Cards/Deck";
-import { GameMenus } from "../common/GameMenus";
-import { CardSelectColor } from "../Cards/Card";
 import { GameWrapper } from "../common/GameWrapper";
 
 const localCardPerRowSmall = 7;

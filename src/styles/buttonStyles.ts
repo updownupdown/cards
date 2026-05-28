@@ -1,4 +1,4 @@
-import { Colors, FontWeight } from "@/styles/styles";
+import { Colors, FontWeight, rgba } from "@/styles/styles";
 import { StyleSheet } from "react-native";
 
 const buttonTransition = {
@@ -7,7 +7,8 @@ const buttonTransition = {
   transitionTimingFunction: "ease",
 };
 
-export const headerButtonSize = 44;
+export const headerButtonSize = 48;
+export const headerButtonIconSize = 30;
 
 export const buttonStyles = StyleSheet.create({
   fullWidth: {
@@ -21,13 +22,16 @@ export const buttonStyles = StyleSheet.create({
     alignItems: "center",
     gap: 6,
 
-    backgroundColor: Colors.buttonColor,
+    backgroundColor: rgba(Colors.buttonColor, 0.1),
+    borderWidth: 1,
+    borderColor: Colors.buttonColor,
     outlineWidth: 0,
   },
 
   // Sizes
   sizeText: {
     backgroundColor: "unset",
+    borderWidth: 0,
   },
   sizeTextLarge: {
     backgroundColor: "unset",
@@ -72,28 +76,74 @@ export const buttonStyles = StyleSheet.create({
   textSizeSmall: {
     fontSize: 12,
     textTransform: "uppercase",
-    color: Colors.K900,
+    color: Colors.accentBlue,
     lineHeight: 12,
   },
   textSizeMedium: {
     fontSize: 16,
     textTransform: "uppercase",
-    color: Colors.K900,
+    color: Colors.accentBlue,
     fontFamily: FontWeight[500],
     lineHeight: 16,
   },
   textSizeLarge: {
     fontSize: 18,
     textTransform: "uppercase",
-    color: Colors.K900,
+    color: Colors.accentBlue,
     fontFamily: FontWeight[600],
     lineHeight: 18,
+  },
+
+  // Themes
+  themeRed: {
+    borderColor: Colors.btnRed,
+    backgroundColor: rgba(Colors.btnRed, 0.1),
+  },
+  themeBlue: {
+    borderColor: Colors.btnBlue,
+    backgroundColor: rgba(Colors.btnBlue, 0.1),
+  },
+  themeYellow: {
+    borderColor: Colors.btnYellow,
+    backgroundColor: rgba(Colors.btnYellow, 0.1),
+  },
+  themeGreen: {
+    borderColor: Colors.btnGreen,
+    backgroundColor: rgba(Colors.btnGreen, 0.1),
+  },
+  themeOrange: {
+    borderColor: Colors.btnOrange,
+    backgroundColor: rgba(Colors.btnOrange, 0.1),
+  },
+  themePurple: {
+    borderColor: Colors.btnPurple,
+    backgroundColor: rgba(Colors.btnPurple, 0.1),
+  },
+
+  themeTextRed: {
+    color: Colors.btnRed,
+  },
+  themeTextBlue: {
+    color: Colors.btnBlue,
+  },
+  themeTextYellow: {
+    color: Colors.btnYellow,
+  },
+  themeTextGreen: {
+    color: Colors.btnGreen,
+  },
+  themeTextOrange: {
+    color: Colors.btnOrange,
+  },
+  themeTextPurple: {
+    color: Colors.btnPurple,
   },
 
   // Disabled
   disabled: {
     color: Colors.K900,
-    backgroundColor: Colors.buttonColorDisabled,
+    borderColor: rgba(Colors.K500, 0.5),
+    backgroundColor: rgba(Colors.K500, 0.1),
     boxShadow: "unset",
   },
   textDisabled: {
@@ -111,6 +161,8 @@ export const buttonStyles = StyleSheet.create({
     boxShadow: "unset",
     borderRadius: "unset",
     backgroundColor: "unset",
+    borderWidth: 0,
+    borderColor: "unset",
   },
   closeModalButton: {
     backgroundColor: Colors.K850,

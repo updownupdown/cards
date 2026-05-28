@@ -35,6 +35,7 @@ export default function ModalFull({
                   text="Home"
                   size="text"
                   iconSize={28}
+                  style={{ borderWidth: 0 }}
                 />
               )}
 

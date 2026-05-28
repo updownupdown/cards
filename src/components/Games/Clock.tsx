@@ -1,9 +1,10 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { useMemo, useRef, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-
 import { flexStyles } from "@/styles/flexStyles";
-import { layoutStyles } from "@/styles/layoutStyles";
+import { textStyles } from "@/styles/textStyles";
+import { useMemo, useRef, useState } from "react";
+import { Text, View } from "react-native";
+import { useAnimations } from "../Animations/Animations";
+import { useCardSize } from "../Cards/Card";
 import { Deck } from "../Cards/Deck";
 import {
   createDeck,
@@ -12,11 +13,6 @@ import {
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { GameMenus } from "../common/GameMenus";
-import { useAnimations } from "../Animations/Animations";
-import { debugStyles } from "@/styles/debugStyles";
-import { useCardSize } from "../Cards/Card";
-import { textStyles } from "@/styles/textStyles";
 import { GameWrapper } from "../common/GameWrapper";
 
 const cardsPerRow = 8;

@@ -1,5 +1,6 @@
 import {
   Colors,
+  ContentSidePadding,
   FontWeight,
   MaxContentHeight,
   MaxContentWidth,
@@ -18,7 +19,7 @@ export const modalStyles = StyleSheet.create({
     backgroundColor: rgba(Colors.K800, 0.2),
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 14,
+    padding: ContentSidePadding / 1.5,
   },
   modalCard: {
     width: "100%",

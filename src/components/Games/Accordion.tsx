@@ -1,19 +1,11 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { useMemo, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { GameMenus } from "../common/GameMenus";
-import { layoutStyles } from "@/styles/layoutStyles";
-import { textStyles } from "@/styles/textStyles";
-import {
-  createDeck,
-  isSameColor,
-  shuffle,
-  type PlayingCard,
-} from "../Cards/card-utils";
-import { CardButton } from "../Cards/CardButton";
 import { flexStyles } from "@/styles/flexStyles";
+import { textStyles } from "@/styles/textStyles";
+import { useMemo, useState } from "react";
+import { Text, View, ViewStyle } from "react-native";
 import { CardSelectColor } from "../Cards/Card";
-import { debugStyles } from "@/styles/debugStyles";
+import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
+import { CardButton } from "../Cards/CardButton";
 import { GameWrapper } from "../common/GameWrapper";
 
 type AccordionState = {
@@ -134,10 +126,6 @@ export default function Accordion() {
           : "No legal moves remain."
       }
     >
-      <Text style={textStyles.default}>
-        Progress: {moveCount} of {moveCount + game.line.length}
-      </Text>
-
       <View
         style={[
           {
@@ -150,18 +138,19 @@ export default function Accordion() {
         ]}
       >
         {game.line.map((card, idx) => {
+          const selectedColor = selectColor(idx) as CardSelectColor;
+
           return (
             <CardButton
               key={card.id}
               onPress={() => onCardPress(idx)}
               disabled={game.ended}
               isSelected={selectedIndex === idx}
-              selectColor={selectColor(idx) as CardSelectColor}
+              selectColor={selectedColor}
               suit={card.suit}
               rank={card.rank}
               cardsPerRow={8}
-              // customTopMarginPerc={idx > 5 ? -0.4 : undefined}
-              cardSize="small"
+              cardSize="small-colored"
             />
           );
         })}

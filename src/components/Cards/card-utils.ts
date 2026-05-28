@@ -1,4 +1,5 @@
 import type { View as RNView } from "react-native";
+import { LoopRank } from "../Games/LootTheLoop";
 
 export type CardSuit = "clubs" | "diamonds" | "hearts" | "spades";
 export type CardRank =
@@ -95,6 +96,10 @@ export function isSameColor(card1: PlayingCard, card2: PlayingCard) {
   const card2Red = isRed(card2.suit) ? "red" : "black";
 
   return card1Red === card2Red;
+}
+
+export function isNumberRank(rank: CardRank | LoopRank) {
+  return ["2", "3", "4", "5", "6", "7", "8", "9", "10"].includes(rank);
 }
 
 export function shuffle<T>(items: T[]) {

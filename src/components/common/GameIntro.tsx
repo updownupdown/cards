@@ -47,10 +47,7 @@ export function GameIntro({ isLoaded, setShowMenu }: Props) {
           <Text style={textStyles.h1}>How to Play</Text>
 
           {gameInfo.howToPlay.map((info, key) => (
-            <Text
-              key={`info-${key}`}
-              style={[textStyles.default, menuStyles.introHowToPlayText]}
-            >
+            <Text key={`info-${key}`} style={[menuStyles.introHowToPlayText]}>
               {info}
             </Text>
           ))}

@@ -4,7 +4,7 @@ import {
   recordAttempt,
   recordResult,
 } from "@/data/game-menu";
-import { buttonStyles } from "@/styles/buttonStyles";
+import { buttonStyles, headerButtonIconSize } from "@/styles/buttonStyles";
 import { layoutStyles } from "@/styles/layoutStyles";
 import { Colors } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
@@ -87,9 +87,16 @@ export const GameMenus = ({
           }}
           iconName={"arrow-back"}
           iconColor={Colors.K400}
+          iconSize={headerButtonIconSize}
         />
 
-        <Text style={textStyles.gameHeaderTitle}>{gameInfo.title}</Text>
+        <Text
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={[textStyles.gameHeaderTitle]}
+        >
+          {gameInfo.title}
+        </Text>
 
         <ResetButton reset={reset} isLoaded={!!isLoaded} />
 
@@ -99,6 +106,7 @@ export const GameMenus = ({
           onPress={() => setShowMenu(true)}
           iconName="menu"
           iconColor={Colors.K400}
+          iconSize={headerButtonIconSize}
         />
       </View>
     </>

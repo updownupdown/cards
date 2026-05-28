@@ -34,7 +34,8 @@ const cardShadowRadio = 0.01;
 
 export const useCardSize = (cardsPerRow = 5) => {
   const { width: windowWidth } = useWindowDimensions();
-  const contentWidth = Math.min(windowWidth, MaxContentWidth);
+  const contentWidth =
+    Math.min(windowWidth, MaxContentWidth) - ContentSidePadding * 2;
   const cardWidthRequested = (100 / cardsPerRow / 100) * contentWidth;
   const width = cardWidthRequested * cardWidthRatio;
   const topMargin = cardWidthRequested * (1 - cardWidthRatio);
@@ -66,6 +67,8 @@ export type CardProps = Omit<SvgProps, "width" | "height" | "style"> & {
   isSelected?: boolean;
   selectColor?: CardSelectColor;
   hasTopMargin?: boolean;
+  forceSelectColor?: boolean;
+  forceOverlay?: boolean;
   customTopMarginPerc?: number;
   cardSize?: CardSizes;
 };
@@ -85,6 +88,8 @@ export const Card = forwardRef<any, CardProps>(
       isSelected,
       cardSize,
       hasTopMargin,
+      forceSelectColor,
+      forceOverlay,
       customTopMarginPerc,
       ...svgProps
     },
@@ -115,7 +120,8 @@ export const Card = forwardRef<any, CardProps>(
       return null;
     }
 
-    const { width, height, topMargin, borderRadius } = useCardSize(cardsPerRow);
+    const { width, height, topMargin, borderRadius, placeholderShadow } =
+      useCardSize(cardsPerRow);
 
     const cardStyle: ViewStyle = {};
 
@@ -123,7 +129,7 @@ export const Card = forwardRef<any, CardProps>(
     cardStyle.height = height;
     cardStyle.borderRadius = borderRadius;
 
-    if (customTopMarginPerc !== undefined) {
+    if (hasTopMargin && customTopMarginPerc !== undefined) {
       cardStyle.marginTop = customTopMarginPerc * height;
     } else if (hasTopMargin) {
       cardStyle.marginTop = topMargin;
@@ -171,7 +177,7 @@ export const Card = forwardRef<any, CardProps>(
     if (settings?.showCardHints !== false) {
       if (isSelected) {
         cardStyle.boxShadow = shadow(shadowSizeSelected, 0.8);
-      } else if (isSelectable && selectColor !== "none") {
+      } else if ((isSelectable || forceSelectColor) && selectColor !== "none") {
         cardStyle.boxShadow = shadow(shadowSizeUnselected, 0.8);
       } else {
         cardStyle.boxShadow = `0 0 0 1px ${rgba(Colors.K900, 0.2)}, 0 0  ${shadowUnit * 4}px 0 ${rgba(Colors.K900, 0.5)}`;
@@ -186,13 +192,20 @@ export const Card = forwardRef<any, CardProps>(
           cardStyles.card,
           cardStyle,
           isAnimRef && cardStyles.animHide,
+          isPlaceholder && cardStyles.placeholderCard,
           style,
+          {
+            boxShadow: isPlaceholder ? placeholderShadow : undefined,
+          },
         ]}
       >
         <View
           style={[
             cardStyles.cardSelectOverlay,
-            { backgroundColor: colorValue, opacity: isSelected ? 0.17 : 0 },
+            {
+              backgroundColor: colorValue,
+              opacity: isSelected || forceOverlay ? 0.2 : 0,
+            },
           ]}
         />
         <SvgCard {...svgProps} width="100%" height="100%" />
