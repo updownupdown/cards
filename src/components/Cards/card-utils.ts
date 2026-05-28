@@ -16,15 +16,21 @@ export type CardRank =
   | "J"
   | "Q"
   | "K"
-  | "Joker"
-  | "Back";
+  | "Joker";
 
-export type StandardRank = Exclude<CardRank, "Joker" | "Back">;
+export type StandardRank = Exclude<CardRank, "Joker">;
 
 export type PlayingCard = {
   id: string;
   suit: CardSuit;
   rank: StandardRank;
+  faceUp: boolean;
+};
+
+export type PlayingCardJoker = {
+  id: string;
+  suit: CardSuit;
+  rank: CardRank;
   faceUp: boolean;
 };
 
@@ -65,30 +71,66 @@ export const RANK_VALUE: Record<StandardRank | "Joker", number> = {
   Joker: 14,
 };
 
+export function rankValue(
+  card: PlayingCard | PlayingCardJoker,
+  customAceValue?: number,
+  customJokerValue?: number,
+) {
+  if (card.rank === "Joker") {
+    return customJokerValue ?? RANK_VALUE[card.rank];
+  } else if (card.rank === "A") {
+    return customAceValue ?? RANK_VALUE[card.rank];
+  } else {
+    return RANK_VALUE[card.rank];
+  }
+}
+
 export function areRanksConsecutive(
   rank1: number,
   rank2: number,
   looping: boolean,
 ) {
+  if (looping) return Math.abs(rank1 - rank2) % 13 === 1;
+
   if (rank1 === 1) {
-    if (looping) {
-      return rank2 === 2 || rank2 === 13;
-    } else {
-      return rank2 === 2;
-    }
+    return rank2 === 2;
   } else if (rank1 === 13) {
-    if (looping) {
-      return rank2 === 1 || rank2 === 12;
-    } else {
-      return rank2 === 12;
-    }
+    return rank2 === 12;
   } else {
     return Math.abs(rank1 - rank2) === 1;
   }
 }
 
+export function areRanksTwoAway(
+  rank1: number,
+  rank2: number,
+  looping: boolean,
+) {
+  if (looping) return Math.abs(rank1 - rank2) % 13 === 2;
+
+  if (rank1 === 2) {
+    return rank2 === 13 || rank2 === 4;
+  } else if (rank1 === 1) {
+    return rank2 === 12 || rank2 === 3;
+  } else if (rank1 === 13) {
+    return rank2 === 11 || rank2 === 2;
+  } else if (rank1 === 12) {
+    return rank2 === 10 || rank2 === 1;
+  } else {
+    return Math.abs(rank1 - rank2) === 2;
+  }
+}
+
 export function isRed(suit: CardSuit) {
   return suit === "hearts" || suit === "diamonds";
+}
+
+export function cardColor(card: PlayingCard | PlayingCardJoker) {
+  return isRed(card.suit) ? "red" : "black";
+}
+
+export function isFace(card: PlayingCard | PlayingCardJoker) {
+  return card.rank === "J" || card.rank === "Q" || card.rank === "K";
 }
 
 export function isSameColor(card1: PlayingCard, card2: PlayingCard) {
@@ -100,6 +142,10 @@ export function isSameColor(card1: PlayingCard, card2: PlayingCard) {
 
 export function isNumberRank(rank: CardRank | LoopRank) {
   return ["2", "3", "4", "5", "6", "7", "8", "9", "10"].includes(rank);
+}
+
+export function isJoker(card: PlayingCard | PlayingCardJoker) {
+  return card.rank === "Joker";
 }
 
 export function shuffle<T>(items: T[]) {

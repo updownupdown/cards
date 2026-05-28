@@ -108,7 +108,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   "/dead-center": {
     title: "Dead Center",
-    enabled: false,
+    // enabled: false,
     howToPlay: [
       "Resolve threats in center lanes before they overwhelm the board.",
       "Use tactical placements to keep the draw sequence alive.",

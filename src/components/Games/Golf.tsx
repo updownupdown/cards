@@ -7,9 +7,11 @@ import { useAnimations } from "../Animations/Animations";
 import { Button } from "../Button/Button";
 import { CardSelectColor } from "../Cards/Card";
 import {
+  CardRank,
   RANK_VALUE,
   StandardRank,
   areRanksConsecutive,
+  areRanksTwoAway,
   createDeck,
   shuffle,
   type PlayingCard,
@@ -93,6 +95,12 @@ export default function Golf() {
   const wasteRef = useRef<View>(null);
   const stockRef = useRef<View>(null);
   const [isDrawing, setIsDrawing] = useState(false);
+
+  // const [hasLegalMoves, setHasLegalMoves] = useState(false);
+
+  // useEffect(() => {
+  //   setHasLegalMoves(hasAnyMove(game));
+  // }, [game]);
 
   function reset() {
     setGame(setup());
@@ -218,13 +226,20 @@ export default function Golf() {
     setRankToMatch(RANK_VALUE[game.waste[game.waste.length - 1].rank]);
   }, [game.waste]);
 
-  function selectColor(rank: StandardRank) {
-    const wasteRank = RANK_VALUE[game.waste[game.waste.length - 1].rank];
+  function selectCardColor(
+    rank: StandardRank,
+    isBottomCard: boolean,
+    rankValueToMatch: number | undefined,
+  ): CardSelectColor {
+    if (!isBottomCard || rankValueToMatch === undefined) return "none";
+
+    const wasteRank = rankValueToMatch;
     const currentRank = RANK_VALUE[rank];
 
-    return areRanksConsecutive(wasteRank, currentRank, false)
-      ? "green"
-      : "none";
+    if (areRanksConsecutive(wasteRank, currentRank, false)) return "green";
+    if (areRanksTwoAway(wasteRank, currentRank, false)) return "blue";
+
+    return "none";
   }
 
   return (
@@ -238,11 +253,7 @@ export default function Golf() {
       }
     >
       <View
-        style={[
-          flexStyles.rowCentered,
-          flexStyles.fullWidth,
-          flexStyles.justifyEvenly,
-        ]}
+        style={[flexStyles.rowCentered, flexStyles.fullWidth, flexStyles.gap40]}
       >
         <Deck
           refTopCurrent={stockRef}
@@ -253,7 +264,7 @@ export default function Golf() {
           limitFan
           showCount
           countPosition="left"
-          fan="horizontalRight"
+          fan="horizontalLeft"
         />
 
         <Deck
@@ -269,7 +280,7 @@ export default function Golf() {
           limitFan
           showCount
           countPosition="right"
-          fan="horizontalLeft"
+          fan="horizontalRight"
           cardSize="small"
         />
       </View>
@@ -278,7 +289,12 @@ export default function Golf() {
         {game.tableau.map((col, colIndex) => (
           <View key={`g-col-${colIndex}`} style={cardStyles.colDownwards}>
             {col.map((card, cardIndex) => {
-              const isBottomCard = cardIndex !== col.length - 1;
+              const isBottomCard = cardIndex === col.length - 1;
+              const selectColor = selectCardColor(
+                card.rank,
+                isBottomCard,
+                rankToMatch,
+              );
 
               return (
                 <CardButton
@@ -291,16 +307,13 @@ export default function Golf() {
                       animatingCard?.row === cardIndex && { opacity: 0 },
                   ]}
                   onPress={() => playCard(colIndex, cardIndex)}
-                  disabled={game.ended || isBottomCard || isAnimating}
+                  disabled={game.ended || !isBottomCard || isAnimating}
                   suit={card.suit}
                   rank={card.rank}
                   cardsPerRow={localCardPerRowSmall}
                   hasTopMargin={cardIndex > 0}
-                  selectColor={
-                    isBottomCard || rankToMatch === undefined
-                      ? "none"
-                      : (selectColor(card.rank) as CardSelectColor)
-                  }
+                  selectColor={selectColor}
+                  forceOverlay={selectColor !== "none"}
                   cardSize="small"
                 />
               );
@@ -312,7 +325,12 @@ export default function Golf() {
       <View style={[flexStyles.rowCentered, flexStyles.fullWidth]}>
         <Button
           onPress={drawFromStock}
-          disabled={game.stock.length === 0 || game.ended || isAnimating}
+          disabled={
+            hasAnyMove(game) ||
+            game.stock.length === 0 ||
+            game.ended ||
+            isAnimating
+          }
           text="Draw"
           size="large"
           fullWidth

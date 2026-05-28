@@ -29,20 +29,69 @@ export type CardSelectColor =
 const cardDefaultWidth = 250;
 const cardDefaultHeight = 350;
 const cardAspectRatio = cardDefaultWidth / cardDefaultHeight;
-const cardWidthRatio = 0.82;
+const cardGapRatio = 0.82;
 const cardShadowRadio = 0.01;
 
-export const useCardSize = (cardsPerRow = 5) => {
+interface CardGridProps {
+  cardsPerRow: number;
+  targetGirdCols?: number;
+  style?: ViewStyle[];
+  children: React.ReactNode;
+}
+
+export const useContentWidth = () => {
   const { width: windowWidth } = useWindowDimensions();
-  const contentWidth =
-    Math.min(windowWidth, MaxContentWidth) - ContentSidePadding * 2;
+  return Math.min(windowWidth - ContentSidePadding * 2, MaxContentWidth);
+};
+
+export const CardGrid = ({
+  cardsPerRow,
+  targetGirdCols,
+  style,
+  children,
+}: CardGridProps) => {
+  const contentWidth = useContentWidth();
+
+  const cardWidth = (contentWidth / cardsPerRow) * cardGapRatio;
+
+  const totalGap = contentWidth - cardWidth * cardsPerRow;
+  const gridGap = totalGap / (cardsPerRow - 1);
+
+  const targetCols = targetGirdCols ?? cardsPerRow;
+  const gridWidth = cardWidth * targetCols + gridGap * (targetCols - 1);
+
+  return (
+    <View
+      style={[
+        {
+          display: "flex",
+          flexDirection: "row",
+          flexWrap: "wrap",
+          width: gridWidth,
+          gap: gridGap,
+        },
+        style,
+      ]}
+    >
+      {children}
+    </View>
+  );
+};
+
+export const useCardSize = (cardsPerRow = 5, targetGridCol?: number) => {
+  const contentWidth = useContentWidth();
   const cardWidthRequested = (100 / cardsPerRow / 100) * contentWidth;
-  const width = cardWidthRequested * cardWidthRatio;
-  const topMargin = cardWidthRequested * (1 - cardWidthRatio);
+  const width = cardWidthRequested * cardGapRatio;
+
+  const topMargin = cardWidthRequested * (1 - cardGapRatio);
   const height = width / cardAspectRatio;
   const borderRadius = width * 0.08;
   const shadowUnit = width * cardShadowRadio;
   const placeholderShadow = `inset ${shadowUnit}px ${shadowUnit * 2}px ${shadowUnit * 14}px ${rgba(Colors.black, 0.3)}`;
+
+  const gridGap = topMargin / 2;
+  const targetCols = targetGridCol ?? cardsPerRow;
+  const gridWidth = width * targetCols + gridGap * (targetCols - 1);
 
   return {
     width,
@@ -50,6 +99,8 @@ export const useCardSize = (cardsPerRow = 5) => {
     topMargin,
     borderRadius,
     placeholderShadow,
+    gridWidth,
+    gridGap,
   };
 };
 
@@ -192,23 +243,27 @@ export const Card = forwardRef<any, CardProps>(
           cardStyles.card,
           cardStyle,
           isAnimRef && cardStyles.animHide,
-          isPlaceholder && cardStyles.placeholderCard,
           style,
-          {
-            boxShadow: isPlaceholder ? placeholderShadow : undefined,
-          },
         ]}
       >
         <View
           style={[
             cardStyles.cardSelectOverlay,
             {
-              backgroundColor: colorValue,
+              backgroundColor: isPlaceholder ? undefined : colorValue,
               opacity: isSelected || forceOverlay ? 0.2 : 0,
             },
           ]}
         />
         <SvgCard {...svgProps} width="100%" height="100%" />
+        {isPlaceholder && (
+          <View
+            style={[
+              cardStyles.cardPlaceholderUnderlay,
+              { boxShadow: placeholderShadow },
+            ]}
+          />
+        )}
       </View>
     );
   },

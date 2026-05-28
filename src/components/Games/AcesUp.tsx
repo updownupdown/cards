@@ -318,7 +318,7 @@ export default function AcesUp() {
           cardsPerRow={4}
           limitFan
           showCount
-          fan="horizontalRight"
+          fan="horizontalLeft"
           countPosition="right"
           iconName="draw"
           onPress={dealFour}

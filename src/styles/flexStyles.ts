@@ -71,6 +71,12 @@ export const flexStyles = StyleSheet.create({
   gap12: {
     gap: 12,
   },
+  gap14: {
+    gap: 14,
+  },
+  gap16: {
+    gap: 16,
+  },
   gap20: {
     gap: 20,
   },

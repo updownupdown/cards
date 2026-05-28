@@ -1,12 +1,16 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { flexStyles } from "@/styles/flexStyles";
-import { textStyles } from "@/styles/textStyles";
-import { useMemo, useState } from "react";
-import { Text, View, ViewStyle } from "react-native";
-import { CardSelectColor } from "../Cards/Card";
+import { useRef, useState } from "react";
+import { View } from "react-native";
+import { useAnimations } from "../Animations/Animations";
+import { CardSelectColor, CardSizes, useCardSize } from "../Cards/Card";
 import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
 import { CardButton } from "../Cards/CardButton";
 import { GameWrapper } from "../common/GameWrapper";
+
+const cardsPerRow = 6;
+const gridCols = 6;
+const gridGap = 10;
 
 type AccordionState = {
   line: PlayingCard[];
@@ -37,12 +41,15 @@ function hasAnyMove(line: PlayingCard[]) {
 }
 
 export default function Accordion() {
+  const { gridWidth } = useCardSize(cardsPerRow, gridCols);
   const isLoaded = useGameLoading();
+  const { animateCards, measureRef, isAnimating, setIsAnimating } =
+    useAnimations();
+  const cardRefs = useRef<(View | null)[]>([]);
+  const [hiddenIndices, setHiddenIndices] = useState<Set<number>>(new Set());
 
   const [game, setGame] = useState<AccordionState>(setup);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-
-  const moveCount = useMemo(() => 52 - game.line.length, [game.line.length]);
 
   function reset() {
     setGame(setup());
@@ -50,49 +57,122 @@ export default function Accordion() {
   }
 
   function onCardPress(index: number) {
-    setGame((prev) => {
-      if (prev.ended) return prev;
+    if (isAnimating || game.ended) return;
 
-      if (selectedIndex === null) {
-        setSelectedIndex(index);
-        return prev;
-      }
+    if (selectedIndex === null) {
+      setSelectedIndex(index);
+      return;
+    }
 
-      if (selectedIndex === index) {
-        setSelectedIndex(null);
-        return prev;
-      }
-
-      const source = selectedIndex;
-      const target = index;
-      const validDistance = source - target === 1 || source - target === 3;
-      if (!validDistance) {
-        setSelectedIndex(index);
-        return prev;
-      }
-
-      const srcCard = prev.line[source];
-      const targetCard = prev.line[target];
-      if (!srcCard || !targetCard || !canMerge(srcCard, targetCard)) {
-        setSelectedIndex(index);
-        return prev;
-      }
-
-      const line = [...prev.line];
-      line[target] = srcCard;
-      line.splice(source, 1);
-
-      const won = line.length === 1;
-      const ended = won || !hasAnyMove(line);
+    if (selectedIndex === index) {
       setSelectedIndex(null);
+      return;
+    }
 
-      return {
-        ...prev,
-        line,
-        ended,
-        won,
-      };
-    });
+    const source = selectedIndex;
+    const target = index;
+    const validDistance = source - target === 1 || source - target === 3;
+    if (!validDistance) {
+      setSelectedIndex(index);
+      return;
+    }
+
+    const srcCard = game.line[source];
+    const targetCard = game.line[target];
+    if (!srcCard || !targetCard || !canMerge(srcCard, targetCard)) {
+      setSelectedIndex(index);
+      return;
+    }
+
+    performMergeAnimation(source, target, srcCard);
+  }
+
+  async function performMergeAnimation(
+    source: number,
+    target: number,
+    srcCard: PlayingCard,
+  ) {
+    setIsAnimating(true);
+
+    const positions = await Promise.all(
+      game.line.map((_, i) => {
+        const el = cardRefs.current[i];
+        return el ? measureRef({ current: el }) : Promise.resolve(null);
+      }),
+    );
+
+    const srcPos = positions[source];
+    const tgtPos = positions[target];
+
+    if (srcPos && tgtPos) {
+      setHiddenIndices(new Set([source]));
+
+      await animateCards([
+        {
+          id: `merge-${source}-${target}-${Date.now()}`,
+          cardInfo: {
+            rank: srcCard.rank,
+            suit: srcCard.suit,
+            isBack: false,
+            cardsPerRow: cardsPerRow,
+            cardSize: "small-colored" as CardSizes,
+          },
+          from: { ...srcPos, zIndex: 100 },
+          to: { ...tgtPos, zIndex: 100 },
+          duration: 150,
+        },
+      ]);
+    }
+
+    const shiftAnims = [];
+    const shiftingIndices = new Set([source, target]);
+
+    for (let i = source + 1; i < game.line.length; i++) {
+      const fromPos = positions[i];
+      const toPos = positions[i - 1];
+      const card = game.line[i];
+      if (fromPos && toPos) {
+        shiftingIndices.add(i);
+        shiftAnims.push({
+          id: `shift-${i}-${Date.now()}`,
+          cardInfo: {
+            rank: card.rank,
+            suit: card.suit,
+            isBack: false,
+            cardsPerRow: cardsPerRow,
+            cardSize: "small-colored" as CardSizes,
+          },
+          from: { ...fromPos, zIndex: 50 },
+          to: { ...toPos, zIndex: 50 },
+          duration: 150,
+          delay: (i - source - 1) * 20,
+        });
+      }
+    }
+
+    setHiddenIndices(shiftingIndices);
+
+    if (shiftAnims.length > 0) {
+      await animateCards(shiftAnims);
+    }
+
+    const line = [...game.line];
+    line[target] = srcCard;
+    line.splice(source, 1);
+
+    const won = line.length === 1;
+    const ended = won || !hasAnyMove(line);
+
+    setGame((prev) => ({
+      ...prev,
+      line,
+      ended,
+      won,
+    }));
+
+    setSelectedIndex(null);
+    setHiddenIndices(new Set());
+    setIsAnimating(false);
   }
 
   function selectColor(idx: number): string {
@@ -107,7 +187,7 @@ export default function Accordion() {
       // Card 1 or 3 to the left
       return game.line[idx].suit === game.line[selectedIndex].suit
         ? "green"
-        : "orange";
+        : "purple";
     } else {
       // Other cards
       return "none";
@@ -130,10 +210,11 @@ export default function Accordion() {
         style={[
           {
             ...flexStyles.rowCentered,
-            ...flexStyles.fullWidth,
+            width: gridWidth,
             flexWrap: "wrap",
-            padding: 10,
-            gap: 12,
+            justifyContent: "flex-start",
+            marginHorizontal: "auto",
+            gap: gridGap,
           },
         ]}
       >
@@ -143,13 +224,18 @@ export default function Accordion() {
           return (
             <CardButton
               key={card.id}
+              ref={(el) => {
+                cardRefs.current[idx] = el;
+              }}
+              style={[{ opacity: hiddenIndices.has(idx) ? 0 : 1 }]}
               onPress={() => onCardPress(idx)}
               disabled={game.ended}
               isSelected={selectedIndex === idx}
-              selectColor={selectedColor}
+              selectColor={isAnimating ? "none" : selectedColor}
+              forceOverlay={!isAnimating && selectedColor !== "none"}
               suit={card.suit}
               rank={card.rank}
-              cardsPerRow={8}
+              cardsPerRow={cardsPerRow}
               cardSize="small-colored"
             />
           );

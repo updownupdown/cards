@@ -15,6 +15,7 @@ import { CardButton } from "../Cards/CardButton";
 import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
 import { MessageBox } from "../common/MessageBox";
+import { CardGrid, useCardSize } from "../Cards/Card";
 
 const cardsPerRow = 4;
 
@@ -99,6 +100,7 @@ export default function TheSandwichGuy() {
   const [message, setMessage] = useState(
     "Pick three cards to make a sandwich.",
   );
+  const { gridWidth, gridGap } = useCardSize(cardsPerRow, cardsPerRow);
 
   const selectedCards = useMemo(
     () =>
@@ -222,7 +224,15 @@ export default function TheSandwichGuy() {
         />
       </View>
 
-      <View style={[cardStyles.row, cardStyles.rowGap4]}>
+      <CardGrid
+        cardsPerRow={cardsPerRow}
+        style={[
+          {
+            flexDirection: "row-reverse",
+            justifyContent: "flex-end",
+          },
+        ]}
+      >
         {game.hand.map((card, index) => {
           const selected = !!(card && selectedIds.includes(card.id));
 
@@ -239,12 +249,12 @@ export default function TheSandwichGuy() {
               isPlaceholder={!card}
               suit={card?.suit}
               rank={card?.rank}
-              hasTopMargin={index > cardsPerRow - 1}
+              // hasTopMargin={index > cardsPerRow - 1}
               selectColor={selectColor(selected)}
             />
           );
         })}
-      </View>
+      </CardGrid>
 
       <Button
         onPress={commitSandwich}

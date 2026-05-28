@@ -277,12 +277,7 @@ export default function TriPeaks() {
         <View style={styles.stockWasteRow}>
           <Pressable style={styles.cardSlot} onPress={draw}>
             {game.stock.length > 0 ? (
-              <Card
-                suit="spades"
-                rank="Back"
-                cardsPerRow={cardsPerRow}
-                isBack
-              />
+              <Card cardsPerRow={cardsPerRow} isBack />
             ) : (
               <Text style={styles.slotLabel}>Stock</Text>
             )}

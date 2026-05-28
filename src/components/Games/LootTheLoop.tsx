@@ -4,7 +4,7 @@ import { ContentSidePadding, MaxContentWidth } from "@/styles/styles";
 import { useEffect, useMemo, useState } from "react";
 import { useWindowDimensions, View, ViewStyle } from "react-native";
 import { Button } from "../Button/Button";
-import { CardSelectColor } from "../Cards/Card";
+import { CardSelectColor, useCardSize } from "../Cards/Card";
 import {
   CardSuit,
   createDeck,
@@ -16,9 +16,16 @@ import {
 import { CardButton } from "../Cards/CardButton";
 import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
+import { useContentWidth } from "@/hooks/useContentWidth";
+import { debugStyles } from "@/styles/debugStyles";
 
 const maxMarkedPaths = 3;
 const exploreTransitionInMs = 1200;
+const cardsPerRow = {
+  loop: 5,
+  markedPaths: 5,
+  loot: 7,
+};
 
 export type LoopRank = PlayingCard["rank"] | "Joker";
 
@@ -88,12 +95,8 @@ function setup(): LoopState {
 
 export default function LootTheLoop() {
   const isLoaded = useGameLoading();
-  const { width: windowWidth } = useWindowDimensions();
-  const loopRadius = useMemo(
-    () => (Math.min(windowWidth, MaxContentWidth) - ContentSidePadding) / 2,
-    [windowWidth],
-  );
-
+  const { contentRadius, contentDiameter } = useContentWidth();
+  const { height: cardHeight } = useCardSize(cardsPerRow.loop);
   const [game, setGame] = useState<LoopState>(setup);
 
   const [selectedCardIndex, setSelectedCardIndex] = useState<
@@ -192,16 +195,13 @@ export default function LootTheLoop() {
 
       const updated = prev;
 
-      // const cardsInDeck = updated.deck.length;
       const movedBy = rankValue(selectedCard);
-      const newDeckPos = prev.deckPos + movedBy;
+      const newDeckPos = (prev.deckPos + movedBy) % prev.deck.length;
 
-      // Moved deck post...
       updated.deckPos = newDeckPos;
 
-      const newTopCard = updated.deck[prev.deckPos];
+      const newTopCard = updated.deck[newDeckPos];
       const deck = prev.deck;
-      // const scorePile = updated.scorePile;
 
       if (newTopCard.faceUp && isFace(newTopCard)) {
         // Lose due to landing on face card
@@ -278,249 +278,269 @@ export default function LootTheLoop() {
     >
       <View
         style={[
-          flexStyles.rowCentered,
+          flexStyles.colCentered,
           flexStyles.fullWidth,
-          flexStyles.gap2,
-          {
-            position: "relative",
-            aspectRatio: 1,
-          },
+          flexStyles.gap20,
+          // debugStyles.borderGreen,
+          flexStyles.flex1,
         ]}
       >
         <View
           style={[
-            flexStyles.colCentered,
-            flexStyles.gap20,
+            flexStyles.rowCentered,
+            flexStyles.fullWidth,
+            flexStyles.flex1,
+            // debugStyles.borderOrange,
             {
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
+              position: "relative",
+              // minHeight: contentDiameter + ContentSidePadding * 2,
+              aspectRatio: 1,
+              marginBottom: ContentSidePadding * 2,
             },
           ]}
         >
-          <View style={[flexStyles.rowCentered, flexStyles.gap20]}>
-            <Deck
-              cards={game.scorePile.filter((card) => card.rank !== "A")}
-              cardsPerRow={7}
-              showCount
-              countPosition="left"
-              limitFan
-              fan="horizontalRight"
-            />
-            <Deck
-              cards={game.scorePile.filter((card) => card.rank === "A")}
-              cardsPerRow={7}
-              showCount
-              countPosition="right"
-              limitFan
-              fan="horizontalLeft"
-            />
-          </View>
-
-          <View style={[flexStyles.rowCentered, flexStyles.gap12]}>
-            {Array.from({ length: maxMarkedPaths }, (_, index) => {
-              const noteCard: LoopCard | undefined = game.notes[index];
-              const isSelected = selectedNoteIndex?.index === index;
-
-              return (
-                <CardButton
-                  key={`note-${index}`}
-                  onPress={() => {
-                    if (noteCard !== undefined) {
-                      setSelectedNoteIndex(
-                        selectedNoteIndex?.index === index
-                          ? undefined
-                          : { card: noteCard, index },
-                      );
-                    }
-                  }}
-                  cardsPerRow={5}
-                  suit={noteCard?.suit}
-                  rank={noteCard?.rank}
-                  isPlaceholder={!noteCard}
-                  selectColor={isSelected ? "green" : "blue"}
-                  isSelected={isSelected}
-                />
-              );
-            })}
-          </View>
-        </View>
-
-        {game.deck.map((card, index) => {
-          const deckLength = game.deck.length;
-          const isSelected = selectedCardIndex === index;
-          const isLookAround = index === game.deckPos && !card.faceUp;
-          const isExploreTarget = !!(
-            selectedRevealedRank !== undefined &&
-            selectedCardIndex !== undefined &&
-            index === (selectedCardIndex + selectedRevealedRank) % deckLength
-          );
-          const isPotentialPathTarget = !!(
-            selectedNoteIndex?.index !== undefined &&
-            index ===
-              (RANK_VALUE[selectedNoteIndex.card.rank] + game.deckPos - 1) %
-                deckLength
-          );
-
-          // Style
-          const topCardAngleIncrease = 10;
-          const gapAngle = 42;
-          const eachCardAngle = (360 - gapAngle) / deckLength;
-          let angle =
-            index * eachCardAngle - 180 - game.deckPos * eachCardAngle;
-          const translate = isSelected || isExploreTarget ? 14 : 0;
-          let zIndex = 100 - index;
-
-          if (index < game.deckPos) {
-            angle -= gapAngle;
-            zIndex -= deckLength + index;
-          }
-
-          if (index === game.deckPos) {
-            angle -= topCardAngleIncrease;
-          } else if (index === game.deckPos + 1) {
-            angle -= topCardAngleIncrease * 0.2;
-          }
-
-          const style: ViewStyle = {
-            position: "absolute",
-            transform: [
-              { rotate: `${angle}deg` },
-              { translateY: loopRadius * -1 + translate },
-            ],
-            zIndex,
-            transitionDuration: isExploring
-              ? `${exploreTransitionInMs / 1000}s`
-              : "0.5s",
-          };
-
-          const onPressFn = () => {
-            if (index !== game.deckPos && index !== game.deckPos + 1) {
-              return undefined;
-            }
-
-            if (!card.faceUp) {
-              if (index === game.deckPos) {
-                return lookAround;
-              }
-              return undefined;
-            }
-
-            return () =>
-              setSelectedCardIndex(
-                selectedCardIndex === index ? undefined : index,
-              );
-          };
-
-          const selectedColor = () => {
-            if (isLookAround) {
-              return "blue" as CardSelectColor;
-            } else if (index === selectedCardIndex) {
-              return "blue" as CardSelectColor;
-            } else if (isExploreTarget) {
-              return "purple" as CardSelectColor;
-            } else if (isPotentialPathTarget) {
-              return "green" as CardSelectColor;
-            }
-            return "blue" as CardSelectColor;
-          };
-
-          return (
-            <CardButton
-              key={`deck-${index}`}
-              onPress={onPressFn()}
-              suit={card.faceUp ? card.suit : undefined}
-              rank={card.faceUp ? card.rank : undefined}
-              style={[style]}
-              isSelected={isSelected}
-              selectColor={selectedColor()}
-              forceSelectColor={isExploreTarget || isPotentialPathTarget}
-              forceOverlay={
-                isExploreTarget || isPotentialPathTarget || isLookAround
-              }
-            />
-          );
-        })}
-
-        {selectedNoteIndex !== undefined && (
-          <CardButton
-            onPress={returnToSelectedMarkedPath}
-            suit={selectedNoteIndex.card.suit}
-            rank={selectedNoteIndex.card.rank}
+          <View
             style={[
+              flexStyles.colCentered,
+              flexStyles.gap20,
               {
-                opacity: 0.75,
                 position: "absolute",
-                transform: [
-                  { rotate: `155deg` },
-                  { translateY: loopRadius * -1 },
-                ],
-                zIndex: 1000,
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
               },
             ]}
-            selectColor={"green"}
-            forceSelectColor
-            forceOverlay
+          >
+            <View style={[flexStyles.rowCentered, flexStyles.gap20]}>
+              <Deck
+                cards={game.scorePile.filter((card) => card.rank !== "A")}
+                cardsPerRow={cardsPerRow.loot}
+                showCount
+                countPosition="left"
+                limitFan
+                fan="horizontalLeft"
+              />
+              <Deck
+                cards={game.scorePile.filter((card) => card.rank === "A")}
+                cardsPerRow={cardsPerRow.loot}
+                showCount
+                countPosition="right"
+                limitFan
+                fan="horizontalRight"
+              />
+            </View>
+
+            <View style={[flexStyles.rowCentered, flexStyles.gap12]}>
+              {Array.from({ length: maxMarkedPaths }, (_, index) => {
+                const noteCard: LoopCard | undefined = game.notes[index];
+                const isSelected = selectedNoteIndex?.index === index;
+
+                return (
+                  <CardButton
+                    key={`note-${index}`}
+                    onPress={() => {
+                      if (noteCard !== undefined) {
+                        setSelectedNoteIndex(
+                          selectedNoteIndex?.index === index
+                            ? undefined
+                            : { card: noteCard, index },
+                        );
+                      }
+                    }}
+                    cardsPerRow={cardsPerRow.markedPaths}
+                    suit={noteCard?.suit}
+                    rank={noteCard?.rank}
+                    isPlaceholder={!noteCard}
+                    selectColor={isSelected ? "green" : "blue"}
+                    isSelected={isSelected}
+                  />
+                );
+              })}
+            </View>
+          </View>
+
+          {game.deck.map((card, index) => {
+            const deckLength = game.deck.length;
+            const isSelected = selectedCardIndex === index;
+            const isLookAround = index === game.deckPos && !card.faceUp;
+            const isExploreTarget = !!(
+              selectedRevealedRank !== undefined &&
+              selectedCardIndex !== undefined &&
+              index === (selectedCardIndex + selectedRevealedRank) % deckLength
+            );
+            const isPotentialPathTarget = !!(
+              selectedNoteIndex?.index !== undefined &&
+              index ===
+                (RANK_VALUE[selectedNoteIndex.card.rank] + game.deckPos - 1) %
+                  deckLength
+            );
+
+            // Style
+            const topCardAngleIncrease = 10;
+            const gapAngle = 42;
+            const eachCardAngle = (360 - gapAngle) / deckLength;
+            let angle =
+              index * eachCardAngle - 180 - game.deckPos * eachCardAngle;
+            const translate = isSelected || isExploreTarget ? 14 : 0;
+            let zIndex = 100 - index;
+
+            if (index < game.deckPos) {
+              angle -= gapAngle;
+              zIndex -= deckLength + index;
+            }
+
+            if (index === game.deckPos) {
+              angle -= topCardAngleIncrease;
+            } else if (index === game.deckPos + 1) {
+              angle -= topCardAngleIncrease * 0.2;
+            }
+
+            const style: ViewStyle = {
+              position: "absolute",
+              transform: [
+                { rotate: `${angle}deg` },
+                { translateY: contentRadius * -1 + translate },
+              ],
+              zIndex,
+              transitionDuration: isExploring
+                ? `${exploreTransitionInMs / 1000}s`
+                : "0.5s",
+            };
+
+            const onPressFn = () => {
+              if (index !== game.deckPos && index !== game.deckPos + 1) {
+                return undefined;
+              }
+
+              if (!card.faceUp) {
+                if (index === game.deckPos) {
+                  return lookAround;
+                }
+                return undefined;
+              }
+
+              return () =>
+                setSelectedCardIndex(
+                  selectedCardIndex === index ? undefined : index,
+                );
+            };
+
+            const selectedColor = () => {
+              if (isLookAround) {
+                return "blue" as CardSelectColor;
+              } else if (index === selectedCardIndex) {
+                return "blue" as CardSelectColor;
+              } else if (isExploreTarget) {
+                return "purple" as CardSelectColor;
+              } else if (isPotentialPathTarget) {
+                return "green" as CardSelectColor;
+              }
+              return "blue" as CardSelectColor;
+            };
+
+            return (
+              <CardButton
+                key={`deck-${index}`}
+                onPress={onPressFn()}
+                suit={card.faceUp ? card.suit : undefined}
+                rank={card.faceUp ? card.rank : undefined}
+                style={[style]}
+                isSelected={isSelected}
+                selectColor={selectedColor()}
+                forceSelectColor={isExploreTarget || isPotentialPathTarget}
+                forceOverlay={
+                  isExploreTarget || isPotentialPathTarget || isLookAround
+                }
+                cardsPerRow={cardsPerRow.loop}
+              />
+            );
+          })}
+
+          {selectedNoteIndex !== undefined && (
+            <CardButton
+              onPress={returnToSelectedMarkedPath}
+              suit={selectedNoteIndex.card.suit}
+              rank={selectedNoteIndex.card.rank}
+              style={[
+                {
+                  opacity: 0.75,
+                  position: "absolute",
+                  transform: [
+                    { rotate: `155deg` },
+                    { translateY: contentRadius * -1 },
+                  ],
+                  zIndex: 1000,
+                },
+              ]}
+              selectColor={"green"}
+              forceSelectColor
+              forceOverlay
+              cardsPerRow={cardsPerRow.loop}
+            />
+          )}
+        </View>
+
+        <View
+          style={[
+            flexStyles.rowCentered,
+            flexStyles.fullWidth,
+            flexStyles.gap12,
+            // debugStyles.borderBlue,
+          ]}
+        >
+          <Button
+            text="Explore"
+            onPress={() => {
+              if (selectedCardIndex !== undefined) {
+                setIsExploring(true);
+              }
+            }}
+            disabled={
+              selectedCardIndex === undefined ||
+              !isNumberRank(game.deck[selectedCardIndex].rank) ||
+              !game.deck[selectedCardIndex].faceUp
+            }
+            style={[flexStyles.flex1]}
+            theme={"purple"}
           />
-        )}
-      </View>
 
-      <View
-        style={[flexStyles.rowCentered, flexStyles.fullWidth, flexStyles.gap12]}
-      >
-        <Button
-          text="Explore"
-          onPress={() => {
-            if (selectedCardIndex !== undefined) {
-              setIsExploring(true);
+          <Button
+            text="Mark Path"
+            onPress={() => {
+              if (selectedCardIndex !== undefined) {
+                markPath(selectedCardIndex);
+              }
+            }}
+            disabled={
+              selectedCardIndex === undefined ||
+              !isNumberRank(game.deck[selectedCardIndex].rank) ||
+              !game.deck[selectedCardIndex].faceUp ||
+              game.notes.length >= maxMarkedPaths
             }
-          }}
-          disabled={
-            selectedCardIndex === undefined ||
-            !isNumberRank(game.deck[selectedCardIndex].rank) ||
-            !game.deck[selectedCardIndex].faceUp
-          }
-          style={[flexStyles.flex1]}
-          theme={"purple"}
-        />
+            style={[flexStyles.flex1]}
+            theme={"green"}
+          />
 
-        <Button
-          text="Mark Path"
-          onPress={() => {
-            if (selectedCardIndex !== undefined) {
-              markPath(selectedCardIndex);
+          <Button
+            text="Return to Path"
+            onPress={returnToSelectedMarkedPath}
+            disabled={selectedNoteIndex === undefined}
+            style={[flexStyles.flex1]}
+            theme={"green"}
+          />
+
+          <Button
+            text="Look Around"
+            onPress={lookAround}
+            disabled={
+              game.ended ||
+              game.deck.length === 0 ||
+              game.deck[game.deckPos].faceUp
             }
-          }}
-          disabled={
-            selectedCardIndex === undefined ||
-            !isNumberRank(game.deck[selectedCardIndex].rank) ||
-            !game.deck[selectedCardIndex].faceUp ||
-            game.notes.length >= maxMarkedPaths
-          }
-          style={[flexStyles.flex1]}
-          theme={"green"}
-        />
-
-        <Button
-          text="Return to Path"
-          onPress={returnToSelectedMarkedPath}
-          disabled={selectedNoteIndex === undefined}
-          style={[flexStyles.flex1]}
-          theme={"green"}
-        />
-
-        <Button
-          text="Look Around"
-          onPress={lookAround}
-          disabled={
-            game.ended ||
-            game.deck.length === 0 ||
-            game.deck[game.deckPos].faceUp
-          }
-          style={[flexStyles.flex1]}
-          theme={"green"}
-        />
+            style={[flexStyles.flex1]}
+            theme={"green"}
+          />
+        </View>
       </View>
     </GameWrapper>
   );

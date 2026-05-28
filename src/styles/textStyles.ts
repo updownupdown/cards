@@ -2,15 +2,6 @@ import { Colors, FontWeight } from "@/styles/styles";
 import { StyleSheet } from "react-native";
 
 export const textStyles = StyleSheet.create({
-  gameHeaderTitle: {
-    fontSize: 20,
-    fontFamily: FontWeight[300],
-    color: Colors.K400,
-    flex: 1,
-    textAlign: "center",
-    overflow: "hidden",
-    paddingHorizontal: 10,
-  },
   default: {
     fontSize: 16,
     fontFamily: FontWeight[300],

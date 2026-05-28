@@ -29,4 +29,8 @@ export const debugStyles = StyleSheet.create({
     opacity: 1,
     boxShadow: "0 0 0 1px beige, inset 0 0 0 1px beige",
   },
+  borderLarge: {
+    opacity: 1,
+    boxShadow: "0 0 0 4px red, inset 0 0 0 4px red",
+  },
 });

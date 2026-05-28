@@ -1,32 +1,27 @@
-import { useMemo, useState } from "react";
-import { GameMenus } from "../common/GameMenus";
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-
+import { textStyles } from "@/styles/textStyles";
+import { useMemo, useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Card } from "../Cards/Card";
 import {
-  CardSuit,
+  PlayingCardJoker,
   RANK_VALUE,
+  cardColor,
   createDeck,
-  isRed,
+  isFace,
+  isJoker,
+  rankValue,
   shuffle,
-  type PlayingCard,
 } from "../Cards/card-utils";
-import { textStyles } from "@/styles/textStyles";
 import { GameWrapper } from "../common/GameWrapper";
+import { Button } from "../Button/Button";
+import { flexStyles } from "@/styles/flexStyles";
 
-type DeadRank = PlayingCard["rank"] | "Joker";
-
-type DeadCard = {
-  id: string;
-  suit: CardSuit;
-  rank: DeadRank;
-  faceUp: boolean;
-};
+const cardsPerRow = 6;
 
 type Zombie = {
   id: string;
-  card: DeadCard;
+  card: PlayingCardJoker;
   revealed: boolean;
   dead: boolean;
 };
@@ -34,11 +29,11 @@ type Zombie = {
 type Phase = "reveal" | "play" | "kill";
 
 type GameState = {
-  piles: DeadCard[][];
+  piles: PlayingCardJoker[][];
   zombies: Zombie[];
-  draw: DeadCard[];
+  draw: PlayingCardJoker[];
   phase: Phase;
-  currentDraw: DeadCard | null;
+  currentDraw: PlayingCardJoker | null;
   lastPlayedPile: number | null;
   ended: boolean;
   won: boolean;
@@ -56,29 +51,13 @@ const PILE_TO_ZOMBIES: Record<number, number[]> = {
   8: [8, 5],
 };
 
-function isFace(card: DeadCard) {
-  return card.rank === "J" || card.rank === "Q" || card.rank === "K";
-}
-
-function isJoker(card: DeadCard) {
-  return card.rank === "Joker";
-}
-
-function rankValue(card: DeadCard) {
-  return card.rank === "Joker" ? 0 : RANK_VALUE[card.rank];
-}
-
-function cardColor(card: DeadCard) {
-  return isRed(card.suit) ? "red" : "black";
-}
-
 function setup(): GameState {
   const normal = createDeck({ faceUp: true }).map((card) => ({
     ...card,
-    rank: card.rank as DeadRank,
+    rank: card.rank,
   }));
 
-  const jokers: DeadCard[] = [
+  const jokers: PlayingCardJoker[] = [
     { id: "joker-a", suit: "spades", rank: "Joker", faceUp: true },
     { id: "joker-b", suit: "hearts", rank: "Joker", faceUp: true },
   ];
@@ -87,7 +66,7 @@ function setup(): GameState {
   const zombiesCards = shuffle(all.filter(isFace));
   const nonFace = shuffle(all.filter((card) => !isFace(card)));
 
-  const piles = Array.from({ length: 9 }, () => [] as DeadCard[]);
+  const piles = Array.from({ length: 9 }, () => [] as PlayingCardJoker[]);
   for (let i = 0; i < 9; i += 1) {
     const next = nonFace.shift();
     if (next) piles[i].push(next);
@@ -112,11 +91,11 @@ function setup(): GameState {
   };
 }
 
-function canPlayOn(top: DeadCard, card: DeadCard) {
+function canPlayOn(top: PlayingCardJoker, card: PlayingCardJoker) {
   if (isJoker(top) || isJoker(card)) return true;
 
-  const topValue = rankValue(top);
-  const cardValue = rankValue(card);
+  const topValue = rankValue(top, undefined, 0);
+  const cardValue = rankValue(card, undefined, 0);
   const sameColor = cardColor(top) === cardColor(card);
 
   if (cardValue === topValue) return true;
@@ -149,8 +128,12 @@ function supportIndicesForAttack(
   return [];
 }
 
-function canKillZombie(zombie: DeadCard, supports: DeadCard[]) {
-  const values = supports.map(rankValue);
+function rankValueMap(card: PlayingCardJoker) {
+  return card.rank === "Joker" ? 0 : RANK_VALUE[card.rank];
+}
+
+function canKillZombie(zombie: PlayingCardJoker, supports: PlayingCardJoker[]) {
+  const values = supports.map(rankValueMap);
   if (values[0] + values[1] < 10) return false;
 
   if (zombie.rank === "K") {
@@ -192,7 +175,7 @@ export default function DeadCenter() {
       const supportIdx = supportIndicesForAttack(game.lastPlayedPile!, index);
       const supports = supportIdx
         .map((idx) => game.piles[idx][game.piles[idx].length - 1])
-        .filter(Boolean) as DeadCard[];
+        .filter(Boolean) as PlayingCardJoker[];
 
       if (supports.length !== 2) return false;
       return canKillZombie(z.card, supports);
@@ -330,31 +313,28 @@ export default function DeadCenter() {
     setMessage("Next turn.");
   }
 
-  const loseText =
-    game.ended && !game.won
-      ? "You lost: deck exhausted or no legal play remained."
-      : null;
-
   return (
     <GameWrapper
       ended={game.ended}
       won={game.won}
       reset={reset}
       isLoaded={isLoaded}
+      winLoseMessage={
+        game.won
+          ? "You won!"
+          : "You lost: deck exhausted or no legal play remained."
+      }
     >
       <Text style={textStyles.default}>
-        Draw pile: {game.draw.length}
-        <br />
-        Zombies left: {aliveCount(game.zombies)}
-        <br />
-        Phase: {game.phase}
+        Draw ({game.draw.length}) - Zombies ({aliveCount(game.zombies)}) - Phase
+        ({game.phase})
         <br />
         Message: {message}
       </Text>
 
       {game.currentDraw ? (
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Current draw</Text>
+        <View style={[flexStyles.gap10]}>
+          <Text style={textStyles.default}>Current draw</Text>
           <Card
             suit={game.currentDraw.suit}
             rank={
@@ -362,14 +342,22 @@ export default function DeadCenter() {
                 ? "Joker"
                 : game.currentDraw.rank
             }
-            cardsPerRow={5}
+            cardsPerRow={cardsPerRow}
           />
         </View>
       ) : null}
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Cabin (3x3)</Text>
-        <View style={styles.grid}>
+      <View style={[flexStyles.gap10]}>
+        <Text style={textStyles.default}>Cabin (3x3)</Text>
+        <View
+          style={[
+            {
+              flexDirection: "row",
+              flexWrap: "wrap",
+              gap: 8,
+            },
+          ]}
+        >
           {game.piles.map((pile, index) => {
             const top = pile[pile.length - 1];
             const canPlay =
@@ -386,18 +374,26 @@ export default function DeadCenter() {
                 <Card
                   suit={top.suit}
                   rank={top.rank === "Joker" ? "Joker" : top.rank}
-                  cardsPerRow={5}
+                  cardsPerRow={cardsPerRow}
                 />
-                <Text style={styles.pileDepth}>x{pile.length}</Text>
+                <Text style={textStyles.default}>x{pile.length}</Text>
               </Pressable>
             );
           })}
         </View>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Zombies</Text>
-        <View style={styles.zombieWrap}>
+      <View style={[flexStyles.gap10]}>
+        <Text style={textStyles.default}>Zombies</Text>
+        <View
+          style={[
+            {
+              flexDirection: "row",
+              flexWrap: "wrap",
+              gap: 6,
+            },
+          ]}
+        >
           {game.zombies.map((z, index) => {
             const canReveal = game.phase === "reveal" && !z.revealed && !z.dead;
             const canKill =
@@ -422,15 +418,15 @@ export default function DeadCenter() {
                 ]}
               >
                 {z.dead ? (
-                  <Text style={styles.deadText}>DEAD</Text>
+                  <Text style={textStyles.default}>DEAD</Text>
                 ) : z.revealed ? (
                   <Card
                     suit={z.card.suit}
                     rank={z.card.rank === "Joker" ? "Joker" : z.card.rank}
-                    cardsPerRow={5}
+                    cardsPerRow={cardsPerRow}
                   />
                 ) : (
-                  <Card suit={z.card.suit} isBack cardsPerRow={5} />
+                  <Card suit={z.card.suit} isBack cardsPerRow={cardsPerRow} />
                 )}
               </Pressable>
             );
@@ -438,63 +434,14 @@ export default function DeadCenter() {
         </View>
       </View>
 
-      {game.phase === "kill" ? (
-        <Pressable style={styles.skipBtn} onPress={() => finishKill(null)}>
-          <Text style={styles.skipText}>Skip Kill</Text>
-        </Pressable>
-      ) : null}
-
-      {game.ended && game.won ? (
-        <Text style={styles.winText}>You won!</Text>
-      ) : null}
-      {loseText ? <Text style={styles.loseText}>{loseText}</Text> : null}
+      {game.phase === "kill" && (
+        <Button onPress={() => finishKill(null)} text="Skip Kill" />
+      )}
     </GameWrapper>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingTop: 56,
-    paddingHorizontal: 10,
-    paddingBottom: 24,
-    gap: 10,
-  },
-  headerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 24,
-    fontFamily: "Outfit_600SemiBold",
-    color: "#1f2937",
-  },
-  button: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-    backgroundColor: "#1d4ed8",
-  },
-  buttonText: {
-    color: "#fff",
-    fontFamily: "Outfit_500Medium",
-  },
-  metaText: {
-    color: "#334155",
-    fontFamily: "Outfit_400Regular",
-  },
-  section: {
-    gap: 8,
-  },
-  sectionTitle: {
-    fontFamily: "Outfit_600SemiBold",
-    color: "#111827",
-  },
-  grid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
-  },
   pileCell: {
     width: "31%",
     aspectRatio: 1,
@@ -516,15 +463,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     backgroundColor: "rgba(239,68,68,0.16)",
   },
-  pileDepth: {
-    fontSize: 11,
-    color: "#334155",
-  },
-  zombieWrap: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 6,
-  },
+
   zombieSlot: {
     borderRadius: 8,
     borderWidth: 1,
@@ -534,29 +473,5 @@ const styles = StyleSheet.create({
     minHeight: 80,
     justifyContent: "center",
     alignItems: "center",
-  },
-  deadText: {
-    color: "#991b1b",
-    fontFamily: "Outfit_600SemiBold",
-    fontSize: 11,
-  },
-  skipBtn: {
-    alignSelf: "flex-start",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-    backgroundColor: "#475569",
-  },
-  skipText: {
-    color: "#fff",
-    fontFamily: "Outfit_500Medium",
-  },
-  winText: {
-    color: "#065f46",
-    fontFamily: "Outfit_600SemiBold",
-  },
-  loseText: {
-    color: "#991b1b",
-    fontFamily: "Outfit_600SemiBold",
   },
 });

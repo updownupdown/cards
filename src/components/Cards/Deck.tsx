@@ -13,7 +13,7 @@ export const DEFAULT_FRONT_OVERLAP = 0.7;
 export const DEFAULT_BACK_OVERLAP = 0.9;
 
 // Fan sizes, in percentage of width or height of that card
-const minFanSize = 9;
+export const minFanSize = 9;
 const maxFanSize = 24;
 const maxFanSizeExtraWide = 46;
 
@@ -38,7 +38,7 @@ type DeckProps = {
     | "verticalDown"
     | undefined;
   largeFan?: "all" | "progressive" | "extra-wide";
-  cardsPerRow?: number;
+  cardsPerRow: number;
   showCount?: boolean;
   selectColor?: CardSelectColor;
   countPosition?: "over" | "above" | "left" | "right" | "below";
@@ -147,9 +147,9 @@ export const Deck = ({
     }
 
     if (fan === "horizontalLeft") {
-      return { left: offsetSize };
-    } else if (fan === "horizontalRight") {
       return { right: offsetSize };
+    } else if (fan === "horizontalRight") {
+      return { left: offsetSize };
     } else if (fan === "verticalUp") {
       return { bottom: offsetSize };
     } else {
@@ -158,9 +158,12 @@ export const Deck = ({
   }
 
   // Compute container size
-  const largestOffset = cardOffsetStyle(limitedDeckSize - 1);
+  // For limited fan, always make deck as large as it'll be
+  const sizeOfLargestOffset =
+    (limitFan ? maxBackDeckSize : limitedDeckSize) - 1;
+  const largestOffset = cardOffsetStyle(sizeOfLargestOffset);
 
-  let deckContainerStyle: ViewStyle = { width, height };
+  const deckContainerStyle: ViewStyle = { width, height };
 
   if (fan === "horizontalLeft") {
     deckContainerStyle.width = width + Number(largestOffset.left);
@@ -213,12 +216,7 @@ export const Deck = ({
 
       {/* Deck */}
       <View
-        style={[
-          styles.deck,
-          style,
-          deckContainerStyle,
-          // debugStyles.borderYellow,
-        ]}
+        style={[styles.deck, style, deckContainerStyle]}
         collapsable={false}
       >
         {/* Anchor Views for refs, used for animations */}
@@ -232,7 +230,6 @@ export const Deck = ({
 
               { width, height, ...cardOffsetStyle(limitedDeckSize - 1) },
               cardStyles.animHide,
-              // debugStyles.borderBlue,
             ]}
             collapsable={false}
           />
@@ -245,7 +242,6 @@ export const Deck = ({
               flexStyles.positionAbsolute,
               { width, height, ...cardOffsetStyle(limitedDeckSize, true) },
               cardStyles.animHide,
-              // debugStyles.borderPink,
             ]}
             collapsable={false}
           />
@@ -261,6 +257,7 @@ export const Deck = ({
             disabled={isDisabled}
             selectColor={selectColor}
             cardSize={cardSize}
+            forceSelectColor={!isDisabled}
           />
         )}
 
@@ -307,6 +304,8 @@ export const Deck = ({
   );
 };
 Deck.displayName = "Deck";
+
+export const deckCountAboveBelowHeight = 36;
 
 export const styles = StyleSheet.create({
   deckWrap: {
@@ -367,6 +366,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
+    minHeight: deckCountAboveBelowHeight,
   },
   deckCountBelow: {
     ...flexStyles.rowCentered,
@@ -376,6 +376,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
+    minHeight: deckCountAboveBelowHeight,
   },
   deckCountLeft: {
     ...flexStyles.colCentered,

@@ -3,9 +3,8 @@ import { flexStyles } from "./flexStyles";
 import { Colors } from "./styles";
 
 const cardTransition = {
-  transitionDuration: "0.5s",
-  transitionProperty:
-    "border-color, border-width, bottom, left, right, top, transform",
+  transitionDuration: "0.3s",
+  transitionProperty: "bottom, left, right, top, transform",
   transitionTimingFunction: "easeInOut",
 };
 
@@ -20,6 +19,12 @@ export const cardStyles = StyleSheet.create({
   rowAlignDown: {
     alignItems: "flex-end",
     alignContent: "flex-end",
+  },
+  cardGrid: {
+    display: "flex",
+    flexWrap: "wrap",
+    flexDirection: "row-reverse",
+    justifyContent: "flex-end",
   },
   rowGap4: {
     gap: 10,
@@ -45,19 +50,29 @@ export const cardStyles = StyleSheet.create({
     ...cardTransition,
     overflow: "hidden",
     position: "relative",
+    zIndex: 2,
     outlineWidth: 0,
-    backgroundColor: Colors.white,
+    // backgroundColor: Colors.white,
   },
-  placeholderCard: {
-    backgroundColor: Colors.K875,
-  },
+
   cardSelectOverlay: {
-    ...cardTransition,
+    // ...cardTransition,
     position: "absolute",
+    zIndex: 3,
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
+  },
+  cardPlaceholderUnderlay: {
+    // ...cardTransition,
+    position: "absolute",
+    zIndex: 1,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: Colors.K875,
   },
   animHide: {
     opacity: 0,

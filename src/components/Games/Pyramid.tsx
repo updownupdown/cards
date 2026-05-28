@@ -481,12 +481,7 @@ export default function Pyramid() {
         <View style={styles.stockWasteRow}>
           <Pressable style={styles.cardSlot} onPress={drawCard}>
             {game.stock.length > 0 ? (
-              <Card
-                suit="spades"
-                rank="Back"
-                cardsPerRow={cardsPerRow}
-                isBack
-              />
+              <Card cardsPerRow={cardsPerRow} isBack />
             ) : (
               <Text style={styles.slotLabel}>Stock</Text>
             )}

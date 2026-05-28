@@ -6,7 +6,7 @@ import {
 } from "@/data/game-menu";
 import { buttonStyles, headerButtonIconSize } from "@/styles/buttonStyles";
 import { layoutStyles } from "@/styles/layoutStyles";
-import { Colors } from "@/styles/styles";
+import { Colors, FontWeight } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
 import { router, usePathname } from "expo-router";
 import { useEffect, useRef, useState } from "react";
@@ -93,7 +93,17 @@ export const GameMenus = ({
         <Text
           numberOfLines={1}
           ellipsizeMode="tail"
-          style={[textStyles.gameHeaderTitle]}
+          style={[
+            {
+              fontSize: 20,
+              fontFamily: FontWeight[300],
+              color: Colors.K400,
+              flex: 1,
+              textAlign: "center",
+              overflow: "hidden",
+              paddingHorizontal: 10,
+            },
+          ]}
         >
           {gameInfo.title}
         </Text>

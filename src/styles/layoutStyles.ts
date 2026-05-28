@@ -8,6 +8,7 @@ import {
 import { StyleSheet } from "react-native";
 import { headerButtonSize } from "./buttonStyles";
 import { flexStyles } from "./flexStyles";
+import { debugStyles } from "./debugStyles";
 
 export const layoutStyles = StyleSheet.create({
   // App
@@ -48,6 +49,7 @@ export const layoutStyles = StyleSheet.create({
     height: headerButtonSize + ContentSidePadding,
     backgroundColor: Colors.K850,
     padding: ContentSidePadding,
+    boxShadow: `0 0 20px ${rgba(Colors.K850, 1)}`,
   },
   gameLoadingOverlay: {
     position: "absolute",
@@ -72,10 +74,10 @@ export const layoutStyles = StyleSheet.create({
   gameAreaScroll: {
     ...flexStyles.colCentered,
     justifyContent: "space-evenly",
-    paddingVertical: 20,
     gap: 30,
     flex: 1,
     alignItems: "stretch",
     padding: ContentSidePadding,
+    paddingBottom: 30,
   },
 });

@@ -29,7 +29,7 @@ export const CardButton = ({
   disabled,
   isSelected,
   style,
-  cardsPerRow = 5,
+  cardsPerRow,
   hasTopMargin,
   customTopMarginPerc,
   selectColor,

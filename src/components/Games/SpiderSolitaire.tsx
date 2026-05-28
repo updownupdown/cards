@@ -352,7 +352,7 @@ export default function SpiderSolitaire() {
         <View style={styles.stockRow}>
           <View style={styles.stockSlot}>
             {game.stock.length > 0 ? (
-              <Card suit="spades" rank="Back" cardsPerRow={5} isBack />
+              <Card cardsPerRow={5} isBack />
             ) : (
               <Text style={styles.slotLabel}>Empty</Text>
             )}
