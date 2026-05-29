@@ -129,6 +129,7 @@ const AnimatedCard = ({
         { rotateZ: `${rotationZ}deg` },
         { rotateY: `${rotationY}deg` },
       ],
+      // transformOrigin: flip ? "center center" : "top left",
       zIndex:
         progress.value > 0.5
           ? (to.zIndex ?? from.zIndex ?? 100)
@@ -305,32 +306,4 @@ export const AnimationProvider = ({ children }: { children: ReactNode }) => {
       )}
     </AnimationContext.Provider>
   );
-};
-
-export const useAnimCardsQueue = () => {
-  const [animQueue, setAnimQueue] = useState<CardAnimationParams[]>([]);
-
-  const addAnimToQueue = (anim: CardAnimationParams | null | undefined) => {
-    if (anim && anim.to && anim.from) {
-      console.log("set anim queue");
-      console.log(anim);
-      setAnimQueue((prev) => [...prev, anim]);
-    } else {
-      console.log("defective");
-      console.log(anim);
-    }
-  };
-
-  console.log(animQueue);
-
-  function resetAnimQueue() {
-    console.log("reset anim quee");
-    setAnimQueue([]);
-  }
-
-  return {
-    animQueue,
-    addAnimToQueue,
-    resetAnimQueue,
-  };
 };

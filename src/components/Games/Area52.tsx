@@ -194,43 +194,33 @@ export default function Area52() {
     });
   }
 
-  async function applyAction(action: Action) {
-    if (!currentAttacker || game.ended || isAnimating) return;
+  const getAttackerPos = async (idx: number) =>
+    await measureRef({ current: attackerRefs.current[idx] });
+  const getDefenderPos = async (idx: number) =>
+    await measureRef({ current: defenderRefs.current[idx] });
 
-    const prev = game;
-    const attackerIndex = prev.currentAttackers.length - 1;
-    const attacker = prev.currentAttackers[attackerIndex];
-    const defenders = [...prev.currentDefenders];
-    let attackerDeck = [...prev.attackerDeck];
-    let discardDeck = [...prev.discardDeck];
-
-    let anims: CardAnimationParams[] = [];
-
-    // Helper to push animations safely
+  const processSpecificAction = async (
+    action: Action,
+    attackerIndex: number,
+    attacker: PlayingCard,
+    defenders: (PlayingCard | null)[],
+    discardDeck: PlayingCard[],
+    attackerDeck: PlayingCard[],
+    anims: CardAnimationParams[],
+  ) => {
     const addAnim = (anim: CardAnimationParams | null | undefined) => {
       if (anim) anims.push(anim);
     };
 
-    const getAttackerPos = async (idx: number) =>
-      await measureRef({ current: attackerRefs.current[idx] });
-    const getDefenderPos = async (idx: number) =>
-      await measureRef({ current: defenderRefs.current[idx] });
-
     if (action === "dual") {
-      if (selectedDefenders.length !== 2) {
-        return;
-      }
+      if (selectedDefenders.length !== 2) return false;
       const [aIdx, bIdx] = selectedDefenders;
       const a = defenders[aIdx];
       const b = defenders[bIdx];
-      if (!a || !b) {
-        return;
-      }
+      if (!a || !b) return false;
 
       const sum = RANK_VALUE[a.rank] + RANK_VALUE[b.rank];
-      if (sum !== RANK_VALUE[attacker.rank]) {
-        return;
-      }
+      if (sum !== RANK_VALUE[attacker.rank]) return false;
 
       discardDeck.push(attacker);
       const attackerPos = await getAttackerPos(attackerIndex);
@@ -239,8 +229,8 @@ export default function Area52() {
         buildAnim(
           "dual-attacker",
           attacker,
-          attackerPos,
-          discardDeckPos,
+          attackerPos ?? null,
+          discardDeckPos ?? null,
           undefined,
           undefined,
           "toBack",
@@ -248,7 +238,7 @@ export default function Area52() {
         ),
       );
 
-      if (prev.wave === 2) {
+      if (game.wave === 2) {
         const attackerIsRed = isRed(attacker.suit);
 
         if (isRed(a.suit) === attackerIsRed) {
@@ -259,8 +249,8 @@ export default function Area52() {
             buildAnim(
               "dual-da",
               a,
-              posA,
-              discardDeckPos,
+              posA ?? null,
+              discardDeckPos ?? null,
               undefined,
               undefined,
               "toBack",
@@ -277,8 +267,8 @@ export default function Area52() {
               buildAnim(
                 "dual-attack",
                 b,
-                posB,
-                discardDeckPos,
+                posB ?? null,
+                discardDeckPos ?? null,
                 undefined,
                 undefined,
                 "toBack",
@@ -287,22 +277,17 @@ export default function Area52() {
           }
         }
       }
+      return true;
     } else if (action === "single") {
-      if (selectedDefenders.length !== 1) {
-        return;
-      }
+      if (selectedDefenders.length !== 1) return false;
       const [index] = selectedDefenders;
       const defender = defenders[index];
-      if (!defender) {
-        return;
-      }
+      if (!defender) return false;
 
       const valid =
         RANK_VALUE[defender.rank] > RANK_VALUE[attacker.rank] &&
         isRed(defender.suit) !== isRed(attacker.suit);
-      if (!valid) {
-        return;
-      }
+      if (!valid) return false;
 
       discardDeck.push(defender);
       defenders[index] = attacker;
@@ -311,14 +296,13 @@ export default function Area52() {
       const defenderPos = await getDefenderPos(index);
       const discardDeckPos = await measureRef(discardDeckRef);
 
-      // Animate defender from hand to discard
       if (defenderPos && discardDeckPos) {
         addAnim(
           buildAnim(
             "single-def",
             defender,
-            defenderPos,
-            discardDeckPos,
+            defenderPos ?? null,
+            discardDeckPos ?? null,
             undefined,
             undefined,
             "toBack",
@@ -326,31 +310,33 @@ export default function Area52() {
         );
       }
 
-      // Animate attacker from lineup to hand
       if (attackerPos && defenderPos) {
-        addAnim(buildAnim("single-attack", attacker, attackerPos, defenderPos));
+        addAnim(
+          buildAnim(
+            "single-attack",
+            attacker,
+            attackerPos ?? null,
+            defenderPos ?? null,
+          ),
+        );
       }
+      return true;
     } else if (action === "sacrifice") {
-      if (selectedDefenders.length !== 1) {
-        return;
-      }
+      if (selectedDefenders.length !== 1) return false;
       const [index] = selectedDefenders;
-      if (!defenders[index]) {
-        return;
-      }
+      if (!defenders[index]) return false;
 
       discardDeck.push(defenders[index]);
       const defPos = await getDefenderPos(index);
       const discardDeckPos = await measureRef(discardDeckRef);
 
-      // Animate defender from hand to discard
       if (defPos && discardDeckPos) {
         addAnim(
           buildAnim(
             "sac-def",
             defenders[index],
-            defPos,
-            discardDeckPos,
+            defPos ?? null,
+            discardDeckPos ?? null,
             undefined,
             undefined,
             "toBack",
@@ -363,55 +349,26 @@ export default function Area52() {
       const attackerPos = await getAttackerPos(attackerIndex);
       const attackerDeckPos = await measureRef(attackerDeckCurrentRef);
 
-      // Animate attacker from lineup to attacker deck
       if (attackerPos && attackerDeckPos) {
         addAnim(
           buildAnim(
             "sac-att",
             attacker,
-            attackerPos,
-            attackerDeckPos,
+            attackerPos ?? null,
+            attackerDeckPos ?? null,
             undefined,
             undefined,
             "toBack",
           ),
         );
       }
+      return true;
     }
 
-    setIsAnimating(true);
+    return false;
+  };
 
-    if (anims.length > 0) {
-      await animateCards(anims);
-    }
-    anims = [];
-
-    // It's safe to unselect defenders now (earlier would mess up animations)
-    setSelectedDefenders([]);
-
-    // Form intermediate state after action resolves
-    let nextState = {
-      ...prev,
-      currentDefenders: defenders,
-      attackerDeck,
-      discardDeck,
-    };
-
-    // Remove current attacker
-    let currentAttackers = [...prev.currentAttackers];
-    currentAttackers.pop();
-    nextState.currentAttackers = currentAttackers;
-
-    if (anims.length > 0) {
-      // Show intermediate update to fix discard count for the discarded attacker
-      setGame(nextState);
-      await animateCards(anims);
-      anims = [];
-    } else {
-      setGame(nextState);
-    }
-
-    // Handle Wave Transition
+  const checkWaveTransition = async (nextState: AreaState) => {
     if (nextState.currentAttackers.length === 0 && !nextState.ended) {
       if (nextState.attackerDeck.length === 0) {
         if (nextState.discardDeck.length === 0) {
@@ -434,19 +391,19 @@ export default function Area52() {
             const discardDeckPos = await measureRef(discardDeckRef);
             const attackerDeckPos = await measureRef(attackerDeckNextRef);
 
-            // Animate refill from discard to attacker deck
-            await animateCards([
-              buildAnim(
-                `wave-trans-${i}`,
-                { ...card, isBack: true },
-                discardDeckPos,
-                attackerDeckPos,
-                50,
-                0,
-                undefined,
-                false,
-              ),
-            ]);
+            const transAnim = buildAnim(
+              `wave-trans-${i}`,
+              { ...card, isBack: true },
+              discardDeckPos ?? null,
+              attackerDeckPos ?? null,
+              50,
+              0,
+              undefined,
+              false,
+            );
+            if (transAnim) {
+              await animateCards([transAnim]);
+            }
 
             setGame({
               ...nextState,
@@ -465,71 +422,69 @@ export default function Area52() {
         }
       }
     }
+    return nextState;
+  };
 
-    // Refill attackers one by one
+  const processAttackerRefill = async (nextState: AreaState) => {
     if (nextState.currentAttackers.length === 0 && !nextState.ended) {
-      if (!nextState.ended) {
-        for (let i = 0; i < maxAttackersNum; i++) {
-          const { nextCard, newState } = getNextAttacker(nextState);
-          if (!nextCard) {
-            nextState = newState;
-            break;
-          }
-
-          nextState = {
-            ...newState,
-            currentAttackers: [...newState.currentAttackers, nextCard],
-          };
-          setGame(nextState);
-
-          const attackerDeckPos = await measureRef(attackerDeckCurrentRef);
-          const toPos = await getAttackerPos(i);
-          await animateCards([
-            buildAnim(
-              `deal-att-${i}`,
-              nextCard,
-              attackerDeckPos,
-              toPos,
-              animDuration,
-              0,
-              "toFace",
-              true,
-            ),
-          ]);
+      for (let i = 0; i < maxAttackersNum; i++) {
+        const { nextCard, newState } = getNextAttacker(nextState);
+        if (!nextCard) {
+          nextState = newState;
+          break;
         }
-      } else {
+
+        nextState = {
+          ...newState,
+          currentAttackers: [...newState.currentAttackers, nextCard],
+        };
         setGame(nextState);
+
+        const attackerDeckPos = await measureRef(attackerDeckCurrentRef);
+        const toPos = await getAttackerPos(i);
+        const anim = buildAnim(
+          `deal-att-${i}`,
+          nextCard,
+          attackerDeckPos ?? null,
+          toPos ?? null,
+          animDuration,
+          0,
+          "toFace",
+          true,
+        );
+        if (anim) {
+          await animateCards([anim]);
+        }
       }
     }
+    return nextState;
+  };
 
-    // Refill defenders
+  const processDefenderRefill = async (nextState: AreaState) => {
     let updatedDefenders = [...nextState.currentDefenders];
     let updatedDefenderDeck = [...nextState.defenderDeck];
+    let anims: CardAnimationParams[] = [];
+    let delayCount = 0;
 
     for (let i = 0; i < updatedDefenders.length; i++) {
       if (!updatedDefenders[i]) {
         const next = updatedDefenderDeck.shift();
-        // Use a delay count, because i can be 6, which gives inaccurate delays
-        let delayCount = 0;
         if (next) {
           updatedDefenders[i] = next;
-
           const defenderDeckPos = await measureRef(defenderDeckRef);
           const targetPos = await getDefenderPos(i);
 
-          // Animate from defender deck to hand
           if (defenderDeckPos && targetPos) {
-            addAnim(
-              buildAnim(
-                `deal-def-${i}`,
-                next,
-                defenderDeckPos,
-                targetPos,
-                animDuration,
-                delayCount * animDuration - 100 * delayCount,
-                "toFace",
-              ),
+            const anim = buildAnim(
+              `deal-def-${i}`,
+              next,
+              defenderDeckPos ?? null,
+              targetPos ?? null,
+              animDuration,
+              delayCount * animDuration - 100 * delayCount,
+              "toFace",
             );
+            if (anim) anims.push(anim);
             delayCount += 1;
           }
         }
@@ -540,8 +495,9 @@ export default function Area52() {
       await animateCards(anims);
     }
 
-    const finalDefenders = updatedDefenders.filter(Boolean) as PlayingCard[];
-    nextState.currentDefenders = finalDefenders;
+    nextState.currentDefenders = updatedDefenders.filter(
+      Boolean,
+    ) as PlayingCard[];
     nextState.defenderDeck = updatedDefenderDeck;
 
     if (nextState.currentDefenders.length === 0) {
@@ -549,9 +505,66 @@ export default function Area52() {
       nextState.won = false;
     }
 
+    return nextState;
+  };
+
+  async function applyAction(action: Action) {
+    if (!currentAttacker || game.ended || isAnimating) return;
+
+    const attackerIndex = game.currentAttackers.length - 1;
+    const attacker = game.currentAttackers[attackerIndex];
+    const defenders = [...game.currentDefenders];
+    let attackerDeck = [...game.attackerDeck];
+    let discardDeck = [...game.discardDeck];
+    let anims: CardAnimationParams[] = [];
+
+    const isActionValid = await processSpecificAction(
+      action,
+      attackerIndex,
+      attacker,
+      defenders,
+      discardDeck,
+      attackerDeck,
+      anims,
+    );
+
+    if (!isActionValid) {
+      return;
+    }
+
+    setIsAnimating(true);
+
+    if (anims.length > 0) {
+      await animateCards(anims);
+    }
+
+    setIsAnimating(false);
+
+    setSelectedDefenders([]);
+
+    let nextState = {
+      ...game,
+      currentDefenders: defenders,
+      attackerDeck,
+      discardDeck,
+    };
+
+    let currentAttackers = [...game.currentAttackers];
+    currentAttackers.pop();
+    nextState.currentAttackers = currentAttackers;
+
+    setGame(nextState);
+
+    nextState = await checkWaveTransition(nextState);
+    if (!nextState.ended) {
+      nextState = await processAttackerRefill(nextState);
+    }
+    if (!nextState.ended) {
+      nextState = await processDefenderRefill(nextState);
+    }
+
     setGame(nextState);
     setSelectedDefenders([]);
-    setIsAnimating(false);
   }
 
   const canAttack = useMemo(() => {

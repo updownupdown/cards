@@ -9,6 +9,8 @@ import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
 import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
 
+const cardsPerRow = 4;
+
 type AcesUpState = {
   stock: PlayingCard[];
   piles: PlayingCard[][];
@@ -103,9 +105,9 @@ export default function AcesUp() {
 
   const { animateCards, measureRef, isAnimating, setIsAnimating } =
     useAnimations();
-  const [isDiscarding, setIsDiscarding] = useState<number | undefined>(
-    undefined,
-  );
+  const [animatedPileIndex, setAnimatedPileIndex] = useState<
+    number | undefined
+  >(undefined);
 
   const stockRef = useRef<View>(null);
   const discardRef = useRef<View>(null);
@@ -149,7 +151,7 @@ export default function AcesUp() {
             cardInfo: {
               rank: cardsToDeal[i].rank,
               suit: cardsToDeal[i].suit,
-              cardsPerRow: 4,
+              cardsPerRow,
             },
             to: { ...pilePos, zIndex: 200 - i },
             from: { ...stockPos, zIndex: 200 - i },
@@ -196,7 +198,7 @@ export default function AcesUp() {
 
     // Avoid disappearing card flash; give animation time to kick in
     setTimeout(() => {
-      setIsDiscarding(pileIndex);
+      setAnimatedPileIndex(pileIndex);
     }, 10);
 
     const pileEl = pileRefsCurrent.current[pileIndex];
@@ -214,7 +216,7 @@ export default function AcesUp() {
             cardInfo: {
               rank: cardToDiscard.rank,
               suit: cardToDiscard.suit,
-              cardsPerRow: 4,
+              cardsPerRow,
             },
             flip: "toBack" as const,
             from: pilePos,
@@ -241,33 +243,70 @@ export default function AcesUp() {
 
     setSelectedPile(undefined);
     setIsAnimating(false);
-    setIsDiscarding(undefined);
+    setAnimatedPileIndex(undefined);
   }
 
-  function onPilePress(pileIndex: number) {
-    if (isAnimating) return;
-    setGame((prev) => {
-      if (prev.ended) return prev;
+  async function onPilePress(pileIndex: number) {
+    if (isAnimating || game.ended) return;
 
-      const piles = prev.piles.map((pile) => [...pile]);
-      const clickedEmptyPile = piles[pileIndex].length === 0;
+    const piles = game.piles.map((pile) => [...pile]);
+    const clickedEmptyPile = piles[pileIndex].length === 0;
 
-      if (selectedPile === undefined) {
-        // Select first source card
-        if (!clickedEmptyPile) {
-          setSelectedPile(pileIndex);
-        }
-        return prev;
-      } else if (selectedPile === pileIndex) {
-        // Unselect pile
-        setSelectedPile(undefined);
-        return prev;
-      } else if (!clickedEmptyPile) {
-        // Switch to another source card
+    if (selectedPile === undefined) {
+      // Select first source card
+      if (!clickedEmptyPile) {
         setSelectedPile(pileIndex);
-        return prev;
       }
+      return;
+    } else if (selectedPile === pileIndex) {
+      // Unselect pile
+      setSelectedPile(undefined);
+      return;
+    } else if (!clickedEmptyPile) {
+      // Switch to another source card
+      setSelectedPile(pileIndex);
+      return;
+    }
 
+    setIsAnimating(true);
+
+    // Animate move card to empty pile
+    // Avoid disappearing card flash; give animation time to kick in
+    setTimeout(() => {
+      setAnimatedPileIndex(selectedPile);
+    }, 10);
+
+    const emptyPileEl = pileRefsCurrent.current[pileIndex];
+    const selectedPileEl = pileRefsCurrent.current[selectedPile];
+
+    if (emptyPileEl && selectedPileEl) {
+      const emptyPilePos = await measureRef({ current: emptyPileEl });
+      const selectedPilePos = await measureRef({ current: selectedPileEl });
+
+      if (emptyPilePos && selectedPilePos) {
+        const pile = game.piles[selectedPile];
+        const cardToMove = pile[pile.length - 1];
+
+        await animateCards([
+          {
+            id: `move-to-empty-${Date.now()}`,
+            cardInfo: {
+              rank: cardToMove.rank,
+              suit: cardToMove.suit,
+              cardsPerRow,
+            },
+            from: selectedPilePos,
+            to: emptyPilePos,
+          },
+        ]);
+      }
+    }
+
+    setSelectedPile(undefined);
+    setIsAnimating(false);
+    setAnimatedPileIndex(undefined);
+
+    setGame((prev) => {
       // Check if clicked an empty pile after having a card selected
       const source = piles[selectedPile];
       const target = piles[pileIndex];
@@ -303,7 +342,7 @@ export default function AcesUp() {
         <Deck
           refTopNext={discardRef}
           backCount={game.discard.length}
-          cardsPerRow={4}
+          cardsPerRow={cardsPerRow}
           limitFan
           fan="horizontalRight"
           showCount
@@ -315,7 +354,7 @@ export default function AcesUp() {
         <Deck
           refTopCurrent={stockRef}
           backCount={game.stock.length}
-          cardsPerRow={4}
+          cardsPerRow={cardsPerRow}
           limitFan
           showCount
           fan="horizontalLeft"
@@ -334,11 +373,11 @@ export default function AcesUp() {
           return (
             <View key={`pile-${idx}`} style={[cardStyles.colUpwards]}>
               <Deck
-                cardsPerRow={4}
+                cardsPerRow={cardsPerRow}
                 fan="verticalUp"
                 largeFan="progressive"
                 cards={pile}
-                hideTopCard={isDiscarding === idx}
+                hideTopCard={animatedPileIndex === idx}
                 refTopCurrent={(el) => {
                   pileRefsCurrent.current[idx] = el;
                 }}
