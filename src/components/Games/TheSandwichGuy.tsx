@@ -1,9 +1,10 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { cardStyles } from "@/styles/cardStyles";
 import { flexStyles } from "@/styles/flexStyles";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { View } from "react-native";
+import { CardAnimationParams, useAnimations } from "../Animations/Animations";
 import { Button } from "../Button/Button";
+import { CardGrid } from "../Cards/Card";
 import {
   RANK_VALUE,
   createDeck,
@@ -14,9 +15,9 @@ import {
 import { CardButton } from "../Cards/CardButton";
 import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
-import { MessageBox } from "../common/MessageBox";
-import { CardGrid, useCardSize } from "../Cards/Card";
+import { useToast } from "../common/Toast";
 
+const animDuration = 400;
 const cardsPerRow = 4;
 
 type SandwichState = {
@@ -96,11 +97,39 @@ export default function TheSandwichGuy() {
 
   const [game, setGame] = useState<SandwichState>(initState);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [invalidSandwichSelected, setInvalidSandwichSelected] = useState(false);
-  const [message, setMessage] = useState(
-    "Pick three cards to make a sandwich.",
-  );
-  const { gridWidth, gridGap } = useCardSize(cardsPerRow, cardsPerRow);
+
+  const deckRef = useRef<View>(null);
+  const discardRef = useRef<View>(null);
+  const handRefs = useRef<(View | null)[]>([]);
+
+  const { animateCards, measureRef, isAnimating, setIsAnimating } =
+    useAnimations();
+
+  const buildAnim = (
+    idPrefix: string,
+    card: PlayingCard,
+    from: any,
+    to: any,
+    duration = animDuration,
+    delay = 0,
+    flip?: "toFace" | "toBack",
+    keepAlive = true,
+  ): CardAnimationParams => {
+    return {
+      id: `${idPrefix}-${Date.now()}`,
+      cardInfo: {
+        rank: card.rank,
+        suit: card.suit,
+        cardsPerRow,
+      },
+      from,
+      to,
+      duration,
+      delay,
+      flip,
+      keepAlive,
+    };
+  };
 
   const selectedCards = useMemo(
     () =>
@@ -110,11 +139,11 @@ export default function TheSandwichGuy() {
     [game.hand, selectedIds],
   );
 
-  useEffect(() => {
+  const invalidSandwichSelected = useMemo(() => {
     if (selectedCards.length !== 3) {
-      setInvalidSandwichSelected(false);
+      return false;
     } else {
-      setInvalidSandwichSelected(!isValidSandwich(selectedCards));
+      return !isValidSandwich(selectedCards);
     }
   }, [selectedCards]);
 
@@ -123,11 +152,10 @@ export default function TheSandwichGuy() {
   function reset() {
     setGame(initState());
     setSelectedIds([]);
-    setMessage("Pick three cards to make a sandwich.");
   }
 
   function toggleSelect(id: string) {
-    if (game.ended) return;
+    if (game.ended || isAnimating) return;
     setSelectedIds((prev) => {
       if (prev.includes(id)) {
         return prev.filter((entry) => entry !== id);
@@ -137,53 +165,149 @@ export default function TheSandwichGuy() {
     });
   }
 
-  function commitSandwich() {
-    if (selectedCards.length !== 3) return;
-    if (!isValidSandwich(selectedCards)) {
-      setMessage(
-        "Not a valid sandwich. Choose cards with equal step difference.",
-      );
+  async function commitSandwich() {
+    if (
+      selectedCards.length !== 3 ||
+      isAnimating ||
+      !isValidSandwich(selectedCards)
+    )
       return;
-    }
 
+    setIsAnimating(true);
     const replacement = replacementCount(selectedCards);
 
-    setGame((prev) => {
-      if (prev.ended) return prev;
+    const deckPos = await measureRef(deckRef);
 
-      // Replace selected cards with null
-      const hand = prev.hand.map((card) =>
-        card && selectedIds.includes(card.id) ? null : card,
-      );
-      const discard = [...prev.discard, ...selectedCards];
-      const deck = [...prev.deck];
+    let currentState = { ...game };
 
-      for (let i = 0; i < replacement; i += 1) {
-        const drawn = deck.shift();
-        const emptyIndex = hand.indexOf(null);
-        if (!drawn || emptyIndex === -1) break;
-        hand[emptyIndex] = drawn; // Replace null with the drawn card
+    // Discard Phase: move cards 1 by 1, updating state each time to increment the discard pile count
+    for (let i = 0; i < currentState.hand.length; i++) {
+      const card = currentState.hand[i];
+      if (card && selectedIds.includes(card.id)) {
+        const handPos = await measureRef({ current: handRefs.current[i] });
+
+        const newHand = [...currentState.hand];
+        newHand[i] = null;
+
+        const discardPos = await measureRef(discardRef);
+
+        // Updated hand
+        currentState = {
+          ...currentState,
+          hand: newHand,
+        };
+        setGame(currentState);
+
+        // Animate hand to discard
+        if (handPos && discardPos) {
+          await animateCards([
+            buildAnim(
+              `discard-${i}-${Date.now()}`,
+              card,
+              handPos,
+              discardPos,
+              animDuration / 2,
+              0,
+              "toBack",
+            ),
+          ]);
+        }
+
+        // Updated discard
+        currentState = {
+          ...currentState,
+          discard: [...currentState.discard, card],
+        };
+        setGame(currentState);
+      }
+    }
+
+    const deckCards = [...currentState.deck];
+    const newlyDrawn: PlayingCard[] = [];
+    const slotsToFill: number[] = [];
+
+    for (let i = 0; i < currentState.hand.length; i++) {
+      if (currentState.hand[i] === null) {
+        slotsToFill.push(i);
+      }
+    }
+
+    const actuallyReplaced = Math.min(
+      replacement,
+      deckCards.length,
+      slotsToFill.length,
+    );
+
+    if (actuallyReplaced > 0) {
+      showToast(`Sandwich served (${actuallyReplaced} new cards)`);
+
+      const drawAnimsPromises = [];
+
+      for (let i = 0; i < actuallyReplaced; i++) {
+        const drawn = deckCards.shift();
+        if (!drawn) break;
+
+        newlyDrawn.push(drawn);
+        const slotIndex = slotsToFill[i];
+        const handPos = await measureRef({
+          current: handRefs.current[slotIndex],
+        });
+
+        // Shrink the deck 1 by 1 visually
+        currentState = {
+          ...currentState,
+          deck: [...deckCards],
+        };
+        setGame(currentState);
+
+        if (deckPos && handPos) {
+          const anim = animateCards([
+            buildAnim(
+              `draw-${i}-${Date.now()}`,
+              drawn,
+              deckPos,
+              handPos,
+              animDuration,
+              0,
+              "toFace",
+            ),
+          ]);
+          drawAnimsPromises.push(anim);
+
+          await new Promise((r) => setTimeout(r, 100)); // stagger
+        }
       }
 
-      const wonByDeckingOut = prev.wonByDeckingOut || deck.length === 0;
-      const next = {
-        ...prev,
-        // Fill nulls with placeholders
-        hand: hand.map((card) => card || null),
-        deck,
-        discard,
-        wonByDeckingOut,
-      };
+      // await all drawer animations
+      await Promise.all(drawAnimsPromises);
+    }
 
-      if (!hasAnyValidSandwich(next.hand)) {
-        return { ...next, ended: true };
+    // Populate final hand slots
+    const finalHand = [...currentState.hand];
+    let drawIndex = 0;
+    for (let i = 0; i < finalHand.length; i++) {
+      if (finalHand[i] === null && drawIndex < newlyDrawn.length) {
+        finalHand[i] = newlyDrawn[drawIndex];
+        drawIndex++;
       }
+    }
 
-      return next;
-    });
+    const wonByDeckingOut =
+      currentState.wonByDeckingOut || deckCards.length === 0;
+    const nextState = {
+      ...currentState,
+      hand: finalHand,
+      deck: deckCards,
+      wonByDeckingOut,
+    };
 
+    if (!hasAnyValidSandwich(nextState.hand)) {
+      nextState.ended = true;
+    }
+
+    setGame(nextState);
     setSelectedIds([]);
-    setMessage("Sandwich served (" + replacement + " new cards)");
+    setIsAnimating(false);
   }
 
   const won = game.ended && game.wonByDeckingOut;
@@ -198,6 +322,8 @@ export default function TheSandwichGuy() {
     }
   }
 
+  const showToast = useToast();
+
   return (
     <GameWrapper
       ended={game.ended}
@@ -211,16 +337,28 @@ export default function TheSandwichGuy() {
           : "No valid sandwich available. You lose."
       }
     >
-      <MessageBox message={message} />
-
-      <View style={[flexStyles.rowCentered]}>
+      <View
+        style={[flexStyles.rowCentered, flexStyles.fullWidth, flexStyles.gap40]}
+      >
         <Deck
+          refTopCurrent={deckRef}
+          showCount
+          limitFan
+          cardsPerRow={cardsPerRow}
+          countPosition="left"
+          backCount={game.deck.length}
+          iconName="draw"
+          fan="horizontalRight"
+        />
+        <Deck
+          refTopNext={discardRef}
           showCount
           limitFan
           cardsPerRow={cardsPerRow}
           countPosition="right"
-          backCount={game.deck.length}
-          iconName="draw"
+          backCount={game.discard.length}
+          iconName="delete"
+          fan="horizontalLeft"
         />
       </View>
 
@@ -234,23 +372,25 @@ export default function TheSandwichGuy() {
         ]}
       >
         {game.hand.map((card, index) => {
-          const selected = !!(card && selectedIds.includes(card.id));
+          const isSelected = !!(card && selectedIds.includes(card.id));
 
           return (
             <CardButton
+              ref={(el) => {
+                handRefs.current[index] = el;
+              }}
               key={card ? card.id : "placeholder" + index}
               onPress={() => {
                 if (card) {
                   toggleSelect(card.id);
                 }
               }}
-              isSelected={selected}
+              isSelected={isSelected}
               cardsPerRow={cardsPerRow}
               isPlaceholder={!card}
               suit={card?.suit}
               rank={card?.rank}
-              // hasTopMargin={index > cardsPerRow - 1}
-              selectColor={selectColor(selected)}
+              selectColor={card ? selectColor(isSelected) : "none"}
             />
           );
         })}
@@ -258,7 +398,9 @@ export default function TheSandwichGuy() {
 
       <Button
         onPress={commitSandwich}
-        disabled={selectedCards.length !== 3 || invalidSandwichSelected}
+        disabled={
+          selectedCards.length !== 3 || invalidSandwichSelected || isAnimating
+        }
         text="Serve Sandwich"
         size="large"
         fullWidth

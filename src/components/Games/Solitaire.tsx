@@ -27,7 +27,6 @@ import { Deck } from "../Cards/Deck";
 import { GameMenus } from "../common/GameMenus";
 import { layoutStyles } from "@/styles/layoutStyles";
 import { Button } from "../Button/Button";
-import { MessageBox } from "../common/MessageBox";
 import { cardStyles } from "@/styles/cardStyles";
 import { flexStyles } from "@/styles/flexStyles";
 import { GameWrapper } from "../common/GameWrapper";

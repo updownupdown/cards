@@ -12,6 +12,7 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { useWindowDimensions, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { ToastProvider } from "@/components/common/Toast";
 
 export default function Layout() {
   const { width: windowWidth } = useWindowDimensions();
@@ -31,25 +32,32 @@ export default function Layout() {
   }
 
   return (
-    <AnimationProvider>
-      <View
-        style={[layoutStyles.appView, wideWidth && layoutStyles.appViewWide]}
-      >
-        <SafeAreaView
-          style={[
-            layoutStyles.safeArea,
-            wideWidth && layoutStyles.safeAreaWide,
-          ]}
-        >
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              gestureEnabled: false,
-              fullScreenGestureEnabled: false,
-            }}
-          />
-        </SafeAreaView>
-      </View>
-    </AnimationProvider>
+    <>
+      <ToastProvider>
+        <AnimationProvider>
+          <View
+            style={[
+              layoutStyles.appView,
+              wideWidth && layoutStyles.appViewWide,
+            ]}
+          >
+            <SafeAreaView
+              style={[
+                layoutStyles.safeArea,
+                wideWidth && layoutStyles.safeAreaWide,
+              ]}
+            >
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                  gestureEnabled: false,
+                  fullScreenGestureEnabled: false,
+                }}
+              />
+            </SafeAreaView>
+          </View>
+        </AnimationProvider>
+      </ToastProvider>
+    </>
   );
 }

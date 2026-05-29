@@ -136,7 +136,6 @@ export default function Clock() {
       //       cardInfo: {
       //         rank: prevCard.rank,
       //         suit: prevCard.suit,
-      //         isBack: false,
       //         cardsPerRow,
       //         cardSize: "small",
       //       },

@@ -1,7 +1,7 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { cardStyles } from "@/styles/cardStyles";
 import { flexStyles } from "@/styles/flexStyles";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { View } from "react-native";
 import { useAnimations } from "../Animations/Animations";
 import { Button } from "../Button/Button";
@@ -11,7 +11,6 @@ import {
   RANK_VALUE,
   StandardRank,
   areRanksConsecutive,
-  areRanksTwoAway,
   createDeck,
   shuffle,
   type PlayingCard,
@@ -136,7 +135,6 @@ export default function Golf() {
             cardInfo: {
               rank: card.rank,
               suit: card.suit,
-              isBack: false,
               cardsPerRow: localCardPerRowSmall,
               cardSize: "small",
             },
@@ -190,7 +188,6 @@ export default function Golf() {
           cardInfo: {
             rank: nextCard.rank,
             suit: nextCard.suit,
-            isBack: false,
             cardsPerRow: localCardPerRowMedium,
             cardSize: "small",
           },
@@ -218,12 +215,8 @@ export default function Golf() {
     setIsAnimating(false);
   }
 
-  const [rankToMatch, setRankToMatch] = useState<number | undefined>(undefined);
-  const rankToMatchRef = useRef(rankToMatch);
-  rankToMatchRef.current = rankToMatch;
-
-  useEffect(() => {
-    setRankToMatch(RANK_VALUE[game.waste[game.waste.length - 1].rank]);
+  const rankToMatch = useMemo(() => {
+    return RANK_VALUE[game.waste[game.waste.length - 1].rank];
   }, [game.waste]);
 
   function selectCardColor(
@@ -231,13 +224,13 @@ export default function Golf() {
     isBottomCard: boolean,
     rankValueToMatch: number | undefined,
   ): CardSelectColor {
-    if (!isBottomCard || rankValueToMatch === undefined) return "none";
+    if (!isBottomCard || rankValueToMatch === undefined || isAnimating)
+      return "none";
 
     const wasteRank = rankValueToMatch;
     const currentRank = RANK_VALUE[rank];
 
     if (areRanksConsecutive(wasteRank, currentRank, false)) return "green";
-    if (areRanksTwoAway(wasteRank, currentRank, false)) return "blue";
 
     return "none";
   }
@@ -264,7 +257,7 @@ export default function Golf() {
           limitFan
           showCount
           countPosition="left"
-          fan="horizontalLeft"
+          fan="horizontalRight"
         />
 
         <Deck
@@ -280,7 +273,7 @@ export default function Golf() {
           limitFan
           showCount
           countPosition="right"
-          fan="horizontalRight"
+          fan="horizontalLeft"
           cardSize="small"
         />
       </View>

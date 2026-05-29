@@ -1,6 +1,6 @@
 import { Icon, IconName } from "@/icons";
 import { cardStyles } from "@/styles/cardStyles";
-import { flexStyles } from "@/styles/flexStyles";
+import { flexStyles, transitionStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
 import { clamp } from "@/utils/utils";
 import React from "react";
@@ -166,9 +166,9 @@ export const Deck = ({
   const deckContainerStyle: ViewStyle = { width, height };
 
   if (fan === "horizontalLeft") {
-    deckContainerStyle.width = width + Number(largestOffset.left);
-  } else if (fan === "horizontalRight") {
     deckContainerStyle.width = width + Number(largestOffset.right);
+  } else if (fan === "horizontalRight") {
+    deckContainerStyle.width = width + Number(largestOffset.left);
   } else if (fan === "verticalUp") {
     deckContainerStyle.height = height + Number(largestOffset.bottom);
   } else {
@@ -227,7 +227,8 @@ export const Deck = ({
               // Used as a relative positioned card
               cardStyles.card,
               flexStyles.positionAbsolute,
-
+              // Prevent transition, so animations get accurate position quickly!
+              transitionStyles.none,
               { width, height, ...cardOffsetStyle(limitedDeckSize - 1) },
               cardStyles.animHide,
             ]}
@@ -240,6 +241,8 @@ export const Deck = ({
             style={[
               cardStyles.card,
               flexStyles.positionAbsolute,
+              // Prevent transition, so animations get accurate position quickly!
+              transitionStyles.none,
               { width, height, ...cardOffsetStyle(limitedDeckSize, true) },
               cardStyles.animHide,
             ]}

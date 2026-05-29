@@ -3,7 +3,12 @@ import { flexStyles } from "@/styles/flexStyles";
 import { useRef, useState } from "react";
 import { View } from "react-native";
 import { useAnimations } from "../Animations/Animations";
-import { CardSelectColor, CardSizes, useCardSize } from "../Cards/Card";
+import {
+  CardGrid,
+  CardSelectColor,
+  CardSizes,
+  useCardSize,
+} from "../Cards/Card";
 import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
 import { CardButton } from "../Cards/CardButton";
 import { GameWrapper } from "../common/GameWrapper";
@@ -113,7 +118,6 @@ export default function Accordion() {
           cardInfo: {
             rank: srcCard.rank,
             suit: srcCard.suit,
-            isBack: false,
             cardsPerRow: cardsPerRow,
             cardSize: "small-colored" as CardSizes,
           },
@@ -138,7 +142,6 @@ export default function Accordion() {
           cardInfo: {
             rank: card.rank,
             suit: card.suit,
-            isBack: false,
             cardsPerRow: cardsPerRow,
             cardSize: "small-colored" as CardSizes,
           },
@@ -206,17 +209,18 @@ export default function Accordion() {
           : "No legal moves remain."
       }
     >
-      <View
-        style={[
-          {
-            ...flexStyles.rowCentered,
-            width: gridWidth,
-            flexWrap: "wrap",
-            justifyContent: "flex-start",
-            marginHorizontal: "auto",
-            gap: gridGap,
-          },
-        ]}
+      <CardGrid
+        cardsPerRow={cardsPerRow}
+        // style={[
+        //   {
+        //     ...flexStyles.rowCentered,
+        //     width: gridWidth,
+        //     flexWrap: "wrap",
+        //     justifyContent: "flex-start",
+        //     marginHorizontal: "auto",
+        //     gap: gridGap,
+        //   },
+        // ]}
       >
         {game.line.map((card, idx) => {
           const selectedColor = selectColor(idx) as CardSelectColor;
@@ -240,7 +244,7 @@ export default function Accordion() {
             />
           );
         })}
-      </View>
+      </CardGrid>
     </GameWrapper>
   );
 }

@@ -3,7 +3,7 @@ import { useGameLoading } from "@/hooks/useGameLoading";
 import { buttonTransition } from "@/styles/buttonStyles";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, ContentSidePadding, rgba } from "@/styles/styles";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { View, ViewStyle } from "react-native";
 import { Button } from "../Button/Button";
 import {
@@ -22,10 +22,11 @@ import {
 import { CardButton } from "../Cards/CardButton";
 import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
+import { useAnimations } from "../Animations/Animations";
 
 const loopCardTranslate = 14;
-const firstCardAngleIncrease = 12;
-const secondCardAngleIncrease = 4;
+const firstCardAngleIncrease = 10;
+const secondCardAngleIncrease = 2;
 const gapAngle = 46;
 
 const maxMarkedPaths = 3;
@@ -45,10 +46,14 @@ type LoopCard = {
   faceUp: boolean;
 };
 
+type Path = LoopCard | null;
+type MarkedPaths = [Path, Path, Path];
+type Note = { card: LoopCard; index: number };
+
 type LoopState = {
   deck: LoopCard[];
   deckPos: number;
-  notes: LoopCard[];
+  notes: MarkedPaths;
   scorePile: LoopCard[];
   ended: boolean;
   won: boolean;
@@ -95,7 +100,7 @@ function setup(): LoopState {
   return {
     deck,
     deckPos: 0,
-    notes: [],
+    notes: [null, null, null],
     scorePile: [],
     ended: false,
     won: false,
@@ -103,6 +108,8 @@ function setup(): LoopState {
 }
 
 export default function LootTheLoop() {
+  const { animateCards, measureRef, isAnimating, setIsAnimating } =
+    useAnimations();
   const isLoaded = useGameLoading();
   const { contentRadius } = useContentWidth();
   const { width: cardWidth, height: cardHeight } = useCardSize(
@@ -114,9 +121,7 @@ export default function LootTheLoop() {
     number | undefined
   >(undefined);
 
-  const [selectedNoteIndex, setSelectedNoteIndex] = useState<
-    { card: LoopCard; index: number } | undefined
-  >(undefined);
+  const [selectedNote, setSelectedNote] = useState<Note | undefined>(undefined);
 
   const [selectedRevealedRank, setSelectedRevealedRank] = useState<
     number | undefined
@@ -159,11 +164,15 @@ export default function LootTheLoop() {
     setSelectedCardIndex(game.deckPos);
   }
 
+  const markedPathRef = useRef<(View | null)[]>([]);
+  const loopCardRef = useRef<(View | null)[]>([]);
+
   // Mark path
-  function markPath(selectedCardIndex: number) {
+  async function markPath(selectedCardIndex: number, noteIndex: number) {
     const pathToMark = game.deck[selectedCardIndex];
     if (
-      game.notes.length >= maxMarkedPaths ||
+      game.notes.filter((p) => p !== null).length >= maxMarkedPaths ||
+      game.notes[noteIndex] !== null ||
       !pathToMark.faceUp ||
       !isNumberRank(pathToMark.rank)
     ) {
@@ -172,10 +181,45 @@ export default function LootTheLoop() {
 
     setSelectedCardIndex(undefined);
 
+    ///////////////////////////////////////////////////
+    // const loopCardEl = loopCardRef.current[selectedCardIndex];
+    // const markedPathEl = markedPathRef.current[noteIndex];
+
+    // if (loopCardEl && markedPathEl) {
+    //   const loopCardPos = await measureRef({ current: loopCardEl });
+    //   const markPathPos = await measureRef({ current: markedPathEl });
+
+    //   if (loopCardPos && markPathPos) {
+    //     setIsAnimating(true);
+    //     await animateCards([
+    //       {
+    //         id: `note-${noteIndex}`,
+    //         cardInfo: {
+    //           rank: pathToMark.rank,
+    //           suit: pathToMark.suit,
+    //           cardsPerRow: cardsPerRow.loop,
+    //         },
+    //         from: loopCardPos,
+    //         to: markPathPos,
+    //         keepAlive: false,
+    //         duration: 1000,
+    //         // delay: i * 150,
+    //         // flip: "toFace" as const,
+    //       },
+    //     ]);
+    //     setIsAnimating(false);
+    //   }
+    // }
+
+    ///////////////////////////////////////////////////
+
     setGame((prev) => {
+      const notes: MarkedPaths = [...prev.notes];
+      notes[noteIndex] = pathToMark;
+
       return {
         ...prev,
-        notes: [...prev.notes, pathToMark],
+        notes,
         deck: [...prev.deck.toSpliced(selectedCardIndex, 1)],
       };
     });
@@ -251,15 +295,19 @@ export default function LootTheLoop() {
     }, exploreTransitionInMs);
   }
 
-  function returnToMarked(pathCard: LoopCard, indexOfPathCard: number) {
+  function returnToMarked(pathCard: Note) {
     setSelectedCardIndex(undefined);
+
+    /////////////////////////////////////
+    /////////////////////////////////////
 
     setGame((prev) => {
       // Remove cards from notes
-      const notes = prev.notes.filter((_, i) => i !== indexOfPathCard);
+      const notes: MarkedPaths = [...prev.notes];
+      notes[pathCard.index] = null;
 
       // Insert path card in deck
-      const deck = prev.deck.toSpliced(prev.deckPos, 0, pathCard);
+      const deck = prev.deck.toSpliced(prev.deckPos, 0, pathCard.card);
 
       // Selected newly inserted card
       setSelectedCardIndex(prev.deckPos);
@@ -269,9 +317,9 @@ export default function LootTheLoop() {
   }
 
   function returnToSelectedMarkedPath() {
-    if (selectedNoteIndex !== undefined) {
-      setSelectedNoteIndex(undefined);
-      returnToMarked(selectedNoteIndex.card, selectedNoteIndex.index);
+    if (selectedNote !== undefined) {
+      setSelectedNote(undefined);
+      returnToMarked(selectedNote);
     }
   }
 
@@ -280,7 +328,7 @@ export default function LootTheLoop() {
       selectedCardIndex !== undefined &&
       isNumberRank(game.deck[selectedCardIndex].rank) &&
       game.deck[selectedCardIndex].faceUp &&
-      game.notes.length < maxMarkedPaths
+      game.notes.filter((p) => p !== null).length < maxMarkedPaths
     );
   }, [selectedCardIndex, game.notes, game.deck]);
 
@@ -351,16 +399,16 @@ export default function LootTheLoop() {
             </View>
 
             {/* Marked Paths */}
-            <View style={[flexStyles.rowCentered, flexStyles.gap6]}>
+            <View style={[flexStyles.rowCentered, flexStyles.gap10]}>
               {Array.from({ length: maxMarkedPaths }, (_, index) => {
-                const noteCard: LoopCard | undefined = game.notes[index];
-                const isSelected = selectedNoteIndex?.index === index;
+                const noteCard = game.notes[index];
+                const isSelected = selectedNote?.index === index;
 
                 const MarkButton = (
                   <Button
                     onPress={() => {
                       if (selectedCardIndex !== undefined) {
-                        markPath(selectedCardIndex);
+                        markPath(selectedCardIndex, index);
                       }
                     }}
                     text="Mark"
@@ -388,13 +436,16 @@ export default function LootTheLoop() {
 
                 return (
                   <CardButton
+                    ref={(el) => {
+                      markedPathRef.current[index] = el;
+                    }}
                     key={`note-${index}`}
                     onPress={
                       noteCard
                         ? () => {
                             setSelectedCardIndex(undefined);
-                            setSelectedNoteIndex(
-                              selectedNoteIndex?.index === index
+                            setSelectedNote(
+                              selectedNote?.index === index
                                 ? undefined
                                 : { card: noteCard, index },
                             );
@@ -425,9 +476,9 @@ export default function LootTheLoop() {
               index === (selectedCardIndex + selectedRevealedRank) % deckLength
             );
             const isPotentialPathTarget = !!(
-              selectedNoteIndex?.index !== undefined &&
+              selectedNote?.index !== undefined &&
               index ===
-                (RANK_VALUE[selectedNoteIndex.card.rank] + game.deckPos - 1) %
+                (RANK_VALUE[selectedNote.card.rank] + game.deckPos - 1) %
                   deckLength
             );
 
@@ -445,12 +496,9 @@ export default function LootTheLoop() {
               zIndex -= deckLength + index;
             }
 
-            if (index === game.deckPos && selectedNoteIndex === undefined) {
+            if (index === game.deckPos) {
               angle -= firstCardAngleIncrease;
-            } else if (
-              index === game.deckPos + 1 &&
-              selectedNoteIndex === undefined
-            ) {
+            } else if (index === game.deckPos + 1) {
               angle -= secondCardAngleIncrease;
             }
 
@@ -479,8 +527,8 @@ export default function LootTheLoop() {
               }
 
               return () => {
-                if (selectedNoteIndex !== undefined) {
-                  setSelectedNoteIndex(undefined);
+                if (selectedNote !== undefined) {
+                  setSelectedNote(undefined);
                 }
                 setSelectedCardIndex(
                   selectedCardIndex === index ? undefined : index,
@@ -504,6 +552,9 @@ export default function LootTheLoop() {
             // Loop Card
             return (
               <CardButton
+                ref={(el) => {
+                  loopCardRef.current[index] = el;
+                }}
                 key={`deck-${index}`}
                 onPress={onPressFn()}
                 suit={card.faceUp ? card.suit : undefined}
@@ -521,37 +572,27 @@ export default function LootTheLoop() {
           })}
 
           {/* Ghost "return to marked path" card */}
-          <Button
+          <CardButton
             onPress={returnToSelectedMarkedPath}
-            text="Return"
-            theme="green"
+            suit={selectedNote?.card.suit}
+            rank={selectedNote?.card.rank}
+            selectColor="green"
+            forceOverlay
             style={[
               {
-                ...buttonTransition,
+                pointerEvents: selectedNote !== undefined ? undefined : "none",
+                opacity: selectedNote !== undefined ? 0.5 : 0,
                 position: "absolute",
-                pointerEvents:
-                  selectedNoteIndex !== undefined ? undefined : "none",
-                opacity: selectedNoteIndex !== undefined ? 1 : 0,
-                zIndex: 1000,
+                zIndex: 200,
                 transform: [
                   {
                     rotate:
-                      selectedNoteIndex !== undefined
-                        ? `${firstCardAngleIncrease * -1}deg`
-                        : `${firstCardAngleIncrease * -2}deg`,
+                      selectedNote !== undefined
+                        ? `${firstCardAngleIncrease * -2.5}deg`
+                        : `${firstCardAngleIncrease * -3.5}deg`,
                   },
-                  { translateY: contentRadius - loopCardTranslate },
+                  { translateY: contentRadius },
                 ],
-                width: cardWidth,
-                height: cardHeight,
-                borderRadius: cardWidth * cardBorderRadiusRatio,
-                backgroundColor: rgba(Colors.btnGreen, 0.3),
-              },
-            ]}
-            textStyle={[
-              {
-                fontSize: cardWidth * 0.2,
-                lineHeight: cardWidth * 0.22,
               },
             ]}
           />
@@ -584,7 +625,7 @@ export default function LootTheLoop() {
           <Button
             text="Return to Path"
             onPress={returnToSelectedMarkedPath}
-            disabled={selectedNoteIndex === undefined}
+            disabled={selectedNote === undefined}
             style={[flexStyles.flex1]}
             theme={"green"}
           />

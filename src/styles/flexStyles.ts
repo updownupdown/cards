@@ -1,6 +1,11 @@
 import { StyleSheet } from "react-native";
 
 export const transitionStyles = StyleSheet.create({
+  none: {
+    transitionDuration: "unset",
+    transitionProperty: "unset",
+    transitionTimingFunction: "unset",
+  },
   sec01: {
     transitionDuration: "0.1s",
     transitionProperty: "all",

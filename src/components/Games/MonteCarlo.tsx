@@ -211,7 +211,6 @@ export default function MonteCarlo() {
           cardInfo: {
             rank: card.rank,
             suit: card.suit,
-            isBack: false,
             cardsPerRow: cardsPerRow,
             cardSize: "small",
           },

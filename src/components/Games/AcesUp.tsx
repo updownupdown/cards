@@ -149,7 +149,6 @@ export default function AcesUp() {
             cardInfo: {
               rank: cardsToDeal[i].rank,
               suit: cardsToDeal[i].suit,
-              isBack: false,
               cardsPerRow: 4,
             },
             to: { ...pilePos, zIndex: 200 - i },
@@ -215,7 +214,6 @@ export default function AcesUp() {
             cardInfo: {
               rank: cardToDiscard.rank,
               suit: cardToDiscard.suit,
-              isBack: false,
               cardsPerRow: 4,
             },
             flip: "toBack" as const,
@@ -298,14 +296,16 @@ export default function AcesUp() {
       reset={reset}
       isLoaded={isLoaded}
     >
-      <View style={[flexStyles.rowCentered, flexStyles.justifyEvenly]}>
+      <View
+        style={[flexStyles.rowCentered, flexStyles.fullWidth, flexStyles.gap40]}
+      >
         {/* Discard pile */}
         <Deck
           refTopNext={discardRef}
           backCount={game.discard.length}
           cardsPerRow={4}
           limitFan
-          fan="horizontalLeft"
+          fan="horizontalRight"
           showCount
           countPosition="left"
           iconName="delete"

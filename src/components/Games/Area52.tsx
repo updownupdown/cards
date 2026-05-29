@@ -3,7 +3,11 @@ import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
 import { useMemo, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { CardAnimationParams, useAnimations } from "../Animations/Animations";
+import {
+  AnimCardInfo,
+  CardAnimationParams,
+  useAnimations,
+} from "../Animations/Animations";
 import { Button } from "../Button/Button";
 import { Card, CardGrid, CardSelectColor } from "../Cards/Card";
 import {
@@ -16,13 +20,22 @@ import {
 import { CardButton } from "../Cards/CardButton";
 import { Deck, deckCountAboveBelowHeight, minFanSize } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
+import { useToast } from "../common/Toast";
 
+const animDuration = 400;
 const cardsPerRow = 4.2;
 const maxAttackersNum = 3;
 
+type AnimPos = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+} | null;
+
 type AreaState = {
   defenderDeck: PlayingCard[];
-  currentDefenders: PlayingCard[];
+  currentDefenders: (PlayingCard | null)[];
   attackerDeck: PlayingCard[];
   discardDeck: PlayingCard[];
   currentAttackers: PlayingCard[];
@@ -33,7 +46,7 @@ type AreaState = {
 
 type Action = "dual" | "single" | "sacrifice";
 
-function initState(): AreaState {
+function setup(): AreaState {
   const all = shuffle(createDeck({ faceUp: true }));
   const defenders = all.filter((card) => !isRed(card.suit));
   const aliens = all.filter((card) => isRed(card.suit));
@@ -50,45 +63,48 @@ function initState(): AreaState {
   };
 }
 
+function getNextAttacker(state: AreaState): {
+  nextCard: PlayingCard | null;
+  newState: AreaState;
+} {
+  if (state.ended) return { nextCard: null, newState: state };
+
+  let attackerDeck = [...state.attackerDeck];
+
+  if (attackerDeck.length === 0) {
+    return {
+      nextCard: null,
+      newState: state,
+    };
+  }
+
+  const nextCard = attackerDeck.shift()!;
+  return {
+    nextCard,
+    newState: {
+      ...state,
+      attackerDeck,
+    },
+  };
+}
+
 function ensureQueue(state: AreaState): AreaState {
   if (state.currentAttackers.length > 0 || state.ended) return state;
 
-  let attackerDeck = [...state.attackerDeck];
-  let discardDeck = [...state.discardDeck];
-  let wave = state.wave;
+  let curr = state;
 
-  if (attackerDeck.length === 0) {
-    if (wave === 1) {
-      if (discardDeck.length === 0) {
-        return { ...state, ended: true, won: true };
-      }
-      attackerDeck = shuffle(discardDeck);
-      discardDeck = [];
-      wave = 2;
-    } else {
-      if (discardDeck.length === 0) {
-        return { ...state, ended: true, won: true };
-      }
-      attackerDeck = shuffle(discardDeck);
-      discardDeck = [];
+  while (curr.currentAttackers.length < maxAttackersNum && !curr.ended) {
+    const { nextCard, newState } = getNextAttacker(curr);
+    if (!nextCard) {
+      curr = newState;
+      break;
     }
+    curr = {
+      ...newState,
+      currentAttackers: [...newState.currentAttackers, nextCard],
+    };
   }
-
-  const currentAttackers = attackerDeck.splice(
-    0,
-    Math.min(maxAttackersNum, attackerDeck.length),
-  );
-  if (currentAttackers.length === 0) {
-    return { ...state, ended: true, won: wave === 2 };
-  }
-
-  return {
-    ...state,
-    attackerDeck,
-    discardDeck,
-    currentAttackers,
-    wave,
-  };
+  return curr;
 }
 
 function calcLoseScore(state: AreaState) {
@@ -102,24 +118,24 @@ function calcWinScore(state: AreaState) {
   return state.defenderDeck.length + state.currentDefenders.length;
 }
 
-const animDuration = 350;
-
 const buildAnim = (
   idPrefix: string,
-  card: PlayingCard,
-  from: any,
-  to: any,
+  card: AnimCardInfo,
+  from: AnimPos,
+  to: AnimPos,
   duration = animDuration,
   delay = 0,
   flip?: "toFace" | "toBack",
   keepAlive = true,
-): CardAnimationParams => {
+): CardAnimationParams | null => {
+  if (!from || !to) return null;
+
   return {
     id: `${idPrefix}-${Date.now()}`,
     cardInfo: {
       rank: card.rank,
       suit: card.suit,
-      isBack: false,
+      isBack: card.isBack,
       cardsPerRow,
     },
     from,
@@ -133,13 +149,20 @@ const buildAnim = (
 
 export default function Area52() {
   const isLoaded = useGameLoading();
-  const [game, setGame] = useState<AreaState>(() => ensureQueue(initState()));
+  const [game, setGame] = useState<AreaState>(() => ensureQueue(setup()));
   const [selectedDefenders, setSelectedDefenders] = useState<number[]>([]);
+  const showToast = useToast();
 
-  const { animateCards, measureRef, isAnimating, setIsAnimating } =
-    useAnimations();
+  const {
+    animateCards,
+    clearAnimations,
+    measureRef,
+    isAnimating,
+    setIsAnimating,
+  } = useAnimations();
 
-  const attackerDeckRef = useRef<View>(null);
+  const attackerDeckCurrentRef = useRef<View>(null);
+  const attackerDeckNextRef = useRef<View>(null);
   const discardDeckRef = useRef<View>(null);
   const defenderDeckRef = useRef<View>(null);
   const attackerRefs = useRef<(View | null)[]>([]);
@@ -153,8 +176,10 @@ export default function Area52() {
   }, [game]);
 
   function reset() {
+    setIsAnimating(false);
+    clearAnimations();
     setSelectedDefenders([]);
-    setGame(ensureQueue(initState()));
+    setGame(ensureQueue(setup()));
   }
 
   function toggleDefender(index: number) {
@@ -186,10 +211,6 @@ export default function Area52() {
       if (anim) anims.push(anim);
     };
 
-    const discardDeckPos = await measureRef(discardDeckRef);
-    const attackerDeckPos = await measureRef(attackerDeckRef);
-    const defenderDeckPos = await measureRef(defenderDeckRef);
-
     const getAttackerPos = async (idx: number) =>
       await measureRef({ current: attackerRefs.current[idx] });
     const getDefenderPos = async (idx: number) =>
@@ -213,19 +234,19 @@ export default function Area52() {
 
       discardDeck.push(attacker);
       const attackerPos = await getAttackerPos(attackerIndex);
-      if (attackerPos && discardDeckPos) {
-        addAnim(
-          buildAnim(
-            "dual-attacker",
-            attacker,
-            attackerPos,
-            discardDeckPos,
-            undefined,
-            undefined,
-            "toBack",
-          ),
-        );
-      }
+      const discardDeckPos = await measureRef(discardDeckRef);
+      addAnim(
+        buildAnim(
+          "dual-attacker",
+          attacker,
+          attackerPos,
+          discardDeckPos,
+          undefined,
+          undefined,
+          "toBack",
+          false,
+        ),
+      );
 
       if (prev.wave === 2) {
         const attackerIsRed = isRed(attacker.suit);
@@ -234,9 +255,17 @@ export default function Area52() {
           discardDeck.push(a);
           (defenders as any)[aIdx] = null;
           const posA = await getDefenderPos(aIdx);
-          if (posA && discardDeckPos) {
-            addAnim(buildAnim("dual-da", a, posA, discardDeckPos));
-          }
+          addAnim(
+            buildAnim(
+              "dual-da",
+              a,
+              posA,
+              discardDeckPos,
+              undefined,
+              undefined,
+              "toBack",
+            ),
+          );
         }
 
         if (isRed(b.suit) === attackerIsRed) {
@@ -244,7 +273,17 @@ export default function Area52() {
           (defenders as any)[bIdx] = null;
           const posB = await getDefenderPos(bIdx);
           if (posB && discardDeckPos) {
-            addAnim(buildAnim("dual-db", b, posB, discardDeckPos));
+            addAnim(
+              buildAnim(
+                "dual-attack",
+                b,
+                posB,
+                discardDeckPos,
+                undefined,
+                undefined,
+                "toBack",
+              ),
+            );
           }
         }
       }
@@ -270,7 +309,9 @@ export default function Area52() {
 
       const attackerPos = await getAttackerPos(attackerIndex);
       const defenderPos = await getDefenderPos(index);
+      const discardDeckPos = await measureRef(discardDeckRef);
 
+      // Animate defender from hand to discard
       if (defenderPos && discardDeckPos) {
         addAnim(
           buildAnim(
@@ -285,8 +326,9 @@ export default function Area52() {
         );
       }
 
+      // Animate attacker from lineup to hand
       if (attackerPos && defenderPos) {
-        addAnim(buildAnim("single-att", attacker, attackerPos, defenderPos));
+        addAnim(buildAnim("single-attack", attacker, attackerPos, defenderPos));
       }
     } else if (action === "sacrifice") {
       if (selectedDefenders.length !== 1) {
@@ -299,6 +341,9 @@ export default function Area52() {
 
       discardDeck.push(defenders[index]);
       const defPos = await getDefenderPos(index);
+      const discardDeckPos = await measureRef(discardDeckRef);
+
+      // Animate defender from hand to discard
       if (defPos && discardDeckPos) {
         addAnim(
           buildAnim(
@@ -316,6 +361,9 @@ export default function Area52() {
       (defenders as any)[index] = null;
       attackerDeck.push(attacker);
       const attackerPos = await getAttackerPos(attackerIndex);
+      const attackerDeckPos = await measureRef(attackerDeckCurrentRef);
+
+      // Animate attacker from lineup to attacker deck
       if (attackerPos && attackerDeckPos) {
         addAnim(
           buildAnim(
@@ -338,6 +386,9 @@ export default function Area52() {
     }
     anims = [];
 
+    // It's safe to unselect defenders now (earlier would mess up animations)
+    setSelectedDefenders([]);
+
     // Form intermediate state after action resolves
     let nextState = {
       ...prev,
@@ -346,47 +397,110 @@ export default function Area52() {
       discardDeck,
     };
 
-    // Remove current attacker and replace with null
+    // Remove current attacker
     let currentAttackers = [...prev.currentAttackers];
     currentAttackers.pop();
     nextState.currentAttackers = currentAttackers;
 
-    // Use shared ensureQueue logic
-    let queuedState = ensureQueue(nextState);
+    if (anims.length > 0) {
+      // Show intermediate update to fix discard count for the discarded attacker
+      setGame(nextState);
+      await animateCards(anims);
+      anims = [];
+    } else {
+      setGame(nextState);
+    }
 
-    // If new attackers were dealt, animate them
-    if (
-      queuedState.currentAttackers.length > 0 &&
-      nextState.currentAttackers.length === 0
-    ) {
-      // Queue up anims in reverse order, for the sake of zIndex overlaps
-      for (let i = queuedState.currentAttackers.length - 1; i >= 0; i--) {
-        const reversedIndex = maxAttackersNum - i - 1;
+    // Handle Wave Transition
+    if (nextState.currentAttackers.length === 0 && !nextState.ended) {
+      if (nextState.attackerDeck.length === 0) {
+        if (nextState.discardDeck.length === 0) {
+          nextState = { ...nextState, ended: true, won: true };
+          setGame(nextState);
+        } else {
+          if (nextState.wave === 1) {
+            showToast("Wave 2");
+          }
 
-        const toPos = await getAttackerPos(reversedIndex);
-        if (attackerDeckPos && toPos) {
-          addAnim(
-            buildAnim(
-              `deal-att-${i}`,
-              queuedState.currentAttackers[reversedIndex],
-              attackerDeckPos,
-              toPos,
-              animDuration,
-              i * animDuration - 100 * i,
-              "toFace",
-              true,
-            ),
-          );
+          let cardsToMove = shuffle([...nextState.discardDeck]);
+          let animatedDiscardDeck = [...nextState.discardDeck];
+          let animatedAttackerDeck = [...nextState.attackerDeck];
+
+          for (let i = 0; i < cardsToMove.length; i++) {
+            const card = cardsToMove[i];
+            animatedDiscardDeck.pop();
+            animatedAttackerDeck.push(card);
+
+            const discardDeckPos = await measureRef(discardDeckRef);
+            const attackerDeckPos = await measureRef(attackerDeckNextRef);
+
+            // Animate refill from discard to attacker deck
+            await animateCards([
+              buildAnim(
+                `wave-trans-${i}`,
+                { ...card, isBack: true },
+                discardDeckPos,
+                attackerDeckPos,
+                50,
+                0,
+                undefined,
+                false,
+              ),
+            ]);
+
+            setGame({
+              ...nextState,
+              discardDeck: [...animatedDiscardDeck],
+              attackerDeck: [...animatedAttackerDeck],
+            });
+          }
+
+          nextState = {
+            ...nextState,
+            discardDeck: [],
+            attackerDeck: cardsToMove,
+            wave: nextState.wave === 1 ? 2 : nextState.wave,
+          };
+          setGame(nextState);
         }
       }
     }
 
-    if (anims.length > 0) {
-      await animateCards(anims);
-      anims = [];
-    }
+    // Refill attackers one by one
+    if (nextState.currentAttackers.length === 0 && !nextState.ended) {
+      if (!nextState.ended) {
+        for (let i = 0; i < maxAttackersNum; i++) {
+          const { nextCard, newState } = getNextAttacker(nextState);
+          if (!nextCard) {
+            nextState = newState;
+            break;
+          }
 
-    nextState = queuedState;
+          nextState = {
+            ...newState,
+            currentAttackers: [...newState.currentAttackers, nextCard],
+          };
+          setGame(nextState);
+
+          const attackerDeckPos = await measureRef(attackerDeckCurrentRef);
+          const toPos = await getAttackerPos(i);
+          await animateCards([
+            buildAnim(
+              `deal-att-${i}`,
+              nextCard,
+              attackerDeckPos,
+              toPos,
+              animDuration,
+              0,
+              "toFace",
+              true,
+            ),
+          ]);
+        }
+      } else {
+        setGame(nextState);
+      }
+    }
 
     // Refill defenders
     let updatedDefenders = [...nextState.currentDefenders];
@@ -399,7 +513,11 @@ export default function Area52() {
         let delayCount = 0;
         if (next) {
           updatedDefenders[i] = next;
+
+          const defenderDeckPos = await measureRef(defenderDeckRef);
           const targetPos = await getDefenderPos(i);
+
+          // Animate from defender deck to hand
           if (defenderDeckPos && targetPos) {
             addAnim(
               buildAnim(
@@ -494,7 +612,8 @@ export default function Area52() {
           <View style={[flexStyles.colCentered, flexStyles.gap20]}>
             <Deck
               // title="Attackers"
-              refTopNext={attackerDeckRef}
+              refTopNext={attackerDeckNextRef}
+              refTopCurrent={attackerDeckCurrentRef}
               backCount={game.attackerDeck.length}
               showCount
               countPosition="above"
@@ -604,17 +723,19 @@ export default function Area52() {
 
                   return (
                     <CardButton
-                      key={`${card.id}-${index}`}
+                      key={`defender-hand-${index}`}
                       ref={(el) => {
                         defenderRefs.current[index] = el;
                       }}
-                      onPress={() => toggleDefender(index)}
-                      suit={card.suit}
-                      rank={card.rank}
+                      onPress={
+                        isAnimating ? undefined : () => toggleDefender(index)
+                      }
+                      suit={card?.suit}
+                      rank={card?.rank}
                       cardsPerRow={cardsPerRow}
                       isSelected={isAnimatingCardToPile ? false : isSelected}
                       selectColor={selectedColor()}
-                      isPlaceholder={isAnimatingCardToPile}
+                      isPlaceholder={!card || isAnimatingCardToPile}
                     />
                   );
                 })}

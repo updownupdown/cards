@@ -1,7 +1,9 @@
 import { layoutStyles } from "@/styles/layoutStyles";
-import React from "react";
+import React, { useCallback } from "react";
+import { useFocusEffect } from "expo-router";
 import { ScrollView, View } from "react-native";
 import { GameMenus } from "./GameMenus";
+import { useAnimations } from "../Animations/Animations";
 
 interface Props {
   isLoaded?: boolean;
@@ -22,6 +24,18 @@ export const GameWrapper = ({
   reset,
   children,
 }: Props) => {
+  const { setIsAnimating, clearAnimations } = useAnimations();
+
+  // Cannot use a simple useEffect here due to react-native
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        setIsAnimating(false);
+        clearAnimations();
+      };
+    }, [setIsAnimating, clearAnimations]),
+  );
+
   return (
     <>
       <GameMenus

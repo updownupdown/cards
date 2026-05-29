@@ -8,7 +8,8 @@ import {
 import { StyleSheet } from "react-native";
 import { headerButtonSize } from "./buttonStyles";
 import { flexStyles } from "./flexStyles";
-import { debugStyles } from "./debugStyles";
+
+export const headerHeight = headerButtonSize + ContentSidePadding;
 
 export const layoutStyles = StyleSheet.create({
   // App
@@ -46,7 +47,7 @@ export const layoutStyles = StyleSheet.create({
     ...flexStyles.rowCentered,
     justifyContent: "space-between",
     width: "100%",
-    height: headerButtonSize + ContentSidePadding,
+    height: headerHeight,
     backgroundColor: Colors.K850,
     padding: ContentSidePadding,
     boxShadow: `0 0 20px ${rgba(Colors.K850, 1)}`,
@@ -75,8 +76,13 @@ export const layoutStyles = StyleSheet.create({
     ...flexStyles.colCentered,
     justifyContent: "space-evenly",
     gap: 30,
-    flex: 1,
+    // Careful editing these styles below!
+    // Expand content when scrolling is needed, but don't shrink
+    flexGrow: 1,
+    // Stretch children elements by default, to fill width
     alignItems: "stretch",
+    // Stretch self if needed
+    alignSelf: "stretch",
     padding: ContentSidePadding,
     paddingBottom: 30,
   },

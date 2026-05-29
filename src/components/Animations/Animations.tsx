@@ -18,7 +18,7 @@ import Animated, {
 import { scheduleOnRN } from "react-native-worklets";
 import { Card, CardProps } from "../Cards/Card";
 
-type AnimCardInfo = Pick<
+export type AnimCardInfo = Pick<
   CardProps,
   "rank" | "suit" | "isBack" | "isPlaceholder" | "cardSize" | "cardsPerRow"
 >;
@@ -51,7 +51,7 @@ export type CardAnimationParams = {
 interface AnimationContextType {
   isAnimating: boolean;
   setIsAnimating: (isAnimating: boolean) => void;
-  animateCards: (params: CardAnimationParams[]) => Promise<void>;
+  animateCards: (params: (CardAnimationParams | null)[]) => Promise<void>;
   clearAnimations: (ids?: string[]) => void;
   measureRef: (
     ref: React.RefObject<View | null>,
@@ -80,7 +80,7 @@ const AnimatedCard = ({
   const { from, to, duration = 250, delay = 0, flip } = params;
 
   // Trigger animation on mount
-  React.useEffect(() => {
+  useEffect(() => {
     progress.value = withDelay(
       delay,
       withTiming(1, { duration }, () => {
@@ -129,7 +129,6 @@ const AnimatedCard = ({
         { rotateZ: `${rotationZ}deg` },
         { rotateY: `${rotationY}deg` },
       ],
-      transformOrigin: flip === undefined ? "top left" : "center center",
       zIndex:
         progress.value > 0.5
           ? (to.zIndex ?? from.zIndex ?? 100)
@@ -139,12 +138,19 @@ const AnimatedCard = ({
 
   // Calculate back and front visibility based on 3D rotation if flipping
   const frontStyle = useAnimatedStyle(() => {
-    if (!flip) return { opacity: params.cardInfo.isBack ? 0 : 1 };
+    if (!flip) {
+      return {
+        position: "absolute",
+        opacity: params.cardInfo.isBack ? 0 : 1,
+      };
+    }
+
     const rotationY = interpolate(
       progress.value,
       [0, 1],
       flip === "toFace" ? [180, 0] : [0, 180],
     );
+
     return {
       position: "absolute",
       opacity: rotationY > 90 && rotationY < 270 ? 0 : 1,
@@ -152,12 +158,19 @@ const AnimatedCard = ({
   });
 
   const backStyle = useAnimatedStyle(() => {
-    if (!flip) return { opacity: params.cardInfo.isBack ? 1 : 0 };
+    if (!flip) {
+      return {
+        position: "absolute",
+        opacity: params.cardInfo.isBack ? 1 : 0,
+      };
+    }
+
     const rotationY = interpolate(
       progress.value,
       [0, 1],
       flip === "toFace" ? [180, 0] : [0, 180],
     );
+
     return {
       position: "absolute",
       opacity: rotationY > 90 && rotationY < 270 ? 1 : 0,
@@ -167,34 +180,35 @@ const AnimatedCard = ({
 
   return (
     <Animated.View style={animatedStyle}>
-      {/* Front side */}
       <Animated.View style={frontStyle}>
-        <Card {...params.cardInfo} isBack={false} />
+        <Card {...params.cardInfo} />
       </Animated.View>
-      {/* Back side */}
+
       <Animated.View style={backStyle}>
-        <Card
-          {...params.cardInfo}
-          isBack={true}
-          rank={undefined}
-          suit={undefined}
-        />
+        <Card {...params.cardInfo} suit={undefined} rank={undefined} isBack />
       </Animated.View>
     </Animated.View>
   );
 };
 
 export const AnimationProvider = ({ children }: { children: ReactNode }) => {
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [isAnimating, setIsAnimatingState] = useState(false);
+  const isAnimatingRef = useRef(false);
+
+  const setIsAnimating = useCallback((val: boolean) => {
+    isAnimatingRef.current = val;
+    setIsAnimatingState(val);
+  }, []);
+
   const [animations, setAnimations] = useState<CardAnimationParams[]>([]);
   const promisesRef = useRef<Record<string, () => void>>({});
 
-  const animateCards = useCallback((params: CardAnimationParams[]) => {
+  const animateCards = useCallback((params: (CardAnimationParams | null)[]) => {
     return new Promise<void>((resolve) => {
       let completedCount = 0;
       const total = params.length;
 
-      if (total === 0) {
+      if (total === 0 || !isAnimatingRef.current) {
         resolve();
         return;
       }
@@ -210,11 +224,13 @@ export const AnimationProvider = ({ children }: { children: ReactNode }) => {
       };
 
       params.forEach((param) => {
-        promisesRef.current[param.id] = () =>
-          onAnimComplete(param.id, param.keepAlive);
+        if (param) {
+          promisesRef.current[param.id] = () =>
+            onAnimComplete(param.id, param.keepAlive);
+        }
       });
 
-      setAnimations((prev) => [...prev, ...params]);
+      setAnimations((prev) => [...prev, ...params.filter((p) => p !== null)]);
     });
   }, []);
 
@@ -289,4 +305,32 @@ export const AnimationProvider = ({ children }: { children: ReactNode }) => {
       )}
     </AnimationContext.Provider>
   );
+};
+
+export const useAnimCardsQueue = () => {
+  const [animQueue, setAnimQueue] = useState<CardAnimationParams[]>([]);
+
+  const addAnimToQueue = (anim: CardAnimationParams | null | undefined) => {
+    if (anim && anim.to && anim.from) {
+      console.log("set anim queue");
+      console.log(anim);
+      setAnimQueue((prev) => [...prev, anim]);
+    } else {
+      console.log("defective");
+      console.log(anim);
+    }
+  };
+
+  console.log(animQueue);
+
+  function resetAnimQueue() {
+    console.log("reset anim quee");
+    setAnimQueue([]);
+  }
+
+  return {
+    animQueue,
+    addAnimToQueue,
+    resetAnimQueue,
+  };
 };
