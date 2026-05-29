@@ -1,7 +1,7 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { flexStyles } from "@/styles/flexStyles";
-import { textStyles } from "@/styles/textStyles";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { Colors, FontWeight } from "@/styles/styles";
+import { useMemo, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { CardAnimationParams, useAnimations } from "../Animations/Animations";
 import { Button } from "../Button/Button";
@@ -16,9 +16,9 @@ import {
 import { CardButton } from "../Cards/CardButton";
 import { Deck, deckCountAboveBelowHeight, minFanSize } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
-import { Colors, FontWeight } from "@/styles/styles";
 
 const cardsPerRow = 4.2;
+const maxAttackersNum = 3;
 
 type AreaState = {
   defenderDeck: PlayingCard[];
@@ -76,7 +76,7 @@ function ensureQueue(state: AreaState): AreaState {
 
   const currentAttackers = attackerDeck.splice(
     0,
-    Math.min(3, attackerDeck.length),
+    Math.min(maxAttackersNum, attackerDeck.length),
   );
   if (currentAttackers.length === 0) {
     return { ...state, ended: true, won: wave === 2 };
@@ -102,36 +102,34 @@ function calcWinScore(state: AreaState) {
   return state.defenderDeck.length + state.currentDefenders.length;
 }
 
-function useCardAnimBuilder(cardsPerRow: number) {
-  return useCallback(
-    (
-      idPrefix: string,
-      card: PlayingCard,
-      from: any,
-      to: any,
-      duration = 400,
-      delay = 0,
-      flip?: "toFace" | "toBack",
-    ): CardAnimationParams => {
-      return {
-        id: `${idPrefix}-${Date.now()}`,
-        cardInfo: {
-          rank: card.rank,
-          suit: card.suit,
-          isBack: false,
-          cardsPerRow,
-        },
-        from,
-        to,
-        duration,
-        delay,
-        flip,
-        keepAlive: false,
-      };
+const animDuration = 350;
+
+const buildAnim = (
+  idPrefix: string,
+  card: PlayingCard,
+  from: any,
+  to: any,
+  duration = animDuration,
+  delay = 0,
+  flip?: "toFace" | "toBack",
+  keepAlive = true,
+): CardAnimationParams => {
+  return {
+    id: `${idPrefix}-${Date.now()}`,
+    cardInfo: {
+      rank: card.rank,
+      suit: card.suit,
+      isBack: false,
+      cardsPerRow,
     },
-    [cardsPerRow],
-  );
-}
+    from,
+    to,
+    duration,
+    delay,
+    flip,
+    keepAlive,
+  };
+};
 
 export default function Area52() {
   const isLoaded = useGameLoading();
@@ -141,15 +139,14 @@ export default function Area52() {
   const { animateCards, measureRef, isAnimating, setIsAnimating } =
     useAnimations();
 
-  const buildAnim = useCardAnimBuilder(cardsPerRow);
-
   const attackerDeckRef = useRef<View>(null);
   const discardDeckRef = useRef<View>(null);
   const defenderDeckRef = useRef<View>(null);
   const attackerRefs = useRef<(View | null)[]>([]);
   const defenderRefs = useRef<(View | null)[]>([]);
 
-  const currentAttacker = game.currentAttackers[0] ?? null;
+  const currentAttacker =
+    game.currentAttackers[game.currentAttackers.length - 1] ?? null;
   const score = useMemo(() => {
     if (!game.ended) return undefined;
     return game.won ? calcWinScore(game) : calcLoseScore(game);
@@ -174,10 +171,10 @@ export default function Area52() {
 
   async function applyAction(action: Action) {
     if (!currentAttacker || game.ended || isAnimating) return;
-    setIsAnimating(true);
 
     const prev = game;
-    const attacker = prev.currentAttackers[0];
+    const attackerIndex = prev.currentAttackers.length - 1;
+    const attacker = prev.currentAttackers[attackerIndex];
     const defenders = [...prev.currentDefenders];
     let attackerDeck = [...prev.attackerDeck];
     let discardDeck = [...prev.discardDeck];
@@ -200,28 +197,33 @@ export default function Area52() {
 
     if (action === "dual") {
       if (selectedDefenders.length !== 2) {
-        setIsAnimating(false);
         return;
       }
       const [aIdx, bIdx] = selectedDefenders;
       const a = defenders[aIdx];
       const b = defenders[bIdx];
       if (!a || !b) {
-        setIsAnimating(false);
         return;
       }
 
       const sum = RANK_VALUE[a.rank] + RANK_VALUE[b.rank];
       if (sum !== RANK_VALUE[attacker.rank]) {
-        setIsAnimating(false);
         return;
       }
 
       discardDeck.push(attacker);
-      const attackerPos = await getAttackerPos(0);
+      const attackerPos = await getAttackerPos(attackerIndex);
       if (attackerPos && discardDeckPos) {
         addAnim(
-          buildAnim("dual-attacker", attacker, attackerPos, discardDeckPos),
+          buildAnim(
+            "dual-attacker",
+            attacker,
+            attackerPos,
+            discardDeckPos,
+            undefined,
+            undefined,
+            "toBack",
+          ),
         );
       }
 
@@ -248,13 +250,11 @@ export default function Area52() {
       }
     } else if (action === "single") {
       if (selectedDefenders.length !== 1) {
-        setIsAnimating(false);
         return;
       }
       const [index] = selectedDefenders;
       const defender = defenders[index];
       if (!defender) {
-        setIsAnimating(false);
         return;
       }
 
@@ -262,43 +262,60 @@ export default function Area52() {
         RANK_VALUE[defender.rank] > RANK_VALUE[attacker.rank] &&
         isRed(defender.suit) !== isRed(attacker.suit);
       if (!valid) {
-        setIsAnimating(false);
         return;
       }
 
       discardDeck.push(defender);
       defenders[index] = attacker;
 
-      const attackerPos = await getAttackerPos(0);
+      const attackerPos = await getAttackerPos(attackerIndex);
       const defenderPos = await getDefenderPos(index);
 
       if (defenderPos && discardDeckPos) {
-        addAnim(buildAnim("single-def", defender, defenderPos, discardDeckPos));
+        addAnim(
+          buildAnim(
+            "single-def",
+            defender,
+            defenderPos,
+            discardDeckPos,
+            undefined,
+            undefined,
+            "toBack",
+          ),
+        );
       }
 
       if (attackerPos && defenderPos) {
         addAnim(buildAnim("single-att", attacker, attackerPos, defenderPos));
       }
-    } else {
+    } else if (action === "sacrifice") {
       if (selectedDefenders.length !== 1) {
-        setIsAnimating(false);
         return;
       }
       const [index] = selectedDefenders;
       if (!defenders[index]) {
-        setIsAnimating(false);
         return;
       }
 
       discardDeck.push(defenders[index]);
       const defPos = await getDefenderPos(index);
       if (defPos && discardDeckPos) {
-        addAnim(buildAnim("sac-def", defenders[index], defPos, discardDeckPos));
+        addAnim(
+          buildAnim(
+            "sac-def",
+            defenders[index],
+            defPos,
+            discardDeckPos,
+            undefined,
+            undefined,
+            "toBack",
+          ),
+        );
       }
 
       (defenders as any)[index] = null;
       attackerDeck.push(attacker);
-      const attackerPos = await getAttackerPos(0);
+      const attackerPos = await getAttackerPos(attackerIndex);
       if (attackerPos && attackerDeckPos) {
         addAnim(
           buildAnim(
@@ -306,13 +323,15 @@ export default function Area52() {
             attacker,
             attackerPos,
             attackerDeckPos,
-            400,
-            0,
+            undefined,
+            undefined,
             "toBack",
           ),
         );
       }
     }
+
+    setIsAnimating(true);
 
     if (anims.length > 0) {
       await animateCards(anims);
@@ -327,9 +346,9 @@ export default function Area52() {
       discardDeck,
     };
 
-    // Shift current attacker
+    // Remove current attacker and replace with null
     let currentAttackers = [...prev.currentAttackers];
-    currentAttackers.shift();
+    currentAttackers.pop();
     nextState.currentAttackers = currentAttackers;
 
     // Use shared ensureQueue logic
@@ -340,18 +359,22 @@ export default function Area52() {
       queuedState.currentAttackers.length > 0 &&
       nextState.currentAttackers.length === 0
     ) {
-      for (let i = 0; i < queuedState.currentAttackers.length; i++) {
-        const toPos = await getAttackerPos(i);
+      // Queue up anims in reverse order, for the sake of zIndex overlaps
+      for (let i = queuedState.currentAttackers.length - 1; i >= 0; i--) {
+        const reversedIndex = maxAttackersNum - i - 1;
+
+        const toPos = await getAttackerPos(reversedIndex);
         if (attackerDeckPos && toPos) {
           addAnim(
             buildAnim(
               `deal-att-${i}`,
-              queuedState.currentAttackers[i],
+              queuedState.currentAttackers[reversedIndex],
               attackerDeckPos,
               toPos,
-              300,
-              i * 150,
+              animDuration,
+              i * animDuration - 100 * i,
               "toFace",
+              true,
             ),
           );
         }
@@ -372,6 +395,8 @@ export default function Area52() {
     for (let i = 0; i < updatedDefenders.length; i++) {
       if (!updatedDefenders[i]) {
         const next = updatedDefenderDeck.shift();
+        // Use a delay count, because i can be 6, which gives inaccurate delays
+        let delayCount = 0;
         if (next) {
           updatedDefenders[i] = next;
           const targetPos = await getDefenderPos(i);
@@ -382,11 +407,12 @@ export default function Area52() {
                 next,
                 defenderDeckPos,
                 targetPos,
-                300,
-                i * 150,
+                animDuration,
+                delayCount * animDuration - 100 * delayCount,
                 "toFace",
               ),
             );
+            delayCount += 1;
           }
         }
       }
@@ -413,7 +439,7 @@ export default function Area52() {
   const canAttack = useMemo(() => {
     if (selectedDefenders.length === 0) return undefined;
 
-    const enemy = game.currentAttackers[0];
+    const enemy = game.currentAttackers[game.currentAttackers.length - 1];
     if (!enemy) return undefined;
 
     const enemyValue = RANK_VALUE[enemy.rank];
@@ -461,14 +487,14 @@ export default function Area52() {
             flexStyles.rowCentered,
             flexStyles.spaceBetween,
             flexStyles.fullWidth,
-            { marginVertical: "auto" },
+            { marginVertical: "auto", position: "relative", zIndex: 2 },
           ]}
         >
           {/* Piles Col */}
           <View style={[flexStyles.colCentered, flexStyles.gap20]}>
             <Deck
               // title="Attackers"
-              refTopCurrent={attackerDeckRef}
+              refTopNext={attackerDeckRef}
               backCount={game.attackerDeck.length}
               showCount
               countPosition="above"
@@ -479,7 +505,7 @@ export default function Area52() {
 
             <Deck
               // title="Discard"
-              refTopCurrent={discardDeckRef}
+              refTopNext={discardDeckRef}
               backCount={game.discardDeck.length}
               showCount
               countPosition="above"
@@ -491,7 +517,7 @@ export default function Area52() {
 
             <Deck
               // title="Defenders"
-              refTopCurrent={defenderDeckRef}
+              refTopNext={defenderDeckRef}
               backCount={game.defenderDeck.length}
               showCount
               countPosition="above"
@@ -506,7 +532,7 @@ export default function Area52() {
             style={[
               flexStyles.colCentered,
               flexStyles.spaceBetween,
-              { height: "100%" },
+              { height: "100%", position: "relative", zIndex: 1 },
             ]}
           >
             <View style={[styles.section]}>
@@ -518,33 +544,38 @@ export default function Area52() {
 
               <CardGrid
                 cardsPerRow={cardsPerRow}
-                targetGirdCols={3}
-                style={[
-                  { flexDirection: "row-reverse", justifyContent: "flex-end" },
-                ]}
+                targetGirdCols={maxAttackersNum}
+                style={[{ flexDirection: "row", justifyContent: "flex-start" }]}
               >
-                {game.currentAttackers.map((card, idx) => (
-                  <View
-                    key={card.id}
-                    ref={(el) => {
-                      attackerRefs.current[idx] = el;
-                    }}
-                    style={[idx === 0 && { transform: [{ translateY: 20 }] }]}
-                  >
-                    <Card
-                      suit={card.suit}
-                      rank={card.rank}
-                      cardsPerRow={cardsPerRow}
-                      selectColor="red"
-                      forceOverlay={idx === 0}
-                      forceSelectColor={idx === 0}
-                    />
-                  </View>
-                ))}
+                {Array.from({ length: maxAttackersNum }, (_, idx) => {
+                  const card: PlayingCard | undefined =
+                    game.currentAttackers[idx];
+                  const isCurrentAttacker =
+                    idx === game.currentAttackers.length - 1;
 
-                {game.currentAttackers.length === 0 && (
-                  <Text style={textStyles.default}>No active attackers</Text>
-                )}
+                  const isAnimatingCardToPile =
+                    isAnimating && isCurrentAttacker;
+
+                  return (
+                    <Card
+                      key={`attacker-${idx}`}
+                      ref={(el) => {
+                        attackerRefs.current[idx] = el;
+                      }}
+                      suit={card?.suit}
+                      rank={card?.rank}
+                      isPlaceholder={!card || isAnimatingCardToPile}
+                      cardsPerRow={cardsPerRow}
+                      selectColor={isAnimatingCardToPile ? "none" : "red"}
+                      forceOverlay={
+                        isAnimatingCardToPile ? false : isCurrentAttacker
+                      }
+                      forceSelectColor={
+                        isAnimatingCardToPile ? false : isCurrentAttacker
+                      }
+                    />
+                  );
+                })}
               </CardGrid>
             </View>
 
@@ -556,21 +587,18 @@ export default function Area52() {
                 {game.currentDefenders.map((card, index) => {
                   const isSelected = selectedDefenders.includes(index);
 
-                  const selectedColor = () => {
-                    if (!isSelected || canAttack === undefined) {
-                      return "blue" as CardSelectColor;
+                  const isAnimatingCardToPile =
+                    isAnimating && isSelected && selectedDefenders.length === 1;
+
+                  const selectedColor = (): CardSelectColor => {
+                    if (isAnimatingCardToPile) {
+                      return "none";
+                    } else if (!isSelected || canAttack === undefined) {
+                      return "blue";
                     } else if (selectedDefenders.length === 2) {
-                      if (canAttack) {
-                        return "purple" as CardSelectColor;
-                      } else {
-                        return "orange" as CardSelectColor;
-                      }
+                      return canAttack ? "purple" : "orange";
                     } else {
-                      if (canAttack) {
-                        return "green" as CardSelectColor;
-                      } else {
-                        return "red" as CardSelectColor;
-                      }
+                      return canAttack ? "green" : "red";
                     }
                   };
 
@@ -584,8 +612,9 @@ export default function Area52() {
                       suit={card.suit}
                       rank={card.rank}
                       cardsPerRow={cardsPerRow}
-                      isSelected={isSelected}
+                      isSelected={isAnimatingCardToPile ? false : isSelected}
                       selectColor={selectedColor()}
+                      isPlaceholder={isAnimatingCardToPile}
                     />
                   );
                 })}
@@ -593,7 +622,6 @@ export default function Area52() {
             </View>
           </View>
         </View>
-        {/* ///////// BUTTONS //////////// */}
 
         <View
           style={[

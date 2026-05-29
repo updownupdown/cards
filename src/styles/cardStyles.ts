@@ -1,11 +1,10 @@
 import { StyleSheet } from "react-native";
-import { flexStyles } from "./flexStyles";
+import { flexStyles, transitionStyles } from "./flexStyles";
 import { Colors } from "./styles";
 
 const cardTransition = {
-  transitionDuration: "0.3s",
+  ...transitionStyles.sec03,
   transitionProperty: "bottom, left, right, top, transform",
-  transitionTimingFunction: "easeInOut",
 };
 
 export const cardStyles = StyleSheet.create({
@@ -50,7 +49,7 @@ export const cardStyles = StyleSheet.create({
     ...cardTransition,
     overflow: "hidden",
     position: "relative",
-    zIndex: 2,
+    zIndex: 3,
     outlineWidth: 0,
     // backgroundColor: Colors.white,
   },
@@ -58,7 +57,7 @@ export const cardStyles = StyleSheet.create({
   cardSelectOverlay: {
     // ...cardTransition,
     position: "absolute",
-    zIndex: 3,
+    zIndex: 4,
     top: 0,
     left: 0,
     right: 0,
@@ -77,5 +76,14 @@ export const cardStyles = StyleSheet.create({
   animHide: {
     opacity: 0,
     pointerEvents: "none",
+  },
+  placeholderContentWrap: {
+    position: "absolute",
+    zIndex: 5,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    ...flexStyles.colCentered,
   },
 });

@@ -11,6 +11,11 @@ export const transitionStyles = StyleSheet.create({
     transitionProperty: "all",
     transitionTimingFunction: "ease",
   },
+  sec03: {
+    transitionDuration: "0.3s",
+    transitionProperty: "all",
+    transitionTimingFunction: "ease",
+  },
   sec05: {
     transitionDuration: "0.5s",
     transitionProperty: "all",

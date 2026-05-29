@@ -2,6 +2,7 @@ import { Pressable, ViewStyle, View } from "react-native";
 import { CardRank, CardSuit } from "./card-utils";
 import { Card, CardSelectColor, CardSizes } from "./Card";
 import { cardStyles } from "@/styles/cardStyles";
+import React from "react";
 
 interface Props {
   style?: (ViewStyle | false)[];
@@ -20,6 +21,7 @@ interface Props {
   cardSize?: CardSizes;
   forceSelectColor?: boolean;
   forceOverlay?: boolean;
+  placeholderContent?: React.ReactNode;
 }
 
 export const CardButton = ({
@@ -38,6 +40,7 @@ export const CardButton = ({
   onPress,
   forceSelectColor,
   forceOverlay,
+  placeholderContent,
   ref,
 }: Props) => {
   return (
@@ -62,6 +65,12 @@ export const CardButton = ({
         forceSelectColor={forceSelectColor}
         forceOverlay={forceOverlay}
       />
+
+      {placeholderContent && (
+        <View style={[cardStyles.placeholderContentWrap]}>
+          {placeholderContent}
+        </View>
+      )}
     </Pressable>
   );
 };

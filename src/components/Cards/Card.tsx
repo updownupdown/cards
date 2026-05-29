@@ -31,6 +31,7 @@ const cardDefaultHeight = 350;
 const cardAspectRatio = cardDefaultWidth / cardDefaultHeight;
 const cardGapRatio = 0.82;
 const cardShadowRadio = 0.01;
+export const cardBorderRadiusRatio = 0.08;
 
 interface CardGridProps {
   cardsPerRow: number;
@@ -85,7 +86,7 @@ export const useCardSize = (cardsPerRow = 5, targetGridCol?: number) => {
 
   const topMargin = cardWidthRequested * (1 - cardGapRatio);
   const height = width / cardAspectRatio;
-  const borderRadius = width * 0.08;
+  const borderRadius = width * cardBorderRadiusRatio;
   const shadowUnit = width * cardShadowRadio;
   const placeholderShadow = `inset ${shadowUnit}px ${shadowUnit * 2}px ${shadowUnit * 14}px ${rgba(Colors.black, 0.3)}`;
 

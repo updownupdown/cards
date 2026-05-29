@@ -1,7 +1,7 @@
 import { Colors, FontWeight, rgba } from "@/styles/styles";
 import { StyleSheet } from "react-native";
 
-const buttonTransition = {
+export const buttonTransition = {
   transitionDuration: "0.4s",
   transitionProperty: "all",
   transitionTimingFunction: "ease",
