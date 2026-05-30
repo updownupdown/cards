@@ -37,6 +37,7 @@ function createDiscardCount(): Record<PlayingCard["rank"], number> {
     J: 0,
     Q: 0,
     K: 0,
+    Joker: 0, // ADDED FOR TS, NOT USED?!
   };
 }
 
@@ -171,7 +172,7 @@ export default function FirstBobaTeaShopInLondon() {
                 key={card.id}
                 style={{ marginTop: i === 0 ? 0 : -44, zIndex: i + 1 }}
               >
-                <Card suit={card.suit} rank={card.rank} cardsPerRow={5} />
+                <Card card={card} cardsPerRow={5} />
               </View>
             ))}
           </Pressable>

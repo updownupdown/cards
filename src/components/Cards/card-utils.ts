@@ -23,13 +23,6 @@ export type StandardRank = Exclude<CardRank, "Joker">;
 export type PlayingCard = {
   id: string;
   suit: CardSuit;
-  rank: StandardRank;
-  faceUp: boolean;
-};
-
-export type PlayingCardJoker = {
-  id: string;
-  suit: CardSuit;
   rank: CardRank;
   faceUp: boolean;
 };
@@ -72,7 +65,7 @@ export const RANK_VALUE: Record<StandardRank | "Joker", number> = {
 };
 
 export function rankValue(
-  card: PlayingCard | PlayingCardJoker,
+  card: PlayingCard,
   customAceValue?: number,
   customJokerValue?: number,
 ) {
@@ -82,6 +75,22 @@ export function rankValue(
     return customAceValue ?? RANK_VALUE[card.rank];
   } else {
     return RANK_VALUE[card.rank];
+  }
+}
+
+export function nameFromRankValue(rank: number) {
+  if (rank === 0 || rank === 14) {
+    return "Joker";
+  } else if (rank === 1) {
+    return "Ace";
+  } else if (rank === 11) {
+    return "Jack";
+  } else if (rank === 12) {
+    return "Queen";
+  } else if (rank === 13) {
+    return "King";
+  } else {
+    return rank.toString();
   }
 }
 
@@ -125,11 +134,11 @@ export function isRed(suit: CardSuit) {
   return suit === "hearts" || suit === "diamonds";
 }
 
-export function cardColor(card: PlayingCard | PlayingCardJoker) {
+export function cardColor(card: PlayingCard) {
   return isRed(card.suit) ? "red" : "black";
 }
 
-export function isFace(card: PlayingCard | PlayingCardJoker) {
+export function isFace(card: PlayingCard) {
   return card.rank === "J" || card.rank === "Q" || card.rank === "K";
 }
 
@@ -144,7 +153,7 @@ export function isNumberRank(rank: CardRank | LoopRank) {
   return ["2", "3", "4", "5", "6", "7", "8", "9", "10"].includes(rank);
 }
 
-export function isJoker(card: PlayingCard | PlayingCardJoker) {
+export function isJoker(card: PlayingCard) {
   return card.rank === "Joker";
 }
 
@@ -161,8 +170,14 @@ export function createDeck(options?: {
   deckCount?: number;
   forceSuit?: CardSuit;
   faceUp?: boolean;
+  includeJokers?: boolean;
 }) {
-  const { deckCount = 1, forceSuit, faceUp = false } = options ?? {};
+  const {
+    deckCount = 1,
+    forceSuit,
+    faceUp = false,
+    includeJokers,
+  } = options ?? {};
   const suits = forceSuit ? [forceSuit] : SUITS;
 
   const cards: PlayingCard[] = [];
@@ -177,6 +192,11 @@ export function createDeck(options?: {
         });
       }
     }
+  }
+
+  if (includeJokers) {
+    cards.push({ id: "joker-a", suit: "spades", rank: "Joker", faceUp });
+    cards.push({ id: "joker-b", suit: "hearts", rank: "Joker", faceUp });
   }
 
   return cards;

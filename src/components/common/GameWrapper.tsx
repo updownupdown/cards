@@ -24,16 +24,15 @@ export const GameWrapper = ({
   reset,
   children,
 }: Props) => {
-  const { setIsAnimating, clearAnimations } = useAnimations();
+  const { clearAnimations } = useAnimations();
 
   // Cannot use a simple useEffect here due to react-native
   useFocusEffect(
     useCallback(() => {
       return () => {
-        setIsAnimating(false);
         clearAnimations();
       };
-    }, [setIsAnimating, clearAnimations]),
+    }, [clearAnimations]),
   );
 
   return (

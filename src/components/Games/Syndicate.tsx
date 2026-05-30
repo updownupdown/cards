@@ -246,7 +246,7 @@ export default function Syndicate() {
                       : undefined
                   }
                 >
-                  <Card suit={card.suit} rank={card.rank} cardsPerRow={5} />
+                  <Card card={card} cardsPerRow={5} />
                 </Pressable>
               ))
             ) : (
@@ -297,7 +297,7 @@ export default function Syndicate() {
                     }}
                     style={selected ? styles.selectedCard : undefined}
                   >
-                    <Card suit={card.suit} rank={card.rank} cardsPerRow={5} />
+                    <Card card={card} cardsPerRow={5} />
                   </Pressable>
                 );
               })}
@@ -308,12 +308,7 @@ export default function Syndicate() {
             </Text>
             <View style={styles.stackWrap}>
               {band.candidates.slice(0, 3).map((card) => (
-                <Card
-                  key={card.id}
-                  suit={card.suit}
-                  rank={card.rank}
-                  cardsPerRow={5}
-                />
+                <Card key={card.id} card={card} cardsPerRow={5} />
               ))}
             </View>
           </View>

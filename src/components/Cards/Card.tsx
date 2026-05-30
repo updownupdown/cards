@@ -11,10 +11,11 @@ import {
 import { cardStyles } from "@/styles/cardStyles";
 import { useWindowDimensions, View, ViewStyle } from "react-native";
 import type { SvgProps } from "react-native-svg";
-import { CardRank, CardSuit } from "./card-utils";
+import { CardRank, CardSuit, PlayingCard } from "./card-utils";
 import { useGameSettings } from "@/hooks/useGameSettings";
 import { normalizeGamePath } from "@/data/game-menu";
 import { usePathname } from "expo-router";
+import { useContentWidth } from "@/hooks/useContentWidth";
 
 export type CardSelectColor =
   | "none"
@@ -40,18 +41,13 @@ interface CardGridProps {
   children: React.ReactNode;
 }
 
-export const useContentWidth = () => {
-  const { width: windowWidth } = useWindowDimensions();
-  return Math.min(windowWidth - ContentSidePadding * 2, MaxContentWidth);
-};
-
 export const CardGrid = ({
   cardsPerRow,
   targetGirdCols,
   style,
   children,
 }: CardGridProps) => {
-  const contentWidth = useContentWidth();
+  const { contentDiameter: contentWidth } = useContentWidth();
 
   const cardWidth = (contentWidth / cardsPerRow) * cardGapRatio;
 
@@ -80,7 +76,8 @@ export const CardGrid = ({
 };
 
 export const useCardSize = (cardsPerRow = 5, targetGridCol?: number) => {
-  const contentWidth = useContentWidth();
+  const { contentDiameter: contentWidth } = useContentWidth();
+
   const cardWidthRequested = (100 / cardsPerRow / 100) * contentWidth;
   const width = cardWidthRequested * cardGapRatio;
 
@@ -108,11 +105,8 @@ export const useCardSize = (cardsPerRow = 5, targetGridCol?: number) => {
 export type CardSizes = "small" | "regular" | "small-colored";
 
 export type CardProps = Omit<SvgProps, "width" | "height" | "style"> & {
-  rank?: CardRank;
-  suit?: CardSuit;
-  isBack?: boolean;
+  card: PlayingCard | undefined | null;
   isPlaceholder?: boolean;
-  isAnimRef?: boolean;
   style?: (ViewStyle | false)[];
   cardsPerRow?: number;
   isSelectable?: boolean;
@@ -129,11 +123,8 @@ export const Card = forwardRef<any, CardProps>(
   (
     {
       style,
-      rank,
-      suit,
-      isBack,
+      card,
       isPlaceholder,
-      isAnimRef,
       cardsPerRow = 5,
       isSelectable,
       selectColor,
@@ -157,12 +148,10 @@ export const Card = forwardRef<any, CardProps>(
           ? CardsSmallColored
           : CardsRegular;
 
-    let cardName = "Placeholder";
+    let cardName = isPlaceholder ? "Placeholder" : "BackH";
 
-    if (!isPlaceholder && !isAnimRef) {
-      const suitName = suit ? suit.charAt(0).toUpperCase() : "H";
-      cardName = rank ?? "Back";
-      cardName += suitName;
+    if (!isPlaceholder && card && card.faceUp) {
+      cardName = card.rank + card.suit.charAt(0).toUpperCase();
     }
 
     const SvgCard = cardFiles[cardName];
@@ -240,12 +229,7 @@ export const Card = forwardRef<any, CardProps>(
       <View
         ref={ref}
         collapsable={false}
-        style={[
-          cardStyles.card,
-          cardStyle,
-          isAnimRef && cardStyles.animHide,
-          style,
-        ]}
+        style={[cardStyles.card, cardStyle, style]}
       >
         <View
           style={[

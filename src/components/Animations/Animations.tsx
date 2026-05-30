@@ -16,16 +16,13 @@ import Animated, {
   interpolate,
 } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
-import { Card, CardProps } from "../Cards/Card";
-
-export type AnimCardInfo = Pick<
-  CardProps,
-  "rank" | "suit" | "isBack" | "isPlaceholder" | "cardSize" | "cardsPerRow"
->;
+import { Card, CardSizes } from "../Cards/Card";
+import { PlayingCard } from "../Cards/card-utils";
 
 export type CardAnimationParams = {
-  id: string; // unique id for the animated card
-  cardInfo: AnimCardInfo;
+  card: PlayingCard;
+  cardSize?: CardSizes;
+  cardsPerRow: number;
   from: {
     x: number;
     y: number;
@@ -33,6 +30,7 @@ export type CardAnimationParams = {
     height?: number;
     zIndex?: number;
     rotation?: number;
+    opacity?: number;
   };
   to: {
     x: number;
@@ -41,6 +39,7 @@ export type CardAnimationParams = {
     height?: number;
     zIndex?: number;
     rotation?: number;
+    opacity?: number;
   };
   duration?: number;
   delay?: number;
@@ -48,14 +47,19 @@ export type CardAnimationParams = {
   keepAlive?: boolean; // if true, the card won't be unmounted automatically when the animation ends
 };
 
+export type MeasuredRef = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+} | null;
+
 interface AnimationContextType {
   isAnimating: boolean;
-  setIsAnimating: (isAnimating: boolean) => void;
+  animatingCardIds: string[];
   animateCards: (params: (CardAnimationParams | null)[]) => Promise<void>;
   clearAnimations: (ids?: string[]) => void;
-  measureRef: (
-    ref: React.RefObject<View | null>,
-  ) => Promise<{ x: number; y: number; width: number; height: number } | null>;
+  measureRef: (ref: React.RefObject<View | null>) => Promise<MeasuredRef>;
 }
 
 const AnimationContext = createContext<AnimationContextType | null>(null);
@@ -84,14 +88,19 @@ const AnimatedCard = ({
     progress.value = withDelay(
       delay,
       withTiming(1, { duration }, () => {
-        scheduleOnRN(onComplete, params.id);
+        scheduleOnRN(onComplete, params.card.id);
       }),
     );
-  }, [delay, duration, params.id, progress, onComplete]);
+  }, [delay, duration, params.card.id, progress, onComplete]);
 
   const animatedStyle = useAnimatedStyle(() => {
     const translateX = interpolate(progress.value, [0, 1], [from.x, to.x]);
     const translateY = interpolate(progress.value, [0, 1], [from.y, to.y]);
+
+    const opacity =
+      from.opacity !== undefined && to.opacity !== undefined
+        ? interpolate(progress.value, [0, 1], [from.opacity, to.opacity])
+        : 1;
 
     // For flipping
     const rotationY = flip
@@ -122,6 +131,7 @@ const AnimatedCard = ({
       top: 0,
       width: to.width,
       height: to.height,
+      opacity,
       transform: [
         { translateX },
         { translateY },
@@ -129,7 +139,7 @@ const AnimatedCard = ({
         { rotateZ: `${rotationZ}deg` },
         { rotateY: `${rotationY}deg` },
       ],
-      // transformOrigin: flip ? "center center" : "top left",
+      transformOrigin: flip ? "center center" : "top left",
       zIndex:
         progress.value > 0.5
           ? (to.zIndex ?? from.zIndex ?? 100)
@@ -142,7 +152,7 @@ const AnimatedCard = ({
     if (!flip) {
       return {
         position: "absolute",
-        opacity: params.cardInfo.isBack ? 0 : 1,
+        opacity: params.card.faceUp ? 1 : 0,
       };
     }
 
@@ -162,7 +172,7 @@ const AnimatedCard = ({
     if (!flip) {
       return {
         position: "absolute",
-        opacity: params.cardInfo.isBack ? 1 : 0,
+        opacity: params.card.faceUp ? 0 : 1,
       };
     }
 
@@ -182,17 +192,26 @@ const AnimatedCard = ({
   return (
     <Animated.View style={animatedStyle}>
       <Animated.View style={frontStyle}>
-        <Card {...params.cardInfo} />
+        <Card
+          cardsPerRow={params.cardsPerRow}
+          card={{ ...params.card, faceUp: true }}
+          cardSize={params.cardSize}
+        />
       </Animated.View>
 
       <Animated.View style={backStyle}>
-        <Card {...params.cardInfo} suit={undefined} rank={undefined} isBack />
+        <Card
+          cardsPerRow={params.cardsPerRow}
+          card={{ ...params.card, faceUp: false }}
+          cardSize={params.cardSize}
+        />
       </Animated.View>
     </Animated.View>
   );
 };
 
 export const AnimationProvider = ({ children }: { children: ReactNode }) => {
+  const [animatingCardIds, setAnimatingCardIds] = useState<string[]>([]);
   const [isAnimating, setIsAnimatingState] = useState(false);
   const isAnimatingRef = useRef(false);
 
@@ -204,50 +223,75 @@ export const AnimationProvider = ({ children }: { children: ReactNode }) => {
   const [animations, setAnimations] = useState<CardAnimationParams[]>([]);
   const promisesRef = useRef<Record<string, () => void>>({});
 
-  const animateCards = useCallback((params: (CardAnimationParams | null)[]) => {
-    return new Promise<void>((resolve) => {
-      let completedCount = 0;
-      const total = params.length;
+  const cancelAnimsAfterTimeoutRef = useRef(true);
 
-      if (total === 0 || !isAnimatingRef.current) {
-        resolve();
-        return;
-      }
-
-      const onAnimComplete = (id: string, keepAlive?: boolean) => {
-        if (keepAlive === false) {
-          setAnimations((prev) => prev.filter((anim) => anim.id !== id));
-        }
-        completedCount++;
-        if (completedCount === total) {
+  const animateCards = useCallback(
+    (params: (CardAnimationParams | null)[]) => {
+      return new Promise<void>((resolve) => {
+        function doResolve() {
+          setAnimatingCardIds([]);
+          setAnimations([]);
           resolve();
-        }
-      };
 
-      params.forEach((param) => {
-        if (param) {
-          promisesRef.current[param.id] = () =>
-            onAnimComplete(param.id, param.keepAlive);
+          // Buffer so that back-to-back animations don't create
+          // "flashes" from isAnimating switching value
+          cancelAnimsAfterTimeoutRef.current = true;
+
+          setTimeout(() => {
+            if (cancelAnimsAfterTimeoutRef.current) {
+              setIsAnimating(false);
+            }
+          }, 50);
         }
+
+        cancelAnimsAfterTimeoutRef.current = false;
+
+        const validParams = params.filter(
+          (p): p is CardAnimationParams => p !== null,
+        );
+        let completedCount = 0;
+        const total = validParams.length;
+
+        if (total === 0) {
+          doResolve();
+          return;
+        }
+
+        setAnimatingCardIds(validParams.map((p) => p.card.id));
+
+        setIsAnimating(true);
+
+        const onAnimComplete = (id: string, keepAlive?: boolean) => {
+          if (keepAlive === false) {
+            setAnimations((prev) => prev.filter((anim) => anim.card.id !== id));
+          }
+          completedCount++;
+          if (completedCount === total) {
+            doResolve();
+          }
+        };
+
+        validParams.forEach((param) => {
+          promisesRef.current[param.card.id] = () =>
+            onAnimComplete(param.card.id, param.keepAlive);
+        });
+
+        setAnimations((prev) => {
+          const next = prev.filter(
+            (p) => !validParams.find((v) => v.card.id === p.card.id),
+          );
+          return [...next, ...validParams];
+        });
       });
+    },
+    [setIsAnimating],
+  );
 
-      setAnimations((prev) => [...prev, ...params.filter((p) => p !== null)]);
-    });
-  }, []);
-
-  const clearAnimations = useCallback((ids?: string[]) => {
-    if (ids) {
-      setAnimations((prev) => prev.filter((anim) => !ids.includes(anim.id)));
-    } else {
-      setAnimations([]);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!isAnimating) {
-      setTimeout(clearAnimations, 0);
-    }
-  }, [isAnimating]);
+  const clearAnimations = useCallback(() => {
+    setIsAnimating(false);
+    setAnimations([]);
+    promisesRef.current = {};
+  }, [setIsAnimating]);
 
   const handleComplete = useCallback((id: string) => {
     if (promisesRef.current[id]) {
@@ -280,7 +324,7 @@ export const AnimationProvider = ({ children }: { children: ReactNode }) => {
         clearAnimations,
         measureRef,
         isAnimating,
-        setIsAnimating,
+        animatingCardIds,
       }}
     >
       {children}
@@ -297,7 +341,7 @@ export const AnimationProvider = ({ children }: { children: ReactNode }) => {
         >
           {animations.map((anim) => (
             <AnimatedCard
-              key={anim.id}
+              key={anim.card.id}
               params={anim}
               onComplete={handleComplete}
             />

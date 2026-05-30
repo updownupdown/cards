@@ -460,11 +460,7 @@ export default function FreeCell() {
                           hiddenByDrag ? styles.hiddenDuringDrag : undefined
                         }
                       >
-                        <Card
-                          suit={card.suit}
-                          rank={card.rank}
-                          cardsPerRow={9}
-                        />
+                        <Card card={card} cardsPerRow={9} />
                       </View>
                     ) : (
                       <Text style={styles.slotLabel}>Free</Text>
@@ -499,7 +495,7 @@ export default function FreeCell() {
                     ]}
                   >
                     {top ? (
-                      <Card suit={top.suit} rank={top.rank} cardsPerRow={9} />
+                      <Card card={top} cardsPerRow={9} />
                     ) : (
                       <Text style={styles.slotLabel}>
                         {suit[0].toUpperCase()}
@@ -570,7 +566,7 @@ export default function FreeCell() {
                       ]}
                       {...(isTop ? topDragHandlers : {})}
                     >
-                      <Card suit={card.suit} rank={card.rank} cardsPerRow={9} />
+                      <Card card={card} cardsPerRow={9} />
                     </View>
                   );
                 })}
@@ -590,11 +586,7 @@ export default function FreeCell() {
               },
             ]}
           >
-            <Card
-              suit={dragGhost.card.suit}
-              rank={dragGhost.card.rank}
-              cardsPerRow={9}
-            />
+            <Card card={dragGhost.card} cardsPerRow={9} />
           </Animated.View>
         ) : null}
       </View>

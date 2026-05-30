@@ -53,7 +53,7 @@ function setup(): ClockState {
 export default function Clock() {
   const isLoaded = useGameLoading();
 
-  const { animateCards, isAnimating, setIsAnimating } = useAnimations();
+  const { animateCards, isAnimating } = useAnimations();
 
   const [game, setGame] = useState<ClockState>(setup);
 
@@ -65,8 +65,6 @@ export default function Clock() {
 
   async function revealCardAtPileIndex(pileIndex: number) {
     if (game.ended) return;
-
-    setIsAnimating(true);
 
     // Flip over top card of at pileIndex
     setGame((prev) => {
@@ -204,8 +202,6 @@ export default function Clock() {
         revealedKings,
       };
     });
-
-    setIsAnimating(false);
   }
 
   const decks = useMemo(
@@ -226,9 +222,7 @@ export default function Clock() {
           style = { position: "absolute" }; // Center pile
         }
 
-        const deckCards = game.piles[pileIndex].map((card) =>
-          card.faceUp ? { suit: card.suit, rank: card.rank } : "back",
-        );
+        const deckCards = game.piles[pileIndex];
 
         const pressable = pileIndex === game.nextPileIndex && !game.ended;
 

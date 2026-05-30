@@ -3,11 +3,7 @@ import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
 import { useMemo, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import {
-  AnimCardInfo,
-  CardAnimationParams,
-  useAnimations,
-} from "../Animations/Animations";
+import { CardAnimationParams, useAnimations } from "../Animations/Animations";
 import { Button } from "../Button/Button";
 import { Card, CardGrid, CardSelectColor } from "../Cards/Card";
 import {
@@ -119,8 +115,8 @@ function calcWinScore(state: AreaState) {
 }
 
 const buildAnim = (
-  idPrefix: string,
-  card: AnimCardInfo,
+  card: PlayingCard,
+  cardsPerRow: number,
   from: AnimPos,
   to: AnimPos,
   duration = animDuration,
@@ -131,13 +127,8 @@ const buildAnim = (
   if (!from || !to) return null;
 
   return {
-    id: `${idPrefix}-${Date.now()}`,
-    cardInfo: {
-      rank: card.rank,
-      suit: card.suit,
-      isBack: card.isBack,
-      cardsPerRow,
-    },
+    card,
+    cardsPerRow,
     from,
     to,
     duration,
@@ -158,7 +149,7 @@ export default function Area52() {
     clearAnimations,
     measureRef,
     isAnimating,
-    setIsAnimating,
+    animatingCardIds,
   } = useAnimations();
 
   const attackerDeckCurrentRef = useRef<View>(null);
@@ -176,7 +167,6 @@ export default function Area52() {
   }, [game]);
 
   function reset() {
-    setIsAnimating(false);
     clearAnimations();
     setSelectedDefenders([]);
     setGame(ensureQueue(setup()));
@@ -227,8 +217,8 @@ export default function Area52() {
       const discardDeckPos = await measureRef(discardDeckRef);
       addAnim(
         buildAnim(
-          "dual-attacker",
           attacker,
+          cardsPerRow,
           attackerPos ?? null,
           discardDeckPos ?? null,
           undefined,
@@ -247,8 +237,8 @@ export default function Area52() {
           const posA = await getDefenderPos(aIdx);
           addAnim(
             buildAnim(
-              "dual-da",
               a,
+              cardsPerRow,
               posA ?? null,
               discardDeckPos ?? null,
               undefined,
@@ -265,8 +255,8 @@ export default function Area52() {
           if (posB && discardDeckPos) {
             addAnim(
               buildAnim(
-                "dual-attack",
                 b,
+                cardsPerRow,
                 posB ?? null,
                 discardDeckPos ?? null,
                 undefined,
@@ -299,8 +289,8 @@ export default function Area52() {
       if (defenderPos && discardDeckPos) {
         addAnim(
           buildAnim(
-            "single-def",
             defender,
+            cardsPerRow,
             defenderPos ?? null,
             discardDeckPos ?? null,
             undefined,
@@ -313,8 +303,8 @@ export default function Area52() {
       if (attackerPos && defenderPos) {
         addAnim(
           buildAnim(
-            "single-attack",
             attacker,
+            cardsPerRow,
             attackerPos ?? null,
             defenderPos ?? null,
           ),
@@ -333,8 +323,8 @@ export default function Area52() {
       if (defPos && discardDeckPos) {
         addAnim(
           buildAnim(
-            "sac-def",
             defenders[index],
+            cardsPerRow,
             defPos ?? null,
             discardDeckPos ?? null,
             undefined,
@@ -352,8 +342,8 @@ export default function Area52() {
       if (attackerPos && attackerDeckPos) {
         addAnim(
           buildAnim(
-            "sac-att",
             attacker,
+            cardsPerRow,
             attackerPos ?? null,
             attackerDeckPos ?? null,
             undefined,
@@ -392,8 +382,8 @@ export default function Area52() {
             const attackerDeckPos = await measureRef(attackerDeckNextRef);
 
             const transAnim = buildAnim(
-              `wave-trans-${i}`,
-              { ...card, isBack: true },
+              { ...card, faceUp: false },
+              cardsPerRow,
               discardDeckPos ?? null,
               attackerDeckPos ?? null,
               50,
@@ -401,6 +391,7 @@ export default function Area52() {
               undefined,
               false,
             );
+
             if (transAnim) {
               await animateCards([transAnim]);
             }
@@ -438,13 +429,12 @@ export default function Area52() {
           ...newState,
           currentAttackers: [...newState.currentAttackers, nextCard],
         };
-        setGame(nextState);
 
         const attackerDeckPos = await measureRef(attackerDeckCurrentRef);
         const toPos = await getAttackerPos(i);
         const anim = buildAnim(
-          `deal-att-${i}`,
           nextCard,
+          cardsPerRow,
           attackerDeckPos ?? null,
           toPos ?? null,
           animDuration,
@@ -452,9 +442,12 @@ export default function Area52() {
           "toFace",
           true,
         );
+
         if (anim) {
           await animateCards([anim]);
         }
+
+        setGame(nextState);
       }
     }
     return nextState;
@@ -476,8 +469,8 @@ export default function Area52() {
 
           if (defenderDeckPos && targetPos) {
             const anim = buildAnim(
-              `deal-def-${i}`,
               next,
+              cardsPerRow,
               defenderDeckPos ?? null,
               targetPos ?? null,
               animDuration,
@@ -532,13 +525,9 @@ export default function Area52() {
       return;
     }
 
-    setIsAnimating(true);
-
     if (anims.length > 0) {
       await animateCards(anims);
     }
-
-    setIsAnimating(false);
 
     setSelectedDefenders([]);
 
@@ -683,10 +672,10 @@ export default function Area52() {
                   const card: PlayingCard | undefined =
                     game.currentAttackers[idx];
                   const isCurrentAttacker =
-                    idx === game.currentAttackers.length - 1;
+                    !isAnimating && idx === game.currentAttackers.length - 1;
 
-                  const isAnimatingCardToPile =
-                    isAnimating && isCurrentAttacker;
+                  const animatingCard =
+                    card && animatingCardIds.includes(card.id);
 
                   return (
                     <Card
@@ -694,16 +683,13 @@ export default function Area52() {
                       ref={(el) => {
                         attackerRefs.current[idx] = el;
                       }}
-                      suit={card?.suit}
-                      rank={card?.rank}
-                      isPlaceholder={!card || isAnimatingCardToPile}
+                      card={card}
+                      isPlaceholder={!card || animatingCard}
                       cardsPerRow={cardsPerRow}
-                      selectColor={isAnimatingCardToPile ? "none" : "red"}
-                      forceOverlay={
-                        isAnimatingCardToPile ? false : isCurrentAttacker
-                      }
+                      selectColor={animatingCard ? "none" : "red"}
+                      forceOverlay={animatingCard ? false : isCurrentAttacker}
                       forceSelectColor={
-                        isAnimatingCardToPile ? false : isCurrentAttacker
+                        animatingCard ? false : isCurrentAttacker
                       }
                     />
                   );
@@ -719,8 +705,9 @@ export default function Area52() {
                 {game.currentDefenders.map((card, index) => {
                   const isSelected = selectedDefenders.includes(index);
 
-                  const isAnimatingCardToPile =
-                    isAnimating && isSelected && selectedDefenders.length === 1;
+                  const isAnimatingCardToPile = !!(
+                    card && animatingCardIds.includes(card.id)
+                  );
 
                   const selectedColor = (): CardSelectColor => {
                     if (isAnimatingCardToPile) {
@@ -743,8 +730,7 @@ export default function Area52() {
                       onPress={
                         isAnimating ? undefined : () => toggleDefender(index)
                       }
-                      suit={card?.suit}
-                      rank={card?.rank}
+                      card={card}
                       cardsPerRow={cardsPerRow}
                       isSelected={isAnimatingCardToPile ? false : isSelected}
                       selectColor={selectedColor()}

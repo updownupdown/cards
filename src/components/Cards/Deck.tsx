@@ -6,7 +6,7 @@ import { clamp } from "@/utils/utils";
 import React from "react";
 import { StyleSheet, Text, View, ViewStyle } from "react-native";
 import { CardSelectColor, CardSizes, useCardSize } from "./Card";
-import { CardRank, CardSuit } from "./card-utils";
+import { CardRank, CardSuit, PlayingCard } from "./card-utils";
 import { CardButton } from "./CardButton";
 
 export const DEFAULT_FRONT_OVERLAP = 0.7;
@@ -21,16 +21,11 @@ const fanSizeDelta = maxFanSize - minFanSize;
 const progressFanProximityThreshold = 4;
 const maxBackDeckSize = 3;
 
-type DeckCard = {
-  rank: CardRank;
-  suit: CardSuit;
-};
-
 type DeckProps = {
   style?: ViewStyle[];
   backCount?: number;
   limitFan?: boolean;
-  cards?: (DeckCard | "back")[];
+  cards?: PlayingCard[];
   fan?:
     | "horizontalRight"
     | "horizontalLeft"
@@ -46,6 +41,7 @@ type DeckProps = {
   hideTopCard?: boolean;
   isSelected?: boolean;
   isDisabled?: boolean;
+  forceSelectColor?: boolean;
   invisibleWhenEmpty?: boolean;
   title?: string;
   refTopCurrent?: React.Ref<View>;
@@ -68,6 +64,7 @@ export const Deck = ({
   title,
   iconName,
   hideTopCard,
+  forceSelectColor,
   isSelected,
   isDisabled,
   invisibleWhenEmpty,
@@ -167,12 +164,20 @@ export const Deck = ({
 
   if (fan === "horizontalLeft") {
     deckContainerStyle.width = width + Number(largestOffset.right);
+    deckContainerStyle.minWidth = width + Number(largestOffset.right);
+    deckContainerStyle.justifyContent = "flex-end";
   } else if (fan === "horizontalRight") {
     deckContainerStyle.width = width + Number(largestOffset.left);
+    deckContainerStyle.minWidth = width + Number(largestOffset.left);
+    deckContainerStyle.justifyContent = "flex-start";
   } else if (fan === "verticalUp") {
     deckContainerStyle.height = height + Number(largestOffset.bottom);
+    deckContainerStyle.minHeight = height + Number(largestOffset.bottom);
+    deckContainerStyle.justifyContent = "flex-end";
   } else {
     deckContainerStyle.height = height + Number(largestOffset.top);
+    deckContainerStyle.minHeight = height + Number(largestOffset.top);
+    deckContainerStyle.justifyContent = "flex-start";
   }
 
   return (
@@ -260,45 +265,32 @@ export const Deck = ({
             disabled={isDisabled}
             selectColor={selectColor}
             cardSize={cardSize}
-            forceSelectColor={!isDisabled}
+            forceSelectColor={!isDisabled || forceSelectColor}
           />
         )}
 
         {Array.from({ length: limitedDeckSize }, (_, index) => {
           const adjustedIndex = index + numSkipCards;
-
-          const suit =
-            cards?.[adjustedIndex] !== "back"
-              ? cards?.[adjustedIndex].suit
-              : undefined;
-          const rank =
-            cards?.[adjustedIndex] !== "back"
-              ? cards?.[adjustedIndex].rank
-              : undefined;
-          const isBack = !suit || !rank;
-          const isTopCard = adjustedIndex === limitedDeckSize - 1;
+          const isTopCard = index === limitedDeckSize - 1;
 
           return (
             <CardButton
-              key={`back-${index}`}
+              key={`card-${index}`}
               // Top card props
               onPress={isTopCard && onPress ? onPress : undefined}
               isSelected={isTopCard && isSelected}
               disabled={isTopCard && isDisabled}
               // Other
+              card={cards?.[adjustedIndex]}
               cardsPerRow={cardsPerRow}
-              isBack={isBack}
-              suit={suit}
-              rank={rank}
               style={[
                 styles.deckCard,
                 { ...cardOffsetStyle(index) },
-                hideTopCard === true &&
-                  adjustedIndex === limitedDeckSize - 1 &&
-                  cardStyles.animHide,
+                hideTopCard === true && isTopCard && cardStyles.animHide,
               ]}
               selectColor={selectColor}
               cardSize={cardSize}
+              forceSelectColor={isTopCard && forceSelectColor}
             />
           );
         })}

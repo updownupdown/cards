@@ -246,12 +246,7 @@ export default function HideAndSeek() {
               style={styles.playmateCell}
               onPress={() => revealPlaymate(idx)}
             >
-              <Card
-                suit={card.suit}
-                rank={card.rank}
-                isBack={!game.revealed[idx]}
-                cardsPerRow={5}
-              />
+              <Card card={card} cardsPerRow={5} />
             </Pressable>
           ))}
         </View>
@@ -267,11 +262,7 @@ export default function HideAndSeek() {
                 style={styles.slotBtn}
               >
                 {slot.card ? (
-                  <Card
-                    suit={slot.card.suit}
-                    rank={slot.card.rank}
-                    cardsPerRow={5}
-                  />
+                  <Card card={slot.card} cardsPerRow={5} />
                 ) : (
                   <Text style={styles.slotHint}>Place</Text>
                 )}

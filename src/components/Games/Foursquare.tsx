@@ -260,11 +260,7 @@ export default function Foursquare() {
       {game.current ? (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Current card</Text>
-          <Card
-            suit={game.current.suit}
-            rank={game.current.rank}
-            cardsPerRow={5}
-          />
+          <Card card={game.current} cardsPerRow={5} />
         </View>
       ) : null}
 
@@ -284,12 +280,7 @@ export default function Foursquare() {
                 style={[styles.cell, isLegal ? styles.legalCell : null]}
               >
                 {pile ? (
-                  <Card
-                    suit={top(pile).suit}
-                    rank={top(pile).rank}
-                    isBack={!top(pile).faceUp}
-                    cardsPerRow={5}
-                  />
+                  <Card card={top(pile)} cardsPerRow={5} />
                 ) : (
                   <Text style={styles.cellHint}>{isLegal ? "Drop" : ""}</Text>
                 )}

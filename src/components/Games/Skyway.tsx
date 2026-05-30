@@ -1,25 +1,23 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { layoutStyles } from "@/styles/layoutStyles";
+import { Icon } from "@/icons";
+import { flexStyles, transitionStyles } from "@/styles/flexStyles";
+import { Colors, FontWeight, rgba } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
 import { useMemo, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import Svg, { Line } from "react-native-svg";
 import { Deck } from "../Cards/Deck";
 import {
-  RANK_VALUE,
   SUITS,
   createDeck,
+  rankValue,
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { GameMenus } from "../common/GameMenus";
-import { Icon } from "@/icons";
-import { flexStyles, transitionStyles } from "@/styles/flexStyles";
-import { Colors, FontWeight, MaxContentHeight, rgba } from "@/styles/styles";
 import { GameWrapper } from "../common/GameWrapper";
 
 const cardsPerRow = 6;
-const svgCellSize = MaxContentHeight;
+const svgCellSize = 800;
 const svgGridSize = svgCellSize * 3;
 
 // Map grid index to (x, y) center in SVG overlay
@@ -150,7 +148,7 @@ function findLongestSuitPath(
   const valuesByCell = grid.map((stack) =>
     stack
       .filter((card) => card.suit === suit)
-      .map((card) => RANK_VALUE[card.rank])
+      .map((card) => rankValue(card))
       .sort((a, b) => a - b),
   );
 
@@ -281,16 +279,16 @@ export default function Skyway() {
       }
     >
       {/* Paths info */}
-      <View style={styles.gameInfo}>
+      <View style={[styles.gameInfo]}>
         <Text
           style={[
             textStyles.default,
-            { color: Colors.K700, fontFamily: FontWeight[400] },
+            { color: Colors.K200, fontFamily: FontWeight[400] },
           ]}
         >
           Longest paths
           <br />
-          (Total: {totalScore})
+          Total: {totalScore}
         </Text>
         <View
           style={[
@@ -321,9 +319,44 @@ export default function Skyway() {
 
       {/* Market */}
       <View
-        style={[flexStyles.colCentered, flexStyles.fullWidth, flexStyles.gap8]}
+        style={[
+          styles.marketWrap,
+          flexStyles.colCentered,
+          flexStyles.fullWidth,
+          flexStyles.gap8,
+        ]}
       >
-        <Text style={textStyles.default}>Market (Round {game.round} of 3)</Text>
+        <View
+          style={[
+            flexStyles.rowCentered,
+            flexStyles.fullWidth,
+            flexStyles.spaceBetween,
+            { paddingHorizontal: 12, paddingVertical: 4 },
+          ]}
+        >
+          <Text
+            style={[
+              textStyles.default,
+              {
+                color: Colors.K200,
+                fontFamily: FontWeight[400],
+              },
+            ]}
+          >
+            Market
+          </Text>
+          <Text
+            style={[
+              textStyles.default,
+              {
+                color: Colors.K200,
+                fontFamily: FontWeight[400],
+              },
+            ]}
+          >
+            Round {game.round} of 3
+          </Text>
+        </View>
         <View
           style={[
             flexStyles.rowCentered,
@@ -349,7 +382,7 @@ export default function Skyway() {
               <Deck
                 cards={pile}
                 largeFan="extra-wide"
-                fan="horizontalLeft"
+                fan="horizontalRight"
                 cardsPerRow={cardsPerRow}
                 cardSize="small-colored"
               />
@@ -385,7 +418,7 @@ export default function Skyway() {
               ? path.slice(1).map((cell, i) => {
                   const prev = path[i];
                   // Offset lines for multiple suits between same cells
-                  const offset = (suitIdx - 1.5) * 6; // space out lines
+                  const offset = (suitIdx - 1.5) * 30; // space out lines
                   const { cx: x1, cy: y1 } = getCellCenter(prev);
                   const { cx: x2, cy: y2 } = getCellCenter(cell);
                   // Perpendicular offset
@@ -413,7 +446,7 @@ export default function Skyway() {
 
         {/* Grid  */}
         {game.grid.map((stack, index) => (
-          <View key={`cell-${index}`} style={styles.gridCellWrap}>
+          <View key={`cell-${index}`} style={[styles.gridCellWrap]}>
             <Pressable
               key={`cell-${index}`}
               style={[
@@ -426,7 +459,7 @@ export default function Skyway() {
                 cards={stack}
                 cardsPerRow={cardsPerRow}
                 largeFan="extra-wide"
-                fan="horizontalLeft"
+                fan="horizontalRight"
                 cardSize="small-colored"
                 invisibleWhenEmpty
               />
@@ -444,23 +477,29 @@ const styles = StyleSheet.create({
     ...flexStyles.rowCentered,
     ...flexStyles.fullWidth,
     ...flexStyles.gap12,
-    backgroundColor: Colors.white,
-    borderRadius: 12,
     paddingVertical: 12,
     paddingHorizontal: 16,
+
+    borderRadius: 12,
+    backgroundColor: Colors.K900,
   },
 
   // Market
+  marketWrap: {
+    padding: 6,
+    borderRadius: 12,
+    backgroundColor: Colors.K900,
+  },
   marketPile: {
     ...flexStyles.rowCentered,
     ...transitionStyles.sec05,
     flex: 1,
     paddingVertical: 12,
+    alignItems: "center",
+
     borderRadius: 12,
     backgroundColor: `${rgba(Colors.accentBlue, 0.1)}`,
     boxShadow: `inset 0 0 0 2px ${rgba(Colors.accentBlue, 0.6)}`,
-    padding: 6,
-    alignItems: "center",
   },
   marketPileSelected: {
     backgroundColor: `${rgba(Colors.accentGreen, 0.2)}`,
@@ -476,7 +515,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     borderRadius: 16,
     padding: 4,
-    backgroundColor: rgba(Colors.black, 0.2),
+    backgroundColor: Colors.K900,
   },
 
   // Grid
@@ -498,9 +537,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     justifyContent: "center",
     alignItems: "center",
-
-    // backgroundColor: rgba(Colors.black, 0.2),
-    boxShadow: `inset 0 0 0 2px ${rgba(Colors.K100, 0.1)}`,
+    boxShadow: `inset 0 0 0 2px ${rgba(Colors.accentGreen, 0)}`,
   },
   gridCellDropReady: {
     boxShadow: `inset 0 0 0 2px ${rgba(Colors.accentGreen, 0.4)}`,

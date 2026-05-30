@@ -248,9 +248,7 @@ export default function Scorpion() {
                 <CardButton
                   key={card.id}
                   onPress={() => onCardPress(colIdx, idx)}
-                  suit={card.suit}
-                  rank={card.rank}
-                  isBack={!card.faceUp}
+                  card={card}
                   cardsPerRow={cardsPerRow}
                   isSelected={isSelected}
                 />

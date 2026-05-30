@@ -103,8 +103,7 @@ export default function AcesUp() {
     undefined,
   );
 
-  const { animateCards, measureRef, isAnimating, setIsAnimating } =
-    useAnimations();
+  const { animateCards, measureRef, isAnimating } = useAnimations();
   const [animatedPileIndex, setAnimatedPileIndex] = useState<
     number | undefined
   >(undefined);
@@ -133,7 +132,6 @@ export default function AcesUp() {
 
   async function dealFour() {
     if (game.ended || game.stock.length < 4 || isAnimating) return;
-    setIsAnimating(true);
 
     const stockPos = await measureRef(stockRef);
     if (stockPos) {
@@ -148,11 +146,8 @@ export default function AcesUp() {
         if (pilePos) {
           anims.push({
             id: `deal-${i}`,
-            cardInfo: {
-              rank: cardsToDeal[i].rank,
-              suit: cardsToDeal[i].suit,
-              cardsPerRow,
-            },
+            card: cardsToDeal[i],
+            cardsPerRow,
             to: { ...pilePos, zIndex: 200 - i },
             from: { ...stockPos, zIndex: 200 - i },
             delay: i * 150,
@@ -186,15 +181,12 @@ export default function AcesUp() {
     });
 
     setSelectedPile(undefined);
-    setIsAnimating(false);
   }
 
   async function discardTop(pileIndex: number) {
     if (game.ended || isAnimating) return;
     const allowed = getDiscardablePileIndexes(game.piles);
     if (!allowed.has(pileIndex)) return;
-
-    setIsAnimating(true);
 
     // Avoid disappearing card flash; give animation time to kick in
     setTimeout(() => {
@@ -212,12 +204,8 @@ export default function AcesUp() {
 
         await animateCards([
           {
-            id: `discard-${Date.now()}`,
-            cardInfo: {
-              rank: cardToDiscard.rank,
-              suit: cardToDiscard.suit,
-              cardsPerRow,
-            },
+            card: cardToDiscard,
+            cardsPerRow,
             flip: "toBack" as const,
             from: pilePos,
             to: discardPos,
@@ -242,7 +230,6 @@ export default function AcesUp() {
     });
 
     setSelectedPile(undefined);
-    setIsAnimating(false);
     setAnimatedPileIndex(undefined);
   }
 
@@ -268,8 +255,6 @@ export default function AcesUp() {
       return;
     }
 
-    setIsAnimating(true);
-
     // Animate move card to empty pile
     // Avoid disappearing card flash; give animation time to kick in
     setTimeout(() => {
@@ -289,12 +274,8 @@ export default function AcesUp() {
 
         await animateCards([
           {
-            id: `move-to-empty-${Date.now()}`,
-            cardInfo: {
-              rank: cardToMove.rank,
-              suit: cardToMove.suit,
-              cardsPerRow,
-            },
+            card: cardToMove,
+            cardsPerRow,
             from: selectedPilePos,
             to: emptyPilePos,
           },
@@ -303,7 +284,6 @@ export default function AcesUp() {
     }
 
     setSelectedPile(undefined);
-    setIsAnimating(false);
     setAnimatedPileIndex(undefined);
 
     setGame((prev) => {

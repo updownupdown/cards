@@ -136,8 +136,7 @@ type SelectedCard = { row: number; col: number };
 
 export default function MonteCarlo() {
   const isLoaded = useGameLoading();
-  const { animateCards, measureRef, isAnimating, setIsAnimating } =
-    useAnimations();
+  const { animateCards, measureRef, isAnimating } = useAnimations();
 
   const [game, setGame] = useState<MonteCarloState>(setup);
   const [selected, setSelected] = useState<
@@ -207,13 +206,9 @@ export default function MonteCarlo() {
       let cardPos = await measureRef({ current: cardEl });
       if (cardPos) {
         anims.push({
-          id: `anim-${row}-${col}`,
-          cardInfo: {
-            rank: card.rank,
-            suit: card.suit,
-            cardsPerRow: cardsPerRow,
-            cardSize: "small",
-          },
+          card,
+          cardsPerRow: cardsPerRow,
+          cardSize: "small",
           flip: "toBack",
           from: cardPos,
           to: cardPos,
@@ -222,7 +217,6 @@ export default function MonteCarlo() {
       }
     }
 
-    setIsAnimating(true);
     if (anims.length > 0) {
       await animateCards(anims);
     }
@@ -246,8 +240,6 @@ export default function MonteCarlo() {
 
       return { ...next, ...end };
     });
-
-    setIsAnimating(false);
   }
 
   function consolidateAndDeal() {
@@ -359,8 +351,7 @@ export default function MonteCarlo() {
                     disabled={
                       isAnimating || !cell?.suit || !cell?.rank || game.ended
                     }
-                    suit={cell?.faceUp ? cell.suit : undefined}
-                    rank={cell?.faceUp ? cell.rank : undefined}
+                    card={cell}
                     cardsPerRow={cardsPerRow}
                     isSelected={isSelected}
                     cardSize="small"

@@ -1,7 +1,7 @@
 import { Icon, IconName } from "@/icons";
 import { buttonStyles } from "@/styles/buttonStyles";
 import { Colors } from "@/styles/styles";
-import { Pressable, Text, TextStyle, ViewStyle } from "react-native";
+import { Platform, Pressable, Text, TextStyle, ViewStyle } from "react-native";
 
 interface Props {
   style?: ViewStyle | ViewStyle[];
@@ -58,7 +58,12 @@ export const Button = ({
         disabled && buttonStyles.disabled,
         style,
       ]}
-      onPress={onPress}
+      onPress={() => {
+        if (Platform.OS === "web" && typeof document !== "undefined") {
+          (document.activeElement as HTMLElement)?.blur?.();
+        }
+        if (onPress) onPress();
+      }}
       onLongPress={onLongPress}
       delayLongPress={delayLongPress}
       onPressIn={onPressIn}

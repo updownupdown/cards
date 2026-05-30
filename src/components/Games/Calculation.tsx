@@ -1,28 +1,27 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
+import { cardStyles } from "@/styles/cardStyles";
 import { flexStyles } from "@/styles/flexStyles";
-import { textStyles } from "@/styles/textStyles";
-import { useMemo, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { Button } from "../Button/Button";
-import { Card } from "../Cards/Card";
+import { Colors, FontWeight } from "@/styles/styles";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Text, View } from "react-native";
+import { MeasuredRef, useAnimations } from "../Animations/Animations";
 import {
   CardRank,
-  RANK_VALUE,
   createDeck,
+  nameFromRankValue,
+  rankValue,
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
 import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
-import { Colors } from "@/styles/styles";
-import { cardStyles } from "@/styles/cardStyles";
 
 const cardsPerRow = 4;
 
 type CalculationState = {
-  foundations: PlayingCard[][];
   stock: PlayingCard[];
-  waste: PlayingCard[];
+  foundations: PlayingCard[][];
+  wastes: PlayingCard[][];
   ended: boolean;
   won: boolean;
 };
@@ -30,41 +29,42 @@ type CalculationState = {
 const START_RANKS: CardRank[] = ["A", "2", "3", "4"];
 const STEPS = [1, 2, 3, 4];
 
-function nextRankValue(current: number, step: number) {
-  const zeroBased = (current - 1 + step) % 13;
-  return zeroBased + 1;
+function nextRankValue(card: PlayingCard, step: number) {
+  return (rankValue(card) + step) % 13;
 }
 
 function setup(): CalculationState {
-  const deck = shuffle(createDeck({ faceUp: true }));
+  const deck = shuffle(createDeck());
   const foundations: PlayingCard[][] = [[], [], [], []];
+  const wastes: PlayingCard[][] = [[], [], [], []];
 
   for (let i = 0; i < START_RANKS.length; i += 1) {
     const rank = START_RANKS[i];
     const idx = deck.findIndex((card) => card.rank === rank);
     if (idx >= 0) {
-      foundations[i].push(deck.splice(idx, 1)[0]);
+      const startingCard = deck.splice(idx, 1)[0];
+      foundations[i].push({ ...startingCard, faceUp: true });
     }
   }
 
   return {
-    foundations,
     stock: deck,
-    waste: [],
+    foundations,
+    wastes,
     ended: false,
     won: false,
   };
 }
 
 function canPlayToFoundation(
-  card: PlayingCard,
+  card: PlayingCard | undefined,
   foundation: PlayingCard[],
   step: number,
 ) {
-  if (foundation.length === 0) return false;
+  if (!card || foundation.length === 0) return false;
   const top = foundation[foundation.length - 1];
-  const expected = nextRankValue(RANK_VALUE[top.rank], step);
-  return RANK_VALUE[card.rank] === expected;
+  const expected = nextRankValue(top, step);
+  return rankValue(card) === expected;
 }
 
 function anyFoundationPlayable(
@@ -77,61 +77,203 @@ function anyFoundationPlayable(
   return false;
 }
 
-function evaluate(next: CalculationState) {
-  const total = next.foundations.reduce((sum, pile) => sum + pile.length, 0);
-  if (total === 52) return { ...next, ended: true, won: true };
-
-  const wasteTop = next.waste[next.waste.length - 1] ?? null;
-  const canPlayWaste = wasteTop
-    ? anyFoundationPlayable(wasteTop, next.foundations)
-    : false;
-
-  if (next.stock.length === 0 && !canPlayWaste) {
-    return { ...next, ended: true, won: false };
-  }
-
-  return next;
-}
-
 export default function Calculation() {
   const isLoaded = useGameLoading();
-
   const [game, setGame] = useState<CalculationState>(setup);
-
-  const wasteTop = game.waste[game.waste.length - 1] ?? null;
+  const { animateCards, isAnimating, measureRef, animatingCardIds } =
+    useAnimations();
 
   function reset() {
     setGame(setup());
   }
 
-  function draw() {
-    setGame((prev) => {
-      if (prev.ended || prev.stock.length === 0) return prev;
-      const stock = [...prev.stock];
-      const card = stock.shift();
-      if (!card) return prev;
+  const topStockCard = useMemo(() => {
+    return game.stock.length ? game.stock[game.stock.length - 1] : undefined;
+  }, [game.stock]);
 
-      const waste = [...prev.waste, card];
-      return evaluate({ ...prev, stock, waste });
+  const [selectedCard, setSelectedCard] = useState<PlayingCard | undefined>(
+    undefined,
+  );
+
+  // Deck refs
+  const stockDeckRef = useRef<View>(null);
+  const wastesCurrentRefs = useRef<(View | null)[]>([]);
+  const wastesNextRefs = useRef<(View | null)[]>([]);
+  const foundationsRefsNext = useRef<(View | null)[]>([]);
+
+  // Turn over top stock card
+  async function turnOverStockCard() {
+    if (topStockCard === undefined) return;
+    const stockDeckPos = await measureRef(stockDeckRef);
+
+    if (stockDeckPos) {
+      await animateCards([
+        {
+          card: topStockCard,
+          cardsPerRow,
+          from: stockDeckPos,
+          to: stockDeckPos,
+          flip: "toFace",
+        },
+      ]);
+    }
+
+    setGame((prev) => {
+      const stock = [...prev.stock];
+      const lastIndex = prev.stock.length - 1;
+      const newTopStockCard = { ...stock[lastIndex], faceUp: true };
+      stock[lastIndex] = newTopStockCard;
+      return { ...prev, stock };
     });
   }
 
-  function playWasteToFoundation(foundationIndex: number) {
-    setGame((prev) => {
-      if (prev.ended) return prev;
-      const top = prev.waste[prev.waste.length - 1];
-      if (!top) return prev;
+  // Turn over draw card
+  useEffect(() => {
+    // Evaluate win/lose conditions
+    const totalOnFoundations = game.foundations.reduce(
+      (sum, pile) => sum + pile.length,
+      0,
+    );
 
-      const foundations = prev.foundations.map((pile) => [...pile]);
-      const foundation = foundations[foundationIndex];
-      if (!foundation) return prev;
-      if (!canPlayToFoundation(top, foundation, STEPS[foundationIndex]))
+    // Win!
+    if (totalOnFoundations === 52) {
+      setGame((prev) => {
+        return { ...prev, ended: true, won: true };
+      });
+    }
+
+    // No more stock card, check if waste cards can be added to foundations
+    if (!topStockCard) {
+      const availableWasteCards = game.wastes.find((waste, i) => {
+        if (game.wastes[i].length !== 0) return false;
+        const topWasteCard = game.wastes[i][game.wastes[i].length - 1];
+        return anyFoundationPlayable(topWasteCard, game.foundations);
+      });
+
+      // Lost!
+      if (availableWasteCards === undefined) {
+        setGame((prev) => {
+          return { ...prev, ended: true, won: false };
+        });
+      }
+    }
+
+    // Turn over stock card if that makes sense
+    if (
+      !game.ended &&
+      game.stock.length > 0 &&
+      !game.stock[game.stock.length - 1].faceUp
+    ) {
+      turnOverStockCard();
+    }
+  }, [game]);
+
+  // Move from stock to waste pile
+  async function moveStockToWaste(wastePileIndex: number) {
+    setSelectedCard(undefined);
+
+    const wasteEl = wastesNextRefs.current[wastePileIndex];
+    if (topStockCard && wasteEl) {
+      const stockDeckPos = await measureRef(stockDeckRef);
+      const wasteDeckPos = await measureRef({ current: wasteEl });
+
+      if (stockDeckPos && wasteDeckPos) {
+        await animateCards([
+          {
+            card: topStockCard,
+            cardsPerRow,
+            from: stockDeckPos,
+            to: wasteDeckPos,
+          },
+        ]);
+      }
+    }
+
+    setGame((prev) => {
+      if (!selectedCard) return prev;
+
+      // Add stock card to waste pile
+      const wastes = [...prev.wastes];
+      const newWastePile = [...wastes[wastePileIndex], selectedCard];
+      wastes[wastePileIndex] = newWastePile;
+
+      // Remove top stock card
+      const stock = [...prev.stock].slice(0, -1);
+      return { ...prev, wastes, stock };
+    });
+  }
+
+  async function moveCardToFoundation(foundationPileIndex: number) {
+    if (!selectedCard) return;
+
+    let cardFromStock = false;
+    let cardFromWasteIndex: number | undefined;
+
+    // Figure out where the selected card is
+    let fromPos: MeasuredRef | undefined = undefined;
+
+    if (selectedCard.id === topStockCard?.id) {
+      cardFromStock = true;
+      fromPos = await measureRef(stockDeckRef);
+    } else {
+      let selectedWasteIndex = game.wastes.findIndex((wastePile, i) => {
+        if (game.wastes[i].length === 0) return false;
+        const topWasteCard = game.wastes[i][game.wastes[i].length - 1];
+        const cardFromThisWastePile = topWasteCard.id === selectedCard.id;
+        if (cardFromThisWastePile) {
+          cardFromWasteIndex = i;
+          return true;
+        }
+      });
+      if (selectedWasteIndex === undefined) return;
+      const fromEl = wastesCurrentRefs.current[selectedWasteIndex];
+      fromPos = await measureRef({ current: fromEl });
+    }
+
+    // To position (foundation)
+    const toEl = foundationsRefsNext.current[foundationPileIndex];
+    if (toEl) {
+      const toPos = await measureRef({ current: toEl });
+
+      // Animate from waste to foundation
+      if (fromPos && toPos) {
+        await animateCards([
+          {
+            card: selectedCard,
+            cardsPerRow,
+            from: fromPos,
+            to: toPos,
+          },
+        ]);
+      }
+    }
+
+    // Update game
+    setGame((prev) => {
+      if (!selectedCard || (!cardFromStock && cardFromWasteIndex === undefined))
         return prev;
 
-      const waste = prev.waste.slice(0, -1);
-      foundation.push(top);
+      // Add stock card to foundation pile
+      const foundations = [...prev.foundations];
+      const newFoundationPile = [
+        ...foundations[foundationPileIndex],
+        selectedCard,
+      ];
+      foundations[foundationPileIndex] = newFoundationPile;
 
-      return evaluate({ ...prev, foundations, waste });
+      let stock = [...prev.stock];
+      let wastes = [...prev.wastes];
+
+      if (cardFromStock) {
+        // Remove card from stock
+        stock = [...prev.stock].slice(0, -1);
+      } else if (cardFromWasteIndex !== undefined) {
+        // Remove card from waste pile
+        const newWastePile = [...wastes[cardFromWasteIndex]].slice(0, -1);
+        wastes[cardFromWasteIndex] = newWastePile;
+      }
+
+      return { ...prev, foundations, wastes, stock };
     });
   }
 
@@ -155,100 +297,168 @@ export default function Calculation() {
           flexStyles.flex1,
         ]}
       >
+        {/* Stock */}
         <Deck
-          backCount={game.stock.length}
+          refTopCurrent={stockDeckRef}
+          cards={game.stock}
           showCount
           countPosition="left"
           iconName="draw"
           limitFan
-          fan="horizontalLeft"
+          fan="horizontalRight"
           cardsPerRow={cardsPerRow}
+          selectColor="blue"
+          isSelected={selectedCard?.id === topStockCard?.id}
+          isDisabled={isAnimating}
+          onPress={() => {
+            if (selectedCard?.id === topStockCard?.id) {
+              setSelectedCard(undefined);
+            } else if (topStockCard) {
+              setSelectedCard(topStockCard);
+            }
+          }}
+          hideTopCard={
+            topStockCard && animatingCardIds.includes(topStockCard.id)
+          }
         />
-
-        <Deck
-          showCount
-          countPosition="right"
-          iconName="delete"
-          limitFan
-          fan="horizontalLeft"
-          cards={game.waste}
-          cardsPerRow={cardsPerRow}
-        />
-      </View>
-
-      <View style={[flexStyles.rowCentered, flexStyles.fullWidth]}>
-        {game.foundations.map((foundation, i) => {
-          return (
-            <Pressable
-              key={`calc-found-${i}`}
-              style={[
-                cardStyles.colUpwards,
-                flexStyles.gap10,
-                flexStyles.fullHeight,
-              ]}
-              onPress={() => playWasteToFoundation(i)}
-              disabled={game.ended || !wasteTop}
-            >
-              <Deck
-                cards={foundation}
-                cardsPerRow={cardsPerRow}
-                fan="verticalUp"
-                limitFan
-                showCount
-                countPosition="below"
-              />
-
-              <Text style={textStyles.h3}>+{STEPS[i]}</Text>
-            </Pressable>
-          );
-        })}
       </View>
 
       <View
         style={[
           flexStyles.rowCentered,
           flexStyles.fullWidth,
-          flexStyles.spaceBetween,
+          flexStyles.justifyEvenly,
+          flexStyles.flex1,
         ]}
       >
-        <View style={styles.zone}>
-          <Button
-            onPress={draw}
-            disabled={game.stock.length === 0 || game.ended}
-            text="Draw"
-            size="large"
-            fullWidth
-          />
-        </View>
+        {/* Waste Piles */}
+        {game.wastes.map((waste, i) => {
+          const topWasteCard =
+            waste.length === 0 ? undefined : waste[waste.length - 1];
+
+          const stockIsSelected =
+            selectedCard?.id !== undefined &&
+            selectedCard?.id === topStockCard?.id;
+          const thisIsSelected =
+            selectedCard?.id !== undefined &&
+            selectedCard?.id === topWasteCard?.id;
+          const nothingSelected = !selectedCard;
+          const hasTopCard = topWasteCard !== undefined;
+          const anotherWasteCardIsSelected =
+            selectedCard !== undefined && !thisIsSelected;
+
+          const isEnabled =
+            stockIsSelected || // Stock card is selected
+            anotherWasteCardIsSelected || // Another waste card is selected
+            (nothingSelected && hasTopCard) || // No selected card, this pile has a top card
+            thisIsSelected; // This is the currently selected card
+
+          return (
+            <Deck
+              key={`calc-found-${i}`}
+              refTopCurrent={(el) => {
+                wastesCurrentRefs.current[i] = el;
+              }}
+              refTopNext={(el) => {
+                wastesNextRefs.current[i] = el;
+              }}
+              cards={waste}
+              cardsPerRow={cardsPerRow}
+              fan="verticalUp"
+              limitFan
+              showCount
+              countPosition="below"
+              isSelected={selectedCard?.id === topWasteCard?.id}
+              isDisabled={!isEnabled || isAnimating}
+              selectColor={
+                isEnabled ? (stockIsSelected ? "green" : "blue") : "none"
+              }
+              onPress={() => {
+                if (thisIsSelected) {
+                  setSelectedCard(undefined);
+                } else if (stockIsSelected) {
+                  moveStockToWaste(i);
+                } else if (anotherWasteCardIsSelected || topWasteCard) {
+                  setSelectedCard(topWasteCard);
+                }
+              }}
+              hideTopCard={
+                topWasteCard && animatingCardIds.includes(topWasteCard.id)
+              }
+            />
+          );
+        })}
+      </View>
+
+      <View style={[flexStyles.rowCentered, flexStyles.fullWidth]}>
+        {/* Foundation Piles */}
+        {game.foundations.map((foundation, i) => {
+          const canPlaySelectedHere = canPlayToFoundation(
+            selectedCard,
+            foundation,
+            i + 1,
+          );
+
+          return (
+            <View
+              key={`calc-found-${i}`}
+              style={[
+                cardStyles.colUpwards,
+                flexStyles.gap14,
+                flexStyles.fullHeight,
+              ]}
+            >
+              <View key={`calc-found-${i}`} style={[flexStyles.colCentered]}>
+                <Text
+                  style={[
+                    {
+                      fontFamily: FontWeight[400],
+                      fontSize: 17,
+                      color: Colors.K600,
+                    },
+                  ]}
+                >
+                  +{STEPS[i]}
+                </Text>
+                <Text
+                  style={[
+                    {
+                      fontFamily: FontWeight[300],
+                      fontSize: 17,
+                      color: Colors.K100,
+                    },
+                  ]}
+                >
+                  {nameFromRankValue(
+                    nextRankValue(
+                      game.foundations[i][game.foundations[i].length - 1],
+                      i + 1,
+                    ),
+                  )}
+                </Text>
+              </View>
+              <Deck
+                refTopNext={(el) => {
+                  foundationsRefsNext.current[i] = el;
+                }}
+                cards={foundation}
+                cardsPerRow={cardsPerRow}
+                fan="verticalUp"
+                limitFan
+                // showCount
+                countPosition="below"
+                selectColor={"green"}
+                onPress={() => {
+                  if (canPlaySelectedHere) {
+                    moveCardToFoundation(i);
+                  }
+                }}
+                isDisabled={!canPlaySelectedHere || isAnimating}
+              />
+            </View>
+          );
+        })}
       </View>
     </GameWrapper>
   );
 }
-
-const styles = StyleSheet.create({
-  emptySlot: {
-    width: 80,
-    height: 116,
-    borderWidth: 1,
-    borderColor: Colors.K700,
-    borderRadius: 8,
-    backgroundColor: Colors.K900,
-  },
-  bottomRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  zone: {
-    flex: 1,
-    alignItems: "center",
-    gap: 6,
-  },
-  winText: {
-    color: "#065f46",
-    fontFamily: "Outfit_600SemiBold",
-  },
-  loseText: {
-    color: "#991b1b",
-    fontFamily: "Outfit_600SemiBold",
-  },
-});

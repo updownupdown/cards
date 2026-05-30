@@ -429,7 +429,6 @@ export default function Solitaire() {
       return;
     }
 
-    setIsAnimating(true);
     dragTranslate.setValue({ x: 0, y: 0 });
     setDragGhost({ source, cards: [cards[0]], origin: sourceRect });
 
@@ -439,7 +438,6 @@ export default function Solitaire() {
     });
 
     clearDragGhost();
-    setIsAnimating(false);
   }
 
   async function moveSourceToFoundation(
@@ -850,11 +848,7 @@ export default function Solitaire() {
                         : undefined
                     }
                   >
-                    <Card
-                      suit={wasteTop.suit}
-                      rank={wasteTop.rank}
-                      cardsPerRow={7}
-                    />
+                    <Card card={wasteTop} cardsPerRow={7} />
                   </View>
                 ) : (
                   <Text style={styles.slotLabel}>Waste</Text>
@@ -910,7 +904,7 @@ export default function Solitaire() {
                             : undefined
                         }
                       >
-                        <Card suit={top.suit} rank={top.rank} cardsPerRow={7} />
+                        <Card card={top} cardsPerRow={7} />
                       </View>
                     ) : (
                       <Text style={styles.slotLabel}>
@@ -988,12 +982,7 @@ export default function Solitaire() {
                       {...(dragHandlers ?? {})}
                     >
                       <View>
-                        <Card
-                          suit={card.suit}
-                          rank={card.rank}
-                          isBack={!card.faceUp}
-                          cardsPerRow={7}
-                        />
+                        <Card card={card} cardsPerRow={7} />
                       </View>
                     </View>
                   );
@@ -1023,7 +1012,7 @@ export default function Solitaire() {
                   { top: index * TABLEAU_GAP, zIndex: index + 1 },
                 ]}
               >
-                <Card suit={card.suit} rank={card.rank} cardsPerRow={7} />
+                <Card card={card} cardsPerRow={7} />
               </View>
             ))}
           </Animated.View>

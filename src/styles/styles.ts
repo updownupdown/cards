@@ -34,10 +34,10 @@ export const Colors = {
   favoriteStar: "#ff922d",
   suitsRed: "#CD3D50",
   suitsBlack: "#CD3D50",
-  suitsColoredDiamonds: "#E68036",
-  suitsColoredHearts: "#CD3D50",
-  suitsColoredClubs: "#397189",
-  suitsColoredSpades: "#413419",
+  suitsColoredDiamonds: "#AF75CA",
+  suitsColoredHearts: "#D4725A",
+  suitsColoredClubs: "#77B15D",
+  suitsColoredSpades: "#4EB2CE",
 
   // Greys
   black: "#000000",

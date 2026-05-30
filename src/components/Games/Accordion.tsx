@@ -48,8 +48,7 @@ function hasAnyMove(line: PlayingCard[]) {
 export default function Accordion() {
   const { gridWidth } = useCardSize(cardsPerRow, gridCols);
   const isLoaded = useGameLoading();
-  const { animateCards, measureRef, isAnimating, setIsAnimating } =
-    useAnimations();
+  const { animateCards, measureRef, isAnimating } = useAnimations();
   const cardRefs = useRef<(View | null)[]>([]);
   const [hiddenIndices, setHiddenIndices] = useState<Set<number>>(new Set());
 
@@ -97,8 +96,6 @@ export default function Accordion() {
     target: number,
     srcCard: PlayingCard,
   ) {
-    setIsAnimating(true);
-
     const positions = await Promise.all(
       game.line.map((_, i) => {
         const el = cardRefs.current[i];
@@ -114,16 +111,12 @@ export default function Accordion() {
 
       await animateCards([
         {
-          id: `merge-${source}-${target}-${Date.now()}`,
-          cardInfo: {
-            rank: srcCard.rank,
-            suit: srcCard.suit,
-            cardsPerRow: cardsPerRow,
-            cardSize: "small-colored" as CardSizes,
-          },
+          card: srcCard,
+          cardSize: "small-colored",
           from: { ...srcPos, zIndex: 100 },
           to: { ...tgtPos, zIndex: 100 },
           duration: 150,
+          cardsPerRow,
         },
       ]);
     }
@@ -139,12 +132,9 @@ export default function Accordion() {
         shiftingIndices.add(i);
         shiftAnims.push({
           id: `shift-${i}-${Date.now()}`,
-          cardInfo: {
-            rank: card.rank,
-            suit: card.suit,
-            cardsPerRow: cardsPerRow,
-            cardSize: "small-colored" as CardSizes,
-          },
+          card,
+          cardSize: "small-colored" as CardSizes,
+          cardsPerRow,
           from: { ...fromPos, zIndex: 50 },
           to: { ...toPos, zIndex: 50 },
           duration: 150,
@@ -175,7 +165,6 @@ export default function Accordion() {
 
     setSelectedIndex(null);
     setHiddenIndices(new Set());
-    setIsAnimating(false);
   }
 
   function selectColor(idx: number): string {
@@ -237,8 +226,7 @@ export default function Accordion() {
               isSelected={selectedIndex === idx}
               selectColor={isAnimating ? "none" : selectedColor}
               forceOverlay={!isAnimating && selectedColor !== "none"}
-              suit={card.suit}
-              rank={card.rank}
+              card={card}
               cardsPerRow={cardsPerRow}
               cardSize="small-colored"
             />

@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { View } from "react-native";
 import { useAnimations } from "../Animations/Animations";
 import { Button } from "../Button/Button";
-import { CardSelectColor } from "../Cards/Card";
+import { CardSelectColor, CardSizes } from "../Cards/Card";
 import {
   CardRank,
   RANK_VALUE,
@@ -83,8 +83,7 @@ function evaluateEnd(state: GolfState) {
 export default function Golf() {
   const isLoaded = useGameLoading();
   const [game, setGame] = useState<GolfState>(setup);
-  const { animateCards, measureRef, isAnimating, setIsAnimating } =
-    useAnimations();
+  const { animateCards, measureRef, isAnimating } = useAnimations();
   const [animatingCard, setAnimatingCard] = useState<{
     col: number;
     row: number;
@@ -116,8 +115,6 @@ export default function Golf() {
     const wasteTop = game.waste[game.waste.length - 1] ?? null;
     if (!canPlayOnWaste(card, wasteTop)) return;
 
-    setIsAnimating(true);
-
     // Avoid disappearing card flash; give animation time to kick in
     setTimeout(() => {
       setAnimatingCard({ col: colIndex, row: cardIndex });
@@ -131,13 +128,9 @@ export default function Golf() {
       if (cardPos && wastePos) {
         await animateCards([
           {
-            id: `play-${Date.now()}`,
-            cardInfo: {
-              rank: card.rank,
-              suit: card.suit,
-              cardsPerRow: localCardPerRowSmall,
-              cardSize: "small",
-            },
+            card,
+            cardsPerRow: localCardPerRowSmall,
+            cardSize: "small" as CardSizes,
             from: cardPos,
             to: wastePos,
             duration: 350,
@@ -166,12 +159,10 @@ export default function Golf() {
     });
 
     setAnimatingCard(null);
-    setIsAnimating(false);
   }
 
   async function drawFromStock() {
     if (game.ended || game.stock.length === 0 || isAnimating) return;
-    setIsAnimating(true);
 
     setTimeout(() => {
       setIsDrawing(true);
@@ -184,13 +175,9 @@ export default function Golf() {
       const nextCard = game.stock[0];
       await animateCards([
         {
-          id: `draw-${Date.now()}`,
-          cardInfo: {
-            rank: nextCard.rank,
-            suit: nextCard.suit,
-            cardsPerRow: localCardPerRowMedium,
-            cardSize: "small",
-          },
+          card: nextCard,
+          cardsPerRow: localCardPerRowMedium,
+          cardSize: "small",
           from: stockPos,
           to: wastePos,
           flip: "toFace",
@@ -212,7 +199,6 @@ export default function Golf() {
     });
 
     setIsDrawing(false);
-    setIsAnimating(false);
   }
 
   const rankToMatch = useMemo(() => {
@@ -220,7 +206,7 @@ export default function Golf() {
   }, [game.waste]);
 
   function selectCardColor(
-    rank: StandardRank,
+    rank: CardRank,
     isBottomCard: boolean,
     rankValueToMatch: number | undefined,
   ): CardSelectColor {
@@ -263,12 +249,7 @@ export default function Golf() {
         <Deck
           refTopNext={wasteRef}
           iconName="delete"
-          cards={Array.from({ length: game.waste.length }, (_, i) => {
-            return {
-              suit: game.waste[i].suit,
-              rank: game.waste[i].rank,
-            };
-          })}
+          cards={game.waste}
           cardsPerRow={localCardPerRowMedium}
           limitFan
           showCount
@@ -301,8 +282,7 @@ export default function Golf() {
                   ]}
                   onPress={() => playCard(colIndex, cardIndex)}
                   disabled={game.ended || !isBottomCard || isAnimating}
-                  suit={card.suit}
-                  rank={card.rank}
+                  card={card}
                   cardsPerRow={localCardPerRowSmall}
                   hasTopMargin={cardIndex > 0}
                   selectColor={selectColor}

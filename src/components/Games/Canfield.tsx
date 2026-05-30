@@ -360,7 +360,7 @@ export default function Canfield() {
             <View key={`c-found-${suit}`} style={styles.zone}>
               <Text style={styles.smallText}>{suit}</Text>
               {top ? (
-                <Card suit={top.suit} rank={top.rank} cardsPerRow={5} />
+                <Card card={top} cardsPerRow={5} />
               ) : (
                 <View style={styles.empty} />
               )}
@@ -378,8 +378,7 @@ export default function Canfield() {
           >
             {game.reserve.length > 0 ? (
               <Card
-                suit={game.reserve[game.reserve.length - 1].suit}
-                rank={game.reserve[game.reserve.length - 1].rank}
+                card={game.reserve[game.reserve.length - 1]}
                 cardsPerRow={5}
               />
             ) : (
@@ -395,11 +394,7 @@ export default function Canfield() {
             disabled={game.ended || game.waste.length === 0}
           >
             {game.waste.length > 0 ? (
-              <Card
-                suit={game.waste[game.waste.length - 1].suit}
-                rank={game.waste[game.waste.length - 1].rank}
-                cardsPerRow={5}
-              />
+              <Card card={game.waste[game.waste.length - 1]} cardsPerRow={5} />
             ) : (
               <View style={styles.empty} />
             )}
@@ -434,7 +429,7 @@ export default function Canfield() {
                 disabled={game.ended || col.length === 0}
               >
                 {top ? (
-                  <Card suit={top.suit} rank={top.rank} cardsPerRow={5} />
+                  <Card card={top} cardsPerRow={5} />
                 ) : (
                   <View style={styles.empty} />
                 )}

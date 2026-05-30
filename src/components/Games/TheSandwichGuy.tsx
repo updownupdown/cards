@@ -102,8 +102,7 @@ export default function TheSandwichGuy() {
   const discardRef = useRef<View>(null);
   const handRefs = useRef<(View | null)[]>([]);
 
-  const { animateCards, measureRef, isAnimating, setIsAnimating } =
-    useAnimations();
+  const { animateCards, measureRef, isAnimating } = useAnimations();
 
   const buildAnim = (
     idPrefix: string,
@@ -116,12 +115,8 @@ export default function TheSandwichGuy() {
     keepAlive = true,
   ): CardAnimationParams => {
     return {
-      id: `${idPrefix}-${Date.now()}`,
-      cardInfo: {
-        rank: card.rank,
-        suit: card.suit,
-        cardsPerRow,
-      },
+      card,
+      cardsPerRow,
       from,
       to,
       duration,
@@ -173,7 +168,6 @@ export default function TheSandwichGuy() {
     )
       return;
 
-    setIsAnimating(true);
     const replacement = replacementCount(selectedCards);
 
     const deckPos = await measureRef(deckRef);
@@ -307,7 +301,6 @@ export default function TheSandwichGuy() {
 
     setGame(nextState);
     setSelectedIds([]);
-    setIsAnimating(false);
   }
 
   const won = game.ended && game.wonByDeckingOut;
@@ -388,8 +381,7 @@ export default function TheSandwichGuy() {
               isSelected={isSelected}
               cardsPerRow={cardsPerRow}
               isPlaceholder={!card}
-              suit={card?.suit}
-              rank={card?.rank}
+              card={card}
               selectColor={card ? selectColor(isSelected) : "none"}
             />
           );

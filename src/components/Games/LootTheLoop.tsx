@@ -108,8 +108,7 @@ function setup(): LoopState {
 }
 
 export default function LootTheLoop() {
-  const { animateCards, measureRef, isAnimating, setIsAnimating } =
-    useAnimations();
+  const { animateCards, measureRef, isAnimating } = useAnimations();
   const isLoaded = useGameLoading();
   const { contentRadius } = useContentWidth();
   const { width: cardWidth, height: cardHeight } = useCardSize(
@@ -190,7 +189,6 @@ export default function LootTheLoop() {
     //   const markPathPos = await measureRef({ current: markedPathEl });
 
     //   if (loopCardPos && markPathPos) {
-    //     setIsAnimating(true);
     //     await animateCards([
     //       {
     //         id: `note-${noteIndex}`,
@@ -207,7 +205,6 @@ export default function LootTheLoop() {
     //         // flip: "toFace" as const,
     //       },
     //     ]);
-    //     setIsAnimating(false);
     //   }
     // }
 
@@ -453,8 +450,7 @@ export default function LootTheLoop() {
                         : undefined
                     }
                     cardsPerRow={cardsPerRow.markedPaths}
-                    suit={noteCard?.suit}
-                    rank={noteCard?.rank}
+                    card={noteCard}
                     isPlaceholder={!noteCard}
                     selectColor={"green"}
                     isSelected={isSelected}
@@ -557,8 +553,7 @@ export default function LootTheLoop() {
                 }}
                 key={`deck-${index}`}
                 onPress={onPressFn()}
-                suit={card.faceUp ? card.suit : undefined}
-                rank={card.faceUp ? card.rank : undefined}
+                card={card}
                 style={[style]}
                 isSelected={isSelected}
                 selectColor={selectedColor()}
@@ -574,8 +569,7 @@ export default function LootTheLoop() {
           {/* Ghost "return to marked path" card */}
           <CardButton
             onPress={returnToSelectedMarkedPath}
-            suit={selectedNote?.card.suit}
-            rank={selectedNote?.card.rank}
+            card={selectedNote?.card}
             selectColor="green"
             forceOverlay
             style={[

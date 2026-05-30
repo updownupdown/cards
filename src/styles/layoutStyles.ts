@@ -21,7 +21,7 @@ export const layoutStyles = StyleSheet.create({
     userSelect: "none",
   },
   appViewWide: {
-    backgroundColor: Colors.K900,
+    backgroundColor: Colors.K850,
   },
   safeArea: {
     ...flexStyles.fullWidthHeight,
@@ -34,7 +34,7 @@ export const layoutStyles = StyleSheet.create({
     backgroundColor: Colors.K900,
   },
   safeAreaWide: {
-    boxShadow: `1px 2px 4px ${rgba(Colors.black, 0.3)}, 2px 4px 16px ${rgba(Colors.black, 0.3)}`,
+    // boxShadow: `1px 2px 4px ${rgba(Colors.black, 0.3)}, 2px 4px 16px ${rgba(Colors.black, 0.3)}`,
   },
   background: {
     width: "100%",

@@ -1,13 +1,12 @@
-import { Pressable, ViewStyle, View } from "react-native";
-import { CardRank, CardSuit } from "./card-utils";
-import { Card, CardSelectColor, CardSizes } from "./Card";
 import { cardStyles } from "@/styles/cardStyles";
 import React from "react";
+import { Platform, Pressable, View, ViewStyle } from "react-native";
+import { Card, CardSelectColor, CardSizes } from "./Card";
+import { PlayingCard } from "./card-utils";
 
 interface Props {
   style?: (ViewStyle | false)[];
-  suit?: CardSuit;
-  rank?: CardRank;
+  card?: PlayingCard | null | undefined;
   isPlaceholder?: boolean;
   isSelected?: boolean;
   disabled?: boolean;
@@ -15,7 +14,6 @@ interface Props {
   hasTopMargin?: boolean;
   customTopMarginPerc?: number;
   selectColor?: CardSelectColor;
-  isBack?: boolean;
   onPress?: () => void;
   ref?: React.Ref<View>;
   cardSize?: CardSizes;
@@ -25,8 +23,7 @@ interface Props {
 }
 
 export const CardButton = ({
-  rank,
-  suit,
+  card,
   isPlaceholder,
   disabled,
   isSelected,
@@ -35,7 +32,6 @@ export const CardButton = ({
   hasTopMargin,
   customTopMarginPerc,
   selectColor,
-  isBack,
   cardSize,
   onPress,
   forceSelectColor,
@@ -46,20 +42,23 @@ export const CardButton = ({
   return (
     <Pressable
       ref={ref}
-      onPress={onPress}
+      onPress={() => {
+        if (Platform.OS === "web" && typeof document !== "undefined") {
+          (document.activeElement as HTMLElement)?.blur?.();
+        }
+        if (onPress) onPress();
+      }}
       style={[cardStyles.transition, style]}
       disabled={disabled || !onPress}
     >
       <Card
-        suit={suit}
-        rank={rank}
+        card={card}
         isPlaceholder={isPlaceholder}
         isSelectable={!disabled && onPress !== undefined}
         isSelected={isSelected}
         cardsPerRow={cardsPerRow}
         hasTopMargin={hasTopMargin}
         customTopMarginPerc={customTopMarginPerc}
-        isBack={isBack}
         selectColor={selectColor}
         cardSize={cardSize}
         forceSelectColor={forceSelectColor}
