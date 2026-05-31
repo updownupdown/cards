@@ -96,6 +96,9 @@ export const flexStyles = StyleSheet.create({
   gap30: {
     gap: 30,
   },
+  gap34: {
+    gap: 34,
+  },
   gap40: {
     gap: 40,
   },

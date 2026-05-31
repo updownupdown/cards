@@ -22,8 +22,6 @@ export const SettingsTab = () => {
       <View style={styles.settingsSection}>
         <Text style={textStyles.h3}>Global Settings</Text>
 
-        <Text style={textStyles.default}>Nothing here for now!</Text>
-
         {/* <SettingControl
           label="Theme"
           value={settings.theme}
@@ -35,12 +33,12 @@ export const SettingsTab = () => {
           onChange={(val) => updateSettings({ theme: val as ThemeName })}
         /> */}
 
-        {/* <SettingControl
+        <SettingControl
           label="Show Hints"
           value={settings.showHints}
           type="boolean"
           onChange={(val) => updateSettings({ showHints: val })}
-        /> */}
+        />
       </View>
     </ScrollView>
   );

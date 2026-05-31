@@ -13,6 +13,7 @@ import {
 import { Button } from "../Button/Button";
 import ModalFull from "./ModalFull";
 import { Colors } from "@/styles/styles";
+import { flexStyles } from "@/styles/flexStyles";
 
 export const EMPTY_STATS: GameStats = {
   attempts: 0,
@@ -42,7 +43,19 @@ export default function GameModal({ onClose }: Props) {
           showsVerticalScrollIndicator={false}
         >
           {/* Title */}
-          <Text style={textStyles.h1}>{info.title}</Text>
+          <View
+            style={[
+              flexStyles.colCentered,
+              flexStyles.fullWidth,
+              flexStyles.gap4,
+              { alignItems: "flex-start" },
+            ]}
+          >
+            <Text style={textStyles.h1}>{info.title}</Text>
+
+            {/* By Line */}
+            {info.byLine && <Text style={textStyles.h5}>{info.byLine}</Text>}
+          </View>
 
           {/* Stats and favourite */}
           <View style={modalStyles.statsAndFav}>
@@ -99,14 +112,13 @@ export default function GameModal({ onClose }: Props) {
             ))}
           </View>
 
-          {/* Settings */}
-          <View style={[modalStyles.gameSettings]}>
+          {/* <View style={[modalStyles.gameSettings]}>
             <Text style={textStyles.h4}>Game Settings</Text>
             <Text style={textStyles.default}>
               Setting changes apply to the next game
             </Text>
 
-            {/* <SettingControl
+             <SettingControl
               label="Difficulty"
               value={settings.difficulty}
               type="string"
@@ -117,7 +129,7 @@ export default function GameModal({ onClose }: Props) {
               onChange={(val) =>
                 updateSettings({ difficulty: val as "easy" | "difficult" })
               }
-            /> */}
+            /> 
 
             <SettingControl
               label="Show intro"
@@ -132,7 +144,7 @@ export default function GameModal({ onClose }: Props) {
               type="boolean"
               onChange={(val) => updateSettings({ showCardHints: val })}
             />
-          </View>
+          </View> */}
         </ScrollView>
 
         {/* Play button */}

@@ -14,8 +14,6 @@ import { CardButton } from "../Cards/CardButton";
 import { GameWrapper } from "../common/GameWrapper";
 
 const cardsPerRow = 6;
-const gridCols = 6;
-const gridGap = 10;
 
 type AccordionState = {
   line: PlayingCard[];
@@ -46,11 +44,9 @@ function hasAnyMove(line: PlayingCard[]) {
 }
 
 export default function Accordion() {
-  const { gridWidth } = useCardSize(cardsPerRow, gridCols);
   const isLoaded = useGameLoading();
   const { animateCards, measureRef, isAnimating } = useAnimations();
   const cardRefs = useRef<(View | null)[]>([]);
-  const [hiddenIndices, setHiddenIndices] = useState<Set<number>>(new Set());
 
   const [game, setGame] = useState<AccordionState>(setup);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -107,12 +103,10 @@ export default function Accordion() {
     const tgtPos = positions[target];
 
     if (srcPos && tgtPos) {
-      setHiddenIndices(new Set([source]));
-
       await animateCards([
         {
           card: srcCard,
-          cardSize: "small-colored",
+          cardSize: "small",
           from: { ...srcPos, zIndex: 100 },
           to: { ...tgtPos, zIndex: 100 },
           duration: 150,
@@ -133,7 +127,7 @@ export default function Accordion() {
         shiftAnims.push({
           id: `shift-${i}-${Date.now()}`,
           card,
-          cardSize: "small-colored" as CardSizes,
+          cardSize: "small" as CardSizes,
           cardsPerRow,
           from: { ...fromPos, zIndex: 50 },
           to: { ...toPos, zIndex: 50 },
@@ -142,8 +136,6 @@ export default function Accordion() {
         });
       }
     }
-
-    setHiddenIndices(shiftingIndices);
 
     if (shiftAnims.length > 0) {
       await animateCards(shiftAnims);
@@ -164,7 +156,6 @@ export default function Accordion() {
     }));
 
     setSelectedIndex(null);
-    setHiddenIndices(new Set());
   }
 
   function selectColor(idx: number): string {
@@ -198,19 +189,7 @@ export default function Accordion() {
           : "No legal moves remain."
       }
     >
-      <CardGrid
-        cardsPerRow={cardsPerRow}
-        // style={[
-        //   {
-        //     ...flexStyles.rowCentered,
-        //     width: gridWidth,
-        //     flexWrap: "wrap",
-        //     justifyContent: "flex-start",
-        //     marginHorizontal: "auto",
-        //     gap: gridGap,
-        //   },
-        // ]}
-      >
+      <CardGrid cardsPerRow={cardsPerRow}>
         {game.line.map((card, idx) => {
           const selectedColor = selectColor(idx) as CardSelectColor;
 
@@ -220,7 +199,6 @@ export default function Accordion() {
               ref={(el) => {
                 cardRefs.current[idx] = el;
               }}
-              style={[{ opacity: hiddenIndices.has(idx) ? 0 : 1 }]}
               onPress={() => onCardPress(idx)}
               disabled={game.ended}
               isSelected={selectedIndex === idx}
@@ -228,7 +206,7 @@ export default function Accordion() {
               forceOverlay={!isAnimating && selectedColor !== "none"}
               card={card}
               cardsPerRow={cardsPerRow}
-              cardSize="small-colored"
+              cardSize="small"
             />
           );
         })}

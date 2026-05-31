@@ -10,14 +10,11 @@ import {
 } from "@expo-google-fonts/outfit";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-import { useWindowDimensions, View } from "react-native";
+import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ToastProvider } from "@/components/common/Toast";
 
 export default function Layout() {
-  const { width: windowWidth } = useWindowDimensions();
-  const wideWidth = windowWidth > 480;
-
   const [fontsLoaded] = useFonts({
     Outfit_200ExtraLight,
     Outfit_300Light,
@@ -35,18 +32,8 @@ export default function Layout() {
     <>
       <ToastProvider>
         <AnimationProvider>
-          <View
-            style={[
-              layoutStyles.appView,
-              wideWidth && layoutStyles.appViewWide,
-            ]}
-          >
-            <SafeAreaView
-              style={[
-                layoutStyles.safeArea,
-                wideWidth && layoutStyles.safeAreaWide,
-              ]}
-            >
+          <View style={[layoutStyles.appView]}>
+            <SafeAreaView style={[layoutStyles.safeArea]}>
               <Stack
                 screenOptions={{
                   headerShown: false,

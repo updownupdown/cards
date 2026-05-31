@@ -260,12 +260,11 @@ export const Deck = ({
           <CardButton
             onPress={onPress}
             cardsPerRow={cardsPerRow}
-            isPlaceholder
-            style={[styles.deckCard]}
             disabled={isDisabled}
             selectColor={selectColor}
             cardSize={cardSize}
             forceSelectColor={!isDisabled || forceSelectColor}
+            isPlaceholder
           />
         )}
 

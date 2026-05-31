@@ -318,18 +318,6 @@ export default function AcesUp() {
       <View
         style={[flexStyles.rowCentered, flexStyles.fullWidth, flexStyles.gap40]}
       >
-        {/* Discard pile */}
-        <Deck
-          refTopNext={discardRef}
-          backCount={game.discard.length}
-          cardsPerRow={cardsPerRow}
-          limitFan
-          fan="horizontalRight"
-          showCount
-          countPosition="left"
-          iconName="delete"
-        />
-
         {/* Stock pile */}
         <Deck
           refTopCurrent={stockRef}
@@ -337,11 +325,23 @@ export default function AcesUp() {
           cardsPerRow={cardsPerRow}
           limitFan
           showCount
-          fan="horizontalLeft"
-          countPosition="right"
+          fan="horizontalRight"
+          countPosition="left"
           iconName="draw"
           onPress={dealFour}
           isDisabled={game.stock.length === 0 || !canDeal || isAnimating}
+        />
+
+        {/* Discard pile */}
+        <Deck
+          refTopNext={discardRef}
+          backCount={game.discard.length}
+          cardsPerRow={cardsPerRow}
+          limitFan
+          showCount
+          fan="horizontalLeft"
+          countPosition="right"
+          iconName="delete"
         />
       </View>
 

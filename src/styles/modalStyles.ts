@@ -16,7 +16,7 @@ const modalSidePadding = 30;
 export const modalStyles = StyleSheet.create({
   modalBackdrop: {
     flex: 1,
-    backgroundColor: rgba(Colors.K800, 0.2),
+    backgroundColor: rgba(Colors.K800, 0.7),
     alignItems: "center",
     justifyContent: "center",
     padding: ContentSidePadding / 1.5,

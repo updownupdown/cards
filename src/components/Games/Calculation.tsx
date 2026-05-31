@@ -367,7 +367,7 @@ export default function Calculation() {
               fan="verticalUp"
               limitFan
               showCount
-              countPosition="below"
+              countPosition="above"
               isSelected={selectedCard?.id === topWasteCard?.id}
               isDisabled={!isEnabled || isAnimating}
               selectColor={

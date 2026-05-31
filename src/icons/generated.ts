@@ -13,12 +13,14 @@ import CheckBoxOnIcon from "./CheckBoxOn.svg";
 import ChevronLeftIcon from "./ChevronLeft.svg";
 import CloseIcon from "./Close.svg";
 import ClubsIcon from "./Clubs.svg";
+import CoinsIcon from "./Coins.svg";
 import DeleteIcon from "./Delete.svg";
 import DiamondsIcon from "./Diamonds.svg";
 import DrawIcon from "./Draw.svg";
 import DungeonIcon from "./Dungeon.svg";
 import FistIcon from "./Fist.svg";
 import GamesIcon from "./Games.svg";
+import GemIcon from "./Gem.svg";
 import HeartsIcon from "./Hearts.svg";
 import HelpOutlineIcon from "./HelpOutline.svg";
 import HomeIcon from "./Home.svg";
@@ -41,12 +43,14 @@ export type IconName =
   | "chevron-left"
   | "close"
   | "clubs"
+  | "coins"
   | "delete"
   | "diamonds"
   | "draw"
   | "dungeon"
   | "fist"
   | "games"
+  | "gem"
   | "hearts"
   | "help-outline"
   | "home"
@@ -69,12 +73,14 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "chevron-left": ChevronLeftIcon,
   "close": CloseIcon,
   "clubs": ClubsIcon,
+  "coins": CoinsIcon,
   "delete": DeleteIcon,
   "diamonds": DiamondsIcon,
   "draw": DrawIcon,
   "dungeon": DungeonIcon,
   "fist": FistIcon,
   "games": GamesIcon,
+  "gem": GemIcon,
   "hearts": HeartsIcon,
   "help-outline": HelpOutlineIcon,
   "home": HomeIcon,

@@ -2,27 +2,29 @@ import { useContentWidth } from "@/hooks/useContentWidth";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { buttonTransition } from "@/styles/buttonStyles";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, ContentSidePadding, rgba } from "@/styles/styles";
+import { Colors, ContentSidePadding, FontWeight } from "@/styles/styles";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { View, ViewStyle } from "react-native";
+import { StyleSheet, Text, View, ViewStyle } from "react-native";
+import { useAnimations } from "../Animations/Animations";
 import { Button } from "../Button/Button";
-import {
-  cardBorderRadiusRatio,
-  CardSelectColor,
-  useCardSize,
-} from "../Cards/Card";
+import { CardSelectColor, useCardSize } from "../Cards/Card";
 import {
   CardSuit,
   createDeck,
+  isAce,
+  isFace,
+  isJoker,
   isNumberRank,
   RANK_VALUE,
+  rankValue,
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
 import { CardButton } from "../Cards/CardButton";
 import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
-import { useAnimations } from "../Animations/Animations";
+import { mockLoot } from "./_mock";
+import { Icon } from "@/icons";
 
 const loopCardTranslate = 14;
 const firstCardAngleIncrease = 10;
@@ -57,21 +59,10 @@ type LoopState = {
   scorePile: LoopCard[];
   ended: boolean;
   won: boolean;
+  winLoseMessage?: string;
+  numLoops: number;
 };
 
-function isFace(card: LoopCard) {
-  return card.rank === "J" || card.rank === "Q" || card.rank === "K";
-}
-function isAce(card: LoopCard) {
-  return card.rank === "A";
-}
-function isJoker(card: LoopCard) {
-  return card.rank === "Joker";
-}
-function rankValue(card: LoopCard) {
-  if (card.rank === "Joker") return 0;
-  return RANK_VALUE[card.rank];
-}
 function countAces(score: LoopCard[]) {
   return score.filter(isAce).length;
 }
@@ -104,6 +95,7 @@ function setup(): LoopState {
     scorePile: [],
     ended: false,
     won: false,
+    numLoops: 0,
   };
 }
 
@@ -232,59 +224,83 @@ export default function LootTheLoop() {
 
   // Explore
   function explore(selectedCardIndex: number) {
+    const selectedCard = game.deck[selectedCardIndex];
+
+    // Can't explore
+    if (
+      !selectedCard ||
+      !selectedCard.faceUp ||
+      !isNumberRank(selectedCard.rank)
+    ) {
+      return;
+    }
+
     setSelectedCardIndex(undefined);
     setGame((prev) => {
-      const selectedCard = prev.deck[selectedCardIndex];
+      const movedBy = rankValue(selectedCard, 1, 0);
+      const deckPos = (prev.deckPos + movedBy) % prev.deck.length;
+      const numLoops = prev.numLoops + (deckPos < prev.deckPos ? 1 : 0);
 
-      // Can't explore
-      if (
-        !selectedCard ||
-        !selectedCard.faceUp ||
-        !isNumberRank(selectedCard.rank)
-      ) {
-        return prev;
-      }
+      // updated.deckPos = newDeckPos;
 
-      const updated = prev;
-
-      const movedBy = rankValue(selectedCard);
-      const newDeckPos = (prev.deckPos + movedBy) % prev.deck.length;
-
-      updated.deckPos = newDeckPos;
-
-      const newTopCard = updated.deck[newDeckPos];
-      const deck = prev.deck;
+      const newTopCard = prev.deck[deckPos];
 
       if (newTopCard.faceUp && isFace(newTopCard)) {
         // Lose due to landing on face card
-        return { ...updated, ended: true, won: false };
+        return {
+          ...prev,
+          deckPos,
+          numLoops,
+          ended: true,
+          won: false,
+          winLoseMessage: "You landed on a trap!",
+        };
       } else if (newTopCard.faceUp && isJoker(newTopCard)) {
         // Win by having all aces and landing on joker/exit
-        if (countAces(updated.scorePile) === 4) {
-          return { ...updated, ended: true, won: true };
+        if (countAces(prev.scorePile) === 4) {
+          return {
+            ...prev,
+            deckPos,
+            numLoops,
+            ended: true,
+            won: true,
+            winLoseMessage: "You got all four jewels and found the exit!",
+          };
         } else {
           // Landing on joker without all aces does nothing
-          return updated;
+          return { ...prev, deckPos, numLoops };
         }
       } else if (
         newTopCard.faceUp &&
         (isAce(newTopCard) || isNumberRank(newTopCard.rank))
       ) {
         // Add newTopCard to scorePile, and remove from deck
-        const newScorePile = [...updated.scorePile, newTopCard];
-        updated.deck = updated.deck.toSpliced(newDeckPos, 1);
+        const scorePile = [...prev.scorePile, newTopCard];
+        const deck = prev.deck.toSpliced(deckPos, 1);
 
         if (deck.length === 0) {
           return {
-            ...updated,
-            scorePile: newScorePile,
+            ...prev,
+            deck,
+            deckPos,
+            numLoops,
+            scorePile,
             ended: true,
             won: false,
+            winLoseMessage: "You somehow... ran out of cards?!",
           };
         }
+
+        return {
+          ...prev,
+          deck,
+          deckPos,
+          numLoops,
+          scorePile,
+        };
       }
 
-      return updated;
+      return { ...prev, deckPos, numLoops };
     });
 
     setTimeout(() => {
@@ -329,17 +345,27 @@ export default function LootTheLoop() {
     );
   }, [selectedCardIndex, game.notes, game.deck]);
 
+  // Reset numLoops to prevent huge rotation degree values after several loops
+  const [isAdjustingRotation, setIsAdjustingRotation] = useState(false);
+
+  useEffect(() => {
+    if (isExploring || game.numLoops < 2) return;
+
+    setIsAdjustingRotation(true);
+    setGame((prev) => ({ ...prev, numLoops: 0 }));
+
+    setTimeout(() => {
+      setIsAdjustingRotation(false);
+    }, 50);
+  }, [isExploring, game.numLoops]);
+
   return (
     <GameWrapper
       ended={game.ended}
       won={game.won}
       reset={reset}
       isLoaded={isLoaded}
-      winLoseMessage={
-        game.won
-          ? "You escaped with all four jewels."
-          : "You were trapped or hit a revealed trap."
-      }
+      winLoseMessage={game.winLoseMessage}
     >
       <View
         style={[
@@ -364,35 +390,28 @@ export default function LootTheLoop() {
           <View
             style={[
               flexStyles.colCentered,
-              flexStyles.gap14,
+              flexStyles.gap24,
               {
                 position: "absolute",
                 top: "50%",
                 left: "50%",
-                transform: "translate(-50%, -60%)",
+                transform: "translate(-50%, -62%)",
               },
             ]}
           >
-            <View style={[flexStyles.rowCentered, flexStyles.gap20]}>
-              {/* Trinkets */}
-              <Deck
-                cards={game.scorePile.filter((card) => card.rank !== "A")}
-                cardsPerRow={cardsPerRow.loot}
-                showCount
-                countPosition="left"
-                limitFan
-                fan="horizontalLeft"
-              />
-
-              {/* Aces */}
-              <Deck
-                cards={game.scorePile.filter((card) => card.rank === "A")}
-                cardsPerRow={cardsPerRow.loot}
-                showCount
-                countPosition="right"
-                limitFan
-                fan="horizontalRight"
-              />
+            <View style={styles.trinkets}>
+              <View style={styles.trinket}>
+                <Icon name="gem" size={36} color={Colors.K200} />
+                <Text style={styles.trinketText}>
+                  {game.scorePile.filter((card) => card.rank === "A").length}
+                </Text>
+              </View>
+              <View style={styles.trinket}>
+                <Icon name="coins" size={36} color={Colors.K200} />
+                <Text style={styles.trinketText}>
+                  {game.scorePile.filter((card) => card.rank !== "A").length}
+                </Text>
+              </View>
             </View>
 
             {/* Marked Paths */}
@@ -469,7 +488,7 @@ export default function LootTheLoop() {
             const isExploreTarget = !!(
               selectedRevealedRank !== undefined &&
               selectedCardIndex !== undefined &&
-              index === (selectedCardIndex + selectedRevealedRank) % deckLength
+              index === (game.deckPos + selectedRevealedRank) % deckLength
             );
             const isPotentialPathTarget = !!(
               selectedNote?.index !== undefined &&
@@ -479,10 +498,12 @@ export default function LootTheLoop() {
             );
 
             // Style
-
             const eachCardAngle = (360 - gapAngle) / deckLength;
-            let angle =
-              index * eachCardAngle - 180 - game.deckPos * eachCardAngle;
+            let angle = index * eachCardAngle;
+            angle -= 180;
+            angle -= game.deckPos * eachCardAngle;
+            angle -= game.numLoops * 360;
+
             const translate =
               isSelected || isExploreTarget ? loopCardTranslate : 0;
             let zIndex = 100 - index;
@@ -505,9 +526,12 @@ export default function LootTheLoop() {
                 { translateY: contentRadius * -1 + translate },
               ],
               zIndex,
-              transitionDuration: isExploring
-                ? `${exploreTransitionInMs / 1000}s`
-                : "0.5s",
+              transitionProperty: isAdjustingRotation ? "none" : undefined,
+              transitionDuration: isAdjustingRotation
+                ? "0s"
+                : isExploring
+                  ? `${exploreTransitionInMs / 1000}s`
+                  : "0.5s",
             };
 
             const onPressFn = () => {
@@ -640,3 +664,19 @@ export default function LootTheLoop() {
     </GameWrapper>
   );
 }
+
+const styles = StyleSheet.create({
+  trinkets: {
+    ...flexStyles.rowCentered,
+    ...flexStyles.gap34,
+  },
+  trinket: {
+    ...flexStyles.rowCentered,
+    ...flexStyles.gap8,
+  },
+  trinketText: {
+    fontSize: 24,
+    color: Colors.K200,
+    fontFamily: FontWeight[500],
+  },
+});

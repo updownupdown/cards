@@ -665,8 +665,7 @@ export default function Area52() {
 
               <CardGrid
                 cardsPerRow={cardsPerRow}
-                targetGirdCols={maxAttackersNum}
-                style={[{ flexDirection: "row", justifyContent: "flex-start" }]}
+                targetGridCols={maxAttackersNum}
               >
                 {Array.from({ length: maxAttackersNum }, (_, idx) => {
                   const card: PlayingCard | undefined =
@@ -701,7 +700,7 @@ export default function Area52() {
               <View style={[styles.sectionTitleWrap]}>
                 <Text style={styles.sectionTitle}>Defenders</Text>
               </View>
-              <CardGrid cardsPerRow={cardsPerRow} targetGirdCols={3}>
+              <CardGrid cardsPerRow={cardsPerRow} targetGridCols={3}>
                 {game.currentDefenders.map((card, index) => {
                   const isSelected = selectedDefenders.includes(index);
 

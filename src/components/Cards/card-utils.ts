@@ -133,15 +133,18 @@ export function areRanksTwoAway(
 export function isRed(suit: CardSuit) {
   return suit === "hearts" || suit === "diamonds";
 }
-
 export function cardColor(card: PlayingCard) {
   return isRed(card.suit) ? "red" : "black";
 }
-
 export function isFace(card: PlayingCard) {
   return card.rank === "J" || card.rank === "Q" || card.rank === "K";
 }
-
+export function isAce(card: PlayingCard) {
+  return card.rank === "A";
+}
+export function isJoker(card: PlayingCard) {
+  return card.rank === "Joker";
+}
 export function isSameColor(card1: PlayingCard, card2: PlayingCard) {
   const card1Red = isRed(card1.suit) ? "red" : "black";
   const card2Red = isRed(card2.suit) ? "red" : "black";
@@ -151,10 +154,6 @@ export function isSameColor(card1: PlayingCard, card2: PlayingCard) {
 
 export function isNumberRank(rank: CardRank | LoopRank) {
   return ["2", "3", "4", "5", "6", "7", "8", "9", "10"].includes(rank);
-}
-
-export function isJoker(card: PlayingCard) {
-  return card.rank === "Joker";
 }
 
 export function shuffle<T>(items: T[]) {

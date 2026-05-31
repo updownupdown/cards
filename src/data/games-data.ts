@@ -1,49 +1,67 @@
+import React from "react";
+
 export type GameMenuInfo = {
   title: string;
   enabled?: boolean;
   howToPlay: string[];
   rules?: string[];
+  byLine?: string;
 };
 
 export const GAMES_DATA: Record<string, GameMenuInfo> = {
+  // Status: animated and looks good. need thorough testing
+  "/monte-carlo": {
+    title: "Monte Carlo",
+    howToPlay: [
+      "Flip over any adjacent, equal-rank pairs.",
+      "Consolidate the deck to remove flipped cards and refill the grid.",
+      "Win by clearing all cards.",
+    ],
+  },
+  // Status:
+  "/calculation": {
+    title: "Calculation",
+    howToPlay: [
+      "Build four foundations with increasing step intervals of 1, 2, 3, and 4.",
+      "Stock pile cards can be moved to any waste piles, or any suitable foundation.",
+      "Only the top card of a waste pile can be moved, and only to a suitable foundation.",
+      "Win by placing all cards (up to Kings) on foundations.",
+    ],
+  },
+  // Status - needs testing
+  "/dead-center": {
+    title: "Dead Center",
+    byLine: "Game design by Wil Su",
+    howToPlay: [
+      "Kill all 12 zombies surrounding your 3x3 cabin before the deck runs out.",
+      "Cards can be placed on a card of equal value; same color and greater value; or opposite color and less value.",
+      "Placed cards may kill adjacent zombies depending on the rank and value of the other cards on the same line.",
+    ],
+  },
   "/accordion": {
     title: "Accordion",
     howToPlay: [
-      "Move a card onto one 1-left or 3-left if suit or rank matches.",
-      "Each move compresses the row and changes future options.",
-      "Win by reducing to one card.",
+      "Move a card onto another card 1 or 3 spaces to its left, if their suit or rank matches.",
+      "Cards can match if they wrap around to a previous row, given they are still 1 or 3 spaces apart.",
+      "Win by reducing the grid down to one card.",
     ],
   },
   "/aces-up": {
     title: "Aces Up",
     enabled: true,
     howToPlay: [
-      "Discard a top card when a higher card of the same suit is showing.",
-      "Move a top card into an empty pile to create new options.",
-      "Win by ending with only the four Aces.",
-      // Discard lower cards of same suit, move cards to empty piles, then deal when blocked.
-    ],
-    rules: [
-      "These are the full rules!",
-      "Discard a top card when a higher card of the same suit is showing.",
-      "Move a top card into an empty pile to create new options.",
+      "Discard a top card from a foundation when a higher card of the same suit is visible.",
+      "Top cards can be moved to empty foundations when available. Deal when no move is possible.",
       "Win by ending with only the four Aces.",
     ],
   },
   "/area-52": {
     title: "Area 52",
+    byLine: "Game design by Wil Su",
     howToPlay: [
       "Survive each wave by placing cards according to the scenario rule.",
       "Use limited actions efficiently before drawing deeper into the deck.",
       "Clear all required wave objectives to win.",
-    ],
-  },
-  "/calculation": {
-    title: "Calculation",
-    howToPlay: [
-      "Build four foundations with step intervals 1, 2, 3, and 4.",
-      "Draw from stock to waste and play waste onto legal foundation.",
-      "Win by placing all cards on foundations.",
     ],
   },
   "/clock": {
@@ -83,6 +101,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   "/skyway": {
     title: "Skyway",
+    byLine: "Game design by Wil Su",
     howToPlay: [
       "Play cards onto lanes following each lane's build rule.",
       "Use draws and transfers to keep lanes advancing.",
@@ -91,6 +110,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   "/the-sandwich-guy": {
     title: "The Sandwich Guy",
+    byLine: "Game design by Wil Su",
     howToPlay: [
       "Chain legal matches to keep the run alive.",
       "Use buffer spaces carefully to prevent dead ends.",
@@ -106,17 +126,9 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Draw from stock when no legal tableau move is available.",
     ],
   },
-  "/dead-center": {
-    title: "Dead Center",
-    // enabled: false,
-    howToPlay: [
-      "Resolve threats in center lanes before they overwhelm the board.",
-      "Use tactical placements to keep the draw sequence alive.",
-      "Win by clearing the final objective state.",
-    ],
-  },
   "/the-first-boba-tea-shop-in-london": {
     title: "The First Boba Tea Shop in London",
+    byLine: "Game design by Wil Su",
     enabled: false,
     howToPlay: [
       "Play cards into valid stacks to satisfy order constraints.",
@@ -126,6 +138,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   "/foursquare": {
     title: "Foursquare",
+    byLine: "Game design by Wil Su",
     enabled: false,
     howToPlay: [
       "Manage four zones with distinct placement constraints.",
@@ -144,6 +157,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   "/loot-the-loop": {
     title: "Loot the Loop",
+    byLine: "Game design by Wil Su",
     howToPlay: [
       "Capture valid loop cards into the score pile.",
       "Protect scoring tempo by avoiding loop breaks.",
@@ -152,6 +166,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   "/syndicate": {
     title: "Syndicate",
+    byLine: "Game design by Wil Su",
     enabled: false,
     howToPlay: [
       "Build and convert stacks under syndicate rank restrictions.",
@@ -161,6 +176,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   "/hide-and-seek": {
     title: "Hide and Seek",
+    byLine: "Game design by Wil Su",
     enabled: false,
     howToPlay: [
       "Reveal hidden cards through legal uncover moves.",
@@ -170,7 +186,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   "/the-emissary": {
     title: "The Emissary",
-    enabled: false,
+    byLine: "Game design by Wil Su",
+    // enabled: false,
     howToPlay: [
       "Progress through kingdoms by completing each local objective.",
       "Balance risk and board control between kingdoms.",
@@ -183,15 +200,6 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Play only top tableau cards one rank up or down from waste top.",
       "Use stock draws when no tableau play is possible.",
       "Clear all tableau cards to win.",
-    ],
-  },
-
-  "/monte-carlo": {
-    title: "Monte Carlo",
-    howToPlay: [
-      "Remove adjacent equal-rank pairs.",
-      "Consolidate cards only when no removable pair exists.",
-      "Win by clearing all cards.",
     ],
   },
   "/scorpion": {

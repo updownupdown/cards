@@ -36,14 +36,14 @@ export const cardBorderRadiusRatio = 0.08;
 
 interface CardGridProps {
   cardsPerRow: number;
-  targetGirdCols?: number;
+  targetGridCols?: number;
   style?: ViewStyle[];
   children: React.ReactNode;
 }
 
 export const CardGrid = ({
   cardsPerRow,
-  targetGirdCols,
+  targetGridCols,
   style,
   children,
 }: CardGridProps) => {
@@ -54,7 +54,7 @@ export const CardGrid = ({
   const totalGap = contentWidth - cardWidth * cardsPerRow;
   const gridGap = totalGap / (cardsPerRow - 1);
 
-  const targetCols = targetGirdCols ?? cardsPerRow;
+  const targetCols = targetGridCols ?? cardsPerRow;
   const gridWidth = cardWidth * targetCols + gridGap * (targetCols - 1);
 
   return (
