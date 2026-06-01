@@ -213,11 +213,12 @@ export const ChooseKingdomOverlay = ({
           opacity: chooseKingdomOpacity,
           position: "absolute",
           zIndex: 10,
-          top: 0,
-          left: 0,
-          right: 0,
-          height: debateRecordsHeight,
-          backgroundColor: Colors.K850,
+          top: -4,
+          left: -4,
+          right: -4,
+          borderRadius: 12,
+          height: debateRecordsHeight + 8,
+          backgroundColor: Colors.K700,
         },
       ]}
     >
@@ -225,9 +226,9 @@ export const ChooseKingdomOverlay = ({
         style={[
           textStyles.default,
           {
-            fontSize: 18,
+            fontSize: 20,
             fontFamily: FontWeight[300],
-            color: Colors.K300,
+            color: Colors.white,
           },
         ]}
       >

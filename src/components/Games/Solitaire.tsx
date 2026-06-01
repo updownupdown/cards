@@ -194,7 +194,7 @@ function runTiming(
       toValue,
       duration,
       easing: Easing.out(Easing.cubic),
-      useNativeDriver: true,
+      useNativeDriver: false,
     }).start(() => resolve());
   });
 }

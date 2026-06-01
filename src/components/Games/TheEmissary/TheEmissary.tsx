@@ -122,6 +122,7 @@ export default function TheEmissary() {
           debateTopic: undefined,
           debateRecord: [],
         },
+        winLoseMessage: "",
       };
     });
   }
@@ -140,6 +141,8 @@ export default function TheEmissary() {
   ) {
     if (debateTopic.suit !== trumpSuit && card.suit === trumpSuit) {
       return true;
+    } else if (card.suit !== debateTopic.suit) {
+      return false;
     }
 
     return rankValue(card) > rankValue(debateTopic);
@@ -206,9 +209,13 @@ export default function TheEmissary() {
   const showToast = useToast();
 
   useEffect(() => {
-    if (game.hand.length > 0 || !game.visit?.kingdomId) return;
+    if (!game.visit || game.hand.length > 0 || !game.visit?.kingdomId) return;
 
-    showToast(`You won over Kingdom #${game.visit.kingdomId + 1}!`);
+    const wonKingdom = game.visit.wins === game.visit.requiredWins || debugMode;
+
+    if (wonKingdom) {
+      showToast(`You won over Kingdom #${game.visit.kingdomId + 1}!`);
+    }
 
     // Finish kingdom visit
     // This needs to be in a useEffect because it can be triggered in two ways:

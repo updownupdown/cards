@@ -133,13 +133,6 @@ export const EmissaryHand = ({
           cardsPerRow={cardsPerRow}
           style={[{ justifyContent: "center" }]}
         >
-          <Card
-            card={undefined}
-            ref={futureHandRef}
-            cardsPerRow={cardsPerRow}
-            isPlaceholder
-            style={[{ width: 0, overflow: "hidden", marginRight: -12 }]}
-          />
           {hand.map((card, i) => {
             const isDisabled =
               discardFromHand === 0 &&
@@ -176,6 +169,21 @@ export const EmissaryHand = ({
               />
             );
           })}
+           <Card
+            card={undefined}
+            ref={futureHandRef}
+            cardsPerRow={cardsPerRow}
+            isPlaceholder
+            style={[
+              {
+                width: 0,
+                overflow: "hidden",
+                marginRight: -12,
+                boxShadow: "unset",
+                backgroundColor: "unset",
+              },
+            ]}
+          />
         </CardGrid>
       </View>
     </>
