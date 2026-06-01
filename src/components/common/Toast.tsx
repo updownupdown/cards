@@ -1,14 +1,13 @@
-import { headerHeight } from "@/styles/layoutStyles";
 import { Colors, FontWeight, rgba } from "@/styles/styles";
 import React, {
   createContext,
-  useState,
-  useContext,
-  useCallback,
-  useRef,
   ReactNode,
+  useCallback,
+  useContext,
+  useRef,
+  useState,
 } from "react";
-import { StyleSheet, Text, Animated, ViewStyle, TextStyle } from "react-native";
+import { Animated, StyleSheet, Text, TextStyle, ViewStyle } from "react-native";
 
 // Define the type for the function our hook will return
 type ShowToastFn = (message: string, duration?: number) => void;
@@ -65,7 +64,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
               opacity,
               top: opacity.interpolate({
                 inputRange: [0, 1],
-                outputRange: [0, headerHeight],
+                outputRange: [-100, 10],
               }),
             },
           ]}
@@ -85,7 +84,7 @@ interface Styles {
 const styles = StyleSheet.create<Styles>({
   toastContainer: {
     position: "absolute",
-    top: headerHeight,
+    top: -100,
     alignSelf: "center",
     backgroundColor: rgba(Colors.K900, 0.8),
     paddingHorizontal: 24,

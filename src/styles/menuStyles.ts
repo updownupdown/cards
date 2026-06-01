@@ -79,6 +79,7 @@ export const menuStyles = StyleSheet.create({
     fontSize: 16,
     fontFamily: FontWeight[300],
     color: Colors.white,
+    textAlign: "center",
   },
   playBtn: {
     textTransform: "uppercase",

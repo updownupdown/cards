@@ -1,14 +1,13 @@
-import { useState, useEffect } from "react";
-import { Animated, Text, View } from "react-native";
+import { getGameInfo, normalizeGamePath } from "@/data/game-menu";
 import { useFade } from "@/hooks/useFade";
+import { useGameSettings } from "@/hooks/useGameSettings";
 import { menuStyles } from "@/styles/menuStyles";
 import { textStyles } from "@/styles/textStyles";
+import { usePathname } from "expo-router";
+import { useEffect, useState } from "react";
+import { Animated, Text, View } from "react-native";
 import { Button } from "../Button/Button";
 import { SettingControl } from "./SettingControl";
-import { GameMenuInfo } from "@/data/games-data";
-import { GameSettings, getGameInfo, normalizeGamePath } from "@/data/game-menu";
-import { usePathname } from "expo-router";
-import { useGameSettings } from "@/hooks/useGameSettings";
 
 interface Props {
   setShowMenu: (show: boolean) => void;

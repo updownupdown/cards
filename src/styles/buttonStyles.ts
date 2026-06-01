@@ -27,6 +27,12 @@ export const buttonStyles = StyleSheet.create({
     borderColor: Colors.buttonColor,
     outlineWidth: 0,
   },
+  cardPlaceholderContentBtn: {
+    ...buttonTransition,
+    width: "88%",
+    height: "90%",
+    padding: 0,
+  },
 
   // Sizes
   sizeText: {

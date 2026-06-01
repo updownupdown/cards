@@ -1,6 +1,7 @@
 import { useContentWidth } from "@/hooks/useContentWidth";
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { buttonTransition } from "@/styles/buttonStyles";
+import { Icon } from "@/icons";
+import { buttonStyles } from "@/styles/buttonStyles";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, ContentSidePadding, FontWeight } from "@/styles/styles";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -21,10 +22,7 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { CardButton } from "../Cards/CardButton";
-import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
-import { mockLoot } from "./_mock";
-import { Icon } from "@/icons";
 
 const loopCardTranslate = 14;
 const firstCardAngleIncrease = 10;
@@ -430,12 +428,9 @@ export default function LootTheLoop() {
                     text="Mark"
                     theme="green"
                     style={[
+                      buttonStyles.cardPlaceholderContentBtn,
                       {
-                        ...buttonTransition,
-                        width: "88%",
-                        height: "90%",
                         borderRadius: cardWidth * 0.1,
-                        padding: 0,
                         opacity: canMarkPath && !noteCard ? 1 : 0,
                         pointerEvents:
                           canMarkPath && !noteCard ? undefined : "none",

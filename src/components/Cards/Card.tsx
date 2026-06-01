@@ -111,7 +111,7 @@ export type CardProps = Omit<SvgProps, "width" | "height" | "style"> & {
   cardsPerRow?: number;
   isSelectable?: boolean;
   isSelected?: boolean;
-  selectColor?: CardSelectColor;
+  selectColor?: string;
   hasTopMargin?: boolean;
   forceSelectColor?: boolean;
   forceOverlay?: boolean;
@@ -203,6 +203,8 @@ export const Card = forwardRef<any, CardProps>(
         case "pink":
           colorValue = Colors.cardSelectPink;
           break;
+        default:
+          colorValue = selectColor;
       }
     }
 

@@ -13,7 +13,7 @@ interface Props {
   cardsPerRow?: number;
   hasTopMargin?: boolean;
   customTopMarginPerc?: number;
-  selectColor?: CardSelectColor;
+  selectColor?: string;
   onPress?: () => void;
   ref?: React.Ref<View>;
   cardSize?: CardSizes;

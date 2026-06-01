@@ -1,4 +1,4 @@
-import TheEmissary from "@/components/Games/TheEmissary";
+import TheEmissary from "@/components/Games/TheEmissary/TheEmissary";
 
 export default function TheEmissaryRoute() {
   return <TheEmissary />;
