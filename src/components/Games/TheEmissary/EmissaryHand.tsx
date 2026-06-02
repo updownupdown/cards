@@ -6,6 +6,7 @@ import { Card, CardGrid } from "../../Cards/Card";
 import { type PlayingCard } from "../../Cards/card-utils";
 import { CardButton } from "../../Cards/CardButton";
 import { EmissarySuitsColorMap, TheEmissaryVisit } from "./TheEmissaryCommon";
+import { cardStyles } from "@/styles/cardStyles";
 
 const cardBlock: ViewStyle[] = [
   flexStyles.colCentered,
@@ -166,10 +167,13 @@ export const EmissaryHand = ({
                 }
                 forceOverlay={potentialDiscard}
                 forceSelectColor={potentialDiscard}
+                style={[
+                  animatingCardIds.includes(card.id) && cardStyles.animHide,
+                ]}
               />
             );
           })}
-           <Card
+          <Card
             card={undefined}
             ref={futureHandRef}
             cardsPerRow={cardsPerRow}

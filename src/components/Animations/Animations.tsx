@@ -44,6 +44,8 @@ export type CardAnimationParams = {
   duration?: number;
   delay?: number;
   flip?: "toFace" | "toBack"; // whether it flips during the animation
+  arcX?: number; // rightward arc height in pixels (parabolic path)
+  arcY?: number; // upward arc height in pixels (parabolic path)
   keepAlive?: boolean; // if true, the card won't be unmounted automatically when the animation ends
 };
 
@@ -94,8 +96,18 @@ const AnimatedCard = ({
   }, [delay, duration, params.card.id, progress, onComplete]);
 
   const animatedStyle = useAnimatedStyle(() => {
-    const translateX = interpolate(progress.value, [0, 1], [from.x, to.x]);
-    const translateY = interpolate(progress.value, [0, 1], [from.y, to.y]);
+    let translateX = interpolate(progress.value, [0, 1], [from.x, to.x]);
+    let translateY = interpolate(progress.value, [0, 1], [from.y, to.y]);
+
+    // Apply parabolic arcs if specified
+    if (params.arcX) {
+      const arcOffset = params.arcX * 4 * progress.value * (1 - progress.value);
+      translateX -= arcOffset; // subtract to arc upward
+    }
+    if (params.arcY) {
+      const arcOffset = params.arcY * 4 * progress.value * (1 - progress.value);
+      translateY -= arcOffset; // subtract to arc upward
+    }
 
     const opacity =
       from.opacity !== undefined && to.opacity !== undefined

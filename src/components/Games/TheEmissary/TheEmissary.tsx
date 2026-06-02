@@ -1,3 +1,8 @@
+import {
+  CardAnimationParams,
+  useAnimations,
+} from "@/components/Animations/Animations";
+import { useToast } from "@/components/common/Toast";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
@@ -11,6 +16,7 @@ import {
   isFace,
   rankValue,
   shuffle,
+  suitValue,
   type PlayingCard,
 } from "../../Cards/card-utils";
 import { CardButton } from "../../Cards/CardButton";
@@ -24,8 +30,6 @@ import {
   TheEmissaryGame,
   TheEmissaryKingdom,
 } from "./TheEmissaryCommon";
-import { useToast } from "@/components/common/Toast";
-import { useAnimations } from "@/components/Animations/Animations";
 
 const defaultHandSize = 8;
 
@@ -71,6 +75,7 @@ function setup(): TheEmissaryGame {
     won: false,
     winLoseMessage: "",
     neededToHand: 0,
+    handNeedsOrdering: false,
     discardFromHand: 0,
     handSize: defaultHandSize,
   };
@@ -109,7 +114,7 @@ export default function TheEmissary() {
       if (prev.ended || prev.visit !== null || prev.kingdoms[kingdomId].visited)
         return prev;
 
-      const k = game.kingdoms[kingdomId];
+      const k = prev.kingdoms[kingdomId];
 
       return {
         ...prev,
@@ -227,7 +232,7 @@ export default function TheEmissary() {
       const wonKingdom =
         prev.visit.wins === prev.visit.requiredWins || debugMode;
 
-      let kingdoms = prev.kingdoms;
+      let kingdoms = [...prev.kingdoms];
       const kId = prev.visit.kingdomId;
       const ruler = prev.kingdoms[kId].ruler;
       kingdoms[kId] = {
@@ -281,20 +286,31 @@ export default function TheEmissary() {
     return !game.ended && game.visit === null;
   }, [game.visit]);
 
-  async function refreshDeck() {
+  async function refreshDeckWithinKingdom() {
     setGame((prev) => {
-      const draw = shuffle(game.discardLost);
+      const draw: PlayingCard[] = shuffle([
+        ...prev.discardLost,
+        ...prev.draw,
+      ]).map((c) => ({ ...c, faceUp: false }));
 
       return { ...prev, draw, discardLost: [] };
     });
   }
 
-  async function drawCardToHand() {
-    if (game.draw.length === 0) {
-      await refreshDeck();
-      return;
-    }
+  async function refreshDeckAfterKingdom() {
+    setGame((prev) => {
+      const draw: PlayingCard[] = shuffle([
+        ...prev.discardLost,
+        ...prev.hand,
+        ...prev.discardWon,
+        ...prev.draw,
+      ]).map((c) => ({ ...c, faceUp: false }));
 
+      return { ...prev, draw, hand: [], discardLost: [], discardWon: [] };
+    });
+  }
+
+  async function drawCardToHand() {
     const drawPos = await measureRef(drawCurrentRef);
     const futureHandPos = await measureRef(futureHandRef);
 
@@ -319,14 +335,15 @@ export default function TheEmissary() {
       const hand = [...prev.hand, { ...newCard, faceUp: true }];
       const draw = prev.draw.slice(0, -1);
       const neededToHand = prev.neededToHand - 1;
+      const handNeedsOrdering = neededToHand === 0;
 
-      return { ...prev, draw, hand, neededToHand };
+      return { ...prev, draw, hand, neededToHand, handNeedsOrdering };
     });
   }
 
   async function drawCardToTopic() {
     if (game.draw.length === 0) {
-      await refreshDeck();
+      await refreshDeckWithinKingdom();
     }
 
     const drawPos = await measureRef(drawCurrentRef);
@@ -395,11 +412,73 @@ export default function TheEmissary() {
     });
   }
 
+  async function orderHand() {
+    console.log("order hand");
+    const hand = [...game.hand];
+
+    const orderedHand = [...hand].sort((a, b) => {
+      if (suitValue(a) !== suitValue(b)) {
+        return suitValue(a) - suitValue(b);
+      } else {
+        return rankValue(a) - rankValue(b);
+      }
+    });
+
+    console.log(orderedHand);
+
+    const anims: CardAnimationParams[] = [];
+
+    for (let i = 0; i < hand.length; i++) {
+      const beforeEl = handRefs.current[i];
+      const newPosIndex = orderedHand.findIndex((c) => c.id === hand[i].id);
+      console.log({ newPosIndex });
+      const afterEl = handRefs.current[newPosIndex];
+      if (beforeEl && afterEl) {
+        const beforePos = await measureRef({ current: beforeEl });
+        const afterPos = await measureRef({ current: afterEl });
+        if (beforePos && afterPos) {
+          anims.push({
+            card: game.hand[i],
+            from: beforePos,
+            to: afterPos,
+            cardsPerRow: cardsPerRow.other,
+            cardSize: "small",
+            delay: i * 80,
+            duration: 350,
+            arcY: 0.5 * Math.abs(beforePos.x - afterPos.x),
+          });
+        }
+      }
+    }
+
+    console.log(anims);
+
+    if (anims.length > 0) {
+      await animateCards(anims);
+    }
+
+    setGame((prev) => {
+      return { ...prev, hand: orderedHand, handNeedsOrdering: false };
+    });
+  }
+
+  useEffect(() => {
+    if (game.handNeedsOrdering) orderHand();
+  }, [game.handNeedsOrdering]);
+
   useEffect(() => {
     if (game.neededToHand === 0) return;
 
-    drawCardToHand();
-  }, [game.neededToHand, game.draw]);
+    if (game.draw.length === 0) {
+      if (game.visit === null) {
+        refreshDeckAfterKingdom();
+      } else {
+        refreshDeckWithinKingdom();
+      }
+    } else {
+      drawCardToHand();
+    }
+  }, [game.neededToHand, game.draw, game.visit]);
 
   async function spendAdvisor(advisor: PlayingCard) {
     const advisorIndex = game.advisors.findIndex((c) => c.id === advisor.id);
@@ -476,12 +555,16 @@ export default function TheEmissary() {
       await discardCardsMatchingTrump();
       await spendAdvisor(advisor);
     } else if (suit === "clubs") {
-      const numCardsToDraw = game.hand.filter((c) => c.suit === "clubs").length;
-      setGame((prev) => ({
-        ...prev,
-        handSize: prev.handSize + numCardsToDraw,
-        neededToHand: numCardsToDraw,
-      }));
+      setGame((prev) => {
+        const numCardsToDraw = prev.hand.filter(
+          (c) => c.suit === "clubs",
+        ).length;
+        return {
+          ...prev,
+          handSize: prev.handSize + numCardsToDraw,
+          neededToHand: numCardsToDraw,
+        };
+      });
     }
   }
 
@@ -516,7 +599,7 @@ export default function TheEmissary() {
     });
   }
 
-  // console.log(game);
+  console.log(game);
 
   return (
     <GameWrapper

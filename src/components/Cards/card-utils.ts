@@ -64,6 +64,17 @@ export const RANK_VALUE: Record<StandardRank | "Joker", number> = {
   Joker: 14,
 };
 
+export const SUIT_VALUE: Record<CardSuit, number> = {
+  hearts: 1,
+  clubs: 2,
+  diamonds: 3,
+  spades: 4,
+};
+
+export function suitValue(card: PlayingCard) {
+  return SUIT_VALUE[card.suit];
+}
+
 export function rankValue(
   card: PlayingCard,
   customAceValue?: number,

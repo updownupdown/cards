@@ -25,6 +25,7 @@ export type TheEmissaryGame = {
   advisors: PlayingCard[];
   visit: TheEmissaryVisit | null;
   hand: PlayingCard[];
+  handNeedsOrdering: boolean;
   ended: boolean;
   won: boolean;
   winLoseMessage: string;
