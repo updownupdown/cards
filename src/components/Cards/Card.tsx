@@ -31,7 +31,7 @@ const cardDefaultWidth = 250;
 const cardDefaultHeight = 350;
 const cardAspectRatio = cardDefaultWidth / cardDefaultHeight;
 const cardGapRatio = 0.82;
-const cardShadowRadio = 0.01;
+const cardShadowRadio = 0.012;
 export const cardBorderRadiusRatio = 0.08;
 
 interface CardGridProps {
@@ -85,7 +85,7 @@ export const useCardSize = (cardsPerRow = 5, targetGridCol?: number) => {
   const height = width / cardAspectRatio;
   const borderRadius = width * cardBorderRadiusRatio;
   const shadowUnit = width * cardShadowRadio;
-  const placeholderShadow = `inset ${shadowUnit}px ${shadowUnit * 2}px ${shadowUnit * 14}px ${rgba(Colors.black, 0.3)}`;
+  const placeholderShadow = `inset ${shadowUnit}px ${shadowUnit * 2}px ${shadowUnit * 14}px ${rgba(Colors.K950, 0.5)}`;
 
   const gridGap = topMargin / 2;
   const targetCols = targetGridCol ?? cardsPerRow;
@@ -209,7 +209,7 @@ export const Card = forwardRef<any, CardProps>(
     }
 
     function shadow(size: number, opacity: number, customColor?: string) {
-      return `0 0 0 1px ${rgba(Colors.K900, 0.2)}, 0 0 0 ${shadowUnit * size}px ${rgba(customColor ?? colorValue, opacity)}`;
+      return `0 0 0 1px ${rgba(Colors.K800, 0.2)}, 0 0 0 ${shadowUnit * size}px ${rgba(customColor ?? colorValue, opacity)}`;
     }
 
     const shadowSizeUnselected = 4;
@@ -222,8 +222,8 @@ export const Card = forwardRef<any, CardProps>(
         cardStyle.boxShadow = shadow(shadowSizeSelected, 0.8);
       } else if ((isSelectable || forceSelectColor) && selectColor !== "none") {
         cardStyle.boxShadow = shadow(shadowSizeUnselected, 0.8);
-      } else {
-        cardStyle.boxShadow = `0 0 0 1px ${rgba(Colors.K900, 0.2)}, 0 0  ${shadowUnit * 4}px 0 ${rgba(Colors.K900, 0.5)}`;
+      } else if (!isPlaceholder) {
+        cardStyle.boxShadow = `0 0 0 1px ${rgba(Colors.K800, 0.2)}, 0 0 0 1px ${rgba(Colors.K950, 0.3)}, ${shadowUnit * 1}px ${shadowUnit * 2}px ${shadowUnit * 8}px 0 ${rgba(Colors.K900, 0.5)}`;
       }
     }
 

@@ -304,7 +304,7 @@ export const deckCountAboveBelowHeight = 36;
 export const styles = StyleSheet.create({
   deckWrap: {
     display: "flex",
-    backgroundColor: Colors.K875,
+    backgroundColor: Colors.K860,
   },
   deckWrapInvisibleWhenEmpty: {
     backgroundColor: "unset",

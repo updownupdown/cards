@@ -71,7 +71,7 @@ export const cardStyles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: Colors.K875,
+    backgroundColor: Colors.K860,
   },
   animHide: {
     opacity: 0,

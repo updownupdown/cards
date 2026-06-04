@@ -176,6 +176,7 @@ export const AdvisorInfo = ({
                   <Button
                     onPress={() => setSelectedAdvisor(undefined)}
                     text="Cancel"
+                    theme={Colors.K200}
                     style={[{ borderWidth: 0 }]}
                   />
                   {advisorSuit !== "spades" && (
@@ -183,6 +184,13 @@ export const AdvisorInfo = ({
                       onPress={() => doAdvisorAction(selectedAdvisor)}
                       text={buttonText}
                       style={[flexStyles.flex1]}
+                      theme={
+                        advisorSuit === "hearts"
+                          ? Colors.suitsColoredHearts
+                          : advisorSuit === "diamonds"
+                            ? Colors.suitsColoredClubs
+                            : Colors.suitsColoredSpades
+                      }
                     />
                   )}
                 </View>
@@ -213,10 +221,10 @@ export const ChooseKingdomOverlay = ({
           opacity: chooseKingdomOpacity,
           position: "absolute",
           zIndex: 10,
-          top: -4,
-          left: -4,
-          right: -4,
-          borderRadius: 12,
+          top: -2,
+          left: -2,
+          right: -2,
+          borderRadius: 8,
           height: debateRecordsHeight + 8,
           backgroundColor: Colors.K700,
         },
@@ -227,6 +235,7 @@ export const ChooseKingdomOverlay = ({
           textStyles.default,
           {
             fontSize: 20,
+            lineHeight: 20,
             fontFamily: FontWeight[300],
             color: Colors.white,
           },

@@ -1,6 +1,7 @@
 import {
   Colors,
   ContentSidePadding,
+  FontWeight,
   MaxContentHeight,
   MaxContentWidth,
   rgba,
@@ -16,8 +17,8 @@ export const layoutStyles = StyleSheet.create({
   appView: {
     flex: 1,
     justifyContent: "center",
-    fontFamily: "Outfit_500Medium",
-    backgroundColor: Colors.K850,
+    fontFamily: FontWeight[500],
+    backgroundColor: Colors.background,
     userSelect: "none",
   },
 
@@ -29,7 +30,7 @@ export const layoutStyles = StyleSheet.create({
     alignSelf: "center",
     maxWidth: MaxContentWidth + ContentSidePadding * 2,
     maxHeight: MaxContentHeight + ContentSidePadding * 2,
-    backgroundColor: Colors.K850,
+    backgroundColor: Colors.background,
   },
   background: {
     width: "100%",
@@ -43,9 +44,10 @@ export const layoutStyles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
     height: headerHeight,
-    backgroundColor: Colors.K850,
-    padding: ContentSidePadding,
-    boxShadow: `0 0 20px ${rgba(Colors.K850, 1)}`,
+    backgroundColor: Colors.background,
+    paddingVertical: ContentSidePadding,
+    paddingHorizontal: ContentSidePadding * 0.75,
+    boxShadow: `0 0 20px ${rgba(Colors.background, 1)}`,
   },
   gameLoadingOverlay: {
     position: "absolute",
@@ -55,7 +57,7 @@ export const layoutStyles = StyleSheet.create({
     right: 0,
     bottom: 0,
     ...flexStyles.rowCentered,
-    backgroundColor: Colors.K850,
+    backgroundColor: Colors.background,
   },
   gameArea: {
     position: "relative",
@@ -64,7 +66,7 @@ export const layoutStyles = StyleSheet.create({
     ...flexStyles.fullWidth,
     flex: 1,
     justifyContent: "space-evenly",
-    backgroundColor: Colors.K850,
+    backgroundColor: Colors.background,
     alignItems: "stretch",
   },
   gameAreaScroll: {

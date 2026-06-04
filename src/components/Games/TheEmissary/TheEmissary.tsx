@@ -325,7 +325,7 @@ export default function TheEmissary() {
           cardSize: "small",
           flip: "toFace",
           cardsPerRow: cardsPerRow.other,
-          duration: 125,
+          duration: 150,
         },
       ]);
     }
@@ -413,7 +413,6 @@ export default function TheEmissary() {
   }
 
   async function orderHand() {
-    console.log("order hand");
     const hand = [...game.hand];
 
     const orderedHand = [...hand].sort((a, b) => {
@@ -423,8 +422,6 @@ export default function TheEmissary() {
         return rankValue(a) - rankValue(b);
       }
     });
-
-    console.log(orderedHand);
 
     const anims: CardAnimationParams[] = [];
 
@@ -443,8 +440,8 @@ export default function TheEmissary() {
             to: afterPos,
             cardsPerRow: cardsPerRow.other,
             cardSize: "small",
-            delay: i * 80,
-            duration: 350,
+            delay: i * 10 + Math.abs(beforePos.x - afterPos.x) * 2,
+            duration: 320,
             arcY: 0.5 * Math.abs(beforePos.x - afterPos.x),
           });
         }
@@ -655,14 +652,18 @@ export default function TheEmissary() {
                     paddingTop: 2,
                     gap: 4,
                     alignItems: "center",
-                    backgroundColor: Colors.K800,
+                    backgroundColor: isCurrent ? Colors.K700 : Colors.K800,
                   },
                 ]}
               >
                 <Text
                   style={[
                     textStyles.default,
-                    { fontSize: 15, fontFamily: FontWeight[500] },
+                    {
+                      fontSize: 15,
+                      fontFamily: FontWeight[500],
+                      color: isCurrent ? Colors.white : Colors.K300,
+                    },
                   ]}
                 >
                   {k.requiredWins}

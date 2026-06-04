@@ -92,7 +92,7 @@ export const EmissaryHand = ({
             {
               flexDirection: "row",
               flexWrap: "wrap",
-              gap: 10,
+              gap: 12,
               opacity: !visit || visit?.debateTopic ? 0.5 : 1,
             },
           ]}

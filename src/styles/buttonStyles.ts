@@ -8,7 +8,7 @@ export const buttonTransition = {
 };
 
 export const headerButtonSize = 48;
-export const headerButtonIconSize = 30;
+export const headerButtonIconSize = 26;
 
 export const buttonStyles = StyleSheet.create({
   fullWidth: {
@@ -22,10 +22,9 @@ export const buttonStyles = StyleSheet.create({
     alignItems: "center",
     gap: 6,
 
-    backgroundColor: rgba(Colors.buttonColor, 0.1),
-    borderWidth: 1,
-    borderColor: Colors.buttonColor,
+    backgroundColor: rgba(Colors.K800, 0.1),
     outlineWidth: 0,
+    boxShadow: `inset 0 1px 1px ${rgba(Colors.white, 0.2)}, inset 1px 2px 14px ${rgba(Colors.K500, 0.2)}, inset 2px 4px 20px ${rgba(Colors.K600, 0.2)}, -2px -2px 12px ${rgba(Colors.K750, 0.8)}, 2px 2px 16px ${rgba(Colors.K950, 0.5)}`,
   },
   cardPlaceholderContentBtn: {
     ...buttonTransition,
@@ -101,59 +100,18 @@ export const buttonStyles = StyleSheet.create({
   },
 
   // Themes
-  themeRed: {
-    borderColor: Colors.btnRed,
-    backgroundColor: rgba(Colors.btnRed, 0.1),
-  },
-  themeBlue: {
-    borderColor: Colors.btnBlue,
-    backgroundColor: rgba(Colors.btnBlue, 0.1),
-  },
-  themeYellow: {
-    borderColor: Colors.btnYellow,
-    backgroundColor: rgba(Colors.btnYellow, 0.1),
-  },
-  themeGreen: {
-    borderColor: Colors.btnGreen,
-    backgroundColor: rgba(Colors.btnGreen, 0.1),
-  },
-  themeOrange: {
-    borderColor: Colors.btnOrange,
-    backgroundColor: rgba(Colors.btnOrange, 0.1),
-  },
-  themePurple: {
-    borderColor: Colors.btnPurple,
-    backgroundColor: rgba(Colors.btnPurple, 0.1),
-  },
-
-  themeTextRed: {
-    color: Colors.btnRed,
-  },
-  themeTextBlue: {
-    color: Colors.btnBlue,
-  },
-  themeTextYellow: {
-    color: Colors.btnYellow,
-  },
-  themeTextGreen: {
-    color: Colors.btnGreen,
-  },
-  themeTextOrange: {
-    color: Colors.btnOrange,
-  },
-  themeTextPurple: {
-    color: Colors.btnPurple,
-  },
 
   // Disabled
   disabled: {
-    color: Colors.K900,
-    borderColor: rgba(Colors.K500, 0.5),
-    backgroundColor: rgba(Colors.K500, 0.1),
-    boxShadow: "unset",
+    opacity: 0.6,
+    // color: Colors.K900,
+    // borderColor: rgba(Colors.K500, 0.5),
+    // backgroundColor: rgba(Colors.K500, 0.1),
+    // boxShadow: "unset",
   },
   textDisabled: {
-    color: Colors.K400,
+    opacity: 0.6,
+    // color: Colors.K400,
   },
 
   // Header button
@@ -167,8 +125,6 @@ export const buttonStyles = StyleSheet.create({
     boxShadow: "unset",
     borderRadius: "unset",
     backgroundColor: "unset",
-    borderWidth: 0,
-    borderColor: "unset",
   },
   closeModalButton: {
     backgroundColor: Colors.K850,

@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 export const homeStyles = StyleSheet.create({
   scrollContent: {
     paddingVertical: 30,
-    backgroundColor: Colors.K850,
+    backgroundColor: Colors.background,
   },
   sectionHeaderRow: {
     marginTop: 20,
@@ -27,18 +27,18 @@ export const homeStyles = StyleSheet.create({
   // Tabs
   container: {
     flex: 1,
-    backgroundColor: Colors.K850,
+    backgroundColor: Colors.background,
   },
   content: {
     flex: 1,
   },
   tabBar: {
     flexDirection: "row",
-    backgroundColor: Colors.K850,
+    backgroundColor: Colors.background,
     paddingVertical: 12,
     justifyContent: "space-around",
     alignItems: "center",
-    boxShadow: `0 0 4px ${Colors.K850}, 0 0 18px ${Colors.K850}`,
+    boxShadow: `0 0 4px ${Colors.background}, 0 0 18px ${Colors.background}`,
   },
   tabButton: {
     flex: 1,

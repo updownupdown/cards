@@ -1,13 +1,13 @@
 import { Icon, IconName } from "@/icons";
 import { buttonStyles } from "@/styles/buttonStyles";
-import { Colors } from "@/styles/styles";
+import { Colors, rgba } from "@/styles/styles";
 import { Platform, Pressable, Text, TextStyle, ViewStyle } from "react-native";
 
 interface Props {
   style?: ViewStyle | ViewStyle[];
   textStyle?: TextStyle | TextStyle[];
   size?: "text" | "textLarge" | "small" | "medium" | "large";
-  theme?: "blue" | "purple" | "orange" | "red" | "yellow" | "green";
+  theme?: string;
   disabled?: boolean;
   fullWidth?: boolean;
   onPress: () => void;
@@ -38,17 +38,39 @@ export const Button = ({
   onPressIn,
   onPressOut,
 }: Props) => {
+  let themeColor: string | undefined = undefined;
+
+  switch (theme) {
+    case "blue":
+      themeColor = Colors.btnBlue;
+      break;
+    case "red":
+      themeColor = Colors.btnRed;
+      break;
+    case "orange":
+      themeColor = Colors.btnOrange;
+      break;
+    case "purple":
+      themeColor = Colors.btnPurple;
+      break;
+    case "yellow":
+      themeColor = Colors.btnYellow;
+      break;
+    case "green":
+      themeColor = Colors.btnGreen;
+      break;
+    default:
+      themeColor = theme;
+  }
+
+  if (disabled) {
+    themeColor = Colors.K600;
+  }
+
   return (
     <Pressable
       style={[
         buttonStyles.button,
-        theme === undefined && buttonStyles.themeBlue,
-        theme === "blue" && buttonStyles.themeBlue,
-        theme === "red" && buttonStyles.themeRed,
-        theme === "orange" && buttonStyles.themeOrange,
-        theme === "purple" && buttonStyles.themePurple,
-        theme === "yellow" && buttonStyles.themeYellow,
-        theme === "green" && buttonStyles.themeGreen,
         size === "text" && buttonStyles.sizeText,
         size === "textLarge" && buttonStyles.sizeTextLarge,
         size === "small" && buttonStyles.sizeSmall,
@@ -57,6 +79,12 @@ export const Button = ({
         fullWidth && buttonStyles.fullWidth,
         disabled && buttonStyles.disabled,
         style,
+        {
+          backgroundColor: themeColor ? rgba(themeColor, 0.07) : undefined,
+          boxShadow: themeColor
+            ? `inset 0 1px 1px ${rgba(Colors.white, 0.2)}, inset 1px 2px 6px ${rgba(themeColor, 0.35)}, inset 2px 4px 20px ${rgba(themeColor, 0.2)}, -2px -2px 18px ${rgba(Colors.K750, 0.7)}, 2px 2px 18px ${rgba(Colors.K950, 0.8)}`
+            : undefined,
+        },
       ]}
       onPress={() => {
         if (Platform.OS === "web" && typeof document !== "undefined") {
@@ -87,15 +115,11 @@ export const Button = ({
             size === "small" && buttonStyles.textSizeSmall,
             size === "medium" && buttonStyles.textSizeMedium,
             size === "large" && buttonStyles.textSizeLarge,
-            theme === undefined && buttonStyles.themeTextBlue,
-            theme === "blue" && buttonStyles.themeTextBlue,
-            theme === "red" && buttonStyles.themeTextRed,
-            theme === "orange" && buttonStyles.themeTextOrange,
-            theme === "purple" && buttonStyles.themeTextPurple,
-            theme === "yellow" && buttonStyles.themeTextYellow,
-            theme === "green" && buttonStyles.themeTextGreen,
             disabled && buttonStyles.textDisabled,
             textStyle,
+            {
+              color: themeColor ? rgba(themeColor, 1) : undefined,
+            },
           ]}
         >
           {text}

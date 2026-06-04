@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     zIndex: 10,
-    backgroundColor: Colors.K850,
+    backgroundColor: Colors.background,
     paddingTop: ContentSidePadding,
     paddingBottom: ContentSidePadding,
   },

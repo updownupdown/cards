@@ -515,7 +515,7 @@ export default function DeadCenter() {
             flexStyles.rowCentered,
             flexStyles.fullWidth,
             {
-              backgroundColor: Colors.K900,
+              backgroundColor: Colors.K875,
               borderRadius: 12,
               paddingVertical: 12,
               paddingLeft: 20,
@@ -575,7 +575,7 @@ export default function DeadCenter() {
                   flexWrap: "wrap",
                   width: gridCellWidth * 3,
                   height: gridCellHeight * 3,
-                  backgroundColor: Colors.K900,
+                  backgroundColor: Colors.K875,
                   borderRadius: 12,
                 },
               ]}
