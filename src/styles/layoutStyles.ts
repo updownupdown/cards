@@ -72,7 +72,7 @@ export const layoutStyles = StyleSheet.create({
   gameAreaScroll: {
     ...flexStyles.colCentered,
     justifyContent: "space-evenly",
-    gap: 30,
+    gap: 20,
     // Careful editing these styles below!
     // Expand content when scrolling is needed, but don't shrink
     flexGrow: 1,
@@ -81,6 +81,7 @@ export const layoutStyles = StyleSheet.create({
     // Stretch self if needed
     alignSelf: "stretch",
     padding: ContentSidePadding,
+    paddingTop: 10,
     paddingBottom: 30,
   },
 });

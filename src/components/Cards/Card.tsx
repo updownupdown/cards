@@ -85,7 +85,7 @@ export const useCardSize = (cardsPerRow = 5, targetGridCol?: number) => {
   const height = width / cardAspectRatio;
   const borderRadius = width * cardBorderRadiusRatio;
   const shadowUnit = width * cardShadowRadio;
-  const placeholderShadow = `inset ${shadowUnit}px ${shadowUnit * 2}px ${shadowUnit * 14}px ${rgba(Colors.K950, 0.5)}`;
+  const placeholderShadow = `inset ${shadowUnit}px ${shadowUnit * 2}px ${shadowUnit * 14}px ${rgba(Colors.K900, 0.5)}`;
 
   const gridGap = topMargin / 2;
   const targetCols = targetGridCol ?? cardsPerRow;

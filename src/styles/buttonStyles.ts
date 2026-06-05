@@ -37,6 +37,7 @@ export const buttonStyles = StyleSheet.create({
   sizeText: {
     backgroundColor: "unset",
     borderWidth: 0,
+    boxShadow: "unset",
   },
   sizeTextLarge: {
     backgroundColor: "unset",

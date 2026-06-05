@@ -153,14 +153,65 @@ export default function TheEmissary() {
     return rankValue(card) > rankValue(debateTopic);
   }
 
-  function debateWithCard(card: PlayingCard) {
+  async function debateWithCard(card: PlayingCard) {
+    if (!game.visit?.debateTopic) return;
+
     setSelectedAdvisor(undefined);
+
+    const anims: CardAnimationParams[] = [];
+
+    // Animate played hand card to discard pile
+    const wonTopic = wonDebate(
+      card,
+      game.visit.debateTopic,
+      game.visit.trumpSuit,
+    );
+
+    const cardIndex = game.hand.findIndex((c) => c.id === card.id);
+    const cardEl = handRefs.current[cardIndex];
+
+    if (cardEl) {
+      const currentHandPos = await measureRef({ current: cardEl });
+      const discardPos = await measureRef(
+        wonTopic ? discardWonNextRef : discardLostNextRef,
+      );
+
+      if (currentHandPos && discardPos && card) {
+        anims.push({
+          card,
+          from: currentHandPos,
+          to: discardPos,
+          cardSize: "small",
+          flip: wonTopic ? undefined : "toBack",
+          cardsPerRow: cardsPerRow.other,
+        });
+      }
+    }
+
+    // Animate topic to discard
+    const topicCard = await measureRef(topicRef);
+    const discardPos = await measureRef(discardLostNextRef);
+
+    if (topicCard && discardPos && game.visit.debateTopic) {
+      anims.push({
+        card: game.visit.debateTopic,
+        from: topicCard,
+        to: discardPos,
+        cardSize: "small",
+        flip: "toBack",
+        cardsPerRow: cardsPerRow.topic,
+        delay: 150,
+      });
+    }
+
+    if (anims.length > 0) {
+      await animateCards(anims);
+    }
 
     setGame((prev) => {
       if (!prev.visit || prev.visit.debateTopic === undefined) return prev;
 
       const debateTopic = prev.visit.debateTopic;
-      const won = wonDebate(card, debateTopic, prev.visit.trumpSuit);
 
       let discardLost = prev.discardLost;
       let discardWon = prev.discardWon;
@@ -168,7 +219,7 @@ export default function TheEmissary() {
       let hand = prev.hand.filter((c) => c.id !== card.id);
       let debateRecord = prev.visit.debateRecord;
 
-      if (won) {
+      if (wonTopic) {
         wins += 1;
         discardWon = [...discardWon, card];
         discardLost = [...discardLost, { ...debateTopic, faceUp: false }];
@@ -359,7 +410,7 @@ export default function TheEmissary() {
           to: topicPos,
           cardSize: "small",
           flip: "toFace",
-          cardsPerRow: cardsPerRow.other,
+          cardsPerRow: cardsPerRow.debates,
         },
       ]);
     }
@@ -428,7 +479,6 @@ export default function TheEmissary() {
     for (let i = 0; i < hand.length; i++) {
       const beforeEl = handRefs.current[i];
       const newPosIndex = orderedHand.findIndex((c) => c.id === hand[i].id);
-      console.log({ newPosIndex });
       const afterEl = handRefs.current[newPosIndex];
       if (beforeEl && afterEl) {
         const beforePos = await measureRef({ current: beforeEl });
@@ -447,8 +497,6 @@ export default function TheEmissary() {
         }
       }
     }
-
-    console.log(anims);
 
     if (anims.length > 0) {
       await animateCards(anims);
@@ -526,12 +574,44 @@ export default function TheEmissary() {
   }
 
   async function discardCardsMatchingTrump() {
+    const anims: CardAnimationParams[] = [];
+
+    const trumpSuit = game.visit?.trumpSuit;
+    const hand = game.hand.filter((c) => c.suit !== trumpSuit);
+    const cardsToDiscard = game.hand.filter((c) => c.suit === trumpSuit);
+
+    for (let i = 0; i < cardsToDiscard.length; i++) {
+      const card = cardsToDiscard[i];
+      const cardIndex = game.hand.findIndex(
+        (c) => c.id === cardsToDiscard[i].id,
+      );
+      const cardEl = handRefs.current[cardIndex];
+
+      if (cardEl) {
+        const currentHandPos = await measureRef({ current: cardEl });
+        const discardPos = await measureRef(discardLostNextRef);
+
+        if (currentHandPos && discardPos && card) {
+          anims.push({
+            card,
+            from: currentHandPos,
+            to: discardPos,
+            cardSize: "small",
+            flip: "toBack",
+            cardsPerRow: cardsPerRow.other,
+            delay: 100,
+          });
+        }
+      }
+    }
+
+    if (anims.length > 0) {
+      await animateCards(anims);
+    }
+
     setGame((prev) => {
       if (!prev.visit) return prev;
 
-      const trumpSuit = prev.visit?.trumpSuit;
-      const hand = prev.hand.filter((c) => c.suit !== trumpSuit);
-      const cardsToDiscard = prev.hand.filter((c) => c.suit === trumpSuit);
       const draw = [...cardsToDiscard, ...prev.draw];
       const handSize = Math.max(prev.handSize - cardsToDiscard.length, 0);
 
@@ -595,8 +675,6 @@ export default function TheEmissary() {
       };
     });
   }
-
-  console.log(game);
 
   return (
     <GameWrapper

@@ -22,7 +22,7 @@ export const DebateRecord = ({ handSize, visit }: DebateRecordProps) => {
         {
           position: "relative",
           zIndex: 1,
-          backgroundColor: Colors.K900,
+          backgroundColor: Colors.K875,
           borderRadius: 8,
           paddingHorizontal: 12,
           height: debateRecordsHeight,

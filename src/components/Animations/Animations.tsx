@@ -96,8 +96,40 @@ const AnimatedCard = ({
   }, [delay, duration, params.card.id, progress, onComplete]);
 
   const animatedStyle = useAnimatedStyle(() => {
-    let translateX = interpolate(progress.value, [0, 1], [from.x, to.x]);
-    let translateY = interpolate(progress.value, [0, 1], [from.y, to.y]);
+    // Get dimensions, using to dimensions as fallback
+    const fromWidth = from.width ?? to.width ?? 0;
+    const fromHeight = from.height ?? to.height ?? 0;
+    const toWidth = to.width ?? 0;
+    const toHeight = to.height ?? 0;
+
+    // Interpolate dimensions to handle smooth size transitions
+    const currentWidth = interpolate(
+      progress.value,
+      [0, 1],
+      [fromWidth, toWidth],
+    );
+    const currentHeight = interpolate(
+      progress.value,
+      [0, 1],
+      [fromHeight, toHeight],
+    );
+
+    // Calculate where the CENTER of the element should be at each point
+    const centerX = interpolate(
+      progress.value,
+      [0, 1],
+      [from.x + fromWidth / 2, to.x + toWidth / 2],
+    );
+    const centerY = interpolate(
+      progress.value,
+      [0, 1],
+      [from.y + fromHeight / 2, to.y + toHeight / 2],
+    );
+
+    // Position element so its center is at (centerX, centerY)
+    // Since element is at (left: 0, top: 0), we translate to center it
+    let translateX = centerX - currentWidth / 2;
+    let translateY = centerY - currentHeight / 2;
 
     // Apply parabolic arcs if specified
     if (params.arcX) {
@@ -123,11 +155,6 @@ const AnimatedCard = ({
         )
       : 0;
 
-    const scale =
-      from.width && to.width
-        ? interpolate(progress.value, [0, 1], [1, to.width / from.width])
-        : 1;
-
     const rotationZ =
       from.rotation || to.rotation
         ? interpolate(
@@ -141,17 +168,16 @@ const AnimatedCard = ({
       position: "absolute",
       left: 0,
       top: 0,
-      width: to.width,
-      height: to.height,
+      width: currentWidth,
+      height: currentHeight,
       opacity,
       transform: [
         { translateX },
         { translateY },
-        { scale },
         { rotateZ: `${rotationZ}deg` },
         { rotateY: `${rotationY}deg` },
       ],
-      transformOrigin: flip ? "center center" : "top left",
+      transformOrigin: "center center",
       zIndex:
         progress.value > 0.5
           ? (to.zIndex ?? from.zIndex ?? 100)
@@ -208,6 +234,7 @@ const AnimatedCard = ({
           cardsPerRow={params.cardsPerRow}
           card={{ ...params.card, faceUp: true }}
           cardSize={params.cardSize}
+          style={[{ width: "100%", height: "100%" }]}
         />
       </Animated.View>
 
@@ -216,6 +243,7 @@ const AnimatedCard = ({
           cardsPerRow={params.cardsPerRow}
           card={{ ...params.card, faceUp: false }}
           cardSize={params.cardSize}
+          style={[{ width: "100%", height: "100%" }]}
         />
       </Animated.View>
     </Animated.View>

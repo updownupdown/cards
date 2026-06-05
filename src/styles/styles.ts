@@ -15,7 +15,7 @@ export const Colors = {
   btnGreen: "#26ff93",
 
   // Accents
-  accentBlue: "#6fe9ff",
+  accentBlue: "#83deee",
   accentRed: "#CE3566",
   accentGreen: "#26ff93",
 
@@ -32,8 +32,8 @@ export const Colors = {
   win: "#03B491",
   lose: "#CE3566",
   favoriteStar: "#ff922d",
-  suitsRed: "#CD3D50",
-  suitsBlack: "#23292F",
+  suitsRed: "#D52A41",
+  suitsBlack: "#313C3F",
   suitsColoredDiamonds: "#AF75CA",
   suitsColoredHearts: "#D4725A",
   suitsColoredClubs: "#77B15D",

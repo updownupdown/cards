@@ -81,7 +81,7 @@ export const EmissaryHand = ({
         style={[
           ...cardBlock,
           {
-            backgroundColor: Colors.K900,
+            backgroundColor: Colors.K875,
           },
         ]}
       >
