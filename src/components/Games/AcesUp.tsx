@@ -97,7 +97,7 @@ function evaluateEndState(stock: PlayingCard[], piles: PlayingCard[][]) {
 }
 
 export default function AcesUp() {
-  const isLoaded = useGameLoading();
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
   const [game, setGame] = useState<AcesUpState>(setup);
   const [selectedPile, setSelectedPile] = useState<number | undefined>(
     undefined,
@@ -310,6 +310,8 @@ export default function AcesUp() {
 
   return (
     <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

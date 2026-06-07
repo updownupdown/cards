@@ -98,7 +98,7 @@ function evaluateEnd(state: MonteCarloState) {
 }
 
 export default function MonteCarlo() {
-  const isLoaded = useGameLoading();
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
   const { animateCards, measureRef, isAnimating, animatingCardIds } =
     useAnimations();
 
@@ -326,6 +326,8 @@ export default function MonteCarlo() {
 
   return (
     <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

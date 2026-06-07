@@ -199,7 +199,7 @@ function computeScore(grid: PlayingCard[][]): ScoreBySuit {
 }
 
 export default function Skyway() {
-  const isLoaded = useGameLoading();
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
 
   const [game, setGame] = useState<SkywayState>(initState);
   const [selectedMarket, setSelectedMarket] = useState<number | null>(null);
@@ -268,6 +268,8 @@ export default function Skyway() {
 
   return (
     <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
       ended={game.ended}
       won={won}
       reset={reset}

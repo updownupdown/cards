@@ -151,7 +151,7 @@ function totalFoundations(foundations: Foundations) {
 }
 
 export default function Penguin() {
-  const isLoaded = useGameLoading();
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
 
   const [game, setGame] = useState<PenguinState>(setup);
   const [selected, setSelected] = useState<Selection>(null);
@@ -247,6 +247,8 @@ export default function Penguin() {
 
   return (
     <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

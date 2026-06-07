@@ -20,6 +20,7 @@ export const Colors = {
   accentGreen: "#26ff93",
 
   // Card select colours
+  cardSelectNone: "#00000000",
   cardSelectRed: "#e0485c",
   cardSelectBlue: "#7bd5ff",
   cardSelectPurple: "#bb55ff",

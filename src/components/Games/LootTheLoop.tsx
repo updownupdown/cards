@@ -99,7 +99,7 @@ function setup(): LoopState {
 
 export default function LootTheLoop() {
   const { animateCards, measureRef, isAnimating } = useAnimations();
-  const isLoaded = useGameLoading();
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
   const { contentRadius } = useContentWidth();
   const { width: cardWidth, height: cardHeight } = useCardSize(
     cardsPerRow.loop,
@@ -359,6 +359,8 @@ export default function LootTheLoop() {
 
   return (
     <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

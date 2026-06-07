@@ -90,7 +90,7 @@ function hasAnyMove(state: SyndicateState) {
 }
 
 export default function Syndicate() {
-  const isLoaded = useGameLoading();
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
 
   const [game, setGame] = useState<SyndicateState>(setup);
   const [selectedRank, setSelectedRank] = useState<number | null>(null);
@@ -221,6 +221,8 @@ export default function Syndicate() {
 
   return (
     <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

@@ -101,7 +101,7 @@ function isExposed(card: TableauCard, tableau: TableauCard[]) {
 }
 
 export default function TriPeaks() {
-  const isLoaded = useGameLoading();
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
 
   const [game, setGame] = useState<GameState>(createInitialState);
   const [dragGhost, setDragGhost] = useState<DragGhost | null>(null);
@@ -263,7 +263,14 @@ export default function TriPeaks() {
   const ghostTop = dragGhost ? dragGhost.origin.y - boardOrigin.y : 0;
 
   return (
-    <GameWrapper ended={won} won={won} reset={resetGame} isLoaded={isLoaded}>
+    <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
+      ended={won}
+      won={won}
+      reset={resetGame}
+      isLoaded={isLoaded}
+    >
       <View
         ref={boardRef}
         onLayout={updateBoardOrigin}

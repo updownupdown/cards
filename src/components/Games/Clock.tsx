@@ -49,7 +49,7 @@ function setup(): ClockState {
 }
 
 export default function Clock() {
-  const isLoaded = useGameLoading();
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
 
   const { animateCards, measureRef, animatingCardIds } = useAnimations();
   const { width: cardWidth, height: cardHeight } = useCardSize(cardsPerRow);
@@ -61,8 +61,6 @@ export default function Clock() {
   function reset() {
     setGame(setup());
   }
-
-  console.log(game);
 
   async function revealCardAtPileIndex(pileIndex: number) {
     if (game.ended || game.piles.length === 0) {
@@ -249,6 +247,8 @@ export default function Clock() {
 
   return (
     <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

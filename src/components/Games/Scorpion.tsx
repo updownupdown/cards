@@ -116,7 +116,7 @@ function evaluate(state: ScorpionState) {
 type Selection = { column: number; index: number } | null;
 
 export default function Scorpion() {
-  const isLoaded = useGameLoading();
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
 
   const [game, setGame] = useState<ScorpionState>(setup);
   const [selected, setSelected] = useState<Selection>(null);
@@ -211,6 +211,8 @@ export default function Scorpion() {
 
   return (
     <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

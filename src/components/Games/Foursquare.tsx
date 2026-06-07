@@ -177,7 +177,7 @@ function has4x4AllFaceUp(piles: Pile[]) {
 }
 
 export default function Foursquare() {
-  const isLoaded = useGameLoading();
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
 
   const [game, setGame] = useState<GameState>(setup);
   const [message, setMessage] = useState("Place the current restaurant.");
@@ -246,6 +246,8 @@ export default function Foursquare() {
 
   return (
     <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

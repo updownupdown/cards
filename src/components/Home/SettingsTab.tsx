@@ -1,14 +1,17 @@
-import React from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { textStyles } from "@/styles/textStyles";
+import { DEFAULT_GLOBAL_SETTINGS, resetGameSettings } from "@/data/game-menu";
+import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { flexStyles } from "@/styles/flexStyles";
 import { homeStyles } from "@/styles/homeStyles";
-import { useGlobalSettings } from "@/hooks/useGlobalSettings";
+import { textStyles } from "@/styles/textStyles";
+import React from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Button } from "../Button/Button";
 import { SettingControl } from "../common/SettingControl";
-import { ThemeName } from "@/data/game-menu";
+import { useToast } from "../common/Toast";
 
 export const SettingsTab = () => {
   const { settings, updateSettings, isLoading } = useGlobalSettings();
+  const showToast = useToast();
 
   if (isLoading) {
     return null; // Or a loading indicator
@@ -38,6 +41,15 @@ export const SettingsTab = () => {
           value={settings.showHints}
           type="boolean"
           onChange={(val) => updateSettings({ showHints: val })}
+        />
+
+        <Button
+          onPress={() => {
+            updateSettings(DEFAULT_GLOBAL_SETTINGS);
+            resetGameSettings();
+            showToast("Settings have been reset");
+          }}
+          text="Reset Settings"
         />
       </View>
     </ScrollView>

@@ -22,6 +22,7 @@ type CalculationState = {
   stock: PlayingCard[];
   foundations: PlayingCard[][];
   wastes: PlayingCard[][];
+  started: boolean;
   ended: boolean;
   won: boolean;
 };
@@ -33,7 +34,7 @@ function nextRankValue(card: PlayingCard, step: number) {
   return (rankValue(card) + step) % 13;
 }
 
-function setup(): CalculationState {
+function setup(firstSetup = false): CalculationState {
   const deck = shuffle(createDeck());
   const foundations: PlayingCard[][] = [[], [], [], []];
   const wastes: PlayingCard[][] = [[], [], [], []];
@@ -51,6 +52,7 @@ function setup(): CalculationState {
     stock: deck,
     foundations,
     wastes,
+    started: !firstSetup,
     ended: false,
     won: false,
   };
@@ -78,14 +80,21 @@ function anyFoundationPlayable(
 }
 
 export default function Calculation() {
-  const isLoaded = useGameLoading();
-  const [game, setGame] = useState<CalculationState>(setup);
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
+
+  const [game, setGame] = useState<CalculationState>(setup(true));
   const { animateCards, isAnimating, measureRef, animatingCardIds } =
     useAnimations();
 
   function reset() {
     setGame(setup());
   }
+
+  useEffect(() => {
+    if (showIntro === false) {
+      setGame((prev) => ({ ...prev, started: true }));
+    }
+  }, [showIntro]);
 
   const topStockCard = useMemo(() => {
     return game.stock.length ? game.stock[game.stock.length - 1] : undefined;
@@ -129,6 +138,8 @@ export default function Calculation() {
 
   // Turn over draw card
   useEffect(() => {
+    if (!game.started) return;
+
     // Evaluate win/lose conditions
     const totalOnFoundations = game.foundations.reduce(
       (sum, pile) => sum + pile.length,
@@ -166,7 +177,7 @@ export default function Calculation() {
     ) {
       turnOverStockCard();
     }
-  }, [game]);
+  }, [game, showIntro]);
 
   // Move from stock to waste pile
   async function moveStockToWaste(wastePileIndex: number) {
@@ -279,6 +290,8 @@ export default function Calculation() {
 
   return (
     <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}
@@ -353,6 +366,18 @@ export default function Calculation() {
             (nothingSelected && hasTopCard) || // No selected card, this pile has a top card
             thisIsSelected; // This is the currently selected card
 
+          function selectedColor() {
+            if (!isEnabled) {
+              return "none";
+            } else if (stockIsSelected) {
+              return "green";
+            } else if (hasTopCard) {
+              return "blue";
+            } else {
+              return "none";
+            }
+          }
+
           return (
             <Deck
               key={`calc-found-${i}`}
@@ -370,9 +395,7 @@ export default function Calculation() {
               countPosition="above"
               isSelected={selectedCard?.id === topWasteCard?.id}
               isDisabled={!isEnabled || isAnimating}
-              selectColor={
-                isEnabled ? (stockIsSelected ? "green" : "blue") : "none"
-              }
+              selectColor={selectedColor()}
               onPress={() => {
                 if (thisIsSelected) {
                   setSelectedCard(undefined);

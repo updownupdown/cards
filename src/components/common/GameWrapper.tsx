@@ -13,6 +13,8 @@ interface Props {
   winLoseMessage?: string;
   reset: () => void;
   children: React.ReactNode;
+  showIntro: boolean | undefined;
+  setShowIntro: (show: boolean | undefined) => void;
 }
 
 export const GameWrapper = ({
@@ -23,6 +25,8 @@ export const GameWrapper = ({
   winLoseMessage,
   reset,
   children,
+  showIntro,
+  setShowIntro,
 }: Props) => {
   const { clearAnimations } = useAnimations();
 
@@ -44,6 +48,8 @@ export const GameWrapper = ({
         isLoaded={isLoaded}
         winLoseMessage={winLoseMessage}
         score={score}
+        showIntro={showIntro}
+        setShowIntro={setShowIntro}
       />
 
       <View style={[layoutStyles.gameArea]}>

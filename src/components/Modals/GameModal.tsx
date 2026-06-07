@@ -12,13 +12,67 @@ import {
 } from "../../data/game-menu";
 import { Button } from "../Button/Button";
 import ModalFull from "./ModalFull";
-import { Colors } from "@/styles/styles";
+import { Colors, FontWeight } from "@/styles/styles";
 import { flexStyles } from "@/styles/flexStyles";
+import { Icon, IconName } from "@/icons";
 
 export const EMPTY_STATS: GameStats = {
   attempts: 0,
   wins: 0,
   losses: 0,
+};
+
+interface ModalSectionProps {
+  title?: string;
+  iconName?: IconName;
+  children: React.ReactNode;
+}
+
+const ModalSection = ({ children, title, iconName }: ModalSectionProps) => {
+  return (
+    <View
+      style={[
+        flexStyles.colCentered,
+        flexStyles.fullWidth,
+        flexStyles.gap20,
+        {
+          alignItems: "flex-start",
+        },
+      ]}
+    >
+      {(title || iconName) && (
+        <View
+          style={[
+            flexStyles.rowCentered,
+            flexStyles.fullWidth,
+            {
+              borderTopWidth: 1,
+              borderTopColor: Colors.K800,
+              paddingTop: 20,
+            },
+          ]}
+        >
+          {title && (
+            <Text
+              style={[
+                flexStyles.flex1,
+                {
+                  fontFamily: FontWeight[500],
+                  fontSize: 22,
+                  color: Colors.K500,
+                },
+              ]}
+            >
+              {title}
+            </Text>
+          )}
+          {iconName && <Icon name={iconName} size={32} color={Colors.K500} />}
+        </View>
+      )}
+
+      {children}
+    </View>
+  );
 };
 
 type Props = {
@@ -30,9 +84,9 @@ export default function GameModal({ onClose }: Props) {
   const info = getGameInfo(pathname);
   const { settings, updateSettings, isLoading } = useGameSettings(pathname);
 
-  const rules = info.rules ?? info.howToPlay;
-
   if (isLoading || settings === undefined) return null;
+
+  const howToPlayText = info.howToPlay ?? info.briefRules;
 
   return (
     <>
@@ -54,7 +108,9 @@ export default function GameModal({ onClose }: Props) {
             <Text style={textStyles.h1}>{info.title}</Text>
 
             {/* By Line */}
-            {info.byLine && <Text style={textStyles.h5}>{info.byLine}</Text>}
+            {info.byLine && (
+              <Text style={modalStyles.byLine}>{info.byLine}</Text>
+            )}
           </View>
 
           {/* Stats and favourite */}
@@ -103,14 +159,23 @@ export default function GameModal({ onClose }: Props) {
             />
           </View>
 
-          {/* Rules */}
-          <View style={modalStyles.rules}>
-            {rules.map((line) => (
+          {info.about && (
+            <ModalSection>
+              {info.about.map((line) => (
+                <Text key={line} style={modalStyles.aboutText}>
+                  {line}
+                </Text>
+              ))}
+            </ModalSection>
+          )}
+
+          <ModalSection title="How to Play" iconName="instructions">
+            {howToPlayText.map((line) => (
               <Text key={line} style={modalStyles.rulesText}>
                 {line}
               </Text>
             ))}
-          </View>
+          </ModalSection>
 
           {/* <View style={[modalStyles.gameSettings]}>
             <Text style={textStyles.h4}>Game Settings</Text>
@@ -148,9 +213,9 @@ export default function GameModal({ onClose }: Props) {
         </ScrollView>
 
         {/* Play button */}
-        <View style={modalStyles.modalFooter}>
+        {/* <View style={modalStyles.modalFooter}>
           <Button onPress={onClose} size="large" text="Play" fullWidth />
-        </View>
+        </View> */}
       </ModalFull>
     </>
   );

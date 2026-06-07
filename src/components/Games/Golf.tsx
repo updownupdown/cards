@@ -81,7 +81,7 @@ function evaluateEnd(state: GolfState) {
 }
 
 export default function Golf() {
-  const isLoaded = useGameLoading();
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
   const [game, setGame] = useState<GolfState>(setup);
   const { animateCards, measureRef, isAnimating } = useAnimations();
   const [animatingCard, setAnimatingCard] = useState<{
@@ -223,6 +223,8 @@ export default function Golf() {
 
   return (
     <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

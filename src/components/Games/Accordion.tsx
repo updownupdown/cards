@@ -44,7 +44,7 @@ function hasAnyMove(line: PlayingCard[]) {
 }
 
 export default function Accordion() {
-  const isLoaded = useGameLoading();
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
   const { animateCards, measureRef, isAnimating } = useAnimations();
   const cardRefs = useRef<(View | null)[]>([]);
 
@@ -179,6 +179,8 @@ export default function Accordion() {
 
   return (
     <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

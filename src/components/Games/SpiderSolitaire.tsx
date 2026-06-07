@@ -81,7 +81,7 @@ function tryCollectRun(pile: PlayingCard[]) {
 }
 
 export default function SpiderSolitaire() {
-  const isLoaded = useGameLoading();
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
 
   const [game, setGame] = useState<GameState>(createInitialState);
   const [selected, setSelected] = useState<Selection>(null);
@@ -326,7 +326,14 @@ export default function SpiderSolitaire() {
   const ghostTop = dragGhost ? dragGhost.origin.y - boardOrigin.y : 0;
 
   return (
-    <GameWrapper ended={won} won={won} reset={resetGame} isLoaded={isLoaded}>
+    <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
+      ended={won}
+      won={won}
+      reset={resetGame}
+      isLoaded={isLoaded}
+    >
       <View
         ref={boardRef}
         onLayout={updateBoardOrigin}

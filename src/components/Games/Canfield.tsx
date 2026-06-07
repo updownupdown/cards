@@ -192,7 +192,7 @@ function totalOnFoundations(foundations: Foundations) {
 }
 
 export default function Canfield() {
-  const isLoaded = useGameLoading();
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
 
   const [game, setGame] = useState<CanfieldState>(setup);
   const [message, setMessage] = useState(
@@ -334,6 +334,8 @@ export default function Canfield() {
 
   return (
     <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

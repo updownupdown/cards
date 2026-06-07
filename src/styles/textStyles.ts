@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 
 export const textStyles = StyleSheet.create({
   default: {
-    fontSize: 16,
+    fontSize: 17,
     fontFamily: FontWeight[300],
     color: Colors.K200,
   },

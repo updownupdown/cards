@@ -7,7 +7,6 @@ import {
 import { buttonStyles, headerButtonIconSize } from "@/styles/buttonStyles";
 import { layoutStyles } from "@/styles/layoutStyles";
 import { Colors, FontWeight } from "@/styles/styles";
-import { textStyles } from "@/styles/textStyles";
 import { router, usePathname } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Text, View } from "react-native";
@@ -25,6 +24,8 @@ interface Props {
   score?: number | string;
   winLoseMessage?: string;
   reset: () => void;
+  showIntro: boolean | undefined;
+  setShowIntro: (show: boolean | undefined) => void;
 }
 
 export const GameMenus = ({
@@ -34,6 +35,8 @@ export const GameMenus = ({
   score,
   winLoseMessage,
   reset,
+  showIntro,
+  setShowIntro,
 }: Props) => {
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);
@@ -63,11 +66,17 @@ export const GameMenus = ({
     recordResult(pathname, won).catch(() => {});
   }, [ended, won, pathname]);
 
+  if (!gameInfo) return null;
+
   return (
     <>
       <LoadingOverlay isLoaded={!!isLoaded} />
 
-      <GameIntro setShowMenu={setShowMenu} isLoaded={!!isLoaded} />
+      <GameIntro
+        showIntro={showIntro}
+        setShowIntro={setShowIntro}
+        setShowMenu={setShowMenu}
+      />
 
       <WinLoseBox
         gameEnded={ended}

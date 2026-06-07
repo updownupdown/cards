@@ -102,7 +102,7 @@ function canPlaceOnFoundation(card: PlayingCard, destinationTop?: PlayingCard) {
 }
 
 export default function FreeCell() {
-  const isLoaded = useGameLoading();
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
 
   const [game, setGame] = useState<GameState>(createInitialState);
   const [selected, setSelected] = useState<Selection>(null);
@@ -409,7 +409,14 @@ export default function FreeCell() {
   const ghostTop = dragGhost ? dragGhost.origin.y - boardOrigin.y : 0;
 
   return (
-    <GameWrapper ended={won} won={won} reset={resetGame} isLoaded={isLoaded}>
+    <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
+      ended={won}
+      won={won}
+      reset={resetGame}
+      isLoaded={isLoaded}
+    >
       <View
         ref={boardRef}
         onLayout={updateBoardOrigin}

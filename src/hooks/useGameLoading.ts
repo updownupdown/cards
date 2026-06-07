@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { useGameSettings } from "./useGameSettings";
+import { usePathname } from "expo-router";
+import { normalizeGamePath } from "@/data/game-menu";
 
 export function useGameLoading() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -11,5 +14,18 @@ export function useGameLoading() {
     return () => clearTimeout(timer);
   }, []);
 
-  return isLoaded;
+  const [showIntro, setShowIntro] = useState<boolean | undefined>(undefined);
+
+  const pathname = normalizeGamePath(usePathname());
+  const { settings: gameSettings } = useGameSettings(pathname);
+
+  useEffect(() => {
+    if (gameSettings === undefined) {
+    }
+    if (gameSettings?.showIntro !== undefined) {
+      setShowIntro(gameSettings?.showIntro);
+    }
+  }, [gameSettings]);
+
+  return { isLoaded, showIntro, setShowIntro };
 }

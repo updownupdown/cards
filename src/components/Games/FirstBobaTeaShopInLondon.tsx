@@ -62,7 +62,7 @@ function totalInQueues(queues: PlayingCard[][]) {
 }
 
 export default function FirstBobaTeaShopInLondon() {
-  const isLoaded = useGameLoading();
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
 
   const [game, setGame] = useState<BobaState>(setup);
   const [message, setMessage] = useState(
@@ -146,6 +146,8 @@ export default function FirstBobaTeaShopInLondon() {
 
   return (
     <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

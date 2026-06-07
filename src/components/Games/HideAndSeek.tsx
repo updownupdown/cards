@@ -117,7 +117,7 @@ function playmatePos(index: number) {
 }
 
 export default function HideAndSeek() {
-  const isLoaded = useGameLoading();
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
 
   const [game, setGame] = useState<GameState>(setup);
   const [message, setMessage] = useState(
@@ -228,7 +228,14 @@ export default function HideAndSeek() {
   const won = allRevealed && score >= 20;
 
   return (
-    <GameWrapper ended={game.ended} won={won} reset={reset} isLoaded={isLoaded}>
+    <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
+      ended={game.ended}
+      won={won}
+      reset={reset}
+      isLoaded={isLoaded}
+    >
       <Text style={textStyles.default}>
         Deck: {game.deck.length}
         <br />

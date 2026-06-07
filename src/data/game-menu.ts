@@ -68,14 +68,7 @@ export function normalizeGamePath(pathname: string) {
 
 export function getGameInfo(pathname: string): GameMenuInfo {
   const key = normalizeGamePath(pathname);
-  return (
-    GAMES_DATA[key] ?? {
-      title: "Game",
-      howToPlay: [
-        "Use the in-game controls to complete that game's objective.",
-      ],
-    }
-  );
+  return GAMES_DATA[key];
 }
 
 export function sortHomeGames(
@@ -126,6 +119,10 @@ export async function loadGameSettingsMap(): Promise<GameSettingsMap> {
 
 export async function saveGameSettingsMap(map: GameSettingsMap) {
   await AsyncStorage.setItem(GAME_SETTINGS_STORAGE_KEY, JSON.stringify(map));
+}
+
+export async function resetGameSettings() {
+  await AsyncStorage.setItem(GAME_SETTINGS_STORAGE_KEY, "");
 }
 
 export function getGameSettings(

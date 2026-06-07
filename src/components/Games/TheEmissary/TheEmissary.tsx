@@ -42,7 +42,7 @@ const cardsPerRow = {
   other: 8,
 };
 
-function setup(): TheEmissaryGame {
+function setup(firstGame = false): TheEmissaryGame {
   const deck = shuffle(createDeck());
   const rulers = shuffle(
     deck.filter((c) => c.rank === "K" || c.rank === "Q").slice(0, 8),
@@ -71,6 +71,7 @@ function setup(): TheEmissaryGame {
     discardLost: [],
     hand: [],
     visit: null,
+    started: !firstGame,
     ended: false,
     won: false,
     winLoseMessage: "",
@@ -82,8 +83,8 @@ function setup(): TheEmissaryGame {
 }
 
 export default function TheEmissary() {
-  const isLoaded = useGameLoading();
-  const [game, setGame] = useState<TheEmissaryGame>(setup);
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
+  const [game, setGame] = useState<TheEmissaryGame>(setup(true));
   const { width: cardWidth } = useCardSize(cardsPerRow.topic);
   const [selectedAdvisor, setSelectedAdvisor] = useState<
     PlayingCard | undefined
@@ -108,6 +109,12 @@ export default function TheEmissary() {
     setGame(setup());
     setSelectedAdvisor(undefined);
   }
+
+  useEffect(() => {
+    if (showIntro === false) {
+      setGame((prev) => ({ ...prev, started: true }));
+    }
+  }, [showIntro]);
 
   function startVisit(kingdomId: number) {
     setGame((prev) => {
@@ -134,10 +141,16 @@ export default function TheEmissary() {
 
   // Refill hand after visit
   useEffect(() => {
-    if (game.ended || game.hand.length > 0 || game.visit !== null) return;
+    if (
+      !game.started ||
+      game.ended ||
+      game.hand.length > 0 ||
+      game.visit !== null
+    )
+      return;
 
     setGame((prev) => ({ ...prev, neededToHand: defaultHandSize }));
-  }, [game.visit, game.hand]);
+  }, [game.visit, game.hand, game.started]);
 
   function wonDebate(
     card: PlayingCard,
@@ -678,6 +691,8 @@ export default function TheEmissary() {
 
   return (
     <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

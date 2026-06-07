@@ -139,7 +139,7 @@ const buildAnim = (
 };
 
 export default function Area52() {
-  const isLoaded = useGameLoading();
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
   const [game, setGame] = useState<AreaState>(() => ensureQueue(setup()));
   const [selectedDefenders, setSelectedDefenders] = useState<number[]>([]);
   const showToast = useToast();
@@ -588,6 +588,8 @@ export default function Area52() {
 
   return (
     <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

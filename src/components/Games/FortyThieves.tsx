@@ -100,7 +100,7 @@ function hasAnyLegalMove(state: FortyState) {
 }
 
 export default function FortyThieves() {
-  const isLoaded = useGameLoading();
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
 
   const [game, setGame] = useState<FortyState>(setup);
   const [message, setMessage] = useState(
@@ -197,6 +197,8 @@ export default function FortyThieves() {
 
   return (
     <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

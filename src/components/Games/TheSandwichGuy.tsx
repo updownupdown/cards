@@ -93,7 +93,7 @@ function replacementCount(cards: PlayingCard[]) {
 }
 
 export default function TheSandwichGuy() {
-  const isLoaded = useGameLoading();
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
 
   const [game, setGame] = useState<SandwichState>(initState);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -102,29 +102,8 @@ export default function TheSandwichGuy() {
   const discardRef = useRef<View>(null);
   const handRefs = useRef<(View | null)[]>([]);
 
-  const { animateCards, measureRef, isAnimating } = useAnimations();
-
-  const buildAnim = (
-    idPrefix: string,
-    card: PlayingCard,
-    from: any,
-    to: any,
-    duration = animDuration,
-    delay = 0,
-    flip?: "toFace" | "toBack",
-    keepAlive = true,
-  ): CardAnimationParams => {
-    return {
-      card,
-      cardsPerRow,
-      from,
-      to,
-      duration,
-      delay,
-      flip,
-      keepAlive,
-    };
-  };
+  const { animateCards, measureRef, isAnimating, animatingCardIds } =
+    useAnimations();
 
   const selectedCards = useMemo(
     () =>
@@ -150,7 +129,7 @@ export default function TheSandwichGuy() {
   }
 
   function toggleSelect(id: string) {
-    if (game.ended || isAnimating) return;
+    if (game.ended) return;
     setSelectedIds((prev) => {
       if (prev.includes(id)) {
         return prev.filter((entry) => entry !== id);
@@ -195,15 +174,13 @@ export default function TheSandwichGuy() {
         // Animate hand to discard
         if (handPos && discardPos) {
           await animateCards([
-            buildAnim(
-              `discard-${i}-${Date.now()}`,
+            {
               card,
-              handPos,
-              discardPos,
-              animDuration / 2,
-              0,
-              "toBack",
-            ),
+              from: handPos,
+              to: discardPos,
+              flip: "toBack",
+              cardsPerRow,
+            },
           ]);
         }
 
@@ -212,6 +189,7 @@ export default function TheSandwichGuy() {
           ...currentState,
           discard: [...currentState.discard, card],
         };
+
         setGame(currentState);
       }
     }
@@ -235,7 +213,7 @@ export default function TheSandwichGuy() {
     if (actuallyReplaced > 0) {
       showToast(`Sandwich served (${actuallyReplaced} new cards)`);
 
-      const drawAnimsPromises = [];
+      const anims: CardAnimationParams[] = [];
 
       for (let i = 0; i < actuallyReplaced; i++) {
         const drawn = deckCards.shift();
@@ -255,25 +233,22 @@ export default function TheSandwichGuy() {
         setGame(currentState);
 
         if (deckPos && handPos) {
-          const anim = animateCards([
-            buildAnim(
-              `draw-${i}-${Date.now()}`,
-              drawn,
-              deckPos,
-              handPos,
-              animDuration,
-              0,
-              "toFace",
-            ),
-          ]);
-          drawAnimsPromises.push(anim);
-
-          await new Promise((r) => setTimeout(r, 100)); // stagger
+          anims.push({
+            card: drawn,
+            from: deckPos,
+            to: handPos,
+            flip: "toFace",
+            cardsPerRow,
+            delay: 100 * i,
+            keepAlive: true,
+          });
         }
       }
 
-      // await all drawer animations
-      await Promise.all(drawAnimsPromises);
+      // await all draw animations
+      if (anims.length > 0) {
+        await animateCards(anims);
+      }
     }
 
     // Populate final hand slots
@@ -319,6 +294,8 @@ export default function TheSandwichGuy() {
 
   return (
     <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
       ended={game.ended}
       won={won}
       reset={reset}
@@ -380,7 +357,7 @@ export default function TheSandwichGuy() {
               }}
               isSelected={isSelected}
               cardsPerRow={cardsPerRow}
-              isPlaceholder={!card}
+              isPlaceholder={!card || animatingCardIds.includes(card.id)}
               card={card}
               selectColor={card ? selectColor(isSelected) : "none"}
             />

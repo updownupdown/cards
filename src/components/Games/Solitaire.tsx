@@ -200,7 +200,7 @@ function runTiming(
 }
 
 export default function Solitaire() {
-  const isLoaded = useGameLoading();
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
 
   const navigation = useNavigation();
 
@@ -782,7 +782,14 @@ export default function Solitaire() {
   const ghostTop = dragGhost ? dragGhost.origin.y - boardOrigin.y : 0;
 
   return (
-    <GameWrapper ended={won} won={won} reset={resetGame} isLoaded={isLoaded}>
+    <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
+      ended={won}
+      won={won}
+      reset={resetGame}
+      isLoaded={isLoaded}
+    >
       <View
         ref={boardRef}
         onLayout={updateBoardOrigin}

@@ -4,36 +4,36 @@ import { useGameSettings } from "@/hooks/useGameSettings";
 import { menuStyles } from "@/styles/menuStyles";
 import { textStyles } from "@/styles/textStyles";
 import { usePathname } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Animated, Text, View } from "react-native";
 import { Button } from "../Button/Button";
 import { SettingControl } from "./SettingControl";
 
 interface Props {
   setShowMenu: (show: boolean) => void;
-  isLoaded: boolean;
+  showIntro: boolean | undefined;
+  setShowIntro: (show: boolean | undefined) => void;
 }
 
-export function GameIntro({ isLoaded, setShowMenu }: Props) {
+export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);
 
-  const [showIntro, setShowIntro] = useState(false);
   const { settings: gameSettings, updateSettings: updateGameSettings } =
     useGameSettings(pathname);
 
   const { isRendered: renderIntro, opacity: introOpacity } = useFade(
-    showIntro,
+    showIntro === true,
     300,
   );
 
   useEffect(() => {
-    if (gameSettings?.showIntro) {
-      setShowIntro(true);
+    if (gameSettings !== undefined) {
+      setShowIntro(gameSettings.showIntro);
     }
   }, [gameSettings]);
 
-  return showIntro && renderIntro ? (
+  return renderIntro ? (
     <>
       {/* Overlay */}
       <Animated.View
@@ -45,7 +45,7 @@ export function GameIntro({ isLoaded, setShowMenu }: Props) {
         <View style={[menuStyles.introHowToPlay]}>
           <Text style={textStyles.h1}>How to Play</Text>
 
-          {gameInfo.howToPlay.map((info, key) => (
+          {gameInfo.briefRules.map((info, key) => (
             <Text key={`info-${key}`} style={[menuStyles.introHowToPlayText]}>
               {info}
             </Text>

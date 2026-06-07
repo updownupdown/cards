@@ -155,7 +155,7 @@ export default function DeadCenter() {
 
   const { animateCards, measureRef, animatingCardIds, isAnimating } =
     useAnimations();
-  const isLoaded = useGameLoading();
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
   const [game, setGame] = useState<GameState>(setup);
 
   function reset() {
@@ -500,6 +500,8 @@ export default function DeadCenter() {
 
   return (
     <GameWrapper
+      showIntro={showIntro}
+      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

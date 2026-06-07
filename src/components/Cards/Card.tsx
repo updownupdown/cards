@@ -182,6 +182,9 @@ export const Card = forwardRef<any, CardProps>(
 
     if (selectColor) {
       switch (selectColor) {
+        case "none":
+          colorValue = Colors.cardSelectNone;
+          break;
         case "red":
           colorValue = Colors.cardSelectRed;
           break;

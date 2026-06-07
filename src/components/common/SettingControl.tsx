@@ -1,10 +1,9 @@
-import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { textStyles } from "@/styles/textStyles";
-import { flexStyles } from "@/styles/flexStyles";
-import { Colors } from "@/styles/styles";
 import { Icon } from "@/icons";
 import { settingsStyles } from "@/styles/settingsStyles";
+import { Colors } from "@/styles/styles";
+import { textStyles } from "@/styles/textStyles";
+import React from "react";
+import { Pressable, Text, View } from "react-native";
 
 type SettingControlProps<T> = {
   label: string;

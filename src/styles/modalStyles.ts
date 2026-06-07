@@ -44,9 +44,26 @@ export const modalStyles = StyleSheet.create({
     padding: modalSidePadding,
   },
   scrollContent: {
-    flex: 1,
+    ...flexStyles.colCentered,
     padding: modalSidePadding,
+    paddingTop: 10,
+    paddingBottom: 40,
+    justifyContent: "space-evenly",
     gap: 30,
+    // Careful editing these styles below!
+    // Expand content when scrolling is needed, but don't shrink
+    flexGrow: 1,
+    // Stretch children elements by default, to fill width
+    alignItems: "stretch",
+    // Stretch self if needed
+    alignSelf: "stretch",
+  },
+
+  // By line
+  byLine: {
+    fontFamily: FontWeight[300],
+    fontSize: 15,
+    color: Colors.K500,
   },
 
   // Stats and favourite
@@ -79,6 +96,13 @@ export const modalStyles = StyleSheet.create({
     alignItems: "flex-start",
     paddingVertical: 12,
     gap: 20,
+  },
+
+  // Text
+  aboutText: {
+    fontSize: 17,
+    fontFamily: FontWeight[500],
+    color: Colors.K200,
   },
   rulesText: {
     fontSize: 17,
