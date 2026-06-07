@@ -18,10 +18,8 @@ export const layoutStyles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     fontFamily: FontWeight[500],
-    backgroundColor: Colors.background,
     userSelect: "none",
   },
-
   safeArea: {
     ...flexStyles.fullWidthHeight,
     flex: 1,
@@ -30,7 +28,6 @@ export const layoutStyles = StyleSheet.create({
     alignSelf: "center",
     maxWidth: MaxContentWidth + ContentSidePadding * 2,
     maxHeight: MaxContentHeight + ContentSidePadding * 2,
-    backgroundColor: Colors.background,
   },
   background: {
     width: "100%",
@@ -44,9 +41,10 @@ export const layoutStyles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
     height: headerHeight,
-    backgroundColor: Colors.background,
     paddingVertical: ContentSidePadding,
     paddingHorizontal: ContentSidePadding * 0.75,
+
+    backgroundColor: Colors.background,
     boxShadow: `0 0 20px ${rgba(Colors.background, 1)}`,
   },
   gameLoadingOverlay: {
@@ -66,7 +64,6 @@ export const layoutStyles = StyleSheet.create({
     ...flexStyles.fullWidth,
     flex: 1,
     justifyContent: "space-evenly",
-    backgroundColor: Colors.background,
     alignItems: "stretch",
   },
   gameAreaScroll: {

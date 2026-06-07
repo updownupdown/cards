@@ -180,7 +180,7 @@ export const EmissaryHand = ({
             isPlaceholder
             style={[
               {
-                width: 0,
+                height: 0,
                 overflow: "hidden",
                 marginRight: -12,
                 boxShadow: "unset",

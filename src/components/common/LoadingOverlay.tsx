@@ -21,7 +21,7 @@ export const LoadingOverlay = ({ isLoaded }: Props) => {
     }
   }, [isLoaded]);
 
-  return showLoadingOverlay && renderLoadingOverlay ? (
+  return renderLoadingOverlay ? (
     <Animated.View
       style={[layoutStyles.gameLoadingOverlay, { opacity: loadingOpacity }]}
     >

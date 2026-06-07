@@ -1,22 +1,20 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { flexStyles } from "@/styles/flexStyles";
 import { textStyles } from "@/styles/textStyles";
-import { useMemo, useRef, useState } from "react";
-import { Text, View } from "react-native";
-import { useAnimations } from "../Animations/Animations";
+import { useRef, useState } from "react";
+import { Text, View, ViewStyle } from "react-native";
+import { CardAnimationParams, useAnimations } from "../Animations/Animations";
 import { useCardSize } from "../Cards/Card";
 import { Deck } from "../Cards/Deck";
 import {
   createDeck,
-  numRanks,
-  RANK_VALUE,
+  rankValue,
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 
 const cardsPerRow = 8;
-const clockRadius = 140;
 
 type ClockState = {
   piles: PlayingCard[][];
@@ -41,7 +39,7 @@ function setup(): ClockState {
 
   return {
     piles,
-    nextPileIndex: 12,
+    nextPileIndex: 0,
     prevPileIndex: undefined,
     revealedKings: 0,
     revealedCards: 0,
@@ -53,217 +51,201 @@ function setup(): ClockState {
 export default function Clock() {
   const isLoaded = useGameLoading();
 
-  const { animateCards, isAnimating } = useAnimations();
+  const { animateCards, measureRef, animatingCardIds } = useAnimations();
+  const { width: cardWidth, height: cardHeight } = useCardSize(cardsPerRow);
 
   const [game, setGame] = useState<ClockState>(setup);
+
+  const pilesRefsCurrent = useRef<(View | null)[]>([]);
 
   function reset() {
     setGame(setup());
   }
 
-  const { width: cardWidth, height: cardHeight } = useCardSize(cardsPerRow);
+  console.log(game);
 
   async function revealCardAtPileIndex(pileIndex: number) {
-    if (game.ended) return;
-
-    // Flip over top card of at pileIndex
-    setGame((prev) => {
-      if (prev.ended || prev.piles.length === 0) return prev;
-
-      const clickedPile = prev.piles[pileIndex];
-      const clickedCard = clickedPile[clickedPile.length - 1];
-
-      // Make copy of clicked pile,
-      const newClickedPile = [...clickedPile];
-      // and update the last card so it's face up.
-      newClickedPile[newClickedPile.length - 1] = {
-        ...clickedCard,
-        faceUp: true,
-      };
-
-      // Make copy of all piles,
-      const newPiles = [...prev.piles];
-      // and update the current pile with the modified one.
-      newPiles[pileIndex] = newClickedPile;
-
-      return {
-        ...prev,
-        piles: newPiles,
-      };
-    });
-
-    // Animate previous card to clicked pile
-    if (game.prevPileIndex !== undefined) {
-      // Skip animation for now; hard to figure out
-      // const prevPile = game.piles[game.prevPileIndex];
-      // const prevCard = prevPile[prevPile.length - 1];
-      // const nextPileIndex = pileIndex;
-
-      // let centerX = 0,
-      //   centerY = 0,
-      //   radius = clockRadius;
-
-      // if (clockContainerRef.current) {
-      //   await new Promise<void>((resolve) => {
-      //     clockContainerRef.current?.measure(
-      //       (x, y, width, height, pageX, pageY) => {
-      //         centerX = pageX + width / 2;
-      //         centerY = pageY + height / 2;
-      //         resolve();
-      //       },
-      //     );
-      //   });
-      // }
-      // const prevPos = getPileCardPosition(
-      //   game.prevPileIndex,
-      //   centerX,
-      //   centerY,
-      //   radius,
-      // );
-      // const nextPos = getPileCardPosition(
-      //   nextPileIndex,
-      //   centerX,
-      //   centerY,
-      //   radius,
-      // );
-
-      // if (prevPos && nextPos) {
-      //   await animateCards([
-      //     {
-      //       id: `discard-${Date.now()}`,
-      //       cardInfo: {
-      //         rank: prevCard.rank,
-      //         suit: prevCard.suit,
-      //         cardsPerRow,
-      //         cardSize: "small",
-      //       },
-      //       from: prevPos,
-      //       to: nextPos,
-      //       duration: 1000,
-      //       keepAlive: false,
-      //     },
-      //   ]);
-      // }
-
-      // Move previous card to current pile index
-      setGame((prev) => {
-        if (prev.prevPileIndex === undefined) return prev;
-
-        const newPrevPile = prev.piles[prev.prevPileIndex];
-        const cardToTransfer = newPrevPile[newPrevPile.length - 1];
-
-        newPrevPile.pop();
-
-        const newPiles = [...prev.piles];
-        newPiles[prev.prevPileIndex] = newPrevPile;
-        newPiles[pileIndex].unshift(cardToTransfer);
-
-        return { ...prev, piles: newPiles };
-      });
+    if (game.ended || game.piles.length === 0) {
+      return;
     }
 
-    // Update indexes, kings, and check for win/lose conditions
-    setGame((prev) => {
-      if (prev.ended || prev.piles.length === 0) return prev;
+    const anims: CardAnimationParams[] = [];
 
-      const clickedPile = prev.piles[pileIndex];
+    // GAME: Move previous card to current pile index (unless already at that pile)
+    if (game.prevPileIndex !== undefined && game.prevPileIndex !== pileIndex) {
+      const prevCard =
+        game.piles[game.prevPileIndex][
+          game.piles[game.prevPileIndex].length - 1
+        ];
+      const prevEl = pilesRefsCurrent.current[game.prevPileIndex];
+      const nextEl = pilesRefsCurrent.current[pileIndex];
+      if (prevEl && nextEl && prevCard) {
+        const prevPos = await measureRef({ current: prevEl });
+        const nextPos = await measureRef({ current: nextEl });
+        if (prevPos && nextPos) {
+          anims.push({
+            card: prevCard,
+            from: { ...prevPos, opacity: 1 },
+            to: { ...nextPos, opacity: 0 },
+            cardsPerRow,
+            cardSize: "small",
+            duration: 500,
+            keepAlive: true,
+          });
+        }
+      }
+    }
+
+    // ANIMATION - Flip top card over
+    const cardEl = pilesRefsCurrent.current[pileIndex];
+
+    if (cardEl && game.prevPileIndex !== pileIndex) {
+      const clickedPileAnim = game.piles[pileIndex];
+      const clickedCardAnim = clickedPileAnim[clickedPileAnim.length - 1];
+
+      const cardPos = await measureRef({ current: cardEl });
+      if (cardPos) {
+        anims.push({
+          card: clickedCardAnim,
+          from: cardPos,
+          to: cardPos,
+          cardsPerRow,
+          flip: "toFace",
+          cardSize: "small",
+          duration: 500,
+          delay: game.prevPileIndex === undefined ? 0 : 400,
+        });
+      }
+    }
+
+    if (anims.length > 0) {
+      await animateCards(anims);
+    }
+
+    setGame((prev) => {
+      const piles = [...prev.piles];
+
+      let clickedPile = game.piles[pileIndex];
       const clickedCard = clickedPile[clickedPile.length - 1];
 
+      // Move prev top card to clicked pile
+      if (prev.prevPileIndex !== undefined) {
+        let prevPile = piles[prev.prevPileIndex];
+        const prevPileTop = prevPile[prevPile.length - 1];
+
+        prevPile.pop();
+
+        if (prev.prevPileIndex === pileIndex) {
+          clickedPile = prevPile;
+        } else {
+          clickedPile = [{ ...prevPileTop, faceUp: true }, ...clickedPile];
+        }
+      }
+
+      // Flip over card on clicked pile
+      const cardToTurnIndex = clickedPile.length - 1;
+      const cardToTurn = clickedPile[cardToTurnIndex];
+      clickedPile[cardToTurnIndex] = { ...cardToTurn, faceUp: true };
+
       // Update the next pile index
-      let nextSourceIndex = RANK_VALUE[clickedCard.rank];
-      nextSourceIndex -= 1;
-      if (nextSourceIndex === -1) nextSourceIndex = numRanks - 1;
+      const clickedCardRank = rankValue(clickedCard);
+      const nextPileIndex = clickedCardRank === 13 ? 0 : clickedCardRank;
 
       // Increment revealed kings
-      let revealedKings = prev.revealedKings;
-      if (clickedCard.rank === "K") {
-        revealedKings += 1;
-      }
+      const revealedKings =
+        prev.revealedKings + (clickedCard.rank === "K" ? 1 : 0);
 
       const revealedCards = prev.revealedCards + 1;
-
-      // Check for win or lose conditions
-      let lost = false;
-      let won = false;
-
-      if (revealedKings === 4) {
-        lost = true;
-      } else if (revealedCards === 52) {
-        won = true;
-      }
+      const won = revealedCards === 52;
+      const lost = revealedKings === 4;
+      const ended = won || lost;
 
       return {
         ...prev,
-        ended: lost || won,
-        win: won,
+        piles,
+        ended,
+        won,
         prevPileIndex: pileIndex,
-        nextPileIndex: nextSourceIndex,
+        nextPileIndex,
         revealedCards,
         revealedKings,
       };
     });
   }
 
-  const decks = useMemo(
-    () =>
-      Array.from({ length: game.piles.length }).map((_, pileIndex) => {
-        let style = {};
+  function getPileStyles(pileIndex: number) {
+    const style: ViewStyle = {
+      position: "absolute",
+      zIndex: 10,
+    };
 
-        if (pileIndex !== 12) {
-          const angle = ((pileIndex + 1) % 12) * 30;
-          style = {
-            position: "absolute",
-            transform: [
-              { rotate: `${angle}deg` },
-              { translateY: clockRadius * -1 },
-            ],
-          };
-        } else {
-          style = { position: "absolute" }; // Center pile
-        }
+    let left = 0;
+    let bottom = 0;
 
-        const deckCards = game.piles[pileIndex];
+    switch (pileIndex) {
+      case 12:
+      case 6:
+        left = 50;
+        break;
+      case 1:
+      case 5:
+      case 7:
+      case 11:
+        left = 65;
+        break;
+      case 2:
+      case 4:
+      case 8:
+      case 10:
+        left = 78;
+        break;
+      case 3:
+      case 9:
+        left = 90;
+        break;
+    }
 
-        const pressable = pileIndex === game.nextPileIndex && !game.ended;
+    switch (pileIndex) {
+      case 12:
+      case 6:
+        bottom = 90;
+        break;
+      case 1:
+      case 11:
+      case 5:
+      case 7:
+        bottom = 82;
+        break;
+      case 2:
+      case 10:
+      case 4:
+      case 8:
+        bottom = 70;
+        break;
+      case 3:
+      case 9:
+        bottom = 50;
+        break;
+    }
 
-        return (
-          <View
-            key={`clock-pile-${pileIndex}`}
-            style={[
-              {
-                alignItems: "center",
-                justifyContent: "center",
-              },
-              style,
-            ]}
-          >
-            <Deck
-              cards={deckCards}
-              cardsPerRow={cardsPerRow}
-              isSelected={pileIndex === game.nextPileIndex && !game.ended}
-              onPress={() => {
-                pressable ? revealCardAtPileIndex(pileIndex) : undefined;
-              }}
-              cardSize="small"
-              fan="verticalDown"
-              largeFan="all"
-              selectColor={
-                pressable
-                  ? "green"
-                  : pileIndex === game.prevPileIndex
-                    ? "blue"
-                    : "none"
-              }
-              isDisabled={isAnimating}
-            />
-          </View>
-        );
-      }),
-    [game],
-  );
+    if (pileIndex > 6) {
+      left = 100 - left;
+    }
 
-  // Ref for the game area to measure its center
-  const clockContainerRef = useRef<View>(null);
+    if (pileIndex > 3 && pileIndex < 9) {
+      bottom = 100 - bottom;
+    }
+
+    if (pileIndex === 0) {
+      left = 50;
+      bottom = 50;
+    }
+
+    style.bottom = `${bottom}%`;
+    style.left = `${left}%`;
+
+    return style;
+  }
 
   return (
     <GameWrapper
@@ -292,73 +274,48 @@ export default function Clock() {
         </Text>
       </View>
 
-      {/* <View style={styles.revealRow}>
-          <View style={styles.lastCardWrap}>
-            {game.lastRevealed ? (
-              <Card
-                suit={game.lastRevealed.suit}
-                rank={game.lastRevealed.rank}
-                cardsPerRow={5}
-                cardSize="small"
-              />
-            ) : (
-              <View style={styles.placeholder} />
-            )}
-          </View>
-        </View> */}
-
       <View
         style={[
           {
-            height: 380,
+            position: "relative",
+            aspectRatio: 1,
             width: "100%",
             alignItems: "center",
             justifyContent: "center",
-            marginVertical: 10,
+            marginLeft: cardWidth * -0.5,
+            marginTop: cardHeight * 0.5,
           },
-          // debugStyles.borderBeige,
         ]}
-        ref={clockContainerRef}
       >
-        {decks}
-      </View>
+        {game.piles.map((cards, pileIndex) => {
+          const style = getPileStyles(pileIndex);
+          const pressable =
+            isLoaded && pileIndex === game.nextPileIndex && !game.ended;
 
-      {/* <Button
-          onPress={revealStep}
-          disabled={game.ended}
-          text="Reveal Next"
-          fullWidth
-          size="large"
-        /> */}
+          return (
+            <View key={`clock-pile-${pileIndex}`} style={[style]}>
+              <Deck
+                refTopCurrent={(el) => {
+                  pilesRefsCurrent.current[pileIndex] = el;
+                }}
+                cards={cards}
+                cardsPerRow={cardsPerRow}
+                onPress={
+                  pressable ? () => revealCardAtPileIndex(pileIndex) : undefined
+                }
+                cardSize="small"
+                fan={pileIndex === 0 ? "horizontalRight" : "verticalDown"}
+                limitFan={pileIndex !== 0}
+                largeFan={pileIndex === 0 ? "extra-wide" : undefined}
+                selectColor={pressable ? "green" : "none"}
+                hideTopCard={animatingCardIds.includes(
+                  cards[cards.length - 1].id,
+                )}
+              />
+            </View>
+          );
+        })}
+      </View>
     </GameWrapper>
   );
-}
-
-// Returns the absolute position (x, y) and rotation (deg) for the center of the first card in the pile
-function getPileCardPosition(
-  pileIndex: number,
-  centerX: number,
-  centerY: number,
-  radius: number,
-) {
-  // For 12 outer piles, arrange in a circle; for center pile (12), no rotation/offset
-  if (pileIndex === 12) {
-    return {
-      x: centerX,
-      y: centerY,
-      rotation: 0,
-    };
-  }
-
-  const modifiedRadius = 200;
-
-  const angleDeg = ((pileIndex + 1) % 12) * 30;
-  const angleRad = (angleDeg * Math.PI) / 180;
-  const x = centerX + modifiedRadius * Math.sin(angleRad);
-  const y = centerY - modifiedRadius * Math.cos(angleRad);
-  return {
-    x,
-    y,
-    rotation: angleDeg,
-  };
 }

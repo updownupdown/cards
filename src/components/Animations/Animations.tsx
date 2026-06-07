@@ -14,6 +14,8 @@ import Animated, {
   withDelay,
   withTiming,
   interpolate,
+  Easing,
+  EasingFunction,
 } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 import { Card, CardSizes } from "../Cards/Card";
@@ -47,6 +49,7 @@ export type CardAnimationParams = {
   arcX?: number; // rightward arc height in pixels (parabolic path)
   arcY?: number; // upward arc height in pixels (parabolic path)
   keepAlive?: boolean; // if true, the card won't be unmounted automatically when the animation ends
+  easing?: EasingFunction;
 };
 
 export type MeasuredRef = {
@@ -83,13 +86,13 @@ const AnimatedCard = ({
 }) => {
   const progress = useSharedValue(0);
 
-  const { from, to, duration = 250, delay = 0, flip } = params;
+  const { from, to, duration = 400, delay = 0, flip } = params;
 
   // Trigger animation on mount
   useEffect(() => {
     progress.value = withDelay(
       delay,
-      withTiming(1, { duration }, () => {
+      withTiming(1, { duration, easing: Easing.inOut(Easing.ease) }, () => {
         scheduleOnRN(onComplete, params.card.id);
       }),
     );
@@ -146,7 +149,6 @@ const AnimatedCard = ({
         ? interpolate(progress.value, [0, 1], [from.opacity, to.opacity])
         : 1;
 
-    // For flipping
     const rotationY = flip
       ? interpolate(
           progress.value,
@@ -368,6 +370,7 @@ export const AnimationProvider = ({ children }: { children: ReactNode }) => {
       }}
     >
       {children}
+
       {animations.length > 0 && (
         <View
           style={{

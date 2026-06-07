@@ -13,6 +13,7 @@ import { Stack } from "expo-router";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ToastProvider } from "@/components/common/Toast";
+import { Colors } from "@/styles/styles";
 
 export default function Layout() {
   const [fontsLoaded] = useFonts({
@@ -29,22 +30,21 @@ export default function Layout() {
   }
 
   return (
-    <>
-      <ToastProvider>
-        <AnimationProvider>
-          <View style={[layoutStyles.appView]}>
-            <SafeAreaView style={[layoutStyles.safeArea]}>
-              <Stack
-                screenOptions={{
-                  headerShown: false,
-                  gestureEnabled: false,
-                  fullScreenGestureEnabled: false,
-                }}
-              />
-            </SafeAreaView>
-          </View>
-        </AnimationProvider>
-      </ToastProvider>
-    </>
+    <ToastProvider>
+      <AnimationProvider>
+        <View style={[layoutStyles.appView]}>
+          <SafeAreaView style={[layoutStyles.safeArea]}>
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                gestureEnabled: false,
+                fullScreenGestureEnabled: false,
+                contentStyle: { backgroundColor: Colors.background },
+              }}
+            />
+          </SafeAreaView>
+        </View>
+      </AnimationProvider>
+    </ToastProvider>
   );
 }

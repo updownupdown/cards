@@ -46,7 +46,7 @@ export const GameWrapper = ({
         score={score}
       />
 
-      <View style={layoutStyles.gameArea}>
+      <View style={[layoutStyles.gameArea]}>
         <ScrollView
           contentContainerStyle={layoutStyles.gameAreaScroll}
           showsVerticalScrollIndicator={false}
