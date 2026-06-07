@@ -71,21 +71,6 @@ export function getGameInfo(pathname: string): GameMenuInfo {
   return GAMES_DATA[key];
 }
 
-export function sortHomeGames(
-  entries: HomeGameEntry[],
-  favorites: Set<string>,
-) {
-  const normalize = (path: string) => normalizeGamePath(path);
-  const alpha = [...entries].sort((a, b) => a.title.localeCompare(b.title));
-
-  const starred = alpha.filter((entry) => favorites.has(normalize(entry.path)));
-  const nonStarred = alpha.filter(
-    (entry) => !favorites.has(normalize(entry.path)),
-  );
-
-  return [...starred, ...nonStarred];
-}
-
 // Global Settings
 
 export async function loadGlobalSettings(): Promise<GlobalSettings> {

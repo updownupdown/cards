@@ -13,6 +13,8 @@ export const modalBorderRadius = 20;
 
 const modalSidePadding = 30;
 
+export const modalShadow = `1px 2px 10px ${rgba(Colors.K900, 0.6)}, 2px 4px 20px ${rgba(Colors.K900, 0.4)}`;
+
 export const modalStyles = StyleSheet.create({
   modalBackdrop: {
     flex: 1,
@@ -26,9 +28,10 @@ export const modalStyles = StyleSheet.create({
     maxWidth: MaxContentWidth,
     height: "100%",
     maxHeight: MaxContentHeight,
-    backgroundColor: rgba(Colors.K900, 1),
+    backgroundColor: Colors.K900,
     borderRadius: modalBorderRadius,
     overflow: "hidden",
+    boxShadow: modalShadow,
   },
   modalHeader: {
     flexDirection: "row",
@@ -52,7 +55,6 @@ export const modalStyles = StyleSheet.create({
     gap: 30,
     // Careful editing these styles below!
     // Expand content when scrolling is needed, but don't shrink
-    flexGrow: 1,
     // Stretch children elements by default, to fill width
     alignItems: "stretch",
     // Stretch self if needed

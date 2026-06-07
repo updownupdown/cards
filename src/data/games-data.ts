@@ -1,5 +1,17 @@
 import React from "react";
 
+export enum GameCategory {
+  Isaludo = "Isaludo",
+  ClassicSolitaire = "ClassicSolitaire",
+  Beta = "Beta",
+}
+
+export const GameCategoryNames: Record<GameCategory, string> = {
+  [GameCategory.Isaludo]: "Isaludo Collection (by Wil Su)",
+  [GameCategory.ClassicSolitaire]: "Classic Solitaire",
+  [GameCategory.Beta]: "Beta",
+};
+
 export type GameMenuInfo = {
   title: string;
   enabled?: boolean;
@@ -7,15 +19,44 @@ export type GameMenuInfo = {
   briefRules: string[];
   howToPlay?: string[];
   byLine?: string;
+  category: GameCategory;
 };
 
 export const GAMES_DATA: Record<string, GameMenuInfo> = {
+  // ============================== //
+  // ========== Isaludo ========== //
+  // ============================== //
+  // Area 52
+  "/area-52": {
+    title: "Area 52",
+    category: GameCategory.Isaludo,
+    byLine: "Game design by Wil Su",
+    briefRules: [
+      "Survive both waves of alien invaders before running out of defenders to win.",
+      "Single attacks must be of greater value and opposite color to the attacker.",
+      "Dual attacks must add up to exactly the attacker's value. During wave 2, defenders matching the attacker's color are lost.",
+      "Use sacrifices as a last resort.",
+    ],
+    howToPlay: [
+      "To win, you must survive both waves of alien invaders before running out of defenders.",
+      "Each wave is made up of a series of attacks. Choose one or two defenders to tackle the lead attacker.",
+      "Single attacks can be done with a defender of greater value and opposite color to the attacker. After a single attack, the defender is lost, and is replaced with the attacker.",
+      "Dual attacks can be done with two cards whose total value equals the attacker's value. No attackers are lost during dual attacks, except during the second wave, where defenders matching the attacker's color are lost.",
+      "Sacrifices can be used to move the lead attacker to the back of the attacker deck; the sacrified defender is lost.",
+    ],
+    about: [
+      "Strategically command your defenders to fight off two waves of invading aliens.",
+      "This game is adapted from Wil Su's Isaludo collection.",
+    ],
+  },
+  // The Sandwich Guy
   "/the-sandwich-guy": {
     title: "The Sandwich Guy",
+    category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     about: [
       "Make sandwiches with ingredients available in your food truck. The quality of each sandwich determines how many ingredients will refill your prep area. Sell out your entire inventory to win!",
-      "This game is closely adapted from Wil Su's Isaludo collection.",
+      "This game is adapted from Wil Su's Isaludo collection.",
     ],
     briefRules: [
       "Select three cards with equally-spaced rank values to create a sandwich.",
@@ -30,18 +71,98 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     ],
     // howToPlay: ["Lorem ipsum"],
   },
-  // Status: animated and looks good. need thorough testing
+  // Dead Center
+  "/dead-center": {
+    title: "Dead Center",
+    category: GameCategory.Isaludo,
+    byLine: "Game design by Wil Su",
+    briefRules: [
+      "Kill all 12 zombies surrounding your 3x3 cabin before the deck runs out.",
+      "Cards can be placed on a card of: equal value, the same color and greater value, or of opposite color and less value.",
+      "Placed cards may kill adjacent zombies depending on the rank and value of the other cards in that line (see instructions).",
+    ],
+    about: [
+      "Your 3x3 cabin is surrounded by zombies! Plan ahead: your ability to attack depends on surrounding cards!",
+    ],
+    howToPlay: [
+      "You must eliminate all zombies before running out of cards to win.",
+      "During each turn, you may reveal a zombie if able, draw and play a card on a valid pile, and kill an adjacent zombie if you can.",
+      "A drawn cards can be placed on top of an existing pile if that card is either: of equal value, of the same color and greater value, or of opposite color and less value, than a pile's top card.",
+      "You may only kill a zombie adjacent to the last card placed, in addition to meeting the requirements for that zombie's rank. Those requirements depend on the two support cards that are in the same line as the zombie and the last played card. In addition, both support cards must add up to 10 (Jokers and Aces are worth 1).",
+      "To kill a King, both support cards must match the King's suit.",
+      "To kill a Queen, both support cards must match the Queen's suit.",
+      "There are no restrictions to kill Jacks.",
+    ],
+  },
+  // Skyway
+  "/skyway": {
+    title: "Skyway",
+    category: GameCategory.Isaludo,
+    byLine: "Game design by Wil Su",
+    briefRules: [
+      "Win by creating paths of length 5 or more for each suit.",
+      "Create paths by placing cards of increasing value, within the same suit, in adjacent grid cells.",
+      "Build grid cells of at most 3 cards tall by drawing cards from the market over 3 full passes of the deck.",
+    ],
+    about: [
+      "You are a city planner in charge of designing a new traffic interchange. To be successful, you must create paths of sufficient length for each suit.",
+    ],
+    howToPlay: [
+      "Each turn, you may draw one set of cards from the market. The other cards are moved to the discard pile. You will go through the full deck three times.",
+      "You can place cards on any grid cell, but only the top 3 cards will be kept.",
+      "Create paths by placing cards of increasing value, within the same suit, in adjacent grid cells.",
+      "To win, you must create paths of length 5 or more for each suit.",
+    ],
+  },
+  // Loot the Loop
+  "/loot-the-loop": {
+    title: "Loot the Loop",
+    category: GameCategory.Isaludo,
+    byLine: "Game design by Wil Su",
+    briefRules: [
+      "Capture valid loop cards into the score pile.",
+      "Protect scoring tempo by avoiding loop breaks.",
+      "Win by reaching the game score objective before deck exhaustion.",
+    ],
+  },
+  // The Emissary
+  "/the-emissary": {
+    title: "The Emissary",
+    category: GameCategory.Isaludo,
+    byLine: "Game design by Wil Su",
+    // enabled: false,
+    briefRules: [
+      "Win by successfully debating all 8 kindgoms.",
+      "You must win the exact number of required debates for each kingdom (1 to 8).",
+      "Collect and use advisors wisely.",
+    ],
+    about: [
+      "You are a young noble, send by your father to gather support from eight neighboring kingdoms. You must engage in a series of debates to win over each kingdom's ruler.",
+    ],
+    howToPlay: [
+      "You must visit each kingdom, and win the exact number of debates indicated by the number of that kingdom (1 through 8).",
+      "You start each visit with 8 cards, and four advisors (Jacks). When winning over a kingdom, its ruler joins you as an advisor (Queen/King), but you may only use their services once, whereas your own advisors can be used anew each kingdom.",
+      "When ready, select the next topic to debate. When able, you must be a card of the same suit.",
+      "Each ruler has a trump suit (its own). To win a debate, you must play a card of higher value and of the same suit, or any card of the trump suit.",
+    ],
+  },
+  // ======================================= //
+  // ========== Classic Solitaire ========== //
+  // ======================================= //
+  // Monte Carlo
   "/monte-carlo": {
     title: "Monte Carlo",
+    category: GameCategory.ClassicSolitaire,
     briefRules: [
       "Flip over any adjacent, equal-rank pairs.",
       "Consolidate the deck to remove flipped cards and refill the grid.",
       "Win by clearing all cards.",
     ],
   },
-  // Status:
+  // Calculation
   "/calculation": {
     title: "Calculation",
+    category: GameCategory.ClassicSolitaire,
     briefRules: [
       "Build four foundations with increasing step intervals of 1, 2, 3, and 4.",
       "Stock pile cards can be moved to any waste piles, or any suitable foundation.",
@@ -49,26 +170,20 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Win by placing all cards (up to Kings) on foundations.",
     ],
   },
-  // Status - needs testing
-  "/dead-center": {
-    title: "Dead Center",
-    byLine: "Game design by Wil Su",
-    briefRules: [
-      "Kill all 12 zombies surrounding your 3x3 cabin before the deck runs out.",
-      "Cards can be placed on a card of equal value; same color and greater value; or opposite color and less value.",
-      "Placed cards may kill adjacent zombies depending on the rank and value of the other cards on the same line.",
-    ],
-  },
+  // Accordion
   "/accordion": {
     title: "Accordion",
+    category: GameCategory.ClassicSolitaire,
     briefRules: [
       "Move a card onto another card 1 or 3 spaces to its left, if their suit or rank matches.",
       "Cards can match if they wrap around to a previous row, given they are still 1 or 3 spaces apart.",
       "Win by reducing the grid down to one card.",
     ],
   },
+  // Aces Up
   "/aces-up": {
     title: "Aces Up",
+    category: GameCategory.ClassicSolitaire,
     enabled: true,
     briefRules: [
       "Discard a top card from a foundation when a higher card of the same suit is visible.",
@@ -76,25 +191,48 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Win by ending with only the four Aces.",
     ],
   },
-  "/area-52": {
-    title: "Area 52",
-    byLine: "Game design by Wil Su",
+  // Golf
+  "/golf": {
+    title: "Golf Solitaire",
+    category: GameCategory.ClassicSolitaire,
     briefRules: [
-      "Survive each wave by placing cards according to the scenario rule.",
-      "Use limited actions efficiently before drawing deeper into the deck.",
-      "Clear all required wave objectives to win.",
+      "Play only top tableau cards one rank up or down from waste top.",
+      "Use stock draws when no tableau play is possible.",
+      "Clear all tableau cards to win.",
     ],
   },
+  // ============================== //
+  // ========== Beta ========== //
+  // ============================== //
+  // Clock
   "/clock": {
     title: "Clock Solitaire",
+    category: GameCategory.Beta,
     briefRules: [
       "Place revealed cards to matching clock positions by rank.",
       "Continue turns by revealing from the pile at each destination.",
       "Losing occurs if the fourth King appears before completion.",
     ],
   },
+  // Foursquare
+  "/foursquare": {
+    title: "Foursquare",
+    category: GameCategory.Beta,
+    byLine: "Game design by Wil Su",
+    briefRules: [
+      "Manage four zones with distinct placement constraints.",
+      "Sequence cards so each zone can continue progressing.",
+      "Complete all target zone conditions before deck lockout.",
+    ],
+  },
+  // ============================== //
+  // ========== Disabled ========== //
+  // ============================== //
+
+  // Freecell
   "/freecell": {
     title: "FreeCell",
+    category: GameCategory.ClassicSolitaire,
     enabled: false,
     briefRules: [
       "Move all cards to the foundations from Ace up to King by suit.",
@@ -102,8 +240,10 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Use free cells and empty columns as temporary storage.",
     ],
   },
+  // Spider Solitaire
   "/spider-solitaire": {
     title: "Spider Solitaire",
+    category: GameCategory.ClassicSolitaire,
     enabled: false,
     briefRules: [
       "Build cards down by rank in tableau columns.",
@@ -111,8 +251,10 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Deal new rows when needed, but only when every column has cards.",
     ],
   },
+  // Pyramid
   "/pyramid": {
     title: "Pyramid",
+    category: GameCategory.ClassicSolitaire,
     enabled: false,
     briefRules: [
       "Clear the pyramid by pairing exposed cards that total 13.",
@@ -120,17 +262,10 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Use stock and waste cards to make needed pairs.",
     ],
   },
-  "/skyway": {
-    title: "Skyway",
-    byLine: "Game design by Wil Su",
-    briefRules: [
-      "Play cards onto lanes following each lane's build rule.",
-      "Use draws and transfers to keep lanes advancing.",
-      "Avoid board lockups that leave no legal lane actions.",
-    ],
-  },
+  // TriPeaks
   "/tripeaks": {
     title: "TriPeaks",
+    category: GameCategory.ClassicSolitaire,
     enabled: false,
     briefRules: [
       "Remove exposed cards that are one rank higher or lower than waste top.",
@@ -138,8 +273,10 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Draw from stock when no legal tableau move is available.",
     ],
   },
+  // The First Boba Tea Shop in London
   "/the-first-boba-tea-shop-in-london": {
     title: "The First Boba Tea Shop in London",
+    category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     enabled: false,
     briefRules: [
@@ -148,18 +285,10 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Complete all required stacks to win.",
     ],
   },
-  "/foursquare": {
-    title: "Foursquare",
-    byLine: "Game design by Wil Su",
-    enabled: false,
-    briefRules: [
-      "Manage four zones with distinct placement constraints.",
-      "Sequence cards so each zone can continue progressing.",
-      "Complete all target zone conditions before deck lockout.",
-    ],
-  },
+  // Solitaire
   "/solitaire": {
     title: "Solitaire",
+    category: GameCategory.ClassicSolitaire,
     enabled: false,
     briefRules: [
       "Move all cards to the four foundations by suit from Ace to King.",
@@ -167,17 +296,10 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Only Kings can fill an empty tableau column.",
     ],
   },
-  "/loot-the-loop": {
-    title: "Loot the Loop",
-    byLine: "Game design by Wil Su",
-    briefRules: [
-      "Capture valid loop cards into the score pile.",
-      "Protect scoring tempo by avoiding loop breaks.",
-      "Win by reaching the game score objective before deck exhaustion.",
-    ],
-  },
+  // Syndicate
   "/syndicate": {
     title: "Syndicate",
+    category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     enabled: false,
     briefRules: [
@@ -186,8 +308,10 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Game ends when objective is met or no legal move remains.",
     ],
   },
+  // Hide and Seek
   "/hide-and-seek": {
     title: "Hide and Seek",
+    category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     enabled: false,
     briefRules: [
@@ -196,26 +320,10 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Finish by uncovering and resolving the final hidden sets.",
     ],
   },
-  "/the-emissary": {
-    title: "The Emissary",
-    byLine: "Game design by Wil Su",
-    // enabled: false,
-    briefRules: [
-      "Progress through kingdoms by completing each local objective.",
-      "Balance risk and board control between kingdoms.",
-      "Win by completing all required kingdoms.",
-    ],
-  },
-  "/golf": {
-    title: "Golf Solitaire",
-    briefRules: [
-      "Play only top tableau cards one rank up or down from waste top.",
-      "Use stock draws when no tableau play is possible.",
-      "Clear all tableau cards to win.",
-    ],
-  },
+  // Scorpion
   "/scorpion": {
     title: "Scorpion",
+    category: GameCategory.ClassicSolitaire,
     enabled: false,
     briefRules: [
       "Build same-suit descending runs in tableau columns.",
@@ -223,8 +331,10 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Win after completing four full King-to-Ace suit runs.",
     ],
   },
+  // Canfield
   "/canfield": {
     title: "Canfield",
+    category: GameCategory.ClassicSolitaire,
     enabled: false,
     briefRules: [
       "Build foundations by suit from the starting base rank.",
@@ -232,8 +342,10 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Use reserve and stock strategically to avoid dead ends.",
     ],
   },
+  // Penguin
   "/penguin": {
     title: "Penguin",
+    category: GameCategory.ClassicSolitaire,
     enabled: false,
     briefRules: [
       "Build foundations by suit upward from the beak rank.",
@@ -241,8 +353,10 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Use the reserve (flipper) cards to unlock key moves.",
     ],
   },
+  // Forty Thieves
   "/forty-thieves": {
     title: "Forty Thieves",
+    category: GameCategory.Isaludo,
     enabled: false,
     briefRules: [
       "Build foundations up by suit from Ace.",

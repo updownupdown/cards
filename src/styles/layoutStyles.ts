@@ -19,6 +19,7 @@ export const layoutStyles = StyleSheet.create({
     justifyContent: "center",
     fontFamily: FontWeight[500],
     userSelect: "none",
+    backgroundColor: Colors.background,
   },
   safeArea: {
     ...flexStyles.fullWidthHeight,

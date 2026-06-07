@@ -4,34 +4,12 @@ import { flexStyles } from "./flexStyles";
 import { modalBorderRadius } from "./modalStyles";
 
 export const menuStyles = StyleSheet.create({
-  // Intro
-  intro: {
-    ...flexStyles.colCentered,
-    position: "absolute",
-    zIndex: 10,
-    bottom: 0,
-    right: 0,
-    left: 0,
-    minHeight: 200,
-
-    margin: ContentSidePadding,
-    padding: 30,
-    gap: 30,
-
-    borderRadius: modalBorderRadius,
-    backgroundColor: rgba(Colors.K900, 0.97),
-  },
-  introHowToPlay: {
-    ...flexStyles.colCentered,
-    ...flexStyles.fullWidth,
-    gap: 20,
-  },
   introHowToPlayText: {
     ...flexStyles.colCentered,
     ...flexStyles.fullWidth,
     alignItems: "flex-start",
-    fontSize: 18,
-    fontFamily: FontWeight[400],
+    fontSize: 17,
+    fontFamily: FontWeight[300],
     color: Colors.K200,
   },
 

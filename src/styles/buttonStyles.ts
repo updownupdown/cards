@@ -128,6 +128,7 @@ export const buttonStyles = StyleSheet.create({
     backgroundColor: "unset",
   },
   closeModalButton: {
+    marginLeft: "auto",
     backgroundColor: Colors.K850,
     borderRadius: headerButtonSize / 2,
   },

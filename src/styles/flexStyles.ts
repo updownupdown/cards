@@ -38,11 +38,23 @@ export const flexStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  rowStart: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+  },
   colCentered: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+  },
+  colStart: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
   },
   fullWidthHeight: {
     width: "100%",
