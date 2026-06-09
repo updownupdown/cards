@@ -20,8 +20,6 @@ export function useGameLoading() {
   const { settings: gameSettings } = useGameSettings(pathname);
 
   useEffect(() => {
-    if (gameSettings === undefined) {
-    }
     if (gameSettings?.showIntro !== undefined) {
       setShowIntro(gameSettings?.showIntro);
     }

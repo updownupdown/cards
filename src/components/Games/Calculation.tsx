@@ -15,6 +15,7 @@ import {
 } from "../Cards/card-utils";
 import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
+import { useUndoHistory } from "@/hooks/useUndoHistory";
 
 const cardsPerRow = 4;
 
@@ -25,6 +26,10 @@ type CalculationState = {
   started: boolean;
   ended: boolean;
   won: boolean;
+};
+
+type GameSnapshot = {
+  game: CalculationState;
 };
 
 const START_RANKS: CardRank[] = ["A", "2", "3", "4"];
@@ -86,7 +91,17 @@ export default function Calculation() {
   const { animateCards, isAnimating, measureRef, animatingCardIds } =
     useAnimations();
 
+  const { saveUndoState, undo, canUndo, clearHistory } =
+    useUndoHistory<GameSnapshot>();
+  const handleUndo = () => {
+    const previousState = undo();
+    if (previousState) {
+      setGame(previousState.game);
+    }
+  };
+
   function reset() {
+    clearHistory();
     setGame(setup());
   }
 
@@ -181,6 +196,8 @@ export default function Calculation() {
 
   // Move from stock to waste pile
   async function moveStockToWaste(wastePileIndex: number) {
+    saveUndoState(structuredClone({ game }));
+
     setSelectedCard(undefined);
 
     const wasteEl = wastesNextRefs.current[wastePileIndex];
@@ -216,6 +233,8 @@ export default function Calculation() {
 
   async function moveCardToFoundation(foundationPileIndex: number) {
     if (!selectedCard) return;
+
+    saveUndoState(structuredClone({ game }));
 
     let cardFromStock = false;
     let cardFromWasteIndex: number | undefined;
@@ -301,6 +320,8 @@ export default function Calculation() {
           ? "All 52 cards are on the foundations."
           : "No legal moves remain."
       }
+      canUndo={canUndo}
+      handleUndo={handleUndo}
     >
       <View
         style={[

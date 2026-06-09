@@ -37,6 +37,10 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Dual attacks must add up to exactly the attacker's value. During wave 2, defenders matching the attacker's color are lost.",
       "Use sacrifices as a last resort.",
     ],
+    about: [
+      "Strategically command your defenders to fight off two waves of invading aliens.",
+      "This game is adapted from Wil Su's Isaludo collection.",
+    ],
     howToPlay: [
       "To win, you must survive both waves of alien invaders before running out of defenders.",
       "Each wave is made up of a series of attacks. Choose one or two defenders to tackle the lead attacker.",
@@ -44,24 +48,20 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Dual attacks can be done with two cards whose total value equals the attacker's value. No attackers are lost during dual attacks, except during the second wave, where defenders matching the attacker's color are lost.",
       "Sacrifices can be used to move the lead attacker to the back of the attacker deck; the sacrified defender is lost.",
     ],
-    about: [
-      "Strategically command your defenders to fight off two waves of invading aliens.",
-      "This game is adapted from Wil Su's Isaludo collection.",
-    ],
   },
   // The Sandwich Guy
   "/the-sandwich-guy": {
     title: "The Sandwich Guy",
     category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
-    about: [
-      "Make sandwiches with ingredients available in your food truck. The quality of each sandwich determines how many ingredients will refill your prep area. Sell out your entire inventory to win!",
-      "This game is adapted from Wil Su's Isaludo collection.",
-    ],
     briefRules: [
       "Select three cards with equally-spaced rank values to create a sandwich.",
       "A/J/Q/K are worth 1/11/12/13, and wrapping around A/K is allowed",
       "Use same suits, or same colors, for better hand refills.",
+    ],
+    about: [
+      "Make sandwiches with ingredients available in your food truck. The quality of each sandwich determines how many ingredients will refill your prep area. Sell out your entire inventory to win!",
+      "This game is adapted from Wil Su's Isaludo collection.",
     ],
     howToPlay: [
       "Select three cards with equally-spaced rank values to create a sandwich.",
@@ -83,6 +83,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     ],
     about: [
       "Your 3x3 cabin is surrounded by zombies! Plan ahead: your ability to attack depends on surrounding cards!",
+      "This game is adapted from Wil Su's Isaludo collection.",
     ],
     howToPlay: [
       "You must eliminate all zombies before running out of cards to win.",
@@ -92,6 +93,28 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "To kill a King, both support cards must match the King's suit.",
       "To kill a Queen, both support cards must match the Queen's suit.",
       "There are no restrictions to kill Jacks.",
+    ],
+  },
+  // Foursquare
+  "/foursquare": {
+    title: "Foursquare",
+    category: GameCategory.Isaludo,
+    byLine: "Game design by Wil Su",
+    briefRules: [
+      "Manage four zones with distinct placement constraints.",
+      "Sequence cards so each zone can continue progressing.",
+      "Complete all target zone conditions before deck lockout.",
+    ],
+    about: [
+      "As the major of Flavortown, you are responsible for the placement of new restaurants across the grid. New restaurants (cards) that are the lowest or highest quality (rank) within their row or column will cause other restaurants to go out of business, or open up to challenge the newcomer.",
+      "To win, you must manage to have 16 open restaurants (face up) within the 4x4 grid.",
+      "This game is adapted from Wil Su's Isaludo collection.",
+    ],
+    howToPlay: [
+      "Each turn, place the top card from the draw deck on a pile within the grid. You can start a new pile (as long as it's adjacent to an existing pile), or place a card on top of an existing pile (piles can have at most 4 cards).",
+      "After a card is placed, if that card is the highest or lowest of its row or column, the cards in that row or column are flipped (face up or down). The value of face down cards are not used to determined which cards must be flipped. Aces are worth 1.",
+      "At any given time, you must not have more than 4 piles whose top cards are face down.",
+      "Win by having all 16 piles end up with a face up top card.",
     ],
   },
   // Skyway
@@ -112,17 +135,6 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "You can place cards on any grid cell, but only the top 3 cards will be kept.",
       "Create paths by placing cards of increasing value, within the same suit, in adjacent grid cells.",
       "To win, you must create paths of length 5 or more for each suit.",
-    ],
-  },
-  // Loot the Loop
-  "/loot-the-loop": {
-    title: "Loot the Loop",
-    category: GameCategory.Isaludo,
-    byLine: "Game design by Wil Su",
-    briefRules: [
-      "Capture valid loop cards into the score pile.",
-      "Protect scoring tempo by avoiding loop breaks.",
-      "Win by reaching the game score objective before deck exhaustion.",
     ],
   },
   // The Emissary
@@ -204,6 +216,17 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   // ============================== //
   // ========== Beta ========== //
   // ============================== //
+  // Loot the Loop
+  "/loot-the-loop": {
+    title: "Loot the Loop",
+    category: GameCategory.Beta,
+    byLine: "Game design by Wil Su",
+    briefRules: [
+      "Capture valid loop cards into the score pile.",
+      "Protect scoring tempo by avoiding loop breaks.",
+      "Win by reaching the game score objective before deck exhaustion.",
+    ],
+  },
   // Clock
   "/clock": {
     title: "Clock Solitaire",
@@ -212,17 +235,6 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Place revealed cards to matching clock positions by rank.",
       "Continue turns by revealing from the pile at each destination.",
       "Losing occurs if the fourth King appears before completion.",
-    ],
-  },
-  // Foursquare
-  "/foursquare": {
-    title: "Foursquare",
-    category: GameCategory.Beta,
-    byLine: "Game design by Wil Su",
-    briefRules: [
-      "Manage four zones with distinct placement constraints.",
-      "Sequence cards so each zone can continue progressing.",
-      "Complete all target zone conditions before deck lockout.",
     ],
   },
   // ============================== //

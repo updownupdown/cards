@@ -5,9 +5,15 @@ import { useMemo, useRef, useState } from "react";
 import { View } from "react-native";
 import { useAnimations } from "../Animations/Animations";
 import { Button } from "../Button/Button";
-import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
+import {
+  createDeck,
+  shuffle,
+  top,
+  type PlayingCard,
+} from "../Cards/card-utils";
 import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
+import { useUndoHistory } from "@/hooks/useUndoHistory";
 
 const cardsPerRow = 4;
 
@@ -17,6 +23,10 @@ type AcesUpState = {
   discard: PlayingCard[];
   ended: boolean;
   won: boolean;
+};
+
+type GameSnapshot = {
+  game: AcesUpState;
 };
 
 function rankValueAcesHigh(card: PlayingCard) {
@@ -103,10 +113,17 @@ export default function AcesUp() {
     undefined,
   );
 
-  const { animateCards, measureRef, isAnimating } = useAnimations();
-  const [animatedPileIndex, setAnimatedPileIndex] = useState<
-    number | undefined
-  >(undefined);
+  const { saveUndoState, undo, canUndo, clearHistory } =
+    useUndoHistory<GameSnapshot>();
+  const handleUndo = () => {
+    const previousState = undo();
+    if (previousState) {
+      setGame(previousState.game);
+    }
+  };
+
+  const { animateCards, measureRef, isAnimating, animatingCardIds } =
+    useAnimations();
 
   const stockRef = useRef<View>(null);
   const discardRef = useRef<View>(null);
@@ -126,12 +143,15 @@ export default function AcesUp() {
   }, [discardable, game.ended, game.piles, game.stock.length]);
 
   function reset() {
+    clearHistory();
     setGame(setup());
     setSelectedPile(undefined);
   }
 
   async function dealFour() {
     if (game.ended || game.stock.length < 4 || isAnimating) return;
+
+    saveUndoState(structuredClone({ game }));
 
     const stockPos = await measureRef(stockRef);
     if (stockPos) {
@@ -188,10 +208,7 @@ export default function AcesUp() {
     const allowed = getDiscardablePileIndexes(game.piles);
     if (!allowed.has(pileIndex)) return;
 
-    // Avoid disappearing card flash; give animation time to kick in
-    setTimeout(() => {
-      setAnimatedPileIndex(pileIndex);
-    }, 10);
+    saveUndoState(structuredClone({ game }));
 
     const pileEl = pileRefsCurrent.current[pileIndex];
     if (pileEl) {
@@ -230,7 +247,6 @@ export default function AcesUp() {
     });
 
     setSelectedPile(undefined);
-    setAnimatedPileIndex(undefined);
   }
 
   async function onPilePress(pileIndex: number) {
@@ -239,28 +255,16 @@ export default function AcesUp() {
     const piles = game.piles.map((pile) => [...pile]);
     const clickedEmptyPile = piles[pileIndex].length === 0;
 
-    if (selectedPile === undefined) {
-      // Select first source card
-      if (!clickedEmptyPile) {
-        setSelectedPile(pileIndex);
-      }
-      return;
-    } else if (selectedPile === pileIndex) {
-      // Unselect pile
-      setSelectedPile(undefined);
-      return;
-    } else if (!clickedEmptyPile) {
-      // Switch to another source card
-      setSelectedPile(pileIndex);
+    if (clickedEmptyPile) {
+      if (selectedPile === undefined) return;
+    } else {
+      setSelectedPile(selectedPile === pileIndex ? undefined : pileIndex);
       return;
     }
 
-    // Animate move card to empty pile
-    // Avoid disappearing card flash; give animation time to kick in
-    setTimeout(() => {
-      setAnimatedPileIndex(selectedPile);
-    }, 10);
+    saveUndoState(structuredClone({ game }));
 
+    // Animate move card to empty pile
     const emptyPileEl = pileRefsCurrent.current[pileIndex];
     const selectedPileEl = pileRefsCurrent.current[selectedPile];
 
@@ -284,7 +288,6 @@ export default function AcesUp() {
     }
 
     setSelectedPile(undefined);
-    setAnimatedPileIndex(undefined);
 
     setGame((prev) => {
       // Check if clicked an empty pile after having a card selected
@@ -316,6 +319,8 @@ export default function AcesUp() {
       won={game.won}
       reset={reset}
       isLoaded={isLoaded}
+      canUndo={canUndo}
+      handleUndo={handleUndo}
     >
       <View
         style={[flexStyles.rowCentered, flexStyles.fullWidth, flexStyles.gap40]}
@@ -351,6 +356,7 @@ export default function AcesUp() {
         {game.piles.map((pile, idx) => {
           const isSelected = selectedPile === idx;
           const canDiscard = discardable.has(idx);
+          const topCard = top(pile);
 
           return (
             <View key={`pile-${idx}`} style={[cardStyles.colUpwards]}>
@@ -359,7 +365,7 @@ export default function AcesUp() {
                 fan="verticalUp"
                 largeFan="progressive"
                 cards={pile}
-                hideTopCard={animatedPileIndex === idx}
+                hideTopCard={topCard && animatingCardIds.includes(topCard.id)}
                 refTopCurrent={(el) => {
                   pileRefsCurrent.current[idx] = el;
                 }}

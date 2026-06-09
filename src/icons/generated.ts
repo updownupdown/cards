@@ -33,6 +33,7 @@ import SpadesIcon from "./Spades.svg";
 import StarIcon from "./Star.svg";
 import StarOutlineIcon from "./StarOutline.svg";
 import SwordIcon from "./Sword.svg";
+import UndoIcon from "./Undo.svg";
 
 export type IconName =
   | "arrow-back"
@@ -62,7 +63,8 @@ export type IconName =
   | "spades"
   | "star"
   | "star-outline"
-  | "sword";
+  | "sword"
+  | "undo";
 
 export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "arrow-back": ArrowBackIcon,
@@ -93,4 +95,5 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "star": StarIcon,
   "star-outline": StarOutlineIcon,
   "sword": SwordIcon,
+  "undo": UndoIcon,
 };

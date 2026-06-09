@@ -1,5 +1,7 @@
 import { AnimationProvider } from "@/components/Animations/Animations";
+import { ToastProvider } from "@/components/common/Toast";
 import { layoutStyles } from "@/styles/layoutStyles";
+import { Colors } from "@/styles/styles";
 import {
   Outfit_200ExtraLight,
   Outfit_300Light,
@@ -12,8 +14,6 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ToastProvider } from "@/components/common/Toast";
-import { Colors } from "@/styles/styles";
 
 export default function Layout() {
   const [fontsLoaded] = useFonts({

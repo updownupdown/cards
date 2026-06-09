@@ -1,21 +1,16 @@
 import { getGameInfo, normalizeGamePath } from "@/data/game-menu";
 import { useFade } from "@/hooks/useFade";
 import { useGameSettings } from "@/hooks/useGameSettings";
+import { flexStyles } from "@/styles/flexStyles";
+import { headerHeight } from "@/styles/layoutStyles";
 import { menuStyles } from "@/styles/menuStyles";
+import { modalBorderRadius, modalShadow } from "@/styles/modalStyles";
+import { Colors, ContentSidePadding, rgba } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
 import { usePathname } from "expo-router";
-import { useEffect } from "react";
 import { Animated, ScrollView, Text, View } from "react-native";
 import { Button } from "../Button/Button";
 import { SettingControl } from "./SettingControl";
-import {
-  modalBorderRadius,
-  modalShadow,
-  modalStyles,
-} from "@/styles/modalStyles";
-import { flexStyles } from "@/styles/flexStyles";
-import { Colors, ContentSidePadding, rgba } from "@/styles/styles";
-import { headerHeight } from "@/styles/layoutStyles";
 
 interface Props {
   setShowMenu: (show: boolean) => void;
@@ -34,12 +29,6 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
     showIntro === true,
     300,
   );
-
-  useEffect(() => {
-    if (gameSettings !== undefined) {
-      setShowIntro(gameSettings.showIntro);
-    }
-  }, [gameSettings]);
 
   return renderIntro ? (
     <>
@@ -126,12 +115,13 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
               fullWidth
             />
 
-            <SettingControl
-              label="Skip intro next time"
-              type="boolean"
-              booleanType="checkbox"
-              value={!gameSettings?.showIntro}
-              onChange={(val) => updateGameSettings({ showIntro: !val })}
+            <Button
+              text="Close and skip intro next time"
+              size="text"
+              onPress={() => {
+                updateGameSettings({ showIntro: false });
+                setShowIntro(false);
+              }}
             />
           </ScrollView>
         </View>

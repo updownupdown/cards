@@ -1,248 +1,415 @@
-import { useMemo, useState } from "react";
-import { GameMenus } from "../common/GameMenus";
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-
-import { Card } from "../Cards/Card";
+import { flexStyles } from "@/styles/flexStyles";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { View } from "react-native";
+import { CardAnimationParams, useAnimations } from "../Animations/Animations";
 import {
-  RANK_VALUE,
   createDeck,
+  isFace,
+  rankValue,
   shuffle,
+  top,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { textStyles } from "@/styles/textStyles";
+import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
+import { useToast } from "../common/Toast";
+import { Colors } from "@/styles/styles";
+import { useUndoHistory } from "@/hooks/useUndoHistory";
 
-type Pile = {
-  x: number;
-  y: number;
-  cards: PlayingCard[];
-};
+const cardsPerRow = 5;
 
-type Pos = { x: number; y: number };
+function getColRow(index: number) {
+  let row: number[] = [];
+  let col: number[] = [];
 
-type GameState = {
-  deck: PlayingCard[];
-  piles: Pile[];
-  current: PlayingCard | null;
-  ended: boolean;
-  won: boolean;
-};
-
-function isFace(card: PlayingCard) {
-  return card.rank === "J" || card.rank === "Q" || card.rank === "K";
-}
-
-function setup(): GameState {
-  const cards = shuffle(createDeck({ faceUp: true }).filter((c) => !isFace(c)));
-  const first = cards[0];
-  return {
-    deck: cards.slice(1),
-    piles: [{ x: 0, y: 0, cards: [first] }],
-    current: cards[1] ?? null,
-    ended: false,
-    won: false,
-  };
-}
-
-function top(pile: Pile) {
-  return pile.cards[pile.cards.length - 1];
-}
-
-function keyOf(pos: Pos) {
-  return `${pos.x}:${pos.y}`;
-}
-
-function bounding(piles: Pile[]) {
-  const xs = piles.map((p) => p.x);
-  const ys = piles.map((p) => p.y);
-  return {
-    minX: Math.min(...xs),
-    maxX: Math.max(...xs),
-    minY: Math.min(...ys),
-    maxY: Math.max(...ys),
-  };
-}
-
-function legalPlacements(piles: Pile[]): Pos[] {
-  const occupied = new Set(piles.map((p) => keyOf(p)));
-  const result: Pos[] = [];
-
-  // Existing piles are legal if below stack height cap.
-  piles.forEach((p) => {
-    if (p.cards.length < 4) result.push({ x: p.x, y: p.y });
-  });
-
-  const dirs = [
-    [1, 0],
-    [-1, 0],
-    [0, 1],
-    [0, -1],
-  ];
-
-  for (const p of piles) {
-    for (const [dx, dy] of dirs) {
-      const candidate = { x: p.x + dx, y: p.y + dy };
-      const k = keyOf(candidate);
-      if (occupied.has(k)) continue;
-
-      const simulated = [
-        ...piles,
-        { x: candidate.x, y: candidate.y, cards: [] },
-      ];
-      const b = bounding(simulated);
-      const width = b.maxX - b.minX + 1;
-      const height = b.maxY - b.minY + 1;
-      if (width <= 4 && height <= 4) {
-        result.push(candidate);
-      }
+  for (let i = 0; i < 16; i++) {
+    if (Math.floor(i / 4) === Math.floor(index / 4) && i !== index) {
+      row.push(i);
+    }
+    if (i % 4 === index % 4 && i !== index) {
+      col.push(i);
     }
   }
 
-  const unique = new Map<string, Pos>();
-  result.forEach((r) => unique.set(keyOf(r), r));
-  return [...unique.values()];
+  return { row, col };
 }
 
-function flipTop(pile: Pile) {
-  const copy = [...pile.cards];
-  const t = copy[copy.length - 1];
-  copy[copy.length - 1] = { ...t, faceUp: !t.faceUp };
-  return { ...pile, cards: copy };
-}
+type GameState = {
+  deck: PlayingCard[];
+  piles: PlayingCard[][];
+  ended: boolean;
+  won: boolean;
+  winLoseMessage?: string;
+};
 
-function compareValue(card: PlayingCard | undefined) {
-  if (!card || !card.faceUp) return null;
-  return RANK_VALUE[card.rank];
-}
+type GameSnapshot = {
+  game: GameState;
+};
 
-function applyFlips(piles: Pile[], placed: Pos) {
-  let next = piles.map((p) => ({ ...p, cards: [...p.cards] }));
+function setup(): GameState {
+  const deck = shuffle(createDeck().filter((c) => !isFace(c)));
 
-  const placedPile = next.find((p) => p.x === placed.x && p.y === placed.y);
-  if (!placedPile) return next;
-  const placedValue = compareValue(top(placedPile));
-  if (placedValue === null) return next;
-
-  const checkAxis = (axis: "row" | "col") => {
-    const line = next.filter((p) =>
-      axis === "row" ? p.y === placed.y : p.x === placed.x,
-    );
-    const withValues = line
-      .map((p) => ({ pile: p, value: compareValue(top(p)) }))
-      .filter((entry) => entry.value !== null) as Array<{
-      pile: Pile;
-      value: number;
-    }>;
-
-    if (withValues.length === 0) return;
-
-    const values = withValues.map((entry) => entry.value);
-    const max = Math.max(...values);
-    const min = Math.min(...values);
-    const maxCount = values.filter((v) => v === max).length;
-    const minCount = values.filter((v) => v === min).length;
-
-    const isUniqueHigh = placedValue === max && maxCount === 1;
-    const isUniqueLow = placedValue === min && minCount === 1;
-    if (!isUniqueHigh && !isUniqueLow) return;
-
-    const placedKey = keyOf(placed);
-    next = next.map((p) => {
-      if (
-        (axis === "row" ? p.y === placed.y : p.x === placed.x) &&
-        keyOf(p) !== placedKey
-      ) {
-        return flipTop(p);
-      }
-      return p;
-    });
+  return {
+    deck,
+    piles: Array(16).fill([]),
+    ended: false,
+    won: false,
+    winLoseMessage: "",
   };
-
-  checkAxis("row");
-  checkAxis("col");
-
-  return next;
 }
 
-function countFaceDownTops(piles: Pile[]) {
-  return piles.filter((p) => !top(p).faceUp).length;
+function numFaceDownTopCards(piles: PlayingCard[][]) {
+  return piles.filter((p) => p.length && !top(p)?.faceUp).length;
 }
 
-function has4x4AllFaceUp(piles: Pile[]) {
+function hasAllFaceUp(piles: PlayingCard[][]) {
   if (piles.length !== 16) return false;
-  const b = bounding(piles);
-  if (b.maxX - b.minX + 1 !== 4 || b.maxY - b.minY + 1 !== 4) return false;
-  return piles.every((p) => top(p).faceUp);
+  return piles.every((p) => p.length && top(p)?.faceUp);
+}
+
+function getAdjacentPiles(piles: PlayingCard[][]) {
+  const isEmptyBoard = piles.every((pile) => pile.length === 0);
+
+  if (isEmptyBoard) {
+    return Array.from({ length: 16 }, (_, i) => i);
+  }
+
+  const legalIndices = new Set<number>();
+
+  for (let i = 0; i < 16; i++) {
+    if (piles[i].length > 0) {
+      // Can place on a pile that already has cards
+      legalIndices.add(i);
+
+      // Can place on adjacent (horizontally or vertically) piles
+      const row = Math.floor(i / 4);
+      const col = i % 4;
+
+      if (row > 0) legalIndices.add(i - 4);
+      if (row < 3) legalIndices.add(i + 4);
+      if (col > 0) legalIndices.add(i - 1);
+      if (col < 3) legalIndices.add(i + 1);
+    }
+  }
+
+  return Array.from(legalIndices).sort((a, b) => a - b);
 }
 
 export default function Foursquare() {
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
+  const { isAnimating, measureRef, animateCards, animatingCardIds } =
+    useAnimations();
 
-  const [game, setGame] = useState<GameState>(setup);
-  const [message, setMessage] = useState("Place the current restaurant.");
+  const { saveUndoState, undo, canUndo, clearHistory } =
+    useUndoHistory<GameSnapshot>();
+  const handleUndo = () => {
+    const previousState = undo();
+    if (previousState) {
+      setGame(previousState.game);
+    }
+  };
 
-  const legal = useMemo(() => legalPlacements(game.piles), [game.piles]);
+  const drawRef = useRef<View>(null);
+  const pilesNextRef = useRef<(View | null)[]>([]);
+  const pilesCurrentRef = useRef<(View | null)[]>([]);
 
-  const score = game.deck.length;
+  function initGame(game: GameState) {
+    turnOverDeckCard(game);
+  }
+
+  useEffect(() => {
+    if (showIntro === false) {
+      initGame(game);
+    }
+  }, [showIntro]);
+
+  const [game, setGame] = useState<GameState>(setup());
+
+  async function turnOverDeckCard(gameState: GameState) {
+    const drawPos = await measureRef(drawRef);
+    const topCard = top(gameState.deck);
+    let deck = [...gameState.deck];
+    if (topCard) {
+      deck = deck.slice(0, -1);
+      deck = [...deck, { ...topCard, faceUp: true }];
+    }
+
+    const newGame = { ...gameState, deck };
+
+    if (drawPos && topCard) {
+      await animateCards([
+        {
+          card: topCard,
+          from: drawPos,
+          to: drawPos,
+          flip: "toFace",
+          cardsPerRow,
+        },
+      ]);
+    }
+
+    setGame(newGame);
+  }
 
   function reset() {
-    setGame(setup());
-    setMessage("Place the current restaurant.");
+    clearHistory();
+    const initSetup = setup();
+    setGame(initSetup);
+    initGame(initSetup);
   }
 
-  function placeAt(pos: Pos) {
-    setGame((prev) => {
-      if (prev.ended || !prev.current) return prev;
+  // ====================================
+  // PLACE CARD ON A PILE
+  // ====================================
+  async function placeAt(index: number) {
+    if (!legal.includes(index)) return;
 
-      const legalNow = legalPlacements(prev.piles).some(
-        (p) => p.x === pos.x && p.y === pos.y,
-      );
-      if (!legalNow) return prev;
+    // Save state for undo
+    saveUndoState(structuredClone({ game }));
 
-      let piles = prev.piles.map((p) => ({ ...p, cards: [...p.cards] }));
-      const existing = piles.find((p) => p.x === pos.x && p.y === pos.y);
-      if (existing) {
-        if (existing.cards.length >= 4) return prev;
-        existing.cards.push(prev.current);
-      } else {
-        piles.push({ x: pos.x, y: pos.y, cards: [prev.current] });
-      }
+    // Move draw card to selected pile
+    const drawCard = top(game.deck);
 
-      piles = applyFlips(piles, pos);
+    const deck = [...game.deck];
+    deck.pop();
 
-      if (countFaceDownTops(piles) > 4) {
-        return { ...prev, piles, ended: true, won: false };
-      }
+    const piles = [...game.piles];
+    let targetPile = [...piles[index]];
 
-      if (has4x4AllFaceUp(piles)) {
-        return { ...prev, piles, ended: true, won: true, current: null };
-      }
-
-      const deck = [...prev.deck];
-      const current = deck.shift() ?? null;
-      if (!current) {
-        return { ...prev, piles, deck, current: null, ended: true, won: false };
-      }
-
-      const nextLegal = legalPlacements(piles);
-      if (nextLegal.length === 0) {
-        return { ...prev, piles, deck, current, ended: true, won: false };
-      }
-
-      return { ...prev, piles, deck, current };
-    });
-
-    setMessage("Placement resolved.");
-  }
-
-  const b = bounding(game.piles);
-  const cells: Pos[] = [];
-  for (let y = b.minY - 1; y <= b.maxY + 1; y += 1) {
-    for (let x = b.minX - 1; x <= b.maxX + 1; x += 1) {
-      cells.push({ x, y });
+    // Flip top of target pile face down
+    const pileTop = top(targetPile);
+    if (targetPile.length && pileTop) {
+      targetPile = targetPile.slice(0, -1);
+      targetPile.push({ ...pileTop, faceUp: false });
     }
+
+    // Add new card to pile
+    if (drawCard) {
+      targetPile.push(drawCard);
+    }
+
+    piles[index] = targetPile;
+
+    // Prepare to update game
+    const intermediateGame = { ...game, piles, deck };
+
+    // Animate draw card to pile
+    const pileEl = pilesNextRef.current[index];
+
+    if (pileEl) {
+      const pilePos = await measureRef({ current: pileEl });
+      const drawPos = await measureRef(drawRef);
+
+      if (drawPos && pilePos && drawCard) {
+        await animateCards([
+          {
+            card: drawCard,
+            from: drawPos,
+            to: pilePos,
+            cardsPerRow,
+          },
+        ]);
+      }
+    }
+
+    // Update game
+    setGame(intermediateGame);
+
+    // Flip cards in piles logic
+    const topCardAtTargetPile = top(intermediateGame.piles[index]);
+    let finalPiles = [...intermediateGame.piles];
+    let cardsToAnimate: number[] = [];
+
+    if (topCardAtTargetPile) {
+      const flipResult = applyFlips(
+        [...intermediateGame.piles],
+        index,
+        topCardAtTargetPile,
+      );
+
+      finalPiles = flipResult.newPiles;
+      cardsToAnimate = flipResult.flippedIndices;
+    }
+
+    const finalGame = { ...intermediateGame, piles: finalPiles };
+
+    // Animate flipped cards
+    let anims: CardAnimationParams[] = [];
+    if (cardsToAnimate.length) {
+      const animPromises = cardsToAnimate.map(async (pileIndex, index) => {
+        const card = top(intermediateGame.piles[pileIndex]);
+        const pileEl = pilesCurrentRef.current[pileIndex];
+
+        if (pileEl && card) {
+          const pilePos = await measureRef({ current: pileEl });
+
+          if (pilePos) {
+            return {
+              card,
+              from: pilePos,
+              to: pilePos,
+              cardsPerRow,
+              flip: card.faceUp ? "toBack" : "toFace",
+              delay: 100 * index,
+            } as CardAnimationParams;
+          }
+        }
+
+        return null;
+      });
+
+      const resolvedAnims = await Promise.all(animPromises);
+
+      anims = resolvedAnims.filter(
+        (anim) => anim !== null,
+      ) as CardAnimationParams[];
+    }
+
+    if (anims.length > 0) {
+      await animateCards(anims);
+    }
+
+    setGame(finalGame);
+
+    // Turn over draw deck card
+    turnOverDeckCard(finalGame);
   }
+
+  function isMinOrMax(line: PlayingCard[], card: PlayingCard) {
+    const cardvalue = rankValue(card);
+    const lowest = line.reduce(
+      (min, current) =>
+        current.faceUp && rankValue(current) < min ? rankValue(current) : min,
+      Infinity,
+    );
+    const highest = line.reduce(
+      (max, current) =>
+        current.faceUp && rankValue(current) > max ? rankValue(current) : max,
+      0,
+    );
+
+    return cardvalue < lowest || cardvalue > highest;
+  }
+
+  function flipTop(pile: PlayingCard[]) {
+    if (pile.length === 0) return pile;
+
+    const copy = [...pile];
+    const topCard = copy[copy.length - 1];
+    copy[copy.length - 1] = { ...topCard, faceUp: !topCard.faceUp };
+    return copy;
+  }
+
+  function applyFlips(
+    piles: PlayingCard[][],
+    index: number,
+    lastPlayedCard: PlayingCard,
+  ): { newPiles: PlayingCard[][]; flippedIndices: number[] } {
+    const { col, row } = getColRow(index);
+
+    function applyFlip(
+      currentPiles: PlayingCard[][],
+      line: number[],
+      lastPlayedCard: PlayingCard,
+    ) {
+      let lineCards: PlayingCard[] = [];
+      const flippedInLine: number[] = [];
+      let updatedPiles = [...currentPiles];
+
+      line.forEach((idx) => {
+        const topCard = top(currentPiles[idx]);
+        if (topCard) {
+          lineCards.push(topCard);
+        }
+      });
+
+      if (lineCards.length && isMinOrMax(lineCards, lastPlayedCard)) {
+        line.forEach((idx) => {
+          updatedPiles[idx] = flipTop(updatedPiles[idx]);
+          flippedInLine.push(idx);
+        });
+      }
+
+      return { updatedPiles, flippedInLine };
+    }
+
+    const colResult = applyFlip(piles, col, lastPlayedCard);
+    const rowResult = applyFlip(colResult.updatedPiles, row, lastPlayedCard);
+
+    // Combine the flipped indices. We use a Set to remove duplicates in case
+    // the newly placed card (at the intersection) gets targeted by both the row and col
+    const uniqueFlippedIndices = Array.from(
+      new Set([...colResult.flippedInLine, ...rowResult.flippedInLine]),
+    );
+
+    return {
+      newPiles: rowResult.updatedPiles,
+      flippedIndices: uniqueFlippedIndices,
+    };
+  }
+
+  function legalPlacements(
+    piles: PlayingCard[][],
+    drawCard: PlayingCard | undefined,
+  ) {
+    if (drawCard === undefined) return [];
+
+    let legalPiles: number[] = [];
+    const adjacentPiles = getAdjacentPiles(piles);
+
+    for (let i = 0; i < 16; i++) {
+      const { newPiles: mockFlipedPiles } = applyFlips([...piles], i, drawCard);
+      const tooManyFaceDownCards = numFaceDownTopCards(mockFlipedPiles) > 4;
+      const pileFull = piles[i].length >= 4;
+      const isInAdjacentPile = adjacentPiles.includes(i);
+
+      if (!pileFull && !tooManyFaceDownCards && isInAdjacentPile) {
+        legalPiles.push(i);
+      }
+    }
+
+    return legalPiles;
+  }
+
+  const legal = useMemo(
+    () => legalPlacements(game.piles, top(game.deck)),
+    [game.piles],
+  );
+
+  // Win/lose conditions
+  useEffect(() => {
+    if (game.deck.length === 40) return;
+
+    // Win condition
+    if (hasAllFaceUp(game.piles)) {
+      setGame((prev) => {
+        return { ...prev, ended: true, won: true, winLoseMessage: "You won!" };
+      });
+    } else if (game.deck.length === 0) {
+      setGame((prev) => {
+        return {
+          ...prev,
+          ended: true,
+          won: false,
+          winLoseMessage: "You ran out of cards to place!",
+        };
+      });
+    } else if (legal.length === 0) {
+      setGame((prev) => {
+        return {
+          ...prev,
+          ended: true,
+          won: false,
+          winLoseMessage: "You ran out of valid placements!",
+        };
+      });
+    }
+  }, [legal, game.deck]);
+
+  const showToast = useToast();
+
+  const [showLegalPlacements, setShowLegalPlacements] = useState(false);
 
   return (
     <GameWrapper
@@ -250,127 +417,115 @@ export default function Foursquare() {
       setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
+      score={game.deck.length * (game.won ? 1 : -1)}
       reset={reset}
       isLoaded={isLoaded}
+      winLoseMessage={game.winLoseMessage}
+      canUndo={canUndo}
+      handleUndo={handleUndo}
     >
-      <Text style={textStyles.default}>
-        Deck remaining: {game.deck.length}
-        <br />
-        Message: {message}
-      </Text>
-
-      {game.current ? (
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Current card</Text>
-          <Card card={game.current} cardsPerRow={5} />
-        </View>
-      ) : null}
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>City grid</Text>
-        <View style={styles.gridWrap}>
-          {cells.map((cell) => {
-            const pile = game.piles.find(
-              (p) => p.x === cell.x && p.y === cell.y,
-            );
-            const isLegal = legal.some((p) => p.x === cell.x && p.y === cell.y);
-
-            return (
-              <Pressable
-                key={`${cell.x}:${cell.y}`}
-                onPress={() => placeAt(cell)}
-                style={[styles.cell, isLegal ? styles.legalCell : null]}
-              >
-                {pile ? (
-                  <Card card={top(pile)} cardsPerRow={5} />
-                ) : (
-                  <Text style={styles.cellHint}>{isLegal ? "Drop" : ""}</Text>
-                )}
-              </Pressable>
-            );
-          })}
-        </View>
+      <View style={[flexStyles.colCentered]}>
+        <Deck
+          // title="Draw"
+          refTopCurrent={drawRef}
+          cards={game.deck}
+          cardsPerRow={cardsPerRow}
+          limitFan
+          showCount
+          countPosition="left"
+          fan="horizontalRight"
+          hideTopCard={
+            top(game.deck) && animatingCardIds.includes(top(game.deck)!.id)
+          }
+        />
       </View>
 
-      {game.ended ? (
-        <Text style={game.won ? styles.winText : styles.loseText}>
-          {game.won
-            ? `You won with score ${score} (cards left in deck).`
-            : "You lost: grid constraints, closures, or draw exhaustion ended the game."}
-        </Text>
-      ) : null}
+      <View
+        style={[
+          {
+            flexDirection: "row",
+            flexWrap: "wrap",
+            rowGap: 6,
+          },
+        ]}
+      >
+        {game.piles.map((pile, index) => {
+          const isLegal = legal.includes(index);
+
+          return (
+            <View
+              key={`pile-${index}`}
+              style={[
+                flexStyles.colCentered,
+                {
+                  width: "25%",
+                  padding: 6,
+                },
+              ]}
+            >
+              <View
+                style={[
+                  flexStyles.colStart,
+                  {
+                    borderRadius: 8,
+                    backgroundColor: Colors.K860,
+                    width: "100%",
+                  },
+                ]}
+              >
+                <Deck
+                  cards={pile}
+                  refTopNext={(el) => {
+                    pilesNextRef.current[index] = el;
+                  }}
+                  refTopCurrent={(el) => {
+                    pilesCurrentRef.current[index] = el;
+                  }}
+                  onPress={() => {
+                    if (!isLegal) {
+                      if (pile.length >= 4) {
+                        showToast("Pile is full!");
+                      } else {
+                        const validAdjacentPiles = getAdjacentPiles(game.piles);
+                        if (!validAdjacentPiles.includes(index)) {
+                          showToast("Must place on existing or adjacent pile!");
+                        } else {
+                          showToast(
+                            "Placing here would result in too many face up cards!",
+                          );
+                        }
+                      }
+
+                      setShowLegalPlacements(true);
+                    } else {
+                      setShowLegalPlacements(false);
+                      placeAt(index);
+                    }
+                  }}
+                  isDisabled={isAnimating}
+                  selectColor={
+                    showLegalPlacements ? (isLegal ? "green" : "red") : "none"
+                  }
+                  limitFan
+                  fan="horizontalRight"
+                  limitFanNum={4}
+                  style={[
+                    {
+                      width: "100%",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    },
+                  ]}
+                  cardsPerRow={cardsPerRow}
+                  hideTopCard={
+                    top(pile) && animatingCardIds.includes(top(pile)!.id)
+                  }
+                />
+              </View>
+            </View>
+          );
+        })}
+      </View>
     </GameWrapper>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 56,
-    paddingHorizontal: 10,
-    paddingBottom: 24,
-    gap: 10,
-  },
-  headerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 24,
-    fontFamily: "Outfit_600SemiBold",
-    color: "#1f2937",
-  },
-  button: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-    backgroundColor: "#1d4ed8",
-  },
-  buttonText: {
-    color: "#fff",
-    fontFamily: "Outfit_500Medium",
-  },
-  metaText: {
-    color: "#334155",
-    fontFamily: "Outfit_400Regular",
-  },
-  section: {
-    gap: 8,
-  },
-  sectionTitle: {
-    fontFamily: "Outfit_600SemiBold",
-    color: "#111827",
-  },
-  gridWrap: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 6,
-  },
-  cell: {
-    width: 58,
-    height: 78,
-    borderWidth: 1,
-    borderColor: "rgba(15,23,42,0.2)",
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(255,255,255,0.35)",
-  },
-  legalCell: {
-    borderWidth: 2,
-    borderColor: "#0f766e",
-    backgroundColor: "rgba(16,185,129,0.14)",
-  },
-  cellHint: {
-    fontSize: 11,
-    color: "#64748b",
-  },
-  winText: {
-    color: "#065f46",
-    fontFamily: "Outfit_600SemiBold",
-  },
-  loseText: {
-    color: "#991b1b",
-    fontFamily: "Outfit_600SemiBold",
-  },
-});

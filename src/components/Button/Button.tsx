@@ -78,13 +78,13 @@ export const Button = ({
         size === "large" && buttonStyles.sizeLarge,
         fullWidth && buttonStyles.fullWidth,
         disabled && buttonStyles.disabled,
-        style,
         {
           backgroundColor: themeColor ? rgba(themeColor, 0.07) : undefined,
           boxShadow: themeColor
             ? `inset 0 1px 1px ${rgba(Colors.white, 0.2)}, inset 1px 2px 6px ${rgba(themeColor, 0.35)}, inset 2px 4px 20px ${rgba(themeColor, 0.2)}, -2px -2px 18px ${rgba(Colors.K750, 0.7)}, 2px 2px 18px ${rgba(Colors.K950, 0.8)}`
             : undefined,
         },
+        style,
       ]}
       onPress={() => {
         if (Platform.OS === "web" && typeof document !== "undefined") {

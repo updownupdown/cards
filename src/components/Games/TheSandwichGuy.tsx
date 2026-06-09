@@ -16,11 +16,11 @@ import { CardButton } from "../Cards/CardButton";
 import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
 import { useToast } from "../common/Toast";
+import { useUndoHistory } from "@/hooks/useUndoHistory";
 
-const animDuration = 400;
 const cardsPerRow = 4;
 
-type SandwichState = {
+type GameState = {
   deck: PlayingCard[];
   hand: (PlayingCard | null)[];
   discard: PlayingCard[];
@@ -28,7 +28,11 @@ type SandwichState = {
   ended: boolean;
 };
 
-function initState(): SandwichState {
+type GameSnapshot = {
+  game: GameState;
+};
+
+function initState(): GameState {
   const deck = shuffle(createDeck({ faceUp: true }));
 
   return {
@@ -95,7 +99,7 @@ function replacementCount(cards: PlayingCard[]) {
 export default function TheSandwichGuy() {
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
 
-  const [game, setGame] = useState<SandwichState>(initState);
+  const [game, setGame] = useState<GameState>(initState);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const deckRef = useRef<View>(null);
@@ -124,6 +128,7 @@ export default function TheSandwichGuy() {
   const score = game.hand.length;
 
   function reset() {
+    clearHistory();
     setGame(initState());
     setSelectedIds([]);
   }
@@ -144,8 +149,11 @@ export default function TheSandwichGuy() {
       selectedCards.length !== 3 ||
       isAnimating ||
       !isValidSandwich(selectedCards)
-    )
+    ) {
       return;
+    }
+
+    saveUndoState(structuredClone({ game }));
 
     const replacement = replacementCount(selectedCards);
 
@@ -292,6 +300,15 @@ export default function TheSandwichGuy() {
 
   const showToast = useToast();
 
+  const { saveUndoState, undo, canUndo, clearHistory } =
+    useUndoHistory<GameSnapshot>();
+  const handleUndo = () => {
+    const previousState = undo();
+    if (previousState) {
+      setGame(previousState.game);
+    }
+  };
+
   return (
     <GameWrapper
       showIntro={showIntro}
@@ -306,6 +323,8 @@ export default function TheSandwichGuy() {
             ${score}`
           : "No valid sandwich available. You lose."
       }
+      canUndo={canUndo}
+      handleUndo={handleUndo}
     >
       <View
         style={[flexStyles.rowCentered, flexStyles.fullWidth, flexStyles.gap40]}

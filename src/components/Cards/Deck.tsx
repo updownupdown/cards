@@ -6,7 +6,7 @@ import { clamp } from "@/utils/utils";
 import React from "react";
 import { StyleSheet, Text, View, ViewStyle } from "react-native";
 import { CardSelectColor, CardSizes, useCardSize } from "./Card";
-import { CardRank, CardSuit, PlayingCard } from "./card-utils";
+import { PlayingCard } from "./card-utils";
 import { CardButton } from "./CardButton";
 
 export const DEFAULT_FRONT_OVERLAP = 0.7;
@@ -25,6 +25,7 @@ type DeckProps = {
   style?: ViewStyle[];
   backCount?: number;
   limitFan?: boolean;
+  limitFanNum?: number;
   cards?: PlayingCard[];
   fan?:
     | "horizontalRight"
@@ -59,6 +60,7 @@ export const Deck = ({
   countPosition = "above",
   fan = "horizontalRight",
   limitFan,
+  limitFanNum = maxBackDeckSize,
   largeFan,
   cardsPerRow = 5,
   title,
@@ -73,15 +75,16 @@ export const Deck = ({
   cardSize,
   onPress,
 }: DeckProps) => {
-  const { width, height, borderRadius, placeholderShadow } =
-    useCardSize(cardsPerRow);
+  const { width, height, borderRadius } = useCardSize(cardsPerRow);
+
+  const maxDeckSize = limitFanNum ?? maxBackDeckSize;
 
   let trueDeckSize = backCount ?? cards?.length ?? 0;
   let limitedDeckSize = trueDeckSize;
   let numSkipCards = 0;
 
   if (limitFan) {
-    const targetDeckSize = Math.min(limitedDeckSize, maxBackDeckSize);
+    const targetDeckSize = Math.min(limitedDeckSize, maxDeckSize);
     numSkipCards = limitedDeckSize - targetDeckSize;
     limitedDeckSize = targetDeckSize;
   }
@@ -97,9 +100,9 @@ export const Deck = ({
 
       if (limitFan) {
         // Prevent going to larger deck size than will be generated
-        adjustedDeckSize = Math.min(adjustedDeckSize, maxBackDeckSize);
+        adjustedDeckSize = Math.min(adjustedDeckSize, maxDeckSize);
 
-        if (index >= maxBackDeckSize) {
+        if (index >= maxDeckSize) {
           adjustedIndex -= 1;
         }
       }
@@ -156,8 +159,7 @@ export const Deck = ({
 
   // Compute container size
   // For limited fan, always make deck as large as it'll be
-  const sizeOfLargestOffset =
-    (limitFan ? maxBackDeckSize : limitedDeckSize) - 1;
+  const sizeOfLargestOffset = (limitFan ? maxDeckSize : limitedDeckSize) - 1;
   const largestOffset = cardOffsetStyle(sizeOfLargestOffset);
 
   const deckContainerStyle: ViewStyle = { width, height };
@@ -165,11 +167,11 @@ export const Deck = ({
   if (fan === "horizontalLeft") {
     deckContainerStyle.width = width + Number(largestOffset.right);
     deckContainerStyle.minWidth = width + Number(largestOffset.right);
-    deckContainerStyle.justifyContent = "flex-end";
+    deckContainerStyle.alignItems = "flex-end";
   } else if (fan === "horizontalRight") {
     deckContainerStyle.width = width + Number(largestOffset.left);
     deckContainerStyle.minWidth = width + Number(largestOffset.left);
-    deckContainerStyle.justifyContent = "flex-start";
+    deckContainerStyle.alignItems = "flex-start";
   } else if (fan === "verticalUp") {
     deckContainerStyle.height = height + Number(largestOffset.bottom);
     deckContainerStyle.minHeight = height + Number(largestOffset.bottom);
@@ -189,7 +191,7 @@ export const Deck = ({
         countPosition === "left" && styles.deckWrapCountLeft,
         countPosition === "right" && styles.deckWrapCountRight,
         countPosition === "below" && styles.deckWrapCountBelow,
-        { borderRadius, boxShadow: placeholderShadow },
+        { borderRadius },
         invisibleWhenEmpty && styles.deckWrapInvisibleWhenEmpty,
       ]}
     >
@@ -396,8 +398,9 @@ export const styles = StyleSheet.create({
   },
   deckCountTitle: {
     fontSize: 13,
-    fontFamily: FontWeight[500],
+    fontFamily: FontWeight[300],
     color: Colors.K300,
+    textTransform: "uppercase",
   },
   deckCountIcon: {
     width: 24,

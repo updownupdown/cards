@@ -17,6 +17,7 @@ import { CardButton } from "../Cards/CardButton";
 import { Deck, deckCountAboveBelowHeight, minFanSize } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
 import { useToast } from "../common/Toast";
+import { useUndoHistory } from "@/hooks/useUndoHistory";
 
 const animDuration = 400;
 const cardsPerRow = 4.2;
@@ -38,6 +39,10 @@ type AreaState = {
   wave: 1 | 2;
   ended: boolean;
   won: boolean;
+};
+
+type GameSnapshot = {
+  game: AreaState;
 };
 
 type Action = "dual" | "single" | "sacrifice";
@@ -166,7 +171,17 @@ export default function Area52() {
     return game.won ? calcWinScore(game) : calcLoseScore(game);
   }, [game]);
 
+  const { saveUndoState, undo, canUndo, clearHistory } =
+    useUndoHistory<GameSnapshot>();
+  const handleUndo = () => {
+    const previousState = undo();
+    if (previousState) {
+      setGame(previousState.game);
+    }
+  };
+
   function reset() {
+    clearHistory();
     clearAnimations();
     setSelectedDefenders([]);
     setGame(ensureQueue(setup()));
@@ -198,6 +213,8 @@ export default function Area52() {
     attackerDeck: PlayingCard[],
     anims: CardAnimationParams[],
   ) => {
+    saveUndoState(structuredClone({ game }));
+
     const addAnim = (anim: CardAnimationParams | null | undefined) => {
       if (anim) anims.push(anim);
     };
@@ -595,6 +612,8 @@ export default function Area52() {
       reset={reset}
       isLoaded={isLoaded}
       score={`${score} (${game.won ? "higher is better" : "closer to zero is better"})`}
+      canUndo={canUndo}
+      handleUndo={handleUndo}
     >
       <View
         style={[

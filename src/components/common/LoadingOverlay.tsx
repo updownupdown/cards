@@ -10,6 +10,8 @@ interface Props {
 
 export const LoadingOverlay = ({ isLoaded }: Props) => {
   const [showLoadingOverlay, setShowLoadingOverlay] = useState(!isLoaded);
+  const [showSpinner, setShowSpinner] = useState(false);
+
   const { isRendered: renderLoadingOverlay, opacity: loadingOpacity } = useFade(
     showLoadingOverlay,
     300,
@@ -18,14 +20,32 @@ export const LoadingOverlay = ({ isLoaded }: Props) => {
   useEffect(() => {
     if (isLoaded) {
       setShowLoadingOverlay(false);
+    } else {
+      setShowLoadingOverlay(true);
     }
+  }, [isLoaded]);
+
+  useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    if (!isLoaded) {
+      setShowSpinner(false);
+
+      timeoutId = setTimeout(() => {
+        setShowSpinner(true);
+      }, 500);
+    }
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, [isLoaded]);
 
   return renderLoadingOverlay ? (
     <Animated.View
       style={[layoutStyles.gameLoadingOverlay, { opacity: loadingOpacity }]}
     >
-      <ActivityIndicator size="large" color={Colors.K400} />
+      {showSpinner && <ActivityIndicator size="large" color={Colors.K400} />}
     </Animated.View>
   ) : null;
 };

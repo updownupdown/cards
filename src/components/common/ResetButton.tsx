@@ -16,18 +16,14 @@ const minDisplayDuration = holdToResetDuration;
 interface Props {
   reset: () => void;
   minHintDuration?: number;
-  isLoaded: boolean;
 }
 
-export function ResetButton({ reset, isLoaded }: Props) {
+export function ResetButton({ reset }: Props) {
   const [showResetHint, setShowResetHint] = useState(false);
   const { isRendered: renderResetHint, opacity: hintOpacity } = useFade(
     showResetHint,
     300,
   );
-
-  const { isRendered: renderResetButton, opacity: resetButtonOpacity } =
-    useFade(!!isLoaded, 300);
 
   const hintTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -85,34 +81,18 @@ export function ResetButton({ reset, isLoaded }: Props) {
           <Text style={styles.resetHintText}>Press and hold to reset game</Text>
         </Animated.View>
       )}
-      {renderResetButton ? (
-        <Animated.View
-          style={{
-            opacity: resetButtonOpacity,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Button
-            style={[buttonStyles.headerButton]}
-            onPress={displayResetHint}
-            onLongPress={reset}
-            onPressIn={onPressInReset}
-            onPressOut={onPressOutReset}
-            delayLongPress={holdToResetDuration}
-            iconName="reset"
-            iconColor={isResetPressed ? Colors.accentRed : Colors.K400}
-            iconSize={headerButtonIconSize}
-          />
-        </Animated.View>
-      ) : (
-        <View
-          style={[
-            buttonStyles.headerButton,
-            { backgroundColor: "transparent" },
-          ]}
-        />
-      )}
+
+      <Button
+        style={[buttonStyles.headerButton]}
+        onPress={displayResetHint}
+        onLongPress={reset}
+        onPressIn={onPressInReset}
+        onPressOut={onPressOutReset}
+        delayLongPress={holdToResetDuration}
+        iconName="reset"
+        iconColor={isResetPressed ? Colors.accentRed : Colors.K200}
+        iconSize={headerButtonIconSize}
+      />
     </>
   );
 }

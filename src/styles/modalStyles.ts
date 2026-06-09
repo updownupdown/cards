@@ -37,7 +37,8 @@ export const modalStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 16,
+    paddingRight: 16,
+    paddingLeft: modalSidePadding,
     paddingVertical: 12,
   },
   modalFooter: {

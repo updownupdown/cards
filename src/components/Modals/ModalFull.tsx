@@ -37,11 +37,11 @@ export default function ModalFull({
                     onClose();
                     router.push("/");
                   }}
-                  iconName={"chevron-left"}
+                  iconName={"arrow-back"}
                   iconColor={Colors.accentBlue}
                   text="Home"
                   size="text"
-                  iconSize={28}
+                  iconSize={22}
                   style={{ borderWidth: 0, boxShadow: "unset" }}
                 />
               )}

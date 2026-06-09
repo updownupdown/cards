@@ -50,7 +50,7 @@ export const layoutStyles = StyleSheet.create({
   },
   gameLoadingOverlay: {
     position: "absolute",
-    zIndex: 11, // under the header but over the intro
+    zIndex: 13, // over the header
     top: 0,
     left: 0,
     right: 0,

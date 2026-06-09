@@ -104,7 +104,7 @@ export const buttonStyles = StyleSheet.create({
 
   // Disabled
   disabled: {
-    opacity: 0.6,
+    opacity: 0.4,
     // color: Colors.K900,
     // borderColor: rgba(Colors.K500, 0.5),
     // backgroundColor: rgba(Colors.K500, 0.1),
@@ -112,7 +112,6 @@ export const buttonStyles = StyleSheet.create({
   },
   textDisabled: {
     opacity: 0.6,
-    // color: Colors.K400,
   },
 
   // Header button

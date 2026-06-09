@@ -212,7 +212,7 @@ export const Card = forwardRef<any, CardProps>(
     }
 
     function shadow(size: number, opacity: number, customColor?: string) {
-      return `0 0 0 1px ${rgba(Colors.K800, 0.2)}, 0 0 0 ${shadowUnit * size}px ${rgba(customColor ?? colorValue, opacity)}`;
+      return `0 0 0 1px ${rgba(Colors.K860, 0.2)}, 0 0 0 ${shadowUnit * size}px ${rgba(customColor ?? colorValue, opacity)}`;
     }
 
     const shadowSizeUnselected = 4;
@@ -226,7 +226,7 @@ export const Card = forwardRef<any, CardProps>(
       } else if ((isSelectable || forceSelectColor) && selectColor !== "none") {
         cardStyle.boxShadow = shadow(shadowSizeUnselected, 0.8);
       } else if (!isPlaceholder) {
-        cardStyle.boxShadow = `0 0 0 1px ${rgba(Colors.K800, 0.2)}, 0 0 0 1px ${rgba(Colors.K950, 0.3)}, ${shadowUnit * 1}px ${shadowUnit * 2}px ${shadowUnit * 8}px 0 ${rgba(Colors.K900, 0.5)}`;
+        cardStyle.boxShadow = `0 0 0 1px ${rgba(Colors.K860, 0.2)}, 0 0 0 1px ${rgba(Colors.K950, 0.3)}, ${shadowUnit * 1}px ${shadowUnit * 2}px ${shadowUnit * 8}px 0 ${rgba(Colors.K900, 0.5)}`;
       }
     }
 
@@ -246,14 +246,7 @@ export const Card = forwardRef<any, CardProps>(
           ]}
         />
         <SvgCard {...svgProps} width="100%" height="100%" />
-        {isPlaceholder && (
-          <View
-            style={[
-              cardStyles.cardPlaceholderUnderlay,
-              { boxShadow: placeholderShadow },
-            ]}
-          />
-        )}
+        {isPlaceholder && <View style={[cardStyles.cardPlaceholderUnderlay]} />}
       </View>
     );
   },

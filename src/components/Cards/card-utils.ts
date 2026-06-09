@@ -167,6 +167,11 @@ export function isNumberRank(rank: CardRank | LoopRank) {
   return ["2", "3", "4", "5", "6", "7", "8", "9", "10"].includes(rank);
 }
 
+export function top(deck: PlayingCard[]) {
+  if (deck.length === 0) return undefined;
+  return deck[deck.length - 1];
+}
+
 export function shuffle<T>(items: T[]) {
   const next = [...items];
   for (let i = next.length - 1; i > 0; i -= 1) {

@@ -2,7 +2,7 @@ import { useGameLoading } from "@/hooks/useGameLoading";
 import { flexStyles } from "@/styles/flexStyles";
 import { useRef, useState } from "react";
 import { View } from "react-native";
-import { useAnimations } from "../Animations/Animations";
+import { CardAnimationParams, useAnimations } from "../Animations/Animations";
 import {
   CardGrid,
   CardSelectColor,
@@ -12,6 +12,8 @@ import {
 import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
 import { CardButton } from "../Cards/CardButton";
 import { GameWrapper } from "../common/GameWrapper";
+import { cardStyles } from "@/styles/cardStyles";
+import { useUndoHistory } from "@/hooks/useUndoHistory";
 
 const cardsPerRow = 6;
 
@@ -19,6 +21,10 @@ type AccordionState = {
   line: PlayingCard[];
   ended: boolean;
   won: boolean;
+};
+
+type GameSnapshot = {
+  game: AccordionState;
 };
 
 function setup(): AccordionState {
@@ -45,13 +51,24 @@ function hasAnyMove(line: PlayingCard[]) {
 
 export default function Accordion() {
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
-  const { animateCards, measureRef, isAnimating } = useAnimations();
+  const { animateCards, measureRef, isAnimating, animatingCardIds } =
+    useAnimations();
   const cardRefs = useRef<(View | null)[]>([]);
 
   const [game, setGame] = useState<AccordionState>(setup);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
+  const { saveUndoState, undo, canUndo, clearHistory } =
+    useUndoHistory<GameSnapshot>();
+  const handleUndo = () => {
+    const previousState = undo();
+    if (previousState) {
+      setGame(previousState.game);
+    }
+  };
+
   function reset() {
+    clearHistory();
     setGame(setup());
     setSelectedIndex(null);
   }
@@ -92,6 +109,10 @@ export default function Accordion() {
     target: number,
     srcCard: PlayingCard,
   ) {
+    saveUndoState(structuredClone({ game }));
+
+    const anims: CardAnimationParams[] = [];
+
     const positions = await Promise.all(
       game.line.map((_, i) => {
         const el = cardRefs.current[i];
@@ -103,19 +124,17 @@ export default function Accordion() {
     const tgtPos = positions[target];
 
     if (srcPos && tgtPos) {
-      await animateCards([
-        {
-          card: srcCard,
-          cardSize: "small",
-          from: { ...srcPos, zIndex: 100 },
-          to: { ...tgtPos, zIndex: 100 },
-          duration: 150,
-          cardsPerRow,
-        },
-      ]);
+      anims.push({
+        card: srcCard,
+        cardSize: "small",
+        from: { ...srcPos, zIndex: 100 },
+        to: { ...tgtPos, zIndex: 100 },
+        duration: 150,
+        cardsPerRow,
+        keepAlive: true,
+      });
     }
 
-    const shiftAnims = [];
     const shiftingIndices = new Set([source, target]);
 
     for (let i = source + 1; i < game.line.length; i++) {
@@ -124,8 +143,7 @@ export default function Accordion() {
       const card = game.line[i];
       if (fromPos && toPos) {
         shiftingIndices.add(i);
-        shiftAnims.push({
-          id: `shift-${i}-${Date.now()}`,
+        anims.push({
           card,
           cardSize: "small" as CardSizes,
           cardsPerRow,
@@ -137,8 +155,8 @@ export default function Accordion() {
       }
     }
 
-    if (shiftAnims.length > 0) {
-      await animateCards(shiftAnims);
+    if (anims.length > 0) {
+      await animateCards(anims);
     }
 
     const line = [...game.line];
@@ -168,7 +186,7 @@ export default function Accordion() {
         (selectedIndex && idx === selectedIndex - 1))
     ) {
       // Card 1 or 3 to the left
-      return game.line[idx].suit === game.line[selectedIndex].suit
+      return canMerge(game.line[idx], game.line[selectedIndex])
         ? "green"
         : "purple";
     } else {
@@ -190,6 +208,8 @@ export default function Accordion() {
           ? "You compressed the deck to one card."
           : "No legal moves remain."
       }
+      canUndo={canUndo}
+      handleUndo={handleUndo}
     >
       <CardGrid cardsPerRow={cardsPerRow}>
         {game.line.map((card, idx) => {
@@ -205,10 +225,13 @@ export default function Accordion() {
               disabled={game.ended}
               isSelected={selectedIndex === idx}
               selectColor={isAnimating ? "none" : selectedColor}
-              forceOverlay={!isAnimating && selectedColor !== "none"}
+              forceOverlay={!isAnimating}
               card={card}
               cardsPerRow={cardsPerRow}
               cardSize="small"
+              style={[
+                animatingCardIds.includes(card.id) && cardStyles.animHide,
+              ]}
             />
           );
         })}

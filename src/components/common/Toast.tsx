@@ -38,7 +38,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
       Animated.timing(opacity, {
         toValue: 1,
         duration: 300,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }).start();
 
       // Auto-hide after duration
@@ -84,18 +84,21 @@ interface Styles {
 const styles = StyleSheet.create<Styles>({
   toastContainer: {
     position: "absolute",
+    zIndex: 999,
     top: -100,
     alignSelf: "center",
-    backgroundColor: rgba(Colors.K900, 0.8),
-    paddingHorizontal: 24,
+    marginHorizontal: 10,
+    paddingHorizontal: 20,
     paddingVertical: 14,
-    borderRadius: 25,
-    zIndex: 999,
+
+    borderRadius: 12,
+    backgroundColor: rgba(Colors.K900, 0.8),
   },
   toastText: {
     color: Colors.K100,
     fontSize: 16,
     fontFamily: FontWeight[400],
+    textAlign: "center",
   },
 });
 

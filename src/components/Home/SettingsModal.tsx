@@ -15,7 +15,6 @@ interface Props {
 
 export const SettingsModal = ({ onClose }: Props) => {
   const { settings, updateSettings, isLoading } = useGlobalSettings();
-  const showToast = useToast();
 
   if (isLoading) {
     return null; // Or a loading indicator
@@ -59,7 +58,6 @@ export const SettingsModal = ({ onClose }: Props) => {
             onPress={() => {
               updateSettings(DEFAULT_GLOBAL_SETTINGS);
               resetGameSettings();
-              showToast("Settings have been reset");
             }}
             text="Reset Settings"
           />

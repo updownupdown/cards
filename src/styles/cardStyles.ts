@@ -25,9 +25,6 @@ export const cardStyles = StyleSheet.create({
     flexDirection: "row-reverse",
     justifyContent: "flex-end",
   },
-  rowGap4: {
-    gap: 10,
-  },
   colDownwards: {
     ...flexStyles.colCentered,
     flex: 1,
@@ -44,6 +41,7 @@ export const cardStyles = StyleSheet.create({
   transition: {
     ...cardTransition,
   },
+
   // Card itself
   card: {
     ...cardTransition,
@@ -51,11 +49,9 @@ export const cardStyles = StyleSheet.create({
     position: "relative",
     zIndex: 3,
     outlineWidth: 0,
-    // backgroundColor: Colors.white,
   },
 
   cardSelectOverlay: {
-    // ...cardTransition,
     position: "absolute",
     zIndex: 4,
     top: 0,
@@ -64,7 +60,6 @@ export const cardStyles = StyleSheet.create({
     bottom: 0,
   },
   cardPlaceholderUnderlay: {
-    // ...cardTransition,
     position: "absolute",
     zIndex: 1,
     top: 0,

@@ -1,9 +1,4 @@
-import {
-  HomeGameEntry,
-  homeGameList,
-  loadFavoriteGames,
-  toggleFavoriteGame,
-} from "@/data/game-menu";
+import { loadFavoriteGames, toggleFavoriteGame } from "@/data/game-menu";
 import {
   GameCategory,
   GameCategoryNames,
@@ -12,13 +7,13 @@ import {
 } from "@/data/games-data";
 import { Icon } from "@/icons";
 import { buttonStyles } from "@/styles/buttonStyles";
+import { debugStyles } from "@/styles/debugStyles";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, FontWeight } from "@/styles/styles";
+import { Colors, FontWeight, HomePadding } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
 import { Link, type Href } from "expo-router";
 import { useEffect, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { homePadding } from "./Home";
 
 export const GamesList = () => {
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
@@ -147,8 +142,8 @@ export const GamesList = () => {
             flexStyles.fullWidth,
             {
               alignItems: "flex-start",
-              paddingLeft: homePadding,
-              paddingTop: homePadding * 1.5,
+              paddingLeft: HomePadding,
+              paddingTop: HomePadding * 1.5,
               paddingBottom: 6,
 
               fontFamily: FontWeight[300],
@@ -182,9 +177,12 @@ export const GamesList = () => {
 
   return (
     <ScrollView
-      contentContainerStyle={{
-        paddingBottom: homePadding * 2.5,
-      }}
+      contentContainerStyle={[
+        {
+          paddingHorizontal: HomePadding,
+          paddingBottom: HomePadding * 2.5,
+        },
+      ]}
       showsVerticalScrollIndicator={false}
     >
       <View

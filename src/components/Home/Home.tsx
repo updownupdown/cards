@@ -1,4 +1,5 @@
 import { flexStyles } from "@/styles/flexStyles";
+import { Colors, FontWeight, HomePadding, rgba } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -7,9 +8,6 @@ import { LoadingOverlay } from "../common/LoadingOverlay";
 import { GamesList } from "./GamesList";
 import { SettingsModal } from "./SettingsModal";
 import { StatsModal } from "./StatsModal";
-import { Colors, FontWeight, rgba } from "@/styles/styles";
-
-export const homePadding = 20;
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -40,8 +38,6 @@ export default function Home() {
           {
             flex: 1,
             backgroundColor: Colors.background,
-            paddingTop: homePadding,
-            paddingHorizontal: homePadding * 1.5,
           },
         ]}
       >
@@ -51,7 +47,8 @@ export default function Home() {
             {
               position: "relative",
               zIndex: 2,
-              paddingBottom: homePadding * 0.5,
+              padding: HomePadding,
+              paddingBottom: HomePadding * 0.5,
               boxShadow: `0 0 20px ${rgba(Colors.background, 1)}`,
             },
           ]}
@@ -61,7 +58,7 @@ export default function Home() {
               flexStyles.flex1,
               textStyles.default,
               {
-                paddingLeft: homePadding,
+                paddingLeft: HomePadding,
                 fontFamily: FontWeight[200],
                 fontSize: 22,
               },
