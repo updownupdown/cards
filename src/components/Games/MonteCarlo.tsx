@@ -10,6 +10,7 @@ import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
 import { CardButton } from "../Cards/CardButton";
 import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
+import { useLayoutManager } from "@/hooks/useLayoutManager";
 
 const cardsPerRow = 6;
 const gridWidth = 5;
@@ -99,15 +100,16 @@ function evaluateEnd(state: MonteCarloState) {
 
 export default function MonteCarlo() {
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
-  const { animateCards, measureRef, isAnimating, animatingCardIds } =
-    useAnimations();
+  const { animateCards, isAnimating, animatingCardIds } = useAnimations();
 
   const [game, setGame] = useState<MonteCarloState>(setup);
   const [selected, setSelected] = useState<number[] | null>(null);
 
-  const tableauRefs = useRef<(View | null)[]>(Array(25).fill(null));
-  const stockDeckRef = useRef<View>(null);
-  const discardDeckRef = useRef<View>(null);
+  const { getLayout, setRef } = useLayoutManager([
+    "tableauRefs",
+    "stockDeckRef",
+    "discardDeckRef",
+  ]);
 
   function reset() {
     setGame(setup());
@@ -163,9 +165,7 @@ export default function MonteCarlo() {
       const card = game.grid[index];
 
       if (!card) continue;
-      const cardEl = tableauRefs.current[index];
-      if (!cardEl) continue;
-      let cardPos = await measureRef({ current: cardEl });
+      let cardPos = getLayout("tableauRefs", index);
       if (cardPos) {
         anims.push({
           card,
@@ -208,18 +208,8 @@ export default function MonteCarlo() {
 
     // Prepare animations
     const removedCards = countFaceDownCardsInGrid(game.grid);
-
-    const positions = await Promise.all(
-      game.grid.map((_, i) => {
-        const el = tableauRefs.current[i];
-        return el ? measureRef({ current: el }) : Promise.resolve(null);
-      }),
-    );
-
-    const discardDeckPos = await measureRef({
-      current: discardDeckRef.current,
-    });
-    const stockDeckPos = await measureRef({ current: stockDeckRef.current });
+    const discardDeckPos = getLayout("discardDeckRef");
+    const stockDeckPos = getLayout("stockDeckRef");
 
     const anims: CardAnimationParams[] = [];
     let delayCount = 0;
@@ -228,7 +218,7 @@ export default function MonteCarlo() {
     for (let i = 0; i < 25; i++) {
       const card = game.grid[i];
       if (card && !card.faceUp) {
-        const pos = positions[i];
+        const pos = getLayout("tableauRefs", i);
         if (pos && discardDeckPos) {
           anims.push({
             card,
@@ -252,8 +242,8 @@ export default function MonteCarlo() {
       const card = game.grid[i];
       if (card && card.faceUp) {
         if (i !== tgtIdx) {
-          const fromPos = positions[i];
-          const toPos = positions[tgtIdx];
+          const fromPos = getLayout("tableauRefs", i);
+          const toPos = getLayout("tableauRefs", tgtIdx);
           if (fromPos && toPos) {
             anims.push({
               card,
@@ -278,7 +268,7 @@ export default function MonteCarlo() {
       if (stockCards.length > 0) {
         const nextCard = stockCards.shift()!;
         nextGrid[i] = nextCard;
-        const toPos = positions[i];
+        const toPos = getLayout("tableauRefs", i);
         if (stockDeckPos && toPos) {
           anims.push({
             card: nextCard,
@@ -346,7 +336,7 @@ export default function MonteCarlo() {
         ]}
       >
         <Deck
-          refTopCurrent={stockDeckRef}
+          refTop={setRef("stockDeckRef")}
           backCount={game.stock.length}
           iconName="draw"
           showCount
@@ -357,7 +347,7 @@ export default function MonteCarlo() {
         />
 
         <Deck
-          refTopNext={discardDeckRef}
+          refNext={setRef("discardDeckRef")}
           backCount={game.removed}
           iconName="delete"
           showCount
@@ -378,9 +368,7 @@ export default function MonteCarlo() {
 
           return (
             <CardButton
-              ref={(el) => {
-                tableauRefs.current[index] = el;
-              }}
+              ref={setRef("tableauRefs", index)}
               key={`mc-${index}`}
               onPress={() => selectCell(index)}
               disabled={isAnimating || !cell?.suit || !cell?.rank || game.ended}

@@ -17,6 +17,7 @@ import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
 import { useToast } from "../common/Toast";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { useLayoutManager } from "@/hooks/useLayoutManager";
 
 const cardsPerRow = 4;
 
@@ -102,12 +103,9 @@ export default function TheSandwichGuy() {
   const [game, setGame] = useState<GameState>(initState);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  const deckRef = useRef<View>(null);
-  const discardRef = useRef<View>(null);
-  const handRefs = useRef<(View | null)[]>([]);
+  const { getLayout, setRef } = useLayoutManager(["deck", "discard", "hand"]);
 
-  const { animateCards, measureRef, isAnimating, animatingCardIds } =
-    useAnimations();
+  const { animateCards, isAnimating, animatingCardIds } = useAnimations();
 
   const selectedCards = useMemo(
     () =>
@@ -157,7 +155,7 @@ export default function TheSandwichGuy() {
 
     const replacement = replacementCount(selectedCards);
 
-    const deckPos = await measureRef(deckRef);
+    const deckPos = getLayout("deck");
 
     let currentState = { ...game };
 
@@ -165,12 +163,12 @@ export default function TheSandwichGuy() {
     for (let i = 0; i < currentState.hand.length; i++) {
       const card = currentState.hand[i];
       if (card && selectedIds.includes(card.id)) {
-        const handPos = await measureRef({ current: handRefs.current[i] });
+        const handPos = getLayout("hand", i);
 
         const newHand = [...currentState.hand];
         newHand[i] = null;
 
-        const discardPos = await measureRef(discardRef);
+        const discardPos = getLayout("discard");
 
         // Updated hand
         currentState = {
@@ -229,9 +227,7 @@ export default function TheSandwichGuy() {
 
         newlyDrawn.push(drawn);
         const slotIndex = slotsToFill[i];
-        const handPos = await measureRef({
-          current: handRefs.current[slotIndex],
-        });
+        const handPos = getLayout("hand", slotIndex);
 
         // Shrink the deck 1 by 1 visually
         currentState = {
@@ -330,7 +326,7 @@ export default function TheSandwichGuy() {
         style={[flexStyles.rowCentered, flexStyles.fullWidth, flexStyles.gap40]}
       >
         <Deck
-          refTopCurrent={deckRef}
+          refTop={setRef("deck")}
           showCount
           limitFan
           cardsPerRow={cardsPerRow}
@@ -340,7 +336,7 @@ export default function TheSandwichGuy() {
           fan="horizontalRight"
         />
         <Deck
-          refTopNext={discardRef}
+          refNext={setRef("discard")}
           showCount
           limitFan
           cardsPerRow={cardsPerRow}
@@ -365,9 +361,7 @@ export default function TheSandwichGuy() {
 
           return (
             <CardButton
-              ref={(el) => {
-                handRefs.current[index] = el;
-              }}
+              ref={setRef("hand", index)}
               key={card ? card.id : "placeholder" + index}
               onPress={() => {
                 if (card) {

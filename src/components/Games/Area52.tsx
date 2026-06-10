@@ -18,6 +18,7 @@ import { Deck, deckCountAboveBelowHeight, minFanSize } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
 import { useToast } from "../common/Toast";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { useLayoutManager } from "@/hooks/useLayoutManager";
 
 const animDuration = 400;
 const cardsPerRow = 4.2;
@@ -149,20 +150,17 @@ export default function Area52() {
   const [selectedDefenders, setSelectedDefenders] = useState<number[]>([]);
   const showToast = useToast();
 
-  const {
-    animateCards,
-    clearAnimations,
-    measureRef,
-    isAnimating,
-    animatingCardIds,
-  } = useAnimations();
+  const { animateCards, clearAnimations, isAnimating, animatingCardIds } =
+    useAnimations();
 
-  const attackerDeckCurrentRef = useRef<View>(null);
-  const attackerDeckNextRef = useRef<View>(null);
-  const discardDeckRef = useRef<View>(null);
-  const defenderDeckRef = useRef<View>(null);
-  const attackerRefs = useRef<(View | null)[]>([]);
-  const defenderRefs = useRef<(View | null)[]>([]);
+  const { getLayout, setRef } = useLayoutManager([
+    "attackerTop",
+    "attackerNext",
+    "defenderDeck",
+    "attackers",
+    "defenders",
+    "discardDeck",
+  ]);
 
   const currentAttacker =
     game.currentAttackers[game.currentAttackers.length - 1] ?? null;
@@ -199,11 +197,6 @@ export default function Area52() {
     });
   }
 
-  const getAttackerPos = async (idx: number) =>
-    await measureRef({ current: attackerRefs.current[idx] });
-  const getDefenderPos = async (idx: number) =>
-    await measureRef({ current: defenderRefs.current[idx] });
-
   const processSpecificAction = async (
     action: Action,
     attackerIndex: number,
@@ -230,8 +223,8 @@ export default function Area52() {
       if (sum !== RANK_VALUE[attacker.rank]) return false;
 
       discardDeck.push(attacker);
-      const attackerPos = await getAttackerPos(attackerIndex);
-      const discardDeckPos = await measureRef(discardDeckRef);
+      const attackerPos = getLayout("attackers", attackerIndex);
+      const discardDeckPos = getLayout("discardDeck");
       addAnim(
         buildAnim(
           attacker,
@@ -251,7 +244,7 @@ export default function Area52() {
         if (isRed(a.suit) === attackerIsRed) {
           discardDeck.push(a);
           (defenders as any)[aIdx] = null;
-          const posA = await getDefenderPos(aIdx);
+          const posA = getLayout("defenders", aIdx);
           addAnim(
             buildAnim(
               a,
@@ -268,7 +261,7 @@ export default function Area52() {
         if (isRed(b.suit) === attackerIsRed) {
           discardDeck.push(b);
           (defenders as any)[bIdx] = null;
-          const posB = await getDefenderPos(bIdx);
+          const posB = getLayout("attackers", bIdx);
           if (posB && discardDeckPos) {
             addAnim(
               buildAnim(
@@ -299,9 +292,9 @@ export default function Area52() {
       discardDeck.push(defender);
       defenders[index] = attacker;
 
-      const attackerPos = await getAttackerPos(attackerIndex);
-      const defenderPos = await getDefenderPos(index);
-      const discardDeckPos = await measureRef(discardDeckRef);
+      const attackerPos = getLayout("attackers", attackerIndex);
+      const defenderPos = getLayout("defenders", index);
+      const discardDeckPos = getLayout("discardDeck");
 
       if (defenderPos && discardDeckPos) {
         addAnim(
@@ -334,8 +327,8 @@ export default function Area52() {
       if (!defenders[index]) return false;
 
       discardDeck.push(defenders[index]);
-      const defPos = await getDefenderPos(index);
-      const discardDeckPos = await measureRef(discardDeckRef);
+      const defPos = getLayout("defenders", index);
+      const discardDeckPos = getLayout("discardDeck");
 
       if (defPos && discardDeckPos) {
         addAnim(
@@ -353,8 +346,8 @@ export default function Area52() {
 
       (defenders as any)[index] = null;
       attackerDeck.push(attacker);
-      const attackerPos = await getAttackerPos(attackerIndex);
-      const attackerDeckPos = await measureRef(attackerDeckCurrentRef);
+      const attackerPos = getLayout("attackers", attackerIndex);
+      const attackerDeckPos = getLayout("attackerTop");
 
       if (attackerPos && attackerDeckPos) {
         addAnim(
@@ -378,13 +371,11 @@ export default function Area52() {
   const checkWaveTransition = async (nextState: AreaState) => {
     if (nextState.currentAttackers.length === 0 && !nextState.ended) {
       if (nextState.attackerDeck.length === 0) {
-        if (nextState.discardDeck.length === 0) {
+        if (nextState.wave === 2) {
           nextState = { ...nextState, ended: true, won: true };
           setGame(nextState);
         } else {
-          if (nextState.wave === 1) {
-            showToast("Wave 2");
-          }
+          showToast("Wave 2");
 
           let cardsToMove = shuffle([...nextState.discardDeck]);
           let animatedDiscardDeck = [...nextState.discardDeck];
@@ -395,8 +386,8 @@ export default function Area52() {
             animatedDiscardDeck.pop();
             animatedAttackerDeck.push(card);
 
-            const discardDeckPos = await measureRef(discardDeckRef);
-            const attackerDeckPos = await measureRef(attackerDeckNextRef);
+            const discardDeckPos = getLayout("discardDeck");
+            const attackerDeckPos = getLayout("attackerNext");
 
             const transAnim = buildAnim(
               { ...card, faceUp: false },
@@ -430,6 +421,7 @@ export default function Area52() {
         }
       }
     }
+
     return nextState;
   };
 
@@ -447,8 +439,8 @@ export default function Area52() {
           currentAttackers: [...newState.currentAttackers, nextCard],
         };
 
-        const attackerDeckPos = await measureRef(attackerDeckCurrentRef);
-        const toPos = await getAttackerPos(i);
+        const attackerDeckPos = getLayout("attackerTop");
+        const toPos = getLayout("attackers", i);
         const anim = buildAnim(
           nextCard,
           cardsPerRow,
@@ -481,8 +473,8 @@ export default function Area52() {
         const next = updatedDefenderDeck.shift();
         if (next) {
           updatedDefenders[i] = next;
-          const defenderDeckPos = await measureRef(defenderDeckRef);
-          const targetPos = await getDefenderPos(i);
+          const defenderDeckPos = getLayout("defenderDeck");
+          const targetPos = getLayout("defenders", i);
 
           if (defenderDeckPos && targetPos) {
             const anim = buildAnim(
@@ -562,10 +554,9 @@ export default function Area52() {
     setGame(nextState);
 
     nextState = await checkWaveTransition(nextState);
+
     if (!nextState.ended) {
       nextState = await processAttackerRefill(nextState);
-    }
-    if (!nextState.ended) {
       nextState = await processDefenderRefill(nextState);
     }
 
@@ -635,8 +626,8 @@ export default function Area52() {
           <View style={[flexStyles.colCentered, flexStyles.gap20]}>
             <Deck
               // title="Attackers"
-              refTopNext={attackerDeckNextRef}
-              refTopCurrent={attackerDeckCurrentRef}
+              refNext={setRef("attackerNext")}
+              refTop={setRef("attackerTop")}
               backCount={game.attackerDeck.length}
               showCount
               countPosition="above"
@@ -647,7 +638,7 @@ export default function Area52() {
 
             <Deck
               // title="Discard"
-              refTopNext={discardDeckRef}
+              refNext={setRef("discardDeck")}
               backCount={game.discardDeck.length}
               showCount
               countPosition="above"
@@ -659,7 +650,7 @@ export default function Area52() {
 
             <Deck
               // title="Defenders"
-              refTopNext={defenderDeckRef}
+              refNext={setRef("defenderDeck")}
               backCount={game.defenderDeck.length}
               showCount
               countPosition="above"
@@ -700,9 +691,7 @@ export default function Area52() {
                   return (
                     <Card
                       key={`attacker-${idx}`}
-                      ref={(el) => {
-                        attackerRefs.current[idx] = el;
-                      }}
+                      ref={setRef("attackers", idx)}
                       card={card}
                       isPlaceholder={!card || animatingCard}
                       cardsPerRow={cardsPerRow}
@@ -744,9 +733,7 @@ export default function Area52() {
                   return (
                     <CardButton
                       key={`defender-hand-${index}`}
-                      ref={(el) => {
-                        defenderRefs.current[index] = el;
-                      }}
+                      ref={setRef("defenders", index)}
                       onPress={
                         isAnimating ? undefined : () => toggleDefender(index)
                       }

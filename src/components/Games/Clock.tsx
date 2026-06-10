@@ -13,6 +13,7 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
+import { useLayoutManager } from "@/hooks/useLayoutManager";
 
 const cardsPerRow = 8;
 
@@ -51,12 +52,12 @@ function setup(): ClockState {
 export default function Clock() {
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
 
-  const { animateCards, measureRef, animatingCardIds } = useAnimations();
+  const { animateCards, animatingCardIds } = useAnimations();
   const { width: cardWidth, height: cardHeight } = useCardSize(cardsPerRow);
 
   const [game, setGame] = useState<ClockState>(setup);
 
-  const pilesRefsCurrent = useRef<(View | null)[]>([]);
+  const { getLayout, setRef } = useLayoutManager(["piles"]);
 
   function reset() {
     setGame(setup());
@@ -75,11 +76,10 @@ export default function Clock() {
         game.piles[game.prevPileIndex][
           game.piles[game.prevPileIndex].length - 1
         ];
-      const prevEl = pilesRefsCurrent.current[game.prevPileIndex];
-      const nextEl = pilesRefsCurrent.current[pileIndex];
-      if (prevEl && nextEl && prevCard) {
-        const prevPos = await measureRef({ current: prevEl });
-        const nextPos = await measureRef({ current: nextEl });
+
+      if (prevCard) {
+        const prevPos = getLayout("piles", game.prevPileIndex);
+        const nextPos = getLayout("piles", pileIndex);
         if (prevPos && nextPos) {
           anims.push({
             card: prevCard,
@@ -95,13 +95,12 @@ export default function Clock() {
     }
 
     // ANIMATION - Flip top card over
-    const cardEl = pilesRefsCurrent.current[pileIndex];
 
-    if (cardEl && game.prevPileIndex !== pileIndex) {
+    if (game.prevPileIndex !== pileIndex) {
       const clickedPileAnim = game.piles[pileIndex];
       const clickedCardAnim = clickedPileAnim[clickedPileAnim.length - 1];
 
-      const cardPos = await measureRef({ current: cardEl });
+      const cardPos = getLayout("piles", pileIndex);
       if (cardPos) {
         anims.push({
           card: clickedCardAnim,
@@ -295,9 +294,7 @@ export default function Clock() {
           return (
             <View key={`clock-pile-${pileIndex}`} style={[style]}>
               <Deck
-                refTopCurrent={(el) => {
-                  pilesRefsCurrent.current[pileIndex] = el;
-                }}
+                refTop={setRef("piles", pileIndex)}
                 cards={cards}
                 cardsPerRow={cardsPerRow}
                 onPress={

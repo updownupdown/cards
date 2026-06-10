@@ -34,6 +34,23 @@ const cardGapRatio = 0.82;
 const cardShadowRadio = 0.012;
 export const cardBorderRadiusRatio = 0.08;
 
+export const useCardGridSizes = (
+  cardsPerRow: number,
+  targetGridCols?: number,
+) => {
+  const { contentDiameter: contentWidth } = useContentWidth();
+
+  const cardWidth = (contentWidth / cardsPerRow) * cardGapRatio;
+
+  const totalGap = contentWidth - cardWidth * cardsPerRow;
+  const gridGap = totalGap / (cardsPerRow - 1);
+
+  const targetCols = targetGridCols ?? cardsPerRow;
+  const gridWidth = cardWidth * targetCols + gridGap * (targetCols - 1);
+
+  return { gridWidth, gridGap };
+};
+
 interface CardGridProps {
   cardsPerRow: number;
   targetGridCols?: number;
@@ -47,15 +64,7 @@ export const CardGrid = ({
   style,
   children,
 }: CardGridProps) => {
-  const { contentDiameter: contentWidth } = useContentWidth();
-
-  const cardWidth = (contentWidth / cardsPerRow) * cardGapRatio;
-
-  const totalGap = contentWidth - cardWidth * cardsPerRow;
-  const gridGap = totalGap / (cardsPerRow - 1);
-
-  const targetCols = targetGridCols ?? cardsPerRow;
-  const gridWidth = cardWidth * targetCols + gridGap * (targetCols - 1);
+  const { gridWidth, gridGap } = useCardGridSizes(cardsPerRow, targetGridCols);
 
   return (
     <View
@@ -212,7 +221,7 @@ export const Card = forwardRef<any, CardProps>(
     }
 
     function shadow(size: number, opacity: number, customColor?: string) {
-      return `0 0 0 1px ${rgba(Colors.K860, 0.2)}, 0 0 0 ${shadowUnit * size}px ${rgba(customColor ?? colorValue, opacity)}`;
+      return `0 0 0 1px ${rgba(Colors.K875, 0.2)}, 0 0 0 ${shadowUnit * size}px ${rgba(customColor ?? colorValue, opacity)}`;
     }
 
     const shadowSizeUnselected = 4;
@@ -226,7 +235,7 @@ export const Card = forwardRef<any, CardProps>(
       } else if ((isSelectable || forceSelectColor) && selectColor !== "none") {
         cardStyle.boxShadow = shadow(shadowSizeUnselected, 0.8);
       } else if (!isPlaceholder) {
-        cardStyle.boxShadow = `0 0 0 1px ${rgba(Colors.K860, 0.2)}, 0 0 0 1px ${rgba(Colors.K950, 0.3)}, ${shadowUnit * 1}px ${shadowUnit * 2}px ${shadowUnit * 8}px 0 ${rgba(Colors.K900, 0.5)}`;
+        cardStyle.boxShadow = `0 0 0 1px ${rgba(Colors.K875, 0.2)}, 0 0 0 1px ${rgba(Colors.K950, 0.3)}, ${shadowUnit * 1}px ${shadowUnit * 2}px ${shadowUnit * 8}px 0 ${rgba(Colors.K900, 0.5)}`;
       }
     }
 

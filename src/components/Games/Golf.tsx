@@ -18,6 +18,7 @@ import {
 import { CardButton } from "../Cards/CardButton";
 import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
+import { useLayoutManager } from "@/hooks/useLayoutManager";
 
 const localCardPerRowSmall = 7;
 const localCardPerRowMedium = 5;
@@ -83,15 +84,18 @@ function evaluateEnd(state: GolfState) {
 export default function Golf() {
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
   const [game, setGame] = useState<GolfState>(setup);
-  const { animateCards, measureRef, isAnimating } = useAnimations();
+  const { animateCards, isAnimating } = useAnimations();
   const [animatingCard, setAnimatingCard] = useState<{
     col: number;
     row: number;
   } | null>(null);
 
-  const tableauRefs = useRef<(View | null)[][]>([[], [], [], [], [], [], []]);
-  const wasteRef = useRef<View>(null);
-  const stockRef = useRef<View>(null);
+  const { getLayout, setRef } = useLayoutManager([
+    "tableauRefs",
+    "wasteRef",
+    "stockRef",
+  ]);
+
   const [isDrawing, setIsDrawing] = useState(false);
 
   // const [hasLegalMoves, setHasLegalMoves] = useState(false);
@@ -120,23 +124,20 @@ export default function Golf() {
       setAnimatingCard({ col: colIndex, row: cardIndex });
     }, 10);
 
-    const cardEl = tableauRefs.current[colIndex][cardIndex];
-    if (cardEl) {
-      const cardPos = await measureRef({ current: cardEl });
-      const wastePos = await measureRef(wasteRef);
+    const cardPos = getLayout("tableauRefs", [colIndex][cardIndex]);
+    const wastePos = getLayout("wasteRef");
 
-      if (cardPos && wastePos) {
-        await animateCards([
-          {
-            card,
-            cardsPerRow: localCardPerRowSmall,
-            cardSize: "small" as CardSizes,
-            from: cardPos,
-            to: wastePos,
-            duration: 350,
-          },
-        ]);
-      }
+    if (cardPos && wastePos) {
+      await animateCards([
+        {
+          card,
+          cardsPerRow: localCardPerRowSmall,
+          cardSize: "small" as CardSizes,
+          from: cardPos,
+          to: wastePos,
+          duration: 350,
+        },
+      ]);
     }
 
     setGame((prev) => {
@@ -168,8 +169,8 @@ export default function Golf() {
       setIsDrawing(true);
     }, 10);
 
-    const stockPos = await measureRef(stockRef);
-    const wastePos = await measureRef(wasteRef);
+    const stockPos = getLayout("stockRef");
+    const wastePos = getLayout("wasteRef");
 
     if (stockPos && wastePos) {
       const nextCard = game.stock[0];
@@ -237,7 +238,7 @@ export default function Golf() {
         style={[flexStyles.rowCentered, flexStyles.fullWidth, flexStyles.gap40]}
       >
         <Deck
-          refTopCurrent={stockRef}
+          refTop={setRef("stockRef")}
           iconName="draw"
           cardsPerRow={localCardPerRowMedium}
           backCount={game.stock.length}
@@ -249,7 +250,7 @@ export default function Golf() {
         />
 
         <Deck
-          refTopNext={wasteRef}
+          refNext={setRef("wasteRef")}
           iconName="delete"
           cards={game.waste}
           cardsPerRow={localCardPerRowMedium}
@@ -275,9 +276,7 @@ export default function Golf() {
               return (
                 <CardButton
                   key={card.id}
-                  ref={(el) => {
-                    tableauRefs.current[colIndex][cardIndex] = el;
-                  }}
+                  ref={setRef("tableauRefs", [colIndex][cardIndex])}
                   style={[
                     animatingCard?.col === colIndex &&
                       animatingCard?.row === cardIndex && { opacity: 0 },

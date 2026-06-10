@@ -5,7 +5,11 @@ import { Text, TextStyle, View, ViewStyle } from "react-native";
 import { Card, CardGrid } from "../../Cards/Card";
 import { type PlayingCard } from "../../Cards/card-utils";
 import { CardButton } from "../../Cards/CardButton";
-import { EmissarySuitsColorMap, TheEmissaryVisit } from "./TheEmissaryCommon";
+import {
+  EmissaryRefKeys,
+  EmissarySuitsColorMap,
+  TheEmissaryVisit,
+} from "./TheEmissaryCommon";
 import { cardStyles } from "@/styles/cardStyles";
 
 const cardBlock: ViewStyle[] = [
@@ -37,6 +41,10 @@ const rotatedText: TextStyle[] = [
 ];
 
 interface EmissaryHandProps {
+  setRef: (
+    key: EmissaryRefKeys,
+    index?: number | undefined,
+  ) => (el: View | null) => void;
   selectedAdvisor?: PlayingCard;
   advisors: PlayingCard[];
   hand: PlayingCard[];
@@ -51,19 +59,12 @@ interface EmissaryHandProps {
     t: PlayingCard | undefined,
     c: PlayingCard,
   ) => boolean;
-  futureAdvisorRef: React.RefObject<View | null>;
-  futureHandRef: React.RefObject<View | null>;
-  advisorsRefs: React.RefObject<(View | null)[]>;
-  handRefs: React.RefObject<(View | null)[]>;
   animatingCardIds: string[];
 }
 
 export const EmissaryHand = ({
+  setRef,
   animatingCardIds,
-  futureAdvisorRef,
-  futureHandRef,
-  advisorsRefs,
-  handRefs,
   selectedAdvisor,
   discardFromHand,
   advisors,
@@ -103,9 +104,7 @@ export const EmissaryHand = ({
             return (
               <CardButton
                 key={card.id}
-                ref={(el) => {
-                  advisorsRefs.current[i] = el;
-                }}
+                ref={setRef("advisorsRefs", i)}
                 onPress={() => {
                   setSelectedAdvisor(
                     selectedAdvisor === card ? undefined : card,
@@ -148,9 +147,7 @@ export const EmissaryHand = ({
             return (
               <CardButton
                 key={card.id}
-                ref={(el) => {
-                  handRefs.current[i] = el;
-                }}
+                ref={setRef("handRefs", i)}
                 onPress={() => {
                   if (discardFromHand === 0) {
                     debateWithCard(card);
@@ -175,7 +172,7 @@ export const EmissaryHand = ({
           })}
           <Card
             card={undefined}
-            ref={futureHandRef}
+            ref={setRef("futureHandRef")}
             cardsPerRow={cardsPerRow}
             isPlaceholder
             style={[

@@ -30,6 +30,7 @@ import {
   TheEmissaryGame,
   TheEmissaryKingdom,
 } from "./TheEmissaryCommon";
+import { useLayoutManager } from "@/hooks/useLayoutManager";
 
 const defaultHandSize = 8;
 
@@ -89,21 +90,22 @@ export default function TheEmissary() {
   const [selectedAdvisor, setSelectedAdvisor] = useState<
     PlayingCard | undefined
   >(undefined);
-  const { animateCards, measureRef, animatingCardIds, isAnimating } =
-    useAnimations();
+  const { animateCards, animatingCardIds } = useAnimations();
 
-  const drawCurrentRef = useRef<View>(null);
-  const drawNextRef = useRef<View>(null);
-  const topicRef = useRef<View>(null);
-  const discardLostCurrentRef = useRef<View>(null);
-  const discardLostNextRef = useRef<View>(null);
-  const discardWonCurrentRef = useRef<View>(null);
-  const discardWonNextRef = useRef<View>(null);
-  const futureAdvisorRef = useRef<View>(null);
-  const futureHandRef = useRef<View>(null);
-  const advisorsRefs = useRef<(View | null)[]>([]);
-  const handRefs = useRef<(View | null)[]>([]);
-  const rulersRefs = useRef<(View | null)[]>([]);
+  const { getLayout, setRef } = useLayoutManager([
+    "drawCurrentRef",
+    "drawNextRef",
+    "topicRef",
+    "discardLostCurrentRef",
+    "discardLostNextRef",
+    "discardWonCurrentRef",
+    "discardWonNextRef",
+    "futureAdvisorRef",
+    "futureHandRef",
+    "advisorsRefs",
+    "handRefs",
+    "rulersRefs",
+  ]);
 
   function reset() {
     setGame(setup());
@@ -181,29 +183,26 @@ export default function TheEmissary() {
     );
 
     const cardIndex = game.hand.findIndex((c) => c.id === card.id);
-    const cardEl = handRefs.current[cardIndex];
 
-    if (cardEl) {
-      const currentHandPos = await measureRef({ current: cardEl });
-      const discardPos = await measureRef(
-        wonTopic ? discardWonNextRef : discardLostNextRef,
-      );
+    const currentHandPos = getLayout("handRefs", cardIndex);
+    let discardPos = getLayout(
+      wonTopic ? "discardWonNextRef" : "discardLostNextRef",
+    );
 
-      if (currentHandPos && discardPos && card) {
-        anims.push({
-          card,
-          from: currentHandPos,
-          to: discardPos,
-          cardSize: "small",
-          flip: wonTopic ? undefined : "toBack",
-          cardsPerRow: cardsPerRow.other,
-        });
-      }
+    if (currentHandPos && discardPos && card) {
+      anims.push({
+        card,
+        from: currentHandPos,
+        to: discardPos,
+        cardSize: "small",
+        flip: wonTopic ? undefined : "toBack",
+        cardsPerRow: cardsPerRow.other,
+      });
     }
 
     // Animate topic to discard
-    const topicCard = await measureRef(topicRef);
-    const discardPos = await measureRef(discardLostNextRef);
+    const topicCard = getLayout("topicRef");
+    discardPos = getLayout("discardLostNextRef");
 
     if (topicCard && discardPos && game.visit.debateTopic) {
       anims.push({
@@ -375,8 +374,8 @@ export default function TheEmissary() {
   }
 
   async function drawCardToHand() {
-    const drawPos = await measureRef(drawCurrentRef);
-    const futureHandPos = await measureRef(futureHandRef);
+    const drawPos = getLayout("drawCurrentRef");
+    const futureHandPos = getLayout("futureHandRef");
 
     const card = game.draw[game.draw.length - 1];
 
@@ -410,8 +409,8 @@ export default function TheEmissary() {
       await refreshDeckWithinKingdom();
     }
 
-    const drawPos = await measureRef(drawCurrentRef);
-    const topicPos = await measureRef(topicRef);
+    const drawPos = getLayout("drawCurrentRef");
+    const topicPos = getLayout("topicRef");
 
     const nextTopic = game.draw[game.draw.length - 1];
 
@@ -447,24 +446,20 @@ export default function TheEmissary() {
 
   async function discardCard(card: PlayingCard) {
     const cardIndex = game.hand.findIndex((c) => c.id === card.id);
-    const cardEl = handRefs.current[cardIndex];
+    const discardLostPos = getLayout("discardLostNextRef");
+    const cardPos = getLayout("handRefs", cardIndex);
 
-    if (cardEl) {
-      const discardLostPos = await measureRef(discardLostNextRef);
-      const cardPos = await measureRef({ current: cardEl });
-
-      if (discardLostPos && cardPos && card) {
-        await animateCards([
-          {
-            card: card,
-            from: cardPos,
-            to: discardLostPos,
-            cardSize: "small",
-            flip: "toFace",
-            cardsPerRow: cardsPerRow.other,
-          },
-        ]);
-      }
+    if (discardLostPos && cardPos && card) {
+      await animateCards([
+        {
+          card: card,
+          from: cardPos,
+          to: discardLostPos,
+          cardSize: "small",
+          flip: "toFace",
+          cardsPerRow: cardsPerRow.other,
+        },
+      ]);
     }
 
     setGame((prev) => {
@@ -490,24 +485,20 @@ export default function TheEmissary() {
     const anims: CardAnimationParams[] = [];
 
     for (let i = 0; i < hand.length; i++) {
-      const beforeEl = handRefs.current[i];
       const newPosIndex = orderedHand.findIndex((c) => c.id === hand[i].id);
-      const afterEl = handRefs.current[newPosIndex];
-      if (beforeEl && afterEl) {
-        const beforePos = await measureRef({ current: beforeEl });
-        const afterPos = await measureRef({ current: afterEl });
-        if (beforePos && afterPos) {
-          anims.push({
-            card: game.hand[i],
-            from: beforePos,
-            to: afterPos,
-            cardsPerRow: cardsPerRow.other,
-            cardSize: "small",
-            delay: i * 10 + Math.abs(beforePos.x - afterPos.x) * 2,
-            duration: 320,
-            arcY: 0.5 * Math.abs(beforePos.x - afterPos.x),
-          });
-        }
+      const beforePos = getLayout("handRefs", i);
+      const afterPos = getLayout("handRefs", newPosIndex);
+      if (beforePos && afterPos) {
+        anims.push({
+          card: game.hand[i],
+          from: beforePos,
+          to: afterPos,
+          cardsPerRow: cardsPerRow.other,
+          cardSize: "small",
+          delay: i * 10 + Math.abs(beforePos.x - afterPos.x) * 2,
+          duration: 320,
+          arcY: 0.5 * Math.abs(beforePos.x - afterPos.x),
+        });
       }
     }
 
@@ -540,23 +531,20 @@ export default function TheEmissary() {
 
   async function spendAdvisor(advisor: PlayingCard) {
     const advisorIndex = game.advisors.findIndex((c) => c.id === advisor.id);
-    const advisorEl = advisorsRefs.current[advisorIndex];
 
-    if (advisorEl) {
-      const advisorPos = await measureRef({ current: advisorEl });
+    const advisorPos = getLayout("advisorsRefs", advisorIndex);
 
-      if (advisorPos) {
-        await animateCards([
-          {
-            card: advisor,
-            from: advisorPos,
-            to: advisorPos,
-            cardSize: "small",
-            flip: "toBack",
-            cardsPerRow: cardsPerRow.other,
-          },
-        ]);
-      }
+    if (advisorPos) {
+      await animateCards([
+        {
+          card: advisor,
+          from: advisorPos,
+          to: advisorPos,
+          cardSize: "small",
+          flip: "toBack",
+          cardsPerRow: cardsPerRow.other,
+        },
+      ]);
     }
 
     // Turn advisor face down, or remove it
@@ -598,23 +586,20 @@ export default function TheEmissary() {
       const cardIndex = game.hand.findIndex(
         (c) => c.id === cardsToDiscard[i].id,
       );
-      const cardEl = handRefs.current[cardIndex];
 
-      if (cardEl) {
-        const currentHandPos = await measureRef({ current: cardEl });
-        const discardPos = await measureRef(discardLostNextRef);
+      const currentHandPos = getLayout("handRefs", cardIndex);
+      const discardPos = getLayout("discardLostNextRef");
 
-        if (currentHandPos && discardPos && card) {
-          anims.push({
-            card,
-            from: currentHandPos,
-            to: discardPos,
-            cardSize: "small",
-            flip: "toBack",
-            cardsPerRow: cardsPerRow.other,
-            delay: 100,
-          });
-        }
+      if (currentHandPos && discardPos && card) {
+        anims.push({
+          card,
+          from: currentHandPos,
+          to: discardPos,
+          cardSize: "small",
+          flip: "toBack",
+          cardsPerRow: cardsPerRow.other,
+          delay: 100,
+        });
       }
     }
 
@@ -763,9 +748,7 @@ export default function TheEmissary() {
                 </Text>
                 <CardButton
                   card={!k.won ? k.ruler : undefined}
-                  ref={(el) => {
-                    rulersRefs.current[i] = el;
-                  }}
+                  ref={setRef("rulersRefs", i)}
                   cardsPerRow={cardsPerRow.other}
                   onPress={onPress()}
                   disabled={onPress() === undefined}
@@ -814,13 +797,7 @@ export default function TheEmissary() {
 
           {/* Visit - Debate Decks */}
           <DebateDecks
-            topicRef={topicRef}
-            drawCurrentRef={drawCurrentRef}
-            drawNextRef={drawNextRef}
-            discardLostCurrentRef={discardLostCurrentRef}
-            discardLostNextRef={discardLostNextRef}
-            discardWonCurrentRef={discardWonCurrentRef}
-            discardWonNextRef={discardWonNextRef}
+            setRef={setRef}
             cardsPerRowDebates={cardsPerRow.debates}
             cardsPerRowTopic={cardsPerRow.topic}
             visit={game.visit}
@@ -842,11 +819,8 @@ export default function TheEmissary() {
         >
           {/* Advisor List */}
           <EmissaryHand
+            setRef={setRef}
             animatingCardIds={animatingCardIds}
-            futureAdvisorRef={futureAdvisorRef}
-            futureHandRef={futureHandRef}
-            handRefs={handRefs}
-            advisorsRefs={advisorsRefs}
             advisors={game.advisors}
             discardFromHand={game.discardFromHand}
             setSelectedAdvisor={setSelectedAdvisor}

@@ -14,6 +14,7 @@ import { CardButton } from "../Cards/CardButton";
 import { GameWrapper } from "../common/GameWrapper";
 import { cardStyles } from "@/styles/cardStyles";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { useLayoutManager } from "@/hooks/useLayoutManager";
 
 const cardsPerRow = 6;
 
@@ -51,9 +52,9 @@ function hasAnyMove(line: PlayingCard[]) {
 
 export default function Accordion() {
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
-  const { animateCards, measureRef, isAnimating, animatingCardIds } =
-    useAnimations();
-  const cardRefs = useRef<(View | null)[]>([]);
+  const { animateCards, isAnimating, animatingCardIds } = useAnimations();
+
+  const { getLayout, setRef } = useLayoutManager(["card"]);
 
   const [game, setGame] = useState<AccordionState>(setup);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -111,30 +112,24 @@ export default function Accordion() {
   ) {
     saveUndoState(structuredClone({ game }));
 
-    const anims: CardAnimationParams[] = [];
-
-    const positions = await Promise.all(
-      game.line.map((_, i) => {
-        const el = cardRefs.current[i];
-        return el ? measureRef({ current: el }) : Promise.resolve(null);
-      }),
-    );
-
+    const positions = game.line.map((_, i) => getLayout("card", i));
     const srcPos = positions[source];
     const tgtPos = positions[target];
 
     if (srcPos && tgtPos) {
-      anims.push({
-        card: srcCard,
-        cardSize: "small",
-        from: { ...srcPos, zIndex: 100 },
-        to: { ...tgtPos, zIndex: 100 },
-        duration: 150,
-        cardsPerRow,
-        keepAlive: true,
-      });
+      await animateCards([
+        {
+          card: srcCard,
+          cardSize: "small",
+          from: { ...srcPos, zIndex: 100 },
+          to: { ...tgtPos, zIndex: 100 },
+          cardsPerRow,
+          keepAlive: true,
+        },
+      ]);
     }
 
+    const anims: CardAnimationParams[] = [];
     const shiftingIndices = new Set([source, target]);
 
     for (let i = source + 1; i < game.line.length; i++) {
@@ -218,9 +213,7 @@ export default function Accordion() {
           return (
             <CardButton
               key={card.id}
-              ref={(el) => {
-                cardRefs.current[idx] = el;
-              }}
+              ref={setRef("card", idx)}
               onPress={() => onCardPress(idx)}
               disabled={game.ended}
               isSelected={selectedIndex === idx}

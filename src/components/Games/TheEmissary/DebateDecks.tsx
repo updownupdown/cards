@@ -5,9 +5,13 @@ import { Button } from "../../Button/Button";
 import { type PlayingCard } from "../../Cards/card-utils";
 import { CardButton } from "../../Cards/CardButton";
 import { Deck } from "../../Cards/Deck";
-import { TheEmissaryVisit } from "./TheEmissaryCommon";
+import { EmissaryRefKeys, TheEmissaryVisit } from "./TheEmissaryCommon";
 
 interface DebateDecksProps {
+  setRef: (
+    key: EmissaryRefKeys,
+    index?: number | undefined,
+  ) => (el: View | null) => void;
   cardWidth: number;
   cardsPerRowDebates: number;
   cardsPerRowTopic: number;
@@ -16,23 +20,9 @@ interface DebateDecksProps {
   discardLost: PlayingCard[];
   discardWon: PlayingCard[];
   draw: PlayingCard[];
-  topicRef: React.RefObject<View | null>;
-  drawCurrentRef: React.RefObject<View | null>;
-  drawNextRef: React.RefObject<View | null>;
-  discardLostCurrentRef: React.RefObject<View | null>;
-  discardLostNextRef: React.RefObject<View | null>;
-  discardWonCurrentRef: React.RefObject<View | null>;
-  discardWonNextRef: React.RefObject<View | null>;
 }
 
 export const DebateDecks = ({
-  topicRef,
-  drawCurrentRef,
-  drawNextRef,
-  discardLostCurrentRef,
-  discardLostNextRef,
-  discardWonCurrentRef,
-  discardWonNextRef,
   cardWidth,
   draw,
   discardLost,
@@ -41,6 +31,7 @@ export const DebateDecks = ({
   visit,
   cardsPerRowDebates,
   cardsPerRowTopic,
+  setRef,
 }: DebateDecksProps) => {
   return (
     <View
@@ -58,8 +49,8 @@ export const DebateDecks = ({
     >
       {/* Draw Deck */}
       <Deck
-        refTopCurrent={drawCurrentRef}
-        refTopNext={drawNextRef}
+        refTop={setRef("drawCurrentRef")}
+        refNext={setRef("drawNextRef")}
         cards={draw}
         cardsPerRow={cardsPerRowDebates}
         cardSize="small"
@@ -69,7 +60,7 @@ export const DebateDecks = ({
       <View style={[flexStyles.colCentered, flexStyles.gap14]}>
         {/* Current debate topic */}
         <CardButton
-          ref={topicRef}
+          ref={setRef("topicRef")}
           card={visit?.debateTopic}
           cardsPerRow={cardsPerRowTopic}
           cardSize="small"
@@ -97,8 +88,8 @@ export const DebateDecks = ({
 
       {/* Discard LOST Deck */}
       <Deck
-        refTopCurrent={discardLostCurrentRef}
-        refTopNext={discardLostNextRef}
+        refTop={setRef("discardLostCurrentRef")}
+        refNext={setRef("discardLostNextRef")}
         cards={discardLost}
         cardsPerRow={cardsPerRowDebates}
         cardSize="small"
@@ -107,8 +98,8 @@ export const DebateDecks = ({
 
       {/* Discard WON Deck */}
       <Deck
-        refTopCurrent={discardWonCurrentRef}
-        refTopNext={discardWonNextRef}
+        refTop={setRef("discardWonCurrentRef")}
+        refNext={setRef("discardWonNextRef")}
         cards={discardWon}
         cardsPerRow={cardsPerRowDebates}
         cardSize="small"

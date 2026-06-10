@@ -1,0 +1,30 @@
+import { useRef } from "react";
+import { View } from "react-native";
+
+export function useLayoutManager<T extends string>(initialKeys: T[]) {
+  const registry = useRef<Record<T, any>>({} as any).current;
+  const refs = useRef<Record<string, View | null>>({});
+
+  const setRef = (key: T, index?: number) => (el: View | null) => {
+    const rKey = index !== undefined ? `${key}-${index}` : key;
+    refs.current[rKey] = el;
+    if (el) {
+      el.measureInWindow((x, y, width, height) => {
+        const data = { x, y, width, height };
+        if (index !== undefined) {
+          if (!registry[key]) registry[key] = {};
+          registry[key][index] = data;
+        } else {
+          registry[key] = data;
+        }
+      });
+    }
+  };
+
+  const getLayout = (key: T, index?: number) => {
+    const data = registry[key];
+    return index !== undefined ? data?.[index] : data;
+  };
+
+  return { getLayout, setRef };
+}

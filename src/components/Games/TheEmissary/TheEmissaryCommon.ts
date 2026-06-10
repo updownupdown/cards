@@ -43,3 +43,17 @@ export const EmissarySuitsColorMap: Record<string, string> = {
 };
 
 export const debateRecordsHeight = 40;
+
+export type EmissaryRefKeys =
+  | "topicRef"
+  | "drawCurrentRef"
+  | "drawNextRef"
+  | "discardLostCurrentRef"
+  | "discardLostNextRef"
+  | "discardWonCurrentRef"
+  | "discardWonNextRef"
+  | "futureAdvisorRef"
+  | "futureHandRef"
+  | "advisorsRefs"
+  | "handRefs"
+  | "rulersRefs";

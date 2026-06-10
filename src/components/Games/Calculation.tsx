@@ -16,6 +16,7 @@ import {
 import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { useLayoutManager } from "@/hooks/useLayoutManager";
 
 const cardsPerRow = 4;
 
@@ -88,8 +89,7 @@ export default function Calculation() {
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
 
   const [game, setGame] = useState<CalculationState>(setup(true));
-  const { animateCards, isAnimating, measureRef, animatingCardIds } =
-    useAnimations();
+  const { animateCards, isAnimating, animatingCardIds } = useAnimations();
 
   const { saveUndoState, undo, canUndo, clearHistory } =
     useUndoHistory<GameSnapshot>();
@@ -119,16 +119,17 @@ export default function Calculation() {
     undefined,
   );
 
-  // Deck refs
-  const stockDeckRef = useRef<View>(null);
-  const wastesCurrentRefs = useRef<(View | null)[]>([]);
-  const wastesNextRefs = useRef<(View | null)[]>([]);
-  const foundationsRefsNext = useRef<(View | null)[]>([]);
+  const { getLayout, setRef } = useLayoutManager([
+    "stockDeck",
+    "wastesTop",
+    "wastesNext",
+    "foundationsNext",
+  ]);
 
   // Turn over top stock card
   async function turnOverStockCard() {
     if (topStockCard === undefined) return;
-    const stockDeckPos = await measureRef(stockDeckRef);
+    const stockDeckPos = getLayout("stockDeck");
 
     if (stockDeckPos) {
       await animateCards([
@@ -200,10 +201,9 @@ export default function Calculation() {
 
     setSelectedCard(undefined);
 
-    const wasteEl = wastesNextRefs.current[wastePileIndex];
-    if (topStockCard && wasteEl) {
-      const stockDeckPos = await measureRef(stockDeckRef);
-      const wasteDeckPos = await measureRef({ current: wasteEl });
+    if (topStockCard) {
+      const stockDeckPos = getLayout("stockDeck");
+      const wasteDeckPos = getLayout("wastesNext", wastePileIndex);
 
       if (stockDeckPos && wasteDeckPos) {
         await animateCards([
@@ -244,7 +244,7 @@ export default function Calculation() {
 
     if (selectedCard.id === topStockCard?.id) {
       cardFromStock = true;
-      fromPos = await measureRef(stockDeckRef);
+      fromPos = getLayout("stockDeck");
     } else {
       let selectedWasteIndex = game.wastes.findIndex((wastePile, i) => {
         if (game.wastes[i].length === 0) return false;
@@ -256,26 +256,22 @@ export default function Calculation() {
         }
       });
       if (selectedWasteIndex === undefined) return;
-      const fromEl = wastesCurrentRefs.current[selectedWasteIndex];
-      fromPos = await measureRef({ current: fromEl });
+      fromPos = getLayout("wastesTop", selectedWasteIndex);
     }
 
     // To position (foundation)
-    const toEl = foundationsRefsNext.current[foundationPileIndex];
-    if (toEl) {
-      const toPos = await measureRef({ current: toEl });
+    const toPos = getLayout("foundationsNext", foundationPileIndex);
 
-      // Animate from waste to foundation
-      if (fromPos && toPos) {
-        await animateCards([
-          {
-            card: selectedCard,
-            cardsPerRow,
-            from: fromPos,
-            to: toPos,
-          },
-        ]);
-      }
+    // Animate from waste to foundation
+    if (fromPos && toPos) {
+      await animateCards([
+        {
+          card: selectedCard,
+          cardsPerRow,
+          from: fromPos,
+          to: toPos,
+        },
+      ]);
     }
 
     // Update game
@@ -333,7 +329,7 @@ export default function Calculation() {
       >
         {/* Stock */}
         <Deck
-          refTopCurrent={stockDeckRef}
+          refTop={setRef("stockDeck")}
           cards={game.stock}
           showCount
           countPosition="left"
@@ -402,12 +398,8 @@ export default function Calculation() {
           return (
             <Deck
               key={`calc-found-${i}`}
-              refTopCurrent={(el) => {
-                wastesCurrentRefs.current[i] = el;
-              }}
-              refTopNext={(el) => {
-                wastesNextRefs.current[i] = el;
-              }}
+              refTop={setRef("wastesTop", i)}
+              refNext={setRef("wastesNext", i)}
               cards={waste}
               cardsPerRow={cardsPerRow}
               fan="verticalUp"
@@ -482,9 +474,7 @@ export default function Calculation() {
                 </Text>
               </View>
               <Deck
-                refTopNext={(el) => {
-                  foundationsRefsNext.current[i] = el;
-                }}
+                refNext={setRef("foundationsNext", i)}
                 cards={foundation}
                 cardsPerRow={cardsPerRow}
                 fan="verticalUp"

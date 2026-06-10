@@ -98,7 +98,7 @@ function setup(): LoopState {
 }
 
 export default function LootTheLoop() {
-  const { animateCards, measureRef, isAnimating } = useAnimations();
+  const { animateCards, isAnimating } = useAnimations();
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
   const { contentRadius } = useContentWidth();
   const { width: cardWidth, height: cardHeight } = useCardSize(
@@ -175,8 +175,8 @@ export default function LootTheLoop() {
     // const markedPathEl = markedPathRef.current[noteIndex];
 
     // if (loopCardEl && markedPathEl) {
-    //   const loopCardPos = await measureRef({ current: loopCardEl });
-    //   const markPathPos = await measureRef({ current: markedPathEl });
+    //   const loopCardPos = getLayout?({ current: loopCardEl });
+    //   const markPathPos = getLayout?({ current: markedPathEl });
 
     //   if (loopCardPos && markPathPos) {
     //     await animateCards([

@@ -16,6 +16,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { useToast } from "../common/Toast";
 import { Colors } from "@/styles/styles";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { useLayoutManager } from "@/hooks/useLayoutManager";
 
 const cardsPerRow = 5;
 
@@ -98,8 +99,7 @@ function getAdjacentPiles(piles: PlayingCard[][]) {
 
 export default function Foursquare() {
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
-  const { isAnimating, measureRef, animateCards, animatingCardIds } =
-    useAnimations();
+  const { isAnimating, animateCards, animatingCardIds } = useAnimations();
 
   const { saveUndoState, undo, canUndo, clearHistory } =
     useUndoHistory<GameSnapshot>();
@@ -110,9 +110,11 @@ export default function Foursquare() {
     }
   };
 
-  const drawRef = useRef<View>(null);
-  const pilesNextRef = useRef<(View | null)[]>([]);
-  const pilesCurrentRef = useRef<(View | null)[]>([]);
+  const { getLayout, setRef } = useLayoutManager([
+    "draw",
+    "pilesTop",
+    "pilesNext",
+  ]);
 
   function initGame(game: GameState) {
     turnOverDeckCard(game);
@@ -127,7 +129,7 @@ export default function Foursquare() {
   const [game, setGame] = useState<GameState>(setup());
 
   async function turnOverDeckCard(gameState: GameState) {
-    const drawPos = await measureRef(drawRef);
+    const drawPos = getLayout("draw");
     const topCard = top(gameState.deck);
     let deck = [...gameState.deck];
     if (topCard) {
@@ -195,22 +197,19 @@ export default function Foursquare() {
     const intermediateGame = { ...game, piles, deck };
 
     // Animate draw card to pile
-    const pileEl = pilesNextRef.current[index];
 
-    if (pileEl) {
-      const pilePos = await measureRef({ current: pileEl });
-      const drawPos = await measureRef(drawRef);
+    const pilePos = getLayout("pilesNext", index);
+    const drawPos = getLayout("draw");
 
-      if (drawPos && pilePos && drawCard) {
-        await animateCards([
-          {
-            card: drawCard,
-            from: drawPos,
-            to: pilePos,
-            cardsPerRow,
-          },
-        ]);
-      }
+    if (drawPos && pilePos && drawCard) {
+      await animateCards([
+        {
+          card: drawCard,
+          from: drawPos,
+          to: pilePos,
+          cardsPerRow,
+        },
+      ]);
     }
 
     // Update game
@@ -239,10 +238,9 @@ export default function Foursquare() {
     if (cardsToAnimate.length) {
       const animPromises = cardsToAnimate.map(async (pileIndex, index) => {
         const card = top(intermediateGame.piles[pileIndex]);
-        const pileEl = pilesCurrentRef.current[pileIndex];
 
-        if (pileEl && card) {
-          const pilePos = await measureRef({ current: pileEl });
+        if (card) {
+          const pilePos = getLayout("pilesTop", pileIndex);
 
           if (pilePos) {
             return {
@@ -427,7 +425,7 @@ export default function Foursquare() {
       <View style={[flexStyles.colCentered]}>
         <Deck
           // title="Draw"
-          refTopCurrent={drawRef}
+          refTop={setRef("draw")}
           cards={game.deck}
           cardsPerRow={cardsPerRow}
           limitFan
@@ -468,19 +466,15 @@ export default function Foursquare() {
                   flexStyles.colStart,
                   {
                     borderRadius: 8,
-                    backgroundColor: Colors.K860,
+                    backgroundColor: Colors.K875,
                     width: "100%",
                   },
                 ]}
               >
                 <Deck
                   cards={pile}
-                  refTopNext={(el) => {
-                    pilesNextRef.current[index] = el;
-                  }}
-                  refTopCurrent={(el) => {
-                    pilesCurrentRef.current[index] = el;
-                  }}
+                  refNext={setRef("pilesNext", index)}
+                  refTop={setRef("pilesTop", index)}
                   onPress={() => {
                     if (!isLegal) {
                       if (pile.length >= 4) {

@@ -19,6 +19,7 @@ import {
 import { CardButton } from "../Cards/CardButton";
 import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
+import { useLayoutManager } from "@/hooks/useLayoutManager";
 
 const cardsPerRow = 6.2;
 
@@ -153,8 +154,7 @@ export default function DeadCenter() {
   const gridCellWidth = contentDiameter / 5;
   const gridCellHeight = gridCellWidth * 1.2;
 
-  const { animateCards, measureRef, animatingCardIds, isAnimating } =
-    useAnimations();
+  const { animateCards, animatingCardIds, isAnimating } = useAnimations();
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
   const [game, setGame] = useState<GameState>(setup);
 
@@ -162,31 +162,30 @@ export default function DeadCenter() {
     setGame(setup());
   }
 
-  const drawRef = useRef<View | null>(null);
-  const zombieRefs = useRef<(View | null)[]>([]);
-  const pilesCurrentRefs = useRef<(View | null)[]>([]);
-  const pilesNextRefs = useRef<(View | null)[]>([]);
+  const { getLayout, setRef } = useLayoutManager([
+    "draw",
+    "zombies",
+    "pilesTop",
+    "pilesNext",
+  ]);
 
   async function revealZombie(index: number) {
     if (game.ended || game.phase !== "reveal") return;
     const zombie = game.zombies[index];
     if (!zombie || zombie.dead || zombie.card.faceUp) return;
 
-    const zombieEl = zombieRefs.current[index];
-    if (zombieEl) {
-      const zombiePos = await measureRef({ current: zombieEl });
-      if (zombiePos) {
-        await animateCards([
-          {
-            card: zombie.card,
-            cardsPerRow,
-            from: zombiePos,
-            to: zombiePos,
-            flip: "toFace",
-            cardSize: "small",
-          },
-        ]);
-      }
+    const zombiePos = getLayout("zombies", index);
+    if (zombiePos) {
+      await animateCards([
+        {
+          card: zombie.card,
+          cardsPerRow,
+          from: zombiePos,
+          to: zombiePos,
+          flip: "toFace",
+          cardSize: "small",
+        },
+      ]);
     }
 
     setGame((prev) => {
@@ -209,23 +208,19 @@ export default function DeadCenter() {
     const top = game.piles[index][game.piles[index].length - 1];
     if (!canPlayOn(top, currentDraw)) return;
 
-    const pileEl = pilesNextRefs.current[index];
+    const drawPos = getLayout("draw");
+    const pilePos = getLayout("pilesNext", index);
 
-    if (pileEl) {
-      const drawPos = await measureRef(drawRef);
-      const pilePos = await measureRef({ current: pileEl });
-
-      if (drawPos && pilePos) {
-        await animateCards([
-          {
-            card: currentDraw,
-            cardsPerRow,
-            from: drawPos,
-            to: pilePos,
-            cardSize: "small",
-          },
-        ]);
-      }
+    if (drawPos && pilePos) {
+      await animateCards([
+        {
+          card: currentDraw,
+          cardsPerRow,
+          from: drawPos,
+          to: pilePos,
+          cardSize: "small",
+        },
+      ]);
     }
 
     setGame((prev) => {
@@ -245,23 +240,18 @@ export default function DeadCenter() {
   }
 
   async function killZombie(zombieIndex: number) {
-    const zombieEl = zombieRefs.current[zombieIndex];
-
-    if (zombieEl) {
-      const zombiePos = await measureRef({ current: zombieEl });
-
-      if (zombiePos) {
-        await animateCards([
-          {
-            card: game.zombies[zombieIndex].card,
-            cardsPerRow,
-            from: { ...zombiePos, opacity: 1 },
-            to: { ...zombiePos, opacity: 0 },
-            cardSize: "small",
-            duration: 1000,
-          },
-        ]);
-      }
+    const zombiePos = getLayout("zombies", zombieIndex);
+    if (zombiePos) {
+      await animateCards([
+        {
+          card: game.zombies[zombieIndex].card,
+          cardsPerRow,
+          from: { ...zombiePos, opacity: 1 },
+          to: { ...zombiePos, opacity: 0 },
+          cardSize: "small",
+          duration: 1000,
+        },
+      ]);
     }
 
     setGame((prev) => {
@@ -294,20 +284,18 @@ export default function DeadCenter() {
     const drawCard = game.draw[game.draw.length - 1];
     if (drawCard.faceUp) return;
 
-    if (drawRef) {
-      const drawPos = await measureRef(drawRef);
-      if (drawPos) {
-        await animateCards([
-          {
-            card: drawCard,
-            cardsPerRow,
-            from: drawPos,
-            to: drawPos,
-            flip: "toFace",
-            cardSize: "small",
-          },
-        ]);
-      }
+    const drawPos = getLayout("draw");
+    if (drawPos) {
+      await animateCards([
+        {
+          card: drawCard,
+          cardsPerRow,
+          from: drawPos,
+          to: drawPos,
+          flip: "toFace",
+          cardSize: "small",
+        },
+      ]);
     }
 
     setGame((prev) => {
@@ -472,9 +460,7 @@ export default function DeadCenter() {
               ]}
             >
               <CardButton
-                ref={(el) => {
-                  zombieRefs.current[zombieIndex] = el;
-                }}
+                ref={setRef("zombies", zombieIndex)}
                 onPress={() => {
                   if (canReveal) {
                     revealZombie(zombieIndex);
@@ -544,7 +530,7 @@ export default function DeadCenter() {
           </Text>
 
           <Deck
-            refTopCurrent={drawRef}
+            refTop={setRef("draw")}
             cards={game.draw}
             cardsPerRow={cardsPerRow}
             showCount
@@ -602,12 +588,8 @@ export default function DeadCenter() {
                   >
                     {/* Cabin piles */}
                     <Deck
-                      refTopCurrent={(el) => {
-                        pilesCurrentRefs.current[index] = el;
-                      }}
-                      refTopNext={(el) => {
-                        pilesNextRefs.current[index] = el;
-                      }}
+                      refTop={setRef("pilesTop", index)}
+                      refNext={setRef("pilesNext", index)}
                       limitFan
                       cards={pile}
                       cardsPerRow={cardsPerRow}

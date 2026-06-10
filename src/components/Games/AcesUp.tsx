@@ -14,6 +14,7 @@ import {
 import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { useLayoutManager } from "@/hooks/useLayoutManager";
 
 const cardsPerRow = 4;
 
@@ -122,13 +123,14 @@ export default function AcesUp() {
     }
   };
 
-  const { animateCards, measureRef, isAnimating, animatingCardIds } =
-    useAnimations();
+  const { animateCards, isAnimating, animatingCardIds } = useAnimations();
 
-  const stockRef = useRef<View>(null);
-  const discardRef = useRef<View>(null);
-  const pileRefsCurrent = useRef<(View | null)[]>([]);
-  const pileRefsNext = useRef<(View | null)[]>([]);
+  const { getLayout, setRef } = useLayoutManager([
+    "stock",
+    "discard",
+    "pileTop",
+    "pileNext",
+  ]);
 
   const discardable = useMemo(
     () => getDiscardablePileIndexes(game.piles),
@@ -153,27 +155,24 @@ export default function AcesUp() {
 
     saveUndoState(structuredClone({ game }));
 
-    const stockPos = await measureRef(stockRef);
+    const stockPos = getLayout("stock");
     if (stockPos) {
       const stock = [...game.stock];
       const cardsToDeal = stock.slice(0, 4);
       const anims = [];
 
       for (let i = 0; i < 4; i += 1) {
-        const pileEl = pileRefsNext.current[i];
-        if (!pileEl) continue;
-        const pilePos = await measureRef({ current: pileEl });
-        if (pilePos) {
-          anims.push({
-            id: `deal-${i}`,
-            card: cardsToDeal[i],
-            cardsPerRow,
-            to: { ...pilePos, zIndex: 200 - i },
-            from: { ...stockPos, zIndex: 200 - i },
-            delay: i * 150,
-            flip: "toFace" as const,
-          });
-        }
+        const pilePos = getLayout("pileNext", i);
+        if (!pilePos) continue;
+        anims.push({
+          id: `deal-${i}`,
+          card: cardsToDeal[i],
+          cardsPerRow,
+          to: { ...pilePos, zIndex: 200 - i },
+          from: { ...stockPos, zIndex: 200 - i },
+          delay: i * 150,
+          flip: "toFace" as const,
+        });
       }
 
       if (anims.length > 0) {
@@ -210,25 +209,22 @@ export default function AcesUp() {
 
     saveUndoState(structuredClone({ game }));
 
-    const pileEl = pileRefsCurrent.current[pileIndex];
-    if (pileEl) {
-      const pilePos = await measureRef({ current: pileEl });
-      const discardPos = await measureRef(discardRef);
+    const pilePos = getLayout("pileTop", pileIndex);
+    const discardPos = getLayout("discard");
 
-      if (pilePos && discardPos) {
-        const pile = game.piles[pileIndex];
-        const cardToDiscard = pile[pile.length - 1];
+    if (pilePos && discardPos) {
+      const pile = game.piles[pileIndex];
+      const cardToDiscard = pile[pile.length - 1];
 
-        await animateCards([
-          {
-            card: cardToDiscard,
-            cardsPerRow,
-            flip: "toBack" as const,
-            from: pilePos,
-            to: discardPos,
-          },
-        ]);
-      }
+      await animateCards([
+        {
+          card: cardToDiscard,
+          cardsPerRow,
+          flip: "toBack" as const,
+          from: pilePos,
+          to: discardPos,
+        },
+      ]);
     }
 
     setGame((prev) => {
@@ -265,26 +261,21 @@ export default function AcesUp() {
     saveUndoState(structuredClone({ game }));
 
     // Animate move card to empty pile
-    const emptyPileEl = pileRefsCurrent.current[pileIndex];
-    const selectedPileEl = pileRefsCurrent.current[selectedPile];
+    const emptyPilePos = getLayout("pileTop", pileIndex);
+    const selectedPilePos = getLayout("pileTop", selectedPile);
 
-    if (emptyPileEl && selectedPileEl) {
-      const emptyPilePos = await measureRef({ current: emptyPileEl });
-      const selectedPilePos = await measureRef({ current: selectedPileEl });
+    if (emptyPilePos && selectedPilePos) {
+      const pile = game.piles[selectedPile];
+      const cardToMove = pile[pile.length - 1];
 
-      if (emptyPilePos && selectedPilePos) {
-        const pile = game.piles[selectedPile];
-        const cardToMove = pile[pile.length - 1];
-
-        await animateCards([
-          {
-            card: cardToMove,
-            cardsPerRow,
-            from: selectedPilePos,
-            to: emptyPilePos,
-          },
-        ]);
-      }
+      await animateCards([
+        {
+          card: cardToMove,
+          cardsPerRow,
+          from: selectedPilePos,
+          to: emptyPilePos,
+        },
+      ]);
     }
 
     setSelectedPile(undefined);
@@ -327,7 +318,7 @@ export default function AcesUp() {
       >
         {/* Stock pile */}
         <Deck
-          refTopCurrent={stockRef}
+          refTop={setRef("stock")}
           backCount={game.stock.length}
           cardsPerRow={cardsPerRow}
           limitFan
@@ -341,7 +332,7 @@ export default function AcesUp() {
 
         {/* Discard pile */}
         <Deck
-          refTopNext={discardRef}
+          refNext={setRef("discard")}
           backCount={game.discard.length}
           cardsPerRow={cardsPerRow}
           limitFan
@@ -366,12 +357,8 @@ export default function AcesUp() {
                 largeFan="progressive"
                 cards={pile}
                 hideTopCard={topCard && animatingCardIds.includes(topCard.id)}
-                refTopCurrent={(el) => {
-                  pileRefsCurrent.current[idx] = el;
-                }}
-                refTopNext={(el) => {
-                  pileRefsNext.current[idx] = el;
-                }}
+                refTop={setRef("pileTop", idx)}
+                refNext={setRef("pileNext", idx)}
                 onPress={() => {
                   if (canDiscard) {
                     discardTop(idx);

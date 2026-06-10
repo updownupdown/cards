@@ -1,72 +1,55 @@
-import { useMemo, useState } from "react";
-import { GameMenus } from "../common/GameMenus";
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-
-import { Card } from "../Cards/Card";
-import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
-import { textStyles } from "@/styles/textStyles";
+import { useLayoutManager } from "@/hooks/useLayoutManager";
+import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { flexStyles } from "@/styles/flexStyles";
+import { useState } from "react";
+import { View } from "react-native";
+import { CardAnimationParams, useAnimations } from "../Animations/Animations";
+import { CardGrid, useCardGridSizes } from "../Cards/Card";
+import {
+  createDeck,
+  isFace,
+  shuffle,
+  top,
+  type PlayingCard,
+} from "../Cards/card-utils";
+import { CardButton } from "../Cards/CardButton";
+import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
 
-type GuessSlot = {
-  id: string;
-  row: number;
-  col: number;
-  card: PlayingCard | null;
-};
+const cardsPerRow = 6;
+const gridCols = 4;
+const gridRows = 3;
 
 type GameState = {
-  playmates: PlayingCard[]; // 12 cards in row-major 3x4
-  revealed: boolean[];
-  slots: GuessSlot[];
-  deck: PlayingCard[];
-  discard: PlayingCard[];
+  playmates: PlayingCard[];
+  guesses: (PlayingCard | null)[];
+  drawPile: PlayingCard[];
+  discardPile: PlayingCard[];
   scorePile: PlayingCard[];
   ended: boolean;
+  won: boolean;
+  winLoseMessage: string;
 };
 
-function isFace(card: PlayingCard) {
-  return card.rank === "J" || card.rank === "Q" || card.rank === "K";
-}
-
-function buildSlots() {
-  const slots: GuessSlot[] = [];
-  for (let r = 0; r < 3; r += 1) {
-    slots.push({ id: `l-${r}`, row: r, col: -1, card: null });
-    slots.push({ id: `r-${r}`, row: r, col: 4, card: null });
-  }
-  for (let c = 0; c < 4; c += 1) {
-    slots.push({ id: `t-${c}`, row: -1, col: c, card: null });
-    slots.push({ id: `b-${c}`, row: 3, col: c, card: null });
-  }
-  // Two extra flexible perimeter spots to make 14 as described.
-  slots.push({ id: "x-0", row: 1, col: -2, card: null });
-  slots.push({ id: "x-1", row: 1, col: 5, card: null });
-  return slots;
-}
-
-function shuffleInPlace<T>(arr: T[]) {
-  const next = [...arr];
-  for (let i = next.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [next[i], next[j]] = [next[j], next[i]];
-  }
-  return next;
-}
+type GameSnapshot = {
+  game: GameState;
+};
 
 function dealPlaymates(faceCards: PlayingCard[]) {
-  const jacks = shuffleInPlace(faceCards.filter((c) => c.rank === "J"));
-  const queens = shuffleInPlace(faceCards.filter((c) => c.rank === "Q"));
-  const kings = shuffleInPlace(faceCards.filter((c) => c.rank === "K"));
+  const jacks = shuffle(faceCards.filter((c) => c.rank === "J"));
+  const queens = shuffle(faceCards.filter((c) => c.rank === "Q"));
+  const kings = shuffle(faceCards.filter((c) => c.rank === "K"));
 
-  // Find a partition of 4 columns where each column has J/Q/K with distinct suits.
+  // Find a partition of 4 columns where each column has J/Q/K with distinct suits
   for (let attempt = 0; attempt < 100; attempt += 1) {
     const cols: Array<[PlayingCard, PlayingCard, PlayingCard]> = [];
-    const qPool = shuffleInPlace(queens);
-    const kPool = shuffleInPlace(kings);
+    const qPool = shuffle(queens);
+    const kPool = shuffle(kings);
 
     let ok = true;
-    for (let c = 0; c < 4; c += 1) {
+
+    for (let c = 0; c < gridCols; c += 1) {
       const j = jacks[c];
       const q = qPool[c];
       const k = kPool[c];
@@ -80,314 +63,434 @@ function dealPlaymates(faceCards: PlayingCard[]) {
 
     if (!ok) continue;
 
-    const shuffledColumns = shuffleInPlace(cols).map((col) =>
-      shuffleInPlace(col),
-    );
-    const rows = 3;
+    const shuffledColumns = shuffle(cols).map((col) => shuffle(col));
+
     const out: PlayingCard[] = [];
-    for (let r = 0; r < rows; r += 1) {
-      for (let c = 0; c < 4; c += 1) {
+    for (let r = 0; r < gridRows; r += 1) {
+      for (let c = 0; c < gridCols; c += 1) {
         out.push(shuffledColumns[c][r]);
       }
     }
     return out;
   }
 
-  return shuffleInPlace(faceCards).slice(0, 12);
+  return shuffle(faceCards).slice(0, gridCols * gridRows);
+}
+
+function getScoreIndexes(playmateIndex: number) {
+  let indexes: number[] = [];
+
+  // Top and bottom rows of guesses
+  if (playmateIndex % 4 === 0) indexes.push(0, 10);
+  if (playmateIndex % 4 === 1) indexes.push(1, 9);
+  if (playmateIndex % 4 === 2) indexes.push(2, 8);
+  if (playmateIndex % 4 === 3) indexes.push(3, 7);
+
+  // Left and right columns of guesses
+  if (Math.floor(playmateIndex / 4) === 0) indexes.push(13, 4);
+  if (Math.floor(playmateIndex / 4) === 1) indexes.push(12, 5);
+  if (Math.floor(playmateIndex / 4) === 2) indexes.push(11, 6);
+
+  return indexes;
 }
 
 function setup(): GameState {
-  const deck = shuffle(createDeck({ faceUp: true }));
-  const faces = dealPlaymates(deck.filter(isFace));
-  const others = shuffle(deck.filter((c) => !isFace(c)));
+  const fullDeck = shuffle(createDeck());
+  const playmates = dealPlaymates(fullDeck.filter((c) => isFace(c)));
+  const drawPile = shuffle(fullDeck.filter((c) => !isFace(c))).map((c) => ({
+    ...c,
+    faceUp: true,
+  }));
 
   return {
-    playmates: faces.slice(0, 12),
-    revealed: Array.from({ length: 12 }, () => false),
-    slots: buildSlots(),
-    deck: others,
-    discard: [],
+    playmates,
+    guesses: Array.from({ length: 14 }, (_, i) => null),
+    drawPile,
+    discardPile: [],
     scorePile: [],
     ended: false,
+    won: false,
+    winLoseMessage: "",
   };
-}
-
-function playmatePos(index: number) {
-  return { row: Math.floor(index / 4), col: index % 4 };
 }
 
 export default function HideAndSeek() {
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
-
   const [game, setGame] = useState<GameState>(setup);
-  const [message, setMessage] = useState(
-    "Place guesses, reveal playmates, and withdraw bad guesses when needed.",
-  );
-
-  const allRevealed = useMemo(
-    () => game.revealed.every(Boolean),
-    [game.revealed],
-  );
+  const { animateCards, animatingCardIds } = useAnimations();
 
   function reset() {
+    clearHistory();
     setGame(setup());
-    setMessage(
-      "Place guesses, reveal playmates, and withdraw bad guesses when needed.",
+  }
+
+  const { saveUndoState, undo, canUndo, clearHistory } =
+    useUndoHistory<GameSnapshot>();
+  const handleUndo = () => {
+    const previousState = undo();
+    if (previousState) {
+      setGame(previousState.game);
+    }
+  };
+
+  const { gridGap } = useCardGridSizes(cardsPerRow, gridCols);
+
+  const { getLayout, setRef } = useLayoutManager([
+    "drawPile",
+    "scorePile",
+    "discardPile",
+    "guesses",
+    "playmates",
+  ]);
+
+  const Guesses = ({ indexes }: { indexes: number[] }) => {
+    const isVertical = indexes.length === 3;
+
+    return (
+      <View
+        style={[
+          isVertical ? flexStyles.colCentered : flexStyles.rowCentered,
+          { gap: gridGap },
+        ]}
+      >
+        {indexes.map((i) => {
+          const guess = game.guesses[i];
+
+          return (
+            <CardButton
+              key={`guess-${i}`}
+              ref={setRef("guesses", i)}
+              card={guess}
+              cardsPerRow={cardsPerRow}
+              cardSize="small"
+              onPress={() => {
+                if (guess) {
+                  widthdrawGuess(i);
+                } else {
+                  placeGuess(i);
+                }
+              }}
+              isPlaceholder={
+                !guess || (guess && animatingCardIds.includes(guess.id))
+              }
+              selectColor="none"
+            />
+          );
+        })}
+      </View>
     );
+  };
+
+  async function placeGuess(guessIndex: number) {
+    // Calculate game state
+    let newDrawPile = [...game.drawPile];
+    const topDrawCard = top(newDrawPile);
+
+    if (game.ended || !topDrawCard) return;
+
+    saveUndoState(structuredClone({ game }));
+
+    newDrawPile = newDrawPile.slice(0, -1);
+
+    let newGuesses = [...game.guesses];
+    newGuesses[guessIndex] = topDrawCard;
+
+    const newGame: GameState = {
+      ...game,
+      guesses: newGuesses,
+      drawPile: newDrawPile,
+    };
+
+    // Animate draw card to guess
+    if (topDrawCard) {
+      const drawPos = getLayout("drawPile");
+      const guessPos = getLayout("guesses", guessIndex);
+
+      if (drawPos && guessPos) {
+        await animateCards([
+          {
+            card: topDrawCard,
+            from: drawPos,
+            to: guessPos,
+            cardsPerRow,
+            cardSize: "small",
+          },
+        ]);
+      }
+    }
+
+    // Update game
+    setGame(newGame);
   }
 
-  function placeGuess(slotId: string) {
-    setGame((prev) => {
-      if (prev.ended) return prev;
-      const slotIndex = prev.slots.findIndex((s) => s.id === slotId);
-      if (slotIndex < 0 || prev.slots[slotIndex].card) return prev;
-      if (prev.deck.length === 0) return prev;
+  async function widthdrawGuess(guessIndex: number) {
+    // Calculate game state
+    let newDrawPile = [...game.drawPile];
+    const topDrawCard = top(newDrawPile);
+    const guessCard = game.guesses[guessIndex];
 
-      const deck = [...prev.deck];
-      const card = deck.shift() ?? null;
-      if (!card) return prev;
+    if (game.ended || !topDrawCard || !guessCard) return;
 
-      const slots = prev.slots.map((s) => ({ ...s }));
-      slots[slotIndex].card = card;
-      return { ...prev, deck, slots };
+    saveUndoState(structuredClone({ game }));
+
+    newDrawPile = newDrawPile.slice(0, -1);
+
+    let newGuesses = [...game.guesses];
+    newGuesses[guessIndex] = null;
+
+    let newDiscardPile = [...game.discardPile];
+    newDiscardPile.push({ ...topDrawCard, faceUp: false });
+    newDiscardPile.push({ ...guessCard, faceUp: false });
+
+    const newGame: GameState = {
+      ...game,
+      guesses: newGuesses,
+      drawPile: newDrawPile,
+      discardPile: newDiscardPile,
+    };
+
+    // Animate draw card to guess
+    if (topDrawCard && guessCard) {
+      const anims: CardAnimationParams[] = [];
+
+      const drawPos = getLayout("drawPile");
+      const discardPos = getLayout("discardPile");
+      const guessPos = getLayout("guesses", guessIndex);
+
+      if (drawPos && discardPos && guessPos) {
+        // Draw card to discard pile
+        anims.push({
+          card: topDrawCard,
+          from: drawPos,
+          to: discardPos,
+          cardsPerRow,
+          cardSize: "small",
+          flip: "toBack",
+        });
+        // Guess card to discard pile
+        anims.push({
+          card: guessCard,
+          from: guessPos,
+          to: discardPos,
+          cardsPerRow,
+          cardSize: "small",
+          flip: "toBack",
+          delay: 100,
+        });
+      }
+
+      if (anims.length > 0) {
+        await animateCards(anims);
+      }
+    }
+
+    // Update game
+    setGame(newGame);
+  }
+
+  async function revealPlaymate(playmateIndex: number) {
+    // Calculate game state
+    const playmate = game.playmates[playmateIndex];
+
+    if (game.ended || !playmate) return;
+
+    saveUndoState(structuredClone({ game }));
+
+    let newPlaymates = [...game.playmates];
+    newPlaymates[playmateIndex] = { ...playmate, faceUp: true };
+
+    // Animate draw card to guess
+    if (playmate) {
+      const playmatePos = getLayout("playmates", playmateIndex);
+
+      if (playmatePos) {
+        await animateCards([
+          {
+            card: playmate,
+            from: playmatePos,
+            to: playmatePos,
+            cardsPerRow,
+            cardSize: "small",
+            flip: "toFace",
+          },
+        ]);
+      }
+    }
+
+    let newGame: GameState = {
+      ...game,
+      playmates: newPlaymates,
+    };
+
+    // Update game
+    setGame(newGame);
+
+    // Score cards
+    let scoredCardsAtIndexes: { card: PlayingCard; index: number }[] = [];
+    let scoredIndexes = getScoreIndexes(playmateIndex);
+    let newGuesses = [...game.guesses];
+    let newScorePile = [...game.scorePile];
+
+    scoredIndexes.forEach((index) => {
+      const guessAtIndex = game.guesses[index];
+      if (guessAtIndex?.suit === playmate.suit) {
+        scoredCardsAtIndexes.push({ card: guessAtIndex, index });
+        newScorePile.push({ ...guessAtIndex, faceUp: false });
+        newGuesses[index] = null;
+      }
     });
 
-    setMessage("Guess placed.");
+    // Animate score cards
+    let anims: CardAnimationParams[] = [];
+
+    if (scoredCardsAtIndexes.length) {
+      const scorePos = getLayout("scorePile");
+      const animPromises = scoredCardsAtIndexes.map(
+        async (cardAtIndex, idx) => {
+          if (cardAtIndex.card && scorePos) {
+            const guessPos = getLayout("guesses", cardAtIndex.index);
+
+            if (guessPos) {
+              return {
+                card: cardAtIndex.card,
+                from: guessPos,
+                to: scorePos,
+                cardsPerRow,
+                flip: "toBack",
+                delay: 100 * idx,
+                cardSize: "small",
+              } as CardAnimationParams;
+            }
+          }
+
+          return null;
+        },
+      );
+
+      const resolvedAnims = await Promise.all(animPromises);
+
+      anims = resolvedAnims.filter(
+        (anim) => anim !== null,
+      ) as CardAnimationParams[];
+    }
+
+    if (anims.length > 0) {
+      await animateCards(anims);
+    }
+
+    // Check for win/lose conditions
+    const hasFaceDownPlaymates = newPlaymates.some((c) => !c.faceUp);
+    let newWon: boolean = game.won;
+    let newEnded: boolean = game.ended;
+    let newWinLoseMessage = game.winLoseMessage;
+
+    if (!hasFaceDownPlaymates) {
+      newEnded = true;
+      const score = game.scorePile.length;
+      newWon = score >= 20;
+      newWinLoseMessage = `You scored ${score} (20 to win)`;
+    }
+
+    newGame = {
+      ...newGame,
+      won: newWon,
+      ended: newEnded,
+      playmates: newPlaymates,
+      winLoseMessage: newWinLoseMessage,
+      scorePile: newScorePile,
+      guesses: newGuesses,
+    };
+
+    // Update game
+    setGame(newGame);
   }
-
-  function revealPlaymate(index: number) {
-    setGame((prev) => {
-      if (prev.ended || prev.revealed[index]) return prev;
-
-      const revealed = [...prev.revealed];
-      revealed[index] = true;
-
-      const pos = playmatePos(index);
-      const targetSuit = prev.playmates[index].suit;
-
-      const slots = prev.slots.map((s) => ({ ...s }));
-      const scorePile = [...prev.scorePile];
-      let scoredThisReveal = 0;
-
-      slots.forEach((slot) => {
-        if (!slot.card) return;
-        if (scoredThisReveal >= 4) return;
-
-        // Flexible side slots still align by row.
-        const rowMatch = slot.row === pos.row;
-        const colMatch = slot.col === pos.col;
-        if ((rowMatch || colMatch) && slot.card.suit === targetSuit) {
-          scorePile.push(slot.card);
-          slot.card = null;
-          scoredThisReveal += 1;
-        }
-      });
-
-      const ended = revealed.every(Boolean);
-      return {
-        ...prev,
-        revealed,
-        slots,
-        scorePile,
-        ended,
-      };
-    });
-
-    setMessage("Playmate revealed and matching guesses scored.");
-  }
-
-  function withdrawGuess(slotId: string) {
-    setGame((prev) => {
-      if (prev.ended) return prev;
-      const slotIndex = prev.slots.findIndex((s) => s.id === slotId);
-      if (slotIndex < 0 || !prev.slots[slotIndex].card) return prev;
-      if (prev.deck.length === 0) return prev;
-
-      const topDeck = prev.deck[0];
-      const guess = prev.slots[slotIndex].card;
-      if (!guess || topDeck.suit !== guess.suit) return prev;
-
-      const deck = [...prev.deck];
-      const slots = prev.slots.map((s) => ({ ...s }));
-      const discard = [...prev.discard];
-
-      const payment = deck.shift();
-      if (!payment) return prev;
-
-      discard.push(payment);
-      discard.push(guess);
-      slots[slotIndex].card = null;
-
-      return { ...prev, deck, slots, discard };
-    });
-
-    setMessage("Guess withdrawn by matching suit payment.");
-  }
-
-  const score = game.scorePile.length;
-  const won = allRevealed && score >= 20;
 
   return (
     <GameWrapper
       showIntro={showIntro}
       setShowIntro={setShowIntro}
       ended={game.ended}
-      won={won}
+      won={game.won}
       reset={reset}
       isLoaded={isLoaded}
+      canUndo={canUndo}
+      handleUndo={handleUndo}
     >
-      <Text style={textStyles.default}>
-        Deck: {game.deck.length}
-        <br />
-        Score pile: {score}
-        <br />
-        Message: {message}
-      </Text>
+      <View style={[flexStyles.rowCentered, flexStyles.gap16]}>
+        <Deck
+          refTop={setRef("drawPile")}
+          // title="Draw"
+          iconName="draw"
+          cards={game.drawPile}
+          cardsPerRow={cardsPerRow}
+          cardSize="small"
+          showCount
+          limitFan
+          fan="horizontalRight"
+          countPosition="left"
+          hideTopCard={
+            top(game.drawPile) &&
+            animatingCardIds.includes(top(game.drawPile)!.id)
+          }
+        />
 
-      <View style={styles.section}>
-        <Text style={textStyles.default}>Playground (3x4)</Text>
-        <View style={styles.grid}>
-          {game.playmates.map((card, idx) => (
-            <Pressable
-              key={card.id}
-              style={styles.playmateCell}
-              onPress={() => revealPlaymate(idx)}
-            >
-              <Card card={card} cardsPerRow={5} />
-            </Pressable>
-          ))}
-        </View>
+        <Deck
+          refNext={setRef("discardPile")}
+          // title="Discard"
+          iconName="delete"
+          cards={game.discardPile}
+          cardsPerRow={cardsPerRow}
+          cardSize="small"
+          showCount
+          limitFan
+          fan="horizontalRight"
+          countPosition="left"
+        />
+        <Deck
+          refNext={setRef("scorePile")}
+          // title="Score"
+          iconName="star"
+          cards={game.scorePile}
+          cardsPerRow={cardsPerRow}
+          cardSize="small"
+          showCount
+          limitFan
+          fan="horizontalRight"
+          countPosition="left"
+        />
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Perimeter Guess Slots</Text>
-        <View style={styles.slotsWrap}>
-          {game.slots.map((slot) => (
-            <View key={slot.id} style={styles.slotCol}>
-              <Pressable
-                onPress={() => placeGuess(slot.id)}
-                style={styles.slotBtn}
-              >
-                {slot.card ? (
-                  <Card card={slot.card} cardsPerRow={5} />
-                ) : (
-                  <Text style={styles.slotHint}>Place</Text>
-                )}
-              </Pressable>
-              <Pressable
-                onPress={() => withdrawGuess(slot.id)}
-                style={styles.withdrawBtn}
-              >
-                <Text style={styles.withdrawText}>Withdraw</Text>
-              </Pressable>
-            </View>
-          ))}
-        </View>
-      </View>
+      {/* Grid Wrap */}
+      <View style={[flexStyles.colCentered, { gap: gridGap }]}>
+        <Guesses indexes={[0, 1, 2, 3]} />
+        <View style={[flexStyles.rowCentered, { gap: gridGap }]}>
+          <Guesses indexes={[13, 12, 11]} />
+          <CardGrid
+            cardsPerRow={cardsPerRow}
+            targetGridCols={gridCols}
+            style={[{ marginHorizontal: "auto" }]}
+          >
+            {game.playmates.map((card, index) => {
+              return (
+                <CardButton
+                  key={`mc-${index}`}
+                  ref={setRef("playmates", index)}
+                  card={card}
+                  cardsPerRow={cardsPerRow}
+                  cardSize="small"
+                  isPlaceholder={animatingCardIds.includes(card.id)}
+                  selectColor="none"
+                  onPress={() => revealPlaymate(index)}
+                  disabled={!!card.faceUp}
+                />
+              );
+            })}
+          </CardGrid>
 
-      {game.ended ? (
-        <Text style={won ? styles.winText : styles.loseText}>
-          {won
-            ? `You won with ${score} points.`
-            : `Game ended with ${score} points. Need 20+ to win.`}
-        </Text>
-      ) : null}
+          <Guesses indexes={[4, 5, 6]} />
+        </View>
+        <Guesses indexes={[10, 9, 8, 7]} />
+      </View>
     </GameWrapper>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 56,
-    paddingHorizontal: 10,
-    paddingBottom: 24,
-    gap: 10,
-  },
-  headerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 24,
-    fontFamily: "Outfit_600SemiBold",
-    color: "#1f2937",
-  },
-  button: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-    backgroundColor: "#1d4ed8",
-  },
-  buttonText: {
-    color: "#fff",
-    fontFamily: "Outfit_500Medium",
-  },
-  metaText: {
-    color: "#334155",
-    fontFamily: "Outfit_400Regular",
-  },
-  section: {
-    gap: 8,
-  },
-  sectionTitle: {
-    fontFamily: "Outfit_600SemiBold",
-    color: "#111827",
-  },
-  grid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 6,
-  },
-  playmateCell: {
-    width: "23%",
-    borderWidth: 1,
-    borderColor: "rgba(15,23,42,0.2)",
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 4,
-    backgroundColor: "rgba(255,255,255,0.35)",
-  },
-  slotsWrap: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 6,
-  },
-  slotCol: {
-    width: "23%",
-    gap: 4,
-  },
-  slotBtn: {
-    minHeight: 72,
-    borderWidth: 1,
-    borderColor: "rgba(15,23,42,0.2)",
-    borderRadius: 8,
-    backgroundColor: "rgba(255,255,255,0.35)",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 4,
-  },
-  slotHint: {
-    color: "#64748b",
-    fontSize: 11,
-  },
-  withdrawBtn: {
-    borderRadius: 6,
-    backgroundColor: "#475569",
-    paddingVertical: 6,
-    alignItems: "center",
-  },
-  withdrawText: {
-    color: "#fff",
-    fontSize: 11,
-  },
-  winText: {
-    color: "#065f46",
-    fontFamily: "Outfit_600SemiBold",
-  },
-  loseText: {
-    color: "#991b1b",
-    fontFamily: "Outfit_600SemiBold",
-  },
-});

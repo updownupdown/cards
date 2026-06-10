@@ -1,6 +1,12 @@
 import { cardStyles } from "@/styles/cardStyles";
 import React from "react";
-import { Platform, Pressable, View, ViewStyle } from "react-native";
+import {
+  LayoutChangeEvent,
+  Platform,
+  Pressable,
+  View,
+  ViewStyle,
+} from "react-native";
 import { Card, CardSelectColor, CardSizes } from "./Card";
 import { PlayingCard } from "./card-utils";
 

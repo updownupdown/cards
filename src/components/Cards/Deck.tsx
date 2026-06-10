@@ -4,7 +4,13 @@ import { flexStyles, transitionStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
 import { clamp } from "@/utils/utils";
 import React from "react";
-import { StyleSheet, Text, View, ViewStyle } from "react-native";
+import {
+  LayoutChangeEvent,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from "react-native";
 import { CardSelectColor, CardSizes, useCardSize } from "./Card";
 import { PlayingCard } from "./card-utils";
 import { CardButton } from "./CardButton";
@@ -45,8 +51,8 @@ type DeckProps = {
   forceSelectColor?: boolean;
   invisibleWhenEmpty?: boolean;
   title?: string;
-  refTopCurrent?: React.Ref<View>;
-  refTopNext?: React.Ref<View>;
+  refTop?: React.Ref<View>;
+  refNext?: React.Ref<View>;
   onPress?: () => void;
   cardSize?: CardSizes;
 };
@@ -70,8 +76,8 @@ export const Deck = ({
   isSelected,
   isDisabled,
   invisibleWhenEmpty,
-  refTopCurrent,
-  refTopNext,
+  refTop,
+  refNext,
   cardSize,
   onPress,
 }: DeckProps) => {
@@ -227,9 +233,9 @@ export const Deck = ({
         collapsable={false}
       >
         {/* Anchor Views for refs, used for animations */}
-        {refTopCurrent && (
+        {refTop && (
           <View
-            ref={refTopCurrent}
+            ref={refTop}
             style={[
               // Used as a relative positioned card
               cardStyles.card,
@@ -242,9 +248,9 @@ export const Deck = ({
             collapsable={false}
           />
         )}
-        {refTopNext && (
+        {refNext && (
           <View
-            ref={refTopNext}
+            ref={refNext}
             style={[
               cardStyles.card,
               flexStyles.positionAbsolute,
@@ -306,7 +312,7 @@ export const deckCountAboveBelowHeight = 36;
 export const styles = StyleSheet.create({
   deckWrap: {
     display: "flex",
-    backgroundColor: Colors.K860,
+    backgroundColor: Colors.K875,
   },
   deckWrapInvisibleWhenEmpty: {
     backgroundColor: "unset",
@@ -397,7 +403,7 @@ export const styles = StyleSheet.create({
     backgroundColor: Colors.suitsRed,
   },
   deckCountTitle: {
-    fontSize: 13,
+    fontSize: 11,
     fontFamily: FontWeight[300],
     color: Colors.K300,
     textTransform: "uppercase",
@@ -408,7 +414,8 @@ export const styles = StyleSheet.create({
     flexShrink: 0,
   },
   deckCountValue: {
-    fontSize: 18,
+    textTransform: "uppercase",
+    fontSize: 16,
     fontFamily: FontWeight[500],
     color: Colors.K300,
   },

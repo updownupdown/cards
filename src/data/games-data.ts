@@ -323,9 +323,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   // Hide and Seek
   "/hide-and-seek": {
     title: "Hide and Seek",
-    category: GameCategory.Isaludo,
+    category: GameCategory.Beta,
     byLine: "Game design by Wil Su",
-    enabled: false,
     briefRules: [
       "Reveal hidden cards through legal uncover moves.",
       "Avoid locking hidden cards under unusable stacks.",

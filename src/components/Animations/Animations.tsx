@@ -64,7 +64,6 @@ interface AnimationContextType {
   animatingCardIds: string[];
   animateCards: (params: (CardAnimationParams | null)[]) => Promise<void>;
   clearAnimations: (ids?: string[]) => void;
-  measureRef: (ref: React.RefObject<View | null>) => Promise<MeasuredRef>;
 }
 
 const AnimationContext = createContext<AnimationContextType | null>(null);
@@ -263,6 +262,7 @@ export const AnimationProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const [animations, setAnimations] = useState<CardAnimationParams[]>([]);
+
   const promisesRef = useRef<Record<string, () => void>>({});
 
   const cancelAnimsAfterTimeoutRef = useRef(true);
@@ -342,29 +342,11 @@ export const AnimationProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const measureRef = useCallback((ref: React.RefObject<View | null>) => {
-    return new Promise<{
-      x: number;
-      y: number;
-      width: number;
-      height: number;
-    } | null>((resolve) => {
-      if (ref.current) {
-        ref.current.measure((x, y, width, height, pageX, pageY) => {
-          resolve({ x: pageX, y: pageY, width, height });
-        });
-      } else {
-        resolve(null);
-      }
-    });
-  }, []);
-
   return (
     <AnimationContext.Provider
       value={{
         animateCards,
         clearAnimations,
-        measureRef,
         isAnimating,
         animatingCardIds,
       }}
