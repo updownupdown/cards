@@ -171,6 +171,18 @@ export function top(deck: PlayingCard[]) {
   if (deck.length === 0) return undefined;
   return deck[deck.length - 1];
 }
+export function flipToFace(card: PlayingCard) {
+  return { ...card, faceUp: true } as PlayingCard;
+}
+export function flipToBack(card: PlayingCard) {
+  return { ...card, faceUp: false } as PlayingCard;
+}
+export function flipAllToFace(cards: PlayingCard[]) {
+  return cards.map((c) => flipToFace(c));
+}
+export function flipAllToBack(cards: PlayingCard[]) {
+  return cards.map((c) => flipToBack(c));
+}
 
 export function shuffle<T>(items: T[]) {
   const next = [...items];

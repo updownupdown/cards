@@ -4,12 +4,13 @@ import {
 } from "@/components/Animations/Animations";
 import { useToast } from "@/components/common/Toast";
 import { useGameLoading } from "@/hooks/useGameLoading";
+import { useLayoutManager } from "@/hooks/useLayoutManager";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Text, View } from "react-native";
-import { useCardSize } from "../../Cards/Card";
+import { useCardSizing } from "../../Cards/Card";
 import {
   CardSuit,
   createDeck,
@@ -30,7 +31,6 @@ import {
   TheEmissaryGame,
   TheEmissaryKingdom,
 } from "./TheEmissaryCommon";
-import { useLayoutManager } from "@/hooks/useLayoutManager";
 
 const defaultHandSize = 8;
 
@@ -86,7 +86,8 @@ function setup(firstGame = false): TheEmissaryGame {
 export default function TheEmissary() {
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
   const [game, setGame] = useState<TheEmissaryGame>(setup(true));
-  const { width: cardWidth } = useCardSize(cardsPerRow.topic);
+  const { cardWidth } = useCardSizing(cardsPerRow.topic);
+
   const [selectedAdvisor, setSelectedAdvisor] = useState<
     PlayingCard | undefined
   >(undefined);

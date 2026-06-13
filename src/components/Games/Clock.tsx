@@ -1,10 +1,11 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
+import { useLayoutManager } from "@/hooks/useLayoutManager";
 import { flexStyles } from "@/styles/flexStyles";
 import { textStyles } from "@/styles/textStyles";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Text, View, ViewStyle } from "react-native";
 import { CardAnimationParams, useAnimations } from "../Animations/Animations";
-import { useCardSize } from "../Cards/Card";
+import { cardAspectRatio, useCardSizing } from "../Cards/Card";
 import { Deck } from "../Cards/Deck";
 import {
   createDeck,
@@ -13,7 +14,6 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-import { useLayoutManager } from "@/hooks/useLayoutManager";
 
 const cardsPerRow = 8;
 
@@ -53,7 +53,8 @@ export default function Clock() {
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
 
   const { animateCards, animatingCardIds } = useAnimations();
-  const { width: cardWidth, height: cardHeight } = useCardSize(cardsPerRow);
+  const { cardWidth } = useCardSizing(cardsPerRow);
+  const cardHeight = cardWidth / cardAspectRatio;
 
   const [game, setGame] = useState<ClockState>(setup);
 
@@ -88,7 +89,6 @@ export default function Clock() {
             cardsPerRow,
             cardSize: "small",
             duration: 500,
-            keepAlive: true,
           });
         }
       }

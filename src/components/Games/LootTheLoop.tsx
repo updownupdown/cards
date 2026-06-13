@@ -8,7 +8,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, Text, View, ViewStyle } from "react-native";
 import { useAnimations } from "../Animations/Animations";
 import { Button } from "../Button/Button";
-import { CardSelectColor, useCardSize } from "../Cards/Card";
+import { CardSelectColor, useCardSizing } from "../Cards/Card";
 import {
   CardSuit,
   createDeck,
@@ -101,9 +101,8 @@ export default function LootTheLoop() {
   const { animateCards, isAnimating } = useAnimations();
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
   const { contentRadius } = useContentWidth();
-  const { width: cardWidth, height: cardHeight } = useCardSize(
-    cardsPerRow.loop,
-  );
+  const { cardWidth } = useCardSizing(cardsPerRow.loop);
+
   const [game, setGame] = useState<LoopState>(setup);
 
   const [selectedCardIndex, setSelectedCardIndex] = useState<

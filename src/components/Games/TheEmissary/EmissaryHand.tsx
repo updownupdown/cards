@@ -1,6 +1,6 @@
 import { flexStyles, transitionStyles } from "@/styles/flexStyles";
 import { Colors } from "@/styles/styles";
-import { textStyles } from "@/styles/textStyles";
+import { rotatedText, textStyles } from "@/styles/textStyles";
 import { Text, TextStyle, View, ViewStyle } from "react-native";
 import { Card, CardGrid } from "../../Cards/Card";
 import { type PlayingCard } from "../../Cards/card-utils";
@@ -21,22 +21,6 @@ const cardBlock: ViewStyle[] = [
     borderRadius: 8,
     paddingVertical: 12,
     paddingHorizontal: 24,
-  },
-];
-
-const rotatedText: TextStyle[] = [
-  textStyles.default,
-  {
-    pointerEvents: "none",
-    width: 80,
-    height: 80,
-    fontSize: 14,
-    position: "absolute",
-    top: "50%",
-    left: 8,
-    textAlign: "center",
-    transformOrigin: "top center",
-    transform: [{ rotate: `-90deg` }, { translateY: "-50%" }],
   },
 ];
 

@@ -1,21 +1,16 @@
-import React, { forwardRef } from "react";
 import { CardComponents as CardsRegular } from "@/assets/cards/regular";
 import { CardComponents as CardsSmall } from "@/assets/cards/small";
 import { CardComponents as CardsSmallColored } from "@/assets/cards/small-colored";
-import {
-  Colors,
-  ContentSidePadding,
-  MaxContentWidth,
-  rgba,
-} from "@/styles/styles";
-import { cardStyles } from "@/styles/cardStyles";
-import { useWindowDimensions, View, ViewStyle } from "react-native";
-import type { SvgProps } from "react-native-svg";
-import { CardRank, CardSuit, PlayingCard } from "./card-utils";
-import { useGameSettings } from "@/hooks/useGameSettings";
 import { normalizeGamePath } from "@/data/game-menu";
-import { usePathname } from "expo-router";
 import { useContentWidth } from "@/hooks/useContentWidth";
+import { useGameSettings } from "@/hooks/useGameSettings";
+import { cardStyles } from "@/styles/cardStyles";
+import { Colors, rgba } from "@/styles/styles";
+import { usePathname } from "expo-router";
+import React, { forwardRef } from "react";
+import { View, ViewStyle } from "react-native";
+import type { SvgProps } from "react-native-svg";
+import { PlayingCard } from "./card-utils";
 
 export type CardSelectColor =
   | "none"
@@ -29,15 +24,13 @@ export type CardSelectColor =
 
 const cardDefaultWidth = 250;
 const cardDefaultHeight = 350;
-const cardAspectRatio = cardDefaultWidth / cardDefaultHeight;
+export const cardAspectRatio = cardDefaultWidth / cardDefaultHeight;
 const cardGapRatio = 0.82;
 const cardShadowRadio = 0.012;
+export const cardGapToMarginRatio = 2;
 export const cardBorderRadiusRatio = 0.08;
 
-export const useCardGridSizes = (
-  cardsPerRow: number,
-  targetGridCols?: number,
-) => {
+export const useCardSizing = (cardsPerRow: number, targetGridCols?: number) => {
   const { contentDiameter: contentWidth } = useContentWidth();
 
   const cardWidth = (contentWidth / cardsPerRow) * cardGapRatio;
@@ -47,8 +40,9 @@ export const useCardGridSizes = (
 
   const targetCols = targetGridCols ?? cardsPerRow;
   const gridWidth = cardWidth * targetCols + gridGap * (targetCols - 1);
+  const cardHeight = cardWidth / cardAspectRatio;
 
-  return { gridWidth, gridGap };
+  return { gridWidth, gridGap, cardWidth, cardHeight };
 };
 
 interface CardGridProps {
@@ -64,7 +58,7 @@ export const CardGrid = ({
   style,
   children,
 }: CardGridProps) => {
-  const { gridWidth, gridGap } = useCardGridSizes(cardsPerRow, targetGridCols);
+  const { gridWidth, gridGap } = useCardSizing(cardsPerRow, targetGridCols);
 
   return (
     <View
@@ -82,33 +76,6 @@ export const CardGrid = ({
       {children}
     </View>
   );
-};
-
-export const useCardSize = (cardsPerRow = 5, targetGridCol?: number) => {
-  const { contentDiameter: contentWidth } = useContentWidth();
-
-  const cardWidthRequested = (100 / cardsPerRow / 100) * contentWidth;
-  const width = cardWidthRequested * cardGapRatio;
-
-  const topMargin = cardWidthRequested * (1 - cardGapRatio);
-  const height = width / cardAspectRatio;
-  const borderRadius = width * cardBorderRadiusRatio;
-  const shadowUnit = width * cardShadowRadio;
-  const placeholderShadow = `inset ${shadowUnit}px ${shadowUnit * 2}px ${shadowUnit * 14}px ${rgba(Colors.K900, 0.5)}`;
-
-  const gridGap = topMargin / 2;
-  const targetCols = targetGridCol ?? cardsPerRow;
-  const gridWidth = width * targetCols + gridGap * (targetCols - 1);
-
-  return {
-    width,
-    height,
-    topMargin,
-    borderRadius,
-    placeholderShadow,
-    gridWidth,
-    gridGap,
-  };
 };
 
 export type CardSizes = "small" | "regular" | "small-colored";
@@ -170,22 +137,21 @@ export const Card = forwardRef<any, CardProps>(
       return null;
     }
 
-    const { width, height, topMargin, borderRadius, placeholderShadow } =
-      useCardSize(cardsPerRow);
-
+    const { cardWidth, gridGap } = useCardSizing(cardsPerRow);
+    const cardHeight = cardWidth / cardAspectRatio;
     const cardStyle: ViewStyle = {};
 
-    cardStyle.width = width;
-    cardStyle.height = height;
-    cardStyle.borderRadius = borderRadius;
+    cardStyle.width = cardWidth;
+    cardStyle.height = cardHeight;
+    cardStyle.borderRadius = cardWidth * cardBorderRadiusRatio;
 
     if (hasTopMargin && customTopMarginPerc !== undefined) {
-      cardStyle.marginTop = customTopMarginPerc * height;
+      cardStyle.marginTop = customTopMarginPerc * cardHeight;
     } else if (hasTopMargin) {
-      cardStyle.marginTop = topMargin;
+      cardStyle.marginTop = gridGap * cardGapToMarginRatio;
     }
 
-    const shadowUnit = Math.max(width * cardShadowRadio, 0.7);
+    const shadowUnit = Math.max(cardWidth * cardShadowRadio, 0.7);
 
     let colorValue: string = Colors.cardSelectBlue;
 

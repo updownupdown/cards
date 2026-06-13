@@ -16,15 +16,18 @@ import Animated, {
   interpolate,
   Easing,
   EasingFunction,
+  cancelAnimation,
 } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 import { Card, CardSizes } from "../Cards/Card";
 import { PlayingCard } from "../Cards/card-utils";
 
+export const defaultAnimDuration = 400;
+
 export type CardAnimationParams = {
   card: PlayingCard;
   cardSize?: CardSizes;
-  cardsPerRow: number;
+  cardsPerRow?: number;
   from: {
     x: number;
     y: number;
@@ -50,6 +53,7 @@ export type CardAnimationParams = {
   arcY?: number; // upward arc height in pixels (parabolic path)
   keepAlive?: boolean; // if true, the card won't be unmounted automatically when the animation ends
   easing?: EasingFunction;
+  id?: string; // unique animation ID to prevent key collisions
 };
 
 export type MeasuredRef = {
@@ -60,13 +64,22 @@ export type MeasuredRef = {
 } | null;
 
 interface AnimationContextType {
+  cardsPerRow: number;
+  cardSize: CardSizes;
   isAnimating: boolean;
   animatingCardIds: string[];
   animateCards: (params: (CardAnimationParams | null)[]) => Promise<void>;
   clearAnimations: (ids?: string[]) => void;
+  animateQueue: () => void;
+  addToAnimQueue: (anim: CardAnimationParams) => void;
 }
 
 const AnimationContext = createContext<AnimationContextType | null>(null);
+
+type AnimationParams = {
+  cardsPerRow: number;
+  cardSize: CardSizes;
+};
 
 export const useAnimations = () => {
   const context = useContext(AnimationContext);
@@ -79,23 +92,38 @@ export const useAnimations = () => {
 const AnimatedCard = ({
   params,
   onComplete,
+  cardsPerRow,
+  cardSize,
 }: {
   params: CardAnimationParams;
   onComplete: (id: string) => void;
+  cardsPerRow: number;
+  cardSize: CardSizes;
 }) => {
   const progress = useSharedValue(0);
 
-  const { from, to, duration = 400, delay = 0, flip } = params;
+  const { from, to, duration = defaultAnimDuration, delay = 0, flip } = params;
 
   // Trigger animation on mount
   useEffect(() => {
     progress.value = withDelay(
       delay,
-      withTiming(1, { duration, easing: Easing.inOut(Easing.ease) }, () => {
-        scheduleOnRN(onComplete, params.card.id);
-      }),
+      withTiming(
+        1,
+        { duration, easing: Easing.inOut(Easing.ease) },
+        (isFinished) => {
+          // ONLY resolve if the animation actually ran to completion
+          if (isFinished && params.id) {
+            scheduleOnRN(onComplete, params.id);
+          }
+        },
+      ),
     );
-  }, [delay, duration, params.card.id, progress, onComplete]);
+
+    return () => {
+      cancelAnimation(progress);
+    };
+  }, [delay, duration, params.id, progress, onComplete]);
 
   const animatedStyle = useAnimatedStyle(() => {
     // Get dimensions, using to dimensions as fallback
@@ -232,18 +260,18 @@ const AnimatedCard = ({
     <Animated.View style={animatedStyle}>
       <Animated.View style={frontStyle}>
         <Card
-          cardsPerRow={params.cardsPerRow}
+          cardsPerRow={params.cardsPerRow ?? cardsPerRow}
           card={{ ...params.card, faceUp: true }}
-          cardSize={params.cardSize}
+          cardSize={params.cardSize ?? cardSize}
           style={[{ width: "100%", height: "100%" }]}
         />
       </Animated.View>
 
       <Animated.View style={backStyle}>
         <Card
-          cardsPerRow={params.cardsPerRow}
+          cardsPerRow={params.cardsPerRow ?? cardsPerRow}
           card={{ ...params.card, faceUp: false }}
-          cardSize={params.cardSize}
+          cardSize={params.cardSize ?? cardSize}
           style={[{ width: "100%", height: "100%" }]}
         />
       </Animated.View>
@@ -251,7 +279,16 @@ const AnimatedCard = ({
   );
 };
 
-export const AnimationProvider = ({ children }: { children: ReactNode }) => {
+export const AnimationProvider = ({
+  children,
+  cardsPerRow,
+  cardSize,
+}: {
+  children: ReactNode;
+  cardsPerRow: number;
+  cardSize: CardSizes;
+}) => {
+  // Animation logic
   const [animatingCardIds, setAnimatingCardIds] = useState<string[]>([]);
   const [isAnimating, setIsAnimatingState] = useState(false);
   const isAnimatingRef = useRef(false);
@@ -262,6 +299,7 @@ export const AnimationProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const [animations, setAnimations] = useState<CardAnimationParams[]>([]);
+  const animationIdRef = useRef(0);
 
   const promisesRef = useRef<Record<string, () => void>>({});
 
@@ -272,7 +310,7 @@ export const AnimationProvider = ({ children }: { children: ReactNode }) => {
       return new Promise<void>((resolve) => {
         function doResolve() {
           setAnimatingCardIds([]);
-          setAnimations([]);
+          clearAnimations();
           resolve();
 
           // Buffer so that back-to-back animations don't create
@@ -283,14 +321,17 @@ export const AnimationProvider = ({ children }: { children: ReactNode }) => {
             if (cancelAnimsAfterTimeoutRef.current) {
               setIsAnimating(false);
             }
-          }, 50);
+          }, 100);
         }
 
         cancelAnimsAfterTimeoutRef.current = false;
 
-        const validParams = params.filter(
-          (p): p is CardAnimationParams => p !== null,
-        );
+        const validParams = params
+          .filter((p): p is CardAnimationParams => p !== null)
+          .map((p) => ({
+            ...p,
+            id: `${p.card.id}-${animationIdRef.current++}`,
+          }));
         let completedCount = 0;
         const total = validParams.length;
 
@@ -304,8 +345,8 @@ export const AnimationProvider = ({ children }: { children: ReactNode }) => {
         setIsAnimating(true);
 
         const onAnimComplete = (id: string, keepAlive?: boolean) => {
-          if (keepAlive === false) {
-            setAnimations((prev) => prev.filter((anim) => anim.card.id !== id));
+          if (!keepAlive) {
+            setAnimations((prev) => prev.filter((anim) => anim.id !== id));
           }
           completedCount++;
           if (completedCount === total) {
@@ -314,8 +355,8 @@ export const AnimationProvider = ({ children }: { children: ReactNode }) => {
         };
 
         validParams.forEach((param) => {
-          promisesRef.current[param.card.id] = () =>
-            onAnimComplete(param.card.id, param.keepAlive);
+          promisesRef.current[param.id] = () =>
+            onAnimComplete(param.id, param.keepAlive);
         });
 
         setAnimations((prev) => {
@@ -342,15 +383,46 @@ export const AnimationProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
+  // Animation queue logic
+  const animationQueueRef = useRef<CardAnimationParams[]>([]);
+
+  const animateQueue = useCallback(async () => {
+    if (animationQueueRef.current.length > 0) {
+      const currentQueue = [...animationQueueRef.current];
+      animationQueueRef.current = []; // Clear the staging queue
+      await animateCards(currentQueue);
+    }
+  }, [animateCards]);
+
+  const addToAnimQueue = useCallback((anim: CardAnimationParams) => {
+    animationQueueRef.current.push(anim);
+  }, []);
+
+  const contextValue = React.useMemo(
+    () => ({
+      cardsPerRow,
+      cardSize,
+      animateCards,
+      clearAnimations,
+      isAnimating,
+      animatingCardIds,
+      addToAnimQueue,
+      animateQueue,
+    }),
+    [
+      cardsPerRow,
+      cardSize,
+      animateCards,
+      clearAnimations,
+      isAnimating,
+      animatingCardIds,
+      addToAnimQueue,
+      animateQueue,
+    ],
+  );
+
   return (
-    <AnimationContext.Provider
-      value={{
-        animateCards,
-        clearAnimations,
-        isAnimating,
-        animatingCardIds,
-      }}
-    >
+    <AnimationContext.Provider value={contextValue}>
       {children}
 
       {animations.length > 0 && (
@@ -366,9 +438,11 @@ export const AnimationProvider = ({ children }: { children: ReactNode }) => {
         >
           {animations.map((anim) => (
             <AnimatedCard
-              key={anim.card.id}
+              key={anim.id}
               params={anim}
               onComplete={handleComplete}
+              cardsPerRow={cardsPerRow}
+              cardSize={cardSize}
             />
           ))}
         </View>

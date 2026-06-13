@@ -5,7 +5,7 @@ import { flexStyles } from "@/styles/flexStyles";
 import { useState } from "react";
 import { View } from "react-native";
 import { CardAnimationParams, useAnimations } from "../Animations/Animations";
-import { CardGrid, useCardGridSizes } from "../Cards/Card";
+import { CardGrid, useCardSizing } from "../Cards/Card";
 import {
   createDeck,
   isFace,
@@ -133,7 +133,7 @@ export default function HideAndSeek() {
     }
   };
 
-  const { gridGap } = useCardGridSizes(cardsPerRow, gridCols);
+  const { gridGap } = useCardSizing(cardsPerRow, gridCols);
 
   const { getLayout, setRef } = useLayoutManager([
     "drawPile",

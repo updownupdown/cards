@@ -9,7 +9,7 @@ export const Colors = {
 
   btnRed: "#ff3c67",
   btnBlue: "#6fe9ff",
-  btnPurple: "#d973ee",
+  btnPurple: "#e460ff",
   btnOrange: "#ff8b2d",
   btnYellow: "#ffea2d",
   btnGreen: "#26ff93",

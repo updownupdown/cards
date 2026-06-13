@@ -158,6 +158,50 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Each ruler has a trump suit (its own). To win a debate, you must play a card of higher value and of the same suit, or any card of the trump suit.",
     ],
   },
+  // The First Boba Tea Shop in London
+  "/the-boba-tea-shop": {
+    title: "The Boba Tea Shop",
+    category: GameCategory.Beta,
+    byLine: "Game design by Wil Su",
+    briefRules: [
+      "Play cards into valid stacks to satisfy order constraints.",
+      "Plan around blocked stacks so you do not run out of legal moves.",
+      "Complete all required stacks to win.",
+    ],
+  },
+  // Syndicate
+  "/syndicate": {
+    title: "Syndicate",
+    category: GameCategory.Isaludo,
+    byLine: "Game design by Wil Su",
+    briefRules: [
+      "Build and convert stacks under syndicate rank restrictions.",
+      "Use timing windows to secure high-value conversions.",
+      "Game ends when objective is met or no legal move remains.",
+    ],
+  },
+  // Hide and Seek
+  "/hide-and-seek": {
+    title: "Hide and Seek",
+    category: GameCategory.Isaludo,
+    byLine: "Game design by Wil Su",
+    briefRules: [
+      "Reveal hidden cards through legal uncover moves.",
+      "Avoid locking hidden cards under unusable stacks.",
+      "Finish by uncovering and resolving the final hidden sets.",
+    ],
+  },
+  // Loot the Loop
+  "/loot-the-loop": {
+    title: "Loot the Loop",
+    category: GameCategory.Isaludo,
+    byLine: "Game design by Wil Su",
+    briefRules: [
+      "Capture valid loop cards into the score pile.",
+      "Protect scoring tempo by avoiding loop breaks.",
+      "Win by reaching the game score objective before deck exhaustion.",
+    ],
+  },
   // ======================================= //
   // ========== Classic Solitaire ========== //
   // ======================================= //
@@ -213,24 +257,10 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Clear all tableau cards to win.",
     ],
   },
-  // ============================== //
-  // ========== Beta ========== //
-  // ============================== //
-  // Loot the Loop
-  "/loot-the-loop": {
-    title: "Loot the Loop",
-    category: GameCategory.Beta,
-    byLine: "Game design by Wil Su",
-    briefRules: [
-      "Capture valid loop cards into the score pile.",
-      "Protect scoring tempo by avoiding loop breaks.",
-      "Win by reaching the game score objective before deck exhaustion.",
-    ],
-  },
   // Clock
   "/clock": {
     title: "Clock Solitaire",
-    category: GameCategory.Beta,
+    category: GameCategory.Isaludo,
     briefRules: [
       "Place revealed cards to matching clock positions by rank.",
       "Continue turns by revealing from the pile at each destination.",
@@ -285,18 +315,6 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Draw from stock when no legal tableau move is available.",
     ],
   },
-  // The First Boba Tea Shop in London
-  "/the-first-boba-tea-shop-in-london": {
-    title: "The First Boba Tea Shop in London",
-    category: GameCategory.Isaludo,
-    byLine: "Game design by Wil Su",
-    enabled: false,
-    briefRules: [
-      "Play cards into valid stacks to satisfy order constraints.",
-      "Plan around blocked stacks so you do not run out of legal moves.",
-      "Complete all required stacks to win.",
-    ],
-  },
   // Solitaire
   "/solitaire": {
     title: "Solitaire",
@@ -306,29 +324,6 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Move all cards to the four foundations by suit from Ace to King.",
       "Build tableau piles in descending rank with alternating colors.",
       "Only Kings can fill an empty tableau column.",
-    ],
-  },
-  // Syndicate
-  "/syndicate": {
-    title: "Syndicate",
-    category: GameCategory.Isaludo,
-    byLine: "Game design by Wil Su",
-    enabled: false,
-    briefRules: [
-      "Build and convert stacks under syndicate rank restrictions.",
-      "Use timing windows to secure high-value conversions.",
-      "Game ends when objective is met or no legal move remains.",
-    ],
-  },
-  // Hide and Seek
-  "/hide-and-seek": {
-    title: "Hide and Seek",
-    category: GameCategory.Beta,
-    byLine: "Game design by Wil Su",
-    briefRules: [
-      "Reveal hidden cards through legal uncover moves.",
-      "Avoid locking hidden cards under unusable stacks.",
-      "Finish by uncovering and resolving the final hidden sets.",
     ],
   },
   // Scorpion
@@ -367,7 +362,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   // Forty Thieves
   "/forty-thieves": {
     title: "Forty Thieves",
-    category: GameCategory.Isaludo,
+    category: GameCategory.ClassicSolitaire,
     enabled: false,
     briefRules: [
       "Build foundations up by suit from Ace.",

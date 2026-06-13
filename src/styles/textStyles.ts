@@ -1,5 +1,5 @@
 import { Colors, FontWeight } from "@/styles/styles";
-import { StyleSheet } from "react-native";
+import { StyleSheet, TextStyle } from "react-native";
 
 export const textStyles = StyleSheet.create({
   default: {
@@ -38,3 +38,19 @@ export const textStyles = StyleSheet.create({
     color: Colors.K200,
   },
 });
+
+export const rotatedText: TextStyle[] = [
+  textStyles.default,
+  {
+    pointerEvents: "none",
+    width: 80,
+    height: 80,
+    fontSize: 14,
+    position: "absolute",
+    top: "50%",
+    left: 8,
+    textAlign: "center",
+    transformOrigin: "top center",
+    transform: [{ rotate: `-90deg` }, { translateY: "-50%" }],
+  },
+];

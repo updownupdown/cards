@@ -1,20 +1,13 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { flexStyles } from "@/styles/flexStyles";
-import { useRef, useState } from "react";
-import { View } from "react-native";
+import { useLayoutManager } from "@/hooks/useLayoutManager";
+import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { cardStyles } from "@/styles/cardStyles";
+import { useState } from "react";
 import { CardAnimationParams, useAnimations } from "../Animations/Animations";
-import {
-  CardGrid,
-  CardSelectColor,
-  CardSizes,
-  useCardSize,
-} from "../Cards/Card";
+import { CardGrid, CardSelectColor, CardSizes } from "../Cards/Card";
 import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
 import { CardButton } from "../Cards/CardButton";
 import { GameWrapper } from "../common/GameWrapper";
-import { cardStyles } from "@/styles/cardStyles";
-import { useUndoHistory } from "@/hooks/useUndoHistory";
-import { useLayoutManager } from "@/hooks/useLayoutManager";
 
 const cardsPerRow = 6;
 
@@ -124,7 +117,6 @@ export default function Accordion() {
           from: { ...srcPos, zIndex: 100 },
           to: { ...tgtPos, zIndex: 100 },
           cardsPerRow,
-          keepAlive: true,
         },
       ]);
     }

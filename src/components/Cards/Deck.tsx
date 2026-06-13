@@ -4,14 +4,14 @@ import { flexStyles, transitionStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
 import { clamp } from "@/utils/utils";
 import React from "react";
+import { StyleSheet, Text, View, ViewStyle } from "react-native";
 import {
-  LayoutChangeEvent,
-  StyleSheet,
-  Text,
-  View,
-  ViewStyle,
-} from "react-native";
-import { CardSelectColor, CardSizes, useCardSize } from "./Card";
+  cardAspectRatio,
+  cardBorderRadiusRatio,
+  CardSelectColor,
+  CardSizes,
+  useCardSizing,
+} from "./Card";
 import { PlayingCard } from "./card-utils";
 import { CardButton } from "./CardButton";
 
@@ -49,6 +49,7 @@ type DeckProps = {
   isSelected?: boolean;
   isDisabled?: boolean;
   forceSelectColor?: boolean;
+  forceOverlay?: boolean;
   invisibleWhenEmpty?: boolean;
   title?: string;
   refTop?: React.Ref<View>;
@@ -73,6 +74,7 @@ export const Deck = ({
   iconName,
   hideTopCard,
   forceSelectColor,
+  forceOverlay,
   isSelected,
   isDisabled,
   invisibleWhenEmpty,
@@ -81,7 +83,9 @@ export const Deck = ({
   cardSize,
   onPress,
 }: DeckProps) => {
-  const { width, height, borderRadius } = useCardSize(cardsPerRow);
+  const { cardWidth: width } = useCardSizing(cardsPerRow);
+  const height = width / cardAspectRatio;
+  const borderRadius = width * cardBorderRadiusRatio;
 
   const maxDeckSize = limitFanNum ?? maxBackDeckSize;
 
@@ -272,6 +276,7 @@ export const Deck = ({
             selectColor={selectColor}
             cardSize={cardSize}
             forceSelectColor={!isDisabled || forceSelectColor}
+            forceOverlay={(!!onPress && !isDisabled) || forceOverlay}
             isPlaceholder
           />
         )}
@@ -298,6 +303,7 @@ export const Deck = ({
               selectColor={selectColor}
               cardSize={cardSize}
               forceSelectColor={isTopCard && forceSelectColor}
+              forceOverlay={(!!onPress && !isDisabled) || forceOverlay}
             />
           );
         })}
