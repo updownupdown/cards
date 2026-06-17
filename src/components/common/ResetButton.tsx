@@ -1,12 +1,15 @@
 import { Button } from "@/components/Button/Button";
 import { useFade } from "@/hooks/useFade";
-import {
-  buttonStyles,
-  headerButtonIconSize,
-  headerButtonSize,
-} from "@/styles/buttonStyles";
+import { buttonStyles } from "@/styles/buttonStyles";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, ContentSidePadding, FontWeight, rgba } from "@/styles/styles";
+import {
+  Colors,
+  ContentSidePadding,
+  FontWeight,
+  HeaderButtonIconSize,
+  HeaderButtonSize,
+  rgba,
+} from "@/styles/styles";
 import React, { useRef, useState } from "react";
 import { Animated, Easing, StyleSheet, Text, View } from "react-native";
 
@@ -91,7 +94,7 @@ export function ResetButton({ reset }: Props) {
         delayLongPress={holdToResetDuration}
         iconName="reset"
         iconColor={isResetPressed ? Colors.accentRed : Colors.K200}
-        iconSize={headerButtonIconSize}
+        iconSize={HeaderButtonIconSize}
       />
     </>
   );
@@ -106,10 +109,10 @@ export const styles = StyleSheet.create({
     zIndex: 20,
     top: ContentSidePadding / 2,
     left: ContentSidePadding,
-    right: headerButtonSize * 2 + 8 + ContentSidePadding,
-    height: headerButtonSize,
+    right: HeaderButtonSize * 2 + 8 + ContentSidePadding,
+    height: HeaderButtonSize,
 
-    borderRadius: headerButtonSize / 2,
+    borderRadius: HeaderButtonSize / 2,
     backgroundColor: rgba(Colors.K900, 0.9),
     boxShadow: `1px 2px 6px ${rgba(Colors.K900, 0.5)}, 2px 4px 20px ${rgba(Colors.K900, 0.5)}`,
   },

@@ -1,0 +1,154 @@
+import { LayoutManager } from "@/hooks/useZoneLayout";
+import { Icon } from "@/icons";
+import { flexStyles } from "@/styles/flexStyles";
+import { Colors, FontWeight } from "@/styles/styles";
+import { Text, TextStyle, View, ViewStyle } from "react-native";
+import { cardDims } from "./card-utils";
+
+type Props = {
+  layoutManager: LayoutManager;
+  game: any;
+};
+
+export const infoSize = {
+  aboveBelow: 0.32,
+  leftRight: 0.4,
+};
+
+export const ZoneBackgrounds = ({ layoutManager, game }: Props) => {
+  const { zones, getZoneBasePos, cardWidth, cardHeight } = layoutManager;
+
+  return (
+    <>
+      {zones.map((zone) => {
+        if (!zone.placeholder?.show) return null;
+        const pos = getZoneBasePos(zone);
+        const count: number = zone.id ? game[zone.id]?.length : 0;
+
+        let placeholderWidth = cardWidth;
+        let placeholderHeight = cardHeight;
+        let placeholderOffsetX = 0;
+        let placeholderOffsetY = 0;
+
+        let infoStyles: ViewStyle = {
+          userSelect: "none",
+          position: "absolute",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        };
+
+        let textContainerStyle: ViewStyle = {};
+        let textStyle: TextStyle = {
+          userSelect: "none",
+          fontSize: cardWidth * 0.17,
+          color: Colors.K300,
+          fontFamily: FontWeight[300],
+          textTransform: "uppercase",
+        };
+        let countStyle: TextStyle = {
+          userSelect: "none",
+          fontSize: cardWidth * 0.2,
+          color: Colors.K300,
+          fontFamily: FontWeight[500],
+          textTransform: "uppercase",
+        };
+
+        const infoPosition = zone.placeholder.infoPos;
+
+        if (infoPosition) {
+          const rotatedTextWidth = cardHeight * 0.6;
+          const rotatedTextHeight = cardWidth * infoSize.leftRight;
+
+          const rotatedTextOffset = (rotatedTextWidth - rotatedTextHeight) / 2;
+
+          switch (infoPosition) {
+            case "above":
+            case "below":
+              placeholderHeight += cardHeight * infoSize.aboveBelow;
+              infoStyles.height = cardHeight * infoSize.aboveBelow * 0.8;
+              infoStyles.width = "100%";
+              infoStyles.gap = cardWidth * 0.1;
+              infoStyles.flexDirection = "row";
+              break;
+            case "left":
+            case "right":
+              placeholderWidth += cardWidth * infoSize.leftRight;
+              infoStyles.width = cardWidth * infoSize.leftRight;
+              infoStyles.height = "100%";
+              infoStyles.gap = cardHeight * 0.1;
+              infoStyles.flexDirection = "column";
+              textStyle.width = rotatedTextWidth;
+              textStyle.height = rotatedTextHeight;
+              textStyle.lineHeight = rotatedTextHeight;
+              textContainerStyle.width = rotatedTextHeight;
+              textContainerStyle.height = rotatedTextWidth;
+              textStyle.textAlign = "center";
+              textStyle.transform = [
+                { rotate: `-90deg` },
+                { translateX: -rotatedTextOffset },
+                { translateY: -rotatedTextOffset },
+              ];
+              break;
+          }
+          switch (infoPosition) {
+            case "above":
+              infoStyles.top = 0;
+              placeholderOffsetY = cardHeight * infoSize.aboveBelow;
+              break;
+            case "below":
+              infoStyles.bottom = 0;
+              break;
+            case "left":
+              infoStyles.left = 0;
+              placeholderOffsetX = cardWidth * infoSize.leftRight;
+              break;
+            case "right":
+              infoStyles.right = 0;
+              break;
+          }
+        }
+
+        return (
+          <View
+            key={`placeholder-${zone.id}`}
+            style={[
+              flexStyles.rowCentered,
+              {
+                position: "absolute",
+                left: pos.x - placeholderOffsetX,
+                top: pos.y - placeholderOffsetY,
+                width: placeholderWidth,
+                height: placeholderHeight,
+                borderRadius: cardWidth * cardDims.ratioRadius,
+                backgroundColor: Colors.K875,
+                justifyContent: "center",
+                alignItems: "center",
+              },
+            ]}
+          >
+            {infoPosition && (
+              <View style={infoStyles}>
+                {zone.placeholder.text && (
+                  <View style={textContainerStyle}>
+                    <Text style={textStyle}>{zone.placeholder.text}</Text>
+                  </View>
+                )}
+
+                {zone.placeholder.iconName && (
+                  <Icon
+                    name={zone.placeholder.iconName}
+                    size={20}
+                    color={Colors.K300}
+                  />
+                )}
+
+                <Text style={countStyle}>{count}</Text>
+              </View>
+            )}
+          </View>
+        );
+      })}
+    </>
+  );
+};

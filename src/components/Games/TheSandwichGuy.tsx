@@ -4,7 +4,7 @@ import { useMemo, useRef, useState } from "react";
 import { View } from "react-native";
 import { CardAnimationParams, useAnimations } from "../Animations/Animations";
 import { Button } from "../Button/Button";
-import { CardGrid } from "../Cards/Card";
+import { CardGrid } from "../Cards/CardOLD";
 import {
   RANK_VALUE,
   createDeck,
@@ -12,7 +12,7 @@ import {
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { CardButton } from "../Cards/CardButton";
+import { CardButton } from "../Cards/CardButtonOLD";
 import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
 import { useToast } from "../common/Toast";

@@ -1,9 +1,8 @@
 import { useMemo, useState } from "react";
-import { GameMenus } from "../common/GameMenus";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { Card } from "../Cards/Card";
+import { CardOLD } from "../Cards/CardOLD";
 import {
   CardSuit,
   RANK_VALUE,
@@ -362,7 +361,7 @@ export default function Canfield() {
             <View key={`c-found-${suit}`} style={styles.zone}>
               <Text style={styles.smallText}>{suit}</Text>
               {top ? (
-                <Card card={top} cardsPerRow={5} />
+                <CardOLD card={top} cardsPerRow={5} />
               ) : (
                 <View style={styles.empty} />
               )}
@@ -379,7 +378,7 @@ export default function Canfield() {
             disabled={game.ended || game.reserve.length === 0}
           >
             {game.reserve.length > 0 ? (
-              <Card
+              <CardOLD
                 card={game.reserve[game.reserve.length - 1]}
                 cardsPerRow={5}
               />
@@ -396,7 +395,10 @@ export default function Canfield() {
             disabled={game.ended || game.waste.length === 0}
           >
             {game.waste.length > 0 ? (
-              <Card card={game.waste[game.waste.length - 1]} cardsPerRow={5} />
+              <CardOLD
+                card={game.waste[game.waste.length - 1]}
+                cardsPerRow={5}
+              />
             ) : (
               <View style={styles.empty} />
             )}
@@ -431,7 +433,7 @@ export default function Canfield() {
                 disabled={game.ended || col.length === 0}
               >
                 {top ? (
-                  <Card card={top} cardsPerRow={5} />
+                  <CardOLD card={top} cardsPerRow={5} />
                 ) : (
                   <View style={styles.empty} />
                 )}

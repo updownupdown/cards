@@ -2,9 +2,9 @@ import { flexStyles, transitionStyles } from "@/styles/flexStyles";
 import { Colors } from "@/styles/styles";
 import { rotatedText, textStyles } from "@/styles/textStyles";
 import { Text, TextStyle, View, ViewStyle } from "react-native";
-import { Card, CardGrid } from "../../Cards/Card";
+import { CardOLD, CardGrid } from "../../Cards/CardOLD";
 import { type PlayingCard } from "../../Cards/card-utils";
-import { CardButton } from "../../Cards/CardButton";
+import { CardButton } from "../../Cards/CardButtonOLD";
 import {
   EmissaryRefKeys,
   EmissarySuitsColorMap,
@@ -154,7 +154,7 @@ export const EmissaryHand = ({
               />
             );
           })}
-          <Card
+          <CardOLD
             card={undefined}
             ref={setRef("futureHandRef")}
             cardsPerRow={cardsPerRow}

@@ -1,5 +1,4 @@
 import { useMemo, useRef, useState } from "react";
-import { GameMenus } from "../common/GameMenus";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import {
   Animated,
@@ -11,7 +10,7 @@ import {
 } from "react-native";
 import type { GestureResponderEvent, View as RNView } from "react-native";
 
-import { Card } from "../Cards/Card";
+import { CardOLD } from "../Cards/CardOLD";
 import {
   DRAG_CAPTURE_THRESHOLD,
   DRAG_MOVE_THRESHOLD,
@@ -515,7 +514,7 @@ export default function Pyramid() {
                       : undefined
                   }
                 >
-                  <Card card={wasteTop} cardsPerRow={cardsPerRow} />
+                  <CardOLD card={wasteTop} cardsPerRow={cardsPerRow} />
                 </View>
               ) : (
                 <Text style={styles.slotLabel}>Waste</Text>
@@ -569,7 +568,7 @@ export default function Pyramid() {
                       {...(dragHandlers ?? {})}
                     >
                       {!card.removed ? (
-                        <Card card={card} cardsPerRow={cardsPerRow} />
+                        <CardOLD card={card} cardsPerRow={cardsPerRow} />
                       ) : (
                         <View style={styles.removedPlaceholder} />
                       )}
@@ -592,7 +591,7 @@ export default function Pyramid() {
               },
             ]}
           >
-            <Card card={dragGhost.card} cardsPerRow={cardsPerRow} />
+            <CardOLD card={dragGhost.card} cardsPerRow={cardsPerRow} />
           </Animated.View>
         ) : null}
       </View>

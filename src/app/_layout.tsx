@@ -1,7 +1,7 @@
 import { AnimationProvider } from "@/components/Animations/Animations";
 import { ToastProvider } from "@/components/common/Toast";
-import { layoutStyles } from "@/styles/layoutStyles";
-import { Colors } from "@/styles/styles";
+import { flexStyles } from "@/styles/flexStyles";
+import { Colors, MaxContentHeight, MaxContentWidth } from "@/styles/styles";
 import {
   Outfit_200ExtraLight,
   Outfit_300Light,
@@ -31,20 +31,39 @@ export default function Layout() {
 
   return (
     <ToastProvider>
-      <AnimationProvider>
-        <View style={[layoutStyles.appView]}>
-          <SafeAreaView style={[layoutStyles.safeArea]}>
-            <Stack
-              screenOptions={{
-                headerShown: false,
-                gestureEnabled: false,
-                fullScreenGestureEnabled: false,
-                contentStyle: { backgroundColor: Colors.background },
-              }}
-            />
-          </SafeAreaView>
-        </View>
-      </AnimationProvider>
+      <View
+        style={[
+          {
+            flex: 1,
+            justifyContent: "center",
+            userSelect: "none",
+            backgroundColor: Colors.background,
+          },
+        ]}
+      >
+        <SafeAreaView
+          style={[
+            flexStyles.fullWidthHeight,
+            {
+              flex: 1,
+              flexGrow: 1,
+              alignItems: "stretch",
+              alignSelf: "center",
+              maxWidth: MaxContentWidth,
+              maxHeight: MaxContentHeight,
+            },
+          ]}
+        >
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              gestureEnabled: false,
+              fullScreenGestureEnabled: false,
+              contentStyle: { backgroundColor: Colors.background },
+            }}
+          />
+        </SafeAreaView>
+      </View>
     </ToastProvider>
   );
 }

@@ -1,9 +1,8 @@
 import { useMemo, useState } from "react";
-import { GameMenus } from "../common/GameMenus";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { Card } from "../Cards/Card";
+import { CardOLD } from "../Cards/CardOLD";
 import {
   CardSuit,
   RANK_VALUE,
@@ -221,7 +220,7 @@ export default function FortyThieves() {
             <View key={`ft-found-${i}`} style={styles.foundationZone}>
               <Text style={styles.smallText}>{pile.suit ?? "-"}</Text>
               {top ? (
-                <Card card={top} cardsPerRow={5} />
+                <CardOLD card={top} cardsPerRow={5} />
               ) : (
                 <View style={styles.empty} />
               )}
@@ -238,7 +237,10 @@ export default function FortyThieves() {
             disabled={game.ended || game.waste.length === 0}
           >
             {game.waste.length > 0 ? (
-              <Card card={game.waste[game.waste.length - 1]} cardsPerRow={5} />
+              <CardOLD
+                card={game.waste[game.waste.length - 1]}
+                cardsPerRow={5}
+              />
             ) : (
               <View style={styles.empty} />
             )}
@@ -273,7 +275,7 @@ export default function FortyThieves() {
                 disabled={game.ended || col.length === 0}
               >
                 {top ? (
-                  <Card card={top} cardsPerRow={5} />
+                  <CardOLD card={top} cardsPerRow={5} />
                 ) : (
                   <View style={styles.empty} />
                 )}

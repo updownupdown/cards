@@ -7,7 +7,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import { Card, CardSelectColor, CardSizes } from "./Card";
+import { CardOLD, CardSelectColor, CardSizes } from "./CardOLD";
 import { PlayingCard } from "./card-utils";
 
 interface Props {
@@ -57,7 +57,7 @@ export const CardButton = ({
       style={[cardStyles.transition, style]}
       disabled={disabled || !onPress}
     >
-      <Card
+      <CardOLD
         card={card}
         isPlaceholder={isPlaceholder}
         isSelectable={!disabled && onPress !== undefined}

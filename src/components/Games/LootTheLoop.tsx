@@ -8,7 +8,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, Text, View, ViewStyle } from "react-native";
 import { useAnimations } from "../Animations/Animations";
 import { Button } from "../Button/Button";
-import { CardSelectColor, useCardSizing } from "../Cards/Card";
+import { CardSelectColor, useCardSizing } from "../Cards/CardOLD";
 import {
   CardSuit,
   createDeck,
@@ -21,7 +21,7 @@ import {
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { CardButton } from "../Cards/CardButton";
+import { CardButton } from "../Cards/CardButtonOLD";
 import { GameWrapper } from "../common/GameWrapper";
 
 const loopCardTranslate = 14;

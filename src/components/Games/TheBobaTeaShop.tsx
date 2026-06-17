@@ -1,35 +1,33 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { useLayoutManager } from "@/hooks/useLayoutManager";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { useZoneLayout, ZoneConfig } from "@/hooks/useZoneLayout";
+import { buttonStyles } from "@/styles/buttonStyles";
 import { flexStyles, transitionStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
+import { delay } from "@/utils/utils";
+import { produce } from "immer";
 import { useMemo, useState } from "react";
 import { Pressable, Text, View } from "react-native";
-import {
-  CardAnimationParams,
-  defaultAnimDuration,
-  useAnimations,
-} from "../Animations/Animations";
 import { Button } from "../Button/Button";
-import { Card, CardGrid, useCardSizing } from "../Cards/Card";
+import { AnimatedCard, ArcConfig } from "../Cards/AnimatedCard";
+import { CardSelectColor } from "../Cards/Card";
 import {
   createDeck,
   flipAllToBack,
+  flipToBack,
   flipToFace,
   rankValue,
   shuffle,
   top,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { Deck } from "../Cards/Deck";
+import { CardPositionBuilder } from "../Cards/CardPositionBuilder";
+import { ZoneBackgrounds } from "../Cards/ZoneBackgrounds";
 import { GameWrapper } from "../common/GameWrapper";
-import { buttonStyles } from "@/styles/buttonStyles";
-import { cardStyles } from "@/styles/cardStyles";
-import { produce } from "immer";
 
-const cardsPerRow = 6;
 const cardSize = "small";
+const selectedPlaceholderId = "selectedPlaceholder";
 
 type BobaState = {
   deck: PlayingCard[];
@@ -117,15 +115,118 @@ function updatedDiscardsByRank(
   return discardsByRank;
 }
 
-export default function TheBobaTeaShop() {
-  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
-  const { cardWidth, cardHeight } = useCardSizing(cardsPerRow);
+const queueCardOffset = 0.47;
 
+function queueZones() {
+  let zones: ZoneConfig[] = [];
+
+  for (let i = 0; i < 4; i++) {
+    zones.push({
+      id: `q-${i}`,
+      col: i * 1.8,
+      row: 3,
+      height: 3.5,
+      fan: { direction: "down", offset: queueCardOffset },
+    });
+    zones.push({
+      id: `btns-${i}`,
+      col: i * 1.8 + 1,
+      row: 3,
+      width: 0.8,
+      height: 3.5,
+    });
+  }
+
+  return zones;
+}
+
+const targetCols = 1.8 * 4;
+const targetRows = 7;
+
+export const layoutZones: ZoneConfig[] = [
+  {
+    id: "rankTally",
+    col: 0,
+    row: 0,
+    width: targetCols,
+  },
+  {
+    id: "deck",
+    col: 2,
+    row: 1.5,
+    fan: { maxVisible: 3 },
+    placeholder: { show: true, text: "Draw", infoPos: "left" },
+  },
+  {
+    id: "discard",
+    col: 4,
+    row: 1.5,
+    fan: { maxVisible: 3 },
+    placeholder: { show: true, text: "Dscrd", infoPos: "right" },
+  },
+  ...queueZones(),
+  {
+    id: "actionBtns",
+    col: 0,
+    row: 6.5,
+    width: targetCols,
+    height: 0.75,
+  },
+];
+
+export default function TheBobaTeaShop() {
   const [game, setGame] = useState<BobaState>(setup);
   const [selectedPos, setSelectedPos] = useState<SelectedPos | undefined>(
     undefined,
   );
   const [decisionNeeded, setDecisionNeeded] = useState(false);
+  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
+
+  const layoutManager = useZoneLayout({
+    zones: layoutZones,
+    targetCols,
+    targetRows,
+    gapPc: 0,
+  });
+
+  const { cardWidth, cardHeight, getCardPosition, getZoneStyles } =
+    layoutManager;
+
+  const cardPositions = useMemo(() => {
+    const builder = new CardPositionBuilder(getCardPosition);
+
+    builder.addDeck(game.deck, "deck");
+    builder.addDeck(game.discard, "discard");
+
+    game.queues.forEach((queue, queueIdx) => {
+      builder.addArray(
+        queue,
+        `q-${queueIdx}`,
+        queueIdx + 20,
+        (card, index) => ({
+          rankIndex: queueIdx,
+          cardIndex: index,
+        }),
+      );
+    });
+
+    if (selectedPos) {
+      builder.add({
+        card: {
+          id: selectedPlaceholderId,
+          suit: "spades",
+          rank: "A",
+          faceUp: false,
+        },
+        zoneId: `q-${selectedPos.queueIndex}`,
+        index: selectedPos.cardIndex,
+        total: 1,
+        startingZIndex: selectedPos.queueIndex + 20 + selectedPos.cardIndex - 1,
+      });
+    }
+
+    return builder.build();
+  }, [game, selectedPos, decisionNeeded, getCardPosition]);
 
   const score = useMemo(() => totalInQueues(game.queues), [game.queues]);
 
@@ -140,23 +241,6 @@ export default function TheBobaTeaShop() {
     }
   };
 
-  const { getLayout, setRef } = useLayoutManager([
-    "deck",
-    "discard",
-    "queueRoots",
-    "queues",
-    "selectedPos",
-  ]);
-
-  const {
-    animateCards,
-    clearAnimations,
-    addToAnimQueue,
-    animateQueue,
-    isAnimating,
-    animatingCardIds,
-  } = useAnimations();
-
   const nextCustomerRevealed = useMemo(
     () => top(game.deck)?.faceUp,
     [game.deck],
@@ -164,13 +248,10 @@ export default function TheBobaTeaShop() {
 
   function reset() {
     clearHistory();
-    clearAnimations();
     setSelectedPos(undefined);
     setDecisionNeeded(false);
     setGame(setup());
   }
-
-  // =========================================
 
   // ===== Reveal Next Customer ===== //
   async function revealNextCustomer(gameState: BobaState) {
@@ -185,18 +266,10 @@ export default function TheBobaTeaShop() {
       draft.deck[topCardIndex] = flipToFace(draft.deck[topCardIndex]);
     });
 
-    // Flip card over - animation
+    // Flip card over
     const topCard = flipToFace(
       nextGameState.deck[nextGameState.deck.length - 1],
     );
-
-    addToAnimQueue({
-      card: topCard,
-      from: getLayout("deck"),
-      to: getLayout("deck"),
-      flip: "toFace",
-    });
-    animateQueue();
 
     // Check if card fits in queue
     const targetQueue = nextGameState.queues[selectedPos.queueIndex];
@@ -224,13 +297,6 @@ export default function TheBobaTeaShop() {
     });
 
     if (nextCustomerFits) {
-      addToAnimQueue({
-        card: topCard,
-        from: getLayout("deck"),
-        to: getLayout("selectedPos"),
-      });
-      animateQueue();
-
       setSelectedPos(undefined);
       decisionNeeded && setDecisionNeeded(false);
       setGame(nextGameState);
@@ -261,48 +327,6 @@ export default function TheBobaTeaShop() {
       );
     });
 
-    const anims: CardAnimationParams[] = [];
-    const discardPos = getLayout("discard");
-
-    if (discardPos) {
-      // Animate customers to discard
-      queueToDiscard.forEach((card, index) => {
-        const guessPos = getLayout("queues", selectedPos.queueIndex + index);
-
-        if (guessPos) {
-          anims.push({
-            card,
-            from: guessPos,
-            to: discardPos,
-            cardsPerRow,
-            cardSize: "small",
-            flip: "toBack",
-            delay: index * 100,
-            keepAlive: true,
-          });
-        }
-      });
-
-      // Animate new customer to queue
-      const deckPos = getLayout("deck");
-      const queueStartPos = getLayout("queueRoots", selectedPos.queueIndex);
-
-      if (deckPos) {
-        anims.push({
-          card: topCard,
-          from: deckPos,
-          to: queueStartPos,
-          cardsPerRow,
-          cardSize: "small",
-          delay: queueToDiscard.length * 100,
-        });
-      }
-    }
-
-    if (anims.length > 0) {
-      await animateCards(anims);
-    }
-
     setDecisionNeeded(false);
     setGame(nextGameState);
   }
@@ -316,42 +340,35 @@ export default function TheBobaTeaShop() {
       structuredClone({ game: gameState, selectedPos, decisionNeeded }),
     );
 
-    const cardsToDiscard = [...gameState.deck.slice(-2)].reverse();
-
-    const nextGameState = produce(gameState, (draft) => {
-      draft.deck.splice(-2);
-      draft.discard.push(...flipAllToBack(cardsToDiscard));
-      draft.discardsByRank = updatedDiscardsByRank(
-        draft.discardsByRank,
-        cardsToDiscard,
-      );
-    });
-
-    const anims: CardAnimationParams[] = [];
-    const deckPos = getLayout("deck");
-    const discardPos = getLayout("discard");
-
-    if (deckPos && discardPos) {
-      cardsToDiscard.forEach((card, index) => {
-        anims.push({
-          card,
-          from: { ...deckPos, zIndex: 10 - index },
-          to: { ...discardPos, zIndex: index },
-          cardsPerRow,
-          cardSize: "small",
-          flip: "toBack",
-          delay: index * defaultAnimDuration,
-          keepAlive: true,
+    for (let i = 0; i < 2; i++) {
+      // Discard top of deck
+      setGame((prev) => {
+        return produce(prev, (draft) => {
+          if (draft.deck.length > 0) {
+            const cardToDiscard = draft.deck.pop()!;
+            draft.discard.push(flipToBack(cardToDiscard));
+            draft.discardsByRank = updatedDiscardsByRank(draft.discardsByRank, [
+              cardToDiscard,
+            ]);
+          }
         });
       });
-    }
 
-    if (anims.length > 0) {
-      await animateCards(anims);
-      clearAnimations();
-    }
+      await delay(200);
 
-    setGame(nextGameState);
+      // Flip next card over
+      setGame((prev) => {
+        return produce(prev, (draft) => {
+          if (draft.deck.length > 0 && i === 0) {
+            draft.deck[draft.deck.length - 1] = flipToFace(
+              draft.deck[draft.deck.length - 1],
+            );
+          }
+        });
+      });
+
+      await delay(400);
+    }
   }
 
   function cardTopPos(
@@ -392,345 +409,289 @@ export default function TheBobaTeaShop() {
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
+      <ZoneBackgrounds layoutManager={layoutManager} game={game} />
+
+      {Object.values(cardPositions).map((target) => {
+        let selectColor: CardSelectColor = "none";
+        let isSelected = undefined;
+        let yOffset: number | undefined = undefined;
+        let forceOverlay = false;
+        let forceSelectColor = false;
+        let arcConfig: ArcConfig | undefined = { enabled: false };
+
+        if (target.card.id === selectedPlaceholderId) {
+          // Placeholder
+          selectColor = decisionNeeded ? "red" : "purple";
+          forceOverlay = true;
+          forceSelectColor = true;
+
+          arcConfig = {
+            enabled: true,
+            magnitudeY: 0.25,
+          };
+        } else if (target.misc?.topOfDeck) {
+          // Top of deck
+          selectColor =
+            selectedPos !== undefined
+              ? decisionNeeded
+                ? "red"
+                : "purple"
+              : "none";
+          forceSelectColor = selectedPos !== undefined;
+          forceOverlay = selectedPos !== undefined;
+
+          arcConfig = {
+            enabled: true,
+            magnitudeY: 0.25,
+          };
+        } else if (
+          selectedPos !== undefined &&
+          target.misc?.rankIndex === selectedPos.queueIndex &&
+          target.misc?.cardIndex >= selectedPos.cardIndex
+        ) {
+          // Shift card down if under the placeholder
+          yOffset = 30;
+        }
+
+        return (
+          <AnimatedCard
+            key={target.card.id}
+            targetState={target}
+            cardWidth={cardWidth}
+            cardHeight={cardHeight}
+            cardSize={cardSize}
+            isSelected={isSelected}
+            yOffset={yOffset}
+            arcConfig={arcConfig}
+            selectColor={selectColor}
+            forceOverlay={forceOverlay}
+            forceSelectColor={forceSelectColor}
+            isVisible={!target.isHiddenUnderDeck}
+          />
+        );
+      })}
+
+      {/* Rank Tallies */}
       <View
         style={[
-          flexStyles.colCentered,
-          flexStyles.flex1,
-          flexStyles.fullWidth,
-          flexStyles.gap40,
+          flexStyles.rowCentered,
+          flexStyles.spaceBetween,
+          getZoneStyles("rankTally"),
         ]}
       >
-        <View style={[flexStyles.colStart, flexStyles.fullWidth, { gap: 40 }]}>
-          {/* Rank Tallies */}
+        {(Object.keys(game.discardsByRank) as Array<PlayingCard["rank"]>)
+          .filter((r) => r !== "Joker")
+          .map((rank) => {
+            const discardCount = game.discardsByRank[rank];
+
+            return (
+              <View
+                key={rank}
+                style={[
+                  flexStyles.colCentered,
+                  flexStyles.gap6,
+                  flexStyles.flex1,
+                ]}
+              >
+                <View
+                  key={rank}
+                  style={[
+                    flexStyles.colCentered,
+                    flexStyles.gap6,
+                    { flexDirection: "column-reverse" },
+                  ]}
+                >
+                  {Array.from({ length: 3 }, (_, i) => {
+                    let bgColor: string = Colors.K900;
+
+                    if (i < discardCount) {
+                      if (i === 0) bgColor = Colors.cardSelectGreen;
+                      if (i === 1) bgColor = Colors.cardSelectYellow;
+                      if (i === 2) bgColor = Colors.cardSelectRed;
+                    }
+
+                    return (
+                      <View
+                        key={`discard-by-rank-${rank}-${i}`}
+                        style={[
+                          transitionStyles.sec05,
+                          {
+                            display: "flex",
+                            width: 8,
+                            height: 8,
+                            borderRadius: 4,
+                            backgroundColor: bgColor,
+                            boxShadow: `0 0 3px ${bgColor}`,
+                          },
+                        ]}
+                      />
+                    );
+                  })}
+                </View>
+
+                <Text
+                  style={[
+                    textStyles.default,
+                    { fontSize: cardWidth * 0.3, fontFamily: FontWeight[500] },
+                  ]}
+                >
+                  {rank}
+                </Text>
+              </View>
+            );
+          })}
+      </View>
+
+      {/* Select position buttons */}
+      {game.queues.map((queue, queueIndex) => (
+        <View
+          key={`queue-${queueIndex}`}
+          style={[
+            flexStyles.colStart,
+            flexStyles.gap14,
+            flexStyles.flex1,
+            getZoneStyles(`btns-${queueIndex}`),
+          ]}
+        >
+          {Array.from({ length: queue.length + 1 }, (_, i) => {
+            const isSelected =
+              selectedPos?.queueIndex === queueIndex &&
+              selectedPos.cardIndex === i;
+
+            let backgroundColor: string = "";
+            let textColor: string = "";
+
+            if (isSelected) {
+              textColor = Colors.white;
+              backgroundColor = decisionNeeded
+                ? Colors.cardSelectRed
+                : Colors.cardSelectPurple;
+            } else {
+              textColor = decisionNeeded ? Colors.K600 : Colors.K100;
+              backgroundColor = decisionNeeded ? Colors.K800 : Colors.K700;
+            }
+
+            return (
+              <Pressable
+                key={`select-pos-${queueIndex}-${i}`}
+                onPress={() => {
+                  if (isSelected) {
+                    setSelectedPos(undefined);
+                  } else {
+                    setSelectedPos({ queueIndex, cardIndex: i });
+                  }
+                }}
+                disabled={decisionNeeded}
+                style={[
+                  flexStyles.colCentered,
+                  transitionStyles.sec02,
+                  {
+                    alignItems: "flex-end",
+                    position: "absolute",
+                    padding: 10,
+                    left: 0,
+                    width:
+                      cardWidth * 0.4 +
+                      (isSelected ? cardWidth * 0.22 : cardWidth * 0.1),
+                    top: cardHeight * i * queueCardOffset + cardHeight / 10,
+                    height: cardWidth * 0.5,
+                    borderTopRightRadius: cardWidth * 0.25,
+                    borderBottomRightRadius: cardWidth * 0.25,
+                    backgroundColor: backgroundColor,
+                    zIndex: i * 2 - 2,
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    textStyles.default,
+                    {
+                      fontSize: cardWidth * 0.21,
+                      fontFamily: FontWeight[500],
+                      color: textColor,
+                    },
+                  ]}
+                >
+                  {i + 1}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      ))}
+
+      {/* Action Buttons */}
+      <View
+        style={[
+          getZoneStyles("actionBtns"),
+          flexStyles.rowCentered,
+          flexStyles.spaceBetween,
+          {
+            zIndex: 100,
+            gap: cardWidth * 0.25,
+          },
+        ]}
+      >
+        {!nextCustomerRevealed && !selectedPos && (
           <View
             style={[
               flexStyles.rowCentered,
-              flexStyles.spaceBetween,
               flexStyles.fullWidth,
-              { paddingHorizontal: 8 },
+              buttonStyles.sizeMedium,
             ]}
           >
-            {(Object.keys(game.discardsByRank) as Array<PlayingCard["rank"]>)
-              .filter((r) => r !== "Joker")
-              .map((rank) => {
-                const discardCount = game.discardsByRank[rank];
-
-                return (
-                  <View
-                    key={rank}
-                    style={[
-                      flexStyles.colCentered,
-                      flexStyles.gap6,
-                      flexStyles.flex1,
-                    ]}
-                  >
-                    <View
-                      key={rank}
-                      style={[
-                        flexStyles.colCentered,
-                        flexStyles.gap6,
-                        { flexDirection: "column-reverse" },
-                      ]}
-                    >
-                      {Array.from({ length: 3 }, (_, i) => {
-                        let bgColor: string = Colors.K900;
-
-                        if (i < discardCount) {
-                          if (i === 0) bgColor = Colors.cardSelectGreen;
-                          if (i === 1) bgColor = Colors.cardSelectYellow;
-                          if (i === 2) bgColor = Colors.cardSelectRed;
-                        }
-
-                        return (
-                          <View
-                            key={`discard-by-rank-${rank}-${i}`}
-                            style={[
-                              transitionStyles.sec05,
-                              {
-                                display: "flex",
-                                width: 8,
-                                height: 8,
-                                borderRadius: 4,
-                                backgroundColor: bgColor,
-                                boxShadow: `0 0 3px ${bgColor}`,
-                              },
-                            ]}
-                          />
-                        );
-                      })}
-                    </View>
-
-                    <Text
-                      style={[
-                        textStyles.default,
-                        { fontSize: 16, fontFamily: FontWeight[500] },
-                      ]}
-                    >
-                      {rank}
-                    </Text>
-                  </View>
-                );
-              })}
+            <Text
+              style={[
+                textStyles.default,
+                {
+                  fontSize: cardWidth * 0.32,
+                  textAlign: "center",
+                  color: Colors.K500,
+                },
+              ]}
+            >
+              Select queue position for next customer
+            </Text>
           </View>
-        </View>
+        )}
 
-        {/* Decks */}
-        <View
-          style={[
-            flexStyles.rowCentered,
-            flexStyles.gap40,
-            flexStyles.fullWidth,
-          ]}
-        >
-          <Deck
-            refTop={setRef("deck")}
-            cards={game.deck}
-            cardsPerRow={cardsPerRow}
-            limitFan
-            fan="horizontalRight"
-            showCount
-            iconName="draw"
-            countPosition="left"
-            cardSize={cardSize}
-            hideTopCard={
-              top(game.deck) && animatingCardIds.includes(top(game.deck)!.id)
-            }
-            selectColor={
-              isAnimating
-                ? "none"
-                : selectedPos !== undefined
-                  ? decisionNeeded
-                    ? "red"
-                    : "purple"
-                  : "none"
-            }
-            forceSelectColor={!isAnimating && selectedPos !== undefined}
-            forceOverlay={!isAnimating && selectedPos !== undefined}
+        {!nextCustomerRevealed && selectedPos && (
+          <Button
+            text="Reveal next customer"
+            onPress={() => {
+              revealNextCustomer(game);
+            }}
+            disabled={selectedPos === undefined}
+            style={[flexStyles.flex1]}
+            theme="purple"
           />
-          <Deck
-            refNext={setRef("discard")}
-            cards={game.discard}
-            cardsPerRow={cardsPerRow}
-            cardSize={cardSize}
-            fan="horizontalLeft"
-            limitFan
-            showCount
-            iconName="delete"
-            countPosition="right"
-            // selectColor="none"
-          />
-        </View>
+        )}
 
-        {/* Queues */}
-        <CardGrid
-          cardsPerRow={cardsPerRow}
-          targetGridCols={cardsPerRow}
-          style={[flexStyles.fullWidth, flexStyles.flex1]}
-        >
-          {game.queues.map((queue, queueIndex) => (
-            <View
-              key={`queue-${queueIndex}`}
-              style={[
-                flexStyles.colStart,
-                flexStyles.gap14,
-                flexStyles.flex1,
-                { position: "relative", height: "100%" },
-              ]}
-            >
-              {/* Queue Root Placeholder (needs to be card sized) */}
-              <Card
-                ref={setRef("queueRoots", queueIndex)}
-                card={undefined}
-                style={[cardStyles.animHide, { zIndex: 1 }]}
-                cardsPerRow={cardsPerRow}
-                cardSize={cardSize}
-              />
-
-              {/* Selected position back card */}
-              {selectedPos && selectedPos.queueIndex === queueIndex && (
-                <Card
-                  ref={setRef("selectedPos")}
-                  card={undefined}
-                  cardsPerRow={cardsPerRow}
-                  cardSize={cardSize}
-                  style={[
-                    // isAnimating && decisionNeeded && cardStyles.animHide,
-                    {
-                      position: "absolute",
-                      top: cardTopPos(
-                        selectedPos.queueIndex,
-                        selectedPos.cardIndex,
-                      ),
-                      left: 0,
-                      zIndex: 10 + selectedPos.cardIndex * 2,
-                    },
-                  ]}
-                  selectColor={
-                    isAnimating ? "none" : decisionNeeded ? "red" : "purple"
-                  }
-                  forceSelectColor={!isAnimating}
-                  forceOverlay={!isAnimating}
-                />
-              )}
-
-              {/* Queue */}
-              {queue.map((card, cardIndex) => {
-                return (
-                  <Card
-                    key={`queue-${queueIndex}-${cardIndex}`}
-                    ref={setRef("queues", queueIndex + cardIndex)}
-                    card={card}
-                    cardsPerRow={cardsPerRow}
-                    cardSize={cardSize}
-                    style={[
-                      animatingCardIds.includes(card.id) && cardStyles.animHide,
-                      // isAnimating && transitionStyles.none,
-                      {
-                        position: "absolute",
-                        top: cardTopPos(queueIndex, cardIndex, selectedPos),
-                        left: 0,
-                        zIndex: 10 + cardIndex * 2,
-                      },
-                    ]}
-                  />
-                );
-              })}
-
-              {/* Select position buttons */}
-              {Array.from({ length: queue.length + 1 }, (_, i) => {
-                const isSelected =
-                  selectedPos?.queueIndex === queueIndex &&
-                  selectedPos.cardIndex === i;
-
-                let backgroundColor: string = "";
-                let textColor: string = "";
-
-                if (isSelected) {
-                  textColor = Colors.white;
-                  backgroundColor = decisionNeeded
-                    ? Colors.cardSelectRed
-                    : Colors.cardSelectPurple;
-                } else {
-                  textColor = decisionNeeded ? Colors.K600 : Colors.K100;
-                  backgroundColor = decisionNeeded ? Colors.K800 : Colors.K700;
-                }
-
-                return (
-                  <Pressable
-                    key={`select-pos-${queueIndex}-${i}`}
-                    onPress={() => {
-                      if (isSelected) {
-                        setSelectedPos(undefined);
-                      } else {
-                        setSelectedPos({ queueIndex, cardIndex: i });
-                      }
-                    }}
-                    disabled={decisionNeeded}
-                    style={[
-                      flexStyles.colCentered,
-                      transitionStyles.sec02,
-                      {
-                        alignItems: "flex-end",
-                        position: "absolute",
-                        padding: 10,
-                        left: cardWidth,
-                        width:
-                          cardWidth * 0.4 +
-                          (isSelected ? cardWidth * 0.22 : cardWidth * 0.1),
-                        top: cardTopPos(queueIndex, i) + cardHeight / 8,
-                        height: cardWidth * 0.5,
-                        borderTopRightRadius: cardWidth * 0.25,
-                        borderBottomRightRadius: cardWidth * 0.25,
-                        backgroundColor: backgroundColor,
-                        zIndex: i * 2 - 2,
-                      },
-                    ]}
-                  >
-                    <Text
-                      style={[
-                        textStyles.default,
-                        {
-                          fontSize: cardWidth * 0.2,
-                          fontFamily: FontWeight[500],
-                          color: textColor,
-                        },
-                      ]}
-                    >
-                      {i + 1}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-          ))}
-        </CardGrid>
-
-        {/* Action Buttons */}
-        <View
-          style={[
-            flexStyles.rowCentered,
-            flexStyles.fullWidth,
-            flexStyles.gap12,
-          ]}
-        >
-          {!nextCustomerRevealed && !selectedPos && (
-            <View
-              style={[
-                flexStyles.rowCentered,
-                flexStyles.fullWidth,
-                buttonStyles.sizeMedium,
-                { backgroundColor: Colors.K875 },
-              ]}
-            >
-              <Text
-                style={[
-                  textStyles.default,
-                  { fontSize: 16, textAlign: "center" },
-                ]}
-              >
-                Select queue position for next customer
-              </Text>
-            </View>
-          )}
-
-          {!nextCustomerRevealed && selectedPos && (
+        {nextCustomerRevealed && decisionNeeded && (
+          <>
             <Button
-              text="Reveal next customer"
+              text="Let them stay"
               onPress={() => {
-                revealNextCustomer(game);
+                if (selectedPos?.queueIndex !== undefined) {
+                  setSelectedPos(undefined);
+                  placeCustomer(game);
+                }
               }}
               disabled={selectedPos === undefined}
               style={[flexStyles.flex1]}
-              theme="purple"
             />
-          )}
-
-          {nextCustomerRevealed && decisionNeeded && (
-            <>
-              <Button
-                text="Let them stay"
-                onPress={() => {
-                  if (selectedPos?.queueIndex !== undefined) {
-                    setSelectedPos(undefined);
-                    placeCustomer(game);
-                  }
-                }}
-                disabled={selectedPos === undefined}
-                style={[flexStyles.flex1]}
-              />
-              <Button
-                text="Kick them out"
-                onPress={() => {
-                  if (selectedPos?.queueIndex !== undefined) {
-                    kickOutCustomer(game);
-                  }
-                }}
-                disabled={selectedPos === undefined}
-                style={[flexStyles.flex1]}
-              />
-            </>
-          )}
-        </View>
+            <Button
+              text="Kick them out"
+              onPress={() => {
+                if (selectedPos?.queueIndex !== undefined) {
+                  kickOutCustomer(game);
+                }
+              }}
+              disabled={selectedPos === undefined}
+              style={[flexStyles.flex1]}
+            />
+          </>
+        )}
       </View>
     </GameWrapper>
   );

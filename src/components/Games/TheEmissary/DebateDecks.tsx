@@ -3,7 +3,7 @@ import { flexStyles } from "@/styles/flexStyles";
 import { View } from "react-native";
 import { Button } from "../../Button/Button";
 import { type PlayingCard } from "../../Cards/card-utils";
-import { CardButton } from "../../Cards/CardButton";
+import { CardButton } from "../../Cards/CardButtonOLD";
 import { Deck } from "../../Cards/Deck";
 import { EmissaryRefKeys, TheEmissaryVisit } from "./TheEmissaryCommon";
 

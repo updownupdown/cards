@@ -11,9 +11,9 @@ import {
   CardSelectColor,
   CardSizes,
   useCardSizing,
-} from "./Card";
+} from "./CardOLD";
 import { PlayingCard } from "./card-utils";
-import { CardButton } from "./CardButton";
+import { CardButton } from "./CardButtonOLD";
 
 export const DEFAULT_FRONT_OVERLAP = 0.7;
 export const DEFAULT_BACK_OVERLAP = 0.9;

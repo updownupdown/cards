@@ -4,9 +4,9 @@ import { useUndoHistory } from "@/hooks/useUndoHistory";
 import { cardStyles } from "@/styles/cardStyles";
 import { useState } from "react";
 import { CardAnimationParams, useAnimations } from "../Animations/Animations";
-import { CardGrid, CardSelectColor, CardSizes } from "../Cards/Card";
+import { CardGrid, CardSelectColor, CardSizes } from "../Cards/CardOLD";
 import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
-import { CardButton } from "../Cards/CardButton";
+import { CardButton } from "../Cards/CardButtonOLD";
 import { GameWrapper } from "../common/GameWrapper";
 
 const cardsPerRow = 6;

@@ -1,4 +1,4 @@
-import { Colors, FontWeight, rgba } from "@/styles/styles";
+import { Colors, FontWeight, HeaderButtonSize, rgba } from "@/styles/styles";
 import { StyleSheet } from "react-native";
 
 export const buttonTransition = {
@@ -6,9 +6,6 @@ export const buttonTransition = {
   transitionProperty: "all",
   transitionTimingFunction: "ease",
 };
-
-export const headerButtonSize = 48;
-export const headerButtonIconSize = 26;
 
 export const buttonStyles = StyleSheet.create({
   fullWidth: {
@@ -120,8 +117,8 @@ export const buttonStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 0,
-    width: headerButtonSize,
-    height: headerButtonSize,
+    width: HeaderButtonSize,
+    height: HeaderButtonSize,
     boxShadow: "unset",
     borderRadius: "unset",
     backgroundColor: "unset",
@@ -129,7 +126,7 @@ export const buttonStyles = StyleSheet.create({
   closeModalButton: {
     marginLeft: "auto",
     backgroundColor: Colors.K850,
-    borderRadius: headerButtonSize / 2,
+    borderRadius: HeaderButtonSize / 2,
   },
   icon: {
     ...buttonTransition,

@@ -1,25 +1,28 @@
-import { layoutStyles } from "@/styles/layoutStyles";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { router, useFocusEffect, usePathname } from "expo-router";
-import { ScrollView, Text, View } from "react-native";
-import { useAnimations } from "../Animations/Animations";
 import {
   getGameInfo,
   normalizeGamePath,
   recordAttempt,
   recordResult,
 } from "@/data/game-menu";
+import { buttonStyles } from "@/styles/buttonStyles";
+import { flexStyles } from "@/styles/flexStyles";
+import {
+  Colors,
+  ContentSidePadding,
+  FontWeight,
+  HeaderButtonIconSize,
+  HeaderHeight,
+  rgba,
+} from "@/styles/styles";
+import { router, usePathname } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
+import { Text, View } from "react-native";
+import { Button } from "../Button/Button";
+import GameModal from "../Modals/GameModal";
 import { GameIntro } from "./GameIntro";
 import { LoadingOverlay } from "./LoadingOverlay";
-import { WinLoseBox } from "./WinLoseBox";
-import GameModal from "../Modals/GameModal";
-import { Button } from "../Button/Button";
-import { buttonStyles, headerButtonIconSize } from "@/styles/buttonStyles";
-import { Colors, FontWeight } from "@/styles/styles";
 import { ResetButton } from "./ResetButton";
-import { useFade } from "@/hooks/useFade";
-import { flexStyles } from "@/styles/flexStyles";
-import Animated from "react-native-reanimated";
+import { WinLoseBox } from "./WinLoseBox";
 
 interface Props {
   isLoaded?: boolean;
@@ -48,17 +51,6 @@ export const GameWrapper = ({
   canUndo,
   handleUndo,
 }: Props) => {
-  // Clear animations on leave game;
-  // Cannot use a simple useEffect here due to react-native
-  const { clearAnimations } = useAnimations();
-  useFocusEffect(
-    useCallback(() => {
-      return () => {
-        clearAnimations();
-      };
-    }, [clearAnimations]),
-  );
-
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);
 
@@ -91,87 +83,105 @@ export const GameWrapper = ({
 
   return (
     <>
-      {gameInfo && (
-        <>
-          <LoadingOverlay isLoaded={!!isLoaded} />
+      <LoadingOverlay isLoaded={!!isLoaded} />
 
-          <GameIntro
-            showIntro={showIntro}
-            setShowIntro={setShowIntro}
-            setShowMenu={setShowMenu}
-          />
+      <GameIntro
+        showIntro={showIntro}
+        setShowIntro={setShowIntro}
+        setShowMenu={setShowMenu}
+      />
 
-          <WinLoseBox
-            gameEnded={ended}
-            won={won}
-            score={score}
-            reset={reset}
-            message={winLoseMessage}
-          />
+      <WinLoseBox
+        gameEnded={ended}
+        won={won}
+        score={score}
+        reset={reset}
+        message={winLoseMessage}
+      />
 
-          {showMenu && <GameModal onClose={() => setShowMenu(false)} />}
+      {showMenu && <GameModal onClose={() => setShowMenu(false)} />}
 
-          <View style={layoutStyles.gameHeader}>
-            <Button
-              style={[buttonStyles.headerButton]}
-              onPress={() => {
-                router.push("/");
-              }}
-              iconName={"arrow-back"}
-              iconColor={Colors.K500}
-              iconSize={22}
-            />
+      <View
+        style={[
+          {
+            position: "relative",
+            zIndex: 12, // above the game overlay
+            ...flexStyles.rowCentered,
+            justifyContent: "space-between",
+            width: "100%",
+            height: HeaderHeight,
+            paddingVertical: ContentSidePadding,
+            paddingHorizontal: ContentSidePadding * 0.75,
 
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={[
-                {
-                  fontSize: 14,
-                  fontFamily: FontWeight[300],
-                  color: Colors.K500,
-                  flex: 1,
-                  overflow: "hidden",
-                  textTransform: "uppercase",
-                },
-              ]}
-            >
-              {gameInfo.title}
-            </Text>
+            backgroundColor: Colors.background,
+            boxShadow: `0 0 20px ${rgba(Colors.background, 1)}`,
+          },
+        ]}
+      >
+        <Button
+          style={[buttonStyles.headerButton]}
+          onPress={() => {
+            router.push("/");
+          }}
+          iconName={"arrow-back"}
+          iconColor={Colors.K500}
+          iconSize={22}
+        />
 
-            {handleUndo && (
-              <Button
-                style={[buttonStyles.headerButton]}
-                textStyle={[buttonStyles.headerButton]}
-                onPress={handleUndo}
-                iconName="undo"
-                iconColor={canUndo ? Colors.K200 : Colors.K600}
-                iconSize={headerButtonIconSize}
-                disabled={!canUndo}
-              />
-            )}
-
-            <ResetButton reset={reset} />
-
-            <Button
-              style={[buttonStyles.headerButton]}
-              textStyle={[buttonStyles.headerButton]}
-              onPress={() => setShowMenu(true)}
-              iconName="menu"
-              iconColor={Colors.K200}
-              iconSize={headerButtonIconSize}
-            />
-          </View>
-        </>
-      )}
-
-      <View style={[layoutStyles.gameArea]}>
-        <ScrollView
-          contentContainerStyle={layoutStyles.gameAreaScroll}
-          showsVerticalScrollIndicator={false}
+        <Text
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={[
+            {
+              fontSize: 14,
+              fontFamily: FontWeight[300],
+              color: Colors.K500,
+              flex: 1,
+              overflow: "hidden",
+              textTransform: "uppercase",
+            },
+          ]}
         >
-          {children}
-        </ScrollView>
+          {gameInfo.title}
+        </Text>
+
+        {handleUndo && (
+          <Button
+            style={[buttonStyles.headerButton]}
+            textStyle={[buttonStyles.headerButton]}
+            onPress={handleUndo}
+            iconName="undo"
+            iconColor={canUndo ? Colors.K200 : Colors.K600}
+            iconSize={HeaderButtonIconSize}
+            disabled={!canUndo}
+          />
+        )}
+
+        <ResetButton reset={reset} />
+
+        <Button
+          style={[buttonStyles.headerButton]}
+          textStyle={[buttonStyles.headerButton]}
+          onPress={() => setShowMenu(true)}
+          iconName="menu"
+          iconColor={Colors.K200}
+          iconSize={HeaderButtonIconSize}
+        />
+      </View>
+
+      <View
+        style={[
+          {
+            position: "relative",
+            zIndex: 1,
+            ...flexStyles.colCentered,
+            ...flexStyles.fullWidth,
+            flex: 1,
+            pointerEvents: "box-none",
+          },
+        ]}
+      >
+        {children}
       </View>
     </>
   );

@@ -5,7 +5,7 @@ import { flexStyles } from "@/styles/flexStyles";
 import { useState } from "react";
 import { View } from "react-native";
 import { CardAnimationParams, useAnimations } from "../Animations/Animations";
-import { CardGrid, useCardSizing } from "../Cards/Card";
+import { CardGrid, useCardSizing } from "../Cards/CardOLD";
 import {
   createDeck,
   isFace,
@@ -13,7 +13,7 @@ import {
   top,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { CardButton } from "../Cards/CardButton";
+import { CardButton } from "../Cards/CardButtonOLD";
 import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
 

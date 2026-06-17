@@ -1,6 +1,15 @@
 import type { View as RNView } from "react-native";
 import { LoopRank } from "../Games/LootTheLoop";
 
+export const cardDims = {
+  aspectRatio: 2.5 / 3.5,
+  fanOffset: 0.04, // % of card width or height
+  ratioShadowUnit: 0.008, // % of card width
+  ratioRadius: 0.08, // % of card width
+  layoutPadding: 0.4, // $ of card width or height
+  layoutGap: 0.25, // % of card width
+};
+
 export type CardSuit = "clubs" | "diamonds" | "hearts" | "spades";
 export type CardRank =
   | "A"
@@ -182,6 +191,16 @@ export function flipAllToFace(cards: PlayingCard[]) {
 }
 export function flipAllToBack(cards: PlayingCard[]) {
   return cards.map((c) => flipToBack(c));
+}
+export function flipTopCardToFace(cards: PlayingCard[]) {
+  let newCards = [...cards];
+  newCards[newCards.length - 1] = flipToFace(newCards[newCards.length - 1]);
+  return newCards;
+}
+export function flipTopCardToBack(cards: PlayingCard[]) {
+  let newCards = [...cards];
+  newCards[newCards.length - 1] = flipToBack(newCards[newCards.length - 1]);
+  return newCards;
 }
 
 export function shuffle<T>(items: T[]) {

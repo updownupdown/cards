@@ -112,19 +112,12 @@ export const FontWeight = {
   700: "Outfit_700Bold",
 };
 
-export const Spacing = {
-  half: 2,
-  one: 4,
-  two: 8,
-  three: 16,
-  four: 24,
-  five: 32,
-  six: 64,
-} as const;
-
 export const ContentSidePadding = 20;
+export const MaxContentWidth = 420;
+export const MaxContentHeight = 820;
 
-export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
-export const MaxContentWidth = 400;
-export const MaxContentHeight = 800;
 export const HomePadding = 20;
+
+export const HeaderButtonSize = 48;
+export const HeaderButtonIconSize = 26;
+export const HeaderHeight = HeaderButtonSize + ContentSidePadding;

@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { View } from "react-native";
 import { useAnimations } from "../Animations/Animations";
 import { Button } from "../Button/Button";
-import { CardSelectColor, CardSizes } from "../Cards/Card";
+import { CardSelectColor, CardSizes } from "../Cards/CardOLD";
 import {
   CardRank,
   RANK_VALUE,
@@ -15,7 +15,7 @@ import {
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { CardButton } from "../Cards/CardButton";
+import { CardButton } from "../Cards/CardButtonOLD";
 import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
 import { useLayoutManager } from "@/hooks/useLayoutManager";

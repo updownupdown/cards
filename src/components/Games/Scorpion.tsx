@@ -3,7 +3,7 @@ import { GameMenus } from "../common/GameMenus";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { Card } from "../Cards/Card";
+import { CardOLD } from "../Cards/CardOLD";
 import {
   CardRank,
   RANK_VALUE,
@@ -13,7 +13,7 @@ import {
 } from "../Cards/card-utils";
 import { textStyles } from "@/styles/textStyles";
 import { GameWrapper } from "../common/GameWrapper";
-import { CardButton } from "../Cards/CardButton";
+import { CardButton } from "../Cards/CardButtonOLD";
 import { Button } from "../Button/Button";
 
 const cardsPerRow = 8;

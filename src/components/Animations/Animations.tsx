@@ -19,7 +19,7 @@ import Animated, {
   cancelAnimation,
 } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
-import { Card, CardSizes } from "../Cards/Card";
+import { CardOLD, CardSizes } from "../Cards/CardOLD";
 import { PlayingCard } from "../Cards/card-utils";
 
 export const defaultAnimDuration = 400;
@@ -259,7 +259,7 @@ const AnimatedCard = ({
   return (
     <Animated.View style={animatedStyle}>
       <Animated.View style={frontStyle}>
-        <Card
+        <CardOLD
           cardsPerRow={params.cardsPerRow ?? cardsPerRow}
           card={{ ...params.card, faceUp: true }}
           cardSize={params.cardSize ?? cardSize}
@@ -268,7 +268,7 @@ const AnimatedCard = ({
       </Animated.View>
 
       <Animated.View style={backStyle}>
-        <Card
+        <CardOLD
           cardsPerRow={params.cardsPerRow ?? cardsPerRow}
           card={{ ...params.card, faceUp: false }}
           cardSize={params.cardSize ?? cardSize}

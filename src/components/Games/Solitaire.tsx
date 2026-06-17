@@ -11,7 +11,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { Card } from "../Cards/Card";
+import { CardOLD } from "../Cards/CardOLD";
 import {
   CardSuit,
   DRAG_CAPTURE_THRESHOLD,
@@ -24,8 +24,6 @@ import {
   SUITS,
 } from "../Cards/card-utils";
 import { Deck } from "../Cards/Deck";
-import { GameMenus } from "../common/GameMenus";
-import { layoutStyles } from "@/styles/layoutStyles";
 import { Button } from "../Button/Button";
 import { cardStyles } from "@/styles/cardStyles";
 import { flexStyles } from "@/styles/flexStyles";
@@ -793,7 +791,7 @@ export default function Solitaire() {
       <View
         ref={boardRef}
         onLayout={updateBoardOrigin}
-        style={layoutStyles.gameArea}
+        // style={layoutStyles.gameGrid}
       >
         <View
           style={[
@@ -855,7 +853,7 @@ export default function Solitaire() {
                         : undefined
                     }
                   >
-                    <Card card={wasteTop} cardsPerRow={7} />
+                    <CardOLD card={wasteTop} cardsPerRow={7} />
                   </View>
                 ) : (
                   <Text style={styles.slotLabel}>Waste</Text>
@@ -911,7 +909,7 @@ export default function Solitaire() {
                             : undefined
                         }
                       >
-                        <Card card={top} cardsPerRow={7} />
+                        <CardOLD card={top} cardsPerRow={7} />
                       </View>
                     ) : (
                       <Text style={styles.slotLabel}>
@@ -989,7 +987,7 @@ export default function Solitaire() {
                       {...(dragHandlers ?? {})}
                     >
                       <View>
-                        <Card card={card} cardsPerRow={7} />
+                        <CardOLD card={card} cardsPerRow={7} />
                       </View>
                     </View>
                   );
@@ -1019,7 +1017,7 @@ export default function Solitaire() {
                   { top: index * TABLEAU_GAP, zIndex: index + 1 },
                 ]}
               >
-                <Card card={card} cardsPerRow={7} />
+                <CardOLD card={card} cardsPerRow={7} />
               </View>
             ))}
           </Animated.View>

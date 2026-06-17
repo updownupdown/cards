@@ -1,5 +1,5 @@
 import { useFade } from "@/hooks/useFade";
-import { layoutStyles } from "@/styles/layoutStyles";
+import { flexStyles } from "@/styles/flexStyles";
 import { Colors } from "@/styles/styles";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Animated } from "react-native";
@@ -43,7 +43,19 @@ export const LoadingOverlay = ({ isLoaded }: Props) => {
 
   return renderLoadingOverlay ? (
     <Animated.View
-      style={[layoutStyles.gameLoadingOverlay, { opacity: loadingOpacity }]}
+      style={[
+        flexStyles.rowCentered,
+        {
+          opacity: loadingOpacity,
+          position: "fixed",
+          zIndex: 13, // over the header
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: Colors.background,
+        },
+      ]}
     >
       {showSpinner && <ActivityIndicator size="large" color={Colors.K400} />}
     </Animated.View>

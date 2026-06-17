@@ -2,15 +2,18 @@ import { getGameInfo, normalizeGamePath } from "@/data/game-menu";
 import { useFade } from "@/hooks/useFade";
 import { useGameSettings } from "@/hooks/useGameSettings";
 import { flexStyles } from "@/styles/flexStyles";
-import { headerHeight } from "@/styles/layoutStyles";
 import { menuStyles } from "@/styles/menuStyles";
 import { modalBorderRadius, modalShadow } from "@/styles/modalStyles";
-import { Colors, ContentSidePadding, rgba } from "@/styles/styles";
+import {
+  Colors,
+  ContentSidePadding,
+  HeaderHeight,
+  rgba,
+} from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
 import { usePathname } from "expo-router";
 import { Animated, ScrollView, Text, View } from "react-native";
 import { Button } from "../Button/Button";
-import { SettingControl } from "./SettingControl";
 
 interface Props {
   setShowMenu: (show: boolean) => void;
@@ -45,7 +48,7 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
             opacity: introOpacity,
             position: "absolute",
             zIndex: 10,
-            top: headerHeight,
+            top: HeaderHeight,
             bottom: 0,
             right: 0,
             left: 0,

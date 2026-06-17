@@ -1,5 +1,4 @@
 import { useMemo, useRef, useState } from "react";
-import { GameMenus } from "../common/GameMenus";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import {
   Animated,
@@ -11,7 +10,7 @@ import {
 } from "react-native";
 import type { GestureResponderEvent, View as RNView } from "react-native";
 
-import { Card } from "../Cards/Card";
+import { CardOLD } from "../Cards/CardOLD";
 import {
   DRAG_CAPTURE_THRESHOLD,
   DRAG_MOVE_THRESHOLD,
@@ -467,7 +466,7 @@ export default function FreeCell() {
                           hiddenByDrag ? styles.hiddenDuringDrag : undefined
                         }
                       >
-                        <Card card={card} cardsPerRow={9} />
+                        <CardOLD card={card} cardsPerRow={9} />
                       </View>
                     ) : (
                       <Text style={styles.slotLabel}>Free</Text>
@@ -502,7 +501,7 @@ export default function FreeCell() {
                     ]}
                   >
                     {top ? (
-                      <Card card={top} cardsPerRow={9} />
+                      <CardOLD card={top} cardsPerRow={9} />
                     ) : (
                       <Text style={styles.slotLabel}>
                         {suit[0].toUpperCase()}
@@ -573,7 +572,7 @@ export default function FreeCell() {
                       ]}
                       {...(isTop ? topDragHandlers : {})}
                     >
-                      <Card card={card} cardsPerRow={9} />
+                      <CardOLD card={card} cardsPerRow={9} />
                     </View>
                   );
                 })}
@@ -593,7 +592,7 @@ export default function FreeCell() {
               },
             ]}
           >
-            <Card card={dragGhost.card} cardsPerRow={9} />
+            <CardOLD card={dragGhost.card} cardsPerRow={9} />
           </Animated.View>
         ) : null}
       </View>

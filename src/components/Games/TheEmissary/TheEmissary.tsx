@@ -10,7 +10,7 @@ import { Colors, FontWeight } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
 import { useEffect, useMemo, useState } from "react";
 import { Text, View } from "react-native";
-import { useCardSizing } from "../../Cards/Card";
+import { useCardSizing } from "../../Cards/CardOLD";
 import {
   CardSuit,
   createDeck,
@@ -20,7 +20,7 @@ import {
   suitValue,
   type PlayingCard,
 } from "../../Cards/card-utils";
-import { CardButton } from "../../Cards/CardButton";
+import { CardButton } from "../../Cards/CardButtonOLD";
 import { GameWrapper } from "../../common/GameWrapper";
 import { AdvisorInfo, ChooseKingdomOverlay } from "./AdvisorInfo";
 import { DebateDecks } from "./DebateDecks";

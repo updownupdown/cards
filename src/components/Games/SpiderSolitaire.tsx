@@ -1,5 +1,4 @@
 import { useMemo, useRef, useState } from "react";
-import { GameMenus } from "../common/GameMenus";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import {
   Animated,
@@ -10,7 +9,7 @@ import {
   View,
 } from "react-native";
 import type { GestureResponderEvent, View as RNView } from "react-native";
-import { Card } from "../Cards/Card";
+import { CardOLD } from "../Cards/CardOLD";
 import {
   DRAG_CAPTURE_THRESHOLD,
   DRAG_MOVE_THRESHOLD,
@@ -409,7 +408,7 @@ export default function SpiderSolitaire() {
                       ]}
                       {...(isTop ? topHandlers : {})}
                     >
-                      <Card card={card} cardsPerRow={5} />
+                      <CardOLD card={card} cardsPerRow={5} />
                     </View>
                   );
                 })}
@@ -429,7 +428,7 @@ export default function SpiderSolitaire() {
               },
             ]}
           >
-            <Card card={dragGhost.card} cardsPerRow={5} />
+            <CardOLD card={dragGhost.card} cardsPerRow={5} />
           </Animated.View>
         ) : null}
       </View>

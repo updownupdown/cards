@@ -1,8 +1,7 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { flexStyles } from "@/styles/flexStyles";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { View } from "react-native";
-import { CardAnimationParams, useAnimations } from "../Animations/Animations";
+import { Pressable, View } from "react-native";
 import {
   createDeck,
   isFace,
@@ -10,43 +9,27 @@ import {
   shuffle,
   top,
   type PlayingCard,
-} from "../Cards/card-utils";
-import { Deck } from "../Cards/Deck";
-import { GameWrapper } from "../common/GameWrapper";
-import { useToast } from "../common/Toast";
+} from "../../Cards/card-utils";
+import { Deck } from "../../Cards/Deck";
+import { GameWrapper } from "../../common/GameWrapper";
+import { useToast } from "../../common/Toast";
 import { Colors } from "@/styles/styles";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
 import { useLayoutManager } from "@/hooks/useLayoutManager";
+import { useZoneLayout, ZoneConfig } from "@/hooks/useZoneLayout";
+import {
+  GameSnapshot,
+  GameState,
+  getColRow,
+  layoutZones,
+} from "./FoursquareSetup";
+import { CardPositionBuilder } from "../../Cards/CardPositionBuilder";
+import { AnimatedCard } from "../../Cards/AnimatedCard";
+import { CardSelectColor } from "../../Cards/Card";
+import { ZoneVisualizer } from "../../Cards/ZoneVisualizer";
+import { ZoneBackgrounds } from "../../Cards/ZoneBackgrounds";
 
-const cardsPerRow = 5;
-
-function getColRow(index: number) {
-  let row: number[] = [];
-  let col: number[] = [];
-
-  for (let i = 0; i < 16; i++) {
-    if (Math.floor(i / 4) === Math.floor(index / 4) && i !== index) {
-      row.push(i);
-    }
-    if (i % 4 === index % 4 && i !== index) {
-      col.push(i);
-    }
-  }
-
-  return { row, col };
-}
-
-type GameState = {
-  deck: PlayingCard[];
-  piles: PlayingCard[][];
-  ended: boolean;
-  won: boolean;
-  winLoseMessage?: string;
-};
-
-type GameSnapshot = {
-  game: GameState;
-};
+const cardSize = "small";
 
 function setup(): GameState {
   const deck = shuffle(createDeck().filter((c) => !isFace(c)));
@@ -99,7 +82,6 @@ function getAdjacentPiles(piles: PlayingCard[][]) {
 
 export default function Foursquare() {
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
-  const { isAnimating, animateCards, animatingCardIds } = useAnimations();
 
   const { saveUndoState, undo, canUndo, clearHistory } =
     useUndoHistory<GameSnapshot>();
@@ -109,12 +91,6 @@ export default function Foursquare() {
       setGame(previousState.game);
     }
   };
-
-  const { getLayout, setRef } = useLayoutManager([
-    "draw",
-    "pilesTop",
-    "pilesNext",
-  ]);
 
   function initGame(game: GameState) {
     turnOverDeckCard(game);
@@ -129,7 +105,6 @@ export default function Foursquare() {
   const [game, setGame] = useState<GameState>(setup());
 
   async function turnOverDeckCard(gameState: GameState) {
-    const drawPos = getLayout("draw");
     const topCard = top(gameState.deck);
     let deck = [...gameState.deck];
     if (topCard) {
@@ -138,18 +113,6 @@ export default function Foursquare() {
     }
 
     const newGame = { ...gameState, deck };
-
-    if (drawPos && topCard) {
-      await animateCards([
-        {
-          card: topCard,
-          from: drawPos,
-          to: drawPos,
-          flip: "toFace",
-          cardsPerRow,
-        },
-      ]);
-    }
 
     setGame(newGame);
   }
@@ -196,29 +159,12 @@ export default function Foursquare() {
     // Prepare to update game
     const intermediateGame = { ...game, piles, deck };
 
-    // Animate draw card to pile
-
-    const pilePos = getLayout("pilesNext", index);
-    const drawPos = getLayout("draw");
-
-    if (drawPos && pilePos && drawCard) {
-      await animateCards([
-        {
-          card: drawCard,
-          from: drawPos,
-          to: pilePos,
-          cardsPerRow,
-        },
-      ]);
-    }
-
     // Update game
     setGame(intermediateGame);
 
     // Flip cards in piles logic
     const topCardAtTargetPile = top(intermediateGame.piles[index]);
     let finalPiles = [...intermediateGame.piles];
-    let cardsToAnimate: number[] = [];
 
     if (topCardAtTargetPile) {
       const flipResult = applyFlips(
@@ -228,45 +174,9 @@ export default function Foursquare() {
       );
 
       finalPiles = flipResult.newPiles;
-      cardsToAnimate = flipResult.flippedIndices;
     }
 
     const finalGame = { ...intermediateGame, piles: finalPiles };
-
-    // Animate flipped cards
-    let anims: CardAnimationParams[] = [];
-    if (cardsToAnimate.length) {
-      const animPromises = cardsToAnimate.map(async (pileIndex, index) => {
-        const card = top(intermediateGame.piles[pileIndex]);
-
-        if (card) {
-          const pilePos = getLayout("pilesTop", pileIndex);
-
-          if (pilePos) {
-            return {
-              card,
-              from: pilePos,
-              to: pilePos,
-              cardsPerRow,
-              flip: card.faceUp ? "toBack" : "toFace",
-              delay: 100 * index,
-            } as CardAnimationParams;
-          }
-        }
-
-        return null;
-      });
-
-      const resolvedAnims = await Promise.all(animPromises);
-
-      anims = resolvedAnims.filter(
-        (anim) => anim !== null,
-      ) as CardAnimationParams[];
-    }
-
-    if (anims.length > 0) {
-      await animateCards(anims);
-    }
 
     setGame(finalGame);
 
@@ -409,6 +319,27 @@ export default function Foursquare() {
 
   const [showLegalPlacements, setShowLegalPlacements] = useState(false);
 
+  const layoutManager = useZoneLayout({
+    zones: layoutZones,
+    gapPc: 0.4,
+  });
+
+  const { cardWidth, cardHeight, getCardPosition, getZoneStyles } =
+    layoutManager;
+
+  // ========== Card Positions ========== //
+  const cardPositions = useMemo(() => {
+    const builder = new CardPositionBuilder(getCardPosition);
+
+    builder.addDeck(game.deck, "deck", 50, "deck");
+
+    game.piles.forEach((pile, pileIndex) => {
+      builder.addDeck(pile, `pile-${pileIndex}`, 10, "pile");
+    });
+
+    return builder.build();
+  }, [game, getCardPosition]);
+
   return (
     <GameWrapper
       showIntro={showIntro}
@@ -422,104 +353,60 @@ export default function Foursquare() {
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
-      <View style={[flexStyles.colCentered]}>
-        <Deck
-          // title="Draw"
-          refTop={setRef("draw")}
-          cards={game.deck}
-          cardsPerRow={cardsPerRow}
-          limitFan
-          showCount
-          countPosition="left"
-          fan="horizontalRight"
-          hideTopCard={
-            top(game.deck) && animatingCardIds.includes(top(game.deck)!.id)
-          }
-        />
-      </View>
+      <ZoneBackgrounds layoutManager={layoutManager} game={game} />
 
-      <View
-        style={[
-          {
-            flexDirection: "row",
-            flexWrap: "wrap",
-            rowGap: 6,
-          },
-        ]}
-      >
-        {game.piles.map((pile, index) => {
-          const isLegal = legal.includes(index);
+      {Object.values(cardPositions).map((target) => {
+        return (
+          <AnimatedCard
+            key={target.card.id}
+            targetState={target}
+            cardWidth={cardWidth}
+            cardHeight={cardHeight}
+            cardSize={cardSize}
+          />
+        );
+      })}
 
-          return (
-            <View
-              key={`pile-${index}`}
-              style={[
-                flexStyles.colCentered,
-                {
-                  width: "25%",
-                  padding: 6,
-                },
-              ]}
-            >
-              <View
-                style={[
-                  flexStyles.colStart,
-                  {
-                    borderRadius: 8,
-                    backgroundColor: Colors.K875,
-                    width: "100%",
-                  },
-                ]}
-              >
-                <Deck
-                  cards={pile}
-                  refNext={setRef("pilesNext", index)}
-                  refTop={setRef("pilesTop", index)}
-                  onPress={() => {
-                    if (!isLegal) {
-                      if (pile.length >= 4) {
-                        showToast("Pile is full!");
-                      } else {
-                        const validAdjacentPiles = getAdjacentPiles(game.piles);
-                        if (!validAdjacentPiles.includes(index)) {
-                          showToast("Must place on existing or adjacent pile!");
-                        } else {
-                          showToast(
-                            "Placing here would result in too many face up cards!",
-                          );
-                        }
-                      }
+      {Array.from({ length: 16 }, (_, pileIndex) => {
+        const isLegal = legal.includes(pileIndex);
 
-                      setShowLegalPlacements(true);
-                    } else {
-                      setShowLegalPlacements(false);
-                      placeAt(index);
-                    }
-                  }}
-                  isDisabled={isAnimating}
-                  selectColor={
-                    showLegalPlacements ? (isLegal ? "green" : "red") : "none"
+        const selectColor = showLegalPlacements
+          ? isLegal
+            ? Colors.cardSelectGreen
+            : Colors.cardSelectRed
+          : "none";
+
+        return (
+          <Pressable
+            key={`pile-${pileIndex}`}
+            style={[
+              getZoneStyles(`pile-${pileIndex}`),
+              { zIndex: 90, borderWidth: 2, borderColor: selectColor },
+            ]}
+            onPress={() => {
+              if (!isLegal) {
+                if (game.piles[pileIndex].length >= 4) {
+                  showToast("Pile is full!");
+                } else {
+                  const validAdjacentPiles = getAdjacentPiles(game.piles);
+                  if (!validAdjacentPiles.includes(pileIndex)) {
+                    showToast("Must place on existing or adjacent pile!");
+                  } else {
+                    showToast(
+                      "Placing here would result in too many face up cards!",
+                    );
                   }
-                  limitFan
-                  fan="horizontalRight"
-                  limitFanNum={4}
-                  style={[
-                    {
-                      width: "100%",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    },
-                  ]}
-                  cardsPerRow={cardsPerRow}
-                  hideTopCard={
-                    top(pile) && animatingCardIds.includes(top(pile)!.id)
-                  }
-                />
-              </View>
-            </View>
-          );
-        })}
-      </View>
+                }
+
+                setShowLegalPlacements(true);
+              } else {
+                setShowLegalPlacements(false);
+                placeAt(pileIndex);
+              }
+            }}
+          />
+        );
+      })}
     </GameWrapper>
   );
 }
