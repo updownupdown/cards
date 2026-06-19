@@ -1,23 +1,46 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { cardStyles } from "@/styles/cardStyles";
-import { flexStyles } from "@/styles/flexStyles";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useZoneLayout, ZoneConfig } from "@/hooks/useZoneLayout";
+import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
-import { CardAnimationParams, useAnimations } from "../Animations/Animations";
 import { Button } from "../Button/Button";
-import { CardGrid } from "../Cards/CardOLD";
-import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
-import { CardButton } from "../Cards/CardButtonOLD";
-import { Deck } from "../Cards/Deck";
+import { AnimatedCard } from "../Cards/AnimatedCard";
+import {
+  createDeck,
+  flipAllToFace,
+  shuffle,
+  type PlayingCard,
+} from "../Cards/card-utils";
+import { CardPositionBuilder, getZoneGrid } from "../Cards/CardPositionBuilder";
+import { ZoneBackgrounds } from "../Cards/ZoneBackgrounds";
+import { ZoneVisualizer } from "../Cards/ZoneVisualizer";
 import { GameWrapper } from "../common/GameWrapper";
-import { useLayoutManager } from "@/hooks/useLayoutManager";
+import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { produce } from "immer";
 
-const cardsPerRow = 6;
-const gridWidth = 5;
-const animationDuration = 250;
-const animationDelay = 80;
+const cardSize = "small";
 
-type MonteCarloState = {
+const layoutZones: ZoneConfig[] = [
+  {
+    id: "stock",
+    col: 2,
+    row: 0,
+  },
+  ...getZoneGrid({
+    idPrefix: "grid",
+    length: 25,
+    cols: 5,
+    rowOffset: 1.2,
+  }),
+  {
+    id: "button",
+    col: 0,
+    row: 6.4,
+    width: "full",
+    height: 0.6,
+  },
+];
+
+type GameState = {
   grid: (PlayingCard | null)[];
   stock: PlayingCard[];
   removed: number;
@@ -25,13 +48,13 @@ type MonteCarloState = {
   won: boolean;
 };
 
-function setup(): MonteCarloState {
-  const deck = shuffle(createDeck({ faceUp: true }));
-  const grid: (PlayingCard | null)[] = Array(25).fill(null);
+type GameSnapshot = {
+  game: GameState;
+};
 
-  for (let i = 0; i < 25; i += 1) {
-    grid[i] = deck.shift() ?? null;
-  }
+function setup(): GameState {
+  const deck = shuffle(createDeck());
+  const grid = flipAllToFace(deck.splice(-25));
 
   return {
     grid,
@@ -90,7 +113,7 @@ function hasPair(grid: (PlayingCard | null)[]) {
   return false;
 }
 
-function evaluateEnd(state: MonteCarloState) {
+function evaluateEnd(state: GameState) {
   const cardsInPlay = countCards(state.grid) + state.stock.length;
   if (cardsInPlay === 0) return { ended: true, won: true };
   if (hasPair(state.grid)) return { ended: false, won: false };
@@ -100,23 +123,29 @@ function evaluateEnd(state: MonteCarloState) {
 
 export default function MonteCarlo() {
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
-  const { animateCards, isAnimating, animatingCardIds } = useAnimations();
 
-  const [game, setGame] = useState<MonteCarloState>(setup);
+  const [game, setGame] = useState<GameState>(setup);
   const [selected, setSelected] = useState<number[] | null>(null);
 
-  const { getLayout, setRef } = useLayoutManager([
-    "tableauRefs",
-    "stockDeckRef",
-    "discardDeckRef",
-  ]);
+  const { saveUndoState, undo, canUndo, clearHistory } =
+    useUndoHistory<GameSnapshot>();
+  const handleUndo = () => {
+    const previousState = undo();
+    if (previousState) {
+      clearHistory();
+      setGame(previousState.game);
+    }
+  };
 
   function reset() {
+    clearHistory();
     setGame(setup());
     setSelected(null);
   }
 
   function selectCell(index: number) {
+    console.log(index);
+
     setGame((prev) => {
       if (prev.ended) return prev;
 
@@ -158,29 +187,7 @@ export default function MonteCarlo() {
   }
 
   async function flipCards(selectedIndices: number[]) {
-    const anims: CardAnimationParams[] = [];
-
-    for (let i = 0; i < 2; i += 1) {
-      const index = selectedIndices[i];
-      const card = game.grid[index];
-
-      if (!card) continue;
-      let cardPos = getLayout("tableauRefs", index);
-      if (cardPos) {
-        anims.push({
-          card,
-          cardsPerRow,
-          cardSize: "small",
-          flip: "toBack",
-          from: cardPos,
-          to: cardPos,
-        });
-      }
-    }
-
-    if (anims.length > 0) {
-      await animateCards(anims);
-    }
+    saveUndoState(structuredClone({ game }));
 
     setGame((prev) => {
       if (!selected) return prev;
@@ -204,101 +211,46 @@ export default function MonteCarlo() {
   }
 
   async function consolidateAndDeal() {
-    if (game.ended || isAnimating) return;
+    if (game.ended) return;
+
+    saveUndoState(structuredClone({ game }));
 
     // Prepare animations
     const removedCards = countFaceDownCardsInGrid(game.grid);
-    const discardDeckPos = getLayout("discardDeckRef");
-    const stockDeckPos = getLayout("stockDeckRef");
 
-    const anims: CardAnimationParams[] = [];
-    let delayCount = 0;
-
-    // Animate flipped cards to discard
-    for (let i = 0; i < 25; i++) {
-      const card = game.grid[i];
-      if (card && !card.faceUp) {
-        const pos = getLayout("tableauRefs", i);
-        if (pos && discardDeckPos) {
-          anims.push({
-            card,
-            cardSize: "small",
-            cardsPerRow,
-            from: { ...pos, zIndex: 80 },
-            to: { ...discardDeckPos, zIndex: 80 },
-            duration: animationDuration,
-            delay: delayCount * animationDelay,
-          });
-          delayCount++;
-        }
-      }
-    }
-
-    let tgtIdx = 0;
     const nextGrid: (PlayingCard | null)[] = Array(25).fill(null);
 
-    // Animate moving cards to their new locations
+    const stockCards = [...game.stock];
+
+    let tgtIdx = 0;
+
     for (let i = 0; i < 25; i++) {
       const card = game.grid[i];
       if (card && card.faceUp) {
-        if (i !== tgtIdx) {
-          const fromPos = getLayout("tableauRefs", i);
-          const toPos = getLayout("tableauRefs", tgtIdx);
-          if (fromPos && toPos) {
-            anims.push({
-              card,
-              cardSize: "small",
-              cardsPerRow,
-              from: { ...fromPos, zIndex: 50 },
-              to: { ...toPos, zIndex: 50 },
-              duration: animationDuration,
-              delay: delayCount * animationDelay,
-            });
-            delayCount++;
-          }
-        }
         nextGrid[tgtIdx] = card;
         tgtIdx++;
       }
     }
 
-    const stockCards = [...game.stock];
-
     for (let i = tgtIdx; i < 25; i++) {
       if (stockCards.length > 0) {
         const nextCard = stockCards.shift()!;
         nextGrid[i] = nextCard;
-        const toPos = getLayout("tableauRefs", i);
-        if (stockDeckPos && toPos) {
-          anims.push({
-            card: nextCard,
-            cardSize: "small",
-            cardsPerRow,
-            from: { ...stockDeckPos, zIndex: 60 },
-            to: { ...toPos, zIndex: 60 },
-            duration: animationDuration,
-            delay: delayCount * animationDelay,
-            flip: "toFace",
-          });
-          delayCount++;
-        }
       }
     }
 
-    if (anims.length > 0) {
-      await animateCards(anims);
-    }
+    console.log("consolidate");
 
     setGame((prev) => {
-      const next = {
-        ...prev,
-        grid: nextGrid,
-        stock: stockCards,
-        removed: prev.removed + removedCards,
-      };
+      return produce(prev, (draft) => {
+        draft.grid = nextGrid;
+        draft.stock = stockCards;
+        draft.removed = draft.removed + removedCards;
 
-      const end = evaluateEnd(next);
-      return { ...next, ...end };
+        const { ended, won } = evaluateEnd(draft);
+        draft.ended = ended;
+        draft.won = won;
+      });
     });
 
     setSelected(null);
@@ -314,6 +266,39 @@ export default function MonteCarlo() {
     }
   }, [selected]);
 
+  const layoutManager = useZoneLayout({
+    zones: layoutZones,
+    targetRows: 8.15,
+  });
+
+  const {
+    cardWidth,
+    cardHeight,
+    getCardPosition,
+    getZoneStyles,
+    layoutMetrics,
+  } = layoutManager;
+
+  // ========== Card Positions ========== //
+  const cardPositions = useMemo(() => {
+    const builder = new CardPositionBuilder(getCardPosition);
+
+    builder.addDeck(game.stock, "stock", 100, "stock");
+
+    game.grid.forEach((card, cardIndex) => {
+      builder.add({
+        card,
+        index: cardIndex,
+        total: 1,
+        zoneId: `grid-${cardIndex}`,
+        startingZIndex: 5,
+        type: "grid",
+      });
+    });
+
+    return builder.build();
+  }, [game, getCardPosition]);
+
   return (
     <GameWrapper
       showIntro={showIntro}
@@ -327,74 +312,47 @@ export default function MonteCarlo() {
           ? "You cleared all cards!"
           : "No adjacent pairs, and stock is empty."
       }
+      canUndo={canUndo}
+      handleUndo={handleUndo}
     >
-      <View
-        style={[
-          flexStyles.rowCentered,
-          flexStyles.fullWidth,
-          flexStyles.justifyEvenly,
-        ]}
-      >
-        <Deck
-          refTop={setRef("stockDeckRef")}
-          backCount={game.stock.length}
-          iconName="draw"
-          showCount
-          countPosition="left"
-          cardsPerRow={cardsPerRow}
-          limitFan
-          fan="horizontalRight"
-        />
+      <ZoneBackgrounds layoutManager={layoutManager} game={game} />
+      {/* <ZoneVisualizer
+        layoutManager={layoutManager}
+        layoutMetrics={layoutMetrics}
+      /> */}
 
-        <Deck
-          refNext={setRef("discardDeckRef")}
-          backCount={game.removed}
-          iconName="delete"
-          showCount
-          countPosition="right"
-          cardsPerRow={cardsPerRow}
-          limitFan
-          fan="horizontalLeft"
+      {Object.values(cardPositions).map((target) => {
+        const index = target.index;
+
+        if (index === undefined) return null;
+
+        const isSelected = !!selected?.includes(index);
+
+        return (
+          <AnimatedCard
+            key={target.card.id}
+            targetState={target}
+            cardWidth={cardWidth}
+            cardHeight={cardHeight}
+            cardSize={cardSize}
+            onPress={() => selectCell(index)}
+            isSelected={isSelected}
+            selectColor={isSelected ? "green" : "none"}
+            isDisabled={!target.card?.suit || !target.card?.rank || game.ended}
+          />
+        );
+      })}
+
+      <View style={[getZoneStyles("button")]}>
+        <Button
+          onPress={consolidateAndDeal}
+          disabled={game.ended || !hasFaceDownCard}
+          text="Consolidate"
+          fullWidth
+          size="large"
+          style={[{ height: "100%" }]}
         />
       </View>
-
-      <CardGrid
-        cardsPerRow={cardsPerRow}
-        targetGridCols={gridWidth}
-        style={[{ marginHorizontal: "auto" }]}
-      >
-        {game.grid.map((cell, index) => {
-          const isSelected = !!selected?.includes(index);
-
-          return (
-            <CardButton
-              ref={setRef("tableauRefs", index)}
-              key={`mc-${index}`}
-              onPress={() => selectCell(index)}
-              disabled={isAnimating || !cell?.suit || !cell?.rank || game.ended}
-              card={cell}
-              cardsPerRow={cardsPerRow}
-              isSelected={isSelected}
-              cardSize="small"
-              selectColor={isSelected ? "green" : "none"}
-              style={[
-                ((isAnimating && isSelected) ||
-                  cell === null ||
-                  animatingCardIds.includes(cell.id)) &&
-                  cardStyles.animHide,
-              ]}
-            />
-          );
-        })}
-      </CardGrid>
-
-      <Button
-        onPress={consolidateAndDeal}
-        disabled={game.ended || isAnimating || !hasFaceDownCard}
-        text="Consolidate"
-        fullWidth
-        size="large"
-      />
     </GameWrapper>
   );
 }

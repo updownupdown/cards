@@ -8,6 +8,9 @@ type ViewMeasurement = {
   height: number;
 };
 
+/**
+ * @deprecated
+ */
 export function useLayoutManager<T extends string>(initialKeys: T[]) {
   const registry = useRef<Record<T, any>>({} as any).current;
   const refs = useRef<Record<string, View | null>>({});

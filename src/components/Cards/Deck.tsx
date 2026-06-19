@@ -58,6 +58,9 @@ type DeckProps = {
   cardSize?: CardSizes;
 };
 
+/**
+ * @deprecated
+ */
 export const Deck = ({
   style,
   backCount,

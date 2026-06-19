@@ -81,6 +81,9 @@ type AnimationParams = {
   cardSize: CardSizes;
 };
 
+/**
+ * @deprecated
+ */
 export const useAnimations = () => {
   const context = useContext(AnimationContext);
   if (!context) {
@@ -89,6 +92,9 @@ export const useAnimations = () => {
   return context;
 };
 
+/**
+ * @deprecated
+ */
 const AnimatedCard = ({
   params,
   onComplete,
@@ -276,177 +282,5 @@ const AnimatedCard = ({
         />
       </Animated.View>
     </Animated.View>
-  );
-};
-
-export const AnimationProvider = ({
-  children,
-  cardsPerRow,
-  cardSize,
-}: {
-  children: ReactNode;
-  cardsPerRow: number;
-  cardSize: CardSizes;
-}) => {
-  // Animation logic
-  const [animatingCardIds, setAnimatingCardIds] = useState<string[]>([]);
-  const [isAnimating, setIsAnimatingState] = useState(false);
-  const isAnimatingRef = useRef(false);
-
-  const setIsAnimating = useCallback((val: boolean) => {
-    isAnimatingRef.current = val;
-    setIsAnimatingState(val);
-  }, []);
-
-  const [animations, setAnimations] = useState<CardAnimationParams[]>([]);
-  const animationIdRef = useRef(0);
-
-  const promisesRef = useRef<Record<string, () => void>>({});
-
-  const cancelAnimsAfterTimeoutRef = useRef(true);
-
-  const animateCards = useCallback(
-    (params: (CardAnimationParams | null)[]) => {
-      return new Promise<void>((resolve) => {
-        function doResolve() {
-          setAnimatingCardIds([]);
-          clearAnimations();
-          resolve();
-
-          // Buffer so that back-to-back animations don't create
-          // "flashes" from isAnimating switching value
-          cancelAnimsAfterTimeoutRef.current = true;
-
-          setTimeout(() => {
-            if (cancelAnimsAfterTimeoutRef.current) {
-              setIsAnimating(false);
-            }
-          }, 100);
-        }
-
-        cancelAnimsAfterTimeoutRef.current = false;
-
-        const validParams = params
-          .filter((p): p is CardAnimationParams => p !== null)
-          .map((p) => ({
-            ...p,
-            id: `${p.card.id}-${animationIdRef.current++}`,
-          }));
-        let completedCount = 0;
-        const total = validParams.length;
-
-        if (total === 0) {
-          doResolve();
-          return;
-        }
-
-        setAnimatingCardIds(validParams.map((p) => p.card.id));
-
-        setIsAnimating(true);
-
-        const onAnimComplete = (id: string, keepAlive?: boolean) => {
-          if (!keepAlive) {
-            setAnimations((prev) => prev.filter((anim) => anim.id !== id));
-          }
-          completedCount++;
-          if (completedCount === total) {
-            doResolve();
-          }
-        };
-
-        validParams.forEach((param) => {
-          promisesRef.current[param.id] = () =>
-            onAnimComplete(param.id, param.keepAlive);
-        });
-
-        setAnimations((prev) => {
-          const next = prev.filter(
-            (p) => !validParams.find((v) => v.card.id === p.card.id),
-          );
-          return [...next, ...validParams];
-        });
-      });
-    },
-    [setIsAnimating],
-  );
-
-  const clearAnimations = useCallback(() => {
-    setIsAnimating(false);
-    setAnimations([]);
-    promisesRef.current = {};
-  }, [setIsAnimating]);
-
-  const handleComplete = useCallback((id: string) => {
-    if (promisesRef.current[id]) {
-      promisesRef.current[id]();
-      delete promisesRef.current[id];
-    }
-  }, []);
-
-  // Animation queue logic
-  const animationQueueRef = useRef<CardAnimationParams[]>([]);
-
-  const animateQueue = useCallback(async () => {
-    if (animationQueueRef.current.length > 0) {
-      const currentQueue = [...animationQueueRef.current];
-      animationQueueRef.current = []; // Clear the staging queue
-      await animateCards(currentQueue);
-    }
-  }, [animateCards]);
-
-  const addToAnimQueue = useCallback((anim: CardAnimationParams) => {
-    animationQueueRef.current.push(anim);
-  }, []);
-
-  const contextValue = React.useMemo(
-    () => ({
-      cardsPerRow,
-      cardSize,
-      animateCards,
-      clearAnimations,
-      isAnimating,
-      animatingCardIds,
-      addToAnimQueue,
-      animateQueue,
-    }),
-    [
-      cardsPerRow,
-      cardSize,
-      animateCards,
-      clearAnimations,
-      isAnimating,
-      animatingCardIds,
-      addToAnimQueue,
-      animateQueue,
-    ],
-  );
-
-  return (
-    <AnimationContext.Provider value={contextValue}>
-      {children}
-
-      {animations.length > 0 && (
-        <View
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: 0,
-            pointerEvents: "none",
-          }}
-        >
-          {animations.map((anim) => (
-            <AnimatedCard
-              key={anim.id}
-              params={anim}
-              onComplete={handleComplete}
-              cardsPerRow={cardsPerRow}
-              cardSize={cardSize}
-            />
-          ))}
-        </View>
-      )}
-    </AnimationContext.Provider>
   );
 };

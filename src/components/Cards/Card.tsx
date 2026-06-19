@@ -3,7 +3,6 @@ import { CardComponents as CardsSmall } from "@/assets/cards/small";
 import { CardComponents as CardsSmallColored } from "@/assets/cards/small-colored";
 import { normalizeGamePath } from "@/data/game-menu";
 import { useGameSettings } from "@/hooks/useGameSettings";
-import { cardStyles } from "@/styles/cardStyles";
 import { Colors, rgba } from "@/styles/styles";
 import { usePathname } from "expo-router";
 import React, { useMemo } from "react";
@@ -161,6 +160,7 @@ export const Card = ({
     }
 
     return {
+      aspectRatio: cardDims.aspectRatio,
       borderRadius: cardWidth * cardDims.ratioRadius,
       boxShadow,
       backgroundColor: "transparent", // Prevents shadow bleeding
@@ -181,7 +181,6 @@ export const Card = ({
       style={[
         cardStyle,
         style,
-
         {
           overflow: "hidden",
           width: "100%",
@@ -209,7 +208,21 @@ export const Card = ({
         ]}
       />
       <SvgCard {...svgProps} width="100%" height="100%" />
-      {isPlaceholder && <View style={[cardStyles.cardPlaceholderUnderlay]} />}
+      {isPlaceholder && (
+        <View
+          style={[
+            {
+              position: "absolute",
+              zIndex: 1,
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: Colors.K875,
+            },
+          ]}
+        />
+      )}
     </View>
   );
 };

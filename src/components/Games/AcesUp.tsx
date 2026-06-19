@@ -1,21 +1,22 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
+import { useUndoHistory } from "@/hooks/useUndoHistory";
 import { cardStyles } from "@/styles/cardStyles";
 import { flexStyles } from "@/styles/flexStyles";
-import { useMemo, useRef, useState } from "react";
-import { View } from "react-native";
-import { useAnimations } from "../Animations/Animations";
+import { useMemo, useState } from "react";
+import { Pressable, View } from "react-native";
 import { Button } from "../Button/Button";
-import {
-  createDeck,
-  shuffle,
-  top,
-  type PlayingCard,
-} from "../Cards/card-utils";
+import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
 import { Deck } from "../Cards/Deck";
 import { GameWrapper } from "../common/GameWrapper";
-import { useUndoHistory } from "@/hooks/useUndoHistory";
-import { useLayoutManager } from "@/hooks/useLayoutManager";
+import { useZoneLayout, ZoneConfig } from "@/hooks/useZoneLayout";
+import { CardPositionBuilder, getZoneGrid } from "../Cards/CardPositionBuilder";
+import { AnimatedCard } from "../Cards/AnimatedCard";
+import { CardSelectColor } from "../Cards/Card";
+import { ZoneVisualizer } from "../Cards/ZoneVisualizer";
+import { ZoneBackgrounds } from "../Cards/ZoneBackgrounds";
+import { Colors } from "@/styles/styles";
 
+const cardSize = "regular";
 const cardsPerRow = 4;
 
 type AcesUpState = {
@@ -43,17 +44,56 @@ function topCard(pile: PlayingCard[]) {
   return pile[pile.length - 1];
 }
 
+export const layoutZones: ZoneConfig[] = [
+  {
+    id: "stock",
+    col: 0.75,
+    row: 0,
+    fan: { maxVisible: 3 },
+    placeholder: { show: true, infoPos: "left", showCount: true, text: "Draw" },
+  },
+  {
+    id: "discard",
+    col: 2.25,
+    row: 0,
+    fan: { maxVisible: 3 },
+    placeholder: {
+      show: true,
+      infoPos: "right",
+      showCount: true,
+      text: "Discard",
+    },
+  },
+  ...getZoneGrid({
+    idPrefix: "pile",
+    length: 4,
+    cols: 4,
+    rowOffset: 3,
+    config: {
+      fan: { direction: "up", offset: 0.25 },
+      placeholder: { show: true },
+    },
+  }),
+  {
+    id: "button",
+    col: 0,
+    row: 4.1,
+    width: "full",
+    height: 0.6,
+  },
+];
+
 function setup(): AcesUpState {
-  const deck = shuffle(createDeck({ faceUp: true }));
+  const stock = shuffle(createDeck({ faceUp: true }));
   const piles: PlayingCard[][] = [[], [], [], []];
 
   for (let i = 0; i < 4; i += 1) {
-    const card = deck.shift();
+    const card = stock.shift();
     if (card) piles[i].push(card);
   }
 
   return {
-    stock: deck,
+    stock,
     piles,
     discard: [],
     ended: false,
@@ -123,15 +163,6 @@ export default function AcesUp() {
     }
   };
 
-  const { animateCards, isAnimating, animatingCardIds } = useAnimations();
-
-  const { getLayout, setRef } = useLayoutManager([
-    "stock",
-    "discard",
-    "pileTop",
-    "pileNext",
-  ]);
-
   const discardable = useMemo(
     () => getDiscardablePileIndexes(game.piles),
     [game.piles],
@@ -151,34 +182,9 @@ export default function AcesUp() {
   }
 
   async function dealFour() {
-    if (game.ended || game.stock.length < 4 || isAnimating) return;
+    if (game.ended || game.stock.length < 4) return;
 
     saveUndoState(structuredClone({ game }));
-
-    const stockPos = getLayout("stock");
-    if (stockPos) {
-      const stock = [...game.stock];
-      const cardsToDeal = stock.slice(0, 4);
-      const anims = [];
-
-      for (let i = 0; i < 4; i += 1) {
-        const pilePos = getLayout("pileNext", i);
-        if (!pilePos) continue;
-        anims.push({
-          id: `deal-${i}`,
-          card: cardsToDeal[i],
-          cardsPerRow,
-          to: { ...pilePos, zIndex: 200 - i },
-          from: { ...stockPos, zIndex: 200 - i },
-          delay: i * 150,
-          flip: "toFace" as const,
-        });
-      }
-
-      if (anims.length > 0) {
-        await animateCards(anims);
-      }
-    }
 
     setGame((prev) => {
       if (prev.ended || prev.stock.length < 4) return prev;
@@ -203,29 +209,11 @@ export default function AcesUp() {
   }
 
   async function discardTop(pileIndex: number) {
-    if (game.ended || isAnimating) return;
+    if (game.ended) return;
     const allowed = getDiscardablePileIndexes(game.piles);
     if (!allowed.has(pileIndex)) return;
 
     saveUndoState(structuredClone({ game }));
-
-    const pilePos = getLayout("pileTop", pileIndex);
-    const discardPos = getLayout("discard");
-
-    if (pilePos && discardPos) {
-      const pile = game.piles[pileIndex];
-      const cardToDiscard = pile[pile.length - 1];
-
-      await animateCards([
-        {
-          card: cardToDiscard,
-          cardsPerRow,
-          flip: "toBack" as const,
-          from: pilePos,
-          to: discardPos,
-        },
-      ]);
-    }
 
     setGame((prev) => {
       if (prev.ended) return prev;
@@ -246,7 +234,7 @@ export default function AcesUp() {
   }
 
   async function onPilePress(pileIndex: number) {
-    if (isAnimating || game.ended) return;
+    if (game.ended) return;
 
     const piles = game.piles.map((pile) => [...pile]);
     const clickedEmptyPile = piles[pileIndex].length === 0;
@@ -259,24 +247,6 @@ export default function AcesUp() {
     }
 
     saveUndoState(structuredClone({ game }));
-
-    // Animate move card to empty pile
-    const emptyPilePos = getLayout("pileTop", pileIndex);
-    const selectedPilePos = getLayout("pileTop", selectedPile);
-
-    if (emptyPilePos && selectedPilePos) {
-      const pile = game.piles[selectedPile];
-      const cardToMove = pile[pile.length - 1];
-
-      await animateCards([
-        {
-          card: cardToMove,
-          cardsPerRow,
-          from: selectedPilePos,
-          to: emptyPilePos,
-        },
-      ]);
-    }
 
     setSelectedPile(undefined);
 
@@ -302,6 +272,31 @@ export default function AcesUp() {
 
   const hasEmptyPile = !!game.piles.find((p) => p.length === 0);
 
+  const layoutManager = useZoneLayout({
+    zones: layoutZones,
+    targetRows: 5.45,
+  });
+
+  const {
+    cardWidth,
+    cardHeight,
+    getCardPosition,
+    layoutMetrics,
+    getZoneStyles,
+  } = layoutManager;
+
+  // ========== Card Positions ========== //
+  const cardPositions = useMemo(() => {
+    const builder = new CardPositionBuilder(getCardPosition);
+
+    builder.addDeck(game.stock, "stock", 20, "stock");
+    builder.addDeck(game.discard, "discard", 1, "discard");
+    game.piles.forEach((pile, pileIndex) => {
+      builder.addDeck(pile, `pile-${pileIndex}`, 10, "pile");
+    });
+    return builder.build();
+  }, [game, discardable, getCardPosition]);
+
   return (
     <GameWrapper
       showIntro={showIntro}
@@ -313,81 +308,100 @@ export default function AcesUp() {
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
-      <View
-        style={[flexStyles.rowCentered, flexStyles.fullWidth, flexStyles.gap40]}
-      >
-        {/* Stock pile */}
-        <Deck
-          refTop={setRef("stock")}
-          backCount={game.stock.length}
-          cardsPerRow={cardsPerRow}
-          limitFan
-          showCount
-          fan="horizontalRight"
-          countPosition="left"
-          iconName="draw"
-          onPress={dealFour}
-          isDisabled={game.stock.length === 0 || !canDeal || isAnimating}
-        />
+      <ZoneBackgrounds layoutManager={layoutManager} game={game} />
+      {/* <ZoneVisualizer
+        layoutManager={layoutManager}
+        layoutMetrics={layoutMetrics}
+      /> */}
 
-        {/* Discard pile */}
-        <Deck
-          refNext={setRef("discard")}
-          backCount={game.discard.length}
-          cardsPerRow={cardsPerRow}
-          limitFan
-          showCount
-          fan="horizontalLeft"
-          countPosition="right"
-          iconName="delete"
-        />
-      </View>
+      {Object.values(cardPositions).map((target) => {
+        let selectColor: CardSelectColor = "none";
+        let isSelected = undefined;
+        // let forceOverlay = false;
+        // let forceSelectColor = false;
+        let isDisabled = false;
+        // let isPlaceholder = false;
+        let onPress: (() => void) | undefined = undefined;
 
-      <View style={[cardStyles.row, cardStyles.rowAlignDown, flexStyles.flex1]}>
-        {game.piles.map((pile, idx) => {
-          const isSelected = selectedPile === idx;
-          const canDiscard = discardable.has(idx);
-          const topCard = top(pile);
-
-          return (
-            <View key={`pile-${idx}`} style={[cardStyles.colUpwards]}>
-              <Deck
-                cardsPerRow={cardsPerRow}
-                fan="verticalUp"
-                largeFan="progressive"
-                cards={pile}
-                hideTopCard={topCard && animatingCardIds.includes(topCard.id)}
-                refTop={setRef("pileTop", idx)}
-                refNext={setRef("pileNext", idx)}
-                onPress={() => {
-                  if (canDiscard) {
-                    discardTop(idx);
-                  } else {
-                    onPilePress(idx);
-                  }
-                }}
-                selectColor={
-                  pile.length === 0 ? "blue" : canDiscard ? "green" : "blue"
-                }
-                isSelected={isSelected}
-                isDisabled={
-                  (!canDiscard && !hasEmptyPile) ||
-                  isAnimating ||
-                  (pile.length === 0 && selectedPile === undefined)
-                }
-              />
-            </View>
+        if (target.zoneId === "stock" && target.misc?.topOfDeck) {
+          //  Stock pile
+          onPress = dealFour;
+          isDisabled = !canDeal;
+        } else if (target.type === "pile" && target.misc?.topOfDeck) {
+          // Piles
+          const cardIndex: number | undefined = target.index;
+          const pileIndex: number | undefined = Number(
+            target.zoneId.split("-")[1],
           );
-        })}
-      </View>
 
-      <Button
-        text="Deal"
-        size="large"
-        onPress={dealFour}
-        fullWidth
-        disabled={!canDeal || isAnimating}
-      />
+          if (cardIndex !== undefined && pileIndex !== undefined) {
+            const pile = game.piles[pileIndex];
+
+            isSelected = selectedPile === pileIndex;
+            const canDiscard = discardable.has(pileIndex);
+
+            onPress = () => {
+              if (canDiscard) {
+                discardTop(pileIndex);
+              } else {
+                onPilePress(pileIndex);
+              }
+            };
+
+            selectColor =
+              pile.length === 0 ? "blue" : canDiscard ? "green" : "blue";
+            isDisabled =
+              (!canDiscard && !hasEmptyPile) ||
+              (pile.length === 0 && selectedPile === undefined);
+          }
+        }
+
+        return (
+          <AnimatedCard
+            key={target.card.id}
+            targetState={target}
+            cardWidth={cardWidth}
+            cardHeight={cardHeight}
+            cardSize={cardSize}
+            onPress={onPress}
+            isSelected={isSelected}
+            selectColor={selectColor}
+            // forceOverlay={forceOverlay}
+            // forceSelectColor={forceSelectColor}
+            // isPlaceholder={isPlaceholder}
+            isDisabled={isDisabled}
+          />
+        );
+      })}
+
+      {Array.from({ length: 4 }, (_, pileIndex) => {
+        return (
+          <Pressable
+            key={`pile-${pileIndex}`}
+            style={[
+              getZoneStyles(`pile-${pileIndex}`),
+              { zIndex: 1, borderWidth: 2, borderColor: Colors.accentBlue },
+            ]}
+            onPress={() => {
+              onPilePress(pileIndex);
+            }}
+            disabled={
+              game.piles[pileIndex].length !== 0 && selectedPile === undefined
+            }
+          />
+        );
+      })}
+
+      <View style={[getZoneStyles("button")]}>
+        <Button
+          text="Deal"
+          size="large"
+          onPress={dealFour}
+          fullWidth
+          disabled={!canDeal}
+          style={[{ height: "100%" }]}
+        />
+      </View>
     </GameWrapper>
   );
 }

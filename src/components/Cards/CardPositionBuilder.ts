@@ -1,5 +1,9 @@
+import { ZoneConfig } from "@/hooks/useZoneLayout";
 import { CardRegistration, TargetState } from "./AnimatedCard";
 
+/**
+ * @deprecated
+ */
 export class CardPositionBuilder {
   private positionMap: Record<string, TargetState> = {};
 
@@ -90,4 +94,30 @@ export class CardPositionBuilder {
   build(): Record<string, TargetState> {
     return this.positionMap;
   }
+}
+
+/**
+ * @deprecated
+ */
+export function getZoneGrid({
+  idPrefix,
+  length,
+  cols,
+  config,
+  colOffset = 0,
+  rowOffset = 0,
+}: {
+  idPrefix: string;
+  length: number;
+  cols: number;
+  colOffset?: number;
+  rowOffset?: number;
+  config?: Partial<ZoneConfig>;
+}): ZoneConfig[] {
+  return Array.from({ length: length }, (_, i) => ({
+    id: `${idPrefix}-${i}`,
+    col: (i % cols) + colOffset,
+    row: Math.floor(i / cols) + rowOffset,
+    ...config,
+  }));
 }

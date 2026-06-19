@@ -30,7 +30,6 @@ import {
   maxDefendersNum,
   setup,
 } from "./Area52Setup";
-import { ZoneVisualizer } from "@/components/Cards/ZoneVisualizer";
 
 export default function Area52() {
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();

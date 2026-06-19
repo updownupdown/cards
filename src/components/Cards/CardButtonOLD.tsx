@@ -28,6 +28,9 @@ interface Props {
   placeholderContent?: React.ReactNode;
 }
 
+/**
+ * @deprecated
+ */
 export const CardButton = ({
   card,
   isPlaceholder,

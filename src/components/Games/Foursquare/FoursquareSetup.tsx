@@ -1,13 +1,6 @@
 import { PlayingCard } from "@/components/Cards/card-utils";
+import { getZoneGrid } from "@/components/Cards/CardPositionBuilder";
 import { ZoneConfig } from "@/hooks/useZoneLayout";
-
-const piles: ZoneConfig[] = Array.from({ length: 16 }, (_, i) => ({
-  id: `pile-${i}`,
-  col: i % 4,
-  row: Math.floor(i / 4) + 1,
-  fan: { maxVisible: 4 },
-  placeholder: { show: true },
-}));
 
 export const layoutZones: ZoneConfig[] = [
   {
@@ -17,7 +10,13 @@ export const layoutZones: ZoneConfig[] = [
     fan: { maxVisible: 3 },
     placeholder: { show: true, showCount: true, infoPos: "left" },
   },
-  ...piles,
+  ...getZoneGrid({
+    idPrefix: "pile",
+    length: 16,
+    cols: 4,
+    rowOffset: 1,
+    config: { fan: { maxVisible: 4 }, placeholder: { show: true } },
+  }),
 ];
 
 export function getColRow(index: number) {

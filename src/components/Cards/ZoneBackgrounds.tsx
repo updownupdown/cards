@@ -12,9 +12,12 @@ type Props = {
 
 export const infoSize = {
   aboveBelow: 0.32,
-  leftRight: 0.4,
+  leftRight: 0.54,
 };
 
+/**
+ * @deprecated
+ */
 export const ZoneBackgrounds = ({ layoutManager, game }: Props) => {
   const { zones, getZoneBasePos, cardWidth, cardHeight } = layoutManager;
 
@@ -25,8 +28,8 @@ export const ZoneBackgrounds = ({ layoutManager, game }: Props) => {
         const pos = getZoneBasePos(zone);
         const count: number = zone.id ? game[zone.id]?.length : 0;
 
-        let placeholderWidth = cardWidth;
-        let placeholderHeight = cardHeight;
+        let placeholderWidth = pos.width;
+        let placeholderHeight = pos.height;
         let placeholderOffsetX = 0;
         let placeholderOffsetY = 0;
 

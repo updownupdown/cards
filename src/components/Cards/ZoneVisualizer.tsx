@@ -7,15 +7,11 @@ type Props = {
   layoutMetrics: LayoutMetrics;
 };
 
-{
-  /* <ZoneVisualizer
-  layoutManager={layoutManager}
-  layoutMetrics={layoutMetrics}
-/> */
-}
-
+/**
+ * @deprecated
+ */
 export const ZoneVisualizer = ({ layoutManager, layoutMetrics }: Props) => {
-  const { zones, getZoneBasePos, cardWidth, cardHeight } = layoutManager;
+  const { zones, getZoneStyles } = layoutManager;
   const {
     startX,
     startY,
@@ -23,7 +19,6 @@ export const ZoneVisualizer = ({ layoutManager, layoutMetrics }: Props) => {
     gridHeight,
     gridWidthPadded,
     gridHeightPadded,
-    gridGap,
   } = layoutMetrics;
 
   const zoneStyle: ViewStyle = {
@@ -92,19 +87,14 @@ export const ZoneVisualizer = ({ layoutManager, layoutMetrics }: Props) => {
       />
 
       {zones.map((zone) => {
-        const pos = getZoneBasePos(zone);
-
         return (
           <View
             key={`placeholder-${zone.id}`}
             style={[
               zoneStyle,
+              getZoneStyles(zone.id),
               {
-                left: pos.x,
-                top: pos.y,
                 borderColor: Colors.accentRed,
-                width: cardWidth * (zone.width ?? 1),
-                height: cardHeight * (zone.height ?? 1),
               },
             ]}
           />

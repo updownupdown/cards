@@ -1,15 +1,16 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { useLayoutManager } from "@/hooks/useLayoutManager";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
-import { cardStyles } from "@/styles/cardStyles";
-import { useState } from "react";
-import { CardAnimationParams, useAnimations } from "../Animations/Animations";
-import { CardGrid, CardSelectColor, CardSizes } from "../Cards/CardOLD";
+import { useZoneLayout, ZoneConfig } from "@/hooks/useZoneLayout";
+import { produce } from "immer";
+import { useMemo, useState } from "react";
+import { useWindowDimensions } from "react-native";
+import { AnimatedCard } from "../Cards/AnimatedCard";
 import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
-import { CardButton } from "../Cards/CardButtonOLD";
+import { CardSelectColor } from "../Cards/CardOLD";
+import { CardPositionBuilder, getZoneGrid } from "../Cards/CardPositionBuilder";
 import { GameWrapper } from "../common/GameWrapper";
 
-const cardsPerRow = 6;
+const cardSize = "small";
 
 type AccordionState = {
   line: PlayingCard[];
@@ -45,10 +46,6 @@ function hasAnyMove(line: PlayingCard[]) {
 
 export default function Accordion() {
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
-  const { animateCards, isAnimating, animatingCardIds } = useAnimations();
-
-  const { getLayout, setRef } = useLayoutManager(["card"]);
-
   const [game, setGame] = useState<AccordionState>(setup);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
@@ -68,7 +65,7 @@ export default function Accordion() {
   }
 
   function onCardPress(index: number) {
-    if (isAnimating || game.ended) return;
+    if (game.ended) return;
 
     if (selectedIndex === null) {
       setSelectedIndex(index);
@@ -105,60 +102,15 @@ export default function Accordion() {
   ) {
     saveUndoState(structuredClone({ game }));
 
-    const positions = game.line.map((_, i) => getLayout("card", i));
-    const srcPos = positions[source];
-    const tgtPos = positions[target];
+    setGame((prev) => {
+      return produce(prev, (draft) => {
+        draft.line[target] = srcCard;
+        draft.line.splice(source, 1);
 
-    if (srcPos && tgtPos) {
-      await animateCards([
-        {
-          card: srcCard,
-          cardSize: "small",
-          from: { ...srcPos, zIndex: 100 },
-          to: { ...tgtPos, zIndex: 100 },
-          cardsPerRow,
-        },
-      ]);
-    }
-
-    const anims: CardAnimationParams[] = [];
-    const shiftingIndices = new Set([source, target]);
-
-    for (let i = source + 1; i < game.line.length; i++) {
-      const fromPos = positions[i];
-      const toPos = positions[i - 1];
-      const card = game.line[i];
-      if (fromPos && toPos) {
-        shiftingIndices.add(i);
-        anims.push({
-          card,
-          cardSize: "small" as CardSizes,
-          cardsPerRow,
-          from: { ...fromPos, zIndex: 50 },
-          to: { ...toPos, zIndex: 50 },
-          duration: 150,
-          delay: (i - source - 1) * 20,
-        });
-      }
-    }
-
-    if (anims.length > 0) {
-      await animateCards(anims);
-    }
-
-    const line = [...game.line];
-    line[target] = srcCard;
-    line.splice(source, 1);
-
-    const won = line.length === 1;
-    const ended = won || !hasAnyMove(line);
-
-    setGame((prev) => ({
-      ...prev,
-      line,
-      ended,
-      won,
-    }));
+        draft.won = draft.line.length === 1;
+        draft.ended = draft.won || !hasAnyMove(draft.line);
+      });
+    });
 
     setSelectedIndex(null);
   }
@@ -182,6 +134,44 @@ export default function Accordion() {
     }
   }
 
+  // ========== Layouts ========== //
+  const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+  const windowAspectRatio = windowWidth / windowHeight;
+  const zoneCols =
+    game.line.length < 30
+      ? 5
+      : windowAspectRatio < 0.6
+        ? 6
+        : windowAspectRatio < 0.8
+          ? 7
+          : 8;
+
+  const layoutZones: ZoneConfig[] = [
+    ...getZoneGrid({
+      idPrefix: "zone",
+      length: game.line.length,
+      cols: zoneCols,
+    }),
+  ];
+
+  const layoutManager = useZoneLayout({
+    zones: layoutZones,
+    gapPc: 0.35,
+  });
+
+  const { cardWidth, cardHeight, getCardPosition, layoutMetrics } =
+    layoutManager;
+
+  // ========== Card Positions ========== //
+  const cardPositions = useMemo(() => {
+    const builder = new CardPositionBuilder(getCardPosition);
+    builder.addCollection(game.line, "zone", 0, (_, i) => ({
+      type: "zone",
+      cardIndex: i,
+    }));
+    return builder.build();
+  }, [game, layoutManager, zoneCols, getCardPosition]);
+
   return (
     <GameWrapper
       showIntro={showIntro}
@@ -198,29 +188,24 @@ export default function Accordion() {
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
-      <CardGrid cardsPerRow={cardsPerRow}>
-        {game.line.map((card, idx) => {
-          const selectedColor = selectColor(idx) as CardSelectColor;
+      {Object.values(cardPositions).map((target) => {
+        const index = target.misc?.cardIndex;
+        if (index === undefined) return null;
 
-          return (
-            <CardButton
-              key={card.id}
-              ref={setRef("card", idx)}
-              onPress={() => onCardPress(idx)}
-              disabled={game.ended}
-              isSelected={selectedIndex === idx}
-              selectColor={isAnimating ? "none" : selectedColor}
-              forceOverlay={!isAnimating}
-              card={card}
-              cardsPerRow={cardsPerRow}
-              cardSize="small"
-              style={[
-                animatingCardIds.includes(card.id) && cardStyles.animHide,
-              ]}
-            />
-          );
-        })}
-      </CardGrid>
+        return (
+          <AnimatedCard
+            key={target.card.id}
+            targetState={target}
+            cardWidth={cardWidth}
+            cardHeight={cardHeight}
+            cardSize={cardSize}
+            onPress={() => onCardPress(index)}
+            isSelected={selectedIndex === index}
+            selectColor={selectColor(index) as CardSelectColor}
+            forceOverlay={true}
+          />
+        );
+      })}
     </GameWrapper>
   );
 }

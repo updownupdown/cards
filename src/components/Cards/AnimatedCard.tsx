@@ -43,7 +43,7 @@ export type ArcConfig = {
   magnitudeY?: number;
 };
 
-type AnimatedCardProps = {
+export type AnimatedCardProps = {
   targetState: TargetState;
   cardWidth: number;
   cardHeight: number;
@@ -59,6 +59,11 @@ type AnimatedCardProps = {
   yOffset?: number;
   arcConfig?: ArcConfig;
 };
+
+export type AnimatedCardMapping = Omit<
+  AnimatedCardProps,
+  "cardWidth" | "cardHeight" | "targetState"
+>;
 
 export const AnimatedCard = ({
   targetState,
@@ -213,7 +218,7 @@ export const AnimatedCard = ({
         { translateX: finalX },
         { translateY: finalY + rawYOffset },
         { rotate: `${rotation}deg` },
-        { rotateX: `20deg` },
+        // { rotateX: `20deg` }, // DON'T DO THIS! It will mess up the card height
         { rotateY: `${spinY.value}deg` },
       ],
     };

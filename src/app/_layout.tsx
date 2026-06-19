@@ -1,4 +1,3 @@
-import { AnimationProvider } from "@/components/Animations/Animations";
 import { ToastProvider } from "@/components/common/Toast";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, MaxContentHeight, MaxContentWidth } from "@/styles/styles";

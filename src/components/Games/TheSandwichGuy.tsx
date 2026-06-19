@@ -1,47 +1,52 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { flexStyles } from "@/styles/flexStyles";
-import { useMemo, useRef, useState } from "react";
+import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { useZoneLayout, ZoneConfig } from "@/hooks/useZoneLayout";
+import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
-import { CardAnimationParams, useAnimations } from "../Animations/Animations";
 import { Button } from "../Button/Button";
-import { CardGrid } from "../Cards/CardOLD";
+import { AnimatedCard } from "../Cards/AnimatedCard";
 import {
-  RANK_VALUE,
   createDeck,
+  flipToBack,
+  flipToFace,
   isRed,
+  RANK_VALUE,
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { CardButton } from "../Cards/CardButtonOLD";
-import { Deck } from "../Cards/Deck";
+import { CardSelectColor } from "../Cards/CardOLD";
+import { CardPositionBuilder, getZoneGrid } from "../Cards/CardPositionBuilder";
+import { ZoneBackgrounds } from "../Cards/ZoneBackgrounds";
 import { GameWrapper } from "../common/GameWrapper";
 import { useToast } from "../common/Toast";
-import { useUndoHistory } from "@/hooks/useUndoHistory";
-import { useLayoutManager } from "@/hooks/useLayoutManager";
+import { produce } from "immer";
+import { delay } from "@/utils/utils";
 
-const cardsPerRow = 4;
+const cardSize = "regular";
 
 type GameState = {
   deck: PlayingCard[];
   hand: (PlayingCard | null)[];
   discard: PlayingCard[];
-  wonByDeckingOut: boolean;
+  won: boolean;
   ended: boolean;
+  dealFirstHand: boolean;
 };
 
 type GameSnapshot = {
   game: GameState;
 };
 
-function initState(): GameState {
-  const deck = shuffle(createDeck({ faceUp: true }));
+function setup(dealFirstHand = true): GameState {
+  const deck = shuffle(createDeck());
 
   return {
-    hand: deck.slice(0, 8),
-    deck: deck.slice(8),
+    hand: Array(8).fill(null),
+    deck,
     discard: [],
-    wonByDeckingOut: false,
+    won: false,
     ended: false,
+    dealFirstHand,
   };
 }
 
@@ -100,12 +105,8 @@ function replacementCount(cards: PlayingCard[]) {
 export default function TheSandwichGuy() {
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
 
-  const [game, setGame] = useState<GameState>(initState);
+  const [game, setGame] = useState<GameState>(setup(false));
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-
-  const { getLayout, setRef } = useLayoutManager(["deck", "discard", "hand"]);
-
-  const { animateCards, isAnimating, animatingCardIds } = useAnimations();
 
   const selectedCards = useMemo(
     () =>
@@ -125,9 +126,23 @@ export default function TheSandwichGuy() {
 
   const score = game.hand.length;
 
+  useEffect(() => {
+    if (showIntro === false) {
+      setGame((prev) => ({ ...prev, dealFirstHand: true }));
+    }
+  }, [showIntro]);
+
+  useEffect(() => {
+    if (!game.dealFirstHand) {
+      return;
+    }
+
+    refillHand();
+  }, [game.dealFirstHand]);
+
   function reset() {
     clearHistory();
-    setGame(initState());
+    setGame(setup());
     setSelectedIds([]);
   }
 
@@ -142,149 +157,87 @@ export default function TheSandwichGuy() {
     });
   }
 
+  async function refillHand(maxToRefill = 8) {
+    let refilledCount = 0;
+
+    for (let i = 0; i < game.hand.length; i++) {
+      if (refilledCount >= maxToRefill) break;
+
+      let wasRefilled = false;
+
+      setGame((prev) => {
+        return produce(prev, (draft) => {
+          if (draft.hand[i] === null) {
+            const topOfDeck = draft.deck.pop();
+            if (topOfDeck) {
+              draft.hand[i] = flipToFace(topOfDeck);
+              wasRefilled = true;
+            }
+          }
+
+          if (draft.dealFirstHand) {
+            draft.dealFirstHand = false;
+          }
+        });
+      });
+
+      if (wasRefilled) {
+        refilledCount++;
+      }
+
+      await delay(100);
+    }
+  }
+
   async function commitSandwich() {
-    if (
-      selectedCards.length !== 3 ||
-      isAnimating ||
-      !isValidSandwich(selectedCards)
-    ) {
+    if (selectedCards.length !== 3 || !isValidSandwich(selectedCards)) {
       return;
     }
 
     saveUndoState(structuredClone({ game }));
 
-    const replacement = replacementCount(selectedCards);
-
-    const deckPos = getLayout("deck");
-
-    let currentState = { ...game };
-
-    // Discard Phase: move cards 1 by 1, updating state each time to increment the discard pile count
-    for (let i = 0; i < currentState.hand.length; i++) {
-      const card = currentState.hand[i];
-      if (card && selectedIds.includes(card.id)) {
-        const handPos = getLayout("hand", i);
-
-        const newHand = [...currentState.hand];
-        newHand[i] = null;
-
-        const discardPos = getLayout("discard");
-
-        // Updated hand
-        currentState = {
-          ...currentState,
-          hand: newHand,
-        };
-        setGame(currentState);
-
-        // Animate hand to discard
-        if (handPos && discardPos) {
-          await animateCards([
-            {
-              card,
-              from: handPos,
-              to: discardPos,
-              flip: "toBack",
-              cardsPerRow,
-            },
-          ]);
-        }
-
-        // Updated discard
-        currentState = {
-          ...currentState,
-          discard: [...currentState.discard, card],
-        };
-
-        setGame(currentState);
-      }
-    }
-
-    const deckCards = [...currentState.deck];
-    const newlyDrawn: PlayingCard[] = [];
-    const slotsToFill: number[] = [];
-
-    for (let i = 0; i < currentState.hand.length; i++) {
-      if (currentState.hand[i] === null) {
-        slotsToFill.push(i);
-      }
-    }
-
-    const actuallyReplaced = Math.min(
-      replacement,
-      deckCards.length,
-      slotsToFill.length,
+    const replacementsEarned = replacementCount(selectedCards);
+    const replacementsPossible = Math.min(
+      replacementsEarned,
+      game.deck.length,
+      game.hand.filter((c) => c !== null).length,
     );
 
-    if (actuallyReplaced > 0) {
-      showToast(`Sandwich served (${actuallyReplaced} new cards)`);
+    // Discard
+    for (let i = 0; i < game.hand.length; i++) {
+      setGame((prev) => {
+        return produce(prev, (draft) => {
+          const cardToDiscard = draft.hand[i];
+          if (cardToDiscard && selectedIds.includes(cardToDiscard.id)) {
+            draft.hand[i] = null;
+            draft.discard.push(flipToBack(cardToDiscard));
+          }
+        });
+      });
 
-      const anims: CardAnimationParams[] = [];
-
-      for (let i = 0; i < actuallyReplaced; i++) {
-        const drawn = deckCards.shift();
-        if (!drawn) break;
-
-        newlyDrawn.push(drawn);
-        const slotIndex = slotsToFill[i];
-        const handPos = getLayout("hand", slotIndex);
-
-        // Shrink the deck 1 by 1 visually
-        currentState = {
-          ...currentState,
-          deck: [...deckCards],
-        };
-        setGame(currentState);
-
-        if (deckPos && handPos) {
-          anims.push({
-            card: drawn,
-            from: deckPos,
-            to: handPos,
-            flip: "toFace",
-            cardsPerRow,
-            delay: 100 * i,
-            keepAlive: true,
-          });
-        }
-      }
-
-      // await all draw animations
-      if (anims.length > 0) {
-        await animateCards(anims);
-      }
+      await delay(100);
     }
 
-    // Populate final hand slots
-    const finalHand = [...currentState.hand];
-    let drawIndex = 0;
-    for (let i = 0; i < finalHand.length; i++) {
-      if (finalHand[i] === null && drawIndex < newlyDrawn.length) {
-        finalHand[i] = newlyDrawn[drawIndex];
-        drawIndex++;
-      }
-    }
-
-    const wonByDeckingOut =
-      currentState.wonByDeckingOut || deckCards.length === 0;
-    const nextState = {
-      ...currentState,
-      hand: finalHand,
-      deck: deckCards,
-      wonByDeckingOut,
-    };
-
-    if (!hasAnyValidSandwich(nextState.hand)) {
-      nextState.ended = true;
-    }
-
-    setGame(nextState);
     setSelectedIds([]);
+
+    // Refill
+    await refillHand(replacementsPossible);
+
+    showToast(`Sandwich served (${replacementsPossible} new cards)`);
+
+    setGame((prev) => {
+      return produce(prev, (draft) => {
+        if (draft.deck.length === 0) {
+          draft.won = true;
+          draft.ended = true;
+        } else if (!hasAnyValidSandwich(draft.hand)) {
+          draft.ended = true;
+        }
+      });
+    });
   }
 
-  const won = game.ended && game.wonByDeckingOut;
-
-  function selectColor(selected: boolean) {
+  function getSelectColor(selected: boolean) {
     if (selected && invalidSandwichSelected) {
       return "red";
     } else if (selectedIds.length === 3 && selected) {
@@ -301,20 +254,90 @@ export default function TheSandwichGuy() {
   const handleUndo = () => {
     const previousState = undo();
     if (previousState) {
+      clearHistory();
       setGame(previousState.game);
     }
   };
+
+  const layoutZones: ZoneConfig[] = [
+    {
+      id: "deck",
+      col: 0.75,
+      row: 0,
+      fan: { maxVisible: 3 },
+      placeholder: {
+        show: true,
+        showCount: true,
+        text: "Draw",
+        infoPos: "left",
+      },
+    },
+    {
+      id: "discard",
+      col: 2.25,
+      row: 0,
+      fan: { maxVisible: 3 },
+      placeholder: {
+        show: true,
+        showCount: true,
+        text: "Discard",
+        infoPos: "right",
+      },
+    },
+    ...getZoneGrid({
+      idPrefix: "hand",
+      length: 8,
+      cols: 4,
+      rowOffset: 1.25,
+      config: { placeholder: { show: true } },
+    }),
+    {
+      id: "button",
+      col: 0,
+      row: 3.5,
+      width: "full",
+      height: 0.6,
+    },
+  ];
+
+  const layoutManager = useZoneLayout({
+    zones: layoutZones,
+    targetRows: 4.725,
+  });
+
+  const { cardWidth, cardHeight, getCardPosition, getZoneStyles } =
+    layoutManager;
+
+  const cardPositions = useMemo(() => {
+    const builder = new CardPositionBuilder(getCardPosition);
+
+    builder.addDeck(game.deck, "deck", 100, "deck");
+    builder.addDeck(game.discard, "discard", 1, "discard");
+
+    game.hand.forEach((hand, handIndex) => {
+      builder.add({
+        card: hand,
+        index: handIndex,
+        total: 1,
+        zoneId: `hand-${handIndex}`,
+        startingZIndex: 50,
+        type: "hand",
+      });
+    });
+
+    return builder.build();
+  }, [game, getCardPosition]);
 
   return (
     <GameWrapper
       showIntro={showIntro}
       setShowIntro={setShowIntro}
       ended={game.ended}
-      won={won}
+      won={game.won}
       reset={reset}
       isLoaded={isLoaded}
       winLoseMessage={
-        won
+        game.won
           ? `You won by drawing out the deck. Final score (lower is better):{" "}
             ${score}`
           : "No valid sandwich available. You lose."
@@ -322,71 +345,52 @@ export default function TheSandwichGuy() {
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
-      <View
-        style={[flexStyles.rowCentered, flexStyles.fullWidth, flexStyles.gap40]}
-      >
-        <Deck
-          refTop={setRef("deck")}
-          showCount
-          limitFan
-          cardsPerRow={cardsPerRow}
-          countPosition="left"
-          backCount={game.deck.length}
-          iconName="draw"
-          fan="horizontalRight"
-        />
-        <Deck
-          refNext={setRef("discard")}
-          showCount
-          limitFan
-          cardsPerRow={cardsPerRow}
-          countPosition="right"
-          backCount={game.discard.length}
-          iconName="delete"
-          fan="horizontalLeft"
+      <ZoneBackgrounds layoutManager={layoutManager} game={game} />
+
+      {Object.values(cardPositions).map((target) => {
+        let selectColor: CardSelectColor = "none";
+        let isSelected = undefined;
+        let isPlaceholder = false;
+        let onPress: (() => void) | undefined = undefined;
+
+        if (target.type === "hand") {
+          isSelected = !!(target.card && selectedIds.includes(target.card.id));
+
+          onPress = () => {
+            if (target.card) {
+              toggleSelect(target.card.id);
+            }
+          };
+
+          isPlaceholder = !target.card;
+          selectColor = target.card ? getSelectColor(isSelected) : "none";
+        }
+
+        return (
+          <AnimatedCard
+            key={target.card.id}
+            targetState={target}
+            cardWidth={cardWidth}
+            cardHeight={cardHeight}
+            cardSize={cardSize}
+            onPress={onPress}
+            isSelected={isSelected}
+            selectColor={selectColor}
+            isPlaceholder={isPlaceholder}
+          />
+        );
+      })}
+
+      <View style={[getZoneStyles("button")]}>
+        <Button
+          onPress={commitSandwich}
+          disabled={selectedCards.length !== 3 || invalidSandwichSelected}
+          text="Serve Sandwich"
+          size="large"
+          fullWidth
+          style={[{ height: "100%" }]}
         />
       </View>
-
-      <CardGrid
-        cardsPerRow={cardsPerRow}
-        style={[
-          {
-            flexDirection: "row-reverse",
-            justifyContent: "flex-end",
-          },
-        ]}
-      >
-        {game.hand.map((card, index) => {
-          const isSelected = !!(card && selectedIds.includes(card.id));
-
-          return (
-            <CardButton
-              ref={setRef("hand", index)}
-              key={card ? card.id : "placeholder" + index}
-              onPress={() => {
-                if (card) {
-                  toggleSelect(card.id);
-                }
-              }}
-              isSelected={isSelected}
-              cardsPerRow={cardsPerRow}
-              isPlaceholder={!card || animatingCardIds.includes(card.id)}
-              card={card}
-              selectColor={card ? selectColor(isSelected) : "none"}
-            />
-          );
-        })}
-      </CardGrid>
-
-      <Button
-        onPress={commitSandwich}
-        disabled={
-          selectedCards.length !== 3 || invalidSandwichSelected || isAnimating
-        }
-        text="Serve Sandwich"
-        size="large"
-        fullWidth
-      />
     </GameWrapper>
   );
 }

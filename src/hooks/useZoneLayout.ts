@@ -1,5 +1,4 @@
 import { cardDims } from "@/components/Cards/card-utils";
-import { cardAspectRatio } from "@/components/Cards/CardOLD";
 import { IconName } from "@/icons";
 import {
   HeaderHeight,
@@ -31,7 +30,7 @@ export type ZoneConfig = {
   id: string;
   col: number;
   row: number;
-  width?: number;
+  width?: number | "full";
   height?: number;
   fan?: {
     direction?: FanDirection;
@@ -92,6 +91,9 @@ export type LayoutManager = {
   layoutMetrics: LayoutMetrics;
 };
 
+/**
+ * @deprecated
+ */
 export function useZoneLayout({
   zones,
   targetCols,
@@ -184,6 +186,7 @@ export function useZoneLayout({
       gridHeightPadded,
     };
   }, [
+    screenWidthActual,
     containerWidth,
     containerHeight,
     gridCols,
@@ -206,7 +209,8 @@ export function useZoneLayout({
     return {
       x: startX + zone.col * (cardWidth + actualGap),
       y: startY + zone.row * (cardHeight + actualGap),
-      width: cardWidth * (zone.width ?? 1),
+      width:
+        zone.width === "full" ? gridWidthPadded : cardWidth * (zone.width ?? 1),
       height: cardHeight * (zone.height ?? 1),
     };
   };
@@ -220,13 +224,17 @@ export function useZoneLayout({
       height: 100,
     };
 
-    const zonePos = getZoneBasePos(zones.find((z) => z.id === zoneId)!);
+    const zone = zones.find((z) => z.id === zoneId);
 
-    if (zonePos) {
-      styles.top = zonePos.y;
-      styles.left = zonePos.x;
-      styles.width = zonePos.width;
-      styles.height = zonePos.height;
+    if (zone) {
+      const zonePos = getZoneBasePos(zone);
+
+      if (zonePos) {
+        styles.top = zonePos.y;
+        styles.left = zonePos.x;
+        styles.width = zonePos.width;
+        styles.height = zonePos.height;
+      }
     }
 
     return styles;

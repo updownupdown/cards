@@ -30,6 +30,9 @@ const cardShadowRadio = 0.012;
 export const cardGapToMarginRatio = 2;
 export const cardBorderRadiusRatio = 0.08;
 
+/**
+ * @deprecated
+ */
 export const useCardSizing = (cardsPerRow: number, targetGridCols?: number) => {
   const { contentDiameter: contentWidth } = useContentWidth();
 

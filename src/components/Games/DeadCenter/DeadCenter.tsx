@@ -1,13 +1,18 @@
-import { useContentWidth } from "@/hooks/useContentWidth";
+import {
+  ColRows,
+  getGridColRows,
+  MappedCard,
+  MapZone,
+  useCardMap,
+} from "@/components/Cards/CardMap";
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { useZoneLayout } from "@/hooks/useZoneLayout";
+import { useUndoHistory } from "@/hooks/useUndoHistory";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
 import { useEffect, useMemo, useState } from "react";
 import { Text, View } from "react-native";
-import { AnimatedCard } from "../../Cards/AnimatedCard";
-import { CardSelectColor } from "../../Cards/Card";
+import { AnimatedCardMapping } from "../../Cards/AnimatedCard";
 import {
   cardColor,
   createDeck,
@@ -18,19 +23,57 @@ import {
   rankValue,
   shuffle,
 } from "../../Cards/card-utils";
-import { CardPositionBuilder } from "../../Cards/CardPositionBuilder";
-import { ZoneVisualizer } from "../../Cards/ZoneVisualizer";
 import { GameWrapper } from "../../common/GameWrapper";
-import {
-  GameSnapshot,
-  GameState,
-  layoutZones,
-  PILE_TO_ZOMBIES,
-  Zombie,
-} from "./DeadCenterSetup";
-import { useUndoHistory } from "@/hooks/useUndoHistory";
 
-const cardSize = "small";
+const zombieZonesColRows: ColRows[] = [
+  { c: 1, r: 1 },
+  { c: 2, r: 1 },
+  { c: 3, r: 1 },
+  { c: 4, r: 2 },
+  { c: 4, r: 3 },
+  { c: 4, r: 4 },
+  { c: 3, r: 5 },
+  { c: 2, r: 5 },
+  { c: 1, r: 5 },
+  { c: 0, r: 4 },
+  { c: 0, r: 3 },
+  { c: 0, r: 2 },
+];
+
+const PILE_TO_ZOMBIES: Record<number, number[]> = {
+  0: [0, 11],
+  1: [1],
+  2: [2, 3],
+  3: [10],
+  4: [],
+  5: [4],
+  6: [8, 9],
+  7: [7],
+  8: [5, 6],
+};
+
+type Zombie = {
+  id: string;
+  card: PlayingCard;
+  dead: boolean;
+};
+
+type Phase = "reveal" | "play" | "kill";
+
+type GameState = {
+  piles: PlayingCard[][];
+  zombies: Zombie[];
+  draw: PlayingCard[];
+  phase: Phase;
+  lastPlayedPile: number | null;
+  ended: boolean;
+  won: boolean;
+  winLoseMessage?: string;
+};
+
+type GameSnapshot = {
+  game: GameState;
+};
 
 function setup(): GameState {
   const deck = createDeck({ faceUp: false, includeJokers: true });
@@ -328,36 +371,131 @@ export default function DeadCenter() {
     }
   }, [game]);
 
-  const layoutManager = useZoneLayout({
-    zones: layoutZones,
-    gapPc: 0.35,
+  // ========== Card Mapping ========== //
+  const zones: MapZone[] = useMemo(() => {
+    const zombieZones: MapZone[] = zombieZonesColRows.map((pos, i) => ({
+      id: `zombie-${i}`,
+      pileIndex: i,
+      cards: [game.zombies[i].card],
+      name: "zombie",
+      type: "single-card",
+      col: pos.c,
+      row: pos.r,
+      baseZIndex: 1,
+    }));
+    const pileZones: MapZone[] = getGridColRows({
+      cols: 3,
+      rows: 3,
+      colOffset: 1,
+      rowOffset: 2,
+    }).map((pos, i) => ({
+      id: `pile-${i}`,
+      pileIndex: i,
+      cards: game.piles[i],
+      name: "pile",
+      type: "deck",
+      col: pos.c,
+      row: pos.r,
+      baseZIndex: 10,
+      fan: { maxVisible: 3 },
+    }));
+
+    return [
+      {
+        id: "gameInfo",
+        type: "ui",
+        col: 0,
+        row: 0,
+        width: "full",
+        baseZIndex: 10,
+      },
+      {
+        id: "draw",
+        name: "draw",
+        type: "deck",
+        cards: game.draw,
+        col: 4,
+        row: 0,
+        fan: { maxVisible: 3 },
+        baseZIndex: 50,
+        placeholder: { show: true, text: "Draw", infoPos: "left" },
+      },
+      ...zombieZones,
+      ...pileZones,
+    ];
+  }, [game]);
+
+  const cardMapper = (
+    mappedCard: MappedCard,
+  ): AnimatedCardMapping | undefined => {
+    if (
+      mappedCard.zoneName === "zombie" &&
+      mappedCard.pileIndex !== undefined
+    ) {
+      // ========== Zombies ========== //
+      const zombie = game.zombies[mappedCard.pileIndex];
+      const canReveal =
+        game.phase === "reveal" && !zombie.card.faceUp && !zombie.dead;
+      const canKill =
+        game.phase === "kill" && currentAttacks.includes(mappedCard.pileIndex);
+
+      const selectedColor = () => {
+        if (game.phase === "reveal" && canReveal) {
+          return "purple";
+        } else if (game.phase === "kill" && canKill) {
+          return "purple";
+        }
+        return "none";
+      };
+      const selectColor = selectedColor();
+
+      return {
+        selectColor,
+        forceOverlay: selectColor === "purple",
+        isPlaceholder: zombie.dead,
+        onPress: () => {
+          if (canReveal) {
+            revealZombie(mappedCard.pileIndex!);
+          } else if (canKill) {
+            killZombie(mappedCard.pileIndex!);
+          }
+        },
+      };
+    } else if (
+      mappedCard.zoneName === "pile" &&
+      mappedCard.pileIndex !== undefined
+    ) {
+      // ========== Piles ========== //
+      const pileIdx = mappedCard.pileIndex;
+      const topCard = mappedCard.topOfZone ? mappedCard.card : undefined;
+      const canPlay = !!(
+        topCard &&
+        game.phase === "play" &&
+        game.draw[game.draw.length - 1] &&
+        canPlayOn(topCard, game.draw[game.draw.length - 1])
+      );
+
+      return {
+        selectColor: canPlay ? "green" : "none",
+        forceSelectColor: canPlay,
+        isDisabled: !canPlay,
+        onPress: () => playToPile(pileIdx),
+      };
+    }
+  };
+
+  const {
+    getZoneStylesById,
+    mappedCards,
+    // mapVisualizer,
+    // mapBackgrounds,
+  } = useCardMap({
+    game,
+    zones,
+    gap: 0.35,
+    cardMapper,
+    cardSize: "small",
   });
-
-  const { cardWidth, cardHeight, getCardPosition, getZoneStyles } =
-    layoutManager;
-
-  // ========== Card Positions ========== //
-  const cardPositions = useMemo(() => {
-    const builder = new CardPositionBuilder(getCardPosition);
-
-    builder.addDeck(game.draw, "draw", 20, "draw");
-
-    game.piles.forEach((pile, pileIndex) => {
-      builder.addDeck(pile, `pile-${pileIndex}`, 10, "pile");
-    });
-
-    game.zombies.forEach((zombie, zombieIndex) => {
-      builder.add({
-        card: zombie.card,
-        zoneId: `zombie-${zombieIndex}`,
-        index: zombieIndex,
-        total: 1,
-        startingZIndex: 0,
-        type: "zombie",
-      });
-    });
-    return builder.build();
-  }, [game, getCardPosition]);
 
   return (
     <GameWrapper
@@ -373,86 +511,16 @@ export default function DeadCenter() {
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
-      {Object.values(cardPositions).map((target) => {
-        let selectColor: CardSelectColor = "none";
-        let isSelected = undefined;
-        let forceOverlay = false;
-        let forceSelectColor = false;
-        let isDisabled = false;
-        let isPlaceholder = false;
-        let onPress: (() => void) | undefined = undefined;
-
-        const zombieIndex = target.index;
-        const pileIndex = target.zoneId.split("-")[1];
-
-        if (target.type === "zombie" && zombieIndex !== undefined) {
-          // ========== Zombies ========== //
-          const zombie = game.zombies[zombieIndex];
-          const canReveal =
-            game.phase === "reveal" && !zombie.card.faceUp && !zombie.dead;
-          const canKill =
-            game.phase === "kill" && currentAttacks.includes(zombieIndex);
-
-          const selectedColor = () => {
-            if (game.phase === "reveal" && canReveal) {
-              return "purple";
-            } else if (game.phase === "kill" && canKill) {
-              return "purple";
-            }
-            return "none";
-          };
-          isPlaceholder = zombie.dead;
-          selectColor = selectedColor();
-          forceOverlay = selectedColor() === "purple";
-
-          onPress = () => {
-            if (canReveal) {
-              revealZombie(zombieIndex);
-            } else if (canKill) {
-              killZombie(zombieIndex);
-            }
-          };
-        } else if (target.type === "pile" && pileIndex !== undefined) {
-          // ========== Piles ========== //
-          const pileIdx = Number(pileIndex);
-          const topCard = target.misc?.topOfDeck ? target.card : undefined;
-          const canPlay = !!(
-            topCard &&
-            game.phase === "play" &&
-            game.draw[game.draw.length - 1] &&
-            canPlayOn(topCard, game.draw[game.draw.length - 1])
-          );
-          isDisabled = !canPlay;
-          selectColor = canPlay ? "green" : "none";
-          forceOverlay = canPlay;
-          forceSelectColor = canPlay;
-          onPress = () => playToPile(pileIdx);
-        }
-
-        return (
-          <AnimatedCard
-            key={target.card.id}
-            targetState={target}
-            cardWidth={cardWidth}
-            cardHeight={cardHeight}
-            cardSize={cardSize}
-            onPress={onPress}
-            isSelected={isSelected}
-            selectColor={selectColor}
-            forceOverlay={forceOverlay}
-            forceSelectColor={forceSelectColor}
-            isPlaceholder={isPlaceholder}
-            isDisabled={isDisabled}
-          />
-        );
-      })}
+      {/* {mapVisualizer} */}
+      {/* {mapBackgrounds} */}
+      {mappedCards}
 
       {/* Game Info */}
       <View
         style={[
           flexStyles.rowCentered,
           flexStyles.fullWidth,
-          getZoneStyles("gameInfo"),
+          getZoneStylesById("gameInfo"),
           {
             backgroundColor: Colors.K875,
             borderRadius: 12,
