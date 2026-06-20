@@ -1,7 +1,10 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { flexStyles } from "@/styles/flexStyles";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Pressable, View } from "react-native";
+import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { useZoneLayout } from "@/hooks/useZoneLayout";
+import { Colors } from "@/styles/styles";
+import { useEffect, useMemo, useState } from "react";
+import { Pressable } from "react-native";
+import { AnimatedCard } from "../../Cards/AnimatedCard";
 import {
   createDeck,
   isFace,
@@ -10,24 +13,15 @@ import {
   top,
   type PlayingCard,
 } from "../../Cards/card-utils";
-import { Deck } from "../../Cards/Deck";
+import { CardPositionBuilder } from "../../Cards/CardPositionBuilder";
 import { GameWrapper } from "../../common/GameWrapper";
 import { useToast } from "../../common/Toast";
-import { Colors } from "@/styles/styles";
-import { useUndoHistory } from "@/hooks/useUndoHistory";
-import { useLayoutManager } from "@/hooks/useLayoutManager";
-import { useZoneLayout, ZoneConfig } from "@/hooks/useZoneLayout";
 import {
   GameSnapshot,
   GameState,
   getColRow,
   layoutZones,
 } from "./FoursquareSetup";
-import { CardPositionBuilder } from "../../Cards/CardPositionBuilder";
-import { AnimatedCard } from "../../Cards/AnimatedCard";
-import { CardSelectColor } from "../../Cards/Card";
-import { ZoneVisualizer } from "../../Cards/ZoneVisualizer";
-import { ZoneBackgrounds } from "../../Cards/ZoneBackgrounds";
 
 const cardSize = "small";
 
@@ -353,8 +347,6 @@ export default function Foursquare() {
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
-      <ZoneBackgrounds layoutManager={layoutManager} game={game} />
-
       {Object.values(cardPositions).map((target) => {
         return (
           <AnimatedCard

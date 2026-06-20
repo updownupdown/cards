@@ -8,10 +8,9 @@ import { produce } from "immer";
 import { useEffect, useMemo, useState } from "react";
 import { Text, View } from "react-native";
 import { Button } from "../../Button/Button";
-import { AnimatedCard } from "../../Cards/AnimatedCard";
+import { AnimatedCard, AnimatedCardMapping } from "../../Cards/AnimatedCard";
 import { CardSelectColor } from "../../Cards/CardOLD";
 import { CardPositionBuilder } from "../../Cards/CardPositionBuilder";
-import { ZoneBackgrounds } from "../../Cards/ZoneBackgrounds";
 import {
   cardDims,
   flipAllToBack,
@@ -25,11 +24,17 @@ import { GameWrapper } from "../../common/GameWrapper";
 import { useToast } from "../../common/Toast";
 import {
   GameState,
-  layoutZones,
   maxAttackersNum,
   maxDefendersNum,
   setup,
 } from "./Area52Setup";
+import {
+  getGridColRows,
+  MappedCard,
+  MapZone,
+  useCardMap,
+} from "@/components/Cards/CardMap";
+import { CardColor } from "@/components/Cards/CardStyles";
 
 export default function Area52() {
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
@@ -40,11 +45,6 @@ export default function Area52() {
 
   const [game, setGame] = useState<GameState>(setup(true));
   const [selectedDefenders, setSelectedDefenders] = useState<number[]>([]);
-
-  const layoutManager = useZoneLayout({
-    zones: layoutZones,
-    paddingBottomPc: cardDims.layoutPadding + 0.25 + 0.5,
-  });
 
   async function startGame(gameState: GameState) {
     const stateFrame = await refillAttackers(gameState);
@@ -60,14 +60,6 @@ export default function Area52() {
       setGame((prev) => ({ ...prev, started: true }));
     }
   }, [showIntro]);
-
-  const {
-    cardWidth,
-    cardHeight,
-    getCardPosition,
-    getZoneBasePos,
-    layoutMetrics,
-  } = layoutManager;
 
   const currentAttacker = useMemo(
     () => game.currentAttackers[game.currentAttackers.length - 1] ?? null,
@@ -102,23 +94,6 @@ export default function Area52() {
       return sum === enemyValue;
     }
   }, [selectedDefenders, currentAttacker, game.currentDefenders]);
-
-  // ========== Card Positions ========== //
-  const cardPositions = useMemo(() => {
-    return new CardPositionBuilder(getCardPosition)
-      .addDeck(game.attackerDeck, "attackerDeck")
-      .addDeck(game.discardDeck, "discardDeck")
-      .addDeck(game.defenderDeck, "defenderDeck")
-      .addCollection(game.currentAttackers, "attacker", 0, (_, i) => ({
-        type: "attacker",
-        attackerIndex: i,
-      }))
-      .addCollection(game.currentDefenders, "defender", 0, (_, i) => ({
-        type: "defender",
-        defenderIndex: i,
-      }))
-      .build();
-  }, [game, selectedDefenders, canAttack, getCardPosition]);
 
   // ========== Actions ========== //
   function toggleDefender(index: number) {
@@ -289,12 +264,142 @@ export default function Area52() {
     return stateFrame;
   }
 
-  const aTitlePos = getZoneBasePos(
-    layoutZones.find((z) => z.id === "attacker-1")!,
-  );
-  const dTitlePos = getZoneBasePos(
-    layoutZones.find((z) => z.id === "defender-1")!,
-  );
+  // ========== Card Map ========== //
+  const zones: MapZone[] = useMemo(() => {
+    const zoneGap = 0.2;
+    const rowOffset = 1.3;
+
+    const attackers: MapZone[] = Array.from({ length: 3 }, (_, i) => ({
+      id: `attacker-${i}`,
+      refIndex: i,
+      name: "attacker",
+      cards: game.currentAttackers[i] ? [game.currentAttackers[i]] : undefined,
+      type: "single-card",
+      col: i + 1 + zoneGap,
+      row: 0,
+      baseZIndex: 10 + i,
+      placeholder: {},
+    }));
+    const defenders: MapZone[] = getGridColRows({
+      cols: 3,
+      rows: 2,
+      colOffset: 1.2,
+      rowOffset: 1.6,
+    }).map((pos, i) => ({
+      id: `defender-${i}`,
+      refIndex: i,
+      cards: game.currentDefenders[i] ? [game.currentDefenders[i]] : undefined,
+      name: "defender",
+      type: "single-card",
+      col: pos.c,
+      row: pos.r,
+      baseZIndex: 10 + pos.c,
+      placeholder: {},
+    }));
+
+    return [
+      {
+        id: "attackerDeck",
+        type: "deck",
+        cards: game.attackerDeck,
+        col: 0,
+        row: rowOffset * 0,
+        fan: { maxVisible: 3 },
+        baseZIndex: 50,
+        placeholder: { show: true, text: "Atks", infoPos: "above" },
+      },
+      ...attackers,
+      {
+        id: "discardDeck",
+        cards: game.discardDeck,
+        type: "deck",
+        col: 0,
+        row: rowOffset * 1,
+        fan: { maxVisible: 3 },
+        baseZIndex: 50,
+        placeholder: { show: true, text: "Dscrd", infoPos: "above" },
+      },
+      {
+        id: "defenderDeck",
+        cards: game.defenderDeck,
+        type: "deck",
+        col: 0,
+        row: rowOffset * 2,
+        fan: { maxVisible: 3 },
+        baseZIndex: 50,
+        placeholder: { show: true, text: "Defs", infoPos: "above" },
+      },
+      ...defenders,
+      {
+        id: "buttons",
+        type: "ui",
+        col: 0,
+        row: 3.75,
+        width: "full",
+        height: 0.6,
+        baseZIndex: 10,
+      },
+    ];
+  }, [game, selectedDefenders, canAttack]);
+
+  const cardMapper = (
+    mappedCard: MappedCard,
+  ): AnimatedCardMapping | undefined => {
+    // Attacker logic
+    if (mappedCard.zoneName === "attacker") {
+      const isCurrent = mappedCard.card.id === currentAttacker.id;
+
+      return {
+        selectColor: isCurrent ? "red" : "none",
+        forceSelectColor: isCurrent,
+        forceOverlay: isCurrent,
+        yOffset: isCurrent ? 0.15 : 0,
+      };
+    }
+
+    // Defender Logic
+    if (mappedCard.zoneName === "defender") {
+      const isSelected = !!(
+        mappedCard.refIndex && selectedDefenders.includes(mappedCard.refIndex)
+      );
+      let selectColor: CardColor = "none";
+      if (isSelected) {
+        selectColor =
+          selectedDefenders.length === 2
+            ? canAttack
+              ? "purple"
+              : "orange"
+            : canAttack
+              ? "green"
+              : "red";
+      } else if (canAttack !== undefined && !isSelected) {
+        selectColor = "blue";
+      }
+
+      return {
+        selectColor,
+        isSelected,
+        onPress: () => {
+          const dIndex = game.currentDefenders.findIndex(
+            (d) => d?.id === mappedCard.card.id,
+          );
+          if (dIndex !== -1) toggleDefender(dIndex);
+        },
+      };
+    }
+  };
+
+  const { cardMap, getZoneBasePos, getZoneStylesById } = useCardMap({
+    game,
+    zones,
+    cardMapper,
+    cardSize: "regular",
+    // visualizer: true,
+    paddingTop: 0.6,
+  });
+
+  const aTitlePos = getZoneBasePos(zones.find((z) => z.id === "attacker-1")!);
+  const dTitlePos = getZoneBasePos(zones.find((z) => z.id === "defender-1")!);
 
   return (
     <GameWrapper
@@ -320,7 +425,7 @@ export default function Area52() {
         }
       }}
     >
-      <ZoneBackgrounds layoutManager={layoutManager} game={game} />
+      {cardMap}
 
       {/* Titles */}
       <Text
@@ -348,81 +453,12 @@ export default function Area52() {
         Defenders
       </Text>
 
-      {Object.values(cardPositions).map((target) => {
-        let selectColor: CardSelectColor = "none";
-        let isSelected = undefined;
-        let isCurrent = undefined;
-        let yOffset = 0;
-        let forceOverlay = false;
-        let forceSelectColor = false;
-
-        // Attacker logic
-        if (target.misc?.type === "attacker") {
-          isCurrent = target.card.id === currentAttacker.id;
-          selectColor = isCurrent ? "red" : "none";
-          forceSelectColor = isCurrent;
-          forceOverlay = isCurrent;
-          yOffset = isCurrent ? 0.15 * cardHeight : 0;
-        }
-
-        // Defender Logic
-        if (target.misc?.type === "defender") {
-          isSelected = selectedDefenders.includes(target.misc?.defenderIndex);
-          selectColor = "none";
-          if (isSelected) {
-            selectColor =
-              selectedDefenders.length === 2
-                ? canAttack
-                  ? "purple"
-                  : "orange"
-                : canAttack
-                  ? "green"
-                  : "red";
-          } else if (canAttack !== undefined && !isSelected) {
-            selectColor = "blue";
-          }
-        }
-
-        return (
-          <AnimatedCard
-            key={target.card.id}
-            targetState={target}
-            cardWidth={cardWidth}
-            cardHeight={cardHeight}
-            onPress={() => {
-              const dIndex = game.currentDefenders.findIndex(
-                (d) => d?.id === target.card.id,
-              );
-              if (dIndex !== -1) toggleDefender(dIndex);
-            }}
-            isSelected={isSelected}
-            yOffset={yOffset}
-            selectColor={selectColor}
-            forceOverlay={forceOverlay}
-            forceSelectColor={forceSelectColor}
-            isVisible={!target.isHiddenUnderDeck}
-          />
-        );
-      })}
-
       {/* Buttons */}
       <View
         style={[
-          {
-            position: "absolute",
-            zIndex: 100,
-            left: layoutMetrics.startX,
-            width: layoutMetrics.gridWidthPadded,
-            top:
-              layoutMetrics.startY +
-              layoutMetrics.gridHeightPadded +
-              cardHeight * 0.35,
-            height: cardHeight * 0.5,
-            gap: layoutMetrics.gridGap,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          },
+          getZoneStylesById("buttons"),
+          flexStyles.rowCentered,
+          flexStyles.gap10,
         ]}
       >
         <Button

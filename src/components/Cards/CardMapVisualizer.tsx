@@ -1,28 +1,28 @@
-import { LayoutManager, LayoutMetrics } from "@/hooks/useZoneLayout";
-import { Colors } from "@/styles/styles";
+import { Colors, rgba } from "@/styles/styles";
 import { View, ViewStyle } from "react-native";
-import { CardPosition, MapMetrics, MapZone } from "./CardMap";
+import { MapZone } from "./CardMap";
 
 type Props = {
   zones: MapZone[];
   getZoneStyles: (zone: MapZone) => ViewStyle;
-  mapMetrics: MapMetrics;
+  startX: number;
+  startY: number;
+  gridWidth: number;
+  gridWidthPadded: number;
+  gridHeight: number;
+  gridHeightPadded: number;
 };
 
 export const CardMapVisualizer = ({
   zones,
   getZoneStyles,
-  mapMetrics,
+  startX,
+  startY,
+  gridWidth,
+  gridWidthPadded,
+  gridHeight,
+  gridHeightPadded,
 }: Props) => {
-  const {
-    startX,
-    startY,
-    gridWidth,
-    gridHeight,
-    gridWidthPadded,
-    gridHeightPadded,
-  } = mapMetrics;
-
   const zoneStyle: ViewStyle = {
     position: "absolute",
     zIndex: 200,
@@ -54,7 +54,7 @@ export const CardMapVisualizer = ({
             top: 0,
             right: 0,
             bottom: 0,
-            borderColor: Colors.K700,
+            borderColor: rgba(Colors.white, 0.2),
           },
         ]}
       />
@@ -68,7 +68,7 @@ export const CardMapVisualizer = ({
             top: "50%",
             width: gridWidth,
             height: gridHeight,
-            borderColor: Colors.accentBlue,
+            borderColor: rgba(Colors.accentBlue, 0.8),
             transform: [{ translateX: "-50%" }, { translateY: "-50%" }],
           },
         ]}
@@ -83,11 +83,12 @@ export const CardMapVisualizer = ({
             top: startY,
             width: gridWidthPadded,
             height: gridHeightPadded,
-            borderColor: Colors.accentGreen,
+            borderColor: rgba(Colors.accentGreen, 0.8),
           },
         ]}
       />
 
+      {/* Zones */}
       {zones.map((zone) => {
         return (
           <View
@@ -96,7 +97,7 @@ export const CardMapVisualizer = ({
               zoneStyle,
               getZoneStyles(zone),
               {
-                borderColor: Colors.accentRed,
+                borderColor: rgba(Colors.accentRed, 0.6),
               },
             ]}
           />

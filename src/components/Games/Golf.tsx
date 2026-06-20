@@ -1,218 +1,152 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { cardStyles } from "@/styles/cardStyles";
-import { flexStyles } from "@/styles/flexStyles";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
-import { useAnimations } from "../Animations/Animations";
 import { Button } from "../Button/Button";
-import { CardSelectColor, CardSizes } from "../Cards/CardOLD";
+import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
-  CardRank,
-  RANK_VALUE,
-  StandardRank,
   areRanksConsecutive,
+  CardRank,
   createDeck,
+  flipToFace,
+  RANK_VALUE,
+  rankValue,
   shuffle,
+  top,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { CardButton } from "../Cards/CardButtonOLD";
-import { Deck } from "../Cards/Deck";
+import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
-import { useLayoutManager } from "@/hooks/useLayoutManager";
+import { produce } from "immer";
+import { CardColor } from "../Cards/CardStyles";
 
-const localCardPerRowSmall = 7;
-const localCardPerRowMedium = 5;
-
-type GolfState = {
-  tableau: PlayingCard[][];
-  stock: PlayingCard[];
-  waste: PlayingCard[];
+type GameState = {
+  draw: PlayingCard[];
+  discard: PlayingCard[];
+  piles: PlayingCard[][];
   ended: boolean;
   won: boolean;
 };
 
-function value(card: PlayingCard) {
-  return RANK_VALUE[card.rank];
-}
+type GameSnapshot = {
+  game: GameState;
+};
 
-function canPlayOnWaste(card: PlayingCard, wasteTop: PlayingCard | null) {
-  if (!wasteTop) return true;
-  const a = value(card);
-  const b = value(wasteTop);
+function canPlayOnDiscard(card: PlayingCard, discardTop: PlayingCard) {
+  const a = rankValue(card);
+  const b = rankValue(discardTop);
   const diff = Math.abs(a - b);
   return diff === 1;
 }
 
-function setup(): GolfState {
-  const deck = shuffle(createDeck({ faceUp: true }));
+function setup(): GameState {
+  const deck = shuffle(createDeck());
   const tableau: PlayingCard[][] = [[], [], [], [], [], [], []];
 
   for (let row = 0; row < 5; row += 1) {
     for (let col = 0; col < 7; col += 1) {
-      const card = deck.shift();
-      if (card) tableau[col].push(card);
+      const card = deck.pop();
+      if (card) tableau[col].push(flipToFace(card));
     }
   }
 
-  const firstWaste = deck.shift();
+  const firstDiscard = deck.pop();
 
   return {
-    tableau,
-    stock: deck,
-    waste: firstWaste ? [firstWaste] : [],
+    piles: tableau,
+    draw: deck,
+    discard: firstDiscard ? [flipToFace(firstDiscard)] : [],
     ended: false,
     won: false,
   };
 }
 
-function hasAnyMove(state: GolfState) {
-  const wasteTop = state.waste[state.waste.length - 1] ?? null;
-  return state.tableau.some((col) => {
+function hasAnyMove(state: GameState) {
+  const wasteTop = state.discard[state.discard.length - 1] ?? null;
+  return state.piles.some((col) => {
     const top = col[col.length - 1] ?? null;
-    return top ? canPlayOnWaste(top, wasteTop) : false;
+    return top ? canPlayOnDiscard(top, wasteTop) : false;
   });
 }
 
-function evaluateEnd(state: GolfState) {
-  const tableauCount = state.tableau.reduce((sum, col) => sum + col.length, 0);
+function evaluateEnd(state: GameState) {
+  const tableauCount = state.piles.reduce((sum, col) => sum + col.length, 0);
   if (tableauCount === 0) return { ended: true, won: true };
-  if (state.stock.length > 0) return { ended: false, won: false };
+  if (state.draw.length > 0) return { ended: false, won: false };
   if (hasAnyMove(state)) return { ended: false, won: false };
   return { ended: true, won: false };
 }
 
 export default function Golf() {
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
-  const [game, setGame] = useState<GolfState>(setup);
-  const { animateCards, isAnimating } = useAnimations();
-  const [animatingCard, setAnimatingCard] = useState<{
-    col: number;
-    row: number;
-  } | null>(null);
+  const [game, setGame] = useState<GameState>(setup);
 
-  const { getLayout, setRef } = useLayoutManager([
-    "tableauRefs",
-    "wasteRef",
-    "stockRef",
-  ]);
-
-  const [isDrawing, setIsDrawing] = useState(false);
-
-  // const [hasLegalMoves, setHasLegalMoves] = useState(false);
-
-  // useEffect(() => {
-  //   setHasLegalMoves(hasAnyMove(game));
-  // }, [game]);
+  const { saveUndoState, undo, canUndo, clearHistory } =
+    useUndoHistory<GameSnapshot>();
+  const handleUndo = () => {
+    const previousState = undo();
+    if (previousState) {
+      setGame(previousState.game);
+    }
+  };
 
   function reset() {
+    clearHistory();
     setGame(setup());
   }
 
-  async function playCard(colIndex: number, cardIndex: number) {
-    if (game.ended || isAnimating) return;
+  useEffect(() => {
+    if (!game.ended) evaluateEnd(game);
+  }, [game]);
 
-    const col = game.tableau[colIndex];
-    const card = col?.[cardIndex];
-    if (!card) return;
-    if (cardIndex !== col.length - 1) return;
+  async function playCard(pileIndex: number, cardIndex: number) {
+    if (game.ended) return;
 
-    const wasteTop = game.waste[game.waste.length - 1] ?? null;
-    if (!canPlayOnWaste(card, wasteTop)) return;
-
-    // Avoid disappearing card flash; give animation time to kick in
-    setTimeout(() => {
-      setAnimatingCard({ col: colIndex, row: cardIndex });
-    }, 10);
-
-    const cardPos = getLayout("tableauRefs", [colIndex][cardIndex]);
-    const wastePos = getLayout("wasteRef");
-
-    if (cardPos && wastePos) {
-      await animateCards([
-        {
-          card,
-          cardsPerRow: localCardPerRowSmall,
-          cardSize: "small" as CardSizes,
-          from: cardPos,
-          to: wastePos,
-          duration: 350,
-        },
-      ]);
-    }
+    saveUndoState(structuredClone({ game }));
 
     setGame((prev) => {
-      if (prev.ended) return prev;
-      const tableau = prev.tableau.map((col) => [...col]);
-      const prevCol = tableau[colIndex];
-      const prevCard = prevCol?.[cardIndex];
-      if (!prevCard) return prev;
-      if (cardIndex !== prevCol.length - 1) return prev;
+      return produce(prev, (draft) => {
+        const currentDiscard = top(draft.discard);
+        const cardToDiscard = draft.piles[pileIndex][cardIndex];
 
-      const prevWasteTop = prev.waste[prev.waste.length - 1] ?? null;
-      if (!canPlayOnWaste(prevCard, prevWasteTop)) return prev;
+        if (
+          !currentDiscard ||
+          !cardToDiscard ||
+          !canPlayOnDiscard(cardToDiscard, currentDiscard)
+        ) {
+          return;
+        }
 
-      prevCol.splice(cardIndex, 1);
-      const waste = [...prev.waste, prevCard];
-
-      const next = { ...prev, tableau, waste };
-      const end = evaluateEnd(next);
-      return { ...next, ...end };
+        draft.piles[pileIndex].pop();
+        draft.discard.push(cardToDiscard);
+      });
     });
-
-    setAnimatingCard(null);
   }
 
-  async function drawFromStock() {
-    if (game.ended || game.stock.length === 0 || isAnimating) return;
-
-    setTimeout(() => {
-      setIsDrawing(true);
-    }, 10);
-
-    const stockPos = getLayout("stockRef");
-    const wastePos = getLayout("wasteRef");
-
-    if (stockPos && wastePos) {
-      const nextCard = game.stock[0];
-      await animateCards([
-        {
-          card: nextCard,
-          cardsPerRow: localCardPerRowMedium,
-          cardSize: "small",
-          from: stockPos,
-          to: wastePos,
-          flip: "toFace",
-          duration: 350,
-        },
-      ]);
-    }
-
+  async function drawCard() {
     setGame((prev) => {
-      if (prev.ended || prev.stock.length === 0) return prev;
-      const stock = [...prev.stock];
-      const nextCard = stock.shift();
-      if (!nextCard) return prev;
+      return produce(prev, (draft) => {
+        if (draft.ended || draft.draw.length === 0) return;
 
-      const waste = [...prev.waste, nextCard];
-      const next = { ...prev, stock, waste };
-      const end = evaluateEnd(next);
-      return { ...next, ...end };
+        const nextCard = draft.draw.pop();
+
+        if (!nextCard) return;
+
+        draft.discard.push(flipToFace(nextCard));
+      });
     });
-
-    setIsDrawing(false);
   }
 
   const rankToMatch = useMemo(() => {
-    return RANK_VALUE[game.waste[game.waste.length - 1].rank];
-  }, [game.waste]);
+    return RANK_VALUE[game.discard[game.discard.length - 1].rank];
+  }, [game.discard]);
 
   function selectCardColor(
     rank: CardRank,
     isBottomCard: boolean,
     rankValueToMatch: number | undefined,
-  ): CardSelectColor {
-    if (!isBottomCard || rankValueToMatch === undefined || isAnimating)
-      return "none";
+  ): CardColor {
+    if (!isBottomCard || rankValueToMatch === undefined) return "none";
 
     const wasteRank = rankValueToMatch;
     const currentRank = RANK_VALUE[rank];
@@ -221,6 +155,98 @@ export default function Golf() {
 
     return "none";
   }
+
+  // ========== Card Mapping ========== //
+  const zones: MapZone[] = useMemo(() => {
+    let pileZones: MapZone[] = [];
+
+    for (let pileIndex = 0; pileIndex < game.piles.length; pileIndex++) {
+      const pile = game.piles[pileIndex];
+
+      for (let cardIndex = 0; cardIndex < pile.length; cardIndex++) {
+        pileZones.push({
+          id: `pile-${pileIndex}-${cardIndex}`,
+          cards: [game.piles[pileIndex][cardIndex]],
+          pileIndex,
+          refIndex: cardIndex,
+          name: "pile",
+          type: "single-card",
+          col: pileIndex,
+          row: cardIndex + 1,
+          baseZIndex: 1 + cardIndex,
+        });
+      }
+    }
+
+    return [
+      {
+        id: "draw",
+        name: "draw",
+        type: "deck",
+        cards: game.draw,
+        col: 2,
+        row: 0,
+        fan: { maxVisible: 3 },
+        baseZIndex: 50,
+        placeholder: { text: "Draw", infoPos: "left" },
+      },
+      {
+        id: "discard",
+        name: "discard",
+        type: "deck",
+        cards: game.discard,
+        col: 4,
+        row: 0,
+        fan: { maxVisible: 3 },
+        baseZIndex: 50,
+        placeholder: { text: "Discard", infoPos: "right" },
+      },
+      ...pileZones,
+      {
+        id: "button",
+        type: "ui",
+        col: 0,
+        row: 6.25,
+        width: "full",
+        baseZIndex: 10,
+      },
+    ];
+  }, [game]);
+
+  const cardMapper = (
+    mappedCard: MappedCard,
+  ): AnimatedCardMapping | undefined => {
+    if (
+      mappedCard.zoneName !== "pile" ||
+      mappedCard.pileIndex === undefined ||
+      mappedCard.refIndex === undefined ||
+      mappedCard.card === undefined
+    )
+      return {};
+
+    const isBottomCard =
+      mappedCard.refIndex === game.piles[mappedCard.pileIndex].length - 1;
+    const selectColor = selectCardColor(
+      mappedCard.card.rank,
+      isBottomCard,
+      rankToMatch,
+    );
+
+    return {
+      selectColor,
+      forceOverlay: selectColor !== "none",
+      isDisabled: game.ended || !isBottomCard,
+      onPress: () => playCard(mappedCard.pileIndex!, mappedCard.refIndex!),
+    };
+  };
+
+  const { getZoneStylesById, cardMap } = useCardMap({
+    game,
+    zones,
+    gap: 0.35,
+    cardMapper,
+    cardSize: "small",
+  });
 
   return (
     <GameWrapper
@@ -233,81 +259,19 @@ export default function Golf() {
       winLoseMessage={
         game.won ? "You cleared the tableau!" : "No more playable cards."
       }
+      canUndo={canUndo}
+      handleUndo={handleUndo}
     >
-      <View
-        style={[flexStyles.rowCentered, flexStyles.fullWidth, flexStyles.gap40]}
-      >
-        <Deck
-          refTop={setRef("stockRef")}
-          iconName="draw"
-          cardsPerRow={localCardPerRowMedium}
-          backCount={game.stock.length}
-          hideTopCard={isDrawing}
-          limitFan
-          showCount
-          countPosition="left"
-          fan="horizontalRight"
-        />
+      {cardMap}
 
-        <Deck
-          refNext={setRef("wasteRef")}
-          iconName="delete"
-          cards={game.waste}
-          cardsPerRow={localCardPerRowMedium}
-          limitFan
-          showCount
-          countPosition="right"
-          fan="horizontalLeft"
-          cardSize="small"
-        />
-      </View>
-
-      <View style={[cardStyles.row]}>
-        {game.tableau.map((col, colIndex) => (
-          <View key={`g-col-${colIndex}`} style={cardStyles.colDownwards}>
-            {col.map((card, cardIndex) => {
-              const isBottomCard = cardIndex === col.length - 1;
-              const selectColor = selectCardColor(
-                card.rank,
-                isBottomCard,
-                rankToMatch,
-              );
-
-              return (
-                <CardButton
-                  key={card.id}
-                  ref={setRef("tableauRefs", [colIndex][cardIndex])}
-                  style={[
-                    animatingCard?.col === colIndex &&
-                      animatingCard?.row === cardIndex && { opacity: 0 },
-                  ]}
-                  onPress={() => playCard(colIndex, cardIndex)}
-                  disabled={game.ended || !isBottomCard || isAnimating}
-                  card={card}
-                  cardsPerRow={localCardPerRowSmall}
-                  hasTopMargin={cardIndex > 0}
-                  selectColor={selectColor}
-                  forceOverlay={selectColor !== "none"}
-                  cardSize="small"
-                />
-              );
-            })}
-          </View>
-        ))}
-      </View>
-
-      <View style={[flexStyles.rowCentered, flexStyles.fullWidth]}>
+      <View style={[getZoneStylesById("button")]}>
         <Button
-          onPress={drawFromStock}
-          disabled={
-            hasAnyMove(game) ||
-            game.stock.length === 0 ||
-            game.ended ||
-            isAnimating
-          }
+          onPress={drawCard}
+          disabled={hasAnyMove(game) || game.draw.length === 0 || game.ended}
           text="Draw"
           size="large"
           fullWidth
+          style={[{ height: "100%" }]}
         />
       </View>
     </GameWrapper>

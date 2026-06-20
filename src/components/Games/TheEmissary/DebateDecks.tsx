@@ -1,10 +1,6 @@
-import { buttonStyles } from "@/styles/buttonStyles";
 import { flexStyles } from "@/styles/flexStyles";
 import { View } from "react-native";
-import { Button } from "../../Button/Button";
 import { type PlayingCard } from "../../Cards/card-utils";
-import { CardButton } from "../../Cards/CardButtonOLD";
-import { Deck } from "../../Cards/Deck";
 import { EmissaryRefKeys, TheEmissaryVisit } from "./TheEmissaryCommon";
 
 interface DebateDecksProps {
@@ -48,18 +44,18 @@ export const DebateDecks = ({
       ]}
     >
       {/* Draw Deck */}
-      <Deck
+      {/* <Deck
         refTop={setRef("drawCurrentRef")}
         refNext={setRef("drawNextRef")}
         cards={draw}
         cardsPerRow={cardsPerRowDebates}
         cardSize="small"
         limitFan
-      />
+      /> */}
 
       <View style={[flexStyles.colCentered, flexStyles.gap14]}>
         {/* Current debate topic */}
-        <CardButton
+        {/* <CardButton
           ref={setRef("topicRef")}
           card={visit?.debateTopic}
           cardsPerRow={cardsPerRowTopic}
@@ -83,28 +79,28 @@ export const DebateDecks = ({
               />
             )
           }
-        />
+        /> */}
       </View>
 
       {/* Discard LOST Deck */}
-      <Deck
+      {/* <Deck
         refTop={setRef("discardLostCurrentRef")}
         refNext={setRef("discardLostNextRef")}
         cards={discardLost}
         cardsPerRow={cardsPerRowDebates}
         cardSize="small"
         limitFan
-      />
+      /> */}
 
       {/* Discard WON Deck */}
-      <Deck
+      {/* <Deck
         refTop={setRef("discardWonCurrentRef")}
         refNext={setRef("discardWonNextRef")}
         cards={discardWon}
         cardsPerRow={cardsPerRowDebates}
         cardSize="small"
         limitFan
-      />
+      /> */}
     </View>
   );
 };

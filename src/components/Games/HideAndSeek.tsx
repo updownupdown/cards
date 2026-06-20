@@ -1,11 +1,7 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { useLayoutManager } from "@/hooks/useLayoutManager";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
-import { flexStyles } from "@/styles/flexStyles";
-import { useState } from "react";
-import { View } from "react-native";
-import { CardAnimationParams, useAnimations } from "../Animations/Animations";
-import { CardGrid, useCardSizing } from "../Cards/CardOLD";
+import { useMemo, useState } from "react";
+import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
   isFace,
@@ -13,19 +9,41 @@ import {
   top,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { CardButton } from "../Cards/CardButtonOLD";
-import { Deck } from "../Cards/Deck";
+import {
+  ColRows,
+  getGridColRows,
+  MappedCard,
+  MapZone,
+  useCardMap,
+} from "../Cards/CardMap";
+import { CardMapBGMapping } from "../Cards/CardMapBackgrounds";
 import { GameWrapper } from "../common/GameWrapper";
 
-const cardsPerRow = 6;
 const gridCols = 4;
 const gridRows = 3;
+
+const guessZonesColRows: ColRows[] = [
+  { c: 1, r: 1 },
+  { c: 2, r: 1 },
+  { c: 3, r: 1 },
+  { c: 4, r: 1 },
+  { c: 5, r: 2 },
+  { c: 5, r: 3 },
+  { c: 5, r: 4 },
+  { c: 4, r: 5 },
+  { c: 3, r: 5 },
+  { c: 2, r: 5 },
+  { c: 1, r: 5 },
+  { c: 0, r: 4 },
+  { c: 0, r: 3 },
+  { c: 0, r: 2 },
+];
 
 type GameState = {
   playmates: PlayingCard[];
   guesses: (PlayingCard | null)[];
-  drawPile: PlayingCard[];
-  discardPile: PlayingCard[];
+  draw: PlayingCard[];
+  discard: PlayingCard[];
   scorePile: PlayingCard[];
   ended: boolean;
   won: boolean;
@@ -105,8 +123,8 @@ function setup(): GameState {
   return {
     playmates,
     guesses: Array.from({ length: 14 }, (_, i) => null),
-    drawPile,
-    discardPile: [],
+    draw: drawPile,
+    discard: [],
     scorePile: [],
     ended: false,
     won: false,
@@ -117,7 +135,6 @@ function setup(): GameState {
 export default function HideAndSeek() {
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
   const [game, setGame] = useState<GameState>(setup);
-  const { animateCards, animatingCardIds } = useAnimations();
 
   function reset() {
     clearHistory();
@@ -133,57 +150,9 @@ export default function HideAndSeek() {
     }
   };
 
-  const { gridGap } = useCardSizing(cardsPerRow, gridCols);
-
-  const { getLayout, setRef } = useLayoutManager([
-    "drawPile",
-    "scorePile",
-    "discardPile",
-    "guesses",
-    "playmates",
-  ]);
-
-  const Guesses = ({ indexes }: { indexes: number[] }) => {
-    const isVertical = indexes.length === 3;
-
-    return (
-      <View
-        style={[
-          isVertical ? flexStyles.colCentered : flexStyles.rowCentered,
-          { gap: gridGap },
-        ]}
-      >
-        {indexes.map((i) => {
-          const guess = game.guesses[i];
-
-          return (
-            <CardButton
-              key={`guess-${i}`}
-              ref={setRef("guesses", i)}
-              card={guess}
-              cardsPerRow={cardsPerRow}
-              cardSize="small"
-              onPress={() => {
-                if (guess) {
-                  widthdrawGuess(i);
-                } else {
-                  placeGuess(i);
-                }
-              }}
-              isPlaceholder={
-                !guess || (guess && animatingCardIds.includes(guess.id))
-              }
-              selectColor="none"
-            />
-          );
-        })}
-      </View>
-    );
-  };
-
   async function placeGuess(guessIndex: number) {
     // Calculate game state
-    let newDrawPile = [...game.drawPile];
+    let newDrawPile = [...game.draw];
     const topDrawCard = top(newDrawPile);
 
     if (game.ended || !topDrawCard) return;
@@ -198,26 +167,8 @@ export default function HideAndSeek() {
     const newGame: GameState = {
       ...game,
       guesses: newGuesses,
-      drawPile: newDrawPile,
+      draw: newDrawPile,
     };
-
-    // Animate draw card to guess
-    if (topDrawCard) {
-      const drawPos = getLayout("drawPile");
-      const guessPos = getLayout("guesses", guessIndex);
-
-      if (drawPos && guessPos) {
-        await animateCards([
-          {
-            card: topDrawCard,
-            from: drawPos,
-            to: guessPos,
-            cardsPerRow,
-            cardSize: "small",
-          },
-        ]);
-      }
-    }
 
     // Update game
     setGame(newGame);
@@ -225,7 +176,7 @@ export default function HideAndSeek() {
 
   async function widthdrawGuess(guessIndex: number) {
     // Calculate game state
-    let newDrawPile = [...game.drawPile];
+    let newDrawPile = [...game.draw];
     const topDrawCard = top(newDrawPile);
     const guessCard = game.guesses[guessIndex];
 
@@ -238,51 +189,16 @@ export default function HideAndSeek() {
     let newGuesses = [...game.guesses];
     newGuesses[guessIndex] = null;
 
-    let newDiscardPile = [...game.discardPile];
+    let newDiscardPile = [...game.discard];
     newDiscardPile.push({ ...topDrawCard, faceUp: false });
     newDiscardPile.push({ ...guessCard, faceUp: false });
 
     const newGame: GameState = {
       ...game,
       guesses: newGuesses,
-      drawPile: newDrawPile,
-      discardPile: newDiscardPile,
+      draw: newDrawPile,
+      discard: newDiscardPile,
     };
-
-    // Animate draw card to guess
-    if (topDrawCard && guessCard) {
-      const anims: CardAnimationParams[] = [];
-
-      const drawPos = getLayout("drawPile");
-      const discardPos = getLayout("discardPile");
-      const guessPos = getLayout("guesses", guessIndex);
-
-      if (drawPos && discardPos && guessPos) {
-        // Draw card to discard pile
-        anims.push({
-          card: topDrawCard,
-          from: drawPos,
-          to: discardPos,
-          cardsPerRow,
-          cardSize: "small",
-          flip: "toBack",
-        });
-        // Guess card to discard pile
-        anims.push({
-          card: guessCard,
-          from: guessPos,
-          to: discardPos,
-          cardsPerRow,
-          cardSize: "small",
-          flip: "toBack",
-          delay: 100,
-        });
-      }
-
-      if (anims.length > 0) {
-        await animateCards(anims);
-      }
-    }
 
     // Update game
     setGame(newGame);
@@ -298,24 +214,6 @@ export default function HideAndSeek() {
 
     let newPlaymates = [...game.playmates];
     newPlaymates[playmateIndex] = { ...playmate, faceUp: true };
-
-    // Animate draw card to guess
-    if (playmate) {
-      const playmatePos = getLayout("playmates", playmateIndex);
-
-      if (playmatePos) {
-        await animateCards([
-          {
-            card: playmate,
-            from: playmatePos,
-            to: playmatePos,
-            cardsPerRow,
-            cardSize: "small",
-            flip: "toFace",
-          },
-        ]);
-      }
-    }
 
     let newGame: GameState = {
       ...game,
@@ -339,44 +237,6 @@ export default function HideAndSeek() {
         newGuesses[index] = null;
       }
     });
-
-    // Animate score cards
-    let anims: CardAnimationParams[] = [];
-
-    if (scoredCardsAtIndexes.length) {
-      const scorePos = getLayout("scorePile");
-      const animPromises = scoredCardsAtIndexes.map(
-        async (cardAtIndex, idx) => {
-          if (cardAtIndex.card && scorePos) {
-            const guessPos = getLayout("guesses", cardAtIndex.index);
-
-            if (guessPos) {
-              return {
-                card: cardAtIndex.card,
-                from: guessPos,
-                to: scorePos,
-                cardsPerRow,
-                flip: "toBack",
-                delay: 100 * idx,
-                cardSize: "small",
-              } as CardAnimationParams;
-            }
-          }
-
-          return null;
-        },
-      );
-
-      const resolvedAnims = await Promise.all(animPromises);
-
-      anims = resolvedAnims.filter(
-        (anim) => anim !== null,
-      ) as CardAnimationParams[];
-    }
-
-    if (anims.length > 0) {
-      await animateCards(anims);
-    }
 
     // Check for win/lose conditions
     const hasFaceDownPlaymates = newPlaymates.some((c) => !c.faceUp);
@@ -405,6 +265,127 @@ export default function HideAndSeek() {
     setGame(newGame);
   }
 
+  // ========== Card Mapping ========== //
+  const zones: MapZone[] = useMemo(() => {
+    const guessZones: MapZone[] = guessZonesColRows.map((pos, i) => ({
+      id: `guess-${i}`,
+      pileIndex: i,
+      cards: game.guesses[i] ? [game.guesses[i]] : undefined,
+      name: "guess",
+      type: "single-card",
+      col: pos.c,
+      row: pos.r,
+      baseZIndex: 20,
+      placeholder: {},
+    }));
+    const playmatesZones: MapZone[] = getGridColRows({
+      cols: 4,
+      rows: 3,
+      colOffset: 1,
+      rowOffset: 2,
+    }).map((pos, i) => ({
+      id: `playmate-${i}`,
+      pileIndex: i,
+      cards: game.playmates[i] ? [game.playmates[i]] : undefined,
+      name: "playmate",
+      type: "single-card",
+      col: pos.c,
+      row: pos.r,
+      baseZIndex: 1,
+      fan: { maxVisible: 3 },
+    }));
+
+    return [
+      {
+        id: "draw",
+        name: "draw",
+        type: "deck",
+        cards: game.draw,
+        col: 1,
+        row: 0,
+        fan: { maxVisible: 3 },
+        baseZIndex: 50,
+        placeholder: { text: "Draw", infoPos: "left" },
+      },
+      {
+        id: "discard",
+        name: "discard",
+        type: "deck",
+        cards: game.discard,
+        col: 3,
+        row: 0,
+        fan: { maxVisible: 3 },
+        baseZIndex: 50,
+        placeholder: { text: "Discard", infoPos: "left" },
+      },
+      {
+        id: "score",
+        name: "score",
+        type: "deck",
+        cards: game.scorePile,
+        col: 5,
+        row: 0,
+        fan: { maxVisible: 3 },
+        baseZIndex: 50,
+        placeholder: { text: "Score", infoPos: "left" },
+      },
+      ...guessZones,
+      ...playmatesZones,
+    ];
+  }, [game]);
+
+  const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
+    if (zone.name === "guess" && zone.pileIndex !== undefined) {
+      return {
+        onPress: () => placeGuess(zone.pileIndex!),
+        isDisabled: game.guesses[zone.pileIndex] !== null,
+      };
+    }
+    return {};
+  };
+
+  const cardMapper = (
+    mappedCard: MappedCard,
+  ): AnimatedCardMapping | undefined => {
+    if (mappedCard.zoneName === "guess") {
+      // ===== Guess ===== //
+      if (mappedCard.pileIndex === undefined) return {};
+
+      const guess = game.guesses[mappedCard.pileIndex];
+
+      return {
+        onPress: () => {
+          if (guess) {
+            widthdrawGuess(mappedCard.pileIndex!);
+          }
+        },
+        isPlaceholder: guess === null,
+        selectColor: "none",
+      };
+    } else if (mappedCard.zoneName === "playmate") {
+      // ===== Playmate ===== //
+      if (mappedCard.pileIndex === undefined || mappedCard.card === undefined)
+        return {};
+
+      return {
+        selectColor: "none",
+        onPress: () => revealPlaymate(mappedCard.pileIndex!),
+        isDisabled: !!mappedCard.card.faceUp,
+      };
+    }
+
+    return {};
+  };
+
+  const { cardMap } = useCardMap({
+    game,
+    zones,
+    cardMapper,
+    zoneMapper,
+    cardSize: "small",
+    // visualizer: true,
+  });
+
   return (
     <GameWrapper
       showIntro={showIntro}
@@ -416,81 +397,7 @@ export default function HideAndSeek() {
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
-      <View style={[flexStyles.rowCentered, flexStyles.gap16]}>
-        <Deck
-          refTop={setRef("drawPile")}
-          // title="Draw"
-          iconName="draw"
-          cards={game.drawPile}
-          cardsPerRow={cardsPerRow}
-          cardSize="small"
-          showCount
-          limitFan
-          fan="horizontalRight"
-          countPosition="left"
-          hideTopCard={
-            top(game.drawPile) &&
-            animatingCardIds.includes(top(game.drawPile)!.id)
-          }
-        />
-
-        <Deck
-          refNext={setRef("discardPile")}
-          // title="Discard"
-          iconName="delete"
-          cards={game.discardPile}
-          cardsPerRow={cardsPerRow}
-          cardSize="small"
-          showCount
-          limitFan
-          fan="horizontalRight"
-          countPosition="left"
-        />
-        <Deck
-          refNext={setRef("scorePile")}
-          // title="Score"
-          iconName="star"
-          cards={game.scorePile}
-          cardsPerRow={cardsPerRow}
-          cardSize="small"
-          showCount
-          limitFan
-          fan="horizontalRight"
-          countPosition="left"
-        />
-      </View>
-
-      {/* Grid Wrap */}
-      <View style={[flexStyles.colCentered, { gap: gridGap }]}>
-        <Guesses indexes={[0, 1, 2, 3]} />
-        <View style={[flexStyles.rowCentered, { gap: gridGap }]}>
-          <Guesses indexes={[13, 12, 11]} />
-          <CardGrid
-            cardsPerRow={cardsPerRow}
-            targetGridCols={gridCols}
-            style={[{ marginHorizontal: "auto" }]}
-          >
-            {game.playmates.map((card, index) => {
-              return (
-                <CardButton
-                  key={`mc-${index}`}
-                  ref={setRef("playmates", index)}
-                  card={card}
-                  cardsPerRow={cardsPerRow}
-                  cardSize="small"
-                  isPlaceholder={animatingCardIds.includes(card.id)}
-                  selectColor="none"
-                  onPress={() => revealPlaymate(index)}
-                  disabled={!!card.faceUp}
-                />
-              );
-            })}
-          </CardGrid>
-
-          <Guesses indexes={[4, 5, 6]} />
-        </View>
-        <Guesses indexes={[10, 9, 8, 7]} />
-      </View>
+      {cardMap}
     </GameWrapper>
   );
 }

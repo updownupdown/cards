@@ -1,20 +1,15 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
-import { cardStyles } from "@/styles/cardStyles";
-import { flexStyles } from "@/styles/flexStyles";
+import { useZoneLayout, ZoneConfig } from "@/hooks/useZoneLayout";
+import { Colors } from "@/styles/styles";
 import { useMemo, useState } from "react";
 import { Pressable, View } from "react-native";
 import { Button } from "../Button/Button";
-import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
-import { Deck } from "../Cards/Deck";
-import { GameWrapper } from "../common/GameWrapper";
-import { useZoneLayout, ZoneConfig } from "@/hooks/useZoneLayout";
-import { CardPositionBuilder, getZoneGrid } from "../Cards/CardPositionBuilder";
 import { AnimatedCard } from "../Cards/AnimatedCard";
-import { CardSelectColor } from "../Cards/Card";
-import { ZoneVisualizer } from "../Cards/ZoneVisualizer";
-import { ZoneBackgrounds } from "../Cards/ZoneBackgrounds";
-import { Colors } from "@/styles/styles";
+import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
+import { CardPositionBuilder, getZoneGrid } from "../Cards/CardPositionBuilder";
+import { CardColor } from "../Cards/CardStyles";
+import { GameWrapper } from "../common/GameWrapper";
 
 const cardSize = "regular";
 const cardsPerRow = 4;
@@ -308,14 +303,8 @@ export default function AcesUp() {
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
-      <ZoneBackgrounds layoutManager={layoutManager} game={game} />
-      {/* <ZoneVisualizer
-        layoutManager={layoutManager}
-        layoutMetrics={layoutMetrics}
-      /> */}
-
       {Object.values(cardPositions).map((target) => {
-        let selectColor: CardSelectColor = "none";
+        let selectColor: CardColor = "none";
         let isSelected = undefined;
         // let forceOverlay = false;
         // let forceSelectColor = false;

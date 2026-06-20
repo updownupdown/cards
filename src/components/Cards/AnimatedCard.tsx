@@ -10,7 +10,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { Pressable, StyleSheet } from "react-native";
 import { PlayingCard } from "./card-utils";
-import { CardSelectColor, Card, CardSizes } from "./Card";
+import { CardColor, CardSizes } from "./CardStyles";
+import { Card } from "./Card";
 
 export const animationDuration = 400;
 
@@ -52,7 +53,7 @@ export type AnimatedCardProps = {
   isDisabled?: boolean;
   isSelected?: boolean;
   isVisible?: boolean;
-  selectColor?: CardSelectColor;
+  selectColor?: CardColor;
   forceSelectColor?: boolean;
   forceOverlay?: boolean;
   isPlaceholder?: boolean;
@@ -102,7 +103,7 @@ export const AnimatedCard = ({
       zIndex: targetState.zIndex,
       yOffset: yOffset,
       rotation: targetState.rotation,
-      faceUp: targetState.card.faceUp,
+      faceUp: targetState.card?.faceUp,
     }),
     (curr, prev) => {
       const hasChanged =
@@ -131,11 +132,11 @@ export const AnimatedCard = ({
   );
 
   const spinY = useDerivedValue(() => {
-    return withTiming(targetState.card.faceUp ? 0 : 180, {
+    return withTiming(targetState.card?.faceUp ? 0 : 180, {
       duration: animationDuration,
       easing: Easing.out(Easing.quad),
     });
-  }, [targetState.card.faceUp]);
+  }, [targetState.card?.faceUp]);
 
   const hopMagnitude = useMemo(() => {
     if (arcConfig?.magnitudeY !== undefined) {
@@ -171,7 +172,7 @@ export const AnimatedCard = ({
     const rawYOffset = interpolate(
       moveProgress.value,
       [0, 1],
-      [startYOffset.value ?? 0, yOffset ?? 0],
+      [startYOffset.value ?? 0, yOffset ? yOffset * cardHeight : 0],
     );
 
     const rawX = rawXBase;
@@ -193,6 +194,9 @@ export const AnimatedCard = ({
     currentVisualY.value = rawY;
     currentVisualYOffset.value = rawYOffset;
     currentVisualZ.value = rawZ;
+
+    const finalYOffset =
+      moveProgress.value === 1 ? Math.round(rawYOffset) : rawYOffset;
 
     // 3. Snap to integer pixel grid ONLY when static to fix SVG blur
     const finalX = moveProgress.value === 1 ? Math.round(rawX) : rawX;
@@ -216,7 +220,7 @@ export const AnimatedCard = ({
       height: cardHeight,
       transform: [
         { translateX: finalX },
-        { translateY: finalY + rawYOffset },
+        { translateY: finalY + finalYOffset },
         { rotate: `${rotation}deg` },
         // { rotateX: `20deg` }, // DON'T DO THIS! It will mess up the card height
         { rotateY: `${spinY.value}deg` },
@@ -243,6 +247,8 @@ export const AnimatedCard = ({
     transform: [{ rotateY: "180deg" }],
   }));
 
+  if (isVisible === false || targetState.isHiddenUnderDeck) return null;
+
   return (
     <Animated.View style={animatedStyle}>
       <Pressable
@@ -257,7 +263,7 @@ export const AnimatedCard = ({
             selectColor={selectColor ?? "none"}
             isSelected={isSelected}
             forceSelectColor={forceSelectColor}
-            forceOverlay={forceOverlay}
+            forceOverlayColor={forceOverlay}
             isVisible={isVisible}
             cardSize={cardSize}
             isPlaceholder={isPlaceholder}
@@ -271,7 +277,7 @@ export const AnimatedCard = ({
             selectColor={selectColor ?? "none"}
             isSelected={isSelected}
             forceSelectColor={forceSelectColor}
-            forceOverlay={forceOverlay}
+            forceOverlayColor={forceOverlay}
             isVisible={isVisible}
             cardSize={cardSize}
             isPlaceholder={isPlaceholder}

@@ -11,8 +11,6 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { CardPositionBuilder, getZoneGrid } from "../Cards/CardPositionBuilder";
-import { ZoneBackgrounds } from "../Cards/ZoneBackgrounds";
-import { ZoneVisualizer } from "../Cards/ZoneVisualizer";
 import { GameWrapper } from "../common/GameWrapper";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
 import { produce } from "immer";
@@ -144,8 +142,6 @@ export default function MonteCarlo() {
   }
 
   function selectCell(index: number) {
-    console.log(index);
-
     setGame((prev) => {
       if (prev.ended) return prev;
 
@@ -239,8 +235,6 @@ export default function MonteCarlo() {
       }
     }
 
-    console.log("consolidate");
-
     setGame((prev) => {
       return produce(prev, (draft) => {
         draft.grid = nextGrid;
@@ -315,12 +309,6 @@ export default function MonteCarlo() {
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
-      <ZoneBackgrounds layoutManager={layoutManager} game={game} />
-      {/* <ZoneVisualizer
-        layoutManager={layoutManager}
-        layoutMetrics={layoutMetrics}
-      /> */}
-
       {Object.values(cardPositions).map((target) => {
         const index = target.index;
 

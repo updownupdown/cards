@@ -16,7 +16,6 @@ import {
 } from "../Cards/card-utils";
 import { CardSelectColor } from "../Cards/CardOLD";
 import { CardPositionBuilder, getZoneGrid } from "../Cards/CardPositionBuilder";
-import { ZoneBackgrounds } from "../Cards/ZoneBackgrounds";
 import { GameWrapper } from "../common/GameWrapper";
 import { useToast } from "../common/Toast";
 import { produce } from "immer";
@@ -345,8 +344,6 @@ export default function TheSandwichGuy() {
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
-      <ZoneBackgrounds layoutManager={layoutManager} game={game} />
-
       {Object.values(cardPositions).map((target) => {
         let selectColor: CardSelectColor = "none";
         let isSelected = undefined;

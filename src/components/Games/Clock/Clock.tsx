@@ -9,7 +9,6 @@ import { Text, View } from "react-native";
 import { AnimatedCard } from "../../Cards/AnimatedCard";
 import { cardAspectRatio } from "../../Cards/CardOLD";
 import { CardPositionBuilder } from "../../Cards/CardPositionBuilder";
-import { ZoneBackgrounds } from "../../Cards/ZoneBackgrounds";
 import {
   createDeck,
   flipTopCardToFace,
@@ -168,8 +167,6 @@ export default function Clock() {
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
-      <ZoneBackgrounds layoutManager={layoutManager} game={game} />
-
       <View
         style={[
           flexStyles.rowCentered,

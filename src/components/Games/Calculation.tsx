@@ -1,9 +1,11 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { cardStyles } from "@/styles/cardStyles";
+import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { useZoneLayout, ZoneConfig } from "@/hooks/useZoneLayout";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
 import { useEffect, useMemo, useState } from "react";
 import { Pressable, Text, View } from "react-native";
+import { AnimatedCard } from "../Cards/AnimatedCard";
 import {
   CardRank,
   createDeck,
@@ -12,15 +14,9 @@ import {
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { Deck } from "../Cards/Deck";
-import { GameWrapper } from "../common/GameWrapper";
-import { useUndoHistory } from "@/hooks/useUndoHistory";
-import { useZoneLayout, ZoneConfig } from "@/hooks/useZoneLayout";
 import { CardPositionBuilder, getZoneGrid } from "../Cards/CardPositionBuilder";
-import { AnimatedCard } from "../Cards/AnimatedCard";
-import { CardSelectColor } from "../Cards/Card";
-import { ZoneVisualizer } from "../Cards/ZoneVisualizer";
-import { ZoneBackgrounds } from "../Cards/ZoneBackgrounds";
+import { CardColor } from "../Cards/CardStyles";
+import { GameWrapper } from "../common/GameWrapper";
 
 const cardsPerRow = 4;
 const cardSize = "regular";
@@ -329,14 +325,8 @@ export default function Calculation() {
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
-      <ZoneBackgrounds layoutManager={layoutManager} game={game} />
-      <ZoneVisualizer
-        layoutManager={layoutManager}
-        layoutMetrics={layoutMetrics}
-      />
-
       {Object.values(cardPositions).map((target) => {
-        let selectColor: CardSelectColor = "none";
+        let selectColor: CardColor = "none";
         let isSelected = undefined;
         let forceOverlay = false;
         let forceSelectColor = false;

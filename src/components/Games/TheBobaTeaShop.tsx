@@ -11,7 +11,6 @@ import { useMemo, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import { Button } from "../Button/Button";
 import { AnimatedCard, ArcConfig } from "../Cards/AnimatedCard";
-import { CardSelectColor } from "../Cards/Card";
 import {
   createDeck,
   flipAllToBack,
@@ -23,8 +22,8 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { CardPositionBuilder } from "../Cards/CardPositionBuilder";
-import { ZoneBackgrounds } from "../Cards/ZoneBackgrounds";
 import { GameWrapper } from "../common/GameWrapper";
+import { CardColor } from "../Cards/CardStyles";
 
 const cardSize = "small";
 const selectedPlaceholderId = "selectedPlaceholder";
@@ -409,10 +408,8 @@ export default function TheBobaTeaShop() {
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
-      <ZoneBackgrounds layoutManager={layoutManager} game={game} />
-
       {Object.values(cardPositions).map((target) => {
-        let selectColor: CardSelectColor = "none";
+        let selectColor: CardColor = "none";
         let isSelected = undefined;
         let yOffset: number | undefined = undefined;
         let forceOverlay = false;

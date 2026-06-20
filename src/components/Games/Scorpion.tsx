@@ -1,8 +1,6 @@
 import { useMemo, useState } from "react";
-import { GameMenus } from "../common/GameMenus";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-
 import { CardOLD } from "../Cards/CardOLD";
 import {
   CardRank,
@@ -13,10 +11,7 @@ import {
 } from "../Cards/card-utils";
 import { textStyles } from "@/styles/textStyles";
 import { GameWrapper } from "../common/GameWrapper";
-import { CardButton } from "../Cards/CardButtonOLD";
 import { Button } from "../Button/Button";
-
-const cardsPerRow = 8;
 
 type TableauCard = PlayingCard & { faceUp: boolean };
 
@@ -246,15 +241,16 @@ export default function Scorpion() {
             {column.map((card, idx) => {
               const isSelected =
                 selected?.column === colIdx && selected?.index === idx;
-              return (
-                <CardButton
-                  key={card.id}
-                  onPress={() => onCardPress(colIdx, idx)}
-                  card={card}
-                  cardsPerRow={cardsPerRow}
-                  isSelected={isSelected}
-                />
-              );
+              return false;
+              // return (
+              // <CardButton
+              //   key={card.id}
+              //   onPress={() => onCardPress(colIdx, idx)}
+              //   card={card}
+              //   cardsPerRow={cardsPerRow}
+              //   isSelected={isSelected}
+              // />
+              // );
             })}
           </View>
         ))}

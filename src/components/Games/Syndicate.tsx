@@ -8,7 +8,7 @@ import { useMemo, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "../Button/Button";
 import { AnimatedCard } from "../Cards/AnimatedCard";
-import { CardSelectColor } from "../Cards/Card";
+import { CardColor } from "../Cards/Card";
 import {
   cardDims,
   createDeck,
@@ -464,7 +464,7 @@ export default function Syndicate() {
         let isSelected = false;
         let onPress: (() => void) | undefined = undefined;
         let isDisabled = false;
-        let selectColor: CardSelectColor = "none";
+        let selectColor: CardColor = "none";
         let yOffset: number | undefined = undefined;
 
         if (type === "member") {

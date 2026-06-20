@@ -4,7 +4,6 @@ import { rotatedText, textStyles } from "@/styles/textStyles";
 import { Text, TextStyle, View, ViewStyle } from "react-native";
 import { CardOLD, CardGrid } from "../../Cards/CardOLD";
 import { type PlayingCard } from "../../Cards/card-utils";
-import { CardButton } from "../../Cards/CardButtonOLD";
 import {
   EmissaryRefKeys,
   EmissarySuitsColorMap,
@@ -82,7 +81,7 @@ export const EmissaryHand = ({
             },
           ]}
         >
-          {advisors.map((card, i) => {
+          {/* {advisors.map((card, i) => {
             const isAnimatingCard = animatingCardIds.includes(card.id);
 
             return (
@@ -108,7 +107,7 @@ export const EmissaryHand = ({
                 isPlaceholder={isAnimatingCard}
               />
             );
-          })}
+          })} */}
         </View>
       </View>
 
@@ -128,31 +127,33 @@ export const EmissaryHand = ({
             const potentialDiscard =
               diplomacySelected && card.suit === currentTrump;
 
-            return (
-              <CardButton
-                key={card.id}
-                ref={setRef("handRefs", i)}
-                onPress={() => {
-                  if (discardFromHand === 0) {
-                    debateWithCard(card);
-                  } else {
-                    discardCard(card);
-                  }
-                }}
-                card={card}
-                cardsPerRow={cardsPerRow}
-                cardSize="small"
-                disabled={isDisabled}
-                selectColor={
-                  potentialDiscard ? EmissarySuitsColorMap["hearts"] : "blue"
-                }
-                forceOverlay={potentialDiscard}
-                forceSelectColor={potentialDiscard}
-                style={[
-                  animatingCardIds.includes(card.id) && cardStyles.animHide,
-                ]}
-              />
-            );
+            return null;
+
+            // return (
+            //   <CardButton
+            //     key={card.id}
+            //     ref={setRef("handRefs", i)}
+            //     onPress={() => {
+            //       if (discardFromHand === 0) {
+            //         debateWithCard(card);
+            //       } else {
+            //         discardCard(card);
+            //       }
+            //     }}
+            //     card={card}
+            //     cardsPerRow={cardsPerRow}
+            //     cardSize="small"
+            //     disabled={isDisabled}
+            //     selectColor={
+            //       potentialDiscard ? EmissarySuitsColorMap["hearts"] : "blue"
+            //     }
+            //     forceOverlay={potentialDiscard}
+            //     forceSelectColor={potentialDiscard}
+            //     style={[
+            //       animatingCardIds.includes(card.id) && cardStyles.animHide,
+            //     ]}
+            //   />
+            // );
           })}
           <CardOLD
             card={undefined}

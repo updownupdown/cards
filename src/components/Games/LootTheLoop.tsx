@@ -21,7 +21,6 @@ import {
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { CardButton } from "../Cards/CardButtonOLD";
 import { GameWrapper } from "../common/GameWrapper";
 
 const loopCardTranslate = 14;
@@ -446,32 +445,33 @@ export default function LootTheLoop() {
                   />
                 );
 
-                return (
-                  <CardButton
-                    ref={(el) => {
-                      markedPathRef.current[index] = el;
-                    }}
-                    key={`note-${index}`}
-                    onPress={
-                      noteCard
-                        ? () => {
-                            setSelectedCardIndex(undefined);
-                            setSelectedNote(
-                              selectedNote?.index === index
-                                ? undefined
-                                : { card: noteCard, index },
-                            );
-                          }
-                        : undefined
-                    }
-                    cardsPerRow={cardsPerRow.markedPaths}
-                    card={noteCard}
-                    isPlaceholder={!noteCard}
-                    selectColor={"green"}
-                    isSelected={isSelected}
-                    placeholderContent={MarkButton}
-                  />
-                );
+                return null;
+                // return (
+                //   <CardButton
+                //     ref={(el) => {
+                //       markedPathRef.current[index] = el;
+                //     }}
+                //     key={`note-${index}`}
+                //     onPress={
+                //       noteCard
+                //         ? () => {
+                //             setSelectedCardIndex(undefined);
+                //             setSelectedNote(
+                //               selectedNote?.index === index
+                //                 ? undefined
+                //                 : { card: noteCard, index },
+                //             );
+                //           }
+                //         : undefined
+                //     }
+                //     cardsPerRow={cardsPerRow.markedPaths}
+                //     card={noteCard}
+                //     isPlaceholder={!noteCard}
+                //     selectColor={"green"}
+                //     isSelected={isSelected}
+                //     placeholderContent={MarkButton}
+                //   />
+                // );
               })}
             </View>
           </View>
@@ -566,28 +566,29 @@ export default function LootTheLoop() {
             };
 
             // Loop Card
-            return (
-              <CardButton
-                ref={(el) => {
-                  loopCardRef.current[index] = el;
-                }}
-                key={`deck-${index}`}
-                onPress={onPressFn()}
-                card={card}
-                style={[style]}
-                isSelected={isSelected}
-                selectColor={selectedColor()}
-                forceSelectColor={isExploreTarget || isPotentialPathTarget}
-                forceOverlay={
-                  isExploreTarget || isPotentialPathTarget || isLookAround
-                }
-                cardsPerRow={cardsPerRow.loop}
-              />
-            );
+            return null;
+            // return (
+            //   <CardButton
+            //     ref={(el) => {
+            //       loopCardRef.current[index] = el;
+            //     }}
+            //     key={`deck-${index}`}
+            //     onPress={onPressFn()}
+            //     card={card}
+            //     style={[style]}
+            //     isSelected={isSelected}
+            //     selectColor={selectedColor()}
+            //     forceSelectColor={isExploreTarget || isPotentialPathTarget}
+            //     forceOverlay={
+            //       isExploreTarget || isPotentialPathTarget || isLookAround
+            //     }
+            //     cardsPerRow={cardsPerRow.loop}
+            //   />
+            // );
           })}
 
           {/* Ghost "return to marked path" card */}
-          <CardButton
+          {/* <CardButton
             onPress={returnToSelectedMarkedPath}
             card={selectedNote?.card}
             selectColor="green"
@@ -609,7 +610,7 @@ export default function LootTheLoop() {
                 ],
               },
             ]}
-          />
+          /> */}
         </View>
 
         {/* ----- Buttons ----- */}

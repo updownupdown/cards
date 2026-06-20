@@ -6,7 +6,6 @@ import { textStyles } from "@/styles/textStyles";
 import { useMemo, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Svg, { Line } from "react-native-svg";
-import { Deck } from "../Cards/Deck";
 import {
   SUITS,
   createDeck,
@@ -381,13 +380,13 @@ export default function Skyway() {
                 }
               }}
             >
-              <Deck
+              {/* <Deck
                 cards={pile}
                 largeFan="extra-wide"
                 fan="horizontalRight"
                 cardsPerRow={cardsPerRow}
                 cardSize="small-colored"
-              />
+              /> */}
             </Pressable>
           ))}
         </View>
@@ -457,14 +456,14 @@ export default function Skyway() {
               ]}
               onPress={() => draftToCell(index)}
             >
-              <Deck
+              {/* <Deck
                 cards={stack}
                 cardsPerRow={cardsPerRow}
                 largeFan="extra-wide"
                 fan="horizontalRight"
                 cardSize="small-colored"
                 invisibleWhenEmpty
-              />
+              /> */}
             </Pressable>
           </View>
         ))}

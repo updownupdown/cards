@@ -20,7 +20,6 @@ import {
   suitValue,
   type PlayingCard,
 } from "../../Cards/card-utils";
-import { CardButton } from "../../Cards/CardButtonOLD";
 import { GameWrapper } from "../../common/GameWrapper";
 import { AdvisorInfo, ChooseKingdomOverlay } from "./AdvisorInfo";
 import { DebateDecks } from "./DebateDecks";
@@ -747,7 +746,7 @@ export default function TheEmissary() {
                 >
                   {k.requiredWins}
                 </Text>
-                <CardButton
+                {/* <CardButton
                   card={!k.won ? k.ruler : undefined}
                   ref={setRef("rulersRefs", i)}
                   cardsPerRow={cardsPerRow.other}
@@ -761,7 +760,7 @@ export default function TheEmissary() {
                         ? "blue"
                         : "none"
                   }
-                />
+                /> */}
               </View>
             );
           })}

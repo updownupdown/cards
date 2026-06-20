@@ -7,24 +7,15 @@ import {
 } from "@/styles/styles";
 import { useMemo } from "react";
 import { useWindowDimensions, ViewStyle } from "react-native";
-import { CardMapBackgrounds } from "./CardMapBackgrounds";
-import { CardMapVisualizer } from "./CardMapVisualizer";
+import { AnimatedCard, AnimatedCardMapping } from "./AnimatedCard";
 import {
-  AnimatedCard,
-  AnimatedCardMapping,
-  AnimatedCardProps,
-} from "./AnimatedCard";
-import { CardSizes } from "./Card";
-
-type DeckFanDirection =
-  | "none"
-  | "up"
-  | "down"
-  | "left"
-  | "right"
-  | "diagonal-depth";
-
-type DeckInfoPosition = "above" | "below" | "left" | "right";
+  CardMapBackgrounds,
+  CardMapBGMapping,
+  DeckFanDirection,
+  DeckInfoPosition,
+} from "./CardMapBackgrounds";
+import { CardMapVisualizer } from "./CardMapVisualizer";
+import { CardSizes } from "./CardStyles";
 
 export type CardPosition = {
   x: number;
@@ -36,6 +27,7 @@ export type CardPosition = {
 export type MappedCard = {
   card: PlayingCard;
   cardIndex: number;
+  refIndex?: number;
   zoneName?: string;
   zoneId: string;
   zoneType: string;
@@ -45,8 +37,6 @@ export type MappedCard = {
   zIndex: number;
   isHiddenUnderDeck?: boolean;
   topOfZone: boolean;
-  // rotation?: number;
-  // misc?: any;
 };
 
 export type MapZoneType = "ui" | "single-card" | "deck" | "card-array";
@@ -54,6 +44,7 @@ export type MapZoneType = "ui" | "single-card" | "deck" | "card-array";
 export type MapZone = {
   id: string;
   pileIndex?: number;
+  refIndex?: number;
   name?: string;
   type: MapZoneType;
   col: number;
@@ -68,7 +59,6 @@ export type MapZone = {
     maxVisible?: number;
   };
   placeholder?: {
-    show: boolean;
     showCount?: boolean;
     text?: string;
     iconName?: IconName;
@@ -76,112 +66,77 @@ export type MapZone = {
   };
 };
 
-export type MapMetrics = {
-  startX: number;
-  startY: number;
-  endY: number;
-  gridWidth: number;
-  gridWidthPadded: number;
-  gridHeight: number;
-  gridHeightPadded: number;
-  gridGap: number;
-};
-
-// export type MapManager = {
-//     zones: ZoneConfig[];
-//   cardWidth: number;
-//   cardHeight: number;
-//   layoutMetrics: MapMetrics;
-//   getCardPosition: (
-//     zoneId: string,
-//     cardIndex: number,
-//     totalCardsInZone: number,
-//     startingZIndex?: number,
-//   ) => CardPosition;
-//   getZoneBasePos: (zone: ZoneConfig) => {
-//     x: number;
-//     y: number;
-//     width: number;
-//     height: number;
-//   };
-//   getZoneStyles: (zoneId: string) => ViewStyle;
-// };
-
 type MapConfig = {
   game: any;
   zones: MapZone[];
-  fixedCols?: number;
-  fixedRows?: number;
   gap?: number; // Gap (x AND y) as a percentage of the layout width
   paddingTop?: number;
   paddingBottom?: number;
   paddingLeft?: number;
   paddingRight?: number;
   cardSize: CardSizes;
+  visualizer?: boolean;
   cardMapper: (mappedCard: MappedCard) => AnimatedCardMapping | undefined;
+  zoneMapper?: (zone: MapZone) => CardMapBGMapping | undefined;
 };
 
 export function useCardMap({
   game,
   zones,
-  fixedCols,
-  fixedRows,
   gap = cardDims.layoutGap,
   paddingTop = cardDims.layoutPadding,
   paddingBottom = cardDims.layoutPadding,
   paddingLeft = cardDims.layoutPadding,
   paddingRight = cardDims.layoutPadding,
   cardSize,
+  visualizer,
   cardMapper,
+  zoneMapper,
 }: MapConfig) {
   const { width: screenWidthActual, height: screenHeightActual } =
     useWindowDimensions();
 
-  const containerWidth = Math.min(screenWidthActual, MaxContentWidth);
-  const containerHeight = Math.min(
-    screenHeightActual - HeaderHeight,
-    MaxContentHeight - HeaderHeight,
-  );
-
   // Calculate the end column (col + height) for each zone
   // and find the maximum value among them.
-  const gridCols = useMemo(() => {
-    if (fixedCols) return fixedCols;
-    if (zones.length === 0) return 0;
-    return Math.max(...zones.map((z) => (z.col || 0) + (z.height || 1)));
-  }, [zones, fixedCols]);
-
-  const gridRows = useMemo(() => {
-    if (fixedRows) return fixedRows;
-    if (zones.length === 0) return 0;
-    return Math.max(
-      ...zones.map((z) =>
-        z.width === "full" ? 0 : (z.row || 0) + (z.width || 1),
+  const gridCols = useMemo(
+    () =>
+      Math.max(
+        ...zones.map(
+          (z) => (z.col || 0) + (z.width === "full" ? 1 : (z.height ?? 1)),
+        ),
       ),
-    );
-  }, [zones, fixedRows]);
+    [screenWidthActual],
+  );
+
+  const gridRows = useMemo(
+    () => Math.max(...zones.map((z) => (z.row || 0) + (z.height || 1))),
+    [screenWidthActual],
+  );
 
   const {
     cardWidth,
     cardHeight,
-    actualGap,
+    gridGap,
     startX,
     startY,
-    endY,
     gridWidth,
     gridWidthPadded,
     gridHeight,
     gridHeightPadded,
   } = useMemo(() => {
-    const cardWidthUnitsToFit = fixedCols
-      ? fixedCols + paddingLeft + paddingRight
-      : gridCols + gap * (gridCols - 1) + paddingLeft + paddingRight;
+    const containerWidth = Math.min(screenWidthActual, MaxContentWidth);
+    const containerHeight = Math.min(
+      screenHeightActual - HeaderHeight,
+      MaxContentHeight - HeaderHeight,
+    );
 
     const gapYUnits = gap * cardDims.aspectRatio;
 
-    const cardHeightUnitsToFit = fixedRows
-      ? fixedRows + paddingTop + paddingBottom
-      : gridRows + gapYUnits * (gridRows - 1) + paddingTop + paddingBottom;
+    const cardWidthUnitsToFit =
+      gridCols + gap * (gridCols - 1) + paddingLeft + paddingRight;
+
+    const cardHeightUnitsToFit =
+      gridRows + gapYUnits * (gridRows - 1) + paddingTop + paddingBottom;
 
     let cardWidth = containerWidth / cardWidthUnitsToFit;
     let cardHeight = containerHeight / cardHeightUnitsToFit;
@@ -195,60 +150,46 @@ export function useCardMap({
       cardHeight = cardWidth / cardDims.aspectRatio;
     }
 
-    // 4. Calculate Final Grid Bounding Box
+    // Calculate Final Grid Bounding Box
     const gridWidth = cardWidth * cardWidthUnitsToFit;
     const gridHeight = cardHeight * cardHeightUnitsToFit;
 
     const paddingX = (paddingLeft + paddingRight) * cardWidth;
     const paddingY = (paddingTop + paddingBottom) * cardHeight;
 
-    // 5. Perfect Centering: Divide remaining screen space evenly
+    const gridWidthPadded = gridWidth - paddingX;
+    const gridHeightPadded = gridHeight - paddingY;
+
+    // Perfect Centering: Divide remaining screen space evenly
     const offsetX = (containerWidth - gridWidth) / 2 + paddingLeft * cardWidth;
     const offsetY =
       (containerHeight - gridHeight) / 2 + paddingTop * cardHeight;
 
-    const gridWidthPadded = gridWidth - paddingX;
-    const gridHeightPadded = gridHeight - paddingY;
-
     return {
       cardWidth,
       cardHeight,
-      actualGap: gap * cardWidth,
+      gridGap: gap * cardWidth,
       startX: offsetX,
       startY: offsetY,
-      endY: offsetY + gridHeightPadded,
       gridWidth,
       gridWidthPadded,
       gridHeight,
       gridHeightPadded,
     };
-  }, [
-    screenWidthActual,
-    containerWidth,
-    containerHeight,
-    gridCols,
-    gridRows,
-    gap,
-    paddingTop,
-    paddingBottom,
-    paddingLeft,
-    paddingRight,
-  ]);
+  }, [screenWidthActual]);
 
-  const zoneMap = useMemo(() => {
-    const map: Record<string, MapZone> = {};
-    zones.forEach((z) => (map[z.id] = z));
-    return map;
-  }, [zones]);
-
-  // Use the dynamic centering offsets instead of standard padding
   const getZoneBasePos = (zone: MapZone) => {
+    const zWidth = zone.width === "full" ? 1 : (zone.width ?? 1);
+    const zHeight = zone.height ?? 1;
+
     return {
-      x: startX + zone.col * (cardWidth + actualGap),
-      y: startY + zone.row * (cardHeight + actualGap),
+      x: startX + zone.col * (cardWidth + gridGap),
+      y: startY + zone.row * (cardHeight + gridGap),
       width:
-        zone.width === "full" ? gridWidthPadded : cardWidth * (zone.width ?? 1),
-      height: cardHeight * (zone.height ?? 1),
+        zone.width === "full"
+          ? gridWidthPadded
+          : cardWidth * zWidth + gridGap * (zWidth - 1),
+      height: cardHeight * zHeight + gridGap * (zHeight - 1),
     } as CardPosition;
   };
 
@@ -326,29 +267,31 @@ export function useCardMap({
     const positionMap: Record<string, MappedCard> = {};
 
     for (const zone of zones) {
-      if (zone.cards && zone.cards.length > 0) {
-        for (let i = 0; i < zone.cards.length; i++) {
-          const card = zone.cards[i];
-          const position = getCardPosition(
-            zone,
-            zone.cards.length,
-            zone.baseZIndex ?? 1,
-            i,
-          );
-          positionMap[`${zone.id}-${card.id}`] = {
-            card,
-            cardIndex: i,
-            zoneId: zone.id,
-            zoneName: zone.name,
-            zoneType: zone.type,
-            pileIndex: zone.pileIndex,
-            x: position.x,
-            y: position.y,
-            zIndex: position.zIndex,
-            isHiddenUnderDeck: position.isHiddenUnderDeck,
-            topOfZone: i === zone.cards.length - 1,
-          };
-        }
+      if (zone.cards === undefined) continue;
+      for (let i = 0; i < zone.cards.length; i++) {
+        const card = zone.cards?.[i];
+
+        const position = getCardPosition(
+          zone,
+          zone.cards?.length ?? 1,
+          zone.baseZIndex ?? 1,
+          i,
+        );
+
+        positionMap[`${zone.id}-${card?.id}`] = {
+          card,
+          cardIndex: i,
+          zoneId: zone.id,
+          zoneName: zone.name,
+          zoneType: zone.type,
+          pileIndex: zone.pileIndex,
+          refIndex: zone.refIndex,
+          x: position.x,
+          y: position.y,
+          zIndex: position.zIndex,
+          isHiddenUnderDeck: position.isHiddenUnderDeck,
+          topOfZone: zone.cards ? i === zone.cards.length - 1 : true,
+        };
       }
     }
 
@@ -359,53 +302,54 @@ export function useCardMap({
     return (
       <AnimatedCard
         key={mappedCard.card.id}
-        {...cardMapper(mappedCard)}
         targetState={mappedCard}
         cardWidth={cardWidth}
         cardHeight={cardHeight}
         cardSize={cardSize}
+        {...cardMapper(mappedCard)}
       />
     );
   });
 
-  const mapMetrics: MapMetrics = {
-    startX,
-    startY,
-    endY,
-    gridWidth,
-    gridWidthPadded,
-    gridHeight,
-    gridHeightPadded,
-    gridGap: actualGap,
-  };
-
   const mapBackgrounds = (
     <CardMapBackgrounds
       zones={zones}
+      game={game}
       getZoneBasePos={getZoneBasePos}
+      zoneMapper={zoneMapper}
       cardWidth={cardWidth}
       cardHeight={cardHeight}
-      game={game}
-    />
-  );
-  const mapVisualizer = (
-    <CardMapVisualizer
-      zones={zones}
-      getZoneStyles={getZoneStyles}
-      mapMetrics={mapMetrics}
     />
   );
 
+  const mapVisualizer = visualizer ? (
+    <CardMapVisualizer
+      zones={zones}
+      getZoneStyles={getZoneStyles}
+      startX={startX}
+      startY={startY}
+      gridWidth={gridWidth}
+      gridWidthPadded={gridWidthPadded}
+      gridHeight={gridHeight}
+      gridHeightPadded={gridHeightPadded}
+    />
+  ) : null;
+
+  const cardMap = (
+    <>
+      {mapBackgrounds}
+      {mappedCards}
+      {mapVisualizer}
+    </>
+  );
+
   return {
-    mappedCards,
-    mapVisualizer,
-    mapBackgrounds,
+    cardMap,
     getZoneStyles,
     getZoneStylesById,
-    cardPositions,
+    getZoneBasePos,
     cardWidth,
     cardHeight,
-    mapMetrics,
   };
 }
 

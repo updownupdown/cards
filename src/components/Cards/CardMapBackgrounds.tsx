@@ -1,10 +1,20 @@
-import { LayoutManager } from "@/hooks/useZoneLayout";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
-import { Text, TextStyle, View, ViewStyle } from "react-native";
+import { Pressable, Text, TextStyle, View, ViewStyle } from "react-native";
 import { cardDims } from "./card-utils";
 import { CardPosition, MapZone } from "./CardMap";
+import { CardColor, CardOverlay, getCardShadow } from "./CardStyles";
+
+export type DeckFanDirection =
+  | "none"
+  | "up"
+  | "down"
+  | "left"
+  | "right"
+  | "diagonal-depth";
+
+export type DeckInfoPosition = "above" | "below" | "left" | "right";
 
 type Props = {
   zones: MapZone[];
@@ -12,6 +22,16 @@ type Props = {
   cardWidth: number;
   cardHeight: number;
   game: any;
+  zoneMapper?: (zone: MapZone) => CardMapBGMapping | undefined;
+};
+
+export type CardMapBGMapping = {
+  onPress?: () => void;
+  isDisabled?: boolean;
+  isSelected?: boolean;
+  selectColor?: CardColor | string;
+  forceSelectColor?: boolean;
+  forceOverlayColor?: boolean;
 };
 
 export const infoSize = {
@@ -25,11 +45,22 @@ export const CardMapBackgrounds = ({
   cardWidth,
   cardHeight,
   game,
+  zoneMapper,
 }: Props) => {
   return (
     <>
       {zones.map((zone) => {
-        if (!zone.placeholder?.show) return null;
+        if (!zone.placeholder) return null;
+
+        const zoneMapperResult = zoneMapper ? zoneMapper(zone) : undefined;
+
+        const onPress = zoneMapperResult?.onPress ?? (() => {});
+        const isDisabled = zoneMapperResult?.isDisabled ?? true;
+        const isSelected = zoneMapperResult?.isSelected ?? true;
+        const selectColor = zoneMapperResult?.selectColor;
+        const forceSelectColor = zoneMapperResult?.forceSelectColor ?? false;
+        const forceOverlayColor = zoneMapperResult?.forceOverlayColor ?? false;
+
         const pos = getZoneBasePos(zone);
         const count: number = zone.id ? game[zone.id]?.length : 0;
 
@@ -118,7 +149,7 @@ export const CardMapBackgrounds = ({
         }
 
         return (
-          <View
+          <Pressable
             key={`placeholder-${zone.id}`}
             style={[
               flexStyles.rowCentered,
@@ -132,9 +163,24 @@ export const CardMapBackgrounds = ({
                 backgroundColor: Colors.K875,
                 justifyContent: "center",
                 alignItems: "center",
+                zIndex: 1,
+                boxShadow: getCardShadow({
+                  cardWidth,
+                  selectColor,
+                  forceSelectColor,
+                  isPlaceholder: true,
+                }),
               },
             ]}
+            onPress={onPress}
+            disabled={isDisabled}
           >
+            <CardOverlay
+              isSelected={isSelected}
+              forceOverlayColor={forceOverlayColor}
+              selectColor={selectColor}
+            />
+
             {infoPosition && (
               <View style={infoStyles}>
                 {zone.placeholder.text && (
@@ -151,10 +197,12 @@ export const CardMapBackgrounds = ({
                   />
                 )}
 
-                <Text style={countStyle}>{count}</Text>
+                {zone.placeholder.showCount !== false && (
+                  <Text style={countStyle}>{count}</Text>
+                )}
               </View>
             )}
-          </View>
+          </Pressable>
         );
       })}
     </>

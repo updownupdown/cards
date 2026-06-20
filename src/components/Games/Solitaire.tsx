@@ -1,5 +1,7 @@
-import { useNavigation } from "expo-router";
 import { useGameLoading } from "@/hooks/useGameLoading";
+import { cardStyles } from "@/styles/cardStyles";
+import { flexStyles } from "@/styles/flexStyles";
+import { useNavigation } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { GestureResponderEvent, View as RNView } from "react-native";
 import {
@@ -11,6 +13,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { Button } from "../Button/Button";
 import { CardOLD } from "../Cards/CardOLD";
 import {
   CardSuit,
@@ -23,10 +26,6 @@ import {
   shuffle,
   SUITS,
 } from "../Cards/card-utils";
-import { Deck } from "../Cards/Deck";
-import { Button } from "../Button/Button";
-import { cardStyles } from "@/styles/cardStyles";
-import { flexStyles } from "@/styles/flexStyles";
 import { GameWrapper } from "../common/GameWrapper";
 
 type GameState = {
@@ -820,7 +819,7 @@ export default function Solitaire() {
           ]}
         >
           <View style={[flexStyles.rowCentered, flexStyles.gap10]}>
-            <Pressable onPress={drawFromStock} style={styles.cardSlot}>
+            {/* <Pressable onPress={drawFromStock} style={styles.cardSlot}>
               {game.stock.length > 0 ? (
                 <Deck
                   backCount={Math.min(game.stock.length, 8)}
@@ -829,7 +828,7 @@ export default function Solitaire() {
               ) : (
                 <Text style={styles.slotLabel}>Recycle</Text>
               )}
-            </Pressable>
+            </Pressable> */}
 
             <View
               ref={wasteRef}

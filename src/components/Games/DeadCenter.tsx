@@ -12,7 +12,7 @@ import { Colors, FontWeight } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
 import { useEffect, useMemo, useState } from "react";
 import { Text, View } from "react-native";
-import { AnimatedCardMapping } from "../../Cards/AnimatedCard";
+import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   cardColor,
   createDeck,
@@ -22,8 +22,8 @@ import {
   RANK_VALUE,
   rankValue,
   shuffle,
-} from "../../Cards/card-utils";
-import { GameWrapper } from "../../common/GameWrapper";
+} from "../Cards/card-utils";
+import { GameWrapper } from "../common/GameWrapper";
 
 const zombieZonesColRows: ColRows[] = [
   { c: 1, r: 1 },
@@ -484,12 +484,7 @@ export default function DeadCenter() {
     }
   };
 
-  const {
-    getZoneStylesById,
-    mappedCards,
-    // mapVisualizer,
-    // mapBackgrounds,
-  } = useCardMap({
+  const { getZoneStylesById, cardMap } = useCardMap({
     game,
     zones,
     gap: 0.35,
@@ -506,14 +501,12 @@ export default function DeadCenter() {
       reset={reset}
       isLoaded={isLoaded}
       winLoseMessage={
-        game.winLoseMessage ?? (game.won ? "You win!" : "You lost.")
+        game.winLoseMessage ?? (game.won ? "You won!" : "You lost.")
       }
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
-      {/* {mapVisualizer} */}
-      {/* {mapBackgrounds} */}
-      {mappedCards}
+      {cardMap}
 
       {/* Game Info */}
       <View
