@@ -6,8 +6,6 @@ import {
   GAMES_DATA,
 } from "@/data/games-data";
 import { Icon } from "@/icons";
-import { buttonStyles, buttonTransition } from "@/styles/buttonStyles";
-import { debugStyles } from "@/styles/debugStyles";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight, HomePadding, rgba } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
@@ -18,7 +16,6 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 export const GamesList = () => {
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [lastFavorited, setLastFavorited] = useState<string | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -26,7 +23,6 @@ export const GamesList = () => {
     loadFavoriteGames().then((loaded) => {
       if (!cancelled) {
         setFavorites(loaded);
-        setIsLoaded(true);
       }
     });
 
@@ -73,9 +69,11 @@ export const GamesList = () => {
         <Link
           href={path as Href}
           style={[
-            buttonStyles.sizeMedium,
-            buttonTransition,
             {
+              transitionDuration: "0.4s",
+              transitionProperty: "all",
+              transitionTimingFunction: "ease",
+
               display: "flex",
               flexDirection: "row",
               justifyContent: "center",
@@ -83,24 +81,27 @@ export const GamesList = () => {
               gap: 6,
 
               outlineWidth: 0,
-              boxShadow: `inset 0 1px 1px ${rgba(Colors.white, 0.2)}, inset 1px 2px 14px ${rgba(Colors.K500, 0.2)}, inset 2px 4px 20px ${rgba(Colors.K600, 0.2)}, -2px -2px 12px ${rgba(Colors.K750, 0.8)}, 2px 2px 16px ${rgba(Colors.K950, 0.5)}`,
 
               paddingVertical: 10,
-              height: "auto",
-              textTransform: "none",
-              fontFamily: FontWeight[300],
               backgroundColor: Colors.K800,
-              color: Colors.K200,
-              fontSize: 19,
-              textAlign: "center",
+
+              borderRadius: 10,
               borderWidth: 0,
               borderColor: "unset",
               width: "100%",
+
+              // Font
+              fontSize: 18,
+              textAlign: "center",
+              fontFamily: FontWeight[300],
+              color: Colors.K200,
+              // textTransform: "uppercase",
             },
           ]}
         >
           {game.title}
         </Link>
+
         <Pressable
           style={[styles.starBtn]}
           onPress={() => onToggleFavorite(path)}

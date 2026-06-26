@@ -8,6 +8,7 @@ import { LoadingOverlay } from "../common/LoadingOverlay";
 import { GamesList } from "./GamesList";
 import { SettingsModal } from "./SettingsModal";
 import { StatsModal } from "./StatsModal";
+import { menuStyles } from "@/styles/menuStyles";
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -70,13 +71,13 @@ export default function Home() {
           <Button
             iconName="chart"
             onPress={() => setShowStatsModal(true)}
-            style={[styles.headerBtn]}
+            style={[styles.headerBtn, menuStyles.headerButton]}
           />
 
           <Button
             iconName="settings"
             onPress={() => setShowSettingsModal(true)}
-            style={[styles.headerBtn]}
+            style={[styles.headerBtn, menuStyles.headerButton]}
           />
         </View>
 

@@ -44,6 +44,10 @@ export type ArcConfig = {
   magnitudeY?: number;
 };
 
+export type OrbitConfig = {
+  enabled?: boolean;
+};
+
 export type CardMapBGMapping = {
   onPress?: () => void;
   isDisabled?: boolean;
@@ -63,6 +67,7 @@ export type AnimatedCardProps = CardMapBGMapping & {
   isPlaceholder?: boolean;
   yOffset?: number;
   arcConfig?: ArcConfig;
+  orbitConfig?: OrbitConfig;
   clickThroughCards?: boolean;
 };
 
@@ -83,21 +88,24 @@ export const AnimatedCard = ({
   isVisible,
   selectColor,
   yOffset,
+  orbitConfig,
   forceSelectColor,
   forceOverlayColor,
   isPlaceholder,
   clickThroughCards,
 }: AnimatedCardProps) => {
+  const initialYOffset = (yOffset ?? 0) * cardHeight;
+
   const startX = useSharedValue(targetState.x);
   const startY = useSharedValue(targetState.y);
-  const startYOffset = useSharedValue(yOffset);
+  const startYOffset = useSharedValue(initialYOffset);
   const startZ = useSharedValue(targetState.zIndex);
   const startRotation = useSharedValue(targetState.rotation);
   const moveProgress = useSharedValue(1); // Default to 1 (already at destination)
 
   const currentVisualX = useSharedValue(targetState.x);
   const currentVisualY = useSharedValue(targetState.y);
-  const currentVisualYOffset = useSharedValue(yOffset);
+  const currentVisualYOffset = useSharedValue(initialYOffset);
   const currentVisualZ = useSharedValue(targetState.zIndex);
   const currentRotation = useSharedValue(targetState.rotation);
 
@@ -172,13 +180,12 @@ export const AnimatedCard = ({
   }, [arcConfig, cardHeight, yOffset]);
 
   const animatedStyle = useAnimatedStyle(() => {
-    // 1. Calculate raw float positions for X and Y
-    const rawXBase = interpolate(
+    const rawXBaseLinear = interpolate(
       moveProgress.value,
       [0, 1],
       [startX.value, targetState.x],
     );
-    const rawYBase = interpolate(
+    const rawYBaseLinear = interpolate(
       moveProgress.value,
       [0, 1],
       [startY.value, targetState.y],
@@ -186,10 +193,67 @@ export const AnimatedCard = ({
     const rawYOffset = interpolate(
       moveProgress.value,
       [0, 1],
-      [startYOffset.value ?? 0, yOffset ? yOffset * cardHeight : 0],
+      [startYOffset.value, (yOffset ?? 0) * cardHeight],
     );
 
-    const rawX = rawXBase;
+    let rawXBase = rawXBaseLinear;
+    let rawYBase = rawYBaseLinear;
+
+    if (orbitConfig?.enabled) {
+      const startRotationDegrees = (startRotation.value ?? 0) + 90;
+      const targetRotationDegrees = (targetState.rotation ?? 0) + 90;
+      const startAngleRadians = startRotationDegrees * (Math.PI / 180);
+      const targetAngleRadians = targetRotationDegrees * (Math.PI / 180);
+
+      const startDirection = {
+        x: -Math.cos(startAngleRadians),
+        y: -Math.sin(startAngleRadians),
+      };
+      const targetDirection = {
+        x: -Math.cos(targetAngleRadians),
+        y: -Math.sin(targetAngleRadians),
+      };
+
+      const deltaX = targetState.x - startX.value;
+      const deltaY = targetState.y - startY.value;
+      const denominator =
+        startDirection.x * targetDirection.y -
+        startDirection.y * targetDirection.x;
+
+      if (Math.abs(denominator) > 0.0001) {
+        const startDistanceToCenter =
+          (deltaX * targetDirection.y - deltaY * targetDirection.x) /
+          denominator;
+
+        const centerX = startX.value + startDirection.x * startDistanceToCenter;
+        const centerY = startY.value + startDirection.y * startDistanceToCenter;
+
+        const startRadius = Math.hypot(
+          startX.value - centerX,
+          startY.value - centerY,
+        );
+        const targetRadius = Math.hypot(
+          targetState.x - centerX,
+          targetState.y - centerY,
+        );
+
+        let angleDelta = targetAngleRadians - startAngleRadians;
+
+        while (angleDelta > Math.PI) angleDelta -= Math.PI * 2;
+        while (angleDelta < -Math.PI) angleDelta += Math.PI * 2;
+
+        const interpolatedAngle =
+          startAngleRadians + angleDelta * moveProgress.value;
+        const interpolatedRadius = interpolate(
+          moveProgress.value,
+          [0, 1],
+          [startRadius, targetRadius],
+        );
+
+        rawXBase = centerX + Math.cos(interpolatedAngle) * interpolatedRadius;
+        rawYBase = centerY + Math.sin(interpolatedAngle) * interpolatedRadius;
+      }
+    }
 
     const parabolicMultiplier =
       4 * moveProgress.value * (1 - moveProgress.value);
@@ -199,6 +263,7 @@ export const AnimatedCard = ({
         ? -(hopMagnitude.y * parabolicMultiplier)
         : 0;
 
+    const rawX = rawXBase;
     const rawY = rawYBase + arcYOffset;
 
     const rawZ = moveProgress.value < 0.5 ? startZ.value : targetState.zIndex;
@@ -220,11 +285,16 @@ export const AnimatedCard = ({
     // zIndex must always be an integer, so we round the interpolated value
     const finalZ = Math.round(rawZ);
 
-    const rotation = interpolate(
-      moveProgress.value,
-      [0, 1],
-      [startRotation.value ?? 0, targetState.rotation ?? 0],
-    );
+    const startRotationDegrees = startRotation.value ?? 0;
+    const targetRotationDegrees = targetState.rotation ?? 0;
+
+    let rotationDelta = targetRotationDegrees - startRotationDegrees;
+    while (rotationDelta > 180) rotationDelta -= 360;
+    while (rotationDelta < -180) rotationDelta += 360;
+
+    const rotation = startRotationDegrees + rotationDelta * moveProgress.value;
+
+    currentRotation.value = rotation;
 
     return {
       position: "absolute",
@@ -247,6 +317,7 @@ export const AnimatedCard = ({
     targetState.rotation,
     yOffset,
     hopMagnitude,
+    orbitConfig,
     cardWidth,
     cardHeight,
   ]);

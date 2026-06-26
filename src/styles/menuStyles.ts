@@ -1,4 +1,10 @@
-import { Colors, ContentSidePadding, FontWeight, rgba } from "@/styles/styles";
+import {
+  Colors,
+  ContentSidePadding,
+  FontWeight,
+  HeaderButtonSize,
+  rgba,
+} from "@/styles/styles";
 import { StyleSheet } from "react-native";
 import { flexStyles } from "./flexStyles";
 import { modalBorderRadius } from "./modalStyles";
@@ -65,5 +71,18 @@ export const menuStyles = StyleSheet.create({
     fontSize: 18,
     color: Colors.white,
     fontFamily: FontWeight[500],
+  },
+
+  headerButton: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 0,
+    width: HeaderButtonSize,
+    height: HeaderButtonSize,
+    boxShadow: "unset",
+    borderWidth: 0,
+    borderRadius: "unset",
+    backgroundColor: "unset",
   },
 });

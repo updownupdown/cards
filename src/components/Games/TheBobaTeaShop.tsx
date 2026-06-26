@@ -1,6 +1,5 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
-import { buttonStyles } from "@/styles/buttonStyles";
 import { flexStyles, transitionStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
@@ -594,13 +593,7 @@ export default function TheBobaTeaShop() {
         ]}
       >
         {!nextCustomerRevealed && !selectedPos && (
-          <View
-            style={[
-              flexStyles.rowCentered,
-              flexStyles.fullWidth,
-              buttonStyles.sizeMedium,
-            ]}
-          >
+          <View style={[flexStyles.rowCentered, flexStyles.fullWidth]}>
             <Text
               style={[
                 textStyles.default,

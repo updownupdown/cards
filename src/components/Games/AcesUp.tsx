@@ -1,25 +1,17 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
-import { useZoneLayout, ZoneConfig } from "@/hooks/useZoneLayout";
-import { Colors } from "@/styles/styles";
 import { useMemo, useState } from "react";
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 import { Button } from "../Button/Button";
-import {
-  AnimatedCard,
-  AnimatedCardMapping,
-  CardMapBGMapping,
-} from "../Cards/AnimatedCard";
+import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
-import { CardPositionBuilder, getZoneGrid } from "../Cards/CardPositionBuilder";
-import { CardColor } from "../Cards/CardStyles";
-import { GameWrapper } from "../common/GameWrapper";
 import {
   getGridColRows,
   MappedCard,
   MapZone,
   useCardMap,
 } from "../Cards/CardMap";
+import { GameWrapper } from "../common/GameWrapper";
 
 const cardSize = "regular";
 

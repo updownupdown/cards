@@ -1,7 +1,7 @@
 import { Button } from "@/components/Button/Button";
 import { useFade } from "@/hooks/useFade";
-import { buttonStyles } from "@/styles/buttonStyles";
 import { flexStyles } from "@/styles/flexStyles";
+import { menuStyles } from "@/styles/menuStyles";
 import {
   Colors,
   ContentSidePadding,
@@ -86,7 +86,7 @@ export function ResetButton({ reset }: Props) {
       )}
 
       <Button
-        style={[buttonStyles.headerButton]}
+        style={[menuStyles.headerButton]}
         onPress={displayResetHint}
         onLongPress={reset}
         onPressIn={onPressInReset}

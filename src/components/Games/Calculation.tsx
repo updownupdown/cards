@@ -1,15 +1,10 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
-import { useZoneLayout, ZoneConfig } from "@/hooks/useZoneLayout";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
 import { useEffect, useMemo, useState } from "react";
-import { Pressable, Text, View } from "react-native";
-import {
-  AnimatedCard,
-  AnimatedCardMapping,
-  CardMapBGMapping,
-} from "../Cards/AnimatedCard";
+import { Text, View } from "react-native";
+import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   cardDims,
   CardRank,
@@ -19,10 +14,8 @@ import {
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { CardPositionBuilder, getZoneGrid } from "../Cards/CardPositionBuilder";
-import { CardColor } from "../Cards/CardStyles";
-import { GameWrapper } from "../common/GameWrapper";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
+import { GameWrapper } from "../common/GameWrapper";
 
 type GameState = {
   stock: PlayingCard[];

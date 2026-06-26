@@ -195,7 +195,6 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   "/loot-the-loop": {
     title: "Loot the Loop",
     category: GameCategory.Isaludo,
-    enabled: false,
     byLine: "Game design by Wil Su",
     briefRules: [
       "Capture valid loop cards into the score pile.",

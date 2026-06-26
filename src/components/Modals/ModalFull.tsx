@@ -1,6 +1,5 @@
-import { buttonStyles } from "@/styles/buttonStyles";
 import { modalStyles } from "@/styles/modalStyles";
-import { Colors, FontWeight } from "@/styles/styles";
+import { Colors, FontWeight, HeaderButtonSize } from "@/styles/styles";
 import { router } from "expo-router";
 import React from "react";
 import { Modal, Text, View } from "react-native";
@@ -8,6 +7,7 @@ import { Button } from "../Button/Button";
 import { Icon, IconName } from "@/icons";
 import { textStyles } from "@/styles/textStyles";
 import { flexStyles } from "@/styles/flexStyles";
+import { menuStyles } from "@/styles/menuStyles";
 
 type Props = {
   children: React.ReactNode;
@@ -74,8 +74,12 @@ export default function ModalFull({
               {/* Close button */}
               <Button
                 style={[
-                  buttonStyles.headerButton,
-                  buttonStyles.closeModalButton,
+                  menuStyles.headerButton,
+                  {
+                    marginLeft: "auto",
+                    backgroundColor: Colors.K850,
+                    borderRadius: HeaderButtonSize / 2,
+                  },
                 ]}
                 onPress={onClose}
                 iconName="close"

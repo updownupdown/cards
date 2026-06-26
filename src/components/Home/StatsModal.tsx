@@ -61,7 +61,7 @@ export const StatsModal = ({ onClose }: Props) => {
               <Text
                 style={[textStyles.default, styles.colNum, styles.headerText]}
               >
-                Att
+                Try
               </Text>
               <Text
                 style={[textStyles.default, styles.colNum, styles.headerText]}
@@ -71,7 +71,7 @@ export const StatsModal = ({ onClose }: Props) => {
               <Text
                 style={[textStyles.default, styles.colNum, styles.headerText]}
               >
-                Loss
+                Lose
               </Text>
               <Text
                 style={[textStyles.default, styles.colRate, styles.headerText]}

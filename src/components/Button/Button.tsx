@@ -1,8 +1,6 @@
 import { Icon, IconName } from "@/icons";
-import { buttonStyles, buttonTransition } from "@/styles/buttonStyles";
-import { Colors, rgba } from "@/styles/styles";
+import { Colors, FontWeight, rgba } from "@/styles/styles";
 import { Platform, Pressable, Text, TextStyle, ViewStyle } from "react-native";
-import { cardDims } from "../Cards/card-utils";
 
 interface Props {
   style?: ViewStyle | ViewStyle[];
@@ -20,7 +18,7 @@ interface Props {
   iconName?: IconName;
   iconColor?: string;
   iconSize?: number;
-  cardWidth: number;
+  cardWidth?: number;
 }
 
 export const Button = ({
@@ -39,10 +37,9 @@ export const Button = ({
   delayLongPress,
   onPressIn,
   onPressOut,
-  cardWidth,
+  cardWidth = 50,
 }: Props) => {
   let themeColor: string | undefined = undefined;
-  const shadowUnit = Math.max(cardWidth * cardDims.ratioShadowUnit, 2);
 
   switch (theme) {
     case "blue":
@@ -64,36 +61,68 @@ export const Button = ({
       themeColor = Colors.btnGreen;
       break;
     default:
-      themeColor = theme;
+      themeColor = undefined;
   }
 
   if (disabled) {
     themeColor = Colors.K700;
   }
 
+  let fontSize = cardWidth * 0.3;
+  let height = cardWidth * 0.6;
+  let borderRadius = cardWidth * 0.15;
+  let borderWidth = themeColor ? cardWidth * 0.04 : 0;
+  let paddingVertical = cardWidth * 0.08;
+  let paddingHorizontal = cardWidth * 0.14;
+  let fontFamily = FontWeight[500];
+
+  switch (size) {
+    case "text":
+    case "small":
+      fontSize = cardWidth * 0.2;
+      height = cardWidth * 0.2;
+      borderRadius = cardWidth * 0.1;
+      borderWidth = cardWidth * 0.02;
+      paddingVertical = cardWidth * 0.06;
+      paddingHorizontal = cardWidth * 0.08;
+      break;
+    case "large":
+    case "textLarge":
+      fontSize = cardWidth * 0.4;
+      height = cardWidth * 0.4;
+      borderRadius = cardWidth * 0.2;
+      borderWidth = cardWidth * 0.06;
+      paddingVertical = cardWidth * 0.12;
+      paddingHorizontal = cardWidth * 0.18;
+      break;
+  }
+
   return (
     <Pressable
       style={[
-        size === "text" && buttonStyles.sizeText,
-        size === "textLarge" && buttonStyles.sizeTextLarge,
-        size === "small" && buttonStyles.sizeSmall,
-        size === "medium" && buttonStyles.sizeMedium,
-        size === "large" && buttonStyles.sizeLarge,
-        disabled && buttonStyles.disabled,
-        buttonTransition,
         {
+          transitionDuration: "0.4s",
+          transitionProperty: "all",
+          transitionTimingFunction: "ease",
+          outlineWidth: 0,
+          opacity: disabled ? 0.4 : 1,
+
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
           alignItems: "center",
-          gap: 6,
-
           width: fullWidth ? "100%" : undefined,
+          height,
+          paddingVertical,
+          paddingHorizontal,
 
-          outlineWidth: 0,
-          backgroundColor: themeColor ? rgba(themeColor, 0.12) : undefined,
-          borderWidth: themeColor ? cardWidth * 0.04 : 0,
+          borderRadius,
+          borderWidth,
           borderColor: themeColor ? rgba(themeColor, 0.6) : undefined,
+          backgroundColor:
+            !["text", "textLarge"].includes(size) && themeColor
+              ? rgba(themeColor, 0.12)
+              : undefined,
         },
         style,
       ]}
@@ -112,7 +141,14 @@ export const Button = ({
       {iconName && (
         <Icon
           name={iconName}
-          style={buttonStyles.icon}
+          style={[
+            {
+              transitionDuration: "0.4s",
+              transitionProperty: "all",
+              transitionTimingFunction: "ease",
+              flexShrink: 0,
+            },
+          ]}
           color={iconColor ?? Colors.K100}
           size={iconSize ?? 24}
         />
@@ -120,17 +156,18 @@ export const Button = ({
       {text && (
         <Text
           style={[
-            buttonStyles.text,
-            size === "text" && buttonStyles.textSizeText,
-            size === "textLarge" && buttonStyles.textSizeTextLarge,
-            size === "small" && buttonStyles.textSizeSmall,
-            size === "medium" && buttonStyles.textSizeMedium,
-            size === "large" && buttonStyles.textSizeLarge,
-            disabled && buttonStyles.textDisabled,
             textStyle,
             {
-              fontSize: cardWidth ? cardWidth * 0.3 : undefined,
-              color: themeColor ? rgba(themeColor, 1) : undefined,
+              transitionDuration: "0.4s",
+              transitionProperty: "all",
+              transitionTimingFunction: "ease",
+
+              fontSize,
+              fontFamily,
+              textTransform: "uppercase",
+              color: themeColor ? themeColor : Colors.accentBlue,
+              lineHeight: fontSize,
+              textAlign: "center",
             },
           ]}
         >

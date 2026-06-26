@@ -1,8 +1,8 @@
-import { useContentWidth } from "@/hooks/useContentWidth";
+import { useFade } from "@/hooks/useFade";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { flexStyles } from "@/styles/flexStyles";
 import { useEffect, useMemo, useState } from "react";
-import { View } from "react-native";
+import { Animated, View } from "react-native";
 import { Button } from "../Button/Button";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
@@ -22,6 +22,7 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
 import { useImmer } from "use-immer";
+import { infoSize } from "../Cards/CardMapBackgrounds";
 
 const maxMarkedPaths = 3;
 const exploreTransitionInMs = 1200;
@@ -103,12 +104,18 @@ export default function LootTheLoop() {
   const noHopAnimation: AnimatedCardMapping = {
     arcConfig: { enabled: false, magnitudeY: 0 },
   };
+  const orbitingLoopAnimation: AnimatedCardMapping = {
+    ...noHopAnimation,
+    orbitConfig: { enabled: true },
+  };
 
   const { saveUndoState, undo, canUndo, clearHistory } =
     useUndoHistory<GameSnapshot>();
   const handleUndo = () => {
     const previousState = undo();
     if (previousState) {
+      setSelectedPath(undefined);
+      setSelectedCardIndex(undefined);
       setGame(previousState.game);
     }
   };
@@ -130,6 +137,8 @@ export default function LootTheLoop() {
   function reset() {
     clearHistory();
     setSelectedCardIndex(undefined);
+    setSelectedPath(undefined);
+    setSelectedRevealedRank(undefined);
     setGame(setup());
   }
 
@@ -299,19 +308,8 @@ export default function LootTheLoop() {
     );
   }, [selectedCardIndex, game.paths, game.deck]);
 
-  // Reset numLoops to prevent huge rotation degree values after several loops
-  // const [isAdjustingRotation, setIsAdjustingRotation] = useState(false);
-
-  // useEffect(() => {
-  //   if (isExploring || game.numLoops < 2) return;
-
-  //   setIsAdjustingRotation(true);
-  //   setGame((prev) => ({ ...prev, numLoops: 0 }));
-
-  //   setTimeout(() => {
-  //     setIsAdjustingRotation(false);
-  //   }, 50);
-  // }, [isExploring, game.numLoops]);
+  const { isRendered: renderMarkPathButtons, opacity: markPathOpacity } =
+    useFade(canMarkPath, 200);
 
   // ========== Card Mapping ========== //
   const positioning = {
@@ -372,7 +370,6 @@ export default function LootTheLoop() {
         pileIndex: i,
         cards: game.deck[i] ? [game.deck[i]] : undefined,
         name: "loop",
-
         col,
         row,
         baseZIndex,
@@ -382,6 +379,12 @@ export default function LootTheLoop() {
     });
 
     // ---------- Paths ---------- //
+    const dims = {
+      colOffset: 1.25,
+      colStart: 2.25,
+      acesRow: 1.3,
+    };
+
     const pathZones: MapZone[] = Array.from({ length: 3 }, (_, i) => {
       const path = game.paths[i];
 
@@ -390,55 +393,46 @@ export default function LootTheLoop() {
         pileIndex: i,
         cards: path === null ? undefined : [path],
         name: "path",
-
-        col: i * 1.25 + 2.25,
-        row: 2.3,
+        col: i * dims.colOffset + dims.colStart,
+        row: dims.acesRow + dims.colOffset,
         baseZIndex: 2,
         placeholder: {},
       };
     });
 
     return [
-      {
-        id: "loop-footprint",
-
-        width: positioning.rad * 2,
-        height: positioning.rad * 2,
-        col: 0,
-        row: 0,
-      },
       ...loopZones,
       ...pathZones,
       {
         id: "aces",
         name: "aces",
-
-        col: 2.875,
-        row: 1.1,
+        col: dims.colStart + infoSize.leftRight,
+        row: dims.acesRow,
         cards: game.acesPile,
-        placeholder: {},
+        placeholder: {
+          infoPos: "left",
+          text: "Jewels",
+        },
         fan: {},
       },
       {
         id: "trinkets",
         name: "trinkets",
-
-        col: 4.125,
-        row: 1.1,
+        col: 2 * dims.colOffset + dims.colStart - infoSize.leftRight,
+        row: dims.acesRow,
         cards: game.trinketsPile,
-        placeholder: {},
+        placeholder: { infoPos: "right", text: "Trinkets" },
         fan: { maxVisible: 3 },
       },
       {
         id: "button",
-
         col: 0,
         row: 6.2,
-        height: 1,
+        height: 0.8,
         width: "full",
       },
     ];
-  }, [game, selectedCardIndex]);
+  }, [game, selectedCardIndex, selectedPath, selectedRevealedRank]);
 
   const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
     if (zone.name === "path") {
@@ -465,7 +459,8 @@ export default function LootTheLoop() {
       const index = mappedCard.pileIndex;
       const card = mappedCard.card;
 
-      if (index === undefined || card === undefined) return noHopAnimation;
+      if (index === undefined || card === undefined)
+        return orbitingLoopAnimation;
 
       const deckLength = game.deck.length;
       const isSelected = selectedCardIndex === index;
@@ -481,8 +476,10 @@ export default function LootTheLoop() {
       );
 
       const selectedColor = () => {
-        if (isLookAround || index === selectedCardIndex) {
+        if (isLookAround) {
           return "blue";
+        } else if (index === selectedCardIndex) {
+          return isNumberRank(card.rank) ? "blue" : "red";
         } else if (isExploreTarget) {
           return "purple";
         } else if (isPotentialPathTarget) {
@@ -492,7 +489,7 @@ export default function LootTheLoop() {
       };
 
       return {
-        ...noHopAnimation,
+        ...orbitingLoopAnimation,
         onPress: () => {
           // Ignore cards that are not the first two
           if (index !== game.deckPos && index !== game.deckPos + 1) {
@@ -553,11 +550,9 @@ export default function LootTheLoop() {
     cardMapper,
     zoneMapper,
     cardSize: "small",
-    visualizer: true,
+    // visualizer: true,
     paddingLeft: 0,
     paddingRight: 0,
-    paddingTop: 0,
-    // paddingBottom: 0,
     fixedCols: positioning.colWidth,
   });
 
@@ -574,6 +569,34 @@ export default function LootTheLoop() {
       handleUndo={handleUndo}
     >
       {cardMap}
+
+      {renderMarkPathButtons &&
+        [0, 1, 2].map((pathIndex) => (
+          <Animated.View
+            key={`mark-path-${pathIndex}`}
+            style={[
+              getZoneStylesById(`path-${pathIndex}`),
+              {
+                opacity: markPathOpacity,
+                zIndex: game.paths[pathIndex] ? 0 : 20,
+              },
+            ]}
+          >
+            <Button
+              text="Mark Path"
+              onPress={() => {
+                if (selectedCardIndex !== undefined) {
+                  markPath(selectedCardIndex, pathIndex);
+                }
+              }}
+              disabled={selectedCardIndex === undefined}
+              style={[flexStyles.fullWidth, flexStyles.fullHeight]}
+              theme={"green"}
+              cardWidth={cardWidth}
+              size="small"
+            />
+          </Animated.View>
+        ))}
 
       <View
         style={[

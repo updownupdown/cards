@@ -4,7 +4,6 @@ import {
   recordAttempt,
   recordResult,
 } from "@/data/game-menu";
-import { buttonStyles } from "@/styles/buttonStyles";
 import { flexStyles } from "@/styles/flexStyles";
 import {
   Colors,
@@ -23,6 +22,7 @@ import { GameIntro } from "./GameIntro";
 import { LoadingOverlay } from "./LoadingOverlay";
 import { ResetButton } from "./ResetButton";
 import { WinLoseBox } from "./WinLoseBox";
+import { menuStyles } from "@/styles/menuStyles";
 
 interface Props {
   isLoaded?: boolean;
@@ -119,7 +119,7 @@ export const GameWrapper = ({
         ]}
       >
         <Button
-          style={[buttonStyles.headerButton]}
+          style={[menuStyles.headerButton]}
           onPress={() => {
             router.push("/");
           }}
@@ -147,8 +147,8 @@ export const GameWrapper = ({
 
         {handleUndo && (
           <Button
-            style={[buttonStyles.headerButton]}
-            textStyle={[buttonStyles.headerButton]}
+            style={[menuStyles.headerButton]}
+            textStyle={[menuStyles.headerButton]}
             onPress={handleUndo}
             iconName="undo"
             iconColor={canUndo ? Colors.K200 : Colors.K600}
@@ -160,8 +160,8 @@ export const GameWrapper = ({
         <ResetButton reset={reset} />
 
         <Button
-          style={[buttonStyles.headerButton]}
-          textStyle={[buttonStyles.headerButton]}
+          style={[menuStyles.headerButton]}
+          textStyle={[menuStyles.headerButton]}
           onPress={() => setShowMenu(true)}
           iconName="menu"
           iconColor={Colors.K200}
