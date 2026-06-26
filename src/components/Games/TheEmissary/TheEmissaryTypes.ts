@@ -17,7 +17,7 @@ export type TheEmissaryVisit = {
   debateRecord: boolean[];
 };
 
-export type TheEmissaryGame = {
+export type GameState = {
   kingdoms: TheEmissaryKingdom[];
   draw: PlayingCard[];
   discardWon: PlayingCard[];
@@ -35,14 +35,9 @@ export type TheEmissaryGame = {
   handSize: number;
 };
 
-export const EmissarySuitsColorMap: Record<string, string> = {
-  diamonds: "#77B15D",
-  hearts: "#D4725A",
-  spades: "#AF75CA",
-  clubs: "#4EB2CE",
+export type GameSnapshot = {
+  game: GameState;
 };
-
-export const debateRecordsHeight = 40;
 
 export type EmissaryRefKeys =
   | "topicRef"
@@ -57,3 +52,12 @@ export type EmissaryRefKeys =
   | "advisorsRefs"
   | "handRefs"
   | "rulersRefs";
+
+export const EmissarySuitsColorMap: Record<string, string> = {
+  diamonds: "#84cf61",
+  hearts: "#58d8bc",
+  spades: "#d28af3",
+  clubs: "#f16a88",
+};
+
+export const defaultHandSize = 8;

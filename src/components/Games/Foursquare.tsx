@@ -1,10 +1,14 @@
+import {
+  getGridColRows,
+  MappedCard,
+  MapZone,
+  useCardMap,
+} from "@/components/Cards/CardMap";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
-import { useZoneLayout } from "@/hooks/useZoneLayout";
 import { Colors } from "@/styles/styles";
 import { useEffect, useMemo, useState } from "react";
-import { Pressable } from "react-native";
-import { AnimatedCard } from "../../Cards/AnimatedCard";
+import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
   isFace,
@@ -12,18 +16,37 @@ import {
   shuffle,
   top,
   type PlayingCard,
-} from "../../Cards/card-utils";
-import { CardPositionBuilder } from "../../Cards/CardPositionBuilder";
-import { GameWrapper } from "../../common/GameWrapper";
-import { useToast } from "../../common/Toast";
-import {
-  GameSnapshot,
-  GameState,
-  getColRow,
-  layoutZones,
-} from "./FoursquareSetup";
+} from "../Cards/card-utils";
+import { GameWrapper } from "../common/GameWrapper";
+import { useToast } from "../common/Toast";
 
-const cardSize = "small";
+function getColRow(index: number) {
+  let row: number[] = [];
+  let col: number[] = [];
+
+  for (let i = 0; i < 16; i++) {
+    if (Math.floor(i / 4) === Math.floor(index / 4) && i !== index) {
+      row.push(i);
+    }
+    if (i % 4 === index % 4 && i !== index) {
+      col.push(i);
+    }
+  }
+
+  return { row, col };
+}
+
+export type GameState = {
+  deck: PlayingCard[];
+  piles: PlayingCard[][];
+  ended: boolean;
+  won: boolean;
+  winLoseMessage?: string;
+};
+
+export type GameSnapshot = {
+  game: GameState;
+};
 
 function setup(): GameState {
   const deck = shuffle(createDeck().filter((c) => !isFace(c)));
@@ -313,26 +336,103 @@ export default function Foursquare() {
 
   const [showLegalPlacements, setShowLegalPlacements] = useState(false);
 
-  const layoutManager = useZoneLayout({
-    zones: layoutZones,
-    gapPc: 0.4,
+  // ========== Card Mapping ========== //
+  const zones: MapZone[] = useMemo(() => {
+    const pileZones: MapZone[] = getGridColRows({
+      cols: 4,
+      rows: 4,
+      colOffset: 0,
+      rowOffset: 1,
+    }).map((pos, i) => ({
+      id: `pile-${i}`,
+      pileIndex: i,
+      cards: game.piles[i],
+      name: "pile",
+
+      col: pos.c,
+      row: pos.r,
+      baseZIndex: 10,
+      fan: { maxVisible: 3 },
+      placeholder: {},
+    }));
+
+    return [
+      {
+        id: "deck",
+        name: "deck",
+
+        cards: game.deck,
+        col: 1.5,
+        row: 0,
+        fan: { maxVisible: 3 },
+        baseZIndex: 50,
+        placeholder: { text: "Draw", infoPos: "left" },
+      },
+      ...pileZones,
+    ];
+  }, [game]);
+
+  function handOnPress(isLegal: boolean, pileIndex: number) {
+    if (!isLegal) {
+      if (game.piles[pileIndex!].length >= 4) {
+        showToast("Pile is full!");
+      } else {
+        const validAdjacentPiles = getAdjacentPiles(game.piles);
+        if (!validAdjacentPiles.includes(pileIndex!)) {
+          showToast("Must place on existing or adjacent pile!");
+        } else {
+          showToast("Placing here would result in too many face up cards!");
+        }
+      }
+
+      setShowLegalPlacements(true);
+    } else {
+      setShowLegalPlacements(false);
+      placeAt(pileIndex!);
+    }
+  }
+
+  const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
+    if (zone.name === "pile" && zone.pileIndex !== undefined) {
+      const isLegal = legal.includes(zone.pileIndex);
+
+      return {
+        selectColor: showLegalPlacements
+          ? isLegal
+            ? Colors.cardSelectGreen
+            : Colors.cardSelectRed
+          : "none",
+        onPress: () => handOnPress(isLegal, zone.pileIndex!),
+      };
+    }
+    return {};
+  };
+
+  const cardMapper = (
+    mappedCard: MappedCard,
+  ): AnimatedCardMapping | undefined => {
+    if (mappedCard.zoneName === "pile" && mappedCard.pileIndex !== undefined) {
+      const isLegal = legal.includes(mappedCard.pileIndex);
+
+      return {
+        selectColor: showLegalPlacements
+          ? isLegal
+            ? Colors.cardSelectGreen
+            : Colors.cardSelectRed
+          : "none",
+        onPress: () => handOnPress(isLegal, mappedCard.pileIndex!),
+      };
+    }
+    return {};
+  };
+
+  const { cardMap } = useCardMap({
+    game,
+    zones,
+    zoneMapper,
+    cardMapper,
+    cardSize: "regular",
   });
-
-  const { cardWidth, cardHeight, getCardPosition, getZoneStyles } =
-    layoutManager;
-
-  // ========== Card Positions ========== //
-  const cardPositions = useMemo(() => {
-    const builder = new CardPositionBuilder(getCardPosition);
-
-    builder.addDeck(game.deck, "deck", 50, "deck");
-
-    game.piles.forEach((pile, pileIndex) => {
-      builder.addDeck(pile, `pile-${pileIndex}`, 10, "pile");
-    });
-
-    return builder.build();
-  }, [game, getCardPosition]);
 
   return (
     <GameWrapper
@@ -347,58 +447,7 @@ export default function Foursquare() {
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
-      {Object.values(cardPositions).map((target) => {
-        return (
-          <AnimatedCard
-            key={target.card.id}
-            targetState={target}
-            cardWidth={cardWidth}
-            cardHeight={cardHeight}
-            cardSize={cardSize}
-          />
-        );
-      })}
-
-      {Array.from({ length: 16 }, (_, pileIndex) => {
-        const isLegal = legal.includes(pileIndex);
-
-        const selectColor = showLegalPlacements
-          ? isLegal
-            ? Colors.cardSelectGreen
-            : Colors.cardSelectRed
-          : "none";
-
-        return (
-          <Pressable
-            key={`pile-${pileIndex}`}
-            style={[
-              getZoneStyles(`pile-${pileIndex}`),
-              { zIndex: 90, borderWidth: 2, borderColor: selectColor },
-            ]}
-            onPress={() => {
-              if (!isLegal) {
-                if (game.piles[pileIndex].length >= 4) {
-                  showToast("Pile is full!");
-                } else {
-                  const validAdjacentPiles = getAdjacentPiles(game.piles);
-                  if (!validAdjacentPiles.includes(pileIndex)) {
-                    showToast("Must place on existing or adjacent pile!");
-                  } else {
-                    showToast(
-                      "Placing here would result in too many face up cards!",
-                    );
-                  }
-                }
-
-                setShowLegalPlacements(true);
-              } else {
-                setShowLegalPlacements(false);
-                placeAt(pileIndex);
-              }
-            }}
-          />
-        );
-      })}
+      {cardMap}
     </GameWrapper>
   );
 }

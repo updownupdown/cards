@@ -2,16 +2,16 @@ import { useMemo, useState } from "react";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { CardOLD } from "../Cards/CardOLD";
+import { Card } from "../../Cards/Card";
 import {
   CardSuit,
   RANK_VALUE,
   createDeck,
   shuffle,
   type PlayingCard,
-} from "../Cards/card-utils";
+} from "../../Cards/card-utils";
 import { textStyles } from "@/styles/textStyles";
-import { GameWrapper } from "../common/GameWrapper";
+import { GameWrapper } from "../../common/GameWrapper";
 
 type FoundationPile = {
   suit: CardSuit | null;
@@ -220,7 +220,7 @@ export default function FortyThieves() {
             <View key={`ft-found-${i}`} style={styles.foundationZone}>
               <Text style={styles.smallText}>{pile.suit ?? "-"}</Text>
               {top ? (
-                <CardOLD card={top} cardsPerRow={5} />
+                <Card card={top} cardWidth={5} />
               ) : (
                 <View style={styles.empty} />
               )}
@@ -237,10 +237,7 @@ export default function FortyThieves() {
             disabled={game.ended || game.waste.length === 0}
           >
             {game.waste.length > 0 ? (
-              <CardOLD
-                card={game.waste[game.waste.length - 1]}
-                cardsPerRow={5}
-              />
+              <Card card={game.waste[game.waste.length - 1]} cardWidth={5} />
             ) : (
               <View style={styles.empty} />
             )}
@@ -275,7 +272,7 @@ export default function FortyThieves() {
                 disabled={game.ended || col.length === 0}
               >
                 {top ? (
-                  <CardOLD card={top} cardsPerRow={5} />
+                  <Card card={top} cardWidth={5} />
                 ) : (
                   <View style={styles.empty} />
                 )}

@@ -3,5 +3,6 @@
     "source.fixAll": "explicit",
     // "source.organizeImports": "explicit",
     "source.sortMembers": "explicit"
-  }
+  },
+  "github.copilot.llm-gateway.serverUrl": "http://localhost:9999/v1"
 }

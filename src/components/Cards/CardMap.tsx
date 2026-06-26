@@ -1,5 +1,4 @@
 import { cardDims, PlayingCard } from "@/components/Cards/card-utils";
-import { IconName } from "@/icons";
 import {
   HeaderHeight,
   MaxContentHeight,
@@ -7,10 +6,13 @@ import {
 } from "@/styles/styles";
 import { useMemo } from "react";
 import { useWindowDimensions, ViewStyle } from "react-native";
-import { AnimatedCard, AnimatedCardMapping } from "./AnimatedCard";
+import {
+  AnimatedCard,
+  AnimatedCardMapping,
+  CardMapBGMapping,
+} from "./AnimatedCard";
 import {
   CardMapBackgrounds,
-  CardMapBGMapping,
   DeckFanDirection,
   DeckInfoPosition,
 } from "./CardMapBackgrounds";
@@ -22,6 +24,7 @@ export type CardPosition = {
   y: number;
   width: number;
   height: number;
+  zIndex: number;
 };
 
 export type MappedCard = {
@@ -30,25 +33,24 @@ export type MappedCard = {
   refIndex?: number;
   zoneName?: string;
   zoneId: string;
-  zoneType: string;
   pileIndex?: number;
   x: number;
   y: number;
   zIndex: number;
   isHiddenUnderDeck?: boolean;
+  rotation?: number;
   topOfZone: boolean;
+  clickThroughCards?: boolean;
 };
-
-export type MapZoneType = "ui" | "single-card" | "deck" | "card-array";
 
 export type MapZone = {
   id: string;
   pileIndex?: number;
   refIndex?: number;
   name?: string;
-  type: MapZoneType;
   col: number;
   row: number;
+  rotation?: number;
   baseZIndex?: number;
   cards?: PlayingCard[];
   width?: number | "full";
@@ -61,9 +63,11 @@ export type MapZone = {
   placeholder?: {
     showCount?: boolean;
     text?: string;
-    iconName?: IconName;
     infoPos?: DeckInfoPosition;
+    hideBackground?: boolean;
+    backgroundColor?: string;
   };
+  clickThroughCards?: boolean;
 };
 
 type MapConfig = {
@@ -74,6 +78,8 @@ type MapConfig = {
   paddingBottom?: number;
   paddingLeft?: number;
   paddingRight?: number;
+  fixedCols?: number;
+  fixedRows?: number;
   cardSize: CardSizes;
   visualizer?: boolean;
   cardMapper: (mappedCard: MappedCard) => AnimatedCardMapping | undefined;
@@ -88,6 +94,8 @@ export function useCardMap({
   paddingBottom = cardDims.layoutPadding,
   paddingLeft = cardDims.layoutPadding,
   paddingRight = cardDims.layoutPadding,
+  fixedCols,
+  fixedRows,
   cardSize,
   visualizer,
   cardMapper,
@@ -102,7 +110,7 @@ export function useCardMap({
     () =>
       Math.max(
         ...zones.map(
-          (z) => (z.col || 0) + (z.width === "full" ? 1 : (z.height ?? 1)),
+          (z) => (z.col || 0) + (z.width === "full" ? 1 : (z.width ?? 1)),
         ),
       ),
     [screenWidthActual],
@@ -133,9 +141,10 @@ export function useCardMap({
     const gapYUnits = gap * cardDims.aspectRatio;
 
     const cardWidthUnitsToFit =
-      gridCols + gap * (gridCols - 1) + paddingLeft + paddingRight;
+      fixedCols ?? gridCols + gap * (gridCols - 1) + paddingLeft + paddingRight;
 
     const cardHeightUnitsToFit =
+      fixedRows ??
       gridRows + gapYUnits * (gridRows - 1) + paddingTop + paddingBottom;
 
     let cardWidth = containerWidth / cardWidthUnitsToFit;
@@ -190,6 +199,7 @@ export function useCardMap({
           ? gridWidthPadded
           : cardWidth * zWidth + gridGap * (zWidth - 1),
       height: cardHeight * zHeight + gridGap * (zHeight - 1),
+      zIndex: zone.baseZIndex,
     } as CardPosition;
   };
 
@@ -202,6 +212,7 @@ export function useCardMap({
       left: zonePos.x,
       width: zonePos.width,
       height: zonePos.height,
+      zIndex: zonePos.zIndex,
     } as ViewStyle;
   };
 
@@ -221,10 +232,14 @@ export function useCardMap({
     let zIndex = baseZIndex + cardIndex;
     let isHiddenUnderDeck = false;
     let fanOffset = zone.fan?.offset ?? cardDims.fanOffset;
+    let numCardsVisible = zone.cards?.length ?? 1;
 
     if (zone.fan) {
       let visualIndex = cardIndex;
+
       if (zone.fan.maxVisible !== undefined) {
+        numCardsVisible = Math.min(zone.fan.maxVisible, numCardsVisible);
+
         const startVisible = Math.max(
           0,
           totalCardsInZone - zone.fan.maxVisible,
@@ -247,7 +262,7 @@ export function useCardMap({
               ? fanOffset * cardWidth
               : 0;
 
-      const offsetY =
+      let offsetY =
         fanDirection === "up"
           ? -fanOffset * cardHeight
           : fanDirection === "down"
@@ -255,6 +270,28 @@ export function useCardMap({
             : fanDirection === "diagonal-depth"
               ? -fanOffset * cardHeight
               : 0;
+
+      // Horizontal centering of cards within a zone with width > 1
+      if (zone.width !== undefined && zone.width !== "full" && zone.width > 1) {
+        const fanSpanX = Math.abs(offsetX * (numCardsVisible - 1));
+        const deckWidthPx = cardWidth + fanSpanX;
+        const zoneWidthPx = base.width;
+        const centeringOffset = (zoneWidthPx - deckWidthPx) / 2;
+        const shiftForNegativeFan = offsetX < 0 ? fanSpanX : 0;
+
+        x += centeringOffset + shiftForNegativeFan;
+      }
+
+      // Vertical centering of cards within a zone with height > 1
+      if (zone.height !== undefined && zone.height > 1) {
+        const fanSpanY = Math.abs(offsetY * (numCardsVisible - 1));
+        const deckHeightPx = cardHeight + fanSpanY;
+        const zoneHeightPx = base.height;
+        const centeringOffset = (zoneHeightPx - deckHeightPx) / 2;
+        const shiftForNegativeFan = offsetY < 0 ? fanSpanY : 0;
+
+        y += centeringOffset + shiftForNegativeFan;
+      }
 
       x += offsetX * visualIndex;
       y += offsetY * visualIndex;
@@ -283,13 +320,14 @@ export function useCardMap({
           cardIndex: i,
           zoneId: zone.id,
           zoneName: zone.name,
-          zoneType: zone.type,
           pileIndex: zone.pileIndex,
           refIndex: zone.refIndex,
           x: position.x,
           y: position.y,
           zIndex: position.zIndex,
+          rotation: zone.rotation,
           isHiddenUnderDeck: position.isHiddenUnderDeck,
+          clickThroughCards: zone.clickThroughCards,
           topOfZone: zone.cards ? i === zone.cards.length - 1 : true,
         };
       }
@@ -314,7 +352,6 @@ export function useCardMap({
   const mapBackgrounds = (
     <CardMapBackgrounds
       zones={zones}
-      game={game}
       getZoneBasePos={getZoneBasePos}
       zoneMapper={zoneMapper}
       cardWidth={cardWidth}
@@ -353,20 +390,33 @@ export function useCardMap({
   };
 }
 
-export type ColRows = { c: number; r: number };
+export type ColRows = {
+  c: number;
+  r: number;
+  width?: number;
+  height?: number;
+};
+
 export function getGridColRows({
   cols,
   rows,
   colOffset = 0,
   rowOffset = 0,
+  scaleX = 1,
+  scaleY = 1,
 }: {
   cols: number;
   rows: number;
   colOffset?: number;
   rowOffset?: number;
+  scaleX?: number;
+  scaleY?: number;
+  aspectRatio?: number;
 }): ColRows[] {
   return Array.from({ length: cols * rows }, (_, i) => ({
-    c: (i % cols) + colOffset,
-    r: Math.floor(i / cols) + rowOffset,
+    c: (i % cols) * scaleX + colOffset,
+    r: Math.floor(i / cols) * scaleY + rowOffset,
+    width: 1 * scaleX,
+    height: 1 * scaleY,
   }));
 }

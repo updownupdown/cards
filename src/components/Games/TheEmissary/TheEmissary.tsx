@@ -1,281 +1,102 @@
+import { Button } from "@/components/Button/Button";
 import {
-  CardAnimationParams,
-  useAnimations,
-} from "@/components/Animations/Animations";
+  AnimatedCardMapping,
+  CardMapBGMapping,
+} from "@/components/Cards/AnimatedCard";
+import { MappedCard, MapZone, useCardMap } from "@/components/Cards/CardMap";
+import { DeckInfoPosition } from "@/components/Cards/CardMapBackgrounds";
 import { useToast } from "@/components/common/Toast";
+import { useFade } from "@/hooks/useFade";
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { useLayoutManager } from "@/hooks/useLayoutManager";
-import { flexStyles } from "@/styles/flexStyles";
-import { Colors, FontWeight } from "@/styles/styles";
-import { textStyles } from "@/styles/textStyles";
+import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { flexStyles, transitionStyles } from "@/styles/flexStyles";
+import { Colors, FontWeight, rgba } from "@/styles/styles";
+import { rotatedText, textStyles } from "@/styles/textStyles";
 import { useEffect, useMemo, useState } from "react";
-import { Text, View } from "react-native";
-import { useCardSizing } from "../../Cards/CardOLD";
+import { Animated, Text, View, ViewStyle } from "react-native";
+import { useImmer } from "use-immer";
 import {
-  CardSuit,
-  createDeck,
-  isFace,
-  rankValue,
+  flipAllToBack,
+  flipAllToFace,
+  flipToBack,
+  flipToFace,
   shuffle,
-  suitValue,
+  sortCards,
   type PlayingCard,
 } from "../../Cards/card-utils";
 import { GameWrapper } from "../../common/GameWrapper";
-import { AdvisorInfo, ChooseKingdomOverlay } from "./AdvisorInfo";
-import { DebateDecks } from "./DebateDecks";
-import { DebateRecord } from "./DebateRecord";
-import { EmissaryHand } from "./EmissaryHand";
+import { AdvisorInfo } from "./AdvisorInfo";
+import { canDebateWithCard, setup, wonDebate } from "./TheEmissaryLogic";
 import {
+  defaultHandSize,
   EmissarySuitsColorMap,
-  TheEmissaryGame,
+  GameSnapshot,
+  GameState,
   TheEmissaryKingdom,
-} from "./TheEmissaryCommon";
-
-const defaultHandSize = 8;
+} from "./TheEmissaryTypes";
 
 // TODO - remove this
 const debugMode = false;
 
-const cardsPerRow = {
-  topic: 4,
-  debates: 6,
-  other: 8,
-};
-
-function setup(firstGame = false): TheEmissaryGame {
-  const deck = shuffle(createDeck());
-  const rulers = shuffle(
-    deck.filter((c) => c.rank === "K" || c.rank === "Q").slice(0, 8),
-  ).map((c) => ({ ...c, faceUp: true }));
-  const advisors = shuffle(deck.filter((c) => c.rank === "J").slice(0, 4)).map(
-    (c) => ({ ...c, faceUp: true }),
-  );
-
-  const draw = shuffle(
-    deck.filter((c) => !isFace(c) && c.rank !== "9" && c.rank !== "10"),
-  );
-
-  const kingdoms: TheEmissaryKingdom[] = Array.from({ length: 8 }, (_, i) => ({
-    id: i,
-    ruler: rulers[i],
-    requiredWins: i + 1,
-    visited: false,
-    won: false,
-  }));
-
-  return {
-    kingdoms,
-    advisors,
-    draw,
-    discardWon: [],
-    discardLost: [],
-    hand: [],
-    visit: null,
-    started: !firstGame,
-    ended: false,
-    won: false,
-    winLoseMessage: "",
-    neededToHand: 0,
-    handNeedsOrdering: false,
-    discardFromHand: 0,
-    handSize: defaultHandSize,
-  };
-}
-
 export default function TheEmissary() {
+  const showToast = useToast();
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
-  const [game, setGame] = useState<TheEmissaryGame>(setup(true));
-  const { cardWidth } = useCardSizing(cardsPerRow.topic);
+  const [game, setGame] = useImmer<GameState>(setup(true));
 
   const [selectedAdvisor, setSelectedAdvisor] = useState<
     PlayingCard | undefined
   >(undefined);
-  const { animateCards, animatingCardIds } = useAnimations();
 
-  const { getLayout, setRef } = useLayoutManager([
-    "drawCurrentRef",
-    "drawNextRef",
-    "topicRef",
-    "discardLostCurrentRef",
-    "discardLostNextRef",
-    "discardWonCurrentRef",
-    "discardWonNextRef",
-    "futureAdvisorRef",
-    "futureHandRef",
-    "advisorsRefs",
-    "handRefs",
-    "rulersRefs",
-  ]);
+  const lastSelectedAdvisor: PlayingCard | undefined = useMemo(() => {
+    return selectedAdvisor ?? undefined;
+  }, [selectedAdvisor]);
 
+  const { saveUndoState, undo, canUndo, clearHistory } =
+    useUndoHistory<GameSnapshot>();
+  const handleUndo = () => {
+    const previousState = undo();
+    if (previousState) {
+      setGame(previousState.game);
+    }
+  };
+
+  const showChooseKingdom = useMemo(() => {
+    return !game.ended && game.visit === null;
+  }, [game.visit]);
+
+  // ----- Reset ----- //
   function reset() {
+    clearHistory();
     setGame(setup());
     setSelectedAdvisor(undefined);
   }
 
+  // ----- useEffect: Intro ----- //
   useEffect(() => {
     if (showIntro === false) {
-      setGame((prev) => ({ ...prev, started: true }));
+      setGame((draft) => {
+        draft.started = true;
+      });
     }
   }, [showIntro]);
 
-  function startVisit(kingdomId: number) {
-    setGame((prev) => {
-      if (prev.ended || prev.visit !== null || prev.kingdoms[kingdomId].visited)
-        return prev;
-
-      const k = prev.kingdoms[kingdomId];
-
-      return {
-        ...prev,
-        visit: {
-          kingdomId,
-          trumpSuit: k.ruler.suit,
-          requiredWins: k.requiredWins,
-          wins: 0,
-          debatesLeft: 8,
-          debateTopic: undefined,
-          debateRecord: [],
-        },
-        winLoseMessage: "",
-      };
-    });
-  }
-
-  // Refill hand after visit
+  // ----- useEffect: Refill hand after visit ----- //
   useEffect(() => {
     if (
       !game.started ||
       game.ended ||
       game.hand.length > 0 ||
       game.visit !== null
-    )
+    ) {
       return;
+    }
 
-    setGame((prev) => ({ ...prev, neededToHand: defaultHandSize }));
+    setGame((draft) => {
+      draft.neededToHand = defaultHandSize;
+    });
   }, [game.visit, game.hand, game.started]);
 
-  function wonDebate(
-    card: PlayingCard,
-    debateTopic: PlayingCard,
-    trumpSuit: CardSuit,
-  ) {
-    if (debateTopic.suit !== trumpSuit && card.suit === trumpSuit) {
-      return true;
-    } else if (card.suit !== debateTopic.suit) {
-      return false;
-    }
-
-    return rankValue(card) > rankValue(debateTopic);
-  }
-
-  async function debateWithCard(card: PlayingCard) {
-    if (!game.visit?.debateTopic) return;
-
-    setSelectedAdvisor(undefined);
-
-    const anims: CardAnimationParams[] = [];
-
-    // Animate played hand card to discard pile
-    const wonTopic = wonDebate(
-      card,
-      game.visit.debateTopic,
-      game.visit.trumpSuit,
-    );
-
-    const cardIndex = game.hand.findIndex((c) => c.id === card.id);
-
-    const currentHandPos = getLayout("handRefs", cardIndex);
-    let discardPos = getLayout(
-      wonTopic ? "discardWonNextRef" : "discardLostNextRef",
-    );
-
-    if (currentHandPos && discardPos && card) {
-      anims.push({
-        card,
-        from: currentHandPos,
-        to: discardPos,
-        cardSize: "small",
-        flip: wonTopic ? undefined : "toBack",
-        cardsPerRow: cardsPerRow.other,
-      });
-    }
-
-    // Animate topic to discard
-    const topicCard = getLayout("topicRef");
-    discardPos = getLayout("discardLostNextRef");
-
-    if (topicCard && discardPos && game.visit.debateTopic) {
-      anims.push({
-        card: game.visit.debateTopic,
-        from: topicCard,
-        to: discardPos,
-        cardSize: "small",
-        flip: "toBack",
-        cardsPerRow: cardsPerRow.topic,
-        delay: 150,
-      });
-    }
-
-    if (anims.length > 0) {
-      await animateCards(anims);
-    }
-
-    setGame((prev) => {
-      if (!prev.visit || prev.visit.debateTopic === undefined) return prev;
-
-      const debateTopic = prev.visit.debateTopic;
-
-      let discardLost = prev.discardLost;
-      let discardWon = prev.discardWon;
-      let wins = prev.visit.wins;
-      let hand = prev.hand.filter((c) => c.id !== card.id);
-      let debateRecord = prev.visit.debateRecord;
-
-      if (wonTopic) {
-        wins += 1;
-        discardWon = [...discardWon, card];
-        discardLost = [...discardLost, { ...debateTopic, faceUp: false }];
-        debateRecord = [...debateRecord, true];
-      } else {
-        discardLost = [
-          ...discardWon,
-          { ...debateTopic, faceUp: false },
-          { ...card, faceUp: false },
-        ];
-        debateRecord = [...debateRecord, false];
-      }
-
-      // Won too many debates, lost!
-      if (wins > prev.visit.requiredWins && !debugMode) {
-        return {
-          ...prev,
-          discardLost,
-          discardWon,
-          hand,
-          visit: null,
-          ended: true,
-          won: false,
-          winLoseMessage: "You won too many debates, insulting the ruler!",
-        };
-      }
-
-      return {
-        ...prev,
-        hand,
-        discardLost,
-        discardWon,
-        visit: {
-          ...prev.visit,
-          wins,
-          debateRecord,
-          debateTopic: undefined,
-        },
-      };
-    });
-  }
-
-  const showToast = useToast();
-
+  // ----- useEffect: Finish Kingdom Visit ----- //
   useEffect(() => {
     if (!game.visit || game.hand.length > 0 || !game.visit?.kingdomId) return;
 
@@ -285,236 +106,181 @@ export default function TheEmissary() {
       showToast(`You won over Kingdom #${game.visit.kingdomId + 1}!`);
     }
 
+    saveUndoState(structuredClone({ game }));
+
     // Finish kingdom visit
     // This needs to be in a useEffect because it can be triggered in two ways:
     // 1: player plays a debate card, updates states, then has no cards left
     // 2: player uses advisor to remove trump cards left in hand, and has no cards left
-    setGame((prev) => {
-      if (prev.visit === null) return prev;
+    setGame((draft) => {
+      if (draft.visit === null) return draft;
 
       const wonKingdom =
-        prev.visit.wins === prev.visit.requiredWins || debugMode;
+        draft.visit.wins === draft.visit.requiredWins || debugMode;
 
-      let kingdoms = [...prev.kingdoms];
-      const kId = prev.visit.kingdomId;
-      const ruler = prev.kingdoms[kId].ruler;
-      kingdoms[kId] = {
-        ...kingdoms[kId],
+      // let kingdoms = [...draft.kingdoms];
+      const kId = draft.visit.kingdomId;
+      const ruler = draft.kingdoms[kId].ruler;
+      draft.kingdoms[kId] = {
+        ...draft.kingdoms[kId],
         visited: true,
         won: wonKingdom,
-        ruler: { ...ruler, faceUp: false },
+        ruler: flipToBack(ruler),
       };
-      let advisors = prev.advisors.map((a) => ({ ...a, faceUp: true }));
+      draft.advisors = flipAllToFace(draft.advisors);
 
       if (wonKingdom) {
-        advisors = [ruler, ...advisors];
+        draft.advisors.unshift(ruler);
       }
 
-      return {
-        ...prev,
-        kingdoms,
-        advisors,
-        handSize: defaultHandSize,
-        visit: null,
-        ended: !wonKingdom,
-        won: wonKingdom,
-        winLoseMessage: wonKingdom
-          ? "You won over the rulers of all eight kingdoms with your spectacular debating skills!"
-          : "You failed to win enough debates; the ruler doesn't take you seriously enough.",
-      };
+      sortCards(draft.advisors);
+
+      ((draft.handSize = defaultHandSize), (draft.visit = null));
+
+      draft.ended = !wonKingdom;
+      draft.won = wonKingdom;
+      draft.winLoseMessage = wonKingdom
+        ? "You won over the rulers of all eight kingdoms with your spectacular debating skills!"
+        : "You failed to win enough debates; the ruler doesn't take you seriously enough.";
     });
   }, [game.hand]);
 
-  function canDebateWithCard(
-    hand: PlayingCard[],
-    debateTopic?: PlayingCard,
-    handCard?: PlayingCard,
-  ) {
-    if (!debateTopic || !handCard) return false;
+  // ========== Start Visit ========== //
+  function startVisit(kingdomId: number) {
+    if (game.ended || game.visit !== null || game.kingdoms[kingdomId].visited) {
+      return;
+    }
 
-    const handContainsTopicSuit = hand.some(
-      (card) => card.suit === debateTopic.suit,
+    saveUndoState(structuredClone({ game }));
+
+    setGame((draft) => {
+      const k = draft.kingdoms[kingdomId];
+
+      draft.visit = {
+        kingdomId,
+        trumpSuit: k.ruler.suit,
+        requiredWins: k.requiredWins,
+        wins: 0,
+        debateTopic: undefined,
+        debateRecord: [],
+      };
+
+      draft.winLoseMessage = "";
+    });
+  }
+
+  // ========== Debate with Card ========== //
+  async function debateWithCard(card: PlayingCard) {
+    if (!game.visit?.debateTopic) return;
+
+    saveUndoState(structuredClone({ game }));
+
+    setSelectedAdvisor(undefined);
+
+    const wonTopic = wonDebate(
+      card,
+      game.visit.debateTopic,
+      game.visit.trumpSuit,
     );
-    if (handContainsTopicSuit && handCard.suit !== debateTopic.suit) {
-      return false;
-    }
-    return true;
+
+    setGame((draft) => {
+      if (!draft.visit || draft.visit.debateTopic === undefined) return;
+
+      const debateTopic = draft.visit.debateTopic;
+
+      draft.hand = draft.hand.filter((c) => c.id !== card.id);
+      draft.visit.debateRecord.push(wonTopic);
+
+      if (wonTopic) {
+        draft.visit.wins += 1;
+        draft.discardWon.push(flipToBack(card), flipToBack(debateTopic));
+      } else {
+        draft.discardLost.push(flipToBack(card), flipToBack(debateTopic));
+      }
+
+      // Won too many debates, lost!
+      if (draft.visit.wins > draft.visit.requiredWins && !debugMode) {
+        draft.visit = null;
+        draft.ended = true;
+        draft.won = false;
+        draft.winLoseMessage = "You won too many debates, insulting the ruler!";
+        return;
+      }
+
+      draft.visit.debateTopic = undefined;
+    });
   }
 
-  const lastSelectedAdvisor: PlayingCard | undefined = useMemo(() => {
-    return selectedAdvisor ?? undefined;
-  }, [selectedAdvisor]);
-
-  const showChooseKingdom = useMemo(() => {
-    return !game.ended && game.visit === null;
-  }, [game.visit]);
-
+  // ========== Refresh Deck WITHIN Kingdom ========== //
   async function refreshDeckWithinKingdom() {
-    setGame((prev) => {
-      const draw: PlayingCard[] = shuffle([
-        ...prev.discardLost,
-        ...prev.draw,
-      ]).map((c) => ({ ...c, faceUp: false }));
-
-      return { ...prev, draw, discardLost: [] };
+    setGame((draft) => {
+      draft.draw = flipAllToBack(
+        shuffle([...draft.discardLost, ...draft.draw]),
+      );
+      draft.discardLost = [];
     });
   }
 
+  // ========== Refresh Deck AFTER Kingdom ========== //
   async function refreshDeckAfterKingdom() {
-    setGame((prev) => {
-      const draw: PlayingCard[] = shuffle([
-        ...prev.discardLost,
-        ...prev.hand,
-        ...prev.discardWon,
-        ...prev.draw,
-      ]).map((c) => ({ ...c, faceUp: false }));
-
-      return { ...prev, draw, hand: [], discardLost: [], discardWon: [] };
+    setGame((draft) => {
+      draft.draw = flipAllToBack(
+        shuffle([
+          ...draft.discardLost,
+          ...draft.hand,
+          ...draft.discardWon,
+          ...draft.draw,
+        ]),
+      );
+      draft.hand = [];
+      draft.discardLost = [];
+      draft.discardWon = [];
     });
   }
 
+  // ========== Draw Card to Hand ========== //
   async function drawCardToHand() {
-    const drawPos = getLayout("drawCurrentRef");
-    const futureHandPos = getLayout("futureHandRef");
+    setGame((draft) => {
+      const newCard = draft.draw[draft.draw.length - 1];
+      draft.hand.push(flipToFace(newCard));
+      draft.draw.pop();
+      draft.neededToHand -= 1;
 
-    const card = game.draw[game.draw.length - 1];
-
-    if (drawPos && futureHandPos && card) {
-      await animateCards([
-        {
-          card,
-          from: drawPos,
-          to: futureHandPos,
-          cardSize: "small",
-          flip: "toFace",
-          cardsPerRow: cardsPerRow.other,
-          duration: 150,
-        },
-      ]);
-    }
-
-    setGame((prev) => {
-      const newCard = prev.draw[prev.draw.length - 1];
-      const hand = [...prev.hand, { ...newCard, faceUp: true }];
-      const draw = prev.draw.slice(0, -1);
-      const neededToHand = prev.neededToHand - 1;
-      const handNeedsOrdering = neededToHand === 0;
-
-      return { ...prev, draw, hand, neededToHand, handNeedsOrdering };
+      if (draft.neededToHand === 0) {
+        sortCards(draft.hand);
+      }
     });
   }
 
+  // ========== Draw Card to Topic ========== //
   async function drawCardToTopic() {
+    saveUndoState(structuredClone({ game }));
+
     if (game.draw.length === 0) {
       await refreshDeckWithinKingdom();
     }
 
-    const drawPos = getLayout("drawCurrentRef");
-    const topicPos = getLayout("topicRef");
+    setGame((draft) => {
+      if (draft.ended || draft.visit === null) return;
 
-    const nextTopic = game.draw[game.draw.length - 1];
-
-    if (drawPos && topicPos && nextTopic) {
-      await animateCards([
-        {
-          card: nextTopic,
-          from: drawPos,
-          to: topicPos,
-          cardSize: "small",
-          flip: "toFace",
-          cardsPerRow: cardsPerRow.debates,
-        },
-      ]);
-    }
-
-    setGame((prev) => {
-      if (prev.ended || prev.visit === null) return prev;
-
-      const nextTopic = { ...prev.draw[prev.draw.length - 1], faceUp: true };
-      const draw = prev.draw.slice(0, -1);
-
-      return {
-        ...prev,
-        draw,
-        visit: {
-          ...prev.visit,
-          debateTopic: nextTopic,
-        },
-      };
+      const nextTopic = flipToFace(draft.draw[draft.draw.length - 1]);
+      draft.draw.pop();
+      draft.visit.debateTopic = nextTopic;
     });
   }
 
+  // ========== Discard Card ========== //
   async function discardCard(card: PlayingCard) {
-    const cardIndex = game.hand.findIndex((c) => c.id === card.id);
-    const discardLostPos = getLayout("discardLostNextRef");
-    const cardPos = getLayout("handRefs", cardIndex);
+    saveUndoState(structuredClone({ game }));
 
-    if (discardLostPos && cardPos && card) {
-      await animateCards([
-        {
-          card: card,
-          from: cardPos,
-          to: discardLostPos,
-          cardSize: "small",
-          flip: "toFace",
-          cardsPerRow: cardsPerRow.other,
-        },
-      ]);
-    }
-
-    setGame((prev) => {
-      const hand = prev.hand.filter((c) => c.id !== card.id);
-      const discardLost = [card, ...prev.discardLost];
-      const discardFromHand = prev.discardFromHand - 1;
-
-      return { ...prev, hand, discardLost, discardFromHand };
+    setGame((draft) => {
+      draft.hand = draft.hand.filter((c) => c.id !== card.id);
+      draft.discardLost.unshift(card);
+      draft.discardFromHand -= 1;
     });
   }
 
-  async function orderHand() {
-    const hand = [...game.hand];
-
-    const orderedHand = [...hand].sort((a, b) => {
-      if (suitValue(a) !== suitValue(b)) {
-        return suitValue(a) - suitValue(b);
-      } else {
-        return rankValue(a) - rankValue(b);
-      }
-    });
-
-    const anims: CardAnimationParams[] = [];
-
-    for (let i = 0; i < hand.length; i++) {
-      const newPosIndex = orderedHand.findIndex((c) => c.id === hand[i].id);
-      const beforePos = getLayout("handRefs", i);
-      const afterPos = getLayout("handRefs", newPosIndex);
-      if (beforePos && afterPos) {
-        anims.push({
-          card: game.hand[i],
-          from: beforePos,
-          to: afterPos,
-          cardsPerRow: cardsPerRow.other,
-          cardSize: "small",
-          delay: i * 10 + Math.abs(beforePos.x - afterPos.x) * 2,
-          duration: 320,
-          arcY: 0.5 * Math.abs(beforePos.x - afterPos.x),
-        });
-      }
-    }
-
-    if (anims.length > 0) {
-      await animateCards(anims);
-    }
-
-    setGame((prev) => {
-      return { ...prev, hand: orderedHand, handNeedsOrdering: false };
-    });
-  }
-
-  useEffect(() => {
-    if (game.handNeedsOrdering) orderHand();
-  }, [game.handNeedsOrdering]);
-
+  // ----- useEffect: Deck and hand refresh ----- //
   useEffect(() => {
     if (game.neededToHand === 0) return;
 
@@ -529,150 +295,372 @@ export default function TheEmissary() {
     }
   }, [game.neededToHand, game.draw, game.visit]);
 
+  // ========== Spend Advisor ========== //
   async function spendAdvisor(advisor: PlayingCard) {
-    const advisorIndex = game.advisors.findIndex((c) => c.id === advisor.id);
-
-    const advisorPos = getLayout("advisorsRefs", advisorIndex);
-
-    if (advisorPos) {
-      await animateCards([
-        {
-          card: advisor,
-          from: advisorPos,
-          to: advisorPos,
-          cardSize: "small",
-          flip: "toBack",
-          cardsPerRow: cardsPerRow.other,
-        },
-      ]);
-    }
+    saveUndoState(structuredClone({ game }));
 
     // Turn advisor face down, or remove it
-    setGame((prev) => {
-      let advisors = prev.advisors;
-
+    setGame((draft) => {
       if (advisor.rank === "J") {
         // If Jack, turn it face down
-        advisors = advisors.map((a) => {
-          if (a.id === advisor.id) {
-            return { ...a, faceUp: false };
-          } else {
-            return a;
-          }
-        });
+        const advisorIndex = draft.advisors.findIndex(
+          (a) => a.id === advisor.id,
+        );
+        if (advisorIndex !== -1) {
+          draft.advisors[advisorIndex] = flipToBack(
+            draft.advisors[advisorIndex],
+          );
+        }
       } else {
         // Otherwise, remove from advisors
-        advisors = advisors.filter((a) => a.id !== advisor.id);
+        draft.advisors = draft.advisors.filter((a) => a.id !== advisor.id);
       }
-
-      return {
-        ...prev,
-        advisors,
-      };
     });
 
     setSelectedAdvisor(undefined);
   }
 
+  // ========== Discard Cards Matching Trump ========== //
   async function discardCardsMatchingTrump() {
-    const anims: CardAnimationParams[] = [];
+    saveUndoState(structuredClone({ game }));
 
-    const trumpSuit = game.visit?.trumpSuit;
-    const hand = game.hand.filter((c) => c.suit !== trumpSuit);
-    const cardsToDiscard = game.hand.filter((c) => c.suit === trumpSuit);
+    setGame((draft) => {
+      if (!draft.visit) return;
 
-    for (let i = 0; i < cardsToDiscard.length; i++) {
-      const card = cardsToDiscard[i];
-      const cardIndex = game.hand.findIndex(
-        (c) => c.id === cardsToDiscard[i].id,
-      );
+      const trumpSuit = draft.visit.trumpSuit;
+      const cardsToDiscard = draft.hand.filter((c) => c.suit === trumpSuit);
 
-      const currentHandPos = getLayout("handRefs", cardIndex);
-      const discardPos = getLayout("discardLostNextRef");
-
-      if (currentHandPos && discardPos && card) {
-        anims.push({
-          card,
-          from: currentHandPos,
-          to: discardPos,
-          cardSize: "small",
-          flip: "toBack",
-          cardsPerRow: cardsPerRow.other,
-          delay: 100,
-        });
-      }
-    }
-
-    if (anims.length > 0) {
-      await animateCards(anims);
-    }
-
-    setGame((prev) => {
-      if (!prev.visit) return prev;
-
-      const draw = [...cardsToDiscard, ...prev.draw];
-      const handSize = Math.max(prev.handSize - cardsToDiscard.length, 0);
-
-      return { ...prev, hand, draw, handSize };
+      draft.hand = draft.hand.filter((c) => c.suit !== trumpSuit);
+      draft.draw = [...cardsToDiscard, ...draft.draw];
+      draft.handSize = Math.max(draft.handSize - cardsToDiscard.length, 0);
     });
   }
 
+  // ========== Do Advisor Action ========== //
   async function doAdvisorAction(advisor: PlayingCard | undefined) {
     if (!advisor) return;
+
+    saveUndoState(structuredClone({ game }));
 
     const suit = advisor.suit;
 
     await spendAdvisor(advisor);
 
     if (suit === "diamonds") {
-      setGame((prev) => ({ ...prev, neededToHand: 2, discardFromHand: 2 }));
+      setGame((draft) => {
+        draft.neededToHand = 2;
+        draft.discardFromHand = 2;
+      });
     } else if (suit === "hearts") {
       await discardCardsMatchingTrump();
       await spendAdvisor(advisor);
     } else if (suit === "clubs") {
-      setGame((prev) => {
-        const numCardsToDraw = prev.hand.filter(
+      setGame((draft) => {
+        const numCardsToDraw = draft.hand.filter(
           (c) => c.suit === "clubs",
         ).length;
-        return {
-          ...prev,
-          handSize: prev.handSize + numCardsToDraw,
-          neededToHand: numCardsToDraw,
-        };
+        draft.handSize += numCardsToDraw;
+        draft.neededToHand = numCardsToDraw;
       });
     }
   }
 
-  async function swapRulers(
-    kingdomId: TheEmissaryKingdom,
-    advisor: PlayingCard,
-  ) {
+  async function swapRulers(kingdom: TheEmissaryKingdom, advisor: PlayingCard) {
+    saveUndoState(structuredClone({ game }));
+
     await spendAdvisor(advisor);
 
-    setGame((prev) => {
-      if (!prev.visit) return prev;
+    setGame((draft) => {
+      if (!draft.visit) return;
 
-      const kingdoms = [...prev.kingdoms];
+      const currentKingdomId = draft.visit.kingdomId;
+      const tempRuler = draft.kingdoms[currentKingdomId].ruler;
 
-      kingdoms[prev.visit.kingdomId] = {
-        ...kingdoms[prev.visit.kingdomId],
-        ruler: prev.kingdoms[kingdomId.id].ruler,
+      draft.kingdoms[currentKingdomId].ruler = draft.kingdoms[kingdom.id].ruler;
+      draft.kingdoms[kingdom.id].ruler = tempRuler;
+      draft.visit.trumpSuit = kingdom.ruler.suit;
+    });
+  }
+
+  // ========== Card Mapping ========== //
+  const dims = {
+    rowGap: 0.2,
+    rulersNum: 8,
+    width: 7,
+    rulersHeaderHeight: 0.4,
+    winsHeight: 0.6,
+    debateAreaHeight: 2.5,
+    advisorHeight: 1.2,
+    handHeight: 1.2,
+    debateRow: 2.38,
+    minOffset: 1.2,
+  };
+
+  const zones: MapZone[] = useMemo(() => {
+    const debateDeckWidth = dims.width / 4;
+    const debateAreaRow = dims.rulersHeaderHeight + 1 + dims.rowGap;
+
+    // Adding -0.01 offset to prevent right side overflowing due to rounding
+    const rulersOffset = (dims.width - 1) / (dims.rulersNum - 1) - 0.01;
+    const handOffset = Math.min(
+      dims.minOffset,
+      5 / (game.hand.length - 1) - 0.01,
+    );
+    const advisorsOffset =
+      Math.min(dims.minOffset, 6 / game.advisors.length) - 0.01;
+
+    const advisorRow = debateAreaRow + dims.debateAreaHeight + dims.rowGap;
+    const advisorOverlayRow = debateAreaRow;
+    const advisorOverlayHeight = dims.debateAreaHeight;
+
+    const handRow =
+      debateAreaRow +
+      dims.debateAreaHeight +
+      dims.advisorHeight +
+      dims.rowGap * 2;
+    const chooseKingdomHeight = handRow + dims.handHeight - debateAreaRow;
+
+    // UI Zones
+    const rulerHeadersZone: MapZone = {
+      id: "ruler-headers",
+      col: 0,
+      row: 0,
+      width: dims.width,
+      height: dims.rulersHeaderHeight,
+    };
+    const debateAreaZone: MapZone = {
+      id: "debate-area",
+      col: 0,
+      row: debateAreaRow,
+      width: dims.width,
+      height: dims.debateAreaHeight,
+    };
+    const chooseKingdomZone: MapZone = {
+      id: "choose-kingdom",
+      col: 0,
+      row: debateAreaRow,
+      width: dims.width,
+      height: chooseKingdomHeight,
+      baseZIndex: 80,
+    };
+    const advisorOverlay: MapZone = {
+      id: "advisor-overlay",
+      col: 0,
+      row: advisorOverlayRow,
+      width: dims.width,
+      height: advisorOverlayHeight,
+      baseZIndex: 80,
+    };
+    const advisorsZone: MapZone = {
+      id: "advisors",
+      name: "advisor",
+      cards: game.advisors,
+      col: 0,
+      row: advisorRow,
+      width: dims.width,
+      height: dims.advisorHeight,
+      fan: { offset: advisorsOffset, direction: "right" },
+    };
+
+    // Card Zones
+    const rulerZones: MapZone = {
+      id: "ruler",
+      name: "ruler",
+      cards: game.kingdoms.map((k) => k.ruler),
+      col: 0,
+      row: dims.rulersHeaderHeight,
+      width: dims.width,
+      fan: { offset: rulersOffset, direction: "right" },
+    };
+
+    const debateDeckProps = (
+      id: string,
+      title: string,
+      row: number,
+    ): MapZone => {
+      return {
+        id,
+        name: id,
+        col: debateDeckWidth * row,
+        row: dims.debateRow,
+        width: debateDeckWidth,
+        height: 1.2,
+        baseZIndex: 10,
+        fan: { maxVisible: 3 },
+        placeholder: {
+          text: title,
+          infoPos: "below" as DeckInfoPosition,
+          showCount: id !== "topic",
+          hideBackground: id !== "topic",
+          backgroundColor: id === "topic" ? Colors.K900 : undefined,
+        },
       };
-      kingdoms[kingdomId.id] = {
-        ...kingdoms[kingdomId.id],
-        ruler: prev.kingdoms[prev.visit.kingdomId].ruler,
+    };
+    const drawZone: MapZone = {
+      cards: game.draw,
+      ...debateDeckProps("draw", "Draw", 0),
+    };
+    const topicZone: MapZone = {
+      cards: game.visit?.debateTopic ? [game.visit.debateTopic] : undefined,
+      ...debateDeckProps("topic", "Topic", 1),
+    };
+    const discardLostZone: MapZone = {
+      cards: game.discardLost,
+      ...debateDeckProps("lost", "Lost", 2),
+    };
+    const discardWonZone: MapZone = {
+      cards: game.discardWon,
+      ...debateDeckProps("won", "Won", 3),
+    };
+
+    const handZones: MapZone = {
+      id: "hand",
+      name: "hand",
+      cards: game.hand,
+      col: 0,
+      row: handRow,
+      width: dims.width,
+      height: dims.handHeight,
+      fan: { offset: handOffset, direction: "right" },
+    };
+
+    return [
+      chooseKingdomZone,
+      rulerHeadersZone,
+      rulerZones,
+      debateAreaZone,
+      advisorOverlay,
+      drawZone,
+      topicZone,
+      discardLostZone,
+      discardWonZone,
+      advisorsZone,
+      handZones,
+    ];
+  }, [game.visit, game.draw, game.discardLost, game.discardWon, game.kingdoms]);
+
+  const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
+    if (zone.name === "topic") {
+      return {
+        onPress: drawCardToTopic,
+        selectColor: game.visit?.debateTopic !== undefined ? "blue" : undefined,
+        forceOverlayColor: game.visit?.debateTopic !== undefined,
+        forceSelectColor: game.visit?.debateTopic !== undefined,
+      };
+    }
+  };
+
+  const cardMapper = (
+    mappedCard: MappedCard,
+  ): AnimatedCardMapping | undefined => {
+    if (mappedCard.zoneName === "ruler") {
+      // .......... Ruler .......... //
+      const index = mappedCard.cardIndex;
+      const kingdom = game.kingdoms[index];
+
+      const swappingRuler = selectedAdvisor?.suit === "spades";
+      const isCurrent = game.visit?.kingdomId === kingdom.id;
+      const isEnabled =
+        (game.visit === null && kingdom.ruler.faceUp) ||
+        (swappingRuler && !isCurrent) ||
+        (isCurrent && !swappingRuler);
+      // const opacity = isEnabled ? 1 : 0.6;
+
+      const onPress = () => {
+        if (game.visit === null) {
+          return startVisit(kingdom.id);
+        } else if (selectedAdvisor?.suit === "spades" && !isCurrent) {
+          return swapRulers(kingdom, selectedAdvisor);
+        } else {
+          return undefined;
+        }
+      };
+
+      const selectColor = () => {
+        if (swappingRuler) {
+          return isCurrent ? "none" : EmissarySuitsColorMap["spades"];
+        } else {
+          return isEnabled || isCurrent ? "blue" : "none";
+        }
       };
 
       return {
-        ...prev,
-        kingdoms,
-        visit: {
-          ...prev.visit,
-          trumpSuit: kingdomId.ruler.suit,
-        },
+        onPress,
+        isDisabled: onPress === undefined,
+        isVisible: !kingdom.won,
+        yOffset: isCurrent ? 0.1 : 0,
+        forceOverlayColor: isCurrent || swappingRuler,
+        selectColor: selectColor(),
       };
-    });
-  }
+    } else if (mappedCard.zoneName === "hand") {
+      // .......... Hand .......... //
+      const isDisabled =
+        game.discardFromHand === 0 &&
+        !canDebateWithCard(
+          game.hand,
+          game.visit?.debateTopic ?? undefined,
+          mappedCard.card,
+        );
+
+      const diplomacySelected =
+        selectedAdvisor && selectedAdvisor.suit === "hearts";
+      const currentTrump = game.visit?.trumpSuit;
+      const potentialDiscard =
+        diplomacySelected && mappedCard.card.suit === currentTrump;
+
+      return {
+        onPress: () => {
+          if (game.discardFromHand === 0) {
+            debateWithCard(mappedCard.card);
+          } else {
+            discardCard(mappedCard.card);
+          }
+        },
+        isDisabled,
+        selectColor: potentialDiscard
+          ? EmissarySuitsColorMap["hearts"]
+          : "blue",
+        forceOverlayColor: !isDisabled || potentialDiscard,
+      };
+    } else if (mappedCard.zoneName === "advisor") {
+      // .......... Advisor .......... //
+      return {
+        onPress: () => {
+          setSelectedAdvisor(
+            selectedAdvisor === mappedCard.card ? undefined : mappedCard.card,
+          );
+        },
+        isSelected: selectedAdvisor === mappedCard.card,
+        isDisabled:
+          game.discardFromHand !== 0 ||
+          !game.visit ||
+          !!game.visit.debateTopic ||
+          !mappedCard.card.faceUp,
+        selectColor: EmissarySuitsColorMap[mappedCard.card.suit],
+      };
+    }
+  };
+
+  const { cardMap, cardWidth, getZoneStylesById } = useCardMap({
+    game,
+    zones,
+    zoneMapper,
+    cardMapper,
+    gap: 0,
+    cardSize: "small",
+  });
+
+  const dotRadius = cardWidth * 0.08;
+
+  const { isRendered: renderChooseKingdom, opacity: chooseKingdomOpacity } =
+    useFade(showChooseKingdom, 300);
+  const { isRendered: renderNextTopicBtn, opacity: nextTopicBtnOpacity } =
+    useFade(game.visit?.debateTopic === undefined, 200, 200, 0);
+
+  const darkZoneStyles: ViewStyle = {
+    borderRadius: cardWidth * 0.15,
+    backgroundColor: Colors.K875,
+  };
 
   return (
     <GameWrapper
@@ -683,16 +671,99 @@ export default function TheEmissary() {
       reset={reset}
       isLoaded={isLoaded}
       winLoseMessage={game.winLoseMessage}
+      canUndo={canUndo}
+      handleUndo={handleUndo}
     >
+      {cardMap}
+
+      {/* Rulers Header */}
       <View
         style={[
-          flexStyles.colCentered,
-          flexStyles.gap14,
-          flexStyles.flex1,
-          { marginTop: -10 },
+          flexStyles.rowCentered,
+          getZoneStylesById("ruler-headers"),
+          {
+            paddingLeft: cardWidth * 0.22,
+            paddingRight: cardWidth * 0.04,
+          },
         ]}
       >
-        {/* Kingdoms */}
+        {game.kingdoms.map((k) => {
+          const swappingRuler = selectedAdvisor?.suit === "spades";
+          const isCurrent = game.visit?.kingdomId === k.id;
+          const color = () => {
+            if (swappingRuler) {
+              return isCurrent ? Colors.K500 : EmissarySuitsColorMap["spades"];
+            } else {
+              return isCurrent ? Colors.accentBlue : Colors.K600;
+            }
+          };
+
+          return (
+            <Text
+              key={`ruler-header-${k.requiredWins}`}
+              style={[
+                {
+                  flex: 1,
+                  fontFamily: FontWeight[500],
+                  fontSize: cardWidth * 0.26,
+                  color: color(),
+                },
+              ]}
+            >
+              {k.requiredWins}
+            </Text>
+          );
+        })}
+      </View>
+
+      {/* Choose a kingdom */}
+      {renderChooseKingdom && (
+        <Animated.View
+          style={[
+            flexStyles.colCentered,
+            getZoneStylesById("choose-kingdom"),
+            {
+              opacity: chooseKingdomOpacity,
+              padding: cardWidth * 0.5,
+              backgroundColor: rgba(Colors.K850, 0.7),
+            },
+          ]}
+        >
+          <Text
+            style={[
+              textStyles.default,
+              {
+                paddingHorizontal: cardWidth * 0.4,
+                paddingVertical: cardWidth * 0.3,
+
+                borderRadius: cardWidth * 0.15,
+                backgroundColor: Colors.K900,
+
+                fontSize: cardWidth * 0.3,
+                fontFamily: FontWeight[300],
+                color: Colors.K200,
+              },
+            ]}
+          >
+            Choose a kingdom
+          </Text>
+        </Animated.View>
+      )}
+
+      {/* Debate Record */}
+      <View
+        style={[
+          flexStyles.rowStart,
+          flexStyles.spaceBetween,
+          flexStyles.gap10,
+          getZoneStylesById("debate-area"),
+          darkZoneStyles,
+          {
+            paddingHorizontal: cardWidth * 0.26,
+            paddingVertical: cardWidth * 0.26,
+          },
+        ]}
+      >
         <View
           style={[
             flexStyles.rowCentered,
@@ -700,140 +771,147 @@ export default function TheEmissary() {
             flexStyles.spaceBetween,
           ]}
         >
-          {game.kingdoms.map((k, i) => {
-            const swappingRuler = selectedAdvisor?.suit === "spades";
-            const isCurrent = game.visit?.kingdomId === k.id;
-            const isEnabled =
-              (game.visit === null && k.ruler.faceUp) ||
-              (swappingRuler && !isCurrent) ||
-              (isCurrent && !swappingRuler);
-            const opacity = isEnabled ? 1 : 0.6;
+          <Text
+            style={[
+              textStyles.caps,
+              {
+                color: Colors.K500,
+                fontSize: cardWidth * 0.3,
+              },
+            ]}
+          >
+            Wins
+          </Text>
 
-            const onPress = () => {
-              if (game.visit === null) {
-                return () => startVisit(k.id);
-              } else if (selectedAdvisor?.suit === "spades" && !isCurrent) {
-                return () => swapRulers(k, selectedAdvisor);
-              } else {
-                return undefined;
-              }
-            };
+          <View style={[flexStyles.rowCentered, { gap: dotRadius }]}>
+            {Array.from({ length: game.handSize }, (_, i) => {
+              if (!game.visit) return null;
 
-            return (
-              <View
-                key={`kingdom-${k.id}`}
-                style={[
-                  flexStyles.colCentered,
-                  {
-                    opacity,
-                    borderRadius: 4,
-                    paddingTop: 2,
-                    gap: 4,
-                    alignItems: "center",
-                    backgroundColor: isCurrent ? Colors.K700 : Colors.K800,
-                  },
-                ]}
-              >
-                <Text
+              const won =
+                game.visit.debateRecord[i] === undefined
+                  ? undefined
+                  : game.visit.debateRecord[i];
+
+              const color =
+                won === undefined
+                  ? Colors.K800
+                  : won
+                    ? Colors.win
+                    : Colors.lose;
+
+              return (
+                <View
+                  key={`record-${i}`}
                   style={[
-                    textStyles.default,
+                    transitionStyles.sec03,
                     {
-                      fontSize: 15,
-                      fontFamily: FontWeight[500],
-                      color: isCurrent ? Colors.white : Colors.K300,
+                      backgroundColor: color,
+                      width: dotRadius * 2,
+                      height: dotRadius * 2,
+                      borderRadius: dotRadius,
                     },
                   ]}
-                >
-                  {k.requiredWins}
-                </Text>
-                {/* <CardButton
-                  card={!k.won ? k.ruler : undefined}
-                  ref={setRef("rulersRefs", i)}
-                  cardsPerRow={cardsPerRow.other}
-                  onPress={onPress()}
-                  disabled={onPress() === undefined}
-                  cardSize="small"
-                  selectColor={
-                    swappingRuler
-                      ? EmissarySuitsColorMap["spades"]
-                      : isEnabled
-                        ? "blue"
-                        : "none"
-                  }
-                /> */}
-              </View>
-            );
-          })}
-        </View>
+                />
+              );
+            })}
+          </View>
 
-        {/* Debate Area */}
-        <View
+          <Text
+            style={[
+              textStyles.caps,
+              {
+                fontFamily: FontWeight[500],
+                fontSize: cardWidth * 0.3,
+              },
+            ]}
+          >
+            {game.visit?.wins ?? "0"} / {game.visit?.requiredWins ?? "-"}
+          </Text>
+        </View>
+      </View>
+
+      {/* Next Topic Button */}
+      {renderNextTopicBtn && (
+        <Animated.View
           style={[
-            flexStyles.colCentered,
-            flexStyles.fullWidth,
-            flexStyles.flex1,
-            flexStyles.gap12,
+            getZoneStylesById("topic"),
             {
-              position: "relative",
+              opacity: nextTopicBtnOpacity,
+              padding: cardWidth * 0.1,
+              pointerEvents: "none",
+              zIndex: 15,
             },
           ]}
         >
-          {/* Choose a kingdom */}
-          <ChooseKingdomOverlay showChooseKingdom={showChooseKingdom} />
-
-          {/* Advisor Info */}
-          <AdvisorInfo
-            lastSelectedAdvisor={lastSelectedAdvisor}
-            selectedAdvisor={selectedAdvisor}
-            discardFromHand={game.discardFromHand}
-            setSelectedAdvisor={setSelectedAdvisor}
-            doAdvisorAction={doAdvisorAction}
-            hand={game.hand}
-            visit={game.visit}
-          />
-
-          {/* Debate Record */}
-          <DebateRecord visit={game.visit} handSize={game.handSize} />
-
-          {/* Visit - Debate Decks */}
-          <DebateDecks
-            setRef={setRef}
-            cardsPerRowDebates={cardsPerRow.debates}
-            cardsPerRowTopic={cardsPerRow.topic}
-            visit={game.visit}
-            drawCardToTopic={drawCardToTopic}
-            discardLost={game.discardLost}
-            discardWon={game.discardWon}
-            draw={game.draw}
+          <Button
+            onPress={drawCardToTopic}
+            text="Next Topic"
+            style={[
+              {
+                borderRadius: cardWidth * 0.1,
+                width: "100%",
+                height: "100%",
+                backgroundColor: Colors.K850,
+              },
+            ]}
             cardWidth={cardWidth}
+            theme={"blue"}
           />
-        </View>
+        </Animated.View>
+      )}
 
-        {/* Hand Area */}
-        <View
+      {/* Advisor List */}
+      <View
+        style={[
+          flexStyles.rowStart,
+          getZoneStylesById("advisors"),
+          darkZoneStyles,
+        ]}
+      >
+        <Text
           style={[
-            flexStyles.colCentered,
-            flexStyles.fullWidth,
-            flexStyles.gap20,
+            textStyles.caps,
+            rotatedText,
+            {
+              color: Colors.K500,
+              fontSize: cardWidth * 0.2,
+            },
           ]}
         >
-          {/* Advisor List */}
-          <EmissaryHand
-            setRef={setRef}
-            animatingCardIds={animatingCardIds}
-            advisors={game.advisors}
-            discardFromHand={game.discardFromHand}
-            setSelectedAdvisor={setSelectedAdvisor}
-            selectedAdvisor={selectedAdvisor}
-            visit={game.visit}
-            cardsPerRow={cardsPerRow.other}
-            debateWithCard={debateWithCard}
-            discardCard={discardCard}
-            canDebateWithCard={canDebateWithCard}
-            hand={game.hand}
-          />
-        </View>
+          Advisors
+        </Text>
       </View>
+
+      {/* Hand */}
+      <View
+        style={[flexStyles.rowStart, getZoneStylesById("hand"), darkZoneStyles]}
+      >
+        <Text
+          style={[
+            textStyles.caps,
+            rotatedText,
+            {
+              color: Colors.K500,
+              fontSize: cardWidth * 0.2,
+            },
+          ]}
+        >
+          Hand
+        </Text>
+      </View>
+
+      {/* Advisor Info */}
+      <AdvisorInfo
+        cardWidth={cardWidth}
+        lastSelectedAdvisor={lastSelectedAdvisor}
+        selectedAdvisor={selectedAdvisor}
+        discardFromHand={game.discardFromHand}
+        setSelectedAdvisor={setSelectedAdvisor}
+        doAdvisorAction={doAdvisorAction}
+        hand={game.hand}
+        visit={game.visit}
+        advisorStyles={getZoneStylesById("advisor-overlay")}
+      />
     </GameWrapper>
   );
 }

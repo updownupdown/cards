@@ -6,10 +6,10 @@ import {
   GAMES_DATA,
 } from "@/data/games-data";
 import { Icon } from "@/icons";
-import { buttonStyles } from "@/styles/buttonStyles";
+import { buttonStyles, buttonTransition } from "@/styles/buttonStyles";
 import { debugStyles } from "@/styles/debugStyles";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, FontWeight, HomePadding } from "@/styles/styles";
+import { Colors, FontWeight, HomePadding, rgba } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
 import { Link, type Href } from "expo-router";
 import { useEffect, useState } from "react";
@@ -73,10 +73,18 @@ export const GamesList = () => {
         <Link
           href={path as Href}
           style={[
-            buttonStyles.button,
             buttonStyles.sizeMedium,
-            buttonStyles.fullWidth,
+            buttonTransition,
             {
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 6,
+
+              outlineWidth: 0,
+              boxShadow: `inset 0 1px 1px ${rgba(Colors.white, 0.2)}, inset 1px 2px 14px ${rgba(Colors.K500, 0.2)}, inset 2px 4px 20px ${rgba(Colors.K600, 0.2)}, -2px -2px 12px ${rgba(Colors.K750, 0.8)}, 2px 2px 16px ${rgba(Colors.K950, 0.5)}`,
+
               paddingVertical: 10,
               height: "auto",
               textTransform: "none",
@@ -87,6 +95,7 @@ export const GamesList = () => {
               textAlign: "center",
               borderWidth: 0,
               borderColor: "unset",
+              width: "100%",
             },
           ]}
         >

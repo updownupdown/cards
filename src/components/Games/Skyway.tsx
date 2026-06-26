@@ -4,18 +4,25 @@ import { flexStyles, transitionStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight, rgba } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
 import { useMemo, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import Svg, { Line } from "react-native-svg";
+import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
-  SUITS,
+  cardDims,
   createDeck,
   rankValue,
   shuffle,
+  SUITS,
   type PlayingCard,
 } from "../Cards/card-utils";
+import {
+  getGridColRows,
+  MappedCard,
+  MapZone,
+  useCardMap,
+} from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
-const cardsPerRow = 6;
 const svgCellSize = 800;
 const svgGridSize = svgCellSize * 3;
 
@@ -265,6 +272,133 @@ export default function Skyway() {
     return paths;
   }, [game.grid]);
 
+  // ========== Card Mapping ========== //
+  const zones: MapZone[] = useMemo(() => {
+    const gridScaling = 2.4;
+
+    const marketZones: MapZone[] = getGridColRows({
+      cols: 3,
+      rows: 1,
+      rowOffset: 1.5,
+      scaleX: gridScaling,
+      scaleY: gridScaling * 0.54,
+    }).map((pos, i) => {
+      return {
+        id: `market-${i}`,
+        name: "market",
+
+        pileIndex: i,
+        cards: game.market[i],
+        col: pos.c,
+        row: pos.r,
+        width: pos.width,
+        height: pos.height,
+        placeholder: {},
+        fan: { direction: "right", offset: 0.5 },
+        baseZIndex: 100,
+        clickThroughCards: true,
+      };
+    });
+
+    const gridZones: MapZone[] = getGridColRows({
+      cols: 3,
+      rows: 3,
+      rowOffset: 1 + gridScaling * 0.8,
+      scaleX: gridScaling,
+      scaleY: gridScaling * cardDims.aspectRatio,
+    }).map((pos, i) => {
+      return {
+        id: `grid-${i}`,
+        name: "grid",
+
+        pileIndex: i,
+        cards: game.grid[i],
+        col: pos.c,
+        row: pos.r,
+        width: pos.width,
+        height: pos.height,
+        placeholder: {},
+        fan: { direction: "right", offset: 0.5 },
+        baseZIndex: 50,
+        clickThroughCards: true,
+      };
+    });
+
+    return [
+      {
+        id: "paths-info",
+
+        col: 0,
+        row: 0,
+        width: "full",
+        height: 0.9,
+        baseZIndex: 1,
+      },
+      {
+        id: "market",
+
+        col: 0,
+        row: 1,
+        width: "full",
+        height: 0.5,
+        baseZIndex: 1,
+      },
+      ...marketZones,
+      ...gridZones,
+      {
+        id: "paths",
+
+        col: 0,
+        row: 1 + gridScaling * 0.8,
+        width: 3 * gridScaling,
+        height: 3 * gridScaling * cardDims.aspectRatio,
+        baseZIndex: 15,
+      },
+    ];
+  }, [game]);
+
+  const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
+    const index = zone.pileIndex;
+    if (index === undefined) return {};
+
+    if (zone.name === "grid") {
+      return {
+        zIndexOffset: -49,
+        onPress: () => draftToCell(index!),
+      };
+    } else if (zone.name === "market") {
+      return {
+        selectColor: selectedMarket === index ? "green" : "blue",
+        forceOverlayColor: true,
+        forceSelectColor: true,
+        onPress: () => {
+          setSelectedMarket(selectedMarket === index ? null : index);
+        },
+      };
+    }
+  };
+
+  const cardMapper = (
+    mappedCard: MappedCard,
+  ): AnimatedCardMapping | undefined => {
+    return {
+      clickThroughCards: mappedCard.clickThroughCards,
+    };
+  };
+
+  const { cardMap, cardWidth, getZoneStylesById } = useCardMap({
+    game,
+    zones,
+    cardMapper,
+    zoneMapper,
+    gap: 0.14,
+    cardSize: "small",
+    // visualizer: true,
+  });
+
+  const paddingHorizontal = cardWidth * 0.28;
+  const borderRadius = cardWidth * 0.15;
+
   return (
     <GameWrapper
       showIntro={showIntro}
@@ -279,14 +413,24 @@ export default function Skyway() {
           : "5 cards for each suit path needed to win."
       }
     >
+      {cardMap}
+
       {/* Paths info */}
-      <View style={[styles.gameInfo]}>
-        <Text
-          style={[
-            textStyles.default,
-            { color: Colors.K200, fontFamily: FontWeight[400] },
-          ]}
-        >
+      <View
+        style={[
+          flexStyles.rowCentered,
+          flexStyles.fullWidth,
+          flexStyles.spaceBetween,
+          getZoneStylesById("paths-info"),
+          {
+            paddingHorizontal,
+            gap: cardWidth / 2,
+            borderRadius,
+            backgroundColor: Colors.K875,
+          },
+        ]}
+      >
+        <Text style={[styles.topText, { fontSize: cardWidth * 0.3 }]}>
           Longest paths
           <br />
           Total: {totalScore}
@@ -294,7 +438,7 @@ export default function Skyway() {
         <View
           style={[
             flexStyles.rowCentered,
-            flexStyles.justifyEvenly,
+            flexStyles.spaceBetween,
             flexStyles.flex1,
           ]}
         >
@@ -321,85 +465,45 @@ export default function Skyway() {
       {/* Market */}
       <View
         style={[
-          styles.marketWrap,
-          flexStyles.colCentered,
-          flexStyles.fullWidth,
-          flexStyles.gap8,
+          flexStyles.rowCentered,
+          flexStyles.spaceBetween,
+          getZoneStylesById("market"),
+          {
+            paddingHorizontal,
+          },
         ]}
       >
-        <View
-          style={[
-            flexStyles.rowCentered,
-            flexStyles.fullWidth,
-            flexStyles.spaceBetween,
-            { paddingHorizontal: 12, paddingVertical: 4 },
-          ]}
-        >
-          <Text
-            style={[
-              textStyles.default,
-              {
-                color: Colors.K200,
-                fontFamily: FontWeight[400],
-              },
-            ]}
-          >
-            Market
-          </Text>
-          <Text
-            style={[
-              textStyles.default,
-              {
-                color: Colors.K200,
-                fontFamily: FontWeight[400],
-              },
-            ]}
-          >
-            Round {game.round} of 3
-          </Text>
-        </View>
-        <View
-          style={[
-            flexStyles.rowCentered,
-            flexStyles.fullWidth,
-            flexStyles.gap8,
-          ]}
-        >
-          {game.market.map((pile, index) => (
-            <Pressable
-              key={`market-${index}`}
-              style={[
-                styles.marketPile,
-                selectedMarket === index && styles.marketPileSelected,
-              ]}
-              onPress={() => {
-                if (selectedMarket === index) {
-                  setSelectedMarket(null);
-                } else {
-                  setSelectedMarket(index);
-                }
-              }}
-            >
-              {/* <Deck
-                cards={pile}
-                largeFan="extra-wide"
-                fan="horizontalRight"
-                cardsPerRow={cardsPerRow}
-                cardSize="small-colored"
-              /> */}
-            </Pressable>
-          ))}
-        </View>
+        <Text style={[styles.topText, { fontSize: cardWidth * 0.3 }]}>
+          Market
+        </Text>
+        <Text style={[styles.topText, { fontSize: cardWidth * 0.3 }]}>
+          Round {game.round} of 3
+        </Text>
       </View>
 
       {/* Grid and paths */}
-      <View style={styles.gridAndPathsWrap}>
+      <View
+        style={[
+          flexStyles.rowCentered,
+          flexStyles.fullWidth,
+          getZoneStylesById("paths"),
+          // debugStyles.borderOrange,
+          {
+            zIndex: 10,
+            flexWrap: "wrap",
+            aspectRatio: 1,
+            padding: 4,
+            userSelect: "none",
+            pointerEvents: "none",
+          },
+        ]}
+      >
         {/* Paths */}
         <Svg
           style={[
             {
               position: "absolute",
-              zIndex: 1,
+              zIndex: 2,
               left: 0,
               top: 0,
               width: "100%",
@@ -444,53 +548,20 @@ export default function Skyway() {
               : null;
           })}
         </Svg>
-
-        {/* Grid  */}
-        {game.grid.map((stack, index) => (
-          <View key={`cell-${index}`} style={[styles.gridCellWrap]}>
-            <Pressable
-              key={`cell-${index}`}
-              style={[
-                styles.gridCell,
-                selectedMarket !== null && styles.gridCellDropReady,
-              ]}
-              onPress={() => draftToCell(index)}
-            >
-              {/* <Deck
-                cards={stack}
-                cardsPerRow={cardsPerRow}
-                largeFan="extra-wide"
-                fan="horizontalRight"
-                cardSize="small-colored"
-                invisibleWhenEmpty
-              /> */}
-            </Pressable>
-          </View>
-        ))}
       </View>
     </GameWrapper>
   );
 }
 
 const styles = StyleSheet.create({
-  // Game Info
-  gameInfo: {
-    ...flexStyles.rowCentered,
-    ...flexStyles.fullWidth,
-    ...flexStyles.gap12,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-
-    borderRadius: 12,
-    backgroundColor: Colors.K900,
+  // Text
+  topText: {
+    ...textStyles.default,
+    color: Colors.K400,
+    fontFamily: FontWeight[400],
   },
 
   // Market
-  marketWrap: {
-    padding: 6,
-    borderRadius: 12,
-    backgroundColor: Colors.K900,
-  },
   marketPile: {
     ...flexStyles.rowCentered,
     ...transitionStyles.sec05,
@@ -505,42 +576,5 @@ const styles = StyleSheet.create({
   marketPileSelected: {
     backgroundColor: `${rgba(Colors.accentGreen, 0.2)}`,
     boxShadow: `inset 0 0 0 3px ${rgba(Colors.accentGreen, 1)}`,
-  },
-
-  // Grid and Paths wrap
-  gridAndPathsWrap: {
-    ...flexStyles.rowCentered,
-    ...flexStyles.fullWidth,
-    position: "relative",
-    flexWrap: "wrap",
-    aspectRatio: 1,
-    borderRadius: 16,
-    padding: 4,
-    backgroundColor: Colors.K900,
-  },
-
-  // Grid
-  gridCellWrap: {
-    ...flexStyles.rowCentered,
-    position: "relative",
-    width: "33.33%",
-    zIndex: 2,
-    padding: 2,
-  },
-  gridCell: {
-    ...flexStyles.rowCentered,
-    ...flexStyles.fullWidth,
-    ...transitionStyles.sec05,
-    position: "relative",
-    zIndex: 2,
-    aspectRatio: 1,
-    borderRadius: 12,
-    overflow: "hidden",
-    justifyContent: "center",
-    alignItems: "center",
-    boxShadow: `inset 0 0 0 2px ${rgba(Colors.accentGreen, 0)}`,
-  },
-  gridCellDropReady: {
-    boxShadow: `inset 0 0 0 2px ${rgba(Colors.accentGreen, 0.4)}`,
   },
 });

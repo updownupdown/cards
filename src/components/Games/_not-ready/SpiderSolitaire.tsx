@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 import type { GestureResponderEvent, View as RNView } from "react-native";
-import { CardOLD } from "../Cards/CardOLD";
+import { Card } from "../../Cards/Card";
 import {
   DRAG_CAPTURE_THRESHOLD,
   DRAG_MOVE_THRESHOLD,
@@ -19,9 +19,9 @@ import {
   pointInRect,
   shuffle,
   type PlayingCard,
-} from "../Cards/card-utils";
+} from "../../Cards/card-utils";
 import { textStyles } from "@/styles/textStyles";
-import { GameWrapper } from "../common/GameWrapper";
+import { GameWrapper } from "../../common/GameWrapper";
 
 type GameState = {
   tableau: PlayingCard[][];
@@ -408,7 +408,7 @@ export default function SpiderSolitaire() {
                       ]}
                       {...(isTop ? topHandlers : {})}
                     >
-                      <CardOLD card={card} cardsPerRow={5} />
+                      <Card card={card} cardsPerRow={5} />
                     </View>
                   );
                 })}
@@ -428,7 +428,7 @@ export default function SpiderSolitaire() {
               },
             ]}
           >
-            <CardOLD card={dragGhost.card} cardsPerRow={5} />
+            <Card card={dragGhost.card} cardsPerRow={5} />
           </Animated.View>
         ) : null}
       </View>

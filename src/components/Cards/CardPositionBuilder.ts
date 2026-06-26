@@ -11,7 +11,15 @@ export class CardPositionBuilder {
 
   // Add single card
   add(params: CardRegistration): this {
-    const { card, zoneId, index, total, startingZIndex, misc, type } = params;
+    const {
+      card,
+      zoneId,
+      index,
+      total,
+      baseZIndex: startingZIndex,
+      misc,
+      type,
+    } = params;
     if (!card) return this;
 
     const position = this.getCardPosition(zoneId, index, total, startingZIndex);
@@ -44,7 +52,7 @@ export class CardPositionBuilder {
         index,
         type,
         total: deck.length,
-        startingZIndex,
+        baseZIndex: startingZIndex,
         misc: { topOfDeck: index === deck.length - 1 },
       });
     });
@@ -64,7 +72,7 @@ export class CardPositionBuilder {
         zoneId: `${zonePrefix}-${index}`,
         index: 0,
         total: 1,
-        startingZIndex,
+        baseZIndex: startingZIndex,
         misc: miscFactory(card, index),
       });
     });
@@ -84,7 +92,7 @@ export class CardPositionBuilder {
         zoneId,
         index,
         total: cards.length,
-        startingZIndex: startingZIndex + index,
+        baseZIndex: startingZIndex + index,
         misc: getMisc(card, index),
       });
     });

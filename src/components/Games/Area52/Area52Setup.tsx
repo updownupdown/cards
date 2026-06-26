@@ -1,4 +1,3 @@
-import { ZoneConfig } from "@/hooks/useZoneLayout";
 import {
   createDeck,
   isRed,

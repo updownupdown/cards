@@ -1,17 +1,17 @@
 import { useMemo, useState } from "react";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { CardOLD } from "../Cards/CardOLD";
+import { Card } from "../../Cards/Card";
 import {
   CardRank,
   RANK_VALUE,
   createDeck,
   shuffle,
   type PlayingCard,
-} from "../Cards/card-utils";
+} from "../../Cards/card-utils";
 import { textStyles } from "@/styles/textStyles";
-import { GameWrapper } from "../common/GameWrapper";
-import { Button } from "../Button/Button";
+import { GameWrapper } from "../../common/GameWrapper";
+import { Button } from "../../Button/Button";
 
 type TableauCard = PlayingCard & { faceUp: boolean };
 

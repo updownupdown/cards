@@ -4,7 +4,8 @@ import { Colors, FontWeight } from "@/styles/styles";
 import { Pressable, Text, TextStyle, View, ViewStyle } from "react-native";
 import { cardDims } from "./card-utils";
 import { CardPosition, MapZone } from "./CardMap";
-import { CardColor, CardOverlay, getCardShadow } from "./CardStyles";
+import { CardOverlay, getCardShadow } from "./CardStyles";
+import { CardMapBGMapping } from "./AnimatedCard";
 
 export type DeckFanDirection =
   | "none"
@@ -21,17 +22,7 @@ type Props = {
   getZoneBasePos: (zone: MapZone) => CardPosition;
   cardWidth: number;
   cardHeight: number;
-  game: any;
   zoneMapper?: (zone: MapZone) => CardMapBGMapping | undefined;
-};
-
-export type CardMapBGMapping = {
-  onPress?: () => void;
-  isDisabled?: boolean;
-  isSelected?: boolean;
-  selectColor?: CardColor | string;
-  forceSelectColor?: boolean;
-  forceOverlayColor?: boolean;
 };
 
 export const infoSize = {
@@ -44,7 +35,6 @@ export const CardMapBackgrounds = ({
   getZoneBasePos,
   cardWidth,
   cardHeight,
-  game,
   zoneMapper,
 }: Props) => {
   return (
@@ -55,14 +45,16 @@ export const CardMapBackgrounds = ({
         const zoneMapperResult = zoneMapper ? zoneMapper(zone) : undefined;
 
         const onPress = zoneMapperResult?.onPress ?? (() => {});
-        const isDisabled = zoneMapperResult?.isDisabled ?? true;
+        const isDisabled = zoneMapperResult?.isDisabled ?? false;
         const isSelected = zoneMapperResult?.isSelected ?? true;
         const selectColor = zoneMapperResult?.selectColor;
         const forceSelectColor = zoneMapperResult?.forceSelectColor ?? false;
         const forceOverlayColor = zoneMapperResult?.forceOverlayColor ?? false;
+        const zIndex =
+          (zone.baseZIndex ?? 1) + (zoneMapperResult?.zIndexOffset ?? 0);
 
         const pos = getZoneBasePos(zone);
-        const count: number = zone.id ? game[zone.id]?.length : 0;
+        const count: number = zone.cards?.length ?? 0;
 
         let placeholderWidth = pos.width;
         let placeholderHeight = pos.height;
@@ -160,22 +152,26 @@ export const CardMapBackgrounds = ({
                 width: placeholderWidth,
                 height: placeholderHeight,
                 borderRadius: cardWidth * cardDims.ratioRadius,
-                backgroundColor: Colors.K875,
+                backgroundColor: zone.placeholder.hideBackground
+                  ? "transparent"
+                  : (zone.placeholder.backgroundColor ?? Colors.K875),
                 justifyContent: "center",
                 alignItems: "center",
-                zIndex: 1,
+                zIndex,
                 boxShadow: getCardShadow({
                   cardWidth,
                   selectColor,
                   forceSelectColor,
                   isPlaceholder: true,
                 }),
+                outline: "none",
               },
             ]}
             onPress={onPress}
             disabled={isDisabled}
           >
             <CardOverlay
+              cardWidth={cardWidth}
               isSelected={isSelected}
               forceOverlayColor={forceOverlayColor}
               selectColor={selectColor}
@@ -187,14 +183,6 @@ export const CardMapBackgrounds = ({
                   <View style={textContainerStyle}>
                     <Text style={textStyle}>{zone.placeholder.text}</Text>
                   </View>
-                )}
-
-                {zone.placeholder.iconName && (
-                  <Icon
-                    name={zone.placeholder.iconName}
-                    size={20}
-                    color={Colors.K300}
-                  />
                 )}
 
                 {zone.placeholder.showCount !== false && (

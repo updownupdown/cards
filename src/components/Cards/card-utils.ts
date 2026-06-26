@@ -212,6 +212,16 @@ export function shuffle<T>(items: T[]) {
   return next;
 }
 
+export function sortCards(cards: PlayingCard[]) {
+  return cards.sort((a, b) => {
+    if (suitValue(a) !== suitValue(b)) {
+      return suitValue(a) - suitValue(b);
+    }
+
+    return rankValue(a) - rankValue(b);
+  });
+}
+
 export function createDeck(options?: {
   deckCount?: number;
   forceSuit?: CardSuit;

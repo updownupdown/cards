@@ -1,7 +1,8 @@
 import { Icon, IconName } from "@/icons";
-import { buttonStyles } from "@/styles/buttonStyles";
+import { buttonStyles, buttonTransition } from "@/styles/buttonStyles";
 import { Colors, rgba } from "@/styles/styles";
 import { Platform, Pressable, Text, TextStyle, ViewStyle } from "react-native";
+import { cardDims } from "../Cards/card-utils";
 
 interface Props {
   style?: ViewStyle | ViewStyle[];
@@ -19,6 +20,7 @@ interface Props {
   iconName?: IconName;
   iconColor?: string;
   iconSize?: number;
+  cardWidth: number;
 }
 
 export const Button = ({
@@ -37,8 +39,10 @@ export const Button = ({
   delayLongPress,
   onPressIn,
   onPressOut,
+  cardWidth,
 }: Props) => {
   let themeColor: string | undefined = undefined;
+  const shadowUnit = Math.max(cardWidth * cardDims.ratioShadowUnit, 2);
 
   switch (theme) {
     case "blue":
@@ -64,25 +68,32 @@ export const Button = ({
   }
 
   if (disabled) {
-    themeColor = Colors.K600;
+    themeColor = Colors.K700;
   }
 
   return (
     <Pressable
       style={[
-        buttonStyles.button,
         size === "text" && buttonStyles.sizeText,
         size === "textLarge" && buttonStyles.sizeTextLarge,
         size === "small" && buttonStyles.sizeSmall,
         size === "medium" && buttonStyles.sizeMedium,
         size === "large" && buttonStyles.sizeLarge,
-        fullWidth && buttonStyles.fullWidth,
         disabled && buttonStyles.disabled,
+        buttonTransition,
         {
-          backgroundColor: themeColor ? rgba(themeColor, 0.07) : undefined,
-          boxShadow: themeColor
-            ? `inset 0 1px 1px ${rgba(Colors.white, 0.2)}, inset 1px 2px 6px ${rgba(themeColor, 0.35)}, inset 2px 4px 20px ${rgba(themeColor, 0.2)}, -2px -2px 18px ${rgba(Colors.K750, 0.7)}, 2px 2px 18px ${rgba(Colors.K950, 0.8)}`
-            : undefined,
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 6,
+
+          width: fullWidth ? "100%" : undefined,
+
+          outlineWidth: 0,
+          backgroundColor: themeColor ? rgba(themeColor, 0.12) : undefined,
+          borderWidth: themeColor ? cardWidth * 0.04 : 0,
+          borderColor: themeColor ? rgba(themeColor, 0.6) : undefined,
         },
         style,
       ]}
@@ -118,6 +129,7 @@ export const Button = ({
             disabled && buttonStyles.textDisabled,
             textStyle,
             {
+              fontSize: cardWidth ? cardWidth * 0.3 : undefined,
               color: themeColor ? rgba(themeColor, 1) : undefined,
             },
           ]}

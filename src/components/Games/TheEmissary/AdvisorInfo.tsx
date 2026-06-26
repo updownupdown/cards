@@ -2,14 +2,10 @@ import { useFade } from "@/hooks/useFade";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight, rgba } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
-import { Animated, Text, View } from "react-native";
+import { Animated, Text, View, ViewStyle } from "react-native";
 import { Button } from "../../Button/Button";
 import { type PlayingCard } from "../../Cards/card-utils";
-import {
-  debateRecordsHeight,
-  EmissarySuitsColorMap,
-  TheEmissaryVisit,
-} from "./TheEmissaryCommon";
+import { EmissarySuitsColorMap, TheEmissaryVisit } from "./TheEmissaryTypes";
 
 interface AdvisorInfoProps {
   lastSelectedAdvisor?: PlayingCard;
@@ -19,6 +15,8 @@ interface AdvisorInfoProps {
   visit: TheEmissaryVisit | null;
   setSelectedAdvisor: (a: PlayingCard | undefined) => void;
   doAdvisorAction: (a: PlayingCard | undefined) => void;
+  advisorStyles: ViewStyle;
+  cardWidth: number;
 }
 
 export const AdvisorInfo = ({
@@ -29,6 +27,8 @@ export const AdvisorInfo = ({
   visit,
   setSelectedAdvisor,
   doAdvisorAction,
+  advisorStyles,
+  cardWidth,
 }: AdvisorInfoProps) => {
   const { isRendered: renderAdvisorInfo, opacity: advisorInfoOpacity } =
     useFade(!!selectedAdvisor || discardFromHand !== 0, 300);
@@ -80,169 +80,107 @@ export const AdvisorInfo = ({
     <Animated.View
       style={[
         flexStyles.colCentered,
+        advisorStyles,
         {
           opacity: advisorInfoOpacity,
-          position: "absolute",
-          zIndex: 10,
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: rgba(Colors.K850, 0.9),
+          borderRadius: cardWidth * 0.15,
+          padding: cardWidth * 0.4,
+          backgroundColor: Colors.K875,
         },
       ]}
     >
-      <View
-        style={[
-          flexStyles.colCentered,
-          flexStyles.fullWidth,
-          flexStyles.flex1,
-          {
-            borderRadius: 20,
-            padding: 20,
-            maxHeight: 190,
-            backgroundColor: Colors.K900,
-            boxShadow: `1px 2px 12px ${Colors.K900}, 2px 4px 24px ${Colors.K900}`,
-          },
-        ]}
-      >
-        {(advisor || discardFromHand !== 0) && (
-          <View
-            style={[
-              flexStyles.colCentered,
-              flexStyles.fullWidth,
-              flexStyles.flex1,
-            ]}
-          >
-            {discardFromHand !== 0 && (
-              <Text
+      {(advisor || discardFromHand !== 0) && (
+        <View
+          style={[
+            flexStyles.colCentered,
+            flexStyles.fullWidth,
+            flexStyles.flex1,
+          ]}
+        >
+          {discardFromHand !== 0 && (
+            <Text
+              style={[
+                textStyles.default,
+                {
+                  fontSize: cardWidth * 0.3,
+                  fontFamily: FontWeight[300],
+                  color: Colors.K200,
+                },
+              ]}
+            >
+              {`Discard ${discardFromHand} card${discardFromHand > 1 ? "s" : ""} to continue`}
+            </Text>
+          )}
+
+          {advisor && (
+            <>
+              <View
                 style={[
-                  textStyles.default,
-                  {
-                    fontSize: 20,
-                    fontFamily: FontWeight[300],
-                    color: Colors.K100,
-                  },
+                  flexStyles.colCentered,
+                  flexStyles.fullWidth,
+                  flexStyles.flex1,
+                  flexStyles.gap6,
+                  { alignItems: "flex-start", justifyContent: "flex-start" },
                 ]}
               >
-                {`Discard ${discardFromHand} card${discardFromHand > 1 ? "s" : ""} to continue`}
-              </Text>
-            )}
-
-            {advisor && (
-              <>
-                <View
+                <Text
                   style={[
-                    flexStyles.colCentered,
-                    flexStyles.fullWidth,
-                    flexStyles.flex1,
-                    flexStyles.gap6,
-                    { alignItems: "flex-start", justifyContent: "flex-start" },
+                    textStyles.default,
+                    {
+                      fontSize: cardWidth * 0.38,
+                      fontFamily: FontWeight[500],
+                      color: EmissarySuitsColorMap[advisor.suit],
+                    },
                   ]}
                 >
-                  <Text
-                    style={[
-                      textStyles.default,
-                      {
-                        fontSize: 20,
-                        fontFamily: FontWeight[600],
-                        color: EmissarySuitsColorMap[advisor.suit],
-                      },
-                    ]}
-                  >
-                    {advisorType} Advisor
-                  </Text>
-                  <Text
-                    style={[
-                      textStyles.default,
-                      {
-                        fontSize: 16,
-                        fontFamily: FontWeight[300],
-                        color: Colors.K100,
-                      },
-                    ]}
-                  >
-                    {advisorText}
-                  </Text>
-                </View>
-
-                <View
+                  {advisorType} Advisor
+                </Text>
+                <Text
                   style={[
-                    flexStyles.rowCentered,
-                    flexStyles.fullWidth,
-                    flexStyles.gap20,
+                    textStyles.default,
+                    {
+                      fontSize: cardWidth * 0.28,
+                      fontFamily: FontWeight[300],
+                      color: Colors.K200,
+                    },
                   ]}
                 >
+                  {advisorText}
+                </Text>
+              </View>
+
+              <View
+                style={[
+                  flexStyles.rowCentered,
+                  flexStyles.fullWidth,
+                  flexStyles.gap20,
+                ]}
+              >
+                <Button
+                  onPress={() => setSelectedAdvisor(undefined)}
+                  text="Cancel"
+                  theme={Colors.K200}
+                  style={[{ borderWidth: 0 }]}
+                  cardWidth={cardWidth}
+                />
+                {advisorSuit !== "spades" && (
                   <Button
-                    onPress={() => setSelectedAdvisor(undefined)}
-                    text="Cancel"
-                    theme={Colors.K200}
-                    style={[{ borderWidth: 0 }]}
+                    onPress={() => doAdvisorAction(selectedAdvisor)}
+                    text={buttonText}
+                    style={[flexStyles.flex1]}
+                    theme={
+                      advisorSuit
+                        ? EmissarySuitsColorMap[advisorSuit]
+                        : undefined
+                    }
+                    cardWidth={cardWidth}
                   />
-                  {advisorSuit !== "spades" && (
-                    <Button
-                      onPress={() => doAdvisorAction(selectedAdvisor)}
-                      text={buttonText}
-                      style={[flexStyles.flex1]}
-                      theme={
-                        advisorSuit === "hearts"
-                          ? Colors.suitsColoredHearts
-                          : advisorSuit === "diamonds"
-                            ? Colors.suitsColoredClubs
-                            : Colors.suitsColoredSpades
-                      }
-                    />
-                  )}
-                </View>
-              </>
-            )}
-          </View>
-        )}
-      </View>
-    </Animated.View>
-  );
-};
-
-export const ChooseKingdomOverlay = ({
-  showChooseKingdom,
-}: {
-  showChooseKingdom: boolean;
-}) => {
-  const { isRendered: renderChooseKingdom, opacity: chooseKingdomOpacity } =
-    useFade(showChooseKingdom, 300);
-
-  if (!renderChooseKingdom) return null;
-
-  return (
-    <Animated.View
-      style={[
-        flexStyles.colCentered,
-        {
-          opacity: chooseKingdomOpacity,
-          position: "absolute",
-          zIndex: 10,
-          top: -2,
-          left: -2,
-          right: -2,
-          borderRadius: 8,
-          height: debateRecordsHeight + 8,
-          backgroundColor: Colors.K700,
-        },
-      ]}
-    >
-      <Text
-        style={[
-          textStyles.default,
-          {
-            fontSize: 20,
-            lineHeight: 20,
-            fontFamily: FontWeight[300],
-            color: Colors.white,
-          },
-        ]}
-      >
-        Choose a kingdom
-      </Text>
+                )}
+              </View>
+            </>
+          )}
+        </View>
+      )}
     </Animated.View>
   );
 };

@@ -378,7 +378,7 @@ export default function DeadCenter() {
       pileIndex: i,
       cards: [game.zombies[i].card],
       name: "zombie",
-      type: "single-card",
+
       col: pos.c,
       row: pos.r,
       baseZIndex: 1,
@@ -393,7 +393,7 @@ export default function DeadCenter() {
       pileIndex: i,
       cards: game.piles[i],
       name: "pile",
-      type: "deck",
+
       col: pos.c,
       row: pos.r,
       baseZIndex: 10,
@@ -403,7 +403,7 @@ export default function DeadCenter() {
     return [
       {
         id: "gameInfo",
-        type: "ui",
+
         col: 0,
         row: 0,
         width: "full",
@@ -412,13 +412,13 @@ export default function DeadCenter() {
       {
         id: "draw",
         name: "draw",
-        type: "deck",
+
         cards: game.draw,
         col: 4,
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { show: true, text: "Draw", infoPos: "left" },
+        placeholder: { text: "Draw", infoPos: "left" },
       },
       ...zombieZones,
       ...pileZones,
@@ -451,7 +451,7 @@ export default function DeadCenter() {
 
       return {
         selectColor,
-        forceOverlay: selectColor === "purple",
+        forceOverlayColor: selectColor === "purple",
         isPlaceholder: zombie.dead,
         onPress: () => {
           if (canReveal) {

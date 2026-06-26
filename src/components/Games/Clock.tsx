@@ -1,26 +1,22 @@
+import { MappedCard, MapZone, useCardMap } from "@/components/Cards/CardMap";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
-import { useZoneLayout } from "@/hooks/useZoneLayout";
 import { flexStyles } from "@/styles/flexStyles";
 import { textStyles } from "@/styles/textStyles";
 import { produce } from "immer";
 import { useMemo, useState } from "react";
 import { Text, View } from "react-native";
-import { AnimatedCard } from "../../Cards/AnimatedCard";
-import { cardAspectRatio } from "../../Cards/CardOLD";
-import { CardPositionBuilder } from "../../Cards/CardPositionBuilder";
+import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
+  cardDims,
   createDeck,
   flipTopCardToFace,
   rankValue,
   shuffle,
   top,
   type PlayingCard,
-} from "../../Cards/card-utils";
-import { GameWrapper } from "../../common/GameWrapper";
-import { layoutZones, targetCols } from "./ClockSetup";
-
-const cardSize = "small";
+} from "../Cards/card-utils";
+import { GameWrapper } from "../common/GameWrapper";
 
 type GameState = {
   piles: PlayingCard[][];
@@ -77,31 +73,6 @@ export default function Clock() {
     setGame(setup());
   }
 
-  const layoutManager = useZoneLayout({
-    zones: layoutZones,
-    targetCols,
-    targetRows: targetCols * cardAspectRatio + 0.5,
-    gapPc: 0.1,
-  });
-
-  const {
-    cardWidth,
-    cardHeight,
-    getCardPosition,
-    getZoneStyles,
-    layoutMetrics,
-  } = layoutManager;
-
-  const cardPositions = useMemo(() => {
-    const builder = new CardPositionBuilder(getCardPosition);
-
-    game.piles.forEach((pile, pileIndex) => {
-      builder.addDeck(pile, `pile-${pileIndex}`, 10, "pile");
-    });
-
-    return builder.build();
-  }, [game, getCardPosition]);
-
   async function revealCardAtPileIndex(pileIndex: number) {
     if (game.ended || game.piles.length === 0) {
       return;
@@ -151,6 +122,79 @@ export default function Clock() {
     });
   }
 
+  // ========== Card Mapping ========== //
+  const zones: MapZone[] = useMemo(() => {
+    const clockRadius = 2.6;
+    const pileZones = Array.from({ length: 13 }).map((_, i) => {
+      let col, row;
+
+      if (i === 0) {
+        // Middle position
+        col = clockRadius;
+        row = clockRadius * cardDims.aspectRatio + 0.2;
+      } else {
+        // Clock positions: 12 is top, 3 is right, 6 is bottom, 9 is left
+        // Formula: angle = (index - 3) * (2 * Math.PI / 12)
+        // We adjust by -3 to align index 3 with 0 radians (right)
+        const angle = (i - 3) * (Math.PI / 6);
+
+        col = clockRadius + clockRadius * Math.cos(angle);
+        row =
+          clockRadius * cardDims.aspectRatio +
+          0.2 +
+          clockRadius * Math.sin(angle) * cardDims.aspectRatio;
+      }
+
+      return {
+        id: `pile-${i}`,
+        col: Math.round(col * 100) / 100,
+        row: Math.round(row * 100) / 100,
+        fan: { offset: 0.05 },
+        pileIndex: i,
+        cards: game.piles[i] ?? undefined,
+        name: "pile",
+
+        baseZIndex: 1,
+        rotation: (i % 12) * 30,
+      } as MapZone;
+    });
+
+    return [
+      ...pileZones,
+      {
+        id: "gameInfo",
+        col: 0,
+        row: 0,
+        width: "full",
+      },
+    ];
+  }, [game]);
+
+  const cardMapper = (
+    mappedCard: MappedCard,
+  ): AnimatedCardMapping | undefined => {
+    const pileIndex = mappedCard.pileIndex;
+
+    if (pileIndex === undefined) return {};
+
+    const pressable =
+      mappedCard.topOfZone && pileIndex === game.nextPileIndex && !game.ended;
+
+    return {
+      selectColor: pressable ? "green" : "none",
+      onPress: pressable ? () => revealCardAtPileIndex(pileIndex) : undefined,
+    };
+  };
+
+  const { cardMap, getZoneStylesById } = useCardMap({
+    game,
+    zones,
+    cardMapper,
+    cardSize: "small",
+    paddingLeft: 0.8,
+    paddingRight: 0.8,
+  });
+
   return (
     <GameWrapper
       showIntro={showIntro}
@@ -167,11 +211,13 @@ export default function Clock() {
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
+      {cardMap}
+
       <View
         style={[
           flexStyles.rowCentered,
           flexStyles.spaceBetween,
-          getZoneStyles("gameInfo"),
+          getZoneStylesById("gameInfo"),
         ]}
       >
         <Text style={[textStyles.caps]}>
@@ -185,29 +231,6 @@ export default function Clock() {
           {game.revealedKings} /4
         </Text>
       </View>
-
-      {Object.values(cardPositions).map((target) => {
-        const pileIndex = Number(target.zoneId.split("-")[1]);
-        const pressable = !!(
-          target.misc?.topOfDeck &&
-          pileIndex === game.nextPileIndex &&
-          !game.ended
-        );
-
-        return (
-          <AnimatedCard
-            key={target.card.id}
-            targetState={{ ...target, rotation: (pileIndex % 12) * 30 }}
-            cardWidth={cardWidth}
-            cardHeight={cardHeight}
-            cardSize={cardSize}
-            selectColor={pressable ? "green" : "none"}
-            onPress={
-              pressable ? () => revealCardAtPileIndex(pileIndex) : undefined
-            }
-          />
-        );
-      })}
     </GameWrapper>
   );
 }

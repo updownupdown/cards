@@ -1,6 +1,5 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
-import { useZoneLayout, ZoneConfig } from "@/hooks/useZoneLayout";
 import { buttonStyles } from "@/styles/buttonStyles";
 import { flexStyles, transitionStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
@@ -10,7 +9,7 @@ import { produce } from "immer";
 import { useMemo, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import { Button } from "../Button/Button";
-import { AnimatedCard, ArcConfig } from "../Cards/AnimatedCard";
+import { AnimatedCardMapping, ArcConfig } from "../Cards/AnimatedCard";
 import {
   createDeck,
   flipAllToBack,
@@ -21,12 +20,9 @@ import {
   top,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { CardPositionBuilder } from "../Cards/CardPositionBuilder";
-import { GameWrapper } from "../common/GameWrapper";
+import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { CardColor } from "../Cards/CardStyles";
-
-const cardSize = "small";
-const selectedPlaceholderId = "selectedPlaceholder";
+import { GameWrapper } from "../common/GameWrapper";
 
 type BobaState = {
   deck: PlayingCard[];
@@ -114,65 +110,6 @@ function updatedDiscardsByRank(
   return discardsByRank;
 }
 
-const queueCardOffset = 0.47;
-
-function queueZones() {
-  let zones: ZoneConfig[] = [];
-
-  for (let i = 0; i < 4; i++) {
-    zones.push({
-      id: `q-${i}`,
-      col: i * 1.8,
-      row: 3,
-      height: 3.5,
-      fan: { direction: "down", offset: queueCardOffset },
-    });
-    zones.push({
-      id: `btns-${i}`,
-      col: i * 1.8 + 1,
-      row: 3,
-      width: 0.8,
-      height: 3.5,
-    });
-  }
-
-  return zones;
-}
-
-const targetCols = 1.8 * 4;
-const targetRows = 7;
-
-export const layoutZones: ZoneConfig[] = [
-  {
-    id: "rankTally",
-    col: 0,
-    row: 0,
-    width: targetCols,
-  },
-  {
-    id: "deck",
-    col: 2,
-    row: 1.5,
-    fan: { maxVisible: 3 },
-    placeholder: { show: true, text: "Draw", infoPos: "left" },
-  },
-  {
-    id: "discard",
-    col: 4,
-    row: 1.5,
-    fan: { maxVisible: 3 },
-    placeholder: { show: true, text: "Dscrd", infoPos: "right" },
-  },
-  ...queueZones(),
-  {
-    id: "actionBtns",
-    col: 0,
-    row: 6.5,
-    width: targetCols,
-    height: 0.75,
-  },
-];
-
 export default function TheBobaTeaShop() {
   const [game, setGame] = useState<BobaState>(setup);
   const [selectedPos, setSelectedPos] = useState<SelectedPos | undefined>(
@@ -180,52 +117,6 @@ export default function TheBobaTeaShop() {
   );
   const [decisionNeeded, setDecisionNeeded] = useState(false);
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
-
-  const layoutManager = useZoneLayout({
-    zones: layoutZones,
-    targetCols,
-    targetRows,
-    gapPc: 0,
-  });
-
-  const { cardWidth, cardHeight, getCardPosition, getZoneStyles } =
-    layoutManager;
-
-  const cardPositions = useMemo(() => {
-    const builder = new CardPositionBuilder(getCardPosition);
-
-    builder.addDeck(game.deck, "deck");
-    builder.addDeck(game.discard, "discard");
-
-    game.queues.forEach((queue, queueIdx) => {
-      builder.addArray(
-        queue,
-        `q-${queueIdx}`,
-        queueIdx + 20,
-        (card, index) => ({
-          rankIndex: queueIdx,
-          cardIndex: index,
-        }),
-      );
-    });
-
-    if (selectedPos) {
-      builder.add({
-        card: {
-          id: selectedPlaceholderId,
-          suit: "spades",
-          rank: "A",
-          faceUp: false,
-        },
-        zoneId: `q-${selectedPos.queueIndex}`,
-        index: selectedPos.cardIndex,
-        total: 1,
-        startingZIndex: selectedPos.queueIndex + 20 + selectedPos.cardIndex - 1,
-      });
-    }
-
-    return builder.build();
-  }, [game, selectedPos, decisionNeeded, getCardPosition]);
 
   const score = useMemo(() => totalInQueues(game.queues), [game.queues]);
 
@@ -370,27 +261,156 @@ export default function TheBobaTeaShop() {
     }
   }
 
-  function cardTopPos(
-    queueIndex: number,
-    cardIndex: number,
-    selectedPos?: SelectedPos,
-  ) {
-    let topMargin = 0;
+  // ========== Card Mapping ========== //
+  const positioning = {
+    queueCardOffset: 0.47,
+    btnColWidth: 0.8,
+    queueHeight: 3.5,
+    queueRowStart: 3,
+    queueZIndexIncrement: 20,
+  };
 
-    if (cardIndex > 0) {
-      topMargin += cardHeight * cardIndex * 0.5;
+  const zones: MapZone[] = useMemo(() => {
+    let queueZones: MapZone[] = [];
+
+    for (let i = 0; i < 4; i++) {
+      queueZones.push({
+        id: `queue-${i}`,
+        cards: game.queues[i],
+        col: i * (positioning.btnColWidth + 1),
+        row: positioning.queueRowStart,
+        height: positioning.queueHeight,
+        pileIndex: i,
+        refIndex: i,
+        name: "queue",
+
+        baseZIndex: i + positioning.queueZIndexIncrement,
+        fan: { direction: "down", offset: positioning.queueCardOffset },
+      });
+      queueZones.push({
+        id: `btns-${i}`,
+
+        col: i * (positioning.btnColWidth + 1) + 1,
+        row: positioning.queueRowStart,
+        width: positioning.btnColWidth,
+        height: positioning.queueHeight,
+      });
     }
 
-    if (
-      selectedPos &&
-      selectedPos.queueIndex === queueIndex &&
-      cardIndex >= selectedPos.cardIndex
+    if (selectedPos) {
+      queueZones.push({
+        id: "selected-placeholder",
+        name: "selected-placeholder",
+
+        cards: [
+          {
+            rank: "Joker",
+            faceUp: false,
+            suit: "hearts",
+            id: "placeholder-joker",
+          },
+        ],
+        col: selectedPos.queueIndex * (positioning.btnColWidth + 1),
+        row: positioning.queueRowStart,
+        baseZIndex:
+          selectedPos.queueIndex +
+          positioning.queueZIndexIncrement +
+          selectedPos.cardIndex -
+          1,
+      });
+    }
+
+    return [
+      {
+        id: "rankTally",
+
+        col: 0,
+        row: 0,
+        width: "full",
+      },
+      {
+        id: "deck",
+        name: "deck",
+
+        cards: game.deck,
+        col: 2,
+        row: 1.5,
+        baseZIndex: 50,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Draw", infoPos: "left" },
+      },
+      {
+        id: "discard",
+        name: "discard",
+
+        cards: game.discard,
+        col: 4,
+        row: 1.5,
+        baseZIndex: 50,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Discard", infoPos: "right" },
+      },
+      ...queueZones,
+      {
+        id: "actionBtns",
+
+        col: 0,
+        row: 6.5,
+        width: "full",
+        height: 0.75,
+      },
+    ];
+  }, [game, selectedPos]);
+
+  const cardMapper = (
+    mappedCard: MappedCard,
+  ): AnimatedCardMapping | undefined => {
+    let selectColor: CardColor = "none";
+    let isSelected = undefined;
+    let yOffset: number | undefined = undefined;
+    let forceOverlayColor = false;
+    let forceSelectColor = false;
+    let arcConfig: ArcConfig | undefined = { enabled: false };
+
+    // Placeholder card
+    if (selectedPos && mappedCard.zoneName === "selected-placeholder") {
+      selectColor = decisionNeeded ? "red" : "purple";
+      forceOverlayColor = true;
+      forceSelectColor = true;
+
+      arcConfig = {
+        enabled: true,
+        magnitudeY: 0.25,
+      };
+
+      yOffset = selectedPos.cardIndex * positioning.queueCardOffset;
+    } else if (
+      selectedPos !== undefined &&
+      mappedCard.pileIndex === selectedPos.queueIndex &&
+      mappedCard.cardIndex !== undefined &&
+      mappedCard.cardIndex >= selectedPos.cardIndex
     ) {
-      topMargin += cardHeight * 0.5;
+      // Shift card down if under the placeholder
+      yOffset = positioning.queueCardOffset;
     }
 
-    return topMargin;
-  }
+    return {
+      isSelected,
+      forceSelectColor,
+      forceOverlayColor,
+      arcConfig,
+      selectColor,
+      yOffset,
+    };
+  };
+
+  const { cardMap, cardWidth, cardHeight, getZoneStylesById } = useCardMap({
+    game,
+    zones,
+    gap: 0,
+    cardMapper,
+    cardSize: "small",
+  });
 
   return (
     <GameWrapper
@@ -408,72 +428,14 @@ export default function TheBobaTeaShop() {
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
-      {Object.values(cardPositions).map((target) => {
-        let selectColor: CardColor = "none";
-        let isSelected = undefined;
-        let yOffset: number | undefined = undefined;
-        let forceOverlay = false;
-        let forceSelectColor = false;
-        let arcConfig: ArcConfig | undefined = { enabled: false };
-
-        if (target.card.id === selectedPlaceholderId) {
-          // Placeholder
-          selectColor = decisionNeeded ? "red" : "purple";
-          forceOverlay = true;
-          forceSelectColor = true;
-
-          arcConfig = {
-            enabled: true,
-            magnitudeY: 0.25,
-          };
-        } else if (target.misc?.topOfDeck) {
-          // Top of deck
-          selectColor =
-            selectedPos !== undefined
-              ? decisionNeeded
-                ? "red"
-                : "purple"
-              : "none";
-          forceSelectColor = selectedPos !== undefined;
-          forceOverlay = selectedPos !== undefined;
-
-          arcConfig = {
-            enabled: true,
-            magnitudeY: 0.25,
-          };
-        } else if (
-          selectedPos !== undefined &&
-          target.misc?.rankIndex === selectedPos.queueIndex &&
-          target.misc?.cardIndex >= selectedPos.cardIndex
-        ) {
-          // Shift card down if under the placeholder
-          yOffset = 30;
-        }
-
-        return (
-          <AnimatedCard
-            key={target.card.id}
-            targetState={target}
-            cardWidth={cardWidth}
-            cardHeight={cardHeight}
-            cardSize={cardSize}
-            isSelected={isSelected}
-            yOffset={yOffset}
-            arcConfig={arcConfig}
-            selectColor={selectColor}
-            forceOverlay={forceOverlay}
-            forceSelectColor={forceSelectColor}
-            isVisible={!target.isHiddenUnderDeck}
-          />
-        );
-      })}
+      {cardMap}
 
       {/* Rank Tallies */}
       <View
         style={[
           flexStyles.rowCentered,
           flexStyles.spaceBetween,
-          getZoneStyles("rankTally"),
+          getZoneStylesById("rankTally"),
         ]}
       >
         {(Object.keys(game.discardsByRank) as Array<PlayingCard["rank"]>)
@@ -547,7 +509,7 @@ export default function TheBobaTeaShop() {
             flexStyles.colStart,
             flexStyles.gap14,
             flexStyles.flex1,
-            getZoneStyles(`btns-${queueIndex}`),
+            getZoneStylesById(`btns-${queueIndex}`),
           ]}
         >
           {Array.from({ length: queue.length + 1 }, (_, i) => {
@@ -590,7 +552,9 @@ export default function TheBobaTeaShop() {
                     width:
                       cardWidth * 0.4 +
                       (isSelected ? cardWidth * 0.22 : cardWidth * 0.1),
-                    top: cardHeight * i * queueCardOffset + cardHeight / 10,
+                    top:
+                      cardHeight * i * positioning.queueCardOffset +
+                      cardHeight / 10,
                     height: cardWidth * 0.5,
                     borderTopRightRadius: cardWidth * 0.25,
                     borderBottomRightRadius: cardWidth * 0.25,
@@ -620,7 +584,7 @@ export default function TheBobaTeaShop() {
       {/* Action Buttons */}
       <View
         style={[
-          getZoneStyles("actionBtns"),
+          getZoneStylesById("actionBtns"),
           flexStyles.rowCentered,
           flexStyles.spaceBetween,
           {
@@ -659,8 +623,9 @@ export default function TheBobaTeaShop() {
               revealNextCustomer(game);
             }}
             disabled={selectedPos === undefined}
-            style={[flexStyles.flex1]}
+            style={[flexStyles.flex1, { height: "100%" }]}
             theme="purple"
+            cardWidth={cardWidth}
           />
         )}
 
@@ -675,7 +640,8 @@ export default function TheBobaTeaShop() {
                 }
               }}
               disabled={selectedPos === undefined}
-              style={[flexStyles.flex1]}
+              style={[flexStyles.flex1, { height: "100%" }]}
+              cardWidth={cardWidth}
             />
             <Button
               text="Kick them out"
@@ -685,7 +651,8 @@ export default function TheBobaTeaShop() {
                 }
               }}
               disabled={selectedPos === undefined}
-              style={[flexStyles.flex1]}
+              style={[flexStyles.flex1, { height: "100%" }]}
+              cardWidth={cardWidth}
             />
           </>
         )}

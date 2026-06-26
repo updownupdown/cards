@@ -13,8 +13,8 @@ import {
   Text,
   View,
 } from "react-native";
-import { Button } from "../Button/Button";
-import { CardOLD } from "../Cards/CardOLD";
+import { Button } from "../../Button/Button";
+import { Card } from "../../Cards/Card";
 import {
   CardSuit,
   DRAG_CAPTURE_THRESHOLD,
@@ -25,8 +25,8 @@ import {
   RANKS,
   shuffle,
   SUITS,
-} from "../Cards/card-utils";
-import { GameWrapper } from "../common/GameWrapper";
+} from "../../Cards/card-utils";
+import { GameWrapper } from "../../common/GameWrapper";
 
 type GameState = {
   tableau: PlayingCard[][];
@@ -852,7 +852,7 @@ export default function Solitaire() {
                         : undefined
                     }
                   >
-                    <CardOLD card={wasteTop} cardsPerRow={7} />
+                    <Card card={wasteTop} cardsPerRow={7} />
                   </View>
                 ) : (
                   <Text style={styles.slotLabel}>Waste</Text>
@@ -908,7 +908,7 @@ export default function Solitaire() {
                             : undefined
                         }
                       >
-                        <CardOLD card={top} cardsPerRow={7} />
+                        <Card card={top} cardsPerRow={7} />
                       </View>
                     ) : (
                       <Text style={styles.slotLabel}>
@@ -986,7 +986,7 @@ export default function Solitaire() {
                       {...(dragHandlers ?? {})}
                     >
                       <View>
-                        <CardOLD card={card} cardsPerRow={7} />
+                        <Card card={card} cardsPerRow={7} />
                       </View>
                     </View>
                   );
@@ -1016,7 +1016,7 @@ export default function Solitaire() {
                   { top: index * TABLEAU_GAP, zIndex: index + 1 },
                 ]}
               >
-                <CardOLD card={card} cardsPerRow={7} />
+                <Card card={card} cardsPerRow={7} />
               </View>
             ))}
           </Animated.View>

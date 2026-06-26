@@ -161,7 +161,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   // The First Boba Tea Shop in London
   "/the-boba-tea-shop": {
     title: "The Boba Tea Shop",
-    category: GameCategory.Beta,
+    category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     briefRules: [
       "Play cards into valid stacks to satisfy order constraints.",
@@ -195,6 +195,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   "/loot-the-loop": {
     title: "Loot the Loop",
     category: GameCategory.Isaludo,
+    enabled: false,
     byLine: "Game design by Wil Su",
     briefRules: [
       "Capture valid loop cards into the score pile.",

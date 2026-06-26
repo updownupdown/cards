@@ -1,7 +1,7 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
 import { useMemo, useState } from "react";
-import { AnimatedCardMapping } from "../Cards/AnimatedCard";
+import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
   isFace,
@@ -16,7 +16,6 @@ import {
   MapZone,
   useCardMap,
 } from "../Cards/CardMap";
-import { CardMapBGMapping } from "../Cards/CardMapBackgrounds";
 import { GameWrapper } from "../common/GameWrapper";
 
 const gridCols = 4;
@@ -272,7 +271,7 @@ export default function HideAndSeek() {
       pileIndex: i,
       cards: game.guesses[i] ? [game.guesses[i]] : undefined,
       name: "guess",
-      type: "single-card",
+
       col: pos.c,
       row: pos.r,
       baseZIndex: 20,
@@ -288,7 +287,7 @@ export default function HideAndSeek() {
       pileIndex: i,
       cards: game.playmates[i] ? [game.playmates[i]] : undefined,
       name: "playmate",
-      type: "single-card",
+
       col: pos.c,
       row: pos.r,
       baseZIndex: 1,
@@ -299,7 +298,7 @@ export default function HideAndSeek() {
       {
         id: "draw",
         name: "draw",
-        type: "deck",
+
         cards: game.draw,
         col: 1,
         row: 0,
@@ -310,7 +309,7 @@ export default function HideAndSeek() {
       {
         id: "discard",
         name: "discard",
-        type: "deck",
+
         cards: game.discard,
         col: 3,
         row: 0,
@@ -321,7 +320,7 @@ export default function HideAndSeek() {
       {
         id: "score",
         name: "score",
-        type: "deck",
+
         cards: game.scorePile,
         col: 5,
         row: 0,
@@ -383,7 +382,6 @@ export default function HideAndSeek() {
     cardMapper,
     zoneMapper,
     cardSize: "small",
-    // visualizer: true,
   });
 
   return (

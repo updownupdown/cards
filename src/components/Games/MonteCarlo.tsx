@@ -1,42 +1,25 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { useZoneLayout, ZoneConfig } from "@/hooks/useZoneLayout";
+import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { flexStyles } from "@/styles/flexStyles";
+import { produce } from "immer";
 import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { Button } from "../Button/Button";
-import { AnimatedCard } from "../Cards/AnimatedCard";
+import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
   flipAllToFace,
+  flipToFace,
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { CardPositionBuilder, getZoneGrid } from "../Cards/CardPositionBuilder";
+import {
+  getGridColRows,
+  MappedCard,
+  MapZone,
+  useCardMap,
+} from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
-import { useUndoHistory } from "@/hooks/useUndoHistory";
-import { produce } from "immer";
-
-const cardSize = "small";
-
-const layoutZones: ZoneConfig[] = [
-  {
-    id: "stock",
-    col: 2,
-    row: 0,
-  },
-  ...getZoneGrid({
-    idPrefix: "grid",
-    length: 25,
-    cols: 5,
-    rowOffset: 1.2,
-  }),
-  {
-    id: "button",
-    col: 0,
-    row: 6.4,
-    width: "full",
-    height: 0.6,
-  },
-];
 
 type GameState = {
   grid: (PlayingCard | null)[];
@@ -182,7 +165,7 @@ export default function MonteCarlo() {
     });
   }
 
-  async function flipCards(selectedIndices: number[]) {
+  async function flipCards() {
     saveUndoState(structuredClone({ game }));
 
     setGame((prev) => {
@@ -211,35 +194,27 @@ export default function MonteCarlo() {
 
     saveUndoState(structuredClone({ game }));
 
-    // Prepare animations
-    const removedCards = countFaceDownCardsInGrid(game.grid);
-
-    const nextGrid: (PlayingCard | null)[] = Array(25).fill(null);
-
-    const stockCards = [...game.stock];
-
-    let tgtIdx = 0;
-
-    for (let i = 0; i < 25; i++) {
-      const card = game.grid[i];
-      if (card && card.faceUp) {
-        nextGrid[tgtIdx] = card;
-        tgtIdx++;
-      }
-    }
-
-    for (let i = tgtIdx; i < 25; i++) {
-      if (stockCards.length > 0) {
-        const nextCard = stockCards.shift()!;
-        nextGrid[i] = nextCard;
-      }
-    }
-
     setGame((prev) => {
       return produce(prev, (draft) => {
-        draft.grid = nextGrid;
-        draft.stock = stockCards;
-        draft.removed = draft.removed + removedCards;
+        const removedCards = countFaceDownCardsInGrid(game.grid);
+
+        let scanIndex = 0;
+
+        for (let i = 0; i < 25; i++) {
+          const card = game.grid[i];
+          if (card && card.faceUp) {
+            draft.grid[scanIndex] = card;
+            scanIndex++;
+          }
+        }
+
+        for (let i = scanIndex; i < 25; i++) {
+          if (draft.stock.length > 0) {
+            draft.grid[i] = flipToFace(draft.stock.pop()!);
+          }
+        }
+
+        draft.removed += removedCards;
 
         const { ended, won } = evaluateEnd(draft);
         draft.ended = ended;
@@ -256,42 +231,75 @@ export default function MonteCarlo() {
 
   useEffect(() => {
     if (selected?.length === 2) {
-      flipCards(selected);
+      flipCards();
     }
   }, [selected]);
 
-  const layoutManager = useZoneLayout({
-    zones: layoutZones,
-    targetRows: 8.15,
+  // ========== Card Mapping ========== //
+  const zones: MapZone[] = useMemo(() => {
+    const gridZones: MapZone[] = getGridColRows({
+      cols: 5,
+      rows: 5,
+      rowOffset: 1,
+    }).map((pos, i) => ({
+      id: `grid-${i}`,
+      pileIndex: i,
+      cards: game.grid[i] ? [game.grid[i]] : undefined,
+      name: "playmate",
+
+      col: pos.c,
+      row: pos.r,
+      baseZIndex: 5,
+      fan: { maxVisible: 3 },
+    }));
+
+    return [
+      {
+        id: "stock",
+        name: "stock",
+
+        cards: game.stock,
+        col: 2,
+        row: 0,
+        fan: { maxVisible: 3 },
+        baseZIndex: 50,
+        placeholder: { text: "Draw", infoPos: "left" },
+      },
+      ...gridZones,
+      {
+        id: "button",
+
+        col: 0,
+        row: 6,
+        width: "full",
+        height: 0.6,
+      },
+    ];
+  }, [game]);
+
+  const cardMapper = (
+    mappedCard: MappedCard,
+  ): AnimatedCardMapping | undefined => {
+    const index = mappedCard.pileIndex;
+
+    if (index === undefined) return {};
+
+    const isSelected = !!selected?.includes(index);
+
+    return {
+      onPress: () => selectCell(index),
+      isSelected,
+      selectColor: isSelected ? "green" : "none",
+      isDisabled: !mappedCard.card.faceUp || game.ended,
+    };
+  };
+
+  const { cardMap, cardWidth, getZoneStylesById } = useCardMap({
+    game,
+    zones,
+    cardMapper,
+    cardSize: "small",
   });
-
-  const {
-    cardWidth,
-    cardHeight,
-    getCardPosition,
-    getZoneStyles,
-    layoutMetrics,
-  } = layoutManager;
-
-  // ========== Card Positions ========== //
-  const cardPositions = useMemo(() => {
-    const builder = new CardPositionBuilder(getCardPosition);
-
-    builder.addDeck(game.stock, "stock", 100, "stock");
-
-    game.grid.forEach((card, cardIndex) => {
-      builder.add({
-        card,
-        index: cardIndex,
-        total: 1,
-        zoneId: `grid-${cardIndex}`,
-        startingZIndex: 5,
-        type: "grid",
-      });
-    });
-
-    return builder.build();
-  }, [game, getCardPosition]);
 
   return (
     <GameWrapper
@@ -309,36 +317,17 @@ export default function MonteCarlo() {
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
-      {Object.values(cardPositions).map((target) => {
-        const index = target.index;
+      {cardMap}
 
-        if (index === undefined) return null;
-
-        const isSelected = !!selected?.includes(index);
-
-        return (
-          <AnimatedCard
-            key={target.card.id}
-            targetState={target}
-            cardWidth={cardWidth}
-            cardHeight={cardHeight}
-            cardSize={cardSize}
-            onPress={() => selectCell(index)}
-            isSelected={isSelected}
-            selectColor={isSelected ? "green" : "none"}
-            isDisabled={!target.card?.suit || !target.card?.rank || game.ended}
-          />
-        );
-      })}
-
-      <View style={[getZoneStyles("button")]}>
+      <View style={[getZoneStylesById("button")]}>
         <Button
           onPress={consolidateAndDeal}
           disabled={game.ended || !hasFaceDownCard}
           text="Consolidate"
           fullWidth
           size="large"
-          style={[{ height: "100%" }]}
+          style={[flexStyles.flex1, { height: "100%" }]}
+          cardWidth={cardWidth}
         />
       </View>
     </GameWrapper>

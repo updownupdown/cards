@@ -1,10 +1,12 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
-import { useZoneLayout, ZoneConfig } from "@/hooks/useZoneLayout";
+import { flexStyles } from "@/styles/flexStyles";
+import { delay } from "@/utils/utils";
+import { produce } from "immer";
 import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { Button } from "../Button/Button";
-import { AnimatedCard } from "../Cards/AnimatedCard";
+import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
   flipToBack,
@@ -14,14 +16,14 @@ import {
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { CardSelectColor } from "../Cards/CardOLD";
-import { CardPositionBuilder, getZoneGrid } from "../Cards/CardPositionBuilder";
+import {
+  getGridColRows,
+  MappedCard,
+  MapZone,
+  useCardMap,
+} from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { useToast } from "../common/Toast";
-import { produce } from "immer";
-import { delay } from "@/utils/utils";
-
-const cardSize = "regular";
 
 type GameState = {
   deck: PlayingCard[];
@@ -214,7 +216,7 @@ export default function TheSandwichGuy() {
         });
       });
 
-      await delay(100);
+      // await delay(100);
     }
 
     setSelectedIds([]);
@@ -258,74 +260,89 @@ export default function TheSandwichGuy() {
     }
   };
 
-  const layoutZones: ZoneConfig[] = [
-    {
-      id: "deck",
-      col: 0.75,
-      row: 0,
-      fan: { maxVisible: 3 },
-      placeholder: {
-        show: true,
-        showCount: true,
-        text: "Draw",
-        infoPos: "left",
-      },
-    },
-    {
-      id: "discard",
-      col: 2.25,
-      row: 0,
-      fan: { maxVisible: 3 },
-      placeholder: {
-        show: true,
-        showCount: true,
-        text: "Discard",
-        infoPos: "right",
-      },
-    },
-    ...getZoneGrid({
-      idPrefix: "hand",
-      length: 8,
+  // ========== Card Mapping ========== //
+  const zones: MapZone[] = useMemo(() => {
+    const handZones: MapZone[] = getGridColRows({
       cols: 4,
+      rows: 2,
       rowOffset: 1.25,
-      config: { placeholder: { show: true } },
-    }),
-    {
-      id: "button",
-      col: 0,
-      row: 3.5,
-      width: "full",
-      height: 0.6,
-    },
-  ];
+    }).map((pos, i) => ({
+      id: `hand-${i}`,
+      pileIndex: i,
+      cards: game.hand[i] ? [game.hand[i]] : undefined,
+      name: "hand",
 
-  const layoutManager = useZoneLayout({
-    zones: layoutZones,
-    targetRows: 4.725,
+      col: pos.c,
+      row: pos.r,
+      baseZIndex: 1,
+      fan: { maxVisible: 3 },
+      placeholder: {},
+    }));
+
+    return [
+      {
+        id: "deck",
+        name: "deck",
+
+        cards: game.deck,
+        col: 0.75,
+        row: 0,
+        fan: { maxVisible: 3 },
+        baseZIndex: 1,
+        placeholder: { text: "Draw", infoPos: "left" },
+      },
+      {
+        id: "discard",
+        name: "discard",
+
+        cards: game.discard,
+        col: 2.25,
+        row: 0,
+        fan: { maxVisible: 3 },
+        baseZIndex: 1,
+        placeholder: { text: "Discard", infoPos: "right" },
+      },
+      ...handZones,
+      {
+        id: "button",
+
+        col: 0,
+        row: 3.6,
+        width: "full",
+        height: 0.6,
+      },
+    ];
+  }, [game]);
+
+  const cardMapper = (
+    mappedCard: MappedCard,
+  ): AnimatedCardMapping | undefined => {
+    if (mappedCard.zoneName === "hand") {
+      const isSelected = !!(
+        mappedCard.card && selectedIds.includes(mappedCard.card.id)
+      );
+
+      return {
+        isSelected,
+
+        onPress: () => {
+          if (mappedCard.card) {
+            toggleSelect(mappedCard.card.id);
+          }
+        },
+
+        isPlaceholder: !mappedCard.card,
+        selectColor: mappedCard.card ? getSelectColor(isSelected) : "none",
+      };
+    }
+  };
+
+  const { cardMap, cardWidth, getZoneStylesById } = useCardMap({
+    game,
+    zones,
+    cardMapper,
+    cardSize: "regular",
   });
-
-  const { cardWidth, cardHeight, getCardPosition, getZoneStyles } =
-    layoutManager;
-
-  const cardPositions = useMemo(() => {
-    const builder = new CardPositionBuilder(getCardPosition);
-
-    builder.addDeck(game.deck, "deck", 100, "deck");
-    builder.addDeck(game.discard, "discard", 1, "discard");
-
-    game.hand.forEach((hand, handIndex) => {
-      builder.add({
-        card: hand,
-        index: handIndex,
-        total: 1,
-        zoneId: `hand-${handIndex}`,
-        startingZIndex: 50,
-        type: "hand",
-      });
-    });
-
-    return builder.build();
-  }, [game, getCardPosition]);
 
   return (
     <GameWrapper
@@ -344,48 +361,17 @@ export default function TheSandwichGuy() {
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
-      {Object.values(cardPositions).map((target) => {
-        let selectColor: CardSelectColor = "none";
-        let isSelected = undefined;
-        let isPlaceholder = false;
-        let onPress: (() => void) | undefined = undefined;
+      {cardMap}
 
-        if (target.type === "hand") {
-          isSelected = !!(target.card && selectedIds.includes(target.card.id));
-
-          onPress = () => {
-            if (target.card) {
-              toggleSelect(target.card.id);
-            }
-          };
-
-          isPlaceholder = !target.card;
-          selectColor = target.card ? getSelectColor(isSelected) : "none";
-        }
-
-        return (
-          <AnimatedCard
-            key={target.card.id}
-            targetState={target}
-            cardWidth={cardWidth}
-            cardHeight={cardHeight}
-            cardSize={cardSize}
-            onPress={onPress}
-            isSelected={isSelected}
-            selectColor={selectColor}
-            isPlaceholder={isPlaceholder}
-          />
-        );
-      })}
-
-      <View style={[getZoneStyles("button")]}>
+      <View style={[getZoneStylesById("button")]}>
         <Button
           onPress={commitSandwich}
           disabled={selectedCards.length !== 3 || invalidSandwichSelected}
           text="Serve Sandwich"
           size="large"
           fullWidth
-          style={[{ height: "100%" }]}
+          style={[flexStyles.flex1, { height: "100%" }]}
+          cardWidth={cardWidth}
         />
       </View>
     </GameWrapper>

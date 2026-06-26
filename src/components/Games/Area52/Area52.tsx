@@ -1,6 +1,12 @@
+import {
+  getGridColRows,
+  MappedCard,
+  MapZone,
+  useCardMap,
+} from "@/components/Cards/CardMap";
+import { CardColor } from "@/components/Cards/CardStyles";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
-import { useZoneLayout } from "@/hooks/useZoneLayout";
 import { flexStyles } from "@/styles/flexStyles";
 import { textStyles } from "@/styles/textStyles";
 import { delay } from "@/utils/utils";
@@ -8,11 +14,8 @@ import { produce } from "immer";
 import { useEffect, useMemo, useState } from "react";
 import { Text, View } from "react-native";
 import { Button } from "../../Button/Button";
-import { AnimatedCard, AnimatedCardMapping } from "../../Cards/AnimatedCard";
-import { CardSelectColor } from "../../Cards/CardOLD";
-import { CardPositionBuilder } from "../../Cards/CardPositionBuilder";
+import { AnimatedCardMapping } from "../../Cards/AnimatedCard";
 import {
-  cardDims,
   flipAllToBack,
   flipToBack,
   flipToFace,
@@ -28,13 +31,6 @@ import {
   maxDefendersNum,
   setup,
 } from "./Area52Setup";
-import {
-  getGridColRows,
-  MappedCard,
-  MapZone,
-  useCardMap,
-} from "@/components/Cards/CardMap";
-import { CardColor } from "@/components/Cards/CardStyles";
 
 export default function Area52() {
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
@@ -274,7 +270,7 @@ export default function Area52() {
       refIndex: i,
       name: "attacker",
       cards: game.currentAttackers[i] ? [game.currentAttackers[i]] : undefined,
-      type: "single-card",
+
       col: i + 1 + zoneGap,
       row: 0,
       baseZIndex: 10 + i,
@@ -290,7 +286,7 @@ export default function Area52() {
       refIndex: i,
       cards: game.currentDefenders[i] ? [game.currentDefenders[i]] : undefined,
       name: "defender",
-      type: "single-card",
+
       col: pos.c,
       row: pos.r,
       baseZIndex: 10 + pos.c,
@@ -300,7 +296,7 @@ export default function Area52() {
     return [
       {
         id: "attackerDeck",
-        type: "deck",
+
         cards: game.attackerDeck,
         col: 0,
         row: rowOffset * 0,
@@ -312,7 +308,7 @@ export default function Area52() {
       {
         id: "discardDeck",
         cards: game.discardDeck,
-        type: "deck",
+
         col: 0,
         row: rowOffset * 1,
         fan: { maxVisible: 3 },
@@ -322,7 +318,7 @@ export default function Area52() {
       {
         id: "defenderDeck",
         cards: game.defenderDeck,
-        type: "deck",
+
         col: 0,
         row: rowOffset * 2,
         fan: { maxVisible: 3 },
@@ -332,7 +328,7 @@ export default function Area52() {
       ...defenders,
       {
         id: "buttons",
-        type: "ui",
+
         col: 0,
         row: 3.75,
         width: "full",
@@ -352,7 +348,7 @@ export default function Area52() {
       return {
         selectColor: isCurrent ? "red" : "none",
         forceSelectColor: isCurrent,
-        forceOverlay: isCurrent,
+        forceOverlayColor: isCurrent,
         yOffset: isCurrent ? 0.15 : 0,
       };
     }
@@ -389,12 +385,11 @@ export default function Area52() {
     }
   };
 
-  const { cardMap, getZoneBasePos, getZoneStylesById } = useCardMap({
+  const { cardMap, cardWidth, getZoneBasePos, getZoneStylesById } = useCardMap({
     game,
     zones,
     cardMapper,
     cardSize: "regular",
-    // visualizer: true,
     paddingTop: 0.6,
   });
 
@@ -468,6 +463,7 @@ export default function Area52() {
           disabled={selectedDefenders.length !== 1}
           theme="red"
           style={[{ height: "100%" }]}
+          cardWidth={cardWidth}
         />
         <Button
           onPress={() =>
@@ -478,6 +474,7 @@ export default function Area52() {
           disabled={!canAttack || selectedDefenders.length < 1}
           theme={selectedDefenders.length === 2 ? "purple" : "green"}
           style={[flexStyles.flex1, { height: "100%" }]}
+          cardWidth={cardWidth}
         />
       </View>
     </GameWrapper>

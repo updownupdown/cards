@@ -170,7 +170,7 @@ export default function Golf() {
           pileIndex,
           refIndex: cardIndex,
           name: "pile",
-          type: "single-card",
+
           col: pileIndex,
           row: cardIndex + 1,
           baseZIndex: 1 + cardIndex,
@@ -182,7 +182,7 @@ export default function Golf() {
       {
         id: "draw",
         name: "draw",
-        type: "deck",
+
         cards: game.draw,
         col: 2,
         row: 0,
@@ -193,7 +193,7 @@ export default function Golf() {
       {
         id: "discard",
         name: "discard",
-        type: "deck",
+
         cards: game.discard,
         col: 4,
         row: 0,
@@ -204,7 +204,7 @@ export default function Golf() {
       ...pileZones,
       {
         id: "button",
-        type: "ui",
+
         col: 0,
         row: 6.25,
         width: "full",
@@ -234,16 +234,15 @@ export default function Golf() {
 
     return {
       selectColor,
-      forceOverlay: selectColor !== "none",
+      forceOverlayColor: selectColor !== "none",
       isDisabled: game.ended || !isBottomCard,
       onPress: () => playCard(mappedCard.pileIndex!, mappedCard.refIndex!),
     };
   };
 
-  const { getZoneStylesById, cardMap } = useCardMap({
+  const { getZoneStylesById, cardWidth, cardMap } = useCardMap({
     game,
     zones,
-    gap: 0.35,
     cardMapper,
     cardSize: "small",
   });
@@ -272,6 +271,7 @@ export default function Golf() {
           size="large"
           fullWidth
           style={[{ height: "100%" }]}
+          cardWidth={cardWidth}
         />
       </View>
     </GameWrapper>

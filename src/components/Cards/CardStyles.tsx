@@ -56,6 +56,7 @@ export function getCardShadow(props: {
 
 // ==== Overlays ===== //
 export const CardOverlay = (props: {
+  cardWidth: number;
   selectColor?: CardColor | string;
   isSelected?: boolean;
   forceOverlayColor?: boolean;
@@ -71,6 +72,7 @@ export const CardOverlay = (props: {
           transitionDuration: "0.15s",
           transitionTimingFunction: "ease",
           transitionProperty: "all",
+          borderRadius: props.cardWidth * cardDims.ratioRadius,
           backgroundColor: selectColor,
           opacity: props.isSelected || props.forceOverlayColor ? 0.2 : 0,
         },

@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import type { GestureResponderEvent, View as RNView } from "react-native";
 
-import { CardOLD } from "../Cards/CardOLD";
+import { Card } from "../../Cards/Card";
 import {
   DRAG_CAPTURE_THRESHOLD,
   DRAG_MOVE_THRESHOLD,
@@ -22,8 +22,8 @@ import {
   pointInRect,
   shuffle,
   type PlayingCard,
-} from "../Cards/card-utils";
-import { GameWrapper } from "../common/GameWrapper";
+} from "../../Cards/card-utils";
+import { GameWrapper } from "../../common/GameWrapper";
 
 type GameState = {
   cascades: PlayingCard[][];
@@ -466,7 +466,7 @@ export default function FreeCell() {
                           hiddenByDrag ? styles.hiddenDuringDrag : undefined
                         }
                       >
-                        <CardOLD card={card} cardsPerRow={9} />
+                        <Card card={card} cardsPerRow={9} />
                       </View>
                     ) : (
                       <Text style={styles.slotLabel}>Free</Text>
@@ -501,7 +501,7 @@ export default function FreeCell() {
                     ]}
                   >
                     {top ? (
-                      <CardOLD card={top} cardsPerRow={9} />
+                      <Card card={top} cardsPerRow={9} />
                     ) : (
                       <Text style={styles.slotLabel}>
                         {suit[0].toUpperCase()}
@@ -572,7 +572,7 @@ export default function FreeCell() {
                       ]}
                       {...(isTop ? topDragHandlers : {})}
                     >
-                      <CardOLD card={card} cardsPerRow={9} />
+                      <Card card={card} cardsPerRow={9} />
                     </View>
                   );
                 })}
@@ -592,7 +592,7 @@ export default function FreeCell() {
               },
             ]}
           >
-            <CardOLD card={dragGhost.card} cardsPerRow={9} />
+            <Card card={dragGhost.card} cardsPerRow={9} />
           </Animated.View>
         ) : null}
       </View>

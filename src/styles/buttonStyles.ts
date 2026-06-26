@@ -8,21 +8,6 @@ export const buttonTransition = {
 };
 
 export const buttonStyles = StyleSheet.create({
-  fullWidth: {
-    width: "100%",
-  },
-  button: {
-    ...buttonTransition,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 6,
-
-    backgroundColor: rgba(Colors.K800, 0.1),
-    outlineWidth: 0,
-    boxShadow: `inset 0 1px 1px ${rgba(Colors.white, 0.2)}, inset 1px 2px 14px ${rgba(Colors.K500, 0.2)}, inset 2px 4px 20px ${rgba(Colors.K600, 0.2)}, -2px -2px 12px ${rgba(Colors.K750, 0.8)}, 2px 2px 16px ${rgba(Colors.K950, 0.5)}`,
-  },
   cardPlaceholderContentBtn: {
     ...buttonTransition,
     width: "88%",
@@ -102,10 +87,6 @@ export const buttonStyles = StyleSheet.create({
   // Disabled
   disabled: {
     opacity: 0.4,
-    // color: Colors.K900,
-    // borderColor: rgba(Colors.K500, 0.5),
-    // backgroundColor: rgba(Colors.K500, 0.1),
-    // boxShadow: "unset",
   },
   textDisabled: {
     opacity: 0.6,

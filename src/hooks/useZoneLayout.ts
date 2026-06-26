@@ -1,4 +1,8 @@
 import { cardDims } from "@/components/Cards/card-utils";
+import {
+  DeckFanDirection,
+  DeckInfoPosition,
+} from "@/components/Cards/CardMapBackgrounds";
 import { IconName } from "@/icons";
 import {
   HeaderHeight,
@@ -7,16 +11,6 @@ import {
 } from "@/styles/styles";
 import { useMemo } from "react";
 import { useWindowDimensions, ViewStyle } from "react-native";
-
-export type FanDirection =
-  | "none"
-  | "up"
-  | "down"
-  | "left"
-  | "right"
-  | "diagonal-depth";
-
-export type DeckInfoPosition = "above" | "below" | "left" | "right";
 
 type CardPosition = {
   x: number;
@@ -33,7 +27,7 @@ export type ZoneConfig = {
   width?: number | "full";
   height?: number;
   fan?: {
-    direction?: FanDirection;
+    direction?: DeckFanDirection;
     offset?: number; // Multiplier of card dimension (e.g. 0.4 for 40%)
     maxVisible?: number;
   };

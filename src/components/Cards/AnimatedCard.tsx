@@ -20,7 +20,7 @@ export type CardRegistration = {
   zoneId: string;
   index: number;
   total: number;
-  startingZIndex?: number;
+  baseZIndex?: number;
   type?: string;
   yOffset?: number;
   misc?: any;
@@ -44,21 +44,26 @@ export type ArcConfig = {
   magnitudeY?: number;
 };
 
-export type AnimatedCardProps = {
+export type CardMapBGMapping = {
+  onPress?: () => void;
+  isDisabled?: boolean;
+  isSelected?: boolean;
+  selectColor?: CardColor | string;
+  forceSelectColor?: boolean;
+  forceOverlayColor?: boolean;
+  zIndexOffset?: number;
+};
+
+export type AnimatedCardProps = CardMapBGMapping & {
   targetState: TargetState;
   cardWidth: number;
   cardHeight: number;
   cardSize?: CardSizes;
-  onPress?: () => void;
-  isDisabled?: boolean;
-  isSelected?: boolean;
   isVisible?: boolean;
-  selectColor?: CardColor;
-  forceSelectColor?: boolean;
-  forceOverlay?: boolean;
   isPlaceholder?: boolean;
   yOffset?: number;
   arcConfig?: ArcConfig;
+  clickThroughCards?: boolean;
 };
 
 export type AnimatedCardMapping = Omit<
@@ -79,8 +84,9 @@ export const AnimatedCard = ({
   selectColor,
   yOffset,
   forceSelectColor,
-  forceOverlay,
+  forceOverlayColor,
   isPlaceholder,
+  clickThroughCards,
 }: AnimatedCardProps) => {
   const startX = useSharedValue(targetState.x);
   const startY = useSharedValue(targetState.y);
@@ -128,7 +134,15 @@ export const AnimatedCard = ({
         });
       }
     },
-    [targetState.zoneId, yOffset],
+    [
+      targetState.zoneId,
+      targetState.x,
+      targetState.y,
+      targetState.zIndex,
+      targetState.rotation,
+      targetState.card?.faceUp,
+      yOffset,
+    ],
   );
 
   const spinY = useDerivedValue(() => {
@@ -195,14 +209,15 @@ export const AnimatedCard = ({
     currentVisualYOffset.value = rawYOffset;
     currentVisualZ.value = rawZ;
 
-    const finalYOffset =
-      moveProgress.value === 1 ? Math.round(rawYOffset) : rawYOffset;
+    const finalYOffset = Math.round(rawYOffset);
+    //   const finalYOffset =
+    // moveProgress.value === 1 ? Math.round(rawYOffset) : rawYOffset;
 
-    // 3. Snap to integer pixel grid ONLY when static to fix SVG blur
-    const finalX = moveProgress.value === 1 ? Math.round(rawX) : rawX;
-    const finalY = moveProgress.value === 1 ? Math.round(rawY) : rawY;
+    // Snap to integer pixel grid to fix SVG blur
+    const finalX = Math.round(rawX);
+    const finalY = Math.round(rawY);
 
-    // Z-Index must always be an integer, so we round the interpolated value
+    // zIndex must always be an integer, so we round the interpolated value
     const finalZ = Math.round(rawZ);
 
     const rotation = interpolate(
@@ -250,11 +265,13 @@ export const AnimatedCard = ({
   if (isVisible === false || targetState.isHiddenUnderDeck) return null;
 
   return (
-    <Animated.View style={animatedStyle}>
+    <Animated.View
+      style={[animatedStyle, { userSelect: "none", pointerEvents: "none" }]}
+    >
       <Pressable
         onPress={onPress}
         disabled={!onPress || isDisabled}
-        style={{ flex: 1 }}
+        style={{ flex: 1, pointerEvents: clickThroughCards ? "none" : "auto" }}
       >
         <Animated.View style={[frontStyle]}>
           <Card
@@ -263,7 +280,7 @@ export const AnimatedCard = ({
             selectColor={selectColor ?? "none"}
             isSelected={isSelected}
             forceSelectColor={forceSelectColor}
-            forceOverlayColor={forceOverlay}
+            forceOverlayColor={forceOverlayColor}
             isVisible={isVisible}
             cardSize={cardSize}
             isPlaceholder={isPlaceholder}
@@ -277,7 +294,7 @@ export const AnimatedCard = ({
             selectColor={selectColor ?? "none"}
             isSelected={isSelected}
             forceSelectColor={forceSelectColor}
-            forceOverlayColor={forceOverlay}
+            forceOverlayColor={forceOverlayColor}
             isVisible={isVisible}
             cardSize={cardSize}
             isPlaceholder={isPlaceholder}

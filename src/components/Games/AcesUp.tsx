@@ -5,14 +5,23 @@ import { Colors } from "@/styles/styles";
 import { useMemo, useState } from "react";
 import { Pressable, View } from "react-native";
 import { Button } from "../Button/Button";
-import { AnimatedCard } from "../Cards/AnimatedCard";
+import {
+  AnimatedCard,
+  AnimatedCardMapping,
+  CardMapBGMapping,
+} from "../Cards/AnimatedCard";
 import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
 import { CardPositionBuilder, getZoneGrid } from "../Cards/CardPositionBuilder";
 import { CardColor } from "../Cards/CardStyles";
 import { GameWrapper } from "../common/GameWrapper";
+import {
+  getGridColRows,
+  MappedCard,
+  MapZone,
+  useCardMap,
+} from "../Cards/CardMap";
 
 const cardSize = "regular";
-const cardsPerRow = 4;
 
 type AcesUpState = {
   stock: PlayingCard[];
@@ -38,45 +47,6 @@ function topCard(pile: PlayingCard[]) {
   if (pile.length === 0) return null;
   return pile[pile.length - 1];
 }
-
-export const layoutZones: ZoneConfig[] = [
-  {
-    id: "stock",
-    col: 0.75,
-    row: 0,
-    fan: { maxVisible: 3 },
-    placeholder: { show: true, infoPos: "left", showCount: true, text: "Draw" },
-  },
-  {
-    id: "discard",
-    col: 2.25,
-    row: 0,
-    fan: { maxVisible: 3 },
-    placeholder: {
-      show: true,
-      infoPos: "right",
-      showCount: true,
-      text: "Discard",
-    },
-  },
-  ...getZoneGrid({
-    idPrefix: "pile",
-    length: 4,
-    cols: 4,
-    rowOffset: 3,
-    config: {
-      fan: { direction: "up", offset: 0.25 },
-      placeholder: { show: true },
-    },
-  }),
-  {
-    id: "button",
-    col: 0,
-    row: 4.1,
-    width: "full",
-    height: 0.6,
-  },
-];
 
 function setup(): AcesUpState {
   const stock = shuffle(createDeck({ faceUp: true }));
@@ -267,30 +237,124 @@ export default function AcesUp() {
 
   const hasEmptyPile = !!game.piles.find((p) => p.length === 0);
 
-  const layoutManager = useZoneLayout({
-    zones: layoutZones,
-    targetRows: 5.45,
+  // ========== Card Mapping ========== //
+  const zones: MapZone[] = useMemo(() => {
+    const pileZones: MapZone[] = getGridColRows({
+      cols: 4,
+      rows: 1,
+      rowOffset: 3,
+    }).map((pos, i) => ({
+      id: `pile-${i}`,
+      name: "pile",
+
+      pileIndex: i,
+      cards: game.piles[i],
+      col: pos.c,
+      row: pos.r,
+      baseZIndex: 1,
+      fan: { maxVisible: 3, direction: "up", offset: 0.25 },
+      placeholder: {},
+    }));
+
+    return [
+      {
+        id: "stock",
+        name: "stock",
+        cards: game.stock,
+
+        col: 0.75,
+        row: 0,
+        fan: { maxVisible: 3 },
+        placeholder: {
+          show: true,
+          infoPos: "left",
+          showCount: true,
+          text: "Draw",
+        },
+      },
+      {
+        id: "discard",
+        name: "discard",
+        cards: game.discard,
+
+        col: 2.25,
+        row: 0,
+        fan: { maxVisible: 3 },
+        placeholder: {
+          show: true,
+          infoPos: "right",
+          showCount: true,
+          text: "Discard",
+        },
+      },
+      ...pileZones,
+      {
+        id: "button",
+
+        col: 0,
+        row: 4.1,
+        width: "full",
+        height: 0.6,
+      },
+    ];
+  }, [game, discardable]);
+
+  const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
+    if (zone.name !== "pile" || zone.pileIndex === undefined) return {};
+
+    const isDisabled =
+      game.piles[zone.pileIndex!].length !== 0 && selectedPile === undefined;
+
+    return {
+      selectColor: selectedPile !== undefined ? "blue" : "none",
+      onPress: () => {
+        onPilePress(zone.pileIndex!);
+      },
+      isDisabled,
+    };
+  };
+
+  const cardMapper = (
+    mappedCard: MappedCard,
+  ): AnimatedCardMapping | undefined => {
+    if (mappedCard.zoneName === "stock" && mappedCard.topOfZone) {
+      //  Stock pile
+      return {
+        onPress: dealFour,
+        isDisabled: !canDeal,
+      };
+    } else if (mappedCard.zoneName === "pile" && mappedCard.topOfZone) {
+      // Piles
+      const pileIndex = mappedCard.pileIndex;
+
+      if (pileIndex === undefined) return {};
+
+      const canDiscard = discardable.has(pileIndex);
+
+      return {
+        onPress: () => {
+          if (canDiscard) {
+            discardTop(pileIndex);
+          } else {
+            onPilePress(pileIndex);
+          }
+        },
+        isSelected: selectedPile === pileIndex,
+        selectColor: canDiscard ? "green" : "blue",
+        forceSelectColor: canDiscard,
+        forceOverlayColor: canDiscard,
+        isDisabled: !canDiscard && !hasEmptyPile,
+      };
+    }
+  };
+
+  const { cardMap, cardWidth, getZoneStylesById } = useCardMap({
+    game,
+    zones,
+    cardMapper,
+    zoneMapper,
+    cardSize: "regular",
   });
-
-  const {
-    cardWidth,
-    cardHeight,
-    getCardPosition,
-    layoutMetrics,
-    getZoneStyles,
-  } = layoutManager;
-
-  // ========== Card Positions ========== //
-  const cardPositions = useMemo(() => {
-    const builder = new CardPositionBuilder(getCardPosition);
-
-    builder.addDeck(game.stock, "stock", 20, "stock");
-    builder.addDeck(game.discard, "discard", 1, "discard");
-    game.piles.forEach((pile, pileIndex) => {
-      builder.addDeck(pile, `pile-${pileIndex}`, 10, "pile");
-    });
-    return builder.build();
-  }, [game, discardable, getCardPosition]);
 
   return (
     <GameWrapper
@@ -303,85 +367,9 @@ export default function AcesUp() {
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
-      {Object.values(cardPositions).map((target) => {
-        let selectColor: CardColor = "none";
-        let isSelected = undefined;
-        // let forceOverlay = false;
-        // let forceSelectColor = false;
-        let isDisabled = false;
-        // let isPlaceholder = false;
-        let onPress: (() => void) | undefined = undefined;
+      {cardMap}
 
-        if (target.zoneId === "stock" && target.misc?.topOfDeck) {
-          //  Stock pile
-          onPress = dealFour;
-          isDisabled = !canDeal;
-        } else if (target.type === "pile" && target.misc?.topOfDeck) {
-          // Piles
-          const cardIndex: number | undefined = target.index;
-          const pileIndex: number | undefined = Number(
-            target.zoneId.split("-")[1],
-          );
-
-          if (cardIndex !== undefined && pileIndex !== undefined) {
-            const pile = game.piles[pileIndex];
-
-            isSelected = selectedPile === pileIndex;
-            const canDiscard = discardable.has(pileIndex);
-
-            onPress = () => {
-              if (canDiscard) {
-                discardTop(pileIndex);
-              } else {
-                onPilePress(pileIndex);
-              }
-            };
-
-            selectColor =
-              pile.length === 0 ? "blue" : canDiscard ? "green" : "blue";
-            isDisabled =
-              (!canDiscard && !hasEmptyPile) ||
-              (pile.length === 0 && selectedPile === undefined);
-          }
-        }
-
-        return (
-          <AnimatedCard
-            key={target.card.id}
-            targetState={target}
-            cardWidth={cardWidth}
-            cardHeight={cardHeight}
-            cardSize={cardSize}
-            onPress={onPress}
-            isSelected={isSelected}
-            selectColor={selectColor}
-            // forceOverlay={forceOverlay}
-            // forceSelectColor={forceSelectColor}
-            // isPlaceholder={isPlaceholder}
-            isDisabled={isDisabled}
-          />
-        );
-      })}
-
-      {Array.from({ length: 4 }, (_, pileIndex) => {
-        return (
-          <Pressable
-            key={`pile-${pileIndex}`}
-            style={[
-              getZoneStyles(`pile-${pileIndex}`),
-              { zIndex: 1, borderWidth: 2, borderColor: Colors.accentBlue },
-            ]}
-            onPress={() => {
-              onPilePress(pileIndex);
-            }}
-            disabled={
-              game.piles[pileIndex].length !== 0 && selectedPile === undefined
-            }
-          />
-        );
-      })}
-
-      <View style={[getZoneStyles("button")]}>
+      <View style={[getZoneStylesById("button")]}>
         <Button
           text="Deal"
           size="large"
@@ -389,6 +377,7 @@ export default function AcesUp() {
           fullWidth
           disabled={!canDeal}
           style={[{ height: "100%" }]}
+          cardWidth={cardWidth}
         />
       </View>
     </GameWrapper>

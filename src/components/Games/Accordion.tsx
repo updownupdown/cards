@@ -1,16 +1,17 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
-import { useZoneLayout, ZoneConfig } from "@/hooks/useZoneLayout";
 import { produce } from "immer";
 import { useMemo, useState } from "react";
-import { useWindowDimensions } from "react-native";
-import { AnimatedCard } from "../Cards/AnimatedCard";
+import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
-import { CardSelectColor } from "../Cards/CardOLD";
-import { CardPositionBuilder, getZoneGrid } from "../Cards/CardPositionBuilder";
+import {
+  getGridColRows,
+  MappedCard,
+  MapZone,
+  useCardMap,
+} from "../Cards/CardMap";
+import { CardSelectColor } from "../Cards/Card";
 import { GameWrapper } from "../common/GameWrapper";
-
-const cardSize = "small";
 
 type AccordionState = {
   line: PlayingCard[];
@@ -134,43 +135,44 @@ export default function Accordion() {
     }
   }
 
-  // ========== Layouts ========== //
-  const { width: windowWidth, height: windowHeight } = useWindowDimensions();
-  const windowAspectRatio = windowWidth / windowHeight;
-  const zoneCols =
-    game.line.length < 30
-      ? 5
-      : windowAspectRatio < 0.6
-        ? 6
-        : windowAspectRatio < 0.8
-          ? 7
-          : 8;
+  // ========== Card Mapping ========== //
+  const colNums = 7;
+  const zones: MapZone[] = useMemo(() => {
+    return getGridColRows({
+      cols: colNums,
+      rows: Math.ceil(game.line.length / colNums),
+    }).map((pos, i) => ({
+      id: `line-${i}`,
+      name: "line",
+      pileIndex: i,
+      cards: game.line[i] ? [game.line[i]] : undefined,
 
-  const layoutZones: ZoneConfig[] = [
-    ...getZoneGrid({
-      idPrefix: "zone",
-      length: game.line.length,
-      cols: zoneCols,
-    }),
-  ];
-
-  const layoutManager = useZoneLayout({
-    zones: layoutZones,
-    gapPc: 0.35,
-  });
-
-  const { cardWidth, cardHeight, getCardPosition, layoutMetrics } =
-    layoutManager;
-
-  // ========== Card Positions ========== //
-  const cardPositions = useMemo(() => {
-    const builder = new CardPositionBuilder(getCardPosition);
-    builder.addCollection(game.line, "zone", 0, (_, i) => ({
-      type: "zone",
-      cardIndex: i,
+      col: pos.c,
+      row: pos.r,
+      baseZIndex: i,
     }));
-    return builder.build();
-  }, [game, layoutManager, zoneCols, getCardPosition]);
+  }, [game]);
+
+  const cardMapper = (
+    mappedCard: MappedCard,
+  ): AnimatedCardMapping | undefined => {
+    const index = mappedCard.pileIndex;
+    if (index === undefined) return {};
+
+    return {
+      onPress: () => onCardPress(index),
+      isSelected: selectedIndex === index,
+      selectColor: selectColor(index) as CardSelectColor,
+      forceOverlayColor: true,
+    };
+  };
+
+  const { cardMap } = useCardMap({
+    game,
+    zones,
+    cardMapper,
+    cardSize: "small",
+  });
 
   return (
     <GameWrapper
@@ -188,24 +190,7 @@ export default function Accordion() {
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
-      {Object.values(cardPositions).map((target) => {
-        const index = target.misc?.cardIndex;
-        if (index === undefined) return null;
-
-        return (
-          <AnimatedCard
-            key={target.card.id}
-            targetState={target}
-            cardWidth={cardWidth}
-            cardHeight={cardHeight}
-            cardSize={cardSize}
-            onPress={() => onCardPress(index)}
-            isSelected={selectedIndex === index}
-            selectColor={selectColor(index) as CardSelectColor}
-            forceOverlay={true}
-          />
-        );
-      })}
+      {cardMap}
     </GameWrapper>
   );
 }

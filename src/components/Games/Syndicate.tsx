@@ -1,35 +1,26 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
-import { useZoneLayout, ZoneConfig } from "@/hooks/useZoneLayout";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
 import { useMemo, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "../Button/Button";
-import { AnimatedCard } from "../Cards/AnimatedCard";
-import { CardColor } from "../Cards/Card";
+import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
-  cardDims,
   createDeck,
   isFace,
   rankValue,
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { CardPositionBuilder } from "../Cards/CardPositionBuilder";
+import {
+  getGridColRows,
+  MappedCard,
+  MapZone,
+  useCardMap,
+} from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
-import { ZoneVisualizer } from "../Cards/ZoneVisualizer";
-
-const cardSize = "small";
-const tableSize = {
-  borderRadius: 6,
-  colGap: 4,
-  innerGap: 10,
-  paddingHorizontal: 6,
-  paddingVertical: 6,
-  rankWidth: 20,
-};
 
 type RankBand = {
   members: PlayingCard[];
@@ -108,32 +99,6 @@ function hasAnyMove(state: GameState) {
   return false;
 }
 
-function layoutRanks() {
-  let members: ZoneConfig[] = [];
-
-  for (let i = 0; i < 5; i++) {
-    // Members
-    members.push({
-      id: `members-${i}`,
-      col: 0.55,
-      row: i * 1.1,
-      fan: { direction: "right", offset: 0.47 },
-    });
-
-    // Candidates
-    members.push({
-      id: `candidates-${i}`,
-      col: 2.4,
-      row: i * 1.1,
-      fan: { direction: "right", offset: 0.47 },
-    });
-  }
-
-  return members;
-}
-
-const layoutZones: ZoneConfig[] = [...layoutRanks()];
-
 // ==============================
 // SYNDICATE
 // ==============================
@@ -147,29 +112,12 @@ export default function Syndicate() {
   const [selectedSacrifice, setSelectedSacrifice] =
     useState<PlayingCard | null>(null);
 
-  const layoutManager = useZoneLayout({
-    zones: layoutZones,
-    targetCols: 7.8,
-    paddingTopPc: cardDims.layoutPadding + 0.6,
-    paddingBottomPc: cardDims.layoutPadding + 1.6,
-  });
-
-  const {
-    cardWidth,
-    cardHeight,
-    getCardPosition,
-    getZoneBasePos,
-    layoutMetrics,
-  } = layoutManager;
-
   function resetSelected() {
     setSelectedRank(null);
     setSelectedMember(null);
     setSelectedReplacement(null);
     setSelectedSacrifice(null);
   }
-
-  const membersWidth = cardWidth * 2.2;
 
   const { saveUndoState, undo, canUndo, clearHistory } =
     useUndoHistory<GameSnapshot>();
@@ -312,29 +260,168 @@ export default function Syndicate() {
     }
   };
 
-  // ========== Card Positions ========== //
-  const cardPositions = useMemo(() => {
-    const builder = new CardPositionBuilder(getCardPosition);
+  // ========== Card Mapping ========== //
+  const positioning = {
+    innerGap: 10,
+    paddingHorizontal: 0.07,
+    paddingVertical: 6,
+    rankWidth: 0.5,
+    tableHeaderHeight: 0.6,
+    borderRadius: 0.14,
+  };
 
-    game.ranks.forEach((rank, rankIdx) => {
-      builder
-        .addArray(rank.members, `members-${rankIdx}`, rankIdx + 20, () => ({
-          type: "member",
-          rankIndex: rankIdx,
-        }))
-        .addArray(
-          rank.candidates,
-          `candidates-${rankIdx}`,
-          rankIdx + 20,
-          () => ({
-            type: "candidate",
-            rankIndex: rankIdx,
-          }),
-        );
+  const zones: MapZone[] = useMemo(() => {
+    const colRows = getGridColRows({
+      cols: 5,
+      rows: 1,
     });
 
-    return builder.build();
-  }, [game, selectedMember, getCardPosition]);
+    const rankZones: MapZone[][] = colRows.map((pos, i) => [
+      // Rank (for backgrounds)
+      {
+        id: `rank-${i}`,
+        pileIndex: i,
+        name: "rank",
+
+        col: 0,
+        row: i * 1.1 + positioning.tableHeaderHeight - 0.09,
+        width: "full",
+        height: 1.18,
+        baseZIndex: 1,
+      },
+      // Members
+      {
+        id: `member-${i}`,
+        pileIndex: i,
+        cards: game.ranks[i].members.length ? game.ranks[i].members : undefined,
+        name: "member",
+
+        col: positioning.rankWidth,
+        row: i * 1.1 + positioning.tableHeaderHeight,
+        width: 2,
+        baseZIndex: i + 20,
+        fan: { direction: "right", offset: 0.47 },
+      },
+      // Candidates
+      {
+        id: `candidate-${i}`,
+        pileIndex: i,
+        cards: game.ranks[i].candidates.length
+          ? game.ranks[i].candidates
+          : undefined,
+        name: "candidate",
+
+        col: 2.4,
+        width: pos.r + 4.5,
+        row: i * 1.1 + positioning.tableHeaderHeight,
+        baseZIndex: i + 20,
+        fan: { direction: "right", offset: 0.47 },
+      },
+    ]);
+
+    return [
+      {
+        id: "table-headers",
+
+        col: 0,
+        row: 0,
+        width: "full",
+        height: positioning.tableHeaderHeight,
+      },
+      ...rankZones.flat(),
+      {
+        id: "instructions",
+
+        col: 0,
+        row: 6,
+        width: "full",
+        height: 1,
+      },
+      {
+        id: "buttons",
+
+        col: 0,
+        row: 7,
+        width: "full",
+        height: 1,
+      },
+    ];
+  }, [game]);
+
+  const cardMapper = (
+    mappedCard: MappedCard,
+  ): AnimatedCardMapping | undefined => {
+    const yOffsetHeight = -0.2;
+
+    if (mappedCard.zoneName === "member") {
+      // Member logic
+      const rankIndex = mappedCard.pileIndex;
+
+      if (rankIndex === undefined) return {};
+
+      const isSelectedMember =
+        rankIndex !== undefined &&
+        selectedRank === rankIndex &&
+        selectedMember === mappedCard.card.id;
+      const isSelectedSacrifice = selectedSacrifice === mappedCard.card;
+      const isPotentialSacrifice =
+        rankIndex !== undefined &&
+        selectedReplacement &&
+        selectedRank === rankIndex + 1 &&
+        game.ranks[rankIndex].members.length === 3;
+
+      const isSelected = isSelectedMember || isSelectedSacrifice;
+
+      return {
+        isSelected,
+        selectColor: isPotentialSacrifice ? "red" : "blue",
+        yOffset: isSelected ? yOffsetHeight : 0,
+        onPress: () => {
+          const isPotentialSacrifice =
+            rankIndex !== undefined &&
+            selectedReplacement &&
+            selectedRank === rankIndex + 1 &&
+            game.ranks[rankIndex].members.length === 3;
+
+          if (isSelectedMember) {
+            resetSelected();
+          } else if (isSelectedSacrifice) {
+            setSelectedSacrifice(null);
+          } else if (isPotentialSacrifice) {
+            setSelectedSacrifice(mappedCard.card);
+          } else {
+            setSelectedReplacement(null);
+            setSelectedRank(rankIndex);
+            setSelectedMember(mappedCard.card.id);
+          }
+        },
+      };
+    } else if (mappedCard.zoneName === "candidate") {
+      // Candidate logic
+      const isValidReplacement = validReplacementCards.includes(
+        mappedCard.card,
+      );
+
+      const isSelected = selectedReplacement?.id === mappedCard.card.id;
+
+      return {
+        isSelected,
+        yOffset: isValidReplacement ? yOffsetHeight : 0,
+        isDisabled: !isValidReplacement,
+        selectColor: "purple",
+        onPress: () => {
+          setSelectedReplacement(isSelected ? null : mappedCard.card);
+        },
+      };
+    }
+  };
+
+  const { cardMap, cardWidth, cardHeight, getZoneStylesById } = useCardMap({
+    game,
+    zones,
+    cardMapper,
+    cardSize: "small",
+  });
 
   return (
     <GameWrapper
@@ -352,23 +439,19 @@ export default function Syndicate() {
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
+      {cardMap}
+
       {/* Table Headers */}
       <View
         style={[
+          flexStyles.rowCentered,
+          flexStyles.spaceBetween,
+          getZoneStylesById("table-headers"),
           {
-            position: "absolute",
-            zIndex: 1,
-            left: layoutMetrics.startX,
-            width: layoutMetrics.gridWidthPadded,
-            top: layoutMetrics.startY - cardHeight * 0.7,
-            height: cardHeight * 0.5,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: tableSize.innerGap,
-            paddingVertical: tableSize.paddingVertical,
-            paddingHorizontal: tableSize.paddingHorizontal,
-            borderRadius: tableSize.borderRadius,
+            gap: positioning.innerGap,
+            paddingVertical: positioning.paddingVertical,
+            paddingHorizontal: cardWidth * positioning.paddingHorizontal,
+            borderRadius: cardWidth * positioning.borderRadius,
             backgroundColor: Colors.K875,
           },
         ]}
@@ -377,7 +460,7 @@ export default function Syndicate() {
           style={[
             styles.textSmall,
             {
-              width: tableSize.rankWidth,
+              width: cardWidth * positioning.rankWidth,
               color: Colors.K600,
               textAlign: "center",
             },
@@ -388,7 +471,7 @@ export default function Syndicate() {
         <Text
           style={[
             styles.textSmall,
-            { width: membersWidth, color: Colors.btnBlue },
+            { width: cardWidth * 2.2, color: Colors.btnBlue },
           ]}
         >
           Members
@@ -406,34 +489,17 @@ export default function Syndicate() {
 
       {/* Rank Rows */}
       {game.ranks.map((band, rankIndex) => {
-        const zonePos = getZoneBasePos(
-          layoutZones.find((z) => z.id === `members-${rankIndex}`)!,
-        );
-        const tablePaddingUnit = cardHeight * 0.1;
-
         return (
           <View
             key={`rank-${rankIndex}`}
             style={[
               flexStyles.rowStart,
               flexStyles.fullWidth,
+              getZoneStylesById(`rank-${rankIndex}`),
               {
-                position: "absolute",
-                zIndex: 1,
-                left: layoutMetrics.startX,
-                top: zonePos.y - tablePaddingUnit,
-                gap: tableSize.innerGap,
-
-                width: layoutMetrics.gridWidthPadded,
-                height: cardHeight + tablePaddingUnit * 2,
-
-                // paddingVertical: tableSize.paddingVertical,
-                paddingHorizontal: tableSize.paddingHorizontal,
-
-                flex: 1,
+                paddingHorizontal: cardWidth * positioning.paddingHorizontal,
                 alignItems: "center",
-
-                borderRadius: tableSize.borderRadius,
+                borderRadius: cardWidth * positioning.borderRadius,
                 backgroundColor: Colors.K875,
               },
             ]}
@@ -442,7 +508,7 @@ export default function Syndicate() {
               style={[
                 textStyles.default,
                 {
-                  width: tableSize.rankWidth,
+                  width: cardWidth * positioning.rankWidth,
                   textAlign: "center",
                   color: Colors.K600,
                   fontFamily: FontWeight[600],
@@ -455,104 +521,14 @@ export default function Syndicate() {
         );
       })}
 
-      {/* Card Positions */}
-      {Object.values(cardPositions).map((target) => {
-        const rankIndex: number | undefined = target.misc?.rankIndex;
-        const type: "member" | "candidate" = target.misc?.type;
-
-        const yOffsetHeight = -0.2 * cardHeight;
-        let isSelected = false;
-        let onPress: (() => void) | undefined = undefined;
-        let isDisabled = false;
-        let selectColor: CardColor = "none";
-        let yOffset: number | undefined = undefined;
-
-        if (type === "member") {
-          // Member logic
-          const isSelectedMember =
-            rankIndex !== undefined &&
-            selectedRank === rankIndex &&
-            selectedMember === target.card.id;
-          const isSelectedSacrifice = selectedSacrifice === target.card;
-          const isPotentialSacrifice =
-            rankIndex !== undefined &&
-            selectedReplacement &&
-            selectedRank === rankIndex + 1 &&
-            game.ranks[rankIndex].members.length === 3;
-
-          isSelected = isSelectedMember || isSelectedSacrifice;
-          selectColor = isPotentialSacrifice ? "red" : "blue";
-          yOffset = isSelected ? yOffsetHeight : 0;
-
-          onPress = () => {
-            const isPotentialSacrifice =
-              rankIndex !== undefined &&
-              selectedReplacement &&
-              selectedRank === rankIndex + 1 &&
-              game.ranks[rankIndex].members.length === 3;
-
-            if (isSelectedMember) {
-              resetSelected();
-            } else if (isSelectedSacrifice) {
-              setSelectedSacrifice(null);
-            } else if (isPotentialSacrifice) {
-              setSelectedSacrifice(target.card);
-            } else {
-              setSelectedReplacement(null);
-              setSelectedRank(target.misc.rankIndex);
-              setSelectedMember(target.card.id);
-            }
-          };
-        } else {
-          // Candidate logic
-          const isValidReplacement = validReplacementCards.includes(
-            target.card,
-          );
-
-          isSelected = selectedReplacement?.id === target.card.id;
-          yOffset = isValidReplacement ? yOffsetHeight : 0;
-          isDisabled = !isValidReplacement;
-          selectColor = "purple";
-
-          onPress = () => {
-            setSelectedReplacement(isSelected ? null : target.card);
-          };
-        }
-
-        return (
-          <AnimatedCard
-            key={target.card.id}
-            targetState={target}
-            cardWidth={cardWidth}
-            cardHeight={cardHeight}
-            cardSize={cardSize}
-            onPress={onPress}
-            isSelected={isSelected}
-            isVisible={!target.isHiddenUnderDeck}
-            yOffset={yOffset}
-            selectColor={selectColor}
-            isDisabled={isDisabled}
-          />
-        );
-      })}
-
       {/* Instructions */}
       <View
         style={[
+          flexStyles.rowCentered,
+          flexStyles.spaceBetween,
+          getZoneStylesById("instructions"),
           {
-            position: "absolute",
-            zIndex: 1,
-            left: layoutMetrics.startX,
-            width: layoutMetrics.gridWidthPadded,
-            top:
-              layoutMetrics.startY +
-              layoutMetrics.gridHeightPadded +
-              cardHeight * 0.25,
-            height: cardHeight * 0.5,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            paddingHorizontal: cardWidth * 0.2,
+            paddingHorizontal: cardWidth * 0.3,
           },
         ]}
       >
@@ -584,17 +560,11 @@ export default function Syndicate() {
       {/* Action Buttons */}
       <View
         style={[
+          getZoneStylesById("buttons"),
           {
             position: "absolute",
             zIndex: 1,
-            left: layoutMetrics.startX,
-            width: layoutMetrics.gridWidthPadded,
-            top:
-              layoutMetrics.startY +
-              layoutMetrics.gridHeightPadded +
-              cardHeight * 1,
-            height: cardHeight * 0.5,
-            gap: layoutMetrics.gridGap,
+            gap: cardHeight * 0.25,
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
@@ -609,20 +579,23 @@ export default function Syndicate() {
             !selectedReplacement ||
             !!(
               selectedRank &&
-              game.ranks[selectedRank].members.length === 3 &&
+              selectedRank !== 0 &&
+              game.ranks[selectedRank - 1].members.length === 3 &&
               !selectedSacrifice
             )
           }
-          style={[flexStyles.flex1]}
+          style={[flexStyles.flex1, { height: "100%" }]}
           theme="blue"
+          cardWidth={cardWidth}
         />
         <Button
           onPress={() => promote("candidates")}
           text="Candidates"
           size="medium"
           disabled={!selectedReplacement}
-          style={[flexStyles.flex1]}
+          style={[flexStyles.flex1, { height: "100%" }]}
           theme="purple"
+          cardWidth={cardWidth}
         />
       </View>
     </GameWrapper>

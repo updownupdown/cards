@@ -10,7 +10,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { CardOLD } from "../Cards/CardOLD";
+import { Card } from "../../Cards/Card";
 import {
   DRAG_CAPTURE_THRESHOLD,
   DRAG_MOVE_THRESHOLD,
@@ -20,8 +20,8 @@ import {
   pointInRect,
   shuffle,
   type PlayingCard,
-} from "../Cards/card-utils";
-import { GameWrapper } from "../common/GameWrapper";
+} from "../../Cards/card-utils";
+import { GameWrapper } from "../../common/GameWrapper";
 
 const cardsPerRow = 10;
 
@@ -299,7 +299,7 @@ export default function TriPeaks() {
             ]}
           >
             {wasteTop ? (
-              <CardOLD card={wasteTop} cardsPerRow={cardsPerRow} />
+              <Card card={wasteTop} cardsPerRow={cardsPerRow} />
             ) : (
               <Text style={styles.slotLabel}>Waste</Text>
             )}
@@ -337,7 +337,7 @@ export default function TriPeaks() {
                       {...(dragHandlers ?? {})}
                     >
                       {!card.removed ? (
-                        <CardOLD card={card} cardsPerRow={cardsPerRow} />
+                        <Card card={card} cardsPerRow={cardsPerRow} />
                       ) : (
                         <View style={styles.removedPlaceholder} />
                       )}
@@ -360,7 +360,7 @@ export default function TriPeaks() {
               },
             ]}
           >
-            <CardOLD card={dragGhost.card} cardsPerRow={cardsPerRow} />
+            <Card card={dragGhost.card} cardsPerRow={cardsPerRow} />
           </Animated.View>
         ) : null}
       </View>

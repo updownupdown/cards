@@ -1,17 +1,10 @@
 import { CardComponents as CardsRegular } from "@/assets/cards/regular";
 import { CardComponents as CardsSmall } from "@/assets/cards/small";
 import { CardComponents as CardsSmallColored } from "@/assets/cards/small-colored";
-import { Colors } from "@/styles/styles";
 import React from "react";
-import { StyleSheet, View, ViewStyle } from "react-native";
+import { View, ViewStyle } from "react-native";
 import { cardDims, PlayingCard } from "./card-utils";
-import {
-  CardColor,
-  CardOverlay,
-  CardSizes,
-  getCardShadow,
-  getColorValue,
-} from "./CardStyles";
+import { CardColor, CardOverlay, CardSizes, getCardShadow } from "./CardStyles";
 
 export type CardProps = {
   card?: PlayingCard;
@@ -90,6 +83,7 @@ export const Card = ({
       ]}
     >
       <CardOverlay
+        cardWidth={cardWidth}
         isSelected={isSelected}
         forceOverlayColor={forceOverlayColor}
         selectColor={selectColor}

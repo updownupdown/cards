@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { CardOLD } from "../Cards/CardOLD";
+import { Card } from "../../Cards/Card";
 import {
   CardSuit,
   RANK_VALUE,
@@ -10,9 +10,9 @@ import {
   isRed,
   shuffle,
   type PlayingCard,
-} from "../Cards/card-utils";
+} from "../../Cards/card-utils";
 import { textStyles } from "@/styles/textStyles";
-import { GameWrapper } from "../common/GameWrapper";
+import { GameWrapper } from "../../common/GameWrapper";
 
 type Foundations = Record<CardSuit, PlayingCard[]>;
 
@@ -361,7 +361,7 @@ export default function Canfield() {
             <View key={`c-found-${suit}`} style={styles.zone}>
               <Text style={styles.smallText}>{suit}</Text>
               {top ? (
-                <CardOLD card={top} cardsPerRow={5} />
+                <Card card={top} cardsPerRow={5} />
               ) : (
                 <View style={styles.empty} />
               )}
@@ -378,7 +378,7 @@ export default function Canfield() {
             disabled={game.ended || game.reserve.length === 0}
           >
             {game.reserve.length > 0 ? (
-              <CardOLD
+              <Card
                 card={game.reserve[game.reserve.length - 1]}
                 cardsPerRow={5}
               />
@@ -395,10 +395,7 @@ export default function Canfield() {
             disabled={game.ended || game.waste.length === 0}
           >
             {game.waste.length > 0 ? (
-              <CardOLD
-                card={game.waste[game.waste.length - 1]}
-                cardsPerRow={5}
-              />
+              <Card card={game.waste[game.waste.length - 1]} cardsPerRow={5} />
             ) : (
               <View style={styles.empty} />
             )}
@@ -433,7 +430,7 @@ export default function Canfield() {
                 disabled={game.ended || col.length === 0}
               >
                 {top ? (
-                  <CardOLD card={top} cardsPerRow={5} />
+                  <Card card={top} cardsPerRow={5} />
                 ) : (
                   <View style={styles.empty} />
                 )}

@@ -5,8 +5,13 @@ import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
 import { useEffect, useMemo, useState } from "react";
 import { Pressable, Text, View } from "react-native";
-import { AnimatedCard } from "../Cards/AnimatedCard";
 import {
+  AnimatedCard,
+  AnimatedCardMapping,
+  CardMapBGMapping,
+} from "../Cards/AnimatedCard";
+import {
+  cardDims,
   CardRank,
   createDeck,
   nameFromRankValue,
@@ -17,9 +22,7 @@ import {
 import { CardPositionBuilder, getZoneGrid } from "../Cards/CardPositionBuilder";
 import { CardColor } from "../Cards/CardStyles";
 import { GameWrapper } from "../common/GameWrapper";
-
-const cardsPerRow = 4;
-const cardSize = "regular";
+import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 
 type GameState = {
   stock: PlayingCard[];
@@ -85,33 +88,6 @@ function anyFoundationPlayable(
   }
   return false;
 }
-
-export const layoutZones: ZoneConfig[] = [
-  {
-    id: "stock",
-    col: 1.5,
-    row: 0,
-    fan: { maxVisible: 3 },
-    placeholder: { show: true, showCount: true },
-  },
-  ...getZoneGrid({
-    idPrefix: "waste",
-    length: 4,
-    cols: 4,
-    rowOffset: 1.25,
-    config: {
-      fan: { direction: "up", offset: 0.1 },
-      placeholder: { show: true, showCount: true, infoPos: "above" },
-    },
-  }),
-  ...getZoneGrid({
-    idPrefix: "foundation",
-    length: 4,
-    cols: 4,
-    rowOffset: 2.75,
-    config: { fan: { direction: "up", offset: 0.1 } },
-  }),
-];
 
 export default function Calculation() {
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
@@ -276,38 +252,182 @@ export default function Calculation() {
     });
   }
 
-  const layoutManager = useZoneLayout({
-    zones: layoutZones,
-    paddingBottomPc: 1,
+  // ========== Card Mapping ========== //
+  const zones: MapZone[] = useMemo(() => {
+    const wasteZones: MapZone[] = game.wastes.map((pos, i) => ({
+      id: `waste-${i}`,
+      name: "waste",
+      pileIndex: i,
+      cards: game.wastes[i],
+
+      col: i,
+      row: 1.5,
+      baseZIndex: 30,
+      fan: { maxVisible: 3 },
+      placeholder: { infoPos: "above" },
+    }));
+    const foundationZones: MapZone[] = game.foundations.map((pos, i) => ({
+      id: `foundation-${i}`,
+      name: "foundation",
+      pileIndex: i,
+      cards: game.foundations[i],
+
+      col: i,
+      row: 2.75,
+      baseZIndex: 20,
+      fan: { maxVisible: 3 },
+    }));
+
+    return [
+      {
+        id: "stock",
+        name: "stock",
+
+        cards: game.stock,
+        col: 1.5,
+        row: 0,
+        fan: { maxVisible: 3 },
+        baseZIndex: 20,
+        placeholder: { text: "Draw", infoPos: "left" },
+      },
+      ...foundationZones,
+      ...wasteZones,
+    ];
+  }, [game]);
+
+  const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
+    if (
+      zone.name === "waste" &&
+      zone.pileIndex !== undefined &&
+      zone.pileIndex !== undefined
+    ) {
+      const waste = game.wastes[zone.pileIndex];
+      const topWasteCard =
+        waste.length === 0 ? undefined : waste[waste.length - 1];
+      const stockIsSelected =
+        selectedCard?.id !== undefined && selectedCard?.id === topStockCard?.id;
+      const thisIsSelected =
+        selectedCard?.id !== undefined && selectedCard?.id === topWasteCard?.id;
+      const anotherWasteCardIsSelected =
+        selectedCard !== undefined && !thisIsSelected;
+
+      return {
+        onPress: () => {
+          if (thisIsSelected) {
+            setSelectedCard(undefined);
+          } else if (stockIsSelected) {
+            zone.pileIndex !== undefined && moveStockToWaste(zone.pileIndex);
+          } else if (anotherWasteCardIsSelected || topWasteCard) {
+            setSelectedCard(topWasteCard);
+          }
+        },
+      };
+    }
+  };
+
+  const cardMapper = (
+    mappedCard: MappedCard,
+  ): AnimatedCardMapping | undefined => {
+    if (mappedCard.zoneName === "stock" && mappedCard.topOfZone) {
+      // Stock
+      return {
+        selectColor: "blue",
+        isSelected: selectedCard?.id === topStockCard?.id,
+        onPress: () => {
+          if (selectedCard?.id === topStockCard?.id) {
+            setSelectedCard(undefined);
+          } else if (topStockCard) {
+            setSelectedCard(topStockCard);
+          }
+        },
+      };
+    } else if (mappedCard.zoneName === "waste") {
+      // Waste Piles
+      const wasteIndex = mappedCard.pileIndex;
+
+      if (wasteIndex !== undefined) {
+        const waste = game.wastes[wasteIndex];
+
+        const topWasteCard =
+          waste.length === 0 ? undefined : waste[waste.length - 1];
+        const stockIsSelected =
+          selectedCard?.id !== undefined &&
+          selectedCard?.id === topStockCard?.id;
+        const thisIsSelected =
+          selectedCard?.id !== undefined &&
+          selectedCard?.id === topWasteCard?.id;
+        const nothingSelected = !selectedCard;
+        const hasTopCard = topWasteCard !== undefined;
+        const anotherWasteCardIsSelected =
+          selectedCard !== undefined && !thisIsSelected;
+
+        const isEnabled =
+          stockIsSelected || // Stock card is selected
+          anotherWasteCardIsSelected || // Another waste card is selected
+          (nothingSelected && hasTopCard) || // No selected card, this pile has a top card
+          thisIsSelected; // This is the currently selected card
+
+        function selectedColor() {
+          if (!isEnabled) {
+            return "none";
+          } else if (stockIsSelected) {
+            return "green";
+          } else if (hasTopCard) {
+            return "blue";
+          } else {
+            return "none";
+          }
+        }
+
+        return {
+          onPress: () => {
+            if (thisIsSelected) {
+              setSelectedCard(undefined);
+            } else if (stockIsSelected) {
+              mappedCard.pileIndex && moveStockToWaste(mappedCard.pileIndex);
+            } else if (anotherWasteCardIsSelected || topWasteCard) {
+              setSelectedCard(topWasteCard);
+            }
+          },
+          isSelected: selectedCard?.id === topWasteCard?.id,
+          selectColor: selectedColor(),
+          isDisabled: !isEnabled,
+        };
+      }
+    } else if (mappedCard.zoneName === "foundation") {
+      // Foundation
+      const foundationIndex = mappedCard.pileIndex;
+
+      if (foundationIndex !== undefined) {
+        const foundation = game.foundations[foundationIndex];
+
+        const canPlaySelectedHere = canPlayToFoundation(
+          selectedCard,
+          foundation,
+          foundationIndex + 1,
+        );
+
+        return {
+          selectColor: "green",
+          onPress: () => {
+            if (canPlaySelectedHere) {
+              moveCardToFoundation(foundationIndex);
+            }
+          },
+          isDisabled: !canPlaySelectedHere,
+        };
+      }
+    }
+  };
+
+  const { cardMap, cardWidth, cardHeight, getZoneStylesById } = useCardMap({
+    game,
+    zones,
+    cardMapper,
+    zoneMapper,
+    cardSize: "regular",
+    paddingBottom: 0.9,
   });
-  const {
-    cardWidth,
-    cardHeight,
-    getCardPosition,
-    getZoneStyles,
-    getZoneBasePos,
-    layoutMetrics,
-  } = layoutManager;
-
-  // ========== Card Positions ========== //
-  const cardPositions = useMemo(() => {
-    const builder = new CardPositionBuilder(getCardPosition);
-
-    builder.addDeck(game.stock, "stock", 20, "stock");
-    game.foundations.forEach((foundation, foundationIndex) => {
-      builder.addDeck(
-        foundation,
-        `foundation-${foundationIndex}`,
-        10,
-        "foundation",
-      );
-    });
-    game.wastes.forEach((waste, wasteIndex) => {
-      builder.addDeck(waste, `waste-${wasteIndex}`, 10, "waste");
-    });
-
-    return builder.build();
-  }, [game, getCardPosition]);
 
   return (
     <GameWrapper
@@ -325,175 +445,56 @@ export default function Calculation() {
       canUndo={canUndo}
       handleUndo={handleUndo}
     >
-      {Object.values(cardPositions).map((target) => {
-        let selectColor: CardColor = "none";
-        let isSelected = undefined;
-        let forceOverlay = false;
-        let forceSelectColor = false;
-        let isDisabled = false;
-        let isPlaceholder = false;
-        let onPress: (() => void) | undefined = undefined;
+      {cardMap}
 
-        if (target.zoneId === "stock" && target.misc?.topOfDeck) {
-          // Stock
-          selectColor = "blue";
-          isSelected = selectedCard?.id === topStockCard?.id;
-          onPress = () => {
-            if (selectedCard?.id === topStockCard?.id) {
-              setSelectedCard(undefined);
-            } else if (topStockCard) {
-              setSelectedCard(topStockCard);
-            }
-          };
-        } else if (target.type === "waste") {
-          // Waste Piles
-          const wasteIndex = Number(target.zoneId.split("-")[1]);
-          const waste = game.wastes[wasteIndex];
-
-          const topWasteCard =
-            waste.length === 0 ? undefined : waste[waste.length - 1];
-          const stockIsSelected =
-            selectedCard?.id !== undefined &&
-            selectedCard?.id === topStockCard?.id;
-          const thisIsSelected =
-            selectedCard?.id !== undefined &&
-            selectedCard?.id === topWasteCard?.id;
-          const nothingSelected = !selectedCard;
-          const hasTopCard = topWasteCard !== undefined;
-          const anotherWasteCardIsSelected =
-            selectedCard !== undefined && !thisIsSelected;
-
-          const isEnabled =
-            stockIsSelected || // Stock card is selected
-            anotherWasteCardIsSelected || // Another waste card is selected
-            (nothingSelected && hasTopCard) || // No selected card, this pile has a top card
-            thisIsSelected; // This is the currently selected card
-
-          function selectedColor() {
-            if (!isEnabled) {
-              return "none";
-            } else if (stockIsSelected) {
-              return "green";
-            } else if (hasTopCard) {
-              return "blue";
-            } else {
-              return "none";
-            }
-          }
-
-          isSelected = selectedCard?.id === topWasteCard?.id;
-          isDisabled = !isEnabled;
-          selectColor = selectedColor();
-          onPress = () => {
-            if (thisIsSelected) {
-              setSelectedCard(undefined);
-            } else if (stockIsSelected) {
-              target.index && moveStockToWaste(target.index);
-            } else if (anotherWasteCardIsSelected || topWasteCard) {
-              setSelectedCard(topWasteCard);
-            }
-          };
-        } else if (target.type === "foundation") {
-          // Foundation
-          const foundationIndex = Number(target.zoneId.split("-")[1]);
-          const foundation = game.foundations[foundationIndex];
-
-          const canPlaySelectedHere = canPlayToFoundation(
-            selectedCard,
-            foundation,
-            foundationIndex + 1,
-          );
-          selectColor = "green";
-          onPress = () => {
-            if (canPlaySelectedHere) {
-              moveCardToFoundation(foundationIndex);
-            }
-          };
-          isDisabled = !canPlaySelectedHere;
-        }
-
-        return (
-          <AnimatedCard
-            key={target.card.id}
-            targetState={target}
-            cardWidth={cardWidth}
-            cardHeight={cardHeight}
-            cardSize={cardSize}
-            onPress={onPress}
-            isSelected={isSelected}
-            selectColor={selectColor}
-            forceOverlay={forceOverlay}
-            forceSelectColor={forceSelectColor}
-            isPlaceholder={isPlaceholder}
-            isDisabled={isDisabled}
-          />
-        );
-      })}
-
-      {Array.from({ length: 4 }, (_, i) => {
-        return (
-          // Wastes
-          <Pressable
-            key={`waste-${i}`}
+      {/* Foundations Info */}
+      {Array.from({ length: 4 }, (_, i) => (
+        <View
+          key={`calc-found-${i}`}
+          style={[
+            flexStyles.colCentered,
+            getZoneStylesById(`foundation-${i}`),
+            {
+              backgroundColor: Colors.K875,
+              height: cardHeight / 2,
+              padding: 10,
+              marginTop: cardHeight,
+              zIndex: 100,
+              borderBottomLeftRadius: cardDims.ratioRadius * cardWidth,
+              borderBottomRightRadius: cardDims.ratioRadius * cardWidth,
+            },
+          ]}
+        >
+          <Text
             style={[
-              getZoneStyles(`waste-${i}`),
-              { zIndex: 1, borderWidth: 2, borderColor: Colors.accentBlue },
-            ]}
-            onPress={() => {}}
-          />
-        );
-      })}
-
-      {Array.from({ length: 4 }, (_, i) => {
-        const zonePos = getZoneBasePos(
-          layoutZones.find((z) => z.id === `foundation-${i}`)!,
-        );
-
-        return (
-          // Foundation
-          <View
-            key={`calc-found-${i}`}
-            style={[
-              flexStyles.colCentered,
-              getZoneStyles(`foundation-${i}`),
               {
-                backgroundColor: Colors.K875,
-                height: "auto",
-                padding: 10,
-                top: zonePos.y + cardHeight,
+                fontFamily: FontWeight[400],
+                fontSize: 17,
+                color: Colors.K600,
               },
             ]}
           >
-            <Text
-              style={[
-                {
-                  fontFamily: FontWeight[400],
-                  fontSize: 17,
-                  color: Colors.K600,
-                },
-              ]}
-            >
-              +{STEPS[i]}
-            </Text>
-            <Text
-              style={[
-                {
-                  fontFamily: FontWeight[300],
-                  fontSize: 17,
-                  color: Colors.K100,
-                },
-              ]}
-            >
-              {nameFromRankValue(
-                nextRankValue(
-                  game.foundations[i][game.foundations[i].length - 1],
-                  i + 1,
-                ),
-              )}
-            </Text>
-          </View>
-        );
-      })}
+            +{STEPS[i]}
+          </Text>
+          <Text
+            style={[
+              {
+                fontFamily: FontWeight[300],
+                fontSize: 17,
+                color: Colors.K100,
+              },
+            ]}
+          >
+            ={" "}
+            {nameFromRankValue(
+              nextRankValue(
+                game.foundations[i][game.foundations[i].length - 1],
+                i + 1,
+              ),
+            )}
+          </Text>
+        </View>
+      ))}
     </GameWrapper>
   );
 }

@@ -2,16 +2,16 @@ import { useMemo, useState } from "react";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { CardOLD } from "../Cards/CardOLD";
+import { Card } from "../../Cards/Card";
 import {
   CardSuit,
   RANK_VALUE,
   createDeck,
   shuffle,
   type PlayingCard,
-} from "../Cards/card-utils";
+} from "../../Cards/card-utils";
 import { textStyles } from "@/styles/textStyles";
-import { GameWrapper } from "../common/GameWrapper";
+import { GameWrapper } from "../../common/GameWrapper";
 
 const cardsPerRow = 8;
 
@@ -269,7 +269,7 @@ export default function Penguin() {
             <View key={`p-found-${suit}`} style={styles.zone}>
               <Text style={styles.smallText}>{suit}</Text>
               {top ? (
-                <CardOLD card={top} cardsPerRow={cardsPerRow} />
+                <Card card={top} cardsPerRow={cardsPerRow} />
               ) : (
                 <View style={styles.empty} />
               )}
@@ -295,7 +295,7 @@ export default function Penguin() {
                     disabled={game.ended}
                     style={isSelected ? styles.selectedCard : undefined}
                   >
-                    <CardOLD card={card} cardsPerRow={cardsPerRow} />
+                    <Card card={card} cardsPerRow={cardsPerRow} />
                   </Pressable>
                 );
               })}
