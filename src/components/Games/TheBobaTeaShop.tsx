@@ -8,7 +8,7 @@ import { produce } from "immer";
 import { useMemo, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import { Button } from "../Button/Button";
-import { AnimatedCardMapping, ArcConfig } from "../Cards/AnimatedCard";
+import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
   flipAllToBack,
@@ -282,13 +282,15 @@ export default function TheBobaTeaShop() {
         pileIndex: i,
         refIndex: i,
         name: "queue",
-
         baseZIndex: i + positioning.queueZIndexIncrement,
-        fan: { direction: "down", offset: positioning.queueCardOffset },
+        fan: {
+          direction: "down",
+          offset: positioning.queueCardOffset,
+          center: false,
+        },
       });
       queueZones.push({
         id: `btns-${i}`,
-
         col: i * (positioning.btnColWidth + 1) + 1,
         row: positioning.queueRowStart,
         width: positioning.btnColWidth,
@@ -300,7 +302,6 @@ export default function TheBobaTeaShop() {
       queueZones.push({
         id: "selected-placeholder",
         name: "selected-placeholder",
-
         cards: [
           {
             rank: "Joker",
@@ -322,7 +323,6 @@ export default function TheBobaTeaShop() {
     return [
       {
         id: "rankTally",
-
         col: 0,
         row: 0,
         width: "full",
@@ -330,7 +330,6 @@ export default function TheBobaTeaShop() {
       {
         id: "deck",
         name: "deck",
-
         cards: game.deck,
         col: 2,
         row: 1.5,
@@ -341,7 +340,6 @@ export default function TheBobaTeaShop() {
       {
         id: "discard",
         name: "discard",
-
         cards: game.discard,
         col: 4,
         row: 1.5,
@@ -352,7 +350,6 @@ export default function TheBobaTeaShop() {
       ...queueZones,
       {
         id: "actionBtns",
-
         col: 0,
         row: 6.5,
         width: "full",
@@ -369,18 +366,12 @@ export default function TheBobaTeaShop() {
     let yOffset: number | undefined = undefined;
     let forceOverlayColor = false;
     let forceSelectColor = false;
-    let arcConfig: ArcConfig | undefined = { enabled: false };
 
     // Placeholder card
     if (selectedPos && mappedCard.zoneName === "selected-placeholder") {
       selectColor = decisionNeeded ? "red" : "purple";
       forceOverlayColor = true;
       forceSelectColor = true;
-
-      arcConfig = {
-        enabled: true,
-        magnitudeY: 0.25,
-      };
 
       yOffset = selectedPos.cardIndex * positioning.queueCardOffset;
     } else if (
@@ -397,7 +388,6 @@ export default function TheBobaTeaShop() {
       isSelected,
       forceSelectColor,
       forceOverlayColor,
-      arcConfig,
       selectColor,
       yOffset,
     };

@@ -1,11 +1,18 @@
 import { Icon, IconName } from "@/icons";
-import { Colors, FontWeight, rgba } from "@/styles/styles";
-import { Platform, Pressable, Text, TextStyle, ViewStyle } from "react-native";
+import { Colors, FontWeight, MaxContentWidth, rgba } from "@/styles/styles";
+import {
+  Platform,
+  Pressable,
+  Text,
+  TextStyle,
+  useWindowDimensions,
+  ViewStyle,
+} from "react-native";
 
 interface Props {
   style?: ViewStyle | ViewStyle[];
   textStyle?: TextStyle | TextStyle[];
-  size?: "text" | "textLarge" | "small" | "medium" | "large";
+  size?: "text" | "textLarge" | "textMedium" | "small" | "medium" | "large";
   theme?: string;
   disabled?: boolean;
   fullWidth?: boolean;
@@ -37,8 +44,19 @@ export const Button = ({
   delayLongPress,
   onPressIn,
   onPressOut,
-  cardWidth = 50,
+  cardWidth,
 }: Props) => {
+  const { width: screenWidth } = useWindowDimensions();
+  const containerWidth = Math.min(screenWidth, MaxContentWidth);
+
+  if (!cardWidth) {
+    cardWidth = containerWidth / 6;
+  }
+
+  if (!theme) {
+    theme = Colors.accentBlue;
+  }
+
   let themeColor: string | undefined = undefined;
 
   switch (theme) {
@@ -61,7 +79,7 @@ export const Button = ({
       themeColor = Colors.btnGreen;
       break;
     default:
-      themeColor = undefined;
+      themeColor = theme;
   }
 
   if (disabled) {
@@ -72,8 +90,8 @@ export const Button = ({
   let height = cardWidth * 0.6;
   let borderRadius = cardWidth * 0.15;
   let borderWidth = themeColor ? cardWidth * 0.04 : 0;
-  let paddingVertical = cardWidth * 0.08;
-  let paddingHorizontal = cardWidth * 0.14;
+  let paddingVertical = cardWidth * 0.12;
+  let paddingHorizontal = cardWidth * 0.15;
   let fontFamily = FontWeight[500];
 
   switch (size) {
@@ -83,18 +101,28 @@ export const Button = ({
       height = cardWidth * 0.2;
       borderRadius = cardWidth * 0.1;
       borderWidth = cardWidth * 0.02;
-      paddingVertical = cardWidth * 0.06;
-      paddingHorizontal = cardWidth * 0.08;
+      paddingVertical = cardWidth * 0.3;
+      paddingHorizontal = cardWidth * 0.12;
+      break;
+    case "textMedium":
+      borderWidth = 0;
       break;
     case "large":
     case "textLarge":
       fontSize = cardWidth * 0.4;
       height = cardWidth * 0.4;
       borderRadius = cardWidth * 0.2;
-      borderWidth = cardWidth * 0.06;
-      paddingVertical = cardWidth * 0.12;
-      paddingHorizontal = cardWidth * 0.18;
+      borderWidth = cardWidth * 0.04;
+      paddingVertical = cardWidth * 0.4;
+      paddingHorizontal = cardWidth * 0.3;
       break;
+  }
+
+  if (size === "text" || size === "textMedium" || size === "textLarge") {
+    borderRadius = 0;
+    borderWidth = 0;
+    paddingVertical = 0;
+    paddingHorizontal = 0;
   }
 
   return (

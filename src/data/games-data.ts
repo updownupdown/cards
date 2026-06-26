@@ -260,7 +260,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   // Clock
   "/clock": {
     title: "Clock Solitaire",
-    category: GameCategory.Isaludo,
+    category: GameCategory.ClassicSolitaire,
     briefRules: [
       "Place revealed cards to matching clock positions by rank.",
       "Continue turns by revealing from the pile at each destination.",

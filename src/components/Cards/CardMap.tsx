@@ -59,6 +59,7 @@ export type MapZone = {
     direction?: DeckFanDirection;
     offset?: number; // Multiplier of card dimension (e.g. 0.4 for 40%)
     maxVisible?: number;
+    center?: boolean;
   };
   placeholder?: {
     showCount?: boolean;
@@ -232,6 +233,7 @@ export function useCardMap({
     let zIndex = baseZIndex + cardIndex;
     let isHiddenUnderDeck = false;
     let fanOffset = zone.fan?.offset ?? cardDims.fanOffset;
+    let fanCenter = zone.fan?.center ?? true;
     let numCardsVisible = zone.cards?.length ?? 1;
 
     if (zone.fan) {
@@ -272,7 +274,12 @@ export function useCardMap({
               : 0;
 
       // Horizontal centering of cards within a zone with width > 1
-      if (zone.width !== undefined && zone.width !== "full" && zone.width > 1) {
+      if (
+        fanCenter &&
+        zone.width !== undefined &&
+        zone.width !== "full" &&
+        zone.width > 1
+      ) {
         const fanSpanX = Math.abs(offsetX * (numCardsVisible - 1));
         const deckWidthPx = cardWidth + fanSpanX;
         const zoneWidthPx = base.width;
@@ -283,7 +290,7 @@ export function useCardMap({
       }
 
       // Vertical centering of cards within a zone with height > 1
-      if (zone.height !== undefined && zone.height > 1) {
+      if (fanCenter && zone.height !== undefined && zone.height > 1) {
         const fanSpanY = Math.abs(offsetY * (numCardsVisible - 1));
         const deckHeightPx = cardHeight + fanSpanY;
         const zoneHeightPx = base.height;

@@ -33,7 +33,8 @@ export const menuStyles = StyleSheet.create({
     position: "absolute",
     zIndex: 500,
     margin: ContentSidePadding,
-    paddingHorizontal: 12,
+    padding: 20,
+    gap: 20,
     bottom: 0,
     right: 0,
     left: 0,
@@ -51,7 +52,6 @@ export const menuStyles = StyleSheet.create({
   },
   winLoseMessageLeft: {
     ...flexStyles.colCentered,
-    paddingTop: 20,
     gap: 2,
   },
   wlmTitle: {

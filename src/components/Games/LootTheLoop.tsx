@@ -101,11 +101,8 @@ export default function LootTheLoop() {
   const [selectedRevealedRank, setSelectedRevealedRank] = useState<
     number | undefined
   >(undefined);
-  const noHopAnimation: AnimatedCardMapping = {
-    arcConfig: { enabled: false, magnitudeY: 0 },
-  };
+
   const orbitingLoopAnimation: AnimatedCardMapping = {
-    ...noHopAnimation,
     orbitConfig: { enabled: true },
   };
 
@@ -374,7 +371,6 @@ export default function LootTheLoop() {
         row,
         baseZIndex,
         rotation,
-        arcConfig: { enabled: false, magnitudeY: 0 },
       };
     });
 
@@ -526,7 +522,6 @@ export default function LootTheLoop() {
       const isSelected = selectedPath?.index === index;
 
       return {
-        ...noHopAnimation,
         selectColor: "green",
         isSelected,
         onPress: () => {
@@ -539,8 +534,6 @@ export default function LootTheLoop() {
         },
       };
     }
-
-    return noHopAnimation;
   };
 
   const { cardMap, cardWidth, getZoneStylesById } = useCardMap({

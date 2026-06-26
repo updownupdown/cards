@@ -2,6 +2,7 @@ import { menuStyles } from "@/styles/menuStyles";
 import { useEffect, useRef } from "react";
 import { Animated, Easing, Text, View } from "react-native";
 import { Button } from "../Button/Button";
+import { Colors } from "@/styles/styles";
 
 interface Props {
   gameEnded: boolean;
@@ -78,9 +79,10 @@ export const WinLoseBox = ({
 
         <Button
           onPress={() => fadeOutWLM(reset)}
-          size="text"
+          size="medium"
           text={won ? "Play again" : "Try again"}
           textStyle={menuStyles.playBtn}
+          theme={Colors.white}
         />
       </Animated.View>
     </>

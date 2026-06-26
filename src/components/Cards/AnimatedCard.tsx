@@ -39,11 +39,6 @@ export type TargetState = {
   misc?: any;
 };
 
-export type ArcConfig = {
-  enabled?: boolean;
-  magnitudeY?: number;
-};
-
 export type OrbitConfig = {
   enabled?: boolean;
 };
@@ -66,7 +61,6 @@ export type AnimatedCardProps = CardMapBGMapping & {
   isVisible?: boolean;
   isPlaceholder?: boolean;
   yOffset?: number;
-  arcConfig?: ArcConfig;
   orbitConfig?: OrbitConfig;
   clickThroughCards?: boolean;
 };
@@ -81,7 +75,6 @@ export const AnimatedCard = ({
   cardWidth,
   cardHeight,
   onPress,
-  arcConfig,
   cardSize = "regular",
   isSelected,
   isDisabled,
@@ -160,25 +153,6 @@ export const AnimatedCard = ({
     });
   }, [targetState.card?.faceUp]);
 
-  const hopMagnitude = useMemo(() => {
-    if (arcConfig?.magnitudeY !== undefined) {
-      return {
-        y: cardHeight * (arcConfig.magnitudeY ?? 0),
-      };
-    }
-
-    if (yOffset !== undefined) {
-      return {
-        enabled: arcConfig?.enabled ?? false,
-        y: cardHeight * (arcConfig?.magnitudeY ?? 0),
-      };
-    }
-
-    return {
-      y: cardHeight * (0.25 + Math.random() * 0.25),
-    };
-  }, [arcConfig, cardHeight, yOffset]);
-
   const animatedStyle = useAnimatedStyle(() => {
     const rawXBaseLinear = interpolate(
       moveProgress.value,
@@ -255,16 +229,8 @@ export const AnimatedCard = ({
       }
     }
 
-    const parabolicMultiplier =
-      4 * moveProgress.value * (1 - moveProgress.value);
-
-    const arcYOffset =
-      (arcConfig?.enabled ?? true)
-        ? -(hopMagnitude.y * parabolicMultiplier)
-        : 0;
-
     const rawX = rawXBase;
-    const rawY = rawYBase + arcYOffset;
+    const rawY = rawYBase;
 
     const rawZ = moveProgress.value < 0.5 ? startZ.value : targetState.zIndex;
 
@@ -316,7 +282,6 @@ export const AnimatedCard = ({
     targetState.y,
     targetState.rotation,
     yOffset,
-    hopMagnitude,
     orbitConfig,
     cardWidth,
     cardHeight,
