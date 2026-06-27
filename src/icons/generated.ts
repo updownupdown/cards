@@ -14,6 +14,7 @@ import ChevronLeftIcon from "./ChevronLeft.svg";
 import CloseIcon from "./Close.svg";
 import ClubsIcon from "./Clubs.svg";
 import CoinsIcon from "./Coins.svg";
+import CollectionsIcon from "./Collections.svg";
 import DeleteIcon from "./Delete.svg";
 import DiamondsIcon from "./Diamonds.svg";
 import DrawIcon from "./Draw.svg";
@@ -29,6 +30,7 @@ import InstructionsIcon from "./Instructions.svg";
 import MenuIcon from "./Menu.svg";
 import ResetIcon from "./Reset.svg";
 import SettingsIcon from "./Settings.svg";
+import SolitaireIcon from "./Solitaire.svg";
 import SpadesIcon from "./Spades.svg";
 import StarIcon from "./Star.svg";
 import StarOutlineIcon from "./StarOutline.svg";
@@ -45,6 +47,7 @@ export type IconName =
   | "close"
   | "clubs"
   | "coins"
+  | "collections"
   | "delete"
   | "diamonds"
   | "draw"
@@ -60,6 +63,7 @@ export type IconName =
   | "menu"
   | "reset"
   | "settings"
+  | "solitaire"
   | "spades"
   | "star"
   | "star-outline"
@@ -76,6 +80,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "close": CloseIcon,
   "clubs": ClubsIcon,
   "coins": CoinsIcon,
+  "collections": CollectionsIcon,
   "delete": DeleteIcon,
   "diamonds": DiamondsIcon,
   "draw": DrawIcon,
@@ -91,6 +96,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "menu": MenuIcon,
   "reset": ResetIcon,
   "settings": SettingsIcon,
+  "solitaire": SolitaireIcon,
   "spades": SpadesIcon,
   "star": StarIcon,
   "star-outline": StarOutlineIcon,

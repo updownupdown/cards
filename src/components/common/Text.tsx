@@ -1,33 +1,35 @@
 import { HexColor } from "@/data/games-data";
 import { Colors, FontWeight } from "@/styles/styles";
 import { forwardRef } from "react";
-import { Dimensions, PixelRatio, Text as RNText } from "react-native";
+import { PixelRatio, Text as RNText, useWindowDimensions } from "react-native";
 import type { TextProps as RNTextProps } from "react-native";
-
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 // Base width from iPhone 11
 const BASE_WIDTH = 375;
 
-const widthScale = SCREEN_WIDTH / BASE_WIDTH;
+const moderateScale = (size: number, screenWidth: number, factor = 0.5) => {
+  const widthScale = screenWidth / BASE_WIDTH;
+  return size + (widthScale * size - size) * factor;
+};
 
-const moderateScale = (size: number, factor = 0.5) =>
-  size + (widthScale * size - size) * factor;
-
-export const responsiveFontSize = (fontSize: number, factor = 0.5) => {
-  const newSize = moderateScale(fontSize, factor);
+export const responsiveFontSize = (
+  fontSize: number,
+  factor = 0.5,
+  screenWidth = BASE_WIDTH,
+) => {
+  const newSize = moderateScale(fontSize, screenWidth, factor);
   return Math.round(PixelRatio.roundToNearestPixel(newSize));
 };
 
 export const Typography = {
   size: {
-    xxs: responsiveFontSize(7),
-    xs: responsiveFontSize(8),
-    sm: responsiveFontSize(9),
-    md: responsiveFontSize(10),
-    lg: responsiveFontSize(12),
-    xl: responsiveFontSize(14),
-    xxl: responsiveFontSize(16),
+    xxs: 12,
+    xs: 14,
+    sm: 15,
+    md: 18,
+    lg: 20,
+    xl: 22,
+    xxl: 24,
   },
   fontFamily: {
     200: FontWeight[200],

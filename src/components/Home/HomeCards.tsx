@@ -130,6 +130,7 @@ export function SmallHomeCard({
               source={getGameSource(game)}
               style={styles.smallCardImage}
               resizeMode="cover"
+              fadeDuration={0}
             />
             <View style={styles.smallCardThumbOverlay} />
           </View>
@@ -244,7 +245,7 @@ export function LargeHomeCard({
       }}
     >
       <Link href={path as Href} asChild>
-        <Pressable style={{ gap: spacingUnit }}>
+        <Pressable style={{ gap: spacingUnit * 2 }}>
           <View style={[styles.largeCardTopRow, { gap: spacingUnit }]}>
             <View
               style={[
@@ -291,6 +292,7 @@ export function LargeHomeCard({
                 source={getGameSource(game)}
                 style={styles.largeCardImage}
                 resizeMode="cover"
+                fadeDuration={0}
               />
               <View style={styles.cardOverlay} />
             </View>
@@ -300,7 +302,7 @@ export function LargeHomeCard({
             style={[
               styles.statsRow,
               {
-                gap: Math.round(10 * layoutScale),
+                gap: Math.round(24 * layoutScale),
                 paddingHorizontal: cardPadding * 1.5,
                 paddingBottom: cardPadding * 1.5,
               },

@@ -44,6 +44,7 @@ function makeStats(
 export type GameMenuInfo = {
   title: string;
   thumbnail: GameThumbnailName;
+  cardBack?: string;
   cardColorBg: HexColor;
   cardColorText: HexColor;
   cardDescription: string;
@@ -64,11 +65,12 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   "/area-52": {
     title: "Area 52",
     thumbnail: "Area52.jpg",
+    cardBack: "Area52.png",
     cardColorBg: "#200a16",
     cardColorText: "#ffbcdd",
     cardDescription:
       "A two-wave defense puzzle where each choice of defender can save or sink your final stand.",
-    stats: makeStats(74, 71, 33),
+    stats: makeStats(70, 70, 30),
     category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     briefRules: [
@@ -93,11 +95,12 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   "/the-sandwich-guy": {
     title: "The Sandwich Guy",
     thumbnail: "SandwichGuy.jpg",
+    cardBack: "SandwichGuy.png",
     cardColorBg: "#18251f",
     cardColorText: "#c6ffd5",
     cardDescription:
       "Build clever three-card sandwiches with evenly spaced ranks to keep your ingredient engine running.",
-    stats: makeStats(62, 56, 41),
+    stats: makeStats(20, 80, 40),
     category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     briefRules: [
@@ -121,11 +124,12 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   "/dead-center": {
     title: "Dead Center",
     thumbnail: "DeadCenter.jpg",
+    cardBack: "DeadCenter.png",
     cardColorBg: "#241a15",
     cardColorText: "#fcd3c2",
     cardDescription:
       "Survive a tight cabin siege by placing cards strategically to unlock zombie eliminations.",
-    stats: makeStats(82, 79, 28),
+    stats: makeStats(75, 50, 20),
     category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     briefRules: [
@@ -151,11 +155,12 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   "/foursquare": {
     title: "Foursquare",
     thumbnail: "Foursquare.jpg",
+    cardBack: "Foursquare.png",
     cardColorBg: "#202640",
     cardColorText: "#d8e2ff",
     cardDescription:
       "Develop a volatile 4x4 city grid where each new card can flip entire districts.",
-    stats: makeStats(77, 67, 36),
+    stats: makeStats(30, 50, 40),
     category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     briefRules: [
@@ -179,11 +184,12 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   "/skyway": {
     title: "Skyway",
     thumbnail: "Skyway.jpg",
+    cardBack: "Skyway.png",
     cardColorBg: "#1d2a35",
     cardColorText: "#b3d5ec",
     cardDescription:
       "Draft from a shifting market to engineer long suit-based routes across a growing grid.",
-    stats: makeStats(69, 64, 44),
+    stats: makeStats(90, 65, 50),
     category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     briefRules: [
@@ -205,11 +211,12 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   "/the-emissary": {
     title: "The Emissary",
     thumbnail: "Emissary.jpg",
+    cardBack: "TheEmissary.png",
     cardColorBg: "#18102e",
     cardColorText: "#d5abfc",
     cardDescription:
       "Win exactly the right number of debates in each kingdom while managing one-time advisors.",
-    stats: makeStats(86, 81, 24),
+    stats: makeStats(70, 60, 30),
     category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     // enabled: false,
@@ -232,11 +239,12 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   "/the-boba-tea-shop": {
     title: "The Boba Tea Shop",
     thumbnail: "BobaTea.jpg",
+    cardBack: "BobaTeaShop.png",
     cardColorBg: "#2b3015",
     cardColorText: "#dff0a4",
     cardDescription:
       "Fulfill layered card orders by sequencing stacks before your available moves dry up.",
-    stats: makeStats(71, 63, 39),
+    stats: makeStats(30, 40, 55),
     category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     briefRules: [
@@ -253,7 +261,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#c4f1e7",
     cardDescription:
       "Build and convert rank-restricted stacks, timing key turns to lock in powerful scores.",
-    stats: makeStats(76, 72, 34),
+    stats: makeStats(60, 60, 30),
     category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     briefRules: [
@@ -266,11 +274,12 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   "/hide-and-seek": {
     title: "Hide and Seek",
     thumbnail: "HideAndSeek.jpg",
+    cardBack: "HideAndSeek.png",
     cardColorBg: "#132422",
     cardColorText: "#91f1e9",
     cardDescription:
       "Carefully uncover buried cards without trapping crucial reveals behind dead stacks.",
-    stats: makeStats(67, 61, 47),
+    stats: makeStats(20, 65, 65),
     category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     briefRules: [
@@ -283,11 +292,12 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   "/loot-the-loop": {
     title: "Loot the Loop",
     thumbnail: "LootTheLoop.jpg",
+    cardBack: "LootTheLoop.png",
     cardColorBg: "#1a0d0c",
     cardColorText: "#ffdcce",
     cardDescription:
       "Capture scoring loop cards while preserving momentum and avoiding disruptive breaks.",
-    stats: makeStats(64, 59, 51),
+    stats: makeStats(50, 45, 60),
     category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     briefRules: [
@@ -303,11 +313,12 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   "/monte-carlo": {
     title: "Monte Carlo",
     thumbnail: "MonteCarlo.jpg",
+    cardBack: "MonteCarlo.png",
     cardColorBg: "#242b33",
     cardColorText: "#c6d3e9",
     cardDescription:
       "Match adjacent ranks, collapse the grid, and keep clearing until every card is gone.",
-    stats: makeStats(43, 38, 67),
+    stats: makeStats(10, 30, 50),
     category: GameCategory.ClassicSolitaire,
     briefRules: [
       "Flip over any adjacent, equal-rank pairs.",
@@ -319,11 +330,12 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   "/calculation": {
     title: "Calculation",
     thumbnail: "Calculation.jpg",
+    cardBack: "Calculation.png",
     cardColorBg: "#110c1d",
     cardColorText: "#e0cfff",
     cardDescription:
       "Build four mathematical foundations with different step patterns from a shared stock.",
-    stats: makeStats(72, 66, 29),
+    stats: makeStats(80, 90, 60),
     category: GameCategory.ClassicSolitaire,
     briefRules: [
       "Build four foundations with increasing step intervals of 1, 2, 3, and 4.",
@@ -336,11 +348,12 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   "/accordion": {
     title: "Accordion",
     thumbnail: "Accordion.jpg",
+    cardBack: "Accordion.png",
     cardColorBg: "#1d1118",
     cardColorText: "#ffcff3",
     cardDescription:
       "Compress a wide spread of cards by jumping matches one or three positions left.",
-    stats: makeStats(58, 55, 53),
+    stats: makeStats(10, 35, 65),
     category: GameCategory.ClassicSolitaire,
     briefRules: [
       "Move a card onto another card 1 or 3 spaces to its left, if their suit or rank matches.",
@@ -352,11 +365,12 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   "/aces-up": {
     title: "Aces Up",
     thumbnail: "AcesUp.jpg",
+    cardBack: "AcesUp.png",
     cardColorBg: "#1b150f",
     cardColorText: "#fff2db",
     cardDescription:
       "Strip each suit down to its ace by discarding weaker visible cards at the right time.",
-    stats: makeStats(41, 36, 73),
+    stats: makeStats(15, 80, 80),
     category: GameCategory.ClassicSolitaire,
     enabled: true,
     briefRules: [
@@ -369,11 +383,12 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   "/golf": {
     title: "Golf Solitaire",
     thumbnail: "Golf.jpg",
+    cardBack: "Golf.png",
     cardColorBg: "#12251a",
     cardColorText: "#beffdb",
     cardDescription:
       "Chain tableau plays up or down in rank and use limited stock draws to finish the course.",
-    stats: makeStats(46, 43, 65),
+    stats: makeStats(15, 50, 70),
     category: GameCategory.ClassicSolitaire,
     briefRules: [
       "Play only top tableau cards one rank up or down from waste top.",
@@ -385,11 +400,12 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   "/clock": {
     title: "Clock Solitaire",
     thumbnail: "Clock.jpg",
+    cardBack: "Clock.png",
     cardColorBg: "#272115",
     cardColorText: "#DABE9B",
     cardDescription:
       "Reveal and place cards by rank around the dial, hoping the final kings arrive late.",
-    stats: makeStats(34, 28, 88),
+    stats: makeStats(10, 10, 100),
     category: GameCategory.ClassicSolitaire,
     briefRules: [
       "Place revealed cards to matching clock positions by rank.",

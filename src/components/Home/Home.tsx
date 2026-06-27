@@ -1,4 +1,6 @@
 import { Text } from "@/components/common/Text";
+import { GameCategory, GameCategoryNames } from "@/data/games-data";
+import type { HomeTabConfig } from "@/components/Home/GamesList";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight, HomePadding, rgba } from "@/styles/styles";
 import { useEffect, useState } from "react";
@@ -9,6 +11,47 @@ import { GamesList } from "./GamesList";
 import { SettingsModal } from "./SettingsModal";
 import { StatsModal } from "./StatsModal";
 import { menuStyles } from "@/styles/menuStyles";
+
+const HOME_TABS: HomeTabConfig[] = [
+  {
+    key: "home",
+    title: "Home",
+    iconName: "home",
+    sections: [
+      {
+        key: "recent",
+        title: "Recently Played",
+        variant: "small",
+        firstCardLarge: true,
+      },
+      { key: "favorites", title: "Favorites", variant: "small" },
+    ],
+  },
+  {
+    key: "modern",
+    title: "Modern",
+    iconName: "collections",
+    sections: [
+      {
+        key: GameCategory.Isaludo,
+        title: GameCategoryNames[GameCategory.Isaludo],
+        variant: "large",
+      },
+    ],
+  },
+  {
+    key: "classic",
+    title: "Classic",
+    iconName: "solitaire",
+    sections: [
+      {
+        key: GameCategory.ClassicSolitaire,
+        title: GameCategoryNames[GameCategory.ClassicSolitaire],
+        variant: "large",
+      },
+    ],
+  },
+];
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -80,8 +123,7 @@ export default function Home() {
             style={[styles.headerBtn, menuStyles.headerButton]}
           />
         </View>
-
-        <GamesList />
+        <GamesList tabs={HOME_TABS} />
       </View>
     </>
   );

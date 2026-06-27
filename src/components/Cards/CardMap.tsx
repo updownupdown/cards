@@ -18,6 +18,8 @@ import {
 } from "./CardMapBackgrounds";
 import { CardMapVisualizer } from "./CardMapVisualizer";
 import { CardSizes } from "./CardStyles";
+import { GAMES_DATA } from "@/data/games-data";
+import { usePathname } from "expo-router";
 
 export type CardPosition = {
   x: number;
@@ -102,6 +104,9 @@ export function useCardMap({
   cardMapper,
   zoneMapper,
 }: MapConfig) {
+  const pathname = usePathname();
+  const customBack = GAMES_DATA[pathname]?.cardBack;
+
   const { width: screenWidthActual, height: screenHeightActual } =
     useWindowDimensions();
 
@@ -351,6 +356,7 @@ export function useCardMap({
         cardWidth={cardWidth}
         cardHeight={cardHeight}
         cardSize={cardSize}
+        customBack={customBack}
         {...cardMapper(mappedCard)}
       />
     );

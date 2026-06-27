@@ -3,8 +3,15 @@ import { CardComponents as CardsSmall } from "@/assets/cards/small";
 import { CardComponents as CardsSmallColored } from "@/assets/cards/small-colored";
 import React from "react";
 import { View, ViewStyle } from "react-native";
+import { Image } from "expo-image";
 import { cardDims, PlayingCard } from "./card-utils";
 import { CardColor, CardOverlay, CardSizes, getCardShadow } from "./CardStyles";
+import { cardBackAssets, defaultCardBackName } from "./generated-card-backs";
+
+const getCardBackAsset = (filename?: string) => {
+  if (!filename) return cardBackAssets[defaultCardBackName];
+  return cardBackAssets[filename] ?? cardBackAssets[defaultCardBackName];
+};
 
 export type CardProps = {
   card?: PlayingCard;
@@ -18,6 +25,7 @@ export type CardProps = {
   cardWidth: number;
   cardSize?: CardSizes;
   isPlaceholder?: boolean;
+  customBack?: string;
 };
 
 export const Card = ({
@@ -32,6 +40,7 @@ export const Card = ({
   forceOverlayColor,
   cardWidth,
   isPlaceholder,
+  customBack,
 }: CardProps) => {
   const cardFiles =
     cardSize === "small"
@@ -47,9 +56,11 @@ export const Card = ({
   }
 
   const SvgCard = cardFiles[cardName];
+  const isFaceDown = !card || !card.faceUp;
+  const backAsset = getCardBackAsset(customBack);
 
   if (!isVisible) return null;
-  if (!SvgCard) {
+  if (!isFaceDown && !SvgCard) {
     console.warn(`SVG ${cardName} not found.`);
     return null;
   }
@@ -89,7 +100,15 @@ export const Card = ({
         selectColor={selectColor}
       />
 
-      <SvgCard width="100%" height="100%" />
+      {isFaceDown ? (
+        <Image
+          source={backAsset}
+          style={{ width: "100%", height: "100%" }}
+          transition={0}
+        />
+      ) : (
+        <SvgCard width="100%" height="100%" />
+      )}
     </View>
   );
 };
