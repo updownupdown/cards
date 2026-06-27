@@ -61,6 +61,7 @@ export const Colors = {
   K050: "#FCFDFE",
 
   background: "#343f49",
+  text: "#DDE5ED",
 } as const;
 
 /**

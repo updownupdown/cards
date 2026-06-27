@@ -327,7 +327,6 @@ export default function MonteCarlo() {
           fullWidth
           size="large"
           style={[flexStyles.flex1, { height: "100%" }]}
-          cardWidth={cardWidth}
         />
       </View>
     </GameWrapper>

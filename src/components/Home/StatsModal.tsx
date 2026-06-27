@@ -1,8 +1,8 @@
+import { Text } from "@/components/common/Text";
 import { EMPTY_STATS } from "@/data/game-menu";
 import { GAMES_DATA } from "@/data/games-data";
-import { textStyles } from "@/styles/textStyles";
 import { useEffect, useMemo, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import {
   calculateWinRate,
   loadGameSettingsMap,
@@ -53,29 +53,19 @@ export const StatsModal = ({ onClose }: Props) => {
           <View style={styles.table}>
             {/* Header */}
             <View style={styles.tableHeaderRow}>
-              <Text
-                style={[textStyles.default, styles.colTitle, styles.headerText]}
-              >
+              <Text size="sm" style={[styles.colTitle, styles.headerText]}>
                 Game
               </Text>
-              <Text
-                style={[textStyles.default, styles.colNum, styles.headerText]}
-              >
+              <Text size="sm" style={[styles.colNum, styles.headerText]}>
                 Try
               </Text>
-              <Text
-                style={[textStyles.default, styles.colNum, styles.headerText]}
-              >
+              <Text size="sm" style={[styles.colNum, styles.headerText]}>
                 Win
               </Text>
-              <Text
-                style={[textStyles.default, styles.colNum, styles.headerText]}
-              >
+              <Text size="sm" style={[styles.colNum, styles.headerText]}>
                 Lose
               </Text>
-              <Text
-                style={[textStyles.default, styles.colRate, styles.headerText]}
-              >
+              <Text size="sm" style={[styles.colRate, styles.headerText]}>
                 Win %
               </Text>
             </View>
@@ -83,22 +73,19 @@ export const StatsModal = ({ onClose }: Props) => {
             {/* Rows */}
             {orderedStatsRows.map((row) => (
               <View key={row.path} style={styles.tableRow}>
-                <Text
-                  style={[textStyles.default, styles.colTitle]}
-                  numberOfLines={1}
-                >
+                <Text size="sm" style={styles.colTitle} numberOfLines={1}>
                   {row.title}
                 </Text>
-                <Text style={[textStyles.default, styles.colNum]}>
+                <Text size="sm" style={styles.colNum}>
                   {row.stats.attempts}
                 </Text>
-                <Text style={[textStyles.default, styles.colNum]}>
+                <Text size="sm" style={styles.colNum}>
                   {row.stats.wins}
                 </Text>
-                <Text style={[textStyles.default, styles.colNum]}>
+                <Text size="sm" style={styles.colNum}>
                   {row.stats.losses}
                 </Text>
-                <Text style={[textStyles.default, styles.colRate]}>
+                <Text size="sm" style={styles.colRate}>
                   {calculateWinRate(row.stats)}
                 </Text>
               </View>

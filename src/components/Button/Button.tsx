@@ -1,9 +1,9 @@
+import { Text } from "@/components/common/Text";
 import { Icon, IconName } from "@/icons";
 import { Colors, FontWeight, MaxContentWidth, rgba } from "@/styles/styles";
 import {
   Platform,
   Pressable,
-  Text,
   TextStyle,
   useWindowDimensions,
   ViewStyle,
@@ -12,7 +12,8 @@ import {
 interface Props {
   style?: ViewStyle | ViewStyle[];
   textStyle?: TextStyle | TextStyle[];
-  size?: "text" | "textLarge" | "textMedium" | "small" | "medium" | "large";
+  size?: "small" | "medium" | "large";
+  textOnly?: boolean;
   theme?: string;
   disabled?: boolean;
   fullWidth?: boolean;
@@ -25,13 +26,13 @@ interface Props {
   iconName?: IconName;
   iconColor?: string;
   iconSize?: number;
-  cardWidth?: number;
 }
 
 export const Button = ({
   style,
   textStyle,
   size = "medium",
+  textOnly = false,
   disabled,
   fullWidth,
   text,
@@ -44,14 +45,11 @@ export const Button = ({
   delayLongPress,
   onPressIn,
   onPressOut,
-  cardWidth,
 }: Props) => {
   const { width: screenWidth } = useWindowDimensions();
   const containerWidth = Math.min(screenWidth, MaxContentWidth);
 
-  if (!cardWidth) {
-    cardWidth = containerWidth / 6;
-  }
+  const scale = Math.min(Math.max(containerWidth / MaxContentWidth, 0.82), 1);
 
   if (!theme) {
     theme = Colors.accentBlue;
@@ -86,42 +84,24 @@ export const Button = ({
     themeColor = Colors.K700;
   }
 
-  let fontSize = cardWidth * 0.3;
-  let height = cardWidth * 0.6;
-  let borderRadius = cardWidth * 0.15;
-  let borderWidth = themeColor ? cardWidth * 0.04 : 0;
-  let paddingVertical = cardWidth * 0.12;
-  let paddingHorizontal = cardWidth * 0.15;
+  const sizeMultiplier: Record<"small" | "medium" | "large", number> = {
+    small: 0.78,
+    medium: 1,
+    large: 1.32,
+  };
+  const sizeScale = sizeMultiplier[size];
+
+  let fontSize = 16 * scale * sizeScale;
+  let height: number | undefined = 44 * scale * sizeScale;
+  let borderRadius = 8 * scale * sizeScale;
+  let borderWidth = themeColor ? 2 * scale * sizeScale : 0;
+  let paddingVertical = 8 * scale * sizeScale;
+  let paddingHorizontal = 12 * scale * sizeScale;
   let fontFamily = FontWeight[500];
-  let lineHeight = fontSize * 1.2;
+  let lineHeight = 24 * scale * sizeScale;
 
-  switch (size) {
-    case "text":
-    case "small":
-      fontSize = cardWidth * 0.2;
-      lineHeight = cardWidth * 0.2;
-      height = cardWidth * 0.2;
-      borderRadius = cardWidth * 0.1;
-      borderWidth = cardWidth * 0.02;
-      paddingVertical = cardWidth * 0.3;
-      paddingHorizontal = cardWidth * 0.12;
-      break;
-    case "textMedium":
-      borderWidth = 0;
-      break;
-    case "large":
-    case "textLarge":
-      fontSize = cardWidth * 0.4;
-      lineHeight = cardWidth * 0.44;
-      height = cardWidth * 0.4;
-      borderRadius = cardWidth * 0.2;
-      borderWidth = cardWidth * 0.04;
-      paddingVertical = cardWidth * 0.4;
-      paddingHorizontal = cardWidth * 0.3;
-      break;
-  }
-
-  if (size === "text" || size === "textMedium" || size === "textLarge") {
+  if (textOnly) {
+    height = undefined;
     borderRadius = 0;
     borderWidth = 0;
     paddingVertical = 0;
@@ -149,11 +129,9 @@ export const Button = ({
 
           borderRadius,
           borderWidth,
-          borderColor: themeColor ? rgba(themeColor, 0.6) : undefined,
+          borderColor: themeColor ? rgba(themeColor, 0.5) : undefined,
           backgroundColor:
-            !["text", "textLarge"].includes(size) && themeColor
-              ? rgba(themeColor, 0.12)
-              : undefined,
+            !textOnly && themeColor ? rgba(themeColor, 0.12) : undefined,
         },
         style,
       ]}

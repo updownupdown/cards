@@ -1,3 +1,4 @@
+import { Text } from "@/components/common/Text";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { cardStyles } from "@/styles/cardStyles";
 import { flexStyles } from "@/styles/flexStyles";
@@ -10,7 +11,6 @@ import {
   PanResponder,
   Pressable,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 import { Button } from "../../Button/Button";

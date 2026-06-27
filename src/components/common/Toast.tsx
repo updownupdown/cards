@@ -1,13 +1,22 @@
-import { Colors, FontWeight, rgba } from "@/styles/styles";
-import React, {
+import { Text } from "@/components/common/Text";
+import {
+  Colors,
+  FontWeight,
+  rgba } from "@/styles/styles";
+import React,
+  {
   createContext,
   ReactNode,
   useCallback,
   useContext,
   useRef,
   useState,
-} from "react";
-import { Animated, StyleSheet, Text, TextStyle, ViewStyle } from "react-native";
+  } from "react";
+import { Animated,
+  StyleSheet,
+  TextStyle,
+  ViewStyle,
+} from "react-native";
 
 // Define the type for the function our hook will return
 type ShowToastFn = (message: string, duration?: number) => void;

@@ -1,4 +1,6 @@
-import { Button } from "@/components/Button/Button";
+import { Text } from "@/components/common/Text";
+import {
+  Button } from "@/components/Button/Button";
 import { useFade } from "@/hooks/useFade";
 import { flexStyles } from "@/styles/flexStyles";
 import { menuStyles } from "@/styles/menuStyles";
@@ -9,9 +11,15 @@ import {
   HeaderButtonIconSize,
   HeaderButtonSize,
   rgba,
-} from "@/styles/styles";
-import React, { useRef, useState } from "react";
-import { Animated, Easing, StyleSheet, Text, View } from "react-native";
+  } from "@/styles/styles";
+import React,
+  { useRef,
+  useState } from "react";
+import { Animated,
+  Easing,
+  StyleSheet,
+  View,
+} from "react-native";
 
 const holdToResetDuration = 900;
 const minDisplayDuration = holdToResetDuration;

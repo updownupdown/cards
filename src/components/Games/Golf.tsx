@@ -271,7 +271,6 @@ export default function Golf() {
           size="large"
           fullWidth
           style={[{ height: "100%" }]}
-          cardWidth={cardWidth}
         />
       </View>
     </GameWrapper>

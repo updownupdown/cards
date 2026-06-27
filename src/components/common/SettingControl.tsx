@@ -1,9 +1,9 @@
+import { Text } from "@/components/common/Text";
 import { Icon } from "@/icons";
 import { settingsStyles } from "@/styles/settingsStyles";
 import { Colors } from "@/styles/styles";
-import { textStyles } from "@/styles/textStyles";
 import React from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
 
 type SettingControlProps<T> = {
   label: string;
@@ -35,7 +35,7 @@ export function SettingControl<T>({
           }
           onPress={() => onChange(!value as any)}
         >
-          <Text style={textStyles.default}>{label}</Text>
+          <Text size="sm">{label}</Text>
           {booleanType === "toggle" ? (
             <View
               style={[
@@ -66,7 +66,7 @@ export function SettingControl<T>({
   if (type === "string" && options) {
     return (
       <View style={settingsStyles.containerCol}>
-        <Text style={textStyles.default}>{label}</Text>
+        <Text size="sm">{label}</Text>
         <View style={settingsStyles.optionsWrap}>
           {options.map((opt) => {
             const isSelected = value === opt.value;
@@ -79,7 +79,7 @@ export function SettingControl<T>({
                 <View style={settingsStyles.radioOuter}>
                   {isSelected && <View style={settingsStyles.radioInner} />}
                 </View>
-                <Text style={textStyles.default}>{opt.label}</Text>
+                <Text size="sm">{opt.label}</Text>
               </Pressable>
             );
           })}

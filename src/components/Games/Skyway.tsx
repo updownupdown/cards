@@ -1,11 +1,11 @@
+import { Text } from "@/components/common/Text";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { Icon } from "@/icons";
 import { flexStyles, transitionStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight, rgba } from "@/styles/styles";
-import { textStyles } from "@/styles/textStyles";
 import { useMemo, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Svg, { Line } from "react-native-svg";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
@@ -448,8 +448,8 @@ export default function Skyway() {
             <View key={suit} style={[flexStyles.rowCentered, flexStyles.gap6]}>
               <Icon name={suit} color={SUIT_PATH_COLORS[suit]} size={24} />
               <Text
+                size="sm"
                 style={[
-                  textStyles.default,
                   {
                     color: SUIT_PATH_COLORS[suit],
                     fontSize: 18,
@@ -558,7 +558,7 @@ export default function Skyway() {
 const styles = StyleSheet.create({
   // Text
   topText: {
-    ...textStyles.default,
+    fontSize: 14,
     color: Colors.K400,
     fontFamily: FontWeight[400],
   },

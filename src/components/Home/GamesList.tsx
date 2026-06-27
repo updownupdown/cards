@@ -1,3 +1,4 @@
+import { Text } from "@/components/common/Text";
 import {
   loadFavoriteGames,
   loadRecentlyPlayedGames,
@@ -9,24 +10,10 @@ import {
   GameMenuInfo,
   GAMES_DATA,
 } from "@/data/games-data";
-import {
-  Colors,
-  FontWeight,
-  HomePadding,
-  MaxContentWidth,
-} from "@/styles/styles";
-import { textStyles } from "@/styles/textStyles";
+import { Colors, HomePadding } from "@/styles/styles";
 import { useEffect, useState } from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { LargeHomeCard, SmallHomeCard } from "./HomeCards";
-
-const SMALL_CARD_GAP = 16;
 
 type CardVariant = "small" | "large";
 
@@ -61,11 +48,6 @@ const HOME_SECTIONS: HomeSectionConfig[] = [
 export const GamesList = () => {
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [recentPaths, setRecentPaths] = useState<string[]>([]);
-  const { width: screenWidth } = useWindowDimensions();
-
-  const containerWidth =
-    Math.min(screenWidth, MaxContentWidth) - HomePadding * 2;
-  const smallCardWidth = (containerWidth - SMALL_CARD_GAP) / 2;
 
   useEffect(() => {
     let cancelled = false;
@@ -96,7 +78,8 @@ export const GamesList = () => {
     if (section.key === "recent") {
       gameList = recentPaths
         .map((path) => [path, GAMES_DATA[path]] as [string, GameMenuInfo])
-        .filter(([_, game]) => !!game && game.enabled !== false);
+        .filter(([_, game]) => !!game && game.enabled !== false)
+        .slice(0, 3);
     } else if (section.key === "favorites") {
       gameList = gameEntries.filter(
         ([key, val]) => favorites.has(key) && val.enabled !== false,
@@ -104,7 +87,6 @@ export const GamesList = () => {
     } else {
       gameList = gameEntries.filter(
         ([key, val]) => val.category === section.key && val.enabled !== false,
-        //  &&          !favorites.has(key),
       );
     }
 
@@ -115,8 +97,21 @@ export const GamesList = () => {
     if (gameList.length === 0) return null;
 
     return (
-      <View style={styles.section}>
-        <Text style={[textStyles.default, styles.sectionTitle]}>
+      <View style={[{ gap: 10 }]}>
+        <Text
+          style={[
+            {
+              alignItems: "flex-start",
+              paddingLeft: HomePadding,
+              paddingTop: HomePadding * 1.5,
+              paddingBottom: 6,
+            },
+          ]}
+          weight={300}
+          size="sm"
+          textTransform={"uppercase"}
+          color={Colors.K500}
+        >
           {section.title}
         </Text>
 
@@ -127,7 +122,8 @@ export const GamesList = () => {
                 key={path}
                 path={path}
                 game={game}
-                width={smallCardWidth}
+                onToggleFavorite={onToggleFavorite}
+                isFavorite={favorites.has(path)}
               />
             ))}
           </View>
@@ -168,29 +164,12 @@ export const GamesList = () => {
 };
 
 const styles = StyleSheet.create({
-  section: {
-    gap: 10,
-  },
-  sectionTitle: {
-    alignItems: "flex-start",
-    paddingLeft: HomePadding,
-    paddingTop: HomePadding * 1.5,
-    paddingBottom: 6,
-    fontFamily: FontWeight[300],
-    fontSize: 14,
-    textTransform: "uppercase",
-    color: Colors.K500,
-  },
   smallCardGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: "column",
     alignItems: "stretch",
-    justifyContent: "space-between",
-    rowGap: SMALL_CARD_GAP,
-    columnGap: SMALL_CARD_GAP,
-    paddingVertical: 12,
+    rowGap: 10,
   },
   cardList: {
-    gap: 16,
+    gap: 26,
   },
 });

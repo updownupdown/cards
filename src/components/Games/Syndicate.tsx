@@ -1,13 +1,13 @@
+import { Text } from "@/components/common/Text";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
-import { textStyles } from "@/styles/textStyles";
 import { useMemo, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Button } from "../Button/Button";
-import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
+import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
   isFace,
@@ -507,8 +507,8 @@ export default function Syndicate() {
             ]}
           >
             <Text
+              size="sm"
               style={[
-                textStyles.default,
                 {
                   width: cardWidth * positioning.rankWidth,
                   textAlign: "center",
@@ -535,8 +535,8 @@ export default function Syndicate() {
         ]}
       >
         <Text
+          size="sm"
           style={[
-            textStyles.default,
             {
               fontSize: 16,
               fontFamily: FontWeight[300],
@@ -547,8 +547,8 @@ export default function Syndicate() {
           <InstructionText />
         </Text>
         <Text
+          size="sm"
           style={[
-            textStyles.default,
             {
               fontSize: 16,
               fontFamily: FontWeight[300],
@@ -588,7 +588,6 @@ export default function Syndicate() {
           }
           style={[flexStyles.flex1, { height: "100%" }]}
           theme="blue"
-          cardWidth={cardWidth}
         />
         <Button
           onPress={() => promote("candidates")}
@@ -597,7 +596,6 @@ export default function Syndicate() {
           disabled={!selectedReplacement}
           style={[flexStyles.flex1, { height: "100%" }]}
           theme="purple"
-          cardWidth={cardWidth}
         />
       </View>
     </GameWrapper>

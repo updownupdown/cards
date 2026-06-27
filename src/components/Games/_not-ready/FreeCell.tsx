@@ -1,11 +1,14 @@
-import { useMemo, useRef, useState } from "react";
+import { Text } from "@/components/common/Text";
+import {
+  useMemo,
+  useRef,
+  useState } from "react";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import {
   Animated,
   PanResponder,
   Pressable,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 import type { GestureResponderEvent, View as RNView } from "react-native";

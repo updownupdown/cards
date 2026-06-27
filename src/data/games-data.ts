@@ -8,7 +8,7 @@ export enum GameCategory {
 }
 
 export const GameCategoryNames: Record<GameCategory, string> = {
-  [GameCategory.Isaludo]: "Isaludo Collection (by Wil Su)",
+  [GameCategory.Isaludo]: "Isaludo Collection",
   [GameCategory.ClassicSolitaire]: "Classic Solitaire",
   [GameCategory.Beta]: "Beta",
 };

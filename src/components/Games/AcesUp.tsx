@@ -369,7 +369,6 @@ export default function AcesUp() {
           fullWidth
           disabled={!canDeal}
           style={[{ height: "100%" }]}
-          cardWidth={cardWidth}
         />
       </View>
     </GameWrapper>

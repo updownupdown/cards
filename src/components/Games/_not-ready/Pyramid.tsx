@@ -1,3 +1,4 @@
+import { Text } from "@/components/common/Text";
 import { useMemo, useRef, useState } from "react";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import {
@@ -5,7 +6,6 @@ import {
   PanResponder,
   Pressable,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 import type { GestureResponderEvent, View as RNView } from "react-native";
@@ -21,7 +21,6 @@ import {
   shuffle,
   type PlayingCard,
 } from "../../Cards/card-utils";
-import { textStyles } from "@/styles/textStyles";
 import { GameWrapper } from "../../common/GameWrapper";
 
 const cardsPerRow = 7;
@@ -479,9 +478,7 @@ export default function Pyramid() {
         onLayout={updateBoardOrigin}
         style={styles.container}
       >
-        <Text style={textStyles.default}>
-          Clear all pyramid cards by making 13.
-        </Text>
+        <Text size="sm">Clear all pyramid cards by making 13.</Text>
         {won && <Text style={styles.winText}>You won!</Text>}
 
         <View style={styles.stockWasteRow}>

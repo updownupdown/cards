@@ -371,7 +371,6 @@ export default function TheSandwichGuy() {
           size="large"
           fullWidth
           style={[flexStyles.flex1, { height: "100%" }]}
-          cardWidth={cardWidth}
         />
       </View>
     </GameWrapper>

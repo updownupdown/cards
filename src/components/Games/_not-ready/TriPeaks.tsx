@@ -1,5 +1,5 @@
+import { Text } from "@/components/common/Text";
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { textStyles } from "@/styles/textStyles";
 import { useMemo, useRef, useState } from "react";
 import type { GestureResponderEvent, View as RNView } from "react-native";
 import {
@@ -7,7 +7,6 @@ import {
   PanResponder,
   Pressable,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 import { Card } from "../../Cards/Card";
@@ -276,9 +275,7 @@ export default function TriPeaks() {
         onLayout={updateBoardOrigin}
         style={styles.container}
       >
-        <Text style={textStyles.default}>
-          Remove exposed cards adjacent to waste rank.
-        </Text>
+        <Text size="sm">Remove exposed cards adjacent to waste rank.</Text>
         {won && <Text style={styles.winText}>You won!</Text>}
 
         <View style={styles.stockWasteRow}>

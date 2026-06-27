@@ -1,3 +1,4 @@
+import { Text } from "@/components/common/Text";
 import {
   getGridColRows,
   MappedCard,
@@ -12,7 +13,7 @@ import { textStyles } from "@/styles/textStyles";
 import { delay } from "@/utils/utils";
 import { produce } from "immer";
 import { useEffect, useMemo, useState } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { Button } from "../../Button/Button";
 import { AnimatedCardMapping } from "../../Cards/AnimatedCard";
 import {
@@ -459,22 +460,20 @@ export default function Area52() {
         <Button
           onPress={() => applyAction("sacrifice")}
           text="Sacrifice"
-          size="large"
+          size="medium"
           disabled={selectedDefenders.length !== 1}
           theme="red"
           style={[{ height: "100%" }]}
-          cardWidth={cardWidth}
         />
         <Button
           onPress={() =>
             applyAction(selectedDefenders.length === 2 ? "dual" : "single")
           }
           text={`Attack${selectedDefenders.length === 2 ? " x2" : ""}`}
-          size="large"
+          size="medium"
           disabled={!canAttack || selectedDefenders.length < 1}
           theme={selectedDefenders.length === 2 ? "purple" : "green"}
           style={[flexStyles.flex1, { height: "100%" }]}
-          cardWidth={cardWidth}
         />
       </View>
     </GameWrapper>

@@ -1,6 +1,7 @@
+import { Text } from "@/components/common/Text";
 import { useMemo, useState } from "react";
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { Card } from "../../Cards/Card";
 import {
   CardRank,
@@ -9,7 +10,6 @@ import {
   shuffle,
   type PlayingCard,
 } from "../../Cards/card-utils";
-import { textStyles } from "@/styles/textStyles";
 import { GameWrapper } from "../../common/GameWrapper";
 import { Button } from "../../Button/Button";
 
@@ -216,7 +216,7 @@ export default function Scorpion() {
         game.won ? "All four suit stacks are complete." : "No further progress."
       }
     >
-      <Text style={textStyles.default}>
+      <Text size="sm">
         Reserve cards: {game.stock.length}
         <br />
         Completed suit stacks: {completedStacks}/4
@@ -235,7 +235,7 @@ export default function Scorpion() {
           <View key={`sc-col-${colIdx}`} style={styles.column}>
             {column.length === 0 ? (
               <View style={styles.emptySlot}>
-                <Text style={textStyles.default}>Empty</Text>
+                <Text size="sm">Empty</Text>
               </View>
             ) : null}
             {column.map((card, idx) => {

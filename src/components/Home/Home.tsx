@@ -1,8 +1,8 @@
+import { Text } from "@/components/common/Text";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight, HomePadding, rgba } from "@/styles/styles";
-import { textStyles } from "@/styles/textStyles";
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Button } from "../Button/Button";
 import { LoadingOverlay } from "../common/LoadingOverlay";
 import { GamesList } from "./GamesList";
@@ -55,9 +55,9 @@ export default function Home() {
           ]}
         >
           <Text
+            size="sm"
             style={[
               flexStyles.flex1,
-              textStyles.default,
               {
                 paddingLeft: HomePadding,
                 fontFamily: FontWeight[200],

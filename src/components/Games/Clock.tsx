@@ -1,3 +1,4 @@
+import { Text } from "@/components/common/Text";
 import { MappedCard, MapZone, useCardMap } from "@/components/Cards/CardMap";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
@@ -5,7 +6,7 @@ import { flexStyles } from "@/styles/flexStyles";
 import { textStyles } from "@/styles/textStyles";
 import { produce } from "immer";
 import { useMemo, useState } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   cardDims,

@@ -1,6 +1,12 @@
-import { menuStyles } from "@/styles/menuStyles";
-import { useEffect, useRef } from "react";
-import { Animated, Easing, Text, View } from "react-native";
+import { Text } from "@/components/common/Text";
+import {
+  menuStyles } from "@/styles/menuStyles";
+import { useEffect,
+  useRef } from "react";
+import { Animated,
+  Easing,
+  View,
+} from "react-native";
 import { Button } from "../Button/Button";
 import { Colors } from "@/styles/styles";
 

@@ -1,3 +1,4 @@
+import { Text } from "@/components/common/Text";
 import { useMemo, useRef, useState } from "react";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import {
@@ -5,7 +6,6 @@ import {
   PanResponder,
   Pressable,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 import type { GestureResponderEvent, View as RNView } from "react-native";
@@ -20,7 +20,6 @@ import {
   shuffle,
   type PlayingCard,
 } from "../../Cards/card-utils";
-import { textStyles } from "@/styles/textStyles";
 import { GameWrapper } from "../../common/GameWrapper";
 
 type GameState = {
@@ -350,9 +349,7 @@ export default function SpiderSolitaire() {
           </View>
         </View>
 
-        <Text style={textStyles.default}>
-          Runs completed: {game.completedRuns}/8
-        </Text>
+        <Text size="sm">Runs completed: {game.completedRuns}/8</Text>
         {won && <Text style={styles.winText}>You won!</Text>}
 
         <View style={styles.stockRow}>
@@ -363,7 +360,7 @@ export default function SpiderSolitaire() {
               <Text style={styles.slotLabel}>Empty</Text>
             )} */}
           </View>
-          <Text style={textStyles.default}>Stock: {game.stock.length}</Text>
+          <Text size="sm">Stock: {game.stock.length}</Text>
         </View>
 
         <View style={styles.tableauRow}>

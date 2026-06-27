@@ -1,9 +1,10 @@
+import { Text } from "@/components/common/Text";
 import {
   getGameInfo,
   normalizeGamePath,
   recordAttempt,
   recordResult,
-} from "@/data/game-menu";
+  } from "@/data/game-menu";
 import { flexStyles } from "@/styles/flexStyles";
 import {
   Colors,
@@ -12,11 +13,17 @@ import {
   HeaderButtonIconSize,
   HeaderHeight,
   rgba,
-} from "@/styles/styles";
+  } from "@/styles/styles";
 import { GAME_THUMBNAIL_ASSETS } from "@/data/game-thumbnails";
-import { router, usePathname } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
-import { Image, Text, View } from "react-native";
+import { router,
+  usePathname } from "expo-router";
+import React,
+  { useEffect,
+  useRef,
+  useState } from "react";
+import { Image,
+  View,
+} from "react-native";
 import { Button } from "../Button/Button";
 import GameModal from "../Modals/GameModal";
 import { GameIntro } from "./GameIntro";

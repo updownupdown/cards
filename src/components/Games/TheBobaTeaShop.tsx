@@ -1,12 +1,12 @@
+import { Text } from "@/components/common/Text";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
 import { flexStyles, transitionStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
-import { textStyles } from "@/styles/textStyles";
 import { delay } from "@/utils/utils";
 import { produce } from "immer";
 import { useMemo, useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { Button } from "../Button/Button";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
@@ -478,8 +478,8 @@ export default function TheBobaTeaShop() {
                 </View>
 
                 <Text
+                  size="sm"
                   style={[
-                    textStyles.default,
                     { fontSize: cardWidth * 0.3, fontFamily: FontWeight[500] },
                   ]}
                 >
@@ -553,8 +553,8 @@ export default function TheBobaTeaShop() {
                 ]}
               >
                 <Text
+                  size="sm"
                   style={[
-                    textStyles.default,
                     {
                       fontSize: cardWidth * 0.21,
                       fontFamily: FontWeight[500],
@@ -585,8 +585,8 @@ export default function TheBobaTeaShop() {
         {!nextCustomerRevealed && !selectedPos && (
           <View style={[flexStyles.rowCentered, flexStyles.fullWidth]}>
             <Text
+              size="sm"
               style={[
-                textStyles.default,
                 {
                   fontSize: cardWidth * 0.32,
                   textAlign: "center",
@@ -608,7 +608,6 @@ export default function TheBobaTeaShop() {
             disabled={selectedPos === undefined}
             style={[flexStyles.flex1, { height: "100%" }]}
             theme="purple"
-            cardWidth={cardWidth}
           />
         )}
 
@@ -624,7 +623,6 @@ export default function TheBobaTeaShop() {
               }}
               disabled={selectedPos === undefined}
               style={[flexStyles.flex1, { height: "100%" }]}
-              cardWidth={cardWidth}
             />
             <Button
               text="Kick them out"
@@ -635,7 +633,6 @@ export default function TheBobaTeaShop() {
               }}
               disabled={selectedPos === undefined}
               style={[flexStyles.flex1, { height: "100%" }]}
-              cardWidth={cardWidth}
             />
           </>
         )}

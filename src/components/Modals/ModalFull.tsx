@@ -1,11 +1,11 @@
+import { Text } from "@/components/common/Text";
 import { modalStyles } from "@/styles/modalStyles";
 import { Colors, FontWeight, HeaderButtonSize } from "@/styles/styles";
 import { router } from "expo-router";
 import React from "react";
-import { Modal, Text, View } from "react-native";
+import { Modal, View } from "react-native";
 import { Button } from "../Button/Button";
 import { Icon, IconName } from "@/icons";
-import { textStyles } from "@/styles/textStyles";
 import { flexStyles } from "@/styles/flexStyles";
 import { menuStyles } from "@/styles/menuStyles";
 
@@ -40,7 +40,8 @@ export default function ModalFull({
                   iconName={"arrow-back"}
                   iconColor={Colors.accentBlue}
                   text="Home"
-                  size="text"
+                  size="small"
+                  textOnly
                   iconSize={22}
                   style={{ borderWidth: 0, boxShadow: "unset" }}
                 />
@@ -57,8 +58,8 @@ export default function ModalFull({
                 >
                   <Icon name={iconName} size={28} color={Colors.K400} />
                   <Text
+                    size="sm"
                     style={[
-                      textStyles.default,
                       {
                         color: Colors.K400,
                         fontFamily: FontWeight[300],

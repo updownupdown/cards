@@ -1,9 +1,9 @@
+import { Text } from "@/components/common/Text";
 import { useFade } from "@/hooks/useFade";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight, rgba } from "@/styles/styles";
-import { textStyles } from "@/styles/textStyles";
-import { Animated, Text, View, ViewStyle } from "react-native";
+import { Animated, View, ViewStyle } from "react-native";
 import { Button } from "../../Button/Button";
 import { type PlayingCard } from "../../Cards/card-utils";
 import { EmissarySuitsColorMap, TheEmissaryVisit } from "./TheEmissaryTypes";
@@ -101,8 +101,8 @@ export const AdvisorInfo = ({
         >
           {discardFromHand !== 0 && (
             <Text
+              size="sm"
               style={[
-                textStyles.default,
                 {
                   fontSize: cardWidth * 0.3,
                   fontFamily: FontWeight[300],
@@ -126,8 +126,8 @@ export const AdvisorInfo = ({
                 ]}
               >
                 <Text
+                  size="sm"
                   style={[
-                    textStyles.default,
                     {
                       fontSize: cardWidth * 0.38,
                       fontFamily: FontWeight[500],
@@ -138,8 +138,8 @@ export const AdvisorInfo = ({
                   {advisorType} Advisor
                 </Text>
                 <Text
+                  size="sm"
                   style={[
-                    textStyles.default,
                     {
                       fontSize: cardWidth * 0.28,
                       fontFamily: FontWeight[300],
@@ -163,7 +163,6 @@ export const AdvisorInfo = ({
                   text="Cancel"
                   theme={Colors.K200}
                   style={[{ borderWidth: 0 }]}
-                  cardWidth={cardWidth}
                 />
                 {advisorSuit !== "spades" && (
                   <Button
@@ -175,7 +174,6 @@ export const AdvisorInfo = ({
                         ? EmissarySuitsColorMap[advisorSuit]
                         : undefined
                     }
-                    cardWidth={cardWidth}
                   />
                 )}
               </View>

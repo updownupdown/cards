@@ -1,3 +1,4 @@
+import { Text } from "@/components/common/Text";
 import { getGameInfo, normalizeGamePath } from "@/data/game-menu";
 import { useFade } from "@/hooks/useFade";
 import { useGameSettings } from "@/hooks/useGameSettings";
@@ -12,7 +13,7 @@ import {
 } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
 import { usePathname } from "expo-router";
-import { Animated, ScrollView, Text, View } from "react-native";
+import { Animated, ScrollView, View } from "react-native";
 import { Button } from "../Button/Button";
 
 interface Props {
@@ -89,7 +90,14 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
                 flexStyles.gap20,
               ]}
             >
-              <Text style={textStyles.h1}>How to Play</Text>
+              <Text
+                size="xl"
+                weight={500}
+                textTransform="uppercase"
+                style={{ color: Colors.K100 }}
+              >
+                How to Play
+              </Text>
               {gameInfo.briefRules.map((info, key) => (
                 <Text
                   key={`info-${key}`}
@@ -105,7 +113,8 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
                   setShowMenu(true);
                 }}
                 text="Read detailed rules"
-                size="text"
+                size="small"
+                textOnly
               />
             </View>
 
@@ -120,7 +129,8 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
 
             <Button
               text="Close and skip intro next time"
-              size="text"
+              size="small"
+              textOnly
               onPress={() => {
                 updateGameSettings({ showIntro: false });
                 setShowIntro(false);

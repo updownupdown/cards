@@ -1,9 +1,10 @@
+import { Text } from "@/components/common/Text";
 import { useGameSettings } from "@/hooks/useGameSettings";
 import { SettingControl } from "../common/SettingControl";
 import { modalStyles } from "@/styles/modalStyles";
 import { textStyles } from "@/styles/textStyles";
 import { usePathname } from "expo-router";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import {
   calculateWinRate,
   getGameInfo,
@@ -105,7 +106,14 @@ export default function GameModal({ onClose }: Props) {
               { alignItems: "flex-start" },
             ]}
           >
-            <Text style={textStyles.h1}>{info.title}</Text>
+            <Text
+              size="xl"
+              weight={500}
+              textTransform="uppercase"
+              style={{ color: Colors.K100 }}
+            >
+              {info.title}
+            </Text>
 
             {/* By Line */}
             {info.byLine && (
@@ -150,7 +158,8 @@ export default function GameModal({ onClose }: Props) {
                 updateSettings({ isFavorite: !settings.isFavorite })
               }
               iconName={settings.isFavorite ? "star" : "star-outline"}
-              size="text"
+              size="small"
+              textOnly
               iconSize={42}
               iconColor={
                 settings.isFavorite ? Colors.favoriteStar : Colors.accentBlue
@@ -179,7 +188,7 @@ export default function GameModal({ onClose }: Props) {
 
           {/* <View style={[modalStyles.gameSettings]}>
             <Text style={textStyles.h4}>Game Settings</Text>
-            <Text style={textStyles.default}>
+            <Text size="sm">
               Setting changes apply to the next game
             </Text>
 

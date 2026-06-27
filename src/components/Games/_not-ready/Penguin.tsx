@@ -1,6 +1,7 @@
+import { Text } from "@/components/common/Text";
 import { useMemo, useState } from "react";
 import { useGameLoading } from "@/hooks/useGameLoading";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 
 import { Card } from "../../Cards/Card";
 import {
@@ -10,7 +11,6 @@ import {
   shuffle,
   type PlayingCard,
 } from "../../Cards/card-utils";
-import { textStyles } from "@/styles/textStyles";
 import { GameWrapper } from "../../common/GameWrapper";
 
 const cardsPerRow = 8;
@@ -253,7 +253,7 @@ export default function Penguin() {
       reset={reset}
       isLoaded={isLoaded}
     >
-      <Text style={textStyles.default}>
+      <Text size="sm">
         Beak rank: {game.beakRank}
         <br />
         Foundations: {foundationsCount}/52

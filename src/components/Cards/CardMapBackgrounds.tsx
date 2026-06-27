@@ -1,8 +1,9 @@
+import { Text } from "@/components/common/Text";
 import { Icon } from "@/icons";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
-import { Pressable, Text, TextStyle, View, ViewStyle } from "react-native";
+import { Pressable, TextStyle, View, ViewStyle } from "react-native";
 import { cardDims } from "./card-utils";
 import { CardPosition, MapZone } from "./CardMap";
 import { CardOverlay, getCardShadow } from "./CardStyles";
@@ -58,6 +59,8 @@ export const CardMapBackgrounds = ({
 
         const pos = getZoneBasePos(zone);
         const count: number = zone.cards?.length ?? 0;
+        const hasText = Boolean(zone.placeholder.text);
+        const showCount = zone.placeholder.showCount !== false;
 
         let placeholderWidth = pos.width;
         let placeholderHeight = pos.height;
@@ -94,8 +97,6 @@ export const CardMapBackgrounds = ({
           const rotatedTextWidth = cardHeight * 0.6;
           const rotatedTextHeight = cardWidth * infoSize.leftRight;
 
-          const rotatedTextOffset = (rotatedTextWidth - rotatedTextHeight) / 2;
-
           switch (infoPosition) {
             case "above":
             case "below":
@@ -106,24 +107,39 @@ export const CardMapBackgrounds = ({
               infoStyles.flexDirection = "row";
               break;
             case "left":
-            case "right":
+            case "right": {
+              const sidePadding = cardHeight * 0.08;
+              const sideGap = cardHeight * 0.08;
+              const countBlockHeight = showCount ? cardWidth * 0.28 : 0;
+              const totalGap = hasText && showCount ? sideGap : 0;
+              const availableTextHeight = Math.max(
+                0,
+                pos.height - sidePadding * 2 - totalGap - countBlockHeight,
+              );
+
               placeholderWidth += cardWidth * infoSize.leftRight;
               infoStyles.width = cardWidth * infoSize.leftRight;
               infoStyles.height = "100%";
-              infoStyles.gap = cardHeight * 0.1;
+              infoStyles.paddingVertical = sidePadding;
+              infoStyles.gap = hasText && showCount ? 0 : sideGap;
+              infoStyles.justifyContent =
+                hasText && showCount ? "space-around" : "center";
               infoStyles.flexDirection = "column";
               textStyle.width = rotatedTextWidth;
-              textStyle.height = rotatedTextHeight;
-              textStyle.lineHeight = rotatedTextHeight;
+              textStyle.flexShrink = 0;
               textContainerStyle.width = rotatedTextHeight;
-              textContainerStyle.height = rotatedTextWidth;
+              textContainerStyle.height = Math.min(
+                rotatedTextWidth,
+                availableTextHeight,
+              );
+              textContainerStyle.justifyContent = "center";
+              textContainerStyle.alignItems = "center";
+              textContainerStyle.overflow = "hidden";
               textStyle.textAlign = "center";
-              textStyle.transform = [
-                { rotate: `-90deg` },
-                { translateX: -rotatedTextOffset },
-                { translateY: -rotatedTextOffset },
-              ];
+              textStyle.transform = [{ rotate: `-90deg` }];
+              countStyle.lineHeight = countBlockHeight;
               break;
+            }
           }
           switch (infoPosition) {
             case "above":
@@ -182,15 +198,13 @@ export const CardMapBackgrounds = ({
 
             {infoPosition && (
               <View style={infoStyles}>
-                {zone.placeholder.text && (
+                {hasText && (
                   <View style={textContainerStyle}>
                     <Text style={textStyle}>{zone.placeholder.text}</Text>
                   </View>
                 )}
 
-                {zone.placeholder.showCount !== false && (
-                  <Text style={countStyle}>{count}</Text>
-                )}
+                {showCount && <Text style={countStyle}>{count}</Text>}
               </View>
             )}
           </Pressable>

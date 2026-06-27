@@ -1,3 +1,4 @@
+import { Text } from "@/components/common/Text";
 import {
   ColRows,
   getGridColRows,
@@ -10,9 +11,8 @@ import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
-import { textStyles } from "@/styles/textStyles";
 import { useEffect, useMemo, useState } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   cardColor,
@@ -526,8 +526,8 @@ export default function DeadCenter() {
         ]}
       >
         <Text
+          size="sm"
           style={[
-            textStyles.default,
             flexStyles.flex1,
             {
               fontSize: 18,

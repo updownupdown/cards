@@ -1,3 +1,4 @@
+import { Text } from "@/components/common/Text";
 import { Button } from "@/components/Button/Button";
 import {
   AnimatedCardMapping,
@@ -14,7 +15,7 @@ import { flexStyles, transitionStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight, rgba } from "@/styles/styles";
 import { rotatedText, textStyles } from "@/styles/textStyles";
 import { useEffect, useMemo, useState } from "react";
-import { Animated, Text, View, ViewStyle } from "react-native";
+import { Animated, View, ViewStyle } from "react-native";
 import { useImmer } from "use-immer";
 import {
   flipAllToBack,
@@ -733,8 +734,8 @@ export default function TheEmissary() {
           ]}
         >
           <Text
+            size="sm"
             style={[
-              textStyles.default,
               {
                 paddingHorizontal: cardWidth * 0.4,
                 paddingVertical: cardWidth * 0.3,
@@ -857,7 +858,6 @@ export default function TheEmissary() {
                 backgroundColor: Colors.K850,
               },
             ]}
-            cardWidth={cardWidth}
             theme={"blue"}
           />
         </Animated.View>
@@ -905,7 +905,6 @@ export default function TheEmissary() {
 
       {/* Advisor Info */}
       <AdvisorInfo
-        cardWidth={cardWidth}
         lastSelectedAdvisor={lastSelectedAdvisor}
         selectedAdvisor={selectedAdvisor}
         discardFromHand={game.discardFromHand}
@@ -914,6 +913,7 @@ export default function TheEmissary() {
         hand={game.hand}
         visit={game.visit}
         advisorStyles={getZoneStylesById("advisor-overlay")}
+        cardWidth={cardWidth}
       />
     </GameWrapper>
   );

@@ -585,7 +585,6 @@ export default function LootTheLoop() {
               disabled={selectedCardIndex === undefined}
               style={[flexStyles.fullWidth, flexStyles.fullHeight]}
               theme={"green"}
-              cardWidth={cardWidth}
               size="small"
             />
           </Animated.View>
@@ -648,7 +647,6 @@ export default function LootTheLoop() {
             }
             style={[flexStyles.flex1, { height: "100%" }]}
             theme={"purple"}
-            cardWidth={cardWidth}
           />
 
           <Button
@@ -657,7 +655,6 @@ export default function LootTheLoop() {
             disabled={selectedPath === undefined}
             style={[flexStyles.flex1, { height: "100%" }]}
             theme={"green"}
-            cardWidth={cardWidth}
           />
 
           <Button
@@ -670,7 +667,6 @@ export default function LootTheLoop() {
             }
             style={[flexStyles.flex1, { height: "100%" }]}
             theme={"blue"}
-            cardWidth={cardWidth}
           />
         </View>
       </View>
