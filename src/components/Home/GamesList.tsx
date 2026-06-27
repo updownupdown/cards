@@ -1,30 +1,83 @@
-import { loadFavoriteGames, toggleFavoriteGame } from "@/data/game-menu";
+import {
+  loadFavoriteGames,
+  loadRecentlyPlayedGames,
+  toggleFavoriteGame,
+} from "@/data/game-menu";
 import {
   GameCategory,
   GameCategoryNames,
   GameMenuInfo,
   GAMES_DATA,
 } from "@/data/games-data";
-import { Icon } from "@/icons";
-import { flexStyles } from "@/styles/flexStyles";
-import { Colors, FontWeight, HomePadding, rgba } from "@/styles/styles";
+import {
+  Colors,
+  FontWeight,
+  HomePadding,
+  MaxContentWidth,
+} from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
-import { Link, type Href } from "expo-router";
 import { useEffect, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import { LargeHomeCard, SmallHomeCard } from "./HomeCards";
+
+const SMALL_CARD_GAP = 16;
+
+type CardVariant = "small" | "large";
+
+type HomeSectionKey = GameCategory | "favorites" | "recent";
+
+type HomeSectionConfig = {
+  key: HomeSectionKey;
+  title: string;
+  variant: CardVariant;
+};
+
+const HOME_SECTIONS: HomeSectionConfig[] = [
+  { key: "recent", title: "Recently Played", variant: "small" },
+  { key: "favorites", title: "Favorites", variant: "small" },
+  {
+    key: GameCategory.Isaludo,
+    title: GameCategoryNames[GameCategory.Isaludo],
+    variant: "large",
+  },
+  {
+    key: GameCategory.ClassicSolitaire,
+    title: GameCategoryNames[GameCategory.ClassicSolitaire],
+    variant: "large",
+  },
+  {
+    key: GameCategory.Beta,
+    title: GameCategoryNames[GameCategory.Beta],
+    variant: "large",
+  },
+];
 
 export const GamesList = () => {
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
-  const [lastFavorited, setLastFavorited] = useState<string | null>(null);
+  const [recentPaths, setRecentPaths] = useState<string[]>([]);
+  const { width: screenWidth } = useWindowDimensions();
+
+  const containerWidth =
+    Math.min(screenWidth, MaxContentWidth) - HomePadding * 2;
+  const smallCardWidth = (containerWidth - SMALL_CARD_GAP) / 2;
 
   useEffect(() => {
     let cancelled = false;
 
-    loadFavoriteGames().then((loaded) => {
-      if (!cancelled) {
-        setFavorites(loaded);
-      }
-    });
+    Promise.all([loadFavoriteGames(), loadRecentlyPlayedGames()]).then(
+      ([loadedFavorites, loadedRecent]) => {
+        if (!cancelled) {
+          setFavorites(loadedFavorites);
+          setRecentPaths(loadedRecent.map((entry) => entry.path));
+        }
+      },
+    );
 
     return () => {
       cancelled = true;
@@ -32,197 +85,112 @@ export const GamesList = () => {
   }, []);
 
   async function onToggleFavorite(path: string) {
-    const isAdding = !favorites.has(path);
-
-    // Optimistic UI update to prevent layout jumps/lag
-    const newFavs = new Set(favorites);
-    if (isAdding) {
-      newFavs.add(path);
-      setLastFavorited(path);
-    } else {
-      newFavs.delete(path);
-      if (lastFavorited === path) {
-        setLastFavorited(null);
-      }
-    }
-    setFavorites(newFavs);
-
-    // Save in background
     const updated = await toggleFavoriteGame(path);
     setFavorites(new Set(updated));
   }
 
-  const GameLink = ({ path, game }: { path: string; game: GameMenuInfo }) => {
-    const isFav = favorites.has(path);
-
-    return (
-      <View
-        style={[
-          flexStyles.rowCentered,
-          {
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 8,
-          },
-        ]}
-      >
-        <Link
-          href={path as Href}
-          style={[
-            {
-              transitionDuration: "0.4s",
-              transitionProperty: "all",
-              transitionTimingFunction: "ease",
-
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: 6,
-
-              outlineWidth: 0,
-
-              paddingVertical: 10,
-              backgroundColor: Colors.K800,
-
-              borderRadius: 10,
-              borderWidth: 0,
-              borderColor: "unset",
-              width: "100%",
-
-              // Font
-              fontSize: 18,
-              textAlign: "center",
-              fontFamily: FontWeight[300],
-              color: Colors.K200,
-              // textTransform: "uppercase",
-            },
-          ]}
-        >
-          {game.title}
-        </Link>
-
-        <Pressable
-          style={[styles.starBtn]}
-          onPress={() => onToggleFavorite(path)}
-        >
-          <Icon
-            name={isFav ? "star" : "star-outline"}
-            color={isFav ? Colors.favoriteStar : Colors.K500}
-            size={30}
-          />
-        </Pressable>
-      </View>
-    );
-  };
-
-  const GamesCategory = ({
-    category,
-  }: {
-    category: GameCategory | "favorites";
-  }) => {
-    let gameEntries = Object.entries(GAMES_DATA);
-    // const isFav = favorites.has(game.path);
+  const GamesCategory = ({ section }: { section: HomeSectionConfig }) => {
+    const gameEntries = Object.entries(GAMES_DATA);
     let gameList: [string, GameMenuInfo][] = [];
 
-    if (category === "favorites") {
+    if (section.key === "recent") {
+      gameList = recentPaths
+        .map((path) => [path, GAMES_DATA[path]] as [string, GameMenuInfo])
+        .filter(([_, game]) => !!game && game.enabled !== false);
+    } else if (section.key === "favorites") {
       gameList = gameEntries.filter(
         ([key, val]) => favorites.has(key) && val.enabled !== false,
       );
     } else {
       gameList = gameEntries.filter(
-        ([key, val]) =>
-          val.category === category &&
-          val.enabled !== false &&
-          !favorites.has(key),
+        ([key, val]) => val.category === section.key && val.enabled !== false,
+        //  &&          !favorites.has(key),
       );
     }
 
-    gameList.sort((a, b) => a[1].title.localeCompare(b[1].title));
+    if (section.key !== "recent") {
+      gameList.sort((a, b) => a[1].title.localeCompare(b[1].title));
+    }
 
     if (gameList.length === 0) return null;
 
     return (
-      <View style={[flexStyles.colCentered, flexStyles.gap10]}>
-        {/* Category Name */}
-        <Text
-          style={[
-            flexStyles.colCentered,
-            textStyles.default,
-            flexStyles.fullWidth,
-            {
-              alignItems: "flex-start",
-              paddingLeft: HomePadding,
-              paddingTop: HomePadding * 1.5,
-              paddingBottom: 6,
-
-              fontFamily: FontWeight[300],
-              fontSize: 14,
-              textTransform: "uppercase",
-              color: Colors.K500,
-            },
-          ]}
-        >
-          {category === "favorites" ? "Favorites" : GameCategoryNames[category]}
+      <View style={styles.section}>
+        <Text style={[textStyles.default, styles.sectionTitle]}>
+          {section.title}
         </Text>
 
-        {/* Game List (in category) */}
-        <View
-          style={[
-            flexStyles.colCentered,
-            flexStyles.fullWidth,
-            flexStyles.gap16,
-            {
-              alignItems: "stretch",
-            },
-          ]}
-        >
-          {gameList.map(([path, game]) => {
-            return <GameLink key={path} path={path} game={game} />;
-          })}
-        </View>
+        {section.variant === "small" ? (
+          <View style={styles.smallCardGrid}>
+            {gameList.map(([path, game]) => (
+              <SmallHomeCard
+                key={path}
+                path={path}
+                game={game}
+                width={smallCardWidth}
+              />
+            ))}
+          </View>
+        ) : (
+          <View style={styles.cardList}>
+            {gameList.map(([path, game]) => (
+              <LargeHomeCard
+                key={path}
+                path={path}
+                game={game}
+                onToggleFavorite={onToggleFavorite}
+                isFavorite={favorites.has(path)}
+              />
+            ))}
+          </View>
+        )}
       </View>
     );
   };
 
   return (
     <ScrollView
-      contentContainerStyle={[
-        {
-          paddingHorizontal: HomePadding,
-          paddingBottom: HomePadding * 2.5,
-        },
-      ]}
+      contentContainerStyle={{
+        paddingHorizontal: HomePadding,
+        paddingBottom: HomePadding * 2.5,
+      }}
       showsVerticalScrollIndicator={false}
     >
-      <View
-        style={[
-          flexStyles.colCentered,
-          flexStyles.fullWidth,
-          flexStyles.gap16,
-          {
-            alignItems: "stretch",
-          },
-        ]}
-      >
-        {favorites.size > 0 && <GamesCategory category="favorites" />}
-
-        {Object.values(GameCategory).map((cat) => (
-          <GamesCategory key={`cat-${cat}`} category={cat} />
-        ))}
-        {/* {orderedGames.map((game) => {
-          return <GameLink key={game.path} game={game} />;
-        })} */}
-      </View>
+      {HOME_SECTIONS.map((section) => {
+        if (section.key === "recent" && recentPaths.length === 0) return null;
+        if (section.key === "favorites" && favorites.size === 0) return null;
+        return (
+          <GamesCategory key={`section-${section.key}`} section={section} />
+        );
+      })}
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  starBtn: {
-    width: 44,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 8,
+  section: {
+    gap: 10,
+  },
+  sectionTitle: {
+    alignItems: "flex-start",
+    paddingLeft: HomePadding,
+    paddingTop: HomePadding * 1.5,
+    paddingBottom: 6,
+    fontFamily: FontWeight[300],
+    fontSize: 14,
+    textTransform: "uppercase",
+    color: Colors.K500,
+  },
+  smallCardGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "stretch",
+    justifyContent: "space-between",
+    rowGap: SMALL_CARD_GAP,
+    columnGap: SMALL_CARD_GAP,
+    paddingVertical: 12,
+  },
+  cardList: {
+    gap: 16,
   },
 });

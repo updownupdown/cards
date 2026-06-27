@@ -8,6 +8,7 @@ import { DeckInfoPosition } from "@/components/Cards/CardMapBackgrounds";
 import { useToast } from "@/components/common/Toast";
 import { useFade } from "@/hooks/useFade";
 import { useGameLoading } from "@/hooks/useGameLoading";
+import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
 import { flexStyles, transitionStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight, rgba } from "@/styles/styles";
@@ -39,6 +40,7 @@ import {
 const debugMode = false;
 
 export default function TheEmissary() {
+  const { zoneBg, cardBg, cardText } = useGameZoneBackground();
   const showToast = useToast();
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
   const [game, setGame] = useImmer<GameState>(setup(true));
@@ -492,7 +494,7 @@ export default function TheEmissary() {
           infoPos: "below" as DeckInfoPosition,
           showCount: id !== "topic",
           hideBackground: id !== "topic",
-          backgroundColor: id === "topic" ? Colors.K900 : undefined,
+          backgroundColor: id === "topic" ? cardBg : undefined,
         },
       };
     };
@@ -659,7 +661,7 @@ export default function TheEmissary() {
 
   const darkZoneStyles: ViewStyle = {
     borderRadius: cardWidth * 0.15,
-    backgroundColor: Colors.K875,
+    backgroundColor: zoneBg,
   };
 
   return (
@@ -721,11 +723,12 @@ export default function TheEmissary() {
         <Animated.View
           style={[
             flexStyles.colCentered,
+            darkZoneStyles,
             getZoneStylesById("choose-kingdom"),
             {
               opacity: chooseKingdomOpacity,
+              justifyContent: "flex-start",
               padding: cardWidth * 0.5,
-              backgroundColor: rgba(Colors.K850, 0.7),
             },
           ]}
         >
@@ -737,11 +740,11 @@ export default function TheEmissary() {
                 paddingVertical: cardWidth * 0.3,
 
                 borderRadius: cardWidth * 0.15,
-                backgroundColor: Colors.K900,
+                backgroundColor: cardText,
 
-                fontSize: cardWidth * 0.3,
-                fontFamily: FontWeight[300],
-                color: Colors.K200,
+                fontSize: cardWidth * 0.34,
+                fontFamily: FontWeight[400],
+                color: cardBg,
               },
             ]}
           >

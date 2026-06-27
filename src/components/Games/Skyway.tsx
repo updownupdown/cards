@@ -1,4 +1,5 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
+import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { Icon } from "@/icons";
 import { flexStyles, transitionStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight, rgba } from "@/styles/styles";
@@ -205,6 +206,7 @@ function computeScore(grid: PlayingCard[][]): ScoreBySuit {
 }
 
 export default function Skyway() {
+  const { zoneBg } = useGameZoneBackground();
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
 
   const [game, setGame] = useState<SkywayState>(initState);
@@ -426,7 +428,7 @@ export default function Skyway() {
             paddingHorizontal,
             gap: cardWidth / 2,
             borderRadius,
-            backgroundColor: Colors.K875,
+            backgroundColor: zoneBg,
           },
         ]}
       >

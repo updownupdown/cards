@@ -358,7 +358,7 @@ export default function SpiderSolitaire() {
         <View style={styles.stockRow}>
           <View style={styles.stockSlot}>
             {/* {game.stock.length > 0 ? (
-              <Card cardsPerRow={5}  />
+              <Card cardWidth={5}  />
             ) : (
               <Text style={styles.slotLabel}>Empty</Text>
             )} */}
@@ -408,7 +408,7 @@ export default function SpiderSolitaire() {
                       ]}
                       {...(isTop ? topHandlers : {})}
                     >
-                      <Card card={card} cardsPerRow={5} />
+                      <Card card={card} cardWidth={5} />
                     </View>
                   );
                 })}
@@ -428,7 +428,7 @@ export default function SpiderSolitaire() {
               },
             ]}
           >
-            <Card card={dragGhost.card} cardsPerRow={5} />
+            <Card card={dragGhost.card} cardWidth={5} />
           </Animated.View>
         ) : null}
       </View>

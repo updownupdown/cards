@@ -13,9 +13,10 @@ import {
   HeaderHeight,
   rgba,
 } from "@/styles/styles";
+import { GAME_THUMBNAIL_ASSETS } from "@/data/game-thumbnails";
 import { router, usePathname } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { Text, View } from "react-native";
+import { Image, Text, View } from "react-native";
 import { Button } from "../Button/Button";
 import GameModal from "../Modals/GameModal";
 import { GameIntro } from "./GameIntro";
@@ -36,6 +37,23 @@ interface Props {
   setShowIntro: (show: boolean | undefined) => void;
   canUndo?: boolean;
   handleUndo?: () => void;
+}
+
+function lightenHexColor(hexColor: string, amount: number) {
+  const hex = hexColor.replace("#", "");
+  if (hex.length !== 6) return hexColor;
+
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  if ([r, g, b].some((v) => Number.isNaN(v))) return hexColor;
+
+  const next = (value: number) =>
+    Math.round(value + (255 - value) * amount)
+      .toString(16)
+      .padStart(2, "0");
+
+  return `#${next(r)}${next(g)}${next(b)}`;
 }
 
 export const GameWrapper = ({
@@ -81,6 +99,11 @@ export const GameWrapper = ({
 
   if (!gameInfo) return null;
 
+  const titleColor = gameInfo.cardColorText;
+  const backgroundColor = gameInfo.cardColorBg;
+  const backgroundSource = GAME_THUMBNAIL_ASSETS[gameInfo.thumbnail];
+  const overlayColor = lightenHexColor(backgroundColor, 0.2);
+
   return (
     <>
       <LoadingOverlay isLoaded={!!isLoaded} />
@@ -102,86 +125,126 @@ export const GameWrapper = ({
       {showMenu && <GameModal onClose={() => setShowMenu(false)} />}
 
       <View
-        style={[
-          {
-            position: "relative",
-            zIndex: 12, // above the game overlay
-            ...flexStyles.rowCentered,
-            justifyContent: "space-between",
-            width: "100%",
-            height: HeaderHeight,
-            paddingVertical: ContentSidePadding,
-            paddingHorizontal: ContentSidePadding * 0.75,
-
-            backgroundColor: Colors.background,
-            boxShadow: `0 0 20px ${rgba(Colors.background, 1)}`,
-          },
-        ]}
+        style={{
+          flex: 1,
+          position: "relative",
+          backgroundColor,
+        }}
       >
-        <Button
-          style={[menuStyles.headerButton]}
-          onPress={() => {
-            router.push("/");
+        <Image
+          source={backgroundSource}
+          blurRadius={4}
+          resizeMode="cover"
+          style={{
+            position: "absolute",
+            zIndex: 0,
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            opacity: 0.2,
           }}
-          iconName={"arrow-back"}
-          iconColor={Colors.K500}
-          iconSize={22}
         />
 
-        <Text
-          numberOfLines={1}
-          ellipsizeMode="tail"
+        <View
+          pointerEvents="none"
+          style={{
+            position: "absolute",
+            zIndex: 1,
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            backgroundColor: rgba(overlayColor, 0.45),
+          }}
+        />
+
+        <View
           style={[
             {
-              fontSize: 14,
-              fontFamily: FontWeight[300],
-              color: Colors.K500,
-              flex: 1,
-              overflow: "hidden",
-              textTransform: "uppercase",
+              position: "relative",
+              zIndex: 12, // above the game overlay
+              ...flexStyles.rowCentered,
+              justifyContent: "space-between",
+              width: "100%",
+              height: HeaderHeight,
+              paddingVertical: ContentSidePadding,
+              paddingHorizontal: ContentSidePadding * 0.75,
+              backgroundColor: "transparent",
             },
           ]}
         >
-          {gameInfo.title}
-        </Text>
+          <Button
+            style={[menuStyles.headerButton]}
+            onPress={() => {
+              router.push("/");
+            }}
+            iconName={"arrow-back"}
+            iconColor={titleColor}
+            iconSize={22}
+          />
 
-        {handleUndo && (
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={[
+              {
+                fontSize: 14,
+                fontFamily: FontWeight[300],
+                color: titleColor,
+                flex: 1,
+                overflow: "hidden",
+                textTransform: "uppercase",
+              },
+            ]}
+          >
+            {gameInfo.title}
+          </Text>
+
+          {handleUndo && (
+            <Button
+              style={[menuStyles.headerButton]}
+              textStyle={[menuStyles.headerButton]}
+              onPress={handleUndo}
+              iconName="undo"
+              iconColor={canUndo ? titleColor : rgba(titleColor, 0.35)}
+              iconSize={HeaderButtonIconSize}
+              disabled={!canUndo}
+            />
+          )}
+
+          <ResetButton
+            reset={reset}
+            iconColor={titleColor}
+            pressedIconColor={rgba(titleColor, 0.7)}
+          />
+
           <Button
             style={[menuStyles.headerButton]}
             textStyle={[menuStyles.headerButton]}
-            onPress={handleUndo}
-            iconName="undo"
-            iconColor={canUndo ? Colors.K200 : Colors.K600}
+            onPress={() => setShowMenu(true)}
+            iconName="menu"
+            iconColor={titleColor}
             iconSize={HeaderButtonIconSize}
-            disabled={!canUndo}
           />
-        )}
+        </View>
 
-        <ResetButton reset={reset} />
-
-        <Button
-          style={[menuStyles.headerButton]}
-          textStyle={[menuStyles.headerButton]}
-          onPress={() => setShowMenu(true)}
-          iconName="menu"
-          iconColor={Colors.K200}
-          iconSize={HeaderButtonIconSize}
-        />
-      </View>
-
-      <View
-        style={[
-          {
-            position: "relative",
-            zIndex: 1,
-            ...flexStyles.colCentered,
-            ...flexStyles.fullWidth,
-            flex: 1,
-            pointerEvents: "box-none",
-          },
-        ]}
-      >
-        {children}
+        <View
+          style={[
+            {
+              position: "relative",
+              zIndex: 2,
+              ...flexStyles.colCentered,
+              ...flexStyles.fullWidth,
+              flex: 1,
+              pointerEvents: "box-none",
+            },
+          ]}
+        >
+          {children}
+        </View>
       </View>
     </>
   );

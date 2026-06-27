@@ -247,7 +247,7 @@ export default function Scorpion() {
               //   key={card.id}
               //   onPress={() => onCardPress(colIdx, idx)}
               //   card={card}
-              //   cardsPerRow={cardsPerRow}
+              //   cardWidth={5}
               //   isSelected={isSelected}
               // />
               // );

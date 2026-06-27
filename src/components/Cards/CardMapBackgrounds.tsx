@@ -1,4 +1,5 @@
 import { Icon } from "@/icons";
+import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
 import { Pressable, Text, TextStyle, View, ViewStyle } from "react-native";
@@ -37,6 +38,8 @@ export const CardMapBackgrounds = ({
   cardHeight,
   zoneMapper,
 }: Props) => {
+  const { zoneBg } = useGameZoneBackground();
+
   return (
     <>
       {zones.map((zone) => {
@@ -154,7 +157,7 @@ export const CardMapBackgrounds = ({
                 borderRadius: cardWidth * cardDims.ratioRadius,
                 backgroundColor: zone.placeholder.hideBackground
                   ? "transparent"
-                  : (zone.placeholder.backgroundColor ?? Colors.K875),
+                  : (zone.placeholder.backgroundColor ?? zoneBg),
                 justifyContent: "center",
                 alignItems: "center",
                 zIndex,

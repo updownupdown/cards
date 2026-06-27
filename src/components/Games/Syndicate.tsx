@@ -1,4 +1,5 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
+import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
@@ -103,6 +104,7 @@ function hasAnyMove(state: GameState) {
 // SYNDICATE
 // ==============================
 export default function Syndicate() {
+  const { zoneBg } = useGameZoneBackground(0.6);
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
   const [game, setGame] = useState<GameState>(setup);
   const [selectedRank, setSelectedRank] = useState<number | null>(null);
@@ -452,7 +454,7 @@ export default function Syndicate() {
             paddingVertical: positioning.paddingVertical,
             paddingHorizontal: cardWidth * positioning.paddingHorizontal,
             borderRadius: cardWidth * positioning.borderRadius,
-            backgroundColor: Colors.K875,
+            backgroundColor: zoneBg,
           },
         ]}
       >
@@ -500,7 +502,7 @@ export default function Syndicate() {
                 paddingHorizontal: cardWidth * positioning.paddingHorizontal,
                 alignItems: "center",
                 borderRadius: cardWidth * positioning.borderRadius,
-                backgroundColor: Colors.K875,
+                backgroundColor: zoneBg,
               },
             ]}
           >
@@ -573,8 +575,8 @@ export default function Syndicate() {
       >
         <Button
           onPress={() => promote("members")}
-          text="Members"
-          size="medium"
+          text="Promote as Member"
+          size="large"
           disabled={
             !selectedReplacement ||
             !!(
@@ -590,8 +592,8 @@ export default function Syndicate() {
         />
         <Button
           onPress={() => promote("candidates")}
-          text="Candidates"
-          size="medium"
+          text="Promote as Candidate"
+          size="large"
           disabled={!selectedReplacement}
           style={[flexStyles.flex1, { height: "100%" }]}
           theme="purple"

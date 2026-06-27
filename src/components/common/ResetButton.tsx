@@ -19,9 +19,15 @@ const minDisplayDuration = holdToResetDuration;
 interface Props {
   reset: () => void;
   minHintDuration?: number;
+  iconColor?: string;
+  pressedIconColor?: string;
 }
 
-export function ResetButton({ reset }: Props) {
+export function ResetButton({
+  reset,
+  iconColor = Colors.K200,
+  pressedIconColor,
+}: Props) {
   const [showResetHint, setShowResetHint] = useState(false);
   const { isRendered: renderResetHint, opacity: hintOpacity } = useFade(
     showResetHint,
@@ -93,7 +99,7 @@ export function ResetButton({ reset }: Props) {
         onPressOut={onPressOutReset}
         delayLongPress={holdToResetDuration}
         iconName="reset"
-        iconColor={isResetPressed ? Colors.accentRed : Colors.K200}
+        iconColor={isResetPressed ? (pressedIconColor ?? iconColor) : iconColor}
         iconSize={HeaderButtonIconSize}
       />
     </>

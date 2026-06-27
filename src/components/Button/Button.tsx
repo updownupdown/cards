@@ -93,11 +93,13 @@ export const Button = ({
   let paddingVertical = cardWidth * 0.12;
   let paddingHorizontal = cardWidth * 0.15;
   let fontFamily = FontWeight[500];
+  let lineHeight = fontSize * 1.2;
 
   switch (size) {
     case "text":
     case "small":
       fontSize = cardWidth * 0.2;
+      lineHeight = cardWidth * 0.2;
       height = cardWidth * 0.2;
       borderRadius = cardWidth * 0.1;
       borderWidth = cardWidth * 0.02;
@@ -110,6 +112,7 @@ export const Button = ({
     case "large":
     case "textLarge":
       fontSize = cardWidth * 0.4;
+      lineHeight = cardWidth * 0.44;
       height = cardWidth * 0.4;
       borderRadius = cardWidth * 0.2;
       borderWidth = cardWidth * 0.04;
@@ -194,7 +197,7 @@ export const Button = ({
               fontFamily,
               textTransform: "uppercase",
               color: themeColor ? themeColor : Colors.accentBlue,
-              lineHeight: fontSize,
+              lineHeight,
               textAlign: "center",
             },
           ]}

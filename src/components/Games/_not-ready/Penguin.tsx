@@ -269,7 +269,7 @@ export default function Penguin() {
             <View key={`p-found-${suit}`} style={styles.zone}>
               <Text style={styles.smallText}>{suit}</Text>
               {top ? (
-                <Card card={top} cardsPerRow={cardsPerRow} />
+                <Card card={top} cardWidth={5} />
               ) : (
                 <View style={styles.empty} />
               )}
@@ -295,7 +295,7 @@ export default function Penguin() {
                     disabled={game.ended}
                     style={isSelected ? styles.selectedCard : undefined}
                   >
-                    <Card card={card} cardsPerRow={cardsPerRow} />
+                    <Card card={card} cardWidth={5} />
                   </Pressable>
                 );
               })}

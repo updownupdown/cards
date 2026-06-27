@@ -29,8 +29,15 @@ export type HomeGameEntry = {
   title: string;
 };
 
+export type RecentGameEntry = {
+  path: string;
+  playedAt: number;
+};
+
 export const GLOBAL_SETTINGS_STORAGE_KEY = "cards.globalSettings.v1";
 export const GAME_SETTINGS_STORAGE_KEY = "cards.gameSettings.v1";
+export const RECENT_GAMES_STORAGE_KEY = "cards.recentGames.v1";
+export const MAX_RECENT_GAMES = 10;
 
 export const DEFAULT_GLOBAL_SETTINGS: GlobalSettings = {
   theme: "dark",
@@ -139,6 +146,54 @@ export async function loadFavoriteGames(): Promise<Set<string>> {
   return favorites;
 }
 
+function parseRecentGames(raw: string | null): RecentGameEntry[] {
+  if (!raw) return [];
+
+  try {
+    const parsed = JSON.parse(raw) as Partial<RecentGameEntry>[];
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed
+      .filter(
+        (entry): entry is RecentGameEntry =>
+          typeof entry?.path === "string" &&
+          typeof entry?.playedAt === "number" &&
+          Number.isFinite(entry.playedAt) &&
+          !!GAMES_DATA[entry.path],
+      )
+      .sort((a, b) => b.playedAt - a.playedAt);
+  } catch {
+    return [];
+  }
+}
+
+export async function loadRecentlyPlayedGames(
+  limit = MAX_RECENT_GAMES,
+): Promise<RecentGameEntry[]> {
+  const raw = await AsyncStorage.getItem(RECENT_GAMES_STORAGE_KEY);
+  const list = parseRecentGames(raw);
+  return list.slice(0, Math.max(0, limit));
+}
+
+async function saveRecentlyPlayedGames(games: RecentGameEntry[]) {
+  await AsyncStorage.setItem(RECENT_GAMES_STORAGE_KEY, JSON.stringify(games));
+}
+
+export async function recordRecentlyPlayedGame(pathname: string) {
+  const path = normalizeGamePath(pathname);
+  const now = Date.now();
+
+  const current = await loadRecentlyPlayedGames(MAX_RECENT_GAMES);
+  const withoutCurrent = current.filter((entry) => entry.path !== path);
+  const next = [{ path, playedAt: now }, ...withoutCurrent].slice(
+    0,
+    MAX_RECENT_GAMES,
+  );
+
+  await saveRecentlyPlayedGames(next);
+  return next;
+}
+
 export async function toggleFavoriteGame(pathname: string) {
   const key = normalizeGamePath(pathname);
   const map = await loadGameSettingsMap();
@@ -169,13 +224,16 @@ export async function updateGameSettings(
 }
 
 export async function recordAttempt(pathname: string) {
-  await updateGameSettings(pathname, (settings) => ({
-    ...settings,
-    stats: {
-      ...settings.stats,
-      attempts: settings.stats.attempts + 1,
-    },
-  }));
+  await Promise.all([
+    updateGameSettings(pathname, (settings) => ({
+      ...settings,
+      stats: {
+        ...settings.stats,
+        attempts: settings.stats.attempts + 1,
+      },
+    })),
+    recordRecentlyPlayedGame(pathname),
+  ]);
 }
 
 export async function recordResult(pathname: string, won: boolean) {

@@ -284,7 +284,7 @@ export default function TriPeaks() {
         <View style={styles.stockWasteRow}>
           <Pressable style={styles.cardSlot} onPress={draw}>
             {/* {game.stock.length > 0 ? (
-              <Card cardsPerRow={cardsPerRow}  />
+              <Card cardWidth={5}  />
             ) : (
               <Text style={styles.slotLabel}>Stock</Text>
             )} */}
@@ -299,7 +299,7 @@ export default function TriPeaks() {
             ]}
           >
             {wasteTop ? (
-              <Card card={wasteTop} cardsPerRow={cardsPerRow} />
+              <Card card={wasteTop} cardWidth={5} />
             ) : (
               <Text style={styles.slotLabel}>Waste</Text>
             )}
@@ -337,7 +337,7 @@ export default function TriPeaks() {
                       {...(dragHandlers ?? {})}
                     >
                       {!card.removed ? (
-                        <Card card={card} cardsPerRow={cardsPerRow} />
+                        <Card card={card} cardWidth={5} />
                       ) : (
                         <View style={styles.removedPlaceholder} />
                       )}
@@ -360,7 +360,7 @@ export default function TriPeaks() {
               },
             ]}
           >
-            <Card card={dragGhost.card} cardsPerRow={cardsPerRow} />
+            <Card card={dragGhost.card} cardWidth={5} />
           </Animated.View>
         ) : null}
       </View>

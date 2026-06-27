@@ -6,6 +6,7 @@ import {
   useCardMap,
 } from "@/components/Cards/CardMap";
 import { useGameLoading } from "@/hooks/useGameLoading";
+import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
@@ -171,6 +172,7 @@ function aliveCount(zombies: Zombie[]) {
 }
 
 export default function DeadCenter() {
+  const { zoneBg } = useGameZoneBackground();
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
   const [game, setGame] = useState<GameState>(setup);
 
@@ -515,7 +517,7 @@ export default function DeadCenter() {
           flexStyles.fullWidth,
           getZoneStylesById("gameInfo"),
           {
-            backgroundColor: Colors.K875,
+            backgroundColor: zoneBg,
             borderRadius: 12,
             paddingVertical: 12,
             paddingLeft: 20,

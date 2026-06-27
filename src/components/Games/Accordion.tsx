@@ -10,7 +10,6 @@ import {
   MapZone,
   useCardMap,
 } from "../Cards/CardMap";
-import { CardSelectColor } from "../Cards/Card";
 import { GameWrapper } from "../common/GameWrapper";
 
 type AccordionState = {
@@ -162,7 +161,7 @@ export default function Accordion() {
     return {
       onPress: () => onCardPress(index),
       isSelected: selectedIndex === index,
-      selectColor: selectColor(index) as CardSelectColor,
+      selectColor: selectColor(index),
       forceOverlayColor: true,
     };
   };

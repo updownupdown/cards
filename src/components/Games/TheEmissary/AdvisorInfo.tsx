@@ -1,4 +1,5 @@
 import { useFade } from "@/hooks/useFade";
+import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight, rgba } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
@@ -30,6 +31,7 @@ export const AdvisorInfo = ({
   advisorStyles,
   cardWidth,
 }: AdvisorInfoProps) => {
+  const { zoneBg } = useGameZoneBackground();
   const { isRendered: renderAdvisorInfo, opacity: advisorInfoOpacity } =
     useFade(!!selectedAdvisor || discardFromHand !== 0, 300);
 
@@ -85,7 +87,7 @@ export const AdvisorInfo = ({
           opacity: advisorInfoOpacity,
           borderRadius: cardWidth * 0.15,
           padding: cardWidth * 0.4,
-          backgroundColor: Colors.K875,
+          backgroundColor: zoneBg,
         },
       ]}
     >

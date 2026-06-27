@@ -823,7 +823,7 @@ export default function Solitaire() {
               {game.stock.length > 0 ? (
                 <Deck
                   backCount={Math.min(game.stock.length, 8)}
-                  cardsPerRow={7}
+                  cardWidth={5}
                 />
               ) : (
                 <Text style={styles.slotLabel}>Recycle</Text>
@@ -852,7 +852,7 @@ export default function Solitaire() {
                         : undefined
                     }
                   >
-                    <Card card={wasteTop} cardsPerRow={7} />
+                    <Card card={wasteTop} cardWidth={5} />
                   </View>
                 ) : (
                   <Text style={styles.slotLabel}>Waste</Text>
@@ -908,7 +908,7 @@ export default function Solitaire() {
                             : undefined
                         }
                       >
-                        <Card card={top} cardsPerRow={7} />
+                        <Card card={top} cardWidth={5} />
                       </View>
                     ) : (
                       <Text style={styles.slotLabel}>
@@ -986,7 +986,7 @@ export default function Solitaire() {
                       {...(dragHandlers ?? {})}
                     >
                       <View>
-                        <Card card={card} cardsPerRow={7} />
+                        <Card card={card} cardWidth={5} />
                       </View>
                     </View>
                   );
@@ -1016,7 +1016,7 @@ export default function Solitaire() {
                   { top: index * TABLEAU_GAP, zIndex: index + 1 },
                 ]}
               >
-                <Card card={card} cardsPerRow={7} />
+                <Card card={card} cardWidth={5} />
               </View>
             ))}
           </Animated.View>

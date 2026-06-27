@@ -1,4 +1,5 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
+import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
@@ -83,6 +84,7 @@ function anyFoundationPlayable(
 }
 
 export default function Calculation() {
+  const { zoneBg } = useGameZoneBackground();
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
 
   const [game, setGame] = useState<GameState>(setup(true));
@@ -448,7 +450,7 @@ export default function Calculation() {
             flexStyles.colCentered,
             getZoneStylesById(`foundation-${i}`),
             {
-              backgroundColor: Colors.K875,
+              backgroundColor: zoneBg,
               height: cardHeight / 2,
               padding: 10,
               marginTop: cardHeight,
