@@ -1,4 +1,4 @@
-import FortyThieves from "@/components/Games/_not-ready/FortyThieves";
+import FortyThieves from "@/components/Games/FortyThieves";
 
 export default function FortyThievesRoute() {
   return <FortyThieves />;

@@ -122,3 +122,5 @@ export const HomePadding = 20;
 export const HeaderButtonSize = 48;
 export const HeaderButtonIconSize = 26;
 export const HeaderHeight = HeaderButtonSize + ContentSidePadding;
+
+export const TabletBreakpoint = 768;

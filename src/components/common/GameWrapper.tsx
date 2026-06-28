@@ -4,33 +4,28 @@ import {
   normalizeGamePath,
   recordAttempt,
   recordResult,
-  } from "@/data/game-menu";
+} from "@/data/game-menu";
+import { GAME_THUMBNAIL_ASSETS } from "@/data/game-thumbnails";
+import { useResponsiveLayout } from "@/hooks/useResponsiveLayout";
 import { flexStyles } from "@/styles/flexStyles";
+import { menuStyles } from "@/styles/menuStyles";
 import {
-  Colors,
   ContentSidePadding,
   FontWeight,
   HeaderButtonIconSize,
   HeaderHeight,
   rgba,
-  } from "@/styles/styles";
-import { GAME_THUMBNAIL_ASSETS } from "@/data/game-thumbnails";
-import { router,
-  usePathname } from "expo-router";
-import React,
-  { useEffect,
-  useRef,
-  useState } from "react";
-import { Image,
-  View,
-} from "react-native";
+} from "@/styles/styles";
+import { router, usePathname } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
+import { Image, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button } from "../Button/Button";
 import GameModal from "../Modals/GameModal";
 import { GameIntro } from "./GameIntro";
 import { LoadingOverlay } from "./LoadingOverlay";
 import { ResetButton } from "./ResetButton";
 import { WinLoseBox } from "./WinLoseBox";
-import { menuStyles } from "@/styles/menuStyles";
 
 interface Props {
   isLoaded?: boolean;
@@ -78,6 +73,8 @@ export const GameWrapper = ({
 }: Props) => {
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);
+  const insets = useSafeAreaInsets();
+  const responsiveScale = useResponsiveLayout();
 
   const [showMenu, setShowMenu] = useState(false);
 
@@ -110,6 +107,7 @@ export const GameWrapper = ({
   const backgroundColor = gameInfo.cardColorBg;
   const backgroundSource = GAME_THUMBNAIL_ASSETS[gameInfo.thumbnail];
   const overlayColor = lightenHexColor(backgroundColor, 0.2);
+  const headerHeight = Math.round(HeaderHeight * responsiveScale) + insets.top;
 
   return (
     <>
@@ -156,7 +154,6 @@ export const GameWrapper = ({
         />
 
         <View
-          pointerEvents="none"
           style={{
             position: "absolute",
             zIndex: 1,
@@ -165,6 +162,7 @@ export const GameWrapper = ({
             bottom: 0,
             left: 0,
             backgroundColor: rgba(overlayColor, 0.45),
+            pointerEvents: "none",
           }}
         />
 
@@ -176,9 +174,16 @@ export const GameWrapper = ({
               ...flexStyles.rowCentered,
               justifyContent: "space-between",
               width: "100%",
-              height: HeaderHeight,
-              paddingVertical: ContentSidePadding,
-              paddingHorizontal: ContentSidePadding * 0.75,
+              height: headerHeight,
+              paddingTop:
+                insets.top +
+                Math.round(ContentSidePadding * responsiveScale * 0.3),
+              paddingBottom: Math.round(
+                ContentSidePadding * responsiveScale * 0.5,
+              ),
+              paddingHorizontal: Math.round(
+                ContentSidePadding * responsiveScale * 0.75,
+              ),
               backgroundColor: "transparent",
             },
           ]}
@@ -190,7 +195,7 @@ export const GameWrapper = ({
             }}
             iconName={"arrow-back"}
             iconColor={titleColor}
-            iconSize={22}
+            iconSize={Math.round(HeaderButtonIconSize * responsiveScale)}
           />
 
           <Text
@@ -198,7 +203,7 @@ export const GameWrapper = ({
             ellipsizeMode="tail"
             style={[
               {
-                fontSize: 14,
+                fontSize: Math.round(14 * responsiveScale),
                 fontFamily: FontWeight[300],
                 color: titleColor,
                 flex: 1,
@@ -217,7 +222,7 @@ export const GameWrapper = ({
               onPress={handleUndo}
               iconName="undo"
               iconColor={canUndo ? titleColor : rgba(titleColor, 0.35)}
-              iconSize={HeaderButtonIconSize}
+              iconSize={Math.round(HeaderButtonIconSize * responsiveScale)}
               disabled={!canUndo}
             />
           )}
@@ -234,7 +239,7 @@ export const GameWrapper = ({
             onPress={() => setShowMenu(true)}
             iconName="menu"
             iconColor={titleColor}
-            iconSize={HeaderButtonIconSize}
+            iconSize={Math.round(HeaderButtonIconSize * responsiveScale)}
           />
         </View>
 

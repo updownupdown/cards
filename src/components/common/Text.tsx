@@ -1,25 +1,9 @@
 import { HexColor } from "@/data/games-data";
-import { Colors, FontWeight } from "@/styles/styles";
+import { Colors, FontWeight as FontFamilies } from "@/styles/styles";
+import { useResponsiveLayout } from "@/hooks/useResponsiveLayout";
 import { forwardRef } from "react";
-import { PixelRatio, Text as RNText, useWindowDimensions } from "react-native";
+import { Text as RNText } from "react-native";
 import type { TextProps as RNTextProps } from "react-native";
-
-// Base width from iPhone 11
-const BASE_WIDTH = 375;
-
-const moderateScale = (size: number, screenWidth: number, factor = 0.5) => {
-  const widthScale = screenWidth / BASE_WIDTH;
-  return size + (widthScale * size - size) * factor;
-};
-
-export const responsiveFontSize = (
-  fontSize: number,
-  factor = 0.5,
-  screenWidth = BASE_WIDTH,
-) => {
-  const newSize = moderateScale(fontSize, screenWidth, factor);
-  return Math.round(PixelRatio.roundToNearestPixel(newSize));
-};
 
 export const Typography = {
   size: {
@@ -32,20 +16,20 @@ export const Typography = {
     xxl: 24,
   },
   fontFamily: {
-    200: FontWeight[200],
-    300: FontWeight[300],
-    400: FontWeight[400],
-    500: FontWeight[500],
-    600: FontWeight[600],
-    700: FontWeight[700],
-    regular: FontWeight[400],
-    medium: FontWeight[500],
-    semibold: FontWeight[600],
-    bold: FontWeight[700],
+    200: FontFamilies[200],
+    300: FontFamilies[300],
+    400: FontFamilies[400],
+    500: FontFamilies[500],
+    600: FontFamilies[600],
+    700: FontFamilies[700],
+    regular: FontFamilies[400],
+    medium: FontFamilies[500],
+    semibold: FontFamilies[600],
+    bold: FontFamilies[700],
   },
 };
 
-export type FontWeight = keyof typeof Typography.fontFamily;
+export type TextWeight = keyof typeof Typography.fontFamily;
 export type TextSize = keyof typeof Typography.size;
 
 export const setOpacity = (hex: string, alpha: number) =>
@@ -57,7 +41,7 @@ export interface TextProps extends RNTextProps {
   color?: string | HexColor;
   size?: TextSize | number;
   lineHeight?: number;
-  weight?: FontWeight;
+  weight?: TextWeight;
   dimRate?: `${number}%`;
   textTransform?: "none" | "capitalize" | "uppercase" | "lowercase";
 }
@@ -75,10 +59,15 @@ export const Text = forwardRef<React.ElementRef<typeof RNText>, TextProps>(
       color = Colors.K200,
       ...otherProps
     } = props;
+    const responsiveScale = useResponsiveLayout();
 
     const getFontSize = () => {
-      if (typeof size === "number") return size;
-      return Typography.size[size] || Typography.size["md"];
+      const baseSize =
+        typeof size === "number"
+          ? size
+          : (Typography.size[size] ?? Typography.size["md"]);
+
+      return baseSize * responsiveScale;
     };
 
     const getLineHeight = () => {

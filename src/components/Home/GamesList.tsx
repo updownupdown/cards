@@ -4,26 +4,21 @@ import {
   loadRecentlyPlayedGames,
   toggleFavoriteGame,
 } from "@/data/game-menu";
-import {
-  GameCategory,
-  GameCategoryNames,
-  GameMenuInfo,
-  GAMES_DATA,
-} from "@/data/games-data";
+import { GameCategory, GameMenuInfo, GAMES_DATA } from "@/data/games-data";
+import { useResponsiveLayout } from "@/hooks/useResponsiveLayout";
 import { Icon, type IconName } from "@/icons";
-import { Colors, HomePadding } from "@/styles/styles";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Colors, HomePadding, MaxContentWidth, rgba } from "@/styles/styles";
+import { useEffect, useRef, useState } from "react";
 import {
   LayoutChangeEvent,
   NativeSyntheticEvent,
   NativeScrollEvent,
   Pressable,
   ScrollView,
-  StyleSheet,
   View,
 } from "react-native";
-import { LargeHomeCard, SmallHomeCard } from "./HomeCards";
-
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { HomeCard } from "./HomeCard";
 type CardVariant = "small" | "large";
 
 export type HomeSectionKey = GameCategory | "favorites" | "recent";
@@ -47,6 +42,9 @@ type GamesListProps = {
 };
 
 export const GamesList = ({ tabs }: GamesListProps) => {
+  const insets = useSafeAreaInsets();
+  const responsiveScale = useResponsiveLayout();
+
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [recentPaths, setRecentPaths] = useState<string[]>([]);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
@@ -55,6 +53,9 @@ export const GamesList = ({ tabs }: GamesListProps) => {
   const pagerRef = useRef<ScrollView>(null);
   const isProgrammaticTabScrollRef = useRef(false);
   const programmaticTargetIndexRef = useRef<number | null>(null);
+
+  const tabGap = Math.round(6 * responsiveScale);
+  const tabWrapPadding = Math.max(8, tabGap);
 
   useEffect(() => {
     let cancelled = false;
@@ -104,23 +105,6 @@ export const GamesList = ({ tabs }: GamesListProps) => {
     return gameList;
   };
 
-  const tabsWithVisibleSections = useMemo(
-    () =>
-      tabs.map((tab) => {
-        const sections = tab.sections
-          .map((section) => ({
-            section,
-            gameList: getGamesForSection(section),
-          }))
-          .filter((entry) => entry.gameList.length > 0);
-        return {
-          ...tab,
-          sections,
-        };
-      }),
-    [favorites, recentPaths, tabs],
-  );
-
   const renderGamesCategory = (
     section: HomeSectionConfig,
     gameList: [string, GameMenuInfo][],
@@ -128,62 +112,55 @@ export const GamesList = ({ tabs }: GamesListProps) => {
     if (gameList.length === 0) return null;
 
     return (
-      <View key={`section-${section.key}`} style={[{ gap: 10 }]}>
+      <View
+        key={`section-${section.key}`}
+        style={[
+          {
+            width: "100%",
+            maxWidth: MaxContentWidth * responsiveScale,
+            gap: 10 * responsiveScale,
+          },
+        ]}
+      >
+        {/* —— Category Title ——————————————————————————————————————————————————————————————— */}
         <Text
           style={[
             {
-              alignItems: "flex-start",
-              paddingLeft: HomePadding,
-              paddingTop: HomePadding * 1.5,
-              paddingBottom: 6,
+              paddingTop: HomePadding * 2 * responsiveScale,
+              paddingBottom: 6 * responsiveScale,
             },
           ]}
           weight={300}
           size="sm"
           textTransform={"uppercase"}
-          color={Colors.K500}
+          color={Colors.K400}
         >
           {section.title}
         </Text>
 
-        {section.variant === "small" ? (
-          <View style={styles.smallCardGrid}>
-            {gameList.map(([path, game], index) => {
-              if (index === 0 && section.firstCardLarge) {
-                return (
-                  <LargeHomeCard
-                    key={path}
-                    path={path}
-                    game={game}
-                    onToggleFavorite={onToggleFavorite}
-                    isFavorite={favorites.has(path)}
-                  />
-                );
+        {/* —— Category Cards ——————————————————————————————————————————————————————————————— */}
+        <View
+          style={[
+            {
+              flexDirection: "column",
+              gap: 14 * responsiveScale,
+            },
+          ]}
+        >
+          {gameList.map(([path, game], index) => (
+            <HomeCard
+              key={path}
+              path={path}
+              game={game}
+              onToggleFavorite={onToggleFavorite}
+              isFavorite={favorites.has(path)}
+              isLarge={
+                section.variant === "large" ||
+                (index === 0 && section.firstCardLarge)
               }
-              return (
-                <SmallHomeCard
-                  key={path}
-                  path={path}
-                  game={game}
-                  onToggleFavorite={onToggleFavorite}
-                  isFavorite={favorites.has(path)}
-                />
-              );
-            })}
-          </View>
-        ) : (
-          <View style={styles.cardList}>
-            {gameList.map(([path, game]) => (
-              <LargeHomeCard
-                key={path}
-                path={path}
-                game={game}
-                onToggleFavorite={onToggleFavorite}
-                isFavorite={favorites.has(path)}
-              />
-            ))}
-          </View>
-        )}
+            />
+          ))}
+        </View>
       </View>
     );
   };
@@ -249,7 +226,10 @@ export const GamesList = ({ tabs }: GamesListProps) => {
   };
 
   return (
-    <View style={styles.container} onLayout={onContainerLayout}>
+    <View
+      style={[{ flex: 1, overflow: "visible" }]}
+      onLayout={onContainerLayout}
+    >
       <ScrollView
         ref={pagerRef}
         horizontal
@@ -259,17 +239,35 @@ export const GamesList = ({ tabs }: GamesListProps) => {
         onScrollEndDrag={(event) => syncTabFromOffset(event, true)}
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={16}
-        style={styles.pager}
+        style={{ flex: 1 }}
       >
-        {tabsWithVisibleSections.map((tab) => (
+        {/* —— Tabs Content ——————————————————————————————————————————————————————————————— */}
+        {tabs.map((tab) => (
           <ScrollView
             key={tab.key}
-            style={[styles.page, { width: pagerWidth || "100%" }]}
-            contentContainerStyle={styles.pageContent}
+            style={[{ flex: 1, width: pagerWidth || "100%" }]}
+            contentContainerStyle={[
+              {
+                paddingHorizontal: HomePadding * responsiveScale,
+                paddingTop: HomePadding * 1.5 * responsiveScale,
+                paddingBottom: HomePadding * 2 * responsiveScale,
+                flexGrow: 1,
+                alignItems: "center",
+              },
+            ]}
             showsVerticalScrollIndicator={false}
           >
             {tab.sections.length === 0 ? (
-              <View style={styles.emptySection}>
+              <View
+                style={[
+                  {
+                    width: "100%",
+                    paddingTop: 32 * responsiveScale,
+                    maxWidth: MaxContentWidth * responsiveScale,
+                    alignItems: "center",
+                  },
+                ]}
+              >
                 <Text size="sm" color={Colors.K500}>
                   {tab.key === "home"
                     ? "No recent or favorite games yet."
@@ -277,32 +275,62 @@ export const GamesList = ({ tabs }: GamesListProps) => {
                 </Text>
               </View>
             ) : (
-              tab.sections.map(({ section, gameList }) =>
-                renderGamesCategory(section, gameList),
+              tab.sections.map((section) =>
+                renderGamesCategory(section, getGamesForSection(section)),
               )
             )}
           </ScrollView>
         ))}
       </ScrollView>
 
-      <View style={styles.tabBarWrap}>
-        <View style={styles.tabBar}>
-          {tabsWithVisibleSections.map((tab, index) => {
+      {/* —— Tab Bar ——————————————————————————————————————————————————————————————— */}
+      <View
+        style={[
+          {
+            paddingTop: tabWrapPadding * responsiveScale,
+            paddingBottom: (insets.bottom + tabWrapPadding) * responsiveScale,
+            width: "100%",
+            flexDirection: "row",
+            justifyContent: "center",
+            backgroundColor: Colors.K900,
+          },
+        ]}
+      >
+        <View
+          style={[
+            {
+              flexDirection: "row",
+              width: MaxContentWidth * responsiveScale,
+            },
+          ]}
+        >
+          {tabs.map((tab, index) => {
             const isActive = activeTabIndex === index;
             return (
               <Pressable
                 key={`tab-${tab.key}`}
                 onPress={() => goToTab(index)}
-                style={[styles.tabButton, isActive && styles.tabButtonActive]}
+                style={[
+                  {
+                    gap: tabGap * responsiveScale,
+                    paddingVertical: tabGap * responsiveScale,
+                    borderRadius: tabGap * responsiveScale * 1.5,
+                    flex: 1,
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  },
+                  isActive && { backgroundColor: rgba(Colors.K700, 0.4) },
+                ]}
               >
                 <Icon
                   name={tab.iconName}
-                  size={28}
+                  size={Math.round(30 * responsiveScale)}
                   color={isActive ? Colors.K100 : Colors.K500}
                 />
                 <Text
                   size="xs"
-                  weight={500}
+                  weight={400}
                   color={isActive ? Colors.K100 : Colors.K500}
                   textTransform="uppercase"
                 >
@@ -316,56 +344,3 @@ export const GamesList = ({ tabs }: GamesListProps) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  pager: {
-    flex: 1,
-  },
-  page: {
-    flex: 1,
-  },
-  pageContent: {
-    paddingHorizontal: HomePadding,
-    paddingBottom: HomePadding,
-  },
-  emptySection: {
-    paddingTop: HomePadding * 2,
-    alignItems: "center",
-  },
-  smallCardGrid: {
-    flexDirection: "column",
-    alignItems: "stretch",
-    rowGap: 10,
-  },
-  cardList: {
-    gap: 26,
-  },
-  tabBarWrap: {
-    paddingHorizontal: HomePadding,
-    paddingBottom: HomePadding,
-    paddingTop: HomePadding * 0.5,
-    backgroundColor: Colors.background,
-  },
-  tabBar: {
-    flexDirection: "row",
-    backgroundColor: Colors.K875,
-    borderRadius: 16,
-    padding: 6,
-    gap: 6,
-  },
-  tabButton: {
-    flex: 1,
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 6,
-    borderRadius: 12,
-    paddingVertical: 10,
-  },
-  tabButtonActive: {
-    backgroundColor: Colors.K800,
-  },
-});

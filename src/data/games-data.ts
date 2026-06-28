@@ -13,33 +13,15 @@ export const GameCategoryNames: Record<GameCategory, string> = {
   [GameCategory.Beta]: "Beta",
 };
 
-export type Percentage = number;
-
 export type HexColor = `#${string}`;
 
 export type GameStats = {
-  complexity: Percentage;
-  difficulty: Percentage;
-  luck: Percentage;
+  complexity: number;
+  difficulty: number;
+  luck: number;
 };
 
 const DEFAULT_GAME_THUMBNAIL: GameThumbnailName = "MonteCarlo.jpg";
-
-function clampPercentage(value: number): Percentage {
-  return Math.max(0, Math.min(100, Math.round(value)));
-}
-
-function makeStats(
-  complexity: number,
-  difficulty: number,
-  luck: number,
-): GameStats {
-  return {
-    complexity: clampPercentage(complexity),
-    difficulty: clampPercentage(difficulty),
-    luck: clampPercentage(luck),
-  };
-}
 
 export type GameMenuInfo = {
   title: string;
@@ -70,7 +52,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#ffbcdd",
     cardDescription:
       "A two-wave defense puzzle where each choice of defender can save or sink your final stand.",
-    stats: makeStats(70, 70, 30),
+    stats: {
+      complexity: 70,
+      difficulty: 70,
+      luck: 30,
+    },
     category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     briefRules: [
@@ -100,7 +86,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#c6ffd5",
     cardDescription:
       "Build clever three-card sandwiches with evenly spaced ranks to keep your ingredient engine running.",
-    stats: makeStats(20, 80, 40),
+    stats: {
+      complexity: 20,
+      difficulty: 80,
+      luck: 40,
+    },
     category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     briefRules: [
@@ -129,7 +119,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#fcd3c2",
     cardDescription:
       "Survive a tight cabin siege by placing cards strategically to unlock zombie eliminations.",
-    stats: makeStats(75, 50, 20),
+    stats: {
+      complexity: 75,
+      difficulty: 50,
+      luck: 20,
+    },
     category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     briefRules: [
@@ -160,7 +154,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#d8e2ff",
     cardDescription:
       "Develop a volatile 4x4 city grid where each new card can flip entire districts.",
-    stats: makeStats(30, 50, 40),
+    stats: {
+      complexity: 30,
+      difficulty: 50,
+      luck: 40,
+    },
     category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     briefRules: [
@@ -189,7 +187,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#b3d5ec",
     cardDescription:
       "Draft from a shifting market to engineer long suit-based routes across a growing grid.",
-    stats: makeStats(90, 65, 50),
+    stats: {
+      complexity: 90,
+      difficulty: 65,
+      luck: 50,
+    },
     category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     briefRules: [
@@ -216,7 +218,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#d5abfc",
     cardDescription:
       "Win exactly the right number of debates in each kingdom while managing one-time advisors.",
-    stats: makeStats(70, 60, 30),
+    stats: {
+      complexity: 70,
+      difficulty: 60,
+      luck: 30,
+    },
     category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     // enabled: false,
@@ -244,7 +250,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#dff0a4",
     cardDescription:
       "Fulfill layered card orders by sequencing stacks before your available moves dry up.",
-    stats: makeStats(30, 40, 55),
+    stats: {
+      complexity: 30,
+      difficulty: 40,
+      luck: 55,
+    },
     category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     briefRules: [
@@ -261,7 +271,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#c4f1e7",
     cardDescription:
       "Build and convert rank-restricted stacks, timing key turns to lock in powerful scores.",
-    stats: makeStats(60, 60, 30),
+    stats: {
+      complexity: 60,
+      difficulty: 60,
+      luck: 30,
+    },
     category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     briefRules: [
@@ -279,7 +293,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#91f1e9",
     cardDescription:
       "Carefully uncover buried cards without trapping crucial reveals behind dead stacks.",
-    stats: makeStats(20, 65, 65),
+    stats: {
+      complexity: 20,
+      difficulty: 65,
+      luck: 65,
+    },
     category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     briefRules: [
@@ -297,7 +315,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#ffdcce",
     cardDescription:
       "Capture scoring loop cards while preserving momentum and avoiding disruptive breaks.",
-    stats: makeStats(50, 45, 60),
+    stats: {
+      complexity: 50,
+      difficulty: 45,
+      luck: 60,
+    },
     category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
     briefRules: [
@@ -318,7 +340,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#c6d3e9",
     cardDescription:
       "Match adjacent ranks, collapse the grid, and keep clearing until every card is gone.",
-    stats: makeStats(10, 30, 50),
+    stats: {
+      complexity: 10,
+      difficulty: 30,
+      luck: 50,
+    },
     category: GameCategory.ClassicSolitaire,
     briefRules: [
       "Flip over any adjacent, equal-rank pairs.",
@@ -335,7 +361,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#e0cfff",
     cardDescription:
       "Build four mathematical foundations with different step patterns from a shared stock.",
-    stats: makeStats(80, 90, 60),
+    stats: {
+      complexity: 80,
+      difficulty: 90,
+      luck: 60,
+    },
     category: GameCategory.ClassicSolitaire,
     briefRules: [
       "Build four foundations with increasing step intervals of 1, 2, 3, and 4.",
@@ -353,7 +383,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#ffcff3",
     cardDescription:
       "Compress a wide spread of cards by jumping matches one or three positions left.",
-    stats: makeStats(10, 35, 65),
+    stats: {
+      complexity: 10,
+      difficulty: 35,
+      luck: 65,
+    },
     category: GameCategory.ClassicSolitaire,
     briefRules: [
       "Move a card onto another card 1 or 3 spaces to its left, if their suit or rank matches.",
@@ -370,7 +404,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#fff2db",
     cardDescription:
       "Strip each suit down to its ace by discarding weaker visible cards at the right time.",
-    stats: makeStats(15, 80, 80),
+    stats: {
+      complexity: 15,
+      difficulty: 80,
+      luck: 80,
+    },
     category: GameCategory.ClassicSolitaire,
     enabled: true,
     briefRules: [
@@ -388,7 +426,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#beffdb",
     cardDescription:
       "Chain tableau plays up or down in rank and use limited stock draws to finish the course.",
-    stats: makeStats(15, 50, 70),
+    stats: {
+      complexity: 15,
+      difficulty: 50,
+      luck: 70,
+    },
     category: GameCategory.ClassicSolitaire,
     briefRules: [
       "Play only top tableau cards one rank up or down from waste top.",
@@ -405,7 +447,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#DABE9B",
     cardDescription:
       "Reveal and place cards by rank around the dial, hoping the final kings arrive late.",
-    stats: makeStats(10, 10, 100),
+    stats: {
+      complexity: 10,
+      difficulty: 10,
+      luck: 100,
+    },
     category: GameCategory.ClassicSolitaire,
     briefRules: [
       "Place revealed cards to matching clock positions by rank.",
@@ -425,9 +471,13 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#DDEBFF",
     cardDescription:
       "A highly strategic open-information solitaire where careful sequence management wins.",
-    stats: makeStats(79, 73, 16),
+    stats: {
+      complexity: 79,
+      difficulty: 73,
+      luck: 16,
+    },
     category: GameCategory.ClassicSolitaire,
-    enabled: false,
+    // enabled: false,
     briefRules: [
       "Move all cards to the foundations from Ace up to King by suit.",
       "Build tableau columns down by alternating colors.",
@@ -442,9 +492,13 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#F5E6FF",
     cardDescription:
       "Build descending tableau runs and complete full suited sequences from king to ace.",
-    stats: makeStats(74, 69, 38),
+    stats: {
+      complexity: 74,
+      difficulty: 69,
+      luck: 38,
+    },
     category: GameCategory.ClassicSolitaire,
-    enabled: false,
+    // enabled: false,
     briefRules: [
       "Build cards down by rank in tableau columns.",
       "Complete full King to Ace suit runs to clear them.",
@@ -459,7 +513,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#FFEACC",
     cardDescription:
       "Dismantle the pyramid by pairing exposed cards to thirteen with careful stock timing.",
-    stats: makeStats(52, 49, 62),
+    stats: {
+      complexity: 52,
+      difficulty: 49,
+      luck: 62,
+    },
     category: GameCategory.ClassicSolitaire,
     enabled: false,
     briefRules: [
@@ -476,7 +534,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#E4F4FF",
     cardDescription:
       "Clear three peaks by making one-rank moves and preserving long scoring runs.",
-    stats: makeStats(48, 44, 64),
+    stats: {
+      complexity: 48,
+      difficulty: 44,
+      luck: 64,
+    },
     category: GameCategory.ClassicSolitaire,
     enabled: false,
     briefRules: [
@@ -493,9 +555,13 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#EEF0FF",
     cardDescription:
       "Classic Klondike pacing with alternating tableau builds and foundation progression.",
-    stats: makeStats(57, 52, 58),
+    stats: {
+      complexity: 57,
+      difficulty: 52,
+      luck: 58,
+    },
     category: GameCategory.ClassicSolitaire,
-    enabled: false,
+    // enabled: false,
     briefRules: [
       "Move all cards to the four foundations by suit from Ace to King.",
       "Build tableau piles in descending rank with alternating colors.",
@@ -510,7 +576,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#FFE4E8",
     cardDescription:
       "Manipulate long face-up runs to assemble four full same-suit king-to-ace sequences.",
-    stats: makeStats(68, 63, 47),
+    stats: {
+      complexity: 68,
+      difficulty: 63,
+      luck: 47,
+    },
     category: GameCategory.ClassicSolitaire,
     enabled: false,
     briefRules: [
@@ -527,7 +597,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#E4F6FF",
     cardDescription:
       "A constrained reserve-driven solitaire where planning around the base rank is key.",
-    stats: makeStats(73, 68, 45),
+    stats: {
+      complexity: 73,
+      difficulty: 68,
+      luck: 45,
+    },
     category: GameCategory.ClassicSolitaire,
     enabled: false,
     briefRules: [
@@ -544,9 +618,13 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#E7F6FF",
     cardDescription:
       "Build by suit from the beak rank while using reserve cards to unlock frozen lines.",
-    stats: makeStats(77, 71, 31),
+    stats: {
+      complexity: 77,
+      difficulty: 71,
+      luck: 31,
+    },
     category: GameCategory.ClassicSolitaire,
-    enabled: false,
+    // enabled: false,
     briefRules: [
       "Build foundations by suit upward from the beak rank.",
       "Build tableau down by suit, filling empties with valid continuation cards.",
@@ -561,7 +639,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     cardColorText: "#EFE8FF",
     cardDescription:
       "A strict one-card-move solitaire that rewards patience and precise tableau control.",
-    stats: makeStats(66, 62, 52),
+    stats: {
+      complexity: 66,
+      difficulty: 62,
+      luck: 52,
+    },
     category: GameCategory.ClassicSolitaire,
     enabled: false,
     briefRules: [

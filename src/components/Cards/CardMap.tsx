@@ -1,11 +1,15 @@
 import { cardDims, PlayingCard } from "@/components/Cards/card-utils";
+import { GAMES_DATA } from "@/data/games-data";
+import { useResponsiveLayout } from "@/hooks/useResponsiveLayout";
 import {
   HeaderHeight,
   MaxContentHeight,
   MaxContentWidth,
 } from "@/styles/styles";
+import { usePathname } from "expo-router";
 import { useMemo } from "react";
 import { useWindowDimensions, ViewStyle } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   AnimatedCard,
   AnimatedCardMapping,
@@ -18,8 +22,6 @@ import {
 } from "./CardMapBackgrounds";
 import { CardMapVisualizer } from "./CardMapVisualizer";
 import { CardSizes } from "./CardStyles";
-import { GAMES_DATA } from "@/data/games-data";
-import { usePathname } from "expo-router";
 
 export type CardPosition = {
   x: number;
@@ -106,6 +108,8 @@ export function useCardMap({
 }: MapConfig) {
   const pathname = usePathname();
   const customBack = GAMES_DATA[pathname]?.cardBack;
+  const insets = useSafeAreaInsets();
+  const responsiveScale = useResponsiveLayout();
 
   const { width: screenWidthActual, height: screenHeightActual } =
     useWindowDimensions();
@@ -119,12 +123,12 @@ export function useCardMap({
           (z) => (z.col || 0) + (z.width === "full" ? 1 : (z.width ?? 1)),
         ),
       ),
-    [screenWidthActual],
+    [zones],
   );
 
   const gridRows = useMemo(
     () => Math.max(...zones.map((z) => (z.row || 0) + (z.height || 1))),
-    [screenWidthActual],
+    [zones],
   );
 
   const {
@@ -138,11 +142,21 @@ export function useCardMap({
     gridHeight,
     gridHeightPadded,
   } = useMemo(() => {
-    const containerWidth = Math.min(screenWidthActual, MaxContentWidth);
-    const containerHeight = Math.min(
-      screenHeightActual - HeaderHeight,
-      MaxContentHeight - HeaderHeight,
+    const headerHeight =
+      Math.round(HeaderHeight * responsiveScale) + insets.top;
+    const screenBoardHeight = Math.max(screenHeightActual - headerHeight, 0);
+
+    const containerWidth = Math.min(
+      screenWidthActual,
+      MaxContentWidth * responsiveScale,
     );
+    const containerHeight = Math.min(
+      screenBoardHeight,
+      Math.max(MaxContentHeight * responsiveScale - headerHeight, 0),
+    );
+
+    const widthMargin = (screenWidthActual - containerWidth) / 2;
+    const heightMargin = (screenBoardHeight - containerHeight) / 2;
 
     const gapYUnits = gap * cardDims.aspectRatio;
 
@@ -176,9 +190,12 @@ export function useCardMap({
     const gridHeightPadded = gridHeight - paddingY;
 
     // Perfect Centering: Divide remaining screen space evenly
-    const offsetX = (containerWidth - gridWidth) / 2 + paddingLeft * cardWidth;
+    const offsetX =
+      widthMargin + (containerWidth - gridWidth) / 2 + paddingLeft * cardWidth;
     const offsetY =
-      (containerHeight - gridHeight) / 2 + paddingTop * cardHeight;
+      heightMargin +
+      (containerHeight - gridHeight) / 2 +
+      paddingTop * cardHeight;
 
     return {
       cardWidth,
@@ -191,7 +208,21 @@ export function useCardMap({
       gridHeight,
       gridHeightPadded,
     };
-  }, [screenWidthActual]);
+  }, [
+    fixedCols,
+    fixedRows,
+    gap,
+    gridCols,
+    gridRows,
+    insets.top,
+    paddingBottom,
+    paddingLeft,
+    paddingRight,
+    paddingTop,
+    responsiveScale,
+    screenHeightActual,
+    screenWidthActual,
+  ]);
 
   const getZoneBasePos = (zone: MapZone) => {
     const zWidth = zone.width === "full" ? 1 : (zone.width ?? 1);

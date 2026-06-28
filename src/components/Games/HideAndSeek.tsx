@@ -60,7 +60,7 @@ function dealPlaymates(faceCards: PlayingCard[]) {
 
   // Find a partition of 4 columns where each column has J/Q/K with distinct suits
   for (let attempt = 0; attempt < 100; attempt += 1) {
-    const cols: Array<[PlayingCard, PlayingCard, PlayingCard]> = [];
+    const cols: [PlayingCard, PlayingCard, PlayingCard][] = [];
     const qPool = shuffle(queens);
     const kPool = shuffle(kings);
 
@@ -121,7 +121,7 @@ function setup(): GameState {
 
   return {
     playmates,
-    guesses: Array.from({ length: 14 }, (_, i) => null),
+    guesses: Array.from({ length: 14 }, () => null),
     draw: drawPile,
     discard: [],
     scorePile: [],
@@ -144,94 +144,60 @@ export default function HideAndSeek() {
     useUndoHistory<GameSnapshot>();
   const handleUndo = () => {
     const previousState = undo();
-    if (previousState) {
-      setGame(previousState.game);
-    }
+    if (previousState) setGame(previousState.game);
   };
 
-  async function placeGuess(guessIndex: number) {
-    // Calculate game state
-    let newDrawPile = [...game.draw];
+  // ── Game logic ────────────────────────────────────────────────────────────────
+  function placeGuess(guessIndex: number) {
+    const newDrawPile = [...game.draw];
     const topDrawCard = top(newDrawPile);
-
     if (game.ended || !topDrawCard) return;
 
     saveUndoState(structuredClone({ game }));
 
-    newDrawPile = newDrawPile.slice(0, -1);
-
-    let newGuesses = [...game.guesses];
-    newGuesses[guessIndex] = topDrawCard;
-
-    const newGame: GameState = {
+    setGame({
       ...game,
-      guesses: newGuesses,
-      draw: newDrawPile,
-    };
-
-    // Update game
-    setGame(newGame);
+      guesses: game.guesses.map((g, i) => (i === guessIndex ? topDrawCard : g)),
+      draw: newDrawPile.slice(0, -1),
+    });
   }
 
-  async function widthdrawGuess(guessIndex: number) {
-    // Calculate game state
-    let newDrawPile = [...game.draw];
+  function widthdrawGuess(guessIndex: number) {
+    const newDrawPile = [...game.draw];
     const topDrawCard = top(newDrawPile);
     const guessCard = game.guesses[guessIndex];
-
     if (game.ended || !topDrawCard || !guessCard) return;
 
     saveUndoState(structuredClone({ game }));
-
-    newDrawPile = newDrawPile.slice(0, -1);
-
-    let newGuesses = [...game.guesses];
-    newGuesses[guessIndex] = null;
-
-    let newDiscardPile = [...game.discard];
-    newDiscardPile.push({ ...topDrawCard, faceUp: false });
-    newDiscardPile.push({ ...guessCard, faceUp: false });
-
-    const newGame: GameState = {
+    setGame({
       ...game,
-      guesses: newGuesses,
-      draw: newDrawPile,
-      discard: newDiscardPile,
-    };
-
-    // Update game
-    setGame(newGame);
+      guesses: game.guesses.map((g, i) => (i === guessIndex ? null : g)),
+      draw: newDrawPile.slice(0, -1),
+      discard: [
+        ...game.discard,
+        { ...topDrawCard, faceUp: false },
+        { ...guessCard, faceUp: false },
+      ],
+    });
   }
 
-  async function revealPlaymate(playmateIndex: number) {
-    // Calculate game state
+  function revealPlaymate(playmateIndex: number) {
     const playmate = game.playmates[playmateIndex];
-
     if (game.ended || !playmate) return;
 
     saveUndoState(structuredClone({ game }));
 
-    let newPlaymates = [...game.playmates];
-    newPlaymates[playmateIndex] = { ...playmate, faceUp: true };
+    const newPlaymates = game.playmates.map((p, i) =>
+      i === playmateIndex ? { ...p, faceUp: true } : p,
+    );
 
-    let newGame: GameState = {
-      ...game,
-      playmates: newPlaymates,
-    };
-
-    // Update game
-    setGame(newGame);
-
-    // Score cards
-    let scoredCardsAtIndexes: { card: PlayingCard; index: number }[] = [];
-    let scoredIndexes = getScoreIndexes(playmateIndex);
-    let newGuesses = [...game.guesses];
-    let newScorePile = [...game.scorePile];
+    const scoredIndexes = getScoreIndexes(playmateIndex);
+    const newGuesses = [...game.guesses];
+    const newScorePile = [...game.scorePile];
 
     scoredIndexes.forEach((index) => {
       const guessAtIndex = game.guesses[index];
       if (guessAtIndex?.suit === playmate.suit) {
-        scoredCardsAtIndexes.push({ card: guessAtIndex, index });
         newScorePile.push({ ...guessAtIndex, faceUp: false });
         newGuesses[index] = null;
       }
@@ -239,44 +205,42 @@ export default function HideAndSeek() {
 
     // Check for win/lose conditions
     const hasFaceDownPlaymates = newPlaymates.some((c) => !c.faceUp);
-    let newWon: boolean = game.won;
     let newEnded: boolean = game.ended;
-    let newWinLoseMessage = game.winLoseMessage;
+    let newWon: boolean = game.won;
+    let newWinLoseMessage: string = game.winLoseMessage;
 
     if (!hasFaceDownPlaymates) {
       newEnded = true;
-      const score = game.scorePile.length;
+      const score = newScorePile.length;
       newWon = score >= 20;
       newWinLoseMessage = `You scored ${score} (20 to win)`;
     }
 
-    newGame = {
-      ...newGame,
-      won: newWon,
-      ended: newEnded,
+    setGame({
+      ...game,
       playmates: newPlaymates,
-      winLoseMessage: newWinLoseMessage,
-      scorePile: newScorePile,
       guesses: newGuesses,
-    };
-
-    // Update game
-    setGame(newGame);
+      scorePile: newScorePile,
+      ended: newEnded,
+      won: newWon,
+      winLoseMessage: newWinLoseMessage,
+    });
   }
 
-  // ========== Card Mapping ========== //
+  // ── Card Mapping ─────────────────────────────────────────────────────────────
+
   const zones: MapZone[] = useMemo(() => {
     const guessZones: MapZone[] = guessZonesColRows.map((pos, i) => ({
       id: `guess-${i}`,
       pileIndex: i,
       cards: game.guesses[i] ? [game.guesses[i]] : undefined,
       name: "guess",
-
       col: pos.c,
       row: pos.r,
       baseZIndex: 20,
       placeholder: {},
     }));
+
     const playmatesZones: MapZone[] = getGridColRows({
       cols: 4,
       rows: 3,
@@ -287,7 +251,6 @@ export default function HideAndSeek() {
       pileIndex: i,
       cards: game.playmates[i] ? [game.playmates[i]] : undefined,
       name: "playmate",
-
       col: pos.c,
       row: pos.r,
       baseZIndex: 1,
@@ -298,7 +261,6 @@ export default function HideAndSeek() {
       {
         id: "draw",
         name: "draw",
-
         cards: game.draw,
         col: 1,
         row: 0,
@@ -309,7 +271,6 @@ export default function HideAndSeek() {
       {
         id: "discard",
         name: "discard",
-
         cards: game.discard,
         col: 3,
         row: 0,
@@ -320,7 +281,6 @@ export default function HideAndSeek() {
       {
         id: "score",
         name: "score",
-
         cards: game.scorePile,
         col: 5,
         row: 0,
@@ -349,9 +309,7 @@ export default function HideAndSeek() {
     if (mappedCard.zoneName === "guess") {
       // ===== Guess ===== //
       if (mappedCard.pileIndex === undefined) return {};
-
       const guess = game.guesses[mappedCard.pileIndex];
-
       return {
         onPress: () => {
           if (guess) {
@@ -365,7 +323,6 @@ export default function HideAndSeek() {
       // ===== Playmate ===== //
       if (mappedCard.pileIndex === undefined || mappedCard.card === undefined)
         return {};
-
       return {
         selectColor: "none",
         onPress: () => revealPlaymate(mappedCard.pileIndex!),
@@ -390,6 +347,7 @@ export default function HideAndSeek() {
       setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
+      winLoseMessage={game.winLoseMessage}
       reset={reset}
       isLoaded={isLoaded}
       canUndo={canUndo}

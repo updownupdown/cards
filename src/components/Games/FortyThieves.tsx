@@ -3,15 +3,15 @@ import { useMemo, useState } from "react";
 import { useGameLoading } from "@/hooks/useGameLoading";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 
-import { Card } from "../../Cards/Card";
+import { Card } from "../Cards/Card";
 import {
   CardSuit,
   RANK_VALUE,
   createDeck,
   shuffle,
   type PlayingCard,
-} from "../../Cards/card-utils";
-import { GameWrapper } from "../../common/GameWrapper";
+} from "../Cards/card-utils";
+import { GameWrapper } from "../common/GameWrapper";
 
 type FoundationPile = {
   suit: CardSuit | null;

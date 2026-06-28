@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import type { GestureResponderEvent, View as RNView } from "react-native";
 
-import { Card } from "../../Cards/Card";
+import { Card } from "../Cards/Card";
 import {
   DRAG_CAPTURE_THRESHOLD,
   DRAG_MOVE_THRESHOLD,
@@ -20,8 +20,8 @@ import {
   pointInRect,
   shuffle,
   type PlayingCard,
-} from "../../Cards/card-utils";
-import { GameWrapper } from "../../common/GameWrapper";
+} from "../Cards/card-utils";
+import { GameWrapper } from "../common/GameWrapper";
 
 const cardsPerRow = 7;
 

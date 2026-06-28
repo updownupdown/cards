@@ -1,19 +1,19 @@
-import React, { useMemo } from "react";
+import React from "react";
+import { Pressable, StyleSheet } from "react-native";
 import Animated, {
-  useAnimatedStyle,
-  withTiming,
   Easing,
+  interpolate,
+  useAnimatedReaction,
+  useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
-  useAnimatedReaction,
-  interpolate,
+  withTiming,
 } from "react-native-reanimated";
-import { Pressable, StyleSheet } from "react-native";
+import { Card } from "./Card";
 import { PlayingCard } from "./card-utils";
 import { CardColor, CardSizes } from "./CardStyles";
-import { Card } from "./Card";
 
-export const animationDuration = 400;
+export const defaultAnimDuration = 400;
 
 export type CardRegistration = {
   card: PlayingCard | null;
@@ -59,6 +59,7 @@ export type AnimatedCardProps = CardMapBGMapping & {
   cardHeight: number;
   cardSize?: CardSizes;
   isVisible?: boolean;
+  animDuration?: number;
   isPlaceholder?: boolean;
   yOffset?: number;
   orbitConfig?: OrbitConfig;
@@ -80,6 +81,7 @@ export const AnimatedCard = ({
   isSelected,
   isDisabled,
   isVisible,
+  animDuration,
   selectColor,
   yOffset,
   orbitConfig,
@@ -90,6 +92,7 @@ export const AnimatedCard = ({
   customBack,
 }: AnimatedCardProps) => {
   const initialYOffset = (yOffset ?? 0) * cardHeight;
+  const duration = animDuration ?? defaultAnimDuration;
 
   const startX = useSharedValue(targetState.x);
   const startY = useSharedValue(targetState.y);
@@ -124,17 +127,21 @@ export const AnimatedCard = ({
         curr.zIndex !== prev?.zIndex;
 
       if (prev && hasChanged) {
-        startX.value = currentVisualX.value;
-        startY.value = currentVisualY.value;
-        startYOffset.value = currentVisualYOffset.value;
-        startZ.value = currentVisualZ.value;
-        startRotation.value = currentRotation.value;
+        if (duration === 0) {
+          moveProgress.value = 1;
+        } else {
+          startX.value = currentVisualX.value;
+          startY.value = currentVisualY.value;
+          startYOffset.value = currentVisualYOffset.value;
+          startZ.value = currentVisualZ.value;
+          startRotation.value = currentRotation.value;
 
-        moveProgress.value = 0;
-        moveProgress.value = withTiming(1, {
-          duration: animationDuration,
-          easing: Easing.out(Easing.quad),
-        });
+          moveProgress.value = 0;
+          moveProgress.value = withTiming(1, {
+            duration,
+            easing: Easing.out(Easing.quad),
+          });
+        }
       }
     },
     [
@@ -145,12 +152,13 @@ export const AnimatedCard = ({
       targetState.rotation,
       targetState.card?.faceUp,
       yOffset,
+      duration,
     ],
   );
 
   const spinY = useDerivedValue(() => {
     return withTiming(targetState.card?.faceUp ? 0 : 180, {
-      duration: animationDuration,
+      duration: defaultAnimDuration,
       easing: Easing.out(Easing.quad),
     });
   }, [targetState.card?.faceUp]);

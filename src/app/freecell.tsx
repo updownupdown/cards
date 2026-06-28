@@ -1,4 +1,4 @@
-import FreeCell from "@/components/Games/_not-ready/FreeCell";
+import FreeCell from "@/components/Games/FreeCell";
 
 export default function FreeCellRoute() {
   return <FreeCell />;

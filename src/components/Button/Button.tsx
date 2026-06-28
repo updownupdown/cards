@@ -1,13 +1,8 @@
 import { Text } from "@/components/common/Text";
 import { Icon, IconName } from "@/icons";
-import { Colors, FontWeight, MaxContentWidth, rgba } from "@/styles/styles";
-import {
-  Platform,
-  Pressable,
-  TextStyle,
-  useWindowDimensions,
-  ViewStyle,
-} from "react-native";
+import { Colors, FontWeight, rgba } from "@/styles/styles";
+import { useResponsiveLayout } from "@/hooks/useResponsiveLayout";
+import { Platform, Pressable, TextStyle, ViewStyle } from "react-native";
 
 interface Props {
   style?: ViewStyle | ViewStyle[];
@@ -46,10 +41,7 @@ export const Button = ({
   onPressIn,
   onPressOut,
 }: Props) => {
-  const { width: screenWidth } = useWindowDimensions();
-  const containerWidth = Math.min(screenWidth, MaxContentWidth);
-
-  const scale = Math.min(Math.max(containerWidth / MaxContentWidth, 0.82), 1);
+  const scale = useResponsiveLayout();
 
   if (!theme) {
     theme = Colors.accentBlue;

@@ -1,4 +1,4 @@
-import SpiderSolitaire from "@/components/Games/_not-ready/SpiderSolitaire";
+import SpiderSolitaire from "@/components/Games/SpiderSolitaire";
 
 export default function SpiderSolitaireRoute() {
   return <SpiderSolitaire />;
