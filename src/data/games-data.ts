@@ -225,7 +225,6 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     },
     category: GameCategory.Isaludo,
     byLine: "Game design by Wil Su",
-    // enabled: false,
     briefRules: [
       "Win by successfully debating all 8 kindgoms.",
       "You must win the exact number of required debates for each kingdom (1 to 8).",
@@ -410,7 +409,6 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       luck: 80,
     },
     category: GameCategory.ClassicSolitaire,
-    enabled: true,
     briefRules: [
       "Discard a top card from a foundation when a higher card of the same suit is visible.",
       "Top cards can be moved to empty foundations when available. Deal when no move is possible.",
@@ -477,7 +475,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       luck: 16,
     },
     category: GameCategory.ClassicSolitaire,
-    // enabled: false,
+    enabled: false,
     briefRules: [
       "Move all cards to the foundations from Ace up to King by suit.",
       "Build tableau columns down by alternating colors.",
@@ -498,7 +496,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       luck: 38,
     },
     category: GameCategory.ClassicSolitaire,
-    // enabled: false,
+    enabled: false,
     briefRules: [
       "Build cards down by rank in tableau columns.",
       "Complete full King to Ace suit runs to clear them.",
@@ -561,7 +559,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       luck: 58,
     },
     category: GameCategory.ClassicSolitaire,
-    // enabled: false,
+    enabled: false,
     briefRules: [
       "Move all cards to the four foundations by suit from Ace to King.",
       "Build tableau piles in descending rank with alternating colors.",
@@ -624,7 +622,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       luck: 31,
     },
     category: GameCategory.ClassicSolitaire,
-    // enabled: false,
+    enabled: false,
     briefRules: [
       "Build foundations by suit upward from the beak rank.",
       "Build tableau down by suit, filling empties with valid continuation cards.",

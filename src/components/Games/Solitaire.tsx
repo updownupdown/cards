@@ -4,7 +4,6 @@ import {
   createRect,
   DropHitArea,
   pointInRect,
-  Rect,
   runTiming,
   useDragDrop,
 } from "@/hooks/useDragDrop";
@@ -12,7 +11,6 @@ import { useNavigation } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { GestureResponderEvent } from "react-native";
 import { Animated, StyleSheet, useWindowDimensions, View } from "react-native";
-import { Button } from "../Button/Button";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { Card } from "../Cards/Card";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
@@ -26,8 +24,9 @@ import {
   SUITS,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
+import { useUndoHistory } from "@/hooks/useUndoHistory";
 
-const TABLEAU_FAN_OFFSET = 0.22;
+const TABLEAU_FAN_OFFSET = 0.35;
 const DOUBLE_TAP_MS = 300;
 
 type GameState = {
@@ -35,6 +34,10 @@ type GameState = {
   stock: PlayingCard[];
   waste: PlayingCard[];
   foundations: Record<CardSuit, PlayingCard[]>;
+};
+
+type GameSnapshot = {
+  game: GameState;
 };
 
 type Selection =
@@ -152,12 +155,17 @@ export default function Solitaire() {
   const navigation = useNavigation();
 
   const [game, setGame] = useState<GameState>(createInitialState);
-  const [history, setHistory] = useState<GameState[]>([]);
   const [selected, setSelected] = useState<Selection>(null);
   const [lastTap, setLastTap] = useState<{ key: string; at: number } | null>(
     null,
   );
-  const [isAnimating, setIsAnimating] = useState(false);
+
+  const { saveUndoState, undo, canUndo, clearHistory } =
+    useUndoHistory<GameSnapshot>();
+  const handleUndo = () => {
+    const previousState = undo();
+    if (previousState) setGame(previousState.game);
+  };
 
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
 
@@ -168,7 +176,6 @@ export default function Solitaire() {
   const {
     dragGhost,
     draggedCardIds,
-    hoverTargetRef,
     justDroppedCardIds,
     dragTranslate,
     boardRef,
@@ -198,12 +205,6 @@ export default function Solitaire() {
   });
 
   const wasteTop = game.waste[game.waste.length - 1];
-  const stockLabel =
-    game.stock.length > 0
-      ? "Draw"
-      : game.waste.length > 0
-        ? "Recycle"
-        : "Empty";
 
   const zones: MapZone[] = useMemo(() => {
     const tableauZones: MapZone[] = game.tableau.map((pile, pileIndex) => ({
@@ -214,7 +215,7 @@ export default function Solitaire() {
       col: pileIndex,
       row: 1.6,
       baseZIndex: 10 + pileIndex,
-      fan: { direction: "down", offset: TABLEAU_FAN_OFFSET, maxVisible: 13 },
+      fan: { direction: "down", offset: TABLEAU_FAN_OFFSET },
       placeholder: { showCount: false },
     }));
 
@@ -224,21 +225,21 @@ export default function Solitaire() {
         name: "stock",
         cards: game.stock,
         pileIndex: 0,
-        col: -1,
+        col: 0,
         row: 0,
         baseZIndex: 40,
         fan: { maxVisible: 3 },
-        placeholder: { text: stockLabel, infoPos: "left" },
+        placeholder: { text: "Draw", infoPos: "below" },
       },
       {
         id: "waste",
         name: "waste",
         cards: game.waste,
         pileIndex: 0,
-        col: 0,
+        col: 1,
         row: 0,
         baseZIndex: 30,
-        fan: { maxVisible: 1 },
+        fan: { maxVisible: 3 },
         placeholder: { text: "Waste", infoPos: "below" },
       },
       {
@@ -246,44 +247,44 @@ export default function Solitaire() {
         name: "foundation",
         cards: game.foundations.clubs,
         pileIndex: 0,
-        col: 2,
+        col: 3,
         row: 0,
         baseZIndex: 20,
         fan: { maxVisible: 1 },
-        placeholder: { text: "C", infoPos: "above" },
+        placeholder: { text: "Clbs", infoPos: "below" },
       },
       {
         id: "foundation-diamonds",
         name: "foundation",
         cards: game.foundations.diamonds,
         pileIndex: 1,
-        col: 3,
+        col: 4,
         row: 0,
         baseZIndex: 20,
         fan: { maxVisible: 1 },
-        placeholder: { text: "D", infoPos: "above" },
+        placeholder: { text: "Dmds", infoPos: "below" },
       },
       {
         id: "foundation-hearts",
         name: "foundation",
         cards: game.foundations.hearts,
         pileIndex: 2,
-        col: 4,
+        col: 5,
         row: 0,
         baseZIndex: 20,
         fan: { maxVisible: 1 },
-        placeholder: { text: "H", infoPos: "above" },
+        placeholder: { text: "Hrts", infoPos: "below" },
       },
       {
         id: "foundation-spades",
         name: "foundation",
         cards: game.foundations.spades,
         pileIndex: 3,
-        col: 5,
+        col: 6,
         row: 0,
         baseZIndex: 20,
         fan: { maxVisible: 1 },
-        placeholder: { text: "S", infoPos: "above" },
+        placeholder: { text: "Spds", infoPos: "below" },
       },
       ...tableauZones,
     ];
@@ -313,9 +314,7 @@ export default function Solitaire() {
         isSelected: selected?.zone === "stock",
         onPress: drawFromStock,
         isDisabled:
-          !!dragGhost ||
-          isAnimating ||
-          (game.stock.length === 0 && game.waste.length === 0),
+          !!dragGhost || (game.stock.length === 0 && game.waste.length === 0),
         isVisible: !isBeingDragged,
         animDuration: animDuration,
       };
@@ -359,9 +358,7 @@ export default function Solitaire() {
       return {
         onPress: drawFromStock,
         isDisabled:
-          !!dragGhost ||
-          isAnimating ||
-          (game.stock.length === 0 && game.waste.length === 0),
+          !!dragGhost || (game.stock.length === 0 && game.waste.length === 0),
         isSelected: selected?.zone === "stock",
       };
     }
@@ -369,20 +366,19 @@ export default function Solitaire() {
     if (zone.name === "waste") {
       return {
         onPress: onWastePress,
-        isDisabled: !wasteTop || !!dragGhost || isAnimating,
+        isDisabled: !wasteTop || !!dragGhost,
         isSelected: selected?.zone === "waste",
       };
     }
 
     if (zone.name === "foundation" && zone.pileIndex !== undefined) {
       const suit = SUITS[zone.pileIndex] as CardSuit;
-      const top = game.foundations[suit][game.foundations[suit].length - 1];
       const selectedFoundation =
         selected?.zone === "foundation" && selected.suit === suit;
 
       return {
         onPress: () => onFoundationPress(suit),
-        isDisabled: !!dragGhost || isAnimating,
+        isDisabled: !!dragGhost,
         isSelected: selectedFoundation,
       };
     }
@@ -392,7 +388,7 @@ export default function Solitaire() {
         selected?.zone === "tableau" && selected.pileIndex === zone.pileIndex;
       return {
         onPress: () => onEmptyTableauPress(zone.pileIndex!),
-        isDisabled: !selected || !!dragGhost || isAnimating,
+        isDisabled: !selected || !!dragGhost,
         isSelected,
       };
     }
@@ -400,16 +396,15 @@ export default function Solitaire() {
     return undefined;
   };
 
-  const { cardMap, getZoneStylesById, getZoneBasePos, cardWidth, cardHeight } =
-    useCardMap({
-      game,
-      zones,
-      gap: 0.35,
-      cardMapper,
-      zoneMapper,
-      cardSize: "small",
-      paddingBottom: 0.9,
-    });
+  const { cardMap, getZoneBasePos, cardWidth, cardHeight } = useCardMap({
+    game,
+    zones,
+    gap: 0.35,
+    cardMapper,
+    zoneMapper,
+    cardSize: "small",
+    paddingBottom: 0.9,
+  });
 
   function getSourceRect(source: MoveSource) {
     const zone = zones.find((entry) => {
@@ -575,30 +570,18 @@ export default function Solitaire() {
   function applyGameUpdate(updater: (prev: GameState) => GameState) {
     setGame((prev) => {
       const next = updater(prev);
-      if (next !== prev) {
-        setHistory((existing) => [prev, ...existing].slice(0, 200));
-      }
+
+      saveUndoState(structuredClone({ game }));
+
       return next;
     });
   }
 
   function resetGame() {
+    clearHistory();
     setGame(createInitialState());
-    setHistory([]);
     clearSelection();
     clearDragGhost();
-  }
-
-  function undoMove() {
-    setHistory((prev) => {
-      if (prev.length === 0) return prev;
-
-      const [latest, ...rest] = prev;
-      setGame(latest);
-      clearSelection();
-      clearDragGhost();
-      return rest;
-    });
   }
 
   function getSourceCards(source: MoveSource, snapshot: GameState) {
@@ -623,8 +606,6 @@ export default function Solitaire() {
   }
 
   function startGhostDrag(source: MoveSource, event: GestureResponderEvent) {
-    if (isAnimating) return;
-
     const cards = getSourceCards(source, game);
     if (cards.length === 0) return;
 
@@ -639,7 +620,7 @@ export default function Solitaire() {
   }
 
   function drawFromStock() {
-    if (dragGhost || isAnimating) return;
+    if (dragGhost) return;
 
     applyGameUpdate((prev) => {
       if (prev.stock.length > 0) {
@@ -726,8 +707,6 @@ export default function Solitaire() {
     targetSuit: CardSuit,
     options?: { animate?: boolean },
   ) {
-    if (isAnimating) return;
-
     if (!canMoveSourceToFoundation(source, targetSuit, game)) {
       clearSelection();
       return;
@@ -780,8 +759,6 @@ export default function Solitaire() {
   }
 
   function moveSourceToTableau(source: MoveSource, destinationIndex: number) {
-    if (isAnimating) return;
-
     applyGameUpdate((prev) => {
       const next = cloneGameState(prev);
       let movingCards: PlayingCard[] = [];
@@ -850,7 +827,7 @@ export default function Solitaire() {
   }
 
   function onWastePress() {
-    if (!wasteTop || dragGhost || isAnimating) {
+    if (!wasteTop || dragGhost) {
       clearSelection();
       return;
     }
@@ -873,7 +850,7 @@ export default function Solitaire() {
   }
 
   function onFoundationPress(suit: CardSuit) {
-    if (dragGhost || isAnimating) {
+    if (dragGhost) {
       clearSelection();
       return;
     }
@@ -906,7 +883,7 @@ export default function Solitaire() {
   }
 
   function onTableauCardPress(pileIndex: number, cardIndex: number) {
-    if (dragGhost || isAnimating) {
+    if (dragGhost) {
       clearSelection();
       return;
     }
@@ -944,7 +921,7 @@ export default function Solitaire() {
       return;
     }
 
-    if (!selected || dragGhost || isAnimating) return;
+    if (!selected || dragGhost) return;
     moveSourceToTableau(selected, pileIndex);
   }
 
@@ -982,10 +959,6 @@ export default function Solitaire() {
     return makeDragHandlers(source, startGhostDrag, onTap);
   }
 
-  const wasteDragHandlers = wasteTop
-    ? makeHandlers({ zone: "waste" }, onWastePress)
-    : null;
-
   const ghostLeft = dragGhost ? dragGhost.origin.x : 0;
   const ghostTop = dragGhost ? dragGhost.origin.y : 0;
 
@@ -997,21 +970,10 @@ export default function Solitaire() {
       won={won}
       reset={resetGame}
       isLoaded={isLoaded}
+      canUndo={canUndo}
+      handleUndo={handleUndo}
     >
       <View style={styles.gameShell}>
-        <View style={styles.toolbar}>
-          <Button
-            onPress={undoMove}
-            disabled={history.length === 0 || !!dragGhost || isAnimating}
-            text="Undo"
-          />
-          <Button
-            onPress={resetGame}
-            disabled={!!dragGhost || isAnimating}
-            text="New game"
-          />
-        </View>
-
         <View ref={boardRef} style={styles.boardShell}>
           {cardMap}
 
@@ -1052,6 +1014,7 @@ export default function Solitaire() {
               );
             })}
           </View>
+
           {dragGhost && (
             <Animated.View
               style={[

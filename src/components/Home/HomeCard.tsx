@@ -156,7 +156,7 @@ export function HomeCard({
         <Icon
           name={isFavorite ? "star" : "star-outline"}
           color={isFavorite ? Colors.favoriteStar : Colors.K500}
-          size={favBtnSize * 0.7}
+          size={favBtnSize * 0.6}
         />
       </Pressable>
     </View>

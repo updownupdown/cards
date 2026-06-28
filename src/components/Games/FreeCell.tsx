@@ -595,10 +595,6 @@ export default function FreeCell() {
       isLoaded={isLoaded}
     >
       <View style={styles.gameShell}>
-        <View style={styles.toolbar}>
-          <Button onPress={resetGame} disabled={!!dragGhost} text="New game" />
-        </View>
-
         <View ref={boardRef} style={styles.boardShell}>
           {cardMap}
 
