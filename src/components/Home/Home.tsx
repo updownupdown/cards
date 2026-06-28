@@ -100,7 +100,6 @@ export default function Home() {
               pointerEvents: "box-none",
               width: "100%",
               maxWidth: MaxContentWidth * responsiveScale,
-
               paddingTop: headerOffsetTop,
               alignSelf: "center",
             },
@@ -126,11 +125,11 @@ export default function Home() {
               style={[styles.headerBtn, menuStyles.headerButton]}
             />
 
-            <Button
+            {/* <Button
               iconName="settings"
               onPress={() => setShowSettingsModal(true)}
               style={[styles.headerBtn, menuStyles.headerButton]}
-            />
+            /> */}
           </View>
         </View>
 

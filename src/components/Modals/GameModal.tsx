@@ -55,14 +55,10 @@ const ModalSection = ({ children, title, iconName }: ModalSectionProps) => {
         >
           {title && (
             <Text
-              style={[
-                flexStyles.flex1,
-                {
-                  fontFamily: FontWeight[500],
-                  fontSize: 22,
-                  color: Colors.K500,
-                },
-              ]}
+              size="lg"
+              weight={500}
+              color={Colors.K100}
+              style={flexStyles.flex1}
             >
               {title}
             </Text>

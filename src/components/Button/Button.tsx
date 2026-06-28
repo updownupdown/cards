@@ -7,7 +7,7 @@ import { Platform, Pressable, TextStyle, ViewStyle } from "react-native";
 interface Props {
   style?: ViewStyle | ViewStyle[];
   textStyle?: TextStyle | TextStyle[];
-  size?: "small" | "medium" | "large";
+  size?: "small" | "medium" | "medium-large" | "large";
   textOnly?: boolean;
   theme?: string;
   disabled?: boolean;
@@ -21,6 +21,7 @@ interface Props {
   iconName?: IconName;
   iconColor?: string;
   iconSize?: number;
+  uppercase?: boolean;
 }
 
 export const Button = ({
@@ -35,6 +36,7 @@ export const Button = ({
   iconColor,
   theme,
   iconSize,
+  uppercase = true,
   onPress,
   onLongPress,
   delayLongPress,
@@ -76,9 +78,13 @@ export const Button = ({
     themeColor = Colors.K700;
   }
 
-  const sizeMultiplier: Record<"small" | "medium" | "large", number> = {
+  const sizeMultiplier: Record<
+    "small" | "medium" | "medium-large" | "large",
+    number
+  > = {
     small: 0.78,
     medium: 1,
+    "medium-large": 1.16,
     large: 1.32,
   };
   const sizeScale = sizeMultiplier[size];
@@ -89,7 +95,7 @@ export const Button = ({
   let borderWidth = themeColor ? 2 * scale * sizeScale : 0;
   let paddingVertical = 8 * scale * sizeScale;
   let paddingHorizontal = 12 * scale * sizeScale;
-  let fontFamily = FontWeight[500];
+  let fontFamily = textOnly ? FontWeight[300] : FontWeight[500];
   let lineHeight = 24 * scale * sizeScale;
 
   if (textOnly) {
@@ -165,7 +171,7 @@ export const Button = ({
 
               fontSize,
               fontFamily,
-              textTransform: "uppercase",
+              textTransform: uppercase ? "uppercase" : "none",
               color: themeColor ? themeColor : Colors.accentBlue,
               lineHeight,
               textAlign: "center",

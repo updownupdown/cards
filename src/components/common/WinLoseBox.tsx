@@ -1,14 +1,16 @@
 import { Text } from "@/components/common/Text";
+import { useResponsiveLayout } from "@/hooks/useResponsiveLayout";
+import { flexStyles } from "@/styles/flexStyles";
+import { modalBorderRadius } from "@/styles/modalStyles";
 import {
-  menuStyles } from "@/styles/menuStyles";
-import { useEffect,
-  useRef } from "react";
-import { Animated,
-  Easing,
-  View,
-} from "react-native";
+  Colors,
+  ContentSidePadding,
+  MaxContentWidth,
+  rgba,
+} from "@/styles/styles";
+import { useEffect, useRef } from "react";
+import { Animated, Easing, View } from "react-native";
 import { Button } from "../Button/Button";
-import { Colors } from "@/styles/styles";
 
 interface Props {
   gameEnded: boolean;
@@ -16,6 +18,7 @@ interface Props {
   message?: string;
   won: boolean;
   reset: () => void;
+  handleUndo?: () => void;
 }
 
 export const WinLoseBox = ({
@@ -24,7 +27,10 @@ export const WinLoseBox = ({
   won,
   gameEnded,
   reset,
+  handleUndo,
 }: Props) => {
+  const responsiveScale = useResponsiveLayout();
+
   // Win/lose animations
   const wlmAnim = useRef(new Animated.Value(0)).current;
 
@@ -59,37 +65,108 @@ export const WinLoseBox = ({
 
   return gameEnded ? (
     <>
-      <Animated.View style={[menuStyles.wlmOverlay, { opacity: wlmAnim }]} />
+      <Animated.View
+        style={{
+          opacity: wlmAnim,
+          position: "absolute",
+          zIndex: 9, // just under the game header
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: rgba(Colors.K850, 0.5),
+        }}
+      />
 
       <Animated.View
         style={[
-          menuStyles.winLoseMessage,
-          won ? menuStyles.winLoseMessageWin : menuStyles.winLoseMessageLose,
+          flexStyles.colCentered,
           {
             opacity: wlmAnim,
+            position: "absolute",
+            zIndex: 500,
+            padding: 20,
+            gap: 20,
+            left: "50%",
+            transform: [{ translateX: "-50%" }],
+            borderRadius: modalBorderRadius,
+            backgroundColor: won
+              ? rgba(Colors.win, 0.95)
+              : rgba(Colors.lose, 0.9),
+            boxShadow: won
+              ? `0 0 20px ${rgba(Colors.win, 0.6)}, 0 0 40px ${rgba(Colors.win, 0.6)}`
+              : `0 0 20px ${rgba(Colors.lose, 0.6)}, 0 0 40px ${rgba(Colors.lose, 0.6)}`,
+            width: "100%",
+            maxWidth:
+              MaxContentWidth * responsiveScale - ContentSidePadding * 2,
             bottom: wlmAnim.interpolate({
               inputRange: [0, 1],
-              outputRange: [-100, 0],
+              outputRange: [-200, ContentSidePadding],
             }),
           },
         ]}
       >
-        <View style={menuStyles.winLoseMessageLeft}>
-          <Text style={menuStyles.wlmTitle}>
+        <View
+          style={[
+            flexStyles.colCentered,
+            {
+              gap: 6,
+            },
+          ]}
+        >
+          <Text size={24} weight={400} color={Colors.white}>
             {won ? "You won!" : "You lost"}
           </Text>
 
-          {message && <Text style={menuStyles.wlmScore}>{message}</Text>}
-          {score && <Text style={menuStyles.wlmScore}>Score: {score}</Text>}
+          {message && (
+            <Text
+              size={16}
+              weight={300}
+              color={Colors.white}
+              style={{
+                textAlign: "center",
+              }}
+            >
+              {message}
+            </Text>
+          )}
+          {score && (
+            <Text
+              size={16}
+              weight={300}
+              color={Colors.white}
+              style={{
+                textAlign: "center",
+              }}
+            >
+              Score: {score}
+            </Text>
+          )}
         </View>
 
-        <Button
-          onPress={() => fadeOutWLM(reset)}
-          size="medium"
-          text={won ? "Play again" : "Try again"}
-          textStyle={menuStyles.playBtn}
-          theme={Colors.white}
-        />
+        <View
+          style={[
+            flexStyles.rowCentered,
+            flexStyles.fullWidth,
+            flexStyles.gap12,
+          ]}
+        >
+          {handleUndo && !won && (
+            <Button
+              onPress={() => fadeOutWLM(handleUndo)}
+              size="medium"
+              text="Undo"
+              theme={Colors.white}
+            />
+          )}
+
+          <Button
+            onPress={() => fadeOutWLM(reset)}
+            size="medium"
+            text={won ? "Play again" : "Try again"}
+            theme={Colors.white}
+          />
+        </View>
       </Animated.View>
     </>
   ) : null;

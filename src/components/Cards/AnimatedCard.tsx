@@ -90,6 +90,7 @@ export const AnimatedCard = ({
   isPlaceholder,
   clickThroughCards,
   customBack,
+  zIndexOffset = 0,
 }: AnimatedCardProps) => {
   const initialYOffset = (yOffset ?? 0) * cardHeight;
   const duration = animDuration ?? defaultAnimDuration;
@@ -97,13 +98,13 @@ export const AnimatedCard = ({
   const startX = useSharedValue(targetState.x);
   const startY = useSharedValue(targetState.y);
   const startYOffset = useSharedValue(initialYOffset);
-  const startZ = useSharedValue(targetState.zIndex);
+  const startZ = useSharedValue(targetState.zIndex + zIndexOffset);
   const startRotation = useSharedValue(targetState.rotation);
   const moveProgress = useSharedValue(1); // Default to 1 (already at destination)
 
   const currentVisualX = useSharedValue(targetState.x);
   const currentVisualY = useSharedValue(targetState.y);
-  const currentVisualYOffset = useSharedValue(initialYOffset);
+  const currentVisualYOffset = useSharedValue(initialYOffset + zIndexOffset);
   const currentVisualZ = useSharedValue(targetState.zIndex);
   const currentRotation = useSharedValue(targetState.rotation);
 
@@ -112,7 +113,7 @@ export const AnimatedCard = ({
       loc: targetState.zoneId,
       x: targetState.x,
       y: targetState.y,
-      zIndex: targetState.zIndex,
+      totalZIndex: targetState.zIndex + zIndexOffset,
       yOffset: yOffset,
       rotation: targetState.rotation,
       faceUp: targetState.card?.faceUp,
@@ -124,9 +125,12 @@ export const AnimatedCard = ({
         curr.x !== prev?.x ||
         curr.y !== prev?.y ||
         curr.rotation !== prev?.rotation ||
-        curr.zIndex !== prev?.zIndex;
+        curr.totalZIndex !== prev?.totalZIndex ||
+        curr.faceUp !== prev?.faceUp;
 
-      if (prev && hasChanged) {
+      if (!hasChanged) return;
+
+      if (prev) {
         if (duration === 0) {
           moveProgress.value = 1;
         } else {
@@ -153,6 +157,7 @@ export const AnimatedCard = ({
       targetState.card?.faceUp,
       yOffset,
       duration,
+      zIndexOffset,
     ],
   );
 
@@ -242,7 +247,10 @@ export const AnimatedCard = ({
     const rawX = rawXBase;
     const rawY = rawYBase;
 
-    const rawZ = moveProgress.value < 0.5 ? startZ.value : targetState.zIndex;
+    const rawZ =
+      moveProgress.value < 0.5
+        ? startZ.value
+        : targetState.zIndex + zIndexOffset;
 
     // Save current visual state for graceful mid-flight interruptions
     currentVisualX.value = rawX;
@@ -291,6 +299,8 @@ export const AnimatedCard = ({
     targetState.x,
     targetState.y,
     targetState.rotation,
+    targetState.zIndex,
+    zIndexOffset,
     yOffset,
     orbitConfig,
     cardWidth,

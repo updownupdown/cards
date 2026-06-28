@@ -125,6 +125,7 @@ export const GameWrapper = ({
         score={score}
         reset={reset}
         message={winLoseMessage}
+        handleUndo={handleUndo}
       />
 
       {showMenu && <GameModal onClose={() => setShowMenu(false)} />}

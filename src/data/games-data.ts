@@ -45,7 +45,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   // ============================== //
   // Area 52
   "/area-52": {
-    title: "Area 52",
+    title: "Area 52 (BETA)",
     thumbnail: "Area52.jpg",
     cardBack: "Area52.png",
     cardColorBg: "#200a16",
@@ -79,7 +79,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // The Sandwich Guy
   "/the-sandwich-guy": {
-    title: "The Sandwich Guy",
+    title: "The Sandwich Guy (BETA)",
     thumbnail: "SandwichGuy.jpg",
     cardBack: "SandwichGuy.png",
     cardColorBg: "#18251f",
@@ -112,7 +112,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Dead Center
   "/dead-center": {
-    title: "Dead Center",
+    title: "Dead Center (BETA)",
     thumbnail: "DeadCenter.jpg",
     cardBack: "DeadCenter.png",
     cardColorBg: "#241a15",
@@ -147,7 +147,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Foursquare
   "/foursquare": {
-    title: "Foursquare",
+    title: "Foursquare (BETA)",
     thumbnail: "Foursquare.jpg",
     cardBack: "Foursquare.png",
     cardColorBg: "#202640",
@@ -180,7 +180,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Skyway
   "/skyway": {
-    title: "Skyway",
+    title: "Skyway (BETA)",
     thumbnail: "Skyway.jpg",
     cardBack: "Skyway.png",
     cardColorBg: "#1d2a35",
@@ -211,7 +211,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // The Emissary
   "/the-emissary": {
-    title: "The Emissary",
+    title: "The Emissary (BETA)",
     thumbnail: "Emissary.jpg",
     cardBack: "TheEmissary.png",
     cardColorBg: "#18102e",
@@ -242,7 +242,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // The First Boba Tea Shop in London
   "/the-boba-tea-shop": {
-    title: "The Boba Tea Shop",
+    title: "The Boba Tea Shop (BETA)",
     thumbnail: "BobaTea.jpg",
     cardBack: "BobaTeaShop.png",
     cardColorBg: "#2b3015",
@@ -264,7 +264,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Syndicate
   "/syndicate": {
-    title: "Syndicate",
+    title: "Syndicate (BETA)",
     thumbnail: "Syndicate.jpg",
     cardColorBg: "#112221",
     cardColorText: "#c4f1e7",
@@ -285,7 +285,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Hide and Seek
   "/hide-and-seek": {
-    title: "Hide and Seek",
+    title: "Hide and Seek (BETA)",
     thumbnail: "HideAndSeek.jpg",
     cardBack: "HideAndSeek.png",
     cardColorBg: "#132422",
@@ -307,7 +307,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Loot the Loop
   "/loot-the-loop": {
-    title: "Loot the Loop",
+    title: "Loot the Loop (BETA)",
     thumbnail: "LootTheLoop.jpg",
     cardBack: "LootTheLoop.png",
     cardColorBg: "#1a0d0c",
@@ -332,7 +332,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   // ======================================= //
   // Monte Carlo
   "/monte-carlo": {
-    title: "Monte Carlo",
+    title: "Monte Carlo (BETA)",
     thumbnail: "MonteCarlo.jpg",
     cardBack: "MonteCarlo.png",
     cardColorBg: "#242b33",
@@ -353,7 +353,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Calculation
   "/calculation": {
-    title: "Calculation",
+    title: "Calculation (BETA)",
     thumbnail: "Calculation.jpg",
     cardBack: "Calculation.png",
     cardColorBg: "#110c1d",
@@ -375,7 +375,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Accordion
   "/accordion": {
-    title: "Accordion",
+    title: "Accordion (BETA)",
     thumbnail: "Accordion.jpg",
     cardBack: "Accordion.png",
     cardColorBg: "#1d1118",
@@ -396,7 +396,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Aces Up
   "/aces-up": {
-    title: "Aces Up",
+    title: "Aces Up (BETA)",
     thumbnail: "AcesUp.jpg",
     cardBack: "AcesUp.png",
     cardColorBg: "#1b150f",
@@ -417,7 +417,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Golf
   "/golf": {
-    title: "Golf Solitaire",
+    title: "Golf Solitaire (BETA)",
     thumbnail: "Golf.jpg",
     cardBack: "Golf.png",
     cardColorBg: "#12251a",
@@ -438,7 +438,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Clock
   "/clock": {
-    title: "Clock Solitaire",
+    title: "Clock Solitaire (BETA)",
     thumbnail: "Clock.jpg",
     cardBack: "Clock.png",
     cardColorBg: "#272115",
@@ -463,7 +463,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
 
   // Freecell
   "/freecell": {
-    title: "FreeCell",
+    title: "FreeCell (BETA)",
     thumbnail: DEFAULT_GAME_THUMBNAIL,
     cardColorBg: "#2A3440",
     cardColorText: "#DDEBFF",
@@ -484,7 +484,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Spider Solitaire
   "/spider-solitaire": {
-    title: "Spider Solitaire",
+    title: "Spider Solitaire (BETA)",
     thumbnail: DEFAULT_GAME_THUMBNAIL,
     cardColorBg: "#2E2731",
     cardColorText: "#F5E6FF",
@@ -505,7 +505,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Pyramid
   "/pyramid": {
-    title: "Pyramid",
+    title: "Pyramid (BETA)",
     thumbnail: DEFAULT_GAME_THUMBNAIL,
     cardColorBg: "#3A3126",
     cardColorText: "#FFEACC",
@@ -526,7 +526,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // TriPeaks
   "/tripeaks": {
-    title: "TriPeaks",
+    title: "TriPeaks (BETA)",
     thumbnail: DEFAULT_GAME_THUMBNAIL,
     cardColorBg: "#24313A",
     cardColorText: "#E4F4FF",
@@ -547,7 +547,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Solitaire
   "/solitaire": {
-    title: "Solitaire",
+    title: "Solitaire (BETA)",
     thumbnail: DEFAULT_GAME_THUMBNAIL,
     cardColorBg: "#2C2F3A",
     cardColorText: "#EEF0FF",
@@ -568,7 +568,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Scorpion
   "/scorpion": {
-    title: "Scorpion",
+    title: "Scorpion (BETA)",
     thumbnail: DEFAULT_GAME_THUMBNAIL,
     cardColorBg: "#33262A",
     cardColorText: "#FFE4E8",
@@ -589,7 +589,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Canfield
   "/canfield": {
-    title: "Canfield",
+    title: "Canfield (BETA)",
     thumbnail: DEFAULT_GAME_THUMBNAIL,
     cardColorBg: "#263238",
     cardColorText: "#E4F6FF",
@@ -610,7 +610,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Penguin
   "/penguin": {
-    title: "Penguin",
+    title: "Penguin (BETA)",
     thumbnail: DEFAULT_GAME_THUMBNAIL,
     cardColorBg: "#243443",
     cardColorText: "#E7F6FF",
@@ -631,7 +631,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Forty Thieves
   "/forty-thieves": {
-    title: "Forty Thieves",
+    title: "Forty Thieves (BETA)",
     thumbnail: DEFAULT_GAME_THUMBNAIL,
     cardColorBg: "#2E2D34",
     cardColorText: "#EFE8FF",

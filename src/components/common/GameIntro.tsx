@@ -26,8 +26,7 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);
 
-  const { settings: gameSettings, updateSettings: updateGameSettings } =
-    useGameSettings(pathname);
+  const { updateSettings: updateGameSettings } = useGameSettings(pathname);
 
   const { isRendered: renderIntro, opacity: introOpacity } = useFade(
     showIntro === true,
@@ -87,21 +86,26 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
               style={[
                 flexStyles.colStart,
                 flexStyles.fullWidth,
-                flexStyles.gap20,
+                flexStyles.gap12,
               ]}
             >
-              <Text
-                size="xl"
-                weight={500}
-                textTransform="uppercase"
-                style={{ color: Colors.K100 }}
-              >
+              <Text size="lg" weight={500} style={{ color: Colors.K100 }}>
                 How to Play
               </Text>
               {gameInfo.briefRules.map((info, key) => (
                 <Text
                   key={`info-${key}`}
-                  style={[menuStyles.introHowToPlayText]}
+                  weight={300}
+                  size="sm"
+                  lineHeight={1.25}
+                  color={Colors.K200}
+                  style={[
+                    flexStyles.colCentered,
+                    flexStyles.fullWidth,
+                    {
+                      alignItems: "flex-start",
+                    },
+                  ]}
                 >
                   {info}
                 </Text>
@@ -113,8 +117,9 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
                   setShowMenu(true);
                 }}
                 text="Read detailed rules"
-                size="small"
+                size="medium"
                 textOnly
+                uppercase={false}
               />
             </View>
 
@@ -129,12 +134,13 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
 
             <Button
               text="Close and skip intro next time"
-              size="small"
+              size="medium"
               textOnly
               onPress={() => {
                 updateGameSettings({ showIntro: false });
                 setShowIntro(false);
               }}
+              uppercase={false}
             />
           </ScrollView>
         </View>

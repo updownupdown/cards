@@ -128,6 +128,7 @@ export const GamesList = ({ tabs }: GamesListProps) => {
             {
               paddingTop: HomePadding * 2 * responsiveScale,
               paddingBottom: 6 * responsiveScale,
+              paddingHorizontal: HomePadding * responsiveScale,
             },
           ]}
           weight={300}
@@ -138,7 +139,7 @@ export const GamesList = ({ tabs }: GamesListProps) => {
           {section.title}
         </Text>
 
-        {/* —— Category Cards ——————————————————————————————————————————————————————————————— */}
+        {/* —— Category Cards ————————————————————————————————— */}
         <View
           style={[
             {
@@ -241,7 +242,7 @@ export const GamesList = ({ tabs }: GamesListProps) => {
         scrollEventThrottle={16}
         style={{ flex: 1 }}
       >
-        {/* —— Tabs Content ——————————————————————————————————————————————————————————————— */}
+        {/* —— Tabs Content —————————————————————————————————— */}
         {tabs.map((tab) => (
           <ScrollView
             key={tab.key}
@@ -283,12 +284,13 @@ export const GamesList = ({ tabs }: GamesListProps) => {
         ))}
       </ScrollView>
 
-      {/* —— Tab Bar ——————————————————————————————————————————————————————————————— */}
+      {/* —— Tab Bar —————————————————————————————————————— */}
       <View
         style={[
           {
             paddingTop: tabWrapPadding * responsiveScale,
             paddingBottom: (insets.bottom + tabWrapPadding) * responsiveScale,
+            paddingHorizontal: HomePadding * responsiveScale,
             width: "100%",
             flexDirection: "row",
             justifyContent: "center",
@@ -300,7 +302,8 @@ export const GamesList = ({ tabs }: GamesListProps) => {
           style={[
             {
               flexDirection: "row",
-              width: MaxContentWidth * responsiveScale,
+              width: "100%",
+              maxWidth: MaxContentWidth * responsiveScale,
             },
           ]}
         >
@@ -319,6 +322,7 @@ export const GamesList = ({ tabs }: GamesListProps) => {
                     flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
+                    outline: "none",
                   },
                   isActive && { backgroundColor: rgba(Colors.K700, 0.4) },
                 ]}
