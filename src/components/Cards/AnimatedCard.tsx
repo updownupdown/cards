@@ -318,11 +318,17 @@ export const AnimatedCard = ({
     transform: [{ rotateY: "180deg" }],
   }));
 
-  if (isVisible === false || targetState.isHiddenUnderDeck) return null;
+  if (isVisible === false) return null;
 
   return (
     <Animated.View
-      style={[animatedStyle, { userSelect: "none", pointerEvents: "none" }]}
+      style={[
+        animatedStyle,
+        {
+          userSelect: "none",
+          pointerEvents: "none",
+        },
+      ]}
     >
       <Pressable
         onPress={onPress}
@@ -340,6 +346,7 @@ export const AnimatedCard = ({
             isVisible={isVisible}
             cardSize={cardSize}
             isPlaceholder={isPlaceholder}
+            isHiddenUnderDeck={targetState.isHiddenUnderDeck}
             customBack={customBack}
           />
         </Animated.View>
@@ -355,6 +362,7 @@ export const AnimatedCard = ({
             isVisible={isVisible}
             cardSize={cardSize}
             isPlaceholder={isPlaceholder}
+            isHiddenUnderDeck={targetState.isHiddenUnderDeck}
             customBack={customBack}
           />
         </Animated.View>

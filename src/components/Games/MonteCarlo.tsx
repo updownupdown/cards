@@ -2,7 +2,7 @@ import { useGameLoading } from "@/hooks/useGameLoading";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
 import { flexStyles } from "@/styles/flexStyles";
 import { produce } from "immer";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { Button } from "../Button/Button";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
@@ -24,6 +24,11 @@ import { GameWrapper } from "../common/GameWrapper";
 import { useImmer } from "use-immer";
 import { delay } from "@/utils/utils";
 import { useAnimatedDeal } from "@/hooks/useAnimatedDeal";
+import {
+  createStandardDealLogic,
+  createStandardGatherLogic,
+} from "@/utils/dealUtils";
+import { useInitialDeal } from "@/hooks/useInitialDeal";
 
 type GameState = {
   grid: (PlayingCard | null)[];
@@ -37,10 +42,13 @@ type GameSnapshot = {
   game: GameState;
 };
 
-function getInitialState(): GameState {
+function setup(): GameState {
+  const draw = shuffle(createDeck());
+  const grid = flipAllToFace(draw.splice(-25));
+
   return {
-    grid: Array(25).fill(null),
-    draw: createDeck(),
+    grid,
+    draw,
     trash: [],
     ended: false,
     won: false,
@@ -105,13 +113,21 @@ function evaluateEnd(state: GameState) {
 export default function MonteCarlo() {
   const { isLoaded, showIntro, setShowIntro } = useGameLoading();
 
-  const [game, setGame] = useImmer<GameState>(getInitialState);
+  const [dealLogic, setDealLogic] = useState(() =>
+    createStandardDealLogic(setup(), {
+      mainDeck: "draw",
+      grids: ["grid"],
+      piles: ["trash"],
+    }),
+  );
+
+  const [game, setGame] = useImmer<GameState>(dealLogic.initialState);
   const [selected, setSelected] = useImmer<number[] | null>(null);
 
   const { runAnimatedSequence, isAnimating } = useAnimatedDeal<GameState>();
-
   const { saveUndoState, undo, canUndo, clearHistory } =
     useUndoHistory<GameSnapshot>();
+
   const handleUndo = () => {
     if (isAnimating) return;
     const previousState = undo();
@@ -121,65 +137,55 @@ export default function MonteCarlo() {
     }
   };
 
+  const { getGatherableCount, gatherOneCard } = useMemo(
+    () =>
+      createStandardGatherLogic<GameState>({
+        mainDeck: "draw",
+        grids: ["grid"],
+        piles: ["trash"],
+      }),
+    [],
+  );
   // 3. Define the Dealing Sequence Callback
-  const startDeal = useCallback(() => {
-    runAnimatedSequence({
+  const startDeal = useCallback(
+    (currentLogic = dealLogic) => {
+      runAnimatedSequence({
+        setGame,
+        getGatherableCount,
+        gatherOneCard,
+        onGatherComplete: (draft) => {
+          Object.assign(draft, currentLogic.initialState);
+        },
+        // Wrap the call here to satisfy the signature
+        dealSequence: async (checkAbort) => {
+          await currentLogic.dealSequence(setGame, checkAbort, 100);
+        },
+      });
+    },
+    [
+      runAnimatedSequence,
       setGame,
-      // Safely returns the count of cards currently on the board/trash
-      getGatherableCount: (draft) => {
-        const gridCards = draft.grid.filter((c) => c !== null).length;
-        const trashCards = draft.trash.length;
-        return gridCards + trashCards;
-      },
-      // Instructions on how to move exactly ONE card to the main deck
-      gatherOneCard: (draft) => {
-        // Gather from grid first (sweeping bottom-right to top-left looks visually cleaner)
-        for (let i = draft.grid.length - 1; i >= 0; i--) {
-          if (draft.grid[i] !== null) {
-            const card = draft.grid[i]!;
-            draft.grid[i] = null;
-            draft.draw.push(flipToBack(card));
-            return;
-          }
-        }
-        // Then gather from trash
-        if (draft.trash.length > 0) {
-          const card = draft.trash.pop()!;
-          draft.draw.push(flipToBack(card));
-          return;
-        }
-      },
-      // Prep the deck after gathering is completely done
-      onGatherComplete: (draft) => {
-        draft.draw = shuffle(draft.draw);
-        draft.ended = false;
-        draft.won = false;
-      },
-      // The game-specific deal pattern
-      dealSequence: async (checkAbort) => {
-        for (let i = 0; i < 25; i++) {
-          checkAbort();
-          setGame((draft) => {
-            const card = draft.draw.pop();
-            if (card) {
-              draft.grid[i] = flipToFace(card);
-            }
-          });
-          await delay(100);
-        }
-      },
-    });
-  }, [runAnimatedSequence, setGame]);
+      getGatherableCount,
+      gatherOneCard,
+      dealLogic,
+    ],
+  );
 
-  // 4. Trigger deal on initial mount
-  useEffect(() => {
-    startDeal();
-  }, []);
+  useInitialDeal(showIntro ?? true, startDeal);
 
   function reset() {
     clearHistory();
     setSelected(null);
-    startDeal();
+
+    // 5. Generate a brand new setup and deal logic for the next game
+    const newLogic = createStandardDealLogic(setup(), {
+      mainDeck: "draw",
+      grids: ["grid"],
+      piles: ["trash"],
+    });
+
+    setDealLogic(newLogic);
+    startDeal(newLogic); // Pass the fresh logic explicitly to start gathering/dealing
   }
 
   function selectCell(index: number) {
@@ -326,8 +332,6 @@ export default function MonteCarlo() {
     }
   }, [selected]);
 
-  console.log(game);
-
   // ========== Card Mapping ========== //
   const zones: MapZone[] = useMemo(() => {
     const gridZones: MapZone[] = getGridColRows({
@@ -353,7 +357,7 @@ export default function MonteCarlo() {
         cards: game.draw,
         col: 1,
         row: 0,
-        fan: { maxVisible: 50 },
+        fan: { maxVisible: 3 },
         baseZIndex: 50,
         // placeholder: { text: "Draw", infoPos: "left" },
       },

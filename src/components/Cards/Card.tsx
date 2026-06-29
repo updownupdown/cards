@@ -25,6 +25,7 @@ export type CardProps = {
   cardWidth: number;
   cardSize?: CardSizes;
   isPlaceholder?: boolean;
+  isHiddenUnderDeck?: boolean;
   customBack?: string;
 };
 
@@ -40,6 +41,7 @@ export const Card = ({
   forceOverlayColor,
   cardWidth,
   isPlaceholder,
+  isHiddenUnderDeck,
   customBack,
 }: CardProps) => {
   const cardFiles =
@@ -82,14 +84,16 @@ export const Card = ({
           zIndex: 3,
           outlineWidth: 0,
           borderRadius: cardWidth * cardDims.ratioRadius,
-          boxShadow: getCardShadow({
-            cardWidth,
-            selectColor,
-            isSelected,
-            isSelectable,
-            forceSelectColor,
-            isPlaceholder,
-          }),
+          boxShadow: isHiddenUnderDeck
+            ? "none"
+            : getCardShadow({
+                cardWidth,
+                selectColor,
+                isSelected,
+                isSelectable,
+                forceSelectColor,
+                isPlaceholder,
+              }),
         },
       ]}
     >
