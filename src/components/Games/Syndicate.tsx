@@ -439,7 +439,7 @@ export default function Syndicate() {
           : "No valid promotion/replacement remains. You lose."
       }
       canUndo={canUndo}
-      handleUndo={handleUndo}
+      undo={handleUndo}
     >
       {cardMap}
 

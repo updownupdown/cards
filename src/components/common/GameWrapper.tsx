@@ -38,7 +38,7 @@ interface Props {
   showIntro: boolean | undefined;
   setShowIntro: (show: boolean | undefined) => void;
   canUndo?: boolean;
-  handleUndo?: () => void;
+  undo?: () => void;
 }
 
 function lightenHexColor(hexColor: string, amount: number) {
@@ -69,7 +69,7 @@ export const GameWrapper = ({
   showIntro,
   setShowIntro,
   canUndo,
-  handleUndo,
+  undo: handleUndo,
 }: Props) => {
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);

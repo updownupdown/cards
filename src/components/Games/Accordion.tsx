@@ -187,7 +187,7 @@ export default function Accordion() {
           : "No legal moves remain."
       }
       canUndo={canUndo}
-      handleUndo={handleUndo}
+      undo={handleUndo}
     >
       {cardMap}
     </GameWrapper>

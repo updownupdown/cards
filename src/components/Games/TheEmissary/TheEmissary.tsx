@@ -675,7 +675,7 @@ export default function TheEmissary() {
       isLoaded={isLoaded}
       winLoseMessage={game.winLoseMessage}
       canUndo={canUndo}
-      handleUndo={handleUndo}
+      undo={handleUndo}
     >
       {cardMap}
 

@@ -559,7 +559,7 @@ export default function LootTheLoop() {
       isLoaded={isLoaded}
       winLoseMessage={game.winLoseMessage}
       canUndo={canUndo}
-      handleUndo={handleUndo}
+      undo={handleUndo}
     >
       {cardMap}
 

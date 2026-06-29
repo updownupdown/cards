@@ -3,7 +3,6 @@ import { getGameInfo, normalizeGamePath } from "@/data/game-menu";
 import { useFade } from "@/hooks/useFade";
 import { useGameSettings } from "@/hooks/useGameSettings";
 import { flexStyles } from "@/styles/flexStyles";
-import { menuStyles } from "@/styles/menuStyles";
 import { modalBorderRadius, modalShadow } from "@/styles/modalStyles";
 import {
   Colors,
@@ -11,7 +10,6 @@ import {
   HeaderHeight,
   rgba,
 } from "@/styles/styles";
-import { textStyles } from "@/styles/textStyles";
 import { usePathname } from "expo-router";
 import { Animated, ScrollView, View } from "react-native";
 import { Button } from "../Button/Button";
@@ -20,6 +18,8 @@ interface Props {
   setShowMenu: (show: boolean) => void;
   showIntro: boolean | undefined;
   setShowIntro: (show: boolean | undefined) => void;
+  titleColor?: string;
+  backgroundColor?: string;
 }
 
 export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
@@ -37,7 +37,17 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
     <>
       {/* Overlay */}
       <Animated.View
-        style={[menuStyles.wlmOverlay, { opacity: introOpacity }]}
+        style={[
+          {
+            opacity: introOpacity,
+            position: "absolute",
+            zIndex: 10,
+            top: HeaderHeight,
+            bottom: 0,
+            right: 0,
+            left: 0,
+          },
+        ]}
       />
 
       {/* Intro box */}

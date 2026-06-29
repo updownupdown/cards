@@ -506,7 +506,7 @@ export default function DeadCenter() {
         game.winLoseMessage ?? (game.won ? "You won!" : "You lost.")
       }
       canUndo={canUndo}
-      handleUndo={handleUndo}
+      undo={handleUndo}
     >
       {cardMap}
 

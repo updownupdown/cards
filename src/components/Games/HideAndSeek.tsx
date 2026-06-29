@@ -351,7 +351,7 @@ export default function HideAndSeek() {
       reset={reset}
       isLoaded={isLoaded}
       canUndo={canUndo}
-      handleUndo={handleUndo}
+      undo={handleUndo}
     >
       {cardMap}
     </GameWrapper>

@@ -210,7 +210,7 @@ export default function Clock() {
           : "The fourth king appeared before all cards were revealed."
       }
       canUndo={canUndo}
-      handleUndo={handleUndo}
+      undo={handleUndo}
     >
       {cardMap}
 

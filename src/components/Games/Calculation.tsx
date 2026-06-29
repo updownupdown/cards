@@ -439,7 +439,7 @@ export default function Calculation() {
           : "No legal moves remain."
       }
       canUndo={canUndo}
-      handleUndo={handleUndo}
+      undo={handleUndo}
     >
       {cardMap}
 

@@ -1,13 +1,17 @@
 import { useGameLoading } from "@/hooks/useGameLoading";
+import { useInitialDeal } from "@/hooks/useInitialDeal";
 import { useUndoHistory } from "@/hooks/useUndoHistory";
 import { flexStyles } from "@/styles/flexStyles";
+import { delay } from "@/utils/utils";
 import { produce } from "immer";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { View } from "react-native";
+import { useImmer } from "use-immer";
 import { Button } from "../Button/Button";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
+  flipAllToBack,
   flipAllToFace,
   flipToBack,
   flipToFace,
@@ -21,14 +25,7 @@ import {
   useCardMap,
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
-import { useImmer } from "use-immer";
-import { delay } from "@/utils/utils";
-import { useAnimatedDeal } from "@/hooks/useAnimatedDeal";
-import {
-  createStandardDealLogic,
-  createStandardGatherLogic,
-} from "@/utils/dealUtils";
-import { useInitialDeal } from "@/hooks/useInitialDeal";
+import { useStateManager } from "@/hooks/useStateManager";
 
 type GameState = {
   grid: (PlayingCard | null)[];
@@ -38,23 +35,37 @@ type GameState = {
   won: boolean;
 };
 
-type GameSnapshot = {
-  game: GameState;
+const gameStateInitial: GameState = {
+  grid: Array(25).fill(null),
+  draw: createDeck(),
+  trash: [],
+  ended: false,
+  won: false,
 };
 
-function setup(): GameState {
-  const draw = shuffle(createDeck());
-  const grid = flipAllToFace(draw.splice(-25));
+async function resetAndDeal(
+  setGame: (updater: (draft: GameState) => void) => void,
+) {
+  setGame((draft) => {
+    const allCards = [...draft.draw, ...draft.grid, ...draft.trash].filter(
+      (card): card is PlayingCard => card !== null,
+    );
 
-  return {
-    grid,
-    draw,
-    trash: [],
-    ended: false,
-    won: false,
-  };
+    draft.grid = Array(25).fill(null);
+    draft.draw = flipAllToBack(allCards);
+    draft.trash = [];
+  });
+
+  await delay(1000);
+
+  setGame((draft) => {
+    const draw = shuffle(draft.draw);
+    draft.grid = flipAllToFace(draw.splice(-25));
+    draft.draw = draw;
+  });
 }
 
+// ========== Helper Functions ========== //
 function isAdjacent(indexA: number, indexB: number) {
   const rowA = Math.floor(indexA / 5);
   const colA = indexA % 5;
@@ -110,83 +121,29 @@ function evaluateEnd(state: GameState) {
   return { ended: false, won: false };
 }
 
+// ========== Main Component ========== //
 export default function MonteCarlo() {
-  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
-
-  const [dealLogic, setDealLogic] = useState(() =>
-    createStandardDealLogic(setup(), {
-      mainDeck: "draw",
-      grids: ["grid"],
-      piles: ["trash"],
-    }),
-  );
-
-  const [game, setGame] = useImmer<GameState>(dealLogic.initialState);
   const [selected, setSelected] = useImmer<number[] | null>(null);
 
-  const { runAnimatedSequence, isAnimating } = useAnimatedDeal<GameState>();
-  const { saveUndoState, undo, canUndo, clearHistory } =
-    useUndoHistory<GameSnapshot>();
-
-  const handleUndo = () => {
-    if (isAnimating) return;
-    const previousState = undo();
-    if (previousState) {
-      clearHistory();
-      setGame(previousState.game);
-    }
-  };
-
-  const { getGatherableCount, gatherOneCard } = useMemo(
-    () =>
-      createStandardGatherLogic<GameState>({
-        mainDeck: "draw",
-        grids: ["grid"],
-        piles: ["trash"],
-      }),
-    [],
-  );
-  // 3. Define the Dealing Sequence Callback
-  const startDeal = useCallback(
-    (currentLogic = dealLogic) => {
-      runAnimatedSequence({
-        setGame,
-        getGatherableCount,
-        gatherOneCard,
-        onGatherComplete: (draft) => {
-          Object.assign(draft, currentLogic.initialState);
-        },
-        // Wrap the call here to satisfy the signature
-        dealSequence: async (checkAbort) => {
-          await currentLogic.dealSequence(setGame, checkAbort, 100);
-        },
-      });
+  const {
+    isLoaded,
+    showIntro,
+    setShowIntro,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    startDeal: () => {
+      resetAndDeal(setGame);
     },
-    [
-      runAnimatedSequence,
-      setGame,
-      getGatherableCount,
-      gatherOneCard,
-      dealLogic,
-    ],
-  );
-
-  useInitialDeal(showIntro ?? true, startDeal);
-
-  function reset() {
-    clearHistory();
-    setSelected(null);
-
-    // 5. Generate a brand new setup and deal logic for the next game
-    const newLogic = createStandardDealLogic(setup(), {
-      mainDeck: "draw",
-      grids: ["grid"],
-      piles: ["trash"],
-    });
-
-    setDealLogic(newLogic);
-    startDeal(newLogic); // Pass the fresh logic explicitly to start gathering/dealing
-  }
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelected(null);
+    },
+  });
 
   function selectCell(index: number) {
     if (game.ended) return;
@@ -229,7 +186,7 @@ export default function MonteCarlo() {
   async function flipCards() {
     if (selected === null) return;
 
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
     setGame((draft) => {
       const card1 = draft.grid[selected[0]];
@@ -247,7 +204,7 @@ export default function MonteCarlo() {
   async function consolidateAndDeal() {
     if (game.ended) return;
 
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
     setSelected(null);
 
@@ -359,7 +316,7 @@ export default function MonteCarlo() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        // placeholder: { text: "Draw", infoPos: "left" },
+        placeholder: { text: "Draw", infoPos: "left" },
       },
       {
         id: "trash",
@@ -420,7 +377,7 @@ export default function MonteCarlo() {
         game.won ? "You cleared all cards!" : "No adjacent pairs left."
       }
       canUndo={canUndo}
-      handleUndo={handleUndo}
+      undo={undo}
     >
       {cardMap}
 

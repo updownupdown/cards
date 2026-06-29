@@ -255,7 +255,6 @@ export default function TheSandwichGuy() {
   const handleUndo = () => {
     const previousState = undo();
     if (previousState) {
-      clearHistory();
       setGame(previousState.game);
     }
   };
@@ -359,7 +358,7 @@ export default function TheSandwichGuy() {
           : "No valid sandwich available. You lose."
       }
       canUndo={canUndo}
-      handleUndo={handleUndo}
+      undo={handleUndo}
     >
       {cardMap}
 

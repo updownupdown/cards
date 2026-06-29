@@ -415,7 +415,7 @@ export default function TheBobaTeaShop() {
           : "You lost: discarded the fourth card of a rank."
       }
       canUndo={canUndo}
-      handleUndo={handleUndo}
+      undo={handleUndo}
     >
       {cardMap}
 

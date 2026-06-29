@@ -445,7 +445,7 @@ export default function Foursquare() {
       isLoaded={isLoaded}
       winLoseMessage={game.winLoseMessage}
       canUndo={canUndo}
-      handleUndo={handleUndo}
+      undo={handleUndo}
     >
       {cardMap}
     </GameWrapper>

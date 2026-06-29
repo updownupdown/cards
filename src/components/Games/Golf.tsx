@@ -259,7 +259,7 @@ export default function Golf() {
         game.won ? "You cleared the tableau!" : "No more playable cards."
       }
       canUndo={canUndo}
-      handleUndo={handleUndo}
+      undo={handleUndo}
     >
       {cardMap}
 

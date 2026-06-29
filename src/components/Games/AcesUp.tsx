@@ -357,7 +357,7 @@ export default function AcesUp() {
       reset={reset}
       isLoaded={isLoaded}
       canUndo={canUndo}
-      handleUndo={handleUndo}
+      undo={handleUndo}
     >
       {cardMap}
 

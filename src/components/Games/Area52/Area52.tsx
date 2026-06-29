@@ -17,31 +17,107 @@ import { View } from "react-native";
 import { Button } from "../../Button/Button";
 import { AnimatedCardMapping } from "../../Cards/AnimatedCard";
 import {
+  createDeck,
   flipAllToBack,
+  flipAllToFace,
   flipToBack,
   flipToFace,
   isRed,
+  PlayingCard,
   rankValue,
   shuffle,
 } from "../../Cards/card-utils";
 import { GameWrapper } from "../../common/GameWrapper";
 import { useToast } from "../../common/Toast";
-import {
-  GameState,
-  maxAttackersNum,
-  maxDefendersNum,
-  setup,
-} from "./Area52Setup";
+import { useStateManager } from "@/hooks/useStateManager";
+
+const maxAttackersNum = 3;
+const maxDefendersNum = 6;
+
+type Wave = 1 | 2;
+
+type GameState = {
+  defenderDeck: PlayingCard[];
+  currentDefenders: (PlayingCard | null)[];
+  attackerDeck: PlayingCard[];
+  discardDeck: PlayingCard[];
+  currentAttackers: PlayingCard[];
+  wave: Wave;
+  ended: boolean;
+  won: boolean;
+  winLoseMessage: string;
+};
+
+// --- SETUP --- //
+const gameStateInitial: GameState = {
+  defenderDeck: [],
+  currentDefenders: [],
+  attackerDeck: [],
+  discardDeck: createDeck(),
+  currentAttackers: [],
+  wave: 1,
+  ended: false,
+  won: false,
+  winLoseMessage: "",
+};
+
+async function resetAndDeal(
+  setGame: (updater: (draft: GameState) => void) => void,
+) {
+  setGame((draft) => {
+    const allCards = [
+      ...draft.defenderDeck,
+      ...draft.currentDefenders,
+      ...draft.attackerDeck,
+      ...draft.currentAttackers,
+      ...draft.discardDeck,
+    ].filter((card): card is PlayingCard => card !== null);
+
+    draft.discardDeck = flipAllToBack(allCards);
+    draft.defenderDeck = [];
+    draft.currentDefenders = [];
+    draft.attackerDeck = [];
+    draft.currentAttackers = [];
+  });
+
+  await delay(1000);
+
+  setGame((draft) => {
+    const draw = shuffle(draft.discardDeck);
+    draft.defenderDeck = draw.filter((card) => !isRed(card.suit));
+    draft.attackerDeck = draw.filter((card) => isRed(card.suit));
+    draft.discardDeck = [];
+    draft.wave = 1;
+    draft.ended = false;
+    draft.won = false;
+    draft.winLoseMessage = "";
+  });
+}
 
 export default function Area52() {
-  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
   const showToast = useToast();
-  const { saveUndoState, undo, canUndo, clearHistory } = useUndoHistory<{
-    game: GameState;
-  }>();
 
-  const [game, setGame] = useState<GameState>(setup(true));
   const [selectedDefenders, setSelectedDefenders] = useState<number[]>([]);
+
+  const {
+    isLoaded,
+    showIntro,
+    setShowIntro,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    startDeal: () => {
+      resetAndDeal(setGame);
+    },
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelectedDefenders([]);
+    },
+  });
 
   async function startGame(gameState: GameState) {
     const stateFrame = await refillAttackers(gameState);
@@ -49,14 +125,15 @@ export default function Area52() {
   }
 
   useEffect(() => {
-    if (showIntro === false) startGame(game);
-  }, [showIntro]);
+    if (
+      showIntro ||
+      game.currentAttackers.length > 0 ||
+      game.attackerDeck.length === 0
+    )
+      return;
 
-  useEffect(() => {
-    if (showIntro === false) {
-      setGame((prev) => ({ ...prev, started: true }));
-    }
-  }, [showIntro]);
+    startGame(game);
+  }, [showIntro, game.currentAttackers, game.attackerDeck]);
 
   const currentAttacker = useMemo(
     () => game.currentAttackers[game.currentAttackers.length - 1] ?? null,
@@ -109,7 +186,7 @@ export default function Area52() {
   async function applyAction(action: "dual" | "single" | "sacrifice") {
     if (!currentAttacker) return;
 
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
     // 1. Calculate the combat outcome perfectly synchronously
     let gameState = produce(game, (draft) => {
@@ -386,7 +463,7 @@ export default function Area52() {
     }
   };
 
-  const { cardMap, cardWidth, getZoneBasePos, getZoneStylesById } = useCardMap({
+  const { cardMap, getZoneBasePos, getZoneStylesById } = useCardMap({
     game,
     zones,
     cardMapper,
@@ -403,23 +480,11 @@ export default function Area52() {
       setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
-      reset={() => {
-        clearHistory();
-        setSelectedDefenders([]);
-        const gameSetup = setup();
-        setGame(gameSetup);
-        startGame(gameSetup);
-      }}
+      reset={reset}
       isLoaded={isLoaded}
       score={`${score} (${game.won ? "higher is better" : "closer to zero is better"})`}
       canUndo={canUndo}
-      handleUndo={() => {
-        const p = undo();
-        if (p) {
-          setGame(p.game);
-          setSelectedDefenders([]);
-        }
-      }}
+      undo={undo}
     >
       {cardMap}
 

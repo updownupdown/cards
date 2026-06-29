@@ -971,7 +971,7 @@ export default function Solitaire() {
       reset={resetGame}
       isLoaded={isLoaded}
       canUndo={canUndo}
-      handleUndo={handleUndo}
+      undo={handleUndo}
     >
       <View style={styles.gameShell}>
         <View ref={boardRef} style={styles.boardShell}>
