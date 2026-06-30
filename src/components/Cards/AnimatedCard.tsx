@@ -14,6 +14,7 @@ import { PlayingCard } from "./card-utils";
 import { CardColor, CardSizes } from "./CardStyles";
 
 export const defaultAnimDuration = 400;
+export const bufferedDefaultAnimDuration = defaultAnimDuration + 100;
 
 export type CardRegistration = {
   card: PlayingCard | null;

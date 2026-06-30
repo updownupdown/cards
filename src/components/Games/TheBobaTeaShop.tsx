@@ -8,7 +8,11 @@ import { produce } from "immer";
 import { useMemo, useState } from "react";
 import { Pressable, View } from "react-native";
 import { Button } from "../Button/Button";
-import { AnimatedCardMapping } from "../Cards/AnimatedCard";
+import {
+  AnimatedCardMapping,
+  bufferedDefaultAnimDuration,
+  defaultAnimDuration,
+} from "../Cards/AnimatedCard";
 import {
   createDeck,
   flipAllToBack,
@@ -243,7 +247,7 @@ export default function TheBobaTeaShop() {
         });
       });
 
-      await delay(200);
+      await delay(defaultAnimDuration / 2);
 
       // Flip next card over
       setGame((prev) => {
@@ -256,7 +260,7 @@ export default function TheBobaTeaShop() {
         });
       });
 
-      await delay(400);
+      await delay(bufferedDefaultAnimDuration);
     }
   }
 
@@ -427,7 +431,7 @@ export default function TheBobaTeaShop() {
           getZoneStylesById("rankTally"),
         ]}
       >
-        {(Object.keys(game.discardsByRank) as Array<PlayingCard["rank"]>)
+        {(Object.keys(game.discardsByRank) as PlayingCard["rank"][])
           .filter((r) => r !== "Joker")
           .map((rank) => {
             const discardCount = game.discardsByRank[rank];

@@ -4,13 +4,20 @@ import {
   MapZone,
   useCardMap,
 } from "@/components/Cards/CardMap";
-import { useGameLoading } from "@/hooks/useGameLoading";
-import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { useStateManager } from "@/hooks/useStateManager";
 import { Colors } from "@/styles/styles";
+import { delay } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
-import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
+import {
+  AnimatedCardMapping,
+  bufferedDefaultAnimDuration,
+  CardMapBGMapping,
+  defaultAnimDuration,
+} from "../Cards/AnimatedCard";
 import {
   createDeck,
+  flipAllToBack,
+  flipTopCardToFace,
   isFace,
   rankValue,
   shuffle,
@@ -37,7 +44,7 @@ function getColRow(index: number) {
 }
 
 export type GameState = {
-  deck: PlayingCard[];
+  draw: PlayingCard[];
   piles: PlayingCard[][];
   ended: boolean;
   won: boolean;
@@ -48,16 +55,38 @@ export type GameSnapshot = {
   game: GameState;
 };
 
-function setup(): GameState {
-  const deck = shuffle(createDeck().filter((c) => !isFace(c)));
+const gameStateInitial: GameState = {
+  draw: shuffle(createDeck().filter((c) => !isFace(c))),
+  piles: Array(16).fill([]),
+  ended: false,
+  won: false,
+  winLoseMessage: "",
+};
 
-  return {
-    deck,
-    piles: Array(16).fill([]),
-    ended: false,
-    won: false,
-    winLoseMessage: "",
-  };
+async function resetAndSetup(
+  setGame: (updater: (draft: GameState) => void) => void,
+) {
+  setGame((draft) => {
+    const allCards = [...draft.draw, ...draft.piles.flat()];
+
+    draft.draw = flipAllToBack(allCards);
+    draft.piles = Array(16).fill([]);
+  });
+
+  await delay(bufferedDefaultAnimDuration);
+
+  setGame((draft) => {
+    const draw = shuffle(draft.draw);
+    draft.draw = draw;
+  });
+
+  await delay(bufferedDefaultAnimDuration);
+
+  setGame((draft) => {
+    draft.draw = flipTopCardToFace(draft.draw);
+  });
+
+  await delay(bufferedDefaultAnimDuration);
 }
 
 function numFaceDownTopCards(piles: PlayingCard[][]) {
@@ -98,48 +127,43 @@ function getAdjacentPiles(piles: PlayingCard[][]) {
 }
 
 export default function Foursquare() {
-  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
+  const showToast = useToast();
 
-  const { saveUndoState, undo, canUndo, clearHistory } =
-    useUndoHistory<GameSnapshot>();
-  const handleUndo = () => {
-    const previousState = undo();
-    if (previousState) {
-      setGame(previousState.game);
-    }
-  };
+  const [showLegalPlacements, setShowLegalPlacements] = useState(false);
 
-  function initGame(game: GameState) {
-    turnOverDeckCard(game);
-  }
+  const {
+    isLoaded,
+    showIntro,
+    setShowIntro,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setShowLegalPlacements(false);
+    },
+  });
 
-  useEffect(() => {
-    if (showIntro === false) {
-      initGame(game);
-    }
-  }, [showIntro]);
+  // };
 
-  const [game, setGame] = useState<GameState>(setup());
+  // function initGame(game: GameState) {
+  //   turnOverDeckCard(game);
+  // }
 
-  async function turnOverDeckCard(gameState: GameState) {
-    const topCard = top(gameState.deck);
-    let deck = [...gameState.deck];
-    if (topCard) {
-      deck = deck.slice(0, -1);
-      deck = [...deck, { ...topCard, faceUp: true }];
-    }
+  // useEffect(() => {
+  //   if (showIntro === false) {
+  //     initGame(game);
+  //   }
+  // }, [showIntro]);
 
-    const newGame = { ...gameState, deck };
-
-    setGame(newGame);
-  }
-
-  function reset() {
-    clearHistory();
-    const initSetup = setup();
-    setGame(initSetup);
-    initGame(initSetup);
-  }
+  // Turn over deck card if the top card is face down
 
   // ====================================
   // PLACE CARD ON A PILE
@@ -148,13 +172,13 @@ export default function Foursquare() {
     if (!legal.includes(index)) return;
 
     // Save state for undo
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
     // Move draw card to selected pile
-    const drawCard = top(game.deck);
+    const drawCard = top(game.draw);
 
-    const deck = [...game.deck];
-    deck.pop();
+    const draw = [...game.draw];
+    draw.pop();
 
     const piles = [...game.piles];
     let targetPile = [...piles[index]];
@@ -174,10 +198,12 @@ export default function Foursquare() {
     piles[index] = targetPile;
 
     // Prepare to update game
-    const intermediateGame = { ...game, piles, deck };
+    const intermediateGame = { ...game, piles, draw };
 
     // Update game
     setGame(intermediateGame);
+
+    await delay(defaultAnimDuration / 2);
 
     // Flip cards in piles logic
     const topCardAtTargetPile = top(intermediateGame.piles[index]);
@@ -197,8 +223,16 @@ export default function Foursquare() {
 
     setGame(finalGame);
 
-    // Turn over draw deck card
-    turnOverDeckCard(finalGame);
+    await delay(defaultAnimDuration / 2);
+
+    // Turn over deck card if the top card is face down
+    const topCard = top(finalGame.draw);
+
+    if (topCard && !topCard.faceUp) {
+      setGame((draft) => {
+        draft.draw = flipTopCardToFace(draft.draw);
+      });
+    }
   }
 
   function isMinOrMax(line: PlayingCard[], card: PlayingCard) {
@@ -298,20 +332,20 @@ export default function Foursquare() {
   }
 
   const legal = useMemo(
-    () => legalPlacements(game.piles, top(game.deck)),
+    () => legalPlacements(game.piles, top(game.draw)),
     [game.piles],
   );
 
   // Win/lose conditions
   useEffect(() => {
-    if (game.deck.length === 40) return;
+    if (game.draw.length === 40) return;
 
     // Win condition
     if (hasAllFaceUp(game.piles)) {
       setGame((prev) => {
         return { ...prev, ended: true, won: true, winLoseMessage: "You won!" };
       });
-    } else if (game.deck.length === 0) {
+    } else if (game.draw.length === 0) {
       setGame((prev) => {
         return {
           ...prev,
@@ -330,11 +364,7 @@ export default function Foursquare() {
         };
       });
     }
-  }, [legal, game.deck]);
-
-  const showToast = useToast();
-
-  const [showLegalPlacements, setShowLegalPlacements] = useState(false);
+  }, [legal, game.draw]);
 
   // ========== Card Mapping ========== //
   const zones: MapZone[] = useMemo(() => {
@@ -342,13 +372,12 @@ export default function Foursquare() {
       cols: 4,
       rows: 4,
       colOffset: 0,
-      rowOffset: 1,
+      rowOffset: 1.25,
     }).map((pos, i) => ({
       id: `pile-${i}`,
       pileIndex: i,
       cards: game.piles[i],
       name: "pile",
-
       col: pos.c,
       row: pos.r,
       baseZIndex: 10,
@@ -358,10 +387,9 @@ export default function Foursquare() {
 
     return [
       {
-        id: "deck",
-        name: "deck",
-
-        cards: game.deck,
+        id: "draw",
+        name: "draw",
+        cards: game.draw,
         col: 1.5,
         row: 0,
         fan: { maxVisible: 3 },
@@ -413,13 +441,15 @@ export default function Foursquare() {
   ): AnimatedCardMapping | undefined => {
     if (mappedCard.zoneName === "pile" && mappedCard.pileIndex !== undefined) {
       const isLegal = legal.includes(mappedCard.pileIndex);
+      const selectColor = showLegalPlacements
+        ? isLegal
+          ? Colors.cardSelectGreen
+          : Colors.cardSelectRed
+        : "none";
 
       return {
-        selectColor: showLegalPlacements
-          ? isLegal
-            ? Colors.cardSelectGreen
-            : Colors.cardSelectRed
-          : "none",
+        selectColor,
+        forceOverlayColor: showLegalPlacements && mappedCard.topOfZone,
         onPress: () => handOnPress(isLegal, mappedCard.pileIndex!),
       };
     }
@@ -440,12 +470,12 @@ export default function Foursquare() {
       setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
-      score={game.deck.length * (game.won ? 1 : -1)}
+      score={game.draw.length * (game.won ? 1 : -1)}
       reset={reset}
       isLoaded={isLoaded}
       winLoseMessage={game.winLoseMessage}
       canUndo={canUndo}
-      undo={handleUndo}
+      undo={undo}
     >
       {cardMap}
     </GameWrapper>

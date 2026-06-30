@@ -8,20 +8,23 @@ const maxHistory = 10;
 
 type Props<T> = {
   gameStateInitial: T;
-  startDeal: () => void;
   resetNonGameStates?: () => void;
+  resetAndSetup: () => Promise<void>;
+  postSetupAction?: () => Promise<void>;
 };
 
 export function useStateManager<T>({
-  startDeal,
   gameStateInitial,
   resetNonGameStates,
+  resetAndSetup,
+  postSetupAction,
 }: Props<T>) {
   // —— Game State ————————————————————————
   const [game, setGame] = useImmer<T>(gameStateInitial);
 
   // —— Game Loading ————————————————————————
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isSettingUp, setIsSettingUp] = useState(true);
 
   useEffect(() => {
     // Delay rendering heavy components so the UI can mount and fade in first.
@@ -45,12 +48,17 @@ export function useStateManager<T>({
   // —— Initiate First Deal ————————————————————————
   const hasDealtRef = useRef(false);
 
+  async function firstDeal() {
+    hasDealtRef.current = true;
+    await resetAndSetup();
+    await postSetupAction?.();
+    setIsSettingUp(false);
+  }
+
   useEffect(() => {
     if (showIntro || hasDealtRef.current) return;
-
-    hasDealtRef.current = true;
-    startDeal();
-  }, [showIntro, startDeal]);
+    firstDeal();
+  }, [showIntro, resetAndSetup]);
 
   // —— Undo ————————————————————————
   const [history, setHistory] = useState<T[]>([]);
@@ -90,13 +98,28 @@ export function useStateManager<T>({
   }, [prevState, setGame, resetNonGameStates]);
 
   // —— Reset ————————————————————————
-  function reset() {
+  async function reset() {
+    setIsSettingUp(true);
     clearHistory();
     resetNonGameStates?.();
-    startDeal();
+    await resetAndSetup();
+    setGame((draft) => {
+      if (
+        typeof draft === "object" &&
+        draft !== null &&
+        "ended" in draft &&
+        "won" in draft
+      ) {
+        draft.ended = false;
+        draft.won = false;
+      }
+    });
+    await postSetupAction?.();
+    setIsSettingUp(false);
   }
 
   return {
+    isSettingUp,
     reset,
     saveUndoState,
     undo,

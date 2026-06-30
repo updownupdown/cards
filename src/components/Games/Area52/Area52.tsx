@@ -1,4 +1,3 @@
-import { Text } from "@/components/common/Text";
 import {
   getGridColRows,
   MappedCard,
@@ -6,8 +5,8 @@ import {
   useCardMap,
 } from "@/components/Cards/CardMap";
 import { CardColor } from "@/components/Cards/CardStyles";
-import { useGameLoading } from "@/hooks/useGameLoading";
-import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { Text } from "@/components/common/Text";
+import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
 import { textStyles } from "@/styles/textStyles";
 import { delay } from "@/utils/utils";
@@ -15,11 +14,14 @@ import { produce } from "immer";
 import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { Button } from "../../Button/Button";
-import { AnimatedCardMapping } from "../../Cards/AnimatedCard";
+import {
+  AnimatedCardMapping,
+  bufferedDefaultAnimDuration,
+  defaultAnimDuration,
+} from "../../Cards/AnimatedCard";
 import {
   createDeck,
   flipAllToBack,
-  flipAllToFace,
   flipToBack,
   flipToFace,
   isRed,
@@ -29,7 +31,6 @@ import {
 } from "../../Cards/card-utils";
 import { GameWrapper } from "../../common/GameWrapper";
 import { useToast } from "../../common/Toast";
-import { useStateManager } from "@/hooks/useStateManager";
 
 const maxAttackersNum = 3;
 const maxDefendersNum = 6;
@@ -61,7 +62,7 @@ const gameStateInitial: GameState = {
   winLoseMessage: "",
 };
 
-async function resetAndDeal(
+async function resetAndSetup(
   setGame: (updater: (draft: GameState) => void) => void,
 ) {
   setGame((draft) => {
@@ -80,7 +81,7 @@ async function resetAndDeal(
     draft.currentAttackers = [];
   });
 
-  await delay(1000);
+  await delay(bufferedDefaultAnimDuration);
 
   setGame((draft) => {
     const draw = shuffle(draft.discardDeck);
@@ -92,6 +93,8 @@ async function resetAndDeal(
     draft.won = false;
     draft.winLoseMessage = "";
   });
+
+  await delay(bufferedDefaultAnimDuration);
 }
 
 export default function Area52() {
@@ -110,8 +113,8 @@ export default function Area52() {
     saveUndoState,
     reset,
   } = useStateManager({
-    startDeal: () => {
-      resetAndDeal(setGame);
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
     },
     gameStateInitial,
     resetNonGameStates: () => {
@@ -128,9 +131,10 @@ export default function Area52() {
     if (
       showIntro ||
       game.currentAttackers.length > 0 ||
-      game.attackerDeck.length === 0
-    )
+      game.currentDefenders.length > 0
+    ) {
       return;
+    }
 
     startGame(game);
   }, [showIntro, game.currentAttackers, game.attackerDeck]);
@@ -229,7 +233,8 @@ export default function Area52() {
     // 2. Apply it and wait for visual flight
     setGame(gameState);
     setSelectedDefenders([]);
-    await delay(400);
+
+    await delay(bufferedDefaultAnimDuration);
 
     // 3. Pass the resulting state down the async pipeline
     gameState = await checkWaveTransition(gameState);
@@ -271,7 +276,7 @@ export default function Area52() {
           draft.attackerDeck.push({ ...card, faceUp: false });
         });
         setGame(stateFrame);
-        await delay(60);
+        await delay(defaultAnimDuration / 2);
       }
 
       const wave2ReadyState = produce(stateFrame, (draft) => {
@@ -293,7 +298,7 @@ export default function Area52() {
       gameState.attackerDeck.length > 0 &&
       !gameState.ended
     ) {
-      await delay(150);
+      await delay(defaultAnimDuration / 2);
 
       gameState = produce(gameState, (draft) => {
         const nextAttacker = draft.attackerDeck.pop()!;
@@ -321,22 +326,29 @@ export default function Area52() {
           draft.currentDefenders[i] = flipToFace(nextDefender);
         });
         setGame(stateFrame);
-        await delay(150);
+        await delay(defaultAnimDuration / 2);
       }
-    }
-
-    // Check lose condition
-    if (stateFrame.currentDefenders.filter(Boolean).length === 0) {
-      stateFrame = produce(stateFrame, (draft) => {
-        draft.ended = true;
-        draft.won = false;
-        draft.winLoseMessage = "No more defenders left!";
-      });
-      setGame(stateFrame);
     }
 
     return stateFrame;
   }
+
+  // Check lose condition
+  useEffect(() => {
+    if (game.ended) return;
+
+    const hasAttackers = game.currentAttackers.length > 0;
+    const hasDefenders = game.currentDefenders.some((d) => d !== null);
+    const hasAttackerDeck = game.attackerDeck.length > 0;
+
+    if (hasAttackers && !hasDefenders && !hasAttackerDeck) {
+      setGame((draft) => {
+        draft.ended = true;
+        draft.won = false;
+        draft.winLoseMessage = "You have no cards left to play!";
+      });
+    }
+  }, [game]);
 
   // ========== Card Map ========== //
   const zones: MapZone[] = useMemo(() => {
@@ -433,9 +445,9 @@ export default function Area52() {
 
     // Defender Logic
     if (mappedCard.zoneName === "defender") {
-      const isSelected = !!(
-        mappedCard.refIndex && selectedDefenders.includes(mappedCard.refIndex)
-      );
+      const isSelected =
+        mappedCard.refIndex !== undefined &&
+        selectedDefenders.includes(mappedCard.refIndex);
       let selectColor: CardColor = "none";
       if (isSelected) {
         selectColor =
@@ -482,6 +494,7 @@ export default function Area52() {
       won={game.won}
       reset={reset}
       isLoaded={isLoaded}
+      winLoseMessage={game.winLoseMessage}
       score={`${score} (${game.won ? "higher is better" : "closer to zero is better"})`}
       canUndo={canUndo}
       undo={undo}

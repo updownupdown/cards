@@ -83,7 +83,6 @@ export const Card = ({
           position: "relative",
           zIndex: 3,
           outlineWidth: 0,
-          borderRadius: cardWidth * cardDims.ratioRadius,
           boxShadow: isHiddenUnderDeck
             ? "none"
             : getCardShadow({
@@ -94,6 +93,10 @@ export const Card = ({
                 forceSelectColor,
                 isPlaceholder,
               }),
+          // Potential fixes for clipping mask issue on Chrome mobile
+          // borderRadius: cardWidth * cardDims.ratioRadius,
+          borderRadius: Math.max(cardWidth, 1) * cardDims.ratioRadius,
+          backfaceVisibility: "hidden",
         },
       ]}
     >

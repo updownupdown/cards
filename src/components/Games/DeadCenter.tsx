@@ -1,4 +1,3 @@
-import { Text } from "@/components/common/Text";
 import {
   ColRows,
   getGridColRows,
@@ -6,17 +5,24 @@ import {
   MapZone,
   useCardMap,
 } from "@/components/Cards/CardMap";
-import { useGameLoading } from "@/hooks/useGameLoading";
+import { Text } from "@/components/common/Text";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
-import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, FontWeight } from "@/styles/styles";
-import { useEffect, useMemo, useState } from "react";
+import { FontWeight } from "@/styles/styles";
+import { delay } from "@/utils/utils";
+import { useEffect, useMemo } from "react";
 import { View } from "react-native";
-import { AnimatedCardMapping } from "../Cards/AnimatedCard";
+import {
+  AnimatedCardMapping,
+  bufferedDefaultAnimDuration,
+} from "../Cards/AnimatedCard";
 import {
   cardColor,
   createDeck,
+  flipAllToBack,
+  flipToFace,
+  flipTopCardToFace,
   isFace,
   isJoker,
   PlayingCard,
@@ -62,9 +68,9 @@ type Zombie = {
 type Phase = "reveal" | "play" | "kill";
 
 type GameState = {
+  draw: PlayingCard[];
   piles: PlayingCard[][];
   zombies: Zombie[];
-  draw: PlayingCard[];
   phase: Phase;
   lastPlayedPile: number | null;
   ended: boolean;
@@ -72,39 +78,67 @@ type GameState = {
   winLoseMessage?: string;
 };
 
-type GameSnapshot = {
-  game: GameState;
+const gameStateInitial: GameState = {
+  draw: createDeck({ faceUp: false, includeJokers: true }),
+  piles: [],
+  zombies: [],
+  phase: "reveal",
+  lastPlayedPile: null,
+  ended: false,
+  won: false,
 };
 
-function setup(): GameState {
-  const deck = createDeck({ faceUp: false, includeJokers: true });
-  const all = shuffle(deck);
-  const zombiesCards = shuffle(all.filter(isFace));
-  const draw = shuffle(all.filter((card) => !isFace(card)));
+async function resetAndSetup(
+  setGame: (updater: (draft: GameState) => void) => void,
+) {
+  setGame((draft) => {
+    const allCards = flipAllToBack([
+      ...draft.draw,
+      ...draft.piles.flat(),
+      ...draft.zombies.map((z) => z.card),
+    ]);
 
-  const piles = Array.from({ length: 9 }, () => [] as PlayingCard[]);
-  for (let i = 0; i < 9; i += 1) {
-    const next = draw.shift();
-    if (next) piles[i].push({ ...next, faceUp: true });
-  }
+    draft.draw = allCards;
+    draft.piles = [];
+    draft.zombies = [];
+    draft.phase = "reveal";
+    draft.lastPlayedPile = null;
+  });
 
-  const zombies = Array.from({ length: 12 }, (_, idx) => ({
-    id: `z-${idx}`,
-    card: zombiesCards[idx],
-    dead: false,
-  }));
+  await delay(bufferedDefaultAnimDuration);
 
-  return {
-    piles,
-    zombies,
-    draw,
-    phase: "reveal",
-    lastPlayedPile: null,
-    ended: false,
-    won: false,
-  };
+  setGame((draft) => {
+    const allCards = shuffle(draft.draw);
+
+    const zombiesCards = shuffle(allCards.filter(isFace));
+    draft.draw = shuffle(allCards.filter((card) => !isFace(card)));
+
+    const piles = Array.from({ length: 9 }, () => [] as PlayingCard[]);
+    for (let i = 0; i < 9; i += 1) {
+      const next = draft.draw.pop();
+      if (next) piles[i].push(flipToFace(next));
+    }
+
+    const zombies = Array.from({ length: 12 }, (_, idx) => ({
+      id: `z-${idx}`,
+      card: zombiesCards[idx],
+      dead: false,
+    }));
+
+    draft.piles = piles;
+    draft.zombies = zombies;
+  });
+
+  await delay(bufferedDefaultAnimDuration);
+
+  setGame((draft) => {
+    draft.draw = flipTopCardToFace(draft.draw);
+  });
+
+  await delay(bufferedDefaultAnimDuration);
 }
 
+// ========== Helper Functions ========== //
 function canPlayOn(top: PlayingCard, card: PlayingCard) {
   if (!top || !card) return false;
 
@@ -173,40 +207,38 @@ function aliveCount(zombies: Zombie[]) {
 
 export default function DeadCenter() {
   const { zoneBg } = useGameZoneBackground();
-  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
-  const [game, setGame] = useState<GameState>(setup);
 
-  const { saveUndoState, undo, canUndo, clearHistory } =
-    useUndoHistory<GameSnapshot>();
-  const handleUndo = () => {
-    const previousState = undo();
-    if (previousState) {
-      setGame(previousState.game);
-    }
-  };
-
-  function reset() {
-    clearHistory();
-    setGame(setup());
-  }
+  const {
+    isSettingUp,
+    isLoaded,
+    showIntro,
+    setShowIntro,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+  });
 
   async function revealZombie(index: number) {
     if (game.ended || game.phase !== "reveal") return;
     const zombie = game.zombies[index];
     if (!zombie || zombie.dead || zombie.card.faceUp) return;
 
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
-    setGame((prev) => {
-      const zombies = prev.zombies.map((z, i) =>
+    setGame((draft) => {
+      draft.zombies = draft.zombies.map((z, i) =>
         i === index ? { ...z, card: { ...z.card, faceUp: true } } : z,
       );
 
-      return {
-        ...prev,
-        zombies,
-        phase: "play",
-      };
+      draft.phase = "play";
     });
   }
 
@@ -217,49 +249,26 @@ export default function DeadCenter() {
     const top = game.piles[index][game.piles[index].length - 1];
     if (!canPlayOn(top, currentDraw)) return;
 
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
-    setGame((prev) => {
-      const piles = prev.piles;
-      piles[index] = [...piles[index], currentDraw];
-
-      const draw = [...prev.draw].slice(0, -1);
-
-      return {
-        ...prev,
-        piles,
-        draw,
-        phase: "kill",
-        lastPlayedPile: index,
-      };
+    setGame((draft) => {
+      draft.piles[index] = [...draft.piles[index], currentDraw];
+      draft.draw = [...draft.draw].slice(0, -1);
+      draft.phase = "kill";
+      draft.lastPlayedPile = index;
     });
   }
 
   async function killZombie(zombieIndex: number) {
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
-    setGame((prev) => {
-      let zombies = [...prev.zombies];
-
+    setGame((draft) => {
       // Kill zombie
-      if (zombieIndex !== null) {
-        const z = zombies[zombieIndex];
-        if (z && z.card.faceUp && !z.dead) {
-          zombies = zombies.map((entry, idx) =>
-            idx === zombieIndex
-              ? { ...entry, card: { ...entry.card, faceUp: false }, dead: true }
-              : entry,
-          );
-        }
-      }
+      draft.zombies[zombieIndex].dead = true;
 
       // Go to reveal phase if possible, otherwise, play phase
-      return {
-        ...prev,
-        zombies,
-        phase: needsReveal(zombies) ? "reveal" : "play",
-        lastPlayedPile: null,
-      };
+      draft.phase = needsReveal(draft.zombies) ? "reveal" : "play";
+      draft.lastPlayedPile = null;
     });
   }
 
@@ -270,19 +279,10 @@ export default function DeadCenter() {
     const drawCard = game.draw[game.draw.length - 1];
     if (drawCard.faceUp) return;
 
-    setGame((prev) => {
-      const draw = [...prev.draw];
-      const drawCardIndex = prev.draw.length - 1;
-      const currentDraw = draw[drawCardIndex];
-      draw[drawCardIndex] = { ...draw[drawCardIndex], faceUp: true };
-
-      return {
-        ...prev,
-        draw,
-        currentDraw,
-        phase: "play",
-        lastPlayedPile: null,
-      };
+    setGame((draft) => {
+      draft.draw = flipTopCardToFace(draft.draw);
+      draft.phase = "play";
+      draft.lastPlayedPile = null;
     });
   }
 
@@ -317,27 +317,21 @@ export default function DeadCenter() {
       return;
 
     setTimeout(() => {
-      setGame((prev) => {
-        return {
-          ...prev,
-          phase: needsReveal(prev.zombies) ? "reveal" : "play",
-        };
+      setGame((draft) => {
+        draft.phase = needsReveal(draft.zombies) ? "reveal" : "play";
       });
     }, 1500);
   }, [currentAttacks]);
 
   // Manage win/lose condition
   useEffect(() => {
-    if (game.ended) return;
+    if (game.ended || isSettingUp) return;
 
     if (game.draw.length === 0) {
-      setGame((prev) => {
-        return {
-          ...prev,
-          ended: true,
-          won: false,
-          winLoseMessage: "No cards left to draw!",
-        };
+      setGame((draft) => {
+        draft.ended = true;
+        draft.won = false;
+        draft.winLoseMessage = "No cards left to draw!";
       });
       return;
     }
@@ -348,26 +342,20 @@ export default function DeadCenter() {
     );
 
     if (!playable) {
-      setGame((prev) => {
-        return {
-          ...prev,
-          ended: true,
-          won: false,
-          winLoseMessage: "Unable to place card.",
-        };
+      setGame((draft) => {
+        draft.ended = true;
+        draft.won = false;
+        draft.winLoseMessage = "Unable to place card.";
       });
       return;
     }
 
     // No more zombie - win!
     if (aliveCount(game.zombies) === 0) {
-      setGame((prev) => {
-        return {
-          ...prev,
-          ended: true,
-          won: true,
-          winLoseMessage: "You killed all the zombies!",
-        };
+      setGame((draft) => {
+        draft.ended = true;
+        draft.won = true;
+        draft.winLoseMessage = "You killed all the zombies!";
       });
       return;
     }
@@ -377,13 +365,13 @@ export default function DeadCenter() {
   const zones: MapZone[] = useMemo(() => {
     const zombieZones: MapZone[] = zombieZonesColRows.map((pos, i) => ({
       id: `zombie-${i}`,
-      pileIndex: i,
-      cards: [game.zombies[i].card],
       name: "zombie",
-
+      pileIndex: i,
+      cards: game.zombies[i]?.card ? [game.zombies[i].card] : undefined,
       col: pos.c,
       row: pos.r,
       baseZIndex: 1,
+      placeholder: {},
     }));
     const pileZones: MapZone[] = getGridColRows({
       cols: 3,
@@ -392,10 +380,9 @@ export default function DeadCenter() {
       rowOffset: 2,
     }).map((pos, i) => ({
       id: `pile-${i}`,
+      name: "pile",
       pileIndex: i,
       cards: game.piles[i],
-      name: "pile",
-
       col: pos.c,
       row: pos.r,
       baseZIndex: 10,
@@ -405,7 +392,6 @@ export default function DeadCenter() {
     return [
       {
         id: "gameInfo",
-
         col: 0,
         row: 0,
         width: "full",
@@ -414,7 +400,6 @@ export default function DeadCenter() {
       {
         id: "draw",
         name: "draw",
-
         cards: game.draw,
         col: 4,
         row: 0,
@@ -442,10 +427,11 @@ export default function DeadCenter() {
         game.phase === "kill" && currentAttacks.includes(mappedCard.pileIndex);
 
       const selectedColor = () => {
-        if (game.phase === "reveal" && canReveal) {
-          return "purple";
-        } else if (game.phase === "kill" && canKill) {
-          return "purple";
+        if (
+          (game.phase === "reveal" && canReveal) ||
+          (game.phase === "kill" && canKill)
+        ) {
+          return "red";
         }
         return "none";
       };
@@ -453,8 +439,9 @@ export default function DeadCenter() {
 
       return {
         selectColor,
-        forceOverlayColor: selectColor === "purple",
-        isPlaceholder: zombie.dead,
+        forceOverlayColor: selectColor === "red",
+        forceSelectColor: selectColor === "red",
+        isVisible: !zombie.dead,
         onPress: () => {
           if (canReveal) {
             revealZombie(mappedCard.pileIndex!);
@@ -479,7 +466,7 @@ export default function DeadCenter() {
 
       return {
         selectColor: canPlay ? "green" : "none",
-        forceSelectColor: canPlay,
+        forceOverlayColor: canPlay,
         isDisabled: !canPlay,
         onPress: () => playToPile(pileIdx),
       };
@@ -506,7 +493,7 @@ export default function DeadCenter() {
         game.winLoseMessage ?? (game.won ? "You won!" : "You lost.")
       }
       canUndo={canUndo}
-      undo={handleUndo}
+      undo={undo}
     >
       {cardMap}
 

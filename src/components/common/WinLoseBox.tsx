@@ -130,7 +130,7 @@ export const WinLoseBox = ({
               {message}
             </Text>
           )}
-          {score && (
+          {score !== undefined && (
             <Text
               size={16}
               weight={300}

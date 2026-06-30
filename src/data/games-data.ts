@@ -45,13 +45,13 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   // ============================== //
   // Area 52
   "/area-52": {
-    title: "Area 52 (BETA)",
+    title: "Area 52",
     thumbnail: "Area52.jpg",
     cardBack: "Area52.png",
     cardColorBg: "#200a16",
     cardColorText: "#ffbcdd",
     cardDescription:
-      "A two-wave defense puzzle where each choice of defender can save or sink your final stand.",
+      "Fight off waves of alien invaders before running out of defenders.",
     stats: {
       complexity: 70,
       difficulty: 70,
@@ -79,13 +79,13 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // The Sandwich Guy
   "/the-sandwich-guy": {
-    title: "The Sandwich Guy (BETA)",
+    title: "The Sandwich Guy",
     thumbnail: "SandwichGuy.jpg",
     cardBack: "SandwichGuy.png",
     cardColorBg: "#18251f",
     cardColorText: "#c6ffd5",
     cardDescription:
-      "Build clever three-card sandwiches with evenly spaced ranks to keep your ingredient engine running.",
+      "Serve sandwiches by selecting evenly spaced cards; don't let your ingredients run out!",
     stats: {
       complexity: 20,
       difficulty: 80,
@@ -112,13 +112,13 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Dead Center
   "/dead-center": {
-    title: "Dead Center (BETA)",
+    title: "Dead Center",
     thumbnail: "DeadCenter.jpg",
     cardBack: "DeadCenter.png",
     cardColorBg: "#241a15",
     cardColorText: "#fcd3c2",
     cardDescription:
-      "Survive a tight cabin siege by placing cards strategically to unlock zombie eliminations.",
+      "Defend your cabin against a siege of zombies, using supporting cards strategically.",
     stats: {
       complexity: 75,
       difficulty: 50,
@@ -147,13 +147,13 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Foursquare
   "/foursquare": {
-    title: "Foursquare (BETA)",
+    title: "Foursquare",
     thumbnail: "Foursquare.jpg",
     cardBack: "Foursquare.png",
     cardColorBg: "#202640",
     cardColorText: "#d8e2ff",
     cardDescription:
-      "Develop a volatile 4x4 city grid where each new card can flip entire districts.",
+      "A tile-laying game where each move can disrupt the precarious grid.",
     stats: {
       complexity: 30,
       difficulty: 50,
@@ -285,13 +285,13 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Hide and Seek
   "/hide-and-seek": {
-    title: "Hide and Seek (BETA)",
+    title: "Hide and Seek",
     thumbnail: "HideAndSeek.jpg",
     cardBack: "HideAndSeek.png",
     cardColorBg: "#132422",
     cardColorText: "#91f1e9",
     cardDescription:
-      "Carefully uncover buried cards without trapping crucial reveals behind dead stacks.",
+      "Find your hidden playmates through careful planning and deduction.",
     stats: {
       complexity: 20,
       difficulty: 65,
@@ -332,17 +332,17 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   // ======================================= //
   // Monte Carlo
   "/monte-carlo": {
-    title: "Monte Carlo (BETA)",
+    title: "Monte Carlo",
     thumbnail: "MonteCarlo.jpg",
     cardBack: "MonteCarlo.png",
     cardColorBg: "#242b33",
     cardColorText: "#c6d3e9",
     cardDescription:
-      "Match adjacent ranks, collapse the grid, and keep clearing until every card is gone.",
+      "Clear the grid by matching adjacent cards and strategically consolidating.",
     stats: {
       complexity: 10,
-      difficulty: 30,
-      luck: 50,
+      difficulty: 20,
+      luck: 30,
     },
     category: GameCategory.ClassicSolitaire,
     briefRules: [

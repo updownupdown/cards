@@ -1,9 +1,15 @@
-import { useGameLoading } from "@/hooks/useGameLoading";
-import { useUndoHistory } from "@/hooks/useUndoHistory";
-import { useMemo, useState } from "react";
-import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
+import { useStateManager } from "@/hooks/useStateManager";
+import { delay } from "@/utils/utils";
+import { useMemo } from "react";
+import {
+  AnimatedCardMapping,
+  bufferedDefaultAnimDuration,
+  CardMapBGMapping,
+} from "../Cards/AnimatedCard";
 import {
   createDeck,
+  flipAllToBack,
+  flipAllToFace,
   isFace,
   shuffle,
   top,
@@ -38,22 +44,9 @@ const guessZonesColRows: ColRows[] = [
   { c: 0, r: 2 },
 ];
 
-type GameState = {
-  playmates: PlayingCard[];
-  guesses: (PlayingCard | null)[];
-  draw: PlayingCard[];
-  discard: PlayingCard[];
-  scorePile: PlayingCard[];
-  ended: boolean;
-  won: boolean;
-  winLoseMessage: string;
-};
-
-type GameSnapshot = {
-  game: GameState;
-};
-
 function dealPlaymates(faceCards: PlayingCard[]) {
+  console.log(faceCards);
+
   const jacks = shuffle(faceCards.filter((c) => c.rank === "J"));
   const queens = shuffle(faceCards.filter((c) => c.rank === "Q"));
   const kings = shuffle(faceCards.filter((c) => c.rank === "K"));
@@ -111,49 +104,84 @@ function getScoreIndexes(playmateIndex: number) {
   return indexes;
 }
 
-function setup(): GameState {
-  const fullDeck = shuffle(createDeck());
-  const playmates = dealPlaymates(fullDeck.filter((c) => isFace(c)));
-  const drawPile = shuffle(fullDeck.filter((c) => !isFace(c))).map((c) => ({
-    ...c,
-    faceUp: true,
-  }));
+type GameState = {
+  playmates: PlayingCard[];
+  guesses: (PlayingCard | null)[];
+  draw: PlayingCard[];
+  discard: PlayingCard[];
+  scorePile: PlayingCard[];
+  ended: boolean;
+  won: boolean;
+  winLoseMessage: string;
+};
 
-  return {
-    playmates,
-    guesses: Array.from({ length: 14 }, () => null),
-    draw: drawPile,
-    discard: [],
-    scorePile: [],
-    ended: false,
-    won: false,
-    winLoseMessage: "",
-  };
+const gameStateInitial: GameState = {
+  playmates: [],
+  guesses: Array.from({ length: 14 }, () => null),
+  draw: shuffle(createDeck()),
+  discard: [],
+  scorePile: [],
+  ended: false,
+  won: false,
+  winLoseMessage: "",
+};
+
+async function resetAndSetup(
+  setGame: (updater: (draft: GameState) => void) => void,
+) {
+  setGame((draft) => {
+    const allCards = [
+      ...draft.draw,
+      ...draft.guesses,
+      ...draft.playmates,
+      ...draft.discard,
+      ...draft.scorePile,
+    ].filter((card): card is PlayingCard => card !== null);
+
+    draft.playmates = [];
+    draft.guesses = Array.from({ length: 14 }, () => null);
+    draft.draw = flipAllToBack(allCards);
+    draft.discard = [];
+    draft.scorePile = [];
+    draft.winLoseMessage = "";
+  });
+
+  await delay(bufferedDefaultAnimDuration);
+
+  setGame((draft) => {
+    draft.playmates = dealPlaymates(draft.draw.filter((c) => isFace(c)));
+    draft.draw = flipAllToFace(shuffle(draft.draw.filter((c) => !isFace(c))));
+  });
+
+  await delay(bufferedDefaultAnimDuration);
 }
 
+// ── Main Component ─────────────────────────────────────────
 export default function HideAndSeek() {
-  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
-  const [game, setGame] = useState<GameState>(setup);
+  const {
+    isLoaded,
+    showIntro,
+    setShowIntro,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+  });
 
-  function reset() {
-    clearHistory();
-    setGame(setup());
-  }
-
-  const { saveUndoState, undo, canUndo, clearHistory } =
-    useUndoHistory<GameSnapshot>();
-  const handleUndo = () => {
-    const previousState = undo();
-    if (previousState) setGame(previousState.game);
-  };
-
-  // ── Game logic ────────────────────────────────────────────────────────────────
+  // ── Game logic ────────────────────────────────────────────
   function placeGuess(guessIndex: number) {
     const newDrawPile = [...game.draw];
     const topDrawCard = top(newDrawPile);
     if (game.ended || !topDrawCard) return;
 
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
     setGame({
       ...game,
@@ -168,7 +196,7 @@ export default function HideAndSeek() {
     const guessCard = game.guesses[guessIndex];
     if (game.ended || !topDrawCard || !guessCard) return;
 
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
     setGame({
       ...game,
       guesses: game.guesses.map((g, i) => (i === guessIndex ? null : g)),
@@ -185,7 +213,7 @@ export default function HideAndSeek() {
     const playmate = game.playmates[playmateIndex];
     if (game.ended || !playmate) return;
 
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
     const newPlaymates = game.playmates.map((p, i) =>
       i === playmateIndex ? { ...p, faceUp: true } : p,
@@ -227,8 +255,7 @@ export default function HideAndSeek() {
     });
   }
 
-  // ── Card Mapping ─────────────────────────────────────────────────────────────
-
+  // ── Card Mapping ─────────────────────────────────────────
   const zones: MapZone[] = useMemo(() => {
     const guessZones: MapZone[] = guessZonesColRows.map((pos, i) => ({
       id: `guess-${i}`,
@@ -236,7 +263,7 @@ export default function HideAndSeek() {
       cards: game.guesses[i] ? [game.guesses[i]] : undefined,
       name: "guess",
       col: pos.c,
-      row: pos.r,
+      row: pos.r + 0.25,
       baseZIndex: 20,
       placeholder: {},
     }));
@@ -245,7 +272,7 @@ export default function HideAndSeek() {
       cols: 4,
       rows: 3,
       colOffset: 1,
-      rowOffset: 2,
+      rowOffset: 2.25,
     }).map((pos, i) => ({
       id: `playmate-${i}`,
       pileIndex: i,
@@ -351,7 +378,7 @@ export default function HideAndSeek() {
       reset={reset}
       isLoaded={isLoaded}
       canUndo={canUndo}
-      undo={handleUndo}
+      undo={undo}
     >
       {cardMap}
     </GameWrapper>

@@ -76,7 +76,7 @@ export function HomeCard({
               {/* Title */}
               <Text
                 size={isLarge ? "lg" : "md"}
-                weight={isLarge ? 600 : 400}
+                weight={500}
                 style={{
                   color: game.cardColorText,
                   paddingLeft: isLarge ? undefined : favBtnSize * 1.25,

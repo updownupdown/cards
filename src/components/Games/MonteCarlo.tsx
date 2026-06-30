@@ -1,6 +1,4 @@
-import { useGameLoading } from "@/hooks/useGameLoading";
-import { useInitialDeal } from "@/hooks/useInitialDeal";
-import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
 import { delay } from "@/utils/utils";
 import { produce } from "immer";
@@ -8,7 +6,10 @@ import { useEffect, useMemo } from "react";
 import { View } from "react-native";
 import { useImmer } from "use-immer";
 import { Button } from "../Button/Button";
-import { AnimatedCardMapping } from "../Cards/AnimatedCard";
+import {
+  AnimatedCardMapping,
+  bufferedDefaultAnimDuration,
+} from "../Cards/AnimatedCard";
 import {
   createDeck,
   flipAllToBack,
@@ -25,7 +26,6 @@ import {
   useCardMap,
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
-import { useStateManager } from "@/hooks/useStateManager";
 
 type GameState = {
   grid: (PlayingCard | null)[];
@@ -43,7 +43,7 @@ const gameStateInitial: GameState = {
   won: false,
 };
 
-async function resetAndDeal(
+async function resetAndSetup(
   setGame: (updater: (draft: GameState) => void) => void,
 ) {
   setGame((draft) => {
@@ -56,13 +56,15 @@ async function resetAndDeal(
     draft.trash = [];
   });
 
-  await delay(1000);
+  await delay(bufferedDefaultAnimDuration);
 
   setGame((draft) => {
     const draw = shuffle(draft.draw);
     draft.grid = flipAllToFace(draw.splice(-25));
     draft.draw = draw;
   });
+
+  await delay(bufferedDefaultAnimDuration);
 }
 
 // ========== Helper Functions ========== //
@@ -136,8 +138,8 @@ export default function MonteCarlo() {
     saveUndoState,
     reset,
   } = useStateManager({
-    startDeal: () => {
-      resetAndDeal(setGame);
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
     },
     gameStateInitial,
     resetNonGameStates: () => {

@@ -1,14 +1,17 @@
-import { useGameLoading } from "@/hooks/useGameLoading";
-import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
 import { delay } from "@/utils/utils";
 import { produce } from "immer";
 import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { Button } from "../Button/Button";
-import { AnimatedCardMapping } from "../Cards/AnimatedCard";
+import {
+  AnimatedCardMapping,
+  bufferedDefaultAnimDuration,
+} from "../Cards/AnimatedCard";
 import {
   createDeck,
+  flipAllToBack,
   flipToBack,
   flipToFace,
   isRed,
@@ -34,21 +37,35 @@ type GameState = {
   dealFirstHand: boolean;
 };
 
-type GameSnapshot = {
-  game: GameState;
+const gameStateInitial: GameState = {
+  hand: Array(8).fill(null),
+  deck: shuffle(createDeck()),
+  discard: [],
+  won: false,
+  ended: false,
+  dealFirstHand: true,
 };
 
-function setup(dealFirstHand = true): GameState {
-  const deck = shuffle(createDeck());
+async function resetAndSetup(
+  setGame: (updater: (draft: GameState) => void) => void,
+) {
+  setGame((draft) => {
+    const allCards = [...draft.deck, ...draft.hand, ...draft.discard].filter(
+      (card): card is PlayingCard => card !== null,
+    );
 
-  return {
-    hand: Array(8).fill(null),
-    deck,
-    discard: [],
-    won: false,
-    ended: false,
-    dealFirstHand,
-  };
+    draft.hand = Array(8).fill(null);
+    draft.deck = flipAllToBack(allCards);
+    draft.discard = [];
+    draft.won = false;
+    draft.ended = false;
+  });
+
+  await delay(bufferedDefaultAnimDuration);
+
+  setGame((draft) => {
+    draft.dealFirstHand = true;
+  });
 }
 
 function mod13(value: number) {
@@ -103,11 +120,29 @@ function replacementCount(cards: PlayingCard[]) {
   return 2;
 }
 
+// ================== Component =================== //
 export default function TheSandwichGuy() {
-  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
-
-  const [game, setGame] = useState<GameState>(setup(false));
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  const {
+    isLoaded,
+    showIntro,
+    setShowIntro,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelectedIds([]);
+    },
+  });
 
   const selectedCards = useMemo(
     () =>
@@ -140,12 +175,6 @@ export default function TheSandwichGuy() {
 
     refillHand();
   }, [game.dealFirstHand]);
-
-  function reset() {
-    clearHistory();
-    setGame(setup());
-    setSelectedIds([]);
-  }
 
   function toggleSelect(id: string) {
     if (game.ended) return;
@@ -185,8 +214,6 @@ export default function TheSandwichGuy() {
       if (wasRefilled) {
         refilledCount++;
       }
-
-      await delay(100);
     }
   }
 
@@ -195,7 +222,7 @@ export default function TheSandwichGuy() {
       return;
     }
 
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
     const replacementsEarned = replacementCount(selectedCards);
     const replacementsPossible = Math.min(
@@ -215,9 +242,9 @@ export default function TheSandwichGuy() {
           }
         });
       });
-
-      // await delay(100);
     }
+
+    await delay(bufferedDefaultAnimDuration);
 
     setSelectedIds([]);
 
@@ -249,15 +276,6 @@ export default function TheSandwichGuy() {
   }
 
   const showToast = useToast();
-
-  const { saveUndoState, undo, canUndo, clearHistory } =
-    useUndoHistory<GameSnapshot>();
-  const handleUndo = () => {
-    const previousState = undo();
-    if (previousState) {
-      setGame(previousState.game);
-    }
-  };
 
   // ========== Card Mapping ========== //
   const zones: MapZone[] = useMemo(() => {
@@ -336,7 +354,7 @@ export default function TheSandwichGuy() {
     }
   };
 
-  const { cardMap, cardWidth, getZoneStylesById } = useCardMap({
+  const { cardMap, getZoneStylesById } = useCardMap({
     game,
     zones,
     cardMapper,
@@ -358,7 +376,7 @@ export default function TheSandwichGuy() {
           : "No valid sandwich available. You lose."
       }
       canUndo={canUndo}
-      undo={handleUndo}
+      undo={undo}
     >
       {cardMap}
 
@@ -367,7 +385,7 @@ export default function TheSandwichGuy() {
           onPress={commitSandwich}
           disabled={selectedCards.length !== 3 || invalidSandwichSelected}
           text="Serve Sandwich"
-          size="large"
+          size="medium-large"
           fullWidth
           style={[flexStyles.flex1, { height: "100%" }]}
         />
