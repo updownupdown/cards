@@ -161,11 +161,16 @@ export function useCardMap({
     const gapYUnits = gap * cardDims.aspectRatio;
 
     const cardWidthUnitsToFit =
-      fixedCols ?? gridCols + gap * (gridCols - 1) + paddingLeft + paddingRight;
+      (fixedCols ?? gridCols) +
+      gap * (gridCols - 1) +
+      paddingLeft +
+      paddingRight;
 
     const cardHeightUnitsToFit =
-      fixedRows ??
-      gridRows + gapYUnits * (gridRows - 1) + paddingTop + paddingBottom;
+      (fixedRows ?? gridRows) +
+      gapYUnits * (gridRows - 1) +
+      paddingTop +
+      paddingBottom;
 
     let cardWidth = containerWidth / cardWidthUnitsToFit;
     let cardHeight = containerHeight / cardHeightUnitsToFit;
@@ -377,7 +382,7 @@ export function useCardMap({
     }
 
     return positionMap;
-  }, [game, zones, cardWidth]);
+  }, [game, zones, cardWidth, cardHeight, gridGap, startX, startY]);
 
   const mappedCards = Object.values(cardPositions).map((mappedCard) => {
     return (

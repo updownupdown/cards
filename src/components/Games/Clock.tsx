@@ -1,16 +1,25 @@
-import { Text } from "@/components/common/Text";
 import { MappedCard, MapZone, useCardMap } from "@/components/Cards/CardMap";
-import { useGameLoading } from "@/hooks/useGameLoading";
-import { useUndoHistory } from "@/hooks/useUndoHistory";
 import { flexStyles } from "@/styles/flexStyles";
-import { textStyles } from "@/styles/textStyles";
 import { produce } from "immer";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { View } from "react-native";
-import { AnimatedCardMapping } from "../Cards/AnimatedCard";
+import Animated, {
+  useAnimatedProps,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import Svg, { Circle } from "react-native-svg";
+import ClockHandHours from "@/assets/images/ClockHandHours.svg";
+import ClockHandMinutes from "@/assets/images/ClockHandMinutes.svg";
+import {
+  AnimatedCardMapping,
+  bufferedDefaultAnimDuration,
+} from "../Cards/AnimatedCard";
 import {
   cardDims,
   createDeck,
+  flipAllToBack,
   flipTopCardToFace,
   rankValue,
   shuffle,
@@ -18,6 +27,11 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
+import { useStateManager } from "@/hooks/useStateManager";
+import { delay } from "@/utils/utils";
+import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { rgba } from "@/styles/styles";
+import { useResponsiveLayout } from "@/hooks/useResponsiveLayout";
 
 type GameState = {
   piles: PlayingCard[][];
@@ -29,110 +43,131 @@ type GameState = {
   won: boolean;
 };
 
-type GameSnapshot = {
-  game: GameState;
+const gameStateInitial: GameState = {
+  piles: Array.from({ length: 13 }, (_, i) =>
+    i === 0 ? flipAllToBack(shuffle(createDeck())) : [],
+  ),
+  nextPileIndex: 0,
+  prevPileIndex: undefined,
+  revealedKings: 0,
+  revealedCards: 0,
+  ended: false,
+  won: false,
 };
 
-function setup(): GameState {
-  const deck = shuffle(createDeck({ faceUp: false }));
-  const piles: PlayingCard[][] = Array.from({ length: 13 }, () => []);
+async function resetAndSetup(
+  setGame: (updater: (draft: GameState) => void) => void,
+) {
+  setGame((draft) => {
+    const allCards = draft.piles.flat();
 
-  let target = 0;
-  while (deck.length > 0) {
-    const card = deck.shift();
-    if (card) piles[target].push(card);
-    target = (target + 1) % 13;
-  }
+    draft.piles = Array.from({ length: 13 }, () => []);
+    draft.piles[0] = flipAllToBack(allCards);
+    draft.nextPileIndex = 0;
+    draft.prevPileIndex = undefined;
+    draft.revealedKings = 0;
+    draft.revealedCards = 0;
+    draft.ended = false;
+    draft.won = false;
+  });
 
-  return {
-    piles,
-    nextPileIndex: 0,
-    prevPileIndex: undefined,
-    revealedKings: 0,
-    revealedCards: 0,
-    ended: false,
-    won: false,
-  };
+  await delay(bufferedDefaultAnimDuration);
+
+  setGame((draft) => {
+    const deck = shuffle(draft.piles[0]);
+    draft.piles[0] = [];
+    let target = 0;
+    while (deck.length > 0) {
+      const card = deck.shift();
+      if (card) draft.piles[target].push(card);
+      target = (target + 1) % 13;
+    }
+  });
 }
 
 export default function Clock() {
-  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
+  const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+  const { cardText, cardBg, zoneBg } = useGameZoneBackground();
+  const responsiveScale = useResponsiveLayout();
 
-  const [game, setGame] = useState<GameState>(setup);
-
-  const { saveUndoState, undo, canUndo, clearHistory } =
-    useUndoHistory<GameSnapshot>();
-  const handleUndo = () => {
-    const previousState = undo();
-    if (previousState) {
-      setGame(previousState.game);
-    }
-  };
-
-  function reset() {
-    clearHistory();
-    setGame(setup());
-  }
+  const {
+    isSettingUp,
+    isLoaded,
+    showIntro,
+    setShowIntro,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+  });
 
   async function revealCardAtPileIndex(pileIndex: number) {
     if (game.ended || game.piles.length === 0) {
       return;
     }
 
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
-    setGame((prev) => {
-      return produce(prev, (draft) => {
-        const clickedCard = top(draft.piles[pileIndex]);
+    setGame((draft) => {
+      const clickedCard = top(draft.piles[pileIndex]);
 
-        if (!clickedCard) return;
+      if (!clickedCard) return;
 
-        // Move prev top card to clicked pile
-        if (draft.prevPileIndex !== undefined) {
-          const cardToMove = draft.piles[draft.prevPileIndex].pop();
+      // Move prev top card to clicked pile
+      if (draft.prevPileIndex !== undefined) {
+        const cardToMove = draft.piles[draft.prevPileIndex].pop();
 
-          if (!cardToMove) return;
+        if (!cardToMove) return;
 
-          draft.piles[pileIndex].unshift(cardToMove);
-        }
+        draft.piles[pileIndex].unshift(cardToMove);
+      }
 
-        // Flip over card on clicked pile
-        draft.piles[pileIndex] = flipTopCardToFace(draft.piles[pileIndex]);
+      // Flip over card on clicked pile
+      draft.piles[pileIndex] = flipTopCardToFace(draft.piles[pileIndex]);
 
-        // Update the next pile index
-        const clickedCardRank = rankValue(clickedCard);
-        let nextCardRank = clickedCardRank;
+      // Update the next pile index
+      const clickedCardRank = rankValue(clickedCard);
+      let nextCardRank = clickedCardRank;
 
-        if (pileIndex === draft.nextPileIndex) {
-          const topOfSamePile = top(draft.piles[pileIndex]);
-          if (!topOfSamePile) return;
-          nextCardRank = rankValue(topOfSamePile);
-        }
+      if (pileIndex === draft.nextPileIndex) {
+        const topOfSamePile = top(draft.piles[pileIndex]);
+        if (!topOfSamePile) return;
+        nextCardRank = rankValue(topOfSamePile);
+      }
 
-        draft.nextPileIndex = nextCardRank === 13 ? 0 : nextCardRank;
-        draft.prevPileIndex = pileIndex;
+      draft.nextPileIndex = nextCardRank === 13 ? 0 : nextCardRank;
+      draft.prevPileIndex = pileIndex;
 
-        // Increment revealed kings
-        draft.revealedKings += nextCardRank === 13 ? 1 : 0;
+      // Increment revealed kings
+      draft.revealedKings += nextCardRank === 13 ? 1 : 0;
 
-        draft.revealedCards += 1;
-        draft.won = draft.revealedCards === 52;
-        const lost = draft.revealedKings === 4;
-        draft.ended = draft.won || lost;
-      });
+      draft.revealedCards += 1;
+      draft.won = draft.revealedCards === 52;
+      const lost = draft.revealedKings === 4;
+      draft.ended = draft.won || lost;
     });
   }
 
   // ========== Card Mapping ========== //
+  const kingPileWidth = 2.5;
+  const clockRadius = 2.6;
+  const kingPileRow = -1.6;
+
   const zones: MapZone[] = useMemo(() => {
-    const clockRadius = 2.6;
     const pileZones = Array.from({ length: 13 }).map((_, i) => {
       let col, row;
 
       if (i === 0) {
         // Middle position
-        col = clockRadius;
-        row = clockRadius * cardDims.aspectRatio + 0.2;
+        col = clockRadius - kingPileWidth / 2 + 0.5;
+        row = kingPileRow;
       } else {
         // Clock positions: 12 is top, 3 is right, 6 is bottom, 9 is left
         // Formula: angle = (index - 3) * (2 * Math.PI / 12)
@@ -142,21 +177,26 @@ export default function Clock() {
         col = clockRadius + clockRadius * Math.cos(angle);
         row =
           clockRadius * cardDims.aspectRatio +
-          0.2 +
           clockRadius * Math.sin(angle) * cardDims.aspectRatio;
       }
 
       return {
         id: `pile-${i}`,
+        name: "pile",
         col: Math.round(col * 100) / 100,
         row: Math.round(row * 100) / 100,
-        fan: { offset: 0.05 },
+        width: i === 0 ? kingPileWidth : 1,
+        height: i === 0 ? 1.2 : 1,
         pileIndex: i,
         cards: game.piles[i] ?? undefined,
-        name: "pile",
-
-        baseZIndex: 1,
+        baseZIndex: i === 0 ? 1 : 20,
         rotation: (i % 12) * 30,
+        fan: {
+          maxVisible: 6,
+          offset: i === 0 ? (isSettingUp ? 0 : 0.4) : 0.05,
+          direction: i === 0 ? "right" : "diagonal-depth",
+        },
+        placeholder: i === 0 ? {} : undefined,
       } as MapZone;
     });
 
@@ -176,25 +216,115 @@ export default function Clock() {
   ): AnimatedCardMapping | undefined => {
     const pileIndex = mappedCard.pileIndex;
 
-    if (pileIndex === undefined) return {};
+    if (pileIndex === undefined) return;
 
     const pressable =
       mappedCard.topOfZone && pileIndex === game.nextPileIndex && !game.ended;
 
     return {
-      selectColor: pressable ? "green" : "none",
       onPress: pressable ? () => revealCardAtPileIndex(pileIndex) : undefined,
     };
   };
 
-  const { cardMap, getZoneStylesById } = useCardMap({
+  const { cardMap, cardWidth } = useCardMap({
     game,
     zones,
     cardMapper,
     cardSize: "small",
     paddingLeft: 0.8,
     paddingRight: 0.8,
+    paddingTop: 1.7,
+    paddingBottom: 1.7,
   });
+
+  const revealedProgress = Math.min(Math.max(game.revealedCards / 52, 0), 1);
+  const progressSize = clockRadius * 2 * cardDims.aspectRatio * cardWidth;
+  const progressStroke = Math.max(4, cardWidth * 0.08);
+  const progressRadius = (progressSize - progressStroke) / 2;
+  const progressCircumference = 2 * Math.PI * progressRadius;
+
+  const progressValue = useSharedValue(revealedProgress);
+  const hourAngle = useSharedValue(0);
+  const minuteAngle = useSharedValue(0);
+
+  const prevHourAngle = useRef(0);
+  const prevMinuteAngle = useRef(0);
+
+  const animDuration = 1250;
+
+  function nextSmoothAngle(prev: number, target: number) {
+    const delta = ((target - prev + 540) % 360) - 180;
+    return prev + delta;
+  }
+
+  function pileIndexToClockAngle(pileIndex?: number) {
+    if (pileIndex === undefined) return 0;
+    return (pileIndex % 12) * 30;
+  }
+
+  useEffect(() => {
+    progressValue.value = withTiming(revealedProgress, {
+      duration: animDuration,
+    });
+  }, [revealedProgress, progressValue]);
+
+  useEffect(() => {
+    const targetHourAngle = revealedProgress * 360;
+    const smoothHourAngle = nextSmoothAngle(
+      prevHourAngle.current,
+      targetHourAngle,
+    );
+    prevHourAngle.current = smoothHourAngle;
+    hourAngle.value = withTiming(smoothHourAngle, {
+      duration: animDuration,
+    });
+  }, [revealedProgress, hourAngle]);
+
+  useEffect(() => {
+    const targetMinuteAngle = pileIndexToClockAngle(game.nextPileIndex);
+    const smoothMinuteAngle = nextSmoothAngle(
+      prevMinuteAngle.current,
+      targetMinuteAngle,
+    );
+    prevMinuteAngle.current = smoothMinuteAngle;
+    minuteAngle.value = withTiming(smoothMinuteAngle, {
+      duration: animDuration,
+    });
+  }, [game.nextPileIndex, minuteAngle]);
+
+  const animatedProgressProps = useAnimatedProps(() => {
+    return {
+      strokeDashoffset: progressCircumference * (1 - progressValue.value),
+    };
+  });
+  const animatedHourStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ rotate: `${hourAngle.value}deg` }],
+    };
+  });
+  const animatedMinuteStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ rotate: `${minuteAngle.value}deg` }],
+    };
+  });
+
+  const center = progressSize / 2;
+
+  const hourSource = { width: 130, height: 376, pivotFromBottom: 35 };
+  const minuteSource = { width: 70, height: 480, pivotFromBottom: 35 };
+
+  const hourHeight = progressSize * 0.58;
+  const hourScale = hourHeight / hourSource.height;
+  const hourWidth = hourSource.width * hourScale;
+  const hourPivotY = hourHeight - hourSource.pivotFromBottom * hourScale;
+
+  const minuteHeight = progressSize * 0.84;
+  const minuteScale = minuteHeight / minuteSource.height;
+  const minuteWidth = minuteSource.width * minuteScale;
+  const minutePivotY =
+    minuteHeight - minuteSource.pivotFromBottom * minuteScale;
+
+  const clockFaceRadius = clockRadius * 3.34 * cardWidth;
 
   return (
     <GameWrapper
@@ -210,27 +340,120 @@ export default function Clock() {
           : "The fourth king appeared before all cards were revealed."
       }
       canUndo={canUndo}
-      undo={handleUndo}
+      undo={undo}
     >
+      <View
+        style={[
+          flexStyles.rowCentered,
+          {
+            position: "absolute",
+            pointerEvents: "none",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1,
+            backgroundColor: zoneBg,
+            width: clockFaceRadius,
+            height: clockFaceRadius,
+            borderRadius: clockFaceRadius / 2,
+          },
+        ]}
+      />
+
       {cardMap}
 
       <View
         style={[
           flexStyles.rowCentered,
-          flexStyles.spaceBetween,
-          getZoneStylesById("gameInfo"),
+          {
+            pointerEvents: "none",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 50,
+            width: clockFaceRadius,
+            height: clockFaceRadius,
+          },
         ]}
       >
-        <Text style={[textStyles.caps]}>
-          Cards
-          <br />
-          {game.revealedCards} / 52
-        </Text>
-        <Text style={[textStyles.caps, { textAlign: "right" }]}>
-          Kings
-          <br />
-          {game.revealedKings} /4
-        </Text>
+        <View style={{ width: progressSize, height: progressSize }}>
+          <Svg
+            width={progressSize}
+            height={progressSize}
+            style={{ transform: [{ rotate: "-90deg" }] }}
+          >
+            <Circle
+              cx={progressSize / 2}
+              cy={progressSize / 2}
+              r={progressRadius}
+              stroke={rgba(cardText, 0.15)}
+              strokeWidth={progressStroke}
+              fill="transparent"
+            />
+            <AnimatedCircle
+              animatedProps={animatedProgressProps}
+              cx={progressSize / 2}
+              cy={progressSize / 2}
+              r={progressRadius}
+              stroke={cardText}
+              strokeWidth={progressStroke}
+              strokeLinecap="round"
+              strokeDasharray={progressCircumference}
+              fill="transparent"
+            />
+          </Svg>
+
+          <Animated.View
+            style={[
+              {
+                position: "absolute",
+                zIndex: 10,
+                left: 0,
+                top: 0,
+                width: progressSize,
+                height: progressSize,
+              },
+              animatedHourStyle,
+            ]}
+          >
+            <ClockHandHours
+              width={hourWidth}
+              height={hourHeight}
+              style={{
+                position: "absolute",
+                left: center - hourWidth / 2,
+                top: center - hourPivotY,
+              }}
+              fill={cardText}
+              stroke={rgba(cardBg, 0.7)}
+              strokeWidth={responsiveScale * 4}
+            />
+          </Animated.View>
+
+          <Animated.View
+            style={[
+              {
+                position: "absolute",
+                left: 0,
+                top: 0,
+                width: progressSize,
+                height: progressSize,
+              },
+              animatedMinuteStyle,
+            ]}
+          >
+            <ClockHandMinutes
+              width={minuteWidth}
+              height={minuteHeight}
+              style={{
+                position: "absolute",
+                left: center - minuteWidth / 2,
+                top: center - minutePivotY,
+              }}
+              fill={cardText}
+              stroke={rgba(cardBg, 0.7)}
+              strokeWidth={responsiveScale * 4}
+            />
+          </Animated.View>
+        </View>
       </View>
     </GameWrapper>
   );

@@ -1,9 +1,18 @@
-import { useGameLoading } from "@/hooks/useGameLoading";
-import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { useStateManager } from "@/hooks/useStateManager";
 import { produce } from "immer";
 import { useMemo, useState } from "react";
-import { AnimatedCardMapping } from "../Cards/AnimatedCard";
-import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
+import {
+  AnimatedCardMapping,
+  bufferedDefaultAnimDuration,
+} from "../Cards/AnimatedCard";
+import {
+  cardDims,
+  createDeck,
+  flipAllToBack,
+  flipAllToFace,
+  shuffle,
+  type PlayingCard,
+} from "../Cards/card-utils";
 import {
   getGridColRows,
   MappedCard,
@@ -11,23 +20,44 @@ import {
   useCardMap,
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { delay } from "@/utils/utils";
 
-type AccordionState = {
+type GameState = {
+  setupPile: PlayingCard[];
   line: PlayingCard[];
   ended: boolean;
   won: boolean;
 };
 
-type GameSnapshot = {
-  game: AccordionState;
+const gameStateInitial: GameState = {
+  setupPile: shuffle(createDeck()),
+  line: [],
+  ended: false,
+  won: false,
 };
 
-function setup(): AccordionState {
-  return {
-    line: shuffle(createDeck({ faceUp: true })),
-    ended: false,
-    won: false,
-  };
+async function resetAndSetup(
+  setGame: (updater: (draft: GameState) => void) => void,
+) {
+  // Gather all cards, face down, to setup pile
+  setGame((draft) => {
+    const allCards = [...draft.setupPile, ...draft.line].filter(
+      (card): card is PlayingCard => card !== null,
+    );
+
+    draft.setupPile = shuffle(flipAllToBack(allCards));
+    draft.line = [];
+    draft.ended = false;
+    draft.won = false;
+  });
+
+  await delay(bufferedDefaultAnimDuration);
+
+  // Distribute to line
+  setGame((draft) => {
+    draft.line = flipAllToFace(draft.setupPile);
+    draft.setupPile = [];
+  });
 }
 
 function canMerge(source: PlayingCard, target: PlayingCard) {
@@ -44,25 +74,29 @@ function hasAnyMove(line: PlayingCard[]) {
   return false;
 }
 
+// ========== Game Component ========== //
 export default function Accordion() {
-  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
-  const [game, setGame] = useState<AccordionState>(setup);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-  const { saveUndoState, undo, canUndo, clearHistory } =
-    useUndoHistory<GameSnapshot>();
-  const handleUndo = () => {
-    const previousState = undo();
-    if (previousState) {
-      setGame(previousState.game);
-    }
-  };
-
-  function reset() {
-    clearHistory();
-    setGame(setup());
-    setSelectedIndex(null);
-  }
+  const {
+    isLoaded,
+    showIntro,
+    setShowIntro,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelectedIndex(null);
+    },
+  });
 
   function onCardPress(index: number) {
     if (game.ended) return;
@@ -100,16 +134,14 @@ export default function Accordion() {
     target: number,
     srcCard: PlayingCard,
   ) {
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
-    setGame((prev) => {
-      return produce(prev, (draft) => {
-        draft.line[target] = srcCard;
-        draft.line.splice(source, 1);
+    setGame((draft) => {
+      draft.line[target] = srcCard;
+      draft.line.splice(source, 1);
 
-        draft.won = draft.line.length === 1;
-        draft.ended = draft.won || !hasAnyMove(draft.line);
-      });
+      draft.won = draft.line.length === 1;
+      draft.ended = draft.won || !hasAnyMove(draft.line);
     });
 
     setSelectedIndex(null);
@@ -137,7 +169,17 @@ export default function Accordion() {
   // ========== Card Mapping ========== //
   const colNums = 7;
   const zones: MapZone[] = useMemo(() => {
-    return getGridColRows({
+    const setupPile: MapZone = {
+      id: "setup",
+      name: "setup",
+      cards: game.setupPile,
+      col: 3,
+      row: 3,
+      baseZIndex: 1,
+      pileIndex: 1,
+    };
+
+    const gridZones: MapZone[] = getGridColRows({
       cols: colNums,
       rows: Math.ceil(game.line.length / colNums),
     }).map((pos, i) => ({
@@ -145,18 +187,19 @@ export default function Accordion() {
       name: "line",
       pileIndex: i,
       cards: game.line[i] ? [game.line[i]] : undefined,
-
       col: pos.c,
       row: pos.r,
-      baseZIndex: i,
+      baseZIndex: i + 10,
     }));
+
+    return [setupPile, ...gridZones];
   }, [game]);
 
   const cardMapper = (
     mappedCard: MappedCard,
   ): AnimatedCardMapping | undefined => {
     const index = mappedCard.pileIndex;
-    if (index === undefined) return {};
+    if (index === undefined) return;
 
     return {
       onPress: () => onCardPress(index),
@@ -171,6 +214,8 @@ export default function Accordion() {
     zones,
     cardMapper,
     cardSize: "small",
+    fixedCols: 7,
+    fixedRows: 8,
   });
 
   return (
@@ -187,7 +232,7 @@ export default function Accordion() {
           : "No legal moves remain."
       }
       canUndo={canUndo}
-      undo={handleUndo}
+      undo={undo}
     >
       {cardMap}
     </GameWrapper>

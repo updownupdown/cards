@@ -54,6 +54,8 @@ async function resetAndSetup(
     draft.grid = Array(25).fill(null);
     draft.draw = flipAllToBack(allCards);
     draft.trash = [];
+    draft.ended = false;
+    draft.won = false;
   });
 
   await delay(bufferedDefaultAnimDuration);

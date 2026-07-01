@@ -33,7 +33,7 @@ export function HomeCard({
   const padding = isLarge ? Math.round(22 * responsiveScale) : 0;
   const spacingUnit = Math.round(20 * responsiveScale);
   const shadowUnit = Math.round(2 * responsiveScale);
-  const smallCardHeight = Math.round(52 * responsiveScale);
+  const smallCardHeight = Math.round(58 * responsiveScale);
   const height = isLarge ? undefined : smallCardHeight;
   const favBtnSize = Math.round(40 * responsiveScale);
   const favBtnInset = isLarge

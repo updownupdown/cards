@@ -48,8 +48,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     title: "Area 52",
     thumbnail: "Area52.jpg",
     cardBack: "Area52.png",
-    cardColorBg: "#200a16",
-    cardColorText: "#ffbcdd",
+    cardColorBg: "#2e1825",
+    cardColorText: "#b5faff",
     cardDescription:
       "Fight off waves of alien invaders before running out of defenders.",
     stats: {
@@ -82,8 +82,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     title: "The Sandwich Guy",
     thumbnail: "SandwichGuy.jpg",
     cardBack: "SandwichGuy.png",
-    cardColorBg: "#18251f",
-    cardColorText: "#c6ffd5",
+    cardColorBg: "#162926",
+    cardColorText: "#a8f7e9",
     cardDescription:
       "Serve sandwiches by selecting evenly spaced cards; don't let your ingredients run out!",
     stats: {
@@ -115,8 +115,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     title: "Dead Center",
     thumbnail: "DeadCenter.jpg",
     cardBack: "DeadCenter.png",
-    cardColorBg: "#241a15",
-    cardColorText: "#fcd3c2",
+    cardColorBg: "#0f2519",
+    cardColorText: "#e6a59c",
     cardDescription:
       "Defend your cabin against a siege of zombies, using supporting cards strategically.",
     stats: {
@@ -151,7 +151,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     thumbnail: "Foursquare.jpg",
     cardBack: "Foursquare.png",
     cardColorBg: "#202640",
-    cardColorText: "#d8e2ff",
+    cardColorText: "#fff5ca",
     cardDescription:
       "A tile-laying game where each move can disrupt the precarious grid.",
     stats: {
@@ -180,7 +180,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Skyway
   "/skyway": {
-    title: "Skyway (BETA)",
+    title: "Skyway",
     thumbnail: "Skyway.jpg",
     cardBack: "Skyway.png",
     cardColorBg: "#1d2a35",
@@ -211,11 +211,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // The Emissary
   "/the-emissary": {
-    title: "The Emissary (BETA)",
+    title: "The Emissary",
     thumbnail: "Emissary.jpg",
     cardBack: "TheEmissary.png",
-    cardColorBg: "#18102e",
-    cardColorText: "#d5abfc",
+    cardColorBg: "#1b1531",
+    cardColorText: "#acdeff",
     cardDescription:
       "Win exactly the right number of debates in each kingdom while managing one-time advisors.",
     stats: {
@@ -242,13 +242,13 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // The First Boba Tea Shop in London
   "/the-boba-tea-shop": {
-    title: "The Boba Tea Shop (BETA)",
+    title: "The Boba Tea Shop",
     thumbnail: "BobaTea.jpg",
     cardBack: "BobaTeaShop.png",
-    cardColorBg: "#2b3015",
-    cardColorText: "#dff0a4",
+    cardColorBg: "#2b261c",
+    cardColorText: "#cfbc92",
     cardDescription:
-      "Fulfill layered card orders by sequencing stacks before your available moves dry up.",
+      "A push-your-luck game where you must manage ordered queues of customers.",
     stats: {
       complexity: 30,
       difficulty: 40,
@@ -264,15 +264,15 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Syndicate
   "/syndicate": {
-    title: "Syndicate (BETA)",
+    title: "Syndicate",
     thumbnail: "Syndicate.jpg",
-    cardColorBg: "#112221",
+    cardColorBg: "#142c24",
     cardColorText: "#c4f1e7",
     cardDescription:
-      "Build and convert rank-restricted stacks, timing key turns to lock in powerful scores.",
+      "Stategically promote members and candidates to the top of the syndicate hierarchy.",
     stats: {
-      complexity: 60,
-      difficulty: 60,
+      complexity: 70,
+      difficulty: 70,
       luck: 30,
     },
     category: GameCategory.Isaludo,
@@ -288,8 +288,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     title: "Hide and Seek",
     thumbnail: "HideAndSeek.jpg",
     cardBack: "HideAndSeek.png",
-    cardColorBg: "#132422",
-    cardColorText: "#91f1e9",
+    cardColorBg: "#152927",
+    cardColorText: "#91f1b9",
     cardDescription:
       "Find your hidden playmates through careful planning and deduction.",
     stats: {
@@ -307,11 +307,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Loot the Loop
   "/loot-the-loop": {
-    title: "Loot the Loop (BETA)",
+    title: "Loot the Loop",
     thumbnail: "LootTheLoop.jpg",
     cardBack: "LootTheLoop.png",
-    cardColorBg: "#1a0d0c",
-    cardColorText: "#ffdcce",
+    cardColorBg: "#2e1c15",
+    cardColorText: "#eeddb8",
     cardDescription:
       "Capture scoring loop cards while preserving momentum and avoiding disruptive breaks.",
     stats: {
@@ -353,13 +353,12 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Calculation
   "/calculation": {
-    title: "Calculation (BETA)",
+    title: "Calculation",
     thumbnail: "Calculation.jpg",
     cardBack: "Calculation.png",
-    cardColorBg: "#110c1d",
-    cardColorText: "#e0cfff",
-    cardDescription:
-      "Build four mathematical foundations with different step patterns from a shared stock.",
+    cardColorBg: "#12122b",
+    cardColorText: "#eccfff",
+    cardDescription: "Build four foundations with set step intervals.",
     stats: {
       complexity: 80,
       difficulty: 90,
@@ -375,11 +374,11 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Accordion
   "/accordion": {
-    title: "Accordion (BETA)",
+    title: "Accordion",
     thumbnail: "Accordion.jpg",
     cardBack: "Accordion.png",
-    cardColorBg: "#1d1118",
-    cardColorText: "#ffcff3",
+    cardColorBg: "#36141a",
+    cardColorText: "#f6ffcf",
     cardDescription:
       "Compress a wide spread of cards by jumping matches one or three positions left.",
     stats: {
@@ -396,13 +395,13 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Aces Up
   "/aces-up": {
-    title: "Aces Up (BETA)",
+    title: "Aces Up",
     thumbnail: "AcesUp.jpg",
     cardBack: "AcesUp.png",
     cardColorBg: "#1b150f",
-    cardColorText: "#fff2db",
+    cardColorText: "#dbffeb",
     cardDescription:
-      "Strip each suit down to its ace by discarding weaker visible cards at the right time.",
+      "Strip each suit down to its Ace by discarding weaker visible cards.",
     stats: {
       complexity: 15,
       difficulty: 80,
@@ -417,13 +416,13 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Golf
   "/golf": {
-    title: "Golf Solitaire (BETA)",
+    title: "Golf Solitaire",
     thumbnail: "Golf.jpg",
     cardBack: "Golf.png",
-    cardColorBg: "#12251a",
-    cardColorText: "#beffdb",
+    cardColorBg: "#163021",
+    cardColorText: "#acfdd1",
     cardDescription:
-      "Chain tableau plays up or down in rank and use limited stock draws to finish the course.",
+      "Eliminate the tableau by discarding rank-adjacent cards to the current rank card.",
     stats: {
       complexity: 15,
       difficulty: 50,
@@ -438,13 +437,13 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Clock
   "/clock": {
-    title: "Clock Solitaire (BETA)",
+    title: "Clock Solitaire",
     thumbnail: "Clock.jpg",
     cardBack: "Clock.png",
-    cardColorBg: "#272115",
-    cardColorText: "#DABE9B",
+    cardColorBg: "#251c12",
+    cardColorText: "#eee1d2",
     cardDescription:
-      "Reveal and place cards by rank around the dial, hoping the final kings arrive late.",
+      "Flip by all the cards around the clock dial before all the kings are revealed.",
     stats: {
       complexity: 10,
       difficulty: 10,

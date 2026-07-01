@@ -103,17 +103,6 @@ export function useStateManager<T>({
     clearHistory();
     resetNonGameStates?.();
     await resetAndSetup();
-    setGame((draft) => {
-      if (
-        typeof draft === "object" &&
-        draft !== null &&
-        "ended" in draft &&
-        "won" in draft
-      ) {
-        draft.ended = false;
-        draft.won = false;
-      }
-    });
     await postSetupAction?.();
     setIsSettingUp(false);
   }

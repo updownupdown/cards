@@ -71,6 +71,9 @@ async function resetAndSetup(
 
     draft.draw = flipAllToBack(allCards);
     draft.piles = Array(16).fill([]);
+    draft.ended = false;
+    draft.won = false;
+    draft.winLoseMessage = "";
   });
 
   await delay(bufferedDefaultAnimDuration);
@@ -150,20 +153,6 @@ export default function Foursquare() {
       setShowLegalPlacements(false);
     },
   });
-
-  // };
-
-  // function initGame(game: GameState) {
-  //   turnOverDeckCard(game);
-  // }
-
-  // useEffect(() => {
-  //   if (showIntro === false) {
-  //     initGame(game);
-  //   }
-  // }, [showIntro]);
-
-  // Turn over deck card if the top card is face down
 
   // ====================================
   // PLACE CARD ON A PILE
@@ -342,26 +331,22 @@ export default function Foursquare() {
 
     // Win condition
     if (hasAllFaceUp(game.piles)) {
-      setGame((prev) => {
-        return { ...prev, ended: true, won: true, winLoseMessage: "You won!" };
+      setGame((draft) => {
+        draft.ended = true;
+        draft.won = true;
+        draft.winLoseMessage = "You won!";
       });
     } else if (game.draw.length === 0) {
-      setGame((prev) => {
-        return {
-          ...prev,
-          ended: true,
-          won: false,
-          winLoseMessage: "You ran out of cards to place!",
-        };
+      setGame((draft) => {
+        draft.ended = true;
+        draft.won = false;
+        draft.winLoseMessage = "You ran out of cards!";
       });
     } else if (legal.length === 0) {
-      setGame((prev) => {
-        return {
-          ...prev,
-          ended: true,
-          won: false,
-          winLoseMessage: "You ran out of valid placements!",
-        };
+      setGame((draft) => {
+        draft.ended = true;
+        draft.won = false;
+        draft.winLoseMessage = "You ran out of valid placements!";
       });
     }
   }, [legal, game.draw]);

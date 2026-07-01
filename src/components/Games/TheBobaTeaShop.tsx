@@ -1,11 +1,11 @@
 import { Text } from "@/components/common/Text";
-import { useGameLoading } from "@/hooks/useGameLoading";
-import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles, transitionStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
 import { delay } from "@/utils/utils";
 import { produce } from "immer";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Pressable, View } from "react-native";
 import { Button } from "../Button/Button";
 import {
@@ -18,6 +18,7 @@ import {
   flipAllToBack,
   flipToBack,
   flipToFace,
+  RANKS,
   rankValue,
   shuffle,
   top,
@@ -27,21 +28,17 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { CardColor } from "../Cards/CardStyles";
 import { GameWrapper } from "../common/GameWrapper";
 
-type BobaState = {
+type SelectedPos = { queueIndex: number; cardIndex: number };
+
+type GameState = {
   deck: PlayingCard[];
   queues: PlayingCard[][];
   discard: PlayingCard[];
   discardsByRank: Record<PlayingCard["rank"], number>;
+  decisionNeeded: boolean;
+  selectedPos?: SelectedPos;
   ended: boolean;
   won: boolean;
-};
-
-type SelectedPos = { queueIndex: number; cardIndex: number };
-
-type GameSnapshot = {
-  game: BobaState;
-  selectedPos: SelectedPos;
-  decisionNeeded: boolean;
 };
 
 function createDiscardCount(): Record<PlayingCard["rank"], number> {
@@ -63,22 +60,42 @@ function createDiscardCount(): Record<PlayingCard["rank"], number> {
   };
 }
 
-function setup(): BobaState {
-  const deck = shuffle(createDeck());
+const gameStateInitial: GameState = {
+  deck: shuffle(createDeck()),
+  queues: [[], [], [], []],
+  discard: [],
+  discardsByRank: createDiscardCount(),
+  decisionNeeded: false,
+  ended: false,
+  won: false,
+};
 
-  return {
-    queues: [
-      [flipToFace(deck[0])],
-      [flipToFace(deck[1])],
-      [flipToFace(deck[2])],
-      [flipToFace(deck[3])],
-    ],
-    deck: deck.slice(4),
-    discard: [],
-    discardsByRank: createDiscardCount(),
-    ended: false,
-    won: false,
-  };
+async function resetAndSetup(
+  setGame: (updater: (draft: GameState) => void) => void,
+) {
+  setGame((draft) => {
+    const allCards = [...draft.deck, ...draft.queues.flat(), ...draft.discard];
+
+    draft.queues = [[], [], [], []];
+    draft.deck = flipAllToBack(allCards);
+    draft.discard = [];
+    draft.discardsByRank = createDiscardCount();
+    draft.selectedPos = undefined;
+    draft.decisionNeeded = false;
+    draft.ended = false;
+    draft.won = false;
+  });
+
+  await delay(bufferedDefaultAnimDuration);
+
+  setGame((draft) => {
+    const draw = shuffle(draft.deck);
+    draft.queues[0] = [flipToFace(draw.pop()!)];
+    draft.queues[1] = [flipToFace(draw.pop()!)];
+    draft.queues[2] = [flipToFace(draw.pop()!)];
+    draft.queues[3] = [flipToFace(draw.pop()!)];
+    draft.deck = draw;
+  });
 }
 
 function totalInQueues(queues: PlayingCard[][]) {
@@ -113,163 +130,162 @@ function updatedDiscardsByRank(
   return discardsByRank;
 }
 
+function evaluateEnd(state: GameState): { ended: boolean; won: boolean } {
+  for (const rank of RANKS) {
+    if (state.discardsByRank[rank] >= 4) {
+      return { ended: true, won: false };
+    }
+  }
+  if (state.deck.length === 0) {
+    return { ended: true, won: true };
+  }
+  return { ended: false, won: false };
+}
+
+// ========== Main Game Component ========== //
 export default function TheBobaTeaShop() {
-  const [game, setGame] = useState<BobaState>(setup);
-  const [selectedPos, setSelectedPos] = useState<SelectedPos | undefined>(
-    undefined,
-  );
-  const [decisionNeeded, setDecisionNeeded] = useState(false);
-  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
+  const { zoneBg, cardText } = useGameZoneBackground();
+
+  const {
+    isLoaded,
+    showIntro,
+    setShowIntro,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+  });
 
   const score = useMemo(() => totalInQueues(game.queues), [game.queues]);
-
-  const { saveUndoState, undo, canUndo, clearHistory } =
-    useUndoHistory<GameSnapshot>();
-  const handleUndo = () => {
-    const previousState = undo();
-    if (previousState) {
-      setGame(previousState.game);
-      setDecisionNeeded(previousState.decisionNeeded);
-      setSelectedPos(previousState.selectedPos);
-    }
-  };
 
   const nextCustomerRevealed = useMemo(
     () => top(game.deck)?.faceUp,
     [game.deck],
   );
 
-  function reset() {
-    clearHistory();
-    setSelectedPos(undefined);
-    setDecisionNeeded(false);
-    setGame(setup());
-  }
-
   // ===== Reveal Next Customer ===== //
-  async function revealNextCustomer(gameState: BobaState) {
-    if (!gameState.deck.length || selectedPos?.queueIndex === undefined) return;
+  async function revealNextCustomer(gameState: GameState) {
+    if (
+      !gameState.deck.length ||
+      gameState.selectedPos?.queueIndex === undefined
+    )
+      return;
 
-    saveUndoState(
-      structuredClone({ game: gameState, selectedPos, decisionNeeded }),
-    );
+    saveUndoState(structuredClone(gameState));
 
-    let nextGameState = produce(gameState, (draft) => {
-      const topCardIndex = draft.deck.length - 1;
-      draft.deck[topCardIndex] = flipToFace(draft.deck[topCardIndex]);
-    });
-
-    // Flip card over
-    const topCard = flipToFace(
-      nextGameState.deck[nextGameState.deck.length - 1],
-    );
-
-    // Check if card fits in queue
-    const targetQueue = nextGameState.queues[selectedPos.queueIndex];
+    const { selectedPos } = gameState;
+    const topCard = top(gameState.deck)!;
+    const targetQueue = gameState.queues[selectedPos.queueIndex];
     const nextCustomerFits = checkNextCustomerFits(
       selectedPos,
       topCard,
       targetQueue,
     );
 
-    // If card fits, add it to queue - logic
-    nextGameState = produce(nextGameState, (draft) => {
-      if (nextCustomerFits) {
-        const customer = draft.deck.pop();
+    setGame(
+      produce(gameState, (draft) => {
+        draft.deck[draft.deck.length - 1].faceUp = true;
 
-        if (customer) {
-          const queue = draft.queues[selectedPos.queueIndex];
-
-          if (selectedPos.cardIndex === 0) {
-            queue.unshift(customer);
-          } else {
-            queue.splice(selectedPos.cardIndex, 0, customer);
-          }
+        if (nextCustomerFits) {
+          const customer = draft.deck.pop()!;
+          draft.queues[selectedPos.queueIndex].splice(
+            selectedPos.cardIndex,
+            0,
+            customer,
+          );
+          draft.selectedPos = undefined;
+          const { ended, won } = evaluateEnd(draft as GameState);
+          draft.ended = ended;
+          draft.won = won;
+        } else {
+          draft.decisionNeeded = true;
         }
-      }
-    });
-
-    if (nextCustomerFits) {
-      setSelectedPos(undefined);
-      decisionNeeded && setDecisionNeeded(false);
-      setGame(nextGameState);
-    } else {
-      setGame(nextGameState);
-      setDecisionNeeded(true);
-    }
+      }),
+    );
   }
 
   // ===== Let Customer Stay ===== //
-  async function placeCustomer(gameState: BobaState) {
-    const topCard = top(gameState.deck);
-    if (!topCard || selectedPos?.queueIndex === undefined) return;
+  async function placeCustomer(gameState: GameState) {
+    if (!top(gameState.deck) || gameState.selectedPos?.queueIndex === undefined)
+      return;
 
-    saveUndoState(
-      structuredClone({ game: gameState, selectedPos, decisionNeeded }),
-    );
+    saveUndoState(structuredClone(gameState));
 
+    const { selectedPos } = gameState;
     const queueToDiscard = gameState.queues[selectedPos.queueIndex];
 
-    let nextGameState = produce(gameState, (draft) => {
-      draft.deck.pop();
-      draft.queues[selectedPos.queueIndex] = [topCard];
-      draft.discard.push(...flipAllToBack(queueToDiscard));
-      draft.discardsByRank = updatedDiscardsByRank(
-        draft.discardsByRank,
-        queueToDiscard,
-      );
-    });
-
-    setDecisionNeeded(false);
-    setGame(nextGameState);
+    setGame(
+      produce(gameState, (draft) => {
+        const customer = draft.deck.pop()!;
+        draft.queues[selectedPos.queueIndex] = [customer];
+        draft.discard.push(...flipAllToBack(queueToDiscard));
+        updatedDiscardsByRank(draft.discardsByRank, queueToDiscard);
+        draft.selectedPos = undefined;
+        draft.decisionNeeded = false;
+        const { ended, won } = evaluateEnd(draft as GameState);
+        draft.ended = ended;
+        draft.won = won;
+      }),
+    );
   }
 
   // ===== Quick Customer Out ===== //
-  async function kickOutCustomer(gameState: BobaState) {
-    const topCard = top(gameState.deck);
-    if (!topCard || selectedPos?.queueIndex === undefined) return;
+  async function kickOutCustomer(gameState: GameState) {
+    if (!top(gameState.deck) || gameState.selectedPos?.queueIndex === undefined)
+      return;
 
-    saveUndoState(
-      structuredClone({ game: gameState, selectedPos, decisionNeeded }),
-    );
+    saveUndoState(structuredClone(gameState));
 
-    for (let i = 0; i < 2; i++) {
-      // Discard top of deck
-      setGame((prev) => {
-        return produce(prev, (draft) => {
-          if (draft.deck.length > 0) {
-            const cardToDiscard = draft.deck.pop()!;
-            draft.discard.push(flipToBack(cardToDiscard));
-            draft.discardsByRank = updatedDiscardsByRank(draft.discardsByRank, [
-              cardToDiscard,
-            ]);
-          }
-        });
-      });
+    // Discard the revealed card
+    setGame((draft) => {
+      if (draft.deck.length === 0) return;
+      const card = draft.deck.pop()!;
+      draft.discard.push(flipToBack(card));
+      updatedDiscardsByRank(draft.discardsByRank, [card]);
+    });
 
-      await delay(defaultAnimDuration / 2);
+    await delay(defaultAnimDuration / 2);
 
-      // Flip next card over
-      setGame((prev) => {
-        return produce(prev, (draft) => {
-          if (draft.deck.length > 0 && i === 0) {
-            draft.deck[draft.deck.length - 1] = flipToFace(
-              draft.deck[draft.deck.length - 1],
-            );
-          }
-        });
-      });
+    // Reveal the next card
+    setGame((draft) => {
+      if (draft.deck.length > 0) {
+        draft.deck[draft.deck.length - 1].faceUp = true;
+      }
+    });
 
-      await delay(bufferedDefaultAnimDuration);
-    }
+    await delay(bufferedDefaultAnimDuration);
+
+    // Discard the next card and clear decision state
+    setGame((draft) => {
+      if (draft.deck.length > 0) {
+        const card = draft.deck.pop()!;
+        draft.discard.push(flipToBack(card));
+        updatedDiscardsByRank(draft.discardsByRank, [card]);
+      }
+      draft.decisionNeeded = false;
+      draft.selectedPos = undefined;
+      const { ended, won } = evaluateEnd(draft as GameState);
+      draft.ended = ended;
+      draft.won = won;
+    });
+
+    await delay(defaultAnimDuration / 2);
+    await delay(bufferedDefaultAnimDuration);
   }
 
   // ========== Card Mapping ========== //
   const positioning = {
-    queueCardOffset: 0.47,
+    queueCardOffset: 0.42,
     btnColWidth: 0.8,
-    queueHeight: 3.5,
-    queueRowStart: 3,
+    queueHeight: 4.25,
+    queueRowStart: 2.75,
     queueZIndexIncrement: 20,
   };
 
@@ -302,7 +318,7 @@ export default function TheBobaTeaShop() {
       });
     }
 
-    if (selectedPos) {
+    if (game.selectedPos) {
       queueZones.push({
         id: "selected-placeholder",
         name: "selected-placeholder",
@@ -314,12 +330,12 @@ export default function TheBobaTeaShop() {
             id: "placeholder-joker",
           },
         ],
-        col: selectedPos.queueIndex * (positioning.btnColWidth + 1),
+        col: game.selectedPos.queueIndex * (positioning.btnColWidth + 1),
         row: positioning.queueRowStart,
         baseZIndex:
-          selectedPos.queueIndex +
+          game.selectedPos.queueIndex +
           positioning.queueZIndexIncrement +
-          selectedPos.cardIndex -
+          game.selectedPos.cardIndex -
           1,
       });
     }
@@ -336,7 +352,7 @@ export default function TheBobaTeaShop() {
         name: "deck",
         cards: game.deck,
         col: 2,
-        row: 1.5,
+        row: 1.35,
         baseZIndex: 50,
         fan: { maxVisible: 3 },
         placeholder: { text: "Draw", infoPos: "left" },
@@ -346,7 +362,7 @@ export default function TheBobaTeaShop() {
         name: "discard",
         cards: game.discard,
         col: 4,
-        row: 1.5,
+        row: 1.35,
         baseZIndex: 50,
         fan: { maxVisible: 3 },
         placeholder: { text: "Discard", infoPos: "right" },
@@ -355,12 +371,12 @@ export default function TheBobaTeaShop() {
       {
         id: "actionBtns",
         col: 0,
-        row: 6.5,
+        row: 7,
         width: "full",
         height: 0.75,
       },
     ];
-  }, [game, selectedPos]);
+  }, [game]);
 
   const cardMapper = (
     mappedCard: MappedCard,
@@ -372,17 +388,17 @@ export default function TheBobaTeaShop() {
     let forceSelectColor = false;
 
     // Placeholder card
-    if (selectedPos && mappedCard.zoneName === "selected-placeholder") {
-      selectColor = decisionNeeded ? "red" : "purple";
+    if (game.selectedPos && mappedCard.zoneName === "selected-placeholder") {
+      selectColor = game.decisionNeeded ? "red" : "purple";
       forceOverlayColor = true;
       forceSelectColor = true;
 
-      yOffset = selectedPos.cardIndex * positioning.queueCardOffset;
+      yOffset = game.selectedPos.cardIndex * positioning.queueCardOffset;
     } else if (
-      selectedPos !== undefined &&
-      mappedCard.pileIndex === selectedPos.queueIndex &&
+      game.selectedPos !== undefined &&
+      mappedCard.pileIndex === game.selectedPos.queueIndex &&
       mappedCard.cardIndex !== undefined &&
-      mappedCard.cardIndex >= selectedPos.cardIndex
+      mappedCard.cardIndex >= game.selectedPos.cardIndex
     ) {
       // Shift card down if under the placeholder
       yOffset = positioning.queueCardOffset;
@@ -414,12 +430,11 @@ export default function TheBobaTeaShop() {
       reset={reset}
       isLoaded={isLoaded}
       winLoseMessage={
-        game.won
-          ? `You won. Score is cards still in queues: ${score}`
-          : "You lost: discarded the fourth card of a rank."
+        game.won ? undefined : "Discarded the fourth card of a rank."
       }
+      score={score}
       canUndo={canUndo}
-      undo={handleUndo}
+      undo={undo}
     >
       {cardMap}
 
@@ -431,67 +446,65 @@ export default function TheBobaTeaShop() {
           getZoneStylesById("rankTally"),
         ]}
       >
-        {(Object.keys(game.discardsByRank) as PlayingCard["rank"][])
-          .filter((r) => r !== "Joker")
-          .map((rank) => {
-            const discardCount = game.discardsByRank[rank];
+        {RANKS.map((rank) => {
+          const discardCount = game.discardsByRank[rank];
 
-            return (
+          return (
+            <View
+              key={rank}
+              style={[
+                flexStyles.colCentered,
+                flexStyles.gap6,
+                flexStyles.flex1,
+              ]}
+            >
               <View
                 key={rank}
                 style={[
                   flexStyles.colCentered,
                   flexStyles.gap6,
-                  flexStyles.flex1,
+                  { flexDirection: "column-reverse" },
                 ]}
               >
-                <View
-                  key={rank}
-                  style={[
-                    flexStyles.colCentered,
-                    flexStyles.gap6,
-                    { flexDirection: "column-reverse" },
-                  ]}
-                >
-                  {Array.from({ length: 3 }, (_, i) => {
-                    let bgColor: string = Colors.K900;
+                {Array.from({ length: 3 }, (_, i) => {
+                  let bgColor: string = Colors.K900;
 
-                    if (i < discardCount) {
-                      if (i === 0) bgColor = Colors.cardSelectGreen;
-                      if (i === 1) bgColor = Colors.cardSelectYellow;
-                      if (i === 2) bgColor = Colors.cardSelectRed;
-                    }
+                  if (i < discardCount) {
+                    if (i === 0) bgColor = Colors.cardSelectGreen;
+                    if (i === 1) bgColor = Colors.cardSelectYellow;
+                    if (i === 2) bgColor = Colors.cardSelectRed;
+                  }
 
-                    return (
-                      <View
-                        key={`discard-by-rank-${rank}-${i}`}
-                        style={[
-                          transitionStyles.sec05,
-                          {
-                            display: "flex",
-                            width: 8,
-                            height: 8,
-                            borderRadius: 4,
-                            backgroundColor: bgColor,
-                            boxShadow: `0 0 3px ${bgColor}`,
-                          },
-                        ]}
-                      />
-                    );
-                  })}
-                </View>
-
-                <Text
-                  size="sm"
-                  style={[
-                    { fontSize: cardWidth * 0.3, fontFamily: FontWeight[500] },
-                  ]}
-                >
-                  {rank}
-                </Text>
+                  return (
+                    <View
+                      key={`discard-by-rank-${rank}-${i}`}
+                      style={[
+                        transitionStyles.sec05,
+                        {
+                          display: "flex",
+                          width: 8,
+                          height: 8,
+                          borderRadius: 4,
+                          backgroundColor: bgColor,
+                          boxShadow: `0 0 3px ${bgColor}`,
+                        },
+                      ]}
+                    />
+                  );
+                })}
               </View>
-            );
-          })}
+
+              <Text
+                size="sm"
+                style={[
+                  { fontSize: cardWidth * 0.3, fontFamily: FontWeight[500] },
+                ]}
+              >
+                {rank}
+              </Text>
+            </View>
+          );
+        })}
       </View>
 
       {/* Select position buttons */}
@@ -507,20 +520,20 @@ export default function TheBobaTeaShop() {
         >
           {Array.from({ length: queue.length + 1 }, (_, i) => {
             const isSelected =
-              selectedPos?.queueIndex === queueIndex &&
-              selectedPos.cardIndex === i;
+              game.selectedPos?.queueIndex === queueIndex &&
+              game.selectedPos.cardIndex === i;
 
             let backgroundColor: string = "";
             let textColor: string = "";
 
             if (isSelected) {
               textColor = Colors.white;
-              backgroundColor = decisionNeeded
+              backgroundColor = game.decisionNeeded
                 ? Colors.cardSelectRed
                 : Colors.cardSelectPurple;
             } else {
-              textColor = decisionNeeded ? Colors.K600 : Colors.K100;
-              backgroundColor = decisionNeeded ? Colors.K800 : Colors.K700;
+              textColor = game.decisionNeeded ? Colors.K600 : Colors.K100;
+              backgroundColor = game.decisionNeeded ? Colors.K800 : Colors.K700;
             }
 
             return (
@@ -528,12 +541,16 @@ export default function TheBobaTeaShop() {
                 key={`select-pos-${queueIndex}-${i}`}
                 onPress={() => {
                   if (isSelected) {
-                    setSelectedPos(undefined);
+                    setGame((draft) => {
+                      draft.selectedPos = undefined;
+                    });
                   } else {
-                    setSelectedPos({ queueIndex, cardIndex: i });
+                    setGame((draft) => {
+                      draft.selectedPos = { queueIndex, cardIndex: i };
+                    });
                   }
                 }}
-                disabled={decisionNeeded}
+                disabled={game.decisionNeeded}
                 style={[
                   flexStyles.colCentered,
                   transitionStyles.sec02,
@@ -556,16 +573,7 @@ export default function TheBobaTeaShop() {
                   },
                 ]}
               >
-                <Text
-                  size="sm"
-                  style={[
-                    {
-                      fontSize: cardWidth * 0.21,
-                      fontFamily: FontWeight[500],
-                      color: textColor,
-                    },
-                  ]}
-                >
+                <Text size="sm" weight={500} color={textColor}>
                   {i + 1}
                 </Text>
               </Pressable>
@@ -586,56 +594,65 @@ export default function TheBobaTeaShop() {
           },
         ]}
       >
-        {!nextCustomerRevealed && !selectedPos && (
-          <View style={[flexStyles.rowCentered, flexStyles.fullWidth]}>
+        {!nextCustomerRevealed && !game.selectedPos && (
+          <View
+            style={[
+              flexStyles.rowCentered,
+              flexStyles.fullWidth,
+              flexStyles.fullHeight,
+              {
+                backgroundColor: zoneBg,
+                borderRadius: cardWidth * 0.2,
+              },
+            ]}
+          >
             <Text
               size="sm"
-              style={[
-                {
-                  fontSize: cardWidth * 0.32,
-                  textAlign: "center",
-                  color: Colors.K500,
-                },
-              ]}
+              color={cardText}
+              style={{
+                textAlign: "center",
+              }}
             >
               Select queue position for next customer
             </Text>
           </View>
         )}
 
-        {!nextCustomerRevealed && selectedPos && (
+        {!nextCustomerRevealed && game.selectedPos && (
           <Button
             text="Reveal next customer"
             onPress={() => {
               revealNextCustomer(game);
             }}
-            disabled={selectedPos === undefined}
+            disabled={game.selectedPos === undefined}
             style={[flexStyles.flex1, { height: "100%" }]}
             theme="purple"
           />
         )}
 
-        {nextCustomerRevealed && decisionNeeded && (
+        {nextCustomerRevealed && game.decisionNeeded && (
           <>
             <Button
               text="Let them stay"
               onPress={() => {
-                if (selectedPos?.queueIndex !== undefined) {
-                  setSelectedPos(undefined);
+                if (game.selectedPos?.queueIndex !== undefined) {
+                  setGame((draft) => {
+                    draft.selectedPos = undefined;
+                  });
                   placeCustomer(game);
                 }
               }}
-              disabled={selectedPos === undefined}
+              disabled={game.selectedPos === undefined}
               style={[flexStyles.flex1, { height: "100%" }]}
             />
             <Button
               text="Kick them out"
               onPress={() => {
-                if (selectedPos?.queueIndex !== undefined) {
+                if (game.selectedPos?.queueIndex !== undefined) {
                   kickOutCustomer(game);
                 }
               }}
-              disabled={selectedPos === undefined}
+              disabled={game.selectedPos === undefined}
               style={[flexStyles.flex1, { height: "100%" }]}
             />
           </>

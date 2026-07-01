@@ -5,12 +5,14 @@ import { modalBorderRadius } from "@/styles/modalStyles";
 import {
   Colors,
   ContentSidePadding,
+  HeaderHeight,
   MaxContentWidth,
   rgba,
 } from "@/styles/styles";
 import { useEffect, useRef } from "react";
 import { Animated, Easing, View } from "react-native";
 import { Button } from "../Button/Button";
+import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 
 interface Props {
   gameEnded: boolean;
@@ -30,6 +32,7 @@ export const WinLoseBox = ({
   handleUndo,
 }: Props) => {
   const responsiveScale = useResponsiveLayout();
+  const { cardBg } = useGameZoneBackground();
 
   // Win/lose animations
   const wlmAnim = useRef(new Animated.Value(0)).current;
@@ -69,12 +72,12 @@ export const WinLoseBox = ({
         style={{
           opacity: wlmAnim,
           position: "absolute",
-          zIndex: 9, // just under the game header
-          top: 0,
+          zIndex: 9,
+          top: HeaderHeight * responsiveScale,
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: rgba(Colors.K850, 0.5),
+          backgroundColor: rgba(cardBg, 0.4),
         }}
       />
 
@@ -85,8 +88,8 @@ export const WinLoseBox = ({
             opacity: wlmAnim,
             position: "absolute",
             zIndex: 500,
-            padding: 20,
-            gap: 20,
+            padding: 20 * responsiveScale,
+            gap: 20 * responsiveScale,
             left: "50%",
             transform: [{ translateX: "-50%" }],
             borderRadius: modalBorderRadius,
@@ -101,7 +104,7 @@ export const WinLoseBox = ({
               MaxContentWidth * responsiveScale - ContentSidePadding * 2,
             bottom: wlmAnim.interpolate({
               inputRange: [0, 1],
-              outputRange: [-200, ContentSidePadding],
+              outputRange: [-200, ContentSidePadding * responsiveScale],
             }),
           },
         ]}
@@ -110,11 +113,11 @@ export const WinLoseBox = ({
           style={[
             flexStyles.colCentered,
             {
-              gap: 6,
+              gap: 14 * responsiveScale,
             },
           ]}
         >
-          <Text size={24} weight={400} color={Colors.white}>
+          <Text size="xl" weight={400} color={Colors.white}>
             {won ? "You won!" : "You lost"}
           </Text>
 
@@ -132,7 +135,7 @@ export const WinLoseBox = ({
           )}
           {score !== undefined && (
             <Text
-              size={16}
+              size="md"
               weight={300}
               color={Colors.white}
               style={{
@@ -148,7 +151,9 @@ export const WinLoseBox = ({
           style={[
             flexStyles.rowCentered,
             flexStyles.fullWidth,
-            flexStyles.gap12,
+            {
+              gap: 12 * responsiveScale,
+            },
           ]}
         >
           {handleUndo && !won && (

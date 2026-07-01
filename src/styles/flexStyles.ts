@@ -72,6 +72,9 @@ export const flexStyles = StyleSheet.create({
   spaceBetween: {
     justifyContent: "space-between",
   },
+  spaceAround: {
+    justifyContent: "space-around",
+  },
   flex1: {
     flex: 1,
   },

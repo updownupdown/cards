@@ -7,7 +7,7 @@ import { Platform, Pressable, TextStyle, ViewStyle } from "react-native";
 interface Props {
   style?: ViewStyle | ViewStyle[];
   textStyle?: TextStyle | TextStyle[];
-  size?: "small" | "medium" | "medium-large" | "large";
+  size?: "extra-small" | "small" | "medium" | "medium-large" | "large";
   textOnly?: boolean;
   theme?: string;
   disabled?: boolean;
@@ -79,9 +79,10 @@ export const Button = ({
   }
 
   const sizeMultiplier: Record<
-    "small" | "medium" | "medium-large" | "large",
+    "extra-small" | "small" | "medium" | "medium-large" | "large",
     number
   > = {
+    "extra-small": 0.64,
     small: 0.78,
     medium: 1,
     "medium-large": 1.16,
@@ -96,7 +97,7 @@ export const Button = ({
   let paddingVertical = 8 * scale * sizeScale;
   let paddingHorizontal = 12 * scale * sizeScale;
   let fontFamily = textOnly ? FontWeight[300] : FontWeight[500];
-  let lineHeight = 24 * scale * sizeScale;
+  let lineHeight = fontSize * 1.2;
 
   if (textOnly) {
     height = undefined;

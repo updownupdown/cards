@@ -24,7 +24,6 @@ import {
   SUITS,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-import { useUndoHistory } from "@/hooks/useUndoHistory";
 
 const TABLEAU_FAN_OFFSET = 0.35;
 const DOUBLE_TAP_MS = 300;
@@ -160,12 +159,12 @@ export default function Solitaire() {
     null,
   );
 
-  const { saveUndoState, undo, canUndo, clearHistory } =
-    useUndoHistory<GameSnapshot>();
-  const handleUndo = () => {
-    const previousState = undo();
-    if (previousState) setGame(previousState.game);
-  };
+  // const { saveUndoState, undo, canUndo, clearHistory } =
+  //   useUndoHistory<GameSnapshot>();
+  // const handleUndo = () => {
+  //   const previousState = undo();
+  //   if (previousState) setGame(previousState.game);
+  // };
 
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
 
@@ -571,14 +570,14 @@ export default function Solitaire() {
     setGame((prev) => {
       const next = updater(prev);
 
-      saveUndoState(structuredClone({ game }));
+      // saveUndoState(structuredClone({ game }));
 
       return next;
     });
   }
 
   function resetGame() {
-    clearHistory();
+    // clearHistory();
     setGame(createInitialState());
     clearSelection();
     clearDragGhost();
@@ -970,8 +969,8 @@ export default function Solitaire() {
       won={won}
       reset={resetGame}
       isLoaded={isLoaded}
-      canUndo={canUndo}
-      undo={handleUndo}
+      // canUndo={canUndo}
+      // undo={handleUndo}
     >
       <View style={styles.gameShell}>
         <View ref={boardRef} style={styles.boardShell}>

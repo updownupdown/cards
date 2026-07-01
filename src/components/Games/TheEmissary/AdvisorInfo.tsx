@@ -2,7 +2,7 @@ import { Text } from "@/components/common/Text";
 import { useFade } from "@/hooks/useFade";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, FontWeight, rgba } from "@/styles/styles";
+import { Colors, FontWeight } from "@/styles/styles";
 import { Animated, View, ViewStyle } from "react-native";
 import { Button } from "../../Button/Button";
 import { type PlayingCard } from "../../Cards/card-utils";
@@ -31,7 +31,7 @@ export const AdvisorInfo = ({
   advisorStyles,
   cardWidth,
 }: AdvisorInfoProps) => {
-  const { zoneBg } = useGameZoneBackground();
+  const { cardBg } = useGameZoneBackground();
   const { isRendered: renderAdvisorInfo, opacity: advisorInfoOpacity } =
     useFade(!!selectedAdvisor || discardFromHand !== 0, 300);
 
@@ -87,7 +87,7 @@ export const AdvisorInfo = ({
           opacity: advisorInfoOpacity,
           borderRadius: cardWidth * 0.15,
           padding: cardWidth * 0.4,
-          backgroundColor: zoneBg,
+          backgroundColor: cardBg,
         },
       ]}
     >

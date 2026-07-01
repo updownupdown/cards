@@ -102,6 +102,7 @@ export const AnimatedCard = ({
   const startZ = useSharedValue(targetState.zIndex + zIndexOffset);
   const startRotation = useSharedValue(targetState.rotation);
   const moveProgress = useSharedValue(1); // Default to 1 (already at destination)
+  const shouldOrbitMove = useSharedValue(false);
 
   const currentVisualX = useSharedValue(targetState.x);
   const currentVisualY = useSharedValue(targetState.y);
@@ -132,6 +133,12 @@ export const AnimatedCard = ({
       if (!hasChanged) return;
 
       if (prev) {
+        shouldOrbitMove.value = !!(
+          orbitConfig?.enabled &&
+          prev.loc.startsWith("loop-") &&
+          curr.loc.startsWith("loop-")
+        );
+
         if (duration === 0) {
           moveProgress.value = 1;
         } else {
@@ -159,6 +166,7 @@ export const AnimatedCard = ({
       yOffset,
       duration,
       zIndexOffset,
+      orbitConfig?.enabled,
     ],
   );
 
@@ -189,7 +197,7 @@ export const AnimatedCard = ({
     let rawXBase = rawXBaseLinear;
     let rawYBase = rawYBaseLinear;
 
-    if (orbitConfig?.enabled) {
+    if (orbitConfig?.enabled && shouldOrbitMove.value) {
       const startRotationDegrees = (startRotation.value ?? 0) + 90;
       const targetRotationDegrees = (targetState.rotation ?? 0) + 90;
       const startAngleRadians = startRotationDegrees * (Math.PI / 180);

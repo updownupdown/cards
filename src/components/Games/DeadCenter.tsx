@@ -103,6 +103,9 @@ async function resetAndSetup(
     draft.zombies = [];
     draft.phase = "reveal";
     draft.lastPlayedPile = null;
+    draft.ended = false;
+    draft.won = false;
+    draft.winLoseMessage = "";
   });
 
   await delay(bufferedDefaultAnimDuration);

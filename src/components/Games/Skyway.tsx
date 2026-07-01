@@ -1,16 +1,23 @@
 import { Text } from "@/components/common/Text";
-import { useGameLoading } from "@/hooks/useGameLoading";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { Icon } from "@/icons";
-import { flexStyles, transitionStyles } from "@/styles/flexStyles";
+import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight, rgba } from "@/styles/styles";
 import { useMemo, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import Svg, { Line } from "react-native-svg";
-import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
+import {
+  AnimatedCardMapping,
+  bufferedDefaultAnimDuration,
+  CardMapBGMapping,
+} from "../Cards/AnimatedCard";
 import {
   cardDims,
   createDeck,
+  flipAllToBack,
+  flipToBack,
+  flipToFace,
+  isFace,
   rankValue,
   shuffle,
   SUITS,
@@ -23,6 +30,9 @@ import {
   useCardMap,
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { useStateManager } from "@/hooks/useStateManager";
+import { delay } from "@/utils/utils";
+import { useResponsiveLayout } from "@/hooks/useResponsiveLayout";
 
 const svgCellSize = 800;
 const svgGridSize = svgCellSize * 3;
@@ -43,11 +53,11 @@ const SUIT_PATH_COLORS: Record<string, string> = {
   clubs: Colors.suitsColoredClubs,
 };
 
-type SkywayState = {
-  grid: PlayingCard[][];
-  deck: PlayingCard[];
+type GameState = {
+  draw: PlayingCard[];
   discard: PlayingCard[];
   market: PlayingCard[][];
+  grid: PlayingCard[][];
   round: 1 | 2 | 3;
   finalTurnAfterPlacement: boolean;
   ended: boolean;
@@ -67,31 +77,48 @@ const ADJACENT: number[][] = [
   [5, 7],
 ];
 
-function isFace(card: PlayingCard) {
-  return card.rank === "J" || card.rank === "Q" || card.rank === "K";
+const gameStateInitial: GameState = {
+  grid: Array.from({ length: 9 }, () => []),
+  draw: shuffle(createDeck().filter((card) => !isFace(card))),
+  discard: [],
+  market: [[], [], []],
+  round: 1,
+  finalTurnAfterPlacement: false,
+  ended: false,
+};
+
+async function resetAndSetup(
+  setGame: (updater: (draft: GameState) => void) => void,
+) {
+  setGame((draft) => {
+    const allCards = [
+      ...draft.draw,
+      ...draft.discard,
+      ...draft.market.flat(),
+      ...draft.grid.flat(),
+    ];
+
+    draft.grid = Array.from({ length: 9 }, () => []);
+    draft.draw = shuffle(flipAllToBack(allCards));
+    draft.discard = [];
+    draft.market = [[], [], []];
+    draft.round = 1;
+    draft.finalTurnAfterPlacement = false;
+    draft.ended = false;
+  });
+
+  await delay(bufferedDefaultAnimDuration);
+
+  setGame((draft) => {
+    const next = prepareMarket(draft);
+    Object.assign(draft, next);
+  });
 }
 
-function initState(): SkywayState {
-  const full = shuffle(createDeck({ faceUp: true }));
-  const numbers = full.filter((card) => !isFace(card));
-
-  const base: SkywayState = {
-    grid: Array.from({ length: 9 }, () => []),
-    deck: numbers,
-    discard: [],
-    market: [[], [], []],
-    round: 1,
-    finalTurnAfterPlacement: false,
-    ended: false,
-  };
-
-  return prepareMarket(base);
-}
-
-function prepareMarket(prev: SkywayState): SkywayState {
+function prepareMarket(prev: GameState): GameState {
   if (prev.ended) return prev;
 
-  let deck = [...prev.deck];
+  let draw = [...prev.draw];
   let discard = [...prev.discard];
   let round = prev.round;
   let finalTurnAfterPlacement = prev.finalTurnAfterPlacement;
@@ -100,15 +127,15 @@ function prepareMarket(prev: SkywayState): SkywayState {
   const wanted = [2, 2, 1];
 
   const drawOne = (): PlayingCard | null => {
-    if (deck.length === 0) {
+    if (draw.length === 0) {
       if (discard.length === 0) return null;
 
       if (round < 3) {
         round = (round + 1) as 1 | 2 | 3;
-        deck = shuffle(discard);
+        draw = shuffle(discard);
         discard = [];
       } else if (!finalTurnAfterPlacement) {
-        deck = shuffle(discard);
+        draw = shuffle(discard);
         discard = [];
         finalTurnAfterPlacement = true;
       } else {
@@ -116,7 +143,7 @@ function prepareMarket(prev: SkywayState): SkywayState {
       }
     }
 
-    return deck.shift() ?? null;
+    return draw.shift() ?? null;
   };
 
   for (let pileIndex = 0; pileIndex < 3; pileIndex += 1) {
@@ -126,21 +153,21 @@ function prepareMarket(prev: SkywayState): SkywayState {
         return {
           ...prev,
           market,
-          deck,
+          draw: draw,
           discard,
           round,
           finalTurnAfterPlacement,
           ended: true,
         };
       }
-      market[pileIndex].push(card);
+      market[pileIndex].push(flipToFace(card));
     }
   }
 
   return {
     ...prev,
     market,
-    deck,
+    draw: draw,
     discard,
     round,
     finalTurnAfterPlacement,
@@ -205,61 +232,66 @@ function computeScore(grid: PlayingCard[][]): ScoreBySuit {
   };
 }
 
+// ========== Main Component ========== //
 export default function Skyway() {
   const { zoneBg } = useGameZoneBackground();
-  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
+  const responsiveScale = useResponsiveLayout();
 
-  const [game, setGame] = useState<SkywayState>(initState);
   const [selectedMarket, setSelectedMarket] = useState<number | null>(null);
 
-  const score = useMemo(() => computeScore(game.grid), [game.grid]);
-  const totalScore = score.clubs + score.diamonds + score.hearts + score.spades;
-  const won = SUITS.every((suit) => score[suit] >= 5);
+  const {
+    isLoaded,
+    showIntro,
+    setShowIntro,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelectedMarket(null);
+    },
+  });
 
-  function reset() {
-    setSelectedMarket(null);
-    setGame(initState());
-  }
+  const score = useMemo(() => computeScore(game.grid), [game.grid]);
+  const won = SUITS.every((suit) => score[suit] >= 5);
 
   function draftToCell(cellIndex: number) {
     if (selectedMarket === null || game.ended) return;
 
-    setGame((prev) => {
-      if (prev.ended) return prev;
-      const drafted = prev.market[selectedMarket];
-      if (!drafted || drafted.length === 0) return prev;
+    saveUndoState(structuredClone(game));
 
-      const grid = prev.grid.map((stack) => [...stack]);
-      const discard = [...prev.discard];
+    setGame((draft) => {
+      const drafted = draft.market[selectedMarket];
+      if (!drafted || drafted.length === 0) return;
 
-      const old = grid[cellIndex];
-      const nextStack = [...old, ...drafted];
-
-      while (nextStack.length > 3) {
-        const removed = nextStack.shift();
-        if (removed) discard.push(removed);
+      draft.grid[cellIndex].push(...drafted);
+      while (draft.grid[cellIndex].length > 3) {
+        const removed = draft.grid[cellIndex].shift();
+        if (removed) draft.discard.push(flipToBack(removed));
       }
 
-      grid[cellIndex] = nextStack;
-
-      prev.market.forEach((pile, i) => {
+      draft.market.forEach((pile, i) => {
         if (i !== selectedMarket) {
-          discard.push(...pile);
+          draft.discard.push(...pile.map(flipToBack));
         }
       });
 
-      const next = prepareMarket({
-        ...prev,
-        grid,
-        discard,
-        market: [[], [], []],
-      });
+      draft.market = [[], [], []];
 
-      if (prev.finalTurnAfterPlacement) {
-        return { ...next, ended: true };
+      const wasFinalTurn = draft.finalTurnAfterPlacement;
+      const next = prepareMarket(draft);
+      Object.assign(draft, next);
+
+      if (wasFinalTurn) {
+        draft.ended = true;
       }
-
-      return next;
     });
 
     setSelectedMarket(null);
@@ -275,9 +307,11 @@ export default function Skyway() {
   }, [game.grid]);
 
   // ========== Card Mapping ========== //
-  const zones: MapZone[] = useMemo(() => {
-    const gridScaling = 2.4;
+  const gridScaling = 2.4;
+  const lastCol = 3 * gridScaling - 1;
+  const infoWidth = 3 * gridScaling - 3;
 
+  const zones: MapZone[] = useMemo(() => {
     const marketZones: MapZone[] = getGridColRows({
       cols: 3,
       rows: 1,
@@ -288,7 +322,6 @@ export default function Skyway() {
       return {
         id: `market-${i}`,
         name: "market",
-
         pileIndex: i,
         cards: game.market[i],
         col: pos.c,
@@ -312,7 +345,6 @@ export default function Skyway() {
       return {
         id: `grid-${i}`,
         name: "grid",
-
         pileIndex: i,
         cards: game.grid[i],
         col: pos.c,
@@ -328,17 +360,33 @@ export default function Skyway() {
 
     return [
       {
-        id: "paths-info",
-
+        id: "draw",
+        cards: game.draw,
         col: 0,
         row: 0,
-        width: "full",
-        height: 0.9,
+        baseZIndex: 50,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Draw", infoPos: "right" },
+      },
+      {
+        id: "discard",
+        cards: game.discard,
+        col: lastCol,
+        row: 0,
+        baseZIndex: 50,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Dscrd", infoPos: "left" },
+      },
+      {
+        id: "paths-info",
+        col: 1.5,
+        row: 0,
+        width: infoWidth,
+        height: 1,
         baseZIndex: 1,
       },
       {
         id: "market",
-
         col: 0,
         row: 1,
         width: "full",
@@ -349,7 +397,6 @@ export default function Skyway() {
       ...gridZones,
       {
         id: "paths",
-
         col: 0,
         row: 1 + gridScaling * 0.8,
         width: 3 * gridScaling,
@@ -394,8 +441,7 @@ export default function Skyway() {
     cardMapper,
     zoneMapper,
     gap: 0.14,
-    cardSize: "small",
-    // visualizer: true,
+    cardSize: "small-colored",
   });
 
   const paddingHorizontal = cardWidth * 0.28;
@@ -414,6 +460,8 @@ export default function Skyway() {
           ? "All four suits reached at least a 5-card path."
           : "5 cards for each suit path needed to win."
       }
+      canUndo={canUndo}
+      undo={undo}
     >
       {cardMap}
 
@@ -432,30 +480,33 @@ export default function Skyway() {
           },
         ]}
       >
-        <Text style={[styles.topText, { fontSize: cardWidth * 0.3 }]}>
-          Longest paths
-          <br />
-          Total: {totalScore}
-        </Text>
         <View
           style={[
             flexStyles.rowCentered,
-            flexStyles.spaceBetween,
             flexStyles.flex1,
+            flexStyles.spaceAround,
           ]}
         >
           {SUITS.map((suit) => (
-            <View key={suit} style={[flexStyles.rowCentered, flexStyles.gap6]}>
-              <Icon name={suit} color={SUIT_PATH_COLORS[suit]} size={24} />
+            <View
+              key={suit}
+              style={[
+                flexStyles.colCentered,
+                {
+                  gap: 6 * responsiveScale,
+                },
+              ]}
+            >
+              <Icon
+                name={suit}
+                color={SUIT_PATH_COLORS[suit]}
+                size={18 * responsiveScale}
+              />
               <Text
                 size="sm"
-                style={[
-                  {
-                    color: SUIT_PATH_COLORS[suit],
-                    fontSize: 18,
-                    fontFamily: FontWeight[600],
-                  },
-                ]}
+                weight={600}
+                color={SUIT_PATH_COLORS[suit]}
+                style={{ textAlign: "center" }}
               >
                 {score[suit]}
               </Text>
@@ -475,10 +526,10 @@ export default function Skyway() {
           },
         ]}
       >
-        <Text style={[styles.topText, { fontSize: cardWidth * 0.3 }]}>
+        <Text size="sm" color={Colors.K300} weight={400}>
           Market
         </Text>
-        <Text style={[styles.topText, { fontSize: cardWidth * 0.3 }]}>
+        <Text size="sm" color={Colors.K300} weight={400}>
           Round {game.round} of 3
         </Text>
       </View>
@@ -489,12 +540,11 @@ export default function Skyway() {
           flexStyles.rowCentered,
           flexStyles.fullWidth,
           getZoneStylesById("paths"),
-          // debugStyles.borderOrange,
           {
             zIndex: 10,
             flexWrap: "wrap",
             aspectRatio: 1,
-            padding: 4,
+            padding: 4 * responsiveScale,
             userSelect: "none",
             pointerEvents: "none",
           },
@@ -524,16 +574,19 @@ export default function Skyway() {
             return path.length > 1
               ? path.slice(1).map((cell, i) => {
                   const prev = path[i];
+
                   // Offset lines for multiple suits between same cells
                   const offset = (suitIdx - 1.5) * 30; // space out lines
                   const { cx: x1, cy: y1 } = getCellCenter(prev);
                   const { cx: x2, cy: y2 } = getCellCenter(cell);
+
                   // Perpendicular offset
                   const dx = y2 - y1;
                   const dy = x1 - x2;
                   const mag = Math.sqrt(dx * dx + dy * dy) || 1;
                   const ox = (dx / mag) * offset;
                   const oy = (dy / mag) * offset;
+
                   return (
                     <Line
                       key={`${suit}-${prev}-${cell}`}
@@ -554,29 +607,3 @@ export default function Skyway() {
     </GameWrapper>
   );
 }
-
-const styles = StyleSheet.create({
-  // Text
-  topText: {
-    fontSize: 14,
-    color: Colors.K400,
-    fontFamily: FontWeight[400],
-  },
-
-  // Market
-  marketPile: {
-    ...flexStyles.rowCentered,
-    ...transitionStyles.sec05,
-    flex: 1,
-    paddingVertical: 12,
-    alignItems: "center",
-
-    borderRadius: 12,
-    backgroundColor: `${rgba(Colors.accentBlue, 0.1)}`,
-    boxShadow: `inset 0 0 0 2px ${rgba(Colors.accentBlue, 0.6)}`,
-  },
-  marketPileSelected: {
-    backgroundColor: `${rgba(Colors.accentGreen, 0.2)}`,
-    boxShadow: `inset 0 0 0 3px ${rgba(Colors.accentGreen, 1)}`,
-  },
-});

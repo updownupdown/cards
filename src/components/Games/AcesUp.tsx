@@ -1,10 +1,24 @@
-import { useGameLoading } from "@/hooks/useGameLoading";
-import { useUndoHistory } from "@/hooks/useUndoHistory";
-import { useMemo, useState } from "react";
+import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useStateManager } from "@/hooks/useStateManager";
+import { delay } from "@/utils/utils";
+import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { Button } from "../Button/Button";
-import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
-import { createDeck, shuffle, type PlayingCard } from "../Cards/card-utils";
+import {
+  AnimatedCardMapping,
+  bufferedDefaultAnimDuration,
+  CardMapBGMapping,
+} from "../Cards/AnimatedCard";
+import {
+  createDeck,
+  flipAllToBack,
+  flipToBack,
+  flipToFace,
+  rankValue,
+  shuffle,
+  top,
+  type PlayingCard,
+} from "../Cards/card-utils";
 import {
   getGridColRows,
   MappedCard,
@@ -13,53 +27,46 @@ import {
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
-const cardSize = "regular";
+const numberOfPiles = 4;
 
-type AcesUpState = {
-  stock: PlayingCard[];
+type GameState = {
+  draw: PlayingCard[];
   piles: PlayingCard[][];
   discard: PlayingCard[];
   ended: boolean;
   won: boolean;
 };
 
-type GameSnapshot = {
-  game: AcesUpState;
+const gameStateInitial: GameState = {
+  draw: shuffle(createDeck()),
+  piles: Array.from({ length: numberOfPiles }, () => []),
+  discard: [],
+  ended: false,
+  won: false,
 };
 
-function rankValueAcesHigh(card: PlayingCard) {
-  if (card.rank === "A") return 14;
-  if (card.rank === "K") return 13;
-  if (card.rank === "Q") return 12;
-  if (card.rank === "J") return 11;
-  return Number(card.rank);
-}
+async function resetAndSetup(
+  setGame: (updater: (draft: GameState) => void) => void,
+) {
+  setGame((draft) => {
+    const allCards = [
+      ...draft.draw,
+      ...draft.piles.flat(),
+      ...draft.discard,
+    ].filter((card): card is PlayingCard => card !== null);
 
-function topCard(pile: PlayingCard[]) {
-  if (pile.length === 0) return null;
-  return pile[pile.length - 1];
-}
+    draft.draw = flipAllToBack(shuffle(allCards));
+    draft.piles = Array.from({ length: numberOfPiles }, () => []);
+    draft.discard = [];
+    draft.ended = false;
+    draft.won = false;
+  });
 
-function setup(): AcesUpState {
-  const stock = shuffle(createDeck({ faceUp: true }));
-  const piles: PlayingCard[][] = [[], [], [], []];
-
-  for (let i = 0; i < 4; i += 1) {
-    const card = stock.shift();
-    if (card) piles[i].push(card);
-  }
-
-  return {
-    stock,
-    piles,
-    discard: [],
-    ended: false,
-    won: false,
-  };
+  await delay(bufferedDefaultAnimDuration);
 }
 
 function getDiscardablePileIndexes(piles: PlayingCard[][]) {
-  const tops = piles.map((pile) => topCard(pile));
+  const tops = piles.map((pile) => top(pile));
   const discardable = new Set<number>();
 
   for (let i = 0; i < tops.length; i += 1) {
@@ -72,7 +79,7 @@ function getDiscardablePileIndexes(piles: PlayingCard[][]) {
       if (!other) continue;
       if (
         other.suit === card.suit &&
-        rankValueAcesHigh(other) > rankValueAcesHigh(card)
+        rankValue(other, 14) > rankValue(card, 14)
       ) {
         discardable.add(i);
       }
@@ -88,8 +95,8 @@ function hasRelocateMove(piles: PlayingCard[][]) {
   return hasEmpty && nonEmptyCount > 1;
 }
 
-function evaluateEndState(stock: PlayingCard[], piles: PlayingCard[][]) {
-  if (stock.length > 0) return { ended: false, won: false };
+function evaluateEndState(draw: PlayingCard[], piles: PlayingCard[][]) {
+  if (draw.length > 0) return { ended: false, won: false };
 
   const discardable = getDiscardablePileIndexes(piles);
   const canRelocate = hasRelocateMove(piles);
@@ -104,65 +111,56 @@ function evaluateEndState(stock: PlayingCard[], piles: PlayingCard[][]) {
   return { ended: true, won };
 }
 
+// ========== Main Component ========== //
 export default function AcesUp() {
-  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
-  const [game, setGame] = useState<AcesUpState>(setup);
+  const { cardText } = useGameZoneBackground();
+
   const [selectedPile, setSelectedPile] = useState<number | undefined>(
     undefined,
   );
 
-  const { saveUndoState, undo, canUndo, clearHistory } =
-    useUndoHistory<GameSnapshot>();
-  const handleUndo = () => {
-    const previousState = undo();
-    if (previousState) {
-      setGame(previousState.game);
-    }
-  };
+  const {
+    isLoaded,
+    showIntro,
+    setShowIntro,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelectedPile(undefined);
+    },
+    postSetupAction: async () => {
+      await dealCards();
+    },
+  });
 
   const discardable = useMemo(
     () => getDiscardablePileIndexes(game.piles),
     [game.piles],
   );
 
-  // Always allow dealing, for now.
-  const canDeal = useMemo(() => {
-    if (game.ended || game.stock.length < 4) return false;
-    if (discardable.size > 0) return false;
-    return true;
-  }, [discardable, game.ended, game.piles, game.stock.length]);
-
-  function reset() {
-    clearHistory();
-    setGame(setup());
+  async function dealCards() {
     setSelectedPile(undefined);
-  }
+    saveUndoState(structuredClone(game));
 
-  async function dealFour() {
-    if (game.ended || game.stock.length < 4) return;
+    setGame((draft) => {
+      if (draft.draw.length === 0) return;
 
-    saveUndoState(structuredClone({ game }));
+      const cardsToDeal = Math.min(draft.draw.length, numberOfPiles);
 
-    setGame((prev) => {
-      if (prev.ended || prev.stock.length < 4) return prev;
-
-      // For now, always allow dealing
-      // const blockedByDiscard = getDiscardablePileIndexes(prev.piles).size > 0;
-      // if (blockedByDiscard) return prev;
-
-      const stock = [...prev.stock];
-      const piles = prev.piles.map((pile) => [...pile]);
-
-      for (let i = 0; i < 4; i += 1) {
-        const card = stock.shift();
-        if (card) piles[i].push(card);
+      for (let i = 0; i < cardsToDeal; i += 1) {
+        const card = draft.draw.pop();
+        if (card) draft.piles[i].push(flipToFace(card));
       }
-
-      const { ended, won } = evaluateEndState(stock, piles);
-      return { ...prev, stock, piles, ended, won };
     });
-
-    setSelectedPile(undefined);
   }
 
   async function discardTop(pileIndex: number) {
@@ -170,21 +168,15 @@ export default function AcesUp() {
     const allowed = getDiscardablePileIndexes(game.piles);
     if (!allowed.has(pileIndex)) return;
 
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
-    setGame((prev) => {
-      if (prev.ended) return prev;
-      const allowed = getDiscardablePileIndexes(prev.piles);
-      if (!allowed.has(pileIndex)) return prev;
+    setGame((draft) => {
+      const allowed = getDiscardablePileIndexes(draft.piles);
+      if (!allowed.has(pileIndex)) return;
 
-      const piles = prev.piles.map((pile) => [...pile]);
-      const discard = [...prev.discard];
-      const card = piles[pileIndex].pop();
-      if (!card) return prev;
-      discard.push(card);
-
-      const { ended, won } = evaluateEndState(prev.stock, piles);
-      return { ...prev, piles, discard, ended, won };
+      const card = draft.piles[pileIndex].pop();
+      if (!card) return;
+      draft.discard.push(flipToBack(card));
     });
 
     setSelectedPile(undefined);
@@ -203,27 +195,19 @@ export default function AcesUp() {
       return;
     }
 
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
     setSelectedPile(undefined);
 
-    setGame((prev) => {
-      // Check if clicked an empty pile after having a card selected
-      const source = piles[selectedPile];
-      const target = piles[pileIndex];
-
-      if (source.length === 0 || target.length !== 0) {
-        return prev;
+    // Move selected card to the empty pile
+    setGame((draft) => {
+      if (piles[pileIndex].length !== 0) {
+        return;
       }
 
-      const moving = source.pop();
-      if (!moving) return prev;
-      target.push(moving);
-
-      const { ended, won } = evaluateEndState(prev.stock, piles);
-      setSelectedPile(undefined);
-
-      return { ...prev, piles, ended, won };
+      const cardToMove = draft.piles[selectedPile].pop();
+      if (!cardToMove) return;
+      draft.piles[pileIndex].push(cardToMove);
     });
   }
 
@@ -238,22 +222,20 @@ export default function AcesUp() {
     }).map((pos, i) => ({
       id: `pile-${i}`,
       name: "pile",
-
       pileIndex: i,
       cards: game.piles[i],
       col: pos.c,
       row: pos.r,
       baseZIndex: 1,
-      fan: { maxVisible: 3, direction: "up", offset: 0.25 },
+      fan: { maxVisible: 10, direction: "up", offset: 0.25 },
       placeholder: {},
     }));
 
     return [
       {
-        id: "stock",
-        name: "stock",
-        cards: game.stock,
-
+        id: "draw",
+        name: "draw",
+        cards: game.draw,
         col: 0.75,
         row: 0,
         fan: { maxVisible: 3 },
@@ -268,7 +250,6 @@ export default function AcesUp() {
         id: "discard",
         name: "discard",
         cards: game.discard,
-
         col: 2.25,
         row: 0,
         fan: { maxVisible: 3 },
@@ -282,7 +263,6 @@ export default function AcesUp() {
       ...pileZones,
       {
         id: "button",
-
         col: 0,
         row: 4.1,
         width: "full",
@@ -309,11 +289,10 @@ export default function AcesUp() {
   const cardMapper = (
     mappedCard: MappedCard,
   ): AnimatedCardMapping | undefined => {
-    if (mappedCard.zoneName === "stock" && mappedCard.topOfZone) {
-      //  Stock pile
+    if (mappedCard.zoneName === "draw" && mappedCard.topOfZone) {
+      //  Draw pile
       return {
-        onPress: dealFour,
-        isDisabled: !canDeal,
+        onPress: dealCards,
       };
     } else if (mappedCard.zoneName === "pile" && mappedCard.topOfZone) {
       // Piles
@@ -332,21 +311,30 @@ export default function AcesUp() {
           }
         },
         isSelected: selectedPile === pileIndex,
-        selectColor: canDiscard ? "green" : "blue",
-        forceSelectColor: canDiscard,
-        forceOverlayColor: canDiscard,
+        selectColor: canDiscard ? "none" : "blue",
         isDisabled: !canDiscard && !hasEmptyPile,
       };
     }
   };
 
-  const { cardMap, cardWidth, getZoneStylesById } = useCardMap({
+  const { cardMap, getZoneStylesById } = useCardMap({
     game,
     zones,
     cardMapper,
     zoneMapper,
     cardSize: "regular",
   });
+
+  // Evaluate game end state whenever draw or piles change
+  useEffect(() => {
+    const { ended, won } = evaluateEndState(game.draw, game.piles);
+    if (ended !== game.ended || won !== game.won) {
+      setGame((draft) => {
+        draft.ended = ended;
+        draft.won = won;
+      });
+    }
+  }, [game]);
 
   return (
     <GameWrapper
@@ -357,18 +345,19 @@ export default function AcesUp() {
       reset={reset}
       isLoaded={isLoaded}
       canUndo={canUndo}
-      undo={handleUndo}
+      undo={undo}
     >
       {cardMap}
 
       <View style={[getZoneStylesById("button")]}>
         <Button
           text="Deal"
-          size="large"
-          onPress={dealFour}
+          size="medium-large"
+          onPress={dealCards}
           fullWidth
-          disabled={!canDeal}
           style={[{ height: "100%" }]}
+          disabled={game.draw.length === 0 || game.ended}
+          theme={cardText}
         />
       </View>
     </GameWrapper>

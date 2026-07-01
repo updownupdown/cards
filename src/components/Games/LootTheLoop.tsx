@@ -1,15 +1,22 @@
 import { useFade } from "@/hooks/useFade";
-import { useGameLoading } from "@/hooks/useGameLoading";
+import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
+import { delay } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
 import { Animated, View } from "react-native";
 import { Button } from "../Button/Button";
-import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
+import {
+  AnimatedCardMapping,
+  bufferedDefaultAnimDuration,
+  CardMapBGMapping,
+} from "../Cards/AnimatedCard";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
+import { infoSize } from "../Cards/CardMapBackgrounds";
 import {
   cardDims,
   CardSuit,
   createDeck,
+  flipAllToBack,
   isAce,
   isFace,
   isJoker,
@@ -20,12 +27,9 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-import { useUndoHistory } from "@/hooks/useUndoHistory";
-import { useImmer } from "use-immer";
-import { infoSize } from "../Cards/CardMapBackgrounds";
+import { useResponsiveLayout } from "@/hooks/useResponsiveLayout";
 
 const maxMarkedPaths = 3;
-const exploreTransitionInMs = 1200;
 
 export type LoopRank = PlayingCard["rank"] | "Joker";
 
@@ -42,6 +46,7 @@ type Note = { card: LoopCard; index: number };
 
 type GameState = {
   deck: LoopCard[];
+  dealDeck: LoopCard[];
   deckPos: number;
   paths: MarkedPaths;
   acesPile: LoopCard[];
@@ -52,15 +57,11 @@ type GameState = {
   numLoops: number;
 };
 
-type GameSnapshot = {
-  game: GameState;
-};
-
 function isBadStartCard(card: LoopCard) {
   return isJoker(card) || isAce(card) || isFace(card);
 }
 
-function setup(): GameState {
+function getLoopDeck(): LoopCard[] {
   const base: LoopCard[] = createDeck({ faceUp: false }).map((card) => ({
     ...card,
     rank: card.rank as LoopRank,
@@ -78,25 +79,61 @@ function setup(): GameState {
     deck = shuffle(withJoker);
   } while (isBadStartCard(deck[0]) && isBadStartCard(deck[1]));
 
-  return {
-    deck,
-    deckPos: 0,
-    paths: [null, null, null],
-    acesPile: [],
-    trinketsPile: [],
-    ended: false,
-    won: false,
-    numLoops: 0,
-  };
+  return deck;
+}
+
+const gameStateInitial: GameState = {
+  deck: [],
+  dealDeck: getLoopDeck(),
+  deckPos: 0,
+  paths: [null, null, null],
+  acesPile: [],
+  trinketsPile: [],
+  ended: false,
+  won: false,
+  numLoops: 0,
+};
+
+async function resetAndSetup(
+  setGame: (updater: (draft: GameState) => void) => void,
+) {
+  // Gather all cards to dealDeck
+  setGame((draft) => {
+    const allCards = [
+      ...draft.deck,
+      ...draft.dealDeck,
+      ...draft.acesPile,
+      ...draft.trinketsPile,
+      ...draft.paths.filter((p) => p !== null).map((p) => p as LoopCard),
+    ];
+
+    draft.deck = [];
+    draft.dealDeck = flipAllToBack(allCards);
+    draft.acesPile = [];
+    draft.trinketsPile = [];
+    draft.paths = [null, null, null];
+    draft.deckPos = 0;
+    draft.ended = false;
+    draft.won = false;
+    draft.winLoseMessage = "";
+    draft.numLoops = 0;
+  });
+
+  await delay(bufferedDefaultAnimDuration * 1.5);
+
+  // Deal new cards from dealDeck to deck
+  setGame((draft) => {
+    draft.deck = shuffle(draft.dealDeck);
+    draft.dealDeck = [];
+  });
 }
 
 export default function LootTheLoop() {
-  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
-  const [game, setGame] = useImmer<GameState>(setup);
+  const responsiveScale = useResponsiveLayout();
+
   const [selectedCardIndex, setSelectedCardIndex] = useState<
     number | undefined
   >(undefined);
-
   const [selectedPath, setSelectedPath] = useState<Note | undefined>(undefined);
   const [selectedRevealedRank, setSelectedRevealedRank] = useState<
     number | undefined
@@ -106,42 +143,50 @@ export default function LootTheLoop() {
     orbitConfig: { enabled: true },
   };
 
-  const { saveUndoState, undo, canUndo, clearHistory } =
-    useUndoHistory<GameSnapshot>();
-  const handleUndo = () => {
-    const previousState = undo();
-    if (previousState) {
-      setSelectedPath(undefined);
+  const {
+    isLoaded,
+    showIntro,
+    setShowIntro,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+    resetNonGameStates: () => {
       setSelectedCardIndex(undefined);
-      setGame(previousState.game);
-    }
-  };
+      setSelectedPath(undefined);
+      setSelectedRevealedRank(undefined);
+    },
+  });
 
   useEffect(() => {
+    const selectedCard =
+      selectedCardIndex !== undefined
+        ? game.deck[selectedCardIndex]
+        : undefined;
+
     const selectedRevealedIsNumber = !!(
-      selectedCardIndex !== undefined &&
-      game.deck[selectedCardIndex].faceUp &&
-      isNumberRank(game.deck[selectedCardIndex].rank)
+      selectedCard !== undefined &&
+      selectedCard.faceUp &&
+      isNumberRank(selectedCard.rank)
     );
 
     setSelectedRevealedRank(
-      selectedRevealedIsNumber
-        ? RANK_VALUE[game.deck[selectedCardIndex].rank]
-        : undefined,
+      selectedRevealedIsNumber ? RANK_VALUE[selectedCard!.rank] : undefined,
     );
-  }, [selectedCardIndex]);
-
-  function reset() {
-    clearHistory();
-    setSelectedCardIndex(undefined);
-    setSelectedPath(undefined);
-    setSelectedRevealedRank(undefined);
-    setGame(setup());
-  }
+  }, [selectedCardIndex, game.deck]);
 
   // Look around
   function lookAround() {
-    saveUndoState(structuredClone({ game }));
+    if (game.deck.length === 0) return;
+
+    saveUndoState(structuredClone(game));
 
     setGame((draft) => {
       // Turn two cards up in current and next position
@@ -156,9 +201,10 @@ export default function LootTheLoop() {
   }
 
   // Mark path
-  async function markPath(selectedCardIndex: number, noteIndex: number) {
-    const pathToMark = game.deck[selectedCardIndex];
+  async function markPath(selectedCardId: string, noteIndex: number) {
+    const pathToMark = game.deck.find((card) => card.id === selectedCardId);
     if (
+      !pathToMark ||
       game.paths.filter((p) => p !== null).length >= maxMarkedPaths ||
       game.paths[noteIndex] !== null ||
       !pathToMark.faceUp ||
@@ -167,26 +213,44 @@ export default function LootTheLoop() {
       return;
     }
 
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
     setSelectedCardIndex(undefined);
 
     setGame((draft) => {
+      const indexToMark = draft.deck.findIndex(
+        (card) => card.id === selectedCardId,
+      );
+      if (indexToMark < 0) return;
+
+      const draftPathToMark = draft.deck[indexToMark];
+      if (
+        !draftPathToMark ||
+        !draftPathToMark.faceUp ||
+        !isNumberRank(draftPathToMark.rank)
+      ) {
+        return;
+      }
+
       const notes: MarkedPaths = [...draft.paths];
-      notes[noteIndex] = pathToMark;
+      notes[noteIndex] = draftPathToMark;
 
       draft.paths = notes;
-      draft.deck = [...draft.deck.toSpliced(selectedCardIndex, 1)];
+      draft.deck.splice(indexToMark, 1);
+
+      // If we removed a card before the current deck position, shift deckPos.
+      if (indexToMark < draft.deckPos) {
+        draft.deckPos -= 1;
+      }
+
+      // Keep deckPos in bounds after mutation.
+      if (draft.deck.length > 0) {
+        draft.deckPos = Math.min(draft.deckPos, draft.deck.length - 1);
+      } else {
+        draft.deckPos = 0;
+      }
     });
   }
-
-  const [isExploring, setIsExploring] = useState(false);
-
-  useEffect(() => {
-    if (isExploring && selectedCardIndex !== undefined) {
-      explore(selectedCardIndex);
-    }
-  }, [isExploring]);
 
   // Explore
   function explore(selectedCardIndex: number) {
@@ -201,12 +265,16 @@ export default function LootTheLoop() {
       return;
     }
 
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
     setSelectedCardIndex(undefined);
 
     setGame((draft) => {
-      const movedBy = rankValue(selectedCard, 1, 0);
+      const selectedDraftCard = draft.deck[selectedCardIndex];
+      if (!selectedDraftCard || !selectedDraftCard.faceUp) return;
+      if (!isNumberRank(selectedDraftCard.rank)) return;
+
+      const movedBy = rankValue(selectedDraftCard, 1, 0);
       const deckPos = (draft.deckPos + movedBy) % draft.deck.length;
       const numLoops = draft.numLoops + (deckPos < draft.deckPos ? 1 : 0);
 
@@ -243,10 +311,10 @@ export default function LootTheLoop() {
 
         if (newTopCard.rank === "A") {
           acePile = [...acePile, newTopCard];
-          deck = deck.toSpliced(deckPos, 1);
+          deck.splice(deckPos, 1);
         } else {
           trinketsPile = [...trinketsPile, newTopCard];
-          deck = deck.toSpliced(deckPos, 1);
+          deck.splice(deckPos, 1);
         }
 
         if (deck.length === 0) {
@@ -265,17 +333,15 @@ export default function LootTheLoop() {
         return;
       }
     });
-
-    setTimeout(() => {
-      setIsExploring(false);
-    }, exploreTransitionInMs);
   }
 
   function returnToSelectedMarkedPath() {
     if (selectedPath !== undefined) {
+      const insertAt = game.deckPos;
+
       setSelectedPath(undefined);
 
-      saveUndoState(structuredClone({ game }));
+      saveUndoState(structuredClone(game));
 
       setSelectedCardIndex(undefined);
 
@@ -285,22 +351,28 @@ export default function LootTheLoop() {
         notes[selectedPath.index] = null;
 
         // Insert path card in deck
-        const deck = draft.deck.toSpliced(draft.deckPos, 0, selectedPath.card);
-
-        // Selected newly inserted card
-        setSelectedCardIndex(draft.deckPos);
+        const deck = [...draft.deck];
+        deck.splice(draft.deckPos, 0, selectedPath.card);
 
         draft.deck = deck;
         draft.paths = notes;
       });
+
+      // Select the newly inserted card after state update.
+      setSelectedCardIndex(insertAt);
     }
   }
 
   const canMarkPath = useMemo(() => {
+    const selectedCard =
+      selectedCardIndex !== undefined
+        ? game.deck[selectedCardIndex]
+        : undefined;
+
     return (
-      selectedCardIndex !== undefined &&
-      isNumberRank(game.deck[selectedCardIndex].rank) &&
-      game.deck[selectedCardIndex].faceUp &&
+      selectedCard !== undefined &&
+      isNumberRank(selectedCard.rank) &&
+      selectedCard.faceUp &&
       game.paths.filter((p) => p !== null).length < maxMarkedPaths
     );
   }, [selectedCardIndex, game.paths, game.deck]);
@@ -349,9 +421,11 @@ export default function LootTheLoop() {
         baseZIndex -= deckLength + i;
       }
 
+      const nextDeckPos = (game.deckPos + 1) % deckLength;
+
       if (i === game.deckPos) {
         angle -= positioning.firstCardAngleIncrease;
-      } else if (i === game.deckPos + 1) {
+      } else if (i === nextDeckPos) {
         angle -= positioning.secondCardAngleIncrease;
       }
 
@@ -421,31 +495,21 @@ export default function LootTheLoop() {
         fan: { maxVisible: 3 },
       },
       {
-        id: "button",
-        col: 0,
+        id: "dealDeck",
+        name: "dealDeck",
+        col: dims.colOffset + dims.colStart,
+        row: dims.acesRow + 1,
+        cards: game.dealDeck,
+      },
+      {
+        id: "buttons",
+        col: 0.4,
         row: 6.2,
         height: 0.8,
-        width: "full",
+        width: positioning.colWidth - 0.8,
       },
     ];
   }, [game, selectedCardIndex, selectedPath, selectedRevealedRank]);
-
-  const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
-    if (zone.name === "path") {
-      const index = zone.pileIndex;
-
-      if (index === undefined) return {};
-
-      return {
-        selectColor: canMarkPath ? "green" : "none",
-        onPress: () => {
-          if (selectedCardIndex !== undefined) {
-            markPath(selectedCardIndex, index);
-          }
-        },
-      };
-    }
-  };
 
   const cardMapper = (
     mappedCard: MappedCard,
@@ -459,6 +523,7 @@ export default function LootTheLoop() {
         return orbitingLoopAnimation;
 
       const deckLength = game.deck.length;
+      const nextDeckPos = (game.deckPos + 1) % deckLength;
       const isSelected = selectedCardIndex === index;
       const isLookAround = index === game.deckPos && !card.faceUp;
       const isExploreTarget = !!(
@@ -488,7 +553,7 @@ export default function LootTheLoop() {
         ...orbitingLoopAnimation,
         onPress: () => {
           // Ignore cards that are not the first two
-          if (index !== game.deckPos && index !== game.deckPos + 1) {
+          if (index !== game.deckPos && index !== nextDeckPos) {
             return undefined;
           }
 
@@ -541,9 +606,7 @@ export default function LootTheLoop() {
     zones,
     gap: 0,
     cardMapper,
-    zoneMapper,
     cardSize: "small",
-    // visualizer: true,
     paddingLeft: 0,
     paddingRight: 0,
     fixedCols: positioning.colWidth,
@@ -557,9 +620,10 @@ export default function LootTheLoop() {
       won={game.won}
       reset={reset}
       isLoaded={isLoaded}
+      score={game.acesPile.length + game.trinketsPile.length}
       winLoseMessage={game.winLoseMessage}
       canUndo={canUndo}
-      undo={handleUndo}
+      undo={undo}
     >
       {cardMap}
 
@@ -577,98 +641,67 @@ export default function LootTheLoop() {
           >
             <Button
               text="Mark Path"
+              size="extra-small"
               onPress={() => {
                 if (selectedCardIndex !== undefined) {
-                  markPath(selectedCardIndex, pathIndex);
+                  const selectedCard = game.deck[selectedCardIndex];
+                  if (selectedCard) {
+                    markPath(selectedCard.id, pathIndex);
+                  }
                 }
               }}
               disabled={selectedCardIndex === undefined}
               style={[flexStyles.fullWidth, flexStyles.fullHeight]}
               theme={"green"}
-              size="small"
             />
           </Animated.View>
         ))}
 
+      {/* ----- Buttons ----- */}
       <View
         style={[
-          flexStyles.colCentered,
-          flexStyles.fullWidth,
-          flexStyles.gap20,
-          flexStyles.flex1,
+          flexStyles.rowCentered,
+          getZoneStylesById("buttons"),
+          {
+            gap: cardWidth * 0.25 * responsiveScale,
+          },
         ]}
       >
-        {/* Ghost "return to marked path" card */}
-        {/* <CardButton
-            onPress={returnToSelectedMarkedPath}
-            card={selectedNote?.card}
-            selectColor="green"
-            forceOverlayColor
-            style={[
-              {
-                pointerEvents: selectedNote !== undefined ? undefined : "none",
-                opacity: selectedNote !== undefined ? 0.5 : 0,
-                position: "absolute",
-                zIndex: 200,
-                transform: [
-                  {
-                    rotate:
-                      selectedNote !== undefined
-                        ? `${firstCardAngleIncrease * -2.5}deg`
-                        : `${firstCardAngleIncrease * -3.5}deg`,
-                  },
-                  { translateY: contentRadius },
-                ],
-              },
-            ]}
-          /> */}
-
-        {/* ----- Buttons ----- */}
-        <View
-          style={[
-            flexStyles.rowCentered,
-            getZoneStylesById("button"),
-            {
-              gap: cardWidth * 0.25,
-            },
-          ]}
-        >
-          <Button
-            text="Explore"
-            onPress={() => {
-              if (selectedCardIndex !== undefined) {
-                setIsExploring(true);
-              }
-            }}
-            disabled={
-              selectedCardIndex === undefined ||
-              !isNumberRank(game.deck[selectedCardIndex].rank) ||
-              !game.deck[selectedCardIndex].faceUp
+        <Button
+          text="Explore"
+          onPress={() => {
+            if (selectedCardIndex !== undefined) {
+              explore(selectedCardIndex);
             }
-            style={[flexStyles.flex1, { height: "100%" }]}
-            theme={"purple"}
-          />
+          }}
+          disabled={
+            selectedCardIndex === undefined ||
+            !isNumberRank(game.deck[selectedCardIndex].rank) ||
+            !game.deck[selectedCardIndex].faceUp
+          }
+          style={[flexStyles.flex1, { height: "100%" }]}
+          theme={"purple"}
+        />
 
-          <Button
-            text="Return to Path"
-            onPress={returnToSelectedMarkedPath}
-            disabled={selectedPath === undefined}
-            style={[flexStyles.flex1, { height: "100%" }]}
-            theme={"green"}
-          />
+        <Button
+          text="Return to Path"
+          onPress={returnToSelectedMarkedPath}
+          disabled={selectedPath === undefined}
+          style={[flexStyles.flex1, { height: "100%" }]}
+          theme={"green"}
+        />
 
-          <Button
-            text="Look Around"
-            onPress={lookAround}
-            disabled={
-              game.ended ||
-              game.deck.length === 0 ||
-              game.deck[game.deckPos].faceUp
-            }
-            style={[flexStyles.flex1, { height: "100%" }]}
-            theme={"blue"}
-          />
-        </View>
+        <Button
+          text="Look Around"
+          onPress={lookAround}
+          disabled={
+            game.ended ||
+            game.deck.length === 0 ||
+            game.deck[game.deckPos].faceUp
+          }
+          style={[flexStyles.flex1, { height: "100%" }]}
+          theme={"blue"}
+        />
       </View>
     </GameWrapper>
   );

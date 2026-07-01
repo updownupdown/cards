@@ -1,15 +1,20 @@
 import { Text } from "@/components/common/Text";
-import { useGameLoading } from "@/hooks/useGameLoading";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
-import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
+import { delay } from "@/utils/utils";
 import { useMemo, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import { Button } from "../Button/Button";
-import { AnimatedCardMapping } from "../Cards/AnimatedCard";
+import {
+  AnimatedCardMapping,
+  bufferedDefaultAnimDuration,
+} from "../Cards/AnimatedCard";
 import {
   createDeck,
+  flipAllToBack,
+  flipAllToFace,
   isFace,
   rankValue,
   shuffle,
@@ -35,9 +40,62 @@ type GameState = {
   won: boolean;
 };
 
-type GameSnapshot = {
-  game: GameState;
+const gameStateInitial: GameState = {
+  ranks: Array.from({ length: 5 }).map(() => ({ members: [], candidates: [] })),
+  dead: [],
+  ended: false,
+  won: false,
 };
+
+async function resetAndSetup(
+  setGame: (updater: (draft: GameState) => void) => void,
+) {
+  // Gather all cards and reset the game state
+  setGame((draft) => {
+    const allCards = [
+      ...draft.ranks.flatMap((r) => [...r.members, ...r.candidates]),
+      ...draft.dead,
+    ].filter((card): card is PlayingCard => card !== null);
+
+    draft.ranks = Array.from({ length: 5 }).map(() => ({
+      members: [],
+      candidates: [],
+    }));
+    draft.dead = flipAllToBack(allCards);
+    draft.ended = false;
+    draft.won = false;
+  });
+
+  await delay(bufferedDefaultAnimDuration);
+
+  setGame((draft) => {
+    draft.dead = shuffle(
+      createDeck()
+        .filter((c) => !isFace(c))
+        .slice(0, totalCardsNeeded),
+    );
+  });
+
+  await delay(100);
+
+  setGame((draft) => {
+    // Ranks 1 to 5 have 1, 3, 5, 7, and 9 cards
+    draft.ranks = [
+      { members: [], candidates: flipAllToFace(draft.dead.slice(0, 1)) },
+      { members: [], candidates: flipAllToFace(draft.dead.slice(1, 4)) },
+      { members: [], candidates: flipAllToFace(draft.dead.slice(4, 9)) },
+      { members: [], candidates: flipAllToFace(draft.dead.slice(9, 16)) },
+      { members: [], candidates: flipAllToFace(draft.dead.slice(16, 25)) },
+    ];
+
+    // Last rank starts with 3 members
+    draft.ranks[4].members = flipAllToFace(draft.dead.slice(25, 28));
+
+    draft.dead = [];
+  });
+}
+
+const totalCardsNeeded = 28; // 1 + 3 + 5 + 7 + 9 + 3
 
 function cardVal(card: PlayingCard) {
   if (card.rank === "10") return 0;
@@ -47,29 +105,6 @@ function cardVal(card: PlayingCard) {
 function lastDigit(n: number) {
   const x = n % 10;
   return x < 0 ? x + 10 : x;
-}
-
-function setup(): GameState {
-  const cards = shuffle(createDeck({ faceUp: true }).filter((c) => !isFace(c)));
-
-  // Ranks 1 to 5 have 1, 3, 5, 7, and 9 cards
-  const ranks: RankBand[] = [
-    { members: [], candidates: cards.slice(0, 1) },
-    { members: [], candidates: cards.slice(1, 4) },
-    { members: [], candidates: cards.slice(4, 9) },
-    { members: [], candidates: cards.slice(9, 16) },
-    { members: [], candidates: cards.slice(16, 25) },
-  ];
-
-  // Last rank starts with 3 members
-  ranks[4].members = cards.slice(25, 28);
-
-  return {
-    ranks,
-    dead: [],
-    ended: false,
-    won: false,
-  };
 }
 
 function replacementMatches(
@@ -100,13 +135,30 @@ function hasAnyMove(state: GameState) {
   return false;
 }
 
-// ==============================
-// SYNDICATE
-// ==============================
+// ========== Main Component ========== //
 export default function Syndicate() {
   const { zoneBg } = useGameZoneBackground(0.6);
-  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
-  const [game, setGame] = useState<GameState>(setup);
+
+  const {
+    isLoaded,
+    showIntro,
+    setShowIntro,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+    resetNonGameStates: () => {
+      resetSelected();
+    },
+  });
+
   const [selectedRank, setSelectedRank] = useState<number | null>(null);
   const [selectedMember, setSelectedMember] = useState<string | null>(null);
   const [selectedReplacement, setSelectedReplacement] =
@@ -119,22 +171,6 @@ export default function Syndicate() {
     setSelectedMember(null);
     setSelectedReplacement(null);
     setSelectedSacrifice(null);
-  }
-
-  const { saveUndoState, undo, canUndo, clearHistory } =
-    useUndoHistory<GameSnapshot>();
-  const handleUndo = () => {
-    const previousState = undo();
-    if (previousState) {
-      setGame(previousState.game);
-      resetSelected();
-    }
-  };
-
-  function reset() {
-    clearHistory();
-    setGame(setup());
-    resetSelected();
   }
 
   // ==============================
@@ -167,21 +203,16 @@ export default function Syndicate() {
       return;
     }
 
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
-    setGame((prev) => {
-      if (prev.ended) return prev;
+    setGame((draft) => {
+      if (draft.ended) return;
 
       const rank = selectedRank;
-      const ranks = prev.ranks.map((r) => ({
-        members: [...r.members],
-        candidates: [...r.candidates],
-      }));
-      const dead = [...prev.dead];
+      const from = draft.ranks[rank];
 
-      const from = ranks[rank];
       if (!from || from.members.length !== 3) {
-        return prev;
+        return;
       }
 
       const promoted = from.members.find((c) => c.id === selectedMember);
@@ -192,8 +223,9 @@ export default function Syndicate() {
           candidate.id === selectedReplacement.id &&
           replacementMatches(candidate, remaining[0], remaining[1]),
       );
+
       if (replacementIndex < 0) {
-        return prev;
+        return;
       }
 
       const replacement = from.candidates.splice(replacementIndex, 1)[0];
@@ -201,16 +233,12 @@ export default function Syndicate() {
 
       const toIndex = rank - 1;
       if (toIndex < 0) {
-        return {
-          ...prev,
-          ranks,
-          dead,
-          ended: true,
-          won: true,
-        };
+        draft.ended = true;
+        draft.won = true;
+        return;
       }
 
-      const to = ranks[toIndex];
+      const to = draft.ranks[toIndex];
       if (promoted) {
         if (promotionType === "members") {
           to.members.push(promoted);
@@ -219,28 +247,25 @@ export default function Syndicate() {
         }
       }
 
+      // Move sacrifice to dead pile if needed
       if (to.members.length > 3) {
-        // Auto-sacrifice the highest value member to keep tension and limit.
-        let highestIdx = 0;
-        for (let i = 1; i < to.members.length; i += 1) {
-          if (cardVal(to.members[i]) > cardVal(to.members[highestIdx])) {
-            highestIdx = i;
-          }
+        const selectedSacrificeIndex = to.members.findIndex(
+          (c) => c.id === selectedSacrifice?.id,
+        );
+
+        draft.dead.push(selectedSacrifice ?? to.members[to.members.length - 1]);
+
+        if (selectedSacrificeIndex >= 0) {
+          to.members.splice(selectedSacrificeIndex, 1);
+        } else {
+          to.members.pop();
         }
-        dead.push(to.members.splice(highestIdx, 1)[0]);
       }
 
-      const next: GameState = {
-        ...prev,
-        ranks,
-        dead,
-      };
-
-      if (!hasAnyMove(next)) {
-        return { ...next, ended: true, won: false };
+      if (!hasAnyMove(draft)) {
+        draft.ended = true;
+        draft.won = false;
       }
-
-      return next;
     });
 
     resetSelected();
@@ -248,7 +273,7 @@ export default function Syndicate() {
 
   const score = game.dead.length;
 
-  const InstructionText = () => {
+  const instructionText = () => {
     if (selectedMember === null) {
       return "Select a member to promote";
     } else if (selectedReplacement === null) {
@@ -258,7 +283,16 @@ export default function Syndicate() {
         return "No valid replacement";
       }
     } else if (selectedRank !== null) {
-      return `Promote to rank ${selectedRank}:`;
+      // Check if sacrifice is needed for next rank member
+      const nextRank = selectedRank - 1;
+      if (
+        nextRank >= 0 &&
+        game.ranks[nextRank].members.length === 3 &&
+        !selectedSacrifice
+      ) {
+        return "(Sacrifice needed for member promotion)";
+      }
+      return `Promote as a:`;
     }
   };
 
@@ -324,28 +358,34 @@ export default function Syndicate() {
     return [
       {
         id: "table-headers",
-
         col: 0,
         row: 0,
         width: "full",
         height: positioning.tableHeaderHeight,
       },
+      {
+        id: "dead",
+        name: "dead",
+        cards: game.dead.length ? game.dead : undefined,
+        col: 0,
+        row: 6.5,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Dead", infoPos: "above" },
+      },
       ...rankZones.flat(),
       {
         id: "instructions",
-
-        col: 0,
-        row: 6,
-        width: "full",
-        height: 1,
+        col: 1.1,
+        row: 6.25,
+        width: 5.9,
+        height: 0.25,
       },
       {
         id: "buttons",
-
-        col: 0,
-        row: 7,
-        width: "full",
-        height: 1,
+        col: 1.1,
+        row: 6.65,
+        width: 5.96,
+        height: 0.85,
       },
     ];
   }, [game]);
@@ -423,6 +463,7 @@ export default function Syndicate() {
     zones,
     cardMapper,
     cardSize: "small",
+    paddingTop: 0,
   });
 
   return (
@@ -439,7 +480,7 @@ export default function Syndicate() {
           : "No valid promotion/replacement remains. You lose."
       }
       canUndo={canUndo}
-      undo={handleUndo}
+      undo={undo}
     >
       {cardMap}
 
@@ -459,8 +500,11 @@ export default function Syndicate() {
         ]}
       >
         <Text
+          size="xxs"
+          textTransform="uppercase"
+          weight={300}
+          color={Colors.K200}
           style={[
-            styles.textSmall,
             {
               width: cardWidth * positioning.rankWidth,
               color: Colors.K600,
@@ -471,19 +515,20 @@ export default function Syndicate() {
           Rk
         </Text>
         <Text
-          style={[
-            styles.textSmall,
-            { width: cardWidth * 2.2, color: Colors.btnBlue },
-          ]}
+          size="xxs"
+          textTransform="uppercase"
+          weight={300}
+          color={Colors.K200}
+          style={[{ width: cardWidth * 2.2, color: Colors.btnBlue }]}
         >
           Members
         </Text>
         <Text
-          style={[
-            styles.textSmall,
-            flexStyles.flex1,
-            { color: Colors.btnPurple },
-          ]}
+          size="xxs"
+          textTransform="uppercase"
+          weight={300}
+          color={Colors.K200}
+          style={[flexStyles.flex1, { color: Colors.btnPurple }]}
         >
           Candidates
         </Text>
@@ -536,26 +581,11 @@ export default function Syndicate() {
       >
         <Text
           size="sm"
-          style={[
-            {
-              fontSize: 16,
-              fontFamily: FontWeight[300],
-              color: Colors.K500,
-            },
-          ]}
+          weight={300}
+          color={Colors.K300}
+          style={[flexStyles.flex1, { textAlign: "center" }]}
         >
-          <InstructionText />
-        </Text>
-        <Text
-          size="sm"
-          style={[
-            {
-              fontSize: 16,
-              fontFamily: FontWeight[300],
-            },
-          ]}
-        >
-          Dead cards: {score}
+          {instructionText()}
         </Text>
       </View>
 
@@ -564,8 +594,6 @@ export default function Syndicate() {
         style={[
           getZoneStylesById("buttons"),
           {
-            position: "absolute",
-            zIndex: 1,
             gap: cardHeight * 0.25,
             flexDirection: "row",
             justifyContent: "space-between",
@@ -575,8 +603,8 @@ export default function Syndicate() {
       >
         <Button
           onPress={() => promote("members")}
-          text="Promote as Member"
-          size="large"
+          text="Member"
+          size="medium-large"
           disabled={
             !selectedReplacement ||
             !!(
@@ -591,8 +619,8 @@ export default function Syndicate() {
         />
         <Button
           onPress={() => promote("candidates")}
-          text="Promote as Candidate"
-          size="large"
+          text="Candidate"
+          size="medium-large"
           disabled={!selectedReplacement}
           style={[flexStyles.flex1, { height: "100%" }]}
           theme="purple"
@@ -601,12 +629,3 @@ export default function Syndicate() {
     </GameWrapper>
   );
 }
-
-const styles = StyleSheet.create({
-  textSmall: {
-    fontSize: 12,
-    textTransform: "uppercase",
-    color: Colors.K200,
-    fontFamily: FontWeight[300],
-  },
-});

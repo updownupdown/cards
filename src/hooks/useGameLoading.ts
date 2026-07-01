@@ -3,6 +3,7 @@ import { useGameSettings } from "./useGameSettings";
 import { usePathname } from "expo-router";
 import { normalizeGamePath } from "@/data/game-menu";
 
+/** Deprecated */
 export function useGameLoading() {
   const [isLoaded, setIsLoaded] = useState(false);
 

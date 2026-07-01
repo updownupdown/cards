@@ -45,8 +45,6 @@ const guessZonesColRows: ColRows[] = [
 ];
 
 function dealPlaymates(faceCards: PlayingCard[]) {
-  console.log(faceCards);
-
   const jacks = shuffle(faceCards.filter((c) => c.rank === "J"));
   const queens = shuffle(faceCards.filter((c) => c.rank === "Q"));
   const kings = shuffle(faceCards.filter((c) => c.rank === "K"));
@@ -144,6 +142,8 @@ async function resetAndSetup(
     draft.discard = [];
     draft.scorePile = [];
     draft.winLoseMessage = "";
+    draft.ended = false;
+    draft.won = false;
   });
 
   await delay(bufferedDefaultAnimDuration);

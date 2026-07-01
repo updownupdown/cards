@@ -8,6 +8,7 @@ import { Button } from "../Button/Button";
 import {
   AnimatedCardMapping,
   bufferedDefaultAnimDuration,
+  defaultAnimDuration,
 } from "../Cards/AnimatedCard";
 import {
   createDeck,
@@ -142,6 +143,9 @@ export default function TheSandwichGuy() {
     resetNonGameStates: () => {
       setSelectedIds([]);
     },
+    postSetupAction: async () => {
+      await refillHand();
+    },
   });
 
   const selectedCards = useMemo(
@@ -162,20 +166,6 @@ export default function TheSandwichGuy() {
 
   const score = game.hand.length;
 
-  useEffect(() => {
-    if (showIntro === false) {
-      setGame((prev) => ({ ...prev, dealFirstHand: true }));
-    }
-  }, [showIntro]);
-
-  useEffect(() => {
-    if (!game.dealFirstHand) {
-      return;
-    }
-
-    refillHand();
-  }, [game.dealFirstHand]);
-
   function toggleSelect(id: string) {
     if (game.ended) return;
     setSelectedIds((prev) => {
@@ -188,32 +178,19 @@ export default function TheSandwichGuy() {
   }
 
   async function refillHand(maxToRefill = 8) {
-    let refilledCount = 0;
+    for (let i = 0; i < maxToRefill; i++) {
+      setGame((draft) => {
+        const topOfDeck = draft.deck.pop();
+        if (!topOfDeck || draft.hand.every((card) => card !== null)) {
+          return;
+        }
+        const emptyIndex = draft.hand.findIndex((card) => card === null);
+        draft.hand[emptyIndex] = flipToFace(topOfDeck);
 
-    for (let i = 0; i < game.hand.length; i++) {
-      if (refilledCount >= maxToRefill) break;
-
-      let wasRefilled = false;
-
-      setGame((prev) => {
-        return produce(prev, (draft) => {
-          if (draft.hand[i] === null) {
-            const topOfDeck = draft.deck.pop();
-            if (topOfDeck) {
-              draft.hand[i] = flipToFace(topOfDeck);
-              wasRefilled = true;
-            }
-          }
-
-          if (draft.dealFirstHand) {
-            draft.dealFirstHand = false;
-          }
-        });
+        if (draft.dealFirstHand) draft.dealFirstHand = false;
       });
 
-      if (wasRefilled) {
-        refilledCount++;
-      }
+      await delay(defaultAnimDuration / 2);
     }
   }
 

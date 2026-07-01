@@ -26,7 +26,6 @@ export type GameState = {
   visit: TheEmissaryVisit | null;
   hand: PlayingCard[];
   handNeedsOrdering: boolean;
-  started: boolean;
   ended: boolean;
   won: boolean;
   winLoseMessage: string;

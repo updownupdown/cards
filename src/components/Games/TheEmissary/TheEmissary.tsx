@@ -1,4 +1,3 @@
-import { Text } from "@/components/common/Text";
 import { Button } from "@/components/Button/Button";
 import {
   AnimatedCardMapping,
@@ -6,17 +5,16 @@ import {
 } from "@/components/Cards/AnimatedCard";
 import { MappedCard, MapZone, useCardMap } from "@/components/Cards/CardMap";
 import { DeckInfoPosition } from "@/components/Cards/CardMapBackgrounds";
+import { Text } from "@/components/common/Text";
 import { useToast } from "@/components/common/Toast";
 import { useFade } from "@/hooks/useFade";
-import { useGameLoading } from "@/hooks/useGameLoading";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
-import { useUndoHistory } from "@/hooks/useUndoHistory";
+import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles, transitionStyles } from "@/styles/flexStyles";
-import { Colors, FontWeight, rgba } from "@/styles/styles";
+import { Colors, FontWeight } from "@/styles/styles";
 import { rotatedText, textStyles } from "@/styles/textStyles";
 import { useEffect, useMemo, useState } from "react";
 import { Animated, View, ViewStyle } from "react-native";
-import { useImmer } from "use-immer";
 import {
   flipAllToBack,
   flipAllToFace,
@@ -24,16 +22,20 @@ import {
   flipToFace,
   shuffle,
   sortCards,
+  top,
   type PlayingCard,
 } from "../../Cards/card-utils";
 import { GameWrapper } from "../../common/GameWrapper";
 import { AdvisorInfo } from "./AdvisorInfo";
-import { canDebateWithCard, setup, wonDebate } from "./TheEmissaryLogic";
+import {
+  canDebateWithCard,
+  resetAndSetup,
+  wonDebate,
+  gameStateInitial,
+} from "./TheEmissaryLogic";
 import {
   defaultHandSize,
   EmissarySuitsColorMap,
-  GameSnapshot,
-  GameState,
   TheEmissaryKingdom,
 } from "./TheEmissaryTypes";
 
@@ -43,8 +45,6 @@ const debugMode = false;
 export default function TheEmissary() {
   const { zoneBg, cardBg, cardText } = useGameZoneBackground();
   const showToast = useToast();
-  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
-  const [game, setGame] = useImmer<GameState>(setup(true));
 
   const [selectedAdvisor, setSelectedAdvisor] = useState<
     PlayingCard | undefined
@@ -54,39 +54,35 @@ export default function TheEmissary() {
     return selectedAdvisor ?? undefined;
   }, [selectedAdvisor]);
 
-  const { saveUndoState, undo, canUndo, clearHistory } =
-    useUndoHistory<GameSnapshot>();
-  const handleUndo = () => {
-    const previousState = undo();
-    if (previousState) {
-      setGame(previousState.game);
-    }
-  };
+  const {
+    isSettingUp,
+    isLoaded,
+    showIntro,
+    setShowIntro,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelectedAdvisor(undefined);
+    },
+  });
 
   const showChooseKingdom = useMemo(() => {
     return !game.ended && game.visit === null;
   }, [game.visit]);
 
-  // ----- Reset ----- //
-  function reset() {
-    clearHistory();
-    setGame(setup());
-    setSelectedAdvisor(undefined);
-  }
-
-  // ----- useEffect: Intro ----- //
-  useEffect(() => {
-    if (showIntro === false) {
-      setGame((draft) => {
-        draft.started = true;
-      });
-    }
-  }, [showIntro]);
-
   // ----- useEffect: Refill hand after visit ----- //
   useEffect(() => {
     if (
-      !game.started ||
+      isSettingUp ||
       game.ended ||
       game.hand.length > 0 ||
       game.visit !== null
@@ -97,11 +93,11 @@ export default function TheEmissary() {
     setGame((draft) => {
       draft.neededToHand = defaultHandSize;
     });
-  }, [game.visit, game.hand, game.started]);
+  }, [game.visit, game.hand, isSettingUp]);
 
   // ----- useEffect: Finish Kingdom Visit ----- //
   useEffect(() => {
-    if (!game.visit || game.hand.length > 0 || !game.visit?.kingdomId) return;
+    if (!game.visit || game.hand.length > 0) return;
 
     const wonKingdom = game.visit.wins === game.visit.requiredWins || debugMode;
 
@@ -109,7 +105,7 @@ export default function TheEmissary() {
       showToast(`You won over Kingdom #${game.visit.kingdomId + 1}!`);
     }
 
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
     // Finish kingdom visit
     // This needs to be in a useEffect because it can be triggered in two ways:
@@ -121,7 +117,6 @@ export default function TheEmissary() {
       const wonKingdom =
         draft.visit.wins === draft.visit.requiredWins || debugMode;
 
-      // let kingdoms = [...draft.kingdoms];
       const kId = draft.visit.kingdomId;
       const ruler = draft.kingdoms[kId].ruler;
       draft.kingdoms[kId] = {
@@ -138,13 +133,17 @@ export default function TheEmissary() {
 
       sortCards(draft.advisors);
 
-      ((draft.handSize = defaultHandSize), (draft.visit = null));
+      draft.handSize = defaultHandSize;
+      draft.visit = null;
 
-      draft.ended = !wonKingdom;
-      draft.won = wonKingdom;
-      draft.winLoseMessage = wonKingdom
+      const allKingdomsWon = wonKingdom && draft.kingdoms.every((k) => k.won);
+      draft.ended = !wonKingdom || allKingdomsWon;
+      draft.won = allKingdomsWon;
+      draft.winLoseMessage = allKingdomsWon
         ? "You won over the rulers of all eight kingdoms with your spectacular debating skills!"
-        : "You failed to win enough debates; the ruler doesn't take you seriously enough.";
+        : !wonKingdom
+          ? "You failed to win enough debates; the ruler doesn't take you seriously enough."
+          : "";
     });
   }, [game.hand]);
 
@@ -154,7 +153,7 @@ export default function TheEmissary() {
       return;
     }
 
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
     setGame((draft) => {
       const k = draft.kingdoms[kingdomId];
@@ -176,7 +175,7 @@ export default function TheEmissary() {
   async function debateWithCard(card: PlayingCard) {
     if (!game.visit?.debateTopic) return;
 
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
     setSelectedAdvisor(undefined);
 
@@ -244,7 +243,9 @@ export default function TheEmissary() {
   // ========== Draw Card to Hand ========== //
   async function drawCardToHand() {
     setGame((draft) => {
-      const newCard = draft.draw[draft.draw.length - 1];
+      const newCard = top(draft.draw);
+      if (!newCard) return;
+
       draft.hand.push(flipToFace(newCard));
       draft.draw.pop();
       draft.neededToHand -= 1;
@@ -257,7 +258,7 @@ export default function TheEmissary() {
 
   // ========== Draw Card to Topic ========== //
   async function drawCardToTopic() {
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
     if (game.draw.length === 0) {
       await refreshDeckWithinKingdom();
@@ -274,7 +275,7 @@ export default function TheEmissary() {
 
   // ========== Discard Card ========== //
   async function discardCard(card: PlayingCard) {
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
     setGame((draft) => {
       draft.hand = draft.hand.filter((c) => c.id !== card.id);
@@ -300,7 +301,7 @@ export default function TheEmissary() {
 
   // ========== Spend Advisor ========== //
   async function spendAdvisor(advisor: PlayingCard) {
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
     // Turn advisor face down, or remove it
     setGame((draft) => {
@@ -325,7 +326,7 @@ export default function TheEmissary() {
 
   // ========== Discard Cards Matching Trump ========== //
   async function discardCardsMatchingTrump() {
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
     setGame((draft) => {
       if (!draft.visit) return;
@@ -343,7 +344,7 @@ export default function TheEmissary() {
   async function doAdvisorAction(advisor: PlayingCard | undefined) {
     if (!advisor) return;
 
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
     const suit = advisor.suit;
 
@@ -356,7 +357,6 @@ export default function TheEmissary() {
       });
     } else if (suit === "hearts") {
       await discardCardsMatchingTrump();
-      await spendAdvisor(advisor);
     } else if (suit === "clubs") {
       setGame((draft) => {
         const numCardsToDraw = draft.hand.filter(
@@ -369,7 +369,7 @@ export default function TheEmissary() {
   }
 
   async function swapRulers(kingdom: TheEmissaryKingdom, advisor: PlayingCard) {
-    saveUndoState(structuredClone({ game }));
+    saveUndoState(structuredClone(game));
 
     await spendAdvisor(advisor);
 
@@ -546,7 +546,8 @@ export default function TheEmissary() {
     if (zone.name === "topic") {
       return {
         onPress: drawCardToTopic,
-        selectColor: game.visit?.debateTopic !== undefined ? "blue" : undefined,
+        selectColor:
+          game.visit?.debateTopic !== undefined ? cardText : undefined,
         forceOverlayColor: game.visit?.debateTopic !== undefined,
         forceSelectColor: game.visit?.debateTopic !== undefined,
       };
@@ -583,7 +584,7 @@ export default function TheEmissary() {
         if (swappingRuler) {
           return isCurrent ? "none" : EmissarySuitsColorMap["spades"];
         } else {
-          return isEnabled || isCurrent ? "blue" : "none";
+          return isEnabled || isCurrent ? cardText : "none";
         }
       };
 
@@ -622,7 +623,7 @@ export default function TheEmissary() {
         isDisabled,
         selectColor: potentialDiscard
           ? EmissarySuitsColorMap["hearts"]
-          : "blue",
+          : cardText,
         forceOverlayColor: !isDisabled || potentialDiscard,
       };
     } else if (mappedCard.zoneName === "advisor") {
@@ -675,7 +676,7 @@ export default function TheEmissary() {
       isLoaded={isLoaded}
       winLoseMessage={game.winLoseMessage}
       canUndo={canUndo}
-      undo={handleUndo}
+      undo={undo}
     >
       {cardMap}
 
@@ -697,7 +698,7 @@ export default function TheEmissary() {
             if (swappingRuler) {
               return isCurrent ? Colors.K500 : EmissarySuitsColorMap["spades"];
             } else {
-              return isCurrent ? Colors.accentBlue : Colors.K600;
+              return isCurrent ? cardText : Colors.K600;
             }
           };
 
@@ -858,7 +859,7 @@ export default function TheEmissary() {
                 backgroundColor: Colors.K850,
               },
             ]}
-            theme={"blue"}
+            theme={cardText}
           />
         </Animated.View>
       )}
