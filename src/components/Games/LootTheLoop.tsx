@@ -27,7 +27,7 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-import { useResponsiveLayout } from "@/hooks/useResponsiveLayout";
+import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 
 const maxMarkedPaths = 3;
 
@@ -129,7 +129,7 @@ async function resetAndSetup(
 }
 
 export default function LootTheLoop() {
-  const responsiveScale = useResponsiveLayout();
+  const responsiveScale = useResponsiveScale();
 
   const [selectedCardIndex, setSelectedCardIndex] = useState<
     number | undefined

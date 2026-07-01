@@ -1,6 +1,6 @@
 import { HexColor } from "@/data/games-data";
 import { Colors, FontWeight as FontFamilies } from "@/styles/styles";
-import { useResponsiveLayout } from "@/hooks/useResponsiveLayout";
+import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 import { forwardRef } from "react";
 import { Text as RNText } from "react-native";
 import type { TextProps as RNTextProps } from "react-native";
@@ -59,7 +59,7 @@ export const Text = forwardRef<React.ElementRef<typeof RNText>, TextProps>(
       color = Colors.K200,
       ...otherProps
     } = props;
-    const responsiveScale = useResponsiveLayout();
+    const responsiveScale = useResponsiveScale();
 
     const getFontSize = () => {
       const baseSize =

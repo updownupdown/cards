@@ -1,7 +1,7 @@
 import { Text } from "@/components/common/Text";
 import { GAME_THUMBNAIL_ASSETS } from "@/data/game-thumbnails";
 import { GameMenuInfo } from "@/data/games-data";
-import { useResponsiveLayout } from "@/hooks/useResponsiveLayout";
+import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 import { Icon } from "@/icons";
 import { Colors, rgba } from "@/styles/styles";
 import { Link, type Href } from "expo-router";
@@ -27,7 +27,7 @@ export function HomeCard({
   isFavorite,
   isLarge = false,
 }: Props) {
-  const responsiveScale = useResponsiveLayout();
+  const responsiveScale = useResponsiveScale();
 
   const borderRadius = Math.round(12 * responsiveScale);
   const padding = isLarge ? Math.round(22 * responsiveScale) : 0;

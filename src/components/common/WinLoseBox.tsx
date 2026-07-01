@@ -1,5 +1,5 @@
 import { Text } from "@/components/common/Text";
-import { useResponsiveLayout } from "@/hooks/useResponsiveLayout";
+import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 import { flexStyles } from "@/styles/flexStyles";
 import { modalBorderRadius } from "@/styles/modalStyles";
 import {
@@ -31,7 +31,7 @@ export const WinLoseBox = ({
   reset,
   handleUndo,
 }: Props) => {
-  const responsiveScale = useResponsiveLayout();
+  const responsiveScale = useResponsiveScale();
   const { cardBg } = useGameZoneBackground();
 
   // Win/lose animations

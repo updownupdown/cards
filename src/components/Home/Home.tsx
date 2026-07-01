@@ -1,7 +1,7 @@
 import { Text } from "@/components/common/Text";
 import type { HomeTabConfig } from "@/components/Home/GamesList";
 import { GameCategory, GameCategoryNames } from "@/data/games-data";
-import { useResponsiveLayout } from "@/hooks/useResponsiveLayout";
+import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 import { flexStyles } from "@/styles/flexStyles";
 import { menuStyles } from "@/styles/menuStyles";
 import { Colors, HomePadding, MaxContentWidth } from "@/styles/styles";
@@ -14,6 +14,13 @@ import { GamesList } from "./GamesList";
 import { SettingsModal } from "./SettingsModal";
 import { StatsModal } from "./StatsModal";
 
+const FEATURED_GAME_PATHS: string[] = [
+  "/loot-the-loop",
+  "/dead-center",
+  "/area-52",
+  "/monte-carlo",
+];
+
 const HOME_TABS: HomeTabConfig[] = [
   {
     key: "home",
@@ -23,10 +30,31 @@ const HOME_TABS: HomeTabConfig[] = [
       {
         key: "recent",
         title: "Recently Played",
+        emptyMessage: "No recently played games.",
         variant: "small",
         firstCardLarge: true,
       },
-      { key: "favorites", title: "Favorites", variant: "small" },
+      {
+        key: "favorites",
+        title: "Favorites",
+        emptyMessage: "No favorite games.",
+        variant: "small",
+      },
+      {
+        key: "featured",
+        title: "Featured",
+        emptyMessage: "No featured games configured.",
+        variant: "small",
+        firstCardLarge: true,
+        gamePaths: FEATURED_GAME_PATHS,
+      },
+      // ...(Object.values(GameCategory) as GameCategory[]).map((category) => ({
+      //   key: category,
+      //   title: GameCategoryNames[category],
+      //   variant: "small" as const,
+      //   randomSample: true,
+      //   sampleSize: 3,
+      // })),
     ],
   },
   {
@@ -57,7 +85,7 @@ const HOME_TABS: HomeTabConfig[] = [
 
 export default function Home() {
   const insets = useSafeAreaInsets();
-  const responsiveScale = useResponsiveLayout();
+  const responsiveScale = useResponsiveScale();
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);

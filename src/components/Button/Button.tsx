@@ -1,7 +1,7 @@
 import { Text } from "@/components/common/Text";
 import { Icon, IconName } from "@/icons";
 import { Colors, FontWeight, rgba } from "@/styles/styles";
-import { useResponsiveLayout } from "@/hooks/useResponsiveLayout";
+import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 import { Platform, Pressable, TextStyle, ViewStyle } from "react-native";
 
 interface Props {
@@ -43,7 +43,7 @@ export const Button = ({
   onPressIn,
   onPressOut,
 }: Props) => {
-  const scale = useResponsiveLayout();
+  const scale = useResponsiveScale();
 
   if (!theme) {
     theme = Colors.accentBlue;

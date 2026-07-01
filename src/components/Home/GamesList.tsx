@@ -5,10 +5,10 @@ import {
   toggleFavoriteGame,
 } from "@/data/game-menu";
 import { GameCategory, GameMenuInfo, GAMES_DATA } from "@/data/games-data";
-import { useResponsiveLayout } from "@/hooks/useResponsiveLayout";
+import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 import { Icon, type IconName } from "@/icons";
 import { Colors, HomePadding, MaxContentWidth, rgba } from "@/styles/styles";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   LayoutChangeEvent,
   NativeSyntheticEvent,
@@ -19,15 +19,20 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { HomeCard } from "./HomeCard";
+import { flexStyles } from "@/styles/flexStyles";
 type CardVariant = "small" | "large";
 
-export type HomeSectionKey = GameCategory | "favorites" | "recent";
+export type HomeSectionKey = GameCategory | "favorites" | "recent" | "featured";
 
 export type HomeSectionConfig = {
   key: HomeSectionKey;
   title: string;
+  emptyMessage?: string;
   variant: CardVariant;
   firstCardLarge?: boolean;
+  randomSample?: boolean;
+  sampleSize?: number;
+  gamePaths?: string[];
 };
 
 export type HomeTabConfig = {
@@ -43,12 +48,36 @@ type GamesListProps = {
 
 export const GamesList = ({ tabs }: GamesListProps) => {
   const insets = useSafeAreaInsets();
-  const responsiveScale = useResponsiveLayout();
+  const responsiveScale = useResponsiveScale();
 
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [recentPaths, setRecentPaths] = useState<string[]>([]);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [pagerWidth, setPagerWidth] = useState(0);
+
+  const sampledCategoryPaths = useMemo(() => {
+    const allEntries = Object.entries(GAMES_DATA).filter(
+      ([_, game]) => game.enabled !== false,
+    ) as [string, GameMenuInfo][];
+
+    const sampled: Partial<Record<GameCategory, string[]>> = {};
+
+    (Object.values(GameCategory) as GameCategory[]).forEach((category) => {
+      const categoryPaths = allEntries
+        .filter(([_, game]) => game.category === category)
+        .map(([path]) => path);
+
+      const shuffled = [...categoryPaths];
+      for (let i = shuffled.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+
+      sampled[category] = shuffled;
+    });
+
+    return sampled;
+  }, []);
 
   const pagerRef = useRef<ScrollView>(null);
   const isProgrammaticTabScrollRef = useRef(false);
@@ -88,17 +117,42 @@ export const GamesList = ({ tabs }: GamesListProps) => {
         .map((path) => [path, GAMES_DATA[path]] as [string, GameMenuInfo])
         .filter(([_, game]) => !!game && game.enabled !== false)
         .slice(0, 3);
+    } else if (section.key === "featured") {
+      gameList = (section.gamePaths ?? [])
+        .map((path) => [path, GAMES_DATA[path]] as [string, GameMenuInfo])
+        .filter(([_, game]) => !!game && game.enabled !== false);
     } else if (section.key === "favorites") {
       gameList = gameEntries.filter(
         ([key, val]) => favorites.has(key) && val.enabled !== false,
       );
     } else {
-      gameList = gameEntries.filter(
-        ([key, val]) => val.category === section.key && val.enabled !== false,
-      );
+      if (section.randomSample) {
+        const sampleSize = section.sampleSize ?? 3;
+        const sampledPaths: string[] = (
+          sampledCategoryPaths[section.key] ?? []
+        ).slice(0, sampleSize);
+
+        gameList = sampledPaths
+          .map(
+            (path: string) =>
+              [path, GAMES_DATA[path]] as [string, GameMenuInfo],
+          )
+          .filter(
+            ([_, game]: [string, GameMenuInfo]) =>
+              !!game && game.enabled !== false,
+          );
+      } else {
+        gameList = gameEntries.filter(
+          ([_, val]) => val.category === section.key && val.enabled !== false,
+        );
+      }
     }
 
-    if (section.key !== "recent") {
+    if (
+      section.key !== "recent" &&
+      section.key !== "featured" &&
+      !section.randomSample
+    ) {
       gameList.sort((a, b) => a[1].title.localeCompare(b[1].title));
     }
 
@@ -109,7 +163,9 @@ export const GamesList = ({ tabs }: GamesListProps) => {
     section: HomeSectionConfig,
     gameList: [string, GameMenuInfo][],
   ) => {
-    if (gameList.length === 0) return null;
+    if (gameList.length === 0 && section.emptyMessage === undefined) {
+      return null;
+    }
 
     return (
       <View
@@ -122,7 +178,7 @@ export const GamesList = ({ tabs }: GamesListProps) => {
           },
         ]}
       >
-        {/* —— Category Title ——————————————————————————————————————————————————————————————— */}
+        {/* —— Category Title ————————————————————————————— */}
         <Text
           style={[
             {
@@ -148,6 +204,25 @@ export const GamesList = ({ tabs }: GamesListProps) => {
             },
           ]}
         >
+          {gameList.length === 0 && (
+            <View
+              style={[
+                flexStyles.colCentered,
+                {
+                  width: "100%",
+                  alignItems: "center",
+                  backgroundColor: Colors.K875,
+                  borderRadius: 8 * responsiveScale,
+                  paddingVertical: 24 * responsiveScale,
+                },
+              ]}
+            >
+              <Text size="sm" color={Colors.K500}>
+                {section.emptyMessage}
+              </Text>
+            </View>
+          )}
+
           {gameList.map(([path, game], index) => (
             <HomeCard
               key={path}
@@ -258,27 +333,8 @@ export const GamesList = ({ tabs }: GamesListProps) => {
             ]}
             showsVerticalScrollIndicator={false}
           >
-            {tab.sections.length === 0 ? (
-              <View
-                style={[
-                  {
-                    width: "100%",
-                    paddingTop: 32 * responsiveScale,
-                    maxWidth: MaxContentWidth * responsiveScale,
-                    alignItems: "center",
-                  },
-                ]}
-              >
-                <Text size="sm" color={Colors.K500}>
-                  {tab.key === "home"
-                    ? "No recent or favorite games yet."
-                    : "No games available in this section yet."}
-                </Text>
-              </View>
-            ) : (
-              tab.sections.map((section) =>
-                renderGamesCategory(section, getGamesForSection(section)),
-              )
+            {tab.sections.map((section) =>
+              renderGamesCategory(section, getGamesForSection(section)),
             )}
           </ScrollView>
         ))}

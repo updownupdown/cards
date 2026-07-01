@@ -31,7 +31,7 @@ import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { rgba } from "@/styles/styles";
-import { useResponsiveLayout } from "@/hooks/useResponsiveLayout";
+import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 
 type GameState = {
   piles: PlayingCard[][];
@@ -88,7 +88,7 @@ async function resetAndSetup(
 export default function Clock() {
   const AnimatedCircle = Animated.createAnimatedComponent(Circle);
   const { cardText, cardBg, zoneBg } = useGameZoneBackground();
-  const responsiveScale = useResponsiveLayout();
+  const responsiveScale = useResponsiveScale();
 
   const {
     isSettingUp,

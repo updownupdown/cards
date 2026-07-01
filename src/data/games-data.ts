@@ -261,6 +261,12 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       "Plan around blocked stacks so you do not run out of legal moves.",
       "Complete all required stacks to win.",
     ],
+    howToPlay: [
+      "Play cards into valid stacks to satisfy order constraints.",
+      "Plan around blocked stacks so you do not run out of legal moves.",
+      "Complete all required stacks to win.",
+      "You are allowed to tap the deck at any time to see who else is waiting, but the deck will be reshuffled afterwards.",
+    ],
   },
   // Syndicate
   "/syndicate": {
@@ -558,7 +564,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       luck: 58,
     },
     category: GameCategory.ClassicSolitaire,
-    enabled: false,
+    // enabled: false,
     briefRules: [
       "Move all cards to the four foundations by suit from Ace to King.",
       "Build tableau piles in descending rank with alternating colors.",

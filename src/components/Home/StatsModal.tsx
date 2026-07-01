@@ -9,7 +9,7 @@ import {
   type GameSettingsMap,
 } from "@/data/game-menu";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors } from "@/styles/styles";
+import { Colors, FontWeight } from "@/styles/styles";
 import ModalFull from "../Modals/ModalFull";
 import { modalStyles } from "@/styles/modalStyles";
 
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     color: Colors.K400,
-    fontWeight: "bold",
+    fontFamily: FontWeight[500],
   },
   colTitle: {
     flex: 3,
@@ -128,10 +128,12 @@ const styles = StyleSheet.create({
   },
   colNum: {
     flex: 1.2,
+    fontFamily: FontWeight[500],
     textAlign: "right",
   },
   colRate: {
     flex: 1.5,
+    fontFamily: FontWeight[500],
     textAlign: "right",
   },
 });

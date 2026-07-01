@@ -32,7 +32,7 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
-import { useResponsiveLayout } from "@/hooks/useResponsiveLayout";
+import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 
 const svgCellSize = 800;
 const svgGridSize = svgCellSize * 3;
@@ -235,7 +235,7 @@ function computeScore(grid: PlayingCard[][]): ScoreBySuit {
 // ========== Main Component ========== //
 export default function Skyway() {
   const { zoneBg } = useGameZoneBackground();
-  const responsiveScale = useResponsiveLayout();
+  const responsiveScale = useResponsiveScale();
 
   const [selectedMarket, setSelectedMarket] = useState<number | null>(null);
 

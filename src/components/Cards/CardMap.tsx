@@ -1,6 +1,6 @@
 import { cardDims, PlayingCard } from "@/components/Cards/card-utils";
 import { GAMES_DATA } from "@/data/games-data";
-import { useResponsiveLayout } from "@/hooks/useResponsiveLayout";
+import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 import {
   HeaderHeight,
   MaxContentHeight,
@@ -109,7 +109,7 @@ export function useCardMap({
   const pathname = usePathname();
   const customBack = GAMES_DATA[pathname]?.cardBack;
   const insets = useSafeAreaInsets();
-  const responsiveScale = useResponsiveLayout();
+  const responsiveScale = useResponsiveScale();
 
   const { width: screenWidthActual, height: screenHeightActual } =
     useWindowDimensions();

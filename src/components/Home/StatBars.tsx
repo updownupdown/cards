@@ -1,5 +1,5 @@
 import { GameStats, HexColor } from "@/data/games-data";
-import { useResponsiveLayout } from "@/hooks/useResponsiveLayout";
+import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 import { Colors, rgba } from "@/styles/styles";
 import { View } from "react-native";
 import { Text } from "../common/Text";
@@ -11,7 +11,7 @@ export const StatBars = ({
   stats: GameStats;
   gameColor: HexColor;
 }) => {
-  const responsiveScale = useResponsiveLayout();
+  const responsiveScale = useResponsiveScale();
 
   return (
     <View
@@ -36,7 +36,7 @@ export const StatBar = ({
   value: number;
   fillColor: string;
 }) => {
-  const responsiveScale = useResponsiveLayout();
+  const responsiveScale = useResponsiveScale();
   const statTrackHeight = Math.round(8 * responsiveScale);
 
   return (

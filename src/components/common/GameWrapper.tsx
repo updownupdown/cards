@@ -6,7 +6,7 @@ import {
   recordResult,
 } from "@/data/game-menu";
 import { GAME_THUMBNAIL_ASSETS } from "@/data/game-thumbnails";
-import { useResponsiveLayout } from "@/hooks/useResponsiveLayout";
+import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 import { flexStyles } from "@/styles/flexStyles";
 import { menuStyles } from "@/styles/menuStyles";
 import {
@@ -74,7 +74,7 @@ export const GameWrapper = ({
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);
   const insets = useSafeAreaInsets();
-  const responsiveScale = useResponsiveLayout();
+  const responsiveScale = useResponsiveScale();
 
   const [showMenu, setShowMenu] = useState(false);
 

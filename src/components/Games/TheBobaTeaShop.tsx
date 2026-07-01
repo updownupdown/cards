@@ -5,7 +5,7 @@ import { flexStyles, transitionStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
 import { delay } from "@/utils/utils";
 import { produce } from "immer";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Pressable, View } from "react-native";
 import { Button } from "../Button/Button";
 import {
@@ -27,6 +27,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { CardColor } from "../Cards/CardStyles";
 import { GameWrapper } from "../common/GameWrapper";
+import { DeckPreviewModal } from "../Modals/DeckPreviewModal";
 
 type SelectedPos = { queueIndex: number; cardIndex: number };
 
@@ -145,6 +146,7 @@ function evaluateEnd(state: GameState): { ended: boolean; won: boolean } {
 // ========== Main Game Component ========== //
 export default function TheBobaTeaShop() {
   const { zoneBg, cardText } = useGameZoneBackground();
+  const [showDeckPreview, setShowDeckPreview] = useState(false);
 
   const {
     isLoaded,
@@ -386,6 +388,7 @@ export default function TheBobaTeaShop() {
     let yOffset: number | undefined = undefined;
     let forceOverlayColor = false;
     let forceSelectColor = false;
+    let clickThroughCards: boolean | undefined = undefined;
 
     // Placeholder card
     if (game.selectedPos && mappedCard.zoneName === "selected-placeholder") {
@@ -404,12 +407,18 @@ export default function TheBobaTeaShop() {
       yOffset = positioning.queueCardOffset;
     }
 
+    // Click through deck cards
+    if (mappedCard.zoneName === "deck") {
+      clickThroughCards = true;
+    }
+
     return {
       isSelected,
       forceSelectColor,
       forceOverlayColor,
       selectColor,
       yOffset,
+      clickThroughCards,
     };
   };
 
@@ -418,6 +427,14 @@ export default function TheBobaTeaShop() {
     zones,
     gap: 0,
     cardMapper,
+    zoneMapper: (zone) => {
+      if (zone.id !== "deck") return;
+
+      return {
+        onPress: () => setShowDeckPreview(true),
+        isDisabled: game.deck.length === 0,
+      };
+    },
     cardSize: "small",
   });
 
@@ -436,6 +453,20 @@ export default function TheBobaTeaShop() {
       canUndo={canUndo}
       undo={undo}
     >
+      <DeckPreviewModal
+        visible={showDeckPreview}
+        cards={game.deck}
+        onClose={() => setShowDeckPreview(false)}
+        onCardsChange={(nextDeck) => {
+          setGame((draft) => {
+            draft.deck = nextDeck;
+          });
+        }}
+        title="Draw Deck"
+        shuffleOnClose
+        sortCards
+      />
+
       {cardMap}
 
       {/* Rank Tallies */}
