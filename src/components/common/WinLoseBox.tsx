@@ -161,7 +161,7 @@ export const WinLoseBox = ({
               onPress={() => fadeOutWLM(handleUndo)}
               size="medium"
               text="Undo"
-              theme={Colors.white}
+              theme={"red"}
             />
           )}
 
@@ -169,7 +169,7 @@ export const WinLoseBox = ({
             onPress={() => fadeOutWLM(reset)}
             size="medium"
             text={won ? "Play again" : "Try again"}
-            theme={Colors.white}
+            theme={won ? "green" : "red"}
           />
         </View>
       </Animated.View>
