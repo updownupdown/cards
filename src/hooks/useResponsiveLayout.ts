@@ -1,8 +1,8 @@
 import { TabletBreakpoint } from "@/styles/styles";
-import { useWindowDimensions } from "react-native";
+import { useViewportDimensions } from "./useViewportDimensions";
 
 export function useResponsiveScale() {
-  const { width } = useWindowDimensions();
+  const { width } = useViewportDimensions();
 
   return width > TabletBreakpoint ? 1.3 : 1;
 }

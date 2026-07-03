@@ -9,7 +9,8 @@ import {
 import { useNavigation } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { GestureResponderEvent } from "react-native";
-import { Animated, StyleSheet, useWindowDimensions, View } from "react-native";
+import { Animated, StyleSheet, View } from "react-native";
+import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { Button } from "../Button/Button";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { Card } from "../Cards/Card";
@@ -175,7 +176,7 @@ export default function SpiderSolitaire() {
 
   const [game, setGame] = useState<GameState>(createInitialState);
   const [selected, setSelected] = useState<Selection>(null);
-  const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+  const { width: windowWidth, height: windowHeight } = useViewportDimensions();
 
   // ── Drag & drop ─────────────────────────────────────────────────────────────
 

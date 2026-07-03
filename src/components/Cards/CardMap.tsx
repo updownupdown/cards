@@ -1,6 +1,7 @@
 import { cardDims, PlayingCard } from "@/components/Cards/card-utils";
 import { GAMES_DATA } from "@/data/games-data";
 import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import {
   HeaderHeight,
   MaxContentHeight,
@@ -9,7 +10,7 @@ import {
 import { roundToPixel } from "@/utils/utils";
 import { usePathname } from "expo-router";
 import { useMemo } from "react";
-import { useWindowDimensions, ViewStyle } from "react-native";
+import { ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   AnimatedCard,
@@ -113,7 +114,7 @@ export function useCardMap({
   const responsiveScale = useResponsiveScale();
 
   const { width: screenWidthActual, height: screenHeightActual } =
-    useWindowDimensions();
+    useViewportDimensions();
 
   // Calculate the end column (col + height) for each zone
   // and find the maximum value among them.

@@ -6,10 +6,11 @@ import {
 } from "@/components/Cards/card-utils";
 import { Text } from "@/components/common/Text";
 import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { flexStyles } from "@/styles/flexStyles";
 import { modalStyles } from "@/styles/modalStyles";
 import { Colors, MaxContentWidth } from "@/styles/styles";
-import { ScrollView, useWindowDimensions, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Card } from "../Cards/Card";
 import ModalFull from "./ModalFull";
 
@@ -33,7 +34,7 @@ export function DeckPreviewModal({
   sortCards = false,
 }: Props) {
   const responsiveScale = useResponsiveScale();
-  const { width: screenWidthActual } = useWindowDimensions();
+  const { width: screenWidthActual } = useViewportDimensions();
   const containerWidth = Math.min(
     screenWidthActual,
     MaxContentWidth * responsiveScale,

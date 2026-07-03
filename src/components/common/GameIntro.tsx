@@ -12,9 +12,10 @@ import {
   rgba,
 } from "@/styles/styles";
 import { usePathname } from "expo-router";
-import { Animated, ScrollView, useWindowDimensions, View } from "react-native";
+import { Animated, ScrollView, View } from "react-native";
 import { Button } from "../Button/Button";
 import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 
 interface Props {
   setShowMenu: (show: boolean) => void;
@@ -28,7 +29,7 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);
   const responsiveScale = useResponsiveScale();
-  const { width: screenWidthActual } = useWindowDimensions();
+  const { width: screenWidthActual } = useViewportDimensions();
 
   const containerWidth = Math.min(
     screenWidthActual,

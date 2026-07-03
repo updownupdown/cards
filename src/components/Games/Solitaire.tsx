@@ -10,7 +10,8 @@ import {
 import { useNavigation } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { GestureResponderEvent } from "react-native";
-import { Animated, StyleSheet, useWindowDimensions, View } from "react-native";
+import { Animated, StyleSheet, View } from "react-native";
+import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { Card } from "../Cards/Card";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
@@ -166,7 +167,7 @@ export default function Solitaire() {
   //   if (previousState) setGame(previousState.game);
   // };
 
-  const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+  const { width: windowWidth, height: windowHeight } = useViewportDimensions();
 
   // Pre-computed drop areas are written here each render so the hook's
   // findDropTarget closure always reads the latest values without forward-ref issues.
