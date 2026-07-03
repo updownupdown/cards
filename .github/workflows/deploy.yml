@@ -21,6 +21,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
       - name: Setup Node
         uses: actions/setup-node@v5
         with:
@@ -34,7 +37,7 @@ jobs:
         run: npx expo export -p web
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           path: ./dist
 
@@ -47,4 +50,25 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
+
+      - name: Debug failed deployment status
+        if: failure() && steps.deployment.outputs.id != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DEPLOYMENT_ID: ${{ steps.deployment.outputs.id }}
+        run: |
+          curl -sS \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/pages/deployment/status/$DEPLOYMENT_ID"
+
+      - name: Debug recent Pages deployments
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          curl -sS \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/pages/deployments?per_page=5"
