@@ -69,6 +69,12 @@ export const Button = ({
     case "green":
       themeColor = Colors.buttonGreen;
       break;
+    case "win":
+      themeColor = Colors.win;
+      break;
+    case "lose":
+      themeColor = Colors.lose;
+      break;
   }
 
   if (disabled) {

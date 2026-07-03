@@ -5,20 +5,18 @@ import {
   recordAttempt,
   recordResult,
 } from "@/data/game-menu";
-import { GAME_THUMBNAIL_ASSETS } from "@/data/game-thumbnails";
 import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 import { flexStyles } from "@/styles/flexStyles";
 import { menuStyles } from "@/styles/menuStyles";
 import {
   ContentSidePadding,
-  FontWeight,
   HeaderButtonIconSize,
   HeaderHeight,
   rgba,
 } from "@/styles/styles";
 import { router, usePathname } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { Image, View } from "react-native";
+import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button } from "../Button/Button";
 import GameModal from "../Modals/GameModal";
@@ -105,7 +103,6 @@ export const GameWrapper = ({
 
   const titleColor = gameInfo.cardColorText;
   const backgroundColor = gameInfo.cardColorBg;
-  const backgroundSource = GAME_THUMBNAIL_ASSETS[gameInfo.thumbnail];
   const overlayColor = lightenHexColor(backgroundColor, 0.2);
   const headerHeight = Math.round(HeaderHeight * responsiveScale) + insets.top;
 
@@ -137,23 +134,6 @@ export const GameWrapper = ({
           backgroundColor,
         }}
       >
-        <Image
-          source={backgroundSource}
-          blurRadius={4}
-          resizeMode="cover"
-          style={{
-            position: "absolute",
-            zIndex: 0,
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            opacity: 0.2,
-          }}
-        />
-
         <View
           style={{
             position: "absolute",
@@ -200,12 +180,11 @@ export const GameWrapper = ({
           />
 
           <Text
-            size="sm"
+            size="xs"
             weight={300}
             textTransform="uppercase"
             color={titleColor}
             numberOfLines={1}
-            lineHeight={1}
             ellipsizeMode="tail"
             style={[
               {

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Animated, Easing } from "react-native";
+import { Animated, Easing, Platform } from "react-native";
 
 export const useFade = (
   visible: boolean,
@@ -18,7 +18,7 @@ export const useFade = (
         duration,
         delay: delayFadeIn,
         easing: Easing.inOut(Easing.ease),
-        useNativeDriver: false,
+        useNativeDriver: Platform.OS !== "web",
       }).start();
     } else {
       Animated.timing(opacity, {
@@ -26,7 +26,7 @@ export const useFade = (
         duration,
         delay: delayFadeOut,
         easing: Easing.inOut(Easing.ease),
-        useNativeDriver: false,
+        useNativeDriver: Platform.OS !== "web",
       }).start(({ finished }) => {
         if (finished) {
           setIsRendered(false);

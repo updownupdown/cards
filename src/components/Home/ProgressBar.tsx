@@ -16,7 +16,7 @@ interface Props {
   color: string;
   scaledHeight?: number;
   labelText?: string;
-  tallyText?: string;
+  tallyText?: string | number;
   autoTallyText?: boolean;
 }
 
@@ -42,7 +42,6 @@ export const ProgressBar = ({
   const iconSize = iconName
     ? snapCenteredSize(iconWrapperSize, height * 0.5)
     : 0;
-  const iconWrapperWidth = iconName ? iconWrapperInset + iconWrapperSize : 0;
 
   const clamp = (value: number, min: number, max: number) =>
     Math.min(Math.max(value, min), max);
@@ -78,7 +77,7 @@ export const ProgressBar = ({
   const getEffectiveProgressPercentage = (normalizedPercentage: number) => {
     const rawPercentage = normalizedPercentage * 100;
 
-    if (!iconName || barWidth <= 0) {
+    if (barWidth <= 0) {
       return rawPercentage;
     }
 
@@ -131,15 +130,15 @@ export const ProgressBar = ({
     >
       {labelText && (
         <Text
-          size="xs"
           weight={300}
           color={Colors.white}
           style={{
             position: "absolute",
             zIndex: 10,
-            left: roundToPixel(height * 0.5),
+            left: roundToPixel(height * 0.4),
             top: "50%",
             transform: [{ translateY: "-50%" }],
+            fontSize: clamp(height * 0.4 * scale, 6 * scale, 14 * scale),
             ...textStyles.shadowText,
           }}
           lineHeight={1}
@@ -185,15 +184,15 @@ export const ProgressBar = ({
 
       {/* Tally */}
       <Text
-        size="sm"
-        weight={500}
+        weight={600}
         color={Colors.white}
         style={{
           position: "absolute",
           zIndex: 10,
-          right: roundToPixel(16 * scale),
+          right: roundToPixel(scale * height * 0.5),
           top: "50%",
           transform: [{ translateY: "-50%" }],
+          fontSize: clamp(height * 0.5 * scale, 12 * scale, 30 * scale),
           ...textStyles.shadowText,
         }}
       >

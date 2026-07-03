@@ -1,6 +1,16 @@
+import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 import { useStateManager } from "@/hooks/useStateManager";
+import { Icon, IconName } from "@/icons";
+import { flexStyles } from "@/styles/flexStyles";
+import { Colors, FontWeight, rgba } from "@/styles/styles";
+import { delay } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
-import { AnimatedCardMapping } from "../Cards/AnimatedCard";
+import { View } from "react-native";
+import { Button } from "../Button/Button";
+import {
+  AnimatedCardMapping,
+  bufferedDefaultAnimDuration,
+} from "../Cards/AnimatedCard";
 import {
   createDeck,
   flipAllToBack,
@@ -16,23 +26,16 @@ import {
   useCardMap,
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
-import { View } from "react-native";
-import { Text } from "../common/Text";
-import { Colors, FontWeight, rgba } from "@/styles/styles";
-import { flexStyles } from "@/styles/flexStyles";
-import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
-import { infoSize } from "../Cards/CardMapBackgrounds";
-import { Button } from "../Button/Button";
-import { Icon, IconName } from "@/icons";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
-import { DeckPreviewModal } from "../Modals/DeckPreviewModal";
 import { ProgressBar } from "../Home/ProgressBar";
+import { DeckPreviewModal } from "../Modals/DeckPreviewModal";
 
 type ScoundrelCardType = "monster" | "weapon" | "potion";
 
 const MaxHealth = 20;
 const TotalRooms = 12;
 const EmptyRoom: (PlayingCard | null)[] = [null, null, null, null];
+const MinHealthAfterSafeStart = 2;
+const MaxSafeShuffleAttempts = 20;
 
 type RoomActionSpec = {
   key: string;
@@ -61,6 +64,77 @@ type GameState = {
   won: boolean;
 };
 
+type RoomSolveState = {
+  roomCards: PlayingCard[];
+  resolvedCount: number;
+  health: number;
+  weaponCard: PlayingCard | null;
+  lastWeaponTargetValue: number | null;
+};
+
+// ========== Game Setup ========== //
+function createScoundrelDeck() {
+  return createDeck().filter((card) => {
+    if (card.suit === "clubs" || card.suit === "spades") return true;
+    if (card.suit === "hearts" || card.suit === "diamonds") {
+      const value = rankValue(card);
+      return value >= 2 && value <= 10;
+    }
+    return false;
+  });
+}
+
+const gameStateInitial: GameState = {
+  draw: shuffle(createScoundrelDeck()),
+  discard: [],
+  roomCards: [...EmptyRoom],
+  roomNum: 1,
+  weaponCard: null,
+  weaponUsedOn: [],
+  health: MaxHealth,
+  lastRoomNumRanFrom: null,
+  isRunning: false,
+  score: undefined,
+  lastActionType: undefined,
+  lastPotionValue: undefined,
+  ended: false,
+  won: false,
+};
+
+async function resetAndSetup(
+  setGame: (updater: (draft: GameState) => void) => void,
+) {
+  // Bring all cards to draw deck, then delay, then distribute cards to room and draw deck, so that the animation looks like a shuffle and deal.
+  setGame((draft) => {
+    const allCards = [
+      ...draft.draw,
+      ...draft.discard,
+      ...draft.roomCards.filter((card): card is PlayingCard => card !== null),
+      ...(draft.weaponCard ? [draft.weaponCard] : []),
+      ...draft.weaponUsedOn,
+    ];
+
+    draft.draw = getSafeShuffledDeck(flipAllToBack(allCards));
+    draft.discard = [];
+    draft.roomCards = [...EmptyRoom];
+    draft.roomNum = 0;
+    draft.weaponCard = null;
+    draft.weaponUsedOn = [];
+    draft.health = MaxHealth;
+    draft.lastRoomNumRanFrom = null;
+    draft.isRunning = false;
+    draft.score = undefined;
+    draft.lastActionType = undefined;
+    draft.lastPotionValue = undefined;
+    draft.ended = false;
+    draft.won = false;
+  });
+
+  // Delay for animation
+  await delay(bufferedDefaultAnimDuration);
+}
+
+// ========== Helper Functions ========== //
 function cardType(card: PlayingCard): ScoundrelCardType {
   if (card.suit === "diamonds") return "weapon";
   if (card.suit === "hearts") return "potion";
@@ -72,15 +146,144 @@ function scoundrelValue(card: PlayingCard) {
   return rankValue(card);
 }
 
-function createScoundrelDeck() {
-  return createDeck().filter((card) => {
-    if (card.suit === "clubs" || card.suit === "spades") return true;
-    if (card.suit === "hearts" || card.suit === "diamonds") {
-      const value = rankValue(card);
-      return value >= 2 && value <= 10;
+function roomSolveKey(state: RoomSolveState) {
+  const roomKey = state.roomCards
+    .map((card) => `${card.suit}-${card.rank}`)
+    .sort()
+    .join("|");
+
+  return [
+    roomKey,
+    state.resolvedCount,
+    state.health,
+    state.weaponCard
+      ? `${state.weaponCard.suit}-${state.weaponCard.rank}`
+      : "none",
+    state.lastWeaponTargetValue ?? "none",
+  ].join("::");
+}
+
+function bestHealthAfterRoom(
+  roomCards: PlayingCard[],
+  startingHealth = MaxHealth,
+): number {
+  const memo = new Map<string, number>();
+
+  function solve(state: RoomSolveState): number {
+    if (state.health <= 0) return Number.NEGATIVE_INFINITY;
+    if (state.resolvedCount === 3) return state.health;
+
+    const key = roomSolveKey(state);
+    const cached = memo.get(key);
+    if (cached !== undefined) return cached;
+
+    let bestHealth = Number.NEGATIVE_INFINITY;
+
+    for (let index = 0; index < state.roomCards.length; index += 1) {
+      const card = state.roomCards[index];
+      const nextRoomCards = state.roomCards.filter((_, i) => i !== index);
+      const nextResolvedCount = state.resolvedCount + 1;
+
+      if (cardType(card) === "potion") {
+        bestHealth = Math.max(
+          bestHealth,
+          solve({
+            roomCards: nextRoomCards,
+            resolvedCount: nextResolvedCount,
+            health: Math.min(MaxHealth, state.health + scoundrelValue(card)),
+            weaponCard: state.weaponCard,
+            lastWeaponTargetValue: state.lastWeaponTargetValue,
+          }),
+        );
+        continue;
+      }
+
+      if (cardType(card) === "weapon") {
+        bestHealth = Math.max(
+          bestHealth,
+          solve({
+            roomCards: nextRoomCards,
+            resolvedCount: nextResolvedCount,
+            health: state.health,
+            weaponCard: card,
+            lastWeaponTargetValue: null,
+          }),
+        );
+        continue;
+      }
+
+      bestHealth = Math.max(
+        bestHealth,
+        solve({
+          roomCards: nextRoomCards,
+          resolvedCount: nextResolvedCount,
+          health: state.health - scoundrelValue(card),
+          weaponCard: state.weaponCard,
+          lastWeaponTargetValue: state.lastWeaponTargetValue,
+        }),
+      );
+
+      if (
+        state.weaponCard &&
+        (state.lastWeaponTargetValue === null ||
+          scoundrelValue(card) <= state.lastWeaponTargetValue)
+      ) {
+        bestHealth = Math.max(
+          bestHealth,
+          solve({
+            roomCards: nextRoomCards,
+            resolvedCount: nextResolvedCount,
+            health:
+              state.health -
+              Math.max(
+                0,
+                scoundrelValue(card) - scoundrelValue(state.weaponCard),
+              ),
+            weaponCard: state.weaponCard,
+            lastWeaponTargetValue: scoundrelValue(card),
+          }),
+        );
+      }
     }
-    return false;
+
+    memo.set(key, bestHealth);
+    return bestHealth;
+  }
+
+  return solve({
+    roomCards,
+    resolvedCount: 0,
+    health: startingHealth,
+    weaponCard: null,
+    lastWeaponTargetValue: null,
   });
+}
+
+function dungeonHasFalseStart(cards: PlayingCard[]) {
+  const openingRoom = cards.slice(0, 4);
+  const roomAfterRunning = cards.slice(4, 8);
+
+  if (openingRoom.length < 4 || roomAfterRunning.length < 4) return false;
+
+  const openingRoomHealth = bestHealthAfterRoom(openingRoom);
+  const roomAfterRunningHealth = bestHealthAfterRoom(roomAfterRunning);
+
+  return (
+    openingRoomHealth <= MinHealthAfterSafeStart &&
+    roomAfterRunningHealth <= MinHealthAfterSafeStart
+  );
+}
+
+function getSafeShuffledDeck(cards: PlayingCard[]) {
+  let deck = shuffle(cards);
+  let shuffleCount = 1;
+
+  while (dungeonHasFalseStart(deck) && shuffleCount < MaxSafeShuffleAttempts) {
+    shuffleCount += 1;
+    deck = shuffle(cards);
+  }
+
+  return deck;
 }
 
 function validRoomCards(roomCards: (PlayingCard | null)[]) {
@@ -167,48 +370,18 @@ function refillRoom(game: GameState) {
   };
 }
 
-const gameStateInitial: GameState = {
-  draw: [],
-  discard: [],
-  roomCards: [...EmptyRoom],
-  roomNum: 1,
-  weaponCard: null,
-  weaponUsedOn: [],
-  health: MaxHealth,
-  lastRoomNumRanFrom: null,
-  isRunning: false,
-  score: undefined,
-  lastActionType: undefined,
-  lastPotionValue: undefined,
-  ended: false,
-  won: false,
-};
-
-async function resetAndSetup(
-  setGame: (updater: (draft: GameState) => void) => void,
-) {
-  setGame((draft) => {
-    draft.draw = shuffle(flipAllToBack(createScoundrelDeck()));
-    draft.discard = [];
-    draft.roomCards = [...EmptyRoom];
-    draft.roomNum = 0;
-    draft.weaponCard = null;
-    draft.weaponUsedOn = [];
-    draft.health = MaxHealth;
-    draft.lastRoomNumRanFrom = null;
-    draft.isRunning = false;
-    draft.score = undefined;
-    draft.lastActionType = undefined;
-    draft.lastPotionValue = undefined;
-    draft.ended = false;
-    draft.won = false;
-  });
-}
+// Layout constants
+const healthBarHeight = 0.46;
+const drawRow = healthBarHeight + 0.17;
+const weaponsRow = drawRow + 1.05;
+const weaponsZoneInset = 0.12;
+const weaponsZoneHeight = 1 + weaponsZoneInset * 2;
+const roomCardsRow = weaponsRow + weaponsZoneHeight + 0.06;
+const roomActionsRow = roomCardsRow + 0.95;
 
 // ========== Game Component ========== //
 export default function Scoundrel() {
-  const responsiveScale = useResponsiveScale();
-  const { zoneBg, cardBg } = useGameZoneBackground();
+  const scale = useResponsiveScale();
 
   const {
     isLoaded,
@@ -322,7 +495,6 @@ export default function Scoundrel() {
   }
 
   const healthRatio = Math.max(0, Math.min(1, game.health / MaxHealth));
-  const roomProgress = Math.max(0, Math.min(1, game.roomNum / TotalRooms));
 
   function getRoomActionSpecs(
     roomCard: PlayingCard,
@@ -421,11 +593,12 @@ export default function Scoundrel() {
   }, [game, isSettingUp, setGame]);
 
   // ========== Card Mapping ========== //
+
   const zones: MapZone[] = useMemo(() => {
     const roomZones: MapZone[] = getGridColRows({
       cols: 4,
       rows: 1,
-      rowOffset: 2.6,
+      rowOffset: roomCardsRow,
     }).map((pos, i) => ({
       id: `roomCards-${i}`,
       name: "roomCards",
@@ -433,22 +606,22 @@ export default function Scoundrel() {
       cards: game.roomCards[i] ? [game.roomCards[i]] : undefined,
       col: pos.c,
       row: pos.r,
-      baseZIndex: i + 10,
+      baseZIndex: i + 20,
       placeholder: {},
     }));
 
     const roomActionZones: MapZone[] = getGridColRows({
       cols: 4,
       rows: 1,
-      rowOffset: 3.55,
+      rowOffset: roomActionsRow,
     }).map((pos, i) => ({
       id: `roomCardActions-${i}`,
       name: "roomCardActions",
       pileIndex: i,
       col: pos.c,
       row: pos.r,
-      height: 0.9,
-      baseZIndex: i + 30,
+      height: 0.94,
+      baseZIndex: i + 10,
       placeholder: {
         hideBackground: true,
       },
@@ -456,61 +629,76 @@ export default function Scoundrel() {
 
     return [
       {
+        id: "health-bar",
+        name: "health-bar",
+        col: 0,
+        row: 0,
+        width: "full",
+        height: healthBarHeight,
+        baseZIndex: 1,
+      },
+      {
         id: "draw",
         name: "draw",
         cards: game.draw,
         col: 0,
-        row: 0,
+        row: drawRow,
         fan: { maxVisible: 3 },
         placeholder: {
-          infoPos: "below",
+          infoPos: "right",
           text: "Draw",
         },
+        baseZIndex: 50,
       },
       {
-        id: "game-info",
-        name: "game-info",
-        col: 1.1,
-        row: 0,
-        width: 1.8,
-        height: 1 + infoSize.aboveBelow * infoSize.aboveBelowAdjust,
+        id: "room-info",
+        name: "room-info",
+        col: 2.75,
+        row: drawRow,
+        width: 1.25,
+        height: 1,
+        baseZIndex: 1,
       },
       {
         id: "discard",
         name: "discard",
         cards: game.discard,
-        col: 3,
-        row: 0,
+        col: 1.35,
+        row: drawRow,
         fan: { maxVisible: 3 },
         placeholder: {
-          infoPos: "below",
+          infoPos: "right",
           text: "Dscrd",
         },
+        baseZIndex: 50,
       },
       {
         id: "weapon-zone",
         name: "weapon-zone",
         col: 0,
-        row: 1.3,
-        height: 1.2,
+        row: weaponsRow,
+        height: weaponsZoneHeight,
         width: "full",
         placeholder: {},
+        baseZIndex: 1,
       },
       {
         id: "weaponCard",
         name: "weaponCard",
         cards: game.weaponCard ? [game.weaponCard] : undefined,
-        col: 0.12,
-        row: 1.4,
+        col: weaponsZoneInset + 0.05,
+        row: weaponsRow + weaponsZoneInset,
+        baseZIndex: 1,
       },
       {
         id: "weaponUsedOn",
         name: "weaponUsedOn",
         cards: game.weaponUsedOn,
         col: 1.1,
-        row: 1.4,
-        width: 2.9,
+        row: weaponsRow + weaponsZoneInset,
+        width: 2.75,
         fan: { direction: "right", offset: 0.32 },
+        baseZIndex: 1,
       },
       ...roomZones,
       ...roomActionZones,
@@ -542,6 +730,7 @@ export default function Scoundrel() {
       };
     },
     cardSize: "regular",
+    paddingTop: 0.2,
   });
 
   return (
@@ -567,17 +756,8 @@ export default function Scoundrel() {
 
       {cardMap}
 
-      <View
-        style={[
-          getZoneStylesById("game-info"),
-          flexStyles.colCentered,
-          {
-            gap: 12 * responsiveScale,
-            justifyContent: "space-between",
-          },
-        ]}
-      >
-        {/* Health Bar */}
+      {/* Health Bar */}
+      <View style={[getZoneStylesById("health-bar")]}>
         <ProgressBar
           totalValue={MaxHealth}
           progressValue={game.health}
@@ -589,27 +769,40 @@ export default function Scoundrel() {
                 : "green"
           }
           tallyText={`${game.health} / ${MaxHealth}`}
-          scaledHeight={cardHeight * 0.34}
+          scaledHeight={cardHeight * healthBarHeight}
           iconName="heart"
         />
+      </View>
 
+      {/* Room Bar and Run Button */}
+      <View
+        style={[
+          getZoneStylesById("room-info"),
+          flexStyles.colCentered,
+          {
+            gap: 12 * scale,
+            justifyContent: "space-between",
+          },
+        ]}
+      >
         {/* Room Bar */}
         <ProgressBar
           iconName="door"
           totalValue={TotalRooms}
           progressValue={game.roomNum}
           color="blue"
-          tallyText={`${game.roomNum} / ${TotalRooms}`}
-          scaledHeight={cardHeight * 0.34}
+          tallyText={game.roomNum}
+          scaledHeight={cardHeight * 0.3}
         />
 
         <Button
           text="Run"
-          size="small"
+          size="medium"
           onPress={runFromRoom}
           disabled={!canRun}
           theme={"orange"}
           fullWidth
+          taller
         />
       </View>
 
@@ -646,26 +839,22 @@ export default function Scoundrel() {
                       flexStyles.colCentered,
                       {
                         position: "absolute",
-                        top: -4 * responsiveScale,
-                        left: -6 * responsiveScale,
+                        top: -4 * scale,
+                        left: -6 * scale,
                         zIndex: 2,
-                        width: 24 * responsiveScale,
-                        height: 24 * responsiveScale,
+                        width: 24 * scale,
+                        height: 24 * scale,
                         borderRadius: 999,
                         alignItems: "center",
                         justifyContent: "center",
-                        paddingHorizontal: 2 * responsiveScale,
+                        paddingHorizontal: 2 * scale,
 
                         backgroundColor: Colors.white,
                         boxShadow: `1px 2px 4px ${rgba(Colors.K900, 0.5)}`,
                       },
                     ]}
                   >
-                    <Icon
-                      name="skull"
-                      color={Colors.K950}
-                      size={20 * responsiveScale}
-                    />
+                    <Icon name="skull" color={Colors.K950} size={20 * scale} />
                   </View>
                 )}
 
@@ -679,20 +868,18 @@ export default function Scoundrel() {
                   theme={action.color}
                   iconName={action.iconName}
                   iconColor={Colors.white}
-                  iconSize={24 * responsiveScale}
+                  iconSize={24 * scale}
+                  taller
                   style={{
-                    paddingVertical: 4 * responsiveScale,
-                    height: "100%",
-                    gap: 4 * responsiveScale,
-                    borderRadius: 20 * responsiveScale,
+                    gap: 4 * scale,
                     paddingHorizontal: 0,
                   }}
                   textStyle={{
-                    fontSize: 16 * responsiveScale,
-                    lineHeight: 16 * responsiveScale,
+                    fontSize: 16 * scale,
+                    lineHeight: 16 * scale,
                     fontFamily: FontWeight[600],
                     color: Colors.white,
-                    paddingRight: 3 * responsiveScale,
+                    paddingRight: 4 * scale,
                   }}
                 />
               </View>

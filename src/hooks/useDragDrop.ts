@@ -9,6 +9,7 @@ import {
   Easing,
   GestureResponderEvent,
   PanResponder,
+  Platform,
   View as RNView,
 } from "react-native";
 
@@ -44,7 +45,7 @@ export function runTiming(
       toValue,
       duration,
       easing: Easing.out(Easing.cubic),
-      useNativeDriver: false,
+      useNativeDriver: Platform.OS !== "web",
     }).start(() => resolve());
   });
 }

@@ -10,7 +10,7 @@ import {
   rgba,
 } from "@/styles/styles";
 import { useEffect, useRef } from "react";
-import { Animated, Easing, View } from "react-native";
+import { Animated, Easing, Platform, View } from "react-native";
 import { Button } from "../Button/Button";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 
@@ -42,7 +42,7 @@ export const WinLoseBox = ({
       toValue: 1,
       duration: 750,
       easing: Easing.inOut(Easing.ease),
-      useNativeDriver: false,
+      useNativeDriver: Platform.OS !== "web",
     }).start();
   };
   const fadeOutWLM = (actionAfterFadeout?: () => void) => {
@@ -50,7 +50,7 @@ export const WinLoseBox = ({
       toValue: 0,
       duration: 400,
       easing: Easing.inOut(Easing.ease),
-      useNativeDriver: false,
+      useNativeDriver: Platform.OS !== "web",
     }).start(({ finished }) => {
       if (finished && actionAfterFadeout) {
         actionAfterFadeout();
@@ -161,7 +161,11 @@ export const WinLoseBox = ({
               onPress={() => fadeOutWLM(handleUndo)}
               size="medium"
               text="Undo"
-              theme={"red"}
+              theme={"lose"}
+              taller
+              style={{
+                flex: 1,
+              }}
             />
           )}
 
@@ -169,7 +173,11 @@ export const WinLoseBox = ({
             onPress={() => fadeOutWLM(reset)}
             size="medium"
             text={won ? "Play again" : "Try again"}
-            theme={won ? "green" : "red"}
+            theme={won ? "win" : "lose"}
+            taller
+            style={{
+              flex: 1,
+            }}
           />
         </View>
       </Animated.View>

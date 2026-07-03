@@ -3,10 +3,10 @@ import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 import { useStateManager } from "@/hooks/useStateManager";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors } from "@/styles/styles";
+import { Colors, rgba } from "@/styles/styles";
 import { delay } from "@/utils/utils";
-import { useEffect, useMemo } from "react";
-import { View } from "react-native";
+import { useEffect, useMemo, useRef } from "react";
+import { Animated, Easing, Platform, View } from "react-native";
 import { Button } from "../Button/Button";
 import {
   AnimatedCardMapping,
@@ -274,12 +274,13 @@ function hasValidPlayInHand(cards: PlayingCard[]): boolean {
 // ---------- Main Component ---------- //
 export default function Regicide() {
   const scale = useResponsiveScale();
-  const { zoneBg, cardBg } = useGameZoneBackground();
+  const { zoneBg } = useGameZoneBackground();
 
   const {
     game,
     setGame,
     reset,
+    isSettingUp,
     isLoaded,
     showIntro,
     setShowIntro,
@@ -303,7 +304,10 @@ export default function Regicide() {
     const suitEffects = (
       ["hearts", "diamonds", "clubs", "spades"] as const
     ).filter((suit) => activeSuits.has(suit));
-    const damageMultiplier = activeSuits.has("clubs") ? 2 : 1;
+    const damageMultiplier =
+      activeSuits.has("clubs") && game.currentEnemy?.card.suit !== "clubs"
+        ? 2
+        : 1;
     const attackValue = game.selectedCards.reduce((sum, card) => {
       return sum + getCardAttackValue(card);
     }, 0);
@@ -355,7 +359,8 @@ export default function Regicide() {
   const pendingAttackReduction =
     game.phase === "attack" &&
     playSelection.isValid &&
-    playSelection.suitEffects.includes("spades")
+    playSelection.suitEffects.includes("spades") &&
+    game.currentEnemy?.card.suit !== "spades"
       ? playSelection.totalAttack
       : 0;
 
@@ -363,10 +368,6 @@ export default function Regicide() {
     0,
     currentEnemyAttack - pendingAttackReduction,
   );
-
-  const currentEnemyNumber = game.currentEnemy
-    ? Math.min(game.enemiesDefeated + 1, 12)
-    : 12;
 
   const playSummary = useMemo(() => {
     return {
@@ -380,8 +381,45 @@ export default function Regicide() {
     previewEnemyAttack,
   ]);
 
+  const phaseFlip = useRef(
+    new Animated.Value(game.phase === "attack" ? 0 : 1),
+  ).current;
+
+  useEffect(() => {
+    Animated.timing(phaseFlip, {
+      toValue: game.phase === "attack" ? 0 : 1,
+      duration: 500,
+      easing: Easing.inOut(Easing.cubic),
+      useNativeDriver: Platform.OS !== "web",
+    }).start();
+  }, [game.phase, phaseFlip]);
+
+  const attackFaceRotateX = phaseFlip.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "180deg"],
+  });
+
+  const defendFaceRotateX = phaseFlip.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["180deg", "360deg"],
+  });
+
+  const attackFaceOpacity = phaseFlip.interpolate({
+    inputRange: [0, 0.48, 0.52, 1],
+    outputRange: [1, 1, 0, 0],
+    extrapolate: "clamp",
+  });
+
+  const defendFaceOpacity = phaseFlip.interpolate({
+    inputRange: [0, 0.48, 0.52, 1],
+    outputRange: [0, 0, 1, 1],
+    extrapolate: "clamp",
+  });
+
+  // Handle automatic game over conditions during attack phase
   useEffect(() => {
     if (
+      isSettingUp ||
       game.ended ||
       game.phase !== "attack" ||
       game.jestersDeck.length > 0 ||
@@ -410,11 +448,29 @@ export default function Regicide() {
     game.ended,
     game.jestersDeck.length,
     game.phase,
+    isSettingUp,
     setGame,
   ]);
 
+  // Auto progress to attack phase if enemy attack is 0
+  async function autoProgressToAttackPhase() {
+    await delay(750);
+
+    setGame((draft) => {
+      draft.phase = "attack";
+    });
+  }
+
+  useEffect(() => {
+    if (game.phase === "defend" && currentEnemyAttack === 0) {
+      autoProgressToAttackPhase();
+    }
+  }, [game.phase]);
+
+  // Handle automatic game over conditions during defend phase
   useEffect(() => {
     if (
+      isSettingUp ||
       game.ended ||
       game.phase !== "defend" ||
       game.jestersDeck.length > 0 ||
@@ -449,6 +505,7 @@ export default function Regicide() {
     game.ended,
     game.jestersDeck.length,
     game.phase,
+    isSettingUp,
     setGame,
     totalHandDefenseValue,
   ]);
@@ -495,11 +552,13 @@ export default function Regicide() {
         if (idx >= 0) draft.hand.splice(idx, 1);
       }
 
-      // Apply suit powers
+      // Apply suit powers, if enemy is not immune (i.e. has the same suit)
       if (
         playSelection.suitEffects.includes("hearts") &&
+        draft.currentEnemy.card.suit !== "hearts" &&
         draft.discardPile.length > 0
       ) {
+        // Hearts power: heal from discard pile to tavern deck
         const healedState = healFromDiscard(
           draft.discardPile,
           draft.tavernDeck,
@@ -508,9 +567,11 @@ export default function Regicide() {
 
         draft.discardPile = healedState.discardPile;
         draft.tavernDeck = healedState.tavernDeck;
-      }
-
-      if (playSelection.suitEffects.includes("diamonds")) {
+      } else if (
+        playSelection.suitEffects.includes("diamonds") &&
+        draft.currentEnemy.card.suit !== "diamonds"
+      ) {
+        // Diamonds power: draw from tavern deck to hand
         const drawnState = drawFromTavern(
           draft.tavernDeck,
           draft.hand,
@@ -518,17 +579,21 @@ export default function Regicide() {
         );
         draft.tavernDeck = drawnState.tavernDeck;
         draft.hand = drawnState.hand;
-      }
-
-      // Deal damage and check if enemy defeated
-      const newDamageDealt = draft.damageDealt + playSelection.damage;
-      draft.damageDealt = newDamageDealt;
-      if (playSelection.suitEffects.includes("spades")) {
+      } else if (
+        playSelection.suitEffects.includes("spades") &&
+        draft.currentEnemy.card.suit !== "spades"
+      ) {
+        // Spades power: reduce enemy attack
         draft.currentEnemy.attack = Math.max(
           0,
           draft.currentEnemy.attack - playSelection.totalAttack,
         );
       }
+      // Note: clubs power is applied in the damage calculation below, so no need to handle it here
+
+      // Deal damage and check if enemy defeated
+      const newDamageDealt = draft.damageDealt + playSelection.damage;
+      draft.damageDealt = newDamageDealt;
       draft.currentEnemy.health = Math.max(
         0,
         draft.currentEnemy.maxHealth - newDamageDealt,
@@ -586,7 +651,6 @@ export default function Regicide() {
         // Enemy survives - move to suffering damage phase
         draft.discardPile.push(...playedCards);
         draft.phase = "defend";
-        // const enemyDamage = Math.max(0, draft.currentEnemy.attack);
         draft.selectedCards = [];
       }
     });
@@ -848,7 +912,6 @@ export default function Regicide() {
           ]}
         >
           <ProgressBar
-            // labelText="Health"
             totalValue={game.currentEnemy.maxHealth}
             progressValue={currentEnemyHealth}
             previewProgressValue={
@@ -857,8 +920,10 @@ export default function Regicide() {
                 : undefined
             }
             color={
-              game.phase === "attack" &&
-              currentEnemyHealth - playSelection.damage <= 0
+              currentEnemyHealth === 0 ||
+              (game.phase === "attack" &&
+                playSelection.isValid &&
+                currentEnemyHealth - playSelection.damage <= 0)
                 ? "red"
                 : "blue"
             }
@@ -868,7 +933,6 @@ export default function Regicide() {
           />
 
           <ProgressBar
-            // labelText="Attack"
             totalValue={currentEnemyBaseAttack}
             progressValue={currentEnemyAttack}
             previewProgressValue={
@@ -877,7 +941,7 @@ export default function Regicide() {
                 : undefined
             }
             color={
-              game.phase === "attack" &&
+              enemyDamageAfterShield === 0 ||
               currentEnemyAttack - pendingAttackReduction <= 0
                 ? "red"
                 : "purple"
@@ -893,41 +957,35 @@ export default function Regicide() {
       <View
         style={[
           getZoneStylesById("actions"),
-          flexStyles.rowCentered,
           {
-            backgroundColor: zoneBg,
-            borderRadius: 8 * scale,
-            paddingVertical: 6 * scale,
-            paddingHorizontal: 16 * scale,
-            gap: 16 * scale,
+            position: "absolute",
           },
         ]}
       >
-        {/* ---------- Defend ---------- */}
-        {/* Defend Values */}
-        {game.phase === "defend" && (
-          <View style={[flexStyles.rowCentered, { width: "35%" }]}>
-            <Text size="lg" weight={400} color={Colors.white}>
-              {game.phase === "defend"
-                ? `${selectedDefenseValue} / ${enemyDamageAfterShield}`
-                : "-"}
-            </Text>
-          </View>
-        )}
-        {/* Defend Button */}
-        {game.phase === "defend" && (
-          <Button
-            onPress={handleEndDamagePhase}
-            text="Defend"
-            disabled={selectedDefenseValue < currentEnemyAttack}
-            theme="purple"
-            style={{ flex: 1 }}
-          />
-        )}
-
-        {/* ---------- Attack ---------- */}
-        {/* Powers/Suits */}
-        {game.phase === "attack" && (
+        {/* Attack Actions */}
+        <Animated.View
+          style={[
+            flexStyles.rowCentered,
+            {
+              position: "absolute",
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              paddingVertical: 6 * scale,
+              paddingHorizontal: 16 * scale,
+              gap: 16 * scale,
+              backfaceVisibility: "hidden",
+              opacity: attackFaceOpacity,
+              transform: [{ perspective: 900 }, { rotateX: attackFaceRotateX }],
+              pointerEvents: game.phase === "attack" ? "auto" : "none",
+              backgroundColor: zoneBg,
+              borderRadius: 8 * scale,
+              boxShadow: `inset 0 0 0 ${1.5 * scale}px ${rgba(Colors.buttonBlue, 0.5)}, 0 0 ${20 * scale}px ${rgba(Colors.buttonBlue, 0.5)}`,
+            },
+          ]}
+        >
+          {/* Powers/Suits */}
           <View
             style={[flexStyles.rowCentered, { width: "20%", gap: 6 * scale }]}
           >
@@ -937,10 +995,8 @@ export default function Regicide() {
                 <Icon key={suit} name={suit} size={22} color={Colors.white} />
               ))}
           </View>
-        )}
 
-        {/* Attack Button */}
-        {game.phase === "attack" && (
+          {/* Attack Button */}
           <Button
             onPress={playCards}
             text="Attack"
@@ -948,10 +1004,8 @@ export default function Regicide() {
             theme="blue"
             style={{ flex: 1 }}
           />
-        )}
 
-        {/* Attack Values */}
-        {game.phase === "attack" && (
+          {/* Attack Values */}
           <View
             style={[
               flexStyles.rowCentered,
@@ -967,14 +1021,60 @@ export default function Regicide() {
                   x
                 </Text>
                 <Text size="xl" weight={500} color={Colors.white}>
-                  {game.phase === "attack"
-                    ? `${playSelection.isValid ? playSummary.attackValue : "-"}`
-                    : "-"}
+                  {playSelection.isValid ? playSummary.attackValue : "-"}
                 </Text>
               </>
             )}
           </View>
-        )}
+        </Animated.View>
+
+        {/* Defend Actions */}
+        <Animated.View
+          style={[
+            flexStyles.rowCentered,
+            {
+              position: "absolute",
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              paddingVertical: 6 * scale,
+              paddingHorizontal: 16 * scale,
+              gap: 16 * scale,
+              backfaceVisibility: "hidden",
+              opacity: defendFaceOpacity,
+              transform: [{ perspective: 900 }, { rotateX: defendFaceRotateX }],
+              pointerEvents: game.phase === "defend" ? "auto" : "none",
+              backgroundColor: zoneBg,
+              borderRadius: 8 * scale,
+              boxShadow: `inset 0 0 0 ${1.5 * scale}px ${rgba(Colors.buttonPurple, 0.5)}, 0 0 ${20 * scale}px ${rgba(Colors.buttonPurple, 0.5)}`,
+            },
+          ]}
+        >
+          {/* ---------- Defend ---------- */}
+          {/* Defend Values */}
+          <View style={[flexStyles.rowCentered, { width: "35%" }]}>
+            <Text
+              size="lg"
+              weight={400}
+              color={enemyDamageAfterShield === 0 ? Colors.K500 : Colors.white}
+            >
+              {`${selectedDefenseValue} / ${enemyDamageAfterShield}`}
+            </Text>
+          </View>
+
+          {/* Defend Button */}
+          <Button
+            onPress={handleEndDamagePhase}
+            text="Defend"
+            disabled={
+              enemyDamageAfterShield === 0 ||
+              selectedDefenseValue < currentEnemyAttack
+            }
+            theme="purple"
+            style={{ flex: 1 }}
+          />
+        </Animated.View>
       </View>
     </GameWrapper>
   );

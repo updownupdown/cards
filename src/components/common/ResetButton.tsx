@@ -1,6 +1,5 @@
 import { Text } from "@/components/common/Text";
-import {
-  Button } from "@/components/Button/Button";
+import { Button } from "@/components/Button/Button";
 import { useFade } from "@/hooks/useFade";
 import { flexStyles } from "@/styles/flexStyles";
 import { menuStyles } from "@/styles/menuStyles";
@@ -11,15 +10,9 @@ import {
   HeaderButtonIconSize,
   HeaderButtonSize,
   rgba,
-  } from "@/styles/styles";
-import React,
-  { useRef,
-  useState } from "react";
-import { Animated,
-  Easing,
-  StyleSheet,
-  View,
-} from "react-native";
+} from "@/styles/styles";
+import React, { useRef, useState } from "react";
+import { Animated, Easing, Platform, StyleSheet, View } from "react-native";
 
 const holdToResetDuration = 900;
 const minDisplayDuration = holdToResetDuration;
@@ -56,7 +49,7 @@ export function ResetButton({
       toValue: 1,
       duration: holdToResetDuration,
       easing: Easing.linear,
-      useNativeDriver: false,
+      useNativeDriver: Platform.OS !== "web",
     }).start();
   };
 
@@ -66,7 +59,7 @@ export function ResetButton({
       toValue: 0,
       duration: 150,
       easing: Easing.linear,
-      useNativeDriver: false,
+      useNativeDriver: Platform.OS !== "web",
     }).start();
   };
 

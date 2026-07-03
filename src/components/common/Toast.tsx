@@ -1,18 +1,16 @@
 import { Text } from "@/components/common/Text";
-import {
-  Colors,
-  FontWeight,
-  rgba } from "@/styles/styles";
-import React,
-  {
+import { Colors, FontWeight, rgba } from "@/styles/styles";
+import React, {
   createContext,
   ReactNode,
   useCallback,
   useContext,
   useRef,
   useState,
-  } from "react";
-import { Animated,
+} from "react";
+import {
+  Animated,
+  Platform,
   StyleSheet,
   TextStyle,
   ViewStyle,
@@ -47,7 +45,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
       Animated.timing(opacity, {
         toValue: 1,
         duration: 300,
-        useNativeDriver: false,
+        useNativeDriver: Platform.OS !== "web",
       }).start();
 
       // Auto-hide after duration
@@ -55,7 +53,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
         Animated.timing(opacity, {
           toValue: 0,
           duration: 300,
-          useNativeDriver: false,
+          useNativeDriver: Platform.OS !== "web",
         }).start(() => setToast({ visible: false, message: "" }));
       }, duration);
     },
