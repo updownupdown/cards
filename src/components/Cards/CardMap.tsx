@@ -6,6 +6,7 @@ import {
   MaxContentHeight,
   MaxContentWidth,
 } from "@/styles/styles";
+import { roundToPixel } from "@/utils/utils";
 import { usePathname } from "expo-router";
 import { useMemo } from "react";
 import { useWindowDimensions, ViewStyle } from "react-native";
@@ -142,21 +143,25 @@ export function useCardMap({
     gridHeight,
     gridHeightPadded,
   } = useMemo(() => {
-    const headerHeight =
-      Math.round(HeaderHeight * responsiveScale) + insets.top;
+    const headerHeight = roundToPixel(
+      Math.round(HeaderHeight * responsiveScale) + insets.top,
+    );
     const screenBoardHeight = Math.max(screenHeightActual - headerHeight, 0);
 
-    const containerWidth = Math.min(
-      screenWidthActual,
-      MaxContentWidth * responsiveScale,
+    const containerWidth = roundToPixel(
+      Math.min(screenWidthActual, MaxContentWidth * responsiveScale),
     );
-    const containerHeight = Math.min(
-      screenBoardHeight,
-      Math.max(MaxContentHeight * responsiveScale - headerHeight, 0),
+    const containerHeight = roundToPixel(
+      Math.min(
+        screenBoardHeight,
+        Math.max(MaxContentHeight * responsiveScale - headerHeight, 0),
+      ),
     );
 
-    const widthMargin = (screenWidthActual - containerWidth) / 2;
-    const heightMargin = (screenBoardHeight - containerHeight) / 2;
+    const widthMargin = roundToPixel((screenWidthActual - containerWidth) / 2);
+    const heightMargin = roundToPixel(
+      (screenBoardHeight - containerHeight) / 2,
+    );
 
     const gapYUnits = gap * cardDims.aspectRatio;
 
@@ -184,15 +189,18 @@ export function useCardMap({
       cardHeight = cardWidth / cardDims.aspectRatio;
     }
 
+    cardWidth = roundToPixel(cardWidth);
+    cardHeight = roundToPixel(cardHeight);
+
     // Calculate Final Grid Bounding Box
-    const gridWidth = cardWidth * cardWidthUnitsToFit;
-    const gridHeight = cardHeight * cardHeightUnitsToFit;
+    const gridWidth = roundToPixel(cardWidth * cardWidthUnitsToFit);
+    const gridHeight = roundToPixel(cardHeight * cardHeightUnitsToFit);
 
-    const paddingX = (paddingLeft + paddingRight) * cardWidth;
-    const paddingY = (paddingTop + paddingBottom) * cardHeight;
+    const paddingX = roundToPixel((paddingLeft + paddingRight) * cardWidth);
+    const paddingY = roundToPixel((paddingTop + paddingBottom) * cardHeight);
 
-    const gridWidthPadded = gridWidth - paddingX;
-    const gridHeightPadded = gridHeight - paddingY;
+    const gridWidthPadded = roundToPixel(gridWidth - paddingX);
+    const gridHeightPadded = roundToPixel(gridHeight - paddingY);
 
     // Perfect Centering: Divide remaining screen space evenly
     const offsetX =
@@ -205,9 +213,9 @@ export function useCardMap({
     return {
       cardWidth,
       cardHeight,
-      gridGap: gap * cardWidth,
-      startX: offsetX,
-      startY: offsetY,
+      gridGap: roundToPixel(gap * cardWidth),
+      startX: roundToPixel(offsetX),
+      startY: roundToPixel(offsetY),
       gridWidth,
       gridWidthPadded,
       gridHeight,
@@ -234,13 +242,13 @@ export function useCardMap({
     const zHeight = zone.height ?? 1;
 
     return {
-      x: startX + zone.col * (cardWidth + gridGap),
-      y: startY + zone.row * (cardHeight + gridGap),
+      x: roundToPixel(startX + zone.col * (cardWidth + gridGap)),
+      y: roundToPixel(startY + zone.row * (cardHeight + gridGap)),
       width:
         zone.width === "full"
           ? gridWidthPadded
-          : cardWidth * zWidth + gridGap * (zWidth - 1),
-      height: cardHeight * zHeight + gridGap * (zHeight - 1),
+          : roundToPixel(cardWidth * zWidth + gridGap * (zWidth - 1)),
+      height: roundToPixel(cardHeight * zHeight + gridGap * (zHeight - 1)),
       zIndex: zone.baseZIndex,
     } as CardPosition;
   };
@@ -345,7 +353,12 @@ export function useCardMap({
       y += offsetY * visualIndex;
     }
 
-    return { x, y, zIndex, isHiddenUnderDeck };
+    return {
+      x: roundToPixel(x),
+      y: roundToPixel(y),
+      zIndex,
+      isHiddenUnderDeck,
+    };
   };
 
   const cardPositions: Record<string, MappedCard> = useMemo(() => {

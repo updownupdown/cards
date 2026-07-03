@@ -63,6 +63,11 @@ const HOME_TABS: HomeTabConfig[] = [
     iconName: "collections",
     sections: [
       {
+        key: GameCategory.Misc,
+        title: GameCategoryNames[GameCategory.Misc],
+        variant: "large",
+      },
+      {
         key: GameCategory.Isaludo,
         title: GameCategoryNames[GameCategory.Isaludo],
         variant: "large",

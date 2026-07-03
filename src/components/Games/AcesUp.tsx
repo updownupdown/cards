@@ -240,9 +240,7 @@ export default function AcesUp() {
         row: 0,
         fan: { maxVisible: 3 },
         placeholder: {
-          show: true,
           infoPos: "left",
-          showCount: true,
           text: "Draw",
         },
       },
@@ -254,9 +252,7 @@ export default function AcesUp() {
         row: 0,
         fan: { maxVisible: 3 },
         placeholder: {
-          show: true,
           infoPos: "right",
-          showCount: true,
           text: "Discard",
         },
       },

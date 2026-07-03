@@ -28,6 +28,7 @@ import {
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import { FontWeight } from "@/styles/styles";
 
 const maxMarkedPaths = 3;
 
@@ -642,6 +643,7 @@ export default function LootTheLoop() {
             <Button
               text="Mark Path"
               size="extra-small"
+              textOnly
               onPress={() => {
                 if (selectedCardIndex !== undefined) {
                   const selectedCard = game.deck[selectedCardIndex];
@@ -653,6 +655,7 @@ export default function LootTheLoop() {
               disabled={selectedCardIndex === undefined}
               style={[flexStyles.fullWidth, flexStyles.fullHeight]}
               theme={"green"}
+              textStyle={{ fontFamily: FontWeight[600] }}
             />
           </Animated.View>
         ))}
@@ -679,7 +682,13 @@ export default function LootTheLoop() {
             !isNumberRank(game.deck[selectedCardIndex].rank) ||
             !game.deck[selectedCardIndex].faceUp
           }
-          style={[flexStyles.flex1, { height: "100%" }]}
+          style={[
+            flexStyles.flex1,
+            {
+              height: "100%",
+              borderRadius: cardWidth * 0.25 * responsiveScale,
+            },
+          ]}
           theme={"purple"}
         />
 
@@ -687,7 +696,13 @@ export default function LootTheLoop() {
           text="Return to Path"
           onPress={returnToSelectedMarkedPath}
           disabled={selectedPath === undefined}
-          style={[flexStyles.flex1, { height: "100%" }]}
+          style={[
+            flexStyles.flex1,
+            {
+              height: "100%",
+              borderRadius: cardWidth * 0.25 * responsiveScale,
+            },
+          ]}
           theme={"green"}
         />
 
@@ -699,7 +714,13 @@ export default function LootTheLoop() {
             game.deck.length === 0 ||
             game.deck[game.deckPos].faceUp
           }
-          style={[flexStyles.flex1, { height: "100%" }]}
+          style={[
+            flexStyles.flex1,
+            {
+              height: "100%",
+              borderRadius: cardWidth * 0.25 * responsiveScale,
+            },
+          ]}
           theme={"blue"}
         />
       </View>

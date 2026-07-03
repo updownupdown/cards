@@ -392,7 +392,7 @@ export default function Area52() {
         row: rowOffset * 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { show: true, text: "Atks", infoPos: "above" },
+        placeholder: { text: "Atks", infoPos: "above" },
       },
       ...attackers,
       {
@@ -403,7 +403,7 @@ export default function Area52() {
         row: rowOffset * 1,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { show: true, text: "Dscrd", infoPos: "above" },
+        placeholder: { text: "Dscrd", infoPos: "above" },
       },
       {
         id: "defenderDeck",
@@ -413,7 +413,7 @@ export default function Area52() {
         row: rowOffset * 2,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { show: true, text: "Defs", infoPos: "above" },
+        placeholder: { text: "Defs", infoPos: "above" },
       },
       ...defenders,
       {
@@ -538,20 +538,20 @@ export default function Area52() {
         <Button
           onPress={() => applyAction("sacrifice")}
           text="Sacrifice"
-          size="medium"
+          size="medium-large"
           disabled={selectedDefenders.length !== 1}
           theme="red"
-          style={[{ height: "100%" }]}
         />
+
         <Button
           onPress={() =>
             applyAction(selectedDefenders.length === 2 ? "dual" : "single")
           }
           text={`Attack${selectedDefenders.length === 2 ? " x2" : ""}`}
-          size="medium"
+          size="medium-large"
           disabled={!canAttack || selectedDefenders.length < 1}
           theme={selectedDefenders.length === 2 ? "purple" : "green"}
-          style={[flexStyles.flex1, { height: "100%" }]}
+          style={[flexStyles.flex1]}
         />
       </View>
     </GameWrapper>

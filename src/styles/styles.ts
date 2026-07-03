@@ -3,16 +3,22 @@ import "@/styles/global.css";
 import { Platform } from "react-native";
 
 export const Colors = {
-  // Buttons
-  buttonColor: "#6fe9ff",
-  buttonColorDisabled: "#494F55",
+  // Buttons and progress bars
+  buttonRed: "#b43733",
+  buttonOrange: "#da8037",
+  buttonGreen: "#4ea069",
+  buttonBlue: "#52a3c4",
+  buttonPurple: "#8956b9",
 
-  btnRed: "#ff3c67",
-  btnBlue: "#6fe9ff",
-  btnPurple: "#e460ff",
-  btnOrange: "#ff8b2d",
-  btnYellow: "#ffea2d",
-  btnGreen: "#26ff93",
+  buttonDisabled: "#444444",
+
+  // Bright colours (text buttons, etc.)
+  brightRed: "#ff3c67",
+  brightBlue: "#82e8fa",
+  brightPurple: "#e460ff",
+  brightOrange: "#ff8b2d",
+  brightYellow: "#ffea2d",
+  brightGreen: "#26ff93",
 
   // Accents
   accentBlue: "#83deee",

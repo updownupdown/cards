@@ -3,6 +3,8 @@ import { Icon, IconName } from "@/icons";
 import { Colors, FontWeight, rgba } from "@/styles/styles";
 import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 import { Platform, Pressable, TextStyle, ViewStyle } from "react-native";
+import { textStyles } from "@/styles/textStyles";
+import { roundToPixel } from "@/utils/utils";
 
 interface Props {
   style?: ViewStyle | ViewStyle[];
@@ -21,7 +23,9 @@ interface Props {
   iconName?: IconName;
   iconColor?: string;
   iconSize?: number;
+  lineHeight?: number;
   uppercase?: boolean;
+  taller?: boolean;
 }
 
 export const Button = ({
@@ -40,42 +44,35 @@ export const Button = ({
   onPress,
   onLongPress,
   delayLongPress,
+  lineHeight,
   onPressIn,
   onPressOut,
+  taller = false,
 }: Props) => {
   const scale = useResponsiveScale();
 
-  if (!theme) {
-    theme = Colors.accentBlue;
-  }
-
-  let themeColor: string | undefined = undefined;
+  let themeColor = theme ?? (textOnly ? Colors.brightBlue : Colors.buttonBlue);
 
   switch (theme) {
     case "blue":
-      themeColor = Colors.btnBlue;
+      themeColor = Colors.buttonBlue;
       break;
     case "red":
-      themeColor = Colors.btnRed;
+      themeColor = Colors.buttonRed;
       break;
     case "orange":
-      themeColor = Colors.btnOrange;
+      themeColor = Colors.buttonOrange;
       break;
     case "purple":
-      themeColor = Colors.btnPurple;
-      break;
-    case "yellow":
-      themeColor = Colors.btnYellow;
+      themeColor = Colors.buttonPurple;
       break;
     case "green":
-      themeColor = Colors.btnGreen;
+      themeColor = Colors.buttonGreen;
       break;
-    default:
-      themeColor = theme;
   }
 
   if (disabled) {
-    themeColor = Colors.K700;
+    themeColor = Colors.buttonDisabled;
   }
 
   const sizeMultiplier: Record<
@@ -90,19 +87,20 @@ export const Button = ({
   };
   const sizeScale = sizeMultiplier[size];
 
-  let fontSize = 16 * scale * sizeScale;
-  let height: number | undefined = 44 * scale * sizeScale;
-  let borderRadius = 8 * scale * sizeScale;
-  let borderWidth = themeColor ? 2 * scale * sizeScale : 0;
-  let paddingVertical = 8 * scale * sizeScale;
-  let paddingHorizontal = 12 * scale * sizeScale;
-  let fontFamily = textOnly ? FontWeight[300] : FontWeight[500];
-  let lineHeight = fontSize * 1.2;
+  let fontSize = roundToPixel(16 * scale * sizeScale);
+  let height: number | undefined = roundToPixel(
+    40 * scale * sizeScale * (taller ? 1.26 : 1),
+  );
+  let borderRadius = height / 2;
+  let gap = height / 6;
+  let paddingVertical = roundToPixel(6 * scale * sizeScale);
+  let paddingHorizontal = roundToPixel(16 * scale * sizeScale);
+  let fontFamily = textOnly ? FontWeight[300] : FontWeight[600];
+  let lineHeightUpdated = fontSize * (lineHeight ?? 1);
 
   if (textOnly) {
     height = undefined;
     borderRadius = 0;
-    borderWidth = 0;
     paddingVertical = 0;
     paddingHorizontal = 0;
   }
@@ -125,12 +123,19 @@ export const Button = ({
           height,
           paddingVertical,
           paddingHorizontal,
+          gap,
 
           borderRadius,
-          borderWidth,
-          borderColor: themeColor ? rgba(themeColor, 0.5) : undefined,
-          backgroundColor:
-            !textOnly && themeColor ? rgba(themeColor, 0.12) : undefined,
+          boxShadow: height
+            ? `inset 0 0 0 ${roundToPixel(height * 0.03)}px ${rgba(
+                Colors.white,
+                0.4,
+              )}, inset 0 0 ${roundToPixel(height * 0.4)}px ${rgba(
+                Colors.white,
+                disabled ? 0.2 : 0.4,
+              )}, 0 0 ${roundToPixel(height * 0.2)}px ${rgba(themeColor, 0.8)}`
+            : undefined,
+          backgroundColor: textOnly ? undefined : themeColor,
         },
         style,
       ]}
@@ -149,6 +154,8 @@ export const Button = ({
       {iconName && (
         <Icon
           name={iconName}
+          size={iconSize ?? 24}
+          color={iconColor ?? Colors.white}
           style={[
             {
               transitionDuration: "0.4s",
@@ -157,26 +164,24 @@ export const Button = ({
               flexShrink: 0,
             },
           ]}
-          color={iconColor ?? Colors.K100}
-          size={iconSize ?? 24}
         />
       )}
       {text && (
         <Text
           style={[
-            textStyle,
             {
               transitionDuration: "0.4s",
               transitionProperty: "all",
               transitionTimingFunction: "ease",
-
               fontSize,
               fontFamily,
               textTransform: uppercase ? "uppercase" : "none",
-              color: themeColor ? themeColor : Colors.accentBlue,
-              lineHeight,
+              color: textOnly ? themeColor : Colors.white,
+              lineHeight: lineHeightUpdated,
               textAlign: "center",
             },
+            textStyles.shadowText,
+            textStyle,
           ]}
         >
           {text}

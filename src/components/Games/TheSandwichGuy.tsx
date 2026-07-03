@@ -301,7 +301,7 @@ export default function TheSandwichGuy() {
         id: "button",
 
         col: 0,
-        row: 3.6,
+        row: 3.5,
         width: "full",
         height: 0.6,
       },
@@ -357,14 +357,13 @@ export default function TheSandwichGuy() {
     >
       {cardMap}
 
-      <View style={[getZoneStylesById("button")]}>
+      <View style={[getZoneStylesById("button"), flexStyles.colCentered]}>
         <Button
           onPress={commitSandwich}
           disabled={selectedCards.length !== 3 || invalidSandwichSelected}
           text="Serve Sandwich"
           size="medium-large"
           fullWidth
-          style={[flexStyles.flex1, { height: "100%" }]}
         />
       </View>
     </GameWrapper>

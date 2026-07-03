@@ -1,13 +1,12 @@
 import { Text } from "@/components/common/Text";
-import { Icon } from "@/icons";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
 import { Pressable, TextStyle, View, ViewStyle } from "react-native";
+import { CardMapBGMapping } from "./AnimatedCard";
 import { cardDims } from "./card-utils";
 import { CardPosition, MapZone } from "./CardMap";
 import { CardOverlay, getCardShadow } from "./CardStyles";
-import { CardMapBGMapping } from "./AnimatedCard";
 
 export type DeckFanDirection =
   | "none"
@@ -29,6 +28,7 @@ type Props = {
 
 export const infoSize = {
   aboveBelow: 0.32,
+  aboveBelowAdjust: 0.8,
   leftRight: 0.54,
 };
 
@@ -78,9 +78,9 @@ export const CardMapBackgrounds = ({
         let textContainerStyle: ViewStyle = {};
         let textStyle: TextStyle = {
           userSelect: "none",
-          fontSize: cardWidth * 0.17,
+          fontSize: cardWidth * 0.15,
           color: Colors.K300,
-          fontFamily: FontWeight[300],
+          fontFamily: FontWeight[400],
           textTransform: "uppercase",
         };
         let countStyle: TextStyle = {
@@ -101,7 +101,8 @@ export const CardMapBackgrounds = ({
             case "above":
             case "below":
               placeholderHeight += cardHeight * infoSize.aboveBelow;
-              infoStyles.height = cardHeight * infoSize.aboveBelow * 0.8;
+              infoStyles.height =
+                cardHeight * infoSize.aboveBelow * infoSize.aboveBelowAdjust;
               infoStyles.width = "100%";
               infoStyles.gap = cardWidth * 0.1;
               infoStyles.flexDirection = "row";

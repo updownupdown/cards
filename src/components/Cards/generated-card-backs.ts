@@ -16,7 +16,9 @@ export type CardBackName =
   | "HideAndSeek.png"
   | "LootTheLoop.png"
   | "MonteCarlo.png"
+  | "Regicide.png"
   | "SandwichGuy.png"
+  | "Scoundrel.png"
   | "Skyway.png"
   | "Syndicate.png"
   | "TheEmissary.png";
@@ -37,7 +39,9 @@ export const cardBackAssets: Record<string, any> = {
   "HideAndSeek.png": require("@/assets/card-backs/HideAndSeek.png"),
   "LootTheLoop.png": require("@/assets/card-backs/LootTheLoop.png"),
   "MonteCarlo.png": require("@/assets/card-backs/MonteCarlo.png"),
+  "Regicide.png": require("@/assets/card-backs/Regicide.png"),
   "SandwichGuy.png": require("@/assets/card-backs/SandwichGuy.png"),
+  "Scoundrel.png": require("@/assets/card-backs/Scoundrel.png"),
   "Skyway.png": require("@/assets/card-backs/Skyway.png"),
   "Syndicate.png": require("@/assets/card-backs/Syndicate.png"),
   "TheEmissary.png": require("@/assets/card-backs/TheEmissary.png"),

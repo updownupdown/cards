@@ -50,7 +50,7 @@ export const Text = forwardRef<React.ElementRef<typeof RNText>, TextProps>(
   (props, ref) => {
     const {
       size = "md",
-      lineHeight = 1,
+      lineHeight = 1.3,
       children,
       weight = "regular",
       textTransform = "none",

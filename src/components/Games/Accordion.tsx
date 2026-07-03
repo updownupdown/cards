@@ -1,12 +1,11 @@
 import { useStateManager } from "@/hooks/useStateManager";
-import { produce } from "immer";
+import { delay } from "@/utils/utils";
 import { useMemo, useState } from "react";
 import {
   AnimatedCardMapping,
   bufferedDefaultAnimDuration,
 } from "../Cards/AnimatedCard";
 import {
-  cardDims,
   createDeck,
   flipAllToBack,
   flipAllToFace,
@@ -20,7 +19,6 @@ import {
   useCardMap,
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
-import { delay } from "@/utils/utils";
 
 type GameState = {
   setupPile: PlayingCard[];

@@ -2,12 +2,14 @@ import React from "react";
 import { GameThumbnailName } from "./game-thumbnails";
 
 export enum GameCategory {
+  Misc = "Misc",
   Isaludo = "Isaludo",
   ClassicSolitaire = "ClassicSolitaire",
   Beta = "Beta",
 }
 
 export const GameCategoryNames: Record<GameCategory, string> = {
+  [GameCategory.Misc]: "Misc",
   [GameCategory.Isaludo]: "Isaludo Collection",
   [GameCategory.ClassicSolitaire]: "Classic Solitaire",
   [GameCategory.Beta]: "Beta",
@@ -40,6 +42,200 @@ export type GameMenuInfo = {
 };
 
 export const GAMES_DATA: Record<string, GameMenuInfo> = {
+  // ============================== //
+  // ========== Scoundrel ========== //
+  // ============================== //
+  // Scoundrel
+  "/scoundrel": {
+    title: "Scoundrel",
+    thumbnail: "Scoundrel.jpg",
+    cardBack: "Scoundrel.png",
+    cardColorBg: "#272319",
+    cardColorText: "#ffedd7",
+    cardDescription:
+      "A dungeon crawl where you manage weapon strength and potion usage.",
+    stats: {
+      complexity: 70,
+      difficulty: 70,
+      luck: 30,
+    },
+    category: GameCategory.Misc,
+    briefRules: [
+      "Build each room to 4 face-up cards; resolve 3 cards and carry 1 forward.",
+      "Fight monsters barehanded or with a weapon, but weapon kills must be non-increasing in value.",
+      "You may run from a full room, but never two rooms in a row.",
+      "Reach the end of the dungeon before your health hits 0.",
+    ],
+    byLine: "by Zach Gage and Kurt Bieg",
+    about: [
+      "Scoundrel is a compact dungeon-crawling solitaire game played with a reduced standard deck.",
+      "Every decision matters: when to equip, when to tank damage, when to retreat, and when to push for a clean finish.",
+    ],
+    howToPlay: [
+      "Start with 20 health. The dungeon contains black-suit monsters (A counts as 14), diamond weapons (2-10), and heart potions (2-10).",
+      "At the start of a room, reveal cards from the dungeon until 4 room cards are face up.",
+      "On each room, resolve exactly 3 cards. The 4th card remains and carries into the next room.",
+      "Weapon cards are binding: equipping a new weapon discards your old weapon and any monsters stacked on it.",
+      "Monster damage is reduced by your equipped weapon value. After a weapon kills a monster, it can only be used on monsters of equal or lower value than the last one it killed.",
+      "You can run from a full room by placing all 4 room cards at the bottom of the dungeon, but you cannot run two rooms in a row.",
+      "You lose at 0 health. You win by emptying the dungeon and room; your score is based on remaining health (with bonus conditions on a perfect potion finish).",
+    ],
+  },
+
+  // The Bogey
+  "/the-bogey": {
+    enabled: false,
+    title: "The Bogey",
+    thumbnail: "Calculation.jpg",
+    cardColorBg: "#1a2332",
+    cardColorText: "#f0e8d8",
+    cardDescription:
+      "Build columns of cards in decreasing suit-matched sequences while playing against the mysterious Bogey.",
+    stats: {
+      complexity: 60,
+      difficulty: 65,
+      luck: 35,
+    },
+    category: GameCategory.Misc,
+    briefRules: [
+      "Build columns with same-suit cards in decreasing value (K to A).",
+      "Start with 5 cards in hand; draw to maintain 5 cards each turn.",
+      "Alternate turns between you and the Bogey; the Bogey plays from the deck.",
+      "Win by building columns efficiently: novice=12, normal=11, advanced=10, legendary=9, epic=8.",
+    ],
+    byLine: "Designer: Katharine Turner, 2016",
+    about: [
+      "Play against the Bogey in a tactical card game of columns and choices.",
+      "Each decision to play, discard, or hold cards directly impacts your path to victory.",
+      "The challenge lies in building enough columns to win while managing the Bogey's plays.",
+    ],
+    howToPlay: [
+      "Start with an empty board and a hand of 5 cards dealt from a standard deck (no jokers).",
+      "On your turn, draw cards to bring your hand back to 5. Then, for each card decide whether to play it, discard it, or hold it.",
+      "Play a card by adding it to the bottom of an existing column (if same suit and lower value) or starting a new column (limited to 12 total).",
+      "Cards in a column must be the same suit and decrease in value (K,Q,J,10,9,8,7,6,5,4,3,2,A), but may skip values.",
+      "After your turn, the Bogey plays the next card from the deck. You choose which column it goes to.",
+      "If the Bogey's card cannot be played legally, you lose immediately.",
+      "When the deck runs out, shuffle the discards to create a new deck.",
+      "You win by building columns efficiently. Fewer columns is better: aim for 12 (novice), 11 (normal), 10 (advanced), 9 (legendary), or 8 (epic).",
+      "For a harder variant, start with a hand of 4 instead of 5, letting the Bogey play more often.",
+    ],
+  },
+
+  // Regicide
+  "/regicide": {
+    title: "Regicide",
+    cardBack: "Regicide.png",
+    thumbnail: "Regicide.jpg",
+    cardColorBg: "#1a1a2e",
+    cardColorText: "#e8d5b7",
+    cardDescription:
+      "Defeat 12 royal enemies using card combos and suit powers.",
+    stats: {
+      complexity: 85,
+      difficulty: 80,
+      luck: 25,
+    },
+    category: GameCategory.Misc,
+    briefRules: [
+      "Play cards to deal damage to enemies: Jack (20 HP), Queen (30 HP), King (40 HP).",
+      "Use suit powers: Hearts heal, Diamonds draw, Clubs double damage, Spades block enemy attacks.",
+      "Discard cards to block enemy damage each turn.",
+      "Defeat all 12 enemies to win: Gold (no Jesters), Silver (1 Jester), Bronze (2 Jesters).",
+    ],
+    byLine: "Designer: Lawrence Beveridge",
+    about: [
+      "Regicide is a challenging solo cooperative card game where you battle corrupted royalty.",
+      "Combine cards strategically to defeat Jacks, Queens, and Kings using their suit powers.",
+      "Each enemy becomes harder—manage your hand and resources carefully to achieve victory.",
+    ],
+    howToPlay: [
+      "Arrange Castle deck: Jacks (bottom), Queens, Kings (top). Start with Jack as first enemy.",
+      "Deal 8 cards from Tavern deck (cards 2-10, Animal Companions, Jesters). Max hand: 8 cards.",
+      "Each turn: Play a card (deal damage), activate its suit power, check if enemy defeated, take enemy damage.",
+      "Card values count as attack damage (A=1 or 20, 2-10=face value, J/Q/K=11/12/13).",
+      "Suit powers: Hearts shuffle discard to heal, Diamonds draw cards, Clubs double damage, Spades reduce enemy attack.",
+      "After playing, discard cards from hand (equal to enemy's reduced attack value) to block damage.",
+      "Defeat the 12 enemies by dealing enough cumulative damage. Victory type: Gold (0 Jesters), Silver (1), Bronze (2).",
+      "Jester power: Discard entire hand and refill to 8—restores options but limits victory level.",
+    ],
+  },
+
+  // Card Capture
+  "/card-capture": {
+    enabled: false,
+    title: "Card Capture",
+    thumbnail: "HideAndSeek.jpg",
+    cardColorBg: "#2b2d42",
+    cardColorText: "#d4cdc3",
+    cardDescription:
+      "Capture enemy combatants using strategic card plays and careful hand management.",
+    stats: {
+      complexity: 75,
+      difficulty: 70,
+      luck: 40,
+    },
+    category: GameCategory.Misc,
+    briefRules: [
+      "Capture face cards (J,Q,K,A) from the Enemy Row using same-suit cards from your hand.",
+      "Spend cards equal to or greater than the target card's value to capture it.",
+      "Manage your Personal Draw Deck (2s, 3s, 4s, Jokers) and avoid letting enemy capture face cards.",
+      "Win by emptying Enemy Draw Deck and Enemy Row without face cards in Enemy Capture Pile.",
+    ],
+    about: [
+      "Card Capture is a tactical solitaire game of hand management and strategic choices.",
+      "Use your limited tools (2s, 3s, 4s) to defeat powerful enemies (J,Q,K,A).",
+      "Each round offers multiple options: capture an enemy, sacrifice cards, or let them take from you.",
+    ],
+    howToPlay: [
+      "Personal Draw Deck contains all 2s, 3s, 4s, and both Jokers. Enemy Draw Deck contains remaining cards.",
+      "Setup: Draw 4 cards from Enemy Deck into positions 1-4. Remove any face cards to bottom of Enemy Deck.",
+      "Each round: Enemy Phase (refill empty positions) → Discard Phase (discard up to 4 cards) → Draw Phase (draw to 4) → Capture Phase.",
+      "In Capture Phase, choose one: (1) Capture an enemy card by spending same-suit cards totaling its value or more, (2) Let enemy capture one of your cards, or (3) Sacrifice 2 cards to send 1 enemy card to bottom of Enemy Deck.",
+      "Card values: 2-10 are face value, J=11, Q=12, K=13, A=14. Jokers act as any value of any suit.",
+      "LOSE if any face card (J,Q,K,A) enters the Enemy Capture Pile.",
+      "WIN when Enemy Draw Deck is empty, all positions are empty, and no face cards were captured.",
+    ],
+  },
+
+  // Bowling Solitaire
+  "/bowling-solitaire": {
+    enabled: false,
+    title: "Bowling Solitaire",
+    thumbnail: "Golf.jpg",
+    cardColorBg: "#1a1f36",
+    cardColorText: "#f4e4c1",
+    cardDescription:
+      "Play 10 frames of solitaire bowling, knocking down pins using card arithmetic and strategy.",
+    stats: {
+      complexity: 70,
+      difficulty: 75,
+      luck: 35,
+    },
+    category: GameCategory.Misc,
+    briefRules: [
+      "Arrange 10 cards into a bowling pin formation; use 3 ball piles to knock down pins.",
+      "Match card value (1-10) to the final digit of adjacent pin sums to knock them down.",
+      "Score like real 10-Pin Bowling: strikes (10+next 2 balls), spares (10+next 1 ball).",
+      "Play 10 frames; higher score wins.",
+    ],
+    byLine: "Designer: Sid Sackson",
+    about: [
+      "Bowling Solitaire translates the classic sport into a card game using clever arithmetic.",
+      "Select cards strategically and calculate pin combinations to maximize your score.",
+      "Master real bowling scoring rules to achieve strikes, spares, and perfect frames.",
+    ],
+    howToPlay: [
+      "Use one suit (10 cards 1-10 and 3 ball piles of 5, 3, 2 cards). Arrange 10 pins in bowling formation: 4 back, 3 middle, 2 front, 1 front.",
+      "Turn up top card of each ball pile. Select one card and try to knock down pins whose sum equals your card's value (ending digit matches).",
+      "Example: 8 card can knock pins summing to 8, 18, 28, etc. On turn 1: cannot remove back row or center pin alone.",
+      "After knocking down pins, turn up next card in that pile. If no valid move exists, record pins knocked (first ball).",
+      "On second ball: knock down remaining pins that are adjacent to already-removed pins. If no valid move, frame ends.",
+      "Scoring: Real bowling rules apply. Strike (all 10 on ball 1) = 10 + next 2 balls. Spare (all 10 on ball 2) = 10 + next 1 ball.",
+      "Play 10 frames. Frame 10 allows extra balls if strike/spare scored. Try to beat your highest total score!",
+    ],
+  },
+
   // ============================== //
   // ========== Isaludo ========== //
   // ============================== //
@@ -489,6 +685,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Spider Solitaire
   "/spider-solitaire": {
+    enabled: false,
     title: "Spider Solitaire (BETA)",
     thumbnail: DEFAULT_GAME_THUMBNAIL,
     cardColorBg: "#2E2731",
@@ -501,7 +698,6 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       luck: 38,
     },
     category: GameCategory.ClassicSolitaire,
-    enabled: false,
     briefRules: [
       "Build cards down by rank in tableau columns.",
       "Complete full King to Ace suit runs to clear them.",
@@ -552,6 +748,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Solitaire
   "/solitaire": {
+    enabled: false,
     title: "Solitaire (BETA)",
     thumbnail: DEFAULT_GAME_THUMBNAIL,
     cardColorBg: "#2C2F3A",

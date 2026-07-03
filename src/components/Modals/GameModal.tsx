@@ -160,7 +160,6 @@ export default function GameModal({ onClose }: Props) {
               iconColor={
                 settings.isFavorite ? Colors.favoriteStar : Colors.accentBlue
               }
-              style={{ borderWidth: 0, boxShadow: "unset" }}
             />
           </View>
 

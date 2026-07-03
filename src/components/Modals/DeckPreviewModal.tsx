@@ -73,10 +73,6 @@ export function DeckPreviewModal({
             size="md"
             color={Colors.K200}
             weight={400}
-            // style={{
-            //   color: Colors.K300,
-            //   fontFamily: FontWeight[300],
-            // }}
             style={{ textAlign: "center" }}
           >
             The deck will be shuffled after preview.

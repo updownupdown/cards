@@ -162,7 +162,6 @@ export const AdvisorInfo = ({
                   onPress={() => setSelectedAdvisor(undefined)}
                   text="Cancel"
                   theme={Colors.K200}
-                  style={[{ borderWidth: 0 }]}
                 />
                 {advisorSuit !== "spades" && (
                   <Button

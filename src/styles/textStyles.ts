@@ -1,5 +1,5 @@
 import { Colors, FontWeight } from "@/styles/styles";
-import { StyleSheet, TextStyle } from "react-native";
+import { Platform, StyleSheet, TextStyle } from "react-native";
 
 export const textStyles = StyleSheet.create({
   default: {
@@ -30,6 +30,20 @@ export const textStyles = StyleSheet.create({
     fontFamily: FontWeight[300],
     color: Colors.K200,
     textTransform: "uppercase",
+  },
+  shadowText: {
+    ...Platform.select({
+      // Web uses the unified standard CSS textShadow string
+      web: {
+        textShadow: "0 1px 2px rgba(0, 0, 0, 0.4)",
+      },
+      // iOS and Android use the separate mobile style props
+      default: {
+        textShadowColor: "rgba(0, 0, 0, 0.4)",
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 2,
+      },
+    }),
   },
 });
 

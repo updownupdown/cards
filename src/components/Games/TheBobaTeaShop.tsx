@@ -462,7 +462,7 @@ export default function TheBobaTeaShop() {
             draft.deck = nextDeck;
           });
         }}
-        title="Draw Deck"
+        title="Deck Preview"
         shuffleOnClose
         sortCards
       />
@@ -656,8 +656,9 @@ export default function TheBobaTeaShop() {
               revealNextCustomer(game);
             }}
             disabled={game.selectedPos === undefined}
-            style={[flexStyles.flex1, { height: "100%" }]}
             theme="purple"
+            fullWidth
+            taller
           />
         )}
 
@@ -674,7 +675,8 @@ export default function TheBobaTeaShop() {
                 }
               }}
               disabled={game.selectedPos === undefined}
-              style={[flexStyles.flex1, { height: "100%" }]}
+              fullWidth
+              taller
             />
             <Button
               text="Kick them out"
@@ -684,7 +686,8 @@ export default function TheBobaTeaShop() {
                 }
               }}
               disabled={game.selectedPos === undefined}
-              style={[flexStyles.flex1, { height: "100%" }]}
+              fullWidth
+              taller
             />
           </>
         )}

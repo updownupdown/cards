@@ -8,11 +8,13 @@ import {
   Colors,
   ContentSidePadding,
   HeaderHeight,
+  MaxContentWidth,
   rgba,
 } from "@/styles/styles";
 import { usePathname } from "expo-router";
-import { Animated, ScrollView, View } from "react-native";
+import { Animated, ScrollView, useWindowDimensions, View } from "react-native";
 import { Button } from "../Button/Button";
+import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 
 interface Props {
   setShowMenu: (show: boolean) => void;
@@ -25,6 +27,13 @@ interface Props {
 export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);
+  const responsiveScale = useResponsiveScale();
+  const { width: screenWidthActual } = useWindowDimensions();
+
+  const containerWidth = Math.min(
+    screenWidthActual,
+    MaxContentWidth * responsiveScale,
+  );
 
   const { updateSettings: updateGameSettings } = useGameSettings(pathname);
 
@@ -75,10 +84,13 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
               borderRadius: modalBorderRadius,
               backgroundColor: rgba(Colors.K900, 0.97),
               boxShadow: modalShadow,
+              width: "100%",
+              maxWidth: containerWidth,
             },
           ]}
         >
           <ScrollView
+            style={{ width: "100%", alignSelf: "stretch" }}
             contentContainerStyle={[
               flexStyles.colCentered,
               {
@@ -102,12 +114,12 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
               <Text size="lg" weight={500} style={{ color: Colors.K100 }}>
                 How to Play
               </Text>
+
               {gameInfo.briefRules.map((info, key) => (
                 <Text
                   key={`info-${key}`}
                   weight={300}
                   size="sm"
-                  lineHeight={1.25}
                   color={Colors.K200}
                   style={[
                     flexStyles.colCentered,
@@ -130,6 +142,7 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
                 size="medium"
                 textOnly
                 uppercase={false}
+                style={{ marginTop: 10 }}
               />
             </View>
 

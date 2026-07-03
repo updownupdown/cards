@@ -335,9 +335,8 @@ export default function MonteCarlo() {
       ...gridZones,
       {
         id: "button",
-
         col: 0,
-        row: 6.5,
+        row: 6.4,
         width: "full",
         height: 0.7,
       },
@@ -367,6 +366,8 @@ export default function MonteCarlo() {
     zones,
     cardMapper,
     cardSize: "small",
+    paddingTop: 0.3,
+    paddingBottom: 0.6,
   });
 
   return (
@@ -385,14 +386,13 @@ export default function MonteCarlo() {
     >
       {cardMap}
 
-      <View style={[getZoneStylesById("button")]}>
+      <View style={[getZoneStylesById("button"), flexStyles.colCentered]}>
         <Button
           onPress={consolidateAndDeal}
           disabled={game.ended || !hasFaceDownCard}
           text="Consolidate"
           fullWidth
           size="medium-large"
-          style={[flexStyles.flex1, { height: "100%" }]}
         />
       </View>
     </GameWrapper>

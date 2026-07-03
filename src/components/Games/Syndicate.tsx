@@ -374,18 +374,11 @@ export default function Syndicate() {
       },
       ...rankZones.flat(),
       {
-        id: "instructions",
+        id: "instructions-buttons",
         col: 1.1,
-        row: 6.25,
+        row: 6.15,
         width: 5.9,
-        height: 0.25,
-      },
-      {
-        id: "buttons",
-        col: 1.1,
-        row: 6.65,
-        width: 5.96,
-        height: 0.85,
+        height: 1.35,
       },
     ];
   }, [game]);
@@ -519,7 +512,7 @@ export default function Syndicate() {
           textTransform="uppercase"
           weight={300}
           color={Colors.K200}
-          style={[{ width: cardWidth * 2.2, color: Colors.btnBlue }]}
+          style={[{ width: cardWidth * 2.2, color: Colors.brightBlue }]}
         >
           Members
         </Text>
@@ -528,7 +521,7 @@ export default function Syndicate() {
           textTransform="uppercase"
           weight={300}
           color={Colors.K200}
-          style={[flexStyles.flex1, { color: Colors.btnPurple }]}
+          style={[flexStyles.flex1, { color: Colors.brightPurple }]}
         >
           Candidates
         </Text>
@@ -571,60 +564,59 @@ export default function Syndicate() {
       {/* Instructions */}
       <View
         style={[
-          flexStyles.rowCentered,
+          flexStyles.colCentered,
           flexStyles.spaceBetween,
-          getZoneStylesById("instructions"),
-          {
-            paddingHorizontal: cardWidth * 0.3,
-          },
+          getZoneStylesById("instructions-buttons"),
         ]}
       >
         <Text
           size="sm"
-          weight={300}
+          weight={400}
           color={Colors.K300}
           style={[flexStyles.flex1, { textAlign: "center" }]}
         >
           {instructionText()}
         </Text>
-      </View>
 
-      {/* Action Buttons */}
-      <View
-        style={[
-          getZoneStylesById("buttons"),
-          {
-            gap: cardHeight * 0.25,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          },
-        ]}
-      >
-        <Button
-          onPress={() => promote("members")}
-          text="Member"
-          size="medium-large"
-          disabled={
-            !selectedReplacement ||
-            !!(
-              selectedRank &&
-              selectedRank !== 0 &&
-              game.ranks[selectedRank - 1].members.length === 3 &&
-              !selectedSacrifice
-            )
-          }
-          style={[flexStyles.flex1, { height: "100%" }]}
-          theme="blue"
-        />
-        <Button
-          onPress={() => promote("candidates")}
-          text="Candidate"
-          size="medium-large"
-          disabled={!selectedReplacement}
-          style={[flexStyles.flex1, { height: "100%" }]}
-          theme="purple"
-        />
+        {/* Action Buttons */}
+        <View
+          style={[
+            flexStyles.fullWidth,
+            {
+              gap: cardHeight * 0.25,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            },
+          ]}
+        >
+          <Button
+            onPress={() => promote("members")}
+            text="Member"
+            size="medium"
+            disabled={
+              !selectedReplacement ||
+              !!(
+                selectedRank &&
+                selectedRank !== 0 &&
+                game.ranks[selectedRank - 1].members.length === 3 &&
+                !selectedSacrifice
+              )
+            }
+            style={[flexStyles.flex1]}
+            theme="blue"
+            taller
+          />
+          <Button
+            onPress={() => promote("candidates")}
+            text="Candidate"
+            size="medium"
+            disabled={!selectedReplacement}
+            style={[flexStyles.flex1]}
+            theme="purple"
+            taller
+          />
+        </View>
       </View>
     </GameWrapper>
   );

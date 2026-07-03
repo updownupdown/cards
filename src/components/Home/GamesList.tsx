@@ -8,6 +8,7 @@ import { GameCategory, GameMenuInfo, GAMES_DATA } from "@/data/games-data";
 import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 import { Icon, type IconName } from "@/icons";
 import { Colors, HomePadding, MaxContentWidth, rgba } from "@/styles/styles";
+import { roundToPixel } from "@/utils/utils";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   LayoutChangeEvent,
@@ -83,8 +84,8 @@ export const GamesList = ({ tabs }: GamesListProps) => {
   const isProgrammaticTabScrollRef = useRef(false);
   const programmaticTargetIndexRef = useRef<number | null>(null);
 
-  const tabGap = Math.round(6 * responsiveScale);
-  const tabWrapPadding = Math.max(8, tabGap);
+  const tabGap = roundToPixel(6 * responsiveScale);
+  const tabWrapPadding = roundToPixel(Math.max(8, tabGap));
 
   useEffect(() => {
     let cancelled = false;
@@ -173,8 +174,8 @@ export const GamesList = ({ tabs }: GamesListProps) => {
         style={[
           {
             width: "100%",
-            maxWidth: MaxContentWidth * responsiveScale,
-            gap: 10 * responsiveScale,
+            maxWidth: roundToPixel(MaxContentWidth * responsiveScale),
+            gap: roundToPixel(10 * responsiveScale),
           },
         ]}
       >
@@ -182,9 +183,9 @@ export const GamesList = ({ tabs }: GamesListProps) => {
         <Text
           style={[
             {
-              paddingTop: HomePadding * 2 * responsiveScale,
-              paddingBottom: 6 * responsiveScale,
-              paddingHorizontal: HomePadding * responsiveScale,
+              paddingTop: roundToPixel(HomePadding * 2 * responsiveScale),
+              paddingBottom: roundToPixel(6 * responsiveScale),
+              paddingHorizontal: roundToPixel(HomePadding * responsiveScale),
             },
           ]}
           weight={300}
@@ -200,7 +201,7 @@ export const GamesList = ({ tabs }: GamesListProps) => {
           style={[
             {
               flexDirection: "column",
-              gap: 14 * responsiveScale,
+              gap: roundToPixel(14 * responsiveScale),
             },
           ]}
         >
@@ -212,8 +213,8 @@ export const GamesList = ({ tabs }: GamesListProps) => {
                   width: "100%",
                   alignItems: "center",
                   backgroundColor: Colors.K875,
-                  borderRadius: 8 * responsiveScale,
-                  paddingVertical: 24 * responsiveScale,
+                  borderRadius: roundToPixel(8 * responsiveScale),
+                  paddingVertical: roundToPixel(24 * responsiveScale),
                 },
               ]}
             >
@@ -287,7 +288,7 @@ export const GamesList = ({ tabs }: GamesListProps) => {
   };
 
   const onContainerLayout = (event: LayoutChangeEvent): void => {
-    const nextWidth = Math.round(event.nativeEvent.layout.width);
+    const nextWidth = roundToPixel(event.nativeEvent.layout.width);
     if (!nextWidth || nextWidth === pagerWidth) return;
 
     setPagerWidth(nextWidth);
@@ -324,9 +325,9 @@ export const GamesList = ({ tabs }: GamesListProps) => {
             style={[{ flex: 1, width: pagerWidth || "100%" }]}
             contentContainerStyle={[
               {
-                paddingHorizontal: HomePadding * responsiveScale,
-                paddingTop: HomePadding * 1.5 * responsiveScale,
-                paddingBottom: HomePadding * 2 * responsiveScale,
+                paddingHorizontal: roundToPixel(HomePadding * responsiveScale),
+                paddingTop: roundToPixel(HomePadding * 1.5 * responsiveScale),
+                paddingBottom: roundToPixel(HomePadding * 2 * responsiveScale),
                 flexGrow: 1,
                 alignItems: "center",
               },
@@ -344,9 +345,11 @@ export const GamesList = ({ tabs }: GamesListProps) => {
       <View
         style={[
           {
-            paddingTop: tabWrapPadding * responsiveScale,
-            paddingBottom: (insets.bottom + tabWrapPadding) * responsiveScale,
-            paddingHorizontal: HomePadding * responsiveScale,
+            paddingTop: roundToPixel(tabWrapPadding * responsiveScale),
+            paddingBottom: roundToPixel(
+              (insets.bottom + tabWrapPadding) * responsiveScale,
+            ),
+            paddingHorizontal: roundToPixel(HomePadding * responsiveScale),
             width: "100%",
             flexDirection: "row",
             justifyContent: "center",
@@ -359,7 +362,7 @@ export const GamesList = ({ tabs }: GamesListProps) => {
             {
               flexDirection: "row",
               width: "100%",
-              maxWidth: MaxContentWidth * responsiveScale,
+              maxWidth: roundToPixel(MaxContentWidth * responsiveScale),
             },
           ]}
         >
@@ -371,9 +374,9 @@ export const GamesList = ({ tabs }: GamesListProps) => {
                 onPress={() => goToTab(index)}
                 style={[
                   {
-                    gap: tabGap * responsiveScale,
-                    paddingVertical: tabGap * responsiveScale,
-                    borderRadius: tabGap * responsiveScale * 1.5,
+                    gap: roundToPixel(tabGap * responsiveScale),
+                    paddingVertical: roundToPixel(tabGap * responsiveScale),
+                    borderRadius: roundToPixel(tabGap * responsiveScale * 1.5),
                     flex: 1,
                     flexDirection: "column",
                     alignItems: "center",
@@ -385,7 +388,7 @@ export const GamesList = ({ tabs }: GamesListProps) => {
               >
                 <Icon
                   name={tab.iconName}
-                  size={Math.round(30 * responsiveScale)}
+                  size={roundToPixel(30 * responsiveScale)}
                   color={isActive ? Colors.K100 : Colors.K500}
                 />
                 <Text

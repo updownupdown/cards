@@ -43,7 +43,7 @@ export default function ModalFull({
                   size="small"
                   textOnly
                   iconSize={22}
-                  style={{ borderWidth: 0, boxShadow: "unset" }}
+                  lineHeight={1}
                 />
               )}
 

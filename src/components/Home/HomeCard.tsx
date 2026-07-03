@@ -4,6 +4,7 @@ import { GameMenuInfo } from "@/data/games-data";
 import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 import { Icon } from "@/icons";
 import { Colors, rgba } from "@/styles/styles";
+import { roundToPixel } from "@/utils/utils";
 import { Link, type Href } from "expo-router";
 import { Image, Pressable, View } from "react-native";
 import { StatBars } from "./StatBars";
@@ -29,16 +30,16 @@ export function HomeCard({
 }: Props) {
   const responsiveScale = useResponsiveScale();
 
-  const borderRadius = Math.round(12 * responsiveScale);
-  const padding = isLarge ? Math.round(22 * responsiveScale) : 0;
-  const spacingUnit = Math.round(20 * responsiveScale);
-  const shadowUnit = Math.round(2 * responsiveScale);
-  const smallCardHeight = Math.round(58 * responsiveScale);
+  const borderRadius = roundToPixel(12 * responsiveScale);
+  const padding = isLarge ? roundToPixel(22 * responsiveScale) : 0;
+  const spacingUnit = roundToPixel(20 * responsiveScale);
+  const shadowUnit = roundToPixel(2 * responsiveScale);
+  const smallCardHeight = roundToPixel(58 * responsiveScale);
   const height = isLarge ? undefined : smallCardHeight;
-  const favBtnSize = Math.round(40 * responsiveScale);
-  const favBtnInset = isLarge
-    ? padding * 0.25
-    : smallCardHeight / 2 - favBtnSize / 2;
+  const favBtnSize = roundToPixel(40 * responsiveScale);
+  const favBtnInset = roundToPixel(
+    isLarge ? padding * 0.25 : smallCardHeight / 2 - favBtnSize / 2,
+  );
 
   return (
     <View
@@ -53,7 +54,7 @@ export function HomeCard({
       <Link href={path as Href} asChild>
         <Pressable
           style={{
-            gap: spacingUnit * 0.5,
+            gap: roundToPixel(spacingUnit * 0.5),
             height: isLarge ? undefined : "100%",
           }}
         >
@@ -67,7 +68,7 @@ export function HomeCard({
           >
             <View
               style={{
-                gap: Math.round(8 * responsiveScale),
+                gap: roundToPixel(8 * responsiveScale),
                 flex: 1,
                 height: isLarge ? undefined : "100%",
                 justifyContent: isLarge ? undefined : "center",
@@ -79,7 +80,9 @@ export function HomeCard({
                 weight={500}
                 style={{
                   color: game.cardColorText,
-                  paddingLeft: isLarge ? undefined : favBtnSize * 1.25,
+                  paddingLeft: isLarge
+                    ? undefined
+                    : roundToPixel(favBtnSize * 1.25),
                 }}
               >
                 {game.title}
@@ -101,15 +104,17 @@ export function HomeCard({
             {/* Thumbnail */}
             <View
               style={{
-                borderRadius: Math.round(8 * responsiveScale),
+                borderRadius: roundToPixel(8 * responsiveScale),
                 borderTopLeftRadius: isLarge ? undefined : 0,
                 borderBottomLeftRadius: isLarge ? undefined : 0,
                 width: "35%",
                 height: "100%",
                 aspectRatio: isLarge ? 1 : undefined,
                 overflow: "hidden",
-                marginTop: isLarge ? padding * -0.75 : undefined,
-                marginRight: isLarge ? padding * -0.75 : undefined,
+                marginTop: isLarge ? roundToPixel(padding * -0.75) : undefined,
+                marginRight: isLarge
+                  ? roundToPixel(padding * -0.75)
+                  : undefined,
               }}
             >
               <Image
@@ -146,7 +151,7 @@ export function HomeCard({
             width: favBtnSize,
             height: favBtnSize,
 
-            borderRadius: Math.round(8 * responsiveScale),
+            borderRadius: roundToPixel(8 * responsiveScale),
             backgroundColor: isLarge ? rgba(Colors.black, 0.6) : undefined,
           },
         ]}
@@ -156,7 +161,7 @@ export function HomeCard({
         <Icon
           name={isFavorite ? "star" : "star-outline"}
           color={isFavorite ? Colors.favoriteStar : Colors.K500}
-          size={favBtnSize * 0.6}
+          size={roundToPixel(favBtnSize * 0.6)}
         />
       </Pressable>
     </View>

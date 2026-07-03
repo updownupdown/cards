@@ -15,6 +15,8 @@ export const GAME_THUMBNAIL_ASSETS = {
   "Syndicate.jpg": require("../../assets/thumbnails/Syndicate.jpg"),
   "Calculation.jpg": require("../../assets/thumbnails/Calculation.jpg"),
   "Golf.jpg": require("../../assets/thumbnails/Golf.jpg"),
+  "Regicide.jpg": require("../../assets/thumbnails/Regicide.jpg"),
+  "Scoundrel.jpg": require("../../assets/thumbnails/Scoundrel.jpg"),
 } as const;
 
 export type GameThumbnailName = keyof typeof GAME_THUMBNAIL_ASSETS;

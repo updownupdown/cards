@@ -200,13 +200,15 @@ export const GameWrapper = ({
           />
 
           <Text
+            size="sm"
+            weight={300}
+            textTransform="uppercase"
+            color={titleColor}
             numberOfLines={1}
+            lineHeight={1}
             ellipsizeMode="tail"
             style={[
               {
-                fontSize: Math.round(14 * responsiveScale),
-                fontFamily: FontWeight[300],
-                color: titleColor,
                 flex: 1,
                 overflow: "hidden",
                 textTransform: "uppercase",
