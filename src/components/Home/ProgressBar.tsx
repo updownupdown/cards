@@ -82,7 +82,7 @@ export const ProgressBar = ({
       return rawPercentage;
     }
 
-    const minPercentage = clamp((iconWrapperWidth / barWidth) * 100, 0, 100);
+    const minPercentage = clamp((height / barWidth) * 100, 0, 100);
 
     // Interpolate from icon-wrapper width at 0% to full bar width at 100%.
     return minPercentage + normalizedPercentage * (100 - minPercentage);
