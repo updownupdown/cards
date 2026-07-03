@@ -5,6 +5,23 @@ import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 import { Platform, Pressable, TextStyle, ViewStyle } from "react-native";
 import { textStyles } from "@/styles/textStyles";
 import { roundToPixel } from "@/utils/utils";
+import { HexColor } from "@/data/games-data";
+
+const TRANSITION_STYLE = {
+  transitionDuration: "0.4s",
+  transitionProperty: "all",
+  transitionTimingFunction: "ease",
+} as const;
+
+const THEME_COLORS = {
+  blue: Colors.buttonBlue,
+  red: Colors.buttonRed,
+  orange: Colors.buttonOrange,
+  purple: Colors.buttonPurple,
+  green: Colors.buttonGreen,
+  win: Colors.win,
+  lose: Colors.lose,
+} as const;
 
 interface Props {
   style?: ViewStyle | ViewStyle[];
@@ -51,31 +68,10 @@ export const Button = ({
 }: Props) => {
   const scale = useResponsiveScale();
 
-  let themeColor = theme ?? (textOnly ? Colors.brightBlue : Colors.buttonBlue);
-
-  switch (theme) {
-    case "blue":
-      themeColor = Colors.buttonBlue;
-      break;
-    case "red":
-      themeColor = Colors.buttonRed;
-      break;
-    case "orange":
-      themeColor = Colors.buttonOrange;
-      break;
-    case "purple":
-      themeColor = Colors.buttonPurple;
-      break;
-    case "green":
-      themeColor = Colors.buttonGreen;
-      break;
-    case "win":
-      themeColor = Colors.win;
-      break;
-    case "lose":
-      themeColor = Colors.lose;
-      break;
-  }
+  const fallbackColor = textOnly ? Colors.brightBlue : Colors.buttonBlue;
+  let themeColor: HexColor =
+    (theme && THEME_COLORS[theme as keyof typeof THEME_COLORS]) ||
+    fallbackColor;
 
   if (disabled) {
     themeColor = Colors.buttonDisabled;
@@ -115,9 +111,7 @@ export const Button = ({
     <Pressable
       style={[
         {
-          transitionDuration: "0.4s",
-          transitionProperty: "all",
-          transitionTimingFunction: "ease",
+          ...TRANSITION_STYLE,
           outlineWidth: 0,
           opacity: disabled ? 0.4 : 1,
 
@@ -164,9 +158,7 @@ export const Button = ({
           color={iconColor ?? Colors.white}
           style={[
             {
-              transitionDuration: "0.4s",
-              transitionProperty: "all",
-              transitionTimingFunction: "ease",
+              ...TRANSITION_STYLE,
               flexShrink: 0,
             },
           ]}
@@ -176,9 +168,7 @@ export const Button = ({
         <Text
           style={[
             {
-              transitionDuration: "0.4s",
-              transitionProperty: "all",
-              transitionTimingFunction: "ease",
+              ...TRANSITION_STYLE,
               fontSize,
               fontFamily,
               textTransform: uppercase ? "uppercase" : "none",

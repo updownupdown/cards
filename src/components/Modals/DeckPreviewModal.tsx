@@ -5,11 +5,14 @@ import {
   sortCards as sortCardsFn,
 } from "@/components/Cards/card-utils";
 import { Text } from "@/components/common/Text";
-import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import {
+  getConstrainedContentWidth,
+  useResponsiveScaleFromWidth,
+} from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { flexStyles } from "@/styles/flexStyles";
 import { modalStyles } from "@/styles/modalStyles";
-import { Colors, MaxContentWidth } from "@/styles/styles";
+import { Colors } from "@/styles/styles";
 import { ScrollView, View } from "react-native";
 import { Card } from "../Cards/Card";
 import ModalFull from "./ModalFull";
@@ -33,11 +36,11 @@ export function DeckPreviewModal({
   shuffleOnClose = false,
   sortCards = false,
 }: Props) {
-  const responsiveScale = useResponsiveScale();
   const { width: screenWidthActual } = useViewportDimensions();
-  const containerWidth = Math.min(
+  const responsiveScale = useResponsiveScaleFromWidth(screenWidthActual);
+  const containerWidth = getConstrainedContentWidth(
     screenWidthActual,
-    MaxContentWidth * responsiveScale,
+    responsiveScale,
   );
 
   if (!visible) return null;

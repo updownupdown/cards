@@ -229,6 +229,7 @@ export const GamesList = ({ tabs }: GamesListProps) => {
               key={path}
               path={path}
               game={game}
+              responsiveScale={responsiveScale}
               onToggleFavorite={onToggleFavorite}
               isFavorite={favorites.has(path)}
               isLarge={

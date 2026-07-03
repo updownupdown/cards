@@ -8,32 +8,32 @@ import {
   Colors,
   ContentSidePadding,
   HeaderHeight,
-  MaxContentWidth,
   rgba,
 } from "@/styles/styles";
 import { usePathname } from "expo-router";
 import { Animated, ScrollView, View } from "react-native";
 import { Button } from "../Button/Button";
-import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import {
+  getConstrainedContentWidth,
+  useResponsiveScaleFromWidth,
+} from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 
 interface Props {
   setShowMenu: (show: boolean) => void;
   showIntro: boolean | undefined;
   setShowIntro: (show: boolean | undefined) => void;
-  titleColor?: string;
-  backgroundColor?: string;
 }
 
 export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);
-  const responsiveScale = useResponsiveScale();
   const { width: screenWidthActual } = useViewportDimensions();
+  const responsiveScale = useResponsiveScaleFromWidth(screenWidthActual);
 
-  const containerWidth = Math.min(
+  const containerWidth = getConstrainedContentWidth(
     screenWidthActual,
-    MaxContentWidth * responsiveScale,
+    responsiveScale,
   );
 
   const { updateSettings: updateGameSettings } = useGameSettings(pathname);

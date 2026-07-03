@@ -1,15 +1,14 @@
 import { cardDims, PlayingCard } from "@/components/Cards/card-utils";
 import { GAMES_DATA } from "@/data/games-data";
-import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
-import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import {
-  HeaderHeight,
-  MaxContentHeight,
-  MaxContentWidth,
-} from "@/styles/styles";
+  getConstrainedContentWidth,
+  useResponsiveScaleFromWidth,
+} from "@/hooks/useResponsiveLayout";
+import { useViewportDimensions } from "@/hooks/useViewportDimensions";
+import { HeaderHeight, MaxContentHeight } from "@/styles/styles";
 import { roundToPixel } from "@/utils/utils";
 import { usePathname } from "expo-router";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
@@ -78,7 +77,7 @@ export type MapZone = {
 };
 
 type MapConfig = {
-  game: any;
+  game: unknown;
   zones: MapZone[];
   gap?: number; // Gap (x AND y) as a percentage of the layout width
   paddingTop?: number;
@@ -111,10 +110,10 @@ export function useCardMap({
   const pathname = usePathname();
   const customBack = GAMES_DATA[pathname]?.cardBack;
   const insets = useSafeAreaInsets();
-  const responsiveScale = useResponsiveScale();
 
   const { width: screenWidthActual, height: screenHeightActual } =
     useViewportDimensions();
+  const responsiveScale = useResponsiveScaleFromWidth(screenWidthActual);
 
   // Calculate the end column (col + height) for each zone
   // and find the maximum value among them.
@@ -150,7 +149,7 @@ export function useCardMap({
     const screenBoardHeight = Math.max(screenHeightActual - headerHeight, 0);
 
     const containerWidth = roundToPixel(
-      Math.min(screenWidthActual, MaxContentWidth * responsiveScale),
+      getConstrainedContentWidth(screenWidthActual, responsiveScale),
     );
     const containerHeight = roundToPixel(
       Math.min(
@@ -181,19 +180,15 @@ export function useCardMap({
     let cardWidth = containerWidth / cardWidthUnitsToFit;
     let cardHeight = containerHeight / cardHeightUnitsToFit;
 
-    // Enforce Aspect Ratio
     if (cardWidth / cardDims.aspectRatio > cardHeight) {
-      // Height is the bottleneck, scale width down
       cardWidth = cardHeight * cardDims.aspectRatio;
     } else {
-      // Width is the bottleneck, scale height down
       cardHeight = cardWidth / cardDims.aspectRatio;
     }
 
     cardWidth = roundToPixel(cardWidth);
     cardHeight = roundToPixel(cardHeight);
 
-    // Calculate Final Grid Bounding Box
     const gridWidth = roundToPixel(cardWidth * cardWidthUnitsToFit);
     const gridHeight = roundToPixel(cardHeight * cardHeightUnitsToFit);
 
@@ -203,7 +198,6 @@ export function useCardMap({
     const gridWidthPadded = roundToPixel(gridWidth - paddingX);
     const gridHeightPadded = roundToPixel(gridHeight - paddingY);
 
-    // Perfect Centering: Divide remaining screen space evenly
     const offsetX =
       widthMargin + (containerWidth - gridWidth) / 2 + paddingLeft * cardWidth;
     const offsetY =
@@ -238,129 +232,171 @@ export function useCardMap({
     screenWidthActual,
   ]);
 
-  const getZoneBasePos = (zone: MapZone) => {
-    const zWidth = zone.width === "full" ? 1 : (zone.width ?? 1);
-    const zHeight = zone.height ?? 1;
+  const zoneBasePosById = useMemo(() => {
+    const map = new Map<string, CardPosition>();
 
-    return {
-      x: roundToPixel(startX + zone.col * (cardWidth + gridGap)),
-      y: roundToPixel(startY + zone.row * (cardHeight + gridGap)),
-      width:
-        zone.width === "full"
-          ? gridWidthPadded
-          : roundToPixel(cardWidth * zWidth + gridGap * (zWidth - 1)),
-      height: roundToPixel(cardHeight * zHeight + gridGap * (zHeight - 1)),
-      zIndex: zone.baseZIndex,
-    } as CardPosition;
-  };
+    for (const zone of zones) {
+      const zWidth = zone.width === "full" ? 1 : (zone.width ?? 1);
+      const zHeight = zone.height ?? 1;
 
-  const getZoneStyles = (zone: MapZone) => {
-    const zonePos = getZoneBasePos(zone);
-
-    return {
-      position: "absolute",
-      top: zonePos.y,
-      left: zonePos.x,
-      width: zonePos.width,
-      height: zonePos.height,
-      zIndex: zonePos.zIndex,
-    } as ViewStyle;
-  };
-
-  const getZoneStylesById = (zoneId: string) => {
-    const zone = zones.find((z) => z.id === zoneId);
-    return (zone ? getZoneStyles(zone) : {}) as ViewStyle;
-  };
-
-  const getCardPosition = (
-    zone: MapZone,
-    totalCardsInZone: number,
-    baseZIndex: number,
-    cardIndex: number,
-  ) => {
-    const base = getZoneBasePos(zone);
-    let { x, y } = base;
-    let zIndex = baseZIndex + cardIndex;
-    let isHiddenUnderDeck = false;
-    let fanOffset = zone.fan?.offset ?? cardDims.fanOffset;
-    let fanCenter = zone.fan?.center ?? true;
-    let numCardsVisible = zone.cards?.length ?? 1;
-
-    if (zone.fan) {
-      let visualIndex = cardIndex;
-
-      if (zone.fan.maxVisible !== undefined) {
-        numCardsVisible = Math.min(zone.fan.maxVisible, numCardsVisible);
-
-        const startVisible = Math.max(
-          0,
-          totalCardsInZone - zone.fan.maxVisible,
-        );
-        visualIndex = Math.max(0, cardIndex - startVisible);
-
-        if (cardIndex < startVisible) {
-          isHiddenUnderDeck = true;
-        }
-      }
-
-      const fanDirection = zone.fan.direction ?? "diagonal-depth";
-
-      const offsetX =
-        fanDirection === "left"
-          ? -fanOffset * cardWidth
-          : fanDirection === "right"
-            ? fanOffset * cardWidth
-            : fanDirection === "diagonal-depth"
-              ? fanOffset * cardWidth
-              : 0;
-
-      let offsetY =
-        fanDirection === "up"
-          ? -fanOffset * cardHeight
-          : fanDirection === "down"
-            ? fanOffset * cardHeight
-            : fanDirection === "diagonal-depth"
-              ? -fanOffset * cardHeight
-              : 0;
-
-      // Horizontal centering of cards within a zone with width > 1
-      if (
-        fanCenter &&
-        zone.width !== undefined &&
-        zone.width !== "full" &&
-        zone.width > 1
-      ) {
-        const fanSpanX = Math.abs(offsetX * (numCardsVisible - 1));
-        const deckWidthPx = cardWidth + fanSpanX;
-        const zoneWidthPx = base.width;
-        const centeringOffset = (zoneWidthPx - deckWidthPx) / 2;
-        const shiftForNegativeFan = offsetX < 0 ? fanSpanX : 0;
-
-        x += centeringOffset + shiftForNegativeFan;
-      }
-
-      // Vertical centering of cards within a zone with height > 1
-      if (fanCenter && zone.height !== undefined && zone.height > 1) {
-        const fanSpanY = Math.abs(offsetY * (numCardsVisible - 1));
-        const deckHeightPx = cardHeight + fanSpanY;
-        const zoneHeightPx = base.height;
-        const centeringOffset = (zoneHeightPx - deckHeightPx) / 2;
-        const shiftForNegativeFan = offsetY < 0 ? fanSpanY : 0;
-
-        y += centeringOffset + shiftForNegativeFan;
-      }
-
-      x += offsetX * visualIndex;
-      y += offsetY * visualIndex;
+      map.set(zone.id, {
+        x: roundToPixel(startX + zone.col * (cardWidth + gridGap)),
+        y: roundToPixel(startY + zone.row * (cardHeight + gridGap)),
+        width:
+          zone.width === "full"
+            ? gridWidthPadded
+            : roundToPixel(cardWidth * zWidth + gridGap * (zWidth - 1)),
+        height: roundToPixel(cardHeight * zHeight + gridGap * (zHeight - 1)),
+        zIndex: zone.baseZIndex ?? 1,
+      });
     }
 
-    return {
-      x: roundToPixel(x),
-      y: roundToPixel(y),
-      zIndex,
-      isHiddenUnderDeck,
-    };
-  };
+    return map;
+  }, [cardHeight, cardWidth, gridGap, gridWidthPadded, startX, startY, zones]);
+
+  const zoneById = useMemo(() => {
+    const map = new Map<string, MapZone>();
+    for (const zone of zones) {
+      map.set(zone.id, zone);
+    }
+    return map;
+  }, [zones]);
+
+  const getZoneBasePos = useCallback(
+    (zone: MapZone) => {
+      const cached = zoneBasePosById.get(zone.id);
+
+      if (cached) {
+        return cached;
+      }
+
+      return {
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+        zIndex: zone.baseZIndex ?? 1,
+      } as CardPosition;
+    },
+    [zoneBasePosById],
+  );
+
+  const getZoneStyles = useCallback(
+    (zone: MapZone) => {
+      const zonePos = getZoneBasePos(zone);
+
+      return {
+        position: "absolute",
+        top: zonePos.y,
+        left: zonePos.x,
+        width: zonePos.width,
+        height: zonePos.height,
+        zIndex: zonePos.zIndex,
+      } as ViewStyle;
+    },
+    [getZoneBasePos],
+  );
+
+  const getZoneStylesById = useCallback(
+    (zoneId: string) => {
+      const zone = zoneById.get(zoneId);
+      return (zone ? getZoneStyles(zone) : {}) as ViewStyle;
+    },
+    [getZoneStyles, zoneById],
+  );
+
+  const getCardPosition = useCallback(
+    (
+      zone: MapZone,
+      totalCardsInZone: number,
+      baseZIndex: number,
+      cardIndex: number,
+    ) => {
+      const base = getZoneBasePos(zone);
+      let { x, y } = base;
+      let zIndex = baseZIndex + cardIndex;
+      let isHiddenUnderDeck = false;
+      let fanOffset = zone.fan?.offset ?? cardDims.fanOffset;
+      let fanCenter = zone.fan?.center ?? true;
+      let numCardsVisible = zone.cards?.length ?? 1;
+
+      if (zone.fan) {
+        let visualIndex = cardIndex;
+
+        if (zone.fan.maxVisible !== undefined) {
+          numCardsVisible = Math.min(zone.fan.maxVisible, numCardsVisible);
+
+          const startVisible = Math.max(
+            0,
+            totalCardsInZone - zone.fan.maxVisible,
+          );
+          visualIndex = Math.max(0, cardIndex - startVisible);
+
+          if (cardIndex < startVisible) {
+            isHiddenUnderDeck = true;
+          }
+        }
+
+        const fanDirection = zone.fan.direction ?? "diagonal-depth";
+
+        const offsetX =
+          fanDirection === "left"
+            ? -fanOffset * cardWidth
+            : fanDirection === "right"
+              ? fanOffset * cardWidth
+              : fanDirection === "diagonal-depth"
+                ? fanOffset * cardWidth
+                : 0;
+
+        let offsetY =
+          fanDirection === "up"
+            ? -fanOffset * cardHeight
+            : fanDirection === "down"
+              ? fanOffset * cardHeight
+              : fanDirection === "diagonal-depth"
+                ? -fanOffset * cardHeight
+                : 0;
+
+        // Horizontal centering of cards within a zone with width > 1
+        if (
+          fanCenter &&
+          zone.width !== undefined &&
+          zone.width !== "full" &&
+          zone.width > 1
+        ) {
+          const fanSpanX = Math.abs(offsetX * (numCardsVisible - 1));
+          const deckWidthPx = cardWidth + fanSpanX;
+          const zoneWidthPx = base.width;
+          const centeringOffset = (zoneWidthPx - deckWidthPx) / 2;
+          const shiftForNegativeFan = offsetX < 0 ? fanSpanX : 0;
+
+          x += centeringOffset + shiftForNegativeFan;
+        }
+
+        // Vertical centering of cards within a zone with height > 1
+        if (fanCenter && zone.height !== undefined && zone.height > 1) {
+          const fanSpanY = Math.abs(offsetY * (numCardsVisible - 1));
+          const deckHeightPx = cardHeight + fanSpanY;
+          const zoneHeightPx = base.height;
+          const centeringOffset = (zoneHeightPx - deckHeightPx) / 2;
+          const shiftForNegativeFan = offsetY < 0 ? fanSpanY : 0;
+
+          y += centeringOffset + shiftForNegativeFan;
+        }
+
+        x += offsetX * visualIndex;
+        y += offsetY * visualIndex;
+      }
+
+      return {
+        x: roundToPixel(x),
+        y: roundToPixel(y),
+        zIndex,
+        isHiddenUnderDeck,
+      };
+    },
+    [cardHeight, cardWidth, getZoneBasePos],
+  );
 
   const cardPositions: Record<string, MappedCard> = useMemo(() => {
     const positionMap: Record<string, MappedCard> = {};
@@ -396,51 +432,73 @@ export function useCardMap({
     }
 
     return positionMap;
-  }, [game, zones, cardWidth, cardHeight, gridGap, startX, startY]);
+  }, [game, getCardPosition, zones]);
 
-  const mappedCards = Object.values(cardPositions).map((mappedCard) => {
-    return (
-      <AnimatedCard
-        key={mappedCard.card.id}
-        targetState={mappedCard}
-        cardWidth={cardWidth}
-        cardHeight={cardHeight}
-        cardSize={cardSize}
-        customBack={customBack}
-        {...cardMapper(mappedCard)}
-      />
-    );
-  });
-
-  const mapBackgrounds = (
-    <CardMapBackgrounds
-      zones={zones}
-      getZoneBasePos={getZoneBasePos}
-      zoneMapper={zoneMapper}
-      cardWidth={cardWidth}
-      cardHeight={cardHeight}
-    />
+  const mappedCards = useMemo(
+    () =>
+      Object.values(cardPositions).map((mappedCard) => (
+        <AnimatedCard
+          key={mappedCard.card.id}
+          targetState={mappedCard}
+          cardWidth={cardWidth}
+          cardHeight={cardHeight}
+          cardSize={cardSize}
+          customBack={customBack}
+          {...cardMapper(mappedCard)}
+        />
+      )),
+    [cardHeight, cardMapper, cardPositions, cardSize, cardWidth, customBack],
   );
 
-  const mapVisualizer = visualizer ? (
-    <CardMapVisualizer
-      zones={zones}
-      getZoneStyles={getZoneStyles}
-      startX={startX}
-      startY={startY}
-      gridWidth={gridWidth}
-      gridWidthPadded={gridWidthPadded}
-      gridHeight={gridHeight}
-      gridHeightPadded={gridHeightPadded}
-    />
-  ) : null;
+  const mapBackgrounds = useMemo(
+    () => (
+      <CardMapBackgrounds
+        zones={zones}
+        getZoneBasePos={getZoneBasePos}
+        zoneMapper={zoneMapper}
+        cardWidth={cardWidth}
+        cardHeight={cardHeight}
+      />
+    ),
+    [cardHeight, cardWidth, getZoneBasePos, zoneMapper, zones],
+  );
 
-  const cardMap = (
-    <>
-      {mapBackgrounds}
-      {mappedCards}
-      {mapVisualizer}
-    </>
+  const mapVisualizer = useMemo(
+    () =>
+      visualizer ? (
+        <CardMapVisualizer
+          zones={zones}
+          getZoneStyles={getZoneStyles}
+          startX={startX}
+          startY={startY}
+          gridWidth={gridWidth}
+          gridWidthPadded={gridWidthPadded}
+          gridHeight={gridHeight}
+          gridHeightPadded={gridHeightPadded}
+        />
+      ) : null,
+    [
+      getZoneStyles,
+      gridHeight,
+      gridHeightPadded,
+      gridWidth,
+      gridWidthPadded,
+      startX,
+      startY,
+      visualizer,
+      zones,
+    ],
+  );
+
+  const cardMap = useMemo(
+    () => (
+      <>
+        {mapBackgrounds}
+        {mappedCards}
+        {mapVisualizer}
+      </>
+    ),
+    [mapBackgrounds, mapVisualizer, mappedCards],
   );
 
   return {

@@ -1,7 +1,7 @@
 import { HexColor } from "@/data/games-data";
 import { Colors, FontWeight as FontFamilies } from "@/styles/styles";
 import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
-import { forwardRef } from "react";
+import { forwardRef, useMemo } from "react";
 import { Text as RNText } from "react-native";
 import type { TextProps as RNTextProps } from "react-native";
 
@@ -61,38 +61,33 @@ export const Text = forwardRef<React.ElementRef<typeof RNText>, TextProps>(
     } = props;
     const responsiveScale = useResponsiveScale();
 
-    const getFontSize = () => {
+    const fontSize = useMemo(() => {
       const baseSize =
         typeof size === "number"
           ? size
           : (Typography.size[size] ?? Typography.size["md"]);
 
       return baseSize * responsiveScale;
-    };
+    }, [responsiveScale, size]);
 
-    const getLineHeight = () => {
-      return getFontSize() * lineHeight;
-    };
-
-    const getTextColor = () => {
+    const textColor = useMemo(() => {
       if (dimRate)
         return setOpacity(color, parseFloat(dimRate.replace("%", "")) / 100);
       return color;
-    };
+    }, [color, dimRate]);
 
-    const getFontFamily = () => {
-      return Typography.fontFamily[weight];
-    };
+    const fontFamily = Typography.fontFamily[weight];
+    const resolvedLineHeight = fontSize * lineHeight;
 
     return (
       <RNText
         style={[
           {
-            fontSize: getFontSize(),
-            fontFamily: getFontFamily(),
-            color: getTextColor(),
+            fontSize,
+            fontFamily,
+            color: textColor,
             textTransform,
-            lineHeight: getLineHeight(),
+            lineHeight: resolvedLineHeight,
             flexShrink: 1,
           },
           style,

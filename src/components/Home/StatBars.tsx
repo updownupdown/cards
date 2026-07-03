@@ -21,7 +21,13 @@ export const StatBars = ({
       }}
     >
       {Object.entries(stats).map(([key, value]) => (
-        <StatBar key={key} label={key} value={value} fillColor={gameColor} />
+        <StatBar
+          key={key}
+          label={key}
+          value={value}
+          fillColor={gameColor}
+          responsiveScale={responsiveScale}
+        />
       ))}
     </View>
   );
@@ -31,12 +37,13 @@ export const StatBar = ({
   label,
   value,
   fillColor,
+  responsiveScale,
 }: {
   label: string;
   value: number;
   fillColor: string;
+  responsiveScale: number;
 }) => {
-  const responsiveScale = useResponsiveScale();
   const statTrackHeight = Math.round(8 * responsiveScale);
 
   return (

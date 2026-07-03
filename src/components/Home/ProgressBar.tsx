@@ -8,6 +8,20 @@ import { Text } from "../common/Text";
 import { flexStyles } from "@/styles/flexStyles";
 import { textStyles } from "@/styles/textStyles";
 
+const PROGRESS_COLORS = {
+  red: Colors.buttonRed,
+  orange: Colors.buttonOrange,
+  green: Colors.buttonGreen,
+  purple: Colors.buttonPurple,
+  blue: Colors.buttonBlue,
+} as const;
+
+const TRANSITION_STYLE = {
+  transitionDuration: "0.4s",
+  transitionProperty: "all",
+  transitionTimingFunction: "ease",
+} as const;
+
 interface Props {
   totalValue: number;
   progressValue: number;
@@ -46,25 +60,8 @@ export const ProgressBar = ({
   const clamp = (value: number, min: number, max: number) =>
     Math.min(Math.max(value, min), max);
 
-  let progressColor = color;
-
-  switch (color) {
-    case "red":
-      progressColor = Colors.buttonRed;
-      break;
-    case "orange":
-      progressColor = Colors.buttonOrange;
-      break;
-    case "green":
-      progressColor = Colors.buttonGreen;
-      break;
-    case "purple":
-      progressColor = Colors.buttonPurple;
-      break;
-    case "blue":
-      progressColor = Colors.buttonBlue;
-      break;
-  }
+  const progressColor =
+    PROGRESS_COLORS[color as keyof typeof PROGRESS_COLORS] ?? color;
 
   const normalizedProgress =
     totalValue > 0 ? clamp(progressValue / totalValue, 0, 1) : 0;
@@ -203,9 +200,7 @@ export const ProgressBar = ({
       <View
         style={[
           {
-            transitionDuration: "0.4s",
-            transitionProperty: "all",
-            transitionTimingFunction: "ease",
+            ...TRANSITION_STYLE,
             position: "absolute",
             zIndex: 1,
             width: progressWidth,
@@ -225,9 +220,7 @@ export const ProgressBar = ({
       <View
         style={[
           {
-            transitionDuration: "0.4s",
-            transitionProperty: "all",
-            transitionTimingFunction: "ease",
+            ...TRANSITION_STYLE,
             position: "absolute",
             zIndex: 2,
             width: previewProgressWidth,

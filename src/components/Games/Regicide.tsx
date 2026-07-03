@@ -768,6 +768,7 @@ export default function Regicide() {
         cards: game.castleDeck,
         placeholder: { infoPos: "above", text: "Castle" },
         fan: { maxVisible: 3 },
+        baseZIndex: 30,
       },
       {
         id: "tavernDeck",
@@ -777,6 +778,7 @@ export default function Regicide() {
         cards: game.tavernDeck,
         placeholder: { infoPos: "above", text: "Tavern" },
         fan: { maxVisible: 3 },
+        baseZIndex: 30,
       },
       {
         id: "jestersDeck",
@@ -786,6 +788,7 @@ export default function Regicide() {
         cards: game.jestersDeck,
         placeholder: { infoPos: "above", text: "Jesters" },
         fan: { maxVisible: 3 },
+        baseZIndex: 30,
       },
       {
         id: "discardPile",
@@ -794,6 +797,7 @@ export default function Regicide() {
         cards: game.discardPile,
         placeholder: { infoPos: "above", text: "Discard" },
         fan: { maxVisible: 3 },
+        baseZIndex: 40,
       },
 
       // Enemy
@@ -803,12 +807,14 @@ export default function Regicide() {
         row: 1.1,
         width: 4,
         height: 1.2,
+        baseZIndex: 1,
       },
       {
         id: "currentEnemy",
         col: 0.16,
         row: 1.2,
         cards: game.currentEnemy?.card ? [game.currentEnemy.card] : undefined,
+        baseZIndex: 10,
       },
       {
         id: "enemyStats",
@@ -816,10 +822,18 @@ export default function Regicide() {
         row: 1.2,
         width: 2.55,
         height: 1,
+        baseZIndex: 2,
       },
 
       // Actions
-      { id: "actions", col: 0, row: 2.25, width: 4, height: 0.8 },
+      {
+        id: "actions",
+        col: 0,
+        row: 2.25,
+        width: 4,
+        height: 0.8,
+        baseZIndex: 2,
+      },
 
       // Hand
       {
@@ -830,6 +844,7 @@ export default function Regicide() {
         width: 4,
         cards: game.hand,
         fan: { direction: "right", offset: 0.53 },
+        baseZIndex: 10,
       },
     ];
   }, [game]);

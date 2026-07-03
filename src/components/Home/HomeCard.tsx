@@ -1,7 +1,6 @@
 import { Text } from "@/components/common/Text";
 import { GAME_THUMBNAIL_ASSETS } from "@/data/game-thumbnails";
 import { GameMenuInfo } from "@/data/games-data";
-import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 import { Icon } from "@/icons";
 import { Colors, rgba } from "@/styles/styles";
 import { roundToPixel } from "@/utils/utils";
@@ -19,6 +18,7 @@ type Props = {
   onToggleFavorite?: (path: string) => void;
   isFavorite: boolean;
   isLarge?: boolean;
+  responsiveScale: number;
 };
 
 export function HomeCard({
@@ -27,16 +27,17 @@ export function HomeCard({
   onToggleFavorite,
   isFavorite,
   isLarge = false,
+  responsiveScale,
 }: Props) {
-  const responsiveScale = useResponsiveScale();
+  const scale = responsiveScale;
 
-  const borderRadius = roundToPixel(12 * responsiveScale);
-  const padding = isLarge ? roundToPixel(22 * responsiveScale) : 0;
-  const spacingUnit = roundToPixel(20 * responsiveScale);
-  const shadowUnit = roundToPixel(2 * responsiveScale);
-  const smallCardHeight = roundToPixel(58 * responsiveScale);
+  const borderRadius = roundToPixel(12 * scale);
+  const padding = isLarge ? roundToPixel(22 * scale) : 0;
+  const spacingUnit = roundToPixel(20 * scale);
+  const shadowUnit = roundToPixel(2 * scale);
+  const smallCardHeight = roundToPixel(58 * scale);
   const height = isLarge ? undefined : smallCardHeight;
-  const favBtnSize = roundToPixel(40 * responsiveScale);
+  const favBtnSize = roundToPixel(40 * scale);
   const favBtnInset = roundToPixel(
     isLarge ? padding * 0.25 : smallCardHeight / 2 - favBtnSize / 2,
   );
@@ -68,7 +69,7 @@ export function HomeCard({
           >
             <View
               style={{
-                gap: roundToPixel(8 * responsiveScale),
+                gap: roundToPixel(8 * scale),
                 flex: 1,
                 height: isLarge ? undefined : "100%",
                 justifyContent: isLarge ? undefined : "center",
@@ -104,7 +105,7 @@ export function HomeCard({
             {/* Thumbnail */}
             <View
               style={{
-                borderRadius: roundToPixel(8 * responsiveScale),
+                borderRadius: roundToPixel(8 * scale),
                 borderTopLeftRadius: isLarge ? undefined : 0,
                 borderBottomLeftRadius: isLarge ? undefined : 0,
                 width: "35%",
@@ -151,7 +152,7 @@ export function HomeCard({
             width: favBtnSize,
             height: favBtnSize,
 
-            borderRadius: roundToPixel(8 * responsiveScale),
+            borderRadius: roundToPixel(8 * scale),
             backgroundColor: isLarge ? rgba(Colors.black, 0.6) : undefined,
           },
         ]}
