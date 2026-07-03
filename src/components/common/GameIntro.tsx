@@ -83,7 +83,7 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
             {
               maxHeight: "100%",
               borderRadius: modalBorderRadius,
-              backgroundColor: rgba(Colors.K900, 0.97),
+              backgroundColor: rgba(Colors.black, 0.94),
               boxShadow: modalShadow,
               width: "100%",
               maxWidth: containerWidth,

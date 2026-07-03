@@ -442,8 +442,6 @@ export default function DeadCenter() {
 
       return {
         selectColor,
-        forceOverlayColor: selectColor === "red",
-        forceSelectColor: selectColor === "red",
         isVisible: !zombie.dead,
         onPress: () => {
           if (canReveal) {

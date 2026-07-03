@@ -83,7 +83,7 @@ export function HomeCard({
                   color: game.cardColorText,
                   paddingLeft: isLarge
                     ? undefined
-                    : roundToPixel(favBtnSize * 1.25),
+                    : roundToPixel(favBtnSize * 1.3),
                 }}
               >
                 {game.title}

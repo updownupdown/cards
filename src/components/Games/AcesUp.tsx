@@ -351,9 +351,8 @@ export default function AcesUp() {
           size="medium-large"
           onPress={dealCards}
           fullWidth
-          style={[{ height: "100%" }]}
+          taller
           disabled={game.draw.length === 0 || game.ended}
-          theme={cardText}
         />
       </View>
     </GameWrapper>

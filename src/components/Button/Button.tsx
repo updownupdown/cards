@@ -28,7 +28,7 @@ interface Props {
   textStyle?: TextStyle | TextStyle[];
   size?: "extra-small" | "small" | "medium" | "medium-large" | "large";
   textOnly?: boolean;
-  theme?: string;
+  theme?: string | HexColor;
   disabled?: boolean;
   fullWidth?: boolean;
   onPress: () => void;
@@ -69,8 +69,9 @@ export const Button = ({
   const scale = useResponsiveScale();
 
   const fallbackColor = textOnly ? Colors.brightBlue : Colors.buttonBlue;
-  let themeColor: HexColor =
+  let themeColor: string =
     (theme && THEME_COLORS[theme as keyof typeof THEME_COLORS]) ||
+    theme ||
     fallbackColor;
 
   if (disabled) {

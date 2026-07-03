@@ -284,8 +284,7 @@ export default function Golf() {
           text="Draw"
           size="medium-large"
           fullWidth
-          style={[{ height: "100%" }]}
-          theme={cardText}
+          taller
         />
       </View>
     </GameWrapper>

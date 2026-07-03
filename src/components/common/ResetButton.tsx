@@ -120,8 +120,8 @@ export const styles = StyleSheet.create({
     height: HeaderButtonSize,
 
     borderRadius: HeaderButtonSize / 2,
-    backgroundColor: rgba(Colors.K900, 0.9),
-    boxShadow: `1px 2px 6px ${rgba(Colors.K900, 0.5)}, 2px 4px 20px ${rgba(Colors.K900, 0.5)}`,
+    backgroundColor: rgba(Colors.black, 0.8),
+    boxShadow: `1px 2px 6px ${rgba(Colors.black, 0.4)}, 2px 4px 20px ${rgba(Colors.black, 0.4)}`,
   },
   resetHintText: {
     color: Colors.K100,
@@ -134,6 +134,6 @@ export const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     left: 0,
-    backgroundColor: rgba(Colors.accentRed, 0.7),
+    backgroundColor: rgba(Colors.lose, 0.7),
   },
 });

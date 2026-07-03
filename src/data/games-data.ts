@@ -23,7 +23,7 @@ export type GameStats = {
   luck: number;
 };
 
-const DEFAULT_GAME_THUMBNAIL: GameThumbnailName = "MonteCarlo.jpg";
+const DEFAULT_GAME_THUMBNAIL: GameThumbnailName = "DefaultThumbnail.jpg";
 
 export type GameMenuInfo = {
   title: string;
@@ -50,8 +50,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     title: "Scoundrel",
     thumbnail: "Scoundrel.jpg",
     cardBack: "Scoundrel.png",
-    cardColorBg: "#272319",
-    cardColorText: "#ffedd7",
+    cardColorBg: "#1d2a2e",
+    cardColorText: "#ced19c",
     cardDescription:
       "A dungeon crawl where you manage weapon strength and potion usage.",
     stats: {
@@ -244,7 +244,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     title: "Area 52",
     thumbnail: "Area52.jpg",
     cardBack: "Area52.png",
-    cardColorBg: "#2e1825",
+    cardColorBg: "#2a2836",
     cardColorText: "#b5faff",
     cardDescription:
       "Fight off waves of alien invaders before running out of defenders.",
@@ -278,8 +278,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     title: "The Sandwich Guy",
     thumbnail: "SandwichGuy.jpg",
     cardBack: "SandwichGuy.png",
-    cardColorBg: "#162926",
-    cardColorText: "#a8f7e9",
+    cardColorBg: "#102524",
+    cardColorText: "#b0eee9",
     cardDescription:
       "Serve sandwiches by selecting evenly spaced cards; don't let your ingredients run out!",
     stats: {
@@ -311,8 +311,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     title: "Dead Center",
     thumbnail: "DeadCenter.jpg",
     cardBack: "DeadCenter.png",
-    cardColorBg: "#0f2519",
-    cardColorText: "#e6a59c",
+    cardColorBg: "#0f2430",
+    cardColorText: "#f7d1ca",
     cardDescription:
       "Defend your cabin against a siege of zombies, using supporting cards strategically.",
     stats: {
@@ -410,7 +410,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     title: "The Emissary",
     thumbnail: "Emissary.jpg",
     cardBack: "TheEmissary.png",
-    cardColorBg: "#1b1531",
+    cardColorBg: "#221c35",
     cardColorText: "#acdeff",
     cardDescription:
       "Win exactly the right number of debates in each kingdom while managing one-time advisors.",
@@ -441,8 +441,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     title: "The Boba Tea Shop",
     thumbnail: "BobaTea.jpg",
     cardBack: "BobaTeaShop.png",
-    cardColorBg: "#2b261c",
-    cardColorText: "#cfbc92",
+    cardColorBg: "#2b1c29",
+    cardColorText: "#eed5a0",
     cardDescription:
       "A push-your-luck game where you must manage ordered queues of customers.",
     stats: {
@@ -468,8 +468,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   "/syndicate": {
     title: "Syndicate",
     thumbnail: "Syndicate.jpg",
-    cardColorBg: "#142c24",
-    cardColorText: "#c4f1e7",
+    cardColorBg: "#252220",
+    cardColorText: "#b2eee1",
     cardDescription:
       "Stategically promote members and candidates to the top of the syndicate hierarchy.",
     stats: {
@@ -490,8 +490,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     title: "Hide and Seek",
     thumbnail: "HideAndSeek.jpg",
     cardBack: "HideAndSeek.png",
-    cardColorBg: "#152927",
-    cardColorText: "#91f1b9",
+    cardColorBg: "#221815",
+    cardColorText: "#c5f7da",
     cardDescription:
       "Find your hidden playmates through careful planning and deduction.",
     stats: {
@@ -512,7 +512,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     title: "Loot the Loop",
     thumbnail: "LootTheLoop.jpg",
     cardBack: "LootTheLoop.png",
-    cardColorBg: "#2e1c15",
+    cardColorBg: "#2e151f",
     cardColorText: "#eeddb8",
     cardDescription:
       "Capture scoring loop cards while preserving momentum and avoiding disruptive breaks.",
@@ -537,8 +537,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     title: "Monte Carlo",
     thumbnail: "MonteCarlo.jpg",
     cardBack: "MonteCarlo.png",
-    cardColorBg: "#242b33",
-    cardColorText: "#c6d3e9",
+    cardColorBg: "#222f3d",
+    cardColorText: "#b1dada",
     cardDescription:
       "Clear the grid by matching adjacent cards and strategically consolidating.",
     stats: {
@@ -579,8 +579,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     title: "Accordion",
     thumbnail: "Accordion.jpg",
     cardBack: "Accordion.png",
-    cardColorBg: "#36141a",
-    cardColorText: "#f6ffcf",
+    cardColorBg: "#351219",
+    cardColorText: "#fffccf",
     cardDescription:
       "Compress a wide spread of cards by jumping matches one or three positions left.",
     stats: {
@@ -600,8 +600,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     title: "Aces Up",
     thumbnail: "AcesUp.jpg",
     cardBack: "AcesUp.png",
-    cardColorBg: "#1b150f",
-    cardColorText: "#dbffeb",
+    cardColorBg: "#1d0f0a",
+    cardColorText: "#eee0ca",
     cardDescription:
       "Strip each suit down to its Ace by discarding weaker visible cards.",
     stats: {
@@ -642,8 +642,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     title: "Clock Solitaire",
     thumbnail: "Clock.jpg",
     cardBack: "Clock.png",
-    cardColorBg: "#251c12",
-    cardColorText: "#eee1d2",
+    cardColorBg: "#1d1610",
+    cardColorText: "#eed9c2",
     cardDescription:
       "Flip by all the cards around the clock dial before all the kings are revealed.",
     stats: {

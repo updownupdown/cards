@@ -2,7 +2,7 @@ import { Text } from "@/components/common/Text";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles, transitionStyles } from "@/styles/flexStyles";
-import { Colors, FontWeight } from "@/styles/styles";
+import { Colors, FontWeight, rgba } from "@/styles/styles";
 import { delay } from "@/utils/utils";
 import { produce } from "immer";
 import { useMemo, useState } from "react";
@@ -498,7 +498,7 @@ export default function TheBobaTeaShop() {
                 ]}
               >
                 {Array.from({ length: 3 }, (_, i) => {
-                  let bgColor: string = Colors.K900;
+                  let bgColor: string | undefined = undefined;
 
                   if (i < discardCount) {
                     if (i === 0) bgColor = Colors.cardSelectGreen;
@@ -516,8 +516,8 @@ export default function TheBobaTeaShop() {
                           width: 8,
                           height: 8,
                           borderRadius: 4,
-                          backgroundColor: bgColor,
-                          boxShadow: `0 0 3px ${bgColor}`,
+                          backgroundColor: bgColor ?? rgba(Colors.black, 0.5),
+                          boxShadow: bgColor ? `0 0 3px ${bgColor}` : undefined,
                         },
                       ]}
                     />
@@ -657,8 +657,8 @@ export default function TheBobaTeaShop() {
             }}
             disabled={game.selectedPos === undefined}
             theme="purple"
-            fullWidth
             taller
+            style={{ flex: 1 }}
           />
         )}
 
@@ -675,7 +675,7 @@ export default function TheBobaTeaShop() {
                 }
               }}
               disabled={game.selectedPos === undefined}
-              fullWidth
+              style={{ flex: 1 }}
               taller
             />
             <Button
@@ -686,8 +686,8 @@ export default function TheBobaTeaShop() {
                 }
               }}
               disabled={game.selectedPos === undefined}
-              fullWidth
               taller
+              style={{ flex: 1 }}
             />
           </>
         )}

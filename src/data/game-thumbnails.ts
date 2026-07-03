@@ -1,4 +1,5 @@
 export const GAME_THUMBNAIL_ASSETS = {
+  "DefaultThumbnail.jpg": require("../../assets/thumbnails/DefaultThumbnail.jpg"),
   "Accordion.jpg": require("../../assets/thumbnails/Accordion.jpg"),
   "AcesUp.jpg": require("../../assets/thumbnails/AcesUp.jpg"),
   "Area52.jpg": require("../../assets/thumbnails/Area52.jpg"),
