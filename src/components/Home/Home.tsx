@@ -14,6 +14,8 @@ import { SettingsModal } from "./SettingsModal";
 import { StatsModal } from "./StatsModal";
 
 const FEATURED_GAME_PATHS: string[] = [
+  "/scoundrel",
+  "/regicide",
   "/loot-the-loop",
   "/dead-center",
   "/area-52",
@@ -109,11 +111,13 @@ export default function Home() {
                   {
                     pointerEvents: "box-none",
                     height: headerHeight,
-                    paddingHorizontal: HomePadding * responsiveScale,
+                    paddingLeft: HomePadding * responsiveScale,
+                    // Less right padding to account for button padding
+                    paddingRight: HomePadding * responsiveScale * 0.5,
                   },
                 ]}
               >
-                <Text size="lg" weight={300} style={[flexStyles.flex1]}>
+                <Text size="xl" weight={200} style={[flexStyles.flex1]}>
                   Solo Suite
                 </Text>
 

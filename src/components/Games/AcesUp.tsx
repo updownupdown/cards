@@ -348,7 +348,7 @@ export default function AcesUp() {
       <View style={[getZoneStylesById("button")]}>
         <Button
           text="Deal"
-          size="medium-large"
+          size="lg"
           onPress={dealCards}
           fullWidth
           taller

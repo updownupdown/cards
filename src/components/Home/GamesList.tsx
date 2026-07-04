@@ -16,7 +16,9 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ScrollView, View, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { DiscoverFilters } from "@/components/Home/DiscoverFilters";
+import { Button } from "@/components/Button/Button";
 import { HomeCard } from "./HomeCard";
+import { router, type Href } from "expo-router";
 
 type CardSize = "small" | "medium" | "large";
 
@@ -48,6 +50,10 @@ export const GamesList = ({ sections, header }: GamesListProps) => {
   const [playedFrequentlyPaths, setPlayedFrequentlyPaths] = useState<
     Set<string>
   >(new Set());
+  const [attemptsByPath, setAttemptsByPath] = useState<Record<string, number>>(
+    {},
+  );
+  const [hasLoadedGameSettings, setHasLoadedGameSettings] = useState(false);
   const [selectedTag, setSelectedTag] = useState<GameTag | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -95,6 +101,17 @@ export const GamesList = ({ sections, header }: GamesListProps) => {
     });
   }, [allEnabledGames, searchQuery, selectedTag]);
 
+  const allEnabledGamePaths = useMemo(
+    () => allEnabledGames.map(([path]) => path),
+    [allEnabledGames],
+  );
+
+  const unplayedEnabledGamePaths = useMemo(
+    () =>
+      allEnabledGamePaths.filter((path) => (attemptsByPath[path] ?? 0) === 0),
+    [allEnabledGamePaths, attemptsByPath],
+  );
+
   const tagResultCounts = useMemo(() => {
     const normalizedQuery = searchQuery.trim().toLowerCase();
     const counts: Partial<Record<GameTag, number>> = {};
@@ -122,24 +139,40 @@ export const GamesList = ({ sections, header }: GamesListProps) => {
   useEffect(() => {
     let cancelled = false;
 
-    Promise.all([
-      loadFavoriteGames(),
-      loadRecentlyPlayedGames(),
-      loadGameSettingsMap(),
-    ]).then(([loadedFavorites, loadedRecent, loadedGameSettings]) => {
-      if (!cancelled) {
+    (async () => {
+      try {
+        const [loadedFavorites, loadedRecent, loadedGameSettings] =
+          await Promise.all([
+            loadFavoriteGames(),
+            loadRecentlyPlayedGames(),
+            loadGameSettingsMap(),
+          ]);
+
+        if (cancelled) return;
+
         setFavorites(loadedFavorites);
         setRecentPaths(loadedRecent.map((entry) => entry.path));
 
         const frequentlyPlayed = new Set<string>();
+        const loadedAttemptsByPath: Record<string, number> = {};
+
         Object.entries(loadedGameSettings).forEach(([path, gameSettings]) => {
-          if ((gameSettings.stats?.attempts ?? 0) >= 3) {
+          const attempts = gameSettings.stats?.attempts ?? 0;
+          loadedAttemptsByPath[path] = attempts;
+
+          if (attempts >= 3) {
             frequentlyPlayed.add(path);
           }
         });
+
+        setAttemptsByPath(loadedAttemptsByPath);
         setPlayedFrequentlyPaths(frequentlyPlayed);
+      } finally {
+        if (!cancelled) {
+          setHasLoadedGameSettings(true);
+        }
       }
-    });
+    })();
 
     return () => {
       cancelled = true;
@@ -159,6 +192,24 @@ export const GamesList = ({ sections, header }: GamesListProps) => {
     const updated = await toggleFavoriteGame(path);
     setFavorites(new Set(updated));
   }
+
+  const getRandomPath = (paths: string[]) => {
+    if (paths.length === 0) return null;
+    const randomIndex = Math.floor(Math.random() * paths.length);
+    return paths[randomIndex];
+  };
+
+  const onPlayRandomAllGames = () => {
+    const randomPath = getRandomPath(allEnabledGamePaths);
+    if (!randomPath) return;
+    router.push(randomPath as Href);
+  };
+
+  const onPlayRandomUnplayedGames = () => {
+    const randomPath = getRandomPath(unplayedEnabledGamePaths);
+    if (!randomPath) return;
+    router.push(randomPath as Href);
+  };
 
   const getGamesForSection = (section: HomeSectionConfig) => {
     const gameEntries = Object.entries(GAMES_DATA) as [string, GameMenuInfo][];
@@ -218,14 +269,19 @@ export const GamesList = ({ sections, header }: GamesListProps) => {
           },
         ]}
       >
-        <Icon name={section.iconName} size={20} color={Colors.K400} />
+        <Icon
+          name={section.iconName}
+          size={roundToPixel(24 * scale)}
+          color={Colors.K400}
+        />
 
         <Text
           style={[flexStyles.flex1]}
           weight={300}
-          size="xs"
+          size="sm"
           textTransform="uppercase"
           color={Colors.K400}
+          lineHeight={1}
         >
           {section.title}
         </Text>
@@ -300,14 +356,48 @@ export const GamesList = ({ sections, header }: GamesListProps) => {
           width: "100%",
           maxWidth: contentMaxWidth,
           alignSelf: "center",
-          gap: roundToPixel(12 * scale),
         }}
       >
+        <View
+          style={[
+            flexStyles.rowCentered,
+            flexStyles.fullWidth,
+            {
+              paddingHorizontal: pageSidePadding,
+              paddingVertical: roundToPixel(28 * scale),
+              gap: roundToPixel(24 * scale),
+            },
+          ]}
+        >
+          <Text size="md" weight={300} color={Colors.K200} style={{ flex: 1 }}>
+            Play random:
+          </Text>
+
+          <Button
+            text="All games"
+            uppercase={false}
+            size="md"
+            onPress={onPlayRandomAllGames}
+            textOnly
+          />
+
+          <Button
+            text="Unplayed games"
+            uppercase={false}
+            size="md"
+            onPress={onPlayRandomUnplayedGames}
+            disabled={
+              !hasLoadedGameSettings || unplayedEnabledGamePaths.length === 0
+            }
+            textOnly
+          />
+        </View>
+
         <View
           style={{
             width: "100%",
             paddingHorizontal: pageSidePadding,
-            paddingTop: roundToPixel(14 * scale),
+            paddingTop: roundToPixel(6 * scale),
             flexDirection: "row",
             flexWrap: "wrap",
             justifyContent: "space-between",

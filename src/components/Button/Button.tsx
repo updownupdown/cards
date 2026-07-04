@@ -1,4 +1,5 @@
-import { Text } from "@/components/common/Text";
+import { Text, Typography } from "@/components/common/Text";
+import type { TextSize } from "@/components/common/Text";
 import { Icon, IconName } from "@/icons";
 import { Colors, FontWeight, rgba } from "@/styles/styles";
 import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
@@ -26,7 +27,7 @@ const THEME_COLORS = {
 interface Props {
   style?: ViewStyle | ViewStyle[];
   textStyle?: TextStyle | TextStyle[];
-  size?: "extra-small" | "small" | "medium" | "medium-large" | "large";
+  size?: TextSize;
   textOnly?: boolean;
   theme?: string | HexColor;
   disabled?: boolean;
@@ -48,7 +49,7 @@ interface Props {
 export const Button = ({
   style,
   textStyle,
-  size = "medium",
+  size = "md",
   textOnly = false,
   disabled,
   fullWidth,
@@ -78,21 +79,12 @@ export const Button = ({
     themeColor = Colors.buttonDisabled;
   }
 
-  const sizeMultiplier: Record<
-    "extra-small" | "small" | "medium" | "medium-large" | "large",
-    number
-  > = {
-    "extra-small": 0.64,
-    small: 0.78,
-    medium: 1,
-    "medium-large": 1.16,
-    large: 1.32,
-  };
-  const sizeScale = sizeMultiplier[size];
+  const baseFontSize = Typography.size[size];
+  const sizeScale = baseFontSize / Typography.size.md;
 
-  let fontSize = roundToPixel(16 * scale * sizeScale);
+  let fontSize = roundToPixel(baseFontSize * scale);
   let height: number | undefined = roundToPixel(
-    40 * scale * sizeScale * (taller ? 1.26 : 1),
+    40 * scale * sizeScale * (taller ? 1.4 : 1),
   );
   let borderRadius = height / 2;
   let gap = height / 6;

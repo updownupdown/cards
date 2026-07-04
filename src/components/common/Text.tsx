@@ -7,13 +7,13 @@ import type { TextProps as RNTextProps } from "react-native";
 
 export const Typography = {
   size: {
-    xxs: 12,
-    xs: 14,
+    xxs: 11,
+    xs: 13,
     sm: 15,
-    md: 18,
-    lg: 20,
-    xl: 22,
-    xxl: 24,
+    md: 17,
+    lg: 18,
+    xl: 20,
+    xxl: 22,
   },
   fontFamily: {
     200: FontFamilies[200],
@@ -32,6 +32,9 @@ export const Typography = {
 export type TextWeight = keyof typeof Typography.fontFamily;
 export type TextSize = keyof typeof Typography.size;
 
+export const getScaledTextSize = (size: TextSize, scale: number) =>
+  Typography.size[size] * scale;
+
 export const setOpacity = (hex: string, alpha: number) =>
   `${hex}${Math.floor(alpha * 255)
     .toString(16)
@@ -39,7 +42,7 @@ export const setOpacity = (hex: string, alpha: number) =>
 
 export interface TextProps extends RNTextProps {
   color?: string | HexColor;
-  size?: TextSize | number;
+  size?: TextSize;
   lineHeight?: number;
   weight?: TextWeight;
   dimRate?: `${number}%`;
@@ -62,12 +65,7 @@ export const Text = forwardRef<React.ElementRef<typeof RNText>, TextProps>(
     const responsiveScale = useResponsiveScale();
 
     const fontSize = useMemo(() => {
-      const baseSize =
-        typeof size === "number"
-          ? size
-          : (Typography.size[size] ?? Typography.size["md"]);
-
-      return baseSize * responsiveScale;
+      return getScaledTextSize(size, responsiveScale);
     }, [responsiveScale, size]);
 
     const textColor = useMemo(() => {

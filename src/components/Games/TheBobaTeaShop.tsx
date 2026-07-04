@@ -1,12 +1,13 @@
 import { Text } from "@/components/common/Text";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useFade } from "@/hooks/useFade";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles, transitionStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight, rgba } from "@/styles/styles";
 import { delay } from "@/utils/utils";
 import { produce } from "immer";
 import { useMemo, useState } from "react";
-import { Pressable, View } from "react-native";
+import { Animated, Pressable, StyleSheet, View } from "react-native";
 import { Button } from "../Button/Button";
 import {
   AnimatedCardMapping,
@@ -147,6 +148,8 @@ function evaluateEnd(state: GameState): { ended: boolean; won: boolean } {
 export default function TheBobaTeaShop() {
   const { zoneBg, cardText } = useGameZoneBackground();
   const [showDeckPreview, setShowDeckPreview] = useState(false);
+  const [isResolvingCustomerAction, setIsResolvingCustomerAction] =
+    useState(false);
 
   const {
     isLoaded,
@@ -168,9 +171,27 @@ export default function TheBobaTeaShop() {
   const score = useMemo(() => totalInQueues(game.queues), [game.queues]);
 
   const nextCustomerRevealed = useMemo(
-    () => top(game.deck)?.faceUp,
+    () => !!top(game.deck)?.faceUp,
     [game.deck],
   );
+
+  const showSelectQueuePrompt =
+    !isResolvingCustomerAction && !nextCustomerRevealed && !game.selectedPos;
+  const showRevealNextCustomerButton =
+    !isResolvingCustomerAction && !nextCustomerRevealed && !!game.selectedPos;
+  const showDecisionButtons =
+    !isResolvingCustomerAction && nextCustomerRevealed && !!game.decisionNeeded;
+
+  const {
+    isRendered: renderSelectQueuePrompt,
+    opacity: selectQueuePromptOpacity,
+  } = useFade(showSelectQueuePrompt, 220);
+  const {
+    isRendered: renderRevealNextCustomerButton,
+    opacity: revealNextCustomerButtonOpacity,
+  } = useFade(showRevealNextCustomerButton, 220);
+  const { isRendered: renderDecisionButtons, opacity: decisionButtonsOpacity } =
+    useFade(showDecisionButtons, 220);
 
   // ===== Reveal Next Customer ===== //
   async function revealNextCustomer(gameState: GameState) {
@@ -180,37 +201,43 @@ export default function TheBobaTeaShop() {
     )
       return;
 
-    saveUndoState(structuredClone(gameState));
+    setIsResolvingCustomerAction(true);
 
-    const { selectedPos } = gameState;
-    const topCard = top(gameState.deck)!;
-    const targetQueue = gameState.queues[selectedPos.queueIndex];
-    const nextCustomerFits = checkNextCustomerFits(
-      selectedPos,
-      topCard,
-      targetQueue,
-    );
+    try {
+      saveUndoState(structuredClone(gameState));
 
-    setGame(
-      produce(gameState, (draft) => {
-        draft.deck[draft.deck.length - 1].faceUp = true;
+      const { selectedPos } = gameState;
+      const topCard = top(gameState.deck)!;
+      const targetQueue = gameState.queues[selectedPos.queueIndex];
+      const nextCustomerFits = checkNextCustomerFits(
+        selectedPos,
+        topCard,
+        targetQueue,
+      );
 
-        if (nextCustomerFits) {
-          const customer = draft.deck.pop()!;
-          draft.queues[selectedPos.queueIndex].splice(
-            selectedPos.cardIndex,
-            0,
-            customer,
-          );
-          draft.selectedPos = undefined;
-          const { ended, won } = evaluateEnd(draft as GameState);
-          draft.ended = ended;
-          draft.won = won;
-        } else {
-          draft.decisionNeeded = true;
-        }
-      }),
-    );
+      setGame(
+        produce(gameState, (draft) => {
+          draft.deck[draft.deck.length - 1].faceUp = true;
+
+          if (nextCustomerFits) {
+            const customer = draft.deck.pop()!;
+            draft.queues[selectedPos.queueIndex].splice(
+              selectedPos.cardIndex,
+              0,
+              customer,
+            );
+            draft.selectedPos = undefined;
+            const { ended, won } = evaluateEnd(draft as GameState);
+            draft.ended = ended;
+            draft.won = won;
+          } else {
+            draft.decisionNeeded = true;
+          }
+        }),
+      );
+    } finally {
+      setIsResolvingCustomerAction(false);
+    }
   }
 
   // ===== Let Customer Stay ===== //
@@ -218,24 +245,30 @@ export default function TheBobaTeaShop() {
     if (!top(gameState.deck) || gameState.selectedPos?.queueIndex === undefined)
       return;
 
-    saveUndoState(structuredClone(gameState));
+    setIsResolvingCustomerAction(true);
 
-    const { selectedPos } = gameState;
-    const queueToDiscard = gameState.queues[selectedPos.queueIndex];
+    try {
+      saveUndoState(structuredClone(gameState));
 
-    setGame(
-      produce(gameState, (draft) => {
-        const customer = draft.deck.pop()!;
-        draft.queues[selectedPos.queueIndex] = [customer];
-        draft.discard.push(...flipAllToBack(queueToDiscard));
-        updatedDiscardsByRank(draft.discardsByRank, queueToDiscard);
-        draft.selectedPos = undefined;
-        draft.decisionNeeded = false;
-        const { ended, won } = evaluateEnd(draft as GameState);
-        draft.ended = ended;
-        draft.won = won;
-      }),
-    );
+      const { selectedPos } = gameState;
+      const queueToDiscard = gameState.queues[selectedPos.queueIndex];
+
+      setGame(
+        produce(gameState, (draft) => {
+          const customer = draft.deck.pop()!;
+          draft.queues[selectedPos.queueIndex] = [customer];
+          draft.discard.push(...flipAllToBack(queueToDiscard));
+          updatedDiscardsByRank(draft.discardsByRank, queueToDiscard);
+          draft.selectedPos = undefined;
+          draft.decisionNeeded = false;
+          const { ended, won } = evaluateEnd(draft as GameState);
+          draft.ended = ended;
+          draft.won = won;
+        }),
+      );
+    } finally {
+      setIsResolvingCustomerAction(false);
+    }
   }
 
   // ===== Quick Customer Out ===== //
@@ -243,43 +276,49 @@ export default function TheBobaTeaShop() {
     if (!top(gameState.deck) || gameState.selectedPos?.queueIndex === undefined)
       return;
 
-    saveUndoState(structuredClone(gameState));
+    setIsResolvingCustomerAction(true);
 
-    // Discard the revealed card
-    setGame((draft) => {
-      if (draft.deck.length === 0) return;
-      const card = draft.deck.pop()!;
-      draft.discard.push(flipToBack(card));
-      updatedDiscardsByRank(draft.discardsByRank, [card]);
-    });
+    try {
+      saveUndoState(structuredClone(gameState));
 
-    await delay(defaultAnimDuration / 2);
-
-    // Reveal the next card
-    setGame((draft) => {
-      if (draft.deck.length > 0) {
-        draft.deck[draft.deck.length - 1].faceUp = true;
-      }
-    });
-
-    await delay(bufferedDefaultAnimDuration);
-
-    // Discard the next card and clear decision state
-    setGame((draft) => {
-      if (draft.deck.length > 0) {
+      // Discard the revealed card
+      setGame((draft) => {
+        if (draft.deck.length === 0) return;
         const card = draft.deck.pop()!;
         draft.discard.push(flipToBack(card));
         updatedDiscardsByRank(draft.discardsByRank, [card]);
-      }
-      draft.decisionNeeded = false;
-      draft.selectedPos = undefined;
-      const { ended, won } = evaluateEnd(draft as GameState);
-      draft.ended = ended;
-      draft.won = won;
-    });
+      });
 
-    await delay(defaultAnimDuration / 2);
-    await delay(bufferedDefaultAnimDuration);
+      await delay(defaultAnimDuration / 2);
+
+      // Reveal the next card
+      setGame((draft) => {
+        if (draft.deck.length > 0) {
+          draft.deck[draft.deck.length - 1].faceUp = true;
+        }
+      });
+
+      await delay(bufferedDefaultAnimDuration);
+
+      // Discard the next card and clear decision state
+      setGame((draft) => {
+        if (draft.deck.length > 0) {
+          const card = draft.deck.pop()!;
+          draft.discard.push(flipToBack(card));
+          updatedDiscardsByRank(draft.discardsByRank, [card]);
+        }
+        draft.decisionNeeded = false;
+        draft.selectedPos = undefined;
+        const { ended, won } = evaluateEnd(draft as GameState);
+        draft.ended = ended;
+        draft.won = won;
+      });
+
+      await delay(defaultAnimDuration / 2);
+      await delay(bufferedDefaultAnimDuration);
+    } finally {
+      setIsResolvingCustomerAction(false);
+    }
   }
 
   // ========== Card Mapping ========== //
@@ -625,13 +664,15 @@ export default function TheBobaTeaShop() {
           },
         ]}
       >
-        {!nextCustomerRevealed && !game.selectedPos && (
-          <View
+        {renderSelectQueuePrompt && (
+          <Animated.View
             style={[
               flexStyles.rowCentered,
               flexStyles.fullWidth,
               flexStyles.fullHeight,
               {
+                ...StyleSheet.absoluteFill,
+                opacity: selectQueuePromptOpacity,
                 backgroundColor: zoneBg,
                 borderRadius: cardWidth * 0.2,
               },
@@ -646,24 +687,45 @@ export default function TheBobaTeaShop() {
             >
               Select queue position for next customer
             </Text>
-          </View>
+          </Animated.View>
         )}
 
-        {!nextCustomerRevealed && game.selectedPos && (
-          <Button
-            text="Reveal next customer"
-            onPress={() => {
-              revealNextCustomer(game);
-            }}
-            disabled={game.selectedPos === undefined}
-            theme="purple"
-            taller
-            style={{ flex: 1 }}
-          />
+        {renderRevealNextCustomerButton && (
+          <Animated.View
+            style={[
+              flexStyles.rowCentered,
+              {
+                opacity: revealNextCustomerButtonOpacity,
+                ...StyleSheet.absoluteFill,
+              },
+            ]}
+          >
+            <Button
+              text="Reveal next customer"
+              onPress={() => {
+                revealNextCustomer(game);
+              }}
+              disabled={game.selectedPos === undefined}
+              theme="purple"
+              style={{ flex: 1 }}
+              taller
+              size="sm"
+            />
+          </Animated.View>
         )}
 
-        {nextCustomerRevealed && game.decisionNeeded && (
-          <>
+        {renderDecisionButtons && (
+          <Animated.View
+            style={[
+              flexStyles.rowCentered,
+              flexStyles.fullWidth,
+              {
+                opacity: decisionButtonsOpacity,
+                ...StyleSheet.absoluteFill,
+                gap: cardWidth * 0.25,
+              },
+            ]}
+          >
             <Button
               text="Let them stay"
               onPress={() => {
@@ -677,6 +739,8 @@ export default function TheBobaTeaShop() {
               disabled={game.selectedPos === undefined}
               style={{ flex: 1 }}
               taller
+              size="sm"
+              theme="green"
             />
             <Button
               text="Kick them out"
@@ -687,9 +751,11 @@ export default function TheBobaTeaShop() {
               }}
               disabled={game.selectedPos === undefined}
               taller
+              size="sm"
               style={{ flex: 1 }}
+              theme="red"
             />
-          </>
+          </Animated.View>
         )}
       </View>
     </GameWrapper>

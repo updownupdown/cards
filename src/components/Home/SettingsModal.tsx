@@ -1,4 +1,4 @@
-import { DEFAULT_GLOBAL_SETTINGS, resetGlobalSettings } from "@/data/game-menu";
+import { DEFAULT_GLOBAL_SETTINGS, resetAllSettings } from "@/data/game-menu";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { flexStyles } from "@/styles/flexStyles";
 import { modalStyles } from "@/styles/modalStyles";
@@ -6,7 +6,6 @@ import React from "react";
 import { ScrollView, View } from "react-native";
 import { Button } from "../Button/Button";
 import { SettingControl } from "../common/SettingControl";
-import { useToast } from "../common/Toast";
 import ModalFull from "../Modals/ModalFull";
 
 interface Props {
@@ -21,34 +20,42 @@ export const SettingsModal = ({ onClose }: Props) => {
   }
 
   return (
-    <ModalFull title="Settings" iconName="settings" onClose={onClose}>
+    <ModalFull title="Settings" onClose={onClose}>
       <ScrollView
-        contentContainerStyle={modalStyles.scrollContent}
+        contentContainerStyle={[modalStyles.scrollContent, { flex: 1 }]}
         showsVerticalScrollIndicator={false}
       >
         <View
           style={[
             flexStyles.colCentered,
             flexStyles.fullWidth,
+            flexStyles.fullHeight,
             flexStyles.gap40,
-            {
-              alignItems: "flex-start",
-            },
           ]}
         >
-          <SettingControl
-            label="Show game intros"
-            value={settings.showIntros}
-            type="boolean"
-            onChange={(val) => updateSettings({ showIntros: val })}
-          />
+          <View
+            style={[
+              flexStyles.colCentered,
+              flexStyles.fullWidth,
+              flexStyles.flex1,
+            ]}
+          >
+            <SettingControl
+              label="Show game intros"
+              value={settings.showIntros}
+              type="boolean"
+              onChange={(val) => updateSettings({ showIntros: val })}
+            />
+          </View>
 
           <Button
+            size="md"
+            uppercase={false}
             onPress={() => {
               updateSettings(DEFAULT_GLOBAL_SETTINGS);
-              resetGlobalSettings();
+              resetAllSettings();
             }}
-            text="Reset Settings, Stats, History, and Favorites"
+            text="Reset EVERYTHING (settings, stats, history, and favorites)"
             textOnly
           />
         </View>

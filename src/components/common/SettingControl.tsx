@@ -35,7 +35,8 @@ export function SettingControl<T>({
           }
           onPress={() => onChange(!value as any)}
         >
-          <Text size="sm">{label}</Text>
+          <Text size="md">{label}</Text>
+
           {booleanType === "toggle" ? (
             <View
               style={[
@@ -66,7 +67,7 @@ export function SettingControl<T>({
   if (type === "string" && options) {
     return (
       <View style={settingsStyles.containerCol}>
-        <Text size="sm">{label}</Text>
+        <Text size="md">{label}</Text>
         <View style={settingsStyles.optionsWrap}>
           {options.map((opt) => {
             const isSelected = value === opt.value;
@@ -79,7 +80,7 @@ export function SettingControl<T>({
                 <View style={settingsStyles.radioOuter}>
                   {isSelected && <View style={settingsStyles.radioInner} />}
                 </View>
-                <Text size="sm">{opt.label}</Text>
+                <Text size="md">{opt.label}</Text>
               </Pressable>
             );
           })}

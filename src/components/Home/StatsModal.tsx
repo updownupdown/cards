@@ -33,6 +33,7 @@ export const StatsModal = ({ onClose }: Props) => {
   const orderedStatsRows = useMemo(
     () =>
       Object.entries(GAMES_DATA)
+        .filter(([path, gameInfo]) => gameInfo.enabled !== false)
         .map(([path, gameInfo]) => ({
           path,
           title: gameInfo.title,
@@ -43,7 +44,7 @@ export const StatsModal = ({ onClose }: Props) => {
   );
 
   return (
-    <ModalFull title="Stats" iconName="chart" onClose={onClose}>
+    <ModalFull title="Stats" onClose={onClose}>
       <ScrollView
         contentContainerStyle={modalStyles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -57,13 +58,13 @@ export const StatsModal = ({ onClose }: Props) => {
                 Game
               </Text>
               <Text size="sm" style={[styles.colNum, styles.headerText]}>
-                Try
+                Tried
               </Text>
               <Text size="sm" style={[styles.colNum, styles.headerText]}>
-                Win
+                Won
               </Text>
               <Text size="sm" style={[styles.colNum, styles.headerText]}>
-                Lose
+                Lost
               </Text>
               <Text size="sm" style={[styles.colRate, styles.headerText]}>
                 Win %

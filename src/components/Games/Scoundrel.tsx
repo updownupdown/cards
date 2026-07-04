@@ -797,7 +797,7 @@ export default function Scoundrel() {
 
         <Button
           text="Run"
-          size="medium"
+          size="sm"
           onPress={runFromRoom}
           disabled={!canRun}
           theme={"orange"}
@@ -860,7 +860,7 @@ export default function Scoundrel() {
 
                 <Button
                   text={action.text}
-                  size="small"
+                  size="xs"
                   uppercase={false}
                   onPress={action.onPress}
                   disabled={action.disabled}

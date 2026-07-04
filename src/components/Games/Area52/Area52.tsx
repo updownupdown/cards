@@ -538,7 +538,7 @@ export default function Area52() {
         <Button
           onPress={() => applyAction("sacrifice")}
           text="Sacrifice"
-          size="medium-large"
+          size="lg"
           disabled={selectedDefenders.length !== 1}
           theme="red"
         />
@@ -548,7 +548,7 @@ export default function Area52() {
             applyAction(selectedDefenders.length === 2 ? "dual" : "single")
           }
           text={`Attack${selectedDefenders.length === 2 ? " x2" : ""}`}
-          size="medium-large"
+          size="lg"
           disabled={!canAttack || selectedDefenders.length < 1}
           theme={selectedDefenders.length === 2 ? "purple" : "green"}
           style={[flexStyles.flex1]}

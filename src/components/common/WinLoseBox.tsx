@@ -123,7 +123,7 @@ export const WinLoseBox = ({
 
           {message && (
             <Text
-              size={16}
+              size="md"
               weight={300}
               color={Colors.white}
               style={{
@@ -159,7 +159,7 @@ export const WinLoseBox = ({
           {handleUndo && !won && (
             <Button
               onPress={() => fadeOutWLM(handleUndo)}
-              size="medium"
+              size="sm"
               text="Undo"
               theme={"lose"}
               taller
@@ -171,7 +171,7 @@ export const WinLoseBox = ({
 
           <Button
             onPress={() => fadeOutWLM(reset)}
-            size="medium"
+            size="sm"
             text={won ? "Play again" : "Try again"}
             theme={won ? "win" : "lose"}
             taller

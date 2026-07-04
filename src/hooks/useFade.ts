@@ -33,7 +33,7 @@ export const useFade = (
         }
       });
     }
-  }, [visible, duration, opacity]);
+  }, [visible, duration, delayFadeIn, delayFadeOut, opacity]);
 
   return { isRendered, opacity };
 };

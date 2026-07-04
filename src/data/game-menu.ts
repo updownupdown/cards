@@ -95,9 +95,10 @@ export async function saveGlobalSettings(settings: GlobalSettings) {
   );
 }
 
-export async function resetGlobalSettings() {
+export async function resetAllSettings() {
   await AsyncStorage.setItem(GLOBAL_SETTINGS_STORAGE_KEY, "");
   await AsyncStorage.setItem(RECENT_GAMES_STORAGE_KEY, "");
+  await AsyncStorage.setItem(GAME_SETTINGS_STORAGE_KEY, "");
 }
 
 // ========== Game Settings ========== //

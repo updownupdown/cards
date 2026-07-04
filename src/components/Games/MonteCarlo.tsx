@@ -392,7 +392,7 @@ export default function MonteCarlo() {
           disabled={game.ended || !hasFaceDownCard}
           text="Consolidate"
           fullWidth
-          size="medium-large"
+          size="lg"
         />
       </View>
     </GameWrapper>

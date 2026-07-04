@@ -83,7 +83,7 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
             {
               maxHeight: "100%",
               borderRadius: modalBorderRadius,
-              backgroundColor: rgba(Colors.black, 0.94),
+              backgroundColor: Colors.K900,
               boxShadow: modalShadow,
               width: "100%",
               maxWidth: containerWidth,
@@ -140,7 +140,7 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
                   setShowMenu(true);
                 }}
                 text="Read detailed rules"
-                size="medium"
+                size="sm"
                 textOnly
                 uppercase={false}
                 style={{ marginTop: 10 }}
@@ -151,14 +151,14 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
               onPress={() => {
                 setShowIntro(false);
               }}
-              size="large"
+              size="xl"
               text="Play"
               fullWidth
             />
 
             <Button
-              text="Close and skip intro next time"
-              size="medium"
+              text="Don't show again (for this game)"
+              size="sm"
               textOnly
               onPress={() => {
                 updateGameSettings({ showIntro: false });

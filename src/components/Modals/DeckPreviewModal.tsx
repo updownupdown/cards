@@ -59,7 +59,7 @@ export function DeckPreviewModal({
   };
 
   return (
-    <ModalFull title={title} iconName="collections" onClose={closeModal}>
+    <ModalFull title={title} onClose={closeModal}>
       <ScrollView
         contentContainerStyle={[
           modalStyles.scrollContent,

@@ -1,19 +1,17 @@
 import { Text } from "@/components/common/Text";
+import { flexStyles } from "@/styles/flexStyles";
+import { menuStyles } from "@/styles/menuStyles";
 import { modalStyles } from "@/styles/modalStyles";
-import { Colors, FontWeight, HeaderButtonSize } from "@/styles/styles";
+import { Colors, HeaderButtonSize } from "@/styles/styles";
 import { router } from "expo-router";
 import React from "react";
 import { Modal, View } from "react-native";
 import { Button } from "../Button/Button";
-import { Icon, IconName } from "@/icons";
-import { flexStyles } from "@/styles/flexStyles";
-import { menuStyles } from "@/styles/menuStyles";
 
 type Props = {
   children: React.ReactNode;
   showHomeButton?: boolean;
   title?: string;
-  iconName?: IconName;
   onClose: () => void;
 };
 
@@ -21,7 +19,6 @@ export default function ModalFull({
   children,
   showHomeButton,
   title,
-  iconName,
   onClose,
 }: Props) {
   return (
@@ -40,7 +37,7 @@ export default function ModalFull({
                   iconName={"arrow-back"}
                   iconColor={Colors.accentBlue}
                   text="Home"
-                  size="small"
+                  size="xs"
                   textOnly
                   iconSize={22}
                   lineHeight={1}
@@ -48,9 +45,8 @@ export default function ModalFull({
               )}
 
               {/* Icon/Title */}
-              {title && iconName && (
+              {title && (
                 <View style={[flexStyles.rowCentered, flexStyles.gap10]}>
-                  <Icon name={iconName} size={28} color={Colors.K400} />
                   <Text
                     size="sm"
                     color={Colors.K400}

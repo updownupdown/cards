@@ -121,14 +121,14 @@ export default function GameModal({ onClose }: Props) {
           <View style={modalStyles.statsAndFav}>
             <View style={modalStyles.stats}>
               <View style={modalStyles.stat}>
-                <Text style={modalStyles.statsTextLabel}>Attempts</Text>
+                <Text style={modalStyles.statsTextLabel}>Tried</Text>
                 <Text style={modalStyles.statsTextValue}>
                   {settings.stats.attempts}
                 </Text>
               </View>
 
               <View style={modalStyles.stat}>
-                <Text style={modalStyles.statsTextLabel}>Wins</Text>
+                <Text style={modalStyles.statsTextLabel}>Won</Text>
                 <Text style={modalStyles.statsTextValue}>
                   {settings.stats.wins}
                 </Text>
@@ -142,7 +142,7 @@ export default function GameModal({ onClose }: Props) {
               </View>
 
               <View style={modalStyles.stat}>
-                <Text style={modalStyles.statsTextLabel}>Win rate</Text>
+                <Text style={modalStyles.statsTextLabel}>Win %</Text>
                 <Text style={modalStyles.statsTextValue}>
                   {calculateWinRate(settings.stats)}
                 </Text>
@@ -154,7 +154,7 @@ export default function GameModal({ onClose }: Props) {
                 updateSettings({ isFavorite: !settings.isFavorite })
               }
               iconName={settings.isFavorite ? "star" : "star-outline"}
-              size="small"
+              size="xs"
               textOnly
               iconSize={42}
               iconColor={

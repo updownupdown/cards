@@ -282,7 +282,7 @@ export default function Golf() {
           onPress={drawCard}
           disabled={game.draw.length === 0 || game.ended}
           text="Draw"
-          size="medium-large"
+          size="md"
           fullWidth
           taller
         />

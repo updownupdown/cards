@@ -642,7 +642,7 @@ export default function LootTheLoop() {
           >
             <Button
               text="Mark Path"
-              size="extra-small"
+              size="xxs"
               textOnly
               onPress={() => {
                 if (selectedCardIndex !== undefined) {
@@ -685,11 +685,13 @@ export default function LootTheLoop() {
           style={[
             flexStyles.flex1,
             {
-              height: "100%",
-              borderRadius: cardWidth * 0.25 * responsiveScale,
+              // height: "100%",
+              // borderRadius: cardWidth * 0.25 * responsiveScale,
             },
           ]}
           theme={"purple"}
+          size="sm"
+          taller
         />
 
         <Button
@@ -699,11 +701,13 @@ export default function LootTheLoop() {
           style={[
             flexStyles.flex1,
             {
-              height: "100%",
-              borderRadius: cardWidth * 0.25 * responsiveScale,
+              // height: "100%",
+              // borderRadius: cardWidth * 0.25 * responsiveScale,
             },
           ]}
           theme={"green"}
+          size="sm"
+          taller
         />
 
         <Button
@@ -717,11 +721,13 @@ export default function LootTheLoop() {
           style={[
             flexStyles.flex1,
             {
-              height: "100%",
-              borderRadius: cardWidth * 0.25 * responsiveScale,
+              // height: "100%",
+              // borderRadius: cardWidth * 0.25 * responsiveScale,
             },
           ]}
           theme={"blue"}
+          size="sm"
+          taller
         />
       </View>
     </GameWrapper>
