@@ -2,6 +2,9 @@ import { Text } from "@/components/common/Text";
 import { GameTag, GameTagNames } from "@/data/games-data";
 import { useFade } from "@/hooks/useFade";
 import { Icon, type IconName } from "@/icons";
+import { flexStyles } from "@/styles/flexStyles";
+import { menuStyles } from "@/styles/menuStyles";
+import { modalShadow } from "@/styles/modalStyles";
 import {
   Colors,
   FontWeight,
@@ -23,8 +26,6 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button } from "../Button/Button";
-import { menuStyles } from "@/styles/menuStyles";
-import { flexStyles } from "@/styles/flexStyles";
 
 export type DiscoverCardSize = "small" | "medium" | "large";
 
@@ -313,31 +314,34 @@ export function DiscoverFilters({
           <Pressable
             style={[
               StyleSheet.absoluteFill,
-              { backgroundColor: rgba(Colors.K800, 0.7) },
+              { backgroundColor: rgba(Colors.background, 0.8) },
             ]}
             onPress={() => setShowTagPicker(false)}
           />
 
           {/* Modal box */}
           <View
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              width: "100%",
-              maxWidth: contentMaxWidth - pageSidePadding * 2,
-              maxHeight: roundToPixel(420 * scale),
-              transform: [{ translateX: "-50%" }, { translateY: "-50%" }],
+            style={[
+              {
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                width: "100%",
+                maxWidth: contentMaxWidth - pageSidePadding * 2,
+                maxHeight: roundToPixel(420 * scale),
+                transform: [{ translateX: "-50%" }, { translateY: "-50%" }],
 
-              alignItems: "center",
-              justifyContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
 
-              gap: roundToPixel(20 * scale),
-              padding: roundToPixel(20 * scale),
+                gap: roundToPixel(20 * scale),
+                padding: roundToPixel(20 * scale),
 
-              borderRadius: roundToPixel(14 * scale),
-              backgroundColor: Colors.K900,
-            }}
+                borderRadius: roundToPixel(14 * scale),
+                backgroundColor: Colors.K900,
+                boxShadow: modalShadow,
+              },
+            ]}
           >
             <View
               style={{

@@ -224,6 +224,10 @@ export const GamesList = ({ sections, header }: GamesListProps) => {
     }
 
     if (section.key === "featured") {
+      if (!hasLoadedGameSettings) {
+        return [] as [string, GameMenuInfo][];
+      }
+
       return (section.gamePaths ?? [])
         .map((path) => [path, GAMES_DATA[path]] as [string, GameMenuInfo])
         .filter(
