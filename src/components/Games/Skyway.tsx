@@ -107,7 +107,7 @@ async function resetAndSetup(
     draft.ended = false;
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 
   setGame((draft) => {
     const next = prepareMarket(draft);

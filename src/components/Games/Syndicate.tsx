@@ -66,7 +66,7 @@ async function resetAndSetup(
     draft.won = false;
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 
   setGame((draft) => {
     draft.dead = shuffle(

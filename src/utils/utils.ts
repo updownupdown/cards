@@ -1,3 +1,4 @@
+import { bufferedDefaultAnimDuration } from "@/components/Cards/AnimatedCard";
 import { PixelRatio } from "react-native";
 
 export function clamp(val: number, min: number, max: number) {
@@ -61,5 +62,5 @@ export function centeredOffset(containerSize: number, childSize: number) {
   return (containerPx - childPx) / (2 * ratio);
 }
 
-export const delay = (ms: number) =>
+export const delay = (ms: number = bufferedDefaultAnimDuration) =>
   new Promise((resolve) => setTimeout(resolve, ms));

@@ -58,7 +58,7 @@ async function resetAndSetup(
     draft.won = false;
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 
   // Set up piles
   setGame((draft) => {
@@ -79,7 +79,7 @@ async function resetAndSetup(
     draft.draw = deck;
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 
   // Flip first card to discard
   setGame((draft) => {

@@ -146,14 +146,14 @@ async function resetAndSetup(
     draft.won = false;
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 
   setGame((draft) => {
     draft.playmates = dealPlaymates(draft.draw.filter((c) => isFace(c)));
     draft.draw = flipAllToFace(shuffle(draft.draw.filter((c) => !isFace(c))));
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 }
 
 // ── Main Component ─────────────────────────────────────────

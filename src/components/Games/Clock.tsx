@@ -71,7 +71,7 @@ async function resetAndSetup(
     draft.won = false;
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 
   setGame((draft) => {
     const deck = shuffle(draft.piles[0]);

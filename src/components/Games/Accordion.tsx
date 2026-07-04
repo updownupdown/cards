@@ -49,7 +49,7 @@ async function resetAndSetup(
     draft.won = false;
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 
   // Distribute to line
   setGame((draft) => {

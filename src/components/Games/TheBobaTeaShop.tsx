@@ -88,7 +88,7 @@ async function resetAndSetup(
     draft.won = false;
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 
   setGame((draft) => {
     const draw = shuffle(draft.deck);
@@ -298,7 +298,7 @@ export default function TheBobaTeaShop() {
         }
       });
 
-      await delay(bufferedDefaultAnimDuration);
+      await delay();
 
       // Discard the next card and clear decision state
       setGame((draft) => {
@@ -315,7 +315,7 @@ export default function TheBobaTeaShop() {
       });
 
       await delay(defaultAnimDuration / 2);
-      await delay(bufferedDefaultAnimDuration);
+      await delay();
     } finally {
       setIsResolvingCustomerAction(false);
     }

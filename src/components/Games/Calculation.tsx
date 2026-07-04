@@ -60,7 +60,7 @@ async function resetAndSetup(
     draft.won = false;
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 
   setGame((draft) => {
     for (let i = 0; i < START_RANKS.length; i += 1) {

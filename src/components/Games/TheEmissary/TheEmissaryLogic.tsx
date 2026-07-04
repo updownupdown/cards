@@ -59,7 +59,7 @@ export async function resetAndSetup(
     draft.handSize = defaultHandSize;
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 
   setGame((draft) => {
     const deck = shuffle(createDeck());

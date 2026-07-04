@@ -81,7 +81,7 @@ async function resetAndSetup(
     draft.currentAttackers = [];
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 
   setGame((draft) => {
     const draw = shuffle(draft.discardDeck);
@@ -94,7 +94,7 @@ async function resetAndSetup(
     draft.winLoseMessage = "";
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 }
 
 export default function Area52() {
@@ -234,7 +234,7 @@ export default function Area52() {
     setGame(gameState);
     setSelectedDefenders([]);
 
-    await delay(bufferedDefaultAnimDuration);
+    await delay();
 
     // 3. Pass the resulting state down the async pipeline
     gameState = await checkWaveTransition(gameState);

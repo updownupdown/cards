@@ -23,7 +23,15 @@
     "web": {
       "output": "static",
       "favicon": "./assets/images/favicon.png",
-      "themeColor": "#343f49"
+      "themeColor": "#343f49",
+      "name": "Solo Suite",
+      "shortName": "SoloSuite",
+      "description": "A collection of solo and card-based games.",
+      "display": "standalone",
+      "startUrl": "/cards/",
+      "scope": "/cards/",
+      "backgroundColor": "#343f49",
+      "orientation": "portrait"
     },
     "plugins": [
       "expo-router",

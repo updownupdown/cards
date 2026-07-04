@@ -58,7 +58,7 @@ async function resetAndSetup(
     draft.won = false;
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 
   setGame((draft) => {
     const draw = shuffle(draft.draw);
@@ -66,7 +66,7 @@ async function resetAndSetup(
     draft.draw = draw;
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 }
 
 // ========== Helper Functions ========== //

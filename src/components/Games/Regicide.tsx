@@ -106,7 +106,7 @@ async function resetAndSetup(
     draft.currentEnemy = undefined;
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 
   setGame((draft) => {
     const allCards = draft.discardPile;

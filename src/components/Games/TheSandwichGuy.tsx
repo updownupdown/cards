@@ -62,7 +62,7 @@ async function resetAndSetup(
     draft.ended = false;
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 
   setGame((draft) => {
     draft.dealFirstHand = true;
@@ -221,7 +221,7 @@ export default function TheSandwichGuy() {
       });
     }
 
-    await delay(bufferedDefaultAnimDuration);
+    await delay();
 
     setSelectedIds([]);
 

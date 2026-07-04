@@ -62,7 +62,7 @@ async function resetAndSetup(
     draft.won = false;
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 }
 
 function getDiscardablePileIndexes(piles: PlayingCard[][]) {

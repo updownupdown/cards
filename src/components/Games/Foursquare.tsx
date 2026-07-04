@@ -76,20 +76,20 @@ async function resetAndSetup(
     draft.winLoseMessage = "";
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 
   setGame((draft) => {
     const draw = shuffle(draft.draw);
     draft.draw = draw;
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 
   setGame((draft) => {
     draft.draw = flipTopCardToFace(draft.draw);
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 }
 
 function numFaceDownTopCards(piles: PlayingCard[][]) {

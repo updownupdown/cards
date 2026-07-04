@@ -131,7 +131,7 @@ async function resetAndSetup(
   });
 
   // Delay for animation
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 }
 
 // ========== Helper Functions ========== //

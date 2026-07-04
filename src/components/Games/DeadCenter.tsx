@@ -108,7 +108,7 @@ async function resetAndSetup(
     draft.winLoseMessage = "";
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 
   setGame((draft) => {
     const allCards = shuffle(draft.draw);
@@ -132,13 +132,13 @@ async function resetAndSetup(
     draft.zombies = zombies;
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 
   setGame((draft) => {
     draft.draw = flipTopCardToFace(draft.draw);
   });
 
-  await delay(bufferedDefaultAnimDuration);
+  await delay();
 }
 
 // ========== Helper Functions ========== //
