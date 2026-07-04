@@ -3,6 +3,7 @@ import { useGameSettings } from "./useGameSettings";
 import { usePathname } from "expo-router";
 import { normalizeGamePath } from "@/data/game-menu";
 import { useImmer } from "use-immer";
+import { useGlobalSettings } from "./useGlobalSettings";
 
 const maxHistory = 10;
 
@@ -19,6 +20,10 @@ export function useStateManager<T>({
   resetAndSetup,
   postSetupAction,
 }: Props<T>) {
+  const pathname = normalizeGamePath(usePathname());
+  const { settings: globalSettings } = useGlobalSettings();
+  const { settings: gameSettings } = useGameSettings(pathname);
+
   // —— Game State ————————————————————————
   const [game, setGame] = useImmer<T>(gameStateInitial);
 
@@ -36,14 +41,16 @@ export function useStateManager<T>({
 
   const [showIntro, setShowIntro] = useState<boolean | undefined>(undefined);
 
-  const pathname = normalizeGamePath(usePathname());
-  const { settings: gameSettings } = useGameSettings(pathname);
-
   useEffect(() => {
-    if (gameSettings?.showIntro !== undefined) {
-      setShowIntro(gameSettings?.showIntro);
+    if (
+      gameSettings?.showIntro === undefined ||
+      globalSettings?.showIntros === undefined
+    ) {
+      return;
     }
-  }, [gameSettings]);
+
+    setShowIntro(gameSettings?.showIntro && globalSettings?.showIntros);
+  }, [gameSettings, globalSettings?.showIntros]);
 
   // —— Initiate First Deal ————————————————————————
   const hasDealtRef = useRef(false);

@@ -1,6 +1,5 @@
 import { Text } from "@/components/common/Text";
-import type { HomeTabConfig } from "@/components/Home/GamesList";
-import { GameCategory, GameCategoryNames } from "@/data/games-data";
+import type { HomeSectionConfig } from "@/components/Home/GamesList";
 import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 import { flexStyles } from "@/styles/flexStyles";
 import { menuStyles } from "@/styles/menuStyles";
@@ -21,70 +20,31 @@ const FEATURED_GAME_PATHS: string[] = [
   "/monte-carlo",
 ];
 
-const HOME_TABS: HomeTabConfig[] = [
+const HOME_SECTIONS: HomeSectionConfig[] = [
   {
-    key: "home",
-    title: "Home",
-    iconName: "home",
-    sections: [
-      {
-        key: "recent",
-        title: "Recently Played",
-        emptyMessage: "No recently played games.",
-        variant: "small",
-        firstCardLarge: true,
-      },
-      {
-        key: "favorites",
-        title: "Favorites",
-        emptyMessage: "No favorite games.",
-        variant: "small",
-      },
-      {
-        key: "featured",
-        title: "Featured",
-        emptyMessage: "No featured games configured.",
-        variant: "small",
-        firstCardLarge: true,
-        gamePaths: FEATURED_GAME_PATHS,
-      },
-      // ...(Object.values(GameCategory) as GameCategory[]).map((category) => ({
-      //   key: category,
-      //   title: GameCategoryNames[category],
-      //   variant: "small" as const,
-      //   randomSample: true,
-      //   sampleSize: 3,
-      // })),
-    ],
+    key: "recent",
+    title: "Recently Played",
+    variant: "medium",
+    iconName: "recent",
   },
   {
-    key: "modern",
-    title: "Modern",
-    iconName: "collections",
-    sections: [
-      {
-        key: GameCategory.Misc,
-        title: GameCategoryNames[GameCategory.Misc],
-        variant: "large",
-      },
-      {
-        key: GameCategory.Isaludo,
-        title: GameCategoryNames[GameCategory.Isaludo],
-        variant: "large",
-      },
-    ],
+    key: "favorites",
+    title: "Favorites",
+    variant: "medium",
+    iconName: "star",
   },
   {
-    key: "classic",
-    title: "Classic",
-    iconName: "solitaire",
-    sections: [
-      {
-        key: GameCategory.ClassicSolitaire,
-        title: GameCategoryNames[GameCategory.ClassicSolitaire],
-        variant: "large",
-      },
-    ],
+    key: "featured",
+    title: "Featured",
+    variant: "medium",
+    gamePaths: FEATURED_GAME_PATHS,
+    iconName: "featured",
+  },
+  {
+    key: "discover",
+    title: "Discover",
+    variant: "medium",
+    iconName: "explore",
   },
 ];
 
@@ -127,46 +87,51 @@ export default function Home() {
           },
         ]}
       >
-        <View
-          style={[
-            {
-              pointerEvents: "box-none",
-              width: "100%",
-              maxWidth: MaxContentWidth * responsiveScale,
-              paddingTop: headerOffsetTop,
-              alignSelf: "center",
-            },
-          ]}
-        >
-          <View
-            style={[
-              flexStyles.rowCentered,
-              {
-                pointerEvents: "box-none",
-                height: headerHeight,
-                paddingHorizontal: HomePadding * responsiveScale,
-              },
-            ]}
-          >
-            <Text size="lg" weight={300} style={[flexStyles.flex1]}>
-              Solo Suite
-            </Text>
+        <GamesList
+          sections={HOME_SECTIONS}
+          header={
+            <View
+              key="home-header"
+              style={[
+                {
+                  pointerEvents: "box-none",
+                  width: "100%",
+                  maxWidth: MaxContentWidth * responsiveScale,
+                  paddingTop: headerOffsetTop,
+                  paddingBottom: headerOffsetTop * 4,
+                  alignSelf: "center",
+                },
+              ]}
+            >
+              <View
+                style={[
+                  flexStyles.rowCentered,
+                  {
+                    pointerEvents: "box-none",
+                    height: headerHeight,
+                    paddingHorizontal: HomePadding * responsiveScale,
+                  },
+                ]}
+              >
+                <Text size="lg" weight={300} style={[flexStyles.flex1]}>
+                  Solo Suite
+                </Text>
 
-            <Button
-              iconName="chart"
-              onPress={() => setShowStatsModal(true)}
-              style={[styles.headerBtn, menuStyles.headerButton]}
-            />
+                <Button
+                  iconName="chart"
+                  onPress={() => setShowStatsModal(true)}
+                  style={[styles.headerBtn, menuStyles.headerButton]}
+                />
 
-            {/* <Button
-              iconName="settings"
-              onPress={() => setShowSettingsModal(true)}
-              style={[styles.headerBtn, menuStyles.headerButton]}
-            /> */}
-          </View>
-        </View>
-
-        <GamesList tabs={HOME_TABS} />
+                <Button
+                  iconName="settings"
+                  onPress={() => setShowSettingsModal(true)}
+                  style={[styles.headerBtn, menuStyles.headerButton]}
+                />
+              </View>
+            </View>
+          }
+        />
       </View>
     </>
   );

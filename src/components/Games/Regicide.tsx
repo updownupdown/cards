@@ -552,7 +552,8 @@ export default function Regicide() {
         if (idx >= 0) draft.hand.splice(idx, 1);
       }
 
-      // Apply suit powers, if enemy is not immune (i.e. has the same suit)
+      // Apply suit powers (can be more than one, with aces!)
+      // Only apply if enemy is not immune (i.e. has the same suit)
       if (
         playSelection.suitEffects.includes("hearts") &&
         draft.currentEnemy.card.suit !== "hearts" &&
@@ -567,7 +568,9 @@ export default function Regicide() {
 
         draft.discardPile = healedState.discardPile;
         draft.tavernDeck = healedState.tavernDeck;
-      } else if (
+      }
+
+      if (
         playSelection.suitEffects.includes("diamonds") &&
         draft.currentEnemy.card.suit !== "diamonds"
       ) {
@@ -579,7 +582,9 @@ export default function Regicide() {
         );
         draft.tavernDeck = drawnState.tavernDeck;
         draft.hand = drawnState.hand;
-      } else if (
+      }
+
+      if (
         playSelection.suitEffects.includes("spades") &&
         draft.currentEnemy.card.suit !== "spades"
       ) {

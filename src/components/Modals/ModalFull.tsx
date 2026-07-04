@@ -49,23 +49,13 @@ export default function ModalFull({
 
               {/* Icon/Title */}
               {title && iconName && (
-                <View
-                  style={[
-                    flexStyles.rowCentered,
-                    flexStyles.gap10,
-                    { paddingLeft: 10 },
-                  ]}
-                >
+                <View style={[flexStyles.rowCentered, flexStyles.gap10]}>
                   <Icon name={iconName} size={28} color={Colors.K400} />
                   <Text
                     size="sm"
-                    style={[
-                      {
-                        color: Colors.K400,
-                        fontFamily: FontWeight[300],
-                        fontSize: 20,
-                      },
-                    ]}
+                    color={Colors.K400}
+                    weight={300}
+                    textTransform="uppercase"
                   >
                     {title}
                   </Text>

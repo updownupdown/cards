@@ -1,18 +1,18 @@
 import React from "react";
 import { GameThumbnailName } from "./game-thumbnails";
 
-export enum GameCategory {
-  Misc = "Misc",
-  Isaludo = "Isaludo",
+export enum GameTag {
   ClassicSolitaire = "ClassicSolitaire",
-  Beta = "Beta",
+  IsaludoCollection = "IsaludoCollection",
+  DragAndDrop = "DragAndDrop",
+  ModernMechanics = "ModernMechanics",
 }
 
-export const GameCategoryNames: Record<GameCategory, string> = {
-  [GameCategory.Misc]: "Misc",
-  [GameCategory.Isaludo]: "Isaludo Collection",
-  [GameCategory.ClassicSolitaire]: "Classic Solitaire",
-  [GameCategory.Beta]: "Beta",
+export const GameTagNames: Record<GameTag, string> = {
+  [GameTag.IsaludoCollection]: "Isaludo Collection",
+  [GameTag.ClassicSolitaire]: "Classic Solitaire",
+  [GameTag.DragAndDrop]: "Drag-and-Drop",
+  [GameTag.ModernMechanics]: "Modern Mechanics",
 };
 
 export type HexColor = `#${string}`;
@@ -38,7 +38,7 @@ export type GameMenuInfo = {
   briefRules: string[];
   howToPlay?: string[];
   byLine?: string;
-  category: GameCategory;
+  tags?: GameTag[];
 };
 
 export const GAMES_DATA: Record<string, GameMenuInfo> = {
@@ -51,7 +51,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     thumbnail: "Scoundrel.jpg",
     cardBack: "Scoundrel.png",
     cardColorBg: "#1d2a2e",
-    cardColorText: "#ced19c",
+    cardColorText: "#d6c1a5",
     cardDescription:
       "A dungeon crawl where you manage weapon strength and potion usage.",
     stats: {
@@ -59,7 +59,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 70,
       luck: 30,
     },
-    category: GameCategory.Misc,
+    tags: [GameTag.ModernMechanics],
     briefRules: [
       "Build each room to 4 face-up cards; resolve 3 cards and carry 1 forward.",
       "Fight monsters barehanded or with a weapon, but weapon kills must be non-increasing in value.",
@@ -96,7 +96,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 65,
       luck: 35,
     },
-    category: GameCategory.Misc,
+    tags: [GameTag.ModernMechanics],
     briefRules: [
       "Build columns with same-suit cards in decreasing value (K to A).",
       "Start with 5 cards in hand; draw to maintain 5 cards each turn.",
@@ -136,7 +136,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 80,
       luck: 25,
     },
-    category: GameCategory.Misc,
+    tags: [GameTag.ModernMechanics],
     briefRules: [
       "Play cards to deal damage to enemies: Jack (20 HP), Queen (30 HP), King (40 HP).",
       "Use suit powers: Hearts heal, Diamonds draw, Clubs double damage, Spades block enemy attacks.",
@@ -175,7 +175,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 70,
       luck: 40,
     },
-    category: GameCategory.Misc,
+    tags: [GameTag.ModernMechanics],
     briefRules: [
       "Capture face cards (J,Q,K,A) from the Enemy Row using same-suit cards from your hand.",
       "Spend cards equal to or greater than the target card's value to capture it.",
@@ -212,7 +212,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 75,
       luck: 35,
     },
-    category: GameCategory.Misc,
+    tags: [GameTag.ClassicSolitaire, GameTag.ModernMechanics],
     briefRules: [
       "Arrange 10 cards into a bowling pin formation; use 3 ball piles to knock down pins.",
       "Match card value (1-10) to the final digit of adjacent pin sums to knock them down.",
@@ -253,7 +253,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 70,
       luck: 30,
     },
-    category: GameCategory.Isaludo,
+    tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
     byLine: "Game design by Wil Su",
     briefRules: [
       "Survive both waves of alien invaders before running out of defenders to win.",
@@ -287,7 +287,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 80,
       luck: 40,
     },
-    category: GameCategory.Isaludo,
+    tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
     byLine: "Game design by Wil Su",
     briefRules: [
       "Select three cards with equally-spaced rank values to create a sandwich.",
@@ -320,7 +320,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 50,
       luck: 20,
     },
-    category: GameCategory.Isaludo,
+    tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
     byLine: "Game design by Wil Su",
     briefRules: [
       "Kill all 12 zombies surrounding your 3x3 cabin before the deck runs out.",
@@ -355,7 +355,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 50,
       luck: 40,
     },
-    category: GameCategory.Isaludo,
+    tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
     byLine: "Game design by Wil Su",
     briefRules: [
       "Manage four zones with distinct placement constraints.",
@@ -388,7 +388,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 65,
       luck: 50,
     },
-    category: GameCategory.Isaludo,
+    tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
     byLine: "Game design by Wil Su",
     briefRules: [
       "Win by creating paths of length 5 or more for each suit.",
@@ -419,7 +419,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 60,
       luck: 30,
     },
-    category: GameCategory.Isaludo,
+    tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
     byLine: "Game design by Wil Su",
     briefRules: [
       "Win by successfully debating all 8 kindgoms.",
@@ -450,7 +450,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 40,
       luck: 55,
     },
-    category: GameCategory.Isaludo,
+    tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
     byLine: "Game design by Wil Su",
     briefRules: [
       "Play cards into valid stacks to satisfy order constraints.",
@@ -477,7 +477,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 70,
       luck: 30,
     },
-    category: GameCategory.Isaludo,
+    tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
     byLine: "Game design by Wil Su",
     briefRules: [
       "Build and convert stacks under syndicate rank restrictions.",
@@ -499,7 +499,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 65,
       luck: 65,
     },
-    category: GameCategory.Isaludo,
+    tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
     byLine: "Game design by Wil Su",
     briefRules: [
       "Reveal hidden cards through legal uncover moves.",
@@ -521,7 +521,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 45,
       luck: 60,
     },
-    category: GameCategory.Isaludo,
+    tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
     byLine: "Game design by Wil Su",
     briefRules: [
       "Capture valid loop cards into the score pile.",
@@ -546,7 +546,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 20,
       luck: 30,
     },
-    category: GameCategory.ClassicSolitaire,
+    tags: [GameTag.ClassicSolitaire],
     briefRules: [
       "Flip over any adjacent, equal-rank pairs.",
       "Consolidate the deck to remove flipped cards and refill the grid.",
@@ -566,7 +566,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 90,
       luck: 60,
     },
-    category: GameCategory.ClassicSolitaire,
+    tags: [GameTag.ClassicSolitaire],
     briefRules: [
       "Build four foundations with increasing step intervals of 1, 2, 3, and 4.",
       "Stock pile cards can be moved to any waste piles, or any suitable foundation.",
@@ -588,7 +588,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 35,
       luck: 65,
     },
-    category: GameCategory.ClassicSolitaire,
+    tags: [GameTag.ClassicSolitaire],
     briefRules: [
       "Move a card onto another card 1 or 3 spaces to its left, if their suit or rank matches.",
       "Cards can match if they wrap around to a previous row, given they are still 1 or 3 spaces apart.",
@@ -609,7 +609,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 80,
       luck: 80,
     },
-    category: GameCategory.ClassicSolitaire,
+    tags: [GameTag.ClassicSolitaire],
     briefRules: [
       "Discard a top card from a foundation when a higher card of the same suit is visible.",
       "Top cards can be moved to empty foundations when available. Deal when no move is possible.",
@@ -630,7 +630,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 50,
       luck: 70,
     },
-    category: GameCategory.ClassicSolitaire,
+    tags: [GameTag.ClassicSolitaire],
     briefRules: [
       "Play only top tableau cards one rank up or down from waste top.",
       "Use stock draws when no tableau play is possible.",
@@ -651,7 +651,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 10,
       luck: 100,
     },
-    category: GameCategory.ClassicSolitaire,
+    tags: [GameTag.ClassicSolitaire],
     briefRules: [
       "Place revealed cards to matching clock positions by rank.",
       "Continue turns by revealing from the pile at each destination.",
@@ -675,7 +675,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 73,
       luck: 16,
     },
-    category: GameCategory.ClassicSolitaire,
+    tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
     enabled: false,
     briefRules: [
       "Move all cards to the foundations from Ace up to King by suit.",
@@ -697,7 +697,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 69,
       luck: 38,
     },
-    category: GameCategory.ClassicSolitaire,
+    tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
     briefRules: [
       "Build cards down by rank in tableau columns.",
       "Complete full King to Ace suit runs to clear them.",
@@ -717,7 +717,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 49,
       luck: 62,
     },
-    category: GameCategory.ClassicSolitaire,
+    tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
     enabled: false,
     briefRules: [
       "Clear the pyramid by pairing exposed cards that total 13.",
@@ -738,7 +738,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 44,
       luck: 64,
     },
-    category: GameCategory.ClassicSolitaire,
+    tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
     enabled: false,
     briefRules: [
       "Remove exposed cards that are one rank higher or lower than waste top.",
@@ -760,7 +760,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 52,
       luck: 58,
     },
-    category: GameCategory.ClassicSolitaire,
+    tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
     // enabled: false,
     briefRules: [
       "Move all cards to the four foundations by suit from Ace to King.",
@@ -781,7 +781,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 63,
       luck: 47,
     },
-    category: GameCategory.ClassicSolitaire,
+    tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
     enabled: false,
     briefRules: [
       "Build same-suit descending runs in tableau columns.",
@@ -802,7 +802,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 68,
       luck: 45,
     },
-    category: GameCategory.ClassicSolitaire,
+    tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
     enabled: false,
     briefRules: [
       "Build foundations by suit from the starting base rank.",
@@ -823,7 +823,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 71,
       luck: 31,
     },
-    category: GameCategory.ClassicSolitaire,
+    tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
     enabled: false,
     briefRules: [
       "Build foundations by suit upward from the beak rank.",
@@ -844,7 +844,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       difficulty: 62,
       luck: 52,
     },
-    category: GameCategory.ClassicSolitaire,
+    tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
     enabled: false,
     briefRules: [
       "Build foundations up by suit from Ace.",

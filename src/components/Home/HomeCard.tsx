@@ -1,11 +1,12 @@
 import { Text } from "@/components/common/Text";
 import { GAME_THUMBNAIL_ASSETS } from "@/data/game-thumbnails";
-import { GameMenuInfo } from "@/data/games-data";
+import { GameMenuInfo, GameTagNames } from "@/data/games-data";
 import { Icon } from "@/icons";
 import { Colors, rgba } from "@/styles/styles";
 import { roundToPixel } from "@/utils/utils";
+import { LinearGradient } from "expo-linear-gradient";
 import { Link, type Href } from "expo-router";
-import { Image, Pressable, View } from "react-native";
+import { Image, Pressable, type ViewStyle, View } from "react-native";
 import { StatBars } from "./StatBars";
 
 function getGameSource(game: GameMenuInfo) {
@@ -17,8 +18,10 @@ type Props = {
   game: GameMenuInfo;
   onToggleFavorite?: (path: string) => void;
   isFavorite: boolean;
+  size?: "small" | "medium" | "large";
   isLarge?: boolean;
   responsiveScale: number;
+  style?: ViewStyle;
 };
 
 export function HomeCard({
@@ -26,114 +29,131 @@ export function HomeCard({
   game,
   onToggleFavorite,
   isFavorite,
-  isLarge = false,
+  size = "medium",
   responsiveScale,
+  style,
 }: Props) {
   const scale = responsiveScale;
+  const tagsText = game.tags?.map((tag) => GameTagNames[tag]).join(", ");
 
   const borderRadius = roundToPixel(12 * scale);
-  const padding = isLarge ? roundToPixel(22 * scale) : 0;
-  const spacingUnit = roundToPixel(20 * scale);
-  const shadowUnit = roundToPixel(2 * scale);
-  const smallCardHeight = roundToPixel(58 * scale);
-  const height = isLarge ? undefined : smallCardHeight;
-  const favBtnSize = roundToPixel(40 * scale);
-  const favBtnInset = roundToPixel(
-    isLarge ? padding * 0.25 : smallCardHeight / 2 - favBtnSize / 2,
+  const padding = roundToPixel(
+    (size === "large" ? 22 : size === "medium" ? 12 : 18) * scale,
   );
+  const shadowUnit = roundToPixel(2 * scale);
+
+  const smallCardHeight = roundToPixel(50 * scale);
+  const mediumCardHeight = roundToPixel(120 * scale);
+
+  const height =
+    size === "large"
+      ? undefined
+      : size === "small"
+        ? smallCardHeight
+        : mediumCardHeight;
+
+  const favBtnSize = roundToPixel(36 * scale);
+  const favBtnInset = roundToPixel(favBtnSize / 10);
 
   return (
     <View
-      style={{
-        height,
-        padding,
-        borderRadius,
-        backgroundColor: game.cardColorBg,
-        boxShadow: `${shadowUnit * 0.5}px ${shadowUnit * 1}px ${shadowUnit * 4}px ${rgba(Colors.K900, 0.4)}, ${shadowUnit * 1}px ${shadowUnit * 2}px ${shadowUnit * 8}px ${rgba(Colors.K900, 0.4)}`,
-      }}
+      style={[
+        {
+          overflow: "hidden",
+          position: "relative",
+          height,
+          padding,
+          borderRadius,
+          boxShadow: `${shadowUnit * 0.5}px ${shadowUnit * 1}px ${shadowUnit * 4}px ${rgba(Colors.K900, 0.4)}, ${shadowUnit * 1}px ${shadowUnit * 2}px ${shadowUnit * 8}px ${rgba(Colors.K900, 0.4)}`,
+        },
+        style,
+      ]}
     >
+      {/* Thumbnail */}
+      <Image
+        source={getGameSource(game)}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+        }}
+        resizeMode="cover"
+        fadeDuration={0}
+      />
+
+      <LinearGradient
+        colors={
+          size === "medium"
+            ? [rgba(game.cardColorBg, 0.9), rgba(game.cardColorBg, 0.2)]
+            : [
+                rgba(game.cardColorBg, 0.9),
+                rgba(game.cardColorBg, 0.9),
+                rgba(game.cardColorBg, 0.5),
+              ]
+        }
+        start={size === "medium" ? { x: 0.5, y: 1 } : { x: 0.2, y: 1 }}
+        end={size === "medium" ? { x: 0.5, y: 0 } : { x: 0.6, y: 0 }}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+        }}
+      />
+
       <Link href={path as Href} asChild>
         <Pressable
           style={{
-            gap: roundToPixel(spacingUnit * 0.5),
-            height: isLarge ? undefined : "100%",
+            gap: roundToPixel(14 * scale),
+            height: size === "large" ? undefined : "100%",
           }}
         >
           <View
             style={{
-              gap: spacingUnit,
-              flexDirection: "row",
-              alignItems: "flex-start",
-              height: isLarge ? undefined : "100%",
+              flexDirection: "column",
+              alignItems: size === "medium" ? "center" : "flex-start",
+              height: size === "large" ? undefined : "100%",
+              gap: roundToPixel(8 * scale),
+              flex: 1,
+              justifyContent: size === "medium" ? "flex-end" : "center",
             }}
           >
-            <View
+            {/* Title */}
+            <Text
+              size={size === "large" ? "lg" : "md"}
+              weight={500}
+              color={game.cardColorText}
               style={{
-                gap: roundToPixel(8 * scale),
-                flex: 1,
-                height: isLarge ? undefined : "100%",
-                justifyContent: isLarge ? undefined : "center",
+                textAlign: size === "medium" ? "center" : undefined,
               }}
             >
-              {/* Title */}
+              {game.title}
+            </Text>
+
+            {/* Description */}
+            {size === "large" && (
               <Text
-                size={isLarge ? "lg" : "md"}
-                weight={500}
-                style={{
-                  color: game.cardColorText,
-                  paddingLeft: isLarge
-                    ? undefined
-                    : roundToPixel(favBtnSize * 1.3),
-                }}
+                size="sm"
+                weight={300}
+                color={Colors.K100}
+                lineHeight={1.25}
               >
-                {game.title}
+                {game.cardDescription}
               </Text>
-
-              {/* Description */}
-              {isLarge && (
-                <Text
-                  size="sm"
-                  weight={300}
-                  color={Colors.K400}
-                  lineHeight={1.25}
-                >
-                  {game.cardDescription}
-                </Text>
-              )}
-            </View>
-
-            {/* Thumbnail */}
-            <View
-              style={{
-                borderRadius: roundToPixel(8 * scale),
-                borderTopLeftRadius: isLarge ? undefined : 0,
-                borderBottomLeftRadius: isLarge ? undefined : 0,
-                width: "35%",
-                height: "100%",
-                aspectRatio: isLarge ? 1 : undefined,
-                overflow: "hidden",
-                marginTop: isLarge ? roundToPixel(padding * -0.75) : undefined,
-                marginRight: isLarge
-                  ? roundToPixel(padding * -0.75)
-                  : undefined,
-              }}
-            >
-              <Image
-                source={getGameSource(game)}
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  width: "100%",
-                  height: "100%",
-                }}
-                resizeMode="cover"
-                fadeDuration={0}
-              />
-            </View>
+            )}
           </View>
 
-          {isLarge && (
+          {size === "large" && (
             <StatBars stats={game.stats} gameColor={game.cardColorText} />
+          )}
+
+          {size === "large" && tagsText && (
+            <Text size="xs" weight={300} color={game.cardColorText}>
+              {tagsText}
+            </Text>
           )}
         </Pressable>
       </Link>
@@ -146,14 +166,14 @@ export function HomeCard({
             zIndex: 2,
             alignItems: "center",
             justifyContent: "center",
-            top: favBtnInset,
-            right: isLarge ? favBtnInset : undefined,
-            left: isLarge ? undefined : favBtnInset,
+            top: size === "small" ? "50%" : favBtnInset,
+            right: favBtnInset,
             width: favBtnSize,
             height: favBtnSize,
-
+            transform:
+              size === "small" ? [{ translateY: -favBtnSize / 2 }] : undefined,
             borderRadius: roundToPixel(8 * scale),
-            backgroundColor: isLarge ? rgba(Colors.black, 0.6) : undefined,
+            backgroundColor: rgba(game.cardColorBg, 0.5),
           },
         ]}
         onPress={() => onToggleFavorite?.(path)}
@@ -161,8 +181,8 @@ export function HomeCard({
       >
         <Icon
           name={isFavorite ? "star" : "star-outline"}
-          color={isFavorite ? Colors.favoriteStar : Colors.K500}
-          size={roundToPixel(favBtnSize * 0.6)}
+          color={isFavorite ? Colors.favoriteStar : Colors.K300}
+          size={roundToPixel(favBtnSize * 0.7)}
         />
       </Pressable>
     </View>

@@ -18,7 +18,7 @@ export const modalShadow = `1px 2px 10px ${rgba(Colors.K900, 0.6)}, 2px 4px 20px
 export const modalStyles = StyleSheet.create({
   modalBackdrop: {
     flex: 1,
-    backgroundColor: rgba(Colors.black, 0.3),
+    backgroundColor: rgba(Colors.K800, 0.5),
     alignItems: "center",
     justifyContent: "center",
     padding: ContentSidePadding / 1.5,
@@ -28,7 +28,7 @@ export const modalStyles = StyleSheet.create({
     maxWidth: MaxContentWidth,
     height: "100%",
     maxHeight: MaxContentHeight,
-    backgroundColor: rgba(Colors.black, 0.9),
+    backgroundColor: Colors.K900,
     borderRadius: modalBorderRadius,
     overflow: "hidden",
     boxShadow: modalShadow,

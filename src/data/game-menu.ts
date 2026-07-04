@@ -15,13 +15,11 @@ export type GameSettings = {
   stats: GameStats;
 };
 
-export type ThemeName = "dark" | "light";
-
 export type GameSettingsMap = Record<string, GameSettings>;
 
 export type GlobalSettings = {
-  theme: ThemeName;
-  showHints: boolean;
+  showIntros: boolean;
+  discoverCardSize: "small" | "medium" | "large";
 };
 
 export type HomeGameEntry = {
@@ -40,8 +38,8 @@ export const RECENT_GAMES_STORAGE_KEY = "cards.recentGames.v1";
 export const MAX_RECENT_GAMES = 10;
 
 export const DEFAULT_GLOBAL_SETTINGS: GlobalSettings = {
-  theme: "dark",
-  showHints: true,
+  showIntros: true,
+  discoverCardSize: "large",
 };
 
 export const DEFAULT_GAME_SETTINGS: GameSettings = {
@@ -78,8 +76,7 @@ export function getGameInfo(pathname: string): GameMenuInfo {
   return GAMES_DATA[key];
 }
 
-// Global Settings
-
+// ========== Global Settings ========== //
 export async function loadGlobalSettings(): Promise<GlobalSettings> {
   const raw = await AsyncStorage.getItem(GLOBAL_SETTINGS_STORAGE_KEY);
   if (!raw) return DEFAULT_GLOBAL_SETTINGS;
@@ -98,8 +95,12 @@ export async function saveGlobalSettings(settings: GlobalSettings) {
   );
 }
 
-// Game Settings
+export async function resetGlobalSettings() {
+  await AsyncStorage.setItem(GLOBAL_SETTINGS_STORAGE_KEY, "");
+  await AsyncStorage.setItem(RECENT_GAMES_STORAGE_KEY, "");
+}
 
+// ========== Game Settings ========== //
 export async function loadGameSettingsMap(): Promise<GameSettingsMap> {
   const raw = await AsyncStorage.getItem(GAME_SETTINGS_STORAGE_KEY);
   if (!raw) return {};
@@ -111,10 +112,6 @@ export async function loadGameSettingsMap(): Promise<GameSettingsMap> {
 
 export async function saveGameSettingsMap(map: GameSettingsMap) {
   await AsyncStorage.setItem(GAME_SETTINGS_STORAGE_KEY, JSON.stringify(map));
-}
-
-export async function resetGameSettings() {
-  await AsyncStorage.setItem(GAME_SETTINGS_STORAGE_KEY, "");
 }
 
 export function getGameSettings(

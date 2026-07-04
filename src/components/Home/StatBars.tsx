@@ -17,6 +17,7 @@ export const StatBars = ({
     <View
       style={{
         gap: Math.round(24 * responsiveScale),
+        paddingTop: Math.round(6 * responsiveScale),
         flexDirection: "row",
       }}
     >
@@ -56,7 +57,7 @@ export const StatBar = ({
       <Text
         size="xxs"
         weight={300}
-        color={Colors.K300}
+        color={Colors.K400}
         textTransform="uppercase"
       >
         {label}

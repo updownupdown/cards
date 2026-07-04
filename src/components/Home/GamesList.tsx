@@ -1,108 +1,159 @@
 import { Text } from "@/components/common/Text";
+import { flexStyles } from "@/styles/flexStyles";
 import {
+  loadGameSettingsMap,
   loadFavoriteGames,
   loadRecentlyPlayedGames,
   toggleFavoriteGame,
 } from "@/data/game-menu";
-import { GameCategory, GameMenuInfo, GAMES_DATA } from "@/data/games-data";
+import { GameMenuInfo, GAMES_DATA, GameTag } from "@/data/games-data";
+import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 import { Icon, type IconName } from "@/icons";
-import { Colors, HomePadding, MaxContentWidth, rgba } from "@/styles/styles";
+import { Colors, HomePadding, MaxContentWidth } from "@/styles/styles";
 import { roundToPixel } from "@/utils/utils";
-import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  LayoutChangeEvent,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-  Pressable,
-  ScrollView,
-  View,
-} from "react-native";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { ScrollView, View, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { DiscoverFilters } from "@/components/Home/DiscoverFilters";
 import { HomeCard } from "./HomeCard";
-import { flexStyles } from "@/styles/flexStyles";
-type CardVariant = "small" | "large";
 
-export type HomeSectionKey = GameCategory | "favorites" | "recent" | "featured";
+type CardSize = "small" | "medium" | "large";
+
+export type HomeSectionKey = "favorites" | "recent" | "featured" | "discover";
 
 export type HomeSectionConfig = {
   key: HomeSectionKey;
   title: string;
-  emptyMessage?: string;
-  variant: CardVariant;
-  firstCardLarge?: boolean;
-  randomSample?: boolean;
-  sampleSize?: number;
+  variant: CardSize;
   gamePaths?: string[];
-};
-
-export type HomeTabConfig = {
-  key: "home" | "classic" | "modern";
-  title: string;
   iconName: IconName;
-  sections: HomeSectionConfig[];
 };
 
 type GamesListProps = {
-  tabs: HomeTabConfig[];
+  sections: HomeSectionConfig[];
+  header?: ReactNode;
 };
 
-export const GamesList = ({ tabs }: GamesListProps) => {
+export const GamesList = ({ sections, header }: GamesListProps) => {
+  const listRef = useRef<ScrollView>(null);
+  const hasMountedRef = useRef(false);
   const insets = useSafeAreaInsets();
-  const responsiveScale = useResponsiveScale();
+  const scale = useResponsiveScale();
+  const { width: viewportWidth } = useWindowDimensions();
+  const { settings, updateSettings } = useGlobalSettings();
 
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [recentPaths, setRecentPaths] = useState<string[]>([]);
-  const [activeTabIndex, setActiveTabIndex] = useState(0);
-  const [pagerWidth, setPagerWidth] = useState(0);
+  const [playedFrequentlyPaths, setPlayedFrequentlyPaths] = useState<
+    Set<string>
+  >(new Set());
+  const [selectedTag, setSelectedTag] = useState<GameTag | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const sampledCategoryPaths = useMemo(() => {
-    const allEntries = Object.entries(GAMES_DATA).filter(
-      ([_, game]) => game.enabled !== false,
-    ) as [string, GameMenuInfo][];
+  const discoverCardSize: CardSize = settings.discoverCardSize ?? "large";
 
-    const sampled: Partial<Record<GameCategory, string[]>> = {};
+  const pageSidePadding = roundToPixel(HomePadding * scale);
+  const contentMaxWidth = roundToPixel(MaxContentWidth * scale);
+  const renderedContentWidth = Math.min(contentMaxWidth, viewportWidth);
+  const centeredContentOffset = Math.max(
+    0,
+    roundToPixel((viewportWidth - contentMaxWidth) / 2),
+  );
+  const sectionEdgePadding = pageSidePadding + centeredContentOffset;
+  const discoverCardGap = roundToPixel(12 * scale);
+  const discoverRowInnerWidth = Math.max(
+    0,
+    renderedContentWidth - pageSidePadding * 2,
+  );
+  const discoverMediumCardWidth = Math.max(
+    0,
+    roundToPixel((discoverRowInnerWidth - discoverCardGap) / 2),
+  );
+  const horizontalCardWidth = discoverMediumCardWidth;
+  const hasDiscoverFilters =
+    selectedTag != null || searchQuery.trim().length > 0;
 
-    (Object.values(GameCategory) as GameCategory[]).forEach((category) => {
-      const categoryPaths = allEntries
-        .filter(([_, game]) => game.category === category)
-        .map(([path]) => path);
+  const allEnabledGames = useMemo(
+    () =>
+      (Object.entries(GAMES_DATA) as [string, GameMenuInfo][])
+        .filter(([_, game]) => game.enabled !== false)
+        .sort((a, b) => a[1].title.localeCompare(b[1].title)),
+    [],
+  );
 
-      const shuffled = [...categoryPaths];
-      for (let i = shuffled.length - 1; i > 0; i -= 1) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-      }
+  const filteredDiscoverGames = useMemo(() => {
+    const normalizedQuery = searchQuery.trim().toLowerCase();
 
-      sampled[category] = shuffled;
+    return allEnabledGames.filter(([_, game]) => {
+      const matchesTag = selectedTag ? game.tags?.includes(selectedTag) : true;
+      const matchesSearch = normalizedQuery
+        ? game.title.toLowerCase().includes(normalizedQuery) ||
+          game.cardDescription.toLowerCase().includes(normalizedQuery)
+        : true;
+      return matchesTag && matchesSearch;
+    });
+  }, [allEnabledGames, searchQuery, selectedTag]);
+
+  const tagResultCounts = useMemo(() => {
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+    const counts: Partial<Record<GameTag, number>> = {};
+
+    (Object.values(GameTag) as GameTag[]).forEach((tag) => {
+      counts[tag] = 0;
     });
 
-    return sampled;
-  }, []);
+    allEnabledGames.forEach(([_, game]) => {
+      const matchesSearch = normalizedQuery
+        ? game.title.toLowerCase().includes(normalizedQuery) ||
+          game.cardDescription.toLowerCase().includes(normalizedQuery)
+        : true;
 
-  const pagerRef = useRef<ScrollView>(null);
-  const isProgrammaticTabScrollRef = useRef(false);
-  const programmaticTargetIndexRef = useRef<number | null>(null);
+      if (!matchesSearch) return;
 
-  const tabGap = roundToPixel(6 * responsiveScale);
-  const tabWrapPadding = roundToPixel(Math.max(8, tabGap));
+      (game.tags ?? []).forEach((tag) => {
+        counts[tag] = (counts[tag] ?? 0) + 1;
+      });
+    });
+
+    return counts;
+  }, [allEnabledGames, searchQuery]);
 
   useEffect(() => {
     let cancelled = false;
 
-    Promise.all([loadFavoriteGames(), loadRecentlyPlayedGames()]).then(
-      ([loadedFavorites, loadedRecent]) => {
-        if (!cancelled) {
-          setFavorites(loadedFavorites);
-          setRecentPaths(loadedRecent.map((entry) => entry.path));
-        }
-      },
-    );
+    Promise.all([
+      loadFavoriteGames(),
+      loadRecentlyPlayedGames(),
+      loadGameSettingsMap(),
+    ]).then(([loadedFavorites, loadedRecent, loadedGameSettings]) => {
+      if (!cancelled) {
+        setFavorites(loadedFavorites);
+        setRecentPaths(loadedRecent.map((entry) => entry.path));
+
+        const frequentlyPlayed = new Set<string>();
+        Object.entries(loadedGameSettings).forEach(([path, gameSettings]) => {
+          if ((gameSettings.stats?.attempts ?? 0) >= 3) {
+            frequentlyPlayed.add(path);
+          }
+        });
+        setPlayedFrequentlyPaths(frequentlyPlayed);
+      }
+    });
 
     return () => {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true;
+      return;
+    }
+
+    listRef.current?.scrollTo({ y: 0, animated: true });
+  }, [selectedTag, searchQuery]);
 
   async function onToggleFavorite(path: string) {
     const updated = await toggleFavoriteGame(path);
@@ -110,132 +161,173 @@ export const GamesList = ({ tabs }: GamesListProps) => {
   }
 
   const getGamesForSection = (section: HomeSectionConfig) => {
-    const gameEntries = Object.entries(GAMES_DATA);
-    let gameList: [string, GameMenuInfo][] = [];
+    const gameEntries = Object.entries(GAMES_DATA) as [string, GameMenuInfo][];
 
     if (section.key === "recent") {
-      gameList = recentPaths
+      return recentPaths
         .map((path) => [path, GAMES_DATA[path]] as [string, GameMenuInfo])
         .filter(([_, game]) => !!game && game.enabled !== false)
         .slice(0, 3);
-    } else if (section.key === "featured") {
-      gameList = (section.gamePaths ?? [])
+    }
+
+    if (section.key === "featured") {
+      return (section.gamePaths ?? [])
         .map((path) => [path, GAMES_DATA[path]] as [string, GameMenuInfo])
-        .filter(([_, game]) => !!game && game.enabled !== false);
-    } else if (section.key === "favorites") {
-      gameList = gameEntries.filter(
-        ([key, val]) => favorites.has(key) && val.enabled !== false,
-      );
-    } else {
-      if (section.randomSample) {
-        const sampleSize = section.sampleSize ?? 3;
-        const sampledPaths: string[] = (
-          sampledCategoryPaths[section.key] ?? []
-        ).slice(0, sampleSize);
-
-        gameList = sampledPaths
-          .map(
-            (path: string) =>
-              [path, GAMES_DATA[path]] as [string, GameMenuInfo],
-          )
-          .filter(
-            ([_, game]: [string, GameMenuInfo]) =>
-              !!game && game.enabled !== false,
-          );
-      } else {
-        gameList = gameEntries.filter(
-          ([_, val]) => val.category === section.key && val.enabled !== false,
+        .filter(
+          ([path, game]) =>
+            !!game &&
+            game.enabled !== false &&
+            !playedFrequentlyPaths.has(path),
         );
-      }
     }
 
-    if (
-      section.key !== "recent" &&
-      section.key !== "featured" &&
-      !section.randomSample
-    ) {
-      gameList.sort((a, b) => a[1].title.localeCompare(b[1].title));
+    if (section.key === "favorites") {
+      return gameEntries
+        .filter(([key, val]) => favorites.has(key) && val.enabled !== false)
+        .sort((a, b) => a[1].title.localeCompare(b[1].title));
     }
 
-    return gameList;
+    if (section.key === "discover") {
+      return filteredDiscoverGames;
+    }
+
+    return [] as [string, GameMenuInfo][];
   };
 
-  const renderGamesCategory = (
+  const onSelectDiscoverSize = (size: CardSize) => {
+    if (discoverCardSize === size) return;
+    updateSettings({ discoverCardSize: size });
+  };
+
+  const renderSectionTitle = (section: HomeSectionConfig, key: string) => (
+    <View
+      key={key}
+      style={{
+        width: "100%",
+        maxWidth: contentMaxWidth,
+        alignSelf: "center",
+      }}
+    >
+      <View
+        style={[
+          flexStyles.rowCentered,
+          flexStyles.fullWidth,
+          {
+            gap: roundToPixel(8 * scale),
+            paddingHorizontal: pageSidePadding,
+          },
+        ]}
+      >
+        <Icon name={section.iconName} size={20} color={Colors.K400} />
+
+        <Text
+          style={[flexStyles.flex1]}
+          weight={300}
+          size="xs"
+          textTransform="uppercase"
+          color={Colors.K400}
+        >
+          {section.title}
+        </Text>
+      </View>
+    </View>
+  );
+
+  const renderHorizontalSection = (
     section: HomeSectionConfig,
     gameList: [string, GameMenuInfo][],
   ) => {
-    if (gameList.length === 0 && section.emptyMessage === undefined) {
+    if (gameList.length === 0) {
       return null;
     }
 
     return (
       <View
         key={`section-${section.key}`}
-        style={[
-          {
-            width: "100%",
-            maxWidth: roundToPixel(MaxContentWidth * responsiveScale),
-            gap: roundToPixel(10 * responsiveScale),
-          },
-        ]}
+        style={{
+          width: "100%",
+        }}
       >
-        {/* —— Category Title ————————————————————————————— */}
-        <Text
-          style={[
-            {
-              paddingTop: roundToPixel(HomePadding * 2 * responsiveScale),
-              paddingBottom: roundToPixel(6 * responsiveScale),
-              paddingHorizontal: roundToPixel(HomePadding * responsiveScale),
-            },
-          ]}
-          weight={300}
-          size="sm"
-          textTransform={"uppercase"}
-          color={Colors.K400}
-        >
-          {section.title}
-        </Text>
+        {renderSectionTitle(section, `title-${section.key}`)}
 
-        {/* —— Category Cards ————————————————————————————————— */}
-        <View
-          style={[
-            {
-              flexDirection: "column",
-              gap: roundToPixel(14 * responsiveScale),
-            },
-          ]}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingLeft: sectionEdgePadding,
+            paddingRight: sectionEdgePadding,
+            gap: roundToPixel(12 * scale),
+            paddingTop: roundToPixel(14 * scale),
+            paddingBottom: roundToPixel(40 * scale),
+            alignItems: "stretch",
+          }}
         >
-          {gameList.length === 0 && (
-            <View
-              style={[
-                flexStyles.colCentered,
-                {
-                  width: "100%",
-                  alignItems: "center",
-                  backgroundColor: Colors.K875,
-                  borderRadius: roundToPixel(8 * responsiveScale),
-                  paddingVertical: roundToPixel(24 * responsiveScale),
-                },
-              ]}
-            >
-              <Text size="sm" color={Colors.K500}>
-                {section.emptyMessage}
-              </Text>
-            </View>
-          )}
-
-          {gameList.map(([path, game], index) => (
+          {gameList.map(([path, game]) => (
             <HomeCard
               key={path}
               path={path}
               game={game}
-              responsiveScale={responsiveScale}
+              size={section.variant}
+              responsiveScale={scale}
               onToggleFavorite={onToggleFavorite}
               isFavorite={favorites.has(path)}
-              isLarge={
-                section.variant === "large" ||
-                (index === 0 && section.firstCardLarge)
-              }
+              style={{ width: horizontalCardWidth, flexShrink: 0 }}
+            />
+          ))}
+        </ScrollView>
+      </View>
+    );
+  };
+
+  const renderDiscoverCards = (
+    section: HomeSectionConfig,
+    gameList: [string, GameMenuInfo][],
+  ) => {
+    if (gameList.length === 0) {
+      return null;
+    }
+
+    const cardSize =
+      section.key === "discover"
+        ? (settings.discoverCardSize ?? "medium")
+        : section.variant;
+    const isMediumLayout = cardSize === "medium";
+
+    return (
+      <View
+        key="section-discover"
+        style={{
+          width: "100%",
+          maxWidth: contentMaxWidth,
+          alignSelf: "center",
+          gap: roundToPixel(12 * scale),
+        }}
+      >
+        <View
+          style={{
+            width: "100%",
+            paddingHorizontal: pageSidePadding,
+            paddingTop: roundToPixel(14 * scale),
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            rowGap: isMediumLayout ? roundToPixel(12 * scale) : undefined,
+            gap: isMediumLayout ? undefined : roundToPixel(12 * scale),
+          }}
+        >
+          {gameList.map(([path, game]) => (
+            <HomeCard
+              key={path}
+              path={path}
+              game={game}
+              size={cardSize}
+              responsiveScale={scale}
+              onToggleFavorite={onToggleFavorite}
+              isFavorite={favorites.has(path)}
+              style={{
+                width: isMediumLayout ? discoverMediumCardWidth : "100%",
+                flexGrow: isMediumLayout ? 0 : 1,
+              }}
             />
           ))}
         </View>
@@ -243,168 +335,64 @@ export const GamesList = ({ tabs }: GamesListProps) => {
     );
   };
 
-  const goToTab = (index: number) => {
-    const nextIndex = Math.max(0, Math.min(index, tabs.length - 1));
-    setActiveTabIndex((prev) => (prev === nextIndex ? prev : nextIndex));
-    if (pagerWidth <= 0) return;
+  const scrollChildren: ReactNode[] = [];
 
-    isProgrammaticTabScrollRef.current = true;
-    programmaticTargetIndexRef.current = nextIndex;
+  if (header) {
+    scrollChildren.push(header);
+  }
 
-    pagerRef.current?.scrollTo({
-      x: nextIndex * pagerWidth,
-      y: 0,
-      animated: true,
-    });
-  };
-
-  const syncTabFromOffset = (
-    event: NativeSyntheticEvent<NativeScrollEvent>,
-    isTerminalEvent = false,
-  ): void => {
-    if (pagerWidth <= 0) return;
-    const offsetX = event.nativeEvent.contentOffset.x;
-    const roundedIndex = Math.round(offsetX / pagerWidth);
-    const nextIndex = Math.max(0, Math.min(roundedIndex, tabs.length - 1));
-
-    if (isProgrammaticTabScrollRef.current) {
-      const targetIndex = programmaticTargetIndexRef.current;
-
-      // Keep the pressed tab selected while the pager animates to it.
-      if (
-        targetIndex != null &&
-        nextIndex !== targetIndex &&
-        !isTerminalEvent
-      ) {
+  sections.forEach((section) => {
+    if (section.key !== "discover") {
+      if (hasDiscoverFilters) {
         return;
       }
 
-      if (nextIndex === targetIndex || isTerminalEvent) {
-        isProgrammaticTabScrollRef.current = false;
-        programmaticTargetIndexRef.current = null;
-      }
+      scrollChildren.push(
+        renderHorizontalSection(section, getGamesForSection(section)),
+      );
+      return;
     }
 
-    setActiveTabIndex((prev) => (prev === nextIndex ? prev : nextIndex));
-  };
+    const discoverGames = getGamesForSection(section);
+    if (discoverGames.length === 0) {
+      return;
+    }
 
-  const onContainerLayout = (event: LayoutChangeEvent): void => {
-    const nextWidth = roundToPixel(event.nativeEvent.layout.width);
-    if (!nextWidth || nextWidth === pagerWidth) return;
-
-    setPagerWidth(nextWidth);
-
-    requestAnimationFrame(() => {
-      pagerRef.current?.scrollTo({
-        x: activeTabIndex * nextWidth,
-        y: 0,
-        animated: false,
-      });
-    });
-  };
+    scrollChildren.push(renderSectionTitle(section, "discover-title"));
+    scrollChildren.push(renderDiscoverCards(section, discoverGames));
+  });
 
   return (
-    <View
-      style={[{ flex: 1, overflow: "visible" }]}
-      onLayout={onContainerLayout}
-    >
+    <View style={{ flex: 1, overflow: "visible" }}>
       <ScrollView
-        ref={pagerRef}
-        horizontal
-        pagingEnabled
-        onScroll={syncTabFromOffset}
-        onMomentumScrollEnd={(event) => syncTabFromOffset(event, true)}
-        onScrollEndDrag={(event) => syncTabFromOffset(event, true)}
-        showsHorizontalScrollIndicator={false}
-        scrollEventThrottle={16}
+        ref={listRef}
         style={{ flex: 1 }}
+        contentContainerStyle={{
+          paddingHorizontal: 0,
+          paddingBottom: roundToPixel(
+            (insets.bottom + HomePadding * 10) * scale,
+          ),
+          flexGrow: 1,
+          alignItems: "stretch",
+        }}
+        showsVerticalScrollIndicator={false}
       >
-        {/* —— Tabs Content —————————————————————————————————— */}
-        {tabs.map((tab) => (
-          <ScrollView
-            key={tab.key}
-            style={[{ flex: 1, width: pagerWidth || "100%" }]}
-            contentContainerStyle={[
-              {
-                paddingHorizontal: roundToPixel(HomePadding * responsiveScale),
-                paddingTop: roundToPixel(HomePadding * 1.5 * responsiveScale),
-                paddingBottom: roundToPixel(HomePadding * 2 * responsiveScale),
-                flexGrow: 1,
-                alignItems: "center",
-              },
-            ]}
-            showsVerticalScrollIndicator={false}
-          >
-            {tab.sections.map((section) =>
-              renderGamesCategory(section, getGamesForSection(section)),
-            )}
-          </ScrollView>
-        ))}
+        {scrollChildren}
       </ScrollView>
 
-      {/* —— Tab Bar —————————————————————————————————————— */}
-      <View
-        style={[
-          {
-            paddingTop: roundToPixel(tabWrapPadding * responsiveScale),
-            paddingBottom: roundToPixel(
-              (insets.bottom + tabWrapPadding) * responsiveScale,
-            ),
-            paddingHorizontal: roundToPixel(HomePadding * responsiveScale),
-            width: "100%",
-            flexDirection: "row",
-            justifyContent: "center",
-            backgroundColor: Colors.K900,
-          },
-        ]}
-      >
-        <View
-          style={[
-            {
-              flexDirection: "row",
-              width: "100%",
-              maxWidth: roundToPixel(MaxContentWidth * responsiveScale),
-            },
-          ]}
-        >
-          {tabs.map((tab, index) => {
-            const isActive = activeTabIndex === index;
-            return (
-              <Pressable
-                key={`tab-${tab.key}`}
-                onPress={() => goToTab(index)}
-                style={[
-                  {
-                    gap: roundToPixel(tabGap * responsiveScale),
-                    paddingVertical: roundToPixel(tabGap * responsiveScale),
-                    borderRadius: roundToPixel(tabGap * responsiveScale * 1.5),
-                    flex: 1,
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    outline: "none",
-                  },
-                  isActive && { backgroundColor: rgba(Colors.K700, 0.4) },
-                ]}
-              >
-                <Icon
-                  name={tab.iconName}
-                  size={roundToPixel(30 * responsiveScale)}
-                  color={isActive ? Colors.K100 : Colors.K500}
-                />
-                <Text
-                  size="xs"
-                  weight={400}
-                  color={isActive ? Colors.K100 : Colors.K500}
-                  textTransform="uppercase"
-                >
-                  {tab.title}
-                </Text>
-              </Pressable>
-            );
-          })}
-        </View>
-      </View>
+      <DiscoverFilters
+        scale={scale}
+        pageSidePadding={pageSidePadding}
+        contentMaxWidth={contentMaxWidth}
+        resultCount={filteredDiscoverGames.length}
+        tagResultCounts={tagResultCounts}
+        selectedTag={selectedTag}
+        searchQuery={searchQuery}
+        discoverCardSize={discoverCardSize}
+        onSelectedTagChange={setSelectedTag}
+        onSearchQueryChange={setSearchQuery}
+        onDiscoverCardSizeChange={onSelectDiscoverSize}
+      />
     </View>
   );
 };

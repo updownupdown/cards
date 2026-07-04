@@ -1,4 +1,4 @@
-import { DEFAULT_GLOBAL_SETTINGS, resetGameSettings } from "@/data/game-menu";
+import { DEFAULT_GLOBAL_SETTINGS, resetGlobalSettings } from "@/data/game-menu";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { flexStyles } from "@/styles/flexStyles";
 import { modalStyles } from "@/styles/modalStyles";
@@ -36,30 +36,20 @@ export const SettingsModal = ({ onClose }: Props) => {
             },
           ]}
         >
-          {/* <SettingControl
-          label="Theme"
-          value={settings.theme}
-          type="string"
-          options={[
-            { label: "Dark", value: "dark" },
-            { label: "Light", value: "light" },
-          ]}
-          onChange={(val) => updateSettings({ theme: val as ThemeName })}
-        /> */}
-
           <SettingControl
-            label="Show Hints"
-            value={settings.showHints}
+            label="Show game intros"
+            value={settings.showIntros}
             type="boolean"
-            onChange={(val) => updateSettings({ showHints: val })}
+            onChange={(val) => updateSettings({ showIntros: val })}
           />
 
           <Button
             onPress={() => {
               updateSettings(DEFAULT_GLOBAL_SETTINGS);
-              resetGameSettings();
+              resetGlobalSettings();
             }}
-            text="Reset Settings"
+            text="Reset Settings, Stats, History, and Favorites"
+            textOnly
           />
         </View>
       </ScrollView>
