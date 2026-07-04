@@ -76,7 +76,7 @@ export const Button = ({
     fallbackColor;
 
   if (disabled) {
-    themeColor = Colors.buttonDisabled;
+    themeColor = textOnly ? rgba(Colors.white, 0.7) : Colors.buttonDisabled;
   }
 
   const baseFontSize = Typography.size[size];

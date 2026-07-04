@@ -96,7 +96,7 @@ export function DiscoverFilters({
     <>
       <View
         style={{
-          position: "absolute",
+          position: Platform.OS === "web" ? "fixed" : "absolute",
           left: 0,
           right: 0,
           bottom: 0,
@@ -106,9 +106,9 @@ export function DiscoverFilters({
       >
         <LinearGradient
           colors={[
-            rgba(Colors.K850, 0.95),
-            rgba(Colors.K850, 0.95),
-            rgba(Colors.K850, 0),
+            rgba(Colors.background, 0.95),
+            rgba(Colors.background, 0.95),
+            rgba(Colors.background, 0),
           ]}
           start={{ x: 0.5, y: 1 }}
           end={{ x: 0.5, y: 0 }}

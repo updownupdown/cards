@@ -15,15 +15,6 @@ import { flexStyles } from "@/styles/flexStyles";
 import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 import { Button } from "../Button/Button";
 
-// Card value for ordering
-function cardValue(card: PlayingCard): number {
-  if (card.rank === "A") return 1;
-  if (card.rank === "K") return 13;
-  if (card.rank === "Q") return 12;
-  if (card.rank === "J") return 11;
-  return rankValue(card);
-}
-
 // Win columns based on difficulty
 const WIN_COLUMNS = {
   easy: 12,
@@ -61,7 +52,7 @@ function canPlayCard(card: PlayingCard, columns: PlayingCard[][]): number[] {
     if (column.length === 0) continue; // Can't play to empty column
 
     const lastCard = column[column.length - 1];
-    if (lastCard.suit === card.suit && cardValue(lastCard) > cardValue(card)) {
+    if (lastCard.suit === card.suit && rankValue(lastCard) > rankValue(card)) {
       validColumns.push(i);
     }
   }

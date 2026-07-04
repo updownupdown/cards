@@ -86,7 +86,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   "/the-bogey": {
     enabled: false,
     title: "The Bogey",
-    thumbnail: "Calculation.jpg",
+    thumbnail: "DefaultThumbnail.jpg",
     cardColorBg: "#1a2332",
     cardColorText: "#f0e8d8",
     cardDescription:
@@ -761,7 +761,6 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       luck: 58,
     },
     tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
-    // enabled: false,
     briefRules: [
       "Move all cards to the four foundations by suit from Ace to King.",
       "Build tableau piles in descending rank with alternating colors.",

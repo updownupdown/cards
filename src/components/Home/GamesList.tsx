@@ -9,11 +9,12 @@ import {
 import { GameMenuInfo, GAMES_DATA, GameTag } from "@/data/games-data";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { Icon, type IconName } from "@/icons";
 import { Colors, HomePadding, MaxContentWidth } from "@/styles/styles";
 import { roundToPixel } from "@/utils/utils";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { ScrollView, View, useWindowDimensions } from "react-native";
+import { ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { DiscoverFilters } from "@/components/Home/DiscoverFilters";
 import { Button } from "@/components/Button/Button";
@@ -42,7 +43,7 @@ export const GamesList = ({ sections, header }: GamesListProps) => {
   const hasMountedRef = useRef(false);
   const insets = useSafeAreaInsets();
   const scale = useResponsiveScale();
-  const { width: viewportWidth } = useWindowDimensions();
+  const { width: viewportWidth } = useViewportDimensions();
   const { settings, updateSettings } = useGlobalSettings();
 
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
@@ -67,6 +68,7 @@ export const GamesList = ({ sections, header }: GamesListProps) => {
     roundToPixel((viewportWidth - contentMaxWidth) / 2),
   );
   const sectionEdgePadding = pageSidePadding + centeredContentOffset;
+  const sectionTopPadding = roundToPixel(14 * scale);
   const discoverCardGap = roundToPixel(12 * scale);
   const discoverRowInnerWidth = Math.max(
     0,
@@ -313,7 +315,7 @@ export const GamesList = ({ sections, header }: GamesListProps) => {
             paddingLeft: sectionEdgePadding,
             paddingRight: sectionEdgePadding,
             gap: roundToPixel(12 * scale),
-            paddingTop: roundToPixel(14 * scale),
+            paddingTop: sectionTopPadding,
             paddingBottom: roundToPixel(40 * scale),
             alignItems: "stretch",
           }}
@@ -358,46 +360,54 @@ export const GamesList = ({ sections, header }: GamesListProps) => {
           alignSelf: "center",
         }}
       >
-        <View
-          style={[
-            flexStyles.rowCentered,
-            flexStyles.fullWidth,
-            {
-              paddingHorizontal: pageSidePadding,
-              paddingVertical: roundToPixel(28 * scale),
-              gap: roundToPixel(24 * scale),
-            },
-          ]}
-        >
-          <Text size="md" weight={300} color={Colors.K200} style={{ flex: 1 }}>
-            Play random:
-          </Text>
+        {!hasDiscoverFilters && (
+          <View
+            style={[
+              flexStyles.rowCentered,
+              flexStyles.fullWidth,
+              {
+                paddingHorizontal: pageSidePadding,
+                paddingTop: sectionTopPadding * 2,
+                paddingBottom: sectionTopPadding,
+                gap: roundToPixel(24 * scale),
+              },
+            ]}
+          >
+            <Text
+              size="md"
+              weight={300}
+              color={Colors.K200}
+              style={{ flex: 1 }}
+            >
+              Play random:
+            </Text>
 
-          <Button
-            text="All games"
-            uppercase={false}
-            size="md"
-            onPress={onPlayRandomAllGames}
-            textOnly
-          />
+            <Button
+              text="All games"
+              uppercase={false}
+              size="md"
+              onPress={onPlayRandomAllGames}
+              textOnly
+            />
 
-          <Button
-            text="Unplayed games"
-            uppercase={false}
-            size="md"
-            onPress={onPlayRandomUnplayedGames}
-            disabled={
-              !hasLoadedGameSettings || unplayedEnabledGamePaths.length === 0
-            }
-            textOnly
-          />
-        </View>
+            <Button
+              text="Unplayed games"
+              uppercase={false}
+              size="md"
+              onPress={onPlayRandomUnplayedGames}
+              disabled={
+                !hasLoadedGameSettings || unplayedEnabledGamePaths.length === 0
+              }
+              textOnly
+            />
+          </View>
+        )}
 
         <View
           style={{
             width: "100%",
             paddingHorizontal: pageSidePadding,
-            paddingTop: roundToPixel(6 * scale),
+            paddingTop: sectionTopPadding,
             flexDirection: "row",
             flexWrap: "wrap",
             justifyContent: "space-between",
