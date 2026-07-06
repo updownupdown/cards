@@ -1,54 +1,34 @@
+import { Button } from "@/components/Button/Button";
+import { MappedCard, MapZone, useCardMap } from "@/components/Cards/CardMap";
+import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { useStateManager } from "@/hooks/useStateManager";
-import { useEffect } from "react";
+import { flexStyles } from "@/styles/flexStyles";
+import { useEffect, useMemo } from "react";
+import { View } from "react-native";
+import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
+  createNullArray,
+  flipAllToBack,
+  flipToBack,
+  flipToFace,
+  isAce,
+  isFace,
   rankValue,
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-import { View } from "react-native";
-import { Text } from "../common/Text";
-import { flexStyles } from "@/styles/flexStyles";
+import { delay } from "@/utils/utils";
+import { useToast } from "../common/Toast";
 import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
-import { Button } from "../Button/Button";
+import { RadioButtons } from "../common/RadioButtons";
+import { Colors } from "@/styles/styles";
 
-function getCardValue(card: PlayingCard): number {
-  if (card.rank === "J") return 11;
-  if (card.rank === "Q") return 12;
-  if (card.rank === "K") return 13;
-  if (card.rank === "A") return 14;
-  if (card.rank === "Joker") return 0; // Joker has special handling
-  return rankValue(card);
-}
+const ENEMY_SLOTS = 4;
+const HAND_SIZE = 4;
 
-function isJoker(card: PlayingCard): boolean {
-  return card.rank === "Joker";
-}
-
-function isFaceCard(card: PlayingCard): boolean {
-  return ["J", "Q", "K", "A"].includes(card.rank);
-}
-
-function createPersonalDeck(): PlayingCard[] {
-  const deck = createDeck();
-  const personal = deck.filter((card) => {
-    if (card.rank === "Joker") return true;
-    const val = rankValue(card);
-    return val >= 2 && val <= 4;
-  });
-  return shuffle(personal);
-}
-
-function createEnemyDeck(): PlayingCard[] {
-  const deck = createDeck();
-  const enemy = deck.filter((card) => {
-    if (card.rank === "Joker") return false;
-    const val = rankValue(card);
-    return val >= 5;
-  });
-  return shuffle(enemy);
-}
+const PERSONAL_RANKS = ["2", "3", "4", "Joker"] as const;
 
 type GamePhase =
   | "enemyPhase"
@@ -56,73 +36,254 @@ type GamePhase =
   | "drawPhase"
   | "capturePhase"
   | "gameOver";
+type ActionMode = "capture" | "enemyCapture" | "sacrifice";
 
 type GameState = {
   personalDeck: PlayingCard[];
   personalDiscard: PlayingCard[];
   enemyDeck: PlayingCard[];
   enemyRow: (PlayingCard | null)[];
-  enemyCaptured: PlayingCard[];
+  enemyCapturePile: PlayingCard[];
   hand: PlayingCard[];
   phase: GamePhase;
-  round: number;
-  gameWon: boolean;
-  gameLost: boolean;
-  selectedForCapture: PlayingCard[];
-  selectedForSacrifice: PlayingCard[];
-  targetEnemyIdx: number | null;
-  message: string;
+  actionMode: ActionMode;
+  selectedHandIds: string[];
+  selectedEnemyIdx: number | null;
+  ended: boolean;
+  won: boolean;
+  winLoseMessage?: string;
 };
 
-function setupGame(): GameState {
-  const personalDeck = createPersonalDeck();
-  const enemyDeck = createEnemyDeck();
-
-  // Draw 4 cards from enemy deck
-  const initialRow: (PlayingCard | null)[] = [null, null, null, null];
-  const tempEnemyDeck = [...enemyDeck];
-
-  for (let i = 0; i < 4; i++) {
-    if (tempEnemyDeck.length > 0) {
-      const card = tempEnemyDeck.shift()!;
-      if (isFaceCard(card)) {
-        tempEnemyDeck.push(card); // Move face card to bottom
-      } else {
-        initialRow[i] = card;
-      }
-    }
-  }
-
-  // Draw initial hand
-  const hand: PlayingCard[] = [];
-  while (hand.length < 4 && tempEnemyDeck.length > 0) {
-    hand.push(personalDeck.shift()!);
-  }
-
-  return {
-    personalDeck,
-    personalDiscard: [],
-    enemyDeck: tempEnemyDeck,
-    enemyRow: initialRow,
-    enemyCaptured: [],
-    hand,
-    phase: "enemyPhase",
-    round: 1,
-    gameWon: false,
-    gameLost: false,
-    selectedForCapture: [],
-    selectedForSacrifice: [],
-    targetEnemyIdx: null,
-    message: "Starting game. Enemy is refreshing forces...",
-  };
+function isEnemyCombatant(card: PlayingCard): boolean {
+  return isAce(card) || isFace(card);
 }
 
-const gameStateInitial: GameState = setupGame();
+function getCardValue(card: PlayingCard): number {
+  return rankValue(card, 14, 0);
+}
 
+function recyclePersonalDeckIfNeeded(draft: GameState) {
+  if (draft.personalDeck.length > 0 || draft.personalDiscard.length === 0) {
+    return;
+  }
+
+  draft.personalDeck = shuffle(
+    draft.personalDiscard.map((card) => flipToBack(card)),
+  );
+  draft.personalDiscard = [];
+}
+
+function drawToHand(draft: GameState) {
+  while (draft.hand.length < HAND_SIZE) {
+    recyclePersonalDeckIfNeeded(draft);
+    const next = draft.personalDeck.pop();
+    if (!next) break;
+    draft.hand.push(flipToFace(next));
+  }
+}
+
+function compactEnemyRowRight(
+  enemyRow: (PlayingCard | null)[],
+): (PlayingCard | null)[] {
+  const cards = enemyRow.filter((card): card is PlayingCard => card !== null);
+  const emptyCount = ENEMY_SLOTS - cards.length;
+  return [...createNullArray(emptyCount), ...cards];
+}
+
+function canCaptureWithCards(
+  selectedCards: PlayingCard[],
+  enemyCard: PlayingCard,
+) {
+  if (selectedCards.length === 0) return false;
+
+  const nonJokers = selectedCards.filter((card) => card.rank !== "Joker");
+  if (nonJokers.some((card) => card.suit !== enemyCard.suit)) {
+    return false;
+  }
+
+  const nonJokerValue = nonJokers.reduce(
+    (sum, card) => sum + getCardValue(card),
+    0,
+  );
+  const targetValue = getCardValue(enemyCard);
+
+  if (nonJokerValue >= targetValue) {
+    return true;
+  }
+
+  const jokerCount = selectedCards.length - nonJokers.length;
+  if (jokerCount === 0 || nonJokers.length === 0) {
+    return false;
+  }
+
+  // Each joker may only copy a value already present
+  // in the selected non-joker cards.
+  const copyableValues = nonJokers.map((card) => getCardValue(card));
+  const bestCopyValue = Math.max(...copyableValues);
+
+  return nonJokerValue + bestCopyValue * jokerCount >= targetValue;
+}
+
+function cardById(
+  cards: PlayingCard[],
+  cardId: string,
+): PlayingCard | undefined {
+  return cards.find((card) => card.id === cardId);
+}
+
+const gameStateInitial: GameState = {
+  personalDeck: [],
+  personalDiscard: shuffle(createDeck({ includeJokers: true, faceUp: false })),
+  enemyDeck: [],
+  enemyRow: createNullArray(ENEMY_SLOTS),
+  enemyCapturePile: [],
+  hand: [],
+  phase: "enemyPhase",
+  actionMode: "capture",
+  selectedHandIds: [],
+  selectedEnemyIdx: null,
+  ended: false,
+  won: false,
+  winLoseMessage: "",
+};
+
+async function resetAndSetup(
+  setGame: (updater: (draft: GameState) => void) => void,
+) {
+  // Bring all cards to personal discard and reset game state
+  setGame((draft) => {
+    const allCards = [
+      ...draft.personalDeck,
+      ...draft.hand,
+      ...draft.personalDiscard,
+      ...draft.enemyDeck,
+      ...draft.enemyRow.filter((card): card is PlayingCard => card !== null),
+      ...draft.enemyCapturePile,
+    ];
+
+    draft.personalDiscard = flipAllToBack(allCards);
+    draft.personalDeck = [];
+    draft.enemyDeck = [];
+    draft.hand = [];
+    draft.enemyRow = createNullArray(ENEMY_SLOTS);
+    draft.enemyCapturePile = [];
+    draft.phase = "enemyPhase";
+    draft.actionMode = "capture";
+    draft.selectedHandIds = [];
+    draft.selectedEnemyIdx = null;
+    draft.ended = false;
+    draft.won = false;
+    draft.winLoseMessage = "";
+  });
+
+  await delay(750);
+
+  // Deal cards
+  setGame((draft) => {
+    draft.personalDeck = shuffle(
+      draft.personalDiscard
+        .filter((card) =>
+          PERSONAL_RANKS.includes(card.rank as (typeof PERSONAL_RANKS)[number]),
+        )
+        .map((card) => flipToBack(card)),
+    );
+
+    draft.enemyDeck = shuffle(
+      draft.personalDiscard
+        .filter(
+          (card) =>
+            !PERSONAL_RANKS.includes(
+              card.rank as (typeof PERSONAL_RANKS)[number],
+            ),
+        )
+        .map((card) => flipToBack(card)),
+    );
+
+    draft.personalDiscard = [];
+
+    draft.enemyRow = createNullArray(ENEMY_SLOTS);
+
+    for (let i = 0; i < ENEMY_SLOTS; i += 1) {
+      const next = draft.enemyDeck.pop();
+      if (!next) break;
+      draft.enemyRow[i] = flipToFace(next);
+    }
+  });
+
+  await delay(750);
+
+  // Move enemy combatants to the front of the enemy deck
+  setGame((draft) => {
+    const combatants = draft.enemyRow.filter(
+      (card): card is PlayingCard => card !== null && isEnemyCombatant(card),
+    );
+    draft.enemyRow = draft.enemyRow.map((card) =>
+      card && isEnemyCombatant(card) ? null : card,
+    );
+    draft.enemyDeck.unshift(...flipAllToBack(combatants));
+  });
+
+  await delay(750);
+}
+
+function clearCaptureSelections(draft: GameState) {
+  draft.selectedHandIds = [];
+  draft.selectedEnemyIdx = null;
+  draft.actionMode = "capture";
+}
+
+function finalizeRoundOrWin(draft: GameState) {
+  const enemyBoardEmpty =
+    draft.enemyDeck.length === 0 &&
+    draft.enemyRow.every((card) => card === null);
+
+  if (!enemyBoardEmpty) {
+    draft.phase = "enemyPhase";
+    clearCaptureSelections(draft);
+    return;
+  }
+
+  const enemyCapturedCombatant = draft.enemyCapturePile.some((card) =>
+    isEnemyCombatant(card),
+  );
+
+  draft.ended = true;
+  draft.phase = "gameOver";
+  draft.won = !enemyCapturedCombatant;
+  draft.winLoseMessage = enemyCapturedCombatant
+    ? "A combatant entered the enemy capture pile."
+    : "All enemy cards cleared without losing combatants.";
+}
+
+// ========== Main Game Component ========== //
 export default function CardCapture() {
+  const { zoneBg } = useGameZoneBackground();
   const scale = useResponsiveScale();
+  const showToast = useToast();
+
+  const actionModeOptions = useMemo(
+    () => [
+      {
+        value: "capture" as const,
+        label: "Capture Enemy",
+        selectedBackgroundColor: Colors.buttonGreen,
+      },
+      {
+        value: "enemyCapture" as const,
+        label: "Let Enemy Capture",
+        selectedBackgroundColor: Colors.buttonOrange,
+      },
+      {
+        value: "sacrifice" as const,
+        label: "Sacrifice Cards",
+        selectedBackgroundColor: Colors.buttonRed,
+      },
+    ],
+    [],
+  );
 
   const {
+    isSettingUp,
     game,
     setGame,
     reset,
@@ -131,719 +292,569 @@ export default function CardCapture() {
     setShowIntro,
     canUndo,
     undo,
+    saveUndoState,
   } = useStateManager({
     gameStateInitial,
     resetAndSetup: async () => {
-      setGame((draft) => {
-        const newGame = setupGame();
-        Object.assign(draft, newGame);
-      });
-    },
-    resetNonGameStates: () => {
-      // No additional UI state to reset
+      await resetAndSetup(setGame);
     },
   });
 
-  // Enemy Phase
-  useEffect(() => {
-    if (game.phase !== "enemyPhase") return;
+  async function doEnemyPhase() {
+    setGame((draft) => {
+      draft.enemyRow = compactEnemyRowRight(draft.enemyRow);
+    });
 
-    const timer = setTimeout(() => {
-      setGame((draft) => {
-        // Move cards right and refill
-        let newRow = [...draft.enemyRow];
-        let newEnemyDeck = [...draft.enemyDeck];
-
-        // Move cards right to fill gaps
-        const compacted = newRow.filter((c) => c !== null);
-        newRow = [...compacted, ...Array(4 - compacted.length).fill(null)];
-
-        // Refill empty positions from enemy deck
-        for (let i = 0; i < 4; i++) {
-          if (newRow[i] === null && newEnemyDeck.length > 0) {
-            let card = newEnemyDeck.shift()!;
-            // Keep moving face cards to bottom
-            while (isFaceCard(card) && newEnemyDeck.length > 0) {
-              newEnemyDeck.push(card);
-              card = newEnemyDeck.shift()!;
-            }
-            if (!isFaceCard(card)) {
-              newRow[i] = card;
-            }
-          }
-        }
-
-        draft.enemyRow = newRow;
-        draft.enemyDeck = newEnemyDeck;
-        draft.phase = "discardPhase";
-        draft.message = "Discard Phase: discard any cards you don't need";
-      });
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [game.phase, setGame]);
-
-  // Draw Phase (after discard)
-  useEffect(() => {
-    if (game.phase !== "drawPhase") return;
-
-    const timer = setTimeout(() => {
-      setGame((draft) => {
-        let newHand = [...draft.hand];
-        let newPersonalDeck = [...draft.personalDeck];
-        let newPersonalDiscard = [...draft.personalDiscard];
-
-        // Draw until 4 cards
-        while (newHand.length < 4) {
-          if (newPersonalDeck.length > 0) {
-            newHand.push(newPersonalDeck.shift()!);
-          } else if (newPersonalDiscard.length > 0) {
-            // Reshuffle discard
-            newPersonalDeck = shuffle(newPersonalDiscard);
-            newPersonalDiscard = [];
-            if (newPersonalDeck.length > 0) {
-              newHand.push(newPersonalDeck.shift()!);
-            }
-          } else {
-            break;
-          }
-        }
-
-        draft.hand = newHand;
-        draft.personalDeck = newPersonalDeck;
-        draft.personalDiscard = newPersonalDiscard;
-        draft.phase = "capturePhase";
-        draft.message = "Capture Phase: choose your action";
-      });
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [game.phase, setGame]);
-
-  const handleDiscard = (card: PlayingCard) => {
-    if (game.phase !== "discardPhase") return;
+    await delay();
 
     setGame((draft) => {
-      draft.hand = draft.hand.filter(
-        (c: PlayingCard) => !(c.suit === card.suit && c.rank === card.rank),
-      );
-      draft.personalDiscard.push(card);
-    });
-  };
+      for (let i = 0; i < ENEMY_SLOTS; i += 1) {
+        if (draft.enemyRow[i] !== null) continue;
 
-  const handleEndDiscard = () => {
-    if (game.phase !== "discardPhase") return;
+        const next = draft.enemyDeck.pop();
+        if (!next) break;
+        draft.enemyRow[i] = flipToFace(next);
+      }
+
+      draft.phase = draft.hand.length === 0 ? "drawPhase" : "discardPhase";
+
+      clearCaptureSelections(draft);
+    });
+  }
+
+  useEffect(() => {
+    if (isSettingUp || game.ended || game.phase !== "enemyPhase") return;
+
+    doEnemyPhase();
+  }, [game.ended, game.phase, isSettingUp, setGame]);
+
+  async function doDrawPhase() {
+    setGame((draft) => {
+      drawToHand(draft);
+
+      if (draft.hand.length === 0) {
+        draft.ended = true;
+        draft.phase = "gameOver";
+        draft.won = false;
+        draft.winLoseMessage = "No cards available to play.";
+        return;
+      }
+
+      draft.phase = "capturePhase";
+      clearCaptureSelections(draft);
+    });
+  }
+
+  useEffect(() => {
+    if (isSettingUp || game.ended || game.phase !== "drawPhase") return;
+
+    doDrawPhase();
+  }, [game.ended, game.phase, isSettingUp, setGame]);
+
+  const selectedHandCards = useMemo(
+    () =>
+      game.selectedHandIds
+        .map((id) => cardById(game.hand, id))
+        .filter((card): card is PlayingCard => !!card),
+    [game.hand, game.selectedHandIds],
+  );
+
+  const captureTarget =
+    game.selectedEnemyIdx !== null
+      ? game.enemyRow[game.selectedEnemyIdx]
+      : null;
+
+  const canExecuteCapture =
+    game.phase === "capturePhase" &&
+    game.actionMode === "capture" &&
+    !!captureTarget &&
+    selectedHandCards.length > 0 &&
+    canCaptureWithCards(selectedHandCards, captureTarget);
+
+  const canExecuteEnemyCapture =
+    game.phase === "capturePhase" &&
+    game.actionMode === "enemyCapture" &&
+    !!game.enemyRow[0] &&
+    selectedHandCards.length === 1;
+
+  const canExecuteSacrifice =
+    game.phase === "capturePhase" &&
+    game.actionMode === "sacrifice" &&
+    game.selectedEnemyIdx !== null &&
+    !!game.enemyRow[game.selectedEnemyIdx] &&
+    selectedHandCards.length === 2 &&
+    selectedHandCards.every((card) => !isEnemyCombatant(card));
+
+  function toggleHandSelection(card: PlayingCard) {
+    if (game.ended) return;
+
+    if (game.phase === "discardPhase") {
+      saveUndoState(structuredClone(game));
+      setGame((draft) => {
+        draft.hand = draft.hand.filter((c) => c.id !== card.id);
+        draft.personalDiscard.push(flipToBack(card));
+      });
+      return;
+    }
+
+    if (game.phase !== "capturePhase") return;
+
+    setGame((draft) => {
+      const already = draft.selectedHandIds.includes(card.id);
+      if (already) {
+        draft.selectedHandIds = draft.selectedHandIds.filter(
+          (id) => id !== card.id,
+        );
+        return;
+      }
+
+      if (draft.actionMode === "enemyCapture") {
+        draft.selectedHandIds = [card.id];
+        return;
+      }
+
+      if (draft.actionMode === "sacrifice") {
+        if (isEnemyCombatant(card)) {
+          return;
+        }
+        if (draft.selectedHandIds.length >= 2) {
+          return;
+        }
+      }
+
+      draft.selectedHandIds.push(card.id);
+    });
+  }
+
+  function selectEnemyTarget(enemyIdx: number) {
+    if (game.phase !== "capturePhase" || game.ended) return;
+    if (game.actionMode === "enemyCapture") return;
+    if (!game.enemyRow[enemyIdx]) return;
+
+    setGame((draft) => {
+      draft.selectedEnemyIdx =
+        draft.selectedEnemyIdx === enemyIdx ? null : enemyIdx;
+    });
+  }
+
+  function endDiscardPhase() {
+    if (game.phase !== "discardPhase" || game.ended) return;
+
+    saveUndoState(structuredClone(game));
     setGame((draft) => {
       draft.phase = "drawPhase";
-      draft.message = "Drawing cards...";
+      clearCaptureSelections(draft);
     });
-  };
+  }
 
-  const toggleCardForCapture = (card: PlayingCard, enemyIdx: number) => {
-    if (game.phase !== "capturePhase") return;
-
-    setGame((draft) => {
-      const idx = draft.selectedForCapture.findIndex(
-        (c: PlayingCard) => c.suit === card.suit && c.rank === card.rank,
-      );
-
-      if (idx >= 0) {
-        // Deselect
-        draft.selectedForCapture.splice(idx, 1);
-        if (draft.selectedForCapture.length === 0) {
-          draft.targetEnemyIdx = null;
-        }
-      } else {
-        // Select
-        draft.selectedForCapture.push(card);
-        draft.targetEnemyIdx = enemyIdx;
-      }
-    });
-  };
-
-  const calculateCaptureValue = (cards: PlayingCard[]): number => {
-    let total = 0;
-    let jokerCount = 0;
-
-    for (const card of cards) {
-      if (isJoker(card)) {
-        jokerCount++;
-      } else {
-        total += getCardValue(card);
-      }
-    }
-
-    // Jokers can be used as any value - for now just return total + jokers
-    // This simplifies to: jokers add flexibility
-    return total;
-  };
-
-  const canCaptureEnemy = (
-    cards: PlayingCard[],
-    enemy: PlayingCard,
-    cardSuit: string,
-  ): boolean => {
-    // Check if all non-joker cards match suit
-    const nonJokers = cards.filter((c) => !isJoker(c));
-    if (nonJokers.length === 0) {
-      // All jokers - can use as any suit
-      return true;
-    }
-
-    const allSameSuit = nonJokers.every((c) => c.suit === cardSuit);
-    if (!allSameSuit) {
-      return false;
-    }
-
-    // Calculate value
-    const baseValue = nonJokers.reduce((sum, c) => sum + getCardValue(c), 0);
-    const jokerCount = cards.filter((c) => isJoker(c)).length;
-
-    // Each joker can add any value needed - simplified: if we have any jokers and base value is close, it works
-    const enemyValue = getCardValue(enemy);
-    if (jokerCount > 0) {
-      return baseValue + 10 * jokerCount >= enemyValue; // Jokers can be up to 10 each as added value
-    }
-
-    return baseValue >= enemyValue;
-  };
-
-  const handleCapture = () => {
-    if (game.selectedForCapture.length === 0 || game.targetEnemyIdx === null) {
-      return;
-    }
-
-    const targetCard = game.enemyRow[game.targetEnemyIdx];
-    if (!targetCard) return;
-
-    // Check if capture is valid
+  function executeCapture() {
     if (
-      !canCaptureEnemy(game.selectedForCapture, targetCard, targetCard.suit)
+      !canExecuteCapture ||
+      game.selectedEnemyIdx === null ||
+      !captureTarget
     ) {
-      setGame((draft) => {
-        draft.message = "Invalid capture - not enough value or wrong suit";
-      });
       return;
     }
 
-    setGame((draft) => {
-      // Move captured and spent cards to discard
-      draft.personalDiscard.push(...draft.selectedForCapture);
-      draft.personalDiscard.push(targetCard);
-
-      // Remove from enemy row
-      draft.enemyRow[draft.targetEnemyIdx!] = null;
-
-      // Remove from hand
-      for (const card of draft.selectedForCapture) {
-        const idx = draft.hand.findIndex(
-          (c: PlayingCard) => c.suit === card.suit && c.rank === card.rank,
-        );
-        if (idx >= 0) draft.hand.splice(idx, 1);
-      }
-
-      // Check if enemy deck and row are empty
-      const isGameWon =
-        draft.enemyDeck.length === 0 &&
-        draft.enemyRow.every((c: PlayingCard | null) => c === null);
-
-      if (isGameWon) {
-        draft.selectedForCapture = [];
-        draft.targetEnemyIdx = null;
-        draft.phase = "gameOver";
-        draft.gameWon = true;
-        draft.message = "You won! All enemies captured!";
-      } else {
-        // Start next round
-        draft.selectedForCapture = [];
-        draft.targetEnemyIdx = null;
-        draft.round += 1;
-        draft.phase = "enemyPhase";
-        draft.message = "Enemy captured! Next round...";
-      }
-    });
-  };
-
-  const handleLetEnemyCapture = (cardToLose: PlayingCard) => {
-    if (game.phase !== "capturePhase") return;
-
-    const enemyCard = game.enemyRow[0];
-    if (!enemyCard) return;
-
-    // Check if we're losing a face card
-    if (isFaceCard(cardToLose)) {
-      setGame((draft) => {
-        draft.phase = "gameOver";
-        draft.gameLost = true;
-        draft.message = `You lost! Face card captured: ${cardToLose.rank}${cardToLose.suit}`;
-      });
-      return;
-    }
+    saveUndoState(structuredClone(game));
 
     setGame((draft) => {
-      // Remove from hand and add both to enemy captured
+      const targetIdx = draft.selectedEnemyIdx;
+      if (targetIdx === null) return;
+
+      const target = draft.enemyRow[targetIdx];
+      if (!target) return;
+
+      const spentCards = draft.selectedHandIds
+        .map((id) => cardById(draft.hand, id))
+        .filter((card): card is PlayingCard => !!card);
+
+      if (!canCaptureWithCards(spentCards, target)) {
+        showToast("Invalid capture: suit/value requirement not met.");
+        return;
+      }
+
       draft.hand = draft.hand.filter(
-        (c: PlayingCard) =>
-          !(c.suit === cardToLose.suit && c.rank === cardToLose.rank),
+        (card) => !draft.selectedHandIds.includes(card.id),
       );
-      draft.enemyCaptured.push(enemyCard);
-      draft.enemyCaptured.push(cardToLose);
-      draft.enemyRow[0] = null;
-      draft.round += 1;
-      draft.phase = "enemyPhase";
-      draft.message = "Enemy captured your card. Next round...";
-    });
-  };
+      draft.personalDiscard.push(...spentCards.map((card) => flipToBack(card)));
+      draft.personalDiscard.push(flipToBack(target));
+      draft.enemyRow[targetIdx] = null;
 
-  const toggleCardForSacrifice = (card: PlayingCard) => {
-    if (game.phase !== "capturePhase" || isFaceCard(card)) return;
+      finalizeRoundOrWin(draft);
+    });
+  }
+
+  function executeEnemyCapture() {
+    if (!canExecuteEnemyCapture) return;
+
+    saveUndoState(structuredClone(game));
 
     setGame((draft) => {
-      const idx = draft.selectedForSacrifice.findIndex(
-        (c: PlayingCard) => c.suit === card.suit && c.rank === card.rank,
+      const enemyCard = draft.enemyRow[3];
+      const playerCardId = draft.selectedHandIds[0];
+      const playerCard = playerCardId
+        ? cardById(draft.hand, playerCardId)
+        : undefined;
+
+      if (!enemyCard || !playerCard) return;
+
+      draft.enemyRow[3] = null;
+      draft.hand = draft.hand.filter((card) => card.id !== playerCard.id);
+      draft.enemyCapturePile.push(
+        flipToBack(enemyCard),
+        flipToBack(playerCard),
       );
 
-      if (idx >= 0) {
-        draft.selectedForSacrifice.splice(idx, 1);
-      } else {
-        if (draft.selectedForSacrifice.length < 2) {
-          draft.selectedForSacrifice.push(card);
-        }
+      if (isEnemyCombatant(enemyCard) || isEnemyCombatant(playerCard)) {
+        draft.ended = true;
+        draft.phase = "gameOver";
+        draft.won = false;
+        draft.winLoseMessage =
+          "A combatant entered the enemy capture pile. You lose.";
+        clearCaptureSelections(draft);
+        return;
       }
+
+      finalizeRoundOrWin(draft);
     });
-  };
+  }
 
-  const handleSacrifice = (enemyIdx: number) => {
-    if (game.selectedForSacrifice.length !== 2 || game.phase !== "capturePhase")
-      return;
+  function executeSacrifice() {
+    if (!canExecuteSacrifice || game.selectedEnemyIdx === null) return;
 
-    const targetCard = game.enemyRow[enemyIdx];
-    if (!targetCard) return;
+    saveUndoState(structuredClone(game));
 
-    // Check for face cards
-    if (game.selectedForSacrifice.some((c: PlayingCard) => isFaceCard(c))) {
-      setGame((draft) => {
-        draft.message = "Cannot sacrifice face cards!";
-      });
-      return;
+    setGame((draft) => {
+      const targetIdx = draft.selectedEnemyIdx;
+      if (targetIdx === null) return;
+
+      const targetEnemy = draft.enemyRow[targetIdx];
+      if (!targetEnemy) return;
+
+      const sacrificedCards = draft.selectedHandIds
+        .map((id) => cardById(draft.hand, id))
+        .filter((card): card is PlayingCard => !!card);
+
+      if (sacrificedCards.length !== 2) return;
+      if (sacrificedCards.some((card) => isEnemyCombatant(card))) {
+        // draft.ended = true;
+        // draft.phase = "gameOver";
+        // draft.won = false;
+        // draft.winLoseMessage = "Cannot sacrifice a combatant card. You lose.";
+        showToast("Cannot sacrifice a combatant card.");
+        clearCaptureSelections(draft);
+        return;
+      }
+
+      draft.hand = draft.hand.filter(
+        (card) => !draft.selectedHandIds.includes(card.id),
+      );
+      draft.enemyCapturePile.push(
+        ...sacrificedCards.map((card) => flipToBack(card)),
+      );
+      draft.enemyRow[targetIdx] = null;
+      draft.enemyDeck.unshift(flipToBack(targetEnemy));
+
+      finalizeRoundOrWin(draft);
+    });
+  }
+
+  const zones: MapZone[] = useMemo(() => {
+    const enemySlots: MapZone[] = Array.from(
+      { length: ENEMY_SLOTS },
+      (_, idx) => ({
+        id: `enemy-slot-${idx}`,
+        name: "enemySlot",
+        pileIndex: idx,
+        cards: game.enemyRow[idx] ? [game.enemyRow[idx]!] : [],
+        col: 1 + idx,
+        row: 0,
+        baseZIndex: 20,
+        placeholder: {},
+      }),
+    );
+
+    const handSlots: MapZone[] = Array.from(
+      { length: HAND_SIZE },
+      (_, idx) => ({
+        id: `hand-slot-${idx}`,
+        name: "hand",
+        refIndex: idx,
+        cards: game.hand[idx] ? [game.hand[idx]] : [],
+        col: 1 + idx,
+        row: 2,
+        baseZIndex: 30,
+        placeholder: {},
+      }),
+    );
+
+    return [
+      {
+        id: "enemy-deck",
+        name: "enemyDeck",
+        cards: game.enemyDeck,
+        col: 0,
+        row: 0,
+        baseZIndex: 40,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Enemy", infoPos: "below" },
+      },
+      ...enemySlots,
+      {
+        id: "enemy-capture",
+        name: "enemyCapture",
+        cards: game.enemyCapturePile,
+        col: 5,
+        row: 0,
+        baseZIndex: 40,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Capture", infoPos: "below" },
+      },
+      {
+        id: "personal-deck",
+        name: "personalDeck",
+        cards: game.personalDeck,
+        col: 0,
+        row: 2,
+        baseZIndex: 40,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Deck", infoPos: "above" },
+      },
+      ...handSlots,
+      {
+        id: "personal-discard",
+        name: "personalDiscard",
+        cards: game.personalDiscard,
+        col: 5,
+        row: 2,
+        baseZIndex: 40,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Discard", infoPos: "above" },
+      },
+      {
+        id: "actions",
+        col: 0,
+        row: 3.2,
+        width: "full",
+        height: 2,
+        baseZIndex: 5,
+      },
+    ];
+  }, [
+    game.enemyCapturePile,
+    game.enemyDeck,
+    game.enemyRow,
+    game.hand,
+    game.personalDeck,
+    game.personalDiscard,
+  ]);
+
+  const cardMapper = (
+    mappedCard: MappedCard,
+  ): AnimatedCardMapping | undefined => {
+    const canExecuteAction =
+      (game.actionMode === "capture" && canExecuteCapture) ||
+      (game.actionMode === "sacrifice" && canExecuteSacrifice) ||
+      (game.actionMode === "enemyCapture" && canExecuteEnemyCapture);
+
+    if (mappedCard.zoneName === "hand") {
+      const isSelected = game.selectedHandIds.includes(mappedCard.card.id);
+      const isDisabled =
+        game.ended ||
+        (game.phase !== "discardPhase" && game.phase !== "capturePhase");
+
+      return {
+        onPress: () => toggleHandSelection(mappedCard.card),
+        isDisabled,
+        isSelected,
+        selectColor: isSelected
+          ? canExecuteAction
+            ? "green"
+            : "blue"
+          : "none",
+      };
+    } else if (
+      mappedCard.zoneName === "enemySlot" &&
+      mappedCard.pileIndex !== undefined
+    ) {
+      const idx = mappedCard.pileIndex;
+      const isSelected = game.selectedEnemyIdx === idx;
+
+      const isDisabled =
+        game.phase !== "capturePhase" ||
+        game.ended ||
+        game.actionMode === "enemyCapture";
+
+      return {
+        onPress: () => selectEnemyTarget(idx),
+        isDisabled,
+        isSelected,
+        selectColor: isSelected
+          ? canExecuteAction
+            ? "green"
+            : "blue"
+          : "none",
+      };
     }
 
-    setGame((draft) => {
-      // Remove sacrifice cards from hand
-      for (const card of draft.selectedForSacrifice) {
-        const idx = draft.hand.findIndex(
-          (c: PlayingCard) => c.suit === card.suit && c.rank === card.rank,
-        );
-        if (idx >= 0) draft.hand.splice(idx, 1);
-      }
+    if (
+      mappedCard.zoneName === "enemyCapture" ||
+      mappedCard.zoneName === "personalDiscard"
+    ) {
+      return {
+        clickThroughCards: true,
+      };
+    }
 
-      // Add to enemy captured
-      draft.enemyCaptured.push(...draft.selectedForSacrifice);
-
-      // Move target to bottom of enemy deck
-      draft.enemyRow[enemyIdx] = null;
-      draft.enemyDeck.push(targetCard);
-
-      draft.selectedForSacrifice = [];
-      draft.round += 1;
-      draft.phase = "enemyPhase";
-      draft.message = "Card sacrificed. Next round...";
-    });
+    return {};
   };
 
-  const getSuitSymbol = (suit: string): string => {
-    const symbols: Record<string, string> = {
-      hearts: "♥",
-      diamonds: "♦",
-      clubs: "♣",
-      spades: "♠",
-    };
-    return symbols[suit.toLowerCase()] || suit;
+  const zoneMapper = (zone: MapZone) => {
+    if (zone.name === "enemySlot" && zone.pileIndex !== undefined) {
+      const hasCard = !!game.enemyRow[zone.pileIndex];
+      const canSelect =
+        game.phase === "capturePhase" &&
+        !game.ended &&
+        game.actionMode !== "enemyCapture" &&
+        hasCard;
+      const isSelected = game.selectedEnemyIdx === zone.pileIndex;
+
+      return {
+        onPress: () => selectEnemyTarget(zone.pileIndex!),
+        isDisabled: !canSelect,
+        selectColor: isSelected ? "green" : "none",
+        forceOverlayColor: isSelected,
+      };
+    }
+
+    return;
   };
+
+  const { cardMap, cardHeight, getZoneStylesById } = useCardMap({
+    game,
+    zones,
+    gap: 0.2,
+    cardSize: "small",
+    cardMapper,
+    zoneMapper,
+  });
 
   return (
     <GameWrapper
       showIntro={showIntro}
       setShowIntro={setShowIntro}
-      ended={game.phase === "gameOver"}
-      won={game.gameWon}
+      ended={game.ended}
+      won={game.won}
       reset={reset}
       isLoaded={isLoaded}
       canUndo={canUndo}
       undo={undo}
+      winLoseMessage={game.winLoseMessage}
     >
-      <View style={[flexStyles.flex1, { backgroundColor: "#2b2d42" }]}>
-        {/* Status Bar */}
-        <View
-          style={{
-            marginHorizontal: 10 * scale,
-            marginTop: 10 * scale,
-            marginBottom: 10 * scale,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 12 * scale,
-              color: "#d4cdc3",
-              marginBottom: 5 * scale,
-            }}
-          >
-            Round: {game.round} | Enemy Deck: {game.enemyDeck.length} | Phase:{" "}
-            {game.phase}
-          </Text>
-          <Text style={{ fontSize: 11 * scale, color: "#a8a29d" }}>
-            Personal Deck: {game.personalDeck.length} | Discard:{" "}
-            {game.personalDiscard.length}
-          </Text>
-        </View>
+      {cardMap}
 
-        {/* Enemy Row */}
-        <View
-          style={{ marginHorizontal: 10 * scale, marginBottom: 15 * scale }}
-        >
-          <Text
-            style={{
-              fontSize: 12 * scale,
-              color: "#d4cdc3",
-              marginBottom: 8 * scale,
-            }}
-          >
-            Enemy Row
-          </Text>
-          <View style={{ flexDirection: "row", gap: 8 * scale }}>
-            {game.enemyRow.map((card: PlayingCard | null, idx: number) => (
-              <View
-                key={`enemy-${idx}`}
-                style={{
-                  width: 70 * scale,
-                  height: 100 * scale,
-                  backgroundColor: card ? "#3a3c52" : "#1f2133",
-                  borderRadius: 6 * scale,
-                  borderWidth: 2,
-                  borderColor: card ? "#d4cdc3" : "#555",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                {card ? (
-                  <View style={{ alignItems: "center" }}>
-                    <Text
-                      style={{
-                        fontSize: 24 * scale,
-                        fontWeight: "bold",
-                        color:
-                          card.suit === "hearts" || card.suit === "diamonds"
-                            ? "#e74c3c"
-                            : "#ecf0f1",
-                      }}
-                    >
-                      {card.rank}
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 16 * scale,
-                        color:
-                          card.suit === "hearts" || card.suit === "diamonds"
-                            ? "#e74c3c"
-                            : "#ecf0f1",
-                      }}
-                    >
-                      {getSuitSymbol(card.suit)}
-                    </Text>
-                  </View>
-                ) : (
-                  <Text style={{ fontSize: 10 * scale, color: "#555" }}>
-                    Empty
-                  </Text>
-                )}
-              </View>
-            ))}
-          </View>
-        </View>
-
-        {/* Hand */}
-        <View
-          style={{ marginHorizontal: 10 * scale, marginBottom: 15 * scale }}
-        >
-          <Text
-            style={{
-              fontSize: 12 * scale,
-              color: "#d4cdc3",
-              marginBottom: 8 * scale,
-            }}
-          >
-            Hand ({game.hand.length} / 4)
-          </Text>
-          <View
-            style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 * scale }}
-          >
-            {game.hand.map((card: PlayingCard, idx: number) => {
-              const isSelectedCapture = game.selectedForCapture.some(
-                (c: PlayingCard) =>
-                  c.suit === card.suit && c.rank === card.rank,
-              );
-              const isSelectedSacrifice = game.selectedForSacrifice.some(
-                (c: PlayingCard) =>
-                  c.suit === card.suit && c.rank === card.rank,
-              );
-              return (
-                <View key={`hand-${idx}`}>
-                  <Button
-                    onPress={() => {
-                      if (game.phase === "discardPhase") {
-                        handleDiscard(card);
-                      } else if (game.phase === "capturePhase") {
-                        toggleCardForCapture(card, 0);
-                      }
-                    }}
-                    text={`${card.rank}${getSuitSymbol(card.suit)}`}
-                    style={{
-                      width: 50 * scale,
-                      height: 50 * scale,
-                      backgroundColor:
-                        isSelectedCapture || isSelectedSacrifice
-                          ? "#666"
-                          : "#333",
-                      borderColor:
-                        isSelectedCapture || isSelectedSacrifice
-                          ? "#ffd700"
-                          : "#666",
-                      borderWidth: 2,
-                    }}
-                    textStyle={{
-                      fontSize: 10 * scale,
-                    }}
-                  />
-                </View>
-              );
-            })}
-          </View>
-        </View>
-
-        {/* Actions */}
+      <View
+        style={[
+          getZoneStylesById("actions"),
+          flexStyles.colCentered,
+          { gap: 8 },
+        ]}
+      >
         {game.phase === "discardPhase" && (
-          <View
-            style={{ marginHorizontal: 10 * scale, marginBottom: 15 * scale }}
-          >
-            <Button
-              onPress={handleEndDiscard}
-              text="Done Discarding"
-              theme="#27ae60"
-            />
-          </View>
+          <Button
+            text="Done Discarding"
+            theme="blue"
+            size="sm"
+            onPress={endDiscardPhase}
+            fullWidth
+            taller
+          />
         )}
 
         {game.phase === "capturePhase" && (
           <View
-            style={{
-              marginHorizontal: 10 * scale,
-              marginBottom: 15 * scale,
-              gap: 10 * scale,
-            }}
+            style={[
+              flexStyles.colCentered,
+              flexStyles.fullWidth,
+              { gap: 20 * scale },
+            ]}
           >
-            {/* Capture Option */}
-            <View>
-              <Text
-                style={{
-                  fontSize: 11 * scale,
-                  color: "#d4cdc3",
-                  marginBottom: 6 * scale,
-                }}
-              >
-                Capture ({game.selectedForCapture.length} cards selected):
-              </Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  gap: 6 * scale,
-                  flexWrap: "wrap",
-                }}
-              >
-                {game.enemyRow.map(
-                  (card: PlayingCard | null, idx: number) =>
-                    card && (
-                      <Button
-                        key={`capture-${idx}`}
-                        onPress={() => {
-                          toggleCardForCapture(game.selectedForCapture[0], idx);
-                        }}
-                        text={`Cap ${card.rank}${getSuitSymbol(card.suit)}`}
-                        disabled={game.selectedForCapture.length === 0}
-                        style={{
-                          flex: 1,
-                          minWidth: 80 * scale,
-                        }}
-                        textStyle={{
-                          fontSize: 9 * scale,
-                        }}
-                      />
-                    ),
-                )}
-              </View>
-              <Button
-                onPress={handleCapture}
-                text="Capture!"
-                disabled={
-                  game.selectedForCapture.length === 0 ||
-                  game.targetEnemyIdx === null
-                }
-                theme={game.selectedForCapture.length > 0 ? "#27ae60" : "#666"}
-                style={{
-                  marginTop: 6 * scale,
-                }}
-              />
-            </View>
-
-            {/* Let Enemy Capture */}
-            <View>
-              <Text
-                style={{
-                  fontSize: 11 * scale,
-                  color: "#d4cdc3",
-                  marginBottom: 6 * scale,
-                }}
-              >
-                Or let enemy capture:
-              </Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  gap: 6 * scale,
-                }}
-              >
-                {game.hand.map((card: PlayingCard, idx: number) => (
-                  <Button
-                    key={`lose-${idx}`}
-                    onPress={() => handleLetEnemyCapture(card)}
-                    text={`Lose ${card.rank}`}
-                    theme={isFaceCard(card) ? "#e74c3c" : "#3498db"}
-                    style={{
-                      flex: 1,
-                      minWidth: 60 * scale,
-                    }}
-                    textStyle={{
-                      fontSize: 9 * scale,
-                    }}
-                  />
-                ))}
-              </View>
-            </View>
-
-            {/* Sacrifice */}
-            <View>
-              <Text
-                style={{
-                  fontSize: 11 * scale,
-                  color: "#d4cdc3",
-                  marginBottom: 6 * scale,
-                }}
-              >
-                Or sacrifice ({game.selectedForSacrifice.length} / 2):
-              </Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  gap: 6 * scale,
-                  marginBottom: 6 * scale,
-                }}
-              >
-                {game.hand
-                  .filter((c: PlayingCard) => !isFaceCard(c))
-                  .map((card: PlayingCard, idx: number) => {
-                    const isSelected = game.selectedForSacrifice.some(
-                      (c: PlayingCard) =>
-                        c.suit === card.suit && c.rank === card.rank,
-                    );
-                    return (
-                      <Button
-                        key={`sac-${idx}`}
-                        onPress={() => toggleCardForSacrifice(card)}
-                        text={`${card.rank}`}
-                        style={{
-                          width: 45 * scale,
-                          height: 45 * scale,
-                          backgroundColor: isSelected ? "#8e44ad" : "#555",
-                        }}
-                        textStyle={{
-                          fontSize: 10 * scale,
-                        }}
-                      />
-                    );
-                  })}
-              </View>
-              <View style={{ flexDirection: "row", gap: 6 * scale }}>
-                {game.enemyRow.map((card: PlayingCard | null, idx: number) =>
-                  card ? (
-                    <Button
-                      key={`sac-target-${idx}`}
-                      onPress={() => handleSacrifice(idx)}
-                      text={`Send ${card.rank} to bottom`}
-                      disabled={game.selectedForSacrifice.length !== 2}
-                      theme={
-                        game.selectedForSacrifice.length === 2
-                          ? "#8e44ad"
-                          : "#666"
-                      }
-                      style={{
-                        flex: 1,
-                      }}
-                      textStyle={{
-                        fontSize: 9 * scale,
-                      }}
-                    />
-                  ) : null,
-                )}
-              </View>
-            </View>
-
-            <Button
-              onPress={() => {
+            <RadioButtons
+              options={actionModeOptions}
+              selectedValue={game.actionMode}
+              selectedBackgroundColor={Colors.K200}
+              onChange={(value) => {
                 setGame((draft) => {
-                  draft.selectedForCapture = [];
-                  draft.selectedForSacrifice = [];
-                  draft.targetEnemyIdx = null;
+                  draft.actionMode = value;
+                  draft.selectedEnemyIdx = null;
+                  draft.selectedHandIds = [];
                 });
               }}
-              text="Clear Selection"
-            />
-          </View>
-        )}
-
-        {/* Game Over */}
-        {game.phase === "gameOver" && (
-          <View
-            style={{ marginHorizontal: 10 * scale, marginBottom: 15 * scale }}
-          >
-            <Text
-              style={{
-                fontSize: 18 * scale,
-                fontWeight: "bold",
-                color: game.gameWon ? "#27ae60" : "#e74c3c",
-                marginBottom: 10 * scale,
+              containerStyle={{
+                backgroundColor: zoneBg,
+                height: cardHeight * 0.84,
               }}
+            />
+
+            <View
+              style={[
+                flexStyles.rowCentered,
+                flexStyles.fullWidth,
+                { gap: 14 * scale },
+              ]}
             >
-              {game.gameWon ? "YOU WIN!" : "YOU LOSE!"}
-            </Text>
-            <Button onPress={reset} text="Play Again" theme="#3498db" />
+              <Button
+                text="Clear"
+                size="sm"
+                theme="blue"
+                onPress={() => {
+                  setGame((draft) => {
+                    draft.selectedEnemyIdx = null;
+                    draft.selectedHandIds = [];
+                  });
+                }}
+                taller
+              />
+
+              {game.actionMode === "capture" && (
+                <Button
+                  text="Capture Card"
+                  size="sm"
+                  theme="green"
+                  onPress={executeCapture}
+                  disabled={!canExecuteCapture}
+                  style={{ flex: 1 }}
+                  taller
+                />
+              )}
+
+              {game.actionMode === "enemyCapture" && (
+                <Button
+                  text="Let Enemy Capture"
+                  size="sm"
+                  theme="orange"
+                  onPress={executeEnemyCapture}
+                  disabled={!canExecuteEnemyCapture}
+                  style={{ flex: 1 }}
+                  taller
+                />
+              )}
+
+              {game.actionMode === "sacrifice" && (
+                <Button
+                  text="Sacrifice"
+                  size="sm"
+                  theme="red"
+                  onPress={executeSacrifice}
+                  disabled={!canExecuteSacrifice}
+                  style={{ flex: 1 }}
+                  taller
+                />
+              )}
+            </View>
           </View>
         )}
-
-        {/* Message */}
-        <View
-          style={{ marginHorizontal: 10 * scale, marginBottom: 10 * scale }}
-        >
-          <Text
-            style={{
-              fontSize: 11 * scale,
-              color: "#d4cdc3",
-              textAlign: "center",
-            }}
-          >
-            {game.message}
-          </Text>
-        </View>
       </View>
     </GameWrapper>
   );

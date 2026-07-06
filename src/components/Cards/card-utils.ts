@@ -289,3 +289,7 @@ export function measureNode(node: RNView | null): Promise<Rect | null> {
     });
   });
 }
+
+export function createNullArray(length: number) {
+  return Array.from({ length }, () => null);
+}

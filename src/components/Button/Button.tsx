@@ -8,7 +8,7 @@ import { textStyles } from "@/styles/textStyles";
 import { roundToPixel } from "@/utils/utils";
 import { HexColor } from "@/data/games-data";
 
-const TRANSITION_STYLE = {
+export const BTN_TRANSITION_STYLE = {
   transitionDuration: "0.4s",
   transitionProperty: "all",
   transitionTimingFunction: "ease",
@@ -44,6 +44,7 @@ interface Props {
   lineHeight?: number;
   uppercase?: boolean;
   taller?: boolean;
+  preventWebLongPressMenu?: boolean;
 }
 
 export const Button = ({
@@ -66,8 +67,18 @@ export const Button = ({
   onPressIn,
   onPressOut,
   taller = false,
+  preventWebLongPressMenu = false,
 }: Props) => {
   const scale = useResponsiveScale();
+
+  const webContextMenuProps =
+    Platform.OS === "web" && preventWebLongPressMenu
+      ? ({
+          onContextMenu: (e: any) => {
+            e.preventDefault();
+          },
+        } as any)
+      : undefined;
 
   const fallbackColor = textOnly ? Colors.brightBlue : Colors.buttonBlue;
   let themeColor: string =
@@ -89,7 +100,7 @@ export const Button = ({
   let borderRadius = height / 2;
   let gap = height / 6;
   let paddingVertical = roundToPixel(6 * scale * sizeScale);
-  let paddingHorizontal = roundToPixel(16 * scale * sizeScale);
+  let paddingHorizontal = roundToPixel(20 * scale * sizeScale);
   let fontFamily = textOnly ? FontWeight[300] : FontWeight[600];
   let lineHeightUpdated = fontSize * (lineHeight ?? 1);
 
@@ -104,7 +115,7 @@ export const Button = ({
     <Pressable
       style={[
         {
-          ...TRANSITION_STYLE,
+          ...BTN_TRANSITION_STYLE,
           outlineWidth: 0,
           opacity: disabled ? 0.4 : 1,
 
@@ -122,13 +133,21 @@ export const Button = ({
           boxShadow: height
             ? `inset 0 0 0 ${roundToPixel(height * 0.03)}px ${rgba(
                 Colors.white,
-                0.4,
+                0.2,
               )}, inset 0 0 ${roundToPixel(height * 0.4)}px ${rgba(
                 Colors.white,
                 disabled ? 0.2 : 0.4,
               )}, 0 0 ${roundToPixel(height * 0.2)}px ${rgba(themeColor, 0.8)}`
             : undefined,
-          backgroundColor: textOnly ? undefined : themeColor,
+          backgroundColor: textOnly || disabled ? undefined : themeColor,
+          ...(Platform.OS === "web" && preventWebLongPressMenu
+            ? ({
+                userSelect: "none",
+                WebkitUserSelect: "none",
+                WebkitTouchCallout: "none",
+                touchAction: "manipulation",
+              } as const)
+            : null),
         },
         style,
       ]}
@@ -143,6 +162,8 @@ export const Button = ({
       onPressIn={onPressIn}
       onPressOut={onPressOut}
       disabled={disabled}
+      // Prevent iOS Safari context menu on long-press for hold-to-confirm buttons.
+      {...webContextMenuProps}
     >
       {iconName && (
         <Icon
@@ -151,7 +172,7 @@ export const Button = ({
           color={iconColor ?? Colors.white}
           style={[
             {
-              ...TRANSITION_STYLE,
+              ...BTN_TRANSITION_STYLE,
               flexShrink: 0,
             },
           ]}
@@ -161,7 +182,7 @@ export const Button = ({
         <Text
           style={[
             {
-              ...TRANSITION_STYLE,
+              ...BTN_TRANSITION_STYLE,
               fontSize,
               fontFamily,
               textTransform: uppercase ? "uppercase" : "none",

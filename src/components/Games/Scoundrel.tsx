@@ -371,7 +371,7 @@ function refillRoom(game: GameState) {
 }
 
 // Layout constants
-const healthBarHeight = 0.46;
+const healthBarHeight = 0.4;
 const drawRow = healthBarHeight + 0.17;
 const weaponsRow = drawRow + 1.05;
 const weaponsZoneInset = 0.12;

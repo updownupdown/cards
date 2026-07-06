@@ -96,7 +96,7 @@ export function useCardMap({
   game,
   zones,
   gap = cardDims.layoutGap,
-  paddingTop = cardDims.layoutPadding,
+  paddingTop = cardDims.layoutPadding / 2,
   paddingBottom = cardDims.layoutPadding,
   paddingLeft = cardDims.layoutPadding,
   paddingRight = cardDims.layoutPadding,

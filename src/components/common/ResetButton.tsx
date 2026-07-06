@@ -99,6 +99,7 @@ export function ResetButton({
         onPressIn={onPressInReset}
         onPressOut={onPressOutReset}
         delayLongPress={holdToResetDuration}
+        preventWebLongPressMenu
         iconName="reset"
         iconColor={isResetPressed ? (pressedIconColor ?? iconColor) : iconColor}
         iconSize={HeaderButtonIconSize}

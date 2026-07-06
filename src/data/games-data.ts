@@ -50,8 +50,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     title: "Scoundrel",
     thumbnail: "Scoundrel.jpg",
     cardBack: "Scoundrel.png",
-    cardColorBg: "#1d2a2e",
-    cardColorText: "#d6c1a5",
+    cardColorBg: "#070605",
+    cardColorText: "#fce8e3",
     cardDescription:
       "A dungeon crawl where you manage weapon strength and potion usage.",
     stats: {
@@ -84,11 +84,10 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
 
   // The Bogey
   "/the-bogey": {
-    enabled: false,
-    title: "The Bogey",
+    title: "The Bogey (BETA)",
     thumbnail: "DefaultThumbnail.jpg",
-    cardColorBg: "#1a2332",
-    cardColorText: "#f0e8d8",
+    cardColorBg: "#0a1e1f",
+    cardColorText: "#ddf0ce",
     cardDescription:
       "Build columns of cards in decreasing suit-matched sequences while playing against the mysterious Bogey.",
     stats: {
@@ -163,13 +162,12 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
 
   // Card Capture
   "/card-capture": {
-    enabled: false,
-    title: "Card Capture",
-    thumbnail: "HideAndSeek.jpg",
+    title: "Card Capture (BETA)",
+    thumbnail: "DefaultThumbnail.jpg",
     cardColorBg: "#2b2d42",
     cardColorText: "#d4cdc3",
     cardDescription:
-      "Capture enemy combatants using strategic card plays and careful hand management.",
+      "Use low cards and jokers to dismantle enemy forces, while protecting every Ace and face card from capture.",
     stats: {
       complexity: 75,
       difficulty: 70,
@@ -177,31 +175,39 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     },
     tags: [GameTag.ModernMechanics],
     briefRules: [
-      "Capture face cards (J,Q,K,A) from the Enemy Row using same-suit cards from your hand.",
-      "Spend cards equal to or greater than the target card's value to capture it.",
-      "Manage your Personal Draw Deck (2s, 3s, 4s, Jokers) and avoid letting enemy capture face cards.",
-      "Win by emptying Enemy Draw Deck and Enemy Row without face cards in Enemy Capture Pile.",
+      "Your Personal Draw Deck is only 2s, 3s, 4s, and both jokers; all other cards form the Enemy Draw Deck.",
+      "Each round is Enemy -> Discard -> Draw -> Capture.",
+      "To capture an enemy card, spend same-suit hand cards with total value equal to or greater than that enemy card (jokers are wild).",
+      "If a Jack, Queen, King, or Ace ever enters the Enemy Capture Pile, you lose immediately.",
+      "You win only when both the Enemy Draw Deck and all 4 enemy positions are empty, and no combatant was captured by the enemy.",
     ],
     about: [
-      "Card Capture is a tactical solitaire game of hand management and strategic choices.",
-      "Use your limited tools (2s, 3s, 4s) to defeat powerful enemies (J,Q,K,A).",
-      "Each round offers multiple options: capture an enemy, sacrifice cards, or let them take from you.",
+      "Card Capture is a tactical, phase-based solitaire game where weak cards become precision tools.",
+      "You fight stronger enemies by converting value efficiently, controlling suits, and timing discards between rounds.",
+      "Every capture choice has risk: take an enemy now, allow Position 1 to take one of yours, or sacrifice two cards to delay a threat.",
+      "The central tension is protection: Aces and face cards must never end up in the Enemy Capture Pile.",
     ],
     howToPlay: [
-      "Personal Draw Deck contains all 2s, 3s, 4s, and both Jokers. Enemy Draw Deck contains remaining cards.",
-      "Setup: Draw 4 cards from Enemy Deck into positions 1-4. Remove any face cards to bottom of Enemy Deck.",
-      "Each round: Enemy Phase (refill empty positions) → Discard Phase (discard up to 4 cards) → Draw Phase (draw to 4) → Capture Phase.",
-      "In Capture Phase, choose one: (1) Capture an enemy card by spending same-suit cards totaling its value or more, (2) Let enemy capture one of your cards, or (3) Sacrifice 2 cards to send 1 enemy card to bottom of Enemy Deck.",
-      "Card values: 2-10 are face value, J=11, Q=12, K=13, A=14. Jokers act as any value of any suit.",
-      "LOSE if any face card (J,Q,K,A) enters the Enemy Capture Pile.",
-      "WIN when Enemy Draw Deck is empty, all positions are empty, and no face cards were captured.",
+      "Setup decks: take all 2s, 3s, 4s, plus both jokers as your Personal Draw Deck. Shuffle all remaining cards as the Enemy Draw Deck.",
+      "Layout: top row is Enemy Draw Deck, then enemy Positions 1-4, then Enemy Capture Pile. Bottom row is Personal Draw Deck, your hand area (up to 4 cards), then your discard pile.",
+      "Initial enemy row: deal 4 cards face up into Positions 1-4. After all 4 are placed, move any Jack, Queen, King, or Ace among them to the bottom of the Enemy Draw Deck. Empty positions stay empty until Enemy Phase refill.",
+      "1) Enemy Phase: if positions are empty, shift existing enemy cards to the right to fill gaps, then draw from Enemy Draw Deck to refill open positions. If the enemy deck is empty, skip refills.",
+      "2) Discard Phase: discard any number of cards from your hand to your discard pile.",
+      "3) Draw Phase: draw from your Personal Draw Deck until you have 4 cards in hand. If needed, shuffle your discard pile to form a new Personal Draw Deck, then keep drawing.",
+      "4) Capture Phase - choose exactly one option:",
+      "4A Capture an enemy card: choose an enemy card and spend hand cards of the same suit with equal or greater total value. Spent cards and captured enemy card go to your discard pile.",
+      "4B Let the enemy capture: take the enemy card in Position 1 and one card from your hand; place both into the Enemy Capture Pile.",
+      "4C Sacrifice: place any two non-combatant cards from your hand into the Enemy Capture Pile, then choose one enemy row card to place at the bottom of the Enemy Draw Deck.",
+      "Values: number cards use face value, J=11, Q=12, K=13, A=14, jokers are wild.",
+      "Loss condition: if any Jack, Queen, King, or Ace enters the Enemy Capture Pile at any time, you lose immediately.",
+      "Win condition: at the end of a Capture Phase, if Enemy Draw Deck is empty and all enemy positions are empty, and no combatant was captured by the enemy, you win. Otherwise begin the next round at Enemy Phase.",
     ],
   },
 
   // Bowling Solitaire
   "/bowling-solitaire": {
     enabled: false,
-    title: "Bowling Solitaire",
+    title: "Bowling Solitaire (BETA)",
     thumbnail: "Golf.jpg",
     cardColorBg: "#1a1f36",
     cardColorText: "#f4e4c1",

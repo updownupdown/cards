@@ -1,130 +1,83 @@
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
-import { FontWeight, rgba } from "@/styles/styles";
 import { delay } from "@/utils/utils";
 import { useEffect, useMemo } from "react";
 import { View } from "react-native";
-import {
-  AnimatedCardMapping,
-  bufferedDefaultAnimDuration,
-} from "../Cards/AnimatedCard";
+import { Button } from "../Button/Button";
+import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
   flipAllToBack,
+  flipToBack,
   flipToFace,
   rankValue,
   shuffle,
+  top,
   type PlayingCard,
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
-import { Button } from "../Button/Button";
 import { GameWrapper } from "../common/GameWrapper";
-import { Text } from "../common/Text";
 
 const MAX_COLUMNS = 12;
 const HAND_SIZE = 5;
 
-const WIN_COLUMNS = {
-  novice: 12,
-  normal: 11,
-  advanced: 10,
-  legendary: 9,
-  epic: 8,
-} as const;
-
-type WinTier = keyof typeof WIN_COLUMNS;
-
-const WIN_TIER_ORDER: WinTier[] = [
-  "epic",
-  "legendary",
-  "advanced",
-  "normal",
-  "novice",
-];
-
 type GameState = {
-  hand: PlayingCard[];
-  columns: PlayingCard[][];
+  hand: (PlayingCard | null)[];
+  columns: (PlayingCard[] | null)[];
   deck: PlayingCard[];
   discard: PlayingCard[];
   currentBogeyCard: PlayingCard | null;
   awaitingBogeyPlacement: boolean;
-  gameEnded: boolean;
-  won: boolean;
-  achievedTier: WinTier | null;
-  lastAction: string;
-  playerTurnEnded: boolean;
   selectedHandCardId: string | null;
+  playerTurnEnded: boolean;
+  ended: boolean;
+  won: boolean;
+  winLoseMessage?: string;
 };
 
-function cardLabel(card: PlayingCard) {
-  return `${card.rank} of ${card.suit}`;
+function getWinTier(columnCount: number) {
+  switch (columnCount) {
+    case 12:
+      return "novice";
+    case 11:
+      return "normal";
+    case 10:
+      return "advanced";
+    case 9:
+      return "legendary";
+    default:
+      return "epic";
+  }
 }
 
-function getWinTier(columnCount: number): WinTier | null {
-  return WIN_TIER_ORDER.find((tier) => columnCount <= WIN_COLUMNS[tier]) ?? null;
-}
-
-function canPlayCard(card: PlayingCard, columns: PlayingCard[][]): number[] {
+function canPlayCard(
+  card: PlayingCard,
+  columns: (PlayingCard[] | null)[],
+): number[] {
   const validColumns: number[] = [];
 
   for (let i = 0; i < columns.length; i += 1) {
     const column = columns[i];
-    const lastCard = column[column.length - 1];
 
-    if (!lastCard) continue;
+    // Column is empty
+    if (column === null) {
+      validColumns.push(i);
+      continue;
+    }
 
-    if (lastCard.suit === card.suit && rankValue(lastCard) > rankValue(card)) {
+    // Column can fit card
+    const lastCard = top(column);
+    if (
+      lastCard &&
+      lastCard.suit === card.suit &&
+      rankValue(lastCard) > rankValue(card)
+    ) {
       validColumns.push(i);
     }
   }
 
-  if (columns.length < MAX_COLUMNS) {
-    validColumns.push(-1);
-  }
-
   return validColumns;
-}
-
-function playCardToColumn(
-  card: PlayingCard,
-  columnIndex: number,
-  columns: PlayingCard[][],
-): PlayingCard[][] {
-  const nextColumns = columns.map((col) => [...col]);
-
-  if (columnIndex === -1) {
-    nextColumns.push([card]);
-  } else {
-    nextColumns[columnIndex] = [...nextColumns[columnIndex], card];
-  }
-
-  return nextColumns;
-}
-
-function drawRawCardFromDeck(state: Pick<GameState, "deck" | "discard">) {
-  if (state.deck.length === 0 && state.discard.length > 0) {
-    state.deck = shuffle(flipAllToBack(state.discard));
-    state.discard = [];
-  }
-
-  return state.deck.pop() ?? null;
-}
-
-function drawCardToHand(state: Pick<GameState, "deck" | "discard" | "hand">) {
-  const next = drawRawCardFromDeck(state);
-  if (!next) return false;
-
-  state.hand.push(flipToFace(next));
-  return true;
-}
-
-function drawBogeyCard(
-  state: Pick<GameState, "deck" | "discard">,
-): PlayingCard | null {
-  const next = drawRawCardFromDeck(state);
-  return next ? flipToFace(next) : null;
 }
 
 function allCardsPlaced(state: GameState) {
@@ -139,32 +92,53 @@ function allCardsPlaced(state: GameState) {
 function finishCompletedGame(draft: GameState) {
   const tier = getWinTier(draft.columns.length);
 
-  draft.gameEnded = true;
+  draft.ended = true;
   draft.won = tier !== null;
-  draft.achievedTier = tier;
   draft.playerTurnEnded = false;
   draft.awaitingBogeyPlacement = false;
   draft.selectedHandCardId = null;
   draft.currentBogeyCard = null;
 
   if (tier) {
-    draft.lastAction = `All cards played in ${draft.columns.length} columns. Tier: ${tier}.`;
+    draft.winLoseMessage = `${draft.columns.length} columns used. ${tier.toUpperCase()} win.`;
   } else {
-    draft.lastAction = `All cards played in ${draft.columns.length} columns.`;
+    draft.winLoseMessage = `All cards played in ${draft.columns.length} columns.`;
+  }
+}
+
+function recycleDiscardIntoDeck(draft: GameState) {
+  if (draft.deck.length > 0 || draft.discard.length === 0) return;
+
+  draft.deck = shuffle(flipAllToBack(draft.discard));
+  draft.discard = [];
+}
+
+function drawFromDeck(draft: GameState): PlayingCard | null {
+  recycleDiscardIntoDeck(draft);
+  return draft.deck.pop() ?? null;
+}
+
+function refillPlayerHand(draft: GameState) {
+  for (let i = 0; i < HAND_SIZE; i += 1) {
+    const hasCard = !!draft.hand[i];
+    if (hasCard) continue;
+
+    const next = drawFromDeck(draft);
+    if (!next) break;
+
+    draft.hand[i] = flipToFace(next);
   }
 }
 
 const gameStateInitial: GameState = {
   hand: [],
-  columns: [],
+  columns: Array.from({ length: MAX_COLUMNS }, () => null),
   deck: createDeck(),
   discard: [],
   currentBogeyCard: null,
   awaitingBogeyPlacement: false,
-  gameEnded: false,
+  ended: false,
   won: false,
-  achievedTier: null,
-  lastAction: "Game started",
   playerTurnEnded: false,
   selectedHandCardId: null,
 };
@@ -174,8 +148,10 @@ async function resetAndSetup(
 ) {
   setGame((draft) => {
     const allCards = [
-      ...draft.hand,
-      ...draft.columns.flat(),
+      ...draft.hand.filter((c): c is PlayingCard => c !== null),
+      ...draft.columns
+        .filter((col): col is PlayingCard[] => col !== null)
+        .flat(),
       ...draft.discard,
       ...draft.deck,
       ...(draft.currentBogeyCard ? [draft.currentBogeyCard] : []),
@@ -184,13 +160,11 @@ async function resetAndSetup(
     draft.deck = shuffle(flipAllToBack(allCards));
     draft.discard = [];
     draft.hand = [];
-    draft.columns = [];
+    draft.columns = Array.from({ length: MAX_COLUMNS }, () => null);
     draft.currentBogeyCard = null;
     draft.awaitingBogeyPlacement = false;
-    draft.gameEnded = false;
+    draft.ended = false;
     draft.won = false;
-    draft.achievedTier = null;
-    draft.lastAction = "Your turn: play, discard, or hold cards.";
     draft.playerTurnEnded = false;
     draft.selectedHandCardId = null;
   });
@@ -199,14 +173,16 @@ async function resetAndSetup(
 
   setGame((draft) => {
     while (draft.hand.length < HAND_SIZE) {
-      const drew = drawCardToHand(draft);
-      if (!drew) break;
+      const next = draft.deck.pop();
+      if (!next) break;
+
+      draft.hand.push(flipToFace(next));
     }
   });
 }
 
 export default function TheBogey() {
-  const { zoneBg, cardText } = useGameZoneBackground();
+  const { zoneBg } = useGameZoneBackground();
 
   const {
     game,
@@ -228,154 +204,143 @@ export default function TheBogey() {
   const selectedHandCard = useMemo(
     () =>
       game.selectedHandCardId
-        ? game.hand.find((card) => card.id === game.selectedHandCardId) ?? null
+        ? (game.hand.find(
+            (card) => card && card.id === game.selectedHandCardId,
+          ) ?? null)
         : null,
     [game.hand, game.selectedHandCardId],
   );
 
-  const activePlacementCard = game.awaitingBogeyPlacement
-    ? game.currentBogeyCard
-    : selectedHandCard;
+  const { validPlacementTargets } = useMemo(() => {
+    const placementCard = game.awaitingBogeyPlacement
+      ? game.currentBogeyCard
+      : selectedHandCard;
 
-  const validPlacementTargets = useMemo(
-    () =>
-      activePlacementCard ? canPlayCard(activePlacementCard, game.columns) : [],
-    [activePlacementCard, game.columns],
-  );
+    return {
+      activePlacementCard: placementCard,
+      validPlacementTargets: placementCard
+        ? canPlayCard(placementCard, game.columns)
+        : [],
+    };
+  }, [
+    game.awaitingBogeyPlacement,
+    game.columns,
+    game.currentBogeyCard,
+    selectedHandCard,
+  ]);
 
-  // Refill player hand to 5 at the start of each player turn.
+  // Refill player hand to 5 when a player turn starts (including after Bogey placement).
   useEffect(() => {
-    if (game.gameEnded || game.playerTurnEnded || game.awaitingBogeyPlacement) {
-      return;
-    }
-
-    if (game.hand.length >= HAND_SIZE) {
-      return;
-    }
-
-    if (game.deck.length + game.discard.length === 0) {
+    if (
+      game.ended ||
+      game.playerTurnEnded ||
+      game.awaitingBogeyPlacement ||
+      game.currentBogeyCard
+    ) {
       return;
     }
 
     setGame((draft) => {
-      while (draft.hand.length < HAND_SIZE) {
-        const drew = drawCardToHand(draft);
-        if (!drew) break;
-      }
+      refillPlayerHand(draft);
     });
   }, [
     game.awaitingBogeyPlacement,
-    game.deck.length,
-    game.discard.length,
-    game.gameEnded,
-    game.hand.length,
+    game.currentBogeyCard,
+    game.ended,
     game.playerTurnEnded,
     setGame,
   ]);
 
   // Bogey turn: draw one card, then the player chooses where it goes.
   useEffect(() => {
-    if (game.gameEnded || !game.playerTurnEnded || game.awaitingBogeyPlacement) {
+    if (
+      game.ended ||
+      !game.playerTurnEnded ||
+      game.awaitingBogeyPlacement ||
+      game.currentBogeyCard
+    ) {
       return;
     }
 
-    if (game.currentBogeyCard) {
-      return;
-    }
+    setGame((draft) => {
+      const bogeyCard = drawFromDeck(draft);
 
-    const timer = setTimeout(() => {
-      setGame((draft) => {
-        const bogeyCard = drawBogeyCard(draft);
+      if (!bogeyCard) {
+        draft.playerTurnEnded = false;
 
-        if (!bogeyCard) {
-          draft.playerTurnEnded = false;
-          draft.lastAction = "Bogey cannot draw. Your turn continues.";
-
-          if (allCardsPlaced(draft)) {
-            finishCompletedGame(draft);
-          }
-
-          return;
+        if (allCardsPlaced(draft)) {
+          finishCompletedGame(draft);
         }
 
-        const validColumns = canPlayCard(bogeyCard, draft.columns);
+        return;
+      }
 
-        if (validColumns.length === 0) {
-          draft.currentBogeyCard = bogeyCard;
-          draft.awaitingBogeyPlacement = false;
-          draft.gameEnded = true;
-          draft.won = false;
-          draft.lastAction = `Bogey drew ${cardLabel(bogeyCard)} and it cannot be played. You lose.`;
-          return;
-        }
+      const validColumns = canPlayCard(bogeyCard, draft.columns);
+      draft.currentBogeyCard = flipToFace(bogeyCard);
 
-        draft.currentBogeyCard = bogeyCard;
-        draft.awaitingBogeyPlacement = true;
-        draft.lastAction = `Bogey drew ${cardLabel(bogeyCard)}. Choose a column.`;
-      });
-    }, bufferedDefaultAnimDuration * 2);
+      if (validColumns.length === 0) {
+        draft.awaitingBogeyPlacement = false;
+        draft.ended = true;
+        draft.won = false;
+        draft.winLoseMessage = `Bogey card cannot be played.`;
+        return;
+      }
 
-    return () => clearTimeout(timer);
+      draft.awaitingBogeyPlacement = true;
+    });
   }, [
     game.awaitingBogeyPlacement,
     game.currentBogeyCard,
-    game.gameEnded,
+    game.ended,
     game.playerTurnEnded,
     setGame,
   ]);
 
   function handleSelectHandCard(cardId: string) {
-    if (game.gameEnded || game.playerTurnEnded || game.awaitingBogeyPlacement) {
+    if (game.ended || game.playerTurnEnded || game.awaitingBogeyPlacement) {
       return;
     }
 
     setGame((draft) => {
       draft.selectedHandCardId =
         draft.selectedHandCardId === cardId ? null : cardId;
-
-      const selected = draft.hand.find((card) => card.id === draft.selectedHandCardId);
-      draft.lastAction = selected
-        ? `Selected ${cardLabel(selected)}. Choose a column, new column, or discard.`
-        : "Selection cleared.";
     });
   }
 
   function handleColumnSelection(columnIdx: number) {
-    if (game.gameEnded) return;
+    if (game.ended) return;
 
-    const isBogeyPlacement = game.awaitingBogeyPlacement && !!game.currentBogeyCard;
-    const sourceCard = isBogeyPlacement ? game.currentBogeyCard : selectedHandCard;
+    const isBogeyPlacement =
+      game.awaitingBogeyPlacement && !!game.currentBogeyCard;
+    const sourceCard = isBogeyPlacement
+      ? game.currentBogeyCard
+      : selectedHandCard;
 
     if (!sourceCard) return;
-
-    const validColumns = canPlayCard(sourceCard, game.columns);
-    if (!validColumns.includes(columnIdx)) {
-      setGame((draft) => {
-        draft.lastAction = "That column is not a legal target.";
-      });
-      return;
-    }
 
     saveUndoState(structuredClone(game));
 
     setGame((draft) => {
       const playableCard = isBogeyPlacement
         ? draft.currentBogeyCard
-        : draft.hand.find((card) => card.id === draft.selectedHandCardId);
+        : draft.hand.find(
+            (card) => card && card.id === draft.selectedHandCardId,
+          );
 
       if (!playableCard) return;
 
-      draft.columns = playCardToColumn(playableCard, columnIdx, draft.columns);
+      draft.columns[columnIdx]?.push(playableCard) ||
+        (draft.columns[columnIdx] = [playableCard]);
 
       if (isBogeyPlacement) {
         draft.currentBogeyCard = null;
         draft.awaitingBogeyPlacement = false;
         draft.playerTurnEnded = false;
-        draft.lastAction = `Bogey card played to column ${columnIdx + 1}. Your turn.`;
       } else {
-        draft.hand = draft.hand.filter((card) => card.id !== playableCard.id);
+        draft.hand = draft.hand.map((card) =>
+          card && card.id === playableCard.id ? null : card,
+        );
         draft.selectedHandCardId = null;
-        draft.lastAction = `Played ${cardLabel(playableCard)} to column ${columnIdx + 1}.`;
       }
 
       if (allCardsPlaced(draft)) {
@@ -384,13 +349,9 @@ export default function TheBogey() {
     });
   }
 
-  function handleNewColumn() {
-    handleColumnSelection(-1);
-  }
-
   function handleDiscardSelectedCard() {
     if (
-      game.gameEnded ||
+      game.ended ||
       game.playerTurnEnded ||
       game.awaitingBogeyPlacement ||
       !selectedHandCard
@@ -401,18 +362,21 @@ export default function TheBogey() {
     saveUndoState(structuredClone(game));
 
     setGame((draft) => {
-      const selected = draft.hand.find((card) => card.id === draft.selectedHandCardId);
+      const selected = draft.hand.find(
+        (card) => card && card.id === draft.selectedHandCardId,
+      );
       if (!selected) return;
 
-      draft.hand = draft.hand.filter((card) => card.id !== selected.id);
-      draft.discard.push(selected);
+      draft.hand = draft.hand.map((card) =>
+        card && card.id === selected.id ? null : card,
+      );
+      draft.discard.push(flipToBack(selected));
       draft.selectedHandCardId = null;
-      draft.lastAction = `Discarded ${cardLabel(selected)}.`;
     });
   }
 
   function handleEndTurn() {
-    if (game.gameEnded || game.playerTurnEnded || game.awaitingBogeyPlacement) {
+    if (game.ended || game.playerTurnEnded || game.awaitingBogeyPlacement) {
       return;
     }
 
@@ -421,57 +385,54 @@ export default function TheBogey() {
     setGame((draft) => {
       draft.playerTurnEnded = true;
       draft.selectedHandCardId = null;
-      draft.lastAction = "Bogey's turn...";
     });
   }
 
   const zones: MapZone[] = useMemo(() => {
-    const columnZones: MapZone[] = Array.from({ length: MAX_COLUMNS }, (_, idx) => ({
-      id: `column-${idx}`,
-      name: "column",
-      pileIndex: idx,
-      cards: game.columns[idx] ?? [],
-      col: idx % 6,
-      row: 1.8 + Math.floor(idx / 6) * 2.35,
-      height: 2.05,
-      baseZIndex: 5,
-      fan: {
-        direction: "down",
-        offset: 0.24,
-        maxVisible: 6,
-      },
-      placeholder: {
-        text: `Column ${idx + 1}`,
-        infoPos: "above",
-        showCount: false,
-      },
-    }));
+    const columnZones: MapZone[] = Array.from(
+      { length: MAX_COLUMNS },
+      (_, idx) => ({
+        id: `column-${idx}`,
+        name: "column",
+        pileIndex: idx,
+        cards: game.columns[idx] ?? [],
+        col: idx % 6,
+        row: 1.1 + Math.floor(idx / 6) * 1.5,
+        height: 1.5,
+        baseZIndex: 1,
+        fan: {
+          direction: "down",
+          offset: 0.1,
+          maxVisible: 6,
+          center: false,
+        },
+        placeholder: {},
+      }),
+    );
 
-    const handZones: MapZone[] = game.hand.map((card, idx) => ({
-      id: `hand-${card.id}`,
-      name: "hand",
-      refIndex: idx,
-      cards: [card],
-      col: 0.5 + idx * 1.02,
-      row: 6.4,
-      baseZIndex: 40,
-    }));
+    const handZones: MapZone[] = Array.from({ length: HAND_SIZE }).map(
+      (_, idx) => {
+        const card = game.hand[idx];
+        return {
+          id: `hand-${card?.id ?? idx}`,
+          name: "hand",
+          refIndex: idx,
+          cards: card ? [card] : [],
+          col: 0.5 + idx * 1,
+          row: 5.2,
+          baseZIndex: 30,
+          placeholder: {},
+        };
+      },
+    );
 
     return [
-      {
-        id: "info",
-        col: 0,
-        row: 0,
-        width: "full",
-        height: 0.8,
-        baseZIndex: 30,
-      },
       {
         id: "deck",
         name: "deck",
         cards: game.deck,
         col: 0,
-        row: 0.9,
+        row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
         placeholder: { text: "Deck", infoPos: "right" },
@@ -480,8 +441,8 @@ export default function TheBogey() {
         id: "discard",
         name: "discard",
         cards: game.discard,
-        col: 1.2,
-        row: 0.9,
+        col: 1.5,
+        row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
         placeholder: { text: "Discard", infoPos: "right" },
@@ -490,51 +451,46 @@ export default function TheBogey() {
         id: "bogey",
         name: "bogey",
         cards: game.currentBogeyCard ? [game.currentBogeyCard] : [],
-        col: 4.7,
-        row: 0.9,
+        col: 5,
+        row: 0,
         baseZIndex: 50,
-        placeholder: { text: "Bogey", infoPos: "left" },
-      },
-      {
-        id: "new-column",
-        col: 3.2,
-        row: 0.9,
-        baseZIndex: 20,
-        placeholder: {
-          text: "New Column",
-          infoPos: "above",
-          showCount: false,
-        },
+        placeholder: { text: "Bogey", infoPos: "left", showCount: false },
       },
       ...columnZones,
       ...handZones,
       {
         id: "actions",
         col: 0,
-        row: 7.5,
+        row: 4.3,
         width: "full",
         height: 0.7,
-        baseZIndex: 30,
+        baseZIndex: 1,
       },
     ];
   }, [game.columns, game.currentBogeyCard, game.deck, game.discard, game.hand]);
 
-  const cardMapper = (mappedCard: MappedCard): AnimatedCardMapping | undefined => {
+  const cardMapper = (
+    mappedCard: MappedCard,
+  ): AnimatedCardMapping | undefined => {
     if (mappedCard.zoneName === "hand") {
-      const selected = mappedCard.card.id === game.selectedHandCardId;
+      const isSelected = mappedCard.card.id === game.selectedHandCardId;
 
       return {
         onPress: () => handleSelectHandCard(mappedCard.card.id),
         isDisabled:
-          game.gameEnded || game.playerTurnEnded || game.awaitingBogeyPlacement,
-        selectColor: selected ? "blue" : "none",
-        forceSelectColor: selected,
+          game.ended || game.playerTurnEnded || game.awaitingBogeyPlacement,
+        selectColor: isSelected ? "blue" : "none",
+        isSelected,
+        forceSelectColor: isSelected,
       };
-    }
-
-    if (mappedCard.zoneName === "column" && mappedCard.pileIndex !== undefined) {
+    } else if (
+      mappedCard.zoneName === "column" &&
+      mappedCard.pileIndex !== undefined
+    ) {
       const isTopCard = mappedCard.topOfZone;
-      const isValidTarget = validPlacementTargets.includes(mappedCard.pileIndex);
+      const isValidTarget = validPlacementTargets.includes(
+        mappedCard.pileIndex,
+      );
 
       return {
         onPress: () => {
@@ -546,134 +502,87 @@ export default function TheBogey() {
         selectColor: isValidTarget && isTopCard ? "green" : "none",
         forceOverlayColor: isValidTarget && isTopCard,
       };
+    } else if (mappedCard.zoneName === "discard") {
+      return {
+        clickThroughCards: true,
+      };
+    } else if (mappedCard.zoneName === "bogey") {
+      return {
+        isSelected: true,
+        selectColor: "blue",
+      };
     }
 
     return {};
   };
 
   const zoneMapper = (zone: MapZone) => {
-    if (zone.name === "column" && zone.pileIndex !== undefined) {
-      const isValid = validPlacementTargets.includes(zone.pileIndex);
+    if (zone.name === "column") {
+      const isValid =
+        zone.pileIndex === undefined ||
+        validPlacementTargets.includes(zone.pileIndex);
 
       return {
         onPress: () => handleColumnSelection(zone.pileIndex!),
         isDisabled: !isValid,
-        selectColor: isValid ? "green" : "none",
-        forceSelectColor: isValid,
-        forceOverlayColor: isValid,
+        // selectColor: isValid ? "green" : "none",
+        // forceOverlayColor: isValid,
       };
-    }
-
-    if (zone.id === "new-column") {
-      const isValid = validPlacementTargets.includes(-1);
+    } else if (zone.name === "discard") {
+      const isDisabled =
+        game.ended ||
+        game.playerTurnEnded ||
+        game.awaitingBogeyPlacement ||
+        !selectedHandCard;
 
       return {
-        onPress: handleNewColumn,
-        isDisabled: !isValid,
-        selectColor: isValid ? "green" : "none",
-        forceSelectColor: isValid,
-        forceOverlayColor: isValid,
+        onPress: () => {
+          if (game.awaitingBogeyPlacement) return;
+          handleDiscardSelectedCard();
+        },
+        isDisabled,
+        selectColor: isDisabled ? "none" : "orange",
+        forceOverlayColor: !isDisabled,
       };
     }
 
-    return {};
+    return;
   };
 
   const { cardMap, getZoneStylesById } = useCardMap({
     game,
     zones,
     gap: 0.2,
-    fixedCols: 6,
-    fixedRows: 8.5,
     cardSize: "small",
     cardMapper,
     zoneMapper,
   });
 
-  const tierText = game.achievedTier ? `Tier: ${game.achievedTier}` : "";
-
   return (
     <GameWrapper
       showIntro={showIntro}
       setShowIntro={setShowIntro}
-      ended={game.gameEnded}
+      ended={game.ended}
       won={game.won}
       reset={reset}
       isLoaded={isLoaded}
-      winLoseMessage={
-        game.won
-          ? `All cards played in ${game.columns.length} columns. ${tierText}`
-          : "Bogey drew an unplayable card."
-      }
       canUndo={canUndo}
       undo={undo}
     >
       {cardMap}
 
-      <View
-        style={[
-          getZoneStylesById("info"),
-          flexStyles.rowCentered,
-          {
-            borderRadius: 12,
-            paddingHorizontal: 16,
-            backgroundColor: zoneBg,
-          },
-        ]}
-      >
-        <Text
+      <View style={[getZoneStylesById("actions"), flexStyles.colCentered]}>
+        <Button
+          text="End Turn"
+          theme="blue"
           size="sm"
-          style={[
-            flexStyles.flex1,
-            {
-              color: cardText,
-              fontFamily: FontWeight[400],
-            },
-          ]}
-        >
-          Columns: {game.columns.length} / {MAX_COLUMNS} | Targets N:{WIN_COLUMNS.novice} NR:{WIN_COLUMNS.normal} A:{WIN_COLUMNS.advanced} L:{WIN_COLUMNS.legendary} E:{WIN_COLUMNS.epic}
-        </Text>
-      </View>
-
-      <View
-        style={[
-          getZoneStylesById("actions"),
-          {
-            ...flexStyles.rowCentered,
-            justifyContent: "space-between",
-            backgroundColor: rgba(zoneBg, 0.96),
-            borderRadius: 12,
-            gap: 10,
-            paddingHorizontal: 10,
-          },
-        ]}
-      >
-        <Text size="xs" style={[flexStyles.flex1, { color: cardText }]}> 
-          {game.lastAction}
-        </Text>
-
-        {!game.awaitingBogeyPlacement && !game.playerTurnEnded && selectedHandCard && (
-          <>
-            <Button text="Discard" theme="orange" onPress={handleDiscardSelectedCard} />
-            <Button
-              text="Cancel"
-              theme="blue"
-              onPress={() => {
-                setGame((draft) => {
-                  draft.selectedHandCardId = null;
-                  draft.lastAction = "Selection cleared.";
-                });
-              }}
-            />
-          </>
-        )}
-
-        {!game.awaitingBogeyPlacement &&
-          !game.playerTurnEnded &&
-          !selectedHandCard &&
-          !game.gameEnded && (
-            <Button text="End Turn" theme="blue" onPress={handleEndTurn} />
-          )}
+          onPress={handleEndTurn}
+          disabled={
+            game.ended || game.playerTurnEnded || game.awaitingBogeyPlacement
+          }
+          fullWidth
+          taller
+        />
       </View>
     </GameWrapper>
   );
