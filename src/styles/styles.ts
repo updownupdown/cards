@@ -33,6 +33,7 @@ export const Colors = {
   cardSelectOrange: "#ff7418",
   cardSelectYellow: "#ffea2d",
   cardSelectGreen: "#26ff93",
+  cardSelectGrey: "#333333",
 
   // Misc
   win: "#03B491",

@@ -14,6 +14,7 @@ const cardSelectColorMap = {
   purple: Colors.cardSelectPurple,
   yellow: Colors.cardSelectYellow,
   pink: Colors.cardSelectPink,
+  grey: Colors.cardSelectGrey,
 } as const;
 
 export type CardColor = keyof typeof cardSelectColorMap;
@@ -74,7 +75,12 @@ export const CardOverlay = (props: {
           transitionProperty: "all",
           borderRadius: props.cardWidth * cardDims.ratioRadius,
           backgroundColor: selectColor,
-          opacity: props.isSelected || props.forceOverlayColor ? 0.2 : 0,
+          opacity:
+            props.isSelected || props.forceOverlayColor
+              ? props.selectColor === "grey"
+                ? 0.5
+                : 0.2
+              : 0,
         },
       ]}
     />

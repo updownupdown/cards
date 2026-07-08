@@ -29,6 +29,7 @@ interface Props {
   textStyle?: TextStyle | TextStyle[];
   size?: TextSize;
   textOnly?: boolean;
+  flat?: boolean;
   theme?: string | HexColor;
   disabled?: boolean;
   fullWidth?: boolean;
@@ -52,6 +53,7 @@ export const Button = ({
   textStyle,
   size = "md",
   textOnly = false,
+  flat = false,
   disabled,
   fullWidth,
   text,
@@ -129,17 +131,24 @@ export const Button = ({
           paddingHorizontal,
           gap,
 
+          // borderWidth: outlined ? 2 * scale : 0,
+          // borderColor: outlined ? themeColor : undefined,
           borderRadius,
-          boxShadow: height
-            ? `inset 0 0 0 ${roundToPixel(height * 0.03)}px ${rgba(
-                Colors.white,
-                0.2,
-              )}, inset 0 0 ${roundToPixel(height * 0.4)}px ${rgba(
-                Colors.white,
-                disabled ? 0.2 : 0.4,
-              )}, 0 0 ${roundToPixel(height * 0.2)}px ${rgba(themeColor, 0.8)}`
-            : undefined,
-          backgroundColor: textOnly || disabled ? undefined : themeColor,
+          boxShadow:
+            height && !flat
+              ? `inset 0 0 0 ${roundToPixel(height * 0.03)}px ${rgba(
+                  Colors.white,
+                  0.2,
+                )}, inset 0 0 ${roundToPixel(height * 0.4)}px ${rgba(
+                  Colors.white,
+                  disabled ? 0.2 : 0.4,
+                )}, 0 0 ${roundToPixel(height * 0.2)}px ${rgba(themeColor, 0.8)}`
+              : undefined,
+          backgroundColor: flat
+            ? rgba(themeColor, 0.2)
+            : textOnly || disabled
+              ? undefined
+              : themeColor,
           ...(Platform.OS === "web" && preventWebLongPressMenu
             ? ({
                 userSelect: "none",
@@ -186,7 +195,7 @@ export const Button = ({
               fontSize,
               fontFamily,
               textTransform: uppercase ? "uppercase" : "none",
-              color: textOnly ? themeColor : Colors.white,
+              color: textOnly || flat ? themeColor : Colors.white,
               lineHeight: lineHeightUpdated,
               textAlign: "center",
             },

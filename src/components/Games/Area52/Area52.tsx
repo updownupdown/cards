@@ -16,7 +16,6 @@ import { View } from "react-native";
 import { Button } from "../../Button/Button";
 import {
   AnimatedCardMapping,
-  bufferedDefaultAnimDuration,
   defaultAnimDuration,
 } from "../../Cards/AnimatedCard";
 import {
