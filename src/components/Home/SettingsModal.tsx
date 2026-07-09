@@ -1,4 +1,8 @@
-import { DEFAULT_GLOBAL_SETTINGS, resetAllSettings } from "@/data/game-menu";
+import {
+  clearLastGameSession,
+  DEFAULT_GLOBAL_SETTINGS,
+  resetAllSettings,
+} from "@/data/game-menu";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { flexStyles } from "@/styles/flexStyles";
 import { modalStyles } from "@/styles/modalStyles";
@@ -53,6 +57,18 @@ export const SettingsModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               value={settings.showIntros}
               type="boolean"
               onChange={(val) => updateSettings({ showIntros: val })}
+            />
+
+            <SettingControl
+              label="Resume last played game on launch"
+              value={settings.resumeLastGame}
+              type="boolean"
+              onChange={(val) => {
+                void updateSettings({ resumeLastGame: val });
+                if (!val) {
+                  void clearLastGameSession();
+                }
+              }}
             />
 
             <AddToHomeScreenNotice />

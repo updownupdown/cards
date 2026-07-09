@@ -1,4 +1,6 @@
-import { useGameLoading } from "@/hooks/useGameLoading";
+import { Text } from "@/components/common/Text";
+import { useGameSettingValue } from "@/hooks/useGameSettingValue";
+import { useStateManager } from "@/hooks/useStateManager";
 import {
   CardHitArea,
   createRect,
@@ -7,185 +9,193 @@ import {
   useDragDrop,
 } from "@/hooks/useDragDrop";
 import { useNavigation } from "expo-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { GestureResponderEvent } from "react-native";
-import { Animated, StyleSheet, View } from "react-native";
+import { Animated, Pressable, StyleSheet, View } from "react-native";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { Button } from "../Button/Button";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { Card } from "../Cards/Card";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
+  PlayingCard,
   RANK_VALUE,
   createDeck,
   shuffle,
-  type PlayingCard,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-import { Text } from "../common/Text";
 
-// ─── Constants ────────────────────────────────────────────────────────────────
+const TABLEAU_FAN_OFFSET = 0.26;
 
-const CASCADE_FAN_OFFSET = 0.16;
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-type GameState = {
+type SpiderState = {
   tableau: PlayingCard[][];
   stock: PlayingCard[];
   completedRuns: number;
+  difficulty: "easy" | "difficult";
 };
 
-/**
- * Selection tracks the start of the movable same-suit run the user picked.
- * cardIndex is the index of the first card in the run within the pile.
- */
-type Selection = { pileIndex: number; cardIndex: number } | null;
+type Selection = {
+  zone: "tableau";
+  pileIndex: number;
+  cardIndex: number;
+} | null;
 
 type MoveSource = Exclude<Selection, null>;
-type DropTarget = { pileIndex: number };
 
-// ─── Pure game logic ──────────────────────────────────────────────────────────
+type DropTarget = {
+  zone: "tableau";
+  pileIndex: number;
+};
 
-/**
- * Returns the sub-array of cards from startIndex that forms a valid same-suit
- * descending sequence. Returns [] if the starting card is face-down or the
- * sequence is broken.
- */
-function getSameSuitRun(
-  pile: PlayingCard[],
-  startIndex: number,
-): PlayingCard[] {
-  if (startIndex < 0 || startIndex >= pile.length) return [];
-  if (!pile[startIndex].faceUp) return [];
-
-  const result: PlayingCard[] = [pile[startIndex]];
-  for (let i = startIndex + 1; i < pile.length; i += 1) {
-    const prev = pile[i - 1];
-    const curr = pile[i];
-    if (!curr.faceUp) return [];
-    if (curr.suit !== prev.suit) return [];
-    if (
-      RANK_VALUE[prev.rank as keyof typeof RANK_VALUE] !==
-      RANK_VALUE[curr.rank as keyof typeof RANK_VALUE] + 1
-    )
-      return [];
-    result.push(curr);
-  }
-  return result;
-}
-
-/**
- * Find the longest same-suit descending run at the end of the pile.
- * Returns the cardIndex where that run starts, or null if the top is face-down.
- */
-function getTopMovableRun(
-  pile: PlayingCard[],
-): { startIndex: number; cards: PlayingCard[] } | null {
-  if (pile.length === 0) return null;
-  if (!pile[pile.length - 1].faceUp) return null;
-
-  let startIndex = pile.length - 1;
-  while (startIndex > 0) {
-    const above = pile[startIndex - 1];
-    const curr = pile[startIndex];
-    if (!above.faceUp) break;
-    if (above.suit !== curr.suit) break;
-    if (
-      RANK_VALUE[above.rank as keyof typeof RANK_VALUE] !==
-      RANK_VALUE[curr.rank as keyof typeof RANK_VALUE] + 1
-    )
-      break;
-    startIndex -= 1;
-  }
-
-  return { startIndex, cards: pile.slice(startIndex) };
-}
-
-/**
- * A run (or single card) can be placed on a destination pile if:
- *  - Destination is empty (accepts any card).
- *  - OR the bottom card of the run is exactly one rank below the destination top.
- *    (Any suit — Spider allows mixed-suit builds.)
- */
-function canPlaceOnPile(
-  runBottom: PlayingCard,
-  targetPile: PlayingCard[],
-): boolean {
-  if (targetPile.length === 0) return true;
-  const targetTop = targetPile[targetPile.length - 1];
-  return (
-    RANK_VALUE[runBottom.rank as keyof typeof RANK_VALUE] + 1 ===
-    RANK_VALUE[targetTop.rank as keyof typeof RANK_VALUE]
-  );
-}
-
-/**
- * Remove a complete K→A same-suit run from the end of a pile (if present).
- * Returns the updated pile and whether a run was collected.
- */
-function tryCollectRun(pile: PlayingCard[]): {
-  pile: PlayingCard[];
-  collected: boolean;
-} {
-  if (pile.length < 13) return { pile, collected: false };
-
-  const run = pile.slice(-13);
-  if (run[0].rank !== "K") return { pile, collected: false };
-
-  for (let i = 0; i < run.length - 1; i += 1) {
-    const curr = run[i];
-    const next = run[i + 1];
-    if (curr.suit !== next.suit) return { pile, collected: false };
-    if (
-      RANK_VALUE[curr.rank as keyof typeof RANK_VALUE] !==
-      RANK_VALUE[next.rank as keyof typeof RANK_VALUE] + 1
-    ) {
-      return { pile, collected: false };
-    }
-  }
-
-  return { pile: pile.slice(0, -13), collected: true };
-}
-
-function createInitialState(): GameState {
-  // Two full decks, single suit (1-suit Spider)
+function createInitialState(
+  difficulty: "easy" | "difficult" = "easy",
+): SpiderState {
   const deck = shuffle(
-    createDeck({ deckCount: 2, forceSuit: "spades", faceUp: false }),
+    createDeck({
+      deckCount: 2,
+      forceSuit: difficulty === "easy" ? "spades" : undefined,
+      faceUp: false,
+    }),
   );
-  const tableau: PlayingCard[][] = Array.from({ length: 10 }, () => []);
 
-  // Columns 0-3 get 6 cards, columns 4-9 get 5 cards (54 total dealt)
-  for (let col = 0; col < 10; col += 1) {
-    const count = col < 4 ? 6 : 5;
-    for (let i = 0; i < count; i += 1) {
-      const card = deck.pop();
-      if (!card) break;
-      tableau[col].push({ ...card, faceUp: i === count - 1 });
+  const tableau: PlayingCard[][] = Array.from({ length: 10 }, () => []);
+  let cursor = 0;
+
+  // Deal 54 cards: first 4 piles get 6, remaining 6 piles get 5.
+  for (let pileIndex = 0; pileIndex < 10; pileIndex += 1) {
+    const count = pileIndex < 4 ? 6 : 5;
+    for (let depth = 0; depth < count; depth += 1) {
+      const baseCard = deck[cursor++];
+      if (!baseCard) continue;
+      tableau[pileIndex].push({
+        ...baseCard,
+        faceUp: depth === count - 1,
+      });
     }
   }
 
-  return { tableau, stock: deck, completedRuns: 0 };
+  return {
+    tableau,
+    stock: deck.slice(cursor),
+    completedRuns: 0,
+    difficulty,
+  };
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
+function revealLastIfNeeded(pile: PlayingCard[]) {
+  if (pile.length === 0) return pile;
+
+  const top = pile[pile.length - 1];
+  if (top.faceUp) return pile;
+
+  return [...pile.slice(0, -1), { ...top, faceUp: true }];
+}
+
+function isValidDescendingRun(cards: PlayingCard[]) {
+  if (cards.length === 0) return false;
+  if (cards.some((card) => !card.faceUp)) return false;
+
+  for (let i = 0; i < cards.length - 1; i += 1) {
+    const current = cards[i];
+    const next = cards[i + 1];
+
+    if (RANK_VALUE[current.rank] !== RANK_VALUE[next.rank] + 1) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function isCompleteRun(cards: PlayingCard[]) {
+  if (cards.length !== 13) return false;
+  if (!cards.every((card) => card.faceUp)) return false;
+
+  const suit = cards[0].suit;
+  if (!cards.every((card) => card.suit === suit)) return false;
+  if (cards[0].rank !== "K") return false;
+
+  for (let i = 0; i < cards.length - 1; i += 1) {
+    const current = cards[i];
+    const next = cards[i + 1];
+
+    if (RANK_VALUE[current.rank] !== RANK_VALUE[next.rank] + 1) {
+      return false;
+    }
+  }
+
+  return cards[cards.length - 1].rank === "A";
+}
+
+function canPlaceOnTableau(card: PlayingCard, destinationTop?: PlayingCard) {
+  if (!destinationTop) {
+    return true;
+  }
+
+  return RANK_VALUE[card.rank] + 1 === RANK_VALUE[destinationTop.rank];
+}
+
+function collectCompletedRuns(tableau: PlayingCard[][]) {
+  let removed = 0;
+
+  for (let pileIndex = 0; pileIndex < tableau.length; pileIndex += 1) {
+    const pile = tableau[pileIndex];
+
+    while (pile.length >= 13) {
+      const tail = pile.slice(-13);
+      if (!isCompleteRun(tail)) {
+        break;
+      }
+
+      pile.splice(pile.length - 13, 13);
+      removed += 1;
+    }
+
+    tableau[pileIndex] = revealLastIfNeeded(pile);
+  }
+
+  return removed;
+}
+
+const gameStateInitial = createInitialState();
 
 export default function SpiderSolitaire() {
-  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
+  const configuredDifficulty = useGameSettingValue("difficulty");
   const navigation = useNavigation();
-
-  const [game, setGame] = useState<GameState>(createInitialState);
   const [selected, setSelected] = useState<Selection>(null);
+  const [hoverTarget, setHoverTarget] = useState<DropTarget | null>(null);
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
 
-  // ── Drag & drop ─────────────────────────────────────────────────────────────
+  const {
+    isLoaded,
+    showIntro,
+    setShowIntro,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<SpiderState>({
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelected(null);
+      clearDragGhost();
+    },
+    resetAndSetup: async () => {
+      setGame(createInitialState(configuredDifficulty));
+    },
+  });
 
   const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
+
+  const handleHoverTargetChange = useCallback((next: DropTarget | null) => {
+    setHoverTarget((prev) => (sameDropTarget(prev, next) ? prev : next));
+  }, []);
 
   const {
     dragGhost,
     draggedCardIds,
-    hoverTargetRef,
     justDroppedCardIds,
     dragTranslate,
     boardRef,
@@ -202,96 +212,132 @@ export default function SpiderSolitaire() {
       return hit?.target ?? null;
     },
     canDropOnTarget,
-    sameTarget: (a, b) => {
-      if (!a || !b) return a === b;
-      return a.pileIndex === b.pileIndex;
-    },
-    onSuccessfulDrop: (source, target) => {
-      applyMove(source, target);
+    sameTarget: sameDropTarget,
+    onSuccessfulDrop: async (source, target) => {
+      moveSourceToTableau(source, target.pileIndex);
     },
     getDroppedCardIds: (source) =>
-      getSameSuitRun(game.tableau[source.pileIndex], source.cardIndex).map(
-        (c) => c.id,
-      ),
+      getSourceCards(source, game).map((card) => card.id),
     getDropHitAreas: () => dropHitAreasRef.current,
     getSourceRect,
+    onHoverTargetChange: handleHoverTargetChange,
   });
 
-  // ── Derived ─────────────────────────────────────────────────────────────────
+  const canDealStock = useMemo(
+    () =>
+      game.stock.length >= 10 && game.tableau.every((pile) => pile.length > 0),
+    [game.stock.length, game.tableau],
+  );
 
   const won = useMemo(() => game.completedRuns === 8, [game.completedRuns]);
 
-  const canDeal = game.stock.length >= 10;
-
-  // ── CardMap zones ───────────────────────────────────────────────────────────
-
   const zones: MapZone[] = useMemo(() => {
-    const tableauZones: MapZone[] = game.tableau.map((pile, i) => ({
-      id: `cascade-${i}`,
-      name: "cascade",
-      pileIndex: i,
+    const tableauZones: MapZone[] = game.tableau.map((pile, pileIndex) => ({
+      id: `tableau-${pileIndex}`,
+      name: "tableau",
+      pileIndex,
       cards: pile,
-      col: i,
-      row: 0,
-      baseZIndex: 10 + i,
-      fan: {
-        direction: "down" as const,
-        offset: CASCADE_FAN_OFFSET,
-        maxVisible: 104,
-      },
-      placeholder: { showCount: false },
+      col: pileIndex,
+      row: 1.6,
+      baseZIndex: 10 + pileIndex,
+      fan: { direction: "down", offset: TABLEAU_FAN_OFFSET, maxVisible: 104 },
+      placeholder: { showCount: false, text: "Empty" },
     }));
 
-    return tableauZones;
-  }, [game.tableau]);
-
-  // ── CardMap callbacks ───────────────────────────────────────────────────────
+    return [
+      {
+        id: "stock",
+        name: "stock",
+        cards: game.stock,
+        pileIndex: 0,
+        col: 0,
+        row: 0,
+        baseZIndex: 30,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Deal", infoPos: "below" },
+      },
+      ...tableauZones,
+    ];
+  }, [game.stock, game.tableau]);
 
   const cardMapper = (
     mappedCard: MappedCard,
   ): AnimatedCardMapping | undefined => {
-    if (
-      mappedCard.zoneName !== "cascade" ||
-      mappedCard.pileIndex === undefined
-    ) {
-      return undefined;
-    }
-
     const isBeingDragged = draggedCardIds?.has(mappedCard.card.id) ?? false;
     const animDuration =
       justDroppedCardIds.current?.has(mappedCard.card.id) === true
         ? 0
         : undefined;
 
-    const pileIndex = mappedCard.pileIndex;
-    const cardIndex = mappedCard.cardIndex;
-    const isInSelectedRun =
-      selected?.pileIndex === pileIndex && cardIndex >= selected.cardIndex;
+    if (mappedCard.zoneName === "stock" && mappedCard.topOfZone) {
+      return {
+        selectColor: "blue",
+        isSelected: false,
+        onPress: dealFromStock,
+        isDisabled: !canDealStock,
+        isVisible: !isBeingDragged,
+        animDuration,
+      };
+    }
+
+    if (
+      mappedCard.zoneName === "tableau" &&
+      mappedCard.pileIndex !== undefined
+    ) {
+      const isSelectedSource =
+        selected?.zone === "tableau" &&
+        selected.pileIndex === mappedCard.pileIndex &&
+        mappedCard.cardIndex >= selected.cardIndex;
+      const isHoverTargetTop =
+        !!dragGhost &&
+        mappedCard.topOfZone &&
+        hoverTarget?.zone === "tableau" &&
+        hoverTarget.pileIndex === mappedCard.pileIndex;
+
+      return {
+        selectColor: isHoverTargetTop
+          ? "green"
+          : isSelectedSource
+            ? "blue"
+            : "none",
+        isSelected: isSelectedSource || isHoverTargetTop,
+        isDisabled: !mappedCard.card.faceUp,
+        isVisible: !isBeingDragged,
+        animDuration,
+      };
+    }
 
     return {
-      selectColor: isInSelectedRun ? "blue" : "none",
-      isSelected: isInSelectedRun,
-      isDisabled: !mappedCard.card.faceUp,
       isVisible: !isBeingDragged,
-      animDuration: animDuration,
+      animDuration,
     };
   };
 
   const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
-    if (zone.name === "cascade" && zone.pileIndex !== undefined) {
-      const pileIndex = zone.pileIndex;
+    if (zone.name === "stock") {
       return {
-        onPress: () => onPilePress(pileIndex),
-        isDisabled: !!dragGhost || !selected,
-        isSelected:
-          selected?.pileIndex === pileIndex &&
-          game.tableau[pileIndex].length === 0,
+        onPress: dealFromStock,
+        isDisabled: !canDealStock,
+        isSelected: false,
       };
     }
+
+    if (zone.name === "tableau" && zone.pileIndex !== undefined) {
+      const isHoverDropTarget =
+        !!dragGhost &&
+        hoverTarget?.zone === "tableau" &&
+        hoverTarget.pileIndex === zone.pileIndex;
+
+      return {
+        onPress: () => onEmptyTableauPress(zone.pileIndex!),
+        isDisabled: !selected || !!dragGhost,
+        isSelected: isHoverDropTarget && zone.cards?.length === 0,
+        selectColor: isHoverDropTarget ? "green" : "blue",
+      };
+    }
+
     return undefined;
   };
-
-  // ── useCardMap ──────────────────────────────────────────────────────────────
 
   const { cardMap, getZoneBasePos, cardWidth, cardHeight } = useCardMap({
     game,
@@ -300,40 +346,67 @@ export default function SpiderSolitaire() {
     cardMapper,
     zoneMapper,
     cardSize: "small",
-    paddingTop: 0.2,
-    paddingBottom: 2.5,
+    fixedRows: 6,
+    visualizer: true,
   });
 
-  // ── Hit areas ───────────────────────────────────────────────────────────────
+  const stockTapRect = useMemo(() => {
+    const stockZone = zones.find((zone) => zone.name === "stock");
+    if (!stockZone) return null;
+
+    const pos = getZoneBasePos(stockZone);
+    return createRect(pos.x, pos.y, cardWidth, cardHeight);
+  }, [cardHeight, cardWidth, getZoneBasePos, zones]);
+
+  function getSourceRect(source: MoveSource) {
+    const zone = zones.find(
+      (entry) =>
+        entry.name === "tableau" && entry.pileIndex === source.pileIndex,
+    );
+    if (!zone) return null;
+
+    const base = getZoneBasePos(zone);
+    return createRect(
+      base.x,
+      base.y + source.cardIndex * TABLEAU_FAN_OFFSET * cardHeight,
+      cardWidth,
+      cardHeight,
+    );
+  }
 
   const cardHitAreas = useMemo<CardHitArea<MoveSource>[]>(() => {
     const areas: CardHitArea<MoveSource>[] = [];
 
     zones.forEach((zone) => {
-      if (zone.name !== "cascade" || zone.pileIndex === undefined) return;
+      if (zone.name !== "tableau" || zone.pileIndex === undefined) {
+        return;
+      }
 
-      const pile = game.tableau[zone.pileIndex];
       const zoneRect = getZoneBasePos(zone);
+      const pile = game.tableau[zone.pileIndex];
 
-      // Add a hit area for each valid same-suit run start
-      for (let ci = 0; ci < pile.length; ci += 1) {
-        const run = getSameSuitRun(pile, ci);
-        if (run.length === 0) continue;
+      pile.forEach((card, cardIndex) => {
+        if (!card.faceUp) return;
+
         areas.push({
-          source: { pileIndex: zone.pileIndex!, cardIndex: ci },
+          source: {
+            zone: "tableau",
+            pileIndex: zone.pileIndex!,
+            cardIndex,
+          },
           rect: createRect(
             zoneRect.x,
-            zoneRect.y + ci * CASCADE_FAN_OFFSET * cardHeight,
+            zoneRect.y + cardIndex * TABLEAU_FAN_OFFSET * cardHeight,
             cardWidth,
             cardHeight,
           ),
-          priority: 10 + ci,
+          priority: 10 + cardIndex,
         });
-      }
+      });
     });
 
     return areas;
-  }, [cardHeight, cardWidth, game, getZoneBasePos, zones]);
+  }, [cardHeight, cardWidth, game.tableau, getZoneBasePos, zones]);
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
@@ -346,18 +419,25 @@ export default function SpiderSolitaire() {
     const areas: DropHitArea<DropTarget>[] = [];
 
     zones.forEach((zone) => {
-      if (zone.name !== "cascade" || zone.pileIndex === undefined) return;
+      if (zone.name !== "tableau" || zone.pileIndex === undefined) {
+        return;
+      }
+
       const zoneRect = getZoneBasePos(zone);
-      const bx = zoneRect.x + boardPageOffset.x;
-      const by = zoneRect.y + boardPageOffset.y;
       const pile = game.tableau[zone.pileIndex];
       const pileHeight =
         cardHeight +
-        Math.max(0, pile.length - 1) * CASCADE_FAN_OFFSET * cardHeight;
+        Math.max(0, pile.length - 1) * TABLEAU_FAN_OFFSET * cardHeight;
+
       areas.push({
-        target: { pileIndex: zone.pileIndex },
-        rect: createRect(bx, by, cardWidth, pileHeight),
-        priority: 50 + pile.length,
+        target: { zone: "tableau", pileIndex: zone.pileIndex },
+        rect: createRect(
+          zoneRect.x + boardPageOffset.x,
+          zoneRect.y + boardPageOffset.y,
+          cardWidth,
+          pileHeight,
+        ),
+        priority: 40 + pile.length,
       });
     });
 
@@ -367,187 +447,236 @@ export default function SpiderSolitaire() {
     boardPageOffset.y,
     cardHeight,
     cardWidth,
-    game,
+    game.tableau,
     getZoneBasePos,
     zones,
   ]);
 
   dropHitAreasRef.current = dropHitAreas;
 
-  // ── Navigation ──────────────────────────────────────────────────────────────
-
   useEffect(() => {
     navigation.setOptions({ gestureEnabled: false });
+
     return () => {
       navigation.setOptions({ gestureEnabled: true });
     };
   }, [navigation]);
 
-  // ── Game logic ──────────────────────────────────────────────────────────────
-
-  function canDropOnTarget(source: MoveSource, target: DropTarget): boolean {
-    if (source.pileIndex === target.pileIndex) return false;
-    const run = getSameSuitRun(
-      game.tableau[source.pileIndex],
-      source.cardIndex,
-    );
-    if (run.length === 0) return false;
-    return canPlaceOnPile(run[0], game.tableau[target.pileIndex]);
+  function clearSelection() {
+    setSelected(null);
   }
 
-  function applyMove(source: MoveSource, target: DropTarget) {
-    setGame((prev) => {
-      const run = getSameSuitRun(
-        prev.tableau[source.pileIndex],
-        source.cardIndex,
-      );
-      if (run.length === 0) return prev;
+  function getSourceCards(source: MoveSource, snapshot: SpiderState) {
+    const pile = snapshot.tableau[source.pileIndex];
+    const cards = pile.slice(source.cardIndex);
 
-      const tableau = prev.tableau.map((p) => [...p]);
+    if (!isValidDescendingRun(cards)) {
+      return [];
+    }
 
-      // Remove run from source pile
-      tableau[source.pileIndex] = tableau[source.pileIndex].slice(
-        0,
-        source.cardIndex,
-      );
-
-      // Reveal newly exposed face-down card
-      const srcPile = tableau[source.pileIndex];
-      if (srcPile.length > 0 && !srcPile[srcPile.length - 1].faceUp) {
-        srcPile[srcPile.length - 1] = {
-          ...srcPile[srcPile.length - 1],
-          faceUp: true,
-        };
+    if (snapshot.difficulty === "difficult" && cards.length > 1) {
+      const suit = cards[0].suit;
+      if (!cards.every((card) => card.suit === suit)) {
+        return [];
       }
+    }
 
-      // Place run on destination
-      tableau[target.pileIndex] = [...tableau[target.pileIndex], ...run];
+    return cards;
+  }
 
-      // Check for completed K→A same-suit run
-      let completedRuns = prev.completedRuns;
-      const { pile: newDest, collected } = tryCollectRun(
-        tableau[target.pileIndex],
-      );
-      if (collected) {
-        completedRuns += 1;
-        tableau[target.pileIndex] = newDest;
-      }
+  function startGhostDrag(source: MoveSource, _event: GestureResponderEvent) {
+    const cards = getSourceCards(source, game);
+    if (cards.length === 0) return;
 
-      return { ...prev, tableau, completedRuns };
-    });
-    setSelected(null);
+    const rect = getSourceRect(source);
+    if (!rect) return;
+
+    startDrag(source, cards, { x: rect.x, y: rect.y });
   }
 
   function dealFromStock() {
-    if (!canDeal) return;
-    setGame((prev) => {
-      if (prev.stock.length < 10) return prev;
-      const tableau = prev.tableau.map((p) => [...p]);
-      const stock = [...prev.stock];
-      for (let i = 0; i < 10; i += 1) {
-        const card = stock.pop();
-        if (!card) break;
-        tableau[i].push({ ...card, faceUp: true });
+    if (dragGhost) {
+      clearDragGhost();
+    }
+
+    if (!canDealStock) {
+      clearSelection();
+      return;
+    }
+
+    saveUndoState(structuredClone(game));
+    setGame((draft) => {
+      if (draft.stock.length < 10) {
+        return;
       }
-      return { ...prev, tableau, stock };
+
+      if (draft.tableau.some((pile) => pile.length === 0)) {
+        return;
+      }
+
+      for (let pileIndex = 0; pileIndex < 10; pileIndex += 1) {
+        const top = draft.stock[draft.stock.length - 1];
+        if (!top) {
+          return;
+        }
+
+        draft.stock = draft.stock.slice(0, -1);
+        draft.tableau[pileIndex].push({ ...top, faceUp: true });
+      }
+
+      draft.completedRuns += collectCompletedRuns(draft.tableau);
     });
-    setSelected(null);
-    clearDragGhost();
+
+    clearSelection();
   }
 
-  function resetGame() {
-    setGame(createInitialState());
-    setSelected(null);
-    clearDragGhost();
-  }
+  function moveSourceToTableau(source: MoveSource, destinationIndex: number) {
+    if (
+      !canDropOnTarget(source, {
+        zone: "tableau",
+        pileIndex: destinationIndex,
+      })
+    ) {
+      clearSelection();
+      return;
+    }
 
-  // ── Drag helpers ─────────────────────────────────────────────────────────────
+    saveUndoState(structuredClone(game));
+    setGame((draft) => {
+      if (source.pileIndex === destinationIndex) {
+        return;
+      }
 
-  function startGhostDrag(source: MoveSource, _event: GestureResponderEvent) {
-    const run = getSameSuitRun(
-      game.tableau[source.pileIndex],
-      source.cardIndex,
-    );
-    if (run.length === 0) return;
+      const sourcePile = draft.tableau[source.pileIndex];
+      const movingCards = sourcePile.slice(source.cardIndex);
 
-    const zone = zones.find(
-      (z) => z.name === "cascade" && z.pileIndex === source.pileIndex,
-    );
-    if (!zone) return;
+      if (!isValidDescendingRun(movingCards)) {
+        return;
+      }
 
-    const base = getZoneBasePos(zone);
-    startDrag(source, run, {
-      x: base.x,
-      y: base.y + source.cardIndex * CASCADE_FAN_OFFSET * cardHeight,
+      const destinationPile = draft.tableau[destinationIndex];
+      const destinationTop = destinationPile[destinationPile.length - 1];
+      if (!canPlaceOnTableau(movingCards[0], destinationTop)) {
+        return;
+      }
+
+      sourcePile.splice(source.cardIndex, movingCards.length);
+      destinationPile.push(
+        ...movingCards.map((card) => ({ ...card, faceUp: true })),
+      );
+
+      draft.tableau[source.pileIndex] = revealLastIfNeeded(sourcePile);
+      draft.tableau[destinationIndex] = revealLastIfNeeded(destinationPile);
+      draft.completedRuns += collectCompletedRuns(draft.tableau);
     });
+
+    clearSelection();
   }
 
-  function getSourceRect(source: MoveSource) {
-    const zone = zones.find(
-      (z) => z.name === "cascade" && z.pileIndex === source.pileIndex,
-    );
-    if (!zone) return null;
+  function onTableauCardPress(pileIndex: number, cardIndex: number) {
+    if (dragGhost) {
+      clearSelection();
+      return;
+    }
 
-    const base = getZoneBasePos(zone);
-    return createRect(
-      base.x,
-      base.y + source.cardIndex * CASCADE_FAN_OFFSET * cardHeight,
-      cardWidth,
-      cardHeight,
-    );
+    const card = game.tableau[pileIndex]?.[cardIndex];
+    if (!card?.faceUp) {
+      return;
+    }
+
+    const source: MoveSource = { zone: "tableau", pileIndex, cardIndex };
+
+    if (!selected) {
+      if (getSourceCards(source, game).length > 0) {
+        setSelected(source);
+      }
+      return;
+    }
+
+    if (selected.pileIndex === pileIndex && selected.cardIndex === cardIndex) {
+      clearSelection();
+      return;
+    }
+
+    if (selected.pileIndex === pileIndex) {
+      if (getSourceCards(source, game).length > 0) {
+        setSelected(source);
+      }
+      return;
+    }
+
+    moveSourceToTableau(selected, pileIndex);
+  }
+
+  function onEmptyTableauPress(pileIndex: number) {
+    if (!selected || dragGhost) return;
+    moveSourceToTableau(selected, pileIndex);
+  }
+
+  function sameDropTarget(a: DropTarget | null, b: DropTarget | null) {
+    if (!a || !b) return a === b;
+    return a.zone === b.zone && a.pileIndex === b.pileIndex;
+  }
+
+  function canDropOnTarget(
+    source: MoveSource,
+    target: DropTarget,
+    snapshot = game,
+  ) {
+    if (source.pileIndex === target.pileIndex) {
+      return false;
+    }
+
+    const movingCards = getSourceCards(source, snapshot);
+    if (movingCards.length === 0) return false;
+
+    const destinationPile = snapshot.tableau[target.pileIndex];
+    const destinationTop = destinationPile[destinationPile.length - 1];
+    return canPlaceOnTableau(movingCards[0], destinationTop);
   }
 
   function makeHandlers(source: MoveSource, onTap?: () => void) {
     return makeDragHandlers(source, startGhostDrag, onTap);
   }
 
-  // ── Tap handlers ─────────────────────────────────────────────────────────────
-
-  function onCardTap(pileIndex: number, cardIndex: number) {
-    if (dragGhost) return;
-
-    if (selected?.pileIndex === pileIndex && selected.cardIndex === cardIndex) {
-      setSelected(null);
-      return;
-    }
-
-    if (!selected) {
-      const run = getSameSuitRun(game.tableau[pileIndex], cardIndex);
-      if (run.length > 0) {
-        setSelected({ pileIndex, cardIndex });
-      }
-      return;
-    }
-
-    const target: DropTarget = { pileIndex };
-    if (canDropOnTarget(selected, target)) {
-      applyMove(selected, target);
-      return;
-    }
-
-    // Re-select from the tapped position
-    const run = getSameSuitRun(game.tableau[pileIndex], cardIndex);
-    if (run.length > 0) {
-      setSelected({ pileIndex, cardIndex });
-    } else {
-      setSelected(null);
-    }
-  }
-
-  function onPilePress(pileIndex: number) {
-    if (!selected || dragGhost) return;
-    const target: DropTarget = { pileIndex };
-    if (canDropOnTarget(selected, target)) {
-      applyMove(selected, target);
-    } else {
-      setSelected(null);
-    }
-  }
-
-  // ── Render ────────────────────────────────────────────────────────────────────
-
   const ghostLeft = dragGhost ? dragGhost.origin.x : 0;
   const ghostTop = dragGhost ? dragGhost.origin.y : 0;
+  const ghostHasValidDrop = !!dragGhost && hoverTarget !== null;
+
+  const tapHandlerResolverRef = useRef(
+    (_source: MoveSource): (() => void) =>
+      () => {},
+  );
+  tapHandlerResolverRef.current = (source: MoveSource) => {
+    return () => onTableauCardPress(source.pileIndex, source.cardIndex);
+  };
+
+  const interactionTargets = useMemo(
+    () =>
+      cardHitAreas.map((hit) => {
+        const source = hit.source;
+        const rect = hit.rect;
+
+        return (
+          <View
+            key={`tableau-${source.pileIndex}-${source.cardIndex}`}
+            collapsable={false}
+            style={{
+              position: "absolute",
+              backgroundColor: "transparent",
+              left: rect.x,
+              top: rect.y,
+              width: rect.width,
+              height: rect.height,
+            }}
+            {...makeHandlers(source, () =>
+              tapHandlerResolverRef.current(source)(),
+            )}
+          />
+        );
+      }),
+    [cardHitAreas],
+  );
 
   return (
     <GameWrapper
@@ -555,70 +684,106 @@ export default function SpiderSolitaire() {
       setShowIntro={setShowIntro}
       ended={won}
       won={won}
-      reset={resetGame}
+      score={game.completedRuns * 13}
+      reset={() => {
+        void reset();
+      }}
       isLoaded={isLoaded}
+      canUndo={canUndo}
+      undo={undo}
+      winLoseMessage={
+        won ? "All eight K-to-A suit runs are complete." : undefined
+      }
     >
-      <View style={styles.gameShell}>
-        <View style={styles.toolbar}>
-          <Text size="sm" style={styles.runsText}>
-            Runs: {game.completedRuns}/8
-          </Text>
-          <Button
-            onPress={dealFromStock}
-            disabled={!canDeal || !!dragGhost}
-            text={`Deal (${Math.floor(game.stock.length / 10)} left)`}
-          />
-          <Button onPress={resetGame} disabled={!!dragGhost} text="New game" />
-        </View>
+      <View style={styles.toolbar}>
+        <Text size="sm" style={styles.toolbarText}>
+          Runs: {game.completedRuns}/8 | Deals left:{" "}
+          {Math.floor(game.stock.length / 10)}
+        </Text>
+        <Button
+          onPress={dealFromStock}
+          disabled={!canDealStock || !!dragGhost}
+          text="Deal"
+          size="xs"
+        />
+      </View>
 
-        <View ref={boardRef} style={styles.boardShell}>
+      <View style={{ flex: 1, width: "100%", gap: 12 }}>
+        <View
+          ref={boardRef}
+          style={{
+            flex: 1,
+            width: "100%",
+            position: "relative",
+            touchAction: "none",
+            overscrollBehaviorX: "contain",
+          }}
+        >
           {cardMap}
 
-          <View style={styles.interactionLayer}>
-            {cardHitAreas.map((hit) => {
-              const { source, rect } = hit;
-              const onTap = () => onCardTap(source.pileIndex, source.cardIndex);
-              return (
-                <View
-                  key={`c-${source.pileIndex}-${source.cardIndex}`}
-                  collapsable={false}
-                  style={[
-                    styles.interactionTarget,
-                    {
-                      left: rect.x,
-                      top: rect.y,
-                      width: rect.width,
-                      height: rect.height,
-                    },
-                  ]}
-                  {...makeHandlers(source, onTap)}
-                />
-              );
-            })}
+          <View
+            style={{
+              ...StyleSheet.absoluteFill,
+              zIndex: 3000,
+              touchAction: "none",
+              overscrollBehaviorX: "contain",
+              pointerEvents: "box-none",
+            }}
+          >
+            {stockTapRect && (
+              <Pressable
+                style={{
+                  position: "absolute",
+                  backgroundColor: "transparent",
+                  left: stockTapRect.x,
+                  top: stockTapRect.y,
+                  width: stockTapRect.width,
+                  height: stockTapRect.height,
+                }}
+                onPress={dealFromStock}
+                disabled={!canDealStock || !!dragGhost}
+              />
+            )}
+            {interactionTargets}
           </View>
 
           {dragGhost && (
             <Animated.View
               style={[
-                styles.ghostLayer,
                 {
+                  pointerEvents: "none",
+                  position: "absolute",
+                  zIndex: 4000,
                   left: ghostLeft,
                   top: ghostTop,
                   transform: dragTranslate.getTranslateTransform(),
-                  pointerEvents: "none",
                 },
               ]}
             >
-              {dragGhost.cards.map((card, i) => (
+              {dragGhost.cards.map((card, index) => (
                 <View
                   key={`ghost-${card.id}`}
                   style={[
-                    styles.ghostCard,
-                    { width: cardWidth, height: cardHeight },
-                    { top: i * CASCADE_FAN_OFFSET * cardHeight, zIndex: i + 1 },
+                    {
+                      position: "absolute",
+                      left: 0,
+                      opacity: 1,
+                      width: cardWidth,
+                      height: cardHeight,
+                    },
+                    {
+                      top: index * TABLEAU_FAN_OFFSET * cardHeight,
+                      zIndex: index + 1,
+                    },
                   ]}
                 >
-                  <Card card={card} cardWidth={cardWidth} cardSize="small" />
+                  <Card
+                    card={card}
+                    cardWidth={cardWidth}
+                    cardSize="small"
+                    selectColor={ghostHasValidDrop ? "green" : "none"}
+                    isSelected={ghostHasValidDrop}
+                  />
                 </View>
               ))}
             </Animated.View>
@@ -629,50 +794,14 @@ export default function SpiderSolitaire() {
   );
 }
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
-
 const styles = StyleSheet.create({
-  gameShell: {
-    flex: 1,
-    width: "100%",
-    gap: 8,
-    paddingHorizontal: 8,
-  },
   toolbar: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     gap: 8,
   },
-  runsText: {
+  toolbarText: {
     flex: 1,
-  },
-  boardShell: {
-    flex: 1,
-    width: "100%",
-    position: "relative",
-    touchAction: "none",
-    overscrollBehaviorX: "contain",
-  },
-  interactionLayer: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 3000,
-    touchAction: "none",
-    overscrollBehaviorX: "contain",
-    pointerEvents: "box-none",
-  },
-  interactionTarget: {
-    position: "absolute",
-    backgroundColor: "transparent",
-  },
-  ghostLayer: {
-    position: "absolute",
-    zIndex: 4000,
-    pointerEvents: "none",
-  },
-  ghostCard: {
-    position: "absolute",
-    left: 0,
-    opacity: 1,
   },
 });

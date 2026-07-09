@@ -8,7 +8,7 @@ import {
   runTiming,
 } from "@/hooks/useDragDrop";
 import { useNavigation } from "expo-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { GestureResponderEvent } from "react-native";
 import { Animated, StyleSheet, View } from "react-native";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
@@ -17,7 +17,6 @@ import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { Card } from "../Cards/Card";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
-  CardSuit,
   isRed,
   PlayingCard,
   RANK_VALUE,
@@ -29,14 +28,15 @@ import { GameWrapper } from "../common/GameWrapper";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const CASCADE_FAN_OFFSET = 0.22;
+const CASCADE_FAN_OFFSET = 0.4;
+const DOUBLE_TAP_MS = 300;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type GameState = {
   cascades: PlayingCard[][];
   freeCells: (PlayingCard | null)[];
-  foundations: Record<CardSuit, PlayingCard[]>;
+  foundations: PlayingCard[][];
 };
 
 type Selection =
@@ -49,7 +49,7 @@ type MoveSource = Exclude<Selection, null>;
 type DropTarget =
   | { zone: "cascade"; pileIndex: number }
   | { zone: "free"; slotIndex: number }
-  | { zone: "foundation"; suit: CardSuit };
+  | { zone: "foundation"; pileIndex: number };
 
 // ─── Pure game logic ──────────────────────────────────────────────────────────
 
@@ -93,7 +93,7 @@ function createInitialState(): GameState {
   return {
     cascades,
     freeCells: [null, null, null, null],
-    foundations: { clubs: [], diamonds: [], hearts: [], spades: [] },
+    foundations: Array.from({ length: 4 }, () => [] as PlayingCard[]),
   };
 }
 
@@ -105,6 +105,10 @@ export default function FreeCell() {
   const navigation = useNavigation();
 
   const [selected, setSelected] = useState<Selection>(null);
+  const [hoverTarget, setHoverTarget] = useState<DropTarget | null>(null);
+  const [lastTap, setLastTap] = useState<{ key: string; at: number } | null>(
+    null,
+  );
   const clearDragGhostRef = useRef<(() => void) | null>(null);
 
   const {
@@ -121,6 +125,7 @@ export default function FreeCell() {
     gameStateInitial,
     resetNonGameStates: () => {
       setSelected(null);
+      setLastTap(null);
       clearDragGhostRef.current?.();
     },
     resetAndSetup: async () => {
@@ -133,11 +138,13 @@ export default function FreeCell() {
   // ── Drag & drop ─────────────────────────────────────────────────────────────
 
   const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
+  const handleHoverTargetChange = useCallback((next: DropTarget | null) => {
+    setHoverTarget((prev) => (sameDropTarget(prev, next) ? prev : next));
+  }, []);
 
   const {
     dragGhost,
     draggedCardIds,
-    hoverTargetRef,
     justDroppedCardIds,
     dragTranslate,
     boardRef,
@@ -164,6 +171,7 @@ export default function FreeCell() {
     },
     getDropHitAreas: () => dropHitAreasRef.current,
     getSourceRect,
+    onHoverTargetChange: handleHoverTargetChange,
   });
 
   clearDragGhostRef.current = clearDragGhost;
@@ -171,10 +179,7 @@ export default function FreeCell() {
   // ── Derived ─────────────────────────────────────────────────────────────────
 
   const won = useMemo(
-    () =>
-      (SUITS as readonly string[]).every(
-        (suit) => game.foundations[suit as CardSuit].length === 13,
-      ),
+    () => game.foundations.every((pile) => pile.length === 13),
     [game.foundations],
   );
 
@@ -190,25 +195,20 @@ export default function FreeCell() {
       row: 0,
       baseZIndex: 50,
       fan: { maxVisible: 1 },
-      placeholder: { text: "Free", infoPos: "below" as const },
+      placeholder: { infoPos: "below" as const },
     }));
 
-    const foundationZones: MapZone[] = (SUITS as readonly string[]).map(
-      (suit, i) => ({
-        id: `foundation-${suit}`,
-        name: "foundation",
-        pileIndex: i,
-        cards: game.foundations[suit as CardSuit],
-        col: 4 + i,
-        row: 0,
-        baseZIndex: 40,
-        fan: { maxVisible: 1 },
-        placeholder: {
-          text: suit[0].toUpperCase(),
-          infoPos: "above" as const,
-        },
-      }),
-    );
+    const foundationZones: MapZone[] = game.foundations.map((pile, i) => ({
+      id: `foundation-${i}`,
+      name: "foundation",
+      pileIndex: i,
+      cards: pile,
+      col: 4 + i,
+      row: 0,
+      baseZIndex: 40,
+      fan: { maxVisible: 1 },
+      placeholder: {},
+    }));
 
     const cascadeZones: MapZone[] = game.cascades.map((pile, i) => ({
       id: `cascade-${i}`,
@@ -217,11 +217,12 @@ export default function FreeCell() {
       cards: pile,
       col: i,
       row: 1.5,
+      height: 4,
       baseZIndex: 10 + i,
       fan: {
         direction: "down" as const,
         offset: CASCADE_FAN_OFFSET,
-        maxVisible: 52,
+        center: false,
       },
       placeholder: { showCount: false },
     }));
@@ -241,11 +242,18 @@ export default function FreeCell() {
         : undefined;
 
     if (mappedCard.zoneName === "free" && mappedCard.pileIndex !== undefined) {
+      const isHoverTargetTop =
+        !!dragGhost &&
+        mappedCard.topOfZone &&
+        hoverTarget?.zone === "free" &&
+        hoverTarget.slotIndex === mappedCard.pileIndex;
+
       return {
-        selectColor: "blue",
+        selectColor: isHoverTargetTop ? "green" : "blue",
         isSelected:
-          selected?.zone === "free" &&
-          selected.slotIndex === mappedCard.pileIndex,
+          (selected?.zone === "free" &&
+            selected.slotIndex === mappedCard.pileIndex) ||
+          isHoverTargetTop,
         isVisible: !isBeingDragged,
         animDuration: animDuration,
       };
@@ -255,9 +263,15 @@ export default function FreeCell() {
       mappedCard.zoneName === "foundation" &&
       mappedCard.pileIndex !== undefined
     ) {
+      const isHoverTargetTop =
+        !!dragGhost &&
+        mappedCard.topOfZone &&
+        hoverTarget?.zone === "foundation" &&
+        hoverTarget.pileIndex === mappedCard.pileIndex;
+
       return {
         selectColor: "green",
-        isSelected: false,
+        isSelected: isHoverTargetTop,
         isVisible: !isBeingDragged,
         animDuration: animDuration,
       };
@@ -270,9 +284,18 @@ export default function FreeCell() {
       const pileIndex = mappedCard.pileIndex;
       const isTopSelected =
         selected?.zone === "cascade" && selected.pileIndex === pileIndex;
+      const isHoverTargetTop =
+        !!dragGhost &&
+        mappedCard.topOfZone &&
+        hoverTarget?.zone === "cascade" &&
+        hoverTarget.pileIndex === pileIndex;
       return {
-        selectColor: isTopSelected ? "blue" : "none",
-        isSelected: isTopSelected,
+        selectColor: isHoverTargetTop
+          ? "green"
+          : isTopSelected
+            ? "blue"
+            : "none",
+        isSelected: isTopSelected || isHoverTargetTop,
         isVisible: !isBeingDragged,
         animDuration: animDuration,
       };
@@ -284,30 +307,47 @@ export default function FreeCell() {
   const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
     if (zone.name === "free" && zone.pileIndex !== undefined) {
       const slotIndex = zone.pileIndex;
+      const isHoverDropTarget =
+        !!dragGhost &&
+        hoverTarget?.zone === "free" &&
+        hoverTarget.slotIndex === slotIndex;
       return {
         onPress: () => onFreeCellPress(slotIndex),
         isDisabled: !!dragGhost || !selected,
         isSelected:
-          selected?.zone === "free" && selected.slotIndex === slotIndex,
+          (selected?.zone === "free" && selected.slotIndex === slotIndex) ||
+          (isHoverDropTarget && zone.cards?.length === 0),
+        selectColor: isHoverDropTarget ? "green" : "blue",
       };
     }
 
     if (zone.name === "foundation" && zone.pileIndex !== undefined) {
-      const suit = SUITS[zone.pileIndex] as CardSuit;
+      const foundationPileIndex = zone.pileIndex;
+      const isHoverDropTarget =
+        !!dragGhost &&
+        hoverTarget?.zone === "foundation" &&
+        hoverTarget.pileIndex === foundationPileIndex;
       return {
-        onPress: () => onFoundationPress(suit),
+        onPress: () => onFoundationPress(foundationPileIndex),
         isDisabled: !!dragGhost || !selected,
-        isSelected: false,
+        isSelected: isHoverDropTarget,
+        selectColor: "green",
       };
     }
 
     if (zone.name === "cascade" && zone.pileIndex !== undefined) {
       const pileIndex = zone.pileIndex;
+      const isHoverDropTarget =
+        !!dragGhost &&
+        hoverTarget?.zone === "cascade" &&
+        hoverTarget.pileIndex === pileIndex;
       return {
         onPress: () => onCascadePress(pileIndex),
         isDisabled: !!dragGhost || !selected,
         isSelected:
-          selected?.zone === "cascade" && selected.pileIndex === pileIndex,
+          (selected?.zone === "cascade" && selected.pileIndex === pileIndex) ||
+          (isHoverDropTarget && zone.cards?.length === 0),
+        selectColor: isHoverDropTarget ? "green" : "blue",
       };
     }
 
@@ -319,11 +359,10 @@ export default function FreeCell() {
   const { cardMap, getZoneBasePos, cardWidth, cardHeight } = useCardMap({
     game,
     zones,
-    gap: 0.3,
     cardMapper,
     zoneMapper,
     cardSize: "small",
-    paddingBottom: 0.9,
+    // visualizer: true,
   });
 
   // ── Hit areas ───────────────────────────────────────────────────────────────
@@ -387,9 +426,8 @@ export default function FreeCell() {
       }
 
       if (zone.name === "foundation" && zone.pileIndex !== undefined) {
-        const suit = SUITS[zone.pileIndex] as CardSuit;
         areas.push({
-          target: { zone: "foundation", suit },
+          target: { zone: "foundation", pileIndex: zone.pileIndex },
           rect: createRect(bx, by, cardWidth, cardHeight),
           priority: 80,
         });
@@ -441,7 +479,9 @@ export default function FreeCell() {
     if (a.zone === "free" && b.zone === "free")
       return a.slotIndex === b.slotIndex;
     return (
-      a.zone === "foundation" && b.zone === "foundation" && a.suit === b.suit
+      a.zone === "foundation" &&
+      b.zone === "foundation" &&
+      a.pileIndex === b.pileIndex
     );
   }
 
@@ -465,9 +505,8 @@ export default function FreeCell() {
     }
 
     if (target.zone === "foundation") {
-      if (card.suit !== target.suit) return false;
-      const top =
-        game.foundations[target.suit][game.foundations[target.suit].length - 1];
+      const targetPile = game.foundations[target.pileIndex];
+      const top = targetPile[targetPile.length - 1];
       return canPlaceOnFoundation(card, top);
     }
 
@@ -507,11 +546,48 @@ export default function FreeCell() {
         if (draft.freeCells[target.slotIndex] !== null) return;
         draft.freeCells[target.slotIndex] = card;
       } else {
-        draft.foundations[target.suit].push(card);
+        draft.foundations[target.pileIndex].push(card);
       }
     });
 
+    setLastTap(null);
     setSelected(null);
+  }
+
+  function getAutoFoundationTarget(
+    source: MoveSource,
+    snapshot: GameState = game,
+  ): DropTarget | null {
+    const card = getTopCard(source, snapshot);
+    if (!card) return null;
+
+    for (
+      let pileIndex = 0;
+      pileIndex < snapshot.foundations.length;
+      pileIndex++
+    ) {
+      const pile = snapshot.foundations[pileIndex];
+      const top = pile[pile.length - 1];
+      if (!top) continue;
+      if (top.suit !== card.suit) continue;
+      if (!canPlaceOnFoundation(card, top)) continue;
+
+      return { zone: "foundation", pileIndex };
+    }
+
+    for (
+      let pileIndex = 0;
+      pileIndex < snapshot.foundations.length;
+      pileIndex++
+    ) {
+      const pile = snapshot.foundations[pileIndex];
+      if (pile.length > 0) continue;
+      if (!canPlaceOnFoundation(card, undefined)) continue;
+
+      return { zone: "foundation", pileIndex };
+    }
+
+    return null;
   }
 
   // ── Drag helpers ─────────────────────────────────────────────────────────────
@@ -558,6 +634,21 @@ export default function FreeCell() {
   // ── Tap handlers ─────────────────────────────────────────────────────────────
 
   function onCascadePress(pileIndex: number) {
+    const now = Date.now();
+    const tapKey = `cascade-${pileIndex}`;
+
+    if (lastTap?.key === tapKey && now - lastTap.at < DOUBLE_TAP_MS) {
+      setLastTap(null);
+      const source: MoveSource = { zone: "cascade", pileIndex };
+      const foundationTarget = getAutoFoundationTarget(source);
+      if (foundationTarget && canDropOnTarget(source, foundationTarget)) {
+        applyMove(source, foundationTarget);
+      }
+      return;
+    }
+
+    setLastTap({ key: tapKey, at: now });
+
     const pile = game.cascades[pileIndex];
 
     if (!selected) {
@@ -574,6 +665,21 @@ export default function FreeCell() {
   }
 
   function onFreeCellPress(slotIndex: number) {
+    const now = Date.now();
+    const tapKey = `free-${slotIndex}`;
+
+    if (lastTap?.key === tapKey && now - lastTap.at < DOUBLE_TAP_MS) {
+      setLastTap(null);
+      const source: MoveSource = { zone: "free", slotIndex };
+      const foundationTarget = getAutoFoundationTarget(source);
+      if (foundationTarget && canDropOnTarget(source, foundationTarget)) {
+        applyMove(source, foundationTarget);
+      }
+      return;
+    }
+
+    setLastTap({ key: tapKey, at: now });
+
     const slotCard = game.freeCells[slotIndex];
 
     if (!selected) {
@@ -589,21 +695,66 @@ export default function FreeCell() {
     applyMove(selected, { zone: "free", slotIndex });
   }
 
-  function onFoundationPress(suit: CardSuit) {
+  function onFoundationPress(pileIndex: number) {
     if (!selected) return;
 
-    if (!canDropOnTarget(selected, { zone: "foundation", suit })) {
+    if (!canDropOnTarget(selected, { zone: "foundation", pileIndex })) {
       setSelected(null);
       return;
     }
 
-    applyMove(selected, { zone: "foundation", suit });
+    applyMove(selected, { zone: "foundation", pileIndex });
   }
 
   // ── Render ────────────────────────────────────────────────────────────────────
 
   const ghostLeft = dragGhost ? dragGhost.origin.x : 0;
   const ghostTop = dragGhost ? dragGhost.origin.y : 0;
+  const ghostHasValidDrop = !!dragGhost && hoverTarget !== null;
+
+  const tapHandlerResolverRef = useRef(
+    (_source: MoveSource): (() => void) =>
+      () => {},
+  );
+  tapHandlerResolverRef.current = (source: MoveSource) => {
+    if (source.zone === "cascade") {
+      return () => onCascadePress(source.pileIndex);
+    }
+
+    return () => onFreeCellPress(source.slotIndex);
+  };
+
+  const interactionTargets = useMemo(
+    () =>
+      cardHitAreas.map((hit) => {
+        const { source, rect } = hit;
+        const key =
+          source.zone === "cascade"
+            ? `cascade-${source.pileIndex}`
+            : `free-${source.slotIndex}`;
+
+        return (
+          <View
+            key={key}
+            collapsable={false}
+            style={[
+              {
+                position: "absolute",
+                backgroundColor: "transparent",
+                left: rect.x,
+                top: rect.y,
+                width: rect.width,
+                height: rect.height,
+              },
+            ]}
+            {...makeHandlers(source, () =>
+              tapHandlerResolverRef.current(source)(),
+            )}
+          />
+        );
+      }),
+    [cardHitAreas],
+  );
 
   return (
     <GameWrapper
@@ -618,64 +769,64 @@ export default function FreeCell() {
       canUndo={canUndo}
       undo={undo}
     >
-      <View style={styles.gameShell}>
-        <View ref={boardRef} style={styles.boardShell}>
+      <View style={{ flex: 1, width: "100%", gap: 12 }}>
+        <View
+          ref={boardRef}
+          style={{
+            flex: 1,
+            width: "100%",
+            position: "relative",
+            touchAction: "none",
+            overscrollBehaviorX: "contain",
+          }}
+        >
           {cardMap}
 
-          <View style={styles.interactionLayer}>
-            {cardHitAreas.map((hit) => {
-              const { source, rect } = hit;
-              const onTap =
-                source.zone === "cascade"
-                  ? () => onCascadePress(source.pileIndex)
-                  : () => onFreeCellPress(source.slotIndex);
-
-              const key =
-                source.zone === "cascade"
-                  ? `cascade-${source.pileIndex}`
-                  : `free-${source.slotIndex}`;
-
-              return (
-                <View
-                  key={key}
-                  collapsable={false}
-                  style={[
-                    styles.interactionTarget,
-                    {
-                      left: rect.x,
-                      top: rect.y,
-                      width: rect.width,
-                      height: rect.height,
-                    },
-                  ]}
-                  {...makeHandlers(source, onTap)}
-                />
-              );
-            })}
+          <View
+            style={[
+              {
+                ...StyleSheet.absoluteFill,
+                zIndex: 3000,
+                touchAction: "none",
+                overscrollBehaviorX: "contain",
+                pointerEvents: "box-none",
+              },
+            ]}
+          >
+            {interactionTargets}
           </View>
 
           {dragGhost && (
             <Animated.View
               style={[
-                styles.ghostLayer,
                 {
+                  position: "absolute",
+                  zIndex: 4000,
+                  pointerEvents: "none",
                   left: ghostLeft,
                   top: ghostTop,
                   transform: dragTranslate.getTranslateTransform(),
-                  pointerEvents: "none",
                 },
               ]}
             >
               <View
                 style={[
-                  styles.ghostCard,
-                  { width: cardWidth, height: cardHeight },
+                  {
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                    opacity: 1,
+                    width: cardWidth,
+                    height: cardHeight,
+                  },
                 ]}
               >
                 <Card
                   card={dragGhost.cards[0]}
                   cardWidth={cardWidth}
                   cardSize="small"
+                  selectColor={ghostHasValidDrop ? "green" : "none"}
+                  isSelected={ghostHasValidDrop}
                 />
               </View>
             </Animated.View>
@@ -685,48 +836,3 @@ export default function FreeCell() {
     </GameWrapper>
   );
 }
-
-// ─── Styles ───────────────────────────────────────────────────────────────────
-
-const styles = StyleSheet.create({
-  gameShell: {
-    flex: 1,
-    width: "100%",
-    gap: 12,
-    paddingHorizontal: 12,
-  },
-  toolbar: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    gap: 12,
-  },
-  boardShell: {
-    flex: 1,
-    width: "100%",
-    position: "relative",
-    touchAction: "none",
-    overscrollBehaviorX: "contain",
-  },
-  interactionLayer: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 3000,
-    touchAction: "none",
-    overscrollBehaviorX: "contain",
-    pointerEvents: "box-none",
-  },
-  interactionTarget: {
-    position: "absolute",
-    backgroundColor: "transparent",
-  },
-  ghostLayer: {
-    position: "absolute",
-    zIndex: 4000,
-    pointerEvents: "none",
-  },
-  ghostCard: {
-    position: "absolute",
-    left: 0,
-    top: 0,
-    opacity: 1,
-  },
-});

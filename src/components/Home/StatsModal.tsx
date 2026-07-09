@@ -43,6 +43,16 @@ export const StatsModal = ({ onClose }: Props) => {
     [settingsMap],
   );
 
+  const hasAnyHighestScore = useMemo(
+    () =>
+      orderedStatsRows.some(
+        (row) =>
+          typeof row.stats.highestScore === "number" &&
+          Number.isFinite(row.stats.highestScore),
+      ),
+    [orderedStatsRows],
+  );
+
   return (
     <ModalFull title="Stats" onClose={onClose}>
       <ScrollView
@@ -69,6 +79,11 @@ export const StatsModal = ({ onClose }: Props) => {
               <Text size="sm" style={[styles.colRate, styles.headerText]}>
                 Win %
               </Text>
+              {hasAnyHighestScore && (
+                <Text size="sm" style={[styles.colBest, styles.headerText]}>
+                  Best
+                </Text>
+              )}
             </View>
 
             {/* Rows */}
@@ -89,6 +104,13 @@ export const StatsModal = ({ onClose }: Props) => {
                 <Text size="sm" style={styles.colRate}>
                   {calculateWinRate(row.stats)}
                 </Text>
+                {hasAnyHighestScore && (
+                  <Text size="sm" style={styles.colBest}>
+                    {row.stats.highestScore === null
+                      ? "-"
+                      : row.stats.highestScore}
+                  </Text>
+                )}
               </View>
             ))}
           </View>
@@ -134,6 +156,11 @@ const styles = StyleSheet.create({
   },
   colRate: {
     flex: 1.5,
+    fontFamily: FontWeight[500],
+    textAlign: "right",
+  },
+  colBest: {
+    flex: 1.4,
     fontFamily: FontWeight[500],
     textAlign: "right",
   },

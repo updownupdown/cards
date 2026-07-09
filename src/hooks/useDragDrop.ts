@@ -113,6 +113,8 @@ type UseDragDropOptions<TSource, TTarget> = {
   getDropHitAreas?: () => DropHitArea<TTarget>[];
   /** Return source card bounds in board coordinates for generous overlap fallback. */
   getSourceRect?: (source: TSource) => Rect | null;
+  /** Optional callback fired when the valid hovered drop target changes. */
+  onHoverTargetChange?: (target: TTarget | null) => void;
 };
 
 export function useDragDrop<TSource, TTarget>({
@@ -123,6 +125,7 @@ export function useDragDrop<TSource, TTarget>({
   getDroppedCardIds,
   getDropHitAreas,
   getSourceRect,
+  onHoverTargetChange,
 }: UseDragDropOptions<TSource, TTarget>) {
   // ── State & refs ────────────────────────────────────────────────────────────
 
@@ -149,7 +152,10 @@ export function useDragDrop<TSource, TTarget>({
   const getDroppedCardIdsRef = useRef(getDroppedCardIds);
   const getDropHitAreasRef = useRef(getDropHitAreas);
   const getSourceRectRef = useRef(getSourceRect);
+  const onHoverTargetChangeRef = useRef(onHoverTargetChange);
   const boardPageOffsetRef = useRef(boardPageOffset);
+  const pendingHoverTargetRef = useRef<TTarget | null>(null);
+  const hoverNotifyFrameRef = useRef<number | null>(null);
 
   findDropTargetRef.current = findDropTarget;
   canDropOnTargetRef.current = canDropOnTarget;
@@ -158,7 +164,16 @@ export function useDragDrop<TSource, TTarget>({
   getDroppedCardIdsRef.current = getDroppedCardIds;
   getDropHitAreasRef.current = getDropHitAreas;
   getSourceRectRef.current = getSourceRect;
+  onHoverTargetChangeRef.current = onHoverTargetChange;
   boardPageOffsetRef.current = boardPageOffset;
+
+  useEffect(() => {
+    return () => {
+      if (hoverNotifyFrameRef.current !== null) {
+        cancelAnimationFrame(hoverNotifyFrameRef.current);
+      }
+    };
+  }, []);
 
   // ── Derived ─────────────────────────────────────────────────────────────────
 
@@ -183,9 +198,23 @@ export function useDragDrop<TSource, TTarget>({
     setDragGhostState(ghost);
   }
 
+  function notifyHoverTargetChange(target: TTarget | null) {
+    pendingHoverTargetRef.current = target;
+
+    if (hoverNotifyFrameRef.current !== null) {
+      return;
+    }
+
+    hoverNotifyFrameRef.current = requestAnimationFrame(() => {
+      hoverNotifyFrameRef.current = null;
+      onHoverTargetChangeRef.current?.(pendingHoverTargetRef.current);
+    });
+  }
+
   function clearDragGhost() {
     setDragGhost(null);
     hoverTargetRef.current = null;
+    notifyHoverTargetChange(null);
     dragTranslate.setValue({ x: 0, y: 0 });
   }
 
@@ -195,6 +224,8 @@ export function useDragDrop<TSource, TTarget>({
     origin: { x: number; y: number },
   ) {
     dragTranslate.setValue({ x: 0, y: 0 });
+    hoverTargetRef.current = null;
+    notifyHoverTargetChange(null);
     setDragGhost({ source, cards, origin });
   }
 
@@ -211,27 +242,18 @@ export function useDragDrop<TSource, TTarget>({
     return findDropTargetRef.current(pageX, pageY);
   }
 
-  function internalUpdateHoverTarget(
-    source: TSource,
-    pageX: number,
-    pageY: number,
-  ) {
-    const target = internalFindDropTarget(pageX, pageY);
-    const valid =
-      target && canDropOnTargetRef.current(source, target) ? target : null;
-    if (!sameTargetRef.current(hoverTargetRef.current, valid)) {
-      hoverTargetRef.current = valid;
-    }
-  }
-
-  async function handleDropInternal(
+  function resolveValidDropTarget(
     source: TSource,
     pageX: number,
     pageY: number,
     dragX: number,
     dragY: number,
-  ) {
+  ): TTarget | null {
     let target = internalFindDropTarget(pageX, pageY);
+
+    if (target && canDropOnTargetRef.current(source, target)) {
+      return target;
+    }
 
     if (!target || !canDropOnTargetRef.current(source, target)) {
       const sourceRectLocal = getSourceRectRef.current?.(source) ?? null;
@@ -275,6 +297,32 @@ export function useDragDrop<TSource, TTarget>({
       }
     }
 
+    return target && canDropOnTargetRef.current(source, target) ? target : null;
+  }
+
+  function internalUpdateHoverTarget(
+    source: TSource,
+    pageX: number,
+    pageY: number,
+    dragX: number,
+    dragY: number,
+  ) {
+    const valid = resolveValidDropTarget(source, pageX, pageY, dragX, dragY);
+    if (!sameTargetRef.current(hoverTargetRef.current, valid)) {
+      hoverTargetRef.current = valid;
+      notifyHoverTargetChange(valid);
+    }
+  }
+
+  async function handleDropInternal(
+    source: TSource,
+    pageX: number,
+    pageY: number,
+    dragX: number,
+    dragY: number,
+  ) {
+    const target = resolveValidDropTarget(source, pageX, pageY, dragX, dragY);
+
     if (!target || !canDropOnTargetRef.current(source, target)) {
       await runTiming(dragTranslate, { x: 0, y: 0 }, 250);
       return;
@@ -309,7 +357,13 @@ export function useDragDrop<TSource, TTarget>({
       onPanResponderMove: (_, gesture) => {
         dragTranslate.setValue({ x: gesture.dx, y: gesture.dy });
         const activeSource = dragGhostRef.current?.source ?? source;
-        internalUpdateHoverTarget(activeSource, gesture.moveX, gesture.moveY);
+        internalUpdateHoverTarget(
+          activeSource,
+          gesture.moveX,
+          gesture.moveY,
+          gesture.dx,
+          gesture.dy,
+        );
       },
       onPanResponderRelease: (event, gesture) => {
         const moved =

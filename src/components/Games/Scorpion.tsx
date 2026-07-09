@@ -1,26 +1,47 @@
 import { Text } from "@/components/common/Text";
-import { useMemo, useState } from "react";
-import { useGameLoading } from "@/hooks/useGameLoading";
-import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { useStateManager } from "@/hooks/useStateManager";
+import {
+  CardHitArea,
+  createRect,
+  DropHitArea,
+  pointInRect,
+  useDragDrop,
+} from "@/hooks/useDragDrop";
+import { useNavigation } from "expo-router";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { GestureResponderEvent } from "react-native";
+import { Animated, Pressable, StyleSheet, View } from "react-native";
+import { useViewportDimensions } from "@/hooks/useViewportDimensions";
+import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { Card } from "../Cards/Card";
+import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
   CardRank,
-  RANK_VALUE,
   createDeck,
+  PlayingCard,
+  RANK_VALUE,
   shuffle,
-  type PlayingCard,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-import { Button } from "../Button/Button";
 
-type TableauCard = PlayingCard & { faceUp: boolean };
+const TABLEAU_FAN_OFFSET = 0.35;
 
 type ScorpionState = {
-  columns: TableauCard[][];
-  stock: TableauCard[];
-  ended: boolean;
-  won: boolean;
+  tableau: PlayingCard[][];
+  stock: PlayingCard[];
+  foundations: PlayingCard[][];
+  stockDealt: boolean;
 };
+
+type Selection = {
+  zone: "tableau";
+  pileIndex: number;
+  cardIndex: number;
+} | null;
+
+type MoveSource = Exclude<Selection, null>;
+
+type DropTarget = { zone: "tableau"; pileIndex: number };
 
 const DESC_RANKS: CardRank[] = [
   "K",
@@ -38,247 +59,751 @@ const DESC_RANKS: CardRank[] = [
   "A",
 ];
 
-function setup(): ScorpionState {
-  const deck = shuffle(createDeck({ faceUp: true }));
-  const columns: TableauCard[][] = Array.from({ length: 7 }, () => []);
+function createInitialState(): ScorpionState {
+  const deck = shuffle(createDeck({ faceUp: false }));
+  const tableau: PlayingCard[][] = Array.from({ length: 7 }, () => []);
+  let cursor = 0;
 
-  for (let col = 0; col < 7; col += 1) {
+  for (let column = 0; column < 7; column += 1) {
     for (let row = 0; row < 7; row += 1) {
-      const base = deck.shift();
-      if (!base) continue;
-      const hidden = col < 4 && row < 3;
-      columns[col].push({ ...base, faceUp: !hidden });
+      const baseCard = deck[cursor++];
+      if (!baseCard) continue;
+      const hidden = column < 4 && row < 3;
+      tableau[column].push({ ...baseCard, faceUp: !hidden });
     }
   }
 
-  const stock = (deck.splice(0, 3) as TableauCard[]).map((card) => ({
-    ...card,
-    faceUp: true,
-  }));
-
   return {
-    columns,
-    stock,
-    ended: false,
-    won: false,
+    tableau,
+    stock: deck.slice(cursor, cursor + 3).map((card) => ({
+      ...card,
+      faceUp: false,
+    })),
+    foundations: Array.from({ length: 4 }, () => [] as PlayingCard[]),
+    stockDealt: false,
   };
 }
 
-function isDescendingSameSuitRun(cards: TableauCard[]) {
-  for (let i = 0; i < cards.length - 1; i += 1) {
-    const a = cards[i];
-    const b = cards[i + 1];
-    if (!a.faceUp || !b.faceUp) return false;
-    if (a.suit !== b.suit) return false;
-    if (RANK_VALUE[a.rank] !== RANK_VALUE[b.rank] + 1) return false;
-  }
-  return true;
-}
-
-function canAttach(movingTop: TableauCard, targetTop: TableauCard | null) {
-  if (!targetTop) return true;
-  if (!targetTop.faceUp) return false;
-  return RANK_VALUE[targetTop.rank] === RANK_VALUE[movingTop.rank] + 1;
-}
-
-function normalizeColumn(column: TableauCard[]) {
+function normalizeColumn(column: PlayingCard[]) {
   if (column.length === 0) return column;
-  const next = [...column];
-  const top = next[next.length - 1];
-  if (!top.faceUp) {
-    next[next.length - 1] = { ...top, faceUp: true };
-  }
-  return next;
+  const top = column[column.length - 1];
+  if (top.faceUp) return column;
+
+  return [...column.slice(0, -1), { ...top, faceUp: true }];
 }
 
-function isCompleteSuitStack(column: TableauCard[]) {
-  if (column.length !== 13) return false;
-  if (!column.every((c) => c.faceUp)) return false;
-  const suit = column[0].suit;
-  for (let i = 0; i < 13; i += 1) {
-    if (column[i].suit !== suit) return false;
-    if (column[i].rank !== DESC_RANKS[i]) return false;
+function canAttachToTableau(
+  movingTop: PlayingCard,
+  destinationTop?: PlayingCard,
+) {
+  if (!destinationTop) {
+    return movingTop.rank === "K";
   }
+
+  if (!destinationTop.faceUp) {
+    return false;
+  }
+
+  return (
+    movingTop.suit === destinationTop.suit &&
+    RANK_VALUE[destinationTop.rank] === RANK_VALUE[movingTop.rank] + 1
+  );
+}
+
+function isCompleteSuitRun(cards: PlayingCard[]) {
+  if (cards.length !== 13) return false;
+  if (!cards.every((card) => card.faceUp)) return false;
+
+  const suit = cards[0].suit;
+  for (let i = 0; i < cards.length; i += 1) {
+    if (cards[i].suit !== suit) return false;
+    if (cards[i].rank !== DESC_RANKS[i]) return false;
+  }
+
   return true;
 }
 
-function evaluate(state: ScorpionState) {
-  const done = state.columns.filter(isCompleteSuitStack).length;
-  if (done === 4) return { ended: true, won: true };
-  return { ended: false, won: false };
+function moveCompletedRunsToFoundations(
+  tableau: PlayingCard[][],
+  foundations: PlayingCard[][],
+) {
+  for (let pileIndex = 0; pileIndex < tableau.length; pileIndex += 1) {
+    while (tableau[pileIndex].length >= 13) {
+      const run = tableau[pileIndex].slice(-13);
+      if (!isCompleteSuitRun(run)) {
+        break;
+      }
+
+      const targetFoundationIndex = foundations.findIndex(
+        (pile) => pile.length === 0,
+      );
+      if (targetFoundationIndex < 0) {
+        break;
+      }
+
+      tableau[pileIndex] = tableau[pileIndex].slice(0, -13);
+      foundations[targetFoundationIndex] = run.map((card) => ({
+        ...card,
+        faceUp: true,
+      }));
+      tableau[pileIndex] = normalizeColumn(tableau[pileIndex]);
+    }
+  }
 }
 
-type Selection = { column: number; index: number } | null;
+const gameStateInitial = createInitialState();
 
 export default function Scorpion() {
-  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
-
-  const [game, setGame] = useState<ScorpionState>(setup);
+  const navigation = useNavigation();
   const [selected, setSelected] = useState<Selection>(null);
-  const [message, setMessage] = useState(
-    "Select any face-up card stack, then tap target column. Empty columns accept any card.",
-  );
+  const [hoverTarget, setHoverTarget] = useState<DropTarget | null>(null);
 
-  const completedStacks = useMemo(
-    () => game.columns.filter(isCompleteSuitStack).length,
-    [game.columns],
-  );
+  const {
+    isLoaded,
+    showIntro,
+    setShowIntro,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<ScorpionState>({
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelected(null);
+      clearDragGhost();
+    },
+    resetAndSetup: async () => {
+      setGame(createInitialState());
+    },
+  });
 
-  function reset() {
-    setGame(setup());
-    setSelected(null);
-    setMessage(
-      "Select any face-up card stack, then tap target column. Empty columns accept any card.",
+  const { width: windowWidth, height: windowHeight } = useViewportDimensions();
+
+  const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
+
+  const handleHoverTargetChange = useCallback((next: DropTarget | null) => {
+    setHoverTarget((prev) => (sameDropTarget(prev, next) ? prev : next));
+  }, []);
+
+  const {
+    dragGhost,
+    draggedCardIds,
+    justDroppedCardIds,
+    dragTranslate,
+    boardRef,
+    boardPageOffset,
+    clearDragGhost,
+    startDrag,
+    updateBoardOffset,
+    makeDragHandlers,
+  } = useDragDrop<MoveSource, DropTarget>({
+    findDropTarget: (pageX, pageY) => {
+      const hit = [...dropHitAreasRef.current]
+        .filter(({ rect }) => pointInRect(pageX, pageY, rect))
+        .sort((a, b) => b.priority - a.priority)[0];
+      return hit?.target ?? null;
+    },
+    canDropOnTarget,
+    sameTarget: sameDropTarget,
+    onSuccessfulDrop: async (source, target) => {
+      moveSourceToTableau(source, target.pileIndex);
+    },
+    getDroppedCardIds: (source) =>
+      getSourceCards(source, game).map((card) => card.id),
+    getDropHitAreas: () => dropHitAreasRef.current,
+    getSourceRect,
+    onHoverTargetChange: handleHoverTargetChange,
+  });
+
+  const zones: MapZone[] = useMemo(() => {
+    const tableauZones: MapZone[] = game.tableau.map((pile, pileIndex) => ({
+      id: `tableau-${pileIndex}`,
+      name: "tableau",
+      pileIndex,
+      cards: pile,
+      col: pileIndex,
+      row: 1.6,
+      baseZIndex: 10 + pileIndex,
+      fan: { direction: "down", offset: TABLEAU_FAN_OFFSET },
+      placeholder: { showCount: false, text: "Empty" },
+    }));
+
+    return [
+      {
+        id: "stock",
+        name: "stock",
+        cards: game.stock,
+        col: 0,
+        row: 0,
+        baseZIndex: 35,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Deal", infoPos: "below" },
+      },
+      {
+        id: "foundation-0",
+        name: "foundation",
+        pileIndex: 0,
+        cards: game.foundations[0],
+        col: 3,
+        row: 0,
+        baseZIndex: 20,
+        fan: { maxVisible: 1 },
+        placeholder: { text: "Done", infoPos: "below" },
+      },
+      {
+        id: "foundation-1",
+        name: "foundation",
+        pileIndex: 1,
+        cards: game.foundations[1],
+        col: 4,
+        row: 0,
+        baseZIndex: 20,
+        fan: { maxVisible: 1 },
+        placeholder: { text: "Done", infoPos: "below" },
+      },
+      {
+        id: "foundation-2",
+        name: "foundation",
+        pileIndex: 2,
+        cards: game.foundations[2],
+        col: 5,
+        row: 0,
+        baseZIndex: 20,
+        fan: { maxVisible: 1 },
+        placeholder: { text: "Done", infoPos: "below" },
+      },
+      {
+        id: "foundation-3",
+        name: "foundation",
+        pileIndex: 3,
+        cards: game.foundations[3],
+        col: 6,
+        row: 0,
+        baseZIndex: 20,
+        fan: { maxVisible: 1 },
+        placeholder: { text: "Done", infoPos: "below" },
+      },
+      ...tableauZones,
+    ];
+  }, [game]);
+
+  const cardMapper = (
+    mappedCard: MappedCard,
+  ): AnimatedCardMapping | undefined => {
+    const isBeingDragged = draggedCardIds?.has(mappedCard.card.id) ?? false;
+    const animDuration =
+      justDroppedCardIds.current?.has(mappedCard.card.id) === true
+        ? 0
+        : undefined;
+
+    if (mappedCard.zoneName === "stock" && mappedCard.topOfZone) {
+      return {
+        selectColor: "blue",
+        isSelected: false,
+        onPress: dealStock,
+        isDisabled: game.stock.length === 0 || game.stockDealt,
+        isVisible: !isBeingDragged,
+        animDuration,
+      };
+    }
+
+    if (
+      mappedCard.zoneName === "tableau" &&
+      mappedCard.pileIndex !== undefined
+    ) {
+      const isSelectedSource =
+        selected?.zone === "tableau" &&
+        selected.pileIndex === mappedCard.pileIndex &&
+        mappedCard.cardIndex >= selected.cardIndex;
+      const isHoverTargetTop =
+        !!dragGhost &&
+        mappedCard.topOfZone &&
+        hoverTarget?.zone === "tableau" &&
+        hoverTarget.pileIndex === mappedCard.pileIndex;
+
+      return {
+        selectColor: isHoverTargetTop
+          ? "green"
+          : isSelectedSource
+            ? "blue"
+            : "none",
+        isSelected: isSelectedSource || isHoverTargetTop,
+        isDisabled: !mappedCard.card.faceUp,
+        isVisible: !isBeingDragged,
+        animDuration,
+      };
+    }
+
+    return {
+      isVisible: !isBeingDragged,
+      animDuration,
+    };
+  };
+
+  const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
+    if (zone.name === "stock") {
+      return {
+        onPress: dealStock,
+        isDisabled: game.stock.length === 0 || game.stockDealt,
+        isSelected: false,
+      };
+    }
+
+    if (zone.name === "tableau" && zone.pileIndex !== undefined) {
+      const isHoverDropTarget =
+        !!dragGhost &&
+        hoverTarget?.zone === "tableau" &&
+        hoverTarget.pileIndex === zone.pileIndex;
+
+      return {
+        onPress: () => onEmptyTableauPress(zone.pileIndex!),
+        isDisabled: !selected || !!dragGhost,
+        isSelected: isHoverDropTarget && zone.cards?.length === 0,
+        selectColor: "green",
+      };
+    }
+
+    return undefined;
+  };
+
+  const { cardMap, getZoneBasePos, cardWidth, cardHeight } = useCardMap({
+    game,
+    zones,
+    cardMapper,
+    zoneMapper,
+    cardSize: "small",
+    fixedRows: 6,
+    visualizer: true,
+  });
+
+  const stockTapRect = useMemo(() => {
+    const stockZone = zones.find((zone) => zone.name === "stock");
+    if (!stockZone) return null;
+    const pos = getZoneBasePos(stockZone);
+    return createRect(pos.x, pos.y, cardWidth, cardHeight);
+  }, [cardHeight, cardWidth, getZoneBasePos, zones]);
+
+  function getSourceRect(source: MoveSource) {
+    const zone = zones.find(
+      (entry) =>
+        entry.name === "tableau" && entry.pileIndex === source.pileIndex,
+    );
+    if (!zone) return null;
+
+    const base = getZoneBasePos(zone);
+    return createRect(
+      base.x,
+      base.y + source.cardIndex * TABLEAU_FAN_OFFSET * cardHeight,
+      cardWidth,
+      cardHeight,
     );
   }
 
-  function dealStock() {
-    setGame((prev) => {
-      if (prev.ended || prev.stock.length === 0) return prev;
-      const columns = prev.columns.map((col) => [...col]);
-      const stock = [...prev.stock];
+  const cardHitAreas = useMemo<CardHitArea<MoveSource>[]>(() => {
+    const areas: CardHitArea<MoveSource>[] = [];
 
-      for (let i = 0; i < 3; i += 1) {
-        const card = stock.shift();
-        if (card) columns[i].push(card);
+    zones.forEach((zone) => {
+      if (zone.name !== "tableau" || zone.pileIndex === undefined) {
+        return;
       }
 
-      for (let i = 0; i < columns.length; i += 1) {
-        columns[i] = normalizeColumn(columns[i]);
-      }
+      const zoneRect = getZoneBasePos(zone);
+      const pile = game.tableau[zone.pileIndex];
 
-      const next = { ...prev, columns, stock };
-      return { ...next, ...evaluate(next) };
+      pile.forEach((card, cardIndex) => {
+        if (!card.faceUp) return;
+
+        areas.push({
+          source: {
+            zone: "tableau",
+            pileIndex: zone.pileIndex!,
+            cardIndex,
+          },
+          rect: createRect(
+            zoneRect.x,
+            zoneRect.y + cardIndex * TABLEAU_FAN_OFFSET * cardHeight,
+            cardWidth,
+            cardHeight,
+          ),
+          priority: 10 + cardIndex,
+        });
+      });
     });
 
+    return areas;
+  }, [cardHeight, cardWidth, game.tableau, getZoneBasePos, zones]);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      updateBoardOffset();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [windowWidth, windowHeight, zones.length, cardWidth, cardHeight]);
+
+  const dropHitAreas = useMemo<DropHitArea<DropTarget>[]>(() => {
+    const areas: DropHitArea<DropTarget>[] = [];
+
+    zones.forEach((zone) => {
+      if (zone.name !== "tableau" || zone.pileIndex === undefined) {
+        return;
+      }
+
+      const zoneRect = getZoneBasePos(zone);
+      const pile = game.tableau[zone.pileIndex];
+      const pileHeight =
+        cardHeight +
+        Math.max(0, pile.length - 1) * TABLEAU_FAN_OFFSET * cardHeight;
+
+      areas.push({
+        target: { zone: "tableau", pileIndex: zone.pileIndex },
+        rect: createRect(
+          zoneRect.x + boardPageOffset.x,
+          zoneRect.y + boardPageOffset.y,
+          cardWidth,
+          pileHeight,
+        ),
+        priority: 40 + pile.length,
+      });
+    });
+
+    return areas;
+  }, [
+    boardPageOffset.x,
+    boardPageOffset.y,
+    cardHeight,
+    cardWidth,
+    game.tableau,
+    getZoneBasePos,
+    zones,
+  ]);
+
+  dropHitAreasRef.current = dropHitAreas;
+
+  const completedStacks = useMemo(
+    () => game.foundations.filter((pile) => pile.length === 13).length,
+    [game.foundations],
+  );
+  const won = useMemo(
+    () => game.foundations.every((pile) => pile.length === 13),
+    [game.foundations],
+  );
+
+  useEffect(() => {
+    navigation.setOptions({ gestureEnabled: false });
+
+    return () => {
+      navigation.setOptions({ gestureEnabled: true });
+    };
+  }, [navigation]);
+
+  function clearSelection() {
     setSelected(null);
-    setMessage("Dealt reserve cards to first three columns.");
   }
 
-  function onCardPress(columnIndex: number, cardIndex: number) {
-    setGame((prev) => {
-      if (prev.ended) return prev;
-      const column = prev.columns[columnIndex];
-      const card = column?.[cardIndex];
-      if (!card || !card.faceUp) return prev;
+  function getSourceCards(source: MoveSource, snapshot: ScorpionState) {
+    const pile = snapshot.tableau[source.pileIndex];
+    const cards = pile.slice(source.cardIndex);
 
-      if (!selected) {
-        const moving = column.slice(cardIndex);
-        if (!moving.every((c) => c.faceUp)) return prev;
-        setSelected({ column: columnIndex, index: cardIndex });
-        return prev;
+    if (cards.length === 0 || !cards[0].faceUp) {
+      return [];
+    }
+
+    return cards;
+  }
+
+  function startGhostDrag(source: MoveSource, _event: GestureResponderEvent) {
+    const cards = getSourceCards(source, game);
+    if (cards.length === 0) return;
+
+    const rect = getSourceRect(source);
+    if (!rect) return;
+
+    startDrag(source, cards, { x: rect.x, y: rect.y });
+  }
+
+  function dealStock() {
+    if (dragGhost) {
+      clearDragGhost();
+    }
+
+    if (game.stockDealt || game.stock.length === 0) {
+      clearSelection();
+      return;
+    }
+
+    saveUndoState(structuredClone(game));
+    setGame((draft) => {
+      if (draft.stockDealt || draft.stock.length === 0) {
+        return;
       }
 
-      if (selected.column === columnIndex && selected.index === cardIndex) {
-        setSelected(null);
-        return prev;
+      for (let column = 0; column < 3; column += 1) {
+        const card = draft.stock[column];
+        if (!card) continue;
+        draft.tableau[column].push({ ...card, faceUp: true });
       }
 
-      const columns = prev.columns.map((col) => [...col]);
-      const from = columns[selected.column];
-      const to = columns[columnIndex];
-      const moving = from.slice(selected.index);
+      draft.stock = [];
+      draft.stockDealt = true;
 
-      if (!moving.every((c) => c.faceUp)) {
-        setSelected(null);
-        return prev;
+      for (let column = 0; column < draft.tableau.length; column += 1) {
+        draft.tableau[column] = normalizeColumn(draft.tableau[column]);
       }
 
-      const movingTop = moving[0];
-      const targetTop = to.length > 0 ? to[to.length - 1] : null;
-      if (!canAttach(movingTop, targetTop)) {
-        setSelected(null);
-        return prev;
-      }
-
-      from.splice(selected.index, moving.length);
-      to.push(...moving);
-
-      columns[selected.column] = normalizeColumn(from);
-      columns[columnIndex] = normalizeColumn(to);
-
-      const next = { ...prev, columns };
-      setSelected(null);
-      setMessage("Moved run.");
-      return { ...next, ...evaluate(next) };
+      moveCompletedRunsToFoundations(draft.tableau, draft.foundations);
     });
+
+    clearSelection();
   }
+
+  function moveSourceToTableau(source: MoveSource, destinationIndex: number) {
+    if (
+      !canDropOnTarget(source, {
+        zone: "tableau",
+        pileIndex: destinationIndex,
+      })
+    ) {
+      clearSelection();
+      return;
+    }
+
+    saveUndoState(structuredClone(game));
+    setGame((draft) => {
+      if (source.pileIndex === destinationIndex) {
+        return;
+      }
+
+      const sourcePile = draft.tableau[source.pileIndex];
+      const movingCards = sourcePile.slice(source.cardIndex);
+      if (movingCards.length === 0 || !movingCards[0].faceUp) {
+        return;
+      }
+
+      const destinationPile = draft.tableau[destinationIndex];
+      const destinationTop = destinationPile[destinationPile.length - 1];
+      if (!canAttachToTableau(movingCards[0], destinationTop)) {
+        return;
+      }
+
+      sourcePile.splice(source.cardIndex, movingCards.length);
+      destinationPile.push(
+        ...movingCards.map((card) => ({ ...card, faceUp: true })),
+      );
+
+      draft.tableau[source.pileIndex] = normalizeColumn(sourcePile);
+      draft.tableau[destinationIndex] = normalizeColumn(destinationPile);
+
+      moveCompletedRunsToFoundations(draft.tableau, draft.foundations);
+    });
+
+    clearSelection();
+  }
+
+  function onTableauCardPress(pileIndex: number, cardIndex: number) {
+    if (dragGhost) {
+      clearSelection();
+      return;
+    }
+
+    const card = game.tableau[pileIndex]?.[cardIndex];
+    if (!card?.faceUp) {
+      return;
+    }
+
+    const source: MoveSource = { zone: "tableau", pileIndex, cardIndex };
+
+    if (!selected) {
+      setSelected(source);
+      return;
+    }
+
+    if (selected.pileIndex === pileIndex && selected.cardIndex === cardIndex) {
+      clearSelection();
+      return;
+    }
+
+    if (selected.pileIndex === pileIndex) {
+      setSelected(source);
+      return;
+    }
+
+    moveSourceToTableau(selected, pileIndex);
+  }
+
+  function onEmptyTableauPress(pileIndex: number) {
+    if (!selected || dragGhost) return;
+    moveSourceToTableau(selected, pileIndex);
+  }
+
+  function sameDropTarget(a: DropTarget | null, b: DropTarget | null) {
+    if (!a || !b) return a === b;
+    return a.zone === b.zone && a.pileIndex === b.pileIndex;
+  }
+
+  function canDropOnTarget(
+    source: MoveSource,
+    target: DropTarget,
+    snapshot = game,
+  ) {
+    if (source.pileIndex === target.pileIndex) {
+      return false;
+    }
+
+    const movingCards = getSourceCards(source, snapshot);
+    if (movingCards.length === 0) return false;
+
+    const destinationPile = snapshot.tableau[target.pileIndex];
+    const destinationTop = destinationPile[destinationPile.length - 1];
+    return canAttachToTableau(movingCards[0], destinationTop);
+  }
+
+  function makeHandlers(source: MoveSource, onTap?: () => void) {
+    return makeDragHandlers(source, startGhostDrag, onTap);
+  }
+
+  const ghostLeft = dragGhost ? dragGhost.origin.x : 0;
+  const ghostTop = dragGhost ? dragGhost.origin.y : 0;
+  const ghostHasValidDrop = !!dragGhost && hoverTarget !== null;
+
+  const tapHandlerResolverRef = useRef(
+    (_source: MoveSource): (() => void) =>
+      () => {},
+  );
+  tapHandlerResolverRef.current = (source: MoveSource) => {
+    return () => onTableauCardPress(source.pileIndex, source.cardIndex);
+  };
+
+  const interactionTargets = useMemo(
+    () =>
+      cardHitAreas.map((hit) => {
+        const source = hit.source;
+        const rect = hit.rect;
+
+        return (
+          <View
+            key={`tableau-${source.pileIndex}-${source.cardIndex}`}
+            collapsable={false}
+            style={{
+              position: "absolute",
+              backgroundColor: "transparent",
+              left: rect.x,
+              top: rect.y,
+              width: rect.width,
+              height: rect.height,
+            }}
+            {...makeHandlers(source, () =>
+              tapHandlerResolverRef.current(source)(),
+            )}
+          />
+        );
+      }),
+    [cardHitAreas],
+  );
 
   return (
     <GameWrapper
       showIntro={showIntro}
       setShowIntro={setShowIntro}
-      ended={game.ended}
-      won={game.won}
-      reset={reset}
+      ended={won}
+      won={won}
+      reset={() => {
+        void reset();
+      }}
       isLoaded={isLoaded}
-      winLoseMessage={
-        game.won ? "All four suit stacks are complete." : "No further progress."
-      }
+      canUndo={canUndo}
+      undo={undo}
+      winLoseMessage={won ? "All four suit stacks are complete." : undefined}
     >
       <Text size="sm">
         Reserve cards: {game.stock.length}
         <br />
         Completed suit stacks: {completedStacks}/4
-        <br />
-        Message: {message}
       </Text>
 
-      <Button
-        onPress={dealStock}
-        disabled={game.stock.length === 0 || game.ended}
-        text="Deal Reserve"
-      />
+      <View style={{ flex: 1, width: "100%", gap: 12 }}>
+        <View
+          ref={boardRef}
+          style={{
+            flex: 1,
+            width: "100%",
+            position: "relative",
+            touchAction: "none",
+            overscrollBehaviorX: "contain",
+          }}
+        >
+          {cardMap}
 
-      <View style={styles.columnsWrap}>
-        {game.columns.map((column, colIdx) => (
-          <View key={`sc-col-${colIdx}`} style={styles.column}>
-            {column.length === 0 ? (
-              <View style={styles.emptySlot}>
-                <Text size="sm">Empty</Text>
-              </View>
-            ) : null}
-            {column.map((card, idx) => {
-              const isSelected =
-                selected?.column === colIdx && selected?.index === idx;
-              return false;
-              // return (
-              // <CardButton
-              //   key={card.id}
-              //   onPress={() => onCardPress(colIdx, idx)}
-              //   card={card}
-              //   cardWidth={5}
-              //   isSelected={isSelected}
-              // />
-              // );
-            })}
+          <View
+            style={{
+              ...StyleSheet.absoluteFill,
+              zIndex: 3000,
+              touchAction: "none",
+              overscrollBehaviorX: "contain",
+              pointerEvents: "box-none",
+            }}
+          >
+            {stockTapRect && (
+              <Pressable
+                style={{
+                  position: "absolute",
+                  backgroundColor: "transparent",
+                  left: stockTapRect.x,
+                  top: stockTapRect.y,
+                  width: stockTapRect.width,
+                  height: stockTapRect.height,
+                }}
+                onPress={dealStock}
+                disabled={game.stock.length === 0 || game.stockDealt}
+              />
+            )}
+            {interactionTargets}
           </View>
-        ))}
+
+          {dragGhost && (
+            <Animated.View
+              style={[
+                {
+                  pointerEvents: "none",
+                  position: "absolute",
+                  zIndex: 4000,
+                  left: ghostLeft,
+                  top: ghostTop,
+                  transform: dragTranslate.getTranslateTransform(),
+                },
+              ]}
+            >
+              {dragGhost.cards.map((card, index) => (
+                <View
+                  key={`ghost-${card.id}`}
+                  style={[
+                    {
+                      position: "absolute",
+                      left: 0,
+                      opacity: 1,
+                      width: cardWidth,
+                      height: cardHeight,
+                    },
+                    {
+                      top: index * TABLEAU_FAN_OFFSET * cardHeight,
+                      zIndex: index + 1,
+                    },
+                  ]}
+                >
+                  <Card
+                    card={card}
+                    cardWidth={cardWidth}
+                    cardSize="small"
+                    selectColor={ghostHasValidDrop ? "green" : "none"}
+                    isSelected={ghostHasValidDrop}
+                  />
+                </View>
+              ))}
+            </Animated.View>
+          )}
+        </View>
       </View>
     </GameWrapper>
   );
 }
-
-const styles = StyleSheet.create({
-  columnsWrap: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 6,
-  },
-  column: {
-    flex: 1,
-    gap: 4,
-    alignItems: "center",
-  },
-
-  emptySlot: {
-    width: "100%",
-    minHeight: 60,
-    borderWidth: 1,
-    borderColor: "rgba(15,23,42,0.2)",
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(255,255,255,0.2)",
-  },
-});

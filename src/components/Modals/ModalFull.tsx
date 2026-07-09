@@ -1,4 +1,5 @@
 import { Text } from "@/components/common/Text";
+import { clearLastGameSession } from "@/data/game-menu";
 import { flexStyles } from "@/styles/flexStyles";
 import { menuStyles } from "@/styles/menuStyles";
 import { modalStyles } from "@/styles/modalStyles";
@@ -30,9 +31,13 @@ export default function ModalFull({
               {/* Home button */}
               {showHomeButton && (
                 <Button
-                  onPress={() => {
+                  onPress={async () => {
                     onClose();
-                    router.push("/");
+                    try {
+                      await clearLastGameSession();
+                    } finally {
+                      router.push("/");
+                    }
                   }}
                   iconName={"arrow-back"}
                   iconColor={Colors.accentBlue}

@@ -1,4 +1,4 @@
-import { useGameLoading } from "@/hooks/useGameLoading";
+import { useStateManager } from "@/hooks/useStateManager";
 import {
   CardHitArea,
   createRect,
@@ -7,7 +7,7 @@ import {
   useDragDrop,
 } from "@/hooks/useDragDrop";
 import { useNavigation } from "expo-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { GestureResponderEvent } from "react-native";
 import { Animated, StyleSheet, View } from "react-native";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
@@ -26,7 +26,7 @@ import { GameWrapper } from "../common/GameWrapper";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const TABLEAU_FAN_OFFSET = 0.22;
+const TABLEAU_FAN_OFFSET = 0.35;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -34,20 +34,28 @@ type GameState = {
   foundations: Record<CardSuit, PlayingCard[]>;
   beakRank: PlayingCard["rank"];
   tableau: PlayingCard[][];
+  reserves: (PlayingCard | null)[];
   ended: boolean;
   won: boolean;
 };
 
-type Selection = {
-  zone: "tableau";
-  pileIndex: number;
-  cardIndex: number;
-} | null;
+type Selection =
+  | {
+      zone: "tableau";
+      pileIndex: number;
+      cardIndex: number;
+    }
+  | {
+      zone: "reserve";
+      slotIndex: number;
+    }
+  | null;
 
 type MoveSource = Exclude<Selection, null>;
 
 type DropTarget =
   | { zone: "tableau"; pileIndex: number }
+  | { zone: "reserve"; slotIndex: number }
   | { zone: "foundation"; suit: CardSuit };
 
 // ─── Pure game logic ──────────────────────────────────────────────────────────
@@ -76,6 +84,17 @@ function canPlaceOnFoundation(card: PlayingCard, pile: PlayingCard[]): boolean {
   const top = pile[pile.length - 1] ?? null;
   if (!top) return false;
   return card.suit === top.suit && rankVal(card.rank) === nextRankVal(top.rank);
+}
+
+function canStartFoundation(
+  card: PlayingCard,
+  pile: PlayingCard[],
+  beakRank: PlayingCard["rank"],
+): boolean {
+  if (pile.length > 0) {
+    return canPlaceOnFoundation(card, pile);
+  }
+  return rankVal(card.rank) === rankVal(beakRank);
 }
 
 /**
@@ -110,6 +129,8 @@ function isValidRun(cards: PlayingCard[]): boolean {
 }
 
 function hasAnyLegalMove(state: GameState): boolean {
+  const hasEmptyReserve = state.reserves.some((slot) => slot === null);
+
   for (let i = 0; i < state.tableau.length; i += 1) {
     const col = state.tableau[i];
     if (col.length === 0) continue;
@@ -127,12 +148,48 @@ function hasAnyLegalMove(state: GameState): boolean {
 
       // Can the bottom card go to foundation? (only single cards)
       if (run.length === 1) {
-        if (canPlaceOnFoundation(run[0], state.foundations[run[0].suit])) {
+        if (
+          canStartFoundation(
+            run[0],
+            state.foundations[run[0].suit],
+            state.beakRank,
+          )
+        ) {
+          return true;
+        }
+        if (hasEmptyReserve) {
           return true;
         }
       }
     }
   }
+
+  for (let i = 0; i < state.reserves.length; i += 1) {
+    const card = state.reserves[i];
+    if (!card) continue;
+
+    if (
+      canStartFoundation(card, state.foundations[card.suit], state.beakRank)
+    ) {
+      return true;
+    }
+
+    for (let j = 0; j < state.tableau.length; j += 1) {
+      const targetTop = state.tableau[j][state.tableau[j].length - 1] ?? null;
+      if (canPlaceOnTableau(card, targetTop, state.beakRank)) {
+        return true;
+      }
+    }
+
+    if (hasEmptyReserve) {
+      for (let j = 0; j < state.reserves.length; j += 1) {
+        if (i !== j && state.reserves[j] === null) {
+          return true;
+        }
+      }
+    }
+  }
+
   return false;
 }
 
@@ -154,12 +211,13 @@ function evaluate(state: GameState): GameState {
 
 function createInitialState(): GameState {
   const cards = shuffle(createDeck({ faceUp: true }));
-  const beak = cards.shift();
+  const beak = cards[0];
   if (!beak) {
     return {
       foundations: { clubs: [], diamonds: [], hearts: [], spades: [] },
       beakRank: "A",
       tableau: Array.from({ length: 7 }, () => []),
+      reserves: Array.from({ length: 7 }, () => null),
       ended: true,
       won: false,
     };
@@ -172,10 +230,16 @@ function createInitialState(): GameState {
     spades: [],
   };
   const remaining: PlayingCard[] = [];
+  let foundationsSeeded = 0;
 
-  for (const card of [beak, ...cards]) {
-    if (card.rank === beak.rank && foundations[card.suit].length === 0) {
+  for (const card of cards) {
+    if (
+      card.rank === beak.rank &&
+      foundations[card.suit].length === 0 &&
+      foundationsSeeded < 3
+    ) {
       foundations[card.suit].push(card);
+      foundationsSeeded += 1;
     } else {
       remaining.push(card);
     }
@@ -188,29 +252,55 @@ function createInitialState(): GameState {
     foundations,
     beakRank: beak.rank,
     tableau,
+    reserves: Array.from({ length: 7 }, () => null),
     ended: false,
     won: false,
   };
 }
 
+const gameStateInitial = createInitialState();
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function Penguin() {
-  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
   const navigation = useNavigation();
 
-  const [game, setGame] = useState<GameState>(createInitialState);
   const [selected, setSelected] = useState<Selection>(null);
+  const [hoverTarget, setHoverTarget] = useState<DropTarget | null>(null);
+
+  const {
+    isLoaded,
+    showIntro,
+    setShowIntro,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<GameState>({
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelected(null);
+      clearDragGhost();
+    },
+    resetAndSetup: async () => {
+      setGame(createInitialState());
+    },
+  });
+
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
 
   // ── Drag & drop ─────────────────────────────────────────────────────────────
 
   const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
+  const handleHoverTargetChange = useCallback((next: DropTarget | null) => {
+    setHoverTarget((prev) => (sameDropTarget(prev, next) ? prev : next));
+  }, []);
 
   const {
     dragGhost,
     draggedCardIds,
-    hoverTargetRef,
     justDroppedCardIds,
     dragTranslate,
     boardRef,
@@ -232,21 +322,26 @@ export default function Penguin() {
       applyMove(source, target);
     },
     getDroppedCardIds: (source) =>
-      game.tableau[source.pileIndex].slice(source.cardIndex).map((c) => c.id),
+      getRunFromSource(source, game).map((card) => card.id),
     getDropHitAreas: () => dropHitAreasRef.current,
     getSourceRect,
+    onHoverTargetChange: handleHoverTargetChange,
   });
-
-  // ── Derived ─────────────────────────────────────────────────────────────────
-
-  const foundationCount = useMemo(
-    () => countFoundations(game.foundations),
-    [game.foundations],
-  );
 
   // ── CardMap zones ───────────────────────────────────────────────────────────
 
   const zones: MapZone[] = useMemo(() => {
+    const reserveZones: MapZone[] = game.reserves.map((card, i) => ({
+      id: `reserve-${i}`,
+      name: "reserve",
+      pileIndex: i,
+      cards: card ? [card] : [],
+      col: i,
+      row: 1.2,
+      baseZIndex: 50,
+      placeholder: {},
+    }));
+
     const foundationZones: MapZone[] = (SUITS as readonly CardSuit[]).map(
       (suit, i) => ({
         id: `foundation-${suit}`,
@@ -270,17 +365,18 @@ export default function Penguin() {
       pileIndex: i,
       cards: pile,
       col: i,
-      row: 1.5,
+      row: 2.4,
+      height: 4,
       baseZIndex: 10 + i,
       fan: {
         direction: "down" as const,
         offset: TABLEAU_FAN_OFFSET,
-        maxVisible: 52,
+        center: false,
       },
       placeholder: { showCount: false },
     }));
 
-    return [...foundationZones, ...tableauZones];
+    return [...reserveZones, ...foundationZones, ...tableauZones];
   }, [game]);
 
   // ── CardMap callbacks ───────────────────────────────────────────────────────
@@ -295,12 +391,44 @@ export default function Penguin() {
         : undefined;
 
     if (
+      mappedCard.zoneName === "reserve" &&
+      mappedCard.pileIndex !== undefined
+    ) {
+      const slotIndex = mappedCard.pileIndex;
+      const isHoverTargetTop =
+        !!dragGhost &&
+        mappedCard.topOfZone &&
+        hoverTarget?.zone === "reserve" &&
+        hoverTarget.slotIndex === slotIndex;
+
+      return {
+        selectColor: isHoverTargetTop
+          ? "green"
+          : selected?.zone === "reserve" && selected.slotIndex === slotIndex
+            ? "blue"
+            : "none",
+        isSelected:
+          (selected?.zone === "reserve" && selected.slotIndex === slotIndex) ||
+          isHoverTargetTop,
+        isVisible: !isBeingDragged,
+        animDuration: animDuration,
+      };
+    }
+
+    if (
       mappedCard.zoneName === "foundation" &&
       mappedCard.pileIndex !== undefined
     ) {
+      const suit = SUITS[mappedCard.pileIndex] as CardSuit;
+      const isHoverTargetTop =
+        !!dragGhost &&
+        mappedCard.topOfZone &&
+        hoverTarget?.zone === "foundation" &&
+        hoverTarget.suit === suit;
+
       return {
         selectColor: "green",
-        isSelected: false,
+        isSelected: isHoverTargetTop,
         isVisible: !isBeingDragged,
         animDuration: animDuration,
         clickThroughCards: true,
@@ -314,11 +442,22 @@ export default function Penguin() {
       const pileIndex = mappedCard.pileIndex;
       const cardIndex = mappedCard.cardIndex;
       const isInSelectedRun =
-        selected?.pileIndex === pileIndex && cardIndex >= selected.cardIndex;
+        selected?.zone === "tableau" &&
+        selected.pileIndex === pileIndex &&
+        cardIndex >= selected.cardIndex;
+      const isHoverTargetTop =
+        !!dragGhost &&
+        mappedCard.topOfZone &&
+        hoverTarget?.zone === "tableau" &&
+        hoverTarget.pileIndex === pileIndex;
 
       return {
-        selectColor: isInSelectedRun ? "blue" : "none",
-        isSelected: isInSelectedRun,
+        selectColor: isHoverTargetTop
+          ? "green"
+          : isInSelectedRun
+            ? "blue"
+            : "none",
+        isSelected: isInSelectedRun || isHoverTargetTop,
         isVisible: !isBeingDragged,
         animDuration: animDuration,
       };
@@ -328,24 +467,53 @@ export default function Penguin() {
   };
 
   const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
+    if (zone.name === "reserve" && zone.pileIndex !== undefined) {
+      const slotIndex = zone.pileIndex;
+      const isHoverDropTarget =
+        !!dragGhost &&
+        hoverTarget?.zone === "reserve" &&
+        hoverTarget.slotIndex === slotIndex;
+
+      return {
+        onPress: () => onReserveTap(slotIndex),
+        isDisabled: !!dragGhost || !selected,
+        isSelected:
+          (selected?.zone === "reserve" && selected.slotIndex === slotIndex) ||
+          (isHoverDropTarget && game.reserves[slotIndex] === null),
+        selectColor: isHoverDropTarget ? "green" : "blue",
+      };
+    }
+
     if (zone.name === "foundation" && zone.pileIndex !== undefined) {
       const suit = SUITS[zone.pileIndex] as CardSuit;
+      const isHoverDropTarget =
+        !!dragGhost &&
+        hoverTarget?.zone === "foundation" &&
+        hoverTarget.suit === suit;
       return {
         onPress: () => onFoundationTap(suit),
-        isDisabled: !!dragGhost || !selected || selected.zone !== "tableau",
-        isSelected: false,
+        isDisabled: !!dragGhost || !selected,
+        isSelected: isHoverDropTarget,
+        selectColor: "green",
       };
     }
 
     if (zone.name === "tableau" && zone.pileIndex !== undefined) {
       const pileIndex = zone.pileIndex;
+      const isHoverDropTarget =
+        !!dragGhost &&
+        hoverTarget?.zone === "tableau" &&
+        hoverTarget.pileIndex === pileIndex;
       return {
         onPress: () => onEmptyTableauTap(pileIndex),
         isDisabled: !!dragGhost || !selected,
         isSelected:
-          selected?.pileIndex === pileIndex &&
-          selected.cardIndex === 0 &&
-          game.tableau[pileIndex].length === 0,
+          (selected?.zone === "tableau" &&
+            selected.pileIndex === pileIndex &&
+            selected.cardIndex === 0 &&
+            game.tableau[pileIndex].length === 0) ||
+          (isHoverDropTarget && game.tableau[pileIndex].length === 0),
+        selectColor: isHoverDropTarget ? "green" : "blue",
       };
     }
 
@@ -357,11 +525,9 @@ export default function Penguin() {
   const { cardMap, getZoneBasePos, cardWidth, cardHeight } = useCardMap({
     game,
     zones,
-    gap: 0.3,
     cardMapper,
     zoneMapper,
     cardSize: "small",
-    paddingBottom: 1.2,
   });
 
   // ── Hit areas ───────────────────────────────────────────────────────────────
@@ -370,6 +536,18 @@ export default function Penguin() {
     const areas: CardHitArea<MoveSource>[] = [];
 
     zones.forEach((zone) => {
+      if (zone.name === "reserve" && zone.pileIndex !== undefined) {
+        const card = game.reserves[zone.pileIndex];
+        if (!card) return;
+        const zoneRect = getZoneBasePos(zone);
+        areas.push({
+          source: { zone: "reserve", slotIndex: zone.pileIndex },
+          rect: createRect(zoneRect.x, zoneRect.y, cardWidth, cardHeight),
+          priority: 95,
+        });
+        return;
+      }
+
       if (zone.name !== "tableau" || zone.pileIndex === undefined) return;
 
       const pile = game.tableau[zone.pileIndex];
@@ -418,6 +596,14 @@ export default function Penguin() {
         });
       }
 
+      if (zone.name === "reserve" && zone.pileIndex !== undefined) {
+        areas.push({
+          target: { zone: "reserve", slotIndex: zone.pileIndex },
+          rect: createRect(bx, by, cardWidth, cardHeight),
+          priority: 85,
+        });
+      }
+
       if (zone.name === "tableau" && zone.pileIndex !== undefined) {
         const pile = game.tableau[zone.pileIndex];
         const pileHeight =
@@ -460,24 +646,47 @@ export default function Penguin() {
     if (a.zone !== b.zone) return false;
     if (a.zone === "tableau" && b.zone === "tableau")
       return a.pileIndex === b.pileIndex;
+    if (a.zone === "reserve" && b.zone === "reserve") {
+      return a.slotIndex === b.slotIndex;
+    }
     return (
       a.zone === "foundation" && b.zone === "foundation" && a.suit === b.suit
     );
   }
 
+  function getRunFromSource(source: MoveSource, snapshot: GameState) {
+    if (source.zone === "tableau") {
+      return snapshot.tableau[source.pileIndex].slice(source.cardIndex);
+    }
+    const reserveCard = snapshot.reserves[source.slotIndex];
+    return reserveCard ? [reserveCard] : [];
+  }
+
   function canDropOnTarget(source: MoveSource, target: DropTarget): boolean {
-    const run = game.tableau[source.pileIndex].slice(source.cardIndex);
+    const run = getRunFromSource(source, game);
     if (run.length === 0) return false;
+
+    if (target.zone === "reserve") {
+      if (run.length !== 1) return false;
+      if (source.zone === "reserve" && source.slotIndex === target.slotIndex) {
+        return false;
+      }
+      return game.reserves[target.slotIndex] === null;
+    }
 
     if (target.zone === "foundation") {
       if (run.length !== 1) return false;
       return (
-        canPlaceOnFoundation(run[0], game.foundations[run[0].suit]) &&
-        run[0].suit === target.suit
+        canStartFoundation(
+          run[0],
+          game.foundations[run[0].suit],
+          game.beakRank,
+        ) && run[0].suit === target.suit
       );
     }
 
-    if (source.pileIndex === target.pileIndex) return false;
+    if (source.zone === "tableau" && source.pileIndex === target.pileIndex)
+      return false;
 
     const pile = game.tableau[target.pileIndex];
     const targetTop = pile[pile.length - 1] ?? null;
@@ -485,11 +694,14 @@ export default function Penguin() {
   }
 
   function applyMove(source: MoveSource, target: DropTarget) {
+    saveUndoState(structuredClone(game));
+
     setGame((prev) => {
-      const run = prev.tableau[source.pileIndex].slice(source.cardIndex);
+      const run = getRunFromSource(source, prev);
       if (run.length === 0) return prev;
 
       const tableau = prev.tableau.map((c) => [...c]);
+      const reserves = [...prev.reserves];
       const foundations: Record<CardSuit, PlayingCard[]> = {
         clubs: [...prev.foundations.clubs],
         diamonds: [...prev.foundations.diamonds],
@@ -497,59 +709,68 @@ export default function Penguin() {
         spades: [...prev.foundations.spades],
       };
 
-      tableau[source.pileIndex] = tableau[source.pileIndex].slice(
-        0,
-        source.cardIndex,
-      );
+      if (source.zone === "tableau") {
+        tableau[source.pileIndex] = tableau[source.pileIndex].slice(
+          0,
+          source.cardIndex,
+        );
+      } else {
+        reserves[source.slotIndex] = null;
+      }
 
       if (target.zone === "foundation") {
         foundations[target.suit] = [...foundations[target.suit], run[0]];
+      } else if (target.zone === "reserve") {
+        reserves[target.slotIndex] = run[0];
       } else {
         tableau[target.pileIndex] = [...tableau[target.pileIndex], ...run];
       }
 
-      return evaluate({ ...prev, foundations, tableau });
+      return evaluate({ ...prev, foundations, tableau, reserves });
     });
     setSelected(null);
-  }
-
-  function resetGame() {
-    setGame(createInitialState());
-    setSelected(null);
-    clearDragGhost();
   }
 
   // ── Drag helpers ─────────────────────────────────────────────────────────────
 
   function startGhostDrag(source: MoveSource, _event: GestureResponderEvent) {
-    const run = game.tableau[source.pileIndex].slice(source.cardIndex);
+    const run = getRunFromSource(source, game);
     if (run.length === 0) return;
 
-    const zone = zones.find(
-      (z) => z.name === "tableau" && z.pileIndex === source.pileIndex,
-    );
+    const zone = zones.find((z) => {
+      if (source.zone === "tableau") {
+        return z.name === "tableau" && z.pileIndex === source.pileIndex;
+      }
+      return z.name === "reserve" && z.pileIndex === source.slotIndex;
+    });
     if (!zone) return;
 
     const base = getZoneBasePos(zone);
+    const dragYOffset =
+      source.zone === "tableau"
+        ? source.cardIndex * TABLEAU_FAN_OFFSET * cardHeight
+        : 0;
     startDrag(source, run, {
       x: base.x,
-      y: base.y + source.cardIndex * TABLEAU_FAN_OFFSET * cardHeight,
+      y: base.y + dragYOffset,
     });
   }
 
   function getSourceRect(source: MoveSource) {
-    const zone = zones.find(
-      (z) => z.name === "tableau" && z.pileIndex === source.pileIndex,
-    );
+    const zone = zones.find((z) => {
+      if (source.zone === "tableau") {
+        return z.name === "tableau" && z.pileIndex === source.pileIndex;
+      }
+      return z.name === "reserve" && z.pileIndex === source.slotIndex;
+    });
     if (!zone) return null;
 
     const base = getZoneBasePos(zone);
-    return createRect(
-      base.x,
-      base.y + source.cardIndex * TABLEAU_FAN_OFFSET * cardHeight,
-      cardWidth,
-      cardHeight,
-    );
+    const dragYOffset =
+      source.zone === "tableau"
+        ? source.cardIndex * TABLEAU_FAN_OFFSET * cardHeight
+        : 0;
+    return createRect(base.x, base.y + dragYOffset, cardWidth, cardHeight);
   }
 
   function makeHandlers(source: MoveSource, onTap?: () => void) {
@@ -562,7 +783,11 @@ export default function Penguin() {
     if (dragGhost) return;
 
     // If tapping the active selection, deselect
-    if (selected?.pileIndex === pileIndex && selected.cardIndex === cardIndex) {
+    if (
+      selected?.zone === "tableau" &&
+      selected.pileIndex === pileIndex &&
+      selected.cardIndex === cardIndex
+    ) {
       setSelected(null);
       return;
     }
@@ -586,6 +811,36 @@ export default function Penguin() {
     const run = game.tableau[pileIndex].slice(cardIndex);
     if (isValidRun(run)) {
       setSelected({ zone: "tableau", pileIndex, cardIndex });
+    } else {
+      setSelected(null);
+    }
+  }
+
+  function onReserveTap(slotIndex: number) {
+    if (dragGhost) return;
+
+    if (selected?.zone === "reserve" && selected.slotIndex === slotIndex) {
+      setSelected(null);
+      return;
+    }
+
+    const card = game.reserves[slotIndex];
+
+    if (!selected) {
+      if (card) {
+        setSelected({ zone: "reserve", slotIndex });
+      }
+      return;
+    }
+
+    const target: DropTarget = { zone: "reserve", slotIndex };
+    if (canDropOnTarget(selected, target)) {
+      applyMove(selected, target);
+      return;
+    }
+
+    if (card) {
+      setSelected({ zone: "reserve", slotIndex });
     } else {
       setSelected(null);
     }
@@ -615,6 +870,48 @@ export default function Penguin() {
 
   const ghostLeft = dragGhost ? dragGhost.origin.x : 0;
   const ghostTop = dragGhost ? dragGhost.origin.y : 0;
+  const ghostHasValidDrop = !!dragGhost && hoverTarget !== null;
+
+  const tapHandlerResolverRef = useRef(
+    (_source: MoveSource): (() => void) =>
+      () => {},
+  );
+  tapHandlerResolverRef.current = (source: MoveSource) => () =>
+    source.zone === "tableau"
+      ? onTableauCardTap(source.pileIndex, source.cardIndex)
+      : onReserveTap(source.slotIndex);
+
+  const interactionTargets = useMemo(
+    () =>
+      cardHitAreas.map((hit) => {
+        const { source, rect } = hit;
+
+        return (
+          <View
+            key={
+              source.zone === "tableau"
+                ? `t-${source.pileIndex}-${source.cardIndex}`
+                : `r-${source.slotIndex}`
+            }
+            collapsable={false}
+            style={[
+              {
+                position: "absolute",
+                backgroundColor: "transparent",
+                left: rect.x,
+                top: rect.y,
+                width: rect.width,
+                height: rect.height,
+              },
+            ]}
+            {...makeHandlers(source, () =>
+              tapHandlerResolverRef.current(source)(),
+            )}
+          />
+        );
+      }),
+    [cardHitAreas],
+  );
 
   return (
     <GameWrapper
@@ -622,47 +919,48 @@ export default function Penguin() {
       setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
-      reset={resetGame}
+      reset={() => {
+        void reset();
+      }}
       isLoaded={isLoaded}
+      canUndo={canUndo}
+      undo={undo}
     >
-      <View style={styles.gameShell}>
-        <View ref={boardRef} style={styles.boardShell}>
+      <View style={{ flex: 1, width: "100%" }}>
+        <View
+          ref={boardRef}
+          style={{
+            flex: 1,
+            width: "100%",
+            position: "relative",
+            touchAction: "none",
+            overscrollBehaviorX: "contain",
+          }}
+        >
           {cardMap}
 
-          <View style={styles.interactionLayer}>
-            {cardHitAreas.map((hit) => {
-              const { source, rect } = hit;
-              const onTap = () =>
-                onTableauCardTap(source.pileIndex, source.cardIndex);
-
-              return (
-                <View
-                  key={`t-${source.pileIndex}-${source.cardIndex}`}
-                  collapsable={false}
-                  style={[
-                    styles.interactionTarget,
-                    {
-                      left: rect.x,
-                      top: rect.y,
-                      width: rect.width,
-                      height: rect.height,
-                    },
-                  ]}
-                  {...makeHandlers(source, onTap)}
-                />
-              );
-            })}
+          <View
+            style={{
+              ...StyleSheet.absoluteFillObject,
+              zIndex: 3000,
+              touchAction: "none",
+              overscrollBehaviorX: "contain",
+              pointerEvents: "box-none",
+            }}
+          >
+            {interactionTargets}
           </View>
 
           {dragGhost && (
             <Animated.View
               style={[
-                styles.ghostLayer,
                 {
+                  position: "absolute",
+                  zIndex: 4000,
+                  pointerEvents: "none",
                   left: ghostLeft,
                   top: ghostTop,
                   transform: dragTranslate.getTranslateTransform(),
-                  pointerEvents: "none",
                 },
               ]}
             >
@@ -670,12 +968,24 @@ export default function Penguin() {
                 <View
                   key={`ghost-${card.id}`}
                   style={[
-                    styles.ghostCard,
-                    { width: cardWidth, height: cardHeight },
-                    { top: i * TABLEAU_FAN_OFFSET * cardHeight, zIndex: i + 1 },
+                    {
+                      position: "absolute",
+                      left: 0,
+                      opacity: 1,
+                      width: cardWidth,
+                      height: cardHeight,
+                      top: i * TABLEAU_FAN_OFFSET * cardHeight,
+                      zIndex: i + 1,
+                    },
                   ]}
                 >
-                  <Card card={card} cardWidth={cardWidth} cardSize="small" />
+                  <Card
+                    card={card}
+                    cardWidth={cardWidth}
+                    cardSize="small"
+                    selectColor={ghostHasValidDrop ? "green" : "none"}
+                    isSelected={ghostHasValidDrop}
+                  />
                 </View>
               ))}
             </Animated.View>
@@ -688,37 +998,4 @@ export default function Penguin() {
 
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
-const styles = StyleSheet.create({
-  gameShell: {
-    flex: 1,
-    width: "100%",
-  },
-  boardShell: {
-    flex: 1,
-    width: "100%",
-    position: "relative",
-    touchAction: "none",
-    overscrollBehaviorX: "contain",
-  },
-  interactionLayer: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 3000,
-    touchAction: "none",
-    overscrollBehaviorX: "contain",
-    pointerEvents: "box-none",
-  },
-  interactionTarget: {
-    position: "absolute",
-    backgroundColor: "transparent",
-  },
-  ghostLayer: {
-    position: "absolute",
-    zIndex: 4000,
-    pointerEvents: "none",
-  },
-  ghostCard: {
-    position: "absolute",
-    left: 0,
-    opacity: 1,
-  },
-});
+const styles = StyleSheet.create({});

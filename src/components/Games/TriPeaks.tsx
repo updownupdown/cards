@@ -1,33 +1,32 @@
-import { Text } from "@/components/common/Text";
-import { useGameLoading } from "@/hooks/useGameLoading";
-import { useMemo, useRef, useState } from "react";
-import type { GestureResponderEvent, View as RNView } from "react-native";
+import { useStateManager } from "@/hooks/useStateManager";
 import {
-  Animated,
-  PanResponder,
-  Pressable,
-  StyleSheet,
-  View,
-} from "react-native";
-import { Card } from "../Cards/Card";
-import {
-  DRAG_CAPTURE_THRESHOLD,
-  DRAG_MOVE_THRESHOLD,
-  RANK_VALUE,
-  createDeck,
-  measureNode,
+  CardHitArea,
+  createRect,
+  DropHitArea,
   pointInRect,
-  shuffle,
+  useDragDrop,
+} from "@/hooks/useDragDrop";
+import { useViewportDimensions } from "@/hooks/useViewportDimensions";
+import { useNavigation } from "expo-router";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { GestureResponderEvent } from "react-native";
+import { Animated, Pressable, StyleSheet, View } from "react-native";
+import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
+import { Card } from "../Cards/Card";
+import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
+import {
+  createDeck,
   type PlayingCard,
+  RANK_VALUE,
+  shuffle,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 
-const cardsPerRow = 10;
-
 type TableauCard = PlayingCard & {
-  row: number;
+  row: 0 | 1 | 2 | 3;
   col: number;
   removed: boolean;
+  blockers: number[];
 };
 
 type GameState = {
@@ -36,11 +35,19 @@ type GameState = {
   waste: PlayingCard[];
 };
 
-type DragGhost = {
-  index: number;
-  card: TableauCard;
-  origin: { x: number; y: number };
-};
+type MoveSource = { zone: "tableau"; index: number };
+type DropTarget = { zone: "waste" };
+
+const ROW_LAYOUT: readonly (readonly number[])[] = [
+  [1, 4, 7],
+  [0.5, 1.5, 3.5, 4.5, 6.5, 7.5],
+  [0, 1, 2, 3, 4, 5, 6, 7, 8],
+  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+] as const;
+
+const CARDS_PER_ROW = [3, 6, 9, 10] as const;
+const TABLEAU_ROW_BASE = 1.2;
+const TABLEAU_ROW_STEP = 0.43;
 
 function isAdjacentRank(a: PlayingCard, b: PlayingCard) {
   if (
@@ -53,404 +60,594 @@ function isAdjacentRank(a: PlayingCard, b: PlayingCard) {
   return Math.abs(RANK_VALUE[a.rank] - RANK_VALUE[b.rank]) === 1;
 }
 
+function tableauIndex(row: 0 | 1 | 2 | 3, col: number) {
+  const rowOffsets = [0, 3, 9, 18] as const;
+  return rowOffsets[row] + col;
+}
+
+function blockersFor(row: 0 | 1 | 2 | 3, col: number) {
+  if (row === 3) return [];
+
+  if (row === 2) {
+    return [tableauIndex(3, col), tableauIndex(3, col + 1)];
+  }
+
+  if (row === 1) {
+    if (col < 2) return [tableauIndex(2, col), tableauIndex(2, col + 1)];
+    if (col < 4) {
+      const local = col - 2;
+      return [tableauIndex(2, 3 + local), tableauIndex(2, 4 + local)];
+    }
+    const local = col - 4;
+    return [tableauIndex(2, 6 + local), tableauIndex(2, 7 + local)];
+  }
+
+  if (col === 0) return [tableauIndex(1, 0), tableauIndex(1, 1)];
+  if (col === 1) return [tableauIndex(1, 2), tableauIndex(1, 3)];
+  return [tableauIndex(1, 4), tableauIndex(1, 5)];
+}
+
+function isExposed(card: TableauCard, tableau: TableauCard[]) {
+  if (card.removed) return false;
+
+  return card.blockers.every((index) => tableau[index]?.removed);
+}
+
+function revealExposedCards(tableau: TableauCard[]) {
+  tableau.forEach((card, index) => {
+    if (card.removed || card.faceUp) return;
+    if (!isExposed(card, tableau)) return;
+
+    tableau[index] = { ...card, faceUp: true };
+  });
+}
+
+function canMoveToWaste(index: number, snapshot: GameState) {
+  const card = snapshot.tableau[index];
+  const wasteTop = snapshot.waste[snapshot.waste.length - 1];
+
+  if (!card || card.removed || !card.faceUp || !wasteTop) {
+    return false;
+  }
+
+  if (!isExposed(card, snapshot.tableau)) {
+    return false;
+  }
+
+  return isAdjacentRank(card, wasteTop);
+}
+
+function hasAvailableMoves(snapshot: GameState) {
+  return snapshot.tableau.some((card, index) => {
+    if (card.removed || !card.faceUp) return false;
+    if (!isExposed(card, snapshot.tableau)) return false;
+    return canMoveToWaste(index, snapshot);
+  });
+}
+
 function createInitialState(): GameState {
   const deck = shuffle(createDeck({ faceUp: true }));
-
-  const rows = [3, 6, 9, 10];
   const tableau: TableauCard[] = [];
 
-  rows.forEach((count, row) => {
-    for (let col = 0; col < count; col += 1) {
-      const base = deck.pop();
-      if (!base) continue;
-      tableau.push({ ...base, row, col, removed: false });
+  for (
+    let row = 0 as 0 | 1 | 2 | 3;
+    row <= 3;
+    row = (row + 1) as 0 | 1 | 2 | 3
+  ) {
+    for (let col = 0; col < CARDS_PER_ROW[row]; col += 1) {
+      const baseCard = deck.pop();
+      if (!baseCard) continue;
+
+      tableau.push({
+        ...baseCard,
+        row,
+        col,
+        removed: false,
+        faceUp: row === 3,
+        blockers: blockersFor(row, col),
+      });
     }
-  });
+  }
 
   const wasteSeed = deck.pop();
 
   return {
     tableau,
     stock: deck,
-    waste: wasteSeed ? [wasteSeed] : [],
+    waste: wasteSeed ? [{ ...wasteSeed, faceUp: true }] : [],
   };
 }
 
-function isExposed(card: TableauCard, tableau: TableauCard[]) {
-  if (card.removed) return false;
-  if (card.row === 3) return true;
-
-  const nextRowStart = card.row === 0 ? 0 : card.row === 1 ? 3 : 9;
-  const nextRowCount = card.row === 0 ? 6 : card.row === 1 ? 9 : 10;
-
-  const leftIndex = nextRowStart + card.col;
-  const rightIndex = leftIndex + 1;
-
-  const nextRowCards = tableau
-    .filter((entry) => entry.row === card.row + 1)
-    .slice(0, nextRowCount);
-
-  const left = nextRowCards[leftIndex - nextRowStart];
-  const right = nextRowCards[rightIndex - nextRowStart];
-
-  const leftBlocking = left && !left.removed;
-  const rightBlocking = right && !right.removed;
-
-  return !leftBlocking && !rightBlocking;
-}
+const gameStateInitial = createInitialState();
 
 export default function TriPeaks() {
-  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
+  const navigation = useNavigation();
+  const [hoverTarget, setHoverTarget] = useState<DropTarget | null>(null);
 
-  const [game, setGame] = useState<GameState>(createInitialState);
-  const [dragGhost, setDragGhost] = useState<DragGhost | null>(null);
-  const [isWasteDropActive, setIsWasteDropActive] = useState(false);
-  const [boardOrigin, setBoardOrigin] = useState({ x: 0, y: 0 });
+  const {
+    isLoaded,
+    showIntro,
+    setShowIntro,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<GameState>({
+    gameStateInitial,
+    resetNonGameStates: () => {
+      clearDragGhost();
+      setHoverTarget(null);
+    },
+    resetAndSetup: async () => {
+      setGame(createInitialState());
+    },
+  });
 
-  const dragTranslate = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
+  const { width: windowWidth, height: windowHeight } = useViewportDimensions();
 
-  const boardRef = useRef<RNView | null>(null);
-  const wasteRef = useRef<RNView | null>(null);
-  const cardRefs = useRef<Record<string, RNView | null>>({});
+  const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
 
-  const removedCount = useMemo(
-    () => game.tableau.filter((card) => card.removed).length,
+  const sameDropTarget = useCallback(
+    (a: DropTarget | null, b: DropTarget | null) => {
+      if (!a || !b) return a === b;
+      return a.zone === b.zone;
+    },
+    [],
+  );
+
+  const handleHoverTargetChange = useCallback(
+    (next: DropTarget | null) => {
+      setHoverTarget((prev) => (sameDropTarget(prev, next) ? prev : next));
+    },
+    [sameDropTarget],
+  );
+
+  function canDropOnTarget(
+    source: MoveSource,
+    target: DropTarget,
+    snapshot = game,
+  ) {
+    if (target.zone !== "waste") return false;
+    return canMoveToWaste(source.index, snapshot);
+  }
+
+  const {
+    dragGhost,
+    draggedCardIds,
+    justDroppedCardIds,
+    dragTranslate,
+    boardRef,
+    boardPageOffset,
+    clearDragGhost,
+    startDrag,
+    updateBoardOffset,
+    makeDragHandlers,
+  } = useDragDrop<MoveSource, DropTarget>({
+    findDropTarget: (pageX, pageY) => {
+      const hit = [...dropHitAreasRef.current]
+        .filter(({ rect }) => pointInRect(pageX, pageY, rect))
+        .sort((a, b) => b.priority - a.priority)[0];
+      return hit?.target ?? null;
+    },
+    canDropOnTarget,
+    sameTarget: sameDropTarget,
+    onSuccessfulDrop: (source) => {
+      moveTableauToWaste(source.index);
+    },
+    getDroppedCardIds: (source) => {
+      const card = game.tableau[source.index];
+      return card && !card.removed ? [card.id] : [];
+    },
+    getDropHitAreas: () => dropHitAreasRef.current,
+    getSourceRect,
+    onHoverTargetChange: handleHoverTargetChange,
+  });
+
+  const won = useMemo(
+    () => game.tableau.every((card) => card.removed),
     [game.tableau],
   );
 
-  const won = removedCount === 28;
-  const wasteTop = game.waste[game.waste.length - 1];
+  const lost = useMemo(() => {
+    if (won) return false;
+    if (game.stock.length > 0) return false;
+    return !hasAvailableMoves(game);
+  }, [game, won]);
 
-  function updateBoardOrigin() {
-    boardRef.current?.measureInWindow((x, y) => {
-      setBoardOrigin({ x, y });
-    });
-  }
+  const ended = won || lost;
 
-  function resetGame() {
-    setGame(createInitialState());
-    setDragGhost(null);
-    setIsWasteDropActive(false);
-    dragTranslate.setValue({ x: 0, y: 0 });
-  }
+  const zones: MapZone[] = useMemo(() => {
+    const tableauZones: MapZone[] = game.tableau.map((card, index) => ({
+      id: `tableau-${index}`,
+      name: "tableau",
+      pileIndex: index,
+      cards: card.removed ? [] : [card],
+      col: ROW_LAYOUT[card.row][card.col],
+      row: TABLEAU_ROW_BASE + card.row * TABLEAU_ROW_STEP,
+      baseZIndex: 20 + card.row,
+      fan: { maxVisible: 1 },
+    }));
 
-  function draw() {
-    setGame((prev) => {
-      if (prev.stock.length === 0) return prev;
-      const nextStock = [...prev.stock];
-      const drawn = nextStock.pop();
-      if (!drawn) return prev;
+    return [
+      {
+        id: "stock",
+        name: "stock",
+        cards: game.stock,
+        col: 0,
+        row: 0,
+        baseZIndex: 60,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Draw", infoPos: "below" },
+      },
+      {
+        id: "waste",
+        name: "waste",
+        cards: game.waste,
+        col: 1.4,
+        row: 0,
+        baseZIndex: 50,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Waste", infoPos: "below" },
+      },
+      ...tableauZones,
+    ];
+  }, [game]);
 
+  const cardMapper = (
+    mappedCard: MappedCard,
+  ): AnimatedCardMapping | undefined => {
+    const isBeingDragged = draggedCardIds?.has(mappedCard.card.id) ?? false;
+    const animDuration =
+      justDroppedCardIds.current?.has(mappedCard.card.id) === true
+        ? 0
+        : undefined;
+
+    if (mappedCard.zoneName === "stock" && mappedCard.topOfZone) {
       return {
-        ...prev,
-        stock: nextStock,
-        waste: [...prev.waste, drawn],
+        selectColor: "blue",
+        onPress: drawFromStock,
+        isDisabled: game.stock.length === 0 || ended,
+        isVisible: !isBeingDragged,
+        animDuration,
       };
-    });
-  }
+    }
 
-  function removeTableauCard(index: number) {
-    setGame((prev) => {
-      const card = prev.tableau[index];
-      const top = prev.waste[prev.waste.length - 1];
-      if (!card || card.removed || !top || !isExposed(card, prev.tableau)) {
-        return prev;
-      }
-      if (!isAdjacentRank(card, top)) return prev;
+    if (mappedCard.zoneName === "waste") {
+      const isWasteDropTarget = !!dragGhost && hoverTarget?.zone === "waste";
+      return {
+        selectColor: isWasteDropTarget ? "green" : "none",
+        isSelected: isWasteDropTarget,
+        isVisible: !isBeingDragged,
+        animDuration,
+      };
+    }
+
+    if (
+      mappedCard.zoneName === "tableau" &&
+      mappedCard.pileIndex !== undefined
+    ) {
+      const source = game.tableau[mappedCard.pileIndex];
+      if (!source) return undefined;
+
+      const exposed = isExposed(source, game.tableau);
+      const playable = canMoveToWaste(mappedCard.pileIndex, game);
+      return {
+        selectColor: playable ? "blue" : "none",
+        isSelected: playable,
+        isDisabled: !source.faceUp || source.removed || !exposed || ended,
+        isVisible: !isBeingDragged,
+        animDuration,
+      };
+    }
+
+    return undefined;
+  };
+
+  const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
+    if (zone.name === "stock") {
+      return {
+        onPress: drawFromStock,
+        isDisabled: game.stock.length === 0 || ended,
+      };
+    }
+
+    if (zone.name === "waste") {
+      const isWasteDropTarget = !!dragGhost && hoverTarget?.zone === "waste";
 
       return {
-        ...prev,
-        tableau: prev.tableau.map((entry, entryIndex) =>
-          entryIndex === index ? { ...entry, removed: true } : entry,
+        isDisabled: true,
+        isSelected: isWasteDropTarget,
+        selectColor: isWasteDropTarget ? "green" : "none",
+      };
+    }
+
+    return undefined;
+  };
+
+  const { cardMap, getZoneBasePos, cardWidth, cardHeight } = useCardMap({
+    game,
+    zones,
+    cardMapper,
+    zoneMapper,
+    cardSize: "small",
+    fixedCols: 10,
+    fixedRows: 6,
+  });
+
+  const stockTapRect = useMemo(() => {
+    const stockZone = zones.find((zone) => zone.name === "stock");
+    if (!stockZone) return null;
+    const pos = getZoneBasePos(stockZone);
+    return createRect(pos.x, pos.y, cardWidth, cardHeight);
+  }, [cardHeight, cardWidth, getZoneBasePos, zones]);
+
+  function getSourceRect(source: MoveSource) {
+    const zone = zones.find(
+      (entry) => entry.name === "tableau" && entry.pileIndex === source.index,
+    );
+    if (!zone) return null;
+
+    const base = getZoneBasePos(zone);
+    return createRect(base.x, base.y, cardWidth, cardHeight);
+  }
+
+  function startGhostDrag(source: MoveSource, _event: GestureResponderEvent) {
+    const card = game.tableau[source.index];
+    if (!card || card.removed || !card.faceUp || ended) return;
+    if (!isExposed(card, game.tableau)) return;
+
+    const rect = getSourceRect(source);
+    if (!rect) return;
+
+    startDrag(source, [card], { x: rect.x, y: rect.y });
+  }
+
+  const cardHitAreas = useMemo<CardHitArea<MoveSource>[]>(() => {
+    const areas: CardHitArea<MoveSource>[] = [];
+
+    game.tableau.forEach((card, index) => {
+      if (card.removed || !card.faceUp || ended) return;
+      if (!isExposed(card, game.tableau)) return;
+
+      const zone = zones.find(
+        (entry) => entry.name === "tableau" && entry.pileIndex === index,
+      );
+      if (!zone) return;
+
+      const pos = getZoneBasePos(zone);
+      areas.push({
+        source: { zone: "tableau", index },
+        rect: createRect(pos.x, pos.y, cardWidth, cardHeight),
+        priority: 10 + card.row,
+      });
+    });
+
+    return areas;
+  }, [cardHeight, cardWidth, ended, game.tableau, getZoneBasePos, zones]);
+
+  const dropHitAreas = useMemo<DropHitArea<DropTarget>[]>(() => {
+    const wasteZone = zones.find((zone) => zone.name === "waste");
+    if (!wasteZone || ended) return [];
+
+    const zoneRect = getZoneBasePos(wasteZone);
+
+    return [
+      {
+        target: { zone: "waste" },
+        rect: createRect(
+          zoneRect.x + boardPageOffset.x,
+          zoneRect.y + boardPageOffset.y,
+          cardWidth,
+          cardHeight,
         ),
-        waste: [...prev.waste, { ...card }],
-      };
+        priority: 100,
+      },
+    ];
+  }, [
+    boardPageOffset.x,
+    boardPageOffset.y,
+    cardHeight,
+    cardWidth,
+    ended,
+    getZoneBasePos,
+    zones,
+  ]);
+
+  dropHitAreasRef.current = dropHitAreas;
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      updateBoardOffset();
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [windowWidth, windowHeight, zones.length, cardWidth, cardHeight]);
+
+  useEffect(() => {
+    navigation.setOptions({ gestureEnabled: false });
+
+    return () => {
+      navigation.setOptions({ gestureEnabled: true });
+    };
+  }, [navigation]);
+
+  function drawFromStock() {
+    if (dragGhost || ended) {
+      clearDragGhost();
+    }
+
+    if (game.stock.length === 0 || ended) {
+      return;
+    }
+
+    saveUndoState(structuredClone(game));
+    setGame((draft) => {
+      const drawn = draft.stock[draft.stock.length - 1];
+      if (!drawn) return;
+
+      draft.stock.pop();
+      draft.waste.push({ ...drawn, faceUp: true });
+    });
+  }
+
+  function moveTableauToWaste(index: number) {
+    if (!canMoveToWaste(index, game) || ended) {
+      return;
+    }
+
+    saveUndoState(structuredClone(game));
+    setGame((draft) => {
+      const card = draft.tableau[index];
+      if (!card || card.removed || !card.faceUp) return;
+      if (!isExposed(card, draft.tableau)) return;
+
+      const top = draft.waste[draft.waste.length - 1];
+      if (!top || !isAdjacentRank(card, top)) return;
+
+      draft.tableau[index] = { ...card, removed: true };
+      draft.waste.push({
+        id: card.id,
+        suit: card.suit,
+        rank: card.rank,
+        faceUp: true,
+      });
+
+      revealExposedCards(draft.tableau);
     });
   }
 
   function onTableauPress(index: number) {
-    removeTableauCard(index);
+    if (ended) return;
+    moveTableauToWaste(index);
   }
 
-  function startDrag(index: number, event: GestureResponderEvent) {
-    const card = game.tableau[index];
-    if (!card || card.removed || !isExposed(card, game.tableau)) return;
-
-    const { pageX, pageY, locationX, locationY } = event.nativeEvent;
-    dragTranslate.setValue({ x: 0, y: 0 });
-    setDragGhost({
-      index,
-      card,
-      origin: {
-        x: pageX - locationX,
-        y: pageY - locationY,
-      },
-    });
+  function makeHandlers(source: MoveSource, onTap?: () => void) {
+    return makeDragHandlers(source, startGhostDrag, onTap);
   }
 
-  function clearDrag() {
-    setDragGhost(null);
-    setIsWasteDropActive(false);
-    dragTranslate.setValue({ x: 0, y: 0 });
-  }
+  const interactionTargets = useMemo(
+    () =>
+      cardHitAreas.map((hit) => {
+        const source = hit.source;
+        const rect = hit.rect;
 
-  function canDropToWaste(index: number, snapshot = game) {
-    const card = snapshot.tableau[index];
-    const top = snapshot.waste[snapshot.waste.length - 1];
-    if (!card || card.removed || !top || !isExposed(card, snapshot.tableau)) {
-      return false;
-    }
-    return isAdjacentRank(card, top);
-  }
+        return (
+          <View
+            key={`tableau-target-${source.index}`}
+            collapsable={false}
+            style={{
+              position: "absolute",
+              backgroundColor: "transparent",
+              left: rect.x,
+              top: rect.y,
+              width: rect.width,
+              height: rect.height,
+            }}
+            {...makeHandlers(source, () => onTableauPress(source.index))}
+          />
+        );
+      }),
+    [cardHitAreas],
+  );
 
-  async function updateWasteHover(index: number, pageX: number, pageY: number) {
-    const wasteRect = await measureNode(wasteRef.current);
-    const overWaste = !!wasteRect && pointInRect(pageX, pageY, wasteRect);
-    setIsWasteDropActive(overWaste && canDropToWaste(index));
-  }
-
-  async function handleDrop(index: number, event: GestureResponderEvent) {
-    const wasteRect = await measureNode(wasteRef.current);
-    if (!wasteRect) return;
-
-    if (
-      pointInRect(event.nativeEvent.pageX, event.nativeEvent.pageY, wasteRect)
-    ) {
-      removeTableauCard(index);
-    }
-  }
-
-  function makeDragHandlers(index: number) {
-    return PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onStartShouldSetPanResponderCapture: () => true,
-      onMoveShouldSetPanResponder: (_, gesture) =>
-        Math.abs(gesture.dx) + Math.abs(gesture.dy) > DRAG_MOVE_THRESHOLD,
-      onMoveShouldSetPanResponderCapture: (_, gesture) =>
-        Math.abs(gesture.dx) + Math.abs(gesture.dy) > DRAG_CAPTURE_THRESHOLD,
-      onPanResponderGrant: (event) => {
-        startDrag(index, event);
-      },
-      onPanResponderMove: (_, gesture) => {
-        dragTranslate.setValue({ x: gesture.dx, y: gesture.dy });
-        const sourceIndex = dragGhost?.index ?? index;
-        void updateWasteHover(sourceIndex, gesture.moveX, gesture.moveY);
-      },
-      onPanResponderRelease: (event, gesture) => {
-        const moved =
-          Math.abs(gesture.dx) + Math.abs(gesture.dy) > DRAG_MOVE_THRESHOLD;
-        if (!moved) {
-          clearDrag();
-          onTableauPress(index);
-          return;
-        }
-
-        const sourceIndex = dragGhost?.index ?? index;
-        void handleDrop(sourceIndex, event).finally(() => {
-          clearDrag();
-        });
-      },
-      onPanResponderTerminate: () => {
-        clearDrag();
-      },
-      onPanResponderTerminationRequest: () => false,
-      onShouldBlockNativeResponder: () => true,
-    }).panHandlers;
-  }
-
-  const ghostLeft = dragGhost ? dragGhost.origin.x - boardOrigin.x : 0;
-  const ghostTop = dragGhost ? dragGhost.origin.y - boardOrigin.y : 0;
+  const ghostLeft = dragGhost ? dragGhost.origin.x : 0;
+  const ghostTop = dragGhost ? dragGhost.origin.y : 0;
+  const ghostHasValidDrop = !!dragGhost && hoverTarget !== null;
 
   return (
     <GameWrapper
       showIntro={showIntro}
       setShowIntro={setShowIntro}
-      ended={won}
+      ended={ended}
       won={won}
-      reset={resetGame}
+      winLoseMessage={lost ? "No moves left." : undefined}
+      reset={() => {
+        void reset();
+      }}
       isLoaded={isLoaded}
+      canUndo={canUndo}
+      undo={undo}
     >
-      <View
-        ref={boardRef}
-        onLayout={updateBoardOrigin}
-        style={styles.container}
-      >
-        <Text size="sm">Remove exposed cards adjacent to waste rank.</Text>
-        {won && <Text style={styles.winText}>You won!</Text>}
-
-        <View style={styles.stockWasteRow}>
-          <Pressable style={styles.cardSlot} onPress={draw}>
-            {/* {game.stock.length > 0 ? (
-              <Card cardWidth={5}  />
-            ) : (
-              <Text style={styles.slotLabel}>Stock</Text>
-            )} */}
-          </Pressable>
+      <View style={{ flex: 1, width: "100%", gap: 12 }}>
+        <View
+          ref={boardRef}
+          style={{
+            flex: 1,
+            width: "100%",
+            position: "relative",
+            touchAction: "none",
+            overscrollBehaviorX: "contain",
+          }}
+        >
+          {cardMap}
 
           <View
-            ref={wasteRef}
-            collapsable={false}
-            style={[
-              styles.cardSlot,
-              isWasteDropActive ? styles.dropHintSlot : null,
-            ]}
+            style={{
+              ...StyleSheet.absoluteFill,
+              zIndex: 3000,
+              touchAction: "none",
+              overscrollBehaviorX: "contain",
+              pointerEvents: "box-none",
+            }}
           >
-            {wasteTop ? (
-              <Card card={wasteTop} cardWidth={5} />
-            ) : (
-              <Text style={styles.slotLabel}>Waste</Text>
+            {stockTapRect && (
+              <Pressable
+                style={{
+                  position: "absolute",
+                  backgroundColor: "transparent",
+                  left: stockTapRect.x,
+                  top: stockTapRect.y,
+                  width: stockTapRect.width,
+                  height: stockTapRect.height,
+                }}
+                onPress={drawFromStock}
+                disabled={game.stock.length === 0 || ended}
+              />
             )}
+
+            {interactionTargets}
           </View>
+
+          {dragGhost && (
+            <Animated.View
+              style={[
+                {
+                  pointerEvents: "none",
+                  position: "absolute",
+                  zIndex: 4000,
+                  left: ghostLeft,
+                  top: ghostTop,
+                  transform: dragTranslate.getTranslateTransform(),
+                },
+              ]}
+            >
+              {dragGhost.cards.map((card) => (
+                <View
+                  key={`ghost-${card.id}`}
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                    opacity: 1,
+                    width: cardWidth,
+                    height: cardHeight,
+                  }}
+                >
+                  <Card
+                    card={card}
+                    cardWidth={cardWidth}
+                    cardSize="small"
+                    selectColor={ghostHasValidDrop ? "green" : "none"}
+                    isSelected={ghostHasValidDrop}
+                  />
+                </View>
+              ))}
+            </Animated.View>
+          )}
         </View>
-
-        <View style={styles.tableauWrap}>
-          {Array.from({ length: 4 }, (_, row) => {
-            const rowCards = game.tableau.filter((card) => card.row === row);
-
-            return (
-              <View key={`tripeaks-row-${row}`} style={styles.tableauRow}>
-                {rowCards.map((card) => {
-                  const index = game.tableau.findIndex(
-                    (entry) => entry.id === card.id,
-                  );
-                  const exposed = isExposed(card, game.tableau);
-                  const hiddenByDrag = dragGhost?.index === index;
-                  const dragHandlers =
-                    exposed && !card.removed ? makeDragHandlers(index) : null;
-
-                  return (
-                    <Pressable
-                      key={card.id}
-                      ref={(node) => {
-                        cardRefs.current[card.id] = node;
-                      }}
-                      collapsable={false}
-                      onPress={() => onTableauPress(index)}
-                      disabled={!exposed || card.removed}
-                      style={[
-                        card.removed ? styles.removedCard : null,
-                        hiddenByDrag ? styles.hiddenDuringDrag : null,
-                      ]}
-                      {...(dragHandlers ?? {})}
-                    >
-                      {!card.removed ? (
-                        <Card card={card} cardWidth={5} />
-                      ) : (
-                        <View style={styles.removedPlaceholder} />
-                      )}
-                    </Pressable>
-                  );
-                })}
-              </View>
-            );
-          })}
-        </View>
-
-        {dragGhost ? (
-          <Animated.View
-            style={[
-              styles.ghostLayer,
-              {
-                left: ghostLeft,
-                top: ghostTop,
-                transform: dragTranslate.getTranslateTransform(),
-              },
-            ]}
-          >
-            <Card card={dragGhost.card} cardWidth={5} />
-          </Animated.View>
-        ) : null}
       </View>
     </GameWrapper>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: "100%",
-    paddingTop: 56,
-    paddingHorizontal: 8,
-    gap: 10,
-  },
-  headerRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  title: {
-    fontSize: 24,
-    fontFamily: "Outfit_600SemiBold",
-    color: "#1f2937",
-  },
-  button: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-    backgroundColor: "#1d4ed8",
-  },
-  buttonText: {
-    color: "#fff",
-    fontFamily: "Outfit_500Medium",
-  },
-  metaText: {
-    color: "#334155",
-    fontFamily: "Outfit_500Medium",
-  },
-  winText: {
-    color: "#047857",
-    fontFamily: "Outfit_600SemiBold",
-  },
-  stockWasteRow: {
-    flexDirection: "row",
-    gap: 8,
-  },
-  cardSlot: {
-    borderWidth: 1,
-    borderColor: "rgba(15, 23, 42, 0.25)",
-    borderStyle: "dashed",
-    borderRadius: 8,
-    minWidth: 36,
-    minHeight: 56,
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-    backgroundColor: "rgba(255,255,255,0.35)",
-  },
-  slotLabel: {
-    color: "#334155",
-    fontSize: 11,
-    fontFamily: "Outfit_500Medium",
-  },
-  dropHintSlot: {
-    borderColor: "#0f766e",
-    borderStyle: "solid",
-    borderWidth: 2,
-    backgroundColor: "rgba(16, 185, 129, 0.18)",
-  },
-  tableauWrap: {
-    flex: 1,
-    gap: 2,
-  },
-  tableauRow: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: -26,
-    gap: 2,
-  },
-  removedCard: {
-    opacity: 0.08,
-  },
-  removedPlaceholder: {
-    width: 24,
-    height: 34,
-  },
-  hiddenDuringDrag: {
-    opacity: 0,
-  },
-  ghostLayer: {
-    position: "absolute",
-    zIndex: 4000,
-    pointerEvents: "none",
-  },
-});

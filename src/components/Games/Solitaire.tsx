@@ -1,4 +1,5 @@
 import { useStateManager } from "@/hooks/useStateManager";
+import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import {
   CardHitArea,
   createRect,
@@ -8,9 +9,9 @@ import {
   useDragDrop,
 } from "@/hooks/useDragDrop";
 import { useNavigation } from "expo-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { GestureResponderEvent } from "react-native";
-import { Animated, StyleSheet, View } from "react-native";
+import { Animated, Pressable, StyleSheet, View } from "react-native";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { Card } from "../Cards/Card";
@@ -33,6 +34,7 @@ type GameState = {
   stock: PlayingCard[];
   waste: PlayingCard[];
   foundations: PlayingCard[][];
+  drawCount: 1 | 3;
 };
 
 type Selection =
@@ -48,7 +50,7 @@ type DropTarget =
   | { zone: "tableau"; pileIndex: number }
   | { zone: "foundation"; pileIndex: number };
 
-function createInitialState(): GameState {
+function createInitialState(drawCount: 1 | 3 = 1): GameState {
   const fullDeck = shuffle(
     SUITS.flatMap((suit) =>
       RANKS.map((rank) => ({
@@ -78,6 +80,7 @@ function createInitialState(): GameState {
     stock: fullDeck.slice(cursor),
     waste: [],
     foundations: Array.from({ length: 4 }, () => [] as PlayingCard[]),
+    drawCount,
   };
 }
 
@@ -128,8 +131,11 @@ function revealLastIfNeeded(pile: PlayingCard[]) {
 const gameStateInitial = createInitialState();
 
 export default function Solitaire() {
+  const configuredDrawCount = useGameSettingValue("drawCount");
+
   const navigation = useNavigation();
   const [selected, setSelected] = useState<Selection>(null);
+  const [hoverTarget, setHoverTarget] = useState<DropTarget | null>(null);
   const [lastTap, setLastTap] = useState<{ key: string; at: number } | null>(
     null,
   );
@@ -152,7 +158,7 @@ export default function Solitaire() {
       clearDragGhost();
     },
     resetAndSetup: async () => {
-      setGame(createInitialState());
+      setGame(createInitialState(configuredDrawCount));
     },
   });
 
@@ -161,6 +167,10 @@ export default function Solitaire() {
   // Pre-computed drop areas are written here each render so the hook's
   // findDropTarget closure always reads the latest values without forward-ref issues.
   const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
+
+  const handleHoverTargetChange = useCallback((next: DropTarget | null) => {
+    setHoverTarget((prev) => (sameDropTarget(prev, next) ? prev : next));
+  }, []);
 
   const {
     dragGhost,
@@ -193,6 +203,7 @@ export default function Solitaire() {
       getSourceCards(source, game).map((c) => c.id),
     getDropHitAreas: () => dropHitAreasRef.current,
     getSourceRect,
+    onHoverTargetChange: handleHoverTargetChange,
   });
 
   const wasteTop = game.waste[game.waste.length - 1];
@@ -304,8 +315,7 @@ export default function Solitaire() {
         selectColor: "blue",
         isSelected: selected?.zone === "stock",
         onPress: drawFromStock,
-        isDisabled:
-          !!dragGhost || (game.stock.length === 0 && game.waste.length === 0),
+        isDisabled: game.stock.length === 0 && game.waste.length === 0,
         isVisible: !isBeingDragged,
         animDuration: animDuration,
       };
@@ -315,11 +325,18 @@ export default function Solitaire() {
       mappedCard.zoneName === "foundation" &&
       mappedCard.pileIndex !== undefined
     ) {
+      const isHoverTargetTop =
+        !!dragGhost &&
+        mappedCard.topOfZone &&
+        hoverTarget?.zone === "foundation" &&
+        hoverTarget.pileIndex === mappedCard.pileIndex;
+
       return {
         selectColor: "green",
         isSelected:
-          selected?.zone === "foundation" &&
-          selected.pileIndex === mappedCard.pileIndex,
+          (selected?.zone === "foundation" &&
+            selected.pileIndex === mappedCard.pileIndex) ||
+          isHoverTargetTop,
         isVisible: !isBeingDragged,
         animDuration: animDuration,
       };
@@ -332,10 +349,15 @@ export default function Solitaire() {
       const isSelected =
         selected?.zone === "tableau" &&
         selected.pileIndex === mappedCard.pileIndex;
+      const isHoverTargetTop =
+        !!dragGhost &&
+        mappedCard.topOfZone &&
+        hoverTarget?.zone === "tableau" &&
+        hoverTarget.pileIndex === mappedCard.pileIndex;
       const isFaceUp = mappedCard.card?.faceUp ?? false;
       return {
-        selectColor: isSelected ? "blue" : "none",
-        isSelected,
+        selectColor: isHoverTargetTop ? "green" : isSelected ? "blue" : "none",
+        isSelected: isSelected || isHoverTargetTop,
         isDisabled: !isFaceUp,
         isVisible: !isBeingDragged,
         animDuration: animDuration,
@@ -349,8 +371,7 @@ export default function Solitaire() {
     if (zone.name === "stock") {
       return {
         onPress: drawFromStock,
-        isDisabled:
-          !!dragGhost || (game.stock.length === 0 && game.waste.length === 0),
+        isDisabled: game.stock.length === 0 && game.waste.length === 0,
         isSelected: selected?.zone === "stock",
       };
     }
@@ -368,21 +389,32 @@ export default function Solitaire() {
       const selectedFoundation =
         selected?.zone === "foundation" &&
         selected.pileIndex === foundationPileIndex;
+      const isHoverDropTarget =
+        !!dragGhost &&
+        hoverTarget?.zone === "foundation" &&
+        hoverTarget.pileIndex === foundationPileIndex;
 
       return {
         onPress: () => onFoundationPress(foundationPileIndex),
         isDisabled: !!dragGhost,
-        isSelected: selectedFoundation,
+        isSelected: selectedFoundation || isHoverDropTarget,
+        selectColor: isHoverDropTarget ? "green" : "blue",
       };
     }
 
     if (zone.name === "tableau" && zone.pileIndex !== undefined) {
       const isSelected =
         selected?.zone === "tableau" && selected.pileIndex === zone.pileIndex;
+      const isHoverDropTarget =
+        !!dragGhost &&
+        hoverTarget?.zone === "tableau" &&
+        hoverTarget.pileIndex === zone.pileIndex;
       return {
         onPress: () => onEmptyTableauPress(zone.pileIndex!),
         isDisabled: !selected || !!dragGhost,
-        isSelected,
+        isSelected:
+          isSelected || (isHoverDropTarget && zone.cards?.length === 0),
+        selectColor: isHoverDropTarget ? "green" : "blue",
       };
     }
 
@@ -392,14 +424,19 @@ export default function Solitaire() {
   const { cardMap, getZoneBasePos, cardWidth, cardHeight } = useCardMap({
     game,
     zones,
-    // gap: 0.35,
     cardMapper,
     zoneMapper,
     cardSize: "small",
-    // paddingBottom: 2.5,
     fixedRows: 6,
     visualizer: true,
   });
+
+  const stockTapRect = useMemo(() => {
+    const stockZone = zones.find((zone) => zone.name === "stock");
+    if (!stockZone) return null;
+    const pos = getZoneBasePos(stockZone);
+    return createRect(pos.x, pos.y, cardWidth, cardHeight);
+  }, [cardHeight, cardWidth, getZoneBasePos, zones]);
 
   function getSourceRect(source: MoveSource) {
     const zone = zones.find((entry) => {
@@ -595,7 +632,9 @@ export default function Solitaire() {
   }
 
   function drawFromStock() {
-    if (dragGhost) return;
+    if (dragGhost) {
+      clearDragGhost();
+    }
 
     if (game.stock.length === 0 && game.waste.length === 0) {
       clearSelection();
@@ -605,9 +644,13 @@ export default function Solitaire() {
     saveUndoState(structuredClone(game));
     setGame((draft) => {
       if (draft.stock.length > 0) {
-        const top = draft.stock[draft.stock.length - 1];
-        draft.stock = draft.stock.slice(0, -1);
-        draft.waste.push({ ...top, faceUp: true });
+        const drawTotal = Math.min(draft.drawCount, draft.stock.length);
+        for (let i = 0; i < drawTotal; i += 1) {
+          const top = draft.stock[draft.stock.length - 1];
+          if (!top) return;
+          draft.stock = draft.stock.slice(0, -1);
+          draft.waste.push({ ...top, faceUp: true });
+        }
         return;
       }
 
@@ -926,6 +969,56 @@ export default function Solitaire() {
 
   const ghostLeft = dragGhost ? dragGhost.origin.x : 0;
   const ghostTop = dragGhost ? dragGhost.origin.y : 0;
+  const ghostHasValidDrop = !!dragGhost && hoverTarget !== null;
+
+  const tapHandlerResolverRef = useRef(
+    (_source: MoveSource): (() => void) =>
+      () => {},
+  );
+  tapHandlerResolverRef.current = (source: MoveSource) => {
+    if (source.zone === "waste") {
+      return onWastePress;
+    }
+
+    if (source.zone === "foundation") {
+      return () => onFoundationPress(source.pileIndex);
+    }
+
+    return () => onTableauCardPress(source.pileIndex, source.cardIndex);
+  };
+
+  const interactionTargets = useMemo(
+    () =>
+      cardHitAreas.map((hit) => {
+        const source = hit.source;
+        const rect = hit.rect;
+
+        return (
+          <View
+            key={
+              source.zone === "waste"
+                ? "waste"
+                : source.zone === "foundation"
+                  ? `foundation-${source.pileIndex}`
+                  : `tableau-${source.pileIndex}-${source.cardIndex}`
+            }
+            collapsable={false}
+            style={{
+              position: "absolute",
+              backgroundColor: "transparent",
+              left: rect.x,
+              top: rect.y,
+              width: rect.width,
+              height: rect.height,
+            }}
+            {...makeHandlers(source, () =>
+              tapHandlerResolverRef.current(source)(),
+            )}
+          />
+        );
+      }),
+    [cardHitAreas],
+  );
 
   return (
     <GameWrapper
@@ -940,54 +1033,52 @@ export default function Solitaire() {
       canUndo={canUndo}
       undo={undo}
     >
-      <View style={styles.gameShell}>
-        <View ref={boardRef} style={styles.boardShell}>
+      <View style={{ flex: 1, width: "100%", gap: 12 }}>
+        <View
+          ref={boardRef}
+          style={{
+            flex: 1,
+            width: "100%",
+            position: "relative",
+            touchAction: "none",
+            overscrollBehaviorX: "contain",
+          }}
+        >
           {cardMap}
 
-          <View style={styles.interactionLayer}>
-            {cardHitAreas.map((hit) => {
-              const source = hit.source;
-              const rect = hit.rect;
-
-              const onTap =
-                source.zone === "waste"
-                  ? onWastePress
-                  : source.zone === "foundation"
-                    ? () => onFoundationPress(source.pileIndex)
-                    : () =>
-                        onTableauCardPress(source.pileIndex, source.cardIndex);
-
-              return (
-                <View
-                  key={
-                    source.zone === "waste"
-                      ? "waste"
-                      : source.zone === "foundation"
-                        ? `foundation-${source.pileIndex}`
-                        : `tableau-${source.pileIndex}-${source.cardIndex}`
-                  }
-                  collapsable={false}
-                  style={[
-                    styles.interactionTarget,
-                    {
-                      left: rect.x,
-                      top: rect.y,
-                      width: rect.width,
-                      height: rect.height,
-                    },
-                  ]}
-                  {...makeHandlers(source, onTap)}
-                />
-              );
-            })}
+          <View
+            style={{
+              ...StyleSheet.absoluteFill,
+              zIndex: 3000,
+              touchAction: "none",
+              overscrollBehaviorX: "contain",
+              pointerEvents: "box-none",
+            }}
+          >
+            {stockTapRect && (
+              <Pressable
+                style={{
+                  position: "absolute",
+                  backgroundColor: "transparent",
+                  left: stockTapRect.x,
+                  top: stockTapRect.y,
+                  width: stockTapRect.width,
+                  height: stockTapRect.height,
+                }}
+                onPress={drawFromStock}
+                disabled={game.stock.length === 0 && game.waste.length === 0}
+              />
+            )}
+            {interactionTargets}
           </View>
 
           {dragGhost && (
             <Animated.View
               style={[
-                styles.ghostLayer,
-                styles.ghostNoPointerEvents,
                 {
+                  pointerEvents: "none",
+                  position: "absolute",
+                  zIndex: 4000,
                   left: ghostLeft,
                   top: ghostTop,
                   transform: dragTranslate.getTranslateTransform(),
@@ -998,8 +1089,10 @@ export default function Solitaire() {
                 <View
                   key={`ghost-${card.id}`}
                   style={[
-                    styles.ghostCard,
                     {
+                      position: "absolute",
+                      left: 0,
+                      opacity: 1,
                       width: cardWidth,
                       height: cardHeight,
                     },
@@ -1009,7 +1102,13 @@ export default function Solitaire() {
                     },
                   ]}
                 >
-                  <Card card={card} cardWidth={cardWidth} cardSize="small" />
+                  <Card
+                    card={card}
+                    cardWidth={cardWidth}
+                    cardSize="small"
+                    selectColor={ghostHasValidDrop ? "green" : "none"}
+                    isSelected={ghostHasValidDrop}
+                  />
                 </View>
               ))}
             </Animated.View>
@@ -1019,112 +1118,3 @@ export default function Solitaire() {
     </GameWrapper>
   );
 }
-
-const styles = StyleSheet.create({
-  cardSlot: {
-    borderWidth: 1,
-    borderColor: "rgba(15, 23, 42, 0.25)",
-    borderStyle: "dashed",
-    borderRadius: 8,
-    minWidth: 44,
-    minHeight: 64,
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-    backgroundColor: "rgba(255,255,255,0.35)",
-  },
-  selectedSlot: {
-    borderColor: "#2563eb",
-    borderStyle: "solid",
-    borderWidth: 2,
-  },
-  dropHintSlot: {
-    borderColor: "#0f766e",
-    borderStyle: "solid",
-    borderWidth: 2,
-    backgroundColor: "rgba(16, 185, 129, 0.18)",
-  },
-  draggingSlot: {
-    opacity: 0.7,
-    borderColor: "#7c3aed",
-    borderStyle: "solid",
-    borderWidth: 2,
-  },
-  slotLabel: {
-    color: "#334155",
-    fontSize: 12,
-    fontFamily: "Outfit_500Medium",
-  },
-  tableauScrollContent: {
-    paddingBottom: 20,
-  },
-  tableauPile: {
-    width: 52,
-    position: "relative",
-    borderRadius: 8,
-  },
-  dropHintPile: {
-    borderWidth: 2,
-    borderColor: "#0f766e",
-    backgroundColor: "rgba(16, 185, 129, 0.12)",
-  },
-  emptyPileSlot: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 72,
-  },
-  tableauCard: {
-    position: "absolute",
-    left: 0,
-  },
-  selectedCard: {
-    transform: [{ translateY: -6 }],
-  },
-  ghostLayer: {
-    position: "absolute",
-    zIndex: 4000,
-  },
-  ghostNoPointerEvents: {
-    pointerEvents: "none",
-  },
-  gameShell: {
-    flex: 1,
-    width: "100%",
-    gap: 12,
-    paddingHorizontal: 12,
-  },
-  toolbar: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 12,
-  },
-  boardShell: {
-    flex: 1,
-    width: "100%",
-    position: "relative",
-    touchAction: "none",
-    overscrollBehaviorX: "contain",
-  },
-  interactionLayer: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 3000,
-    touchAction: "none",
-    overscrollBehaviorX: "contain",
-    pointerEvents: "box-none",
-  },
-  interactionTarget: {
-    position: "absolute",
-    backgroundColor: "transparent",
-  },
-  ghostCard: {
-    position: "absolute",
-    left: 0,
-    opacity: 1,
-  },
-  hiddenDuringDrag: {
-    opacity: 0,
-    pointerEvents: "none",
-  },
-});

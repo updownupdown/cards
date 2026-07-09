@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useGameSettings } from "./useGameSettings";
 import { usePathname } from "expo-router";
-import { normalizeGamePath } from "@/data/game-menu";
+import {
+  isGamePath,
+  loadLastGameSession,
+  normalizeGamePath,
+  saveLastGameSession,
+} from "@/data/game-menu";
 import { useImmer } from "use-immer";
 import { useGlobalSettings } from "./useGlobalSettings";
 
@@ -21,7 +26,8 @@ export function useStateManager<T>({
   postSetupAction,
 }: Props<T>) {
   const pathname = normalizeGamePath(usePathname());
-  const { settings: globalSettings } = useGlobalSettings();
+  const { settings: globalSettings, isLoading: isGlobalSettingsLoading } =
+    useGlobalSettings();
   const { settings: gameSettings } = useGameSettings(pathname);
 
   // —— Game State ————————————————————————
@@ -54,6 +60,43 @@ export function useStateManager<T>({
 
   // —— Initiate First Deal ————————————————————————
   const hasDealtRef = useRef(false);
+  const [isResumeHydrated, setIsResumeHydrated] = useState(false);
+
+  useEffect(() => {
+    if (isGlobalSettingsLoading) {
+      return;
+    }
+
+    if (!isGamePath(pathname) || !globalSettings.resumeLastGame) {
+      setIsResumeHydrated(true);
+      return;
+    }
+
+    let active = true;
+
+    (async () => {
+      const session = await loadLastGameSession<T>();
+      if (!active) return;
+
+      if (session && session.path === pathname) {
+        setGame(session.state);
+        hasDealtRef.current = true;
+        setShowIntro(false);
+        setIsSettingUp(false);
+      }
+
+      setIsResumeHydrated(true);
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [
+    globalSettings.resumeLastGame,
+    isGlobalSettingsLoading,
+    pathname,
+    setGame,
+  ]);
 
   async function firstDeal() {
     hasDealtRef.current = true;
@@ -63,9 +106,29 @@ export function useStateManager<T>({
   }
 
   useEffect(() => {
-    if (showIntro || hasDealtRef.current) return;
+    if (
+      !isResumeHydrated ||
+      showIntro === undefined ||
+      showIntro ||
+      hasDealtRef.current
+    ) {
+      return;
+    }
+
     firstDeal();
-  }, [showIntro, resetAndSetup]);
+  }, [isResumeHydrated, showIntro, resetAndSetup]);
+
+  useEffect(() => {
+    if (!isGamePath(pathname)) return;
+    if (!globalSettings.resumeLastGame) return;
+    if (isSettingUp) return;
+
+    const timer = setTimeout(() => {
+      void saveLastGameSession(pathname, game);
+    }, 350);
+
+    return () => clearTimeout(timer);
+  }, [game, globalSettings.resumeLastGame, isSettingUp, pathname]);
 
   // —— Undo ————————————————————————
   const [history, setHistory] = useState<T[]>([]);

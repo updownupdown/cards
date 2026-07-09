@@ -1,0 +1,10 @@
+import { DEFAULT_GAME_SETTINGS, type GameSettings } from "@/data/game-menu";
+import { usePathname } from "expo-router";
+import { useGameSettings } from "./useGameSettings";
+
+export function useGameSettingValue<K extends keyof GameSettings>(key: K) {
+  const pathname = usePathname();
+  const { settings } = useGameSettings(pathname);
+
+  return (settings?.[key] ?? DEFAULT_GAME_SETTINGS[key]) as GameSettings[K];
+}

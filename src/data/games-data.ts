@@ -882,7 +882,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
     briefRules: [
       "Build foundations by suit upward from the beak rank.",
       "Build tableau down by suit, filling empties with valid continuation cards.",
-      "Use the reserve (flipper) cards to unlock key moves.",
+      "Use seven reserve piles (one card each) to unlock key moves.",
     ],
   },
   // Forty Thieves

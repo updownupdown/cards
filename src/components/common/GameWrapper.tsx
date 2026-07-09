@@ -1,5 +1,6 @@
 import { Text } from "@/components/common/Text";
 import {
+  clearLastGameSession,
   getGameInfo,
   normalizeGamePath,
   recordAttempt,
@@ -96,8 +97,8 @@ export const GameWrapper = ({
     prevEndedRef.current = true;
     if (typeof won !== "boolean") return;
 
-    recordResult(pathname, won).catch(() => {});
-  }, [ended, won, pathname]);
+    recordResult(pathname, won, score).catch(() => {});
+  }, [ended, pathname, score, won]);
 
   if (!gameInfo) return null;
 
@@ -171,8 +172,12 @@ export const GameWrapper = ({
         >
           <Button
             style={[menuStyles.headerButton]}
-            onPress={() => {
-              router.push("/");
+            onPress={async () => {
+              try {
+                await clearLastGameSession();
+              } finally {
+                router.push("/");
+              }
             }}
             iconName={"arrow-back"}
             iconColor={titleColor}
