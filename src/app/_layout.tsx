@@ -1,4 +1,5 @@
 import { ToastProvider } from "@/components/common/Toast";
+import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { Colors } from "@/styles/styles";
 import {
   Outfit_200ExtraLight,
@@ -10,9 +11,11 @@ import {
 } from "@expo-google-fonts/outfit";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
+import { useEffect } from "react";
 import { View } from "react-native";
 
 export default function Layout() {
+  const { cardBg } = useGameZoneBackground();
   const [fontsLoaded] = useFonts({
     Outfit_200ExtraLight,
     Outfit_300Light,
@@ -21,6 +24,19 @@ export default function Layout() {
     Outfit_600SemiBold,
     Outfit_700Bold,
   });
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    const updateMeta = (name: string, content: string) => {
+      const meta = document.querySelector(`meta[name="${name}"]`);
+      if (!meta) return;
+      meta.setAttribute("content", content);
+    };
+
+    updateMeta("theme-color", cardBg);
+    updateMeta("msapplication-navbutton-color", cardBg);
+  }, [cardBg]);
 
   if (!fontsLoaded) {
     return null;

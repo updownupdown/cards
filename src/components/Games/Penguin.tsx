@@ -233,6 +233,8 @@ export default function Penguin() {
     },
     getDroppedCardIds: (source) =>
       game.tableau[source.pileIndex].slice(source.cardIndex).map((c) => c.id),
+    getDropHitAreas: () => dropHitAreasRef.current,
+    getSourceRect,
   });
 
   // ── Derived ─────────────────────────────────────────────────────────────────
@@ -533,6 +535,21 @@ export default function Penguin() {
       x: base.x,
       y: base.y + source.cardIndex * TABLEAU_FAN_OFFSET * cardHeight,
     });
+  }
+
+  function getSourceRect(source: MoveSource) {
+    const zone = zones.find(
+      (z) => z.name === "tableau" && z.pileIndex === source.pileIndex,
+    );
+    if (!zone) return null;
+
+    const base = getZoneBasePos(zone);
+    return createRect(
+      base.x,
+      base.y + source.cardIndex * TABLEAU_FAN_OFFSET * cardHeight,
+      cardWidth,
+      cardHeight,
+    );
   }
 
   function makeHandlers(source: MoveSource, onTap?: () => void) {

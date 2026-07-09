@@ -714,19 +714,19 @@ export default function BowlingSolitaire() {
     // while indices remain logically front-to-back for rule checks.
     const pinLayout = [
       // idx 0 (front row of 1)
-      { c: 1.5, r: 3.6 },
+      { c: 3, r: 3.6 },
       // idx 1-2 (row of 2)
-      { c: 1, r: 2.8 },
-      { c: 2, r: 2.8 },
+      { c: 2.5, r: 2.8 },
+      { c: 3.5, r: 2.8 },
       // idx 3-5 (row of 3)
-      { c: 0.5, r: 2 },
-      { c: 1.5, r: 2 },
-      { c: 2.5, r: 2 },
+      { c: 2, r: 2 },
+      { c: 3, r: 2 },
+      { c: 4, r: 2 },
       // idx 6-9 (back row of 4)
-      { c: 0, r: 1.2 },
-      { c: 1, r: 1.2 },
-      { c: 2, r: 1.2 },
-      { c: 3, r: 1.2 },
+      { c: 1.5, r: 1.2 },
+      { c: 2.5, r: 1.2 },
+      { c: 3.5, r: 1.2 },
+      { c: 4.5, r: 1.2 },
     ];
 
     const pinZones: MapZone[] = pinLayout.map((pos, idx) => ({
@@ -745,7 +745,7 @@ export default function BowlingSolitaire() {
       name: "ball",
       pileIndex: idx,
       cards: pile,
-      col: 0.5 + idx,
+      col: 2 + idx,
       row: 4.8,
       baseZIndex: 40 + idx,
       fan: {
@@ -767,7 +767,7 @@ export default function BowlingSolitaire() {
       {
         id: "discard",
         cards: game.discard,
-        col: 4.5,
+        col: 0,
         row: 1.2,
         baseZIndex: 20,
         placeholder: {},
@@ -776,7 +776,7 @@ export default function BowlingSolitaire() {
       ...ballZones,
       {
         id: "actions",
-        col: 3.6,
+        col: 0,
         row: 3,
         width: 1.9,
         height: 3.25,

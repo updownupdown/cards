@@ -1,4 +1,3 @@
-/* eslint-disable */
 // AUTO-GENERATED FILE. DO NOT EDIT.
 // Run: npm run card-backs:generate
 
@@ -20,6 +19,9 @@ export type CardBackName =
   | "SandwichGuy.png"
   | "Scoundrel.png"
   | "Skyway.png"
+  | "Syndicate.png"
+  | "CardCapture.png"
+  | "TheBogey.png"
   | "Syndicate.png"
   | "TheEmissary.png";
 
@@ -45,4 +47,6 @@ export const cardBackAssets: Record<string, any> = {
   "Skyway.png": require("@/assets/card-backs/Skyway.png"),
   "Syndicate.png": require("@/assets/card-backs/Syndicate.png"),
   "TheEmissary.png": require("@/assets/card-backs/TheEmissary.png"),
+  "TheBogey.png": require("@/assets/card-backs/TheBogey.png"),
+  "CardCapture.png": require("@/assets/card-backs/CardCapture.png"),
 };

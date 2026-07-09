@@ -6,7 +6,12 @@ import {
   loadRecentlyPlayedGames,
   toggleFavoriteGame,
 } from "@/data/game-menu";
-import { GameMenuInfo, GAMES_DATA, GameTag } from "@/data/games-data";
+import {
+  GameMenuInfo,
+  GAMES_DATA,
+  GameTag,
+  isGameEnabled,
+} from "@/data/games-data";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
@@ -18,6 +23,7 @@ import { ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { DiscoverFilters } from "@/components/Home/DiscoverFilters";
 import { Button } from "@/components/Button/Button";
+import { AddToHomeScreenNotice } from "@/components/common/AddToHomeScreenNotice";
 import { HomeCard } from "./HomeCard";
 import { router, type Href } from "expo-router";
 
@@ -36,9 +42,14 @@ export type HomeSectionConfig = {
 type GamesListProps = {
   sections: HomeSectionConfig[];
   header?: ReactNode;
+  refreshToken?: number;
 };
 
-export const GamesList = ({ sections, header }: GamesListProps) => {
+export const GamesList = ({
+  sections,
+  header,
+  refreshToken,
+}: GamesListProps) => {
   const listRef = useRef<ScrollView>(null);
   const hasMountedRef = useRef(false);
   const insets = useSafeAreaInsets();
@@ -59,6 +70,7 @@ export const GamesList = ({ sections, header }: GamesListProps) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const discoverCardSize: CardSize = settings.discoverCardSize ?? "large";
+  const shouldShowHomeInstallNotice = !settings.dismissHomeInstallPrompt;
 
   const pageSidePadding = roundToPixel(HomePadding * scale);
   const contentMaxWidth = roundToPixel(MaxContentWidth * scale);
@@ -85,7 +97,7 @@ export const GamesList = ({ sections, header }: GamesListProps) => {
   const allEnabledGames = useMemo(
     () =>
       (Object.entries(GAMES_DATA) as [string, GameMenuInfo][])
-        .filter(([_, game]) => game.enabled !== false)
+        .filter(([_, game]) => isGameEnabled(game))
         .sort((a, b) => a[1].title.localeCompare(b[1].title)),
     [],
   );
@@ -142,6 +154,8 @@ export const GamesList = ({ sections, header }: GamesListProps) => {
     let cancelled = false;
 
     (async () => {
+      setHasLoadedGameSettings(false);
+
       try {
         const [loadedFavorites, loadedRecent, loadedGameSettings] =
           await Promise.all([
@@ -179,7 +193,7 @@ export const GamesList = ({ sections, header }: GamesListProps) => {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [refreshToken]);
 
   useEffect(() => {
     if (!hasMountedRef.current) {
@@ -190,9 +204,26 @@ export const GamesList = ({ sections, header }: GamesListProps) => {
     listRef.current?.scrollTo({ y: 0, animated: true });
   }, [selectedTag, searchQuery]);
 
-  async function onToggleFavorite(path: string) {
-    const updated = await toggleFavoriteGame(path);
-    setFavorites(new Set(updated));
+  function onToggleFavorite(path: string) {
+    setFavorites((previous) => {
+      const next = new Set(previous);
+      if (next.has(path)) {
+        next.delete(path);
+      } else {
+        next.add(path);
+      }
+      return next;
+    });
+
+    void (async () => {
+      try {
+        const updated = await toggleFavoriteGame(path);
+        setFavorites(new Set(updated));
+      } catch {
+        const latest = await loadFavoriteGames();
+        setFavorites(latest);
+      }
+    })();
   }
 
   const getRandomPath = (paths: string[]) => {
@@ -219,7 +250,7 @@ export const GamesList = ({ sections, header }: GamesListProps) => {
     if (section.key === "recent") {
       return recentPaths
         .map((path) => [path, GAMES_DATA[path]] as [string, GameMenuInfo])
-        .filter(([_, game]) => !!game && game.enabled !== false)
+        .filter(([_, game]) => isGameEnabled(game))
         .slice(0, 3);
     }
 
@@ -232,15 +263,13 @@ export const GamesList = ({ sections, header }: GamesListProps) => {
         .map((path) => [path, GAMES_DATA[path]] as [string, GameMenuInfo])
         .filter(
           ([path, game]) =>
-            !!game &&
-            game.enabled !== false &&
-            !playedFrequentlyPaths.has(path),
+            isGameEnabled(game) && !playedFrequentlyPaths.has(path),
         );
     }
 
     if (section.key === "favorites") {
       return gameEntries
-        .filter(([key, val]) => favorites.has(key) && val.enabled !== false)
+        .filter(([key, val]) => favorites.has(key) && isGameEnabled(val))
         .sort((a, b) => a[1].title.localeCompare(b[1].title));
     }
 
@@ -254,6 +283,14 @@ export const GamesList = ({ sections, header }: GamesListProps) => {
   const onSelectDiscoverSize = (size: CardSize) => {
     if (discoverCardSize === size) return;
     updateSettings({ discoverCardSize: size });
+  };
+
+  const onDismissHomeInstallNotice = () => {
+    if (settings.dismissHomeInstallPrompt) {
+      return;
+    }
+
+    updateSettings({ dismissHomeInstallPrompt: true });
   };
 
   const renderSectionTitle = (section: HomeSectionConfig, key: string) => (
@@ -455,6 +492,26 @@ export const GamesList = ({ sections, header }: GamesListProps) => {
         renderHorizontalSection(section, getGamesForSection(section)),
       );
       return;
+    }
+
+    if (shouldShowHomeInstallNotice) {
+      scrollChildren.push(
+        <View
+          key="add-to-home-notice"
+          style={{
+            width: "100%",
+            maxWidth: contentMaxWidth,
+            alignSelf: "center",
+            paddingHorizontal: pageSidePadding,
+            paddingTop: sectionTopPadding,
+          }}
+        >
+          <AddToHomeScreenNotice
+            dismissible
+            onDismiss={onDismissHomeInstallNotice}
+          />
+        </View>,
+      );
     }
 
     const discoverGames = getGamesForSection(section);

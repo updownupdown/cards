@@ -34,12 +34,49 @@ export type GameMenuInfo = {
   cardDescription: string;
   stats: GameStats;
   enabled?: boolean;
+  enabledOnLocalOnly?: boolean;
   about?: string[];
   briefRules: string[];
   howToPlay?: string[];
   byLine?: string;
   tags?: GameTag[];
 };
+
+const LOCAL_DEV_HOSTNAMES = new Set(["localhost", "127.0.0.1", "::1"]);
+
+export function isLocalDevEnvironment() {
+  if (__DEV__) {
+    return true;
+  }
+
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  const hostname = window.location.hostname.toLowerCase();
+
+  return (
+    LOCAL_DEV_HOSTNAMES.has(hostname) ||
+    hostname.endsWith(".local") ||
+    hostname.endsWith(".localhost")
+  );
+}
+
+export function isGameEnabled(game: GameMenuInfo | undefined) {
+  if (!game) {
+    return false;
+  }
+
+  if (game.enabled === false) {
+    return false;
+  }
+
+  if (game.enabledOnLocalOnly && !isLocalDevEnvironment()) {
+    return false;
+  }
+
+  return true;
+}
 
 export const GAMES_DATA: Record<string, GameMenuInfo> = {
   // ============================== //
@@ -84,8 +121,9 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
 
   // The Bogey
   "/the-bogey": {
-    title: "The Bogey (BETA)",
-    thumbnail: "DefaultThumbnail.jpg",
+    title: "The Bogey",
+    thumbnail: "TheBogey.jpg",
+    cardBack: "TheBogey.png",
     cardColorBg: "#0a1e1f",
     cardColorText: "#ddf0ce",
     cardDescription:
@@ -162,8 +200,10 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
 
   // Card Capture
   "/card-capture": {
-    title: "Card Capture (BETA)",
-    thumbnail: "DefaultThumbnail.jpg",
+    title: "Card Capture",
+    enabledOnLocalOnly: true,
+    thumbnail: "CardCapture.jpg",
+    cardBack: "CardCapture.png",
     cardColorBg: "#2b2d42",
     cardColorText: "#d4cdc3",
     cardDescription:
@@ -206,8 +246,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
 
   // Bowling Solitaire
   "/bowling-solitaire": {
-    title: "Bowling Solitaire (BETA)",
-    thumbnail: "DefaultThumbnail.jpg",
+    title: "Bowling Solitaire",
+    thumbnail: "BowlingSolitaire.jpg",
     cardColorBg: "#1f1c18",
     cardColorText: "#c1e1e6",
     cardDescription:
@@ -672,7 +712,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
 
   // Freecell
   "/freecell": {
-    title: "FreeCell (BETA)",
+    title: "FreeCell",
+    enabledOnLocalOnly: true,
     thumbnail: DEFAULT_GAME_THUMBNAIL,
     cardColorBg: "#2A3440",
     cardColorText: "#DDEBFF",
@@ -684,7 +725,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       luck: 16,
     },
     tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
-    enabled: false,
+    // enabled: false,
     briefRules: [
       "Move all cards to the foundations from Ace up to King by suit.",
       "Build tableau columns down by alternating colors.",
@@ -693,8 +734,9 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Spider Solitaire
   "/spider-solitaire": {
-    enabled: false,
-    title: "Spider Solitaire (BETA)",
+    // enabled: false,
+    title: "Spider Solitaire",
+    enabledOnLocalOnly: true,
     thumbnail: DEFAULT_GAME_THUMBNAIL,
     cardColorBg: "#2E2731",
     cardColorText: "#F5E6FF",
@@ -714,7 +756,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Pyramid
   "/pyramid": {
-    title: "Pyramid (BETA)",
+    title: "Pyramid",
+    enabledOnLocalOnly: true,
     thumbnail: DEFAULT_GAME_THUMBNAIL,
     cardColorBg: "#3A3126",
     cardColorText: "#FFEACC",
@@ -735,7 +778,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // TriPeaks
   "/tripeaks": {
-    title: "TriPeaks (BETA)",
+    title: "TriPeaks",
+    enabledOnLocalOnly: true,
     thumbnail: DEFAULT_GAME_THUMBNAIL,
     cardColorBg: "#24313A",
     cardColorText: "#E4F4FF",
@@ -747,7 +791,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       luck: 64,
     },
     tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
-    enabled: false,
+    // enabled: false,
     briefRules: [
       "Remove exposed cards that are one rank higher or lower than waste top.",
       "Aces and Kings wrap in sequence for moves.",
@@ -756,8 +800,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Solitaire
   "/solitaire": {
-    enabled: false,
-    title: "Solitaire (BETA)",
+    title: "Solitaire",
+    enabledOnLocalOnly: true,
     thumbnail: DEFAULT_GAME_THUMBNAIL,
     cardColorBg: "#2C2F3A",
     cardColorText: "#EEF0FF",
@@ -777,7 +821,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Scorpion
   "/scorpion": {
-    title: "Scorpion (BETA)",
+    title: "Scorpion",
+    enabledOnLocalOnly: true,
     thumbnail: DEFAULT_GAME_THUMBNAIL,
     cardColorBg: "#33262A",
     cardColorText: "#FFE4E8",
@@ -789,7 +834,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       luck: 47,
     },
     tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
-    enabled: false,
+    // enabled: false,
     briefRules: [
       "Build same-suit descending runs in tableau columns.",
       "Move face-up sequences as a stack to legal destinations.",
@@ -798,7 +843,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Canfield
   "/canfield": {
-    title: "Canfield (BETA)",
+    title: "Canfield",
+    enabledOnLocalOnly: true,
     thumbnail: DEFAULT_GAME_THUMBNAIL,
     cardColorBg: "#263238",
     cardColorText: "#E4F6FF",
@@ -810,7 +856,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       luck: 45,
     },
     tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
-    enabled: false,
+    // enabled: false,
     briefRules: [
       "Build foundations by suit from the starting base rank.",
       "Build tableau down by alternating color with wraparound allowed.",
@@ -819,7 +865,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Penguin
   "/penguin": {
-    title: "Penguin (BETA)",
+    title: "Penguin",
+    enabledOnLocalOnly: true,
     thumbnail: DEFAULT_GAME_THUMBNAIL,
     cardColorBg: "#243443",
     cardColorText: "#E7F6FF",
@@ -831,7 +878,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       luck: 31,
     },
     tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
-    enabled: false,
+    // enabled: false,
     briefRules: [
       "Build foundations by suit upward from the beak rank.",
       "Build tableau down by suit, filling empties with valid continuation cards.",
@@ -840,7 +887,8 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
   },
   // Forty Thieves
   "/forty-thieves": {
-    title: "Forty Thieves (BETA)",
+    title: "Forty Thieves",
+    enabledOnLocalOnly: true,
     thumbnail: DEFAULT_GAME_THUMBNAIL,
     cardColorBg: "#2E2D34",
     cardColorText: "#EFE8FF",
@@ -852,7 +900,7 @@ export const GAMES_DATA: Record<string, GameMenuInfo> = {
       luck: 52,
     },
     tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
-    enabled: false,
+    // enabled: false,
     briefRules: [
       "Build foundations up by suit from Ace.",
       "Build tableau down by suit and move one card at a time.",

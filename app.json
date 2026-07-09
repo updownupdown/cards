@@ -1,6 +1,7 @@
 {
   "expo": {
-    "name": "cards",
+    "name": "Solo Suite",
+    "description": "A collection of solo playing card games.",
     "slug": "cards",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -26,7 +27,7 @@
       "themeColor": "#343f49",
       "name": "Solo Suite",
       "shortName": "SoloSuite",
-      "description": "A collection of solo and card-based games.",
+      "description": "A collection of solo playing card games.",
       "display": "standalone",
       "startUrl": "/cards/",
       "scope": "/cards/",

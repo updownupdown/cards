@@ -5,22 +5,29 @@ import { modalStyles } from "@/styles/modalStyles";
 import React from "react";
 import { ScrollView, View } from "react-native";
 import { Button } from "../Button/Button";
+import { AddToHomeScreenNotice } from "../common/AddToHomeScreenNotice";
 import { SettingControl } from "../common/SettingControl";
 import ModalFull from "../Modals/ModalFull";
 
 interface Props {
   onClose: () => void;
+  onHomeDataInvalidated: () => void;
 }
 
-export const SettingsModal = ({ onClose }: Props) => {
+export const SettingsModal = ({ onClose, onHomeDataInvalidated }: Props) => {
   const { settings, updateSettings, isLoading } = useGlobalSettings();
+
+  const onCloseAndRefresh = () => {
+    onHomeDataInvalidated();
+    onClose();
+  };
 
   if (isLoading) {
     return null; // Or a loading indicator
   }
 
   return (
-    <ModalFull title="Settings" onClose={onClose}>
+    <ModalFull title="Settings" onClose={onCloseAndRefresh}>
       <ScrollView
         contentContainerStyle={[modalStyles.scrollContent, { flex: 1 }]}
         showsVerticalScrollIndicator={false}
@@ -38,6 +45,7 @@ export const SettingsModal = ({ onClose }: Props) => {
               flexStyles.colCentered,
               flexStyles.fullWidth,
               flexStyles.flex1,
+              { gap: 20 },
             ]}
           >
             <SettingControl
@@ -46,14 +54,17 @@ export const SettingsModal = ({ onClose }: Props) => {
               type="boolean"
               onChange={(val) => updateSettings({ showIntros: val })}
             />
+
+            <AddToHomeScreenNotice />
           </View>
 
           <Button
             size="md"
             uppercase={false}
-            onPress={() => {
+            onPress={async () => {
               updateSettings(DEFAULT_GLOBAL_SETTINGS);
-              resetAllSettings();
+              await resetAllSettings();
+              onHomeDataInvalidated();
             }}
             text="Reset EVERYTHING (settings, stats, history, and favorites)"
             textOnly

@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { GameMenuInfo, GAMES_DATA } from "./games-data";
+import { GameMenuInfo, GAMES_DATA, isGameEnabled } from "./games-data";
 
 export type GameStats = {
   attempts: number;
@@ -20,6 +20,7 @@ export type GameSettingsMap = Record<string, GameSettings>;
 export type GlobalSettings = {
   showIntros: boolean;
   discoverCardSize: "small" | "medium" | "large";
+  dismissHomeInstallPrompt: boolean;
 };
 
 export type HomeGameEntry = {
@@ -40,6 +41,7 @@ export const MAX_RECENT_GAMES = 10;
 export const DEFAULT_GLOBAL_SETTINGS: GlobalSettings = {
   showIntros: true,
   discoverCardSize: "large",
+  dismissHomeInstallPrompt: false,
 };
 
 export const DEFAULT_GAME_SETTINGS: GameSettings = {
@@ -60,8 +62,29 @@ export const EMPTY_STATS: GameStats = {
   losses: 0,
 };
 
+let gameSettingsWriteQueue: Promise<void> = Promise.resolve();
+
+async function runWithGameSettingsMapWriteLock<T>(
+  mutate: (map: GameSettingsMap) => T | Promise<T>,
+): Promise<T> {
+  const queuedMutation = gameSettingsWriteQueue.then(async () => {
+    const map = await loadGameSettingsMap();
+    const result = await mutate(map);
+    await saveGameSettingsMap(map);
+    return result;
+  });
+
+  // Keep the queue alive even if one mutation fails.
+  gameSettingsWriteQueue = queuedMutation.then(
+    () => undefined,
+    () => undefined,
+  );
+
+  return queuedMutation;
+}
+
 export const homeGameList: HomeGameEntry[] = Object.entries(GAMES_DATA)
-  .filter(([key, game]) => game.enabled !== false)
+  .filter(([_, game]) => isGameEnabled(game))
   .map(([path, gameData]) => {
     return { path, title: gameData.title };
   });
@@ -96,9 +119,16 @@ export async function saveGlobalSettings(settings: GlobalSettings) {
 }
 
 export async function resetAllSettings() {
-  await AsyncStorage.setItem(GLOBAL_SETTINGS_STORAGE_KEY, "");
-  await AsyncStorage.setItem(RECENT_GAMES_STORAGE_KEY, "");
-  await AsyncStorage.setItem(GAME_SETTINGS_STORAGE_KEY, "");
+  await Promise.all([
+    AsyncStorage.setItem(GLOBAL_SETTINGS_STORAGE_KEY, ""),
+    AsyncStorage.setItem(RECENT_GAMES_STORAGE_KEY, ""),
+  ]);
+
+  await runWithGameSettingsMapWriteLock((map) => {
+    Object.keys(map).forEach((key) => {
+      delete map[key];
+    });
+  });
 }
 
 // ========== Game Settings ========== //
@@ -194,14 +224,21 @@ export async function recordRecentlyPlayedGame(pathname: string) {
 
 export async function toggleFavoriteGame(pathname: string) {
   const key = normalizeGamePath(pathname);
-  const map = await loadGameSettingsMap();
-  const gameSettings = getGameSettings(map, key);
+  return runWithGameSettingsMapWriteLock((map) => {
+    const gameSettings = getGameSettings(map, key);
 
-  gameSettings.isFavorite = !gameSettings.isFavorite;
-  map[key] = gameSettings;
+    gameSettings.isFavorite = !gameSettings.isFavorite;
+    map[key] = gameSettings;
 
-  await saveGameSettingsMap(map);
-  return loadFavoriteGames();
+    const favorites = new Set<string>();
+    Object.keys(map).forEach((path) => {
+      if (map[path].isFavorite) {
+        favorites.add(path);
+      }
+    });
+
+    return favorites;
+  });
 }
 
 export function calculateWinRate(stats: GameStats) {
@@ -215,10 +252,10 @@ export async function updateGameSettings(
   updater: (settings: GameSettings) => GameSettings,
 ) {
   const key = normalizeGamePath(pathname);
-  const map = await loadGameSettingsMap();
-  const current = getGameSettings(map, key);
-  map[key] = updater(current);
-  await saveGameSettingsMap(map);
+  await runWithGameSettingsMapWriteLock((map) => {
+    const current = getGameSettings(map, key);
+    map[key] = updater(current);
+  });
 }
 
 export async function recordAttempt(pathname: string) {

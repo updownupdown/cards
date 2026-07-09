@@ -35,6 +35,22 @@ export function pointInRect(pageX: number, pageY: number, rect: Rect): boolean {
   );
 }
 
+function rectsOverlap(a: Rect, b: Rect): boolean {
+  return (
+    a.x < b.x + b.width &&
+    a.x + a.width > b.x &&
+    a.y < b.y + b.height &&
+    a.y + a.height > b.y
+  );
+}
+
+function rectCenter(rect: Rect) {
+  return {
+    x: rect.x + rect.width / 2,
+    y: rect.y + rect.height / 2,
+  };
+}
+
 export function runTiming(
   value: Animated.ValueXY,
   toValue: { x: number; y: number },
@@ -93,6 +109,10 @@ type UseDragDropOptions<TSource, TTarget> = {
    * its position animation (instant snap).
    */
   getDroppedCardIds: (source: TSource) => string[];
+  /** Return all current drop areas for generous overlap fallback. */
+  getDropHitAreas?: () => DropHitArea<TTarget>[];
+  /** Return source card bounds in board coordinates for generous overlap fallback. */
+  getSourceRect?: (source: TSource) => Rect | null;
 };
 
 export function useDragDrop<TSource, TTarget>({
@@ -101,6 +121,8 @@ export function useDragDrop<TSource, TTarget>({
   sameTarget,
   onSuccessfulDrop,
   getDroppedCardIds,
+  getDropHitAreas,
+  getSourceRect,
 }: UseDragDropOptions<TSource, TTarget>) {
   // ── State & refs ────────────────────────────────────────────────────────────
 
@@ -125,12 +147,18 @@ export function useDragDrop<TSource, TTarget>({
   const sameTargetRef = useRef(sameTarget);
   const onSuccessfulDropRef = useRef(onSuccessfulDrop);
   const getDroppedCardIdsRef = useRef(getDroppedCardIds);
+  const getDropHitAreasRef = useRef(getDropHitAreas);
+  const getSourceRectRef = useRef(getSourceRect);
+  const boardPageOffsetRef = useRef(boardPageOffset);
 
   findDropTargetRef.current = findDropTarget;
   canDropOnTargetRef.current = canDropOnTarget;
   sameTargetRef.current = sameTarget;
   onSuccessfulDropRef.current = onSuccessfulDrop;
   getDroppedCardIdsRef.current = getDroppedCardIds;
+  getDropHitAreasRef.current = getDropHitAreas;
+  getSourceRectRef.current = getSourceRect;
+  boardPageOffsetRef.current = boardPageOffset;
 
   // ── Derived ─────────────────────────────────────────────────────────────────
 
@@ -200,8 +228,53 @@ export function useDragDrop<TSource, TTarget>({
     source: TSource,
     pageX: number,
     pageY: number,
+    dragX: number,
+    dragY: number,
   ) {
-    const target = internalFindDropTarget(pageX, pageY);
+    let target = internalFindDropTarget(pageX, pageY);
+
+    if (!target || !canDropOnTargetRef.current(source, target)) {
+      const sourceRectLocal = getSourceRectRef.current?.(source) ?? null;
+      const dropHitAreas = getDropHitAreasRef.current?.() ?? [];
+
+      if (sourceRectLocal && dropHitAreas.length > 0) {
+        const boardOffset = boardPageOffsetRef.current;
+        const draggedRect: Rect = {
+          x: boardOffset.x + sourceRectLocal.x + dragX,
+          y: boardOffset.y + sourceRectLocal.y + dragY,
+          width: sourceRectLocal.width,
+          height: sourceRectLocal.height,
+        };
+
+        const draggedCenter = rectCenter(draggedRect);
+
+        const generousCandidates = dropHitAreas
+          .filter(({ target: candidateTarget }) =>
+            canDropOnTargetRef.current(source, candidateTarget),
+          )
+          .filter(({ rect }) => rectsOverlap(draggedRect, rect));
+
+        if (generousCandidates.length > 0) {
+          target = generousCandidates.slice().sort((a, b) => {
+            const ac = rectCenter(a.rect);
+            const bc = rectCenter(b.rect);
+            const ad =
+              (ac.x - draggedCenter.x) * (ac.x - draggedCenter.x) +
+              (ac.y - draggedCenter.y) * (ac.y - draggedCenter.y);
+            const bd =
+              (bc.x - draggedCenter.x) * (bc.x - draggedCenter.x) +
+              (bc.y - draggedCenter.y) * (bc.y - draggedCenter.y);
+
+            if (ad !== bd) {
+              return ad - bd;
+            }
+
+            return b.priority - a.priority;
+          })[0].target;
+        }
+      }
+    }
+
     if (!target || !canDropOnTargetRef.current(source, target)) {
       await runTiming(dragTranslate, { x: 0, y: 0 }, 250);
       return;
@@ -253,6 +326,8 @@ export function useDragDrop<TSource, TTarget>({
           activeSource,
           event.nativeEvent.pageX,
           event.nativeEvent.pageY,
+          gesture.dx,
+          gesture.dy,
         ).finally(() => clearDragGhost());
       },
       onPanResponderTerminate: () => clearDragGhost(),

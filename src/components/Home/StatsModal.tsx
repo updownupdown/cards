@@ -1,6 +1,6 @@
 import { Text } from "@/components/common/Text";
 import { EMPTY_STATS } from "@/data/game-menu";
-import { GAMES_DATA } from "@/data/games-data";
+import { GAMES_DATA, isGameEnabled } from "@/data/games-data";
 import { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import {
@@ -33,7 +33,7 @@ export const StatsModal = ({ onClose }: Props) => {
   const orderedStatsRows = useMemo(
     () =>
       Object.entries(GAMES_DATA)
-        .filter(([path, gameInfo]) => gameInfo.enabled !== false)
+        .filter(([_, gameInfo]) => isGameEnabled(gameInfo))
         .map(([path, gameInfo]) => ({
           path,
           title: gameInfo.title,

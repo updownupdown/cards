@@ -57,6 +57,11 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showStatsModal, setShowStatsModal] = useState(false);
+  const [homeDataRefreshToken, setHomeDataRefreshToken] = useState(0);
+
+  const onInvalidateHomeData = () => {
+    setHomeDataRefreshToken((current) => current + 1);
+  };
 
   const headerOffsetTop =
     insets.top + Math.round(HomePadding * responsiveScale * 0.5);
@@ -78,7 +83,10 @@ export default function Home() {
         <StatsModal onClose={() => setShowStatsModal(false)} />
       )}
       {showSettingsModal && (
-        <SettingsModal onClose={() => setShowSettingsModal(false)} />
+        <SettingsModal
+          onClose={() => setShowSettingsModal(false)}
+          onHomeDataInvalidated={onInvalidateHomeData}
+        />
       )}
 
       <View
@@ -91,6 +99,7 @@ export default function Home() {
       >
         <GamesList
           sections={HOME_SECTIONS}
+          refreshToken={homeDataRefreshToken}
           header={
             <View
               key="home-header"

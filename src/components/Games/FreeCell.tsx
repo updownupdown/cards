@@ -1,4 +1,4 @@
-import { useGameLoading } from "@/hooks/useGameLoading";
+import { useStateManager } from "@/hooks/useStateManager";
 import {
   CardHitArea,
   createRect,
@@ -75,19 +75,6 @@ function canPlaceOnFoundation(
   );
 }
 
-function cloneGame(prev: GameState): GameState {
-  return {
-    cascades: prev.cascades.map((c) => [...c]),
-    freeCells: [...prev.freeCells],
-    foundations: {
-      clubs: [...prev.foundations.clubs],
-      diamonds: [...prev.foundations.diamonds],
-      hearts: [...prev.foundations.hearts],
-      spades: [...prev.foundations.spades],
-    },
-  };
-}
-
 function createInitialState(): GameState {
   const deck = shuffle(
     SUITS.flatMap((suit) =>
@@ -110,14 +97,37 @@ function createInitialState(): GameState {
   };
 }
 
+const gameStateInitial = createInitialState();
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function FreeCell() {
-  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
   const navigation = useNavigation();
 
-  const [game, setGame] = useState<GameState>(createInitialState);
   const [selected, setSelected] = useState<Selection>(null);
+  const clearDragGhostRef = useRef<(() => void) | null>(null);
+
+  const {
+    isLoaded,
+    showIntro,
+    setShowIntro,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<GameState>({
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelected(null);
+      clearDragGhostRef.current?.();
+    },
+    resetAndSetup: async () => {
+      setGame(createInitialState());
+    },
+  });
+
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
 
   // ── Drag & drop ─────────────────────────────────────────────────────────────
@@ -152,7 +162,11 @@ export default function FreeCell() {
       const card = getTopCard(source, game);
       return card ? [card.id] : [];
     },
+    getDropHitAreas: () => dropHitAreasRef.current,
+    getSourceRect,
   });
+
+  clearDragGhostRef.current = clearDragGhost;
 
   // ── Derived ─────────────────────────────────────────────────────────────────
 
@@ -469,36 +483,35 @@ export default function FreeCell() {
   }
 
   function applyMove(source: MoveSource, target: DropTarget) {
-    setGame((prev) => {
-      const card = getTopCard(source, prev);
-      if (!card) return prev;
+    if (!canDropOnTarget(source, target)) {
+      setSelected(null);
+      return;
+    }
 
-      const next = cloneGame(prev);
+    saveUndoState(structuredClone(game));
+
+    setGame((draft) => {
+      const snapshot = draft as GameState;
+      const card = getTopCard(source, snapshot);
+      if (!card) return;
 
       if (source.zone === "cascade") {
-        next.cascades[source.pileIndex].pop();
+        draft.cascades[source.pileIndex].pop();
       } else {
-        next.freeCells[source.slotIndex] = null;
+        draft.freeCells[source.slotIndex] = null;
       }
 
       if (target.zone === "cascade") {
-        next.cascades[target.pileIndex].push(card);
+        draft.cascades[target.pileIndex].push(card);
       } else if (target.zone === "free") {
-        if (next.freeCells[target.slotIndex] !== null) return prev;
-        next.freeCells[target.slotIndex] = card;
+        if (draft.freeCells[target.slotIndex] !== null) return;
+        draft.freeCells[target.slotIndex] = card;
       } else {
-        next.foundations[target.suit].push(card);
+        draft.foundations[target.suit].push(card);
       }
-
-      return next;
     });
-    setSelected(null);
-  }
 
-  function resetGame() {
-    setGame(createInitialState());
     setSelected(null);
-    clearDragGhost();
   }
 
   // ── Drag helpers ─────────────────────────────────────────────────────────────
@@ -522,6 +535,12 @@ export default function FreeCell() {
       };
     }
     return { x: base.x, y: base.y };
+  }
+
+  function getSourceRect(source: MoveSource) {
+    const origin = getSourceOrigin(source);
+    if (!origin) return null;
+    return createRect(origin.x, origin.y, cardWidth, cardHeight);
   }
 
   function startGhostDrag(source: MoveSource, _event: GestureResponderEvent) {
@@ -592,8 +611,12 @@ export default function FreeCell() {
       setShowIntro={setShowIntro}
       ended={won}
       won={won}
-      reset={resetGame}
+      reset={() => {
+        void reset();
+      }}
       isLoaded={isLoaded}
+      canUndo={canUndo}
+      undo={undo}
     >
       <View style={styles.gameShell}>
         <View ref={boardRef} style={styles.boardShell}>

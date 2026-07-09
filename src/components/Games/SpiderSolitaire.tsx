@@ -213,6 +213,8 @@ export default function SpiderSolitaire() {
       getSameSuitRun(game.tableau[source.pileIndex], source.cardIndex).map(
         (c) => c.id,
       ),
+    getDropHitAreas: () => dropHitAreasRef.current,
+    getSourceRect,
   });
 
   // ── Derived ─────────────────────────────────────────────────────────────────
@@ -478,6 +480,21 @@ export default function SpiderSolitaire() {
       x: base.x,
       y: base.y + source.cardIndex * CASCADE_FAN_OFFSET * cardHeight,
     });
+  }
+
+  function getSourceRect(source: MoveSource) {
+    const zone = zones.find(
+      (z) => z.name === "cascade" && z.pileIndex === source.pileIndex,
+    );
+    if (!zone) return null;
+
+    const base = getZoneBasePos(zone);
+    return createRect(
+      base.x,
+      base.y + source.cardIndex * CASCADE_FAN_OFFSET * cardHeight,
+      cardWidth,
+      cardHeight,
+    );
   }
 
   function makeHandlers(source: MoveSource, onTap?: () => void) {

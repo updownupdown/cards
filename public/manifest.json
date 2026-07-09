@@ -1,0 +1,25 @@
+{
+  "name": "Solo Suite",
+  "short_name": "SoloSuite",
+  "description": "A collection of solo playing card games.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#343f49",
+  "background_color": "#343f49",
+  "icons": [
+    {
+      "src": "./pwa-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "./pwa-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    }
+  ]
+}
