@@ -5,25 +5,25 @@
     "slug": "cards",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/app-icon/icon.png",
     "scheme": "cards",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/app-icon/icon.png"
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#343f49",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "foregroundImage": "./assets/app-icon/android-foreground.png",
+        "backgroundImage": "./assets/app-icon/android-background.png",
+        "monochromeImage": "./assets/app-icon/android-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.updownupdown.cards"
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png",
+      "favicon": "./assets/app-icon/icon.png",
       "themeColor": "#343f49",
       "name": "Solo Suite",
       "shortName": "SoloSuite",
@@ -39,9 +39,9 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#343F49",
           "android": {
-            "image": "./assets/images/splash-icon.png",
+            "image": "./assets/app-icon/splash-icon.png",
             "imageWidth": 76
           }
         }

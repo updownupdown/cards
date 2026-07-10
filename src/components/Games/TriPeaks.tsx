@@ -23,7 +23,7 @@ const ROW_LAYOUT: readonly (readonly number[])[] = [
 
 const CARDS_PER_ROW = [3, 6, 9, 10] as const;
 
-const TABLEAU_ROW_BASE = 0.9;
+const TABLEAU_ROW_BASE = 1.2;
 const TABLEAU_ROW_STEP = 0.43;
 
 const NUM_ROWS = 4;
@@ -116,8 +116,6 @@ function canMoveToWaste(index: number, snapshot: GameState) {
   const card = snapshot.tableau[index];
   const wasteTop = snapshot.waste[snapshot.waste.length - 1];
 
-  // console.log(card, wasteTop);
-
   if (!card || card.removed || !card.faceUp || !wasteTop) {
     return false;
   }
@@ -170,6 +168,7 @@ async function resetAndSetup(
 
   setGame((draft) => {
     draft.waste = shuffle(draft.waste);
+    draft.tableau = [];
 
     for (let i = 0; i < TABLEAU_CARD_COUNT; i += 1) {
       const card = draft.waste.pop();
@@ -189,7 +188,11 @@ async function resetAndSetup(
 
     draft.draw = shuffle(draft.waste);
     draft.waste = [];
+  });
 
+  await delay();
+
+  setGame((draft) => {
     const firstWasteCard = draft.draw.pop();
     if (firstWasteCard) {
       draft.waste.push(flipToFace(firstWasteCard));
@@ -304,6 +307,7 @@ export default function TriPeaks() {
     zones,
     cardMapper,
     zoneMapper,
+    gap: 0.14,
     cardSize: "small",
   });
 

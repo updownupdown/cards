@@ -1,12 +1,15 @@
-const CACHE_NAME = "solo-suite-v1";
+const CACHE_NAME = "solo-suite-v2";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./offline.html",
   "./manifest.json",
-  "./pwa-192.png",
-  "./pwa-512.png",
   "./favicon.ico",
+  "./apple-touch-icon.png",
+  "./icon-192.png",
+  "./icon-512.png",
+  "./icon-192-maskable.png",
+  "./icon-512-maskable.png",
 ];
 
 self.addEventListener("install", (event) => {
@@ -120,7 +123,7 @@ self.addEventListener("fetch", (event) => {
   }
 
   // The small, mutable app shell (route HTML, manifest.json, favicon and the
-  // pwa-*.png icons) is served network-first so installed users automatically
+  // app icons) is served network-first so installed users automatically
   // pick up new games, updated icons, and other content whenever they are
   // online. The cache is only used as an offline fallback.
   event.respondWith(networkFirst(request));

@@ -29,7 +29,8 @@ export default function Root({ children }: { children: ReactNode }) {
         <meta name="msapplication-navbutton-color" content="#343f49" />
         <meta name="color-scheme" content="dark" />
         <link rel="manifest" href="./manifest.json" />
-        <link rel="apple-touch-icon" href="./pwa-192.png" />
+        <link rel="icon" href="./favicon.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
         <script dangerouslySetInnerHTML={{ __html: swBootstrap }} />
         <ScrollViewStyleReset />
       </head>
