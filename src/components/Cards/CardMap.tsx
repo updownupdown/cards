@@ -1,5 +1,5 @@
 import { cardDims, PlayingCard } from "@/components/Cards/card-utils";
-import { GAMES_DATA } from "@/data/games-data";
+import { GAMES_DATA } from "@/data/games";
 import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { MaxContentHeight } from "@/styles/styles";

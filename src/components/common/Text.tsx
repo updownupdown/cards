@@ -22,10 +22,10 @@ export const Typography = {
     500: FontFamilies[500],
     600: FontFamilies[600],
     700: FontFamilies[700],
-    regular: FontFamilies[400],
-    medium: FontFamilies[500],
-    semibold: FontFamilies[600],
-    bold: FontFamilies[700],
+    regular: FontFamilies[300],
+    medium: FontFamilies[400],
+    semibold: FontFamilies[500],
+    bold: FontFamilies[600],
   },
 };
 

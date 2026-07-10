@@ -1,0 +1,53 @@
+import { GameDefinition, GameTag } from "../games-data";
+
+export const bowlingSolitaire: GameDefinition = {
+  path: "/bowling-solitaire",
+  title: "Bowling Solitaire",
+  thumbnail: "BowlingSolitaire.jpg",
+  cardColorBg: "#1f1c18",
+  cardColorText: "#c1e1e6",
+  cardDescription:
+    "Bowl a full game of 10-pin using cards, chasing strikes and spares.",
+  stats: {
+    complexity: 70,
+    difficulty: 75,
+    luck: 35,
+  },
+  tags: [GameTag.ClassicSolitaire, GameTag.ModernMechanics],
+  briefRules: [
+    "Each frame uses 20 cards: 10 pins and three ball piles.",
+    "Knock down 1–3 adjacent pins whose sum ends in the ball card's digit.",
+    "Keep rolling the same ball until no legal hit remains.",
+    "Score just like real bowling, with strike and spare bonuses.",
+  ],
+  byLine: "Designer: Sid Sackson",
+  about: [
+    "Bowling Solitaire translates 10-pin bowling into a tactical card puzzle.",
+    "Every roll is a value-and-position decision: card value, pin adjacency, and frame timing all matter.",
+    "Plan for strike and spare bonuses while navigating the opening-row restriction.",
+  ],
+  howToPlay: [
+    "## Objective",
+    "Play ten frames of bowling with cards and post the highest score you can.",
+    "## Setup",
+    "- Each frame uses 20 cards: the {AH}–{10H} and {AD}–{10D}.",
+    "- Deal **10 pins** face up in rows of 4, 3, 2, and 1 (back row to front).",
+    "- Split the other 10 cards into three **ball piles** of 5, 3, and 2, with the top card face up.",
+    "## Rolling a ball",
+    "- Choose a face-up ball card and knock down **1, 2, or 3 adjacent pins** whose values **sum to a number ending in the ball card's digit** (for example 15 matches a 5; 10 or 20 matches a 10).",
+    "- Keep making legal hits with the same ball for as long as you can.",
+    "- After each successful hit, discard that ball card and reveal the next in its pile.",
+    "## Restrictions",
+    "- On the **first hit of a frame**, you may not remove a back-row pin, and the center pin cannot be taken by itself.",
+    "- After the opening, every hit must include **at least one pin adjacent to a gap** left by an earlier hit.",
+    "## Ending a ball",
+    "When no legal hit remains, the ball ends. Record the pins knocked down, discard the top card of every ball pile, and roll the next ball.",
+    "## Frames",
+    "A frame allows up to two balls, and ends early if all 10 pins fall on the first ball (a **strike**).",
+    "## Scoring",
+    "- **Strike**: 10 plus the next two balls.",
+    "- **Spare** (all pins in two balls): 10 plus the next one ball.",
+    "- **Open frame**: the total pins knocked down.",
+    "- In frame 10, a strike or spare earns 2 or 1 bonus ball(s).",
+  ],
+};

@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { GameMenuInfo, GAMES_DATA, isGameEnabled } from "./games-data";
+import { GameMenuInfo, isGameEnabled } from "./games-data";
+import { GAMES_DATA } from "./games";
 
 export type GameStats = {
   attempts: number;

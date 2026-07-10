@@ -80,7 +80,7 @@ export function SettingControl<T>({
                 <View style={settingsStyles.radioOuter}>
                   {isSelected && <View style={settingsStyles.radioInner} />}
                 </View>
-                <Text size="md">{opt.label}</Text>
+                <Text size="sm">{opt.label}</Text>
               </Pressable>
             );
           })}

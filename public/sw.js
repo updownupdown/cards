@@ -36,12 +36,22 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-function isStaticAsset(pathname) {
-  return (
-    pathname.includes("/_expo/static/") ||
-    pathname.includes("/assets/") ||
-    /\.(?:js|css|png|jpg|jpeg|gif|webp|svg|ico|woff2?|ttf)$/i.test(pathname)
-  );
+self.addEventListener("message", (event) => {
+  const data = event.data;
+  if (data && data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
+
+// Content-hashed resources are immutable: Expo fingerprints their filenames on
+// every export (e.g. Scoundrel.c6c46ac5....png, entry-64ef....js), so a change
+// always produces a new URL. These are safe to serve cache-first forever, which
+// means large assets (backgrounds, thumbnails, card backs, fonts) are only ever
+// downloaded once and load instantly on subsequent visits and offline.
+//   - /_expo/static/ : JS + CSS bundles
+//   - /assets/       : images and fonts pulled in via require()
+function isImmutableAsset(pathname) {
+  return pathname.includes("/_expo/static/") || pathname.includes("/assets/");
 }
 
 async function networkFirst(request) {
@@ -59,11 +69,13 @@ async function networkFirst(request) {
       return cached;
     }
 
-    const offlineFallback = await cache.match(
-      new URL("./offline.html", self.registration.scope).toString(),
-    );
-    if (offlineFallback) {
-      return offlineFallback;
+    if (request.mode === "navigate") {
+      const offlineFallback = await cache.match(
+        new URL("./offline.html", self.registration.scope).toString(),
+      );
+      if (offlineFallback) {
+        return offlineFallback;
+      }
     }
 
     return new Response("<h1>Offline</h1><p>Reconnect and retry.</p>", {
@@ -100,12 +112,16 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (request.mode === "navigate") {
-    event.respondWith(networkFirst(request));
+  // Immutable, content-hashed bundles and assets are served cache-first so
+  // large files are never re-downloaded and load instantly (also offline).
+  if (isImmutableAsset(url.pathname)) {
+    event.respondWith(cacheFirst(request));
     return;
   }
 
-  if (isStaticAsset(url.pathname)) {
-    event.respondWith(cacheFirst(request));
-  }
+  // The small, mutable app shell (route HTML, manifest.json, favicon and the
+  // pwa-*.png icons) is served network-first so installed users automatically
+  // pick up new games, updated icons, and other content whenever they are
+  // online. The cache is only used as an offline fallback.
+  event.respondWith(networkFirst(request));
 });

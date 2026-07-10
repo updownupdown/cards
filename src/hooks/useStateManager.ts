@@ -9,6 +9,7 @@ import {
 } from "@/data/game-menu";
 import { useImmer } from "use-immer";
 import { useGlobalSettings } from "./useGlobalSettings";
+import { isLocalDevEnvironment } from "@/utils/utils";
 
 const maxHistory = 10;
 
@@ -61,13 +62,14 @@ export function useStateManager<T>({
   // —— Initiate First Deal ————————————————————————
   const hasDealtRef = useRef(false);
   const [isResumeHydrated, setIsResumeHydrated] = useState(false);
+  const isDev = isLocalDevEnvironment();
 
   useEffect(() => {
     if (isGlobalSettingsLoading) {
       return;
     }
 
-    if (!isGamePath(pathname) || !globalSettings.resumeLastGame) {
+    if (!isGamePath(pathname) || !globalSettings.resumeLastGame || isDev) {
       setIsResumeHydrated(true);
       return;
     }

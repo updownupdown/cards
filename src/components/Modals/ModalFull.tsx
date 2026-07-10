@@ -11,17 +11,11 @@ import { Button } from "../Button/Button";
 
 type Props = {
   children: React.ReactNode;
-  showHomeButton?: boolean;
   title?: string;
   onClose: () => void;
 };
 
-export default function ModalFull({
-  children,
-  showHomeButton,
-  title,
-  onClose,
-}: Props) {
+export default function ModalFull({ children, title, onClose }: Props) {
   const modalStyles = useModalStyles();
 
   return (
@@ -30,27 +24,6 @@ export default function ModalFull({
         <View style={modalStyles.modalBackdrop}>
           <View style={modalStyles.modalCard}>
             <View style={modalStyles.modalHeader}>
-              {/* Home button */}
-              {showHomeButton && (
-                <Button
-                  onPress={async () => {
-                    onClose();
-                    try {
-                      await clearLastGameSession();
-                    } finally {
-                      router.push("/");
-                    }
-                  }}
-                  iconName={"arrow-back"}
-                  iconColor={Colors.accentBlue}
-                  text="Home"
-                  size="xs"
-                  textOnly
-                  iconSize={22}
-                  lineHeight={1}
-                />
-              )}
-
               {/* Icon/Title */}
               {title && (
                 <View style={[flexStyles.rowCentered, flexStyles.gap10]}>

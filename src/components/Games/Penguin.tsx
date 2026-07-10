@@ -352,10 +352,7 @@ export default function Penguin() {
         row: 0,
         baseZIndex: 40,
         fan: { maxVisible: 1 },
-        placeholder: {
-          text: suit[0].toUpperCase(),
-          infoPos: "above" as const,
-        },
+        placeholder: {},
       }),
     );
 
@@ -366,7 +363,6 @@ export default function Penguin() {
       cards: pile,
       col: i,
       row: 2.4,
-      height: 4,
       baseZIndex: 10 + i,
       fan: {
         direction: "down" as const,
@@ -528,6 +524,8 @@ export default function Penguin() {
     cardMapper,
     zoneMapper,
     cardSize: "small",
+    fixedRows: 7,
+    // visualizer: true,
   });
 
   // ── Hit areas ───────────────────────────────────────────────────────────────

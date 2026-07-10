@@ -194,8 +194,7 @@ export default function FreeCell() {
       col: i,
       row: 0,
       baseZIndex: 50,
-      fan: { maxVisible: 1 },
-      placeholder: { infoPos: "below" as const },
+      placeholder: { text: "Free", infoPos: "below", showCount: false },
     }));
 
     const foundationZones: MapZone[] = game.foundations.map((pile, i) => ({
@@ -217,14 +216,13 @@ export default function FreeCell() {
       cards: pile,
       col: i,
       row: 1.5,
-      height: 4,
       baseZIndex: 10 + i,
       fan: {
         direction: "down" as const,
         offset: CASCADE_FAN_OFFSET,
         center: false,
       },
-      placeholder: { showCount: false },
+      placeholder: {},
     }));
 
     return [...freeCellZones, ...foundationZones, ...cascadeZones];
@@ -363,6 +361,7 @@ export default function FreeCell() {
     zoneMapper,
     cardSize: "small",
     // visualizer: true,
+    fixedRows: 6,
   });
 
   // ── Hit areas ───────────────────────────────────────────────────────────────

@@ -1,29 +1,16 @@
-import { Text } from "@/components/common/Text";
-import { useMemo, useRef, useState } from "react";
-import { useGameLoading } from "@/hooks/useGameLoading";
+import { useMemo, useState } from "react";
+import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
+import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
-  Animated,
-  PanResponder,
-  Pressable,
-  StyleSheet,
-  View,
-} from "react-native";
-import type { GestureResponderEvent, View as RNView } from "react-native";
-
-import { Card } from "../Cards/Card";
-import {
-  DRAG_CAPTURE_THRESHOLD,
-  DRAG_MOVE_THRESHOLD,
-  RANK_VALUE,
   createDeck,
-  measureNode,
-  pointInRect,
+  RANK_VALUE,
+  flipAllToBack,
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-
-const cardsPerRow = 7;
+import { useStateManager } from "@/hooks/useStateManager";
+import { delay } from "@/utils/utils";
 
 type PyramidCard = PlayingCard & {
   row: number;
@@ -35,19 +22,20 @@ type Selection = { zone: "pyramid"; index: number } | { zone: "waste" } | null;
 
 type GameState = {
   pyramid: PyramidCard[];
-  stock: PlayingCard[];
   waste: PlayingCard[];
+  discard: PlayingCard[];
+  stockCount: number;
 };
 
-type DragGhost = {
-  source: Selection;
-  card: PlayingCard;
-  origin: { x: number; y: number };
-};
+const PYRAMID_ROWS = 7;
+const PYRAMID_SIZE = 28;
+const PYRAMID_BASE_COL = 3;
+const PYRAMID_BASE_ROW = 0.8;
+const PYRAMID_ROW_STEP = 0.5;
 
 function isCardExposed(card: PyramidCard, pyramid: PyramidCard[]) {
   if (card.removed) return false;
-  if (card.row === 6) return true;
+  if (card.row === PYRAMID_ROWS - 1) return true;
 
   const leftCoveredBy = pyramid.find(
     (candidate) =>
@@ -67,77 +55,157 @@ function isCardExposed(card: PyramidCard, pyramid: PyramidCard[]) {
 }
 
 function createInitialState(): GameState {
-  const deck = shuffle(createDeck({ faceUp: true }));
-  const pyramid: PyramidCard[] = [];
-
-  for (let row = 0; row < 7; row += 1) {
-    for (let col = 0; col <= row; col += 1) {
-      const base = deck.pop();
-      if (!base) continue;
-      pyramid.push({ ...base, row, col, removed: false });
-    }
-  }
-
   return {
-    pyramid,
-    stock: deck,
+    pyramid: [],
     waste: [],
+    discard: createDeck({ faceUp: false }),
+    stockCount: 0,
   };
+}
+
+const gameStateInitial = createInitialState();
+
+async function resetAndSetup(
+  setGame: (updater: (draft: GameState) => void) => void,
+) {
+  setGame((draft) => {
+    const allCards = flipAllToBack([
+      ...draft.pyramid.filter((card) => !card.removed),
+      ...draft.waste,
+      ...draft.discard,
+    ]);
+
+    draft.pyramid = [];
+    draft.waste = [];
+    draft.discard = allCards;
+    draft.stockCount = 0;
+  });
+
+  await delay();
+
+  setGame((draft) => {
+    const shuffled = shuffle(draft.discard);
+    const pyramid: PyramidCard[] = [];
+
+    for (let row = 0; row < PYRAMID_ROWS; row += 1) {
+      for (let col = 0; col <= row; col += 1) {
+        const base = shuffled.pop();
+        if (!base) continue;
+        pyramid.push({ ...base, row, col, faceUp: true, removed: false });
+      }
+    }
+
+    draft.pyramid = pyramid;
+    draft.waste = [];
+    draft.discard = shuffled;
+    draft.stockCount = shuffled.length;
+  });
 }
 
 function cardValue(card: PlayingCard) {
   return RANK_VALUE[card.rank];
 }
 
+function hasAvailableMove(snapshot: GameState) {
+  type ExposedSelection = Exclude<Selection, null>;
+
+  const exposedSelections: ExposedSelection[] = snapshot.pyramid
+    .map((card, index) => ({ card, index }))
+    .filter(({ card }) => isCardExposed(card, snapshot.pyramid))
+    .map(({ index }) => ({ zone: "pyramid", index }) as const);
+
+  if (snapshot.waste.length > 0) {
+    exposedSelections.push({ zone: "waste" });
+  }
+
+  // Any exposed king can always be removed.
+  if (
+    exposedSelections.some((selection) => {
+      if (selection.zone === "waste") {
+        return snapshot.waste[snapshot.waste.length - 1]?.rank === "K";
+      }
+
+      return snapshot.pyramid[selection.index]?.rank === "K";
+    })
+  ) {
+    return true;
+  }
+
+  // Any exposed pair summing to 13 is a valid move.
+  for (let i = 0; i < exposedSelections.length; i += 1) {
+    for (let j = i + 1; j < exposedSelections.length; j += 1) {
+      const first = exposedSelections[i];
+      const second = exposedSelections[j];
+
+      if (first.zone === "waste" && second.zone === "waste") {
+        continue;
+      }
+
+      const firstCard =
+        first.zone === "waste"
+          ? snapshot.waste[snapshot.waste.length - 1]
+          : snapshot.pyramid[first.index];
+      const secondCard =
+        second.zone === "waste"
+          ? snapshot.waste[snapshot.waste.length - 1]
+          : snapshot.pyramid[second.index];
+
+      if (!firstCard || !secondCard) continue;
+      if (cardValue(firstCard) + cardValue(secondCard) === 13) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 export default function Pyramid() {
-  const { isLoaded, showIntro, setShowIntro } = useGameLoading();
-
-  const [game, setGame] = useState<GameState>(createInitialState);
   const [selected, setSelected] = useState<Selection>(null);
-  const [dragGhost, setDragGhost] = useState<DragGhost | null>(null);
-  const [hoverTarget, setHoverTarget] = useState<Selection>(null);
-  const [boardOrigin, setBoardOrigin] = useState({ x: 0, y: 0 });
 
-  const dragTranslate = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
-
-  const boardRef = useRef<RNView | null>(null);
-  const wasteRef = useRef<RNView | null>(null);
-  const pyramidRefs = useRef<Record<string, RNView | null>>({});
+  const {
+    isLoaded,
+    showIntro,
+    setShowIntro,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<GameState>({
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelected(null);
+    },
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+  });
 
   const removedCount = useMemo(
     () => game.pyramid.filter((card) => card.removed).length,
     [game.pyramid],
   );
 
-  const won = removedCount === 28;
+  const won = removedCount === PYRAMID_SIZE;
+  const lost = !won && game.stockCount === 0 && !hasAvailableMove(game);
+  const ended = won || lost;
 
-  function updateBoardOrigin() {
-    boardRef.current?.measureInWindow((x, y) => {
-      setBoardOrigin({ x, y });
-    });
+  function stockCards(snapshot = game) {
+    if (snapshot.stockCount <= 0) return [] as PlayingCard[];
+    return snapshot.discard.slice(-snapshot.stockCount);
   }
 
-  function resetGame() {
-    setGame(createInitialState());
-    setSelected(null);
-    setDragGhost(null);
-    setHoverTarget(null);
-    dragTranslate.setValue({ x: 0, y: 0 });
-  }
+  function addCardsToDiscard(draft: GameState, cards: PlayingCard[]) {
+    if (cards.length === 0) return;
 
-  function drawCard() {
-    setGame((prev) => {
-      if (prev.stock.length === 0) return prev;
-      const nextStock = [...prev.stock];
-      const drawn = nextStock.pop();
-      if (!drawn) return prev;
-      return {
-        ...prev,
-        stock: nextStock,
-        waste: [...prev.waste, drawn],
-      };
-    });
-    setSelected(null);
+    const insertIndex = draft.discard.length - draft.stockCount;
+    draft.discard.splice(
+      insertIndex,
+      0,
+      ...cards.map((card) => ({ ...card, faceUp: false })),
+    );
   }
 
   function getSelectionCard(selection: Selection, snapshot = game) {
@@ -148,108 +216,6 @@ export default function Pyramid() {
     return snapshot.pyramid[selection.index] ?? null;
   }
 
-  function removeSingleKing(selection: Selection) {
-    if (!selection) return false;
-
-    if (selection.zone === "waste") {
-      const top = game.waste[game.waste.length - 1];
-      if (!top || top.rank !== "K") return false;
-
-      setGame((prev) => ({
-        ...prev,
-        waste: prev.waste.slice(0, -1),
-      }));
-      setSelected(null);
-      return true;
-    }
-
-    const card = game.pyramid[selection.index];
-    if (!card || card.rank !== "K" || !isCardExposed(card, game.pyramid)) {
-      return false;
-    }
-
-    setGame((prev) => ({
-      ...prev,
-      pyramid: prev.pyramid.map((entry, index) =>
-        index === selection.index ? { ...entry, removed: true } : entry,
-      ),
-    }));
-    setSelected(null);
-    return true;
-  }
-
-  function applyPairRemoval(first: Selection, second: Selection) {
-    if (!first || !second) return false;
-    if (first.zone === second.zone && first.zone === "waste") return false;
-
-    const firstCard = getSelectionCard(first);
-    const secondCard = getSelectionCard(second);
-    if (!firstCard || !secondCard) return false;
-
-    if (first.zone === "pyramid") {
-      const pyramidCard = game.pyramid[first.index];
-      if (
-        !pyramidCard ||
-        pyramidCard.removed ||
-        !isCardExposed(pyramidCard, game.pyramid)
-      ) {
-        return false;
-      }
-    }
-
-    if (second.zone === "pyramid") {
-      const pyramidCard = game.pyramid[second.index];
-      if (
-        !pyramidCard ||
-        pyramidCard.removed ||
-        !isCardExposed(pyramidCard, game.pyramid)
-      ) {
-        return false;
-      }
-    }
-
-    if (cardValue(firstCard) + cardValue(secondCard) !== 13) {
-      return false;
-    }
-
-    setGame((prev) => {
-      let nextPyramid = prev.pyramid;
-      let nextWaste = prev.waste;
-
-      if (first.zone === "pyramid") {
-        nextPyramid = nextPyramid.map((entry, index) =>
-          index === first.index ? { ...entry, removed: true } : entry,
-        );
-      } else {
-        nextWaste = nextWaste.slice(0, -1);
-      }
-
-      if (second.zone === "pyramid") {
-        nextPyramid = nextPyramid.map((entry, index) =>
-          index === second.index ? { ...entry, removed: true } : entry,
-        );
-      } else {
-        nextWaste = nextWaste.slice(0, -1);
-      }
-
-      return {
-        ...prev,
-        pyramid: nextPyramid,
-        waste: nextWaste,
-      };
-    });
-
-    setSelected(null);
-    return true;
-  }
-
-  function sameSelection(a: Selection, b: Selection) {
-    if (!a || !b) return a === b;
-    if (a.zone !== b.zone) return false;
-    if (a.zone === "waste" && b.zone === "waste") return true;
-    return a.zone === "pyramid" && b.zone === "pyramid" && a.index === b.index;
-  }
-
   function canPairSelections(
     first: Selection,
     second: Selection,
@@ -257,11 +223,11 @@ export default function Pyramid() {
   ) {
     if (!first || !second) return false;
     if (first.zone === second.zone && first.zone === "waste") return false;
+
     if (
-      first.zone === second.zone &&
-      first.zone === "pyramid"
-      // &&
-      // first.index === second.index
+      first.zone === "pyramid" &&
+      second.zone === "pyramid" &&
+      first.index === second.index
     ) {
       return false;
     }
@@ -295,7 +261,92 @@ export default function Pyramid() {
     return cardValue(firstCard) + cardValue(secondCard) === 13;
   }
 
+  function drawCard() {
+    if (ended || game.stockCount === 0) return;
+
+    saveUndoState(structuredClone(game));
+    setGame((draft) => {
+      if (draft.stockCount === 0) return;
+
+      const drawn = draft.discard[draft.discard.length - 1];
+      if (!drawn) return;
+
+      draft.discard.pop();
+      draft.stockCount -= 1;
+      draft.waste.push({ ...drawn, faceUp: true });
+    });
+
+    setSelected(null);
+  }
+
+  function removeSingleKing(selection: Selection) {
+    if (!selection) return false;
+
+    if (selection.zone === "waste") {
+      const top = game.waste[game.waste.length - 1];
+      if (!top || top.rank !== "K") return false;
+
+      saveUndoState(structuredClone(game));
+      setGame((draft) => {
+        const removedCard = draft.waste.pop();
+        if (removedCard) {
+          addCardsToDiscard(draft, [removedCard]);
+        }
+      });
+      setSelected(null);
+      return true;
+    }
+
+    const card = game.pyramid[selection.index];
+    if (!card || card.rank !== "K" || !isCardExposed(card, game.pyramid)) {
+      return false;
+    }
+
+    saveUndoState(structuredClone(game));
+    setGame((draft) => {
+      draft.pyramid[selection.index].removed = true;
+      const removedCard = draft.pyramid[selection.index];
+      addCardsToDiscard(draft, [removedCard]);
+    });
+    setSelected(null);
+    return true;
+  }
+
+  function applyPairRemoval(first: Selection, second: Selection) {
+    if (!canPairSelections(first, second)) return false;
+
+    saveUndoState(structuredClone(game));
+    setGame((draft) => {
+      if (!first || !second) return;
+
+      if (first.zone === "pyramid") {
+        draft.pyramid[first.index].removed = true;
+        addCardsToDiscard(draft, [draft.pyramid[first.index]]);
+      } else {
+        const removedCard = draft.waste.pop();
+        if (removedCard) {
+          addCardsToDiscard(draft, [removedCard]);
+        }
+      }
+
+      if (second.zone === "pyramid") {
+        draft.pyramid[second.index].removed = true;
+        addCardsToDiscard(draft, [draft.pyramid[second.index]]);
+      } else {
+        const removedCard = draft.waste.pop();
+        if (removedCard) {
+          addCardsToDiscard(draft, [removedCard]);
+        }
+      }
+    });
+
+    setSelected(null);
+    return true;
+  }
+
   function onPyramidPress(index: number) {
+    if (ended) return;
+
     const card = game.pyramid[index];
     if (!card || card.removed || !isCardExposed(card, game.pyramid)) return;
 
@@ -312,11 +363,13 @@ export default function Pyramid() {
     }
 
     if (!applyPairRemoval(selected, { zone: "pyramid", index })) {
-      setSelected(null);
+      setSelected(index === undefined ? null : { zone: "pyramid", index });
     }
   }
 
   function onWastePress() {
+    if (ended) return;
+
     if (game.waste.length === 0) {
       setSelected(null);
       return;
@@ -339,367 +392,130 @@ export default function Pyramid() {
     }
   }
 
-  function startDrag(source: Selection, event: GestureResponderEvent) {
-    const card = getSelectionCard(source);
-    if (!card) return;
+  const zones: MapZone[] = useMemo(() => {
+    const pyramidZones: MapZone[] = Array.from({
+      length: PYRAMID_SIZE,
+    }).map((_, index) => {
+      const card = game.pyramid[index];
 
-    const { pageX, pageY, locationX, locationY } = event.nativeEvent;
-    dragTranslate.setValue({ x: 0, y: 0 });
-    setDragGhost({
-      source,
-      card,
-      origin: {
-        x: pageX - locationX,
-        y: pageY - locationY,
-      },
+      return {
+        id: `pyramid-${index}`,
+        name: "pyramid",
+        pileIndex: index,
+        cards: !card || card.removed ? [] : [card],
+        col: PYRAMID_BASE_COL - card.row / 2 + card.col,
+        row: PYRAMID_BASE_ROW + card.row * PYRAMID_ROW_STEP,
+        baseZIndex: 20 + card.row,
+      };
     });
-  }
 
-  function clearDrag() {
-    setDragGhost(null);
-    setHoverTarget(null);
-    dragTranslate.setValue({ x: 0, y: 0 });
-  }
+    return [
+      {
+        id: "stock",
+        name: "stock",
+        cards: stockCards(game),
+        col: 0,
+        row: 0,
+        baseZIndex: 50,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Draw", infoPos: "below", showCount: true },
+      },
+      {
+        id: "waste",
+        name: "waste",
+        cards: game.waste,
+        col: 1.2,
+        row: 0,
+        baseZIndex: 55,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Waste", infoPos: "below", showCount: false },
+      },
+      {
+        id: "discard",
+        name: "discard",
+        cards: game.discard.slice(0, game.discard.length - game.stockCount),
+        col: 6,
+        row: 0,
+        baseZIndex: 45,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Discard", infoPos: "below", showCount: true },
+      },
+      ...pyramidZones,
+    ];
+  }, [game]);
 
-  async function updateHoverTarget(
-    source: Selection,
-    pageX: number,
-    pageY: number,
-  ) {
-    const target = await findDropTarget(pageX, pageY);
-    const validTarget = canPairSelections(source, target) ? target : null;
-    setHoverTarget((current) =>
-      sameSelection(current, validTarget) ? current : validTarget,
-    );
-  }
+  const cardMapper = (
+    mappedCard: MappedCard,
+  ): AnimatedCardMapping | undefined => {
+    if (mappedCard.zoneName === "stock") {
+      return {
+        clickThroughCards: true,
+      };
+    } else if (mappedCard.zoneName === "waste" && mappedCard.topOfZone) {
+      return {
+        onPress: mappedCard.topOfZone ? onWastePress : undefined,
+        isDisabled: ended,
+        selectColor: "blue",
+        isSelected: selected?.zone === "waste",
+      };
+    } else if (
+      mappedCard.zoneName === "pyramid" &&
+      mappedCard.pileIndex !== undefined
+    ) {
+      const index = mappedCard.pileIndex;
+      const card = game.pyramid[index];
+      const exposed = card ? isCardExposed(card, game.pyramid) : false;
+      const isSelected =
+        selected?.zone === "pyramid" && selected.index === index;
 
-  async function findDropTarget(
-    pageX: number,
-    pageY: number,
-  ): Promise<Selection> {
-    const wasteRect = await measureNode(wasteRef.current);
-    if (wasteRect && pointInRect(pageX, pageY, wasteRect)) {
-      return { zone: "waste" };
+      return {
+        onPress: () => onPyramidPress(index),
+        isDisabled: ended || !exposed || card?.removed,
+        selectColor: "blue",
+        isSelected,
+      };
     }
+  };
 
-    const exposedCards = game.pyramid
-      .map((card, index) => ({ card, index }))
-      .filter(({ card }) => !card.removed && isCardExposed(card, game.pyramid));
-
-    const cardRects = await Promise.all(
-      exposedCards.map(async ({ card, index }) => {
-        const rect = await measureNode(pyramidRefs.current[card.id] ?? null);
-        if (!rect) return null;
-        return { index, rect };
-      }),
-    );
-
-    for (const entry of cardRects) {
-      if (!entry) continue;
-      if (pointInRect(pageX, pageY, entry.rect)) {
-        return { zone: "pyramid", index: entry.index };
-      }
+  const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
+    if (zone.name === "stock") {
+      return {
+        onPress: drawCard,
+        isDisabled: ended || game.stockCount === 0,
+      };
     }
+  };
 
-    return null;
-  }
-
-  async function handleDrop(source: Selection, event: GestureResponderEvent) {
-    const target = await findDropTarget(
-      event.nativeEvent.pageX,
-      event.nativeEvent.pageY,
-    );
-    if (!source || !target) return;
-    if (!canPairSelections(source, target)) return;
-
-    const moved = applyPairRemoval(source, target);
-    if (!moved) {
-      setSelected(null);
-    }
-  }
-
-  function makeDragHandlers(source: Selection, onTap: () => void) {
-    return PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onStartShouldSetPanResponderCapture: () => true,
-      onMoveShouldSetPanResponder: (_, gesture) =>
-        Math.abs(gesture.dx) + Math.abs(gesture.dy) > DRAG_MOVE_THRESHOLD,
-      onMoveShouldSetPanResponderCapture: (_, gesture) =>
-        Math.abs(gesture.dx) + Math.abs(gesture.dy) > DRAG_CAPTURE_THRESHOLD,
-      onPanResponderGrant: (event) => {
-        startDrag(source, event);
-      },
-      onPanResponderMove: (_, gesture) => {
-        dragTranslate.setValue({ x: gesture.dx, y: gesture.dy });
-        const sourceForHover = dragGhost?.source ?? source;
-        void updateHoverTarget(sourceForHover, gesture.moveX, gesture.moveY);
-      },
-      onPanResponderRelease: (event, gesture) => {
-        const moved =
-          Math.abs(gesture.dx) + Math.abs(gesture.dy) > DRAG_MOVE_THRESHOLD;
-        if (!moved) {
-          clearDrag();
-          onTap();
-          return;
-        }
-
-        const sourceForDrop = dragGhost?.source ?? source;
-        void handleDrop(sourceForDrop, event).finally(() => {
-          clearDrag();
-        });
-      },
-      onPanResponderTerminate: () => {
-        clearDrag();
-      },
-      onPanResponderTerminationRequest: () => false,
-      onShouldBlockNativeResponder: () => true,
-    }).panHandlers;
-  }
-
-  const wasteTop = game.waste[game.waste.length - 1];
-  const wasteDragHandlers = wasteTop
-    ? makeDragHandlers({ zone: "waste" }, onWastePress)
-    : null;
-
-  const ghostLeft = dragGhost ? dragGhost.origin.x - boardOrigin.x : 0;
-  const ghostTop = dragGhost ? dragGhost.origin.y - boardOrigin.y : 0;
+  const { cardMap } = useCardMap({
+    game,
+    zones,
+    cardMapper,
+    zoneMapper,
+    cardSize: "small",
+    fixedCols: 7,
+    gap: 0.14,
+    // visualizer: true,
+  });
 
   return (
     <GameWrapper
       showIntro={showIntro}
       setShowIntro={setShowIntro}
-      ended={won}
+      ended={ended}
       won={won}
-      reset={resetGame}
+      winLoseMessage={
+        won
+          ? "You won!"
+          : lost
+            ? "No more moves and the stock is empty."
+            : undefined
+      }
+      reset={reset}
       isLoaded={isLoaded}
+      canUndo={canUndo}
+      undo={undo}
     >
-      <View
-        ref={boardRef}
-        onLayout={updateBoardOrigin}
-        style={styles.container}
-      >
-        <Text size="sm">Clear all pyramid cards by making 13.</Text>
-        {won && <Text style={styles.winText}>You won!</Text>}
-
-        <View style={styles.stockWasteRow}>
-          <Pressable style={styles.cardSlot} onPress={drawCard}>
-            {/* {game.stock.length > 0 ? (
-              <Card cardWidth={5}  />
-            ) : (
-              <Text style={styles.slotLabel}>Stock</Text>
-            )} */}
-          </Pressable>
-
-          <View
-            ref={wasteRef}
-            collapsable={false}
-            {...(wasteDragHandlers ?? {})}
-          >
-            <Pressable
-              style={[
-                styles.cardSlot,
-                selected?.zone === "waste" ? styles.selectedSlot : null,
-                hoverTarget?.zone === "waste" ? styles.dropHintSlot : null,
-              ]}
-              onPress={onWastePress}
-            >
-              {wasteTop ? (
-                <View
-                  style={
-                    dragGhost?.source?.zone === "waste"
-                      ? styles.hiddenDuringDrag
-                      : undefined
-                  }
-                >
-                  <Card card={wasteTop} cardWidth={5} />
-                </View>
-              ) : (
-                <Text style={styles.slotLabel}>Waste</Text>
-              )}
-            </Pressable>
-          </View>
-        </View>
-
-        <View style={styles.pyramidWrap}>
-          {Array.from({ length: 7 }, (_, row) => {
-            const rowCards = game.pyramid.filter((card) => card.row === row);
-
-            return (
-              <View key={`row-${row}`} style={styles.pyramidRow}>
-                {rowCards.map((card) => {
-                  const index = game.pyramid.findIndex(
-                    (entry) => entry.id === card.id,
-                  );
-                  const exposed = isCardExposed(card, game.pyramid);
-                  const isSelected =
-                    selected?.zone === "pyramid" && selected.index === index;
-                  const dragHandlers =
-                    exposed && !card.removed
-                      ? makeDragHandlers({ zone: "pyramid", index }, () =>
-                          onPyramidPress(index),
-                        )
-                      : null;
-                  const hiddenByDrag =
-                    dragGhost?.source?.zone === "pyramid" &&
-                    dragGhost.source.index === index;
-
-                  return (
-                    <Pressable
-                      key={card.id}
-                      ref={(node) => {
-                        pyramidRefs.current[card.id] = node;
-                      }}
-                      collapsable={false}
-                      onPress={() => onPyramidPress(index)}
-                      style={[
-                        styles.pyramidCard,
-                        isSelected ? styles.selectedCard : null,
-                        hoverTarget?.zone === "pyramid" &&
-                        hoverTarget.index === index
-                          ? styles.dropHintCard
-                          : null,
-                        card.removed ? styles.removedCard : null,
-                        hiddenByDrag ? styles.hiddenDuringDrag : null,
-                      ]}
-                      disabled={card.removed || !exposed}
-                      {...(dragHandlers ?? {})}
-                    >
-                      {!card.removed ? (
-                        <Card card={card} cardWidth={5} />
-                      ) : (
-                        <View style={styles.removedPlaceholder} />
-                      )}
-                    </Pressable>
-                  );
-                })}
-              </View>
-            );
-          })}
-        </View>
-
-        {dragGhost ? (
-          <Animated.View
-            style={[
-              styles.ghostLayer,
-              {
-                left: ghostLeft,
-                top: ghostTop,
-                transform: dragTranslate.getTranslateTransform(),
-              },
-            ]}
-          >
-            <Card card={dragGhost.card} cardWidth={5} />
-          </Animated.View>
-        ) : null}
-      </View>
+      {cardMap}
     </GameWrapper>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: "100%",
-    paddingTop: 56,
-    paddingHorizontal: 8,
-    gap: 10,
-  },
-  headerRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  title: {
-    fontSize: 24,
-    fontFamily: "Outfit_600SemiBold",
-    color: "#1f2937",
-  },
-  button: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-    backgroundColor: "#1d4ed8",
-  },
-  buttonText: {
-    color: "#fff",
-    fontFamily: "Outfit_500Medium",
-  },
-  metaText: {
-    color: "#334155",
-    fontFamily: "Outfit_500Medium",
-  },
-  winText: {
-    color: "#047857",
-    fontFamily: "Outfit_600SemiBold",
-  },
-  stockWasteRow: {
-    flexDirection: "row",
-    gap: 8,
-  },
-  cardSlot: {
-    borderWidth: 1,
-    borderColor: "rgba(15, 23, 42, 0.25)",
-    borderStyle: "dashed",
-    borderRadius: 8,
-    minWidth: 36,
-    minHeight: 56,
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-    backgroundColor: "rgba(255,255,255,0.35)",
-  },
-  selectedSlot: {
-    borderColor: "#2563eb",
-    borderStyle: "solid",
-    borderWidth: 2,
-  },
-  dropHintSlot: {
-    borderColor: "#0f766e",
-    borderStyle: "solid",
-    borderWidth: 2,
-    backgroundColor: "rgba(16, 185, 129, 0.18)",
-  },
-  slotLabel: {
-    color: "#334155",
-    fontSize: 11,
-    fontFamily: "Outfit_500Medium",
-  },
-  pyramidWrap: {
-    flex: 1,
-    gap: 2,
-    paddingTop: 4,
-  },
-  pyramidRow: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: -30,
-    gap: 2,
-  },
-  pyramidCard: {
-    opacity: 1,
-    borderRadius: 8,
-  },
-  dropHintCard: {
-    borderWidth: 2,
-    borderColor: "#0f766e",
-    backgroundColor: "rgba(16, 185, 129, 0.12)",
-  },
-  selectedCard: {
-    transform: [{ translateY: -3 }],
-  },
-  removedCard: {
-    opacity: 0.1,
-  },
-  removedPlaceholder: {
-    width: 24,
-    height: 34,
-  },
-  hiddenDuringDrag: {
-    opacity: 0,
-  },
-  ghostLayer: {
-    position: "absolute",
-    zIndex: 4000,
-    pointerEvents: "none",
-  },
-});

@@ -1,6 +1,7 @@
 import { Text } from "@/components/common/Text";
 import { EMPTY_STATS } from "@/data/game-menu";
-import { GAMES_DATA, isGameEnabled } from "@/data/games-data";
+import { isGameEnabled } from "@/data/games-data";
+import { GAMES_DATA } from "@/data/games";
 import { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import {

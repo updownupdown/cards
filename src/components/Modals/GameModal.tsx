@@ -1,4 +1,5 @@
 import { Text } from "@/components/common/Text";
+import { RichText } from "@/components/common/RichText";
 import { useGameSettings } from "@/hooks/useGameSettings";
 import { useGameSpecificSettings } from "@/hooks/useGameSpecificSettings";
 import { SettingControl } from "../common/SettingControl";
@@ -6,6 +7,7 @@ import { useModalStyles } from "@/styles/modalStyles";
 import { usePathname } from "expo-router";
 import { ScrollView, View } from "react-native";
 import { getSettingApplyBehaviorText } from "@/data/game-settings";
+import { useRef } from "react";
 import {
   calculateWinRate,
   getGameInfo,
@@ -70,15 +72,20 @@ const ModalSection = ({ children, title, iconName }: ModalSectionProps) => {
 
 type Props = {
   onClose: () => void;
+  onReloadGame?: () => void;
 };
 
-export default function GameModal({ onClose }: Props) {
+export default function GameModal({ onClose, onReloadGame }: Props) {
   const pathname = normalizeGamePath(usePathname());
   const info = getGameInfo(pathname);
   const { settings, updateSettings, isLoading } = useGameSettings(pathname);
   const gameSpecificSettings = useGameSpecificSettings(pathname);
   const { spacing } = useResponsiveMetrics();
   const modalStyles = useModalStyles();
+
+  // Track when a setting that only applies on the next deal is changed so the
+  // game can be reloaded once the modal closes.
+  const reloadOnCloseRef = useRef(false);
 
   if (isLoading || settings === undefined) return null;
 
@@ -88,43 +95,58 @@ export default function GameModal({ onClose }: Props) {
     key: K,
     value: GameSettings[K],
   ) {
+    if (settings && value !== settings[key]) {
+      const definition = gameSpecificSettings.find((s) => s.key === key);
+      if (definition?.applyBehavior === "next-game") {
+        reloadOnCloseRef.current = true;
+      }
+    }
     void updateSettings({ [key]: value } as Partial<GameSettings>);
+  }
+
+  function handleClose() {
+    if (reloadOnCloseRef.current) {
+      reloadOnCloseRef.current = false;
+      onReloadGame?.();
+    }
+    onClose();
   }
 
   return (
     <>
-      <ModalFull onClose={onClose} showHomeButton>
+      <ModalFull onClose={handleClose} title={info.title}>
         {/* Scroll view */}
         <ScrollView
           contentContainerStyle={modalStyles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          {/* Title */}
-          <View
-            style={[
-              flexStyles.colCentered,
-              flexStyles.fullWidth,
-              flexStyles.gap4,
-              { alignItems: "flex-start" },
-            ]}
-          >
-            <Text
-              size="xl"
-              weight={500}
-              textTransform="uppercase"
-              style={{ color: Colors.K100 }}
-            >
-              {info.title}
-            </Text>
+          {/* About Text */}
+          {info.about && (
+            <ModalSection>
+              <RichText content={info.about} size="md" weight={300} />
 
-            {/* By Line */}
-            {info.byLine && (
-              <Text style={modalStyles.byLine}>{info.byLine}</Text>
-            )}
-          </View>
+              {/* By Line */}
+              {info.byLine && (
+                <Text style={modalStyles.byLine}>{info.byLine}</Text>
+              )}
+            </ModalSection>
+          )}
 
           {/* Stats and favourite */}
           <View style={modalStyles.statsAndFav}>
+            <Button
+              onPress={() =>
+                updateSettings({ isFavorite: !settings.isFavorite })
+              }
+              iconName={settings.isFavorite ? "star" : "star-outline"}
+              size="xs"
+              textOnly
+              iconSize={42}
+              iconColor={
+                settings.isFavorite ? Colors.favoriteStar : Colors.accentBlue
+              }
+            />
+
             <View style={modalStyles.stats}>
               <View style={modalStyles.stat}>
                 <Text style={modalStyles.statsTextLabel}>Tried</Text>
@@ -163,75 +185,54 @@ export default function GameModal({ onClose }: Props) {
                 </View>
               )}
             </View>
-
-            <Button
-              onPress={() =>
-                updateSettings({ isFavorite: !settings.isFavorite })
-              }
-              iconName={settings.isFavorite ? "star" : "star-outline"}
-              size="xs"
-              textOnly
-              iconSize={42}
-              iconColor={
-                settings.isFavorite ? Colors.favoriteStar : Colors.accentBlue
-              }
-            />
           </View>
 
           {/* Game Settings */}
-          {gameSpecificSettings.length > 0 && (
-            <ModalSection title="Game Settings" iconName="settings">
-              <View style={modalStyles.gameSettings}>
-                {gameSpecificSettings.map((setting) => (
-                  <View key={setting.key} style={flexStyles.fullWidth}>
-                    <SettingControl
-                      label={setting.label}
-                      value={settings[setting.key]}
-                      type={setting.type}
-                      options={setting.options}
-                      onChange={(value) =>
-                        onGameSettingChange(
-                          setting.key,
-                          value as GameSettings[typeof setting.key],
-                        )
-                      }
-                    />
-                    {(setting.description || setting.applyBehavior) && (
-                      <Text
-                        size="sm"
-                        color={Colors.K600}
-                        style={{
-                          paddingTop: spacing(10),
-                        }}
-                      >
-                        {setting.description ??
-                          getSettingApplyBehaviorText(setting.applyBehavior)}
-                      </Text>
-                    )}
-                  </View>
-                ))}
+          {gameSpecificSettings.length > 0 &&
+            gameSpecificSettings.map((setting) => (
+              <View
+                key={setting.key}
+                style={[
+                  flexStyles.colCentered,
+                  flexStyles.fullWidth,
+                  {
+                    alignItems: "flex-start",
+                    padding: spacing(16),
+                    backgroundColor: Colors.K850,
+                    borderRadius: spacing(8),
+                  },
+                ]}
+              >
+                <SettingControl
+                  label={setting.label}
+                  value={settings[setting.key]}
+                  type={setting.type}
+                  options={setting.options}
+                  onChange={(value) =>
+                    onGameSettingChange(
+                      setting.key,
+                      value as GameSettings[typeof setting.key],
+                    )
+                  }
+                />
+                {(setting.description || setting.applyBehavior) && (
+                  <Text
+                    size="sm"
+                    color={Colors.K500}
+                    style={{
+                      paddingTop: spacing(10),
+                    }}
+                  >
+                    {setting.description ??
+                      getSettingApplyBehaviorText(setting.applyBehavior)}
+                  </Text>
+                )}
               </View>
-            </ModalSection>
-          )}
-
-          {/* About Text */}
-          {info.about && (
-            <ModalSection>
-              {info.about.map((line) => (
-                <Text key={line} style={modalStyles.aboutText}>
-                  {line}
-                </Text>
-              ))}
-            </ModalSection>
-          )}
+            ))}
 
           {/* How to Play */}
           <ModalSection title="How to Play" iconName="instructions">
-            {howToPlayText.map((line) => (
-              <Text key={line} style={modalStyles.rulesText}>
-                {line}
-              </Text>
-            ))}
+            <RichText content={howToPlayText} size="md" weight={300} />
           </ModalSection>
         </ScrollView>
       </ModalFull>

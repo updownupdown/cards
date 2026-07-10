@@ -1,4 +1,5 @@
 import { Text } from "@/components/common/Text";
+import { RichText } from "@/components/common/RichText";
 import { getGameInfo, normalizeGamePath } from "@/data/game-menu";
 import { useFade } from "@/hooks/useFade";
 import { useGameSettings } from "@/hooks/useGameSettings";
@@ -116,23 +117,12 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
                 How to Play
               </Text>
 
-              {gameInfo.briefRules.map((info, key) => (
-                <Text
-                  key={`info-${key}`}
-                  weight={300}
-                  size="sm"
-                  color={Colors.K200}
-                  style={[
-                    flexStyles.colCentered,
-                    flexStyles.fullWidth,
-                    {
-                      alignItems: "flex-start",
-                    },
-                  ]}
-                >
-                  {info}
-                </Text>
-              ))}
+              <RichText
+                content={gameInfo.briefRules}
+                size="sm"
+                weight={300}
+                gap={12}
+              />
 
               <Button
                 onPress={() => {

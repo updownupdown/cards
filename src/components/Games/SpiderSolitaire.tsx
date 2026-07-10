@@ -1,5 +1,4 @@
 import { Text } from "@/components/common/Text";
-import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useStateManager } from "@/hooks/useStateManager";
 import {
   CardHitArea,
@@ -13,6 +12,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { GestureResponderEvent } from "react-native";
 import { Animated, Pressable, StyleSheet, View } from "react-native";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
+import { delay } from "@/utils/utils";
 import { Button } from "../Button/Button";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { Card } from "../Cards/Card";
@@ -30,8 +30,7 @@ const TABLEAU_FAN_OFFSET = 0.26;
 type SpiderState = {
   tableau: PlayingCard[][];
   stock: PlayingCard[];
-  completedRuns: number;
-  difficulty: "easy" | "difficult";
+  foundations: PlayingCard[][];
 };
 
 type Selection = {
@@ -47,16 +46,19 @@ type DropTarget = {
   pileIndex: number;
 };
 
-function createInitialState(
-  difficulty: "easy" | "difficult" = "easy",
-): SpiderState {
-  const deck = shuffle(
+function createInitialState(): SpiderState {
+  const fullDeck = shuffle(
     createDeck({
       deckCount: 2,
-      forceSuit: difficulty === "easy" ? "spades" : undefined,
       faceUp: false,
     }),
   );
+
+  return dealSpider(fullDeck);
+}
+
+function dealSpider(deckCards: PlayingCard[]): SpiderState {
+  const deck = [...deckCards];
 
   const tableau: PlayingCard[][] = Array.from({ length: 10 }, () => []);
   let cursor = 0;
@@ -77,9 +79,36 @@ function createInitialState(
   return {
     tableau,
     stock: deck.slice(cursor),
-    completedRuns: 0,
-    difficulty,
+    foundations: Array.from({ length: 8 }, () => [] as PlayingCard[]),
   };
+}
+
+async function resetAndSetup(
+  setGame: (next: SpiderState | ((draft: SpiderState) => void)) => void,
+) {
+  setGame((draft: SpiderState) => {
+    const allCards = [
+      ...draft.tableau.flat(),
+      ...draft.stock,
+      ...draft.foundations.flat(),
+    ].map((card) => ({
+      ...card,
+      faceUp: false,
+    }));
+
+    draft.tableau = Array.from({ length: 10 }, () => [] as PlayingCard[]);
+    draft.foundations = Array.from({ length: 8 }, () => [] as PlayingCard[]);
+    draft.stock = allCards;
+  });
+
+  await delay();
+
+  setGame((draft: SpiderState) => {
+    const next = dealSpider(shuffle([...draft.stock]));
+    draft.tableau = next.tableau;
+    draft.stock = next.stock;
+    draft.foundations = next.foundations;
+  });
 }
 
 function revealLastIfNeeded(pile: PlayingCard[]) {
@@ -135,9 +164,10 @@ function canPlaceOnTableau(card: PlayingCard, destinationTop?: PlayingCard) {
   return RANK_VALUE[card.rank] + 1 === RANK_VALUE[destinationTop.rank];
 }
 
-function collectCompletedRuns(tableau: PlayingCard[][]) {
-  let removed = 0;
-
+function moveCompletedRunsToFoundations(
+  tableau: PlayingCard[][],
+  foundations: PlayingCard[][],
+) {
   for (let pileIndex = 0; pileIndex < tableau.length; pileIndex += 1) {
     const pile = tableau[pileIndex];
 
@@ -147,20 +177,27 @@ function collectCompletedRuns(tableau: PlayingCard[][]) {
         break;
       }
 
+      const targetFoundationIndex = foundations.findIndex(
+        (foundation) => foundation.length === 0,
+      );
+      if (targetFoundationIndex < 0) {
+        break;
+      }
+
       pile.splice(pile.length - 13, 13);
-      removed += 1;
+      foundations[targetFoundationIndex] = tail.map((card) => ({
+        ...card,
+        faceUp: true,
+      }));
     }
 
     tableau[pileIndex] = revealLastIfNeeded(pile);
   }
-
-  return removed;
 }
 
 const gameStateInitial = createInitialState();
 
 export default function SpiderSolitaire() {
-  const configuredDifficulty = useGameSettingValue("difficulty");
   const navigation = useNavigation();
   const [selected, setSelected] = useState<Selection>(null);
   const [hoverTarget, setHoverTarget] = useState<DropTarget | null>(null);
@@ -183,7 +220,7 @@ export default function SpiderSolitaire() {
       clearDragGhost();
     },
     resetAndSetup: async () => {
-      setGame(createInitialState(configuredDifficulty));
+      await resetAndSetup(setGame);
     },
   });
 
@@ -224,12 +261,15 @@ export default function SpiderSolitaire() {
   });
 
   const canDealStock = useMemo(
-    () =>
-      game.stock.length >= 10 && game.tableau.every((pile) => pile.length > 0),
-    [game.stock.length, game.tableau],
+    () => game.stock.length >= 10,
+    [game.stock.length],
   );
 
-  const won = useMemo(() => game.completedRuns === 8, [game.completedRuns]);
+  const completedRuns = useMemo(
+    () => game.foundations.filter((foundation) => foundation.length > 0).length,
+    [game.foundations],
+  );
+  const won = useMemo(() => completedRuns === 8, [completedRuns]);
 
   const zones: MapZone[] = useMemo(() => {
     const tableauZones: MapZone[] = game.tableau.map((pile, pileIndex) => ({
@@ -244,6 +284,20 @@ export default function SpiderSolitaire() {
       placeholder: { showCount: false, text: "Empty" },
     }));
 
+    const foundationZones: MapZone[] = game.foundations.map(
+      (pile, pileIndex) => ({
+        id: `foundation-${pileIndex}`,
+        name: "foundation",
+        pileIndex,
+        cards: pile,
+        col: 2 + pileIndex,
+        row: 0,
+        baseZIndex: 20 + pileIndex,
+        fan: { direction: "down", offset: 0.02, maxVisible: 3 },
+        // placeholder: {},
+      }),
+    );
+
     return [
       {
         id: "stock",
@@ -256,9 +310,10 @@ export default function SpiderSolitaire() {
         fan: { maxVisible: 3 },
         placeholder: { text: "Deal", infoPos: "below" },
       },
+      ...foundationZones,
       ...tableauZones,
     ];
-  }, [game.stock, game.tableau]);
+  }, [game.foundations, game.stock, game.tableau]);
 
   const cardMapper = (
     mappedCard: MappedCard,
@@ -307,6 +362,13 @@ export default function SpiderSolitaire() {
       };
     }
 
+    if (mappedCard.zoneName === "foundation") {
+      return {
+        isVisible: !isBeingDragged,
+        animDuration,
+      };
+    }
+
     return {
       isVisible: !isBeingDragged,
       animDuration,
@@ -336,6 +398,12 @@ export default function SpiderSolitaire() {
       };
     }
 
+    if (zone.name === "foundation") {
+      return {
+        isDisabled: true,
+      };
+    }
+
     return undefined;
   };
 
@@ -347,7 +415,7 @@ export default function SpiderSolitaire() {
     zoneMapper,
     cardSize: "small",
     fixedRows: 6,
-    visualizer: true,
+    // visualizer: true,
   });
 
   const stockTapRect = useMemo(() => {
@@ -474,7 +542,7 @@ export default function SpiderSolitaire() {
       return [];
     }
 
-    if (snapshot.difficulty === "difficult" && cards.length > 1) {
+    if (cards.length > 1) {
       const suit = cards[0].suit;
       if (!cards.every((card) => card.suit === suit)) {
         return [];
@@ -510,10 +578,6 @@ export default function SpiderSolitaire() {
         return;
       }
 
-      if (draft.tableau.some((pile) => pile.length === 0)) {
-        return;
-      }
-
       for (let pileIndex = 0; pileIndex < 10; pileIndex += 1) {
         const top = draft.stock[draft.stock.length - 1];
         if (!top) {
@@ -524,7 +588,7 @@ export default function SpiderSolitaire() {
         draft.tableau[pileIndex].push({ ...top, faceUp: true });
       }
 
-      draft.completedRuns += collectCompletedRuns(draft.tableau);
+      moveCompletedRunsToFoundations(draft.tableau, draft.foundations);
     });
 
     clearSelection();
@@ -567,7 +631,7 @@ export default function SpiderSolitaire() {
 
       draft.tableau[source.pileIndex] = revealLastIfNeeded(sourcePile);
       draft.tableau[destinationIndex] = revealLastIfNeeded(destinationPile);
-      draft.completedRuns += collectCompletedRuns(draft.tableau);
+      moveCompletedRunsToFoundations(draft.tableau, draft.foundations);
     });
 
     clearSelection();
@@ -684,7 +748,7 @@ export default function SpiderSolitaire() {
       setShowIntro={setShowIntro}
       ended={won}
       won={won}
-      score={game.completedRuns * 13}
+      score={completedRuns * 13}
       reset={() => {
         void reset();
       }}
@@ -695,19 +759,6 @@ export default function SpiderSolitaire() {
         won ? "All eight K-to-A suit runs are complete." : undefined
       }
     >
-      <View style={styles.toolbar}>
-        <Text size="sm" style={styles.toolbarText}>
-          Runs: {game.completedRuns}/8 | Deals left:{" "}
-          {Math.floor(game.stock.length / 10)}
-        </Text>
-        <Button
-          onPress={dealFromStock}
-          disabled={!canDealStock || !!dragGhost}
-          text="Deal"
-          size="xs"
-        />
-      </View>
-
       <View style={{ flex: 1, width: "100%", gap: 12 }}>
         <View
           ref={boardRef}
@@ -793,15 +844,3 @@ export default function SpiderSolitaire() {
     </GameWrapper>
   );
 }
-
-const styles = StyleSheet.create({
-  toolbar: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 8,
-  },
-  toolbarText: {
-    flex: 1,
-  },
-});

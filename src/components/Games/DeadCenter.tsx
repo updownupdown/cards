@@ -13,10 +13,7 @@ import { FontWeight } from "@/styles/styles";
 import { delay } from "@/utils/utils";
 import { useEffect, useMemo } from "react";
 import { View } from "react-native";
-import {
-  AnimatedCardMapping,
-  bufferedDefaultAnimDuration,
-} from "../Cards/AnimatedCard";
+import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   cardColor,
   createDeck,

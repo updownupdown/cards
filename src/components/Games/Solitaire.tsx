@@ -398,7 +398,7 @@ export default function Solitaire() {
     zoneMapper,
     cardSize: "small",
     fixedRows: 6,
-    visualizer: true,
+    // visualizer: true,
   });
 
   const stockTapRect = useMemo(() => {

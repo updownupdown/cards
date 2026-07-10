@@ -64,3 +64,23 @@ export function centeredOffset(containerSize: number, childSize: number) {
 
 export const delay = (ms: number = bufferedDefaultAnimDuration) =>
   new Promise((resolve) => setTimeout(resolve, ms));
+
+const LOCAL_DEV_HOSTNAMES = new Set(["localhost", "127.0.0.1", "::1"]);
+
+export function isLocalDevEnvironment() {
+  if (__DEV__) {
+    return true;
+  }
+
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  const hostname = window.location.hostname.toLowerCase();
+
+  return (
+    LOCAL_DEV_HOSTNAMES.has(hostname) ||
+    hostname.endsWith(".local") ||
+    hostname.endsWith(".localhost")
+  );
+}

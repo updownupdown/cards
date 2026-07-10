@@ -1,42 +1,18 @@
 import { useStateManager } from "@/hooks/useStateManager";
-import {
-  CardHitArea,
-  createRect,
-  DropHitArea,
-  pointInRect,
-  useDragDrop,
-} from "@/hooks/useDragDrop";
-import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { useNavigation } from "expo-router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { GestureResponderEvent } from "react-native";
-import { Animated, Pressable, StyleSheet, View } from "react-native";
+import { useEffect, useMemo } from "react";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
-import { Card } from "../Cards/Card";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
   createDeck,
+  flipAllToBack,
+  flipToFace,
   type PlayingCard,
   RANK_VALUE,
   shuffle,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-
-type TableauCard = PlayingCard & {
-  row: 0 | 1 | 2 | 3;
-  col: number;
-  removed: boolean;
-  blockers: number[];
-};
-
-type GameState = {
-  tableau: TableauCard[];
-  stock: PlayingCard[];
-  waste: PlayingCard[];
-};
-
-type MoveSource = { zone: "tableau"; index: number };
-type DropTarget = { zone: "waste" };
+import { delay } from "@/utils/utils";
 
 const ROW_LAYOUT: readonly (readonly number[])[] = [
   [1.5, 4.5, 7.5],
@@ -46,8 +22,42 @@ const ROW_LAYOUT: readonly (readonly number[])[] = [
 ] as const;
 
 const CARDS_PER_ROW = [3, 6, 9, 10] as const;
+
 const TABLEAU_ROW_BASE = 0.9;
 const TABLEAU_ROW_STEP = 0.43;
+
+const NUM_ROWS = 4;
+
+const CARD_LAYOUT_POS: { col: number; row: number }[] = [];
+const CARD_COL_ROWS: { col: number; row: number }[] = [];
+
+for (let row = 0; row < NUM_ROWS; row++) {
+  for (let col = 0; col < CARDS_PER_ROW[row]; col++) {
+    CARD_LAYOUT_POS.push({
+      col: ROW_LAYOUT[row][col],
+      row: TABLEAU_ROW_BASE + row * TABLEAU_ROW_STEP,
+    });
+    CARD_COL_ROWS.push({
+      col,
+      row,
+    });
+  }
+}
+
+const TABLEAU_CARD_COUNT = CARDS_PER_ROW.reduce((sum, count) => sum + count, 0);
+
+type TableauCard = PlayingCard & {
+  row: number;
+  col: number;
+  removed: boolean;
+  blockers: number[];
+};
+
+type GameState = {
+  tableau: TableauCard[];
+  draw: PlayingCard[];
+  waste: PlayingCard[];
+};
 
 function isAdjacentRank(a: PlayingCard, b: PlayingCard) {
   if (
@@ -60,12 +70,12 @@ function isAdjacentRank(a: PlayingCard, b: PlayingCard) {
   return Math.abs(RANK_VALUE[a.rank] - RANK_VALUE[b.rank]) === 1;
 }
 
-function tableauIndex(row: 0 | 1 | 2 | 3, col: number) {
+function tableauIndex(row: number, col: number) {
   const rowOffsets = [0, 3, 9, 18] as const;
   return rowOffsets[row] + col;
 }
 
-function blockersFor(row: 0 | 1 | 2 | 3, col: number) {
+function blockersFor(row: number, col: number) {
   if (row === 3) return [];
 
   if (row === 2) {
@@ -106,6 +116,8 @@ function canMoveToWaste(index: number, snapshot: GameState) {
   const card = snapshot.tableau[index];
   const wasteTop = snapshot.waste[snapshot.waste.length - 1];
 
+  // console.log(card, wasteTop);
+
   if (!card || card.removed || !card.faceUp || !wasteTop) {
     return false;
   }
@@ -126,45 +138,70 @@ function hasAvailableMoves(snapshot: GameState) {
 }
 
 function createInitialState(): GameState {
-  const deck = shuffle(createDeck({ faceUp: true }));
+  const waste = shuffle(createDeck());
   const tableau: TableauCard[] = [];
-
-  for (
-    let row = 0 as 0 | 1 | 2 | 3;
-    row <= 3;
-    row = (row + 1) as 0 | 1 | 2 | 3
-  ) {
-    for (let col = 0; col < CARDS_PER_ROW[row]; col += 1) {
-      const baseCard = deck.pop();
-      if (!baseCard) continue;
-
-      tableau.push({
-        ...baseCard,
-        row,
-        col,
-        removed: false,
-        faceUp: row === 3,
-        blockers: blockersFor(row, col),
-      });
-    }
-  }
-
-  const wasteSeed = deck.pop();
 
   return {
     tableau,
-    stock: deck,
-    waste: wasteSeed ? [{ ...wasteSeed, faceUp: true }] : [],
+    draw: [],
+    waste,
   };
 }
 
 const gameStateInitial = createInitialState();
 
+async function resetAndSetup(
+  setGame: (updater: (draft: GameState) => void) => void,
+) {
+  // Group all cards to discard pile, delay, then reset the game state
+  setGame((draft) => {
+    const allCards = flipAllToBack([
+      ...draft.tableau,
+      ...draft.draw,
+      ...draft.waste,
+    ]);
+
+    draft.tableau = [];
+    draft.draw = [];
+    draft.waste = allCards;
+  });
+
+  await delay();
+
+  setGame((draft) => {
+    draft.waste = shuffle(draft.waste);
+
+    for (let i = 0; i < TABLEAU_CARD_COUNT; i += 1) {
+      const card = draft.waste.pop();
+      if (!card) continue;
+
+      const isLastRow = i >= TABLEAU_CARD_COUNT - CARDS_PER_ROW[NUM_ROWS - 1];
+
+      draft.tableau.push({
+        ...card,
+        row: CARD_COL_ROWS[i].row,
+        col: CARD_COL_ROWS[i].col,
+        removed: false,
+        faceUp: isLastRow,
+        blockers: blockersFor(CARD_COL_ROWS[i].row, CARD_COL_ROWS[i].col),
+      });
+    }
+
+    draft.draw = shuffle(draft.waste);
+    draft.waste = [];
+
+    const firstWasteCard = draft.draw.pop();
+    if (firstWasteCard) {
+      draft.waste.push(flipToFace(firstWasteCard));
+    }
+  });
+}
+
 export default function TriPeaks() {
   const navigation = useNavigation();
-  const [hoverTarget, setHoverTarget] = useState<DropTarget | null>(null);
 
   const {
+    isSettingUp,
     isLoaded,
     showIntro,
     setShowIntro,
@@ -176,107 +213,49 @@ export default function TriPeaks() {
     saveUndoState,
   } = useStateManager<GameState>({
     gameStateInitial,
-    resetNonGameStates: () => {
-      clearDragGhost();
-      setHoverTarget(null);
-    },
     resetAndSetup: async () => {
-      setGame(createInitialState());
+      await resetAndSetup(setGame);
     },
-  });
-
-  const { width: windowWidth, height: windowHeight } = useViewportDimensions();
-
-  const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
-
-  const sameDropTarget = useCallback(
-    (a: DropTarget | null, b: DropTarget | null) => {
-      if (!a || !b) return a === b;
-      return a.zone === b.zone;
-    },
-    [],
-  );
-
-  const handleHoverTargetChange = useCallback(
-    (next: DropTarget | null) => {
-      setHoverTarget((prev) => (sameDropTarget(prev, next) ? prev : next));
-    },
-    [sameDropTarget],
-  );
-
-  function canDropOnTarget(
-    source: MoveSource,
-    target: DropTarget,
-    snapshot = game,
-  ) {
-    if (target.zone !== "waste") return false;
-    return canMoveToWaste(source.index, snapshot);
-  }
-
-  const {
-    dragGhost,
-    draggedCardIds,
-    justDroppedCardIds,
-    dragTranslate,
-    boardRef,
-    boardPageOffset,
-    clearDragGhost,
-    startDrag,
-    updateBoardOffset,
-    makeDragHandlers,
-  } = useDragDrop<MoveSource, DropTarget>({
-    findDropTarget: (pageX, pageY) => {
-      const hit = [...dropHitAreasRef.current]
-        .filter(({ rect }) => pointInRect(pageX, pageY, rect))
-        .sort((a, b) => b.priority - a.priority)[0];
-      return hit?.target ?? null;
-    },
-    canDropOnTarget,
-    sameTarget: sameDropTarget,
-    onSuccessfulDrop: (source) => {
-      moveTableauToWaste(source.index);
-    },
-    getDroppedCardIds: (source) => {
-      const card = game.tableau[source.index];
-      return card && !card.removed ? [card.id] : [];
-    },
-    getDropHitAreas: () => dropHitAreasRef.current,
-    getSourceRect,
-    onHoverTargetChange: handleHoverTargetChange,
   });
 
   const won = useMemo(
-    () => game.tableau.every((card) => card.removed),
-    [game.tableau],
+    () => !isSettingUp && game.tableau.every((card) => card.removed),
+    [game.tableau, isSettingUp],
   );
 
   const lost = useMemo(() => {
-    if (won) return false;
-    if (game.stock.length > 0) return false;
+    if (won || isSettingUp) return false;
+    if (game.draw.length > 0) return false;
     return !hasAvailableMoves(game);
-  }, [game, won]);
+  }, [game, won, isSettingUp]);
 
-  const ended = won || lost;
+  const ended = !isSettingUp && (won || lost);
 
   const zones: MapZone[] = useMemo(() => {
-    const tableauZones: MapZone[] = game.tableau.map((card, index) => ({
-      id: `tableau-${index}`,
-      name: "tableau",
-      pileIndex: index,
-      cards: card.removed ? [] : [card],
-      col: ROW_LAYOUT[card.row][card.col],
-      row: TABLEAU_ROW_BASE + card.row * TABLEAU_ROW_STEP,
-      baseZIndex: 20 + card.row,
-    }));
+    const tableauZones: MapZone[] = Array.from({
+      length: TABLEAU_CARD_COUNT,
+    }).map((_, index) => {
+      const card = game.tableau[index];
+
+      return {
+        id: `tableau-${index}`,
+        name: "tableau",
+        pileIndex: index,
+        cards: !card || card.removed ? [] : [card],
+        col: CARD_LAYOUT_POS[index].col,
+        row: CARD_LAYOUT_POS[index].row,
+        baseZIndex: 20 + CARD_COL_ROWS[index].row,
+      };
+    });
 
     return [
       {
-        id: "stock",
-        name: "stock",
-        cards: game.stock,
+        id: "draw",
+        name: "draw",
+        cards: game.draw,
         col: 3,
         row: 0,
-        baseZIndex: 60,
+        baseZIndex: 50,
         fan: { maxVisible: 3 },
         placeholder: { text: "Draw", infoPos: "below" },
       },
@@ -286,7 +265,7 @@ export default function TriPeaks() {
         cards: game.waste,
         col: 6,
         row: 0,
-        baseZIndex: 50,
+        baseZIndex: 100,
         fan: { maxVisible: 3 },
         placeholder: { text: "Waste", infoPos: "below" },
       },
@@ -297,173 +276,36 @@ export default function TriPeaks() {
   const cardMapper = (
     mappedCard: MappedCard,
   ): AnimatedCardMapping | undefined => {
-    const isBeingDragged = draggedCardIds?.has(mappedCard.card.id) ?? false;
-    const animDuration =
-      justDroppedCardIds.current?.has(mappedCard.card.id) === true
-        ? 0
-        : undefined;
-
-    if (mappedCard.zoneName === "stock" && mappedCard.topOfZone) {
+    if (mappedCard.zoneName === "draw") {
       return {
-        selectColor: "blue",
-        onPress: drawFromStock,
-        isDisabled: game.stock.length === 0 || ended,
-        isVisible: !isBeingDragged,
-        animDuration,
+        clickThroughCards: true,
       };
-    }
-
-    if (mappedCard.zoneName === "waste") {
-      const isWasteDropTarget = !!dragGhost && hoverTarget?.zone === "waste";
-      return {
-        selectColor: isWasteDropTarget ? "green" : "none",
-        isSelected: isWasteDropTarget,
-        isVisible: !isBeingDragged,
-        animDuration,
-      };
-    }
-
-    if (
+    } else if (
       mappedCard.zoneName === "tableau" &&
       mappedCard.pileIndex !== undefined
     ) {
-      const source = game.tableau[mappedCard.pileIndex];
-      if (!source) return undefined;
-
-      const exposed = isExposed(source, game.tableau);
-      const playable = canMoveToWaste(mappedCard.pileIndex, game);
       return {
-        selectColor: playable ? "blue" : "none",
-        isSelected: playable,
-        isDisabled: !source.faceUp || source.removed || !exposed || ended,
-        isVisible: !isBeingDragged,
-        animDuration,
+        onPress: () => moveTableauToWaste(mappedCard.pileIndex!),
       };
     }
-
-    return undefined;
   };
 
   const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
-    if (zone.name === "stock") {
+    if (zone.name === "draw") {
       return {
         onPress: drawFromStock,
-        isDisabled: game.stock.length === 0 || ended,
+        isDisabled: game.draw.length === 0 || ended,
       };
     }
-
-    if (zone.name === "waste") {
-      const isWasteDropTarget = !!dragGhost && hoverTarget?.zone === "waste";
-
-      return {
-        isDisabled: true,
-        isSelected: isWasteDropTarget,
-        selectColor: isWasteDropTarget ? "green" : "none",
-      };
-    }
-
-    return undefined;
   };
 
-  const { cardMap, getZoneBasePos, cardWidth, cardHeight } = useCardMap({
+  const { cardMap } = useCardMap({
     game,
     zones,
     cardMapper,
     zoneMapper,
     cardSize: "small",
-    visualizer: true,
-    // fixedCols: 10,
-    // fixedRows: 6,
   });
-
-  const stockTapRect = useMemo(() => {
-    const stockZone = zones.find((zone) => zone.name === "stock");
-    if (!stockZone) return null;
-    const pos = getZoneBasePos(stockZone);
-    return createRect(pos.x, pos.y, cardWidth, cardHeight);
-  }, [cardHeight, cardWidth, getZoneBasePos, zones]);
-
-  function getSourceRect(source: MoveSource) {
-    const zone = zones.find(
-      (entry) => entry.name === "tableau" && entry.pileIndex === source.index,
-    );
-    if (!zone) return null;
-
-    const base = getZoneBasePos(zone);
-    return createRect(base.x, base.y, cardWidth, cardHeight);
-  }
-
-  function startGhostDrag(source: MoveSource, _event: GestureResponderEvent) {
-    const card = game.tableau[source.index];
-    if (!card || card.removed || !card.faceUp || ended) return;
-    if (!isExposed(card, game.tableau)) return;
-
-    const rect = getSourceRect(source);
-    if (!rect) return;
-
-    startDrag(source, [card], { x: rect.x, y: rect.y });
-  }
-
-  const cardHitAreas = useMemo<CardHitArea<MoveSource>[]>(() => {
-    const areas: CardHitArea<MoveSource>[] = [];
-
-    game.tableau.forEach((card, index) => {
-      if (card.removed || !card.faceUp || ended) return;
-      if (!isExposed(card, game.tableau)) return;
-
-      const zone = zones.find(
-        (entry) => entry.name === "tableau" && entry.pileIndex === index,
-      );
-      if (!zone) return;
-
-      const pos = getZoneBasePos(zone);
-      areas.push({
-        source: { zone: "tableau", index },
-        rect: createRect(pos.x, pos.y, cardWidth, cardHeight),
-        priority: 10 + card.row,
-      });
-    });
-
-    return areas;
-  }, [cardHeight, cardWidth, ended, game.tableau, getZoneBasePos, zones]);
-
-  const dropHitAreas = useMemo<DropHitArea<DropTarget>[]>(() => {
-    const wasteZone = zones.find((zone) => zone.name === "waste");
-    if (!wasteZone || ended) return [];
-
-    const zoneRect = getZoneBasePos(wasteZone);
-
-    return [
-      {
-        target: { zone: "waste" },
-        rect: createRect(
-          zoneRect.x + boardPageOffset.x,
-          zoneRect.y + boardPageOffset.y,
-          cardWidth,
-          cardHeight,
-        ),
-        priority: 100,
-      },
-    ];
-  }, [
-    boardPageOffset.x,
-    boardPageOffset.y,
-    cardHeight,
-    cardWidth,
-    ended,
-    getZoneBasePos,
-    zones,
-  ]);
-
-  dropHitAreasRef.current = dropHitAreas;
-
-  useEffect(() => {
-    const frame = requestAnimationFrame(() => {
-      updateBoardOffset();
-    });
-
-    return () => cancelAnimationFrame(frame);
-  }, [windowWidth, windowHeight, zones.length, cardWidth, cardHeight]);
 
   useEffect(() => {
     navigation.setOptions({ gestureEnabled: false });
@@ -474,20 +316,16 @@ export default function TriPeaks() {
   }, [navigation]);
 
   function drawFromStock() {
-    if (dragGhost || ended) {
-      clearDragGhost();
-    }
-
-    if (game.stock.length === 0 || ended) {
+    if (game.draw.length === 0 || ended) {
       return;
     }
 
     saveUndoState(structuredClone(game));
     setGame((draft) => {
-      const drawn = draft.stock[draft.stock.length - 1];
+      const drawn = draft.draw[draft.draw.length - 1];
       if (!drawn) return;
 
-      draft.stock.pop();
+      draft.draw.pop();
       draft.waste.push({ ...drawn, faceUp: true });
     });
   }
@@ -498,6 +336,7 @@ export default function TriPeaks() {
     }
 
     saveUndoState(structuredClone(game));
+
     setGame((draft) => {
       const card = draft.tableau[index];
       if (!card || card.removed || !card.faceUp) return;
@@ -518,136 +357,19 @@ export default function TriPeaks() {
     });
   }
 
-  function onTableauPress(index: number) {
-    if (ended) return;
-    moveTableauToWaste(index);
-  }
-
-  function makeHandlers(source: MoveSource, onTap?: () => void) {
-    return makeDragHandlers(source, startGhostDrag, onTap);
-  }
-
-  const interactionTargets = useMemo(
-    () =>
-      cardHitAreas.map((hit) => {
-        const source = hit.source;
-        const rect = hit.rect;
-
-        return (
-          <View
-            key={`tableau-target-${source.index}`}
-            collapsable={false}
-            style={{
-              position: "absolute",
-              backgroundColor: "transparent",
-              left: rect.x,
-              top: rect.y,
-              width: rect.width,
-              height: rect.height,
-            }}
-            {...makeHandlers(source, () => onTableauPress(source.index))}
-          />
-        );
-      }),
-    [cardHitAreas],
-  );
-
-  const ghostLeft = dragGhost ? dragGhost.origin.x : 0;
-  const ghostTop = dragGhost ? dragGhost.origin.y : 0;
-  const ghostHasValidDrop = !!dragGhost && hoverTarget !== null;
-
   return (
     <GameWrapper
       showIntro={showIntro}
       setShowIntro={setShowIntro}
       ended={ended}
       won={won}
-      winLoseMessage={lost ? "No moves left." : undefined}
-      reset={() => {
-        void reset();
-      }}
+      // winLoseMessage={lost ? "No moves left." : undefined}
+      reset={reset}
       isLoaded={isLoaded}
       canUndo={canUndo}
       undo={undo}
     >
-      <View style={{ flex: 1, width: "100%", gap: 12 }}>
-        <View
-          ref={boardRef}
-          style={{
-            flex: 1,
-            width: "100%",
-            position: "relative",
-            touchAction: "none",
-            overscrollBehaviorX: "contain",
-          }}
-        >
-          {cardMap}
-
-          <View
-            style={{
-              ...StyleSheet.absoluteFill,
-              zIndex: 3000,
-              touchAction: "none",
-              overscrollBehaviorX: "contain",
-              pointerEvents: "box-none",
-            }}
-          >
-            {stockTapRect && (
-              <Pressable
-                style={{
-                  position: "absolute",
-                  backgroundColor: "transparent",
-                  left: stockTapRect.x,
-                  top: stockTapRect.y,
-                  width: stockTapRect.width,
-                  height: stockTapRect.height,
-                }}
-                onPress={drawFromStock}
-                disabled={game.stock.length === 0 || ended}
-              />
-            )}
-
-            {interactionTargets}
-          </View>
-
-          {dragGhost && (
-            <Animated.View
-              style={[
-                {
-                  pointerEvents: "none",
-                  position: "absolute",
-                  zIndex: 4000,
-                  left: ghostLeft,
-                  top: ghostTop,
-                  transform: dragTranslate.getTranslateTransform(),
-                },
-              ]}
-            >
-              {dragGhost.cards.map((card) => (
-                <View
-                  key={`ghost-${card.id}`}
-                  style={{
-                    position: "absolute",
-                    left: 0,
-                    top: 0,
-                    opacity: 1,
-                    width: cardWidth,
-                    height: cardHeight,
-                  }}
-                >
-                  <Card
-                    card={card}
-                    cardWidth={cardWidth}
-                    cardSize="small"
-                    selectColor={ghostHasValidDrop ? "green" : "none"}
-                    isSelected={ghostHasValidDrop}
-                  />
-                </View>
-              ))}
-            </Animated.View>
-          )}
-        </View>
-      </View>
+      {cardMap}
     </GameWrapper>
   );
 }

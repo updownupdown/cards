@@ -1,5 +1,6 @@
 import { Text } from "@/components/common/Text";
 import { Button } from "@/components/Button/Button";
+import { Icon } from "@/icons";
 import { usePwaInstallPrompt } from "@/hooks/usePwaInstallPrompt";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
@@ -23,25 +24,33 @@ export function AddToHomeScreenNotice({
     "idle" | "accepted" | "dismissed"
   >("idle");
 
-  const instructions = useMemo(() => {
-    if (isStandalone) {
-      return "This app is already installed on your device.";
-    }
-
+  const title = useMemo(() => {
     if (isIos) {
-      return "On iPhone or iPad, open this page in Safari, tap Share, then choose Add to Home Screen.";
+      return "Add Solo Suite to your Home Screen";
+    }
+    if (canPromptInstall) {
+      return "Install Solo Suite";
+    }
+    return "Add Solo Suite to your device";
+  }, [canPromptInstall, isIos]);
+
+  const instructions = useMemo(() => {
+    if (isIos) {
+      return "In Safari, tap the Share button, then choose “Add to Home Screen”.";
     }
 
     if (canPromptInstall) {
-      return "Install this app for faster launches and a full-screen experience.";
+      return "Install for faster launches, a full-screen experience, and offline play.";
     }
 
-    return "Open your browser menu and choose Install app or Add to Home screen.";
-  }, [canPromptInstall, isIos, isStandalone]);
+    return "Open your browser menu and choose “Install app” or “Add to Home screen”.";
+  }, [canPromptInstall, isIos]);
 
-  if (!isWeb) {
+  if (!isWeb || isStandalone) {
     return null;
   }
+
+  const hideInstallButton = installState === "accepted";
 
   return (
     <View
@@ -50,67 +59,79 @@ export function AddToHomeScreenNotice({
         borderRadius: spacing(14),
         backgroundColor: rgba(Colors.K950, 0.5),
         padding: spacing(24),
-        gap: spacing(10),
+        gap: spacing(12),
         boxShadow: `0px 4px 8px ${rgba(Colors.K900, 0.3)}`,
         marginBottom: spacing(40),
+        borderWidth: 1,
+        borderColor: rgba(Colors.buttonBlue, 0.25),
       }}
     >
-      <Text weight={500} size="md" color={Colors.K100}>
-        Add this app to your home screen
-      </Text>
+      <View
+        style={[
+          flexStyles.rowCentered,
+          { justifyContent: "flex-start", gap: spacing(10) },
+        ]}
+      >
+        <Icon name="home" size={spacing(20)} color={Colors.buttonBlue} />
+        <Text weight={600} size="md" color={Colors.K100}>
+          {title}
+        </Text>
+      </View>
 
       <Text size="sm" weight={300} color={Colors.K300}>
         {instructions}
       </Text>
 
-      {installState === "accepted" && !isStandalone && (
+      {installState === "accepted" && (
         <Text size="xs" color={Colors.accentGreen}>
-          Install was accepted. Your browser may complete setup in the
-          background.
+          Nice! Your browser is finishing the install in the background.
         </Text>
       )}
 
       {installState === "dismissed" && (
         <Text size="xs" color={Colors.K400}>
-          Install prompt dismissed. You can still install later from your
-          browser menu.
+          No problem — you can install any time from your browser menu.
         </Text>
       )}
 
-      <View
-        style={[
-          flexStyles.rowCentered,
-          {
-            justifyContent: "flex-start",
-            gap: spacing(16),
-          },
-        ]}
-      >
-        {canPromptInstall && (
-          <Button
-            text="Install now"
-            uppercase={false}
-            textOnly
-            onPress={async () => {
-              const outcome = await promptInstall();
-              if (!outcome) {
-                return;
-              }
-              setInstallState(outcome);
-            }}
-          />
-        )}
+      {(canPromptInstall || dismissible) && (
+        <View
+          style={[
+            flexStyles.rowCentered,
+            {
+              justifyContent: "flex-start",
+              gap: spacing(16),
+              marginTop: spacing(4),
+            },
+          ]}
+        >
+          {canPromptInstall && !hideInstallButton && (
+            <Button
+              text="Install now"
+              theme="blue"
+              iconName="home"
+              uppercase={false}
+              onPress={async () => {
+                const outcome = await promptInstall();
+                if (!outcome) {
+                  return;
+                }
+                setInstallState(outcome);
+              }}
+            />
+          )}
 
-        {dismissible && (
-          <Button
-            size="xs"
-            text="Dismiss"
-            textOnly
-            onPress={() => onDismiss?.()}
-            style={{ marginTop: spacing(8) }}
-          />
-        )}
-      </View>
+          {dismissible && (
+            <Button
+              size="sm"
+              text="Not now"
+              textOnly
+              uppercase={false}
+              onPress={() => onDismiss?.()}
+            />
+          )}
+        </View>
+      )}
     </View>
   );
 }

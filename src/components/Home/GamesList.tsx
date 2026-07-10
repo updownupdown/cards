@@ -6,12 +6,8 @@ import {
   loadRecentlyPlayedGames,
   toggleFavoriteGame,
 } from "@/data/game-menu";
-import {
-  GameMenuInfo,
-  GAMES_DATA,
-  GameTag,
-  isGameEnabled,
-} from "@/data/games-data";
+import { GameMenuInfo, GameTag, isGameEnabled } from "@/data/games-data";
+import { GAMES_DATA } from "@/data/games";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
@@ -254,7 +250,7 @@ export const GamesList = ({
       return recentPaths
         .map((path) => [path, GAMES_DATA[path]] as [string, GameMenuInfo])
         .filter(([_, game]) => isGameEnabled(game))
-        .slice(0, 3);
+        .slice(0, 8);
     }
 
     if (section.key === "featured") {

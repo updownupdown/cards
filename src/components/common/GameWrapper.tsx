@@ -17,8 +17,9 @@ import {
 } from "@/styles/styles";
 import { router, usePathname } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { View } from "react-native";
+import { Image, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { GAME_BACKGROUND_ASSETS } from "@/data/game-backgrounds";
 import { Button } from "../Button/Button";
 import GameModal from "../Modals/GameModal";
 import { GameIntro } from "./GameIntro";
@@ -111,6 +112,9 @@ export const GameWrapper = ({
   const backgroundColor = gameInfo.cardColorBg;
   const overlayColor = lightenHexColor(backgroundColor, 0.2);
   const headerHeight = ui.gameHeaderHeight + insets.top;
+  const backgroundSource = gameInfo.background
+    ? GAME_BACKGROUND_ASSETS[gameInfo.background]
+    : undefined;
 
   return (
     <>
@@ -131,7 +135,9 @@ export const GameWrapper = ({
         handleUndo={handleUndo}
       />
 
-      {showMenu && <GameModal onClose={() => setShowMenu(false)} />}
+      {showMenu && (
+        <GameModal onClose={() => setShowMenu(false)} onReloadGame={reset} />
+      )}
 
       <View
         style={{
@@ -140,6 +146,21 @@ export const GameWrapper = ({
           backgroundColor,
         }}
       >
+        {backgroundSource && (
+          <Image
+            source={backgroundSource}
+            resizeMode="repeat"
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              opacity: 0.5,
+            }}
+          />
+        )}
+
         <View
           style={{
             position: "absolute",
@@ -194,7 +215,7 @@ export const GameWrapper = ({
               {
                 flex: 1,
                 overflow: "hidden",
-                textTransform: "uppercase",
+                textAlign: "center",
               },
             ]}
           >

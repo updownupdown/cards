@@ -106,12 +106,6 @@ export function useModalStyles() {
           fontFamily: FontWeight[300],
           color: Colors.K200,
         },
-        gameSettings: {
-          ...flexStyles.colCentered,
-          ...flexStyles.fullWidth,
-          alignItems: "flex-start",
-          gap: spacing(12),
-        },
       }),
     [ui, spacing, font],
   );

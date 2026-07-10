@@ -40,8 +40,50 @@ export default function Root({ children }: { children: ReactNode }) {
 
 const swBootstrap = `
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  window.addEventListener('load', function () {
+    var hadController = !!navigator.serviceWorker.controller;
+    var refreshing = false;
+
+    navigator.serviceWorker.addEventListener('controllerchange', function () {
+      // Only reload for genuine updates, not the first-ever install.
+      if (refreshing || !hadController) return;
+      refreshing = true;
+      window.location.reload();
+    });
+
+    navigator.serviceWorker
+      .register('./sw.js', { updateViaCache: 'none' })
+      .then(function (registration) {
+        var promoteWaiting = function () {
+          if (registration.waiting) {
+            registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+          }
+        };
+
+        promoteWaiting();
+
+        registration.addEventListener('updatefound', function () {
+          var installing = registration.installing;
+          if (!installing) return;
+          installing.addEventListener('statechange', function () {
+            if (installing.state === 'installed' && navigator.serviceWorker.controller) {
+              promoteWaiting();
+            }
+          });
+        });
+
+        var checkForUpdates = function () {
+          registration.update().catch(function () {});
+        };
+
+        // Poll periodically and whenever the app regains focus so installed
+        // users automatically receive new content.
+        setInterval(checkForUpdates, 60 * 60 * 1000);
+        document.addEventListener('visibilitychange', function () {
+          if (document.visibilityState === 'visible') checkForUpdates();
+        });
+      })
+      .catch(function () {});
   });
 }
 `;

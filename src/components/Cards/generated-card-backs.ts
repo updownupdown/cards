@@ -1,5 +1,5 @@
 // AUTO-GENERATED FILE. DO NOT EDIT.
-// Run: npm run card-backs:generate
+// Run: npm run assets:generate
 
 export type CardBackName =
   | "Accordion.png"
@@ -7,6 +7,7 @@ export type CardBackName =
   | "Area52.png"
   | "BobaTeaShop.png"
   | "Calculation.png"
+  | "CardCapture.png"
   | "Clock.png"
   | "DeadCenter.png"
   | "DefaultCardBack.png"
@@ -20,9 +21,7 @@ export type CardBackName =
   | "Scoundrel.png"
   | "Skyway.png"
   | "Syndicate.png"
-  | "CardCapture.png"
   | "TheBogey.png"
-  | "Syndicate.png"
   | "TheEmissary.png";
 
 export const defaultCardBackName = "DefaultCardBack.png";
@@ -33,6 +32,7 @@ export const cardBackAssets: Record<string, any> = {
   "Area52.png": require("@/assets/card-backs/Area52.png"),
   "BobaTeaShop.png": require("@/assets/card-backs/BobaTeaShop.png"),
   "Calculation.png": require("@/assets/card-backs/Calculation.png"),
+  "CardCapture.png": require("@/assets/card-backs/CardCapture.png"),
   "Clock.png": require("@/assets/card-backs/Clock.png"),
   "DeadCenter.png": require("@/assets/card-backs/DeadCenter.png"),
   "DefaultCardBack.png": require("@/assets/card-backs/DefaultCardBack.png"),
@@ -46,7 +46,6 @@ export const cardBackAssets: Record<string, any> = {
   "Scoundrel.png": require("@/assets/card-backs/Scoundrel.png"),
   "Skyway.png": require("@/assets/card-backs/Skyway.png"),
   "Syndicate.png": require("@/assets/card-backs/Syndicate.png"),
-  "TheEmissary.png": require("@/assets/card-backs/TheEmissary.png"),
   "TheBogey.png": require("@/assets/card-backs/TheBogey.png"),
-  "CardCapture.png": require("@/assets/card-backs/CardCapture.png"),
+  "TheEmissary.png": require("@/assets/card-backs/TheEmissary.png"),
 };

@@ -52,23 +52,11 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         ],
       },
     ],
-    "/spider-solitaire": [
-      {
-        key: "difficulty",
-        label: "Difficulty",
-        type: "string",
-        applyBehavior: "next-game",
-        options: [
-          { label: "Easy", value: "easy" },
-          { label: "Difficult", value: "difficult" },
-        ],
-      },
-    ],
   };
 
 const APPLY_BEHAVIOR_TEXT: Record<GameSpecificSettingApplyBehavior, string> = {
-  immediate: "Setting changes apply immediately.",
-  "next-game": "Setting changes apply to the next game.",
+  immediate: "Applies immediately",
+  "next-game": "Applies next time the game is loaded",
 };
 
 export function getSettingApplyBehaviorText(
