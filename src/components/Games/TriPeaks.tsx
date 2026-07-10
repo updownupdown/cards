@@ -49,12 +49,11 @@ const TABLEAU_CARD_COUNT = CARDS_PER_ROW.reduce((sum, count) => sum + count, 0);
 type TableauCard = PlayingCard & {
   row: number;
   col: number;
-  removed: boolean;
   blockers: number[];
 };
 
 type GameState = {
-  tableau: TableauCard[];
+  tableau: (TableauCard | null)[];
   draw: PlayingCard[];
   waste: PlayingCard[];
 };
@@ -97,15 +96,13 @@ function blockersFor(row: number, col: number) {
   return [tableauIndex(1, 4), tableauIndex(1, 5)];
 }
 
-function isExposed(card: TableauCard, tableau: TableauCard[]) {
-  if (card.removed) return false;
-
-  return card.blockers.every((index) => tableau[index]?.removed);
+function isExposed(card: TableauCard, tableau: (TableauCard | null)[]) {
+  return card.blockers.every((index) => tableau[index] === null);
 }
 
-function revealExposedCards(tableau: TableauCard[]) {
+function revealExposedCards(tableau: (TableauCard | null)[]) {
   tableau.forEach((card, index) => {
-    if (card.removed || card.faceUp) return;
+    if (!card || card.faceUp) return;
     if (!isExposed(card, tableau)) return;
 
     tableau[index] = { ...card, faceUp: true };
@@ -116,7 +113,7 @@ function canMoveToWaste(index: number, snapshot: GameState) {
   const card = snapshot.tableau[index];
   const wasteTop = snapshot.waste[snapshot.waste.length - 1];
 
-  if (!card || card.removed || !card.faceUp || !wasteTop) {
+  if (!card || !card.faceUp || !wasteTop) {
     return false;
   }
 
@@ -129,7 +126,7 @@ function canMoveToWaste(index: number, snapshot: GameState) {
 
 function hasAvailableMoves(snapshot: GameState) {
   return snapshot.tableau.some((card, index) => {
-    if (card.removed || !card.faceUp) return false;
+    if (!card || !card.faceUp) return false;
     if (!isExposed(card, snapshot.tableau)) return false;
     return canMoveToWaste(index, snapshot);
   });
@@ -154,7 +151,7 @@ async function resetAndSetup(
   // Group all cards to discard pile, delay, then reset the game state
   setGame((draft) => {
     const allCards = flipAllToBack([
-      ...draft.tableau,
+      ...draft.tableau.filter((card): card is TableauCard => card !== null),
       ...draft.draw,
       ...draft.waste,
     ]);
@@ -180,7 +177,6 @@ async function resetAndSetup(
         ...card,
         row: CARD_COL_ROWS[i].row,
         col: CARD_COL_ROWS[i].col,
-        removed: false,
         faceUp: isLastRow,
         blockers: blockersFor(CARD_COL_ROWS[i].row, CARD_COL_ROWS[i].col),
       });
@@ -222,7 +218,7 @@ export default function TriPeaks() {
   });
 
   const won = useMemo(
-    () => !isSettingUp && game.tableau.every((card) => card.removed),
+    () => !isSettingUp && game.tableau.every((card) => card === null),
     [game.tableau, isSettingUp],
   );
 
@@ -244,7 +240,7 @@ export default function TriPeaks() {
         id: `tableau-${index}`,
         name: "tableau",
         pileIndex: index,
-        cards: !card || card.removed ? [] : [card],
+        cards: card ? [card] : [],
         col: CARD_LAYOUT_POS[index].col,
         row: CARD_LAYOUT_POS[index].row,
         baseZIndex: 20 + CARD_COL_ROWS[index].row,
@@ -343,13 +339,13 @@ export default function TriPeaks() {
 
     setGame((draft) => {
       const card = draft.tableau[index];
-      if (!card || card.removed || !card.faceUp) return;
+      if (!card || !card.faceUp) return;
       if (!isExposed(card, draft.tableau)) return;
 
       const top = draft.waste[draft.waste.length - 1];
       if (!top || !isAdjacentRank(card, top)) return;
 
-      draft.tableau[index] = { ...card, removed: true };
+      draft.tableau[index] = null;
       draft.waste.push({
         id: card.id,
         suit: card.suit,
