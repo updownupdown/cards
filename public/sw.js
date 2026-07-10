@@ -8,8 +8,10 @@ const APP_SHELL = [
   "./apple-touch-icon.png",
   "./icon-192.png",
   "./icon-512.png",
+  "./icon-1024.png",
   "./icon-192-maskable.png",
   "./icon-512-maskable.png",
+  "./icon-1024-maskable.png",
 ];
 
 self.addEventListener("install", (event) => {
