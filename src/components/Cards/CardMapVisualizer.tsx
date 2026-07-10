@@ -5,6 +5,8 @@ import { MapZone } from "./CardMap";
 type Props = {
   zones: MapZone[];
   getZoneStyles: (zone: MapZone) => ViewStyle;
+  gridStartX: number;
+  gridStartY: number;
   startX: number;
   startY: number;
   gridWidth: number;
@@ -16,6 +18,8 @@ type Props = {
 export const CardMapVisualizer = ({
   zones,
   getZoneStyles,
+  gridStartX,
+  gridStartY,
   startX,
   startY,
   gridWidth,
@@ -64,12 +68,11 @@ export const CardMapVisualizer = ({
         style={[
           zoneStyle,
           {
-            left: "50%",
-            top: "50%",
+            left: gridStartX,
+            top: gridStartY,
             width: gridWidth,
             height: gridHeight,
             borderColor: rgba(Colors.accentBlue, 0.8),
-            transform: [{ translateX: "-50%" }, { translateY: "-50%" }],
           },
         ]}
       />

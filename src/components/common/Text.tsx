@@ -1,6 +1,6 @@
 import { HexColor } from "@/data/games-data";
 import { Colors, FontWeight as FontFamilies } from "@/styles/styles";
-import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import { useResponsiveUiLayout } from "@/hooks/useResponsiveLayout";
 import { forwardRef, useMemo } from "react";
 import { Text as RNText } from "react-native";
 import type { TextProps as RNTextProps } from "react-native";
@@ -32,8 +32,8 @@ export const Typography = {
 export type TextWeight = keyof typeof Typography.fontFamily;
 export type TextSize = keyof typeof Typography.size;
 
-export const getScaledTextSize = (size: TextSize, scale: number) =>
-  Typography.size[size] * scale;
+export const getScaledTextSize = (size: TextSize, textScale: number) =>
+  Typography.size[size] * textScale;
 
 export const setOpacity = (hex: string, alpha: number) =>
   `${hex}${Math.floor(alpha * 255)
@@ -62,11 +62,11 @@ export const Text = forwardRef<React.ElementRef<typeof RNText>, TextProps>(
       color = Colors.K200,
       ...otherProps
     } = props;
-    const responsiveScale = useResponsiveScale();
+    const ui = useResponsiveUiLayout();
 
     const fontSize = useMemo(() => {
-      return getScaledTextSize(size, responsiveScale);
-    }, [responsiveScale, size]);
+      return getScaledTextSize(size, ui.textScale);
+    }, [size, ui.textScale]);
 
     const textColor = useMemo(() => {
       if (dimRate)

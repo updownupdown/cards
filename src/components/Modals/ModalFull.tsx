@@ -2,7 +2,7 @@ import { Text } from "@/components/common/Text";
 import { clearLastGameSession } from "@/data/game-menu";
 import { flexStyles } from "@/styles/flexStyles";
 import { menuStyles } from "@/styles/menuStyles";
-import { modalStyles } from "@/styles/modalStyles";
+import { useModalStyles } from "@/styles/modalStyles";
 import { Colors, HeaderButtonSize } from "@/styles/styles";
 import { router } from "expo-router";
 import React from "react";
@@ -22,6 +22,8 @@ export default function ModalFull({
   title,
   onClose,
 }: Props) {
+  const modalStyles = useModalStyles();
+
   return (
     <>
       <Modal visible transparent animationType="fade" onRequestClose={onClose}>

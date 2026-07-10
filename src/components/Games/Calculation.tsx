@@ -25,7 +25,7 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
-import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 type GameState = {
   draw: PlayingCard[];
@@ -106,7 +106,7 @@ function anyFoundationPlayable(
 // ================ Game Component ========== //
 export default function Calculation() {
   const { zoneBg } = useGameZoneBackground();
-  const responsiveScale = useResponsiveScale();
+  const { spacing } = useResponsiveMetrics();
 
   const {
     isLoaded,
@@ -444,8 +444,8 @@ export default function Calculation() {
             {
               backgroundColor: zoneBg,
               height: cardHeight / 2,
-              padding: 10 * responsiveScale,
-              gap: 2 * responsiveScale,
+              padding: spacing(10),
+              gap: spacing(2),
               marginTop: cardHeight,
               zIndex: 100,
               borderBottomLeftRadius: cardDims.ratioRadius * cardWidth,

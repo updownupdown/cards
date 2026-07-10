@@ -1,71 +1,66 @@
 import { useMemo } from "react";
-import { MaxContentWidth, TabletBreakpoint } from "@/styles/styles";
+import {
+  HeaderHeight,
+  MaxContentWidth,
+  TabletBreakpoint,
+} from "@/styles/styles";
 import { useViewportDimensions } from "./useViewportDimensions";
 
-type ResponsiveScaleOptions = {
-  tabletBreakpoint?: number;
-  phoneScale?: number;
-  tabletScale?: number;
+const TABLET_SCALE = 1.25;
+
+export type ResponsiveTier = "phone" | "tablet";
+
+export type ResponsiveUiLayout = {
+  tier: ResponsiveTier;
+  isTablet: boolean;
+  scale: number;
+  textScale: number;
+  /** Shared max content width (grows with tablet scale). */
+  contentMaxWidth: number;
+  /** Game header height; kept as a token so CardMap and GameWrapper stay in sync. */
+  gameHeaderHeight: number;
 };
 
-const DEFAULT_PHONE_SCALE = 1;
-const DEFAULT_TABLET_SCALE = 1.3;
-
-export function getResponsiveScale(
-  width: number,
-  {
-    tabletBreakpoint = TabletBreakpoint,
-    phoneScale = DEFAULT_PHONE_SCALE,
-    tabletScale = DEFAULT_TABLET_SCALE,
-  }: ResponsiveScaleOptions = {},
-) {
-  return width > tabletBreakpoint ? tabletScale : phoneScale;
+function getResponsiveTier(width: number): ResponsiveTier {
+  return width > TabletBreakpoint ? "tablet" : "phone";
 }
 
-export function useResponsiveScale(
-  widthOverride?: number,
-  options: ResponsiveScaleOptions = {},
-) {
+export function getResponsiveUiLayout(width: number): ResponsiveUiLayout {
+  const tier = getResponsiveTier(width);
+  const isTablet = tier === "tablet";
+  // On phone the scale is 1; on tablet everything grows by TABLET_SCALE.
+  const scale = isTablet ? TABLET_SCALE : 1;
+  // Keep text growth gentler than spacing/card surfaces for readability.
+  const textScale = 1 + (scale - 1) * 0.75;
+
+  return {
+    tier,
+    isTablet,
+    scale,
+    textScale,
+    contentMaxWidth: Math.round(MaxContentWidth * scale * (isTablet ? 1.4 : 1)),
+    gameHeaderHeight: Math.round(HeaderHeight * scale),
+  };
+}
+
+export function useResponsiveUiLayout(widthOverride?: number) {
   const { width } = useViewportDimensions();
   const resolvedWidth = widthOverride ?? width;
 
-  return useMemo(
-    () => getResponsiveScale(resolvedWidth, options),
-    [
-      options.phoneScale,
-      options.tabletBreakpoint,
-      options.tabletScale,
-      resolvedWidth,
-    ],
-  );
+  return useMemo(() => getResponsiveUiLayout(resolvedWidth), [resolvedWidth]);
 }
 
-export function useResponsiveScaleFromWidth(
-  width: number,
-  options: ResponsiveScaleOptions = {},
-) {
-  return useMemo(
-    () => getResponsiveScale(width, options),
-    [options.phoneScale, options.tabletBreakpoint, options.tabletScale, width],
-  );
+export function useResponsiveUiLayoutFromWidth(width: number) {
+  return useMemo(() => getResponsiveUiLayout(width), [width]);
 }
 
-export function getConstrainedContentWidth(
+/**
+ * UI width caps chrome/content (modals, intro, previews) at a fixed max so
+ * text-heavy surfaces stay readable rather than stretching on wide screens.
+ */
+export function getConstrainedUiWidth(
   width: number,
-  responsiveScale: number,
   maxWidth = MaxContentWidth,
 ) {
-  return Math.min(width, maxWidth * responsiveScale);
-}
-
-export function useResponsiveValue<T>(
-  phoneValue: T,
-  tabletValue: T,
-  widthOverride?: number,
-  options: ResponsiveScaleOptions = {},
-) {
-  const scale = useResponsiveScale(widthOverride, options);
-  return scale > (options.phoneScale ?? DEFAULT_PHONE_SCALE)
-    ? tabletValue
-    : phoneValue;
+  return Math.min(width, maxWidth);
 }

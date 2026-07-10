@@ -6,12 +6,12 @@ import {
 } from "@/components/Cards/card-utils";
 import { Text } from "@/components/common/Text";
 import {
-  getConstrainedContentWidth,
-  useResponsiveScaleFromWidth,
+  getConstrainedUiWidth,
+  useResponsiveUiLayoutFromWidth,
 } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { flexStyles } from "@/styles/flexStyles";
-import { modalStyles } from "@/styles/modalStyles";
+import { useModalStyles } from "@/styles/modalStyles";
 import { Colors } from "@/styles/styles";
 import { ScrollView, View } from "react-native";
 import { Card } from "../Cards/Card";
@@ -37,10 +37,12 @@ export function DeckPreviewModal({
   sortCards = false,
 }: Props) {
   const { width: screenWidthActual } = useViewportDimensions();
-  const responsiveScale = useResponsiveScaleFromWidth(screenWidthActual);
-  const containerWidth = getConstrainedContentWidth(
+  const ui = useResponsiveUiLayoutFromWidth(screenWidthActual);
+  const spacing = (value: number) => value * ui.scale;
+  const modalStyles = useModalStyles();
+  const containerWidth = getConstrainedUiWidth(
     screenWidthActual,
-    responsiveScale,
+    ui.contentMaxWidth,
   );
 
   if (!visible) return null;
@@ -66,8 +68,8 @@ export function DeckPreviewModal({
           flexStyles.fullWidth,
           {
             justifyContent: "flex-start",
-            paddingTop: 20 * responsiveScale,
-            gap: 30 * responsiveScale,
+            paddingTop: spacing(30),
+            gap: spacing(30),
           },
         ]}
         showsVerticalScrollIndicator={false}
@@ -103,7 +105,7 @@ export function DeckPreviewModal({
               rowGap: "1.5%",
               flexWrap: "wrap",
               alignSelf: "stretch",
-              paddingBottom: 60 * responsiveScale,
+              paddingBottom: spacing(40),
             },
           ]}
         >

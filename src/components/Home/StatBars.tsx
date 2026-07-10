@@ -1,5 +1,5 @@
 import { GameStats, HexColor } from "@/data/games-data";
-import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Colors, rgba } from "@/styles/styles";
 import { View } from "react-native";
 import { Text } from "../common/Text";
@@ -11,13 +11,13 @@ export const StatBars = ({
   stats: GameStats;
   gameColor: HexColor;
 }) => {
-  const responsiveScale = useResponsiveScale();
+  const { spacing } = useResponsiveMetrics();
 
   return (
     <View
       style={{
-        gap: Math.round(24 * responsiveScale),
-        paddingTop: Math.round(6 * responsiveScale),
+        gap: Math.round(spacing(24)),
+        paddingTop: Math.round(spacing(6)),
         flexDirection: "row",
       }}
     >
@@ -27,7 +27,7 @@ export const StatBars = ({
           label={key}
           value={value}
           fillColor={gameColor}
-          responsiveScale={responsiveScale}
+          statTrackHeight={Math.round(spacing(8))}
         />
       ))}
     </View>
@@ -38,15 +38,13 @@ export const StatBar = ({
   label,
   value,
   fillColor,
-  responsiveScale,
+  statTrackHeight,
 }: {
   label: string;
   value: number;
   fillColor: string;
-  responsiveScale: number;
+  statTrackHeight: number;
 }) => {
-  const statTrackHeight = Math.round(8 * responsiveScale);
-
   return (
     <View
       style={{

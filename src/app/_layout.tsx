@@ -38,7 +38,15 @@ export default function Layout() {
     updateMeta("msapplication-navbutton-color", cardBg);
   }, [cardBg]);
 
-  if (!fontsLoaded) {
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    const html = document.documentElement;
+    html.classList.toggle("fonts-loading", !fontsLoaded);
+    html.classList.toggle("fonts-ready", fontsLoaded);
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded && typeof document === "undefined") {
     return null;
   }
 

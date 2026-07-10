@@ -1,11 +1,8 @@
 import { cardDims, PlayingCard } from "@/components/Cards/card-utils";
 import { GAMES_DATA } from "@/data/games-data";
-import {
-  getConstrainedContentWidth,
-  useResponsiveScaleFromWidth,
-} from "@/hooks/useResponsiveLayout";
+import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
-import { HeaderHeight, MaxContentHeight } from "@/styles/styles";
+import { MaxContentHeight } from "@/styles/styles";
 import { roundToPixel } from "@/utils/utils";
 import { usePathname } from "expo-router";
 import { useCallback, useMemo } from "react";
@@ -113,7 +110,8 @@ export function useCardMap({
 
   const { width: screenWidthActual, height: screenHeightActual } =
     useViewportDimensions();
-  const responsiveScale = useResponsiveScaleFromWidth(screenWidthActual);
+  const ui = useResponsiveUiLayoutFromWidth(screenWidthActual);
+  const responsiveScale = ui.scale;
 
   // Calculate the end column (col + height) for each zone
   // and find the maximum value among them.
@@ -136,6 +134,8 @@ export function useCardMap({
     cardWidth,
     cardHeight,
     gridGap,
+    gridStartX,
+    gridStartY,
     startX,
     startY,
     gridWidth,
@@ -143,14 +143,10 @@ export function useCardMap({
     gridHeight,
     gridHeightPadded,
   } = useMemo(() => {
-    const headerHeight = roundToPixel(
-      Math.round(HeaderHeight * responsiveScale) + insets.top,
-    );
+    const headerHeight = roundToPixel(ui.gameHeaderHeight + insets.top);
     const screenBoardHeight = Math.max(screenHeightActual - headerHeight, 0);
 
-    const containerWidth = roundToPixel(
-      getConstrainedContentWidth(screenWidthActual, responsiveScale),
-    );
+    const containerWidth = screenWidthActual;
     const containerHeight = roundToPixel(
       Math.min(
         screenBoardHeight,
@@ -158,7 +154,6 @@ export function useCardMap({
       ),
     );
 
-    const widthMargin = roundToPixel((screenWidthActual - containerWidth) / 2);
     const heightMargin = roundToPixel(
       (screenBoardHeight - containerHeight) / 2,
     );
@@ -198,17 +193,21 @@ export function useCardMap({
     const gridWidthPadded = roundToPixel(gridWidth - paddingX);
     const gridHeightPadded = roundToPixel(gridHeight - paddingY);
 
-    const offsetX =
-      widthMargin + (containerWidth - gridWidth) / 2 + paddingLeft * cardWidth;
+    const offsetX = (containerWidth - gridWidth) / 2 + paddingLeft * cardWidth;
     const offsetY =
       heightMargin +
       (containerHeight - gridHeight) / 2 +
       paddingTop * cardHeight;
 
+    const gridStartX = (containerWidth - gridWidth) / 2;
+    const gridStartY = heightMargin + (containerHeight - gridHeight) / 2;
+
     return {
       cardWidth,
       cardHeight,
       gridGap: roundToPixel(gap * cardWidth),
+      gridStartX: roundToPixel(gridStartX),
+      gridStartY: roundToPixel(gridStartY),
       startX: roundToPixel(offsetX),
       startY: roundToPixel(offsetY),
       gridWidth,
@@ -228,6 +227,7 @@ export function useCardMap({
     paddingRight,
     paddingTop,
     responsiveScale,
+    ui.gameHeaderHeight,
     screenHeightActual,
     screenWidthActual,
   ]);
@@ -469,6 +469,8 @@ export function useCardMap({
         <CardMapVisualizer
           zones={zones}
           getZoneStyles={getZoneStyles}
+          gridStartX={gridStartX}
+          gridStartY={gridStartY}
           startX={startX}
           startY={startY}
           gridWidth={gridWidth}
@@ -481,6 +483,8 @@ export function useCardMap({
       getZoneStyles,
       gridHeight,
       gridHeightPadded,
+      gridStartX,
+      gridStartY,
       gridWidth,
       gridWidthPadded,
       startX,

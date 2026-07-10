@@ -2,7 +2,7 @@ import { Text, Typography } from "@/components/common/Text";
 import type { TextSize } from "@/components/common/Text";
 import { Icon, IconName } from "@/icons";
 import { Colors, FontWeight, rgba } from "@/styles/styles";
-import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import { useResponsiveUiLayout } from "@/hooks/useResponsiveLayout";
 import { Platform, Pressable, TextStyle, ViewStyle } from "react-native";
 import { textStyles } from "@/styles/textStyles";
 import { roundToPixel } from "@/utils/utils";
@@ -71,7 +71,9 @@ export const Button = ({
   taller = false,
   preventWebLongPressMenu = false,
 }: Props) => {
-  const scale = useResponsiveScale();
+  const ui = useResponsiveUiLayout();
+  const uiScale = ui.scale;
+  const textScale = ui.textScale;
 
   const webContextMenuProps =
     Platform.OS === "web" && preventWebLongPressMenu
@@ -95,14 +97,14 @@ export const Button = ({
   const baseFontSize = Typography.size[size];
   const sizeScale = baseFontSize / Typography.size.md;
 
-  let fontSize = roundToPixel(baseFontSize * scale);
+  let fontSize = roundToPixel(baseFontSize * textScale);
   let height: number | undefined = roundToPixel(
-    40 * scale * sizeScale * (taller ? 1.4 : 1),
+    40 * uiScale * sizeScale * (taller ? 1.4 : 1),
   );
   let borderRadius = height / 2;
   let gap = height / 6;
-  let paddingVertical = roundToPixel(6 * scale * sizeScale);
-  let paddingHorizontal = roundToPixel(20 * scale * sizeScale);
+  let paddingVertical = roundToPixel(6 * uiScale * sizeScale);
+  let paddingHorizontal = roundToPixel(20 * uiScale * sizeScale);
   let fontFamily = textOnly ? FontWeight[300] : FontWeight[600];
   let lineHeightUpdated = fontSize * (lineHeight ?? 1);
 
@@ -177,7 +179,7 @@ export const Button = ({
       {iconName && (
         <Icon
           name={iconName}
-          size={iconSize ?? 24}
+          size={iconSize ?? roundToPixel(24 * uiScale)}
           color={iconColor ?? Colors.white}
           style={[
             {

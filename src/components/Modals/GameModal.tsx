@@ -2,7 +2,7 @@ import { Text } from "@/components/common/Text";
 import { useGameSettings } from "@/hooks/useGameSettings";
 import { useGameSpecificSettings } from "@/hooks/useGameSpecificSettings";
 import { SettingControl } from "../common/SettingControl";
-import { modalStyles } from "@/styles/modalStyles";
+import { useModalStyles } from "@/styles/modalStyles";
 import { usePathname } from "expo-router";
 import { ScrollView, View } from "react-native";
 import { getSettingApplyBehaviorText } from "@/data/game-settings";
@@ -17,7 +17,7 @@ import ModalFull from "./ModalFull";
 import { Colors } from "@/styles/styles";
 import { flexStyles } from "@/styles/flexStyles";
 import { Icon, IconName } from "@/icons";
-import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 interface ModalSectionProps {
   title?: string;
@@ -77,7 +77,8 @@ export default function GameModal({ onClose }: Props) {
   const info = getGameInfo(pathname);
   const { settings, updateSettings, isLoading } = useGameSettings(pathname);
   const gameSpecificSettings = useGameSpecificSettings(pathname);
-  const scale = useResponsiveScale();
+  const { spacing } = useResponsiveMetrics();
+  const modalStyles = useModalStyles();
 
   if (isLoading || settings === undefined) return null;
 
@@ -199,7 +200,9 @@ export default function GameModal({ onClose }: Props) {
                       <Text
                         size="sm"
                         color={Colors.K600}
-                        style={{ paddingTop: 10 * scale }}
+                        style={{
+                          paddingTop: spacing(10),
+                        }}
                       >
                         {setting.description ??
                           getSettingApplyBehaviorText(setting.applyBehavior)}

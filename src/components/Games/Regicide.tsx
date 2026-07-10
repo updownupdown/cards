@@ -1,5 +1,5 @@
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
-import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
@@ -273,7 +273,7 @@ function hasValidPlayInHand(cards: PlayingCard[]): boolean {
 
 // ---------- Main Component ---------- //
 export default function Regicide() {
-  const scale = useResponsiveScale();
+  const { spacing } = useResponsiveMetrics();
   const { zoneBg } = useGameZoneBackground();
 
   const {
@@ -917,7 +917,7 @@ export default function Regicide() {
       <View
         style={[
           getZoneStylesById("enemyZone"),
-          { backgroundColor: zoneBg, borderRadius: 8 * scale },
+          { backgroundColor: zoneBg, borderRadius: spacing(8) },
         ]}
       />
       {game.currentEnemy && (
@@ -927,7 +927,7 @@ export default function Regicide() {
             flexStyles.colStart,
             flexStyles.spaceBetween,
             {
-              paddingVertical: 8 * scale,
+              paddingVertical: spacing(8),
             },
           ]}
         >
@@ -992,22 +992,22 @@ export default function Regicide() {
               right: 0,
               bottom: 0,
               left: 0,
-              paddingVertical: 6 * scale,
-              paddingHorizontal: 16 * scale,
-              gap: 16 * scale,
+              paddingVertical: spacing(6),
+              paddingHorizontal: spacing(16),
+              gap: spacing(16),
               backfaceVisibility: "hidden",
               opacity: attackFaceOpacity,
               transform: [{ perspective: 900 }, { rotateX: attackFaceRotateX }],
               pointerEvents: game.phase === "attack" ? "auto" : "none",
               backgroundColor: zoneBg,
-              borderRadius: 8 * scale,
-              boxShadow: `inset 0 0 0 ${1.5 * scale}px ${rgba(Colors.buttonBlue, 0.5)}, 0 0 ${20 * scale}px ${rgba(Colors.buttonBlue, 0.5)}`,
+              borderRadius: spacing(8),
+              boxShadow: `inset 0 0 0 ${spacing(1.5)}px ${rgba(Colors.buttonBlue, 0.5)}, 0 0 ${spacing(20)}px ${rgba(Colors.buttonBlue, 0.5)}`,
             },
           ]}
         >
           {/* Powers/Suits */}
           <View
-            style={[flexStyles.rowCentered, { width: "20%", gap: 6 * scale }]}
+            style={[flexStyles.rowCentered, { width: "20%", gap: spacing(6) }]}
           >
             {playSelection.isValid &&
               playSummary.suitEffects.length > 0 &&
@@ -1031,7 +1031,7 @@ export default function Regicide() {
               flexStyles.rowCentered,
               {
                 width: "20%",
-                gap: 6 * scale,
+                gap: spacing(6),
               },
             ]}
           >
@@ -1058,16 +1058,16 @@ export default function Regicide() {
               right: 0,
               bottom: 0,
               left: 0,
-              paddingVertical: 6 * scale,
-              paddingHorizontal: 16 * scale,
-              gap: 16 * scale,
+              paddingVertical: spacing(6),
+              paddingHorizontal: spacing(16),
+              gap: spacing(16),
               backfaceVisibility: "hidden",
               opacity: defendFaceOpacity,
               transform: [{ perspective: 900 }, { rotateX: defendFaceRotateX }],
               pointerEvents: game.phase === "defend" ? "auto" : "none",
               backgroundColor: zoneBg,
-              borderRadius: 8 * scale,
-              boxShadow: `inset 0 0 0 ${1.5 * scale}px ${rgba(Colors.buttonPurple, 0.5)}, 0 0 ${20 * scale}px ${rgba(Colors.buttonPurple, 0.5)}`,
+              borderRadius: spacing(8),
+              boxShadow: `inset 0 0 0 ${spacing(1.5)}px ${rgba(Colors.buttonPurple, 0.5)}, 0 0 ${spacing(20)}px ${rgba(Colors.buttonPurple, 0.5)}`,
             },
           ]}
         >

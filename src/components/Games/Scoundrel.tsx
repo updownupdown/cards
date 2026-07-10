@@ -1,4 +1,4 @@
-import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { Icon, IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
@@ -381,7 +381,7 @@ const roomActionsRow = roomCardsRow + 0.95;
 
 // ========== Game Component ========== //
 export default function Scoundrel() {
-  const scale = useResponsiveScale();
+  const { spacing, font } = useResponsiveMetrics();
 
   const {
     isLoaded,
@@ -780,7 +780,7 @@ export default function Scoundrel() {
           getZoneStylesById("room-info"),
           flexStyles.colCentered,
           {
-            gap: 12 * scale,
+            gap: spacing(12),
             justifyContent: "space-between",
           },
         ]}
@@ -839,22 +839,22 @@ export default function Scoundrel() {
                       flexStyles.colCentered,
                       {
                         position: "absolute",
-                        top: -4 * scale,
-                        left: -6 * scale,
+                        top: spacing(-4),
+                        left: spacing(-6),
                         zIndex: 2,
-                        width: 24 * scale,
-                        height: 24 * scale,
+                        width: spacing(24),
+                        height: spacing(24),
                         borderRadius: 999,
                         alignItems: "center",
                         justifyContent: "center",
-                        paddingHorizontal: 2 * scale,
+                        paddingHorizontal: spacing(2),
 
                         backgroundColor: Colors.white,
                         boxShadow: `1px 2px 4px ${rgba(Colors.K900, 0.5)}`,
                       },
                     ]}
                   >
-                    <Icon name="skull" color={Colors.K950} size={20 * scale} />
+                    <Icon name="skull" color={Colors.K950} size={spacing(20)} />
                   </View>
                 )}
 
@@ -868,18 +868,18 @@ export default function Scoundrel() {
                   theme={action.color}
                   iconName={action.iconName}
                   iconColor={Colors.white}
-                  iconSize={24 * scale}
+                  iconSize={spacing(24)}
                   taller
                   style={{
-                    gap: 4 * scale,
+                    gap: spacing(4),
                     paddingHorizontal: 0,
                   }}
                   textStyle={{
-                    fontSize: 16 * scale,
-                    lineHeight: 16 * scale,
+                    fontSize: font(16),
+                    lineHeight: font(16),
                     fontFamily: FontWeight[600],
                     color: Colors.white,
-                    paddingRight: 4 * scale,
+                    paddingRight: spacing(4),
                   }}
                 />
               </View>

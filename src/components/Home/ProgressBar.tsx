@@ -1,4 +1,4 @@
-import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon, IconName } from "@/icons";
 import { Colors, rgba } from "@/styles/styles";
 import { centeredOffset, roundToPixel, snapCenteredSize } from "@/utils/utils";
@@ -45,7 +45,7 @@ export const ProgressBar = ({
   autoTallyText = false,
   scaledHeight,
 }: Props) => {
-  const scale = useResponsiveScale();
+  const { scale, textScale } = useResponsiveMetrics();
   const [barWidth, setBarWidth] = React.useState(0);
 
   const height = roundToPixel(scaledHeight ?? 26 * scale);
@@ -135,7 +135,11 @@ export const ProgressBar = ({
             left: roundToPixel(height * 0.4),
             top: "50%",
             transform: [{ translateY: "-50%" }],
-            fontSize: clamp(height * 0.4 * scale, 6 * scale, 14 * scale),
+            fontSize: clamp(
+              height * 0.4 * textScale,
+              6 * textScale,
+              14 * textScale,
+            ),
             ...textStyles.shadowText,
           }}
           lineHeight={1}
@@ -189,7 +193,11 @@ export const ProgressBar = ({
           right: roundToPixel(scale * height * 0.5),
           top: "50%",
           transform: [{ translateY: "-50%" }],
-          fontSize: clamp(height * 0.5 * scale, 12 * scale, 30 * scale),
+          fontSize: clamp(
+            height * 0.5 * textScale,
+            12 * textScale,
+            30 * textScale,
+          ),
           ...textStyles.shadowText,
         }}
       >

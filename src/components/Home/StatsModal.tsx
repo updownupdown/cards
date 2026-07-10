@@ -11,7 +11,7 @@ import {
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
 import ModalFull from "../Modals/ModalFull";
-import { modalStyles } from "@/styles/modalStyles";
+import { useModalStyles } from "@/styles/modalStyles";
 
 interface Props {
   onClose: () => void;
@@ -19,6 +19,7 @@ interface Props {
 
 export const StatsModal = ({ onClose }: Props) => {
   const [settingsMap, setSettingsMap] = useState<GameSettingsMap>({});
+  const modalStyles = useModalStyles();
 
   useEffect(() => {
     let cancelled = false;

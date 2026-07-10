@@ -1,10 +1,9 @@
 import { Text } from "@/components/common/Text";
 import { Button } from "@/components/Button/Button";
 import { usePwaInstallPrompt } from "@/hooks/usePwaInstallPrompt";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, rgba } from "@/styles/styles";
-import { roundToPixel } from "@/utils/utils";
-import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
 import { useMemo, useState } from "react";
 import { View } from "react-native";
 
@@ -17,7 +16,7 @@ export function AddToHomeScreenNotice({
   dismissible = false,
   onDismiss,
 }: AddToHomeScreenNoticeProps) {
-  const scale = useResponsiveScale();
+  const { spacing } = useResponsiveMetrics();
   const { isWeb, isIos, isStandalone, canPromptInstall, promptInstall } =
     usePwaInstallPrompt();
   const [installState, setInstallState] = useState<
@@ -48,12 +47,12 @@ export function AddToHomeScreenNotice({
     <View
       style={{
         width: "100%",
-        borderRadius: roundToPixel(14 * scale),
+        borderRadius: spacing(14),
         backgroundColor: rgba(Colors.K950, 0.5),
-        padding: roundToPixel(24 * scale),
-        gap: roundToPixel(10 * scale),
+        padding: spacing(24),
+        gap: spacing(10),
         boxShadow: `0px 4px 8px ${rgba(Colors.K900, 0.3)}`,
-        marginBottom: roundToPixel(40 * scale),
+        marginBottom: spacing(40),
       }}
     >
       <Text weight={500} size="md" color={Colors.K100}>
@@ -83,7 +82,7 @@ export function AddToHomeScreenNotice({
           flexStyles.rowCentered,
           {
             justifyContent: "flex-start",
-            gap: roundToPixel(16 * scale),
+            gap: spacing(16),
           },
         ]}
       >
@@ -108,7 +107,7 @@ export function AddToHomeScreenNotice({
             text="Dismiss"
             textOnly
             onPress={() => onDismiss?.()}
-            style={{ marginTop: roundToPixel(8 * scale) }}
+            style={{ marginTop: spacing(8) }}
           />
         )}
       </View>

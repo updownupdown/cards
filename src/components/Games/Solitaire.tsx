@@ -1,5 +1,3 @@
-import { useStateManager } from "@/hooks/useStateManager";
-import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import {
   CardHitArea,
   createRect,
@@ -8,15 +6,18 @@ import {
   runTiming,
   useDragDrop,
 } from "@/hooks/useDragDrop";
+import { useGameSettingValue } from "@/hooks/useGameSettingValue";
+import { useStateManager } from "@/hooks/useStateManager";
+import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { useNavigation } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { GestureResponderEvent } from "react-native";
 import { Animated, Pressable, StyleSheet, View } from "react-native";
-import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { Card } from "../Cards/Card";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
+  cardDims,
   isRed,
   PlayingCard,
   RANK_VALUE,
@@ -26,7 +27,6 @@ import {
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 
-const TABLEAU_FAN_OFFSET = 0.35;
 const DOUBLE_TAP_MS = 300;
 
 type GameState = {
@@ -217,9 +217,22 @@ export default function Solitaire() {
       col: pileIndex,
       row: 1.6,
       baseZIndex: 10 + pileIndex,
-      fan: { direction: "down", offset: TABLEAU_FAN_OFFSET },
+      fan: { direction: "down", offset: cardDims.tableauOffset },
       placeholder: { showCount: false },
     }));
+    const foundationZones: MapZone[] = game.foundations.map(
+      (pile, pileIndex) => ({
+        id: `foundation-${pileIndex}`,
+        name: "foundation",
+        pileIndex,
+        cards: pile,
+        col: 3 + pileIndex,
+        row: 0,
+        baseZIndex: 20 + pileIndex,
+        fan: { maxVisible: 1 },
+        placeholder: {},
+      }),
+    );
 
     return [
       {
@@ -244,50 +257,7 @@ export default function Solitaire() {
         fan: { maxVisible: 3 },
         placeholder: { text: "Waste", infoPos: "below" },
       },
-      {
-        id: "foundation-0",
-        name: "foundation",
-        cards: game.foundations[0],
-        pileIndex: 0,
-        col: 3,
-        row: 0,
-        baseZIndex: 20,
-        fan: { maxVisible: 1 },
-        placeholder: { text: "Fnd", infoPos: "below" },
-      },
-      {
-        id: "foundation-1",
-        name: "foundation",
-        cards: game.foundations[1],
-        pileIndex: 1,
-        col: 4,
-        row: 0,
-        baseZIndex: 20,
-        fan: { maxVisible: 1 },
-        placeholder: { text: "Fnd", infoPos: "below" },
-      },
-      {
-        id: "foundation-2",
-        name: "foundation",
-        cards: game.foundations[2],
-        pileIndex: 2,
-        col: 5,
-        row: 0,
-        baseZIndex: 20,
-        fan: { maxVisible: 1 },
-        placeholder: { text: "Fnd", infoPos: "below" },
-      },
-      {
-        id: "foundation-3",
-        name: "foundation",
-        cards: game.foundations[3],
-        pileIndex: 3,
-        col: 6,
-        row: 0,
-        baseZIndex: 20,
-        fan: { maxVisible: 1 },
-        placeholder: { text: "Fnd", infoPos: "below" },
-      },
+      ...foundationZones,
       ...tableauZones,
     ];
   }, [game]);
@@ -456,7 +426,7 @@ export default function Solitaire() {
     if (source.zone === "tableau") {
       return createRect(
         base.x,
-        base.y + source.cardIndex * TABLEAU_FAN_OFFSET * cardHeight,
+        base.y + source.cardIndex * cardDims.tableauOffset * cardHeight,
         cardWidth,
         cardHeight,
       );
@@ -506,7 +476,7 @@ export default function Solitaire() {
             },
             rect: createRect(
               zoneRect.x,
-              zoneRect.y + cardIndex * TABLEAU_FAN_OFFSET * cardHeight,
+              zoneRect.y + cardIndex * cardDims.tableauOffset * cardHeight,
               cardWidth,
               cardHeight,
             ),
@@ -550,7 +520,7 @@ export default function Solitaire() {
         const pile = game.tableau[zone.pileIndex];
         const pileHeight =
           cardHeight +
-          Math.max(0, pile.length - 1) * TABLEAU_FAN_OFFSET * cardHeight;
+          Math.max(0, pile.length - 1) * cardDims.tableauOffset * cardHeight;
 
         areas.push({
           target: { zone: "tableau", pileIndex: zone.pileIndex },
@@ -1033,87 +1003,88 @@ export default function Solitaire() {
       canUndo={canUndo}
       undo={undo}
     >
-      <View style={{ flex: 1, width: "100%", gap: 12 }}>
-        <View
-          ref={boardRef}
-          style={{
+      <View
+        ref={boardRef}
+        style={[
+          {
             flex: 1,
             width: "100%",
-            position: "relative",
-            touchAction: "none",
-            overscrollBehaviorX: "contain",
-          }}
-        >
-          {cardMap}
+            // touchAction: "none",
+            // overscrollBehaviorX: "contain",
+          },
+        ]}
+      >
+        {cardMap}
 
-          <View
-            style={{
+        <View
+          style={[
+            {
               ...StyleSheet.absoluteFill,
               zIndex: 3000,
               touchAction: "none",
               overscrollBehaviorX: "contain",
               pointerEvents: "box-none",
-            }}
-          >
-            {stockTapRect && (
-              <Pressable
-                style={{
-                  position: "absolute",
-                  backgroundColor: "transparent",
-                  left: stockTapRect.x,
-                  top: stockTapRect.y,
-                  width: stockTapRect.width,
-                  height: stockTapRect.height,
-                }}
-                onPress={drawFromStock}
-                disabled={game.stock.length === 0 && game.waste.length === 0}
-              />
-            )}
-            {interactionTargets}
-          </View>
-
-          {dragGhost && (
-            <Animated.View
-              style={[
-                {
-                  pointerEvents: "none",
-                  position: "absolute",
-                  zIndex: 4000,
-                  left: ghostLeft,
-                  top: ghostTop,
-                  transform: dragTranslate.getTranslateTransform(),
-                },
-              ]}
-            >
-              {dragGhost.cards.map((card, index) => (
-                <View
-                  key={`ghost-${card.id}`}
-                  style={[
-                    {
-                      position: "absolute",
-                      left: 0,
-                      opacity: 1,
-                      width: cardWidth,
-                      height: cardHeight,
-                    },
-                    {
-                      top: index * TABLEAU_FAN_OFFSET * cardHeight,
-                      zIndex: index + 1,
-                    },
-                  ]}
-                >
-                  <Card
-                    card={card}
-                    cardWidth={cardWidth}
-                    cardSize="small"
-                    selectColor={ghostHasValidDrop ? "green" : "none"}
-                    isSelected={ghostHasValidDrop}
-                  />
-                </View>
-              ))}
-            </Animated.View>
+            },
+          ]}
+        >
+          {stockTapRect && (
+            <Pressable
+              style={{
+                position: "absolute",
+                backgroundColor: "transparent",
+                left: stockTapRect.x,
+                top: stockTapRect.y,
+                width: stockTapRect.width,
+                height: stockTapRect.height,
+              }}
+              onPress={drawFromStock}
+              disabled={game.stock.length === 0 && game.waste.length === 0}
+            />
           )}
+          {interactionTargets}
         </View>
+
+        {dragGhost && (
+          <Animated.View
+            style={[
+              {
+                pointerEvents: "none",
+                position: "absolute",
+                zIndex: 4000,
+                left: ghostLeft,
+                top: ghostTop,
+                transform: dragTranslate.getTranslateTransform(),
+              },
+            ]}
+          >
+            {dragGhost.cards.map((card, index) => (
+              <View
+                key={`ghost-${card.id}`}
+                style={[
+                  {
+                    position: "absolute",
+                    left: 0,
+                    opacity: 1,
+                    width: cardWidth,
+                    height: cardHeight,
+                  },
+                  {
+                    top: index * cardDims.tableauOffset * cardHeight,
+                    zIndex: index + 1,
+                  },
+                ]}
+              >
+                <Card
+                  card={card}
+                  cardWidth={cardWidth}
+                  cardSize="small"
+                  selectColor={ghostHasValidDrop ? "green" : "none"}
+                  isSelected={ghostHasValidDrop}
+                />
+              </View>
+            ))}
+          </Animated.View>
+        )}
       </View>
     </GameWrapper>
   );

@@ -1,5 +1,5 @@
 import { Text } from "@/components/common/Text";
-import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Colors, FontWeight, rgba } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
 import {
@@ -39,7 +39,7 @@ export function RadioButtons<T extends string>({
   selectedTextStyle,
   selectedBackgroundColor = Colors.K200,
 }: RadioButtonsProps<T>) {
-  const scale = useResponsiveScale();
+  const { spacing } = useResponsiveMetrics();
 
   return (
     <View
@@ -48,9 +48,9 @@ export function RadioButtons<T extends string>({
           display: "flex",
           flexDirection: "row",
           width: "100%",
-          borderRadius: 8 * scale,
-          padding: 6 * scale,
-          gap: 6 * scale,
+          borderRadius: spacing(8),
+          padding: spacing(6),
+          gap: spacing(6),
           backgroundColor: Colors.K900,
           boxShadow: `inset 0 0 20px ${rgba(Colors.black, 0.2)}`,
         },
@@ -69,9 +69,9 @@ export function RadioButtons<T extends string>({
               {
                 ...BTN_TRANSITION_STYLE,
                 flex: 1,
-                borderRadius: 6 * scale,
-                paddingVertical: 2 * scale,
-                paddingHorizontal: 16 * scale,
+                borderRadius: spacing(6),
+                paddingVertical: spacing(2),
+                paddingHorizontal: spacing(16),
                 height: "100%",
                 display: "flex",
                 justifyContent: "center",

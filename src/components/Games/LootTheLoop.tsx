@@ -27,7 +27,7 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { FontWeight } from "@/styles/styles";
 
 const maxMarkedPaths = 3;
@@ -130,7 +130,8 @@ async function resetAndSetup(
 }
 
 export default function LootTheLoop() {
-  const responsiveScale = useResponsiveScale();
+  const { scale: responsiveScale } = useResponsiveMetrics();
+  const scaleByLayout = (value: number) => value * responsiveScale;
 
   const [selectedCardIndex, setSelectedCardIndex] = useState<
     number | undefined
@@ -666,7 +667,7 @@ export default function LootTheLoop() {
           flexStyles.rowCentered,
           getZoneStylesById("buttons"),
           {
-            gap: cardWidth * 0.25 * responsiveScale,
+            gap: cardWidth * scaleByLayout(0.25),
           },
         ]}
       >
@@ -686,7 +687,7 @@ export default function LootTheLoop() {
             flexStyles.flex1,
             {
               // height: "100%",
-              // borderRadius: cardWidth * 0.25 * responsiveScale,
+              // borderRadius: cardWidth * scaleByLayout(0.25),
             },
           ]}
           theme={"purple"}
@@ -702,7 +703,7 @@ export default function LootTheLoop() {
             flexStyles.flex1,
             {
               // height: "100%",
-              // borderRadius: cardWidth * 0.25 * responsiveScale,
+              // borderRadius: cardWidth * scaleByLayout(0.25),
             },
           ]}
           theme={"green"}
@@ -722,7 +723,7 @@ export default function LootTheLoop() {
             flexStyles.flex1,
             {
               // height: "100%",
-              // borderRadius: cardWidth * 0.25 * responsiveScale,
+              // borderRadius: cardWidth * scaleByLayout(0.25),
             },
           ]}
           theme={"blue"}

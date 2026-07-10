@@ -6,13 +6,13 @@ import {
   recordAttempt,
   recordResult,
 } from "@/data/game-menu";
-import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
+import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { flexStyles } from "@/styles/flexStyles";
 import { menuStyles } from "@/styles/menuStyles";
 import {
   ContentSidePadding,
   HeaderButtonIconSize,
-  HeaderHeight,
   rgba,
 } from "@/styles/styles";
 import { router, usePathname } from "expo-router";
@@ -73,7 +73,12 @@ export const GameWrapper = ({
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);
   const insets = useSafeAreaInsets();
-  const responsiveScale = useResponsiveScale();
+  const { width: viewportWidth, height: viewportHeight } =
+    useViewportDimensions();
+  const ui = useResponsiveUiLayoutFromWidth(
+    Math.min(viewportWidth, viewportHeight),
+  );
+  const spacing = (value: number) => value * ui.scale;
 
   const [showMenu, setShowMenu] = useState(false);
 
@@ -105,7 +110,7 @@ export const GameWrapper = ({
   const titleColor = gameInfo.cardColorText;
   const backgroundColor = gameInfo.cardColorBg;
   const overlayColor = lightenHexColor(backgroundColor, 0.2);
-  const headerHeight = Math.round(HeaderHeight * responsiveScale) + insets.top;
+  const headerHeight = ui.gameHeaderHeight + insets.top;
 
   return (
     <>
@@ -157,15 +162,9 @@ export const GameWrapper = ({
               justifyContent: "space-between",
               width: "100%",
               height: headerHeight,
-              paddingTop:
-                insets.top +
-                Math.round(ContentSidePadding * responsiveScale * 0.3),
-              paddingBottom: Math.round(
-                ContentSidePadding * responsiveScale * 0.5,
-              ),
-              paddingHorizontal: Math.round(
-                ContentSidePadding * responsiveScale * 0.75,
-              ),
+              paddingTop: insets.top + spacing(ContentSidePadding * 0.3),
+              paddingBottom: spacing(ContentSidePadding * 0.5),
+              paddingHorizontal: spacing(ContentSidePadding * 0.75),
               backgroundColor: "transparent",
             },
           ]}
@@ -181,7 +180,7 @@ export const GameWrapper = ({
             }}
             iconName={"arrow-back"}
             iconColor={titleColor}
-            iconSize={Math.round(HeaderButtonIconSize * responsiveScale)}
+            iconSize={spacing(HeaderButtonIconSize)}
           />
 
           <Text
@@ -209,7 +208,7 @@ export const GameWrapper = ({
               onPress={handleUndo}
               iconName="undo"
               iconColor={canUndo ? titleColor : rgba(titleColor, 0.35)}
-              iconSize={Math.round(HeaderButtonIconSize * responsiveScale)}
+              iconSize={spacing(HeaderButtonIconSize)}
               disabled={!canUndo}
             />
           )}
@@ -226,7 +225,7 @@ export const GameWrapper = ({
             onPress={() => setShowMenu(true)}
             iconName="menu"
             iconColor={titleColor}
-            iconSize={Math.round(HeaderButtonIconSize * responsiveScale)}
+            iconSize={spacing(HeaderButtonIconSize)}
           />
         </View>
 

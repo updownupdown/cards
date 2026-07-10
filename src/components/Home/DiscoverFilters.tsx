@@ -1,17 +1,12 @@
 import { Text } from "@/components/common/Text";
 import { GameTag, GameTagNames } from "@/data/games-data";
 import { useFade } from "@/hooks/useFade";
+import { useResponsiveUiLayout } from "@/hooks/useResponsiveLayout";
 import { Icon, type IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { menuStyles } from "@/styles/menuStyles";
 import { modalShadow } from "@/styles/modalStyles";
-import {
-  Colors,
-  FontWeight,
-  HeaderButtonSize,
-  HomePadding,
-  rgba,
-} from "@/styles/styles";
+import { Colors, FontWeight, HeaderButtonSize, rgba } from "@/styles/styles";
 import { roundToPixel } from "@/utils/utils";
 import { LinearGradient } from "expo-linear-gradient";
 import { useMemo, useState } from "react";
@@ -30,7 +25,6 @@ import { Button } from "../Button/Button";
 export type DiscoverCardSize = "small" | "medium" | "large";
 
 type DiscoverFiltersProps = {
-  scale: number;
   pageSidePadding: number;
   contentMaxWidth: number;
   resultCount: number;
@@ -44,7 +38,6 @@ type DiscoverFiltersProps = {
 };
 
 export function DiscoverFilters({
-  scale,
   pageSidePadding,
   contentMaxWidth,
   resultCount,
@@ -56,6 +49,7 @@ export function DiscoverFilters({
   onSearchQueryChange,
   onDiscoverCardSizeChange,
 }: DiscoverFiltersProps) {
+  const ui = useResponsiveUiLayout();
   const insets = useSafeAreaInsets();
   const [showTagPicker, setShowTagPicker] = useState(false);
   const { isRendered: renderTagPicker, opacity: tagPickerOpacity } = useFade(
@@ -85,8 +79,10 @@ export function DiscoverFilters({
     ? `${GameTagNames[selectedTag]} • ${resultLabel}`
     : resultLabel;
   const inputBgColor = rgba(Colors.K950, 0.7);
-  const inputHeight = roundToPixel(50 * scale);
-  const borderRadius = roundToPixel(10 * scale);
+  const spacing = (value: number) => roundToPixel(value * ui.scale);
+  const font = (value: number) => roundToPixel(value * ui.textScale);
+  const inputHeight = spacing(50);
+  const borderRadius = spacing(10);
   const iconSize = roundToPixel(inputHeight * 0.4);
   const webSearchInputProps =
     Platform.OS === "web"
@@ -129,13 +125,11 @@ export function DiscoverFilters({
             maxWidth: contentMaxWidth,
             alignSelf: "center",
             paddingHorizontal: pageSidePadding,
-            paddingTop: roundToPixel(10 * scale),
-            paddingBottom: roundToPixel(
-              (insets.bottom + HomePadding * 0.9) * scale,
-            ),
-            gap: roundToPixel(10 * scale),
-            borderTopLeftRadius: roundToPixel(14 * scale),
-            borderTopRightRadius: roundToPixel(14 * scale),
+            paddingTop: spacing(10),
+            paddingBottom: roundToPixel(insets.bottom + pageSidePadding * 0.9),
+            gap: spacing(10),
+            borderTopLeftRadius: spacing(14),
+            borderTopRightRadius: spacing(14),
           }}
         >
           {/* Results and clear filters */}
@@ -146,7 +140,7 @@ export function DiscoverFilters({
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
-                gap: roundToPixel(10 * scale),
+                gap: spacing(10),
               }}
             >
               <Text size="sm" color={Colors.K400} numberOfLines={1}>
@@ -158,10 +152,10 @@ export function DiscoverFilters({
                 style={[
                   flexStyles.rowCentered,
                   {
-                    paddingLeft: roundToPixel(14 * scale),
-                    paddingRight: roundToPixel(10 * scale),
-                    paddingVertical: roundToPixel(6 * scale),
-                    gap: roundToPixel(6 * scale),
+                    paddingLeft: spacing(14),
+                    paddingRight: spacing(10),
+                    paddingVertical: spacing(6),
+                    gap: spacing(6),
                     borderRadius,
                     height: inputHeight * 0.8,
                     backgroundColor: inputBgColor,
@@ -182,7 +176,7 @@ export function DiscoverFilters({
               width: "100%",
               flexDirection: "row",
               alignItems: "center",
-              gap: roundToPixel(8 * scale),
+              gap: spacing(8),
             }}
           >
             {/* Search Input */}
@@ -223,7 +217,7 @@ export function DiscoverFilters({
                   flexShrink: 1,
                   minWidth: 0,
                   color: Colors.K100,
-                  fontSize: roundToPixel(17 * scale),
+                  fontSize: font(17),
                   fontFamily: FontWeight[300],
                   paddingVertical: 0,
                   outline: "none",
@@ -328,16 +322,16 @@ export function DiscoverFilters({
                 left: "50%",
                 width: "100%",
                 maxWidth: contentMaxWidth - pageSidePadding * 2,
-                maxHeight: roundToPixel(420 * scale),
+                maxHeight: spacing(420),
                 transform: [{ translateX: "-50%" }, { translateY: "-50%" }],
 
                 alignItems: "center",
                 justifyContent: "center",
 
-                gap: roundToPixel(20 * scale),
-                padding: roundToPixel(20 * scale),
+                gap: spacing(20),
+                padding: spacing(20),
 
-                borderRadius: roundToPixel(14 * scale),
+                borderRadius: spacing(14),
                 backgroundColor: Colors.K900,
                 boxShadow: modalShadow,
               },
@@ -349,7 +343,7 @@ export function DiscoverFilters({
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
-                gap: roundToPixel(12 * scale),
+                gap: spacing(12),
               }}
             >
               <Text
@@ -383,7 +377,7 @@ export function DiscoverFilters({
                 flexStyles.colCentered,
                 {
                   flexGrow: 1,
-                  gap: roundToPixel(12 * scale),
+                  gap: spacing(12),
                 },
               ]}
               style={{
@@ -408,9 +402,9 @@ export function DiscoverFilters({
                       flexStyles.fullWidth,
                       flexStyles.flex1,
                       {
-                        borderRadius: roundToPixel(8 * scale),
-                        paddingHorizontal: roundToPixel(16 * scale),
-                        paddingVertical: roundToPixel(10 * scale),
+                        borderRadius: spacing(8),
+                        paddingHorizontal: spacing(16),
+                        paddingVertical: spacing(10),
                         backgroundColor: isActive ? Colors.K750 : Colors.K875,
                       },
                     ]}

@@ -13,10 +13,10 @@ import {
   isGameEnabled,
 } from "@/data/games-data";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
-import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { Icon, type IconName } from "@/icons";
-import { Colors, HomePadding, MaxContentWidth } from "@/styles/styles";
+import { Colors, HomePadding } from "@/styles/styles";
 import { roundToPixel } from "@/utils/utils";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ScrollView, View } from "react-native";
@@ -53,7 +53,7 @@ export const GamesList = ({
   const listRef = useRef<ScrollView>(null);
   const hasMountedRef = useRef(false);
   const insets = useSafeAreaInsets();
-  const scale = useResponsiveScale();
+  const { ui, spacing } = useResponsiveMetrics();
   const { width: viewportWidth } = useViewportDimensions();
   const { settings, updateSettings } = useGlobalSettings();
 
@@ -72,23 +72,26 @@ export const GamesList = ({
   const discoverCardSize: CardSize = settings.discoverCardSize ?? "large";
   const shouldShowHomeInstallNotice = !settings.dismissHomeInstallPrompt;
 
-  const pageSidePadding = roundToPixel(HomePadding * scale);
-  const contentMaxWidth = roundToPixel(MaxContentWidth * scale);
+  const scale = ui.scale;
+  const pageSidePadding = roundToPixel(spacing(HomePadding));
+  const contentMaxWidth = roundToPixel(ui.contentMaxWidth);
   const renderedContentWidth = Math.min(contentMaxWidth, viewportWidth);
   const centeredContentOffset = Math.max(
     0,
     roundToPixel((viewportWidth - contentMaxWidth) / 2),
   );
   const sectionEdgePadding = pageSidePadding + centeredContentOffset;
-  const sectionTopPadding = roundToPixel(14 * scale);
-  const discoverCardGap = roundToPixel(12 * scale);
+  const sectionTopPadding = roundToPixel(spacing(14));
+  const discoverCardGap = roundToPixel(spacing(12));
   const discoverRowInnerWidth = Math.max(
     0,
     renderedContentWidth - pageSidePadding * 2,
   );
   const discoverMediumCardWidth = Math.max(
     0,
-    roundToPixel((discoverRowInnerWidth - discoverCardGap) / 2),
+    roundToPixel(
+      (discoverRowInnerWidth - discoverCardGap) / (ui.isTablet ? 3 : 2),
+    ),
   );
   const horizontalCardWidth = discoverMediumCardWidth;
   const hasDiscoverFilters =
@@ -307,14 +310,14 @@ export const GamesList = ({
           flexStyles.rowCentered,
           flexStyles.fullWidth,
           {
-            gap: roundToPixel(8 * scale),
+            gap: roundToPixel(spacing(8)),
             paddingHorizontal: pageSidePadding,
           },
         ]}
       >
         <Icon
           name={section.iconName}
-          size={roundToPixel(24 * scale)}
+          size={roundToPixel(24 * (ui.isTablet ? 1.15 : 1))}
           color={Colors.K400}
         />
 
@@ -355,9 +358,9 @@ export const GamesList = ({
           contentContainerStyle={{
             paddingLeft: sectionEdgePadding,
             paddingRight: sectionEdgePadding,
-            gap: roundToPixel(12 * scale),
+            gap: roundToPixel(spacing(12)),
             paddingTop: sectionTopPadding,
-            paddingBottom: roundToPixel(40 * scale),
+            paddingBottom: roundToPixel(spacing(40)),
             alignItems: "stretch",
           }}
         >
@@ -410,7 +413,7 @@ export const GamesList = ({
                 paddingHorizontal: pageSidePadding,
                 paddingTop: sectionTopPadding * 2,
                 paddingBottom: sectionTopPadding,
-                gap: roundToPixel(24 * scale),
+                gap: roundToPixel(spacing(24)),
               },
             ]}
           >
@@ -452,8 +455,8 @@ export const GamesList = ({
             flexDirection: "row",
             flexWrap: "wrap",
             justifyContent: "space-between",
-            rowGap: isMediumLayout ? roundToPixel(12 * scale) : undefined,
-            gap: isMediumLayout ? undefined : roundToPixel(12 * scale),
+            rowGap: isMediumLayout ? roundToPixel(spacing(12)) : undefined,
+            gap: isMediumLayout ? undefined : roundToPixel(spacing(12)),
           }}
         >
           {gameList.map(([path, game]) => (
@@ -531,7 +534,7 @@ export const GamesList = ({
         contentContainerStyle={{
           paddingHorizontal: 0,
           paddingBottom: roundToPixel(
-            (insets.bottom + HomePadding * 10) * scale,
+            insets.bottom + spacing(HomePadding * 10),
           ),
           flexGrow: 1,
           alignItems: "stretch",
@@ -542,7 +545,6 @@ export const GamesList = ({
       </ScrollView>
 
       <DiscoverFilters
-        scale={scale}
         pageSidePadding={pageSidePadding}
         contentMaxWidth={contentMaxWidth}
         resultCount={filteredDiscoverGames.length}

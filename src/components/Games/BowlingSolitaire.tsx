@@ -21,7 +21,7 @@ import { Text } from "../common/Text";
 import { delay } from "@/utils/utils";
 import { Colors, rgba } from "@/styles/styles";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
-import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 const BACK_ROW = new Set([6, 7, 8, 9]);
 const CENTER_PIN = 4;
@@ -406,7 +406,7 @@ function recalculateScores(frames: Frame[], bonusRolls: number[]) {
 // ========== Main Component ========== //
 export default function BowlingSolitaire() {
   const { zoneBg, cardBg } = useGameZoneBackground();
-  const scale = useResponsiveScale();
+  const { spacing, font } = useResponsiveMetrics();
 
   const {
     game,
@@ -894,10 +894,10 @@ export default function BowlingSolitaire() {
           flexStyles.colCentered,
           flexStyles.flex1,
           {
-            paddingVertical: 12 * scale,
+            paddingVertical: spacing(12),
             backgroundColor: zoneBg,
-            borderRadius: 8 * scale,
-            gap: 5 * scale,
+            borderRadius: spacing(8),
+            gap: spacing(5),
           },
         ]}
       >
@@ -906,8 +906,8 @@ export default function BowlingSolitaire() {
           textTransform="uppercase"
           color={rgba(Colors.white, 0.7)}
           style={{
-            fontSize: 12 * scale,
-            lineHeight: 12 * scale,
+            fontSize: font(12),
+            lineHeight: font(12),
           }}
         >
           {label}
@@ -919,9 +919,9 @@ export default function BowlingSolitaire() {
               weight={300}
               color={rgba(Colors.white, 0.6)}
               style={{
-                fontSize: 24 * scale,
-                lineHeight: 24 * scale,
-                width: 14 * scale,
+                fontSize: font(24),
+                lineHeight: font(24),
+                width: spacing(14),
                 textAlign: "center",
               }}
             >
@@ -938,9 +938,9 @@ export default function BowlingSolitaire() {
                   : Colors.accentBlue
             }
             style={{
-              fontSize: 24 * scale,
-              lineHeight: 24 * scale,
-              width: 18 * scale,
+              fontSize: font(24),
+              lineHeight: font(24),
+              width: spacing(18),
               textAlign: "center",
             }}
           >
@@ -965,8 +965,8 @@ export default function BowlingSolitaire() {
         style={[
           flexStyles.colCentered,
           {
-            fontSize: 12 * scale,
-            lineHeight: 12 * scale,
+            fontSize: font(12),
+            lineHeight: font(12),
             width: "50%",
             height: "100%",
             aspectRatio: 1,
@@ -1002,8 +1002,8 @@ export default function BowlingSolitaire() {
           flexStyles.rowCentered,
           {
             backgroundColor: zoneBg,
-            paddingHorizontal: 8 * scale,
-            borderRadius: 8 * scale,
+            paddingHorizontal: spacing(8),
+            borderRadius: spacing(8),
           },
         ]}
       >
@@ -1025,7 +1025,7 @@ export default function BowlingSolitaire() {
               style={{
                 flex: 1,
                 alignItems: "center",
-                gap: 3 * scale,
+                gap: spacing(3),
               }}
             >
               <Text
@@ -1122,7 +1122,7 @@ export default function BowlingSolitaire() {
           style={[
             flexStyles.rowCentered,
             flexStyles.fullWidth,
-            { gap: 8 * scale },
+            { gap: spacing(8) },
           ]}
         >
           <CountText count={selectedPinSum} label="Pins" />
@@ -1159,8 +1159,8 @@ export default function BowlingSolitaire() {
           getZoneStylesById("ball-num"),
           flexStyles.colCentered,
           {
-            borderRadius: 8 * scale,
-            gap: 4 * scale,
+            borderRadius: spacing(8),
+            gap: spacing(4),
           },
         ]}
       >

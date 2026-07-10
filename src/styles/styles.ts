@@ -103,7 +103,7 @@ export const Fonts = Platform.select({
     mono: "monospace",
   },
   web: {
-    sans: "var(--font-display)",
+    sans: "var(--font-sans)",
     serif: "var(--font-serif)",
     rounded: "var(--font-rounded)",
     mono: "var(--font-mono)",
@@ -121,7 +121,7 @@ export const FontWeight = {
 
 export const ContentSidePadding = 20;
 export const MaxContentWidth = 420;
-export const MaxContentHeight = 820;
+export const MaxContentHeight = 1000;
 
 export const HomePadding = 20;
 

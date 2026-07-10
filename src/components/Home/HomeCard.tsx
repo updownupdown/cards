@@ -34,16 +34,15 @@ export function HomeCard({
   style,
 }: Props) {
   const scale = responsiveScale;
+  const spacing = (value: number) => roundToPixel(value * scale);
   const tagsText = game.tags?.map((tag) => GameTagNames[tag]).join(", ");
 
-  const borderRadius = roundToPixel(12 * scale);
-  const padding = roundToPixel(
-    (size === "large" ? 22 : size === "medium" ? 12 : 18) * scale,
-  );
-  const shadowUnit = roundToPixel(2 * scale);
+  const borderRadius = spacing(12);
+  const padding = spacing(size === "large" ? 22 : size === "medium" ? 12 : 18);
+  const shadowUnit = spacing(2);
 
-  const smallCardHeight = roundToPixel(50 * scale);
-  const mediumCardHeight = roundToPixel(120 * scale);
+  const smallCardHeight = spacing(50);
+  const mediumCardHeight = spacing(120);
 
   const height =
     size === "large"
@@ -52,7 +51,7 @@ export function HomeCard({
         ? smallCardHeight
         : mediumCardHeight;
 
-  const favBtnSize = roundToPixel(36 * scale);
+  const favBtnSize = spacing(36);
   const favBtnInset = roundToPixel(favBtnSize / 10);
 
   return (
@@ -107,7 +106,7 @@ export function HomeCard({
       <Link href={path as Href} asChild>
         <Pressable
           style={{
-            gap: roundToPixel(14 * scale),
+            gap: spacing(14),
             height: size === "large" ? undefined : "100%",
           }}
         >
@@ -116,7 +115,7 @@ export function HomeCard({
               flexDirection: "column",
               alignItems: size === "medium" ? "center" : "flex-start",
               height: size === "large" ? undefined : "100%",
-              gap: roundToPixel(8 * scale),
+              gap: spacing(8),
               flex: 1,
               justifyContent: size === "medium" ? "flex-end" : "center",
             }}
@@ -172,7 +171,7 @@ export function HomeCard({
             height: favBtnSize,
             transform:
               size === "small" ? [{ translateY: -favBtnSize / 2 }] : undefined,
-            borderRadius: roundToPixel(8 * scale),
+            borderRadius: spacing(8),
             backgroundColor: rgba(game.cardColorBg, 0.5),
           },
         ]}

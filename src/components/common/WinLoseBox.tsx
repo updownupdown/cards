@@ -1,14 +1,7 @@
 import { Text } from "@/components/common/Text";
-import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
-import { modalBorderRadius } from "@/styles/modalStyles";
-import {
-  Colors,
-  ContentSidePadding,
-  HeaderHeight,
-  MaxContentWidth,
-  rgba,
-} from "@/styles/styles";
+import { Colors, ContentSidePadding, rgba } from "@/styles/styles";
 import { useEffect, useRef } from "react";
 import { Animated, Easing, Platform, View } from "react-native";
 import { Button } from "../Button/Button";
@@ -31,7 +24,7 @@ export const WinLoseBox = ({
   reset,
   handleUndo,
 }: Props) => {
-  const responsiveScale = useResponsiveScale();
+  const { ui, spacing } = useResponsiveMetrics();
   const { cardBg } = useGameZoneBackground();
 
   // Win/lose animations
@@ -73,7 +66,7 @@ export const WinLoseBox = ({
           opacity: wlmAnim,
           position: "absolute",
           zIndex: 9,
-          top: HeaderHeight * responsiveScale,
+          top: ui.gameHeaderHeight,
           left: 0,
           right: 0,
           bottom: 0,
@@ -88,11 +81,11 @@ export const WinLoseBox = ({
             opacity: wlmAnim,
             position: "absolute",
             zIndex: 500,
-            padding: 20 * responsiveScale,
-            gap: 20 * responsiveScale,
+            padding: spacing(20),
+            gap: spacing(20),
             left: "50%",
             transform: [{ translateX: "-50%" }],
-            borderRadius: modalBorderRadius,
+            borderRadius: spacing(20),
             backgroundColor: won
               ? rgba(Colors.win, 0.95)
               : rgba(Colors.lose, 0.9),
@@ -100,11 +93,10 @@ export const WinLoseBox = ({
               ? `0 0 20px ${rgba(Colors.win, 0.6)}, 0 0 40px ${rgba(Colors.win, 0.6)}`
               : `0 0 20px ${rgba(Colors.lose, 0.6)}, 0 0 40px ${rgba(Colors.lose, 0.6)}`,
             width: "100%",
-            maxWidth:
-              MaxContentWidth * responsiveScale - ContentSidePadding * 2,
+            maxWidth: ui.contentMaxWidth - ContentSidePadding * 2,
             bottom: wlmAnim.interpolate({
               inputRange: [0, 1],
-              outputRange: [-200, ContentSidePadding * responsiveScale],
+              outputRange: [-200, spacing(ContentSidePadding)],
             }),
           },
         ]}
@@ -113,7 +105,7 @@ export const WinLoseBox = ({
           style={[
             flexStyles.colCentered,
             {
-              gap: 14 * responsiveScale,
+              gap: spacing(14),
             },
           ]}
         >
@@ -152,7 +144,7 @@ export const WinLoseBox = ({
             flexStyles.rowCentered,
             flexStyles.fullWidth,
             {
-              gap: 12 * responsiveScale,
+              gap: spacing(12),
             },
           ]}
         >

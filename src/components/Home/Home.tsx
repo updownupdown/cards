@@ -1,9 +1,9 @@
 import { Text } from "@/components/common/Text";
 import type { HomeSectionConfig } from "@/components/Home/GamesList";
-import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
 import { menuStyles } from "@/styles/menuStyles";
-import { Colors, HomePadding, MaxContentWidth } from "@/styles/styles";
+import { Colors, HomePadding } from "@/styles/styles";
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -52,7 +52,7 @@ const HOME_SECTIONS: HomeSectionConfig[] = [
 
 export default function Home() {
   const insets = useSafeAreaInsets();
-  const responsiveScale = useResponsiveScale();
+  const { ui, spacing } = useResponsiveMetrics();
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
@@ -63,9 +63,8 @@ export default function Home() {
     setHomeDataRefreshToken((current) => current + 1);
   };
 
-  const headerOffsetTop =
-    insets.top + Math.round(HomePadding * responsiveScale * 0.5);
-  const headerHeight = Math.round(52 * responsiveScale);
+  const headerOffsetTop = insets.top + Math.round(spacing(HomePadding) * 0.5);
+  const headerHeight = ui.gameHeaderHeight;
 
   useEffect(() => {
     // Delay rendering heavy components so the UI can mount and fade in first.
@@ -107,7 +106,7 @@ export default function Home() {
                 {
                   pointerEvents: "box-none",
                   width: "100%",
-                  maxWidth: MaxContentWidth * responsiveScale,
+                  maxWidth: ui.contentMaxWidth,
                   paddingTop: headerOffsetTop,
                   paddingBottom: headerOffsetTop * 4,
                   alignSelf: "center",
@@ -120,9 +119,9 @@ export default function Home() {
                   {
                     pointerEvents: "box-none",
                     height: headerHeight,
-                    paddingLeft: HomePadding * responsiveScale,
+                    paddingLeft: spacing(HomePadding),
                     // Less right padding to account for button padding
-                    paddingRight: HomePadding * responsiveScale * 0.5,
+                    paddingRight: Math.round(spacing(HomePadding) * 0.5),
                   },
                 ]}
               >

@@ -32,7 +32,7 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
-import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 const svgCellSize = 800;
 const svgGridSize = svgCellSize * 3;
@@ -235,7 +235,7 @@ function computeScore(grid: PlayingCard[][]): ScoreBySuit {
 // ========== Main Component ========== //
 export default function Skyway() {
   const { zoneBg } = useGameZoneBackground();
-  const responsiveScale = useResponsiveScale();
+  const { spacing } = useResponsiveMetrics();
 
   const [selectedMarket, setSelectedMarket] = useState<number | null>(null);
 
@@ -493,14 +493,14 @@ export default function Skyway() {
               style={[
                 flexStyles.colCentered,
                 {
-                  gap: 6 * responsiveScale,
+                  gap: spacing(6),
                 },
               ]}
             >
               <Icon
                 name={suit}
                 color={SUIT_PATH_COLORS[suit]}
-                size={18 * responsiveScale}
+                size={spacing(18)}
               />
               <Text
                 size="sm"
@@ -544,7 +544,7 @@ export default function Skyway() {
             zIndex: 10,
             flexWrap: "wrap",
             aspectRatio: 1,
-            padding: 4 * responsiveScale,
+            padding: spacing(4),
             userSelect: "none",
             pointerEvents: "none",
           },

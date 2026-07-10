@@ -5,7 +5,7 @@ import {
 } from "@/data/game-menu";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { flexStyles } from "@/styles/flexStyles";
-import { modalStyles } from "@/styles/modalStyles";
+import { useModalStyles } from "@/styles/modalStyles";
 import React from "react";
 import { ScrollView, View } from "react-native";
 import { Button } from "../Button/Button";
@@ -20,6 +20,7 @@ interface Props {
 
 export const SettingsModal = ({ onClose, onHomeDataInvalidated }: Props) => {
   const { settings, updateSettings, isLoading } = useGlobalSettings();
+  const modalStyles = useModalStyles();
 
   const onCloseAndRefresh = () => {
     onHomeDataInvalidated();

@@ -14,8 +14,8 @@ import { usePathname } from "expo-router";
 import { Animated, ScrollView, View } from "react-native";
 import { Button } from "../Button/Button";
 import {
-  getConstrainedContentWidth,
-  useResponsiveScaleFromWidth,
+  getConstrainedUiWidth,
+  useResponsiveUiLayoutFromWidth,
 } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 
@@ -29,11 +29,11 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);
   const { width: screenWidthActual } = useViewportDimensions();
-  const responsiveScale = useResponsiveScaleFromWidth(screenWidthActual);
+  const ui = useResponsiveUiLayoutFromWidth(screenWidthActual);
 
-  const containerWidth = getConstrainedContentWidth(
+  const containerWidth = getConstrainedUiWidth(
     screenWidthActual,
-    responsiveScale,
+    ui.contentMaxWidth,
   );
 
   const { updateSettings: updateGameSettings } = useGameSettings(pathname);

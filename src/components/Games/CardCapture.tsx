@@ -21,7 +21,7 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 import { delay } from "@/utils/utils";
 import { useToast } from "../common/Toast";
-import { useResponsiveScale } from "@/hooks/useResponsiveLayout";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { RadioButtons } from "../common/RadioButtons";
 import { Colors } from "@/styles/styles";
 
@@ -258,7 +258,7 @@ function finalizeRoundOrWin(draft: GameState) {
 // ========== Main Game Component ========== //
 export default function CardCapture() {
   const { zoneBg } = useGameZoneBackground();
-  const scale = useResponsiveScale();
+  const { spacing } = useResponsiveMetrics();
   const showToast = useToast();
 
   const actionModeOptions = useMemo(
@@ -777,7 +777,7 @@ export default function CardCapture() {
             style={[
               flexStyles.colCentered,
               flexStyles.fullWidth,
-              { gap: 20 * scale },
+              { gap: spacing(20) },
             ]}
           >
             <RadioButtons
@@ -801,7 +801,7 @@ export default function CardCapture() {
               style={[
                 flexStyles.rowCentered,
                 flexStyles.fullWidth,
-                { gap: 14 * scale },
+                { gap: spacing(14) },
               ]}
             >
               <Button

@@ -39,14 +39,14 @@ type MoveSource = { zone: "tableau"; index: number };
 type DropTarget = { zone: "waste" };
 
 const ROW_LAYOUT: readonly (readonly number[])[] = [
-  [1, 4, 7],
-  [0.5, 1.5, 3.5, 4.5, 6.5, 7.5],
-  [0, 1, 2, 3, 4, 5, 6, 7, 8],
+  [1.5, 4.5, 7.5],
+  [1, 2, 4, 5, 7, 8],
+  [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5],
   [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
 ] as const;
 
 const CARDS_PER_ROW = [3, 6, 9, 10] as const;
-const TABLEAU_ROW_BASE = 1.2;
+const TABLEAU_ROW_BASE = 0.9;
 const TABLEAU_ROW_STEP = 0.43;
 
 function isAdjacentRank(a: PlayingCard, b: PlayingCard) {
@@ -267,7 +267,6 @@ export default function TriPeaks() {
       col: ROW_LAYOUT[card.row][card.col],
       row: TABLEAU_ROW_BASE + card.row * TABLEAU_ROW_STEP,
       baseZIndex: 20 + card.row,
-      fan: { maxVisible: 1 },
     }));
 
     return [
@@ -275,7 +274,7 @@ export default function TriPeaks() {
         id: "stock",
         name: "stock",
         cards: game.stock,
-        col: 0,
+        col: 3,
         row: 0,
         baseZIndex: 60,
         fan: { maxVisible: 3 },
@@ -285,7 +284,7 @@ export default function TriPeaks() {
         id: "waste",
         name: "waste",
         cards: game.waste,
-        col: 1.4,
+        col: 6,
         row: 0,
         baseZIndex: 50,
         fan: { maxVisible: 3 },
@@ -372,8 +371,9 @@ export default function TriPeaks() {
     cardMapper,
     zoneMapper,
     cardSize: "small",
-    fixedCols: 10,
-    fixedRows: 6,
+    visualizer: true,
+    // fixedCols: 10,
+    // fixedRows: 6,
   });
 
   const stockTapRect = useMemo(() => {
