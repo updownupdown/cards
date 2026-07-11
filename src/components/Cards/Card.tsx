@@ -1,4 +1,5 @@
 import { CardComponents as CardsRegular } from "@/assets/cards/regular";
+import { CardComponents as CardsTableau } from "@/assets/cards/tableau";
 import { CardComponents as CardsSmall } from "@/assets/cards/small";
 import { CardComponents as CardsSmallColored } from "@/assets/cards/small-colored";
 import React from "react";
@@ -49,7 +50,9 @@ export const Card = ({
       ? CardsSmall
       : cardSize === "small-colored"
         ? CardsSmallColored
-        : CardsRegular;
+        : cardSize === "tableau"
+          ? CardsTableau
+          : CardsRegular;
 
   let cardName = "BackH";
 

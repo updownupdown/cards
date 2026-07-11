@@ -1,7 +1,4 @@
-import {
-  GameDefinition,
-  GameTag,
-} from "../games-data";
+import { GameDefinition, GameTag } from "../games-data";
 
 export const theEmissary: GameDefinition = {
   path: "/the-emissary",
@@ -14,8 +11,8 @@ export const theEmissary: GameDefinition = {
     "Win exactly the right number of debates in each kingdom while managing one-time advisors.",
   stats: {
     complexity: 70,
-    difficulty: 60,
-    luck: 30,
+    difficulty: 70,
+    luck: 35,
   },
   tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
   byLine: "Game design by Wil Su",

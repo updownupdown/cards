@@ -373,9 +373,10 @@ export default function Scorpion() {
     zones,
     cardMapper,
     zoneMapper,
-    cardSize: "small",
+    cardSize: "tableau",
     fixedRows: 6,
-    visualizer: true,
+    gap: 0.12,
+    // visualizer: true,
   });
 
   const stockTapRect = useMemo(() => {
@@ -716,93 +717,85 @@ export default function Scorpion() {
       undo={undo}
       winLoseMessage={won ? "All four suit stacks are complete." : undefined}
     >
-      <Text size="sm">
-        Reserve cards: {game.stock.length}
-        <br />
-        Completed suit stacks: {completedStacks}/4
-      </Text>
+      <View
+        ref={boardRef}
+        style={{
+          flex: 1,
+          width: "100%",
+          position: "relative",
+          touchAction: "none",
+          overscrollBehaviorX: "contain",
+        }}
+      >
+        {cardMap}
 
-      <View style={{ flex: 1, width: "100%", gap: 12 }}>
         <View
-          ref={boardRef}
           style={{
-            flex: 1,
-            width: "100%",
-            position: "relative",
+            ...StyleSheet.absoluteFill,
+            zIndex: 3000,
             touchAction: "none",
             overscrollBehaviorX: "contain",
+            pointerEvents: "box-none",
           }}
         >
-          {cardMap}
-
-          <View
-            style={{
-              ...StyleSheet.absoluteFill,
-              zIndex: 3000,
-              touchAction: "none",
-              overscrollBehaviorX: "contain",
-              pointerEvents: "box-none",
-            }}
-          >
-            {stockTapRect && (
-              <Pressable
-                style={{
-                  position: "absolute",
-                  backgroundColor: "transparent",
-                  left: stockTapRect.x,
-                  top: stockTapRect.y,
-                  width: stockTapRect.width,
-                  height: stockTapRect.height,
-                }}
-                onPress={dealStock}
-                disabled={game.stock.length === 0 || game.stockDealt}
-              />
-            )}
-            {interactionTargets}
-          </View>
-
-          {dragGhost && (
-            <Animated.View
-              style={[
-                {
-                  pointerEvents: "none",
-                  position: "absolute",
-                  zIndex: 4000,
-                  left: ghostLeft,
-                  top: ghostTop,
-                  transform: dragTranslate.getTranslateTransform(),
-                },
-              ]}
-            >
-              {dragGhost.cards.map((card, index) => (
-                <View
-                  key={`ghost-${card.id}`}
-                  style={[
-                    {
-                      position: "absolute",
-                      left: 0,
-                      opacity: 1,
-                      width: cardWidth,
-                      height: cardHeight,
-                    },
-                    {
-                      top: index * TABLEAU_FAN_OFFSET * cardHeight,
-                      zIndex: index + 1,
-                    },
-                  ]}
-                >
-                  <Card
-                    card={card}
-                    cardWidth={cardWidth}
-                    cardSize="small"
-                    selectColor={ghostHasValidDrop ? "green" : "none"}
-                    isSelected={ghostHasValidDrop}
-                  />
-                </View>
-              ))}
-            </Animated.View>
+          {stockTapRect && (
+            <Pressable
+              style={{
+                position: "absolute",
+                backgroundColor: "transparent",
+                left: stockTapRect.x,
+                top: stockTapRect.y,
+                width: stockTapRect.width,
+                height: stockTapRect.height,
+              }}
+              onPress={dealStock}
+              disabled={game.stock.length === 0 || game.stockDealt}
+            />
           )}
+          {interactionTargets}
         </View>
+
+        {dragGhost && (
+          <Animated.View
+            style={[
+              {
+                pointerEvents: "none",
+                position: "absolute",
+                zIndex: 4000,
+                left: ghostLeft,
+                top: ghostTop,
+                transform: dragTranslate.getTranslateTransform(),
+              },
+            ]}
+          >
+            {dragGhost.cards.map((card, index) => (
+              <View
+                key={`ghost-${card.id}`}
+                style={[
+                  {
+                    position: "absolute",
+                    left: 0,
+                    opacity: 1,
+                    width: cardWidth,
+                    height: cardHeight,
+                  },
+                  {
+                    top: index * TABLEAU_FAN_OFFSET * cardHeight,
+                    zIndex: index + 1,
+                  },
+                ]}
+              >
+                <Card
+                  card={card}
+                  cardWidth={cardWidth}
+                  cardSize="tableau"
+                  selectColor={ghostHasValidDrop ? "green" : "none"}
+                  isSelected={ghostHasValidDrop}
+                />
+              </View>
+            ))}
+          </Animated.View>
+        )}
       </View>
     </GameWrapper>
   );

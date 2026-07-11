@@ -1,7 +1,4 @@
-import {
-  GameDefinition,
-  GameTag,
-} from "../games-data";
+import { GameDefinition, GameTag } from "../games-data";
 
 export const deadCenter: GameDefinition = {
   path: "/dead-center",
@@ -13,7 +10,7 @@ export const deadCenter: GameDefinition = {
   cardDescription:
     "Defend your cabin against a siege of zombies, using supporting cards strategically.",
   stats: {
-    complexity: 75,
+    complexity: 70,
     difficulty: 50,
     luck: 20,
   },

@@ -10,9 +10,9 @@ export const scorpion: GameDefinition = {
   cardDescription:
     "Untangle face-up columns into four same-suit runs from King to Ace.",
   stats: {
-    complexity: 68,
-    difficulty: 63,
-    luck: 47,
+    complexity: 0,
+    difficulty: 0,
+    luck: 0,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
   briefRules: [

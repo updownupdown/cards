@@ -10,9 +10,9 @@ export const tripeaks: GameDefinition = {
   cardDescription:
     "Clear three peaks by playing cards one rank above or below the waste.",
   stats: {
-    complexity: 48,
-    difficulty: 44,
-    luck: 64,
+    complexity: 15,
+    difficulty: 30,
+    luck: 70,
   },
   tags: [GameTag.ClassicSolitaire],
   briefRules: [

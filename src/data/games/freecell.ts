@@ -10,9 +10,9 @@ export const freecell: GameDefinition = {
   cardDescription:
     "An open-information classic where nearly every deal can be won with care.",
   stats: {
-    complexity: 79,
-    difficulty: 73,
-    luck: 16,
+    complexity: 20,
+    difficulty: 40,
+    luck: 30,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
   briefRules: [

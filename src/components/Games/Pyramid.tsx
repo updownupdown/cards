@@ -15,13 +15,12 @@ import { delay } from "@/utils/utils";
 type PyramidCard = PlayingCard & {
   row: number;
   col: number;
-  removed: boolean;
 };
 
 type Selection = { zone: "pyramid"; index: number } | { zone: "waste" } | null;
 
 type GameState = {
-  pyramid: PyramidCard[];
+  pyramid: (PyramidCard | null)[];
   waste: PlayingCard[];
   discard: PlayingCard[];
   stockCount: number;
@@ -33,22 +32,26 @@ const PYRAMID_BASE_COL = 3;
 const PYRAMID_BASE_ROW = 0.8;
 const PYRAMID_ROW_STEP = 0.5;
 
-function isCardExposed(card: PyramidCard, pyramid: PyramidCard[]) {
-  if (card.removed) return false;
+const PYRAMID_POSITIONS: { row: number; col: number }[] = [];
+for (let row = 0; row < PYRAMID_ROWS; row += 1) {
+  for (let col = 0; col <= row; col += 1) {
+    PYRAMID_POSITIONS.push({ row, col });
+  }
+}
+
+function isCardExposed(card: PyramidCard, pyramid: (PyramidCard | null)[]) {
   if (card.row === PYRAMID_ROWS - 1) return true;
 
   const leftCoveredBy = pyramid.find(
     (candidate) =>
-      candidate.row === card.row + 1 &&
-      candidate.col === card.col &&
-      !candidate.removed,
+      candidate && candidate.row === card.row + 1 && candidate.col === card.col,
   );
 
   const rightCoveredBy = pyramid.find(
     (candidate) =>
+      candidate &&
       candidate.row === card.row + 1 &&
-      candidate.col === card.col + 1 &&
-      !candidate.removed,
+      candidate.col === card.col + 1,
   );
 
   return !leftCoveredBy && !rightCoveredBy;
@@ -70,7 +73,7 @@ async function resetAndSetup(
 ) {
   setGame((draft) => {
     const allCards = flipAllToBack([
-      ...draft.pyramid.filter((card) => !card.removed),
+      ...draft.pyramid.filter((card): card is PyramidCard => card !== null),
       ...draft.waste,
       ...draft.discard,
     ]);
@@ -85,13 +88,12 @@ async function resetAndSetup(
 
   setGame((draft) => {
     const shuffled = shuffle(draft.discard);
-    const pyramid: PyramidCard[] = [];
+    const pyramid: (PyramidCard | null)[] = [];
 
     for (let row = 0; row < PYRAMID_ROWS; row += 1) {
       for (let col = 0; col <= row; col += 1) {
         const base = shuffled.pop();
-        if (!base) continue;
-        pyramid.push({ ...base, row, col, faceUp: true, removed: false });
+        pyramid.push(base ? { ...base, row, col, faceUp: true } : null);
       }
     }
 
@@ -111,7 +113,7 @@ function hasAvailableMove(snapshot: GameState) {
 
   const exposedSelections: ExposedSelection[] = snapshot.pyramid
     .map((card, index) => ({ card, index }))
-    .filter(({ card }) => isCardExposed(card, snapshot.pyramid))
+    .filter(({ card }) => !!card && isCardExposed(card, snapshot.pyramid))
     .map(({ index }) => ({ zone: "pyramid", index }) as const);
 
   if (snapshot.waste.length > 0) {
@@ -164,6 +166,7 @@ export default function Pyramid() {
   const [selected, setSelected] = useState<Selection>(null);
 
   const {
+    isSettingUp,
     isLoaded,
     showIntro,
     setShowIntro,
@@ -184,13 +187,14 @@ export default function Pyramid() {
   });
 
   const removedCount = useMemo(
-    () => game.pyramid.filter((card) => card.removed).length,
+    () => game.pyramid.filter((card) => card === null).length,
     [game.pyramid],
   );
 
-  const won = removedCount === PYRAMID_SIZE;
-  const lost = !won && game.stockCount === 0 && !hasAvailableMove(game);
-  const ended = won || lost;
+  const won = !isSettingUp && removedCount === PYRAMID_SIZE;
+  const lost =
+    !isSettingUp && !won && game.stockCount === 0 && !hasAvailableMove(game);
+  const ended = !isSettingUp && (won || lost);
 
   function stockCards(snapshot = game) {
     if (snapshot.stockCount <= 0) return [] as PlayingCard[];
@@ -238,22 +242,14 @@ export default function Pyramid() {
 
     if (first.zone === "pyramid") {
       const pyramidCard = snapshot.pyramid[first.index];
-      if (
-        !pyramidCard ||
-        pyramidCard.removed ||
-        !isCardExposed(pyramidCard, snapshot.pyramid)
-      ) {
+      if (!pyramidCard || !isCardExposed(pyramidCard, snapshot.pyramid)) {
         return false;
       }
     }
 
     if (second.zone === "pyramid") {
       const pyramidCard = snapshot.pyramid[second.index];
-      if (
-        !pyramidCard ||
-        pyramidCard.removed ||
-        !isCardExposed(pyramidCard, snapshot.pyramid)
-      ) {
+      if (!pyramidCard || !isCardExposed(pyramidCard, snapshot.pyramid)) {
         return false;
       }
     }
@@ -304,8 +300,9 @@ export default function Pyramid() {
 
     saveUndoState(structuredClone(game));
     setGame((draft) => {
-      draft.pyramid[selection.index].removed = true;
       const removedCard = draft.pyramid[selection.index];
+      if (!removedCard) return;
+      draft.pyramid[selection.index] = null;
       addCardsToDiscard(draft, [removedCard]);
     });
     setSelected(null);
@@ -320,8 +317,11 @@ export default function Pyramid() {
       if (!first || !second) return;
 
       if (first.zone === "pyramid") {
-        draft.pyramid[first.index].removed = true;
-        addCardsToDiscard(draft, [draft.pyramid[first.index]]);
+        const removedCard = draft.pyramid[first.index];
+        if (removedCard) {
+          draft.pyramid[first.index] = null;
+          addCardsToDiscard(draft, [removedCard]);
+        }
       } else {
         const removedCard = draft.waste.pop();
         if (removedCard) {
@@ -330,8 +330,11 @@ export default function Pyramid() {
       }
 
       if (second.zone === "pyramid") {
-        draft.pyramid[second.index].removed = true;
-        addCardsToDiscard(draft, [draft.pyramid[second.index]]);
+        const removedCard = draft.pyramid[second.index];
+        if (removedCard) {
+          draft.pyramid[second.index] = null;
+          addCardsToDiscard(draft, [removedCard]);
+        }
       } else {
         const removedCard = draft.waste.pop();
         if (removedCard) {
@@ -348,7 +351,7 @@ export default function Pyramid() {
     if (ended) return;
 
     const card = game.pyramid[index];
-    if (!card || card.removed || !isCardExposed(card, game.pyramid)) return;
+    if (!card || !isCardExposed(card, game.pyramid)) return;
 
     if (!selected) {
       if (!removeSingleKing({ zone: "pyramid", index })) {
@@ -397,15 +400,18 @@ export default function Pyramid() {
       length: PYRAMID_SIZE,
     }).map((_, index) => {
       const card = game.pyramid[index];
+      const position = PYRAMID_POSITIONS[index];
+      const row = position?.row ?? 0;
+      const col = position?.col ?? 0;
 
       return {
         id: `pyramid-${index}`,
         name: "pyramid",
         pileIndex: index,
-        cards: !card || card.removed ? [] : [card],
-        col: PYRAMID_BASE_COL - card.row / 2 + card.col,
-        row: PYRAMID_BASE_ROW + card.row * PYRAMID_ROW_STEP,
-        baseZIndex: 20 + card.row,
+        cards: card ? [card] : [],
+        col: PYRAMID_BASE_COL - row / 2 + col,
+        row: PYRAMID_BASE_ROW + row * PYRAMID_ROW_STEP,
+        baseZIndex: 20 + row,
       };
     });
 
@@ -470,7 +476,7 @@ export default function Pyramid() {
 
       return {
         onPress: () => onPyramidPress(index),
-        isDisabled: ended || !exposed || card?.removed,
+        isDisabled: ended || !exposed,
         selectColor: "blue",
         isSelected,
       };

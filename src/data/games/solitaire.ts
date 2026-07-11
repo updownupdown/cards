@@ -10,9 +10,9 @@ export const solitaire: GameDefinition = {
   cardDescription:
     "The classic solitaire: build four suit foundations from Ace to King.",
   stats: {
-    complexity: 57,
-    difficulty: 52,
-    luck: 58,
+    complexity: 20,
+    difficulty: 30,
+    luck: 40,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
   briefRules: [

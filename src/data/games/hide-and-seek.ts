@@ -1,7 +1,4 @@
-import {
-  GameDefinition,
-  GameTag,
-} from "../games-data";
+import { GameDefinition, GameTag } from "../games-data";
 
 export const hideAndSeek: GameDefinition = {
   path: "/hide-and-seek",
@@ -14,7 +11,7 @@ export const hideAndSeek: GameDefinition = {
     "Find your hidden playmates through careful planning and deduction.",
   stats: {
     complexity: 20,
-    difficulty: 65,
+    difficulty: 60,
     luck: 65,
   },
   tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],

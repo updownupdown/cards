@@ -10,9 +10,9 @@ export const fortyThieves: GameDefinition = {
   cardDescription:
     "A demanding two-deck patience where every card moves one at a time.",
   stats: {
-    complexity: 66,
-    difficulty: 62,
-    luck: 52,
+    complexity: 0,
+    difficulty: 0,
+    luck: 0,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
   briefRules: [

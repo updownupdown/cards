@@ -1,7 +1,4 @@
-import {
-  GameDefinition,
-  GameTag,
-} from "../games-data";
+import { GameDefinition, GameTag } from "../games-data";
 
 export const theBogey: GameDefinition = {
   path: "/the-bogey",
@@ -13,8 +10,8 @@ export const theBogey: GameDefinition = {
   cardDescription:
     "Build columns of cards in decreasing suit-matched sequences while playing against the mysterious Bogey.",
   stats: {
-    complexity: 60,
-    difficulty: 65,
+    complexity: 40,
+    difficulty: 75,
     luck: 35,
   },
   tags: [GameTag.ModernMechanics],

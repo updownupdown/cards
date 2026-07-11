@@ -84,3 +84,5 @@ export function isLocalDevEnvironment() {
     hostname.endsWith(".localhost")
   );
 }
+
+export const DOUBLE_TAP_MS = 300;

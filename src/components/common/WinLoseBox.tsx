@@ -6,6 +6,7 @@ import { useEffect, useRef } from "react";
 import { Animated, Easing, Platform, View } from "react-native";
 import { Button } from "../Button/Button";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { LinearGradient } from "expo-linear-gradient";
 
 interface Props {
   gameEnded: boolean;
@@ -70,9 +71,22 @@ export const WinLoseBox = ({
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: rgba(cardBg, 0.4),
         }}
-      />
+      >
+        <LinearGradient
+          colors={[rgba(cardBg, 0), rgba(cardBg, 0.8)]}
+          start={{ x: 0.5, y: 0 }}
+          end={{ x: 0.5, y: 1 }}
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            width: "100%",
+            height: "160%",
+            pointerEvents: "none",
+          }}
+        />
+      </Animated.View>
 
       <Animated.View
         style={[

@@ -1,7 +1,4 @@
-import {
-  GameDefinition,
-  GameTag,
-} from "../games-data";
+import { GameDefinition, GameTag } from "../games-data";
 
 export const theBobaTeaShop: GameDefinition = {
   path: "/the-boba-tea-shop",
@@ -14,7 +11,7 @@ export const theBobaTeaShop: GameDefinition = {
     "A push-your-luck game where you must manage ordered queues of customers.",
   stats: {
     complexity: 30,
-    difficulty: 40,
+    difficulty: 55,
     luck: 55,
   },
   tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],

@@ -10,7 +10,7 @@ export const scoundrel: GameDefinition = {
   cardDescription:
     "A dungeon crawl where you manage weapon strength and potion usage.",
   stats: {
-    complexity: 70,
+    complexity: 60,
     difficulty: 70,
     luck: 30,
   },

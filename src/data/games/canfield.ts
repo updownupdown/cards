@@ -10,9 +10,9 @@ export const canfield: GameDefinition = {
   cardDescription:
     "Build suit foundations from a random base rank, fed by a 13-card reserve.",
   stats: {
-    complexity: 73,
-    difficulty: 68,
-    luck: 45,
+    complexity: 0,
+    difficulty: 0,
+    luck: 0,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
   briefRules: [

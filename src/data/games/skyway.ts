@@ -1,7 +1,4 @@
-import {
-  GameDefinition,
-  GameTag,
-} from "../games-data";
+import { GameDefinition, GameTag } from "../games-data";
 
 export const skyway: GameDefinition = {
   path: "/skyway",
@@ -14,7 +11,7 @@ export const skyway: GameDefinition = {
     "Draft from a shifting market to engineer long suit-based routes across a growing grid.",
   stats: {
     complexity: 90,
-    difficulty: 65,
+    difficulty: 75,
     luck: 50,
   },
   tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],

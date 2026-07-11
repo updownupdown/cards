@@ -18,6 +18,7 @@ import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { Card } from "../Cards/Card";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
+  cardDims,
   createDeck,
   isRed,
   PlayingCard,
@@ -28,9 +29,7 @@ import {
   SUITS,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-
-const TABLEAU_FAN_OFFSET = 0.35;
-const DOUBLE_TAP_MS = 300;
+import { DOUBLE_TAP_MS } from "@/utils/utils";
 
 type GameState = {
   foundations: PlayingCard[][];
@@ -266,7 +265,7 @@ export default function Canfield() {
       col: pileIndex + 1.8,
       row: 1.6,
       baseZIndex: 12 + pileIndex,
-      fan: { direction: "down", offset: TABLEAU_FAN_OFFSET },
+      fan: { direction: "down", offset: cardDims.tableauOffset },
       placeholder: { text: "Tab", showCount: true },
     }));
 
@@ -278,36 +277,23 @@ export default function Canfield() {
       col: pileIndex + 1.8,
       row: 0,
       baseZIndex: 30,
-      fan: { maxVisible: 1 },
+      fan: {},
       placeholder: {
-        text:
-          pileIndex === 0
-            ? `${suit.slice(0, 3)} (${game.baseRank})`
-            : suit.slice(0, 3),
+        text: suit,
         infoPos: "below",
+        showCount: false,
       },
     }));
 
     return [
-      {
-        id: "reserve",
-        name: "reserve",
-        cards: game.reserve,
-        pileIndex: 0,
-        col: 0,
-        row: 0,
-        baseZIndex: 40,
-        fan: { maxVisible: 1 },
-        placeholder: { text: "Res", infoPos: "right", showCount: true },
-      },
       {
         id: "stock",
         name: "stock",
         cards: game.stock,
         pileIndex: 0,
         col: 0,
-        row: 1,
-        baseZIndex: 38,
+        row: 0,
+        baseZIndex: 20,
         fan: { maxVisible: 3 },
         placeholder: { text: "Draw", infoPos: "right", showCount: true },
       },
@@ -317,10 +303,21 @@ export default function Canfield() {
         cards: game.waste,
         pileIndex: 0,
         col: 0,
-        row: 2,
-        baseZIndex: 36,
+        row: 1,
+        baseZIndex: 10,
         fan: { maxVisible: 3 },
         placeholder: { text: "Waste", infoPos: "right", showCount: true },
+      },
+      {
+        id: "reserve",
+        name: "reserve",
+        cards: game.reserve,
+        pileIndex: 0,
+        col: 0,
+        row: 2.5,
+        baseZIndex: 40,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Res", infoPos: "right", showCount: true },
       },
       ...foundationZones,
       ...tableauZones,
@@ -347,21 +344,21 @@ export default function Canfield() {
       };
     }
 
-    if (mappedCard.zoneName === "reserve" && mappedCard.topOfZone) {
-      const isHoverTargetTop =
-        !!dragGhost &&
-        hoverTarget?.zone === "tableau" &&
-        hoverTarget.pileIndex >= 0;
+    // if (mappedCard.zoneName === "reserve" && mappedCard.topOfZone) {
+    //   const isHoverTargetTop =
+    //     !!dragGhost &&
+    //     hoverTarget?.zone === "tableau" &&
+    //     hoverTarget.pileIndex >= 0;
 
-      return {
-        selectColor: isHoverTargetTop ? "green" : "blue",
-        isSelected: selected?.zone === "reserve" || isHoverTargetTop,
-        isDisabled:
-          (game.reserve[game.reserve.length - 1]?.faceUp ?? false) === false,
-        isVisible: !isBeingDragged,
-        animDuration,
-      };
-    }
+    //   return {
+    //     selectColor: isHoverTargetTop ? "green" : "blue",
+    //     isSelected: selected?.zone === "reserve" || isHoverTargetTop,
+    //     isDisabled:
+    //       (game.reserve[game.reserve.length - 1]?.faceUp ?? false) === false,
+    //     isVisible: !isBeingDragged,
+    //     animDuration,
+    //   };
+    // }
 
     if (mappedCard.zoneName === "waste") {
       return {
@@ -489,9 +486,8 @@ export default function Canfield() {
     cardMapper,
     zoneMapper,
     cardSize: "small",
-    // fixedCols: 8,
-    // fixedRows: 6,
-    visualizer: true,
+    fixedRows: 6,
+    // visualizer: true,
   });
 
   const stockTapRect = useMemo(() => {
@@ -520,7 +516,7 @@ export default function Canfield() {
     if (source.zone === "tableau") {
       return createRect(
         base.x,
-        base.y + source.cardIndex * TABLEAU_FAN_OFFSET * cardHeight,
+        base.y + source.cardIndex * cardDims.tableauOffset * cardHeight,
         cardWidth,
         cardHeight,
       );
@@ -588,7 +584,7 @@ export default function Canfield() {
             },
             rect: createRect(
               zoneRect.x,
-              zoneRect.y + cardIndex * TABLEAU_FAN_OFFSET * cardHeight,
+              zoneRect.y + cardIndex * cardDims.tableauOffset * cardHeight,
               cardWidth,
               cardHeight,
             ),
@@ -632,7 +628,7 @@ export default function Canfield() {
         const pile = game.tableau[zone.pileIndex];
         const pileHeight =
           cardHeight +
-          Math.max(0, pile.length - 1) * TABLEAU_FAN_OFFSET * cardHeight;
+          Math.max(0, pile.length - 1) * cardDims.tableauOffset * cardHeight;
 
         areas.push({
           target: { zone: "tableau", pileIndex: zone.pileIndex },
@@ -1159,97 +1155,85 @@ export default function Canfield() {
       canUndo={canUndo}
       undo={undo}
     >
-      <View style={{ width: "100%", alignItems: "center", gap: 4 }}>
-        <Text size="xs">
-          Base: {game.baseRank} Foundations: {foundationCount}/52
-        </Text>
-        <Text size="xs">
-          Reserve: {game.reserve.length} Stock: {game.stock.length} Waste:{" "}
-          {game.waste.length} Draw: {game.drawCount}
-        </Text>
-      </View>
+      <View
+        ref={boardRef}
+        style={{
+          flex: 1,
+          width: "100%",
+          position: "relative",
+          touchAction: "none",
+          overscrollBehaviorX: "contain",
+        }}
+      >
+        {cardMap}
 
-      <View style={{ flex: 1, width: "100%", gap: 12 }}>
         <View
-          ref={boardRef}
           style={{
-            flex: 1,
-            width: "100%",
-            position: "relative",
+            ...StyleSheet.absoluteFill,
+            zIndex: 3000,
             touchAction: "none",
             overscrollBehaviorX: "contain",
+            pointerEvents: "box-none",
           }}
         >
-          {cardMap}
-
-          <View
-            style={{
-              ...StyleSheet.absoluteFill,
-              zIndex: 3000,
-              touchAction: "none",
-              overscrollBehaviorX: "contain",
-              pointerEvents: "box-none",
-            }}
-          >
-            {stockTapRect && (
-              <Pressable
-                style={{
-                  position: "absolute",
-                  backgroundColor: "transparent",
-                  left: stockTapRect.x,
-                  top: stockTapRect.y,
-                  width: stockTapRect.width,
-                  height: stockTapRect.height,
-                }}
-                onPress={drawFromStock}
-                disabled={game.stock.length === 0 && game.waste.length === 0}
-              />
-            )}
-            {interactionTargets}
-          </View>
-
-          {dragGhost && (
-            <Animated.View
-              style={[
-                {
-                  pointerEvents: "none",
-                  position: "absolute",
-                  zIndex: 4000,
-                  left: ghostLeft,
-                  top: ghostTop,
-                  transform: dragTranslate.getTranslateTransform(),
-                },
-              ]}
-            >
-              {dragGhost.cards.map((card, index) => (
-                <View
-                  key={`ghost-${card.id}`}
-                  style={[
-                    {
-                      position: "absolute",
-                      left: 0,
-                      opacity: 1,
-                      width: cardWidth,
-                      height: cardHeight,
-                    },
-                    {
-                      top: index * TABLEAU_FAN_OFFSET * cardHeight,
-                      zIndex: index + 1,
-                    },
-                  ]}
-                >
-                  <Card
-                    card={card}
-                    cardWidth={cardWidth}
-                    cardSize="small"
-                    selectColor={ghostHasValidDrop ? "green" : "none"}
-                    isSelected={ghostHasValidDrop}
-                  />
-                </View>
-              ))}
-            </Animated.View>
+          {stockTapRect && (
+            <Pressable
+              style={{
+                position: "absolute",
+                backgroundColor: "transparent",
+                left: stockTapRect.x,
+                top: stockTapRect.y,
+                width: stockTapRect.width,
+                height: stockTapRect.height,
+              }}
+              onPress={drawFromStock}
+              disabled={game.stock.length === 0 && game.waste.length === 0}
+            />
           )}
+          {interactionTargets}
         </View>
+
+        {dragGhost && (
+          <Animated.View
+            style={[
+              {
+                pointerEvents: "none",
+                position: "absolute",
+                zIndex: 4000,
+                left: ghostLeft,
+                top: ghostTop,
+                transform: dragTranslate.getTranslateTransform(),
+              },
+            ]}
+          >
+            {dragGhost.cards.map((card, index) => (
+              <View
+                key={`ghost-${card.id}`}
+                style={[
+                  {
+                    position: "absolute",
+                    left: 0,
+                    opacity: 1,
+                    width: cardWidth,
+                    height: cardHeight,
+                  },
+                  {
+                    top: index * cardDims.tableauOffset * cardHeight,
+                    zIndex: index + 1,
+                  },
+                ]}
+              >
+                <Card
+                  card={card}
+                  cardWidth={cardWidth}
+                  cardSize="small"
+                  selectColor={ghostHasValidDrop ? "green" : "none"}
+                  isSelected={ghostHasValidDrop}
+                />
+              </View>
+            ))}
+          </Animated.View>
+        )}
       </View>
     </GameWrapper>
   );

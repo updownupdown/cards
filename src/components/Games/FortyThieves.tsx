@@ -1,5 +1,4 @@
 import { Text } from "@/components/common/Text";
-import { useStateManager } from "@/hooks/useStateManager";
 import {
   CardHitArea,
   createRect,
@@ -9,6 +8,7 @@ import {
   useDragDrop,
 } from "@/hooks/useDragDrop";
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
+import { useStateManager } from "@/hooks/useStateManager";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { useNavigation } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -18,17 +18,15 @@ import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { Card } from "../Cards/Card";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
+  cardDims,
   CardSuit,
   createDeck,
   PlayingCard,
   RANK_VALUE,
   shuffle,
-  SUITS,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-
-const TABLEAU_FAN_OFFSET = 0.28;
-const DOUBLE_TAP_MS = 300;
+import { DOUBLE_TAP_MS } from "@/utils/utils";
 
 type GameState = {
   foundations: PlayingCard[][];
@@ -202,7 +200,7 @@ export default function FortyThieves() {
       col: pileIndex,
       row: 1.5,
       baseZIndex: 10 + pileIndex,
-      fan: { direction: "down", offset: TABLEAU_FAN_OFFSET },
+      fan: { direction: "down", offset: cardDims.tableauOffset },
       placeholder: { text: "Tab", showCount: true },
     }));
 
@@ -217,11 +215,7 @@ export default function FortyThieves() {
         row: 0,
         baseZIndex: 30,
         fan: { maxVisible: 1 },
-        placeholder: {
-          text:
-            foundationSuit(game.foundations[pileIndex])?.slice(0, 3) ?? "Fnd",
-          infoPos: "below",
-        },
+        placeholder: {},
       }),
     );
 
@@ -392,10 +386,9 @@ export default function FortyThieves() {
     zones,
     cardMapper,
     zoneMapper,
-    cardSize: "small",
-    fixedCols: 10,
-    fixedRows: 6,
-    visualizer: true,
+    gap: 0.14,
+    cardSize: "tableau",
+    fixedRows: 5,
   });
 
   const stockTapRect = useMemo(() => {
@@ -423,7 +416,7 @@ export default function FortyThieves() {
     if (source.zone === "tableau") {
       return createRect(
         base.x,
-        base.y + source.cardIndex * TABLEAU_FAN_OFFSET * cardHeight,
+        base.y + source.cardIndex * cardDims.tableauOffset * cardHeight,
         cardWidth,
         cardHeight,
       );
@@ -478,7 +471,7 @@ export default function FortyThieves() {
           },
           rect: createRect(
             zoneRect.x,
-            zoneRect.y + topIndex * TABLEAU_FAN_OFFSET * cardHeight,
+            zoneRect.y + topIndex * cardDims.tableauOffset * cardHeight,
             cardWidth,
             cardHeight,
           ),
@@ -521,7 +514,7 @@ export default function FortyThieves() {
         const pile = game.tableau[zone.pileIndex];
         const pileHeight =
           cardHeight +
-          Math.max(0, pile.length - 1) * TABLEAU_FAN_OFFSET * cardHeight;
+          Math.max(0, pile.length - 1) * cardDims.tableauOffset * cardHeight;
 
         areas.push({
           target: { zone: "tableau", pileIndex: zone.pileIndex },
@@ -977,21 +970,6 @@ export default function FortyThieves() {
       canUndo={canUndo}
       undo={undo}
     >
-      <View
-        style={{ width: "100%", alignItems: "center", gap: 4, paddingTop: 2 }}
-      >
-        <Text size="xs">
-          Foundations: {foundationCount}/104 Stock: {game.stock.length} Waste:{" "}
-          {game.waste.length}
-        </Text>
-        <Text size="xs">
-          Mode:{" "}
-          {allowInfiniteRedeals
-            ? "Easy (infinite redeals)"
-            : "Difficult (one pass)"}
-        </Text>
-      </View>
-
       <View style={{ flex: 1, width: "100%", gap: 12 }}>
         <View
           ref={boardRef}
@@ -1056,7 +1034,7 @@ export default function FortyThieves() {
                       height: cardHeight,
                     },
                     {
-                      top: index * TABLEAU_FAN_OFFSET * cardHeight,
+                      top: index * cardDims.tableauOffset * cardHeight,
                       zIndex: index + 1,
                     },
                   ]}
@@ -1064,7 +1042,7 @@ export default function FortyThieves() {
                   <Card
                     card={card}
                     cardWidth={cardWidth}
-                    cardSize="small"
+                    cardSize="tableau"
                     selectColor={ghostHasValidDrop ? "green" : "none"}
                     isSelected={ghostHasValidDrop}
                   />

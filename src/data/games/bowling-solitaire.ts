@@ -9,8 +9,8 @@ export const bowlingSolitaire: GameDefinition = {
   cardDescription:
     "Bowl a full game of 10-pin using cards, chasing strikes and spares.",
   stats: {
-    complexity: 70,
-    difficulty: 75,
+    complexity: 30,
+    difficulty: 30,
     luck: 35,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.ModernMechanics],

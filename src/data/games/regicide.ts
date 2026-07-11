@@ -10,9 +10,9 @@ export const regicide: GameDefinition = {
   cardDescription:
     "Team up with the deck to topple 12 royals using suit-power combos.",
   stats: {
-    complexity: 85,
+    complexity: 65,
     difficulty: 80,
-    luck: 25,
+    luck: 30,
   },
   tags: [GameTag.ModernMechanics],
   briefRules: [

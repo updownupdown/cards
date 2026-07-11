@@ -2,7 +2,7 @@ import { Colors, rgba } from "@/styles/styles";
 import { cardDims } from "./card-utils";
 import { StyleSheet, View } from "react-native";
 
-export type CardSizes = "small" | "regular" | "small-colored";
+export type CardSizes = "small" | "regular" | "small-colored" | "tableau";
 
 // ===== Card Select Colors ===== //
 const cardSelectColorMap = {

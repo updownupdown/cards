@@ -26,7 +26,7 @@
       "favicon": "./assets/app-icon/icon.png",
       "themeColor": "#343f49",
       "name": "Solo Suite",
-      "shortName": "SoloSuite",
+      "shortName": "Solo Suite",
       "description": "A collection of solo playing card games.",
       "display": "standalone",
       "startUrl": "/cards/",

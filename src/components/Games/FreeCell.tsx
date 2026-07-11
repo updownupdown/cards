@@ -17,6 +17,7 @@ import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { Card } from "../Cards/Card";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
+  cardDims,
   isRed,
   PlayingCard,
   RANK_VALUE,
@@ -25,11 +26,7 @@ import {
   SUITS,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-
-// ─── Constants ────────────────────────────────────────────────────────────────
-
-const CASCADE_FAN_OFFSET = 0.4;
-const DOUBLE_TAP_MS = 300;
+import { DOUBLE_TAP_MS } from "@/utils/utils";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -219,7 +216,7 @@ export default function FreeCell() {
       baseZIndex: 10 + i,
       fan: {
         direction: "down" as const,
-        offset: CASCADE_FAN_OFFSET,
+        offset: cardDims.tableauOffset,
         center: false,
       },
       placeholder: {},
@@ -359,7 +356,7 @@ export default function FreeCell() {
     zones,
     cardMapper,
     zoneMapper,
-    cardSize: "small",
+    cardSize: "tableau",
     // visualizer: true,
     fixedRows: 6,
   });
@@ -389,7 +386,8 @@ export default function FreeCell() {
           source: { zone: "cascade", pileIndex: zone.pileIndex },
           rect: createRect(
             zoneRect.x,
-            zoneRect.y + (pile.length - 1) * CASCADE_FAN_OFFSET * cardHeight,
+            zoneRect.y +
+              (pile.length - 1) * cardDims.tableauOffset * cardHeight,
             cardWidth,
             cardHeight,
           ),
@@ -436,7 +434,7 @@ export default function FreeCell() {
         const pile = game.cascades[zone.pileIndex];
         const pileHeight =
           cardHeight +
-          Math.max(0, pile.length - 1) * CASCADE_FAN_OFFSET * cardHeight;
+          Math.max(0, pile.length - 1) * cardDims.tableauOffset * cardHeight;
         areas.push({
           target: { zone: "cascade", pileIndex: zone.pileIndex },
           rect: createRect(bx, by, cardWidth, pileHeight),
@@ -606,7 +604,7 @@ export default function FreeCell() {
       const pile = game.cascades[source.pileIndex];
       return {
         x: base.x,
-        y: base.y + (pile.length - 1) * CASCADE_FAN_OFFSET * cardHeight,
+        y: base.y + (pile.length - 1) * cardDims.tableauOffset * cardHeight,
       };
     }
     return { x: base.x, y: base.y };
@@ -823,7 +821,7 @@ export default function FreeCell() {
                 <Card
                   card={dragGhost.cards[0]}
                   cardWidth={cardWidth}
-                  cardSize="small"
+                  cardSize="tableau"
                   selectColor={ghostHasValidDrop ? "green" : "none"}
                   isSelected={ghostHasValidDrop}
                 />

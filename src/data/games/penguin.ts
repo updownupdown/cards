@@ -5,14 +5,14 @@ export const penguin: GameDefinition = {
   title: "Penguin",
   // enabledOnLocalOnly: true,
   thumbnail: DEFAULT_GAME_THUMBNAIL,
-  cardColorBg: "#243443",
-  cardColorText: "#E7F6FF",
+  cardColorBg: "#0e2335",
+  cardColorText: "#ff944d",
   cardDescription:
     "A FreeCell-like game building suit runs from a random beak rank.",
   stats: {
-    complexity: 77,
-    difficulty: 71,
-    luck: 31,
+    complexity: 0,
+    difficulty: 0,
+    luck: 0,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
   briefRules: [

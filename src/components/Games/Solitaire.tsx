@@ -26,8 +26,7 @@ import {
   SUITS,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-
-const DOUBLE_TAP_MS = 300;
+import { DOUBLE_TAP_MS } from "@/utils/utils";
 
 type GameState = {
   tableau: PlayingCard[][];

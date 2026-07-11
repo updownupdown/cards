@@ -10,9 +10,9 @@ export const spiderSolitaire: GameDefinition = {
   cardDescription:
     "Build same-suit runs from King to Ace across a tangled double deck.",
   stats: {
-    complexity: 74,
-    difficulty: 69,
-    luck: 38,
+    complexity: 0,
+    difficulty: 0,
+    luck: 0,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
   briefRules: [

@@ -1,7 +1,4 @@
-import {
-  GameDefinition,
-  GameTag,
-} from "../games-data";
+import { GameDefinition, GameTag } from "../games-data";
 
 export const area52: GameDefinition = {
   path: "/area-52",
@@ -13,7 +10,7 @@ export const area52: GameDefinition = {
   cardDescription:
     "Fight off waves of alien invaders before running out of defenders.",
   stats: {
-    complexity: 70,
+    complexity: 40,
     difficulty: 70,
     luck: 30,
   },

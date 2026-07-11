@@ -1,7 +1,4 @@
-import {
-  GameDefinition,
-  GameTag,
-} from "../games-data";
+import { GameDefinition, GameTag } from "../games-data";
 
 export const cardCapture: GameDefinition = {
   path: "/card-capture",
@@ -14,8 +11,8 @@ export const cardCapture: GameDefinition = {
   cardDescription:
     "Use low cards and jokers to dismantle enemy forces, while protecting every Ace and face card from capture.",
   stats: {
-    complexity: 75,
-    difficulty: 70,
+    complexity: 40,
+    difficulty: 50,
     luck: 40,
   },
   tags: [GameTag.ModernMechanics],

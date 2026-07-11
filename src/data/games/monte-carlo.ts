@@ -11,7 +11,7 @@ export const monteCarlo: GameDefinition = {
   stats: {
     complexity: 10,
     difficulty: 20,
-    luck: 30,
+    luck: 35,
   },
   tags: [GameTag.ClassicSolitaire],
   briefRules: [

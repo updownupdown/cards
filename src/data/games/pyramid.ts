@@ -9,9 +9,9 @@ export const pyramid: GameDefinition = {
   cardDescription:
     "Clear the pyramid by removing pairs of cards that add up to 13.",
   stats: {
-    complexity: 52,
-    difficulty: 49,
-    luck: 62,
+    complexity: 15,
+    difficulty: 30,
+    luck: 65,
   },
   tags: [GameTag.ClassicSolitaire],
   briefRules: [
