@@ -42,7 +42,8 @@ export const GAME_SETTINGS_STORAGE_KEY = "cards.gameSettings.v1";
 export const RECENT_GAMES_STORAGE_KEY = "cards.recentGames.v1";
 export const GAME_SESSION_STORAGE_KEY = "cards.gameSession.v1";
 export const MAX_RECENT_GAMES = 10;
-const GAME_SESSION_VERSION = 1;
+const GAME_SESSION_VERSION = 2;
+const MAX_SESSION_AGE_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 export type SavedGameSession<T = unknown> = {
   version: number;
@@ -185,6 +186,10 @@ export async function loadLastGameSession<T = unknown>() {
       !Number.isFinite(parsed.savedAt) ||
       parsed.savedAt <= 0
     ) {
+      return null;
+    }
+
+    if (Date.now() - parsed.savedAt > MAX_SESSION_AGE_MS) {
       return null;
     }
 

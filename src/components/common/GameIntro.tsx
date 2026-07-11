@@ -13,6 +13,7 @@ import {
 } from "@/styles/styles";
 import { usePathname } from "expo-router";
 import { Animated, ScrollView, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button } from "../Button/Button";
 import {
   getConstrainedUiWidth,
@@ -34,6 +35,7 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
   const { width: screenWidthActual } = useViewportDimensions();
   const ui = useResponsiveUiLayoutFromWidth(screenWidthActual);
   const { cardBg } = useGameZoneBackground();
+  const insets = useSafeAreaInsets();
 
   const containerWidth = getConstrainedUiWidth(
     screenWidthActual,
@@ -92,6 +94,7 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
             left: 0,
             justifyContent: "flex-end",
             padding: ContentSidePadding,
+            paddingBottom: Math.max(ContentSidePadding, insets.bottom),
           },
         ]}
       >
