@@ -3,6 +3,7 @@ import { GameThumbnailName } from "./game-thumbnails";
 import { isLocalDevEnvironment } from "@/utils/utils";
 
 export enum GameTag {
+  EasyToLearn = "EasyToLearn",
   ClassicSolitaire = "ClassicSolitaire",
   IsaludoCollection = "IsaludoCollection",
   DragAndDrop = "DragAndDrop",
@@ -10,6 +11,7 @@ export enum GameTag {
 }
 
 export const GameTagNames: Record<GameTag, string> = {
+  [GameTag.EasyToLearn]: "Easy to Learn",
   [GameTag.IsaludoCollection]: "Isaludo Collection",
   [GameTag.ClassicSolitaire]: "Classic Solitaire",
   [GameTag.DragAndDrop]: "Drag-and-Drop",

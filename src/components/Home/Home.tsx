@@ -12,6 +12,7 @@ import { LoadingOverlay } from "../common/LoadingOverlay";
 import { GamesList } from "./GamesList";
 import { SettingsModal } from "./SettingsModal";
 import { StatsModal } from "./StatsModal";
+import SoloSuiteLogo from "@/assets/images/SoloSuiteLogo.svg";
 
 const FEATURED_GAME_PATHS: string[] = [
   "/scoundrel",
@@ -125,9 +126,11 @@ export default function Home() {
                   },
                 ]}
               >
-                <Text size="xl" weight={200} style={[flexStyles.flex1]}>
-                  Solo Suite
-                </Text>
+                <SoloSuiteLogo
+                  width={140}
+                  height={32}
+                  style={{ marginRight: "auto" }}
+                />
 
                 <Button
                   iconName="chart"

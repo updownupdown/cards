@@ -15,7 +15,7 @@ export const golf: GameDefinition = {
     difficulty: 50,
     luck: 70,
   },
-  tags: [GameTag.ClassicSolitaire],
+  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
   briefRules: [
     "Play an exposed tableau card one rank above or below the waste top.",
     "Sequences do not wrap: Aces are low and Kings are high.",

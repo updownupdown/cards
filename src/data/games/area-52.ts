@@ -15,7 +15,11 @@ export const area52: GameDefinition = {
     difficulty: 70,
     luck: 30,
   },
-  tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
+  tags: [
+    GameTag.IsaludoCollection,
+    GameTag.ModernMechanics,
+    GameTag.EasyToLearn,
+  ],
   byLine: "Game design by Wil Su",
   briefRules: [
     "Survive both waves of alien invaders before running out of defenders to win.",

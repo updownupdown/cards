@@ -1,6 +1,7 @@
 import { ToastProvider } from "@/components/common/Toast";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { Colors } from "@/styles/styles";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import {
   Outfit_200ExtraLight,
   Outfit_300Light,
@@ -10,12 +11,13 @@ import {
   Outfit_700Bold,
 } from "@expo-google-fonts/outfit";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Stack, usePathname } from "expo-router";
 import { useEffect } from "react";
 import { View } from "react-native";
 
 export default function Layout() {
   const { cardBg } = useGameZoneBackground();
+  const pathname = usePathname();
   const [fontsLoaded] = useFonts({
     Outfit_200ExtraLight,
     Outfit_300Light,
@@ -46,30 +48,45 @@ export default function Layout() {
     html.classList.toggle("fonts-ready", fontsLoaded);
   }, [fontsLoaded]);
 
+  // On web, expo-router keeps previous screens mounted but hides them with
+  // display:none (which react-native-web flags with aria-hidden). If the
+  // element that triggered navigation still holds focus, Chromium warns that
+  // focus is trapped inside an aria-hidden subtree. Blurring on route change
+  // clears that focus before the outgoing screen is hidden.
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const active = document.activeElement as HTMLElement | null;
+    if (active && typeof active.blur === "function") {
+      active.blur();
+    }
+  }, [pathname]);
+
   if (!fontsLoaded && typeof document === "undefined") {
     return null;
   }
 
   return (
-    <ToastProvider>
-      <View
-        style={[
-          {
-            flex: 1,
-            userSelect: "none",
-            backgroundColor: Colors.background,
-          },
-        ]}
-      >
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            gestureEnabled: false,
-            fullScreenGestureEnabled: false,
-            contentStyle: { backgroundColor: Colors.background },
-          }}
-        />
-      </View>
-    </ToastProvider>
+    <SafeAreaProvider>
+      <ToastProvider>
+        <View
+          style={[
+            {
+              flex: 1,
+              userSelect: "none",
+              backgroundColor: Colors.background,
+            },
+          ]}
+        >
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              gestureEnabled: false,
+              fullScreenGestureEnabled: false,
+              contentStyle: { backgroundColor: Colors.background },
+            }}
+          />
+        </View>
+      </ToastProvider>
+    </SafeAreaProvider>
   );
 }

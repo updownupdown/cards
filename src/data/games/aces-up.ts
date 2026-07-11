@@ -14,7 +14,7 @@ export const acesUp: GameDefinition = {
     difficulty: 80,
     luck: 80,
   },
-  tags: [GameTag.ClassicSolitaire],
+  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
   briefRules: [
     "Deal four cards at a time, one to each pile.",
     "Discard the lower of two exposed cards that share a suit.",

@@ -15,7 +15,11 @@ export const theSandwichGuy: GameDefinition = {
     difficulty: 80,
     luck: 40,
   },
-  tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
+  tags: [
+    GameTag.IsaludoCollection,
+    GameTag.ModernMechanics,
+    GameTag.EasyToLearn,
+  ],
   byLine: "Game design by Wil Su",
   briefRules: [
     "Select three cards with equally-spaced rank values to create a sandwich.",

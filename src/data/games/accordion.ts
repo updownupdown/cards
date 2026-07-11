@@ -15,7 +15,7 @@ export const accordion: GameDefinition = {
     difficulty: 35,
     luck: 65,
   },
-  tags: [GameTag.ClassicSolitaire],
+  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
   briefRules: [
     "Cards match if they share a suit or a rank.",
     "Move a card onto the one 1 or 3 places to its left.",

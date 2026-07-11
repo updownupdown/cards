@@ -6,13 +6,26 @@ import {
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
+import { textStyles } from "@/styles/textStyles";
+import Constants from "expo-constants";
 import React from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { Button } from "../Button/Button";
 import { AddToHomeScreenNotice } from "../common/AddToHomeScreenNotice";
 import { SettingControl } from "../common/SettingControl";
 import ModalFull from "../Modals/ModalFull";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+
+function formatBuildDate(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleString("en-US", {
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+}
 
 interface Props {
   onClose: () => void;
@@ -125,6 +138,18 @@ export const SettingsModal = ({ onClose, onHomeDataInvalidated }: Props) => {
             />
           )}
         </View>
+
+        {Constants.expoConfig?.extra?.buildDate && (
+          <Text
+            style={[
+              textStyles.caps,
+              { opacity: 0.4, textAlign: "center", marginTop: 8 },
+            ]}
+          >
+            {"Last build on " +
+              formatBuildDate(Constants.expoConfig.extra.buildDate)}
+          </Text>
+        )}
       </ScrollView>
     </ModalFull>
   );

@@ -6,16 +6,21 @@ import {
   loadRecentlyPlayedGames,
   toggleFavoriteGame,
 } from "@/data/game-menu";
-import { GameMenuInfo, GameTag, isGameEnabled } from "@/data/games-data";
+import {
+  GameMenuInfo,
+  GameTag,
+  GameTagNames,
+  isGameEnabled,
+} from "@/data/games-data";
 import { GAMES_DATA } from "@/data/games";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { Icon, type IconName } from "@/icons";
-import { Colors, HomePadding } from "@/styles/styles";
+import { Colors, HomePadding, rgba } from "@/styles/styles";
 import { roundToPixel } from "@/utils/utils";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { ScrollView, View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { DiscoverFilters } from "@/components/Home/DiscoverFilters";
 import { Button } from "@/components/Button/Button";
@@ -64,6 +69,7 @@ export const GamesList = ({
   const [hasLoadedGameSettings, setHasLoadedGameSettings] = useState(false);
   const [selectedTag, setSelectedTag] = useState<GameTag | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [tagPromoIndex, setTagPromoIndex] = useState(0);
 
   const discoverCardSize: CardSize = settings.discoverCardSize ?? "large";
   const shouldShowHomeInstallNotice = !settings.dismissHomeInstallPrompt;
@@ -118,6 +124,28 @@ export const GamesList = ({
     () => allEnabledGames.map(([path]) => path),
     [allEnabledGames],
   );
+
+  const promoTags = useMemo(
+    () =>
+      (Object.values(GameTag) as GameTag[]).filter((tag) =>
+        allEnabledGames.some(([_, game]) => game.tags?.includes(tag)),
+      ),
+    [allEnabledGames],
+  );
+
+  const tagPromoGames = useMemo(() => {
+    const map = new Map<GameTag, [string, GameMenuInfo][]>();
+
+    promoTags.forEach((tag) => {
+      const taggedGames = allEnabledGames.filter(([_, game]) =>
+        game.tags?.includes(tag),
+      );
+      const shuffled = [...taggedGames].sort(() => Math.random() - 0.5);
+      map.set(tag, shuffled.slice(0, 3));
+    });
+
+    return map;
+  }, [promoTags, allEnabledGames]);
 
   const unplayedEnabledGamePaths = useMemo(
     () =>
@@ -377,6 +405,197 @@ export const GamesList = ({
     );
   };
 
+  const renderPlayRandomRow = () => (
+    <View
+      key="section-play-random"
+      style={{
+        width: "100%",
+        maxWidth: contentMaxWidth,
+        alignSelf: "center",
+      }}
+    >
+      <View
+        style={[
+          flexStyles.rowCentered,
+          flexStyles.fullWidth,
+          {
+            paddingHorizontal: pageSidePadding,
+            paddingTop: sectionTopPadding * 2,
+            paddingBottom: sectionTopPadding,
+            gap: roundToPixel(spacing(24)),
+          },
+        ]}
+      >
+        <Text size="md" weight={300} color={Colors.K200} style={{ flex: 1 }}>
+          Play random:
+        </Text>
+
+        <Button
+          text="All games"
+          uppercase={false}
+          size="md"
+          onPress={onPlayRandomAllGames}
+          textOnly
+        />
+
+        <Button
+          text="Unplayed games"
+          uppercase={false}
+          size="md"
+          onPress={onPlayRandomUnplayedGames}
+          disabled={
+            !hasLoadedGameSettings || unplayedEnabledGamePaths.length === 0
+          }
+          textOnly
+        />
+      </View>
+    </View>
+  );
+
+  const renderTagPromo = () => {
+    if (promoTags.length === 0) {
+      return null;
+    }
+
+    const promoTag = promoTags[tagPromoIndex % promoTags.length];
+    const promoGames = tagPromoGames.get(promoTag) ?? [];
+    const largeGame = promoGames[0];
+    const smallGames = promoGames.slice(1, 3);
+    const tagName = GameTagNames[promoTag];
+
+    const goToPrevTag = () =>
+      setTagPromoIndex(
+        (index) => (index - 1 + promoTags.length) % promoTags.length,
+      );
+    const goToNextTag = () =>
+      setTagPromoIndex((index) => (index + 1) % promoTags.length);
+
+    const arrowButtonSize = roundToPixel(spacing(38));
+    const arrowIconSize = roundToPixel(spacing(24));
+
+    return (
+      <View
+        key="section-tag-promo"
+        style={{
+          width: "100%",
+          maxWidth: contentMaxWidth,
+          alignSelf: "center",
+          paddingHorizontal: pageSidePadding,
+          paddingTop: sectionTopPadding,
+        }}
+      >
+        <View
+          style={{
+            width: "100%",
+            backgroundColor: rgba(Colors.K950, 0.55),
+            borderRadius: roundToPixel(spacing(16)),
+            padding: roundToPixel(spacing(18)),
+            gap: roundToPixel(spacing(16)),
+          }}
+        >
+          {/* Tag title with prev/next arrows */}
+          <View
+            style={[
+              flexStyles.rowCentered,
+              flexStyles.fullWidth,
+              { gap: roundToPixel(spacing(8)) },
+            ]}
+          >
+            <Pressable
+              onPress={goToPrevTag}
+              hitSlop={8}
+              style={{
+                width: arrowButtonSize,
+                height: arrowButtonSize,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Icon
+                name="arrow-back"
+                size={arrowIconSize}
+                color={Colors.accentBlue}
+              />
+            </Pressable>
+
+            <Text
+              style={{ flex: 1, textAlign: "center" }}
+              size="xl"
+              weight={500}
+              color={Colors.K100}
+              numberOfLines={1}
+            >
+              {tagName}
+            </Text>
+
+            <Pressable
+              onPress={goToNextTag}
+              hitSlop={8}
+              style={{
+                width: arrowButtonSize,
+                height: arrowButtonSize,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Icon
+                name="arrow-forward"
+                size={arrowIconSize}
+                color={Colors.accentBlue}
+              />
+            </Pressable>
+          </View>
+
+          {/* Featured cards for the tag */}
+          <View style={{ width: "100%", gap: discoverCardGap }}>
+            {largeGame && (
+              <HomeCard
+                key={largeGame[0]}
+                path={largeGame[0]}
+                game={largeGame[1]}
+                size="large"
+                responsiveScale={scale}
+                onToggleFavorite={onToggleFavorite}
+                isFavorite={favorites.has(largeGame[0])}
+                style={{ width: "100%" }}
+              />
+            )}
+
+            {smallGames.map(([path, game]) => (
+              <HomeCard
+                key={path}
+                path={path}
+                game={game}
+                size="small"
+                responsiveScale={scale}
+                onToggleFavorite={onToggleFavorite}
+                isFavorite={favorites.has(path)}
+                style={{ width: "100%" }}
+              />
+            ))}
+          </View>
+
+          {/* View all link */}
+          <View
+            style={{
+              width: "100%",
+              alignItems: "center",
+              paddingVertical: spacing(12),
+            }}
+          >
+            <Button
+              text={`View all tagged with "${tagName}"`}
+              uppercase={false}
+              size="sm"
+              onPress={() => setSelectedTag(promoTag)}
+              textOnly
+            />
+          </View>
+        </View>
+      </View>
+    );
+  };
+
   const renderDiscoverCards = (
     section: HomeSectionConfig,
     gameList: [string, GameMenuInfo][],
@@ -400,49 +619,6 @@ export const GamesList = ({
           alignSelf: "center",
         }}
       >
-        {!hasDiscoverFilters && (
-          <View
-            style={[
-              flexStyles.rowCentered,
-              flexStyles.fullWidth,
-              {
-                paddingHorizontal: pageSidePadding,
-                paddingTop: sectionTopPadding * 2,
-                paddingBottom: sectionTopPadding,
-                gap: roundToPixel(spacing(24)),
-              },
-            ]}
-          >
-            <Text
-              size="md"
-              weight={300}
-              color={Colors.K200}
-              style={{ flex: 1 }}
-            >
-              Play random:
-            </Text>
-
-            <Button
-              text="All games"
-              uppercase={false}
-              size="md"
-              onPress={onPlayRandomAllGames}
-              textOnly
-            />
-
-            <Button
-              text="Unplayed games"
-              uppercase={false}
-              size="md"
-              onPress={onPlayRandomUnplayedGames}
-              disabled={
-                !hasLoadedGameSettings || unplayedEnabledGamePaths.length === 0
-              }
-              textOnly
-            />
-          </View>
-        )}
-
         <View
           style={{
             width: "100%",
@@ -511,6 +687,12 @@ export const GamesList = ({
           />
         </View>,
       );
+    }
+
+    if (!hasDiscoverFilters) {
+      scrollChildren.push(renderTagPromo());
+      scrollChildren.push(renderPlayRandomRow());
+      return;
     }
 
     const discoverGames = getGamesForSection(section);

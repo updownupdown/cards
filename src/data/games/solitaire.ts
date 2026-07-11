@@ -14,7 +14,7 @@ export const solitaire: GameDefinition = {
     difficulty: 30,
     luck: 40,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
+  tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop, GameTag.EasyToLearn],
   briefRules: [
     "Build the four foundations up by suit, from Ace to King.",
     "Build tableau columns down in rank with alternating colors.",

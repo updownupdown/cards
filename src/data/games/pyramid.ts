@@ -14,7 +14,7 @@ export const pyramid: GameDefinition = {
     difficulty: 30,
     luck: 65,
   },
-  tags: [GameTag.ClassicSolitaire],
+  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
   briefRules: [
     "Remove pairs of exposed cards that total 13.",
     "Kings are worth 13 and are removed on their own.",

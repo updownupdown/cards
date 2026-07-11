@@ -13,7 +13,7 @@ export const tripeaks: GameDefinition = {
     difficulty: 30,
     luck: 70,
   },
-  tags: [GameTag.ClassicSolitaire],
+  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
   briefRules: [
     "Play an exposed card one rank higher or lower than the waste top.",
     "Rank wraps around, so Aces and Kings connect.",

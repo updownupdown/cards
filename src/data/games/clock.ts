@@ -15,7 +15,7 @@ export const clock: GameDefinition = {
     difficulty: 10,
     luck: 100,
   },
-  tags: [GameTag.ClassicSolitaire],
+  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
   briefRules: [
     "Cards are dealt into 12 clock positions plus a center King pile.",
     "Place each card under the position matching its rank.",

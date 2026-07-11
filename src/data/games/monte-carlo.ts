@@ -14,7 +14,7 @@ export const monteCarlo: GameDefinition = {
     difficulty: 20,
     luck: 35,
   },
-  tags: [GameTag.ClassicSolitaire],
+  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
   briefRules: [
     "Remove pairs of equal rank that sit next to each other.",
     "Neighbours count horizontally, vertically, and diagonally.",
