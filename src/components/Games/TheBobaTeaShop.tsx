@@ -1,6 +1,6 @@
 import { Text } from "@/components/common/Text";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { useFade } from "@/hooks/useFade";
+import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles, transitionStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight, rgba } from "@/styles/styles";
@@ -11,7 +11,6 @@ import { Animated, Pressable, StyleSheet, View } from "react-native";
 import { Button } from "../Button/Button";
 import {
   AnimatedCardMapping,
-  bufferedDefaultAnimDuration,
   defaultAnimDuration,
 } from "../Cards/AnimatedCard";
 import {

@@ -5,6 +5,7 @@ export const clock: GameDefinition = {
   title: "Clock Solitaire",
   thumbnail: "Clock.jpg",
   cardBack: "Clock.png",
+  background: "wood-table.jpg",
   cardColorBg: "#1d1610",
   cardColorText: "#eed9c2",
   cardDescription:

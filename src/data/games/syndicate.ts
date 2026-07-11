@@ -1,12 +1,10 @@
-import {
-  GameDefinition,
-  GameTag,
-} from "../games-data";
+import { GameDefinition, GameTag } from "../games-data";
 
 export const syndicate: GameDefinition = {
   path: "/syndicate",
   title: "Syndicate",
   thumbnail: "Syndicate.jpg",
+  background: "concrete.jpg",
   cardColorBg: "#252220",
   cardColorText: "#b2eee1",
   cardDescription:

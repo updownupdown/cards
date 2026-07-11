@@ -1,10 +1,7 @@
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 import { useMemo, useState } from "react";
-import {
-  AnimatedCardMapping,
-  bufferedDefaultAnimDuration,
-} from "../Cards/AnimatedCard";
+import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
   flipAllToBack,
@@ -212,6 +209,7 @@ export default function Accordion() {
     zones,
     cardMapper,
     cardSize: "small",
+    gap: 0.14,
     fixedCols: 7,
     fixedRows: 8,
   });

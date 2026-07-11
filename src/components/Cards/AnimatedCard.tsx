@@ -1,5 +1,9 @@
 import React from "react";
 import { Pressable, StyleSheet } from "react-native";
+import {
+  bufferedDefaultAnimDuration,
+  defaultAnimDuration,
+} from "@/constants/animation";
 import Animated, {
   Easing,
   interpolate,
@@ -13,8 +17,7 @@ import { Card } from "./Card";
 import { PlayingCard } from "./card-utils";
 import { CardColor, CardSizes } from "./CardStyles";
 
-export const defaultAnimDuration = 400;
-export const bufferedDefaultAnimDuration = defaultAnimDuration + 100;
+export { defaultAnimDuration, bufferedDefaultAnimDuration };
 
 export type CardRegistration = {
   card: PlayingCard | null;

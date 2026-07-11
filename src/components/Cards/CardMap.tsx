@@ -314,7 +314,8 @@ export function useCardMap({
     ) => {
       const base = getZoneBasePos(zone);
       let { x, y } = base;
-      let zIndex = baseZIndex + cardIndex;
+      // Keep the first card above the zone base layer (backgrounds/overlays).
+      let zIndex = baseZIndex + cardIndex + 1;
       let isHiddenUnderDeck = false;
       let fanOffset = zone.fan?.offset ?? cardDims.fanOffset;
       let fanCenter = zone.fan?.center ?? true;

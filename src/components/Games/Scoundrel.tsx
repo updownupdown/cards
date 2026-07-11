@@ -7,10 +7,7 @@ import { delay } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { Button } from "../Button/Button";
-import {
-  AnimatedCardMapping,
-  bufferedDefaultAnimDuration,
-} from "../Cards/AnimatedCard";
+import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
   flipAllToBack,
@@ -859,7 +856,7 @@ export default function Scoundrel() {
                 )}
 
                 <Button
-                  text={action.text}
+                  text={action.disabled ? "--" : action.text}
                   size="xs"
                   uppercase={false}
                   onPress={action.onPress}

@@ -5,6 +5,7 @@ export const hideAndSeek: GameDefinition = {
   title: "Hide and Seek",
   thumbnail: "HideAndSeek.jpg",
   cardBack: "HideAndSeek.png",
+  background: "felt-green.jpg",
   cardColorBg: "#221815",
   cardColorText: "#c5f7da",
   cardDescription:

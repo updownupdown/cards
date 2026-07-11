@@ -2,12 +2,11 @@ import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
 import { delay } from "@/utils/utils";
 import { produce } from "immer";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { View } from "react-native";
 import { Button } from "../Button/Button";
 import {
   AnimatedCardMapping,
-  bufferedDefaultAnimDuration,
   defaultAnimDuration,
 } from "../Cards/AnimatedCard";
 import {

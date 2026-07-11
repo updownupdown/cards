@@ -4,7 +4,7 @@ export const spiderSolitaire: GameDefinition = {
   path: "/spider-solitaire",
   title: "Spider Solitaire",
   enabledOnLocalOnly: true,
-  thumbnail: DEFAULT_GAME_THUMBNAIL,
+  background: "felt-dark-purple.jpg",
   cardColorBg: "#2E2731",
   cardColorText: "#F5E6FF",
   cardDescription:

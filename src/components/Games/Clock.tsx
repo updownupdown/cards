@@ -1,6 +1,12 @@
+import ClockHandHours from "@/assets/images/ClockHandHours.svg";
+import ClockHandMinutes from "@/assets/images/ClockHandMinutes.svg";
 import { MappedCard, MapZone, useCardMap } from "@/components/Cards/CardMap";
+import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
-import { produce } from "immer";
+import { rgba } from "@/styles/styles";
+import { delay } from "@/utils/utils";
 import { useEffect, useMemo, useRef } from "react";
 import { View } from "react-native";
 import Animated, {
@@ -10,12 +16,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import Svg, { Circle } from "react-native-svg";
-import ClockHandHours from "@/assets/images/ClockHandHours.svg";
-import ClockHandMinutes from "@/assets/images/ClockHandMinutes.svg";
-import {
-  AnimatedCardMapping,
-  bufferedDefaultAnimDuration,
-} from "../Cards/AnimatedCard";
+import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   cardDims,
   createDeck,
@@ -27,11 +28,6 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-import { useStateManager } from "@/hooks/useStateManager";
-import { delay } from "@/utils/utils";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
-import { rgba } from "@/styles/styles";
-import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 type GameState = {
   piles: PlayingCard[][];

@@ -8,10 +8,7 @@ import { delay } from "@/utils/utils";
 import { useEffect, useMemo, useRef } from "react";
 import { Animated, Easing, Platform, View } from "react-native";
 import { Button } from "../Button/Button";
-import {
-  AnimatedCardMapping,
-  bufferedDefaultAnimDuration,
-} from "../Cards/AnimatedCard";
+import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
   flipAllToFace,
@@ -25,6 +22,7 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
+import { getUnderlayStyle } from "../Cards/CardStyles";
 import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
 import { ProgressBar } from "../Home/ProgressBar";
@@ -274,7 +272,7 @@ function hasValidPlayInHand(cards: PlayingCard[]): boolean {
 // ---------- Main Component ---------- //
 export default function Regicide() {
   const { spacing } = useResponsiveMetrics();
-  const { zoneBg } = useGameZoneBackground();
+  const { zoneBg, cardBg, cardText } = useGameZoneBackground();
 
   const {
     game,
@@ -892,7 +890,7 @@ export default function Regicide() {
     return;
   };
 
-  const { cardMap, cardHeight, getZoneStylesById } = useCardMap({
+  const { cardMap, cardWidth, cardHeight, getZoneStylesById } = useCardMap({
     game,
     zones,
     cardMapper,
@@ -916,8 +914,8 @@ export default function Regicide() {
       {/* Enemy Display */}
       <View
         style={[
+          getUnderlayStyle(cardWidth, cardBg, cardText),
           getZoneStylesById("enemyZone"),
-          { backgroundColor: zoneBg, borderRadius: spacing(8) },
         ]}
       />
       {game.currentEnemy && (
@@ -1000,8 +998,8 @@ export default function Regicide() {
               transform: [{ perspective: 900 }, { rotateX: attackFaceRotateX }],
               pointerEvents: game.phase === "attack" ? "auto" : "none",
               backgroundColor: zoneBg,
-              borderRadius: spacing(8),
-              boxShadow: `inset 0 0 0 ${spacing(1.5)}px ${rgba(Colors.buttonBlue, 0.5)}, 0 0 ${spacing(20)}px ${rgba(Colors.buttonBlue, 0.5)}`,
+              borderRadius: spacing(16),
+              boxShadow: `inset 0 0 0 ${spacing(1.5)}px ${rgba(Colors.buttonBlue, 0.5)}, inset 0 0 ${spacing(20)}px ${rgba(Colors.buttonBlue, 0.4)}, 0 0 ${spacing(16)}px ${rgba(Colors.black, 1)}`,
             },
           ]}
         >
@@ -1066,8 +1064,8 @@ export default function Regicide() {
               transform: [{ perspective: 900 }, { rotateX: defendFaceRotateX }],
               pointerEvents: game.phase === "defend" ? "auto" : "none",
               backgroundColor: zoneBg,
-              borderRadius: spacing(8),
-              boxShadow: `inset 0 0 0 ${spacing(1.5)}px ${rgba(Colors.buttonPurple, 0.5)}, 0 0 ${spacing(20)}px ${rgba(Colors.buttonPurple, 0.5)}`,
+              borderRadius: spacing(16),
+              boxShadow: `inset 0 0 0 ${spacing(1.5)}px ${rgba(Colors.buttonPurple, 0.5)}, inset 0 0 ${spacing(20)}px ${rgba(Colors.buttonPurple, 0.4)}, 0 0 ${spacing(16)}px ${rgba(Colors.black, 1)}`,
             },
           ]}
         >

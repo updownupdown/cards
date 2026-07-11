@@ -11,7 +11,7 @@ import { useFade } from "@/hooks/useFade";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles, transitionStyles } from "@/styles/flexStyles";
-import { Colors, FontWeight } from "@/styles/styles";
+import { Colors, FontWeight, rgba } from "@/styles/styles";
 import { rotatedText, textStyles } from "@/styles/textStyles";
 import { useEffect, useMemo, useState } from "react";
 import { Animated, View, ViewStyle } from "react-native";
@@ -430,6 +430,7 @@ export default function TheEmissary() {
       row: 0,
       width: dims.width,
       height: dims.rulersHeaderHeight,
+      baseZIndex: 1,
     };
     const debateAreaZone: MapZone = {
       id: "debate-area",
@@ -437,6 +438,7 @@ export default function TheEmissary() {
       row: debateAreaRow,
       width: dims.width,
       height: dims.debateAreaHeight,
+      baseZIndex: 1,
     };
     const chooseKingdomZone: MapZone = {
       id: "choose-kingdom",
@@ -463,6 +465,7 @@ export default function TheEmissary() {
       width: dims.width,
       height: dims.advisorHeight,
       fan: { offset: advisorsOffset, direction: "right" },
+      baseZIndex: 1,
     };
 
     // Card Zones
@@ -474,6 +477,7 @@ export default function TheEmissary() {
       row: dims.rulersHeaderHeight,
       width: dims.width,
       fan: { offset: rulersOffset, direction: "right" },
+      baseZIndex: 10,
     };
 
     const debateDeckProps = (
@@ -525,6 +529,7 @@ export default function TheEmissary() {
       width: dims.width,
       height: dims.handHeight,
       fan: { offset: handOffset, direction: "right" },
+      baseZIndex: 20,
     };
 
     return [
@@ -664,6 +669,8 @@ export default function TheEmissary() {
   const darkZoneStyles: ViewStyle = {
     borderRadius: cardWidth * 0.15,
     backgroundColor: zoneBg,
+    borderWidth: 1,
+    borderColor: rgba(cardText, 0.2),
   };
 
   return (
@@ -777,13 +784,13 @@ export default function TheEmissary() {
           ]}
         >
           <Text
+            textTransform="uppercase"
             style={[
-              textStyles.caps,
               {
-                color: Colors.K500,
                 fontSize: cardWidth * 0.3,
               },
             ]}
+            color={Colors.K300}
           >
             Wins
           </Text>
@@ -829,6 +836,7 @@ export default function TheEmissary() {
                 fontSize: cardWidth * 0.3,
               },
             ]}
+            color={Colors.K300}
           >
             {game.visit?.wins ?? "0"} / {game.visit?.requiredWins ?? "-"}
           </Text>
@@ -856,10 +864,10 @@ export default function TheEmissary() {
                 borderRadius: cardWidth * 0.1,
                 width: "100%",
                 height: "100%",
-                backgroundColor: Colors.K850,
               },
             ]}
             theme={cardText}
+            textOnly
           />
         </Animated.View>
       )}
@@ -877,10 +885,10 @@ export default function TheEmissary() {
             textStyles.caps,
             rotatedText,
             {
-              color: Colors.K500,
               fontSize: cardWidth * 0.2,
             },
           ]}
+          color={Colors.K300}
         >
           Advisors
         </Text>
@@ -895,10 +903,10 @@ export default function TheEmissary() {
             textStyles.caps,
             rotatedText,
             {
-              color: Colors.K500,
               fontSize: cardWidth * 0.2,
             },
           ]}
+          color={Colors.K300}
         >
           Hand
         </Text>

@@ -6,10 +6,7 @@ import { useEffect, useMemo } from "react";
 import { View } from "react-native";
 import { useImmer } from "use-immer";
 import { Button } from "../Button/Button";
-import {
-  AnimatedCardMapping,
-  bufferedDefaultAnimDuration,
-} from "../Cards/AnimatedCard";
+import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
   flipAllToBack,
@@ -366,6 +363,7 @@ export default function MonteCarlo() {
     zones,
     cardMapper,
     cardSize: "small",
+    gap: 0.14,
     paddingTop: 0.3,
     paddingBottom: 0.6,
   });

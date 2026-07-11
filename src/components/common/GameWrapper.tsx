@@ -17,7 +17,7 @@ import {
 } from "@/styles/styles";
 import { router, usePathname } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { Image, View } from "react-native";
+import { ImageBackground, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { GAME_BACKGROUND_ASSETS } from "@/data/game-backgrounds";
 import { Button } from "../Button/Button";
@@ -26,6 +26,8 @@ import { GameIntro } from "./GameIntro";
 import { LoadingOverlay } from "./LoadingOverlay";
 import { ResetButton } from "./ResetButton";
 import { WinLoseBox } from "./WinLoseBox";
+import { DEFAULT_GAME_BACKGROUND } from "@/data/games-data";
+import { lightenHexColor } from "@/utils/utils";
 
 interface Props {
   isLoaded?: boolean;
@@ -39,23 +41,6 @@ interface Props {
   setShowIntro: (show: boolean | undefined) => void;
   canUndo?: boolean;
   undo?: () => void;
-}
-
-function lightenHexColor(hexColor: string, amount: number) {
-  const hex = hexColor.replace("#", "");
-  if (hex.length !== 6) return hexColor;
-
-  const r = parseInt(hex.substring(0, 2), 16);
-  const g = parseInt(hex.substring(2, 4), 16);
-  const b = parseInt(hex.substring(4, 6), 16);
-  if ([r, g, b].some((v) => Number.isNaN(v))) return hexColor;
-
-  const next = (value: number) =>
-    Math.round(value + (255 - value) * amount)
-      .toString(16)
-      .padStart(2, "0");
-
-  return `#${next(r)}${next(g)}${next(b)}`;
 }
 
 export const GameWrapper = ({
@@ -110,11 +95,9 @@ export const GameWrapper = ({
 
   const titleColor = gameInfo.cardColorText;
   const backgroundColor = gameInfo.cardColorBg;
-  const overlayColor = lightenHexColor(backgroundColor, 0.2);
   const headerHeight = ui.gameHeaderHeight + insets.top;
-  const backgroundSource = gameInfo.background
-    ? GAME_BACKGROUND_ASSETS[gameInfo.background]
-    : undefined;
+  const backgroundSource =
+    GAME_BACKGROUND_ASSETS[gameInfo.background ?? DEFAULT_GAME_BACKGROUND];
 
   return (
     <>
@@ -146,20 +129,20 @@ export const GameWrapper = ({
           backgroundColor,
         }}
       >
-        {backgroundSource && (
-          <Image
-            source={backgroundSource}
-            resizeMode="repeat"
-            style={{
-              position: "absolute",
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0,
-              opacity: 0.5,
-            }}
-          />
-        )}
+        <ImageBackground
+          source={backgroundSource}
+          resizeMode="repeat"
+          style={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            opacity: 1,
+          }}
+        />
 
         <View
           style={{
@@ -169,8 +152,9 @@ export const GameWrapper = ({
             right: 0,
             bottom: 0,
             left: 0,
-            backgroundColor: rgba(overlayColor, 0.45),
+            backgroundColor: rgba(backgroundColor, 1),
             pointerEvents: "none",
+            mixBlendMode: "color",
           }}
         />
 
@@ -205,9 +189,8 @@ export const GameWrapper = ({
           />
 
           <Text
-            size="xs"
-            weight={300}
-            textTransform="uppercase"
+            size="md"
+            weight={400}
             color={titleColor}
             numberOfLines={1}
             ellipsizeMode="tail"
@@ -215,7 +198,6 @@ export const GameWrapper = ({
               {
                 flex: 1,
                 overflow: "hidden",
-                textAlign: "center",
               },
             ]}
           >
@@ -228,7 +210,7 @@ export const GameWrapper = ({
               textStyle={[menuStyles.headerButton]}
               onPress={handleUndo}
               iconName="undo"
-              iconColor={canUndo ? titleColor : rgba(titleColor, 0.35)}
+              iconColor={canUndo ? titleColor : rgba(titleColor, 0.5)}
               iconSize={spacing(HeaderButtonIconSize)}
               disabled={!canUndo}
             />

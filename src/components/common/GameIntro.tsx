@@ -19,6 +19,8 @@ import {
   useResponsiveUiLayoutFromWidth,
 } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
+import { LinearGradient } from "expo-linear-gradient";
+import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 
 interface Props {
   setShowMenu: (show: boolean) => void;
@@ -31,6 +33,7 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
   const gameInfo = getGameInfo(pathname);
   const { width: screenWidthActual } = useViewportDimensions();
   const ui = useResponsiveUiLayoutFromWidth(screenWidthActual);
+  const { cardBg } = useGameZoneBackground();
 
   const containerWidth = getConstrainedUiWidth(
     screenWidthActual,
@@ -59,7 +62,21 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
             left: 0,
           },
         ]}
-      />
+      >
+        <LinearGradient
+          colors={[rgba(cardBg, 0), rgba(cardBg, 0.8)]}
+          start={{ x: 0.5, y: 0 }}
+          end={{ x: 0.5, y: 1 }}
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            width: "100%",
+            height: "160%",
+            pointerEvents: "none",
+          }}
+        />
+      </Animated.View>
 
       {/* Intro box */}
       <Animated.View
@@ -84,7 +101,7 @@ export function GameIntro({ showIntro, setShowIntro, setShowMenu }: Props) {
             {
               maxHeight: "100%",
               borderRadius: modalBorderRadius,
-              backgroundColor: Colors.K900,
+              backgroundColor: rgba(Colors.K950, 0.95),
               boxShadow: modalShadow,
               width: "100%",
               maxWidth: containerWidth,

@@ -1,14 +1,13 @@
 import { Text } from "@/components/common/Text";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, FontWeight } from "@/styles/styles";
+import { Colors } from "@/styles/styles";
+import { delay } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
-import {
-  AnimatedCardMapping,
-  bufferedDefaultAnimDuration,
-  CardMapBGMapping,
-} from "../Cards/AnimatedCard";
+import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   cardDims,
   CardRank,
@@ -23,9 +22,6 @@ import {
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
-import { useStateManager } from "@/hooks/useStateManager";
-import { delay } from "@/utils/utils";
-import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 type GameState = {
   draw: PlayingCard[];

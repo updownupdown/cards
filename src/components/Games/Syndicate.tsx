@@ -7,10 +7,7 @@ import { delay } from "@/utils/utils";
 import { useMemo, useState } from "react";
 import { View } from "react-native";
 import { Button } from "../Button/Button";
-import {
-  AnimatedCardMapping,
-  bufferedDefaultAnimDuration,
-} from "../Cards/AnimatedCard";
+import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
   flipAllToBack,

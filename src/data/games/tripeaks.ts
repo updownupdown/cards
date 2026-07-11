@@ -3,10 +3,9 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 export const tripeaks: GameDefinition = {
   path: "/tripeaks",
   title: "TriPeaks",
-  // enabledOnLocalOnly: true,
-  thumbnail: DEFAULT_GAME_THUMBNAIL,
-  cardColorBg: "#24313A",
-  cardColorText: "#E4F4FF",
+  background: "medieval-blocks.jpg",
+  cardColorBg: "#24343a",
+  cardColorText: "#e3fcdd",
   cardDescription:
     "Clear three peaks by playing cards one rank above or below the waste.",
   stats: {

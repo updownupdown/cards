@@ -5,7 +5,8 @@ export const scoundrel: GameDefinition = {
   title: "Scoundrel",
   thumbnail: "Scoundrel.jpg",
   cardBack: "Scoundrel.png",
-  cardColorBg: "#070605",
+  background: "wall-tile.jpg",
+  cardColorBg: "#201913",
   cardColorText: "#fce8e3",
   cardDescription:
     "A dungeon crawl where you manage weapon strength and potion usage.",

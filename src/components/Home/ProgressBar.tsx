@@ -7,6 +7,7 @@ import { DimensionValue, View } from "react-native";
 import { Text } from "../common/Text";
 import { flexStyles } from "@/styles/flexStyles";
 import { textStyles } from "@/styles/textStyles";
+import { getUnderlayStyle } from "../Cards/CardStyles";
 
 const PROGRESS_COLORS = {
   red: Colors.buttonRed,

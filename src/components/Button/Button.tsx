@@ -84,7 +84,8 @@ export const Button = ({
         } as any)
       : undefined;
 
-  const fallbackColor = textOnly ? Colors.brightBlue : Colors.buttonBlue;
+  const fallbackColor =
+    textOnly || flat ? Colors.accentBlue : Colors.buttonBlue;
   let themeColor: string =
     (theme && THEME_COLORS[theme as keyof typeof THEME_COLORS]) ||
     theme ||
@@ -105,7 +106,7 @@ export const Button = ({
   let gap = height / 6;
   let paddingVertical = roundToPixel(6 * uiScale * sizeScale);
   let paddingHorizontal = roundToPixel(20 * uiScale * sizeScale);
-  let fontFamily = textOnly ? FontWeight[300] : FontWeight[600];
+  let fontFamily = textOnly || flat ? FontWeight[600] : FontWeight[600];
   let lineHeightUpdated = fontSize * (lineHeight ?? 1);
 
   if (textOnly) {
@@ -132,9 +133,6 @@ export const Button = ({
           paddingVertical,
           paddingHorizontal,
           gap,
-
-          // borderWidth: outlined ? 2 * scale : 0,
-          // borderColor: outlined ? themeColor : undefined,
           borderRadius,
           boxShadow:
             height && !flat

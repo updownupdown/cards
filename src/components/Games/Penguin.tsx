@@ -525,7 +525,6 @@ export default function Penguin() {
     zoneMapper,
     cardSize: "small",
     fixedRows: 7,
-    // visualizer: true,
   });
 
   // ── Hit areas ───────────────────────────────────────────────────────────────

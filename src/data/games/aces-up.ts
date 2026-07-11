@@ -5,6 +5,7 @@ export const acesUp: GameDefinition = {
   title: "Aces Up",
   thumbnail: "AcesUp.jpg",
   cardBack: "AcesUp.png",
+  background: "wood-table.jpg",
   cardColorBg: "#1d0f0a",
   cardColorText: "#eee0ca",
   cardDescription: "Discard low cards until only the four Aces remain.",

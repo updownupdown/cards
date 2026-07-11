@@ -22,6 +22,7 @@ import { delay } from "@/utils/utils";
 import { Colors, rgba } from "@/styles/styles";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { getUnderlayStyle } from "../Cards/CardStyles";
 
 const BACK_ROW = new Set([6, 7, 8, 9]);
 const CENTER_PIN = 4;
@@ -405,7 +406,7 @@ function recalculateScores(frames: Frame[], bonusRolls: number[]) {
 
 // ========== Main Component ========== //
 export default function BowlingSolitaire() {
-  const { zoneBg, cardBg } = useGameZoneBackground();
+  const { zoneBg, cardBg, cardText } = useGameZoneBackground();
   const { spacing, font } = useResponsiveMetrics();
 
   const {
@@ -893,6 +894,7 @@ export default function BowlingSolitaire() {
         style={[
           flexStyles.colCentered,
           flexStyles.flex1,
+
           {
             paddingVertical: spacing(12),
             backgroundColor: zoneBg,
@@ -1107,12 +1109,12 @@ export default function BowlingSolitaire() {
       >
         {/* End Ball */}
         <Button
-          size="xs"
+          size="sm"
           taller
-          flat
+          // flat
           onPress={endBallNow}
           text="End Ball"
-          theme="orange"
+          theme="blue"
           fullWidth
           disabled={game.phase === "gameEnd"}
         />

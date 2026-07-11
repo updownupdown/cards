@@ -10,7 +10,6 @@ import { delay } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
 import {
   AnimatedCardMapping,
-  bufferedDefaultAnimDuration,
   CardMapBGMapping,
   defaultAnimDuration,
 } from "../Cards/AnimatedCard";

@@ -5,7 +5,8 @@ export const monteCarlo: GameDefinition = {
   title: "Monte Carlo",
   thumbnail: "MonteCarlo.jpg",
   cardBack: "MonteCarlo.png",
-  cardColorBg: "#222f3d",
+  background: "felt-dark-blue.jpg",
+  cardColorBg: "#152635",
   cardColorText: "#b1dada",
   cardDescription: "Match adjacent pairs of equal rank to clear a 5×5 grid.",
   stats: {

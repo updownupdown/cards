@@ -5,8 +5,9 @@ export const deadCenter: GameDefinition = {
   title: "Dead Center",
   thumbnail: "DeadCenter.jpg",
   cardBack: "DeadCenter.png",
-  cardColorBg: "#0f2430",
-  cardColorText: "#f7d1ca",
+  background: "wood-table.jpg",
+  cardColorBg: "#201207",
+  cardColorText: "#e9f1d9",
   cardDescription:
     "Defend your cabin against a siege of zombies, using supporting cards strategically.",
   stats: {

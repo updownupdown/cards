@@ -5,6 +5,7 @@ export const theBogey: GameDefinition = {
   title: "The Bogey",
   thumbnail: "TheBogey.jpg",
   cardBack: "TheBogey.png",
+  background: "rock-wall.jpg",
   cardColorBg: "#0a1e1f",
   cardColorText: "#ddf0ce",
   cardDescription:

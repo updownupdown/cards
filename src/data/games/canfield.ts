@@ -4,8 +4,8 @@ export const canfield: GameDefinition = {
   path: "/canfield",
   title: "Canfield",
   enabledOnLocalOnly: true,
-  thumbnail: DEFAULT_GAME_THUMBNAIL,
-  cardColorBg: "#263238",
+  background: "felt-dark-red.jpg",
+  cardColorBg: "#311a1e",
   cardColorText: "#E4F6FF",
   cardDescription:
     "Build suit foundations from a random base rank, fed by a 13-card reserve.",

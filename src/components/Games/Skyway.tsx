@@ -1,16 +1,15 @@
 import { Text } from "@/components/common/Text";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useStateManager } from "@/hooks/useStateManager";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, FontWeight, rgba } from "@/styles/styles";
+import { Colors } from "@/styles/styles";
+import { delay } from "@/utils/utils";
 import { useMemo, useState } from "react";
 import { View } from "react-native";
 import Svg, { Line } from "react-native-svg";
-import {
-  AnimatedCardMapping,
-  bufferedDefaultAnimDuration,
-  CardMapBGMapping,
-} from "../Cards/AnimatedCard";
+import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   cardDims,
   createDeck,
@@ -30,9 +29,6 @@ import {
   useCardMap,
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
-import { useStateManager } from "@/hooks/useStateManager";
-import { delay } from "@/utils/utils";
-import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 const svgCellSize = 800;
 const svgGridSize = svgCellSize * 3;

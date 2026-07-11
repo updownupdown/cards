@@ -12,7 +12,7 @@ import { flexStyles } from "./flexStyles";
 
 export const modalBorderRadius = 20;
 
-export const modalShadow = `1px 2px 10px ${rgba(Colors.K900, 0.6)}, 2px 4px 20px ${rgba(Colors.K900, 0.4)}`;
+export const modalShadow = `1px 2px 10px ${rgba(Colors.K950, 0.75)}, 2px 4px 20px ${rgba(Colors.K950, 0.6)}`;
 
 export function useModalStyles() {
   const { ui, spacing, font } = useResponsiveMetrics();
@@ -32,7 +32,7 @@ export function useModalStyles() {
           maxWidth: ui.contentMaxWidth,
           height: "100%",
           maxHeight: MaxContentHeight,
-          backgroundColor: Colors.K900,
+          backgroundColor: Colors.K950,
           borderRadius: spacing(20),
           overflow: "hidden",
           boxShadow: modalShadow,

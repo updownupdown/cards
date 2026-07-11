@@ -1,13 +1,11 @@
-import {
-  GameDefinition,
-  GameTag,
-} from "../games-data";
+import { GameDefinition, GameTag } from "../games-data";
 
 export const theSandwichGuy: GameDefinition = {
   path: "/the-sandwich-guy",
   title: "The Sandwich Guy",
   thumbnail: "SandwichGuy.jpg",
   cardBack: "SandwichGuy.png",
+  background: "concrete.jpg",
   cardColorBg: "#102524",
   cardColorText: "#b0eee9",
   cardDescription:

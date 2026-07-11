@@ -10,7 +10,6 @@ import {
   type PlayingCard,
 } from "../../Cards/card-utils";
 import { defaultHandSize, GameState } from "./TheEmissaryTypes";
-import { bufferedDefaultAnimDuration } from "@/components/Cards/AnimatedCard";
 
 export const gameStateInitial: GameState = {
   kingdoms: [],

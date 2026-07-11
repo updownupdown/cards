@@ -357,7 +357,6 @@ export default function FreeCell() {
     cardMapper,
     zoneMapper,
     cardSize: "tableau",
-    // visualizer: true,
     fixedRows: 6,
   });
 

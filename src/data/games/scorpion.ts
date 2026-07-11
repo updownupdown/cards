@@ -4,7 +4,7 @@ export const scorpion: GameDefinition = {
   path: "/scorpion",
   title: "Scorpion",
   enabledOnLocalOnly: true,
-  thumbnail: DEFAULT_GAME_THUMBNAIL,
+  background: "felt-dark-blue.jpg",
   cardColorBg: "#33262A",
   cardColorText: "#FFE4E8",
   cardDescription:

@@ -1,11 +1,7 @@
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 import { useMemo } from "react";
-import {
-  AnimatedCardMapping,
-  bufferedDefaultAnimDuration,
-  CardMapBGMapping,
-} from "../Cards/AnimatedCard";
+import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
   flipAllToBack,

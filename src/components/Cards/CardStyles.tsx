@@ -1,6 +1,7 @@
 import { Colors, rgba } from "@/styles/styles";
 import { cardDims } from "./card-utils";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, ViewStyle } from "react-native";
+import { darkenHexColor, lightenHexColor } from "@/utils/utils";
 
 export type CardSizes = "small" | "regular" | "small-colored" | "tableau";
 
@@ -79,10 +80,31 @@ export const CardOverlay = (props: {
             props.isSelected || props.forceOverlayColor
               ? props.selectColor === "grey"
                 ? 0.5
-                : 0.2
+                : 0.3
               : 0,
+          mixBlendMode: "multiply",
         },
       ]}
     />
   );
+};
+
+// ===== Underlay ===== //
+export const getUnderlayStyle = (
+  cardWidth: number,
+  cardBg: CardColor | string,
+  cardText: CardColor | string,
+  hideBackground?: boolean,
+): ViewStyle => {
+  return {
+    ...StyleSheet.absoluteFill,
+    zIndex: 1,
+    borderRadius: cardWidth * cardDims.ratioRadius,
+    backgroundColor: hideBackground
+      ? "transparent"
+      : rgba(darkenHexColor(cardBg, 0.2), 0.35),
+    boxShadow: hideBackground
+      ? undefined
+      : `0 0 0 1px ${rgba(lightenHexColor(cardText, 0.5), 0.1)}, inset 0 0 ${cardWidth * 0.3}px ${rgba(darkenHexColor(cardBg, 0.7), 0.6)}, 0 0 ${cardWidth * 0.2}px ${rgba(lightenHexColor(cardText, 0.5), 0.3)}`,
+  };
 };

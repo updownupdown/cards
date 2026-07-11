@@ -5,6 +5,7 @@ export const skyway: GameDefinition = {
   title: "Skyway",
   thumbnail: "Skyway.jpg",
   cardBack: "Skyway.png",
+  background: "concrete.jpg",
   cardColorBg: "#1d2a35",
   cardColorText: "#b3d5ec",
   cardDescription:

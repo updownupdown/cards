@@ -5,6 +5,7 @@ export const penguin: GameDefinition = {
   title: "Penguin",
   // enabledOnLocalOnly: true,
   thumbnail: DEFAULT_GAME_THUMBNAIL,
+  background: "felt-dark-blue.jpg",
   cardColorBg: "#0e2335",
   cardColorText: "#ff944d",
   cardDescription:

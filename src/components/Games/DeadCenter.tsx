@@ -28,6 +28,7 @@ import {
   shuffle,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 const zombieZonesColRows: ColRows[] = [
   { c: 1, r: 1 },
@@ -206,7 +207,7 @@ function aliveCount(zombies: Zombie[]) {
 }
 
 export default function DeadCenter() {
-  const { zoneBg } = useGameZoneBackground();
+  const { zoneBg, cardText } = useGameZoneBackground();
 
   const {
     isSettingUp,
@@ -395,7 +396,7 @@ export default function DeadCenter() {
         col: 0,
         row: 0,
         width: "full",
-        baseZIndex: 10,
+        baseZIndex: 1,
       },
       {
         id: "draw",
@@ -512,6 +513,7 @@ export default function DeadCenter() {
       >
         <Text
           size="sm"
+          color={cardText}
           style={[
             flexStyles.flex1,
             {

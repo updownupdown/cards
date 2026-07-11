@@ -4,8 +4,9 @@ export const pyramid: GameDefinition = {
   path: "/pyramid",
   title: "Pyramid",
   thumbnail: DEFAULT_GAME_THUMBNAIL,
-  cardColorBg: "#3A3126",
+  cardColorBg: "#1d170f",
   cardColorText: "#FFEACC",
+  background: "medieval-blocks.jpg",
   cardDescription:
     "Clear the pyramid by removing pairs of cards that add up to 13.",
   stats: {

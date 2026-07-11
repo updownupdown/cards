@@ -1,15 +1,13 @@
-import {
-  GameDefinition,
-  GameTag,
-} from "../games-data";
+import { GameDefinition, GameTag } from "../games-data";
 
 export const lootTheLoop: GameDefinition = {
   path: "/loot-the-loop",
   title: "Loot the Loop",
   thumbnail: "LootTheLoop.jpg",
   cardBack: "LootTheLoop.png",
-  cardColorBg: "#2e151f",
-  cardColorText: "#eeddb8",
+  background: "wall-tile.jpg",
+  cardColorBg: "#1d120e",
+  cardColorText: "#dfd4bd",
   cardDescription:
     "Capture scoring loop cards while preserving momentum and avoiding disruptive breaks.",
   stats: {

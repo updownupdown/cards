@@ -1,12 +1,10 @@
+import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 import { useEffect, useMemo } from "react";
 import { View } from "react-native";
 import { Button } from "../Button/Button";
-import {
-  AnimatedCardMapping,
-  bufferedDefaultAnimDuration,
-} from "../Cards/AnimatedCard";
+import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
   flipToFace,
@@ -17,7 +15,6 @@ import {
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 
 const tableauSize = {
   rows: 5,
@@ -258,6 +255,7 @@ export default function Golf() {
     game,
     zones,
     cardMapper,
+    gap: 0.14,
     cardSize: "small",
   });
 

@@ -5,6 +5,7 @@ export const theBobaTeaShop: GameDefinition = {
   title: "The Boba Tea Shop",
   thumbnail: "BobaTea.jpg",
   cardBack: "BobaTeaShop.png",
+  background: "wood-vertical.jpg",
   cardColorBg: "#2b1c29",
   cardColorText: "#eed5a0",
   cardDescription:

@@ -4,11 +4,7 @@ import { delay } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { Button } from "../Button/Button";
-import {
-  AnimatedCardMapping,
-  bufferedDefaultAnimDuration,
-  CardMapBGMapping,
-} from "../Cards/AnimatedCard";
+import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
   flipAllToBack,
@@ -113,7 +109,7 @@ function evaluateEndState(draw: PlayingCard[], piles: PlayingCard[][]) {
 
 // ========== Main Component ========== //
 export default function AcesUp() {
-  const { cardText } = useGameZoneBackground();
+  const { cardBg } = useGameZoneBackground();
 
   const [selectedPile, setSelectedPile] = useState<number | undefined>(
     undefined,
@@ -353,6 +349,7 @@ export default function AcesUp() {
           fullWidth
           taller
           disabled={game.draw.length === 0 || game.ended}
+          theme={cardBg}
         />
       </View>
     </GameWrapper>

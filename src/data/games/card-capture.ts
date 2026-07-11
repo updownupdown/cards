@@ -6,6 +6,7 @@ export const cardCapture: GameDefinition = {
   enabledOnLocalOnly: true,
   thumbnail: "CardCapture.jpg",
   cardBack: "CardCapture.png",
+  background: "rock-wall.jpg",
   cardColorBg: "#2b2d42",
   cardColorText: "#d4cdc3",
   cardDescription:

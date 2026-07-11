@@ -5,8 +5,9 @@ export const regicide: GameDefinition = {
   title: "Regicide",
   cardBack: "Regicide.png",
   thumbnail: "Regicide.jpg",
-  cardColorBg: "#1a1a2e",
-  cardColorText: "#e8d5b7",
+  background: "rock-wall.jpg",
+  cardColorBg: "#16162b",
+  cardColorText: "#f7e1ff",
   cardDescription:
     "Team up with the deck to topple 12 royals using suit-power combos.",
   stats: {

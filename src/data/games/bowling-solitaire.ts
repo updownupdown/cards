@@ -4,8 +4,9 @@ export const bowlingSolitaire: GameDefinition = {
   path: "/bowling-solitaire",
   title: "Bowling Solitaire",
   thumbnail: "BowlingSolitaire.jpg",
-  cardColorBg: "#1f1c18",
-  cardColorText: "#c1e1e6",
+  background: "wood-vertical.jpg",
+  cardColorBg: "#331e0f",
+  cardColorText: "#a9e9f1",
   cardDescription:
     "Bowl a full game of 10-pin using cards, chasing strikes and spares.",
   stats: {

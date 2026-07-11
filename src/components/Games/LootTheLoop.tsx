@@ -1,6 +1,8 @@
 import { useFade } from "@/hooks/useFade";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
+import { FontWeight } from "@/styles/styles";
 import { delay } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
 import { Animated, View } from "react-native";
@@ -8,7 +10,6 @@ import { Button } from "../Button/Button";
 import {
   AnimatedCardMapping,
   bufferedDefaultAnimDuration,
-  CardMapBGMapping,
 } from "../Cards/AnimatedCard";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { infoSize } from "../Cards/CardMapBackgrounds";
@@ -27,8 +28,6 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-import { FontWeight } from "@/styles/styles";
 
 const maxMarkedPaths = 3;
 
@@ -611,6 +610,7 @@ export default function LootTheLoop() {
     cardSize: "small",
     paddingLeft: 0,
     paddingRight: 0,
+    paddingTop: 0.6,
     fixedCols: positioning.colWidth,
   });
 

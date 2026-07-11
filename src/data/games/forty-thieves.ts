@@ -4,7 +4,7 @@ export const fortyThieves: GameDefinition = {
   path: "/forty-thieves",
   title: "Forty Thieves",
   enabledOnLocalOnly: true,
-  thumbnail: DEFAULT_GAME_THUMBNAIL,
+  background: "concrete.jpg",
   cardColorBg: "#2E2D34",
   cardColorText: "#EFE8FF",
   cardDescription:

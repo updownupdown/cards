@@ -1,6 +1,10 @@
 import { Text } from "@/components/common/Text";
 import { GAME_THUMBNAIL_ASSETS } from "@/data/game-thumbnails";
-import { GameMenuInfo, GameTagNames } from "@/data/games-data";
+import {
+  DEFAULT_GAME_THUMBNAIL,
+  GameMenuInfo,
+  GameTagNames,
+} from "@/data/games-data";
 import { Icon } from "@/icons";
 import { Colors, rgba } from "@/styles/styles";
 import { roundToPixel } from "@/utils/utils";
@@ -9,8 +13,8 @@ import { Link, type Href } from "expo-router";
 import { Image, Pressable, type ViewStyle, View } from "react-native";
 import { StatBars } from "./StatBars";
 
-function getGameSource(game: GameMenuInfo) {
-  return GAME_THUMBNAIL_ASSETS[game.thumbnail];
+function getGameThumbnail(game: GameMenuInfo) {
+  return GAME_THUMBNAIL_ASSETS[game.thumbnail || DEFAULT_GAME_THUMBNAIL];
 }
 
 type Props = {
@@ -70,7 +74,7 @@ export function HomeCard({
     >
       {/* Thumbnail */}
       <Image
-        source={getGameSource(game)}
+        source={getGameThumbnail(game)}
         style={{
           position: "absolute",
           top: 0,

@@ -442,7 +442,7 @@ export default function Pyramid() {
         cards: game.discard.slice(0, game.discard.length - game.stockCount),
         col: 6,
         row: 0,
-        baseZIndex: 45,
+        baseZIndex: 100,
         fan: { maxVisible: 3 },
         placeholder: { text: "Discard", infoPos: "below", showCount: true },
       },

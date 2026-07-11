@@ -20,7 +20,7 @@ export const Colors = {
   brightGreen: "#26ff93",
 
   // Accents
-  accentBlue: "#83deee",
+  accentBlue: "#86e5fd",
   accentRed: "#CE3566",
   accentGreen: "#26ff93",
 
@@ -30,7 +30,7 @@ export const Colors = {
   cardSelectBlue: "#7bd5ff",
   cardSelectPurple: "#bb55ff",
   cardSelectPink: "#ff52c5",
-  cardSelectOrange: "#ff7418",
+  cardSelectOrange: "#ff8432",
   cardSelectYellow: "#ffea2d",
   cardSelectGreen: "#26ff93",
   cardSelectGrey: "#333333",

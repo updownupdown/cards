@@ -1,3 +1,4 @@
+import { GameBackgroundName } from "./game-backgrounds";
 import { GameThumbnailName } from "./game-thumbnails";
 import { isLocalDevEnvironment } from "@/utils/utils";
 
@@ -24,13 +25,14 @@ export type GameStats = {
 };
 
 export const DEFAULT_GAME_THUMBNAIL: GameThumbnailName = "DefaultThumbnail.jpg";
+export const DEFAULT_GAME_BACKGROUND: GameBackgroundName = "felt-grey.jpg";
 
 export type GameMenuInfo = {
   title: string;
-  thumbnail: GameThumbnailName;
+  thumbnail?: GameThumbnailName;
   cardBack?: string;
   /** Optional shared background texture image (see assets/backgrounds). */
-  background?: string;
+  background?: GameBackgroundName;
   cardColorBg: HexColor;
   cardColorText: HexColor;
   cardDescription: string;

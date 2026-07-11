@@ -1,12 +1,12 @@
 import { Text } from "@/components/common/Text";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, FontWeight } from "@/styles/styles";
+import { Colors, FontWeight, rgba } from "@/styles/styles";
 import { Pressable, TextStyle, View, ViewStyle } from "react-native";
 import { CardMapBGMapping } from "./AnimatedCard";
 import { cardDims } from "./card-utils";
 import { CardPosition, MapZone } from "./CardMap";
-import { CardOverlay, getCardShadow } from "./CardStyles";
+import { CardOverlay, getCardShadow, getUnderlayStyle } from "./CardStyles";
 
 export type DeckFanDirection =
   | "none"
@@ -39,7 +39,7 @@ export const CardMapBackgrounds = ({
   cardHeight,
   zoneMapper,
 }: Props) => {
-  const { zoneBg } = useGameZoneBackground();
+  const { zoneBg, cardText, cardBg } = useGameZoneBackground();
 
   return (
     <>
@@ -70,6 +70,7 @@ export const CardMapBackgrounds = ({
         let infoStyles: ViewStyle = {
           userSelect: "none",
           position: "absolute",
+          zIndex: 2,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -79,14 +80,14 @@ export const CardMapBackgrounds = ({
         let textStyle: TextStyle = {
           userSelect: "none",
           fontSize: cardWidth * 0.15,
-          color: Colors.K300,
+          color: rgba(Colors.white, 0.8),
           fontFamily: FontWeight[400],
           textTransform: "uppercase",
         };
         let countStyle: TextStyle = {
           userSelect: "none",
           fontSize: cardWidth * 0.2,
-          color: Colors.K300,
+          color: rgba(Colors.white, 0.8),
           fontFamily: FontWeight[500],
           textTransform: "uppercase",
         };
@@ -172,9 +173,6 @@ export const CardMapBackgrounds = ({
                 width: placeholderWidth,
                 height: placeholderHeight,
                 borderRadius: cardWidth * cardDims.ratioRadius,
-                backgroundColor: zone.placeholder.hideBackground
-                  ? "transparent"
-                  : (zone.placeholder.backgroundColor ?? zoneBg),
                 justifyContent: "center",
                 alignItems: "center",
                 zIndex,
@@ -208,6 +206,16 @@ export const CardMapBackgrounds = ({
                 {showCount && <Text style={countStyle}>{count}</Text>}
               </View>
             )}
+
+            {/* Card Underlay */}
+            <View
+              style={getUnderlayStyle(
+                cardWidth,
+                cardBg,
+                cardText,
+                zone.placeholder.hideBackground,
+              )}
+            />
           </Pressable>
         );
       })}

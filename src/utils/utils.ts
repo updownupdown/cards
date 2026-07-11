@@ -1,4 +1,4 @@
-import { bufferedDefaultAnimDuration } from "@/components/Cards/AnimatedCard";
+import { bufferedDefaultAnimDuration } from "@/constants/animation";
 import { PixelRatio } from "react-native";
 
 export function clamp(val: number, min: number, max: number) {
@@ -86,3 +86,37 @@ export function isLocalDevEnvironment() {
 }
 
 export const DOUBLE_TAP_MS = 300;
+
+export function lightenHexColor(hexColor: string, amount: number) {
+  const hex = hexColor.replace("#", "");
+  if (hex.length !== 6) return hexColor;
+
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  if ([r, g, b].some((v) => Number.isNaN(v))) return hexColor;
+
+  const next = (value: number) =>
+    Math.round(value + (255 - value) * amount)
+      .toString(16)
+      .padStart(2, "0");
+
+  return `#${next(r)}${next(g)}${next(b)}`;
+}
+
+export function darkenHexColor(hexColor: string, amount: number) {
+  const hex = hexColor.replace("#", "");
+  if (hex.length !== 6) return hexColor;
+
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  if ([r, g, b].some((v) => Number.isNaN(v))) return hexColor;
+
+  const next = (value: number) =>
+    Math.round(value * (1 - amount))
+      .toString(16)
+      .padStart(2, "0");
+
+  return `#${next(r)}${next(g)}${next(b)}`;
+}

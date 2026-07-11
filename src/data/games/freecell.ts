@@ -5,8 +5,9 @@ export const freecell: GameDefinition = {
   title: "FreeCell",
   // enabledOnLocalOnly: true,
   thumbnail: DEFAULT_GAME_THUMBNAIL,
-  cardColorBg: "#2A3440",
+  cardColorBg: "#151f2b",
   cardColorText: "#DDEBFF",
+  background: "felt-dark-blue.jpg",
   cardDescription:
     "An open-information classic where nearly every deal can be won with care.",
   stats: {

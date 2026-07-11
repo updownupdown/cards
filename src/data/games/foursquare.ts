@@ -1,14 +1,12 @@
-import {
-  GameDefinition,
-  GameTag,
-} from "../games-data";
+import { GameDefinition, GameTag } from "../games-data";
 
 export const foursquare: GameDefinition = {
   path: "/foursquare",
   title: "Foursquare",
   thumbnail: "Foursquare.jpg",
   cardBack: "Foursquare.png",
-  cardColorBg: "#202640",
+  background: "felt-dark-blue.jpg",
+  cardColorBg: "#1a1e2b",
   cardColorText: "#fff5ca",
   cardDescription:
     "A tile-laying game where each move can disrupt the precarious grid.",

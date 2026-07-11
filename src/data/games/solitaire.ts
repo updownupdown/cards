@@ -4,8 +4,8 @@ export const solitaire: GameDefinition = {
   path: "/solitaire",
   title: "Solitaire",
   enabledOnLocalOnly: true,
-  thumbnail: DEFAULT_GAME_THUMBNAIL,
-  cardColorBg: "#2C2F3A",
+  background: "felt-green.jpg",
+  cardColorBg: "#2c3a2f",
   cardColorText: "#EEF0FF",
   cardDescription:
     "The classic solitaire: build four suit foundations from Ace to King.",

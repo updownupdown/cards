@@ -5,8 +5,9 @@ export const golf: GameDefinition = {
   title: "Golf Solitaire",
   thumbnail: "Golf.jpg",
   cardBack: "Golf.png",
-  cardColorBg: "#163021",
-  cardColorText: "#acfdd1",
+  background: "felt-green.jpg",
+  cardColorBg: "#1e4e22",
+  cardColorText: "#e3f6ff",
   cardDescription:
     "Clear seven columns by playing cards one rank away from the waste.",
   stats: {

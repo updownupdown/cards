@@ -27,12 +27,7 @@ export default function ModalFull({ children, title, onClose }: Props) {
               {/* Icon/Title */}
               {title && (
                 <View style={[flexStyles.rowCentered, flexStyles.gap10]}>
-                  <Text
-                    size="sm"
-                    color={Colors.K400}
-                    weight={300}
-                    textTransform="uppercase"
-                  >
+                  <Text size="xxl" color={Colors.K200} weight={500}>
                     {title}
                   </Text>
                 </View>
@@ -44,7 +39,7 @@ export default function ModalFull({ children, title, onClose }: Props) {
                   menuStyles.headerButton,
                   {
                     marginLeft: "auto",
-                    backgroundColor: Colors.K850,
+                    backgroundColor: Colors.K875,
                     borderRadius: HeaderButtonSize / 2,
                   },
                 ]}

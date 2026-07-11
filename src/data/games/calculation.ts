@@ -5,6 +5,7 @@ export const calculation: GameDefinition = {
   title: "Calculation",
   thumbnail: "Calculation.jpg",
   cardBack: "Calculation.png",
+  background: "felt-dark-purple.jpg",
   cardColorBg: "#12122b",
   cardColorText: "#eccfff",
   cardDescription:

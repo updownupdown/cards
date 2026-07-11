@@ -12,6 +12,7 @@ import { Button } from "../Button/Button";
 import { AddToHomeScreenNotice } from "../common/AddToHomeScreenNotice";
 import { SettingControl } from "../common/SettingControl";
 import ModalFull from "../Modals/ModalFull";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 interface Props {
   onClose: () => void;
@@ -21,6 +22,10 @@ interface Props {
 export const SettingsModal = ({ onClose, onHomeDataInvalidated }: Props) => {
   const { settings, updateSettings, isLoading } = useGlobalSettings();
   const modalStyles = useModalStyles();
+  const [isResetConfirmationVisible, setIsResetConfirmationVisible] =
+    React.useState(false);
+  const [isResettingData, setIsResettingData] = React.useState(false);
+  const { spacing } = useResponsiveMetrics();
 
   const onCloseAndRefresh = () => {
     onHomeDataInvalidated();
@@ -71,21 +76,54 @@ export const SettingsModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                 }
               }}
             />
-
-            <AddToHomeScreenNotice />
           </View>
 
-          <Button
-            size="md"
-            uppercase={false}
-            onPress={async () => {
-              updateSettings(DEFAULT_GLOBAL_SETTINGS);
-              await resetAllSettings();
-              onHomeDataInvalidated();
-            }}
-            text="Reset EVERYTHING (settings, stats, history, and favorites)"
-            textOnly
-          />
+          <AddToHomeScreenNotice />
+
+          {isResetConfirmationVisible ? (
+            <View
+              style={[
+                flexStyles.rowCentered,
+                { gap: spacing(16), flexWrap: "wrap" },
+              ]}
+            >
+              <Button
+                size="md"
+                uppercase={false}
+                onPress={() => setIsResetConfirmationVisible(false)}
+                text="Cancel"
+                flat
+                disabled={isResettingData}
+              />
+
+              <Button
+                size="md"
+                uppercase={false}
+                onPress={async () => {
+                  setIsResettingData(true);
+                  try {
+                    updateSettings(DEFAULT_GLOBAL_SETTINGS);
+                    await resetAllSettings();
+                    onHomeDataInvalidated();
+                    setIsResetConfirmationVisible(false);
+                  } finally {
+                    setIsResettingData(false);
+                  }
+                }}
+                text="Confirm reset"
+                theme="red"
+                disabled={isResettingData}
+              />
+            </View>
+          ) : (
+            <Button
+              size="md"
+              uppercase={false}
+              onPress={() => setIsResetConfirmationVisible(true)}
+              text="Reset all game data"
+              flat
+            />
+          )}
         </View>
       </ScrollView>
     </ModalFull>

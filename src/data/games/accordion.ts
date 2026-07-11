@@ -5,6 +5,7 @@ export const accordion: GameDefinition = {
   title: "Accordion",
   thumbnail: "Accordion.jpg",
   cardBack: "Accordion.png",
+  background: "felt-dark-red.jpg",
   cardColorBg: "#351219",
   cardColorText: "#fffccf",
   cardDescription:
