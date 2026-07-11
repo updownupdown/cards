@@ -57,13 +57,10 @@ export function AddToHomeScreenNotice({
       style={{
         width: "100%",
         borderRadius: spacing(14),
-        backgroundColor: rgba(Colors.K950, 0.5),
+        backgroundColor: rgba(Colors.K800, 0.5),
         padding: spacing(24),
         gap: spacing(12),
-        boxShadow: `0px 4px 8px ${rgba(Colors.K900, 0.3)}`,
         marginBottom: spacing(40),
-        borderWidth: 1,
-        borderColor: rgba(Colors.buttonBlue, 0.25),
       }}
     >
       <View
