@@ -2,7 +2,7 @@ import { LoadingOverlay } from "@/components/common/LoadingOverlay";
 import { DiscoverTab } from "@/components/Home/DiscoverTab";
 import { HomeHeader } from "@/components/Home/HomeHeader";
 import { HomeTab } from "@/components/Home/HomeTab";
-import { HomeTabBar, HOME_TABS } from "@/components/Home/HomeTabBar";
+import { HomeTabBar } from "@/components/Home/HomeTabBar";
 import { SearchModal } from "@/components/Home/SearchModal";
 import { SettingsModal } from "@/components/Home/SettingsModal";
 import { StatsTab } from "@/components/Home/StatsTab";
@@ -38,10 +38,6 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState(0);
   const activeTabRef = useRef(0);
   const isTabPressScrollRef = useRef(false);
-  const isUserScrollingRef = useRef(false);
-  const gestureStartIndexRef = useRef(0);
-  const scrollXRef = useRef(0);
-  const settleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const contentMaxWidth = ui.contentMaxWidth;
   const pageSidePadding = spacing(HomePadding);
@@ -86,22 +82,11 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
-  const clearSettleTimer = () => {
-    if (settleTimerRef.current !== null) {
-      clearTimeout(settleTimerRef.current);
-      settleTimerRef.current = null;
-    }
-  };
-
-  useEffect(() => clearSettleTimer, []);
-
-  // Realign only when the pager width changes (e.g. resize / orientation).
-  // Reading the active tab from a ref keeps this effect from firing on tab
-  // changes, which would otherwise cancel the animated scroll on tab taps.
+  // Realign the pager to the active tab when its width changes (resize /
+  // orientation). Reading the tab from a ref avoids re-running on tab changes,
+  // which would cancel the animated scroll started by a tab tap.
   useEffect(() => {
     isTabPressScrollRef.current = true;
-    isUserScrollingRef.current = false;
-    clearSettleTimer();
     pagerRef.current?.scrollTo({
       x: activeTabRef.current * pageWidth,
       animated: false,
@@ -113,98 +98,79 @@ export default function Home() {
     if (width > 0 && Math.abs(width - pageWidth) > 1) {
       setPageWidth(width);
     }
-    // Native measures its height reliably; web height is driven from
-    // window.innerHeight instead (see resolvedPagerHeight) because mobile
-    // Chrome fails to resolve the CSS height cascade (100dvh / flex) on first
-    // paint, leaving pages collapsed until an orientation change.
     if (height > 0 && Math.abs(height - pagerHeight) > 1) {
       setPagerHeight(height);
     }
   };
 
-  const scrollToTab = (index: number, animated = true) => {
-    const clamped = Math.max(0, Math.min(index, HOME_TABS.length - 1));
-    clearSettleTimer();
-    isUserScrollingRef.current = false;
-    isTabPressScrollRef.current = true;
-    activeTabRef.current = clamped;
-    setActiveTab(clamped);
-    pagerRef.current?.scrollTo({ x: clamped * pageWidth, animated });
-  };
-
-  // Let the pager's native/CSS paging snap to a page, then clamp so a single
-  // swipe never advances more than one tab (a fast flick could otherwise skip
-  // from the first tab straight to the third).
-  const settlePager = () => {
-    if (pageWidth <= 0 || !isUserScrollingRef.current) return;
-    const startIndex = gestureStartIndexRef.current;
-    const landed = Math.round(scrollXRef.current / pageWidth);
-    const target = Math.max(
-      0,
-      Math.min(
-        HOME_TABS.length - 1,
-        Math.max(startIndex - 1, Math.min(landed, startIndex + 1)),
-      ),
-    );
-    if (target !== landed) {
-      // Overshot past the allowed single step: animate back to the neighbour.
-      scrollToTab(target);
+  // Update the highlighted tab as the pager settles. Native paging and CSS
+  // scroll-snap both guarantee it rests on a page; `scroll-snap-stop: always`
+  // (web) additionally stops a single swipe from skipping past a neighbour.
+  const syncActiveTab = (offsetX: number) => {
+    if (pageWidth <= 0) return;
+    const index = Math.round(offsetX / pageWidth);
+    if (index === activeTabRef.current) {
+      isTabPressScrollRef.current = false;
       return;
     }
-    isUserScrollingRef.current = false;
-    if (target !== activeTabRef.current) {
-      activeTabRef.current = target;
-      setActiveTab(target);
-    }
+    // Ignore the intermediate pages a tab-tap animation scrolls through so the
+    // highlight doesn't flicker.
+    if (isTabPressScrollRef.current) return;
+    activeTabRef.current = index;
+    setActiveTab(index);
   };
 
   const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const offsetX = event.nativeEvent.contentOffset.x;
-    scrollXRef.current = offsetX;
-    if (pageWidth <= 0) return;
-
-    // Ignore scroll events produced by our own animated snap / tab tap until
-    // the pager settles on the target page.
-    if (isTabPressScrollRef.current) {
-      if (Math.abs(offsetX - activeTabRef.current * pageWidth) < 1) {
-        isTabPressScrollRef.current = false;
-      }
-      return;
-    }
-
-    // Record where the gesture began so the swipe distance is measured from
-    // the tab the user started on.
-    if (!isUserScrollingRef.current) {
-      isUserScrollingRef.current = true;
-      gestureStartIndexRef.current = activeTabRef.current;
-    }
-
-    // Web has no drag-end event, so snap once scrolling has come to rest.
-    clearSettleTimer();
-    settleTimerRef.current = setTimeout(settlePager, 100);
-  };
-
-  const onMomentumScrollEnd = () => {
-    settlePager();
+    syncActiveTab(event.nativeEvent.contentOffset.x);
   };
 
   const onSelectTab = (index: number) => {
     if (index === activeTabRef.current) return;
-    scrollToTab(index);
+    isTabPressScrollRef.current = true;
+    activeTabRef.current = index;
+    setActiveTab(index);
+    pagerRef.current?.scrollTo({ x: index * pageWidth, animated: true });
   };
 
-  const resolvedPagerHeight = isWeb
-    ? viewportHeight || pagerHeight
-    : pagerHeight;
+  // On web the screen height comes from window.innerHeight and is applied via a
+  // fixed-position container. Mobile Chrome fails to resolve the CSS height
+  // cascade (flex / dvh) on first paint and ancestor RN views clip with
+  // overflow:hidden, so relying on the cascade left the tabs collapsed until an
+  // orientation change. Native uses the reliably measured layout height.
+  const screenHeight = isWeb ? viewportHeight : pagerHeight;
+  const isScreenReady = !isWeb || screenHeight > 0;
+
+  // Web-only CSS scroll-snap passthrough (RNW forwards unknown style props to
+  // the DOM). Mandatory snap keeps pages from resting half-way; snap-stop
+  // limits each swipe to a single page.
+  const webSnapContainer = (
+    isWeb ? { scrollSnapType: "x mandatory" } : null
+  ) as Record<string, unknown> | null;
+  const webSnapChild = (
+    isWeb ? { scrollSnapAlign: "start", scrollSnapStop: "always" } : null
+  ) as Record<string, unknown> | null;
+
+  const containerStyle = (
+    isWeb
+      ? {
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: screenHeight || "100%",
+          backgroundColor: Colors.background,
+        }
+      : { flex: 1, backgroundColor: Colors.background }
+  ) as Record<string, unknown>;
 
   const pageStyle = {
     width: pageWidth,
-    height: resolvedPagerHeight || undefined,
-    flex: resolvedPagerHeight ? undefined : 1,
+    height: screenHeight || undefined,
+    flex: screenHeight ? undefined : 1,
   } as const;
 
   const pages = [
-    <View key="tab-home" style={pageStyle}>
+    <View key="tab-home" style={[pageStyle, webSnapChild]}>
       <HomeTab
         allEnabledGames={allEnabledGames}
         allEnabledGamePaths={allEnabledGamePaths}
@@ -216,7 +182,7 @@ export default function Home() {
         contentPaddingBottom={contentPaddingBottom}
       />
     </View>,
-    <View key="tab-explore" style={pageStyle}>
+    <View key="tab-explore" style={[pageStyle, webSnapChild]}>
       <DiscoverTab
         allEnabledGames={allEnabledGames}
         allEnabledGamePaths={allEnabledGamePaths}
@@ -228,7 +194,7 @@ export default function Home() {
         contentPaddingBottom={contentPaddingBottom}
       />
     </View>,
-    <View key="tab-stats" style={pageStyle}>
+    <View key="tab-stats" style={[pageStyle, webSnapChild]}>
       <StatsTab
         settingsMap={settingsMap}
         favorites={favorites}
@@ -261,27 +227,22 @@ export default function Home() {
         />
       )}
 
-      <View
-        style={{
-          height: isWeb ? resolvedPagerHeight || undefined : undefined,
-          flex: isWeb && resolvedPagerHeight ? undefined : 1,
-          backgroundColor: Colors.background,
-        }}
-        onLayout={onPagerLayout}
-      >
-        <ScrollView
-          ref={pagerRef}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onScroll={onScroll}
-          onMomentumScrollEnd={onMomentumScrollEnd}
-          scrollEventThrottle={16}
-          style={{ flex: 1 }}
-          contentContainerStyle={{ height: resolvedPagerHeight || "100%" }}
-        >
-          {pages}
-        </ScrollView>
+      <View style={containerStyle} onLayout={onPagerLayout}>
+        {isScreenReady && (
+          <ScrollView
+            ref={pagerRef}
+            horizontal
+            pagingEnabled={!isWeb}
+            showsHorizontalScrollIndicator={false}
+            onScroll={onScroll}
+            onMomentumScrollEnd={onScroll}
+            scrollEventThrottle={16}
+            style={[{ flex: 1 }, webSnapContainer]}
+            contentContainerStyle={{ height: screenHeight || "100%" }}
+          >
+            {pages}
+          </ScrollView>
+        )}
 
         <HomeHeader
           contentMaxWidth={contentMaxWidth}
