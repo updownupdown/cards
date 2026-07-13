@@ -21,8 +21,8 @@ body {
   margin: 0;
   padding: 0;
   width: 100%;
-  min-height: 100%;
-  overflow-x: hidden;
+  height: 100%;
+  overflow: hidden;
   font-family: var(--font-sans-fallback);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -40,9 +40,14 @@ html.fonts-loading body {
 
 #root {
   width: 100%;
-  min-height: 100%;
+  height: 100%;
 }
 
 #root > * {
-  min-height: 100vh;
+  /* Dynamic viewport height keeps the app within the visible area as mobile
+     browser chrome (address bar / bottom button bar) shows and hides, and an
+     explicit height lets descendant percentage heights resolve on first paint
+     (fallback to 100vh for browsers without dvh support). */
+  height: 100vh;
+  height: 100dvh;
 }

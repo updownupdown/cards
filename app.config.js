@@ -34,7 +34,7 @@ const config = {
     startUrl: "/cards/",
     scope: "/cards/",
     backgroundColor: "#343f49",
-    orientation: "portrait-primary",
+    orientation: "any",
   },
   plugins: [
     "expo-router",
