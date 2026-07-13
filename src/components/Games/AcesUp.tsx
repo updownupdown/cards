@@ -115,28 +115,19 @@ export default function AcesUp() {
     undefined,
   );
 
-  const {
-    isLoaded,
-    showIntro,
-    setShowIntro,
-    game,
-    setGame,
-    undo,
-    canUndo,
-    saveUndoState,
-    reset,
-  } = useStateManager({
-    resetAndSetup: async () => {
-      await resetAndSetup(setGame);
-    },
-    gameStateInitial,
-    resetNonGameStates: () => {
-      setSelectedPile(undefined);
-    },
-    postSetupAction: async () => {
-      await dealCards();
-    },
-  });
+  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
+    useStateManager({
+      resetAndSetup: async () => {
+        await resetAndSetup(setGame);
+      },
+      gameStateInitial,
+      resetNonGameStates: () => {
+        setSelectedPile(undefined);
+      },
+      postSetupAction: async () => {
+        await dealCards();
+      },
+    });
 
   const discardable = useMemo(
     () => getDiscardablePileIndexes(game.piles),
@@ -330,8 +321,6 @@ export default function AcesUp() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

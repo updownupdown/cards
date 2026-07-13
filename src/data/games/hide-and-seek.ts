@@ -2,6 +2,12 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const hideAndSeek: GameDefinition = {
   path: "/hide-and-seek",
+  tutorial: {
+    default: {
+      text: "Make legal moves to uncover the hidden cards.",
+      tip: "Avoid burying hidden cards under stacks you can't move.",
+    },
+  },
   title: "Hide and Seek",
   thumbnail: "HideAndSeek.jpg",
   cardBack: "HideAndSeek.png",

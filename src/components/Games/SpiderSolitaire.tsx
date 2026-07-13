@@ -203,26 +203,17 @@ export default function SpiderSolitaire() {
   const [hoverTarget, setHoverTarget] = useState<DropTarget | null>(null);
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
 
-  const {
-    isLoaded,
-    showIntro,
-    setShowIntro,
-    game,
-    setGame,
-    reset,
-    undo,
-    canUndo,
-    saveUndoState,
-  } = useStateManager<SpiderState>({
-    gameStateInitial,
-    resetNonGameStates: () => {
-      setSelected(null);
-      clearDragGhost();
-    },
-    resetAndSetup: async () => {
-      await resetAndSetup(setGame);
-    },
-  });
+  const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
+    useStateManager<SpiderState>({
+      gameStateInitial,
+      resetNonGameStates: () => {
+        setSelected(null);
+        clearDragGhost();
+      },
+      resetAndSetup: async () => {
+        await resetAndSetup(setGame);
+      },
+    });
 
   const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
 
@@ -744,8 +735,6 @@ export default function SpiderSolitaire() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
       ended={won}
       won={won}
       score={completedRuns * 13}

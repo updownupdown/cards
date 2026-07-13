@@ -2,6 +2,12 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 
 export const solitaire: GameDefinition = {
   path: "/solitaire",
+  tutorial: {
+    default: {
+      text: "Drag cards to build the foundations and tableau.",
+      tip: "Foundations go up by suit from Ace; tableau builds down in alternating colours. Only Kings fill empty columns.",
+    },
+  },
   title: "Solitaire",
   enabledOnLocalOnly: true,
   background: "felt-green.jpg",

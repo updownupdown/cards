@@ -40,4 +40,14 @@ export const accordion: GameDefinition = {
     "## Winning",
     "You win if you reduce the entire spread down to one pile.",
   ],
+  tutorial: {
+    select: {
+      text: "Tap a card to pick it up.",
+      tip: "You'll then choose a card to its left to stack it onto.",
+    },
+    target: {
+      text: "Tap the card 1 or 3 places to its left.",
+      tip: "Cards match if they share a rank or a suit.",
+    },
+  },
 };

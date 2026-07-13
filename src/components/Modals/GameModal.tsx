@@ -21,55 +21,6 @@ import { flexStyles } from "@/styles/flexStyles";
 import { Icon, IconName } from "@/icons";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
-interface ModalSectionProps {
-  title?: string;
-  iconName?: IconName;
-  children: React.ReactNode;
-}
-
-const ModalSection = ({ children, title, iconName }: ModalSectionProps) => {
-  return (
-    <View
-      style={[
-        flexStyles.colCentered,
-        flexStyles.fullWidth,
-        flexStyles.gap20,
-        {
-          alignItems: "flex-start",
-        },
-      ]}
-    >
-      {(title || iconName) && (
-        <View
-          style={[
-            flexStyles.rowCentered,
-            flexStyles.fullWidth,
-            {
-              borderTopWidth: 1,
-              borderTopColor: Colors.K800,
-              paddingTop: 20,
-            },
-          ]}
-        >
-          {title && (
-            <Text
-              size="lg"
-              weight={500}
-              color={Colors.K100}
-              style={flexStyles.flex1}
-            >
-              {title}
-            </Text>
-          )}
-          {iconName && <Icon name={iconName} size={32} color={Colors.K500} />}
-        </View>
-      )}
-
-      {children}
-    </View>
-  );
-};
-
 type Props = {
   onClose: () => void;
   onReloadGame?: () => void;
@@ -120,33 +71,8 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
           contentContainerStyle={modalStyles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          {/* About Text */}
-          {info.about && (
-            <ModalSection>
-              <RichText content={info.about} size="md" weight={300} />
-
-              {/* By Line */}
-              {info.byLine && (
-                <Text style={modalStyles.byLine}>{info.byLine}</Text>
-              )}
-            </ModalSection>
-          )}
-
           {/* Stats and favourite */}
           <View style={modalStyles.statsAndFav}>
-            <Button
-              onPress={() =>
-                updateSettings({ isFavorite: !settings.isFavorite })
-              }
-              iconName={settings.isFavorite ? "star" : "star-outline"}
-              size="xs"
-              textOnly
-              iconSize={42}
-              iconColor={
-                settings.isFavorite ? Colors.favoriteStar : Colors.accentBlue
-              }
-            />
-
             <View style={modalStyles.stats}>
               <View style={modalStyles.stat}>
                 <Text style={modalStyles.statsTextLabel}>Tried</Text>
@@ -185,6 +111,72 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
                 </View>
               )}
             </View>
+
+            <Button
+              onPress={() =>
+                updateSettings({ isFavorite: !settings.isFavorite })
+              }
+              iconName={settings.isFavorite ? "star" : "star-outline"}
+              size="xs"
+              textOnly
+              iconSize={42}
+              iconColor={
+                settings.isFavorite ? Colors.favoriteStar : Colors.accentBlue
+              }
+            />
+          </View>
+
+          {/* About Text */}
+          {info.about && (
+            <View
+              style={[
+                flexStyles.colCentered,
+                flexStyles.fullWidth,
+                flexStyles.gap20,
+                {
+                  alignItems: "flex-start",
+                },
+              ]}
+            >
+              <RichText content={info.about} size="md" weight={300} />
+
+              {/* By Line */}
+              {info.byLine && (
+                <Text style={modalStyles.byLine}>{info.byLine}</Text>
+              )}
+            </View>
+          )}
+
+          {/* Tutorial mode toggle */}
+          <View
+            style={[
+              flexStyles.colCentered,
+              flexStyles.fullWidth,
+              {
+                alignItems: "flex-start",
+                padding: spacing(16),
+                paddingTop: spacing(12),
+                paddingRight: spacing(12),
+                backgroundColor: Colors.K875,
+                borderRadius: spacing(8),
+              },
+            ]}
+          >
+            <SettingControl
+              label="Tutorial mode"
+              value={settings.tutorialMode}
+              type="boolean"
+              onChange={(value) =>
+                onGameSettingChange("tutorialMode", Boolean(value))
+              }
+            />
+            <Text
+              size="sm"
+              color={Colors.K500}
+              style={{ paddingTop: spacing(10) }}
+            >
+              Show step-by-step guidance while you play.
+            </Text>
           </View>
 
           {/* Game Settings */}
@@ -231,11 +223,44 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
             ))}
 
           {/* How to Play */}
-          <ModalSection title="How to Play" iconName="instructions">
-            <RichText content={howToPlayText} size="md" weight={300} />
-          </ModalSection>
+          <HowToPlay howToPlayText={howToPlayText} />
         </ScrollView>
       </ModalFull>
     </>
   );
 }
+
+export const HowToPlay = ({ howToPlayText }: { howToPlayText: string[] }) => {
+  return (
+    <View
+      style={[
+        flexStyles.colCentered,
+        flexStyles.fullWidth,
+        flexStyles.gap20,
+        {
+          alignItems: "flex-start",
+        },
+      ]}
+    >
+      <View
+        style={[
+          flexStyles.rowCentered,
+          flexStyles.fullWidth,
+          flexStyles.spaceBetween,
+        ]}
+      >
+        <Text
+          size="xl"
+          weight={600}
+          color={Colors.cardSelectPurple}
+          style={flexStyles.flex1}
+        >
+          How to Play
+        </Text>
+        <Icon name="instructions" size={32} color={Colors.cardSelectPurple} />
+      </View>
+
+      <RichText content={howToPlayText} size="md" weight={300} />
+    </View>
+  );
+};

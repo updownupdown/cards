@@ -212,8 +212,6 @@ export default function DeadCenter() {
   const {
     isSettingUp,
     isLoaded,
-    showIntro,
-    setShowIntro,
     game,
     setGame,
     undo,
@@ -482,8 +480,7 @@ export default function DeadCenter() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
+      tutorialPhase={game.phase}
       ended={game.ended}
       won={game.won}
       reset={reset}

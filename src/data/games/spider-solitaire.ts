@@ -2,6 +2,12 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 
 export const spiderSolitaire: GameDefinition = {
   path: "/spider-solitaire",
+  tutorial: {
+    default: {
+      text: "Build columns down in rank to form same-suit runs.",
+      tip: "Only same-suit runs move together. Tap the stock to deal a card to every column.",
+    },
+  },
   title: "Spider Solitaire",
   enabledOnLocalOnly: true,
   background: "felt-dark-purple.jpg",

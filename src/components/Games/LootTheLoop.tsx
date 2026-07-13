@@ -144,27 +144,18 @@ export default function LootTheLoop() {
     orbitConfig: { enabled: true },
   };
 
-  const {
-    isLoaded,
-    showIntro,
-    setShowIntro,
-    game,
-    setGame,
-    undo,
-    canUndo,
-    saveUndoState,
-    reset,
-  } = useStateManager({
-    resetAndSetup: async () => {
-      await resetAndSetup(setGame);
-    },
-    gameStateInitial,
-    resetNonGameStates: () => {
-      setSelectedCardIndex(undefined);
-      setSelectedPath(undefined);
-      setSelectedRevealedRank(undefined);
-    },
-  });
+  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
+    useStateManager({
+      resetAndSetup: async () => {
+        await resetAndSetup(setGame);
+      },
+      gameStateInitial,
+      resetNonGameStates: () => {
+        setSelectedCardIndex(undefined);
+        setSelectedPath(undefined);
+        setSelectedRevealedRank(undefined);
+      },
+    });
 
   useEffect(() => {
     const selectedCard =
@@ -616,8 +607,6 @@ export default function LootTheLoop() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

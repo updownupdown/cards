@@ -139,27 +139,18 @@ export default function Solitaire() {
     null,
   );
 
-  const {
-    isLoaded,
-    showIntro,
-    setShowIntro,
-    game,
-    setGame,
-    reset,
-    undo,
-    canUndo,
-    saveUndoState,
-  } = useStateManager<GameState>({
-    gameStateInitial,
-    resetNonGameStates: () => {
-      setSelected(null);
-      setLastTap(null);
-      clearDragGhost();
-    },
-    resetAndSetup: async () => {
-      setGame(createInitialState(configuredDrawCount));
-    },
-  });
+  const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
+    useStateManager<GameState>({
+      gameStateInitial,
+      resetNonGameStates: () => {
+        setSelected(null);
+        setLastTap(null);
+        clearDragGhost();
+      },
+      resetAndSetup: async () => {
+        setGame(createInitialState(configuredDrawCount));
+      },
+    });
 
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
 
@@ -991,8 +982,6 @@ export default function Solitaire() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
       ended={won}
       won={won}
       reset={() => {

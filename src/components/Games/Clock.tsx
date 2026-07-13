@@ -89,8 +89,6 @@ export default function Clock() {
   const {
     isSettingUp,
     isLoaded,
-    showIntro,
-    setShowIntro,
     game,
     setGame,
     undo,
@@ -324,8 +322,6 @@ export default function Clock() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

@@ -2,6 +2,12 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 
 export const tripeaks: GameDefinition = {
   path: "/tripeaks",
+  tutorial: {
+    default: {
+      text: "Play an exposed card one rank above or below the waste.",
+      tip: "Rank wraps, so Aces and Kings connect. Draw from the stock when stuck.",
+    },
+  },
   title: "TriPeaks",
   background: "medieval-blocks.jpg",
   cardColorBg: "#24343a",

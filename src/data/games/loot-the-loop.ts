@@ -2,6 +2,12 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const lootTheLoop: GameDefinition = {
   path: "/loot-the-loop",
+  tutorial: {
+    default: {
+      text: "Capture valid loop cards into your score pile.",
+      tip: "Protect your tempo — avoid breaking the loop.",
+    },
+  },
   title: "Loot the Loop",
   thumbnail: "LootTheLoop.jpg",
   cardBack: "LootTheLoop.png",

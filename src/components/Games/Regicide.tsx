@@ -280,8 +280,6 @@ export default function Regicide() {
     reset,
     isSettingUp,
     isLoaded,
-    showIntro,
-    setShowIntro,
     canUndo,
     undo,
     saveUndoState,
@@ -899,8 +897,7 @@ export default function Regicide() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
+      tutorialPhase={game.phase}
       reset={reset}
       isLoaded={isLoaded}
       ended={game.ended}

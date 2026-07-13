@@ -2,6 +2,12 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const theSandwichGuy: GameDefinition = {
   path: "/the-sandwich-guy",
+  tutorial: {
+    default: {
+      text: "Select three cards with equally-spaced ranks to make a sandwich.",
+      tip: "Same suit refills 4 cards, same colour 3, mixed 2. Ranks wrap around A/K.",
+    },
+  },
   title: "The Sandwich Guy",
   thumbnail: "SandwichGuy.jpg",
   cardBack: "SandwichGuy.png",

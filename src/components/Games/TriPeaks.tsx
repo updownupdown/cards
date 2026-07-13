@@ -202,8 +202,6 @@ export default function TriPeaks() {
   const {
     isSettingUp,
     isLoaded,
-    showIntro,
-    setShowIntro,
     game,
     setGame,
     reset,
@@ -359,8 +357,6 @@ export default function TriPeaks() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
       ended={ended}
       won={won}
       // winLoseMessage={lost ? "No moves left." : undefined}

@@ -288,8 +288,6 @@ export default function CardCapture() {
     setGame,
     reset,
     isLoaded,
-    showIntro,
-    setShowIntro,
     canUndo,
     undo,
     saveUndoState,
@@ -742,8 +740,7 @@ export default function CardCapture() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
+      tutorialPhase={game.phase}
       ended={game.ended}
       won={game.won}
       reset={reset}

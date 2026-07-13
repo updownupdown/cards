@@ -2,6 +2,12 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const skyway: GameDefinition = {
   path: "/skyway",
+  tutorial: {
+    default: {
+      text: "Draft a set of cards from the market and place them on the grid.",
+      tip: "Build same-suit paths of increasing value across adjacent cells. Aim for length 5+ per suit.",
+    },
+  },
   title: "Skyway",
   thumbnail: "Skyway.jpg",
   cardBack: "Skyway.png",

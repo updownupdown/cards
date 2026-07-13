@@ -136,25 +136,16 @@ function hasAnyMove(state: GameState) {
 export default function Syndicate() {
   const { zoneBg } = useGameZoneBackground(0.6);
 
-  const {
-    isLoaded,
-    showIntro,
-    setShowIntro,
-    game,
-    setGame,
-    undo,
-    canUndo,
-    saveUndoState,
-    reset,
-  } = useStateManager({
-    resetAndSetup: async () => {
-      await resetAndSetup(setGame);
-    },
-    gameStateInitial,
-    resetNonGameStates: () => {
-      resetSelected();
-    },
-  });
+  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
+    useStateManager({
+      resetAndSetup: async () => {
+        await resetAndSetup(setGame);
+      },
+      gameStateInitial,
+      resetNonGameStates: () => {
+        resetSelected();
+      },
+    });
 
   const [selectedRank, setSelectedRank] = useState<number | null>(null);
   const [selectedMember, setSelectedMember] = useState<string | null>(null);
@@ -458,8 +449,6 @@ export default function Syndicate() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

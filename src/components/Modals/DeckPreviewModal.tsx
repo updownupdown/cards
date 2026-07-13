@@ -13,6 +13,7 @@ import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
 import { Colors } from "@/styles/styles";
+import { roundToPixel } from "@/utils/utils";
 import { ScrollView, View } from "react-native";
 import { Card } from "../Cards/Card";
 import ModalFull from "./ModalFull";
@@ -38,7 +39,7 @@ export function DeckPreviewModal({
 }: Props) {
   const { width: screenWidthActual } = useViewportDimensions();
   const ui = useResponsiveUiLayoutFromWidth(screenWidthActual);
-  const spacing = (value: number) => value * ui.scale;
+  const spacing = (value: number) => roundToPixel(value * ui.scale);
   const modalStyles = useModalStyles();
   const containerWidth = getConstrainedUiWidth(
     screenWidthActual,

@@ -158,26 +158,17 @@ export default function Scorpion() {
   const [selected, setSelected] = useState<Selection>(null);
   const [hoverTarget, setHoverTarget] = useState<DropTarget | null>(null);
 
-  const {
-    isLoaded,
-    showIntro,
-    setShowIntro,
-    game,
-    setGame,
-    reset,
-    undo,
-    canUndo,
-    saveUndoState,
-  } = useStateManager<ScorpionState>({
-    gameStateInitial,
-    resetNonGameStates: () => {
-      setSelected(null);
-      clearDragGhost();
-    },
-    resetAndSetup: async () => {
-      setGame(createInitialState());
-    },
-  });
+  const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
+    useStateManager<ScorpionState>({
+      gameStateInitial,
+      resetNonGameStates: () => {
+        setSelected(null);
+        clearDragGhost();
+      },
+      resetAndSetup: async () => {
+        setGame(createInitialState());
+      },
+    });
 
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
 
@@ -705,8 +696,6 @@ export default function Scorpion() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
       ended={won}
       won={won}
       reset={() => {

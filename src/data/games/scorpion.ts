@@ -2,6 +2,12 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 
 export const scorpion: GameDefinition = {
   path: "/scorpion",
+  tutorial: {
+    default: {
+      text: "Build columns down in rank and the same suit.",
+      tip: "Move any face-up card with everything on top of it. Only a King starts an empty column.",
+    },
+  },
   title: "Scorpion",
   enabledOnLocalOnly: true,
   background: "felt-dark-blue.jpg",

@@ -1,6 +1,7 @@
 import { cardDims, PlayingCard } from "@/components/Cards/card-utils";
 import { GAMES_DATA } from "@/data/games";
 import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
+import { useTutorialBoxLayout } from "@/hooks/useTutorialLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { MaxContentHeight } from "@/styles/styles";
 import { roundToPixel } from "@/utils/utils";
@@ -113,6 +114,9 @@ export function useCardMap({
   const ui = useResponsiveUiLayoutFromWidth(screenWidthActual);
   const responsiveScale = ui.scale;
 
+  // Space reserved at the top of the board for the floating tutorial box.
+  const { reservedHeight: tutorialReservedHeight } = useTutorialBoxLayout();
+
   // Calculate the end column (col + height) for each zone
   // and find the maximum value among them.
   const gridCols = useMemo(
@@ -144,13 +148,20 @@ export function useCardMap({
     gridHeightPadded,
   } = useMemo(() => {
     const headerHeight = roundToPixel(ui.gameHeaderHeight + insets.top);
-    const screenBoardHeight = Math.max(screenHeightActual - headerHeight, 0);
+    const topReserved = roundToPixel(tutorialReservedHeight);
+    const screenBoardHeight = Math.max(
+      screenHeightActual - headerHeight - topReserved,
+      0,
+    );
 
     const containerWidth = screenWidthActual;
     const containerHeight = roundToPixel(
       Math.min(
         screenBoardHeight,
-        Math.max(MaxContentHeight * responsiveScale - headerHeight, 0),
+        Math.max(
+          MaxContentHeight * responsiveScale - headerHeight - topReserved,
+          0,
+        ),
       ),
     );
 
@@ -195,12 +206,14 @@ export function useCardMap({
 
     const offsetX = (containerWidth - gridWidth) / 2 + paddingLeft * cardWidth;
     const offsetY =
+      topReserved +
       heightMargin +
       (containerHeight - gridHeight) / 2 +
       paddingTop * cardHeight;
 
     const gridStartX = (containerWidth - gridWidth) / 2;
-    const gridStartY = heightMargin + (containerHeight - gridHeight) / 2;
+    const gridStartY =
+      topReserved + heightMargin + (containerHeight - gridHeight) / 2;
 
     return {
       cardWidth,
@@ -230,6 +243,7 @@ export function useCardMap({
     ui.gameHeaderHeight,
     screenHeightActual,
     screenWidthActual,
+    tutorialReservedHeight,
   ]);
 
   const zoneBasePosById = useMemo(() => {

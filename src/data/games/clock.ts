@@ -2,6 +2,12 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const clock: GameDefinition = {
   path: "/clock",
+  tutorial: {
+    default: {
+      text: "Tap the active pile to turn its next card.",
+      tip: "Each card sorts to its hour automatically; you lose if all four Kings appear first.",
+    },
+  },
   title: "Clock Solitaire",
   thumbnail: "Clock.jpg",
   cardBack: "Clock.png",

@@ -2,6 +2,12 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const foursquare: GameDefinition = {
   path: "/foursquare",
+  tutorial: {
+    default: {
+      text: "Place the drawn card on a pile in the grid.",
+      tip: "A card that's the highest or lowest of its row or column flips that line. Keep face-down tops to 4 or fewer.",
+    },
+  },
   title: "Foursquare",
   thumbnail: "Foursquare.jpg",
   cardBack: "Foursquare.png",

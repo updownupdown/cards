@@ -17,11 +17,14 @@ import CoinsIcon from "./Coins.svg";
 import CollectionsIcon from "./Collections.svg";
 import DeleteIcon from "./Delete.svg";
 import DiamondsIcon from "./Diamonds.svg";
+import DiceIcon from "./Dice.svg";
 import DoorIcon from "./Door.svg";
 import DragonIcon from "./Dragon.svg";
 import DrawIcon from "./Draw.svg";
 import DungeonIcon from "./Dungeon.svg";
 import EquipIcon from "./Equip.svg";
+import ExpandLessIcon from "./ExpandLess.svg";
+import ExpandMoreIcon from "./ExpandMore.svg";
 import ExploreIcon from "./Explore.svg";
 import FeaturedIcon from "./Featured.svg";
 import FistIcon from "./Fist.svg";
@@ -33,6 +36,7 @@ import HelpOutlineIcon from "./HelpOutline.svg";
 import HomeIcon from "./Home.svg";
 import InfoOutlineIcon from "./InfoOutline.svg";
 import InstructionsIcon from "./Instructions.svg";
+import LearnIcon from "./Learn.svg";
 import ListLargeIcon from "./ListLarge.svg";
 import ListMediumIcon from "./ListMedium.svg";
 import ListSmallIcon from "./ListSmall.svg";
@@ -43,6 +47,7 @@ import ResetIcon from "./Reset.svg";
 import SearchIcon from "./Search.svg";
 import SettingsIcon from "./Settings.svg";
 import SkullIcon from "./Skull.svg";
+import SofaIcon from "./Sofa.svg";
 import SolitaireIcon from "./Solitaire.svg";
 import SpadesIcon from "./Spades.svg";
 import StarIcon from "./Star.svg";
@@ -50,6 +55,7 @@ import StarOutlineIcon from "./StarOutline.svg";
 import SwordIcon from "./Sword.svg";
 import TagIcon from "./Tag.svg";
 import UndoIcon from "./Undo.svg";
+import WhaleIcon from "./Whale.svg";
 
 export type IconName =
   | "arrow-back"
@@ -64,11 +70,14 @@ export type IconName =
   | "collections"
   | "delete"
   | "diamonds"
+  | "dice"
   | "door"
   | "dragon"
   | "draw"
   | "dungeon"
   | "equip"
+  | "expand-less"
+  | "expand-more"
   | "explore"
   | "featured"
   | "fist"
@@ -80,6 +89,7 @@ export type IconName =
   | "home"
   | "info-outline"
   | "instructions"
+  | "learn"
   | "list-large"
   | "list-medium"
   | "list-small"
@@ -90,13 +100,15 @@ export type IconName =
   | "search"
   | "settings"
   | "skull"
+  | "sofa"
   | "solitaire"
   | "spades"
   | "star"
   | "star-outline"
   | "sword"
   | "tag"
-  | "undo";
+  | "undo"
+  | "whale";
 
 export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "arrow-back": ArrowBackIcon,
@@ -111,11 +123,14 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "collections": CollectionsIcon,
   "delete": DeleteIcon,
   "diamonds": DiamondsIcon,
+  "dice": DiceIcon,
   "door": DoorIcon,
   "dragon": DragonIcon,
   "draw": DrawIcon,
   "dungeon": DungeonIcon,
   "equip": EquipIcon,
+  "expand-less": ExpandLessIcon,
+  "expand-more": ExpandMoreIcon,
   "explore": ExploreIcon,
   "featured": FeaturedIcon,
   "fist": FistIcon,
@@ -127,6 +142,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "home": HomeIcon,
   "info-outline": InfoOutlineIcon,
   "instructions": InstructionsIcon,
+  "learn": LearnIcon,
   "list-large": ListLargeIcon,
   "list-medium": ListMediumIcon,
   "list-small": ListSmallIcon,
@@ -137,6 +153,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "search": SearchIcon,
   "settings": SettingsIcon,
   "skull": SkullIcon,
+  "sofa": SofaIcon,
   "solitaire": SolitaireIcon,
   "spades": SpadesIcon,
   "star": StarIcon,
@@ -144,4 +161,5 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "sword": SwordIcon,
   "tag": TagIcon,
   "undo": UndoIcon,
+  "whale": WhaleIcon,
 };

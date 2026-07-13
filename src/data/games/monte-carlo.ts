@@ -2,6 +2,12 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const monteCarlo: GameDefinition = {
   path: "/monte-carlo",
+  tutorial: {
+    default: {
+      text: "Tap two adjacent cards of equal rank to remove the pair.",
+      tip: "Neighbours count in all directions. Consolidate to refill and reveal new pairs.",
+    },
+  },
   title: "Monte Carlo",
   thumbnail: "MonteCarlo.jpg",
   cardBack: "MonteCarlo.png",

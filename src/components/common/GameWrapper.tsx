@@ -22,7 +22,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { GAME_BACKGROUND_ASSETS } from "@/data/game-backgrounds";
 import { Button } from "../Button/Button";
 import GameModal from "../Modals/GameModal";
-import { GameIntro } from "./GameIntro";
+import { TutorialBox } from "./TutorialBox";
 import { LoadingOverlay } from "./LoadingOverlay";
 import { ResetButton } from "./ResetButton";
 import { WinLoseBox } from "./WinLoseBox";
@@ -37,8 +37,8 @@ interface Props {
   winLoseMessage?: string;
   reset: () => void;
   children: React.ReactNode;
-  showIntro: boolean | undefined;
-  setShowIntro: (show: boolean | undefined) => void;
+  /** Current tutorial phase key; maps to gameInfo.tutorial[phase]. */
+  tutorialPhase?: string;
   canUndo?: boolean;
   undo?: () => void;
 }
@@ -51,8 +51,7 @@ export const GameWrapper = ({
   winLoseMessage,
   reset,
   children,
-  showIntro,
-  setShowIntro,
+  tutorialPhase,
   canUndo,
   undo: handleUndo,
 }: Props) => {
@@ -102,12 +101,6 @@ export const GameWrapper = ({
   return (
     <>
       <LoadingOverlay isLoaded={!!isLoaded} />
-
-      <GameIntro
-        showIntro={showIntro}
-        setShowIntro={setShowIntro}
-        setShowMenu={setShowMenu}
-      />
 
       <WinLoseBox
         gameEnded={ended}
@@ -246,6 +239,8 @@ export const GameWrapper = ({
         >
           {children}
         </View>
+
+        <TutorialBox phase={tutorialPhase} topOffset={headerHeight} />
       </View>
     </>
   );

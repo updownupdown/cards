@@ -168,8 +168,6 @@ export default function Pyramid() {
   const {
     isSettingUp,
     isLoaded,
-    showIntro,
-    setShowIntro,
     game,
     setGame,
     reset,
@@ -505,8 +503,6 @@ export default function Pyramid() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
       ended={ended}
       won={won}
       winLoseMessage={

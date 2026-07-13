@@ -2,6 +2,12 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const theBobaTeaShop: GameDefinition = {
   path: "/the-boba-tea-shop",
+  tutorial: {
+    default: {
+      text: "Play cards into valid stacks to fill customer orders.",
+      tip: "Plan around blocked stacks so you don't run out of legal moves. Tap the deck to peek (it reshuffles).",
+    },
+  },
   title: "The Boba Tea Shop",
   thumbnail: "BobaTea.jpg",
   cardBack: "BobaTeaShop.png",

@@ -126,25 +126,16 @@ function evaluateEnd(state: GameState) {
 export default function MonteCarlo() {
   const [selected, setSelected] = useImmer<number[] | null>(null);
 
-  const {
-    isLoaded,
-    showIntro,
-    setShowIntro,
-    game,
-    setGame,
-    undo,
-    canUndo,
-    saveUndoState,
-    reset,
-  } = useStateManager({
-    resetAndSetup: async () => {
-      await resetAndSetup(setGame);
-    },
-    gameStateInitial,
-    resetNonGameStates: () => {
-      setSelected(null);
-    },
-  });
+  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
+    useStateManager({
+      resetAndSetup: async () => {
+        await resetAndSetup(setGame);
+      },
+      gameStateInitial,
+      resetNonGameStates: () => {
+        setSelected(null);
+      },
+    });
 
   function selectCell(index: number) {
     if (game.ended) return;
@@ -370,8 +361,6 @@ export default function MonteCarlo() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

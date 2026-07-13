@@ -150,22 +150,13 @@ export default function TheBobaTeaShop() {
   const [isResolvingCustomerAction, setIsResolvingCustomerAction] =
     useState(false);
 
-  const {
-    isLoaded,
-    showIntro,
-    setShowIntro,
-    game,
-    setGame,
-    undo,
-    canUndo,
-    saveUndoState,
-    reset,
-  } = useStateManager({
-    resetAndSetup: async () => {
-      await resetAndSetup(setGame);
-    },
-    gameStateInitial,
-  });
+  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
+    useStateManager({
+      resetAndSetup: async () => {
+        await resetAndSetup(setGame);
+      },
+      gameStateInitial,
+    });
 
   const score = useMemo(() => totalInQueues(game.queues), [game.queues]);
 
@@ -478,8 +469,6 @@ export default function TheBobaTeaShop() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

@@ -382,8 +382,6 @@ export default function Scoundrel() {
 
   const {
     isLoaded,
-    showIntro,
-    setShowIntro,
     game,
     setGame,
     undo,
@@ -732,8 +730,6 @@ export default function Scoundrel() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       score={game.score}

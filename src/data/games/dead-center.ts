@@ -2,6 +2,20 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const deadCenter: GameDefinition = {
   path: "/dead-center",
+  tutorial: {
+    reveal: {
+      text: "Reveal a zombie, if you can.",
+      tip: "Tap a face-down zombie to flip it.",
+    },
+    play: {
+      text: "Draw and place a card on a valid pile.",
+      tip: "Place on equal value, same colour + higher value, or opposite colour + lower value.",
+    },
+    kill: {
+      text: "Kill an adjacent zombie, if you can.",
+      tip: "Support cards in the zombie's line must add to 10 (Aces/Jokers = 1). Kings and Queens need matching suits.",
+    },
+  },
   title: "Dead Center",
   thumbnail: "DeadCenter.jpg",
   cardBack: "DeadCenter.png",

@@ -2,6 +2,12 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const acesUp: GameDefinition = {
   path: "/aces-up",
+  tutorial: {
+    default: {
+      text: "Discard low cards and move cards to empty piles.",
+      tip: "Discard the lower of two exposed cards that share a suit — Aces are high. Deal 4 more when stuck.",
+    },
+  },
   title: "Aces Up",
   thumbnail: "AcesUp.jpg",
   cardBack: "AcesUp.png",

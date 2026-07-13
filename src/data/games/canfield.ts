@@ -2,6 +2,12 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 
 export const canfield: GameDefinition = {
   path: "/canfield",
+  tutorial: {
+    default: {
+      text: "Drag cards to the foundations and tableau.",
+      tip: "Foundations build up by suit; tableau builds down in alternating colours. Refill empty columns from the reserve.",
+    },
+  },
   title: "Canfield",
   enabledOnLocalOnly: true,
   background: "felt-dark-red.jpg",

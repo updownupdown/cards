@@ -6,15 +6,16 @@ import {
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
-import { textStyles } from "@/styles/textStyles";
 import Constants from "expo-constants";
 import React from "react";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Button } from "../Button/Button";
 import { AddToHomeScreenNotice } from "../common/AddToHomeScreenNotice";
 import { SettingControl } from "../common/SettingControl";
 import ModalFull from "../Modals/ModalFull";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { Colors } from "@/styles/styles";
+import { Text } from "../common/Text";
 
 function formatBuildDate(iso: string): string {
   const d = new Date(iso);
@@ -71,13 +72,6 @@ export const SettingsModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               { gap: 20 },
             ]}
           >
-            <SettingControl
-              label="Show game intros"
-              value={settings.showIntros}
-              type="boolean"
-              onChange={(val) => updateSettings({ showIntros: val })}
-            />
-
             <SettingControl
               label="Resume last played game on launch"
               value={settings.resumeLastGame}
@@ -137,19 +131,14 @@ export const SettingsModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               flat
             />
           )}
-        </View>
 
-        {Constants.expoConfig?.extra?.buildDate && (
-          <Text
-            style={[
-              textStyles.caps,
-              { opacity: 0.4, textAlign: "center", marginTop: 8 },
-            ]}
-          >
-            {"Last build on " +
-              formatBuildDate(Constants.expoConfig.extra.buildDate)}
+          <Text size="sm" weight={300} color={Colors.K400}>
+            {"Last build: " +
+              (Constants.expoConfig?.extra?.buildDate
+                ? formatBuildDate(Constants.expoConfig.extra.buildDate)
+                : "N/A")}
           </Text>
-        )}
+        </View>
       </ScrollView>
     </ModalFull>
   );

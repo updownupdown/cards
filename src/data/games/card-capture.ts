@@ -2,6 +2,27 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const cardCapture: GameDefinition = {
   path: "/card-capture",
+  tutorial: {
+    enemyPhase: {
+      text: "The enemy is advancing…",
+      tip: "Enemy cards shift right and refill from the enemy deck.",
+    },
+    discardPhase: {
+      text: "Discard any cards you don't want, then continue.",
+      tip: "You'll draw back up to 4 cards next.",
+    },
+    drawPhase: {
+      text: "Drawing back up to a full hand…",
+      tip: "Your deck is only 2s, 3s, 4s, and both jokers.",
+    },
+    capturePhase: {
+      text: "Choose one action: capture, let the enemy capture, or sacrifice.",
+      tip: "Capture with same-suit cards whose total ≥ the enemy card. Never let a face card or Ace reach the Enemy Capture Pile.",
+    },
+    gameOver: {
+      text: "The battle is over.",
+    },
+  },
   title: "Card Capture",
   enabledOnLocalOnly: true,
   thumbnail: "CardCapture.jpg",

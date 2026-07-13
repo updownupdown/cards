@@ -29,6 +29,24 @@ export type GameStats = {
 export const DEFAULT_GAME_THUMBNAIL: GameThumbnailName = "DefaultThumbnail.jpg";
 export const DEFAULT_GAME_BACKGROUND: GameBackgroundName = "felt-grey.jpg";
 
+/** A single step of guidance shown in the tutorial box for a given phase. */
+export type TutorialInstruction = {
+  /** What the player should do next, e.g. "Pick a card". */
+  text: string;
+  /** Optional hint to help make the choice, e.g. "Suits must match.". */
+  tip?: string;
+};
+
+/**
+ * Phase-keyed tutorial instructions. Games pass a `tutorialPhase` string to
+ * `GameWrapper`; the matching entry here is shown in the tutorial box. Games
+ * with a single continuous action can use the `"default"` key.
+ */
+export type TutorialInstructions = Record<string, TutorialInstruction>;
+
+/** The phase key used by single-phase games (or when no phase is provided). */
+export const DEFAULT_TUTORIAL_PHASE = "default";
+
 export type GameMenuInfo = {
   title: string;
   thumbnail?: GameThumbnailName;
@@ -47,6 +65,8 @@ export type GameMenuInfo = {
   briefRules: string[];
   /** Markdown-ish blocks; supports headings, bold, lists and {5H}/{JC} card tokens. */
   howToPlay?: string[];
+  /** Per-phase tutorial-mode instructions keyed by phase (or "default"). */
+  tutorial?: TutorialInstructions;
   byLine?: string;
   tags?: GameTag[];
 };

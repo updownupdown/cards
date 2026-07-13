@@ -125,27 +125,18 @@ export default function FortyThieves() {
     null,
   );
 
-  const {
-    isLoaded,
-    showIntro,
-    setShowIntro,
-    game,
-    setGame,
-    reset,
-    undo,
-    canUndo,
-    saveUndoState,
-  } = useStateManager<GameState>({
-    gameStateInitial,
-    resetNonGameStates: () => {
-      setSelected(null);
-      setLastTap(null);
-      clearDragGhost();
-    },
-    resetAndSetup: async () => {
-      setGame(createInitialState());
-    },
-  });
+  const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
+    useStateManager<GameState>({
+      gameStateInitial,
+      resetNonGameStates: () => {
+        setSelected(null);
+        setLastTap(null);
+        clearDragGhost();
+      },
+      resetAndSetup: async () => {
+        setGame(createInitialState());
+      },
+    });
 
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
 
@@ -959,8 +950,6 @@ export default function FortyThieves() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
       ended={ended}
       won={won}
       reset={() => {

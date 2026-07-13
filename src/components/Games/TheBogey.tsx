@@ -184,22 +184,13 @@ async function resetAndSetup(
 export default function TheBogey() {
   const { zoneBg } = useGameZoneBackground();
 
-  const {
-    game,
-    setGame,
-    reset,
-    isLoaded,
-    showIntro,
-    setShowIntro,
-    canUndo,
-    undo,
-    saveUndoState,
-  } = useStateManager({
-    gameStateInitial,
-    resetAndSetup: async () => {
-      await resetAndSetup(setGame);
-    },
-  });
+  const { game, setGame, reset, isLoaded, canUndo, undo, saveUndoState } =
+    useStateManager({
+      gameStateInitial,
+      resetAndSetup: async () => {
+        await resetAndSetup(setGame);
+      },
+    });
 
   const selectedHandCard = useMemo(
     () =>
@@ -560,8 +551,6 @@ export default function TheBogey() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

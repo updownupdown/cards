@@ -35,7 +35,9 @@ export function SettingControl<T>({
           }
           onPress={() => onChange(!value as any)}
         >
-          <Text size="md">{label}</Text>
+          <Text weight={500} size="lg">
+            {label}
+          </Text>
 
           {booleanType === "toggle" ? (
             <View

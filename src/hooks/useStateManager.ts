@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useGameSettings } from "./useGameSettings";
 import { usePathname } from "expo-router";
 import {
   isGamePath,
@@ -29,7 +28,6 @@ export function useStateManager<T>({
   const pathname = normalizeGamePath(usePathname());
   const { settings: globalSettings, isLoading: isGlobalSettingsLoading } =
     useGlobalSettings();
-  const { settings: gameSettings } = useGameSettings(pathname);
 
   // —— Game State ————————————————————————
   const [game, setGame] = useImmer<T>(gameStateInitial);
@@ -45,19 +43,6 @@ export function useStateManager<T>({
     }, 150);
     return () => clearTimeout(timer);
   }, []);
-
-  const [showIntro, setShowIntro] = useState<boolean | undefined>(undefined);
-
-  useEffect(() => {
-    if (
-      gameSettings?.showIntro === undefined ||
-      globalSettings?.showIntros === undefined
-    ) {
-      return;
-    }
-
-    setShowIntro(gameSettings?.showIntro && globalSettings?.showIntros);
-  }, [gameSettings, globalSettings?.showIntros]);
 
   // —— Initiate First Deal ————————————————————————
   const hasDealtRef = useRef(false);
@@ -83,7 +68,6 @@ export function useStateManager<T>({
       if (session && session.path === pathname) {
         setGame(session.state);
         hasDealtRef.current = true;
-        setShowIntro(false);
         setIsSettingUp(false);
       }
 
@@ -108,17 +92,12 @@ export function useStateManager<T>({
   }
 
   useEffect(() => {
-    if (
-      !isResumeHydrated ||
-      showIntro === undefined ||
-      showIntro ||
-      hasDealtRef.current
-    ) {
+    if (!isResumeHydrated || hasDealtRef.current) {
       return;
     }
 
     firstDeal();
-  }, [isResumeHydrated, showIntro, resetAndSetup]);
+  }, [isResumeHydrated, resetAndSetup]);
 
   useEffect(() => {
     if (!isGamePath(pathname)) return;
@@ -186,8 +165,6 @@ export function useStateManager<T>({
     undo,
     canUndo: history.length > 0,
     isLoaded,
-    showIntro,
-    setShowIntro,
     game,
     setGame,
   };

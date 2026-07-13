@@ -133,25 +133,16 @@ export default function Foursquare() {
 
   const [showLegalPlacements, setShowLegalPlacements] = useState(false);
 
-  const {
-    isLoaded,
-    showIntro,
-    setShowIntro,
-    game,
-    setGame,
-    undo,
-    canUndo,
-    saveUndoState,
-    reset,
-  } = useStateManager({
-    resetAndSetup: async () => {
-      await resetAndSetup(setGame);
-    },
-    gameStateInitial,
-    resetNonGameStates: () => {
-      setShowLegalPlacements(false);
-    },
-  });
+  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
+    useStateManager({
+      resetAndSetup: async () => {
+        await resetAndSetup(setGame);
+      },
+      gameStateInitial,
+      resetNonGameStates: () => {
+        setShowLegalPlacements(false);
+      },
+    });
 
   // ====================================
   // PLACE CARD ON A PILE
@@ -450,8 +441,6 @@ export default function Foursquare() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       score={game.draw.length * (game.won ? 1 : -1)}

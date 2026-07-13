@@ -31,4 +31,22 @@ export const theEmissary: GameDefinition = {
     "When ready, select the next topic to debate. When able, you must be a card of the same suit.",
     "Each ruler has a trump suit (its own). To win a debate, you must play a card of higher value and of the same suit, or any card of the trump suit.",
   ],
+  tutorial: {
+    chooseKingdom: {
+      text: "Choose a kingdom to visit.",
+      tip: "You must win the exact number of debates shown on the kingdom (1–8).",
+    },
+    drawTopic: {
+      text: "Tap the draw pile to reveal the next debate topic.",
+      tip: "When able, the topic must match the suit you can debate.",
+    },
+    debate: {
+      text: "Play a card from your hand to win the debate.",
+      tip: "Beat the topic with a higher card of the same suit, or play any card of the trump suit.",
+    },
+    discard: {
+      text: "Choose a card to discard.",
+      tip: "Your advisor lets you remove a card from your hand.",
+    },
+  },
 };

@@ -101,25 +101,16 @@ export default function Area52() {
 
   const [selectedDefenders, setSelectedDefenders] = useState<number[]>([]);
 
-  const {
-    isLoaded,
-    showIntro,
-    setShowIntro,
-    game,
-    setGame,
-    undo,
-    canUndo,
-    saveUndoState,
-    reset,
-  } = useStateManager({
-    resetAndSetup: async () => {
-      await resetAndSetup(setGame);
-    },
-    gameStateInitial,
-    resetNonGameStates: () => {
-      setSelectedDefenders([]);
-    },
-  });
+  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
+    useStateManager({
+      resetAndSetup: async () => {
+        await resetAndSetup(setGame);
+      },
+      gameStateInitial,
+      resetNonGameStates: () => {
+        setSelectedDefenders([]);
+      },
+    });
 
   async function startGame(gameState: GameState) {
     const stateFrame = await refillAttackers(gameState);
@@ -127,16 +118,12 @@ export default function Area52() {
   }
 
   useEffect(() => {
-    if (
-      showIntro ||
-      game.currentAttackers.length > 0 ||
-      game.currentDefenders.length > 0
-    ) {
+    if (game.currentAttackers.length > 0 || game.currentDefenders.length > 0) {
       return;
     }
 
     startGame(game);
-  }, [showIntro, game.currentAttackers, game.attackerDeck]);
+  }, [game.currentAttackers, game.attackerDeck]);
 
   const currentAttacker = useMemo(
     () => game.currentAttackers[game.currentAttackers.length - 1] ?? null,
@@ -487,8 +474,7 @@ export default function Area52() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
+      tutorialPhase={selectedDefenders.length === 0 ? "select" : "act"}
       ended={game.ended}
       won={game.won}
       reset={reset}

@@ -2,6 +2,12 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 
 export const fortyThieves: GameDefinition = {
   path: "/forty-thieves",
+  tutorial: {
+    default: {
+      text: "Drag cards to build the foundations and tableau.",
+      tip: "Foundations go up by suit from Ace; tableau builds down in the same suit, one card at a time.",
+    },
+  },
   title: "Forty Thieves",
   enabledOnLocalOnly: true,
   background: "concrete.jpg",

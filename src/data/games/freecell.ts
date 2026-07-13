@@ -2,6 +2,12 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 
 export const freecell: GameDefinition = {
   path: "/freecell",
+  tutorial: {
+    default: {
+      text: "Drag cards to build the foundations and tableau.",
+      tip: "Tableau builds down in alternating colours; use the four free cells to park single cards.",
+    },
+  },
   title: "FreeCell",
   // enabledOnLocalOnly: true,
   thumbnail: DEFAULT_GAME_THUMBNAIL,

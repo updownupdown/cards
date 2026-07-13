@@ -235,25 +235,16 @@ export default function Skyway() {
 
   const [selectedMarket, setSelectedMarket] = useState<number | null>(null);
 
-  const {
-    isLoaded,
-    showIntro,
-    setShowIntro,
-    game,
-    setGame,
-    undo,
-    canUndo,
-    saveUndoState,
-    reset,
-  } = useStateManager({
-    resetAndSetup: async () => {
-      await resetAndSetup(setGame);
-    },
-    gameStateInitial,
-    resetNonGameStates: () => {
-      setSelectedMarket(null);
-    },
-  });
+  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
+    useStateManager({
+      resetAndSetup: async () => {
+        await resetAndSetup(setGame);
+      },
+      gameStateInitial,
+      resetNonGameStates: () => {
+        setSelectedMarket(null);
+      },
+    });
 
   const score = useMemo(() => computeScore(game.grid), [game.grid]);
   const won = SUITS.every((suit) => score[suit] >= 5);
@@ -445,8 +436,6 @@ export default function Skyway() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
       ended={game.ended}
       won={won}
       reset={reset}

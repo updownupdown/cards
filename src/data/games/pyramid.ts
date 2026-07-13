@@ -2,6 +2,12 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 
 export const pyramid: GameDefinition = {
   path: "/pyramid",
+  tutorial: {
+    default: {
+      text: "Remove exposed cards in pairs that total 13.",
+      tip: "Kings are 13 and go alone. Draw from the stock to find matches.",
+    },
+  },
   title: "Pyramid",
   thumbnail: DEFAULT_GAME_THUMBNAIL,
   cardColorBg: "#1d170f",

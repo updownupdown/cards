@@ -38,4 +38,14 @@ export const area52: GameDefinition = {
     "Dual attacks can be done with two cards whose total value equals the attacker's value. No attackers are lost during dual attacks, except during the second wave, where defenders matching the attacker's color are lost.",
     "Sacrifices can be used to move the lead attacker to the back of the attacker deck; the sacrified defender is lost.",
   ],
+  tutorial: {
+    select: {
+      text: "Tap 1 or 2 defenders to face the lead attacker.",
+      tip: "One defender must outrank the attacker and be the opposite colour, or two defenders must sum to its value.",
+    },
+    act: {
+      text: "Tap Attack to fight, or Sacrifice to send the attacker back.",
+      tip: "Sacrifice loses the chosen defender but buys you time.",
+    },
+  },
 };

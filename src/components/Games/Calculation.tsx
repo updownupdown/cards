@@ -106,8 +106,6 @@ export default function Calculation() {
 
   const {
     isLoaded,
-    showIntro,
-    setShowIntro,
     game,
     setGame,
     undo,
@@ -180,7 +178,7 @@ export default function Calculation() {
 
     // Turn over draw card
     turnOverDrawCard();
-  }, [game, showIntro]);
+  }, [game]);
 
   // Move from draw to waste pile
   async function moveDrawToWaste(wastePileIndex: number) {
@@ -414,8 +412,6 @@ export default function Calculation() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

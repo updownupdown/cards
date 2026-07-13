@@ -8,6 +8,12 @@ import { textStyles } from "@/styles/textStyles";
 import { roundToPixel } from "@/utils/utils";
 import { HexColor } from "@/data/games-data";
 
+export const QUICK_TRANSITION_STYLE = {
+  transitionDuration: "0.2s",
+  transitionProperty: "all",
+  transitionTimingFunction: "ease",
+} as const;
+
 export const BTN_TRANSITION_STYLE = {
   transitionDuration: "0.4s",
   transitionProperty: "all",

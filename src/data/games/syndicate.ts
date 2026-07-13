@@ -2,6 +2,12 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const syndicate: GameDefinition = {
   path: "/syndicate",
+  tutorial: {
+    default: {
+      text: "Build and convert stacks to promote members.",
+      tip: "Respect the rank restrictions and use timing windows for high-value conversions.",
+    },
+  },
   title: "Syndicate",
   thumbnail: "Syndicate.jpg",
   background: "concrete.jpg",

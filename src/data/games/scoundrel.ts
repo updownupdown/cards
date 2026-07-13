@@ -2,6 +2,12 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const scoundrel: GameDefinition = {
   path: "/scoundrel",
+  tutorial: {
+    default: {
+      text: "Resolve room cards: fight monsters, equip weapons, drink potions.",
+      tip: "Weapon kills must be non-increasing in value. Resolve 3 of 4 cards, then carry one forward.",
+    },
+  },
   title: "Scoundrel",
   thumbnail: "Scoundrel.jpg",
   cardBack: "Scoundrel.png",

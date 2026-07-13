@@ -73,25 +73,16 @@ function hasAnyMove(line: PlayingCard[]) {
 export default function Accordion() {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-  const {
-    isLoaded,
-    showIntro,
-    setShowIntro,
-    game,
-    setGame,
-    undo,
-    canUndo,
-    saveUndoState,
-    reset,
-  } = useStateManager({
-    resetAndSetup: async () => {
-      await resetAndSetup(setGame);
-    },
-    gameStateInitial,
-    resetNonGameStates: () => {
-      setSelectedIndex(null);
-    },
-  });
+  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
+    useStateManager({
+      resetAndSetup: async () => {
+        await resetAndSetup(setGame);
+      },
+      gameStateInitial,
+      resetNonGameStates: () => {
+        setSelectedIndex(null);
+      },
+    });
 
   function onCardPress(index: number) {
     if (game.ended) return;
@@ -216,8 +207,7 @@ export default function Accordion() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
+      tutorialPhase={selectedIndex === null ? "select" : "target"}
       ended={game.ended}
       won={game.won}
       reset={reset}

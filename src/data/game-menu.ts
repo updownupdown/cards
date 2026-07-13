@@ -10,7 +10,7 @@ export type GameStats = {
 };
 
 export type GameSettings = {
-  showIntro: boolean;
+  tutorialMode: boolean;
   showCardHints: boolean;
   isFavorite: boolean;
   difficulty: "easy" | "difficult";
@@ -21,7 +21,6 @@ export type GameSettings = {
 export type GameSettingsMap = Record<string, GameSettings>;
 
 export type GlobalSettings = {
-  showIntros: boolean;
   discoverCardSize: "small" | "medium" | "large";
   dismissHomeInstallPrompt: boolean;
   resumeLastGame: boolean;
@@ -53,14 +52,13 @@ export type SavedGameSession<T = unknown> = {
 };
 
 export const DEFAULT_GLOBAL_SETTINGS: GlobalSettings = {
-  showIntros: true,
   discoverCardSize: "large",
   dismissHomeInstallPrompt: false,
   resumeLastGame: true,
 };
 
 export const DEFAULT_GAME_SETTINGS: GameSettings = {
-  showIntro: true,
+  tutorialMode: true,
   showCardHints: true,
   isFavorite: false,
   difficulty: "easy",
@@ -133,7 +131,6 @@ export async function loadGlobalSettings(): Promise<GlobalSettings> {
 
     return {
       ...merged,
-      showIntros: merged.showIntros !== false,
       discoverCardSize:
         merged.discoverCardSize === "small" ||
         merged.discoverCardSize === "medium" ||

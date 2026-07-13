@@ -124,28 +124,19 @@ function replacementCount(cards: PlayingCard[]) {
 export default function TheSandwichGuy() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  const {
-    isLoaded,
-    showIntro,
-    setShowIntro,
-    game,
-    setGame,
-    undo,
-    canUndo,
-    saveUndoState,
-    reset,
-  } = useStateManager({
-    resetAndSetup: async () => {
-      await resetAndSetup(setGame);
-    },
-    gameStateInitial,
-    resetNonGameStates: () => {
-      setSelectedIds([]);
-    },
-    postSetupAction: async () => {
-      await refillHand();
-    },
-  });
+  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
+    useStateManager({
+      resetAndSetup: async () => {
+        await resetAndSetup(setGame);
+      },
+      gameStateInitial,
+      resetNonGameStates: () => {
+        setSelectedIds([]);
+      },
+      postSetupAction: async () => {
+        await refillHand();
+      },
+    });
 
   const selectedCards = useMemo(
     () =>
@@ -339,8 +330,6 @@ export default function TheSandwichGuy() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       reset={reset}

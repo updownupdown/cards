@@ -409,22 +409,13 @@ export default function BowlingSolitaire() {
   const { zoneBg, cardBg, cardText } = useGameZoneBackground();
   const { spacing, font } = useResponsiveMetrics();
 
-  const {
-    game,
-    setGame,
-    reset,
-    isLoaded,
-    showIntro,
-    setShowIntro,
-    canUndo,
-    undo,
-    saveUndoState,
-  } = useStateManager({
-    gameStateInitial,
-    resetAndSetup: async () => {
-      await resetAndSetup(setGame, true);
-    },
-  });
+  const { game, setGame, reset, isLoaded, canUndo, undo, saveUndoState } =
+    useStateManager({
+      gameStateInitial,
+      resetAndSetup: async () => {
+        await resetAndSetup(setGame, true);
+      },
+    });
 
   // const isBonusMode = game.bonusBallsRemaining > 0;
 
@@ -985,8 +976,7 @@ export default function BowlingSolitaire() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
+      tutorialPhase={game.phase}
       ended={game.phase === "gameEnd"}
       won={true}
       reset={reset}

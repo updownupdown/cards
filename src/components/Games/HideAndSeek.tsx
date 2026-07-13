@@ -154,22 +154,13 @@ async function resetAndSetup(
 
 // ── Main Component ─────────────────────────────────────────
 export default function HideAndSeek() {
-  const {
-    isLoaded,
-    showIntro,
-    setShowIntro,
-    game,
-    setGame,
-    undo,
-    canUndo,
-    saveUndoState,
-    reset,
-  } = useStateManager({
-    resetAndSetup: async () => {
-      await resetAndSetup(setGame);
-    },
-    gameStateInitial,
-  });
+  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
+    useStateManager({
+      resetAndSetup: async () => {
+        await resetAndSetup(setGame);
+      },
+      gameStateInitial,
+    });
 
   // ── Game logic ────────────────────────────────────────────
   function placeGuess(guessIndex: number) {
@@ -366,8 +357,6 @@ export default function HideAndSeek() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
       ended={game.ended}
       won={game.won}
       winLoseMessage={game.winLoseMessage}

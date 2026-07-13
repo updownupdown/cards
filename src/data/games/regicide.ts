@@ -2,6 +2,16 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const regicide: GameDefinition = {
   path: "/regicide",
+  tutorial: {
+    attack: {
+      text: "Play a card (or combo) to damage the royal.",
+      tip: "Its suit power triggers: ♥ heal, ♦ draw, ♣ double damage, ♠ shield. The enemy is immune to its own suit.",
+    },
+    defend: {
+      text: "Discard cards to absorb the enemy's attack.",
+      tip: "Discard cards totalling at least the enemy's (reduced) attack value.",
+    },
+  },
   title: "Regicide",
   cardBack: "Regicide.png",
   thumbnail: "Regicide.jpg",

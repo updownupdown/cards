@@ -6,8 +6,8 @@ import {
   GameTagNames,
 } from "@/data/games-data";
 import { Icon } from "@/icons";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Colors, rgba } from "@/styles/styles";
-import { roundToPixel } from "@/utils/utils";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link, type Href } from "expo-router";
 import { Image, Pressable, type ViewStyle, View } from "react-native";
@@ -24,7 +24,6 @@ type Props = {
   isFavorite: boolean;
   size?: "small" | "medium" | "large";
   isLarge?: boolean;
-  responsiveScale: number;
   style?: ViewStyle;
 };
 
@@ -34,14 +33,12 @@ export function HomeCard({
   onToggleFavorite,
   isFavorite,
   size = "medium",
-  responsiveScale,
   style,
 }: Props) {
-  const scale = responsiveScale;
-  const spacing = (value: number) => roundToPixel(value * scale);
+  const { spacing } = useResponsiveMetrics();
   const tagsText = game.tags?.map((tag) => GameTagNames[tag]).join(", ");
 
-  const borderRadius = spacing(12);
+  const borderRadius = spacing(8);
   const padding = spacing(size === "large" ? 22 : size === "medium" ? 12 : 18);
   const shadowUnit = spacing(2);
 
@@ -56,7 +53,7 @@ export function HomeCard({
         : mediumCardHeight;
 
   const favBtnSize = spacing(36);
-  const favBtnInset = roundToPixel(favBtnSize / 10);
+  const favBtnInset = spacing(36 / 10);
 
   return (
     <View
@@ -153,11 +150,11 @@ export function HomeCard({
             <StatBars stats={game.stats} gameColor={game.cardColorText} />
           )}
 
-          {size === "large" && tagsText && (
+          {/* {size === "large" && tagsText && (
             <Text size="xs" weight={300} color={game.cardColorText}>
               {tagsText}
             </Text>
-          )}
+          )} */}
         </Pressable>
       </Link>
 
@@ -185,7 +182,7 @@ export function HomeCard({
         <Icon
           name={isFavorite ? "star" : "star-outline"}
           color={isFavorite ? Colors.favoriteStar : Colors.K300}
-          size={roundToPixel(favBtnSize * 0.7)}
+          size={spacing(36 * 0.7)}
         />
       </Pressable>
     </View>

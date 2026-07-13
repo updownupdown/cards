@@ -57,8 +57,6 @@ export default function TheEmissary() {
   const {
     isSettingUp,
     isLoaded,
-    showIntro,
-    setShowIntro,
     game,
     setGame,
     undo,
@@ -78,6 +76,13 @@ export default function TheEmissary() {
   const showChooseKingdom = useMemo(() => {
     return !game.ended && game.visit === null;
   }, [game.visit]);
+
+  const tutorialPhase = useMemo(() => {
+    if (game.visit === null) return "chooseKingdom";
+    if (game.discardFromHand > 0) return "discard";
+    if (game.visit.debateTopic === undefined) return "drawTopic";
+    return "debate";
+  }, [game.visit, game.discardFromHand]);
 
   // ----- useEffect: Refill hand after visit ----- //
   useEffect(() => {
@@ -675,8 +680,7 @@ export default function TheEmissary() {
 
   return (
     <GameWrapper
-      showIntro={showIntro}
-      setShowIntro={setShowIntro}
+      tutorialPhase={tutorialPhase}
       ended={game.ended}
       won={game.won}
       reset={reset}
