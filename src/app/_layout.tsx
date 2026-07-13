@@ -38,6 +38,12 @@ export default function Layout() {
 
     updateMeta("theme-color", cardBg);
     updateMeta("msapplication-navbutton-color", cardBg);
+
+    // Tint the Android system navigation (bottom button) bar to match the
+    // current screen. In a standalone PWA Chrome samples the page background
+    // behind the bottom safe area, so keeping the body background in sync with
+    // the active theme color colours the virtual buttons accordingly.
+    document.body.style.backgroundColor = cardBg;
   }, [cardBg]);
 
   useEffect(() => {

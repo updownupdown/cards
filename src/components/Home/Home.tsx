@@ -42,6 +42,7 @@ export default function Home() {
   const renderedContentWidth = Math.min(contentMaxWidth, viewportWidth);
 
   const [pageWidth, setPageWidth] = useState(renderedContentWidth);
+  const [pagerHeight, setPagerHeight] = useState(0);
   const [tabBarHeight, setTabBarHeight] = useState(96);
 
   const {
@@ -90,9 +91,17 @@ export default function Home() {
   }, [pageWidth]);
 
   const onPagerLayout = (event: LayoutChangeEvent) => {
-    const width = event.nativeEvent.layout.width;
+    const { width, height } = event.nativeEvent.layout;
     if (width > 0 && Math.abs(width - pageWidth) > 1) {
       setPageWidth(width);
+    }
+    // Drive the pager off a measured pixel height rather than height: "100%".
+    // On mobile web the horizontal ScrollView can measure a stale/zero size at
+    // first paint (before the dynamic viewport height settles), leaving pages
+    // collapsed until an orientation change. Measuring the container height
+    // self-heals via the layout observer once the viewport resolves.
+    if (height > 0 && Math.abs(height - pagerHeight) > 1) {
+      setPagerHeight(height);
     }
   };
 
@@ -128,8 +137,14 @@ export default function Home() {
     pagerRef.current?.scrollTo({ x: index * pageWidth, animated: true });
   };
 
+  const pageStyle = {
+    width: pageWidth,
+    height: pagerHeight || undefined,
+    flex: pagerHeight ? undefined : 1,
+  } as const;
+
   const pages = [
-    <View key="tab-home" style={{ width: pageWidth, flex: 1 }}>
+    <View key="tab-home" style={pageStyle}>
       <HomeTab
         allEnabledGames={allEnabledGames}
         allEnabledGamePaths={allEnabledGamePaths}
@@ -141,7 +156,7 @@ export default function Home() {
         contentPaddingBottom={contentPaddingBottom}
       />
     </View>,
-    <View key="tab-explore" style={{ width: pageWidth, flex: 1 }}>
+    <View key="tab-explore" style={pageStyle}>
       <DiscoverTab
         allEnabledGames={allEnabledGames}
         allEnabledGamePaths={allEnabledGamePaths}
@@ -153,7 +168,7 @@ export default function Home() {
         contentPaddingBottom={contentPaddingBottom}
       />
     </View>,
-    <View key="tab-stats" style={{ width: pageWidth, flex: 1 }}>
+    <View key="tab-stats" style={pageStyle}>
       <StatsTab
         settingsMap={settingsMap}
         favorites={favorites}
@@ -186,18 +201,20 @@ export default function Home() {
         />
       )}
 
-      <View style={{ flex: 1, backgroundColor: Colors.background }}>
+      <View
+        style={{ flex: 1, backgroundColor: Colors.background }}
+        onLayout={onPagerLayout}
+      >
         <ScrollView
           ref={pagerRef}
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
-          onLayout={onPagerLayout}
           onScroll={onScroll}
           onMomentumScrollEnd={onScroll}
           scrollEventThrottle={16}
           style={{ flex: 1 }}
-          contentContainerStyle={{ height: "100%" }}
+          contentContainerStyle={{ height: pagerHeight || "100%" }}
         >
           {pages}
         </ScrollView>
