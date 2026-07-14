@@ -4,8 +4,7 @@ export const monteCarlo: GameDefinition = {
   path: "/monte-carlo",
   tutorial: {
     default: {
-      text: "Tap two adjacent cards of equal rank to remove the pair.",
-      tip: "Neighbours count in all directions. Consolidate to refill and reveal new pairs.",
+      text: "Tap adjacent equal ranks to clear; consolidate for new pairs.",
     },
   },
   title: "Monte Carlo",

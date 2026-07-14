@@ -4,8 +4,7 @@ export const spiderSolitaire: GameDefinition = {
   path: "/spider-solitaire",
   tutorial: {
     default: {
-      text: "Build columns down in rank to form same-suit runs.",
-      tip: "Only same-suit runs move together. Tap the stock to deal a card to every column.",
+      text: "Build down by rank; move same-suit runs; deal when stuck.",
     },
   },
   title: "Spider Solitaire",

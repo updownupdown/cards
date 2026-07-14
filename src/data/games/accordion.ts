@@ -42,12 +42,10 @@ export const accordion: GameDefinition = {
   ],
   tutorial: {
     select: {
-      text: "Tap a card to pick it up.",
-      tip: "You'll then choose a card to its left to stack it onto.",
+      text: "Tap a card, then target 1 or 3 spots left.",
     },
     target: {
-      text: "Tap the card 1 or 3 places to its left.",
-      tip: "Cards match if they share a rank or a suit.",
+      text: "Move only to same suit or same rank.",
     },
   },
 };

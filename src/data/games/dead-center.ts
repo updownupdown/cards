@@ -4,16 +4,13 @@ export const deadCenter: GameDefinition = {
   path: "/dead-center",
   tutorial: {
     reveal: {
-      text: "Reveal a zombie, if you can.",
-      tip: "Tap a face-down zombie to flip it.",
+      text: "Reveal one face-down zombie if available.",
     },
     play: {
-      text: "Draw and place a card on a valid pile.",
-      tip: "Place on equal value, same colour + higher value, or opposite colour + lower value.",
+      text: "Draw, then place by value/color rule on a legal pile.",
     },
     kill: {
-      text: "Kill an adjacent zombie, if you can.",
-      tip: "Support cards in the zombie's line must add to 10 (Aces/Jokers = 1). Kings and Queens need matching suits.",
+      text: "Kill adjacent zombie if support cards in its line sum to 10.",
     },
   },
   title: "Dead Center",

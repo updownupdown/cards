@@ -1,0 +1,61 @@
+import { GameDefinition, GameTag } from "../games-data";
+
+export const wildfire: GameDefinition = {
+  enabledOnLocalOnly: true,
+  enabled: false,
+  path: "/wildfire",
+  tutorial: {
+    play: {
+      text: "Douse with same suit or higher rank crew; keep stacks low.",
+    },
+    advance: {
+      text: "Advance spreads flames; 3-high flashovers can chain outward.",
+    },
+  },
+  title: "Wildfire",
+  thumbnail: "DefaultThumbnail.jpg",
+  cardBack: "DefaultCardBack.png",
+  background: "wall-tile.jpg",
+  cardColorBg: "#2a0f08",
+  cardColorText: "#ffd9a0",
+  cardDescription:
+    "Contain a spreading blaze across a nine-cell grid before it engulfs everything.",
+  stats: {
+    complexity: 65,
+    difficulty: 70,
+    luck: 40,
+  },
+  // tags: [GameTag.ModernMechanics],
+  tags: [GameTag.Beta],
+  briefRules: [
+    "Select a crew card, then tap a fire to douse its top flame.",
+    "A crew card works if it matches the flame's suit or is an equal-or-higher rank.",
+    "Advance the fire to spread a fresh flame onto every burning cell.",
+    "A cell three flames high flashes over, spreading flames into adjacent cells. Contain every cell to win.",
+  ],
+  about: [
+    "Wildfire is a tense containment puzzle: a living blaze fights back every turn.",
+    "Every crew card is precious — spend them where the fire is about to flash over, not where it is easy.",
+  ],
+  howToPlay: [
+    "## Objective",
+    "Contain the blaze by clearing **all nine cells** before the fire spreads out of control.",
+    "## The blaze",
+    "- The fire is a **3x3 grid**; each cell holds a stack of flame cards, newest on top.",
+    "- You hold up to **4 crew cards** drawn from the **crew** deck (the stock).",
+    "## Fighting fire",
+    "- **Select** a crew card, then **tap a fire** to fight its top flame.",
+    "- A crew card douses the flame if it is the **same suit** (right equipment) or an **equal-or-higher rank** (Aces are strongest).",
+    "- Clearing the last flame on a cell **contains** it — keep it clear and it stays safe.",
+    "## Advancing the fire",
+    "- When you're done playing, tap **Advance Fire**.",
+    "- Every still-burning cell gains a **new flame** from the deck, and your hand refills.",
+    "- A cell already **three flames high** cannot take more, so it **flashes over**: it throws a new flame into each **adjacent** cell instead, re-igniting even contained ones.",
+    "## Strategy",
+    "- Flashovers never end the game on their own, but each one **spreads the fire outward**.",
+    "- Keep burning cells clustered and knock them down before they max out, so a flashover has fewer neighbours to ignite.",
+    "## Winning & losing",
+    "- Contain **every cell** to win.",
+    "- Running out of crew with fire still burning loses the fight.",
+  ],
+};

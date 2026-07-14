@@ -1,0 +1,48 @@
+import { GameDefinition, GameTag } from "../games-data";
+
+export const baroness: GameDefinition = {
+  path: "/baroness",
+  tutorial: {
+    default: {
+      text: "Discard K alone or pairs to 13 (A1 J11 Q12); deal if stuck.",
+    },
+  },
+  title: "Baroness",
+  thumbnail: "DefaultThumbnail.jpg",
+  cardBack: "DefaultCardBack.png",
+  background: "felt-dark-red.jpg",
+  cardColorBg: "#3a1620",
+  cardColorText: "#f3d6dd",
+  cardDescription: "Clear five piles by discarding cards that total thirteen.",
+  stats: {
+    complexity: 15,
+    difficulty: 70,
+    luck: 75,
+  },
+  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
+  briefRules: [
+    "Discard any exposed King on its own.",
+    "Discard two exposed cards whose ranks add up to 13.",
+    "Deal a new card onto each pile from the stock when stuck.",
+    "Remove every card to win.",
+  ],
+  about: [
+    "Baroness — also called Thirteens or Five Piles — is a brisk thirteen-matching game.",
+    "The order you clear pairs decides whether later cards ever become reachable.",
+  ],
+  howToPlay: [
+    "## Objective",
+    "Discard all 52 cards.",
+    "## Setup",
+    "- Deal **five piles** of one card each; the rest form the **stock**.",
+    "## Card values",
+    "- Aces count **1**, Jacks **11**, Queens **12**, Kings **13**; other cards are face value.",
+    "## Playing",
+    "- Only the **top** card of each pile is available.",
+    "- Discard any **King** by itself.",
+    "- Discard **two** available cards whose values total **13** (for example {5H} + {8S}, or {A}s + {Q}).",
+    "- When no move remains, tap the **stock** to deal one card onto each pile.",
+    "## Winning",
+    "Clear every card to win. If the stock is empty and no move is left, the game ends.",
+  ],
+};

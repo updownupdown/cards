@@ -4,23 +4,19 @@ export const cardCapture: GameDefinition = {
   path: "/card-capture",
   tutorial: {
     enemyPhase: {
-      text: "The enemy is advancing…",
-      tip: "Enemy cards shift right and refill from the enemy deck.",
+      text: "Enemy line shifts right, then refills from enemy deck.",
     },
     discardPhase: {
-      text: "Discard any cards you don't want, then continue.",
-      tip: "You'll draw back up to 4 cards next.",
+      text: "Discard any cards; next phase draws back up to 4.",
     },
     drawPhase: {
-      text: "Drawing back up to a full hand…",
-      tip: "Your deck is only 2s, 3s, 4s, and both jokers.",
+      text: "Draw to 4 from your deck (2s, 3s, 4s, jokers).",
     },
     capturePhase: {
-      text: "Choose one action: capture, let the enemy capture, or sacrifice.",
-      tip: "Capture with same-suit cards whose total ≥ the enemy card. Never let a face card or Ace reach the Enemy Capture Pile.",
+      text: "Capture by same-suit total >= enemy, or let capture, or sacrifice.",
     },
     gameOver: {
-      text: "The battle is over.",
+      text: "Battle over.",
     },
   },
   title: "Card Capture",

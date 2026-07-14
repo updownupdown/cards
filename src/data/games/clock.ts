@@ -4,8 +4,7 @@ export const clock: GameDefinition = {
   path: "/clock",
   tutorial: {
     default: {
-      text: "Tap the active pile to turn its next card.",
-      tip: "Each card sorts to its hour automatically; you lose if all four Kings appear first.",
+      text: "Tap active pile; cards auto-sort by hour; 4 kings first loses.",
     },
   },
   title: "Clock Solitaire",

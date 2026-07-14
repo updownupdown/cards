@@ -4,8 +4,7 @@ export const penguin: GameDefinition = {
   path: "/penguin",
   tutorial: {
     default: {
-      text: "Drag cards to build the foundations and tableau.",
-      tip: "Foundations go up by suit from the beak rank; tableau builds down by suit. Seven free cells help.",
+      text: "From beak rank: foundations up suit; tableau down in suit.",
     },
   },
   title: "Penguin",

@@ -4,8 +4,7 @@ export const syndicate: GameDefinition = {
   path: "/syndicate",
   tutorial: {
     default: {
-      text: "Build and convert stacks to promote members.",
-      tip: "Respect the rank restrictions and use timing windows for high-value conversions.",
+      text: "Build stacks under rank limits; convert in timing windows.",
     },
   },
   title: "Syndicate",

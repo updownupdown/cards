@@ -4,8 +4,7 @@ export const freecell: GameDefinition = {
   path: "/freecell",
   tutorial: {
     default: {
-      text: "Drag cards to build the foundations and tableau.",
-      tip: "Tableau builds down in alternating colours; use the four free cells to park single cards.",
+      text: "Foundations up suit; tableau down alt color; use 4 free cells.",
     },
   },
   title: "FreeCell",

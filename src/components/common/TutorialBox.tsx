@@ -1,5 +1,4 @@
 import { Text } from "@/components/common/Text";
-import { RichText } from "@/components/common/RichText";
 import {
   getGameInfo,
   normalizeGamePath,
@@ -10,14 +9,13 @@ import { useGameSettings } from "@/hooks/useGameSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTutorialBoxLayout } from "@/hooks/useTutorialLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
+import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
-import { modalBorderRadius, modalShadow } from "@/styles/modalStyles";
 import { Colors, ContentSidePadding, rgba } from "@/styles/styles";
 import { usePathname } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { Button } from "../Button/Button";
-import { Icon } from "@/icons";
 import { HowToPlay } from "../Modals/GameModal";
 
 interface Props {
@@ -74,13 +72,14 @@ export function TutorialBox({ phase, topOffset }: Props) {
           height: expanded ? undefined : boxHeight,
           maxHeight: expanded ? expandedMaxHeight : boxHeight,
           borderRadius: spacing(8),
-          backgroundColor: Colors.K950,
-          boxShadow: modalShadow,
+          backgroundColor: gameInfo.cardColorBg,
+          boxShadow: `1px 2px 10px ${rgba(gameInfo.cardColorBg, 0.75)}, 2px 4px 20px ${rgba(gameInfo.cardColorBg, 0.6)}`,
           overflow: "hidden",
         }}
       >
         {/* Header row: instruction + expand/collapse toggle */}
-        <View
+        <Pressable
+          onPress={() => setExpanded((prev) => !prev)}
           style={[
             flexStyles.rowCentered,
             {
@@ -88,69 +87,46 @@ export function TutorialBox({ phase, topOffset }: Props) {
               paddingVertical: spacing(6),
               paddingLeft: spacing(14),
               paddingRight: spacing(6),
-              gap: spacing(8),
+              gap: spacing(12),
             },
           ]}
         >
-          <View
-            style={[
-              flexStyles.rowCentered,
-              flexStyles.flex1,
-              { gap: spacing(12) },
-            ]}
-          >
-            <Icon name="learn" size={20} color={Colors.K100} />
+          <Icon name="learn" size={24} color={Colors.K100} />
 
-            <View style={[flexStyles.colStart, flexStyles.flex1, { gap: 2 }]}>
-              {expanded ? (
-                <Text size="lg" weight={500} color={Colors.K100}>
-                  Tutorial Mode
+          <View style={[flexStyles.colStart, flexStyles.flex1, { gap: 2 }]}>
+            {expanded ? (
+              <Text size="lg" weight={500} color={Colors.K100}>
+                Tutorial Mode
+              </Text>
+            ) : (
+              <>
+                <Text
+                  size="sm"
+                  weight={500}
+                  color={Colors.K100}
+                  numberOfLines={2}
+                  ellipsizeMode="tail"
+                >
+                  {instruction?.text ?? INSTRUCTIONS_UNAVAILABLE}
                 </Text>
-              ) : (
-                <>
-                  <Text
-                    size="sm"
-                    weight={500}
-                    color={Colors.K100}
-                    numberOfLines={expanded ? 2 : 1}
-                    ellipsizeMode="tail"
-                  >
-                    {instruction?.text ?? INSTRUCTIONS_UNAVAILABLE}
-                  </Text>
-
-                  {instruction?.tip && (
-                    <Text
-                      size="xs"
-                      weight={300}
-                      color={Colors.K400}
-                      numberOfLines={expanded ? 2 : 1}
-                      ellipsizeMode="tail"
-                    >
-                      {instruction.tip}
-                    </Text>
-                  )}
-                </>
-              )}
-            </View>
+              </>
+            )}
           </View>
 
-          <Pressable
-            onPress={() => setExpanded((prev) => !prev)}
+          <View
             style={[
               flexStyles.colCentered,
               {
                 width: spacing(32),
                 height: "100%",
-                backgroundColor: Colors.K875,
                 padding: spacing(3),
-                borderRadius: spacing(6),
                 outline: "none",
               },
             ]}
           >
             <Icon size={24} name={expanded ? "expand-less" : "expand-more"} />
-          </Pressable>
-        </View>
+          </View>
+        </Pressable>
 
         {/* Expanded body: full rules + tutorial toggle */}
         {expanded && (
@@ -163,47 +139,69 @@ export function TutorialBox({ phase, topOffset }: Props) {
             }}
             showsVerticalScrollIndicator={false}
           >
+            {/* Full instructions, and optional tip */}
+            <View
+              style={[
+                flexStyles.colCentered,
+                flexStyles.fullWidth,
+                flexStyles.gap20,
+                {
+                  alignItems: "flex-start",
+                },
+              ]}
+            >
+              <View
+                style={[
+                  flexStyles.rowCentered,
+                  flexStyles.fullWidth,
+                  flexStyles.spaceBetween,
+                ]}
+              >
+                <Text
+                  size="xl"
+                  weight={300}
+                  color={gameInfo.cardColorText}
+                  style={flexStyles.flex1}
+                >
+                  Quick Instructions
+                </Text>
+                <Icon
+                  name="help-outline"
+                  size={32}
+                  color={gameInfo.cardColorText}
+                />
+              </View>
+
+              <Text
+                size="md"
+                weight={500}
+                color={Colors.K100}
+                numberOfLines={expanded ? 2 : 1}
+                ellipsizeMode="tail"
+              >
+                {instruction?.text ?? INSTRUCTIONS_UNAVAILABLE}
+              </Text>
+
+              {instruction?.tip && (
+                <Text size="md" weight={300} color={Colors.K400}>
+                  {instruction.tip}
+                </Text>
+              )}
+            </View>
+
+            {/* Tutorial toggle */}
             <View
               style={[
                 flexStyles.colStart,
                 {
-                  backgroundColor: Colors.K875,
+                  borderWidth: 1,
+                  borderColor: rgba(gameInfo.cardColorText, 0.4),
                   borderRadius: spacing(10),
                   padding: spacing(18),
                   gap: spacing(8),
                 },
               ]}
             >
-              <View
-                style={[
-                  flexStyles.colCentered,
-                  flexStyles.fullWidth,
-                  {
-                    gap: spacing(12),
-                    marginBottom: spacing(16),
-                    paddingBottom: spacing(16),
-                    borderBottomWidth: 1,
-                    borderBottomColor: Colors.K750,
-                  },
-                ]}
-              >
-                <Text
-                  size="md"
-                  weight={500}
-                  color={Colors.K100}
-                  numberOfLines={expanded ? 2 : 1}
-                  ellipsizeMode="tail"
-                >
-                  {instruction?.text ?? INSTRUCTIONS_UNAVAILABLE}
-                </Text>
-
-                {instruction?.tip && (
-                  <Text size="md" weight={300} color={Colors.K400}>
-                    {instruction.tip}
-                  </Text>
-                )}
-              </View>
-
               <Button
                 text="Disable tutorial mode for this game"
                 size="md"
@@ -211,12 +209,15 @@ export function TutorialBox({ phase, topOffset }: Props) {
                 uppercase={false}
                 onPress={() => setTutorialMode(false)}
               />
-              <Text size="sm" weight={300} color={Colors.K500}>
+              <Text size="sm" weight={400} color={Colors.K300}>
                 You can re-enable tutorial mode from the menu.
               </Text>
             </View>
 
-            <HowToPlay howToPlayText={howToPlayText} />
+            <HowToPlay
+              howToPlayText={howToPlayText}
+              headingColor={gameInfo.cardColorText}
+            />
           </ScrollView>
         )}
       </View>

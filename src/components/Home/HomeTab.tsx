@@ -51,7 +51,9 @@ export function HomeTab({
   const rowInnerWidth = Math.max(0, renderedContentWidth - pageSidePadding * 2);
   const mediumCardWidth = Math.max(
     0,
-    roundToPixel((rowInnerWidth - cardGap) / (ui.isTablet ? 3 : 2)),
+    roundToPixel(
+      (rowInnerWidth - cardGap * (ui.isTablet ? 2 : 1)) / (ui.isTablet ? 3 : 2),
+    ),
   );
 
   const favoriteKey = useMemo(

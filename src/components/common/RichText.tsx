@@ -165,7 +165,7 @@ export function RichText({
   size = "md",
   weight = 300,
   color = Colors.K200,
-  headingColor = Colors.cardSelectPurple,
+  headingColor = Colors.headings,
   gap = 20,
 }: RichTextProps) {
   const { spacing } = useResponsiveMetrics();

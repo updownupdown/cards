@@ -15,8 +15,54 @@ export type GameSettings = {
   isFavorite: boolean;
   difficulty: "easy" | "difficult";
   drawCount: 1 | 3;
+  islandJokers: boolean;
+  loboMode: "hard" | "ordinary" | "easy";
+  dungeonLevel: 1 | 2 | 3 | 4 | 5;
+  boomerAce: boolean;
+  powerReserve: boolean;
+  specialAbilities: boolean;
+  optritaHard: boolean;
+  pokerJokers: boolean;
+  alpineDifficulty: "gentle" | "standard" | "intense";
+  alpineChallenge: AlpineChallenge;
+  dungeonDifficulty: "beginner" | "intermediate" | "advanced" | "bloodlust";
   stats: GameStats;
 };
+
+export type AlpineChallenge =
+  | "none"
+  | "cho-oyu"
+  | "shishapangma"
+  | "manaslu"
+  | "broad-peak"
+  | "gasherbrum-ii"
+  | "everest"
+  | "dhaulagiri"
+  | "gasherbrum-i"
+  | "kangchenjunga"
+  | "lhotse"
+  | "makalu"
+  | "nanga-parbat"
+  | "k2"
+  | "annapurna";
+
+export const ALPINE_CHALLENGES: AlpineChallenge[] = [
+  "none",
+  "cho-oyu",
+  "shishapangma",
+  "manaslu",
+  "broad-peak",
+  "gasherbrum-ii",
+  "everest",
+  "dhaulagiri",
+  "gasherbrum-i",
+  "kangchenjunga",
+  "lhotse",
+  "makalu",
+  "nanga-parbat",
+  "k2",
+  "annapurna",
+];
 
 export type GameSettingsMap = Record<string, GameSettings>;
 
@@ -63,6 +109,17 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   isFavorite: false,
   difficulty: "easy",
   drawCount: 1,
+  islandJokers: false,
+  loboMode: "ordinary",
+  dungeonLevel: 1,
+  boomerAce: false,
+  powerReserve: false,
+  specialAbilities: false,
+  optritaHard: false,
+  pokerJokers: false,
+  alpineDifficulty: "standard",
+  alpineChallenge: "none",
+  dungeonDifficulty: "beginner",
   stats: {
     attempts: 0,
     wins: 0,
@@ -257,6 +314,34 @@ export function getGameSettings(
     ...merged,
     difficulty: merged.difficulty === "difficult" ? "difficult" : "easy",
     drawCount: merged.drawCount === 3 ? 3 : 1,
+    islandJokers: merged.islandJokers === true,
+    loboMode:
+      merged.loboMode === "hard" || merged.loboMode === "easy"
+        ? merged.loboMode
+        : "ordinary",
+    dungeonLevel:
+      merged.dungeonLevel >= 1 && merged.dungeonLevel <= 5
+        ? merged.dungeonLevel
+        : 1,
+    boomerAce: merged.boomerAce === true,
+    powerReserve: merged.powerReserve === true,
+    specialAbilities: merged.specialAbilities === true,
+    optritaHard: merged.optritaHard === true,
+    pokerJokers: merged.pokerJokers === true,
+    alpineDifficulty:
+      merged.alpineDifficulty === "gentle" ||
+      merged.alpineDifficulty === "intense"
+        ? merged.alpineDifficulty
+        : "standard",
+    alpineChallenge: ALPINE_CHALLENGES.includes(merged.alpineChallenge)
+      ? merged.alpineChallenge
+      : "none",
+    dungeonDifficulty:
+      merged.dungeonDifficulty === "intermediate" ||
+      merged.dungeonDifficulty === "advanced" ||
+      merged.dungeonDifficulty === "bloodlust"
+        ? merged.dungeonDifficulty
+        : "beginner",
     stats: {
       ...DEFAULT_GAME_SETTINGS.stats,
       ...(existing.stats ?? {}),

@@ -4,8 +4,7 @@ export const golf: GameDefinition = {
   path: "/golf",
   tutorial: {
     default: {
-      text: "Play an exposed card one rank above or below the waste.",
-      tip: "Runs don't wrap (Aces low, Kings high). Draw from the stock when stuck.",
+      text: "Play exposed +/-1 to waste; no wrap; draw stock when stuck.",
     },
   },
   title: "Golf Solitaire",

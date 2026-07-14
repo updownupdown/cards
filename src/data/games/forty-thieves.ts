@@ -4,8 +4,7 @@ export const fortyThieves: GameDefinition = {
   path: "/forty-thieves",
   tutorial: {
     default: {
-      text: "Drag cards to build the foundations and tableau.",
-      tip: "Foundations go up by suit from Ace; tableau builds down in the same suit, one card at a time.",
+      text: "Foundations up suit; tableau down suit, one card at a time.",
     },
   },
   title: "Forty Thieves",

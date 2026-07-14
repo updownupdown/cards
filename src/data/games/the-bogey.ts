@@ -4,8 +4,7 @@ export const theBogey: GameDefinition = {
   path: "/the-bogey",
   tutorial: {
     default: {
-      text: "Draw to 5, then play, discard, or hold each card.",
-      tip: "Columns are same-suit and decrease in value. Then place the Bogey's card — if it can't be played, you lose.",
+      text: "Draw to 5, then play/discard/hold; unplayable bogey loses.",
     },
   },
   title: "The Bogey",

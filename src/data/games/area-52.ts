@@ -40,12 +40,10 @@ export const area52: GameDefinition = {
   ],
   tutorial: {
     select: {
-      text: "Tap 1 or 2 defenders to face the lead attacker.",
-      tip: "One defender must outrank the attacker and be the opposite colour, or two defenders must sum to its value.",
+      text: "Choose 1-2 defenders: higher opposite color, or sum target.",
     },
     act: {
-      text: "Tap Attack to fight, or Sacrifice to send the attacker back.",
-      tip: "Sacrifice loses the chosen defender but buys you time.",
+      text: "Attack to fight, or sacrifice a defender to send attacker back.",
     },
   },
 };

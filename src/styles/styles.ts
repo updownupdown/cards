@@ -68,6 +68,7 @@ export const Colors = {
 
   background: "#343f49",
   text: "#DDE5ED",
+  headings: "#e5a1f3",
 } as const;
 
 /**

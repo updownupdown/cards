@@ -4,8 +4,7 @@ export const canfield: GameDefinition = {
   path: "/canfield",
   tutorial: {
     default: {
-      text: "Drag cards to the foundations and tableau.",
-      tip: "Foundations build up by suit; tableau builds down in alternating colours. Refill empty columns from the reserve.",
+      text: "Foundations up suit; tableau down alt color; empties use reserve.",
     },
   },
   title: "Canfield",

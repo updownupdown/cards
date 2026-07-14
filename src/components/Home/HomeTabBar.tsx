@@ -76,7 +76,7 @@ export function HomeTabBar({
               gap: spacing(6),
               borderRadius: tabBarHeight / 2,
               backgroundColor: rgba(Colors.K950, 0.9),
-              boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.K900, 0.4)}, ${spacing(3)}px ${spacing(6)}px ${spacing(16)}px ${rgba(
+              boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.K900, 0.4)}, ${spacing(2)}px ${spacing(4)}px ${spacing(10)}px ${rgba(
                 Colors.K900,
                 0.4,
               )}`,

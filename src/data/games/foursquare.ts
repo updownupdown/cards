@@ -4,8 +4,7 @@ export const foursquare: GameDefinition = {
   path: "/foursquare",
   tutorial: {
     default: {
-      text: "Place the drawn card on a pile in the grid.",
-      tip: "A card that's the highest or lowest of its row or column flips that line. Keep face-down tops to 4 or fewer.",
+      text: "Place drawn card; row/column high or low flips that line.",
     },
   },
   title: "Foursquare",

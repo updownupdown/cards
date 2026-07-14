@@ -4,8 +4,7 @@ export const hideAndSeek: GameDefinition = {
   path: "/hide-and-seek",
   tutorial: {
     default: {
-      text: "Make legal moves to uncover the hidden cards.",
-      tip: "Avoid burying hidden cards under stacks you can't move.",
+      text: "Make legal moves to uncover hidden cards; avoid burying them.",
     },
   },
   title: "Hide and Seek",

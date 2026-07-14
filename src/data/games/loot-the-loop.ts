@@ -4,8 +4,7 @@ export const lootTheLoop: GameDefinition = {
   path: "/loot-the-loop",
   tutorial: {
     default: {
-      text: "Capture valid loop cards into your score pile.",
-      tip: "Protect your tempo — avoid breaking the loop.",
+      text: "Capture legal loop cards; keep tempo; avoid breaking loop.",
     },
   },
   title: "Loot the Loop",

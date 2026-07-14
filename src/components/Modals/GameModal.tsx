@@ -1,13 +1,16 @@
-import { Text } from "@/components/common/Text";
 import { RichText } from "@/components/common/RichText";
+import { Text } from "@/components/common/Text";
+import { getSettingApplyBehaviorText } from "@/data/game-settings";
 import { useGameSettings } from "@/hooks/useGameSettings";
 import { useGameSpecificSettings } from "@/hooks/useGameSpecificSettings";
-import { SettingControl } from "../common/SettingControl";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { Icon } from "@/icons";
+import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
+import { Colors } from "@/styles/styles";
 import { usePathname } from "expo-router";
-import { ScrollView, View } from "react-native";
-import { getSettingApplyBehaviorText } from "@/data/game-settings";
 import { useRef } from "react";
+import { ScrollView, View } from "react-native";
 import {
   calculateWinRate,
   getGameInfo,
@@ -15,11 +18,8 @@ import {
   type GameSettings,
 } from "../../data/game-menu";
 import { Button } from "../Button/Button";
+import { SettingControl } from "../common/SettingControl";
 import ModalFull from "./ModalFull";
-import { Colors } from "@/styles/styles";
-import { flexStyles } from "@/styles/flexStyles";
-import { Icon, IconName } from "@/icons";
-import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 type Props = {
   onClose: () => void;
@@ -223,14 +223,23 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
             ))}
 
           {/* How to Play */}
-          <HowToPlay howToPlayText={howToPlayText} />
+          <HowToPlay
+            howToPlayText={howToPlayText}
+            headingColor={info.cardColorText}
+          />
         </ScrollView>
       </ModalFull>
     </>
   );
 }
 
-export const HowToPlay = ({ howToPlayText }: { howToPlayText: string[] }) => {
+export const HowToPlay = ({
+  howToPlayText,
+  headingColor,
+}: {
+  howToPlayText: string[];
+  headingColor: string;
+}) => {
   return (
     <View
       style={[
@@ -251,16 +260,21 @@ export const HowToPlay = ({ howToPlayText }: { howToPlayText: string[] }) => {
       >
         <Text
           size="xl"
-          weight={600}
-          color={Colors.cardSelectPurple}
+          weight={300}
+          color={headingColor}
           style={flexStyles.flex1}
         >
           How to Play
         </Text>
-        <Icon name="instructions" size={32} color={Colors.cardSelectPurple} />
+        <Icon name="instructions" size={32} color={headingColor} />
       </View>
 
-      <RichText content={howToPlayText} size="md" weight={300} />
+      <RichText
+        content={howToPlayText}
+        size="md"
+        weight={300}
+        headingColor={headingColor}
+      />
     </View>
   );
 };

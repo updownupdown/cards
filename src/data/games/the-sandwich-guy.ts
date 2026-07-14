@@ -4,8 +4,7 @@ export const theSandwichGuy: GameDefinition = {
   path: "/the-sandwich-guy",
   tutorial: {
     default: {
-      text: "Select three cards with equally-spaced ranks to make a sandwich.",
-      tip: "Same suit refills 4 cards, same colour 3, mixed 2. Ranks wrap around A/K.",
+      text: "Pick 3 equally spaced ranks; same suit/color gives more refill.",
     },
   },
   title: "The Sandwich Guy",

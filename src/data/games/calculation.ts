@@ -4,8 +4,7 @@ export const calculation: GameDefinition = {
   path: "/calculation",
   tutorial: {
     default: {
-      text: "Play the drawn card to a foundation, or park it on a waste pile.",
-      tip: "Foundations build up in steps of 1, 2, 3, or 4 — suit doesn't matter.",
+      text: "Play to +1/+2/+3/+4 foundations; park blocks on waste piles.",
     },
   },
   title: "Calculation",

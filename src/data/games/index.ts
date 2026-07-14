@@ -29,6 +29,29 @@ import { scorpion } from "./scorpion";
 import { canfield } from "./canfield";
 import { penguin } from "./penguin";
 import { fortyThieves } from "./forty-thieves";
+import { breakaway } from "./breakaway";
+import { ascent } from "./ascent";
+import { wildfire } from "./wildfire";
+import { riverboat } from "./riverboat";
+import { blackHole } from "./black-hole";
+import { nestor } from "./nestor";
+import { baroness } from "./baroness";
+import { beleagueredCastle } from "./beleaguered-castle";
+import { streetsAndAlleys } from "./streets-and-alleys";
+import { osmosis } from "./osmosis";
+import { sirTommy } from "./sir-tommy";
+import { bakersGame } from "./bakers-game";
+import { eightOff } from "./eight-off";
+import { yukon } from "./yukon";
+import { russianSolitaire } from "./russian-solitaire";
+import { blackjackRiverResearch } from "./blackjack-river-research";
+import { islandOfCards } from "./island-of-cards";
+import { lobo } from "./lobo";
+import { clearTheDungeon } from "./clear-the-dungeon";
+import { optritaLines } from "./optrita-lines";
+import { inHandPoker } from "./in-hand-poker";
+import { alpineSolitaire } from "./alpine-solitaire";
+import { dungeonBounty } from "./dungeon-bounty";
 
 // Order here determines display order across the app.
 export const GAME_DEFINITIONS: GameDefinition[] = [
@@ -62,6 +85,29 @@ export const GAME_DEFINITIONS: GameDefinition[] = [
   canfield,
   penguin,
   fortyThieves,
+  breakaway,
+  ascent,
+  wildfire,
+  riverboat,
+  blackHole,
+  nestor,
+  baroness,
+  beleagueredCastle,
+  streetsAndAlleys,
+  osmosis,
+  sirTommy,
+  bakersGame,
+  eightOff,
+  yukon,
+  russianSolitaire,
+  blackjackRiverResearch,
+  islandOfCards,
+  lobo,
+  clearTheDungeon,
+  optritaLines,
+  inHandPoker,
+  alpineSolitaire,
+  dungeonBounty,
 ];
 
 export const GAMES_DATA: Record<string, GameMenuInfo> = Object.fromEntries(

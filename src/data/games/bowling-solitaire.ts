@@ -53,15 +53,13 @@ export const bowlingSolitaire: GameDefinition = {
   ],
   tutorial: {
     ballSelect: {
-      text: "Pick a ball by tapping the face-up card of a ball pile.",
-      tip: "Only the bottom (face-up) card of each pile is available.",
+      text: "Pick a ball from any face-up bottom card.",
     },
     pinSelect: {
-      text: "Select 1–3 connected pins, then tap Throw.",
-      tip: "Their values must sum to a number ending in the ball card's digit.",
+      text: "Select 1-3 linked pins; values must end in the ball digit.",
     },
     gameEnd: {
-      text: "Game over — reset to bowl a new game.",
+      text: "No legal throw. Reset to bowl a new game.",
     },
   },
 };

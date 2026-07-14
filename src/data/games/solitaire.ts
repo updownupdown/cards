@@ -4,8 +4,7 @@ export const solitaire: GameDefinition = {
   path: "/solitaire",
   tutorial: {
     default: {
-      text: "Drag cards to build the foundations and tableau.",
-      tip: "Foundations go up by suit from Ace; tableau builds down in alternating colours. Only Kings fill empty columns.",
+      text: "Foundations up suit; tableau down alt color; kings fill empty.",
     },
   },
   title: "Solitaire",

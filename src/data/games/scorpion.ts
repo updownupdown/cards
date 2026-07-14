@@ -4,8 +4,7 @@ export const scorpion: GameDefinition = {
   path: "/scorpion",
   tutorial: {
     default: {
-      text: "Build columns down in rank and the same suit.",
-      tip: "Move any face-up card with everything on top of it. Only a King starts an empty column.",
+      text: "Build down in suit; move any face-up stack; kings fill empty.",
     },
   },
   title: "Scorpion",

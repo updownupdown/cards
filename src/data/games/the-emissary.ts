@@ -33,20 +33,16 @@ export const theEmissary: GameDefinition = {
   ],
   tutorial: {
     chooseKingdom: {
-      text: "Choose a kingdom to visit.",
-      tip: "You must win the exact number of debates shown on the kingdom (1–8).",
+      text: "Pick a kingdom and win exactly its listed number of debates.",
     },
     drawTopic: {
-      text: "Tap the draw pile to reveal the next debate topic.",
-      tip: "When able, the topic must match the suit you can debate.",
+      text: "Draw next topic; when possible, follow topic suit.",
     },
     debate: {
-      text: "Play a card from your hand to win the debate.",
-      tip: "Beat the topic with a higher card of the same suit, or play any card of the trump suit.",
+      text: "Win with higher same suit, or any trump suit card.",
     },
     discard: {
-      text: "Choose a card to discard.",
-      tip: "Your advisor lets you remove a card from your hand.",
+      text: "Discard one card via advisor effect.",
     },
   },
 };

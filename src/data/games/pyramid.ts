@@ -4,8 +4,7 @@ export const pyramid: GameDefinition = {
   path: "/pyramid",
   tutorial: {
     default: {
-      text: "Remove exposed cards in pairs that total 13.",
-      tip: "Kings are 13 and go alone. Draw from the stock to find matches.",
+      text: "Remove exposed pairs totaling 13; kings solo; draw stock for matches.",
     },
   },
   title: "Pyramid",
