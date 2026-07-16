@@ -22,12 +22,6 @@ export const dungeonBounty: GameDefinition = {
   },
   // tags: [GameTag.ModernMechanics, GameTag.AIGenerated],
   tags: [GameTag.Beta],
-  briefRules: [
-    "Two cavern cards appear each turn; defeat any enemies before looting.",
-    "Add weapons (clubs) and spells (spades) for an attack that must meet an enemy's health.",
-    "Fail and you take damage or lose an item; win and you claim the loot and grow stronger.",
-    "Clear two dungeon levels; your score is claimed bounties plus collected gems.",
-  ],
   about: [
     "Dungeon Bounty by Theo Peters & Aaron Camponi is a solo dungeon crawler played with one deck.",
     "Only the single-player mode is implemented. Choose a difficulty in Settings; higher tiers start weaker and enemies gain suit powers.",

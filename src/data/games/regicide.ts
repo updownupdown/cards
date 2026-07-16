@@ -24,12 +24,6 @@ export const regicide: GameDefinition = {
     luck: 30,
   },
   tags: [GameTag.ModernMechanics],
-  briefRules: [
-    "Play cards to damage the royal enemy; a suit power triggers on the value played.",
-    "Hearts heal, Diamonds draw, Clubs double damage, Spades blunt attacks.",
-    "Each turn the enemy strikes back — discard cards to absorb the hit.",
-    "Beat all 12 enemies, using as few Jesters as possible.",
-  ],
   byLine: "Designer: Lawrence Beveridge",
   about: [
     "Regicide is a cooperative card game, played here solo, against a castle of corrupted royalty.",

@@ -21,12 +21,6 @@ export const penguin: GameDefinition = {
     luck: 0,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
-  briefRules: [
-    "The first card is the beak; all foundations start on that rank.",
-    "Build foundations up by suit, wrapping past King to Ace.",
-    "Build tableau down by suit, wrapping Ace to King.",
-    "Seven free cells help you shuffle cards around.",
-  ],
   about: [
     "Penguin, by David Parlett, is an open, FreeCell-style patience with everything on show.",
     "With seven free cells and full information, most deals reward patient, planned play.",

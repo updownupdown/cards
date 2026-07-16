@@ -20,12 +20,6 @@ export const yukon: GameDefinition = {
     luck: 35,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop, GameTag.Beta],
-  briefRules: [
-    "Move any face-up card together with every card stacked on top of it.",
-    "Build tableau columns down in rank with alternating colours.",
-    "Carried cards need not form a sequence — only the moved card must fit.",
-    "Only Kings may start an empty column. Build foundations up by suit to win.",
-  ],
   about: [
     "Yukon takes Klondike's layout but lets you haul entire piles of mixed cards in a single move.",
     "With no stock and almost everything face up, wins reward untangling the columns in the right order.",

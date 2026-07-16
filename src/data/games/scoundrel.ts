@@ -21,12 +21,6 @@ export const scoundrel: GameDefinition = {
     luck: 30,
   },
   tags: [GameTag.ModernMechanics],
-  briefRules: [
-    "Build each room to 4 face-up cards; resolve 3 cards and carry 1 forward.",
-    "Fight monsters barehanded or with a weapon, but weapon kills must be non-increasing in value.",
-    "You may run from a full room, but never two rooms in a row.",
-    "Reach the end of the dungeon before your health hits 0.",
-  ],
   byLine: "by Zach Gage and Kurt Bieg",
   about: [
     "Scoundrel is a compact dungeon-crawling solitaire game played with a reduced standard deck.",

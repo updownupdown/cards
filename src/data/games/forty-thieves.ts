@@ -20,12 +20,6 @@ export const fortyThieves: GameDefinition = {
     luck: 0,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
-  briefRules: [
-    "Build the eight foundations up by suit, from Ace to King.",
-    "Build tableau columns down in the same suit.",
-    "Move only one card at a time.",
-    "Any single card may fill an empty column.",
-  ],
   about: [
     "Forty Thieves, also called Napoleon at St Helena, is a patient two-deck game.",
     "Strict single-card moves and suit-matched building make it a low-luck test of planning.",

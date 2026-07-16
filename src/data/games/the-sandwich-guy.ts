@@ -26,11 +26,6 @@ export const theSandwichGuy: GameDefinition = {
     GameTag.EasyToLearn,
   ],
   byLine: "Game design by Wil Su",
-  briefRules: [
-    "Select three cards with equally-spaced rank values to create a sandwich.",
-    "A/J/Q/K are worth 1/11/12/13, and wrapping around A/K is allowed",
-    "Use same suits, or same colors, for better hand refills.",
-  ],
   about: [
     "Make sandwiches with ingredients available in your food truck. The quality of each sandwich determines how many ingredients will refill your prep area. Sell out your entire inventory to win!",
     "This game is adapted from Wil Su's Isaludo collection.",

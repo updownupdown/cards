@@ -20,12 +20,6 @@ export const canfield: GameDefinition = {
     luck: 0,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
-  briefRules: [
-    "All four foundations build up by suit from the same base rank, wrapping past King to Ace.",
-    "Build tableau down in alternating color, wrapping allowed.",
-    "Feed empty columns from the 13-card reserve.",
-    "Turn the stock (one or three at a time) for more cards.",
-  ],
   about: [
     "Canfield is a famously tough gambling-hall patience with a big face-up reserve.",
     "The random base rank and awkward reserve mean most deals are lost, so a win is a real prize.",

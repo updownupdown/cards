@@ -23,12 +23,6 @@ export const blackjackRiverResearch: GameDefinition = {
   },
   // tags: [GameTag.ModernMechanics, GameTag.AIGenerated],
   tags: [GameTag.Beta],
-  briefRules: [
-    "Build a population column to exactly 21 fish to complete a Study.",
-    "Release Schools (A-10) to add fish; place Fishermen (J=1, Q=2, K=3) to remove them.",
-    "Discard a card to transfer the bottom School between columns.",
-    "Score 1 point per Study plus 2 per Research Breakthrough; a column reaching 25 ends the game.",
-  ],
   about: [
     "Blackjack River Research by Gregg Jewell reframes 21-making as fisheries science.",
     "Every completed Study is a data point, and spotting notable patterns earns lasting Breakthroughs.",

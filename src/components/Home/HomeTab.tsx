@@ -1,17 +1,16 @@
-import { Text } from "@/components/common/Text";
-import { GameUserStats } from "@/components/Home/GameUserStats";
 import { HomeCard } from "@/components/Home/HomeCard";
 import { HomeSectionTitle } from "@/components/Home/HomeSectionTitle";
-import { EMPTY_STATS, type GameSettingsMap } from "@/data/game-menu";
+import { type GameSettingsMap } from "@/data/game-menu";
 import { getGameOfTheDayPath } from "@/data/game-of-the-day";
-import { GAMES_DATA } from "@/data/games";
 import { GameMenuInfo, isGameEnabled } from "@/data/games-data";
+import { GAMES_DATA } from "@/data/games-registry";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
+import { flexStyles } from "@/styles/flexStyles";
 import { HomePadding } from "@/styles/styles";
 import { roundToPixel } from "@/utils/utils";
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, useState } from "react";
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
@@ -19,7 +18,6 @@ import {
   View,
 } from "react-native";
 import { RandomGameRoller } from "./RandomGameRoller";
-import { flexStyles } from "@/styles/flexStyles";
 
 type HomeTabProps = {
   allEnabledGames: HomeGameEntry[];
@@ -27,7 +25,6 @@ type HomeTabProps = {
   unplayedGamePaths: string[];
   favorites: Set<string>;
   recentPaths: string[];
-  settingsMap: GameSettingsMap;
   onToggleFavorite: (path: string) => void;
   contentPaddingTop: number;
   contentPaddingBottom: number;
@@ -40,7 +37,6 @@ export function HomeTab({
   unplayedGamePaths,
   favorites,
   recentPaths,
-  settingsMap,
   onToggleFavorite,
   contentPaddingTop,
   contentPaddingBottom,

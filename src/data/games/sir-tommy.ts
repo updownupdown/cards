@@ -21,12 +21,6 @@ export const sirTommy: GameDefinition = {
     luck: 55,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn, GameTag.Beta],
-  briefRules: [
-    "Turn cards one at a time and drop each onto any of four waste piles.",
-    "Foundations build up from Ace to King, ignoring suit.",
-    "Cards move up to the foundations automatically whenever they fit.",
-    "Get all four foundations to the King to win.",
-  ],
   about: [
     "Sir Tommy is often called the oldest recorded solitaire, and it still teaches the core lesson: where you set a card down matters.",
     "You can't rearrange a waste pile, so a King dropped onto a low card buries everything beneath it.",

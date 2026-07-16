@@ -21,12 +21,6 @@ export const blackHole: GameDefinition = {
     luck: 30,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
-  briefRules: [
-    "Move the exposed card of any pile into the black hole.",
-    "A card may enter only if it is one rank above or below the hole's top card.",
-    "Rank wraps around: Ace follows King and King follows Ace.",
-    "Absorb all 52 cards to win.",
-  ],
   about: [
     "Black Hole is an open-information game — every card is visible from the start, so success is almost pure planning.",
     "Most deals are winnable; the challenge is finding the single order that clears the board.",

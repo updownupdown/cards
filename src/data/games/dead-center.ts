@@ -28,11 +28,6 @@ export const deadCenter: GameDefinition = {
   },
   tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
   byLine: "Game design by Wil Su",
-  briefRules: [
-    "Kill all 12 zombies surrounding your 3x3 cabin before the deck runs out.",
-    "Cards can be placed on a card of: equal value, the same color and greater value, or of opposite color and less value.",
-    "Placed cards may kill adjacent zombies depending on the rank and value of the other cards in that line (see instructions).",
-  ],
   about: [
     "Your 3x3 cabin is surrounded by zombies! Plan ahead: your ability to attack depends on surrounding cards!",
     "This game is adapted from Wil Su's Isaludo collection.",

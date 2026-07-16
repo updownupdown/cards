@@ -23,12 +23,6 @@ export const lobo: GameDefinition = {
   },
   // tags: [GameTag.ModernMechanics, GameTag.AIGenerated],
   tags: [GameTag.Beta],
-  briefRules: [
-    "Capture the Wolf's cards to empty its hand; race the Wolf to 100 points.",
-    "Perfect: match a rank. Sum: your cards add up to a Wolf card. Split: one card captures several.",
-    "Over: a bigger card takes a smaller one, but the Wolf draws the difference.",
-    "Win a round to score your leftover cards; fold to limit the Wolf's score.",
-  ],
   about: [
     "Lobo — The Wolf — is a notoriously hard solitaire game by James Ernest for the Postas deck (ranks 1-10, five suits; here Aces are 1s and suits are ignored).",
     '"The wolf takes small bites": often the smart play is the cheapest way to lose, not a risky win.',

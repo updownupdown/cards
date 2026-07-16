@@ -9,7 +9,7 @@ import { Icon } from "@/icons";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Colors, rgba } from "@/styles/styles";
 import { LinearGradient } from "expo-linear-gradient";
-import { Link, type Href } from "expo-router";
+import { router, type Href } from "expo-router";
 import { Image, Pressable, type ViewStyle, View } from "react-native";
 import { StatBars } from "./StatBars";
 
@@ -38,6 +38,11 @@ export function HomeCard({
   onOpen,
 }: Props) {
   const { spacing } = useResponsiveMetrics();
+
+  const handleOpen = () => {
+    onOpen?.();
+    router.push(path as Href);
+  };
 
   const borderRadius = spacing(8);
   const padding = spacing(size === "large" ? 22 : size === "medium" ? 12 : 18);
@@ -105,54 +110,47 @@ export function HomeCard({
         }}
       />
 
-      <Link href={path as Href} asChild>
-        <Pressable
+      <Pressable
+        style={{
+          gap: spacing(14),
+          height: size === "large" ? undefined : "100%",
+        }}
+        onPress={handleOpen}
+      >
+        <View
           style={{
-            gap: spacing(14),
+            flexDirection: "column",
+            alignItems: size === "medium" ? "center" : "flex-start",
             height: size === "large" ? undefined : "100%",
+            gap: spacing(8),
+            flex: 1,
+            justifyContent: size === "medium" ? "flex-end" : "center",
           }}
-          onPress={onOpen}
         >
-          <View
+          {/* Title */}
+          <Text
+            size={size === "large" ? "xl" : "md"}
+            weight={500}
+            color={game.cardColorText}
             style={{
-              flexDirection: "column",
-              alignItems: size === "medium" ? "center" : "flex-start",
-              height: size === "large" ? undefined : "100%",
-              gap: spacing(8),
-              flex: 1,
-              justifyContent: size === "medium" ? "flex-end" : "center",
+              textAlign: size === "medium" ? "center" : undefined,
             }}
           >
-            {/* Title */}
-            <Text
-              size={size === "large" ? "xl" : "md"}
-              weight={500}
-              color={game.cardColorText}
-              style={{
-                textAlign: size === "medium" ? "center" : undefined,
-              }}
-            >
-              {game.title}
-            </Text>
+            {game.title}
+          </Text>
 
-            {/* Description */}
-            {size === "large" && (
-              <Text
-                size="sm"
-                weight={300}
-                color={Colors.K100}
-                lineHeight={1.25}
-              >
-                {game.cardDescription}
-              </Text>
-            )}
-          </View>
-
+          {/* Description */}
           {size === "large" && (
-            <StatBars stats={game.stats} gameColor={game.cardColorText} />
+            <Text size="sm" weight={300} color={Colors.K100} lineHeight={1.25}>
+              {game.cardDescription}
+            </Text>
           )}
-        </Pressable>
-      </Link>
+        </View>
+
+        {size === "large" && (
+          <StatBars stats={game.stats} gameColor={game.cardColorText} />
+        )}
+      </Pressable>
 
       {/* Favourites Button */}
       <Pressable

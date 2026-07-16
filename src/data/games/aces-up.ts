@@ -20,12 +20,6 @@ export const acesUp: GameDefinition = {
     luck: 80,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
-  briefRules: [
-    "Deal four cards at a time, one to each pile.",
-    "Discard the lower of two exposed cards that share a suit.",
-    "Aces are high, so they can never be discarded.",
-    "Move a top card into an empty pile to free others.",
-  ],
   about: [
     "Aces Up, also known as Idiot's Delight, is a compact, luck-heavy discard game.",
     "It looks simple, but wins are rare and every empty-pile move matters.",

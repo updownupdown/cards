@@ -21,12 +21,6 @@ export const golf: GameDefinition = {
     luck: 70,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
-  briefRules: [
-    "Play an exposed tableau card one rank above or below the waste top.",
-    "Sequences do not wrap: Aces are low and Kings are high.",
-    "Draw from the stock when no card is playable.",
-    "Clear all tableau cards to win.",
-  ],
   about: [
     "Golf Solitaire is a breezy race to sweep seven columns onto a single waste pile.",
     "It plays fast, but a poorly-timed King can strand an entire column.",

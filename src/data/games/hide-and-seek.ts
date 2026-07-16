@@ -22,7 +22,7 @@ export const hideAndSeek: GameDefinition = {
   },
   tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
   byLine: "Game design by Wil Su",
-  briefRules: [
+  howToPlay: [
     "Reveal hidden cards through legal uncover moves.",
     "Avoid locking hidden cards under unusable stacks.",
     "Finish by uncovering and resolving the final hidden sets.",

@@ -22,12 +22,6 @@ export const nestor: GameDefinition = {
   },
   // tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn, GameTag.AIGenerated],
   tags: [GameTag.Beta],
-  briefRules: [
-    "Discard two exposed cards that share the same rank.",
-    "Only the bottom card of each column and the reserve top are available.",
-    "No column is dealt two cards of the same rank.",
-    "Remove every card to win.",
-  ],
   about: [
     "Nestor is a quick matching game where planning the order you break pairs is everything.",
     "Because matching cards can hide beneath one another, greedy removals often strand a pair.",

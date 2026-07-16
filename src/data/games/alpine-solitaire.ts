@@ -22,12 +22,6 @@ export const alpineSolitaire: GameDefinition = {
   },
   // tags: [GameTag.ModernMechanics, GameTag.AIGenerated],
   tags: [GameTag.Beta],
-  briefRules: [
-    "Play routes (sets of cards) that are higher than the last route played.",
-    "The route's anchor suit forces you to draw more cards — climbing gets harder.",
-    "Empty your hand to reach a camp; qualifying milestones join your trail.",
-    "Add three milestones to summit; run out of cards and you are overwhelmed.",
-  ],
   about: [
     "Alpine Solitaire by Austin Palmer is a climbing game for one player.",
     "Balance aggressive routes against the fatigue they create, and choose a difficulty or one of fourteen eight-thousander challenges in Settings.",

@@ -20,12 +20,6 @@ export const russianSolitaire: GameDefinition = {
     luck: 30,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop, GameTag.Beta],
-  briefRules: [
-    "Move any face-up card together with every card stacked on top of it.",
-    "Build tableau columns down in rank in the SAME suit.",
-    "Carried cards need not form a sequence — only the moved card must fit.",
-    "Only Kings may start an empty column. Build foundations up by suit to win.",
-  ],
   about: [
     "Russian Solitaire is Yukon with same-suit building, making it one of the toughest games around.",
     "Freeing buried cards in exactly the right order is the whole puzzle.",

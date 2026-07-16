@@ -22,12 +22,6 @@ export const optritaLines: GameDefinition = {
   },
   // tags: [GameTag.ModernMechanics, GameTag.AIGenerated],
   tags: [GameTag.Beta],
-  briefRules: [
-    "Play a card and challenge a full row or column from one end.",
-    "Cards flip until one matches your suit — the higher rank wins that trick (Aces high).",
-    "No suit match? The grid's lowest trump beats you; with no trump either, you capture any card and win.",
-    "First to 21 tricks wins the game.",
-  ],
   about: [
     "Optrita Lines is a solitaire trick-taker: you attack lines of a face-down grid, revealing one card at a time.",
     "More information helps, but every reveal also closes off lines you can no longer challenge.",

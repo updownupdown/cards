@@ -20,12 +20,6 @@ export const solitaire: GameDefinition = {
     luck: 40,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop, GameTag.EasyToLearn],
-  briefRules: [
-    "Build the four foundations up by suit, from Ace to King.",
-    "Build tableau columns down in rank with alternating colors.",
-    "Only a King may move onto an empty column.",
-    "Deal from the stock when you run out of moves.",
-  ],
   about: [
     'Klondike is the solitaire most people simply call "Solitaire".',
     "Dig through the tableau and stock to free the cards you need and move all 52 to the foundations.",

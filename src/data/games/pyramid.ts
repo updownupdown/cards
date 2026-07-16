@@ -4,7 +4,7 @@ export const pyramid: GameDefinition = {
   path: "/pyramid",
   tip: {
     default: {
-      text: "Remove exposed pairs totaling 13; kings solo; draw stock for matches.",
+      text: "Remove Kings, or exposed pairs totaling 13. Draw for more matches.",
     },
   },
   title: "Pyramid",
@@ -20,12 +20,6 @@ export const pyramid: GameDefinition = {
     luck: 65,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
-  briefRules: [
-    "Remove pairs of exposed cards that total 13.",
-    "Kings are worth 13 and are removed on their own.",
-    "A card is only playable once nothing covers it.",
-    "Draw from the stock to find the matches you need.",
-  ],
   about: [
     "Pyramid is a quick adding-up patience built on a 28-card pyramid.",
     "The challenge is timing: uncover the cards you need before the stock runs dry.",

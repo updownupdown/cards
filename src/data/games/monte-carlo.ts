@@ -20,12 +20,6 @@ export const monteCarlo: GameDefinition = {
     luck: 35,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
-  briefRules: [
-    "Remove pairs of equal rank that sit next to each other.",
-    "Neighbours count horizontally, vertically, and diagonally.",
-    "Consolidate to close gaps and refill from the stock.",
-    "Clear every card to win.",
-  ],
   about: [
     "Monte Carlo is a gentle matching patience played on a 5×5 grid.",
     "Regular consolidation brings distant cards together, opening up fresh pairs.",

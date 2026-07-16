@@ -26,7 +26,8 @@ interface Props {
   topOffset: number;
 }
 
-const INSTRUCTIONS_UNAVAILABLE = "Instructions unavailable";
+export const INSTRUCTIONS_UNAVAILABLE =
+  "Instructions are not available for this game.";
 
 export function TipsBox({ phase, topOffset }: Props) {
   const pathname = normalizeGamePath(usePathname());
@@ -42,7 +43,6 @@ export function TipsBox({ phase, topOffset }: Props) {
 
   const phaseKey = phase ?? DEFAULT_TIP_PHASE;
   const instruction = gameInfo.tip?.[phaseKey];
-  const howToPlayText = gameInfo.howToPlay ?? gameInfo.briefRules;
 
   function setTipsMode(value: boolean) {
     void updateSettings({ tipsMode: value } as Partial<GameSettings>);
@@ -197,7 +197,7 @@ export function TipsBox({ phase, topOffset }: Props) {
 
             {/* How to Play */}
             <HowToPlay
-              howToPlayText={howToPlayText}
+              howToPlayText={gameInfo.howToPlay ?? [INSTRUCTIONS_UNAVAILABLE]}
               headingColor={gameInfo.cardColorText}
             />
           </ScrollView>

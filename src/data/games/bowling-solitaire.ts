@@ -15,12 +15,6 @@ export const bowlingSolitaire: GameDefinition = {
     luck: 35,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.ModernMechanics],
-  briefRules: [
-    "Each frame uses 20 cards: 10 pins and three ball piles.",
-    "Knock down 1–3 adjacent pins whose sum ends in the ball card's digit.",
-    "Keep rolling the same ball until no legal hit remains.",
-    "Score just like real bowling, with strike and spare bonuses.",
-  ],
   byLine: "Designer: Sid Sackson",
   about: [
     "Bowling Solitaire translates 10-pin bowling into a tactical card puzzle.",

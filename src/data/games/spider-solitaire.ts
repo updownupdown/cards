@@ -20,12 +20,6 @@ export const spiderSolitaire: GameDefinition = {
     luck: 0,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
-  briefRules: [
-    "Build tableau columns down in rank; suit does not matter.",
-    "Only same-suit sequences may move together.",
-    "Complete a King-to-Ace same-suit run to clear it.",
-    "Deal a new row only when no column is empty.",
-  ],
   about: [
     "Spider is a two-deck solitaire played across ten tangled columns.",
     "Assemble eight complete suit sequences from King down to Ace to win; fewer suits make for an easier game.",

@@ -20,12 +20,6 @@ export const scorpion: GameDefinition = {
     luck: 0,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
-  briefRules: [
-    "Build columns down in rank and the same suit.",
-    "Move any face-up card with everything stacked on it, ordered or not.",
-    "Only a King may start an empty column.",
-    "Complete four King-to-Ace suit runs to win.",
-  ],
   about: [
     "Scorpion is a tense, tangle-heavy cousin of Spider played with a single deck.",
     "Because you can drag buried cards along with their cover, freeing a key card is a puzzle in itself.",

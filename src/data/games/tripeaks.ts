@@ -19,12 +19,6 @@ export const tripeaks: GameDefinition = {
     luck: 70,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
-  briefRules: [
-    "Play an exposed card one rank higher or lower than the waste top.",
-    "Rank wraps around, so Aces and Kings connect.",
-    "Draw from the stock when no card is playable.",
-    "Clear all three peaks to win.",
-  ],
   about: [
     "TriPeaks is a fast, chaining patience played over three overlapping peaks.",
     "Long unbroken runs feel great, and the whole board can sometimes fall in a single chain.",

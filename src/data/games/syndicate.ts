@@ -21,7 +21,7 @@ export const syndicate: GameDefinition = {
   },
   tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
   byLine: "Game design by Wil Su",
-  briefRules: [
+  howToPlay: [
     "Build and convert stacks under syndicate rank restrictions.",
     "Use timing windows to secure high-value conversions.",
     "Game ends when objective is met or no legal move remains.",

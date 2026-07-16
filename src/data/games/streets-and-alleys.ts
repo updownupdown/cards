@@ -23,12 +23,6 @@ export const streetsAndAlleys: GameDefinition = {
   },
   // tags: [GameTag.ClassicSolitaire, GameTag.AIGenerated],
   tags: [GameTag.Beta],
-  briefRules: [
-    "Foundations start empty; free the four Aces from the tableau first.",
-    "Build tableau columns down in rank, ignoring suit, one card at a time.",
-    "Build foundations up by suit from Ace to King.",
-    "Empty columns can hold any card. Complete all four foundations to win.",
-  ],
   about: [
     "Streets and Alleys is the tougher cousin of Beleaguered Castle: nothing is placed for you.",
     "Everything is face up, so a win is a pure test of move order and patience.",

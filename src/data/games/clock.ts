@@ -21,12 +21,6 @@ export const clock: GameDefinition = {
     luck: 100,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
-  briefRules: [
-    "Cards are dealt into 12 clock positions plus a center King pile.",
-    "Place each card under the position matching its rank.",
-    "Turn the next card from the pile you just filled.",
-    "You lose if the fourth King appears before you finish.",
-  ],
   about: [
     "Clock Solitaire is a classic game of pure chance with no decisions to make.",
     "Watch the deck sort itself around the dial and hope the Kings hold off.",

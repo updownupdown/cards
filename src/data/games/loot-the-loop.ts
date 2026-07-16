@@ -22,7 +22,7 @@ export const lootTheLoop: GameDefinition = {
   },
   tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
   byLine: "Game design by Wil Su",
-  briefRules: [
+  howToPlay: [
     "Capture valid loop cards into the score pile.",
     "Protect scoring tempo by avoiding loop breaks.",
     "Win by reaching the game score objective before deck exhaustion.",

@@ -22,12 +22,6 @@ export const bakersGame: GameDefinition = {
   },
   // tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop, GameTag.AIGenerated],
   tags: [GameTag.Beta],
-  briefRules: [
-    "Build the four foundations up by suit, from Ace to King.",
-    "Build tableau columns down in rank in the SAME suit.",
-    "Park a single card in each of the four free cells.",
-    "Every card is dealt face up, so plan ahead.",
-  ],
   about: [
     "Baker's Game is the same-suit forerunner of FreeCell, popularised by Martin Gardner.",
     "Building by suit makes long sequences far harder to assemble, so free cells are precious.",

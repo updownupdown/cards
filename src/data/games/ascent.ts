@@ -24,12 +24,6 @@ export const ascent: GameDefinition = {
   },
   // tags: [GameTag.ModernMechanics],
   tags: [GameTag.Beta],
-  briefRules: [
-    "Overcome the exposed pitch with a hold of the same suit or an equal-or-higher rank.",
-    "Aces are the strongest holds.",
-    "Tap a hold that cannot clear the pitch to swap it for fresh gear.",
-    "Clear all twelve pitches to summit; fall if you run out of gear while stuck.",
-  ],
   about: [
     "Ascent is a push-your-luck climb where every pitch demands the right hold.",
     "Spend your gear wisely — swapping a weak grip burns supplies you may need higher up.",

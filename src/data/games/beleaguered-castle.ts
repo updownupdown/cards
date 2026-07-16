@@ -23,12 +23,6 @@ export const beleagueredCastle: GameDefinition = {
   },
   // tags: [GameTag.ClassicSolitaire, GameTag.AIGenerated],
   tags: [GameTag.Beta],
-  briefRules: [
-    "The four Aces start as foundations; build them up by suit to the King.",
-    "Build tableau columns down in rank, ignoring suit, one card at a time.",
-    "Only the exposed end card of each column can move.",
-    "Empty columns can hold any card. Complete all four foundations to win.",
-  ],
   about: [
     "Beleaguered Castle is an open builder — everything is face up, so wins reward careful sequencing.",
     "The temptation to fill an empty column too soon is what strands most games.",

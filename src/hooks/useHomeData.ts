@@ -5,7 +5,7 @@ import {
   toggleFavoriteGame,
   type GameSettingsMap,
 } from "@/data/game-menu";
-import { GAMES_DATA } from "@/data/games";
+import { GAMES_DATA } from "@/data/games-registry";
 import { GameMenuInfo, isGameEnabled } from "@/data/games-data";
 import { useEffect, useMemo, useState } from "react";
 

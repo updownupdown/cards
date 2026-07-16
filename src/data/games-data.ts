@@ -69,8 +69,6 @@ export type GameMenuInfo = {
   /** Markdown-ish blocks; supports headings, bold, lists and {5H}/{JC} card tokens. */
   about?: string[];
   /** Markdown-ish blocks; supports headings, bold, lists and {5H}/{JC} card tokens. */
-  briefRules: string[];
-  /** Markdown-ish blocks; supports headings, bold, lists and {5H}/{JC} card tokens. */
   howToPlay?: string[];
   /** Per-phase tip-mode instructions keyed by phase (or "default"). */
   tip?: TipInstructions;

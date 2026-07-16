@@ -21,6 +21,7 @@ import { Button } from "../Button/Button";
 import { SettingControl } from "../common/SettingControl";
 import ModalFull from "./ModalFull";
 import { lightenHexColor } from "@/utils/utils";
+import { INSTRUCTIONS_UNAVAILABLE } from "../common/TipsBox";
 
 type Props = {
   onClose: () => void;
@@ -40,8 +41,6 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
   const reloadOnCloseRef = useRef(false);
 
   if (isLoading || settings === undefined) return null;
-
-  const howToPlayText = info.howToPlay ?? info.briefRules;
 
   function onGameSettingChange<K extends keyof GameSettings>(
     key: K,
@@ -250,7 +249,7 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
 
           {/* How to Play */}
           <HowToPlay
-            howToPlayText={howToPlayText}
+            howToPlayText={info.howToPlay ?? [INSTRUCTIONS_UNAVAILABLE]}
             headingColor={info.cardColorText}
           />
         </ScrollView>

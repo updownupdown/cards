@@ -29,7 +29,7 @@ type GameState = {
 const PYRAMID_ROWS = 7;
 const PYRAMID_SIZE = 28;
 const PYRAMID_BASE_COL = 3;
-const PYRAMID_BASE_ROW = 0.8;
+const PYRAMID_BASE_ROW = 0;
 const PYRAMID_ROW_STEP = 0.5;
 
 const PYRAMID_POSITIONS: { row: number; col: number }[] = [];
@@ -419,30 +419,30 @@ export default function Pyramid() {
         name: "stock",
         cards: stockCards(game),
         col: 0,
-        row: 0,
+        row: 4.2,
         baseZIndex: 50,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Draw", infoPos: "below", showCount: true },
+        placeholder: { text: "Draw", infoPos: "right", showCount: true },
       },
       {
         id: "waste",
         name: "waste",
         cards: game.waste,
-        col: 1.2,
-        row: 0,
+        col: 3,
+        row: 4.2,
         baseZIndex: 55,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Waste", infoPos: "below", showCount: false },
+        placeholder: { text: "Waste", infoPos: "left", showCount: false },
       },
       {
         id: "discard",
         name: "discard",
         cards: game.discard.slice(0, game.discard.length - game.stockCount),
         col: 6,
-        row: 0,
+        row: 4.2,
         baseZIndex: 100,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Discard", infoPos: "below", showCount: true },
+        placeholder: { text: "Discard", infoPos: "left", showCount: true },
       },
       ...pyramidZones,
     ];
@@ -497,8 +497,7 @@ export default function Pyramid() {
     zoneMapper,
     cardSize: "small",
     fixedCols: 7,
-    gap: 0.14,
-    // visualizer: true,
+    gap: 0.1,
   });
 
   return (

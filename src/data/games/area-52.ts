@@ -21,12 +21,6 @@ export const area52: GameDefinition = {
     GameTag.EasyToLearn,
   ],
   byLine: "Game design by Wil Su",
-  briefRules: [
-    "Survive both waves of alien invaders before running out of defenders to win.",
-    "Single attacks must be of greater value and opposite color to the attacker.",
-    "Dual attacks must add up to exactly the attacker's value. During wave 2, defenders matching the attacker's color are lost.",
-    "Use sacrifices as a last resort.",
-  ],
   about: [
     "Strategically command your defenders to fight off two waves of invading aliens.",
     "This game is adapted from Wil Su's Isaludo collection.",

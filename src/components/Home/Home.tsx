@@ -174,7 +174,6 @@ export default function Home() {
         allEnabledGamePaths={allEnabledGamePaths}
         favorites={favorites}
         recentPaths={recentPaths}
-        settingsMap={settingsMap}
         onToggleFavorite={toggleFavorite}
         contentPaddingTop={contentPaddingTop}
         contentPaddingBottom={contentPaddingBottom}

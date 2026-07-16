@@ -23,12 +23,6 @@ export const riverboat: GameDefinition = {
   },
   // tags: [GameTag.ModernMechanics, GameTag.AIGenerated],
   tags: [GameTag.Beta],
-  briefRules: [
-    "Place each dealt card into any empty seat on the 5x5 table.",
-    "Every one of the five rows and five columns scores as a poker hand.",
-    "Each card counts toward both its row and its column — plan for both.",
-    "Beat par by the time all 25 seats are filled.",
-  ],
   about: [
     "Riverboat is a game of nerve at the poker table: 25 cards, one hand at a time, no takebacks.",
     "Luck deals the cards, but the pot is won by the player who plans two hands at once and never wastes a seat.",

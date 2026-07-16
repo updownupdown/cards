@@ -27,12 +27,6 @@ export const wildfire: GameDefinition = {
   },
   // tags: [GameTag.ModernMechanics],
   tags: [GameTag.Beta],
-  briefRules: [
-    "Select a crew card, then tap a fire to douse its top flame.",
-    "A crew card works if it matches the flame's suit or is an equal-or-higher rank.",
-    "Advance the fire to spread a fresh flame onto every burning cell.",
-    "A cell three flames high flashes over, spreading flames into adjacent cells. Contain every cell to win.",
-  ],
   about: [
     "Wildfire is a tense containment puzzle: a living blaze fights back every turn.",
     "Every crew card is precious — spend them where the fire is about to flash over, not where it is easy.",

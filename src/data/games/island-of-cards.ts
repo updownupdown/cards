@@ -1,7 +1,6 @@
 import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 
 export const islandOfCards: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/island-of-cards",
   tip: {
     default: {
@@ -21,13 +20,7 @@ export const islandOfCards: GameDefinition = {
     difficulty: 60,
     luck: 55,
   },
-  tags: [GameTag.EasyToLearn],
-  briefRules: [
-    "Draw a card and place it next to a card one rank higher or lower (Ace and King wrap).",
-    "A card may never be placed next to an equal rank, orthogonally or diagonally.",
-    "Cards that can't be placed are discarded for the rest of the game.",
-    "Fill the 7x7 island; score 49, minus discards, plus any cards left to draw.",
-  ],
+  tags: [GameTag.EasyToLearn, GameTag.Beta],
   about: [
     "Island of Cards asks you to grow a connected 7x7 island from an opening X of thirteen cards.",
     "Suit and colour never matter — only how ranks chain together and avoid their equals.",

@@ -23,12 +23,6 @@ export const osmosis: GameDefinition = {
   },
   // tags: [GameTag.ClassicSolitaire, GameTag.AIGenerated],
   tags: [GameTag.Beta],
-  briefRules: [
-    "Each foundation row holds one suit, filled in any order.",
-    "The first row accepts any card of its suit at any time.",
-    "A lower row accepts a card only if that rank already sits in the row directly above.",
-    "New rows must start with the same rank the first row started with. Place all 52 to win.",
-  ],
   about: [
     "Osmosis (also called Treasure Trove) is a game of unlocking ranks row by row.",
     "The rank you start with sets the key for the whole board, so the early rows dictate everything.",

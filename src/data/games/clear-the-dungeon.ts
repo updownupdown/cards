@@ -23,12 +23,6 @@ export const clearTheDungeon: GameDefinition = {
   },
   // tags: [GameTag.ModernMechanics, GameTag.AIGenerated],
   tags: [GameTag.Beta],
-  briefRules: [
-    "Defeat each monster with three cards: two attackers summing to its power, then a suit-matching trigger.",
-    "Monster power: Jacks 11, Queens 12, Kings 13. Jokers are wild (power 10, any suit).",
-    "Cards you can't or won't play are discarded to your damage bar; seven discards lose.",
-    "Clear all twelve monsters before the power deck runs out to win.",
-  ],
   about: [
     "Clear the Dungeon by Mark S. Ball casts you as the King's monster exterminator.",
     "Every attack needs raw power and the right weakness — spend your cards wisely and keep the damage bar low.",

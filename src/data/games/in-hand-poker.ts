@@ -22,12 +22,6 @@ export const inHandPoker: GameDefinition = {
   },
   // tags: [GameTag.ModernMechanics, GameTag.EasyToLearn, GameTag.AIGenerated],
   tags: [GameTag.Beta],
-  briefRules: [
-    "Draw 5 cards, then play or fold (three folds in a row loses).",
-    "Discard and redraw up to 3 times; your draw count sets your minimum bet.",
-    "Bet 1-3 points; the opponent draws 5 cards plus one per point you bet.",
-    "Beat the opponent's best five to gain your bet; reach 10 to win, hit 0 to bust.",
-  ],
   about: [
     "In-Hand Poker is a solitaire poker game you can play with a single deck.",
     "The bigger your bet, the more cards your unseen opponent draws — so a strong hand isn't always worth the risk.",

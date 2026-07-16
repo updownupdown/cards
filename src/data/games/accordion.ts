@@ -16,12 +16,6 @@ export const accordion: GameDefinition = {
     luck: 65,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
-  briefRules: [
-    "Cards match if they share a suit or a rank.",
-    "Move a card onto the one 1 or 3 places to its left.",
-    "Moved piles carry their whole stack along.",
-    "Compress the layout down to a single pile to win.",
-  ],
   about: [
     "Accordion is a solitaire about squeezing a long line of cards together.",
     "It rarely comes out, and one greedy move can leave the line stuck.",

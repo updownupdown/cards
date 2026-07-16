@@ -13,11 +13,11 @@ import { delay } from "@/utils/utils";
 import { produce } from "immer";
 import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
-import { Button } from "../../Button/Button";
+import { Button } from "../Button/Button";
 import {
   AnimatedCardMapping,
   defaultAnimDuration,
-} from "../../Cards/AnimatedCard";
+} from "../Cards/AnimatedCard";
 import {
   createDeck,
   flipAllToBack,
@@ -27,9 +27,9 @@ import {
   PlayingCard,
   rankValue,
   shuffle,
-} from "../../Cards/card-utils";
-import { GameWrapper } from "../../common/GameWrapper";
-import { useToast } from "../../common/Toast";
+} from "../Cards/card-utils";
+import { GameWrapper } from "../common/GameWrapper";
+import { useToast } from "../common/Toast";
 
 const maxAttackersNum = 3;
 const maxDefendersNum = 6;

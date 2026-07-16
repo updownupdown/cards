@@ -20,12 +20,6 @@ export const baroness: GameDefinition = {
     luck: 75,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
-  briefRules: [
-    "Discard any exposed King on its own.",
-    "Discard two exposed cards whose ranks add up to 13.",
-    "Deal a new card onto each pile from the stock when stuck.",
-    "Remove every card to win.",
-  ],
   about: [
     "Baroness — also called Thirteens or Five Piles — is a brisk thirteen-matching game.",
     "The order you clear pairs decides whether later cards ever become reachable.",

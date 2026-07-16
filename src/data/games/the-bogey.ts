@@ -21,12 +21,6 @@ export const theBogey: GameDefinition = {
     luck: 35,
   },
   tags: [GameTag.ModernMechanics],
-  briefRules: [
-    "Build columns with same-suit cards in decreasing value (K to A).",
-    "Start with 5 cards in hand; draw to maintain 5 cards each turn.",
-    "Alternate turns between you and the Bogey; the Bogey plays from the deck.",
-    "Win by building columns efficiently: novice=12, normal=11, advanced=10, legendary=9, epic=8.",
-  ],
   byLine: "Designer: Katharine Turner, 2016",
   about: [
     "Play against the Bogey in a tactical card game of columns and choices.",

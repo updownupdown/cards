@@ -21,12 +21,6 @@ export const freecell: GameDefinition = {
     luck: 30,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
-  briefRules: [
-    "Build the four foundations up by suit, from Ace to King.",
-    "Build tableau columns down in rank with alternating colors.",
-    "Park a single card in each of the four free cells.",
-    "Every card is dealt face up, so plan ahead.",
-  ],
   about: [
     "FreeCell is a skill-heavy solitaire where the whole deck is visible from the start.",
     "With four free cells and no hidden cards, nearly every deal is winnable through careful planning.",

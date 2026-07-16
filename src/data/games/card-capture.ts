@@ -34,13 +34,6 @@ export const cardCapture: GameDefinition = {
     luck: 40,
   },
   tags: [GameTag.ModernMechanics],
-  briefRules: [
-    "Your Personal Draw Deck is only 2s, 3s, 4s, and both jokers; all other cards form the Enemy Draw Deck.",
-    "Each round is Enemy -> Discard -> Draw -> Capture.",
-    "To capture an enemy card, spend same-suit hand cards with total value equal to or greater than that enemy card (jokers are wild).",
-    "If a Jack, Queen, King, or Ace ever enters the Enemy Capture Pile, you lose immediately.",
-    "You win only when both the Enemy Draw Deck and all 4 enemy positions are empty, and no combatant was captured by the enemy.",
-  ],
   about: [
     "Card Capture is a tactical, phase-based solitaire game where weak cards become precision tools.",
     "You fight stronger enemies by converting value efficiently, controlling suits, and timing discards between rounds.",

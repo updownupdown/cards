@@ -22,12 +22,6 @@ export const eightOff: GameDefinition = {
   },
   // tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop, GameTag.AIGenerated],
   tags: [GameTag.Beta],
-  briefRules: [
-    "Build the four foundations up by suit, from Ace to King.",
-    "Build tableau columns down in rank in the SAME suit.",
-    "Eight free cells each hold a single card; four start filled.",
-    "Only a King may be moved into an empty column.",
-  ],
   about: [
     "Eight Off gives you eight free cells instead of four, but demands same-suit tableau building.",
     "The extra cells make most deals winnable — the challenge is not clogging them all at once.",

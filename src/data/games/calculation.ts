@@ -21,12 +21,6 @@ export const calculation: GameDefinition = {
     luck: 60,
   },
   tags: [GameTag.ClassicSolitaire],
-  briefRules: [
-    "The four foundations start on an Ace, 2, 3, and 4.",
-    "Each builds up in steps of 1, 2, 3, or 4, wrapping past the King.",
-    "Suit is ignored; only the rank sequence matters.",
-    "Park cards on four waste piles until they fit.",
-  ],
   about: [
     "Calculation is a brain-bending patience where arithmetic replaces suits.",
     "Skilful use of the four waste piles is the difference between a win and a jam.",

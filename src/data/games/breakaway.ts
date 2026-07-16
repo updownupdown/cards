@@ -24,12 +24,6 @@ export const breakaway: GameDefinition = {
   },
   // tags: [GameTag.EasyToLearn],
   tags: [GameTag.Beta],
-  briefRules: [
-    "Send an exposed rider to the paceline if it is one rank above or below the front rider.",
-    "The race loops, so ranks wrap: Aces follow Kings and Kings follow Aces.",
-    "Pull a card from the team car when no rider can join.",
-    "Absorb the whole bunch into the paceline to win the stage.",
-  ],
   about: [
     "Breakaway is a fast, looping take on the classic chase solitaire, dressed up as a road-race stage.",
     "Because the pace wraps from King back to Ace, momentum rarely stalls — but a careless pull can still strand a rider.",

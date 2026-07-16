@@ -8,7 +8,7 @@ import {
   type GameSettingsMap,
   type GameStats,
 } from "@/data/game-menu";
-import { GAMES_DATA } from "@/data/games";
+import { GAMES_DATA } from "@/data/games-registry";
 import { isGameEnabled } from "@/data/games-data";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
