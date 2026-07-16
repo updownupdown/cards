@@ -1,6 +1,6 @@
 import { Colors, rgba } from "@/styles/styles";
 import React, { useRef, useState, useEffect, useCallback } from "react";
-import { View, StyleSheet, Animated, ViewStyle } from "react-native";
+import { View, Animated, ViewStyle } from "react-native";
 import { Text } from "./Text";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
@@ -18,10 +18,10 @@ export const RangeSlider = ({
   max = 100,
   onRangeChange,
 }: RangeSliderProps) => {
-  const { ui, spacing } = useResponsiveMetrics();
+  const { spacing } = useResponsiveMetrics();
 
-  const THUMB_SIZE = spacing(20);
-  const TRACK_PADDING = spacing(4);
+  const THUMB_SIZE = spacing(30);
+  const TRACK_PADDING = spacing(6);
 
   const thumbStyles: ViewStyle = {
     position: "absolute",

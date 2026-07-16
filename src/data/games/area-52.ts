@@ -5,7 +5,7 @@ export const area52: GameDefinition = {
   title: "Area 52",
   thumbnail: "Area52.jpg",
   cardBack: "Area52.png",
-  background: "concrete.jpg",
+  background: "galaxy.jpg",
   cardColorBg: "#2a2836",
   cardColorText: "#b5faff",
   cardDescription:

@@ -9,9 +9,9 @@ export const pyramid: GameDefinition = {
   },
   title: "Pyramid",
   thumbnail: DEFAULT_GAME_THUMBNAIL,
-  cardColorBg: "#1d170f",
+  cardColorBg: "#251703",
   cardColorText: "#FFEACC",
-  background: "medieval-blocks.jpg",
+  background: "sandstone-2.jpg",
   cardDescription:
     "Clear the pyramid by removing pairs of cards that add up to 13.",
   stats: {

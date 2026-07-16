@@ -105,13 +105,15 @@ export const GameWrapper = ({
 
   const titleColor = gameInfo.cardColorText;
   const backgroundColor = gameInfo.cardColorBg;
-  const headerHeight = ui.gameHeaderHeight + insets.top;
+  const headerHeight = insets.top + spacing(floatingBarDims.height + HomePadding);
   const backgroundSource =
     GAME_BACKGROUND_ASSETS[gameInfo.background ?? DEFAULT_GAME_BACKGROUND];
 
   return (
     <>
       <LoadingOverlay isLoaded={!!isLoaded} />
+
+      <TipsBox phase={tipPhase} topOffset={headerHeight} />
 
       <WinLoseBox
         gameEnded={ended}
@@ -148,6 +150,7 @@ export const GameWrapper = ({
           }}
         />
 
+        {/* Background color overlay */}
         <View
           style={{
             position: "absolute",
@@ -162,8 +165,11 @@ export const GameWrapper = ({
           }}
         />
 
+        {/* Game header */}
         <View
           style={{
+            position: "relative",
+            zIndex: 12, // above the game overlay
             width: "100%",
             maxWidth: ui.contentMaxWidth,
             alignSelf: "center",
@@ -174,8 +180,6 @@ export const GameWrapper = ({
             style={[
               flexStyles.rowCentered,
               {
-                position: "relative",
-                zIndex: 12, // above the game overlay
                 width: "100%",
                 gap: spacing(floatingBarDims.gap),
                 height: spacing(floatingBarDims.height),
@@ -242,11 +246,11 @@ export const GameWrapper = ({
 
         <View
           style={[
+            flexStyles.colCentered,
+            flexStyles.fullWidth,
             {
               position: "relative",
               zIndex: 2,
-              ...flexStyles.colCentered,
-              ...flexStyles.fullWidth,
               flex: 1,
               pointerEvents: "box-none",
             },
@@ -254,8 +258,6 @@ export const GameWrapper = ({
         >
           {children}
         </View>
-
-        <TipsBox phase={tipPhase} topOffset={headerHeight} />
       </View>
     </>
   );

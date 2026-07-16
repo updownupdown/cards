@@ -1,8 +1,10 @@
 import { RichText } from "@/components/common/RichText";
 import { Text } from "@/components/common/Text";
 import { getSettingApplyBehaviorText } from "@/data/game-settings";
-import { useGameSettings } from "@/hooks/useGameSettings";
-import { useGameSpecificSettings } from "@/hooks/useGameSpecificSettings";
+import {
+  useGameSettings,
+  useGameSpecificSettings,
+} from "@/hooks/useGameSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
@@ -21,7 +23,7 @@ import { Button } from "../Button/Button";
 import { SettingControl } from "../common/SettingControl";
 import ModalFull from "./ModalFull";
 import { lightenHexColor } from "@/utils/utils";
-import { INSTRUCTIONS_UNAVAILABLE } from "../common/TipsBox";
+import { INSTRUCTIONS_UNAVAILABLE } from "@/constants/constants";
 
 type Props = {
   onClose: () => void;

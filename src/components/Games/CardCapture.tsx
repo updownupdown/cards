@@ -19,11 +19,11 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-import { delay } from "@/utils/utils";
+import { darkenHexColor, delay } from "@/utils/utils";
 import { useToast } from "../common/Toast";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { RadioButtons } from "../common/RadioButtons";
-import { Colors } from "@/styles/styles";
+import { Colors, rgba } from "@/styles/styles";
 
 const ENEMY_SLOTS = 4;
 const HAND_SIZE = 4;
@@ -257,7 +257,7 @@ function finalizeRoundOrWin(draft: GameState) {
 
 // ========== Main Game Component ========== //
 export default function CardCapture() {
-  const { zoneBg } = useGameZoneBackground();
+  const { cardBg } = useGameZoneBackground();
   const { spacing } = useResponsiveMetrics();
   const showToast = useToast();
 
@@ -788,7 +788,7 @@ export default function CardCapture() {
               buttonStyle={{ flex: 1 }}
               containerStyle={{
                 width: "100%",
-                backgroundColor: zoneBg,
+                backgroundColor: rgba(darkenHexColor(cardBg, 0.75), 0.75),
                 height: cardHeight * 0.84,
               }}
             />

@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 export const floatingBarDims = {
   padding: 6,
   gap: 6,
-  height: 54,
+  height: 58,
 };
 
 export const menuStyles = StyleSheet.create({

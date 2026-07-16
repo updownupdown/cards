@@ -5,7 +5,7 @@ import { floatingBarDims } from "@/styles/menuStyles";
 import { usePathname } from "expo-router";
 
 /** Gap between the header and the top of the tips box. */
-export const TIPS_BOX_TOP_MARGIN = 10;
+export const TIPS_BOX_TOP_MARGIN = 14;
 /** Gap between the bottom of the tips box and the game board. */
 export const TIPS_BOX_BOTTOM_GAP = 0;
 
@@ -39,8 +39,6 @@ export function useTipsBoxLayout(): TipsBoxLayout {
   const topMargin = spacing(TIPS_BOX_TOP_MARGIN);
   const boxHeight = spacing(floatingBarDims.height);
   const bottomGap = spacing(TIPS_BOX_BOTTOM_GAP);
-
-  // floatingBarDims.height
 
   return {
     active,

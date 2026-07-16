@@ -18,6 +18,7 @@ import { Pressable, ScrollView, View } from "react-native";
 import { HowToPlay } from "../Modals/GameModal";
 import { floatingBarDims } from "@/styles/menuStyles";
 import { lightenHexColor } from "@/utils/utils";
+import { INSTRUCTIONS_UNAVAILABLE } from "@/constants/constants";
 
 interface Props {
   /** The current tip phase key; defaults to the single-phase "default". */
@@ -25,9 +26,6 @@ interface Props {
   /** Screen-space Y of the header bottom; the box floats just below it. */
   topOffset: number;
 }
-
-export const INSTRUCTIONS_UNAVAILABLE =
-  "Instructions are not available for this game.";
 
 export function TipsBox({ phase, topOffset }: Props) {
   const pathname = normalizeGamePath(usePathname());

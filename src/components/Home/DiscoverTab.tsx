@@ -131,7 +131,13 @@ export function DiscoverTab({
   ];
 
   return (
-    <View style={[flexStyles.colCentered, { position: "relative", flex: 1 }]}>
+    <View
+      style={[
+        flexStyles.colCentered,
+        flexStyles.fullWidth,
+        { position: "relative", flex: 1 },
+      ]}
+    >
       {/* Filters top bar */}
       <View
         style={[
@@ -195,7 +201,7 @@ export function DiscoverTab({
         <RadioButtons
           options={cardSizeToggleOptions}
           selectedValue={cardSize}
-          selectedBackgroundColor={Colors.K700}
+          selectedBackgroundColor={Colors.background}
           onChange={(value) => {
             onSelectSize(value);
           }}
@@ -213,7 +219,7 @@ export function DiscoverTab({
         />
       </View>
       <ScrollView
-        style={{ flex: 1 }}
+        style={[flexStyles.fullWidth, { flex: 1 }]}
         contentContainerStyle={{
           paddingTop:
             ui.gameHeaderHeight +
@@ -260,11 +266,11 @@ export function DiscoverTab({
                 });
               }}
               buttonStyle={{
-                height: spacing(36),
+                height: spacing(40),
               }}
               selectedBackgroundColor={Colors.suitsRed}
               textStyle={{
-                fontSize: spacing(15),
+                fontSize: spacing(16),
               }}
               containerStyle={{
                 backgroundColor: Colors.K900,
@@ -293,10 +299,10 @@ export function DiscoverTab({
                 }}
                 selectedBackgroundColor={Colors.suitsRed}
                 buttonStyle={{
-                  height: spacing(36),
+                  height: spacing(40),
                 }}
                 textStyle={{
-                  fontSize: spacing(15),
+                  fontSize: spacing(16),
                 }}
                 containerStyle={{
                   backgroundColor: Colors.K900,

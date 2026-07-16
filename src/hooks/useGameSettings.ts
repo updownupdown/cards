@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {
   GameSettings,
   DEFAULT_GAME_SETTINGS,
@@ -7,6 +7,7 @@ import {
   updateGameSettings,
   normalizeGamePath,
 } from "@/data/game-menu";
+import { getGameSpecificSettingDefinitions } from "@/data/game-settings";
 
 // Keep every `useGameSettings` instance for a given game path in sync, so a
 // change made in one place (e.g. the game menu) is reflected immediately in the
@@ -71,4 +72,8 @@ export function useGameSettings(pathname: string) {
     updateSettings,
     isLoading,
   };
+}
+
+export function useGameSpecificSettings(pathname: string) {
+  return useMemo(() => getGameSpecificSettingDefinitions(pathname), [pathname]);
 }

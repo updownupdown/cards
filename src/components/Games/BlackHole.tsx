@@ -1,6 +1,6 @@
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
@@ -17,7 +17,7 @@ import {
   useCardMap,
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
-import { View } from "react-native";
+import { Animated, Easing, Platform, View } from "react-native";
 
 const pileCount = 17;
 
@@ -178,6 +178,26 @@ export default function BlackHole() {
     };
   };
 
+  const rotationAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // 2. Configure and start a looping animation
+    Animated.loop(
+      Animated.timing(rotationAnim, {
+        toValue: 1,
+        duration: 10000,
+        easing: Easing.linear,
+        useNativeDriver: Platform.OS !== "web",
+      }),
+    ).start();
+  }, [rotationAnim]);
+
+  // 3. Interpolate the 0-1 values to degrees
+  const spin = rotationAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "360deg"],
+  });
+
   const { cardMap, cardWidth, getZoneStylesById } = useCardMap({
     game,
     zones,
@@ -201,19 +221,46 @@ export default function BlackHole() {
       {cardMap}
 
       <View style={[getZoneStylesById("hole-graphic")]}>
-        <View
+        <Animated.View
           style={[
             {
               position: "absolute",
+              zIndex: 2,
               top: "50%",
               left: "50%",
-              width: cardWidth * 2.6,
-              height: cardWidth * 2.6,
+              width: cardWidth * 2,
+              height: cardWidth * 2,
               aspectRatio: 1,
-              borderRadius: cardWidth * 1.3,
+              borderRadius: cardWidth * 1.5,
               backgroundColor: "black",
-              transform: [{ translateY: "-50%" }, { translateX: "-50%" }],
-              boxShadow: `0 0 ${cardWidth}px ${cardWidth}px rgba(0,0,0,1)`,
+              transform: [
+                { translateY: "-50%" },
+                { translateX: "-50%" },
+                { rotate: spin },
+              ],
+              boxShadow: `${cardWidth / -16}px ${cardWidth / -16}px ${cardWidth / 4}px #ff01dd`,
+            },
+          ]}
+        />
+
+        <Animated.View
+          style={[
+            {
+              position: "absolute",
+              zIndex: 2,
+              top: "50%",
+              left: "50%",
+              width: cardWidth * 2,
+              height: cardWidth * 2,
+              aspectRatio: 1,
+              borderRadius: cardWidth * 1.2,
+              backgroundColor: "black",
+              transform: [
+                { translateY: "-50%" },
+                { translateX: "-50%" },
+                { rotate: spin },
+              ],
+              boxShadow: `${cardWidth / 6}px ${cardWidth / 6}px ${cardWidth / 1}px #00b7ff`,
             },
           ]}
         />

@@ -10,7 +10,7 @@ export const blackHole: GameDefinition = {
   title: "Black Hole",
   thumbnail: "DefaultThumbnail.jpg",
   cardBack: "DefaultCardBack.png",
-  background: "felt-dark-purple.jpg",
+  background: "galaxy.jpg",
   cardColorBg: "#150e25",
   cardColorText: "#d4cbff",
   cardDescription:

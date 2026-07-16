@@ -9,7 +9,7 @@ export const scorpion: GameDefinition = {
   },
   title: "Scorpion",
   enabledOnLocalOnly: true,
-  background: "felt-dark-blue.jpg",
+  background: "sandstone.jpg",
   cardColorBg: "#33262A",
   cardColorText: "#FFE4E8",
   cardDescription:

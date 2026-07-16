@@ -120,3 +120,21 @@ export function darkenHexColor(hexColor: string, amount: number) {
 
   return `#${next(r)}${next(g)}${next(b)}`;
 }
+
+export function desaturateHexColor(hexColor: string, amount: number) {
+  const hex = hexColor.replace("#", "");
+  if (hex.length !== 6) return hexColor;
+
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  if ([r, g, b].some((v) => Number.isNaN(v))) return hexColor;
+
+  const avg = (r + g + b) / 3;
+  const next = (value: number) =>
+    Math.round(value + (avg - value) * amount)
+      .toString(16)
+      .padStart(2, "0");
+
+  return `#${next(r)}${next(g)}${next(b)}`;
+}

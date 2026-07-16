@@ -5,7 +5,11 @@ import { Colors, FontWeight, rgba } from "@/styles/styles";
 import { useResponsiveUiLayout } from "@/hooks/useResponsiveLayout";
 import { Platform, Pressable, TextStyle, ViewStyle } from "react-native";
 import { textStyles } from "@/styles/textStyles";
-import { roundToPixel } from "@/utils/utils";
+import {
+  darkenHexColor,
+  desaturateHexColor,
+  roundToPixel,
+} from "@/utils/utils";
 import { HexColor } from "@/data/games-data";
 
 export const QUICK_TRANSITION_STYLE = {
@@ -98,7 +102,9 @@ export const Button = ({
     fallbackColor;
 
   if (disabled) {
-    themeColor = textOnly ? rgba(Colors.white, 0.7) : Colors.buttonDisabled;
+    themeColor = textOnly
+      ? rgba(Colors.white, 0.7)
+      : darkenHexColor(desaturateHexColor(themeColor, 0.8), 0.6);
   }
 
   const baseFontSize = Typography.size[size];
@@ -128,7 +134,7 @@ export const Button = ({
         {
           ...BTN_TRANSITION_STYLE,
           outlineWidth: 0,
-          opacity: disabled ? 0.4 : 1,
+          opacity: disabled ? 1 : 1,
 
           display: "flex",
           flexDirection: "row",
@@ -147,12 +153,12 @@ export const Button = ({
                   0.2,
                 )}, inset 0 0 ${roundToPixel(height * 0.4)}px ${rgba(
                   Colors.white,
-                  disabled ? 0.2 : 0.4,
-                )}, 0 0 ${roundToPixel(height * 0.2)}px ${rgba(themeColor, 0.8)}`
+                  0.2,
+                )}, ${roundToPixel(height * 0.04)}px ${roundToPixel(height * 0.08)}px ${roundToPixel(height * 0.4)}px ${rgba(themeColor, 0.8)}`
               : undefined,
           backgroundColor: flat
             ? rgba(themeColor, 0.2)
-            : textOnly || disabled
+            : textOnly
               ? undefined
               : themeColor,
           ...(Platform.OS === "web" && preventWebLongPressMenu

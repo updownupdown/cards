@@ -91,6 +91,7 @@ export function HomeTabBar({
                     height: "100%",
                     gap: spacing(8),
                     paddingVertical: spacing(12),
+                    paddingRight: spacing(4),
                     borderRadius: spacing(floatingBarDims.height / 2 - 6),
                     backgroundColor: isActive
                       ? Colors.background
@@ -101,7 +102,7 @@ export function HomeTabBar({
               >
                 <Icon
                   name={tab.icon}
-                  size={spacing(26)}
+                  size={spacing(28)}
                   color={isActive ? Colors.suitsRed : Colors.K500}
                   style={{ ...QUICK_TRANSITION_STYLE }}
                 />
