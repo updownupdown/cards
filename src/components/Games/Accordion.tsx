@@ -207,7 +207,7 @@ export default function Accordion() {
 
   return (
     <GameWrapper
-      tutorialPhase={selectedIndex === null ? "select" : "target"}
+      tipPhase={selectedIndex === null ? "select" : "target"}
       ended={game.ended}
       won={game.won}
       reset={reset}

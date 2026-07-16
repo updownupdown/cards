@@ -14,6 +14,7 @@ const config = {
     icon: "./assets/app-icon/icon.png",
   },
   android: {
+    softwareKeyboardLayoutMode: "resize",
     adaptiveIcon: {
       backgroundColor: "#343f49",
       foregroundImage: "./assets/app-icon/android-foreground.png",

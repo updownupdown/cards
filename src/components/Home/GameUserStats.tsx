@@ -46,9 +46,6 @@ export function GameUserStats({
         {
           flexDirection: "row",
           width: "100%",
-          gap: spacing(8),
-          borderRadius: spacing(6),
-          backgroundColor: rgba(Colors.K950, 0.4),
         },
         style,
       ]}
@@ -59,9 +56,7 @@ export function GameUserStats({
           style={{
             flex: 1,
             alignItems: "center",
-            paddingVertical: spacing(8),
-            borderRadius: spacing(6),
-            // backgroundColor: rgba(Colors.K950, 0.4),
+            paddingVertical: spacing(12),
           }}
         >
           <Text
@@ -72,7 +67,7 @@ export function GameUserStats({
           >
             {cell.label}
           </Text>
-          <Text size="xl" weight={600} color={accentColor}>
+          <Text size="md" weight={600} color={accentColor}>
             {cell.value}
           </Text>
         </View>

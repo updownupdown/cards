@@ -126,8 +126,8 @@ export const MaxContentHeight = 1000;
 
 export const HomePadding = 20;
 
-export const HeaderButtonSize = 48;
-export const HeaderButtonIconSize = 26;
-export const HeaderHeight = HeaderButtonSize + ContentSidePadding;
+export const HeaderButtonSize = 52;
+export const HeaderButtonIconSize = 28;
+export const HeaderHeight = HeaderButtonSize;
 
 export const TabletBreakpoint = 768;

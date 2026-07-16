@@ -2,7 +2,7 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const lootTheLoop: GameDefinition = {
   path: "/loot-the-loop",
-  tutorial: {
+  tip: {
     default: {
       text: "Capture legal loop cards; keep tempo; avoid breaking loop.",
     },

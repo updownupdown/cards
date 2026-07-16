@@ -348,7 +348,7 @@ export default function Wildfire() {
       won={game.won}
       reset={reset}
       isLoaded={isLoaded}
-      tutorialPhase={currentPhase}
+      tipPhase={currentPhase}
       winLoseMessage={
         game.won ? "The blaze is contained!" : "The fire outran the crew."
       }

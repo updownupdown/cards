@@ -2,7 +2,7 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 
 export const solitaire: GameDefinition = {
   path: "/solitaire",
-  tutorial: {
+  tip: {
     default: {
       text: "Foundations up suit; tableau down alt color; kings fill empty.",
     },

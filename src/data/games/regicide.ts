@@ -2,7 +2,7 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const regicide: GameDefinition = {
   path: "/regicide",
-  tutorial: {
+  tip: {
     attack: {
       text: "Play card/combo to damage royal; suit powers trigger on play.",
     },

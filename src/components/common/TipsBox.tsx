@@ -4,22 +4,23 @@ import {
   normalizeGamePath,
   type GameSettings,
 } from "@/data/game-menu";
-import { DEFAULT_TUTORIAL_PHASE } from "@/data/games-data";
+import { DEFAULT_TIP_PHASE } from "@/data/games-data";
 import { useGameSettings } from "@/hooks/useGameSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-import { useTutorialBoxLayout } from "@/hooks/useTutorialLayout";
+import { useTipsBoxLayout } from "@/hooks/useTipsLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, ContentSidePadding, rgba } from "@/styles/styles";
+import { Colors, ContentSidePadding, HomePadding, rgba } from "@/styles/styles";
 import { usePathname } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
-import { Button } from "../Button/Button";
 import { HowToPlay } from "../Modals/GameModal";
+import { floatingBarDims } from "@/styles/menuStyles";
+import { lightenHexColor } from "@/utils/utils";
 
 interface Props {
-  /** The current tutorial phase key; defaults to the single-phase "default". */
+  /** The current tip phase key; defaults to the single-phase "default". */
   phase?: string;
   /** Screen-space Y of the header bottom; the box floats just below it. */
   topOffset: number;
@@ -27,24 +28,24 @@ interface Props {
 
 const INSTRUCTIONS_UNAVAILABLE = "Instructions unavailable";
 
-export function TutorialBox({ phase, topOffset }: Props) {
+export function TipsBox({ phase, topOffset }: Props) {
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);
   const { updateSettings } = useGameSettings(pathname);
   const { spacing, ui } = useResponsiveMetrics();
-  const { active, topMargin, boxHeight } = useTutorialBoxLayout();
+  const { active, topMargin, boxHeight } = useTipsBoxLayout();
   const { height: viewportHeight } = useViewportDimensions();
 
   const [expanded, setExpanded] = useState(false);
 
   if (!gameInfo || !active) return null;
 
-  const phaseKey = phase ?? DEFAULT_TUTORIAL_PHASE;
-  const instruction = gameInfo.tutorial?.[phaseKey];
+  const phaseKey = phase ?? DEFAULT_TIP_PHASE;
+  const instruction = gameInfo.tip?.[phaseKey];
   const howToPlayText = gameInfo.howToPlay ?? gameInfo.briefRules;
 
-  function setTutorialMode(value: boolean) {
-    void updateSettings({ tutorialMode: value } as Partial<GameSettings>);
+  function setTipsMode(value: boolean) {
+    void updateSettings({ tipsMode: value } as Partial<GameSettings>);
   }
 
   const expandedMaxHeight = Math.max(
@@ -61,20 +62,27 @@ export function TutorialBox({ phase, topOffset }: Props) {
         left: 0,
         right: 0,
         alignItems: "center",
-        paddingHorizontal: spacing(ContentSidePadding * 0.75),
+        padding: spacing(ContentSidePadding / 2),
         pointerEvents: "box-none",
       }}
     >
       <View
         style={{
+          transitionDuration: "0.6s",
+          transitionProperty: "background-color",
+          transitionTimingFunction: "ease",
           width: "100%",
-          maxWidth: ui.contentMaxWidth,
+          zIndex: 12, // above the game overlay
+          maxWidth: ui.contentMaxWidth - spacing(ContentSidePadding),
           height: expanded ? undefined : boxHeight,
           maxHeight: expanded ? expandedMaxHeight : boxHeight,
-          borderRadius: spacing(8),
-          backgroundColor: gameInfo.cardColorBg,
-          boxShadow: `1px 2px 10px ${rgba(gameInfo.cardColorBg, 0.75)}, 2px 4px 20px ${rgba(gameInfo.cardColorBg, 0.6)}`,
-          overflow: "hidden",
+          paddingHorizontal: spacing(HomePadding / 8),
+          borderRadius: spacing(floatingBarDims.height / 2),
+          backgroundColor: rgba(gameInfo.cardColorBg, expanded ? 1 : 0.8),
+          boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.black, 0.3)}, ${spacing(2)}px ${spacing(4)}px ${spacing(10)}px ${rgba(
+            Colors.black,
+            0.3,
+          )}`,
         }}
       >
         {/* Header row: instruction + expand/collapse toggle */}
@@ -85,34 +93,13 @@ export function TutorialBox({ phase, topOffset }: Props) {
             {
               height: boxHeight,
               paddingVertical: spacing(6),
-              paddingLeft: spacing(14),
-              paddingRight: spacing(6),
-              gap: spacing(12),
+              paddingLeft: spacing(6),
+              paddingRight: spacing(12),
+              gap: spacing(8),
+              outline: "none",
             },
           ]}
         >
-          <Icon name="learn" size={24} color={Colors.K100} />
-
-          <View style={[flexStyles.colStart, flexStyles.flex1, { gap: 2 }]}>
-            {expanded ? (
-              <Text size="lg" weight={500} color={Colors.K100}>
-                Tutorial Mode
-              </Text>
-            ) : (
-              <>
-                <Text
-                  size="sm"
-                  weight={500}
-                  color={Colors.K100}
-                  numberOfLines={2}
-                  ellipsizeMode="tail"
-                >
-                  {instruction?.text ?? INSTRUCTIONS_UNAVAILABLE}
-                </Text>
-              </>
-            )}
-          </View>
-
           <View
             style={[
               flexStyles.colCentered,
@@ -126,15 +113,53 @@ export function TutorialBox({ phase, topOffset }: Props) {
           >
             <Icon size={24} name={expanded ? "expand-less" : "expand-more"} />
           </View>
+
+          <View style={[flexStyles.colCentered, flexStyles.flex1]}>
+            {expanded ? (
+              <View
+                style={[
+                  flexStyles.rowCentered,
+                  flexStyles.fullWidth,
+                  {
+                    gap: spacing(8),
+                  },
+                ]}
+              >
+                <Icon
+                  name="info-outline"
+                  size={20}
+                  color={gameInfo.cardColorText}
+                />
+                <Text size="md" weight={300} color={gameInfo.cardColorText}>
+                  Quick Tips
+                </Text>
+              </View>
+            ) : (
+              <Text
+                size="sm"
+                weight={400}
+                color={Colors.K100}
+                numberOfLines={2}
+                ellipsizeMode="tail"
+              >
+                {instruction?.text ?? INSTRUCTIONS_UNAVAILABLE}
+              </Text>
+            )}
+          </View>
+
+          <Pressable onPress={() => setTipsMode(false)}>
+            <Icon name="close" size={24} color={Colors.K100} />
+          </Pressable>
         </Pressable>
 
-        {/* Expanded body: full rules + tutorial toggle */}
+        {/* Expanded body: full rules + quick tips toggle */}
         {expanded && (
           <ScrollView
             style={{ flexShrink: 1 }}
             contentContainerStyle={{
-              padding: spacing(28),
-              paddingTop: spacing(14),
+              padding: spacing(24),
+              paddingTop: 0,
+              paddingBottom: spacing(50),
               gap: spacing(30),
             }}
             showsVerticalScrollIndicator={false}
@@ -144,39 +169,20 @@ export function TutorialBox({ phase, topOffset }: Props) {
               style={[
                 flexStyles.colCentered,
                 flexStyles.fullWidth,
-                flexStyles.gap20,
                 {
                   alignItems: "flex-start",
+                  gap: spacing(12),
+                  padding: spacing(24),
+                  borderRadius: spacing(20),
+                  backgroundColor: lightenHexColor(gameInfo.cardColorBg, 0.1),
                 },
               ]}
             >
-              <View
-                style={[
-                  flexStyles.rowCentered,
-                  flexStyles.fullWidth,
-                  flexStyles.spaceBetween,
-                ]}
-              >
-                <Text
-                  size="xl"
-                  weight={300}
-                  color={gameInfo.cardColorText}
-                  style={flexStyles.flex1}
-                >
-                  Quick Instructions
-                </Text>
-                <Icon
-                  name="help-outline"
-                  size={32}
-                  color={gameInfo.cardColorText}
-                />
-              </View>
-
               <Text
-                size="md"
-                weight={500}
+                size="lg"
+                weight={400}
                 color={Colors.K100}
-                numberOfLines={expanded ? 2 : 1}
+                lineHeight={1.4}
                 ellipsizeMode="tail"
               >
                 {instruction?.text ?? INSTRUCTIONS_UNAVAILABLE}
@@ -189,31 +195,7 @@ export function TutorialBox({ phase, topOffset }: Props) {
               )}
             </View>
 
-            {/* Tutorial toggle */}
-            <View
-              style={[
-                flexStyles.colStart,
-                {
-                  borderWidth: 1,
-                  borderColor: rgba(gameInfo.cardColorText, 0.4),
-                  borderRadius: spacing(10),
-                  padding: spacing(18),
-                  gap: spacing(8),
-                },
-              ]}
-            >
-              <Button
-                text="Disable tutorial mode for this game"
-                size="md"
-                textOnly
-                uppercase={false}
-                onPress={() => setTutorialMode(false)}
-              />
-              <Text size="sm" weight={400} color={Colors.K300}>
-                You can re-enable tutorial mode from the menu.
-              </Text>
-            </View>
-
+            {/* How to Play */}
             <HowToPlay
               howToPlayText={howToPlayText}
               headingColor={gameInfo.cardColorText}

@@ -3,7 +3,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const riverboat: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/riverboat",
-  tutorial: {
+  tip: {
     default: {
       text: "Place dealt card; each row and column is a poker hand.",
     },

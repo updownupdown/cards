@@ -3,7 +3,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const beleagueredCastle: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/beleaguered-castle",
-  tutorial: {
+  tip: {
     default: {
       text: "Expose Aces early; columns down any suit; foundations up suit.",
     },

@@ -2,7 +2,7 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 
 export const canfield: GameDefinition = {
   path: "/canfield",
-  tutorial: {
+  tip: {
     default: {
       text: "Foundations up suit; tableau down alt color; empties use reserve.",
     },

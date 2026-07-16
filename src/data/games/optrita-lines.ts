@@ -3,7 +3,7 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 export const optritaLines: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/optrita-lines",
-  tutorial: {
+  tip: {
     default: {
       text: "Challenge a line; first suit match wins by rank, else trump.",
     },

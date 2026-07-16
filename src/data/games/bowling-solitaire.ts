@@ -51,7 +51,7 @@ export const bowlingSolitaire: GameDefinition = {
     "- **Open frame**: the total pins knocked down.",
     "- In frame 10, a strike or spare earns 2 or 1 bonus ball(s).",
   ],
-  tutorial: {
+  tip: {
     ballSelect: {
       text: "Pick a ball from any face-up bottom card.",
     },

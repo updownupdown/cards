@@ -976,7 +976,7 @@ export default function BowlingSolitaire() {
 
   return (
     <GameWrapper
-      tutorialPhase={game.phase}
+      tipPhase={game.phase}
       ended={game.phase === "gameEnd"}
       won={true}
       reset={reset}

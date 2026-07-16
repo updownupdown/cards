@@ -4,7 +4,7 @@ export const ascent: GameDefinition = {
   enabledOnLocalOnly: true,
   enabled: false,
   path: "/ascent",
-  tutorial: {
+  tip: {
     default: {
       text: "Clear pitch with same suit or higher rank (A high); swap bad hold.",
     },

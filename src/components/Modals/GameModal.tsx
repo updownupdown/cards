@@ -20,6 +20,7 @@ import {
 import { Button } from "../Button/Button";
 import { SettingControl } from "../common/SettingControl";
 import ModalFull from "./ModalFull";
+import { lightenHexColor } from "@/utils/utils";
 
 type Props = {
   onClose: () => void;
@@ -65,7 +66,12 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
 
   return (
     <>
-      <ModalFull onClose={handleClose} title={info.title}>
+      <ModalFull
+        onClose={handleClose}
+        title={info.title}
+        titleColor={info.cardColorText}
+        backgroundColor={info.cardColorBg}
+      >
         {/* Scroll view */}
         <ScrollView
           contentContainerStyle={modalStyles.scrollContent}
@@ -126,101 +132,121 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
             />
           </View>
 
-          {/* About Text */}
-          {info.about && (
-            <View
-              style={[
-                flexStyles.colCentered,
-                flexStyles.fullWidth,
-                flexStyles.gap20,
-                {
-                  alignItems: "flex-start",
-                },
-              ]}
-            >
-              <RichText content={info.about} size="md" weight={300} />
-
-              {/* By Line */}
-              {info.byLine && (
-                <Text style={modalStyles.byLine}>{info.byLine}</Text>
-              )}
-            </View>
-          )}
-
-          {/* Tutorial mode toggle */}
+          {/* About and Settings */}
           <View
             style={[
               flexStyles.colCentered,
               flexStyles.fullWidth,
               {
-                alignItems: "flex-start",
-                padding: spacing(16),
-                paddingTop: spacing(12),
-                paddingRight: spacing(12),
-                backgroundColor: Colors.K875,
-                borderRadius: spacing(8),
+                gap: spacing(12),
               },
             ]}
           >
-            <SettingControl
-              label="Tutorial mode"
-              value={settings.tutorialMode}
-              type="boolean"
-              onChange={(value) =>
-                onGameSettingChange("tutorialMode", Boolean(value))
-              }
-            />
-            <Text
-              size="sm"
-              color={Colors.K500}
-              style={{ paddingTop: spacing(10) }}
+            {/* Tips mode toggle */}
+            <View
+              style={[
+                flexStyles.colCentered,
+                flexStyles.fullWidth,
+                {
+                  alignItems: "flex-start",
+                  padding: spacing(16),
+                  paddingTop: spacing(12),
+                  paddingRight: spacing(12),
+                  backgroundColor: lightenHexColor(info.cardColorBg, 0.1),
+                  borderRadius: spacing(8),
+                },
+              ]}
             >
-              Show step-by-step guidance while you play.
-            </Text>
-          </View>
+              <SettingControl
+                label="Show Quick Tips"
+                labelColor={info.cardColorText}
+                helpText="Show step-by-step guidance while you play."
+                value={settings.tipsMode}
+                type="boolean"
+                onChange={(value) =>
+                  onGameSettingChange("tipsMode", Boolean(value))
+                }
+              />
+            </View>
 
-          {/* Game Settings */}
-          {gameSpecificSettings.length > 0 &&
-            gameSpecificSettings.map((setting) => (
+            {/* Game Settings */}
+            {gameSpecificSettings.length > 0 &&
+              gameSpecificSettings.map((setting) => (
+                <View
+                  key={setting.key}
+                  style={[
+                    flexStyles.colCentered,
+                    flexStyles.fullWidth,
+                    {
+                      alignItems: "flex-start",
+                      padding: spacing(16),
+                      backgroundColor: lightenHexColor(info.cardColorBg, 0.1),
+                      borderRadius: spacing(8),
+                    },
+                  ]}
+                >
+                  <SettingControl
+                    label={setting.label}
+                    labelColor={info.cardColorText}
+                    helpText={
+                      setting.description ??
+                      getSettingApplyBehaviorText(setting.applyBehavior)
+                    }
+                    value={settings[setting.key]}
+                    type={setting.type}
+                    options={setting.options}
+                    onChange={(value) =>
+                      onGameSettingChange(
+                        setting.key,
+                        value as GameSettings[typeof setting.key],
+                      )
+                    }
+                  />
+                </View>
+              ))}
+
+            {/* About Text */}
+            {info.about && (
               <View
-                key={setting.key}
                 style={[
                   flexStyles.colCentered,
                   flexStyles.fullWidth,
                   {
                     alignItems: "flex-start",
-                    padding: spacing(16),
-                    backgroundColor: Colors.K850,
+                    padding: spacing(24),
+                    gap: spacing(12),
+                    backgroundColor: lightenHexColor(info.cardColorBg, 0.1),
                     borderRadius: spacing(8),
                   },
                 ]}
               >
-                <SettingControl
-                  label={setting.label}
-                  value={settings[setting.key]}
-                  type={setting.type}
-                  options={setting.options}
-                  onChange={(value) =>
-                    onGameSettingChange(
-                      setting.key,
-                      value as GameSettings[typeof setting.key],
-                    )
-                  }
-                />
-                {(setting.description || setting.applyBehavior) && (
+                <View
+                  style={[
+                    flexStyles.rowCentered,
+                    flexStyles.fullWidth,
+                    flexStyles.spaceBetween,
+                  ]}
+                >
                   <Text
-                    size="sm"
-                    color={Colors.K500}
-                    style={{
-                      paddingTop: spacing(10),
-                    }}
+                    size="xxl"
+                    weight={300}
+                    color={info.cardColorText}
+                    style={flexStyles.flex1}
                   >
-                    {setting.description ??
-                      getSettingApplyBehaviorText(setting.applyBehavior)}
+                    About
                   </Text>
+                  <Icon name="info" size={28} color={info.cardColorText} />
+                </View>
+
+                <RichText content={info.about} size="md" weight={300} />
+
+                {/* By Line */}
+                {info.byLine && (
+                  <Text style={modalStyles.byLine}>{info.byLine}</Text>
                 )}
               </View>
-            ))}
+            )}
+          </View>
 
           {/* How to Play */}
           <HowToPlay

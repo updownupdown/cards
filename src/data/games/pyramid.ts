@@ -2,7 +2,7 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 
 export const pyramid: GameDefinition = {
   path: "/pyramid",
-  tutorial: {
+  tip: {
     default: {
       text: "Remove exposed pairs totaling 13; kings solo; draw stock for matches.",
     },

@@ -2,7 +2,7 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const sirTommy: GameDefinition = {
   path: "/sir-tommy",
-  tutorial: {
+  tip: {
     default: {
       text: "Place draw on any waste pile; foundations auto-build A to K.",
     },

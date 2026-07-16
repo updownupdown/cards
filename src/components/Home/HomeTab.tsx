@@ -11,32 +11,44 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { HomePadding } from "@/styles/styles";
 import { roundToPixel } from "@/utils/utils";
-import { useMemo, type ReactNode } from "react";
-import { ScrollView, View } from "react-native";
+import { useMemo, useState, type ReactNode } from "react";
+import {
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollView,
+  View,
+} from "react-native";
+import { RandomGameRoller } from "./RandomGameRoller";
+import { flexStyles } from "@/styles/flexStyles";
 
 type HomeTabProps = {
   allEnabledGames: HomeGameEntry[];
   allEnabledGamePaths: string[];
+  unplayedGamePaths: string[];
   favorites: Set<string>;
   recentPaths: string[];
   settingsMap: GameSettingsMap;
   onToggleFavorite: (path: string) => void;
   contentPaddingTop: number;
   contentPaddingBottom: number;
+  hasLoaded: boolean;
 };
 
 export function HomeTab({
   allEnabledGames,
   allEnabledGamePaths,
+  unplayedGamePaths,
   favorites,
   recentPaths,
   settingsMap,
   onToggleFavorite,
   contentPaddingTop,
   contentPaddingBottom,
+  hasLoaded,
 }: HomeTabProps) {
   const { ui, spacing } = useResponsiveMetrics();
-  const { width: viewportWidth } = useViewportDimensions();
+  const { width: viewportWidth, height: viewportHeight } =
+    useViewportDimensions();
 
   const pageSidePadding = spacing(HomePadding);
   const contentMaxWidth = ui.contentMaxWidth;
@@ -55,6 +67,12 @@ export function HomeTab({
       (rowInnerWidth - cardGap * (ui.isTablet ? 2 : 1)) / (ui.isTablet ? 3 : 2),
     ),
   );
+
+  const [scrollY, setScrollY] = useState(0);
+
+  const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    setScrollY(event.nativeEvent.contentOffset.y);
+  };
 
   const favoriteKey = useMemo(
     () => Array.from(favorites).sort().join("|"),
@@ -121,133 +139,10 @@ export function HomeTab({
     return { title: likedGame.title, games: related };
   }, [favoriteKey, allEnabledGames]);
 
-  const sections: ReactNode[] = [];
-
-  // Game of the Day
-  if (gameOfTheDay) {
-    sections.push(
-      <View
-        key="game-of-the-day"
-        style={{
-          width: "100%",
-          maxWidth: contentMaxWidth,
-          alignSelf: "center",
-        }}
-      >
-        <HomeSectionTitle
-          title="Game of the Day"
-          iconName="featured"
-          pageSidePadding={pageSidePadding}
-          contentMaxWidth={contentMaxWidth}
-        />
-
-        <View
-          style={{
-            width: "100%",
-            paddingHorizontal: pageSidePadding,
-            paddingTop: sectionTopPadding,
-            paddingBottom: sectionBottomPadding,
-          }}
-        >
-          <HomeCard
-            path={gameOfTheDay.path}
-            game={gameOfTheDay.game}
-            size="large"
-            onToggleFavorite={onToggleFavorite}
-            isFavorite={favorites.has(gameOfTheDay.path)}
-            style={{ width: "100%" }}
-          />
-        </View>
-      </View>,
-    );
-  }
-
-  // Jump back in
-  if (jumpBackInGames.length > 0) {
-    sections.push(
-      <View
-        key="jump-back-in"
-        style={{
-          width: "100%",
-          maxWidth: contentMaxWidth,
-          alignSelf: "center",
-        }}
-      >
-        <HomeSectionTitle
-          title="Jump Back In"
-          iconName="recent"
-          pageSidePadding={pageSidePadding}
-          contentMaxWidth={contentMaxWidth}
-        />
-        <View
-          style={{
-            width: "100%",
-            paddingHorizontal: pageSidePadding,
-            paddingTop: sectionTopPadding,
-            paddingBottom: sectionBottomPadding,
-            gap: cardGap,
-            flexDirection: "row",
-            flexWrap: "wrap",
-          }}
-        >
-          {jumpBackInGames.map(([path, game]) => (
-            <HomeCard
-              key={path}
-              path={path}
-              game={game}
-              size="medium"
-              onToggleFavorite={onToggleFavorite}
-              isFavorite={favorites.has(path)}
-              style={{ width: mediumCardWidth, flexShrink: 0 }}
-            />
-          ))}
-        </View>
-      </View>,
-    );
-  }
-
-  // Because you liked ...
-  if (becauseYouLiked) {
-    sections.push(
-      <View
-        key="because-you-liked"
-        style={{
-          width: "100%",
-          maxWidth: contentMaxWidth,
-          alignSelf: "center",
-        }}
-      >
-        <HomeSectionTitle
-          title={`Because you liked "${becauseYouLiked.title}"`}
-          iconName="star"
-          pageSidePadding={pageSidePadding}
-          contentMaxWidth={contentMaxWidth}
-        />
-
-        <View
-          style={{
-            width: "100%",
-            paddingHorizontal: pageSidePadding,
-            paddingTop: sectionTopPadding,
-            paddingBottom: sectionBottomPadding,
-            gap: cardGap,
-          }}
-        >
-          {becauseYouLiked.games.map(([path, game]) => (
-            <HomeCard
-              key={path}
-              path={path}
-              game={game}
-              size="large"
-              onToggleFavorite={onToggleFavorite}
-              isFavorite={favorites.has(path)}
-              style={{ width: "100%" }}
-            />
-          ))}
-        </View>
-      </View>,
-    );
-  }
+  const unplayedGames = useMemo(() => {
+    const unplayedSet = new Set(unplayedGamePaths);
+    return allEnabledGames.filter(([path]) => unplayedSet.has(path));
+  }, [allEnabledGames, unplayedGamePaths]);
 
   return (
     <ScrollView
@@ -258,8 +153,167 @@ export function HomeTab({
         gap: spacing(30),
       }}
       showsVerticalScrollIndicator={false}
+      scrollEventThrottle={16}
+      onScroll={onScroll}
     >
-      {sections}
+      {/* Game of the Day */}
+      {gameOfTheDay && (
+        <View
+          key="game-of-the-day"
+          style={{
+            width: "100%",
+            maxWidth: contentMaxWidth,
+            alignSelf: "center",
+          }}
+        >
+          <HomeSectionTitle
+            title="Game of the Day"
+            iconName="featured"
+            pageSidePadding={pageSidePadding}
+            contentMaxWidth={contentMaxWidth}
+          />
+
+          <View
+            style={{
+              width: "100%",
+              paddingHorizontal: pageSidePadding,
+              paddingTop: sectionTopPadding,
+              paddingBottom: sectionBottomPadding,
+            }}
+          >
+            <HomeCard
+              path={gameOfTheDay.path}
+              game={gameOfTheDay.game}
+              size="large"
+              onToggleFavorite={onToggleFavorite}
+              isFavorite={favorites.has(gameOfTheDay.path)}
+              style={{ width: "100%" }}
+            />
+          </View>
+        </View>
+      )}
+
+      {/* Jump back in */}
+      {jumpBackInGames.length > 0 && (
+        <View
+          key="jump-back-in"
+          style={{
+            width: "100%",
+            maxWidth: contentMaxWidth,
+            alignSelf: "center",
+          }}
+        >
+          <HomeSectionTitle
+            title="Jump Back In"
+            iconName="recent"
+            pageSidePadding={pageSidePadding}
+            contentMaxWidth={contentMaxWidth}
+          />
+          <View
+            style={{
+              width: "100%",
+              paddingHorizontal: pageSidePadding,
+              paddingTop: sectionTopPadding,
+              paddingBottom: sectionBottomPadding,
+              gap: cardGap,
+              flexDirection: "row",
+              flexWrap: "wrap",
+            }}
+          >
+            {jumpBackInGames.map(([path, game]) => (
+              <HomeCard
+                key={path}
+                path={path}
+                game={game}
+                size="medium"
+                onToggleFavorite={onToggleFavorite}
+                isFavorite={favorites.has(path)}
+                style={{ width: mediumCardWidth, flexShrink: 0 }}
+              />
+            ))}
+          </View>
+        </View>
+      )}
+
+      {/* Roll the dice */}
+      <View
+        style={[
+          flexStyles.colCentered,
+          flexStyles.fullWidth,
+          {
+            gap: spacing(6),
+          },
+        ]}
+      >
+        <View
+          style={{
+            width: "100%",
+            maxWidth: contentMaxWidth,
+            alignSelf: "center",
+            paddingHorizontal: pageSidePadding,
+          }}
+        >
+          <HomeSectionTitle
+            title="Play a Random Game"
+            iconName="dice"
+            pageSidePadding={0}
+            contentMaxWidth={contentMaxWidth}
+          />
+        </View>
+
+        <RandomGameRoller
+          allEntries={allEnabledGames}
+          unplayedEntries={unplayedGames}
+          favorites={favorites}
+          onToggleFavorite={onToggleFavorite}
+          hasLoaded={hasLoaded}
+          contentMaxWidth={contentMaxWidth}
+          pageSidePadding={pageSidePadding}
+          scrollY={scrollY}
+          viewportHeight={viewportHeight}
+        />
+      </View>
+
+      {/* Because you liked ... */}
+      {becauseYouLiked && (
+        <View
+          key="because-you-liked"
+          style={{
+            width: "100%",
+            maxWidth: contentMaxWidth,
+            alignSelf: "center",
+          }}
+        >
+          <HomeSectionTitle
+            title={`Because you liked "${becauseYouLiked.title}"`}
+            iconName="star"
+            pageSidePadding={pageSidePadding}
+            contentMaxWidth={contentMaxWidth}
+          />
+
+          <View
+            style={{
+              width: "100%",
+              paddingHorizontal: pageSidePadding,
+              paddingTop: sectionTopPadding,
+              paddingBottom: sectionBottomPadding,
+              gap: cardGap,
+            }}
+          >
+            {becauseYouLiked.games.map(([path, game]) => (
+              <HomeCard
+                key={path}
+                path={path}
+                game={game}
+                size="large"
+                onToggleFavorite={onToggleFavorite}
+                isFavorite={favorites.has(path)}
+                style={{ width: "100%" }}
+              />
+            ))}
+          </View>
+        </View>
+      )}
     </ScrollView>
   );
 }

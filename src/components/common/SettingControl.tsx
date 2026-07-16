@@ -1,12 +1,14 @@
 import { Text } from "@/components/common/Text";
 import { Icon } from "@/icons";
 import { settingsStyles } from "@/styles/settingsStyles";
-import { Colors } from "@/styles/styles";
+import { Colors, rgba } from "@/styles/styles";
 import React from "react";
 import { Pressable, View } from "react-native";
 
 type SettingControlProps<T> = {
   label: string;
+  labelColor?: string;
+  helpText?: string;
   value: T;
   onChange: (val: T) => void;
   type: "boolean" | "string";
@@ -16,6 +18,8 @@ type SettingControlProps<T> = {
 
 export function SettingControl<T>({
   label,
+  labelColor = Colors.K200,
+  helpText,
   value,
   onChange,
   type,
@@ -35,7 +39,7 @@ export function SettingControl<T>({
           }
           onPress={() => onChange(!value as any)}
         >
-          <Text weight={500} size="lg">
+          <Text weight={500} size="lg" color={labelColor}>
             {label}
           </Text>
 
@@ -62,6 +66,16 @@ export function SettingControl<T>({
             </View>
           )}
         </Pressable>
+
+        {helpText && (
+          <Text
+            size="sm"
+            color={rgba(Colors.white, 0.7)}
+            style={{ paddingTop: 8, width: "100%" }}
+          >
+            {helpText}
+          </Text>
+        )}
       </View>
     );
   }
@@ -69,7 +83,20 @@ export function SettingControl<T>({
   if (type === "string" && options) {
     return (
       <View style={settingsStyles.containerCol}>
-        <Text size="md">{label}</Text>
+        <Text weight={500} size="lg" color={labelColor}>
+          {label}
+        </Text>
+
+        {helpText && (
+          <Text
+            size="sm"
+            color={rgba(Colors.white, 0.7)}
+            style={{ width: "100%" }}
+          >
+            {helpText}
+          </Text>
+        )}
+
         <View style={settingsStyles.optionsWrap}>
           {options.map((opt) => {
             const isSelected = value === opt.value;

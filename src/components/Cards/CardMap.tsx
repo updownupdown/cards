@@ -1,7 +1,7 @@
 import { cardDims, PlayingCard } from "@/components/Cards/card-utils";
 import { GAMES_DATA } from "@/data/games";
 import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
-import { useTutorialBoxLayout } from "@/hooks/useTutorialLayout";
+import { useTipsBoxLayout } from "@/hooks/useTipsLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { MaxContentHeight } from "@/styles/styles";
 import { roundToPixel } from "@/utils/utils";
@@ -114,8 +114,8 @@ export function useCardMap({
   const ui = useResponsiveUiLayoutFromWidth(screenWidthActual);
   const responsiveScale = ui.scale;
 
-  // Space reserved at the top of the board for the floating tutorial box.
-  const { reservedHeight: tutorialReservedHeight } = useTutorialBoxLayout();
+  // Space reserved at the top of the board for the floating tip box.
+  const { reservedHeight: tipsReservedHeight } = useTipsBoxLayout();
 
   // Calculate the end column (col + height) for each zone
   // and find the maximum value among them.
@@ -148,7 +148,7 @@ export function useCardMap({
     gridHeightPadded,
   } = useMemo(() => {
     const headerHeight = roundToPixel(ui.gameHeaderHeight + insets.top);
-    const topReserved = roundToPixel(tutorialReservedHeight);
+    const topReserved = roundToPixel(tipsReservedHeight);
     const screenBoardHeight = Math.max(
       screenHeightActual - headerHeight - topReserved,
       0,
@@ -243,7 +243,7 @@ export function useCardMap({
     ui.gameHeaderHeight,
     screenHeightActual,
     screenWidthActual,
-    tutorialReservedHeight,
+    tipsReservedHeight,
   ]);
 
   const zoneBasePosById = useMemo(() => {

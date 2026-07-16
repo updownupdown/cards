@@ -261,26 +261,23 @@ export default function CardCapture() {
   const { spacing } = useResponsiveMetrics();
   const showToast = useToast();
 
-  const actionModeOptions = useMemo(
-    () => [
-      {
-        value: "capture" as const,
-        label: "Capture Enemy",
-        selectedBackgroundColor: Colors.buttonGreen,
-      },
-      {
-        value: "enemyCapture" as const,
-        label: "Let Enemy Capture",
-        selectedBackgroundColor: Colors.buttonOrange,
-      },
-      {
-        value: "sacrifice" as const,
-        label: "Sacrifice Cards",
-        selectedBackgroundColor: Colors.buttonRed,
-      },
-    ],
-    [],
-  );
+  const actionModeOptions = [
+    {
+      value: "capture" as const,
+      label: "Capture Enemy",
+      selectedBackgroundColor: Colors.buttonGreen,
+    },
+    {
+      value: "enemyCapture" as const,
+      label: "Let Enemy Capture",
+      selectedBackgroundColor: Colors.buttonOrange,
+    },
+    {
+      value: "sacrifice" as const,
+      label: "Sacrifice Cards",
+      selectedBackgroundColor: Colors.buttonRed,
+    },
+  ];
 
   const {
     isSettingUp,
@@ -740,7 +737,7 @@ export default function CardCapture() {
 
   return (
     <GameWrapper
-      tutorialPhase={game.phase}
+      tipPhase={game.phase}
       ended={game.ended}
       won={game.won}
       reset={reset}
@@ -788,7 +785,9 @@ export default function CardCapture() {
                   draft.selectedHandIds = [];
                 });
               }}
+              buttonStyle={{ flex: 1 }}
               containerStyle={{
+                width: "100%",
                 backgroundColor: zoneBg,
                 height: cardHeight * 0.84,
               }}

@@ -2,7 +2,7 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const scoundrel: GameDefinition = {
   path: "/scoundrel",
-  tutorial: {
+  tip: {
     default: {
       text: "Resolve 3 of 4 rooms; weapon kills must be non-increasing.",
     },

@@ -135,6 +135,7 @@ export function SearchModal({
               onToggleFavorite={onToggleFavorite}
               isFavorite={favorites.has(path)}
               style={{ width: "100%" }}
+              onOpen={onClose} // Close the modal when a game is opened
             />
           ))}
         </ScrollView>

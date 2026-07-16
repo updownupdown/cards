@@ -1,10 +1,8 @@
 import { Text } from "@/components/common/Text";
-import { clearLastGameSession } from "@/data/game-menu";
 import { flexStyles } from "@/styles/flexStyles";
 import { menuStyles } from "@/styles/menuStyles";
 import { useModalStyles } from "@/styles/modalStyles";
-import { Colors, HeaderButtonSize } from "@/styles/styles";
-import { router } from "expo-router";
+import { Colors, HeaderButtonSize, rgba } from "@/styles/styles";
 import React from "react";
 import { Modal, View } from "react-native";
 import { Button } from "../Button/Button";
@@ -12,22 +10,30 @@ import { Button } from "../Button/Button";
 type Props = {
   children: React.ReactNode;
   title?: string;
+  titleColor?: string;
+  backgroundColor?: string;
   onClose: () => void;
 };
 
-export default function ModalFull({ children, title, onClose }: Props) {
+export default function ModalFull({
+  children,
+  title,
+  titleColor = Colors.K200,
+  backgroundColor = Colors.K875,
+  onClose,
+}: Props) {
   const modalStyles = useModalStyles();
 
   return (
     <>
       <Modal visible transparent animationType="fade" onRequestClose={onClose}>
         <View style={modalStyles.modalBackdrop}>
-          <View style={modalStyles.modalCard}>
+          <View style={[modalStyles.modalCard, { backgroundColor }]}>
             <View style={modalStyles.modalHeader}>
               {/* Icon/Title */}
               {title && (
                 <View style={[flexStyles.rowCentered, flexStyles.gap10]}>
-                  <Text size="xxl" color={Colors.K200} weight={500}>
+                  <Text size="xxl" color={titleColor} weight={500}>
                     {title}
                   </Text>
                 </View>
@@ -39,7 +45,7 @@ export default function ModalFull({ children, title, onClose }: Props) {
                   menuStyles.headerButton,
                   {
                     marginLeft: "auto",
-                    backgroundColor: Colors.K875,
+                    backgroundColor: rgba(Colors.black, 0.15),
                     borderRadius: HeaderButtonSize / 2,
                   },
                 ]}

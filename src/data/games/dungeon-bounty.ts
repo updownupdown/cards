@@ -3,7 +3,7 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 export const dungeonBounty: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/dungeon-bounty",
-  tutorial: {
+  tip: {
     default: {
       text: "Use weapons/spells vs foes; survive 2 levels; score bounty+gems.",
     },

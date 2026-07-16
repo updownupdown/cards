@@ -2,7 +2,7 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 
 export const penguin: GameDefinition = {
   path: "/penguin",
-  tutorial: {
+  tip: {
     default: {
       text: "From beak rank: foundations up suit; tableau down in suit.",
     },

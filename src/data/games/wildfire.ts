@@ -4,7 +4,7 @@ export const wildfire: GameDefinition = {
   enabledOnLocalOnly: true,
   enabled: false,
   path: "/wildfire",
-  tutorial: {
+  tip: {
     play: {
       text: "Douse with same suit or higher rank crew; keep stacks low.",
     },

@@ -3,7 +3,7 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 export const islandOfCards: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/island-of-cards",
-  tutorial: {
+  tip: {
     default: {
       text: "Place touching +/-1 rank (A<->K wraps), never equal next to equal.",
     },

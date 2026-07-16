@@ -3,7 +3,7 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 export const blackjackRiverResearch: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/blackjack-river-research",
-  tutorial: {
+  tip: {
     default: {
       text: "Build each column to exactly 21; 25+ busts that study.",
     },

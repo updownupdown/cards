@@ -10,7 +10,7 @@ import {
 
 // Keep every `useGameSettings` instance for a given game path in sync, so a
 // change made in one place (e.g. the game menu) is reflected immediately in the
-// game board, tutorial box, etc. without needing a reload.
+// game board, tips box, etc. without needing a reload.
 type SettingsListener = (settings: GameSettings) => void;
 const settingsListeners = new Map<string, Set<SettingsListener>>();
 

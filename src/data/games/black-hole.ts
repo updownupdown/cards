@@ -2,7 +2,7 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const blackHole: GameDefinition = {
   path: "/black-hole",
-  tutorial: {
+  tip: {
     default: {
       text: "Play exposed +/-1 to hole; A<->K wraps; plan full sequence.",
     },

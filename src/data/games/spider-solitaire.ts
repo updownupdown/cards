@@ -2,7 +2,7 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 
 export const spiderSolitaire: GameDefinition = {
   path: "/spider-solitaire",
-  tutorial: {
+  tip: {
     default: {
       text: "Build down by rank; move same-suit runs; deal when stuck.",
     },

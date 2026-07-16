@@ -3,7 +3,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const streetsAndAlleys: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/streets-and-alleys",
-  tutorial: {
+  tip: {
     default: {
       text: "Expose Aces first; columns down any suit; foundations up suit.",
     },

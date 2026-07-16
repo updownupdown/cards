@@ -3,7 +3,7 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 export const eightOff: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/eight-off",
-  tutorial: {
+  tip: {
     default: {
       text: "Use 8 cells; tableau down in suit; only kings fill empty.",
     },

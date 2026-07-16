@@ -3,7 +3,7 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 export const alpineSolitaire: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/alpine-solitaire",
-  tutorial: {
+  tip: {
     default: {
       text: "Build routes by suit; empty hand to camp; rest recycles.",
     },

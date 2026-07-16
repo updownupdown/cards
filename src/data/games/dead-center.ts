@@ -2,7 +2,7 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const deadCenter: GameDefinition = {
   path: "/dead-center",
-  tutorial: {
+  tip: {
     reveal: {
       text: "Reveal one face-down zombie if available.",
     },

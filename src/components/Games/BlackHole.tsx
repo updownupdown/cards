@@ -17,6 +17,7 @@ import {
   useCardMap,
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { View } from "react-native";
 
 const pileCount = 17;
 
@@ -118,8 +119,8 @@ export default function BlackHole() {
     const pilePositions = getGridColRows({
       cols: 6,
       rows: 3,
-      rowOffset: 1.5,
-      scaleY: 1.7,
+      rowOffset: 1.3,
+      scaleY: 2,
     });
 
     const pileZones: MapZone[] = [];
@@ -133,8 +134,8 @@ export default function BlackHole() {
         col: pos.c,
         row: pos.r,
         baseZIndex: 1,
-        fan: { direction: "down", offset: 0.26, maxVisible: 3 },
-        placeholder: {},
+        height: 2,
+        fan: { direction: "down", offset: 0.46, maxVisible: 3, center: false },
       });
     }
 
@@ -145,9 +146,14 @@ export default function BlackHole() {
         cards: game.hole,
         col: 2.5,
         row: 0,
-        fan: { maxVisible: 1 },
         baseZIndex: 60,
-        placeholder: { text: "Black Hole" },
+      },
+      {
+        id: "hole-graphic",
+        name: "hole-graphic",
+        col: 2.5,
+        row: 0,
+        baseZIndex: 1,
       },
       ...pileZones,
     ];
@@ -172,7 +178,7 @@ export default function BlackHole() {
     };
   };
 
-  const { cardMap } = useCardMap({
+  const { cardMap, cardWidth, getZoneStylesById } = useCardMap({
     game,
     zones,
     cardMapper,
@@ -193,6 +199,25 @@ export default function BlackHole() {
       undo={undo}
     >
       {cardMap}
+
+      <View style={[getZoneStylesById("hole-graphic")]}>
+        <View
+          style={[
+            {
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              width: cardWidth * 2.6,
+              height: cardWidth * 2.6,
+              aspectRatio: 1,
+              borderRadius: cardWidth * 1.3,
+              backgroundColor: "black",
+              transform: [{ translateY: "-50%" }, { translateX: "-50%" }],
+              boxShadow: `0 0 ${cardWidth}px ${cardWidth}px rgba(0,0,0,1)`,
+            },
+          ]}
+        />
+      </View>
     </GameWrapper>
   );
 }

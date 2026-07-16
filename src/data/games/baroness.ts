@@ -2,7 +2,7 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const baroness: GameDefinition = {
   path: "/baroness",
-  tutorial: {
+  tip: {
     default: {
       text: "Discard K alone or pairs to 13 (A1 J11 Q12); deal if stuck.",
     },

@@ -4,7 +4,7 @@ export const breakaway: GameDefinition = {
   enabledOnLocalOnly: true,
   enabled: false,
   path: "/breakaway",
-  tutorial: {
+  tip: {
     default: {
       text: "Play exposed +/-1 to paceline; A<->K wraps; draw team car.",
     },

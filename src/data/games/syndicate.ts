@@ -2,7 +2,7 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const syndicate: GameDefinition = {
   path: "/syndicate",
-  tutorial: {
+  tip: {
     default: {
       text: "Build stacks under rank limits; convert in timing windows.",
     },

@@ -1,6 +1,12 @@
 import { HeaderButtonSize } from "@/styles/styles";
 import { StyleSheet } from "react-native";
 
+export const floatingBarDims = {
+  padding: 6,
+  gap: 6,
+  height: 54,
+};
+
 export const menuStyles = StyleSheet.create({
   headerButton: {
     display: "flex",
@@ -13,5 +19,8 @@ export const menuStyles = StyleSheet.create({
     borderWidth: 0,
     borderRadius: "unset",
     backgroundColor: "unset",
+  },
+  headerButtonFlex: {
+    flex: 1,
   },
 });

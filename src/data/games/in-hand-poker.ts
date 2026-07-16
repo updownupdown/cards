@@ -3,7 +3,7 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 export const inHandPoker: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/in-hand-poker",
-  tutorial: {
+  tip: {
     default: {
       text: "Build hand, then bet; bigger bets make rival draw more; reach 10.",
     },

@@ -3,7 +3,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const osmosis: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/osmosis",
-  tutorial: {
+  tip: {
     default: {
       text: "Top row any in-suit; lower rows need same rank above; tap stock.",
     },

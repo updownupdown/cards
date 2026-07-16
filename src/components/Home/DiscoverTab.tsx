@@ -1,68 +1,72 @@
 import { Text } from "@/components/common/Text";
 import { HomeCard } from "@/components/Home/HomeCard";
-import { RandomGameRoller } from "@/components/Home/RandomGameRoller";
-import { GameTag, GameTagNames } from "@/data/games-data";
-import type { HomeGameEntry } from "@/hooks/useHomeData";
+import {
+  GameStatsNames,
+  GameTag,
+  GameTagNames,
+  statKeys,
+} from "@/data/games-data";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
+import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { Icon, type IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
+import { floatingBarDims } from "@/styles/menuStyles";
 import { Colors, HomePadding, rgba } from "@/styles/styles";
 import { roundToPixel } from "@/utils/utils";
-import { useMemo, useState } from "react";
-import {
-  type NativeScrollEvent,
-  type NativeSyntheticEvent,
-  Pressable,
-  ScrollView,
-  View,
-} from "react-native";
-import { HomeSectionTitle } from "./HomeSectionTitle";
-import { QUICK_TRANSITION_STYLE } from "../Button/Button";
+import { useMemo } from "react";
+import { Pressable, ScrollView, View } from "react-native";
+import { useImmer } from "use-immer";
+import { RadioButtons } from "../common/RadioButtons";
+import { RangeSlider } from "../common/RangeSlider";
 
 type CardSize = "small" | "medium" | "large";
 
 type DiscoverTabProps = {
   allEnabledGames: HomeGameEntry[];
-  allEnabledGamePaths: string[];
   unplayedGamePaths: string[];
   favorites: Set<string>;
   onToggleFavorite: (path: string) => void;
-  hasLoaded: boolean;
-  contentPaddingTop: number;
   contentPaddingBottom: number;
+};
+
+type Filters = {
+  tag: GameTag | "all";
+  played: "all" | "unplayed";
+  statsFilters: StatsFilters;
+};
+
+type StatsFilters = Record<GameStatsNames, { min: number; max: number }>;
+
+const DEFAULT_STATS_FILTERS: StatsFilters = {
+  complexity: { min: 0, max: 100 },
+  difficulty: { min: 0, max: 100 },
+  luck: { min: 0, max: 100 },
+};
+
+const DEFAULT_FILTERS: Filters = {
+  tag: "all",
+  played: "all",
+  statsFilters: DEFAULT_STATS_FILTERS,
 };
 
 export function DiscoverTab({
   allEnabledGames,
-  allEnabledGamePaths,
   unplayedGamePaths,
   favorites,
   onToggleFavorite,
-  hasLoaded,
-  contentPaddingTop,
   contentPaddingBottom,
 }: DiscoverTabProps) {
   const { ui, spacing } = useResponsiveMetrics();
-  const { width: viewportWidth, height: viewportHeight } =
-    useViewportDimensions();
+  const { width: viewportWidth } = useViewportDimensions();
   const { settings, updateSettings } = useGlobalSettings();
-
-  const [expandedTags, setExpandedTags] = useState<Set<GameTag>>(new Set());
-  const [scrollY, setScrollY] = useState(0);
-
-  const unplayedGames = useMemo(() => {
-    const unplayedSet = new Set(unplayedGamePaths);
-    return allEnabledGames.filter(([path]) => unplayedSet.has(path));
-  }, [allEnabledGames, unplayedGamePaths]);
 
   const cardSize: CardSize = settings.discoverCardSize ?? "large";
 
   const pageSidePadding = spacing(HomePadding);
   const contentMaxWidth = ui.contentMaxWidth;
   const renderedContentWidth = Math.min(contentMaxWidth, viewportWidth);
-  const sectionTopPadding = spacing(14);
   const cardGap = spacing(12);
   const rowInnerWidth = Math.max(0, renderedContentWidth - pageSidePadding * 2);
   const mediumCardWidth = Math.max(
@@ -71,253 +75,284 @@ export function DiscoverTab({
   );
   const isMediumLayout = cardSize === "medium";
 
-  const gamesByTag = useMemo(() => {
-    const map = new Map<GameTag, HomeGameEntry[]>();
-    (Object.values(GameTag) as GameTag[]).forEach((tag) => {
-      map.set(tag, []);
-    });
-    allEnabledGames.forEach((entry) => {
-      (entry[1].tags ?? []).forEach((tag) => {
-        map.get(tag)?.push(entry);
-      });
-    });
-    return map;
-  }, [allEnabledGames]);
+  const [filters, setFilters] = useImmer<Filters>(DEFAULT_FILTERS);
 
-  const visibleTags = useMemo(
-    () =>
-      (Object.values(GameTag) as GameTag[]).filter(
-        (tag) => (gamesByTag.get(tag)?.length ?? 0) > 0,
-      ),
-    [gamesByTag],
-  );
+  const hasActiveFilters = useMemo(() => {
+    return JSON.stringify(filters) !== JSON.stringify(DEFAULT_FILTERS);
+  }, [filters]);
 
-  const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    setScrollY(event.nativeEvent.contentOffset.y);
-  };
+  const filteredGames = useMemo(() => {
+    const gamesToFilter = allEnabledGames.filter(([path, game]) => {
+      // Filter by tag if a tag filter is set
+      if (filters.tag !== "all" && !game.tags?.includes(filters.tag)) {
+        return false;
+      }
+
+      // Filter by played/unplayed status if a filter is set
+      if (filters.played === "unplayed" && unplayedGamePaths.includes(path)) {
+        return false;
+      }
+
+      // Filter by stats if stats filters are set
+      if (filters.statsFilters) {
+        for (const stat in filters.statsFilters) {
+          const { min, max } = filters.statsFilters[stat as GameStatsNames];
+          const gameStatValue = game.stats[stat as GameStatsNames];
+          if (gameStatValue < min || gameStatValue > max) {
+            return false;
+          }
+        }
+      }
+
+      return true;
+    });
+
+    return gamesToFilter;
+  }, [allEnabledGames, filters]);
 
   const onSelectSize = (size: CardSize) => {
     if (cardSize === size) return;
     updateSettings({ discoverCardSize: size });
   };
 
-  const onToggleTag = (tag: GameTag) => {
-    setExpandedTags((prev) => {
-      const next = new Set(prev);
-      if (next.has(tag)) {
-        next.delete(tag);
-      } else {
-        next.add(tag);
-      }
-      return next;
-    });
-  };
-
-  const sizeToggleIcons: [CardSize, IconName][] = [
-    ["small", "list-small"],
-    ["medium", "list-medium"],
-    ["large", "list-large"],
+  const cardSizeToggleOptions = [
+    {
+      value: "small" as const,
+      iconName: "list-small" as IconName,
+    },
+    {
+      value: "medium" as const,
+      iconName: "list-medium" as IconName,
+    },
+    {
+      value: "large" as const,
+      iconName: "list-large" as IconName,
+    },
   ];
 
   return (
-    <ScrollView
-      style={{ flex: 1 }}
-      contentContainerStyle={{
-        paddingTop: contentPaddingTop,
-        paddingBottom: contentPaddingBottom,
-      }}
-      showsVerticalScrollIndicator={false}
-      onScroll={onScroll}
-      scrollEventThrottle={16}
-    >
-      {/* Card size toggle */}
+    <View style={[flexStyles.colCentered, { position: "relative", flex: 1 }]}>
+      {/* Filters top bar */}
       <View
-        style={{
-          width: "100%",
-          maxWidth: contentMaxWidth,
-          paddingHorizontal: pageSidePadding,
-          alignSelf: "center",
-        }}
+        style={[
+          flexStyles.rowCentered,
+          {
+            position: "absolute",
+            top: ui.gameHeaderHeight + spacing(HomePadding),
+            left: "50%",
+            transform: [{ translateX: "-50%" }],
+            zIndex: 200,
+            width: "100%",
+            maxWidth: renderedContentWidth - spacing(HomePadding),
+            alignSelf: "center",
+            gap: spacing(20),
+            height: spacing(floatingBarDims.height),
+            borderRadius: spacing(floatingBarDims.height / 2),
+            backgroundColor: rgba(Colors.K950, 0.9),
+            boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.K900, 0.4)}, ${spacing(2)}px ${spacing(4)}px ${spacing(10)}px ${rgba(
+              Colors.K900,
+              0.4,
+            )}`,
+          },
+        ]}
       >
+        {hasActiveFilters ? (
+          <Pressable
+            onPress={() => {
+              setFilters(DEFAULT_FILTERS);
+            }}
+            style={[
+              flexStyles.rowCentered,
+              flexStyles.flex1,
+              { gap: spacing(10), paddingLeft: spacing(HomePadding) },
+            ]}
+          >
+            <Icon name="close" size={22} color={Colors.K400} />
+            <View style={[flexStyles.colStart, flexStyles.flex1]}>
+              <Text size="sm" weight={400} color={Colors.white}>
+                Clear filters
+              </Text>
+              <Text
+                size="xs"
+                weight={500}
+                color={Colors.suitsRed}
+                textTransform="uppercase"
+              >
+                {filteredGames.length} result
+                {filteredGames.length !== 1 ? "s" : ""}
+              </Text>
+            </View>
+          </Pressable>
+        ) : (
+          <View style={[flexStyles.rowCentered, flexStyles.flex1]}>
+            <Text size="md" weight={500} color={Colors.K700}>
+              No filters applied
+            </Text>
+          </View>
+        )}
+
+        {/* Card size toggle */}
+        <RadioButtons
+          options={cardSizeToggleOptions}
+          selectedValue={cardSize}
+          selectedBackgroundColor={Colors.K700}
+          onChange={(value) => {
+            onSelectSize(value);
+          }}
+          iconSize={20}
+          buttonStyle={{
+            borderRadius: spacing(floatingBarDims.height / 2),
+            width: spacing(floatingBarDims.height - 12),
+            height: spacing(floatingBarDims.height - 12),
+          }}
+          containerStyle={{
+            backgroundColor: "transparent",
+            height: spacing(floatingBarDims.height),
+            boxShadow: "none",
+          }}
+        />
+      </View>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{
+          paddingTop:
+            ui.gameHeaderHeight +
+            spacing(HomePadding + floatingBarDims.height + 30),
+          paddingBottom: contentPaddingBottom,
+        }}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Filters and cards */}
         <View
           style={[
-            flexStyles.rowCentered,
+            flexStyles.fullWidth,
             {
-              backgroundColor: Colors.K875,
-              borderRadius: spacing(10),
-              padding: spacing(6),
-              gap: spacing(6),
+              maxWidth: renderedContentWidth,
+              alignSelf: "center",
+              paddingHorizontal: pageSidePadding,
+              paddingBottom: spacing(60),
+              gap: spacing(30),
             },
           ]}
         >
-          {sizeToggleIcons.map(([size, iconName]) => {
-            const isActive = cardSize === size;
-            const buttonSize = spacing(42);
+          {/* Filters */}
+          <View
+            style={[
+              flexStyles.rowStart,
+              flexStyles.fullWidth,
+              { gap: spacing(24) },
+            ]}
+          >
+            {/* Tag Selector */}
+            <RadioButtons
+              vertical
+              options={[
+                { value: "all" as const, label: "All" },
+                ...Object.entries(GameTagNames).map(([tag, name]) => ({
+                  value: tag as GameTag,
+                  label: name,
+                })),
+              ]}
+              selectedValue={filters.tag}
+              onChange={(value) => {
+                setFilters((draft) => {
+                  draft.tag = value as GameTag;
+                });
+              }}
+              buttonStyle={{
+                height: spacing(36),
+              }}
+              selectedBackgroundColor={Colors.suitsRed}
+              textStyle={{
+                fontSize: spacing(15),
+              }}
+              containerStyle={{
+                backgroundColor: Colors.K900,
+                flex: 1,
+              }}
+            />
 
-            return (
-              <Pressable
-                key={size}
-                onPress={() => onSelectSize(size)}
-                style={[
-                  flexStyles.rowCentered,
-                  flexStyles.flex1,
-                  {
-                    ...QUICK_TRANSITION_STYLE,
-                    height: buttonSize,
-                    paddingHorizontal: spacing(12),
-                    gap: spacing(12),
-                    borderRadius: spacing(6),
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: isActive ? Colors.K700 : "transparent",
-                  },
+            <View
+              style={[
+                flexStyles.colStart,
+                flexStyles.flex1,
+                { gap: spacing(20) },
+              ]}
+            >
+              {/* Played/Unplayed Selector */}
+              <RadioButtons
+                options={[
+                  { value: "all", label: "All" },
+                  { value: "unplayed", label: "Unplayed" },
                 ]}
-              >
-                <Icon
-                  name={iconName}
-                  size={spacing(20)}
-                  color={isActive ? Colors.K100 : Colors.K400}
-                />
-                <Text
-                  size="sm"
-                  weight={500}
-                  color={Colors.K200}
-                  style={{ textTransform: "capitalize" }}
-                >
-                  {size}
-                </Text>
-              </Pressable>
-            );
-          })}
-        </View>
-      </View>
+                selectedValue={filters.played}
+                onChange={(value) => {
+                  setFilters((draft) => {
+                    draft.played = value as "all" | "unplayed";
+                  });
+                }}
+                selectedBackgroundColor={Colors.suitsRed}
+                buttonStyle={{
+                  height: spacing(36),
+                }}
+                textStyle={{
+                  fontSize: spacing(15),
+                }}
+                containerStyle={{
+                  backgroundColor: Colors.K900,
+                  width: "100%",
+                }}
+              />
 
-      {/* Tag accordions */}
-      <View
-        style={{
-          width: "100%",
-          maxWidth: contentMaxWidth,
-          alignSelf: "center",
-          paddingHorizontal: pageSidePadding,
-          paddingTop: sectionTopPadding,
-          paddingBottom: spacing(60),
-          gap: spacing(8),
-        }}
-      >
-        {visibleTags.map((tag) => {
-          const isExpanded = expandedTags.has(tag);
-          const tagGames = gamesByTag.get(tag) ?? [];
-
-          return (
-            <View key={tag} style={{ width: "100%" }}>
-              <Pressable
-                onPress={() => onToggleTag(tag)}
-                style={[
-                  flexStyles.rowCentered,
-                  flexStyles.spaceBetween,
-                  {
-                    ...QUICK_TRANSITION_STYLE,
-                    width: "100%",
-                    gap: spacing(16),
-                    paddingHorizontal: spacing(16),
-                    paddingVertical: spacing(12),
-                    borderRadius: spacing(8),
-                    backgroundColor: isExpanded ? Colors.suitsRed : Colors.K900,
-                    outline: "none",
-                  },
-                ]}
-              >
-                <View
-                  style={[
-                    flexStyles.rowCentered,
-                    flexStyles.flex1,
-                    flexStyles.spaceBetween,
-                  ]}
-                >
-                  <Text
-                    size="md"
-                    weight={500}
-                    color={isExpanded ? Colors.white : Colors.K200}
-                  >
-                    {GameTagNames[tag]}
-                  </Text>
-                  <Text
-                    size="sm"
-                    weight={400}
-                    color={isExpanded ? rgba(Colors.white, 0.8) : Colors.K400}
-                  >
-                    {tagGames.length}
-                  </Text>
-                </View>
-
-                <Icon
-                  name={isExpanded ? "expand-less" : "expand-more"}
-                  size={spacing(24)}
-                  color={isExpanded ? Colors.white : Colors.K200}
-                />
-              </Pressable>
-
-              {isExpanded && (
-                <View
-                  style={{
-                    width: "100%",
-                    paddingTop: cardGap,
-                    flexDirection: "row",
-                    flexWrap: "wrap",
-                    justifyContent: "space-between",
-                    rowGap: cardGap,
-                    columnGap: isMediumLayout ? undefined : cardGap,
+              {/* Stats Filters */}
+              {Object.values(statKeys).map((statName) => (
+                <RangeSlider
+                  key={statName}
+                  label={statName}
+                  min={0}
+                  max={100}
+                  onRangeChange={(newValues) => {
+                    setFilters((draft) => {
+                      draft.statsFilters[statName as GameStatsNames] = {
+                        min: newValues.min,
+                        max: newValues.max,
+                      };
+                    });
                   }}
-                >
-                  {tagGames.map(([path, game]) => (
-                    <HomeCard
-                      key={path}
-                      path={path}
-                      game={game}
-                      size={cardSize}
-                      onToggleFavorite={onToggleFavorite}
-                      isFavorite={favorites.has(path)}
-                      style={{
-                        width: isMediumLayout ? mediumCardWidth : "100%",
-                        flexGrow: isMediumLayout ? 0 : 1,
-                      }}
-                    />
-                  ))}
-                </View>
-              )}
+                />
+              ))}
             </View>
-          );
-        })}
-      </View>
+          </View>
 
-      {/* Roll the dice */}
-      <View
-        style={{
-          width: "100%",
-          maxWidth: contentMaxWidth,
-          alignSelf: "center",
-          paddingHorizontal: pageSidePadding,
-        }}
-      >
-        <HomeSectionTitle
-          title="Play a Random Game"
-          iconName="dice"
-          pageSidePadding={0}
-          contentMaxWidth={contentMaxWidth}
-        />
-      </View>
-
-      <RandomGameRoller
-        allEntries={allEnabledGames}
-        unplayedEntries={unplayedGames}
-        favorites={favorites}
-        onToggleFavorite={onToggleFavorite}
-        hasLoaded={hasLoaded}
-        contentMaxWidth={contentMaxWidth}
-        pageSidePadding={pageSidePadding}
-        scrollY={scrollY}
-        viewportHeight={viewportHeight}
-      />
-    </ScrollView>
+          {/* Games List */}
+          <View
+            style={{
+              width: "100%",
+              paddingTop: cardGap,
+              flexDirection: "row",
+              flexWrap: "wrap",
+              justifyContent: "space-between",
+              rowGap: cardGap,
+              columnGap: isMediumLayout ? undefined : cardGap,
+            }}
+          >
+            {filteredGames.map(([path, game]) => (
+              <HomeCard
+                key={path}
+                path={path}
+                game={game}
+                size={cardSize}
+                onToggleFavorite={onToggleFavorite}
+                isFavorite={favorites.has(path)}
+                style={{
+                  width: isMediumLayout ? mediumCardWidth : "100%",
+                  flexGrow: isMediumLayout ? 0 : 1,
+                }}
+              />
+            ))}
+          </View>
+        </View>
+      </ScrollView>
+    </View>
   );
 }

@@ -3,7 +3,6 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon, type IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, HomePadding, rgba } from "@/styles/styles";
-import { LinearGradient } from "expo-linear-gradient";
 import {
   Platform,
   Pressable,
@@ -12,6 +11,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { QUICK_TRANSITION_STYLE } from "../Button/Button";
+import { floatingBarDims } from "@/styles/menuStyles";
 
 export type HomeTabKey = "home" | "explore" | "stats";
 
@@ -22,24 +22,18 @@ export const HOME_TABS: { key: HomeTabKey; label: string; icon: IconName }[] = [
 ];
 
 type HomeTabBarProps = {
-  tabBarHeight: number;
-  contentMaxWidth: number;
-  pageSidePadding: number;
   activeIndex: number;
   onSelect: (index: number) => void;
   onHeightChange?: (height: number) => void;
 };
 
 export function HomeTabBar({
-  tabBarHeight,
-  contentMaxWidth,
-  pageSidePadding,
   activeIndex,
   onSelect,
   onHeightChange,
 }: HomeTabBarProps) {
   const insets = useSafeAreaInsets();
-  const { spacing } = useResponsiveMetrics();
+  const { spacing, ui } = useResponsiveMetrics();
 
   const onLayout = (event: LayoutChangeEvent) => {
     onHeightChange?.(event.nativeEvent.layout.height);
@@ -60,10 +54,9 @@ export function HomeTabBar({
       <View
         style={{
           width: "100%",
-          maxWidth: contentMaxWidth,
+          maxWidth: ui.contentMaxWidth,
           alignSelf: "center",
-          paddingHorizontal: pageSidePadding,
-          paddingTop: spacing(HomePadding * 0.4),
+          padding: spacing(HomePadding * 0.5),
           paddingBottom: insets.bottom + spacing(HomePadding * 0.5),
         }}
       >
@@ -72,9 +65,10 @@ export function HomeTabBar({
             flexStyles.rowCentered,
             {
               width: "100%",
-              padding: spacing(6),
-              gap: spacing(6),
-              borderRadius: tabBarHeight / 2,
+              padding: spacing(floatingBarDims.padding),
+              gap: spacing(floatingBarDims.gap),
+              height: spacing(floatingBarDims.height),
+              borderRadius: spacing(floatingBarDims.height / 2),
               backgroundColor: rgba(Colors.K950, 0.9),
               boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.K900, 0.4)}, ${spacing(2)}px ${spacing(4)}px ${spacing(10)}px ${rgba(
                 Colors.K900,
@@ -94,9 +88,10 @@ export function HomeTabBar({
                   {
                     ...QUICK_TRANSITION_STYLE,
                     flex: 1,
+                    height: "100%",
                     gap: spacing(8),
                     paddingVertical: spacing(12),
-                    borderRadius: tabBarHeight / 2 - spacing(6),
+                    borderRadius: spacing(floatingBarDims.height / 2 - 6),
                     backgroundColor: isActive
                       ? Colors.background
                       : "transparent",
@@ -106,7 +101,7 @@ export function HomeTabBar({
               >
                 <Icon
                   name={tab.icon}
-                  size={spacing(24)}
+                  size={spacing(26)}
                   color={isActive ? Colors.suitsRed : Colors.K500}
                   style={{ ...QUICK_TRANSITION_STYLE }}
                 />

@@ -2,7 +2,7 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const cardCapture: GameDefinition = {
   path: "/card-capture",
-  tutorial: {
+  tip: {
     enemyPhase: {
       text: "Enemy line shifts right, then refills from enemy deck.",
     },

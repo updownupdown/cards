@@ -14,7 +14,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import type { IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, FontWeight, HomePadding } from "@/styles/styles";
+import { Colors, FontWeight, HomePadding, rgba } from "@/styles/styles";
 import { Link, type Href } from "expo-router";
 import { useMemo } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
@@ -290,22 +290,30 @@ export function StatsTab({
                 width: "100%",
                 paddingHorizontal: pageSidePadding,
                 paddingTop: sectionTopPadding,
-                gap: cardGap,
               }}
             >
-              <HomeCard
-                path={persona.row.path}
-                game={game}
-                size="large"
-                onToggleFavorite={onToggleFavorite}
-                isFavorite={favorites.has(persona.row.path)}
-                style={{ width: "100%" }}
-              />
+              {/* Card and stats wrap */}
+              <View
+                style={{
+                  width: "100%",
+                  borderRadius: spacing(10),
+                  backgroundColor: rgba(Colors.K950, 0.4),
+                }}
+              >
+                <HomeCard
+                  path={persona.row.path}
+                  game={game}
+                  size="large"
+                  onToggleFavorite={onToggleFavorite}
+                  isFavorite={favorites.has(persona.row.path)}
+                  style={{ width: "100%" }}
+                />
 
-              <GameUserStats
-                stats={persona.row.stats}
-                accentColor={game.cardColorText}
-              />
+                <GameUserStats
+                  stats={persona.row.stats}
+                  accentColor={game.cardColorText}
+                />
+              </View>
             </View>
           </View>
         );

@@ -10,10 +10,12 @@ import {
   type ViewStyle,
 } from "react-native";
 import { BTN_TRANSITION_STYLE } from "../Button/Button";
+import { Icon, IconName } from "@/icons";
 
 type RadioOption<T extends string> = {
   value: T;
-  label: string;
+  label?: string;
+  iconName?: IconName;
   disabled?: boolean;
   selectedBackgroundColor?: string;
 };
@@ -21,6 +23,8 @@ type RadioOption<T extends string> = {
 type RadioButtonsProps<T extends string> = {
   options: RadioOption<T>[];
   selectedValue: T;
+  iconSize?: number;
+  vertical?: boolean;
   onChange: (value: T) => void;
   containerStyle?: StyleProp<ViewStyle>;
   buttonStyle?: StyleProp<ViewStyle>;
@@ -37,7 +41,9 @@ export function RadioButtons<T extends string>({
   buttonStyle,
   textStyle,
   selectedTextStyle,
-  selectedBackgroundColor = Colors.K200,
+  iconSize,
+  vertical = false,
+  selectedBackgroundColor = Colors.K600,
 }: RadioButtonsProps<T>) {
   const { spacing } = useResponsiveMetrics();
 
@@ -46,8 +52,7 @@ export function RadioButtons<T extends string>({
       style={[
         {
           display: "flex",
-          flexDirection: "row",
-          width: "100%",
+          flexDirection: vertical ? "column" : "row",
           borderRadius: spacing(8),
           padding: spacing(6),
           gap: spacing(6),
@@ -68,7 +73,6 @@ export function RadioButtons<T extends string>({
             style={[
               {
                 ...BTN_TRANSITION_STYLE,
-                flex: 1,
                 borderRadius: spacing(6),
                 paddingVertical: spacing(2),
                 paddingHorizontal: spacing(16),
@@ -86,23 +90,33 @@ export function RadioButtons<T extends string>({
             onPress={() => onChange(option.value)}
             disabled={option.disabled}
           >
-            <Text
-              size="sm"
-              lineHeight={1.14}
-              style={[
-                {
-                  ...BTN_TRANSITION_STYLE,
-                  fontFamily: FontWeight[500],
-                  textAlign: "center",
-                  color: Colors.K400,
-                },
-                textStyles.shadowText,
-                textStyle,
-                isSelected ? [{ color: Colors.K100 }, selectedTextStyle] : null,
-              ]}
-            >
-              {option.label}
-            </Text>
+            {option.iconName && (
+              <Icon
+                name={option.iconName}
+                size={iconSize ?? 24}
+                color={Colors.K100}
+              />
+            )}
+            {option.label && (
+              <Text
+                size="sm"
+                lineHeight={1.14}
+                style={[
+                  {
+                    ...BTN_TRANSITION_STYLE,
+                    fontFamily: FontWeight[400],
+                    textAlign: "center",
+                    color: Colors.K400,
+                  },
+                  textStyle,
+                  isSelected
+                    ? [{ color: Colors.K100 }, selectedTextStyle]
+                    : null,
+                ]}
+              >
+                {option.label}
+              </Text>
+            )}
           </Pressable>
         );
       })}

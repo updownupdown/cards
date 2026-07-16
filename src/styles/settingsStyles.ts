@@ -4,13 +4,12 @@ import { flexStyles } from "./flexStyles";
 
 export const settingsStyles = StyleSheet.create({
   container: {
-    ...flexStyles.rowCentered,
+    ...flexStyles.colCentered,
     justifyContent: "space-between",
     width: "100%",
   },
   containerCol: {
-    ...flexStyles.rowCentered,
-    justifyContent: "space-between",
+    ...flexStyles.colStart,
     width: "100%",
     gap: 12,
   },
@@ -18,7 +17,6 @@ export const settingsStyles = StyleSheet.create({
     ...flexStyles.rowCentered,
     ...flexStyles.fullWidth,
     justifyContent: "space-between",
-    padding: 4,
   },
   toggleBg: {
     width: 60,
@@ -60,7 +58,10 @@ export const settingsStyles = StyleSheet.create({
     justifyContent: "center",
   },
   optionsWrap: {
-    ...flexStyles.rowCentered,
+    ...flexStyles.rowStart,
+    flexWrap: "wrap",
+    // justifyContent: "space-between",
+    width: "100%",
     gap: 20,
   },
   radioRow: {

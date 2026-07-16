@@ -480,7 +480,7 @@ export default function DeadCenter() {
 
   return (
     <GameWrapper
-      tutorialPhase={game.phase}
+      tipPhase={game.phase}
       ended={game.ended}
       won={game.won}
       reset={reset}

@@ -2,7 +2,7 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const clock: GameDefinition = {
   path: "/clock",
-  tutorial: {
+  tip: {
     default: {
       text: "Tap active pile; cards auto-sort by hour; 4 kings first loses.",
     },

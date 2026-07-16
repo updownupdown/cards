@@ -25,6 +25,7 @@ type Props = {
   size?: "small" | "medium" | "large";
   isLarge?: boolean;
   style?: ViewStyle;
+  onOpen?: () => void;
 };
 
 export function HomeCard({
@@ -34,9 +35,9 @@ export function HomeCard({
   isFavorite,
   size = "medium",
   style,
+  onOpen,
 }: Props) {
   const { spacing } = useResponsiveMetrics();
-  const tagsText = game.tags?.map((tag) => GameTagNames[tag]).join(", ");
 
   const borderRadius = spacing(8);
   const padding = spacing(size === "large" ? 22 : size === "medium" ? 12 : 18);
@@ -52,8 +53,8 @@ export function HomeCard({
         ? smallCardHeight
         : mediumCardHeight;
 
-  const favBtnSize = spacing(36);
-  const favBtnInset = spacing(36 / 10);
+  const favBtnSize = spacing(42);
+  const favBtnInset = spacing(4);
 
   return (
     <View
@@ -64,7 +65,7 @@ export function HomeCard({
           height,
           padding,
           borderRadius,
-          boxShadow: `${shadowUnit * 0.5}px ${shadowUnit * 1}px ${shadowUnit * 4}px ${rgba(Colors.K900, 0.4)}, ${shadowUnit * 1}px ${shadowUnit * 2}px ${shadowUnit * 8}px ${rgba(Colors.K900, 0.4)}`,
+          boxShadow: `${shadowUnit * 0.5}px ${shadowUnit * 1}px ${shadowUnit * 4}px ${rgba(Colors.K900, 0.6)}, ${shadowUnit * 1}px ${shadowUnit * 2}px ${shadowUnit * 8}px ${rgba(Colors.K900, 0.6)}`,
         },
         style,
       ]}
@@ -110,6 +111,7 @@ export function HomeCard({
             gap: spacing(14),
             height: size === "large" ? undefined : "100%",
           }}
+          onPress={onOpen}
         >
           <View
             style={{
@@ -123,7 +125,7 @@ export function HomeCard({
           >
             {/* Title */}
             <Text
-              size={size === "large" ? "lg" : "md"}
+              size={size === "large" ? "xl" : "md"}
               weight={500}
               color={game.cardColorText}
               style={{
@@ -149,12 +151,6 @@ export function HomeCard({
           {size === "large" && (
             <StatBars stats={game.stats} gameColor={game.cardColorText} />
           )}
-
-          {/* {size === "large" && tagsText && (
-            <Text size="xs" weight={300} color={game.cardColorText}>
-              {tagsText}
-            </Text>
-          )} */}
         </Pressable>
       </Link>
 

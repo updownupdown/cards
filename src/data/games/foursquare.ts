@@ -2,7 +2,7 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const foursquare: GameDefinition = {
   path: "/foursquare",
-  tutorial: {
+  tip: {
     default: {
       text: "Place drawn card; row/column high or low flips that line.",
     },

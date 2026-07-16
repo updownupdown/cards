@@ -34,6 +34,7 @@ import HeartIcon from "./Heart.svg";
 import HeartsIcon from "./Hearts.svg";
 import HelpOutlineIcon from "./HelpOutline.svg";
 import HomeIcon from "./Home.svg";
+import InfoIcon from "./Info.svg";
 import InfoOutlineIcon from "./InfoOutline.svg";
 import InstructionsIcon from "./Instructions.svg";
 import LearnIcon from "./Learn.svg";
@@ -41,6 +42,7 @@ import ListLargeIcon from "./ListLarge.svg";
 import ListMediumIcon from "./ListMedium.svg";
 import ListSmallIcon from "./ListSmall.svg";
 import MenuIcon from "./Menu.svg";
+import MoreVerticalIcon from "./MoreVertical.svg";
 import PotionIcon from "./Potion.svg";
 import RecentIcon from "./Recent.svg";
 import ResetIcon from "./Reset.svg";
@@ -87,6 +89,7 @@ export type IconName =
   | "hearts"
   | "help-outline"
   | "home"
+  | "info"
   | "info-outline"
   | "instructions"
   | "learn"
@@ -94,6 +97,7 @@ export type IconName =
   | "list-medium"
   | "list-small"
   | "menu"
+  | "more-vertical"
   | "potion"
   | "recent"
   | "reset"
@@ -140,6 +144,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "hearts": HeartsIcon,
   "help-outline": HelpOutlineIcon,
   "home": HomeIcon,
+  "info": InfoIcon,
   "info-outline": InfoOutlineIcon,
   "instructions": InstructionsIcon,
   "learn": LearnIcon,
@@ -147,6 +152,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "list-medium": ListMediumIcon,
   "list-small": ListSmallIcon,
   "menu": MenuIcon,
+  "more-vertical": MoreVerticalIcon,
   "potion": PotionIcon,
   "recent": RecentIcon,
   "reset": ResetIcon,

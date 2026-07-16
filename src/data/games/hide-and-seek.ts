@@ -2,7 +2,7 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const hideAndSeek: GameDefinition = {
   path: "/hide-and-seek",
-  tutorial: {
+  tip: {
     default: {
       text: "Make legal moves to uncover hidden cards; avoid burying them.",
     },

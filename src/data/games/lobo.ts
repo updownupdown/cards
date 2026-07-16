@@ -3,7 +3,7 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 export const lobo: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/lobo",
-  tutorial: {
+  tip: {
     default: {
       text: "Capture by match/sum/split/overtake; fold to limit Wolf score.",
     },

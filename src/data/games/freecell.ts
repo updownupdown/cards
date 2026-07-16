@@ -2,7 +2,7 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 
 export const freecell: GameDefinition = {
   path: "/freecell",
-  tutorial: {
+  tip: {
     default: {
       text: "Foundations up suit; tableau down alt color; use 4 free cells.",
     },

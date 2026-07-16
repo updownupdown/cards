@@ -3,24 +3,22 @@ import { Button } from "@/components/Button/Button";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
 import { menuStyles } from "@/styles/menuStyles";
-import { Colors, HomePadding, rgba } from "@/styles/styles";
+import {
+  Colors,
+  HeaderButtonIconSize,
+  HomePadding,
+  rgba,
+} from "@/styles/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import { Platform, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type HomeHeaderProps = {
-  contentMaxWidth: number;
-  pageSidePadding: number;
   onOpenSearch: () => void;
   onOpenSettings: () => void;
 };
 
-export function HomeHeader({
-  contentMaxWidth,
-  pageSidePadding,
-  onOpenSearch,
-  onOpenSettings,
-}: HomeHeaderProps) {
+export function HomeHeader({ onOpenSearch, onOpenSettings }: HomeHeaderProps) {
   const insets = useSafeAreaInsets();
   const { ui, spacing } = useResponsiveMetrics();
 
@@ -59,7 +57,7 @@ export function HomeHeader({
       <View
         style={{
           width: "100%",
-          maxWidth: contentMaxWidth,
+          maxWidth: ui.contentMaxWidth,
           alignSelf: "center",
           paddingTop: headerOffsetTop,
           paddingBottom: spacing(HomePadding * 0.5),
@@ -87,12 +85,17 @@ export function HomeHeader({
             iconName="search"
             onPress={onOpenSearch}
             style={[styles.headerBtn, menuStyles.headerButton]}
+            iconSize={spacing(HeaderButtonIconSize)}
+            iconColor={rgba(Colors.white, 0.6)}
           />
 
           <Button
+            size="xl"
             iconName="settings"
             onPress={onOpenSettings}
             style={[styles.headerBtn, menuStyles.headerButton]}
+            iconSize={spacing(HeaderButtonIconSize)}
+            iconColor={rgba(Colors.white, 0.6)}
           />
         </View>
       </View>

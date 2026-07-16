@@ -2,7 +2,7 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 
 export const tripeaks: GameDefinition = {
   path: "/tripeaks",
-  tutorial: {
+  tip: {
     default: {
       text: "Play exposed +/-1 to waste; A<->K wraps; draw when stuck.",
     },

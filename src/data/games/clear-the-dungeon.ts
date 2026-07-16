@@ -3,7 +3,7 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 export const clearTheDungeon: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/clear-the-dungeon",
-  tutorial: {
+  tip: {
     default: {
       text: "Beat each monster with sum pair, then matching-suit trigger.",
     },

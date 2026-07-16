@@ -40,7 +40,7 @@ export const accordion: GameDefinition = {
     "## Winning",
     "You win if you reduce the entire spread down to one pile.",
   ],
-  tutorial: {
+  tip: {
     select: {
       text: "Tap a card, then target 1 or 3 spots left.",
     },

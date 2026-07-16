@@ -9,13 +9,14 @@ import { StatsTab } from "@/components/Home/StatsTab";
 import { useHomeData } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
+import { floatingBarDims } from "@/styles/menuStyles";
 import { Colors, HomePadding } from "@/styles/styles";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { ScrollView } from "react-native-gesture-handler";
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   Platform,
-  ScrollView,
   View,
   type LayoutChangeEvent,
 } from "react-native";
@@ -39,13 +40,10 @@ export default function Home() {
   const activeTabRef = useRef(0);
   const isTabPressScrollRef = useRef(false);
 
-  const contentMaxWidth = ui.contentMaxWidth;
-  const pageSidePadding = spacing(HomePadding);
-  const renderedContentWidth = Math.min(contentMaxWidth, viewportWidth);
+  const renderedContentWidth = Math.min(ui.contentMaxWidth, viewportWidth);
 
   const [pageWidth, setPageWidth] = useState(renderedContentWidth);
   const [pagerHeight, setPagerHeight] = useState(0);
-  const [tabBarHeight, setTabBarHeight] = useState(96);
 
   const {
     favorites,
@@ -70,7 +68,7 @@ export default function Home() {
     ui.gameHeaderHeight +
     spacing(HomePadding * 0.5);
   const contentPaddingTop = headerReserved + spacing(10);
-  const contentPaddingBottom = tabBarHeight + spacing(30);
+  const contentPaddingBottom = spacing(floatingBarDims.height + 40);
 
   const onInvalidateHomeData = () => {
     setHomeDataRefreshToken((current) => current + 1);
@@ -180,17 +178,16 @@ export default function Home() {
         onToggleFavorite={toggleFavorite}
         contentPaddingTop={contentPaddingTop}
         contentPaddingBottom={contentPaddingBottom}
+        unplayedGamePaths={unplayedGamePaths}
+        hasLoaded={hasLoaded}
       />
     </View>,
     <View key="tab-explore" style={[pageStyle, webSnapChild]}>
       <DiscoverTab
         allEnabledGames={allEnabledGames}
-        allEnabledGamePaths={allEnabledGamePaths}
         unplayedGamePaths={unplayedGamePaths}
         favorites={favorites}
         onToggleFavorite={toggleFavorite}
-        hasLoaded={hasLoaded}
-        contentPaddingTop={contentPaddingTop}
         contentPaddingBottom={contentPaddingBottom}
       />
     </View>,
@@ -245,24 +242,11 @@ export default function Home() {
         )}
 
         <HomeHeader
-          contentMaxWidth={contentMaxWidth}
-          pageSidePadding={pageSidePadding}
           onOpenSearch={() => setShowSearchModal(true)}
           onOpenSettings={() => setShowSettingsModal(true)}
         />
 
-        <HomeTabBar
-          tabBarHeight={tabBarHeight}
-          contentMaxWidth={contentMaxWidth}
-          pageSidePadding={pageSidePadding}
-          activeIndex={activeTab}
-          onSelect={onSelectTab}
-          onHeightChange={(height) => {
-            if (Math.abs(height - tabBarHeight) > 1) {
-              setTabBarHeight(height);
-            }
-          }}
-        />
+        <HomeTabBar activeIndex={activeTab} onSelect={onSelectTab} />
       </View>
     </>
   );

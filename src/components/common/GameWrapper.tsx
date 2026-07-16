@@ -1,33 +1,35 @@
-import { Text } from "@/components/common/Text";
+import { GAME_BACKGROUND_ASSETS } from "@/data/game-backgrounds";
 import {
   clearLastGameSession,
+  GameSettings,
   getGameInfo,
   normalizeGamePath,
   recordAttempt,
   recordResult,
 } from "@/data/game-menu";
+import { DEFAULT_GAME_BACKGROUND } from "@/data/games-data";
+import { useGameSettings } from "@/hooks/useGameSettings";
 import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
+import { useTipsBoxLayout } from "@/hooks/useTipsLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { flexStyles } from "@/styles/flexStyles";
-import { menuStyles } from "@/styles/menuStyles";
+import { floatingBarDims, menuStyles } from "@/styles/menuStyles";
 import {
-  ContentSidePadding,
+  Colors,
   HeaderButtonIconSize,
+  HomePadding,
   rgba,
 } from "@/styles/styles";
 import { router, usePathname } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { ImageBackground, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { GAME_BACKGROUND_ASSETS } from "@/data/game-backgrounds";
 import { Button } from "../Button/Button";
 import GameModal from "../Modals/GameModal";
-import { TutorialBox } from "./TutorialBox";
 import { LoadingOverlay } from "./LoadingOverlay";
 import { ResetButton } from "./ResetButton";
+import { TipsBox } from "./TipsBox";
 import { WinLoseBox } from "./WinLoseBox";
-import { DEFAULT_GAME_BACKGROUND } from "@/data/games-data";
-import { lightenHexColor } from "@/utils/utils";
 
 interface Props {
   isLoaded?: boolean;
@@ -37,8 +39,8 @@ interface Props {
   winLoseMessage?: string;
   reset: () => void;
   children: React.ReactNode;
-  /** Current tutorial phase key; maps to gameInfo.tutorial[phase]. */
-  tutorialPhase?: string;
+  /** Current tip phase key; maps to gameInfo.tip[phase]. */
+  tipPhase?: string;
   canUndo?: boolean;
   undo?: () => void;
 }
@@ -51,7 +53,7 @@ export const GameWrapper = ({
   winLoseMessage,
   reset,
   children,
-  tutorialPhase,
+  tipPhase,
   canUndo,
   undo: handleUndo,
 }: Props) => {
@@ -63,9 +65,18 @@ export const GameWrapper = ({
   const ui = useResponsiveUiLayoutFromWidth(
     Math.min(viewportWidth, viewportHeight),
   );
+
   const spacing = (value: number) => value * ui.scale;
 
   const [showMenu, setShowMenu] = useState(false);
+
+  const { updateSettings } = useGameSettings(pathname);
+
+  function setTipsMode(value: boolean) {
+    void updateSettings({ tipsMode: value } as Partial<GameSettings>);
+  }
+
+  const { active } = useTipsBoxLayout();
 
   // Record stats
   const prevEndedRef = useRef(false);
@@ -152,77 +163,81 @@ export const GameWrapper = ({
         />
 
         <View
-          style={[
-            {
-              position: "relative",
-              zIndex: 12, // above the game overlay
-              ...flexStyles.rowCentered,
-              justifyContent: "space-between",
-              width: "100%",
-              height: headerHeight,
-              paddingTop: insets.top + spacing(ContentSidePadding * 0.3),
-              paddingBottom: spacing(ContentSidePadding * 0.5),
-              paddingHorizontal: spacing(ContentSidePadding * 0.75),
-              backgroundColor: "transparent",
-            },
-          ]}
+          style={{
+            width: "100%",
+            maxWidth: ui.contentMaxWidth,
+            alignSelf: "center",
+            padding: spacing(HomePadding / 2),
+          }}
         >
-          <Button
-            style={[menuStyles.headerButton]}
-            onPress={async () => {
-              try {
-                await clearLastGameSession();
-              } finally {
-                router.push("/");
-              }
-            }}
-            iconName={"arrow-back"}
-            iconColor={titleColor}
-            iconSize={spacing(HeaderButtonIconSize)}
-          />
-
-          <Text
-            size="md"
-            weight={400}
-            color={titleColor}
-            numberOfLines={1}
-            ellipsizeMode="tail"
+          <View
             style={[
+              flexStyles.rowCentered,
               {
-                flex: 1,
-                overflow: "hidden",
+                position: "relative",
+                zIndex: 12, // above the game overlay
+                width: "100%",
+                gap: spacing(floatingBarDims.gap),
+                height: spacing(floatingBarDims.height),
+                paddingHorizontal: spacing(HomePadding / 2),
+                borderRadius: spacing(floatingBarDims.height / 2),
+                backgroundColor: rgba(backgroundColor, 0.8),
+                boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.black, 0.3)}, ${spacing(2)}px ${spacing(4)}px ${spacing(10)}px ${rgba(
+                  Colors.black,
+                  0.3,
+                )}`,
               },
             ]}
           >
-            {gameInfo.title}
-          </Text>
-
-          {handleUndo && (
             <Button
-              style={[menuStyles.headerButton]}
-              textStyle={[menuStyles.headerButton]}
-              onPress={handleUndo}
-              iconName="undo"
-              iconColor={canUndo ? titleColor : rgba(titleColor, 0.5)}
+              style={[menuStyles.headerButton, menuStyles.headerButtonFlex]}
+              onPress={async () => {
+                try {
+                  await clearLastGameSession();
+                } finally {
+                  router.push("/");
+                }
+              }}
+              iconName={"home"}
+              iconColor={titleColor}
               iconSize={spacing(HeaderButtonIconSize)}
-              disabled={!canUndo}
             />
-          )}
 
-          <ResetButton
-            reset={reset}
-            iconColor={titleColor}
-            pressedIconColor={rgba(titleColor, 0.7)}
-          />
+            <Button
+              style={[menuStyles.headerButton, menuStyles.headerButtonFlex]}
+              onPress={() => setTipsMode(!active)}
+              iconName={"info-outline"}
+              iconColor={active ? rgba(titleColor, 0.5) : titleColor}
+              iconSize={spacing(HeaderButtonIconSize)}
+              disabled={active}
+            />
 
-          <Button
-            style={[menuStyles.headerButton]}
-            textStyle={[menuStyles.headerButton]}
-            onPress={() => setShowMenu(true)}
-            iconName="menu"
-            iconColor={titleColor}
-            iconSize={spacing(HeaderButtonIconSize)}
-          />
+            {handleUndo && (
+              <Button
+                style={[menuStyles.headerButton, menuStyles.headerButtonFlex]}
+                onPress={handleUndo}
+                iconName="undo"
+                iconColor={canUndo ? titleColor : rgba(titleColor, 0.5)}
+                iconSize={spacing(HeaderButtonIconSize)}
+                disabled={!canUndo}
+              />
+            )}
+
+            <ResetButton
+              reset={reset}
+              iconColor={titleColor}
+              pressedIconColor={rgba(titleColor, 0.7)}
+              iconSize={spacing(HeaderButtonIconSize)}
+            />
+
+            <Button
+              style={[menuStyles.headerButton, menuStyles.headerButtonFlex]}
+              onPress={() => setShowMenu(true)}
+              iconName="more-vertical"
+              iconColor={titleColor}
+              iconSize={spacing(HeaderButtonIconSize)}
+            />
+          </View>
         </View>
 
         <View
@@ -240,7 +255,7 @@ export const GameWrapper = ({
           {children}
         </View>
 
-        <TutorialBox phase={tutorialPhase} topOffset={headerHeight} />
+        <TipsBox phase={tipPhase} topOffset={headerHeight} />
       </View>
     </>
   );

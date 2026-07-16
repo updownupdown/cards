@@ -2,7 +2,7 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const theBogey: GameDefinition = {
   path: "/the-bogey",
-  tutorial: {
+  tip: {
     default: {
       text: "Draw to 5, then play/discard/hold; unplayable bogey loses.",
     },

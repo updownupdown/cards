@@ -2,7 +2,7 @@ import { GameDefinition, GameTag } from "../games-data";
 
 export const monteCarlo: GameDefinition = {
   path: "/monte-carlo",
-  tutorial: {
+  tip: {
     default: {
       text: "Tap adjacent equal ranks to clear; consolidate for new pairs.",
     },
