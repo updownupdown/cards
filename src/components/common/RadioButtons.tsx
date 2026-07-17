@@ -1,7 +1,7 @@
 import { Text } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { Icon, IconName } from "@/icons";
 import { Colors, FontWeight, rgba } from "@/styles/styles";
-import { textStyles } from "@/styles/textStyles";
 import {
   Pressable,
   type StyleProp,
@@ -10,7 +10,6 @@ import {
   type ViewStyle,
 } from "react-native";
 import { BTN_TRANSITION_STYLE } from "../Button/Button";
-import { Icon, IconName } from "@/icons";
 
 type RadioOption<T extends string> = {
   value: T;
@@ -25,6 +24,7 @@ type RadioButtonsProps<T extends string> = {
   selectedValue: T;
   iconSize?: number;
   vertical?: boolean;
+  flexAllButFirst?: boolean;
   onChange: (value: T) => void;
   containerStyle?: StyleProp<ViewStyle>;
   buttonStyle?: StyleProp<ViewStyle>;
@@ -43,6 +43,7 @@ export function RadioButtons<T extends string>({
   selectedTextStyle,
   iconSize,
   vertical = false,
+  flexAllButFirst = false,
   selectedBackgroundColor = Colors.K600,
 }: RadioButtonsProps<T>) {
   const { spacing } = useResponsiveMetrics();
@@ -62,7 +63,7 @@ export function RadioButtons<T extends string>({
         containerStyle,
       ]}
     >
-      {options.map((option) => {
+      {options.map((option, i) => {
         const isSelected = option.value === selectedValue;
         const selectedBg =
           option.selectedBackgroundColor ?? selectedBackgroundColor;
@@ -73,9 +74,10 @@ export function RadioButtons<T extends string>({
             style={[
               {
                 ...BTN_TRANSITION_STYLE,
+                flex: flexAllButFirst && i !== 0 ? 1 : undefined,
                 borderRadius: spacing(6),
                 paddingVertical: spacing(2),
-                paddingHorizontal: spacing(16),
+                paddingHorizontal: spacing(12),
                 height: "100%",
                 display: "flex",
                 justifyContent: "center",

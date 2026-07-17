@@ -14,7 +14,7 @@ export const pyramid: GameDefinition = {
   background: "sandstone-2.jpg",
   cardDescription:
     "Clear the pyramid by removing pairs of cards that add up to 13.",
-  stats: {
+  rating: {
     complexity: 15,
     difficulty: 30,
     luck: 65,

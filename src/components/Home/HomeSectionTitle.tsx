@@ -9,7 +9,7 @@ import { View } from "react-native";
 type HomeSectionTitleProps = {
   title: string;
   subtitle?: string;
-  iconName: IconName;
+  iconName?: IconName;
   pageSidePadding: number;
   contentMaxWidth: number;
 };
@@ -42,11 +42,9 @@ export function HomeSectionTitle({
           },
         ]}
       >
-        <Icon
-          name={iconName}
-          size={roundToPixel(24 * (ui.isTablet ? 1.15 : 1))}
-          color={Colors.suitsRed}
-        />
+        {iconName && (
+          <Icon name={iconName} size={spacing(24)} color={Colors.suitsRed} />
+        )}
         <Text
           weight={400}
           size="md"

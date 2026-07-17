@@ -24,7 +24,7 @@ import { SettingControl } from "../common/SettingControl";
 import ModalFull from "./ModalFull";
 import { lightenHexColor } from "@/utils/utils";
 import { INSTRUCTIONS_UNAVAILABLE } from "@/constants/constants";
-import { StatBars } from "../Home/StatBars";
+import { RatingsBars } from "../Home/RatingBars";
 
 type Props = {
   onClose: () => void;
@@ -253,8 +253,8 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
               )}
 
               {/* Stats */}
-              <StatBars
-                stats={gameInfo.stats}
+              <RatingsBars
+                rating={gameInfo.rating}
                 gameColor={gameInfo.cardColorText}
               />
             </View>

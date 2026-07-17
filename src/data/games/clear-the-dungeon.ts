@@ -16,7 +16,7 @@ export const clearTheDungeon: GameDefinition = {
   background: "medieval-blocks.jpg",
   cardDescription:
     "Exterminate twelve dungeon monsters with powerful attacks before your damage bar fills.",
-  stats: {
+  rating: {
     complexity: 75,
     difficulty: 75,
     luck: 45,

@@ -15,7 +15,7 @@ export const dungeonBounty: GameDefinition = {
   background: "wall-tile.jpg",
   cardDescription:
     "A dungeon-crawling bounty hunt: equip weapons, cast spells, slay beasts, and grab the loot.",
-  stats: {
+  rating: {
     complexity: 85,
     difficulty: 75,
     luck: 45,

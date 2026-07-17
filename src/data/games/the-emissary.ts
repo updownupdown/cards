@@ -10,7 +10,7 @@ export const theEmissary: GameDefinition = {
   cardColorText: "#acdeff",
   cardDescription:
     "Win exactly the right number of debates in each kingdom while managing one-time advisors.",
-  stats: {
+  rating: {
     complexity: 70,
     difficulty: 70,
     luck: 35,

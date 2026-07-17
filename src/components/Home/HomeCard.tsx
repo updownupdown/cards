@@ -11,7 +11,7 @@ import { Colors, rgba } from "@/styles/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import { router, type Href } from "expo-router";
 import { Image, Pressable, type ViewStyle, View } from "react-native";
-import { StatBars } from "./StatBars";
+import { RatingsBars } from "./RatingBars";
 
 function getGameThumbnail(game: GameMenuInfo) {
   return GAME_THUMBNAIL_ASSETS[game.thumbnail || DEFAULT_GAME_THUMBNAIL];
@@ -149,7 +149,7 @@ export function HomeCard({
         </View>
 
         {size === "large" && (
-          <StatBars stats={game.stats} gameColor={game.cardColorText} />
+          <RatingsBars rating={game.rating} gameColor={game.cardColorText} />
         )}
       </Pressable>
 

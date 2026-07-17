@@ -17,7 +17,7 @@ export const breakaway: GameDefinition = {
   cardColorText: "#f5d34e",
   cardDescription:
     "Chase down the bunch by pulling riders into one flowing paceline.",
-  stats: {
+  rating: {
     complexity: 20,
     difficulty: 45,
     luck: 70,

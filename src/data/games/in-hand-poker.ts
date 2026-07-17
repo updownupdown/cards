@@ -15,7 +15,7 @@ export const inHandPoker: GameDefinition = {
   background: "felt-green.jpg",
   cardDescription:
     "A pocket poker duel: draw, bet, and out-rank an opponent dealt from the same deck.",
-  stats: {
+  rating: {
     complexity: 45,
     difficulty: 45,
     luck: 55,

@@ -14,7 +14,7 @@ export const islandOfCards: GameDefinition = {
   background: "wood-table.jpg",
   cardDescription:
     "Grow an island across a 7x7 grid, one rank-linked card at a time.",
-  stats: {
+  rating: {
     complexity: 40,
     difficulty: 60,
     luck: 55,

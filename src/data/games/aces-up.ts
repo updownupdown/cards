@@ -14,7 +14,7 @@ export const acesUp: GameDefinition = {
   cardColorBg: "#1d0f0a",
   cardColorText: "#eee0ca",
   cardDescription: "Discard low cards until only the four Aces remain.",
-  stats: {
+  rating: {
     complexity: 15,
     difficulty: 80,
     luck: 80,

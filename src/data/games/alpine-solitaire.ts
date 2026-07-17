@@ -15,7 +15,7 @@ export const alpineSolitaire: GameDefinition = {
   background: "rock-wall.jpg",
   cardDescription:
     "A solo climbing game: play ever-higher routes to reach three camps before the deck runs out.",
-  stats: {
+  rating: {
     complexity: 75,
     difficulty: 70,
     luck: 45,

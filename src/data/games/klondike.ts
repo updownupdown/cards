@@ -14,12 +14,12 @@ export const klondike: GameDefinition = {
   cardColorText: "#EEF0FF",
   cardDescription:
     "The classic solitaire: build four suit foundations from Ace to King.",
-  stats: {
+  rating: {
     complexity: 20,
     difficulty: 30,
     luck: 40,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop, GameTag.EasyToLearn],
+  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag, GameTag.EasyToLearn],
   about: [
     'Klondike is the solitaire most people simply call "Solitaire".',
     "Dig through the tableau and stock to free the cards you need and move all 52 to the foundations.",

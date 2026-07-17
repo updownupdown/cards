@@ -15,7 +15,7 @@ export const skyway: GameDefinition = {
   cardColorText: "#b3d5ec",
   cardDescription:
     "Draft from a shifting market to engineer long suit-based routes across a growing grid.",
-  stats: {
+  rating: {
     complexity: 90,
     difficulty: 75,
     luck: 50,

@@ -16,7 +16,7 @@ export const riverboat: GameDefinition = {
   cardColorText: "#f2d98a",
   cardDescription:
     "Deal 25 cards into a 5x5 table where every row and column pays as a poker hand.",
-  stats: {
+  rating: {
     complexity: 60,
     difficulty: 65,
     luck: 35,

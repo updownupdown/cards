@@ -1,7 +1,7 @@
 import { HomeCard } from "@/components/Home/HomeCard";
 import { HomeSectionTitle } from "@/components/Home/HomeSectionTitle";
 import { getGameOfTheDayPath } from "@/data/game-of-the-day";
-import { GameMenuInfo, isGameEnabled } from "@/data/games-data";
+import { GameMenuInfo, GameTag, isGameEnabled } from "@/data/games-data";
 import { GAMES_DATA } from "@/data/games-registry";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
@@ -17,6 +17,8 @@ import {
   View,
 } from "react-native";
 import { RandomGameRoller } from "./RandomGameRoller";
+import { Text } from "../common/Text";
+import { Button } from "../Button/Button";
 
 type HomeTabProps = {
   allEnabledGames: HomeGameEntry[];
@@ -27,6 +29,7 @@ type HomeTabProps = {
   onToggleFavorite: (path: string) => void;
   contentPaddingTop: number;
   contentPaddingBottom: number;
+  onSelectTab: (index: number) => void;
 };
 
 export function HomeTab({
@@ -38,6 +41,7 @@ export function HomeTab({
   onToggleFavorite,
   contentPaddingTop,
   contentPaddingBottom,
+  onSelectTab,
 }: HomeTabProps) {
   const { ui, spacing } = useResponsiveMetrics();
   const { width: viewportWidth, height: viewportHeight } =
@@ -136,6 +140,15 @@ export function HomeTab({
     return allEnabledGames.filter(([path]) => unplayedSet.has(path));
   }, [allEnabledGames, unplayedGamePaths]);
 
+  const fewPlayedGames = recentPaths.length < 3;
+
+  const getStartedGames = useMemo(() => {
+    const easyToLearnGames = allEnabledGames.filter(([, game]) =>
+      (game.tags ?? []).includes(GameTag.EasyToLearn),
+    );
+    return easyToLearnGames.sort(() => Math.random() - 0.5).slice(0, 5);
+  }, [allEnabledGames]);
+
   return (
     <ScrollView
       style={{ flex: 1 }}
@@ -148,10 +161,64 @@ export function HomeTab({
       scrollEventThrottle={16}
       onScroll={onScroll}
     >
+      {/* No played games */}
+      {fewPlayedGames && (
+        <View
+          style={{
+            width: "100%",
+            maxWidth: contentMaxWidth,
+            alignSelf: "center",
+            paddingHorizontal: scaledPageSidePadding,
+          }}
+        >
+          <HomeSectionTitle
+            title="Start Easy!"
+            iconName="spades"
+            pageSidePadding={0}
+            contentMaxWidth={contentMaxWidth}
+          />
+
+          {/* Recommend games from the easy to learn tag */}
+          <View
+            style={{
+              width: "100%",
+              paddingTop: sectionTopPadding,
+              paddingBottom: sectionBottomPadding,
+              gap: cardGap,
+            }}
+          >
+            <Text style={{ paddingBottom: spacing(20) }}>
+              {`Here are some easy-to-learn games to get started. You can find more under the "Explore" tab.`}
+            </Text>
+
+            {getStartedGames.map(([path, game]) => (
+              <HomeCard
+                key={path}
+                path={path}
+                game={game}
+                size="small"
+                onToggleFavorite={onToggleFavorite}
+                isFavorite={favorites.has(path)}
+                style={{ width: "100%" }}
+              />
+            ))}
+
+            <Button
+              onPress={() => {
+                // Switch to the Explore tab
+                onSelectTab(1);
+              }}
+              text="Explore all games"
+              style={{ marginTop: spacing(20) }}
+              textStyle={{ textTransform: "none" }}
+            />
+          </View>
+        </View>
+      )}
+
       {/* Game of the Day */}
       {gameOfTheDay && (
         <View
-          key="game-of-the-day"
           style={{
             width: "100%",
             maxWidth: contentMaxWidth,
@@ -188,7 +255,6 @@ export function HomeTab({
       {/* Jump back in */}
       {jumpBackInGames.length > 0 && (
         <View
-          key="jump-back-in"
           style={{
             width: "100%",
             maxWidth: contentMaxWidth,
@@ -268,7 +334,6 @@ export function HomeTab({
       {/* Because you liked ... */}
       {becauseYouLiked && (
         <View
-          key="because-you-liked"
           style={{
             width: "100%",
             maxWidth: contentMaxWidth,

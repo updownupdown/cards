@@ -15,7 +15,7 @@ export const blackHole: GameDefinition = {
   cardColorText: "#d4cbff",
   cardDescription:
     "Pull all 52 cards into a central black hole, one rank at a time.",
-  stats: {
+  rating: {
     complexity: 40,
     difficulty: 55,
     luck: 30,

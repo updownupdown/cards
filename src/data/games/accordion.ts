@@ -10,7 +10,7 @@ export const accordion: GameDefinition = {
   cardColorText: "#fffccf",
   cardDescription:
     "Collapse the whole deck into a single pile, matching adjacent suits or ranks one at a time.",
-  stats: {
+  rating: {
     complexity: 10,
     difficulty: 95,
     luck: 65,

@@ -227,7 +227,7 @@ export function StatsTab({
         ]}
       >
         {isActive ? (
-          <Icon name={iconName} size={14} color={Colors.accentGreen} />
+          <Icon name={iconName} size={14} color={Colors.white} />
         ) : null}
 
         <Text
@@ -235,7 +235,7 @@ export function StatsTab({
           weight={500}
           style={[
             {
-              color: isActive ? Colors.accentGreen : Colors.K400,
+              color: isActive ? Colors.white : Colors.K400,
             },
           ]}
         >
@@ -255,134 +255,178 @@ export function StatsTab({
       }}
       showsVerticalScrollIndicator={false}
     >
-      {/* Full stats table */}
-      <View
-        style={{
-          width: "100%",
-          maxWidth: contentMaxWidth,
-          alignSelf: "center",
-          gap: sectionTopPadding,
-        }}
-      >
-        <HomeSectionTitle
-          title="Full Stats"
-          subtitle={
-            playedRows.length === 0
-              ? "No stats to show"
-              : "Only played games are shown"
-          }
-          iconName="chart"
-          pageSidePadding={scaledPageSidePadding}
-          contentMaxWidth={contentMaxWidth}
-        />
+      {/* No stats to show */}
+      {playedRows.length === 0 && (
+        <View
+          style={[
+            flexStyles.colCentered,
+            {
+              gap: spacing(20),
+              maxWidth: contentMaxWidth / 1.5,
+              minHeight:
+                viewportHeight - contentPaddingTop - contentPaddingBottom,
+              flex: 1,
+              alignSelf: "center",
+            },
+          ]}
+        >
+          <Text
+            size="xl"
+            style={[
+              flexStyles.colCentered,
+              {
+                textAlign: "center",
+              },
+            ]}
+          >
+            Uh-oh, no stats to show!
+          </Text>
+          <Text
+            color={Colors.K400}
+            style={[
+              flexStyles.colCentered,
+              {
+                textAlign: "center",
+              },
+            ]}
+          >
+            Come back after playing a few games to see your stats here.
+          </Text>
+        </View>
+      )}
 
+      {/* Full stats table */}
+      {playedRows.length > 0 && (
         <View
           style={{
-            paddingHorizontal: scaledPageSidePadding,
+            width: "100%",
+            maxWidth: contentMaxWidth,
+            alignSelf: "center",
             gap: sectionTopPadding,
           }}
         >
-          {playedRows.length > 0 && (
-            <ScrollView
-              style={{ maxHeight: fullStatsMaxHeight }}
-              showsVerticalScrollIndicator
-              nestedScrollEnabled
-            >
-              <View style={[flexStyles.fullWidth]}>
-                {/* Header */}
-                <View
-                  style={{
-                    position: "sticky",
-                    zIndex: 2,
-                    top: 0,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    paddingBottom: 8,
-                    borderBottomWidth: StyleSheet.hairlineWidth,
-                    borderBottomColor: Colors.K700,
-                    marginBottom: 8,
-                    backgroundColor: Colors.background,
-                  }}
-                >
-                  {renderSortableHeader("Game", "title")}
-                  {renderSortableHeader("Win", "wins")}
-                  {renderSortableHeader("Lose", "losses")}
-                  {renderSortableHeader("W%", "winRate")}
-                  {renderSortableHeader("Best", "best")}
-                </View>
+          <HomeSectionTitle
+            title="Full Stats"
+            subtitle={
+              playedRows.length === 0
+                ? "No stats to show"
+                : "Only played games are shown"
+            }
+            iconName="chart"
+            pageSidePadding={scaledPageSidePadding}
+            contentMaxWidth={contentMaxWidth}
+          />
 
-                {/* Rows */}
-                {sortedPlayedRows.map((row) => (
+          <View
+            style={{
+              paddingHorizontal: scaledPageSidePadding,
+              gap: sectionTopPadding,
+            }}
+          >
+            {playedRows.length > 0 && (
+              <ScrollView
+                style={{ maxHeight: fullStatsMaxHeight }}
+                showsVerticalScrollIndicator
+                nestedScrollEnabled
+              >
+                <View style={[flexStyles.fullWidth]}>
+                  {/* Header */}
                   <View
-                    key={row.path}
-                    style={[
-                      flexStyles.rowCentered,
-                      {
-                        position: "relative",
-                        zIndex: 1,
-                        justifyContent: "flex-start",
-                        paddingVertical: 6,
-                      },
-                    ]}
+                    style={{
+                      position: "sticky",
+                      zIndex: 2,
+                      top: 0,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      paddingBottom: 8,
+                      borderBottomWidth: StyleSheet.hairlineWidth,
+                      borderBottomColor: Colors.K700,
+                      marginBottom: 8,
+                      backgroundColor: Colors.background,
+                    }}
                   >
-                    <Link href={row.path as Href} asChild>
+                    {renderSortableHeader("Game", "title")}
+                    {renderSortableHeader("Win", "wins")}
+                    {renderSortableHeader("Lose", "losses")}
+                    {renderSortableHeader("W%", "winRate")}
+                    {renderSortableHeader("Best", "best")}
+                  </View>
+
+                  {/* Rows */}
+                  {sortedPlayedRows.map((row) => (
+                    <View
+                      key={row.path}
+                      style={[
+                        flexStyles.rowCentered,
+                        {
+                          position: "relative",
+                          zIndex: 1,
+                          justifyContent: "flex-start",
+                          paddingVertical: 8,
+                        },
+                      ]}
+                    >
+                      <Link href={row.path as Href} asChild>
+                        <Text
+                          size="sm"
+                          weight={500}
+                          color={Colors.accentBlue}
+                          style={{ flex: gameTitleFlex }}
+                          numberOfLines={1}
+                        >
+                          {row.title}
+                        </Text>
+                      </Link>
                       <Text
                         size="sm"
                         weight={500}
-                        color={Colors.accentBlue}
-                        style={{ flex: gameTitleFlex }}
-                        numberOfLines={1}
+                        style={{ flex: 1, textAlign: "right" }}
+                        color={row.stats.wins === 0 ? Colors.K700 : Colors.K200}
                       >
-                        {row.title}
+                        {row.stats.wins}
                       </Text>
-                    </Link>
-                    <Text
-                      size="sm"
-                      weight={500}
-                      style={{ flex: 1, textAlign: "right" }}
-                      color={row.stats.wins === 0 ? Colors.K700 : Colors.K200}
-                    >
-                      {row.stats.wins}
-                    </Text>
-                    <Text
-                      size="sm"
-                      weight={500}
-                      style={{ flex: 1, textAlign: "right" }}
-                      color={row.stats.losses === 0 ? Colors.K700 : Colors.K200}
-                    >
-                      {row.stats.losses}
-                    </Text>
-                    <Text
-                      size="sm"
-                      weight={500}
-                      style={{ flex: 1, textAlign: "right" }}
-                      color={
-                        row.stats.attempts === 0 ? Colors.K700 : Colors.K200
-                      }
-                    >
-                      {calculateWinRate(row.stats)}
-                    </Text>
-                    <Text
-                      size="sm"
-                      weight={500}
-                      style={{ flex: 1, textAlign: "right" }}
-                      color={
-                        row.stats.highestScore === null
-                          ? Colors.K700
-                          : Colors.K200
-                      }
-                    >
-                      {row.stats.highestScore === null
-                        ? "-"
-                        : row.stats.highestScore}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-            </ScrollView>
-          )}
+                      <Text
+                        size="sm"
+                        weight={500}
+                        style={{ flex: 1, textAlign: "right" }}
+                        color={
+                          row.stats.losses === 0 ? Colors.K700 : Colors.K200
+                        }
+                      >
+                        {row.stats.losses}
+                      </Text>
+                      <Text
+                        size="sm"
+                        weight={500}
+                        style={{ flex: 1, textAlign: "right" }}
+                        color={
+                          row.stats.attempts === 0 ? Colors.K700 : Colors.K200
+                        }
+                      >
+                        {calculateWinRate(row.stats)}
+                      </Text>
+                      <Text
+                        size="sm"
+                        weight={500}
+                        style={{ flex: 1, textAlign: "right" }}
+                        color={
+                          row.stats.highestScore === null
+                            ? Colors.K700
+                            : Colors.K200
+                        }
+                      >
+                        {row.stats.highestScore === null
+                          ? "-"
+                          : row.stats.highestScore}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              </ScrollView>
+            )}
+          </View>
         </View>
-      </View>
+      )}
 
       {/* Persona award sections */}
       {personas.map((persona) => {
@@ -414,8 +458,7 @@ export function StatsTab({
               <HomeSectionTitle
                 title={persona.title}
                 subtitle={persona.subtitle}
-                iconName={persona.icon}
-                pageSidePadding={spacing(4)}
+                pageSidePadding={spacing(12)}
                 contentMaxWidth={contentMaxWidth}
               />
 

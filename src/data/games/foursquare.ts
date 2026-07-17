@@ -15,7 +15,7 @@ export const foursquare: GameDefinition = {
   cardColorText: "#fff5ca",
   cardDescription:
     "A tile-laying game where each move can disrupt the precarious grid.",
-  stats: {
+  rating: {
     complexity: 30,
     difficulty: 50,
     luck: 40,

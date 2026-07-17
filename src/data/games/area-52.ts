@@ -10,7 +10,7 @@ export const area52: GameDefinition = {
   cardColorText: "#b5faff",
   cardDescription:
     "Fight off waves of alien invaders before running out of defenders.",
-  stats: {
+  rating: {
     complexity: 40,
     difficulty: 70,
     luck: 30,

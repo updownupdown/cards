@@ -13,7 +13,7 @@ export const tripeaks: GameDefinition = {
   cardColorText: "#e3fcdd",
   cardDescription:
     "Clear three peaks by playing cards one rank above or below the waste.",
-  stats: {
+  rating: {
     complexity: 15,
     difficulty: 30,
     luck: 70,

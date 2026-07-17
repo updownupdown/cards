@@ -15,7 +15,7 @@ export const optritaLines: GameDefinition = {
   background: "felt-grey.jpg",
   cardDescription:
     "A one-player trick-taking duel against a 6x6 grid that fights only by hiding its cards.",
-  stats: {
+  rating: {
     complexity: 70,
     difficulty: 60,
     luck: 50,

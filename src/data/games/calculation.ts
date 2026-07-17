@@ -15,7 +15,7 @@ export const calculation: GameDefinition = {
   cardColorText: "#eccfff",
   cardDescription:
     "Build four foundations in steps of 1, 2, 3, and 4 up to the Kings.",
-  stats: {
+  rating: {
     complexity: 80,
     difficulty: 90,
     luck: 60,

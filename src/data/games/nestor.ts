@@ -15,7 +15,7 @@ export const nestor: GameDefinition = {
   cardColorBg: "#16283f",
   cardColorText: "#dbe9ff",
   cardDescription: "Pair off matching ranks to empty every column.",
-  stats: {
+  rating: {
     complexity: 15,
     difficulty: 60,
     luck: 65,

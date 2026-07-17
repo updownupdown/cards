@@ -14,12 +14,12 @@ export const freecell: GameDefinition = {
   background: "felt-dark-blue.jpg",
   cardDescription:
     "An open-information classic where nearly every deal can be won with care.",
-  stats: {
+  rating: {
     complexity: 20,
     difficulty: 40,
     luck: 30,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
+  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
   byLine: "Game design by Paul Alfille, 1978",
   about: [
     "FreeCell is a skill-heavy solitaire where the whole deck is visible from the start.",

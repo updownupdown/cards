@@ -14,12 +14,12 @@ export const canfield: GameDefinition = {
   cardColorText: "#E4F6FF",
   cardDescription:
     "Build suit foundations from a random base rank, fed by a 13-card reserve.",
-  stats: {
+  rating: {
     complexity: 0,
     difficulty: 0,
     luck: 0,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
+  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
   about: [
     "Canfield is a famously tough gambling-hall patience with a big face-up reserve.",
     "The random base rank and awkward reserve mean most deals are lost, so a win is a real prize.",

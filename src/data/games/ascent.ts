@@ -17,7 +17,7 @@ export const ascent: GameDefinition = {
   cardColorText: "#e8f2ff",
   cardDescription:
     "Pick the right holds to overcome every pitch and reach the summit.",
-  stats: {
+  rating: {
     complexity: 45,
     difficulty: 60,
     luck: 45,

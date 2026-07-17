@@ -22,13 +22,13 @@ export const HOME_TABS: { key: HomeTabKey; label: string; icon: IconName }[] = [
 
 type HomeTabBarProps = {
   activeIndex: number;
-  onSelect: (index: number) => void;
+  onSelectTab: (index: number) => void;
   onHeightChange?: (height: number) => void;
 };
 
 export function HomeTabBar({
   activeIndex,
-  onSelect,
+  onSelectTab,
   onHeightChange,
 }: HomeTabBarProps) {
   const insets = useSafeAreaInsets();
@@ -80,7 +80,7 @@ export function HomeTabBar({
             return (
               <Pressable
                 key={tab.key}
-                onPress={() => onSelect(index)}
+                onPress={() => onSelectTab(index)}
                 style={[
                   flexStyles.rowCentered,
                   {

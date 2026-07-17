@@ -1,7 +1,11 @@
+import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
+import { Colors, rgba } from "@/styles/styles";
+import { delay } from "@/utils/utils";
 import { useMemo } from "react";
-import { StyleSheet, View, ViewStyle } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Button } from "../Button/Button";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
@@ -18,11 +22,6 @@ import {
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
-import { delay } from "@/utils/utils";
-import { Colors, rgba } from "@/styles/styles";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
-import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-import { getUnderlayStyle } from "../Cards/CardStyles";
 
 const BACK_ROW = new Set([6, 7, 8, 9]);
 const CENTER_PIN = 4;

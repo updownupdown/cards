@@ -14,7 +14,7 @@ export const baroness: GameDefinition = {
   cardColorBg: "#3a1620",
   cardColorText: "#f3d6dd",
   cardDescription: "Clear five piles by discarding cards that total thirteen.",
-  stats: {
+  rating: {
     complexity: 15,
     difficulty: 70,
     luck: 75,

@@ -15,16 +15,12 @@ export const theSandwichGuy: GameDefinition = {
   cardColorText: "#b0eee9",
   cardDescription:
     "Serve sandwiches by selecting evenly spaced cards; don't let your ingredients run out!",
-  stats: {
+  rating: {
     complexity: 20,
     difficulty: 80,
     luck: 40,
   },
-  tags: [
-    GameTag.IsaludoCollection,
-    GameTag.ModernMechanics,
-    GameTag.EasyToLearn,
-  ],
+  tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
   byLine: "Game design by Wil Su, 2021",
   about: [
     "Make sandwiches with ingredients available in your food truck. The quality of each sandwich determines how many ingredients will refill your prep area. Sell out your entire inventory to win!",

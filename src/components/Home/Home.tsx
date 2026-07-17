@@ -168,6 +168,7 @@ export default function Home() {
   const pages = [
     <View key="tab-home" style={[pageStyle, webSnapChild]}>
       <HomeTab
+        onSelectTab={onSelectTab}
         allEnabledGames={allEnabledGames}
         allEnabledGamePaths={allEnabledGamePaths}
         favorites={favorites}
@@ -242,7 +243,7 @@ export default function Home() {
           onOpenSettings={() => setShowSettingsModal(true)}
         />
 
-        <HomeTabBar activeIndex={activeTab} onSelect={onSelectTab} />
+        <HomeTabBar activeIndex={activeTab} onSelectTab={onSelectTab} />
       </View>
     </>
   );

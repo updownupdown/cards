@@ -15,12 +15,12 @@ export const eightOff: GameDefinition = {
   background: "felt-dark-blue.jpg",
   cardDescription:
     "A roomy, same-suit FreeCell relative with eight cells and Kings-only columns.",
-  stats: {
+  rating: {
     complexity: 25,
     difficulty: 40,
     luck: 25,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.Beta],
+  tags: [GameTag.TapAndDrag, GameTag.ClassicSolitaire, GameTag.Beta],
   about: [
     "Eight Off gives you eight free cells instead of four, but demands same-suit tableau building.",
     "The extra cells make most deals winnable — the challenge is not clogging them all at once.",

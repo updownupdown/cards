@@ -15,7 +15,7 @@ export const lootTheLoop: GameDefinition = {
   cardColorText: "#dfd4bd",
   cardDescription:
     "Capture scoring loop cards while preserving momentum and avoiding disruptive breaks.",
-  stats: {
+  rating: {
     complexity: 50,
     difficulty: 45,
     luck: 60,

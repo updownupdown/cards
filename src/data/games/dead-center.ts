@@ -21,7 +21,7 @@ export const deadCenter: GameDefinition = {
   cardColorText: "#e9f1d9",
   cardDescription:
     "Defend your cabin against a siege of zombies, using supporting cards strategically.",
-  stats: {
+  rating: {
     complexity: 70,
     difficulty: 50,
     luck: 20,

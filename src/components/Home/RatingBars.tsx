@@ -1,16 +1,15 @@
-import { GameStats, HexColor } from "@/data/games-data";
+import { GameRating, HexColor } from "@/data/games-data";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Colors, rgba } from "@/styles/styles";
 import { View } from "react-native";
 import { Text } from "../common/Text";
 
-export const StatBars = ({
-  stats,
-  gameColor,
-}: {
-  stats: GameStats;
+type Props = {
+  rating: GameRating;
   gameColor: HexColor;
-}) => {
+};
+
+export const RatingsBars = ({ rating, gameColor }: Props) => {
   const { spacing } = useResponsiveMetrics();
 
   return (
@@ -22,35 +21,35 @@ export const StatBars = ({
         flexDirection: "row",
       }}
     >
-      {Object.entries(stats).map(([key, value]) => (
-        <StatBar
+      {Object.entries(rating).map(([key, value]) => (
+        <RatingBar
           key={key}
           label={key}
           value={value}
           fillColor={gameColor}
-          statTrackHeight={Math.round(spacing(8))}
+          trackHeight={Math.round(spacing(8))}
         />
       ))}
     </View>
   );
 };
 
-export const StatBar = ({
+export const RatingBar = ({
   label,
   value,
   fillColor,
-  statTrackHeight,
+  trackHeight,
 }: {
   label: string;
   value: number;
   fillColor: string;
-  statTrackHeight: number;
+  trackHeight: number;
 }) => {
   return (
     <View
       style={{
         flex: 1,
-        gap: statTrackHeight,
+        gap: trackHeight,
       }}
     >
       <Text
@@ -64,8 +63,8 @@ export const StatBar = ({
 
       <View
         style={{
-          height: statTrackHeight,
-          borderRadius: statTrackHeight / 2,
+          height: trackHeight,
+          borderRadius: trackHeight / 2,
           backgroundColor: rgba(fillColor, 0.16),
         }}
       >
@@ -73,7 +72,7 @@ export const StatBar = ({
           style={{
             width: `${value}%`,
             height: "100%",
-            borderRadius: statTrackHeight / 2,
+            borderRadius: trackHeight / 2,
             backgroundColor: fillColor,
           }}
         />

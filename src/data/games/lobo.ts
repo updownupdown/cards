@@ -15,7 +15,7 @@ export const lobo: GameDefinition = {
   background: "felt-dark-red.jpg",
   cardDescription:
     "Empty the Wolf's hand through clever captures — and know when to fold.",
-  stats: {
+  rating: {
     complexity: 60,
     difficulty: 85,
     luck: 40,

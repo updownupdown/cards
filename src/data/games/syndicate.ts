@@ -14,7 +14,7 @@ export const syndicate: GameDefinition = {
   cardColorText: "#b2eee1",
   cardDescription:
     "Stategically promote members and candidates to the top of the syndicate hierarchy.",
-  stats: {
+  rating: {
     complexity: 70,
     difficulty: 70,
     luck: 30,

@@ -15,7 +15,7 @@ export const golf: GameDefinition = {
   cardColorText: "#e3f6ff",
   cardDescription:
     "Clear seven columns by playing cards one rank away from the waste.",
-  stats: {
+  rating: {
     complexity: 15,
     difficulty: 50,
     luck: 70,

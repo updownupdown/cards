@@ -6,7 +6,7 @@ export enum GameTag {
   EasyToLearn = "EasyToLearn",
   ClassicSolitaire = "ClassicSolitaire",
   IsaludoCollection = "IsaludoCollection",
-  DragAndDrop = "DragAndDrop",
+  TapAndDrag = "TapAndDrag",
   ModernMechanics = "ModernMechanics",
   Beta = "Beta",
   // AIGenerated = "AIGenerated",
@@ -16,7 +16,7 @@ export const GameTagNames: Record<GameTag, string> = {
   [GameTag.EasyToLearn]: "Easy to Learn",
   [GameTag.IsaludoCollection]: "Isaludo Collection",
   [GameTag.ClassicSolitaire]: "Classic Solitaire",
-  [GameTag.DragAndDrop]: "Drag-and-Drop",
+  [GameTag.TapAndDrag]: "Tap and drag",
   [GameTag.ModernMechanics]: "Modern Mechanics",
   [GameTag.Beta]: "Beta",
   // [GameTag.AIGenerated]: "AI Generated",
@@ -24,13 +24,13 @@ export const GameTagNames: Record<GameTag, string> = {
 
 export type HexColor = `#${string}`;
 
-export type GameStats = {
+export type GameRating = {
   complexity: number;
   difficulty: number;
   luck: number;
 };
 
-export type GameStatsNames = keyof GameStats;
+export type GameStatsNames = keyof GameRating;
 export const statKeys: GameStatsNames[] = ["complexity", "difficulty", "luck"];
 
 export const DEFAULT_GAME_THUMBNAIL: GameThumbnailName = "DefaultThumbnail.jpg";
@@ -63,7 +63,7 @@ export type GameMenuInfo = {
   cardColorBg: HexColor;
   cardColorText: HexColor;
   cardDescription: string;
-  stats: GameStats;
+  rating: GameRating;
   enabled?: boolean;
   enabledOnLocalOnly?: boolean;
   /** Markdown-ish blocks; supports headings, bold, lists and {5H}/{JC} card tokens. */

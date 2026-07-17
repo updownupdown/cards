@@ -16,7 +16,7 @@ export const streetsAndAlleys: GameDefinition = {
   cardColorText: "#e6e6ea",
   cardDescription:
     "Beleaguered Castle with the Aces buried — free them and build every suit home.",
-  stats: {
+  rating: {
     complexity: 45,
     difficulty: 65,
     luck: 30,

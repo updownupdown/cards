@@ -15,7 +15,7 @@ export const hideAndSeek: GameDefinition = {
   cardColorText: "#c5f7da",
   cardDescription:
     "Find your hidden playmates through careful planning and deduction.",
-  stats: {
+  rating: {
     complexity: 20,
     difficulty: 60,
     luck: 65,

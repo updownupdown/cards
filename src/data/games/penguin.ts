@@ -15,12 +15,12 @@ export const penguin: GameDefinition = {
   cardColorText: "#ff944d",
   cardDescription:
     "A FreeCell-like game building suit runs from a random beak rank.",
-  stats: {
+  rating: {
     complexity: 0,
     difficulty: 0,
     luck: 0,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
+  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
   about: [
     "Penguin, by David Parlett, is an open, FreeCell-style patience with everything on show.",
     "With seven free cells and full information, most deals reward patient, planned play.",

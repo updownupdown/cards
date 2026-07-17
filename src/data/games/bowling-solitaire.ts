@@ -9,7 +9,7 @@ export const bowlingSolitaire: GameDefinition = {
   cardColorText: "#a9e9f1",
   cardDescription:
     "Bowl a full game of 10-pin using cards, chasing strikes and spares.",
-  stats: {
+  rating: {
     complexity: 30,
     difficulty: 30,
     luck: 35,

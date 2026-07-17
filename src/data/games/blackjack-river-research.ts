@@ -15,7 +15,7 @@ export const blackjackRiverResearch: GameDefinition = {
   background: "felt-dark-blue.jpg",
   cardDescription:
     "Balance four fish populations to exactly 21 and publish your studies of the Blackjack River.",
-  stats: {
+  rating: {
     complexity: 70,
     difficulty: 55,
     luck: 45,

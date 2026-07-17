@@ -14,12 +14,12 @@ export const yukon: GameDefinition = {
   background: "wood-table.jpg",
   cardDescription:
     "Klondike unleashed: move whole groups of cards, in any order, across the tableau.",
-  stats: {
+  rating: {
     complexity: 35,
     difficulty: 55,
     luck: 35,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop, GameTag.Beta],
+  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag, GameTag.Beta],
   about: [
     "Yukon takes Klondike's layout but lets you haul entire piles of mixed cards in a single move.",
     "With no stock and almost everything face up, wins reward untangling the columns in the right order.",

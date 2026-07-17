@@ -16,7 +16,7 @@ export const beleagueredCastle: GameDefinition = {
   cardColorText: "#f0e2c4",
   cardDescription:
     "Storm the castle: build every suit up from Ace to King with open tableau play.",
-  stats: {
+  rating: {
     complexity: 45,
     difficulty: 55,
     luck: 30,

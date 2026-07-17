@@ -14,7 +14,7 @@ export const monteCarlo: GameDefinition = {
   cardColorBg: "#152635",
   cardColorText: "#b1dada",
   cardDescription: "Match adjacent pairs of equal rank to clear a 5×5 grid.",
-  stats: {
+  rating: {
     complexity: 10,
     difficulty: 20,
     luck: 35,

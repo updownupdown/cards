@@ -20,7 +20,7 @@ export const wildfire: GameDefinition = {
   cardColorText: "#ffd9a0",
   cardDescription:
     "Contain a spreading blaze across a nine-cell grid before it engulfs everything.",
-  stats: {
+  rating: {
     complexity: 65,
     difficulty: 70,
     luck: 40,

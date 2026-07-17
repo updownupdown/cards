@@ -15,7 +15,7 @@ export const theBobaTeaShop: GameDefinition = {
   cardColorText: "#eed5a0",
   cardDescription:
     "A push-your-luck game where you must manage ordered queues of customers.",
-  stats: {
+  rating: {
     complexity: 30,
     difficulty: 55,
     luck: 55,

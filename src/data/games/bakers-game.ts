@@ -15,12 +15,12 @@ export const bakersGame: GameDefinition = {
   background: "felt-dark-green.jpg",
   cardDescription:
     "FreeCell's tougher ancestor: build the tableau down in suit, not colour.",
-  stats: {
+  rating: {
     complexity: 25,
     difficulty: 55,
     luck: 30,
   },
-  tags: [GameTag.Beta],
+  tags: [GameTag.TapAndDrag, GameTag.ClassicSolitaire, GameTag.Beta],
   about: [
     "Baker's Game is the same-suit forerunner of FreeCell, popularised by Martin Gardner.",
     "Building by suit makes long sequences far harder to assemble, so free cells are precious.",

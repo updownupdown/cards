@@ -14,12 +14,12 @@ export const fortyThieves: GameDefinition = {
   cardColorText: "#EFE8FF",
   cardDescription:
     "A demanding two-deck patience where every card moves one at a time.",
-  stats: {
+  rating: {
     complexity: 0,
     difficulty: 0,
     luck: 0,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
+  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
   about: [
     "Forty Thieves, also called Napoleon at St Helena, is a patient two-deck game.",
     "Strict single-card moves and suit-matched building make it a low-luck test of planning.",

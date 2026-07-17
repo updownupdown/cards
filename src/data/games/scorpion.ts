@@ -14,12 +14,12 @@ export const scorpion: GameDefinition = {
   cardColorText: "#FFE4E8",
   cardDescription:
     "Untangle face-up columns into four same-suit runs from King to Ace.",
-  stats: {
+  rating: {
     complexity: 0,
     difficulty: 0,
     luck: 0,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
+  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
   about: [
     "Scorpion is a tense, tangle-heavy cousin of Spider played with a single deck.",
     "Because you can drag buried cards along with their cover, freeing a key card is a puzzle in itself.",

@@ -14,12 +14,12 @@ export const spiderSolitaire: GameDefinition = {
   cardColorText: "#F5E6FF",
   cardDescription:
     "Build same-suit runs from King to Ace across a tangled double deck.",
-  stats: {
+  rating: {
     complexity: 0,
     difficulty: 0,
     luck: 0,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop],
+  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
   about: [
     "Spider is a two-deck solitaire played across ten tangled columns.",
     "Assemble eight complete suit sequences from King down to Ace to win; fewer suits make for an easier game.",

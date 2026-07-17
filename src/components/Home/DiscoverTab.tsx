@@ -96,7 +96,7 @@ export function DiscoverTab({
       if (filters.statsFilters) {
         for (const stat in filters.statsFilters) {
           const { min, max } = filters.statsFilters[stat as GameStatsNames];
-          const gameStatValue = game.stats[stat as GameStatsNames];
+          const gameStatValue = game.rating[stat as GameStatsNames];
           if (gameStatValue < min || gameStatValue > max) {
             return false;
           }
@@ -178,7 +178,7 @@ export function DiscoverTab({
           <Icon
             name="close"
             size={22}
-            color={rgba(Colors.white, hasActiveFilters ? 1 : 0.4)}
+            color={rgba(Colors.white, hasActiveFilters ? 1 : 0)}
           />
           <View style={[flexStyles.colStart, flexStyles.flex1]}>
             <Text
@@ -189,15 +189,17 @@ export function DiscoverTab({
               {hasActiveFilters ? "Clear filters" : "No filters applied"}
             </Text>
 
-            <Text
-              size="xs"
-              weight={600}
-              color={Colors.suitsRed}
-              textTransform="uppercase"
-            >
-              {filteredGames.length} result
-              {filteredGames.length !== 1 ? "s" : ""}
-            </Text>
+            {hasActiveFilters && (
+              <Text
+                size="xs"
+                weight={600}
+                color={Colors.suitsRed}
+                textTransform="uppercase"
+              >
+                {filteredGames.length} result
+                {filteredGames.length !== 1 ? "s" : ""}
+              </Text>
+            )}
           </View>
         </Pressable>
 
@@ -295,6 +297,7 @@ export function DiscoverTab({
                   { value: "all", label: "All" },
                   { value: "unplayed", label: "Unplayed" },
                 ]}
+                flexAllButFirst
                 selectedValue={filters.played}
                 onChange={(value) => {
                   setFilters((draft) => {

@@ -14,12 +14,12 @@ export const russianSolitaire: GameDefinition = {
   background: "wood-vertical.jpg",
   cardDescription:
     "Yukon at its most brutal: haul mixed groups, but build the tableau down in suit.",
-  stats: {
+  rating: {
     complexity: 35,
     difficulty: 80,
     luck: 30,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop, GameTag.Beta],
+  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag, GameTag.Beta],
   about: [
     "Russian Solitaire is Yukon with same-suit building, making it one of the toughest games around.",
     "Freeing buried cards in exactly the right order is the whole puzzle.",

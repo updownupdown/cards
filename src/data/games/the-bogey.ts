@@ -15,7 +15,7 @@ export const theBogey: GameDefinition = {
   cardColorText: "#ddf0ce",
   cardDescription:
     "Build columns of cards in decreasing suit-matched sequences while playing against the mysterious Bogey.",
-  stats: {
+  rating: {
     complexity: 40,
     difficulty: 75,
     luck: 35,

@@ -15,7 +15,7 @@ export const clock: GameDefinition = {
   cardColorText: "#eed9c2",
   cardDescription:
     "A pure-luck patience: follow cards around the clock before all the Kings are uncovered.",
-  stats: {
+  rating: {
     complexity: 10,
     difficulty: 10,
     luck: 100,

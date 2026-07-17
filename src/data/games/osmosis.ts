@@ -16,7 +16,7 @@ export const osmosis: GameDefinition = {
   cardColorText: "#d5f0d0",
   cardDescription:
     "Seep each suit onto its row, but only once the rank above has arrived.",
-  stats: {
+  rating: {
     complexity: 50,
     difficulty: 60,
     luck: 45,

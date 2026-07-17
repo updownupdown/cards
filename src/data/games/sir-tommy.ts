@@ -15,7 +15,7 @@ export const sirTommy: GameDefinition = {
   cardColorText: "#ecdfff",
   cardDescription:
     "The granddaddy of solitaire: sort the deck across four piles into four Ace-to-King stacks.",
-  stats: {
+  rating: {
     complexity: 30,
     difficulty: 60,
     luck: 55,
