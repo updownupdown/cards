@@ -7,7 +7,7 @@ export const golf: GameDefinition = {
       text: "Play exposed +/-1 to waste; no wrap; draw stock when stuck.",
     },
   },
-  title: "Golf Solitaire",
+  title: "Golf",
   thumbnail: "Golf.jpg",
   cardBack: "Golf.png",
   background: "felt-green.jpg",
@@ -25,6 +25,7 @@ export const golf: GameDefinition = {
     "Golf Solitaire is a breezy race to sweep seven columns onto a single waste pile.",
     "It plays fast, but a poorly-timed King can strand an entire column.",
   ],
+  byLine: "Game designer unknown",
   howToPlay: [
     "## Objective",
     "Remove all 35 tableau cards onto the **waste** pile.",

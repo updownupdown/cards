@@ -21,12 +21,12 @@ export const osmosis: GameDefinition = {
     difficulty: 60,
     luck: 45,
   },
-  // tags: [GameTag.ClassicSolitaire, GameTag.AIGenerated],
-  tags: [GameTag.Beta],
+  tags: [GameTag.ClassicSolitaire, GameTag.Beta],
   about: [
     "Osmosis (also called Treasure Trove) is a game of unlocking ranks row by row.",
     "The rank you start with sets the key for the whole board, so the early rows dictate everything.",
   ],
+  byLine: "Game design by Sid Sackson, 1969",
   howToPlay: [
     "## Objective",
     "Move all 52 cards onto the four **foundation rows** (one suit per row).",

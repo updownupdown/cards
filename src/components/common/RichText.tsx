@@ -164,7 +164,7 @@ export function RichText({
   content,
   size = "md",
   weight = 300,
-  color = Colors.K200,
+  color = Colors.white,
   headingColor = Colors.headings,
   gap = 20,
 }: RichTextProps) {

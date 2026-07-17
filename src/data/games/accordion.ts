@@ -9,37 +9,33 @@ export const accordion: GameDefinition = {
   cardColorBg: "#351219",
   cardColorText: "#fffccf",
   cardDescription:
-    "Squeeze the whole deck into a single pile, one matching jump at a time.",
+    "Collapse the whole deck into a single pile, matching adjacent suits or ranks one at a time.",
   stats: {
     complexity: 10,
-    difficulty: 35,
+    difficulty: 95,
     luck: 65,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
   about: [
-    "Accordion is a solitaire about squeezing a long line of cards together.",
-    "It rarely comes out, and one greedy move can leave the line stuck.",
+    "Accordion Solitaire traces its origins to the late 19th century. The earliest known description was published in 1883 by Manhattan-based publisher William B. Dick.",
+    'Originally called "Idle Year" (a humorous nod to its incredibly low win rate of about 1%) it was also historically known as "Methuselah" and "Tower of Babel".',
   ],
   howToPlay: [
     "## Objective",
-    "Compress all 52 cards into a **single pile** by stacking matching cards together.",
-    "## Setup",
-    "- Deal the entire deck out in order, laid left to right (wrapping onto new rows to fit the screen).",
-    "## Playing",
-    "- A card (and everything stacked on it) may move onto the card **immediately to its left** or the card **three places to its left**.",
-    "- The move is legal only if the two cards **match in suit or in rank** (for example {9H} onto {9S}, or {9H} onto {4H}).",
-    "- Only the top card of each pile matters for matching.",
-    "- After a move, the gap closes and the cards to the right shift left.",
-    "- Prefer jumps of three when you can; they collapse the layout faster.",
-    "## Winning",
-    "You win if you reduce the entire spread down to one pile.",
+    "Win by collapsing all 52 cards into a **single pile** by stacking matching cards together.",
+    "## Rules",
+    "- A card may move onto the card **immediately to its left** or the card **three places to its left**.",
+    "- The move is legal only if the two cards **match in suit or rank** (for example {9H} onto {9S}, or {9H} onto {4H}).",
+    "- Only the top card of each pile matters for matching (cards underneath can effectively be ignored).",
+    "- After a move, the cards shift left to close the gap.",
+    "## Tips",
+    '- **Use the "Sweeper" Technique**: Before playing, scan your layout for four cards of the same rank (e.g., four 8s) located near the end of the board. Protect them by never moving any other card on top of a sweeper. Your ultimate goal is to get down to exactly four piles, each topped with a sweeper. Since they have the same rank, you can then stack them on top of each other to win.',
+    "- **Prioritize Rank Matches over Suits**: Matches based on the same rank are usually more flexible and offer better long-term progression than suit matches. Always look for rank matches first to consolidate high-value piles.",
+    "- **Prioritize the 3-Card Jump**: Compacting large chunks of cards opens up new empty spaces and brings previously unreachable cards into play.",
   ],
   tip: {
-    select: {
-      text: "Tap a card, then target 1 or 3 spots left.",
-    },
-    target: {
-      text: "Move only to same suit or same rank.",
+    default: {
+      text: "Consolidate a pile with another, 1 or 3 spots to its left, if suits or ranks match.",
     },
   },
 };

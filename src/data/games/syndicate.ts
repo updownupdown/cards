@@ -20,7 +20,7 @@ export const syndicate: GameDefinition = {
     luck: 30,
   },
   tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
-  byLine: "Game design by Wil Su",
+  byLine: "Game design by Wil Su, 2021",
   howToPlay: [
     "Build and convert stacks under syndicate rank restrictions.",
     "Use timing windows to secure high-value conversions.",

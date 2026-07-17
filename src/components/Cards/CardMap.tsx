@@ -3,7 +3,6 @@ import { GAMES_DATA } from "@/data/games-registry";
 import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
 import { useTipsBoxLayout } from "@/hooks/useTipsLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
-import { getGameHeaderBottom } from "@/styles/layout";
 import { MaxContentHeight } from "@/styles/styles";
 import { roundToPixel } from "@/utils/utils";
 import { usePathname } from "expo-router";
@@ -22,6 +21,7 @@ import {
 } from "./CardMapBackgrounds";
 import { CardMapVisualizer } from "./CardMapVisualizer";
 import { CardSizes } from "./CardStyles";
+import { getGameHeaderBottom } from "@/styles/menuStyles";
 
 export type CardPosition = {
   x: number;

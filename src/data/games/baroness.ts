@@ -24,6 +24,8 @@ export const baroness: GameDefinition = {
     "Baroness — also called Thirteens or Five Piles — is a brisk thirteen-matching game.",
     "The order you clear pairs decides whether later cards ever become reachable.",
   ],
+  byLine:
+    "Game designer unknown, first documented by Mary Whitmore Jones in 1890",
   howToPlay: [
     "## Objective",
     "Discard all 52 cards.",

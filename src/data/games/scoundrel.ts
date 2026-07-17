@@ -21,7 +21,7 @@ export const scoundrel: GameDefinition = {
     luck: 30,
   },
   tags: [GameTag.ModernMechanics],
-  byLine: "by Zach Gage and Kurt Bieg",
+  byLine: "Game design by Zach Gage and Kurt Bieg, 2011",
   about: [
     "Scoundrel is a compact dungeon-crawling solitaire game played with a reduced standard deck.",
     "Every decision matters: when to equip, when to tank damage, when to retreat, and when to push for a clean finish.",

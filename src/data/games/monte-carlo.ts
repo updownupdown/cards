@@ -24,6 +24,7 @@ export const monteCarlo: GameDefinition = {
     "Monte Carlo is a gentle matching patience played on a 5×5 grid.",
     "Regular consolidation brings distant cards together, opening up fresh pairs.",
   ],
+  byLine: "Game designer unknown",
   howToPlay: [
     "## Objective",
     "Remove all 52 cards by pairing equal ranks until the grid is empty.",

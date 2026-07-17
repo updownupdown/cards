@@ -1,19 +1,17 @@
-import { Text } from "@/components/common/Text";
 import { Button } from "@/components/Button/Button";
+import { Text } from "@/components/common/Text";
 import { useFade } from "@/hooks/useFade";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
-import { floatingBarDims, menuStyles } from "@/styles/menuStyles";
+import { menuStyles } from "@/styles/menuStyles";
 import {
   Colors,
-  ContentSidePadding,
-  FontWeight,
   HeaderButtonIconSize,
   HeaderButtonSize,
   rgba,
 } from "@/styles/styles";
 import React, { useRef, useState } from "react";
-import { Animated, Easing, Platform, StyleSheet, View } from "react-native";
-import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { Animated, Easing, Platform } from "react-native";
 
 const holdToResetDuration = 900;
 const minDisplayDuration = holdToResetDuration;
@@ -123,7 +121,7 @@ export function ResetButton({
       )}
 
       <Button
-        style={[menuStyles.headerButton, menuStyles.headerButtonFlex]}
+        style={[menuStyles.headerButton]}
         onPress={displayResetHint}
         onLongPress={reset}
         onPressIn={onPressInReset}

@@ -1,12 +1,13 @@
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
+import { flipToFace } from "../Cards/card-utils";
 import { useMemo, useState } from "react";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
   flipAllToBack,
-  flipAllToFace,
   shuffle,
+  top,
   type PlayingCard,
 } from "../Cards/card-utils";
 import {
@@ -19,7 +20,7 @@ import { GameWrapper } from "../common/GameWrapper";
 
 type GameState = {
   setupPile: PlayingCard[];
-  line: PlayingCard[];
+  line: (PlayingCard[] | null)[];
   ended: boolean;
   won: boolean;
 };
@@ -36,7 +37,11 @@ async function resetAndSetup(
 ) {
   // Gather all cards, face down, to setup pile
   setGame((draft) => {
-    const allCards = [...draft.setupPile, ...draft.line].filter(
+    const lineCards = draft.line
+      .flat()
+      .filter((card): card is PlayingCard => card !== null);
+
+    const allCards = [...draft.setupPile, ...lineCards].filter(
       (card): card is PlayingCard => card !== null,
     );
 
@@ -50,21 +55,35 @@ async function resetAndSetup(
 
   // Distribute to line
   setGame((draft) => {
-    draft.line = flipAllToFace(draft.setupPile);
+    draft.line = draft.setupPile.map((card) => [card]);
     draft.setupPile = [];
   });
+
+  await delay();
+
+  // Flip all cards to face, with 100ms delay between each
+  for (let i = 0; i < 52; i += 1) {
+    setGame((draft) => {
+      if (draft.line[i]) {
+        draft.line[i] = draft.line[i]!.map(flipToFace);
+      }
+    });
+    await delay(10);
+  }
 }
 
-function canMerge(source: PlayingCard, target: PlayingCard) {
+function canMerge(source?: PlayingCard, target?: PlayingCard) {
+  if (!source || !target) return false;
   return source.rank === target.rank || source.suit === target.suit;
 }
 
-function hasAnyMove(line: PlayingCard[]) {
+function hasAnyMove(line: PlayingCard[][]) {
   for (let i = 0; i < line.length; i += 1) {
     const oneLeft = i - 1;
     const threeLeft = i - 3;
-    if (oneLeft >= 0 && canMerge(line[i], line[oneLeft])) return true;
-    if (threeLeft >= 0 && canMerge(line[i], line[threeLeft])) return true;
+    if (oneLeft >= 0 && canMerge(top(line[i]), top(line[oneLeft]))) return true;
+    if (threeLeft >= 0 && canMerge(top(line[i]), top(line[threeLeft])))
+      return true;
   }
   return false;
 }
@@ -73,18 +92,28 @@ function hasAnyMove(line: PlayingCard[]) {
 export default function Accordion() {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
-    useStateManager({
-      resetAndSetup: async () => {
-        await resetAndSetup(setGame);
-      },
-      gameStateInitial,
-      resetNonGameStates: () => {
-        setSelectedIndex(null);
-      },
-    });
+  const {
+    isLoaded,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+    isAnimatingRef,
+    withAnimation,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelectedIndex(null);
+    },
+  });
 
   function onCardPress(index: number) {
+    if (isAnimatingRef.current) return;
     if (game.ended) return;
 
     if (selectedIndex === null) {
@@ -105,32 +134,55 @@ export default function Accordion() {
       return;
     }
 
-    const srcCard = game.line[source];
-    const targetCard = game.line[target];
+    const srcCard = top(game.line[source]);
+    const targetCard = top(game.line[target]);
     if (!srcCard || !targetCard || !canMerge(srcCard, targetCard)) {
       setSelectedIndex(index);
       return;
     }
 
-    performMergeAnimation(source, target, srcCard);
+    void withAnimation(() => performMergeAnimation(source, target, srcCard));
   }
 
   async function performMergeAnimation(
-    source: number,
-    target: number,
+    sourceIndex: number,
+    targetIndex: number,
     srcCard: PlayingCard,
   ) {
     saveUndoState(structuredClone(game));
 
     setGame((draft) => {
-      draft.line[target] = srcCard;
-      draft.line.splice(source, 1);
+      if (draft.line[targetIndex]) {
+        draft.line[targetIndex].push(srcCard);
+      } else {
+        draft.line[targetIndex] = [srcCard];
+      }
 
-      draft.won = draft.line.length === 1;
-      draft.ended = draft.won || !hasAnyMove(draft.line);
+      draft.line[sourceIndex] = null;
     });
 
     setSelectedIndex(null);
+
+    // Move each card to fill the gap, one at a time, with a delay
+    for (let i = sourceIndex + 1; i < game.line.length; i += 1) {
+      if (game.line[i] !== null) {
+        setGame((draft) => {
+          draft.line[i - 1] = draft.line[i];
+          draft.line[i] = null;
+        });
+        await delay(10);
+      }
+    }
+
+    // Check win/lose conditions after the animation is complete
+    setGame((draft) => {
+      draft.won = draft.line.filter((pile) => pile !== null).length === 1;
+      draft.ended =
+        draft.won ||
+        !hasAnyMove(
+          draft.line.filter((pile) => pile !== null) as PlayingCard[][],
+        );
+    });
   }
 
   function selectColor(idx: number): string {
@@ -143,7 +195,7 @@ export default function Accordion() {
         (selectedIndex && idx === selectedIndex - 1))
     ) {
       // Card 1 or 3 to the left
-      return canMerge(game.line[idx], game.line[selectedIndex])
+      return canMerge(top(game.line[idx]), top(game.line[selectedIndex]))
         ? "green"
         : "purple";
     } else {
@@ -172,7 +224,7 @@ export default function Accordion() {
       id: `line-${i}`,
       name: "line",
       pileIndex: i,
-      cards: game.line[i] ? [game.line[i]] : undefined,
+      cards: game.line[i] ? game.line[i] : undefined,
       col: pos.c,
       row: pos.r,
       baseZIndex: i + 10,
@@ -200,14 +252,13 @@ export default function Accordion() {
     zones,
     cardMapper,
     cardSize: "small",
-    gap: 0.14,
+    gap: 0.12,
     fixedCols: 7,
     fixedRows: 8,
   });
 
   return (
     <GameWrapper
-      tipPhase={selectedIndex === null ? "select" : "target"}
       ended={game.ended}
       won={game.won}
       reset={reset}

@@ -24,6 +24,7 @@ export const acesUp: GameDefinition = {
     "Aces Up, also known as Idiot's Delight, is a compact, luck-heavy discard game.",
     "It looks simple, but wins are rare and every empty-pile move matters.",
   ],
+  byLine: "Game designer unknown, first documented in 1900",
   howToPlay: [
     "## Objective",
     "Discard the entire deck except the four Aces, leaving one Ace on each pile.",

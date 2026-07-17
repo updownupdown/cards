@@ -14,8 +14,8 @@ export const bowlingSolitaire: GameDefinition = {
     difficulty: 30,
     luck: 35,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.ModernMechanics],
-  byLine: "Designer: Sid Sackson",
+  tags: [GameTag.ModernMechanics],
+  byLine: "Game design by Sid Sackson, 1969",
   about: [
     "Bowling Solitaire translates 10-pin bowling into a tactical card puzzle.",
     "Every roll is a value-and-position decision: card value, pin adjacency, and frame timing all matter.",

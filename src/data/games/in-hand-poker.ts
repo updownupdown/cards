@@ -26,6 +26,7 @@ export const inHandPoker: GameDefinition = {
     "In-Hand Poker is a solitaire poker game you can play with a single deck.",
     "The bigger your bet, the more cards your unseen opponent draws — so a strong hand isn't always worth the risk.",
   ],
+  byLine: "Game design by John Burton, 2021",
   howToPlay: [
     "## Objective",
     "Start at **5 points** and reach **10** without dropping to **0**.",

@@ -22,12 +22,12 @@ export const ascent: GameDefinition = {
     difficulty: 60,
     luck: 45,
   },
-  // tags: [GameTag.ModernMechanics],
   tags: [GameTag.Beta],
   about: [
     "Ascent is a push-your-luck climb where every pitch demands the right hold.",
     "Spend your gear wisely — swapping a weak grip burns supplies you may need higher up.",
   ],
+  byLine: "Game design by James Carmichael, 2026",
   howToPlay: [
     "## Objective",
     "Overcome all **12 pitches** on the route to reach the **summit**.",

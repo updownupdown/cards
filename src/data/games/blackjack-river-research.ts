@@ -9,7 +9,6 @@ export const blackjackRiverResearch: GameDefinition = {
     },
   },
   title: "Blackjack River Research",
-  byLine: "by Gregg Jewell",
   thumbnail: DEFAULT_GAME_THUMBNAIL,
   cardColorBg: "#0e2233",
   cardColorText: "#cfe8ff",
@@ -21,12 +20,12 @@ export const blackjackRiverResearch: GameDefinition = {
     difficulty: 55,
     luck: 45,
   },
-  // tags: [GameTag.ModernMechanics, GameTag.AIGenerated],
   tags: [GameTag.Beta],
   about: [
     "Blackjack River Research by Gregg Jewell reframes 21-making as fisheries science.",
     "Every completed Study is a data point, and spotting notable patterns earns lasting Breakthroughs.",
   ],
+  byLine: "Game design by Gregg Jewell, 2023",
   howToPlay: [
     "## Objective",
     "Complete **Studies** by stabilising a population column at exactly **21 fish**, then total your Studies and Breakthroughs.",

@@ -20,7 +20,7 @@ export const RangeSlider = ({
 }: RangeSliderProps) => {
   const { spacing } = useResponsiveMetrics();
 
-  const THUMB_SIZE = spacing(30);
+  const THUMB_SIZE = spacing(34);
   const TRACK_PADDING = spacing(6);
 
   const thumbStyles: ViewStyle = {

@@ -8,7 +8,6 @@ export const islandOfCards: GameDefinition = {
     },
   },
   title: "Island of Cards",
-  byLine: "by Frank",
   thumbnail: DEFAULT_GAME_THUMBNAIL,
   cardColorBg: "#14504f",
   cardColorText: "#ffe6a3",
@@ -25,6 +24,7 @@ export const islandOfCards: GameDefinition = {
     "Island of Cards asks you to grow a connected 7x7 island from an opening X of thirteen cards.",
     "Suit and colour never matter — only how ranks chain together and avoid their equals.",
   ],
+  byLine: "Game design by Frank, 2021",
   howToPlay: [
     "## Objective",
     "Fill the whole **7x7 island**, or score as high as you can.",

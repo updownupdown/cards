@@ -21,7 +21,7 @@ export const foursquare: GameDefinition = {
     luck: 40,
   },
   tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
-  byLine: "Game design by Wil Su",
+  byLine: "Game design by Wil Su, 2021",
   about: [
     "As the major of Flavortown, you are responsible for the placement of new restaurants across the grid. New restaurants (cards) that are the lowest or highest quality (rank) within their row or column will cause other restaurants to go out of business, or open up to challenge the newcomer.",
     "To win, you must manage to have 16 open restaurants (face up) within the 4x4 grid.",

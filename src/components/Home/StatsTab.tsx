@@ -52,6 +52,8 @@ type SortState = {
 const winRateValue = (stats: GameStats) =>
   stats.attempts > 0 ? stats.wins / stats.attempts : 0;
 
+const gameTitleFlex = 2.4;
+
 export function StatsTab({
   settingsMap,
   favorites,
@@ -171,7 +173,7 @@ export function StatsTab({
     push(
       "whale",
       "The White Whale",
-      "Most attempts with zero wins",
+      "Most attempts without wins",
       "whale",
       whale,
     );
@@ -219,7 +221,8 @@ export function StatsTab({
             flexDirection: label === "Game" ? "row-reverse" : "row",
             justifyContent: "flex-end",
             gap: 2,
-            flex: label === "Game" ? 3 : 1,
+            flex: label === "Game" ? gameTitleFlex : 1,
+            outline: "none",
           },
         ]}
       >
@@ -302,11 +305,10 @@ export function StatsTab({
                   }}
                 >
                   {renderSortableHeader("Game", "title")}
-                  {renderSortableHeader("Try", "attempts")}
-                  {renderSortableHeader("W", "wins")}
-                  {renderSortableHeader("L", "losses")}
+                  {renderSortableHeader("Win", "wins")}
+                  {renderSortableHeader("Lose", "losses")}
                   {renderSortableHeader("W%", "winRate")}
-                  {renderSortableHeader("HS", "best")}
+                  {renderSortableHeader("Best", "best")}
                 </View>
 
                 {/* Rows */}
@@ -328,22 +330,12 @@ export function StatsTab({
                         size="sm"
                         weight={500}
                         color={Colors.accentBlue}
-                        style={{ flex: 3 }}
+                        style={{ flex: gameTitleFlex }}
                         numberOfLines={1}
                       >
                         {row.title}
                       </Text>
                     </Link>
-                    <Text
-                      size="sm"
-                      weight={500}
-                      style={{ flex: 1, textAlign: "right" }}
-                      color={
-                        row.stats.attempts === 0 ? Colors.K700 : Colors.K200
-                      }
-                    >
-                      {row.stats.attempts}
-                    </Text>
                     <Text
                       size="sm"
                       weight={500}
@@ -404,48 +396,41 @@ export function StatsTab({
               width: "100%",
               maxWidth: contentMaxWidth,
               alignSelf: "center",
+              paddingHorizontal: pageSidePadding,
+              paddingTop: sectionTopPadding,
             }}
           >
-            <HomeSectionTitle
-              title={persona.title}
-              subtitle={persona.subtitle}
-              iconName={persona.icon}
-              pageSidePadding={pageSidePadding}
-              contentMaxWidth={contentMaxWidth}
-            />
-
+            {/* Card and stats wrap */}
             <View
               style={{
                 width: "100%",
-                paddingHorizontal: pageSidePadding,
-                paddingTop: sectionTopPadding,
+                borderRadius: spacing(10),
+                padding: spacing(8),
+                gap: spacing(8),
+                backgroundColor: rgba(Colors.K950, 0.4),
+                boxShadow: `inset 0 0 20px ${rgba(Colors.black, 0.2)}`,
               }}
             >
-              {/* Card and stats wrap */}
-              <View
-                style={{
-                  width: "100%",
-                  borderRadius: spacing(10),
-                  padding: spacing(6),
-                  paddingBottom: 0,
-                  backgroundColor: rgba(Colors.K950, 0.4),
-                  boxShadow: `inset 0 0 20px ${rgba(Colors.black, 0.2)}`,
-                }}
-              >
-                <HomeCard
-                  path={persona.row.path}
-                  game={game}
-                  size="large"
-                  onToggleFavorite={onToggleFavorite}
-                  isFavorite={favorites.has(persona.row.path)}
-                  style={{ width: "100%" }}
-                />
+              <HomeSectionTitle
+                title={persona.title}
+                subtitle={persona.subtitle}
+                iconName={persona.icon}
+                pageSidePadding={spacing(4)}
+                contentMaxWidth={contentMaxWidth}
+              />
 
-                <GameUserStats
-                  stats={persona.row.stats}
-                  accentColor={game.cardColorText}
-                />
-              </View>
+              <HomeCard
+                path={persona.row.path}
+                game={game}
+                size="large"
+                onToggleFavorite={onToggleFavorite}
+                isFavorite={favorites.has(persona.row.path)}
+              />
+
+              <GameUserStats
+                stats={persona.row.stats}
+                accentColor={game.cardColorText}
+              />
             </View>
           </View>
         );

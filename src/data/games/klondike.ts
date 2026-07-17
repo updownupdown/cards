@@ -1,13 +1,13 @@
 import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 
-export const solitaire: GameDefinition = {
-  path: "/solitaire",
+export const klondike: GameDefinition = {
+  path: "/klondike",
   tip: {
     default: {
       text: "Foundations up suit; tableau down alt color; kings fill empty.",
     },
   },
-  title: "Solitaire",
+  title: "Klondike",
   enabledOnLocalOnly: true,
   background: "felt-green.jpg",
   cardColorBg: "#2c3a2f",

@@ -21,12 +21,12 @@ export const streetsAndAlleys: GameDefinition = {
     difficulty: 65,
     luck: 30,
   },
-  // tags: [GameTag.ClassicSolitaire, GameTag.AIGenerated],
-  tags: [GameTag.Beta],
+  tags: [GameTag.ClassicSolitaire, GameTag.Beta],
   about: [
     "Streets and Alleys is the tougher cousin of Beleaguered Castle: nothing is placed for you.",
     "Everything is face up, so a win is a pure test of move order and patience.",
   ],
+  byLine: "Game designer unknown",
   howToPlay: [
     "## Objective",
     "Build all four **foundations** up by suit from **Ace to King**.",

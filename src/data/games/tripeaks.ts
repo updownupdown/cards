@@ -23,6 +23,7 @@ export const tripeaks: GameDefinition = {
     "TriPeaks is a fast, chaining patience played over three overlapping peaks.",
     "Long unbroken runs feel great, and the whole board can sometimes fall in a single chain.",
   ],
+  byLine: "Game design by Robert Hogue, 1989",
   howToPlay: [
     "## Objective",
     "Remove every card from the **three peaks** by building a continuous run on the waste pile.",

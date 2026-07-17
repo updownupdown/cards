@@ -20,12 +20,12 @@ export const nestor: GameDefinition = {
     difficulty: 60,
     luck: 65,
   },
-  // tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn, GameTag.AIGenerated],
-  tags: [GameTag.Beta],
+  tags: [GameTag.ClassicSolitaire, GameTag.Beta],
   about: [
     "Nestor is a quick matching game where planning the order you break pairs is everything.",
     "Because matching cards can hide beneath one another, greedy removals often strand a pair.",
   ],
+  byLine: "Game designer unknown, first documented in 1877",
   howToPlay: [
     "## Objective",
     "Discard all 52 cards by removing matching pairs.",

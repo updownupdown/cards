@@ -9,7 +9,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
-import { Colors } from "@/styles/styles";
+import { Colors, rgba } from "@/styles/styles";
 import { usePathname } from "expo-router";
 import { useRef } from "react";
 import { ScrollView, View } from "react-native";
@@ -24,6 +24,7 @@ import { SettingControl } from "../common/SettingControl";
 import ModalFull from "./ModalFull";
 import { lightenHexColor } from "@/utils/utils";
 import { INSTRUCTIONS_UNAVAILABLE } from "@/constants/constants";
+import { StatBars } from "../Home/StatBars";
 
 type Props = {
   onClose: () => void;
@@ -32,7 +33,7 @@ type Props = {
 
 export default function GameModal({ onClose, onReloadGame }: Props) {
   const pathname = normalizeGamePath(usePathname());
-  const info = getGameInfo(pathname);
+  const gameInfo = getGameInfo(pathname);
   const { settings, updateSettings, isLoading } = useGameSettings(pathname);
   const gameSpecificSettings = useGameSpecificSettings(pathname);
   const { spacing } = useResponsiveMetrics();
@@ -69,9 +70,9 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
     <>
       <ModalFull
         onClose={handleClose}
-        title={info.title}
-        titleColor={info.cardColorText}
-        backgroundColor={info.cardColorBg}
+        title={gameInfo.title}
+        titleColor={gameInfo.cardColorText}
+        backgroundColor={gameInfo.cardColorBg}
       >
         {/* Scroll view */}
         <ScrollView
@@ -81,13 +82,6 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
           {/* Stats and favourite */}
           <View style={modalStyles.statsAndFav}>
             <View style={modalStyles.stats}>
-              <View style={modalStyles.stat}>
-                <Text style={modalStyles.statsTextLabel}>Tried</Text>
-                <Text style={modalStyles.statsTextValue}>
-                  {settings.stats.attempts}
-                </Text>
-              </View>
-
               <View style={modalStyles.stat}>
                 <Text style={modalStyles.statsTextLabel}>Won</Text>
                 <Text style={modalStyles.statsTextValue}>
@@ -153,14 +147,14 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
                   padding: spacing(16),
                   paddingTop: spacing(12),
                   paddingRight: spacing(12),
-                  backgroundColor: lightenHexColor(info.cardColorBg, 0.1),
+                  backgroundColor: lightenHexColor(gameInfo.cardColorBg, 0.1),
                   borderRadius: spacing(8),
                 },
               ]}
             >
               <SettingControl
                 label="Show Quick Tips"
-                labelColor={info.cardColorText}
+                labelColor={gameInfo.cardColorText}
                 helpText="Show step-by-step guidance while you play."
                 value={settings.tipsMode}
                 type="boolean"
@@ -181,14 +175,17 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
                     {
                       alignItems: "flex-start",
                       padding: spacing(16),
-                      backgroundColor: lightenHexColor(info.cardColorBg, 0.1),
+                      backgroundColor: lightenHexColor(
+                        gameInfo.cardColorBg,
+                        0.1,
+                      ),
                       borderRadius: spacing(8),
                     },
                   ]}
                 >
                   <SettingControl
                     label={setting.label}
-                    labelColor={info.cardColorText}
+                    labelColor={gameInfo.cardColorText}
                     helpText={
                       setting.description ??
                       getSettingApplyBehaviorText(setting.applyBehavior)
@@ -207,52 +204,66 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
               ))}
 
             {/* About Text */}
-            {info.about && (
-              <View
-                style={[
-                  flexStyles.colCentered,
-                  flexStyles.fullWidth,
-                  {
-                    alignItems: "flex-start",
-                    padding: spacing(24),
-                    gap: spacing(12),
-                    backgroundColor: lightenHexColor(info.cardColorBg, 0.1),
-                    borderRadius: spacing(8),
-                  },
-                ]}
-              >
-                <View
-                  style={[
-                    flexStyles.rowCentered,
-                    flexStyles.fullWidth,
-                    flexStyles.spaceBetween,
-                  ]}
-                >
-                  <Text
-                    size="xxl"
-                    weight={300}
-                    color={info.cardColorText}
-                    style={flexStyles.flex1}
+            <View
+              style={[
+                flexStyles.colCentered,
+                flexStyles.fullWidth,
+                {
+                  alignItems: "flex-start",
+                  padding: spacing(24),
+                  gap: spacing(12),
+                  backgroundColor: lightenHexColor(gameInfo.cardColorBg, 0.1),
+                  borderRadius: spacing(8),
+                },
+              ]}
+            >
+              {gameInfo.about && (
+                <>
+                  <View
+                    style={[
+                      flexStyles.rowCentered,
+                      flexStyles.fullWidth,
+                      flexStyles.spaceBetween,
+                    ]}
                   >
-                    About
-                  </Text>
-                  <Icon name="info" size={28} color={info.cardColorText} />
-                </View>
+                    <Text
+                      size="xxl"
+                      weight={300}
+                      color={gameInfo.cardColorText}
+                      style={flexStyles.flex1}
+                    >
+                      About
+                    </Text>
+                    <Icon
+                      name="info"
+                      size={28}
+                      color={gameInfo.cardColorText}
+                    />
+                  </View>
 
-                <RichText content={info.about} size="md" weight={300} />
+                  <RichText content={gameInfo.about} size="md" weight={300} />
+                </>
+              )}
 
-                {/* By Line */}
-                {info.byLine && (
-                  <Text style={modalStyles.byLine}>{info.byLine}</Text>
-                )}
-              </View>
-            )}
+              {/* Stats */}
+              <StatBars
+                stats={gameInfo.stats}
+                gameColor={gameInfo.cardColorText}
+              />
+
+              {/* By Line */}
+              {gameInfo.byLine && (
+                <Text weight={300} size="sm" color={rgba(Colors.white, 0.6)}>
+                  {gameInfo.byLine}
+                </Text>
+              )}
+            </View>
           </View>
 
           {/* How to Play */}
           <HowToPlay
-            howToPlayText={info.howToPlay ?? [INSTRUCTIONS_UNAVAILABLE]}
-            headingColor={info.cardColorText}
+            howToPlayText={gameInfo.howToPlay ?? [INSTRUCTIONS_UNAVAILABLE]}
+            headingColor={gameInfo.cardColorText}
           />
         </ScrollView>
       </ModalFull>

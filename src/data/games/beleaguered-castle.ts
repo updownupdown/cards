@@ -21,12 +21,13 @@ export const beleagueredCastle: GameDefinition = {
     difficulty: 55,
     luck: 30,
   },
-  // tags: [GameTag.ClassicSolitaire, GameTag.AIGenerated],
   tags: [GameTag.Beta],
   about: [
     "Beleaguered Castle is an open builder — everything is face up, so wins reward careful sequencing.",
     "The temptation to fill an empty column too soon is what strands most games.",
   ],
+  byLine:
+    "Game designer unknown, first documented by William Brisbane Dick in 1883",
   howToPlay: [
     "## Objective",
     "Build all four **foundations** up by suit from **Ace to King**.",

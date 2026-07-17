@@ -1,5 +1,7 @@
-import { HeaderButtonSize } from "@/styles/styles";
+import { HeaderButtonSize, HomePadding } from "@/styles/styles";
 import { StyleSheet } from "react-native";
+import { roundToPixel } from "@/utils/utils";
+import { flexStyles } from "./flexStyles";
 
 export const floatingBarDims = {
   padding: 6,
@@ -7,11 +9,16 @@ export const floatingBarDims = {
   height: 58,
 };
 
+export function getGameHeaderBottom(insetsTop: number, scale: number): number {
+  return roundToPixel(
+    insetsTop + (floatingBarDims.height + HomePadding) * scale,
+  );
+}
+
 export const menuStyles = StyleSheet.create({
   headerButton: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    ...flexStyles.rowCentered,
+    flex: 1,
     padding: 0,
     width: HeaderButtonSize,
     height: HeaderButtonSize,
@@ -19,8 +26,5 @@ export const menuStyles = StyleSheet.create({
     borderWidth: 0,
     borderRadius: "unset",
     backgroundColor: "unset",
-  },
-  headerButtonFlex: {
-    flex: 1,
   },
 });

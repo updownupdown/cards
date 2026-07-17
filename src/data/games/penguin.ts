@@ -25,6 +25,7 @@ export const penguin: GameDefinition = {
     "Penguin, by David Parlett, is an open, FreeCell-style patience with everything on show.",
     "With seven free cells and full information, most deals reward patient, planned play.",
   ],
+  byLine: "Game design by David Parlett, 1979",
   howToPlay: [
     "## Objective",
     "Build all four **foundations** up by suit from the beak rank until each holds 13 cards.",

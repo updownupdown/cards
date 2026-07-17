@@ -22,8 +22,8 @@ export const breakaway: GameDefinition = {
     difficulty: 45,
     luck: 70,
   },
-  // tags: [GameTag.EasyToLearn],
   tags: [GameTag.Beta],
+  byLine: "Game design by James Carmichael, 2026",
   about: [
     "Breakaway is a fast, looping take on the classic chase solitaire, dressed up as a road-race stage.",
     "Because the pace wraps from King back to Ace, momentum rarely stalls — but a careless pull can still strand a rider.",

@@ -5,7 +5,7 @@ import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
-import { rgba } from "@/styles/styles";
+import { Colors, rgba } from "@/styles/styles";
 import { delay } from "@/utils/utils";
 import { useEffect, useMemo, useRef } from "react";
 import { View } from "react-native";
@@ -152,7 +152,9 @@ export default function Clock() {
   // ========== Card Mapping ========== //
   const kingPileWidth = 2.5;
   const clockRadius = 2.6;
-  const kingPileRow = -1.6;
+  const kingPileExtraHeight = 0.2;
+  const kingPileRow =
+    clockRadius * cardDims.aspectRatio - kingPileExtraHeight / 2;
 
   const zones: MapZone[] = useMemo(() => {
     const pileZones = Array.from({ length: 13 }).map((_, i) => {
@@ -180,7 +182,7 @@ export default function Clock() {
         col: Math.round(col * 100) / 100,
         row: Math.round(row * 100) / 100,
         width: i === 0 ? kingPileWidth : 1,
-        height: i === 0 ? 1.2 : 1,
+        height: 1 + (i === 0 ? kingPileExtraHeight : 0),
         pileIndex: i,
         cards: game.piles[i] ?? undefined,
         baseZIndex: i === 0 ? 1 : 20,
@@ -197,10 +199,11 @@ export default function Clock() {
     return [
       ...pileZones,
       {
-        id: "gameInfo",
-        col: 0,
-        row: 0,
-        width: "full",
+        id: "clockface",
+        col: clockRadius + 0.5,
+        row: (clockRadius + 0.5) * cardDims.aspectRatio,
+        width: 1,
+        height: 1,
       },
     ];
   }, [game]);
@@ -214,13 +217,19 @@ export default function Clock() {
 
     const pressable =
       mappedCard.topOfZone && pileIndex === game.nextPileIndex && !game.ended;
+    const forceOverlayColor =
+      mappedCard.topOfZone &&
+      game.prevPileIndex !== undefined &&
+      pileIndex === game.prevPileIndex;
 
     return {
       onPress: pressable ? () => revealCardAtPileIndex(pileIndex) : undefined,
+      selectColor: "blue",
+      forceOverlayColor,
     };
   };
 
-  const { cardMap, cardWidth } = useCardMap({
+  const { cardMap, cardWidth, getZoneStylesById } = useCardMap({
     game,
     zones,
     cardMapper,
@@ -239,21 +248,14 @@ export default function Clock() {
 
   const progressValue = useSharedValue(revealedProgress);
   const hourAngle = useSharedValue(0);
-  const minuteAngle = useSharedValue(0);
 
   const prevHourAngle = useRef(0);
-  const prevMinuteAngle = useRef(0);
 
   const animDuration = 1250;
 
   function nextSmoothAngle(prev: number, target: number) {
     const delta = ((target - prev + 540) % 360) - 180;
     return prev + delta;
-  }
-
-  function pileIndexToClockAngle(pileIndex?: number) {
-    if (pileIndex === undefined) return 0;
-    return (pileIndex % 12) * 30;
   }
 
   useEffect(() => {
@@ -274,18 +276,6 @@ export default function Clock() {
     });
   }, [revealedProgress, hourAngle]);
 
-  useEffect(() => {
-    const targetMinuteAngle = pileIndexToClockAngle(game.nextPileIndex);
-    const smoothMinuteAngle = nextSmoothAngle(
-      prevMinuteAngle.current,
-      targetMinuteAngle,
-    );
-    prevMinuteAngle.current = smoothMinuteAngle;
-    minuteAngle.value = withTiming(smoothMinuteAngle, {
-      duration: animDuration,
-    });
-  }, [game.nextPileIndex, minuteAngle]);
-
   const animatedProgressProps = useAnimatedProps(() => {
     return {
       strokeDashoffset: progressCircumference * (1 - progressValue.value),
@@ -296,29 +286,26 @@ export default function Clock() {
       transform: [{ rotate: `${hourAngle.value}deg` }],
     };
   });
-  const animatedMinuteStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ rotate: `${minuteAngle.value}deg` }],
-    };
-  });
 
   const center = progressSize / 2;
 
   const hourSource = { width: 130, height: 376, pivotFromBottom: 35 };
-  const minuteSource = { width: 70, height: 480, pivotFromBottom: 35 };
 
   const hourHeight = progressSize * 0.58;
   const hourScale = hourHeight / hourSource.height;
   const hourWidth = hourSource.width * hourScale;
   const hourPivotY = hourHeight - hourSource.pivotFromBottom * hourScale;
 
-  const minuteHeight = progressSize * 0.84;
-  const minuteScale = minuteHeight / minuteSource.height;
-  const minuteWidth = minuteSource.width * minuteScale;
-  const minutePivotY =
-    minuteHeight - minuteSource.pivotFromBottom * minuteScale;
-
   const clockFaceRadius = clockRadius * 3.34 * cardWidth;
+
+  const progressStrokeColor = useMemo(() => {
+    const kings = game.revealedKings;
+    if (kings === 0) return Colors.brightGreen;
+    if (kings === 1) return Colors.brightYellow;
+    if (kings === 2) return Colors.brightOrange;
+    if (kings === 3) return Colors.brightRed;
+    return Colors.brightRed;
+  }, [game.revealedKings]);
 
   return (
     <GameWrapper
@@ -334,11 +321,14 @@ export default function Clock() {
       canUndo={canUndo}
       undo={undo}
     >
+      {cardMap}
+
       <View
         style={[
           flexStyles.rowCentered,
+          getZoneStylesById("clockface"),
           {
-            position: "absolute",
+            transform: [{ translateX: "-50%" }, { translateY: "-50%" }],
             pointerEvents: "none",
             justifyContent: "center",
             alignItems: "center",
@@ -349,102 +339,77 @@ export default function Clock() {
             borderRadius: clockFaceRadius / 2,
           },
         ]}
-      />
-
-      {cardMap}
-
-      <View
-        style={[
-          flexStyles.rowCentered,
-          {
-            pointerEvents: "none",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 50,
-            width: clockFaceRadius,
-            height: clockFaceRadius,
-          },
-        ]}
       >
-        <View style={{ width: progressSize, height: progressSize }}>
-          <Svg
-            width={progressSize}
-            height={progressSize}
-            style={{ transform: [{ rotate: "-90deg" }] }}
-          >
-            <Circle
-              cx={progressSize / 2}
-              cy={progressSize / 2}
-              r={progressRadius}
-              stroke={rgba(cardText, 0.15)}
-              strokeWidth={progressStroke}
-              fill="transparent"
-            />
-            <AnimatedCircle
-              animatedProps={animatedProgressProps}
-              cx={progressSize / 2}
-              cy={progressSize / 2}
-              r={progressRadius}
-              stroke={cardText}
-              strokeWidth={progressStroke}
-              strokeLinecap="round"
-              strokeDasharray={progressCircumference}
-              fill="transparent"
-            />
-          </Svg>
+        <View
+          style={[
+            flexStyles.rowCentered,
+            {
+              top: "50%",
+              left: "50%",
+              transform: [{ translateX: "-50%" }, { translateY: "-50%" }],
+              zIndex: 1,
+              pointerEvents: "none",
+              justifyContent: "center",
+              alignItems: "center",
+              width: clockFaceRadius,
+              height: clockFaceRadius,
+            },
+          ]}
+        >
+          <View style={{ width: progressSize, height: progressSize }}>
+            <Svg
+              width={progressSize}
+              height={progressSize}
+              style={{ transform: [{ rotate: "-90deg" }] }}
+            >
+              <Circle
+                cx={progressSize / 2}
+                cy={progressSize / 2}
+                r={progressRadius}
+                stroke={rgba(cardText, 0.15)}
+                strokeWidth={progressStroke}
+                fill="transparent"
+              />
+              <AnimatedCircle
+                animatedProps={animatedProgressProps}
+                cx={progressSize / 2}
+                cy={progressSize / 2}
+                r={progressRadius}
+                stroke={progressStrokeColor}
+                strokeWidth={progressStroke}
+                strokeLinecap="round"
+                strokeDasharray={progressCircumference}
+                fill="transparent"
+              />
+            </Svg>
 
-          <Animated.View
-            style={[
-              {
-                position: "absolute",
-                zIndex: 10,
-                left: 0,
-                top: 0,
-                width: progressSize,
-                height: progressSize,
-              },
-              animatedHourStyle,
-            ]}
-          >
-            <ClockHandHours
-              width={hourWidth}
-              height={hourHeight}
-              style={{
-                position: "absolute",
-                left: center - hourWidth / 2,
-                top: center - hourPivotY,
-              }}
-              fill={cardText}
-              stroke={rgba(cardBg, 0.7)}
-              strokeWidth={responsiveScale * 4}
-            />
-          </Animated.View>
-
-          <Animated.View
-            style={[
-              {
-                position: "absolute",
-                left: 0,
-                top: 0,
-                width: progressSize,
-                height: progressSize,
-              },
-              animatedMinuteStyle,
-            ]}
-          >
-            <ClockHandMinutes
-              width={minuteWidth}
-              height={minuteHeight}
-              style={{
-                position: "absolute",
-                left: center - minuteWidth / 2,
-                top: center - minutePivotY,
-              }}
-              fill={cardText}
-              stroke={rgba(cardBg, 0.7)}
-              strokeWidth={responsiveScale * 4}
-            />
-          </Animated.View>
+            <Animated.View
+              style={[
+                {
+                  position: "absolute",
+                  zIndex: 10,
+                  left: 0,
+                  top: 0,
+                  width: progressSize,
+                  height: progressSize,
+                },
+                animatedHourStyle,
+              ]}
+            >
+              <ClockHandHours
+                width={hourWidth}
+                height={hourHeight}
+                style={{
+                  position: "absolute",
+                  left: center - hourWidth / 2,
+                  top: center - hourPivotY,
+                }}
+                fill={cardText}
+                stroke={rgba(cardBg, 0.7)}
+                strokeWidth={responsiveScale * 4}
+              />
+            </Animated.View>
+          </View>
         </View>
       </View>
     </GameWrapper>

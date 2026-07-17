@@ -177,8 +177,8 @@ export function isNumberRank(rank: CardRank | LoopRank) {
   return ["2", "3", "4", "5", "6", "7", "8", "9", "10"].includes(rank);
 }
 
-export function top(deck: PlayingCard[]) {
-  if (deck.length === 0) return undefined;
+export function top(deck: PlayingCard[] | null | undefined) {
+  if (!deck || deck.length === 0) return undefined;
   return deck[deck.length - 1];
 }
 export function flipToFace(card: PlayingCard) {

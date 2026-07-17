@@ -181,6 +181,8 @@ export default function LootTheLoop() {
     saveUndoState(structuredClone(game));
 
     setGame((draft) => {
+      if (draft.deck.length === 0) return;
+
       // Turn two cards up in current and next position
       const index0 = draft.deckPos;
       const index1 = (draft.deckPos + 1) % draft.deck.length;
@@ -328,7 +330,7 @@ export default function LootTheLoop() {
   }
 
   function returnToSelectedMarkedPath() {
-    if (selectedPath !== undefined) {
+    if (selectedPath !== undefined && selectedPath.card) {
       const insertAt = game.deckPos;
 
       setSelectedPath(undefined);
@@ -386,7 +388,8 @@ export default function LootTheLoop() {
 
   const zones: MapZone[] = useMemo(() => {
     const deckLength = game.deck.length;
-    const eachCardAngle = (360 - positioning.gapAngle) / deckLength;
+    const eachCardAngle =
+      deckLength > 0 ? (360 - positioning.gapAngle) / deckLength : 0;
 
     // ---------- Loop Cards ---------- //
     const loopZones: MapZone[] = game.deck.map((pos, i) => {
@@ -394,6 +397,7 @@ export default function LootTheLoop() {
       const isSelected = selectedCardIndex === i;
 
       const isExploreTarget = !!(
+        deckLength > 0 &&
         selectedRevealedRank !== undefined &&
         selectedCardIndex !== undefined &&
         i === (game.deckPos + selectedRevealedRank) % deckLength
@@ -515,15 +519,21 @@ export default function LootTheLoop() {
         return orbitingLoopAnimation;
 
       const deckLength = game.deck.length;
+      if (deckLength === 0) return orbitingLoopAnimation;
+
       const nextDeckPos = (game.deckPos + 1) % deckLength;
       const isSelected = selectedCardIndex === index;
       const isLookAround = index === game.deckPos && !card.faceUp;
       const isExploreTarget = !!(
+        deckLength > 0 &&
         selectedRevealedRank !== undefined &&
         selectedCardIndex !== undefined &&
         index === (game.deckPos + selectedRevealedRank) % deckLength
       );
       const isPotentialPathTarget = !!(
+        deckLength > 0 &&
+        selectedPath?.card !== undefined &&
+        selectedPath?.card !== null &&
         selectedPath?.index !== undefined &&
         index === (rankValue(selectedPath.card) + game.deckPos - 1) % deckLength
       );
@@ -582,6 +592,11 @@ export default function LootTheLoop() {
         selectColor: "green",
         isSelected,
         onPress: () => {
+          if (!noteCard) {
+            setSelectedPath(undefined);
+            return;
+          }
+
           setSelectedCardIndex(undefined);
           setSelectedPath(
             selectedPath?.index === index
@@ -604,6 +619,9 @@ export default function LootTheLoop() {
     paddingTop: 0.6,
     fixedCols: positioning.colWidth,
   });
+
+  const selectedDeckCard =
+    selectedCardIndex !== undefined ? game.deck[selectedCardIndex] : undefined;
 
   return (
     <GameWrapper
@@ -668,9 +686,9 @@ export default function LootTheLoop() {
             }
           }}
           disabled={
-            selectedCardIndex === undefined ||
-            !isNumberRank(game.deck[selectedCardIndex].rank) ||
-            !game.deck[selectedCardIndex].faceUp
+            selectedDeckCard === undefined ||
+            !isNumberRank(selectedDeckCard.rank) ||
+            !selectedDeckCard.faceUp
           }
           style={[
             flexStyles.flex1,

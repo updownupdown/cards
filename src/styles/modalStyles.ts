@@ -10,10 +10,6 @@ import { useMemo } from "react";
 import { StyleSheet } from "react-native";
 import { flexStyles } from "./flexStyles";
 
-export const modalBorderRadius = 20;
-
-export const modalShadow = `1px 2px 10px ${rgba(Colors.black, 0.5)}, 2px 4px 20px ${rgba(Colors.black, 0.4)}`;
-
 export function useModalStyles() {
   const { ui, spacing, font } = useResponsiveMetrics();
 
@@ -35,7 +31,7 @@ export function useModalStyles() {
           backgroundColor: Colors.K950,
           borderRadius: spacing(20),
           overflow: "hidden",
-          boxShadow: modalShadow,
+          boxShadow: `1px 2px 10px ${rgba(Colors.black, 0.5)}, 2px 4px 20px ${rgba(Colors.black, 0.4)}`,
         },
         modalHeader: {
           flexDirection: "row",
@@ -60,11 +56,6 @@ export function useModalStyles() {
           gap: spacing(30),
           alignItems: "stretch",
           alignSelf: "stretch",
-        },
-        byLine: {
-          fontFamily: FontWeight[300],
-          fontSize: font(15),
-          color: Colors.K500,
         },
         statsAndFav: {
           ...flexStyles.rowCentered,

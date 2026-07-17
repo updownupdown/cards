@@ -21,7 +21,7 @@ export const theBogey: GameDefinition = {
     luck: 35,
   },
   tags: [GameTag.ModernMechanics],
-  byLine: "Designer: Katharine Turner, 2016",
+  byLine: "Game design by Katharine Turner, 2016",
   about: [
     "Play against the Bogey in a tactical card game of columns and choices.",
     "Each decision to play, discard, or hold cards directly impacts your path to victory.",

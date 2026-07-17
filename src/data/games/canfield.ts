@@ -24,6 +24,8 @@ export const canfield: GameDefinition = {
     "Canfield is a famously tough gambling-hall patience with a big face-up reserve.",
     "The random base rank and awkward reserve mean most deals are lost, so a win is a real prize.",
   ],
+  byLine:
+    "Game designer unknown, first documented by Mary Whitmore Jones in 1891",
   howToPlay: [
     "## Objective",
     "Move as many cards as possible to the four **foundations**, each built up by suit from the base rank.",

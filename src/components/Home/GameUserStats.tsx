@@ -56,7 +56,7 @@ export function GameUserStats({
           style={{
             flex: 1,
             alignItems: "center",
-            paddingVertical: spacing(12),
+            paddingVertical: spacing(6),
           }}
         >
           <Text

@@ -1,13 +1,12 @@
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon, IconName } from "@/icons";
+import { flexStyles } from "@/styles/flexStyles";
 import { Colors, rgba } from "@/styles/styles";
+import { textStyles } from "@/styles/textStyles";
 import { centeredOffset, roundToPixel, snapCenteredSize } from "@/utils/utils";
 import React from "react";
 import { DimensionValue, View } from "react-native";
 import { Text } from "../common/Text";
-import { flexStyles } from "@/styles/flexStyles";
-import { textStyles } from "@/styles/textStyles";
-import { getUnderlayStyle } from "../Cards/CardStyles";
 
 const PROGRESS_COLORS = {
   red: Colors.buttonRed,

@@ -20,12 +20,12 @@ export const bakersGame: GameDefinition = {
     difficulty: 55,
     luck: 30,
   },
-  // tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop, GameTag.AIGenerated],
   tags: [GameTag.Beta],
   about: [
     "Baker's Game is the same-suit forerunner of FreeCell, popularised by Martin Gardner.",
     "Building by suit makes long sequences far harder to assemble, so free cells are precious.",
   ],
+  byLine: "Game design by C. L. Baker, 1968",
   howToPlay: [
     "## Objective",
     "Move all 52 cards to the four **foundations**, each built up by suit from Ace to King.",

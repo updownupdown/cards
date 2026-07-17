@@ -25,7 +25,7 @@ export const theSandwichGuy: GameDefinition = {
     GameTag.ModernMechanics,
     GameTag.EasyToLearn,
   ],
-  byLine: "Game design by Wil Su",
+  byLine: "Game design by Wil Su, 2021",
   about: [
     "Make sandwiches with ingredients available in your food truck. The quality of each sandwich determines how many ingredients will refill your prep area. Sell out your entire inventory to win!",
     "This game is adapted from Wil Su's Isaludo collection.",

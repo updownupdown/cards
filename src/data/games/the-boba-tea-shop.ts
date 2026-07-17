@@ -21,7 +21,7 @@ export const theBobaTeaShop: GameDefinition = {
     luck: 55,
   },
   tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
-  byLine: "Game design by Wil Su",
+  byLine: "Game design by Wil Su, 2021",
   howToPlay: [
     "Play cards into valid stacks to satisfy order constraints.",
     "Plan around blocked stacks so you do not run out of legal moves.",

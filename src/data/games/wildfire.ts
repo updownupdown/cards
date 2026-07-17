@@ -25,12 +25,12 @@ export const wildfire: GameDefinition = {
     difficulty: 70,
     luck: 40,
   },
-  // tags: [GameTag.ModernMechanics],
   tags: [GameTag.Beta],
   about: [
     "Wildfire is a tense containment puzzle: a living blaze fights back every turn.",
     "Every crew card is precious — spend them where the fire is about to flash over, not where it is easy.",
   ],
+  byLine: "Game design by James Carmichael, 2026",
   howToPlay: [
     "## Objective",
     "Contain the blaze by clearing **all nine cells** before the fire spreads out of control.",

@@ -9,7 +9,7 @@ export const clearTheDungeon: GameDefinition = {
     },
   },
   title: "Clear the Dungeon",
-  byLine: "by Mark S. Ball",
+
   thumbnail: DEFAULT_GAME_THUMBNAIL,
   cardColorBg: "#221c2e",
   cardColorText: "#e6dcff",
@@ -27,6 +27,7 @@ export const clearTheDungeon: GameDefinition = {
     "Clear the Dungeon by Mark S. Ball casts you as the King's monster exterminator.",
     "Every attack needs raw power and the right weakness — spend your cards wisely and keep the damage bar low.",
   ],
+  byLine: "Game design by Mark S. Ball, 2019",
   howToPlay: [
     "## Objective",
     "Defeat all **12 monsters** (the Jacks, Queens and Kings) before your power deck runs out.",

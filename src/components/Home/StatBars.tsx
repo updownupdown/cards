@@ -16,6 +16,7 @@ export const StatBars = ({
   return (
     <View
       style={{
+        width: "100%",
         gap: Math.round(spacing(24)),
         paddingTop: Math.round(spacing(6)),
         flexDirection: "row",

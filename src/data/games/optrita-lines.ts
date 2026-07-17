@@ -26,6 +26,7 @@ export const optritaLines: GameDefinition = {
     "Optrita Lines is a solitaire trick-taker: you attack lines of a face-down grid, revealing one card at a time.",
     "More information helps, but every reveal also closes off lines you can no longer challenge.",
   ],
+  byLine: "Game design by Stephen Tudor, 2023",
   howToPlay: [
     "## Objective",
     "Win **21 tricks** before the grid does.",

@@ -25,6 +25,7 @@ export const sirTommy: GameDefinition = {
     "Sir Tommy is often called the oldest recorded solitaire, and it still teaches the core lesson: where you set a card down matters.",
     "You can't rearrange a waste pile, so a King dropped onto a low card buries everything beneath it.",
   ],
+  byLine: "Game designer unknown",
   howToPlay: [
     "## Objective",
     "Build **four foundations** up from **Ace to King**, regardless of suit.",

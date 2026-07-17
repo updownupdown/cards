@@ -20,11 +20,12 @@ export const blackHole: GameDefinition = {
     difficulty: 55,
     luck: 30,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
+  tags: [GameTag.EasyToLearn],
   about: [
     "Black Hole solitaire was invented by British game expert David Parlett and first published in his 1979 book, The Penguin Book of Patience.",
     "With perfect strategy, the win rate is roughly 87%. However, because the game requires looking multiple moves ahead to avoid dead ends, the average human win rate is much lower, between 15% and 40%.",
   ],
+  byLine: "Game design by David Parlett, 1979",
   howToPlay: [
     "## Objective",
     "- Pull every card into the central black hole.",

@@ -21,12 +21,12 @@ export const riverboat: GameDefinition = {
     difficulty: 65,
     luck: 35,
   },
-  // tags: [GameTag.ModernMechanics, GameTag.AIGenerated],
   tags: [GameTag.Beta],
   about: [
     "Riverboat is a game of nerve at the poker table: 25 cards, one hand at a time, no takebacks.",
     "Luck deals the cards, but the pot is won by the player who plans two hands at once and never wastes a seat.",
   ],
+  byLine: "Game design by James Carmichael, 2026",
   howToPlay: [
     "## Objective",
     "Fill the **5x5 table** so the ten poker hands (5 rows + 5 columns) total at least **par** points.",

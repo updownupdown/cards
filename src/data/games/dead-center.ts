@@ -27,7 +27,7 @@ export const deadCenter: GameDefinition = {
     luck: 20,
   },
   tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
-  byLine: "Game design by Wil Su",
+  byLine: "Game design by Wil Su, 2021",
   about: [
     "Your 3x3 cabin is surrounded by zombies! Plan ahead: your ability to attack depends on surrounding cards!",
     "This game is adapted from Wil Su's Isaludo collection.",

@@ -24,6 +24,7 @@ export const russianSolitaire: GameDefinition = {
     "Russian Solitaire is Yukon with same-suit building, making it one of the toughest games around.",
     "Freeing buried cards in exactly the right order is the whole puzzle.",
   ],
+  byLine: "Game designer unknown",
   howToPlay: [
     "## Objective",
     "Build the four **foundations** up by suit from Ace to King.",

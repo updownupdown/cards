@@ -4,7 +4,7 @@ export const clock: GameDefinition = {
   path: "/clock",
   tip: {
     default: {
-      text: "Tap active pile; cards auto-sort by hour; 4 kings first loses.",
+      text: "Tap center pile to start, then the hour matching the last revealed card.",
     },
   },
   title: "Clock Solitaire",
@@ -14,7 +14,7 @@ export const clock: GameDefinition = {
   cardColorBg: "#1d1610",
   cardColorText: "#eed9c2",
   cardDescription:
-    "A pure-luck patience: sort the deck around a clock face before the Kings run out.",
+    "A pure-luck patience: follow cards around the clock before all the Kings are uncovered.",
   stats: {
     complexity: 10,
     difficulty: 10,
@@ -22,9 +22,9 @@ export const clock: GameDefinition = {
   },
   tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
   about: [
-    "Clock Solitaire is a classic game of pure chance with no decisions to make.",
-    "Watch the deck sort itself around the dial and hope the Kings hold off.",
+    "Unlike most solitaire games that involve strategy, Clock Solitaire is purely mechanical, and the odds are entirely up to luck, with winning odds of 1/13.",
   ],
+  byLine: "Game designer unknown, known since at least the 19th century",
   howToPlay: [
     "## Objective",
     "Turn every card face up, sorting all 52 into their **clock positions** before all four Kings appear.",

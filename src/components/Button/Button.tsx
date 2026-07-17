@@ -104,7 +104,7 @@ export const Button = ({
   if (disabled) {
     themeColor = textOnly
       ? rgba(Colors.white, 0.7)
-      : darkenHexColor(desaturateHexColor(themeColor, 0.8), 0.6);
+      : darkenHexColor(desaturateHexColor(themeColor, 1), 0.6);
   }
 
   const baseFontSize = Typography.size[size];

@@ -67,6 +67,7 @@ export function HomeHeader({ onOpenSearch, onOpenSettings }: HomeHeaderProps) {
         <View
           style={[
             flexStyles.rowCentered,
+            flexStyles.spaceBetween,
             {
               pointerEvents: "box-none",
               height: headerHeight,
@@ -81,22 +82,24 @@ export function HomeHeader({ onOpenSearch, onOpenSettings }: HomeHeaderProps) {
             style={{ marginRight: "auto" }}
           />
 
-          <Button
-            iconName="search"
-            onPress={onOpenSearch}
-            style={[styles.headerBtn, menuStyles.headerButton]}
-            iconSize={spacing(HeaderButtonIconSize)}
-            iconColor={rgba(Colors.white, 0.6)}
-          />
+          <View style={[flexStyles.rowCentered]}>
+            <Button
+              iconName="search"
+              onPress={onOpenSearch}
+              style={[styles.headerBtn, menuStyles.headerButton]}
+              iconSize={spacing(HeaderButtonIconSize)}
+              iconColor={rgba(Colors.white, 0.6)}
+            />
 
-          <Button
-            size="xl"
-            iconName="settings"
-            onPress={onOpenSettings}
-            style={[styles.headerBtn, menuStyles.headerButton]}
-            iconSize={spacing(HeaderButtonIconSize)}
-            iconColor={rgba(Colors.white, 0.6)}
-          />
+            <Button
+              size="xl"
+              iconName="settings"
+              onPress={onOpenSettings}
+              style={[styles.headerBtn, menuStyles.headerButton]}
+              iconSize={spacing(HeaderButtonIconSize)}
+              iconColor={rgba(Colors.white, 0.6)}
+            />
+          </View>
         </View>
       </View>
     </View>

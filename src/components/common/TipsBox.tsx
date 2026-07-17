@@ -1,4 +1,5 @@
 import { Text } from "@/components/common/Text";
+import { INSTRUCTIONS_UNAVAILABLE } from "@/constants/constants";
 import {
   getGameInfo,
   normalizeGamePath,
@@ -13,14 +14,12 @@ import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { Layers } from "@/styles/layers";
 import { Colors, ContentSidePadding, HomePadding, rgba } from "@/styles/styles";
+import { lightenHexColor } from "@/utils/utils";
 import { usePathname } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { HowToPlay } from "../Modals/GameModal";
-import { floatingBarDims } from "@/styles/menuStyles";
-import { lightenHexColor } from "@/utils/utils";
-import { INSTRUCTIONS_UNAVAILABLE } from "@/constants/constants";
 
 interface Props {
   /** The current tip phase key; defaults to the single-phase "default". */
@@ -78,7 +77,7 @@ export function TipsBox({ phase, topOffset }: Props) {
           height: expanded ? undefined : boxHeight,
           maxHeight: expanded ? expandedMaxHeight : boxHeight,
           paddingHorizontal: spacing(HomePadding / 8),
-          borderRadius: spacing(floatingBarDims.height / 2),
+          borderRadius: boxHeight / 2,
           backgroundColor: rgba(gameInfo.cardColorBg, expanded ? 1 : 0.8),
           boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.black, 0.3)}, ${spacing(2)}px ${spacing(4)}px ${spacing(10)}px ${rgba(
             Colors.black,

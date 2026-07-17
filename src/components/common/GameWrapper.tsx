@@ -13,9 +13,12 @@ import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
 import { useTipsBoxLayout } from "@/hooks/useTipsLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { flexStyles } from "@/styles/flexStyles";
-import { getGameHeaderBottom } from "@/styles/layout";
 import { Layers } from "@/styles/layers";
-import { floatingBarDims, menuStyles } from "@/styles/menuStyles";
+import {
+  floatingBarDims,
+  getGameHeaderBottom,
+  menuStyles,
+} from "@/styles/menuStyles";
 import {
   Colors,
   HeaderButtonIconSize,
@@ -197,7 +200,7 @@ export const GameWrapper = ({
             ]}
           >
             <Button
-              style={[menuStyles.headerButton, menuStyles.headerButtonFlex]}
+              style={[menuStyles.headerButton]}
               onPress={async () => {
                 try {
                   await clearLastGameSession();
@@ -211,7 +214,7 @@ export const GameWrapper = ({
             />
 
             <Button
-              style={[menuStyles.headerButton, menuStyles.headerButtonFlex]}
+              style={[menuStyles.headerButton]}
               onPress={() => setTipsMode(!active)}
               iconName={"info-outline"}
               iconColor={active ? rgba(Colors.white, 0.3) : titleColor}
@@ -220,7 +223,7 @@ export const GameWrapper = ({
 
             {handleUndo && (
               <Button
-                style={[menuStyles.headerButton, menuStyles.headerButtonFlex]}
+                style={[menuStyles.headerButton]}
                 onPress={handleUndo}
                 iconName="undo"
                 iconColor={canUndo ? titleColor : rgba(Colors.white, 0.3)}
@@ -237,7 +240,7 @@ export const GameWrapper = ({
             />
 
             <Button
-              style={[menuStyles.headerButton, menuStyles.headerButtonFlex]}
+              style={[menuStyles.headerButton]}
               onPress={() => setShowMenu(true)}
               iconName="more-vertical"
               iconColor={titleColor}

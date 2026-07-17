@@ -428,8 +428,8 @@ export async function toggleFavoriteGame(pathname: string) {
 }
 
 export function calculateWinRate(stats: GameStats) {
-  if (stats.attempts === 0) return "0%";
-  return `${((stats.wins / stats.attempts) * 100).toFixed()}%`;
+  if (stats.wins === 0) return "0%";
+  return `${((stats.wins / (stats.wins + stats.losses)) * 100).toFixed()}%`;
 }
 
 // Stats functions directly update Game Settings

@@ -129,7 +129,7 @@ function revealLastIfNeeded(pile: PlayingCard[]) {
 
 const gameStateInitial = createInitialState();
 
-export default function Solitaire() {
+export default function Klondike() {
   const configuredDrawCount = useGameSettingValue("drawCount");
 
   const navigation = useNavigation();

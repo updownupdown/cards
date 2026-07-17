@@ -111,6 +111,18 @@ export function useStateManager<T>({
     return () => clearTimeout(timer);
   }, [game, globalSettings.resumeLastGame, isSettingUp, pathname]);
 
+  // —— Animation Lock ————————————————————————
+  const isAnimatingRef = useRef(false);
+
+  const withAnimation = useCallback(async (fn: () => Promise<void>) => {
+    isAnimatingRef.current = true;
+    try {
+      await fn();
+    } finally {
+      isAnimatingRef.current = false;
+    }
+  }, []);
+
   // —— Undo ————————————————————————
   const [history, setHistory] = useState<T[]>([]);
 
@@ -150,6 +162,7 @@ export function useStateManager<T>({
 
   // —— Reset ————————————————————————
   async function reset() {
+    isAnimatingRef.current = false;
     setIsSettingUp(true);
     clearHistory();
     resetNonGameStates?.();
@@ -167,5 +180,7 @@ export function useStateManager<T>({
     isLoaded,
     game,
     setGame,
+    isAnimatingRef,
+    withAnimation,
   };
 }

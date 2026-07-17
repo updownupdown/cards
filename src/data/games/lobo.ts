@@ -9,7 +9,6 @@ export const lobo: GameDefinition = {
     },
   },
   title: "Lobo",
-  byLine: "by James Ernest",
   thumbnail: DEFAULT_GAME_THUMBNAIL,
   cardColorBg: "#2b1220",
   cardColorText: "#f0d9c2",
@@ -27,6 +26,7 @@ export const lobo: GameDefinition = {
     "Lobo — The Wolf — is a notoriously hard solitaire game by James Ernest for the Postas deck (ranks 1-10, five suits; here Aces are 1s and suits are ignored).",
     '"The wolf takes small bites": often the smart play is the cheapest way to lose, not a risky win.',
   ],
+  byLine: "Game design by James Ernest, 2022",
   howToPlay: [
     "## Objective",
     "Empty the **Wolf's hand** each round. Across rounds, race the Wolf to **100 points**.",

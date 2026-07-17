@@ -24,6 +24,7 @@ export const yukon: GameDefinition = {
     "Yukon takes Klondike's layout but lets you haul entire piles of mixed cards in a single move.",
     "With no stock and almost everything face up, wins reward untangling the columns in the right order.",
   ],
+  byLine: "Game designer unknown",
   howToPlay: [
     "## Objective",
     "Build the four **foundations** up by suit from Ace to King.",

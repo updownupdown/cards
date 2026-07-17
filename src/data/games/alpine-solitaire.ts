@@ -26,6 +26,7 @@ export const alpineSolitaire: GameDefinition = {
     "Alpine Solitaire by Austin Palmer is a climbing game for one player.",
     "Balance aggressive routes against the fatigue they create, and choose a difficulty or one of fourteen eight-thousander challenges in Settings.",
   ],
+  byLine: "Game design by Austin Palmer, 2023",
   howToPlay: [
     "## Goal",
     "Reach three camps by playing a route that empties your hand — while your milestones keep getting higher.",

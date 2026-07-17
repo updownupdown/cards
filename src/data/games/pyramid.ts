@@ -24,6 +24,7 @@ export const pyramid: GameDefinition = {
     "Pyramid is a quick adding-up patience built on a 28-card pyramid.",
     "The challenge is timing: uncover the cards you need before the stock runs dry.",
   ],
+  byLine: "Game designer unknown, first documented in 1949",
   howToPlay: [
     "## Objective",
     "Dismantle the entire **pyramid** of 28 cards by removing them in pairs that sum to **13**.",

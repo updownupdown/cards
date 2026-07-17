@@ -20,12 +20,12 @@ export const eightOff: GameDefinition = {
     difficulty: 40,
     luck: 25,
   },
-  // tags: [GameTag.ClassicSolitaire, GameTag.DragAndDrop, GameTag.AIGenerated],
-  tags: [GameTag.Beta],
+  tags: [GameTag.ClassicSolitaire, GameTag.Beta],
   about: [
     "Eight Off gives you eight free cells instead of four, but demands same-suit tableau building.",
     "The extra cells make most deals winnable — the challenge is not clogging them all at once.",
   ],
+  byLine: "Game designer unknown, popularized by C.L. Baker in the 1920s",
   howToPlay: [
     "## Objective",
     "Move all 52 cards to the four **foundations**, each built up by suit from Ace to King.",

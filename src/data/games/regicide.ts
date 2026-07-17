@@ -24,12 +24,12 @@ export const regicide: GameDefinition = {
     luck: 30,
   },
   tags: [GameTag.ModernMechanics],
-  byLine: "Designer: Lawrence Beveridge",
   about: [
     "Regicide is a cooperative card game, played here solo, against a castle of corrupted royalty.",
     "Chain combos and suit powers to fell Jacks, Queens, and Kings before their counterattacks overwhelm you.",
     "Enemies grow tougher as you climb, so manage your hand and discard pile with care.",
   ],
+  byLine: "Game design by Paul Abrahams, Luke Badger, and Andy Richdale, 2020",
   howToPlay: [
     "## Objective",
     "Defeat all **12 royal enemies** — the Jacks, Queens, and Kings — one after another.",

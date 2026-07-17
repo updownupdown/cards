@@ -24,6 +24,7 @@ export const spiderSolitaire: GameDefinition = {
     "Spider is a two-deck solitaire played across ten tangled columns.",
     "Assemble eight complete suit sequences from King down to Ace to win; fewer suits make for an easier game.",
   ],
+  byLine: "Game designer unknown, first documented in 1917",
   howToPlay: [
     "## Objective",
     "Assemble **8 complete same-suit sequences**, each running from King down to Ace. Finished runs are removed from the table.",

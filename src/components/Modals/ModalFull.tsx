@@ -10,7 +10,7 @@ import { darkenHexColor, lightenHexColor } from "@/utils/utils";
 
 type Props = {
   children: React.ReactNode;
-  title?: string;
+  title: string;
   titleColor?: string;
   backgroundColor?: string;
   onClose: () => void;
@@ -38,29 +38,30 @@ export default function ModalFull({
         >
           <View style={[modalStyles.modalCard, { backgroundColor }]}>
             <View style={modalStyles.modalHeader}>
-              {/* Icon/Title */}
-              {title && (
-                <View style={[flexStyles.rowCentered, flexStyles.gap10]}>
-                  <Text size="xxl" color={titleColor} weight={500}>
-                    {title}
-                  </Text>
-                </View>
-              )}
+              {/* Title */}
+              <Text size="xxl" color={titleColor} weight={500}>
+                {title}
+              </Text>
 
               {/* Close button */}
               <Button
                 style={[
-                  menuStyles.headerButton,
+                  flexStyles.rowCentered,
                   {
                     marginLeft: "auto",
-                    backgroundColor: rgba(Colors.black, 0.24),
+                    backgroundColor: rgba(Colors.white, 0.1),
                     borderRadius: HeaderButtonSize / 2,
+                    padding: 0,
+                    width: HeaderButtonSize,
+                    height: HeaderButtonSize,
+                    boxShadow: "unset",
+                    borderWidth: 0,
                   },
                 ]}
                 onPress={onClose}
                 iconName="close"
                 iconSize={28}
-                iconColor={Colors.K300}
+                iconColor={rgba(Colors.white, 0.7)}
               />
             </View>
 

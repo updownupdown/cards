@@ -25,6 +25,7 @@ export const calculation: GameDefinition = {
     "Calculation is a brain-bending patience where arithmetic replaces suits.",
     "Skilful use of the four waste piles is the difference between a win and a jam.",
   ],
+  byLine: "Game designer unknown.",
   howToPlay: [
     "## Objective",
     "Build all four **foundations** up to the King, each following its own step interval.",

@@ -35,17 +35,11 @@ export type TextSize = keyof typeof Typography.size;
 export const getScaledTextSize = (size: TextSize, textScale: number) =>
   Typography.size[size] * textScale;
 
-export const setOpacity = (hex: string, alpha: number) =>
-  `${hex}${Math.floor(alpha * 255)
-    .toString(16)
-    .padStart(2, "0")}`;
-
 export interface TextProps extends RNTextProps {
   color?: string | HexColor;
   size?: TextSize;
   lineHeight?: number;
   weight?: TextWeight;
-  dimRate?: `${number}%`;
   textTransform?: "none" | "capitalize" | "uppercase" | "lowercase";
 }
 
@@ -57,9 +51,8 @@ export const Text = forwardRef<React.ElementRef<typeof RNText>, TextProps>(
       children,
       weight = "regular",
       textTransform = "none",
-      dimRate,
       style,
-      color = Colors.K200,
+      color = Colors.white,
       ...otherProps
     } = props;
     const ui = useResponsiveUiLayout();
@@ -67,12 +60,6 @@ export const Text = forwardRef<React.ElementRef<typeof RNText>, TextProps>(
     const fontSize = useMemo(() => {
       return getScaledTextSize(size, ui.textScale);
     }, [size, ui.textScale]);
-
-    const textColor = useMemo(() => {
-      if (dimRate)
-        return setOpacity(color, parseFloat(dimRate.replace("%", "")) / 100);
-      return color;
-    }, [color, dimRate]);
 
     const fontFamily = Typography.fontFamily[weight];
     const resolvedLineHeight = fontSize * lineHeight;
@@ -83,7 +70,7 @@ export const Text = forwardRef<React.ElementRef<typeof RNText>, TextProps>(
           {
             fontSize,
             fontFamily,
-            color: textColor,
+            color,
             textTransform,
             lineHeight: resolvedLineHeight,
             flexShrink: 1,

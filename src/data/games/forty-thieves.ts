@@ -24,6 +24,8 @@ export const fortyThieves: GameDefinition = {
     "Forty Thieves, also called Napoleon at St Helena, is a patient two-deck game.",
     "Strict single-card moves and suit-matched building make it a low-luck test of planning.",
   ],
+  byLine:
+    'Game designer unknown, first recorded around 1870 under the name "Napoleon at St. Helena"',
   howToPlay: [
     "## Objective",
     "Move all 104 cards to the **eight foundations**, each built up by suit from Ace to King.",

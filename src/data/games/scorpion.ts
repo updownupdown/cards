@@ -24,6 +24,7 @@ export const scorpion: GameDefinition = {
     "Scorpion is a tense, tangle-heavy cousin of Spider played with a single deck.",
     "Because you can drag buried cards along with their cover, freeing a key card is a puzzle in itself.",
   ],
+  byLine: "Game designer unknown, first documented in the 1940s",
   howToPlay: [
     "## Objective",
     "Build **four complete same-suit sequences**, each running from King down to Ace.",
