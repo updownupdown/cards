@@ -3,9 +3,8 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 export const islandOfCards: GameDefinition = {
   path: "/island-of-cards",
   tip: {
-    default: {
-      text: "Place touching +/-1 rank (A<->K wraps), never equal next to equal.",
-    },
+    default:
+      "Place touching +/-1 rank (A<->K wraps), never equal next to equal.",
   },
   title: "Island of Cards",
   thumbnail: DEFAULT_GAME_THUMBNAIL,

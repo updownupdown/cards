@@ -650,7 +650,7 @@ export default function LootTheLoop() {
           >
             <Button
               text="Mark Path"
-              size="xxs"
+              size="xs"
               textOnly
               onPress={() => {
                 if (selectedCardIndex !== undefined) {
@@ -690,15 +690,8 @@ export default function LootTheLoop() {
             !isNumberRank(selectedDeckCard.rank) ||
             !selectedDeckCard.faceUp
           }
-          style={[
-            flexStyles.flex1,
-            {
-              // height: "100%",
-              // borderRadius: cardWidth * scaleByLayout(0.25),
-            },
-          ]}
+          style={[flexStyles.flex1]}
           theme={"purple"}
-          size="sm"
           taller
         />
 
@@ -706,15 +699,8 @@ export default function LootTheLoop() {
           text="Return to Path"
           onPress={returnToSelectedMarkedPath}
           disabled={selectedPath === undefined}
-          style={[
-            flexStyles.flex1,
-            {
-              // height: "100%",
-              // borderRadius: cardWidth * scaleByLayout(0.25),
-            },
-          ]}
+          style={[flexStyles.flex1]}
           theme={"green"}
-          size="sm"
           taller
         />
 
@@ -726,15 +712,8 @@ export default function LootTheLoop() {
             game.deck.length === 0 ||
             game.deck[game.deckPos].faceUp
           }
-          style={[
-            flexStyles.flex1,
-            {
-              // height: "100%",
-              // borderRadius: cardWidth * scaleByLayout(0.25),
-            },
-          ]}
+          style={[flexStyles.flex1]}
           theme={"blue"}
-          size="sm"
           taller
         />
       </View>

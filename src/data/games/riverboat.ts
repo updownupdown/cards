@@ -4,9 +4,7 @@ export const riverboat: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/riverboat",
   tip: {
-    default: {
-      text: "Place dealt card; each row and column is a poker hand.",
-    },
+    default: "Place dealt card; each row and column is a poker hand.",
   },
   title: "Riverboat",
   thumbnail: "DefaultThumbnail.jpg",

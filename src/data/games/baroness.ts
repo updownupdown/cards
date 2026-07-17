@@ -3,9 +3,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const baroness: GameDefinition = {
   path: "/baroness",
   tip: {
-    default: {
-      text: "Discard K alone or pairs to 13 (A1 J11 Q12); deal if stuck.",
-    },
+    default: "Discard K alone or pairs to 13 (A1 J11 Q12); deal if stuck.",
   },
   title: "Baroness",
   thumbnail: "DefaultThumbnail.jpg",

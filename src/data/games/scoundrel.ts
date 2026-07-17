@@ -3,9 +3,8 @@ import { GameDefinition, GameTag } from "../games-data";
 export const scoundrel: GameDefinition = {
   path: "/scoundrel",
   tip: {
-    default: {
-      text: "Resolve 3 cards to clear a room. Every other room can be skipped. Equip weapons to increase damage, and use potions to heal.",
-    },
+    default:
+      "Resolve 3 cards to clear a room. Every other room can be skipped. Equip weapons to increase damage, and use potions to heal.",
   },
   title: "Scoundrel",
   thumbnail: "Scoundrel.jpg",

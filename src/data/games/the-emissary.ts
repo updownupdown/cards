@@ -27,17 +27,10 @@ export const theEmissary: GameDefinition = {
     "Each ruler has a trump suit (its own). To win a debate, you must play a card of higher value and of the same suit, or any card of the trump suit.",
   ],
   tip: {
-    chooseKingdom: {
-      text: "Pick a kingdom and win exactly its listed number of debates.",
-    },
-    drawTopic: {
-      text: "Draw next topic; when possible, follow topic suit.",
-    },
-    debate: {
-      text: "Win with higher same suit, or any trump suit card.",
-    },
-    discard: {
-      text: "Discard one card via advisor effect.",
-    },
+    chooseKingdom:
+      "Pick a kingdom and win exactly its listed number of debates.",
+    drawTopic: "Draw next topic; when possible, follow topic suit.",
+    debate: "Win with higher same suit, or any trump suit card.",
+    discard: "Discard one card via advisor effect.",
   },
 };

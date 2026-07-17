@@ -70,7 +70,10 @@ export function HomeHeader({ onOpenSearch, onOpenSettings }: HomeHeaderProps) {
           <SoloSuiteLogo
             width={140}
             height={32}
-            style={{ marginRight: "auto" }}
+            style={{
+              marginRight: "auto",
+              filter: `drop-shadow(1px 2px 4px rgba(0, 0, 0, 0.16))`,
+            }}
           />
 
           <View style={[flexStyles.rowCentered]}>

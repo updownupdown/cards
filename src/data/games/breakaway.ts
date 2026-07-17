@@ -5,9 +5,7 @@ export const breakaway: GameDefinition = {
   enabled: false,
   path: "/breakaway",
   tip: {
-    default: {
-      text: "Play exposed +/-1 to paceline; A<->K wraps; draw team car.",
-    },
+    default: "Play exposed +/-1 to paceline; A<->K wraps; draw team car.",
   },
   title: "Breakaway",
   thumbnail: "DefaultThumbnail.jpg",

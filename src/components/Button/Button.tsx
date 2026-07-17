@@ -73,7 +73,7 @@ export const Button = ({
   iconColor,
   theme,
   iconSize,
-  uppercase = true,
+  uppercase = false,
   onPress,
   onLongPress,
   delayLongPress,
@@ -106,7 +106,7 @@ export const Button = ({
   if (disabled) {
     themeColor = textOnly
       ? rgba(Colors.white, 0.7)
-      : darkenHexColor(desaturateHexColor(themeColor, 1), 0.6);
+      : rgba(darkenHexColor(desaturateHexColor(themeColor, 0.5), 0.4), 0.6);
   }
 
   const baseFontSize = Typography.size[size];
@@ -120,8 +120,8 @@ export const Button = ({
   let gap = height / 6;
   let paddingVertical = roundToPixel(6 * uiScale * sizeScale);
   let paddingHorizontal = roundToPixel(20 * uiScale * sizeScale);
-  let fontFamily = textOnly ? FontWeight[600] : FontWeight[600];
-  let lineHeightUpdated = fontSize * (lineHeight ?? 1);
+  let fontFamily = textOnly ? FontWeight[500] : FontWeight[400];
+  let lineHeightUpdated = fontSize * (lineHeight ?? 1.3);
 
   if (textOnly) {
     height = undefined;
@@ -160,7 +160,7 @@ export const Button = ({
               )}, inset 0 0 ${roundToPixel(height * 0.4)}px ${rgba(
                 Colors.white,
                 0.2,
-              )}, ${roundToPixel(height * 0.04)}px ${roundToPixel(height * 0.08)}px ${roundToPixel(height * 0.4)}px ${rgba(themeColor, 0.8)}`
+              )}, ${roundToPixel(height * 0.04)}px ${roundToPixel(height * 0.08)}px ${roundToPixel(height * 0.24)}px ${rgba(Colors.black, 0.2)}`
             : undefined,
           backgroundColor: textOnly ? undefined : themeColor,
           ...(Platform.OS === "web" && preventWebLongPressMenu
@@ -220,7 +220,9 @@ export const Button = ({
               fontSize,
               fontFamily,
               textTransform: uppercase ? "uppercase" : "none",
-              color: textOnly ? themeColor : Colors.white,
+              color: textOnly
+                ? rgba(themeColor, disabled ? 0.5 : 1)
+                : rgba(Colors.white, disabled ? 0.5 : 1),
               lineHeight: lineHeightUpdated,
               textAlign: "center",
             },

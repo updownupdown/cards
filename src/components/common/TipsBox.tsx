@@ -144,7 +144,7 @@ export function TipsBox({ phase, topOffset }: Props) {
                 numberOfLines={2}
                 ellipsizeMode="tail"
               >
-                {instruction?.text ?? INSTRUCTIONS_UNAVAILABLE}
+                {instruction ?? INSTRUCTIONS_UNAVAILABLE}
               </Text>
             )}
           </View>
@@ -187,14 +187,8 @@ export function TipsBox({ phase, topOffset }: Props) {
                 lineHeight={1.4}
                 ellipsizeMode="tail"
               >
-                {instruction?.text ?? INSTRUCTIONS_UNAVAILABLE}
+                {instruction ?? INSTRUCTIONS_UNAVAILABLE}
               </Text>
-
-              {instruction?.tip && (
-                <Text size="md" weight={300} color={Colors.K400}>
-                  {instruction.tip}
-                </Text>
-              )}
             </View>
 
             {/* How to Play */}

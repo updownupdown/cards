@@ -4,9 +4,7 @@ export const blackjackRiverResearch: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/blackjack-river-research",
   tip: {
-    default: {
-      text: "Build each column to exactly 21; 25+ busts that study.",
-    },
+    default: "Build each column to exactly 21; 25+ busts that study.",
   },
   title: "Blackjack River Research",
   thumbnail: DEFAULT_GAME_THUMBNAIL,

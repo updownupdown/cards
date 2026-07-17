@@ -3,9 +3,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const calculation: GameDefinition = {
   path: "/calculation",
   tip: {
-    default: {
-      text: "Play to +1/+2/+3/+4 foundations; park blocks on waste piles.",
-    },
+    default: "Play to +1/+2/+3/+4 foundations; park blocks on waste piles.",
   },
   title: "Calculation",
   thumbnail: "Calculation.jpg",

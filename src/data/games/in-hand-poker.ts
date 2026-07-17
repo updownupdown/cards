@@ -4,9 +4,8 @@ export const inHandPoker: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/in-hand-poker",
   tip: {
-    default: {
-      text: "Build hand, then bet; bigger bets make rival draw more; reach 10.",
-    },
+    default:
+      "Build hand, then bet; bigger bets make rival draw more; reach 10.",
   },
   title: "In-Hand Poker",
   thumbnail: DEFAULT_GAME_THUMBNAIL,

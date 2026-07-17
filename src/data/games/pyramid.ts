@@ -3,9 +3,8 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 export const pyramid: GameDefinition = {
   path: "/pyramid",
   tip: {
-    default: {
-      text: "Remove Kings, or exposed pairs totaling 13. Draw for more matches.",
-    },
+    default:
+      "Remove Kings, or exposed pairs totaling 13. Draw for more matches.",
   },
   title: "Pyramid",
   thumbnail: DEFAULT_GAME_THUMBNAIL,

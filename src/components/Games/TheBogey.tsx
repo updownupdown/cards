@@ -564,7 +564,6 @@ export default function TheBogey() {
         <Button
           text="End Turn"
           theme="blue"
-          size="sm"
           onPress={handleEndTurn}
           disabled={
             game.ended || game.playerTurnEnded || game.awaitingBogeyPlacement

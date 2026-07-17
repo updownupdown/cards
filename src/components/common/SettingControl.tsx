@@ -61,7 +61,7 @@ export function SettingControl<T>({
           }
           onPress={() => onChange(!value as any)}
         >
-          <Text weight={500} size="lg" color={labelColor}>
+          <Text weight={500} size="lg" color={labelColor} lineHeight={1}>
             {label}
           </Text>
 
@@ -75,10 +75,9 @@ export function SettingControl<T>({
                   width: 60,
                   height: 32,
                   borderRadius: 16,
-                  backgroundColor: isTrue ? Colors.win : Colors.K800,
+                  backgroundColor: isTrue ? Colors.win : Colors.K750,
                   justifyContent: "center",
                   paddingHorizontal: 2,
-                  boxShadow: `inset 0 0 6px ${rgba(Colors.black, 0.4)}`,
                 },
               ]}
             >
@@ -92,7 +91,7 @@ export function SettingControl<T>({
                   borderRadius: 11,
                   backgroundColor: Colors.white,
                   transform: [{ translateX: isTrue ? 30 : 4 }],
-                  boxShadow: `1px 2px 4px ${rgba(Colors.black, 0.3)}`,
+                  boxShadow: `1px 2px 8px ${rgba(Colors.black, 0.3)}`,
                 }}
               />
             </View>

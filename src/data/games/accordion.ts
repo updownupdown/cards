@@ -34,8 +34,7 @@ export const accordion: GameDefinition = {
     "- **Prioritize the 3-Card Jump**: Compacting large chunks of cards opens up new empty spaces and brings previously unreachable cards into play.",
   ],
   tip: {
-    default: {
-      text: "Consolidate a pile with another, 1 or 3 spots to its left, if suits or ranks match.",
-    },
+    default:
+      "Consolidate a pile with another, 1 or 3 spots to its left, if suits or ranks match.",
   },
 };

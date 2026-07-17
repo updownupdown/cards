@@ -33,11 +33,7 @@ export const area52: GameDefinition = {
     "Sacrifices can be used to move the lead attacker to the back of the attacker deck; the sacrified defender is lost.",
   ],
   tip: {
-    select: {
-      text: "Choose 1-2 defenders: higher opposite color, or sum target.",
-    },
-    act: {
-      text: "Attack to fight, or sacrifice a defender to send attacker back.",
-    },
+    select: "Choose 1-2 defenders: higher opposite color, or sum target.",
+    act: "Attack to fight, or sacrifice a defender to send attacker back.",
   },
 };

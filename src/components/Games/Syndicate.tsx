@@ -579,7 +579,6 @@ export default function Syndicate() {
           <Button
             onPress={() => promote("members")}
             text="Member"
-            size="sm"
             disabled={
               !selectedReplacement ||
               !!(
@@ -596,7 +595,6 @@ export default function Syndicate() {
           <Button
             onPress={() => promote("candidates")}
             text="Candidate"
-            size="sm"
             disabled={!selectedReplacement}
             style={[flexStyles.flex1]}
             theme="purple"

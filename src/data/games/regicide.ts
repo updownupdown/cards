@@ -3,12 +3,8 @@ import { GameDefinition, GameTag } from "../games-data";
 export const regicide: GameDefinition = {
   path: "/regicide",
   tip: {
-    attack: {
-      text: "Play card/combo to damage royal; suit powers trigger on play.",
-    },
-    defend: {
-      text: "Discard cards totaling enemy attack after shield reduction.",
-    },
+    attack: "Play card/combo to damage royal; suit powers trigger on play.",
+    defend: "Discard cards totaling enemy attack after shield reduction.",
   },
   title: "Regicide",
   cardBack: "Regicide.png",

@@ -36,20 +36,12 @@ export const statKeys: GameStatsNames[] = ["complexity", "difficulty", "luck"];
 export const DEFAULT_GAME_THUMBNAIL: GameThumbnailName = "DefaultThumbnail.jpg";
 export const DEFAULT_GAME_BACKGROUND: GameBackgroundName = "felt-grey.jpg";
 
-/** A single step of guidance shown in the tips box for a given phase. */
-export type TipInstruction = {
-  /** What the player should do next, e.g. "Pick a card". */
-  text: string;
-  /** Optional hint to help make the choice, e.g. "Suits must match.". */
-  tip?: string;
-};
-
 /**
  * Phase-keyed tips instructions. Games pass a `tipPhase` string to
  * `GameWrapper`; the matching entry here is shown in the tips box. Games
  * with a single continuous action can use the `"default"` key.
  */
-export type TipInstructions = Record<string, TipInstruction>;
+export type TipInstructions = Record<string, string>;
 
 /** The phase key used by single-phase games (or when no phase is provided). */
 export const DEFAULT_TIP_PHASE = "default";

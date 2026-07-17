@@ -3,9 +3,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const monteCarlo: GameDefinition = {
   path: "/monte-carlo",
   tip: {
-    default: {
-      text: "Tap adjacent equal ranks to clear; consolidate for new pairs.",
-    },
+    default: "Tap adjacent equal ranks to clear; consolidate for new pairs.",
   },
   title: "Monte Carlo",
   thumbnail: "MonteCarlo.jpg",

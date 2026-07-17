@@ -5,12 +5,8 @@ export const wildfire: GameDefinition = {
   enabled: false,
   path: "/wildfire",
   tip: {
-    play: {
-      text: "Douse with same suit or higher rank crew; keep stacks low.",
-    },
-    advance: {
-      text: "Advance spreads flames; 3-high flashovers can chain outward.",
-    },
+    play: "Douse with same suit or higher rank crew; keep stacks low.",
+    advance: "Advance spreads flames; 3-high flashovers can chain outward.",
   },
   title: "Wildfire",
   thumbnail: "DefaultThumbnail.jpg",

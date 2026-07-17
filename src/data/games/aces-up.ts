@@ -3,9 +3,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const acesUp: GameDefinition = {
   path: "/aces-up",
   tip: {
-    default: {
-      text: "Discard lower same-suit exposes; deal four when stuck.",
-    },
+    default: "Discard lower same-suit exposes; deal four when stuck.",
   },
   title: "Aces Up",
   thumbnail: "AcesUp.jpg",

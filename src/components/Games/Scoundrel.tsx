@@ -790,12 +790,11 @@ export default function Scoundrel() {
 
         <Button
           text="Run"
-          size="sm"
+          size="lg"
           onPress={runFromRoom}
           disabled={!canRun}
           theme={"orange"}
           fullWidth
-          taller
         />
       </View>
 

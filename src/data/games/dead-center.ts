@@ -3,15 +3,9 @@ import { GameDefinition, GameTag } from "../games-data";
 export const deadCenter: GameDefinition = {
   path: "/dead-center",
   tip: {
-    reveal: {
-      text: "Reveal one face-down zombie if available.",
-    },
-    play: {
-      text: "Draw, then place by value/color rule on a legal pile.",
-    },
-    kill: {
-      text: "Kill adjacent zombie if support cards in its line sum to 10.",
-    },
+    reveal: "Reveal one face-down zombie if available.",
+    play: "Draw, then place by value/color rule on a legal pile.",
+    kill: "Kill adjacent zombie if support cards in its line sum to 10.",
   },
   title: "Dead Center",
   thumbnail: "DeadCenter.jpg",

@@ -4,9 +4,7 @@ export const eightOff: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/eight-off",
   tip: {
-    default: {
-      text: "Use 8 cells; tableau down in suit; only kings fill empty.",
-    },
+    default: "Use 8 cells; tableau down in suit; only kings fill empty.",
   },
   title: "Eight Off",
   thumbnail: DEFAULT_GAME_THUMBNAIL,

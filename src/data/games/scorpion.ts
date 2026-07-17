@@ -3,9 +3,7 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 export const scorpion: GameDefinition = {
   path: "/scorpion",
   tip: {
-    default: {
-      text: "Build down in suit; move any face-up stack; kings fill empty.",
-    },
+    default: "Build down in suit; move any face-up stack; kings fill empty.",
   },
   title: "Scorpion",
   enabledOnLocalOnly: true,

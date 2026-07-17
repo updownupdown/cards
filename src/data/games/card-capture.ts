@@ -3,21 +3,12 @@ import { GameDefinition, GameTag } from "../games-data";
 export const cardCapture: GameDefinition = {
   path: "/card-capture",
   tip: {
-    enemyPhase: {
-      text: "Enemy line shifts right, then refills from enemy deck.",
-    },
-    discardPhase: {
-      text: "Discard any cards; next phase draws back up to 4.",
-    },
-    drawPhase: {
-      text: "Draw to 4 from your deck (2s, 3s, 4s, jokers).",
-    },
-    capturePhase: {
-      text: "Capture by same-suit total >= enemy, or let capture, or sacrifice.",
-    },
-    gameOver: {
-      text: "Battle over.",
-    },
+    enemyPhase: "Enemy line shifts right, then refills from enemy deck.",
+    discardPhase: "Discard any cards; next phase draws back up to 4.",
+    drawPhase: "Draw to 4 from your deck (2s, 3s, 4s, jokers).",
+    capturePhase:
+      "Capture by same-suit total >= enemy, or let capture, or sacrifice.",
+    gameOver: "Battle over.",
   },
   title: "Card Capture",
   enabledOnLocalOnly: true,

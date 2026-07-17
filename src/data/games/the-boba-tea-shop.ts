@@ -3,9 +3,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const theBobaTeaShop: GameDefinition = {
   path: "/the-boba-tea-shop",
   tip: {
-    default: {
-      text: "Fill orders with legal stacks; avoid deadlocks; peek reshuffles.",
-    },
+    default: "Fill orders with legal stacks; avoid deadlocks; peek reshuffles.",
   },
   title: "The Boba Tea Shop",
   thumbnail: "BobaTea.jpg",

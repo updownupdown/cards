@@ -3,9 +3,7 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 export const russianSolitaire: GameDefinition = {
   path: "/russian-solitaire",
   tip: {
-    default: {
-      text: "Move any face-up stack; build down in suit; only kings fill.",
-    },
+    default: "Move any face-up stack; build down in suit; only kings fill.",
   },
   title: "Russian Solitaire",
   thumbnail: DEFAULT_GAME_THUMBNAIL,

@@ -5,9 +5,8 @@ export const ascent: GameDefinition = {
   enabled: false,
   path: "/ascent",
   tip: {
-    default: {
-      text: "Clear pitch with same suit or higher rank (A high); swap bad hold.",
-    },
+    default:
+      "Clear pitch with same suit or higher rank (A high); swap bad hold.",
   },
   title: "Ascent",
   thumbnail: "DefaultThumbnail.jpg",

@@ -4,9 +4,7 @@ export const nestor: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/nestor",
   tip: {
-    default: {
-      text: "Discard exposed equal ranks (column bottoms and reserve top).",
-    },
+    default: "Discard exposed equal ranks (column bottoms and reserve top).",
   },
   title: "Nestor",
   thumbnail: "DefaultThumbnail.jpg",

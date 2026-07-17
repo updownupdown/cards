@@ -3,9 +3,8 @@ import { GameDefinition, GameTag } from "../games-data";
 export const lootTheLoop: GameDefinition = {
   path: "/loot-the-loop",
   tip: {
-    default: {
-      text: "Collect all Aces and exit through the Joker to win. Avoid face up face cards, and use number cards to explore.",
-    },
+    default:
+      "Collect all Aces and exit through the Joker to win. Avoid face up face cards, and use number cards to explore.",
   },
   title: "Loot the Loop",
   thumbnail: "LootTheLoop.jpg",

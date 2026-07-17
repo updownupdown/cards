@@ -3,9 +3,8 @@ import { GameDefinition, GameTag } from "../games-data";
 export const blackHole: GameDefinition = {
   path: "/black-hole",
   tip: {
-    default: {
-      text: "Cards of adjacent value to the hole card can be cleared. Clear all to win. A<->K wraps.",
-    },
+    default:
+      "Cards of adjacent value to the hole card can be cleared. Clear all to win. A<->K wraps.",
   },
   title: "Black Hole",
   thumbnail: "DefaultThumbnail.jpg",

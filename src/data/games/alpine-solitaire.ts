@@ -4,9 +4,7 @@ export const alpineSolitaire: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/alpine-solitaire",
   tip: {
-    default: {
-      text: "Build routes by suit; empty hand to camp; rest recycles.",
-    },
+    default: "Build routes by suit; empty hand to camp; rest recycles.",
   },
   title: "Alpine Solitaire",
   thumbnail: DEFAULT_GAME_THUMBNAIL,

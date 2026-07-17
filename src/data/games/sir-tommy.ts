@@ -3,9 +3,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const sirTommy: GameDefinition = {
   path: "/sir-tommy",
   tip: {
-    default: {
-      text: "Place draw on any waste pile; foundations auto-build A to K.",
-    },
+    default: "Place draw on any waste pile; foundations auto-build A to K.",
   },
   title: "Sir Tommy",
   thumbnail: "DefaultThumbnail.jpg",

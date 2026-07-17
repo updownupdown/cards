@@ -3,9 +3,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const golf: GameDefinition = {
   path: "/golf",
   tip: {
-    default: {
-      text: "Play exposed +/-1 to waste; no wrap; draw stock when stuck.",
-    },
+    default: "Play exposed +/-1 to waste; no wrap; draw stock when stuck.",
   },
   title: "Golf",
   thumbnail: "Golf.jpg",

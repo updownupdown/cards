@@ -3,9 +3,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const theSandwichGuy: GameDefinition = {
   path: "/the-sandwich-guy",
   tip: {
-    default: {
-      text: "Pick 3 equally spaced ranks; same suit/color gives more refill.",
-    },
+    default: "Pick 3 equally spaced ranks; same suit/color gives more refill.",
   },
   title: "The Sandwich Guy",
   thumbnail: "SandwichGuy.jpg",

@@ -490,7 +490,7 @@ export default function Area52() {
 
       {/* Titles */}
       <Text
-        size="sm"
+        size="xs"
         weight={300}
         textTransform="uppercase"
         style={[
@@ -505,7 +505,7 @@ export default function Area52() {
       </Text>
       <Text
         textTransform="uppercase"
-        size="sm"
+        size="xs"
         weight={300}
         style={[
           {

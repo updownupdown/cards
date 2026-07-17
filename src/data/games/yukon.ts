@@ -3,9 +3,7 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 export const yukon: GameDefinition = {
   path: "/yukon",
   tip: {
-    default: {
-      text: "Move any face-up stack; build down alt color; kings fill empty.",
-    },
+    default: "Move any face-up stack; build down alt color; kings fill empty.",
   },
   title: "Yukon",
   thumbnail: DEFAULT_GAME_THUMBNAIL,

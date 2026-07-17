@@ -3,9 +3,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const theBogey: GameDefinition = {
   path: "/the-bogey",
   tip: {
-    default: {
-      text: "Draw to 5, then play/discard/hold; unplayable bogey loses.",
-    },
+    default: "Draw to 5, then play/discard/hold; unplayable bogey loses.",
   },
   title: "The Bogey",
   thumbnail: "TheBogey.jpg",

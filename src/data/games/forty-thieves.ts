@@ -3,9 +3,7 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 export const fortyThieves: GameDefinition = {
   path: "/forty-thieves",
   tip: {
-    default: {
-      text: "Foundations up suit; tableau down suit, one card at a time.",
-    },
+    default: "Foundations up suit; tableau down suit, one card at a time.",
   },
   title: "Forty Thieves",
   enabledOnLocalOnly: true,

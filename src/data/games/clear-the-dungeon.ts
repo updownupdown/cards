@@ -4,9 +4,7 @@ export const clearTheDungeon: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/clear-the-dungeon",
   tip: {
-    default: {
-      text: "Beat each monster with sum pair, then matching-suit trigger.",
-    },
+    default: "Beat each monster with sum pair, then matching-suit trigger.",
   },
   title: "Clear the Dungeon",
 

@@ -700,7 +700,6 @@ export default function TheBobaTeaShop() {
               theme="purple"
               style={{ flex: 1 }}
               taller
-              size="sm"
             />
           </Animated.View>
         )}
@@ -730,7 +729,6 @@ export default function TheBobaTeaShop() {
               disabled={game.selectedPos === undefined}
               style={{ flex: 1 }}
               taller
-              size="sm"
               theme="green"
             />
             <Button
@@ -742,7 +740,6 @@ export default function TheBobaTeaShop() {
               }}
               disabled={game.selectedPos === undefined}
               taller
-              size="sm"
               style={{ flex: 1 }}
               theme="red"
             />

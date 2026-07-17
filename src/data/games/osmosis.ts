@@ -4,9 +4,7 @@ export const osmosis: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/osmosis",
   tip: {
-    default: {
-      text: "Top row any in-suit; lower rows need same rank above; tap stock.",
-    },
+    default: "Top row any in-suit; lower rows need same rank above; tap stock.",
   },
   title: "Osmosis",
   thumbnail: "DefaultThumbnail.jpg",

@@ -3,9 +3,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const syndicate: GameDefinition = {
   path: "/syndicate",
   tip: {
-    default: {
-      text: "Build stacks under rank limits; convert in timing windows.",
-    },
+    default: "Build stacks under rank limits; convert in timing windows.",
   },
   title: "Syndicate",
   thumbnail: "Syndicate.jpg",

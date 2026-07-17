@@ -4,9 +4,7 @@ export const bakersGame: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/bakers-game",
   tip: {
-    default: {
-      text: "Foundations up by suit; tableau down in suit; use 4 cells.",
-    },
+    default: "Foundations up by suit; tableau down in suit; use 4 cells.",
   },
   title: "Baker's Game",
   thumbnail: DEFAULT_GAME_THUMBNAIL,

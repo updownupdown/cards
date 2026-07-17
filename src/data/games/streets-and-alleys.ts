@@ -4,9 +4,7 @@ export const streetsAndAlleys: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/streets-and-alleys",
   tip: {
-    default: {
-      text: "Expose Aces first; columns down any suit; foundations up suit.",
-    },
+    default: "Expose Aces first; columns down any suit; foundations up suit.",
   },
   title: "Streets and Alleys",
   thumbnail: "DefaultThumbnail.jpg",

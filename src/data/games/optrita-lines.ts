@@ -4,9 +4,7 @@ export const optritaLines: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/optrita-lines",
   tip: {
-    default: {
-      text: "Challenge a line; first suit match wins by rank, else trump.",
-    },
+    default: "Challenge a line; first suit match wins by rank, else trump.",
   },
   title: "Optrita Lines",
   thumbnail: DEFAULT_GAME_THUMBNAIL,

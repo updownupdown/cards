@@ -4,9 +4,7 @@ export const dungeonBounty: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/dungeon-bounty",
   tip: {
-    default: {
-      text: "Use weapons/spells vs foes; survive 2 levels; score bounty+gems.",
-    },
+    default: "Use weapons/spells vs foes; survive 2 levels; score bounty+gems.",
   },
   title: "Dungeon Bounty",
   thumbnail: DEFAULT_GAME_THUMBNAIL,

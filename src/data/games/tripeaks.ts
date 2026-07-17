@@ -3,9 +3,7 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 export const tripeaks: GameDefinition = {
   path: "/tripeaks",
   tip: {
-    default: {
-      text: "Play exposed +/-1 to waste; A<->K wraps; draw when stuck.",
-    },
+    default: "Play exposed +/-1 to waste; A<->K wraps; draw when stuck.",
   },
   title: "TriPeaks",
   background: "medieval-blocks.jpg",

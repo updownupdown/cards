@@ -4,9 +4,7 @@ export const lobo: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/lobo",
   tip: {
-    default: {
-      text: "Capture by match/sum/split/overtake; fold to limit Wolf score.",
-    },
+    default: "Capture by match/sum/split/overtake; fold to limit Wolf score.",
   },
   title: "Lobo",
   thumbnail: DEFAULT_GAME_THUMBNAIL,

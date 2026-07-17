@@ -4,9 +4,7 @@ export const beleagueredCastle: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/beleaguered-castle",
   tip: {
-    default: {
-      text: "Expose Aces early; columns down any suit; foundations up suit.",
-    },
+    default: "Expose Aces early; columns down any suit; foundations up suit.",
   },
   title: "Beleaguered Castle",
   thumbnail: "DefaultThumbnail.jpg",

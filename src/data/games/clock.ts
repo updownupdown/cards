@@ -3,9 +3,8 @@ import { GameDefinition, GameTag } from "../games-data";
 export const clock: GameDefinition = {
   path: "/clock",
   tip: {
-    default: {
-      text: "Tap center pile to start, then the hour matching the last revealed card.",
-    },
+    default:
+      "Tap center pile to start, then the hour matching the last revealed card.",
   },
   title: "Clock Solitaire",
   thumbnail: "Clock.jpg",

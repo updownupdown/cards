@@ -46,14 +46,8 @@ export const bowlingSolitaire: GameDefinition = {
     "- In frame 10, a strike or spare earns 2 or 1 bonus ball(s).",
   ],
   tip: {
-    ballSelect: {
-      text: "Pick a ball from any face-up bottom card.",
-    },
-    pinSelect: {
-      text: "Select 1-3 linked pins; values must end in the ball digit.",
-    },
-    gameEnd: {
-      text: "No legal throw. Reset to bowl a new game.",
-    },
+    ballSelect: "Pick a ball from any face-up bottom card.",
+    pinSelect: "Select 1-3 linked pins; values must end in the ball digit.",
+    gameEnd: "No legal throw. Reset to bowl a new game.",
   },
 };

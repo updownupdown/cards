@@ -4,6 +4,7 @@ import { View, Animated, ViewStyle } from "react-native";
 import { Text } from "./Text";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { darkenHexColor, lightenHexColor } from "@/utils/utils";
 
 type RangeSliderProps = {
   label?: string;
@@ -32,6 +33,7 @@ export const RangeSlider = ({
     borderRadius: THUMB_SIZE / 2,
     backgroundColor: Colors.suitsRed,
     zIndex: 1,
+    boxShadow: `inset 0 0 10px ${rgba(Colors.black, 0.2)}, 1px 2px 8px ${rgba(Colors.black, 0.25)}`,
   };
 
   const [containerWidth, setContainerWidth] = useState(0);

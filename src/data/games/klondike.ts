@@ -3,9 +3,7 @@ import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 export const klondike: GameDefinition = {
   path: "/klondike",
   tip: {
-    default: {
-      text: "Foundations up suit; tableau down alt color; kings fill empty.",
-    },
+    default: "Foundations up suit; tableau down alt color; kings fill empty.",
   },
   title: "Klondike",
   enabledOnLocalOnly: true,

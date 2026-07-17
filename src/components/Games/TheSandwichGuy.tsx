@@ -350,7 +350,7 @@ export default function TheSandwichGuy() {
           onPress={commitSandwich}
           disabled={selectedCards.length !== 3 || invalidSandwichSelected}
           text="Serve Sandwich"
-          size="lg"
+          size="xl"
           fullWidth
         />
       </View>

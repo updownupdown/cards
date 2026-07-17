@@ -3,9 +3,8 @@ import { GameDefinition, GameTag } from "../games-data";
 export const skyway: GameDefinition = {
   path: "/skyway",
   tip: {
-    default: {
-      text: "Draft market sets; build rising same-suit paths on adjacent cells.",
-    },
+    default:
+      "Draft market sets; build rising same-suit paths on adjacent cells.",
   },
   title: "Skyway",
   thumbnail: "Skyway.jpg",
