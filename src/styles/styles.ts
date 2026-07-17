@@ -40,7 +40,7 @@ export const Colors = {
   win: "#03B491",
   lose: "#CE3566",
   favoriteStar: "#ff922d",
-  suitsRed: "#D52A41",
+  suitsRed: "#C62440",
   suitsBlack: "#313C3F",
   suitsColoredDiamonds: "#AF75CA",
   suitsColoredHearts: "#D4725A",

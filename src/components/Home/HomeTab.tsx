@@ -196,7 +196,7 @@ export function HomeTab({
                 key={path}
                 path={path}
                 game={game}
-                size="small"
+                size="large"
                 onToggleFavorite={onToggleFavorite}
                 isFavorite={favorites.has(path)}
                 style={{ width: "100%" }}
