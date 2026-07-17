@@ -1,6 +1,7 @@
 import { Text } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
+import { Layers } from "@/styles/layers";
 import { Colors, ContentSidePadding, rgba } from "@/styles/styles";
 import { useEffect, useRef } from "react";
 import { Animated, Easing, Platform, View } from "react-native";
@@ -10,6 +11,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 interface Props {
   gameEnded: boolean;
+  headerBottom: number;
   score?: string | number;
   message?: string;
   won: boolean;
@@ -18,6 +20,7 @@ interface Props {
 }
 
 export const WinLoseBox = ({
+  headerBottom,
   score,
   message,
   won,
@@ -66,8 +69,8 @@ export const WinLoseBox = ({
         style={{
           opacity: wlmAnim,
           position: "absolute",
-          zIndex: 9,
-          top: ui.gameHeaderHeight,
+          zIndex: Layers.winLoseBackdrop,
+          top: headerBottom,
           left: 0,
           right: 0,
           bottom: 0,
@@ -94,11 +97,10 @@ export const WinLoseBox = ({
           {
             opacity: wlmAnim,
             position: "absolute",
-            zIndex: 500,
+            zIndex: Layers.winLoseCard,
             padding: spacing(20),
             gap: spacing(20),
-            left: "50%",
-            transform: [{ translateX: "-50%" }],
+            alignSelf: "center",
             borderRadius: spacing(20),
             backgroundColor: won
               ? rgba(Colors.win, 0.95)

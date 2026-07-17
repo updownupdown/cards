@@ -1,4 +1,5 @@
 import { Text } from "@/components/common/Text";
+import { Layers } from "@/styles/layers";
 import { Colors, FontWeight, rgba } from "@/styles/styles";
 import React, {
   createContext,
@@ -91,7 +92,7 @@ interface Styles {
 const styles = StyleSheet.create<Styles>({
   toastContainer: {
     position: "absolute",
-    zIndex: 999,
+    zIndex: Layers.toast,
     top: -100,
     alignSelf: "center",
     marginHorizontal: 10,

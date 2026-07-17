@@ -13,6 +13,8 @@ import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
 import { useTipsBoxLayout } from "@/hooks/useTipsLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { flexStyles } from "@/styles/flexStyles";
+import { getGameHeaderBottom } from "@/styles/layout";
+import { Layers } from "@/styles/layers";
 import { floatingBarDims, menuStyles } from "@/styles/menuStyles";
 import {
   Colors,
@@ -105,7 +107,7 @@ export const GameWrapper = ({
 
   const titleColor = gameInfo.cardColorText;
   const backgroundColor = gameInfo.cardColorBg;
-  const headerHeight = insets.top + spacing(floatingBarDims.height + HomePadding);
+  const headerHeight = getGameHeaderBottom(insets.top, ui.scale);
   const backgroundSource =
     GAME_BACKGROUND_ASSETS[gameInfo.background ?? DEFAULT_GAME_BACKGROUND];
 
@@ -117,6 +119,7 @@ export const GameWrapper = ({
 
       <WinLoseBox
         gameEnded={ended}
+        headerBottom={headerHeight}
         won={won}
         score={score}
         reset={reset}
@@ -154,7 +157,7 @@ export const GameWrapper = ({
         <View
           style={{
             position: "absolute",
-            zIndex: 1,
+            zIndex: Layers.boardBackgroundOverlay,
             top: 0,
             right: 0,
             bottom: 0,
@@ -169,7 +172,7 @@ export const GameWrapper = ({
         <View
           style={{
             position: "relative",
-            zIndex: 12, // above the game overlay
+            zIndex: Layers.header,
             width: "100%",
             maxWidth: ui.contentMaxWidth,
             alignSelf: "center",
@@ -211,9 +214,8 @@ export const GameWrapper = ({
               style={[menuStyles.headerButton, menuStyles.headerButtonFlex]}
               onPress={() => setTipsMode(!active)}
               iconName={"info-outline"}
-              iconColor={active ? rgba(titleColor, 0.5) : titleColor}
+              iconColor={active ? rgba(Colors.white, 0.3) : titleColor}
               iconSize={spacing(HeaderButtonIconSize)}
-              disabled={active}
             />
 
             {handleUndo && (
@@ -221,7 +223,7 @@ export const GameWrapper = ({
                 style={[menuStyles.headerButton, menuStyles.headerButtonFlex]}
                 onPress={handleUndo}
                 iconName="undo"
-                iconColor={canUndo ? titleColor : rgba(titleColor, 0.5)}
+                iconColor={canUndo ? titleColor : rgba(Colors.white, 0.3)}
                 iconSize={spacing(HeaderButtonIconSize)}
                 disabled={!canUndo}
               />
@@ -250,7 +252,7 @@ export const GameWrapper = ({
             flexStyles.fullWidth,
             {
               position: "relative",
-              zIndex: 2,
+              zIndex: Layers.boardContent,
               flex: 1,
               pointerEvents: "box-none",
             },

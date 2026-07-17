@@ -73,7 +73,7 @@ export const SettingsModal = ({ onClose, onHomeDataInvalidated }: Props) => {
             ]}
           >
             <SettingControl
-              label="Resume last played game on launch"
+              label="Resume last game on startup"
               value={settings.resumeLastGame}
               type="boolean"
               onChange={(val) => {

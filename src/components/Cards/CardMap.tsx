@@ -3,8 +3,8 @@ import { GAMES_DATA } from "@/data/games-registry";
 import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
 import { useTipsBoxLayout } from "@/hooks/useTipsLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
-import { floatingBarDims } from "@/styles/menuStyles";
-import { HomePadding, MaxContentHeight } from "@/styles/styles";
+import { getGameHeaderBottom } from "@/styles/layout";
+import { MaxContentHeight } from "@/styles/styles";
 import { roundToPixel } from "@/utils/utils";
 import { usePathname } from "expo-router";
 import { useCallback, useMemo } from "react";
@@ -148,9 +148,7 @@ export function useCardMap({
     gridHeight,
     gridHeightPadded,
   } = useMemo(() => {
-    const headerHeight = roundToPixel(
-      insets.top + (floatingBarDims.height + HomePadding) * responsiveScale,
-    );
+    const headerHeight = getGameHeaderBottom(insets.top, responsiveScale);
     const topReserved = roundToPixel(tipsReservedHeight);
     const screenBoardHeight = Math.max(
       screenHeightActual - headerHeight - topReserved,
@@ -243,7 +241,6 @@ export function useCardMap({
     paddingRight,
     paddingTop,
     responsiveScale,
-    ui.gameHeaderHeight,
     screenHeightActual,
     screenWidthActual,
     tipsReservedHeight,

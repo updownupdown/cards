@@ -12,12 +12,13 @@ import { GAMES_DATA } from "@/data/games-registry";
 import { isGameEnabled } from "@/data/games-data";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
+import { Icon } from "@/icons";
 import type { IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight, HomePadding, rgba } from "@/styles/styles";
 import { Link, type Href } from "expo-router";
-import { useMemo } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { useMemo, useState } from "react";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 
 type StatsTabProps = {
   settingsMap: GameSettingsMap;
@@ -41,6 +42,13 @@ type Persona = {
   row: StatsRow;
 };
 
+type SortKey = "title" | "attempts" | "wins" | "losses" | "winRate" | "best";
+
+type SortState = {
+  key: SortKey;
+  direction: "asc" | "desc";
+};
+
 const winRateValue = (stats: GameStats) =>
   stats.attempts > 0 ? stats.wins / stats.attempts : 0;
 
@@ -51,13 +59,16 @@ export function StatsTab({
   contentPaddingTop,
   contentPaddingBottom,
 }: StatsTabProps) {
+  const [sortState, setSortState] = useState<SortState>({
+    key: "title",
+    direction: "asc",
+  });
   const { ui, spacing } = useResponsiveMetrics();
   const { height: viewportHeight } = useViewportDimensions();
 
   const pageSidePadding = spacing(HomePadding);
   const contentMaxWidth = ui.contentMaxWidth;
   const sectionTopPadding = spacing(14);
-  const cardGap = spacing(12);
   const fullStatsMaxHeight = Math.max(spacing(220), viewportHeight * 0.6);
 
   const orderedStatsRows = useMemo<StatsRow[]>(
@@ -78,15 +89,36 @@ export function StatsTab({
     [orderedStatsRows],
   );
 
-  const hasAnyHighestScore = useMemo(
-    () =>
-      playedRows.some(
-        (row) =>
-          typeof row.stats.highestScore === "number" &&
-          Number.isFinite(row.stats.highestScore),
-      ),
-    [playedRows],
-  );
+  const sortedPlayedRows = useMemo(() => {
+    const directionMultiplier = sortState.direction === "asc" ? 1 : -1;
+
+    return [...playedRows].sort((left, right) => {
+      const comparison = (() => {
+        switch (sortState.key) {
+          case "title":
+            return left.title.localeCompare(right.title);
+          case "attempts":
+            return left.stats.attempts - right.stats.attempts;
+          case "wins":
+            return left.stats.wins - right.stats.wins;
+          case "losses":
+            return left.stats.losses - right.stats.losses;
+          case "winRate":
+            return winRateValue(left.stats) - winRateValue(right.stats);
+          case "best":
+            return (
+              (left.stats.highestScore ?? 0) - (right.stats.highestScore ?? 0)
+            );
+        }
+      })();
+
+      if (comparison !== 0) {
+        return comparison * directionMultiplier;
+      }
+
+      return left.title.localeCompare(right.title);
+    });
+  }, [playedRows, sortState]);
 
   const personas = useMemo<Persona[]>(() => {
     if (playedRows.length === 0) {
@@ -154,6 +186,62 @@ export function StatsTab({
     return entries;
   }, [playedRows]);
 
+  const toggleSort = (key: SortKey) => {
+    setSortState((current) => {
+      if (current.key === key) {
+        return {
+          key,
+          direction: current.direction === "asc" ? "desc" : "asc",
+        };
+      }
+
+      return {
+        key,
+        direction: key === "title" ? "asc" : "desc",
+      };
+    });
+  };
+
+  const renderSortableHeader = (label: string, key: SortKey) => {
+    const isActive = sortState.key === key;
+    const iconName =
+      sortState.direction === "asc" ? "expand-less" : "expand-more";
+
+    return (
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`Sort by ${label}`}
+        key={key}
+        onPress={() => toggleSort(key)}
+        style={[
+          flexStyles.rowCentered,
+          {
+            flexDirection: label === "Game" ? "row-reverse" : "row",
+            justifyContent: "flex-end",
+            gap: 2,
+            flex: label === "Game" ? 3 : 1,
+          },
+        ]}
+      >
+        {isActive ? (
+          <Icon name={iconName} size={14} color={Colors.accentGreen} />
+        ) : null}
+
+        <Text
+          size="sm"
+          weight={500}
+          style={[
+            {
+              color: isActive ? Colors.accentGreen : Colors.K400,
+            },
+          ]}
+        >
+          {label}
+        </Text>
+      </Pressable>
+    );
+  };
+
   return (
     <ScrollView
       style={{ flex: 1 }}
@@ -197,64 +285,105 @@ export function StatsTab({
               showsVerticalScrollIndicator
               nestedScrollEnabled
             >
-              <View style={styles.table}>
+              <View style={[flexStyles.fullWidth]}>
                 {/* Header */}
-                <View style={styles.tableHeaderRow}>
-                  <Text size="sm" style={[styles.colTitle, styles.headerText]}>
-                    Game
-                  </Text>
-                  <Text size="sm" style={[styles.colNum, styles.headerText]}>
-                    Tried
-                  </Text>
-                  <Text size="sm" style={[styles.colNum, styles.headerText]}>
-                    Won
-                  </Text>
-                  <Text size="sm" style={[styles.colNum, styles.headerText]}>
-                    Lost
-                  </Text>
-                  <Text size="sm" style={[styles.colRate, styles.headerText]}>
-                    Win %
-                  </Text>
-                  {hasAnyHighestScore && (
-                    <Text size="sm" style={[styles.colBest, styles.headerText]}>
-                      Best
-                    </Text>
-                  )}
+                <View
+                  style={{
+                    position: "sticky",
+                    zIndex: 2,
+                    top: 0,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    paddingBottom: 8,
+                    borderBottomWidth: StyleSheet.hairlineWidth,
+                    borderBottomColor: Colors.K700,
+                    marginBottom: 8,
+                    backgroundColor: Colors.background,
+                  }}
+                >
+                  {renderSortableHeader("Game", "title")}
+                  {renderSortableHeader("Try", "attempts")}
+                  {renderSortableHeader("W", "wins")}
+                  {renderSortableHeader("L", "losses")}
+                  {renderSortableHeader("W%", "winRate")}
+                  {renderSortableHeader("HS", "best")}
                 </View>
 
                 {/* Rows */}
-                {playedRows.map((row) => (
-                  <View key={row.path} style={styles.tableRow}>
+                {sortedPlayedRows.map((row) => (
+                  <View
+                    key={row.path}
+                    style={[
+                      flexStyles.rowCentered,
+                      {
+                        position: "relative",
+                        zIndex: 1,
+                        justifyContent: "flex-start",
+                        paddingVertical: 6,
+                      },
+                    ]}
+                  >
                     <Link href={row.path as Href} asChild>
                       <Text
                         size="sm"
                         weight={500}
                         color={Colors.accentBlue}
-                        style={StyleSheet.flatten([styles.colTitle])}
+                        style={{ flex: 3 }}
                         numberOfLines={1}
                       >
                         {row.title}
                       </Text>
                     </Link>
-                    <Text size="sm" style={styles.colNum}>
+                    <Text
+                      size="sm"
+                      weight={500}
+                      style={{ flex: 1, textAlign: "right" }}
+                      color={
+                        row.stats.attempts === 0 ? Colors.K700 : Colors.K200
+                      }
+                    >
                       {row.stats.attempts}
                     </Text>
-                    <Text size="sm" style={styles.colNum}>
+                    <Text
+                      size="sm"
+                      weight={500}
+                      style={{ flex: 1, textAlign: "right" }}
+                      color={row.stats.wins === 0 ? Colors.K700 : Colors.K200}
+                    >
                       {row.stats.wins}
                     </Text>
-                    <Text size="sm" style={styles.colNum}>
+                    <Text
+                      size="sm"
+                      weight={500}
+                      style={{ flex: 1, textAlign: "right" }}
+                      color={row.stats.losses === 0 ? Colors.K700 : Colors.K200}
+                    >
                       {row.stats.losses}
                     </Text>
-                    <Text size="sm" style={styles.colRate}>
+                    <Text
+                      size="sm"
+                      weight={500}
+                      style={{ flex: 1, textAlign: "right" }}
+                      color={
+                        row.stats.attempts === 0 ? Colors.K700 : Colors.K200
+                      }
+                    >
                       {calculateWinRate(row.stats)}
                     </Text>
-                    {hasAnyHighestScore && (
-                      <Text size="sm" style={styles.colBest}>
-                        {row.stats.highestScore === null
-                          ? "-"
-                          : row.stats.highestScore}
-                      </Text>
-                    )}
+                    <Text
+                      size="sm"
+                      weight={500}
+                      style={{ flex: 1, textAlign: "right" }}
+                      color={
+                        row.stats.highestScore === null
+                          ? Colors.K700
+                          : Colors.K200
+                      }
+                    >
+                      {row.stats.highestScore === null
+                        ? "-"
+                        : row.stats.highestScore}
+                    </Text>
                   </View>
                 ))}
               </View>
@@ -297,7 +426,10 @@ export function StatsTab({
                 style={{
                   width: "100%",
                   borderRadius: spacing(10),
+                  padding: spacing(6),
+                  paddingBottom: 0,
                   backgroundColor: rgba(Colors.K950, 0.4),
+                  boxShadow: `inset 0 0 20px ${rgba(Colors.black, 0.2)}`,
                 }}
               >
                 <HomeCard
@@ -321,45 +453,3 @@ export function StatsTab({
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  table: {
-    width: "100%",
-  },
-  tableHeaderRow: {
-    flexDirection: "row",
-    paddingBottom: 8,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: Colors.K700,
-    marginBottom: 8,
-  },
-  tableRow: {
-    ...flexStyles.rowCentered,
-    justifyContent: "flex-start",
-    paddingVertical: 6,
-  },
-  headerText: {
-    color: Colors.K400,
-    fontFamily: FontWeight[500],
-  },
-  colTitle: {
-    flex: 3,
-    paddingRight: 8,
-  },
-
-  colNum: {
-    flex: 1.2,
-    fontFamily: FontWeight[500],
-    textAlign: "right",
-  },
-  colRate: {
-    flex: 1.5,
-    fontFamily: FontWeight[500],
-    textAlign: "right",
-  },
-  colBest: {
-    flex: 1.4,
-    fontFamily: FontWeight[500],
-    textAlign: "right",
-  },
-});

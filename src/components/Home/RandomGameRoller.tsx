@@ -1,18 +1,13 @@
-import { Button, QUICK_TRANSITION_STYLE } from "@/components/Button/Button";
+import { Button } from "@/components/Button/Button";
 import { HomeCard } from "@/components/Home/HomeCard";
-import { Text } from "@/components/common/Text";
 import { useFade } from "@/hooks/useFade";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors } from "@/styles/styles";
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  Animated,
-  type LayoutChangeEvent,
-  Pressable,
-  View,
-} from "react-native";
+import { Animated, type LayoutChangeEvent, View } from "react-native";
+import { RadioButtons } from "../common/RadioButtons";
 import { DICE_ROLL_DURATION, RollingDice } from "./RollingDice";
 
 type Mode = "all" | "unplayed";
@@ -22,7 +17,6 @@ type RandomGameRollerProps = {
   unplayedEntries: HomeGameEntry[];
   favorites: Set<string>;
   onToggleFavorite: (path: string) => void;
-  hasLoaded: boolean;
   contentMaxWidth: number;
   pageSidePadding: number;
   /** Current scroll offset of the parent ScrollView. */
@@ -36,7 +30,6 @@ export function RandomGameRoller({
   unplayedEntries,
   favorites,
   onToggleFavorite,
-  hasLoaded,
   contentMaxWidth,
   pageSidePadding,
   scrollY,
@@ -118,13 +111,6 @@ export function RandomGameRoller({
 
   const onReroll = () => roll(mode);
 
-  const modeOptions: [Mode, string][] = [
-    ["all", "All"],
-    ["unplayed", "Unplayed"],
-  ];
-
-  const unplayedDisabled = !hasLoaded || unplayedEntries.length === 0;
-
   return (
     <View
       onLayout={onLayout}
@@ -146,56 +132,35 @@ export function RandomGameRoller({
           },
         ]}
       >
-        <View
-          style={[
-            flexStyles.rowCentered,
-            flexStyles.flex1,
-            {
-              borderRadius: spacing(10),
-              backgroundColor: Colors.K875,
-              padding: spacing(6),
-              gap: spacing(6),
-            },
+        <RadioButtons
+          options={[
+            { value: "all", label: "All" },
+            { value: "unplayed", label: "Unplayed" },
           ]}
-        >
-          {modeOptions.map(([value, label]) => {
-            const isActive = mode === value;
-            const isDisabled = value === "unplayed" && unplayedDisabled;
-            return (
-              <Pressable
-                key={value}
-                onPress={() => !isDisabled && onSelectMode(value)}
-                disabled={isDisabled}
-                style={{
-                  ...QUICK_TRANSITION_STYLE,
-                  flex: 1,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  paddingVertical: spacing(10),
-                  borderRadius: spacing(6),
-                  backgroundColor: isActive ? Colors.K700 : "transparent",
-                  opacity: isDisabled ? 0.4 : 1,
-                }}
-              >
-                <Text
-                  size="sm"
-                  weight={500}
-                  color={isActive ? Colors.K100 : Colors.K300}
-                >
-                  {label}
-                </Text>
-              </Pressable>
-            );
-          })}
-        </View>
+          selectedValue={mode}
+          onChange={(value) => {
+            onSelectMode(value as "all" | "unplayed");
+          }}
+          selectedBackgroundColor={Colors.suitsRed}
+          buttonStyle={{
+            height: spacing(38),
+          }}
+          textStyle={{
+            fontSize: spacing(16),
+          }}
+          containerStyle={{
+            backgroundColor: Colors.K900,
+          }}
+        />
 
         {/* Reroll button */}
         <Button
-          text="Reroll"
+          text="Roll"
           iconName="dice"
           uppercase={false}
-          size="md"
+          size="lg"
           onPress={onReroll}
+          style={{ flex: 1 }}
         />
       </View>
 

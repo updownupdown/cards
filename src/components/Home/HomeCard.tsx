@@ -92,11 +92,11 @@ export function HomeCard({
       <LinearGradient
         colors={
           size === "medium"
-            ? [rgba(game.cardColorBg, 0.9), rgba(game.cardColorBg, 0.2)]
+            ? [rgba(game.cardColorBg, 0.94), rgba(game.cardColorBg, 0.3)]
             : [
                 rgba(game.cardColorBg, 0.9),
                 rgba(game.cardColorBg, 0.9),
-                rgba(game.cardColorBg, 0.5),
+                rgba(game.cardColorBg, 0.6),
               ]
         }
         start={size === "medium" ? { x: 0.5, y: 1 } : { x: 0.2, y: 1 }}
@@ -129,12 +129,13 @@ export function HomeCard({
         >
           {/* Title */}
           <Text
-            size={size === "large" ? "xl" : "md"}
+            size={size === "large" ? "xl" : "lg"}
             weight={500}
             color={game.cardColorText}
             style={{
               textAlign: size === "medium" ? "center" : undefined,
             }}
+            lineHeight={1.2}
           >
             {game.title}
           </Text>
@@ -176,7 +177,7 @@ export function HomeCard({
         <Icon
           name={isFavorite ? "star" : "star-outline"}
           color={isFavorite ? Colors.favoriteStar : Colors.K300}
-          size={spacing(36 * 0.7)}
+          size={spacing(30)}
         />
       </Pressable>
     </View>

@@ -1,4 +1,3 @@
-import { Text } from "@/components/common/Text";
 import { useStateManager } from "@/hooks/useStateManager";
 import {
   CardHitArea,
@@ -367,7 +366,6 @@ export default function Scorpion() {
     cardSize: "tableau",
     fixedRows: 6,
     gap: 0.12,
-    // visualizer: true,
   });
 
   const stockTapRect = useMemo(() => {

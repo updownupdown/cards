@@ -6,6 +6,7 @@ import { Colors, HeaderButtonSize, rgba } from "@/styles/styles";
 import React from "react";
 import { Modal, View } from "react-native";
 import { Button } from "../Button/Button";
+import { darkenHexColor, lightenHexColor } from "@/utils/utils";
 
 type Props = {
   children: React.ReactNode;
@@ -27,7 +28,14 @@ export default function ModalFull({
   return (
     <>
       <Modal visible transparent animationType="fade" onRequestClose={onClose}>
-        <View style={modalStyles.modalBackdrop}>
+        <View
+          style={[
+            modalStyles.modalBackdrop,
+            {
+              backgroundColor: rgba(lightenHexColor(backgroundColor, 0.4), 0.5),
+            },
+          ]}
+        >
           <View style={[modalStyles.modalCard, { backgroundColor }]}>
             <View style={modalStyles.modalHeader}>
               {/* Icon/Title */}
@@ -45,7 +53,7 @@ export default function ModalFull({
                   menuStyles.headerButton,
                   {
                     marginLeft: "auto",
-                    backgroundColor: rgba(Colors.black, 0.15),
+                    backgroundColor: rgba(Colors.black, 0.24),
                     borderRadius: HeaderButtonSize / 2,
                   },
                 ]}

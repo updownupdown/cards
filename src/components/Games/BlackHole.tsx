@@ -238,7 +238,7 @@ export default function BlackHole() {
                 { translateX: "-50%" },
                 { rotate: spin },
               ],
-              boxShadow: `${cardWidth / -16}px ${cardWidth / -16}px ${cardWidth / 4}px #ff01dd`,
+              boxShadow: `${cardWidth / -16}px ${cardWidth / -16}px ${cardWidth / 4}px #ffd901`,
             },
           ]}
         />
@@ -260,7 +260,7 @@ export default function BlackHole() {
                 { translateX: "-50%" },
                 { rotate: spin },
               ],
-              boxShadow: `${cardWidth / 6}px ${cardWidth / 6}px ${cardWidth / 1}px #00b7ff`,
+              boxShadow: `${cardWidth / 6}px ${cardWidth / 6}px ${cardWidth / 1}px #ff5e00`,
             },
           ]}
         />

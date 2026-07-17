@@ -12,7 +12,7 @@ import { flexStyles } from "./flexStyles";
 
 export const modalBorderRadius = 20;
 
-export const modalShadow = `1px 2px 10px ${rgba(Colors.K950, 0.75)}, 2px 4px 20px ${rgba(Colors.K950, 0.6)}`;
+export const modalShadow = `1px 2px 10px ${rgba(Colors.black, 0.5)}, 2px 4px 20px ${rgba(Colors.black, 0.4)}`;
 
 export function useModalStyles() {
   const { ui, spacing, font } = useResponsiveMetrics();

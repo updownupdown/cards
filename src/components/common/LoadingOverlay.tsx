@@ -1,5 +1,6 @@
 import { useFade } from "@/hooks/useFade";
 import { flexStyles } from "@/styles/flexStyles";
+import { Layers } from "@/styles/layers";
 import { Colors } from "@/styles/styles";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Animated } from "react-native";
@@ -48,7 +49,7 @@ export const LoadingOverlay = ({ isLoaded }: Props) => {
         {
           opacity: loadingOpacity,
           position: "fixed",
-          zIndex: 13, // over the header
+          zIndex: Layers.loadingOverlay,
           top: 0,
           left: 0,
           right: 0,

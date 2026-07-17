@@ -262,7 +262,6 @@ export function HomeTab({
           unplayedEntries={unplayedGames}
           favorites={favorites}
           onToggleFavorite={onToggleFavorite}
-          hasLoaded={hasLoaded}
           contentMaxWidth={contentMaxWidth}
           pageSidePadding={pageSidePadding}
           scrollY={scrollY}

@@ -1,4 +1,4 @@
-import { Colors } from "@/styles/styles";
+import { Colors, rgba } from "@/styles/styles";
 import { StyleSheet } from "react-native";
 import { flexStyles } from "./flexStyles";
 
@@ -19,12 +19,16 @@ export const settingsStyles = StyleSheet.create({
     justifyContent: "space-between",
   },
   toggleBg: {
+    transitionDuration: "0.5s",
+    transitionProperty: "all",
+    transitionTimingFunction: "ease",
     width: 60,
     height: 32,
     borderRadius: 16,
     backgroundColor: Colors.K800,
     justifyContent: "center",
     paddingHorizontal: 2,
+    boxShadow: `inset 0 0 6px ${rgba(Colors.black, 0.4)}`,
   },
   toggleBgOn: {
     backgroundColor: Colors.win,
@@ -38,6 +42,7 @@ export const settingsStyles = StyleSheet.create({
     borderRadius: 11,
     backgroundColor: Colors.white,
     transform: [{ translateX: 4 }],
+    boxShadow: `1px 2px 4px ${rgba(Colors.black, 0.3)}`,
   },
   toggleKnobOn: {
     transform: [{ translateX: 30 }],

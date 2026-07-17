@@ -11,10 +11,12 @@ import { useTipsBoxLayout } from "@/hooks/useTipsLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
+import { Layers } from "@/styles/layers";
 import { Colors, ContentSidePadding, HomePadding, rgba } from "@/styles/styles";
 import { usePathname } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { HowToPlay } from "../Modals/GameModal";
 import { floatingBarDims } from "@/styles/menuStyles";
 import { lightenHexColor } from "@/utils/utils";
@@ -32,8 +34,9 @@ export function TipsBox({ phase, topOffset }: Props) {
   const gameInfo = getGameInfo(pathname);
   const { updateSettings } = useGameSettings(pathname);
   const { spacing, ui } = useResponsiveMetrics();
-  const { active, topMargin, boxHeight } = useTipsBoxLayout();
+  const { active, boxHeight } = useTipsBoxLayout();
   const { height: viewportHeight } = useViewportDimensions();
+  const insets = useSafeAreaInsets();
 
   const [expanded, setExpanded] = useState(false);
 
@@ -47,7 +50,7 @@ export function TipsBox({ phase, topOffset }: Props) {
   }
 
   const expandedMaxHeight = Math.max(
-    viewportHeight - topOffset - topMargin - spacing(ContentSidePadding),
+    viewportHeight - topOffset - spacing(ContentSidePadding) - insets.bottom,
     boxHeight,
   );
 
@@ -55,12 +58,12 @@ export function TipsBox({ phase, topOffset }: Props) {
     <View
       style={{
         position: "absolute",
-        zIndex: 11,
-        top: topOffset + topMargin,
+        zIndex: Layers.tipsContainer,
+        top: topOffset,
         left: 0,
         right: 0,
         alignItems: "center",
-        padding: spacing(ContentSidePadding / 2),
+        paddingHorizontal: spacing(ContentSidePadding / 2),
         pointerEvents: "box-none",
       }}
     >
@@ -70,7 +73,7 @@ export function TipsBox({ phase, topOffset }: Props) {
           transitionProperty: "background-color",
           transitionTimingFunction: "ease",
           width: "100%",
-          zIndex: 12, // above the game overlay
+          zIndex: Layers.tipsCard,
           maxWidth: ui.contentMaxWidth - spacing(ContentSidePadding),
           height: expanded ? undefined : boxHeight,
           maxHeight: expanded ? expandedMaxHeight : boxHeight,
