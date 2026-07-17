@@ -8,14 +8,14 @@ import {
   type GameSettingsMap,
   type GameStats,
 } from "@/data/game-menu";
-import { GAMES_DATA } from "@/data/games-registry";
 import { isGameEnabled } from "@/data/games-data";
+import { GAMES_DATA } from "@/data/games-registry";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
-import { Icon } from "@/icons";
 import type { IconName } from "@/icons";
+import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, FontWeight, HomePadding, rgba } from "@/styles/styles";
+import { Colors, rgba, layoutDims } from "@/styles/styles";
 import { Link, type Href } from "expo-router";
 import { useMemo, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
@@ -68,7 +68,7 @@ export function StatsTab({
   const { ui, spacing } = useResponsiveMetrics();
   const { height: viewportHeight } = useViewportDimensions();
 
-  const pageSidePadding = spacing(HomePadding);
+  const scaledPageSidePadding = spacing(layoutDims.pagePadding);
   const contentMaxWidth = ui.contentMaxWidth;
   const sectionTopPadding = spacing(14);
   const fullStatsMaxHeight = Math.max(spacing(220), viewportHeight * 0.6);
@@ -272,13 +272,13 @@ export function StatsTab({
               : "Only played games are shown"
           }
           iconName="chart"
-          pageSidePadding={pageSidePadding}
+          pageSidePadding={scaledPageSidePadding}
           contentMaxWidth={contentMaxWidth}
         />
 
         <View
           style={{
-            paddingHorizontal: pageSidePadding,
+            paddingHorizontal: scaledPageSidePadding,
             gap: sectionTopPadding,
           }}
         >
@@ -396,7 +396,7 @@ export function StatsTab({
               width: "100%",
               maxWidth: contentMaxWidth,
               alignSelf: "center",
-              paddingHorizontal: pageSidePadding,
+              paddingHorizontal: scaledPageSidePadding,
               paddingTop: sectionTopPadding,
             }}
           >

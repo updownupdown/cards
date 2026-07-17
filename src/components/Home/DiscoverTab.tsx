@@ -12,8 +12,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { Icon, type IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
-import { floatingBarDims } from "@/styles/menuStyles";
-import { Colors, HomePadding, rgba } from "@/styles/styles";
+import { Colors, rgba, layoutDims } from "@/styles/styles";
 import { roundToPixel } from "@/utils/utils";
 import { useMemo } from "react";
 import { Pressable, ScrollView, View } from "react-native";
@@ -64,7 +63,7 @@ export function DiscoverTab({
 
   const cardSize: CardSize = settings.discoverCardSize ?? "large";
 
-  const pageSidePadding = spacing(HomePadding);
+  const pageSidePadding = spacing(layoutDims.pagePadding);
   const contentMaxWidth = ui.contentMaxWidth;
   const renderedContentWidth = Math.min(contentMaxWidth, viewportWidth);
   const cardGap = spacing(12);
@@ -144,16 +143,16 @@ export function DiscoverTab({
           flexStyles.rowCentered,
           {
             position: "absolute",
-            top: ui.gameHeaderHeight + spacing(HomePadding),
+            top: spacing(layoutDims.pagePadding + layoutDims.menuBarHeight),
             left: "50%",
             transform: [{ translateX: "-50%" }],
             zIndex: 200,
             width: "100%",
-            maxWidth: renderedContentWidth - spacing(HomePadding),
+            maxWidth: renderedContentWidth - spacing(layoutDims.pagePadding),
             alignSelf: "center",
             gap: spacing(20),
-            height: spacing(floatingBarDims.height),
-            borderRadius: spacing(floatingBarDims.height / 2),
+            height: spacing(layoutDims.menuBarHeight),
+            borderRadius: spacing(layoutDims.menuBarHeight / 2),
             backgroundColor: rgba(Colors.K950, 0.9),
             boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.K900, 0.4)}, ${spacing(2)}px ${spacing(4)}px ${spacing(10)}px ${rgba(
               Colors.K900,
@@ -162,40 +161,45 @@ export function DiscoverTab({
           },
         ]}
       >
-        {hasActiveFilters ? (
-          <Pressable
-            onPress={() => {
-              setFilters(DEFAULT_FILTERS);
-            }}
-            style={[
-              flexStyles.rowCentered,
-              flexStyles.flex1,
-              { gap: spacing(10), paddingLeft: spacing(HomePadding) },
-            ]}
-          >
-            <Icon name="close" size={22} color={Colors.K400} />
-            <View style={[flexStyles.colStart, flexStyles.flex1]}>
-              <Text size="sm" weight={400} color={Colors.white}>
-                Clear filters
-              </Text>
-              <Text
-                size="xs"
-                weight={500}
-                color={Colors.suitsRed}
-                textTransform="uppercase"
-              >
-                {filteredGames.length} result
-                {filteredGames.length !== 1 ? "s" : ""}
-              </Text>
-            </View>
-          </Pressable>
-        ) : (
-          <View style={[flexStyles.rowCentered, flexStyles.flex1]}>
-            <Text size="md" weight={500} color={Colors.K700}>
-              No filters applied
+        <Pressable
+          onPress={() => {
+            setFilters(DEFAULT_FILTERS);
+          }}
+          style={[
+            flexStyles.rowCentered,
+            flexStyles.flex1,
+            {
+              gap: spacing(10),
+              paddingLeft: spacing(layoutDims.pagePadding),
+            },
+          ]}
+          disabled={!hasActiveFilters}
+        >
+          <Icon
+            name="close"
+            size={22}
+            color={rgba(Colors.white, hasActiveFilters ? 1 : 0.4)}
+          />
+          <View style={[flexStyles.colStart, flexStyles.flex1]}>
+            <Text
+              size="md"
+              weight={400}
+              color={rgba(Colors.white, hasActiveFilters ? 1 : 0.4)}
+            >
+              {hasActiveFilters ? "Clear filters" : "No filters applied"}
+            </Text>
+
+            <Text
+              size="xs"
+              weight={600}
+              color={Colors.suitsRed}
+              textTransform="uppercase"
+            >
+              {filteredGames.length} result
+              {filteredGames.length !== 1 ? "s" : ""}
             </Text>
           </View>
-        )}
+        </Pressable>
 
         {/* Card size toggle */}
         <RadioButtons
@@ -207,13 +211,13 @@ export function DiscoverTab({
           }}
           iconSize={20}
           buttonStyle={{
-            borderRadius: spacing(floatingBarDims.height / 2),
-            width: spacing(floatingBarDims.height - 12),
-            height: spacing(floatingBarDims.height - 12),
+            borderRadius: spacing(layoutDims.menuBarHeight / 2),
+            width: spacing(layoutDims.menuBarHeight - 12),
+            height: spacing(layoutDims.menuBarHeight - 12),
           }}
           containerStyle={{
             backgroundColor: "transparent",
-            height: spacing(floatingBarDims.height),
+            height: spacing(layoutDims.menuBarHeight),
             boxShadow: "none",
           }}
         />
@@ -223,7 +227,7 @@ export function DiscoverTab({
         contentContainerStyle={{
           paddingTop:
             ui.gameHeaderHeight +
-            spacing(HomePadding + floatingBarDims.height + 30),
+            spacing(layoutDims.pagePadding + layoutDims.menuBarHeight + 30),
           paddingBottom: contentPaddingBottom,
         }}
         showsVerticalScrollIndicator={false}
@@ -317,6 +321,7 @@ export function DiscoverTab({
                   label={statName}
                   min={0}
                   max={100}
+                  value={filters.statsFilters[statName as GameStatsNames]}
                   onRangeChange={(newValues) => {
                     setFilters((draft) => {
                       draft.statsFilters[statName as GameStatsNames] = {

@@ -1,10 +1,4 @@
-import {
-  Colors,
-  ContentSidePadding,
-  FontWeight,
-  MaxContentHeight,
-  rgba,
-} from "@/styles/styles";
+import { Colors, FontWeight, layoutDims, rgba } from "@/styles/styles";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useMemo } from "react";
 import { StyleSheet } from "react-native";
@@ -21,13 +15,12 @@ export function useModalStyles() {
           backgroundColor: rgba(Colors.K800, 0.5),
           alignItems: "center",
           justifyContent: "center",
-          padding: spacing(ContentSidePadding / 1.5),
+          padding: spacing(layoutDims.pagePadding / 1.5),
         },
         modalCard: {
           width: "100%",
           maxWidth: ui.contentMaxWidth,
           height: "100%",
-          maxHeight: MaxContentHeight,
           backgroundColor: Colors.K950,
           borderRadius: spacing(20),
           overflow: "hidden",

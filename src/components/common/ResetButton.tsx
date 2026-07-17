@@ -3,13 +3,7 @@ import { Text } from "@/components/common/Text";
 import { useFade } from "@/hooks/useFade";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
-import { menuStyles } from "@/styles/menuStyles";
-import {
-  Colors,
-  HeaderButtonIconSize,
-  HeaderButtonSize,
-  rgba,
-} from "@/styles/styles";
+import { layoutDims, Colors, rgba } from "@/styles/styles";
 import React, { useRef, useState } from "react";
 import { Animated, Easing, Platform } from "react-native";
 
@@ -19,7 +13,6 @@ const minDisplayDuration = holdToResetDuration;
 interface Props {
   reset: () => void;
   minHintDuration?: number;
-  iconSize?: number;
   iconColor?: string;
   pressedIconColor?: string;
 }
@@ -28,7 +21,6 @@ export function ResetButton({
   reset,
   iconColor = Colors.K200,
   pressedIconColor,
-  iconSize = HeaderButtonIconSize,
 }: Props) {
   const { spacing } = useResponsiveMetrics();
   const [showResetHint, setShowResetHint] = useState(false);
@@ -84,11 +76,14 @@ export function ResetButton({
             overflow: "hidden",
             position: "absolute",
             zIndex: 20,
-            top: 4,
-            left: 4,
-            bottom: 4,
+            top: spacing(layoutDims.menuBarPadding),
+            left: spacing(layoutDims.menuBarPadding),
+            bottom: spacing(layoutDims.menuBarPadding),
+            // Number of icons to the right of the reset button (2) divided by total number of icons (5)
             right: `${(2 / 5) * 100}%`,
-            borderRadius: HeaderButtonSize / 2,
+            borderRadius: spacing(
+              layoutDims.menuBarHeight / 2 - layoutDims.menuBarPadding,
+            ),
             backgroundColor: rgba(Colors.black, 0.8),
             boxShadow: `1px 2px 6px ${rgba(Colors.black, 0.4)}, 2px 4px 20px ${rgba(Colors.black, 0.4)}`,
           }}
@@ -121,7 +116,7 @@ export function ResetButton({
       )}
 
       <Button
-        style={[menuStyles.headerButton]}
+        headerButton
         onPress={displayResetHint}
         onLongPress={reset}
         onPressIn={onPressInReset}
@@ -130,7 +125,6 @@ export function ResetButton({
         preventWebLongPressMenu
         iconName="reset"
         iconColor={isResetPressed ? (pressedIconColor ?? iconColor) : iconColor}
-        iconSize={iconSize}
       />
     </>
   );

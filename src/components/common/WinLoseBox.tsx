@@ -1,8 +1,7 @@
 import { Text } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
-import { Layers } from "@/styles/layers";
-import { Colors, ContentSidePadding, rgba } from "@/styles/styles";
+import { Colors, LayerZIndexes, layoutDims, rgba } from "@/styles/styles";
 import { useEffect, useRef } from "react";
 import { Animated, Easing, Platform, View } from "react-native";
 import { Button } from "../Button/Button";
@@ -69,7 +68,7 @@ export const WinLoseBox = ({
         style={{
           opacity: wlmAnim,
           position: "absolute",
-          zIndex: Layers.winLoseBackdrop,
+          zIndex: LayerZIndexes.winLoseBackdrop,
           top: headerBottom,
           left: 0,
           right: 0,
@@ -97,7 +96,7 @@ export const WinLoseBox = ({
           {
             opacity: wlmAnim,
             position: "absolute",
-            zIndex: Layers.winLoseCard,
+            zIndex: LayerZIndexes.winLoseCard,
             padding: spacing(20),
             gap: spacing(20),
             alignSelf: "center",
@@ -109,10 +108,10 @@ export const WinLoseBox = ({
               ? `0 0 20px ${rgba(Colors.win, 0.6)}, 0 0 40px ${rgba(Colors.win, 0.6)}`
               : `0 0 20px ${rgba(Colors.lose, 0.6)}, 0 0 40px ${rgba(Colors.lose, 0.6)}`,
             width: "100%",
-            maxWidth: ui.contentMaxWidth - ContentSidePadding * 2,
+            maxWidth: ui.contentMaxWidth - spacing(layoutDims.pagePadding) * 2,
             bottom: wlmAnim.interpolate({
               inputRange: [0, 1],
-              outputRange: [-200, spacing(ContentSidePadding)],
+              outputRange: [-200, spacing(layoutDims.pagePadding)],
             }),
           },
         ]}

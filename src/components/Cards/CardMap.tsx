@@ -3,7 +3,6 @@ import { GAMES_DATA } from "@/data/games-registry";
 import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
 import { useTipsBoxLayout } from "@/hooks/useTipsLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
-import { MaxContentHeight } from "@/styles/styles";
 import { roundToPixel } from "@/utils/utils";
 import { usePathname } from "expo-router";
 import { useCallback, useMemo } from "react";
@@ -21,7 +20,7 @@ import {
 } from "./CardMapBackgrounds";
 import { CardMapVisualizer } from "./CardMapVisualizer";
 import { CardSizes } from "./CardStyles";
-import { getGameHeaderBottom } from "@/styles/menuStyles";
+import { getHeaderHeightWithInset } from "@/styles/styles";
 
 export type CardPosition = {
   x: number;
@@ -148,27 +147,13 @@ export function useCardMap({
     gridHeight,
     gridHeightPadded,
   } = useMemo(() => {
-    const headerHeight = getGameHeaderBottom(insets.top, responsiveScale);
+    const headerHeight = getHeaderHeightWithInset(insets.top, responsiveScale);
     const topReserved = roundToPixel(tipsReservedHeight);
-    const screenBoardHeight = Math.max(
+    const containerHeight = Math.max(
       screenHeightActual - headerHeight - topReserved,
       0,
     );
-
     const containerWidth = screenWidthActual;
-    const containerHeight = roundToPixel(
-      Math.min(
-        screenBoardHeight,
-        Math.max(
-          MaxContentHeight * responsiveScale - headerHeight - topReserved,
-          0,
-        ),
-      ),
-    );
-
-    const heightMargin = roundToPixel(
-      (screenBoardHeight - containerHeight) / 2,
-    );
 
     const gapYUnits = gap * cardDims.aspectRatio;
 
@@ -208,13 +193,11 @@ export function useCardMap({
     const offsetX = (containerWidth - gridWidth) / 2 + paddingLeft * cardWidth;
     const offsetY =
       topReserved +
-      heightMargin +
       (containerHeight - gridHeight) / 2 +
       paddingTop * cardHeight;
 
     const gridStartX = (containerWidth - gridWidth) / 2;
-    const gridStartY =
-      topReserved + heightMargin + (containerHeight - gridHeight) / 2;
+    const gridStartY = topReserved + (containerHeight - gridHeight) / 2;
 
     return {
       cardWidth,

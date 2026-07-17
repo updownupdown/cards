@@ -1,7 +1,7 @@
 import { Text, Typography } from "@/components/common/Text";
 import type { TextSize } from "@/components/common/Text";
 import { Icon, IconName } from "@/icons";
-import { Colors, FontWeight, rgba } from "@/styles/styles";
+import { Colors, FontWeight, layoutDims, rgba } from "@/styles/styles";
 import { useResponsiveUiLayout } from "@/hooks/useResponsiveLayout";
 import { Platform, Pressable, TextStyle, ViewStyle } from "react-native";
 import { textStyles } from "@/styles/textStyles";
@@ -11,6 +11,8 @@ import {
   roundToPixel,
 } from "@/utils/utils";
 import { HexColor } from "@/data/games-data";
+import { flexStyles } from "@/styles/flexStyles";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 export const QUICK_TRANSITION_STYLE = {
   transitionDuration: "0.2s",
@@ -39,7 +41,7 @@ interface Props {
   textStyle?: TextStyle | TextStyle[];
   size?: TextSize;
   textOnly?: boolean;
-  flat?: boolean;
+  headerButton?: boolean;
   theme?: string | HexColor;
   disabled?: boolean;
   fullWidth?: boolean;
@@ -63,7 +65,7 @@ export const Button = ({
   textStyle,
   size = "md",
   textOnly = false,
-  flat = false,
+  headerButton = false,
   disabled,
   fullWidth,
   text,
@@ -81,6 +83,7 @@ export const Button = ({
   taller = false,
   preventWebLongPressMenu = false,
 }: Props) => {
+  const { spacing } = useResponsiveMetrics();
   const ui = useResponsiveUiLayout();
   const uiScale = ui.scale;
   const textScale = ui.textScale;
@@ -94,8 +97,7 @@ export const Button = ({
         } as any)
       : undefined;
 
-  const fallbackColor =
-    textOnly || flat ? Colors.accentBlue : Colors.buttonBlue;
+  const fallbackColor = textOnly ? Colors.accentBlue : Colors.buttonBlue;
   let themeColor: string =
     (theme && THEME_COLORS[theme as keyof typeof THEME_COLORS]) ||
     theme ||
@@ -118,7 +120,7 @@ export const Button = ({
   let gap = height / 6;
   let paddingVertical = roundToPixel(6 * uiScale * sizeScale);
   let paddingHorizontal = roundToPixel(20 * uiScale * sizeScale);
-  let fontFamily = textOnly || flat ? FontWeight[600] : FontWeight[600];
+  let fontFamily = textOnly ? FontWeight[600] : FontWeight[600];
   let lineHeightUpdated = fontSize * (lineHeight ?? 1);
 
   if (textOnly) {
@@ -126,6 +128,10 @@ export const Button = ({
     borderRadius = 0;
     paddingVertical = 0;
     paddingHorizontal = 0;
+  }
+
+  if (headerButton) {
+    iconSize = spacing(layoutDims.menuIconSize);
   }
 
   return (
@@ -146,21 +152,17 @@ export const Button = ({
           paddingHorizontal,
           gap,
           borderRadius,
-          boxShadow:
-            height && !flat
-              ? `inset 0 0 0 ${roundToPixel(height * 0.03)}px ${rgba(
-                  Colors.white,
-                  0.2,
-                )}, inset 0 0 ${roundToPixel(height * 0.4)}px ${rgba(
-                  Colors.white,
-                  0.2,
-                )}, ${roundToPixel(height * 0.04)}px ${roundToPixel(height * 0.08)}px ${roundToPixel(height * 0.4)}px ${rgba(themeColor, 0.8)}`
-              : undefined,
-          backgroundColor: flat
-            ? rgba(themeColor, 0.2)
-            : textOnly
-              ? undefined
-              : themeColor,
+          outline: "none",
+          boxShadow: height
+            ? `inset 0 0 0 ${roundToPixel(height * 0.03)}px ${rgba(
+                Colors.white,
+                0.2,
+              )}, inset 0 0 ${roundToPixel(height * 0.4)}px ${rgba(
+                Colors.white,
+                0.2,
+              )}, ${roundToPixel(height * 0.04)}px ${roundToPixel(height * 0.08)}px ${roundToPixel(height * 0.4)}px ${rgba(themeColor, 0.8)}`
+            : undefined,
+          backgroundColor: textOnly ? undefined : themeColor,
           ...(Platform.OS === "web" && preventWebLongPressMenu
             ? ({
                 userSelect: "none",
@@ -169,6 +171,17 @@ export const Button = ({
                 touchAction: "manipulation",
               } as const)
             : null),
+        },
+        headerButton && {
+          ...flexStyles.rowCentered,
+          flex: 1,
+          padding: 0,
+          width: spacing(layoutDims.menuButtonSize),
+          height: spacing(layoutDims.menuButtonSize),
+          boxShadow: "unset",
+          borderWidth: 0,
+          borderRadius: "unset",
+          backgroundColor: "unset",
         },
         style,
       ]}
@@ -207,7 +220,7 @@ export const Button = ({
               fontSize,
               fontFamily,
               textTransform: uppercase ? "uppercase" : "none",
-              color: textOnly || flat ? themeColor : Colors.white,
+              color: textOnly ? themeColor : Colors.white,
               lineHeight: lineHeightUpdated,
               textAlign: "center",
             },

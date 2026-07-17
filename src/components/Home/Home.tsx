@@ -9,10 +9,8 @@ import { StatsTab } from "@/components/Home/StatsTab";
 import { useHomeData } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
-import { floatingBarDims } from "@/styles/menuStyles";
-import { Colors, HomePadding } from "@/styles/styles";
+import { Colors, layoutDims } from "@/styles/styles";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ScrollView } from "react-native-gesture-handler";
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
@@ -20,6 +18,7 @@ import {
   View,
   type LayoutChangeEvent,
 } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Home() {
@@ -52,7 +51,6 @@ export default function Home() {
     attemptsByPath,
     allEnabledGames,
     allEnabledGamePaths,
-    hasLoaded,
     toggleFavorite,
   } = useHomeData(homeDataRefreshToken);
 
@@ -64,11 +62,11 @@ export default function Home() {
 
   const headerReserved =
     insets.top +
-    spacing(HomePadding * 0.5) +
+    spacing(layoutDims.pagePadding * 0.5) +
     ui.gameHeaderHeight +
-    spacing(HomePadding * 0.5);
+    spacing(layoutDims.pagePadding * 0.5);
   const contentPaddingTop = headerReserved + spacing(10);
-  const contentPaddingBottom = spacing(floatingBarDims.height + 40);
+  const contentPaddingBottom = spacing(layoutDims.menuBarHeight + 40);
 
   const onInvalidateHomeData = () => {
     setHomeDataRefreshToken((current) => current + 1);
@@ -178,7 +176,6 @@ export default function Home() {
         contentPaddingTop={contentPaddingTop}
         contentPaddingBottom={contentPaddingBottom}
         unplayedGamePaths={unplayedGamePaths}
-        hasLoaded={hasLoaded}
       />
     </View>,
     <View key="tab-explore" style={[pageStyle, webSnapChild]}>

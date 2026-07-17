@@ -2,7 +2,7 @@ import { Text } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon, type IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, HomePadding, rgba } from "@/styles/styles";
+import { Colors, rgba, layoutDims } from "@/styles/styles";
 import {
   Platform,
   Pressable,
@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { QUICK_TRANSITION_STYLE } from "../Button/Button";
-import { floatingBarDims } from "@/styles/menuStyles";
 
 export type HomeTabKey = "home" | "explore" | "stats";
 
@@ -56,8 +55,8 @@ export function HomeTabBar({
           width: "100%",
           maxWidth: ui.contentMaxWidth,
           alignSelf: "center",
-          padding: spacing(HomePadding * 0.5),
-          paddingBottom: insets.bottom + spacing(HomePadding * 0.5),
+          padding: spacing(layoutDims.pagePadding * 0.5),
+          paddingBottom: insets.bottom + spacing(layoutDims.pagePadding * 0.5),
         }}
       >
         <View
@@ -65,10 +64,9 @@ export function HomeTabBar({
             flexStyles.rowCentered,
             {
               width: "100%",
-              padding: spacing(floatingBarDims.padding),
-              gap: spacing(floatingBarDims.gap),
-              height: spacing(floatingBarDims.height),
-              borderRadius: spacing(floatingBarDims.height / 2),
+              padding: spacing(layoutDims.menuBarPadding),
+              height: spacing(layoutDims.menuBarHeight),
+              borderRadius: spacing(layoutDims.menuBarHeight / 2),
               backgroundColor: rgba(Colors.K950, 0.9),
               boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.K900, 0.4)}, ${spacing(2)}px ${spacing(4)}px ${spacing(10)}px ${rgba(
                 Colors.K900,
@@ -92,7 +90,7 @@ export function HomeTabBar({
                     gap: spacing(8),
                     paddingVertical: spacing(12),
                     paddingRight: spacing(4),
-                    borderRadius: spacing(floatingBarDims.height / 2 - 6),
+                    borderRadius: spacing(layoutDims.menuBarHeight / 2 - 6),
                     backgroundColor: isActive
                       ? Colors.background
                       : "transparent",

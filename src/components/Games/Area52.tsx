@@ -30,6 +30,7 @@ import {
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 import { useToast } from "../common/Toast";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 const maxAttackersNum = 3;
 const maxDefendersNum = 6;
@@ -97,6 +98,7 @@ async function resetAndSetup(
 }
 
 export default function Area52() {
+  const { spacing } = useResponsiveMetrics();
   const showToast = useToast();
 
   const [selectedDefenders, setSelectedDefenders] = useState<number[]>([]);
@@ -488,8 +490,10 @@ export default function Area52() {
 
       {/* Titles */}
       <Text
+        size="sm"
+        weight={300}
+        textTransform="uppercase"
         style={[
-          textStyles.caps,
           {
             position: "absolute",
             top: aTitlePos.y - 30,
@@ -500,8 +504,10 @@ export default function Area52() {
         Attackers (Wave {game.wave})
       </Text>
       <Text
+        textTransform="uppercase"
+        size="sm"
+        weight={300}
         style={[
-          textStyles.caps,
           {
             position: "absolute",
             top: dTitlePos.y - 30,
@@ -517,7 +523,7 @@ export default function Area52() {
         style={[
           getZoneStylesById("buttons"),
           flexStyles.rowCentered,
-          flexStyles.gap10,
+          { gap: spacing(10) },
         ]}
       >
         <Button

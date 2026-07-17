@@ -38,11 +38,13 @@ import {
   EmissarySuitsColorMap,
   TheEmissaryKingdom,
 } from "./TheEmissaryTypes";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 // TODO - remove this
 const debugMode = false;
 
 export default function TheEmissary() {
+  const { spacing } = useResponsiveMetrics();
   const { zoneBg, cardBg, cardText } = useGameZoneBackground();
   const showToast = useToast();
 
@@ -771,12 +773,12 @@ export default function TheEmissary() {
         style={[
           flexStyles.rowStart,
           flexStyles.spaceBetween,
-          flexStyles.gap10,
           getZoneStylesById("debate-area"),
           darkZoneStyles,
           {
             paddingHorizontal: cardWidth * 0.26,
             paddingVertical: cardWidth * 0.26,
+            gap: spacing(10),
           },
         ]}
       >
@@ -833,8 +835,8 @@ export default function TheEmissary() {
           </View>
 
           <Text
+            textTransform="uppercase"
             style={[
-              textStyles.caps,
               {
                 fontFamily: FontWeight[500],
                 fontSize: cardWidth * 0.3,
@@ -885,8 +887,8 @@ export default function TheEmissary() {
         ]}
       >
         <Text
+          textTransform="uppercase"
           style={[
-            textStyles.caps,
             rotatedText,
             {
               fontSize: cardWidth * 0.2,
@@ -903,8 +905,8 @@ export default function TheEmissary() {
         style={[flexStyles.rowStart, getZoneStylesById("hand"), darkZoneStyles]}
       >
         <Text
+          textTransform="uppercase"
           style={[
-            textStyles.caps,
             rotatedText,
             {
               fontSize: cardWidth * 0.2,

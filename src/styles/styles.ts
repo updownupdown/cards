@@ -1,4 +1,5 @@
 import "@/styles/global.css";
+import { roundToPixel } from "@/utils/utils";
 import { Platform } from "react-native";
 
 export const Colors = {
@@ -120,14 +121,31 @@ export const FontWeight = {
   700: "Outfit_700Bold",
 };
 
-export const ContentSidePadding = 20;
-export const MaxContentWidth = 420;
-export const MaxContentHeight = 1000;
+export const layoutDims = {
+  menuBarPadding: 6,
+  menuBarHeight: 58,
+  menuIconSize: 28,
+  menuButtonSize: 52,
+  pagePadding: 20,
+} as const;
 
-export const HomePadding = 20;
+export const LayerZIndexes = {
+  boardBackgroundOverlay: 1,
+  boardContent: 2,
+  winLoseBackdrop: 45,
+  tipsContainer: 40,
+  tipsCard: 41,
+  header: 50,
+  winLoseCard: 60,
+  loadingOverlay: 100,
+  toast: 110,
+} as const;
 
-export const HeaderButtonSize = 52;
-export const HeaderButtonIconSize = 28;
-export const HeaderHeight = HeaderButtonSize;
-
-export const TabletBreakpoint = 768;
+export function getHeaderHeightWithInset(
+  insetsTop: number,
+  scale: number,
+): number {
+  return roundToPixel(
+    insetsTop + (layoutDims.menuBarHeight + layoutDims.pagePadding) * scale,
+  );
+}

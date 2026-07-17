@@ -15,7 +15,6 @@ export function useHomeData(refreshToken?: number) {
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [recentPaths, setRecentPaths] = useState<string[]>([]);
   const [settingsMap, setSettingsMap] = useState<GameSettingsMap>({});
-  const [hasLoaded, setHasLoaded] = useState(false);
 
   const allEnabledGames = useMemo<HomeGameEntry[]>(
     () =>
@@ -42,8 +41,6 @@ export function useHomeData(refreshToken?: number) {
     let cancelled = false;
 
     (async () => {
-      setHasLoaded(false);
-
       try {
         const [loadedFavorites, loadedRecent, loadedSettings] =
           await Promise.all([
@@ -58,9 +55,6 @@ export function useHomeData(refreshToken?: number) {
         setRecentPaths(loadedRecent.map((entry) => entry.path));
         setSettingsMap(loadedSettings);
       } finally {
-        if (!cancelled) {
-          setHasLoaded(true);
-        }
       }
     })();
 
@@ -98,7 +92,6 @@ export function useHomeData(refreshToken?: number) {
     attemptsByPath,
     allEnabledGames,
     allEnabledGamePaths,
-    hasLoaded,
     toggleFavorite,
   };
 }

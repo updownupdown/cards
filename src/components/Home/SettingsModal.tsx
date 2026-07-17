@@ -61,7 +61,7 @@ export const SettingsModal = ({ onClose, onHomeDataInvalidated }: Props) => {
             flexStyles.colCentered,
             flexStyles.fullWidth,
             flexStyles.fullHeight,
-            flexStyles.gap40,
+            { gap: spacing(40) },
           ]}
         >
           <View
@@ -69,7 +69,7 @@ export const SettingsModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               flexStyles.colCentered,
               flexStyles.fullWidth,
               flexStyles.flex1,
-              { gap: 20 },
+              { gap: spacing(20) },
             ]}
           >
             <SettingControl
@@ -99,7 +99,6 @@ export const SettingsModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                 uppercase={false}
                 onPress={() => setIsResetConfirmationVisible(false)}
                 text="Cancel"
-                flat
                 disabled={isResettingData}
               />
 
@@ -128,7 +127,6 @@ export const SettingsModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               uppercase={false}
               onPress={() => setIsResetConfirmationVisible(true)}
               text="Reset all game data"
-              flat
             />
           )}
 

@@ -1,7 +1,7 @@
 import { normalizeGamePath } from "@/data/game-menu";
 import { useGameSettings } from "@/hooks/useGameSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-import { floatingBarDims } from "@/styles/menuStyles";
+import { layoutDims } from "@/styles/styles";
 import { usePathname } from "expo-router";
 
 export type TipsBoxLayout = {
@@ -17,7 +17,7 @@ export function useTipsBoxLayout(): TipsBoxLayout {
 
   const active = settings?.tipsMode ?? true;
 
-  const boxHeight = spacing(floatingBarDims.height);
+  const boxHeight = spacing(layoutDims.menuBarHeight);
 
   return {
     active,

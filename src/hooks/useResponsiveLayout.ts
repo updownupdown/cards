@@ -1,11 +1,9 @@
 import { useMemo } from "react";
-import {
-  HeaderHeight,
-  MaxContentWidth,
-  TabletBreakpoint,
-} from "@/styles/styles";
 import { useViewportDimensions } from "./useViewportDimensions";
+import { layoutDims } from "@/styles/styles";
 
+const MAX_CONTENT_WIDTH = 420;
+const TABLET_BREAKPOINT = 768;
 const TABLET_SCALE = 1.25;
 
 export type ResponsiveTier = "phone" | "tablet";
@@ -22,7 +20,7 @@ export type ResponsiveUiLayout = {
 };
 
 function getResponsiveTier(width: number): ResponsiveTier {
-  return width > TabletBreakpoint ? "tablet" : "phone";
+  return width > TABLET_BREAKPOINT ? "tablet" : "phone";
 }
 
 export function getResponsiveUiLayout(width: number): ResponsiveUiLayout {
@@ -38,8 +36,10 @@ export function getResponsiveUiLayout(width: number): ResponsiveUiLayout {
     isTablet,
     scale,
     textScale,
-    contentMaxWidth: Math.round(MaxContentWidth * scale * (isTablet ? 1.4 : 1)),
-    gameHeaderHeight: Math.round(HeaderHeight * scale),
+    contentMaxWidth: Math.round(
+      MAX_CONTENT_WIDTH * scale * (isTablet ? 1.4 : 1),
+    ),
+    gameHeaderHeight: Math.round(layoutDims.menuBarHeight * scale),
   };
 }
 
@@ -60,7 +60,7 @@ export function useResponsiveUiLayoutFromWidth(width: number) {
  */
 export function getConstrainedUiWidth(
   width: number,
-  maxWidth = MaxContentWidth,
+  maxWidth = MAX_CONTENT_WIDTH,
 ) {
   return Math.min(width, maxWidth);
 }

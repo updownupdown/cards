@@ -1,6 +1,5 @@
 import { HomeCard } from "@/components/Home/HomeCard";
 import { HomeSectionTitle } from "@/components/Home/HomeSectionTitle";
-import { type GameSettingsMap } from "@/data/game-menu";
 import { getGameOfTheDayPath } from "@/data/game-of-the-day";
 import { GameMenuInfo, isGameEnabled } from "@/data/games-data";
 import { GAMES_DATA } from "@/data/games-registry";
@@ -8,7 +7,7 @@ import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { flexStyles } from "@/styles/flexStyles";
-import { HomePadding } from "@/styles/styles";
+import { layoutDims } from "@/styles/styles";
 import { roundToPixel } from "@/utils/utils";
 import { useMemo, useState } from "react";
 import {
@@ -28,7 +27,6 @@ type HomeTabProps = {
   onToggleFavorite: (path: string) => void;
   contentPaddingTop: number;
   contentPaddingBottom: number;
-  hasLoaded: boolean;
 };
 
 export function HomeTab({
@@ -40,23 +38,21 @@ export function HomeTab({
   onToggleFavorite,
   contentPaddingTop,
   contentPaddingBottom,
-  hasLoaded,
 }: HomeTabProps) {
   const { ui, spacing } = useResponsiveMetrics();
   const { width: viewportWidth, height: viewportHeight } =
     useViewportDimensions();
 
-  const pageSidePadding = spacing(HomePadding);
+  const scaledPageSidePadding = spacing(layoutDims.pagePadding);
   const contentMaxWidth = ui.contentMaxWidth;
   const renderedContentWidth = Math.min(contentMaxWidth, viewportWidth);
   const sectionTopPadding = spacing(14);
   const sectionBottomPadding = spacing(14);
   const cardGap = spacing(12);
-  const centeredContentOffset = Math.max(
+  const rowInnerWidth = Math.max(
     0,
-    roundToPixel((viewportWidth - contentMaxWidth) / 2),
+    renderedContentWidth - scaledPageSidePadding * 2,
   );
-  const rowInnerWidth = Math.max(0, renderedContentWidth - pageSidePadding * 2);
   const mediumCardWidth = Math.max(
     0,
     roundToPixel(
@@ -165,14 +161,14 @@ export function HomeTab({
           <HomeSectionTitle
             title="Game of the Day"
             iconName="featured"
-            pageSidePadding={pageSidePadding}
+            pageSidePadding={scaledPageSidePadding}
             contentMaxWidth={contentMaxWidth}
           />
 
           <View
             style={{
               width: "100%",
-              paddingHorizontal: pageSidePadding,
+              paddingHorizontal: scaledPageSidePadding,
               paddingTop: sectionTopPadding,
               paddingBottom: sectionBottomPadding,
             }}
@@ -202,13 +198,13 @@ export function HomeTab({
           <HomeSectionTitle
             title="Jump Back In"
             iconName="recent"
-            pageSidePadding={pageSidePadding}
+            pageSidePadding={scaledPageSidePadding}
             contentMaxWidth={contentMaxWidth}
           />
           <View
             style={{
               width: "100%",
-              paddingHorizontal: pageSidePadding,
+              paddingHorizontal: scaledPageSidePadding,
               paddingTop: sectionTopPadding,
               paddingBottom: sectionBottomPadding,
               gap: cardGap,
@@ -246,7 +242,7 @@ export function HomeTab({
             width: "100%",
             maxWidth: contentMaxWidth,
             alignSelf: "center",
-            paddingHorizontal: pageSidePadding,
+            paddingHorizontal: scaledPageSidePadding,
           }}
         >
           <HomeSectionTitle
@@ -263,7 +259,7 @@ export function HomeTab({
           favorites={favorites}
           onToggleFavorite={onToggleFavorite}
           contentMaxWidth={contentMaxWidth}
-          pageSidePadding={pageSidePadding}
+          pageSidePadding={scaledPageSidePadding}
           scrollY={scrollY}
           viewportHeight={viewportHeight}
         />
@@ -282,14 +278,14 @@ export function HomeTab({
           <HomeSectionTitle
             title={`Because you liked "${becauseYouLiked.title}"`}
             iconName="star"
-            pageSidePadding={pageSidePadding}
+            pageSidePadding={scaledPageSidePadding}
             contentMaxWidth={contentMaxWidth}
           />
 
           <View
             style={{
               width: "100%",
-              paddingHorizontal: pageSidePadding,
+              paddingHorizontal: scaledPageSidePadding,
               paddingTop: sectionTopPadding,
               paddingBottom: sectionBottomPadding,
               gap: cardGap,

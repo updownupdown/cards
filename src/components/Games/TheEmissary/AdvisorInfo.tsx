@@ -7,6 +7,7 @@ import { Animated, View, ViewStyle } from "react-native";
 import { Button } from "../../Button/Button";
 import { type PlayingCard } from "../../Cards/card-utils";
 import { EmissarySuitsColorMap, TheEmissaryVisit } from "./TheEmissaryTypes";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 interface AdvisorInfoProps {
   lastSelectedAdvisor?: PlayingCard;
@@ -31,6 +32,7 @@ export const AdvisorInfo = ({
   advisorStyles,
   cardWidth,
 }: AdvisorInfoProps) => {
+  const { spacing } = useResponsiveMetrics();
   const { cardBg } = useGameZoneBackground();
   const { isRendered: renderAdvisorInfo, opacity: advisorInfoOpacity } =
     useFade(!!selectedAdvisor || discardFromHand !== 0, 300);
@@ -121,8 +123,11 @@ export const AdvisorInfo = ({
                   flexStyles.colCentered,
                   flexStyles.fullWidth,
                   flexStyles.flex1,
-                  flexStyles.gap6,
-                  { alignItems: "flex-start", justifyContent: "flex-start" },
+                  {
+                    alignItems: "flex-start",
+                    justifyContent: "flex-start",
+                    gap: spacing(6),
+                  },
                 ]}
               >
                 <Text
@@ -155,7 +160,9 @@ export const AdvisorInfo = ({
                 style={[
                   flexStyles.rowCentered,
                   flexStyles.fullWidth,
-                  flexStyles.gap20,
+                  {
+                    gap: spacing(20),
+                  },
                 ]}
               >
                 <Button

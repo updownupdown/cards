@@ -2,35 +2,6 @@ import { Colors, FontWeight } from "@/styles/styles";
 import { Platform, StyleSheet, TextStyle } from "react-native";
 
 export const textStyles = StyleSheet.create({
-  default: {
-    fontSize: 17,
-    fontFamily: FontWeight[300],
-    color: Colors.K200,
-  },
-  caps: {
-    fontSize: 14,
-    fontFamily: FontWeight[300],
-    color: Colors.K200,
-    textTransform: "uppercase",
-  },
-  h4: {
-    fontSize: 20,
-    fontFamily: FontWeight[400],
-    color: Colors.K200,
-    textTransform: "uppercase",
-  },
-  h5: {
-    fontSize: 16,
-    fontFamily: FontWeight[300],
-    color: Colors.K200,
-    textTransform: "uppercase",
-  },
-  h6: {
-    fontSize: 14,
-    fontFamily: FontWeight[300],
-    color: Colors.K200,
-    textTransform: "uppercase",
-  },
   shadowText: {
     ...Platform.select({
       // Web uses the unified standard CSS textShadow string

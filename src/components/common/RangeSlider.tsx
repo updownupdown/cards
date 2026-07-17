@@ -9,13 +9,15 @@ type RangeSliderProps = {
   label?: string;
   min?: number;
   max?: number;
-  onRangeChange?: (range: { min: number; max: number }) => void;
+  value: { min: number; max: number };
+  onRangeChange: (range: { min: number; max: number }) => void;
 };
 
 export const RangeSlider = ({
   label,
   min = 0,
   max = 100,
+  value,
   onRangeChange,
 }: RangeSliderProps) => {
   const { spacing } = useResponsiveMetrics();
@@ -34,80 +36,69 @@ export const RangeSlider = ({
 
   const [containerWidth, setContainerWidth] = useState(0);
 
-  // Animated values to handle smooth dragging
+  // Animated values for layout rendering
   const leftThumbX = useRef(new Animated.Value(0)).current;
   const rightThumbX = useRef(new Animated.Value(0)).current;
 
-  // Refs to keep track of exact positional values for math logic
+  // Track absolute pixel positions directly
   const leftX = useRef(0);
   const rightX = useRef(0);
 
-  // Refs to freeze the starting position when a drag begins
+  // Snapshot positions when a drag starts
   const leftStartX = useRef(0);
   const rightStartX = useRef(0);
 
-  // Sync Animated values with Refs
-  useEffect(() => {
-    const leftSub = leftThumbX.addListener(({ value }) => {
-      leftX.current = value;
-    });
-    const rightSub = rightThumbX.addListener(({ value }) => {
-      rightX.current = value;
-    });
-    return () => {
-      leftThumbX.removeListener(leftSub);
-      rightThumbX.removeListener(rightSub);
-    };
-  }, [leftThumbX, rightThumbX]);
-
-  // Initialize right thumb position once the container width is known
+  // Sync incoming props or layout changes to the thumb positions
   useEffect(() => {
     if (containerWidth > 0) {
-      const initialRight = containerWidth - THUMB_SIZE;
-      rightThumbX.setValue(initialRight);
-      rightX.current = initialRight;
+      const trackWidth = containerWidth - THUMB_SIZE;
+      const rangeSpan = max - min || 1;
+
+      // Translate the min/max values back into absolute pixel coordinates
+      const targetLeft = ((value.min - min) / rangeSpan) * trackWidth;
+      const targetRight = ((value.max - min) / rangeSpan) * trackWidth;
+
+      leftThumbX.setValue(targetLeft);
+      rightThumbX.setValue(targetRight);
+
+      leftX.current = targetLeft;
+      rightX.current = targetRight;
     }
-  }, [containerWidth, rightThumbX]);
+  }, [value.min, value.max, containerWidth, min, max, THUMB_SIZE]);
 
-  // Converts pixel position back to min/max values
+  // Converts current pixel coordinates back to min/max integers for the parent
   const reportValues = useCallback(() => {
-    if (containerWidth === 0 || !onRangeChange) return;
+    if (containerWidth === 0) return;
     const trackWidth = containerWidth - THUMB_SIZE;
+    const rangeSpan = max - min;
 
-    const lowVal = min + (leftX.current / trackWidth) * (max - min);
-    const highVal = min + (rightX.current / trackWidth) * (max - min);
+    const lowVal = min + (leftX.current / trackWidth) * rangeSpan;
+    const highVal = min + (rightX.current / trackWidth) * rangeSpan;
 
     onRangeChange({
       min: Math.round(lowVal),
       max: Math.round(highVal),
     });
-  }, [containerWidth, min, max, onRangeChange]);
+  }, [containerWidth, min, max, onRangeChange, THUMB_SIZE]);
 
   // Drag responder for the minimum (left) toggle
   const leftPanGesture = Gesture.Pan()
     .runOnJS(true)
     .activeOffsetX([-5, 5])
     .onStart(() => {
-      leftStartX.current = leftX.current; // Freeze the start position
-      leftThumbX.setOffset(leftStartX.current);
-      leftThumbX.setValue(0);
+      leftStartX.current = leftX.current;
     })
     .onUpdate((e) => {
-      let newX = e.translationX;
+      let absoluteX = leftStartX.current + e.translationX;
+      const maxLeftBound = rightX.current - THUMB_SIZE;
 
-      // Use leftStartX.current instead of leftX.current for the math
-      if (leftStartX.current + newX < 0) {
-        newX = -leftStartX.current;
-      }
-      // Prevent crossing the right thumb
-      else if (leftStartX.current + newX > rightX.current - THUMB_SIZE) {
-        newX = rightX.current - THUMB_SIZE - leftStartX.current;
-      }
+      // Clamp position between 0 and the right thumb collision boundary
+      absoluteX = Math.max(0, Math.min(absoluteX, maxLeftBound));
 
-      leftThumbX.setValue(newX);
+      leftThumbX.setValue(absoluteX);
+      leftX.current = absoluteX;
     })
     .onEnd(() => {
-      leftThumbX.flattenOffset();
       reportValues();
     });
 
@@ -116,30 +107,23 @@ export const RangeSlider = ({
     .runOnJS(true)
     .activeOffsetX([-5, 5])
     .onStart(() => {
-      rightStartX.current = rightX.current; // Freeze the start position
-      rightThumbX.setOffset(rightStartX.current);
-      rightThumbX.setValue(0);
+      rightStartX.current = rightX.current;
     })
     .onUpdate((e) => {
-      let newX = e.translationX;
+      let absoluteX = rightStartX.current + e.translationX;
+      const minRightBound = leftX.current + THUMB_SIZE;
+      const maxRightBound = containerWidth - THUMB_SIZE;
 
-      // Use rightStartX.current instead of rightX.current for the math
-      if (rightStartX.current + newX > containerWidth - THUMB_SIZE) {
-        newX = containerWidth - THUMB_SIZE - rightStartX.current;
-      }
-      // Prevent crossing the left thumb
-      else if (rightStartX.current + newX < leftX.current + THUMB_SIZE) {
-        newX = leftX.current + THUMB_SIZE - rightStartX.current;
-      }
+      // Clamp position between the left thumb collision boundary and track end
+      absoluteX = Math.max(minRightBound, Math.min(absoluteX, maxRightBound));
 
-      rightThumbX.setValue(newX);
+      rightThumbX.setValue(absoluteX);
+      rightX.current = absoluteX;
     })
     .onEnd(() => {
-      rightThumbX.flattenOffset();
       reportValues();
     });
 
-  // Math to perfectly size and position the transparent red track between the two toggles
   const trackLeftPos = Animated.add(leftThumbX, THUMB_SIZE / 2);
   const trackWidthAnim = Animated.subtract(rightThumbX, leftThumbX);
 

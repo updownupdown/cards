@@ -13,17 +13,12 @@ import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
 import { useTipsBoxLayout } from "@/hooks/useTipsLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { flexStyles } from "@/styles/flexStyles";
-import { Layers } from "@/styles/layers";
-import {
-  floatingBarDims,
-  getGameHeaderBottom,
-  menuStyles,
-} from "@/styles/menuStyles";
 import {
   Colors,
-  HeaderButtonIconSize,
-  HomePadding,
   rgba,
+  layoutDims,
+  LayerZIndexes,
+  getHeaderHeightWithInset,
 } from "@/styles/styles";
 import { router, usePathname } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
@@ -110,7 +105,7 @@ export const GameWrapper = ({
 
   const titleColor = gameInfo.cardColorText;
   const backgroundColor = gameInfo.cardColorBg;
-  const headerHeight = getGameHeaderBottom(insets.top, ui.scale);
+  const headerHeight = getHeaderHeightWithInset(insets.top, ui.scale);
   const backgroundSource =
     GAME_BACKGROUND_ASSETS[gameInfo.background ?? DEFAULT_GAME_BACKGROUND];
 
@@ -160,7 +155,7 @@ export const GameWrapper = ({
         <View
           style={{
             position: "absolute",
-            zIndex: Layers.boardBackgroundOverlay,
+            zIndex: LayerZIndexes.boardBackgroundOverlay,
             top: 0,
             right: 0,
             bottom: 0,
@@ -175,11 +170,11 @@ export const GameWrapper = ({
         <View
           style={{
             position: "relative",
-            zIndex: Layers.header,
+            zIndex: LayerZIndexes.header,
             width: "100%",
             maxWidth: ui.contentMaxWidth,
             alignSelf: "center",
-            padding: spacing(HomePadding / 2),
+            padding: spacing(layoutDims.pagePadding / 2),
           }}
         >
           <View
@@ -187,10 +182,9 @@ export const GameWrapper = ({
               flexStyles.rowCentered,
               {
                 width: "100%",
-                gap: spacing(floatingBarDims.gap),
-                height: spacing(floatingBarDims.height),
-                paddingHorizontal: spacing(HomePadding / 2),
-                borderRadius: spacing(floatingBarDims.height / 2),
+                height: spacing(layoutDims.menuBarHeight),
+                paddingHorizontal: spacing(layoutDims.pagePadding / 2),
+                borderRadius: spacing(layoutDims.menuBarHeight / 2),
                 backgroundColor: rgba(backgroundColor, 0.8),
                 boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.black, 0.3)}, ${spacing(2)}px ${spacing(4)}px ${spacing(10)}px ${rgba(
                   Colors.black,
@@ -200,7 +194,7 @@ export const GameWrapper = ({
             ]}
           >
             <Button
-              style={[menuStyles.headerButton]}
+              headerButton
               onPress={async () => {
                 try {
                   await clearLastGameSession();
@@ -210,24 +204,21 @@ export const GameWrapper = ({
               }}
               iconName={"home"}
               iconColor={titleColor}
-              iconSize={spacing(HeaderButtonIconSize)}
             />
 
             <Button
-              style={[menuStyles.headerButton]}
+              headerButton
               onPress={() => setTipsMode(!active)}
               iconName={"info-outline"}
               iconColor={active ? rgba(Colors.white, 0.3) : titleColor}
-              iconSize={spacing(HeaderButtonIconSize)}
             />
 
             {handleUndo && (
               <Button
-                style={[menuStyles.headerButton]}
+                headerButton
                 onPress={handleUndo}
                 iconName="undo"
                 iconColor={canUndo ? titleColor : rgba(Colors.white, 0.3)}
-                iconSize={spacing(HeaderButtonIconSize)}
                 disabled={!canUndo}
               />
             )}
@@ -236,15 +227,13 @@ export const GameWrapper = ({
               reset={reset}
               iconColor={titleColor}
               pressedIconColor={rgba(titleColor, 0.7)}
-              iconSize={spacing(HeaderButtonIconSize)}
             />
 
             <Button
-              style={[menuStyles.headerButton]}
+              headerButton
               onPress={() => setShowMenu(true)}
               iconName="more-vertical"
               iconColor={titleColor}
-              iconSize={spacing(HeaderButtonIconSize)}
             />
           </View>
         </View>
@@ -255,7 +244,7 @@ export const GameWrapper = ({
             flexStyles.fullWidth,
             {
               position: "relative",
-              zIndex: Layers.boardContent,
+              zIndex: LayerZIndexes.boardContent,
               flex: 1,
               pointerEvents: "box-none",
             },

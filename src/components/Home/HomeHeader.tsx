@@ -2,13 +2,7 @@ import SoloSuiteLogo from "@/assets/images/SoloSuiteLogo.svg";
 import { Button } from "@/components/Button/Button";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
-import { menuStyles } from "@/styles/menuStyles";
-import {
-  Colors,
-  HeaderButtonIconSize,
-  HomePadding,
-  rgba,
-} from "@/styles/styles";
+import { Colors, rgba, layoutDims } from "@/styles/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import { Platform, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -21,9 +15,6 @@ type HomeHeaderProps = {
 export function HomeHeader({ onOpenSearch, onOpenSettings }: HomeHeaderProps) {
   const insets = useSafeAreaInsets();
   const { ui, spacing } = useResponsiveMetrics();
-
-  const headerOffsetTop = insets.top + spacing(HomePadding * 0.5);
-  const headerHeight = ui.gameHeaderHeight;
 
   return (
     <View
@@ -59,8 +50,8 @@ export function HomeHeader({ onOpenSearch, onOpenSettings }: HomeHeaderProps) {
           width: "100%",
           maxWidth: ui.contentMaxWidth,
           alignSelf: "center",
-          paddingTop: headerOffsetTop,
-          paddingBottom: spacing(HomePadding * 0.5),
+          paddingTop: insets.top + spacing(layoutDims.pagePadding * 0.5),
+          paddingBottom: spacing(layoutDims.pagePadding * 0.5),
           pointerEvents: "box-none",
         }}
       >
@@ -70,9 +61,9 @@ export function HomeHeader({ onOpenSearch, onOpenSettings }: HomeHeaderProps) {
             flexStyles.spaceBetween,
             {
               pointerEvents: "box-none",
-              height: headerHeight,
-              paddingLeft: spacing(HomePadding),
-              paddingRight: spacing(HomePadding * 0.5),
+              height: spacing(layoutDims.menuBarHeight),
+              paddingLeft: spacing(layoutDims.pagePadding),
+              paddingRight: spacing(layoutDims.pagePadding * 0.5),
             },
           ]}
         >
@@ -84,19 +75,19 @@ export function HomeHeader({ onOpenSearch, onOpenSettings }: HomeHeaderProps) {
 
           <View style={[flexStyles.rowCentered]}>
             <Button
+              headerButton
               iconName="search"
               onPress={onOpenSearch}
-              style={[styles.headerBtn, menuStyles.headerButton]}
-              iconSize={spacing(HeaderButtonIconSize)}
+              style={[styles.headerBtn]}
               iconColor={rgba(Colors.white, 0.6)}
             />
 
             <Button
+              headerButton
               size="xl"
               iconName="settings"
               onPress={onOpenSettings}
-              style={[styles.headerBtn, menuStyles.headerButton]}
-              iconSize={spacing(HeaderButtonIconSize)}
+              style={[styles.headerBtn]}
               iconColor={rgba(Colors.white, 0.6)}
             />
           </View>

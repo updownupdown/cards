@@ -12,8 +12,7 @@ import { useTipsBoxLayout } from "@/hooks/useTipsLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
-import { Layers } from "@/styles/layers";
-import { Colors, ContentSidePadding, HomePadding, rgba } from "@/styles/styles";
+import { layoutDims, Colors, rgba, LayerZIndexes } from "@/styles/styles";
 import { lightenHexColor } from "@/utils/utils";
 import { usePathname } from "expo-router";
 import { useState } from "react";
@@ -49,7 +48,10 @@ export function TipsBox({ phase, topOffset }: Props) {
   }
 
   const expandedMaxHeight = Math.max(
-    viewportHeight - topOffset - spacing(ContentSidePadding) - insets.bottom,
+    viewportHeight -
+      topOffset -
+      spacing(layoutDims.pagePadding) -
+      insets.bottom,
     boxHeight,
   );
 
@@ -57,12 +59,12 @@ export function TipsBox({ phase, topOffset }: Props) {
     <View
       style={{
         position: "absolute",
-        zIndex: Layers.tipsContainer,
+        zIndex: LayerZIndexes.tipsContainer,
         top: topOffset,
         left: 0,
         right: 0,
         alignItems: "center",
-        paddingHorizontal: spacing(ContentSidePadding / 2),
+        paddingHorizontal: spacing(layoutDims.pagePadding / 2),
         pointerEvents: "box-none",
       }}
     >
@@ -72,11 +74,11 @@ export function TipsBox({ phase, topOffset }: Props) {
           transitionProperty: "background-color",
           transitionTimingFunction: "ease",
           width: "100%",
-          zIndex: Layers.tipsCard,
-          maxWidth: ui.contentMaxWidth - spacing(ContentSidePadding),
+          zIndex: LayerZIndexes.tipsCard,
+          maxWidth: ui.contentMaxWidth - spacing(layoutDims.pagePadding),
           height: expanded ? undefined : boxHeight,
           maxHeight: expanded ? expandedMaxHeight : boxHeight,
-          paddingHorizontal: spacing(HomePadding / 8),
+          paddingHorizontal: spacing(layoutDims.pagePadding / 8),
           borderRadius: boxHeight / 2,
           backgroundColor: rgba(gameInfo.cardColorBg, expanded ? 1 : 0.8),
           boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.black, 0.3)}, ${spacing(2)}px ${spacing(4)}px ${spacing(10)}px ${rgba(

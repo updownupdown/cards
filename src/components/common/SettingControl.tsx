@@ -1,6 +1,7 @@
 import { Text } from "@/components/common/Text";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon } from "@/icons";
-import { settingsStyles } from "@/styles/settingsStyles";
+import { flexStyles } from "@/styles/flexStyles";
 import { Colors, rgba } from "@/styles/styles";
 import React from "react";
 import { Pressable, View } from "react-native";
@@ -26,16 +27,37 @@ export function SettingControl<T>({
   booleanType = "toggle",
   options,
 }: SettingControlProps<T>) {
+  const { spacing } = useResponsiveMetrics();
+
   if (type === "boolean") {
     const isTrue = Boolean(value);
 
     return (
-      <View style={[settingsStyles.container]}>
+      <View
+        style={[
+          flexStyles.colCentered,
+          {
+            justifyContent: "space-between",
+            width: "100%",
+          },
+        ]}
+      >
         <Pressable
           style={
             booleanType === "toggle"
-              ? settingsStyles.toggleWrap
-              : settingsStyles.checkboxWrap
+              ? {
+                  ...flexStyles.rowCentered,
+                  ...flexStyles.fullWidth,
+                  justifyContent: "space-between",
+                }
+              : {
+                  padding: 4,
+                  flexDirection: "row-reverse",
+                  gap: 8,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                }
           }
           onPress={() => onChange(!value as any)}
         >
@@ -46,19 +68,44 @@ export function SettingControl<T>({
           {booleanType === "toggle" ? (
             <View
               style={[
-                settingsStyles.toggleBg,
-                isTrue && settingsStyles.toggleBgOn,
+                {
+                  transitionDuration: "0.5s",
+                  transitionProperty: "all",
+                  transitionTimingFunction: "ease",
+                  width: 60,
+                  height: 32,
+                  borderRadius: 16,
+                  backgroundColor: isTrue ? Colors.win : Colors.K800,
+                  justifyContent: "center",
+                  paddingHorizontal: 2,
+                  boxShadow: `inset 0 0 6px ${rgba(Colors.black, 0.4)}`,
+                },
               ]}
             >
               <View
-                style={[
-                  settingsStyles.toggleKnob,
-                  isTrue && settingsStyles.toggleKnobOn,
-                ]}
+                style={{
+                  transitionDuration: "0.5s",
+                  transitionProperty: "all",
+                  transitionTimingFunction: "ease",
+                  width: 22,
+                  height: 22,
+                  borderRadius: 11,
+                  backgroundColor: Colors.white,
+                  transform: [{ translateX: isTrue ? 30 : 4 }],
+                  boxShadow: `1px 2px 4px ${rgba(Colors.black, 0.3)}`,
+                }}
               />
             </View>
           ) : (
-            <View style={[settingsStyles.checkboxBg]}>
+            <View
+              style={{
+                width: spacing(24),
+                height: spacing(24),
+                borderRadius: spacing(6),
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <Icon
                 name={isTrue ? "check-box-on" : "check-box-off"}
                 color={Colors.accentBlue}
@@ -82,7 +129,15 @@ export function SettingControl<T>({
 
   if (type === "string" && options) {
     return (
-      <View style={settingsStyles.containerCol}>
+      <View
+        style={[
+          flexStyles.colStart,
+          {
+            width: "100%",
+            gap: spacing(12),
+          },
+        ]}
+      >
         <Text weight={500} size="lg" color={labelColor}>
           {label}
         </Text>
@@ -97,17 +152,46 @@ export function SettingControl<T>({
           </Text>
         )}
 
-        <View style={settingsStyles.optionsWrap}>
+        <View
+          style={{
+            ...flexStyles.rowStart,
+            flexWrap: "wrap",
+            width: "100%",
+            gap: spacing(20),
+          }}
+        >
           {options.map((opt) => {
             const isSelected = value === opt.value;
             return (
               <Pressable
                 key={String(opt.value)}
-                style={settingsStyles.radioRow}
+                style={{
+                  ...flexStyles.rowCentered,
+                  gap: spacing(8),
+                }}
                 onPress={() => onChange(opt.value)}
               >
-                <View style={settingsStyles.radioOuter}>
-                  {isSelected && <View style={settingsStyles.radioInner} />}
+                <View
+                  style={{
+                    width: spacing(20),
+                    height: spacing(20),
+                    borderRadius: spacing(10),
+                    borderWidth: 2,
+                    borderColor: Colors.K600,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {isSelected && (
+                    <View
+                      style={{
+                        width: spacing(10),
+                        height: spacing(10),
+                        borderRadius: spacing(5),
+                        backgroundColor: Colors.K400,
+                      }}
+                    />
+                  )}
                 </View>
                 <Text size="sm">{opt.label}</Text>
               </Pressable>

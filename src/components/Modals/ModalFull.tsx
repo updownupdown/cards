@@ -1,12 +1,12 @@
 import { Text } from "@/components/common/Text";
 import { flexStyles } from "@/styles/flexStyles";
-import { menuStyles } from "@/styles/menuStyles";
 import { useModalStyles } from "@/styles/modalStyles";
-import { Colors, HeaderButtonSize, rgba } from "@/styles/styles";
+import { Colors, rgba, layoutDims } from "@/styles/styles";
+import { lightenHexColor } from "@/utils/utils";
 import React from "react";
 import { Modal, View } from "react-native";
 import { Button } from "../Button/Button";
-import { darkenHexColor, lightenHexColor } from "@/utils/utils";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 type Props = {
   children: React.ReactNode;
@@ -24,6 +24,7 @@ export default function ModalFull({
   onClose,
 }: Props) {
   const modalStyles = useModalStyles();
+  const { spacing } = useResponsiveMetrics();
 
   return (
     <>
@@ -50,10 +51,10 @@ export default function ModalFull({
                   {
                     marginLeft: "auto",
                     backgroundColor: rgba(Colors.white, 0.1),
-                    borderRadius: HeaderButtonSize / 2,
+                    borderRadius: spacing(layoutDims.menuButtonSize / 2),
                     padding: 0,
-                    width: HeaderButtonSize,
-                    height: HeaderButtonSize,
+                    width: spacing(layoutDims.menuButtonSize),
+                    height: spacing(layoutDims.menuButtonSize),
                     boxShadow: "unset",
                     borderWidth: 0,
                   },

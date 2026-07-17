@@ -203,7 +203,7 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
                 </View>
               ))}
 
-            {/* About Text */}
+            {/* About Box: About, Complexity/Difficult/Luck, By Line */}
             <View
               style={[
                 flexStyles.colCentered,
@@ -211,7 +211,7 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
                 {
                   alignItems: "flex-start",
                   padding: spacing(24),
-                  gap: spacing(12),
+                  gap: spacing(20),
                   backgroundColor: lightenHexColor(gameInfo.cardColorBg, 0.1),
                   borderRadius: spacing(8),
                 },
@@ -245,18 +245,18 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
                 </>
               )}
 
-              {/* Stats */}
-              <StatBars
-                stats={gameInfo.stats}
-                gameColor={gameInfo.cardColorText}
-              />
-
               {/* By Line */}
               {gameInfo.byLine && (
                 <Text weight={300} size="sm" color={rgba(Colors.white, 0.6)}>
                   {gameInfo.byLine}
                 </Text>
               )}
+
+              {/* Stats */}
+              <StatBars
+                stats={gameInfo.stats}
+                gameColor={gameInfo.cardColorText}
+              />
             </View>
           </View>
 
@@ -278,14 +278,16 @@ export const HowToPlay = ({
   howToPlayText: string[];
   headingColor: string;
 }) => {
+  const { spacing } = useResponsiveMetrics();
+
   return (
     <View
       style={[
         flexStyles.colCentered,
         flexStyles.fullWidth,
-        flexStyles.gap20,
         {
           alignItems: "flex-start",
+          gap: spacing(20),
         },
       ]}
     >

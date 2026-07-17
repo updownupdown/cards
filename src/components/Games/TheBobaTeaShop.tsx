@@ -28,6 +28,7 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { CardColor } from "../Cards/CardStyles";
 import { GameWrapper } from "../common/GameWrapper";
 import { DeckPreviewModal } from "../Modals/DeckPreviewModal";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 type SelectedPos = { queueIndex: number; cardIndex: number };
 
@@ -145,6 +146,7 @@ function evaluateEnd(state: GameState): { ended: boolean; won: boolean } {
 
 // ========== Main Game Component ========== //
 export default function TheBobaTeaShop() {
+  const { spacing } = useResponsiveMetrics();
   const { zoneBg, cardText } = useGameZoneBackground();
   const [showDeckPreview, setShowDeckPreview] = useState(false);
   const [isResolvingCustomerAction, setIsResolvingCustomerAction] =
@@ -512,16 +514,17 @@ export default function TheBobaTeaShop() {
               key={rank}
               style={[
                 flexStyles.colCentered,
-                flexStyles.gap6,
                 flexStyles.flex1,
+                {
+                  gap: spacing(6),
+                },
               ]}
             >
               <View
                 key={rank}
                 style={[
                   flexStyles.colCentered,
-                  flexStyles.gap6,
-                  { flexDirection: "column-reverse" },
+                  { flexDirection: "column-reverse", gap: spacing(6) },
                 ]}
               >
                 {Array.from({ length: 3 }, (_, i) => {
@@ -571,9 +574,9 @@ export default function TheBobaTeaShop() {
           key={`queue-${queueIndex}`}
           style={[
             flexStyles.colStart,
-            flexStyles.gap14,
             flexStyles.flex1,
             getZoneStylesById(`btns-${queueIndex}`),
+            { gap: spacing(14) },
           ]}
         >
           {Array.from({ length: queue.length + 1 }, (_, i) => {

@@ -78,43 +78,4 @@ export const flexStyles = StyleSheet.create({
   flex1: {
     flex: 1,
   },
-  gap2: {
-    gap: 2,
-  },
-  gap4: {
-    gap: 4,
-  },
-  gap6: {
-    gap: 6,
-  },
-  gap8: {
-    gap: 8,
-  },
-  gap10: {
-    gap: 10,
-  },
-  gap12: {
-    gap: 12,
-  },
-  gap14: {
-    gap: 14,
-  },
-  gap16: {
-    gap: 16,
-  },
-  gap20: {
-    gap: 20,
-  },
-  gap24: {
-    gap: 24,
-  },
-  gap30: {
-    gap: 30,
-  },
-  gap34: {
-    gap: 34,
-  },
-  gap40: {
-    gap: 40,
-  },
 });
