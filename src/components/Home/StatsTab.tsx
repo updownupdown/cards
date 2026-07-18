@@ -49,8 +49,11 @@ type SortState = {
   direction: "asc" | "desc";
 };
 
-const winRateValue = (stats: GameStats) =>
-  stats.attempts > 0 ? stats.wins / stats.attempts : 0;
+const winRateValue = (stats: GameStats) => {
+  return stats.wins > 0 && stats.losses > 0
+    ? stats.wins / (stats.wins + stats.losses)
+    : null;
+};
 
 const gameTitleFlex = 2.4;
 
@@ -106,7 +109,9 @@ export function StatsTab({
           case "losses":
             return left.stats.losses - right.stats.losses;
           case "winRate":
-            return winRateValue(left.stats) - winRateValue(right.stats);
+            return (
+              (winRateValue(left.stats) ?? 0) - (winRateValue(right.stats) ?? 0)
+            );
           case "best":
             return (
               (left.stats.highestScore ?? 0) - (right.stats.highestScore ?? 0)
@@ -122,6 +127,24 @@ export function StatsTab({
     });
   }, [playedRows, sortState]);
 
+  const totals = useMemo(() => {
+    return playedRows.reduce(
+      (acc, row) => {
+        acc.wins += row.stats.wins;
+        acc.losses += row.stats.losses;
+        acc.attempts += row.stats.attempts;
+
+        return acc;
+      },
+      {
+        wins: 0,
+        losses: 0,
+        attempts: 0,
+        best: null,
+      },
+    );
+  }, [playedRows]);
+
   const personas = useMemo<Persona[]>(() => {
     if (playedRows.length === 0) {
       return [];
@@ -130,14 +153,14 @@ export function StatsTab({
     // The Nemesis: lowest win rate (tie-break: most played).
     const nemesis = [...playedRows].sort(
       (a, b) =>
-        winRateValue(a.stats) - winRateValue(b.stats) ||
+        (winRateValue(a.stats) ?? 0) - (winRateValue(b.stats) ?? 0) ||
         b.stats.attempts - a.stats.attempts,
     )[0];
 
     // The Comfort Pick: highest win rate (tie-break: most played).
     const comfort = [...playedRows].sort(
       (a, b) =>
-        winRateValue(b.stats) - winRateValue(a.stats) ||
+        (winRateValue(b.stats) ?? 0) - (winRateValue(a.stats) ?? 0) ||
         b.stats.attempts - a.stats.attempts,
     )[0];
 
@@ -151,8 +174,8 @@ export function StatsTab({
       .filter((row) => row.stats.wins > 0)
       .sort(
         (a, b) =>
-          winRateValue(b.stats) / b.stats.attempts -
-          winRateValue(a.stats) / a.stats.attempts,
+          (winRateValue(b.stats) ?? 0) / b.stats.attempts -
+          (winRateValue(a.stats) ?? 0) / a.stats.attempts,
       )[0];
 
     const entries: Persona[] = [];
@@ -400,7 +423,9 @@ export function StatsTab({
                         weight={500}
                         style={{ flex: 1, textAlign: "right" }}
                         color={
-                          row.stats.attempts === 0 ? Colors.K700 : Colors.K200
+                          row.stats.wins === 0 && row.stats.losses === 0
+                            ? Colors.K700
+                            : Colors.K200
                         }
                       >
                         {calculateWinRate(row.stats)}
@@ -421,6 +446,65 @@ export function StatsTab({
                       </Text>
                     </View>
                   ))}
+
+                  {/* Sticky total row */}
+                  <View
+                    style={{
+                      position: "sticky",
+                      zIndex: 2,
+                      bottom: 0,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      paddingTop: 8,
+                      paddingBottom: 8,
+                      borderTopWidth: StyleSheet.hairlineWidth,
+                      borderTopColor: Colors.K700,
+                      marginTop: 8,
+                      backgroundColor: Colors.background,
+                    }}
+                  >
+                    <Text
+                      size="sm"
+                      weight={600}
+                      style={{ flex: gameTitleFlex }}
+                    >
+                      Total
+                    </Text>
+                    <Text
+                      size="sm"
+                      weight={600}
+                      style={{ flex: 1, textAlign: "right" }}
+                      color={totals.wins === 0 ? Colors.K700 : Colors.K200}
+                    >
+                      {totals.wins}
+                    </Text>
+                    <Text
+                      size="sm"
+                      weight={600}
+                      style={{ flex: 1, textAlign: "right" }}
+                      color={totals.losses === 0 ? Colors.K700 : Colors.K200}
+                    >
+                      {totals.losses}
+                    </Text>
+                    <Text
+                      size="sm"
+                      weight={600}
+                      style={{ flex: 1, textAlign: "right" }}
+                      color={totals.attempts === 0 ? Colors.K700 : Colors.K200}
+                    >
+                      {totals.wins > 0 && totals.losses > 0
+                        ? `${Math.round((totals.wins / (totals.wins + totals.losses)) * 100)}%`
+                        : "-"}
+                    </Text>
+                    <Text
+                      size="sm"
+                      weight={600}
+                      style={{ flex: 1, textAlign: "right" }}
+                      color={totals.best === null ? Colors.K700 : Colors.K200}
+                    >
+                      {totals.best === null ? "-" : totals.best}
+                    </Text>
+                  </View>
                 </View>
               </ScrollView>
             )}

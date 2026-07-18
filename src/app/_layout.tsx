@@ -66,7 +66,7 @@ export default function Layout() {
   useEffect(() => {
     if (typeof document === "undefined") return;
 
-    const rootTitle = "SoloSuite";
+    const rootTitle = "Solo Suite";
     const pageTitle = isGamePath(pathname)
       ? `${getGameInfo(pathname).title} ♠ ${rootTitle}`
       : rootTitle;

@@ -856,7 +856,6 @@ export default function BowlingSolitaire() {
     cardMapper,
     zoneMapper,
     paddingTop: 0,
-    // visualizer: true,
   });
 
   const CountText = ({

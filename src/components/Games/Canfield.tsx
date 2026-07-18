@@ -478,7 +478,6 @@ export default function Canfield() {
     zoneMapper,
     cardSize: "small",
     fixedRows: 6,
-    // visualizer: true,
   });
 
   const stockTapRect = useMemo(() => {

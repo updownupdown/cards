@@ -406,7 +406,6 @@ export default function SpiderSolitaire() {
     zoneMapper,
     cardSize: "small",
     fixedRows: 6,
-    // visualizer: true,
   });
 
   const stockTapRect = useMemo(() => {

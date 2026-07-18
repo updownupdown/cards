@@ -728,7 +728,6 @@ export default function Scoundrel() {
     },
     cardSize,
     paddingTop: 0.1,
-    visualizer: true,
   });
 
   return (

@@ -388,7 +388,6 @@ export default function Klondike() {
     zoneMapper,
     cardSize: "small",
     fixedRows: 6,
-    // visualizer: true,
   });
 
   const stockTapRect = useMemo(() => {

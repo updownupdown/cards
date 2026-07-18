@@ -33,7 +33,7 @@ export function GameUserStats({
     { label: "Played", value: stats.attempts },
     { label: "Won", value: stats.wins },
     { label: "Lost", value: stats.losses },
-    { label: "Win rate", value: calculateWinRate(stats) },
+    { label: "Win rate", value: calculateWinRate(stats) ?? "N/A" },
   ];
 
   if (hasBestScore) {
