@@ -1,10 +1,11 @@
+import { CardComponents as CardsClassic } from "@/assets/cards/classic";
 import { CardComponents as CardsRegular } from "@/assets/cards/regular";
-import { CardComponents as CardsTableau } from "@/assets/cards/tableau";
 import { CardComponents as CardsSmall } from "@/assets/cards/small";
 import { CardComponents as CardsSmallColored } from "@/assets/cards/small-colored";
+import { CardComponents as CardsTableau } from "@/assets/cards/tableau";
+import { Image } from "expo-image";
 import React from "react";
 import { View, ViewStyle } from "react-native";
-import { Image } from "expo-image";
 import { cardDims, PlayingCard } from "./card-utils";
 import { CardColor, CardOverlay, CardSizes, getCardShadow } from "./CardStyles";
 import { cardBackAssets, defaultCardBackName } from "./generated-card-backs";
@@ -52,7 +53,9 @@ export const Card = ({
         ? CardsSmallColored
         : cardSize === "tableau"
           ? CardsTableau
-          : CardsRegular;
+          : cardSize === "classic"
+            ? CardsClassic
+            : CardsRegular;
 
   let cardName = "BackH";
 
@@ -60,13 +63,13 @@ export const Card = ({
     cardName = card.rank + card.suit.charAt(0).toUpperCase();
   }
 
-  const SvgCard = cardFiles[cardName];
+  const imageSource = cardFiles[cardName];
   const isFaceDown = !card || !card.faceUp;
   const backAsset = getCardBackAsset(customBack);
 
   if (!isVisible) return null;
-  if (!isFaceDown && !SvgCard) {
-    console.warn(`SVG ${cardName} not found.`);
+  if (!isFaceDown && !imageSource) {
+    console.warn(`PNG ${cardName} not found.`);
     return null;
   }
 
@@ -96,8 +99,6 @@ export const Card = ({
                 forceSelectColor,
                 isPlaceholder,
               }),
-          // Potential fixes for clipping mask issue on Chrome mobile
-          // borderRadius: cardWidth * cardDims.ratioRadius,
           borderRadius: Math.max(cardWidth, 1) * cardDims.ratioRadius,
           backfaceVisibility: "hidden",
         },
@@ -117,7 +118,11 @@ export const Card = ({
           transition={0}
         />
       ) : (
-        <SvgCard width="100%" height="100%" />
+        <Image
+          source={imageSource}
+          style={{ width: "100%", height: "100%" }}
+          transition={0}
+        />
       )}
     </View>
   );

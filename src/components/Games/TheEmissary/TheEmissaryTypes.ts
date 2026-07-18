@@ -53,10 +53,10 @@ export type EmissaryRefKeys =
   | "rulersRefs";
 
 export const EmissarySuitsColorMap: Record<string, string> = {
-  diamonds: "#84cf61",
-  hearts: "#58d8bc",
-  spades: "#d28af3",
-  clubs: "#f16a88",
+  diamonds: "#6db14e",
+  hearts: "#43b39a",
+  spades: "#cd7ff1",
+  clubs: "#dd5960",
 };
 
 export const defaultHandSize = 8;

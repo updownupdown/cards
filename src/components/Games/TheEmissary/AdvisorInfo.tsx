@@ -168,6 +168,7 @@ export const AdvisorInfo = ({
                 <Button
                   onPress={() => setSelectedAdvisor(undefined)}
                   text="Cancel"
+                  textOnly
                   theme={Colors.K200}
                 />
                 {advisorSuit !== "spades" && (

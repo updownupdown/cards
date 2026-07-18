@@ -34,6 +34,8 @@ const EmptyRoom: (PlayingCard | null)[] = [null, null, null, null];
 const MinHealthAfterSafeStart = 2;
 const MaxSafeShuffleAttempts = 20;
 
+const cardSize = "classic";
+
 type RoomActionSpec = {
   key: string;
   text?: string;
@@ -724,7 +726,7 @@ export default function Scoundrel() {
         isDisabled: game.draw.length === 0,
       };
     },
-    cardSize: "regular",
+    cardSize,
     paddingTop: 0.2,
   });
 

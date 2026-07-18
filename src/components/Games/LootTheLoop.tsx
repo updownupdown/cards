@@ -278,52 +278,35 @@ export default function LootTheLoop() {
       const newTopCard = draft.deck[deckPos];
 
       if (newTopCard.faceUp && isFace(newTopCard)) {
-        // Lose due to landing on face card
+        // Lose condition: landed directly on face card
         draft.ended = true;
         draft.won = false;
         draft.winLoseMessage = "You landed on a trap!";
         return;
       } else if (newTopCard.faceUp && isJoker(newTopCard)) {
-        // Win by having all aces and landing on joker/exit
+        // Win condition: found all aces and landed on joker (exit)
         if (draft.acesPile.length === 4) {
           draft.ended = true;
           draft.won = true;
           draft.winLoseMessage = "You got all four jewels and found the exit!";
           return;
         } else {
-          // Landing on joker without all aces does nothing
+          // Landed on joker without all aces does nothing
           return;
         }
       } else if (
         newTopCard.faceUp &&
         (isAce(newTopCard) || isNumberRank(newTopCard.rank))
       ) {
-        // Add newTopCard to scorePile, and remove from deck
-        let acePile = [...draft.acesPile];
-        let trinketsPile = [...draft.trinketsPile];
-        let deck = [...draft.deck];
-
+        // Remove top card from deck and move it to the scorePile
         if (newTopCard.rank === "A") {
-          acePile = [...acePile, newTopCard];
-          deck.splice(deckPos, 1);
+          draft.deck.splice(deckPos, 1);
+          draft.acesPile.push(newTopCard);
         } else {
-          trinketsPile = [...trinketsPile, newTopCard];
-          deck.splice(deckPos, 1);
+          draft.deck.splice(deckPos, 1);
+          draft.trinketsPile.push(newTopCard);
         }
 
-        if (deck.length === 0) {
-          draft.deck = deck;
-          draft.acesPile = acePile;
-          draft.trinketsPile = trinketsPile;
-          draft.ended = true;
-          draft.won = false;
-          draft.winLoseMessage = "You somehow... ran out of cards?!";
-          return;
-        }
-
-        draft.deck = deck;
-        draft.acesPile = acePile;
-        draft.trinketsPile = trinketsPile;
         return;
       }
     });
@@ -356,6 +339,31 @@ export default function LootTheLoop() {
       setSelectedCardIndex(insertAt);
     }
   }
+
+  // Need to check for stuck lose conditions whenever game state updates
+  useEffect(() => {
+    // Lose condition: no marked paths, and first two cards are not number cards
+    if (game.deck.length === 0) return;
+
+    const firstCard = game.deck[game.deckPos];
+    const secondCard = game.deck[(game.deckPos + 1) % game.deck.length];
+
+    if (
+      game.paths.filter((p) => p !== null).length === 0 &&
+      firstCard.faceUp &&
+      !isNumberRank(firstCard.rank) &&
+      !isNumberRank(secondCard.rank)
+    ) {
+      setGame((draft) => {
+        draft.ended = true;
+        draft.won = false;
+        draft.winLoseMessage =
+          draft.acesPile.length + draft.trinketsPile.length > 0
+            ? "You got lost in the dungeon with no way out! You die with your loot."
+            : "You got lost in the dungeon with no way out!";
+      });
+    }
+  }, [game]);
 
   const canMarkPath = useMemo(() => {
     const selectedCard =
@@ -664,6 +672,7 @@ export default function LootTheLoop() {
               style={[flexStyles.fullWidth, flexStyles.fullHeight]}
               theme={"green"}
               textStyle={{ fontFamily: FontWeight[600] }}
+              lineHeight={1.1}
             />
           </Animated.View>
         ))}
@@ -702,6 +711,7 @@ export default function LootTheLoop() {
           style={[flexStyles.flex1]}
           theme={"green"}
           taller
+          lineHeight={1.1}
         />
 
         <Button
@@ -715,6 +725,7 @@ export default function LootTheLoop() {
           style={[flexStyles.flex1]}
           theme={"blue"}
           taller
+          lineHeight={1.1}
         />
       </View>
     </GameWrapper>

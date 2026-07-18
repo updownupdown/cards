@@ -20,6 +20,7 @@ export const accordion: GameDefinition = {
     "Accordion Solitaire traces its origins to the late 19th century. The earliest known description was published in 1883 by Manhattan-based publisher William B. Dick.",
     'Originally called "Idle Year" (a humorous nod to its incredibly low win rate of about 1%) it was also historically known as "Methuselah" and "Tower of Babel".',
   ],
+  byLine: "Game designer unknown; first documented by William B. Dick in 1883",
   howToPlay: [
     "## Objective",
     "Win by collapsing all 52 cards into a **single pile** by stacking matching cards together.",

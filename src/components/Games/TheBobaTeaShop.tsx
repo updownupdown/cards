@@ -281,7 +281,7 @@ export default function TheBobaTeaShop() {
         updatedDiscardsByRank(draft.discardsByRank, [card]);
       });
 
-      await delay(defaultAnimDuration / 2);
+      await delay(400);
 
       // Reveal the next card
       setGame((draft) => {
@@ -290,7 +290,7 @@ export default function TheBobaTeaShop() {
         }
       });
 
-      await delay();
+      await delay(1000);
 
       // Discard the next card and clear decision state
       setGame((draft) => {
@@ -306,7 +306,6 @@ export default function TheBobaTeaShop() {
         draft.won = won;
       });
 
-      await delay(defaultAnimDuration / 2);
       await delay();
     } finally {
       setIsResolvingCustomerAction(false);
@@ -379,13 +378,14 @@ export default function TheBobaTeaShop() {
         col: 0,
         row: 0,
         width: "full",
+        height: 1.14,
       },
       {
         id: "deck",
         name: "deck",
         cards: game.deck,
         col: 2,
-        row: 1.35,
+        row: 1.4,
         baseZIndex: 50,
         fan: { maxVisible: 3 },
         placeholder: { text: "Draw", infoPos: "left" },
@@ -395,7 +395,7 @@ export default function TheBobaTeaShop() {
         name: "discard",
         cards: game.discard,
         col: 4,
-        row: 1.35,
+        row: 1.4,
         baseZIndex: 50,
         fan: { maxVisible: 3 },
         placeholder: { text: "Discard", infoPos: "right" },
@@ -527,13 +527,14 @@ export default function TheBobaTeaShop() {
                   { flexDirection: "column-reverse", gap: spacing(6) },
                 ]}
               >
-                {Array.from({ length: 3 }, (_, i) => {
+                {Array.from({ length: 4 }, (_, i) => {
                   let bgColor: string | undefined = undefined;
 
                   if (i < discardCount) {
                     if (i === 0) bgColor = Colors.cardSelectGreen;
                     if (i === 1) bgColor = Colors.cardSelectYellow;
-                    if (i === 2) bgColor = Colors.cardSelectRed;
+                    if (i === 2) bgColor = Colors.cardSelectOrange;
+                    if (i === 3) bgColor = Colors.cardSelectRed;
                   }
 
                   return (
@@ -543,9 +544,9 @@ export default function TheBobaTeaShop() {
                         transitionStyles.sec05,
                         {
                           display: "flex",
-                          width: 8,
-                          height: 8,
-                          borderRadius: 4,
+                          width: spacing(8),
+                          height: spacing(8),
+                          borderRadius: spacing(4),
                           backgroundColor: bgColor ?? rgba(Colors.black, 0.5),
                           boxShadow: bgColor ? `0 0 3px ${bgColor}` : undefined,
                         },
@@ -671,6 +672,7 @@ export default function TheBobaTeaShop() {
           >
             <Text
               size="sm"
+              weight={400}
               color={cardText}
               style={{
                 textAlign: "center",
@@ -729,7 +731,7 @@ export default function TheBobaTeaShop() {
               disabled={game.selectedPos === undefined}
               style={{ flex: 1 }}
               taller
-              theme="green"
+              theme="blue"
             />
             <Button
               text="Kick them out"
@@ -741,7 +743,7 @@ export default function TheBobaTeaShop() {
               disabled={game.selectedPos === undefined}
               taller
               style={{ flex: 1 }}
-              theme="red"
+              theme="orange"
             />
           </Animated.View>
         )}

@@ -15,23 +15,30 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
-const columnCount = 4;
-const handSize = 4;
-const targetFish = 21;
-const collapseFish = 25;
+const cardSize = "regular";
 
-const columnSpacing = 1.35;
-const colTopRow = 1.4;
-const fanOffset = 0.26;
-const handRow = 5.85;
+const layout = {
+  rowOffset: 0.3,
+  handSize: 4,
+  handRow: 5.85,
+  colTopRow: 1.4,
+  fishermanRowOffset: 0.1,
+};
+
+const params = {
+  columnCount: 4,
+  handSize: 4,
+  targetFish: 21,
+  collapseFish: 25,
+};
 
 type SchoolEntry = { school: PlayingCard; fisherman: PlayingCard | null };
 
 type GameState = {
   station: PlayingCard[];
-  columns: SchoolEntry[][];
-  hand: PlayingCard[];
   discard: PlayingCard[];
+  segments: SchoolEntry[][];
+  hand: PlayingCard[];
   studyCount: number;
   breakthroughs: string[];
   ended: boolean;
@@ -51,7 +58,7 @@ const breakthroughTotal = Object.keys(BREAKTHROUGH_LABELS).length;
 
 const gameStateInitial: GameState = {
   station: [],
-  columns: Array.from({ length: columnCount }, () => []),
+  segments: Array.from({ length: params.columnCount }, () => []),
   hand: [],
   discard: [],
   studyCount: 0,
@@ -117,19 +124,19 @@ function revealSchool(draft: GameState, setAside: PlayingCard[]) {
 }
 
 function studyPhase(draft: GameState) {
-  for (let i = 0; i < draft.columns.length; i += 1) {
-    if (columnTotal(draft.columns[i]) === targetFish) {
-      evaluateStudy(draft.columns[i], draft.breakthroughs);
+  for (let i = 0; i < draft.segments.length; i += 1) {
+    if (columnTotal(draft.segments[i]) === params.targetFish) {
+      evaluateStudy(draft.segments[i], draft.breakthroughs);
       draft.studyCount += 1;
-      draft.columns[i] = [];
+      draft.segments[i] = [];
     }
   }
 
   const setAside: PlayingCard[] = [];
-  for (let i = 0; i < draft.columns.length; i += 1) {
-    if (draft.columns[i].length === 0) {
+  for (let i = 0; i < draft.segments.length; i += 1) {
+    if (draft.segments[i].length === 0) {
       const school = revealSchool(draft, setAside);
-      if (school) draft.columns[i] = [{ school, fisherman: null }];
+      if (school) draft.segments[i] = [{ school, fisherman: null }];
     }
   }
   if (setAside.length > 0) {
@@ -138,14 +145,14 @@ function studyPhase(draft: GameState) {
 }
 
 function drawPhase(draft: GameState) {
-  while (draft.hand.length < handSize && draft.station.length > 0) {
+  while (draft.hand.length < params.handSize && draft.station.length > 0) {
     const card = draft.station.pop();
     if (card) draft.hand.push(flipToFace(card));
   }
 }
 
 function resolveTurn(draft: GameState) {
-  if (draft.columns.some((c) => columnTotal(c) >= collapseFish)) {
+  if (draft.segments.some((c) => columnTotal(c) >= params.collapseFish)) {
     draft.ended = true;
     return;
   }
@@ -153,7 +160,7 @@ function resolveTurn(draft: GameState) {
     studyPhase(draft);
     drawPhase(draft);
   }
-  if (draft.columns.some((c) => columnTotal(c) >= collapseFish)) {
+  if (draft.segments.some((c) => columnTotal(c) >= params.collapseFish)) {
     draft.ended = true;
     return;
   }
@@ -167,7 +174,7 @@ async function resetAndSetup(
 ) {
   setGame((draft) => {
     draft.station = shuffle(createDeck());
-    draft.columns = Array.from({ length: columnCount }, () => []);
+    draft.segments = Array.from({ length: params.columnCount }, () => []);
     draft.hand = [];
     draft.discard = [];
     draft.studyCount = 0;
@@ -176,9 +183,9 @@ async function resetAndSetup(
 
     // Reveal four Schools of Fish for the river; shuffle drawn Fishermen back.
     const setAside: PlayingCard[] = [];
-    for (let i = 0; i < columnCount; i += 1) {
+    for (let i = 0; i < params.columnCount; i += 1) {
       const school = revealSchool(draft, setAside);
-      if (school) draft.columns[i] = [{ school, fisherman: null }];
+      if (school) draft.segments[i] = [{ school, fisherman: null }];
     }
     if (setAside.length > 0) {
       draft.station = shuffle([...draft.station, ...setAside]);
@@ -239,18 +246,18 @@ export default function BlackjackRiverResearch() {
     if (!card || !isSchool(card)) return;
     mutate((draft) => {
       const [played] = draft.hand.splice(handIndex, 1);
-      draft.columns[colIndex].push({ school: played, fisherman: null });
+      draft.segments[colIndex].push({ school: played, fisherman: null });
     });
   }
 
   function catchFish(handIndex: number, colIndex: number, entryIndex: number) {
     if (game.ended) return;
     const card = game.hand[handIndex];
-    const entry = game.columns[colIndex]?.[entryIndex];
+    const entry = game.segments[colIndex]?.[entryIndex];
     if (!card || !isFisherman(card) || !entry || entry.fisherman) return;
     mutate((draft) => {
       const [played] = draft.hand.splice(handIndex, 1);
-      const target = draft.columns[colIndex][entryIndex];
+      const target = draft.segments[colIndex][entryIndex];
       target.fisherman = played;
       if (played.suit === target.school.suit) {
         addBreakthrough(draft.breakthroughs, "harvesting");
@@ -264,7 +271,7 @@ export default function BlackjackRiverResearch() {
     discardIndex: number,
   ) {
     if (game.ended) return;
-    const source = game.columns[sourceCol];
+    const source = game.segments[sourceCol];
     if (!source || source.length < 2) return;
     const moving = bottomEntry(source);
     if (!moving || moving.fisherman) return;
@@ -272,8 +279,8 @@ export default function BlackjackRiverResearch() {
     mutate((draft) => {
       const [discarded] = draft.hand.splice(discardIndex, 1);
       if (discarded) draft.discard.push(discarded);
-      const entry = draft.columns[sourceCol].pop();
-      if (entry) draft.columns[targetCol].push(entry);
+      const entry = draft.segments[sourceCol].pop();
+      if (entry) draft.segments[targetCol].push(entry);
     });
   }
 
@@ -287,7 +294,7 @@ export default function BlackjackRiverResearch() {
 
   // ── Tap routing ────────────────────────────────────────────────────────────
   function isMovableBottom(colIndex: number, entryIndex: number) {
-    const column = game.columns[colIndex];
+    const column = game.segments[colIndex];
     return (
       column.length >= 2 &&
       entryIndex === column.length - 1 &&
@@ -374,18 +381,18 @@ export default function BlackjackRiverResearch() {
     }
   }
 
-  // ── Zones ───────────────────────────────────────────────────────────────────
+  // ── Zones ────────────────────────────────
   const zones: MapZone[] = useMemo(() => {
     const result: MapZone[] = [
       { id: "hud", col: 0, row: 0, width: "full", height: 0.6 },
     ];
 
-    for (let i = 0; i < columnCount; i += 1) {
-      const colX = i * columnSpacing;
+    for (let i = 0; i < params.columnCount; i += 1) {
+      const colX = (i + 1) * (1 + layout.rowOffset);
       result.push({
         id: `total-${i}`,
         col: colX,
-        row: 0.65,
+        row: 0.5,
         width: 1,
         height: 0.55,
       });
@@ -396,16 +403,17 @@ export default function BlackjackRiverResearch() {
         name: "coldrop",
         pileIndex: i,
         col: colX,
-        row: colTopRow,
+        row: layout.colTopRow,
         width: 1,
-        height: 1,
+        height: 4,
         baseZIndex: 0,
         placeholder: {},
       });
 
-      const column = game.columns[i];
+      const column = game.segments[i];
       column.forEach((entry, j) => {
-        const row = colTopRow + j * fanOffset;
+        const row = layout.colTopRow + j * 1;
+
         result.push({
           id: `sch-${i}-${j}`,
           name: "school",
@@ -415,15 +423,17 @@ export default function BlackjackRiverResearch() {
           row,
           baseZIndex: 5 + j,
           cards: [entry.school],
+          placeholder: {},
         });
+
         if (entry.fisherman) {
           result.push({
             id: `fish-${i}-${j}`,
             name: "fisher",
             pileIndex: i,
             refIndex: j,
-            col: colX + 0.12,
-            row: row + 0.22,
+            col: colX,
+            row: row + layout.fishermanRowOffset,
             rotation: 90,
             baseZIndex: 60 + j,
             cards: [entry.fisherman],
@@ -432,28 +442,56 @@ export default function BlackjackRiverResearch() {
       });
     }
 
-    game.hand.forEach((card, k) => {
-      result.push({
-        id: `hand-${k}`,
-        name: "hand",
-        pileIndex: k,
-        col: k * columnSpacing,
-        row: handRow,
-        baseZIndex: 90,
-        cards: [card],
-      });
-    });
+    // Source
+    const sourceZone: MapZone = {
+      id: `source`,
+      name: "source",
+      col: 0,
+      row: layout.colTopRow,
+      baseZIndex: 90,
+      cards: game.station,
+      placeholder: { text: "Source", infoPos: "below" },
+      fan: { maxVisible: 3 },
+    };
 
-    return result;
+    // Discard
+    const discardZone: MapZone = {
+      id: `discard`,
+      name: "discard",
+      col: 0,
+      row: layout.colTopRow + 1.5,
+      baseZIndex: 90,
+      cards: game.discard,
+      placeholder: { text: "Discard", infoPos: "below" },
+      fan: { maxVisible: 3 },
+    };
+
+    // Hand
+    const handZone: MapZone = {
+      id: `hand`,
+      name: "hand",
+      col: 0,
+      row: layout.handRow,
+      baseZIndex: 90,
+      cards: game.hand,
+      width: 5,
+      placeholder: {},
+      fan: { direction: "right", offset: 1.2 },
+    };
+
+    return [...result, sourceZone, discardZone, handZone];
   }, [game]);
 
+  // ─────────────────────────────── Card / Zone Mappers ───────────────────────────────
   const cardMapper = (
     mappedCard: MappedCard,
   ): AnimatedCardMapping | undefined => {
-    if (mappedCard.zoneName === "hand" && mappedCard.pileIndex !== undefined) {
-      const index = mappedCard.pileIndex;
+    if (mappedCard.zoneName === "hand") {
+      // Hand
       const isSelected =
-        !!selection && "hand" in selection && selection.hand === index;
+        !!selection &&
+        "hand" in selection &&
+        selection.hand === mappedCard.cardIndex;
       const isDiscardStep =
         !!selection &&
         "transfer" in selection &&
@@ -462,18 +500,17 @@ export default function BlackjackRiverResearch() {
         isSelected,
         selectColor: isDiscardStep ? "orange" : "blue",
         isDisabled: game.ended,
-        onPress: () => onHandPress(index),
+        onPress: () => onHandPress(mappedCard.cardIndex),
       };
-    }
-
-    if (
+    } else if (
       mappedCard.zoneName === "school" &&
       mappedCard.pileIndex !== undefined &&
       mappedCard.refIndex !== undefined
     ) {
+      // Schools of fish
       const colIndex = mappedCard.pileIndex;
       const entryIndex = mappedCard.refIndex;
-      const entry = game.columns[colIndex]?.[entryIndex];
+      const entry = game.segments[colIndex]?.[entryIndex];
       const catchable =
         !!selectedHandCard &&
         isFisherman(selectedHandCard) &&
@@ -483,21 +520,20 @@ export default function BlackjackRiverResearch() {
         !!selection &&
         "transfer" in selection &&
         selection.transfer === colIndex &&
-        entryIndex === game.columns[colIndex].length - 1;
+        entryIndex === game.segments[colIndex].length - 1;
       return {
         isSelected: isTransferSource,
         selectColor: catchable ? "green" : isTransferSource ? "orange" : "none",
         isDisabled: game.ended,
         onPress: () => onSchoolPress(colIndex, entryIndex),
       };
-    }
-
-    if (mappedCard.zoneName === "fisher") {
+    } else if (mappedCard.zoneName === "fisher") {
+      // Fishermen
       return { isDisabled: true };
     }
-
-    return {};
   };
+
+  console.log(game);
 
   const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
     if (zone.name === "coldrop" && zone.pileIndex !== undefined) {
@@ -522,9 +558,10 @@ export default function BlackjackRiverResearch() {
     zones,
     cardMapper,
     zoneMapper,
-    gap: 0.14,
-    cardSize: "small",
+    // gap: 0.14,
+    cardSize,
     fixedRows: 7.2,
+    visualizer: true,
   });
 
   useEffect(() => {
@@ -557,25 +594,25 @@ export default function BlackjackRiverResearch() {
           },
         ]}
       >
-        <Text size="sm" weight={600} color={cardText}>
+        <Text size="xs" weight={600} color={cardText}>
           Score {score}
         </Text>
-        <Text size="sm" weight={600} color={cardText}>
+        <Text size="xs" weight={600} color={cardText}>
           Studies {game.studyCount}
         </Text>
-        <Text size="sm" weight={600} color={cardText}>
+        <Text size="xs" weight={600} color={cardText}>
           Breaks {game.breakthroughs.length}/{breakthroughTotal}
         </Text>
-        <Text size="sm" weight={600} color={cardText}>
+        <Text size="xs" weight={600} color={cardText}>
           River {game.station.length}
         </Text>
       </View>
 
-      {game.columns.map((column, i) => {
+      {game.segments.map((column, i) => {
         const totalStyle = getZoneStylesById(`total-${i}`);
         const total = columnTotal(column);
-        const near = total === targetFish;
-        const danger = total >= collapseFish - 1;
+        const near = total === params.targetFish;
+        const danger = total >= params.collapseFish - 1;
         return (
           <View
             key={`total-${i}`}

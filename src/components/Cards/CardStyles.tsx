@@ -3,7 +3,12 @@ import { cardDims } from "./card-utils";
 import { StyleSheet, View, ViewStyle } from "react-native";
 import { darkenHexColor, lightenHexColor } from "@/utils/utils";
 
-export type CardSizes = "small" | "regular" | "small-colored" | "tableau";
+export type CardSizes =
+  | "small"
+  | "regular"
+  | "small-colored"
+  | "tableau"
+  | "classic";
 
 // ===== Card Select Colors ===== //
 const cardSelectColorMap = {

@@ -1,67 +1,62 @@
-import { SvgProps } from "react-native-svg";
-import Card10C from "./10C.svg";
-import Card10D from "./10D.svg";
-import Card10H from "./10H.svg";
-import Card10S from "./10S.svg";
-import CardJC from "./JC.svg";
-import CardJD from "./JD.svg";
-import CardJH from "./JH.svg";
-import CardJS from "./JS.svg";
-import CardQC from "./QC.svg";
-import CardQD from "./QD.svg";
-import CardQH from "./QH.svg";
-import CardQS from "./QS.svg";
-import CardKC from "./KC.svg";
-import CardKD from "./KD.svg";
-import CardKH from "./KH.svg";
-import CardKS from "./KS.svg";
-import CardJokerC from "./JokerC.svg";
-import CardJokerD from "./JokerD.svg";
-import CardJokerH from "./JokerH.svg";
-import CardJokerS from "./JokerS.svg";
-import Card2C from "./2C.svg";
-import Card2D from "./2D.svg";
-import Card2H from "./2H.svg";
-import Card2S from "./2S.svg";
-import Card3C from "./3C.svg";
-import Card3D from "./3D.svg";
-import Card3H from "./3H.svg";
-import Card3S from "./3S.svg";
-import Card4C from "./4C.svg";
-import Card4D from "./4D.svg";
-import Card4H from "./4H.svg";
-import Card4S from "./4S.svg";
-import Card5C from "./5C.svg";
-import Card5D from "./5D.svg";
-import Card5H from "./5H.svg";
-import Card5S from "./5S.svg";
-import Card6C from "./6C.svg";
-import Card6D from "./6D.svg";
-import Card6H from "./6H.svg";
-import Card6S from "./6S.svg";
-import Card7C from "./7C.svg";
-import Card7D from "./7D.svg";
-import Card7H from "./7H.svg";
-import Card7S from "./7S.svg";
-import Card8C from "./8C.svg";
-import Card8D from "./8D.svg";
-import Card8H from "./8H.svg";
-import Card8S from "./8S.svg";
-import Card9C from "./9C.svg";
-import Card9D from "./9D.svg";
-import Card9H from "./9H.svg";
-import Card9S from "./9S.svg";
-import CardAC from "./AC.svg";
-import CardAD from "./AD.svg";
-import CardAH from "./AH.svg";
-import CardAS from "./AS.svg";
-import CardBackC from "./BackC.svg";
-import CardBackD from "./BackD.svg";
-import CardBackH from "./BackH.svg";
-import CardBackS from "./BackS.svg";
-import CardPlaceholder from "./Placeholder.svg";
+import Card10C from "./10C.png";
+import Card10D from "./10D.png";
+import Card10H from "./10H.png";
+import Card10S from "./10S.png";
+import CardJC from "./JC.png";
+import CardJD from "./JD.png";
+import CardJH from "./JH.png";
+import CardJS from "./JS.png";
+import CardQC from "./QC.png";
+import CardQD from "./QD.png";
+import CardQH from "./QH.png";
+import CardQS from "./QS.png";
+import CardKC from "./KC.png";
+import CardKD from "./KD.png";
+import CardKH from "./KH.png";
+import CardKS from "./KS.png";
+import CardJokerC from "./JokerC.png";
+import CardJokerD from "./JokerD.png";
+import CardJokerH from "./JokerH.png";
+import CardJokerS from "./JokerS.png";
+import Card2C from "./2C.png";
+import Card2D from "./2D.png";
+import Card2H from "./2H.png";
+import Card2S from "./2S.png";
+import Card3C from "./3C.png";
+import Card3D from "./3D.png";
+import Card3H from "./3H.png";
+import Card3S from "./3S.png";
+import Card4C from "./4C.png";
+import Card4D from "./4D.png";
+import Card4H from "./4H.png";
+import Card4S from "./4S.png";
+import Card5C from "./5C.png";
+import Card5D from "./5D.png";
+import Card5H from "./5H.png";
+import Card5S from "./5S.png";
+import Card6C from "./6C.png";
+import Card6D from "./6D.png";
+import Card6H from "./6H.png";
+import Card6S from "./6S.png";
+import Card7C from "./7C.png";
+import Card7D from "./7D.png";
+import Card7H from "./7H.png";
+import Card7S from "./7S.png";
+import Card8C from "./8C.png";
+import Card8D from "./8D.png";
+import Card8H from "./8H.png";
+import Card8S from "./8S.png";
+import Card9C from "./9C.png";
+import Card9D from "./9D.png";
+import Card9H from "./9H.png";
+import Card9S from "./9S.png";
+import CardAC from "./AC.png";
+import CardAD from "./AD.png";
+import CardAH from "./AH.png";
+import CardAS from "./AS.png";
+import { ImageSourcePropType } from "react-native";
 
-export const CardComponents: Record<string, React.FC<SvgProps>> = {
+export const CardComponents: Record<string, ImageSourcePropType> = {
   "10C": Card10C,
   "10D": Card10D,
   "10H": Card10H,
@@ -118,9 +113,4 @@ export const CardComponents: Record<string, React.FC<SvgProps>> = {
   AD: CardAD,
   AH: CardAH,
   AS: CardAS,
-  BackC: CardBackC,
-  BackD: CardBackD,
-  BackH: CardBackH,
-  BackS: CardBackS,
-  Placeholder: CardPlaceholder,
 };

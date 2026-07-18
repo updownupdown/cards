@@ -8,9 +8,16 @@ type WindowDimensions = {
   fontScale: number;
 };
 
+const INITIAL_WEB_DIMENSIONS: WindowDimensions = {
+  width: 0,
+  height: 0,
+  scale: 1,
+  fontScale: 1,
+};
+
 function readWebDimensions(): WindowDimensions {
   if (typeof window === "undefined") {
-    return { width: 0, height: 0, scale: 1, fontScale: 1 };
+    return INITIAL_WEB_DIMENSIONS;
   }
 
   return {
@@ -31,7 +38,9 @@ function areDimensionsEqual(a: WindowDimensions, b: WindowDimensions) {
 }
 
 function useWebViewportDimensions(): WindowDimensions {
-  const [webDimensions, setWebDimensions] = useState(readWebDimensions);
+  // Keep first render identical between SSR and hydration; real viewport
+  // dimensions are applied immediately after mount.
+  const [webDimensions, setWebDimensions] = useState(INITIAL_WEB_DIMENSIONS);
   const timeoutRef = useRef<number | null>(null);
 
   const commitDimensions = () => {

@@ -11,9 +11,12 @@ import {
   Outfit_700Bold,
 } from "@expo-google-fonts/outfit";
 import { useFonts } from "expo-font";
-import { Stack, usePathname } from "expo-router";
+import { Stack, usePathname, SplashScreen } from "expo-router";
 import { useEffect } from "react";
-import { View } from "react-native";
+import { View, Platform } from "react-native";
+
+// Keep the splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync();
 
 export default function Layout() {
   const { cardBg } = useGameZoneBackground();
@@ -67,7 +70,16 @@ export default function Layout() {
     }
   }, [pathname]);
 
-  if (!fontsLoaded && typeof document === "undefined") {
+  // Add this new useEffect to hide the splash screen once fonts are ready
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  // Native apps will crash if fonts aren't loaded, so we return null.
+  // Web browsers handle missing fonts gracefully, and returning null breaks SSR/Hydration.
+  if (!fontsLoaded && Platform.OS !== "web") {
     return null;
   }
 

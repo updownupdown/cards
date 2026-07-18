@@ -36,6 +36,9 @@ jobs:
       - name: Build web
         run: npx expo export -p web
 
+      - name: Set Pages custom domain
+        run: echo "solosuite.app" > dist/CNAME
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
         with:

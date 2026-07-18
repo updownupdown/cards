@@ -9,10 +9,11 @@ import { Text } from "@/components/common/Text";
 import { useToast } from "@/components/common/Toast";
 import { useFade } from "@/hooks/useFade";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles, transitionStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight, rgba } from "@/styles/styles";
-import { rotatedText, textStyles } from "@/styles/textStyles";
+import { rotatedText } from "@/styles/textStyles";
 import { useEffect, useMemo, useState } from "react";
 import { Animated, View, ViewStyle } from "react-native";
 import {
@@ -29,19 +30,15 @@ import { GameWrapper } from "../../common/GameWrapper";
 import { AdvisorInfo } from "./AdvisorInfo";
 import {
   canDebateWithCard,
+  gameStateInitial,
   resetAndSetup,
   wonDebate,
-  gameStateInitial,
 } from "./TheEmissaryLogic";
 import {
   defaultHandSize,
   EmissarySuitsColorMap,
   TheEmissaryKingdom,
 } from "./TheEmissaryTypes";
-import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-
-// TODO - remove this
-const debugMode = false;
 
 export default function TheEmissary() {
   const { spacing } = useResponsiveMetrics();
@@ -106,7 +103,7 @@ export default function TheEmissary() {
   useEffect(() => {
     if (!game.visit || game.hand.length > 0) return;
 
-    const wonKingdom = game.visit.wins === game.visit.requiredWins || debugMode;
+    const wonKingdom = game.visit.wins === game.visit.requiredWins;
 
     if (wonKingdom) {
       showToast(`You won over Kingdom #${game.visit.kingdomId + 1}!`);
@@ -121,8 +118,7 @@ export default function TheEmissary() {
     setGame((draft) => {
       if (draft.visit === null) return draft;
 
-      const wonKingdom =
-        draft.visit.wins === draft.visit.requiredWins || debugMode;
+      const wonKingdom = draft.visit.wins === draft.visit.requiredWins;
 
       const kId = draft.visit.kingdomId;
       const ruler = draft.kingdoms[kId].ruler;
@@ -208,7 +204,7 @@ export default function TheEmissary() {
       }
 
       // Won too many debates, lost!
-      if (draft.visit.wins > draft.visit.requiredWins && !debugMode) {
+      if (draft.visit.wins > draft.visit.requiredWins) {
         draft.visit = null;
         draft.ended = true;
         draft.won = false;
@@ -286,7 +282,7 @@ export default function TheEmissary() {
 
     setGame((draft) => {
       draft.hand = draft.hand.filter((c) => c.id !== card.id);
-      draft.discardLost.unshift(card);
+      draft.discardLost.push(flipToBack(card));
       draft.discardFromHand -= 1;
     });
   }
@@ -552,7 +548,7 @@ export default function TheEmissary() {
       advisorsZone,
       handZones,
     ];
-  }, [game.visit, game.draw, game.discardLost, game.discardWon, game.kingdoms]);
+  }, [game]);
 
   const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
     if (zone.name === "topic") {
@@ -580,7 +576,6 @@ export default function TheEmissary() {
         (game.visit === null && kingdom.ruler.faceUp) ||
         (swappingRuler && !isCurrent) ||
         (isCurrent && !swappingRuler);
-      // const opacity = isEnabled ? 1 : 0.6;
 
       const onPress = () => {
         if (game.visit === null) {
@@ -640,6 +635,8 @@ export default function TheEmissary() {
       };
     } else if (mappedCard.zoneName === "advisor") {
       // .......... Advisor .......... //
+      const debateActive = game.visit?.debateTopic !== undefined;
+
       return {
         onPress: () => {
           setSelectedAdvisor(
@@ -652,7 +649,10 @@ export default function TheEmissary() {
           !game.visit ||
           !!game.visit.debateTopic ||
           !mappedCard.card.faceUp,
-        selectColor: EmissarySuitsColorMap[mappedCard.card.suit],
+        selectColor: debateActive
+          ? "grey"
+          : EmissarySuitsColorMap[mappedCard.card.suit],
+        forceOverlayColor: debateActive,
       };
     }
   };
