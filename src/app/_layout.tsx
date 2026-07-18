@@ -1,5 +1,6 @@
 import { ToastProvider } from "@/components/common/Toast";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { getGameInfo, isGamePath } from "@/data/game-menu";
 import { Colors } from "@/styles/styles";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import {
@@ -62,6 +63,17 @@ export default function Layout() {
   // element that triggered navigation still holds focus, Chromium warns that
   // focus is trapped inside an aria-hidden subtree. Blurring on route change
   // clears that focus before the outgoing screen is hidden.
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    const rootTitle = "SoloSuite";
+    const pageTitle = isGamePath(pathname)
+      ? `${getGameInfo(pathname).title} ♠ ${rootTitle}`
+      : rootTitle;
+
+    document.title = pageTitle;
+  }, [pathname]);
+
   useEffect(() => {
     if (typeof document === "undefined") return;
     const active = document.activeElement as HTMLElement | null;

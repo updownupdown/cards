@@ -6,9 +6,9 @@ import {
 } from "@/components/Cards/CardMap";
 import { CardColor } from "@/components/Cards/CardStyles";
 import { Text } from "@/components/common/Text";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
-import { textStyles } from "@/styles/textStyles";
 import { delay } from "@/utils/utils";
 import { produce } from "immer";
 import { useEffect, useMemo, useState } from "react";
@@ -30,7 +30,6 @@ import {
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 import { useToast } from "../common/Toast";
-import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 const maxAttackersNum = 3;
 const maxDefendersNum = 6;
@@ -532,6 +531,7 @@ export default function Area52() {
           size="lg"
           disabled={selectedDefenders.length !== 1}
           theme="red"
+          taller
         />
 
         <Button
@@ -543,6 +543,7 @@ export default function Area52() {
           disabled={!canAttack || selectedDefenders.length < 1}
           theme={selectedDefenders.length === 2 ? "purple" : "green"}
           style={[flexStyles.flex1]}
+          taller
         />
       </View>
     </GameWrapper>

@@ -208,6 +208,7 @@ export const Button = ({
             {
               ...BTN_TRANSITION_STYLE,
               flexShrink: 0,
+              filter: `drop-shadow(0 1px 3px rgba(0, 0, 0, 0.2))`,
             },
           ]}
         />

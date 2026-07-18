@@ -370,13 +370,13 @@ function refillRoom(game: GameState) {
 }
 
 // Layout constants
-const healthBarHeight = 0.4;
-const drawRow = healthBarHeight + 0.17;
-const weaponsRow = drawRow + 1.05;
-const weaponsZoneInset = 0.12;
+const healthBarHeight = 0.34;
+const drawRow = healthBarHeight + 0.12;
+const weaponsRow = drawRow + 1;
+const weaponsZoneInset = 0.1;
 const weaponsZoneHeight = 1 + weaponsZoneInset * 2;
-const roomCardsRow = weaponsRow + weaponsZoneHeight + 0.06;
-const roomActionsRow = roomCardsRow + 0.95;
+const roomCardsRow = weaponsRow + weaponsZoneHeight;
+const roomActionsRow = roomCardsRow + 0.94;
 
 // ========== Game Component ========== //
 export default function Scoundrel() {
@@ -727,7 +727,8 @@ export default function Scoundrel() {
       };
     },
     cardSize,
-    paddingTop: 0.2,
+    paddingTop: 0.1,
+    visualizer: true,
   });
 
   return (
@@ -763,7 +764,7 @@ export default function Scoundrel() {
                 ? "orange"
                 : "green"
           }
-          tallyText={`${game.health} / ${MaxHealth}`}
+          tallyText={`${game.health}`}
           scaledHeight={cardHeight * healthBarHeight}
           iconName="heart"
         />
@@ -869,10 +870,12 @@ export default function Scoundrel() {
                     paddingHorizontal: 0,
                   }}
                   textStyle={{
-                    fontSize: font(16),
-                    lineHeight: font(16),
+                    fontSize: font(17),
+                    lineHeight: font(17),
                     fontFamily: FontWeight[600],
-                    color: Colors.white,
+                    color: action.disabled
+                      ? rgba(Colors.white, 0.3)
+                      : Colors.white,
                     paddingRight: spacing(4),
                   }}
                 />
