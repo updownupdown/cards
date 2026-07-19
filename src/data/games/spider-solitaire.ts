@@ -6,6 +6,7 @@ export const spiderSolitaire: GameDefinition = {
     default: "Build down by rank; move same-suit runs; deal when stuck.",
   },
   title: "Spider Solitaire",
+  thumbnail: "SpiderSolitaire.jpg",
   enabledOnLocalOnly: true,
   background: "felt-dark-purple.jpg",
   cardColorBg: "#2E2731",

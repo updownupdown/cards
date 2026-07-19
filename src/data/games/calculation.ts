@@ -14,9 +14,9 @@ export const calculation: GameDefinition = {
   cardDescription:
     "Build four foundations in steps of 1, 2, 3, and 4 up to the Kings.",
   rating: {
-    complexity: 80,
-    difficulty: 90,
-    luck: 60,
+    complexity: 60,
+    difficulty: 80,
+    luck: 50,
   },
   tags: [GameTag.ClassicSolitaire],
   about: [

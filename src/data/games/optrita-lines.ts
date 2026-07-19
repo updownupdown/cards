@@ -6,8 +6,8 @@ export const optritaLines: GameDefinition = {
   tip: {
     default: "Challenge a line; first suit match wins by rank, else trump.",
   },
-  title: "Optrita Lines",
-  thumbnail: DEFAULT_GAME_THUMBNAIL,
+  title: "Optrita: Lines",
+  thumbnail: "OptritaLines.jpg",
   cardColorBg: "#1b2233",
   cardColorText: "#dce6ff",
   background: "felt-grey.jpg",
@@ -21,7 +21,7 @@ export const optritaLines: GameDefinition = {
   // tags: [GameTag.ModernMechanics, GameTag.AIGenerated],
   tags: [GameTag.Beta],
   about: [
-    "Optrita Lines is a solitaire trick-taker: you attack lines of a face-down grid, revealing one card at a time.",
+    "Optrita:Lines is a solitaire trick-taker: you attack lines of a face-down grid, revealing one card at a time.",
     "More information helps, but every reveal also closes off lines you can no longer challenge.",
   ],
   byLine: "Game design by Stephen Tudor, 2023",

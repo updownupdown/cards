@@ -71,6 +71,7 @@ export type MapZone = {
     text?: string;
     infoPos?: DeckInfoPosition;
     hideBackground?: boolean;
+    hideShadow?: boolean;
     backgroundColor?: string;
   };
   clickThroughCards?: boolean;

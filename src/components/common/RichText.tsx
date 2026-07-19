@@ -1,6 +1,6 @@
 import { Text, TextSize, TextWeight } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-import { Colors } from "@/styles/styles";
+import { Colors, rgba } from "@/styles/styles";
 import { ReactNode, useMemo } from "react";
 import { View } from "react-native";
 
@@ -10,6 +10,9 @@ import { View } from "react-native";
  * Supported syntax (per line):
  *  - `# Heading`, `## Heading`, `### Heading`
  *  - `- item` or `* item` for bullet lists
+ *  - `-- item` for nested bullet lists
+ *  - `---` for a horizontal rule
+ *  - a blank line for vertical space
  *  - `**bold**` inline emphasis
  *  - `{5H}` / `{JC}` / `{10S}` card tokens -> rank + colored suit symbol
  *
@@ -36,9 +39,22 @@ type SuitLetter = keyof typeof SUIT_GLYPH;
 type Block =
   | { type: "heading"; level: number; text: string }
   | { type: "paragraph"; text: string }
-  | { type: "list"; items: string[] };
+  | { type: "list"; items: ListItem[] }
+  | { type: "blank" }
+  | { type: "rule" };
+
+type ListItem = {
+  depth: 0 | 1;
+  text: string;
+};
+
+type TextBlock =
+  | { type: "heading"; level: number; lines: string[] }
+  | { type: "paragraph"; lines: string[] };
 
 const HEADING_RE = /^(#{1,3})\s+(.*)$/;
+const HORIZONTAL_RULE_RE = /^\s*-{3,}\s*$/;
+const SUB_LIST_RE = /^\s*--\s+(.*)$/;
 const LIST_RE = /^\s*[-*]\s+(.*)$/;
 // Returns a fresh regex instance each call so recursive renderInline calls
 // (for bold text) never share lastIndex state, which would cause an infinite loop.
@@ -46,15 +62,23 @@ function makeInlineRe() {
   return /\*\*([\s\S]+?)\*\*|\{(10|[2-9]|[AJQKajqk])([HDCShdcs])\}/g;
 }
 
-function toLines(content: string | string[]): string[] {
-  const blocks = Array.isArray(content) ? content : [content];
-  return blocks.flatMap((block) => block.split("\n"));
-}
-
 function parseBlocks(content: string | string[]): Block[] {
-  const lines = toLines(content);
+  const contentBlocks = Array.isArray(content) ? content : [content];
   const blocks: Block[] = [];
-  let listItems: string[] | null = null;
+  let listItems: ListItem[] | null = null;
+  let textBlock: TextBlock | null = null;
+
+  const flushTextBlock = () => {
+    if (!textBlock) return;
+
+    const text = textBlock.lines.join("\n");
+    if (textBlock.type === "heading") {
+      blocks.push({ type: "heading", level: textBlock.level, text });
+    } else {
+      blocks.push({ type: "paragraph", text });
+    }
+    textBlock = null;
+  };
 
   const flushList = () => {
     if (listItems && listItems.length > 0) {
@@ -63,35 +87,73 @@ function parseBlocks(content: string | string[]): Block[] {
     listItems = null;
   };
 
-  for (const rawLine of lines) {
-    const line = rawLine.trimEnd();
-    if (line.trim() === "") {
+  for (const contentBlock of contentBlocks) {
+    const lines = contentBlock.split("\n");
+
+    for (const rawLine of lines) {
+      const line = rawLine.trimEnd();
+      if (line.trim() === "") {
+        flushTextBlock();
+        flushList();
+        blocks.push({ type: "blank" });
+        continue;
+      }
+
+      if (HORIZONTAL_RULE_RE.test(line)) {
+        flushTextBlock();
+        flushList();
+        blocks.push({ type: "rule" });
+        continue;
+      }
+
+      const subListMatch = line.match(SUB_LIST_RE);
+      if (subListMatch) {
+        flushTextBlock();
+        if (!listItems) listItems = [];
+        listItems.push({ depth: 1, text: subListMatch[1] });
+        continue;
+      }
+
+      const listMatch = line.match(LIST_RE);
+      if (listMatch) {
+        flushTextBlock();
+        if (!listItems) listItems = [];
+        listItems.push({ depth: 0, text: listMatch[1] });
+        continue;
+      }
+
+      const headingMatch = line.match(HEADING_RE);
+      if (headingMatch) {
+        flushTextBlock();
+        flushList();
+        textBlock = {
+          type: "heading",
+          level: headingMatch[1].length,
+          lines: [headingMatch[2]],
+        };
+        continue;
+      }
+
+      if (listItems && listItems.length > 0) {
+        listItems[listItems.length - 1].text += `\n${line.trim()}`;
+        continue;
+      }
+
+      if (textBlock) {
+        textBlock.lines.push(line.trim());
+        continue;
+      }
+
+      textBlock = { type: "paragraph", lines: [line.trim()] };
+    }
+
+    if (contentBlocks.length > 1) {
+      flushTextBlock();
       flushList();
-      continue;
     }
-
-    const listMatch = line.match(LIST_RE);
-    if (listMatch) {
-      if (!listItems) listItems = [];
-      listItems.push(listMatch[1]);
-      continue;
-    }
-
-    flushList();
-
-    const headingMatch = line.match(HEADING_RE);
-    if (headingMatch) {
-      blocks.push({
-        type: "heading",
-        level: headingMatch[1].length,
-        text: headingMatch[2],
-      });
-      continue;
-    }
-
-    blocks.push({ type: "paragraph", text: line.trim() });
   }
 
+  flushTextBlock();
   flushList();
   return blocks;
 }
@@ -146,9 +208,9 @@ function renderInline(text: string, keyPrefix: string): ReactNode[] {
 }
 
 const HEADING_SIZE: Record<number, TextSize> = {
-  1: "lg",
-  2: "md",
-  3: "sm",
+  1: "xl",
+  2: "lg",
+  3: "md",
 };
 
 export type RichTextProps = {
@@ -164,7 +226,7 @@ export function RichText({
   content,
   size = "md",
   weight = 300,
-  color = Colors.white,
+  color = rgba(Colors.white, 0.9),
   headingColor = Colors.headings,
   gap = 20,
 }: RichTextProps) {
@@ -176,7 +238,6 @@ export function RichText({
       style={{
         width: "100%",
         alignItems: "flex-start",
-        gap: spacing(gap),
       }}
     >
       {blocks.map((block, index) => {
@@ -185,8 +246,12 @@ export function RichText({
             <Text
               key={`h-${index}`}
               size={HEADING_SIZE[block.level] ?? "md"}
-              weight={600}
+              weight={500}
               color={headingColor}
+              style={{
+                marginTop: spacing(gap * 1.5),
+                // marginBottom: spacing(gap / 2),
+              }}
             >
               {renderInline(block.text, `h-${index}`)}
             </Text>
@@ -197,7 +262,11 @@ export function RichText({
           return (
             <View
               key={`l-${index}`}
-              style={{ width: "100%", gap: spacing(gap / 2) }}
+              style={{
+                width: "100%",
+                gap: spacing(gap),
+                marginTop: spacing(gap / 2),
+              }}
             >
               {block.items.map((item, itemIndex) => (
                 <View
@@ -206,10 +275,11 @@ export function RichText({
                     flexDirection: "row",
                     alignItems: "flex-start",
                     gap: spacing(8),
+                    paddingLeft: item.depth === 1 ? spacing(20) : 0,
                   }}
                 >
                   <Text size={size} weight={weight} color={color}>
-                    {"\u2022"}
+                    {item.depth === 1 ? "\u25E6" : "\u2022"}
                   </Text>
                   <Text
                     size={size}
@@ -217,7 +287,7 @@ export function RichText({
                     color={color}
                     style={{ flex: 1 }}
                   >
-                    {renderInline(item, `l-${index}-${itemIndex}`)}
+                    {renderInline(item.text, `l-${index}-${itemIndex}`)}
                   </Text>
                 </View>
               ))}
@@ -225,8 +295,35 @@ export function RichText({
           );
         }
 
+        if (block.type === "blank") {
+          return <View key={`b-${index}`} style={{ height: spacing(gap) }} />;
+        }
+
+        if (block.type === "rule") {
+          return (
+            <View
+              key={`r-${index}`}
+              style={{
+                width: "100%",
+                borderTopWidth: 1,
+                borderTopColor: rgba(Colors.white, 0.25),
+                marginVertical: spacing(gap),
+              }}
+            />
+          );
+        }
+
         return (
-          <Text key={`p-${index}`} size={size} weight={weight} color={color}>
+          <Text
+            key={`p-${index}`}
+            size={size}
+            weight={weight}
+            color={color}
+            style={{
+              marginTop: spacing(gap / 2),
+              marginBottom: spacing(gap / 2),
+            }}
+          >
             {renderInline(block.text, `p-${index}`)}
           </Text>
         );

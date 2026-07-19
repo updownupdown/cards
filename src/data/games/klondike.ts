@@ -6,6 +6,7 @@ export const klondike: GameDefinition = {
     default: "Foundations up suit; tableau down alt color; kings fill empty.",
   },
   title: "Klondike",
+  thumbnail: "Klondike.jpg",
   enabledOnLocalOnly: true,
   background: "felt-green.jpg",
   cardColorBg: "#2c3a2f",
@@ -14,8 +15,8 @@ export const klondike: GameDefinition = {
     "The classic solitaire: build four suit foundations from Ace to King.",
   rating: {
     complexity: 20,
-    difficulty: 30,
-    luck: 40,
+    difficulty: 35,
+    luck: 30,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag, GameTag.EasyToLearn],
   about: [

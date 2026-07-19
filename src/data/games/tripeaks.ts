@@ -6,6 +6,7 @@ export const tripeaks: GameDefinition = {
     default: "Play exposed +/-1 to waste; A<->K wraps; draw when stuck.",
   },
   title: "TriPeaks",
+  thumbnail: "TriPeaks.jpg",
   background: "medieval-blocks.jpg",
   cardColorBg: "#24343a",
   cardColorText: "#e3fcdd",
@@ -13,7 +14,7 @@ export const tripeaks: GameDefinition = {
     "Clear three peaks by playing cards one rank above or below the waste.",
   rating: {
     complexity: 15,
-    difficulty: 30,
+    difficulty: 40,
     luck: 70,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],

@@ -6,7 +6,7 @@ export const russianSolitaire: GameDefinition = {
     default: "Move any face-up stack; build down in suit; only kings fill.",
   },
   title: "Russian Solitaire",
-  thumbnail: DEFAULT_GAME_THUMBNAIL,
+  thumbnail: "RussianSolitaire.jpg",
   cardColorBg: "#2c1c30",
   cardColorText: "#f0dcf0",
   background: "wood-vertical.jpg",

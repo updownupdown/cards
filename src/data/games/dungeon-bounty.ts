@@ -7,7 +7,7 @@ export const dungeonBounty: GameDefinition = {
     default: "Use weapons/spells vs foes; survive 2 levels; score bounty+gems.",
   },
   title: "Dungeon Bounty",
-  thumbnail: DEFAULT_GAME_THUMBNAIL,
+  thumbnail: "DungeonBounty.jpg",
   cardColorBg: "#2a1a2e",
   cardColorText: "#f3d9a4",
   background: "wall-tile.jpg",

@@ -6,7 +6,7 @@ export const baroness: GameDefinition = {
     default: "Discard K alone or pairs to 13 (A1 J11 Q12); deal if stuck.",
   },
   title: "Baroness",
-  thumbnail: "DefaultThumbnail.jpg",
+  thumbnail: "Baroness.jpg",
   cardBack: "DefaultCardBack.png",
   background: "felt-dark-red.jpg",
   cardColorBg: "#3a1620",
@@ -14,8 +14,8 @@ export const baroness: GameDefinition = {
   cardDescription: "Clear five piles by discarding cards that total thirteen.",
   rating: {
     complexity: 15,
-    difficulty: 70,
-    luck: 75,
+    difficulty: 50,
+    luck: 70,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
   about: [

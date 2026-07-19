@@ -8,7 +8,7 @@ export const clearTheDungeon: GameDefinition = {
   },
   title: "Clear the Dungeon",
 
-  thumbnail: DEFAULT_GAME_THUMBNAIL,
+  thumbnail: "ClearTheDungeon.jpg",
   cardColorBg: "#221c2e",
   cardColorText: "#e6dcff",
   background: "medieval-blocks.jpg",

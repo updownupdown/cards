@@ -1,13 +1,14 @@
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { useStateManager } from "@/hooks/useStateManager";
-import { clamp, delay, DOUBLE_TAP_MS } from "@/utils/utils";
+import { flexStyles } from "@/styles/flexStyles";
+import { Colors, rgba } from "@/styles/styles";
+import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { View } from "react-native";
-import { Text } from "../common/Text";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
-  cardDims,
   createDeck,
+  flipAllToBack,
   flipToFace,
   RANK_VALUE,
   shuffle,
@@ -15,14 +16,19 @@ import {
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { Text } from "../common/Text";
 
 const cardSize = "regular";
 
 const layout = {
   fishermanRowOffset: 0.1,
-  riverHeight: 4,
-  colTopRow: 0.5,
-  totalsHeight: 0.5,
+  estuaryHeight: 4.6,
+  firstEstuaryCol: 1.3,
+  colGap: 0.46,
+  totalsHeight: 0.4,
+  handRowTopOffset: 0.3,
+  estuaryWidthInset: 0.15,
+  estuaryHeightInset: 0.1,
 };
 
 const params = {
@@ -47,17 +53,16 @@ type GameState = {
 type Selection = { hand: number } | { transfer: number; target?: number };
 
 const BREAKTHROUGH_LABELS: Record<string, string> = {
-  specialization: "Species Specialization",
-  diversity: "Species Diversity",
-  dense: "Dense Shoals",
-  clusters: "Population Clusters",
-  harvesting: "Selective Harvesting",
-  pressure: "Fishing Pressure",
+  specialization: "🐟 ♠♠♠", // Species Specialization (all same suit)
+  diversity: "🐟 ♠♥♦♣", // Species Diversity (uses all suits)
+  dense: "🐟🐟 5+", // Dense Shoals (5+ schools)
+  clusters: "🐟# 🐟#", // Population Clusters (2+ schools same rank)
+  harvesting: "🐟♠ 🎣♠", // Selective Harvesting (fisher and fish same suit)
+  pressure: "🎣 2+", // Fishing Pressure (2+ fishers)
 };
-const breakthroughTotal = Object.keys(BREAKTHROUGH_LABELS).length;
 
 const gameStateInitial: GameState = {
-  station: [],
+  station: shuffle(createDeck()),
   segments: Array.from({ length: params.columnCount }, () => []),
   hand: [],
   discard: [],
@@ -65,6 +70,57 @@ const gameStateInitial: GameState = {
   breakthroughs: [],
   ended: false,
 };
+
+async function resetAndSetup(
+  setGame: (updater: (draft: GameState) => void) => void,
+) {
+  setGame((draft) => {
+    // Gather all cards to station
+    const allCards = flipAllToBack([
+      ...draft.station,
+      ...draft.discard,
+      ...draft.hand,
+      ...draft.segments.flatMap((col) =>
+        col.flatMap(
+          (entry) =>
+            [entry.school, entry.fisherman].filter(
+              (c) => c !== null,
+            ) as PlayingCard[],
+        ),
+      ),
+    ]);
+
+    draft.station = shuffle(allCards);
+    draft.segments = Array.from({ length: params.columnCount }, () => []);
+    draft.hand = [];
+    draft.discard = [];
+    draft.studyCount = 0;
+    draft.breakthroughs = [];
+    draft.ended = false;
+  });
+
+  await delay(800);
+
+  setGame((draft) => {
+    // Reveal four Schools of Fish for the river; shuffle drawn Fishermen back.
+    const setAside: PlayingCard[] = [];
+    for (let i = 0; i < params.columnCount; i += 1) {
+      const school = revealSchool(draft, setAside);
+      if (school) draft.segments[i] = [{ school, fisherman: null }];
+    }
+
+    if (setAside.length > 0) {
+      draft.station = shuffle([...draft.station, ...setAside]);
+    }
+  });
+
+  await delay();
+
+  setGame((draft) => {
+    // Opening draw phase.
+    drawPhase(draft);
+  });
+}
 
 // ========== Pure helpers ========== //
 function isFisherman(card: PlayingCard) {
@@ -169,42 +225,14 @@ function resolveTurn(draft: GameState) {
   }
 }
 
-async function resetAndSetup(
-  setGame: (updater: (draft: GameState) => void) => void,
-) {
-  setGame((draft) => {
-    draft.station = shuffle(createDeck());
-    draft.segments = Array.from({ length: params.columnCount }, () => []);
-    draft.hand = [];
-    draft.discard = [];
-    draft.studyCount = 0;
-    draft.breakthroughs = [];
-    draft.ended = false;
-
-    // Reveal four Schools of Fish for the river; shuffle drawn Fishermen back.
-    const setAside: PlayingCard[] = [];
-    for (let i = 0; i < params.columnCount; i += 1) {
-      const school = revealSchool(draft, setAside);
-      if (school) draft.segments[i] = [{ school, fisherman: null }];
-    }
-    if (setAside.length > 0) {
-      draft.station = shuffle([...draft.station, ...setAside]);
-    }
-
-    // Opening draw phase.
-    drawPhase(draft);
-  });
-
-  await delay();
-}
-
 function scoreTier(score: number) {
   if (score >= 18)
-    return "Your work reshapes the science of freshwater ecology!";
+    return "Your work reshapes the science of freshwater ecology!\n\n🐟🐟🐟🐟";
   if (score >= 14)
-    return "Your research advances knowledge of river ecosystems.";
-  if (score >= 9) return "Your findings aid local study of fish populations.";
-  return "Your records add little to the understanding of the river.";
+    return "Your research advances knowledge of river ecosystems.\n\n🐟🐟🐟";
+  if (score >= 9)
+    return "Your findings aid local study of fish populations.\n\n🐟🐟";
+  return "Your records add little to the understanding of the river.\n\n🐟";
 }
 
 // ========== Component ========== //
@@ -382,52 +410,48 @@ export default function BlackjackRiverResearch() {
   }
 
   // ── Zones ────────────────────────────────
+  const waterBackground = rgba("#397b8f", 0.45);
+
   const zones: MapZone[] = useMemo(() => {
-    const result: MapZone[] = [
-      { id: "hud", col: 0, row: 0, width: "full", height: 0.6 },
-    ];
+    const colZones: MapZone[] = [];
 
     for (let i = 0; i < params.columnCount; i += 1) {
-      const col = i + 1;
+      const col = (i + layout.firstEstuaryCol) * (layout.colGap + 1);
 
-      result.push({
+      // Totals
+      colZones.push({
         id: `total-${i}`,
         col,
-        row: layout.colTopRow + layout.riverHeight - layout.totalsHeight,
+        baseZIndex: 2,
+        row: layout.estuaryHeight - layout.totalsHeight + 0.05,
         height: layout.totalsHeight,
       });
 
-      // Background drop area (used to release onto empty / general column).
-      result.push({
-        id: `drop-${i}`,
-        name: "coldrop",
+      // Estuary backgrounds
+      colZones.push({
+        id: `estuary-${i}`,
+        name: "estuary",
         pileIndex: i,
-        col,
-        row: layout.colTopRow,
-        width: 1,
-        height: layout.riverHeight,
-        baseZIndex: 0,
-        placeholder: {},
+        col: col - layout.estuaryWidthInset,
+        row: -layout.estuaryHeightInset,
+        width: 1 + 2 * layout.estuaryWidthInset,
+        height: layout.estuaryHeight + 2 * layout.estuaryHeightInset,
+        baseZIndex: 1,
+        placeholder: { backgroundColor: waterBackground },
       });
 
       const column = game.segments[i];
+
+      const cardOverflow =
+        column.length - layout.estuaryHeight + layout.totalsHeight;
+      const rowOffset =
+        cardOverflow > 0 ? 1 + (cardOverflow / (column.length - 1)) * -1 : 1.08;
+
       column.forEach((entry, j) => {
-        const colLength = column.length;
-        // const minRowOffset = 0.5;
-        // const maxRowOffset = 1.5;
+        // Ensure that all cards in a column fit within the river height
+        const row = j * rowOffset;
 
-        // const rowOffset = clamp(colLength - 1, 0, 1.5);
-
-        // Ensure that all cards in a column fit within the river height, with a minimum offset of 0.5.
-        const rowOffset = clamp(
-          layout.riverHeight / Math.max(colLength, 1),
-          0.5 * cardDims.aspectRatio,
-          1 * cardDims.aspectRatio,
-        );
-
-        const row = layout.colTopRow + j * rowOffset;
-
-        result.push({
+        colZones.push({
           id: `sch-${i}-${j}`,
           name: "school",
           pileIndex: i,
@@ -436,11 +460,10 @@ export default function BlackjackRiverResearch() {
           row,
           baseZIndex: 5 + j,
           cards: [entry.school],
-          placeholder: {},
         });
 
         if (entry.fisherman) {
-          result.push({
+          colZones.push({
             id: `fish-${i}-${j}`,
             name: "fisher",
             pileIndex: i,
@@ -448,7 +471,7 @@ export default function BlackjackRiverResearch() {
             col,
             row: row + layout.fishermanRowOffset,
             rotation: 90,
-            baseZIndex: 60 + j,
+            baseZIndex: 6 + j,
             cards: [entry.fisherman],
           });
         }
@@ -460,11 +483,19 @@ export default function BlackjackRiverResearch() {
       id: `source`,
       name: "source",
       col: 0,
-      row: layout.colTopRow,
+      row: 0,
       baseZIndex: 90,
       cards: game.station,
-      placeholder: { text: "Source", infoPos: "below" },
+      placeholder: { text: "Fld.St.", infoPos: "below" },
       fan: { maxVisible: 3 },
+    };
+
+    const statsZone: MapZone = {
+      id: "stats",
+      col: 0,
+      row: 1.5,
+      width: 1.4,
+      height: layout.estuaryHeight - 1.8,
     };
 
     // Discard
@@ -472,10 +503,10 @@ export default function BlackjackRiverResearch() {
       id: `discard`,
       name: "discard",
       col: 0,
-      row: layout.colTopRow + 1.5,
+      row: layout.estuaryHeight + layout.handRowTopOffset,
       baseZIndex: 90,
       cards: game.discard,
-      placeholder: { text: "Discard", infoPos: "below" },
+      placeholder: { text: "Dscrd", infoPos: "above" },
       fan: { maxVisible: 3 },
     };
 
@@ -483,16 +514,16 @@ export default function BlackjackRiverResearch() {
     const handZone: MapZone = {
       id: `hand`,
       name: "hand",
-      col: 0,
-      row: layout.colTopRow + layout.riverHeight,
+      col: layout.firstEstuaryCol + layout.colGap,
+      row: layout.estuaryHeight + layout.handRowTopOffset,
       baseZIndex: 1,
       cards: game.hand,
-      width: 5,
-      placeholder: {},
+      // Manually calculated width, since gaps are a pain
+      width: 5.65,
       fan: { direction: "right", offset: 1.2 },
     };
 
-    return [...result, sourceZone, discardZone, handZone];
+    return [...colZones, statsZone, sourceZone, discardZone, handZone];
   }, [game]);
 
   // ─────────────────────────────── Card / Zone Mappers ───────────────────────────────
@@ -511,7 +542,8 @@ export default function BlackjackRiverResearch() {
         selection.target !== undefined;
       return {
         isSelected,
-        selectColor: isDiscardStep ? "orange" : "blue",
+        selectColor: isDiscardStep ? "red" : "blue",
+        forceOverlayColor: isDiscardStep,
         isDisabled: game.ended,
         onPress: () => onHandPress(mappedCard.cardIndex),
       };
@@ -536,7 +568,7 @@ export default function BlackjackRiverResearch() {
         entryIndex === game.segments[colIndex].length - 1;
       return {
         isSelected: isTransferSource,
-        selectColor: catchable ? "green" : isTransferSource ? "orange" : "none",
+        selectColor: catchable ? "blue" : isTransferSource ? "purple" : "none",
         isDisabled: game.ended,
         onPress: () => onSchoolPress(colIndex, entryIndex),
       };
@@ -546,10 +578,8 @@ export default function BlackjackRiverResearch() {
     }
   };
 
-  console.log(game);
-
   const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
-    if (zone.name === "coldrop" && zone.pileIndex !== undefined) {
+    if (zone.name === "estuary" && zone.pileIndex !== undefined) {
       const colIndex = zone.pileIndex;
       const releasing = !!selectedHandCard && isSchool(selectedHandCard);
       const targeting =
@@ -557,13 +587,21 @@ export default function BlackjackRiverResearch() {
         "transfer" in selection &&
         selection.target === undefined &&
         selection.transfer !== colIndex;
+      const isSelectedTarget =
+        !!selection && "transfer" in selection && selection.target === colIndex;
+
       return {
         onPress: () => onColumnPress(colIndex),
         isDisabled: game.ended || (!releasing && !targeting),
-        selectColor: releasing || targeting ? "green" : "none",
+        selectColor: releasing
+          ? "blue"
+          : targeting || isSelectedTarget
+            ? "purple"
+            : "none",
+        forceOverlayColor: isSelectedTarget,
+        forceSelectColor: isSelectedTarget,
       };
     }
-    return {};
   };
 
   const { cardMap, getZoneStylesById } = useCardMap({
@@ -572,9 +610,8 @@ export default function BlackjackRiverResearch() {
     cardMapper,
     zoneMapper,
     cardSize,
-    visualizer: true,
-    gap: 0.46,
-    paddingTop: 0,
+    gap: 0,
+    paddingTop: 0.1,
   });
 
   useEffect(() => {
@@ -599,26 +636,57 @@ export default function BlackjackRiverResearch() {
 
       <View
         style={[
-          getZoneStylesById("hud"),
-          {
-            flexDirection: "row",
-            justifyContent: "space-around",
-            alignItems: "center",
-          },
+          flexStyles.colStart,
+          flexStyles.spaceAround,
+          getZoneStylesById("stats"),
         ]}
       >
-        <Text size="xs" weight={600} color={cardText}>
-          Score {score}
-        </Text>
-        <Text size="xs" weight={600} color={cardText}>
-          Studies {game.studyCount}
-        </Text>
-        <Text size="xs" weight={600} color={cardText}>
-          Breaks {game.breakthroughs.length}/{breakthroughTotal}
-        </Text>
-        <Text size="xs" weight={600} color={cardText}>
-          River {game.station.length}
-        </Text>
+        <View
+          style={[
+            flexStyles.rowCentered,
+            flexStyles.fullWidth,
+            flexStyles.spaceBetween,
+          ]}
+        >
+          <Text size="sm" color={cardText}>
+            Score:
+          </Text>
+          <Text size="sm" weight={500} color={cardText}>
+            {score}
+          </Text>
+        </View>
+        <View
+          style={[
+            flexStyles.rowCentered,
+            flexStyles.fullWidth,
+            flexStyles.spaceBetween,
+          ]}
+        >
+          <Text size="sm" color={cardText}>
+            Studies:
+          </Text>
+          <Text size="sm" weight={500} color={cardText}>
+            {game.studyCount}
+          </Text>
+        </View>
+
+        {Object.keys(BREAKTHROUGH_LABELS).map((key) => {
+          const achieved = game.breakthroughs.includes(key);
+          return (
+            <Text
+              key={key}
+              size="sm"
+              weight={500}
+              color={Colors.accentGreen}
+              lineHeight={1.1}
+              style={{
+                filter: achieved ? undefined : "grayscale(100%)",
+              }}
+            >
+              {BREAKTHROUGH_LABELS[key]}
+            </Text>
+          );
+        })}
       </View>
 
       {game.segments.map((column, i) => {
@@ -636,8 +704,10 @@ export default function BlackjackRiverResearch() {
           >
             <Text
               size="md"
-              weight={700}
-              color={near ? "#7CFC98" : danger ? "#FF9C8A" : cardText}
+              weight={500}
+              color={
+                near ? Colors.accentGreen : danger ? Colors.accentRed : cardText
+              }
             >
               {total}
             </Text>

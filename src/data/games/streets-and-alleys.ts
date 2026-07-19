@@ -7,7 +7,7 @@ export const streetsAndAlleys: GameDefinition = {
     default: "Expose Aces first; columns down any suit; foundations up suit.",
   },
   title: "Streets and Alleys",
-  thumbnail: "DefaultThumbnail.jpg",
+  thumbnail: "StreetsAndAlleys.jpg",
   cardBack: "DefaultCardBack.png",
   background: "concrete.jpg",
   cardColorBg: "#2a2a2e",

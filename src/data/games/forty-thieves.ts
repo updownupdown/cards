@@ -6,6 +6,7 @@ export const fortyThieves: GameDefinition = {
     default: "Foundations up suit; tableau down suit, one card at a time.",
   },
   title: "Forty Thieves",
+  thumbnail: "FortyThieves.jpg",
   enabledOnLocalOnly: true,
   background: "concrete.jpg",
   cardColorBg: "#2E2D34",

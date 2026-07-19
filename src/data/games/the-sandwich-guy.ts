@@ -15,7 +15,7 @@ export const theSandwichGuy: GameDefinition = {
     "Serve sandwiches by selecting evenly spaced cards; don't let your ingredients run out!",
   rating: {
     complexity: 20,
-    difficulty: 80,
+    difficulty: 70,
     luck: 40,
   },
   tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],

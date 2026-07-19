@@ -6,6 +6,7 @@ export const scorpion: GameDefinition = {
     default: "Build down in suit; move any face-up stack; kings fill empty.",
   },
   title: "Scorpion",
+  thumbnail: "Scorpion.jpg",
   enabledOnLocalOnly: true,
   background: "sandstone.jpg",
   cardColorBg: "#33262A",

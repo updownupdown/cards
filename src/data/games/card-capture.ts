@@ -20,7 +20,7 @@ export const cardCapture: GameDefinition = {
   cardDescription:
     "Use low cards and jokers to dismantle enemy forces, while protecting every Ace and face card from capture.",
   rating: {
-    complexity: 40,
+    complexity: 60,
     difficulty: 50,
     luck: 40,
   },

@@ -7,7 +7,7 @@ export const blackHole: GameDefinition = {
       "Cards of adjacent value to the hole card can be cleared. Clear all to win. A<->K wraps.",
   },
   title: "Black Hole",
-  thumbnail: "DefaultThumbnail.jpg",
+  thumbnail: "BlackHole.jpg",
   cardBack: "DefaultCardBack.png",
   background: "galaxy.jpg",
   cardColorBg: "#150e25",
@@ -15,7 +15,7 @@ export const blackHole: GameDefinition = {
   cardDescription:
     "Pull all 52 cards into a central black hole, one rank at a time.",
   rating: {
-    complexity: 40,
+    complexity: 25,
     difficulty: 55,
     luck: 30,
   },

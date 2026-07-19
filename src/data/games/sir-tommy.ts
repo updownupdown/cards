@@ -6,7 +6,7 @@ export const sirTommy: GameDefinition = {
     default: "Place draw on any waste pile; foundations auto-build A to K.",
   },
   title: "Sir Tommy",
-  thumbnail: "DefaultThumbnail.jpg",
+  thumbnail: "SirTommy.jpg",
   cardBack: "DefaultCardBack.png",
   background: "felt-dark-purple.jpg",
   cardColorBg: "#241a33",

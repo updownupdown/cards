@@ -26,6 +26,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { ProgressBar } from "../Home/ProgressBar";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useToast } from "../common/Toast";
+import { rgba } from "@/styles/styles";
 
 const SIZE = 7;
 const CELLS = SIZE * SIZE;
@@ -269,7 +270,15 @@ export default function IslandOfCards() {
         baseZIndex: 40,
         placeholder: { text: "Deck", infoPos: "right", showCount: true },
       },
-      { id: "hud", col: 1.75, row: 0, width: 3.5, height: 1 },
+      { id: "hud", col: 1.75, row: 0, width: 3.5, height: 1, baseZIndex: 1 },
+      {
+        id: "land",
+        col: -0.2,
+        row: 1.1,
+        width: 7.4,
+        height: 7.2,
+        baseZIndex: 1,
+      },
       {
         id: "discard",
         name: "discard",
@@ -331,27 +340,32 @@ export default function IslandOfCards() {
       canUndo={canUndo}
       undo={undo}
     >
-      {cardMap}
-
       <View
         style={[
           getZoneStylesById("hud"),
           { alignItems: "center", justifyContent: "center", gap: spacing(12) },
         ]}
       >
-        <Text size="md" weight={700} color={cardText}>
-          Score: {score}
-        </Text>
         <ProgressBar
           progressValue={filled}
           totalValue={CELLS}
           color={cardText}
           scaledHeight={cardHeight * 0.2}
         />
-        {/* <Text size="xs" weight={400} color={cardText}>
-          Filled {filled}/{CELLS}
-        </Text> */}
       </View>
+
+      <View
+        style={[
+          getZoneStylesById("land"),
+          {
+            backgroundColor: rgba("#694927", 1),
+            borderRadius: spacing(16),
+            boxShadow: `inset 0 0 ${spacing(20)}px ${spacing(10)}px rgb(243, 225, 187), 0 0 ${spacing(10)}px ${spacing(10)}px rgb(243, 225, 187)`,
+          },
+        ]}
+      />
+
+      {cardMap}
     </GameWrapper>
   );
 }

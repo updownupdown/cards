@@ -7,7 +7,7 @@ export const beleagueredCastle: GameDefinition = {
     default: "Expose Aces early; columns down any suit; foundations up suit.",
   },
   title: "Beleaguered Castle",
-  thumbnail: "DefaultThumbnail.jpg",
+  thumbnail: "BeleagueredCastle.jpg",
   cardBack: "DefaultCardBack.png",
   background: "medieval-blocks.jpg",
   cardColorBg: "#2e2620",

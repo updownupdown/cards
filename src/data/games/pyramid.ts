@@ -7,7 +7,7 @@ export const pyramid: GameDefinition = {
       "Remove Kings, or exposed pairs totaling 13. Draw for more matches.",
   },
   title: "Pyramid",
-  thumbnail: DEFAULT_GAME_THUMBNAIL,
+  thumbnail: "Pyramid.jpg",
   cardColorBg: "#251703",
   cardColorText: "#FFEACC",
   background: "sandstone-2.jpg",
@@ -15,7 +15,7 @@ export const pyramid: GameDefinition = {
     "Clear the pyramid by removing pairs of cards that add up to 13.",
   rating: {
     complexity: 15,
-    difficulty: 30,
+    difficulty: 65,
     luck: 65,
   },
   tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],

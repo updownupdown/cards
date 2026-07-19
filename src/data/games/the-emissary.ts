@@ -11,8 +11,8 @@ export const theEmissary: GameDefinition = {
   cardDescription:
     "Win exactly the right number of debates in each kingdom while managing one-time advisors.",
   rating: {
-    complexity: 70,
-    difficulty: 70,
+    complexity: 85,
+    difficulty: 80,
     luck: 35,
   },
   tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],

@@ -99,7 +99,9 @@ export const getUnderlayStyle = (
   cardWidth: number,
   cardBg: CardColor | string,
   cardText: CardColor | string,
+  customBackground?: CardColor | string,
   hideBackground?: boolean,
+  hideShadow?: boolean,
 ): ViewStyle => {
   return {
     ...StyleSheet.absoluteFill,
@@ -107,9 +109,12 @@ export const getUnderlayStyle = (
     borderRadius: cardWidth * cardDims.ratioRadius,
     backgroundColor: hideBackground
       ? "transparent"
-      : rgba(darkenHexColor(cardBg, 0.2), 0.35),
-    boxShadow: hideBackground
-      ? undefined
-      : `0 0 0 1px ${rgba(lightenHexColor(cardText, 0.5), 0.1)}, inset 0 0 ${cardWidth * 0.3}px ${rgba(darkenHexColor(cardBg, 0.7), 0.6)}, 0 0 ${cardWidth * 0.2}px ${rgba(lightenHexColor(cardText, 0.5), 0.3)}`,
+      : customBackground
+        ? customBackground
+        : rgba(Colors.black, 0.2),
+    boxShadow:
+      hideBackground || hideShadow
+        ? undefined
+        : `0 0 ${cardWidth * 0.2}px 1px ${rgba(Colors.white, 0.3)}, inset 0 0 ${cardWidth * 0.2}px ${rgba(Colors.black, 0.7)}`,
   };
 };

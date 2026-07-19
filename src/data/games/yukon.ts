@@ -6,7 +6,7 @@ export const yukon: GameDefinition = {
     default: "Move any face-up stack; build down alt color; kings fill empty.",
   },
   title: "Yukon",
-  thumbnail: DEFAULT_GAME_THUMBNAIL,
+  thumbnail: "Yukon.jpg",
   cardColorBg: "#20303a",
   cardColorText: "#e6f1f7",
   background: "wood-table.jpg",

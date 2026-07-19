@@ -287,7 +287,6 @@ export const HowToPlay = ({
         flexStyles.fullWidth,
         {
           alignItems: "flex-start",
-          gap: spacing(20),
         },
       ]}
     >

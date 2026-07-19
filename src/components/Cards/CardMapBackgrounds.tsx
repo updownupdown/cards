@@ -213,7 +213,9 @@ export const CardMapBackgrounds = ({
                 cardWidth,
                 cardBg,
                 cardText,
+                zone.placeholder.backgroundColor,
                 zone.placeholder.hideBackground,
+                zone.placeholder.hideShadow,
               )}
             />
           </Pressable>

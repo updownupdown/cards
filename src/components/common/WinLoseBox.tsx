@@ -137,7 +137,7 @@ export const WinLoseBox = ({
                 textAlign: "center",
               }}
             >
-              {message}
+              {message.replace(/\\n/g, "\n")}
             </Text>
           )}
           {score !== undefined && (
@@ -166,7 +166,7 @@ export const WinLoseBox = ({
           {handleUndo && !won && (
             <Button
               onPress={() => fadeOutWLM(handleUndo)}
-              size="sm"
+              size="md"
               text="Undo"
               theme={"lose"}
               taller
@@ -178,7 +178,7 @@ export const WinLoseBox = ({
 
           <Button
             onPress={() => fadeOutWLM(reset)}
-            size="sm"
+            size="md"
             text={won ? "Play again" : "Try again"}
             theme={won ? "win" : "lose"}
             taller

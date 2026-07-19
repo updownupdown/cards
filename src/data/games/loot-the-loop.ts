@@ -15,9 +15,9 @@ export const lootTheLoop: GameDefinition = {
   cardDescription:
     "Capture scoring loop cards while preserving momentum and avoiding disruptive breaks.",
   rating: {
-    complexity: 50,
-    difficulty: 45,
-    luck: 60,
+    complexity: 45,
+    difficulty: 40,
+    luck: 40,
   },
   tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
   about: [

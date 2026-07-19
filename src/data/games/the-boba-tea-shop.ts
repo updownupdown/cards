@@ -14,8 +14,8 @@ export const theBobaTeaShop: GameDefinition = {
   cardDescription:
     "A push-your-luck game where you must manage ordered queues of customers.",
   rating: {
-    complexity: 30,
-    difficulty: 55,
+    complexity: 40,
+    difficulty: 60,
     luck: 55,
   },
   tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],

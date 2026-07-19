@@ -8,7 +8,7 @@ export const inHandPoker: GameDefinition = {
       "Build hand, then bet; bigger bets make rival draw more; reach 10.",
   },
   title: "In-Hand Poker",
-  thumbnail: DEFAULT_GAME_THUMBNAIL,
+  thumbnail: "InHandPoker.jpg",
   cardColorBg: "#123a2a",
   cardColorText: "#f0d98a",
   background: "felt-green.jpg",
