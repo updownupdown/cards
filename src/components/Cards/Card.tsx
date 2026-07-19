@@ -1,19 +1,9 @@
-import { CardComponents as CardsClassic } from "@/assets/cards/classic";
-import { CardComponents as CardsRegular } from "@/assets/cards/regular";
-import { CardComponents as CardsSmall } from "@/assets/cards/small";
-import { CardComponents as CardsSmallColored } from "@/assets/cards/small-colored";
-import { CardComponents as CardsTableau } from "@/assets/cards/tableau";
 import { Image } from "expo-image";
-import React from "react";
+import React, { memo } from "react";
 import { View, ViewStyle } from "react-native";
+import { getCardBackAsset, getCardImageSource } from "./CardAssets";
 import { cardDims, PlayingCard } from "./card-utils";
 import { CardColor, CardOverlay, CardSizes, getCardShadow } from "./CardStyles";
-import { cardBackAssets, defaultCardBackName } from "./generated-card-backs";
-
-const getCardBackAsset = (filename?: string) => {
-  if (!filename) return cardBackAssets[defaultCardBackName];
-  return cardBackAssets[filename] ?? cardBackAssets[defaultCardBackName];
-};
 
 export type CardProps = {
   card?: PlayingCard;
@@ -31,7 +21,7 @@ export type CardProps = {
   customBack?: string;
 };
 
-export const Card = ({
+const CardComponent = ({
   style,
   card,
   isSelectable,
@@ -46,32 +36,20 @@ export const Card = ({
   isHiddenUnderDeck,
   customBack,
 }: CardProps) => {
-  const cardFiles =
-    cardSize === "small"
-      ? CardsSmall
-      : cardSize === "small-colored"
-        ? CardsSmallColored
-        : cardSize === "tableau"
-          ? CardsTableau
-          : cardSize === "classic"
-            ? CardsClassic
-            : CardsRegular;
-
   let cardName = "BackH";
 
   if (card && card.faceUp) {
     cardName = card.rank + card.suit.charAt(0).toUpperCase();
   }
 
-  const imageSource = cardFiles[cardName];
   const isFaceDown = !card || !card.faceUp;
+  const imageSource = isFaceDown
+    ? undefined
+    : getCardImageSource(cardSize, cardName);
   const backAsset = getCardBackAsset(customBack);
 
   if (!isVisible) return null;
-  if (!isFaceDown && !imageSource) {
-    console.warn(`PNG ${cardName} not found.`);
-    return null;
-  }
+  if (!isFaceDown && !imageSource) return null;
 
   return (
     <View
@@ -114,12 +92,14 @@ export const Card = ({
       {isFaceDown ? (
         <Image
           source={backAsset}
+          cachePolicy="memory-disk"
           style={{ width: "100%", height: "100%" }}
           transition={0}
         />
       ) : (
         <Image
           source={imageSource}
+          cachePolicy="memory-disk"
           style={{ width: "100%", height: "100%" }}
           transition={0}
         />
@@ -127,3 +107,35 @@ export const Card = ({
     </View>
   );
 };
+
+// The card face is purely presentational (no callback props), so it only
+// needs to re-render when a value that affects its visual output changes.
+// This matters a lot for games like Accordion that fire many rapid state
+// updates: the parent AnimatedCard re-renders for every card on each update
+// (its `onPress` closure identity changes each render), but with this memo
+// only the card whose values actually changed re-runs the expensive image /
+// box-shadow / overlay rendering. `style` is compared by identity, which is
+// correct because AnimatedCard never passes it (both undefined), while the
+// drag-ghost usages that do pass an inline `style` simply re-render as before.
+function areCardPropsEqual(prev: CardProps, next: CardProps) {
+  return (
+    prev.style === next.style &&
+    prev.cardWidth === next.cardWidth &&
+    prev.isSelectable === next.isSelectable &&
+    prev.isSelected === next.isSelected &&
+    prev.isVisible === next.isVisible &&
+    prev.selectColor === next.selectColor &&
+    prev.forceSelectColor === next.forceSelectColor &&
+    prev.forceOverlayColor === next.forceOverlayColor &&
+    prev.cardSize === next.cardSize &&
+    prev.isPlaceholder === next.isPlaceholder &&
+    prev.isHiddenUnderDeck === next.isHiddenUnderDeck &&
+    prev.customBack === next.customBack &&
+    prev.card?.id === next.card?.id &&
+    prev.card?.faceUp === next.card?.faceUp &&
+    prev.card?.rank === next.card?.rank &&
+    prev.card?.suit === next.card?.suit
+  );
+}
+
+export const Card = memo(CardComponent, areCardPropsEqual);

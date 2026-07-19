@@ -1,5 +1,12 @@
 import { Text } from "@/components/common/Text";
-import { Colors, FontWeight, LayerZIndexes, rgba } from "@/styles/styles";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import {
+  Colors,
+  FontWeight,
+  LayerZIndexes,
+  layoutDims,
+  rgba,
+} from "@/styles/styles";
 import React, {
   createContext,
   ReactNode,
@@ -8,13 +15,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import {
-  Animated,
-  Platform,
-  StyleSheet,
-  TextStyle,
-  ViewStyle,
-} from "react-native";
+import { Animated, Platform } from "react-native";
 
 // Define the type for the function our hook will return
 type ShowToastFn = (message: string, duration?: number) => void;
@@ -31,6 +32,7 @@ interface ToastState {
 }
 
 export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
+  const { spacing } = useResponsiveMetrics();
   const [toast, setToast] = useState<ToastState>({
     visible: false,
     message: "",
@@ -66,48 +68,47 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
       {toast.visible && (
         <Animated.View
           style={[
-            styles.toastContainer,
             {
               opacity,
               top: opacity.interpolate({
                 inputRange: [0, 1],
-                outputRange: [-100, 10],
+                outputRange: [
+                  spacing(-100),
+                  spacing(
+                    layoutDims.pagePadding * 0.5 + layoutDims.menuBarPadding,
+                  ),
+                ], // Slide in from top
               }),
+              position: "absolute",
+              minHeight: spacing(
+                layoutDims.menuBarHeight - layoutDims.menuBarPadding * 2,
+              ),
+              zIndex: LayerZIndexes.toast,
+              alignSelf: "center",
+              marginHorizontal: spacing(layoutDims.pagePadding),
+              paddingHorizontal: spacing(20),
+              paddingVertical: spacing(10),
+              borderRadius: spacing(12),
+              backgroundColor: rgba(Colors.K950, 0.9),
+              boxShadow: `0 4px 6px ${rgba(Colors.black, 0.3)}`,
             },
           ]}
         >
-          <Text style={styles.toastText}>{toast.message}</Text>
+          <Text
+            style={{
+              color: Colors.K100,
+              fontSize: 16,
+              fontFamily: FontWeight[400],
+              textAlign: "center",
+            }}
+          >
+            {toast.message}
+          </Text>
         </Animated.View>
       )}
     </ToastContext.Provider>
   );
 };
-
-interface Styles {
-  toastContainer: ViewStyle;
-  toastText: TextStyle;
-}
-
-const styles = StyleSheet.create<Styles>({
-  toastContainer: {
-    position: "absolute",
-    zIndex: LayerZIndexes.toast,
-    top: -100,
-    alignSelf: "center",
-    marginHorizontal: 10,
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-
-    borderRadius: 12,
-    backgroundColor: rgba(Colors.K900, 0.8),
-  },
-  toastText: {
-    color: Colors.K100,
-    fontSize: 16,
-    fontFamily: FontWeight[400],
-    textAlign: "center",
-  },
-});
 
 export const useToast = (): ShowToastFn => {
   const context = useContext(ToastContext);

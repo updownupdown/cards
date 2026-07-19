@@ -5,14 +5,16 @@ import { useTipsBoxLayout } from "@/hooks/useTipsLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { roundToPixel } from "@/utils/utils";
 import { usePathname } from "expo-router";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { LoadingOverlay } from "../common/LoadingOverlay";
 import {
   AnimatedCard,
   AnimatedCardMapping,
   CardMapBGMapping,
 } from "./AnimatedCard";
+import { isCardImageSetPreloaded, preloadCardImageSet } from "./CardAssets";
 import {
   CardMapBackgrounds,
   DeckFanDirection,
@@ -108,6 +110,9 @@ export function useCardMap({
   const pathname = usePathname();
   const customBack = GAMES_DATA[pathname]?.cardBack;
   const insets = useSafeAreaInsets();
+  const [cardImagesLoaded, setCardImagesLoaded] = useState(() =>
+    isCardImageSetPreloaded(cardSize, customBack),
+  );
 
   const { width: screenWidthActual, height: screenHeightActual } =
     useViewportDimensions();
@@ -116,6 +121,22 @@ export function useCardMap({
 
   // Space reserved at the top of the board for the floating tip box.
   const { reservedHeight: tipsReservedHeight } = useTipsBoxLayout();
+
+  useEffect(() => {
+    let cancelled = false;
+
+    setCardImagesLoaded(isCardImageSetPreloaded(cardSize, customBack));
+
+    preloadCardImageSet(cardSize, customBack).finally(() => {
+      if (!cancelled) {
+        setCardImagesLoaded(true);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [cardSize, customBack]);
 
   // Calculate the end column (col + height) for each zone
   // and find the maximum value among them.
@@ -495,12 +516,13 @@ export function useCardMap({
   const cardMap = useMemo(
     () => (
       <>
+        <LoadingOverlay isLoaded={cardImagesLoaded} />
         {mapBackgrounds}
         {mappedCards}
         {mapVisualizer}
       </>
     ),
-    [mapBackgrounds, mapVisualizer, mappedCards],
+    [cardImagesLoaded, mapBackgrounds, mapVisualizer, mappedCards],
   );
 
   return {

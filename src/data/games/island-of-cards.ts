@@ -8,7 +8,7 @@ export const islandOfCards: GameDefinition = {
   },
   title: "Island of Cards",
   thumbnail: DEFAULT_GAME_THUMBNAIL,
-  cardColorBg: "#14504f",
+  cardColorBg: "#153846",
   cardColorText: "#ffe6a3",
   background: "wood-table.jpg",
   cardDescription:

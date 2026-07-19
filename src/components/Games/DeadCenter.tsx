@@ -28,7 +28,6 @@ import {
   shuffle,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 const zombieZonesColRows: ColRows[] = [
   { c: 1, r: 1 },
@@ -438,6 +437,8 @@ export default function DeadCenter() {
 
       return {
         selectColor,
+        forceOverlayColor: selectColor !== "none",
+        forceSelectColor: selectColor !== "none",
         isVisible: !zombie.dead,
         onPress: () => {
           if (canReveal) {

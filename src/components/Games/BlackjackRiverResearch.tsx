@@ -1,11 +1,12 @@
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { useStateManager } from "@/hooks/useStateManager";
-import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
+import { clamp, delay, DOUBLE_TAP_MS } from "@/utils/utils";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { View } from "react-native";
 import { Text } from "../common/Text";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
+  cardDims,
   createDeck,
   flipToFace,
   RANK_VALUE,
@@ -18,11 +19,10 @@ import { GameWrapper } from "../common/GameWrapper";
 const cardSize = "regular";
 
 const layout = {
-  rowOffset: 0.3,
-  handSize: 4,
-  handRow: 5.85,
-  colTopRow: 1.4,
   fishermanRowOffset: 0.1,
+  riverHeight: 4,
+  colTopRow: 0.5,
+  totalsHeight: 0.5,
 };
 
 const params = {
@@ -388,13 +388,13 @@ export default function BlackjackRiverResearch() {
     ];
 
     for (let i = 0; i < params.columnCount; i += 1) {
-      const colX = (i + 1) * (1 + layout.rowOffset);
+      const col = i + 1;
+
       result.push({
         id: `total-${i}`,
-        col: colX,
-        row: 0.5,
-        width: 1,
-        height: 0.55,
+        col,
+        row: layout.colTopRow + layout.riverHeight - layout.totalsHeight,
+        height: layout.totalsHeight,
       });
 
       // Background drop area (used to release onto empty / general column).
@@ -402,24 +402,37 @@ export default function BlackjackRiverResearch() {
         id: `drop-${i}`,
         name: "coldrop",
         pileIndex: i,
-        col: colX,
+        col,
         row: layout.colTopRow,
         width: 1,
-        height: 4,
+        height: layout.riverHeight,
         baseZIndex: 0,
         placeholder: {},
       });
 
       const column = game.segments[i];
       column.forEach((entry, j) => {
-        const row = layout.colTopRow + j * 1;
+        const colLength = column.length;
+        // const minRowOffset = 0.5;
+        // const maxRowOffset = 1.5;
+
+        // const rowOffset = clamp(colLength - 1, 0, 1.5);
+
+        // Ensure that all cards in a column fit within the river height, with a minimum offset of 0.5.
+        const rowOffset = clamp(
+          layout.riverHeight / Math.max(colLength, 1),
+          0.5 * cardDims.aspectRatio,
+          1 * cardDims.aspectRatio,
+        );
+
+        const row = layout.colTopRow + j * rowOffset;
 
         result.push({
           id: `sch-${i}-${j}`,
           name: "school",
           pileIndex: i,
           refIndex: j,
-          col: colX,
+          col,
           row,
           baseZIndex: 5 + j,
           cards: [entry.school],
@@ -432,7 +445,7 @@ export default function BlackjackRiverResearch() {
             name: "fisher",
             pileIndex: i,
             refIndex: j,
-            col: colX,
+            col,
             row: row + layout.fishermanRowOffset,
             rotation: 90,
             baseZIndex: 60 + j,
@@ -471,8 +484,8 @@ export default function BlackjackRiverResearch() {
       id: `hand`,
       name: "hand",
       col: 0,
-      row: layout.handRow,
-      baseZIndex: 90,
+      row: layout.colTopRow + layout.riverHeight,
+      baseZIndex: 1,
       cards: game.hand,
       width: 5,
       placeholder: {},
@@ -558,10 +571,10 @@ export default function BlackjackRiverResearch() {
     zones,
     cardMapper,
     zoneMapper,
-    // gap: 0.14,
     cardSize,
-    fixedRows: 7.2,
     visualizer: true,
+    gap: 0.46,
+    paddingTop: 0,
   });
 
   useEffect(() => {

@@ -25,6 +25,7 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 import { ProgressBar } from "../Home/ProgressBar";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useToast } from "../common/Toast";
 
 const SIZE = 7;
 const CELLS = SIZE * SIZE;
@@ -158,6 +159,7 @@ function afterResolve(draft: GameState) {
 
 // ── Component ────────────────────────────────────────────────────────────────
 export default function IslandOfCards() {
+  const showToast = useToast();
   const { spacing } = useResponsiveMetrics();
   const { cardText } = useGameZoneBackground();
   const useJokers = useGameSettingValue("islandJokers");
@@ -296,9 +298,14 @@ export default function IslandOfCards() {
       const cell = zone.pileIndex;
       const isLegal = legalSet.has(cell);
       return {
-        onPress: () => place(cell),
-        isDisabled: game.ended || !isLegal,
-        selectColor: isLegal ? "green" : "none",
+        onPress: () => {
+          if (!isLegal || game.ended) {
+            showToast("Not a legal placement");
+          } else {
+            place(cell);
+          }
+        },
+        // isDisabled: game.ended || !isLegal,
       };
     }
     return {};
