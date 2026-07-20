@@ -10,14 +10,18 @@ import { Text } from "../common/Text";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
+  flipAllToBack,
   flipToBack,
   flipToFace,
   type PlayingCard,
   rankValue,
   shuffle,
+  sortCards,
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { flexStyles } from "@/styles/flexStyles";
 
 // ── Rules configuration ────────────────────────────────────────────────────
 type RouteType = "ascent" | "traverse" | "descent";
@@ -40,6 +44,7 @@ const TYPE_RANK: Record<RouteType, number> = {
   traverse: 1,
   descent: 0,
 };
+const BOARD_WIDTH = 7;
 
 const TRAIL_LENGTH: Record<AlpineChallenge, number> = {
   none: 3,
@@ -285,6 +290,7 @@ function cloneCards(cards: PlayingCard[]) {
 }
 
 export default function AlpineSolitaire() {
+  const { spacing } = useResponsiveMetrics();
   const { cardBg, cardText } = useGameZoneBackground();
   const difficulty = useGameSettingValue("alpineDifficulty") as Difficulty;
   const challenge = useGameSettingValue("alpineChallenge");
@@ -292,8 +298,6 @@ export default function AlpineSolitaire() {
   settingsRef.current = { difficulty, challenge };
 
   const [selected, setSelected] = useState<string[]>([]);
-
-  const handSize = challenge === "everest" ? 7 : 10;
 
   function drawInto(
     draft: GameState,
@@ -310,13 +314,18 @@ export default function AlpineSolitaire() {
     return { cards: out, defeat: false };
   }
 
-  function dealSetup(draft: GameState) {
-    const ch = settingsRef.current.challenge;
-    const size = ch === "everest" ? 7 : 10;
-    draft.deck = shuffle(createDeck({ faceUp: false }));
-    draft.hand = draft.deck.splice(0, size).map(flipToFace);
-    draft.fatigue =
-      draft.deck.length > 0 ? [flipToBack(draft.deck.pop()!)] : [];
+  function resetDeck(draft: GameState) {
+    // Gather all cards to draw deck
+    const allCards = [
+      ...draft.deck,
+      ...draft.fatigue,
+      ...draft.hand,
+      ...draft.discard,
+      ...draft.playedRoutes.flatMap((r) => r.cards),
+    ];
+    draft.deck = shuffle(flipAllToBack(allCards));
+    draft.hand = [];
+    draft.fatigue = [];
     draft.discard = [];
     draft.playedRoutes = [];
     draft.trail = [];
@@ -326,15 +335,31 @@ export default function AlpineSolitaire() {
     draft.won = false;
   }
 
+  function dealSetup(draft: GameState) {
+    const challenge = settingsRef.current.challenge;
+    const handSize = challenge === "everest" ? 7 : 10;
+    draft.hand = draft.deck.splice(0, handSize).map(flipToFace);
+    sortCards(draft.hand);
+    draft.fatigue =
+      draft.deck.length > 0 ? [flipToBack(draft.deck.pop()!)] : [];
+  }
+
   const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
     useStateManager({
       gameStateInitial,
       resetNonGameStates: () => setSelected([]),
       resetAndSetup: async () => {
+        // Gather all cards to draw deck
+        setGame((draft) => {
+          resetDeck(draft);
+        });
+
+        await delay(600);
+
+        // Deal the initial hand and fatigue pile
         setGame((draft) => {
           dealSetup(draft);
         });
-        await delay();
       },
     });
 
@@ -377,13 +402,13 @@ export default function AlpineSolitaire() {
   }
 
   function resolveCamp(draft: GameState, milestone: RouteRecord) {
-    const { difficulty: diff, challenge: ch } = settingsRef.current;
+    const { difficulty: diff, challenge } = settingsRef.current;
     const played = draft.playedRoutes;
     const qualifies = milestoneQualifies(
       milestone,
       draft.trail,
       diff,
-      ch,
+      challenge,
       played,
     );
     const milestoneIds = new Set(milestone.cards.map((c) => c.id));
@@ -396,7 +421,7 @@ export default function AlpineSolitaire() {
       });
       draft.discard.push(...allCards.filter((c) => !milestoneIds.has(c.id)));
       draft.playedRoutes = [];
-      if (draft.trail.length >= TRAIL_LENGTH[ch]) {
+      if (draft.trail.length >= TRAIL_LENGTH[challenge]) {
         draft.ended = true;
         draft.won = true;
         draft.message = "You summited the mountain!";
@@ -409,16 +434,17 @@ export default function AlpineSolitaire() {
       draft.message = "Camp reached, but the milestone did not qualify.";
     }
 
-    const target = ch === "everest" ? 7 : 10;
+    const target = challenge === "everest" ? 7 : 10;
     const { cards, defeat } = drawInto(draft, target);
     draft.hand = cards;
+    sortCards(draft.hand);
     if (defeat) {
       draft.ended = true;
       draft.won = false;
       draft.message = "Out of cards while making camp — overwhelmed.";
       return;
     }
-    if (ch !== "manaslu" && draft.deck.length > 0) {
+    if (challenge !== "manaslu" && draft.deck.length > 0) {
       draft.fatigue.push(flipToBack(draft.deck.pop()!));
     }
   }
@@ -428,9 +454,11 @@ export default function AlpineSolitaire() {
       return;
     const route = analysis;
     const ids = new Set(route.cards.map((c) => c.id));
+
     saveUndoState(structuredClone(game));
+
     setGame((draft) => {
-      const ch = settingsRef.current.challenge;
+      const challenge = settingsRef.current.challenge;
       const routeCards = draft.hand.filter((c) => ids.has(c.id));
       draft.hand = draft.hand.filter((c) => !ids.has(c.id));
       const record: RouteRecord = {
@@ -449,22 +477,25 @@ export default function AlpineSolitaire() {
       }
 
       // Inherent Danger draw.
-      const drawN = computeDraw(record, draft.hand, ch);
+      const drawN = computeDraw(record, draft.hand, challenge);
       const { cards, defeat } = drawInto(draft, drawN);
       if (defeat) {
         draft.hand.push(...cards);
+        sortCards(draft.hand);
         draft.ended = true;
         draft.won = false;
         draft.message = "The deck and fatigue pile ran dry — overwhelmed.";
         return;
       }
       draft.hand.push(...cards);
+      sortCards(draft.hand);
 
       // Annapurna I — matching drawn suit recalls the route.
-      if (ch === "annapurna") {
+      if (challenge === "annapurna") {
         if (cards.some((c) => c.suit === record.anchorSuit)) {
           draft.playedRoutes.pop();
           draft.hand.push(...record.cards.map(flipToFace));
+          sortCards(draft.hand);
           draft.message = "Annapurna: a matching suit recalled the route.";
         }
         if (draft.hand.length >= HAND_LIMIT) {
@@ -475,7 +506,7 @@ export default function AlpineSolitaire() {
         }
       }
 
-      if (ch === "makalu" && draft.hand.length > 0) {
+      if (challenge === "makalu" && draft.hand.length > 0) {
         draft.phase = "makaluDiscard";
         draft.message = "Makalu: you may discard one card, or skip.";
       } else {
@@ -508,15 +539,16 @@ export default function AlpineSolitaire() {
     if (game.ended || game.phase !== "play") return;
     saveUndoState(structuredClone(game));
     setGame((draft) => {
-      const ch = settingsRef.current.challenge;
+      const challenge = settingsRef.current.challenge;
       draft.discard.push(...draft.playedRoutes.flatMap((r) => r.cards));
       draft.playedRoutes = [];
 
       const prevFatigue = draft.fatigue.length;
       draft.hand.push(...draft.fatigue.map(flipToFace));
+      sortCards(draft.hand);
       draft.fatigue = [];
 
-      const toAdd = ch === "manaslu" ? 1 : prevFatigue + 1;
+      const toAdd = challenge === "manaslu" ? 1 : prevFatigue + 1;
       for (let i = 0; i < toAdd; i += 1) {
         if (draft.deck.length === 0) break;
         draft.fatigue.push(flipToBack(draft.deck.pop()!));
@@ -543,125 +575,115 @@ export default function AlpineSolitaire() {
 
   const zones: MapZone[] = useMemo(() => {
     const result: MapZone[] = [
-      { id: "hud", col: 0, row: 0, width: "full", height: 1.1 },
-      { id: "trailLabel", col: 0, row: 1.2, width: "full", height: 0.4 },
-    ];
-
-    if (trailAnchors.length > 0) {
-      result.push({
+      { id: "hud", col: 0, row: 0, width: BOARD_WIDTH, height: 1 },
+      {
         id: "trail",
         name: "trail",
         cards: trailAnchors,
-        col: 0.3,
-        row: 1.7,
-        width: 6.4,
+        col: 0,
+        row: 1.2,
+        width: BOARD_WIDTH,
         fan: {
           direction: "right",
           offset: fanOffset(trailAnchors.length, 6.4),
           center: true,
         },
-      });
-    } else {
-      result.push({
-        id: "trailEmpty",
-        col: 0.3,
-        row: 1.7,
-        width: 6.4,
-        placeholder: { text: "No camps yet" },
-      });
-    }
-
-    result.push({
-      id: "playLabel",
-      col: 0,
-      row: 3.0,
-      width: "full",
-      height: 0.4,
-    });
-    if (playCards.length > 0) {
-      result.push({
+        placeholder: {
+          text: trailAnchors.length > 0 ? "Trail" : "No camps",
+          infoPos: "left",
+          showCount: false,
+        },
+      },
+      {
+        id: "playLabel",
+        col: 0,
+        row: 2.5,
+        width: BOARD_WIDTH,
+        height: 0.5,
+      },
+      {
         id: "play",
         name: "play",
         cards: playCards,
-        col: 0.3,
-        row: 3.5,
-        width: 6.4,
+        col: 0,
+        row: 3,
+        width: BOARD_WIDTH,
         fan: {
           direction: "right",
-          offset: fanOffset(playCards.length, 6.4),
+          offset: fanOffset(playCards.length, BOARD_WIDTH),
           center: true,
         },
-      });
-    } else {
-      result.push({
-        id: "playEmpty",
-        col: 0.3,
-        row: 3.5,
-        width: 6.4,
-        placeholder: { text: "Play area" },
-      });
-    }
-
-    // Piles row: fatigue / deck / discard.
-    result.push({
-      id: "fatigue",
-      name: "fatigue",
-      cards:
-        game.fatigue.length > 0 ? [game.fatigue[game.fatigue.length - 1]] : [],
-      col: 0.6,
-      row: 4.9,
-      placeholder: { text: "Fatigue" },
-    });
-    result.push({
-      id: "deck",
-      name: "deck",
-      cards: game.deck.length > 0 ? [game.deck[game.deck.length - 1]] : [],
-      col: 3.0,
-      row: 4.9,
-      placeholder: { text: "Deck" },
-    });
-    result.push({
-      id: "discard",
-      name: "discard",
-      cards:
-        game.discard.length > 0
-          ? [flipToFace(game.discard[game.discard.length - 1])]
-          : [],
-      col: 5.4,
-      row: 4.9,
-      placeholder: { text: "Discard" },
-    });
-
-    result.push({
-      id: "handLabel",
-      col: 0,
-      row: 6.3,
-      width: "full",
-      height: 0.4,
-    });
-    if (handCards.length > 0) {
-      result.push({
+        placeholder: {
+          infoPos: "left",
+          showCount: false,
+          text: playCards.length > 0 ? "Play area" : "No route played",
+        },
+      },
+      // Piles row: fatigue / deck / discard.
+      {
+        id: "fatigue",
+        name: "fatigue",
+        cards:
+          game.fatigue.length > 0
+            ? [game.fatigue[game.fatigue.length - 1]]
+            : [],
+        col: 0.6,
+        row: 4.3,
+        placeholder: { text: "Fatigue", infoPos: "right" },
+      },
+      {
+        id: "deck",
+        name: "deck",
+        cards: game.deck.length > 0 ? [game.deck[game.deck.length - 1]] : [],
+        col: 3.0,
+        row: 4.3,
+        placeholder: { text: "Deck", infoPos: "right" },
+      },
+      {
+        id: "discard",
+        name: "discard",
+        cards:
+          game.discard.length > 0
+            ? [flipToFace(game.discard[game.discard.length - 1])]
+            : [],
+        col: 5.4,
+        row: 4.3,
+        placeholder: { text: "Discard", infoPos: "right" },
+      },
+      {
+        id: "handLabel",
+        col: 0,
+        row: 5.6,
+        width: BOARD_WIDTH,
+        height: 0.4,
+      },
+      {
         id: "hand",
         name: "hand",
         cards: handCards,
-        col: 0.3,
-        row: 6.8,
-        width: 6.4,
+        col: 0,
+        row: 6.2,
+        width: BOARD_WIDTH,
         fan: {
           direction: "right",
-          offset: fanOffset(handCards.length, 6.4),
+          offset: fanOffset(handCards.length, BOARD_WIDTH),
           center: true,
         },
-      });
-    }
+        placeholder: {
+          text: "Hand",
+          infoPos: "left",
+          showCount: false,
+        },
+      },
+      {
+        id: "controls",
+        col: 0,
+        row: 7.6,
+        width: BOARD_WIDTH,
+        height: 1.8,
+      },
+    ];
 
-    result.push({
-      id: "controls",
-      col: 0,
-      row: 8.4,
-      width: "full",
-      height: 1.8,
-    });
     return result;
   }, [game, handCards, playCards, trailAnchors]);
 
@@ -688,9 +710,9 @@ export default function AlpineSolitaire() {
     game,
     zones,
     cardMapper,
-    gap: 0.08,
+    gap: 0,
     cardSize: "small",
-    fixedRows: 10.4,
+    visualizer: true,
   });
 
   const challengeName =
@@ -721,48 +743,44 @@ export default function AlpineSolitaire() {
       {cardMap}
 
       <View
-        style={[getZoneStylesById("hud"), { justifyContent: "center", gap: 2 }]}
+        style={[
+          getZoneStylesById("hud"),
+          flexStyles.rowCentered,
+          flexStyles.spaceBetween,
+        ]}
       >
         <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
+          style={[
+            flexStyles.colStart,
+            flexStyles.spaceAround,
+            flexStyles.fullHeight,
+          ]}
         >
-          <Text size="sm" weight={700} color={cardText}>
+          <Text size="sm" weight={500} color={cardText}>
             Trail {game.trail.length}/{trailLength}
           </Text>
-          <Text size="xs" weight={600} color={cardText}>
+          <Text size="sm" weight={500} color={cardText}>
             {challengeName} · {difficulty}
           </Text>
         </View>
         <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
+          style={[
+            flexStyles.colStart,
+            flexStyles.spaceAround,
+            flexStyles.fullHeight,
+          ]}
         >
-          <Text size="xs" weight={500} color={cardText}>
+          <Text size="sm" weight={500} color={cardText}>
             Deck {game.deck.length} · Fatigue {game.fatigue.length}
           </Text>
-          <Text size="xs" weight={500} color={cardText}>
+          <Text size="sm" weight={500} color={cardText}>
             Hand {game.hand.length} · Discard {game.discard.length}
           </Text>
         </View>
       </View>
 
-      <View
-        style={[getZoneStylesById("trailLabel"), { justifyContent: "center" }]}
-      >
-        <Text size="xs" weight={600} color={cardText}>
-          Trail (milestones)
-        </Text>
-      </View>
-
-      <View
-        style={[getZoneStylesById("playLabel"), { justifyContent: "center" }]}
-      >
-        <Text size="xs" weight={600} color={cardText}>
+      <View style={[getZoneStylesById("playLabel"), flexStyles.colCentered]}>
+        <Text size="sm" weight={400} color={cardText}>
           {prevRoute
             ? `Beat: ${prevRoute.type} · ${prevRoute.size} card${
                 prevRoute.size === 1 ? "" : "s"
@@ -776,7 +794,7 @@ export default function AlpineSolitaire() {
       <View
         style={[getZoneStylesById("handLabel"), { justifyContent: "center" }]}
       >
-        <Text size="xs" weight={600} color={cardText}>
+        <Text size="xs" weight={400} color={cardText}>
           {analysis
             ? `${analysis.type} · ${approachInfo} · draw ${drawPreview}${
                 playCheck.ok ? "" : ` — ${playCheck.reason ?? "invalid"}`
@@ -808,33 +826,31 @@ export default function AlpineSolitaire() {
             </View>
           </View>
         ) : (
-          <View style={{ flexDirection: "row", gap: 10 }}>
-            <View style={{ flex: 1 }}>
-              <Button
-                text={
-                  analysis && playCheck.ok
-                    ? `Play (draw ${drawPreview})`
-                    : "Play Route"
-                }
-                size="md"
-                onPress={playRoute}
-                fullWidth
-                taller
-                disabled={!analysis || !playCheck.ok || game.ended}
-                theme={cardBg}
-              />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Button
-                text="Rest"
-                size="md"
-                onPress={rest}
-                fullWidth
-                taller
-                disabled={game.ended}
-                theme="red"
-              />
-            </View>
+          <View style={[flexStyles.rowCentered, { gap: spacing(10) }]}>
+            <Button
+              text="Rest"
+              size="md"
+              onPress={rest}
+              fullWidth
+              taller
+              disabled={game.ended}
+              theme="red"
+              style={{ flex: 1 }}
+            />
+            <Button
+              text={
+                analysis && playCheck.ok
+                  ? `Play (draw ${drawPreview})`
+                  : "Play Route"
+              }
+              size="md"
+              onPress={playRoute}
+              fullWidth
+              taller
+              disabled={!analysis || !playCheck.ok || game.ended}
+              theme={cardBg}
+              style={{ flex: 2 }}
+            />
           </View>
         )}
       </View>

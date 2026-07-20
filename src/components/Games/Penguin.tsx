@@ -25,8 +25,9 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-
 const TABLEAU_FAN_OFFSET = 0.35;
+const cardSize = "tableau";
+const zoneBackgroundColor = "rgba(123, 140, 160, 0.4)";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -330,7 +331,7 @@ export default function Penguin() {
       col: i,
       row: 1.2,
       baseZIndex: 50,
-      placeholder: {},
+      placeholder: { backgroundColor: zoneBackgroundColor },
     }));
 
     const foundationZones: MapZone[] = (SUITS as readonly CardSuit[]).map(
@@ -343,7 +344,7 @@ export default function Penguin() {
         row: 0,
         baseZIndex: 40,
         fan: { maxVisible: 1 },
-        placeholder: {},
+        placeholder: { backgroundColor: zoneBackgroundColor },
       }),
     );
 
@@ -360,7 +361,10 @@ export default function Penguin() {
         offset: TABLEAU_FAN_OFFSET,
         center: false,
       },
-      placeholder: { showCount: false },
+      placeholder: {
+        showCount: false,
+        backgroundColor: zoneBackgroundColor,
+      },
     }));
 
     return [...reserveZones, ...foundationZones, ...tableauZones];
@@ -514,7 +518,7 @@ export default function Penguin() {
     zones,
     cardMapper,
     zoneMapper,
-    cardSize: "small",
+    cardSize,
     fixedRows: 7,
   });
 
@@ -968,7 +972,7 @@ export default function Penguin() {
                   <Card
                     card={card}
                     cardWidth={cardWidth}
-                    cardSize="small"
+                    cardSize={cardSize}
                     selectColor={ghostHasValidDrop ? "green" : "none"}
                     isSelected={ghostHasValidDrop}
                   />

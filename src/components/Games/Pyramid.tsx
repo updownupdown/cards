@@ -415,35 +415,36 @@ export default function Pyramid() {
 
     return [
       {
+        id: "discard",
+        name: "discard",
+        cards: game.discard.slice(0, game.discard.length - game.stockCount),
+        col: 0,
+        row: 4.3,
+        baseZIndex: 100,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Discard", infoPos: "right", showCount: true },
+      },
+      {
         id: "stock",
         name: "stock",
         cards: stockCards(game),
-        col: 0,
-        row: 4.2,
+        col: 3.25,
+        row: 4.3,
         baseZIndex: 50,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Draw", infoPos: "right", showCount: true },
+        placeholder: { text: "Draw", infoPos: "left", showCount: true },
       },
       {
         id: "waste",
         name: "waste",
         cards: game.waste,
-        col: 3,
-        row: 4.2,
+        col: 4.5,
+        row: 4.3,
         baseZIndex: 55,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Waste", infoPos: "left", showCount: false },
+        placeholder: { text: "Waste", infoPos: "right", showCount: false },
       },
-      {
-        id: "discard",
-        name: "discard",
-        cards: game.discard.slice(0, game.discard.length - game.stockCount),
-        col: 6,
-        row: 4.2,
-        baseZIndex: 100,
-        fan: { maxVisible: 3 },
-        placeholder: { text: "Discard", infoPos: "left", showCount: true },
-      },
+
       ...pyramidZones,
     ];
   }, [game]);

@@ -671,7 +671,6 @@ export default function BlackjackRiverResearch() {
       </View>
 
       {game.segments.map((column, i) => {
-        const totalStyle = getZoneStylesById(`total-${i}`);
         const total = columnTotal(column);
         const near = total === params.targetFish;
         const danger = total >= params.collapseFish - 1;
@@ -679,8 +678,12 @@ export default function BlackjackRiverResearch() {
           <View
             key={`total-${i}`}
             style={[
-              totalStyle,
-              { alignItems: "center", justifyContent: "center" },
+              getZoneStylesById(`total-${i}`),
+              {
+                alignItems: "center",
+                justifyContent: "center",
+                pointerEvents: "none",
+              },
             ]}
           >
             <Text

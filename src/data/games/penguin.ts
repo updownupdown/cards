@@ -9,7 +9,7 @@ export const penguin: GameDefinition = {
   // enabledOnLocalOnly: true,
   thumbnail: "Penguin.jpg",
   background: "snow.jpg",
-  cardColorBg: "#0e2335",
+  cardColorBg: "#111b27",
   cardColorText: "#ff944d",
   cardDescription:
     "A FreeCell-like game building suit runs from a random beak rank.",

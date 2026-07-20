@@ -287,8 +287,6 @@ export default function Lobo() {
 
     setSelectedPlayer([]);
     setSelectedWolf([]);
-
-    nextRound();
   }
 
   function fold() {

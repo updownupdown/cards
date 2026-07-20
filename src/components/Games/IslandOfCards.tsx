@@ -4,7 +4,6 @@ import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 import { useEffect, useMemo, useRef } from "react";
 import { View } from "react-native";
-import { Text } from "../common/Text";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
@@ -38,6 +37,7 @@ type GameState = {
   discard: PlayingCard[];
   ended: boolean;
   won: boolean;
+  usingJokers?: boolean;
 };
 
 const gameStateInitial: GameState = {
@@ -46,6 +46,7 @@ const gameStateInitial: GameState = {
   discard: [],
   ended: false,
   won: false,
+  usingJokers: false,
 };
 
 // ── Geometry helpers ──────────────────────────────────────────────────────────
@@ -171,32 +172,45 @@ export default function IslandOfCards() {
     useStateManager({
       gameStateInitial,
       resetAndSetup: async () => {
+        // Return all cards to deck
         setGame((draft) => {
-          const deck = shuffle(
-            createDeck({ includeJokers: jokersRef.current }),
-          );
-          const grid: (PlayingCard | null)[] = Array.from(
-            { length: CELLS },
-            () => null,
-          );
-
-          // Lay the opening X (setup ignores the adjacency/equal rules).
-          for (const cell of xCells()) {
-            const card = deck.pop();
-            if (card) grid[cell] = flipToFace(card);
-          }
-
-          draft.grid = grid;
-          draft.draw = deck.map(flipToBack);
+          const allCards = [
+            ...draft.grid.filter((c): c is PlayingCard => c !== null),
+            ...draft.draw,
+            ...draft.discard,
+          ];
+          draft.grid = Array.from({ length: CELLS }, () => null);
+          draft.draw = shuffle(allCards.map(flipToBack));
           draft.discard = [];
-          if (draft.draw.length > 0) {
-            draft.draw = flipTopCardToFace(draft.draw);
+
+          // Update deck if jokers setting changed
+          if (jokersRef.current !== draft.usingJokers) {
+            draft.draw = shuffle(
+              createDeck({ includeJokers: jokersRef.current }).map(flipToBack),
+            );
           }
+          draft.usingJokers = jokersRef.current;
+        });
+
+        await delay(600);
+
+        // Lay the opening X
+        setGame((draft) => {
+          for (const cell of xCells()) {
+            const card = draft.draw.pop();
+            if (card) draft.grid[cell] = flipToFace(card);
+          }
+
           draft.ended = false;
           draft.won = false;
         });
 
-        await delay();
+        await delay(600);
+
+        // Flip top card to face
+        setGame((draft) => {
+          draft.draw = flipTopCardToFace(draft.draw);
+        });
       },
     });
 
@@ -247,7 +261,7 @@ export default function IslandOfCards() {
     const cellZones: MapZone[] = getGridColRows({
       cols: SIZE,
       rows: SIZE,
-      rowOffset: 1.2,
+      rowOffset: 1.4,
     }).map((pos, i) => ({
       id: `cell-${i}`,
       name: "cell",
@@ -274,7 +288,7 @@ export default function IslandOfCards() {
       {
         id: "land",
         col: -0.2,
-        row: 1.1,
+        row: 1.3,
         width: 7.4,
         height: 7.2,
         baseZIndex: 1,
@@ -314,7 +328,6 @@ export default function IslandOfCards() {
             place(cell);
           }
         },
-        // isDisabled: game.ended || !isLegal,
       };
     }
     return {};
