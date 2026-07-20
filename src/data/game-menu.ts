@@ -16,7 +16,7 @@ export type GameSettings = {
   difficulty: "easy" | "difficult";
   drawCount: 1 | 3;
   islandJokers: boolean;
-  loboMode: "hard" | "ordinary" | "easy";
+  loboMode: "hard" | "medium" | "easy";
   dungeonLevel: 1 | 2 | 3 | 4 | 5;
   boomerAce: boolean;
   powerReserve: boolean;
@@ -110,7 +110,7 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   difficulty: "easy",
   drawCount: 1,
   islandJokers: false,
-  loboMode: "ordinary",
+  loboMode: "medium",
   dungeonLevel: 1,
   boomerAce: false,
   powerReserve: false,
@@ -318,7 +318,7 @@ export function getGameSettings(
     loboMode:
       merged.loboMode === "hard" || merged.loboMode === "easy"
         ? merged.loboMode
-        : "ordinary",
+        : "medium",
     dungeonLevel:
       merged.dungeonLevel >= 1 && merged.dungeonLevel <= 5
         ? merged.dungeonLevel

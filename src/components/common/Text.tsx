@@ -14,6 +14,7 @@ export const Typography = {
     lg: 18,
     xl: 20,
     xxl: 22,
+    xxxl: 28,
   },
   fontFamily: {
     200: FontFamilies[200],

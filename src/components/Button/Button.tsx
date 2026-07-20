@@ -16,13 +16,13 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 export const QUICK_TRANSITION_STYLE = {
   transitionDuration: "0.2s",
-  transitionProperty: "all",
+  transitionProperty: "background-color, color, opacity, box-shadow",
   transitionTimingFunction: "ease",
 } as const;
 
 export const BTN_TRANSITION_STYLE = {
   transitionDuration: "0.4s",
-  transitionProperty: "all",
+  transitionProperty: "background-color, color, opacity, box-shadow",
   transitionTimingFunction: "ease",
 } as const;
 
@@ -32,6 +32,7 @@ const THEME_COLORS = {
   orange: Colors.buttonOrange,
   purple: Colors.buttonPurple,
   green: Colors.buttonGreen,
+  pink: Colors.buttonPink,
   win: Colors.win,
   lose: Colors.lose,
 } as const;

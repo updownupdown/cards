@@ -9,6 +9,7 @@ export const Colors = {
   buttonGreen: "#4ea069",
   buttonBlue: "#52a3c4",
   buttonPurple: "#8956b9",
+  buttonPink: "#d36fb5",
 
   buttonDisabled: "#444444",
 
@@ -30,7 +31,7 @@ export const Colors = {
   cardSelectRed: "#e0485c",
   cardSelectBlue: "#7bd5ff",
   cardSelectPurple: "#bb55ff",
-  cardSelectPink: "#ff52c5",
+  cardSelectPink: "#ff74b9",
   cardSelectOrange: "#ff8432",
   cardSelectYellow: "#ffea2d",
   cardSelectGreen: "#78ebb1",

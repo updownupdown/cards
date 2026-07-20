@@ -186,10 +186,7 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
                   <SettingControl
                     label={setting.label}
                     labelColor={gameInfo.cardColorText}
-                    helpText={
-                      setting.description ??
-                      getSettingApplyBehaviorText(setting.applyBehavior)
-                    }
+                    helpText={`${setting.description ? setting.description + " " : ""}${getSettingApplyBehaviorText(setting.applyBehavior)}`}
                     value={settings[setting.key]}
                     type={setting.type}
                     options={setting.options}
@@ -278,8 +275,6 @@ export const HowToPlay = ({
   howToPlayText: string[];
   headingColor: string;
 }) => {
-  const { spacing } = useResponsiveMetrics();
-
   return (
     <View
       style={[

@@ -26,6 +26,7 @@ export const GAME_THUMBNAIL_ASSETS = {
   "InHandPoker.jpg": require("@/assets/thumbnails/InHandPoker.jpg"),
   "IslandOfCards.jpg": require("@/assets/thumbnails/IslandOfCards.jpg"),
   "Klondike.jpg": require("@/assets/thumbnails/Klondike.jpg"),
+  "Lobo.jpg": require("@/assets/thumbnails/Lobo.jpg"),
   "LootTheLoop.jpg": require("@/assets/thumbnails/LootTheLoop.jpg"),
   "MonteCarlo.jpg": require("@/assets/thumbnails/MonteCarlo.jpg"),
   "OptritaLines.jpg": require("@/assets/thumbnails/OptritaLines.jpg"),

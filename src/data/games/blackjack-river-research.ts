@@ -42,7 +42,6 @@ export const blackjackRiverResearch: GameDefinition = {
     "- **Release Fish:** add a school to the bottom of a column (select a hand card, then tap a column).",
     "- **Catch Fish:** place a fisher on a school with no fisher yet (select a hand card, then tap a school).",
     "- **Transfer Fish:** transfer fish from one column to another, at the cost of one card from your hand. With nothing selected, tap a column's bottom school to lift it, tap another column to aim, then tap a hand card to discard it and move the school. You can't move a column's only school, or a school under a fisher.",
-    "- **Discard:** double-tap a hand card to discard it.",
     "\nOnce your hand is empty:",
     "- any column totalling **exactly 21** is set aside as a completed study",
     "- the gap left refills with a new school",

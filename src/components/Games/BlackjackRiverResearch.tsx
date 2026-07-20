@@ -22,13 +22,13 @@ const cardSize = "regular";
 
 const layout = {
   fishermanRowOffset: 0.1,
-  estuaryHeight: 4.6,
+  estuaryHeight: 5,
   firstEstuaryCol: 1.3,
   colGap: 0.46,
-  totalsHeight: 0.4,
-  handRowTopOffset: 0.3,
-  estuaryWidthInset: 0.15,
-  estuaryHeightInset: 0.1,
+  totalsHeight: 0.5,
+  handRowTopOffset: 0.4,
+  estuaryWidthInset: 0.1,
+  estuaryHeightInset: 0.08,
 };
 
 const params = {
@@ -166,6 +166,9 @@ function evaluateStudy(entries: SchoolEntry[], list: string[]) {
   if ([...rankCounts.values()].some((c) => c >= 2)) {
     addBreakthrough(list, "clusters");
   }
+  if (entries.some((e) => e.fisherman?.suit === e.school.suit)) {
+    addBreakthrough(list, "harvesting");
+  }
   if (fishermen.length >= 2) addBreakthrough(list, "pressure");
 }
 
@@ -239,7 +242,6 @@ function scoreTier(score: number) {
 export default function BlackjackRiverResearch() {
   const { cardText } = useGameZoneBackground();
   const [selection, setSelection] = useState<Selection | null>(null);
-  const lastHandTap = useRef<{ index: number; at: number } | null>(null);
 
   const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
     useStateManager({
@@ -249,7 +251,6 @@ export default function BlackjackRiverResearch() {
       gameStateInitial,
       resetNonGameStates: () => {
         setSelection(null);
-        lastHandTap.current = null;
       },
     });
 
@@ -287,9 +288,6 @@ export default function BlackjackRiverResearch() {
       const [played] = draft.hand.splice(handIndex, 1);
       const target = draft.segments[colIndex][entryIndex];
       target.fisherman = played;
-      if (played.suit === target.school.suit) {
-        addBreakthrough(draft.breakthroughs, "harvesting");
-      }
     });
   }
 
@@ -309,14 +307,6 @@ export default function BlackjackRiverResearch() {
       if (discarded) draft.discard.push(discarded);
       const entry = draft.segments[sourceCol].pop();
       if (entry) draft.segments[targetCol].push(entry);
-    });
-  }
-
-  function discardCard(handIndex: number) {
-    if (game.ended) return;
-    mutate((draft) => {
-      const [discarded] = draft.hand.splice(handIndex, 1);
-      if (discarded) draft.discard.push(discarded);
     });
   }
 
@@ -342,15 +332,6 @@ export default function BlackjackRiverResearch() {
       transfer(selection.transfer, selection.target, index);
       return;
     }
-
-    const now = Date.now();
-    const prev = lastHandTap.current;
-    if (prev && prev.index === index && now - prev.at < DOUBLE_TAP_MS) {
-      lastHandTap.current = null;
-      discardCard(index);
-      return;
-    }
-    lastHandTap.current = { index, at: now };
 
     setSelection((current) =>
       current && "hand" in current && current.hand === index

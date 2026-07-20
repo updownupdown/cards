@@ -153,8 +153,7 @@ export function SettingControl<T>({
 
         <View
           style={{
-            ...flexStyles.rowStart,
-            flexWrap: "wrap",
+            ...flexStyles.colStart,
             width: "100%",
             gap: spacing(20),
           }}

@@ -1,29 +1,44 @@
+import { useFade } from "@/hooks/useFade";
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
+import { flexStyles } from "@/styles/flexStyles";
+import { Colors, rgba } from "@/styles/styles";
 import { delay } from "@/utils/utils";
 import { useMemo, useRef, useState } from "react";
-import { View } from "react-native";
+import { Animated, View } from "react-native";
 import { Button } from "../Button/Button";
-import { Text } from "../common/Text";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   type CardRank,
+  flipAllToBack,
   flipToBack,
   flipToFace,
   type PlayingCard,
   rankValue,
   shuffle,
+  sortCards,
   SUITS,
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
+import { infoSize } from "../Cards/CardMapBackgrounds";
 import { GameWrapper } from "../common/GameWrapper";
+import { Text } from "../common/Text";
 
 const startingHand = 4;
+const handWidth = 6;
 const winTarget = 100;
 
-type LoboMode = "hard" | "ordinary" | "easy";
+type LoboMode = "hard" | "medium" | "easy";
 type Action = "perfect" | "sum" | "split" | "over";
+
+const actionColourMap: Record<Action, string> = {
+  perfect: "green",
+  sum: "purple",
+  split: "pink",
+  over: "orange",
+};
 
 type GameState = {
   deck: PlayingCard[];
@@ -38,10 +53,11 @@ type GameState = {
   roundPoints: number;
   ended: boolean;
   won: boolean;
+  mode: LoboMode;
 };
 
 const gameStateInitial: GameState = {
-  deck: [],
+  deck: shuffle(buildLoboDeck("medium")).map(flipToBack),
   player: [],
   wolf: [],
   discard: [],
@@ -53,6 +69,7 @@ const gameStateInitial: GameState = {
   roundPoints: 0,
   ended: false,
   won: false,
+  mode: "medium",
 };
 
 // ── Deck (Postas: ranks 1-10, five suits; suit is irrelevant) ─────────────────
@@ -116,24 +133,42 @@ function drawTo(draft: GameState, who: "player" | "wolf", count: number) {
   keepTopFaceUp(draft);
 }
 
-function dealRound(draft: GameState, mode: LoboMode) {
-  const deck = shuffle(buildLoboDeck(mode)).map(flipToBack);
-  draft.wolf = [];
+async function resetDeck(draft: GameState, mode: LoboMode) {
+  const allCards = flipAllToBack([
+    ...draft.deck,
+    ...draft.player,
+    ...draft.wolf,
+    ...draft.discard,
+  ]);
+
+  // Reset cards if the mode has changed
+  if (draft.mode !== mode) {
+    draft.mode = mode;
+    draft.deck = shuffle(buildLoboDeck(mode));
+  } else {
+    draft.deck = shuffle(allCards);
+  }
+
   draft.player = [];
+  draft.wolf = [];
   draft.discard = [];
+}
+
+function dealRound(draft: GameState) {
   for (let i = 0; i < startingHand; i += 1) {
-    const c = deck.pop();
+    const c = draft.deck.pop();
     if (c) draft.wolf.push(flipToFace(c));
   }
   for (let i = 0; i < startingHand; i += 1) {
-    const c = deck.pop();
+    const c = draft.deck.pop();
     if (c) draft.player.push(flipToFace(c));
   }
-  draft.deck = deck;
+
+  sortCards(draft.player);
+  sortCards(draft.wolf);
+
   keepTopFaceUp(draft);
   draft.roundOver = false;
-  draft.roundWon = false;
-  draft.roundPoints = 0;
 }
 
 function finishRound(draft: GameState, won: boolean) {
@@ -155,7 +190,8 @@ function finishRound(draft: GameState, won: boolean) {
 
 // ── Component ────────────────────────────────────────────────────────────────
 export default function Lobo() {
-  const { cardBg, cardText } = useGameZoneBackground();
+  const { spacing } = useResponsiveMetrics();
+  const { cardText } = useGameZoneBackground();
   const mode = useGameSettingValue("loboMode") as LoboMode;
   const modeRef = useRef(mode);
   modeRef.current = mode;
@@ -166,20 +202,29 @@ export default function Lobo() {
   const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
     useStateManager({
       gameStateInitial,
-      resetNonGameStates: () => {
-        setSelectedPlayer([]);
-        setSelectedWolf([]);
-      },
       resetAndSetup: async () => {
+        setGame((draft) => {
+          resetDeck(draft, modeRef.current);
+        });
+
+        // Reset game state and deal a new round
         setGame((draft) => {
           draft.playerScore = 0;
           draft.wolfScore = 0;
           draft.round = 1;
           draft.ended = false;
           draft.won = false;
-          dealRound(draft, modeRef.current);
         });
-        await delay();
+
+        await delay(600);
+
+        setGame((draft) => {
+          dealRound(draft);
+        });
+      },
+      resetNonGameStates: () => {
+        setSelectedPlayer([]);
+        setSelectedWolf([]);
       },
     });
 
@@ -206,10 +251,12 @@ export default function Lobo() {
     setSelectedWolf((prev) => toggle(prev, id));
   }
 
-  function executeCapture() {
+  async function executeCapture() {
     if (game.ended || game.roundOver || !action) return;
     const pIds = new Set(selectedPlayer);
     const wIds = new Set(selectedWolf);
+    let diff: number | null = null;
+
     saveUndoState(structuredClone(game));
 
     setGame((draft) => {
@@ -217,105 +264,131 @@ export default function Lobo() {
       const wSel = draft.wolf.filter((c) => wIds.has(c.id));
       draft.player = draft.player.filter((c) => !pIds.has(c.id));
       draft.wolf = draft.wolf.filter((c) => !wIds.has(c.id));
-      draft.discard.push(...pSel, ...wSel);
+      draft.discard.push(...flipAllToBack(pSel), ...flipAllToBack(wSel));
+      diff = rankValue(pSel[0]) - rankValue(wSel[0]);
+    });
 
+    await delay(600);
+
+    setGame((draft) => {
       if (action === "perfect" || action === "sum") {
         drawTo(draft, "player", 1);
       } else if (action === "split") {
         drawTo(draft, "wolf", 1);
-      } else {
-        const diff = rankValue(pSel[0]) - rankValue(wSel[0]);
+      } else if (diff !== null && action === "over") {
         drawTo(draft, "wolf", diff);
       }
+
+      sortCards(draft.player);
+      sortCards(draft.wolf);
 
       if (draft.wolf.length === 0) finishRound(draft, true);
     });
 
     setSelectedPlayer([]);
     setSelectedWolf([]);
+
+    nextRound();
   }
 
   function fold() {
     if (game.ended || game.roundOver) return;
+
     saveUndoState(structuredClone(game));
+
     setGame((draft) => finishRound(draft, false));
+
     setSelectedPlayer([]);
     setSelectedWolf([]);
+
+    nextRound();
   }
 
-  function nextRound() {
+  async function nextRound() {
+    await delay(1000);
+
+    setGame((draft) => {
+      resetDeck(draft, modeRef.current);
+    });
+
+    await delay(1000);
+
     setGame((draft) => {
       if (draft.ended) return;
       draft.round += 1;
-      dealRound(draft, modeRef.current);
+      dealRound(draft);
     });
+
     setSelectedPlayer([]);
     setSelectedWolf([]);
   }
 
+  const { isRendered: buttonsRendered, opacity: buttonsOpacity } = useFade(
+    !game.roundOver && !game.ended,
+    500,
+  );
+
   // ── Layout ────────────────────────────────────────────────────────────────
-  function fan(count: number) {
-    const maxStep = 1.15;
-    const span = 5.2;
-    const step = count <= 1 ? 0 : Math.min(maxStep, span / (count - 1));
-    const width = (count - 1) * step + 1;
-    const startX = Math.max(0, (5.6 - width) / 2);
-    return { step, startX };
-  }
-
   const zones: MapZone[] = useMemo(() => {
+    const playerOffset = Math.min(1.2, 5 / game.player.length);
+    const wolfOffset = Math.min(1.2, 5 / game.wolf.length);
+
     const result: MapZone[] = [
-      { id: "hud", col: 0, row: 0, width: "full", height: 0.6 },
-    ];
-
-    const wolfFan = fan(game.wolf.length);
-    game.wolf.forEach((card, i) => {
-      result.push({
-        id: `wolf-${card.id}`,
+      {
+        id: "hud",
+        col: 1.3,
+        row: 0,
+        width: 3.4,
+        height: 1 + infoSize.aboveBelow,
+      },
+      {
+        id: "wolf",
         name: "wolf",
-        cards: [card],
-        col: wolfFan.startX + i * wolfFan.step,
-        row: 1.0,
-        baseZIndex: 5 + i,
-      });
-    });
-
-    const playerFan = fan(game.player.length);
-    game.player.forEach((card, i) => {
-      result.push({
-        id: `player-${card.id}`,
+        cards: game.wolf,
+        col: 0,
+        row: 1.5,
+        width: handWidth,
+        height: 1.2,
+        fan: { direction: "right", offset: wolfOffset },
+        baseZIndex: 5,
+        placeholder: {},
+      },
+      { id: "status", col: 0, row: 2.8, width: "full", height: 0.8 },
+      {
+        id: "player",
         name: "player",
-        cards: [card],
-        col: playerFan.startX + i * playerFan.step,
-        row: 2.9,
-        baseZIndex: 5 + i,
-      });
-    });
-
-    result.push(
+        cards: game.player,
+        col: 0,
+        row: 3.7,
+        width: handWidth,
+        height: 1.2,
+        fan: { direction: "right", offset: playerOffset },
+        baseZIndex: 5,
+        placeholder: {},
+      },
       {
         id: "deck",
         name: "deck",
         cards: game.deck,
-        col: 0.2,
-        row: 4.15,
-        fan: { maxVisible: 1 },
+        col: 0,
+        row: 0,
+        fan: { maxVisible: 3 },
         baseZIndex: 40,
-        placeholder: { text: "Cub", infoPos: "right", showCount: true },
+        placeholder: { text: "Draw", infoPos: "below", showCount: true },
       },
       {
         id: "discard",
         name: "discard",
         cards: game.discard,
-        col: 4.4,
-        row: 4.15,
+        col: handWidth - 1,
+        row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 40,
-        placeholder: { text: "Out", infoPos: "left" },
+        placeholder: { text: "Dscrd", infoPos: "below" },
       },
-      { id: "status", col: 1.4, row: 4.3, width: 2.8, height: 0.7 },
-      { id: "controls", col: 0, row: 5.3, width: "full", height: 0.9 },
-    );
+
+      { id: "buttons", col: 0, row: 5.1, width: "full", height: 0.9 },
+    ];
 
     return result;
   }, [game]);
@@ -327,34 +400,52 @@ export default function Lobo() {
       const id = mappedCard.card.id;
       return {
         isSelected: selectedWolf.includes(id),
-        selectColor: "red",
+        selectColor: action ? actionColourMap[action] : "blue",
         isDisabled: game.ended || game.roundOver,
         onPress: () => onWolfPress(id),
       };
-    }
-    if (mappedCard.zoneName === "player") {
+    } else if (mappedCard.zoneName === "player") {
       const id = mappedCard.card.id;
       return {
         isSelected: selectedPlayer.includes(id),
-        selectColor: "blue",
+        selectColor: action ? actionColourMap[action] : "blue",
         isDisabled: game.ended || game.roundOver,
         onPress: () => onPlayerPress(id),
       };
     }
-    return {};
   };
 
   const { cardMap, getZoneStylesById } = useCardMap({
     game,
     zones,
     cardMapper,
-    gap: 0.12,
+    gap: 0,
     cardSize: "small",
+    // visualizer: true,
   });
 
   const actionLabel = action
     ? action.charAt(0).toUpperCase() + action.slice(1)
     : "Capture";
+
+  const countTextColor = (wolf: boolean) => {
+    let baseColor = cardText;
+
+    const hasCardsSelected = wolf
+      ? sumVals(selWolfCards) > 0
+      : sumVals(selPlayerCards) > 0;
+
+    if (hasCardsSelected) baseColor = Colors.cardSelectBlue;
+
+    if (action === "perfect") baseColor = Colors.cardSelectGreen;
+    if (action === "sum") baseColor = Colors.cardSelectPurple;
+    if (action === "split") baseColor = Colors.cardSelectPink;
+    if (action === "over") baseColor = Colors.cardSelectOrange;
+
+    const opacity = hasCardsSelected ? 1 : 0.4;
+
+    return rgba(baseColor, opacity);
+  };
 
   return (
     <GameWrapper
@@ -366,7 +457,7 @@ export default function Lobo() {
       winLoseMessage={
         game.won
           ? `You beat the Wolf ${game.playerScore}-${game.wolfScore}!`
-          : `The Wolf wins ${game.wolfScore}-${game.playerScore}.`
+          : `The Wolf beat you ${game.wolfScore}-${game.playerScore}.`
       }
       canUndo={canUndo}
       undo={undo}
@@ -376,85 +467,159 @@ export default function Lobo() {
       <View
         style={[
           getZoneStylesById("hud"),
+          flexStyles.rowCentered,
+          flexStyles.spaceAround,
+        ]}
+      >
+        <View style={[flexStyles.colCentered, flexStyles.flex1]}>
+          <Text size="sm" weight={300} color={cardText}>
+            Wolf
+          </Text>
+          <Text size="xl" weight={600} color={cardText}>
+            {game.wolfScore}
+          </Text>
+        </View>
+
+        <View
+          style={[flexStyles.colCentered, flexStyles.flex1, { opacity: 0.5 }]}
+        >
+          <Text size="sm" weight={300} color={cardText}>
+            Round
+          </Text>
+          <Text size="xl" weight={300} color={cardText}>
+            {game.round}
+          </Text>
+        </View>
+
+        <View style={[flexStyles.colCentered, flexStyles.flex1]}>
+          <Text size="sm" weight={300} color={cardText}>
+            Player
+          </Text>
+          <Text size="xl" weight={600} color={cardText}>
+            {game.playerScore}
+          </Text>
+        </View>
+      </View>
+
+      <Animated.View
+        style={[
+          getZoneStylesById("status"),
+          flexStyles.rowCentered,
           {
-            flexDirection: "row",
-            justifyContent: "space-around",
-            alignItems: "center",
+            opacity: buttonsOpacity,
           },
         ]}
       >
-        <Text size="sm" weight={600} color={cardText}>
-          You {game.playerScore}
+        <Text
+          size="xxxl"
+          weight={600}
+          color={countTextColor(true)}
+          style={{ width: spacing(30), textAlign: "center" }}
+          lineHeight={1}
+        >
+          {sumVals(selWolfCards)}
         </Text>
-        <Text size="sm" weight={600} color={cardText}>
-          Wolf {game.wolfScore}
-        </Text>
-        <Text size="sm" weight={600} color={cardText}>
-          Round {game.round} · to {winTarget}
-        </Text>
-      </View>
 
-      <View
+        <Text
+          size="xxxl"
+          weight={300}
+          color={rgba(cardText, 0.6)}
+          style={{ width: spacing(20), textAlign: "center" }}
+        >
+          :
+        </Text>
+
+        <Text
+          size="xxxl"
+          weight={600}
+          color={countTextColor(false)}
+          style={{ width: spacing(30), textAlign: "center" }}
+          lineHeight={1}
+        >
+          {sumVals(selPlayerCards)}
+        </Text>
+      </Animated.View>
+
+      <Animated.View
         style={[
           getZoneStylesById("status"),
-          { alignItems: "center", justifyContent: "center" },
+          flexStyles.rowCentered,
+          {
+            opacity: buttonsOpacity.interpolate({
+              inputRange: [0, 1],
+              outputRange: [1, 0],
+            }),
+          },
         ]}
       >
-        {game.roundOver && !game.ended ? (
-          <Text size="sm" weight={700} color={cardText}>
-            {game.roundWon
-              ? `Round won!  +${game.roundPoints}`
-              : `Folded — Wolf +${game.roundPoints}`}
+        <View
+          style={[
+            flexStyles.rowCentered,
+            flexStyles.flex1,
+            {
+              width: "70%",
+              gap: spacing(6),
+              marginVertical: spacing(10),
+              marginHorizontal: "15%",
+              backgroundColor: rgba(
+                game.roundWon ? Colors.buttonGreen : Colors.buttonRed,
+                0.3,
+              ),
+              padding: spacing(10),
+              borderRadius: spacing(8),
+              borderWidth: spacing(1),
+              borderColor: rgba(
+                game.roundWon ? Colors.buttonGreen : Colors.buttonRed,
+                0.6,
+              ),
+              boxShadow: `0 0 ${spacing(10)}px ${rgba(Colors.black, 0.4)}`,
+            },
+          ]}
+        >
+          <Text size="md" weight={400} color={Colors.white}>
+            {game.roundWon ? `Player` : `Wolf`}
           </Text>
-        ) : (
-          <Text size="xs" weight={400} color={cardText}>
-            {selPlayerCards.length || selWolfCards.length
-              ? `You ${sumVals(selPlayerCards)} · Wolf ${sumVals(selWolfCards)}`
-              : "Select your cards, then the Wolf's"}
+          <Text size="md" weight={600} color={Colors.white}>
+            +{game.roundPoints}
           </Text>
-        )}
-      </View>
+        </View>
+      </Animated.View>
 
-      <View
-        style={[
-          getZoneStylesById("controls"),
-          { flexDirection: "row", gap: 10, alignItems: "center" },
-        ]}
-      >
-        {game.roundOver && !game.ended ? (
-          <Button
-            text="Deal Next Round"
-            size="md"
-            onPress={nextRound}
-            fullWidth
-            taller
-            theme={cardBg}
-          />
-        ) : (
-          <>
-            <View style={{ flex: 2 }}>
-              <Button
-                text={actionLabel}
-                size="md"
-                onPress={executeCapture}
-                fullWidth
-                taller
-                disabled={game.ended || game.roundOver || !action}
-                theme={cardBg}
-              />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Button
-                text="Fold"
-                size="md"
-                onPress={fold}
-                fullWidth
-                taller
-                disabled={game.ended || game.roundOver}
-                theme="red"
-              />
-            </View>
-          </>
+      <View style={[getZoneStylesById("buttons")]}>
+        {buttonsRendered && (
+          <Animated.View
+            style={[
+              flexStyles.fullWidth,
+              flexStyles.fullHeight,
+              {
+                opacity: buttonsOpacity,
+                flexDirection: "row",
+                gap: 10,
+                alignItems: "center",
+              },
+            ]}
+          >
+            <Button
+              text="Fold"
+              size="md"
+              onPress={fold}
+              fullWidth
+              taller
+              disabled={game.ended || game.roundOver}
+              theme="red"
+              style={{ flex: 1 }}
+            />
+            <Button
+              text={actionLabel}
+              size="md"
+              onPress={executeCapture}
+              fullWidth
+              taller
+              disabled={game.ended || game.roundOver || !action}
+              theme={action ? actionColourMap[action] : "none"}
+              style={{ flex: 2 }}
+            />
+          </Animated.View>
         )}
       </View>
     </GameWrapper>

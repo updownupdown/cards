@@ -93,14 +93,14 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
     "/lobo": [
       {
         key: "loboMode",
-        label: "Deck",
+        label: "Difficulty",
         type: "string",
         applyBehavior: "next-game",
-        description: "Fewer high ranks make the Wolf easier to beat.",
+        description: "Fewer high rank cards make the Wolf easier to beat.",
         options: [
-          { label: "Hard (full)", value: "hard" },
-          { label: "Ordinary (no 10s)", value: "ordinary" },
-          { label: "Easy (no 9-10)", value: "easy" },
+          { label: "Easy (no 9s or 10s)", value: "easy" },
+          { label: "Medium (no 10s)", value: "medium" },
+          { label: "Hard (all cards)", value: "hard" },
         ],
       },
     ],
@@ -253,8 +253,8 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
   };
 
 const APPLY_BEHAVIOR_TEXT: Record<GameSpecificSettingApplyBehavior, string> = {
-  immediate: "Applies immediately",
-  "next-game": "Applies next time the game is loaded",
+  immediate: "Applies without resetting the game.",
+  "next-game": "Will reset the game.",
 };
 
 export function getSettingApplyBehaviorText(

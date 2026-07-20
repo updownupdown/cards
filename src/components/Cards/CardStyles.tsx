@@ -1,7 +1,6 @@
 import { Colors, rgba } from "@/styles/styles";
 import { cardDims } from "./card-utils";
 import { StyleSheet, View, ViewStyle } from "react-native";
-import { darkenHexColor, lightenHexColor } from "@/utils/utils";
 
 export type CardSizes =
   | "small"
@@ -115,6 +114,6 @@ export const getUnderlayStyle = (
     boxShadow:
       hideBackground || hideShadow
         ? undefined
-        : `0 0 ${cardWidth * 0.2}px 1px ${rgba(Colors.white, 0.3)}, inset 0 0 ${cardWidth * 0.2}px ${rgba(Colors.black, 0.7)}`,
+        : `0 0 ${cardWidth * 0.2}px 1px ${rgba(Colors.white, 0.25)}, inset 0 0 ${cardWidth * 0.2}px ${rgba(Colors.black, 0.7)}`,
   };
 };
