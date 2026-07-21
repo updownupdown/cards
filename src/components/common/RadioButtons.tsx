@@ -1,7 +1,7 @@
 import { Text } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon, IconName } from "@/icons";
-import { Colors, FontWeight, rgba } from "@/styles/styles";
+import { Colors, FontWeight, rgba, transitionStyles } from "@/styles/styles";
 import {
   Pressable,
   type StyleProp,
@@ -9,7 +9,6 @@ import {
   View,
   type ViewStyle,
 } from "react-native";
-import { BTN_TRANSITION_STYLE } from "../Button/Button";
 
 type RadioOption<T extends string> = {
   value: T;
@@ -73,7 +72,7 @@ export function RadioButtons<T extends string>({
             key={option.value}
             style={[
               {
-                ...BTN_TRANSITION_STYLE,
+                ...transitionStyles.limited04sec,
                 flex: flexAllButFirst && i !== 0 ? 1 : undefined,
                 borderRadius: spacing(6),
                 paddingVertical: spacing(2),
@@ -105,7 +104,7 @@ export function RadioButtons<T extends string>({
                 lineHeight={1.14}
                 style={[
                   {
-                    ...BTN_TRANSITION_STYLE,
+                    ...transitionStyles.limited04sec,
                     fontFamily: FontWeight[400],
                     textAlign: "center",
                     color: Colors.K400,

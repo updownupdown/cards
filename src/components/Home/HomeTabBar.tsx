@@ -2,7 +2,7 @@ import { Text } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon, type IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, rgba, layoutDims } from "@/styles/styles";
+import { Colors, rgba, layoutDims, transitionStyles } from "@/styles/styles";
 import {
   Platform,
   Pressable,
@@ -10,7 +10,6 @@ import {
   type LayoutChangeEvent,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { QUICK_TRANSITION_STYLE } from "../Button/Button";
 
 export type HomeTabKey = "home" | "explore" | "stats";
 
@@ -84,7 +83,7 @@ export function HomeTabBar({
                 style={[
                   flexStyles.rowCentered,
                   {
-                    ...QUICK_TRANSITION_STYLE,
+                    ...transitionStyles.all02sec,
                     flex: 1,
                     height: "100%",
                     gap: spacing(8),
@@ -102,13 +101,13 @@ export function HomeTabBar({
                   name={tab.icon}
                   size={spacing(28)}
                   color={isActive ? Colors.suitsRed : Colors.K500}
-                  style={{ ...QUICK_TRANSITION_STYLE }}
+                  style={{ ...transitionStyles.all02sec }}
                 />
                 <Text
                   size="sm"
                   weight={500}
                   color={isActive ? Colors.white : Colors.K500}
-                  style={{ ...QUICK_TRANSITION_STYLE }}
+                  style={{ ...transitionStyles.all02sec }}
                 >
                   {tab.label}
                 </Text>

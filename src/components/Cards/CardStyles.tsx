@@ -1,4 +1,4 @@
-import { Colors, rgba } from "@/styles/styles";
+import { Colors, rgba, transitionStyles } from "@/styles/styles";
 import { cardDims } from "./card-utils";
 import { StyleSheet, View, ViewStyle } from "react-native";
 
@@ -74,10 +74,8 @@ export const CardOverlay = (props: {
       style={[
         StyleSheet.absoluteFill,
         {
+          ...transitionStyles.limited02sec,
           zIndex: 4,
-          transitionDuration: "0.15s",
-          transitionTimingFunction: "ease",
-          transitionProperty: "all",
           borderRadius: props.cardWidth * cardDims.ratioRadius,
           backgroundColor: selectColor,
           opacity:

@@ -4,6 +4,7 @@ import { View, ViewStyle } from "react-native";
 import { getCardBackAsset, getCardImageSource } from "./CardAssets";
 import { cardDims, PlayingCard } from "./card-utils";
 import { CardColor, CardOverlay, CardSizes, getCardShadow } from "./CardStyles";
+import { transitionStyles } from "@/styles/styles";
 
 export type CardProps = {
   card?: PlayingCard;
@@ -48,7 +49,6 @@ const CardComponent = ({
     : getCardImageSource(cardSize, cardName);
   const backAsset = getCardBackAsset(customBack);
 
-  if (!isVisible) return null;
   if (!isFaceDown && !imageSource) return null;
 
   return (
@@ -61,9 +61,9 @@ const CardComponent = ({
           width: "100%",
           height: "auto",
           aspectRatio: cardDims.aspectRatio,
-          transitionDuration: "0.15s",
-          transitionTimingFunction: "ease",
-          transitionProperty: "all",
+          // DO NOT APPLY OPACITY TRANSITION HERE!
+          // It will create glitches with drag-and-drop actions
+          ...transitionStyles.noOpacity02sec,
           position: "relative",
           zIndex: 3,
           outlineWidth: 0,
@@ -80,6 +80,7 @@ const CardComponent = ({
           borderRadius: Math.max(cardWidth, 1) * cardDims.ratioRadius,
           backfaceVisibility: "hidden",
         },
+        !isVisible && { opacity: 0 },
       ]}
     >
       <CardOverlay

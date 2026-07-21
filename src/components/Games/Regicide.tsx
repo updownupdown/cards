@@ -18,7 +18,7 @@ import {
   isNumberRank,
   rankValue,
   shuffle,
-  sortCards,
+  sortCardsBySuit,
   type PlayingCard,
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
@@ -137,7 +137,7 @@ async function resetAndSetup(
       attack: enemyStats.attack,
     };
     draft.enemiesDefeated = 0;
-    draft.hand = sortCards(hand);
+    draft.hand = sortCardsBySuit(hand);
     draft.discardPile = [];
     draft.damageDealt = 0;
     draft.spadeShield = 0;
@@ -239,7 +239,7 @@ function drawFromTavern(
 
   return {
     tavernDeck: nextTavernDeck,
-    hand: sortCards([...hand, ...drawnCards]),
+    hand: sortCardsBySuit([...hand, ...drawnCards]),
   };
 }
 

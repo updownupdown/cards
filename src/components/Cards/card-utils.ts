@@ -213,13 +213,23 @@ export function shuffle<T>(items: T[]) {
   return next;
 }
 
-export function sortCards(cards: PlayingCard[]) {
+export function sortCardsBySuit(cards: PlayingCard[]) {
   return cards.sort((a, b) => {
     if (suitValue(a) !== suitValue(b)) {
       return suitValue(a) - suitValue(b);
     }
 
     return rankValue(a) - rankValue(b);
+  });
+}
+
+export function sortCardsByRank(cards: PlayingCard[]) {
+  return cards.sort((a, b) => {
+    if (rankValue(a) !== rankValue(b)) {
+      return rankValue(a) - rankValue(b);
+    }
+
+    return suitValue(a) - suitValue(b);
   });
 }
 
@@ -267,7 +277,7 @@ export type Rect = {
 };
 
 export const DRAG_CAPTURE_THRESHOLD = 6;
-export const DRAG_MOVE_THRESHOLD = 8;
+export const DRAG_MOVE_THRESHOLD = 6;
 
 export function pointInRect(pageX: number, pageY: number, rect: Rect) {
   return (

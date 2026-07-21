@@ -6,7 +6,7 @@ import {
   isFace,
   rankValue,
   shuffle,
-  sortCards,
+  sortCardsBySuit,
   type PlayingCard,
 } from "../../Cards/card-utils";
 import { defaultHandSize, GameState } from "./TheEmissaryTypes";
@@ -63,7 +63,7 @@ export async function resetAndSetup(
   setGame((draft) => {
     const deck = shuffle(createDeck());
 
-    draft.advisors = sortCards(
+    draft.advisors = sortCardsBySuit(
       deck.filter((c) => c.rank === "J").slice(0, 4),
     ).map((c) => ({ ...c, faceUp: true }));
 

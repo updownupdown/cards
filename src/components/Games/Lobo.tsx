@@ -18,7 +18,7 @@ import {
   type PlayingCard,
   rankValue,
   shuffle,
-  sortCards,
+  sortCardsByRank,
   SUITS,
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
@@ -164,8 +164,8 @@ function dealRound(draft: GameState) {
     if (c) draft.player.push(flipToFace(c));
   }
 
-  sortCards(draft.player);
-  sortCards(draft.wolf);
+  draft.player = sortCardsByRank(draft.player);
+  draft.wolf = sortCardsByRank(draft.wolf);
 
   keepTopFaceUp(draft);
   draft.roundOver = false;
@@ -255,6 +255,9 @@ export default function Lobo() {
     if (game.ended || game.roundOver || !action) return;
     const pIds = new Set(selectedPlayer);
     const wIds = new Set(selectedWolf);
+    const roundWillEnd =
+      (action === "perfect" || action === "sum") &&
+      selectedWolf.length === game.wolf.length;
     let diff: number | null = null;
 
     saveUndoState(structuredClone(game));
@@ -279,14 +282,18 @@ export default function Lobo() {
         drawTo(draft, "wolf", diff);
       }
 
-      sortCards(draft.player);
-      sortCards(draft.wolf);
+      draft.player = sortCardsByRank(draft.player);
+      draft.wolf = sortCardsByRank(draft.wolf);
 
       if (draft.wolf.length === 0) finishRound(draft, true);
     });
 
     setSelectedPlayer([]);
     setSelectedWolf([]);
+
+    if (roundWillEnd) {
+      nextRound();
+    }
   }
 
   function fold() {

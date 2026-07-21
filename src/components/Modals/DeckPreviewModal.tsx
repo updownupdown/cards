@@ -2,7 +2,7 @@ import {
   flipToFace,
   PlayingCard,
   shuffle,
-  sortCards as sortCardsFn,
+  sortCardsBySuit as sortCardsFn,
 } from "@/components/Cards/card-utils";
 import { Text } from "@/components/common/Text";
 import {

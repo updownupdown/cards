@@ -11,8 +11,8 @@ import { useFade } from "@/hooks/useFade";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
-import { flexStyles, transitionStyles } from "@/styles/flexStyles";
-import { Colors, FontWeight, rgba } from "@/styles/styles";
+import { flexStyles } from "@/styles/flexStyles";
+import { Colors, FontWeight, rgba, transitionStyles } from "@/styles/styles";
 import { rotatedText } from "@/styles/textStyles";
 import { useEffect, useMemo, useState } from "react";
 import { Animated, View, ViewStyle } from "react-native";
@@ -22,7 +22,7 @@ import {
   flipToBack,
   flipToFace,
   shuffle,
-  sortCards,
+  sortCardsBySuit,
   top,
   type PlayingCard,
 } from "../../Cards/card-utils";
@@ -134,7 +134,7 @@ export default function TheEmissary() {
         draft.advisors.unshift(ruler);
       }
 
-      sortCards(draft.advisors);
+      sortCardsBySuit(draft.advisors);
 
       draft.handSize = defaultHandSize;
       draft.visit = null;
@@ -254,7 +254,7 @@ export default function TheEmissary() {
       draft.neededToHand -= 1;
 
       if (draft.neededToHand === 0) {
-        sortCards(draft.hand);
+        sortCardsBySuit(draft.hand);
       }
     });
   }
@@ -821,7 +821,7 @@ export default function TheEmissary() {
                 <View
                   key={`record-${i}`}
                   style={[
-                    transitionStyles.sec03,
+                    transitionStyles.all03sec,
                     {
                       backgroundColor: color,
                       width: dotRadius * 2,

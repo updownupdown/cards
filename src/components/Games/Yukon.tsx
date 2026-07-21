@@ -189,12 +189,29 @@ export function YukonBoard({
 
   // ── Zones ─────────────────────────────────────────────────────────────────
   const zones: MapZone[] = useMemo(() => {
+    const tallestColumn = Math.max(...game.columns.map((f) => f.length));
+    const foundationRow = 1.2;
+    const foundationHeight =
+      tallestColumn >= 22 ? 8 : tallestColumn >= 18 ? 7 : 6;
+
+    const sizingZone: MapZone = {
+      id: "sizing-zone",
+      name: "sizing",
+      pileIndex: -1,
+      cards: [],
+      col: 0,
+      row: foundationRow,
+      width: "full",
+      height: foundationHeight,
+      baseZIndex: 0,
+    };
+
     const foundationZones: MapZone[] = game.foundations.map((pile, i) => ({
       id: `foundation-${i}`,
       name: "foundation",
       pileIndex: i,
       cards: pile,
-      col: 3 + i,
+      col: 1.5 + i,
       row: 0,
       baseZIndex: 40,
       fan: { maxVisible: 1 },
@@ -207,7 +224,7 @@ export function YukonBoard({
       pileIndex: i,
       cards: pile,
       col: i,
-      row: 1.4,
+      row: foundationRow,
       baseZIndex: 10 + i,
       fan: {
         direction: "down" as const,
@@ -217,7 +234,7 @@ export function YukonBoard({
       placeholder: {},
     }));
 
-    return [...foundationZones, ...columnZones];
+    return [sizingZone, ...foundationZones, ...columnZones];
   }, [game]);
 
   // ── Card / zone mappers ─────────────────────────────────────────────────────
@@ -311,7 +328,7 @@ export function YukonBoard({
     cardMapper,
     zoneMapper,
     cardSize: "tableau",
-    fixedRows: 6,
+    gap: 0.16,
   });
 
   // ── Hit areas (each face-up card is a draggable group source) ────────────────

@@ -1,6 +1,6 @@
 import "@/styles/global.css";
 import { roundToPixel } from "@/utils/utils";
-import { Platform } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 
 export const Colors = {
   // Buttons and progress bars
@@ -150,3 +150,38 @@ export function getHeaderHeightWithInset(
     insetsTop + (layoutDims.menuBarHeight + layoutDims.pagePadding) * scale,
   );
 }
+
+export const transitionStyles = StyleSheet.create({
+  all02sec: {
+    transitionDuration: "0.2s",
+    transitionProperty: "all",
+    transitionTimingFunction: "ease",
+  },
+  all03sec: {
+    transitionDuration: "0.3s",
+    transitionProperty: "all",
+    transitionTimingFunction: "ease",
+  },
+  all05sec: {
+    transitionDuration: "0.5s",
+    transitionProperty: "all",
+    transitionTimingFunction: "ease",
+  },
+  limited02sec: {
+    transitionDuration: "0.2s",
+    transitionProperty: "background-color, color, opacity, box-shadow",
+    transitionTimingFunction: "ease",
+  },
+  limited04sec: {
+    transitionDuration: "0.4s",
+    transitionProperty: "background-color, color, opacity, box-shadow",
+    transitionTimingFunction: "ease",
+  },
+  // DO NOT APPLY OPACITY TRANSITION HERE!
+  // It will create glitches with drag-and-drop actions
+  noOpacity02sec: {
+    transitionDuration: "0.2s",
+    transitionProperty: "background-color, color, box-shadow",
+    transitionTimingFunction: "ease",
+  },
+});

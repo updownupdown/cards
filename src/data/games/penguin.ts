@@ -1,4 +1,4 @@
-import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
+import { GameDefinition, GameTag } from "../games-data";
 
 export const penguin: GameDefinition = {
   path: "/penguin",
@@ -6,7 +6,6 @@ export const penguin: GameDefinition = {
     default: "From beak rank: foundations up suit; tableau down in suit.",
   },
   title: "Penguin",
-  // enabledOnLocalOnly: true,
   thumbnail: "Penguin.jpg",
   background: "snow.jpg",
   cardColorBg: "#111b27",

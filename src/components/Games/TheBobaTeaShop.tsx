@@ -1,18 +1,16 @@
 import { Text } from "@/components/common/Text";
 import { useFade } from "@/hooks/useFade";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
-import { flexStyles, transitionStyles } from "@/styles/flexStyles";
-import { Colors, FontWeight, rgba } from "@/styles/styles";
+import { flexStyles } from "@/styles/flexStyles";
+import { Colors, FontWeight, rgba, transitionStyles } from "@/styles/styles";
 import { delay } from "@/utils/utils";
 import { produce } from "immer";
 import { useMemo, useState } from "react";
 import { Animated, Pressable, StyleSheet, View } from "react-native";
 import { Button } from "../Button/Button";
-import {
-  AnimatedCardMapping,
-  defaultAnimDuration,
-} from "../Cards/AnimatedCard";
+import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
   flipAllToBack,
@@ -28,7 +26,6 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { CardColor } from "../Cards/CardStyles";
 import { GameWrapper } from "../common/GameWrapper";
 import { DeckPreviewModal } from "../Modals/DeckPreviewModal";
-import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 type SelectedPos = { queueIndex: number; cardIndex: number };
 
@@ -541,7 +538,7 @@ export default function TheBobaTeaShop() {
                     <View
                       key={`discard-by-rank-${rank}-${i}`}
                       style={[
-                        transitionStyles.sec05,
+                        transitionStyles.all05sec,
                         {
                           display: "flex",
                           width: spacing(8),
@@ -615,7 +612,7 @@ export default function TheBobaTeaShop() {
                 disabled={game.decisionNeeded}
                 style={[
                   flexStyles.colCentered,
-                  transitionStyles.sec02,
+                  transitionStyles.all02sec,
                   {
                     alignItems: "flex-end",
                     position: "absolute",

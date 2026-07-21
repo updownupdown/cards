@@ -330,7 +330,7 @@ export const AnimatedCard = ({
     transform: [{ rotateY: "180deg" }],
   }));
 
-  if (isVisible === false) return null;
+  const isHidden = isVisible === false;
 
   return (
     <Animated.View
@@ -340,12 +340,17 @@ export const AnimatedCard = ({
           userSelect: "none",
           pointerEvents: "none",
         },
+        // Hide via opacity instead of unmounting; avoids flashes
+        isHidden && { opacity: 0 },
       ]}
     >
       <Pressable
         onPress={onPress}
-        disabled={!onPress || isDisabled}
-        style={{ flex: 1, pointerEvents: clickThroughCards ? "none" : "auto" }}
+        disabled={!onPress || isDisabled || isHidden}
+        style={{
+          flex: 1,
+          pointerEvents: isHidden || clickThroughCards ? "none" : "auto",
+        }}
       >
         <Animated.View style={[frontStyle]}>
           <Card

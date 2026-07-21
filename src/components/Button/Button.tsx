@@ -1,7 +1,13 @@
 import { Text, Typography } from "@/components/common/Text";
 import type { TextSize } from "@/components/common/Text";
 import { Icon, IconName } from "@/icons";
-import { Colors, FontWeight, layoutDims, rgba } from "@/styles/styles";
+import {
+  Colors,
+  FontWeight,
+  layoutDims,
+  rgba,
+  transitionStyles,
+} from "@/styles/styles";
 import { useResponsiveUiLayout } from "@/hooks/useResponsiveLayout";
 import { Platform, Pressable, TextStyle, ViewStyle } from "react-native";
 import { textStyles } from "@/styles/textStyles";
@@ -13,18 +19,6 @@ import {
 import { HexColor } from "@/data/games-data";
 import { flexStyles } from "@/styles/flexStyles";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-
-export const QUICK_TRANSITION_STYLE = {
-  transitionDuration: "0.2s",
-  transitionProperty: "background-color, color, opacity, box-shadow",
-  transitionTimingFunction: "ease",
-} as const;
-
-export const BTN_TRANSITION_STYLE = {
-  transitionDuration: "0.4s",
-  transitionProperty: "background-color, color, opacity, box-shadow",
-  transitionTimingFunction: "ease",
-} as const;
 
 const THEME_COLORS = {
   blue: Colors.buttonBlue,
@@ -139,7 +133,7 @@ export const Button = ({
     <Pressable
       style={[
         {
-          ...BTN_TRANSITION_STYLE,
+          ...transitionStyles.limited04sec,
           outlineWidth: 0,
           opacity: disabled ? 1 : 1,
 
@@ -207,7 +201,7 @@ export const Button = ({
           color={iconColor ?? Colors.white}
           style={[
             {
-              ...BTN_TRANSITION_STYLE,
+              ...transitionStyles.limited04sec,
               flexShrink: 0,
               filter: `drop-shadow(0 1px 3px rgba(0, 0, 0, 0.2))`,
             },
@@ -218,7 +212,7 @@ export const Button = ({
         <Text
           style={[
             {
-              ...BTN_TRANSITION_STYLE,
+              ...transitionStyles.limited04sec,
               fontSize,
               fontFamily,
               textTransform: uppercase ? "uppercase" : "none",

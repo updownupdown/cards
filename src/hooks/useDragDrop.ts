@@ -137,8 +137,10 @@ export function useDragDrop<TSource, TTarget>({
 
   const hoverTargetRef = useRef<TTarget | null>(null);
   const justDroppedCardIds = useRef<Set<string> | null>(null);
+  const [hideDraggedCards, setHideDraggedCards] = useState(false);
 
   const dragTranslate = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
+  const pendingDragOffsetRef = useRef<{ x: number; y: number } | null>(null);
 
   const boardRef = useRef<RNView | null>(null);
   const [boardPageOffset, setBoardPageOffset] = useState({ x: 0, y: 0 });
@@ -178,9 +180,25 @@ export function useDragDrop<TSource, TTarget>({
   // ── Derived ─────────────────────────────────────────────────────────────────
 
   const draggedCardIds = useMemo(
-    () => (dragGhost ? new Set(dragGhost.cards.map((c) => c.id)) : null),
-    [dragGhost],
+    () =>
+      dragGhost && hideDraggedCards
+        ? new Set(dragGhost.cards.map((c) => c.id))
+        : null,
+    [dragGhost, hideDraggedCards],
   );
+
+  // Keep the source card visible for the first frame after mounting the ghost.
+  // This makes the handoff overlap instead of hiding the source and mounting
+  // the replacement in the same React commit, which can flash intermittently.
+  useEffect(() => {
+    if (dragGhost === null) {
+      setHideDraggedCards(false);
+      return;
+    }
+
+    const frame = requestAnimationFrame(() => setHideDraggedCards(true));
+    return () => cancelAnimationFrame(frame);
+  }, [dragGhost]);
 
   // Clear justDroppedCardIds one animation frame after the ghost disappears
   useEffect(() => {
@@ -223,7 +241,9 @@ export function useDragDrop<TSource, TTarget>({
     cards: PlayingCard[],
     origin: { x: number; y: number },
   ) {
-    dragTranslate.setValue({ x: 0, y: 0 });
+    const initialOffset = pendingDragOffsetRef.current;
+    pendingDragOffsetRef.current = null;
+    dragTranslate.setValue(initialOffset ?? { x: 0, y: 0 });
     hoverTargetRef.current = null;
     notifyHoverTargetChange(null);
     setDragGhost({ source, cards, origin });
@@ -336,7 +356,8 @@ export function useDragDrop<TSource, TTarget>({
    * Create PanResponder handlers for a draggable hit area.
    *
    * @param source      The MoveSource this hit area represents.
-   * @param onDragStart Called on gesture grant to validate and start the ghost.
+   * @param onDragStart Called once movement crosses the threshold to validate
+   *                    and start the ghost.
    * @param onTap       Called when the gesture ends without significant movement.
    */
   function makeDragHandlers(
@@ -344,6 +365,8 @@ export function useDragDrop<TSource, TTarget>({
     onDragStart: (source: TSource, event: GestureResponderEvent) => void,
     onTap?: () => void,
   ) {
+    let started = false;
+
     return PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onStartShouldSetPanResponderCapture: () => true,
@@ -351,10 +374,21 @@ export function useDragDrop<TSource, TTarget>({
         Math.abs(gesture.dx) + Math.abs(gesture.dy) > DRAG_MOVE_THRESHOLD,
       onMoveShouldSetPanResponderCapture: (_, gesture) =>
         Math.abs(gesture.dx) + Math.abs(gesture.dy) > DRAG_CAPTURE_THRESHOLD,
-      onPanResponderGrant: (event) => {
-        onDragStart(source, event);
+      onPanResponderGrant: () => {
+        started = false;
+        pendingDragOffsetRef.current = null;
       },
-      onPanResponderMove: (_, gesture) => {
+      onPanResponderMove: (event, gesture) => {
+        const moved =
+          Math.abs(gesture.dx) + Math.abs(gesture.dy) > DRAG_MOVE_THRESHOLD;
+
+        if (!started) {
+          if (!moved) return;
+          pendingDragOffsetRef.current = { x: gesture.dx, y: gesture.dy };
+          started = true;
+          onDragStart(source, event);
+        }
+
         dragTranslate.setValue({ x: gesture.dx, y: gesture.dy });
         const activeSource = dragGhostRef.current?.source ?? source;
         internalUpdateHoverTarget(
@@ -366,11 +400,8 @@ export function useDragDrop<TSource, TTarget>({
         );
       },
       onPanResponderRelease: (event, gesture) => {
-        const moved =
-          Math.abs(gesture.dx) + Math.abs(gesture.dy) > DRAG_MOVE_THRESHOLD;
-
-        if (!moved) {
-          clearDragGhost();
+        if (!started) {
+          pendingDragOffsetRef.current = null;
           onTap?.();
           return;
         }
@@ -384,7 +415,10 @@ export function useDragDrop<TSource, TTarget>({
           gesture.dy,
         ).finally(() => clearDragGhost());
       },
-      onPanResponderTerminate: () => clearDragGhost(),
+      onPanResponderTerminate: () => {
+        pendingDragOffsetRef.current = null;
+        if (started) clearDragGhost();
+      },
       onPanResponderTerminationRequest: () => false,
       onShouldBlockNativeResponder: () => true,
     }).panHandlers;

@@ -205,7 +205,7 @@ export default function Klondike() {
       pileIndex,
       cards: pile,
       col: pileIndex,
-      row: 1.6,
+      row: 1.4,
       baseZIndex: 10 + pileIndex,
       fan: { direction: "down", offset: cardDims.tableauOffset },
       placeholder: { showCount: false },
@@ -387,7 +387,8 @@ export default function Klondike() {
     cardMapper,
     zoneMapper,
     cardSize: "small",
-    fixedRows: 6,
+    fixedRows: 6.5,
+    gap: 0.16,
   });
 
   const stockTapRect = useMemo(() => {

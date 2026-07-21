@@ -5,7 +5,8 @@ import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon } from "@/icons";
 import { Colors, FontWeight, rgba } from "@/styles/styles";
-import { useEffect, useMemo, useRef } from "react";
+import { router, type Href } from "expo-router";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Platform, ScrollView, TextInput, View } from "react-native";
 
 type SearchModalProps = {
@@ -27,6 +28,7 @@ export function SearchModal({
 }: SearchModalProps) {
   const { spacing, font } = useResponsiveMetrics();
   const inputRef = useRef<TextInput>(null);
+  const [highlightedIndex, setHighlightedIndex] = useState(0);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -46,6 +48,30 @@ export function SearchModal({
     );
   }, [allEnabledGames, query]);
 
+  useEffect(() => {
+    setHighlightedIndex(0);
+  }, [query]);
+
+  const openHighlightedGame = () => {
+    const highlightedGame = results[highlightedIndex];
+    if (!highlightedGame) return;
+
+    onClose();
+    router.push(highlightedGame[0] as Href);
+  };
+
+  const handleKeyPress = (event: { nativeEvent: { key: string } }) => {
+    if (results.length === 0) return;
+
+    if (event.nativeEvent.key === "ArrowDown") {
+      setHighlightedIndex((current) =>
+        Math.min(current + 1, results.length - 1),
+      );
+    } else if (event.nativeEvent.key === "ArrowUp") {
+      setHighlightedIndex((current) => Math.max(current - 1, 0));
+    }
+  };
+
   const hasQuery = query.trim().length > 0;
   const inputBgColor = rgba(Colors.K950, 0.7);
   const inputHeight = spacing(52);
@@ -58,7 +84,7 @@ export function SearchModal({
 
   return (
     <ModalFull title="Search" onClose={onClose}>
-      <View style={{ flex: 1, paddingHorizontal: spacing(24) }}>
+      <View style={{ flex: 1 }}>
         {/* Search input */}
         <View
           style={{
@@ -67,6 +93,7 @@ export function SearchModal({
             backgroundColor: inputBgColor,
             flexDirection: "row",
             alignItems: "center",
+            marginHorizontal: spacing(24),
             paddingHorizontal: spacing(52 * 0.24),
             gap: spacing(52 * 0.2),
             minWidth: 0,
@@ -90,6 +117,8 @@ export function SearchModal({
             textContentType="none"
             value={query}
             onChangeText={onQueryChange}
+            onKeyPress={handleKeyPress}
+            onSubmitEditing={openHighlightedGame}
             placeholder="Search games..."
             placeholderTextColor={Colors.K600}
             style={{
@@ -113,6 +142,7 @@ export function SearchModal({
           contentContainerStyle={{
             paddingTop: spacing(20),
             paddingBottom: spacing(40),
+            paddingHorizontal: spacing(24),
             gap: spacing(12),
           }}
         >
@@ -126,7 +156,7 @@ export function SearchModal({
             </Text>
           )}
 
-          {results.map(([path, game]) => (
+          {results.map(([path, game], index) => (
             <HomeCard
               key={path}
               path={path}
@@ -134,8 +164,14 @@ export function SearchModal({
               size="large"
               onToggleFavorite={onToggleFavorite}
               isFavorite={favorites.has(path)}
-              style={{ width: "100%" }}
-              onOpen={onClose} // Close the modal when a game is opened
+              style={{
+                width: "100%",
+                boxShadow:
+                  index === highlightedIndex
+                    ? `0 0 0 ${spacing(3)}px ${rgba(game.cardColorText, 0.5)}`
+                    : "none",
+              }}
+              onOpen={onClose}
             />
           ))}
         </ScrollView>
