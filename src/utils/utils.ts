@@ -23,6 +23,11 @@ function toDevicePixels(value: number) {
   return Math.round(value * PixelRatio.get());
 }
 
+export function firstLetterUppercase(str?: string) {
+  if (!str) return str;
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 /**
  * Snap a child size so it keeps the same odd/even device-pixel parity as the container.
  * This prevents half-pixel centered offsets when using `(container - child) / 2`.

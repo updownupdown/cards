@@ -2,7 +2,7 @@ import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { useStateManager } from "@/hooks/useStateManager";
 import type { AlpineChallenge } from "@/data/game-menu";
-import { delay } from "@/utils/utils";
+import { delay, firstLetterUppercase } from "@/utils/utils";
 import { useMemo, useRef, useState } from "react";
 import { View } from "react-native";
 import { Button } from "../Button/Button";
@@ -22,6 +22,7 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
+import { Colors, rgba } from "@/styles/styles";
 
 // ── Rules configuration ────────────────────────────────────────────────────
 type RouteType = "ascent" | "traverse" | "descent";
@@ -33,6 +34,12 @@ const SUIT_GLYPH: Record<string, string> = {
   clubs: "\u2663",
   spades: "\u2660",
 };
+const APPROACH_GLYPH: Record<string, string> = {
+  ascent: "\u2197",
+  traverse: "\u2192",
+  descent: "\u2198",
+};
+
 const APPROACH_NAME: Record<string, string> = {
   hearts: "Cautious",
   clubs: "Reckless",
@@ -195,7 +202,12 @@ function compareRoutes(a: RouteRecord, b: RouteRecord) {
   return a.anchorValue - b.anchorValue;
 }
 
-type PlayCheck = { ok: boolean; reason?: string };
+type ComparisonField = "Type" | "Cards" | "Anchor";
+type PlayCheck = {
+  ok: boolean;
+  reason?: string;
+  comparisonField?: ComparisonField;
+};
 
 function canPlayRoute(
   route: RouteRecord,
@@ -204,17 +216,36 @@ function canPlayRoute(
   prevApproach: string | null,
 ): PlayCheck {
   if (challenge === "lhotse" && route.size < 2)
-    return { ok: false, reason: "Lhotse: routes need 2+ cards." };
+    return {
+      ok: false,
+      reason: "Lhotse: routes need 2+ cards.",
+      comparisonField: "Cards",
+    };
   if (challenge === "gasherbrum-i" && route.anchorValue % 2 === 1)
-    return { ok: false, reason: "Gasherbrum I: anchor must be even." };
+    return {
+      ok: false,
+      reason: "Gasherbrum I: anchor must be even.",
+      comparisonField: "Anchor",
+    };
   if (
     challenge === "broad-peak" &&
     prevApproach !== null &&
     route.anchorSuit === prevApproach
   )
     return { ok: false, reason: "Broad Peak: change your approach." };
-  if (prev && compareRoutes(route, prev) <= 0)
-    return { ok: false, reason: "Route must be higher than the last one." };
+  if (prev && compareRoutes(route, prev) <= 0) {
+    const comparisonField =
+      route.size !== prev.size
+        ? "Cards"
+        : route.type !== prev.type
+          ? "Type"
+          : "Anchor";
+    return {
+      ok: false,
+      reason: "",
+      comparisonField,
+    };
+  }
   return { ok: true };
 }
 
@@ -400,6 +431,11 @@ export default function AlpineSolitaire() {
     );
   }
 
+  function clearSelection() {
+    if (game.phase !== "play" || game.ended) return;
+    setSelected([]);
+  }
+
   function resolveCamp(draft: GameState, milestone: RouteRecord) {
     const { difficulty: diff, challenge } = settingsRef.current;
     const played = draft.playedRoutes;
@@ -569,7 +605,7 @@ export default function AlpineSolitaire() {
 
   function fanOffset(count: number, widthUnits: number) {
     if (count <= 1) return 0.4;
-    return Math.max(0.16, Math.min(0.55, (widthUnits - 1) / (count - 1)));
+    return Math.max(0.16, Math.min(0.7, (widthUnits - 1) / (count - 1)));
   }
 
   console.log(game);
@@ -577,6 +613,7 @@ export default function AlpineSolitaire() {
   const zones: MapZone[] = useMemo(() => {
     const result: MapZone[] = [
       { id: "hud", col: 0, row: 0, width: BOARD_WIDTH, height: 0.6 },
+      // Trail (milestones)
       {
         id: "trail",
         name: "trail",
@@ -595,19 +632,42 @@ export default function AlpineSolitaire() {
           showCount: false,
         },
       },
+
+      // Piles row: fatigue / deck / discard.
       {
-        id: "playLabel",
-        col: 0,
+        id: "fatigue",
+        name: "fatigue",
+        cards: game.fatigue,
+        col: 0.6,
         row: 1.8,
-        width: BOARD_WIDTH,
-        height: 0.6,
+        placeholder: { text: "Fatigue", infoPos: "right" },
       },
+      {
+        id: "deck",
+        name: "deck",
+        cards: game.deck,
+        col: 3.0,
+        row: 1.8,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Deck", infoPos: "right" },
+      },
+      {
+        id: "discard",
+        name: "discard",
+        cards: game.discard,
+        col: 5.4,
+        row: 1.8,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Discard", infoPos: "right" },
+      },
+
+      // Routes
       {
         id: "play",
         name: "play",
         cards: playCards,
         col: 0,
-        row: 2.4,
+        row: 3,
         width: BOARD_WIDTH,
         fan: {
           direction: "right",
@@ -620,46 +680,22 @@ export default function AlpineSolitaire() {
           text: "Routes",
         },
       },
-      // Piles row: fatigue / deck / discard.
+
+      // Route comparison
       {
-        id: "fatigue",
-        name: "fatigue",
-        cards: game.fatigue,
-        col: 0.6,
-        row: 3.6,
-        placeholder: { text: "Fatigue", infoPos: "right" },
-      },
-      {
-        id: "deck",
-        name: "deck",
-        cards: game.deck,
-        col: 3.0,
-        row: 3.6,
-        fan: { maxVisible: 3 },
-        placeholder: { text: "Deck", infoPos: "right" },
-      },
-      {
-        id: "discard",
-        name: "discard",
-        cards: game.discard,
-        col: 5.4,
-        row: 3.6,
-        fan: { maxVisible: 3 },
-        placeholder: { text: "Discard", infoPos: "right" },
-      },
-      {
-        id: "handLabel",
+        id: "routeCompare",
         col: 0,
-        row: 5,
+        row: 4,
         width: BOARD_WIDTH,
-        height: 0.8,
+        height: 1.3,
       },
+      // Hand
       {
         id: "hand",
         name: "hand",
         cards: game.hand,
         col: 0,
-        row: 5.8,
+        row: 5.3,
         width: BOARD_WIDTH,
         fan: {
           direction: "right",
@@ -672,8 +708,17 @@ export default function AlpineSolitaire() {
           showCount: false,
         },
       },
+      // Hand validation
       {
-        id: "controls",
+        id: "handLabel",
+        col: 0,
+        row: 6.4,
+        width: BOARD_WIDTH,
+        height: 0.6,
+      },
+      // Buttons
+      {
+        id: "buttons",
         col: 0,
         row: 7.3,
         width: BOARD_WIDTH,
@@ -699,8 +744,8 @@ export default function AlpineSolitaire() {
           if (isSel) return "green";
           return "none";
         }
-        if (isAnchor) return "red";
-        if (isSel) return "orange";
+        if (isAnchor) return "purple";
+        if (isSel) return "blue";
         return "none";
       };
 
@@ -721,7 +766,7 @@ export default function AlpineSolitaire() {
     cardMapper,
     gap: 0,
     cardSize: "small",
-    visualizer: true,
+    // visualizer: true,
   });
 
   const challengeName =
@@ -729,8 +774,36 @@ export default function AlpineSolitaire() {
       ? "Base Climb"
       : challenge
           .split("-")
-          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+          .map((w) => firstLetterUppercase(w))
           .join(" ");
+
+  const formattedRouteType = (routeType: RouteType | undefined) => {
+    if (!routeType) return undefined;
+    return `${firstLetterUppercase(routeType)} ${APPROACH_GLYPH[routeType]}`;
+  };
+
+  const routeComparison = [
+    {
+      label: "Type",
+      previous: formattedRouteType(prevRoute?.type ?? undefined),
+      current: formattedRouteType(analysis?.type ?? undefined),
+    },
+    { label: "Cards", previous: prevRoute?.size, current: analysis?.size },
+    {
+      label: "Anchor",
+      previous: prevRoute
+        ? `${rankLabel(prevRoute.anchorValue)}${SUIT_GLYPH[prevRoute.anchorSuit]}`
+        : undefined,
+      current: analysis
+        ? `${rankLabel(analysis.anchorValue)}${SUIT_GLYPH[analysis.anchorSuit]}`
+        : undefined,
+    },
+    {
+      label: "Draw",
+      previous: undefined,
+      current: analysis ? drawPreview : undefined,
+    },
+  ];
 
   return (
     <GameWrapper
@@ -756,28 +829,53 @@ export default function AlpineSolitaire() {
           Trail {game.trail.length}/{trailLength}
         </Text>
         <Text size="sm" weight={500} color={cardText}>
-          {challengeName} · {difficulty}
+          {challengeName} ({firstLetterUppercase(difficulty)})
         </Text>
       </View>
 
-      <View style={[getZoneStylesById("playLabel"), flexStyles.colCentered]}>
-        <Text size="sm" weight={400} color={cardText}>
-          {prevRoute
-            ? `Beat: ${prevRoute.type} · ${prevRoute.size} card${
-                prevRoute.size === 1 ? "" : "s"
-              } · anchor ${rankLabel(prevRoute.anchorValue)}${
-                SUIT_GLYPH[prevRoute.anchorSuit]
-              }`
-            : "Play Area (empty)"}
-        </Text>
+      {/* Route comparison */}
+      <View style={[getZoneStylesById("routeCompare"), flexStyles.rowCentered]}>
+        {routeComparison.map(({ label, previous, current }) => (
+          <View
+            key={label}
+            style={[
+              flexStyles.colCentered,
+              flexStyles.fullHeight,
+              flexStyles.flex1,
+              {
+                gap: spacing(3),
+              },
+            ]}
+          >
+            {[previous, label, current].map((value, index) => (
+              <Text
+                key={`${label}-${index}`}
+                size="sm"
+                weight={index === 1 ? 300 : 500}
+                color={
+                  index === 2 && playCheck.comparisonField === label
+                    ? Colors.cardSelectRed
+                    : rgba(
+                        cardText,
+                        index === 1 || value === undefined ? 0.6 : 1,
+                      )
+                }
+                style={{ textAlign: "center" }}
+              >
+                {value ?? "\u00A0"}
+              </Text>
+            ))}
+          </View>
+        ))}
       </View>
 
+      {/* Route validation message */}
       <View style={[getZoneStylesById("handLabel"), flexStyles.colCentered]}>
         {!analysis && (
           <Text
             size="sm"
             weight={400}
-            color={cardText}
+            color={rgba(cardText, 0.5)}
             style={[{ textAlign: "center" }]}
           >
             Tap to build route (last card = anchor)
@@ -785,31 +883,20 @@ export default function AlpineSolitaire() {
         )}
 
         {analysis && (
-          <>
-            <Text
-              size="sm"
-              weight={400}
-              color={cardText}
-              style={[{ textAlign: "center" }]}
-            >
-              {`${analysis.type} — ${SUIT_GLYPH[analysis.anchorSuit]} ${APPROACH_NAME[analysis.anchorSuit]} — Draw ${drawPreview}`}
-            </Text>
-
-            <Text
-              size="sm"
-              weight={400}
-              color={cardText}
-              style={[{ textAlign: "center" }]}
-            >
-              {`${playCheck.ok ? "Route valid" : `${playCheck.reason ?? "invalid"}`}`}
-            </Text>
-          </>
+          <Text
+            size="sm"
+            weight={400}
+            color={playCheck.ok ? Colors.cardSelectGreen : Colors.cardSelectRed}
+            style={[{ textAlign: "center" }]}
+          >
+            {`${playCheck.ok ? "" : `${playCheck.reason ?? "invalid"}`}`}
+          </Text>
         )}
       </View>
 
       <View
         style={[
-          getZoneStylesById("controls"),
+          getZoneStylesById("buttons"),
           flexStyles.colCentered,
           flexStyles.spaceBetween,
         ]}
@@ -855,16 +942,22 @@ export default function AlpineSolitaire() {
               taller
             />
             <Button
-              text={
-                analysis && playCheck.ok
-                  ? `Play (draw ${drawPreview})`
-                  : "Play Route"
-              }
+              text="Clear"
+              size="md"
+              onPress={clearSelection}
+              fullWidth
+              disabled={selected.length === 0 || game.ended}
+              theme="blue"
+              style={{ flex: 1 }}
+              taller
+            />
+            <Button
+              text="Play Route"
               size="md"
               onPress={playRoute}
               fullWidth
               disabled={!analysis || !playCheck.ok || game.ended}
-              theme={cardBg}
+              theme="green"
               style={{ flex: 2 }}
               taller
             />
