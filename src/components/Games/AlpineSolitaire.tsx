@@ -1,28 +1,33 @@
+import type { AlpineChallenge } from "@/data/game-menu";
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
-import type { AlpineChallenge } from "@/data/game-menu";
-import { delay, firstLetterUppercase } from "@/utils/utils";
+import { flexStyles } from "@/styles/flexStyles";
+import { Colors, rgba, transitionStyles } from "@/styles/styles";
+import { rotatedText } from "@/styles/textStyles";
+import {
+  commaFormattedNumber,
+  delay,
+  firstLetterUppercase,
+} from "@/utils/utils";
 import { useMemo, useRef, useState } from "react";
-import { View } from "react-native";
+import { View, type DimensionValue } from "react-native";
 import { Button } from "../Button/Button";
-import { Text } from "../common/Text";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
   flipAllToBack,
   flipToBack,
   flipToFace,
-  type PlayingCard,
   rankValue,
   shuffle,
   sortCardsBySuit,
+  type PlayingCard,
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
-import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-import { flexStyles } from "@/styles/flexStyles";
-import { Colors, rgba } from "@/styles/styles";
+import { Text } from "../common/Text";
 
 // ── Rules configuration ────────────────────────────────────────────────────
 type RouteType = "ascent" | "traverse" | "descent";
@@ -39,13 +44,19 @@ const APPROACH_GLYPH: Record<string, string> = {
   traverse: "\u2192",
   descent: "\u2198",
 };
-
 const APPROACH_NAME: Record<string, string> = {
   hearts: "Cautious",
   clubs: "Reckless",
   diamonds: "Technical",
   spades: "Free-Climbing",
 };
+const APPROACH_DESCRIPTION: Record<string, string> = {
+  hearts: "Draw #: ranks in hand > anchor",
+  clubs: "Draw #: ranks in hand < anchor",
+  diamonds: "Draw #: diamonds in hand",
+  spades: "Draw #: non-spades in route",
+};
+
 const TYPE_RANK: Record<RouteType, number> = {
   ascent: 2,
   traverse: 1,
@@ -69,6 +80,24 @@ const TRAIL_LENGTH: Record<AlpineChallenge, number> = {
   "nanga-parbat": 3,
   k2: 3,
   annapurna: 4,
+};
+
+const MOUNTAIN_HEIGHT: Record<AlpineChallenge, number> = {
+  none: 7500,
+  "cho-oyu": 8188,
+  shishapangma: 8027,
+  manaslu: 8163,
+  "broad-peak": 8051,
+  "gasherbrum-ii": 8035,
+  everest: 8848,
+  dhaulagiri: 8167,
+  "gasherbrum-i": 8080,
+  kangchenjunga: 8586,
+  lhotse: 8516,
+  makalu: 8485,
+  "nanga-parbat": 8126,
+  k2: 8611,
+  annapurna: 8091,
 };
 
 const HAND_LIMIT = 18; // Annapurna loss threshold
@@ -242,7 +271,7 @@ function canPlayRoute(
           : "Anchor";
     return {
       ok: false,
-      reason: "",
+      reason: undefined,
       comparisonField,
     };
   }
@@ -318,6 +347,29 @@ function milestoneQualifies(
 // ── Component ────────────────────────────────────────────────────────────────
 function cloneCards(cards: PlayingCard[]) {
   return cards.map((c) => ({ ...c }));
+}
+
+function getGroupedFanOffsets(groups: RouteRecord[]) {
+  const offsets: number[] = [];
+  let totalOffset = 0;
+  let cardCount = 0;
+
+  groups.forEach((group) => {
+    group.cards.forEach((_, cardIndex) => {
+      if (cardCount > 0) {
+        const offset = cardIndex === 0 ? 1.3 : 0.46;
+        offsets.push(offset);
+        totalOffset += offset;
+      }
+      cardCount += 1;
+    });
+  });
+
+  const availableOffset = Math.max(0, BOARD_WIDTH - 1);
+  const scale =
+    totalOffset > availableOffset ? availableOffset / totalOffset : 1;
+
+  return offsets.map((offset) => offset * scale);
 }
 
 export default function AlpineSolitaire() {
@@ -462,11 +514,11 @@ export default function AlpineSolitaire() {
         draft.winLoseMessage = "You summited the mountain!";
         return;
       }
-      // draft.winLoseMessage = "Camp reached — milestone added to the trail.";
+      // Camp reached; milestone added to the trail
     } else {
       draft.discard.push(...allCards);
       draft.playedRoutes = [];
-      // draft.winLoseMessage = "Camp reached, but the milestone did not qualify.";
+      // Camp reached, but milestone did not qualify
     }
 
     const target = challenge === "everest" ? 7 : 10;
@@ -475,7 +527,7 @@ export default function AlpineSolitaire() {
     if (defeat) {
       draft.ended = true;
       draft.won = false;
-      draft.winLoseMessage = "Out of cards while making camp: overwhelmed.";
+      draft.winLoseMessage = "Out of cards while making camp.";
       return;
     }
     if (challenge !== "manaslu" && draft.deck.length > 0) {
@@ -496,7 +548,7 @@ export default function AlpineSolitaire() {
       const routeCards = draft.hand.filter((c) => ids.has(c.id));
       draft.hand = draft.hand.filter((c) => !ids.has(c.id));
       const record: RouteRecord = {
-        cards: routeCards.map(flipToFace),
+        cards: routeCards.map(flipToFace).reverse(),
         type: route.type,
         size: route.size,
         anchorValue: route.anchorValue,
@@ -518,8 +570,7 @@ export default function AlpineSolitaire() {
         draft.hand = sortCardsBySuit(draft.hand);
         draft.ended = true;
         draft.won = false;
-        draft.winLoseMessage =
-          "The deck and fatigue pile ran dry: overwhelmed.";
+        draft.winLoseMessage = "The deck and fatigue pile ran dry.";
         return;
       }
       draft.hand.push(...cards);
@@ -531,22 +582,19 @@ export default function AlpineSolitaire() {
           draft.playedRoutes.pop();
           draft.hand.push(...record.cards.map(flipToFace));
           draft.hand = sortCardsBySuit(draft.hand);
-          // draft.winLoseMessage = "Annapurna: a matching suit recalled the route.";
+          // Annapurna: a matching suit recalled the route
         }
         if (draft.hand.length >= HAND_LIMIT) {
           draft.ended = true;
           draft.won = false;
-          draft.winLoseMessage =
-            "Your hand overflowed (18+ cards): overwhelmed.";
+          draft.winLoseMessage = "Your hand overflowed (18+ cards).";
           return;
         }
       }
 
       if (challenge === "makalu" && draft.hand.length > 0) {
         draft.phase = "makaluDiscard";
-        // draft.winLoseMessage = "Makalu: you may discard one card, or skip.";
-      } else {
-        // draft.winLoseMessage = "Route played. Keep climbing.";
+        // Makalu: you may discard one card, or skip
       }
     });
     setSelected([]);
@@ -558,7 +606,6 @@ export default function AlpineSolitaire() {
       const idx = draft.hand.findIndex((c) => c.id === id);
       if (idx >= 0) draft.discard.push(draft.hand.splice(idx, 1)[0]);
       draft.phase = "play";
-      // draft.winLoseMessage = "Route played. Keep climbing.";
     });
     setSelected([]);
   }
@@ -567,7 +614,6 @@ export default function AlpineSolitaire() {
     if (game.phase !== "makaluDiscard" || game.ended) return;
     setGame((draft) => {
       draft.phase = "play";
-      // draft.winLoseMessage = "Route played. Keep climbing.";
     });
   }
 
@@ -589,150 +635,144 @@ export default function AlpineSolitaire() {
         if (draft.deck.length === 0) break;
         draft.fatigue.push(flipToBack(draft.deck.pop()!));
       }
-      // draft.winLoseMessage = "You rested. Fatigue cards returned to your hand.";
     });
     setSelected([]);
   }
 
   // ── Layout ──────────────────────────────────────────────────────────────
-  const playCards = game.playedRoutes.flatMap((r) => r.cards);
-  const trailAnchors = game.trail.map((r) => {
-    const anchor =
-      r.cards.find((c) => v(c) === r.anchorValue && c.suit === r.anchorSuit) ??
-      r.cards[r.cards.length - 1];
-    return anchor;
-  });
+  const trailCards = game.trail.flatMap((r) => r.cards);
+
+  const routesCards = game.playedRoutes.flatMap((r) => r.cards);
+
+  const routeFanOffsets = useMemo(() => {
+    return getGroupedFanOffsets(game.playedRoutes);
+  }, [game.playedRoutes]);
+
+  const trailFanOffsets = useMemo(() => {
+    return getGroupedFanOffsets(game.trail);
+  }, [game.trail]);
 
   function fanOffset(count: number, widthUnits: number) {
     if (count <= 1) return 0.4;
-    return Math.max(0.16, Math.min(0.7, (widthUnits - 1) / (count - 1)));
+    return Math.max(0.2, Math.min(0.8, (widthUnits - 1) / (count - 1)));
   }
-
-  console.log(game);
 
   const zones: MapZone[] = useMemo(() => {
     const result: MapZone[] = [
-      { id: "hud", col: 0, row: 0, width: BOARD_WIDTH, height: 0.6 },
-      // Trail (milestones)
-      {
-        id: "trail",
-        name: "trail",
-        cards: trailAnchors,
-        col: 0,
-        row: 0.6,
-        width: BOARD_WIDTH,
-        fan: {
-          direction: "right",
-          offset: fanOffset(trailAnchors.length, 6.4),
-          center: true,
-        },
-        placeholder: {
-          text: trailAnchors.length > 0 ? "Trail" : "No camps",
-          infoPos: "left",
-          showCount: false,
-        },
-      },
+      // Hud
+      { id: "hud", col: 0, row: 0, width: 3, height: 1.2 },
 
       // Piles row: fatigue / deck / discard.
       {
         id: "fatigue",
         name: "fatigue",
         cards: game.fatigue,
-        col: 0.6,
-        row: 1.8,
-        placeholder: { text: "Fatigue", infoPos: "right" },
+        col: 3.5,
+        row: 0,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Fatigue", infoPos: "below" },
       },
       {
         id: "deck",
         name: "deck",
         cards: game.deck,
-        col: 3.0,
-        row: 1.8,
+        col: 4.75,
+        row: 0,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Deck", infoPos: "right" },
+        placeholder: { text: "Deck", infoPos: "below" },
       },
       {
         id: "discard",
         name: "discard",
         cards: game.discard,
-        col: 5.4,
-        row: 1.8,
+        col: 6,
+        row: 0,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Discard", infoPos: "right" },
+        placeholder: { text: "Dscrd", infoPos: "below" },
+      },
+
+      // Trail (milestones)
+      {
+        id: "trail",
+        name: "trail",
+        cards: trailCards,
+        col: 0,
+        row: 1.6,
+        width: BOARD_WIDTH,
+        fan: {
+          direction: "right",
+          offsets: trailFanOffsets,
+          center: true,
+        },
+        placeholder: {},
       },
 
       // Routes
       {
         id: "play",
         name: "play",
-        cards: playCards,
+        cards: routesCards,
         col: 0,
-        row: 3,
+        row: 2.8,
         width: BOARD_WIDTH,
         fan: {
           direction: "right",
-          offset: fanOffset(playCards.length, BOARD_WIDTH),
+          offsets: routeFanOffsets,
           center: true,
         },
-        placeholder: {
-          infoPos: "left",
-          showCount: false,
-          text: "Routes",
-        },
+        placeholder: {},
       },
 
-      // Route comparison
-      {
-        id: "routeCompare",
-        col: 0,
-        row: 4,
-        width: BOARD_WIDTH,
-        height: 1.3,
-      },
       // Hand
       {
         id: "hand",
         name: "hand",
         cards: game.hand,
         col: 0,
-        row: 5.3,
+        row: 4,
         width: BOARD_WIDTH,
         fan: {
           direction: "right",
           offset: fanOffset(game.hand.length, BOARD_WIDTH),
           center: true,
         },
-        placeholder: {
-          text: "Hand",
-          infoPos: "left",
-          showCount: false,
-        },
+        placeholder: {},
       },
-      // Hand validation
+
+      // Route Info
       {
-        id: "handLabel",
+        id: "routeInfo",
         col: 0,
-        row: 6.4,
+        row: 5.1,
         width: BOARD_WIDTH,
-        height: 0.6,
+        height: 1.1,
       },
+
       // Buttons
       {
         id: "buttons",
         col: 0,
-        row: 7.3,
+        row: 6.2,
         width: BOARD_WIDTH,
-        height: 0.88,
+        height: 0.8,
       },
     ];
 
     return result;
-  }, [game, game.hand, playCards, trailAnchors]);
+  }, [
+    game,
+    game.hand,
+    routesCards,
+    trailCards,
+    routeFanOffsets,
+    trailFanOffsets,
+  ]);
 
   const cardMapper = (
     mappedCard: MappedCard,
   ): AnimatedCardMapping | undefined => {
     if (mappedCard.zoneName === "hand") {
+      // Hand cards
       const id = mappedCard.card.id;
       const isAnchor =
         selected.length > 0 && selected[selected.length - 1] === id;
@@ -756,17 +796,18 @@ export default function AlpineSolitaire() {
         onPress: () =>
           game.phase === "makaluDiscard" ? makaluDiscard(id) : toggleSelect(id),
       };
+    } else {
+      // Other cards
+      return { isDisabled: true };
     }
-    return { isDisabled: true };
   };
 
-  const { cardMap, getZoneStylesById } = useCardMap({
+  const { cardMap, cardWidth, getZoneStylesById } = useCardMap({
     game,
     zones,
     cardMapper,
     gap: 0,
     cardSize: "small",
-    // visualizer: true,
   });
 
   const challengeName =
@@ -777,33 +818,9 @@ export default function AlpineSolitaire() {
           .map((w) => firstLetterUppercase(w))
           .join(" ");
 
-  const formattedRouteType = (routeType: RouteType | undefined) => {
-    if (!routeType) return undefined;
-    return `${firstLetterUppercase(routeType)} ${APPROACH_GLYPH[routeType]}`;
-  };
-
-  const routeComparison = [
-    {
-      label: "Type",
-      previous: formattedRouteType(prevRoute?.type ?? undefined),
-      current: formattedRouteType(analysis?.type ?? undefined),
-    },
-    { label: "Cards", previous: prevRoute?.size, current: analysis?.size },
-    {
-      label: "Anchor",
-      previous: prevRoute
-        ? `${rankLabel(prevRoute.anchorValue)}${SUIT_GLYPH[prevRoute.anchorSuit]}`
-        : undefined,
-      current: analysis
-        ? `${rankLabel(analysis.anchorValue)}${SUIT_GLYPH[analysis.anchorSuit]}`
-        : undefined,
-    },
-    {
-      label: "Draw",
-      previous: undefined,
-      current: analysis ? drawPreview : undefined,
-    },
-  ];
+  const trailProgress = Math.min(game.trail.length, trailLength);
+  const trailProgressFraction =
+    trailLength > 0 ? trailProgress / trailLength : 1;
 
   return (
     <GameWrapper
@@ -821,79 +838,205 @@ export default function AlpineSolitaire() {
       <View
         style={[
           getZoneStylesById("hud"),
-          flexStyles.rowCentered,
-          flexStyles.spaceBetween,
+          flexStyles.colStart,
+          {
+            justifyContent: "center",
+            gap: spacing(18),
+          },
         ]}
       >
-        <Text size="sm" weight={500} color={cardText}>
-          Trail {game.trail.length}/{trailLength}
-        </Text>
-        <Text size="sm" weight={500} color={cardText}>
-          {challengeName} ({firstLetterUppercase(difficulty)})
-        </Text>
+        <View style={[flexStyles.colStart]}>
+          <Text size="sm" weight={400} color={rgba(cardText, 0.6)}>
+            {firstLetterUppercase(difficulty)}
+          </Text>
+          <Text size="lg" weight={500} color={cardText}>
+            {challengeName}
+          </Text>
+          <Text size="xxl" weight={500} color={cardText}>
+            {commaFormattedNumber(MOUNTAIN_HEIGHT[challenge] ?? 0)}m
+          </Text>
+        </View>
+
+        <View
+          style={{
+            position: "relative",
+            width: "100%",
+            height: spacing(14),
+            backgroundColor: Colors.K750,
+            borderRadius: spacing(7),
+            boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(8)}px ${rgba(Colors.black, 0.6)}`,
+          }}
+        >
+          <View
+            style={{
+              ...transitionStyles.all05sec,
+              position: "absolute",
+              left: 0,
+              top: 0,
+              height: "100%",
+              width: `${trailProgressFraction * 100}%`,
+              minWidth: spacing(14),
+              backgroundColor: Colors.win,
+              borderRadius: spacing(7),
+              boxShadow: `0 ${spacing(1)}px ${spacing(6)}px ${rgba(Colors.black, 0.3)}`,
+            }}
+          />
+
+          {Array.from({ length: trailLength + 1 }, (_, index) => {
+            const reached = index <= trailProgress;
+            const position =
+              `${(index / trailLength) * 100}%` as DimensionValue;
+
+            if (index === 0) return null;
+
+            return (
+              <View
+                key={index}
+                style={{
+                  ...transitionStyles.all05sec,
+                  position: "absolute",
+                  left: position,
+                  top: 0,
+                  width: spacing(14),
+                  height: spacing(14),
+                  transform: [{ translateX: -spacing(14) }],
+                  borderRadius: spacing(7),
+                  borderWidth: spacing(3),
+                  borderColor: reached ? Colors.win : Colors.K750,
+                  backgroundColor: reached ? Colors.white : Colors.K950,
+                }}
+              />
+            );
+          })}
+        </View>
       </View>
 
-      {/* Route comparison */}
-      <View style={[getZoneStylesById("routeCompare"), flexStyles.rowCentered]}>
-        {routeComparison.map(({ label, previous, current }) => (
-          <View
-            key={label}
+      {/* Route Info */}
+      <View style={[flexStyles.rowCentered, getZoneStylesById("routeInfo")]}>
+        {!analysis && (
+          <View style={[flexStyles.colStart, flexStyles.fullWidth]}>
+            <Text size="md" weight={400} color={rgba(cardText, 0.4)}>
+              No cards selected
+            </Text>
+            <Text size="sm" weight={300} color={rgba(cardText, 0.7)}>
+              Last selected card is the anchor
+            </Text>
+          </View>
+        )}
+
+        {analysis && playCheck.reason && (
+          <Text
+            size="sm"
+            weight={400}
+            color={Colors.cardSelectRed}
+            style={[{ textAlign: "center" }]}
+          >
+            {`${playCheck.reason ?? "invalid"}`}
+          </Text>
+        )}
+
+        {analysis && playCheck.reason === undefined && (
+          <>
+            <View style={[flexStyles.colStart, { flex: 2 }]}>
+              <Text size="md" weight={500} color={cardText}>
+                {APPROACH_NAME[analysis.anchorSuit]}{" "}
+                {firstLetterUppercase(analysis.type)}
+              </Text>
+              <Text size="sm" weight={300} color={rgba(cardText, 0.7)}>
+                {APPROACH_DESCRIPTION[analysis.anchorSuit]}
+              </Text>
+            </View>
+
+            <View
+              style={[flexStyles.colCentered, { flex: 1, gap: spacing(2) }]}
+            >
+              <View style={[flexStyles.rowCentered, { gap: spacing(7) }]}>
+                <Text size="lg" weight={300} color={rgba(cardText, 0.7)}>
+                  Draw
+                </Text>
+                <Text size="lg" weight={600} color={Colors.white}>
+                  {drawPreview}
+                </Text>
+              </View>
+
+              <View style={[flexStyles.rowCentered, flexStyles.fullWidth]}>
+                <Text
+                  size="xxl"
+                  weight={600}
+                  color={
+                    playCheck.comparisonField === "Cards"
+                      ? Colors.cardSelectRed
+                      : Colors.cardSelectGreen
+                  }
+                  style={{ textAlign: "center", flex: 1 }}
+                >
+                  {analysis?.size}
+                </Text>
+                <Text
+                  size="xxl"
+                  weight={600}
+                  color={
+                    playCheck.comparisonField === "Type"
+                      ? Colors.cardSelectRed
+                      : Colors.cardSelectGreen
+                  }
+                  style={{ textAlign: "center", flex: 1 }}
+                >
+                  {APPROACH_GLYPH[analysis.type]}
+                </Text>
+                <Text
+                  size="xxl"
+                  weight={600}
+                  color={
+                    playCheck.comparisonField === "Anchor"
+                      ? Colors.cardSelectRed
+                      : Colors.cardSelectGreen
+                  }
+                  style={{ textAlign: "center", flex: 1 }}
+                >
+                  {`${rankLabel(analysis.anchorValue)}${SUIT_GLYPH[analysis.anchorSuit]}`}
+                </Text>
+              </View>
+            </View>
+          </>
+        )}
+      </View>
+
+      {[
+        {
+          id: "trail",
+          label: "Camps",
+        },
+        {
+          id: "play",
+          label: "Routes",
+        },
+        {
+          id: "hand",
+          label: "hand",
+        },
+      ].map((label) => (
+        <View
+          key={label.id}
+          style={[flexStyles.rowStart, getZoneStylesById(label.id)]}
+        >
+          <Text
+            textTransform="uppercase"
+            weight={400}
             style={[
-              flexStyles.colCentered,
-              flexStyles.fullHeight,
-              flexStyles.flex1,
+              rotatedText,
               {
-                gap: spacing(3),
+                fontSize: cardWidth * 0.2,
+                color: rgba(cardText, 0.6),
               },
             ]}
           >
-            {[previous, label, current].map((value, index) => (
-              <Text
-                key={`${label}-${index}`}
-                size="sm"
-                weight={index === 1 ? 300 : 500}
-                color={
-                  index === 2 && playCheck.comparisonField === label
-                    ? Colors.cardSelectRed
-                    : rgba(
-                        cardText,
-                        index === 1 || value === undefined ? 0.6 : 1,
-                      )
-                }
-                style={{ textAlign: "center" }}
-              >
-                {value ?? "\u00A0"}
-              </Text>
-            ))}
-          </View>
-        ))}
-      </View>
-
-      {/* Route validation message */}
-      <View style={[getZoneStylesById("handLabel"), flexStyles.colCentered]}>
-        {!analysis && (
-          <Text
-            size="sm"
-            weight={400}
-            color={rgba(cardText, 0.5)}
-            style={[{ textAlign: "center" }]}
-          >
-            Tap to build route (last card = anchor)
+            {label.label}
           </Text>
-        )}
+        </View>
+      ))}
 
-        {analysis && (
-          <Text
-            size="sm"
-            weight={400}
-            color={playCheck.ok ? Colors.cardSelectGreen : Colors.cardSelectRed}
-            style={[{ textAlign: "center" }]}
-          >
-            {`${playCheck.ok ? "" : `${playCheck.reason ?? "invalid"}`}`}
-          </Text>
-        )}
-      </View>
-
+      {/* Buttons */}
       <View
         style={[
           getZoneStylesById("buttons"),

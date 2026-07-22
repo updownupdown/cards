@@ -143,3 +143,7 @@ export function desaturateHexColor(hexColor: string, amount: number) {
 
   return `#${next(r)}${next(g)}${next(b)}`;
 }
+
+export function commaFormattedNumber(num: number) {
+  return num.toLocaleString("en-US");
+}

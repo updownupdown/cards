@@ -7,7 +7,6 @@ export const klondike: GameDefinition = {
   },
   title: "Klondike",
   thumbnail: "Klondike.jpg",
-  enabledOnLocalOnly: true,
   background: "felt-green.jpg",
   cardColorBg: "#2c3a2f",
   cardColorText: "#EEF0FF",

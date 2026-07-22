@@ -166,9 +166,14 @@ export default function Nestor() {
       pileIndex: i,
       cards: pile,
       col: i,
-      row: 1.5,
+      row: 1.2,
       baseZIndex: 10 + i,
-      fan: { direction: "down", offset: cardDims.tableauOffset, center: false },
+      fan: {
+        direction: "down",
+        offset: cardDims.tableauOffset,
+        center: false,
+        showCount: false,
+      },
       placeholder: {},
     }));
 
@@ -179,7 +184,7 @@ export default function Nestor() {
         cards: game.reserve,
         col: 5.4,
         row: 0,
-        fan: { direction: "right", offset: 0.28, maxVisible: 4 },
+        fan: { direction: "right", offset: 0.4, maxVisible: 4 },
         baseZIndex: 60,
         placeholder: { text: "Reserve", infoPos: "left" },
       },
@@ -215,7 +220,8 @@ export default function Nestor() {
     zones,
     cardMapper,
     cardSize: "tableau",
-    fixedRows: 6,
+    fixedRows: 4,
+    gap: 0.12,
   });
 
   return (

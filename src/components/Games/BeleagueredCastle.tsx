@@ -193,22 +193,35 @@ export default function BeleagueredCastle() {
       name: "foundation",
       pileIndex: i,
       cards: pile,
-      col: 2 + i,
-      row: 0,
+      col: 3,
+      row: i,
       baseZIndex: 40,
       fan: { maxVisible: 1 },
       placeholder: {},
     }));
+
+    const colWidth = 3;
 
     const columnZones: MapZone[] = game.columns.map((pile, i) => ({
       id: `col-${i}`,
       name: "col",
       pileIndex: i,
       cards: pile,
-      col: i,
-      row: 1.5,
+      col: i < columnCount / 2 ? 0 : 4,
+      row: i % 4,
+      width: colWidth,
       baseZIndex: 10 + i,
-      fan: { direction: "down", offset: cardDims.tableauOffset, center: false },
+      fan: {
+        direction: "right",
+        offset:
+          pile.length > 1
+            ? Math.min(
+                cardDims.tableauOffsetHorizontal,
+                (colWidth - 1) / (pile.length - 2),
+              )
+            : 0,
+        center: false,
+      },
       placeholder: {},
     }));
 
@@ -262,7 +275,7 @@ export default function BeleagueredCastle() {
       return {
         onPress: () => onColumnPress(index),
         isDisabled: game.ended || selectedCol === undefined || !isEmpty,
-        selectColor: "green",
+        // selectColor: "green",
       };
     }
     return {};
@@ -274,7 +287,6 @@ export default function BeleagueredCastle() {
     cardMapper,
     zoneMapper,
     cardSize: "tableau",
-    fixedRows: 6,
   });
 
   return (

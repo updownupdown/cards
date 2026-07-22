@@ -1,7 +1,6 @@
 import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 
 export const bakersGame: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/bakers-game",
   tip: {
     default: "Foundations up by suit; tableau down in suit; use 4 cells.",

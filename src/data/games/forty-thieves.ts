@@ -1,4 +1,4 @@
-import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
+import { GameDefinition, GameTag } from "../games-data";
 
 export const fortyThieves: GameDefinition = {
   path: "/forty-thieves",
@@ -7,7 +7,6 @@ export const fortyThieves: GameDefinition = {
   },
   title: "Forty Thieves",
   thumbnail: "FortyThieves.jpg",
-  enabledOnLocalOnly: true,
   background: "concrete.jpg",
   cardColorBg: "#2E2D34",
   cardColorText: "#EFE8FF",
@@ -18,7 +17,7 @@ export const fortyThieves: GameDefinition = {
     difficulty: 0,
     luck: 0,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
+  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag, GameTag.Beta],
   about: [
     "Forty Thieves, also called Napoleon at St Helena, is a patient two-deck game.",
     "Strict single-card moves and suit-matched building make it a low-luck test of planning.",

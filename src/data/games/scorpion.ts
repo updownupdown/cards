@@ -1,4 +1,4 @@
-import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
+import { GameDefinition, GameTag } from "../games-data";
 
 export const scorpion: GameDefinition = {
   path: "/scorpion",
@@ -7,7 +7,6 @@ export const scorpion: GameDefinition = {
   },
   title: "Scorpion",
   thumbnail: "Scorpion.jpg",
-  enabledOnLocalOnly: true,
   background: "sandstone.jpg",
   cardColorBg: "#33262A",
   cardColorText: "#FFE4E8",
@@ -18,7 +17,7 @@ export const scorpion: GameDefinition = {
     difficulty: 0,
     luck: 0,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
+  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag, GameTag.Beta],
   about: [
     "Scorpion is a tense, tangle-heavy cousin of Spider played with a single deck.",
     "Because you can drag buried cards along with their cover, freeing a key card is a puzzle in itself.",

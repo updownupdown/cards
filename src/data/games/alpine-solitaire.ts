@@ -1,10 +1,10 @@
 import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 
 export const alpineSolitaire: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/alpine-solitaire",
   tip: {
-    default: "Build routes by suit; empty hand to camp; rest recycles.",
+    default:
+      "Build progressively higher routes to empty hand. Rest to reset routes.",
   },
   title: "Alpine Solitaire",
   thumbnail: DEFAULT_GAME_THUMBNAIL,
@@ -15,8 +15,8 @@ export const alpineSolitaire: GameDefinition = {
     "A solo climbing game: play ever-higher routes to reach three camps before the deck runs out.",
   rating: {
     complexity: 75,
-    difficulty: 70,
-    luck: 45,
+    difficulty: 85,
+    luck: 40,
   },
   tags: [GameTag.ModernMechanics, GameTag.Beta],
   about: [
@@ -25,16 +25,16 @@ export const alpineSolitaire: GameDefinition = {
   ],
   byLine: "Game design by Austin Palmer, 2023",
   howToPlay: [
-    "## Goal",
+    "## Objective",
     "Reach three camps by playing a route that empties your hand — while your milestones keep getting higher.",
-    "## Routes",
+    "## Route Types",
     "- **Ascent:** two or more cards in consecutive increasing order (anchor is highest).",
     "- **Traverse:** one or more cards of the same value (choose any anchor).",
     "- **Descent:** two or more cards of one suit in decreasing value (anchor is lowest).",
     "Tap cards in order; the **last card tapped is the anchor**.",
-    "## Ever Higher",
+    "## Route Sequences",
     "Each route must be higher than the previous one: more cards wins, else ascent > traverse > descent, else the higher anchor.",
-    "## Inherent Danger",
+    "## Card Draws",
     "After a route you draw cards based on the anchor's suit:",
     "- **{AH} Hearts (Cautious):** one per hand card ranked higher than the anchor.",
     "- **{AC} Clubs (Reckless):** one per hand card ranked lower than the anchor.",

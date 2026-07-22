@@ -14,6 +14,7 @@ export type GameSettings = {
   showCardHints: boolean;
   isFavorite: boolean;
   difficulty: "easy" | "difficult";
+  memoryDifficulty: "easy" | "medium" | "hard";
   drawCount: 1 | 3;
   islandJokers: boolean;
   loboMode: "hard" | "medium" | "easy";
@@ -108,6 +109,7 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   showCardHints: true,
   isFavorite: false,
   difficulty: "easy",
+  memoryDifficulty: "easy",
   drawCount: 1,
   islandJokers: false,
   loboMode: "medium",

@@ -179,7 +179,7 @@ export default function Osmosis() {
       row: i * 1.15,
       baseZIndex: 10,
       fan: { direction: "right", offset: 0.28, maxVisible: reserveSize },
-      placeholder: { text: i === 0 ? "Reserves" : undefined, infoPos: "below" },
+      placeholder: { text: i === 0 ? "Reserves" : undefined, infoPos: "left" },
     }));
 
     const foundationZones: MapZone[] = game.foundations.map((row, i) => ({
@@ -205,7 +205,7 @@ export default function Osmosis() {
         row: 4.7,
         fan: { maxVisible: 3 },
         baseZIndex: 60,
-        placeholder: { text: "Stock", infoPos: "right", showCount: true },
+        placeholder: { text: "Stock", infoPos: "left", showCount: true },
       },
       {
         id: "waste",
@@ -215,7 +215,7 @@ export default function Osmosis() {
         row: 4.7,
         fan: { maxVisible: 3 },
         baseZIndex: 60,
-        placeholder: { text: "Waste", infoPos: "left" },
+        placeholder: { text: "Waste", infoPos: "right" },
       },
     ];
   }, [game]);

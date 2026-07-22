@@ -1,15 +1,14 @@
-import { Text } from "@/components/common/Text";
 import {
   CardHitArea,
   createRect,
   DropHitArea,
   pointInRect,
-  runTiming,
   useDragDrop,
 } from "@/hooks/useDragDrop";
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useStateManager } from "@/hooks/useStateManager";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
+import { DOUBLE_TAP_MS } from "@/utils/utils";
 import { useNavigation } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { GestureResponderEvent } from "react-native";
@@ -26,7 +25,6 @@ import {
   shuffle,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-import { DOUBLE_TAP_MS } from "@/utils/utils";
 
 type GameState = {
   foundations: PlayingCard[][];
@@ -644,44 +642,10 @@ export default function FortyThieves() {
     return canPlaceOnFoundation(moving, targetPile, startedFoundationsBySuit);
   }
 
-  async function animateSourceToFoundation(
-    source: MoveSource,
-    targetPileIndex: number,
-  ) {
-    const sourceRect = getSourceRect(source);
-    const targetZone = zones.find(
-      (entry) =>
-        entry.name === "foundation" && entry.pileIndex === targetPileIndex,
-    );
-    const targetRect = targetZone ? getZoneBasePos(targetZone) : null;
-    const cards = getSourceCards(source, game);
-
-    if (!sourceRect || !targetRect || cards.length === 0) {
-      return;
-    }
-
-    startDrag(source, [cards[0]], sourceRect);
-
-    await runTiming(dragTranslate, {
-      x: targetRect.x - sourceRect.x,
-      y: targetRect.y - sourceRect.y,
-    });
-
-    clearDragGhost();
-  }
-
-  async function moveSourceToFoundation(
-    source: MoveSource,
-    targetPileIndex: number,
-    options?: { animate?: boolean },
-  ) {
+  function moveSourceToFoundation(source: MoveSource, targetPileIndex: number) {
     if (!canMoveSourceToFoundation(source, targetPileIndex, game)) {
       clearSelection();
       return;
-    }
-
-    if (options?.animate && !dragGhost) {
-      await animateSourceToFoundation(source, targetPileIndex);
     }
 
     saveUndoState(structuredClone(game));
@@ -770,7 +734,7 @@ export default function FortyThieves() {
     );
 
     if (targetPileIndex < 0) return;
-    await moveSourceToFoundation(source, targetPileIndex, { animate: true });
+    moveSourceToFoundation(source, targetPileIndex);
   }
 
   function onWastePress() {
@@ -826,7 +790,7 @@ export default function FortyThieves() {
       return;
     }
 
-    void moveSourceToFoundation(selected, pileIndex, { animate: true });
+    moveSourceToFoundation(selected, pileIndex);
   }
 
   function onTableauCardPress(pileIndex: number, cardIndex: number) {

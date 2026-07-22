@@ -1,7 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 
 export const nestor: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/nestor",
   tip: {
     default: "Discard exposed equal ranks (column bottoms and reserve top).",

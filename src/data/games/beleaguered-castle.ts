@@ -1,7 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 
 export const beleagueredCastle: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/beleaguered-castle",
   tip: {
     default: "Expose Aces early; columns down any suit; foundations up suit.",
@@ -19,7 +18,7 @@ export const beleagueredCastle: GameDefinition = {
     difficulty: 55,
     luck: 30,
   },
-  tags: [GameTag.Beta],
+  tags: [GameTag.ClassicSolitaire, GameTag.Beta],
   about: [
     "Beleaguered Castle is an open builder — everything is face up, so wins reward careful sequencing.",
     "The temptation to fill an empty column too soon is what strands most games.",

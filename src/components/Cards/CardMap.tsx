@@ -63,6 +63,7 @@ export type MapZone = {
   fan?: {
     direction?: DeckFanDirection;
     offset?: number; // Multiplier of card dimension (e.g. 0.4 for 40%)
+    offsets?: number[]; // Per-card start-to-start offsets, beginning after the first card
     maxVisible?: number;
     center?: boolean;
   };
@@ -337,6 +338,7 @@ export function useCardMap({
       let zIndex = baseZIndex + cardIndex + 1;
       let isHiddenUnderDeck = false;
       let fanOffset = zone.fan?.offset ?? cardDims.fanOffset;
+      const fanOffsets = zone.fan?.offsets;
       let fanCenter = zone.fan?.center ?? true;
       let numCardsVisible = zone.cards?.length ?? 1;
 
@@ -358,6 +360,12 @@ export function useCardMap({
         }
 
         const fanDirection = zone.fan.direction ?? "diagonal-depth";
+        const getFanDistance = (index: number) =>
+          fanOffsets
+            ? fanOffsets
+                .slice(0, Math.max(0, index))
+                .reduce((sum, offset) => sum + offset, 0)
+            : fanOffset * index;
 
         const offsetX =
           fanDirection === "left"
@@ -384,7 +392,13 @@ export function useCardMap({
           zone.width !== "full" &&
           zone.width > 1
         ) {
-          const fanSpanX = Math.abs(offsetX * (numCardsVisible - 1));
+          const fanSpanX = fanOffsets
+            ? Math.abs(
+                getFanDistance(
+                  Math.min(numCardsVisible, fanOffsets.length + 1) - 1,
+                ) * cardWidth,
+              )
+            : Math.abs(offsetX * (numCardsVisible - 1));
           const deckWidthPx = cardWidth + fanSpanX;
           const zoneWidthPx = base.width;
           const centeringOffset = (zoneWidthPx - deckWidthPx) / 2;
@@ -404,7 +418,12 @@ export function useCardMap({
           y += centeringOffset + shiftForNegativeFan;
         }
 
-        x += offsetX * visualIndex;
+        x +=
+          fanOffsets && (fanDirection === "left" || fanDirection === "right")
+            ? (fanDirection === "left" ? -1 : 1) *
+              getFanDistance(visualIndex) *
+              cardWidth
+            : offsetX * visualIndex;
         y += offsetY * visualIndex;
       }
 

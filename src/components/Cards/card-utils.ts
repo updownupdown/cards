@@ -9,6 +9,8 @@ export const cardDims = {
   layoutPadding: 0.4, // $ of card width or height
   layoutGap: 0.25, // % of card width
   tableauOffset: 0.34,
+  tableauOffsetHorizontal: 0.37,
+  smallCardOffset: 0.42,
 };
 
 export type CardSuit = "clubs" | "diamonds" | "hearts" | "spades";

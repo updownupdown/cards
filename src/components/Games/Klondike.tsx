@@ -3,7 +3,6 @@ import {
   createRect,
   DropHitArea,
   pointInRect,
-  runTiming,
   useDragDrop,
 } from "@/hooks/useDragDrop";
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
@@ -292,11 +291,8 @@ export default function Klondike() {
         hoverTarget.pileIndex === mappedCard.pileIndex;
 
       return {
-        selectColor: "green",
-        isSelected:
-          (selected?.zone === "foundation" &&
-            selected.pileIndex === mappedCard.pileIndex) ||
-          isHoverTargetTop,
+        selectColor: isHoverTargetTop ? "green" : "none",
+        isSelected: isHoverTargetTop,
         isVisible: !isBeingDragged,
         animDuration: animDuration,
       };
@@ -307,6 +303,7 @@ export default function Klondike() {
       mappedCard.pileIndex !== undefined
     ) {
       const isSelected =
+        mappedCard.topOfZone &&
         selected?.zone === "tableau" &&
         selected.pileIndex === mappedCard.pileIndex;
       const isHoverTargetTop =
@@ -345,20 +342,15 @@ export default function Klondike() {
     }
 
     if (zone.name === "foundation" && zone.pileIndex !== undefined) {
-      const foundationPileIndex = zone.pileIndex;
-      const selectedFoundation =
-        selected?.zone === "foundation" &&
-        selected.pileIndex === foundationPileIndex;
       const isHoverDropTarget =
         !!dragGhost &&
         hoverTarget?.zone === "foundation" &&
-        hoverTarget.pileIndex === foundationPileIndex;
+        hoverTarget.pileIndex === zone.pileIndex;
 
       return {
-        onPress: () => onFoundationPress(foundationPileIndex),
         isDisabled: !!dragGhost,
-        isSelected: selectedFoundation || isHoverDropTarget,
-        selectColor: isHoverDropTarget ? "green" : "blue",
+        isSelected: isHoverDropTarget,
+        selectColor: isHoverDropTarget ? "green" : "none",
       };
     }
 
@@ -648,44 +640,10 @@ export default function Klondike() {
     return canPlaceOnFoundation(moving, targetTop);
   }
 
-  async function animateSourceToFoundation(
-    source: MoveSource,
-    targetPileIndex: number,
-  ) {
-    const sourceRect = getSourceRect(source);
-    const targetZone = zones.find(
-      (entry) =>
-        entry.name === "foundation" && entry.pileIndex === targetPileIndex,
-    );
-    const targetRect = targetZone ? getZoneBasePos(targetZone) : null;
-    const cards = getSourceCards(source, game);
-
-    if (!sourceRect || !targetRect || cards.length === 0) {
-      return;
-    }
-
-    startDrag(source, [cards[0]], sourceRect);
-
-    await runTiming(dragTranslate, {
-      x: targetRect.x - sourceRect.x,
-      y: targetRect.y - sourceRect.y,
-    });
-
-    clearDragGhost();
-  }
-
-  async function moveSourceToFoundation(
-    source: MoveSource,
-    targetPileIndex: number,
-    options?: { animate?: boolean },
-  ) {
+  function moveSourceToFoundation(source: MoveSource, targetPileIndex: number) {
     if (!canMoveSourceToFoundation(source, targetPileIndex, game)) {
       clearSelection();
       return;
-    }
-
-    if (options?.animate && !dragGhost) {
-      await animateSourceToFoundation(source, targetPileIndex);
     }
 
     saveUndoState(structuredClone(game));
@@ -789,7 +747,7 @@ export default function Klondike() {
     );
 
     if (targetPileIndex < 0) return;
-    await moveSourceToFoundation(source, targetPileIndex, { animate: true });
+    moveSourceToFoundation(source, targetPileIndex);
   }
 
   function onWastePress() {
@@ -813,39 +771,6 @@ export default function Klondike() {
     }
 
     clearSelection();
-  }
-
-  function onFoundationPress(pileIndex: number) {
-    if (dragGhost) {
-      clearSelection();
-      return;
-    }
-
-    const now = Date.now();
-    const tapKey = `foundation-${pileIndex}`;
-
-    if (lastTap?.key === tapKey && now - lastTap.at < DOUBLE_TAP_MS) {
-      setLastTap(null);
-      void tryAutoFoundation({ zone: "foundation", pileIndex });
-      return;
-    }
-
-    setLastTap({ key: tapKey, at: now });
-
-    if (selected?.zone === "stock") {
-      clearSelection();
-      return;
-    }
-
-    if (!selected) {
-      const pile = game.foundations[pileIndex];
-      if (pile.length > 0) {
-        setSelected({ zone: "foundation", pileIndex });
-      }
-      return;
-    }
-
-    void moveSourceToFoundation(selected, pileIndex, { animate: true });
   }
 
   function onTableauCardPress(pileIndex: number, cardIndex: number) {
@@ -941,7 +866,7 @@ export default function Klondike() {
     }
 
     if (source.zone === "foundation") {
-      return () => onFoundationPress(source.pileIndex);
+      return () => {};
     }
 
     return () => onTableauCardPress(source.pileIndex, source.cardIndex);
@@ -971,8 +896,11 @@ export default function Klondike() {
               width: rect.width,
               height: rect.height,
             }}
-            {...makeHandlers(source, () =>
-              tapHandlerResolverRef.current(source)(),
+            {...makeHandlers(
+              source,
+              source.zone === "foundation"
+                ? undefined
+                : () => tapHandlerResolverRef.current(source)(),
             )}
           />
         );

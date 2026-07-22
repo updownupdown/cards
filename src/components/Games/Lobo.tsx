@@ -426,7 +426,6 @@ export default function Lobo() {
     cardMapper,
     gap: 0,
     cardSize: "small",
-    // visualizer: true,
   });
 
   const actionLabel = action

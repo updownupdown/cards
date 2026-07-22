@@ -2,6 +2,7 @@ import { normalizeGamePath, type GameSettings } from "./game-menu";
 
 export type GameSpecificSettingKey =
   | "difficulty"
+  | "memoryDifficulty"
   | "drawCount"
   | "islandJokers"
   | "loboMode"
@@ -62,6 +63,19 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         options: [
           { label: "Easy", value: "easy" },
           { label: "Difficult", value: "difficult" },
+        ],
+      },
+    ],
+    "/memory": [
+      {
+        key: "memoryDifficulty",
+        label: "Grid Size",
+        type: "string",
+        applyBehavior: "next-game",
+        options: [
+          { label: "Easy (4 x 5)", value: "easy" },
+          { label: "Medium (5 x 6)", value: "medium" },
+          { label: "Hard (6 x 7)", value: "hard" },
         ],
       },
     ],
