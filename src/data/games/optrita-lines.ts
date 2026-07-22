@@ -18,8 +18,7 @@ export const optritaLines: GameDefinition = {
     difficulty: 60,
     luck: 50,
   },
-  // tags: [GameTag.ModernMechanics, GameTag.AIGenerated],
-  tags: [GameTag.Beta],
+  tags: [GameTag.ModernMechanics],
   about: [
     "Optrita:Lines is a solitaire trick-taker: you attack lines of a face-down grid, revealing one card at a time.",
     "More information helps, but every reveal also closes off lines you can no longer challenge.",

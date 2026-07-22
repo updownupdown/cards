@@ -18,7 +18,7 @@ export const sirTommy: GameDefinition = {
     difficulty: 60,
     luck: 55,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn, GameTag.Beta],
+  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
   about: [
     "Sir Tommy is often called the oldest recorded solitaire, and it still teaches the core lesson: where you set a card down matters.",
     "You can't rearrange a waste pile, so a King dropped onto a low card buries everything beneath it.",

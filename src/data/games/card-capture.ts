@@ -11,7 +11,6 @@ export const cardCapture: GameDefinition = {
     gameOver: "Battle over.",
   },
   title: "Card Capture",
-  enabledOnLocalOnly: true,
   thumbnail: "CardCapture.jpg",
   cardBack: "CardCapture.png",
   background: "rock-wall.jpg",

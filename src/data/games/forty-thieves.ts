@@ -17,7 +17,7 @@ export const fortyThieves: GameDefinition = {
     difficulty: 0,
     luck: 0,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag, GameTag.Beta],
+  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
   about: [
     "Forty Thieves, also called Napoleon at St Helena, is a patient two-deck game.",
     "Strict single-card moves and suit-matched building make it a low-luck test of planning.",

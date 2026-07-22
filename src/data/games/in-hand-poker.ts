@@ -19,8 +19,7 @@ export const inHandPoker: GameDefinition = {
     difficulty: 45,
     luck: 55,
   },
-  // tags: [GameTag.ModernMechanics, GameTag.EasyToLearn, GameTag.AIGenerated],
-  tags: [GameTag.Beta],
+  tags: [GameTag.ModernMechanics],
   about: [
     "In-Hand Poker is a solitaire poker game you can play with a single deck.",
     "The bigger your bet, the more cards your unseen opponent draws — so a strong hand isn't always worth the risk.",

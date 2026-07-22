@@ -19,7 +19,7 @@ export const osmosis: GameDefinition = {
     difficulty: 60,
     luck: 45,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.Beta],
+  tags: [GameTag.ClassicSolitaire],
   about: [
     "Osmosis (also called Treasure Trove) is a game of unlocking ranks row by row.",
     "The rank you start with sets the key for the whole board, so the early rows dictate everything.",

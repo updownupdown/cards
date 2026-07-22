@@ -1,6 +1,5 @@
 import { Button } from "@/components/Button/Button";
 import { MappedCard, MapZone, useCardMap } from "@/components/Cards/CardMap";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
 import { useEffect, useMemo } from "react";
@@ -19,11 +18,9 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-import { darkenHexColor, delay } from "@/utils/utils";
+import { delay } from "@/utils/utils";
 import { useToast } from "../common/Toast";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-import { RadioButtons } from "../common/RadioButtons";
-import { Colors, rgba } from "@/styles/styles";
 
 const ENEMY_SLOTS = 4;
 const HAND_SIZE = 4;
@@ -36,8 +33,6 @@ type GamePhase =
   | "drawPhase"
   | "capturePhase"
   | "gameOver";
-type ActionMode = "capture" | "enemyCapture" | "sacrifice";
-
 type GameState = {
   personalDeck: PlayingCard[];
   personalDiscard: PlayingCard[];
@@ -46,7 +41,6 @@ type GameState = {
   enemyCapturePile: PlayingCard[];
   hand: PlayingCard[];
   phase: GamePhase;
-  actionMode: ActionMode;
   selectedHandIds: string[];
   selectedEnemyIdx: number | null;
   ended: boolean;
@@ -139,7 +133,6 @@ const gameStateInitial: GameState = {
   enemyCapturePile: [],
   hand: [],
   phase: "enemyPhase",
-  actionMode: "capture",
   selectedHandIds: [],
   selectedEnemyIdx: null,
   ended: false,
@@ -168,7 +161,6 @@ async function resetAndSetup(
     draft.enemyRow = createNullArray(ENEMY_SLOTS);
     draft.enemyCapturePile = [];
     draft.phase = "enemyPhase";
-    draft.actionMode = "capture";
     draft.selectedHandIds = [];
     draft.selectedEnemyIdx = null;
     draft.ended = false;
@@ -229,7 +221,6 @@ async function resetAndSetup(
 function clearCaptureSelections(draft: GameState) {
   draft.selectedHandIds = [];
   draft.selectedEnemyIdx = null;
-  draft.actionMode = "capture";
 }
 
 function finalizeRoundOrWin(draft: GameState) {
@@ -257,27 +248,8 @@ function finalizeRoundOrWin(draft: GameState) {
 
 // ========== Main Game Component ========== //
 export default function CardCapture() {
-  const { cardBg } = useGameZoneBackground();
   const { spacing } = useResponsiveMetrics();
   const showToast = useToast();
-
-  const actionModeOptions = [
-    {
-      value: "capture" as const,
-      label: "Capture Enemy",
-      selectedBackgroundColor: Colors.buttonGreen,
-    },
-    {
-      value: "enemyCapture" as const,
-      label: "Let Enemy Capture",
-      selectedBackgroundColor: Colors.buttonOrange,
-    },
-    {
-      value: "sacrifice" as const,
-      label: "Sacrifice Cards",
-      selectedBackgroundColor: Colors.buttonRed,
-    },
-  ];
 
   const {
     isSettingUp,
@@ -361,24 +333,24 @@ export default function CardCapture() {
 
   const canExecuteCapture =
     game.phase === "capturePhase" &&
-    game.actionMode === "capture" &&
     !!captureTarget &&
     selectedHandCards.length > 0 &&
     canCaptureWithCards(selectedHandCards, captureTarget);
 
   const canExecuteEnemyCapture =
     game.phase === "capturePhase" &&
-    game.actionMode === "enemyCapture" &&
-    !!game.enemyRow[0] &&
+    !!game.enemyRow[3] &&
     selectedHandCards.length === 1;
 
   const canExecuteSacrifice =
     game.phase === "capturePhase" &&
-    game.actionMode === "sacrifice" &&
     game.selectedEnemyIdx !== null &&
     !!game.enemyRow[game.selectedEnemyIdx] &&
     selectedHandCards.length === 2 &&
     selectedHandCards.every((card) => !isEnemyCombatant(card));
+
+  const hasSelection =
+    game.selectedHandIds.length > 0 || game.selectedEnemyIdx !== null;
 
   function toggleHandSelection(card: PlayingCard) {
     if (game.ended) return;
@@ -403,27 +375,12 @@ export default function CardCapture() {
         return;
       }
 
-      if (draft.actionMode === "enemyCapture") {
-        draft.selectedHandIds = [card.id];
-        return;
-      }
-
-      if (draft.actionMode === "sacrifice") {
-        if (isEnemyCombatant(card)) {
-          return;
-        }
-        if (draft.selectedHandIds.length >= 2) {
-          return;
-        }
-      }
-
       draft.selectedHandIds.push(card.id);
     });
   }
 
   function selectEnemyTarget(enemyIdx: number) {
     if (game.phase !== "capturePhase" || game.ended) return;
-    if (game.actionMode === "enemyCapture") return;
     if (!game.enemyRow[enemyIdx]) return;
 
     setGame((draft) => {
@@ -614,7 +571,7 @@ export default function CardCapture() {
         row: 2,
         baseZIndex: 40,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Deck", infoPos: "above" },
+        placeholder: { text: "Deck", infoPos: "below" },
       },
       ...handSlots,
       {
@@ -625,12 +582,12 @@ export default function CardCapture() {
         row: 2,
         baseZIndex: 40,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Discard", infoPos: "above" },
+        placeholder: { text: "Discard", infoPos: "below" },
       },
       {
         id: "actions",
         col: 0,
-        row: 3.2,
+        row: 3,
         width: "full",
         height: 2,
         baseZIndex: 5,
@@ -649,9 +606,7 @@ export default function CardCapture() {
     mappedCard: MappedCard,
   ): AnimatedCardMapping | undefined => {
     const canExecuteAction =
-      (game.actionMode === "capture" && canExecuteCapture) ||
-      (game.actionMode === "sacrifice" && canExecuteSacrifice) ||
-      (game.actionMode === "enemyCapture" && canExecuteEnemyCapture);
+      canExecuteCapture || canExecuteSacrifice || canExecuteEnemyCapture;
 
     if (mappedCard.zoneName === "hand") {
       const isSelected = game.selectedHandIds.includes(mappedCard.card.id);
@@ -676,10 +631,7 @@ export default function CardCapture() {
       const idx = mappedCard.pileIndex;
       const isSelected = game.selectedEnemyIdx === idx;
 
-      const isDisabled =
-        game.phase !== "capturePhase" ||
-        game.ended ||
-        game.actionMode === "enemyCapture";
+      const isDisabled = game.phase !== "capturePhase" || game.ended;
 
       return {
         onPress: () => selectEnemyTarget(idx),
@@ -708,11 +660,7 @@ export default function CardCapture() {
   const zoneMapper = (zone: MapZone) => {
     if (zone.name === "enemySlot" && zone.pileIndex !== undefined) {
       const hasCard = !!game.enemyRow[zone.pileIndex];
-      const canSelect =
-        game.phase === "capturePhase" &&
-        !game.ended &&
-        game.actionMode !== "enemyCapture" &&
-        hasCard;
+      const canSelect = game.phase === "capturePhase" && !game.ended && hasCard;
       const isSelected = game.selectedEnemyIdx === zone.pileIndex;
 
       return {
@@ -726,7 +674,7 @@ export default function CardCapture() {
     return;
   };
 
-  const { cardMap, cardHeight, getZoneStylesById } = useCardMap({
+  const { cardMap, getZoneStylesById } = useCardMap({
     game,
     zones,
     gap: 0.2,
@@ -774,25 +722,6 @@ export default function CardCapture() {
               { gap: spacing(20) },
             ]}
           >
-            <RadioButtons
-              options={actionModeOptions}
-              selectedValue={game.actionMode}
-              selectedBackgroundColor={Colors.K200}
-              onChange={(value) => {
-                setGame((draft) => {
-                  draft.actionMode = value;
-                  draft.selectedEnemyIdx = null;
-                  draft.selectedHandIds = [];
-                });
-              }}
-              buttonStyle={{ flex: 1 }}
-              containerStyle={{
-                width: "100%",
-                backgroundColor: rgba(darkenHexColor(cardBg, 0.75), 0.75),
-                height: cardHeight * 0.84,
-              }}
-            />
-
             <View
               style={[
                 flexStyles.rowCentered,
@@ -810,44 +739,40 @@ export default function CardCapture() {
                     draft.selectedHandIds = [];
                   });
                 }}
+                disabled={!hasSelection}
                 taller
               />
 
-              {game.actionMode === "capture" && (
-                <Button
-                  text="Capture Card"
-                  size="sm"
-                  theme="green"
-                  onPress={executeCapture}
-                  disabled={!canExecuteCapture}
-                  style={{ flex: 1 }}
-                  taller
-                />
-              )}
+              <Button
+                text="Sacrifice"
+                size="sm"
+                theme="red"
+                onPress={executeSacrifice}
+                disabled={!canExecuteSacrifice}
+                style={{ flex: 1 }}
+                taller
+              />
 
-              {game.actionMode === "enemyCapture" && (
-                <Button
-                  text="Let Enemy Capture"
-                  size="sm"
-                  theme="orange"
-                  onPress={executeEnemyCapture}
-                  disabled={!canExecuteEnemyCapture}
-                  style={{ flex: 1 }}
-                  taller
-                />
-              )}
+              <Button
+                text="Let Capture"
+                size="sm"
+                theme="orange"
+                onPress={executeEnemyCapture}
+                disabled={!canExecuteEnemyCapture}
+                style={{ flex: 1 }}
+                taller
+                lineHeight={1.1}
+              />
 
-              {game.actionMode === "sacrifice" && (
-                <Button
-                  text="Sacrifice"
-                  size="sm"
-                  theme="red"
-                  onPress={executeSacrifice}
-                  disabled={!canExecuteSacrifice}
-                  style={{ flex: 1 }}
-                  taller
-                />
-              )}
+              <Button
+                text="Capture"
+                size="sm"
+                theme="green"
+                onPress={executeCapture}
+                disabled={!canExecuteCapture}
+                style={{ flex: 1 }}
+                taller
+              />
             </View>
           </View>
         )}

@@ -17,7 +17,7 @@ export const bakersGame: GameDefinition = {
     difficulty: 55,
     luck: 30,
   },
-  tags: [GameTag.TapAndDrag, GameTag.ClassicSolitaire, GameTag.Beta],
+  tags: [GameTag.TapAndDrag, GameTag.ClassicSolitaire],
   about: [
     "Baker's Game is the same-suit forerunner of FreeCell, popularised by Martin Gardner.",
     "Building by suit makes long sequences far harder to assemble, so free cells are precious.",

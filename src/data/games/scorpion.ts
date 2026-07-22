@@ -17,7 +17,7 @@ export const scorpion: GameDefinition = {
     difficulty: 0,
     luck: 0,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag, GameTag.Beta],
+  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
   about: [
     "Scorpion is a tense, tangle-heavy cousin of Spider played with a single deck.",
     "Because you can drag buried cards along with their cover, freeing a key card is a puzzle in itself.",

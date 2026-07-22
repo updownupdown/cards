@@ -9,8 +9,8 @@ export const clearTheDungeon: GameDefinition = {
   title: "Clear the Dungeon",
 
   thumbnail: "ClearTheDungeon.jpg",
-  cardColorBg: "#221c2e",
-  cardColorText: "#e6dcff",
+  cardColorBg: "#2e231c",
+  cardColorText: "#fff6dc",
   background: "medieval-blocks.jpg",
   cardDescription:
     "Exterminate twelve dungeon monsters with powerful attacks before your damage bar fills.",
@@ -19,8 +19,7 @@ export const clearTheDungeon: GameDefinition = {
     difficulty: 75,
     luck: 45,
   },
-  // tags: [GameTag.ModernMechanics, GameTag.AIGenerated],
-  tags: [GameTag.Beta],
+  tags: [GameTag.ModernMechanics],
   about: [
     "Clear the Dungeon by Mark S. Ball casts you as the King's monster exterminator.",
     "Every attack needs raw power and the right weakness — spend your cards wisely and keep the damage bar low.",

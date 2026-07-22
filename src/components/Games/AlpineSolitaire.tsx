@@ -547,13 +547,40 @@ export default function AlpineSolitaire() {
       const challenge = settingsRef.current.challenge;
       const routeCards = draft.hand.filter((c) => ids.has(c.id));
       draft.hand = draft.hand.filter((c) => !ids.has(c.id));
+
+      let mappedCards = routeCards.map(flipToFace);
+      if (route.type === "descent") {
+        // Order cards in descending order of rank, with the anchor last
+        mappedCards.sort((a, b) => v(b) - v(a));
+      } else if (route.type === "traverse") {
+        // Make sure anchor card is last in the traverse route
+        const anchorCard = mappedCards.find(
+          (c) => c.id === route.cards[route.cards.length - 1].id,
+        );
+        if (anchorCard) {
+          mappedCards = mappedCards.filter((c) => c.id !== anchorCard.id);
+          mappedCards.push(anchorCard);
+        }
+      } else if (route.type === "ascent") {
+        // Order cards in ascending order of rank, with the anchor last
+        mappedCards.sort((a, b) => v(a) - v(b));
+        const anchorCard = mappedCards.find(
+          (c) => c.id === route.cards[route.cards.length - 1].id,
+        );
+        if (anchorCard) {
+          mappedCards = mappedCards.filter((c) => c.id !== anchorCard.id);
+          mappedCards.push(anchorCard);
+        }
+      }
+
       const record: RouteRecord = {
-        cards: routeCards.map(flipToFace).reverse(),
+        cards: mappedCards,
         type: route.type,
         size: route.size,
         anchorValue: route.anchorValue,
         anchorSuit: route.anchorSuit,
       };
+
       draft.playedRoutes.push(record);
 
       // Camp: playing a route emptied the hand.
@@ -1044,15 +1071,6 @@ export default function AlpineSolitaire() {
           flexStyles.spaceBetween,
         ]}
       >
-        <Text
-          size="sm"
-          weight={400}
-          color={cardText}
-          style={[flexStyles.flex1, flexStyles.colCentered]}
-        >
-          {game.winLoseMessage}
-        </Text>
-
         {game.phase === "makaluDiscard" ? (
           <View style={{ flexDirection: "row", gap: 10 }}>
             <View style={{ flex: 1 }}>

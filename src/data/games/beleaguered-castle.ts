@@ -18,7 +18,7 @@ export const beleagueredCastle: GameDefinition = {
     difficulty: 55,
     luck: 30,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.Beta],
+  tags: [GameTag.ClassicSolitaire],
   about: [
     "Beleaguered Castle is an open builder — everything is face up, so wins reward careful sequencing.",
     "The temptation to fill an empty column too soon is what strands most games.",

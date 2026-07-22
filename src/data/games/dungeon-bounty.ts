@@ -18,7 +18,7 @@ export const dungeonBounty: GameDefinition = {
     difficulty: 75,
     luck: 45,
   },
-  tags: [GameTag.Beta],
+  tags: [GameTag.ModernMechanics],
   about: [
     "Dungeon Bounty by Theo Peters & Aaron Camponi is a solo dungeon crawler played with one deck.",
     "Only the single-player mode is implemented. Choose a difficulty in Settings; higher tiers start weaker and enemies gain suit powers.",

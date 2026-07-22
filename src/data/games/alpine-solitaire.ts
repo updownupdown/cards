@@ -18,7 +18,7 @@ export const alpineSolitaire: GameDefinition = {
     difficulty: 85,
     luck: 40,
   },
-  tags: [GameTag.ModernMechanics, GameTag.Beta],
+  tags: [GameTag.ModernMechanics],
   about: [
     "Alpine Solitaire by Austin Palmer is a climbing game for one player.",
     "Balance aggressive routes against the fatigue they create, and choose a difficulty or one of fourteen eight-thousander challenges in Settings.",

@@ -9,6 +9,7 @@ import { Text } from "../common/Text";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
+  flipAllToBack,
   flipToBack,
   flipToFace,
   isFace,
@@ -20,16 +21,25 @@ import {
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { Colors } from "@/styles/styles";
 
 const maxDamage = 7;
 
 // Row sizes (top to bottom) per dungeon level; each sums to 12.
-const LAYOUTS: Record<number, number[]> = {
-  1: [4, 4, 4],
-  2: [3, 3, 3, 3],
-  3: [2, 3, 3, 4],
-  4: [2, 2, 3, 2, 3],
-  5: [1, 2, 3, 1, 2, 3],
+const LAYOUT = {
+  fixedCols: 6,
+  fixedRows: 7,
+  xScale: 1.5,
+  rowGap: 0.4,
+  dungeonTop: 1.5,
+  bottomStart: 5,
+  rows: {
+    1: [4, 4, 4],
+    2: [3, 3, 3, 3],
+    3: [2, 3, 3, 4],
+    4: [2, 2, 3, 2, 3],
+    5: [1, 2, 3, 1, 2, 3],
+  } as Record<number, number[]>,
 };
 
 type Placement = {
@@ -142,11 +152,50 @@ export default function ClearTheDungeon() {
       },
       resetAndSetup: async () => {
         setGame((draft) => {
-          const full = createDeck({ includeJokers: true });
-          const monsters = shuffle(full.filter((c) => isFace(c)));
-          const power = shuffle(full.filter((c) => !isFace(c)));
+          const allCards = new Map<string, PlayingCard>();
+          const collect = (card: PlayingCard) => {
+            allCards.set(card.id, card);
+          };
 
-          const layout = LAYOUTS[settingsRef.current.level] ?? LAYOUTS[1];
+          draft.slots.forEach((slot) => {
+            collect(slot.monster);
+            slot.placed.forEach((placement) => collect(placement.card));
+          });
+          [
+            ...draft.deck,
+            ...draft.hand,
+            ...draft.reserve,
+            ...draft.damage,
+            ...draft.clear,
+            ...draft.kings,
+          ].forEach(collect);
+
+          const full =
+            allCards.size > 0
+              ? Array.from(allCards.values())
+              : createDeck({ includeJokers: true });
+
+          draft.slots = [];
+          draft.deck = [];
+          draft.hand = [];
+          draft.reserve = [];
+          draft.damage = [];
+          draft.clear = flipAllToBack(full);
+          draft.kings = [];
+          draft.reserveSetup = false;
+          draft.ended = false;
+          draft.won = false;
+        });
+
+        await delay();
+
+        setGame((draft) => {
+          const shuffled = shuffle(draft.clear);
+          const monsters = shuffle(shuffled.filter((c) => isFace(c)));
+          const power = shuffle(shuffled.filter((c) => !isFace(c)));
+
+          const layout =
+            LAYOUT.rows[settingsRef.current.level] ?? LAYOUT.rows[1];
           const slots: Slot[] = [];
           let k = 0;
           for (let r = 0; r < layout.length; r += 1) {
@@ -392,28 +441,16 @@ export default function ClearTheDungeon() {
   }
 
   // ── Layout ────────────────────────────────────────────────────────────────
-  const layout = LAYOUTS[level] ?? LAYOUTS[1];
-  const rowCount = layout.length;
-  const xScale = 1.5;
-  const maxHalf = Math.max(...layout.map((n) => (n - 1) / 2));
-  const shiftX = maxHalf * xScale + 0.3;
-  const rowGap = 0.66;
-  const dungeonTop = 0.95;
-  const bottomStart = dungeonTop + rowCount * rowGap + 0.9;
-  const itemsRow = bottomStart;
-  const handRow = bottomStart + 1.25;
-  const controlsRow = handRow + 1.2;
+  const shiftX = (LAYOUT.fixedCols - 1) / 2;
 
   const zones: MapZone[] = useMemo(() => {
-    const result: MapZone[] = [
-      { id: "hud", col: 0, row: 0, width: "full", height: 0.6 },
-    ];
+    const result: MapZone[] = [];
 
     game.slots.forEach((slot, idx) => {
       if (slot.defeated) return;
       const attackable = isAttackable(game.slots, idx);
-      const col = slot.x * xScale + shiftX;
-      const row = dungeonTop + slot.row * rowGap;
+      const col = slot.x * LAYOUT.xScale + shiftX;
+      const row = LAYOUT.dungeonTop + slot.row * LAYOUT.rowGap;
       result.push({
         id: `slot-${idx}`,
         name: "slot",
@@ -429,9 +466,10 @@ export default function ClearTheDungeon() {
         result.push({
           id: `placed-${idx}-${k}`,
           name: "placed",
+          pileIndex: idx,
           cards: [p.card],
-          col: col + 0.5 + k * 0.16,
-          row: row + 0.18,
+          col: col - 0.2 + k * 0.4,
+          row: row + 0.65,
           baseZIndex: 40 + k,
         });
       });
@@ -444,12 +482,42 @@ export default function ClearTheDungeon() {
           name: "king",
           pileIndex: i,
           cards: [king],
-          col: i * 0.9,
-          row: itemsRow,
+          col: 3.7 + i * 0.9,
+          row: LAYOUT.bottomStart,
           baseZIndex: 30,
         });
       });
     }
+
+    result.push(
+      {
+        id: "deck",
+        name: "deck",
+        cards: game.deck,
+        col: 0,
+        row: 0,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Draw", infoPos: "below" },
+      },
+      {
+        id: "damage",
+        name: "damage",
+        cards: game.damage,
+        col: 1.2,
+        row: 0,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Damage", infoPos: "below" },
+      },
+      {
+        id: "clear",
+        name: "clear",
+        cards: game.clear,
+        col: 2.4,
+        row: 0,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "Clear", infoPos: "below" },
+      },
+    );
 
     if (powerReserveOn) {
       game.reserve.forEach((card, i) => {
@@ -458,8 +526,8 @@ export default function ClearTheDungeon() {
           name: "reserve",
           pileIndex: i,
           cards: [card],
-          col: 4 + i * 1.1,
-          row: itemsRow,
+          col: 4 + i * 0.4,
+          row: 0,
           baseZIndex: 30,
         });
       });
@@ -472,7 +540,7 @@ export default function ClearTheDungeon() {
         pileIndex: i,
         cards: [card],
         col: i * 1.1,
-        row: handRow,
+        row: LAYOUT.bottomStart,
         baseZIndex: 60,
       });
     });
@@ -480,13 +548,15 @@ export default function ClearTheDungeon() {
     result.push({
       id: "controls",
       col: 0,
-      row: controlsRow,
+      row: 6,
       width: "full",
       height: 0.9,
     });
 
     return result;
   }, [game, abilitiesOn, powerReserveOn, level]);
+
+  console.log(game);
 
   const cardMapper = (
     mappedCard: MappedCard,
@@ -538,8 +608,19 @@ export default function ClearTheDungeon() {
         onPress: () => activateKing(king),
       };
     }
-    if (mappedCard.zoneName === "placed") {
-      return { isDisabled: true };
+    if (
+      mappedCard.zoneName === "placed" &&
+      mappedCard.pileIndex !== undefined
+    ) {
+      const idx = mappedCard.pileIndex;
+      const attackable = isAttackable(game.slots, idx);
+      const canDrop =
+        !!selectedCard && canPlace(game.slots, idx, selectedCard, boomer);
+      return {
+        isDisabled: game.ended || game.reserveSetup || !attackable,
+        selectColor: canDrop ? "green" : "none",
+        onPress: () => placeOnMonster(idx),
+      };
     }
     return {};
   };
@@ -548,7 +629,9 @@ export default function ClearTheDungeon() {
     game,
     zones,
     cardMapper,
-    gap: 0.1,
+    gap: 0.2,
+    fixedCols: LAYOUT.fixedCols,
+    fixedRows: LAYOUT.fixedRows,
     cardSize: "small",
   });
 
@@ -587,7 +670,7 @@ export default function ClearTheDungeon() {
     >
       {cardMap}
 
-      <View
+      {/* <View
         style={[
           getZoneStylesById("hud"),
           {
@@ -606,7 +689,7 @@ export default function ClearTheDungeon() {
         <Text size="sm" weight={600} color={cardText}>
           Monsters {monstersLeft}
         </Text>
-      </View>
+      </View> */}
 
       <View
         style={[
@@ -627,7 +710,7 @@ export default function ClearTheDungeon() {
         ) : (
           <>
             <View style={{ flex: 1 }}>
-              <Text size="xs" weight={400} color={cardText}>
+              <Text size="xs" weight={400} color={Colors.white}>
                 {kingMode?.type === "return"
                   ? "Pick a hand card to bury"
                   : kingMode?.type === "double"
@@ -642,6 +725,7 @@ export default function ClearTheDungeon() {
                 </Text>
               ) : null}
             </View>
+
             <View style={{ flex: 1 }}>
               <Button
                 text="Discard"

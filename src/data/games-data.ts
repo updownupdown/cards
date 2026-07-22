@@ -8,8 +8,6 @@ export enum GameTag {
   IsaludoCollection = "IsaludoCollection",
   TapAndDrag = "TapAndDrag",
   ModernMechanics = "ModernMechanics",
-  Beta = "Beta",
-  // AIGenerated = "AIGenerated",
 }
 
 export const GameTagNames: Record<GameTag, string> = {
@@ -18,8 +16,6 @@ export const GameTagNames: Record<GameTag, string> = {
   [GameTag.ClassicSolitaire]: "Classic Solitaire",
   [GameTag.TapAndDrag]: "Tap and drag",
   [GameTag.ModernMechanics]: "Modern Mechanics",
-  [GameTag.Beta]: "Beta",
-  // [GameTag.AIGenerated]: "AI Generated",
 };
 
 export type HexColor = `#${string}`;
