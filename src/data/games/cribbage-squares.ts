@@ -1,4 +1,4 @@
-import { DEFAULT_GAME_THUMBNAIL, GameDefinition, GameTag } from "../games-data";
+import { GameDefinition, GameTag } from "../games-data";
 
 export const cribbageSquares: GameDefinition = {
   enabledOnLocalOnly: true,
@@ -8,7 +8,7 @@ export const cribbageSquares: GameDefinition = {
       "Place each card beside the connected grid; rows and columns score cribbage hands.",
   },
   title: "Cribbage Squares",
-  thumbnail: DEFAULT_GAME_THUMBNAIL,
+  thumbnail: "CribbageSquares.jpg",
   cardBack: "DefaultCardBack.png",
   background: "felt-grey.jpg",
   cardColorBg: "#263b32",

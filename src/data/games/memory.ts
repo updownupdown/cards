@@ -1,4 +1,4 @@
-import { DEFAULT_GAME_THUMBNAIL, GameDefinition, GameTag } from "../games-data";
+import { GameDefinition, GameTag } from "../games-data";
 
 export const memory: GameDefinition = {
   path: "/memory",
@@ -6,7 +6,7 @@ export const memory: GameDefinition = {
     default: "Find matching pairs by remembering where each card is hidden.",
   },
   title: "Memory",
-  thumbnail: DEFAULT_GAME_THUMBNAIL,
+  thumbnail: "Memory.jpg",
   cardBack: "DefaultCardBack.png",
   background: "felt-grey.jpg",
   cardColorBg: "#243b35",

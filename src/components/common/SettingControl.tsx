@@ -6,6 +6,8 @@ import { Colors, rgba } from "@/styles/styles";
 import React from "react";
 import { Pressable, View } from "react-native";
 
+const MAX_DESCRIPTION_LENGTH = 44;
+
 type SettingControlProps<T> = {
   label: string;
   labelColor?: string;
@@ -14,7 +16,7 @@ type SettingControlProps<T> = {
   onChange: (val: T) => void;
   type: "boolean" | "string";
   booleanType?: "toggle" | "checkbox";
-  options?: { label: string; value: T }[];
+  options?: { label: string; value: T; description?: string }[];
 };
 
 export function SettingControl<T>({
@@ -160,38 +162,54 @@ export function SettingControl<T>({
         >
           {options.map((opt) => {
             const isSelected = value === opt.value;
+            const optionDescription = opt.description
+              ? isSelected || opt.description.length <= MAX_DESCRIPTION_LENGTH
+                ? opt.description
+                : `${opt.description.slice(0, MAX_DESCRIPTION_LENGTH - 3)}...`
+              : undefined;
             return (
               <Pressable
                 key={String(opt.value)}
                 style={{
-                  ...flexStyles.rowCentered,
+                  ...flexStyles.colStart,
                   gap: spacing(8),
                 }}
                 onPress={() => onChange(opt.value)}
               >
-                <View
-                  style={{
-                    width: spacing(20),
-                    height: spacing(20),
-                    borderRadius: spacing(10),
-                    borderWidth: 2,
-                    borderColor: Colors.K600,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  {isSelected && (
-                    <View
-                      style={{
-                        width: spacing(10),
-                        height: spacing(10),
-                        borderRadius: spacing(5),
-                        backgroundColor: Colors.K400,
-                      }}
-                    />
-                  )}
+                <View style={{ ...flexStyles.rowCentered, gap: spacing(8) }}>
+                  <View
+                    style={{
+                      width: spacing(20),
+                      height: spacing(20),
+                      borderRadius: spacing(10),
+                      borderWidth: 2,
+                      borderColor: Colors.K600,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {isSelected && (
+                      <View
+                        style={{
+                          width: spacing(10),
+                          height: spacing(10),
+                          borderRadius: spacing(5),
+                          backgroundColor: Colors.K400,
+                        }}
+                      />
+                    )}
+                  </View>
+                  <Text size="sm">{opt.label}</Text>
                 </View>
-                <Text size="sm">{opt.label}</Text>
+                {optionDescription && (
+                  <Text
+                    size="sm"
+                    color={rgba(Colors.white, 0.7)}
+                    style={{ paddingLeft: spacing(28) }}
+                  >
+                    {optionDescription}
+                  </Text>
+                )}
               </Pressable>
             );
           })}

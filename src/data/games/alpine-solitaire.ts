@@ -1,4 +1,4 @@
-import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
+import { GameDefinition, GameTag } from "../games-data";
 
 export const alpineSolitaire: GameDefinition = {
   path: "/alpine-solitaire",
@@ -7,7 +7,7 @@ export const alpineSolitaire: GameDefinition = {
       "Build progressively higher routes to empty hand. Rest to reset routes.",
   },
   title: "Alpine Solitaire",
-  thumbnail: DEFAULT_GAME_THUMBNAIL,
+  thumbnail: "AlpineSolitaire.jpg",
   cardColorBg: "#2a3b4d",
   cardColorText: "#e8f2ff",
   background: "rock-wall.jpg",

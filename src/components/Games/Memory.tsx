@@ -1,12 +1,8 @@
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
-import { useMemo, useState } from "react";
-import {
-  AnimatedCardMapping,
-  CardMapBGMapping,
-  defaultAnimDuration,
-} from "../Cards/AnimatedCard";
+import { useMemo, useRef, useState } from "react";
+import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
   flipToBack,
@@ -21,20 +17,48 @@ import {
   useCardMap,
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { Text } from "../common/Text";
+import { Pressable, View } from "react-native";
+import { flexStyles } from "@/styles/flexStyles";
+import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 
 const GRID_CONFIG = {
-  easy: { cols: 4, rows: 5 },
-  medium: { cols: 5, rows: 6 },
-  hard: { cols: 6, rows: 7 },
+  veryeasy: { cols: 4, rows: 3 },
+  easy: { cols: 5, rows: 4 },
+  medium: { cols: 6, rows: 5 },
+  hard: { cols: 7, rows: 6 },
+  veryhard: { cols: 8, rows: 7 },
+  extreme: { cols: 8, rows: 9 },
 } as const;
 
 type MemoryDifficulty = keyof typeof GRID_CONFIG;
+
+const DIFFICULTY_LABELS: Record<MemoryDifficulty, string> = {
+  veryeasy: "Very Easy",
+  easy: "Easy",
+  medium: "Medium",
+  hard: "Hard",
+  veryhard: "Very Hard",
+  extreme: "Extreme",
+};
 
 type GameState = {
   grid: (PlayingCard | null)[];
   discard: PlayingCard[];
   ended: boolean;
   won: boolean;
+};
+
+type PendingPair = {
+  firstIndex: number;
+  secondIndex: number;
+  firstCard: PlayingCard;
+  secondCard: PlayingCard;
+};
+
+type MatchedPair = {
+  firstIndex: number;
+  secondIndex: number;
 };
 
 const gameStateInitial: GameState = {
@@ -45,7 +69,17 @@ const gameStateInitial: GameState = {
 };
 
 function createMemoryDeck(pairCount: number) {
-  const pairs = shuffle(createDeck()).slice(0, pairCount);
+  const uniqueCards = Array.from(
+    new Map(
+      shuffle(createDeck()).map((card) => [`${card.rank}-${card.suit}`, card]),
+    ).values(),
+  );
+
+  if (uniqueCards.length < pairCount) {
+    throw new Error("Not enough unique cards to create the Memory board.");
+  }
+
+  const pairs = uniqueCards.slice(0, pairCount);
   const cards = pairs.flatMap((card) => [
     { ...card, id: `${card.id}-a`, faceUp: false },
     { ...card, id: `${card.id}-b`, faceUp: false },
@@ -82,51 +116,98 @@ export default function Memory() {
   const { cols, rows } = GRID_CONFIG[difficulty];
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [isResolving, setIsResolving] = useState(false);
+  const [guesses, setGuesses] = useState(0);
+  const [matchedPair, setMatchedPair] = useState<MatchedPair | null>(null);
+  const [isGameModalOpen, setIsGameModalOpen] = useState(false);
+  const pendingPair = useRef<PendingPair | null>(null);
+  const { cardText } = useGameZoneBackground();
 
-  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
-    useStateManager({
-      resetAndSetup: async () => {
-        await resetAndSetup(setGame, difficulty);
-      },
-      gameStateInitial,
-      resetNonGameStates: () => {
-        setSelectedIndex(null);
-        setIsResolving(false);
-      },
-    });
+  const { isLoaded, game, setGame, reset } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame, difficulty);
+    },
+    gameStateInitial,
+    resetNonGameStates: () => {
+      pendingPair.current = null;
+      setSelectedIndex(null);
+      setIsResolving(false);
+      setGuesses(0);
+      setMatchedPair(null);
+    },
+  });
 
   async function selectCard(index: number) {
-    if (game.ended || isResolving || !game.grid[index]) return;
+    if (game.ended || !game.grid[index]) return;
+
+    if (isResolving) {
+      const pair = pendingPair.current;
+      if (!pair || cardsMatch(pair.firstCard, pair.secondCard)) return;
+
+      pendingPair.current = null;
+      setGame((draft) => {
+        const first = draft.grid[pair.firstIndex];
+        const second = draft.grid[pair.secondIndex];
+        if (first) draft.grid[pair.firstIndex] = flipToBack(first);
+        if (second) draft.grid[pair.secondIndex] = flipToBack(second);
+      });
+      setIsResolving(false);
+      setSelectedIndex(index);
+      setGame((draft) => {
+        const card = draft.grid[index];
+        if (card) draft.grid[index] = flipToFace(card);
+      });
+      return;
+    }
 
     if (selectedIndex === null) {
       setSelectedIndex(index);
+      setGame((draft) => {
+        const card = draft.grid[index];
+        if (card) draft.grid[index] = flipToFace(card);
+      });
       return;
     }
 
     if (selectedIndex === index) {
-      setSelectedIndex(null);
       return;
     }
 
     const firstIndex = selectedIndex;
     const firstCard = game.grid[firstIndex];
     const secondCard = game.grid[index];
-    if (!firstCard || !secondCard || firstCard.faceUp || secondCard.faceUp) {
+    if (!firstCard || !secondCard || !firstCard.faceUp || secondCard.faceUp) {
       return;
     }
 
-    saveUndoState(structuredClone(game));
+    setGuesses((prev) => prev + 1);
+
+    const pair: PendingPair = {
+      firstIndex,
+      secondIndex: index,
+      firstCard,
+      secondCard,
+    };
+    pendingPair.current = pair;
     setIsResolving(true);
     setSelectedIndex(null);
 
     setGame((draft) => {
-      const first = draft.grid[firstIndex];
       const second = draft.grid[index];
-      if (first) draft.grid[firstIndex] = flipToFace(first);
       if (second) draft.grid[index] = flipToFace(second);
     });
 
-    await delay(defaultAnimDuration);
+    if (cardsMatch(firstCard, secondCard)) {
+      setMatchedPair({ firstIndex, secondIndex: index });
+    }
+
+    await delay(cardsMatch(firstCard, secondCard) ? 1000 : 2500);
+
+    if (pendingPair.current !== pair) return;
+    pendingPair.current = null;
+
+    if (cardsMatch(firstCard, secondCard)) {
+      setMatchedPair(null);
+    }
 
     setGame((draft) => {
       const first = draft.grid[firstIndex];
@@ -134,7 +215,7 @@ export default function Memory() {
       if (!first || !second) return;
 
       if (cardsMatch(firstCard, secondCard)) {
-        draft.discard.push(first, second);
+        draft.discard.push(flipToBack(first), flipToBack(second));
         draft.grid[firstIndex] = null;
         draft.grid[index] = null;
         draft.won = draft.grid.every((card) => card === null);
@@ -155,22 +236,30 @@ export default function Memory() {
       pileIndex: index,
       cards: game.grid[index] ? [game.grid[index]!] : undefined,
       col: position.c,
-      row: position.r,
+      row: position.r + 1,
       baseZIndex: 5,
     }));
 
     return [
-      ...gridZones,
+      {
+        id: "hud",
+        name: "hud",
+        col: 1.5,
+        row: 0,
+        width: cols - 1.5,
+        baseZIndex: 1,
+      },
       {
         id: "discard",
         name: "discard",
         cards: game.discard,
         col: 0,
-        row: rows,
+        row: 0,
         baseZIndex: 40,
         fan: { maxVisible: 1 },
         placeholder: { text: "Matched", infoPos: "right" },
       },
+      ...gridZones,
     ];
   }, [cols, game, rows]);
 
@@ -182,11 +271,14 @@ export default function Memory() {
     }
 
     const index = mappedCard.pileIndex;
+    const isMatched =
+      matchedPair?.firstIndex === index || matchedPair?.secondIndex === index;
     return {
       onPress: () => selectCard(index),
-      isSelected: selectedIndex === index,
-      selectColor: selectedIndex === index ? "blue" : "none",
-      isDisabled: game.ended || isResolving || mappedCard.card.faceUp,
+      isDisabled: game.ended || mappedCard.card.faceUp,
+      forceOverlayColor: isMatched,
+      forceSelectColor: isMatched,
+      selectColor: isMatched ? "green" : "none",
     };
   };
 
@@ -195,7 +287,7 @@ export default function Memory() {
     return {};
   };
 
-  const { cardMap } = useCardMap({
+  const { cardMap, getZoneStylesById } = useCardMap({
     game,
     zones,
     cardMapper,
@@ -212,11 +304,33 @@ export default function Memory() {
       won={game.won}
       reset={reset}
       isLoaded={isLoaded}
-      score={game.discard.length}
+      score={guesses}
       winLoseMessage="You found every pair!"
-      canUndo={canUndo}
-      undo={undo}
+      openMenu={isGameModalOpen}
+      onMenuClose={() => setIsGameModalOpen(false)}
     >
+      <View style={[getZoneStylesById("hud"), flexStyles.rowCentered]}>
+        <View style={[flexStyles.colCentered, flexStyles.flex1]}>
+          <Text size="sm" weight={300} color={cardText}>
+            Guesses
+          </Text>
+          <Text size="xl" weight={500} color={cardText}>
+            {guesses}
+          </Text>
+        </View>
+
+        <View style={[flexStyles.colCentered, flexStyles.flex1]}>
+          <Text size="sm" weight={300} color={cardText}>
+            Difficulty
+          </Text>
+          <Pressable onPress={() => setIsGameModalOpen(true)}>
+            <Text size="xl" weight={500} color={cardText}>
+              {DIFFICULTY_LABELS[difficulty]}
+            </Text>
+          </Pressable>
+        </View>
+      </View>
+
       {cardMap}
     </GameWrapper>
   );

@@ -1,4 +1,4 @@
-import { DEFAULT_GAME_THUMBNAIL, GameDefinition, GameTag } from "../games-data";
+import { GameDefinition, GameTag } from "../games-data";
 
 export const pokerSquares: GameDefinition = {
   path: "/poker-squares",
@@ -7,7 +7,7 @@ export const pokerSquares: GameDefinition = {
       "Place each dealt card carefully; rows and columns score poker hands.",
   },
   title: "Poker Squares",
-  thumbnail: DEFAULT_GAME_THUMBNAIL,
+  thumbnail: "PokerSquares.jpg",
   cardBack: "DefaultCardBack.png",
   background: "felt-grey.jpg",
   cardColorBg: "#263b32",

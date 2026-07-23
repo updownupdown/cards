@@ -1,18 +1,17 @@
-import { useStateManager } from "@/hooks/useStateManager";
 import {
   CardHitArea,
   createRect,
   DropHitArea,
   pointInRect,
   useDragDrop,
-  runTiming,
 } from "@/hooks/useDragDrop";
+import { useStateManager } from "@/hooks/useStateManager";
+import { useViewportDimensions } from "@/hooks/useViewportDimensions";
+import { DOUBLE_TAP_MS } from "@/utils/utils";
 import { useNavigation } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { GestureResponderEvent } from "react-native";
 import { Animated, StyleSheet, View } from "react-native";
-import { useViewportDimensions } from "@/hooks/useViewportDimensions";
-import { Button } from "../Button/Button";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { Card } from "../Cards/Card";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
@@ -25,7 +24,6 @@ import {
   SUITS,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-import { DOUBLE_TAP_MS } from "@/utils/utils";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -35,12 +33,11 @@ type GameState = {
   foundations: PlayingCard[][];
 };
 
-type Selection =
-  | { zone: "cascade"; pileIndex: number }
-  | { zone: "free"; slotIndex: number }
-  | null;
+type Selection = { zone: "free"; slotIndex: number } | null;
 
-type MoveSource = Exclude<Selection, null>;
+type MoveSource =
+  | { zone: "cascade"; pileIndex: number; startIndex: number }
+  | { zone: "free"; slotIndex: number };
 
 type DropTarget =
   | { zone: "cascade"; pileIndex: number }
@@ -98,6 +95,17 @@ function createInitialState(): GameState {
     freeCells,
     foundations: Array.from({ length: 4 }, () => [] as PlayingCard[]),
   };
+}
+
+function isDescendingSameSuitStack(cards: PlayingCard[]): boolean {
+  return cards.every((card, index) => {
+    if (index === 0) return true;
+    const previous = cards[index - 1];
+    return (
+      card.suit === previous.suit &&
+      RANK_VALUE[card.rank] + 1 === RANK_VALUE[previous.rank]
+    );
+  });
 }
 
 const gameStateInitial = createInitialState();
@@ -160,8 +168,7 @@ export default function EightOff() {
       applyMove(source, target);
     },
     getDroppedCardIds: (source) => {
-      const card = getTopCard(source, game);
-      return card ? [card.id] : [];
+      return getDraggedCards(source, game).map((card) => card.id);
     },
     getDropHitAreas: () => dropHitAreasRef.current,
     getSourceRect,
@@ -180,26 +187,26 @@ export default function EightOff() {
   // ── CardMap zones ───────────────────────────────────────────────────────────
 
   const zones: MapZone[] = useMemo(() => {
-    const freeCellZones: MapZone[] = game.freeCells.map((card, i) => ({
-      id: `free-${i}`,
-      name: "free",
-      pileIndex: i,
-      cards: card ? [card] : [],
-      col: i,
-      row: 0,
-      baseZIndex: 50,
-      placeholder: { text: "Free", infoPos: "below", showCount: false },
-    }));
-
     const foundationZones: MapZone[] = game.foundations.map((pile, i) => ({
       id: `foundation-${i}`,
       name: "foundation",
       pileIndex: i,
       cards: pile,
       col: 2 + i,
-      row: 1,
-      baseZIndex: 40,
+      row: 0,
+      baseZIndex: 100,
       fan: { maxVisible: 1 },
+      placeholder: {},
+    }));
+
+    const freeCellZones: MapZone[] = game.freeCells.map((card, i) => ({
+      id: `free-${i}`,
+      name: "free",
+      pileIndex: i,
+      cards: card ? [card] : [],
+      col: i,
+      row: 1.2,
+      baseZIndex: 50,
       placeholder: {},
     }));
 
@@ -274,20 +281,14 @@ export default function EightOff() {
       mappedCard.pileIndex !== undefined
     ) {
       const pileIndex = mappedCard.pileIndex;
-      const isTopSelected =
-        selected?.zone === "cascade" && selected.pileIndex === pileIndex;
       const isHoverTargetTop =
         !!dragGhost &&
         mappedCard.topOfZone &&
         hoverTarget?.zone === "cascade" &&
         hoverTarget.pileIndex === pileIndex;
       return {
-        selectColor: isHoverTargetTop
-          ? "green"
-          : isTopSelected
-            ? "blue"
-            : "none",
-        isSelected: isTopSelected || isHoverTargetTop,
+        selectColor: isHoverTargetTop ? "green" : "none",
+        isSelected: isHoverTargetTop,
         isVisible: !isBeingDragged,
         animDuration: animDuration,
       };
@@ -336,9 +337,7 @@ export default function EightOff() {
       return {
         onPress: () => onCascadePress(pileIndex),
         isDisabled: !!dragGhost || !selected,
-        isSelected:
-          (selected?.zone === "cascade" && selected.pileIndex === pileIndex) ||
-          (isHoverDropTarget && zone.cards?.length === 0),
+        isSelected: isHoverDropTarget && zone.cards?.length === 0,
         selectColor: isHoverDropTarget ? "green" : "blue",
       };
     }
@@ -355,6 +354,7 @@ export default function EightOff() {
     zoneMapper,
     cardSize: "tableau",
     fixedRows: 7,
+    gap: 0.12,
   });
 
   // ── Hit areas ───────────────────────────────────────────────────────────────
@@ -377,18 +377,35 @@ export default function EightOff() {
 
       if (zone.name === "cascade" && zone.pileIndex !== undefined) {
         const pile = game.cascades[zone.pileIndex];
-        if (pile.length === 0) return;
-        areas.push({
-          source: { zone: "cascade", pileIndex: zone.pileIndex },
-          rect: createRect(
-            zoneRect.x,
-            zoneRect.y +
-              (pile.length - 1) * cardDims.tableauOffset * cardHeight,
-            cardWidth,
-            cardHeight,
-          ),
-          priority: 10 + pile.length,
-        });
+        const maxStackSize = getMaxMovableStackSize(game);
+        for (let startIndex = 0; startIndex < pile.length; startIndex++) {
+          const cards = pile.slice(startIndex);
+          if (
+            cards.length > maxStackSize ||
+            !isDescendingSameSuitStack(cards)
+          ) {
+            continue;
+          }
+
+          const isTopCard = startIndex === pile.length - 1;
+          const hitHeight = isTopCard
+            ? cardHeight
+            : cardDims.tableauOffset * cardHeight;
+          areas.push({
+            source: {
+              zone: "cascade",
+              pileIndex: zone.pileIndex,
+              startIndex,
+            },
+            rect: createRect(
+              zoneRect.x,
+              zoneRect.y + startIndex * cardDims.tableauOffset * cardHeight,
+              cardWidth,
+              hitHeight,
+            ),
+            priority: 10 + startIndex,
+          });
+        }
       }
     });
 
@@ -489,15 +506,32 @@ export default function EightOff() {
     return snapshot.freeCells[source.slotIndex];
   }
 
+  function getDraggedCards(
+    source: MoveSource,
+    snapshot: GameState,
+  ): PlayingCard[] {
+    if (source.zone === "cascade") {
+      return snapshot.cascades[source.pileIndex].slice(source.startIndex);
+    }
+    const card = snapshot.freeCells[source.slotIndex];
+    return card ? [card] : [];
+  }
+
+  function getMaxMovableStackSize(snapshot: GameState): number {
+    return snapshot.freeCells.filter((card) => card === null).length + 1;
+  }
+
   function canDropOnTarget(source: MoveSource, target: DropTarget): boolean {
-    const card = getTopCard(source, game);
-    if (!card) return false;
+    const cards = getDraggedCards(source, game);
+    const card = cards[0];
+    if (!card || cards.length > getMaxMovableStackSize(game)) return false;
 
     if (target.zone === "free") {
-      return game.freeCells[target.slotIndex] === null;
+      return cards.length === 1 && game.freeCells[target.slotIndex] === null;
     }
 
     if (target.zone === "foundation") {
+      if (cards.length !== 1) return false;
       const targetPile = game.foundations[target.pileIndex];
       const top = targetPile[targetPile.length - 1];
       return canPlaceOnFoundation(card, top);
@@ -511,7 +545,7 @@ export default function EightOff() {
       game.cascades[target.pileIndex][
         game.cascades[target.pileIndex].length - 1
       ];
-    return canPlaceOnCascade(card, top);
+    return isDescendingSameSuitStack(cards) && canPlaceOnCascade(card, top);
   }
 
   function applyMove(source: MoveSource, target: DropTarget) {
@@ -524,22 +558,22 @@ export default function EightOff() {
 
     setGame((draft) => {
       const snapshot = draft as GameState;
-      const card = getTopCard(source, snapshot);
-      if (!card) return;
+      const cards = getDraggedCards(source, snapshot);
+      if (cards.length === 0) return;
 
       if (source.zone === "cascade") {
-        draft.cascades[source.pileIndex].pop();
+        draft.cascades[source.pileIndex].splice(source.startIndex);
       } else {
         draft.freeCells[source.slotIndex] = null;
       }
 
       if (target.zone === "cascade") {
-        draft.cascades[target.pileIndex].push(card);
+        draft.cascades[target.pileIndex].push(...cards);
       } else if (target.zone === "free") {
         if (draft.freeCells[target.slotIndex] !== null) return;
-        draft.freeCells[target.slotIndex] = card;
+        draft.freeCells[target.slotIndex] = cards[0];
       } else {
-        draft.foundations[target.pileIndex].push(card);
+        draft.foundations[target.pileIndex].push(cards[0]);
       }
     });
 
@@ -600,7 +634,7 @@ export default function EightOff() {
       const pile = game.cascades[source.pileIndex];
       return {
         x: base.x,
-        y: base.y + (pile.length - 1) * cardDims.tableauOffset * cardHeight,
+        y: base.y + source.startIndex * cardDims.tableauOffset * cardHeight,
       };
     }
     return { x: base.x, y: base.y };
@@ -613,11 +647,17 @@ export default function EightOff() {
   }
 
   function startGhostDrag(source: MoveSource, _event: GestureResponderEvent) {
-    const card = getTopCard(source, game);
-    if (!card) return;
+    const cards = getDraggedCards(source, game);
+    if (
+      cards.length === 0 ||
+      cards.length > getMaxMovableStackSize(game) ||
+      (source.zone === "cascade" && !isDescendingSameSuitStack(cards))
+    ) {
+      return;
+    }
     const origin = getSourceOrigin(source);
     if (!origin) return;
-    startDrag(source, [card], origin);
+    startDrag(source, cards, origin);
   }
 
   function makeHandlers(source: MoveSource, onTap?: () => void) {
@@ -626,26 +666,27 @@ export default function EightOff() {
 
   // ── Tap handlers ─────────────────────────────────────────────────────────────
 
-  function onCascadePress(pileIndex: number) {
+  function onCascadePress(pileIndex: number, source?: MoveSource) {
     const now = Date.now();
     const tapKey = `cascade-${pileIndex}`;
 
     if (lastTap?.key === tapKey && now - lastTap.at < DOUBLE_TAP_MS) {
       setLastTap(null);
-      const source: MoveSource = { zone: "cascade", pileIndex };
-      const foundationTarget = getAutoFoundationTarget(source);
-      if (foundationTarget && canDropOnTarget(source, foundationTarget)) {
-        applyMove(source, foundationTarget);
+      if (
+        source?.zone === "cascade" &&
+        source.startIndex === game.cascades[pileIndex].length - 1
+      ) {
+        const foundationTarget = getAutoFoundationTarget(source);
+        if (foundationTarget && canDropOnTarget(source, foundationTarget)) {
+          applyMove(source, foundationTarget);
+        }
       }
       return;
     }
 
     setLastTap({ key: tapKey, at: now });
 
-    const pile = game.cascades[pileIndex];
-
     if (!selected) {
-      if (pile.length > 0) setSelected({ zone: "cascade", pileIndex });
       return;
     }
 
@@ -711,7 +752,7 @@ export default function EightOff() {
   );
   tapHandlerResolverRef.current = (source: MoveSource) => {
     if (source.zone === "cascade") {
-      return () => onCascadePress(source.pileIndex);
+      return () => onCascadePress(source.pileIndex, source);
     }
 
     return () => onFreeCellPress(source.slotIndex);
@@ -723,7 +764,7 @@ export default function EightOff() {
         const { source, rect } = hit;
         const key =
           source.zone === "cascade"
-            ? `cascade-${source.pileIndex}`
+            ? `cascade-${source.pileIndex}-${source.startIndex}`
             : `free-${source.slotIndex}`;
 
         return (
@@ -812,13 +853,26 @@ export default function EightOff() {
                   },
                 ]}
               >
-                <Card
-                  card={dragGhost.cards[0]}
-                  cardWidth={cardWidth}
-                  cardSize="tableau"
-                  selectColor={ghostHasValidDrop ? "green" : "none"}
-                  isSelected={ghostHasValidDrop}
-                />
+                {dragGhost.cards.map((card, index) => (
+                  <View
+                    key={card.id}
+                    style={{
+                      position: "absolute",
+                      left: 0,
+                      top: index * cardDims.tableauOffset * cardHeight,
+                      width: cardWidth,
+                      height: cardHeight,
+                    }}
+                  >
+                    <Card
+                      card={card}
+                      cardWidth={cardWidth}
+                      cardSize="tableau"
+                      selectColor={ghostHasValidDrop ? "green" : "none"}
+                      isSelected={ghostHasValidDrop}
+                    />
+                  </View>
+                ))}
               </View>
             </Animated.View>
           )}

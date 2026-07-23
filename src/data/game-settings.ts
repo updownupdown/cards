@@ -24,7 +24,11 @@ export type GameSpecificSettingDefinition = {
   label: string;
   type: "string";
   applyBehavior: GameSpecificSettingApplyBehavior;
-  options: { label: string; value: GameSpecificSettingOptionValue }[];
+  options: {
+    label: string;
+    value: GameSpecificSettingOptionValue;
+    description?: string;
+  }[];
   description?: string;
 };
 
@@ -73,9 +77,30 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         type: "string",
         applyBehavior: "next-game",
         options: [
-          { label: "Easy (4 x 5)", value: "easy" },
-          { label: "Medium (5 x 6)", value: "medium" },
-          { label: "Hard (6 x 7)", value: "hard" },
+          {
+            label: "Very Easy (4 x 3)",
+            value: "veryeasy",
+          },
+          {
+            label: "Easy (5 x 4)",
+            value: "easy",
+          },
+          {
+            label: "Medium (6 x 5)",
+            value: "medium",
+          },
+          {
+            label: "Hard (7 x 6)",
+            value: "hard",
+          },
+          {
+            label: "Very Hard (8 x 7)",
+            value: "veryhard",
+          },
+          {
+            label: "Extreme (8 x 9)",
+            value: "extreme",
+          },
         ],
       },
     ],
@@ -215,36 +240,95 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         description:
           "Optional named challenges tweak the rules and set the trail length.",
         options: [
-          { label: "Base Climb", value: "none" },
-          { label: "Cho Oyu (\u22656-card milestones)", value: "cho-oyu" },
           {
-            label: "Shishapangma (approach draws)",
+            label: "Base Climb",
+            value: "none",
+            description: "Trail Length: 3. No special challenge rules.",
+          },
+          {
+            label: "Cho Oyu (8,188m)",
+            value: "cho-oyu",
+            description:
+              "Trail Length: 2. When you reach a camp, do not add the camp's milestone to your trail unless it has at least 6 cards.",
+          },
+          {
+            label: "Shishapangma (8,027m)",
             value: "shishapangma",
+            description:
+              "Trail Length: 3. When you play a route with a technical (diamonds) or free-climbing (spades) approach, draw an additional card. When you play a route with a cautious (hearts) or reckless (clubs) approach, draw one fewer card. You still do not draw more cards than the number of cards in the route played.",
           },
-          { label: "Manaslu (fatigue capped at 1)", value: "manaslu" },
-          { label: "Broad Peak (vary approaches)", value: "broad-peak" },
           {
-            label: "Gasherbrum II (draw one fewer)",
+            label: "Manaslu (8,163m)",
+            value: "manaslu",
+            description:
+              "Trail Length: 4. When you reach a camp, do not add any additional cards to the fatigue pile. When you rest, after adding the cards in the fatigue pile into your hand, only add one card to the fatigue pile.",
+          },
+          {
+            label: "Broad Peak (8,051m)",
+            value: "broad-peak",
+            description:
+              "Trail Length: 3. You cannot play a route unless its approach is different than that of the previous route. When you reach a camp, do not add that camp's milestone to the trail unless its approach is different from that of all previous routes in the trail.",
+          },
+          {
+            label: "Gasherbrum II (8,035m)",
             value: "gasherbrum-ii",
+            description:
+              "Trail Length: 4. When you play a route, reduce the number of cards you would draw by one before actually drawing cards. If this would cause the number of cards drawn to be negative, instead draw cards equal to the number of cards in the route.",
           },
-          { label: "Everest (draw seven)", value: "everest" },
           {
-            label: "Dhaulagiri (traverse milestones)",
+            label: "Mount Everest (8,848m)",
+            value: "everest",
+            description:
+              "Trail Length: 5. During setup, and whenever you reach a camp, only draw seven cards instead of ten.",
+          },
+          {
+            label: "Dhaulagiri (8,167m)",
             value: "dhaulagiri",
+            description:
+              "Trail Length: 3. When you reach a camp, do not add that camp's milestone to your trail unless a traverse with at least two cards is in the play area, including the milestone itself.",
           },
-          { label: "Gasherbrum I (even anchors)", value: "gasherbrum-i" },
           {
-            label: "Kangchenjunga (any anchor)",
+            label: "Gasherbrum I (8,080m)",
+            value: "gasherbrum-i",
+            description:
+              "Trail Length: 3. You cannot play a route with an odd-valued anchor, including Aces, Jacks, or Kings.",
+          },
+          {
+            label: "Kangchenjunga (8,586m)",
             value: "kangchenjunga",
+            description:
+              "Trail Length: 4. When you play a route, you do not have to play the cards in order, so any card in the route can be the anchor. You still cannot play a Joker as the anchor of a route.",
           },
-          { label: "Lhotse (2+ card routes)", value: "lhotse" },
-          { label: "Makalu (free discard)", value: "makalu" },
           {
-            label: "Nanga Parbat (even-step ascents)",
-            value: "nanga-parbat",
+            label: "Lhotse (8,516m)",
+            value: "lhotse",
+            description:
+              "Trail Length: 3. You cannot play a route unless it contains at least two cards.",
           },
-          { label: "K2 (uncapped draws)", value: "k2" },
-          { label: "Annapurna I (matching suits recall)", value: "annapurna" },
+          {
+            label: "Makalu (8,481m)",
+            value: "makalu",
+            description:
+              "Trail Length: 4. When you play a route, you may also discard any card from your hand.",
+          },
+          {
+            label: "Nanga Parbat (8,126m)",
+            value: "nanga-parbat",
+            description:
+              "Trail Length: 3. You cannot play traverses or descents. Cards in an ascent do not need to be consecutive, but the distance between each card must be the same.",
+          },
+          {
+            label: "K2 (8,611m)",
+            value: "k2",
+            description:
+              "Trail Length: 3. When you play a route, the number of cards you draw is not limited by the number of cards in the route played.",
+          },
+          {
+            label: "Annapurna I (8,091m)",
+            value: "annapurna",
+            description:
+              "Trail Length: 4. When you draw cards after playing a route, if any of the cards drawn match the suit of the route's anchor, return all cards in the route played to your hand. Do not do this when you reach a camp. If you ever have 18 or more cards in your hand, you immediately lose the game.",
+          },
         ],
       },
     ],

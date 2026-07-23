@@ -43,6 +43,8 @@ interface Props {
   tipPhase?: string;
   canUndo?: boolean;
   undo?: () => void;
+  openMenu?: boolean;
+  onMenuClose?: () => void;
 }
 
 export const GameWrapper = ({
@@ -56,6 +58,8 @@ export const GameWrapper = ({
   tipPhase,
   canUndo,
   undo: handleUndo,
+  openMenu = false,
+  onMenuClose,
 }: Props) => {
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);
@@ -125,8 +129,14 @@ export const GameWrapper = ({
         handleUndo={handleUndo}
       />
 
-      {showMenu && (
-        <GameModal onClose={() => setShowMenu(false)} onReloadGame={reset} />
+      {(showMenu || openMenu) && (
+        <GameModal
+          onClose={() => {
+            setShowMenu(false);
+            onMenuClose?.();
+          }}
+          onReloadGame={reset}
+        />
       )}
 
       <View

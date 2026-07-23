@@ -14,7 +14,13 @@ export type GameSettings = {
   showCardHints: boolean;
   isFavorite: boolean;
   difficulty: "easy" | "difficult";
-  memoryDifficulty: "easy" | "medium" | "hard";
+  memoryDifficulty:
+    | "veryeasy"
+    | "easy"
+    | "medium"
+    | "hard"
+    | "veryhard"
+    | "extreme";
   drawCount: 1 | 3;
   islandJokers: boolean;
   loboMode: "hard" | "medium" | "easy";

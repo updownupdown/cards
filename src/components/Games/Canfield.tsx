@@ -1,6 +1,3 @@
-import { Text } from "@/components/common/Text";
-import { useGameSettingValue } from "@/hooks/useGameSettingValue";
-import { useStateManager } from "@/hooks/useStateManager";
 import {
   CardHitArea,
   createRect,
@@ -9,11 +6,14 @@ import {
   runTiming,
   useDragDrop,
 } from "@/hooks/useDragDrop";
+import { useGameSettingValue } from "@/hooks/useGameSettingValue";
+import { useStateManager } from "@/hooks/useStateManager";
+import { useViewportDimensions } from "@/hooks/useViewportDimensions";
+import { DOUBLE_TAP_MS } from "@/utils/utils";
 import { useNavigation } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { GestureResponderEvent } from "react-native";
 import { Animated, Pressable, StyleSheet, View } from "react-native";
-import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { Card } from "../Cards/Card";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
@@ -29,7 +29,6 @@ import {
   SUITS,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-import { DOUBLE_TAP_MS } from "@/utils/utils";
 
 type GameState = {
   foundations: PlayingCard[][];
@@ -284,7 +283,7 @@ export default function Canfield() {
         pileIndex: 0,
         col: 0,
         row: 0,
-        baseZIndex: 20,
+        baseZIndex: 1,
         fan: { maxVisible: 3 },
         placeholder: { text: "Draw", infoPos: "right", showCount: true },
       },
@@ -295,7 +294,7 @@ export default function Canfield() {
         pileIndex: 0,
         col: 0,
         row: 1,
-        baseZIndex: 10,
+        baseZIndex: 50,
         fan: { maxVisible: 3 },
         placeholder: { text: "Waste", infoPos: "right", showCount: true },
       },
@@ -308,7 +307,7 @@ export default function Canfield() {
         row: 2.5,
         baseZIndex: 40,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Res", infoPos: "right", showCount: true },
+        placeholder: { text: "Reserve", infoPos: "right", showCount: true },
       },
       ...foundationZones,
       ...tableauZones,

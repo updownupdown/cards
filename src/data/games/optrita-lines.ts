@@ -1,4 +1,4 @@
-import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
+import { GameDefinition, GameTag } from "../games-data";
 
 export const optritaLines: GameDefinition = {
   enabledOnLocalOnly: true,
