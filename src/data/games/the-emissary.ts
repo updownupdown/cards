@@ -17,6 +17,7 @@ export const theEmissary: GameDefinition = {
   },
   tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
   byLine: "Game design by Wil Su, 2021",
+  authorName: "Wil Su",
   about: [
     "You are a young noble, send by your father to gather support from eight neighboring kingdoms. You must engage in a series of debates to win over each kingdom's ruler.",
   ],

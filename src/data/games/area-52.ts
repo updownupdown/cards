@@ -21,6 +21,7 @@ export const area52: GameDefinition = {
     GameTag.EasyToLearn,
   ],
   byLine: "Game design by Wil Su, 2021",
+  authorName: "Wil Su",
   about: [
     "Strategically command your defenders to fight off two waves of invading aliens.",
     "This game is adapted from Wil Su's Isaludo collection.",

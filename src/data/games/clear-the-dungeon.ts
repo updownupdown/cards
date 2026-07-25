@@ -7,7 +7,6 @@ export const clearTheDungeon: GameDefinition = {
     default: "Beat each monster with sum pair, then matching-suit trigger.",
   },
   title: "Clear the Dungeon",
-
   thumbnail: "ClearTheDungeon.jpg",
   cardColorBg: "#2e231c",
   cardColorText: "#fff6dc",
@@ -25,6 +24,7 @@ export const clearTheDungeon: GameDefinition = {
     "Every attack needs raw power and the right weakness — spend your cards wisely and keep the damage bar low.",
   ],
   byLine: "Game design by Mark S. Ball, 2019",
+  authorName: "Mark S. Ball",
   howToPlay: [
     "## Objective",
     "Defeat all **12 monsters** (the Jacks, Queens and Kings) before your power deck runs out.",

@@ -1,5 +1,5 @@
 import "@/styles/global.css";
-import { roundToPixel } from "@/utils/utils";
+import { darkenHexColor, roundToPixel } from "@/utils/utils";
 import { Platform, StyleSheet } from "react-native";
 
 export const Colors = {
@@ -39,7 +39,9 @@ export const Colors = {
 
   // Misc
   win: "#03B491",
+  winDark: darkenHexColor("#03B491", 0.25),
   lose: "#CE3566",
+  loseDark: darkenHexColor("#CE3566", 0.25),
   favoriteStar: "#ff922d",
   suitsRed: "#C62440",
   suitsBlack: "#313C3F",

@@ -7,6 +7,8 @@ import { Animated, Easing, Platform, View } from "react-native";
 import { Button } from "../Button/Button";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { LinearGradient } from "expo-linear-gradient";
+import { clearLastGameSession } from "@/data/game-menu";
+import { router } from "expo-router";
 
 interface Props {
   gameEnded: boolean;
@@ -76,15 +78,17 @@ export const WinLoseBox = ({
         }}
       >
         <LinearGradient
-          colors={[rgba(cardBg, 0), rgba(cardBg, 0.8)]}
+          colors={[rgba(cardBg, 0.4), rgba(cardBg, 0.9)]}
           start={{ x: 0.5, y: 0 }}
           end={{ x: 0.5, y: 1 }}
           style={{
             position: "absolute",
             bottom: 0,
             left: 0,
+            top: 0,
+            right: 0,
             width: "100%",
-            height: "160%",
+            // height: "160%",
             pointerEvents: "none",
           }}
         />
@@ -163,24 +167,36 @@ export const WinLoseBox = ({
             },
           ]}
         >
+          <Button
+            size="md"
+            onPress={async () => {
+              try {
+                await clearLastGameSession();
+              } finally {
+                router.push("/");
+              }
+            }}
+            taller
+            iconName="home"
+            theme={won ? "winDark" : "loseDark"}
+          />
+
           {handleUndo && !won && (
             <Button
               onPress={() => fadeOutWLM(handleUndo)}
+              iconName="undo"
               size="md"
-              text="Undo"
-              theme={"lose"}
+              theme="loseDark"
               taller
-              style={{
-                flex: 1,
-              }}
             />
           )}
 
           <Button
             onPress={() => fadeOutWLM(reset)}
             size="md"
+            iconName="reset"
             text={won ? "Play again" : "Try again"}
-            theme={won ? "win" : "lose"}
+            theme={won ? "winDark" : "loseDark"}
             taller
             style={{
               flex: 1,

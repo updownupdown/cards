@@ -31,6 +31,7 @@ export const cardCapture: GameDefinition = {
     "The central tension is protection: Aces and face cards must never end up in the Enemy Capture Pile.",
   ],
   byLine: "Game design by Lucas Gentry, 2018",
+  authorName: "Lucas Gentry",
   howToPlay: [
     "Setup decks: take all 2s, 3s, 4s, plus both jokers as your Personal Draw Deck. Shuffle all remaining cards as the Enemy Draw Deck.",
     "Layout: top row is Enemy Draw Deck, then enemy Positions 1-4, then Enemy Capture Pile. Bottom row is Personal Draw Deck, your hand area (up to 4 cards), then your discard pile.",

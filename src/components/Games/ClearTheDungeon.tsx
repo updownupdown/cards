@@ -556,8 +556,6 @@ export default function ClearTheDungeon() {
     return result;
   }, [game, abilitiesOn, powerReserveOn, level]);
 
-  console.log(game);
-
   const cardMapper = (
     mappedCard: MappedCard,
   ): AnimatedCardMapping | undefined => {

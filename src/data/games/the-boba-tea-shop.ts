@@ -20,6 +20,7 @@ export const theBobaTeaShop: GameDefinition = {
   },
   tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
   byLine: "Game design by Wil Su, 2021",
+  authorName: "Wil Su",
   howToPlay: [
     "Play cards into valid stacks to satisfy order constraints.",
     "Plan around blocked stacks so you do not run out of legal moves.",

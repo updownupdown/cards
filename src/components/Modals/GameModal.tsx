@@ -72,6 +72,7 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
         onClose={handleClose}
         title={gameInfo.title}
         titleColor={gameInfo.cardColorText}
+        subtitle={gameInfo.authorName ? `by ${gameInfo.authorName}` : undefined}
         backgroundColor={gameInfo.cardColorBg}
       >
         {/* Scroll view */}
@@ -138,7 +139,7 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
             ]}
           >
             {/* Tips mode toggle */}
-            <View
+            {/* <View
               style={[
                 flexStyles.colCentered,
                 flexStyles.fullWidth,
@@ -162,7 +163,7 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
                   onGameSettingChange("tipsMode", Boolean(value))
                 }
               />
-            </View>
+            </View> */}
 
             {/* Game Settings */}
             {gameSpecificSettings.length > 0 &&
@@ -208,7 +209,7 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
                 {
                   alignItems: "flex-start",
                   padding: spacing(24),
-                  gap: spacing(20),
+                  gap: spacing(8),
                   backgroundColor: lightenHexColor(gameInfo.cardColorBg, 0.1),
                   borderRadius: spacing(8),
                 },
@@ -244,7 +245,12 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
 
               {/* By Line */}
               {gameInfo.byLine && (
-                <Text weight={300} size="sm" color={rgba(Colors.white, 0.6)}>
+                <Text
+                  weight={300}
+                  size="md"
+                  color={gameInfo.cardColorText}
+                  style={{ marginBottom: spacing(8) }}
+                >
                   {gameInfo.byLine}
                 </Text>
               )}
@@ -269,9 +275,11 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
 }
 
 export const HowToPlay = ({
+  showHeading = true,
   howToPlayText,
   headingColor,
 }: {
+  showHeading?: boolean;
   howToPlayText: string[];
   headingColor: string;
 }) => {
@@ -285,23 +293,25 @@ export const HowToPlay = ({
         },
       ]}
     >
-      <View
-        style={[
-          flexStyles.rowCentered,
-          flexStyles.fullWidth,
-          flexStyles.spaceBetween,
-        ]}
-      >
-        <Text
-          size="xl"
-          weight={300}
-          color={headingColor}
-          style={flexStyles.flex1}
+      {showHeading && (
+        <View
+          style={[
+            flexStyles.rowCentered,
+            flexStyles.fullWidth,
+            flexStyles.spaceBetween,
+          ]}
         >
-          How to Play
-        </Text>
-        <Icon name="instructions" size={32} color={headingColor} />
-      </View>
+          <Text
+            size="xl"
+            weight={300}
+            color={headingColor}
+            style={flexStyles.flex1}
+          >
+            How to Play
+          </Text>
+          <Icon name="instructions" size={32} color={headingColor} />
+        </View>
+      )}
 
       <RichText
         content={howToPlayText}

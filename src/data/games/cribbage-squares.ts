@@ -24,6 +24,7 @@ export const cribbageSquares: GameDefinition = {
   about: [
     "Cribbage Squares combines a spatial placement puzzle with the many scoring combinations of cribbage.",
   ],
+  byLine: "Author unknown; appeared in the 1950s",
   howToPlay: [
     "## Objective",
     "Score at least 61 points from the four rows and four columns.",

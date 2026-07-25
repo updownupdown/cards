@@ -61,6 +61,7 @@ export type GameMenuInfo = {
   /** Per-phase tip-mode instructions keyed by phase (or "default"). */
   tip?: TipInstructions;
   byLine?: string;
+  authorName?: string;
   tags?: GameTag[];
 };
 

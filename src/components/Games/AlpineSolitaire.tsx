@@ -687,7 +687,7 @@ export default function AlpineSolitaire() {
   const zones: MapZone[] = useMemo(() => {
     const result: MapZone[] = [
       // Hud
-      { id: "hud", col: 0, row: 0, width: 3, height: 1.2 },
+      { id: "hud", col: 0, row: 0, width: 3, height: 1.28 },
 
       // Piles row: fatigue / deck / discard.
       {
@@ -867,19 +867,24 @@ export default function AlpineSolitaire() {
           getZoneStylesById("hud"),
           flexStyles.colStart,
           {
-            justifyContent: "center",
-            gap: spacing(18),
+            justifyContent: "flex-end",
+            gap: spacing(14),
           },
         ]}
       >
         <View style={[flexStyles.colStart]}>
-          <Text size="sm" weight={400} color={rgba(cardText, 0.6)}>
+          <Text
+            size="xs"
+            weight={300}
+            color={rgba(cardText, 0.6)}
+            lineHeight={1.2}
+          >
             {firstLetterUppercase(difficulty)}
           </Text>
-          <Text size="lg" weight={500} color={cardText}>
+          <Text size="md" weight={400} color={cardText} lineHeight={1.2}>
             {challengeName}
           </Text>
-          <Text size="xxl" weight={500} color={cardText}>
+          <Text size="xl" weight={600} color={cardText} lineHeight={1.2}>
             {commaFormattedNumber(MOUNTAIN_HEIGHT[challenge] ?? 0)}m
           </Text>
         </View>
@@ -1053,7 +1058,7 @@ export default function AlpineSolitaire() {
             style={[
               rotatedText,
               {
-                fontSize: cardWidth * 0.2,
+                fontSize: cardWidth * 0.16,
                 color: rgba(cardText, 0.6),
               },
             ]}

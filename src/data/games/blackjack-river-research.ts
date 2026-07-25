@@ -24,6 +24,7 @@ export const blackjackRiverResearch: GameDefinition = {
     "Every completed study is a data point, and spotting notable patterns earns lasting Breakthroughs.",
   ],
   byLine: "Game design by Gregg Jewell, 2023",
+  authorName: "Gregg Jewell",
   howToPlay: [
     "## Objective",
     "Complete river **studies** by creating fish population columns of **exactly 21 fish**.",

@@ -24,6 +24,7 @@ export const islandOfCards: GameDefinition = {
     "Suit and colour never matter — only how ranks chain together and avoid their equals.",
   ],
   byLine: "Game design by Frank, 2021",
+  authorName: "Frank",
   howToPlay: [
     "## Objective",
     "Fill the whole **7x7 island**, or score as high as you can.",

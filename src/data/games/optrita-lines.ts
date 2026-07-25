@@ -24,6 +24,7 @@ export const optritaLines: GameDefinition = {
     "More information helps, but every reveal also closes off lines you can no longer challenge.",
   ],
   byLine: "Game design by Stephen Tudor, 2023",
+  authorName: "Stephen Tudor",
   howToPlay: [
     "## Objective",
     "Win **21 tricks** before the grid does.",

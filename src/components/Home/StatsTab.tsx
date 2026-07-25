@@ -369,8 +369,8 @@ export function StatsTab({
                     }}
                   >
                     {renderSortableHeader("Game", "title")}
-                    {renderSortableHeader("Win", "wins")}
-                    {renderSortableHeader("Lose", "losses")}
+                    {renderSortableHeader("Won", "wins")}
+                    {renderSortableHeader("Lost", "losses")}
                     {renderSortableHeader("W%", "winRate")}
                     {renderSortableHeader("Best", "best")}
                   </View>

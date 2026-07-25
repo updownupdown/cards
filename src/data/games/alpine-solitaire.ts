@@ -24,6 +24,7 @@ export const alpineSolitaire: GameDefinition = {
     "Balance aggressive routes against the fatigue they create, and choose a difficulty or one of fourteen eight-thousander challenges in Settings.",
   ],
   byLine: "Game design by Austin Palmer, 2023",
+  authorName: "Austin Palmer",
   howToPlay: [
     "## Objective",
     "Reach three camps by playing a route that empties your hand — while your milestones keep getting higher.",

@@ -285,7 +285,6 @@ export default function SpiderSolitaire() {
         row: 0,
         baseZIndex: 20 + pileIndex,
         fan: { direction: "down", offset: 0.02, maxVisible: 3 },
-        // placeholder: {},
       }),
     );
 

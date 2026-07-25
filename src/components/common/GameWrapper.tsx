@@ -219,7 +219,7 @@ export const GameWrapper = ({
             <Button
               headerButton
               onPress={() => setTipsMode(!active)}
-              iconName={"info-outline"}
+              iconName={"instructions"}
               iconColor={active ? rgba(Colors.white, 0.3) : titleColor}
             />
 

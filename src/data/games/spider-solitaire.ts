@@ -7,10 +7,9 @@ export const spiderSolitaire: GameDefinition = {
   },
   title: "Spider Solitaire",
   thumbnail: "SpiderSolitaire.jpg",
-  enabledOnLocalOnly: true,
   background: "felt-dark-purple.jpg",
-  cardColorBg: "#2E2731",
-  cardColorText: "#F5E6FF",
+  cardColorBg: "#24161f",
+  cardColorText: "#ffc6ca",
   cardDescription:
     "Build same-suit runs from King to Ace across a tangled double deck.",
   rating: {

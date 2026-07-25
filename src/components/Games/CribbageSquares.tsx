@@ -253,10 +253,10 @@ export default function CribbageSquares() {
         id: "current",
         name: "current",
         cards: game.current ? [game.current] : [],
-        col: 1,
+        col: 0,
         row: 0,
         baseZIndex: 40,
-        placeholder: { text: "Deal", infoPos: "left" },
+        placeholder: { text: "Deal", infoPos: "right" },
       },
       {
         id: "starter",
@@ -265,7 +265,7 @@ export default function CribbageSquares() {
         col: 3,
         row: 0,
         baseZIndex: 40,
-        placeholder: { text: "Starter", infoPos: "right" },
+        placeholder: { text: "Starter", infoPos: "left" },
       },
       ...gridZones,
     ];

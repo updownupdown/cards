@@ -28,7 +28,9 @@ const THEME_COLORS = {
   green: Colors.buttonGreen,
   pink: Colors.buttonPink,
   win: Colors.win,
+  winDark: Colors.winDark,
   lose: Colors.lose,
+  loseDark: Colors.loseDark,
 } as const;
 
 interface Props {

@@ -23,6 +23,7 @@ export const penguin: GameDefinition = {
     "With seven free cells and full information, most deals reward patient, planned play.",
   ],
   byLine: "Game design by David Parlett, 1979",
+  authorName: "David Parlett",
   howToPlay: [
     "## Objective",
     "Build all four **foundations** up by suit from the beak rank until each holds 13 cards.",

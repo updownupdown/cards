@@ -16,6 +16,7 @@ export const bowlingSolitaire: GameDefinition = {
   },
   tags: [GameTag.ModernMechanics],
   byLine: "Game design by Sid Sackson, 1969",
+  authorName: "Sid Sackson",
   about: [
     "Bowling Solitaire translates 10-pin bowling into a tactical card puzzle.",
     "Every roll is a value-and-position decision: card value, pin adjacency, and frame timing all matter.",

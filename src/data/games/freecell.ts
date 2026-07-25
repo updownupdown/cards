@@ -19,6 +19,7 @@ export const freecell: GameDefinition = {
   },
   tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
   byLine: "Game design by Paul Alfille, 1978",
+  authorName: "Paul Alfille",
   about: [
     "FreeCell is a skill-heavy solitaire where the whole deck is visible from the start.",
     "With four free cells and no hidden cards, nearly every deal is winnable through careful planning.",

@@ -1,4 +1,4 @@
-import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
+import { GameDefinition, GameTag } from "../games-data";
 
 export const canfield: GameDefinition = {
   path: "/canfield",
@@ -7,7 +7,6 @@ export const canfield: GameDefinition = {
       "Foundations up suit; tableau down alt color; empties use reserve.",
   },
   title: "Canfield",
-  enabledOnLocalOnly: true,
   background: "felt-dark-red.jpg",
   cardColorBg: "#311a1e",
   cardColorText: "#E4F6FF",

@@ -28,8 +28,8 @@ const SUIT_GLYPH = {
 } as const;
 
 const SUIT_COLOR = {
-  H: Colors.suitsRed,
-  D: Colors.suitsRed,
+  H: Colors.white,
+  D: Colors.white,
   C: Colors.white,
   S: Colors.white,
 } as const;

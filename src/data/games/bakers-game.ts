@@ -23,6 +23,7 @@ export const bakersGame: GameDefinition = {
     "Building by suit makes long sequences far harder to assemble, so free cells are precious.",
   ],
   byLine: "Game design by C. L. Baker, 1968",
+  authorName: "C. L. Baker",
   howToPlay: [
     "## Objective",
     "Move all 52 cards to the four **foundations**, each built up by suit from Ace to King.",

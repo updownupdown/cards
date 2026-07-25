@@ -20,6 +20,7 @@ export const hideAndSeek: GameDefinition = {
   },
   tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
   byLine: "Game design by Wil Su, 2021",
+  authorName: "Wil Su",
   howToPlay: [
     "Reveal hidden cards through legal uncover moves.",
     "Avoid locking hidden cards under unusable stacks.",

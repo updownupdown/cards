@@ -26,6 +26,7 @@ export const regicide: GameDefinition = {
     "Enemies grow tougher as you climb, so manage your hand and discard pile with care.",
   ],
   byLine: "Game design by Paul Abrahams, Luke Badger, and Andy Richdale, 2020",
+  authorName: "Paul Abrahams, Luke Badger, and Andy Richdale",
   howToPlay: [
     "## Objective",
     "Defeat all **12 royal enemies** — the Jacks, Queens, and Kings — one after another.",

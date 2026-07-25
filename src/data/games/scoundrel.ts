@@ -24,6 +24,7 @@ export const scoundrel: GameDefinition = {
   about: [
     "Scoundrel is a dungeon-crawling solitaire game where planing and strategy truly matters: when to equip, when to take damage, and when to retreat.",
   ],
+  authorName: "Zach Gage and Kurt Bieg",
   howToPlay: [
     "## Objective",
     "- Clear the dungeon by resolving all rooms before running out of health.",

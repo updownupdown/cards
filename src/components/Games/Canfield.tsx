@@ -30,6 +30,8 @@ import {
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 
+const cardSize = "tableau";
+
 type GameState = {
   foundations: PlayingCard[][];
   baseRank: StandardRank;
@@ -475,7 +477,7 @@ export default function Canfield() {
     zones,
     cardMapper,
     zoneMapper,
-    cardSize: "small",
+    cardSize,
     fixedRows: 6,
   });
 
@@ -1213,7 +1215,7 @@ export default function Canfield() {
                 <Card
                   card={card}
                   cardWidth={cardWidth}
-                  cardSize="small"
+                  cardSize={cardSize}
                   selectColor={ghostHasValidDrop ? "green" : "none"}
                   isSelected={ghostHasValidDrop}
                 />

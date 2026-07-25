@@ -123,17 +123,17 @@ export function TipsBox({ phase, topOffset }: Props) {
                   flexStyles.rowCentered,
                   flexStyles.fullWidth,
                   {
-                    gap: spacing(8),
+                    gap: spacing(12),
                   },
                 ]}
               >
                 <Icon
-                  name="info-outline"
-                  size={20}
+                  name="instructions"
+                  size={30}
                   color={gameInfo.cardColorText}
                 />
-                <Text size="md" weight={300} color={gameInfo.cardColorText}>
-                  Quick Tips
+                <Text size="xl" weight={400} color={gameInfo.cardColorText}>
+                  How to Play
                 </Text>
               </View>
             ) : (
@@ -162,7 +162,6 @@ export function TipsBox({ phase, topOffset }: Props) {
               padding: spacing(24),
               paddingTop: 0,
               paddingBottom: spacing(50),
-              gap: spacing(30),
             }}
             showsVerticalScrollIndicator={false}
           >
@@ -193,6 +192,7 @@ export function TipsBox({ phase, topOffset }: Props) {
 
             {/* How to Play */}
             <HowToPlay
+              showHeading={false}
               howToPlayText={gameInfo.howToPlay ?? [INSTRUCTIONS_UNAVAILABLE]}
               headingColor={gameInfo.cardColorText}
             />

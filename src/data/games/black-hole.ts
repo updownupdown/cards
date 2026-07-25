@@ -25,6 +25,7 @@ export const blackHole: GameDefinition = {
     "With perfect strategy, the win rate is roughly 87%. However, because the game requires looking multiple moves ahead to avoid dead ends, the average human win rate is much lower, between 15% and 40%.",
   ],
   byLine: "Game design by David Parlett, 1979",
+  authorName: "David Parlett",
   howToPlay: [
     "## Objective",
     "- Pull every card into the central black hole.",

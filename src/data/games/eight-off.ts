@@ -23,6 +23,7 @@ export const eightOff: GameDefinition = {
     "The extra cells make most deals winnable — the challenge is not clogging them all at once.",
   ],
   byLine: "Game designer unknown, popularized by C.L. Baker in the 1920s",
+  authorName: "C. L. Baker",
   howToPlay: [
     "## Objective",
     "Move all 52 cards to the four **foundations**, each built up by suit from Ace to King.",

@@ -24,6 +24,7 @@ export const lootTheLoop: GameDefinition = {
     'This game is part of the Isaludo collection of games, by Wil Su. Explore and loot the "Template of the Sun", a loop-shaped dungeon filled with trinkets and traps.',
   ],
   byLine: "Game design by Wil Su, 2021",
+  authorName: "Wil Su",
   howToPlay: [
     "## Objective",
     "- Loot all four jewels (Aces) and escape alive by stepping through the exit (Joker).",

@@ -25,6 +25,7 @@ export const inHandPoker: GameDefinition = {
     "The bigger your bet, the more cards your unseen opponent draws — so a strong hand isn't always worth the risk.",
   ],
   byLine: "Game design by John Burton, 2021",
+  authorName: "John Burton",
   howToPlay: [
     "## Objective",
     "Start at **5 points** and reach **10** without dropping to **0**.",

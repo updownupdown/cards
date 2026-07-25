@@ -12,6 +12,7 @@ type Props = {
   children: React.ReactNode;
   title: string;
   titleColor?: string;
+  subtitle?: string;
   backgroundColor?: string;
   onClose: () => void;
 };
@@ -20,6 +21,7 @@ export default function ModalFull({
   children,
   title,
   titleColor = Colors.K200,
+  subtitle,
   backgroundColor = Colors.K875,
   onClose,
 }: Props) {
@@ -40,9 +42,21 @@ export default function ModalFull({
           <View style={[modalStyles.modalCard, { backgroundColor }]}>
             <View style={modalStyles.modalHeader}>
               {/* Title */}
-              <Text size="xxl" color={titleColor} weight={500}>
-                {title}
-              </Text>
+              <View style={[flexStyles.colStart]}>
+                <Text size="xl" color={titleColor} weight={500}>
+                  {title}
+                </Text>
+                {subtitle && (
+                  <Text
+                    size="sm"
+                    color={titleColor}
+                    weight={300}
+                    style={{ opacity: 0.75 }}
+                  >
+                    {subtitle}
+                  </Text>
+                )}
+              </View>
 
               {/* Close button */}
               <Button

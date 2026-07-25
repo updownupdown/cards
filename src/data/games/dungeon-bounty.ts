@@ -24,6 +24,7 @@ export const dungeonBounty: GameDefinition = {
     "Only the single-player mode is implemented. Choose a difficulty in Settings; higher tiers start weaker and enemies gain suit powers.",
   ],
   byLine: "Game design by Theo Peters and Aaron Camponi, 2020",
+  authorName: "Theo Peters and Aaron Camponi",
   howToPlay: [
     "## Goal",
     "Survive two dungeon levels and claim as much **bounty and gems** as possible.",

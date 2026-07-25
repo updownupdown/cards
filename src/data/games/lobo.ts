@@ -24,6 +24,7 @@ export const lobo: GameDefinition = {
     '"The wolf takes small bites": often the smart play is the cheapest way to lose, not a risky win.',
   ],
   byLine: "Game design by James Ernest, 2022",
+  authorName: "James Ernest",
   howToPlay: [
     "## Objective",
     "Empty the **Wolf's hand** each round, and race the Wolf to **100 points**.",
