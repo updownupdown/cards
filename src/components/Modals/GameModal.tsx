@@ -9,7 +9,8 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
-import { Colors, rgba } from "@/styles/styles";
+import { Colors } from "@/styles/styles";
+import { lightenHexColor } from "@/utils/utils";
 import { usePathname } from "expo-router";
 import { useRef } from "react";
 import { ScrollView, View } from "react-native";
@@ -22,9 +23,6 @@ import {
 import { Button } from "../Button/Button";
 import { SettingControl } from "../common/SettingControl";
 import ModalFull from "./ModalFull";
-import { lightenHexColor } from "@/utils/utils";
-import { INSTRUCTIONS_UNAVAILABLE } from "@/constants/constants";
-import { RatingsBars } from "../Home/RatingBars";
 
 type Props = {
   onClose: () => void;
@@ -138,33 +136,6 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
               },
             ]}
           >
-            {/* Tips mode toggle */}
-            {/* <View
-              style={[
-                flexStyles.colCentered,
-                flexStyles.fullWidth,
-                {
-                  alignItems: "flex-start",
-                  padding: spacing(16),
-                  paddingTop: spacing(12),
-                  paddingRight: spacing(12),
-                  backgroundColor: lightenHexColor(gameInfo.cardColorBg, 0.1),
-                  borderRadius: spacing(8),
-                },
-              ]}
-            >
-              <SettingControl
-                label="Show Quick Tips"
-                labelColor={gameInfo.cardColorText}
-                helpText="Show step-by-step guidance while you play."
-                value={settings.tipsMode}
-                type="boolean"
-                onChange={(value) =>
-                  onGameSettingChange("tipsMode", Boolean(value))
-                }
-              />
-            </View> */}
-
             {/* Game Settings */}
             {gameSpecificSettings.length > 0 &&
               gameSpecificSettings.map((setting) => (
@@ -178,7 +149,7 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
                       padding: spacing(16),
                       backgroundColor: lightenHexColor(
                         gameInfo.cardColorBg,
-                        0.1,
+                        0.08,
                       ),
                       borderRadius: spacing(8),
                     },
@@ -187,7 +158,10 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
                   <SettingControl
                     label={setting.label}
                     labelColor={gameInfo.cardColorText}
-                    helpText={`${setting.description ? setting.description + " " : ""}${getSettingApplyBehaviorText(setting.applyBehavior)}`}
+                    helpText={setting.description}
+                    applyBehaviorText={getSettingApplyBehaviorText(
+                      setting.applyBehavior,
+                    )}
                     value={settings[setting.key]}
                     type={setting.type}
                     options={setting.options}
@@ -208,10 +182,11 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
                 flexStyles.fullWidth,
                 {
                   alignItems: "flex-start",
-                  padding: spacing(24),
+                  // padding: spacing(24),
+                  paddingVertical: spacing(24),
                   gap: spacing(8),
-                  backgroundColor: lightenHexColor(gameInfo.cardColorBg, 0.1),
-                  borderRadius: spacing(8),
+                  // backgroundColor: lightenHexColor(gameInfo.cardColorBg, 0.1),
+                  // borderRadius: spacing(8),
                 },
               ]}
             >
@@ -246,7 +221,7 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
               {/* By Line */}
               {gameInfo.byLine && (
                 <Text
-                  weight={300}
+                  weight={500}
                   size="md"
                   color={gameInfo.cardColorText}
                   style={{ marginBottom: spacing(8) }}
@@ -256,69 +231,14 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
               )}
 
               {/* Stats */}
-              <RatingsBars
+              {/* <RatingsBars
                 rating={gameInfo.rating}
                 gameColor={gameInfo.cardColorText}
-              />
+              /> */}
             </View>
           </View>
-
-          {/* How to Play */}
-          <HowToPlay
-            howToPlayText={gameInfo.howToPlay ?? [INSTRUCTIONS_UNAVAILABLE]}
-            headingColor={gameInfo.cardColorText}
-          />
         </ScrollView>
       </ModalFull>
     </>
   );
 }
-
-export const HowToPlay = ({
-  showHeading = true,
-  howToPlayText,
-  headingColor,
-}: {
-  showHeading?: boolean;
-  howToPlayText: string[];
-  headingColor: string;
-}) => {
-  return (
-    <View
-      style={[
-        flexStyles.colCentered,
-        flexStyles.fullWidth,
-        {
-          alignItems: "flex-start",
-        },
-      ]}
-    >
-      {showHeading && (
-        <View
-          style={[
-            flexStyles.rowCentered,
-            flexStyles.fullWidth,
-            flexStyles.spaceBetween,
-          ]}
-        >
-          <Text
-            size="xl"
-            weight={300}
-            color={headingColor}
-            style={flexStyles.flex1}
-          >
-            How to Play
-          </Text>
-          <Icon name="instructions" size={32} color={headingColor} />
-        </View>
-      )}
-
-      <RichText
-        content={howToPlayText}
-        size="md"
-        weight={300}
-        headingColor={headingColor}
-      />
-    </View>
-  );
-};

@@ -1,7 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 
 export const cribbageSquares: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/cribbage-squares",
   tip: {
     default:

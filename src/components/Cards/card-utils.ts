@@ -306,3 +306,16 @@ export function measureNode(node: RNView | null): Promise<Rect | null> {
 export function createNullArray(length: number) {
   return Array.from({ length }, () => null);
 }
+
+export function cardLabel(card: PlayingCard | undefined) {
+  if (!card) return "card";
+
+  const suitSymbol = {
+    clubs: "♣",
+    diamonds: "♦",
+    hearts: "♥",
+    spades: "♠",
+  }[card.suit];
+
+  return `${card.rank}${suitSymbol}`;
+}

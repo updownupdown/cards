@@ -5,7 +5,7 @@ import { Colors, rgba } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
 import { centeredOffset, roundToPixel, snapCenteredSize } from "@/utils/utils";
 import React from "react";
-import { DimensionValue, View } from "react-native";
+import { Animated, DimensionValue, Platform, View } from "react-native";
 import { Text } from "../common/Text";
 
 const PROGRESS_COLORS = {
@@ -47,6 +47,45 @@ export const ProgressBar = ({
 }: Props) => {
   const { scale, textScale } = useResponsiveMetrics();
   const [barWidth, setBarWidth] = React.useState(0);
+  const heartbeatScale = React.useRef(new Animated.Value(1)).current;
+  const heartbeatColor =
+    iconName === "heart" &&
+    (color === "red" || color === "orange" || color === "green");
+  const heartbeatFirstScale =
+    color === "green" ? 0.9 : color === "orange" ? 0.85 : 0.8;
+  const heartbeatSecondScale =
+    color === "green" ? 0.8 : color === "orange" ? 0.78 : 0.7;
+
+  React.useEffect(() => {
+    heartbeatScale.stopAnimation();
+    heartbeatScale.setValue(1);
+
+    if (!heartbeatColor) return;
+
+    const timing = (toValue: number, duration: number) =>
+      Animated.timing(heartbeatScale, {
+        toValue,
+        duration,
+        useNativeDriver: Platform.OS !== "web",
+      });
+    const animation = Animated.loop(
+      Animated.sequence([
+        timing(heartbeatFirstScale, 135),
+        timing(color === "red" ? 1 : 0.98, 135),
+        timing(heartbeatSecondScale, 180),
+        timing(1, 450),
+      ]),
+    );
+
+    animation.start();
+    return () => animation.stop();
+  }, [
+    color,
+    heartbeatColor,
+    heartbeatFirstScale,
+    heartbeatScale,
+    heartbeatSecondScale,
+  ]);
 
   const height = roundToPixel(scaledHeight ?? 26 * scale);
   const iconWrapperSize = iconName ? snapCenteredSize(height, height * 0.8) : 0;
@@ -169,17 +208,20 @@ export const ProgressBar = ({
             },
           ]}
         >
-          <Icon
-            name={iconName}
-            size={24}
-            color={Colors.K100}
-            style={[
-              {
-                width: iconSize,
-                height: iconSize,
-              },
-            ]}
-          />
+          <Animated.View
+            style={heartbeatColor && { transform: [{ scale: heartbeatScale }] }}
+          >
+            <Icon
+              name={iconName}
+              color={heartbeatColor ? Colors.buttonRed : Colors.K100}
+              style={[
+                {
+                  width: iconSize,
+                  height: iconSize,
+                },
+              ]}
+            />
+          </Animated.View>
         </View>
       )}
 

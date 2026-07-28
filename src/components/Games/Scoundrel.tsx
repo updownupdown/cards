@@ -763,7 +763,7 @@ export default function Scoundrel() {
                 ? "orange"
                 : "green"
           }
-          tallyText={`${game.health}`}
+          autoTallyText
           scaledHeight={cardHeight * healthBarHeight}
           iconName="heart"
         />

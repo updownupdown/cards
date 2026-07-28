@@ -73,6 +73,7 @@ export const GameWrapper = ({
   const spacing = (value: number) => value * ui.scale;
 
   const [showMenu, setShowMenu] = useState(false);
+  const [tipsExpandRequest, setTipsExpandRequest] = useState(0);
 
   const { updateSettings } = useGameSettings(pathname);
 
@@ -80,7 +81,7 @@ export const GameWrapper = ({
     void updateSettings({ tipsMode: value } as Partial<GameSettings>);
   }
 
-  const { active } = useTipsBoxLayout();
+  const { active: tipsActive } = useTipsBoxLayout();
 
   // Record stats
   const prevEndedRef = useRef(false);
@@ -117,7 +118,11 @@ export const GameWrapper = ({
     <>
       <LoadingOverlay isLoaded={!!isLoaded} />
 
-      <TipsBox phase={tipPhase} topOffset={headerHeight} />
+      <TipsBox
+        phase={tipPhase}
+        topOffset={headerHeight}
+        expandRequest={tipsExpandRequest}
+      />
 
       <WinLoseBox
         gameEnded={ended}
@@ -218,9 +223,16 @@ export const GameWrapper = ({
 
             <Button
               headerButton
-              onPress={() => setTipsMode(!active)}
+              onPress={() => {
+                if (!tipsActive) {
+                  setTipsExpandRequest((request) => request + 1);
+                  setTipsMode(true);
+                } else {
+                  setTipsMode(false);
+                }
+              }}
               iconName={"instructions"}
-              iconColor={active ? rgba(Colors.white, 0.3) : titleColor}
+              iconColor={tipsActive ? rgba(Colors.white, 0.3) : titleColor}
             />
 
             {handleUndo && (

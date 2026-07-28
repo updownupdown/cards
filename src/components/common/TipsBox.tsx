@@ -15,19 +15,20 @@ import { flexStyles } from "@/styles/flexStyles";
 import { layoutDims, Colors, rgba, LayerZIndexes } from "@/styles/styles";
 import { lightenHexColor } from "@/utils/utils";
 import { usePathname } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { HowToPlay } from "../Modals/GameModal";
+import { RichText } from "./RichText";
 
 interface Props {
   /** The current tip phase key; defaults to the single-phase "default". */
   phase?: string;
   /** Screen-space Y of the header bottom; the box floats just below it. */
   topOffset: number;
+  expandRequest?: number;
 }
 
-export function TipsBox({ phase, topOffset }: Props) {
+export function TipsBox({ phase, topOffset, expandRequest }: Props) {
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);
   const { updateSettings } = useGameSettings(pathname);
@@ -37,6 +38,10 @@ export function TipsBox({ phase, topOffset }: Props) {
   const insets = useSafeAreaInsets();
 
   const [expanded, setExpanded] = useState(false);
+
+  useEffect(() => {
+    if (expandRequest && expandRequest > 0) setExpanded(true);
+  }, [expandRequest]);
 
   if (!gameInfo || !active) return null;
 
@@ -202,3 +207,52 @@ export function TipsBox({ phase, topOffset }: Props) {
     </View>
   );
 }
+
+export const HowToPlay = ({
+  showHeading = true,
+  howToPlayText,
+  headingColor,
+}: {
+  showHeading?: boolean;
+  howToPlayText: string[];
+  headingColor: string;
+}) => {
+  return (
+    <View
+      style={[
+        flexStyles.colCentered,
+        flexStyles.fullWidth,
+        {
+          alignItems: "flex-start",
+        },
+      ]}
+    >
+      {showHeading && (
+        <View
+          style={[
+            flexStyles.rowCentered,
+            flexStyles.fullWidth,
+            flexStyles.spaceBetween,
+          ]}
+        >
+          <Text
+            size="xl"
+            weight={300}
+            color={headingColor}
+            style={flexStyles.flex1}
+          >
+            How to Play
+          </Text>
+          <Icon name="instructions" size={32} color={headingColor} />
+        </View>
+      )}
+
+      <RichText
+        content={howToPlayText}
+        size="md"
+        weight={300}
+        headingColor={headingColor}
+      />
+    </View>
+  );
+};

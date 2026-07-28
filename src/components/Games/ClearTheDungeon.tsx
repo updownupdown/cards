@@ -1,13 +1,14 @@
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { View } from "react-native";
 import { Button } from "../Button/Button";
-import { Text } from "../common/Text";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
+  cardLabel,
   createDeck,
   flipAllToBack,
   flipToBack,
@@ -16,12 +17,18 @@ import {
   isJoker,
   rankValue,
   shuffle,
+  sortCardsBySuit,
   type CardSuit,
   type PlayingCard,
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
-import { Colors } from "@/styles/styles";
+import { useToast } from "../common/Toast";
+import { ProgressBar } from "../Home/ProgressBar";
+import { rotatedText } from "@/styles/textStyles";
+import { Text } from "../common/Text";
+import { flexStyles } from "@/styles/flexStyles";
+import { rgba } from "@/styles/styles";
 
 const maxDamage = 7;
 
@@ -29,10 +36,10 @@ const maxDamage = 7;
 const LAYOUT = {
   fixedCols: 6,
   fixedRows: 7,
-  xScale: 1.5,
+  xScale: 1.4,
   rowGap: 0.4,
-  dungeonTop: 1.5,
-  bottomStart: 5,
+  dungeonTop: 1.2,
+  bottomStart: 4.9,
   rows: {
     1: [4, 4, 4],
     2: [3, 3, 3, 3],
@@ -60,8 +67,8 @@ type GameState = {
   deck: PlayingCard[];
   hand: PlayingCard[];
   reserve: PlayingCard[];
-  damage: PlayingCard[];
-  clear: PlayingCard[];
+  damage: number;
+  discard: PlayingCard[];
   kings: PlayingCard[];
   reserveSetup: boolean;
   ended: boolean;
@@ -73,13 +80,39 @@ const gameStateInitial: GameState = {
   deck: [],
   hand: [],
   reserve: [],
-  damage: [],
-  clear: [],
+  damage: 0,
+  discard: [],
   kings: [],
   reserveSetup: false,
   ended: false,
   won: false,
 };
+
+const kingHint = (
+  suit: CardSuit | "hearts-action" | "spades-action" | "diamonds-action",
+) => {
+  switch (suit) {
+    case "hearts":
+      return "Bury a hand card";
+    case "hearts-action":
+      return "Select hand card";
+    case "spades":
+      return "Double an attack";
+    case "spades-action":
+      return "Choose an attack";
+    case "diamonds-action":
+      return "Choose whether to move card";
+    case "diamonds":
+      return "Move bottom card to top";
+    case "clubs":
+      return "Draw a card";
+  }
+};
+
+function fanOffset(count: number, widthUnits: number) {
+  if (count <= 1) return 0.4;
+  return Math.max(0.1, Math.min(0.8, (widthUnits - 1) / (count - 1)));
+}
 
 // ── Rules helpers ─────────────────────────────────────────────────────────────
 function attackValue(card: PlayingCard, boomer: boolean) {
@@ -102,7 +135,7 @@ function isAttackable(slots: Slot[], idx: number) {
   const s = slots[idx];
   if (s.defeated) return false;
   return !slots.some(
-    (o) => o.row === s.row + 1 && Math.abs(o.x - s.x) < 0.9 && !o.defeated,
+    (o) => o.row > s.row && Math.abs(o.x - s.x) < 0.9 && !o.defeated,
   );
 }
 function canPlace(
@@ -110,10 +143,18 @@ function canPlace(
   idx: number,
   card: PlayingCard,
   boomer: boolean,
+  doubleAttack = false,
 ) {
   const s = slots[idx];
   if (!isAttackable(slots, idx)) return false;
-  if (s.placed.length < 2) return true; // attacker
+  if (s.placed.length === 0) return true; // first attacker
+  if (s.placed.length === 1) {
+    return (
+      attackerSum(s, boomer) +
+        attackValue(card, boomer) * (doubleAttack ? 2 : 1) >=
+      monsterPower(s.monster)
+    );
+  }
   if (s.placed.length === 2) {
     if (attackerSum(s, boomer) < monsterPower(s.monster)) return false;
     return card.suit === s.monster.suit || isJoker(card);
@@ -123,7 +164,8 @@ function canPlace(
 
 // ── Component ────────────────────────────────────────────────────────────────
 export default function ClearTheDungeon() {
-  const { cardBg, cardText } = useGameZoneBackground();
+  const { spacing } = useResponsiveMetrics();
+  const { cardText } = useGameZoneBackground();
   const level = useGameSettingValue("dungeonLevel") as number;
   const boomer = useGameSettingValue("boomerAce") as boolean;
   const powerReserveOn = useGameSettingValue("powerReserve") as boolean;
@@ -132,13 +174,16 @@ export default function ClearTheDungeon() {
   const settingsRef = useRef({ level, powerReserveOn });
   settingsRef.current = { level, powerReserveOn };
 
+  const showToast = useToast();
+
   const [selected, setSelected] = useState<{
     zone: "hand" | "reserve";
     index: number;
   } | null>(null);
   const [reservePick, setReservePick] = useState<string[]>([]);
+  const [selectedKing, setSelectedKing] = useState<PlayingCard | null>(null);
   const [kingMode, setKingMode] = useState<{
-    type: "return" | "double";
+    type: "return" | "double" | "move";
     kingId: string;
   } | null>(null);
 
@@ -148,6 +193,7 @@ export default function ClearTheDungeon() {
       resetNonGameStates: () => {
         setSelected(null);
         setReservePick([]);
+        setSelectedKing(null);
         setKingMode(null);
       },
       resetAndSetup: async () => {
@@ -165,8 +211,7 @@ export default function ClearTheDungeon() {
             ...draft.deck,
             ...draft.hand,
             ...draft.reserve,
-            ...draft.damage,
-            ...draft.clear,
+            ...draft.discard,
             ...draft.kings,
           ].forEach(collect);
 
@@ -179,8 +224,8 @@ export default function ClearTheDungeon() {
           draft.deck = [];
           draft.hand = [];
           draft.reserve = [];
-          draft.damage = [];
-          draft.clear = flipAllToBack(full);
+          draft.damage = 0;
+          draft.discard = flipAllToBack(full);
           draft.kings = [];
           draft.reserveSetup = false;
           draft.ended = false;
@@ -190,7 +235,7 @@ export default function ClearTheDungeon() {
         await delay();
 
         setGame((draft) => {
-          const shuffled = shuffle(draft.clear);
+          const shuffled = shuffle(draft.discard);
           const monsters = shuffle(shuffled.filter((c) => isFace(c)));
           const power = shuffle(shuffled.filter((c) => !isFace(c)));
 
@@ -220,16 +265,12 @@ export default function ClearTheDungeon() {
           }
 
           draft.slots = slots;
+          draft.discard = [];
           draft.deck = power.map(flipToBack);
-          draft.hand = hand;
-          draft.reserve = [];
-          draft.damage = [];
-          draft.clear = [];
-          draft.kings = [];
+          draft.hand = sortCardsBySuit(hand);
           draft.reserveSetup = settingsRef.current.powerReserveOn;
-          draft.ended = false;
-          draft.won = false;
         });
+
         await delay();
       },
     });
@@ -247,13 +288,11 @@ export default function ClearTheDungeon() {
       ? game.hand[selected.index]
       : game.reserve[selected.index]);
 
-  const monstersLeft = game.slots.filter((s) => !s.defeated).length;
-
   // ── Shared mutation helpers (operate on immer draft) ─────────────────────────
   function removeKing(draft: GameState, id: string) {
     const king = draft.kings.find((k) => k.id === id);
     draft.kings = draft.kings.filter((k) => k.id !== id);
-    if (king) draft.clear.push(king);
+    if (king) draft.discard.push(king);
   }
 
   function defeatMonster(draft: GameState, idx: number) {
@@ -261,8 +300,9 @@ export default function ClearTheDungeon() {
     for (const p of s.placed) {
       if (p.role === "trigger" && boomer && p.card.rank === "A") {
         draft.hand.push(p.card);
+        draft.hand = sortCardsBySuit(draft.hand);
       } else {
-        draft.clear.push(p.card);
+        draft.discard.push(p.card);
       }
     }
     s.placed = [];
@@ -270,7 +310,7 @@ export default function ClearTheDungeon() {
     if (abilitiesOn && s.monster.rank === "K") {
       draft.kings.push(flipToFace(s.monster));
     } else {
-      draft.clear.push(s.monster);
+      draft.discard.push(s.monster);
     }
   }
 
@@ -280,7 +320,7 @@ export default function ClearTheDungeon() {
       draft.won = true;
       return;
     }
-    if (draft.damage.length >= maxDamage) {
+    if (draft.damage >= maxDamage) {
       draft.ended = true;
       draft.won = false;
       return;
@@ -300,17 +340,23 @@ export default function ClearTheDungeon() {
         draft.won = false;
       }
     }
+
+    draft.hand = sortCardsBySuit(draft.hand);
   }
 
   // ── Actions ──────────────────────────────────────────────────────────────────
   function placeOnMonster(idx: number) {
     if (game.ended || game.reserveSetup || !selected || !selectedCard) return;
-    if (!canPlace(game.slots, idx, selectedCard, boomer)) return;
+    const doubling = kingMode?.type === "double";
+    if (!canPlace(game.slots, idx, selectedCard, boomer, doubling)) {
+      showToast("Not a valid placement");
+      return;
+    }
 
     const role = game.slots[idx].placed.length < 2 ? "attack" : "trigger";
-    const doubling = kingMode?.type === "double" && role === "attack";
+    const doubledAttack = doubling && role === "attack";
     const src = selected;
-    const doubleKingId = doubling ? kingMode!.kingId : null;
+    const doubleKingId = doubledAttack ? kingMode!.kingId : null;
 
     saveUndoState(structuredClone(game));
     setGame((draft) => {
@@ -323,7 +369,7 @@ export default function ClearTheDungeon() {
       draft.slots[idx].placed.push({
         card,
         role,
-        doubled: doubling || undefined,
+        doubled: doubledAttack || undefined,
       });
       if (doubleKingId) removeKing(draft, doubleKingId);
       if (role === "trigger") defeatMonster(draft, idx);
@@ -331,7 +377,7 @@ export default function ClearTheDungeon() {
     });
 
     setSelected(null);
-    if (doubling) setKingMode(null);
+    if (doubledAttack) setKingMode(null);
   }
 
   function discardSelected() {
@@ -346,7 +392,10 @@ export default function ClearTheDungeon() {
     saveUndoState(structuredClone(game));
     setGame((draft) => {
       const card = draft.hand.splice(index, 1)[0];
-      if (card) draft.damage.push(flipToBack(card));
+      if (card) {
+        draft.damage++;
+        draft.discard.push(flipToBack(card));
+      }
       postAction(draft);
     });
     setSelected(null);
@@ -366,31 +415,65 @@ export default function ClearTheDungeon() {
   function activateKing(king: PlayingCard) {
     if (game.ended || game.reserveSetup) return;
     const suit = king.suit;
+
+    saveUndoState(structuredClone(game));
+
     if (suit === "hearts") {
       setKingMode({ type: "return", kingId: king.id });
+      setSelectedKing(null);
       setSelected(null);
       return;
     }
     if (suit === "spades") {
       setKingMode({ type: "double", kingId: king.id });
+      setSelectedKing(null);
       return;
     }
-    saveUndoState(structuredClone(game));
+
+    if (suit === "diamonds") {
+      setGame((draft) => {
+        removeKing(draft, king.id);
+        postAction(draft);
+      });
+      setKingMode({ type: "move", kingId: king.id });
+      setSelectedKing(null);
+      return;
+    }
+
     setGame((draft) => {
       if (suit === "clubs") {
         if (draft.deck.length > 0) {
           const c = draft.deck.pop();
           if (c) draft.hand.push(flipToFace(c));
         }
-      } else if (suit === "diamonds") {
+      }
+
+      draft.hand = sortCardsBySuit(draft.hand);
+
+      removeKing(draft, king.id);
+      postAction(draft);
+    });
+    setSelectedKing(null);
+  }
+
+  function resolveMoveKing(moveCard: boolean) {
+    if (!kingMode || kingMode.type !== "move") return;
+    if (moveCard) {
+      saveUndoState(structuredClone(game));
+      setGame((draft) => {
         if (draft.deck.length > 1) {
           const bottom = draft.deck.shift();
           if (bottom) draft.deck.push(bottom);
         }
-      }
-      removeKing(draft, king.id);
-      postAction(draft);
-    });
+        postAction(draft);
+      });
+    }
+    setKingMode(null);
+  }
+
+  function selectKing(king: PlayingCard) {
+    if (game.ended || game.reserveSetup || kingMode) return;
+    setSelectedKing((current) => (current?.id === king.id ? null : king));
   }
 
   function returnHandCard(index: number) {
@@ -411,6 +494,7 @@ export default function ClearTheDungeon() {
     if (game.reserveSetup) {
       const id = game.hand[index]?.id;
       if (!id) return;
+      setSelectedKing(null);
       setReservePick((prev) =>
         prev.includes(id)
           ? prev.filter((x) => x !== id)
@@ -421,9 +505,11 @@ export default function ClearTheDungeon() {
       return;
     }
     if (kingMode?.type === "return") {
+      setSelectedKing(null);
       returnHandCard(index);
       return;
     }
+    setSelectedKing(null);
     setSelected((s) =>
       s && s.zone === "hand" && s.index === index
         ? null
@@ -433,6 +519,7 @@ export default function ClearTheDungeon() {
 
   function onReservePress(index: number) {
     if (game.ended || game.reserveSetup) return;
+    setSelectedKing(null);
     setSelected((s) =>
       s && s.zone === "reserve" && s.index === index
         ? null
@@ -444,6 +531,8 @@ export default function ClearTheDungeon() {
   const shiftX = (LAYOUT.fixedCols - 1) / 2;
 
   const zones: MapZone[] = useMemo(() => {
+    const extraCardsZone = powerReserveOn || abilitiesOn;
+
     const result: MapZone[] = [];
 
     game.slots.forEach((slot, idx) => {
@@ -475,20 +564,6 @@ export default function ClearTheDungeon() {
       });
     });
 
-    if (abilitiesOn) {
-      game.kings.forEach((king, i) => {
-        result.push({
-          id: `king-${king.id}`,
-          name: "king",
-          pileIndex: i,
-          cards: [king],
-          col: 3.7 + i * 0.9,
-          row: LAYOUT.bottomStart,
-          baseZIndex: 30,
-        });
-      });
-    }
-
     result.push(
       {
         id: "deck",
@@ -497,60 +572,70 @@ export default function ClearTheDungeon() {
         col: 0,
         row: 0,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Draw", infoPos: "below" },
+        placeholder: { text: "Draw", infoPos: "right" },
       },
       {
-        id: "damage",
-        name: "damage",
-        cards: game.damage,
-        col: 1.2,
+        id: "hud",
+        name: "hud",
+        col: 1.75,
         row: 0,
-        fan: { maxVisible: 3 },
-        placeholder: { text: "Damage", infoPos: "below" },
+        width: 2.5,
       },
       {
         id: "clear",
         name: "clear",
-        cards: game.clear,
-        col: 2.4,
+        cards: game.discard,
+        col: 5,
         row: 0,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Clear", infoPos: "below" },
+        placeholder: { text: "Dscrd", infoPos: "left" },
       },
     );
-
-    if (powerReserveOn) {
-      game.reserve.forEach((card, i) => {
-        result.push({
-          id: `reserve-${i}`,
-          name: "reserve",
-          pileIndex: i,
-          cards: [card],
-          col: 4 + i * 0.4,
-          row: 0,
-          baseZIndex: 30,
-        });
-      });
-    }
-
-    game.hand.forEach((card, i) => {
-      result.push({
-        id: `hand-${i}`,
-        name: "hand",
-        pileIndex: i,
-        cards: [card],
-        col: i * 1.1,
-        row: LAYOUT.bottomStart,
-        baseZIndex: 60,
-      });
-    });
 
     result.push({
       id: "controls",
       col: 0,
-      row: 6,
+      row: LAYOUT.bottomStart,
       width: "full",
       height: 0.9,
+    });
+
+    if (extraCardsZone) {
+      const reserveCards = [
+        ...(powerReserveOn ? game.reserve : []),
+        ...(abilitiesOn ? game.kings : []),
+      ];
+      result.push({
+        id: "reserve",
+        name: "reserve",
+        cards: reserveCards,
+        col: 0,
+        row: 5.8,
+        width: 2.9,
+        height: 1.2,
+        baseZIndex: 30,
+        fan: {
+          direction: "right",
+          offset: fanOffset(reserveCards.length, 2.9),
+        },
+        placeholder: {},
+      });
+    }
+
+    result.push({
+      id: "hand",
+      name: "hand",
+      cards: game.hand,
+      col: extraCardsZone ? 3 : 0,
+      row: 5.8,
+      width: extraCardsZone ? 3 : 6,
+      height: 1.2,
+      baseZIndex: 60,
+      fan: {
+        direction: "right",
+        offset: fanOffset(game.hand.length, extraCardsZone ? 3 : 6),
+      },
+      placeholder: {},
     });
 
     return result;
@@ -560,70 +645,89 @@ export default function ClearTheDungeon() {
     mappedCard: MappedCard,
   ): AnimatedCardMapping | undefined => {
     if (mappedCard.zoneName === "slot" && mappedCard.pileIndex !== undefined) {
+      // ----- Slots ----- //
       const idx = mappedCard.pileIndex;
       const attackable = isAttackable(game.slots, idx);
       const canDrop =
-        !!selectedCard && canPlace(game.slots, idx, selectedCard, boomer);
+        !!selectedCard &&
+        canPlace(
+          game.slots,
+          idx,
+          selectedCard,
+          boomer,
+          kingMode?.type === "double",
+        );
       return {
         isDisabled: game.ended || game.reserveSetup || !attackable,
         selectColor: canDrop ? "green" : "none",
         onPress: () => placeOnMonster(idx),
       };
-    }
-    if (mappedCard.zoneName === "hand" && mappedCard.pileIndex !== undefined) {
-      const index = mappedCard.pileIndex;
-      const picked = game.reserveSetup
+    } else if (mappedCard.zoneName === "hand") {
+      // ----- Hand ----- //
+      const index = mappedCard.cardIndex;
+      const isSelected = game.reserveSetup
         ? reservePick.includes(mappedCard.card.id)
         : selected?.zone === "hand" && selected.index === index;
+
       return {
-        isSelected: picked,
+        isSelected,
         selectColor: game.reserveSetup ? "purple" : "blue",
         isDisabled: game.ended,
         onPress: () => onHandPress(index),
       };
-    }
-    if (
-      mappedCard.zoneName === "reserve" &&
-      mappedCard.pileIndex !== undefined
-    ) {
-      const index = mappedCard.pileIndex;
-      return {
-        isSelected: selected?.zone === "reserve" && selected.index === index,
-        selectColor: "orange",
-        isDisabled: game.ended || game.reserveSetup,
-        onPress: () => onReservePress(index),
-      };
-    }
-    if (mappedCard.zoneName === "king") {
-      const king = mappedCard.card;
-      const armed =
-        (king.suit === "hearts" && kingMode?.kingId === king.id) ||
-        (king.suit === "spades" && kingMode?.kingId === king.id);
-      return {
-        isSelected: armed,
-        selectColor: "green",
-        isDisabled: game.ended || game.reserveSetup,
-        onPress: () => activateKing(king),
-      };
-    }
-    if (
+    } else if (mappedCard.zoneName === "reserve") {
+      // ----- Reserve ----- //
+      const index = mappedCard.cardIndex;
+      const isKing = index >= game.reserve.length;
+      if (isKing) {
+        const king = mappedCard.card;
+        const armed =
+          selectedKing?.id === king.id || kingMode?.kingId === king.id;
+
+        return {
+          isSelected: armed,
+          selectColor: kingMode?.kingId === king.id ? "red" : "green",
+          isDisabled: game.ended || game.reserveSetup,
+          onPress: () => selectKing(king),
+        };
+      } else {
+        return {
+          isSelected: selected?.zone === "reserve" && selected.index === index,
+          selectColor: "purple",
+          isDisabled: game.ended || game.reserveSetup,
+          onPress: () => onReservePress(index),
+        };
+      }
+    } else if (
       mappedCard.zoneName === "placed" &&
       mappedCard.pileIndex !== undefined
     ) {
+      // ----- Placed ----- //
       const idx = mappedCard.pileIndex;
       const attackable = isAttackable(game.slots, idx);
       const canDrop =
-        !!selectedCard && canPlace(game.slots, idx, selectedCard, boomer);
+        !!selectedCard &&
+        canPlace(
+          game.slots,
+          idx,
+          selectedCard,
+          boomer,
+          kingMode?.type === "double",
+        );
+      const doubled = game.slots[idx].placed.some(
+        (placement) =>
+          placement.card.id === mappedCard.card.id && placement.doubled,
+      );
       return {
         isDisabled: game.ended || game.reserveSetup || !attackable,
-        selectColor: canDrop ? "green" : "none",
+        forceOverlayColor: doubled,
+        selectColor: doubled ? "red" : canDrop ? "green" : "none",
         onPress: () => placeOnMonster(idx),
       };
     }
-    return {};
   };
 
-  const { cardMap, getZoneStylesById } = useCardMap({
+  const { cardMap, cardWidth, cardHeight, getZoneStylesById } = useCardMap({
     game,
     zones,
     cardMapper,
@@ -636,19 +740,6 @@ export default function ClearTheDungeon() {
   const score =
     game.deck.length + (powerReserveOn && game.won ? game.reserve.length : 0);
 
-  const kingHint = (suit: CardSuit) => {
-    switch (suit) {
-      case "hearts":
-        return "K\u2665: bury a hand card";
-      case "diamonds":
-        return "K\u2666: bottom card to top";
-      case "spades":
-        return "K\u2660: double an attacker";
-      default:
-        return "K\u2663: draw a card";
-    }
-  };
-
   return (
     <GameWrapper
       ended={game.ended}
@@ -659,16 +750,16 @@ export default function ClearTheDungeon() {
       winLoseMessage={
         game.won
           ? `Dungeon cleared! Score ${score}.`
-          : game.damage.length >= maxDamage
-            ? "Your damage bar is full."
-            : "You ran out of power."
+          : game.damage >= maxDamage
+            ? "Your ran out of health."
+            : "You ran out of attacks."
       }
       canUndo={canUndo}
       undo={undo}
     >
       {cardMap}
 
-      {/* <View
+      <View
         style={[
           getZoneStylesById("hud"),
           {
@@ -678,21 +769,57 @@ export default function ClearTheDungeon() {
           },
         ]}
       >
-        <Text size="sm" weight={600} color={cardText}>
-          Power {game.deck.length}
-        </Text>
-        <Text size="sm" weight={600} color={cardText}>
-          Damage {game.damage.length}/{maxDamage}
-        </Text>
-        <Text size="sm" weight={600} color={cardText}>
-          Monsters {monstersLeft}
-        </Text>
-      </View> */}
+        <ProgressBar
+          progressValue={maxDamage - game.damage}
+          totalValue={maxDamage}
+          color={game.damage > 5 ? "red" : game.damage > 3 ? "orange" : "green"}
+          iconName="heart"
+          autoTallyText
+          scaledHeight={cardHeight * 0.5}
+        />
+      </View>
+
+      {[
+        {
+          id: "reserve",
+          label: "Special",
+        },
+        {
+          id: "hand",
+          label: "Hand",
+        },
+      ].map((label) => {
+        if (label.id === "reserve" && !powerReserveOn && !abilitiesOn)
+          return null;
+
+        return (
+          <View
+            key={label.id}
+            style={[flexStyles.rowStart, getZoneStylesById(label.id)]}
+          >
+            <Text
+              textTransform="uppercase"
+              weight={400}
+              style={[
+                rotatedText,
+                {
+                  left: 0,
+                  fontSize: cardWidth * 0.16,
+                  color: rgba(cardText, 0.6),
+                },
+              ]}
+            >
+              {label.label}
+            </Text>
+          </View>
+        );
+      })}
 
       <View
         style={[
           getZoneStylesById("controls"),
-          { flexDirection: "row", gap: 10, alignItems: "center" },
+          flexStyles.rowCentered,
+          { gap: spacing(14) },
         ]}
       >
         {game.reserveSetup ? (
@@ -700,41 +827,96 @@ export default function ClearTheDungeon() {
             text={`Set Reserve (${reservePick.length}/2)`}
             size="md"
             onPress={confirmReserve}
-            fullWidth
             taller
             disabled={reservePick.length !== 2}
-            theme={cardBg}
+            theme="purple"
+            style={{ flex: 1 }}
           />
         ) : (
           <>
-            <View style={{ flex: 1 }}>
-              <Text size="xs" weight={400} color={Colors.white}>
-                {kingMode?.type === "return"
-                  ? "Pick a hand card to bury"
-                  : kingMode?.type === "double"
-                    ? "Place an attacker to double"
-                    : selectedCard
-                      ? "Tap a monster, or Discard"
-                      : "Tap a card to use it"}
-              </Text>
-              {abilitiesOn && game.kings.length > 0 ? (
-                <Text size="xs" weight={400} color={cardText}>
-                  {game.kings.map((k) => kingHint(k.suit)).join("   ")}
-                </Text>
-              ) : null}
+            <View style={[flexStyles.colCentered, flexStyles.flex1]}>
+              {abilitiesOn &&
+                (kingMode ? (
+                  kingMode.type === "move" ? (
+                    <View
+                      style={[
+                        flexStyles.rowCentered,
+                        flexStyles.fullWidth,
+                        { gap: spacing(10) },
+                      ]}
+                    >
+                      <Button
+                        text={`Move ${cardLabel(game.deck[0])} to top`}
+                        size="sm"
+                        onPress={() => resolveMoveKing(true)}
+                        theme="green"
+                        taller
+                      />
+                      <Button
+                        text="Do nothing"
+                        size="sm"
+                        onPress={() => resolveMoveKing(false)}
+                        theme="red"
+                        taller
+                      />
+                    </View>
+                  ) : (
+                    <View
+                      style={[
+                        flexStyles.rowCentered,
+                        flexStyles.fullWidth,
+                        { gap: spacing(14) },
+                      ]}
+                    >
+                      <Button
+                        text="Cancel"
+                        size="sm"
+                        onPress={() => {
+                          setKingMode(null);
+                          setSelectedKing(null);
+                        }}
+                        theme="red"
+                      />
+                      <Text style={{ flex: 1, textAlign: "center" }}>
+                        {kingHint(
+                          kingMode.type === "return"
+                            ? "hearts-action"
+                            : "spades-action",
+                        )}
+                      </Text>
+                    </View>
+                  )
+                ) : (
+                  <Button
+                    text={
+                      selectedKing
+                        ? kingHint(selectedKing.suit)
+                        : "No King selected"
+                    }
+                    size="md"
+                    onPress={() => {
+                      if (kingMode) {
+                        setKingMode(null);
+                      } else if (selectedKing) {
+                        activateKing(selectedKing);
+                      }
+                    }}
+                    taller
+                    theme={selectedKing || kingMode ? "green" : "none"}
+                    fullWidth
+                    disabled={!selectedKing && !kingMode}
+                  />
+                ))}
             </View>
 
-            <View style={{ flex: 1 }}>
-              <Button
-                text="Discard"
-                size="md"
-                onPress={discardSelected}
-                fullWidth
-                taller
-                disabled={!selected || selected.zone !== "hand" || game.ended}
-                theme="red"
-              />
-            </View>
+            <Button
+              text="Discard"
+              size="md"
+              onPress={discardSelected}
+              taller
+              disabled={!selected || selected.zone !== "hand" || game.ended}
+              theme="orange"
+            />
           </>
         )}
       </View>

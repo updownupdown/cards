@@ -17,6 +17,8 @@ import { roundToPixel } from "@/utils/utils";
 import { ScrollView, View } from "react-native";
 import { Card } from "../Cards/Card";
 import ModalFull from "./ModalFull";
+import { getGameInfo, normalizeGamePath } from "@/data/game-menu";
+import { usePathname } from "expo-router";
 
 type Props = {
   visible: boolean;
@@ -37,6 +39,8 @@ export function DeckPreviewModal({
   shuffleOnClose = false,
   sortCards = false,
 }: Props) {
+  const pathname = normalizeGamePath(usePathname());
+  const gameInfo = getGameInfo(pathname);
   const { width: screenWidthActual } = useViewportDimensions();
   const ui = useResponsiveUiLayoutFromWidth(screenWidthActual);
   const spacing = (value: number) => roundToPixel(value * ui.scale);
@@ -62,7 +66,11 @@ export function DeckPreviewModal({
   };
 
   return (
-    <ModalFull title={title} onClose={closeModal}>
+    <ModalFull
+      title={title}
+      onClose={closeModal}
+      backgroundColor={gameInfo.cardColorBg}
+    >
       <ScrollView
         contentContainerStyle={[
           modalStyles.scrollContent,

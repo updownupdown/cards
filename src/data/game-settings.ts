@@ -22,7 +22,8 @@ type GameSpecificSettingOptionValue = GameSettings[GameSpecificSettingKey];
 export type GameSpecificSettingDefinition = {
   key: GameSpecificSettingKey;
   label: string;
-  type: "string";
+  type: "string" | "boolean";
+  booleanType?: "toggle" | "checkbox";
   applyBehavior: GameSpecificSettingApplyBehavior;
   options: {
     label: string;
@@ -150,8 +151,8 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         type: "string",
         applyBehavior: "next-game",
         options: [
-          { label: "Level 1 (4x3)", value: 1 },
-          { label: "Level 2 (3x4)", value: 2 },
+          { label: "Level 1 (Beginner)", value: 1 },
+          { label: "Level 2", value: 2 },
           { label: "Level 3", value: 3 },
           { label: "Level 4", value: 4 },
           { label: "Level 5 (Extreme)", value: 5 },
@@ -160,10 +161,11 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
       {
         key: "boomerAce",
         label: "Boomer-Ace",
-        type: "string",
+        type: "boolean",
+        booleanType: "toggle",
         applyBehavior: "next-game",
         description:
-          "Aces are worth 11 and return to hand when used as a trigger.",
+          "Aces are worth 11, and return to the hand when used as a trigger.",
         options: [
           { label: "Off", value: false },
           { label: "On", value: true },
@@ -172,9 +174,11 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
       {
         key: "powerReserve",
         label: "Power Reserve",
-        type: "string",
+        type: "boolean",
+        booleanType: "toggle",
         applyBehavior: "next-game",
-        description: "Draw five on turn one and set two aside to use anytime.",
+        description:
+          "Draw five cards on the first turn, and set two aside to use at any time.",
         options: [
           { label: "Off", value: false },
           { label: "On", value: true },
@@ -183,7 +187,8 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
       {
         key: "specialAbilities",
         label: "Special Abilities",
-        type: "string",
+        type: "boolean",
+        booleanType: "toggle",
         applyBehavior: "next-game",
         description: "Defeated Kings grant one-time abilities.",
         options: [
@@ -224,24 +229,31 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         label: "Difficulty",
         type: "string",
         applyBehavior: "next-game",
-        description:
-          "Controls how a milestone qualifies for your trail when you reach a camp.",
         options: [
-          { label: "Gentle", value: "gentle" },
-          { label: "Standard", value: "standard" },
-          { label: "Intense", value: "intense" },
+          {
+            label: "Gentle",
+            value: "gentle",
+            description:
+              "When you reach a camp, always add the played milestone to your trail, even if it is not higher than the previous one.",
+          },
+          { label: "Standard", value: "standard", description: "No changes." },
+          {
+            label: "Intense",
+            value: "intense",
+            description:
+              "When you reach a camp, only add the played milestone to your trail if it contains more cards than the previous one.",
+          },
         ],
       },
       {
         key: "alpineChallenge",
-        label: "Eight-Thousander",
+        label: "The Eight-Thousanders",
         type: "string",
         applyBehavior: "next-game",
-        description:
-          "Optional named challenges tweak the rules and set the trail length.",
+        description: "Optional challenges that tweak trail length and rules.",
         options: [
           {
-            label: "Base Climb",
+            label: "Base Climb (7,500m)",
             value: "none",
             description: "Trail Length: 3. No special challenge rules.",
           },
@@ -352,7 +364,7 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
 
 const APPLY_BEHAVIOR_TEXT: Record<GameSpecificSettingApplyBehavior, string> = {
   immediate: "Applies without resetting the game.",
-  "next-game": "Will reset the game.",
+  "next-game": "Resets the game on change.",
 };
 
 export function getSettingApplyBehaviorText(

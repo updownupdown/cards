@@ -11,7 +11,7 @@ import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
 import { FontWeight } from "@/styles/styles";
 import { delay } from "@/utils/utils";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
@@ -28,6 +28,7 @@ import {
   shuffle,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
+import { DeckPreviewModal } from "../Modals/DeckPreviewModal";
 
 const zombieZonesColRows: ColRows[] = [
   { c: 1, r: 1 },
@@ -207,6 +208,7 @@ function aliveCount(zombies: Zombie[]) {
 
 export default function DeadCenter() {
   const { zoneBg, cardText } = useGameZoneBackground();
+  const [showDeckPreview, setShowDeckPreview] = useState(false);
 
   const {
     isSettingUp,
@@ -468,6 +470,10 @@ export default function DeadCenter() {
         isDisabled: !canPlay,
         onPress: () => playToPile(pileIdx),
       };
+    } else if (mappedCard.zoneName === "draw") {
+      return {
+        clickThroughCards: true,
+      };
     }
   };
 
@@ -476,6 +482,14 @@ export default function DeadCenter() {
     zones,
     gap: 0.35,
     cardMapper,
+    zoneMapper: (zone) => {
+      if (zone.id !== "draw") return;
+
+      return {
+        onPress: () => setShowDeckPreview(true),
+        isDisabled: game.draw.length === 0,
+      };
+    },
     cardSize: "small",
   });
 
@@ -492,6 +506,14 @@ export default function DeadCenter() {
       canUndo={canUndo}
       undo={undo}
     >
+      <DeckPreviewModal
+        visible={showDeckPreview}
+        cards={game.draw}
+        onClose={() => setShowDeckPreview(false)}
+        title="Deck Preview"
+        sortCards
+      />
+
       {cardMap}
 
       {/* Game Info */}

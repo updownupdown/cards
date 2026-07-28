@@ -2,7 +2,7 @@ import { Text } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, rgba, transitionStyles } from "@/styles/styles";
+import { Colors, rgba } from "@/styles/styles";
 import { darkenHexColor } from "@/utils/utils";
 import React from "react";
 import { Pressable, View } from "react-native";
@@ -13,6 +13,7 @@ type SettingControlProps<T> = {
   label: string;
   labelColor?: string;
   helpText?: string;
+  applyBehaviorText?: string;
   value: T;
   onChange: (val: T) => void;
   type: "boolean" | "string";
@@ -24,6 +25,7 @@ export function SettingControl<T>({
   label,
   labelColor = Colors.K200,
   helpText,
+  applyBehaviorText,
   value,
   onChange,
   type,
@@ -31,6 +33,25 @@ export function SettingControl<T>({
   options,
 }: SettingControlProps<T>) {
   const { spacing } = useResponsiveMetrics();
+
+  const HelpText = () => {
+    return (
+      <View
+        style={[flexStyles.colStart, flexStyles.fullWidth, { gap: spacing(4) }]}
+      >
+        {helpText && (
+          <Text size="sm" weight={400} color={Colors.white}>
+            {helpText}
+          </Text>
+        )}
+        {applyBehaviorText && (
+          <Text size="sm" weight={300} color={rgba(Colors.white, 0.6)}>
+            {applyBehaviorText}
+          </Text>
+        )}
+      </View>
+    );
+  };
 
   if (type === "boolean") {
     const isTrue = Boolean(value);
@@ -42,6 +63,7 @@ export function SettingControl<T>({
           {
             justifyContent: "space-between",
             width: "100%",
+            gap: spacing(10),
           },
         ]}
       >
@@ -80,7 +102,7 @@ export function SettingControl<T>({
                   borderRadius: 16,
                   backgroundColor: isTrue
                     ? Colors.win
-                    : darkenHexColor(Colors.accentBlue, 0.8),
+                    : darkenHexColor(labelColor, 0.56),
                   justifyContent: "center",
                   paddingHorizontal: 2,
                 },
@@ -118,15 +140,7 @@ export function SettingControl<T>({
           )}
         </Pressable>
 
-        {helpText && (
-          <Text
-            size="sm"
-            color={rgba(Colors.white, 0.7)}
-            style={{ paddingTop: 8, width: "100%" }}
-          >
-            {helpText}
-          </Text>
-        )}
+        <HelpText />
       </View>
     );
   }
@@ -142,50 +156,28 @@ export function SettingControl<T>({
           },
         ]}
       >
-        <View
-          style={[
-            flexStyles.rowCentered,
-            flexStyles.spaceBetween,
-            flexStyles.fullWidth,
-          ]}
-        >
-          <Text weight={500} size="lg" color={labelColor}>
-            {label}
-          </Text>
-          <Icon name="settings" size={28} color={labelColor} />
-        </View>
+        <Text weight={500} size="lg" color={labelColor}>
+          {label}
+        </Text>
 
-        {helpText && (
-          <Text
-            size="sm"
-            color={rgba(Colors.white, 0.7)}
-            style={{ width: "100%" }}
-          >
-            {helpText}
-          </Text>
-        )}
+        <HelpText />
 
         <View
           style={{
             ...flexStyles.colStart,
             width: "100%",
-            gap: spacing(20),
+            gap: spacing(12),
           }}
         >
+          {/* Radio Options */}
           {options.map((opt) => {
             const isSelected = value === opt.value;
-            const optionDescription = opt.description
-              ? isSelected || opt.description.length <= MAX_DESCRIPTION_LENGTH
-                ? opt.description
-                : `${opt.description.slice(0, MAX_DESCRIPTION_LENGTH - 3)}...`
-              : undefined;
             return (
               <View
                 key={String(opt.value)}
                 style={{ ...flexStyles.colStart, gap: spacing(4) }}
               >
                 <Pressable
-                  // key={String(opt.value)}
                   style={{
                     ...flexStyles.colStart,
                     gap: spacing(8),
@@ -228,13 +220,13 @@ export function SettingControl<T>({
                   </View>
                 </Pressable>
 
-                {optionDescription && (
+                {opt.description && (
                   <Text
                     size="sm"
-                    color={rgba(Colors.white, isSelected ? 1 : 0.7)}
+                    color={rgba(Colors.white, 0.8)}
                     style={{ paddingLeft: spacing(28), userSelect: "none" }}
                   >
-                    {optionDescription}
+                    {opt.description}
                   </Text>
                 )}
               </View>

@@ -5,21 +5,20 @@ import { delay } from "@/utils/utils";
 import { useMemo, useRef, useState } from "react";
 import { View } from "react-native";
 import { Button } from "../Button/Button";
-import { Text } from "../common/Text";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
-  type CardRank,
-  type CardSuit,
   createDeck,
-  flipToBack,
   flipToFace,
   RANKS,
   shuffle,
   SUITS,
+  type CardRank,
+  type CardSuit,
   type PlayingCard,
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { Text } from "../common/Text";
 
 const startScore = 5;
 const winScore = 10;

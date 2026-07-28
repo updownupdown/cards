@@ -17,6 +17,11 @@ import {
   useCardMap,
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { Text } from "../common/Text";
+import { View } from "react-native";
+import { Button } from "../Button/Button";
+import { flexStyles } from "@/styles/flexStyles";
+import { Colors, rgba } from "@/styles/styles";
 
 const GRID_SIZE = 4;
 const GRID_CELLS = GRID_SIZE * GRID_SIZE;
@@ -28,6 +33,7 @@ type GameState = {
   current: PlayingCard | null;
   starter: PlayingCard | null;
   score: number;
+  scoresReady: boolean;
   ended: boolean;
   won: boolean;
 };
@@ -38,6 +44,7 @@ const gameStateInitial: GameState = {
   current: null,
   starter: null,
   score: 0,
+  scoresReady: false,
   ended: false,
   won: false,
 };
@@ -139,6 +146,23 @@ function scoreDeal(grid: (PlayingCard | null)[], starter: PlayingCard) {
   return score;
 }
 
+function getLineScores(grid: (PlayingCard | null)[], starter: PlayingCard) {
+  const rows = Array.from({ length: GRID_SIZE }, (_, row) =>
+    scoreHand(
+      grid.slice(row * GRID_SIZE, (row + 1) * GRID_SIZE) as PlayingCard[],
+      starter,
+    ),
+  );
+  const columns = Array.from({ length: GRID_SIZE }, (_, col) => {
+    const line = Array.from({ length: GRID_SIZE }, (_, row) => {
+      return grid[row * GRID_SIZE + col]!;
+    });
+    return scoreHand(line, starter);
+  });
+
+  return { rows, columns };
+}
+
 function getLegalCells(grid: (PlayingCard | null)[]) {
   const occupied = grid.flatMap((card, index) => (card ? [index] : []));
   if (occupied.length === 0) {
@@ -172,11 +196,12 @@ async function resetAndSetup(
     ];
     draft.stock = shuffle(
       (allCards.length === 52 ? allCards : createDeck()).map(flipToBack),
-    );
+    ).slice(0, GRID_CELLS + 1);
     draft.grid = Array.from({ length: GRID_CELLS }, () => null);
     draft.current = null;
     draft.starter = null;
     draft.score = 0;
+    draft.scoresReady = false;
     draft.ended = false;
     draft.won = false;
   });
@@ -199,6 +224,26 @@ export default function CribbageSquares() {
     });
 
   const legalCells = useMemo(() => getLegalCells(game.grid), [game.grid]);
+  const lineScores = useMemo(
+    () => (game.starter ? getLineScores(game.grid, game.starter) : null),
+    [game.grid, game.starter],
+  );
+  const scoreLabels = useMemo(
+    () =>
+      lineScores
+        ? [
+            ...lineScores.rows.map((score, index) => ({
+              id: `row-score-${index}`,
+              score,
+            })),
+            ...lineScores.columns.map((score, index) => ({
+              id: `column-score-${index}`,
+              score,
+            })),
+          ]
+        : [],
+    [lineScores],
+  );
 
   function placeCard(index: number) {
     if (
@@ -224,8 +269,7 @@ export default function CribbageSquares() {
         if (draft.starter) {
           draft.score = scoreDeal(draft.grid, draft.starter);
         }
-        draft.ended = true;
-        draft.won = draft.score >= TARGET_SCORE;
+        draft.scoresReady = true;
       } else {
         draft.current = next ? flipToFace(next) : null;
       }
@@ -248,28 +292,61 @@ export default function CribbageSquares() {
       placeholder: {},
     }));
 
+    const current = game.current;
+    const starter = game.starter;
+
     return [
       {
         id: "current",
         name: "current",
-        cards: game.current ? [game.current] : [],
+        cards: current ? [...game.stock, current] : [],
         col: 0,
         row: 0,
         baseZIndex: 40,
         placeholder: { text: "Deal", infoPos: "right" },
       },
       {
-        id: "starter",
-        name: "starter",
-        cards: game.starter ? [game.starter] : [],
-        col: 3,
+        id: "end-game",
+        name: "end-game",
+        col: 1.75,
         row: 0,
+        width: 3.25,
         baseZIndex: 40,
-        placeholder: { text: "Starter", infoPos: "left" },
       },
       ...gridZones,
+      ...Array.from({ length: GRID_SIZE }, (_, row) => ({
+        id: `row-score-${row}`,
+        name: "row-score",
+        col: GRID_SIZE,
+        row: row + 1.45,
+        baseZIndex: 10,
+        placeholder: {
+          hideBackground: !lineScores,
+          hideShadow: !lineScores,
+        },
+      })),
+      ...Array.from({ length: GRID_SIZE }, (_, col) => ({
+        id: `column-score-${col}`,
+        name: "column-score",
+        col,
+        row: GRID_SIZE + 1.45,
+        baseZIndex: 10,
+        placeholder: {
+          hideBackground: !lineScores,
+          hideShadow: !lineScores,
+        },
+      })),
+      {
+        id: "starter",
+        name: "starter",
+        cards: starter ? [starter] : [],
+        col: GRID_SIZE,
+        row: GRID_SIZE + 1.45,
+        baseZIndex: 10,
+        placeholder: { hideBackground: !starter, hideShadow: !starter },
+      },
     ];
-  }, [game]);
+  }, [game, lineScores]);
 
   const cardMapper = (
     mappedCard: MappedCard,
@@ -277,6 +354,14 @@ export default function CribbageSquares() {
     if (mappedCard.zoneName === "grid") return { isDisabled: true };
     return {};
   };
+
+  function endGame() {
+    if (!game.scoresReady) return;
+    setGame((draft) => {
+      draft.ended = true;
+      draft.won = draft.score >= TARGET_SCORE;
+    });
+  }
 
   const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
     if (zone.name !== "grid" || zone.pileIndex === undefined) return {};
@@ -287,15 +372,15 @@ export default function CribbageSquares() {
     };
   };
 
-  const { cardMap } = useCardMap({
+  const { cardMap, cardWidth, getZoneStylesById } = useCardMap({
     game,
     zones,
     zoneMapper,
     cardMapper,
     cardSize: "small",
     gap: 0.12,
-    fixedCols: GRID_SIZE,
-    fixedRows: 6.2,
+    fixedCols: GRID_SIZE + 1,
+    fixedRows: 7.2,
   });
 
   return (
@@ -314,6 +399,49 @@ export default function CribbageSquares() {
       undo={undo}
     >
       {cardMap}
+
+      {game.scoresReady && (
+        <View
+          style={[
+            flexStyles.colCentered,
+            flexStyles.fullWidth,
+            getZoneStylesById("end-game"),
+          ]}
+        >
+          <Button
+            text={`End Game (${game.score} pts)`}
+            onPress={endGame}
+            size="md"
+            taller
+            lineHeight={1.1}
+            fullWidth
+          />
+        </View>
+      )}
+
+      {game.scoresReady &&
+        scoreLabels.map(({ id, score }) => (
+          <View
+            key={id}
+            pointerEvents="none"
+            style={[
+              getZoneStylesById(id),
+              {
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 20,
+              },
+            ]}
+          >
+            <Text
+              size="xxxl"
+              weight={500}
+              color={rgba(Colors.white, score > 0 ? 1 : 0.3)}
+            >
+              {score}
+            </Text>
+          </View>
+        ))}
     </GameWrapper>
   );
 }
