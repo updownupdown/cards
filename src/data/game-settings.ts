@@ -110,7 +110,19 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         key: "drawCount",
         label: "Stock Draw",
         type: "string",
-        applyBehavior: "next-game",
+        applyBehavior: "immediate",
+        options: [
+          { label: "Draw 1", value: 1 },
+          { label: "Draw 3", value: 3 },
+        ],
+      },
+    ],
+    "/osmosis": [
+      {
+        key: "drawCount",
+        label: "Stock Draw",
+        type: "string",
+        applyBehavior: "immediate",
         options: [
           { label: "Draw 1", value: 1 },
           { label: "Draw 3", value: 3 },

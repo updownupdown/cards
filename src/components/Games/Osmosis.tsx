@@ -1,22 +1,32 @@
 import { useStateManager } from "@/hooks/useStateManager";
+import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { delay } from "@/utils/utils";
 import { useEffect, useMemo } from "react";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
+  cardDims,
+  cardLabel,
   createDeck,
+  flipAllToBack,
   flipToBack,
   flipToFace,
+  RANK_VALUE,
   shuffle,
+  sortCardsByRank,
   top,
   type PlayingCard,
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { View } from "react-native";
+import { Text } from "../common/Text";
+import { flexStyles } from "@/styles/flexStyles";
 
 const reserveCount = 4;
 const reserveSize = 4;
 
 type GameState = {
+  baseCard: PlayingCard | null;
   reserves: PlayingCard[][];
   foundations: PlayingCard[][];
   stock: PlayingCard[];
@@ -26,9 +36,10 @@ type GameState = {
 };
 
 const gameStateInitial: GameState = {
+  baseCard: null,
   reserves: Array.from({ length: reserveCount }, () => []),
   foundations: Array.from({ length: 4 }, () => []),
-  stock: [],
+  stock: flipAllToBack(shuffle(createDeck())),
   waste: [],
   ended: false,
   won: false,
@@ -36,7 +47,7 @@ const gameStateInitial: GameState = {
 
 /** Which foundation row (if any) a card may join right now; -1 if none. */
 function foundationTarget(state: GameState, card: PlayingCard): number {
-  const base = state.foundations[0][0];
+  const base = state.baseCard;
   if (!base) return -1;
 
   const suitRow = state.foundations.findIndex(
@@ -63,26 +74,41 @@ async function resetAndSetup(
   setGame: (updater: (draft: GameState) => void) => void,
 ) {
   setGame((draft) => {
-    const deck = shuffle(createDeck());
+    const allCards = [
+      ...draft.foundations.flat(),
+      ...draft.reserves.flat(),
+      ...draft.stock,
+      ...draft.waste,
+    ];
 
-    const reserves: PlayingCard[][] = [];
-    for (let i = 0; i < reserveCount; i += 1) {
-      reserves.push(deck.splice(0, reserveSize).map(flipToFace));
-    }
+    draft.stock = flipAllToBack(shuffle(allCards));
 
-    const seed = deck.shift();
-    const foundations: PlayingCard[][] = Array.from({ length: 4 }, () => []);
-    if (seed) foundations[0] = [flipToFace(seed)];
-
-    draft.reserves = reserves;
-    draft.foundations = foundations;
-    draft.stock = deck.map(flipToBack);
+    draft.baseCard = null;
+    draft.foundations = Array.from({ length: 4 }, () => []);
+    draft.reserves = [];
     draft.waste = [];
+
     draft.ended = false;
     draft.won = false;
   });
 
   await delay();
+
+  setGame((draft) => {
+    for (let i = 0; i < reserveCount; i += 1) {
+      draft.reserves.push(draft.stock.splice(0, reserveSize).map(flipToFace));
+    }
+  });
+
+  await delay();
+
+  setGame((draft) => {
+    const baseCard = draft.stock.pop();
+    if (!baseCard) return;
+
+    draft.baseCard = flipToFace(baseCard);
+    draft.foundations[0].push(draft.baseCard);
+  });
 }
 
 function evaluateEnd(state: GameState) {
@@ -105,6 +131,8 @@ function evaluateEnd(state: GameState) {
 
 // ========== Main Component ========== //
 export default function Osmosis() {
+  const configuredDrawCount = useGameSettingValue("drawCount");
+
   const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
     useStateManager({
       resetAndSetup: async () => {
@@ -134,6 +162,7 @@ export default function Osmosis() {
     setGame((draft) => {
       const moved = draft.reserves[index].pop();
       if (moved) draft.foundations[target].push(moved);
+      sortCardsByRank(draft.foundations[target]);
     });
   }
 
@@ -148,6 +177,7 @@ export default function Osmosis() {
     setGame((draft) => {
       const moved = draft.waste.pop();
       if (moved) draft.foundations[target].push(moved);
+      sortCardsByRank(draft.foundations[target]);
     });
   }
 
@@ -156,8 +186,11 @@ export default function Osmosis() {
     saveUndoState(structuredClone(game));
     setGame((draft) => {
       if (draft.stock.length > 0) {
-        const card = draft.stock.pop();
-        if (card) draft.waste.push(flipToFace(card));
+        const drawTotal = Math.min(configuredDrawCount, draft.stock.length);
+        for (let i = 0; i < drawTotal; i += 1) {
+          const card = draft.stock.pop();
+          if (card) draft.waste.push(flipToFace(card));
+        }
       } else if (draft.waste.length > 0) {
         draft.stock = draft.waste.reverse().map(flipToBack);
         draft.waste = [];
@@ -178,40 +211,62 @@ export default function Osmosis() {
       col: 0,
       row: i * 1.15,
       baseZIndex: 10,
-      fan: { direction: "right", offset: 0.28, maxVisible: reserveSize },
-      placeholder: { text: i === 0 ? "Reserves" : undefined, infoPos: "left" },
+      fan: { maxVisible: 3 },
     }));
 
-    const foundationZones: MapZone[] = game.foundations.map((row, i) => ({
-      id: `foundation-${i}`,
-      name: "foundation",
-      pileIndex: i,
-      cards: row,
-      col: 2.5,
-      row: i * 1.15,
-      baseZIndex: 20,
-      fan: { direction: "right", offset: 0.26, maxVisible: 5 },
-      placeholder: {},
-    }));
+    const foundationZones: MapZone[] = game.foundations.flatMap((row, i) =>
+      row.map((card) => ({
+        id: `foundation-${i}-${card.id}`,
+        name: "foundation",
+        pileIndex: i,
+        cards: [card],
+        col: 1.2 + (RANK_VALUE[card.rank] - 1) * 0.3,
+        row: i * 1.15,
+        baseZIndex: 20,
+      })),
+    );
+
+    const foundationBackgrounds: MapZone[] = Array.from(
+      { length: 4 },
+      (_, i) => ({
+        id: `foundation-bg-${i}`,
+        name: "foundation-bg",
+        pileIndex: i,
+        col: 1.1,
+        row: i * 1.15 - 0.08,
+        baseZIndex: 1,
+        width: 4.8,
+        height: 1.16,
+        placeholder: {},
+      }),
+    );
 
     return [
+      ...foundationBackgrounds,
       ...reserveZones,
       ...foundationZones,
+      {
+        id: "base-card",
+        name: "base-card",
+        cards: [],
+        col: 0,
+        row: 4.7,
+      },
       {
         id: "stock",
         name: "stock",
         cards: game.stock,
-        col: 0,
+        col: 2.3,
         row: 4.7,
         fan: { maxVisible: 3 },
         baseZIndex: 60,
-        placeholder: { text: "Stock", infoPos: "left", showCount: true },
+        placeholder: { text: "Stock", infoPos: "left" },
       },
       {
         id: "waste",
         name: "waste",
         cards: game.waste,
-        col: 1.3,
+        col: 3.6,
         row: 4.7,
         fan: { maxVisible: 3 },
         baseZIndex: 60,
@@ -267,7 +322,7 @@ export default function Osmosis() {
     return {};
   };
 
-  const { cardMap } = useCardMap({
+  const { cardMap, getZoneStylesById } = useCardMap({
     game,
     zones,
     cardMapper,
@@ -292,6 +347,11 @@ export default function Osmosis() {
       undo={undo}
     >
       {cardMap}
+
+      <View style={[getZoneStylesById("base-card"), flexStyles.colCentered]}>
+        <Text size="sm">Key</Text>
+        <Text size="xxxl">{game.baseCard ? cardLabel(game.baseCard) : ""}</Text>
+      </View>
     </GameWrapper>
   );
 }

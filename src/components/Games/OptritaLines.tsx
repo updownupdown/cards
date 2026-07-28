@@ -3,6 +3,7 @@ import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 import { useMemo, useState } from "react";
+import { flipAllToFace } from "../Cards/card-utils";
 import { View } from "react-native";
 import { Button } from "../Button/Button";
 import { Text } from "../common/Text";
@@ -37,7 +38,7 @@ type GameState = {
 };
 
 const gameStateInitial: GameState = {
-  grid: [],
+  grid: Array.from({ length: CELLS }, () => ({ card: null, faceUp: false })),
   hand: [],
   trump: null,
   trumpPhase: false,
@@ -101,7 +102,7 @@ export default function OptritaLines() {
       grid.push({ card: deck.pop() ?? null, faceUp: r + c === SIZE - 1 });
     }
     draft.grid = grid;
-    draft.hand = deck.splice(0, 7);
+    draft.hand = flipAllToFace(deck.splice(0, 7));
     draft.trump = null;
     draft.trumpPhase = true;
   }

@@ -319,3 +319,16 @@ export function cardLabel(card: PlayingCard | undefined) {
 
   return `${card.rank}${suitSymbol}`;
 }
+
+export function zoneFanOffset(
+  count: number,
+  widthUnits: number,
+  minOffset = 0.1,
+  maxOffset = 0.8,
+) {
+  if (count <= 1) return (minOffset + maxOffset) / 2;
+  return Math.max(
+    minOffset,
+    Math.min(maxOffset, (widthUnits - 1) / (count - 1)),
+  );
+}

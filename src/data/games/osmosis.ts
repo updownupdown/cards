@@ -1,7 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 
 export const osmosis: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/osmosis",
   tip: {
     default: "Top row any in-suit; lower rows need same rank above; tap stock.",
@@ -15,9 +14,9 @@ export const osmosis: GameDefinition = {
   cardDescription:
     "Seep each suit onto its row, but only once the rank above has arrived.",
   rating: {
-    complexity: 50,
-    difficulty: 60,
-    luck: 45,
+    complexity: 30,
+    difficulty: 30,
+    luck: 30,
   },
   tags: [GameTag.ClassicSolitaire],
   about: [
