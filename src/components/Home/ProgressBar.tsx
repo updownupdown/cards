@@ -5,7 +5,13 @@ import { Colors, rgba } from "@/styles/styles";
 import { textStyles } from "@/styles/textStyles";
 import { centeredOffset, roundToPixel, snapCenteredSize } from "@/utils/utils";
 import React from "react";
-import { Animated, DimensionValue, Platform, View } from "react-native";
+import {
+  Animated,
+  DimensionValue,
+  Platform,
+  View,
+  ViewStyle,
+} from "react-native";
 import { Text } from "../common/Text";
 
 const PROGRESS_COLORS = {
@@ -32,6 +38,7 @@ interface Props {
   labelText?: string;
   tallyText?: string | number;
   autoTallyText?: boolean;
+  style?: ViewStyle | ViewStyle[];
 }
 
 export const ProgressBar = ({
@@ -44,6 +51,7 @@ export const ProgressBar = ({
   totalValue,
   autoTallyText = false,
   scaledHeight,
+  style,
 }: Props) => {
   const { scale, textScale } = useResponsiveMetrics();
   const [barWidth, setBarWidth] = React.useState(0);
@@ -162,6 +170,7 @@ export const ProgressBar = ({
             0.2,
           )}, 0 0 ${roundToPixel(height * 0.2)}px ${rgba(Colors.K950, 0.2)}`,
         },
+        style,
       ]}
     >
       {labelText && (

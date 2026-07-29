@@ -3,13 +3,17 @@ import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 import { useMemo, useState } from "react";
-import { flipAllToFace } from "../Cards/card-utils";
+import {
+  flipAllToBack,
+  flipAllToFace,
+  sortCardsBySuit,
+  zoneFanOffset,
+} from "../Cards/card-utils";
 import { View } from "react-native";
 import { Button } from "../Button/Button";
 import { Text } from "../common/Text";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
-  type CardSuit,
   createDeck,
   flipToBack,
   flipToFace,
@@ -19,6 +23,10 @@ import {
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { ProgressBar } from "../Home/ProgressBar";
+import { flexStyles } from "@/styles/flexStyles";
+import { Colors } from "@/styles/styles";
 
 const SIZE = 6;
 const CELLS = SIZE * SIZE;
@@ -28,6 +36,9 @@ type Cell = { card: PlayingCard | null; faceUp: boolean };
 type GameState = {
   grid: Cell[];
   hand: PlayingCard[];
+  playerWon: PlayingCard[];
+  gridWon: PlayingCard[];
+  discard: PlayingCard[];
   trump: PlayingCard | null;
   trumpPhase: boolean;
   youScore: number;
@@ -40,6 +51,9 @@ type GameState = {
 const gameStateInitial: GameState = {
   grid: Array.from({ length: CELLS }, () => ({ card: null, faceUp: false })),
   hand: [],
+  playerWon: [],
+  gridWon: [],
+  discard: flipAllToBack(shuffle(createDeck().filter((c) => c.rank !== "10"))),
   trump: null,
   trumpPhase: false,
   youScore: 0,
@@ -52,16 +66,9 @@ const gameStateInitial: GameState = {
 type Orient = "row" | "col";
 type Dir = "fwd" | "rev";
 
-// Aces are high in Optrita.
 function rankHigh(card: PlayingCard) {
-  return card.rank === "A" ? 14 : rankValue(card);
+  return rankValue(card, 14);
 }
-const SUIT_GLYPH: Record<CardSuit, string> = {
-  hearts: "\u2665",
-  diamonds: "\u2666",
-  clubs: "\u2663",
-  spades: "\u2660",
-};
 
 function orderedCells(orient: Orient, index: number, dir: Dir) {
   const cells: number[] = [];
@@ -73,17 +80,14 @@ function orderedCells(orient: Orient, index: number, dir: Dir) {
   if (dir === "rev") cells.reverse();
   return cells;
 }
+
 function lineFull(grid: Cell[], orient: Orient, index: number) {
   return orderedCells(orient, index, "fwd").every((i) => grid[i].card !== null);
 }
 
-function buildDeck() {
-  // 48 cards: A, 2-9, J, Q, K in four suits (no 10s, no jokers).
-  return createDeck().filter((c) => c.rank !== "10");
-}
-
 // ── Component ────────────────────────────────────────────────────────────────
 export default function OptritaLines() {
+  const { spacing } = useResponsiveMetrics();
   const { cardBg, cardText } = useGameZoneBackground();
   const hardMode = useGameSettingValue("optritaHard") as boolean;
 
@@ -92,19 +96,79 @@ export default function OptritaLines() {
     handIndex: number;
     cells: number[];
   } | null>(null);
+  const [resolvingChallenge, setResolvingChallenge] = useState(false);
+  const [resolvedCell, setResolvedCell] = useState<{
+    index: number;
+    color: "green" | "red";
+  } | null>(null);
 
-  function startRound(draft: GameState) {
-    const deck = shuffle(buildDeck());
-    const grid: Cell[] = [];
-    for (let i = 0; i < CELLS; i += 1) {
-      const r = Math.floor(i / SIZE);
-      const c = i % SIZE;
-      grid.push({ card: deck.pop() ?? null, faceUp: r + c === SIZE - 1 });
-    }
-    draft.grid = grid;
-    draft.hand = flipAllToFace(deck.splice(0, 7));
-    draft.trump = null;
-    draft.trumpPhase = true;
+  async function startRound(initialDeal = false) {
+    setGame((draft) => {
+      const completedCells = new Set<number>();
+
+      for (const orient of ["row", "col"] as const) {
+        for (let index = 0; index < SIZE; index += 1) {
+          const cells = orderedCells(orient, index, "fwd");
+          if (
+            cells.some(
+              (cellIndex) =>
+                draft.grid[cellIndex].card !== null &&
+                !draft.grid[cellIndex].faceUp,
+            )
+          ) {
+            continue;
+          }
+          cells.forEach((cellIndex) => completedCells.add(cellIndex));
+        }
+      }
+
+      const gatheredGridCards = [...completedCells]
+        .map((cellIndex) => draft.grid[cellIndex].card)
+        .filter((card): card is PlayingCard => card !== null);
+
+      draft.discard = flipAllToBack(
+        shuffle([
+          ...draft.discard,
+          ...draft.playerWon,
+          ...draft.gridWon,
+          ...draft.hand,
+          ...(draft.trump ? [draft.trump] : []),
+          ...gatheredGridCards,
+        ]),
+      );
+
+      completedCells.forEach((cellIndex) => {
+        draft.grid[cellIndex] = { card: null, faceUp: false };
+      });
+      draft.playerWon = [];
+      draft.gridWon = [];
+      draft.hand = [];
+      draft.trump = null;
+      draft.trumpPhase = false;
+    });
+
+    await delay();
+
+    setGame((draft) => {
+      for (let i = 0; i < draft.grid.length; i += 1) {
+        const cell = draft.grid[i];
+        if (cell.card === null) {
+          cell.card = draft.discard.pop() ?? null;
+          const r = Math.floor(i / SIZE);
+          const c = i % SIZE;
+          cell.faceUp = initialDeal && r + c === SIZE - 1;
+        }
+      }
+    });
+
+    await delay();
+
+    setGame((draft) => {
+      draft.hand = flipAllToFace(
+        sortCardsBySuit(draft.discard.splice(0, 7), 14),
+      );
+      draft.trumpPhase = true;
+    });
   }
 
   const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
@@ -113,17 +177,43 @@ export default function OptritaLines() {
       resetNonGameStates: () => {
         setSelectedHand(null);
         setPendingPick(null);
+        setResolvingChallenge(false);
+        setResolvedCell(null);
       },
       resetAndSetup: async () => {
+        setGame((draft) => {
+          // Gather all cards to discard pile, face down.
+          const allCards = [
+            ...draft.discard,
+            ...draft.playerWon,
+            ...draft.gridWon,
+            ...(draft.grid.map((c) => c.card).filter(Boolean) as PlayingCard[]),
+            ...draft.hand,
+            ...(draft.trump ? [draft.trump] : []),
+          ];
+          draft.discard = flipAllToBack(shuffle(allCards));
+          draft.grid = Array.from({ length: CELLS }, () => ({
+            card: null,
+            faceUp: false,
+          }));
+          draft.hand = [];
+          draft.playerWon = [];
+          draft.gridWon = [];
+          draft.trump = null;
+          draft.trumpPhase = false;
+        });
+
+        await delay();
+
         setGame((draft) => {
           draft.youScore = 0;
           draft.gridScore = 0;
           draft.round = 1;
           draft.ended = false;
           draft.won = false;
-          startRound(draft);
         });
-        await delay();
+
+        await startRound(true);
       },
     });
 
@@ -142,7 +232,6 @@ export default function OptritaLines() {
     }
     if (draft.hand.length === 0) {
       draft.round += 1;
-      startRound(draft);
     }
   }
 
@@ -156,10 +245,17 @@ export default function OptritaLines() {
     setSelectedHand(null);
   }
 
-  function challenge(orient: Orient, index: number, dir: Dir) {
-    if (game.ended || game.trumpPhase || pendingPick || selectedHand === null) {
+  async function challenge(orient: Orient, index: number, dir: Dir) {
+    if (
+      game.ended ||
+      game.trumpPhase ||
+      pendingPick ||
+      resolvingChallenge ||
+      selectedHand === null
+    ) {
       return;
     }
+
     if (!lineFull(game.grid, orient, index)) return;
 
     const handIndex = selectedHand;
@@ -167,75 +263,138 @@ export default function OptritaLines() {
     if (!hc) return;
     const cells = orderedCells(orient, index, dir);
 
-    const matchPos = cells.findIndex(
-      (i) => game.grid[i].card && game.grid[i].card!.suit === hc.suit,
-    );
-
+    setResolvingChallenge(true);
     saveUndoState(structuredClone(game));
 
-    if (matchPos >= 0) {
-      const removed = cells[matchPos];
-      const gridCard = game.grid[removed].card!;
-      const youWin = rankHigh(hc) > rankHigh(gridCard);
-      setGame((draft) => {
-        for (let k = 0; k <= matchPos; k += 1)
-          draft.grid[cells[k]].faceUp = true;
-        draft.grid[removed] = { card: null, faceUp: false };
-        draft.hand.splice(handIndex, 1);
-        if (youWin) draft.youScore += 1;
-        else draft.gridScore += 1;
-        endTrickChecks(draft);
-      });
-      setSelectedHand(null);
-      return;
-    }
+    try {
+      let matchPos = -1;
+      for (let position = 0; position < cells.length; position += 1) {
+        const cellIndex = cells[position];
+        const cell = game.grid[cellIndex];
+        if (!cell.card) continue;
 
-    // No same-suit card: reveal the whole line, then resolve by trump.
-    const trumpSuit = game.trump?.suit;
-    const trumpCells =
-      trumpSuit && trumpSuit !== hc.suit
-        ? cells.filter((i) => game.grid[i].card!.suit === trumpSuit)
-        : [];
+        if (!cell.faceUp) {
+          setGame((draft) => {
+            draft.grid[cellIndex].faceUp = true;
+          });
 
-    if (trumpCells.length > 0) {
-      let low = trumpCells[0];
-      for (const i of trumpCells) {
-        if (rankHigh(game.grid[i].card!) < rankHigh(game.grid[low].card!))
-          low = i;
+          await delay(400);
+        }
+
+        if (cell.card.suit === hc.suit) {
+          matchPos = position;
+          break;
+        }
       }
-      setGame((draft) => {
-        for (const i of cells) draft.grid[i].faceUp = true;
-        draft.grid[low] = { card: null, faceUp: false };
-        draft.hand.splice(handIndex, 1);
-        draft.gridScore += 1; // trump always wins
-        endTrickChecks(draft);
-      });
-      setSelectedHand(null);
-      return;
-    }
 
-    // No matching suit and no trump: reveal all, you win and pick any card.
-    setGame((draft) => {
-      for (const i of cells) draft.grid[i].faceUp = true;
-    });
-    setPendingPick({ handIndex, cells: [...cells] });
+      if (matchPos >= 0) {
+        const removed = cells[matchPos];
+        const gridCard = game.grid[removed].card!;
+        const youWin = rankHigh(hc) > rankHigh(gridCard);
+        const shouldStartRound =
+          game.hand.length === 1 &&
+          (youWin ? game.youScore + 1 : game.youScore) < winTarget &&
+          (!youWin ? game.gridScore + 1 : game.gridScore) < gridTarget;
+
+        setResolvedCell({ index: removed, color: youWin ? "green" : "red" });
+
+        await delay(1000);
+
+        setGame((draft) => {
+          draft.grid[removed] = { card: null, faceUp: false };
+          const handCard = draft.hand.splice(handIndex, 1)[0] as PlayingCard;
+
+          if (youWin) {
+            draft.youScore += 1;
+            draft.playerWon.push(...flipAllToBack([gridCard, handCard]));
+          } else {
+            draft.gridScore += 1;
+            draft.gridWon.push(...flipAllToBack([gridCard, handCard]));
+          }
+
+          endTrickChecks(draft);
+        });
+
+        setResolvedCell(null);
+        setSelectedHand(null);
+
+        if (shouldStartRound) {
+          await delay(1000);
+
+          await startRound();
+        }
+        return;
+      }
+
+      // No same-suit card: resolve the revealed line by trump.
+      const trumpSuit = game.trump?.suit;
+      const trumpCells =
+        trumpSuit && trumpSuit !== hc.suit
+          ? cells.filter((i) => game.grid[i].card!.suit === trumpSuit)
+          : [];
+
+      if (trumpCells.length > 0) {
+        let low = trumpCells[0];
+        for (const i of trumpCells) {
+          if (rankHigh(game.grid[i].card!) < rankHigh(game.grid[low].card!))
+            low = i;
+        }
+        const gridCard = game.grid[low].card!;
+        const shouldStartRound =
+          game.hand.length === 1 && game.gridScore + 1 < gridTarget;
+        setResolvedCell({ index: low, color: "red" });
+
+        await delay(1000);
+
+        setGame((draft) => {
+          draft.grid[low] = { card: null, faceUp: false };
+          const handCard = draft.hand.splice(handIndex, 1)[0] as PlayingCard;
+          draft.gridScore += 1;
+          draft.gridWon.push(...flipAllToBack([gridCard, handCard]));
+          endTrickChecks(draft);
+        });
+
+        setResolvedCell(null);
+        setSelectedHand(null);
+        if (shouldStartRound) await startRound();
+        return;
+      }
+
+      // No matching suit and no trump: the user may pick any revealed card.
+      setPendingPick({ handIndex, cells: [...cells] });
+    } finally {
+      setResolvingChallenge(false);
+    }
   }
 
-  function completeFreePick(cellIndex: number) {
+  async function completeFreePick(cellIndex: number) {
     if (!pendingPick || !pendingPick.cells.includes(cellIndex)) return;
     const { handIndex } = pendingPick;
+    const gridCard = game.grid[cellIndex].card;
+    if (!gridCard) return;
+    const shouldStartRound =
+      game.hand.length === 1 && game.youScore + 1 < winTarget;
+
+    setResolvingChallenge(true);
+    setResolvedCell({ index: cellIndex, color: "green" });
+
     setGame((draft) => {
       draft.grid[cellIndex] = { card: null, faceUp: false };
-      draft.hand.splice(handIndex, 1);
+      const handCard = draft.hand.splice(handIndex, 1)[0] as PlayingCard;
       draft.youScore += 1;
+      draft.playerWon.push(...flipAllToBack([gridCard, handCard]));
       endTrickChecks(draft);
     });
+
     setPendingPick(null);
     setSelectedHand(null);
+    setResolvedCell(null);
+    setResolvingChallenge(false);
+    if (shouldStartRound) await startRound();
   }
 
   function onHandPress(index: number) {
-    if (game.ended) return;
+    if (game.ended || resolvingChallenge) return;
     if (game.trumpPhase) {
       pickTrump(index);
       return;
@@ -245,15 +404,71 @@ export default function OptritaLines() {
   }
 
   // ── Layout ────────────────────────────────────────────────────────────────
-  const gridLeft = 1;
+  const gridLeft = 0.8;
   const gridTop = 1.7;
-  const handRow = gridTop + SIZE + 1.1; // below grid + bottom markers
+  const handRow = gridTop + SIZE + 1; // below grid + bottom markers
   const cellCol = (c: number) => gridLeft + c;
   const cellRow = (r: number) => gridTop + r;
 
   const zones: MapZone[] = useMemo(() => {
     const result: MapZone[] = [
-      { id: "hud", col: 0, row: 0, width: "full", height: 0.65 },
+      // Discard
+      {
+        id: "discard",
+        col: 0,
+        row: 0,
+        cards: game.discard,
+        baseZIndex: 60,
+        placeholder: { text: "Discard", infoPos: "right", showCount: false },
+      },
+      // HUD
+      { id: "hud", col: 1.75, row: 0, width: 4, baseZIndex: 1 },
+      // Trump
+      {
+        id: "trump",
+        name: "trump",
+        cards: game.trump ? [game.trump] : [],
+        col: 6.6,
+        row: 0,
+        baseZIndex: 60,
+        placeholder: { text: "Trump", infoPos: "left", showCount: false },
+      },
+
+      // Player won cards
+      {
+        id: "player-won",
+        col: 0,
+        row: handRow - 0.1,
+        cards: game.playerWon,
+        baseZIndex: 60,
+        placeholder: {},
+      },
+      // Hand
+      {
+        id: "hand",
+        name: "hand",
+        cards: game.hand,
+        col: 1.3,
+        row: handRow - 0.2,
+        width: 5,
+        height: 1.2,
+        baseZIndex: 20,
+        fan: {
+          offset: zoneFanOffset(game.hand.length, 5, 0.3, 0.9),
+          direction: "right",
+        },
+        placeholder: {},
+      },
+
+      // Grid won cards
+      {
+        id: "grid-won",
+        col: 6.6,
+        row: handRow - 0.1,
+        cards: game.gridWon,
+        baseZIndex: 60,
+        placeholder: {},
+      },
     ];
 
     game.grid.forEach((cell, i) => {
@@ -277,55 +492,35 @@ export default function OptritaLines() {
     for (let r = 0; r < SIZE; r += 1) {
       result.push({
         id: `mk-row-${r}-L`,
-        col: 0.15,
+        col: 0,
         row: cellRow(r),
-        width: 0.75,
-        height: 0.9,
+        width: 0.8,
+        height: 1,
       });
       result.push({
         id: `mk-row-${r}-R`,
-        col: gridLeft + SIZE + 0.1,
+        col: gridLeft + SIZE,
         row: cellRow(r),
-        width: 0.75,
-        height: 0.9,
+        width: 0.8,
+        height: 1,
       });
     }
     for (let c = 0; c < SIZE; c += 1) {
       result.push({
         id: `mk-col-${c}-T`,
         col: cellCol(c),
-        row: 0.85,
-        width: 0.9,
-        height: 0.7,
+        row: 1.1,
+        width: 1,
+        height: 0.6,
       });
       result.push({
         id: `mk-col-${c}-B`,
         col: cellCol(c),
-        row: gridTop + SIZE + 0.05,
-        width: 0.9,
-        height: 0.7,
+        row: gridTop + SIZE,
+        width: 1,
+        height: 0.6,
       });
     }
-
-    game.hand.forEach((card, i) => {
-      result.push({
-        id: `hand-${i}`,
-        name: "hand",
-        pileIndex: i,
-        cards: [card],
-        col: 0.5 + i,
-        row: handRow,
-        baseZIndex: 60,
-      });
-    });
-
-    result.push({
-      id: "controls",
-      col: 0,
-      row: handRow + 1.1,
-      width: "full",
-      height: 0.8,
-    });
 
     return result;
   }, [game]);
@@ -336,17 +531,30 @@ export default function OptritaLines() {
     if (mappedCard.zoneName === "cell" && mappedCard.pileIndex !== undefined) {
       const idx = mappedCard.pileIndex;
       const pickable = !!pendingPick && pendingPick.cells.includes(idx);
+      const isResolved = resolvedCell?.index === idx;
+
       return {
         isDisabled: !pickable,
-        selectColor: pickable ? "green" : "none",
+        forceOverlayColor: isResolved || pickable,
+        selectColor: isResolved
+          ? resolvedCell.color
+          : pickable
+            ? "green"
+            : "none",
         onPress: () => completeFreePick(idx),
       };
-    }
-    if (mappedCard.zoneName === "hand" && mappedCard.pileIndex !== undefined) {
-      const index = mappedCard.pileIndex;
+    } else if (mappedCard.zoneName === "hand") {
+      const index = mappedCard.cardIndex;
+      const isSelected = selectedHand === index;
+
       return {
-        isSelected: selectedHand === index,
-        selectColor: game.trumpPhase ? "orange" : "blue",
+        isSelected,
+        forceOverlayColor: game.trumpPhase,
+        selectColor: game.trumpPhase
+          ? "orange"
+          : resolvedCell && isSelected
+            ? resolvedCell.color
+            : "blue",
         isDisabled: game.ended || !!pendingPick,
         onPress: () => onHandPress(index),
       };
@@ -354,16 +562,20 @@ export default function OptritaLines() {
     return {};
   };
 
-  const { cardMap, getZoneStylesById } = useCardMap({
+  const { cardMap, cardHeight, getZoneStylesById } = useCardMap({
     game,
     zones,
     cardMapper,
-    gap: 0.08,
+    gap: 0.1,
     cardSize: "small",
   });
 
   const markerActive =
-    selectedHand !== null && !game.trumpPhase && !pendingPick && !game.ended;
+    selectedHand !== null &&
+    !game.trumpPhase &&
+    !pendingPick &&
+    !resolvingChallenge &&
+    !game.ended;
 
   const markers: {
     id: string;
@@ -406,18 +618,17 @@ export default function OptritaLines() {
   }
 
   const statusText = game.trumpPhase
-    ? "Choose a trump card (helps the grid)"
+    ? "Choose a trump card"
     : pendingPick
-      ? "Pick any revealed card to capture"
+      ? "Pick a revealed card"
       : selectedHand !== null
-        ? "Challenge a line with an arrow"
-        : "Select a card from your hand";
+        ? "Select a line"
+        : "Select a hand card";
 
   return (
     <GameWrapper
       ended={game.ended}
       won={game.won}
-      score={game.youScore}
       reset={reset}
       isLoaded={isLoaded}
       winLoseMessage={
@@ -432,52 +643,68 @@ export default function OptritaLines() {
 
       <View
         style={[
+          flexStyles.colCentered,
+          flexStyles.spaceAround,
           getZoneStylesById("hud"),
-          {
-            flexDirection: "row",
-            justifyContent: "space-around",
-            alignItems: "center",
-          },
         ]}
       >
-        <Text size="sm" weight={600} color={cardText}>
-          You {game.youScore}/{winTarget}
-        </Text>
-        <Text size="sm" weight={600} color={cardText}>
-          Grid {game.gridScore}/{gridTarget}
-        </Text>
-        <Text size="sm" weight={600} color={cardText}>
-          Trump {game.trump ? SUIT_GLYPH[game.trump.suit] : "\u2014"}
+        <View
+          style={[
+            flexStyles.rowCentered,
+            {
+              width: "100%",
+              gap: spacing(10),
+            },
+          ]}
+        >
+          <ProgressBar
+            progressValue={game.youScore}
+            totalValue={winTarget}
+            color={Colors.winDark}
+            autoTallyText
+            scaledHeight={cardHeight * 0.4}
+            style={{ flex: 1 }}
+          />
+          <ProgressBar
+            progressValue={game.gridScore}
+            totalValue={gridTarget}
+            color={Colors.loseDark}
+            autoTallyText
+            scaledHeight={cardHeight * 0.4}
+            style={{ flex: 1 }}
+          />
+        </View>
+
+        <Text size="sm" weight={400} color={cardText} lineHeight={1}>
+          {statusText}
         </Text>
       </View>
 
       {markers.map((m) => {
         const available = lineFull(game.grid, m.orient, m.index);
         const enabled = markerActive && available;
+
         return (
           <View key={m.id} style={[getZoneStylesById(m.id)]}>
             <Button
               text={m.label}
-              size="sm"
+              size="xxs"
               onPress={() => challenge(m.orient, m.index, m.dir)}
               disabled={!enabled}
               fullWidth
-              theme={enabled ? cardBg : undefined}
+              theme={cardBg}
+              style={{
+                borderRadius: 4,
+                padding: 0,
+                width: "100%",
+                height: "100%",
+                borderWidth: 0,
+                opacity: available ? (enabled ? 1 : 0.6) : 0,
+              }}
             />
           </View>
         );
       })}
-
-      <View
-        style={[
-          getZoneStylesById("controls"),
-          { alignItems: "center", justifyContent: "center" },
-        ]}
-      >
-        <Text size="xs" weight={400} color={cardText}>
-          {statusText}
-        </Text>
-      </View>
     </GameWrapper>
   );
 }

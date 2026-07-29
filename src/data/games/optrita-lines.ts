@@ -1,10 +1,10 @@
 import { GameDefinition, GameTag } from "../games-data";
 
 export const optritaLines: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/optrita-lines",
   tip: {
-    default: "Challenge a line; first suit match wins by rank, else trump.",
+    default:
+      "Pick a card and line; first suit match wins by rank, otherwise trump suit wins.",
   },
   title: "Optrita: Lines",
   thumbnail: "OptritaLines.jpg",
@@ -14,13 +14,13 @@ export const optritaLines: GameDefinition = {
   cardDescription:
     "A one-player trick-taking duel against a 6x6 grid that fights only by hiding its cards.",
   rating: {
-    complexity: 70,
-    difficulty: 60,
-    luck: 50,
+    complexity: 40,
+    difficulty: 50,
+    luck: 30,
   },
   tags: [GameTag.ModernMechanics],
   about: [
-    "Optrita:Lines is a solitaire trick-taker: you attack lines of a face-down grid, revealing one card at a time.",
+    "Optrita: Lines is a solitaire trick-taker: you attack lines of a face-down grid, revealing one card at a time.",
     "More information helps, but every reveal also closes off lines you can no longer challenge.",
   ],
   byLine: "Game design by Stephen Tudor, 2023",

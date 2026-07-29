@@ -215,20 +215,26 @@ export function shuffle<T>(items: T[]) {
   return next;
 }
 
-export function sortCardsBySuit(cards: PlayingCard[]) {
+export function sortCardsBySuit(
+  cards: PlayingCard[],
+  acesValue = RANK_VALUE.A,
+) {
   return cards.sort((a, b) => {
     if (suitValue(a) !== suitValue(b)) {
       return suitValue(a) - suitValue(b);
     }
 
-    return rankValue(a) - rankValue(b);
+    return rankValue(a, acesValue) - rankValue(b, acesValue);
   });
 }
 
-export function sortCardsByRank(cards: PlayingCard[]) {
+export function sortCardsByRank(
+  cards: PlayingCard[],
+  acesValue = RANK_VALUE.A,
+) {
   return cards.sort((a, b) => {
-    if (rankValue(a) !== rankValue(b)) {
-      return rankValue(a) - rankValue(b);
+    if (rankValue(a, acesValue) !== rankValue(b, acesValue)) {
+      return rankValue(a, acesValue) - rankValue(b, acesValue);
     }
 
     return suitValue(a) - suitValue(b);
