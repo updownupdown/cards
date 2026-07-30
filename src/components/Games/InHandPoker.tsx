@@ -8,6 +8,7 @@ import { Button } from "../Button/Button";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
+  flipAllToBack,
   flipToFace,
   RANKS,
   shuffle,
@@ -15,14 +16,32 @@ import {
   type CardRank,
   type CardSuit,
   type PlayingCard,
+  zoneFanOffset,
+  sortCardsBySuit,
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
+import { ProgressBar } from "../Home/ProgressBar";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { flexStyles } from "@/styles/flexStyles";
+import { Colors, rgba } from "@/styles/styles";
+import { rotatedText } from "@/styles/textStyles";
 
 const startScore = 5;
 const winScore = 10;
 const maxFoldStreak = 3;
+
+const LAYOUT = {
+  cols: 7,
+  oppTop: 1.3,
+  handTop: 4,
+  buttonsTop: 5.9,
+  cardAreaGap: 0.15,
+  cardAreaHeight: 1.7,
+  cardAreaLabelHeight: 0.55,
+  middleMessageHeight: 0.5,
+};
 
 // ── Poker evaluation (pure) ───────────────────────────────────────────────────
 const RANK_ORDER: Record<CardRank, number> = {
@@ -211,6 +230,7 @@ type GameState = {
   deck: PlayingCard[];
   hand: PlayingCard[];
   opponent: PlayingCard[];
+  discard: PlayingCard[];
   oppBest: string[]; // ids of opponent's best 5
   phase: Phase;
   discardCount: number;
@@ -226,6 +246,7 @@ const gameStateInitial: GameState = {
   deck: [],
   hand: [],
   opponent: [],
+  discard: [],
   oppBest: [],
   phase: "decide",
   discardCount: 0,
@@ -244,14 +265,9 @@ function buildDeck(jokers: boolean) {
   return deck;
 }
 
-function scoreRank(score: number): CardRank {
-  if (score <= 1) return "A";
-  if (score >= 10) return "10";
-  return String(score) as CardRank;
-}
-
 // ── Component ────────────────────────────────────────────────────────────────
 export default function InHandPoker() {
+  const { spacing } = useResponsiveMetrics();
   const { cardBg, cardText } = useGameZoneBackground();
   const jokers = useGameSettingValue("pokerJokers") as boolean;
   const jokersRef = useRef(jokers);
@@ -259,11 +275,8 @@ export default function InHandPoker() {
 
   const [selectedDiscards, setSelectedDiscards] = useState<string[]>([]);
 
-  function dealHand(draft: GameState) {
-    draft.deck = shuffle(buildDeck(jokersRef.current));
-    draft.hand = draft.deck.splice(0, 5).map(flipToFace);
-    draft.opponent = [];
-    draft.oppBest = [];
+  function distributeHand(draft: GameState) {
+    draft.hand = sortCardsBySuit(draft.deck.splice(0, 5).map(flipToFace));
     draft.phase = "decide";
     draft.discardCount = 0;
     draft.bet = 0;
@@ -276,15 +289,47 @@ export default function InHandPoker() {
       resetNonGameStates: () => setSelectedDiscards([]),
       resetAndSetup: async () => {
         setGame((draft) => {
+          const cards = [
+            ...draft.deck,
+            ...draft.hand,
+            ...draft.opponent,
+            ...draft.discard,
+          ];
+          draft.deck = flipAllToBack(
+            shuffle(cards.length > 0 ? cards : buildDeck(jokersRef.current)),
+          );
+          draft.hand = [];
+          draft.opponent = [];
+          draft.discard = [];
+          draft.oppBest = [];
           draft.score = startScore;
           draft.foldStreak = 0;
           draft.ended = false;
           draft.won = false;
-          dealHand(draft);
         });
         await delay();
+        setGame(distributeHand);
       },
     });
+
+  async function dealNextRound() {
+    setGame((draft) => {
+      draft.deck = flipAllToBack(
+        shuffle([
+          ...draft.deck,
+          ...draft.hand,
+          ...draft.opponent,
+          ...draft.discard,
+        ]),
+      );
+      draft.hand = [];
+      draft.opponent = [];
+      draft.discard = [];
+      draft.oppBest = [];
+    });
+    await delay();
+    setGame(distributeHand);
+  }
 
   const myValue = useMemo(
     () => (game.hand.length === 5 ? bestHand(game.hand) : null),
@@ -308,19 +353,24 @@ export default function InHandPoker() {
     setSelectedDiscards([]);
   }
 
-  function fold() {
+  async function fold() {
     if (game.phase !== "decide" || game.ended) return;
     saveUndoState(structuredClone(game));
-    setGame((draft) => {
-      draft.foldStreak += 1;
-      if (draft.foldStreak > maxFoldStreak) {
+
+    if (game.foldStreak >= maxFoldStreak) {
+      setGame((draft) => {
+        draft.foldStreak += 1;
         draft.ended = true;
         draft.won = false;
-        return;
-      }
-      dealHand(draft);
+      });
+      return;
+    }
+
+    setGame((draft) => {
+      draft.foldStreak += 1;
     });
     setSelectedDiscards([]);
+    await dealNextRound();
   }
 
   function toggleDiscard(id: string) {
@@ -335,10 +385,12 @@ export default function InHandPoker() {
     const discardIds = new Set(selectedDiscards);
     saveUndoState(structuredClone(game));
     setGame((draft) => {
+      const discarded = draft.hand.filter((c) => discardIds.has(c.id));
       const keep = draft.hand.filter((c) => !discardIds.has(c.id));
       const need = 5 - keep.length;
       const drawn = draft.deck.splice(0, need).map(flipToFace);
-      draft.hand = [...keep, ...drawn];
+      draft.hand = sortCardsBySuit([...keep, ...drawn]);
+      draft.discard.push(...flipAllToBack(discarded));
       draft.discardCount += 1;
       if (draft.discardCount >= 3) draft.phase = "bet";
     });
@@ -346,24 +398,37 @@ export default function InHandPoker() {
   }
 
   function setHand() {
-    if (game.phase !== "discard" || game.discardCount < 1) return;
+    if (game.phase !== "discard") return;
     setGame((draft) => {
       draft.phase = "bet";
     });
     setSelectedDiscards([]);
   }
 
-  function placeBet(amount: number) {
+  async function placeBet(amount: number) {
     if (game.phase !== "bet" || game.ended) return;
+
     saveUndoState(structuredClone(game));
+
+    let best: PlayingCard[] = [];
+    let val: number[] = [];
+
     setGame((draft) => {
       draft.bet = amount;
       const oppCards = draft.deck.splice(0, 5 + amount).map(flipToFace);
-      draft.opponent = oppCards;
-      const { best, val } = bestFiveOf(oppCards);
+      draft.opponent = sortCardsBySuit(oppCards);
+      const result = bestFiveOf(oppCards);
+      best = result.best;
+      val = result.val;
       draft.oppBest = best.map((c) => c.id);
+    });
+
+    await delay(800);
+
+    setGame((draft) => {
       const mine = bestHand(draft.hand);
       const cmp = compareValues(mine, val);
+
       if (cmp > 0) {
         draft.roundResult = "win";
         draft.score += amount;
@@ -373,6 +438,7 @@ export default function InHandPoker() {
       } else {
         draft.roundResult = "push";
       }
+
       if (draft.score >= winScore) {
         draft.ended = true;
         draft.won = true;
@@ -384,75 +450,122 @@ export default function InHandPoker() {
     });
   }
 
-  function nextRound() {
+  async function nextRound() {
     if (game.ended) return;
-    setGame((draft) => {
-      dealHand(draft);
-    });
     setSelectedDiscards([]);
+    await dealNextRound();
   }
 
   // ── Layout ────────────────────────────────────────────────────────────────
   const zones: MapZone[] = useMemo(() => {
     const result: MapZone[] = [
-      { id: "hud", col: 0, row: 0, width: "full", height: 0.6 },
+      // Top
       {
-        id: "score",
-        name: "score",
-        cards: [
-          flipToFace({
-            id: "score-card",
-            suit: "hearts" as CardSuit,
-            rank: scoreRank(game.score),
-            faceUp: true,
-          }),
-        ],
-        col: 6,
-        row: 0.75,
+        id: "draw",
+        name: "draw",
+        cards: game.deck,
+        col: 0,
+        row: 0,
+        fan: { maxVisible: 3 },
         baseZIndex: 30,
-        placeholder: {},
+        placeholder: { text: "Draw", infoPos: "right" },
       },
-      { id: "yourLabel", col: 0, row: 0.8, width: 5.5, height: 0.5 },
-    ];
+      { id: "hud", col: 1.9, row: 0, width: 3.2 },
+      {
+        id: "discard",
+        name: "discard",
+        cards: game.discard,
+        col: LAYOUT.cols - 1,
+        row: 0,
+        fan: { maxVisible: 3 },
+        baseZIndex: 30,
+        placeholder: { text: "Discard", infoPos: "left" },
+      },
 
-    game.hand.forEach((card, i) => {
-      result.push({
-        id: `hand-${i}`,
-        name: "hand",
-        cards: [card],
-        col: 0.5 + i * 1.15,
-        row: 1.4,
-        baseZIndex: 20,
-      });
-    });
-
-    if (game.opponent.length > 0) {
-      result.push({
+      // Opponent
+      {
+        id: "oppBackground",
+        col: 0,
+        row: LAYOUT.oppTop,
+        width: LAYOUT.cols,
+        height: LAYOUT.cardAreaHeight,
+        placeholder: {},
+        baseZIndex: 0,
+      },
+      {
         id: "oppLabel",
         col: 0,
-        row: 3.2,
-        width: "full",
-        height: 0.5,
-      });
-      game.opponent.forEach((card, i) => {
-        result.push({
-          id: `opp-${i}`,
-          name: "opp",
-          cards: [card],
-          col: 0.2 + i * 0.95,
-          row: 3.8,
-          baseZIndex: 10,
-        });
-      });
-    }
+        row: LAYOUT.oppTop + LAYOUT.cardAreaGap + 1,
+        width: LAYOUT.cols,
+        height: LAYOUT.cardAreaLabelHeight,
+        baseZIndex: 10,
+      },
+      {
+        id: "opp",
+        name: "opp",
+        cards: game.opponent,
+        col: 0,
+        row: LAYOUT.oppTop + LAYOUT.cardAreaGap,
+        width: LAYOUT.cols,
+        baseZIndex: 10,
+        fan: {
+          offset: zoneFanOffset(game.opponent.length, 6),
+          direction: "right",
+        },
+      },
 
-    result.push({
-      id: "controls",
-      col: 0,
-      row: 5.4,
-      width: "full",
-      height: 1.6,
-    });
+      // Middle Message
+      {
+        id: "message",
+        col: 0,
+        row: LAYOUT.oppTop + LAYOUT.cardAreaHeight,
+        width: LAYOUT.cols,
+        height: 1,
+        baseZIndex: 1,
+      },
+
+      // Hand
+      {
+        id: "handBackground",
+        col: 0,
+        row: LAYOUT.handTop,
+        width: LAYOUT.cols,
+        height: LAYOUT.cardAreaHeight,
+        placeholder: {},
+        baseZIndex: 0,
+      },
+      {
+        id: "handLabel",
+        col: 0,
+        row: LAYOUT.handTop,
+        width: LAYOUT.cols,
+        height: LAYOUT.cardAreaLabelHeight,
+        baseZIndex: 10,
+      },
+      {
+        id: "hand",
+        name: "hand",
+        cards: game.hand,
+        col: 0,
+        row: LAYOUT.handTop + LAYOUT.cardAreaLabelHeight,
+        width: LAYOUT.cols,
+        baseZIndex: 20,
+        fan: {
+          offset: zoneFanOffset(game.hand.length, 6),
+          direction: "right",
+        },
+      },
+
+      // Buttons
+      {
+        id: "controls",
+        col: 0,
+        row: LAYOUT.buttonsTop,
+        width: LAYOUT.cols,
+        height: 1,
+      },
+    ];
+
     return result;
   }, [game]);
 
@@ -461,6 +574,7 @@ export default function InHandPoker() {
   ): AnimatedCardMapping | undefined => {
     if (mappedCard.zoneName === "hand") {
       const id = mappedCard.card.id;
+
       return {
         isSelected: selectedDiscards.includes(id),
         selectColor: "red",
@@ -470,25 +584,25 @@ export default function InHandPoker() {
     }
     if (mappedCard.zoneName === "opp") {
       const inBest = game.oppBest.includes(mappedCard.card.id);
+
       return {
-        isSelected: inBest,
-        selectColor: inBest ? "green" : "none",
+        forceOverlayColor: true,
+        selectColor: inBest ? "none" : "grey",
         isDisabled: true,
       };
     }
     return {};
   };
 
-  const { cardMap, getZoneStylesById } = useCardMap({
+  const { cardMap, cardHeight, cardWidth, getZoneStylesById } = useCardMap({
     game,
     zones,
     cardMapper,
-    gap: 0.1,
+    gap: 0,
     cardSize: "small",
   });
 
   const minBet = Math.max(1, game.discardCount);
-  const betOptions = [minBet, minBet + 1, minBet + 2].filter((b) => b <= 3);
 
   return (
     <GameWrapper
@@ -507,166 +621,273 @@ export default function InHandPoker() {
       canUndo={canUndo}
       undo={undo}
     >
-      {cardMap}
+      {/* Top */}
+      <View style={[flexStyles.colCentered, getZoneStylesById("hud")]}>
+        <ProgressBar
+          labelText="Score"
+          progressValue={game.score}
+          totalValue={winScore}
+          color={
+            game.score <= 2
+              ? "red"
+              : game.score <= 4
+                ? "orange"
+                : game.score >= 8
+                  ? "green"
+                  : "blue"
+          }
+          autoTallyText
+          scaledHeight={cardHeight * 0.5}
+          style={{ marginVertical: "auto" }}
+        />
+      </View>
 
-      <View
-        style={[
-          getZoneStylesById("hud"),
-          {
-            flexDirection: "row",
-            justifyContent: "space-around",
-            alignItems: "center",
-          },
-        ]}
-      >
-        <Text size="sm" weight={600} color={cardText}>
-          Score {game.score}/{winScore}
+      {/* Opponent */}
+      <View style={[flexStyles.colCentered, getZoneStylesById("oppLabel")]}>
+        <Text size="md" weight={400} color={cardText}>
+          {oppValue && handName(oppValue)}
         </Text>
-        <Text size="sm" weight={600} color={cardText}>
-          Folds {game.foldStreak}/{maxFoldStreak}
-        </Text>
-        {game.bet > 0 ? (
-          <Text size="sm" weight={600} color={cardText}>
-            Bet {game.bet}
+      </View>
+
+      {/* Middle Message  */}
+      <View style={[flexStyles.colCentered, getZoneStylesById("message")]}>
+        {game.phase === "decide" && (
+          <View style={[flexStyles.colCentered, { flex: 1 }]}>
+            <Text
+              size="xs"
+              weight={400}
+              color={cardText}
+              textTransform="uppercase"
+            >
+              Fold
+            </Text>
+            <Text size="xl" weight={600} color={cardText}>
+              {game.foldStreak}/{maxFoldStreak}
+            </Text>
+          </View>
+        )}
+
+        {game.phase === "discard" && (
+          <View style={[flexStyles.rowCentered, flexStyles.fullWidth]}>
+            <View style={[flexStyles.colCentered, { flex: 1 }]}>
+              <Text
+                size="xs"
+                weight={400}
+                color={cardText}
+                textTransform="uppercase"
+              >
+                Draw
+              </Text>
+              <Text size="xl" weight={600} color={cardText}>
+                {game.discardCount} / 3
+              </Text>
+            </View>
+
+            <Text
+              size="sm"
+              weight={400}
+              color={Colors.white}
+              style={{ flex: 2, textAlign: "center" }}
+            >
+              Tap cards to discard
+            </Text>
+
+            <View style={[flexStyles.colCentered, { flex: 1 }]}>
+              <Text
+                size="xs"
+                weight={400}
+                color={cardText}
+                textTransform="uppercase"
+              >
+                Min bet
+              </Text>
+              <Text size="xl" weight={600} color={cardText}>
+                {Math.max(1, game.discardCount || 1)}
+              </Text>
+            </View>
+          </View>
+        )}
+
+        {game.phase === "bet" && (
+          <Text size="sm" weight={400} color={Colors.white}>
+            Opponent draws: 5 + (your bet)
           </Text>
-        ) : (
-          <Text size="sm" weight={600} color={cardText}>
-            Draws {game.discardCount}
-          </Text>
+        )}
+
+        {game.phase === "roundEnd" && (
+          <View
+            style={[
+              flexStyles.rowCentered,
+              flexStyles.flex1,
+              {
+                width: "40%",
+                gap: spacing(8),
+                marginVertical: spacing(14),
+                marginHorizontal: "15%",
+                backgroundColor: rgba(
+                  game.roundResult === "win"
+                    ? Colors.buttonGreen
+                    : game.roundResult === "lose"
+                      ? Colors.buttonRed
+                      : Colors.buttonBlue,
+                  0.6,
+                ),
+                padding: spacing(10),
+                borderRadius: spacing(8),
+                borderWidth: spacing(2),
+                borderColor: rgba(
+                  game.roundResult === "win"
+                    ? Colors.buttonGreen
+                    : game.roundResult === "lose"
+                      ? Colors.buttonRed
+                      : Colors.buttonBlue,
+                  0.6,
+                ),
+                boxShadow: `0 0 ${spacing(12)}px ${rgba(Colors.black, 0.5)}`,
+              },
+            ]}
+          >
+            <Text size="md" weight={400} color={Colors.white}>
+              {game.roundResult === "win"
+                ? "You win"
+                : game.roundResult === "lose"
+                  ? "You lose"
+                  : "Push (tie)"}
+            </Text>
+            <Text size="xl" weight={600} color={Colors.white}>
+              {game.roundResult === "win"
+                ? `+${game.bet}`
+                : game.roundResult === "lose"
+                  ? `-${game.bet}`
+                  : "Push (tie)"}
+            </Text>
+          </View>
         )}
       </View>
 
-      <View
-        style={[
-          getZoneStylesById("yourLabel"),
-          { alignItems: "center", justifyContent: "center" },
-        ]}
-      >
-        <Text size="xs" weight={500} color={cardText}>
-          {myValue ? `Your hand: ${handName(myValue)}` : ""}
+      {/* Hand */}
+      <View style={[flexStyles.colCentered, getZoneStylesById("handLabel")]}>
+        <Text size="md" weight={400} color={cardText}>
+          {myValue && handName(myValue)}
         </Text>
       </View>
 
-      {game.opponent.length > 0 ? (
-        <View
-          style={[
-            getZoneStylesById("oppLabel"),
-            { alignItems: "center", justifyContent: "center" },
-          ]}
-        >
-          <Text size="xs" weight={500} color={cardText}>
-            Opponent: {oppValue ? handName(oppValue) : ""}
-          </Text>
-        </View>
-      ) : null}
-
+      {/* Buttons */}
       <View
         style={[
+          flexStyles.rowCentered,
           getZoneStylesById("controls"),
-          { alignItems: "center", justifyContent: "center", gap: 8 },
+          { gap: spacing(12) },
         ]}
       >
-        {game.phase === "decide" ? (
-          <View style={{ flexDirection: "row", gap: 10, width: "100%" }}>
-            <View style={{ flex: 1 }}>
-              <Button
-                text="Play"
-                size="md"
-                onPress={play}
-                fullWidth
-                taller
-                theme={cardBg}
-              />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Button
-                text="Fold"
-                size="md"
-                onPress={fold}
-                fullWidth
-                taller
-                theme="red"
-              />
-            </View>
-          </View>
-        ) : null}
+        {game.phase === "decide" && (
+          <>
+            <Button
+              text="Fold"
+              size="md"
+              onPress={fold}
+              taller
+              theme="red"
+              disabled={game.ended || game.foldStreak >= maxFoldStreak}
+              style={{ flex: 1 }}
+            />
+            <Button
+              text="Play"
+              size="md"
+              onPress={play}
+              taller
+              theme="green"
+              style={{ flex: 1 }}
+            />
+          </>
+        )}
 
-        {game.phase === "discard" ? (
-          <View style={{ width: "100%", gap: 8 }}>
-            <Text size="xs" weight={400} color={cardText}>
-              Tap cards to discard. Draw {game.discardCount}/3 · min bet{" "}
-              {Math.max(1, game.discardCount || 1)}
-            </Text>
-            <View style={{ flexDirection: "row", gap: 10 }}>
-              <View style={{ flex: 1 }}>
-                <Button
-                  text={`Draw (${selectedDiscards.length})`}
-                  size="md"
-                  onPress={drawAction}
-                  fullWidth
-                  taller
-                  theme={cardBg}
-                />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Button
-                  text="Set Hand"
-                  size="md"
-                  onPress={setHand}
-                  fullWidth
-                  taller
-                  disabled={game.discardCount < 1}
-                  theme={cardBg}
-                />
-              </View>
-            </View>
-          </View>
-        ) : null}
+        {game.phase === "discard" && (
+          <>
+            <Button
+              text={`Draw ${selectedDiscards.length ? selectedDiscards.length : ""}`}
+              size="md"
+              onPress={drawAction}
+              taller
+              theme="blue"
+              disabled={selectedDiscards.length === 0}
+              style={{ flex: 1 }}
+            />
+            <Button
+              text="Set Hand"
+              size="md"
+              onPress={setHand}
+              taller
+              theme="purple"
+              style={{ flex: 1 }}
+            />
+          </>
+        )}
 
-        {game.phase === "bet" ? (
-          <View style={{ width: "100%", gap: 8 }}>
-            <Text size="xs" weight={400} color={cardText}>
-              Bet points (min {minBet}) — the opponent draws 5 + your bet.
-            </Text>
-            <View style={{ flexDirection: "row", gap: 10 }}>
-              {betOptions.map((b) => (
-                <View key={b} style={{ flex: 1 }}>
-                  <Button
-                    text={`Bet ${b}`}
-                    size="md"
-                    onPress={() => placeBet(b)}
-                    fullWidth
-                    taller
-                    theme={cardBg}
-                  />
-                </View>
-              ))}
-            </View>
-          </View>
-        ) : null}
+        {game.phase === "bet" &&
+          Array.from({ length: 3 }, (_, i) => i).map((b) => (
+            <Button
+              key={b}
+              text={`Bet ${b + 1}`}
+              size="md"
+              onPress={() => placeBet(b + 1)}
+              disabled={b + 1 < minBet}
+              taller
+              theme="orange"
+              style={{ flex: 1 }}
+            />
+          ))}
 
-        {game.phase === "roundEnd" ? (
-          <View style={{ width: "100%", gap: 8, alignItems: "center" }}>
-            <Text size="md" weight={700} color={cardText}>
-              {game.roundResult === "win"
-                ? `You win +${game.bet}`
-                : game.roundResult === "lose"
-                  ? `You lose -${game.bet}`
-                  : "Push (tie)"}
-            </Text>
-            {!game.ended ? (
-              <Button
-                text="Next Round"
-                size="md"
-                onPress={nextRound}
-                fullWidth
-                taller
-                theme={cardBg}
-              />
-            ) : null}
-          </View>
-        ) : null}
+        {game.phase === "roundEnd" && !game.ended && (
+          <Button
+            text="Next Round"
+            size="md"
+            onPress={nextRound}
+            fullWidth
+            taller
+            theme="green"
+          />
+        )}
       </View>
+
+      {[
+        {
+          id: "oppBackground",
+          label: "Opponent",
+        },
+        {
+          id: "handBackground",
+          label: "Player",
+        },
+      ].map((label) => {
+        return (
+          <View
+            key={label.id}
+            style={[
+              flexStyles.rowStart,
+              getZoneStylesById(label.id),
+              { zIndex: 10 },
+            ]}
+          >
+            <Text
+              textTransform="uppercase"
+              weight={400}
+              color={Colors.white}
+              style={[
+                rotatedText,
+                {
+                  left: spacing(5),
+                  fontSize: cardWidth * 0.18,
+                },
+              ]}
+            >
+              {label.label}
+            </Text>
+          </View>
+        );
+      })}
+
+      {cardMap}
     </GameWrapper>
   );
 }

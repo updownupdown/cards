@@ -1,7 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 
 export const inHandPoker: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/in-hand-poker",
   tip: {
     default:
@@ -15,9 +14,9 @@ export const inHandPoker: GameDefinition = {
   cardDescription:
     "A pocket poker duel: draw, bet, and out-rank an opponent dealt from the same deck.",
   rating: {
-    complexity: 45,
-    difficulty: 45,
-    luck: 55,
+    complexity: 30,
+    difficulty: 30,
+    luck: 50,
   },
   tags: [GameTag.ModernMechanics],
   about: [
