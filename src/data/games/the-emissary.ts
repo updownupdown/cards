@@ -12,13 +12,15 @@ export const theEmissary: GameDefinition = {
     luck: 35,
   },
   thumbnail: "Emissary.jpg",
-  background: GAME_BACKGROUNDS.wallTile,
+  background: GAME_BACKGROUNDS.castle,
   cardBack: "TheEmissary.png",
   cardColorBg: "#241e33",
   cardColorText: "#acdeff",
   cardDescription:
     "Win exactly the right number of debates in each kingdom while managing one-time advisors.",
-  quickStart: ["Pick a kingdom and win exactly its listed number of debates. Draw next topic; when possible, follow topic suit."],
+  quickStart: [
+    "Pick a kingdom and win exactly its listed number of debates. Draw next topic; when possible, follow topic suit.",
+  ],
   howToPlay: [
     "You must visit each kingdom, and win the exact number of debates indicated by the number of that kingdom (1 through 8).",
     "You start each visit with 8 cards, and four advisors (Jacks). When winning over a kingdom, its ruler joins you as an advisor (Queen/King), but you may only use their services once, whereas your own advisors can be used anew each kingdom.",
@@ -32,6 +34,4 @@ export const theEmissary: GameDefinition = {
     creators: [GameCreators.WilSu],
     creationDate: "2021",
   },
-
-
 };

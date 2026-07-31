@@ -12,13 +12,15 @@ export const cribbageSquares: GameDefinition = {
     luck: 75,
   },
   thumbnail: "CribbageSquares.jpg",
-  background: GAME_BACKGROUNDS.feltGrey,
+  background: GAME_BACKGROUNDS.casino,
   cardBack: "DefaultCardBack.png",
   cardColorBg: "#263b32",
   cardColorText: "#f0ead6",
   cardDescription:
     "Build sixteen connected cards, then score every row and column with a starter card.",
-  quickStart: ["Place each card beside the connected grid; rows and columns score cribbage hands."],
+  quickStart: [
+    "Place each card beside the connected grid; rows and columns score cribbage hands.",
+  ],
   howToPlay: [
     "## Objective",
     "Score at least 61 points from the four rows and four columns.",
@@ -42,6 +44,4 @@ export const cribbageSquares: GameDefinition = {
     creators: [GameCreators.Unknown],
     creationDate: "Appeared in the 1950s",
   },
-
-
 };

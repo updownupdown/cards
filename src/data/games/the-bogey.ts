@@ -12,7 +12,7 @@ export const theBogey: GameDefinition = {
     luck: 35,
   },
   thumbnail: "TheBogey.jpg",
-  background: GAME_BACKGROUNDS.rockWall,
+  background: GAME_BACKGROUNDS.castle,
   cardBack: "TheBogey.png",
   cardColorBg: "#0a1e1f",
   cardColorText: "#ddf0ce",
@@ -39,6 +39,4 @@ export const theBogey: GameDefinition = {
     creators: [GameCreators.KatharineTurner],
     creationDate: "2016",
   },
-
-
 };

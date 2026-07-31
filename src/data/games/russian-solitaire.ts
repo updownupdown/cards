@@ -12,7 +12,7 @@ export const russianSolitaire: GameDefinition = {
     luck: 30,
   },
   thumbnail: "RussianSolitaire.jpg",
-  background: GAME_BACKGROUNDS.woodVertical,
+  background: GAME_BACKGROUNDS.siberia,
   cardColorBg: "#2c1c30",
   cardColorText: "#f0dcf0",
   cardDescription:
@@ -41,6 +41,4 @@ export const russianSolitaire: GameDefinition = {
   credits: {
     creators: [GameCreators.Unknown],
   },
-
-
 };

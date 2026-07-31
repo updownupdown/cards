@@ -11,12 +11,14 @@ export const canfield: GameDefinition = {
     difficulty: 0,
     luck: 0,
   },
-  background: GAME_BACKGROUNDS.feltDarkRed,
+  background: GAME_BACKGROUNDS.oldRoom,
   cardColorBg: "#311a1e",
   cardColorText: "#E4F6FF",
   cardDescription:
     "Build suit foundations from a random base rank, fed by a 13-card reserve.",
-  quickStart: ["Foundations up suit; tableau down alt color; empties use reserve."],
+  quickStart: [
+    "Foundations up suit; tableau down alt color; empties use reserve.",
+  ],
   howToPlay: [
     "## Objective",
     "Move as many cards as possible to the four **foundations**, each built up by suit from the base rank.",
@@ -44,6 +46,4 @@ export const canfield: GameDefinition = {
     creators: [GameCreators.Unknown],
     creationDate: "First documented by Mary Whitmore Jones in 1891",
   },
-
-
 };

@@ -12,7 +12,7 @@ export const clearTheDungeon: GameDefinition = {
     luck: 45,
   },
   thumbnail: "ClearTheDungeon.jpg",
-  background: GAME_BACKGROUNDS.wallTile,
+  background: GAME_BACKGROUNDS.dungeon,
   cardColorBg: "#352820",
   cardColorText: "#fff6dc",
   cardDescription:
@@ -53,6 +53,4 @@ export const clearTheDungeon: GameDefinition = {
     creators: [GameCreators.MarkSBall],
     creationDate: "2019",
   },
-
-
 };

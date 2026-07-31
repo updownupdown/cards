@@ -12,13 +12,15 @@ export const lootTheLoop: GameDefinition = {
     luck: 40,
   },
   thumbnail: "LootTheLoop.jpg",
-  background: GAME_BACKGROUNDS.wallTile,
+  background: GAME_BACKGROUNDS.dungeon,
   cardBack: "LootTheLoop.png",
   cardColorBg: "#1d120e",
   cardColorText: "#dfd4bd",
   cardDescription:
     "Capture scoring loop cards while preserving momentum and avoiding disruptive breaks.",
-  quickStart: ["Collect all Aces and exit through the Joker to win. Avoid face up face cards, and use number cards to explore."],
+  quickStart: [
+    "Collect all Aces and exit through the Joker to win. Avoid face up face cards, and use number cards to explore.",
+  ],
   howToPlay: [
     "## Objective",
     "- Loot all four jewels (Aces) and escape alive by stepping through the exit (Joker).",
@@ -50,6 +52,4 @@ export const lootTheLoop: GameDefinition = {
     creators: [GameCreators.WilSu],
     creationDate: "2021",
   },
-
-
 };

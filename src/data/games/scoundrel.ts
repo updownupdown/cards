@@ -12,13 +12,15 @@ export const scoundrel: GameDefinition = {
     luck: 30,
   },
   thumbnail: "Scoundrel.jpg",
-  background: GAME_BACKGROUNDS.wallTile,
+  background: GAME_BACKGROUNDS.dungeon,
   cardBack: "Scoundrel.png",
   cardColorBg: "#201913",
   cardColorText: "#fce8e3",
   cardDescription:
     "A dungeon crawl where you manage weapon strength and potion usage.",
-  quickStart: ["Resolve 3 cards to clear a room. Every other room can be skipped. Equip weapons to increase damage, and use potions to heal."],
+  quickStart: [
+    "Resolve 3 cards to clear a room. Every other room can be skipped. Equip weapons to increase damage, and use potions to heal.",
+  ],
   howToPlay: [
     "## Objective",
     "- Clear the dungeon by resolving all rooms before running out of health.",
@@ -45,6 +47,4 @@ export const scoundrel: GameDefinition = {
     creators: [GameCreators.ZachGage, GameCreators.KurtBieg],
     creationDate: "2011",
   },
-
-
 };

@@ -12,7 +12,7 @@ export const baroness: GameDefinition = {
     luck: 70,
   },
   thumbnail: "Baroness.jpg",
-  background: GAME_BACKGROUNDS.feltDarkRed,
+  background: GAME_BACKGROUNDS.oldRoom,
   cardBack: "DefaultCardBack.png",
   cardColorBg: "#3a1620",
   cardColorText: "#f3d6dd",
@@ -41,6 +41,4 @@ export const baroness: GameDefinition = {
     creators: [GameCreators.Unknown],
     creationDate: "First documented by Mary Whitmore Jones in 1890",
   },
-
-
 };

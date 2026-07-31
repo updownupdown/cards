@@ -6,44 +6,16 @@ export type GameBackground = {
   authorLink?: string;
 };
 
-export const concreteBackground: GameBackground = {
-  source: require("@/assets/backgrounds/concrete.jpg"),
-};
-
 export const feltDarkBlueBackground: GameBackground = {
   source: require("@/assets/backgrounds/felt-dark-blue.jpg"),
-};
-
-export const feltDarkGreenBackground: GameBackground = {
-  source: require("@/assets/backgrounds/felt-dark-green.jpg"),
 };
 
 export const feltDarkPurpleBackground: GameBackground = {
   source: require("@/assets/backgrounds/felt-dark-purple.jpg"),
 };
 
-export const feltDarkRedBackground: GameBackground = {
-  source: require("@/assets/backgrounds/felt-dark-red.jpg"),
-};
-
 export const feltGreyBackground: GameBackground = {
   source: require("@/assets/backgrounds/felt-grey.jpg"),
-};
-
-export const rockWallBackground: GameBackground = {
-  source: require("@/assets/backgrounds/rock-wall.jpg"),
-};
-
-export const wallTileBackground: GameBackground = {
-  source: require("@/assets/backgrounds/wall-tile.jpg"),
-};
-
-export const woodTableBackground: GameBackground = {
-  source: require("@/assets/backgrounds/wood-table.jpg"),
-};
-
-export const woodVerticalBackground: GameBackground = {
-  source: require("@/assets/backgrounds/wood-vertical.jpg"),
 };
 
 export const river: GameBackground = {
@@ -160,17 +132,22 @@ export const forest: GameBackground = {
   authorLink: "https://unsplash.com/@degleex",
 };
 
+export const oldRoom: GameBackground = {
+  source: require("@/assets/backgrounds/old-room.jpg"),
+  authorName: "The Metropolitan Museum of Art",
+  authorLink: "https://unsplash.com/@metropolitanmuseum",
+};
+
+export const brickStreet: GameBackground = {
+  source: require("@/assets/backgrounds/brick-street.jpg"),
+  authorName: "Barney Goodman",
+  authorLink: "https://unsplash.com/@bgoodpic",
+};
+
 export const GAME_BACKGROUNDS = {
-  concrete: concreteBackground,
   feltDarkBlue: feltDarkBlueBackground,
-  feltDarkGreen: feltDarkGreenBackground,
   feltDarkPurple: feltDarkPurpleBackground,
-  feltDarkRed: feltDarkRedBackground,
   feltGrey: feltGreyBackground,
-  rockWall: rockWallBackground,
-  wallTile: wallTileBackground,
-  woodTable: woodTableBackground,
-  woodVertical: woodVerticalBackground,
   river: river,
   yukon: yukon,
   siberia: siberia,
@@ -190,4 +167,6 @@ export const GAME_BACKGROUNDS = {
   bowling: bowling,
   island: island,
   forest: forest,
+  oldRoom: oldRoom,
+  brickStreet: brickStreet,
 } as const;

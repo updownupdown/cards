@@ -12,13 +12,15 @@ export const osmosis: GameDefinition = {
     luck: 30,
   },
   thumbnail: "DefaultThumbnail.jpg",
-  background: GAME_BACKGROUNDS.feltDarkGreen,
+  background: GAME_BACKGROUNDS.forest,
   cardBack: "DefaultCardBack.png",
   cardColorBg: "#123027",
   cardColorText: "#d5f0d0",
   cardDescription:
     "Seep each suit onto its row, but only once the rank above has arrived.",
-  quickStart: ["Top row any in-suit; lower rows need same rank above; tap stock."],
+  quickStart: [
+    "Top row any in-suit; lower rows need same rank above; tap stock.",
+  ],
   howToPlay: [
     "## Objective",
     "Move all 52 cards onto the four **foundation rows** (one suit per row).",
@@ -42,6 +44,4 @@ export const osmosis: GameDefinition = {
     creators: [GameCreators.SidSackson],
     creationDate: "1969",
   },
-
-
 };

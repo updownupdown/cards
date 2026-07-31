@@ -12,12 +12,14 @@ export const lobo: GameDefinition = {
     luck: 40,
   },
   thumbnail: "Lobo.jpg",
-  background: GAME_BACKGROUNDS.feltDarkRed,
+  background: GAME_BACKGROUNDS.forest,
   cardColorBg: "#311a20",
   cardColorText: "#f7e2ca",
   cardDescription:
     "Empty the Wolf's hand through clever captures — and know when to fold.",
-  quickStart: ["Capture the Wolf's cards by using match/sum/split/overtake actions."],
+  quickStart: [
+    "Capture the Wolf's cards by using match/sum/split/overtake actions.",
+  ],
   howToPlay: [
     "## Objective",
     "Empty the **Wolf's hand** each round, and race the Wolf to **100 points**.",
@@ -45,6 +47,4 @@ export const lobo: GameDefinition = {
     creators: [GameCreators.JamesErnest],
     creationDate: "2022",
   },
-
-
 };

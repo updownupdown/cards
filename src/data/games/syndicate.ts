@@ -12,7 +12,7 @@ export const syndicate: GameDefinition = {
     luck: 30,
   },
   thumbnail: "Syndicate.jpg",
-  background: GAME_BACKGROUNDS.concrete,
+  background: GAME_BACKGROUNDS.brickStreet,
   cardColorBg: "#252220",
   cardColorText: "#b2eee1",
   cardDescription:
@@ -27,6 +27,4 @@ export const syndicate: GameDefinition = {
     creators: [GameCreators.WilSu],
     creationDate: "2021",
   },
-
-
 };

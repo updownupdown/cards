@@ -12,7 +12,7 @@ export const nestor: GameDefinition = {
     luck: 65,
   },
   thumbnail: "DefaultThumbnail.jpg",
-  background: GAME_BACKGROUNDS.feltDarkBlue,
+  background: GAME_BACKGROUNDS.london,
   cardBack: "DefaultCardBack.png",
   cardColorBg: "#16283f",
   cardColorText: "#dbe9ff",
@@ -39,6 +39,4 @@ export const nestor: GameDefinition = {
     creators: [GameCreators.Unknown],
     creationDate: "First documented in 1877",
   },
-
-
 };

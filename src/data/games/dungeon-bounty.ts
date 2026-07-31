@@ -13,12 +13,14 @@ export const dungeonBounty: GameDefinition = {
     luck: 45,
   },
   thumbnail: "DungeonBounty.jpg",
-  background: GAME_BACKGROUNDS.wallTile,
+  background: GAME_BACKGROUNDS.dungeon,
   cardColorBg: "#2a1a2e",
   cardColorText: "#f3d9a4",
   cardDescription:
     "A dungeon-crawling bounty hunt: equip weapons, cast spells, slay beasts, and grab the loot.",
-  quickStart: ["Use weapons/spells vs foes; survive 2 levels; score bounty+gems."],
+  quickStart: [
+    "Use weapons/spells vs foes; survive 2 levels; score bounty+gems.",
+  ],
   howToPlay: [
     "## Goal",
     "Survive two dungeon levels and claim as much **bounty and gems** as possible.",
@@ -46,6 +48,4 @@ export const dungeonBounty: GameDefinition = {
     creators: [GameCreators.TheoPeters, GameCreators.AaronCamponi],
     creationDate: "2020",
   },
-
-
 };

@@ -12,7 +12,7 @@ export const sirTommy: GameDefinition = {
     luck: 55,
   },
   thumbnail: "SirTommy.jpg",
-  background: GAME_BACKGROUNDS.feltDarkPurple,
+  background: GAME_BACKGROUNDS.brickStreet,
   cardBack: "DefaultCardBack.png",
   cardColorBg: "#241a33",
   cardColorText: "#ecdfff",
@@ -40,6 +40,4 @@ export const sirTommy: GameDefinition = {
   credits: {
     creators: [GameCreators.Unknown],
   },
-
-
 };

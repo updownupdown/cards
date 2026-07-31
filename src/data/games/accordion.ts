@@ -12,13 +12,15 @@ export const accordion: GameDefinition = {
     luck: 65,
   },
   thumbnail: "Accordion.jpg",
-  background: GAME_BACKGROUNDS.feltDarkRed,
+  background: GAME_BACKGROUNDS.oldRoom,
   cardBack: "Accordion.png",
   cardColorBg: "#351219",
   cardColorText: "#fffccf",
   cardDescription:
     "Collapse the whole deck into a single pile, matching adjacent suits or ranks one at a time.",
-  quickStart: ["Consolidate a pile with another, 1 or 3 spots to its left, if suits or ranks match."],
+  quickStart: [
+    "Consolidate a pile with another, 1 or 3 spots to its left, if suits or ranks match.",
+  ],
   howToPlay: [
     "## Objective",
     "Win by collapsing all 52 cards into a **single pile** by stacking matching cards together.",
@@ -40,6 +42,4 @@ export const accordion: GameDefinition = {
     creators: [GameCreators.Unknown],
     creationDate: "First documented by William B. Dick in 1883",
   },
-
-
 };

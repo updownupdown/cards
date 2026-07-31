@@ -12,7 +12,7 @@ export const eightOff: GameDefinition = {
     luck: 25,
   },
   thumbnail: DEFAULT_GAME_THUMBNAIL,
-  background: GAME_BACKGROUNDS.feltDarkBlue,
+  background: GAME_BACKGROUNDS.casino,
   cardColorBg: "#101b2b",
   cardColorText: "#d9e6ff",
   cardDescription:

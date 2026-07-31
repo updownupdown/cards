@@ -12,7 +12,7 @@ export const bakersGame: GameDefinition = {
     luck: 30,
   },
   thumbnail: DEFAULT_GAME_THUMBNAIL,
-  background: GAME_BACKGROUNDS.feltDarkGreen,
+  background: GAME_BACKGROUNDS.castle,
   cardColorBg: "#1b2a24",
   cardColorText: "#dcefe4",
   cardDescription:
