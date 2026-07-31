@@ -1,29 +1,25 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const pyramid: GameDefinition = {
   path: "/pyramid",
-  tip: {
-    default:
-      "Remove Kings, or exposed pairs totaling 13. Draw for more matches.",
-  },
   title: "Pyramid",
-  thumbnail: "Pyramid.jpg",
-  cardColorBg: "#251703",
-  cardColorText: "#FFEACC",
-  background: "sandstone-2.jpg",
-  cardDescription:
-    "Clear the pyramid by removing pairs of cards that add up to 13.",
+  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
   rating: {
     complexity: 15,
     difficulty: 65,
     luck: 65,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
-  about: [
-    "Pyramid is a quick adding-up patience built on a 28-card pyramid.",
-    "The challenge is timing: uncover the cards you need before the stock runs dry.",
+  thumbnail: "Pyramid.jpg",
+  background: GAME_BACKGROUNDS.sahara,
+  cardColorBg: "#251703",
+  cardColorText: "#FFEACC",
+  cardDescription:
+    "Clear the pyramid by removing pairs of cards that add up to 13.",
+  quickStart: [
+    "Remove Kings, or exposed pairs totaling 13. Draw for more matches.",
   ],
-  byLine: "Game designer unknown, first documented in 1949",
   howToPlay: [
     "## Objective",
     "Dismantle the entire **pyramid** of 28 cards by removing them in pairs that sum to **13**.",
@@ -41,4 +37,12 @@ export const pyramid: GameDefinition = {
     "## Winning",
     "You win when the whole pyramid has been cleared.",
   ],
+  about: [
+    "Pyramid is a quick adding-up patience built on a 28-card pyramid.",
+    "The challenge is timing: uncover the cards you need before the stock runs dry.",
+  ],
+  credits: {
+    creators: [GameCreators.Unknown],
+    creationDate: "First documented in 1949",
+  },
 };

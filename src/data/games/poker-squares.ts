@@ -1,27 +1,25 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const pokerSquares: GameDefinition = {
   path: "/poker-squares",
-  tip: {
-    default:
-      "Place each dealt card carefully; rows and columns score poker hands.",
-  },
   title: "Poker Squares",
-  thumbnail: "PokerSquares.jpg",
-  cardBack: "DefaultCardBack.png",
-  background: "felt-grey.jpg",
-  cardColorBg: "#263b32",
-  cardColorText: "#f0ead6",
-  cardDescription:
-    "Build ten poker hands from one deck and chase a score of 200.",
+  tags: [GameTag.EasyToLearn, GameTag.ModernMechanics],
   rating: {
     complexity: 35,
     difficulty: 65,
     luck: 75,
   },
-  tags: [GameTag.EasyToLearn, GameTag.ModernMechanics],
-  about: [
-    "Poker Squares rewards planning and probability: every card is committed to the grid forever.",
+  thumbnail: "PokerSquares.jpg",
+  background: GAME_BACKGROUNDS.casino,
+  cardBack: "DefaultCardBack.png",
+  cardColorBg: "#263b32",
+  cardColorText: "#f0ead6",
+  cardDescription:
+    "Build ten poker hands from one deck and chase a score of 200.",
+  quickStart: [
+    "Place each dealt card carefully; rows and columns score poker hands.",
   ],
   howToPlay: [
     "## Objective",
@@ -39,4 +37,10 @@ export const pokerSquares: GameDefinition = {
     "## Winning",
     "Reach 200 points or more.",
   ],
+  about: [
+    "Poker Squares rewards planning and probability: every card is committed to the grid forever.",
+  ],
+  credits: {
+    creators: [GameCreators.Unknown],
+  },
 };

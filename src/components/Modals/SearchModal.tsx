@@ -83,7 +83,7 @@ export function SearchModal({
       : undefined;
 
   return (
-    <ModalFull title="Search" onClose={onClose}>
+    <ModalFull title="Search Games" onClose={onClose} iconName="search">
       <View style={{ flex: 1 }}>
         {/* Search input */}
         <View

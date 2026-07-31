@@ -1,29 +1,23 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const clearTheDungeon: GameDefinition = {
   path: "/clear-the-dungeon",
-  tip: {
-    default: "Beat each monster with sum pair, then matching-suit trigger.",
-  },
   title: "Clear the Dungeon",
-  thumbnail: "ClearTheDungeon.jpg",
-  cardColorBg: "#352820",
-  cardColorText: "#fff6dc",
-  background: "wall-tile.jpg",
-  cardDescription:
-    "Exterminate twelve dungeon monsters with powerful attacks before your damage bar fills.",
+  tags: [GameTag.ModernMechanics],
   rating: {
     complexity: 75,
     difficulty: 75,
     luck: 45,
   },
-  tags: [GameTag.ModernMechanics],
-  about: [
-    "Clear the Dungeon by Mark S. Ball casts you as the King's monster exterminator.",
-    "Every attack needs raw power and the right weakness — spend your cards wisely and keep the damage bar low.",
-  ],
-  byLine: "Game design by Mark S. Ball, 2019",
-  authorName: "Mark S. Ball",
+  thumbnail: "ClearTheDungeon.jpg",
+  background: GAME_BACKGROUNDS.wallTile,
+  cardColorBg: "#352820",
+  cardColorText: "#fff6dc",
+  cardDescription:
+    "Exterminate twelve dungeon monsters with powerful attacks before your damage bar fills.",
+  quickStart: ["Beat each monster with sum pair, then matching-suit trigger."],
   howToPlay: [
     "## Objective",
     "Defeat all **12 monsters** (the Jacks, Queens and Kings) before your power deck runs out, and before your damage bar fills up.",
@@ -51,4 +45,14 @@ export const clearTheDungeon: GameDefinition = {
     "-- K♠: double the value of an attack card",
     "-- K♣: immediately draw a card from the power deck",
   ],
+  about: [
+    "Clear the Dungeon by Mark S. Ball casts you as the King's monster exterminator.",
+    "Every attack needs raw power and the right weakness — spend your cards wisely and keep the damage bar low.",
+  ],
+  credits: {
+    creators: [GameCreators.MarkSBall],
+    creationDate: "2019",
+  },
+
+
 };

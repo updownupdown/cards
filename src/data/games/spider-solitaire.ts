@@ -1,28 +1,23 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const spiderSolitaire: GameDefinition = {
   path: "/spider-solitaire",
-  tip: {
-    default: "Build down by rank; move same-suit runs; deal when stuck.",
-  },
   title: "Spider Solitaire",
-  thumbnail: "SpiderSolitaire.jpg",
-  background: "felt-dark-purple.jpg",
-  cardColorBg: "#24161f",
-  cardColorText: "#ffc6ca",
-  cardDescription:
-    "Build same-suit runs from King to Ace across a tangled double deck.",
+  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
   rating: {
     complexity: 0,
     difficulty: 0,
     luck: 0,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
-  about: [
-    "Spider is a two-deck solitaire played across ten tangled columns.",
-    "Assemble eight complete suit sequences from King down to Ace to win; fewer suits make for an easier game.",
-  ],
-  byLine: "Game designer unknown, first documented in 1917",
+  thumbnail: "SpiderSolitaire.jpg",
+  background: GAME_BACKGROUNDS.feltDarkPurple,
+  cardColorBg: "#24161f",
+  cardColorText: "#ffc6ca",
+  cardDescription:
+    "Build same-suit runs from King to Ace across a tangled double deck.",
+  quickStart: ["Build down by rank; move same-suit runs; deal when stuck."],
   howToPlay: [
     "## Objective",
     "Assemble **8 complete same-suit sequences**, each running from King down to Ace. Finished runs are removed from the table.",
@@ -41,4 +36,14 @@ export const spiderSolitaire: GameDefinition = {
     "## Winning",
     "You win once all eight suit runs are completed and removed.",
   ],
+  about: [
+    "Spider is a two-deck solitaire played across ten tangled columns.",
+    "Assemble eight complete suit sequences from King down to Ace to win; fewer suits make for an easier game.",
+  ],
+  credits: {
+    creators: [GameCreators.Unknown],
+    creationDate: "First documented in 1917",
+  },
+
+
 };

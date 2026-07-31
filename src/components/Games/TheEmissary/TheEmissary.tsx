@@ -76,13 +76,6 @@ export default function TheEmissary() {
     return !game.ended && game.visit === null;
   }, [game.visit]);
 
-  const tipPhase = useMemo(() => {
-    if (game.visit === null) return "chooseKingdom";
-    if (game.discardFromHand > 0) return "discard";
-    if (game.visit.debateTopic === undefined) return "drawTopic";
-    return "debate";
-  }, [game.visit, game.discardFromHand]);
-
   // ----- useEffect: Refill hand after visit ----- //
   useEffect(() => {
     if (
@@ -682,7 +675,6 @@ export default function TheEmissary() {
 
   return (
     <GameWrapper
-      tipPhase={tipPhase}
       ended={game.ended}
       won={game.won}
       reset={reset}

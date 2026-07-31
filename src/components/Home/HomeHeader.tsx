@@ -88,7 +88,7 @@ export function HomeHeader({ onOpenSearch, onOpenSettings }: HomeHeaderProps) {
             <Button
               headerButton
               size="xl"
-              iconName="settings"
+              iconName="menu"
               onPress={onOpenSettings}
               style={[styles.headerBtn]}
               iconColor={rgba(Colors.white, 0.6)}

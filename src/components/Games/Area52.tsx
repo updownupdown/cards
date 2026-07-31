@@ -475,7 +475,6 @@ export default function Area52() {
 
   return (
     <GameWrapper
-      tipPhase={selectedDefenders.length === 0 ? "select" : "act"}
       ended={game.ended}
       won={game.won}
       reset={reset}

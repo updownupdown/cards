@@ -1,26 +1,24 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const bowlingSolitaire: GameDefinition = {
   path: "/bowling-solitaire",
   title: "Bowling Solitaire",
-  thumbnail: "BowlingSolitaire.jpg",
-  background: "wood-vertical.jpg",
-  cardColorBg: "#331e0f",
-  cardColorText: "#a9e9f1",
-  cardDescription:
-    "Bowl a full game of 10-pin using cards, chasing strikes and spares.",
+  tags: [GameTag.ModernMechanics],
   rating: {
     complexity: 30,
     difficulty: 30,
     luck: 35,
   },
-  tags: [GameTag.ModernMechanics],
-  byLine: "Game design by Sid Sackson, 1969",
-  authorName: "Sid Sackson",
-  about: [
-    "Bowling Solitaire translates 10-pin bowling into a tactical card puzzle.",
-    "Every roll is a value-and-position decision: card value, pin adjacency, and frame timing all matter.",
-    "Plan for strike and spare bonuses while navigating the opening-row restriction.",
+  thumbnail: "BowlingSolitaire.jpg",
+  background: GAME_BACKGROUNDS.bowling,
+  cardColorBg: "#331e0f",
+  cardColorText: "#a9e9f1",
+  cardDescription:
+    "Bowl a full game of 10-pin using cards, chasing strikes and spares.",
+  quickStart: [
+    "Pick a ball from any face-up bottom card. Select 1-3 linked pins; values must end in the ball digit. No legal throw. Reset to bowl a new game.",
   ],
   howToPlay: [
     "## Objective",
@@ -46,9 +44,13 @@ export const bowlingSolitaire: GameDefinition = {
     "- **Open frame**: the total pins knocked down.",
     "- In frame 10, a strike or spare earns 2 or 1 bonus ball(s).",
   ],
-  tip: {
-    ballSelect: "Pick a ball from any face-up bottom card.",
-    pinSelect: "Select 1-3 linked pins; values must end in the ball digit.",
-    gameEnd: "No legal throw. Reset to bowl a new game.",
+  about: [
+    "Bowling Solitaire translates 10-pin bowling into a tactical card puzzle.",
+    "Every roll is a value-and-position decision: card value, pin adjacency, and frame timing all matter.",
+    "Plan for strike and spare bonuses while navigating the opening-row restriction.",
+  ],
+  credits: {
+    creators: [GameCreators.SidSackson],
+    creationDate: "1969",
   },
 };

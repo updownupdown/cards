@@ -1,30 +1,25 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const alpineSolitaire: GameDefinition = {
   path: "/alpine-solitaire",
-  tip: {
-    default:
-      "Build progressively higher routes to empty hand. Rest to reset routes.",
-  },
   title: "Alpine Solitaire",
-  thumbnail: "AlpineSolitaire.jpg",
-  cardColorBg: "#2a3b4d",
-  cardColorText: "#e8f2ff",
-  background: "rock-wall.jpg",
-  cardDescription:
-    "A solo climbing game: play ever-higher routes to reach three camps before the deck runs out.",
+  tags: [GameTag.ModernMechanics],
   rating: {
     complexity: 75,
     difficulty: 85,
     luck: 40,
   },
-  tags: [GameTag.ModernMechanics],
-  about: [
-    "Alpine Solitaire by Austin Palmer is a climbing game for one player.",
-    "Balance aggressive routes against the fatigue they create, and choose a difficulty or one of fourteen eight-thousander challenges in Settings.",
+  thumbnail: "AlpineSolitaire.jpg",
+  background: GAME_BACKGROUNDS.mountain1,
+  cardColorBg: "#2a3b4d",
+  cardColorText: "#e8f2ff",
+  cardDescription:
+    "A solo climbing game: play ever-higher routes to reach three camps before the deck runs out.",
+  quickStart: [
+    "Build progressively higher routes to empty hand. Rest to reset routes.",
   ],
-  byLine: "Game design by Austin Palmer, 2023",
-  authorName: "Austin Palmer",
   howToPlay: [
     "## Objective",
     "Reach three camps by playing a route that empties your hand — while your milestones keep getting higher.",
@@ -48,4 +43,12 @@ export const alpineSolitaire: GameDefinition = {
     "- **Difficulty:** Gentle, Standard, or Intense change how milestones qualify.",
     "- **Eight-Thousander challenges:** fourteen named peaks each tweak the rules and set the trail length.",
   ],
+  about: [
+    "Alpine Solitaire by Austin Palmer is a climbing game for one player.",
+    "Balance aggressive routes against the fatigue they create, and choose a difficulty or one of fourteen eight-thousander challenges in Settings.",
+  ],
+  credits: {
+    creators: [GameCreators.AustinPalmer],
+    creationDate: "2023",
+  },
 };

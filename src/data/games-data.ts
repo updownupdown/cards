@@ -1,4 +1,5 @@
-import { GameBackgroundName } from "./game-backgrounds";
+import { GameCreator } from "./game-creators";
+import { feltGreyBackground, GameBackground } from "./game-backgrounds";
 import { GameThumbnailName } from "./game-thumbnails";
 import { isLocalDevEnvironment } from "@/utils/utils";
 
@@ -30,54 +31,43 @@ export type GameStatsNames = keyof GameRating;
 export const statKeys: GameStatsNames[] = ["complexity", "difficulty", "luck"];
 
 export const DEFAULT_GAME_THUMBNAIL: GameThumbnailName = "DefaultThumbnail.jpg";
-export const DEFAULT_GAME_BACKGROUND: GameBackgroundName = "felt-grey.jpg";
-
-/**
- * Phase-keyed tips instructions. Games pass a `tipPhase` string to
- * `GameWrapper`; the matching entry here is shown in the tips box. Games
- * with a single continuous action can use the `"default"` key.
- */
-export type TipInstructions = Record<string, string>;
-
-/** The phase key used by single-phase games (or when no phase is provided). */
-export const DEFAULT_TIP_PHASE = "default";
+export const DEFAULT_GAME_BACKGROUND: GameBackground = feltGreyBackground;
 
 export type GameMenuInfo = {
+  // Basic
   title: string;
+  enabledOnLocalOnly?: boolean;
+  tags?: GameTag[];
+  rating: GameRating;
+
+  // Images
   thumbnail?: GameThumbnailName;
+  background?: GameBackground;
   cardBack?: string;
-  /** Optional shared background texture image (see assets/backgrounds). */
-  background?: GameBackgroundName;
+
+  // Colors
   cardColorBg: HexColor;
   cardColorText: HexColor;
   cardDescription: string;
-  rating: GameRating;
-  enabled?: boolean;
-  enabledOnLocalOnly?: boolean;
-  /** Markdown-ish blocks; supports headings, bold, lists and {5H}/{JC} card tokens. */
-  about?: string[];
-  /** Markdown-ish blocks; supports headings, bold, lists and {5H}/{JC} card tokens. */
-  howToPlay?: string[];
-  /** Per-phase tip-mode instructions keyed by phase (or "default"). */
-  tip?: TipInstructions;
-  byLine?: string;
-  authorName?: string;
-  tags?: GameTag[];
+
+  // How to Play
+  quickStart?: string[]; // Plain text only
+  howToPlay?: string[]; // Supports markdown-ish blocks
+
+  // About and credits
+  about?: string[]; // Supports markdown-ish blocks
+  credits?: {
+    creators?: GameCreator[];
+    creationDate?: string;
+    creatorLink?: string;
+  };
 };
 
 /** A single game entry authored in src/data/games/<slug>.ts. */
 export type GameDefinition = GameMenuInfo & { path: string };
 
 export function isGameEnabled(game: GameMenuInfo | undefined) {
-  if (!game) {
-    return false;
-  }
-
-  if (game.enabled === false) {
-    return false;
-  }
-
-  if (game.enabledOnLocalOnly && !isLocalDevEnvironment()) {
+  if (!game || (game.enabledOnLocalOnly && !isLocalDevEnvironment())) {
     return false;
   }
 

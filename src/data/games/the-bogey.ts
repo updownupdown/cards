@@ -1,31 +1,24 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const theBogey: GameDefinition = {
   path: "/the-bogey",
-  tip: {
-    default: "Draw to 5, then play/discard/hold; unplayable bogey loses.",
-  },
   title: "The Bogey",
-  thumbnail: "TheBogey.jpg",
-  cardBack: "TheBogey.png",
-  background: "rock-wall.jpg",
-  cardColorBg: "#0a1e1f",
-  cardColorText: "#ddf0ce",
-  cardDescription:
-    "Build columns of cards in decreasing suit-matched sequences while playing against the mysterious Bogey.",
+  tags: [GameTag.ModernMechanics],
   rating: {
     complexity: 40,
     difficulty: 75,
     luck: 35,
   },
-  tags: [GameTag.ModernMechanics],
-  byLine: "Game design by Katharine Turner, 2016",
-  authorName: "Katharine Turner",
-  about: [
-    "Play against the Bogey in a tactical card game of columns and choices.",
-    "Each decision to play, discard, or hold cards directly impacts your path to victory.",
-    "The challenge lies in building enough columns to win while managing the Bogey's plays.",
-  ],
+  thumbnail: "TheBogey.jpg",
+  background: GAME_BACKGROUNDS.rockWall,
+  cardBack: "TheBogey.png",
+  cardColorBg: "#0a1e1f",
+  cardColorText: "#ddf0ce",
+  cardDescription:
+    "Build columns of cards in decreasing suit-matched sequences while playing against the mysterious Bogey.",
+  quickStart: ["Draw to 5, then play/discard/hold; unplayable bogey loses."],
   howToPlay: [
     "Start with an empty board and a hand of 5 cards dealt from a standard deck (no jokers).",
     "On your turn, draw cards to bring your hand back to 5. Then, for each card decide whether to play it, discard it, or hold it.",
@@ -37,4 +30,15 @@ export const theBogey: GameDefinition = {
     "You win by building columns efficiently. Fewer columns is better: aim for 12 (novice), 11 (normal), 10 (advanced), 9 (legendary), or 8 (epic).",
     "For a harder variant, start with a hand of 4 instead of 5, letting the Bogey play more often.",
   ],
+  about: [
+    "Play against the Bogey in a tactical card game of columns and choices.",
+    "Each decision to play, discard, or hold cards directly impacts your path to victory.",
+    "The challenge lies in building enough columns to win while managing the Bogey's plays.",
+  ],
+  credits: {
+    creators: [GameCreators.KatharineTurner],
+    creationDate: "2016",
+  },
+
+
 };

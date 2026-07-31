@@ -1,30 +1,23 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const lobo: GameDefinition = {
   path: "/lobo",
-  tip: {
-    default:
-      "Capture the Wolf's cards by using match/sum/split/overtake actions.",
-  },
   title: "Lobo",
-  thumbnail: "Lobo.jpg",
-  cardColorBg: "#311a20",
-  cardColorText: "#f7e2ca",
-  background: "felt-dark-red.jpg",
-  cardDescription:
-    "Empty the Wolf's hand through clever captures — and know when to fold.",
+  tags: [GameTag.ModernMechanics],
   rating: {
     complexity: 60,
     difficulty: 85,
     luck: 40,
   },
-  tags: [GameTag.ModernMechanics],
-  about: [
-    "Lobo — The Wolf — is a notoriously hard solitaire game by James Ernest for the Postas deck (ranks 1-10, five suits; here Aces are 1s and suits are ignored).",
-    '"The wolf takes small bites": often the smart play is the cheapest way to lose, not a risky win.',
-  ],
-  byLine: "Game design by James Ernest, 2022",
-  authorName: "James Ernest",
+  thumbnail: "Lobo.jpg",
+  background: GAME_BACKGROUNDS.feltDarkRed,
+  cardColorBg: "#311a20",
+  cardColorText: "#f7e2ca",
+  cardDescription:
+    "Empty the Wolf's hand through clever captures — and know when to fold.",
+  quickStart: ["Capture the Wolf's cards by using match/sum/split/overtake actions."],
   howToPlay: [
     "## Objective",
     "Empty the **Wolf's hand** each round, and race the Wolf to **100 points**.",
@@ -44,4 +37,14 @@ export const lobo: GameDefinition = {
     "- Sometimes folding early is the right move, as it keeps the Wolf's score small.",
     "- You may change the difficulty settings to help you learn the game. Fewer high rank cards make the Wolf easier to beat.",
   ],
+  about: [
+    "Lobo — The Wolf — is a notoriously hard solitaire game by James Ernest for the Postas deck (ranks 1-10, five suits; here Aces are 1s and suits are ignored).",
+    '"The wolf takes small bites": often the smart play is the cheapest way to lose, not a risky win.',
+  ],
+  credits: {
+    creators: [GameCreators.JamesErnest],
+    creationDate: "2022",
+  },
+
+
 };

@@ -1,258 +1,114 @@
 import { Text } from "@/components/common/Text";
 import { INSTRUCTIONS_UNAVAILABLE } from "@/constants/constants";
-import {
-  getGameInfo,
-  normalizeGamePath,
-  type GameSettings,
-} from "@/data/game-menu";
-import { DEFAULT_TIP_PHASE } from "@/data/games-data";
-import { useGameSettings } from "@/hooks/useGameSettings";
+import { getGameInfo, normalizeGamePath } from "@/data/game-menu";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-import { useTipsBoxLayout } from "@/hooks/useTipsLayout";
-import { useViewportDimensions } from "@/hooks/useViewportDimensions";
-import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
-import { layoutDims, Colors, rgba, LayerZIndexes } from "@/styles/styles";
-import { lightenHexColor } from "@/utils/utils";
+import { Colors, layoutDims, rgba } from "@/styles/styles";
 import { usePathname } from "expo-router";
-import { useEffect, useState } from "react";
-import { Pressable, ScrollView, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { RichText } from "./RichText";
+import { useEffect, useRef } from "react";
+import { View } from "react-native";
+import { Button } from "../Button/Button";
+import { QuickStart } from "../Modals/RulesModal";
 
-interface Props {
-  /** The current tip phase key; defaults to the single-phase "default". */
-  phase?: string;
-  /** Screen-space Y of the header bottom; the box floats just below it. */
-  topOffset: number;
-  expandRequest?: number;
-}
+const AUTO_CLOSE_DELAY = 15000; // milliseconds
 
-export function TipsBox({ phase, topOffset, expandRequest }: Props) {
+type Props = {
+  onClose: () => void;
+  showRulesModal: () => void;
+};
+
+export function TipsBox({ onClose, showRulesModal }: Props) {
+  const onCloseRef = useRef(onClose);
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);
-  const { updateSettings } = useGameSettings(pathname);
   const { spacing, ui } = useResponsiveMetrics();
-  const { active, boxHeight } = useTipsBoxLayout();
-  const { height: viewportHeight } = useViewportDimensions();
-  const insets = useSafeAreaInsets();
+  const instruction = gameInfo.quickStart?.join("\n");
 
-  const [expanded, setExpanded] = useState(false);
+  onCloseRef.current = onClose;
 
   useEffect(() => {
-    if (expandRequest && expandRequest > 0) setExpanded(true);
-  }, [expandRequest]);
+    const timer = setTimeout(() => onCloseRef.current(), AUTO_CLOSE_DELAY);
 
-  if (!gameInfo || !active) return null;
-
-  const phaseKey = phase ?? DEFAULT_TIP_PHASE;
-  const instruction = gameInfo.tip?.[phaseKey];
-
-  function setTipsMode(value: boolean) {
-    void updateSettings({ tipsMode: value } as Partial<GameSettings>);
-  }
-
-  const expandedMaxHeight = Math.max(
-    viewportHeight -
-      topOffset -
-      spacing(layoutDims.pagePadding) -
-      insets.bottom,
-    boxHeight,
-  );
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <View
       style={{
-        position: "absolute",
-        zIndex: LayerZIndexes.tipsContainer,
-        top: topOffset,
-        left: 0,
-        right: 0,
         alignItems: "center",
         paddingHorizontal: spacing(layoutDims.pagePadding / 2),
-        pointerEvents: "box-none",
       }}
     >
       <View
-        style={{
-          transitionDuration: "0.6s",
-          transitionProperty: "background-color",
-          transitionTimingFunction: "ease",
-          width: "100%",
-          zIndex: LayerZIndexes.tipsCard,
-          maxWidth: ui.contentMaxWidth - spacing(layoutDims.pagePadding),
-          height: expanded ? undefined : boxHeight,
-          maxHeight: expanded ? expandedMaxHeight : boxHeight,
-          paddingHorizontal: spacing(layoutDims.pagePadding / 8),
-          borderRadius: boxHeight / 2,
-          backgroundColor: rgba(gameInfo.cardColorBg, expanded ? 1 : 0.8),
-          boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.black, 0.3)}, ${spacing(2)}px ${spacing(4)}px ${spacing(10)}px ${rgba(
-            Colors.black,
-            0.3,
-          )}`,
-        }}
+        style={[
+          flexStyles.colCentered,
+          {
+            padding: spacing(12),
+            paddingBottom: spacing(20),
+            gap: spacing(16),
+            outline: "none",
+            width: "100%",
+            maxWidth: ui.contentMaxWidth - spacing(layoutDims.pagePadding),
+            borderRadius: spacing(24),
+            backgroundColor: gameInfo.cardColorBg,
+            boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.black, 0.3)}, ${spacing(2)}px ${spacing(4)}px ${spacing(10)}px ${rgba(
+              Colors.black,
+              0.3,
+            )}`,
+          },
+        ]}
       >
-        {/* Header row: instruction + expand/collapse toggle */}
-        <Pressable
-          onPress={() => setExpanded((prev) => !prev)}
-          style={[
-            flexStyles.rowCentered,
-            {
-              height: boxHeight,
-              paddingVertical: spacing(6),
-              paddingLeft: spacing(6),
-              paddingRight: spacing(12),
-              gap: spacing(8),
-              outline: "none",
-            },
-          ]}
-        >
-          <View
-            style={[
-              flexStyles.colCentered,
-              {
-                width: spacing(32),
-                height: "100%",
-                padding: spacing(3),
-                outline: "none",
-              },
-            ]}
-          >
-            <Icon size={24} name={expanded ? "expand-less" : "expand-more"} />
-          </View>
-
-          <View style={[flexStyles.colCentered, flexStyles.flex1]}>
-            {expanded ? (
-              <View
-                style={[
-                  flexStyles.rowCentered,
-                  flexStyles.fullWidth,
-                  {
-                    gap: spacing(12),
-                  },
-                ]}
-              >
-                <Icon
-                  name="instructions"
-                  size={30}
-                  color={gameInfo.cardColorText}
-                />
-                <Text size="xl" weight={400} color={gameInfo.cardColorText}>
-                  How to Play
-                </Text>
-              </View>
-            ) : (
-              <Text
-                size="sm"
-                weight={400}
-                color={Colors.K100}
-                numberOfLines={2}
-                ellipsizeMode="tail"
-              >
-                {instruction ?? INSTRUCTIONS_UNAVAILABLE}
-              </Text>
-            )}
-          </View>
-
-          <Pressable onPress={() => setTipsMode(false)}>
-            <Icon name="close" size={24} color={Colors.K100} />
-          </Pressable>
-        </Pressable>
-
-        {/* Expanded body: full rules + quick tips toggle */}
-        {expanded && (
-          <ScrollView
-            style={{ flexShrink: 1 }}
-            contentContainerStyle={{
-              padding: spacing(24),
-              paddingTop: 0,
-              paddingBottom: spacing(50),
-            }}
-            showsVerticalScrollIndicator={false}
-          >
-            {/* Full instructions, and optional tip */}
-            <View
-              style={[
-                flexStyles.colCentered,
-                flexStyles.fullWidth,
-                {
-                  alignItems: "flex-start",
-                  gap: spacing(12),
-                  padding: spacing(24),
-                  borderRadius: spacing(20),
-                  backgroundColor: lightenHexColor(gameInfo.cardColorBg, 0.1),
-                },
-              ]}
-            >
-              <Text
-                size="lg"
-                weight={400}
-                color={Colors.K100}
-                lineHeight={1.4}
-                ellipsizeMode="tail"
-              >
-                {instruction ?? INSTRUCTIONS_UNAVAILABLE}
-              </Text>
-            </View>
-
-            {/* How to Play */}
-            <HowToPlay
-              showHeading={false}
-              howToPlayText={gameInfo.howToPlay ?? [INSTRUCTIONS_UNAVAILABLE]}
-              headingColor={gameInfo.cardColorText}
-            />
-          </ScrollView>
-        )}
-      </View>
-    </View>
-  );
-}
-
-export const HowToPlay = ({
-  showHeading = true,
-  howToPlayText,
-  headingColor,
-}: {
-  showHeading?: boolean;
-  howToPlayText: string[];
-  headingColor: string;
-}) => {
-  return (
-    <View
-      style={[
-        flexStyles.colCentered,
-        flexStyles.fullWidth,
-        {
-          alignItems: "flex-start",
-        },
-      ]}
-    >
-      {showHeading && (
         <View
           style={[
             flexStyles.rowCentered,
             flexStyles.fullWidth,
-            flexStyles.spaceBetween,
+            { gap: spacing(12), paddingLeft: spacing(4) },
           ]}
         >
           <Text
-            size="xl"
+            size="sm"
             weight={300}
-            color={headingColor}
-            style={flexStyles.flex1}
+            color={gameInfo.cardColorText}
+            style={{ flex: 1 }}
           >
-            How to Play
+            Quick Start
           </Text>
-          <Icon name="instructions" size={32} color={headingColor} />
-        </View>
-      )}
 
-      <RichText
-        content={howToPlayText}
-        size="md"
-        weight={300}
-        headingColor={headingColor}
-      />
+          <Button
+            size="sm"
+            iconName="instructions"
+            text="View rules"
+            onPress={() => {
+              onClose();
+              showRulesModal();
+            }}
+            theme={rgba(gameInfo.cardColorText, 0.2)}
+            style={{ paddingLeft: spacing(14) }}
+          />
+
+          <Button
+            size="sm"
+            iconName="close"
+            text="Close"
+            autoProgress={AUTO_CLOSE_DELAY}
+            autoProgressColor={rgba(gameInfo.cardColorText, 0.2)}
+            onPress={() => {
+              onClose();
+            }}
+            theme={rgba(gameInfo.cardColorText, 0.2)}
+            style={{ paddingRight: spacing(9) }}
+          />
+        </View>
+
+        <QuickStart
+          gameInfo={gameInfo}
+          headingColor={gameInfo.cardColorText}
+          style={{
+            gap: spacing(8),
+            paddingRight: spacing(8),
+          }}
+        />
+      </View>
     </View>
   );
-};
+}

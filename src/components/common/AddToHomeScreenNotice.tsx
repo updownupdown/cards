@@ -26,12 +26,12 @@ export function AddToHomeScreenNotice({
 
   const title = useMemo(() => {
     if (isIos) {
-      return "Add Solo Suite to your Home Screen";
+      return "Add SoloSuite to your Home Screen";
     }
     if (canPromptInstall) {
-      return "Install Solo Suite";
+      return "Install SoloSuite";
     }
-    return "Add Solo Suite to your device";
+    return "Add SoloSuite to your device";
   }, [canPromptInstall, isIos]);
 
   const instructions = useMemo(() => {
@@ -60,7 +60,6 @@ export function AddToHomeScreenNotice({
         backgroundColor: rgba(Colors.K800, 0.5),
         padding: spacing(24),
         gap: spacing(12),
-        marginBottom: spacing(40),
       }}
     >
       <View

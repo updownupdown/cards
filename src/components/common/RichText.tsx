@@ -224,8 +224,6 @@ export type RichTextProps = {
 
 export function RichText({
   content,
-  size = "md",
-  weight = 300,
   color = rgba(Colors.white, 0.9),
   headingColor = Colors.headings,
   gap = 20,
@@ -278,12 +276,12 @@ export function RichText({
                     paddingLeft: item.depth === 1 ? spacing(20) : 0,
                   }}
                 >
-                  <Text size={size} weight={weight} color={color}>
+                  <Text size="md" weight={400} color={color}>
                     {item.depth === 1 ? "\u25E6" : "\u2022"}
                   </Text>
                   <Text
-                    size={size}
-                    weight={weight}
+                    size="md"
+                    weight={400}
                     color={color}
                     style={{ flex: 1 }}
                   >
@@ -316,8 +314,8 @@ export function RichText({
         return (
           <Text
             key={`p-${index}`}
-            size={size}
-            weight={weight}
+            size="md"
+            weight={400}
             color={color}
             style={{
               marginTop: spacing(gap / 2),

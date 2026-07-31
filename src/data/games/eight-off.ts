@@ -1,29 +1,23 @@
 import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const eightOff: GameDefinition = {
   path: "/eight-off",
-  tip: {
-    default: "Use 8 cells; tableau down in suit; only kings fill empty.",
-  },
   title: "Eight Off",
-  thumbnail: DEFAULT_GAME_THUMBNAIL,
-  cardColorBg: "#101b2b",
-  cardColorText: "#d9e6ff",
-  background: "felt-dark-blue.jpg",
-  cardDescription:
-    "A roomy, same-suit FreeCell relative with eight cells and Kings-only columns.",
+  tags: [GameTag.TapAndDrag, GameTag.ClassicSolitaire],
   rating: {
     complexity: 25,
     difficulty: 40,
     luck: 25,
   },
-  tags: [GameTag.TapAndDrag, GameTag.ClassicSolitaire],
-  about: [
-    "Eight Off gives you eight free cells instead of four, but demands same-suit tableau building.",
-    "The extra cells make most deals winnable — the challenge is not clogging them all at once.",
-  ],
-  byLine: "Game designer unknown, popularized by C.L. Baker in the 1920s",
-  authorName: "C. L. Baker",
+  thumbnail: DEFAULT_GAME_THUMBNAIL,
+  background: GAME_BACKGROUNDS.feltDarkBlue,
+  cardColorBg: "#101b2b",
+  cardColorText: "#d9e6ff",
+  cardDescription:
+    "A roomy, same-suit FreeCell relative with eight cells and Kings-only columns.",
+  quickStart: ["Use 8 cells; tableau down in suit; only kings fill empty."],
   howToPlay: [
     "## Objective",
     "Move all 52 cards to the four **foundations**, each built up by suit from Ace to King.",
@@ -39,4 +33,12 @@ export const eightOff: GameDefinition = {
     "## Winning",
     "You win when all four foundations are built from Ace to King.",
   ],
+  about: [
+    "Eight Off gives you eight free cells instead of four, but demands same-suit tableau building.",
+    "The extra cells make most deals winnable — the challenge is not clogging them all at once.",
+  ],
+  credits: {
+    creators: [GameCreators.Unknown],
+    creationDate: "Popularized by C. L. Baker in the 1920s",
+  },
 };

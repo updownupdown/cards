@@ -1,37 +1,24 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const cardCapture: GameDefinition = {
   path: "/card-capture",
-  tip: {
-    enemyPhase: "Enemy line shifts right, then refills from enemy deck.",
-    discardPhase: "Discard any cards; next phase draws back up to 4.",
-    drawPhase: "Draw to 4 from your deck (2s, 3s, 4s, jokers).",
-    capturePhase:
-      "Capture by same-suit total >= enemy, or let capture, or sacrifice.",
-    gameOver: "Battle over.",
-  },
   title: "Card Capture",
-  thumbnail: "CardCapture.jpg",
-  cardBack: "CardCapture.png",
-  background: "rock-wall.jpg",
-  cardColorBg: "#2b2d42",
-  cardColorText: "#d4cdc3",
-  cardDescription:
-    "Use low cards and jokers to dismantle enemy forces, while protecting every Ace and face card from capture.",
+  tags: [GameTag.ModernMechanics],
   rating: {
     complexity: 60,
     difficulty: 50,
     luck: 40,
   },
-  tags: [GameTag.ModernMechanics],
-  about: [
-    "Card Capture is a tactical, phase-based solitaire game where weak cards become precision tools.",
-    "You fight stronger enemies by converting value efficiently, controlling suits, and timing discards between rounds.",
-    "Every capture choice has risk: take an enemy now, allow Position 1 to take one of yours, or sacrifice two cards to delay a threat.",
-    "The central tension is protection: Aces and face cards must never end up in the Enemy Capture Pile.",
-  ],
-  byLine: "Game design by Lucas Gentry, 2018",
-  authorName: "Lucas Gentry",
+  thumbnail: "CardCapture.jpg",
+  background: GAME_BACKGROUNDS.field,
+  cardBack: "CardCapture.png",
+  cardColorBg: "#2b2d42",
+  cardColorText: "#d4cdc3",
+  cardDescription:
+    "Use low cards and jokers to dismantle enemy forces, while protecting every Ace and face card from capture.",
+  quickStart: ["Enemy line shifts right, then refills from enemy deck."],
   howToPlay: [
     "Setup decks: take all 2s, 3s, 4s, plus both jokers as your Personal Draw Deck. Shuffle all remaining cards as the Enemy Draw Deck.",
     "Layout: top row is Enemy Draw Deck, then enemy Positions 1-4, then Enemy Capture Pile. Bottom row is Personal Draw Deck, your hand area (up to 4 cards), then your discard pile.",
@@ -47,4 +34,14 @@ export const cardCapture: GameDefinition = {
     "Loss condition: if any Jack, Queen, King, or Ace enters the Enemy Capture Pile at any time, you lose immediately.",
     "Win condition: at the end of a Capture Phase, if Enemy Draw Deck is empty and all enemy positions are empty, and no combatant was captured by the enemy, you win. Otherwise begin the next round at Enemy Phase.",
   ],
+  about: [
+    "Card Capture is a tactical, phase-based solitaire game where weak cards become precision tools.",
+    "You fight stronger enemies by converting value efficiently, controlling suits, and timing discards between rounds.",
+    "Every capture choice has risk: take an enemy now, allow Position 1 to take one of yours, or sacrifice two cards to delay a threat.",
+    "The central tension is protection: Aces and face cards must never end up in the Enemy Capture Pile.",
+  ],
+  credits: {
+    creators: [GameCreators.LucasGentry],
+    creationDate: "2018",
+  },
 };

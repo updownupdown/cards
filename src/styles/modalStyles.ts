@@ -15,7 +15,7 @@ export function useModalStyles() {
           backgroundColor: rgba(Colors.K800, 0.5),
           alignItems: "center",
           justifyContent: "center",
-          padding: spacing(layoutDims.pagePadding / 1.5),
+          padding: spacing(layoutDims.pagePadding / 2),
         },
         modalCard: {
           width: "100%",
@@ -24,7 +24,7 @@ export function useModalStyles() {
           backgroundColor: Colors.K950,
           borderRadius: spacing(20),
           overflow: "hidden",
-          boxShadow: `1px 2px 10px ${rgba(Colors.black, 0.5)}, 2px 4px 20px ${rgba(Colors.black, 0.4)}`,
+          boxShadow: `1px 2px 10px ${rgba(Colors.black, 0.3)}, 2px 4px 20px ${rgba(Colors.black, 0.3)}`,
         },
         modalHeader: {
           flexDirection: "row",

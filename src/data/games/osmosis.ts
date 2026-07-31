@@ -1,30 +1,24 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const osmosis: GameDefinition = {
   path: "/osmosis",
-  tip: {
-    default: "Top row any in-suit; lower rows need same rank above; tap stock.",
-  },
   title: "Osmosis",
-  thumbnail: "DefaultThumbnail.jpg",
-  cardBack: "DefaultCardBack.png",
-  background: "felt-dark-green.jpg",
-  cardColorBg: "#123027",
-  cardColorText: "#d5f0d0",
-  cardDescription:
-    "Seep each suit onto its row, but only once the rank above has arrived.",
+  tags: [GameTag.ClassicSolitaire],
   rating: {
     complexity: 30,
     difficulty: 30,
     luck: 30,
   },
-  tags: [GameTag.ClassicSolitaire],
-  about: [
-    "Osmosis (also called Treasure Trove) is a game of unlocking ranks row by row.",
-    "The rank you start with sets the key for the whole board, so the early rows dictate everything.",
-  ],
-  byLine: "Game design by Sid Sackson, 1969",
-  authorName: "Sid Sackson",
+  thumbnail: "DefaultThumbnail.jpg",
+  background: GAME_BACKGROUNDS.feltDarkGreen,
+  cardBack: "DefaultCardBack.png",
+  cardColorBg: "#123027",
+  cardColorText: "#d5f0d0",
+  cardDescription:
+    "Seep each suit onto its row, but only once the rank above has arrived.",
+  quickStart: ["Top row any in-suit; lower rows need same rank above; tap stock."],
   howToPlay: [
     "## Objective",
     "Move all 52 cards onto the four **foundation rows** (one suit per row).",
@@ -40,4 +34,14 @@ export const osmosis: GameDefinition = {
     "## Winning",
     "Place all 52 cards to win. If the stock is empty and nothing is playable, the game is over.",
   ],
+  about: [
+    "Osmosis (also called Treasure Trove) is a game of unlocking ranks row by row.",
+    "The rank you start with sets the key for the whole board, so the early rows dictate everything.",
+  ],
+  credits: {
+    creators: [GameCreators.SidSackson],
+    creationDate: "1969",
+  },
+
+
 };

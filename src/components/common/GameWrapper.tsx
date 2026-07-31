@@ -1,4 +1,3 @@
-import { GAME_BACKGROUND_ASSETS } from "@/data/game-backgrounds";
 import {
   clearLastGameSession,
   GameSettings,
@@ -8,9 +7,9 @@ import {
   recordResult,
 } from "@/data/game-menu";
 import { DEFAULT_GAME_BACKGROUND } from "@/data/games-data";
+import { useFade } from "@/hooks/useFade";
 import { useGameSettings } from "@/hooks/useGameSettings";
 import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
-import { useTipsBoxLayout } from "@/hooks/useTipsLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { flexStyles } from "@/styles/flexStyles";
 import {
@@ -22,7 +21,7 @@ import {
 } from "@/styles/styles";
 import { router, usePathname } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { ImageBackground, View } from "react-native";
+import { Animated, ImageBackground, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button } from "../Button/Button";
 import GameModal from "../Modals/GameModal";
@@ -30,6 +29,7 @@ import { LoadingOverlay } from "./LoadingOverlay";
 import { ResetButton } from "./ResetButton";
 import { TipsBox } from "./TipsBox";
 import { WinLoseBox } from "./WinLoseBox";
+import { RulesModal } from "../Modals/RulesModal";
 
 interface Props {
   isLoaded?: boolean;
@@ -40,7 +40,6 @@ interface Props {
   reset: () => void;
   children: React.ReactNode;
   /** Current tip phase key; maps to gameInfo.tip[phase]. */
-  tipPhase?: string;
   canUndo?: boolean;
   undo?: () => void;
   openMenu?: boolean;
@@ -55,7 +54,6 @@ export const GameWrapper = ({
   winLoseMessage,
   reset,
   children,
-  tipPhase,
   canUndo,
   undo: handleUndo,
   openMenu = false,
@@ -69,19 +67,20 @@ export const GameWrapper = ({
   const ui = useResponsiveUiLayoutFromWidth(
     Math.min(viewportWidth, viewportHeight),
   );
-
+  const { settings, isLoading } = useGameSettings(pathname);
   const spacing = (value: number) => value * ui.scale;
 
   const [showMenu, setShowMenu] = useState(false);
-  const [tipsExpandRequest, setTipsExpandRequest] = useState(0);
+  const [showRulesModal, setShowRulesModal] = useState(false);
+  const [tipsDismissed, setTipsDismissed] = useState(false);
 
-  const { updateSettings } = useGameSettings(pathname);
+  // Wait for settings before deciding whether the tips box should appear.
+  const hasPlayedGame =
+    settings && (settings.stats.wins > 0 || settings.stats.losses > 0);
+  const showTipsBox = !isLoading && !hasPlayedGame && !tipsDismissed;
 
-  function setTipsMode(value: boolean) {
-    void updateSettings({ tipsMode: value } as Partial<GameSettings>);
-  }
-
-  const { active: tipsActive } = useTipsBoxLayout();
+  const tipsFade = useFade(showTipsBox);
+  const headerFade = useFade(!showTipsBox);
 
   // Record stats
   const prevEndedRef = useRef(false);
@@ -111,18 +110,43 @@ export const GameWrapper = ({
   const titleColor = gameInfo.cardColorText;
   const backgroundColor = gameInfo.cardColorBg;
   const headerHeight = getHeaderHeightWithInset(insets.top, ui.scale);
-  const backgroundSource =
-    GAME_BACKGROUND_ASSETS[gameInfo.background ?? DEFAULT_GAME_BACKGROUND];
+  const background = gameInfo.background ?? DEFAULT_GAME_BACKGROUND;
 
   return (
     <>
       <LoadingOverlay isLoaded={!!isLoaded} />
 
-      <TipsBox
-        phase={tipPhase}
-        topOffset={headerHeight}
-        expandRequest={tipsExpandRequest}
-      />
+      {tipsFade.isRendered && (
+        <Animated.View
+          style={{
+            position: "absolute",
+            zIndex: LayerZIndexes.tipsContainer,
+            top: tipsFade.opacity.interpolate({
+              inputRange: [0, 1],
+              outputRange: [
+                -100,
+                insets.top + spacing(layoutDims.pagePadding / 2),
+              ],
+            }),
+            right: 0,
+            left: 0,
+            opacity: tipsFade.opacity,
+            pointerEvents: "box-none",
+          }}
+        >
+          <TipsBox
+            onClose={() => setTipsDismissed(true)}
+            showRulesModal={() => setShowRulesModal(true)}
+          />
+        </Animated.View>
+      )}
+
+      {showRulesModal && (
+        <RulesModal
+          onClose={() => setShowRulesModal(false)}
+          showMenu={() => setShowMenu(true)}
+        />
+      )}
 
       <WinLoseBox
         gameEnded={ended}
@@ -141,6 +165,7 @@ export const GameWrapper = ({
             onMenuClose?.();
           }}
           onReloadGame={reset}
+          showRulesModal={() => setShowRulesModal(true)}
         />
       )}
 
@@ -152,8 +177,9 @@ export const GameWrapper = ({
         }}
       >
         <ImageBackground
-          source={backgroundSource}
-          resizeMode="repeat"
+          source={background.source}
+          resizeMode="cover"
+          blurRadius={3}
           style={{
             position: "absolute",
             top: 0,
@@ -169,21 +195,22 @@ export const GameWrapper = ({
         {/* Background color overlay */}
         <View
           style={{
+            pointerEvents: "none",
             position: "absolute",
             zIndex: LayerZIndexes.boardBackgroundOverlay,
             top: 0,
             right: 0,
             bottom: 0,
             left: 0,
-            backgroundColor: rgba(backgroundColor, 1),
-            pointerEvents: "none",
-            mixBlendMode: "color",
+            backgroundColor,
+            opacity: 0.6,
           }}
         />
 
         {/* Game header */}
-        <View
+        <Animated.View
           style={{
+            opacity: headerFade.opacity,
             position: "relative",
             zIndex: LayerZIndexes.header,
             width: "100%",
@@ -224,15 +251,10 @@ export const GameWrapper = ({
             <Button
               headerButton
               onPress={() => {
-                if (!tipsActive) {
-                  setTipsExpandRequest((request) => request + 1);
-                  setTipsMode(true);
-                } else {
-                  setTipsMode(false);
-                }
+                setShowRulesModal(true);
               }}
               iconName={"instructions"}
-              iconColor={tipsActive ? rgba(Colors.white, 0.3) : titleColor}
+              iconColor={titleColor}
             />
 
             {handleUndo && (
@@ -258,7 +280,7 @@ export const GameWrapper = ({
               iconColor={titleColor}
             />
           </View>
-        </View>
+        </Animated.View>
 
         <View
           style={[

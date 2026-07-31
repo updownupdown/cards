@@ -3,8 +3,8 @@ import { DiscoverTab } from "@/components/Home/DiscoverTab";
 import { HomeHeader } from "@/components/Home/HomeHeader";
 import { HomeTab } from "@/components/Home/HomeTab";
 import { HomeTabBar } from "@/components/Home/HomeTabBar";
-import { SearchModal } from "@/components/Home/SearchModal";
-import { SettingsModal } from "@/components/Home/SettingsModal";
+import { SearchModal } from "@/components/Modals/SearchModal";
+import { HomeModal } from "@/components/Modals/HomeModal";
 import { StatsTab } from "@/components/Home/StatsTab";
 import { useHomeData } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
@@ -215,7 +215,7 @@ export default function Home() {
       )}
 
       {showSettingsModal && (
-        <SettingsModal
+        <HomeModal
           onClose={() => setShowSettingsModal(false)}
           onHomeDataInvalidated={onInvalidateHomeData}
         />

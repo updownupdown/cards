@@ -1,31 +1,26 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const blackHole: GameDefinition = {
   path: "/black-hole",
-  tip: {
-    default:
-      "Cards of adjacent value to the hole card can be cleared. Clear all to win. A<->K wraps.",
-  },
   title: "Black Hole",
-  thumbnail: "BlackHole.jpg",
-  cardBack: "DefaultCardBack.png",
-  background: "galaxy.jpg",
-  cardColorBg: "#150e25",
-  cardColorText: "#d4cbff",
-  cardDescription:
-    "Pull all 52 cards into a central black hole, one rank at a time.",
+  tags: [GameTag.EasyToLearn],
   rating: {
     complexity: 25,
     difficulty: 55,
     luck: 30,
   },
-  tags: [GameTag.EasyToLearn],
-  about: [
-    "Black Hole solitaire was invented by British game expert David Parlett and first published in his 1979 book, The Penguin Book of Patience.",
-    "With perfect strategy, the win rate is roughly 87%. However, because the game requires looking multiple moves ahead to avoid dead ends, the average human win rate is much lower, between 15% and 40%.",
+  thumbnail: "BlackHole.jpg",
+  background: GAME_BACKGROUNDS.nightSky,
+  cardBack: "DefaultCardBack.png",
+  cardColorBg: "#150e25",
+  cardColorText: "#d4cbff",
+  cardDescription:
+    "Pull all 52 cards into a central black hole, one rank at a time.",
+  quickStart: [
+    "Cards of adjacent value to the hole card can be cleared. Clear all to win. A<->K wraps.",
   ],
-  byLine: "Game design by David Parlett, 1979",
-  authorName: "David Parlett",
   howToPlay: [
     "## Objective",
     "- Pull every card into the central black hole.",
@@ -38,4 +33,12 @@ export const blackHole: GameDefinition = {
     "- There is no stock and no reshuffle, so plan your moves in order and as far in advance as possible.",
     "- Avoid dead ends, or getting to the end game with cards that are not adjacent in rank.",
   ],
+  about: [
+    "Black Hole solitaire was invented by British game expert David Parlett and first published in his 1979 book, The Penguin Book of Patience.",
+    "With perfect strategy, the win rate is roughly 87%. However, because the game requires looking multiple moves ahead to avoid dead ends, the average human win rate is much lower, between 15% and 40%.",
+  ],
+  credits: {
+    creators: [GameCreators.DavidParlett],
+    creationDate: "1979",
+  },
 };

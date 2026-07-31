@@ -897,7 +897,6 @@ export default function Regicide() {
 
   return (
     <GameWrapper
-      tipPhase={game.phase}
       reset={reset}
       isLoaded={isLoaded}
       ended={game.ended}

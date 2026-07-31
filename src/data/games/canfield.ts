@@ -1,29 +1,22 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const canfield: GameDefinition = {
   path: "/canfield",
-  tip: {
-    default:
-      "Foundations up suit; tableau down alt color; empties use reserve.",
-  },
   title: "Canfield",
-  background: "felt-dark-red.jpg",
-  cardColorBg: "#311a1e",
-  cardColorText: "#E4F6FF",
-  cardDescription:
-    "Build suit foundations from a random base rank, fed by a 13-card reserve.",
+  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
   rating: {
     complexity: 0,
     difficulty: 0,
     luck: 0,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
-  about: [
-    "Canfield is a famously tough gambling-hall patience with a big face-up reserve.",
-    "The random base rank and awkward reserve mean most deals are lost, so a win is a real prize.",
-  ],
-  byLine:
-    "Game designer unknown, first documented by Mary Whitmore Jones in 1891",
+  background: GAME_BACKGROUNDS.feltDarkRed,
+  cardColorBg: "#311a1e",
+  cardColorText: "#E4F6FF",
+  cardDescription:
+    "Build suit foundations from a random base rank, fed by a 13-card reserve.",
+  quickStart: ["Foundations up suit; tableau down alt color; empties use reserve."],
   howToPlay: [
     "## Objective",
     "Move as many cards as possible to the four **foundations**, each built up by suit from the base rank.",
@@ -43,4 +36,14 @@ export const canfield: GameDefinition = {
     "## Winning",
     "A perfect game clears all 52 cards to the foundations.",
   ],
+  about: [
+    "Canfield is a famously tough gambling-hall patience with a big face-up reserve.",
+    "The random base rank and awkward reserve mean most deals are lost, so a win is a real prize.",
+  ],
+  credits: {
+    creators: [GameCreators.Unknown],
+    creationDate: "First documented by Mary Whitmore Jones in 1891",
+  },
+
+
 };

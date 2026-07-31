@@ -1,28 +1,24 @@
 import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const freecell: GameDefinition = {
   path: "/freecell",
-  tip: {
-    default: "Foundations up suit; tableau down alt color; use 4 free cells.",
-  },
   title: "FreeCell",
-  thumbnail: DEFAULT_GAME_THUMBNAIL,
-  cardColorBg: "#151f2b",
-  cardColorText: "#DDEBFF",
-  background: "felt-dark-blue.jpg",
-  cardDescription:
-    "An open-information classic where nearly every deal can be won with care.",
+  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
   rating: {
     complexity: 20,
     difficulty: 40,
     luck: 30,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
-  byLine: "Game design by Paul Alfille, 1978",
-  authorName: "Paul Alfille",
-  about: [
-    "FreeCell is a skill-heavy solitaire where the whole deck is visible from the start.",
-    "With four free cells and no hidden cards, nearly every deal is winnable through careful planning.",
+  thumbnail: DEFAULT_GAME_THUMBNAIL,
+  background: GAME_BACKGROUNDS.casino,
+  cardColorBg: "#151f2b",
+  cardColorText: "#DDEBFF",
+  cardDescription:
+    "An open-information classic where nearly every deal can be won with care.",
+  quickStart: [
+    "Foundations up suit; tableau down alt color; use 4 free cells.",
   ],
   howToPlay: [
     "## Objective",
@@ -40,4 +36,12 @@ export const freecell: GameDefinition = {
     "## Winning",
     "You win when all four foundations are built from Ace to King.",
   ],
+  about: [
+    "FreeCell is a skill-heavy solitaire where the whole deck is visible from the start.",
+    "With four free cells and no hidden cards, nearly every deal is winnable through careful planning.",
+  ],
+  credits: {
+    creators: [GameCreators.PaulAlfille],
+    creationDate: "1978",
+  },
 };

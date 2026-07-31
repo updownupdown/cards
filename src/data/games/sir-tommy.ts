@@ -1,29 +1,24 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const sirTommy: GameDefinition = {
   path: "/sir-tommy",
-  tip: {
-    default: "Place draw on any waste pile; foundations auto-build A to K.",
-  },
   title: "Sir Tommy",
-  thumbnail: "SirTommy.jpg",
-  cardBack: "DefaultCardBack.png",
-  background: "felt-dark-purple.jpg",
-  cardColorBg: "#241a33",
-  cardColorText: "#ecdfff",
-  cardDescription:
-    "The granddaddy of solitaire: sort the deck across four piles into four Ace-to-King stacks.",
+  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
   rating: {
     complexity: 30,
     difficulty: 60,
     luck: 55,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
-  about: [
-    "Sir Tommy is often called the oldest recorded solitaire, and it still teaches the core lesson: where you set a card down matters.",
-    "You can't rearrange a waste pile, so a King dropped onto a low card buries everything beneath it.",
-  ],
-  byLine: "Game designer unknown",
+  thumbnail: "SirTommy.jpg",
+  background: GAME_BACKGROUNDS.feltDarkPurple,
+  cardBack: "DefaultCardBack.png",
+  cardColorBg: "#241a33",
+  cardColorText: "#ecdfff",
+  cardDescription:
+    "The granddaddy of solitaire: sort the deck across four piles into four Ace-to-King stacks.",
+  quickStart: ["Place draw on any waste pile; foundations auto-build A to K."],
   howToPlay: [
     "## Objective",
     "Build **four foundations** up from **Ace to King**, regardless of suit.",
@@ -38,4 +33,13 @@ export const sirTommy: GameDefinition = {
     "## Winning",
     "Finish all four foundations to win. If the stock runs out and no waste card can advance, the game is lost.",
   ],
+  about: [
+    "Sir Tommy is often called the oldest recorded solitaire, and it still teaches the core lesson: where you set a card down matters.",
+    "You can't rearrange a waste pile, so a King dropped onto a low card buries everything beneath it.",
+  ],
+  credits: {
+    creators: [GameCreators.Unknown],
+  },
+
+
 };

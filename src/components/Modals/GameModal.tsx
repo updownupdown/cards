@@ -1,5 +1,6 @@
 import { RichText } from "@/components/common/RichText";
 import { Text } from "@/components/common/Text";
+import { CREATOR_LINKS, isValidLink } from "@/data/game-creators";
 import { getSettingApplyBehaviorText } from "@/data/game-settings";
 import {
   useGameSettings,
@@ -9,11 +10,11 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
-import { Colors } from "@/styles/styles";
+import { Colors, rgba } from "@/styles/styles";
 import { lightenHexColor } from "@/utils/utils";
 import { usePathname } from "expo-router";
 import { useRef } from "react";
-import { ScrollView, View } from "react-native";
+import { Linking, ScrollView, View, ViewStyle } from "react-native";
 import {
   calculateWinRate,
   getGameInfo,
@@ -22,14 +23,20 @@ import {
 } from "../../data/game-menu";
 import { Button } from "../Button/Button";
 import { SettingControl } from "../common/SettingControl";
-import ModalFull from "./ModalFull";
+import ModalFull, { ModalHeading } from "./ModalFull";
+import { RatingsBars } from "../Home/RatingBars";
 
 type Props = {
   onClose: () => void;
   onReloadGame?: () => void;
+  showRulesModal: () => void;
 };
 
-export default function GameModal({ onClose, onReloadGame }: Props) {
+export default function GameModal({
+  onClose,
+  onReloadGame,
+  showRulesModal,
+}: Props) {
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);
   const { settings, updateSettings, isLoading } = useGameSettings(pathname);
@@ -70,7 +77,11 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
         onClose={handleClose}
         title={gameInfo.title}
         titleColor={gameInfo.cardColorText}
-        subtitle={gameInfo.authorName ? `by ${gameInfo.authorName}` : undefined}
+        subtitle={
+          gameInfo.credits?.creators?.length
+            ? `by ${gameInfo.credits.creators.join(", ")}`
+            : undefined
+        }
         backgroundColor={gameInfo.cardColorBg}
       >
         {/* Scroll view */}
@@ -80,6 +91,19 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
         >
           {/* Stats and favourite */}
           <View style={modalStyles.statsAndFav}>
+            <Button
+              onPress={() =>
+                updateSettings({ isFavorite: !settings.isFavorite })
+              }
+              iconName={settings.isFavorite ? "star" : "star-outline"}
+              size="xs"
+              textOnly
+              iconSize={42}
+              iconColor={
+                settings.isFavorite ? Colors.favoriteStar : Colors.accentBlue
+              }
+            />
+
             <View style={modalStyles.stats}>
               <View style={modalStyles.stat}>
                 <Text style={modalStyles.statsTextLabel}>Won</Text>
@@ -111,25 +135,11 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
                 </View>
               )}
             </View>
-
-            <Button
-              onPress={() =>
-                updateSettings({ isFavorite: !settings.isFavorite })
-              }
-              iconName={settings.isFavorite ? "star" : "star-outline"}
-              size="xs"
-              textOnly
-              iconSize={42}
-              iconColor={
-                settings.isFavorite ? Colors.favoriteStar : Colors.accentBlue
-              }
-            />
           </View>
 
-          {/* About and Settings */}
           <View
             style={[
-              flexStyles.colCentered,
+              flexStyles.colStart,
               flexStyles.fullWidth,
               {
                 gap: spacing(12),
@@ -137,108 +147,189 @@ export default function GameModal({ onClose, onReloadGame }: Props) {
             ]}
           >
             {/* Game Settings */}
-            {gameSpecificSettings.length > 0 &&
-              gameSpecificSettings.map((setting) => (
-                <View
-                  key={setting.key}
-                  style={[
-                    flexStyles.colCentered,
-                    flexStyles.fullWidth,
-                    {
-                      alignItems: "flex-start",
-                      padding: spacing(16),
-                      backgroundColor: lightenHexColor(
-                        gameInfo.cardColorBg,
-                        0.08,
-                      ),
-                      borderRadius: spacing(8),
-                    },
-                  ]}
-                >
-                  <SettingControl
-                    label={setting.label}
-                    labelColor={gameInfo.cardColorText}
-                    helpText={setting.description}
-                    applyBehaviorText={getSettingApplyBehaviorText(
-                      setting.applyBehavior,
-                    )}
-                    value={settings[setting.key]}
-                    type={setting.type}
-                    options={setting.options}
-                    onChange={(value) =>
-                      onGameSettingChange(
-                        setting.key,
-                        value as GameSettings[typeof setting.key],
-                      )
-                    }
-                  />
-                </View>
-              ))}
+            <ModalHeading
+              color={gameInfo.cardColorText}
+              title="Settings"
+              iconName="settings"
+              topBorder
+            />
 
-            {/* About Box: About, Complexity/Difficult/Luck, By Line */}
-            <View
-              style={[
-                flexStyles.colCentered,
-                flexStyles.fullWidth,
-                {
-                  alignItems: "flex-start",
-                  // padding: spacing(24),
-                  paddingVertical: spacing(24),
-                  gap: spacing(8),
-                  // backgroundColor: lightenHexColor(gameInfo.cardColorBg, 0.1),
-                  // borderRadius: spacing(8),
-                },
-              ]}
-            >
-              {gameInfo.about && (
-                <>
-                  <View
-                    style={[
-                      flexStyles.rowCentered,
-                      flexStyles.fullWidth,
-                      flexStyles.spaceBetween,
-                    ]}
-                  >
-                    <Text
-                      size="xxl"
-                      weight={300}
-                      color={gameInfo.cardColorText}
-                      style={flexStyles.flex1}
-                    >
-                      About
-                    </Text>
-                    <Icon
-                      name="info"
-                      size={28}
-                      color={gameInfo.cardColorText}
-                    />
-                  </View>
+            {gameSpecificSettings.map((setting) => (
+              <View
+                key={setting.key}
+                style={[
+                  flexStyles.colStart,
+                  flexStyles.fullWidth,
+                  {
+                    alignItems: "flex-start",
+                    padding: spacing(16),
+                    marginVertical: spacing(6),
+                    borderRadius: spacing(8),
+                    backgroundColor: lightenHexColor(
+                      gameInfo.cardColorBg,
+                      0.08,
+                    ),
+                  },
+                ]}
+              >
+                <SettingControl
+                  label={setting.label}
+                  labelColor={gameInfo.cardColorText}
+                  helpText={setting.description}
+                  applyBehaviorText={getSettingApplyBehaviorText(
+                    setting.applyBehavior,
+                  )}
+                  value={settings[setting.key]}
+                  type={setting.type}
+                  options={setting.options}
+                  onChange={(value) =>
+                    onGameSettingChange(
+                      setting.key,
+                      value as GameSettings[typeof setting.key],
+                    )
+                  }
+                />
+              </View>
+            ))}
 
-                  <RichText content={gameInfo.about} size="md" weight={300} />
-                </>
-              )}
+            {gameSpecificSettings.length === 0 && (
+              <Text
+                size="sm"
+                weight={300}
+                color={rgba(Colors.white, 0.5)}
+                style={{ marginTop: spacing(8), marginBottom: spacing(12) }}
+              >
+                No game settings
+              </Text>
+            )}
 
-              {/* By Line */}
-              {gameInfo.byLine && (
-                <Text
-                  weight={500}
-                  size="md"
+            {/* About */}
+            {gameInfo.about && (
+              <>
+                <ModalHeading
                   color={gameInfo.cardColorText}
-                  style={{ marginBottom: spacing(8) }}
-                >
-                  {gameInfo.byLine}
-                </Text>
-              )}
+                  title="About"
+                  iconName="info"
+                  topBorder
+                />
 
-              {/* Stats */}
-              {/* <RatingsBars
-                rating={gameInfo.rating}
-                gameColor={gameInfo.cardColorText}
-              /> */}
-            </View>
+                <RichText content={gameInfo.about} size="md" weight={300} />
+              </>
+            )}
+
+            {/* Stats */}
+            <RatingsBars
+              rating={gameInfo.rating}
+              gameColor={gameInfo.cardColorText}
+              style={{ marginBottom: spacing(30) }}
+            />
+
+            {/* Credits */}
+            {gameInfo.credits && <CreditsSection />}
+
+            {/* How to Play */}
+            <Button
+              text="How to Play"
+              iconName="instructions"
+              onPress={() => {
+                handleClose();
+                showRulesModal();
+              }}
+              theme={rgba(gameInfo.cardColorText, 0.2)}
+              taller
+              fullWidth
+              style={{ marginTop: spacing(30) }}
+            />
           </View>
         </ScrollView>
       </ModalFull>
     </>
   );
 }
+
+type CreditsSectionProps = {
+  style?: ViewStyle | ViewStyle[];
+};
+
+export const CreditsSection = ({ style }: CreditsSectionProps) => {
+  const pathname = normalizeGamePath(usePathname());
+  const gameInfo = getGameInfo(pathname);
+  const credits = gameInfo.credits;
+  const { spacing } = useResponsiveMetrics();
+
+  const background = gameInfo.background;
+  const backgroundAuthorLink = isValidLink(background?.authorLink)
+    ? background.authorLink
+    : undefined;
+
+  if (!credits) return null;
+
+  return (
+    <View
+      style={[
+        flexStyles.colStart,
+        flexStyles.fullWidth,
+        flexStyles.spaceBetween,
+        {
+          gap: spacing(12),
+        },
+        style,
+      ]}
+    >
+      <ModalHeading
+        color={gameInfo.cardColorText}
+        title="Credits"
+        iconName="attribution"
+        topBorder
+      />
+
+      {credits.creators?.length && (
+        <Text size="md" weight={300} color={Colors.white}>
+          Game design:{" "}
+          {credits.creators.map((creator, index) => {
+            const creatorLink = CREATOR_LINKS[creator];
+
+            return (
+              <Text key={index} size="md" weight={300} color={Colors.white}>
+                {index > 0 && ", "}
+                {creatorLink ? (
+                  <Text
+                    size="md"
+                    weight={500}
+                    color={Colors.accentBlue}
+                    onPress={() => void Linking.openURL(creatorLink)}
+                    style={{ textDecorationLine: "underline" }}
+                  >
+                    {creator}
+                  </Text>
+                ) : (
+                  creator
+                )}
+              </Text>
+            );
+          })}
+          {credits.creationDate ? `, ${credits.creationDate}` : ""}
+        </Text>
+      )}
+
+      {background?.authorName && (
+        <Text size="md" weight={300} color={Colors.white}>
+          Background image:{" "}
+          {backgroundAuthorLink ? (
+            <Text
+              size="md"
+              weight={500}
+              color={Colors.accentBlue}
+              onPress={() => void Linking.openURL(backgroundAuthorLink)}
+              style={{ textDecorationLine: "underline" }}
+            >
+              {background.authorName}
+            </Text>
+          ) : (
+            background.authorName
+          )}
+        </Text>
+      )}
+    </View>
+  );
+};

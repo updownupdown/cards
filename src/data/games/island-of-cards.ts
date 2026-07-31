@@ -1,30 +1,25 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const islandOfCards: GameDefinition = {
   path: "/island-of-cards",
-  tip: {
-    default:
-      "Place touching +/-1 rank (A<->K wraps), never equal next to equal.",
-  },
   title: "Island of Cards",
-  thumbnail: "IslandOfCards.jpg",
-  cardColorBg: "#153846",
-  cardColorText: "#ffe6a3",
-  background: "water.jpg",
-  cardDescription:
-    "Grow an island across a 7x7 grid, one rank-linked card at a time.",
+  tags: [GameTag.EasyToLearn],
   rating: {
     complexity: 25,
     difficulty: 50,
     luck: 45,
   },
-  tags: [GameTag.EasyToLearn],
-  about: [
-    "Island of Cards asks you to grow a connected 7x7 island from an opening X of thirteen cards.",
-    "Suit and colour never matter — only how ranks chain together and avoid their equals.",
+  thumbnail: "IslandOfCards.jpg",
+  background: GAME_BACKGROUNDS.island,
+  cardColorBg: "#153846",
+  cardColorText: "#ffe6a3",
+  cardDescription:
+    "Grow an island across a 7x7 grid, one rank-linked card at a time.",
+  quickStart: [
+    "Place touching +/-1 rank (A<->K wraps), never equal next to equal.",
   ],
-  byLine: "Game design by Frank, 2021",
-  authorName: "Frank",
   howToPlay: [
     "## Objective",
     "Fill the whole **7x7 island**, or score as high as you can.",
@@ -41,4 +36,12 @@ export const islandOfCards: GameDefinition = {
     "## Easier game",
     "- Turn on **Jokers** in settings to add two wildcards you can place on any connected space (Jokers don't count toward scoring).",
   ],
+  about: [
+    "Island of Cards asks you to grow a connected 7x7 island from an opening X of thirteen cards.",
+    "Suit and colour never matter — only how ranks chain together and avoid their equals.",
+  ],
+  credits: {
+    creators: [GameCreators.Frank],
+    creationDate: "2021",
+  },
 };

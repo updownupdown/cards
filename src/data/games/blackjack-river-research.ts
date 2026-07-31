@@ -1,30 +1,26 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const blackjackRiverResearch: GameDefinition = {
   path: "/blackjack-river-research",
-  tip: {
-    default:
-      "Create columns of 21. Use face cards to lower totals. Avoid totals of 25 or more.",
-  },
   title: "Blackjack River Research",
-  thumbnail: "BlackjackRiverResearch.jpg",
-  cardColorBg: "#11343d",
-  cardColorText: "#c3e9ff",
-  background: "water.jpg",
-  cardDescription:
-    "Balance four fish populations to exactly 21 and publish your studies of the Blackjack River.",
+  tags: [GameTag.ModernMechanics],
   rating: {
     complexity: 40,
     difficulty: 40,
     luck: 30,
   },
-  tags: [GameTag.ModernMechanics],
-  about: [
-    "Blackjack River Research by Gregg Jewell reframes 21-making as fisheries science.",
-    "Every completed study is a data point, and spotting notable patterns earns lasting Breakthroughs.",
+  thumbnail: "BlackjackRiverResearch.jpg",
+  background: GAME_BACKGROUNDS.river,
+  cardColorBg: "#11343d",
+  cardColorText: "#c3e9ff",
+  cardDescription:
+    "Balance four fish populations to exactly 21 and publish your studies of the Blackjack River.",
+  quickStart: [
+    "Create columns of 21 and complete research goals along the way.",
+    "Use face cards to lower totals. Avoid totals of 25 or more.",
   ],
-  byLine: "Game design by Gregg Jewell, 2023",
-  authorName: "Gregg Jewell",
   howToPlay: [
     "## Objective",
     "Complete river **studies** by creating fish population columns of **exactly 21 fish**.",
@@ -62,4 +58,12 @@ export const blackjackRiverResearch: GameDefinition = {
     "-- **14-17:** advances knowledge",
     "-- **18+:** reshapes the science",
   ],
+  about: [
+    "Blackjack River Research by Gregg Jewell reframes 21-making as fisheries science.",
+    "Every completed study is a data point, and spotting notable patterns earns lasting Breakthroughs.",
+  ],
+  credits: {
+    creators: [GameCreators.GreggJewell],
+    creationDate: "2023",
+  },
 };

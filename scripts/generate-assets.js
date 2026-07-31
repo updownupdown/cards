@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-// Generates the static asset maps for thumbnails, card backs, and background
-// textures. Drop an image into the relevant assets/ folder, then run:
+// Generates the static asset maps for thumbnails and card backs. Drop an image
+// into the relevant assets/ folder, then run:
 //   npm run assets:generate
 //
 // Metro requires static require() strings, so these maps must be generated
@@ -59,34 +59,6 @@ export type GameThumbnailName = keyof typeof GAME_THUMBNAIL_ASSETS;
   return files.length;
 }
 
-// --- Background textures ------------------------------------------------
-function generateBackgrounds() {
-  const dir = path.join(projectRoot, "assets", "backgrounds");
-  const files = listImages(dir);
-  const body =
-    files.length > 0
-      ? `export const GAME_BACKGROUND_ASSETS = {
-${mapEntries(files, "backgrounds")}
-} as const;
-
-export type GameBackgroundName = keyof typeof GAME_BACKGROUND_ASSETS;
-`
-      : `export const GAME_BACKGROUND_ASSETS = {} as Record<string, number>;
-
-export type GameBackgroundName = string;
-`;
-  const output = `// AUTO-GENERATED FILE. DO NOT EDIT.
-// Run: npm run assets:generate
-
-${body}`;
-  fs.writeFileSync(
-    path.join(projectRoot, "src", "data", "game-backgrounds.ts"),
-    output,
-    "utf8",
-  );
-  return files.length;
-}
-
 // --- Card backs ---------------------------------------------------------
 const DEFAULT_CARD_BACK = "DefaultCardBack.png";
 
@@ -126,9 +98,8 @@ ${mapEntries(files, "card-backs")}
 function main() {
   const thumbs = generateThumbnails();
   const backs = generateCardBacks();
-  const backgrounds = generateBackgrounds();
   console.log(
-    `Generated asset maps: ${thumbs} thumbnails, ${backs} card backs, ${backgrounds} backgrounds.`,
+    `Generated asset maps: ${thumbs} thumbnails, ${backs} card backs.`,
   );
 }
 

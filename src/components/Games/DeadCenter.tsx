@@ -495,7 +495,6 @@ export default function DeadCenter() {
 
   return (
     <GameWrapper
-      tipPhase={game.phase}
       ended={game.ended}
       won={game.won}
       reset={reset}

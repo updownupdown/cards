@@ -1,30 +1,23 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const optritaLines: GameDefinition = {
   path: "/optrita-lines",
-  tip: {
-    default:
-      "Pick a card and line; first suit match wins by rank, otherwise trump suit wins.",
-  },
   title: "Optrita: Lines",
-  thumbnail: "OptritaLines.jpg",
-  cardColorBg: "#1b2233",
-  cardColorText: "#dce6ff",
-  background: "felt-grey.jpg",
-  cardDescription:
-    "A one-player trick-taking duel against a 6x6 grid that fights only by hiding its cards.",
+  tags: [GameTag.ModernMechanics],
   rating: {
     complexity: 40,
     difficulty: 50,
     luck: 30,
   },
-  tags: [GameTag.ModernMechanics],
-  about: [
-    "Optrita: Lines is a solitaire trick-taker: you attack lines of a face-down grid, revealing one card at a time.",
-    "More information helps, but every reveal also closes off lines you can no longer challenge.",
-  ],
-  byLine: "Game design by Stephen Tudor, 2023",
-  authorName: "Stephen Tudor",
+  thumbnail: "OptritaLines.jpg",
+  background: GAME_BACKGROUNDS.feltGrey,
+  cardColorBg: "#1b2233",
+  cardColorText: "#dce6ff",
+  cardDescription:
+    "A one-player trick-taking duel against a 6x6 grid that fights only by hiding its cards.",
+  quickStart: ["Pick a card and line; first suit match wins by rank, otherwise trump suit wins."],
   howToPlay: [
     "## Objective",
     "Win **21 tricks** before the grid does.",
@@ -42,4 +35,14 @@ export const optritaLines: GameDefinition = {
     "- Each trick is one point. **First to 21** wins.",
     "- **Hard mode** (Settings) lowers the grid's target, giving it the edge.",
   ],
+  about: [
+    "Optrita: Lines is a solitaire trick-taker: you attack lines of a face-down grid, revealing one card at a time.",
+    "More information helps, but every reveal also closes off lines you can no longer challenge.",
+  ],
+  credits: {
+    creators: [GameCreators.StephenTudor],
+    creationDate: "2023",
+  },
+
+
 };

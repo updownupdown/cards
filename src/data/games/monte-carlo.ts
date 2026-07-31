@@ -1,28 +1,23 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const monteCarlo: GameDefinition = {
   path: "/monte-carlo",
-  tip: {
-    default: "Tap adjacent equal ranks to clear; consolidate for new pairs.",
-  },
   title: "Monte Carlo",
-  thumbnail: "MonteCarlo.jpg",
-  cardBack: "MonteCarlo.png",
-  background: "felt-dark-blue.jpg",
-  cardColorBg: "#152635",
-  cardColorText: "#b1dada",
-  cardDescription: "Match adjacent pairs of equal rank to clear a 5×5 grid.",
+  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
   rating: {
     complexity: 10,
     difficulty: 20,
     luck: 35,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
-  about: [
-    "Monte Carlo is a gentle matching patience played on a 5×5 grid.",
-    "Regular consolidation brings distant cards together, opening up fresh pairs.",
-  ],
-  byLine: "Game designer unknown",
+  thumbnail: "MonteCarlo.jpg",
+  background: GAME_BACKGROUNDS.monteCarlo,
+  cardBack: "MonteCarlo.png",
+  cardColorBg: "#152635",
+  cardColorText: "#b1dada",
+  cardDescription: "Match adjacent pairs of equal rank to clear a 5×5 grid.",
+  quickStart: ["Tap adjacent equal ranks to clear; consolidate for new pairs."],
   howToPlay: [
     "## Objective",
     "Remove all 52 cards by pairing equal ranks until the grid is empty.",
@@ -36,4 +31,11 @@ export const monteCarlo: GameDefinition = {
     "## Winning",
     "You win when every card has been removed.",
   ],
+  about: [
+    "Monte Carlo is a gentle matching patience played on a 5×5 grid.",
+    "Regular consolidation brings distant cards together, opening up fresh pairs.",
+  ],
+  credits: {
+    creators: [GameCreators.Unknown],
+  },
 };

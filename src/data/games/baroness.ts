@@ -1,29 +1,23 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const baroness: GameDefinition = {
   path: "/baroness",
-  tip: {
-    default: "Discard K alone or pairs to 13 (A1 J11 Q12); deal if stuck.",
-  },
   title: "Baroness",
-  thumbnail: "Baroness.jpg",
-  cardBack: "DefaultCardBack.png",
-  background: "felt-dark-red.jpg",
-  cardColorBg: "#3a1620",
-  cardColorText: "#f3d6dd",
-  cardDescription: "Clear five piles by discarding cards that total thirteen.",
+  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
   rating: {
     complexity: 15,
     difficulty: 50,
     luck: 70,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
-  about: [
-    "Baroness — also called Thirteens or Five Piles — is a brisk thirteen-matching game.",
-    "The order you clear pairs decides whether later cards ever become reachable.",
-  ],
-  byLine:
-    "Game designer unknown, first documented by Mary Whitmore Jones in 1890",
+  thumbnail: "Baroness.jpg",
+  background: GAME_BACKGROUNDS.feltDarkRed,
+  cardBack: "DefaultCardBack.png",
+  cardColorBg: "#3a1620",
+  cardColorText: "#f3d6dd",
+  cardDescription: "Clear five piles by discarding cards that total thirteen.",
+  quickStart: ["Discard K alone or pairs to 13 (A1 J11 Q12); deal if stuck."],
   howToPlay: [
     "## Objective",
     "Discard all 52 cards.",
@@ -39,4 +33,14 @@ export const baroness: GameDefinition = {
     "## Winning",
     "Clear every card to win. If the stock is empty and no move is left, the game ends.",
   ],
+  about: [
+    "Baroness — also called Thirteens or Five Piles — is a brisk thirteen-matching game.",
+    "The order you clear pairs decides whether later cards ever become reachable.",
+  ],
+  credits: {
+    creators: [GameCreators.Unknown],
+    creationDate: "First documented by Mary Whitmore Jones in 1890",
+  },
+
+
 };

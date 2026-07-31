@@ -1,32 +1,26 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const regicide: GameDefinition = {
   path: "/regicide",
-  tip: {
-    attack: "Play card/combo to damage royal; suit powers trigger on play.",
-    defend: "Discard cards totaling enemy attack after shield reduction.",
-  },
   title: "Regicide",
-  cardBack: "Regicide.png",
-  thumbnail: "Regicide.jpg",
-  background: "rock-wall.jpg",
-  cardColorBg: "#16162b",
-  cardColorText: "#f7e1ff",
-  cardDescription:
-    "Team up with the deck to topple 12 royals using suit-power combos.",
+  tags: [GameTag.ModernMechanics],
   rating: {
     complexity: 70,
     difficulty: 80,
     luck: 30,
   },
-  tags: [GameTag.ModernMechanics],
-  about: [
-    "Regicide is a cooperative card game, played here solo, against a castle of corrupted royalty.",
-    "Chain combos and suit powers to fell Jacks, Queens, and Kings before their counterattacks overwhelm you.",
-    "Enemies grow tougher as you climb, so manage your hand and discard pile with care.",
+  thumbnail: "Regicide.jpg",
+  background: GAME_BACKGROUNDS.castle,
+  cardBack: "Regicide.png",
+  cardColorBg: "#16162b",
+  cardColorText: "#f7e1ff",
+  cardDescription:
+    "Team up with the deck to topple 12 royals using suit-power combos.",
+  quickStart: [
+    "Play card/combo to damage royal; suit powers trigger on play. Discard cards totaling enemy attack after shield reduction.",
   ],
-  byLine: "Game design by Paul Abrahams, Luke Badger, and Andy Richdale, 2020",
-  authorName: "Paul Abrahams, Luke Badger, and Andy Richdale",
   howToPlay: [
     "## Objective",
     "Defeat all **12 royal enemies** — the Jacks, Queens, and Kings — one after another.",
@@ -59,4 +53,17 @@ export const regicide: GameDefinition = {
     "## Winning",
     "Defeat all 12 enemies to win. Fewer **Jesters** earns a better result: Gold (0), Silver (1), Bronze (2). If you ever cannot cover an enemy's attack, you lose.",
   ],
+  about: [
+    "Regicide is a cooperative card game, played here solo, against a castle of corrupted royalty.",
+    "Chain combos and suit powers to fell Jacks, Queens, and Kings before their counterattacks overwhelm you.",
+    "Enemies grow tougher as you climb, so manage your hand and discard pile with care.",
+  ],
+  credits: {
+    creators: [
+      GameCreators.PaulAbrahams,
+      GameCreators.LukeBadger,
+      GameCreators.AndyRichdale,
+    ],
+    creationDate: "2020",
+  },
 };

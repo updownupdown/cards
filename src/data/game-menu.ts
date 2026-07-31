@@ -10,7 +10,6 @@ export type GameStats = {
 };
 
 export type GameSettings = {
-  tipsMode: boolean;
   showCardHints: boolean;
   isFavorite: boolean;
   difficulty: "easy" | "difficult";
@@ -111,7 +110,6 @@ export const DEFAULT_GLOBAL_SETTINGS: GlobalSettings = {
 };
 
 export const DEFAULT_GAME_SETTINGS: GameSettings = {
-  tipsMode: true,
   showCardHints: true,
   isFavorite: false,
   difficulty: "easy",

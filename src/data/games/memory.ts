@@ -1,26 +1,23 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const memory: GameDefinition = {
   path: "/memory",
-  tip: {
-    default: "Find matching pairs by remembering where each card is hidden.",
-  },
   title: "Memory",
-  thumbnail: "Memory.jpg",
-  cardBack: "DefaultCardBack.png",
-  background: "felt-grey.jpg",
-  cardColorBg: "#243b35",
-  cardColorText: "#e8f1df",
-  cardDescription: "Reveal hidden pairs and clear the board using your memory.",
+  tags: [GameTag.EasyToLearn],
   rating: {
     complexity: 15,
     difficulty: 35,
     luck: 5,
   },
-  tags: [GameTag.EasyToLearn],
-  about: [
-    "Memory is a concentration game: every revealed card gives you information for a future turn.",
-  ],
+  thumbnail: "Memory.jpg",
+  background: GAME_BACKGROUNDS.feltGrey,
+  cardBack: "DefaultCardBack.png",
+  cardColorBg: "#243b35",
+  cardColorText: "#e8f1df",
+  cardDescription: "Reveal hidden pairs and clear the board using your memory.",
+  quickStart: ["Find matching pairs by remembering where each card is hidden."],
   howToPlay: [
     "## Objective",
     "Find every matching pair and clear the board.",
@@ -34,4 +31,12 @@ export const memory: GameDefinition = {
     "## Winning",
     "Clear every card from the grid.",
   ],
+  about: [
+    "Memory is a concentration game: every revealed card gives you information for a future turn.",
+  ],
+  credits: {
+    creators: [GameCreators.Unknown],
+  },
+
+
 };

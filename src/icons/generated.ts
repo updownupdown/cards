@@ -7,6 +7,7 @@ import type { SvgProps } from "react-native-svg";
 
 import ArrowBackIcon from "./ArrowBack.svg";
 import ArrowForwardIcon from "./ArrowForward.svg";
+import AttributionIcon from "./Attribution.svg";
 import ChartIcon from "./Chart.svg";
 import CheckBoxOffIcon from "./CheckBoxOff.svg";
 import CheckBoxOnIcon from "./CheckBoxOn.svg";
@@ -26,6 +27,7 @@ import EquipIcon from "./Equip.svg";
 import ExpandLessIcon from "./ExpandLess.svg";
 import ExpandMoreIcon from "./ExpandMore.svg";
 import ExploreIcon from "./Explore.svg";
+import FastForwardIcon from "./FastForward.svg";
 import FeaturedIcon from "./Featured.svg";
 import FistIcon from "./Fist.svg";
 import GamesIcon from "./Games.svg";
@@ -62,6 +64,7 @@ import WhaleIcon from "./Whale.svg";
 export type IconName =
   | "arrow-back"
   | "arrow-forward"
+  | "attribution"
   | "chart"
   | "check-box-off"
   | "check-box-on"
@@ -81,6 +84,7 @@ export type IconName =
   | "expand-less"
   | "expand-more"
   | "explore"
+  | "fast-forward"
   | "featured"
   | "fist"
   | "games"
@@ -117,6 +121,7 @@ export type IconName =
 export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "arrow-back": ArrowBackIcon,
   "arrow-forward": ArrowForwardIcon,
+  "attribution": AttributionIcon,
   "chart": ChartIcon,
   "check-box-off": CheckBoxOffIcon,
   "check-box-on": CheckBoxOnIcon,
@@ -136,6 +141,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "expand-less": ExpandLessIcon,
   "expand-more": ExpandMoreIcon,
   "explore": ExploreIcon,
+  "fast-forward": FastForwardIcon,
   "featured": FeaturedIcon,
   "fist": FistIcon,
   "games": GamesIcon,

@@ -1,29 +1,24 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const calculation: GameDefinition = {
   path: "/calculation",
-  tip: {
-    default: "Play to +1/+2/+3/+4 foundations; park blocks on waste piles.",
-  },
   title: "Calculation",
-  thumbnail: "Calculation.jpg",
-  cardBack: "Calculation.png",
-  background: "felt-dark-purple.jpg",
-  cardColorBg: "#12122b",
-  cardColorText: "#eccfff",
-  cardDescription:
-    "Build four foundations in steps of 1, 2, 3, and 4 up to the Kings.",
+  tags: [GameTag.ClassicSolitaire],
   rating: {
     complexity: 60,
     difficulty: 80,
     luck: 50,
   },
-  tags: [GameTag.ClassicSolitaire],
-  about: [
-    "Calculation is a brain-bending patience where arithmetic replaces suits.",
-    "Skilful use of the four waste piles is the difference between a win and a jam.",
-  ],
-  byLine: "Game designer unknown.",
+  thumbnail: "Calculation.jpg",
+  background: GAME_BACKGROUNDS.feltDarkPurple,
+  cardBack: "Calculation.png",
+  cardColorBg: "#12122b",
+  cardColorText: "#eccfff",
+  cardDescription:
+    "Build four foundations in steps of 1, 2, 3, and 4 up to the Kings.",
+  quickStart: ["Play to +1/+2/+3/+4 foundations; park blocks on waste piles."],
   howToPlay: [
     "## Objective",
     "Build all four **foundations** up to the King, each following its own step interval.",
@@ -43,4 +38,13 @@ export const calculation: GameDefinition = {
     "## Winning",
     "You win when all four foundations are completed up to the Kings.",
   ],
+  about: [
+    "Calculation is a brain-bending patience where arithmetic replaces suits.",
+    "Skilful use of the four waste piles is the difference between a win and a jam.",
+  ],
+  credits: {
+    creators: [GameCreators.Unknown],
+  },
+
+
 };

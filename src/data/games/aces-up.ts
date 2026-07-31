@@ -1,28 +1,23 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const acesUp: GameDefinition = {
   path: "/aces-up",
-  tip: {
-    default: "Discard lower same-suit exposes; deal four when stuck.",
-  },
   title: "Aces Up",
-  thumbnail: "AcesUp.jpg",
-  cardBack: "AcesUp.png",
-  background: "wood-table.jpg",
-  cardColorBg: "#1d0f0a",
-  cardColorText: "#eee0ca",
-  cardDescription: "Discard low cards until only the four Aces remain.",
+  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
   rating: {
     complexity: 15,
     difficulty: 80,
     luck: 80,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
-  about: [
-    "Aces Up, also known as Idiot's Delight, is a compact, luck-heavy discard game.",
-    "It looks simple, but wins are rare and every empty-pile move matters.",
-  ],
-  byLine: "Game designer unknown, first documented in 1900",
+  thumbnail: "AcesUp.jpg",
+  background: GAME_BACKGROUNDS.woodTable,
+  cardBack: "AcesUp.png",
+  cardColorBg: "#1d0f0a",
+  cardColorText: "#eee0ca",
+  cardDescription: "Discard low cards until only the four Aces remain.",
+  quickStart: ["Discard lower same-suit exposes; deal four when stuck."],
   howToPlay: [
     "## Objective",
     "Discard the entire deck except the four Aces, leaving one Ace on each pile.",
@@ -39,4 +34,14 @@ export const acesUp: GameDefinition = {
     "## Winning",
     "You win when the stock is empty and only the **four Aces** remain, one per pile.",
   ],
+  about: [
+    "Aces Up, also known as Idiot's Delight, is a compact, luck-heavy discard game.",
+    "It looks simple, but wins are rare and every empty-pile move matters.",
+  ],
+  credits: {
+    creators: [GameCreators.Unknown],
+    creationDate: "First documented in 1900",
+  },
+
+
 };

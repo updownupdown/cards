@@ -1,31 +1,27 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const deadCenter: GameDefinition = {
   path: "/dead-center",
-  tip: {
-    reveal: "Reveal one face-down zombie if available.",
-    play: "Draw, then place by value/color rule on a legal pile.",
-    kill: "Kill adjacent zombie if support cards in its line sum to 10.",
-  },
   title: "Dead Center",
-  thumbnail: "DeadCenter.jpg",
-  cardBack: "DeadCenter.png",
-  background: "wood-table.jpg",
-  cardColorBg: "#201207",
-  cardColorText: "#e9f1d9",
-  cardDescription:
-    "Defend your cabin against a siege of zombies, using supporting cards strategically.",
+  tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
   rating: {
     complexity: 70,
     difficulty: 50,
     luck: 20,
   },
-  tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
-  byLine: "Game design by Wil Su, 2021",
-  authorName: "Wil Su",
-  about: [
-    "Your 3x3 cabin is surrounded by zombies! Plan ahead: your ability to attack depends on surrounding cards!",
-    "This game is adapted from Wil Su's Isaludo collection.",
+  thumbnail: "DeadCenter.jpg",
+  background: GAME_BACKGROUNDS.forest,
+  cardBack: "DeadCenter.png",
+  cardColorBg: "#201207",
+  cardColorText: "#e9f1d9",
+  cardDescription:
+    "Defend your cabin against a siege of zombies, using supporting cards strategically.",
+  quickStart: [
+    "Kill zombies by placing cards in adjacent, valid spots.",
+    "The other two cards in that line must add to 10 and match suit (Ks) or color (Qs).",
+    "Aces are worth 1; Jokers can be placed anywhere and are worth 0.",
   ],
   howToPlay: [
     "You must eliminate all zombies before running out of cards to win.",
@@ -36,4 +32,12 @@ export const deadCenter: GameDefinition = {
     "To kill a Queen, both support cards must match the Queen's suit.",
     "There are no restrictions to kill Jacks.",
   ],
+  about: [
+    "Your 3x3 cabin is surrounded by zombies! Plan ahead: your ability to attack depends on surrounding cards!",
+    "This game is adapted from Wil Su's Isaludo collection.",
+  ],
+  credits: {
+    creators: [GameCreators.WilSu],
+    creationDate: "2021",
+  },
 };

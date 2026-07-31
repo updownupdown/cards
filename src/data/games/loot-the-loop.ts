@@ -1,30 +1,24 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const lootTheLoop: GameDefinition = {
   path: "/loot-the-loop",
-  tip: {
-    default:
-      "Collect all Aces and exit through the Joker to win. Avoid face up face cards, and use number cards to explore.",
-  },
   title: "Loot the Loop",
-  thumbnail: "LootTheLoop.jpg",
-  cardBack: "LootTheLoop.png",
-  background: "wall-tile.jpg",
-  cardColorBg: "#1d120e",
-  cardColorText: "#dfd4bd",
-  cardDescription:
-    "Capture scoring loop cards while preserving momentum and avoiding disruptive breaks.",
+  tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
   rating: {
     complexity: 45,
     difficulty: 40,
     luck: 40,
   },
-  tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
-  about: [
-    'This game is part of the Isaludo collection of games, by Wil Su. Explore and loot the "Template of the Sun", a loop-shaped dungeon filled with trinkets and traps.',
-  ],
-  byLine: "Game design by Wil Su, 2021",
-  authorName: "Wil Su",
+  thumbnail: "LootTheLoop.jpg",
+  background: GAME_BACKGROUNDS.wallTile,
+  cardBack: "LootTheLoop.png",
+  cardColorBg: "#1d120e",
+  cardColorText: "#dfd4bd",
+  cardDescription:
+    "Capture scoring loop cards while preserving momentum and avoiding disruptive breaks.",
+  quickStart: ["Collect all Aces and exit through the Joker to win. Avoid face up face cards, and use number cards to explore."],
   howToPlay: [
     "## Objective",
     "- Loot all four jewels (Aces) and escape alive by stepping through the exit (Joker).",
@@ -49,4 +43,13 @@ export const lootTheLoop: GameDefinition = {
     "- **Mark paths whenever you can!** If the two top cards are not number cards, and you do not have any marked path, **you will lose instantly**. Having more marked paths also gives you more options to move by specific amounts to effectively avoid traps.",
     "- You can use the **Mark a Path** and **Return to Path** actions multiple times in a row without exploring. This allows you to manipulate the top card order to control how far to explore, and which card you will land on.",
   ],
+  about: [
+    'This game is part of the Isaludo collection of games, by Wil Su. Explore and loot the "Template of the Sun", a loop-shaped dungeon filled with trinkets and traps.',
+  ],
+  credits: {
+    creators: [GameCreators.WilSu],
+    creationDate: "2021",
+  },
+
+
 };

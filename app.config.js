@@ -2,7 +2,7 @@ const buildDate = new Date().toISOString();
 
 /** @type {import('expo/config').ExpoConfig} */
 const config = {
-  name: "Solo Suite",
+  name: "SoloSuite",
   description: "A collection of solo playing card games.",
   slug: "cards",
   version: "1.0.0",
@@ -28,8 +28,8 @@ const config = {
     output: "static",
     favicon: "./assets/app-icon/icon.png",
     themeColor: "#343f49",
-    name: "Solo Suite",
-    shortName: "Solo Suite",
+    name: "SoloSuite",
+    shortName: "SoloSuite",
     description: "A collection of solo playing card games.",
     display: "standalone",
     startUrl: "./",

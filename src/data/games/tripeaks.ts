@@ -1,29 +1,23 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const tripeaks: GameDefinition = {
   path: "/tripeaks",
-  tip: {
-    default: "Play exposed +/-1 to waste; A<->K wraps; draw when stuck.",
-  },
   title: "TriPeaks",
-  thumbnail: "TriPeaks.jpg",
-  background: "medieval-blocks.jpg",
-  cardColorBg: "#24343a",
-  cardColorText: "#e3fcdd",
-  cardDescription:
-    "Clear three peaks by playing cards one rank above or below the waste.",
+  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
   rating: {
     complexity: 15,
     difficulty: 40,
     luck: 70,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
-  about: [
-    "TriPeaks is a fast, chaining patience played over three overlapping peaks.",
-    "Long unbroken runs feel great, and the whole board can sometimes fall in a single chain.",
-  ],
-  byLine: "Game design by Robert Hogue, 1989",
-  authorName: "Robert Hogue",
+  thumbnail: "TriPeaks.jpg",
+  background: GAME_BACKGROUNDS.castle,
+  cardColorBg: "#24343a",
+  cardColorText: "#e3fcdd",
+  cardDescription:
+    "Clear three peaks by playing cards one rank above or below the waste.",
+  quickStart: ["Play exposed +/-1 to waste; A<->K wraps; draw when stuck."],
   howToPlay: [
     "## Objective",
     "Remove every card from the **three peaks** by building a continuous run on the waste pile.",
@@ -38,4 +32,12 @@ export const tripeaks: GameDefinition = {
     "## Winning",
     "You win when all three peaks are cleared. If the stock is empty with no move available, the game is lost.",
   ],
+  about: [
+    "TriPeaks is a fast, chaining patience played over three overlapping peaks.",
+    "Long unbroken runs feel great, and the whole board can sometimes fall in a single chain.",
+  ],
+  credits: {
+    creators: [GameCreators.RobertHogue],
+    creationDate: "1989",
+  },
 };

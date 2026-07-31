@@ -1,30 +1,24 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const scoundrel: GameDefinition = {
   path: "/scoundrel",
-  tip: {
-    default:
-      "Resolve 3 cards to clear a room. Every other room can be skipped. Equip weapons to increase damage, and use potions to heal.",
-  },
   title: "Scoundrel",
-  thumbnail: "Scoundrel.jpg",
-  cardBack: "Scoundrel.png",
-  background: "wall-tile.jpg",
-  cardColorBg: "#201913",
-  cardColorText: "#fce8e3",
-  cardDescription:
-    "A dungeon crawl where you manage weapon strength and potion usage.",
+  tags: [GameTag.ModernMechanics],
   rating: {
     complexity: 55,
     difficulty: 70,
     luck: 30,
   },
-  tags: [GameTag.ModernMechanics],
-  byLine: "Game design by Zach Gage and Kurt Bieg, 2011",
-  about: [
-    "Scoundrel is a dungeon-crawling solitaire game where planing and strategy truly matters: when to equip, when to take damage, and when to retreat.",
-  ],
-  authorName: "Zach Gage and Kurt Bieg",
+  thumbnail: "Scoundrel.jpg",
+  background: GAME_BACKGROUNDS.wallTile,
+  cardBack: "Scoundrel.png",
+  cardColorBg: "#201913",
+  cardColorText: "#fce8e3",
+  cardDescription:
+    "A dungeon crawl where you manage weapon strength and potion usage.",
+  quickStart: ["Resolve 3 cards to clear a room. Every other room can be skipped. Equip weapons to increase damage, and use potions to heal."],
   howToPlay: [
     "## Objective",
     "- Clear the dungeon by resolving all rooms before running out of health.",
@@ -44,4 +38,13 @@ export const scoundrel: GameDefinition = {
     "- Use barefisted attacks when using your weapon would decrease its value too much.",
     "- Tap the Draw deck to see the remaining cards in the dungeon (the cards are not shown in their true order!).",
   ],
+  about: [
+    "Scoundrel is a dungeon-crawling solitaire game where planing and strategy truly matters: when to equip, when to take damage, and when to retreat.",
+  ],
+  credits: {
+    creators: [GameCreators.ZachGage, GameCreators.KurtBieg],
+    creationDate: "2011",
+  },
+
+
 };

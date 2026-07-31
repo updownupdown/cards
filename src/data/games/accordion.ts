@@ -1,26 +1,24 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const accordion: GameDefinition = {
   path: "/accordion",
   title: "Accordion",
-  thumbnail: "Accordion.jpg",
-  cardBack: "Accordion.png",
-  background: "felt-dark-red.jpg",
-  cardColorBg: "#351219",
-  cardColorText: "#fffccf",
-  cardDescription:
-    "Collapse the whole deck into a single pile, matching adjacent suits or ranks one at a time.",
+  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
   rating: {
     complexity: 10,
     difficulty: 95,
     luck: 65,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
-  about: [
-    "Accordion Solitaire traces its origins to the late 19th century. The earliest known description was published in 1883 by Manhattan-based publisher William B. Dick.",
-    'Originally called "Idle Year" (a humorous nod to its incredibly low win rate of about 1%) it was also historically known as "Methuselah" and "Tower of Babel".',
-  ],
-  byLine: "Game designer unknown; first documented by William B. Dick in 1883",
+  thumbnail: "Accordion.jpg",
+  background: GAME_BACKGROUNDS.feltDarkRed,
+  cardBack: "Accordion.png",
+  cardColorBg: "#351219",
+  cardColorText: "#fffccf",
+  cardDescription:
+    "Collapse the whole deck into a single pile, matching adjacent suits or ranks one at a time.",
+  quickStart: ["Consolidate a pile with another, 1 or 3 spots to its left, if suits or ranks match."],
   howToPlay: [
     "## Objective",
     "Win by collapsing all 52 cards into a **single pile** by stacking matching cards together.",
@@ -34,8 +32,14 @@ export const accordion: GameDefinition = {
     "- **Prioritize Rank Matches over Suits**: Matches based on the same rank are usually more flexible and offer better long-term progression than suit matches. Always look for rank matches first to consolidate high-value piles.",
     "- **Prioritize the 3-Card Jump**: Compacting large chunks of cards opens up new empty spaces and brings previously unreachable cards into play.",
   ],
-  tip: {
-    default:
-      "Consolidate a pile with another, 1 or 3 spots to its left, if suits or ranks match.",
+  about: [
+    "Accordion Solitaire traces its origins to the late 19th century. The earliest known description was published in 1883 by Manhattan-based publisher William B. Dick.",
+    'Originally called "Idle Year" (a humorous nod to its incredibly low win rate of about 1%) it was also historically known as "Methuselah" and "Tower of Babel".',
+  ],
+  credits: {
+    creators: [GameCreators.Unknown],
+    creationDate: "First documented by William B. Dick in 1883",
   },
+
+
 };

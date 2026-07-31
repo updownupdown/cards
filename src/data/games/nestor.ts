@@ -1,28 +1,23 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const nestor: GameDefinition = {
   path: "/nestor",
-  tip: {
-    default: "Discard exposed equal ranks (column bottoms and reserve top).",
-  },
   title: "Nestor",
-  thumbnail: "DefaultThumbnail.jpg",
-  cardBack: "DefaultCardBack.png",
-  background: "felt-dark-blue.jpg",
-  cardColorBg: "#16283f",
-  cardColorText: "#dbe9ff",
-  cardDescription: "Pair off matching ranks to empty every column.",
+  tags: [GameTag.ClassicSolitaire],
   rating: {
     complexity: 15,
     difficulty: 60,
     luck: 65,
   },
-  tags: [GameTag.ClassicSolitaire],
-  about: [
-    "Nestor is a quick matching game where planning the order you break pairs is everything.",
-    "Because matching cards can hide beneath one another, greedy removals often strand a pair.",
-  ],
-  byLine: "Game designer unknown, first documented in 1877",
+  thumbnail: "DefaultThumbnail.jpg",
+  background: GAME_BACKGROUNDS.feltDarkBlue,
+  cardBack: "DefaultCardBack.png",
+  cardColorBg: "#16283f",
+  cardColorText: "#dbe9ff",
+  cardDescription: "Pair off matching ranks to empty every column.",
+  quickStart: ["Discard exposed equal ranks (column bottoms and reserve top)."],
   howToPlay: [
     "## Objective",
     "Discard all 52 cards by removing matching pairs.",
@@ -36,4 +31,14 @@ export const nestor: GameDefinition = {
     "## Winning",
     "Clear the entire board to win. If no two available cards match, the game is over.",
   ],
+  about: [
+    "Nestor is a quick matching game where planning the order you break pairs is everything.",
+    "Because matching cards can hide beneath one another, greedy removals often strand a pair.",
+  ],
+  credits: {
+    creators: [GameCreators.Unknown],
+    creationDate: "First documented in 1877",
+  },
+
+
 };

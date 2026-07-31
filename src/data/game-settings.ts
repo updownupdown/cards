@@ -105,7 +105,7 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         ],
       },
     ],
-    "/solitaire": [
+    "/klondike": [
       {
         key: "drawCount",
         label: "Stock Draw",

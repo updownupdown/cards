@@ -1,28 +1,23 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const russianSolitaire: GameDefinition = {
   path: "/russian-solitaire",
-  tip: {
-    default: "Move any face-up stack; build down in suit; only kings fill.",
-  },
   title: "Russian Solitaire",
-  thumbnail: "RussianSolitaire.jpg",
-  cardColorBg: "#2c1c30",
-  cardColorText: "#f0dcf0",
-  background: "wood-vertical.jpg",
-  cardDescription:
-    "Yukon at its most brutal: haul mixed groups, but build the tableau down in suit.",
+  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
   rating: {
     complexity: 35,
     difficulty: 80,
     luck: 30,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
-  about: [
-    "Russian Solitaire is Yukon with same-suit building, making it one of the toughest games around.",
-    "Freeing buried cards in exactly the right order is the whole puzzle.",
-  ],
-  byLine: "Game designer unknown",
+  thumbnail: "RussianSolitaire.jpg",
+  background: GAME_BACKGROUNDS.woodVertical,
+  cardColorBg: "#2c1c30",
+  cardColorText: "#f0dcf0",
+  cardDescription:
+    "Yukon at its most brutal: haul mixed groups, but build the tableau down in suit.",
+  quickStart: ["Move any face-up stack; build down in suit; only kings fill."],
   howToPlay: [
     "## Objective",
     "Build the four **foundations** up by suit from Ace to King.",
@@ -39,4 +34,13 @@ export const russianSolitaire: GameDefinition = {
     "## Winning",
     "You win when all four foundations are complete.",
   ],
+  about: [
+    "Russian Solitaire is Yukon with same-suit building, making it one of the toughest games around.",
+    "Freeing buried cards in exactly the right order is the whole puzzle.",
+  ],
+  credits: {
+    creators: [GameCreators.Unknown],
+  },
+
+
 };

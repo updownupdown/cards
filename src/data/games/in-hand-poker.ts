@@ -1,30 +1,25 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const inHandPoker: GameDefinition = {
   path: "/in-hand-poker",
-  tip: {
-    default:
-      "Build hand, then bet; bigger bets make rival draw more; reach 10.",
-  },
   title: "In-Hand Poker",
-  thumbnail: "InHandPoker.jpg",
-  cardColorBg: "#123a2a",
-  cardColorText: "#f0d98a",
-  background: "felt-green.jpg",
-  cardDescription:
-    "A pocket poker duel: draw, bet, and out-rank an opponent dealt from the same deck.",
+  tags: [GameTag.ModernMechanics],
   rating: {
     complexity: 30,
     difficulty: 30,
     luck: 50,
   },
-  tags: [GameTag.ModernMechanics],
-  about: [
-    "In-Hand Poker is a solitaire poker game you can play with a single deck.",
-    "The bigger your bet, the more cards your unseen opponent draws — so a strong hand isn't always worth the risk.",
+  thumbnail: "InHandPoker.jpg",
+  background: GAME_BACKGROUNDS.casino,
+  cardColorBg: "#123a2a",
+  cardColorText: "#f0d98a",
+  cardDescription:
+    "A pocket poker duel: draw, bet, and out-rank an opponent dealt from the same deck.",
+  quickStart: [
+    "Build hand, then bet; bigger bets make rival draw more; reach 10.",
   ],
-  byLine: "Game design by John Burton, 2021",
-  authorName: "John Burton",
   howToPlay: [
     "## Objective",
     "Start at **5 points** and reach **10** without dropping to **0**.",
@@ -44,4 +39,12 @@ export const inHandPoker: GameDefinition = {
     "## Jokers (Settings)",
     "- Turn on **Wild Jokers** to add two jokers that count as any card not already in the hand.",
   ],
+  about: [
+    "In-Hand Poker is a solitaire poker game you can play with a single deck.",
+    "The bigger your bet, the more cards your unseen opponent draws — so a strong hand isn't always worth the risk.",
+  ],
+  credits: {
+    creators: [GameCreators.JohnBurton],
+    creationDate: "2021",
+  },
 };

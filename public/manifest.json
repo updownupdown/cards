@@ -1,6 +1,6 @@
 {
-  "name": "Solo Suite",
-  "short_name": "Solo Suite",
+  "name": "SoloSuite",
+  "short_name": "SoloSuite",
   "description": "A collection of solo playing card games.",
   "start_url": "./",
   "scope": "./",

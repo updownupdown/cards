@@ -685,7 +685,6 @@ export default function CardCapture() {
 
   return (
     <GameWrapper
-      tipPhase={game.phase}
       ended={game.ended}
       won={game.won}
       reset={reset}

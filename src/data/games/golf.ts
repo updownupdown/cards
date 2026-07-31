@@ -1,29 +1,24 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const golf: GameDefinition = {
   path: "/golf",
-  tip: {
-    default: "Play exposed +/-1 to waste; no wrap; draw stock when stuck.",
-  },
   title: "Golf",
-  thumbnail: "Golf.jpg",
-  cardBack: "Golf.png",
-  background: "felt-green.jpg",
-  cardColorBg: "#1e4e22",
-  cardColorText: "#e3f6ff",
-  cardDescription:
-    "Clear seven columns by playing cards one rank away from the waste.",
+  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
   rating: {
     complexity: 15,
     difficulty: 50,
     luck: 70,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
-  about: [
-    "Golf Solitaire is a breezy race to sweep seven columns onto a single waste pile.",
-    "It plays fast, but a poorly-timed King can strand an entire column.",
-  ],
-  byLine: "Game designer unknown",
+  thumbnail: "Golf.jpg",
+  background: GAME_BACKGROUNDS.golf,
+  cardBack: "Golf.png",
+  cardColorBg: "#1e4e22",
+  cardColorText: "#e3f6ff",
+  cardDescription:
+    "Clear seven columns by playing cards one rank away from the waste.",
+  quickStart: ["Play exposed +/-1 to waste; no wrap; draw stock when stuck."],
   howToPlay: [
     "## Objective",
     "Remove all 35 tableau cards onto the **waste** pile.",
@@ -38,4 +33,11 @@ export const golf: GameDefinition = {
     "## Winning",
     "You win by clearing every tableau card. If the stock is empty with no move available, the game ends.",
   ],
+  about: [
+    "Golf Solitaire is a breezy race to sweep seven columns onto a single waste pile.",
+    "It plays fast, but a poorly-timed King can strand an entire column.",
+  ],
+  credits: {
+    creators: [GameCreators.Unknown],
+  },
 };

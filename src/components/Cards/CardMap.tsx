@@ -1,7 +1,6 @@
 import { cardDims, PlayingCard } from "@/components/Cards/card-utils";
 import { GAMES_DATA } from "@/data/games-registry";
 import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
-import { useTipsBoxLayout } from "@/hooks/useTipsLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { roundToPixel } from "@/utils/utils";
 import { usePathname } from "expo-router";
@@ -121,9 +120,6 @@ export function useCardMap({
   const ui = useResponsiveUiLayoutFromWidth(screenWidthActual);
   const responsiveScale = ui.scale;
 
-  // Space reserved at the top of the board for the floating tip box.
-  const { reservedHeight: tipsReservedHeight } = useTipsBoxLayout();
-
   useEffect(() => {
     let cancelled = false;
 
@@ -171,11 +167,7 @@ export function useCardMap({
     gridHeightPadded,
   } = useMemo(() => {
     const headerHeight = getHeaderHeightWithInset(insets.top, responsiveScale);
-    const topReserved = roundToPixel(tipsReservedHeight);
-    const containerHeight = Math.max(
-      screenHeightActual - headerHeight - topReserved,
-      0,
-    );
+    const containerHeight = Math.max(screenHeightActual - headerHeight, 0);
     const containerWidth = screenWidthActual;
 
     const gapYUnits = gap * cardDims.aspectRatio;
@@ -215,12 +207,10 @@ export function useCardMap({
 
     const offsetX = (containerWidth - gridWidth) / 2 + paddingLeft * cardWidth;
     const offsetY =
-      topReserved +
-      (containerHeight - gridHeight) / 2 +
-      paddingTop * cardHeight;
+      (containerHeight - gridHeight) / 2 + paddingTop * cardHeight;
 
     const gridStartX = (containerWidth - gridWidth) / 2;
-    const gridStartY = topReserved + (containerHeight - gridHeight) / 2;
+    const gridStartY = (containerHeight - gridHeight) / 2;
 
     return {
       cardWidth,
@@ -249,7 +239,6 @@ export function useCardMap({
     responsiveScale,
     screenHeightActual,
     screenWidthActual,
-    tipsReservedHeight,
   ]);
 
   const zoneBasePosById = useMemo(() => {

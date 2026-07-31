@@ -1,29 +1,23 @@
 import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const bakersGame: GameDefinition = {
   path: "/bakers-game",
-  tip: {
-    default: "Foundations up by suit; tableau down in suit; use 4 cells.",
-  },
   title: "Baker's Game",
-  thumbnail: DEFAULT_GAME_THUMBNAIL,
-  cardColorBg: "#1b2a24",
-  cardColorText: "#dcefe4",
-  background: "felt-dark-green.jpg",
-  cardDescription:
-    "FreeCell's tougher ancestor: build the tableau down in suit, not colour.",
+  tags: [GameTag.TapAndDrag, GameTag.ClassicSolitaire],
   rating: {
     complexity: 25,
     difficulty: 55,
     luck: 30,
   },
-  tags: [GameTag.TapAndDrag, GameTag.ClassicSolitaire],
-  about: [
-    "Baker's Game is the same-suit forerunner of FreeCell, popularised by Martin Gardner.",
-    "Building by suit makes long sequences far harder to assemble, so free cells are precious.",
-  ],
-  byLine: "Game design by C. L. Baker, 1968",
-  authorName: "C. L. Baker",
+  thumbnail: DEFAULT_GAME_THUMBNAIL,
+  background: GAME_BACKGROUNDS.feltDarkGreen,
+  cardColorBg: "#1b2a24",
+  cardColorText: "#dcefe4",
+  cardDescription:
+    "FreeCell's tougher ancestor: build the tableau down in suit, not colour.",
+  quickStart: ["Foundations up by suit; tableau down in suit; use 4 cells."],
   howToPlay: [
     "## Objective",
     "Move all 52 cards to the four **foundations**, each built up by suit from Ace to King.",
@@ -39,4 +33,12 @@ export const bakersGame: GameDefinition = {
     "## Winning",
     "You win when all four foundations are built from Ace to King.",
   ],
+  about: [
+    "Baker's Game is the same-suit forerunner of FreeCell, popularised by Martin Gardner.",
+    "Building by suit makes long sequences far harder to assemble, so free cells are precious.",
+  ],
+  credits: {
+    creators: [GameCreators.CLBaker],
+    creationDate: "1968",
+  },
 };

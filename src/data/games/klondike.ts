@@ -1,26 +1,24 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const klondike: GameDefinition = {
   path: "/klondike",
-  tip: {
-    default: "Foundations up suit; tableau down alt color; kings fill empty.",
-  },
   title: "Klondike",
-  thumbnail: "Klondike.jpg",
-  background: "felt-green.jpg",
-  cardColorBg: "#2c3a2f",
-  cardColorText: "#EEF0FF",
-  cardDescription:
-    "The classic solitaire: build four suit foundations from Ace to King.",
+  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag, GameTag.EasyToLearn],
   rating: {
     complexity: 20,
     difficulty: 35,
     luck: 30,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag, GameTag.EasyToLearn],
-  about: [
-    'Klondike is the solitaire most people simply call "Solitaire".',
-    "Dig through the tableau and stock to free the cards you need and move all 52 to the foundations.",
+  thumbnail: "Klondike.jpg",
+  background: GAME_BACKGROUNDS.yukon,
+  cardColorBg: "#2c3a2f",
+  cardColorText: "#EEF0FF",
+  cardDescription:
+    "The classic solitaire: build four suit foundations from Ace to King.",
+  quickStart: [
+    "Foundations up suit; tableau down alt color; kings fill empty.",
   ],
   howToPlay: [
     "## Objective",
@@ -40,4 +38,11 @@ export const klondike: GameDefinition = {
     "## Winning",
     "You win when every foundation is complete from Ace to King.",
   ],
+  about: [
+    'Klondike is the solitaire most people simply call "Solitaire".',
+    "Dig through the tableau and stock to free the cards you need and move all 52 to the foundations.",
+  ],
+  credits: {
+    creators: [GameCreators.Unknown],
+  },
 };

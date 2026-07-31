@@ -1,30 +1,24 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const dungeonBounty: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/dungeon-bounty",
-  tip: {
-    default: "Use weapons/spells vs foes; survive 2 levels; score bounty+gems.",
-  },
   title: "Dungeon Bounty",
-  thumbnail: "DungeonBounty.jpg",
-  cardColorBg: "#2a1a2e",
-  cardColorText: "#f3d9a4",
-  background: "wall-tile.jpg",
-  cardDescription:
-    "A dungeon-crawling bounty hunt: equip weapons, cast spells, slay beasts, and grab the loot.",
+  enabledOnLocalOnly: true,
+  tags: [GameTag.ModernMechanics],
   rating: {
     complexity: 85,
     difficulty: 75,
     luck: 45,
   },
-  tags: [GameTag.ModernMechanics],
-  about: [
-    "Dungeon Bounty by Theo Peters & Aaron Camponi is a solo dungeon crawler played with one deck.",
-    "Only the single-player mode is implemented. Choose a difficulty in Settings; higher tiers start weaker and enemies gain suit powers.",
-  ],
-  byLine: "Game design by Theo Peters and Aaron Camponi, 2020",
-  authorName: "Theo Peters and Aaron Camponi",
+  thumbnail: "DungeonBounty.jpg",
+  background: GAME_BACKGROUNDS.wallTile,
+  cardColorBg: "#2a1a2e",
+  cardColorText: "#f3d9a4",
+  cardDescription:
+    "A dungeon-crawling bounty hunt: equip weapons, cast spells, slay beasts, and grab the loot.",
+  quickStart: ["Use weapons/spells vs foes; survive 2 levels; score bounty+gems."],
   howToPlay: [
     "## Goal",
     "Survive two dungeon levels and claim as much **bounty and gems** as possible.",
@@ -44,4 +38,14 @@ export const dungeonBounty: GameDefinition = {
     "## Difficulty",
     "Beginner starts at 5 strength and ignores enemy suit powers. Intermediate/Advanced/Bloodlust start weaker and honour club/spade/heart/diamond enemy powers.",
   ],
+  about: [
+    "Dungeon Bounty by Theo Peters & Aaron Camponi is a solo dungeon crawler played with one deck.",
+    "Only the single-player mode is implemented. Choose a difficulty in Settings; higher tiers start weaker and enemies gain suit powers.",
+  ],
+  credits: {
+    creators: [GameCreators.TheoPeters, GameCreators.AaronCamponi],
+    creationDate: "2020",
+  },
+
+
 };

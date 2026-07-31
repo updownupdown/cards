@@ -9,7 +9,14 @@ import {
   transitionStyles,
 } from "@/styles/styles";
 import { useResponsiveUiLayout } from "@/hooks/useResponsiveLayout";
-import { Platform, Pressable, TextStyle, ViewStyle } from "react-native";
+import { useEffect, useRef } from "react";
+import {
+  Animated,
+  Platform,
+  Pressable,
+  TextStyle,
+  ViewStyle,
+} from "react-native";
 import { textStyles } from "@/styles/textStyles";
 import {
   darkenHexColor,
@@ -55,6 +62,8 @@ interface Props {
   uppercase?: boolean;
   taller?: boolean;
   preventWebLongPressMenu?: boolean;
+  autoProgress?: number;
+  autoProgressColor?: string;
 }
 
 export const Button = ({
@@ -79,11 +88,28 @@ export const Button = ({
   onPressOut,
   taller = false,
   preventWebLongPressMenu = false,
+  autoProgress,
+  autoProgressColor = rgba(Colors.white, 0.3),
 }: Props) => {
+  const autoProgressValue = useRef(new Animated.Value(0)).current;
   const { spacing } = useResponsiveMetrics();
   const ui = useResponsiveUiLayout();
   const uiScale = ui.scale;
   const textScale = ui.textScale;
+
+  useEffect(() => {
+    if (autoProgress === undefined) return;
+
+    autoProgressValue.setValue(0);
+    const animation = Animated.timing(autoProgressValue, {
+      toValue: 1,
+      duration: autoProgress,
+      useNativeDriver: false,
+    });
+    animation.start();
+
+    return () => animation.stop();
+  }, [autoProgress, autoProgressValue]);
 
   const webContextMenuProps =
     Platform.OS === "web" && preventWebLongPressMenu
@@ -138,9 +164,9 @@ export const Button = ({
           ...transitionStyles.limited04sec,
           outlineWidth: 0,
           opacity: disabled ? 1 : 1,
-
+          overflow: "hidden", // needed for autoProgress bar
           display: "flex",
-          flexDirection: "row",
+          flexDirection: iconName === "close" ? "row-reverse" : "row",
           justifyContent: "center",
           alignItems: "center",
           width: fullWidth ? "100%" : undefined,
@@ -151,13 +177,7 @@ export const Button = ({
           borderRadius,
           outline: "none",
           boxShadow: height
-            ? `inset 0 0 0 ${roundToPixel(height * 0.03)}px ${rgba(
-                Colors.white,
-                0.2,
-              )}, inset 0 0 ${roundToPixel(height * 0.4)}px ${rgba(
-                Colors.white,
-                0.2,
-              )}, ${roundToPixel(height * 0.04)}px ${roundToPixel(height * 0.08)}px ${roundToPixel(height * 0.24)}px ${rgba(Colors.black, 0.2)}`
+            ? `${roundToPixel(height * 0.04)}px ${roundToPixel(height * 0.08)}px ${roundToPixel(height * 0.24)}px ${rgba(Colors.black, 0.2)}`
             : undefined,
           backgroundColor: textOnly ? undefined : themeColor,
           ...(Platform.OS === "web" && preventWebLongPressMenu
@@ -196,6 +216,22 @@ export const Button = ({
       // Prevent iOS Safari context menu on long-press for hold-to-confirm buttons.
       {...webContextMenuProps}
     >
+      {autoProgress !== undefined && (
+        <Animated.View
+          style={{
+            pointerEvents: "none",
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            width: autoProgressValue.interpolate({
+              inputRange: [0, 1],
+              outputRange: ["0%", "100%"],
+            }),
+            backgroundColor: autoProgressColor,
+          }}
+        />
+      )}
       {iconName && (
         <Icon
           name={iconName}

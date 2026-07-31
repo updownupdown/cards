@@ -1,28 +1,23 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const scorpion: GameDefinition = {
   path: "/scorpion",
-  tip: {
-    default: "Build down in suit; move any face-up stack; kings fill empty.",
-  },
   title: "Scorpion",
-  thumbnail: "Scorpion.jpg",
-  background: "sandstone.jpg",
-  cardColorBg: "#33262A",
-  cardColorText: "#FFE4E8",
-  cardDescription:
-    "Untangle face-up columns into four same-suit runs from King to Ace.",
+  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
   rating: {
     complexity: 0,
     difficulty: 0,
     luck: 0,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
-  about: [
-    "Scorpion is a tense, tangle-heavy cousin of Spider played with a single deck.",
-    "Because you can drag buried cards along with their cover, freeing a key card is a puzzle in itself.",
-  ],
-  byLine: "Game designer unknown, first documented in the 1940s",
+  thumbnail: "Scorpion.jpg",
+  background: GAME_BACKGROUNDS.sahara,
+  cardColorBg: "#33262A",
+  cardColorText: "#FFE4E8",
+  cardDescription:
+    "Untangle face-up columns into four same-suit runs from King to Ace.",
+  quickStart: ["Build down in suit; move any face-up stack; kings fill empty."],
   howToPlay: [
     "## Objective",
     "Build **four complete same-suit sequences**, each running from King down to Ace.",
@@ -40,4 +35,12 @@ export const scorpion: GameDefinition = {
     "## Winning",
     "You win once all four King-to-Ace same-suit sequences are assembled.",
   ],
+  about: [
+    "Scorpion is a tense, tangle-heavy cousin of Spider played with a single deck.",
+    "Because you can drag buried cards along with their cover, freeing a key card is a puzzle in itself.",
+  ],
+  credits: {
+    creators: [GameCreators.Unknown],
+    creationDate: "First documented in the 1940s",
+  },
 };

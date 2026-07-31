@@ -1,29 +1,23 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 
 export const penguin: GameDefinition = {
   path: "/penguin",
-  tip: {
-    default: "From beak rank: foundations up suit; tableau down in suit.",
-  },
   title: "Penguin",
-  thumbnail: "Penguin.jpg",
-  background: "snow.jpg",
-  cardColorBg: "#111b27",
-  cardColorText: "#ff944d",
-  cardDescription:
-    "A FreeCell-like game building suit runs from a random beak rank.",
+  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
   rating: {
     complexity: 0,
     difficulty: 0,
     luck: 0,
   },
-  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
-  about: [
-    "Penguin, by David Parlett, is an open, FreeCell-style patience with everything on show.",
-    "With seven free cells and full information, most deals reward patient, planned play.",
-  ],
-  byLine: "Game design by David Parlett, 1979",
-  authorName: "David Parlett",
+  thumbnail: "Penguin.jpg",
+  background: GAME_BACKGROUNDS.antarctica,
+  cardColorBg: "#111b27",
+  cardColorText: "#ff944d",
+  cardDescription:
+    "A FreeCell-like game building suit runs from a random beak rank.",
+  quickStart: ["From beak rank: foundations up suit; tableau down in suit."],
   howToPlay: [
     "## Objective",
     "Build all four **foundations** up by suit from the beak rank until each holds 13 cards.",
@@ -40,4 +34,12 @@ export const penguin: GameDefinition = {
     "## Winning",
     "You win when all four foundations are complete.",
   ],
+  about: [
+    "Penguin, by David Parlett, is an open, FreeCell-style patience with everything on show.",
+    "With seven free cells and full information, most deals reward patient, planned play.",
+  ],
+  credits: {
+    creators: [GameCreators.DavidParlett],
+    creationDate: "1979",
+  },
 };
