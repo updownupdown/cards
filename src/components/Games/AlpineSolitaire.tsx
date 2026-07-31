@@ -896,7 +896,6 @@ export default function AlpineSolitaire() {
             height: spacing(14),
             backgroundColor: Colors.K750,
             borderRadius: spacing(7),
-            boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(8)}px ${rgba(Colors.black, 0.6)}`,
           }}
         >
           <View
@@ -910,7 +909,7 @@ export default function AlpineSolitaire() {
               minWidth: spacing(14),
               backgroundColor: Colors.win,
               borderRadius: spacing(7),
-              boxShadow: `0 ${spacing(1)}px ${spacing(6)}px ${rgba(Colors.black, 0.3)}`,
+              boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.black, 0.2)}`,
             }}
           />
 
@@ -1059,7 +1058,7 @@ export default function AlpineSolitaire() {
               rotatedText,
               {
                 fontSize: cardWidth * 0.16,
-                color: rgba(cardText, 0.6),
+                color: rgba(cardText, 0.8),
               },
             ]}
           >

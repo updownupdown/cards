@@ -28,7 +28,7 @@ export const rotatedText: TextStyle[] = [
     height: 80,
     position: "absolute",
     top: "50%",
-    left: 8,
+    left: 4,
     textAlign: "center",
     transformOrigin: "top center",
     transform: [{ rotate: `-90deg` }, { translateY: "-50%" }],

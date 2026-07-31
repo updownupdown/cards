@@ -12,7 +12,7 @@ export const acesUp: GameDefinition = {
     luck: 80,
   },
   thumbnail: "AcesUp.jpg",
-  background: GAME_BACKGROUNDS.woodTable,
+  background: GAME_BACKGROUNDS.castle,
   cardBack: "AcesUp.png",
   cardColorBg: "#1d0f0a",
   cardColorText: "#eee0ca",
@@ -42,6 +42,4 @@ export const acesUp: GameDefinition = {
     creators: [GameCreators.Unknown],
     creationDate: "First documented in 1900",
   },
-
-
 };

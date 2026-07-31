@@ -197,7 +197,7 @@ export default function GameModal({
                 size="sm"
                 weight={300}
                 color={rgba(Colors.white, 0.5)}
-                style={{ marginTop: spacing(8), marginBottom: spacing(12) }}
+                style={{ marginBottom: spacing(12) }}
               >
                 No game settings
               </Text>

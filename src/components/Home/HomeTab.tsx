@@ -61,7 +61,7 @@ export function HomeTab({
     0,
     roundToPixel(
       (rowInnerWidth - cardGap * (ui.isTablet ? 2 : 1)) / (ui.isTablet ? 3 : 2),
-    ),
+    ) - 1,
   );
 
   const [scrollY, setScrollY] = useState(0);

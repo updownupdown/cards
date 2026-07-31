@@ -17,6 +17,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 const cardSize = "regular";
 
@@ -240,6 +241,7 @@ function scoreTier(score: number) {
 
 // ========== Component ========== //
 export default function BlackjackRiverResearch() {
+  const { spacing } = useResponsiveMetrics();
   const { cardText } = useGameZoneBackground();
   const [selection, setSelection] = useState<Selection | null>(null);
 
@@ -391,7 +393,7 @@ export default function BlackjackRiverResearch() {
   }
 
   // ── Zones ────────────────────────────────
-  const waterBackground = rgba("#397b8f", 0.45);
+  const waterBackground = rgba("#1a5b6e", 0.45);
 
   const zones: MapZone[] = useMemo(() => {
     const colZones: MapZone[] = [];
@@ -592,7 +594,7 @@ export default function BlackjackRiverResearch() {
     zoneMapper,
     cardSize,
     gap: 0,
-    paddingTop: 0.1,
+    paddingTop: 0.2,
   });
 
   useEffect(() => {
@@ -618,8 +620,10 @@ export default function BlackjackRiverResearch() {
       <View
         style={[
           flexStyles.colStart,
-          flexStyles.spaceAround,
           getZoneStylesById("stats"),
+          {
+            gap: spacing(10),
+          },
         ]}
       >
         <View
@@ -636,6 +640,7 @@ export default function BlackjackRiverResearch() {
             {score}
           </Text>
         </View>
+
         <View
           style={[
             flexStyles.rowCentered,

@@ -64,9 +64,7 @@ export const GameWrapper = ({
   const insets = useSafeAreaInsets();
   const { width: viewportWidth, height: viewportHeight } =
     useViewportDimensions();
-  const ui = useResponsiveUiLayoutFromWidth(
-    Math.min(viewportWidth, viewportHeight),
-  );
+  const ui = useResponsiveUiLayoutFromWidth(viewportWidth, viewportHeight);
   const { settings, isLoading } = useGameSettings(pathname);
   const spacing = (value: number) => value * ui.scale;
 
@@ -228,9 +226,9 @@ export const GameWrapper = ({
                 paddingHorizontal: spacing(layoutDims.pagePadding / 2),
                 borderRadius: spacing(layoutDims.menuBarHeight / 2),
                 backgroundColor: rgba(backgroundColor, 0.8),
-                boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.black, 0.3)}, ${spacing(2)}px ${spacing(4)}px ${spacing(10)}px ${rgba(
+                boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.black, 0.2)}, ${spacing(2)}px ${spacing(4)}px ${spacing(10)}px ${rgba(
                   Colors.black,
-                  0.3,
+                  0.2,
                 )}`,
               },
             ]}

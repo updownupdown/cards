@@ -21,6 +21,7 @@ import { textStyles } from "@/styles/textStyles";
 import {
   darkenHexColor,
   desaturateHexColor,
+  lightenHexColor,
   roundToPixel,
 } from "@/utils/utils";
 import { HexColor } from "@/data/games-data";
@@ -125,6 +126,7 @@ export const Button = ({
     (theme && THEME_COLORS[theme as keyof typeof THEME_COLORS]) ||
     theme ||
     fallbackColor;
+  const borderColor = themeColor;
 
   if (disabled) {
     themeColor = textOnly
@@ -177,7 +179,7 @@ export const Button = ({
           borderRadius,
           outline: "none",
           boxShadow: height
-            ? `${roundToPixel(height * 0.04)}px ${roundToPixel(height * 0.08)}px ${roundToPixel(height * 0.24)}px ${rgba(Colors.black, 0.2)}`
+            ? `inset 0 0 1px 1px ${rgba(lightenHexColor(borderColor, 0.3), disabled ? 0 : 1)}, ${roundToPixel(height * 0.04)}px ${roundToPixel(height * 0.08)}px ${roundToPixel(height * 0.24)}px ${rgba(Colors.black, 0.3)}`
             : undefined,
           backgroundColor: textOnly ? undefined : themeColor,
           ...(Platform.OS === "web" && preventWebLongPressMenu

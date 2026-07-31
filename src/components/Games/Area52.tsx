@@ -30,6 +30,7 @@ import {
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 import { useToast } from "../common/Toast";
+import { Colors, rgba } from "@/styles/styles";
 
 const maxAttackersNum = 3;
 const maxDefendersNum = 6;
@@ -489,8 +490,9 @@ export default function Area52() {
       {/* Titles */}
       <Text
         size="xs"
-        weight={300}
+        weight={400}
         textTransform="uppercase"
+        color={rgba(Colors.white, 0.8)}
         style={[
           {
             position: "absolute",
@@ -504,7 +506,8 @@ export default function Area52() {
       <Text
         textTransform="uppercase"
         size="xs"
-        weight={300}
+        weight={400}
+        color={rgba(Colors.white, 0.8)}
         style={[
           {
             position: "absolute",

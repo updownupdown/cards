@@ -592,7 +592,9 @@ export default function TheBobaTeaShop() {
                 : Colors.cardSelectPurple;
             } else {
               textColor = game.decisionNeeded ? Colors.K600 : Colors.K100;
-              backgroundColor = game.decisionNeeded ? Colors.K800 : Colors.K700;
+              backgroundColor = game.decisionNeeded
+                ? Colors.K800
+                : rgba(Colors.K900, 0.8);
             }
 
             return (
@@ -616,7 +618,7 @@ export default function TheBobaTeaShop() {
                   {
                     alignItems: "flex-end",
                     position: "absolute",
-                    padding: 10,
+                    padding: spacing(10),
                     left: 0,
                     width:
                       cardWidth * 0.4 +
@@ -627,7 +629,7 @@ export default function TheBobaTeaShop() {
                     height: cardWidth * 0.5,
                     borderTopRightRadius: cardWidth * 0.25,
                     borderBottomRightRadius: cardWidth * 0.25,
-                    backgroundColor: backgroundColor,
+                    backgroundColor,
                     zIndex: i * 2 - 2,
                   },
                 ]}

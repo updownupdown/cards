@@ -39,7 +39,7 @@ export const CardMapBackgrounds = ({
   cardHeight,
   zoneMapper,
 }: Props) => {
-  const { zoneBg, cardText, cardBg } = useGameZoneBackground();
+  const { cardText, cardBg } = useGameZoneBackground();
 
   return (
     <>
@@ -176,12 +176,14 @@ export const CardMapBackgrounds = ({
                 justifyContent: "center",
                 alignItems: "center",
                 zIndex,
-                boxShadow: getCardShadow({
-                  cardWidth,
-                  selectColor,
-                  forceSelectColor,
-                  isPlaceholder: true,
-                }),
+                boxShadow: zone.placeholder.hideShadow
+                  ? undefined
+                  : getCardShadow({
+                      cardWidth,
+                      selectColor,
+                      forceSelectColor,
+                      isPlaceholder: true,
+                    }),
                 outline: "none",
               },
             ]}

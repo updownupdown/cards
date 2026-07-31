@@ -7,6 +7,7 @@ import {
 import { Text } from "@/components/common/Text";
 import {
   getConstrainedUiWidth,
+  useResponsiveUiLayout,
   useResponsiveUiLayoutFromWidth,
 } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
@@ -42,7 +43,7 @@ export function DeckPreviewModal({
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);
   const { width: screenWidthActual } = useViewportDimensions();
-  const ui = useResponsiveUiLayoutFromWidth(screenWidthActual);
+  const ui = useResponsiveUiLayout();
   const spacing = (value: number) => roundToPixel(value * ui.scale);
   const modalStyles = useModalStyles();
   const containerWidth = getConstrainedUiWidth(

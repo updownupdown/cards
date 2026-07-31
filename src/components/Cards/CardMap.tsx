@@ -117,7 +117,10 @@ export function useCardMap({
 
   const { width: screenWidthActual, height: screenHeightActual } =
     useViewportDimensions();
-  const ui = useResponsiveUiLayoutFromWidth(screenWidthActual);
+  const ui = useResponsiveUiLayoutFromWidth(
+    screenWidthActual,
+    screenHeightActual,
+  );
   const responsiveScale = ui.scale;
 
   useEffect(() => {

@@ -304,6 +304,7 @@ export default function CribbageSquares() {
         row: 0,
         baseZIndex: 40,
         placeholder: { text: "Deal", infoPos: "right" },
+        fan: { maxVisible: 3 },
       },
       {
         id: "end-game",
@@ -372,7 +373,7 @@ export default function CribbageSquares() {
     };
   };
 
-  const { cardMap, cardWidth, getZoneStylesById } = useCardMap({
+  const { cardMap, getZoneStylesById } = useCardMap({
     game,
     zones,
     zoneMapper,

@@ -6,10 +6,7 @@ const MAX_CONTENT_WIDTH = 420;
 const TABLET_BREAKPOINT = 768;
 const TABLET_SCALE = 1.25;
 
-export type ResponsiveTier = "phone" | "tablet";
-
 export type ResponsiveUiLayout = {
-  tier: ResponsiveTier;
   isTablet: boolean;
   scale: number;
   textScale: number;
@@ -19,20 +16,22 @@ export type ResponsiveUiLayout = {
   gameHeaderHeight: number;
 };
 
-function getResponsiveTier(width: number): ResponsiveTier {
-  return width > TABLET_BREAKPOINT ? "tablet" : "phone";
-}
-
-export function getResponsiveUiLayout(width: number): ResponsiveUiLayout {
-  const tier = getResponsiveTier(width);
-  const isTablet = tier === "tablet";
-  // On phone the scale is 1; on tablet everything grows by TABLET_SCALE.
-  const scale = isTablet ? TABLET_SCALE : 1;
+export function getResponsiveUiLayout(
+  width: number,
+  height: number,
+): ResponsiveUiLayout {
+  const maxDim = Math.min(width, height);
+  const isTablet = maxDim > TABLET_BREAKPOINT;
+  let scale = isTablet ? TABLET_SCALE : 1;
   // Keep text growth gentler than spacing/card surfaces for readability.
-  const textScale = 1 + (scale - 1) * 0.75;
+  let textScale = 1 + (scale - 1) * 0.75;
+
+  // if (isTablet) {
+  //   scale = width / TABLET_BREAKPOINT;
+  //   textScale = width / TABLET_BREAKPOINT;
+  // }
 
   return {
-    tier,
     isTablet,
     scale,
     textScale,
@@ -43,15 +42,13 @@ export function getResponsiveUiLayout(width: number): ResponsiveUiLayout {
   };
 }
 
-export function useResponsiveUiLayout(widthOverride?: number) {
-  const { width } = useViewportDimensions();
-  const resolvedWidth = widthOverride ?? width;
-
-  return useMemo(() => getResponsiveUiLayout(resolvedWidth), [resolvedWidth]);
+export function useResponsiveUiLayout() {
+  const { width, height } = useViewportDimensions();
+  return useMemo(() => getResponsiveUiLayout(width, height), [width, height]);
 }
 
-export function useResponsiveUiLayoutFromWidth(width: number) {
-  return useMemo(() => getResponsiveUiLayout(width), [width]);
+export function useResponsiveUiLayoutFromWidth(width: number, height: number) {
+  return useMemo(() => getResponsiveUiLayout(width, height), [width, height]);
 }
 
 /**

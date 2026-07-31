@@ -23,7 +23,9 @@ export const area52: GameDefinition = {
   cardDescription:
     "Fight off waves of alien invaders before running out of defenders.",
   quickStart: [
-    "Choose 1-2 defenders: higher opposite color, or sum target. Attack to fight, or sacrifice a defender to send attacker back.",
+    "Beat back 2 waves of attackers via attacks or sacrifices.",
+    "Single attacks: opposite color, and of larger or equal value",
+    "Double attacks: sum must be of equal value.",
   ],
   howToPlay: [
     "## Objective",

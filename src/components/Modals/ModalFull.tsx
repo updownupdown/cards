@@ -62,7 +62,7 @@ export default function ModalFull({
               {subtitle && (
                 <Text
                   size="sm"
-                  color={titleColor}
+                  color={Colors.white}
                   weight={300}
                   style={{ opacity: 0.75 }}
                 >
