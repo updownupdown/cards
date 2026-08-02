@@ -1,6 +1,7 @@
 import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const bakersGame: GameDefinition = {
   path: "/bakers-game",
@@ -12,7 +13,8 @@ export const bakersGame: GameDefinition = {
     luck: 30,
   },
   thumbnail: DEFAULT_GAME_THUMBNAIL,
-  background: GAME_BACKGROUNDS.castle,
+  background: GAME_BACKGROUNDS.cherryBlossoms,
+  animation: GameAnimations.CherryBlossom,
   gameColorDark: "#1b2a24",
   gameColorPale: "#dcefe4",
   cardDescription:

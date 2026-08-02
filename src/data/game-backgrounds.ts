@@ -92,10 +92,10 @@ export const GAME_BACKGROUNDS = {
     authorName: "Andrew Shelley",
     authorLink: "https://unsplash.com/@andrewshelley",
   },
-  playground: {
-    source: require("@/assets/backgrounds/playground.jpg"),
-    authorName: "Jinhan Moon",
-    authorLink: "https://unsplash.com/@jinhan_photo",
+  fallLeaves: {
+    source: require("@/assets/backgrounds/fall-leaves.jpg"),
+    authorName: "Piotr Miklaszewski",
+    authorLink: "https://unsplash.com/@p_imik",
   },
   bowling: {
     source: require("@/assets/backgrounds/bowling.jpg"),
@@ -137,6 +137,21 @@ export const GAME_BACKGROUNDS = {
     authorName: "David Clode",
     authorLink: "https://unsplash.com/@davidclode",
   },
+  treeRain: {
+    source: require("@/assets/backgrounds/tree-rain.jpg"),
+    authorName: "Jonathan Klok",
+    authorLink: "https://unsplash.com/@mostly_brave",
+  },
+  greenhouse: {
+    source: require("@/assets/backgrounds/greenhouse.jpg"),
+    authorName: "Jack Prew",
+    authorLink: "https://unsplash.com/@jack_prew",
+  },
+  cherryBlossoms: {
+    source: require("@/assets/backgrounds/cherry-blossoms.jpg"),
+    authorName: "Meriç Dağlı",
+    authorLink: "https://unsplash.com/@meric",
+  },
 } satisfies Record<string, GameBackground>;
 
 export const {
@@ -157,7 +172,7 @@ export const {
   casino2,
   monteCarlo,
   golf,
-  playground,
+  fallLeaves,
   bowling,
   island,
   forest,
@@ -166,4 +181,7 @@ export const {
   swamp,
   city,
   savanah,
+  treeRain,
+  greenhouse,
+  cherryBlossoms,
 } = GAME_BACKGROUNDS;

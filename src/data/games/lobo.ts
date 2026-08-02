@@ -14,7 +14,7 @@ export const lobo: GameDefinition = {
   },
   thumbnail: "Lobo.jpg",
   background: GAME_BACKGROUNDS.forest,
-  animation: GameAnimations.FallingLeaves,
+  animation: GameAnimations.Leaves,
   gameColorDark: "#311a20",
   gameColorPale: "#f7e2ca",
   cardDescription:

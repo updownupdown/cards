@@ -13,7 +13,7 @@ export const empire: GameDefinition = {
     luck: 45,
   },
   background: GAME_BACKGROUNDS.nightSky,
-  animation: GameAnimations.ShimmeringStars,
+  animation: GameAnimations.Stars,
   thumbnail: "Empire.jpg",
   cardBack: "DefaultCardBack.png",
   gameColorDark: "#1d2231",

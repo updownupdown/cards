@@ -14,7 +14,7 @@ export const tripeaks: GameDefinition = {
   },
   thumbnail: "TriPeaks.jpg",
   background: GAME_BACKGROUNDS.yukon,
-  animation: GameAnimations.PassingClouds,
+  animation: GameAnimations.Clouds,
   gameColorDark: "#24343a",
   gameColorPale: "#e3fcdd",
   cardDescription:

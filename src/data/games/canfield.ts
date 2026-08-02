@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations/types";
 
 export const canfield: GameDefinition = {
   path: "/canfield",
@@ -12,6 +13,7 @@ export const canfield: GameDefinition = {
     luck: 0,
   },
   background: GAME_BACKGROUNDS.oldRoom,
+  animation: GameAnimations.Dust,
   gameColorDark: "#311a1e",
   gameColorPale: "#E4F6FF",
   cardDescription:

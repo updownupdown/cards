@@ -14,7 +14,7 @@ export const islandOfCards: GameDefinition = {
   },
   thumbnail: "IslandOfCards.jpg",
   background: GAME_BACKGROUNDS.island,
-  animation: GameAnimations.FlyingBirds,
+  animation: GameAnimations.Birds,
   gameColorDark: "#153846",
   gameColorPale: "#ffe6a3",
   cardDescription:

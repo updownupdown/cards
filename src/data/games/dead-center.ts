@@ -14,7 +14,7 @@ export const deadCenter: GameDefinition = {
   },
   thumbnail: "DeadCenter.jpg",
   background: GAME_BACKGROUNDS.forest,
-  animation: GameAnimations.FallingLeaves,
+  animation: GameAnimations.Leaves,
   cardBack: "DeadCenter.png",
   gameColorDark: "#201207",
   gameColorPale: "#e9f1d9",

@@ -1,6 +1,7 @@
 import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const eightOff: GameDefinition = {
   path: "/eight-off",
@@ -12,7 +13,8 @@ export const eightOff: GameDefinition = {
     luck: 25,
   },
   thumbnail: DEFAULT_GAME_THUMBNAIL,
-  background: GAME_BACKGROUNDS.casino,
+  background: GAME_BACKGROUNDS.treeRain,
+  animation: GameAnimations.Rain,
   gameColorDark: "#101b2b",
   gameColorPale: "#d9e6ff",
   cardDescription:

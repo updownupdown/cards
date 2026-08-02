@@ -14,7 +14,7 @@ export const penguin: GameDefinition = {
   },
   thumbnail: "Penguin.jpg",
   background: GAME_BACKGROUNDS.antarctica,
-  animation: GameAnimations.FallingSnow,
+  animation: GameAnimations.Snow,
   gameColorDark: "#111b27",
   gameColorPale: "#ff944d",
   cardDescription:

@@ -1,6 +1,7 @@
 import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const freecell: GameDefinition = {
   path: "/freecell",
@@ -13,6 +14,7 @@ export const freecell: GameDefinition = {
   },
   thumbnail: DEFAULT_GAME_THUMBNAIL,
   background: GAME_BACKGROUNDS.casino2,
+  animation: GameAnimations.Dust,
   gameColorDark: "#151f2b",
   gameColorPale: "#DDEBFF",
   cardDescription:

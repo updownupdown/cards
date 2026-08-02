@@ -14,7 +14,7 @@ export const cardCapture: GameDefinition = {
   },
   thumbnail: "CardCapture.jpg",
   background: GAME_BACKGROUNDS.field,
-  animation: GameAnimations.PassingClouds,
+  animation: GameAnimations.Clouds,
   cardBack: "CardCapture.png",
   gameColorDark: "#2b2d42",
   gameColorPale: "#d4cdc3",

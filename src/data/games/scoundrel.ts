@@ -14,7 +14,7 @@ export const scoundrel: GameDefinition = {
   },
   thumbnail: "Scoundrel.jpg",
   background: GAME_BACKGROUNDS.stoneTunnel,
-  animation: GameAnimations.FallingEmbers,
+  animation: GameAnimations.Embers,
   cardBack: "Scoundrel.png",
   gameColorDark: "#201913",
   gameColorPale: "#fce8e3",

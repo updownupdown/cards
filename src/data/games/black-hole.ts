@@ -14,7 +14,7 @@ export const blackHole: GameDefinition = {
   },
   thumbnail: "BlackHole.jpg",
   background: GAME_BACKGROUNDS.nightSky,
-  animation: GameAnimations.ShimmeringStars,
+  animation: GameAnimations.Stars,
   cardBack: "DefaultCardBack.png",
   gameColorDark: "#150e25",
   gameColorPale: "#d4cbff",

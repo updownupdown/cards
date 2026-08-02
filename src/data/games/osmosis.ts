@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const osmosis: GameDefinition = {
   path: "/osmosis",
@@ -12,7 +13,8 @@ export const osmosis: GameDefinition = {
     luck: 30,
   },
   thumbnail: "DefaultThumbnail.jpg",
-  background: GAME_BACKGROUNDS.forest,
+  background: GAME_BACKGROUNDS.treeRain,
+  animation: GameAnimations.Rain,
   cardBack: "DefaultCardBack.png",
   gameColorDark: "#123027",
   gameColorPale: "#d5f0d0",

@@ -14,7 +14,7 @@ export const klondike: GameDefinition = {
   },
   thumbnail: "Klondike.jpg",
   background: GAME_BACKGROUNDS.yukon,
-  animation: GameAnimations.PassingClouds,
+  animation: GameAnimations.Clouds,
   gameColorDark: "#2c3a2f",
   gameColorPale: "#EEF0FF",
   cardDescription:

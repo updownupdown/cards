@@ -14,7 +14,7 @@ export const acesUp: GameDefinition = {
   },
   thumbnail: "AcesUp.jpg",
   background: GAME_BACKGROUNDS.castle,
-  animation: GameAnimations.FlyingBirds,
+  animation: GameAnimations.Birds,
   cardBack: "AcesUp.png",
   gameColorDark: "#1d0f0a",
   gameColorPale: "#eee0ca",

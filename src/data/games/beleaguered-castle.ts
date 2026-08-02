@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const beleagueredCastle: GameDefinition = {
   path: "/beleaguered-castle",
@@ -13,6 +14,7 @@ export const beleagueredCastle: GameDefinition = {
   },
   thumbnail: "BeleagueredCastle.jpg",
   background: GAME_BACKGROUNDS.castle,
+  animation: GameAnimations.Clouds,
   cardBack: "DefaultCardBack.png",
   gameColorDark: "#2e2620",
   gameColorPale: "#f0e2c4",

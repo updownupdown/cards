@@ -14,7 +14,7 @@ export const alpineSolitaire: GameDefinition = {
   },
   thumbnail: "AlpineSolitaire.jpg",
   background: GAME_BACKGROUNDS.mountain1,
-  animation: GameAnimations.FallingSnow,
+  animation: GameAnimations.Snow,
   gameColorDark: "#2a3b4d",
   gameColorPale: "#e8f2ff",
   cardDescription:

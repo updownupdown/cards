@@ -125,6 +125,7 @@ export function ResetButton({
         preventWebLongPressMenu
         iconName="reset"
         iconColor={isResetPressed ? (pressedIconColor ?? iconColor) : iconColor}
+        style={{ flex: 1, paddingHorizontal: 0 }}
       />
     </>
   );

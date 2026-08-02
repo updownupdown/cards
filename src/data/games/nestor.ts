@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const nestor: GameDefinition = {
   path: "/nestor",
@@ -12,7 +13,8 @@ export const nestor: GameDefinition = {
     luck: 65,
   },
   thumbnail: "DefaultThumbnail.jpg",
-  background: GAME_BACKGROUNDS.london,
+  background: GAME_BACKGROUNDS.cherryBlossoms,
+  animation: GameAnimations.CherryBlossom,
   cardBack: "DefaultCardBack.png",
   gameColorDark: "#16283f",
   gameColorPale: "#dbe9ff",

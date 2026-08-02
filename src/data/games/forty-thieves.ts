@@ -14,7 +14,7 @@ export const fortyThieves: GameDefinition = {
   },
   thumbnail: "FortyThieves.jpg",
   background: GAME_BACKGROUNDS.field,
-  animation: GameAnimations.FlyingBirds,
+  animation: GameAnimations.Birds,
   gameColorDark: "#2E2D34",
   gameColorPale: "#EFE8FF",
   cardDescription:

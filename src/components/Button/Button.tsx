@@ -16,6 +16,7 @@ import {
   Pressable,
   TextStyle,
   ViewStyle,
+  Easing as RNEasing,
 } from "react-native";
 import { textStyles } from "@/styles/textStyles";
 import {
@@ -105,6 +106,7 @@ export const Button = ({
     const animation = Animated.timing(autoProgressValue, {
       toValue: 1,
       duration: autoProgress,
+      easing: RNEasing.linear,
       useNativeDriver: false,
     });
     animation.start();

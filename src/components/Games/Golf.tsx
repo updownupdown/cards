@@ -125,7 +125,7 @@ export const golfRules = {
 
 // ========== Main Component ========== //
 export default function Golf() {
-  const { colorPale } = useGameZoneBackground();
+  const { colorDark } = useGameZoneBackground();
 
   const {
     isLoaded,
@@ -298,6 +298,7 @@ export default function Golf() {
           size="lg"
           fullWidth
           taller
+          theme={colorDark}
         />
       </View>
     </GameWrapper>

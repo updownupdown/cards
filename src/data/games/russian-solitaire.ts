@@ -14,7 +14,7 @@ export const russianSolitaire: GameDefinition = {
   },
   thumbnail: "RussianSolitaire.jpg",
   background: GAME_BACKGROUNDS.siberia,
-  animation: GameAnimations.FallingSnow,
+  animation: GameAnimations.Snow,
   gameColorDark: "#2c1c30",
   gameColorPale: "#f0dcf0",
   cardDescription:

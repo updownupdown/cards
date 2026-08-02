@@ -14,7 +14,7 @@ export const pyramid: GameDefinition = {
   },
   thumbnail: "Pyramid.jpg",
   background: GAME_BACKGROUNDS.sahara,
-  // animation: GameAnimations.SandStorm,
+  // animation: GameAnimations.Sand,
   gameColorDark: "#251703",
   gameColorPale: "#FFEACC",
   cardDescription:

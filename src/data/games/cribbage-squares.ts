@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const cribbageSquares: GameDefinition = {
   path: "/cribbage-squares",
@@ -13,6 +14,7 @@ export const cribbageSquares: GameDefinition = {
   },
   thumbnail: "CribbageSquares.jpg",
   background: GAME_BACKGROUNDS.casino2,
+  animation: GameAnimations.Dust,
   cardBack: "DefaultCardBack.png",
   gameColorDark: "#263b32",
   gameColorPale: "#f0ead6",

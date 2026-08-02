@@ -1,12 +1,11 @@
 import { Text } from "@/components/common/Text";
-import { INSTRUCTIONS_UNAVAILABLE } from "@/constants/constants";
 import { getGameInfo, normalizeGamePath } from "@/data/game-menu";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, layoutDims, rgba } from "@/styles/styles";
 import { usePathname } from "expo-router";
-import { useEffect, useRef } from "react";
-import { View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { Animated, LayoutChangeEvent, View } from "react-native";
 import { Button } from "../Button/Button";
 import { QuickStart } from "../Modals/RulesModal";
 
@@ -15,14 +14,23 @@ const AUTO_CLOSE_DELAY = 15000; // milliseconds
 type Props = {
   onClose: () => void;
   showRulesModal: () => void;
+  morphProgress: Animated.Value;
 };
 
-export function TipsBox({ onClose, showRulesModal }: Props) {
+export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
   const onCloseRef = useRef(onClose);
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);
   const { spacing, ui } = useResponsiveMetrics();
-  const instruction = gameInfo.quickStart?.join("\n");
+  const [expandedWidth, setExpandedWidth] = useState<number>();
+  const [contentHeight, setContentHeight] = useState<number>();
+  const instructionButtonSize = spacing(layoutDims.menuButtonSize);
+  const sidePadding = spacing(layoutDims.pagePadding / 2);
+  const instructionButtonOffset = expandedWidth
+    ? sidePadding +
+      ((expandedWidth - sidePadding * 2) * 3) / 10 -
+      expandedWidth / 2
+    : 0;
 
   onCloseRef.current = onClose;
 
@@ -34,81 +42,122 @@ export function TipsBox({ onClose, showRulesModal }: Props) {
 
   return (
     <View
+      onLayout={(event: LayoutChangeEvent) => {
+        const { width } = event.nativeEvent.layout;
+        const contentWidth = width - sidePadding * 2;
+        setExpandedWidth((currentWidth) =>
+          currentWidth === contentWidth ? currentWidth : contentWidth,
+        );
+      }}
       style={{
+        width: "100%",
+        maxWidth: ui.contentMaxWidth,
+        alignSelf: "center",
         alignItems: "center",
-        paddingHorizontal: spacing(layoutDims.pagePadding / 2),
+        paddingHorizontal: sidePadding,
       }}
     >
-      <View
-        style={[
-          flexStyles.colCentered,
-          {
-            padding: spacing(12),
-            paddingBottom: spacing(20),
-            gap: spacing(16),
-            outline: "none",
-            width: "100%",
-            maxWidth: ui.contentMaxWidth - spacing(layoutDims.pagePadding),
-            borderRadius: spacing(24),
-            backgroundColor: gameInfo.gameColorDark,
-            boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.black, 0.3)}, ${spacing(2)}px ${spacing(4)}px ${spacing(10)}px ${rgba(
-              Colors.black,
-              0.3,
-            )}`,
-          },
-        ]}
+      <Animated.View
+        style={{
+          maxWidth: ui.contentMaxWidth,
+          alignSelf: "center",
+          width: expandedWidth
+            ? morphProgress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [instructionButtonSize, expandedWidth],
+              })
+            : instructionButtonSize,
+          height: contentHeight
+            ? morphProgress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [instructionButtonSize, contentHeight],
+              })
+            : instructionButtonSize,
+          overflow: "hidden",
+          borderRadius: instructionButtonSize / 2,
+          backgroundColor: gameInfo.gameColorDark,
+          transform: [
+            {
+              translateX: morphProgress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [instructionButtonOffset, 0],
+              }),
+            },
+          ],
+          boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.black, 0.3)}, ${spacing(2)}px ${spacing(4)}px ${spacing(10)}px ${rgba(
+            Colors.black,
+            0.3,
+          )}`,
+        }}
       >
         <View
+          onLayout={(event: LayoutChangeEvent) => {
+            const { height } = event.nativeEvent.layout;
+            setContentHeight((currentHeight) =>
+              currentHeight === height ? currentHeight : height,
+            );
+          }}
           style={[
-            flexStyles.rowCentered,
-            flexStyles.fullWidth,
-            { gap: spacing(12), paddingLeft: spacing(4) },
+            flexStyles.colCentered,
+            {
+              padding: spacing(12),
+              paddingBottom: spacing(20),
+              gap: spacing(16),
+              outline: "none",
+              width: expandedWidth ?? "100%",
+            },
           ]}
         >
-          <Text
-            size="sm"
-            weight={300}
-            color={gameInfo.gameColorPale}
-            style={{ flex: 1 }}
+          <View
+            style={[
+              flexStyles.rowCentered,
+              flexStyles.fullWidth,
+              { gap: spacing(12), paddingLeft: spacing(4) },
+            ]}
           >
-            Quick Start
-          </Text>
+            <Text
+              size="sm"
+              weight={300}
+              color={gameInfo.gameColorPale}
+              style={{ flex: 1 }}
+            >
+              Quick Start
+            </Text>
 
-          <Button
-            size="sm"
-            iconName="instructions"
-            text="View rules"
-            onPress={() => {
-              onClose();
-              showRulesModal();
-            }}
-            theme={rgba(gameInfo.gameColorPale, 0.2)}
-            style={{ paddingLeft: spacing(14) }}
-          />
+            <Button
+              size="sm"
+              iconName="instructions"
+              text="View rules"
+              onPress={() => {
+                onClose();
+                showRulesModal();
+              }}
+              theme={rgba(gameInfo.gameColorPale, 0.2)}
+              style={{ paddingLeft: spacing(14) }}
+            />
 
-          <Button
-            size="sm"
-            iconName="close"
-            text="Close"
-            autoProgress={AUTO_CLOSE_DELAY}
-            autoProgressColor={rgba(gameInfo.gameColorPale, 0.2)}
-            onPress={() => {
-              onClose();
+            <Button
+              size="sm"
+              iconName="close"
+              text="Close"
+              autoProgress={AUTO_CLOSE_DELAY}
+              autoProgressColor={rgba(gameInfo.gameColorPale, 0.2)}
+              onPress={onClose}
+              theme={rgba(gameInfo.gameColorPale, 0.2)}
+              style={{ paddingRight: spacing(9) }}
+            />
+          </View>
+
+          <QuickStart
+            gameInfo={gameInfo}
+            headingColor={gameInfo.gameColorPale}
+            style={{
+              gap: spacing(8),
+              paddingRight: spacing(8),
             }}
-            theme={rgba(gameInfo.gameColorPale, 0.2)}
-            style={{ paddingRight: spacing(9) }}
           />
         </View>
-
-        <QuickStart
-          gameInfo={gameInfo}
-          headingColor={gameInfo.gameColorPale}
-          style={{
-            gap: spacing(8),
-            paddingRight: spacing(8),
-          }}
-        />
-      </View>
+      </Animated.View>
     </View>
   );
 }

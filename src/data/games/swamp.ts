@@ -1,3 +1,4 @@
+import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
 import { GameDefinition, GameTag } from "../games-data";
@@ -13,6 +14,7 @@ export const swamp: GameDefinition = {
     luck: 55,
   },
   background: GAME_BACKGROUNDS.swamp,
+  animation: GameAnimations.Firefly,
   thumbnail: "Swamp.jpg",
   gameColorDark: "#173b32",
   gameColorPale: "#e4f0c2",

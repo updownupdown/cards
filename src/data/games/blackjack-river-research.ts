@@ -14,7 +14,7 @@ export const blackjackRiverResearch: GameDefinition = {
   },
   thumbnail: "BlackjackRiverResearch.jpg",
   background: GAME_BACKGROUNDS.river,
-  animation: GameAnimations.FlyingBirds,
+  animation: GameAnimations.Birds,
   gameColorDark: "#11343d",
   gameColorPale: "#c3e9ff",
   cardDescription:

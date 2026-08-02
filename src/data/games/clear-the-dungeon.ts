@@ -14,7 +14,7 @@ export const clearTheDungeon: GameDefinition = {
   },
   thumbnail: "ClearTheDungeon.jpg",
   background: GAME_BACKGROUNDS.stoneTunnel,
-  animation: GameAnimations.FallingEmbers,
+  animation: GameAnimations.ManaDust,
   gameColorDark: "#352820",
   gameColorPale: "#fff6dc",
   cardDescription:

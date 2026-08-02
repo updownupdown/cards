@@ -1,7 +1,13 @@
 import { Icon } from "@/icons";
 import { Colors } from "@/styles/styles";
 import { useEffect, useRef, useState } from "react";
-import { Animated, Easing, Pressable, type ViewStyle } from "react-native";
+import {
+  Animated,
+  Easing,
+  Platform,
+  Pressable,
+  type ViewStyle,
+} from "react-native";
 
 type Props = {
   isFavorite: boolean;
@@ -45,7 +51,7 @@ export function FavButton({
       toValue: 0,
       duration: 150,
       easing: Easing.inOut(Easing.ease),
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== "web",
     }).start(({ finished }) => {
       if (!finished) {
         flipInProgress.current = false;
@@ -60,7 +66,7 @@ export function FavButton({
         Animated.timing(burstValue, {
           toValue: 1,
           duration: 450,
-          useNativeDriver: true,
+          useNativeDriver: Platform.OS !== "web",
         }).start();
       }
 
@@ -68,7 +74,7 @@ export function FavButton({
         toValue: 1,
         duration: 150,
         easing: Easing.inOut(Easing.ease),
-        useNativeDriver: true,
+        useNativeDriver: Platform.OS !== "web",
       }).start(() => {
         flipInProgress.current = false;
       });

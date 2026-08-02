@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const baroness: GameDefinition = {
   path: "/baroness",
@@ -13,6 +14,7 @@ export const baroness: GameDefinition = {
   },
   thumbnail: "Baroness.jpg",
   background: GAME_BACKGROUNDS.oldRoom,
+  animation: GameAnimations.Dust,
   cardBack: "DefaultCardBack.png",
   gameColorDark: "#3a1620",
   gameColorPale: "#f3d6dd",

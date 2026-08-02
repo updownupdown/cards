@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const accordion: GameDefinition = {
   path: "/accordion",
@@ -12,7 +13,8 @@ export const accordion: GameDefinition = {
     luck: 65,
   },
   thumbnail: "Accordion.jpg",
-  background: GAME_BACKGROUNDS.oldRoom,
+  background: GAME_BACKGROUNDS.fallLeaves,
+  animation: GameAnimations.Leaves,
   cardBack: "Accordion.png",
   gameColorDark: "#351219",
   gameColorPale: "#fffccf",

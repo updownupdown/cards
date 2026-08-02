@@ -14,7 +14,7 @@ export const yukon: GameDefinition = {
   },
   thumbnail: "Yukon.jpg",
   background: GAME_BACKGROUNDS.yukon,
-  animation: GameAnimations.PassingClouds,
+  animation: GameAnimations.Clouds,
   gameColorDark: "#20303a",
   gameColorPale: "#e6f1f7",
   cardDescription:

@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const theBogey: GameDefinition = {
   path: "/the-bogey",
@@ -12,7 +13,8 @@ export const theBogey: GameDefinition = {
     luck: 35,
   },
   thumbnail: "TheBogey.jpg",
-  background: GAME_BACKGROUNDS.castle,
+  background: GAME_BACKGROUNDS.treeRain,
+  animation: GameAnimations.Firefly,
   cardBack: "TheBogey.png",
   gameColorDark: "#0a1e1f",
   gameColorPale: "#ddf0ce",

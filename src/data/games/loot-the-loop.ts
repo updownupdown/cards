@@ -14,7 +14,7 @@ export const lootTheLoop: GameDefinition = {
   },
   thumbnail: "LootTheLoop.jpg",
   background: GAME_BACKGROUNDS.stoneTunnel,
-  animation: GameAnimations.FallingEmbers,
+  animation: GameAnimations.ManaDust,
   cardBack: "LootTheLoop.png",
   gameColorDark: "#1d120e",
   gameColorPale: "#dfd4bd",
