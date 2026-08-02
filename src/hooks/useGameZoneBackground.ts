@@ -8,8 +8,8 @@ export function useGameZoneBackground(opacity = 0.7) {
   const fallbackColor = Colors.background;
 
   return {
-    zoneBg: rgba(gameInfo?.cardColorBg ?? fallbackColor, opacity),
-    cardBg: gameInfo?.cardColorBg ?? fallbackColor,
-    cardText: gameInfo?.cardColorText ?? Colors.K100,
+    colorZone: rgba(gameInfo?.gameColorDark ?? fallbackColor, opacity),
+    colorDark: gameInfo?.gameColorDark ?? fallbackColor,
+    colorPale: gameInfo?.gameColorPale ?? Colors.K100,
   };
 }

@@ -33,7 +33,7 @@ const maxMarkedPaths = 3;
 
 export type LoopRank = PlayingCard["rank"] | "Joker";
 
-type LoopCard = {
+export type LoopCard = {
   id: string;
   suit: CardSuit;
   rank: LoopRank;
@@ -81,6 +81,12 @@ function getLoopDeck(): LoopCard[] {
 
   return deck;
 }
+
+export const lootTheLoopRules = {
+  isBadStartCard,
+  getLoopDeck,
+  maxMarkedPaths,
+};
 
 const gameStateInitial: GameState = {
   deck: [],

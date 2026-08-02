@@ -14,8 +14,8 @@ export const monteCarlo: GameDefinition = {
   thumbnail: "MonteCarlo.jpg",
   background: GAME_BACKGROUNDS.monteCarlo,
   cardBack: "MonteCarlo.png",
-  cardColorBg: "#152635",
-  cardColorText: "#b1dada",
+  gameColorDark: "#152635",
+  gameColorPale: "#b1dada",
   cardDescription: "Match adjacent pairs of equal rank to clear a 5×5 grid.",
   quickStart: ["Tap adjacent equal ranks to clear; consolidate for new pairs."],
   howToPlay: [

@@ -13,8 +13,8 @@ export const eightOff: GameDefinition = {
   },
   thumbnail: DEFAULT_GAME_THUMBNAIL,
   background: GAME_BACKGROUNDS.casino,
-  cardColorBg: "#101b2b",
-  cardColorText: "#d9e6ff",
+  gameColorDark: "#101b2b",
+  gameColorPale: "#d9e6ff",
   cardDescription:
     "A roomy, same-suit FreeCell relative with eight cells and Kings-only columns.",
   quickStart: ["Use 8 cells; tableau down in suit; only kings fill empty."],

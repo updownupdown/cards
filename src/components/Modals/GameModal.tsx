@@ -7,11 +7,10 @@ import {
   useGameSpecificSettings,
 } from "@/hooks/useGameSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
 import { Colors, rgba } from "@/styles/styles";
-import { lightenHexColor } from "@/utils/utils";
+import { darkenHexColor, lightenHexColor } from "@/utils/utils";
 import { usePathname } from "expo-router";
 import { useRef } from "react";
 import { Linking, ScrollView, View, ViewStyle } from "react-native";
@@ -23,8 +22,10 @@ import {
 } from "../../data/game-menu";
 import { Button } from "../Button/Button";
 import { SettingControl } from "../common/SettingControl";
+import { FavButton } from "../Home/FavButton";
 import ModalFull, { ModalHeading } from "./ModalFull";
 import { RatingsBars } from "../Home/RatingBars";
+import { shouldReloadGameAfterSettingChange } from "./game-modal-policy";
 
 type Props = {
   onClose: () => void;
@@ -54,11 +55,15 @@ export default function GameModal({
     key: K,
     value: GameSettings[K],
   ) {
-    if (settings && value !== settings[key]) {
-      const definition = gameSpecificSettings.find((s) => s.key === key);
-      if (definition?.applyBehavior === "next-game") {
-        reloadOnCloseRef.current = true;
-      }
+    const definition = gameSpecificSettings.find((s) => s.key === key);
+    if (
+      shouldReloadGameAfterSettingChange(
+        settings?.[key],
+        value,
+        definition?.applyBehavior,
+      )
+    ) {
+      reloadOnCloseRef.current = true;
     }
     void updateSettings({ [key]: value } as Partial<GameSettings>);
   }
@@ -76,13 +81,13 @@ export default function GameModal({
       <ModalFull
         onClose={handleClose}
         title={gameInfo.title}
-        titleColor={gameInfo.cardColorText}
+        titleColor={gameInfo.gameColorPale}
         subtitle={
           gameInfo.credits?.creators?.length
             ? `by ${gameInfo.credits.creators.join(", ")}`
             : undefined
         }
-        backgroundColor={gameInfo.cardColorBg}
+        backgroundColor={gameInfo.gameColorDark}
       >
         {/* Scroll view */}
         <ScrollView
@@ -90,18 +95,19 @@ export default function GameModal({
           showsVerticalScrollIndicator={false}
         >
           {/* Stats and favourite */}
-          <View style={modalStyles.statsAndFav}>
-            <Button
-              onPress={() =>
-                updateSettings({ isFavorite: !settings.isFavorite })
-              }
-              iconName={settings.isFavorite ? "star" : "star-outline"}
-              size="xs"
-              textOnly
+          <View
+            style={[
+              modalStyles.statsAndFav,
+              { backgroundColor: darkenHexColor(gameInfo.gameColorDark, 0.2) },
+            ]}
+          >
+            <FavButton
+              isFavorite={settings.isFavorite}
+              onToggleFavorite={(nextFavorite) => {
+                void updateSettings({ isFavorite: nextFavorite });
+              }}
+              size={42}
               iconSize={42}
-              iconColor={
-                settings.isFavorite ? Colors.favoriteStar : Colors.accentBlue
-              }
             />
 
             <View style={modalStyles.stats}>
@@ -148,10 +154,9 @@ export default function GameModal({
           >
             {/* Game Settings */}
             <ModalHeading
-              color={gameInfo.cardColorText}
+              color={gameInfo.gameColorPale}
               title="Settings"
               iconName="settings"
-              topBorder
             />
 
             {gameSpecificSettings.map((setting) => (
@@ -163,10 +168,9 @@ export default function GameModal({
                   {
                     alignItems: "flex-start",
                     padding: spacing(16),
-                    marginVertical: spacing(6),
-                    borderRadius: spacing(8),
+                    borderRadius: spacing(12),
                     backgroundColor: lightenHexColor(
-                      gameInfo.cardColorBg,
+                      gameInfo.gameColorDark,
                       0.08,
                     ),
                   },
@@ -174,7 +178,7 @@ export default function GameModal({
               >
                 <SettingControl
                   label={setting.label}
-                  labelColor={gameInfo.cardColorText}
+                  labelColor={gameInfo.gameColorPale}
                   helpText={setting.description}
                   applyBehaviorText={getSettingApplyBehaviorText(
                     setting.applyBehavior,
@@ -193,34 +197,34 @@ export default function GameModal({
             ))}
 
             {gameSpecificSettings.length === 0 && (
-              <Text
-                size="sm"
-                weight={300}
-                color={rgba(Colors.white, 0.5)}
-                style={{ marginBottom: spacing(12) }}
-              >
+              <Text size="sm" weight={300} color={rgba(Colors.white, 0.5)}>
                 No game settings
               </Text>
             )}
 
             {/* About */}
             {gameInfo.about && (
-              <>
+              <View
+                style={[
+                  flexStyles.colStart,
+                  flexStyles.fullWidth,
+                  { gap: spacing(2), marginTop: spacing(20) },
+                ]}
+              >
                 <ModalHeading
-                  color={gameInfo.cardColorText}
+                  color={gameInfo.gameColorPale}
                   title="About"
                   iconName="info"
-                  topBorder
                 />
 
                 <RichText content={gameInfo.about} size="md" weight={300} />
-              </>
+              </View>
             )}
 
             {/* Stats */}
             <RatingsBars
               rating={gameInfo.rating}
-              gameColor={gameInfo.cardColorText}
+              gameColor={gameInfo.gameColorPale}
               style={{ marginBottom: spacing(30) }}
             />
 
@@ -235,7 +239,7 @@ export default function GameModal({
                 handleClose();
                 showRulesModal();
               }}
-              theme={rgba(gameInfo.cardColorText, 0.2)}
+              theme={rgba(gameInfo.gameColorPale, 0.2)}
               taller
               fullWidth
               style={{ marginTop: spacing(30) }}
@@ -272,19 +276,23 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
         flexStyles.spaceBetween,
         {
           gap: spacing(12),
+          padding: spacing(20),
+          paddingTop: spacing(16),
+          borderRadius: spacing(12),
+          borderWidth: 1,
+          borderColor: rgba(gameInfo.gameColorPale, 0.2),
         },
         style,
       ]}
     >
       <ModalHeading
-        color={gameInfo.cardColorText}
+        color={gameInfo.gameColorPale}
         title="Credits"
         iconName="attribution"
-        topBorder
       />
 
       {credits.creators?.length && (
-        <Text size="md" weight={300} color={Colors.white}>
+        <Text size="sm" weight={300} color={Colors.white}>
           Game design:{" "}
           {credits.creators.map((creator, index) => {
             const creatorLink = CREATOR_LINKS[creator];
@@ -294,7 +302,7 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
                 {index > 0 && ", "}
                 {creatorLink ? (
                   <Text
-                    size="md"
+                    size="sm"
                     weight={500}
                     color={Colors.accentBlue}
                     onPress={() => void Linking.openURL(creatorLink)}
@@ -313,11 +321,11 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
       )}
 
       {background?.authorName && (
-        <Text size="md" weight={300} color={Colors.white}>
+        <Text size="sm" weight={300} color={Colors.white}>
           Background image:{" "}
           {backgroundAuthorLink ? (
             <Text
-              size="md"
+              size="sm"
               weight={500}
               color={Colors.accentBlue}
               onPress={() => void Linking.openURL(backgroundAuthorLink)}

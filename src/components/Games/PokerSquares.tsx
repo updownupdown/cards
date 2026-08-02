@@ -31,6 +31,8 @@ type GameState = {
   won: boolean;
 };
 
+export type PokerSquaresGameState = GameState;
+
 const gameStateInitial: GameState = {
   deck: [],
   grid: Array.from({ length: GRID_SIZE * GRID_SIZE }, () => null),
@@ -44,6 +46,8 @@ function cardValue(card: PlayingCard) {
 }
 
 function handCategory(hand: PlayingCard[]) {
+  if (hand.length !== GRID_SIZE) return 0;
+
   const values = hand.map(cardValue).sort((a, b) => b - a);
   const uniqueValues = [...new Set(values)];
   const isFlush = hand.every((card) => card.suit === hand[0].suit);
@@ -104,6 +108,33 @@ function revealDeckTop(deck: PlayingCard[]) {
   if (card) deck[topIndex] = flipToFace(card);
 }
 
+function placeCardOnGrid(state: GameState, index: number) {
+  if (state.ended || state.grid[index] || !top(state.deck)) return false;
+
+  const card = state.deck.pop();
+  if (!card || state.grid[index]) return false;
+
+  state.grid[index] = flipToFace(card);
+  revealDeckTop(state.deck);
+  if (state.grid.every((cell) => cell !== null)) {
+    state.score = scoreGrid(state.grid);
+    state.ended = true;
+    state.won = state.score >= TARGET_SCORE;
+  }
+  return true;
+}
+
+export const pokerSquaresRules = {
+  cardValue,
+  handCategory,
+  scoreGrid,
+  revealDeckTop,
+  placeCard: placeCardOnGrid,
+  gridSize: GRID_SIZE,
+  targetScore: TARGET_SCORE,
+  americanPoints: AMERICAN_POINTS,
+};
+
 async function resetAndSetup(
   setGame: (updater: (draft: GameState) => void) => void,
 ) {
@@ -133,16 +164,7 @@ export default function PokerSquares() {
 
     saveUndoState(structuredClone(game));
     setGame((draft) => {
-      const card = draft.deck.pop();
-      if (!card || draft.grid[index]) return;
-
-      draft.grid[index] = flipToFace(card);
-      revealDeckTop(draft.deck);
-      if (draft.grid.every((cell) => cell !== null)) {
-        draft.score = scoreGrid(draft.grid);
-        draft.ended = true;
-        draft.won = draft.score >= TARGET_SCORE;
-      }
+      placeCardOnGrid(draft, index);
     });
   }
 

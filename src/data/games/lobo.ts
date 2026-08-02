@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const lobo: GameDefinition = {
   path: "/lobo",
@@ -13,8 +14,9 @@ export const lobo: GameDefinition = {
   },
   thumbnail: "Lobo.jpg",
   background: GAME_BACKGROUNDS.forest,
-  cardColorBg: "#311a20",
-  cardColorText: "#f7e2ca",
+  animation: GameAnimations.FallingLeaves,
+  gameColorDark: "#311a20",
+  gameColorPale: "#f7e2ca",
   cardDescription:
     "Empty the Wolf's hand through clever captures — and know when to fold.",
   quickStart: [

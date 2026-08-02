@@ -41,6 +41,8 @@ const params = {
 
 type SchoolEntry = { school: PlayingCard; fisherman: PlayingCard | null };
 
+export type BlackjackRiverSchoolEntry = SchoolEntry;
+
 type GameState = {
   station: PlayingCard[];
   discard: PlayingCard[];
@@ -50,6 +52,8 @@ type GameState = {
   breakthroughs: string[];
   ended: boolean;
 };
+
+export type BlackjackRiverGameState = GameState;
 
 type Selection = { hand: number } | { transfer: number; target?: number };
 
@@ -239,10 +243,26 @@ function scoreTier(score: number) {
   return "Your records add little to the understanding of the river.\n\n🐟";
 }
 
+export const blackjackRiverResearchRules = {
+  isFisherman,
+  isSchool,
+  schoolFish,
+  fishermanCatch,
+  entryFish,
+  columnTotal,
+  evaluateStudy,
+  studyPhase,
+  drawPhase,
+  resolveTurn,
+  scoreTier,
+  targetFish: params.targetFish,
+  collapseFish: params.collapseFish,
+};
+
 // ========== Component ========== //
 export default function BlackjackRiverResearch() {
   const { spacing } = useResponsiveMetrics();
-  const { cardText } = useGameZoneBackground();
+  const { colorPale } = useGameZoneBackground();
   const [selection, setSelection] = useState<Selection | null>(null);
 
   const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
@@ -633,10 +653,10 @@ export default function BlackjackRiverResearch() {
             flexStyles.spaceBetween,
           ]}
         >
-          <Text size="sm" color={cardText}>
+          <Text size="sm" color={colorPale}>
             Score:
           </Text>
-          <Text size="sm" weight={500} color={cardText}>
+          <Text size="sm" weight={500} color={colorPale}>
             {score}
           </Text>
         </View>
@@ -648,10 +668,10 @@ export default function BlackjackRiverResearch() {
             flexStyles.spaceBetween,
           ]}
         >
-          <Text size="sm" color={cardText}>
+          <Text size="sm" color={colorPale}>
             Studies:
           </Text>
-          <Text size="sm" weight={500} color={cardText}>
+          <Text size="sm" weight={500} color={colorPale}>
             {game.studyCount}
           </Text>
         </View>
@@ -695,7 +715,11 @@ export default function BlackjackRiverResearch() {
               size="md"
               weight={500}
               color={
-                near ? Colors.accentGreen : danger ? Colors.accentRed : cardText
+                near
+                  ? Colors.accentGreen
+                  : danger
+                    ? Colors.accentRed
+                    : colorPale
               }
             >
               {total}

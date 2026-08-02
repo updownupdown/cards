@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import {
   GameSettings,
   DEFAULT_GAME_SETTINGS,
@@ -33,15 +33,20 @@ function emitGameSettings(path: string, settings: GameSettings) {
 
 export function useGameSettings(pathname: string) {
   const [settings, setSettings] = useState<GameSettings | undefined>(undefined);
+  const settingsRef = useRef<GameSettings | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
 
   const normalizedPath = normalizeGamePath(pathname);
+  const applySettings = (nextSettings: GameSettings) => {
+    settingsRef.current = nextSettings;
+    setSettings(nextSettings);
+  };
 
   useEffect(() => {
     let active = true;
     loadGameSettingsMap().then((map) => {
       if (active) {
-        setSettings(getGameSettings(map, normalizedPath));
+        applySettings(getGameSettings(map, normalizedPath));
         setIsLoading(false);
       }
     });
@@ -52,12 +57,16 @@ export function useGameSettings(pathname: string) {
   }, [normalizedPath]);
 
   useEffect(() => {
-    return subscribeToGameSettings(normalizedPath, setSettings);
+    return subscribeToGameSettings(normalizedPath, applySettings);
   }, [normalizedPath]);
 
   const updateSettings = async (updates: Partial<GameSettings>) => {
     // Optimistic update, broadcast to every instance for this game path.
-    const nextSettings = { ...DEFAULT_GAME_SETTINGS, ...settings, ...updates };
+    const nextSettings = {
+      ...DEFAULT_GAME_SETTINGS,
+      ...settingsRef.current,
+      ...updates,
+    };
     emitGameSettings(normalizedPath, nextSettings);
 
     // Background save

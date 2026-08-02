@@ -27,6 +27,8 @@ export function useModalStyles() {
           boxShadow: `1px 2px 10px ${rgba(Colors.black, 0.3)}, 2px 4px 20px ${rgba(Colors.black, 0.3)}`,
         },
         modalHeader: {
+          position: "relative",
+          zIndex: 2,
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
@@ -42,6 +44,8 @@ export function useModalStyles() {
         },
         scrollContent: {
           ...flexStyles.colCentered,
+          position: "relative",
+          zIndex: 1,
           padding: spacing(30),
           paddingTop: spacing(10),
           paddingBottom: spacing(40),
@@ -55,6 +59,9 @@ export function useModalStyles() {
           ...flexStyles.fullWidth,
           justifyContent: "space-between",
           gap: spacing(20),
+          padding: spacing(12),
+          paddingRight: spacing(20),
+          borderRadius: spacing(12),
         },
         stats: {
           ...flexStyles.rowCentered,

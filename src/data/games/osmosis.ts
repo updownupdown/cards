@@ -14,8 +14,8 @@ export const osmosis: GameDefinition = {
   thumbnail: "DefaultThumbnail.jpg",
   background: GAME_BACKGROUNDS.forest,
   cardBack: "DefaultCardBack.png",
-  cardColorBg: "#123027",
-  cardColorText: "#d5f0d0",
+  gameColorDark: "#123027",
+  gameColorPale: "#d5f0d0",
   cardDescription:
     "Seep each suit onto its row, but only once the rank above has arrived.",
   quickStart: [

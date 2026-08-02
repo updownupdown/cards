@@ -24,6 +24,8 @@ type GameState = {
   won: boolean;
 };
 
+export type BeleagueredCastleGameState = GameState;
+
 const gameStateInitial: GameState = {
   columns: Array.from({ length: columnCount }, () => []),
   foundations: Array.from({ length: 4 }, () => []),
@@ -99,7 +101,9 @@ function anyLegalMove(state: GameState) {
   return false;
 }
 
-function evaluateEnd(state: GameState) {
+function evaluateEnd(state: GameState, isSettingUp = false) {
+  if (isSettingUp) return { ended: false, won: false };
+
   if (state.foundations.every((f) => f.length === 13)) {
     return { ended: true, won: true };
   }
@@ -107,28 +111,43 @@ function evaluateEnd(state: GameState) {
   return { ended: false, won: false };
 }
 
+export const beleagueredCastleRules = {
+  canStackDown,
+  canPlaceFoundation,
+  anyLegalMove,
+  evaluateEnd,
+};
+
 // ========== Main Component ========== //
 export default function BeleagueredCastle() {
   const [selectedCol, setSelectedCol] = useState<number | undefined>(undefined);
 
-  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
-    useStateManager({
-      resetAndSetup: async () => {
-        await resetAndSetup(setGame);
-      },
-      gameStateInitial,
-      resetNonGameStates: () => setSelectedCol(undefined),
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+    resetNonGameStates: () => setSelectedCol(undefined),
+  });
 
   useEffect(() => {
-    const { ended, won } = evaluateEnd(game);
+    const { ended, won } = evaluateEnd(game, isSettingUp);
     if (ended !== game.ended || won !== game.won) {
       setGame((draft) => {
         draft.ended = ended;
         draft.won = won;
       });
     }
-  }, [game]);
+  }, [game, isSettingUp, setGame]);
 
   const foundationTotal = useMemo(
     () => game.foundations.reduce((sum, f) => sum + f.length, 0),

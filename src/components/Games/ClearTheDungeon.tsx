@@ -49,21 +49,21 @@ const LAYOUT = {
   } as Record<number, number[]>,
 };
 
-type Placement = {
+export type ClearDungeonPlacement = {
   card: PlayingCard;
   role: "attack" | "trigger";
   doubled?: boolean;
 };
-type Slot = {
+export type ClearDungeonSlot = {
   monster: PlayingCard;
   row: number;
   x: number;
   defeated: boolean;
-  placed: Placement[];
+  placed: ClearDungeonPlacement[];
 };
 
-type GameState = {
-  slots: Slot[];
+export type ClearDungeonGameState = {
+  slots: ClearDungeonSlot[];
   deck: PlayingCard[];
   hand: PlayingCard[];
   reserve: PlayingCard[];
@@ -74,6 +74,8 @@ type GameState = {
   ended: boolean;
   won: boolean;
 };
+
+type GameState = ClearDungeonGameState;
 
 const gameStateInitial: GameState = {
   slots: [],
@@ -123,7 +125,7 @@ function attackValue(card: PlayingCard, boomer: boolean) {
 function monsterPower(monster: PlayingCard) {
   return rankValue(monster); // J=11, Q=12, K=13
 }
-function attackerSum(slot: Slot, boomer: boolean) {
+function attackerSum(slot: ClearDungeonSlot, boomer: boolean) {
   return slot.placed
     .filter((p) => p.role === "attack")
     .reduce(
@@ -131,7 +133,7 @@ function attackerSum(slot: Slot, boomer: boolean) {
       0,
     );
 }
-function isAttackable(slots: Slot[], idx: number) {
+function isAttackable(slots: ClearDungeonSlot[], idx: number) {
   const s = slots[idx];
   if (s.defeated) return false;
   return !slots.some(
@@ -139,7 +141,7 @@ function isAttackable(slots: Slot[], idx: number) {
   );
 }
 function canPlace(
-  slots: Slot[],
+  slots: ClearDungeonSlot[],
   idx: number,
   card: PlayingCard,
   boomer: boolean,
@@ -162,10 +164,19 @@ function canPlace(
   return false;
 }
 
+export const clearTheDungeonRules = {
+  attackValue,
+  monsterPower,
+  attackerSum,
+  isAttackable,
+  canPlace,
+  maxDamage,
+};
+
 // ── Component ────────────────────────────────────────────────────────────────
 export default function ClearTheDungeon() {
   const { spacing } = useResponsiveMetrics();
-  const { cardText } = useGameZoneBackground();
+  const { colorPale } = useGameZoneBackground();
   const level = useGameSettingValue("dungeonLevel") as number;
   const boomer = useGameSettingValue("boomerAce") as boolean;
   const powerReserveOn = useGameSettingValue("powerReserve") as boolean;
@@ -241,7 +252,7 @@ export default function ClearTheDungeon() {
 
           const layout =
             LAYOUT.rows[settingsRef.current.level] ?? LAYOUT.rows[1];
-          const slots: Slot[] = [];
+          const slots: ClearDungeonSlot[] = [];
           let k = 0;
           for (let r = 0; r < layout.length; r += 1) {
             const size = layout[r];
@@ -805,7 +816,7 @@ export default function ClearTheDungeon() {
                 {
                   left: 0,
                   fontSize: cardWidth * 0.16,
-                  color: rgba(cardText, 0.6),
+                  color: rgba(colorPale, 0.6),
                 },
               ]}
             >

@@ -40,6 +40,8 @@ type GameState = {
   usingJokers?: boolean;
 };
 
+export type IslandOfCardsGameState = GameState;
+
 const gameStateInitial: GameState = {
   grid: Array.from({ length: CELLS }, () => null),
   draw: [],
@@ -159,11 +161,25 @@ function afterResolve(draft: GameState) {
   }
 }
 
+export const islandOfCardsRules = {
+  orthNeighbours,
+  allNeighbours,
+  isWild,
+  adjacentByOne,
+  isLegalPlacement,
+  legalCells,
+  xCells,
+  afterResolve,
+  size: SIZE,
+  cells: CELLS,
+  baseScore,
+};
+
 // ── Component ────────────────────────────────────────────────────────────────
 export default function IslandOfCards() {
   const showToast = useToast();
   const { spacing } = useResponsiveMetrics();
-  const { cardText } = useGameZoneBackground();
+  const { colorPale } = useGameZoneBackground();
   const useJokers = useGameSettingValue("islandJokers");
   const jokersRef = useRef(useJokers);
   jokersRef.current = useJokers;
@@ -362,7 +378,7 @@ export default function IslandOfCards() {
         <ProgressBar
           progressValue={filled}
           totalValue={CELLS}
-          color={cardText}
+          color={colorPale}
           scaledHeight={cardHeight * 0.2}
         />
       </View>

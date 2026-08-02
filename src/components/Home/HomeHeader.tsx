@@ -82,7 +82,7 @@ export function HomeHeader({ onOpenSearch, onOpenSettings }: HomeHeaderProps) {
               iconName="search"
               onPress={onOpenSearch}
               style={[styles.headerBtn]}
-              iconColor={rgba(Colors.white, 0.6)}
+              iconColor={rgba(Colors.white, 0.7)}
             />
 
             <Button
@@ -91,7 +91,7 @@ export function HomeHeader({ onOpenSearch, onOpenSettings }: HomeHeaderProps) {
               iconName="menu"
               onPress={onOpenSettings}
               style={[styles.headerBtn]}
-              iconColor={rgba(Colors.white, 0.6)}
+              iconColor={rgba(Colors.white, 0.7)}
             />
           </View>
         </View>

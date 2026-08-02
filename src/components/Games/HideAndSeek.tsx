@@ -40,45 +40,54 @@ const guessZonesColRows: ColRows[] = [
   { c: 0, r: 2 },
 ];
 
+function permutations<T>(items: T[]): T[][] {
+  if (items.length <= 1) return [items];
+  return items.flatMap((item, index) =>
+    permutations([...items.slice(0, index), ...items.slice(index + 1)]).map(
+      (rest) => [item, ...rest],
+    ),
+  );
+}
+
 function dealPlaymates(faceCards: PlayingCard[]) {
   const jacks = shuffle(faceCards.filter((c) => c.rank === "J"));
   const queens = shuffle(faceCards.filter((c) => c.rank === "Q"));
   const kings = shuffle(faceCards.filter((c) => c.rank === "K"));
 
-  // Find a partition of 4 columns where each column has J/Q/K with distinct suits
-  for (let attempt = 0; attempt < 100; attempt += 1) {
-    const cols: [PlayingCard, PlayingCard, PlayingCard][] = [];
-    const qPool = shuffle(queens);
-    const kPool = shuffle(kings);
-
-    let ok = true;
-
-    for (let c = 0; c < gridCols; c += 1) {
-      const j = jacks[c];
-      const q = qPool[c];
-      const k = kPool[c];
-      const suitSet = new Set([j.suit, q.suit, k.suit]);
-      if (suitSet.size !== 3) {
-        ok = false;
-        break;
-      }
-      cols.push([j, q, k]);
-    }
-
-    if (!ok) continue;
-
-    const shuffledColumns = shuffle(cols).map((col) => shuffle(col));
-
-    const out: PlayingCard[] = [];
-    for (let r = 0; r < gridRows; r += 1) {
-      for (let c = 0; c < gridCols; c += 1) {
-        out.push(shuffledColumns[c][r]);
-      }
-    }
-    return out;
+  if (
+    jacks.length !== gridCols ||
+    queens.length !== gridCols ||
+    kings.length !== gridCols
+  ) {
+    throw new Error("Hide and Seek requires four Jacks, Queens, and Kings.");
   }
 
-  return shuffle(faceCards).slice(0, gridCols * gridRows);
+  for (const qPool of permutations(queens)) {
+    for (const kPool of permutations(kings)) {
+      const cols = jacks.map(
+        (jack, column) =>
+          [jack, qPool[column], kPool[column]] as [
+            PlayingCard,
+            PlayingCard,
+            PlayingCard,
+          ],
+      );
+      if (
+        !cols.every(
+          (column) => new Set(column.map(({ suit }) => suit)).size === 3,
+        )
+      ) {
+        continue;
+      }
+
+      const shuffledColumns = shuffle(cols).map((column) => shuffle(column));
+      return Array.from({ length: gridRows }, (_, row) =>
+        shuffledColumns.map((column) => column[row]),
+      ).flat();
+    }
+  }
+
+  throw new Error("Unable to create valid Hide and Seek playmate columns.");
 }
 
 function getScoreIndexes(playmateIndex: number) {
@@ -107,6 +116,52 @@ type GameState = {
   ended: boolean;
   won: boolean;
   winLoseMessage: string;
+};
+
+export type HideAndSeekGameState = GameState;
+
+function resolvePlaymateReveal(
+  state: GameState,
+  playmateIndex: number,
+): GameState {
+  const playmate = state.playmates[playmateIndex];
+  if (state.ended || !playmate) return state;
+
+  const playmates = state.playmates.map((candidate, index) =>
+    index === playmateIndex ? { ...candidate, faceUp: true } : candidate,
+  );
+  const guesses = [...state.guesses];
+  const scorePile = [...state.scorePile];
+
+  getScoreIndexes(playmateIndex).forEach((index) => {
+    const guess = state.guesses[index];
+    if (guess?.suit === playmate.suit) {
+      scorePile.push({ ...guess, faceUp: false });
+      guesses[index] = null;
+    }
+  });
+
+  const ended = playmates.every(({ faceUp }) => faceUp);
+  const score = scorePile.length;
+  return {
+    ...state,
+    playmates,
+    guesses,
+    scorePile,
+    ended,
+    won: ended ? score >= 20 : state.won,
+    winLoseMessage: ended
+      ? `You scored ${score} (20 to win)`
+      : state.winLoseMessage,
+  };
+}
+
+export const hideAndSeekRules = {
+  dealPlaymates,
+  getScoreIndexes,
+  resolvePlaymateReveal,
+  gridCols,
+  gridRows,
 };
 
 const gameStateInitial: GameState = {
@@ -201,45 +256,7 @@ export default function HideAndSeek() {
     if (game.ended || !playmate) return;
 
     saveUndoState(structuredClone(game));
-
-    const newPlaymates = game.playmates.map((p, i) =>
-      i === playmateIndex ? { ...p, faceUp: true } : p,
-    );
-
-    const scoredIndexes = getScoreIndexes(playmateIndex);
-    const newGuesses = [...game.guesses];
-    const newScorePile = [...game.scorePile];
-
-    scoredIndexes.forEach((index) => {
-      const guessAtIndex = game.guesses[index];
-      if (guessAtIndex?.suit === playmate.suit) {
-        newScorePile.push({ ...guessAtIndex, faceUp: false });
-        newGuesses[index] = null;
-      }
-    });
-
-    // Check for win/lose conditions
-    const hasFaceDownPlaymates = newPlaymates.some((c) => !c.faceUp);
-    let newEnded: boolean = game.ended;
-    let newWon: boolean = game.won;
-    let newWinLoseMessage: string = game.winLoseMessage;
-
-    if (!hasFaceDownPlaymates) {
-      newEnded = true;
-      const score = newScorePile.length;
-      newWon = score >= 20;
-      newWinLoseMessage = `You scored ${score} (20 to win)`;
-    }
-
-    setGame({
-      ...game,
-      playmates: newPlaymates,
-      guesses: newGuesses,
-      scorePile: newScorePile,
-      ended: newEnded,
-      won: newWon,
-      winLoseMessage: newWinLoseMessage,
-    });
+    setGame(resolvePlaymateReveal(game, playmateIndex));
   }
 
   // ── Card Mapping ─────────────────────────────────────────

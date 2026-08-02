@@ -14,8 +14,8 @@ export const clock: GameDefinition = {
   thumbnail: "Clock.jpg",
   background: GAME_BACKGROUNDS.oldRoom,
   cardBack: "Clock.png",
-  cardColorBg: "#1d1610",
-  cardColorText: "#eed9c2",
+  gameColorDark: "#1d1610",
+  gameColorPale: "#eed9c2",
   cardDescription:
     "A pure-luck patience: follow cards around the clock before all the Kings are uncovered.",
   quickStart: [

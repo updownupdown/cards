@@ -59,7 +59,11 @@ type GameState = {
   ended: boolean;
 };
 
+export type SkywayGameState = GameState;
+
 type ScoreBySuit = Record<(typeof SUITS)[number], number>;
+
+export type SkywayScoreBySuit = ScoreBySuit;
 
 const ADJACENT: number[][] = [
   [1, 3],
@@ -228,9 +232,16 @@ function computeScore(grid: PlayingCard[][]): ScoreBySuit {
   };
 }
 
+export const skywayRules = {
+  prepareMarket,
+  findLongestSuitPath,
+  computeScore,
+  adjacent: ADJACENT,
+};
+
 // ========== Main Component ========== //
 export default function Skyway() {
-  const { zoneBg } = useGameZoneBackground();
+  const { colorZone } = useGameZoneBackground();
   const { spacing } = useResponsiveMetrics();
 
   const [selectedMarket, setSelectedMarket] = useState<number | null>(null);
@@ -461,7 +472,7 @@ export default function Skyway() {
             paddingHorizontal,
             gap: cardWidth / 2,
             borderRadius,
-            backgroundColor: zoneBg,
+            backgroundColor: colorZone,
           },
         ]}
       >

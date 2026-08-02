@@ -30,6 +30,7 @@ import { ResetButton } from "./ResetButton";
 import { TipsBox } from "./TipsBox";
 import { WinLoseBox } from "./WinLoseBox";
 import { RulesModal } from "../Modals/RulesModal";
+import { BackgroundAnimation } from "@/animations/BackgroundAnimation";
 
 interface Props {
   isLoaded?: boolean;
@@ -105,8 +106,8 @@ export const GameWrapper = ({
 
   if (!gameInfo) return null;
 
-  const titleColor = gameInfo.cardColorText;
-  const backgroundColor = gameInfo.cardColorBg;
+  const titleColor = gameInfo.gameColorPale;
+  const backgroundColor = gameInfo.gameColorDark;
   const headerHeight = getHeaderHeightWithInset(insets.top, ui.scale);
   const background = gameInfo.background ?? DEFAULT_GAME_BACKGROUND;
 
@@ -140,10 +141,7 @@ export const GameWrapper = ({
       )}
 
       {showRulesModal && (
-        <RulesModal
-          onClose={() => setShowRulesModal(false)}
-          showMenu={() => setShowMenu(true)}
-        />
+        <RulesModal onClose={() => setShowRulesModal(false)} />
       )}
 
       <WinLoseBox
@@ -186,7 +184,6 @@ export const GameWrapper = ({
             left: 0,
             width: "100%",
             height: "100%",
-            opacity: 1,
           }}
         />
 
@@ -204,6 +201,25 @@ export const GameWrapper = ({
             opacity: 0.6,
           }}
         />
+
+        <View
+          style={{
+            position: "absolute",
+            zIndex: LayerZIndexes.boardAnimation,
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            overflow: "hidden",
+            pointerEvents: "none",
+          }}
+        >
+          <BackgroundAnimation
+            animation={gameInfo.animation}
+            width={viewportWidth}
+            height={viewportHeight}
+          />
+        </View>
 
         {/* Game header */}
         <Animated.View

@@ -14,8 +14,8 @@ export const theBobaTeaShop: GameDefinition = {
   thumbnail: "BobaTea.jpg",
   background: GAME_BACKGROUNDS.london,
   cardBack: "BobaTeaShop.png",
-  cardColorBg: "#2b1c29",
-  cardColorText: "#eed5a0",
+  gameColorDark: "#2b1c29",
+  gameColorPale: "#eed5a0",
   cardDescription:
     "A push-your-luck game where you must manage ordered queues of customers.",
   quickStart: [

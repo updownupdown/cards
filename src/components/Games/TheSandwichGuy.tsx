@@ -37,6 +37,8 @@ type GameState = {
   dealFirstHand: boolean;
 };
 
+export type SandwichGuyGameState = GameState;
+
 const gameStateInitial: GameState = {
   hand: Array(8).fill(null),
   deck: shuffle(createDeck()),
@@ -69,8 +71,7 @@ async function resetAndSetup(
 }
 
 function mod13(value: number) {
-  const n = value % 13;
-  return n < 0 ? n + 13 : n;
+  return ((value % 13) + 13) % 13;
 }
 
 function isValidSandwich(cards: PlayingCard[]) {
@@ -120,6 +121,18 @@ function replacementCount(cards: PlayingCard[]) {
   return 2;
 }
 
+function handScore(hand: (PlayingCard | null)[]) {
+  return hand.filter((card) => card !== null).length;
+}
+
+export const sandwichGuyRules = {
+  mod13,
+  isValidSandwich,
+  hasAnyValidSandwich,
+  replacementCount,
+  handScore,
+};
+
 // ================== Component =================== //
 export default function TheSandwichGuy() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -154,7 +167,7 @@ export default function TheSandwichGuy() {
     }
   }, [selectedCards]);
 
-  const score = game.hand.length;
+  const score = handScore(game.hand);
 
   function toggleSelect(id: string) {
     if (game.ended) return;

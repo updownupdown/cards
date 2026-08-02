@@ -35,6 +35,8 @@ type GameState = {
   foundations: PlayingCard[][];
 };
 
+export type BakersGameState = GameState;
+
 type Selection = { zone: "free"; slotIndex: number } | null;
 
 type MoveSource =
@@ -102,6 +104,23 @@ function isDescendingSameSuitStack(cards: PlayingCard[]): boolean {
     );
   });
 }
+
+function getMaxMovableStackSize(snapshot: GameState): number {
+  return snapshot.freeCells.filter((card) => card === null).length + 1;
+}
+
+function isWon(snapshot: GameState): boolean {
+  return snapshot.foundations.every((pile) => pile.length === 13);
+}
+
+export const bakersGameRules = {
+  canPlaceOnCascade,
+  canPlaceOnFoundation,
+  createInitialState,
+  isDescendingSameSuitStack,
+  getMaxMovableStackSize,
+  isWon,
+};
 
 const gameStateInitial = createInitialState();
 
@@ -174,10 +193,7 @@ export default function BakersGame() {
 
   // ── Derived ─────────────────────────────────────────────────────────────────
 
-  const won = useMemo(
-    () => game.foundations.every((pile) => pile.length === 13),
-    [game.foundations],
-  );
+  const won = useMemo(() => isWon(game), [game.foundations]);
 
   // ── CardMap zones ───────────────────────────────────────────────────────────
 
@@ -510,10 +526,6 @@ export default function BakersGame() {
     }
     const card = snapshot.freeCells[source.slotIndex];
     return card ? [card] : [];
-  }
-
-  function getMaxMovableStackSize(snapshot: GameState): number {
-    return snapshot.freeCells.filter((card) => card === null).length + 1;
   }
 
   function canDropOnTarget(source: MoveSource, target: DropTarget): boolean {

@@ -14,8 +14,8 @@ export const baroness: GameDefinition = {
   thumbnail: "Baroness.jpg",
   background: GAME_BACKGROUNDS.oldRoom,
   cardBack: "DefaultCardBack.png",
-  cardColorBg: "#3a1620",
-  cardColorText: "#f3d6dd",
+  gameColorDark: "#3a1620",
+  gameColorPale: "#f3d6dd",
   cardDescription: "Clear five piles by discarding cards that total thirteen.",
   quickStart: ["Discard K alone or pairs to 13 (A1 J11 Q12); deal if stuck."],
   howToPlay: [

@@ -42,6 +42,8 @@ type GameState = {
   drawCount: 1 | 3;
 };
 
+export type CanfieldGameState = GameState;
+
 type Selection =
   | { zone: "stock" }
   | { zone: "reserve" }
@@ -96,7 +98,7 @@ function canPlaceOnTableau(card: PlayingCard, destinationTop?: PlayingCard) {
 
   return (
     isRed(card.suit) !== isRed(destinationTop.suit) &&
-    RANK_VALUE[card.rank] + 1 === RANK_VALUE[destinationTop.rank]
+    nextRankWrap(card.rank as StandardRank) === destinationTop.rank
   );
 }
 
@@ -108,7 +110,7 @@ function isValidTableauRun(cards: PlayingCard[]) {
     const next = cards[i + 1];
 
     if (isRed(current.suit) === isRed(next.suit)) return false;
-    if (RANK_VALUE[current.rank] !== RANK_VALUE[next.rank] + 1) return false;
+    if (nextRankWrap(next.rank as StandardRank) !== current.rank) return false;
   }
 
   return true;
@@ -172,6 +174,17 @@ function createInitialState(drawCount: 1 | 3 = 1): GameState {
     drawCount,
   };
 }
+
+export const canfieldRules = {
+  rankFromValue,
+  nextRankWrap,
+  popReserveTop,
+  canPlaceOnFoundation,
+  canPlaceOnTableau,
+  isValidTableauRun,
+  fillEmptyTableauFromReserve,
+  createInitialState,
+};
 
 function sameDropTarget(a: DropTarget | null, b: DropTarget | null) {
   if (!a || !b) return a === b;

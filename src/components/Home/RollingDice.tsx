@@ -1,16 +1,16 @@
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Colors, rgba } from "@/styles/styles";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { View } from "react-native";
 import Animated, {
+  cancelAnimation,
   Easing,
   useAnimatedStyle,
   useSharedValue,
-  withSequence,
   withTiming,
 } from "react-native-reanimated";
 
-export const DICE_ROLL_DURATION = 2000;
+export const DICE_ROLL_DURATION = 2800;
 
 // 3x3 grid slot indices used by each face value.
 //   0 1 2
@@ -33,95 +33,177 @@ type RollingDiceProps = {
   size?: number;
 };
 
-export function RollingDice({ rollKey, rolling, size }: RollingDiceProps) {
-  const { spacing } = useResponsiveMetrics();
-  const dieSize = size ?? spacing(56);
-  const pipSize = Math.round(dieSize * 0.16);
+type DieProps = {
+  faceValue: number;
+  rolling: boolean;
+  rollKey: number;
+  size: number;
+  turns: number;
+  spinDuration: number;
+  settleDelay: number;
+  shuffleInterval: number;
+};
 
+function Die({
+  faceValue,
+  rolling,
+  rollKey,
+  size,
+  turns,
+  spinDuration,
+  settleDelay,
+  shuffleInterval,
+}: DieProps) {
   const rotation = useSharedValue(0);
-  const scale = useSharedValue(1);
-
-  const [faceValue, setFaceValue] = useState(6);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [displayedFace, setDisplayedFace] = useState(faceValue);
 
   useEffect(() => {
     if (!rolling) return;
 
-    // Spin with a decelerating rotation and a small bounce.
-    const spins = 2;
     rotation.value = 0;
-    rotation.value = withTiming(360 * spins, {
-      duration: DICE_ROLL_DURATION,
+    rotation.value = withTiming(360 * turns, {
+      duration: spinDuration,
       easing: Easing.out(Easing.cubic),
     });
-    scale.value = withSequence(
-      withTiming(1.2, { duration: 180, easing: Easing.out(Easing.quad) }),
-      withTiming(1, {
-        duration: DICE_ROLL_DURATION - 180,
-        easing: Easing.out(Easing.cubic),
-      }),
-    );
-
-    // Flash through random faces while spinning.
-    intervalRef.current = setInterval(() => {
-      setFaceValue(() => 1 + Math.floor(Math.random() * 6));
-    }, 250);
+    const shuffle = () => setDisplayedFace(1 + Math.floor(Math.random() * 6));
+    shuffle();
+    const faceInterval = setInterval(shuffle, shuffleInterval);
+    const settleTimeout = setTimeout(() => {
+      clearInterval(faceInterval);
+      setDisplayedFace(faceValue);
+    }, settleDelay);
 
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
+      cancelAnimation(rotation);
+      clearInterval(faceInterval);
+      clearTimeout(settleTimeout);
     };
-  }, [rollKey, rolling]);
+  }, [
+    faceValue,
+    rollKey,
+    rolling,
+    rotation,
+    settleDelay,
+    shuffleInterval,
+    spinDuration,
+    turns,
+  ]);
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${rotation.value}deg` }, { scale: scale.value }],
+  const dieStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${rotation.value}deg` }],
   }));
 
-  const pips = PIP_PATTERNS[faceValue] ?? PIP_PATTERNS[1];
+  const pipSize = Math.round(size * 0.16);
+  const pips = PIP_PATTERNS[displayedFace] ?? PIP_PATTERNS[1];
 
   return (
     <Animated.View
       style={[
-        animatedStyle,
+        dieStyle,
         {
-          width: dieSize,
-          height: dieSize,
-          borderRadius: Math.round(dieSize * 0.22),
-          padding: Math.round(dieSize * 0.14),
+          width: size,
+          height: size,
+          borderRadius: Math.round(size * 0.176),
+          padding: Math.round(size * 0.14),
           backgroundColor: Colors.white,
-          boxShadow: `0px ${spacing(6)}px ${spacing(16)}px ${rgba(Colors.K900, 0.45)}`,
+          boxShadow: `0px ${Math.round(size * 0.15)}px ${Math.round(size * 0.22)}px ${rgba(Colors.K900, 0.42)}`,
           flexDirection: "row",
           flexWrap: "wrap",
         },
       ]}
     >
-      {Array.from({ length: 9 }).map((_, slot) => {
-        const showPip = pips.includes(slot);
-        return (
-          <View
-            key={slot}
-            style={{
-              width: "33.333%",
-              height: "33.333%",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {showPip && (
-              <View
-                style={{
-                  width: pipSize,
-                  height: pipSize,
-                  borderRadius: pipSize / 2,
-                  backgroundColor: Colors.K900,
-                }}
-              />
-            )}
-          </View>
-        );
-      })}
+      {Array.from({ length: 9 }).map((_, slot) => (
+        <View
+          key={slot}
+          style={{
+            width: "33.333%",
+            height: "33.333%",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {pips.includes(slot) && (
+            <View
+              style={{
+                width: pipSize,
+                height: pipSize,
+                borderRadius: pipSize / 2,
+                backgroundColor: Colors.K900,
+              }}
+            />
+          )}
+        </View>
+      ))}
     </Animated.View>
+  );
+}
+
+export function RollingDice({ rollKey, rolling, size }: RollingDiceProps) {
+  const { spacing } = useResponsiveMetrics();
+  const dieSize = size ?? spacing(56);
+  const stageWidth = Math.max(300, dieSize * 4.8);
+  const [faces, setFaces] = useState<[number, number]>([2, 5]);
+  const [rollConfig, setRollConfig] = useState([
+    {
+      turns: 1.25,
+      spinDuration: 2400,
+      settleDelay: 2400,
+      shuffleInterval: 160,
+    },
+    {
+      turns: 1.75,
+      spinDuration: 2200,
+      settleDelay: 2200,
+      shuffleInterval: 160,
+    },
+  ]);
+
+  useEffect(() => {
+    if (!rolling) return;
+    setFaces([
+      1 + Math.floor(Math.random() * 6),
+      1 + Math.floor(Math.random() * 6),
+    ]);
+    setRollConfig(
+      [0, 1].map(() => {
+        const settleDelay = 1850 + Math.round(Math.random() * 600);
+        const fullTurns = 1 + Math.floor(Math.random() * 2);
+        const quarterTurns = Math.floor(Math.random() * 4);
+        return {
+          turns: fullTurns + quarterTurns / 4,
+          spinDuration: settleDelay,
+          settleDelay,
+          shuffleInterval: 110 + Math.round(Math.random() * 100),
+        };
+      }),
+    );
+  }, [rollKey, rolling]);
+
+  return (
+    <View
+      style={{
+        width: stageWidth,
+        height: dieSize * 1.2,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: dieSize * 0.63,
+      }}
+    >
+      <Die
+        faceValue={faces[0]}
+        rolling={rolling}
+        rollKey={rollKey}
+        size={dieSize}
+        {...rollConfig[0]}
+      />
+      <Die
+        faceValue={faces[1]}
+        rolling={rolling}
+        rollKey={rollKey}
+        size={dieSize}
+        {...rollConfig[1]}
+      />
+    </View>
   );
 }

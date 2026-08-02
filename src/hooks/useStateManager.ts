@@ -9,8 +9,7 @@ import {
 import { useImmer } from "use-immer";
 import { useGlobalSettings } from "./useGlobalSettings";
 import { isLocalDevEnvironment } from "@/utils/utils";
-
-const maxHistory = 10;
+import { appendUndoState, popUndoState } from "./state-history";
 
 type Props<T> = {
   gameStateInitial: T;
@@ -126,23 +125,14 @@ export function useStateManager<T>({
   // —— Undo ————————————————————————
   const [history, setHistory] = useState<T[]>([]);
 
-  const saveUndoState = useCallback(
-    (stateToSave: T) => {
-      setHistory((prevHistory) => {
-        const newHistory = [...prevHistory, stateToSave];
-        return newHistory.slice(-maxHistory);
-      });
-    },
-    [maxHistory],
-  );
+  const saveUndoState = useCallback((stateToSave: T) => {
+    setHistory((prevHistory) => appendUndoState(prevHistory, stateToSave));
+  }, []);
 
   const prevState = useCallback((): T | undefined => {
-    if (history.length === 0) return undefined;
-
-    const previousState = history[history.length - 1];
-
-    setHistory((prevHistory) => prevHistory.slice(0, -1));
-
+    const { previousState, history: nextHistory } = popUndoState(history);
+    if (previousState === undefined) return undefined;
+    setHistory(nextHistory);
     return previousState;
   }, [history]);
 

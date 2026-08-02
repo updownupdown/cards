@@ -13,8 +13,8 @@ export const bowlingSolitaire: GameDefinition = {
   },
   thumbnail: "BowlingSolitaire.jpg",
   background: GAME_BACKGROUNDS.bowling,
-  cardColorBg: "#331e0f",
-  cardColorText: "#a9e9f1",
+  gameColorDark: "#331e0f",
+  gameColorPale: "#a9e9f1",
   cardDescription:
     "Bowl a full game of 10-pin using cards, chasing strikes and spares.",
   quickStart: [

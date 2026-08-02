@@ -29,6 +29,8 @@ type GameState = {
   won: boolean;
 };
 
+export type GolfGameState = GameState;
+
 const gameStateInitial: GameState = {
   draw: shuffle(createDeck()),
   discard: [],
@@ -105,7 +107,9 @@ function hasAnyMove(state: GameState) {
   });
 }
 
-function evaluateEnd(state: GameState) {
+function evaluateEnd(state: GameState, isSettingUp = false) {
+  if (isSettingUp) return { ended: false, won: false };
+
   const tableauCount = state.piles.reduce((sum, col) => sum + col.length, 0);
   if (tableauCount === 0) return { ended: true, won: true };
   if (state.draw.length > 0) return { ended: false, won: false };
@@ -113,21 +117,43 @@ function evaluateEnd(state: GameState) {
   return { ended: true, won: false };
 }
 
+export const golfRules = {
+  canDiscard,
+  hasAnyMove,
+  evaluateEnd,
+};
+
 // ========== Main Component ========== //
 export default function Golf() {
-  const { cardText } = useGameZoneBackground();
+  const { colorPale } = useGameZoneBackground();
 
-  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
-    useStateManager({
-      resetAndSetup: async () => {
-        await resetAndSetup(setGame);
-      },
-      gameStateInitial,
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+  });
 
   useEffect(() => {
-    if (!game.ended) evaluateEnd(game);
-  }, [game]);
+    if (game.ended) return;
+
+    const result = evaluateEnd(game, isSettingUp);
+    if (!result.ended) return;
+
+    setGame((draft) => {
+      draft.ended = result.ended;
+      draft.won = result.won;
+    });
+  }, [game, isSettingUp, setGame]);
 
   async function playCard(pileIndex: number, cardIndex: number) {
     if (game.ended) return;

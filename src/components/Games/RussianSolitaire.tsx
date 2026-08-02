@@ -12,6 +12,10 @@ function russianCanStack(
   );
 }
 
+export const russianSolitaireRules = {
+  russianCanStack,
+};
+
 export default function RussianSolitaire() {
   return (
     <YukonBoard canStack={russianCanStack} winMessage="Every suit is home!" />

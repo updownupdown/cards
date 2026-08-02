@@ -12,10 +12,10 @@ export const foursquare: GameDefinition = {
     luck: 40,
   },
   thumbnail: "Foursquare.jpg",
-  background: GAME_BACKGROUNDS.feltDarkBlue,
+  background: GAME_BACKGROUNDS.city,
   cardBack: "Foursquare.png",
-  cardColorBg: "#1a1e2b",
-  cardColorText: "#fff5ca",
+  gameColorDark: "#1a1e2b",
+  gameColorPale: "#fff5ca",
   cardDescription:
     "A tile-laying game where each move can disrupt the precarious grid.",
   quickStart: ["Place drawn card; row/column high or low flips that line."],
@@ -34,6 +34,4 @@ export const foursquare: GameDefinition = {
     creators: [GameCreators.WilSu],
     creationDate: "2021",
   },
-
-
 };

@@ -1,16 +1,12 @@
 import { Text } from "@/components/common/Text";
 import { GAME_THUMBNAIL_ASSETS } from "@/data/game-thumbnails";
-import {
-  DEFAULT_GAME_THUMBNAIL,
-  GameMenuInfo,
-  GameTagNames,
-} from "@/data/games-data";
-import { Icon } from "@/icons";
+import { DEFAULT_GAME_THUMBNAIL, GameMenuInfo } from "@/data/games-data";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Colors, rgba } from "@/styles/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import { router, type Href } from "expo-router";
-import { Image, Pressable, type ViewStyle, View } from "react-native";
+import { Image, Pressable, View, type ViewStyle } from "react-native";
+import { FavButton } from "./FavButton";
 import { RatingsBars } from "./RatingBars";
 
 function getGameThumbnail(game: GameMenuInfo) {
@@ -92,11 +88,11 @@ export function HomeCard({
       <LinearGradient
         colors={
           size === "medium"
-            ? [rgba(game.cardColorBg, 0.94), rgba(game.cardColorBg, 0.3)]
+            ? [rgba(game.gameColorDark, 0.94), rgba(game.gameColorDark, 0.3)]
             : [
-                rgba(game.cardColorBg, 0.9),
-                rgba(game.cardColorBg, 0.9),
-                rgba(game.cardColorBg, 0.6),
+                rgba(game.gameColorDark, 0.9),
+                rgba(game.gameColorDark, 0.9),
+                rgba(game.gameColorDark, 0.6),
               ]
         }
         start={size === "medium" ? { x: 0.5, y: 1 } : { x: 0.2, y: 1 }}
@@ -131,7 +127,7 @@ export function HomeCard({
           <Text
             size={size === "large" ? "xl" : "lg"}
             weight={500}
-            color={game.cardColorText}
+            color={game.gameColorPale}
             style={{
               textAlign: size === "medium" ? "center" : undefined,
             }}
@@ -149,12 +145,11 @@ export function HomeCard({
         </View>
 
         {size === "large" && (
-          <RatingsBars rating={game.rating} gameColor={game.cardColorText} />
+          <RatingsBars rating={game.rating} gameColor={game.gameColorPale} />
         )}
       </Pressable>
 
-      {/* Favourites Button */}
-      <Pressable
+      <FavButton
         style={[
           {
             position: "absolute",
@@ -167,19 +162,15 @@ export function HomeCard({
             height: favBtnSize,
             transform:
               size === "small" ? [{ translateY: -favBtnSize / 2 }] : undefined,
-            borderRadius: spacing(8),
-            backgroundColor: rgba(game.cardColorBg, 0.5),
           },
         ]}
-        onPress={() => onToggleFavorite?.(path)}
+        isFavorite={isFavorite}
+        onToggleFavorite={() => onToggleFavorite?.(path)}
+        size={favBtnSize}
+        iconSize={spacing(30)}
+        inactiveColor={game.gameColorPale}
         disabled={!onToggleFavorite}
-      >
-        <Icon
-          name={isFavorite ? "star" : "star-outline"}
-          color={isFavorite ? Colors.favoriteStar : Colors.K300}
-          size={spacing(30)}
-        />
-      </Pressable>
+      />
     </View>
   );
 }

@@ -26,7 +26,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { ProgressBar } from "../Home/ProgressBar";
 import { DeckPreviewModal } from "../Modals/DeckPreviewModal";
 
-type ScoundrelCardType = "monster" | "weapon" | "potion";
+export type ScoundrelCardType = "monster" | "weapon" | "potion";
 
 const MaxHealth = 20;
 const TotalRooms = 12;
@@ -62,6 +62,8 @@ type GameState = {
   ended: boolean;
   won: boolean;
 };
+
+export type ScoundrelGameState = GameState;
 
 type RoomSolveState = {
   roomCards: PlayingCard[];
@@ -369,6 +371,132 @@ function refillRoom(game: GameState) {
   };
 }
 
+export type ScoundrelAction =
+  | { type: "run" }
+  | { type: "heal"; roomIndex: number }
+  | { type: "equip"; roomIndex: number }
+  | { type: "fight-bare"; roomIndex: number }
+  | { type: "fight-weapon"; roomIndex: number };
+
+function applyScoundrelAction(draft: GameState, action: ScoundrelAction) {
+  if (draft.ended) return false;
+
+  if (action.type === "run") {
+    const room = validRoomCards(draft.roomCards);
+    if (room.length !== 4 || draft.lastRoomNumRanFrom === draft.roomNum) {
+      return false;
+    }
+
+    draft.draw = [...draft.draw, ...flipAllToBack(room)];
+    draft.roomCards = [...EmptyRoom];
+    draft.lastRoomNumRanFrom = draft.roomNum;
+    draft.isRunning = true;
+    draft.lastActionType = undefined;
+    draft.lastPotionValue = undefined;
+    return true;
+  }
+
+  const roomCard = draft.roomCards[action.roomIndex];
+  if (!roomCard) return false;
+  const type = cardType(roomCard);
+
+  if (action.type === "heal") {
+    if (type !== "potion") return false;
+    const healAmount = Math.min(
+      MaxHealth - draft.health,
+      scoundrelValue(roomCard),
+    );
+    draft.health += healAmount;
+    draft.discard.push(backCard(roomCard));
+    draft.roomCards = removeRoomCard(draft.roomCards, action.roomIndex);
+    draft.lastActionType = "potion";
+    draft.lastPotionValue = scoundrelValue(roomCard);
+    return true;
+  }
+
+  if (action.type === "equip") {
+    if (type !== "weapon") return false;
+    if (draft.weaponCard) draft.discard.push(backCard(draft.weaponCard));
+    if (draft.weaponUsedOn.length > 0) {
+      draft.discard.push(...flipAllToBack(draft.weaponUsedOn));
+    }
+    draft.weaponCard = faceCard(roomCard);
+    draft.weaponUsedOn = [];
+    draft.roomCards = removeRoomCard(draft.roomCards, action.roomIndex);
+    draft.lastActionType = "weapon";
+    draft.lastPotionValue = undefined;
+    return true;
+  }
+
+  if (type !== "monster") return false;
+  if (action.type === "fight-weapon") {
+    if (!canFightWithWeapon(draft, roomCard)) return false;
+    draft.health = Math.max(
+      0,
+      draft.health - damageWithWeapon(draft.weaponCard, roomCard),
+    );
+    draft.weaponUsedOn.push(faceCard(roomCard));
+  } else {
+    draft.health = Math.max(0, draft.health - scoundrelValue(roomCard));
+    draft.discard.push(backCard(roomCard));
+  }
+  draft.roomCards = removeRoomCard(draft.roomCards, action.roomIndex);
+  draft.lastActionType = "monster";
+  draft.lastPotionValue = undefined;
+  return true;
+}
+
+function advanceScoundrelGame(game: Readonly<GameState>): GameState {
+  if (game.ended) return game as GameState;
+
+  const current = game as GameState;
+  const refilled = refillRoom(current);
+  if (refilled !== current) return refilled;
+
+  if (current.health <= 0) {
+    return {
+      ...current,
+      ended: true,
+      won: false,
+      score: -countRemainingMonsterValue(current),
+    };
+  }
+
+  if (
+    current.draw.length === 0 &&
+    validRoomCards(current.roomCards).length === 0
+  ) {
+    const potionBonus =
+      current.health === MaxHealth &&
+      current.lastActionType === "potion" &&
+      current.lastPotionValue !== undefined
+        ? current.lastPotionValue
+        : 0;
+    return {
+      ...current,
+      ended: true,
+      won: true,
+      score: current.health + potionBonus,
+    };
+  }
+
+  return current;
+}
+
+export const scoundrelRules = {
+  createDeck: createScoundrelDeck,
+  cardType,
+  cardValue: scoundrelValue,
+  bestHealthAfterRoom,
+  dungeonHasFalseStart,
+  validRoomCards,
+  canFightWithWeapon,
+  damageWithWeapon,
+  refillRoom,
+  applyAction: applyScoundrelAction,
+  advanceGame: advanceScoundrelGame,
+};
+
 // Layout constants
 const healthBarHeight = 0.34;
 const drawRow = healthBarHeight + 0.12;
@@ -409,14 +537,7 @@ export default function Scoundrel() {
     saveUndoState(game);
 
     setGame((draft) => {
-      const room = validRoomCards(draft.roomCards);
-
-      draft.draw = [...draft.draw, ...flipAllToBack(room)];
-      draft.roomCards = [...EmptyRoom];
-      draft.lastRoomNumRanFrom = draft.roomNum;
-      draft.isRunning = true;
-      draft.lastActionType = undefined;
-      draft.lastPotionValue = undefined;
+      applyScoundrelAction(draft, { type: "run" });
     });
   }
 
@@ -426,16 +547,7 @@ export default function Scoundrel() {
     saveUndoState(game);
 
     setGame((draft) => {
-      const healAmount = Math.min(
-        MaxHealth - draft.health,
-        scoundrelValue(potion),
-      );
-
-      draft.health += healAmount;
-      draft.discard.push(backCard(potion));
-      draft.roomCards = removeRoomCard(draft.roomCards, roomIndex);
-      draft.lastActionType = "potion";
-      draft.lastPotionValue = scoundrelValue(potion);
+      applyScoundrelAction(draft, { type: "heal", roomIndex });
     });
   }
 
@@ -445,19 +557,7 @@ export default function Scoundrel() {
     saveUndoState(game);
 
     setGame((draft) => {
-      if (draft.weaponCard) {
-        draft.discard.push(backCard(draft.weaponCard));
-      }
-
-      if (draft.weaponUsedOn.length > 0) {
-        draft.discard.push(...flipAllToBack(draft.weaponUsedOn));
-      }
-
-      draft.weaponCard = faceCard(weapon);
-      draft.weaponUsedOn = [];
-      draft.roomCards = removeRoomCard(draft.roomCards, roomIndex);
-      draft.lastActionType = "weapon";
-      draft.lastPotionValue = undefined;
+      applyScoundrelAction(draft, { type: "equip", roomIndex });
     });
   }
 
@@ -467,11 +567,7 @@ export default function Scoundrel() {
     saveUndoState(game);
 
     setGame((draft) => {
-      draft.health = Math.max(0, draft.health - scoundrelValue(monster));
-      draft.discard.push(backCard(monster));
-      draft.roomCards = removeRoomCard(draft.roomCards, roomIndex);
-      draft.lastActionType = "monster";
-      draft.lastPotionValue = undefined;
+      applyScoundrelAction(draft, { type: "fight-bare", roomIndex });
     });
   }
 
@@ -481,13 +577,7 @@ export default function Scoundrel() {
     saveUndoState(game);
 
     setGame((draft) => {
-      const damage = damageWithWeapon(draft.weaponCard, monster);
-
-      draft.health = Math.max(0, draft.health - damage);
-      draft.weaponUsedOn.push(faceCard(monster));
-      draft.roomCards = removeRoomCard(draft.roomCards, roomIndex);
-      draft.lastActionType = "monster";
-      draft.lastPotionValue = undefined;
+      applyScoundrelAction(draft, { type: "fight-weapon", roomIndex });
     });
   }
 
@@ -556,37 +646,8 @@ export default function Scoundrel() {
   useEffect(() => {
     if (isSettingUp || game.ended) return;
 
-    const refilled = refillRoom(game);
-    if (refilled !== game) {
-      setGame(refilled);
-      return;
-    }
-
-    if (game.health <= 0) {
-      const remainingMonsterValue = countRemainingMonsterValue(game);
-      setGame((draft) => {
-        draft.ended = true;
-        draft.won = false;
-        draft.score = -remainingMonsterValue;
-      });
-      return;
-    }
-
-    if (game.draw.length === 0 && validRoomCards(game.roomCards).length === 0) {
-      setGame((draft) => {
-        draft.ended = true;
-        draft.won = true;
-        if (
-          draft.health === MaxHealth &&
-          draft.lastActionType === "potion" &&
-          draft.lastPotionValue !== undefined
-        ) {
-          draft.score = draft.health + draft.lastPotionValue;
-        } else {
-          draft.score = draft.health;
-        }
-      });
-    }
+    const advanced = advanceScoundrelGame(game);
+    if (advanced !== game) setGame(advanced);
   }, [game, isSettingUp, setGame]);
 
   // ========== Card Mapping ========== //

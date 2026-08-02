@@ -556,7 +556,7 @@ export function StatsTab({
 
               <GameUserStats
                 stats={persona.row.stats}
-                accentColor={game.cardColorText}
+                accentColor={game.gameColorPale}
               />
             </View>
           </View>

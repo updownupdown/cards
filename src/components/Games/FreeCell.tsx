@@ -36,6 +36,8 @@ type GameState = {
   foundations: PlayingCard[][];
 };
 
+export type FreeCellGameState = GameState;
+
 type Selection =
   | { zone: "cascade"; pileIndex: number }
   | { zone: "free"; slotIndex: number }
@@ -93,6 +95,12 @@ function createInitialState(): GameState {
     foundations: Array.from({ length: 4 }, () => [] as PlayingCard[]),
   };
 }
+
+export const freeCellRules = {
+  canPlaceOnCascade,
+  canPlaceOnFoundation,
+  createInitialState,
+};
 
 const gameStateInitial = createInitialState();
 

@@ -13,8 +13,8 @@ export const bakersGame: GameDefinition = {
   },
   thumbnail: DEFAULT_GAME_THUMBNAIL,
   background: GAME_BACKGROUNDS.castle,
-  cardColorBg: "#1b2a24",
-  cardColorText: "#dcefe4",
+  gameColorDark: "#1b2a24",
+  gameColorPale: "#dcefe4",
   cardDescription:
     "FreeCell's tougher ancestor: build the tableau down in suit, not colour.",
   quickStart: ["Foundations up by suit; tableau down in suit; use 4 cells."],

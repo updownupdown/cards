@@ -14,8 +14,8 @@ export const nestor: GameDefinition = {
   thumbnail: "DefaultThumbnail.jpg",
   background: GAME_BACKGROUNDS.london,
   cardBack: "DefaultCardBack.png",
-  cardColorBg: "#16283f",
-  cardColorText: "#dbe9ff",
+  gameColorDark: "#16283f",
+  gameColorPale: "#dbe9ff",
   cardDescription: "Pair off matching ranks to empty every column.",
   quickStart: ["Discard exposed equal ranks (column bottoms and reserve top)."],
   howToPlay: [

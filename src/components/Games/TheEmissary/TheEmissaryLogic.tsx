@@ -3,6 +3,8 @@ import {
   CardSuit,
   createDeck,
   flipAllToBack,
+  flipAllToFace,
+  flipToBack,
   isFace,
   rankValue,
   shuffle,
@@ -113,3 +115,111 @@ export function canDebateWithCard(
   }
   return true;
 }
+
+export function startVisitAction(draft: GameState, kingdomId: number) {
+  const kingdom = draft.kingdoms[kingdomId];
+  if (draft.ended || draft.visit !== null || !kingdom || kingdom.visited) {
+    return false;
+  }
+
+  draft.visit = {
+    kingdomId,
+    trumpSuit: kingdom.ruler.suit,
+    requiredWins: kingdom.requiredWins,
+    wins: 0,
+    debateTopic: undefined,
+    debateRecord: [],
+  };
+  draft.winLoseMessage = "";
+  return true;
+}
+
+export type DebateActionResult = "invalid" | "won" | "lost" | "too-many";
+
+export function debateWithCardAction(
+  draft: GameState,
+  cardId: PlayingCard["id"],
+): DebateActionResult {
+  const visit = draft.visit;
+  const handCard = draft.hand.find((card) => card.id === cardId);
+  if (
+    draft.ended ||
+    !visit?.debateTopic ||
+    !handCard ||
+    !canDebateWithCard(draft.hand, visit.debateTopic, handCard)
+  ) {
+    return "invalid";
+  }
+
+  const debateTopic = visit.debateTopic;
+  const wonTopic = wonDebate(handCard, debateTopic, visit.trumpSuit);
+  draft.hand = draft.hand.filter((card) => card.id !== cardId);
+  visit.debateRecord.push(wonTopic);
+
+  if (wonTopic) {
+    visit.wins += 1;
+    draft.discardWon.push(flipToBack(handCard), flipToBack(debateTopic));
+  } else {
+    draft.discardLost.push(flipToBack(handCard), flipToBack(debateTopic));
+  }
+
+  if (visit.wins > visit.requiredWins) {
+    draft.visit = null;
+    draft.ended = true;
+    draft.won = false;
+    draft.winLoseMessage = "You won too many debates, insulting the ruler!";
+    return "too-many";
+  }
+
+  visit.debateTopic = undefined;
+  return wonTopic ? "won" : "lost";
+}
+
+export type FinishVisitActionResult =
+  | "invalid"
+  | "won-kingdom"
+  | "lost-game"
+  | "won-game";
+
+export function finishVisitAction(draft: GameState): FinishVisitActionResult {
+  const visit = draft.visit;
+  if (!visit || draft.hand.length > 0) return "invalid";
+
+  const kingdom = draft.kingdoms[visit.kingdomId];
+  if (!kingdom) return "invalid";
+
+  const wonKingdom = visit.wins === visit.requiredWins;
+  const ruler = kingdom.ruler;
+  draft.kingdoms[visit.kingdomId] = {
+    ...kingdom,
+    visited: true,
+    won: wonKingdom,
+    ruler: flipToBack(ruler),
+  };
+  draft.advisors = flipAllToFace(draft.advisors);
+  if (wonKingdom) draft.advisors.unshift(ruler);
+  sortCardsBySuit(draft.advisors);
+
+  draft.handSize = defaultHandSize;
+  draft.visit = null;
+
+  const allKingdomsWon = wonKingdom && draft.kingdoms.every(({ won }) => won);
+  draft.ended = !wonKingdom || allKingdomsWon;
+  draft.won = allKingdomsWon;
+  draft.winLoseMessage = allKingdomsWon
+    ? "You won over the rulers of all eight kingdoms with your spectacular debating skills!"
+    : !wonKingdom
+      ? "You failed to win enough debates; the ruler doesn't take you seriously enough."
+      : "";
+
+  if (allKingdomsWon) return "won-game";
+  return wonKingdom ? "won-kingdom" : "lost-game";
+}
+
+export const theEmissaryRules = {
+  wonDebate,
+  canDebateWithCard,
+  startVisitAction,
+  debateWithCardAction,
+  finishVisitAction,
+};

@@ -1,6 +1,6 @@
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
@@ -17,7 +17,8 @@ import {
   useCardMap,
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
-import { Animated, Easing, Platform, View } from "react-native";
+import { View } from "react-native";
+import { BlackHoleGraphic } from "./BlackHoleGraphic";
 
 const pileCount = 17;
 
@@ -27,6 +28,8 @@ type GameState = {
   ended: boolean;
   won: boolean;
 };
+
+export type BlackHoleGameState = GameState;
 
 const gameStateInitial: GameState = {
   piles: Array.from({ length: pileCount }, () => []),
@@ -65,7 +68,9 @@ async function resetAndSetup(
   await delay();
 }
 
-function evaluateEnd(state: GameState) {
+function evaluateEnd(state: GameState, isSettingUp = false) {
+  if (isSettingUp) return { ended: false, won: false };
+
   const cardsLeft = state.piles.reduce((sum, pile) => sum + pile.length, 0);
   if (cardsLeft === 0) return { ended: true, won: true };
 
@@ -79,25 +84,38 @@ function evaluateEnd(state: GameState) {
   return { ended: false, won: false };
 }
 
+export const blackHoleRules = {
+  adjacentWrap,
+  evaluateEnd,
+};
+
 // ========== Main Component ========== //
 export default function BlackHole() {
-  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
-    useStateManager({
-      resetAndSetup: async () => {
-        await resetAndSetup(setGame);
-      },
-      gameStateInitial,
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+  });
 
   useEffect(() => {
-    const { ended, won } = evaluateEnd(game);
+    const { ended, won } = evaluateEnd(game, isSettingUp);
     if (ended !== game.ended || won !== game.won) {
       setGame((draft) => {
         draft.ended = ended;
         draft.won = won;
       });
     }
-  }, [game]);
+  }, [game, isSettingUp, setGame]);
 
   const holeTop = top(game.hole);
 
@@ -178,26 +196,6 @@ export default function BlackHole() {
     };
   };
 
-  const rotationAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    // 2. Configure and start a looping animation
-    Animated.loop(
-      Animated.timing(rotationAnim, {
-        toValue: 1,
-        duration: 10000,
-        easing: Easing.linear,
-        useNativeDriver: Platform.OS !== "web",
-      }),
-    ).start();
-  }, [rotationAnim]);
-
-  // 3. Interpolate the 0-1 values to degrees
-  const spin = rotationAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0deg", "360deg"],
-  });
-
   const { cardMap, cardWidth, getZoneStylesById } = useCardMap({
     game,
     zones,
@@ -221,49 +219,7 @@ export default function BlackHole() {
       {cardMap}
 
       <View style={[getZoneStylesById("hole-graphic")]}>
-        <Animated.View
-          style={[
-            {
-              position: "absolute",
-              zIndex: 2,
-              top: "50%",
-              left: "50%",
-              width: cardWidth * 2,
-              height: cardWidth * 2,
-              aspectRatio: 1,
-              borderRadius: cardWidth * 1.5,
-              backgroundColor: "black",
-              transform: [
-                { translateY: "-50%" },
-                { translateX: "-50%" },
-                { rotate: spin },
-              ],
-              boxShadow: `${cardWidth / -16}px ${cardWidth / -16}px ${cardWidth / 4}px #ffd901`,
-            },
-          ]}
-        />
-
-        <Animated.View
-          style={[
-            {
-              position: "absolute",
-              zIndex: 2,
-              top: "50%",
-              left: "50%",
-              width: cardWidth * 2,
-              height: cardWidth * 2,
-              aspectRatio: 1,
-              borderRadius: cardWidth * 1.2,
-              backgroundColor: "black",
-              transform: [
-                { translateY: "-50%" },
-                { translateX: "-50%" },
-                { rotate: spin },
-              ],
-              boxShadow: `${cardWidth / 6}px ${cardWidth / 6}px ${cardWidth / 1}px #ff5e00`,
-            },
-          ]}
-        />
+        <BlackHoleGraphic size={cardWidth} />
       </View>
     </GameWrapper>
   );

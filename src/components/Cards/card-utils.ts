@@ -101,17 +101,17 @@ export function rankValue(
   }
 }
 
-export function nameFromRankValue(rank: number) {
+export function nameFromRankValue(rank: number, shortName = false) {
   if (rank === 0 || rank === 14) {
-    return "Joker";
+    return shortName ? "Jkr" : "Joker";
   } else if (rank === 1) {
-    return "Ace";
+    return shortName ? "A" : "Ace";
   } else if (rank === 11) {
-    return "Jack";
+    return shortName ? "J" : "Jack";
   } else if (rank === 12) {
-    return "Queen";
+    return shortName ? "Q" : "Queen";
   } else if (rank === 13) {
-    return "King";
+    return shortName ? "K" : "King";
   } else {
     return rank.toString();
   }
@@ -206,10 +206,10 @@ export function flipTopCardToBack(cards: PlayingCard[]) {
   return newCards;
 }
 
-export function shuffle<T>(items: T[]) {
+export function shuffle<T>(items: T[], random: () => number = Math.random) {
   const next = [...items];
   for (let i = next.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(random() * (i + 1));
     [next[i], next[j]] = [next[j], next[i]];
   }
   return next;

@@ -53,7 +53,7 @@ export const RatingBar = ({
     <View
       style={{
         flex: 1,
-        gap: trackHeight,
+        gap: trackHeight / 1.6,
       }}
     >
       <Text

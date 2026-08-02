@@ -3,7 +3,10 @@
 const fs = require("fs");
 const path = require("path");
 
-const projectRoot = path.resolve(__dirname, "..");
+const scriptDir = path.dirname(
+  process.argv[1] ? path.resolve(process.argv[1]) : process.cwd()
+);
+const projectRoot = path.resolve(scriptDir, "..");
 const iconsDir = path.join(projectRoot, "src", "icons");
 const outputFile = path.join(iconsDir, "generated.ts");
 

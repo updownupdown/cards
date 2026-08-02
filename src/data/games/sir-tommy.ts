@@ -14,8 +14,8 @@ export const sirTommy: GameDefinition = {
   thumbnail: "SirTommy.jpg",
   background: GAME_BACKGROUNDS.brickStreet,
   cardBack: "DefaultCardBack.png",
-  cardColorBg: "#241a33",
-  cardColorText: "#ecdfff",
+  gameColorDark: "#241a33",
+  gameColorPale: "#ecdfff",
   cardDescription:
     "The granddaddy of solitaire: sort the deck across four piles into four Ace-to-King stacks.",
   quickStart: ["Place draw on any waste pile; foundations auto-build A to K."],

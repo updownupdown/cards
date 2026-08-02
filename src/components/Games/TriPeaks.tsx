@@ -52,11 +52,15 @@ type TableauCard = PlayingCard & {
   blockers: number[];
 };
 
+export type TriPeaksTableauCard = TableauCard;
+
 type GameState = {
   tableau: (TableauCard | null)[];
   draw: PlayingCard[];
   waste: PlayingCard[];
 };
+
+export type TriPeaksGameState = GameState;
 
 function isAdjacentRank(a: PlayingCard, b: PlayingCard) {
   if (
@@ -131,6 +135,16 @@ function hasAvailableMoves(snapshot: GameState) {
     return canMoveToWaste(index, snapshot);
   });
 }
+
+export const triPeaksRules = {
+  isAdjacentRank,
+  tableauIndex,
+  blockersFor,
+  isExposed,
+  revealExposedCards,
+  canMoveToWaste,
+  hasAvailableMoves,
+};
 
 function createInitialState(): GameState {
   const waste = shuffle(createDeck());

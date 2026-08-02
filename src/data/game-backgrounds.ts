@@ -6,167 +6,164 @@ export type GameBackground = {
   authorLink?: string;
 };
 
-export const feltDarkBlueBackground: GameBackground = {
-  source: require("@/assets/backgrounds/felt-dark-blue.jpg"),
-};
-
-export const feltDarkPurpleBackground: GameBackground = {
-  source: require("@/assets/backgrounds/felt-dark-purple.jpg"),
-};
-
-export const feltGreyBackground: GameBackground = {
-  source: require("@/assets/backgrounds/felt-grey.jpg"),
-};
-
-export const river: GameBackground = {
-  source: require("@/assets/backgrounds/river.jpg"),
-  authorName: "Deyan Peychev",
-  authorLink: "https://unsplash.com/@deyan_peychev",
-};
-
-export const yukon: GameBackground = {
-  source: require("@/assets/backgrounds/yukon.jpg"),
-  authorName: "Kalen Emsley",
-  authorLink: "https://unsplash.com/@kalenemsley",
-};
-
-export const siberia: GameBackground = {
-  source: require("@/assets/backgrounds/siberia.jpg"),
-  authorName: "Roman Purtov",
-  authorLink: "https://unsplash.com/@roman_purtow",
-};
-
-export const mountain1: GameBackground = {
-  source: require("@/assets/backgrounds/mountain-1.jpg"),
-  authorName: "Mads Schmidt Rasmussen",
-  authorLink: "https://unsplash.com/@mvds",
-};
-
-export const nightSky: GameBackground = {
-  source: require("@/assets/backgrounds/night-sky.jpg"),
-  authorName: "Nathan Anderson",
-  authorLink: "https://unsplash.com/@nathananderson",
-};
-
-export const field: GameBackground = {
-  source: require("@/assets/backgrounds/field.jpg"),
-  authorName: "Claudio Testa",
-  authorLink: "https://unsplash.com/@claudiotesta",
-};
-
-export const sahara: GameBackground = {
-  source: require("@/assets/backgrounds/sahara.jpg"),
-  authorName: "Andrzej Kryszpiniuk",
-  authorLink: "https://unsplash.com/@kryszpin",
-};
-
-export const antarctica: GameBackground = {
-  source: require("@/assets/backgrounds/antarctica.jpg"),
-  authorName: "Cassie Matias",
-  authorLink: "https://unsplash.com/@cass4504",
-};
-
-export const dungeon: GameBackground = {
-  source: require("@/assets/backgrounds/dungeon.jpg"),
-  authorName: "Intricate Explorer",
-  authorLink: "https://unsplash.com/@intricateexplorer",
-};
-
-export const castle: GameBackground = {
-  source: require("@/assets/backgrounds/castle.jpg"),
-  authorName: "Jörg Angeli",
-  authorLink: "https://unsplash.com/@joerga",
-};
-
-export const interchange: GameBackground = {
-  source: require("@/assets/backgrounds/interchange.jpg"),
-  authorName: "Tom Barrett",
-  authorLink: "https://unsplash.com/@wistomsin",
-};
-
-export const london: GameBackground = {
-  source: require("@/assets/backgrounds/london.jpg"),
-  authorName: "Ashleigh Joy Photography",
-  authorLink: "https://unsplash.com/@ashleighjoyphotography",
-};
-
-export const casino: GameBackground = {
-  source: require("@/assets/backgrounds/casino.jpg"),
-  authorName: "Leo_Visions",
-  authorLink: "https://unsplash.com/@leo_visions_",
-};
-
-export const monteCarlo: GameBackground = {
-  source: require("@/assets/backgrounds/monte-carlo.jpg"),
-  authorName: "Braden Egli",
-  authorLink: "https://unsplash.com/@bradenegli",
-};
-
-export const golf: GameBackground = {
-  source: require("@/assets/backgrounds/golf.jpg"),
-  authorName: "Andrew Shelley",
-  authorLink: "https://unsplash.com/@andrewshelley",
-};
-
-export const playground: GameBackground = {
-  source: require("@/assets/backgrounds/playground.jpg"),
-  authorName: "Jinhan Moon",
-  authorLink: "https://unsplash.com/@jinhan_photo",
-};
-
-export const bowling: GameBackground = {
-  source: require("@/assets/backgrounds/bowling.jpg"),
-  authorName: "Steven Cordes",
-  authorLink: "https://unsplash.com/@steven3466",
-};
-
-export const island: GameBackground = {
-  source: require("@/assets/backgrounds/island.jpg"),
-  authorName: "Simon Spring",
-  authorLink: "https://unsplash.com/@springsimon",
-};
-
-export const forest: GameBackground = {
-  source: require("@/assets/backgrounds/forest.jpg"),
-  authorName: "Degleex Ganzorig",
-  authorLink: "https://unsplash.com/@degleex",
-};
-
-export const oldRoom: GameBackground = {
-  source: require("@/assets/backgrounds/old-room.jpg"),
-  authorName: "The Metropolitan Museum of Art",
-  authorLink: "https://unsplash.com/@metropolitanmuseum",
-};
-
-export const brickStreet: GameBackground = {
-  source: require("@/assets/backgrounds/brick-street.jpg"),
-  authorName: "Barney Goodman",
-  authorLink: "https://unsplash.com/@bgoodpic",
-};
-
 export const GAME_BACKGROUNDS = {
-  feltDarkBlue: feltDarkBlueBackground,
-  feltDarkPurple: feltDarkPurpleBackground,
-  feltGrey: feltGreyBackground,
-  river: river,
-  yukon: yukon,
-  siberia: siberia,
-  mountain1: mountain1,
-  nightSky: nightSky,
-  field: field,
-  sahara: sahara,
-  antarctica: antarctica,
-  dungeon: dungeon,
-  castle: castle,
-  interchange: interchange,
-  london: london,
-  casino: casino,
-  monteCarlo: monteCarlo,
-  golf: golf,
-  playground: playground,
-  bowling: bowling,
-  island: island,
-  forest: forest,
-  oldRoom: oldRoom,
-  brickStreet: brickStreet,
-} as const;
+  river: {
+    source: require("@/assets/backgrounds/river.jpg"),
+    authorName: "Deyan Peychev",
+    authorLink: "https://unsplash.com/@deyan_peychev",
+  },
+  yukon: {
+    source: require("@/assets/backgrounds/yukon.jpg"),
+    authorName: "Kalen Emsley",
+    authorLink: "https://unsplash.com/@kalenemsley",
+  },
+  siberia: {
+    source: require("@/assets/backgrounds/siberia.jpg"),
+    authorName: "Roman Purtov",
+    authorLink: "https://unsplash.com/@roman_purtow",
+  },
+  mountain1: {
+    source: require("@/assets/backgrounds/mountain-1.jpg"),
+    authorName: "Mads Schmidt Rasmussen",
+    authorLink: "https://unsplash.com/@mvds",
+  },
+  nightSky: {
+    source: require("@/assets/backgrounds/night-sky.jpg"),
+    authorName: "Thomas Ciszewski",
+    authorLink: "https://unsplash.com/@coc6",
+  },
+  field: {
+    source: require("@/assets/backgrounds/field.jpg"),
+    authorName: "Claudio Testa",
+    authorLink: "https://unsplash.com/@claudiotesta",
+  },
+  sahara: {
+    source: require("@/assets/backgrounds/sahara.jpg"),
+    authorName: "Andrzej Kryszpiniuk",
+    authorLink: "https://unsplash.com/@kryszpin",
+  },
+  antarctica: {
+    source: require("@/assets/backgrounds/antarctica.jpg"),
+    authorName: "Cassie Matias",
+    authorLink: "https://unsplash.com/@cass4504",
+  },
+  dungeon: {
+    source: require("@/assets/backgrounds/dungeon.jpg"),
+    authorName: "Intricate Explorer",
+    authorLink: "https://unsplash.com/@intricateexplorer",
+  },
+  castle: {
+    source: require("@/assets/backgrounds/castle.jpg"),
+    authorName: "Jörg Angeli",
+    authorLink: "https://unsplash.com/@joerga",
+  },
+  interchange: {
+    source: require("@/assets/backgrounds/interchange.jpg"),
+    authorName: "Tom Barrett",
+    authorLink: "https://unsplash.com/@wistomsin",
+  },
+  stoneTunnel: {
+    source: require("@/assets/backgrounds/stone-tunnel.jpg"),
+    authorName: "Francesco Ungaro",
+    authorLink: "https://unsplash.com/@francesco_ungaro",
+  },
+  london: {
+    source: require("@/assets/backgrounds/london.jpg"),
+    authorName: "Ashleigh Joy Photography",
+    authorLink: "https://unsplash.com/@ashleighjoyphotography",
+  },
+  casino: {
+    source: require("@/assets/backgrounds/casino.jpg"),
+    authorName: "Leo_Visions",
+    authorLink: "https://unsplash.com/@leo_visions_",
+  },
+  casino2: {
+    source: require("@/assets/backgrounds/casino-2.jpg"),
+    authorName: "Zoshua Colah",
+    authorLink: "https://unsplash.com/@zoshuacolah",
+  },
+  monteCarlo: {
+    source: require("@/assets/backgrounds/monte-carlo.jpg"),
+    authorName: "Braden Egli",
+    authorLink: "https://unsplash.com/@bradenegli",
+  },
+  golf: {
+    source: require("@/assets/backgrounds/golf.jpg"),
+    authorName: "Andrew Shelley",
+    authorLink: "https://unsplash.com/@andrewshelley",
+  },
+  playground: {
+    source: require("@/assets/backgrounds/playground.jpg"),
+    authorName: "Jinhan Moon",
+    authorLink: "https://unsplash.com/@jinhan_photo",
+  },
+  bowling: {
+    source: require("@/assets/backgrounds/bowling.jpg"),
+    authorName: "Steven Cordes",
+    authorLink: "https://unsplash.com/@steven3466",
+  },
+  island: {
+    source: require("@/assets/backgrounds/island.jpg"),
+    authorName: "Simon Spring",
+    authorLink: "https://unsplash.com/@springsimon",
+  },
+  forest: {
+    source: require("@/assets/backgrounds/forest.jpg"),
+    authorName: "Degleex Ganzorig",
+    authorLink: "https://unsplash.com/@degleex",
+  },
+  oldRoom: {
+    source: require("@/assets/backgrounds/old-room.jpg"),
+    authorName: "The Metropolitan Museum of Art",
+    authorLink: "https://unsplash.com/@metropolitanmuseum",
+  },
+  brickStreet: {
+    source: require("@/assets/backgrounds/brick-street.jpg"),
+    authorName: "Barney Goodman",
+    authorLink: "https://unsplash.com/@bgoodpic",
+  },
+  swamp: {
+    source: require("@/assets/backgrounds/swamp.jpg"),
+    authorName: "Žan Janžekovič",
+    authorLink: "https://unsplash.com/@zanjanzekovic",
+  },
+  city: {
+    source: require("@/assets/backgrounds/city.jpg"),
+    authorName: "ben o'bro",
+    authorLink: "https://unsplash.com/@benobro",
+  },
+  savanah: {
+    source: require("@/assets/backgrounds/savanah.jpg"),
+    authorName: "David Clode",
+    authorLink: "https://unsplash.com/@davidclode",
+  },
+} satisfies Record<string, GameBackground>;
+
+export const {
+  river,
+  yukon,
+  siberia,
+  mountain1,
+  nightSky,
+  field,
+  sahara,
+  antarctica,
+  dungeon,
+  castle,
+  interchange,
+  stoneTunnel,
+  london,
+  casino,
+  casino2,
+  monteCarlo,
+  golf,
+  playground,
+  bowling,
+  island,
+  forest,
+  oldRoom,
+  brickStreet,
+  swamp,
+  city,
+  savanah,
+} = GAME_BACKGROUNDS;

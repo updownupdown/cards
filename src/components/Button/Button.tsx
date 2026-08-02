@@ -130,8 +130,8 @@ export const Button = ({
 
   if (disabled) {
     themeColor = textOnly
-      ? rgba(Colors.white, 0.7)
-      : rgba(darkenHexColor(desaturateHexColor(themeColor, 0.5), 0.4), 0.6);
+      ? Colors.white
+      : darkenHexColor(desaturateHexColor(themeColor, 0.6), 0.3);
   }
 
   const baseFontSize = Typography.size[size];
@@ -165,7 +165,7 @@ export const Button = ({
         {
           ...transitionStyles.limited04sec,
           outlineWidth: 0,
-          opacity: disabled ? 1 : 1,
+          opacity: disabled ? 0.6 : 1,
           overflow: "hidden", // needed for autoProgress bar
           display: "flex",
           flexDirection: iconName === "close" ? "row-reverse" : "row",
@@ -179,7 +179,7 @@ export const Button = ({
           borderRadius,
           outline: "none",
           boxShadow: height
-            ? `inset 0 0 1px 1px ${rgba(lightenHexColor(borderColor, 0.3), disabled ? 0 : 1)}, ${roundToPixel(height * 0.04)}px ${roundToPixel(height * 0.08)}px ${roundToPixel(height * 0.24)}px ${rgba(Colors.black, 0.3)}`
+            ? `inset 0 0 1px 1px ${rgba(lightenHexColor(borderColor, 0.3), disabled ? 0.2 : 1)}, ${roundToPixel(height * 0.04)}px ${roundToPixel(height * 0.08)}px ${roundToPixel(height * (disabled ? 0.1 : 0.24))}px ${rgba(Colors.black, disabled ? 0.1 : 0.3)}`
             : undefined,
           backgroundColor: textOnly ? undefined : themeColor,
           ...(Platform.OS === "web" && preventWebLongPressMenu
@@ -256,9 +256,7 @@ export const Button = ({
               fontSize,
               fontFamily,
               textTransform: uppercase ? "uppercase" : "none",
-              color: textOnly
-                ? rgba(themeColor, disabled ? 0.5 : 1)
-                : rgba(Colors.white, disabled ? 0.5 : 1),
+              color: textOnly ? themeColor : Colors.white,
               lineHeight: lineHeightUpdated,
               textAlign: "center",
             },

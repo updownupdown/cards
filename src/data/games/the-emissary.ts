@@ -14,8 +14,8 @@ export const theEmissary: GameDefinition = {
   thumbnail: "Emissary.jpg",
   background: GAME_BACKGROUNDS.castle,
   cardBack: "TheEmissary.png",
-  cardColorBg: "#241e33",
-  cardColorText: "#acdeff",
+  gameColorDark: "#241e33",
+  gameColorPale: "#acdeff",
   cardDescription:
     "Win exactly the right number of debates in each kingdom while managing one-time advisors.",
   quickStart: [

@@ -34,6 +34,8 @@ type GameState = {
   redealsUsed: number;
 };
 
+export type FortyThievesGameState = GameState;
+
 type Selection =
   | { zone: "stock" }
   | { zone: "waste" }
@@ -1067,3 +1069,13 @@ function hasAnyLegalMove(snapshot: GameState, allowInfiniteRedeals: boolean) {
 
   return canDrawFromStock(snapshot, allowInfiniteRedeals);
 }
+
+export const fortyThievesRules = {
+  createInitialState,
+  foundationSuit,
+  countStartedFoundationSuits,
+  canPlaceOnFoundation,
+  canPlaceOnTableau,
+  canDrawFromStock,
+  hasAnyLegalMove,
+};

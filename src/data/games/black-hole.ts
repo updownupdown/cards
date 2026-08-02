@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const blackHole: GameDefinition = {
   path: "/black-hole",
@@ -13,9 +14,10 @@ export const blackHole: GameDefinition = {
   },
   thumbnail: "BlackHole.jpg",
   background: GAME_BACKGROUNDS.nightSky,
+  animation: GameAnimations.ShimmeringStars,
   cardBack: "DefaultCardBack.png",
-  cardColorBg: "#150e25",
-  cardColorText: "#d4cbff",
+  gameColorDark: "#150e25",
+  gameColorPale: "#d4cbff",
   cardDescription:
     "Pull all 52 cards into a central black hole, one rank at a time.",
   quickStart: [

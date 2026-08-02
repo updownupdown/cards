@@ -52,7 +52,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
   }
 
   return (
-    <ModalFull title="Menu" onClose={onCloseAndRefresh}>
+    <ModalFull title="" onClose={onCloseAndRefresh}>
       <ScrollView
         contentContainerStyle={[
           modalStyles.scrollContent,

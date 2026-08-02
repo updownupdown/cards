@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const russianSolitaire: GameDefinition = {
   path: "/russian-solitaire",
@@ -13,8 +14,9 @@ export const russianSolitaire: GameDefinition = {
   },
   thumbnail: "RussianSolitaire.jpg",
   background: GAME_BACKGROUNDS.siberia,
-  cardColorBg: "#2c1c30",
-  cardColorText: "#f0dcf0",
+  animation: GameAnimations.FallingSnow,
+  gameColorDark: "#2c1c30",
+  gameColorPale: "#f0dcf0",
   cardDescription:
     "Yukon at its most brutal: haul mixed groups, but build the tableau down in suit.",
   quickStart: ["Move any face-up stack; build down in suit; only kings fill."],

@@ -37,7 +37,11 @@ interface Enemy {
   attack: number;
 }
 
+export type RegicideEnemy = Enemy;
+
 type GamePhase = "attack" | "defend";
+
+export type RegicidePhase = GamePhase;
 
 type GameState = {
   castleDeck: PlayingCard[];
@@ -57,11 +61,23 @@ type GameState = {
   victoryType: "gold" | "silver" | "bronze" | null;
 };
 
+export type RegicideGameState = GameState;
+
 const ENEMY_STATS: Record<EnemyType, { health: number; attack: number }> = {
   J: { health: 20, attack: 10 },
   Q: { health: 30, attack: 15 },
   K: { health: 40, attack: 20 },
 };
+
+function createEnemy(card: PlayingCard): Enemy {
+  const stats = ENEMY_STATS[card.rank as EnemyType];
+  return {
+    card,
+    health: stats.health,
+    maxHealth: stats.health,
+    attack: stats.attack,
+  };
+}
 
 // ---------- Game Setup ---------- //
 const gameStateInitial: GameState = {
@@ -123,19 +139,13 @@ async function resetAndSetup(
     );
 
     const firstEnemy = flipToFace(draft.castleDeck.pop()!);
-    const enemyStats = ENEMY_STATS[firstEnemy.rank as EnemyType];
 
     const hand: PlayingCard[] = [];
     for (let i = 0; i < 8 && draft.tavernDeck.length > 0; i++) {
       hand.push(flipToFace(draft.tavernDeck.pop()!));
     }
 
-    draft.currentEnemy = {
-      card: firstEnemy,
-      health: enemyStats.health,
-      maxHealth: enemyStats.health,
-      attack: enemyStats.attack,
-    };
+    draft.currentEnemy = createEnemy(firstEnemy);
     draft.enemiesDefeated = 0;
     draft.hand = sortCardsBySuit(hand);
     draft.discardPile = [];
@@ -269,10 +279,46 @@ function hasValidPlayInHand(cards: PlayingCard[]): boolean {
   return search(0);
 }
 
+function evaluateAttackSelection(cards: PlayingCard[], enemyCard: PlayingCard) {
+  const activeSuits = new Set(cards.map((card) => card.suit));
+  const suitEffects = (
+    ["hearts", "diamonds", "clubs", "spades"] as const
+  ).filter((suit) => activeSuits.has(suit) && suit !== enemyCard.suit);
+  const totalAttack = cards.reduce(
+    (sum, card) => sum + getCardAttackValue(card),
+    0,
+  );
+  const damage = totalAttack * (suitEffects.includes("clubs") ? 2 : 1);
+
+  return { totalAttack, damage, suitEffects };
+}
+
+function getDefenseValue(cards: PlayingCard[]) {
+  return cards.reduce(
+    (sum, card) => sum + (isJester(card) ? 0 : getCardDamageValue(card)),
+    0,
+  );
+}
+
+export const regicideRules = {
+  createEnemy,
+  getCardAttackValue,
+  getCardDamageValue,
+  isJester,
+  isAnimalCompanion,
+  isValidComboSelection,
+  isValidPlaySelection,
+  healFromDiscard,
+  drawFromTavern,
+  hasValidPlayInHand,
+  evaluateAttackSelection,
+  getDefenseValue,
+};
+
 // ---------- Main Component ---------- //
 export default function Regicide() {
   const { spacing } = useResponsiveMetrics();
-  const { zoneBg, cardBg, cardText } = useGameZoneBackground();
+  const { colorZone, colorDark, colorPale } = useGameZoneBackground();
 
   const {
     game,
@@ -296,17 +342,9 @@ export default function Regicide() {
   });
 
   const playSelection = useMemo(() => {
-    const activeSuits = new Set(game.selectedCards.map((card) => card.suit));
-    const suitEffects = (
-      ["hearts", "diamonds", "clubs", "spades"] as const
-    ).filter((suit) => activeSuits.has(suit));
-    const damageMultiplier =
-      activeSuits.has("clubs") && game.currentEnemy?.card.suit !== "clubs"
-        ? 2
-        : 1;
-    const attackValue = game.selectedCards.reduce((sum, card) => {
-      return sum + getCardAttackValue(card);
-    }, 0);
+    const evaluated = game.currentEnemy
+      ? evaluateAttackSelection(game.selectedCards, game.currentEnemy.card)
+      : { totalAttack: 0, damage: 0, suitEffects: [] };
 
     const isValid =
       game.phase === "attack" &&
@@ -315,9 +353,7 @@ export default function Regicide() {
 
     return {
       isValid,
-      totalAttack: attackValue,
-      damage: attackValue * damageMultiplier,
-      suitEffects,
+      ...evaluated,
     };
   }, [game.currentEnemy, game.phase, game.selectedCards]);
 
@@ -327,18 +363,12 @@ export default function Regicide() {
   );
 
   const selectedDefenseValue = useMemo(
-    () =>
-      game.selectedCards.reduce((sum, card) => {
-        return sum + getCardDamageValue(card);
-      }, 0),
+    () => getDefenseValue(game.selectedCards),
     [game.selectedCards],
   );
 
   const totalHandDefenseValue = useMemo(
-    () =>
-      game.hand.reduce((sum, card) => {
-        return sum + getCardDamageValue(card);
-      }, 0),
+    () => getDefenseValue(game.hand),
     [game.hand],
   );
 
@@ -637,15 +667,7 @@ export default function Regicide() {
           // Move to next enemy
           if (draft.castleDeck.length > 0) {
             const nextEnemyCard = flipToFace(draft.castleDeck.pop()!);
-            const nextEnemyType = nextEnemyCard.rank as EnemyType;
-            const nextStats = ENEMY_STATS[nextEnemyType];
-
-            draft.currentEnemy = {
-              card: nextEnemyCard,
-              health: nextStats.health,
-              maxHealth: nextStats.health,
-              attack: nextStats.attack,
-            };
+            draft.currentEnemy = createEnemy(nextEnemyCard);
           }
         }
       } else {
@@ -690,13 +712,7 @@ export default function Regicide() {
     saveUndoState(structuredClone(game));
 
     const enemyDamage = Math.max(0, game.currentEnemy.attack);
-    let discardValue = 0;
-
-    for (const card of game.selectedCards) {
-      if (!isJester(card)) {
-        discardValue += getCardDamageValue(card);
-      }
-    }
+    const discardValue = getDefenseValue(game.selectedCards);
 
     if (discardValue < enemyDamage) {
       // Couldn't block enough damage - lose
@@ -910,7 +926,7 @@ export default function Regicide() {
       {/* Enemy Display */}
       <View
         style={[
-          getUnderlayStyle(cardWidth, cardBg, cardText),
+          getUnderlayStyle(cardWidth, colorDark, colorPale),
           getZoneStylesById("enemyZone"),
         ]}
       />
@@ -993,7 +1009,7 @@ export default function Regicide() {
               opacity: attackFaceOpacity,
               transform: [{ perspective: 900 }, { rotateX: attackFaceRotateX }],
               pointerEvents: game.phase === "attack" ? "auto" : "none",
-              backgroundColor: zoneBg,
+              backgroundColor: colorZone,
               borderRadius: spacing(16),
               boxShadow: `inset 0 0 0 ${spacing(1.5)}px ${rgba(Colors.buttonBlue, 0.5)}, inset 0 0 ${spacing(20)}px ${rgba(Colors.buttonBlue, 0.4)}, 0 0 ${spacing(16)}px ${rgba(Colors.black, 1)}`,
             },
@@ -1059,7 +1075,7 @@ export default function Regicide() {
               opacity: defendFaceOpacity,
               transform: [{ perspective: 900 }, { rotateX: defendFaceRotateX }],
               pointerEvents: game.phase === "defend" ? "auto" : "none",
-              backgroundColor: zoneBg,
+              backgroundColor: colorZone,
               borderRadius: spacing(16),
               boxShadow: `inset 0 0 0 ${spacing(1.5)}px ${rgba(Colors.buttonPurple, 0.5)}, inset 0 0 ${spacing(20)}px ${rgba(Colors.buttonPurple, 0.4)}, 0 0 ${spacing(16)}px ${rgba(Colors.black, 1)}`,
             },

@@ -33,6 +33,8 @@ type SpiderState = {
   foundations: PlayingCard[][];
 };
 
+export type SpiderGameState = SpiderState;
+
 type Selection = {
   zone: "tableau";
   pileIndex: number;
@@ -195,6 +197,43 @@ function moveCompletedRunsToFoundations(
   }
 }
 
+function canDealStock(snapshot: SpiderState) {
+  return (
+    snapshot.stock.length >= 10 &&
+    snapshot.tableau.every((pile) => pile.length > 0)
+  );
+}
+
+function dealStockRow(snapshot: SpiderState) {
+  if (!canDealStock(snapshot)) return false;
+
+  for (let pileIndex = 0; pileIndex < 10; pileIndex += 1) {
+    const top = snapshot.stock.pop();
+    if (!top) return false;
+    snapshot.tableau[pileIndex].push({ ...top, faceUp: true });
+  }
+
+  moveCompletedRunsToFoundations(snapshot.tableau, snapshot.foundations);
+  return true;
+}
+
+function isWon(snapshot: SpiderState) {
+  return snapshot.foundations.every((foundation) => foundation.length === 13);
+}
+
+export const spiderRules = {
+  createInitialState,
+  dealSpider,
+  revealLastIfNeeded,
+  isValidDescendingRun,
+  isCompleteRun,
+  canPlaceOnTableau,
+  moveCompletedRunsToFoundations,
+  canDealStock,
+  dealFromStock: dealStockRow,
+  isWon,
+};
+
 const gameStateInitial = createInitialState();
 
 export default function SpiderSolitaire() {
@@ -251,16 +290,13 @@ export default function SpiderSolitaire() {
     onHoverTargetChange: handleHoverTargetChange,
   });
 
-  const canDealStock = useMemo(
-    () => game.stock.length >= 10,
-    [game.stock.length],
-  );
+  const canDeal = useMemo(() => canDealStock(game), [game]);
 
   const completedRuns = useMemo(
     () => game.foundations.filter((foundation) => foundation.length > 0).length,
     [game.foundations],
   );
-  const won = useMemo(() => completedRuns === 8, [completedRuns]);
+  const won = useMemo(() => isWon(game), [game]);
 
   const zones: MapZone[] = useMemo(() => {
     const tableauZones: MapZone[] = game.tableau.map((pile, pileIndex) => ({
@@ -319,7 +355,7 @@ export default function SpiderSolitaire() {
         selectColor: "blue",
         isSelected: false,
         onPress: dealFromStock,
-        isDisabled: !canDealStock,
+        isDisabled: !canDeal,
         isVisible: !isBeingDragged,
         animDuration,
       };
@@ -369,7 +405,7 @@ export default function SpiderSolitaire() {
     if (zone.name === "stock") {
       return {
         onPress: dealFromStock,
-        isDisabled: !canDealStock,
+        isDisabled: !canDeal,
         isSelected: false,
       };
     }
@@ -556,28 +592,14 @@ export default function SpiderSolitaire() {
       clearDragGhost();
     }
 
-    if (!canDealStock) {
+    if (!canDeal) {
       clearSelection();
       return;
     }
 
     saveUndoState(structuredClone(game));
     setGame((draft) => {
-      if (draft.stock.length < 10) {
-        return;
-      }
-
-      for (let pileIndex = 0; pileIndex < 10; pileIndex += 1) {
-        const top = draft.stock[draft.stock.length - 1];
-        if (!top) {
-          return;
-        }
-
-        draft.stock = draft.stock.slice(0, -1);
-        draft.tableau[pileIndex].push({ ...top, faceUp: true });
-      }
-
-      moveCompletedRunsToFoundations(draft.tableau, draft.foundations);
+      dealStockRow(draft);
     });
 
     clearSelection();
@@ -779,7 +801,7 @@ export default function SpiderSolitaire() {
                   height: stockTapRect.height,
                 }}
                 onPress={dealFromStock}
-                disabled={!canDealStock || !!dragGhost}
+                disabled={!canDeal || !!dragGhost}
               />
             )}
             {interactionTargets}

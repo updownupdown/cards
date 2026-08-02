@@ -12,10 +12,10 @@ export const memory: GameDefinition = {
     luck: 5,
   },
   thumbnail: "Memory.jpg",
-  background: GAME_BACKGROUNDS.feltGrey,
+  background: GAME_BACKGROUNDS.savanah,
   cardBack: "DefaultCardBack.png",
-  cardColorBg: "#243b35",
-  cardColorText: "#e8f1df",
+  gameColorDark: "#243b35",
+  gameColorPale: "#e8f1df",
   cardDescription: "Reveal hidden pairs and clear the board using your memory.",
   quickStart: ["Find matching pairs by remembering where each card is hidden."],
   howToPlay: [
@@ -37,6 +37,4 @@ export const memory: GameDefinition = {
   credits: {
     creators: [GameCreators.Unknown],
   },
-
-
 };

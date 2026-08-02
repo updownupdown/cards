@@ -40,6 +40,8 @@ type GameState = {
   won: boolean;
 };
 
+export type PenguinGameState = GameState;
+
 type Selection =
   | {
       zone: "tableau";
@@ -258,6 +260,19 @@ function createInitialState(): GameState {
     won: false,
   };
 }
+
+export const penguinRules = {
+  prevRankVal,
+  nextRankVal,
+  canPlaceOnFoundation,
+  canStartFoundation,
+  canPlaceOnTableau,
+  isValidRun,
+  hasAnyLegalMove,
+  countFoundations,
+  evaluate,
+  createInitialState,
+};
 
 const gameStateInitial = createInitialState();
 

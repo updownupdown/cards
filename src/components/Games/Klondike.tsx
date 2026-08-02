@@ -48,6 +48,54 @@ type DropTarget =
   | { zone: "tableau"; pileIndex: number }
   | { zone: "foundation"; pileIndex: number };
 
+function canPlaceOnTableau(card: PlayingCard, destinationTop?: PlayingCard) {
+  if (!destinationTop) return card.rank === "K";
+
+  return (
+    isRed(card.suit) !== isRed(destinationTop.suit) &&
+    RANK_VALUE[card.rank] + 1 === RANK_VALUE[destinationTop.rank]
+  );
+}
+
+function canPlaceOnFoundation(card: PlayingCard, destinationTop?: PlayingCard) {
+  if (!destinationTop) return card.rank === "A";
+
+  return (
+    card.suit === destinationTop.suit &&
+    RANK_VALUE[card.rank] === RANK_VALUE[destinationTop.rank] + 1
+  );
+}
+
+function isValidTableauRun(cards: readonly PlayingCard[]) {
+  if (cards.length <= 1) return true;
+
+  for (let index = 0; index < cards.length - 1; index += 1) {
+    const current = cards[index];
+    const next = cards[index + 1];
+
+    if (isRed(current.suit) === isRed(next.suit)) return false;
+    if (RANK_VALUE[current.rank] !== RANK_VALUE[next.rank] + 1) return false;
+  }
+
+  return true;
+}
+
+function revealLastIfNeeded(pile: readonly PlayingCard[]) {
+  if (pile.length === 0) return [];
+
+  const last = pile[pile.length - 1];
+  if (last.faceUp) return [...pile];
+
+  return [...pile.slice(0, -1), { ...last, faceUp: true }];
+}
+
+export const klondikeRules = {
+  canPlaceOnTableau,
+  canPlaceOnFoundation,
+  isValidTableauRun,
+  revealLastIfNeeded,
+};
+
 function createInitialState(drawCount: 1 | 3 = 1): GameState {
   const fullDeck = shuffle(
     SUITS.flatMap((suit) =>
@@ -80,50 +128,6 @@ function createInitialState(drawCount: 1 | 3 = 1): GameState {
     foundations: Array.from({ length: 4 }, () => [] as PlayingCard[]),
     drawCount,
   };
-}
-
-function canPlaceOnTableau(card: PlayingCard, destinationTop?: PlayingCard) {
-  if (!destinationTop) {
-    return card.rank === "K";
-  }
-
-  return (
-    isRed(card.suit) !== isRed(destinationTop.suit) &&
-    RANK_VALUE[card.rank] + 1 === RANK_VALUE[destinationTop.rank]
-  );
-}
-
-function canPlaceOnFoundation(card: PlayingCard, destinationTop?: PlayingCard) {
-  if (!destinationTop) {
-    return card.rank === "A";
-  }
-
-  return (
-    card.suit === destinationTop.suit &&
-    RANK_VALUE[card.rank] === RANK_VALUE[destinationTop.rank] + 1
-  );
-}
-
-function isValidTableauRun(cards: PlayingCard[]) {
-  if (cards.length <= 1) return true;
-
-  for (let i = 0; i < cards.length - 1; i += 1) {
-    const current = cards[i];
-    const next = cards[i + 1];
-
-    if (isRed(current.suit) === isRed(next.suit)) return false;
-    if (RANK_VALUE[current.rank] !== RANK_VALUE[next.rank] + 1) return false;
-  }
-
-  return true;
-}
-
-function revealLastIfNeeded(pile: PlayingCard[]) {
-  if (pile.length === 0) return pile;
-  const last = pile[pile.length - 1];
-  if (last.faceUp) return pile;
-
-  return [...pile.slice(0, -1), { ...last, faceUp: true }];
 }
 
 const gameStateInitial = createInitialState();

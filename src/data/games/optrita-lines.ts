@@ -12,12 +12,14 @@ export const optritaLines: GameDefinition = {
     luck: 30,
   },
   thumbnail: "OptritaLines.jpg",
-  background: GAME_BACKGROUNDS.feltGrey,
-  cardColorBg: "#1b2233",
-  cardColorText: "#dce6ff",
+  background: GAME_BACKGROUNDS.castle,
+  gameColorDark: "#1b2233",
+  gameColorPale: "#dce6ff",
   cardDescription:
     "A one-player trick-taking duel against a 6x6 grid that fights only by hiding its cards.",
-  quickStart: ["Pick a card and line; first suit match wins by rank, otherwise trump suit wins."],
+  quickStart: [
+    "Pick a card and line; first suit match wins by rank, otherwise trump suit wins.",
+  ],
   howToPlay: [
     "## Objective",
     "Win **21 tricks** before the grid does.",
@@ -43,6 +45,4 @@ export const optritaLines: GameDefinition = {
     creators: [GameCreators.StephenTudor],
     creationDate: "2023",
   },
-
-
 };

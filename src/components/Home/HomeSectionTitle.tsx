@@ -43,7 +43,12 @@ export function HomeSectionTitle({
         ]}
       >
         {iconName && (
-          <Icon name={iconName} size={spacing(24)} color={Colors.suitsRed} />
+          <Icon
+            name={iconName}
+            size={spacing(24)}
+            color={Colors.suitsRed}
+            shadow
+          />
         )}
         <Text
           weight={400}

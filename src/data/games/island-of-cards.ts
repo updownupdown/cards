@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const islandOfCards: GameDefinition = {
   path: "/island-of-cards",
@@ -13,8 +14,9 @@ export const islandOfCards: GameDefinition = {
   },
   thumbnail: "IslandOfCards.jpg",
   background: GAME_BACKGROUNDS.island,
-  cardColorBg: "#153846",
-  cardColorText: "#ffe6a3",
+  animation: GameAnimations.FlyingBirds,
+  gameColorDark: "#153846",
+  gameColorPale: "#ffe6a3",
   cardDescription:
     "Grow an island across a 7x7 grid, one rank-linked card at a time.",
   quickStart: [

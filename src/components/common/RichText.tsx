@@ -208,9 +208,9 @@ function renderInline(text: string, keyPrefix: string): ReactNode[] {
 }
 
 const HEADING_SIZE: Record<number, TextSize> = {
-  1: "xl",
-  2: "lg",
-  3: "md",
+  1: "xxl",
+  2: "xl",
+  3: "lg",
 };
 
 export type RichTextProps = {
@@ -244,7 +244,7 @@ export function RichText({
             <Text
               key={`h-${index}`}
               size={HEADING_SIZE[block.level] ?? "md"}
-              weight={500}
+              weight={300}
               color={headingColor}
               style={{
                 marginTop: spacing(gap * 1.5),
@@ -281,7 +281,7 @@ export function RichText({
                   </Text>
                   <Text
                     size="md"
-                    weight={400}
+                    weight={300}
                     color={color}
                     style={{ flex: 1 }}
                   >

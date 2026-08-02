@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+// import { GameAnimations } from "@/animations";
 
 export const pyramid: GameDefinition = {
   path: "/pyramid",
@@ -13,8 +14,9 @@ export const pyramid: GameDefinition = {
   },
   thumbnail: "Pyramid.jpg",
   background: GAME_BACKGROUNDS.sahara,
-  cardColorBg: "#251703",
-  cardColorText: "#FFEACC",
+  // animation: GameAnimations.SandStorm,
+  gameColorDark: "#251703",
+  gameColorPale: "#FFEACC",
   cardDescription:
     "Clear the pyramid by removing pairs of cards that add up to 13.",
   quickStart: [

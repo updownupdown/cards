@@ -70,7 +70,7 @@ export function DeckPreviewModal({
     <ModalFull
       title={title}
       onClose={closeModal}
-      backgroundColor={gameInfo.cardColorBg}
+      backgroundColor={gameInfo.gameColorDark}
     >
       <ScrollView
         contentContainerStyle={[

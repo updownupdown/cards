@@ -43,7 +43,14 @@ export default function ModalFull({
         ]}
       >
         <View style={[modalStyles.modalCard, { backgroundColor }]}>
-          <View style={modalStyles.modalHeader}>
+          <View
+            style={[
+              modalStyles.modalHeader,
+              {
+                boxShadow: `0 0 ${spacing(6)}px ${spacing(6)}px ${rgba(backgroundColor, 1)}`,
+              },
+            ]}
+          >
             {/* Icon */}
             {iconName && (
               <Icon
@@ -77,7 +84,8 @@ export default function ModalFull({
                 flexStyles.rowCentered,
                 {
                   marginLeft: "auto",
-                  backgroundColor: rgba(Colors.white, 0.1),
+                  // backgroundColor: rgba(Colors.white, 0.1),
+                  backgroundColor: "transparent",
                   borderRadius: spacing(layoutDims.menuButtonSize / 2),
                   padding: 0,
                   width: spacing(layoutDims.menuButtonSize),
@@ -104,28 +112,15 @@ type ModalHeadingProps = {
   color: string;
   iconName?: IconName;
   title: string;
-  topBorder?: boolean;
 };
 
-export const ModalHeading = ({
-  color,
-  iconName,
-  title,
-  topBorder = false,
-}: ModalHeadingProps) => {
-  const { spacing } = useResponsiveMetrics();
-
+export const ModalHeading = ({ color, iconName, title }: ModalHeadingProps) => {
   return (
     <View
       style={[
         flexStyles.rowCentered,
         flexStyles.fullWidth,
         flexStyles.spaceBetween,
-        topBorder && {
-          borderTopWidth: 1,
-          borderTopColor: rgba(color, 0.2),
-          paddingTop: spacing(30),
-        },
       ]}
     >
       <Text size="xxl" weight={300} color={color} style={flexStyles.flex1}>

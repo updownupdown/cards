@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const cardCapture: GameDefinition = {
   path: "/card-capture",
@@ -13,9 +14,10 @@ export const cardCapture: GameDefinition = {
   },
   thumbnail: "CardCapture.jpg",
   background: GAME_BACKGROUNDS.field,
+  animation: GameAnimations.PassingClouds,
   cardBack: "CardCapture.png",
-  cardColorBg: "#2b2d42",
-  cardColorText: "#d4cdc3",
+  gameColorDark: "#2b2d42",
+  gameColorPale: "#d4cdc3",
   cardDescription:
     "Use low cards and jokers to dismantle enemy forces, while protecting every Ace and face card from capture.",
   quickStart: ["Enemy line shifts right, then refills from enemy deck."],

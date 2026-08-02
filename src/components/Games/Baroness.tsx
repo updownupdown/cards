@@ -26,6 +26,8 @@ type GameState = {
   won: boolean;
 };
 
+export type BaronessGameState = GameState;
+
 const gameStateInitial: GameState = {
   piles: Array.from({ length: pileCount }, () => []),
   draw: [],
@@ -57,7 +59,13 @@ async function resetAndSetup(
   await delay();
 }
 
-function evaluateEnd(state: GameState, allowMoveToEmptyPile: boolean) {
+function evaluateEnd(
+  state: GameState,
+  allowMoveToEmptyPile: boolean,
+  isSettingUp = false,
+) {
+  if (isSettingUp) return { ended: false, won: false };
+
   const cardsLeft =
     state.piles.reduce((sum, pile) => sum + pile.length, 0) + state.draw.length;
   if (cardsLeft === 0) return { ended: true, won: true };
@@ -94,30 +102,42 @@ function evaluateEnd(state: GameState, allowMoveToEmptyPile: boolean) {
   return { ended: false, won: false };
 }
 
+export const baronessRules = {
+  evaluateEnd,
+};
+
 // ========== Main Component ========== //
 export default function Baroness() {
   const difficulty = useGameSettingValue("difficulty");
   const allowMoveToEmptyPile = difficulty !== "difficult";
   const [selected, setSelected] = useState<number | undefined>(undefined);
 
-  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
-    useStateManager({
-      resetAndSetup: async () => {
-        await resetAndSetup(setGame);
-      },
-      gameStateInitial,
-      resetNonGameStates: () => setSelected(undefined),
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+    resetNonGameStates: () => setSelected(undefined),
+  });
 
   useEffect(() => {
-    const { ended, won } = evaluateEnd(game, allowMoveToEmptyPile);
+    const { ended, won } = evaluateEnd(game, allowMoveToEmptyPile, isSettingUp);
     if (ended !== game.ended || won !== game.won) {
       setGame((draft) => {
         draft.ended = ended;
         draft.won = won;
       });
     }
-  }, [allowMoveToEmptyPile, game]);
+  }, [allowMoveToEmptyPile, game, isSettingUp, setGame]);
 
   function dealRow() {
     if (game.ended || game.draw.length === 0) return;

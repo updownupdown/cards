@@ -223,6 +223,27 @@ function handName(val: number[]) {
   return CAT_NAMES[val[0]] ?? "High Card";
 }
 
+function foldOutcome(foldStreak: number) {
+  const nextFoldStreak = foldStreak + 1;
+  return {
+    foldStreak: nextFoldStreak,
+    ended: nextFoldStreak >= maxFoldStreak,
+  };
+}
+
+export const inHandPokerRules = {
+  handValue,
+  bestHand,
+  compareValues,
+  combos5,
+  bestFiveOf,
+  handName,
+  foldOutcome,
+  startScore,
+  winScore,
+  maxFoldStreak,
+};
+
 // ── Types ─────────────────────────────────────────────────────────────────────
 type Phase = "decide" | "discard" | "bet" | "roundEnd";
 
@@ -241,6 +262,8 @@ type GameState = {
   ended: boolean;
   won: boolean;
 };
+
+export type InHandPokerGameState = GameState;
 
 const gameStateInitial: GameState = {
   deck: [],
@@ -268,7 +291,7 @@ function buildDeck(jokers: boolean) {
 // ── Component ────────────────────────────────────────────────────────────────
 export default function InHandPoker() {
   const { spacing } = useResponsiveMetrics();
-  const { cardBg, cardText } = useGameZoneBackground();
+  const { colorDark, colorPale } = useGameZoneBackground();
   const jokers = useGameSettingValue("pokerJokers") as boolean;
   const jokersRef = useRef(jokers);
   jokersRef.current = jokers;
@@ -356,10 +379,11 @@ export default function InHandPoker() {
   async function fold() {
     if (game.phase !== "decide" || game.ended) return;
     saveUndoState(structuredClone(game));
+    const outcome = foldOutcome(game.foldStreak);
 
-    if (game.foldStreak >= maxFoldStreak) {
+    if (outcome.ended) {
       setGame((draft) => {
-        draft.foldStreak += 1;
+        draft.foldStreak = outcome.foldStreak;
         draft.ended = true;
         draft.won = false;
       });
@@ -367,7 +391,7 @@ export default function InHandPoker() {
     }
 
     setGame((draft) => {
-      draft.foldStreak += 1;
+      draft.foldStreak = outcome.foldStreak;
     });
     setSelectedDiscards([]);
     await dealNextRound();
@@ -614,8 +638,8 @@ export default function InHandPoker() {
       winLoseMessage={
         game.won
           ? "You hit 10 points — you win!"
-          : game.foldStreak > maxFoldStreak
-            ? "Folded four times in a row."
+          : game.foldStreak >= maxFoldStreak
+            ? "Folded three times in a row."
             : "You busted out."
       }
       canUndo={canUndo}
@@ -644,7 +668,7 @@ export default function InHandPoker() {
 
       {/* Opponent */}
       <View style={[flexStyles.colCentered, getZoneStylesById("oppLabel")]}>
-        <Text size="md" weight={400} color={cardText}>
+        <Text size="md" weight={400} color={colorPale}>
           {oppValue && handName(oppValue)}
         </Text>
       </View>
@@ -656,12 +680,12 @@ export default function InHandPoker() {
             <Text
               size="xs"
               weight={400}
-              color={cardText}
+              color={colorPale}
               textTransform="uppercase"
             >
               Fold
             </Text>
-            <Text size="xl" weight={600} color={cardText}>
+            <Text size="xl" weight={600} color={colorPale}>
               {game.foldStreak}/{maxFoldStreak}
             </Text>
           </View>
@@ -673,12 +697,12 @@ export default function InHandPoker() {
               <Text
                 size="xs"
                 weight={400}
-                color={cardText}
+                color={colorPale}
                 textTransform="uppercase"
               >
                 Draw
               </Text>
-              <Text size="xl" weight={600} color={cardText}>
+              <Text size="xl" weight={600} color={colorPale}>
                 {game.discardCount} / 3
               </Text>
             </View>
@@ -696,12 +720,12 @@ export default function InHandPoker() {
               <Text
                 size="xs"
                 weight={400}
-                color={cardText}
+                color={colorPale}
                 textTransform="uppercase"
               >
                 Min bet
               </Text>
-              <Text size="xl" weight={600} color={cardText}>
+              <Text size="xl" weight={600} color={colorPale}>
                 {Math.max(1, game.discardCount || 1)}
               </Text>
             </View>
@@ -767,7 +791,7 @@ export default function InHandPoker() {
 
       {/* Hand */}
       <View style={[flexStyles.colCentered, getZoneStylesById("handLabel")]}>
-        <Text size="md" weight={400} color={cardText}>
+        <Text size="md" weight={400} color={colorPale}>
           {myValue && handName(myValue)}
         </Text>
       </View>

@@ -22,7 +22,13 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 // ── Config ───────────────────────────────────────────────────────────────────
-type Difficulty = "beginner" | "intermediate" | "advanced" | "bloodlust";
+export type DungeonDifficulty =
+  | "beginner"
+  | "intermediate"
+  | "advanced"
+  | "bloodlust";
+
+type Difficulty = DungeonDifficulty;
 
 const START_STRENGTH: Record<Difficulty, number> = {
   beginner: 5,
@@ -80,6 +86,9 @@ type GameState = {
   won: boolean;
 };
 
+export type DungeonBountyGameState = GameState;
+export type DungeonWeaponSlot = WeaponSlot;
+
 const gameStateInitial: GameState = {
   difficulty: "beginner",
   strength: 5,
@@ -136,6 +145,8 @@ type AttackResult = {
   hitsBoth: boolean;
   spendSpellIds: string[];
 };
+
+export type DungeonAttackResult = AttackResult;
 
 function computeAttack(
   selWeapons: WeaponSlot[],
@@ -214,8 +225,20 @@ function buildDungeonDeck(): PlayingCard[] {
   return all.filter((c) => !(c.suit === "hearts" && !isFace(c) && !isJoker(c)));
 }
 
+export const dungeonBountyRules = {
+  cardValue: cval,
+  label,
+  enemyBaseHP,
+  bountyPoints,
+  scoreTier,
+  computeAttack,
+  buildDungeonDeck,
+  startStrength: START_STRENGTH,
+  maxStrength: MAX_STRENGTH,
+};
+
 export default function DungeonBounty() {
-  const { cardBg, cardText } = useGameZoneBackground();
+  const { colorDark, colorPale } = useGameZoneBackground();
   const difficulty = useGameSettingValue("dungeonDifficulty") as Difficulty;
   const difficultyRef = useRef(difficulty);
   difficultyRef.current = difficulty;
@@ -912,18 +935,18 @@ export default function DungeonBounty() {
         style={[getZoneStylesById("hud"), { justifyContent: "center", gap: 2 }]}
       >
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text size="sm" weight={700} color={cardText}>
+          <Text size="sm" weight={700} color={colorPale}>
             {SUIT_GLYPH.hearts} Strength {game.strength}/{MAX_STRENGTH}
           </Text>
-          <Text size="xs" weight={600} color={cardText}>
+          <Text size="xs" weight={600} color={colorPale}>
             Level {game.level} · {game.difficulty}
           </Text>
         </View>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text size="xs" weight={500} color={cardText}>
+          <Text size="xs" weight={500} color={colorPale}>
             Deck {game.deck.length} · Discard {game.discard.length}
           </Text>
-          <Text size="xs" weight={500} color={cardText}>
+          <Text size="xs" weight={500} color={colorPale}>
             Slain {game.bounties.length} · Score {liveScoreValue + gemValue}
           </Text>
         </View>
@@ -937,7 +960,7 @@ export default function DungeonBounty() {
           ]}
         >
           {enemies.length > 0 ? (
-            <Text size="xs" weight={600} color={cardText}>
+            <Text size="xs" weight={600} color={colorPale}>
               {enemies
                 .map(
                   (e) =>
@@ -948,7 +971,7 @@ export default function DungeonBounty() {
                 .join("   ")}
             </Text>
           ) : (
-            <Text size="xs" weight={500} color={cardText}>
+            <Text size="xs" weight={500} color={colorPale}>
               {game.cavernKind === "loot" && game.cavern.length > 0
                 ? "Tap a cavern card to loot it."
                 : ""}
@@ -961,7 +984,7 @@ export default function DungeonBounty() {
         <View
           style={[getZoneStylesById("heroLabel"), { justifyContent: "center" }]}
         >
-          <Text size="xs" weight={600} color={cardText}>
+          <Text size="xs" weight={600} color={colorPale}>
             Hero — tap your cards to build an attack
           </Text>
         </View>
@@ -969,13 +992,13 @@ export default function DungeonBounty() {
 
       {/* Controls */}
       <View style={[getZoneStylesById("controls"), { gap: 6 }]}>
-        <Text size="xs" weight={400} color={cardText}>
+        <Text size="xs" weight={400} color={colorPale}>
           {game.message}
         </Text>
 
         {game.phase === "scout" ? (
           <View style={{ gap: 6 }}>
-            <Text size="xs" weight={400} color={cardText}>
+            <Text size="xs" weight={400} color={colorPale}>
               Tap a club (weapon ≤ strength), spade (spell) or diamond (gem) to
               keep. The rest go to the bottom of the deck.
             </Text>
@@ -983,14 +1006,14 @@ export default function DungeonBounty() {
               text="Skip (keep nothing)"
               size="sm"
               onPress={skipScout}
-              theme={cardBg}
+              theme={colorDark}
             />
           </View>
         ) : null}
 
         {game.phase === "play" && game.merchantOpen ? (
           <View style={{ gap: 6 }}>
-            <Text size="xs" weight={500} color={cardText}>
+            <Text size="xs" weight={500} color={colorPale}>
               Merchant — you have {gemValue} gem value to spend.
             </Text>
             <ScrollView
@@ -1000,7 +1023,7 @@ export default function DungeonBounty() {
             >
               <View style={{ flexDirection: "row", gap: 6 }}>
                 {merchantItems.length === 0 ? (
-                  <Text size="xs" weight={400} color={cardText}>
+                  <Text size="xs" weight={400} color={colorPale}>
                     Nothing affordable.
                   </Text>
                 ) : (
@@ -1010,7 +1033,7 @@ export default function DungeonBounty() {
                       text={`${label(c)} (${cval(c)})`}
                       size="sm"
                       onPress={() => buyFromDiscard(c.id)}
-                      theme={cardBg}
+                      theme={colorDark}
                     />
                   ))
                 )}
@@ -1027,7 +1050,7 @@ export default function DungeonBounty() {
 
         {game.phase === "play" && !game.merchantOpen && enemies.length > 0 ? (
           <View style={{ gap: 6 }}>
-            <Text size="xs" weight={600} color={cardText}>
+            <Text size="xs" weight={600} color={colorPale}>
               Attack {attack.total}
               {attack.isRelic
                 ? " (Volatile Relic — ignores powers, hits all!)"
@@ -1037,7 +1060,7 @@ export default function DungeonBounty() {
             </Text>
             {failPick ? (
               <View style={{ gap: 6 }}>
-                <Text size="xs" weight={500} color={cardText}>
+                <Text size="xs" weight={500} color={colorPale}>
                   Tap one of your items to surrender to the beast.
                 </Text>
                 <Button
@@ -1047,7 +1070,7 @@ export default function DungeonBounty() {
                     setFailPick(false);
                     setGiveUpOpen(true);
                   }}
-                  theme={cardBg}
+                  theme={colorDark}
                 />
               </View>
             ) : giveUpOpen ? (
@@ -1064,13 +1087,13 @@ export default function DungeonBounty() {
                   text="Surrender Item"
                   size="sm"
                   onPress={() => setFailPick(true)}
-                  theme={cardBg}
+                  theme={colorDark}
                 />
                 <Button
                   text="Back"
                   size="sm"
                   onPress={() => setGiveUpOpen(false)}
-                  theme={cardBg}
+                  theme={colorDark}
                 />
               </View>
             ) : (
@@ -1080,28 +1103,28 @@ export default function DungeonBounty() {
                   size="md"
                   onPress={doAttack}
                   disabled={attack.total <= 0}
-                  theme={cardBg}
+                  theme={colorDark}
                 />
                 {canEnchant ? (
                   <Button
                     text="Enchant"
                     size="sm"
                     onPress={enchant}
-                    theme={cardBg}
+                    theme={colorDark}
                   />
                 ) : null}
                 <Button
                   text="Give Up"
                   size="sm"
                   onPress={() => setGiveUpOpen(true)}
-                  theme={cardBg}
+                  theme={colorDark}
                 />
                 {cavernHasAce ? (
                   <Button
                     text="Ace: Clear"
                     size="sm"
                     onPress={useAceClear}
-                    theme={cardBg}
+                    theme={colorDark}
                   />
                 ) : null}
               </View>
@@ -1119,7 +1142,7 @@ export default function DungeonBounty() {
                 text="Enchant"
                 size="sm"
                 onPress={enchant}
-                theme={cardBg}
+                theme={colorDark}
               />
             ) : null}
             {cavernHasAce ? (
@@ -1127,7 +1150,7 @@ export default function DungeonBounty() {
                 text="Ace: Clear (to deck bottom)"
                 size="sm"
                 onPress={useAceClear}
-                theme={cardBg}
+                theme={colorDark}
               />
             ) : null}
           </View>

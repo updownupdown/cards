@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const hideAndSeek: GameDefinition = {
   path: "/hide-and-seek",
@@ -13,9 +14,10 @@ export const hideAndSeek: GameDefinition = {
   },
   thumbnail: "HideAndSeek.jpg",
   background: GAME_BACKGROUNDS.playground,
+  animation: GameAnimations.FallingLeaves,
   cardBack: "HideAndSeek.png",
-  cardColorBg: "#221815",
-  cardColorText: "#c5f7da",
+  gameColorDark: "#221815",
+  gameColorPale: "#c5f7da",
   cardDescription:
     "Find your hidden playmates through careful planning and deduction.",
   quickStart: ["Make legal moves to uncover hidden cards; avoid burying them."],

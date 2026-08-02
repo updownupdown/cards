@@ -39,6 +39,8 @@ type GameState = {
   won: boolean;
 };
 
+export type ClockGameState = GameState;
+
 const gameStateInitial: GameState = {
   piles: Array.from({ length: 13 }, (_, i) =>
     i === 0 ? flipAllToBack(shuffle(createDeck())) : [],
@@ -81,9 +83,43 @@ async function resetAndSetup(
   });
 }
 
+function revealCardAtPileIndex(draft: GameState, pileIndex: number) {
+  if (draft.ended || draft.piles.length === 0) return false;
+
+  const clickedCard = top(draft.piles[pileIndex]);
+  if (!clickedCard) return false;
+
+  if (draft.prevPileIndex !== undefined) {
+    const cardToMove = draft.piles[draft.prevPileIndex].pop();
+    if (!cardToMove) return false;
+    draft.piles[pileIndex].unshift(cardToMove);
+  }
+
+  draft.piles[pileIndex] = flipTopCardToFace(draft.piles[pileIndex]);
+
+  let nextCardRank = rankValue(clickedCard);
+  if (pileIndex === draft.nextPileIndex) {
+    const topOfSamePile = top(draft.piles[pileIndex]);
+    if (!topOfSamePile) return false;
+    nextCardRank = rankValue(topOfSamePile);
+  }
+
+  draft.nextPileIndex = nextCardRank === 13 ? 0 : nextCardRank;
+  draft.prevPileIndex = pileIndex;
+  draft.revealedKings += nextCardRank === 13 ? 1 : 0;
+  draft.revealedCards += 1;
+  draft.won = draft.revealedCards === 52;
+  draft.ended = draft.won || draft.revealedKings === 4;
+  return true;
+}
+
+export const clockRules = {
+  revealCardAtPileIndex,
+};
+
 export default function Clock() {
   const AnimatedCircle = Animated.createAnimatedComponent(Circle);
-  const { cardText, cardBg, zoneBg } = useGameZoneBackground();
+  const { colorPale, colorDark, colorZone } = useGameZoneBackground();
   const { scale: responsiveScale } = useResponsiveMetrics();
 
   const {
@@ -102,7 +138,7 @@ export default function Clock() {
     gameStateInitial,
   });
 
-  async function revealCardAtPileIndex(pileIndex: number) {
+  async function revealCard(pileIndex: number) {
     if (game.ended || game.piles.length === 0) {
       return;
     }
@@ -110,42 +146,7 @@ export default function Clock() {
     saveUndoState(structuredClone(game));
 
     setGame((draft) => {
-      const clickedCard = top(draft.piles[pileIndex]);
-
-      if (!clickedCard) return;
-
-      // Move prev top card to clicked pile
-      if (draft.prevPileIndex !== undefined) {
-        const cardToMove = draft.piles[draft.prevPileIndex].pop();
-
-        if (!cardToMove) return;
-
-        draft.piles[pileIndex].unshift(cardToMove);
-      }
-
-      // Flip over card on clicked pile
-      draft.piles[pileIndex] = flipTopCardToFace(draft.piles[pileIndex]);
-
-      // Update the next pile index
-      const clickedCardRank = rankValue(clickedCard);
-      let nextCardRank = clickedCardRank;
-
-      if (pileIndex === draft.nextPileIndex) {
-        const topOfSamePile = top(draft.piles[pileIndex]);
-        if (!topOfSamePile) return;
-        nextCardRank = rankValue(topOfSamePile);
-      }
-
-      draft.nextPileIndex = nextCardRank === 13 ? 0 : nextCardRank;
-      draft.prevPileIndex = pileIndex;
-
-      // Increment revealed kings
-      draft.revealedKings += nextCardRank === 13 ? 1 : 0;
-
-      draft.revealedCards += 1;
-      draft.won = draft.revealedCards === 52;
-      const lost = draft.revealedKings === 4;
-      draft.ended = draft.won || lost;
+      revealCardAtPileIndex(draft, pileIndex);
     });
   }
 
@@ -223,7 +224,7 @@ export default function Clock() {
       pileIndex === game.prevPileIndex;
 
     return {
-      onPress: pressable ? () => revealCardAtPileIndex(pileIndex) : undefined,
+      onPress: pressable ? () => revealCard(pileIndex) : undefined,
       selectColor: "blue",
       forceOverlayColor,
     };
@@ -333,7 +334,7 @@ export default function Clock() {
             justifyContent: "center",
             alignItems: "center",
             zIndex: 1,
-            backgroundColor: zoneBg,
+            backgroundColor: colorZone,
             width: clockFaceRadius,
             height: clockFaceRadius,
             borderRadius: clockFaceRadius / 2,
@@ -366,7 +367,7 @@ export default function Clock() {
                 cx={progressSize / 2}
                 cy={progressSize / 2}
                 r={progressRadius}
-                stroke={rgba(cardText, 0.15)}
+                stroke={rgba(colorPale, 0.15)}
                 strokeWidth={progressStroke}
                 fill="transparent"
               />
@@ -404,8 +405,8 @@ export default function Clock() {
                   left: center - hourWidth / 2,
                   top: center - hourPivotY,
                 }}
-                fill={cardText}
-                stroke={rgba(cardBg, 0.7)}
+                fill={colorPale}
+                stroke={rgba(colorDark, 0.7)}
                 strokeWidth={responsiveScale * 4}
               />
             </Animated.View>

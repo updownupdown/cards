@@ -29,6 +29,8 @@ import { DeckPreviewModal } from "../Modals/DeckPreviewModal";
 
 type SelectedPos = { queueIndex: number; cardIndex: number };
 
+export type BobaTeaSelectedPos = SelectedPos;
+
 type GameState = {
   deck: PlayingCard[];
   queues: PlayingCard[][];
@@ -39,6 +41,8 @@ type GameState = {
   ended: boolean;
   won: boolean;
 };
+
+export type BobaTeaGameState = GameState;
 
 function createDiscardCount(): Record<PlayingCard["rank"], number> {
   return {
@@ -141,10 +145,18 @@ function evaluateEnd(state: GameState): { ended: boolean; won: boolean } {
   return { ended: false, won: false };
 }
 
+export const bobaTeaShopRules = {
+  createDiscardCount,
+  totalInQueues,
+  checkNextCustomerFits,
+  updatedDiscardsByRank,
+  evaluateEnd,
+};
+
 // ========== Main Game Component ========== //
 export default function TheBobaTeaShop() {
   const { spacing } = useResponsiveMetrics();
-  const { zoneBg, cardText } = useGameZoneBackground();
+  const { colorZone, colorPale } = useGameZoneBackground();
   const [showDeckPreview, setShowDeckPreview] = useState(false);
   const [isResolvingCustomerAction, setIsResolvingCustomerAction] =
     useState(false);
@@ -664,7 +676,7 @@ export default function TheBobaTeaShop() {
               {
                 ...StyleSheet.absoluteFill,
                 opacity: selectQueuePromptOpacity,
-                backgroundColor: zoneBg,
+                backgroundColor: colorZone,
                 borderRadius: cardWidth * 0.2,
               },
             ]}
@@ -672,7 +684,7 @@ export default function TheBobaTeaShop() {
             <Text
               size="sm"
               weight={400}
-              color={cardText}
+              color={colorPale}
               style={{
                 textAlign: "center",
               }}

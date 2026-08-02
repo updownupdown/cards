@@ -14,8 +14,8 @@ export const skyway: GameDefinition = {
   thumbnail: "Skyway.jpg",
   background: GAME_BACKGROUNDS.interchange,
   cardBack: "Skyway.png",
-  cardColorBg: "#1d2a35",
-  cardColorText: "#b3d5ec",
+  gameColorDark: "#1d2a35",
+  gameColorPale: "#b3d5ec",
   cardDescription:
     "Draft from a shifting market to engineer long suit-based routes across a growing grid.",
   quickStart: [

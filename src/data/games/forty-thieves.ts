@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const fortyThieves: GameDefinition = {
   path: "/forty-thieves",
@@ -13,8 +14,9 @@ export const fortyThieves: GameDefinition = {
   },
   thumbnail: "FortyThieves.jpg",
   background: GAME_BACKGROUNDS.field,
-  cardColorBg: "#2E2D34",
-  cardColorText: "#EFE8FF",
+  animation: GameAnimations.FlyingBirds,
+  gameColorDark: "#2E2D34",
+  gameColorPale: "#EFE8FF",
   cardDescription:
     "A demanding two-deck patience where every card moves one at a time.",
   quickStart: ["Foundations up suit; tableau down suit, one card at a time."],

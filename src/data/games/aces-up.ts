@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const acesUp: GameDefinition = {
   path: "/aces-up",
@@ -13,9 +14,10 @@ export const acesUp: GameDefinition = {
   },
   thumbnail: "AcesUp.jpg",
   background: GAME_BACKGROUNDS.castle,
+  animation: GameAnimations.FlyingBirds,
   cardBack: "AcesUp.png",
-  cardColorBg: "#1d0f0a",
-  cardColorText: "#eee0ca",
+  gameColorDark: "#1d0f0a",
+  gameColorPale: "#eee0ca",
   cardDescription: "Discard low cards until only the four Aces remain.",
   quickStart: ["Discard lower same-suit exposes; deal four when stuck."],
   howToPlay: [

@@ -25,6 +25,8 @@ type GameState = {
   won: boolean;
 };
 
+export type AccordionGameState = GameState;
+
 const gameStateInitial: GameState = {
   setupPile: shuffle(createDeck()),
   line: [],
@@ -87,6 +89,11 @@ function hasAnyMove(line: PlayingCard[][]) {
   }
   return false;
 }
+
+export const accordionRules = {
+  canMerge,
+  hasAnyMove,
+};
 
 // ========== Game Component ========== //
 export default function Accordion() {

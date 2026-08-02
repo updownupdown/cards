@@ -35,6 +35,8 @@ type GameState = {
   won: boolean;
 };
 
+export type OsmosisGameState = GameState;
+
 const gameStateInitial: GameState = {
   baseCard: null,
   reserves: Array.from({ length: reserveCount }, () => []),
@@ -111,7 +113,9 @@ async function resetAndSetup(
   });
 }
 
-function evaluateEnd(state: GameState) {
+function evaluateEnd(state: GameState, isSettingUp = false) {
+  if (isSettingUp) return { ended: false, won: false };
+
   const placed = state.foundations.reduce((sum, row) => sum + row.length, 0);
   if (placed === 52) return { ended: true, won: true };
 
@@ -129,27 +133,40 @@ function evaluateEnd(state: GameState) {
   return { ended: false, won: false };
 }
 
+export const osmosisRules = {
+  foundationTarget,
+  evaluateEnd,
+};
+
 // ========== Main Component ========== //
 export default function Osmosis() {
   const configuredDrawCount = useGameSettingValue("drawCount");
 
-  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
-    useStateManager({
-      resetAndSetup: async () => {
-        await resetAndSetup(setGame);
-      },
-      gameStateInitial,
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+  });
 
   useEffect(() => {
-    const { ended, won } = evaluateEnd(game);
+    const { ended, won } = evaluateEnd(game, isSettingUp);
     if (ended !== game.ended || won !== game.won) {
       setGame((draft) => {
         draft.ended = ended;
         draft.won = won;
       });
     }
-  }, [game]);
+  }, [game, isSettingUp, setGame]);
 
   function playFromReserve(index: number) {
     if (game.ended) return;

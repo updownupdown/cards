@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const blackjackRiverResearch: GameDefinition = {
   path: "/blackjack-river-research",
@@ -13,8 +14,9 @@ export const blackjackRiverResearch: GameDefinition = {
   },
   thumbnail: "BlackjackRiverResearch.jpg",
   background: GAME_BACKGROUNDS.river,
-  cardColorBg: "#11343d",
-  cardColorText: "#c3e9ff",
+  animation: GameAnimations.FlyingBirds,
+  gameColorDark: "#11343d",
+  gameColorPale: "#c3e9ff",
   cardDescription:
     "Balance four fish populations to exactly 21 and publish your studies of the Blackjack River.",
   quickStart: [

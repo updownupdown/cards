@@ -12,10 +12,10 @@ export const calculation: GameDefinition = {
     luck: 50,
   },
   thumbnail: "Calculation.jpg",
-  background: GAME_BACKGROUNDS.feltDarkPurple,
+  background: GAME_BACKGROUNDS.oldRoom,
   cardBack: "Calculation.png",
-  cardColorBg: "#12122b",
-  cardColorText: "#eccfff",
+  gameColorDark: "#12122b",
+  gameColorPale: "#eccfff",
   cardDescription:
     "Build four foundations in steps of 1, 2, 3, and 4 up to the Kings.",
   quickStart: ["Play to +1/+2/+3/+4 foundations; park blocks on waste piles."],
@@ -45,6 +45,4 @@ export const calculation: GameDefinition = {
   credits: {
     creators: [GameCreators.Unknown],
   },
-
-
 };

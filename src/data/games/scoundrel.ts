@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const scoundrel: GameDefinition = {
   path: "/scoundrel",
@@ -12,10 +13,11 @@ export const scoundrel: GameDefinition = {
     luck: 30,
   },
   thumbnail: "Scoundrel.jpg",
-  background: GAME_BACKGROUNDS.dungeon,
+  background: GAME_BACKGROUNDS.stoneTunnel,
+  animation: GameAnimations.FallingEmbers,
   cardBack: "Scoundrel.png",
-  cardColorBg: "#201913",
-  cardColorText: "#fce8e3",
+  gameColorDark: "#201913",
+  gameColorPale: "#fce8e3",
   cardDescription:
     "A dungeon crawl where you manage weapon strength and potion usage.",
   quickStart: [

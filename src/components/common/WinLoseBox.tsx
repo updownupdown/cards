@@ -30,7 +30,7 @@ export const WinLoseBox = ({
   handleUndo,
 }: Props) => {
   const { ui, spacing } = useResponsiveMetrics();
-  const { cardBg } = useGameZoneBackground();
+  const { colorDark } = useGameZoneBackground();
 
   // Win/lose animations
   const wlmAnim = useRef(new Animated.Value(0)).current;
@@ -78,7 +78,7 @@ export const WinLoseBox = ({
         }}
       >
         <LinearGradient
-          colors={[rgba(cardBg, 0.4), rgba(cardBg, 0.9)]}
+          colors={[rgba(colorDark, 0), rgba(colorDark, 0.9)]}
           start={{ x: 0.5, y: 0 }}
           end={{ x: 0.5, y: 1 }}
           style={{

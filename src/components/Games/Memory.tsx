@@ -33,6 +33,8 @@ const GRID_CONFIG = {
 
 type MemoryDifficulty = keyof typeof GRID_CONFIG;
 
+export type MemoryGameDifficulty = MemoryDifficulty;
+
 const DIFFICULTY_LABELS: Record<MemoryDifficulty, string> = {
   veryeasy: "Very Easy",
   easy: "Easy",
@@ -48,6 +50,8 @@ type GameState = {
   ended: boolean;
   won: boolean;
 };
+
+export type MemoryGameState = GameState;
 
 type PendingPair = {
   firstIndex: number;
@@ -109,6 +113,13 @@ function cardsMatch(first: PlayingCard, second: PlayingCard) {
   return first.rank === second.rank && first.suit === second.suit;
 }
 
+export const memoryRules = {
+  createMemoryDeck,
+  cardsMatch,
+  gridConfig: GRID_CONFIG,
+  difficultyLabels: DIFFICULTY_LABELS,
+};
+
 export default function Memory() {
   const difficulty = useGameSettingValue(
     "memoryDifficulty",
@@ -120,7 +131,7 @@ export default function Memory() {
   const [matchedPair, setMatchedPair] = useState<MatchedPair | null>(null);
   const [isGameModalOpen, setIsGameModalOpen] = useState(false);
   const pendingPair = useRef<PendingPair | null>(null);
-  const { cardText } = useGameZoneBackground();
+  const { colorPale } = useGameZoneBackground();
 
   const { isLoaded, game, setGame, reset } = useStateManager({
     resetAndSetup: async () => {
@@ -311,20 +322,20 @@ export default function Memory() {
     >
       <View style={[getZoneStylesById("hud"), flexStyles.rowCentered]}>
         <View style={[flexStyles.colCentered, flexStyles.flex1]}>
-          <Text size="sm" weight={300} color={cardText}>
+          <Text size="sm" weight={300} color={colorPale}>
             Guesses
           </Text>
-          <Text size="xl" weight={500} color={cardText}>
+          <Text size="xl" weight={500} color={colorPale}>
             {guesses}
           </Text>
         </View>
 
         <View style={[flexStyles.colCentered, flexStyles.flex1]}>
-          <Text size="sm" weight={300} color={cardText}>
+          <Text size="sm" weight={300} color={colorPale}>
             Difficulty
           </Text>
           <Pressable onPress={() => setIsGameModalOpen(true)}>
-            <Text size="xl" weight={500} color={cardText}>
+            <Text size="xl" weight={500} color={colorPale}>
               {DIFFICULTY_LABELS[difficulty]}
             </Text>
           </Pressable>

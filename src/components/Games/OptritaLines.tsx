@@ -32,9 +32,9 @@ const SIZE = 6;
 const CELLS = SIZE * SIZE;
 const winTarget = 21;
 
-type Cell = { card: PlayingCard | null; faceUp: boolean };
+export type OptritaCell = { card: PlayingCard | null; faceUp: boolean };
 type GameState = {
-  grid: Cell[];
+  grid: OptritaCell[];
   hand: PlayingCard[];
   playerWon: PlayingCard[];
   gridWon: PlayingCard[];
@@ -47,6 +47,8 @@ type GameState = {
   ended: boolean;
   won: boolean;
 };
+
+export type OptritaGameState = GameState;
 
 const gameStateInitial: GameState = {
   grid: Array.from({ length: CELLS }, () => ({ card: null, faceUp: false })),
@@ -81,14 +83,122 @@ function orderedCells(orient: Orient, index: number, dir: Dir) {
   return cells;
 }
 
-function lineFull(grid: Cell[], orient: Orient, index: number) {
+function lineFull(grid: OptritaCell[], orient: Orient, index: number) {
   return orderedCells(orient, index, "fwd").every((i) => grid[i].card !== null);
 }
+
+export type OptritaChallengeResolution =
+  | {
+      type: "matched";
+      cellIndex: number;
+      youWin: boolean;
+      revealCells: number[];
+    }
+  | {
+      type: "trump";
+      cellIndex: number;
+      youWin: false;
+      revealCells: number[];
+    }
+  | { type: "free"; cells: number[]; revealCells: number[] };
+
+function resolveLineChallenge(
+  grid: OptritaCell[],
+  cells: number[],
+  handCard: PlayingCard,
+  trumpSuit?: PlayingCard["suit"],
+): OptritaChallengeResolution | null {
+  const lineCards = cells.map((cellIndex) => grid[cellIndex]?.card ?? null);
+  if (lineCards.some((card) => card === null)) return null;
+
+  const matchPosition = lineCards.findIndex(
+    (card) => card?.suit === handCard.suit,
+  );
+  if (matchPosition >= 0) {
+    const gridCard = lineCards[matchPosition] as PlayingCard;
+    return {
+      type: "matched",
+      cellIndex: cells[matchPosition],
+      youWin: rankHigh(handCard) > rankHigh(gridCard),
+      revealCells: cells.slice(0, matchPosition + 1),
+    };
+  }
+
+  if (trumpSuit && trumpSuit !== handCard.suit) {
+    const trumpCells = cells.filter(
+      (cellIndex) => grid[cellIndex].card?.suit === trumpSuit,
+    );
+    if (trumpCells.length > 0) {
+      const cellIndex = trumpCells.reduce((lowest, candidate) =>
+        rankHigh(grid[candidate].card!) < rankHigh(grid[lowest].card!)
+          ? candidate
+          : lowest,
+      );
+      return {
+        type: "trump",
+        cellIndex,
+        youWin: false,
+        revealCells: [...cells],
+      };
+    }
+  }
+
+  return { type: "free", cells: [...cells], revealCells: [...cells] };
+}
+
+function endTrickChecks(draft: GameState, gridTarget: number) {
+  if (draft.youScore >= winTarget) {
+    draft.ended = true;
+    draft.won = true;
+    return;
+  }
+  if (draft.gridScore >= gridTarget) {
+    draft.ended = true;
+    draft.won = false;
+    return;
+  }
+  if (draft.hand.length === 0) draft.round += 1;
+}
+
+function applyTrickResultAction(
+  draft: GameState,
+  handIndex: number,
+  cellIndex: number,
+  youWin: boolean,
+  gridTarget: number,
+) {
+  if (draft.ended) return false;
+  const handCard = draft.hand[handIndex];
+  const gridCard = draft.grid[cellIndex]?.card;
+  if (!handCard || !gridCard) return false;
+
+  draft.grid[cellIndex] = { card: null, faceUp: false };
+  draft.hand.splice(handIndex, 1);
+  if (youWin) {
+    draft.youScore += 1;
+    draft.playerWon.push(...flipAllToBack([gridCard, handCard]));
+  } else {
+    draft.gridScore += 1;
+    draft.gridWon.push(...flipAllToBack([gridCard, handCard]));
+  }
+  endTrickChecks(draft, gridTarget);
+  return true;
+}
+
+export const optritaLinesRules = {
+  rankHigh,
+  orderedCells,
+  lineFull,
+  resolveLineChallenge,
+  applyTrickResultAction,
+  size: SIZE,
+  winTarget,
+};
 
 // ── Component ────────────────────────────────────────────────────────────────
 export default function OptritaLines() {
   const { spacing } = useResponsiveMetrics();
-  const { cardBg, cardText } = useGameZoneBackground();
+  const { colorDark, colorPale } = useGameZoneBackground();
   const hardMode = useGameSettingValue("optritaHard") as boolean;
 
   const [selectedHand, setSelectedHand] = useState<number | null>(null);
@@ -219,22 +329,6 @@ export default function OptritaLines() {
 
   const gridTarget = hardMode ? 15 : winTarget;
 
-  function endTrickChecks(draft: GameState) {
-    if (draft.youScore >= winTarget) {
-      draft.ended = true;
-      draft.won = true;
-      return;
-    }
-    if (draft.gridScore >= gridTarget) {
-      draft.ended = true;
-      draft.won = false;
-      return;
-    }
-    if (draft.hand.length === 0) {
-      draft.round += 1;
-    }
-  }
-
   function pickTrump(handIndex: number) {
     if (!game.trumpPhase || game.ended) return;
     saveUndoState(structuredClone(game));
@@ -262,14 +356,19 @@ export default function OptritaLines() {
     const hc = game.hand[handIndex];
     if (!hc) return;
     const cells = orderedCells(orient, index, dir);
+    const resolution = resolveLineChallenge(
+      game.grid,
+      cells,
+      hc,
+      game.trump?.suit,
+    );
+    if (!resolution) return;
 
     setResolvingChallenge(true);
     saveUndoState(structuredClone(game));
 
     try {
-      let matchPos = -1;
-      for (let position = 0; position < cells.length; position += 1) {
-        const cellIndex = cells[position];
+      for (const cellIndex of resolution.revealCells) {
         const cell = game.grid[cellIndex];
         if (!cell.card) continue;
 
@@ -280,17 +379,11 @@ export default function OptritaLines() {
 
           await delay(400);
         }
-
-        if (cell.card.suit === hc.suit) {
-          matchPos = position;
-          break;
-        }
       }
 
-      if (matchPos >= 0) {
-        const removed = cells[matchPos];
-        const gridCard = game.grid[removed].card!;
-        const youWin = rankHigh(hc) > rankHigh(gridCard);
+      if (resolution.type === "matched" || resolution.type === "trump") {
+        const removed = resolution.cellIndex;
+        const youWin = resolution.youWin;
         const shouldStartRound =
           game.hand.length === 1 &&
           (youWin ? game.youScore + 1 : game.youScore) < winTarget &&
@@ -301,18 +394,7 @@ export default function OptritaLines() {
         await delay(1000);
 
         setGame((draft) => {
-          draft.grid[removed] = { card: null, faceUp: false };
-          const handCard = draft.hand.splice(handIndex, 1)[0] as PlayingCard;
-
-          if (youWin) {
-            draft.youScore += 1;
-            draft.playerWon.push(...flipAllToBack([gridCard, handCard]));
-          } else {
-            draft.gridScore += 1;
-            draft.gridWon.push(...flipAllToBack([gridCard, handCard]));
-          }
-
-          endTrickChecks(draft);
+          applyTrickResultAction(draft, handIndex, removed, youWin, gridTarget);
         });
 
         setResolvedCell(null);
@@ -326,42 +408,8 @@ export default function OptritaLines() {
         return;
       }
 
-      // No same-suit card: resolve the revealed line by trump.
-      const trumpSuit = game.trump?.suit;
-      const trumpCells =
-        trumpSuit && trumpSuit !== hc.suit
-          ? cells.filter((i) => game.grid[i].card!.suit === trumpSuit)
-          : [];
-
-      if (trumpCells.length > 0) {
-        let low = trumpCells[0];
-        for (const i of trumpCells) {
-          if (rankHigh(game.grid[i].card!) < rankHigh(game.grid[low].card!))
-            low = i;
-        }
-        const gridCard = game.grid[low].card!;
-        const shouldStartRound =
-          game.hand.length === 1 && game.gridScore + 1 < gridTarget;
-        setResolvedCell({ index: low, color: "red" });
-
-        await delay(1000);
-
-        setGame((draft) => {
-          draft.grid[low] = { card: null, faceUp: false };
-          const handCard = draft.hand.splice(handIndex, 1)[0] as PlayingCard;
-          draft.gridScore += 1;
-          draft.gridWon.push(...flipAllToBack([gridCard, handCard]));
-          endTrickChecks(draft);
-        });
-
-        setResolvedCell(null);
-        setSelectedHand(null);
-        if (shouldStartRound) await startRound();
-        return;
-      }
-
       // No matching suit and no trump: the user may pick any revealed card.
-      setPendingPick({ handIndex, cells: [...cells] });
+      setPendingPick({ handIndex, cells: resolution.cells });
     } finally {
       setResolvingChallenge(false);
     }
@@ -379,11 +427,7 @@ export default function OptritaLines() {
     setResolvedCell({ index: cellIndex, color: "green" });
 
     setGame((draft) => {
-      draft.grid[cellIndex] = { card: null, faceUp: false };
-      const handCard = draft.hand.splice(handIndex, 1)[0] as PlayingCard;
-      draft.youScore += 1;
-      draft.playerWon.push(...flipAllToBack([gridCard, handCard]));
-      endTrickChecks(draft);
+      applyTrickResultAction(draft, handIndex, cellIndex, true, gridTarget);
     });
 
     setPendingPick(null);
@@ -675,7 +719,7 @@ export default function OptritaLines() {
           />
         </View>
 
-        <Text size="sm" weight={400} color={cardText} lineHeight={1}>
+        <Text size="sm" weight={400} color={colorPale} lineHeight={1}>
           {statusText}
         </Text>
       </View>
@@ -692,7 +736,7 @@ export default function OptritaLines() {
               onPress={() => challenge(m.orient, m.index, m.dir)}
               disabled={!enabled}
               fullWidth
-              theme={cardBg}
+              theme={colorDark}
               style={{
                 borderRadius: 4,
                 padding: 0,

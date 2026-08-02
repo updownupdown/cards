@@ -48,6 +48,9 @@ type GameState = {
   winLoseMessage?: string;
 };
 
+export type CardCapturePhase = GamePhase;
+export type CardCaptureGameState = GameState;
+
 function isEnemyCombatant(card: PlayingCard): boolean {
   return isAce(card) || isFace(card);
 }
@@ -246,6 +249,102 @@ function finalizeRoundOrWin(draft: GameState) {
     : "All enemy cards cleared without losing combatants.";
 }
 
+type CardCaptureActionResult =
+  | "applied"
+  | "invalid"
+  | "invalid-capture"
+  | "combatant-sacrifice";
+
+function executeCaptureAction(
+  draft: GameState,
+  targetIdx: number,
+  selectedCardIds: string[],
+): CardCaptureActionResult {
+  const target = draft.enemyRow[targetIdx];
+  if (draft.phase !== "capturePhase" || !target) return "invalid";
+
+  const spentCards = selectedCardIds
+    .map((id) => cardById(draft.hand, id))
+    .filter((card): card is PlayingCard => !!card);
+  if (!canCaptureWithCards(spentCards, target)) return "invalid-capture";
+
+  const selectedIds = new Set(selectedCardIds);
+  draft.hand = draft.hand.filter((card) => !selectedIds.has(card.id));
+  draft.personalDiscard.push(...spentCards.map(flipToBack), flipToBack(target));
+  draft.enemyRow[targetIdx] = null;
+  finalizeRoundOrWin(draft);
+  return "applied";
+}
+
+function executeEnemyCaptureAction(
+  draft: GameState,
+  playerCardId: string,
+): CardCaptureActionResult {
+  const enemyCard = draft.enemyRow[3];
+  const playerCard = cardById(draft.hand, playerCardId);
+  if (draft.phase !== "capturePhase" || !enemyCard || !playerCard) {
+    return "invalid";
+  }
+
+  draft.enemyRow[3] = null;
+  draft.hand = draft.hand.filter((card) => card.id !== playerCard.id);
+  draft.enemyCapturePile.push(flipToBack(enemyCard), flipToBack(playerCard));
+
+  if (isEnemyCombatant(enemyCard) || isEnemyCombatant(playerCard)) {
+    draft.ended = true;
+    draft.phase = "gameOver";
+    draft.won = false;
+    draft.winLoseMessage =
+      "A combatant entered the enemy capture pile. You lose.";
+    clearCaptureSelections(draft);
+    return "applied";
+  }
+
+  finalizeRoundOrWin(draft);
+  return "applied";
+}
+
+function executeSacrificeAction(
+  draft: GameState,
+  targetIdx: number,
+  selectedCardIds: string[],
+): CardCaptureActionResult {
+  const targetEnemy = draft.enemyRow[targetIdx];
+  if (draft.phase !== "capturePhase" || !targetEnemy) return "invalid";
+
+  const sacrificedCards = selectedCardIds
+    .map((id) => cardById(draft.hand, id))
+    .filter((card): card is PlayingCard => !!card);
+  if (sacrificedCards.length !== 2) return "invalid";
+  if (sacrificedCards.some(isEnemyCombatant)) {
+    clearCaptureSelections(draft);
+    return "combatant-sacrifice";
+  }
+
+  const selectedIds = new Set(selectedCardIds);
+  draft.hand = draft.hand.filter((card) => !selectedIds.has(card.id));
+  draft.enemyCapturePile.push(...sacrificedCards.map(flipToBack));
+  draft.enemyRow[targetIdx] = null;
+  draft.enemyDeck.unshift(flipToBack(targetEnemy));
+  finalizeRoundOrWin(draft);
+  return "applied";
+}
+
+export const cardCaptureRules = {
+  isEnemyCombatant,
+  getCardValue,
+  recyclePersonalDeckIfNeeded,
+  drawToHand,
+  compactEnemyRowRight,
+  canCaptureWithCards,
+  cardById,
+  clearCaptureSelections,
+  finalizeRoundOrWin,
+  executeCaptureAction,
+  executeEnemyCaptureAction,
+  executeSacrificeAction,
+};
+
 // ========== Main Game Component ========== //
 export default function CardCapture() {
   const { spacing } = useResponsiveMetrics();
@@ -413,27 +512,14 @@ export default function CardCapture() {
     setGame((draft) => {
       const targetIdx = draft.selectedEnemyIdx;
       if (targetIdx === null) return;
-
-      const target = draft.enemyRow[targetIdx];
-      if (!target) return;
-
-      const spentCards = draft.selectedHandIds
-        .map((id) => cardById(draft.hand, id))
-        .filter((card): card is PlayingCard => !!card);
-
-      if (!canCaptureWithCards(spentCards, target)) {
-        showToast("Invalid capture: suit/value requirement not met.");
-        return;
-      }
-
-      draft.hand = draft.hand.filter(
-        (card) => !draft.selectedHandIds.includes(card.id),
+      const result = executeCaptureAction(
+        draft,
+        targetIdx,
+        draft.selectedHandIds,
       );
-      draft.personalDiscard.push(...spentCards.map((card) => flipToBack(card)));
-      draft.personalDiscard.push(flipToBack(target));
-      draft.enemyRow[targetIdx] = null;
-
-      finalizeRoundOrWin(draft);
+      if (result === "invalid-capture") {
+        showToast("Invalid capture: suit/value requirement not met.");
+      }
     });
   }
 
@@ -443,32 +529,8 @@ export default function CardCapture() {
     saveUndoState(structuredClone(game));
 
     setGame((draft) => {
-      const enemyCard = draft.enemyRow[3];
       const playerCardId = draft.selectedHandIds[0];
-      const playerCard = playerCardId
-        ? cardById(draft.hand, playerCardId)
-        : undefined;
-
-      if (!enemyCard || !playerCard) return;
-
-      draft.enemyRow[3] = null;
-      draft.hand = draft.hand.filter((card) => card.id !== playerCard.id);
-      draft.enemyCapturePile.push(
-        flipToBack(enemyCard),
-        flipToBack(playerCard),
-      );
-
-      if (isEnemyCombatant(enemyCard) || isEnemyCombatant(playerCard)) {
-        draft.ended = true;
-        draft.phase = "gameOver";
-        draft.won = false;
-        draft.winLoseMessage =
-          "A combatant entered the enemy capture pile. You lose.";
-        clearCaptureSelections(draft);
-        return;
-      }
-
-      finalizeRoundOrWin(draft);
+      if (playerCardId) executeEnemyCaptureAction(draft, playerCardId);
     });
   }
 
@@ -480,35 +542,14 @@ export default function CardCapture() {
     setGame((draft) => {
       const targetIdx = draft.selectedEnemyIdx;
       if (targetIdx === null) return;
-
-      const targetEnemy = draft.enemyRow[targetIdx];
-      if (!targetEnemy) return;
-
-      const sacrificedCards = draft.selectedHandIds
-        .map((id) => cardById(draft.hand, id))
-        .filter((card): card is PlayingCard => !!card);
-
-      if (sacrificedCards.length !== 2) return;
-      if (sacrificedCards.some((card) => isEnemyCombatant(card))) {
-        // draft.ended = true;
-        // draft.phase = "gameOver";
-        // draft.won = false;
-        // draft.winLoseMessage = "Cannot sacrifice a combatant card. You lose.";
+      const result = executeSacrificeAction(
+        draft,
+        targetIdx,
+        draft.selectedHandIds,
+      );
+      if (result === "combatant-sacrifice") {
         showToast("Cannot sacrifice a combatant card.");
-        clearCaptureSelections(draft);
-        return;
       }
-
-      draft.hand = draft.hand.filter(
-        (card) => !draft.selectedHandIds.includes(card.id),
-      );
-      draft.enemyCapturePile.push(
-        ...sacrificedCards.map((card) => flipToBack(card)),
-      );
-      draft.enemyRow[targetIdx] = null;
-      draft.enemyDeck.unshift(flipToBack(targetEnemy));
-
-      finalizeRoundOrWin(draft);
     });
   }
 

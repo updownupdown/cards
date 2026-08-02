@@ -13,8 +13,8 @@ export const scorpion: GameDefinition = {
   },
   thumbnail: "Scorpion.jpg",
   background: GAME_BACKGROUNDS.sahara,
-  cardColorBg: "#33262A",
-  cardColorText: "#FFE4E8",
+  gameColorDark: "#33262A",
+  gameColorPale: "#FFE4E8",
   cardDescription:
     "Untangle face-up columns into four same-suit runs from King to Ace.",
   quickStart: ["Build down in suit; move any face-up stack; kings fill empty."],

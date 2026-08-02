@@ -12,9 +12,9 @@ export const inHandPoker: GameDefinition = {
     luck: 50,
   },
   thumbnail: "InHandPoker.jpg",
-  background: GAME_BACKGROUNDS.casino,
-  cardColorBg: "#123a2a",
-  cardColorText: "#f0d98a",
+  background: GAME_BACKGROUNDS.casino2,
+  gameColorDark: "#123a2a",
+  gameColorPale: "#f0d98a",
   cardDescription:
     "A pocket poker duel: draw, bet, and out-rank an opponent dealt from the same deck.",
   quickStart: [

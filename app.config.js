@@ -42,7 +42,7 @@ const config = {
     [
       "expo-splash-screen",
       {
-        backgroundColor: "#343F49",
+        backgroundColor: "#C62440",
         android: {
           image: "./assets/app-icon/icon.png",
           imageWidth: 76,

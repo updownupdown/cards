@@ -14,8 +14,8 @@ export const theSandwichGuy: GameDefinition = {
   thumbnail: "SandwichGuy.jpg",
   background: GAME_BACKGROUNDS.london,
   cardBack: "SandwichGuy.png",
-  cardColorBg: "#102524",
-  cardColorText: "#b0eee9",
+  gameColorDark: "#102524",
+  gameColorPale: "#b0eee9",
   cardDescription:
     "Serve sandwiches by selecting evenly spaced cards; don't let your ingredients run out!",
   quickStart: [

@@ -34,6 +34,8 @@ type GameState = {
   foundations: PlayingCard[][];
 };
 
+export type YukonGameState = GameState;
+
 type MoveSource = { pileIndex: number; cardIndex: number };
 
 type DropTarget =
@@ -85,6 +87,12 @@ export function createYukonState(): GameState {
     foundations: Array.from({ length: 4 }, () => [] as PlayingCard[]),
   };
 }
+
+export const yukonRules = {
+  yukonCanStack,
+  canPlaceOnFoundation,
+  createYukonState,
+};
 
 // ─── Component factory (shared with Russian Solitaire) ────────────────────────
 

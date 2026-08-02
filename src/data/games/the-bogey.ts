@@ -14,8 +14,8 @@ export const theBogey: GameDefinition = {
   thumbnail: "TheBogey.jpg",
   background: GAME_BACKGROUNDS.castle,
   cardBack: "TheBogey.png",
-  cardColorBg: "#0a1e1f",
-  cardColorText: "#ddf0ce",
+  gameColorDark: "#0a1e1f",
+  gameColorPale: "#ddf0ce",
   cardDescription:
     "Build columns of cards in decreasing suit-matched sequences while playing against the mysterious Bogey.",
   quickStart: ["Draw to 5, then play/discard/hold; unplayable bogey loses."],

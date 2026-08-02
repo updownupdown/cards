@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations/types";
 
 export const tripeaks: GameDefinition = {
   path: "/tripeaks",
@@ -12,9 +13,10 @@ export const tripeaks: GameDefinition = {
     luck: 70,
   },
   thumbnail: "TriPeaks.jpg",
-  background: GAME_BACKGROUNDS.castle,
-  cardColorBg: "#24343a",
-  cardColorText: "#e3fcdd",
+  background: GAME_BACKGROUNDS.yukon,
+  animation: GameAnimations.PassingClouds,
+  gameColorDark: "#24343a",
+  gameColorPale: "#e3fcdd",
   cardDescription:
     "Clear three peaks by playing cards one rank above or below the waste.",
   quickStart: ["Play exposed +/-1 to waste; A<->K wraps; draw when stuck."],

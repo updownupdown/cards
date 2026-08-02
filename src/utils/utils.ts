@@ -67,7 +67,7 @@ export function centeredOffset(containerSize: number, childSize: number) {
   return (containerPx - childPx) / (2 * ratio);
 }
 
-export const delay = (ms: number = bufferedDefaultAnimDuration) =>
+export const delay = (ms: number = bufferedDefaultAnimDuration * 1.5) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
 const LOCAL_DEV_HOSTNAMES = new Set(["localhost", "127.0.0.1", "::1"]);

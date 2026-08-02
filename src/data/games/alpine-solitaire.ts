@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const alpineSolitaire: GameDefinition = {
   path: "/alpine-solitaire",
@@ -13,8 +14,9 @@ export const alpineSolitaire: GameDefinition = {
   },
   thumbnail: "AlpineSolitaire.jpg",
   background: GAME_BACKGROUNDS.mountain1,
-  cardColorBg: "#2a3b4d",
-  cardColorText: "#e8f2ff",
+  animation: GameAnimations.FallingSnow,
+  gameColorDark: "#2a3b4d",
+  gameColorPale: "#e8f2ff",
   cardDescription:
     "A solo climbing game: play ever-higher routes to reach three camps before the deck runs out.",
   quickStart: [

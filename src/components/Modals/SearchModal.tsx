@@ -76,15 +76,15 @@ export function SearchModal({
   const inputBgColor = rgba(Colors.K950, 0.7);
   const inputHeight = spacing(52);
   const borderRadius = spacing(12);
-  const iconSize = spacing(52 * 0.4);
+  const iconSize = spacing(52 * 0.5);
   const webSearchInputProps =
     Platform.OS === "web"
       ? ({ id: "home-search-input", name: "home-search" } as any)
       : undefined;
 
   return (
-    <ModalFull title="Search Games" onClose={onClose} iconName="search">
-      <View style={{ flex: 1 }}>
+    <ModalFull title="Search Games" onClose={onClose}>
+      <View style={{ flex: 1, paddingTop: spacing(12) }}>
         {/* Search input */}
         <View
           style={{
@@ -119,7 +119,7 @@ export function SearchModal({
             onChangeText={onQueryChange}
             onKeyPress={handleKeyPress}
             onSubmitEditing={openHighlightedGame}
-            placeholder="Search games..."
+            placeholder="Search..."
             placeholderTextColor={Colors.K600}
             style={{
               flex: 1,
@@ -168,7 +168,7 @@ export function SearchModal({
                 width: "100%",
                 boxShadow:
                   index === highlightedIndex
-                    ? `0 0 0 ${spacing(3)}px ${rgba(game.cardColorText, 0.5)}`
+                    ? `0 0 0 ${spacing(3)}px ${rgba(game.gameColorPale, 0.5)}`
                     : "none",
               }}
               onOpen={onClose}

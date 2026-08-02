@@ -14,8 +14,8 @@ export const pokerSquares: GameDefinition = {
   thumbnail: "PokerSquares.jpg",
   background: GAME_BACKGROUNDS.casino,
   cardBack: "DefaultCardBack.png",
-  cardColorBg: "#263b32",
-  cardColorText: "#f0ead6",
+  gameColorDark: "#263b32",
+  gameColorPale: "#f0ead6",
   cardDescription:
     "Build ten poker hands from one deck and chase a score of 200.",
   quickStart: [

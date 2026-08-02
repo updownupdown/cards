@@ -49,6 +49,8 @@ type GameState = {
   winLoseMessage: string;
 };
 
+export type Area52GameState = GameState;
+
 // --- SETUP --- //
 const gameStateInitial: GameState = {
   defenderDeck: [],
@@ -60,6 +62,60 @@ const gameStateInitial: GameState = {
   ended: false,
   won: false,
   winLoseMessage: "",
+};
+
+function canSingleAttack(
+  defender: PlayingCard | null | undefined,
+  attacker: PlayingCard | null | undefined,
+) {
+  if (!defender || !attacker) return false;
+  return (
+    rankValue(defender) > rankValue(attacker) &&
+    isRed(defender.suit) !== isRed(attacker.suit)
+  );
+}
+
+function canDualAttack(
+  defenders: (PlayingCard | null | undefined)[],
+  attacker: PlayingCard | null | undefined,
+) {
+  if (!attacker || defenders.length !== 2 || defenders.some((card) => !card)) {
+    return false;
+  }
+
+  return (
+    defenders.reduce((sum, card) => sum + rankValue(card!), 0) ===
+    rankValue(attacker)
+  );
+}
+
+function isLost(state: GameState) {
+  const hasAttackers = state.currentAttackers.length > 0;
+  const hasDefenders = state.currentDefenders.some((card) => card !== null);
+  return hasAttackers && !hasDefenders && state.defenderDeck.length === 0;
+}
+
+function getScore(state: GameState) {
+  if (!state.ended) return undefined;
+
+  if (state.won) {
+    return (
+      state.defenderDeck.length +
+      state.currentDefenders.filter((card) => card !== null).length
+    );
+  }
+
+  return (
+    -(state.attackerDeck.length + state.currentAttackers.length) -
+    (state.wave === 1 ? 50 : 0)
+  );
+}
+
+export const area52Rules = {
+  canSingleAttack,
+  canDualAttack,
+  isLost,
+  getScore,
 };
 
 async function resetAndSetup(
@@ -132,33 +188,22 @@ export default function Area52() {
     [game.currentAttackers],
   );
 
-  const score = game.ended
-    ? game.won
-      ? game.defenderDeck.length + game.currentDefenders.length
-      : -(game.attackerDeck.length + game.currentAttackers.length) -
-        (game.wave === 1 ? 50 : 0)
-    : undefined;
+  const score = getScore(game);
 
   const canAttack = useMemo(() => {
     if (selectedDefenders.length === 0 || !currentAttacker) return undefined;
-    const enemyValue = rankValue(currentAttacker);
 
     if (selectedDefenders.length === 1) {
-      const defender = game.currentDefenders[selectedDefenders[0]];
-      if (!defender) return undefined;
-      return (
-        rankValue(defender) > enemyValue &&
-        isRed(defender.suit) !== isRed(currentAttacker.suit)
+      return canSingleAttack(
+        game.currentDefenders[selectedDefenders[0]],
+        currentAttacker,
       );
-    } else {
-      const sum = selectedDefenders.reduce(
-        (acc, i) =>
-          acc +
-          (game.currentDefenders[i] ? rankValue(game.currentDefenders[i]!) : 0),
-        0,
-      );
-      return sum === enemyValue;
     }
+
+    return canDualAttack(
+      selectedDefenders.map((index) => game.currentDefenders[index]),
+      currentAttacker,
+    );
   }, [selectedDefenders, currentAttacker, game.currentDefenders]);
 
   // ========== Actions ========== //
@@ -325,11 +370,7 @@ export default function Area52() {
   useEffect(() => {
     if (game.ended) return;
 
-    const hasAttackers = game.currentAttackers.length > 0;
-    const hasDefenders = game.currentDefenders.some((d) => d !== null);
-    const hasAttackerDeck = game.attackerDeck.length > 0;
-
-    if (hasAttackers && !hasDefenders && !hasAttackerDeck) {
+    if (isLost(game)) {
       setGame((draft) => {
         draft.ended = true;
         draft.won = false;

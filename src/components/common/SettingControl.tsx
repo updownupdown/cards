@@ -7,8 +7,6 @@ import { darkenHexColor } from "@/utils/utils";
 import React from "react";
 import { Pressable, View } from "react-native";
 
-const MAX_DESCRIPTION_LENGTH = 70;
-
 type SettingControlProps<T> = {
   label: string;
   labelColor?: string;

@@ -12,7 +12,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 
-type PyramidCard = PlayingCard & {
+export type PyramidCard = PlayingCard & {
   row: number;
   col: number;
 };
@@ -25,6 +25,8 @@ type GameState = {
   discard: PlayingCard[];
   stockCount: number;
 };
+
+export type PyramidGameState = GameState;
 
 const PYRAMID_ROWS = 7;
 const PYRAMID_SIZE = 28;
@@ -161,6 +163,15 @@ function hasAvailableMove(snapshot: GameState) {
 
   return false;
 }
+
+export const pyramidRules = {
+  isCardExposed,
+  cardValue,
+  hasAvailableMove,
+  createInitialState,
+  pyramidRows: PYRAMID_ROWS,
+  pyramidSize: PYRAMID_SIZE,
+};
 
 export default function Pyramid() {
   const [selected, setSelected] = useState<Selection>(null);

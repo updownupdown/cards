@@ -50,7 +50,7 @@ export function TipsBox({ onClose, showRulesModal }: Props) {
             width: "100%",
             maxWidth: ui.contentMaxWidth - spacing(layoutDims.pagePadding),
             borderRadius: spacing(24),
-            backgroundColor: gameInfo.cardColorBg,
+            backgroundColor: gameInfo.gameColorDark,
             boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.black, 0.3)}, ${spacing(2)}px ${spacing(4)}px ${spacing(10)}px ${rgba(
               Colors.black,
               0.3,
@@ -68,7 +68,7 @@ export function TipsBox({ onClose, showRulesModal }: Props) {
           <Text
             size="sm"
             weight={300}
-            color={gameInfo.cardColorText}
+            color={gameInfo.gameColorPale}
             style={{ flex: 1 }}
           >
             Quick Start
@@ -82,7 +82,7 @@ export function TipsBox({ onClose, showRulesModal }: Props) {
               onClose();
               showRulesModal();
             }}
-            theme={rgba(gameInfo.cardColorText, 0.2)}
+            theme={rgba(gameInfo.gameColorPale, 0.2)}
             style={{ paddingLeft: spacing(14) }}
           />
 
@@ -91,18 +91,18 @@ export function TipsBox({ onClose, showRulesModal }: Props) {
             iconName="close"
             text="Close"
             autoProgress={AUTO_CLOSE_DELAY}
-            autoProgressColor={rgba(gameInfo.cardColorText, 0.2)}
+            autoProgressColor={rgba(gameInfo.gameColorPale, 0.2)}
             onPress={() => {
               onClose();
             }}
-            theme={rgba(gameInfo.cardColorText, 0.2)}
+            theme={rgba(gameInfo.gameColorPale, 0.2)}
             style={{ paddingRight: spacing(9) }}
           />
         </View>
 
         <QuickStart
           gameInfo={gameInfo}
-          headingColor={gameInfo.cardColorText}
+          headingColor={gameInfo.gameColorPale}
           style={{
             gap: spacing(8),
             paddingRight: spacing(8),

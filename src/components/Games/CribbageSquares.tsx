@@ -38,6 +38,8 @@ type GameState = {
   won: boolean;
 };
 
+export type CribbageSquaresGameState = GameState;
+
 const gameStateInitial: GameState = {
   grid: Array.from({ length: GRID_CELLS }, () => null),
   stock: [],
@@ -183,6 +185,18 @@ function getLegalCells(grid: (PlayingCard | null)[]) {
     return touches ? [index] : [];
   });
 }
+
+export const cribbageSquaresRules = {
+  countFifteens,
+  countPairs,
+  countRuns,
+  scoreHand,
+  scoreDeal,
+  getLineScores,
+  getLegalCells,
+  gridSize: GRID_SIZE,
+  targetScore: TARGET_SCORE,
+};
 
 async function resetAndSetup(
   setGame: (updater: (draft: GameState) => void) => void,
@@ -424,7 +438,6 @@ export default function CribbageSquares() {
         scoreLabels.map(({ id, score }) => (
           <View
             key={id}
-            pointerEvents="none"
             style={[
               getZoneStylesById(id),
               {

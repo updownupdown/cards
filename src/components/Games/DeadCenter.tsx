@@ -63,7 +63,11 @@ type Zombie = {
   dead: boolean;
 };
 
+export type DeadCenterZombie = Zombie;
+
 type Phase = "reveal" | "play" | "kill";
+
+export type DeadCenterPhase = Phase;
 
 type GameState = {
   draw: PlayingCard[];
@@ -75,6 +79,8 @@ type GameState = {
   won: boolean;
   winLoseMessage?: string;
 };
+
+export type DeadCenterGameState = GameState;
 
 const gameStateInitial: GameState = {
   draw: createDeck({ faceUp: false, includeJokers: true }),
@@ -206,8 +212,108 @@ function aliveCount(zombies: Zombie[]) {
   return zombies.filter((z) => !z.dead).length;
 }
 
+function getAvailableAttacks(snapshot: GameState) {
+  if (snapshot.phase !== "kill" || snapshot.lastPlayedPile === null) {
+    return [] as number[];
+  }
+
+  const lastPlayedPile = snapshot.lastPlayedPile;
+  return (PILE_TO_ZOMBIES[lastPlayedPile] ?? []).filter((index) => {
+    const zombie = snapshot.zombies[index];
+    if (!zombie || zombie.dead || !zombie.card.faceUp) return false;
+
+    const supports = supportIndicesForAttack(lastPlayedPile, index)
+      .map((pileIndex) => {
+        const pile = snapshot.piles[pileIndex];
+        return pile?.[pile.length - 1];
+      })
+      .filter((card): card is PlayingCard => card !== undefined);
+
+    return supports.length === 2 && canKillZombie(zombie.card, supports);
+  });
+}
+
+function phaseAfterKill(zombies: Zombie[]): Phase {
+  return needsReveal(zombies) ? "reveal" : "play";
+}
+
+function playPileAction(draft: GameState, pileIndex: number) {
+  if (draft.phase !== "play" || draft.ended) return false;
+
+  const drawCard = draft.draw[draft.draw.length - 1];
+  const pile = draft.piles[pileIndex];
+  const top = pile?.[pile.length - 1];
+  if (!drawCard || !top || !canPlayOn(top, drawCard)) return false;
+
+  draft.piles[pileIndex] = [...pile, drawCard];
+  draft.draw = draft.draw.slice(0, -1);
+  draft.phase = "kill";
+  draft.lastPlayedPile = pileIndex;
+  return true;
+}
+
+function killZombieAction(draft: GameState, zombieIndex: number) {
+  if (
+    draft.phase !== "kill" ||
+    draft.ended ||
+    !getAvailableAttacks(draft).includes(zombieIndex)
+  ) {
+    return false;
+  }
+
+  draft.zombies[zombieIndex].dead = true;
+  draft.phase = phaseAfterKill(draft.zombies);
+  draft.lastPlayedPile = null;
+  return true;
+}
+
+function evaluateOutcome(snapshot: GameState) {
+  if (aliveCount(snapshot.zombies) === 0) {
+    return {
+      won: true,
+      message: "You killed all the zombies!",
+    };
+  }
+
+  if (snapshot.draw.length === 0) {
+    if (getAvailableAttacks(snapshot).length > 0) return null;
+
+    return {
+      won: false,
+      message: "No cards left to draw!",
+    };
+  }
+
+  const currentDraw = snapshot.draw[snapshot.draw.length - 1];
+  const playable = snapshot.piles.some((pile) =>
+    canPlayOn(pile[pile.length - 1], currentDraw),
+  );
+
+  if (!playable) {
+    return {
+      won: false,
+      message: "Unable to place card.",
+    };
+  }
+
+  return null;
+}
+
+export const deadCenterRules = {
+  canPlayOn,
+  supportIndicesForAttack,
+  canKillZombie,
+  needsReveal,
+  aliveCount,
+  getAvailableAttacks,
+  phaseAfterKill,
+  playPileAction,
+  killZombieAction,
+  evaluateOutcome,
+};
+
 export default function DeadCenter() {
-  const { zoneBg, cardText } = useGameZoneBackground();
+  const { colorZone, colorPale } = useGameZoneBackground();
   const [showDeckPreview, setShowDeckPreview] = useState(false);
 
   const {
@@ -243,32 +349,21 @@ export default function DeadCenter() {
   }
 
   async function playToPile(index: number) {
-    const currentDraw = game.draw[game.draw.length - 1];
-    if (game.ended || game.phase !== "play" || !currentDraw) return;
-
-    const top = game.piles[index][game.piles[index].length - 1];
-    if (!canPlayOn(top, currentDraw)) return;
+    if (game.ended || game.phase !== "play") return;
 
     saveUndoState(structuredClone(game));
 
     setGame((draft) => {
-      draft.piles[index] = [...draft.piles[index], currentDraw];
-      draft.draw = [...draft.draw].slice(0, -1);
-      draft.phase = "kill";
-      draft.lastPlayedPile = index;
+      playPileAction(draft, index);
     });
   }
 
   async function killZombie(zombieIndex: number) {
+    if (!currentAttacks.includes(zombieIndex)) return;
     saveUndoState(structuredClone(game));
 
     setGame((draft) => {
-      // Kill zombie
-      draft.zombies[zombieIndex].dead = true;
-
-      // Go to reveal phase if possible, otherwise, play phase
-      draft.phase = needsReveal(draft.zombies) ? "reveal" : "play";
-      draft.lastPlayedPile = null;
+      killZombieAction(draft, zombieIndex);
     });
   }
 
@@ -294,22 +389,7 @@ export default function DeadCenter() {
 
   // Skip kill phase if cannot kill any zombie
   const currentAttacks = useMemo(() => {
-    if (game.phase !== "kill" || game.lastPlayedPile === null) {
-      return [] as number[];
-    }
-
-    return PILE_TO_ZOMBIES[game.lastPlayedPile].filter((index) => {
-      const z = game.zombies[index];
-      if (!z || z.dead || !z.card.faceUp) return false;
-
-      const supportIdx = supportIndicesForAttack(game.lastPlayedPile!, index);
-      const supports = supportIdx
-        .map((idx) => game.piles[idx][game.piles[idx].length - 1])
-        .filter(Boolean) as PlayingCard[];
-
-      if (supports.length !== 2) return false;
-      return canKillZombie(z.card, supports);
-    });
+    return getAvailableAttacks(game);
   }, [game]);
 
   useEffect(() => {
@@ -318,7 +398,7 @@ export default function DeadCenter() {
 
     setTimeout(() => {
       setGame((draft) => {
-        draft.phase = needsReveal(draft.zombies) ? "reveal" : "play";
+        draft.phase = phaseAfterKill(draft.zombies);
       });
     }, 1500);
   }, [currentAttacks]);
@@ -327,38 +407,14 @@ export default function DeadCenter() {
   useEffect(() => {
     if (game.ended || isSettingUp) return;
 
-    if (game.draw.length === 0) {
-      setGame((draft) => {
-        draft.ended = true;
-        draft.won = false;
-        draft.winLoseMessage = "No cards left to draw!";
-      });
-      return;
-    }
+    const outcome = evaluateOutcome(game);
+    if (!outcome) return;
 
-    const currentDraw = game.draw[game.draw.length - 1];
-    const playable = game.piles.some((pile) =>
-      canPlayOn(pile[pile.length - 1], currentDraw),
-    );
-
-    if (!playable) {
-      setGame((draft) => {
-        draft.ended = true;
-        draft.won = false;
-        draft.winLoseMessage = "Unable to place card.";
-      });
-      return;
-    }
-
-    // No more zombie - win!
-    if (aliveCount(game.zombies) === 0) {
-      setGame((draft) => {
-        draft.ended = true;
-        draft.won = true;
-        draft.winLoseMessage = "You killed all the zombies!";
-      });
-      return;
-    }
+    setGame((draft) => {
+      draft.ended = true;
+      draft.won = outcome.won;
+      draft.winLoseMessage = outcome.message;
+    });
   }, [game]);
 
   // ========== Card Mapping ========== //
@@ -522,7 +578,7 @@ export default function DeadCenter() {
           flexStyles.fullWidth,
           getZoneStylesById("gameInfo"),
           {
-            backgroundColor: zoneBg,
+            backgroundColor: colorZone,
             borderRadius: 12,
             paddingVertical: 12,
             paddingLeft: 20,
@@ -532,7 +588,7 @@ export default function DeadCenter() {
       >
         <Text
           size="sm"
-          color={cardText}
+          color={colorPale}
           style={[
             flexStyles.flex1,
             {

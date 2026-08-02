@@ -30,8 +30,8 @@ import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
 
 // ── Rules configuration ────────────────────────────────────────────────────
-type RouteType = "ascent" | "traverse" | "descent";
-type Difficulty = "gentle" | "standard" | "intense";
+export type AlpineRouteType = "ascent" | "traverse" | "descent";
+export type AlpineDifficulty = "gentle" | "standard" | "intense";
 
 const SUIT_GLYPH: Record<string, string> = {
   hearts: "\u2665",
@@ -57,7 +57,7 @@ const APPROACH_DESCRIPTION: Record<string, string> = {
   spades: "Draw #: non-spades in route",
 };
 
-const TYPE_RANK: Record<RouteType, number> = {
+const TYPE_RANK: Record<AlpineRouteType, number> = {
   ascent: 2,
   traverse: 1,
   descent: 0,
@@ -115,9 +115,9 @@ function rankLabel(value: number) {
 }
 
 // ── Types ──────────────────────────────────────────────────────────────────
-type RouteRecord = {
+export type AlpineRouteRecord = {
   cards: PlayingCard[];
-  type: RouteType;
+  type: AlpineRouteType;
   size: number;
   anchorValue: number;
   anchorSuit: string;
@@ -130,8 +130,8 @@ type GameState = {
   fatigue: PlayingCard[];
   discard: PlayingCard[];
   hand: PlayingCard[];
-  playedRoutes: RouteRecord[];
-  trail: RouteRecord[];
+  playedRoutes: AlpineRouteRecord[];
+  trail: AlpineRouteRecord[];
   phase: Phase;
   winLoseMessage: string;
   ended: boolean;
@@ -160,7 +160,7 @@ const gameStateInitial: GameState = {
 function analyzeRoute(
   cards: PlayingCard[],
   challenge: AlpineChallenge,
-): RouteRecord | null {
+): AlpineRouteRecord | null {
   if (cards.length === 0) return null;
   const kang = challenge === "kangchenjunga";
   const nanga = challenge === "nanga-parbat";
@@ -170,7 +170,7 @@ function analyzeRoute(
   const anchorSuit = anchor.suit;
   const vals = cards.map(v);
 
-  const make = (type: RouteType): RouteRecord => ({
+  const make = (type: AlpineRouteType): AlpineRouteRecord => ({
     cards,
     type,
     size: cards.length,
@@ -225,7 +225,7 @@ function analyzeRoute(
 }
 
 /** >0 when route a is higher than route b. */
-function compareRoutes(a: RouteRecord, b: RouteRecord) {
+function compareRoutes(a: AlpineRouteRecord, b: AlpineRouteRecord) {
   if (a.size !== b.size) return a.size - b.size;
   if (a.type !== b.type) return TYPE_RANK[a.type] - TYPE_RANK[b.type];
   return a.anchorValue - b.anchorValue;
@@ -239,8 +239,8 @@ type PlayCheck = {
 };
 
 function canPlayRoute(
-  route: RouteRecord,
-  prev: RouteRecord | null,
+  route: AlpineRouteRecord,
+  prev: AlpineRouteRecord | null,
   challenge: AlpineChallenge,
   prevApproach: string | null,
 ): PlayCheck {
@@ -280,7 +280,7 @@ function canPlayRoute(
 
 /** Inherent Danger: number of cards to draw after playing a route. */
 function computeDraw(
-  route: RouteRecord,
+  route: AlpineRouteRecord,
   hand: PlayingCard[],
   challenge: AlpineChallenge,
 ) {
@@ -320,11 +320,11 @@ function computeDraw(
 }
 
 function milestoneQualifies(
-  milestone: RouteRecord,
-  trail: RouteRecord[],
-  difficulty: Difficulty,
+  milestone: AlpineRouteRecord,
+  trail: AlpineRouteRecord[],
+  difficulty: AlpineDifficulty,
   challenge: AlpineChallenge,
-  playedRoutes: RouteRecord[],
+  playedRoutes: AlpineRouteRecord[],
 ) {
   const last = trail[trail.length - 1] ?? null;
 
@@ -344,12 +344,20 @@ function milestoneQualifies(
   return true;
 }
 
+export const alpineSolitaireRules = {
+  analyzeRoute,
+  compareRoutes,
+  canPlayRoute,
+  computeDraw,
+  milestoneQualifies,
+};
+
 // ── Component ────────────────────────────────────────────────────────────────
 function cloneCards(cards: PlayingCard[]) {
   return cards.map((c) => ({ ...c }));
 }
 
-function getGroupedFanOffsets(groups: RouteRecord[]) {
+function getGroupedFanOffsets(groups: AlpineRouteRecord[]) {
   const offsets: number[] = [];
   let totalOffset = 0;
   let cardCount = 0;
@@ -374,8 +382,10 @@ function getGroupedFanOffsets(groups: RouteRecord[]) {
 
 export default function AlpineSolitaire() {
   const { spacing } = useResponsiveMetrics();
-  const { cardBg, cardText } = useGameZoneBackground();
-  const difficulty = useGameSettingValue("alpineDifficulty") as Difficulty;
+  const { colorDark, colorPale } = useGameZoneBackground();
+  const difficulty = useGameSettingValue(
+    "alpineDifficulty",
+  ) as AlpineDifficulty;
   const challenge = useGameSettingValue("alpineChallenge");
   const settingsRef = useRef({ difficulty, challenge });
   settingsRef.current = { difficulty, challenge };
@@ -488,7 +498,7 @@ export default function AlpineSolitaire() {
     setSelected([]);
   }
 
-  function resolveCamp(draft: GameState, milestone: RouteRecord) {
+  function resolveCamp(draft: GameState, milestone: AlpineRouteRecord) {
     const { difficulty: diff, challenge } = settingsRef.current;
     const played = draft.playedRoutes;
     const qualifies = milestoneQualifies(
@@ -573,7 +583,7 @@ export default function AlpineSolitaire() {
         }
       }
 
-      const record: RouteRecord = {
+      const record: AlpineRouteRecord = {
         cards: mappedCards,
         type: route.type,
         size: route.size,
@@ -876,15 +886,15 @@ export default function AlpineSolitaire() {
           <Text
             size="xs"
             weight={300}
-            color={rgba(cardText, 0.6)}
+            color={rgba(colorPale, 0.6)}
             lineHeight={1.2}
           >
             {firstLetterUppercase(difficulty)}
           </Text>
-          <Text size="md" weight={400} color={cardText} lineHeight={1.2}>
+          <Text size="md" weight={400} color={colorPale} lineHeight={1.2}>
             {challengeName}
           </Text>
-          <Text size="xl" weight={600} color={cardText} lineHeight={1.2}>
+          <Text size="xl" weight={600} color={colorPale} lineHeight={1.2}>
             {commaFormattedNumber(MOUNTAIN_HEIGHT[challenge] ?? 0)}m
           </Text>
         </View>
@@ -946,10 +956,10 @@ export default function AlpineSolitaire() {
       <View style={[flexStyles.rowCentered, getZoneStylesById("routeInfo")]}>
         {!analysis && (
           <View style={[flexStyles.colStart, flexStyles.fullWidth]}>
-            <Text size="md" weight={400} color={rgba(cardText, 0.4)}>
+            <Text size="md" weight={400} color={rgba(colorPale, 0.4)}>
               No cards selected
             </Text>
-            <Text size="sm" weight={300} color={rgba(cardText, 0.7)}>
+            <Text size="sm" weight={300} color={rgba(colorPale, 0.7)}>
               Last selected card is the anchor
             </Text>
           </View>
@@ -969,11 +979,11 @@ export default function AlpineSolitaire() {
         {analysis && playCheck.reason === undefined && (
           <>
             <View style={[flexStyles.colStart, { flex: 2 }]}>
-              <Text size="md" weight={500} color={cardText}>
+              <Text size="md" weight={500} color={colorPale}>
                 {APPROACH_NAME[analysis.anchorSuit]}{" "}
                 {firstLetterUppercase(analysis.type)}
               </Text>
-              <Text size="sm" weight={300} color={rgba(cardText, 0.7)}>
+              <Text size="sm" weight={300} color={rgba(colorPale, 0.7)}>
                 {APPROACH_DESCRIPTION[analysis.anchorSuit]}
               </Text>
             </View>
@@ -982,7 +992,7 @@ export default function AlpineSolitaire() {
               style={[flexStyles.colCentered, { flex: 1, gap: spacing(2) }]}
             >
               <View style={[flexStyles.rowCentered, { gap: spacing(7) }]}>
-                <Text size="lg" weight={300} color={rgba(cardText, 0.7)}>
+                <Text size="lg" weight={300} color={rgba(colorPale, 0.7)}>
                   Draw
                 </Text>
                 <Text size="lg" weight={600} color={Colors.white}>
@@ -1058,7 +1068,7 @@ export default function AlpineSolitaire() {
               rotatedText,
               {
                 fontSize: cardWidth * 0.16,
-                color: rgba(cardText, 0.8),
+                color: rgba(colorPale, 0.8),
               },
             ]}
           >
@@ -1083,7 +1093,7 @@ export default function AlpineSolitaire() {
                 size="md"
                 onPress={skipMakalu}
                 style={{ flex: 1 }}
-                theme={cardBg}
+                theme={colorDark}
                 taller
               />
             </View>

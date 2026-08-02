@@ -14,8 +14,8 @@ export const beleagueredCastle: GameDefinition = {
   thumbnail: "BeleagueredCastle.jpg",
   background: GAME_BACKGROUNDS.castle,
   cardBack: "DefaultCardBack.png",
-  cardColorBg: "#2e2620",
-  cardColorText: "#f0e2c4",
+  gameColorDark: "#2e2620",
+  gameColorPale: "#f0e2c4",
   cardDescription:
     "Storm the castle: build every suit up from Ace to King with open tableau play.",
   quickStart: [

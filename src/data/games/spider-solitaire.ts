@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const spiderSolitaire: GameDefinition = {
   path: "/spider-solitaire",
@@ -12,9 +13,10 @@ export const spiderSolitaire: GameDefinition = {
     luck: 0,
   },
   thumbnail: "SpiderSolitaire.jpg",
-  background: GAME_BACKGROUNDS.feltDarkPurple,
-  cardColorBg: "#24161f",
-  cardColorText: "#ffc6ca",
+  background: GAME_BACKGROUNDS.dungeon,
+  animation: GameAnimations.FallingEmbers,
+  gameColorDark: "#24161f",
+  gameColorPale: "#ffc6ca",
   cardDescription:
     "Build same-suit runs from King to Ace across a tangled double deck.",
   quickStart: ["Build down by rank; move same-suit runs; deal when stuck."],
@@ -44,6 +46,4 @@ export const spiderSolitaire: GameDefinition = {
     creators: [GameCreators.Unknown],
     creationDate: "First documented in 1917",
   },
-
-
 };

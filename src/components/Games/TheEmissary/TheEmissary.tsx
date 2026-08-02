@@ -18,7 +18,6 @@ import { useEffect, useMemo, useState } from "react";
 import { Animated, View, ViewStyle } from "react-native";
 import {
   flipAllToBack,
-  flipAllToFace,
   flipToBack,
   flipToFace,
   shuffle,
@@ -30,9 +29,11 @@ import { GameWrapper } from "../../common/GameWrapper";
 import { AdvisorInfo } from "./AdvisorInfo";
 import {
   canDebateWithCard,
+  debateWithCardAction,
+  finishVisitAction,
   gameStateInitial,
   resetAndSetup,
-  wonDebate,
+  startVisitAction,
 } from "./TheEmissaryLogic";
 import {
   defaultHandSize,
@@ -42,7 +43,7 @@ import {
 
 export default function TheEmissary() {
   const { spacing } = useResponsiveMetrics();
-  const { zoneBg, cardBg, cardText } = useGameZoneBackground();
+  const { colorZone, colorDark, colorPale } = useGameZoneBackground();
   const showToast = useToast();
 
   const [selectedAdvisor, setSelectedAdvisor] = useState<
@@ -109,61 +110,25 @@ export default function TheEmissary() {
     // 1: player plays a debate card, updates states, then has no cards left
     // 2: player uses advisor to remove trump cards left in hand, and has no cards left
     setGame((draft) => {
-      if (draft.visit === null) return draft;
-
-      const wonKingdom = draft.visit.wins === draft.visit.requiredWins;
-
-      const kId = draft.visit.kingdomId;
-      const ruler = draft.kingdoms[kId].ruler;
-      draft.kingdoms[kId] = {
-        ...draft.kingdoms[kId],
-        visited: true,
-        won: wonKingdom,
-        ruler: flipToBack(ruler),
-      };
-      draft.advisors = flipAllToFace(draft.advisors);
-
-      if (wonKingdom) {
-        draft.advisors.unshift(ruler);
-      }
-
-      sortCardsBySuit(draft.advisors);
-
-      draft.handSize = defaultHandSize;
-      draft.visit = null;
-
-      const allKingdomsWon = wonKingdom && draft.kingdoms.every((k) => k.won);
-      draft.ended = !wonKingdom || allKingdomsWon;
-      draft.won = allKingdomsWon;
-      draft.winLoseMessage = allKingdomsWon
-        ? "You won over the rulers of all eight kingdoms with your spectacular debating skills!"
-        : !wonKingdom
-          ? "You failed to win enough debates; the ruler doesn't take you seriously enough."
-          : "";
+      finishVisitAction(draft);
     });
   }, [game.hand]);
 
   // ========== Start Visit ========== //
   function startVisit(kingdomId: number) {
-    if (game.ended || game.visit !== null || game.kingdoms[kingdomId].visited) {
+    if (
+      game.ended ||
+      game.visit !== null ||
+      !game.kingdoms[kingdomId] ||
+      game.kingdoms[kingdomId].visited
+    ) {
       return;
     }
 
     saveUndoState(structuredClone(game));
 
     setGame((draft) => {
-      const k = draft.kingdoms[kingdomId];
-
-      draft.visit = {
-        kingdomId,
-        trumpSuit: k.ruler.suit,
-        requiredWins: k.requiredWins,
-        wins: 0,
-        debateTopic: undefined,
-        debateRecord: [],
-      };
-
-      draft.winLoseMessage = "";
+      startVisitAction(draft, kingdomId);
     });
   }
 
@@ -175,37 +140,8 @@ export default function TheEmissary() {
 
     setSelectedAdvisor(undefined);
 
-    const wonTopic = wonDebate(
-      card,
-      game.visit.debateTopic,
-      game.visit.trumpSuit,
-    );
-
     setGame((draft) => {
-      if (!draft.visit || draft.visit.debateTopic === undefined) return;
-
-      const debateTopic = draft.visit.debateTopic;
-
-      draft.hand = draft.hand.filter((c) => c.id !== card.id);
-      draft.visit.debateRecord.push(wonTopic);
-
-      if (wonTopic) {
-        draft.visit.wins += 1;
-        draft.discardWon.push(flipToBack(card), flipToBack(debateTopic));
-      } else {
-        draft.discardLost.push(flipToBack(card), flipToBack(debateTopic));
-      }
-
-      // Won too many debates, lost!
-      if (draft.visit.wins > draft.visit.requiredWins) {
-        draft.visit = null;
-        draft.ended = true;
-        draft.won = false;
-        draft.winLoseMessage = "You won too many debates, insulting the ruler!";
-        return;
-      }
-
-      draft.visit.debateTopic = undefined;
+      debateWithCardAction(draft, card.id);
     });
   }
 
@@ -495,7 +431,7 @@ export default function TheEmissary() {
           infoPos: "below" as DeckInfoPosition,
           showCount: id !== "topic",
           hideBackground: id !== "topic",
-          backgroundColor: id === "topic" ? cardBg : undefined,
+          backgroundColor: id === "topic" ? colorDark : undefined,
         },
       };
     };
@@ -548,7 +484,7 @@ export default function TheEmissary() {
       return {
         onPress: drawCardToTopic,
         selectColor:
-          game.visit?.debateTopic !== undefined ? cardText : undefined,
+          game.visit?.debateTopic !== undefined ? colorPale : undefined,
         forceOverlayColor: game.visit?.debateTopic !== undefined,
         forceSelectColor: game.visit?.debateTopic !== undefined,
       };
@@ -584,7 +520,7 @@ export default function TheEmissary() {
         if (swappingRuler) {
           return isCurrent ? "none" : EmissarySuitsColorMap["spades"];
         } else {
-          return isEnabled || isCurrent ? cardText : "none";
+          return isEnabled || isCurrent ? colorPale : "none";
         }
       };
 
@@ -623,7 +559,7 @@ export default function TheEmissary() {
         isDisabled,
         selectColor: potentialDiscard
           ? EmissarySuitsColorMap["hearts"]
-          : cardText,
+          : colorPale,
         forceOverlayColor: !isDisabled || potentialDiscard,
       };
     } else if (mappedCard.zoneName === "advisor") {
@@ -668,9 +604,9 @@ export default function TheEmissary() {
 
   const darkZoneStyles: ViewStyle = {
     borderRadius: cardWidth * 0.15,
-    backgroundColor: zoneBg,
+    backgroundColor: colorZone,
     borderWidth: 1,
-    borderColor: rgba(cardText, 0.2),
+    borderColor: rgba(colorPale, 0.2),
   };
 
   return (
@@ -703,7 +639,7 @@ export default function TheEmissary() {
             if (swappingRuler) {
               return isCurrent ? Colors.K500 : EmissarySuitsColorMap["spades"];
             } else {
-              return isCurrent ? cardText : Colors.K600;
+              return isCurrent ? colorPale : Colors.K600;
             }
           };
 
@@ -747,11 +683,11 @@ export default function TheEmissary() {
                 paddingVertical: cardWidth * 0.3,
 
                 borderRadius: cardWidth * 0.15,
-                backgroundColor: cardText,
+                backgroundColor: colorPale,
 
                 fontSize: cardWidth * 0.34,
                 fontFamily: FontWeight[400],
-                color: cardBg,
+                color: colorDark,
               },
             ]}
           >
@@ -864,7 +800,7 @@ export default function TheEmissary() {
                 height: "100%",
               },
             ]}
-            theme={cardText}
+            theme={colorPale}
             textOnly
           />
         </Animated.View>

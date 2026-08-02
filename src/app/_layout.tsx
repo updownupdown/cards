@@ -20,7 +20,7 @@ import { View, Platform } from "react-native";
 SplashScreen.preventAutoHideAsync();
 
 export default function Layout() {
-  const { cardBg } = useGameZoneBackground();
+  const { colorDark } = useGameZoneBackground();
   const pathname = usePathname();
   const [fontsLoaded] = useFonts({
     Outfit_200ExtraLight,
@@ -40,15 +40,15 @@ export default function Layout() {
       meta.setAttribute("content", content);
     };
 
-    updateMeta("theme-color", cardBg);
-    updateMeta("msapplication-navbutton-color", cardBg);
+    updateMeta("theme-color", colorDark);
+    updateMeta("msapplication-navbutton-color", colorDark);
 
     // Tint the Android system navigation (bottom button) bar to match the
     // current screen. In a standalone PWA Chrome samples the page background
     // behind the bottom safe area, so keeping the body background in sync with
     // the active theme color colours the virtual buttons accordingly.
-    document.body.style.backgroundColor = cardBg;
-  }, [cardBg]);
+    document.body.style.backgroundColor = colorDark;
+  }, [colorDark]);
 
   useEffect(() => {
     if (typeof document === "undefined") return;

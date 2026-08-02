@@ -128,6 +128,103 @@ function getAdjacentPiles(piles: PlayingCard[][]) {
   return Array.from(legalIndices).sort((a, b) => a - b);
 }
 
+function isMinOrMax(line: PlayingCard[], card: PlayingCard) {
+  const cardValue = rankValue(card);
+  const lowest = line.reduce(
+    (min, current) =>
+      current.faceUp && rankValue(current) < min ? rankValue(current) : min,
+    Infinity,
+  );
+  const highest = line.reduce(
+    (max, current) =>
+      current.faceUp && rankValue(current) > max ? rankValue(current) : max,
+    0,
+  );
+
+  return cardValue < lowest || cardValue > highest;
+}
+
+function flipTop(pile: PlayingCard[]) {
+  if (pile.length === 0) return pile;
+
+  const copy = [...pile];
+  const topCard = copy[copy.length - 1];
+  copy[copy.length - 1] = { ...topCard, faceUp: !topCard.faceUp };
+  return copy;
+}
+
+function applyFlips(
+  piles: PlayingCard[][],
+  index: number,
+  lastPlayedCard: PlayingCard,
+): { newPiles: PlayingCard[][]; flippedIndices: number[] } {
+  const { col, row } = getColRow(index);
+
+  function applyFlip(currentPiles: PlayingCard[][], line: number[]) {
+    const lineCards = line.flatMap((lineIndex) => {
+      const topCard = top(currentPiles[lineIndex]);
+      return topCard ? [topCard] : [];
+    });
+    const flippedInLine: number[] = [];
+    const updatedPiles = [...currentPiles];
+
+    if (lineCards.length && isMinOrMax(lineCards, lastPlayedCard)) {
+      line.forEach((lineIndex) => {
+        updatedPiles[lineIndex] = flipTop(updatedPiles[lineIndex]);
+        flippedInLine.push(lineIndex);
+      });
+    }
+
+    return { updatedPiles, flippedInLine };
+  }
+
+  const colResult = applyFlip(piles, col);
+  const rowResult = applyFlip(colResult.updatedPiles, row);
+
+  return {
+    newPiles: rowResult.updatedPiles,
+    flippedIndices: Array.from(
+      new Set([...colResult.flippedInLine, ...rowResult.flippedInLine]),
+    ),
+  };
+}
+
+function legalPlacements(
+  piles: PlayingCard[][],
+  drawCard: PlayingCard | undefined,
+) {
+  if (drawCard === undefined) return [];
+
+  const legalPiles: number[] = [];
+  const adjacentPiles = getAdjacentPiles(piles);
+
+  for (let i = 0; i < 16; i++) {
+    const simulatedPiles = [...piles];
+    simulatedPiles[i] = [...simulatedPiles[i], drawCard];
+    const { newPiles } = applyFlips(simulatedPiles, i, drawCard);
+    const tooManyFaceDownCards = numFaceDownTopCards(newPiles) > 4;
+    const pileFull = piles[i].length >= 4;
+    const isInAdjacentPile = adjacentPiles.includes(i);
+
+    if (!pileFull && !tooManyFaceDownCards && isInAdjacentPile) {
+      legalPiles.push(i);
+    }
+  }
+
+  return legalPiles;
+}
+
+export const foursquareRules = {
+  getColRow,
+  numFaceDownTopCards,
+  hasAllFaceUp,
+  getAdjacentPiles,
+  isMinOrMax,
+  flipTop,
+  applyFlips,
+  legalPlacements,
+};
+
 export default function Foursquare() {
   const showToast = useToast();
 
@@ -212,102 +309,6 @@ export default function Foursquare() {
         draft.draw = flipTopCardToFace(draft.draw);
       });
     }
-  }
-
-  function isMinOrMax(line: PlayingCard[], card: PlayingCard) {
-    const cardvalue = rankValue(card);
-    const lowest = line.reduce(
-      (min, current) =>
-        current.faceUp && rankValue(current) < min ? rankValue(current) : min,
-      Infinity,
-    );
-    const highest = line.reduce(
-      (max, current) =>
-        current.faceUp && rankValue(current) > max ? rankValue(current) : max,
-      0,
-    );
-
-    return cardvalue < lowest || cardvalue > highest;
-  }
-
-  function flipTop(pile: PlayingCard[]) {
-    if (pile.length === 0) return pile;
-
-    const copy = [...pile];
-    const topCard = copy[copy.length - 1];
-    copy[copy.length - 1] = { ...topCard, faceUp: !topCard.faceUp };
-    return copy;
-  }
-
-  function applyFlips(
-    piles: PlayingCard[][],
-    index: number,
-    lastPlayedCard: PlayingCard,
-  ): { newPiles: PlayingCard[][]; flippedIndices: number[] } {
-    const { col, row } = getColRow(index);
-
-    function applyFlip(
-      currentPiles: PlayingCard[][],
-      line: number[],
-      lastPlayedCard: PlayingCard,
-    ) {
-      let lineCards: PlayingCard[] = [];
-      const flippedInLine: number[] = [];
-      let updatedPiles = [...currentPiles];
-
-      line.forEach((idx) => {
-        const topCard = top(currentPiles[idx]);
-        if (topCard) {
-          lineCards.push(topCard);
-        }
-      });
-
-      if (lineCards.length && isMinOrMax(lineCards, lastPlayedCard)) {
-        line.forEach((idx) => {
-          updatedPiles[idx] = flipTop(updatedPiles[idx]);
-          flippedInLine.push(idx);
-        });
-      }
-
-      return { updatedPiles, flippedInLine };
-    }
-
-    const colResult = applyFlip(piles, col, lastPlayedCard);
-    const rowResult = applyFlip(colResult.updatedPiles, row, lastPlayedCard);
-
-    // Combine the flipped indices. We use a Set to remove duplicates in case
-    // the newly placed card (at the intersection) gets targeted by both the row and col
-    const uniqueFlippedIndices = Array.from(
-      new Set([...colResult.flippedInLine, ...rowResult.flippedInLine]),
-    );
-
-    return {
-      newPiles: rowResult.updatedPiles,
-      flippedIndices: uniqueFlippedIndices,
-    };
-  }
-
-  function legalPlacements(
-    piles: PlayingCard[][],
-    drawCard: PlayingCard | undefined,
-  ) {
-    if (drawCard === undefined) return [];
-
-    let legalPiles: number[] = [];
-    const adjacentPiles = getAdjacentPiles(piles);
-
-    for (let i = 0; i < 16; i++) {
-      const { newPiles: mockFlipedPiles } = applyFlips([...piles], i, drawCard);
-      const tooManyFaceDownCards = numFaceDownTopCards(mockFlipedPiles) > 4;
-      const pileFull = piles[i].length >= 4;
-      const isInAdjacentPile = adjacentPiles.includes(i);
-
-      if (!pileFull && !tooManyFaceDownCards && isInAdjacentPile) {
-        legalPiles.push(i);
-      }
-    }
-
-    return legalPiles;
   }
 
   const legal = useMemo(

@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const lootTheLoop: GameDefinition = {
   path: "/loot-the-loop",
@@ -12,10 +13,11 @@ export const lootTheLoop: GameDefinition = {
     luck: 40,
   },
   thumbnail: "LootTheLoop.jpg",
-  background: GAME_BACKGROUNDS.dungeon,
+  background: GAME_BACKGROUNDS.stoneTunnel,
+  animation: GameAnimations.FallingEmbers,
   cardBack: "LootTheLoop.png",
-  cardColorBg: "#1d120e",
-  cardColorText: "#dfd4bd",
+  gameColorDark: "#1d120e",
+  gameColorPale: "#dfd4bd",
   cardDescription:
     "Capture scoring loop cards while preserving momentum and avoiding disruptive breaks.",
   quickStart: [

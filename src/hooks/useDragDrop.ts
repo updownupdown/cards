@@ -86,6 +86,36 @@ export type DropHitArea<TTarget> = {
   priority: number;
 };
 
+export function resolveOverlapDropTarget<TSource, TTarget>(
+  source: TSource,
+  draggedRect: Rect,
+  dropHitAreas: DropHitArea<TTarget>[],
+  canDropOnTarget: (source: TSource, target: TTarget) => boolean,
+): TTarget | null {
+  const draggedCenter = rectCenter(draggedRect);
+  const candidates = dropHitAreas
+    .filter(({ target }) => canDropOnTarget(source, target))
+    .filter(({ rect }) => rectsOverlap(draggedRect, rect));
+
+  if (candidates.length === 0) return null;
+
+  return candidates.slice().sort((a, b) => {
+    const firstCenter = rectCenter(a.rect);
+    const secondCenter = rectCenter(b.rect);
+    const firstDistance =
+      (firstCenter.x - draggedCenter.x) ** 2 +
+      (firstCenter.y - draggedCenter.y) ** 2;
+    const secondDistance =
+      (secondCenter.x - draggedCenter.x) ** 2 +
+      (secondCenter.y - draggedCenter.y) ** 2;
+
+    if (firstDistance !== secondDistance) {
+      return firstDistance - secondDistance;
+    }
+    return b.priority - a.priority;
+  })[0].target;
+}
+
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
 type UseDragDropOptions<TSource, TTarget> = {
@@ -288,32 +318,12 @@ export function useDragDrop<TSource, TTarget>({
           height: sourceRectLocal.height,
         };
 
-        const draggedCenter = rectCenter(draggedRect);
-
-        const generousCandidates = dropHitAreas
-          .filter(({ target: candidateTarget }) =>
-            canDropOnTargetRef.current(source, candidateTarget),
-          )
-          .filter(({ rect }) => rectsOverlap(draggedRect, rect));
-
-        if (generousCandidates.length > 0) {
-          target = generousCandidates.slice().sort((a, b) => {
-            const ac = rectCenter(a.rect);
-            const bc = rectCenter(b.rect);
-            const ad =
-              (ac.x - draggedCenter.x) * (ac.x - draggedCenter.x) +
-              (ac.y - draggedCenter.y) * (ac.y - draggedCenter.y);
-            const bd =
-              (bc.x - draggedCenter.x) * (bc.x - draggedCenter.x) +
-              (bc.y - draggedCenter.y) * (bc.y - draggedCenter.y);
-
-            if (ad !== bd) {
-              return ad - bd;
-            }
-
-            return b.priority - a.priority;
-          })[0].target;
-        }
+        target = resolveOverlapDropTarget(
+          source,
+          draggedRect,
+          dropHitAreas,
+          canDropOnTargetRef.current,
+        );
       }
     }
 

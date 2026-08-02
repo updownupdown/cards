@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const penguin: GameDefinition = {
   path: "/penguin",
@@ -13,8 +14,9 @@ export const penguin: GameDefinition = {
   },
   thumbnail: "Penguin.jpg",
   background: GAME_BACKGROUNDS.antarctica,
-  cardColorBg: "#111b27",
-  cardColorText: "#ff944d",
+  animation: GameAnimations.FallingSnow,
+  gameColorDark: "#111b27",
+  gameColorPale: "#ff944d",
   cardDescription:
     "A FreeCell-like game building suit runs from a random beak rank.",
   quickStart: ["From beak rank: foundations up suit; tableau down in suit."],

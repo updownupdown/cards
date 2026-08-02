@@ -33,6 +33,8 @@ type GameState = {
   won: boolean;
 };
 
+export type AcesUpGameState = GameState;
+
 const gameStateInitial: GameState = {
   draw: shuffle(createDeck()),
   piles: Array.from({ length: numberOfPiles }, () => []),
@@ -107,9 +109,15 @@ function evaluateEndState(draw: PlayingCard[], piles: PlayingCard[][]) {
   return { ended: true, won };
 }
 
+export const acesUpRules = {
+  getDiscardablePileIndexes,
+  hasRelocateMove,
+  evaluateEndState,
+};
+
 // ========== Main Component ========== //
 export default function AcesUp() {
-  const { cardBg } = useGameZoneBackground();
+  const { colorDark } = useGameZoneBackground();
 
   const [selectedPile, setSelectedPile] = useState<number | undefined>(
     undefined,
@@ -338,7 +346,7 @@ export default function AcesUp() {
           fullWidth
           taller
           disabled={game.draw.length === 0 || game.ended}
-          theme={cardBg}
+          theme={colorDark}
         />
       </View>
     </GameWrapper>

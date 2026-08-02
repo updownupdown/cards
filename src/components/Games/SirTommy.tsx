@@ -25,6 +25,8 @@ type GameState = {
   won: boolean;
 };
 
+export type SirTommyGameState = GameState;
+
 const gameStateInitial: GameState = {
   stock: [],
   waste: Array.from({ length: wasteCount }, () => []),
@@ -94,7 +96,9 @@ async function resetAndSetup(
   await delay();
 }
 
-function evaluateEnd(state: GameState) {
+function evaluateEnd(state: GameState, isSettingUp = false) {
+  if (isSettingUp) return { ended: false, won: false };
+
   if (state.foundations.every((f) => f.length === 13)) {
     return { ended: true, won: true };
   }
@@ -105,25 +109,40 @@ function evaluateEnd(state: GameState) {
   return { ended: false, won: false };
 }
 
+export const sirTommyRules = {
+  foundationFor,
+  advance,
+  evaluateEnd,
+  wasteCount,
+};
+
 // ========== Main Component ========== //
 export default function SirTommy() {
-  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
-    useStateManager({
-      resetAndSetup: async () => {
-        await resetAndSetup(setGame);
-      },
-      gameStateInitial,
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+  });
 
   useEffect(() => {
-    const { ended, won } = evaluateEnd(game);
+    const { ended, won } = evaluateEnd(game, isSettingUp);
     if (ended !== game.ended || won !== game.won) {
       setGame((draft) => {
         draft.ended = ended;
         draft.won = won;
       });
     }
-  }, [game]);
+  }, [game, isSettingUp, setGame]);
 
   function placeOnWaste(index: number) {
     if (game.ended || !top(game.stock)) return;

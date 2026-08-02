@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const clearTheDungeon: GameDefinition = {
   path: "/clear-the-dungeon",
@@ -12,9 +13,10 @@ export const clearTheDungeon: GameDefinition = {
     luck: 45,
   },
   thumbnail: "ClearTheDungeon.jpg",
-  background: GAME_BACKGROUNDS.dungeon,
-  cardColorBg: "#352820",
-  cardColorText: "#fff6dc",
+  background: GAME_BACKGROUNDS.stoneTunnel,
+  animation: GameAnimations.FallingEmbers,
+  gameColorDark: "#352820",
+  gameColorPale: "#fff6dc",
   cardDescription:
     "Exterminate twelve dungeon monsters with powerful attacks before your damage bar fills.",
   quickStart: ["Beat each monster with sum pair, then matching-suit trigger."],

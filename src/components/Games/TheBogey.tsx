@@ -36,6 +36,8 @@ type GameState = {
   winLoseMessage?: string;
 };
 
+export type TheBogeyGameState = GameState;
+
 function getWinTier(columnCount: number) {
   switch (columnCount) {
     case 12:
@@ -82,15 +84,21 @@ function canPlayCard(
 
 function allCardsPlaced(state: GameState) {
   return (
-    state.hand.length === 0 &&
+    state.hand.every((card) => card === null) &&
     state.deck.length === 0 &&
     state.discard.length === 0 &&
     state.currentBogeyCard === null
   );
 }
 
+function usedColumnCount(columns: (PlayingCard[] | null)[]) {
+  return columns.filter((column) => column !== null && column.length > 0)
+    .length;
+}
+
 function finishCompletedGame(draft: GameState) {
-  const tier = getWinTier(draft.columns.length);
+  const columnCount = usedColumnCount(draft.columns);
+  const tier = getWinTier(columnCount);
 
   draft.ended = true;
   draft.won = tier !== null;
@@ -100,11 +108,21 @@ function finishCompletedGame(draft: GameState) {
   draft.currentBogeyCard = null;
 
   if (tier) {
-    draft.winLoseMessage = `${draft.columns.length} columns used. ${tier.toUpperCase()} win.`;
+    draft.winLoseMessage = `${columnCount} columns used. ${tier.toUpperCase()} win.`;
   } else {
-    draft.winLoseMessage = `All cards played in ${draft.columns.length} columns.`;
+    draft.winLoseMessage = `All cards played in ${columnCount} columns.`;
   }
 }
+
+export const theBogeyRules = {
+  getWinTier,
+  canPlayCard,
+  allCardsPlaced,
+  usedColumnCount,
+  finishCompletedGame,
+  maxColumns: MAX_COLUMNS,
+  handSize: HAND_SIZE,
+};
 
 function recycleDiscardIntoDeck(draft: GameState) {
   if (draft.deck.length > 0 || draft.discard.length === 0) return;
@@ -182,7 +200,7 @@ async function resetAndSetup(
 }
 
 export default function TheBogey() {
-  const { zoneBg } = useGameZoneBackground();
+  const { colorZone } = useGameZoneBackground();
 
   const { game, setGame, reset, isLoaded, canUndo, undo, saveUndoState } =
     useStateManager({

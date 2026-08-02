@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const area52: GameDefinition = {
   path: "/area-52",
@@ -17,14 +18,15 @@ export const area52: GameDefinition = {
   },
   thumbnail: "Area52.jpg",
   background: GAME_BACKGROUNDS.nightSky,
+  animation: GameAnimations.ShimmeringStars,
   cardBack: "Area52.png",
-  cardColorBg: "#2a2836",
-  cardColorText: "#b5faff",
+  gameColorDark: "#2a2836",
+  gameColorPale: "#b5faff",
   cardDescription:
     "Fight off waves of alien invaders before running out of defenders.",
   quickStart: [
     "Beat back 2 waves of attackers via attacks or sacrifices.",
-    "Single attacks: opposite color, and of larger or equal value",
+    "Single attacks: opposite color, and of strictly larger value",
     "Double attacks: sum must be of equal value.",
   ],
   howToPlay: [

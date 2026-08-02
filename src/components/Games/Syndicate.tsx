@@ -30,12 +30,16 @@ type RankBand = {
   candidates: PlayingCard[];
 };
 
+export type SyndicateRankBand = RankBand;
+
 type GameState = {
   ranks: RankBand[];
   dead: PlayingCard[];
   ended: boolean;
   won: boolean;
 };
+
+export type SyndicateGameState = GameState;
 
 const gameStateInitial: GameState = {
   ranks: Array.from({ length: 5 }).map(() => ({ members: [], candidates: [] })),
@@ -100,8 +104,7 @@ function cardVal(card: PlayingCard) {
 }
 
 function lastDigit(n: number) {
-  const x = n % 10;
-  return x < 0 ? x + 10 : x;
+  return ((n % 10) + 10) % 10;
 }
 
 function replacementMatches(
@@ -132,9 +135,17 @@ function hasAnyMove(state: GameState) {
   return false;
 }
 
+export const syndicateRules = {
+  cardVal,
+  lastDigit,
+  replacementMatches,
+  hasAnyMove,
+  totalCardsNeeded,
+};
+
 // ========== Main Component ========== //
 export default function Syndicate() {
-  const { zoneBg } = useGameZoneBackground(0.6);
+  const { colorZone } = useGameZoneBackground(0.6);
 
   const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
     useStateManager({
@@ -474,7 +485,7 @@ export default function Syndicate() {
             paddingVertical: positioning.paddingVertical,
             paddingHorizontal: cardWidth * positioning.paddingHorizontal,
             borderRadius: cardWidth * positioning.borderRadius,
-            backgroundColor: zoneBg,
+            backgroundColor: colorZone,
           },
         ]}
       >
@@ -526,7 +537,7 @@ export default function Syndicate() {
                 paddingHorizontal: cardWidth * positioning.paddingHorizontal,
                 alignItems: "center",
                 borderRadius: cardWidth * positioning.borderRadius,
-                backgroundColor: zoneBg,
+                backgroundColor: colorZone,
               },
             ]}
           >

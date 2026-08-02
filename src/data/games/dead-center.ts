@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const deadCenter: GameDefinition = {
   path: "/dead-center",
@@ -13,9 +14,10 @@ export const deadCenter: GameDefinition = {
   },
   thumbnail: "DeadCenter.jpg",
   background: GAME_BACKGROUNDS.forest,
+  animation: GameAnimations.FallingLeaves,
   cardBack: "DeadCenter.png",
-  cardColorBg: "#201207",
-  cardColorText: "#e9f1d9",
+  gameColorDark: "#201207",
+  gameColorPale: "#e9f1d9",
   cardDescription:
     "Defend your cabin against a siege of zombies, using supporting cards strategically.",
   quickStart: [

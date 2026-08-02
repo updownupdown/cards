@@ -14,8 +14,8 @@ export const dungeonBounty: GameDefinition = {
   },
   thumbnail: "DungeonBounty.jpg",
   background: GAME_BACKGROUNDS.dungeon,
-  cardColorBg: "#2a1a2e",
-  cardColorText: "#f3d9a4",
+  gameColorDark: "#2a1a2e",
+  gameColorPale: "#f3d9a4",
   cardDescription:
     "A dungeon-crawling bounty hunt: equip weapons, cast spells, slay beasts, and grab the loot.",
   quickStart: [

@@ -13,28 +13,21 @@ import { RichText } from "../common/RichText";
 import { lightenHexColor } from "@/utils/utils";
 import { ScrollView } from "react-native-gesture-handler";
 import { useModalStyles } from "@/styles/modalStyles";
-import { Button } from "../Button/Button";
 import { CreditsSection } from "./GameModal";
 
-export const RulesModal = ({
-  onClose,
-  showMenu,
-}: {
-  onClose: () => void;
-  showMenu: () => void;
-}) => {
+export const RulesModal = ({ onClose }: { onClose: () => void }) => {
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);
   const { spacing } = useResponsiveMetrics();
   const modalStyles = useModalStyles();
-  const headingColor = gameInfo.cardColorText ?? Colors.white;
+  const headingColor = gameInfo.gameColorPale ?? Colors.white;
 
   return (
     <ModalFull
       onClose={onClose}
       title="How to Play"
       titleColor={headingColor}
-      backgroundColor={gameInfo.cardColorBg}
+      backgroundColor={gameInfo.gameColorDark}
       iconName="instructions"
     >
       <ScrollView
@@ -54,13 +47,12 @@ export const RulesModal = ({
             gameInfo={gameInfo}
             headingColor={headingColor}
             style={{
-              marginBottom: spacing(16),
               paddingLeft: spacing(16),
               paddingRight: spacing(20),
               paddingVertical: spacing(16),
               gap: spacing(8),
               borderRadius: spacing(12),
-              backgroundColor: lightenHexColor(gameInfo.cardColorBg, 0.1),
+              backgroundColor: lightenHexColor(gameInfo.gameColorDark, 0.1),
             }}
           />
 

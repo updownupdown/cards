@@ -25,7 +25,7 @@ import { GameWrapper } from "../common/GameWrapper";
 
 const TABLEAU_FAN_OFFSET = 0.35;
 
-type ScorpionState = {
+export type ScorpionState = {
   tableau: PlayingCard[][];
   stock: PlayingCard[];
   foundations: PlayingCard[][];
@@ -149,6 +149,15 @@ function moveCompletedRunsToFoundations(
     }
   }
 }
+
+export const scorpionRules = {
+  createInitialState,
+  normalizeColumn,
+  canAttachToTableau,
+  isCompleteSuitRun,
+  moveCompletedRunsToFoundations,
+  descendingRanks: DESC_RANKS,
+};
 
 const gameStateInitial = createInitialState();
 

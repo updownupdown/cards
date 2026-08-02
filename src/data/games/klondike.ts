@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const klondike: GameDefinition = {
   path: "/klondike",
@@ -13,8 +14,9 @@ export const klondike: GameDefinition = {
   },
   thumbnail: "Klondike.jpg",
   background: GAME_BACKGROUNDS.yukon,
-  cardColorBg: "#2c3a2f",
-  cardColorText: "#EEF0FF",
+  animation: GameAnimations.PassingClouds,
+  gameColorDark: "#2c3a2f",
+  gameColorPale: "#EEF0FF",
   cardDescription:
     "The classic solitaire: build four suit foundations from Ace to King.",
   quickStart: [

@@ -26,21 +26,14 @@ import { infoSize } from "../Cards/CardMapBackgrounds";
 import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
 
-const startingHand = 4;
 const handWidth = 6;
-const winTarget = 100;
+const LOBO_STARTING_HAND = 4;
+const LOBO_WIN_TARGET = 100;
 
-type LoboMode = "hard" | "medium" | "easy";
-type Action = "perfect" | "sum" | "split" | "over";
+export type LoboMode = "hard" | "medium" | "easy";
+export type LoboAction = "perfect" | "sum" | "split" | "over";
 
-const actionColourMap: Record<Action, string> = {
-  perfect: "green",
-  sum: "purple",
-  split: "pink",
-  over: "orange",
-};
-
-type GameState = {
+export type LoboGameState = {
   deck: PlayingCard[];
   player: PlayingCard[];
   wolf: PlayingCard[];
@@ -56,7 +49,14 @@ type GameState = {
   mode: LoboMode;
 };
 
-const gameStateInitial: GameState = {
+const actionColourMap: Record<LoboAction, string> = {
+  perfect: "green",
+  sum: "purple",
+  split: "pink",
+  over: "orange",
+};
+
+const gameStateInitial: LoboGameState = {
   deck: shuffle(buildLoboDeck("medium")).map(flipToBack),
   player: [],
   wolf: [],
@@ -72,51 +72,129 @@ const gameStateInitial: GameState = {
   mode: "medium",
 };
 
-// ── Deck (Postas: ranks 1-10, five suits; suit is irrelevant) ─────────────────
-function rankToCard(n: number): CardRank {
-  return n === 1 ? "A" : (String(n) as CardRank);
+function rankToCard(rank: number): CardRank {
+  return rank === 1 ? "A" : (String(rank) as CardRank);
 }
 
-function buildLoboDeck(mode: LoboMode): PlayingCard[] {
+function buildLoboDeck(
+  mode: LoboMode,
+  random: () => number = Math.random,
+): PlayingCard[] {
   const maxRank = mode === "easy" ? 8 : mode === "hard" ? 10 : 9;
   const cards: PlayingCard[] = [];
+
   for (let copy = 0; copy < 5; copy += 1) {
-    for (let n = 1; n <= maxRank; n += 1) {
+    for (let rank = 1; rank <= maxRank; rank += 1) {
       cards.push({
-        id: `${copy}-${n}-${Math.random().toString(36).slice(2, 8)}`,
+        id: `${copy}-${rank}-${random().toString(36).slice(2, 8)}`,
         suit: SUITS[copy % SUITS.length],
-        rank: rankToCard(n),
+        rank: rankToCard(rank),
         faceUp: false,
       });
     }
   }
+
   return cards;
 }
 
-function sumVals(cards: PlayingCard[]) {
-  return cards.reduce((sum, c) => sum + rankValue(c), 0);
+function sumLoboCards(cards: readonly PlayingCard[]) {
+  return cards.reduce((sum, card) => sum + rankValue(card), 0);
 }
 
-function detectAction(
-  player: PlayingCard[],
-  wolf: PlayingCard[],
-): Action | null {
+function detectLoboAction(
+  player: readonly PlayingCard[],
+  wolf: readonly PlayingCard[],
+): LoboAction | null {
   if (player.length === 0 || wolf.length === 0) return null;
-  const sp = sumVals(player);
-  const sw = sumVals(wolf);
+
+  const playerTotal = sumLoboCards(player);
+  const wolfTotal = sumLoboCards(wolf);
 
   if (player.length === 1 && wolf.length === 1) {
-    if (sp === sw) return "perfect";
-    if (sp > sw) return "over";
+    if (playerTotal === wolfTotal) return "perfect";
+    if (playerTotal > wolfTotal) return "over";
     return null;
   }
-  if (player.length >= 2 && wolf.length === 1) return sp === sw ? "sum" : null;
-  if (player.length === 1 && wolf.length >= 2)
-    return sw === sp ? "split" : null;
+
+  if (player.length >= 2 && wolf.length === 1) {
+    return playerTotal === wolfTotal ? "sum" : null;
+  }
+
+  if (player.length === 1 && wolf.length >= 2) {
+    return wolfTotal === playerTotal ? "split" : null;
+  }
+
   return null;
 }
 
-function keepTopFaceUp(draft: GameState) {
+function getLoboCaptureEffect(
+  player: readonly PlayingCard[],
+  wolf: readonly PlayingCard[],
+) {
+  const action = detectLoboAction(player, wolf);
+  if (action === null) return null;
+
+  if (action === "perfect" || action === "sum") {
+    return { action, drawFor: "player" as const, drawCount: 1 };
+  }
+
+  if (action === "split") {
+    return { action, drawFor: "wolf" as const, drawCount: 1 };
+  }
+
+  return {
+    action,
+    drawFor: "wolf" as const,
+    drawCount: rankValue(player[0]) - rankValue(wolf[0]),
+  };
+}
+
+function scoreLoboRound(
+  state: Readonly<LoboGameState>,
+  roundWon: boolean,
+): LoboGameState {
+  const roundPoints = sumLoboCards(roundWon ? state.player : state.wolf);
+  const playerScore = state.playerScore + (roundWon ? roundPoints : 0);
+  const wolfScore = state.wolfScore + (roundWon ? 0 : roundPoints);
+  const ended = playerScore >= LOBO_WIN_TARGET || wolfScore >= LOBO_WIN_TARGET;
+
+  return {
+    ...state,
+    playerScore,
+    wolfScore,
+    roundPoints,
+    roundWon,
+    roundOver: true,
+    ended,
+    won: ended ? playerScore >= LOBO_WIN_TARGET : state.won,
+  };
+}
+
+function assertLoboInvariants(state: Readonly<LoboGameState>) {
+  const cards = [
+    ...state.deck,
+    ...state.player,
+    ...state.wolf,
+    ...state.discard,
+  ];
+  const uniqueIds = new Set(cards.map((card) => card.id));
+
+  if (uniqueIds.size !== cards.length) {
+    throw new Error("A Lobo card exists in more than one zone");
+  }
+  if (state.playerScore < 0 || state.wolfScore < 0 || state.roundPoints < 0) {
+    throw new Error("Lobo scores cannot be negative");
+  }
+  if (
+    state.ended &&
+    state.playerScore < LOBO_WIN_TARGET &&
+    state.wolfScore < LOBO_WIN_TARGET
+  ) {
+    throw new Error("An ended Lobo game must have a score at the win target");
+  }
+}
+
+function keepTopFaceUp(draft: LoboGameState) {
   if (draft.deck.length > 0) {
     draft.deck[draft.deck.length - 1] = flipToFace(
       draft.deck[draft.deck.length - 1],
@@ -124,7 +202,7 @@ function keepTopFaceUp(draft: GameState) {
   }
 }
 
-function drawTo(draft: GameState, who: "player" | "wolf", count: number) {
+function drawTo(draft: LoboGameState, who: "player" | "wolf", count: number) {
   for (let i = 0; i < count; i += 1) {
     if (draft.deck.length === 0) break;
     const card = draft.deck.pop();
@@ -133,7 +211,11 @@ function drawTo(draft: GameState, who: "player" | "wolf", count: number) {
   keepTopFaceUp(draft);
 }
 
-async function resetDeck(draft: GameState, mode: LoboMode) {
+function resetDeck(
+  draft: LoboGameState,
+  mode: LoboMode,
+  random: () => number = Math.random,
+) {
   const allCards = flipAllToBack([
     ...draft.deck,
     ...draft.player,
@@ -144,9 +226,9 @@ async function resetDeck(draft: GameState, mode: LoboMode) {
   // Reset cards if the mode has changed
   if (draft.mode !== mode) {
     draft.mode = mode;
-    draft.deck = shuffle(buildLoboDeck(mode));
+    draft.deck = shuffle(buildLoboDeck(mode, random), random);
   } else {
-    draft.deck = shuffle(allCards);
+    draft.deck = shuffle(allCards, random);
   }
 
   draft.player = [];
@@ -154,12 +236,12 @@ async function resetDeck(draft: GameState, mode: LoboMode) {
   draft.discard = [];
 }
 
-function dealRound(draft: GameState) {
-  for (let i = 0; i < startingHand; i += 1) {
+function dealRound(draft: LoboGameState) {
+  for (let i = 0; i < LOBO_STARTING_HAND; i += 1) {
     const c = draft.deck.pop();
     if (c) draft.wolf.push(flipToFace(c));
   }
-  for (let i = 0; i < startingHand; i += 1) {
+  for (let i = 0; i < LOBO_STARTING_HAND; i += 1) {
     const c = draft.deck.pop();
     if (c) draft.player.push(flipToFace(c));
   }
@@ -171,27 +253,134 @@ function dealRound(draft: GameState) {
   draft.roundOver = false;
 }
 
-function finishRound(draft: GameState, won: boolean) {
-  if (won) {
-    draft.roundPoints = sumVals(draft.player);
-    draft.playerScore += draft.roundPoints;
-  } else {
-    draft.roundPoints = sumVals(draft.wolf);
-    draft.wolfScore += draft.roundPoints;
-  }
-  draft.roundWon = won;
-  draft.roundOver = true;
-
-  if (draft.playerScore >= winTarget || draft.wolfScore >= winTarget) {
-    draft.ended = true;
-    draft.won = draft.playerScore >= winTarget;
-  }
+function finishRound(draft: LoboGameState, won: boolean) {
+  Object.assign(draft, scoreLoboRound(draft, won));
 }
+
+function foldLoboRoundAction(draft: LoboGameState) {
+  if (draft.ended || draft.roundOver) return false;
+  finishRound(draft, false);
+  return true;
+}
+
+function startNextLoboRoundAction(
+  draft: LoboGameState,
+  mode: LoboMode,
+  random: () => number = Math.random,
+) {
+  if (!draft.roundOver) return false;
+  resetDeck(draft, mode, random);
+  if (draft.ended) return true;
+  draft.round += 1;
+  dealRound(draft);
+  return true;
+}
+
+export type LoboCapturePlan = {
+  playerIds: string[];
+  wolfIds: string[];
+  effect: NonNullable<ReturnType<typeof getLoboCaptureEffect>>;
+  roundWillEnd: boolean;
+};
+
+function createLoboCapturePlan(
+  state: Readonly<LoboGameState>,
+  playerIds: readonly string[],
+  wolfIds: readonly string[],
+): LoboCapturePlan | null {
+  if (state.ended || state.roundOver) return null;
+
+  const uniquePlayerIds = [...new Set(playerIds)];
+  const uniqueWolfIds = [...new Set(wolfIds)];
+  const selectedPlayer = state.player.filter((card) =>
+    uniquePlayerIds.includes(card.id),
+  );
+  const selectedWolf = state.wolf.filter((card) =>
+    uniqueWolfIds.includes(card.id),
+  );
+  if (
+    selectedPlayer.length !== uniquePlayerIds.length ||
+    selectedWolf.length !== uniqueWolfIds.length
+  ) {
+    return null;
+  }
+
+  const effect = getLoboCaptureEffect(selectedPlayer, selectedWolf);
+  if (!effect) return null;
+
+  return {
+    playerIds: uniquePlayerIds,
+    wolfIds: uniqueWolfIds,
+    effect,
+    roundWillEnd:
+      (effect.action === "perfect" || effect.action === "sum") &&
+      selectedWolf.length === state.wolf.length,
+  };
+}
+
+function removeLoboCaptureAction(draft: LoboGameState, plan: LoboCapturePlan) {
+  const playerIds = new Set(plan.playerIds);
+  const wolfIds = new Set(plan.wolfIds);
+  const selectedPlayer = draft.player.filter((card) => playerIds.has(card.id));
+  const selectedWolf = draft.wolf.filter((card) => wolfIds.has(card.id));
+  if (
+    selectedPlayer.length !== playerIds.size ||
+    selectedWolf.length !== wolfIds.size
+  ) {
+    return false;
+  }
+
+  draft.player = draft.player.filter((card) => !playerIds.has(card.id));
+  draft.wolf = draft.wolf.filter((card) => !wolfIds.has(card.id));
+  draft.discard.push(
+    ...flipAllToBack(selectedPlayer),
+    ...flipAllToBack(selectedWolf),
+  );
+  return true;
+}
+
+function completeLoboCaptureAction(
+  draft: LoboGameState,
+  plan: LoboCapturePlan,
+) {
+  drawTo(draft, plan.effect.drawFor, plan.effect.drawCount);
+  draft.player = sortCardsByRank(draft.player);
+  draft.wolf = sortCardsByRank(draft.wolf);
+  if (draft.wolf.length === 0) finishRound(draft, true);
+}
+
+function executeLoboCaptureAction(
+  draft: LoboGameState,
+  playerIds: readonly string[],
+  wolfIds: readonly string[],
+) {
+  const plan = createLoboCapturePlan(draft, playerIds, wolfIds);
+  if (!plan || !removeLoboCaptureAction(draft, plan)) return null;
+  completeLoboCaptureAction(draft, plan);
+  return plan;
+}
+
+export const loboRules = {
+  buildDeck: buildLoboDeck,
+  detectAction: detectLoboAction,
+  getCaptureEffect: getLoboCaptureEffect,
+  scoreRound: scoreLoboRound,
+  sumCards: sumLoboCards,
+  assertInvariants: assertLoboInvariants,
+  createCapturePlan: createLoboCapturePlan,
+  removeCaptureAction: removeLoboCaptureAction,
+  completeCaptureAction: completeLoboCaptureAction,
+  executeCaptureAction: executeLoboCaptureAction,
+  foldRoundAction: foldLoboRoundAction,
+  resetDeckAction: resetDeck,
+  dealRoundAction: dealRound,
+  startNextRoundAction: startNextLoboRoundAction,
+};
 
 // ── Component ────────────────────────────────────────────────────────────────
 export default function Lobo() {
   const { spacing } = useResponsiveMetrics();
-  const { cardText } = useGameZoneBackground();
+  const { colorPale } = useGameZoneBackground();
   const mode = useGameSettingValue("loboMode") as LoboMode;
   const modeRef = useRef(mode);
   modeRef.current = mode;
@@ -236,7 +425,7 @@ export default function Lobo() {
     () => game.wolf.filter((c) => selectedWolf.includes(c.id)),
     [game.wolf, selectedWolf],
   );
-  const action = detectAction(selPlayerCards, selWolfCards);
+  const action = detectLoboAction(selPlayerCards, selWolfCards);
 
   function toggle(list: string[], id: string) {
     return list.includes(id) ? list.filter((x) => x !== id) : [...list, id];
@@ -253,45 +442,28 @@ export default function Lobo() {
 
   async function executeCapture() {
     if (game.ended || game.roundOver || !action) return;
-    const pIds = new Set(selectedPlayer);
-    const wIds = new Set(selectedWolf);
-    const roundWillEnd =
-      (action === "perfect" || action === "sum") &&
-      selectedWolf.length === game.wolf.length;
-    let diff: number | null = null;
-
+    const capturePlan = createLoboCapturePlan(
+      game,
+      selectedPlayer,
+      selectedWolf,
+    );
+    if (!capturePlan) return;
     saveUndoState(structuredClone(game));
 
     setGame((draft) => {
-      const pSel = draft.player.filter((c) => pIds.has(c.id));
-      const wSel = draft.wolf.filter((c) => wIds.has(c.id));
-      draft.player = draft.player.filter((c) => !pIds.has(c.id));
-      draft.wolf = draft.wolf.filter((c) => !wIds.has(c.id));
-      draft.discard.push(...flipAllToBack(pSel), ...flipAllToBack(wSel));
-      diff = rankValue(pSel[0]) - rankValue(wSel[0]);
+      removeLoboCaptureAction(draft, capturePlan);
     });
 
     await delay(600);
 
     setGame((draft) => {
-      if (action === "perfect" || action === "sum") {
-        drawTo(draft, "player", 1);
-      } else if (action === "split") {
-        drawTo(draft, "wolf", 1);
-      } else if (diff !== null && action === "over") {
-        drawTo(draft, "wolf", diff);
-      }
-
-      draft.player = sortCardsByRank(draft.player);
-      draft.wolf = sortCardsByRank(draft.wolf);
-
-      if (draft.wolf.length === 0) finishRound(draft, true);
+      completeLoboCaptureAction(draft, capturePlan);
     });
 
     setSelectedPlayer([]);
     setSelectedWolf([]);
 
-    if (roundWillEnd) {
+    if (capturePlan.roundWillEnd) {
       nextRound();
     }
   }
@@ -301,7 +473,9 @@ export default function Lobo() {
 
     saveUndoState(structuredClone(game));
 
-    setGame((draft) => finishRound(draft, false));
+    setGame((draft) => {
+      foldLoboRoundAction(draft);
+    });
 
     setSelectedPlayer([]);
     setSelectedWolf([]);
@@ -430,14 +604,14 @@ export default function Lobo() {
 
   const actionLabel = action
     ? action.charAt(0).toUpperCase() + action.slice(1)
-    : "Capture";
+    : undefined;
 
   const countTextColor = (wolf: boolean) => {
-    let baseColor = cardText;
+    let baseColor = colorPale;
 
     const hasCardsSelected = wolf
-      ? sumVals(selWolfCards) > 0
-      : sumVals(selPlayerCards) > 0;
+      ? sumLoboCards(selWolfCards) > 0
+      : sumLoboCards(selPlayerCards) > 0;
 
     if (hasCardsSelected) baseColor = Colors.cardSelectBlue;
 
@@ -476,30 +650,28 @@ export default function Lobo() {
         ]}
       >
         <View style={[flexStyles.colCentered, flexStyles.flex1]}>
-          <Text size="sm" weight={300} color={cardText}>
+          <Text size="sm" weight={300} color={colorPale}>
             Wolf
           </Text>
-          <Text size="xl" weight={600} color={cardText}>
+          <Text size="xl" weight={600} color={colorPale}>
             {game.wolfScore}
           </Text>
         </View>
 
-        <View
-          style={[flexStyles.colCentered, flexStyles.flex1, { opacity: 0.5 }]}
-        >
-          <Text size="sm" weight={300} color={cardText}>
+        <View style={[flexStyles.colCentered, flexStyles.flex1]}>
+          <Text size="sm" weight={300} color={Colors.white}>
             Round
           </Text>
-          <Text size="xl" weight={300} color={cardText}>
+          <Text size="xl" weight={600} color={Colors.white}>
             {game.round}
           </Text>
         </View>
 
         <View style={[flexStyles.colCentered, flexStyles.flex1]}>
-          <Text size="sm" weight={300} color={cardText}>
+          <Text size="sm" weight={300} color={colorPale}>
             Player
           </Text>
-          <Text size="xl" weight={600} color={cardText}>
+          <Text size="xl" weight={600} color={colorPale}>
             {game.playerScore}
           </Text>
         </View>
@@ -521,13 +693,13 @@ export default function Lobo() {
           style={{ width: spacing(30), textAlign: "center" }}
           lineHeight={1}
         >
-          {sumVals(selWolfCards)}
+          {sumLoboCards(selWolfCards)}
         </Text>
 
         <Text
           size="xxxl"
           weight={300}
-          color={rgba(cardText, 0.6)}
+          color={rgba(colorPale, 0.6)}
           style={{ width: spacing(20), textAlign: "center" }}
         >
           :
@@ -540,7 +712,7 @@ export default function Lobo() {
           style={{ width: spacing(30), textAlign: "center" }}
           lineHeight={1}
         >
-          {sumVals(selPlayerCards)}
+          {sumLoboCards(selPlayerCards)}
         </Text>
       </Animated.View>
 
@@ -621,7 +793,7 @@ export default function Lobo() {
               taller
               disabled={game.ended || game.roundOver || !action}
               theme={action ? actionColourMap[action] : "none"}
-              style={{ flex: 2 }}
+              style={{ flex: 2, opacity: action ? 1 : 0 }}
             />
           </Animated.View>
         )}

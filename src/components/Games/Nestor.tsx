@@ -25,6 +25,9 @@ type GameState = {
   won: boolean;
 };
 
+export type NestorGameState = GameState;
+export type NestorSelection = Selection;
+
 const gameStateInitial: GameState = {
   columns: Array.from({ length: columnCount }, () => []),
   reserve: [],
@@ -32,32 +35,49 @@ const gameStateInitial: GameState = {
   won: false,
 };
 
+function dealNestor(deckCards: PlayingCard[]): GameState {
+  const cardsByRank = new Map<PlayingCard["rank"], PlayingCard[]>();
+  for (const card of deckCards) {
+    const cards = cardsByRank.get(card.rank) ?? [];
+    cards.push(card);
+    cardsByRank.set(card.rank, cards);
+  }
+
+  const columns: PlayingCard[][] = Array.from(
+    { length: columnCount },
+    () => [],
+  );
+
+  [...cardsByRank.values()].forEach((cards, rankIndex) => {
+    const firstColumn = rankIndex % 2 === 0 ? 0 : 4;
+    cards.forEach((card, cardIndex) => {
+      columns[firstColumn + cardIndex].push(flipToFace(card));
+    });
+  });
+
+  const reserve = columns.slice(0, 4).map((column, columnIndex) => {
+    const [card] = column.splice(columnIndex, 1);
+    return card;
+  });
+
+  return {
+    columns,
+    reserve,
+    ended: false,
+    won: false,
+  };
+}
+
 async function resetAndSetup(
   setGame: (updater: (draft: GameState) => void) => void,
 ) {
   setGame((draft) => {
     const deck = shuffle(createDeck({ faceUp: true }));
-    const columns: PlayingCard[][] = Array.from(
-      { length: columnCount },
-      () => [],
-    );
-
-    // Deal columns, avoiding two cards of the same rank in one column.
-    for (let c = 0; c < columnCount; c += 1) {
-      const ranksInColumn = new Set<string>();
-      for (let n = 0; n < columnHeight; n += 1) {
-        let index = deck.findIndex((card) => !ranksInColumn.has(card.rank));
-        if (index === -1) index = 0; // fallback if a distinct rank isn't left
-        const [card] = deck.splice(index, 1);
-        columns[c].push(flipToFace(card));
-        ranksInColumn.add(card.rank);
-      }
-    }
-
-    draft.columns = columns;
-    draft.reserve = deck.map(flipToFace);
-    draft.ended = false;
-    draft.won = false;
+    const next = dealNestor(deck);
+    draft.columns = next.columns;
+    draft.reserve = next.reserve;
+    draft.ended = next.ended;
+    draft.won = next.won;
   });
 
   await delay();
@@ -70,7 +90,9 @@ function exposedCard(state: GameState, sel: Selection) {
     : top(state.columns[sel.index]);
 }
 
-function evaluateEnd(state: GameState) {
+function evaluateEnd(state: GameState, isSettingUp = false) {
+  if (isSettingUp) return { ended: false, won: false };
+
   const cardsLeft =
     state.columns.reduce((sum, col) => sum + col.length, 0) +
     state.reserve.length;
@@ -93,28 +115,44 @@ function evaluateEnd(state: GameState) {
   return { ended: false, won: false };
 }
 
+export const nestorRules = {
+  dealNestor,
+  exposedCard,
+  evaluateEnd,
+  columnCount,
+  columnHeight,
+};
+
 // ========== Main Component ========== //
 export default function Nestor() {
   const [selected, setSelected] = useState<Selection>(undefined);
 
-  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
-    useStateManager({
-      resetAndSetup: async () => {
-        await resetAndSetup(setGame);
-      },
-      gameStateInitial,
-      resetNonGameStates: () => setSelected(undefined),
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+    resetNonGameStates: () => setSelected(undefined),
+  });
 
   useEffect(() => {
-    const { ended, won } = evaluateEnd(game);
+    const { ended, won } = evaluateEnd(game, isSettingUp);
     if (ended !== game.ended || won !== game.won) {
       setGame((draft) => {
         draft.ended = ended;
         draft.won = won;
       });
     }
-  }, [game]);
+  }, [game, isSettingUp, setGame]);
 
   function sameSelection(a: Selection, b: Selection) {
     return !!a && !!b && a.zone === b.zone && a.index === b.index;

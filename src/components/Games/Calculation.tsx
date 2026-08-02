@@ -31,6 +31,8 @@ type GameState = {
   won: boolean;
 };
 
+export type CalculationGameState = GameState;
+
 const gameStateInitial: GameState = {
   draw: shuffle(createDeck()),
   foundations: [[], [], [], []],
@@ -75,7 +77,7 @@ const START_RANKS: CardRank[] = ["A", "2", "3", "4"];
 const STEPS = [1, 2, 3, 4];
 
 function nextRankValue(card: PlayingCard, step: number) {
-  return (rankValue(card) + step) % 13;
+  return ((rankValue(card) - 1 + step) % 13) + 1;
 }
 
 function canPlayToFoundation(
@@ -90,18 +92,49 @@ function canPlayToFoundation(
 }
 
 function anyFoundationPlayable(
-  card: PlayingCard,
+  card: PlayingCard | undefined,
   foundations: PlayingCard[][],
 ) {
+  if (!card) return false;
+
   for (let i = 0; i < foundations.length; i += 1) {
     if (canPlayToFoundation(card, foundations[i], STEPS[i])) return true;
   }
   return false;
 }
 
+function evaluateEndState(
+  draw: PlayingCard[],
+  foundations: PlayingCard[][],
+  wastes: PlayingCard[][],
+) {
+  const totalOnFoundations = foundations.reduce(
+    (sum, pile) => sum + pile.length,
+    0,
+  );
+
+  if (totalOnFoundations === 52) return { ended: true, won: true };
+  if (draw.length > 0) return { ended: false, won: false };
+
+  const canPlayFromWaste = wastes.some((waste) =>
+    anyFoundationPlayable(waste[waste.length - 1], foundations),
+  );
+
+  return canPlayFromWaste
+    ? { ended: false, won: false }
+    : { ended: true, won: false };
+}
+
+export const calculationRules = {
+  nextRankValue,
+  canPlayToFoundation,
+  anyFoundationPlayable,
+  evaluateEndState,
+};
+
 // ================ Game Component ========== //
 export default function Calculation() {
-  const { zoneBg } = useGameZoneBackground();
+  const { colorZone } = useGameZoneBackground();
   const { spacing } = useResponsiveMetrics();
 
   const {
@@ -145,35 +178,14 @@ export default function Calculation() {
   useEffect(() => {
     if (isSettingUp) return;
 
-    // Evaluate win/lose conditions
-    const totalOnFoundations = game.foundations.reduce(
-      (sum, pile) => sum + pile.length,
-      0,
-    );
+    const outcome = evaluateEndState(game.draw, game.foundations, game.wastes);
 
-    // Win!
-    if (totalOnFoundations === 52) {
+    if (outcome.ended) {
       setGame((draft) => {
         draft.ended = true;
-        draft.won = true;
+        draft.won = outcome.won;
       });
-    }
-
-    // No more draw cards, check if waste cards can be added to foundations
-    if (!topDrawCard) {
-      const availableWasteCards = game.wastes.find((waste, i) => {
-        if (game.wastes[i].length !== 0) return false;
-        const topWasteCard = game.wastes[i][game.wastes[i].length - 1];
-        return anyFoundationPlayable(topWasteCard, game.foundations);
-      });
-
-      // Lost!
-      if (availableWasteCards === undefined) {
-        setGame((draft) => {
-          draft.ended = true;
-          draft.won = false;
-        });
-      }
+      return;
     }
 
     // Turn over draw card
@@ -360,6 +372,7 @@ export default function Calculation() {
         }
 
         return {
+          clickThroughCards: true,
           onPress: () => {
             if (thisIsSelected) {
               setSelectedCard(undefined);
@@ -434,7 +447,7 @@ export default function Calculation() {
             flexStyles.colCentered,
             getZoneStylesById(`foundation-${i}`),
             {
-              backgroundColor: zoneBg,
+              backgroundColor: colorZone,
               height: cardHeight / 2,
               padding: spacing(10),
               gap: spacing(2),
@@ -456,6 +469,7 @@ export default function Calculation() {
                   game.foundations[i][game.foundations[i].length - 1],
                   i + 1,
                 ),
+                true,
               )}
           </Text>
         </View>

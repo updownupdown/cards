@@ -39,7 +39,7 @@ export const CardMapBackgrounds = ({
   cardHeight,
   zoneMapper,
 }: Props) => {
-  const { cardText, cardBg } = useGameZoneBackground();
+  const { colorPale, colorDark } = useGameZoneBackground();
 
   return (
     <>
@@ -213,8 +213,8 @@ export const CardMapBackgrounds = ({
             <View
               style={getUnderlayStyle(
                 cardWidth,
-                cardBg,
-                cardText,
+                colorDark,
+                colorPale,
                 zone.placeholder.backgroundColor,
                 zone.placeholder.hideBackground,
                 zone.placeholder.hideShadow,

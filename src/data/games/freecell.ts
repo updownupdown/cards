@@ -12,9 +12,9 @@ export const freecell: GameDefinition = {
     luck: 30,
   },
   thumbnail: DEFAULT_GAME_THUMBNAIL,
-  background: GAME_BACKGROUNDS.casino,
-  cardColorBg: "#151f2b",
-  cardColorText: "#DDEBFF",
+  background: GAME_BACKGROUNDS.casino2,
+  gameColorDark: "#151f2b",
+  gameColorPale: "#DDEBFF",
   cardDescription:
     "An open-information classic where nearly every deal can be won with care.",
   quickStart: [

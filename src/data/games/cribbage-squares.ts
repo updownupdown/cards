@@ -12,10 +12,10 @@ export const cribbageSquares: GameDefinition = {
     luck: 75,
   },
   thumbnail: "CribbageSquares.jpg",
-  background: GAME_BACKGROUNDS.casino,
+  background: GAME_BACKGROUNDS.casino2,
   cardBack: "DefaultCardBack.png",
-  cardColorBg: "#263b32",
-  cardColorText: "#f0ead6",
+  gameColorDark: "#263b32",
+  gameColorPale: "#f0ead6",
   cardDescription:
     "Build sixteen connected cards, then score every row and column with a starter card.",
   quickStart: [

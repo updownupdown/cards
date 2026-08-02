@@ -70,11 +70,6 @@ export function HomeTab({
     setScrollY(event.nativeEvent.contentOffset.y);
   };
 
-  const favoriteKey = useMemo(
-    () => Array.from(favorites).sort().join("|"),
-    [favorites],
-  );
-
   const gameOfTheDay = useMemo(() => {
     const path = getGameOfTheDayPath(allEnabledGamePaths);
     if (!path) return null;
@@ -99,7 +94,7 @@ export function HomeTab({
     return orderedPaths
       .map((path) => [path, GAMES_DATA[path]] as HomeGameEntry)
       .filter(([, game]) => isGameEnabled(game))
-      .slice(0, 10);
+      .slice(0, 12);
   }, [recentPaths, favorites]);
 
   const becauseYouLiked = useMemo(() => {
@@ -133,7 +128,7 @@ export function HomeTab({
     }
 
     return { title: likedGame.title, games: related };
-  }, [favoriteKey, allEnabledGames]);
+  }, [allEnabledGames]);
 
   const unplayedGames = useMemo(() => {
     const unplayedSet = new Set(unplayedGamePaths);
@@ -155,7 +150,7 @@ export function HomeTab({
       contentContainerStyle={{
         paddingTop: contentPaddingTop,
         paddingBottom: contentPaddingBottom,
-        gap: spacing(30),
+        gap: spacing(40),
       }}
       showsVerticalScrollIndicator={false}
       scrollEventThrottle={16}

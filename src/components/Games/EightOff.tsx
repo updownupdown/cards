@@ -33,6 +33,8 @@ type GameState = {
   foundations: PlayingCard[][];
 };
 
+export type EightOffGameState = GameState;
+
 type Selection = { zone: "free"; slotIndex: number } | null;
 
 type MoveSource =
@@ -107,6 +109,13 @@ function isDescendingSameSuitStack(cards: PlayingCard[]): boolean {
     );
   });
 }
+
+export const eightOffRules = {
+  canPlaceOnCascade,
+  canPlaceOnFoundation,
+  createInitialState,
+  isDescendingSameSuitStack,
+};
 
 const gameStateInitial = createInitialState();
 

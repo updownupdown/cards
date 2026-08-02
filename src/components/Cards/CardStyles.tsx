@@ -1,6 +1,7 @@
 import { Colors, rgba, transitionStyles } from "@/styles/styles";
 import { cardDims } from "./card-utils";
 import { StyleSheet, View, ViewStyle } from "react-native";
+import { lightenHexColor } from "@/utils/utils";
 
 export type CardSizes =
   | "small"
@@ -94,8 +95,8 @@ export const CardOverlay = (props: {
 // ===== Underlay ===== //
 export const getUnderlayStyle = (
   cardWidth: number,
-  cardBg: CardColor | string,
-  cardText: CardColor | string,
+  colorDark: CardColor | string,
+  colorPale: CardColor | string,
   customBackground?: CardColor | string,
   hideBackground?: boolean,
   hideShadow?: boolean,
@@ -108,10 +109,10 @@ export const getUnderlayStyle = (
       ? "transparent"
       : customBackground
         ? customBackground
-        : rgba(cardBg, 0.4),
+        : rgba(colorDark, 0.7),
     boxShadow:
       hideBackground || hideShadow
         ? undefined
-        : `0 0 ${cardWidth * 0.2}px 1px ${rgba(Colors.white, 0.25)}, inset 0 0 ${cardWidth * 0.12}px ${rgba(Colors.black, 0.4)}`,
+        : `${cardWidth * 0.05}px ${cardWidth * 0.1}px ${cardWidth * 0.2}px ${rgba(Colors.black, 0.3)}`,
   };
 };

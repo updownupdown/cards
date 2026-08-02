@@ -45,6 +45,9 @@ const PIN_ADJACENCY: Record<number, number[]> = {
 type Phase = "ballSelect" | "pinSelect" | "gameEnd";
 type BallType = "regular" | "strike" | "spare" | null;
 
+export type BowlingSolitairePhase = Phase;
+export type BowlingSolitaireBallType = BallType;
+
 type Frame = {
   ball1Pins: number | null;
   ball1Type: BallType;
@@ -53,6 +56,8 @@ type Frame = {
   mark: "strike" | "split" | null;
   score: number | null;
 };
+
+export type BowlingSolitaireFrame = Frame;
 
 type GameState = {
   pins: (PlayingCard | null)[];
@@ -71,6 +76,8 @@ type GameState = {
   totalScore: number;
   winLoseMessage: string;
 };
+
+export type BowlingSolitaireGameState = GameState;
 
 function filteredDeck() {
   const cards = createDeck().filter(
@@ -403,9 +410,21 @@ function recalculateScores(frames: Frame[], bonusRolls: number[]) {
   return running;
 }
 
+export const bowlingSolitaireRules = {
+  getCardValue,
+  countKnockedPins,
+  isSelectionConnected,
+  isAdjacentToEmptyPin,
+  isValidPinCombo,
+  canAddPinToSelection,
+  canPinBeSelectedThisTurn,
+  getNextBallValues,
+  recalculateScores,
+};
+
 // ========== Main Component ========== //
 export default function BowlingSolitaire() {
-  const { zoneBg, cardBg, cardText } = useGameZoneBackground();
+  const { colorZone, colorDark, colorPale } = useGameZoneBackground();
   const { spacing, font } = useResponsiveMetrics();
 
   const { game, setGame, reset, isLoaded, canUndo, undo, saveUndoState } =
@@ -886,7 +905,7 @@ export default function BowlingSolitaire() {
 
           {
             paddingVertical: spacing(12),
-            backgroundColor: zoneBg,
+            backgroundColor: colorZone,
             borderRadius: spacing(8),
             gap: spacing(5),
           },
@@ -990,7 +1009,7 @@ export default function BowlingSolitaire() {
           getZoneStylesById("frames"),
           flexStyles.rowCentered,
           {
-            backgroundColor: zoneBg,
+            backgroundColor: colorZone,
             paddingHorizontal: spacing(8),
             borderRadius: spacing(8),
           },

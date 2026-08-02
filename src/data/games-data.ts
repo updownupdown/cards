@@ -1,7 +1,8 @@
 import { GameCreator } from "./game-creators";
-import { feltGreyBackground, GameBackground } from "./game-backgrounds";
+import { city, GameBackground } from "./game-backgrounds";
 import { GameThumbnailName } from "./game-thumbnails";
 import { isLocalDevEnvironment } from "@/utils/utils";
+import type { GameAnimation } from "@/animations/types";
 
 export enum GameTag {
   EasyToLearn = "EasyToLearn",
@@ -31,7 +32,7 @@ export type GameStatsNames = keyof GameRating;
 export const statKeys: GameStatsNames[] = ["complexity", "difficulty", "luck"];
 
 export const DEFAULT_GAME_THUMBNAIL: GameThumbnailName = "DefaultThumbnail.jpg";
-export const DEFAULT_GAME_BACKGROUND: GameBackground = feltGreyBackground;
+export const DEFAULT_GAME_BACKGROUND: GameBackground = city;
 
 export type GameMenuInfo = {
   // Basic
@@ -43,11 +44,12 @@ export type GameMenuInfo = {
   // Images
   thumbnail?: GameThumbnailName;
   background?: GameBackground;
+  animation?: GameAnimation;
   cardBack?: string;
 
   // Colors
-  cardColorBg: HexColor;
-  cardColorText: HexColor;
+  gameColorDark: HexColor;
+  gameColorPale: HexColor;
   cardDescription: string;
 
   // How to Play

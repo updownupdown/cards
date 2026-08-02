@@ -13,8 +13,8 @@ export const syndicate: GameDefinition = {
   },
   thumbnail: "Syndicate.jpg",
   background: GAME_BACKGROUNDS.brickStreet,
-  cardColorBg: "#252220",
-  cardColorText: "#b2eee1",
+  gameColorDark: "#252220",
+  gameColorPale: "#b2eee1",
   cardDescription:
     "Stategically promote members and candidates to the top of the syndicate hierarchy.",
   quickStart: ["Build stacks under rank limits; convert in timing windows."],

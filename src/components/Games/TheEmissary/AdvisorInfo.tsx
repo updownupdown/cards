@@ -33,7 +33,7 @@ export const AdvisorInfo = ({
   cardWidth,
 }: AdvisorInfoProps) => {
   const { spacing } = useResponsiveMetrics();
-  const { cardBg } = useGameZoneBackground();
+  const { colorDark } = useGameZoneBackground();
   const { isRendered: renderAdvisorInfo, opacity: advisorInfoOpacity } =
     useFade(!!selectedAdvisor || discardFromHand !== 0, 300);
 
@@ -89,7 +89,7 @@ export const AdvisorInfo = ({
           opacity: advisorInfoOpacity,
           borderRadius: cardWidth * 0.15,
           padding: cardWidth * 0.4,
-          backgroundColor: cardBg,
+          backgroundColor: colorDark,
         },
       ]}
     >

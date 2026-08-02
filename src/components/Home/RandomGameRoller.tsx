@@ -160,6 +160,7 @@ export function RandomGameRoller({
           uppercase={false}
           size="lg"
           onPress={onReroll}
+          disabled={rolling}
           style={{ flex: 1 }}
         />
       </View>

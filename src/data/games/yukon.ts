@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations/types";
 
 export const yukon: GameDefinition = {
   path: "/yukon",
@@ -13,8 +14,9 @@ export const yukon: GameDefinition = {
   },
   thumbnail: "Yukon.jpg",
   background: GAME_BACKGROUNDS.yukon,
-  cardColorBg: "#20303a",
-  cardColorText: "#e6f1f7",
+  animation: GameAnimations.PassingClouds,
+  gameColorDark: "#20303a",
+  gameColorPale: "#e6f1f7",
   cardDescription:
     "Klondike unleashed: move whole groups of cards, in any order, across the tableau.",
   quickStart: [

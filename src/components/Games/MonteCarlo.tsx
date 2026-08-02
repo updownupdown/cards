@@ -32,6 +32,8 @@ type GameState = {
   won: boolean;
 };
 
+export type MonteCarloGameState = GameState;
+
 const gameStateInitial: GameState = {
   grid: Array(25).fill(null),
   draw: createDeck(),
@@ -58,9 +60,11 @@ async function resetAndSetup(
   await delay();
 
   setGame((draft) => {
-    const draw = shuffle(draft.draw);
-    draft.grid = flipAllToFace(draw.splice(-25));
-    draft.draw = draw;
+    const dealt = createGame(draft.draw);
+    draft.grid = dealt.grid;
+    draft.draw = dealt.draw;
+    draft.ended = dealt.ended;
+    draft.won = dealt.won;
   });
 
   await delay();
@@ -122,6 +126,100 @@ function evaluateEnd(state: GameState) {
   return { ended: false, won: false };
 }
 
+function createGame(
+  cards: PlayingCard[] = createDeck({ faceUp: false }),
+  random: () => number = Math.random,
+): GameState {
+  const draw = shuffle(flipAllToBack(cards), random);
+  const grid = [
+    ...flipAllToFace(draw.splice(-25)),
+    ...Array<null>(Math.max(0, 25 - cards.length)).fill(null),
+  ];
+  const state: GameState = {
+    grid,
+    draw,
+    trash: [],
+    ended: false,
+    won: false,
+  };
+  return { ...state, ...evaluateEnd(state) };
+}
+
+function getPairActions(grid: (PlayingCard | null)[]) {
+  const pairs: [number, number][] = [];
+  for (let first = 0; first < grid.length; first += 1) {
+    const firstCard = grid[first];
+    if (!firstCard?.faceUp) continue;
+
+    for (let second = first + 1; second < grid.length; second += 1) {
+      const secondCard = grid[second];
+      if (
+        secondCard?.faceUp &&
+        firstCard.rank === secondCard.rank &&
+        isAdjacent(first, second)
+      ) {
+        pairs.push([first, second]);
+      }
+    }
+  }
+  return pairs;
+}
+
+function flipPairAction(draft: GameState, first: number, second: number) {
+  const firstCard = draft.grid[first];
+  const secondCard = draft.grid[second];
+  if (
+    draft.ended ||
+    !firstCard?.faceUp ||
+    !secondCard?.faceUp ||
+    firstCard.rank !== secondCard.rank ||
+    !isAdjacent(first, second)
+  ) {
+    return false;
+  }
+
+  draft.grid[first] = flipToBack(firstCard);
+  draft.grid[second] = flipToBack(secondCard);
+  return true;
+}
+
+function consolidateAndDealAction(draft: GameState) {
+  if (draft.ended || !hasFaceDownCards(draft.grid)) return false;
+
+  const remaining: PlayingCard[] = [];
+  for (const card of draft.grid) {
+    if (!card) continue;
+    if (card.faceUp) remaining.push(card);
+    else draft.trash.push(card);
+  }
+
+  while (remaining.length < 25) {
+    const next = draft.draw.pop();
+    if (!next) break;
+    remaining.push(flipToFace(next));
+  }
+
+  draft.grid = [
+    ...remaining,
+    ...Array<null>(Math.max(0, 25 - remaining.length)).fill(null),
+  ];
+  Object.assign(draft, evaluateEnd(draft));
+  return true;
+}
+
+export const monteCarloRules = {
+  isAdjacent,
+  countCards,
+  countFaceDownCardsInGrid,
+  hasFaceDownCards,
+  hasPair,
+  evaluateEnd,
+  createGame,
+  getPairActions,
+  flipPairAction,
+  consolidateAndDealAction,
+};
+
 // ========== Main Component ========== //
 export default function MonteCarlo() {
   const [selected, setSelected] = useImmer<number[] | null>(null);
@@ -181,13 +279,7 @@ export default function MonteCarlo() {
     saveUndoState(structuredClone(game));
 
     setGame((draft) => {
-      const card1 = draft.grid[selected[0]];
-      const card2 = draft.grid[selected[1]];
-
-      if (!card1 || !card2) return;
-
-      draft.grid[selected[0]] = flipToBack(card1);
-      draft.grid[selected[1]] = flipToBack(card2);
+      flipPairAction(draft, selected[0], selected[1]);
     });
 
     setSelected(null);
@@ -262,12 +354,8 @@ export default function MonteCarlo() {
       await delay(100);
     }
 
-    // Check win condition after dealing all cards possible
-    const { ended, won } = evaluateEnd(gameState);
-
     setGame((draft) => {
-      draft.ended = ended;
-      draft.won = won;
+      consolidateAndDealAction(draft);
     });
   }
 
