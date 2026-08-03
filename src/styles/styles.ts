@@ -55,6 +55,8 @@ export const Colors = {
   white: "#ffffff",
   K950: "#14181C",
   K900: "#21282E",
+  // K925: "#1A2025",
+  // K890: "#262E35",
   K875: "#2B353C",
   K850: "#333D47",
   K800: "#414F5B",
@@ -127,6 +129,7 @@ export const FontWeight = {
 export const layoutDims = {
   menuBarPadding: 6,
   menuBarHeight: 58,
+  cardToggleHeight: 48,
   menuIconSize: 28,
   menuButtonSize: 52,
   pagePadding: 20,

@@ -7,7 +7,7 @@ export const swamp: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/swamp",
   title: "Swamp",
-  tags: [GameTag.EasyToLearn, GameTag.ModernMechanics],
+  tags: [GameTag.EasyToLearn, GameTag.ModernMechanics, GameTag.SpatialControl],
   rating: {
     complexity: 45,
     difficulty: 55,

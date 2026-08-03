@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const blackHole: GameDefinition = {
   path: "/black-hole",
   title: "Black Hole",
-  tags: [GameTag.EasyToLearn],
+  tags: [GameTag.EasyToLearn, GameTag.SequenceBuilding],
   rating: {
     complexity: 25,
     difficulty: 55,

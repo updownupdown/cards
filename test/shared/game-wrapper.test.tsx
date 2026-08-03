@@ -1,6 +1,6 @@
 import React from "react";
-import { View } from "react-native";
-import { render } from "@testing-library/react-native";
+import { Animated, View } from "react-native";
+import { render, screen } from "@testing-library/react-native";
 import { GameWrapper } from "@/components/common/GameWrapper";
 import { recordAttempt, recordResult } from "@/data/game-menu";
 
@@ -32,6 +32,21 @@ jest.mock("@/hooks/useGameSettings", () => ({
   }),
 }));
 
+let mockShowAnimations = true;
+function mockUseFade() {
+  return { isRendered: false, opacity: new Animated.Value(1) };
+}
+
+function mockBackgroundAnimation() {
+  return <View testID="background-animation" />;
+}
+
+jest.mock("@/hooks/useGlobalSettings", () => ({
+  useGlobalSettings: () => ({
+    settings: { showAnimations: mockShowAnimations },
+  }),
+}));
+
 jest.mock("@/hooks/useViewportDimensions", () => ({
   useViewportDimensions: () => ({ width: 390, height: 844 }),
 }));
@@ -47,15 +62,10 @@ jest.mock("react-native-safe-area-context", () => ({
   useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
 }));
 
-jest.mock("@/hooks/useFade", () => {
-  const { Animated } = require("react-native");
-  return {
-    useFade: () => ({ isRendered: false, opacity: new Animated.Value(1) }),
-  };
-});
+jest.mock("@/hooks/useFade", () => ({ useFade: mockUseFade }));
 
 jest.mock("@/animations/BackgroundAnimation", () => ({
-  BackgroundAnimation: () => null,
+  BackgroundAnimation: mockBackgroundAnimation,
 }));
 
 jest.mock("@/components/common/LoadingOverlay", () => ({
@@ -79,6 +89,7 @@ const mockRecordResult = jest.mocked(recordResult);
 
 describe("GameWrapper result recording", () => {
   beforeEach(() => {
+    mockShowAnimations = true;
     mockRecordAttempt.mockClear();
     mockRecordResult.mockClear();
   });
@@ -109,5 +120,17 @@ describe("GameWrapper result recording", () => {
     );
     expect(mockRecordResult).toHaveBeenCalledTimes(1);
     expect(mockRecordAttempt).toHaveBeenCalledTimes(1);
+  });
+
+  test("does not render background animations when disabled", async () => {
+    mockShowAnimations = false;
+    const view = await render(
+      <GameWrapper ended={false} won={false} reset={jest.fn()}>
+        <View />
+      </GameWrapper>,
+    );
+
+    expect(screen.queryByTestId("background-animation")).toBeNull();
+    await view.unmount();
   });
 });

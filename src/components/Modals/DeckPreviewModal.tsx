@@ -8,7 +8,6 @@ import { Text } from "@/components/common/Text";
 import {
   getConstrainedUiWidth,
   useResponsiveUiLayout,
-  useResponsiveUiLayoutFromWidth,
 } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { flexStyles } from "@/styles/flexStyles";

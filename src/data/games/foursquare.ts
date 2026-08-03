@@ -5,7 +5,12 @@ import { GameCreators } from "../game-creators";
 export const foursquare: GameDefinition = {
   path: "/foursquare",
   title: "Foursquare",
-  tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
+  tags: [
+    GameTag.IsaludoCollection,
+    GameTag.ModernMechanics,
+    GameTag.GridPlacement,
+    GameTag.SpatialControl,
+  ],
   rating: {
     complexity: 30,
     difficulty: 50,

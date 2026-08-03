@@ -13,6 +13,7 @@ import {
 type RadioOption<T extends string> = {
   value: T;
   label?: string;
+  accessibilityLabel?: string;
   iconName?: IconName;
   disabled?: boolean;
   selectedBackgroundColor?: string;
@@ -43,7 +44,7 @@ export function RadioButtons<T extends string>({
   iconSize,
   vertical = false,
   flexAllButFirst = false,
-  selectedBackgroundColor = Colors.K600,
+  selectedBackgroundColor = Colors.K850,
 }: RadioButtonsProps<T>) {
   const { spacing } = useResponsiveMetrics();
 
@@ -70,6 +71,9 @@ export function RadioButtons<T extends string>({
         return (
           <Pressable
             key={option.value}
+            accessibilityRole="button"
+            accessibilityLabel={option.accessibilityLabel ?? option.label}
+            accessibilityState={{ selected: isSelected }}
             style={[
               {
                 ...transitionStyles.limited04sec,

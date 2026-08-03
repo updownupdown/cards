@@ -1,6 +1,6 @@
+import { BackgroundAnimation } from "@/animations/BackgroundAnimation";
 import {
   clearLastGameSession,
-  GameSettings,
   getGameInfo,
   normalizeGamePath,
   recordAttempt,
@@ -9,15 +9,16 @@ import {
 import { DEFAULT_GAME_BACKGROUND } from "@/data/games-data";
 import { useFade } from "@/hooks/useFade";
 import { useGameSettings } from "@/hooks/useGameSettings";
+import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { flexStyles } from "@/styles/flexStyles";
 import {
   Colors,
-  rgba,
-  layoutDims,
-  LayerZIndexes,
   getHeaderHeightWithInset,
+  LayerZIndexes,
+  layoutDims,
+  rgba,
 } from "@/styles/styles";
 import { router, usePathname } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
@@ -25,12 +26,11 @@ import { Animated, ImageBackground, Platform, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button } from "../Button/Button";
 import GameModal from "../Modals/GameModal";
+import { RulesModal } from "../Modals/RulesModal";
 import { LoadingOverlay } from "./LoadingOverlay";
 import { ResetButton } from "./ResetButton";
 import { TipsBox } from "./TipsBox";
 import { WinLoseBox } from "./WinLoseBox";
-import { RulesModal } from "../Modals/RulesModal";
-import { BackgroundAnimation } from "@/animations/BackgroundAnimation";
 
 const TIPS_MORPH_DURATION = 350;
 
@@ -69,6 +69,7 @@ export const GameWrapper = ({
     useViewportDimensions();
   const ui = useResponsiveUiLayoutFromWidth(viewportWidth, viewportHeight);
   const { settings, isLoading } = useGameSettings(pathname);
+  const { settings: globalSettings } = useGlobalSettings();
   const spacing = (value: number) => value * ui.scale;
 
   const [showMenu, setShowMenu] = useState(false);
@@ -225,24 +226,26 @@ export const GameWrapper = ({
           }}
         />
 
-        <View
-          style={{
-            position: "absolute",
-            zIndex: LayerZIndexes.boardAnimation,
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-            overflow: "hidden",
-            pointerEvents: "none",
-          }}
-        >
-          <BackgroundAnimation
-            animation={gameInfo.animation}
-            width={viewportWidth}
-            height={viewportHeight}
-          />
-        </View>
+        {globalSettings.showAnimations && (
+          <View
+            style={{
+              position: "absolute",
+              zIndex: LayerZIndexes.boardAnimation,
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              overflow: "hidden",
+              pointerEvents: "none",
+            }}
+          >
+            <BackgroundAnimation
+              animation={gameInfo.animation}
+              width={viewportWidth}
+              height={viewportHeight}
+            />
+          </View>
+        )}
 
         {/* Game header */}
         <Animated.View

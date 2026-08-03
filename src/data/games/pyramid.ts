@@ -1,12 +1,11 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
-// import { GameAnimations } from "@/animations";
 
 export const pyramid: GameDefinition = {
   path: "/pyramid",
   title: "Pyramid",
-  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
+  tags: [GameTag.EasyToLearn, GameTag.PairMatching, GameTag.StockAndWaste],
   rating: {
     complexity: 15,
     difficulty: 65,
@@ -14,7 +13,6 @@ export const pyramid: GameDefinition = {
   },
   thumbnail: "Pyramid.jpg",
   background: GAME_BACKGROUNDS.sahara,
-  // animation: GameAnimations.Sand,
   gameColorDark: "#251703",
   gameColorPale: "#FFEACC",
   cardDescription:

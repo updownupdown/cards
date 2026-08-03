@@ -63,13 +63,12 @@ export function GameCreators() {
 
           return (
             <View key={creatorNames} style={[flexStyles.colStart]}>
-              <View style={flexStyles.rowStart}>
+              <View style={[flexStyles.rowStart, { flexWrap: "wrap" }]}>
                 {group.creators.map((creator, index) => {
                   const creatorLink = CREATOR_LINKS[creator];
 
                   return (
                     <View key={creator} style={flexStyles.rowStart}>
-                      {index > 0 && <Text size="md">{", "}</Text>}
                       <Text
                         size="md"
                         weight={500}
@@ -79,14 +78,12 @@ export function GameCreators() {
                             ? () => void Linking.openURL(creatorLink)
                             : undefined
                         }
-                        style={
-                          creatorLink
-                            ? { textDecorationLine: "underline" }
-                            : undefined
-                        }
                       >
                         {creator}
                       </Text>
+                      {index !== group.creators.length - 1 && (
+                        <Text size="md">{", "}</Text>
+                      )}
                     </View>
                   );
                 })}

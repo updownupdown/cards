@@ -6,7 +6,11 @@ import { GameAnimations } from "@/animations";
 export const cribbageSquares: GameDefinition = {
   path: "/cribbage-squares",
   title: "Cribbage Squares",
-  tags: [GameTag.EasyToLearn, GameTag.ModernMechanics],
+  tags: [
+    GameTag.GridPlacement,
+    GameTag.PokerAndCribbage,
+    GameTag.ScoringPuzzles,
+  ],
   rating: {
     complexity: 40,
     difficulty: 60,

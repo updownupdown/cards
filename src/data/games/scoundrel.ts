@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const scoundrel: GameDefinition = {
   path: "/scoundrel",
   title: "Scoundrel",
-  tags: [GameTag.ModernMechanics],
+  tags: [GameTag.ModernMechanics, GameTag.DungeonCrawler, GameTag.CardCombat],
   rating: {
     complexity: 55,
     difficulty: 70,

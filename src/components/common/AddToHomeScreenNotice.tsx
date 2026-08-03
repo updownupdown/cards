@@ -62,19 +62,19 @@ export function AddToHomeScreenNotice({
         gap: spacing(12),
       }}
     >
-      <View
-        style={[
-          flexStyles.rowCentered,
-          { justifyContent: "flex-start", gap: spacing(10) },
-        ]}
-      >
+      <View style={[flexStyles.rowCentered, { gap: spacing(8) }]}>
         <Icon name="home" size={spacing(20)} color={Colors.buttonBlue} />
         <Text weight={600} size="md" color={Colors.K100}>
           {title}
         </Text>
       </View>
 
-      <Text size="sm" weight={300} color={Colors.K300}>
+      <Text
+        size="sm"
+        weight={300}
+        color={Colors.K300}
+        style={{ textAlign: "center" }}
+      >
         {instructions}
       </Text>
 

@@ -1,12 +1,19 @@
 import { LoadingOverlay } from "@/components/common/LoadingOverlay";
-import { DiscoverTab } from "@/components/Home/DiscoverTab";
+import { ExploreTab } from "@/components/Home/ExploreTab";
 import { HomeHeader } from "@/components/Home/HomeHeader";
 import { HomeTab } from "@/components/Home/HomeTab";
 import { HomeTabBar } from "@/components/Home/HomeTabBar";
-import { SearchModal } from "@/components/Modals/SearchModal";
+import { RandomTab } from "@/components/Home/RandomTab";
+import { SearchTab } from "@/components/Home/SearchTab";
+import {
+  getActiveHomeTab,
+  setActiveHomeTab,
+  type HomeTabIndex,
+} from "./home-view-state";
 import { HomeModal } from "@/components/Modals/HomeModal";
 import { StatsTab } from "@/components/Home/StatsTab";
 import { useHomeData } from "@/hooks/useHomeData";
+import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { Colors, layoutDims } from "@/styles/styles";
@@ -22,6 +29,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Home() {
+  const initialActiveTab = useRef(getActiveHomeTab()).current;
   const insets = useSafeAreaInsets();
   const { ui, spacing } = useResponsiveMetrics();
   const { width: viewportWidth, height: viewportHeight } =
@@ -32,14 +40,14 @@ export default function Home() {
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [showSearchModal, setShowSearchModal] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [homeDataRefreshToken, setHomeDataRefreshToken] = useState(0);
-  const [activeTab, setActiveTab] = useState(0);
-  const activeTabRef = useRef(0);
+  const [activeTab, setActiveTab] = useState<HomeTabIndex>(initialActiveTab);
+  const activeTabRef = useRef<HomeTabIndex>(initialActiveTab);
   const isTabPressScrollRef = useRef(false);
 
   const renderedContentWidth = Math.min(ui.contentMaxWidth, viewportWidth);
+  const { settings, updateSettings } = useGlobalSettings();
+  const cardSize = settings.discoverCardSize ?? "large";
 
   const [pageWidth, setPageWidth] = useState(renderedContentWidth);
   const [pagerHeight, setPagerHeight] = useState(0);
@@ -104,7 +112,10 @@ export default function Home() {
   // (web) additionally stops a single swipe from skipping past a neighbour.
   const syncActiveTab = (offsetX: number) => {
     if (pageWidth <= 0) return;
-    const index = Math.round(offsetX / pageWidth);
+    const index = Math.max(
+      0,
+      Math.min(4, Math.round(offsetX / pageWidth)),
+    ) as HomeTabIndex;
     if (index === activeTabRef.current) {
       isTabPressScrollRef.current = false;
       return;
@@ -113,6 +124,7 @@ export default function Home() {
     // highlight doesn't flicker.
     if (isTabPressScrollRef.current) return;
     activeTabRef.current = index;
+    setActiveHomeTab(index);
     setActiveTab(index);
   };
 
@@ -120,10 +132,12 @@ export default function Home() {
     syncActiveTab(event.nativeEvent.contentOffset.x);
   };
 
-  const onSelectTab = (index: number) => {
+  const onSelectTab = (requestedIndex: number) => {
+    const index = Math.max(0, Math.min(4, requestedIndex)) as HomeTabIndex;
     if (index === activeTabRef.current) return;
     isTabPressScrollRef.current = true;
     activeTabRef.current = index;
+    setActiveHomeTab(index);
     setActiveTab(index);
     pagerRef.current?.scrollTo({ x: index * pageWidth, animated: true });
   };
@@ -176,15 +190,45 @@ export default function Home() {
         onToggleFavorite={toggleFavorite}
         contentPaddingTop={contentPaddingTop}
         contentPaddingBottom={contentPaddingBottom}
-        unplayedGamePaths={unplayedGamePaths}
       />
     </View>,
     <View key="tab-explore" style={[pageStyle, webSnapChild]}>
-      <DiscoverTab
+      <ExploreTab
+        allEnabledGames={allEnabledGames}
+        settingsMap={settingsMap}
+        favorites={favorites}
+        onToggleFavorite={toggleFavorite}
+        cardSize={cardSize}
+        onCardSizeChange={(value) =>
+          updateSettings({ discoverCardSize: value })
+        }
+        contentPaddingTop={contentPaddingTop}
+        contentPaddingBottom={contentPaddingBottom}
+      />
+    </View>,
+    <View key="tab-search" style={[pageStyle, webSnapChild]}>
+      <SearchTab
         allEnabledGames={allEnabledGames}
         unplayedGamePaths={unplayedGamePaths}
         favorites={favorites}
         onToggleFavorite={toggleFavorite}
+        cardSize={cardSize}
+        onCardSizeChange={(value) =>
+          updateSettings({ discoverCardSize: value })
+        }
+        contentPaddingTop={contentPaddingTop}
+        contentPaddingBottom={contentPaddingBottom}
+      />
+    </View>,
+    <View key="tab-random" style={[pageStyle, webSnapChild]}>
+      <RandomTab
+        allEnabledGames={allEnabledGames}
+        unplayedGamePaths={unplayedGamePaths}
+        settingsMap={settingsMap}
+        isActive={activeTab === 3}
+        favorites={favorites}
+        onToggleFavorite={toggleFavorite}
+        contentPaddingTop={contentPaddingTop}
         contentPaddingBottom={contentPaddingBottom}
       />
     </View>,
@@ -202,17 +246,6 @@ export default function Home() {
   return (
     <>
       <LoadingOverlay isLoaded={!!isLoaded} />
-
-      {showSearchModal && (
-        <SearchModal
-          allEnabledGames={allEnabledGames}
-          favorites={favorites}
-          onToggleFavorite={toggleFavorite}
-          query={searchQuery}
-          onQueryChange={setSearchQuery}
-          onClose={() => setShowSearchModal(false)}
-        />
-      )}
 
       {showSettingsModal && (
         <HomeModal
@@ -238,10 +271,7 @@ export default function Home() {
           </ScrollView>
         )}
 
-        <HomeHeader
-          onOpenSearch={() => setShowSearchModal(true)}
-          onOpenSettings={() => setShowSettingsModal(true)}
-        />
+        <HomeHeader onOpenSettings={() => setShowSettingsModal(true)} />
 
         <HomeTabBar activeIndex={activeTab} onSelectTab={onSelectTab} />
       </View>

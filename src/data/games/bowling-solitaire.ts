@@ -5,7 +5,7 @@ import { GameCreators } from "../game-creators";
 export const bowlingSolitaire: GameDefinition = {
   path: "/bowling-solitaire",
   title: "Bowling Solitaire",
-  tags: [GameTag.ModernMechanics],
+  tags: [GameTag.ModernMechanics, GameTag.ScoringPuzzles],
   rating: {
     complexity: 30,
     difficulty: 30,

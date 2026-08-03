@@ -9,7 +9,7 @@ export const area52: GameDefinition = {
   tags: [
     GameTag.IsaludoCollection,
     GameTag.ModernMechanics,
-    GameTag.EasyToLearn,
+    GameTag.CardCombat,
   ],
   rating: {
     complexity: 40,

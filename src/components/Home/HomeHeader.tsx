@@ -8,11 +8,10 @@ import { Platform, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type HomeHeaderProps = {
-  onOpenSearch: () => void;
   onOpenSettings: () => void;
 };
 
-export function HomeHeader({ onOpenSearch, onOpenSettings }: HomeHeaderProps) {
+export function HomeHeader({ onOpenSettings }: HomeHeaderProps) {
   const insets = useSafeAreaInsets();
   const { ui, spacing } = useResponsiveMetrics();
 
@@ -77,14 +76,6 @@ export function HomeHeader({ onOpenSearch, onOpenSettings }: HomeHeaderProps) {
           />
 
           <View style={[flexStyles.rowCentered]}>
-            <Button
-              headerButton
-              iconName="search"
-              onPress={onOpenSearch}
-              style={[styles.headerBtn]}
-              iconColor={rgba(Colors.white, 0.7)}
-            />
-
             <Button
               headerButton
               size="xl"

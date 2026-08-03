@@ -32,6 +32,12 @@ export type GameSettings = {
   alpineDifficulty: "gentle" | "standard" | "intense";
   alpineChallenge: AlpineChallenge;
   dungeonDifficulty: "beginner" | "intermediate" | "advanced" | "bloodlust";
+  merchantLoyalPatrons: boolean;
+  merchantCheckBack: boolean;
+  merchantSuperExclusive: boolean;
+  merchantVandals: 0 | 1 | 2;
+  clubFightDifficulty: "easy" | "hard";
+  leafbearerOpenStables: boolean;
   stats: GameStats;
 };
 
@@ -76,6 +82,7 @@ export type GlobalSettings = {
   discoverCardSize: "small" | "medium" | "large";
   dismissHomeInstallPrompt: boolean;
   resumeLastGame: boolean;
+  showAnimations: boolean;
 };
 
 export type HomeGameEntry = {
@@ -107,6 +114,7 @@ export const DEFAULT_GLOBAL_SETTINGS: GlobalSettings = {
   discoverCardSize: "large",
   dismissHomeInstallPrompt: false,
   resumeLastGame: true,
+  showAnimations: true,
 };
 
 export const DEFAULT_GAME_SETTINGS: GameSettings = {
@@ -126,6 +134,12 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   alpineDifficulty: "standard",
   alpineChallenge: "none",
   dungeonDifficulty: "beginner",
+  merchantLoyalPatrons: false,
+  merchantCheckBack: false,
+  merchantSuperExclusive: false,
+  merchantVandals: 0,
+  clubFightDifficulty: "easy",
+  leafbearerOpenStables: false,
   stats: {
     attempts: 0,
     wins: 0,
@@ -202,6 +216,7 @@ export async function loadGlobalSettings(): Promise<GlobalSettings> {
           : DEFAULT_GLOBAL_SETTINGS.discoverCardSize,
       dismissHomeInstallPrompt: merged.dismissHomeInstallPrompt === true,
       resumeLastGame: merged.resumeLastGame !== false,
+      showAnimations: merged.showAnimations !== false,
     };
   } catch {
     return DEFAULT_GLOBAL_SETTINGS;
@@ -348,6 +363,16 @@ export function getGameSettings(
       merged.dungeonDifficulty === "bloodlust"
         ? merged.dungeonDifficulty
         : "beginner",
+    merchantLoyalPatrons: merged.merchantLoyalPatrons === true,
+    merchantCheckBack: merged.merchantCheckBack === true,
+    merchantSuperExclusive: merged.merchantSuperExclusive === true,
+    merchantVandals:
+      merged.merchantVandals === 1 || merged.merchantVandals === 2
+        ? merged.merchantVandals
+        : 0,
+    clubFightDifficulty:
+      merged.clubFightDifficulty === "hard" ? "hard" : "easy",
+    leafbearerOpenStables: merged.leafbearerOpenStables === true,
     stats: {
       ...DEFAULT_GAME_SETTINGS.stats,
       ...(existing.stats ?? {}),

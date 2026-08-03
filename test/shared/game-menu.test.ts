@@ -38,6 +38,7 @@ describe("game menu storage", () => {
         discoverCardSize: "enormous",
         dismissHomeInstallPrompt: 1,
         resumeLastGame: 0,
+        showAnimations: false,
       }),
     );
 
@@ -45,6 +46,7 @@ describe("game menu storage", () => {
       discoverCardSize: "large",
       dismissHomeInstallPrompt: false,
       resumeLastGame: true,
+      showAnimations: false,
     });
 
     await AsyncStorage.setItem(GLOBAL_SETTINGS_STORAGE_KEY, "{");
@@ -52,6 +54,7 @@ describe("game menu storage", () => {
       discoverCardSize: "large",
       dismissHomeInstallPrompt: false,
       resumeLastGame: true,
+      showAnimations: true,
     });
   });
 

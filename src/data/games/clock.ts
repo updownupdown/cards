@@ -5,7 +5,7 @@ import { GameCreators } from "../game-creators";
 export const clock: GameDefinition = {
   path: "/clock",
   title: "Clock Solitaire",
-  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
+  tags: [GameTag.EasyToLearn],
   rating: {
     complexity: 10,
     difficulty: 10,

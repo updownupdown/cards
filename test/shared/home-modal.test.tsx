@@ -1,3 +1,5 @@
+import React from "react";
+import { Pressable, Text, View } from "react-native";
 import { fireEvent, render, screen } from "@testing-library/react-native";
 import { HomeModal } from "@/components/Modals/HomeModal";
 import {
@@ -8,6 +10,35 @@ import {
 
 const mockUpdateSettings = jest.fn();
 let mockSettingsLoading = false;
+function mockModalFull({ onClose, children }: any) {
+  return React.createElement(
+    View,
+    { testID: "home-settings-modal" },
+    React.createElement(Pressable, {
+      testID: "close-home-settings",
+      onPress: onClose,
+    }),
+    children,
+  );
+}
+
+function mockSettingControl({ label, onChange }: any) {
+  return React.createElement(Pressable, {
+    testID:
+      label === "Resume last game on startup"
+        ? "resume-setting"
+        : "animations-setting",
+    onPress: () => onChange(false),
+  });
+}
+
+function mockButton({ text, onPress, disabled }: any) {
+  return React.createElement(
+    Pressable,
+    { testID: `button-${text}`, onPress, disabled },
+    React.createElement(Text, null, text),
+  );
+}
 
 jest.mock("@/hooks/useGlobalSettings", () => ({
   useGlobalSettings: () => ({
@@ -15,6 +46,7 @@ jest.mock("@/hooks/useGlobalSettings", () => ({
       discoverCardSize: "large",
       dismissHomeInstallPrompt: false,
       resumeLastGame: true,
+      showAnimations: true,
     },
     updateSettings: mockUpdateSettings,
     isLoading: mockSettingsLoading,
@@ -28,6 +60,7 @@ jest.mock("@/data/game-menu", () => ({
     discoverCardSize: "large",
     dismissHomeInstallPrompt: false,
     resumeLastGame: true,
+    showAnimations: true,
   },
 }));
 
@@ -44,48 +77,18 @@ jest.mock("@/components/Modals/GameCreators", () => ({
 }));
 jest.mock("@/components/common/Text", () => ({ Text: () => null }));
 
-jest.mock("@/components/Modals/ModalFull", () => {
-  const React = require("react");
-  const { Pressable, View } = require("react-native");
-  return {
-    __esModule: true,
-    default: ({ onClose, children }: any) =>
-      React.createElement(
-        View,
-        { testID: "home-settings-modal" },
-        React.createElement(Pressable, {
-          testID: "close-home-settings",
-          onPress: onClose,
-        }),
-        children,
-      ),
-  };
-});
+jest.mock("@/components/Modals/ModalFull", () => ({
+  __esModule: true,
+  default: mockModalFull,
+}));
 
-jest.mock("@/components/common/SettingControl", () => {
-  const React = require("react");
-  const { Pressable } = require("react-native");
-  return {
-    SettingControl: ({ onChange }: any) =>
-      React.createElement(Pressable, {
-        testID: "resume-setting",
-        onPress: () => onChange(false),
-      }),
-  };
-});
+jest.mock("@/components/common/SettingControl", () => ({
+  SettingControl: mockSettingControl,
+}));
 
-jest.mock("@/components/Button/Button", () => {
-  const React = require("react");
-  const { Pressable, Text } = require("react-native");
-  return {
-    Button: ({ text, onPress, disabled }: any) =>
-      React.createElement(
-        Pressable,
-        { testID: `button-${text}`, onPress, disabled },
-        React.createElement(Text, null, text),
-      ),
-  };
-});
+jest.mock("@/components/Button/Button", () => ({
+  Button: mockButton,
+}));
 
 const mockClearLastGameSession = jest.mocked(clearLastGameSession);
 const mockResetAllSettings = jest.mocked(resetAllSettings);
@@ -125,6 +128,17 @@ describe("HomeModal", () => {
     await fireEvent.press(screen.getByTestId("close-home-settings"));
     expect(onHomeDataInvalidated).toHaveBeenCalledTimes(1);
     expect(onClose).toHaveBeenCalledTimes(1);
+    await view.unmount();
+  });
+
+  test("disabling animations persists the global setting", async () => {
+    const view = await render(
+      <HomeModal onClose={jest.fn()} onHomeDataInvalidated={jest.fn()} />,
+    );
+
+    await fireEvent.press(screen.getByTestId("animations-setting"));
+    expect(mockUpdateSettings).toHaveBeenCalledWith({ showAnimations: false });
+
     await view.unmount();
   });
 

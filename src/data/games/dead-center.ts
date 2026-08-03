@@ -6,7 +6,12 @@ import { GameAnimations } from "@/animations";
 export const deadCenter: GameDefinition = {
   path: "/dead-center",
   title: "Dead Center",
-  tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
+  tags: [
+    GameTag.IsaludoCollection,
+    GameTag.ModernMechanics,
+    GameTag.CardCombat,
+    GameTag.SpatialControl,
+  ],
   rating: {
     complexity: 70,
     difficulty: 50,

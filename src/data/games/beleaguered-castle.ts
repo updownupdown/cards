@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const beleagueredCastle: GameDefinition = {
   path: "/beleaguered-castle",
   title: "Beleaguered Castle",
-  tags: [GameTag.ClassicSolitaire],
+  tags: [GameTag.TableauBuilding],
   rating: {
     complexity: 45,
     difficulty: 55,

@@ -5,7 +5,12 @@ import { GameCreators } from "../game-creators";
 export const skyway: GameDefinition = {
   path: "/skyway",
   title: "Skyway",
-  tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
+  tags: [
+    GameTag.IsaludoCollection,
+    GameTag.ModernMechanics,
+    GameTag.GridPlacement,
+    GameTag.SpatialControl,
+  ],
   rating: {
     complexity: 90,
     difficulty: 75,

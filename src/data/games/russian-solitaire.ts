@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const russianSolitaire: GameDefinition = {
   path: "/russian-solitaire",
   title: "Russian Solitaire",
-  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
+  tags: [GameTag.TableauBuilding],
   rating: {
     complexity: 35,
     difficulty: 80,

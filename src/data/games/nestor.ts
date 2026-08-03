@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const nestor: GameDefinition = {
   path: "/nestor",
   title: "Nestor",
-  tags: [GameTag.ClassicSolitaire],
+  tags: [GameTag.PairMatching],
   rating: {
     complexity: 15,
     difficulty: 60,

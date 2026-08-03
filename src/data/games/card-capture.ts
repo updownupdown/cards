@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const cardCapture: GameDefinition = {
   path: "/card-capture",
   title: "Card Capture",
-  tags: [GameTag.ModernMechanics],
+  tags: [GameTag.ModernMechanics, GameTag.CardCombat],
   rating: {
     complexity: 60,
     difficulty: 50,

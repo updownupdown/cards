@@ -5,7 +5,7 @@ import { GameCreators } from "../game-creators";
 export const golf: GameDefinition = {
   path: "/golf",
   title: "Golf",
-  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
+  tags: [GameTag.EasyToLearn, GameTag.SequenceBuilding, GameTag.StockAndWaste],
   rating: {
     complexity: 15,
     difficulty: 50,

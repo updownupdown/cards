@@ -47,6 +47,7 @@ export function useResponsiveUiLayout() {
   return useMemo(() => getResponsiveUiLayout(width, height), [width, height]);
 }
 
+/** Reuses dimensions a caller already subscribes to, avoiding a second viewport listener. */
 export function useResponsiveUiLayoutFromWidth(width: number, height: number) {
   return useMemo(() => getResponsiveUiLayout(width, height), [width, height]);
 }

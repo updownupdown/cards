@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const freecell: GameDefinition = {
   path: "/freecell",
   title: "FreeCell",
-  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
+  tags: [GameTag.TableauBuilding],
   rating: {
     complexity: 20,
     difficulty: 40,

@@ -9,13 +9,15 @@ import { Button } from "../Button/Button";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { IconName } from "@/icons/generated";
 import { Icon } from "@/icons";
+import SoloSuiteLogo from "@/assets/images/SoloSuiteLogo.svg";
 
 type Props = {
   children: React.ReactNode;
-  title: string;
+  title?: string;
   titleColor?: string;
   subtitle?: string;
   backgroundColor?: string;
+  showLogo?: boolean;
   iconName?: IconName;
   onClose: () => void;
 };
@@ -26,6 +28,7 @@ export default function ModalFull({
   titleColor = Colors.K200,
   subtitle,
   backgroundColor = Colors.K875,
+  showLogo,
   iconName,
   onClose,
 }: Props) {
@@ -51,6 +54,18 @@ export default function ModalFull({
               },
             ]}
           >
+            {/* Logo */}
+            {showLogo && (
+              <SoloSuiteLogo
+                width={120}
+                height={28}
+                style={{
+                  marginRight: "auto",
+                  filter: `drop-shadow(1px 2px 3px rgba(0, 0, 0, 0.12))`,
+                }}
+              />
+            )}
+
             {/* Icon */}
             {iconName && (
               <Icon
@@ -62,21 +77,23 @@ export default function ModalFull({
             )}
 
             {/* Title */}
-            <View style={[flexStyles.colStart]}>
-              <Text size="xl" color={titleColor} weight={500}>
-                {title}
-              </Text>
-              {subtitle && (
-                <Text
-                  size="sm"
-                  color={Colors.white}
-                  weight={300}
-                  style={{ opacity: 0.75 }}
-                >
-                  {subtitle}
+            {title && (
+              <View style={[flexStyles.colStart]}>
+                <Text size="xl" color={titleColor} weight={500}>
+                  {title}
                 </Text>
-              )}
-            </View>
+                {subtitle && (
+                  <Text
+                    size="sm"
+                    color={Colors.white}
+                    weight={300}
+                    style={{ opacity: 0.75 }}
+                  >
+                    {subtitle}
+                  </Text>
+                )}
+              </View>
+            )}
 
             {/* Close button */}
             <Button

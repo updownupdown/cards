@@ -182,12 +182,12 @@ export function RollingDice({ rollKey, rolling, size }: RollingDiceProps) {
   return (
     <View
       style={{
-        width: stageWidth,
-        height: dieSize * 1.2,
-        flexDirection: "row",
+        width: dieSize,
+        height: dieSize * 4,
+        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        gap: dieSize * 0.63,
+        gap: dieSize * 2,
       }}
     >
       <Die

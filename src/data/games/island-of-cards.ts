@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const islandOfCards: GameDefinition = {
   path: "/island-of-cards",
   title: "Island of Cards",
-  tags: [GameTag.EasyToLearn],
+  tags: [GameTag.EasyToLearn, GameTag.GridPlacement],
   rating: {
     complexity: 25,
     difficulty: 50,

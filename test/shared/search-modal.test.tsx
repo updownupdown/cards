@@ -1,6 +1,24 @@
+import React from "react";
+import { Pressable, Text, View } from "react-native";
 import { fireEvent, render, screen } from "@testing-library/react-native";
 import { SearchModal } from "@/components/Modals/SearchModal";
 import { router } from "expo-router";
+
+function mockText({ children }: any) {
+  return React.createElement(Text, null, children);
+}
+
+function mockModalFull({ children }: any) {
+  return React.createElement(View, null, children);
+}
+
+function mockHomeCard({ path, game, onOpen }: any) {
+  return React.createElement(
+    Pressable,
+    { testID: `search-result-${path}`, onPress: onOpen },
+    React.createElement(Text, null, game.title),
+  );
+}
 
 jest.mock("expo-router", () => ({ router: { push: jest.fn() } }));
 jest.mock("@/hooks/useResponsiveMetrics", () => ({
@@ -10,33 +28,12 @@ jest.mock("@/hooks/useResponsiveMetrics", () => ({
   }),
 }));
 jest.mock("@/icons", () => ({ Icon: () => null }));
-jest.mock("@/components/common/Text", () => {
-  const React = require("react");
-  const { Text } = require("react-native");
-  return {
-    Text: ({ children }: any) => React.createElement(Text, null, children),
-  };
-});
-jest.mock("@/components/Modals/ModalFull", () => {
-  const React = require("react");
-  const { View } = require("react-native");
-  return {
-    __esModule: true,
-    default: ({ children }: any) => React.createElement(View, null, children),
-  };
-});
-jest.mock("@/components/Home/HomeCard", () => {
-  const React = require("react");
-  const { Pressable, Text } = require("react-native");
-  return {
-    HomeCard: ({ path, game, onOpen }: any) =>
-      React.createElement(
-        Pressable,
-        { testID: `search-result-${path}`, onPress: onOpen },
-        React.createElement(Text, null, game.title),
-      ),
-  };
-});
+jest.mock("@/components/common/Text", () => ({ Text: mockText }));
+jest.mock("@/components/Modals/ModalFull", () => ({
+  __esModule: true,
+  default: mockModalFull,
+}));
+jest.mock("@/components/Home/HomeCard", () => ({ HomeCard: mockHomeCard }));
 
 const games = [
   ["/alpha", { path: "/alpha", title: "Alpha", gameColorPale: "#ffffff" }],

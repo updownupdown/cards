@@ -6,7 +6,13 @@ import { GameAnimations } from "@/animations";
 export const lootTheLoop: GameDefinition = {
   path: "/loot-the-loop",
   title: "Loot the Loop",
-  tags: [GameTag.IsaludoCollection, GameTag.ModernMechanics],
+  tags: [
+    GameTag.IsaludoCollection,
+    GameTag.ModernMechanics,
+    GameTag.DungeonCrawler,
+    GameTag.ScoringPuzzles,
+    GameTag.SpatialControl,
+  ],
   rating: {
     complexity: 45,
     difficulty: 40,

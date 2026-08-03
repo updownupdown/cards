@@ -5,7 +5,7 @@ import { GameCreators } from "../game-creators";
 export const monteCarlo: GameDefinition = {
   path: "/monte-carlo",
   title: "Monte Carlo",
-  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
+  tags: [GameTag.EasyToLearn, GameTag.PairMatching],
   rating: {
     complexity: 10,
     difficulty: 20,

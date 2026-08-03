@@ -11,12 +11,15 @@ let mockGameParam: string | undefined;
 let mockGlobalSettings = { resumeLastGame: true };
 let mockGlobalSettingsLoading = false;
 let mockIsDev = false;
+function mockHomeScreen() {
+  return React.createElement(Text, null, "Home screen");
+}
 
-jest.mock("@/components/Home/Home", () => {
-  const React = require("react");
-  const { Text } = require("react-native");
-  return () => React.createElement(Text, null, "Home screen");
-});
+function mockRedirect({ href }: { href: string }) {
+  return React.createElement(Text, { testID: "redirect" }, href);
+}
+
+jest.mock("@/components/Home/Home", () => mockHomeScreen);
 
 jest.mock("@/hooks/useGlobalSettings", () => ({
   useGlobalSettings: () => ({
@@ -40,11 +43,7 @@ jest.mock("@/data/games-router", () => ({
 jest.mock("expo-router", () => ({
   router: { replace: jest.fn() },
   useLocalSearchParams: () => ({ game: mockGameParam }),
-  Redirect: ({ href }: { href: string }) => {
-    const React = require("react");
-    const { Text } = require("react-native");
-    return React.createElement(Text, { testID: "redirect" }, href);
-  },
+  Redirect: mockRedirect,
 }));
 
 const mockLoadLastGameSession = jest.mocked(loadLastGameSession);

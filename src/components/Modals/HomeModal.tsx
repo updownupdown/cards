@@ -10,13 +10,13 @@ import { useModalStyles } from "@/styles/modalStyles";
 import { Colors } from "@/styles/styles";
 import Constants from "expo-constants";
 import React from "react";
-import { ScrollView, View } from "react-native";
+import { Linking, ScrollView, View } from "react-native";
 import { Button } from "../Button/Button";
 import { AddToHomeScreenNotice } from "../common/AddToHomeScreenNotice";
 import { SettingControl } from "../common/SettingControl";
 import { Text } from "../common/Text";
 import { GameCreators } from "./GameCreators";
-import ModalFull from "./ModalFull";
+import ModalFull, { ModalHeading } from "./ModalFull";
 
 function formatBuildDate(iso: string): string {
   const d = new Date(iso);
@@ -52,15 +52,15 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
   }
 
   return (
-    <ModalFull title="" onClose={onCloseAndRefresh}>
+    <ModalFull showLogo onClose={onCloseAndRefresh}>
       <ScrollView
         contentContainerStyle={[
           modalStyles.scrollContent,
           flexStyles.colCentered,
           flexStyles.fullWidth,
           {
-            gap: spacing(40),
-            paddingVertical: spacing(20),
+            gap: spacing(30),
+            paddingVertical: spacing(30),
           },
         ]}
         showsVerticalScrollIndicator={false}
@@ -84,11 +84,69 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               }
             }}
           />
+          <SettingControl
+            label="Show background animations"
+            value={settings.showAnimations}
+            type="boolean"
+            onChange={(val) => {
+              void updateSettings({ showAnimations: val });
+            }}
+          />
         </View>
 
         <AddToHomeScreenNotice />
 
-        <GameCreators />
+        <View
+          style={[
+            flexStyles.colStart,
+            flexStyles.fullWidth,
+            flexStyles.spaceBetween,
+            {
+              gap: spacing(12),
+              padding: spacing(20),
+              paddingTop: spacing(16),
+              borderRadius: spacing(12),
+              borderWidth: 1,
+              borderColor: Colors.K800,
+            },
+          ]}
+        >
+          <ModalHeading
+            color={Colors.K200}
+            title="Design & Development"
+            iconName="attribution"
+          />
+
+          <Text>James Carmichael</Text>
+          <Text
+            size="sm"
+            weight={500}
+            color={Colors.accentBlue}
+            onPress={() =>
+              void Linking.openURL("https://github.com/updownupdown/")
+            }
+          >
+            GitHub
+          </Text>
+        </View>
+
+        <View
+          style={[
+            flexStyles.colStart,
+            flexStyles.fullWidth,
+            flexStyles.spaceBetween,
+            {
+              gap: spacing(12),
+              padding: spacing(20),
+              paddingTop: spacing(16),
+              borderRadius: spacing(12),
+              borderWidth: 1,
+              borderColor: Colors.K800,
+            },
+          ]}
+        >
+          <GameCreators />
+        </View>
 
         {isResetConfirmationVisible ? (
           <View
@@ -115,6 +173,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                   await resetAllSettings();
                   onHomeDataInvalidated();
                   setIsResetConfirmationVisible(false);
+                  onClose();
                 } finally {
                   setIsResettingData(false);
                 }
@@ -129,11 +188,11 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
             size="md"
             uppercase={false}
             onPress={() => setIsResetConfirmationVisible(true)}
-            text="Reset all game data"
+            text="Reset all app data"
           />
         )}
 
-        <Text size="sm" weight={300} color={Colors.K400}>
+        <Text size="sm" weight={300} color={Colors.K600}>
           {"Last build: " +
             (Constants.expoConfig?.extra?.buildDate
               ? formatBuildDate(Constants.expoConfig.extra.buildDate)

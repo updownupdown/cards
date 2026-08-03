@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const bakersGame: GameDefinition = {
   path: "/bakers-game",
   title: "Baker's Game",
-  tags: [GameTag.TapAndDrag, GameTag.ClassicSolitaire],
+  tags: [GameTag.TableauBuilding],
   rating: {
     complexity: 25,
     difficulty: 55,

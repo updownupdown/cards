@@ -1,10 +1,10 @@
-import { Colors, rgba } from "@/styles/styles";
-import React, { useRef, useState, useEffect, useCallback } from "react";
-import { View, Animated, ViewStyle } from "react-native";
-import { Text } from "./Text";
-import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-import { darkenHexColor, lightenHexColor } from "@/utils/utils";
+import { flexStyles } from "@/styles/flexStyles";
+import { Colors, rgba } from "@/styles/styles";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Animated, View, ViewStyle } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { Text } from "./Text";
 
 type RangeSliderProps = {
   label?: string;
@@ -23,7 +23,7 @@ export const RangeSlider = ({
 }: RangeSliderProps) => {
   const { spacing } = useResponsiveMetrics();
 
-  const THUMB_SIZE = spacing(34);
+  const THUMB_SIZE = spacing(32);
   const TRACK_PADDING = spacing(6);
 
   const thumbStyles: ViewStyle = {
@@ -31,9 +31,9 @@ export const RangeSlider = ({
     width: THUMB_SIZE,
     height: THUMB_SIZE,
     borderRadius: THUMB_SIZE / 2,
-    backgroundColor: Colors.suitsRed,
+    backgroundColor: Colors.K500,
     zIndex: 1,
-    boxShadow: `inset 0 0 10px ${rgba(Colors.black, 0.2)}, 1px 2px 8px ${rgba(Colors.black, 0.25)}`,
+    boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(10)}px ${rgba(Colors.black, 0.3)}`,
   };
 
   const [containerWidth, setContainerWidth] = useState(0);
@@ -130,21 +130,25 @@ export const RangeSlider = ({
   const trackWidthAnim = Animated.subtract(rightThumbX, leftThumbX);
 
   return (
-    <View style={{ width: "100%", gap: spacing(6) }}>
+    <View style={[flexStyles.rowCentered, { width: "100%", gap: spacing(6) }]}>
       {label && (
-        <Text size="xs" color={Colors.K300} textTransform="uppercase">
+        <Text
+          size="xs"
+          color={Colors.K400}
+          textTransform="uppercase"
+          style={{ width: spacing(100) }}
+        >
           {label}
         </Text>
       )}
 
       <View
         style={{
+          flex: 1,
           height: THUMB_SIZE + TRACK_PADDING * 2,
-          width: "100%",
-          backgroundColor: Colors.K900,
+          backgroundColor: Colors.K950,
           borderRadius: THUMB_SIZE / 2 + TRACK_PADDING,
           padding: TRACK_PADDING,
-          boxShadow: `inset 0 0 10px ${rgba(Colors.black, 0.2)}`,
         }}
       >
         <View
@@ -161,7 +165,7 @@ export const RangeSlider = ({
             style={{
               position: "absolute",
               height: "100%",
-              backgroundColor: rgba(Colors.suitsRed, 0.3),
+              backgroundColor: Colors.K850,
               left: trackLeftPos,
               width: trackWidthAnim,
             }}

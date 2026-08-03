@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations/types";
 export const tripeaks: GameDefinition = {
   path: "/tripeaks",
   title: "TriPeaks",
-  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
+  tags: [GameTag.EasyToLearn, GameTag.SequenceBuilding, GameTag.StockAndWaste],
   rating: {
     complexity: 15,
     difficulty: 40,

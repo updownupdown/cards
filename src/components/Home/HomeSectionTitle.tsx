@@ -60,7 +60,7 @@ export function HomeSectionTitle({
           {title}
         </Text>
         {subtitle && (
-          <Text weight={300} size="sm" color={Colors.K400} lineHeight={1}>
+          <Text weight={300} size="xs" color={Colors.K400} lineHeight={1}>
             {subtitle}
           </Text>
         )}

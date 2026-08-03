@@ -93,6 +93,7 @@ describe("settings hooks", () => {
       discoverCardSize: "small",
       dismissHomeInstallPrompt: false,
       resumeLastGame: false,
+      showAnimations: true,
     });
 
     await act(async () => {
@@ -107,6 +108,7 @@ describe("settings hooks", () => {
         discoverCardSize: "medium",
         dismissHomeInstallPrompt: false,
         resumeLastGame: false,
+        showAnimations: true,
       }),
     );
     unmount();

@@ -286,7 +286,7 @@ export default function IslandOfCards() {
       col: pos.c,
       row: pos.r,
       baseZIndex: 1,
-      placeholder: {},
+      placeholder: { hideShadow: true, backgroundColor: rgba("#2b2015", 0.3) },
     }));
 
     return [

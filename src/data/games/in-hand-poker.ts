@@ -5,7 +5,7 @@ import { GameCreators } from "../game-creators";
 export const inHandPoker: GameDefinition = {
   path: "/in-hand-poker",
   title: "In-Hand Poker",
-  tags: [GameTag.ModernMechanics],
+  tags: [GameTag.PokerAndCribbage, GameTag.ScoringPuzzles],
   rating: {
     complexity: 30,
     difficulty: 30,

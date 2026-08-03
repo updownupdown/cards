@@ -6,24 +6,16 @@ import { GAMES_DATA } from "@/data/games-registry";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
-import { flexStyles } from "@/styles/flexStyles";
-import { layoutDims } from "@/styles/styles";
+import { Colors, layoutDims } from "@/styles/styles";
 import { roundToPixel } from "@/utils/utils";
-import { useMemo, useState } from "react";
-import {
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  ScrollView,
-  View,
-} from "react-native";
-import { RandomGameRoller } from "./RandomGameRoller";
+import { useMemo } from "react";
+import { ScrollView, View } from "react-native";
 import { Text } from "../common/Text";
 import { Button } from "../Button/Button";
 
 type HomeTabProps = {
   allEnabledGames: HomeGameEntry[];
   allEnabledGamePaths: string[];
-  unplayedGamePaths: string[];
   favorites: Set<string>;
   recentPaths: string[];
   onToggleFavorite: (path: string) => void;
@@ -35,7 +27,6 @@ type HomeTabProps = {
 export function HomeTab({
   allEnabledGames,
   allEnabledGamePaths,
-  unplayedGamePaths,
   favorites,
   recentPaths,
   onToggleFavorite,
@@ -44,8 +35,7 @@ export function HomeTab({
   onSelectTab,
 }: HomeTabProps) {
   const { ui, spacing } = useResponsiveMetrics();
-  const { width: viewportWidth, height: viewportHeight } =
-    useViewportDimensions();
+  const { width: viewportWidth } = useViewportDimensions();
 
   const scaledPageSidePadding = spacing(layoutDims.pagePadding);
   const contentMaxWidth = ui.contentMaxWidth;
@@ -63,12 +53,6 @@ export function HomeTab({
       (rowInnerWidth - cardGap * (ui.isTablet ? 2 : 1)) / (ui.isTablet ? 3 : 2),
     ) - 1,
   );
-
-  const [scrollY, setScrollY] = useState(0);
-
-  const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    setScrollY(event.nativeEvent.contentOffset.y);
-  };
 
   const gameOfTheDay = useMemo(() => {
     const path = getGameOfTheDayPath(allEnabledGamePaths);
@@ -130,11 +114,6 @@ export function HomeTab({
     return { title: likedGame.title, games: related };
   }, [allEnabledGames]);
 
-  const unplayedGames = useMemo(() => {
-    const unplayedSet = new Set(unplayedGamePaths);
-    return allEnabledGames.filter(([path]) => unplayedSet.has(path));
-  }, [allEnabledGames, unplayedGamePaths]);
-
   const fewPlayedGames = recentPaths.length < 3;
 
   const getStartedGames = useMemo(() => {
@@ -153,8 +132,6 @@ export function HomeTab({
         gap: spacing(40),
       }}
       showsVerticalScrollIndicator={false}
-      scrollEventThrottle={16}
-      onScroll={onScroll}
     >
       {/* No played games */}
       {fewPlayedGames && (
@@ -203,9 +180,11 @@ export function HomeTab({
                 // Switch to the Explore tab
                 onSelectTab(1);
               }}
-              text="Explore all games"
+              text="Discover more games"
               style={{ marginTop: spacing(20) }}
               textStyle={{ textTransform: "none" }}
+              theme={Colors.suitsRed}
+              taller
             />
           </View>
         </View>
@@ -287,44 +266,6 @@ export function HomeTab({
           </View>
         </View>
       )}
-
-      {/* Roll the dice */}
-      <View
-        style={[
-          flexStyles.colCentered,
-          flexStyles.fullWidth,
-          {
-            gap: spacing(6),
-          },
-        ]}
-      >
-        <View
-          style={{
-            width: "100%",
-            maxWidth: contentMaxWidth,
-            alignSelf: "center",
-            paddingHorizontal: scaledPageSidePadding,
-          }}
-        >
-          <HomeSectionTitle
-            title="Play a Random Game"
-            iconName="dice"
-            pageSidePadding={0}
-            contentMaxWidth={contentMaxWidth}
-          />
-        </View>
-
-        <RandomGameRoller
-          allEntries={allEnabledGames}
-          unplayedEntries={unplayedGames}
-          favorites={favorites}
-          onToggleFavorite={onToggleFavorite}
-          contentMaxWidth={contentMaxWidth}
-          pageSidePadding={scaledPageSidePadding}
-          scrollY={scrollY}
-          viewportHeight={viewportHeight}
-        />
-      </View>
 
       {/* Because you liked ... */}
       {becauseYouLiked && (

@@ -1,4 +1,3 @@
-import { Text } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon, type IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
@@ -11,11 +10,13 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-export type HomeTabKey = "home" | "explore" | "stats";
+export type HomeTabKey = "home" | "explore" | "search" | "random" | "stats";
 
 export const HOME_TABS: { key: HomeTabKey; label: string; icon: IconName }[] = [
   { key: "home", label: "Home", icon: "home" },
   { key: "explore", label: "Explore", icon: "explore" },
+  { key: "search", label: "Search", icon: "search" },
+  { key: "random", label: "Random", icon: "dice" },
   { key: "stats", label: "Stats", icon: "chart" },
 ];
 
@@ -76,23 +77,22 @@ export function HomeTabBar({
         >
           {HOME_TABS.map((tab, index) => {
             const isActive = index === activeIndex;
+
             return (
               <Pressable
                 key={tab.key}
                 onPress={() => onSelectTab(index)}
+                accessibilityRole="button"
+                accessibilityLabel={tab.label}
                 style={[
                   flexStyles.rowCentered,
                   {
                     ...transitionStyles.all02sec,
                     flex: 1,
                     height: "100%",
-                    gap: spacing(8),
                     paddingVertical: spacing(12),
-                    paddingRight: spacing(4),
                     borderRadius: spacing(layoutDims.menuBarHeight / 2 - 6),
-                    backgroundColor: isActive
-                      ? Colors.background
-                      : "transparent",
+                    backgroundColor: isActive ? Colors.suitsRed : "transparent",
                     outline: "none",
                   },
                 ]}
@@ -100,17 +100,9 @@ export function HomeTabBar({
                 <Icon
                   name={tab.icon}
                   size={spacing(28)}
-                  color={isActive ? Colors.suitsRed : Colors.K500}
-                  style={{ ...transitionStyles.all02sec }}
-                />
-                <Text
-                  size="sm"
-                  weight={500}
                   color={isActive ? Colors.white : Colors.K500}
                   style={{ ...transitionStyles.all02sec }}
-                >
-                  {tab.label}
-                </Text>
+                />
               </Pressable>
             );
           })}

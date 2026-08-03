@@ -5,7 +5,11 @@ import { GameCreators } from "../game-creators";
 export const pokerSquares: GameDefinition = {
   path: "/poker-squares",
   title: "Poker Squares",
-  tags: [GameTag.EasyToLearn, GameTag.ModernMechanics],
+  tags: [
+    GameTag.GridPlacement,
+    GameTag.PokerAndCribbage,
+    GameTag.ScoringPuzzles,
+  ],
   rating: {
     complexity: 35,
     difficulty: 65,

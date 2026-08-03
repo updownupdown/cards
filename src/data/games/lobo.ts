@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const lobo: GameDefinition = {
   path: "/lobo",
   title: "Lobo",
-  tags: [GameTag.ModernMechanics],
+  tags: [GameTag.ModernMechanics, GameTag.CardCombat],
   rating: {
     complexity: 60,
     difficulty: 85,
@@ -18,7 +18,7 @@ export const lobo: GameDefinition = {
   gameColorDark: "#311a20",
   gameColorPale: "#f7e2ca",
   cardDescription:
-    "Empty the Wolf's hand through clever captures — and know when to fold.",
+    "Empty the Wolf's hand through clever captures... and know when to fold.",
   quickStart: [
     "Capture the Wolf's cards by using match/sum/split/overtake actions.",
   ],

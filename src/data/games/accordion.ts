@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const accordion: GameDefinition = {
   path: "/accordion",
   title: "Accordion",
-  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
+  tags: [GameTag.EasyToLearn, GameTag.PairMatching],
   rating: {
     complexity: 10,
     difficulty: 95,

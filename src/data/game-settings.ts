@@ -14,7 +14,13 @@ export type GameSpecificSettingKey =
   | "pokerJokers"
   | "alpineDifficulty"
   | "alpineChallenge"
-  | "dungeonDifficulty";
+  | "dungeonDifficulty"
+  | "merchantLoyalPatrons"
+  | "merchantCheckBack"
+  | "merchantSuperExclusive"
+  | "merchantVandals"
+  | "clubFightDifficulty"
+  | "leafbearerOpenStables";
 export type GameSpecificSettingApplyBehavior = "immediate" | "next-game";
 
 type GameSpecificSettingOptionValue = GameSettings[GameSpecificSettingKey];
@@ -35,6 +41,34 @@ export type GameSpecificSettingDefinition = {
 
 const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
   {
+    "/leafbearer": [
+      {
+        key: "leafbearerOpenStables",
+        label: "Open Stables",
+        type: "boolean",
+        booleanType: "toggle",
+        applyBehavior: "next-game",
+        description:
+          "Adds the Noble and Jester companions to the central Stables location.",
+        options: [
+          { label: "Off", value: false },
+          { label: "On", value: true },
+        ],
+      },
+    ],
+    "/club-fight": [
+      {
+        key: "clubFightDifficulty",
+        label: "Difficulty",
+        type: "string",
+        applyBehavior: "next-game",
+        description: "Hard mode adds a second Joker to the grid deck.",
+        options: [
+          { label: "Easy (1 Joker)", value: "easy" },
+          { label: "Hard (2 Jokers)", value: "hard" },
+        ],
+      },
+    ],
     "/canfield": [
       {
         key: "drawCount",
@@ -353,6 +387,57 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
             description:
               "Trail Length: 4. When you draw cards after playing a route, if any of the cards drawn match the suit of the route's anchor, return all cards in the route played to your hand. Do not do this when you reach a camp. If you ever have 18 or more cards in your hand, you immediately lose the game.",
           },
+        ],
+      },
+    ],
+    "/merchants-solitaire": [
+      {
+        key: "merchantLoyalPatrons",
+        label: "Loyal Patrons",
+        type: "boolean",
+        booleanType: "toggle",
+        applyBehavior: "next-game",
+        description:
+          "Offers using four or more items add the customer to Guild Standing.",
+        options: [
+          { label: "Off", value: false },
+          { label: "On (Easy)", value: true },
+        ],
+      },
+      {
+        key: "merchantCheckBack",
+        label: "Check in the Back",
+        type: "boolean",
+        booleanType: "toggle",
+        applyBehavior: "next-game",
+        description: "The top Inventory item can be included in an offer.",
+        options: [
+          { label: "Off", value: false },
+          { label: "On (Easy)", value: true },
+        ],
+      },
+      {
+        key: "merchantSuperExclusive",
+        label: "Super Exclusive Offer",
+        type: "boolean",
+        booleanType: "toggle",
+        applyBehavior: "next-game",
+        description: "Items matching the Used Item's suit or rank cost $0.",
+        options: [
+          { label: "Off", value: false },
+          { label: "On (Hard)", value: true },
+        ],
+      },
+      {
+        key: "merchantVandals",
+        label: "Vandals!",
+        type: "string",
+        applyBehavior: "next-game",
+        description: "Jokers permanently lock the next available shop shelf.",
+        options: [
+          { label: "Off", value: 0 },
+          { label: "1 Joker (Hard)", value: 1 },
+          { label: "2 Jokers (Harder)", value: 2 },
         ],
       },
     ],

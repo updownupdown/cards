@@ -5,7 +5,7 @@ import { GameCreators } from "../game-creators";
 export const sirTommy: GameDefinition = {
   path: "/sir-tommy",
   title: "Sir Tommy",
-  tags: [GameTag.ClassicSolitaire, GameTag.EasyToLearn],
+  tags: [GameTag.StockAndWaste],
   rating: {
     complexity: 30,
     difficulty: 60,

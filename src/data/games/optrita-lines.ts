@@ -5,7 +5,7 @@ import { GameCreators } from "../game-creators";
 export const optritaLines: GameDefinition = {
   path: "/optrita-lines",
   title: "Optrita: Lines",
-  tags: [GameTag.ModernMechanics],
+  tags: [GameTag.ModernMechanics, GameTag.SpatialControl],
   rating: {
     complexity: 40,
     difficulty: 50,

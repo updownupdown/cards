@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations/types";
 export const canfield: GameDefinition = {
   path: "/canfield",
   title: "Canfield",
-  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
+  tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: {
     complexity: 0,
     difficulty: 0,

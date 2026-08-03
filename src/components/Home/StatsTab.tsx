@@ -273,7 +273,7 @@ export function StatsTab({
       style={{ flex: 1 }}
       contentContainerStyle={{
         paddingTop: contentPaddingTop,
-        paddingBottom: contentPaddingBottom,
+        paddingBottom: contentPaddingBottom * 1.4,
         gap: spacing(40),
       }}
       showsVerticalScrollIndicator={false}
@@ -325,189 +325,211 @@ export function StatsTab({
             width: "100%",
             maxWidth: contentMaxWidth,
             alignSelf: "center",
-            gap: sectionTopPadding,
+            paddingHorizontal: scaledPageSidePadding,
+            paddingTop: sectionTopPadding,
           }}
         >
-          <HomeSectionTitle
-            title="Full Stats"
-            subtitle={
-              playedRows.length === 0
-                ? "No stats to show"
-                : "Only played games are shown"
-            }
-            iconName="chart"
-            pageSidePadding={scaledPageSidePadding}
-            contentMaxWidth={contentMaxWidth}
-          />
-
           <View
             style={{
-              paddingHorizontal: scaledPageSidePadding,
+              width: "100%",
               gap: sectionTopPadding,
+              borderWidth: 1,
+              borderColor: Colors.K800,
+              backgroundColor: Colors.K875,
+              paddingVertical: spacing(12),
+              borderRadius: spacing(12),
+              boxShadow: `inset 0 0  ${spacing(18)}px ${rgba(Colors.black, 0.25)}, 0 0 ${spacing(12)}px ${rgba(Colors.K400, 0.1)}`,
             }}
           >
-            {playedRows.length > 0 && (
-              <ScrollView
-                style={{ maxHeight: fullStatsMaxHeight }}
-                showsVerticalScrollIndicator
-                nestedScrollEnabled
-              >
-                <View style={[flexStyles.fullWidth]}>
-                  {/* Header */}
-                  <View
-                    style={{
-                      position: "sticky",
-                      zIndex: 2,
-                      top: 0,
-                      flexDirection: "row",
-                      alignItems: "center",
-                      paddingBottom: 8,
-                      borderBottomWidth: StyleSheet.hairlineWidth,
-                      borderBottomColor: Colors.K700,
-                      marginBottom: 8,
-                      backgroundColor: Colors.background,
-                    }}
-                  >
-                    {renderSortableHeader("Game", "title")}
-                    {renderSortableHeader("Won", "wins")}
-                    {renderSortableHeader("Lost", "losses")}
-                    {renderSortableHeader("W%", "winRate")}
-                    {renderSortableHeader("Best", "best")}
-                  </View>
+            <HomeSectionTitle
+              title="Full Stats"
+              subtitle={
+                playedRows.length === 0
+                  ? "No stats to show"
+                  : "Only played games are shown"
+              }
+              iconName="chart"
+              pageSidePadding={scaledPageSidePadding}
+              contentMaxWidth={contentMaxWidth}
+            />
 
-                  {/* Rows */}
-                  {sortedPlayedRows.map((row) => (
+            <View
+              style={{
+                paddingHorizontal: scaledPageSidePadding,
+                gap: sectionTopPadding,
+              }}
+            >
+              {playedRows.length > 0 && (
+                <ScrollView
+                  style={{ maxHeight: fullStatsMaxHeight }}
+                  showsVerticalScrollIndicator
+                  nestedScrollEnabled
+                >
+                  <View style={[flexStyles.fullWidth]}>
+                    {/* Header */}
                     <View
-                      key={row.path}
-                      style={[
-                        flexStyles.rowCentered,
-                        {
-                          position: "relative",
-                          zIndex: 1,
-                          justifyContent: "flex-start",
-                          paddingVertical: 8,
-                        },
-                      ]}
+                      style={{
+                        position: "sticky",
+                        zIndex: 2,
+                        top: 0,
+                        flexDirection: "row",
+                        alignItems: "center",
+                        paddingBottom: 8,
+                        borderBottomWidth: StyleSheet.hairlineWidth,
+                        borderBottomColor: Colors.K750,
+                        marginBottom: 8,
+                        backgroundColor: Colors.K875,
+                      }}
                     >
-                      <Link href={row.path as Href} asChild>
+                      {renderSortableHeader("Game", "title")}
+                      {renderSortableHeader("Won", "wins")}
+                      {renderSortableHeader("Lost", "losses")}
+                      {renderSortableHeader("W%", "winRate")}
+                      {renderSortableHeader("Best", "best")}
+                    </View>
+
+                    {/* Rows */}
+                    {sortedPlayedRows.map((row, index) => (
+                      <View
+                        key={row.path}
+                        style={[
+                          flexStyles.rowCentered,
+                          {
+                            position: "relative",
+                            zIndex: 1,
+                            justifyContent: "flex-start",
+                            paddingVertical: 8,
+                            marginBottom:
+                              index === sortedPlayedRows.length - 1
+                                ? spacing(20)
+                                : 0,
+                          },
+                        ]}
+                      >
+                        <Link href={row.path as Href} asChild>
+                          <Text
+                            size="sm"
+                            weight={500}
+                            color={Colors.accentBlue}
+                            style={{ flex: gameTitleFlex }}
+                            numberOfLines={1}
+                          >
+                            {row.title}
+                          </Text>
+                        </Link>
                         <Text
                           size="sm"
                           weight={500}
-                          color={Colors.accentBlue}
-                          style={{ flex: gameTitleFlex }}
-                          numberOfLines={1}
+                          style={{ flex: 1, textAlign: "right" }}
+                          color={
+                            row.stats.wins === 0 ? Colors.K700 : Colors.K200
+                          }
                         >
-                          {row.title}
+                          {row.stats.wins}
                         </Text>
-                      </Link>
+                        <Text
+                          size="sm"
+                          weight={500}
+                          style={{ flex: 1, textAlign: "right" }}
+                          color={
+                            row.stats.losses === 0 ? Colors.K700 : Colors.K200
+                          }
+                        >
+                          {row.stats.losses}
+                        </Text>
+                        <Text
+                          size="sm"
+                          weight={500}
+                          style={{ flex: 1, textAlign: "right" }}
+                          color={
+                            row.stats.wins === 0 && row.stats.losses === 0
+                              ? Colors.K700
+                              : Colors.K200
+                          }
+                        >
+                          {calculateWinRate(row.stats)}
+                        </Text>
+                        <Text
+                          size="sm"
+                          weight={500}
+                          style={{ flex: 1, textAlign: "right" }}
+                          color={
+                            row.stats.highestScore === null
+                              ? Colors.K700
+                              : Colors.K200
+                          }
+                        >
+                          {row.stats.highestScore === null
+                            ? "-"
+                            : row.stats.highestScore}
+                        </Text>
+                      </View>
+                    ))}
+
+                    {/* Sticky total row */}
+                    <View
+                      style={{
+                        position: "sticky",
+                        zIndex: 2,
+                        bottom: 0,
+                        flexDirection: "row",
+                        alignItems: "center",
+                        paddingTop: 8,
+                        paddingBottom: 8,
+                        borderTopWidth: StyleSheet.hairlineWidth,
+                        borderTopColor: Colors.K750,
+                        marginTop: 8,
+                        backgroundColor: Colors.K875,
+                      }}
+                    >
                       <Text
                         size="sm"
-                        weight={500}
-                        style={{ flex: 1, textAlign: "right" }}
-                        color={row.stats.wins === 0 ? Colors.K700 : Colors.K200}
+                        weight={600}
+                        style={{ flex: gameTitleFlex }}
                       >
-                        {row.stats.wins}
+                        Total
                       </Text>
                       <Text
                         size="sm"
-                        weight={500}
+                        weight={600}
                         style={{ flex: 1, textAlign: "right" }}
-                        color={
-                          row.stats.losses === 0 ? Colors.K700 : Colors.K200
-                        }
+                        color={totals.wins === 0 ? Colors.K700 : Colors.K200}
                       >
-                        {row.stats.losses}
+                        {totals.wins}
                       </Text>
                       <Text
                         size="sm"
-                        weight={500}
+                        weight={600}
                         style={{ flex: 1, textAlign: "right" }}
-                        color={
-                          row.stats.wins === 0 && row.stats.losses === 0
-                            ? Colors.K700
-                            : Colors.K200
-                        }
+                        color={totals.losses === 0 ? Colors.K700 : Colors.K200}
                       >
-                        {calculateWinRate(row.stats)}
+                        {totals.losses}
                       </Text>
                       <Text
                         size="sm"
-                        weight={500}
+                        weight={600}
                         style={{ flex: 1, textAlign: "right" }}
                         color={
-                          row.stats.highestScore === null
-                            ? Colors.K700
-                            : Colors.K200
+                          totals.attempts === 0 ? Colors.K700 : Colors.K200
                         }
                       >
-                        {row.stats.highestScore === null
-                          ? "-"
-                          : row.stats.highestScore}
+                        {totals.wins > 0 && totals.losses > 0
+                          ? `${Math.round((totals.wins / (totals.wins + totals.losses)) * 100)}%`
+                          : "-"}
+                      </Text>
+                      <Text
+                        size="sm"
+                        weight={600}
+                        style={{ flex: 1, textAlign: "right" }}
+                        color={totals.best === null ? Colors.K700 : Colors.K200}
+                      >
+                        {totals.best === null ? "-" : totals.best}
                       </Text>
                     </View>
-                  ))}
-
-                  {/* Sticky total row */}
-                  <View
-                    style={{
-                      position: "sticky",
-                      zIndex: 2,
-                      bottom: 0,
-                      flexDirection: "row",
-                      alignItems: "center",
-                      paddingTop: 8,
-                      paddingBottom: 8,
-                      borderTopWidth: StyleSheet.hairlineWidth,
-                      borderTopColor: Colors.K700,
-                      marginTop: 8,
-                      backgroundColor: Colors.background,
-                    }}
-                  >
-                    <Text
-                      size="sm"
-                      weight={600}
-                      style={{ flex: gameTitleFlex }}
-                    >
-                      Total
-                    </Text>
-                    <Text
-                      size="sm"
-                      weight={600}
-                      style={{ flex: 1, textAlign: "right" }}
-                      color={totals.wins === 0 ? Colors.K700 : Colors.K200}
-                    >
-                      {totals.wins}
-                    </Text>
-                    <Text
-                      size="sm"
-                      weight={600}
-                      style={{ flex: 1, textAlign: "right" }}
-                      color={totals.losses === 0 ? Colors.K700 : Colors.K200}
-                    >
-                      {totals.losses}
-                    </Text>
-                    <Text
-                      size="sm"
-                      weight={600}
-                      style={{ flex: 1, textAlign: "right" }}
-                      color={totals.attempts === 0 ? Colors.K700 : Colors.K200}
-                    >
-                      {totals.wins > 0 && totals.losses > 0
-                        ? `${Math.round((totals.wins / (totals.wins + totals.losses)) * 100)}%`
-                        : "-"}
-                    </Text>
-                    <Text
-                      size="sm"
-                      weight={600}
-                      style={{ flex: 1, textAlign: "right" }}
-                      color={totals.best === null ? Colors.K700 : Colors.K200}
-                    >
-                      {totals.best === null ? "-" : totals.best}
-                    </Text>
                   </View>
-                </View>
-              </ScrollView>
-            )}
+                </ScrollView>
+              )}
+            </View>
           </View>
         </View>
       )}
@@ -535,8 +557,8 @@ export function StatsTab({
                 borderRadius: spacing(10),
                 padding: spacing(8),
                 gap: spacing(8),
-                backgroundColor: rgba(Colors.K950, 0.4),
-                boxShadow: `inset 0 0 20px ${rgba(Colors.black, 0.2)}`,
+                backgroundColor: rgba(game.gameColorDark, 0.4),
+                boxShadow: `inset 0 0 0 ${spacing(1)}px  ${rgba(game.gameColorPale, 0.15)}, ${spacing(1)}px ${spacing(2)}px ${spacing(12)}px ${rgba(Colors.black, 0.2)}`,
               }}
             >
               <HomeSectionTitle

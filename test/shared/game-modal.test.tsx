@@ -1,9 +1,30 @@
+import React from "react";
+import { Pressable, Text, View } from "react-native";
 import { fireEvent, render } from "@testing-library/react-native";
 import GameModal from "@/components/Modals/GameModal";
 
 const mockUpdateSettings = jest.fn();
 const mockUseGameSpecificSettings = jest.fn();
 let mockNextSettingValue = "hard";
+function mockModalFull({ onClose, children }: any) {
+  return React.createElement(
+    View,
+    null,
+    React.createElement(Pressable, { testID: "modal-close", onPress: onClose }),
+    children,
+  );
+}
+
+function mockSettingControl({ onChange }: any) {
+  return React.createElement(Pressable, {
+    testID: "setting-control",
+    onPress: () => onChange(mockNextSettingValue),
+  });
+}
+
+function mockText({ children }: any) {
+  return React.createElement(Text, null, children);
+}
 
 jest.mock("expo-router", () => ({
   usePathname: () => "/lobo",
@@ -61,44 +82,17 @@ jest.mock("@/data/game-creators", () => ({
   isValidLink: () => false,
 }));
 
-jest.mock("@/components/Modals/ModalFull", () => {
-  const React = require("react");
-  const { Pressable, View } = require("react-native");
-  return {
-    __esModule: true,
-    default: ({ onClose, children }: any) =>
-      React.createElement(
-        View,
-        null,
-        React.createElement(Pressable, {
-          testID: "modal-close",
-          onPress: onClose,
-        }),
-        children,
-      ),
-    ModalHeading: () => null,
-  };
-});
+jest.mock("@/components/Modals/ModalFull", () => ({
+  __esModule: true,
+  default: mockModalFull,
+  ModalHeading: () => null,
+}));
 
-jest.mock("@/components/common/SettingControl", () => {
-  const React = require("react");
-  const { Pressable } = require("react-native");
-  return {
-    SettingControl: ({ onChange }: any) =>
-      React.createElement(Pressable, {
-        testID: "setting-control",
-        onPress: () => onChange(mockNextSettingValue),
-      }),
-  };
-});
+jest.mock("@/components/common/SettingControl", () => ({
+  SettingControl: mockSettingControl,
+}));
 
-jest.mock("@/components/common/Text", () => {
-  const React = require("react");
-  const { Text } = require("react-native");
-  return {
-    Text: ({ children }: any) => React.createElement(Text, null, children),
-  };
-});
+jest.mock("@/components/common/Text", () => ({ Text: mockText }));
 
 jest.mock("@/components/common/RichText", () => ({ RichText: () => null }));
 jest.mock("@/components/Button/Button", () => ({ Button: () => null }));

@@ -6,18 +6,34 @@ import type { GameAnimation } from "@/animations/types";
 
 export enum GameTag {
   EasyToLearn = "EasyToLearn",
-  ClassicSolitaire = "ClassicSolitaire",
   IsaludoCollection = "IsaludoCollection",
-  TapAndDrag = "TapAndDrag",
+  TableauBuilding = "TableauBuilding",
   ModernMechanics = "ModernMechanics",
+  DungeonCrawler = "DungeonCrawler",
+  CardCombat = "CardCombat",
+  GridPlacement = "GridPlacement",
+  PokerAndCribbage = "PokerAndCribbage",
+  PairMatching = "PairMatching",
+  SequenceBuilding = "SequenceBuilding",
+  StockAndWaste = "StockAndWaste",
+  ScoringPuzzles = "ScoringPuzzles",
+  SpatialControl = "SpatialControl",
 }
 
 export const GameTagNames: Record<GameTag, string> = {
   [GameTag.EasyToLearn]: "Easy to Learn",
   [GameTag.IsaludoCollection]: "Isaludo Collection",
-  [GameTag.ClassicSolitaire]: "Classic Solitaire",
-  [GameTag.TapAndDrag]: "Tap and drag",
+  [GameTag.TableauBuilding]: "Tableau Building",
   [GameTag.ModernMechanics]: "Modern Mechanics",
+  [GameTag.DungeonCrawler]: "Dungeon Crawler",
+  [GameTag.CardCombat]: "Card Combat",
+  [GameTag.GridPlacement]: "Grid Placement",
+  [GameTag.PokerAndCribbage]: "Poker & Cribbage",
+  [GameTag.PairMatching]: "Pair Matching",
+  [GameTag.SequenceBuilding]: "Sequence Building",
+  [GameTag.StockAndWaste]: "Stock & Waste",
+  [GameTag.ScoringPuzzles]: "Scoring Puzzles",
+  [GameTag.SpatialControl]: "Spatial Control",
 };
 
 export type HexColor = `#${string}`;

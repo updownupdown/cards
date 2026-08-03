@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const osmosis: GameDefinition = {
   path: "/osmosis",
   title: "Osmosis",
-  tags: [GameTag.ClassicSolitaire],
+  tags: [GameTag.StockAndWaste],
   rating: {
     complexity: 30,
     difficulty: 30,

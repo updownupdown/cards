@@ -6,7 +6,12 @@ import { GameAnimations } from "@/animations";
 export const empire: GameDefinition = {
   path: "/empire",
   title: "Empire",
-  tags: [GameTag.EasyToLearn, GameTag.ModernMechanics],
+  tags: [
+    GameTag.EasyToLearn,
+    GameTag.ModernMechanics,
+    GameTag.CardCombat,
+    GameTag.SpatialControl,
+  ],
   rating: {
     complexity: 35,
     difficulty: 65,

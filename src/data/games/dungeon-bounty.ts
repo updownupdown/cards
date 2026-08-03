@@ -6,7 +6,7 @@ export const dungeonBounty: GameDefinition = {
   path: "/dungeon-bounty",
   title: "Dungeon Bounty",
   enabledOnLocalOnly: true,
-  tags: [GameTag.ModernMechanics],
+  tags: [GameTag.ModernMechanics, GameTag.DungeonCrawler, GameTag.CardCombat],
   rating: {
     complexity: 85,
     difficulty: 75,

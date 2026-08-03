@@ -5,7 +5,7 @@ import { GameCreators } from "../game-creators";
 export const memory: GameDefinition = {
   path: "/memory",
   title: "Memory",
-  tags: [GameTag.EasyToLearn],
+  tags: [GameTag.EasyToLearn, GameTag.PairMatching],
   rating: {
     complexity: 15,
     difficulty: 35,

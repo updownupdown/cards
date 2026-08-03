@@ -5,7 +5,7 @@ import { GameCreators } from "../game-creators";
 export const calculation: GameDefinition = {
   path: "/calculation",
   title: "Calculation",
-  tags: [GameTag.ClassicSolitaire],
+  tags: [GameTag.SequenceBuilding, GameTag.StockAndWaste],
   rating: {
     complexity: 60,
     difficulty: 80,

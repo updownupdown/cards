@@ -5,7 +5,7 @@ import { GameCreators } from "../game-creators";
 export const regicide: GameDefinition = {
   path: "/regicide",
   title: "Regicide",
-  tags: [GameTag.ModernMechanics],
+  tags: [GameTag.ModernMechanics, GameTag.CardCombat],
   rating: {
     complexity: 70,
     difficulty: 80,

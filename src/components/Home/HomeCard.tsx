@@ -8,6 +8,8 @@ import { router, type Href } from "expo-router";
 import { Image, Pressable, View, type ViewStyle } from "react-native";
 import { FavButton } from "./FavButton";
 import { RatingsBars } from "./RatingBars";
+import { Icon } from "@/icons";
+import { flexStyles } from "@/styles/flexStyles";
 
 function getGameThumbnail(game: GameMenuInfo) {
   return GAME_THUMBNAIL_ASSETS[game.thumbnail || DEFAULT_GAME_THUMBNAIL];
@@ -21,6 +23,7 @@ type Props = {
   size?: "small" | "medium" | "large";
   isLarge?: boolean;
   style?: ViewStyle;
+  showCompleted?: boolean;
   onOpen?: () => void;
 };
 
@@ -31,6 +34,7 @@ export function HomeCard({
   isFavorite,
   size = "medium",
   style,
+  showCompleted,
   onOpen,
 }: Props) {
   const { spacing } = useResponsiveMetrics();
@@ -123,7 +127,8 @@ export function HomeCard({
             justifyContent: size === "medium" ? "flex-end" : "center",
           }}
         >
-          {/* Title */}
+          {/* Title and Completed */}
+
           <Text
             size={size === "large" ? "xl" : "lg"}
             weight={500}
@@ -148,6 +153,44 @@ export function HomeCard({
           <RatingsBars rating={game.rating} gameColor={game.gameColorPale} />
         )}
       </Pressable>
+
+      {showCompleted && (
+        <View
+          style={[
+            flexStyles.rowCentered,
+            {
+              pointerEvents: "none",
+              userSelect: "none",
+              position: "absolute",
+              zIndex: 2,
+              top: size === "small" ? "50%" : favBtnInset,
+              right: size === "medium" ? undefined : favBtnInset + favBtnSize,
+              left: size === "medium" ? favBtnInset : undefined,
+              width: favBtnSize,
+              height: favBtnSize,
+              transform:
+                size === "small"
+                  ? [{ translateY: -favBtnSize / 2 }]
+                  : undefined,
+            },
+          ]}
+        >
+          <View
+            style={[
+              flexStyles.rowCentered,
+              {
+                width: spacing(20),
+                height: spacing(20),
+                borderRadius: spacing(10),
+                backgroundColor: Colors.win,
+                boxShadow: `0 ${spacing(1)}px ${spacing(6)}px ${rgba(Colors.black, 0.3)}`,
+              },
+            ]}
+          >
+            <Icon name="check" size={spacing(16)} color={Colors.white} />
+          </View>
+        </View>
+      )}
 
       <FavButton
         style={[

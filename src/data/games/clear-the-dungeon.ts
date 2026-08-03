@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const clearTheDungeon: GameDefinition = {
   path: "/clear-the-dungeon",
   title: "Clear the Dungeon",
-  tags: [GameTag.ModernMechanics],
+  tags: [GameTag.ModernMechanics, GameTag.DungeonCrawler, GameTag.CardCombat],
   rating: {
     complexity: 75,
     difficulty: 75,

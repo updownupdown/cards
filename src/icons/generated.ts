@@ -9,8 +9,10 @@ import ArrowBackIcon from "./ArrowBack.svg";
 import ArrowForwardIcon from "./ArrowForward.svg";
 import AttributionIcon from "./Attribution.svg";
 import ChartIcon from "./Chart.svg";
+import CheckIcon from "./Check.svg";
 import CheckBoxOffIcon from "./CheckBoxOff.svg";
 import CheckBoxOnIcon from "./CheckBoxOn.svg";
+import CheckCircleIcon from "./CheckCircle.svg";
 import ChevronLeftIcon from "./ChevronLeft.svg";
 import CloseIcon from "./Close.svg";
 import ClubsIcon from "./Clubs.svg";
@@ -29,6 +31,7 @@ import ExpandMoreIcon from "./ExpandMore.svg";
 import ExploreIcon from "./Explore.svg";
 import FastForwardIcon from "./FastForward.svg";
 import FeaturedIcon from "./Featured.svg";
+import FilterIcon from "./Filter.svg";
 import FistIcon from "./Fist.svg";
 import GamesIcon from "./Games.svg";
 import GemIcon from "./Gem.svg";
@@ -66,8 +69,10 @@ export type IconName =
   | "arrow-forward"
   | "attribution"
   | "chart"
+  | "check"
   | "check-box-off"
   | "check-box-on"
+  | "check-circle"
   | "chevron-left"
   | "close"
   | "clubs"
@@ -86,6 +91,7 @@ export type IconName =
   | "explore"
   | "fast-forward"
   | "featured"
+  | "filter"
   | "fist"
   | "games"
   | "gem"
@@ -123,8 +129,10 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "arrow-forward": ArrowForwardIcon,
   "attribution": AttributionIcon,
   "chart": ChartIcon,
+  "check": CheckIcon,
   "check-box-off": CheckBoxOffIcon,
   "check-box-on": CheckBoxOnIcon,
+  "check-circle": CheckCircleIcon,
   "chevron-left": ChevronLeftIcon,
   "close": CloseIcon,
   "clubs": ClubsIcon,
@@ -143,6 +151,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "explore": ExploreIcon,
   "fast-forward": FastForwardIcon,
   "featured": FeaturedIcon,
+  "filter": FilterIcon,
   "fist": FistIcon,
   "games": GamesIcon,
   "gem": GemIcon,

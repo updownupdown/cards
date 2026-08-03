@@ -306,7 +306,6 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
                     weight={500}
                     color={Colors.accentBlue}
                     onPress={() => void Linking.openURL(creatorLink)}
-                    style={{ textDecorationLine: "underline" }}
                   >
                     {creator}
                   </Text>
@@ -329,7 +328,6 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
               weight={500}
               color={Colors.accentBlue}
               onPress={() => void Linking.openURL(backgroundAuthorLink)}
-              style={{ textDecorationLine: "underline" }}
             >
               {background.authorName}
             </Text>

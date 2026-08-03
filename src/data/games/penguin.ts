@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const penguin: GameDefinition = {
   path: "/penguin",
   title: "Penguin",
-  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
+  tags: [GameTag.TableauBuilding],
   rating: {
     complexity: 0,
     difficulty: 0,

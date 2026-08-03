@@ -5,7 +5,7 @@ import { GameCreators } from "../game-creators";
 export const scorpion: GameDefinition = {
   path: "/scorpion",
   title: "Scorpion",
-  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
+  tags: [GameTag.TableauBuilding],
   rating: {
     complexity: 0,
     difficulty: 0,

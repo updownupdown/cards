@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations/types";
 export const yukon: GameDefinition = {
   path: "/yukon",
   title: "Yukon",
-  tags: [GameTag.ClassicSolitaire, GameTag.TapAndDrag],
+  tags: [GameTag.TableauBuilding],
   rating: {
     complexity: 35,
     difficulty: 55,
