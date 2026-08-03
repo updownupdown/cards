@@ -24,6 +24,7 @@ export const GameCreators = {
   TheoPeters: "Theo Peters",
   WilSu: "Wil Su",
   ZachGage: "Zach Gage",
+  DTeuber: "D. Teuber",
 } as const;
 
 export const CREATOR_LINKS: Partial<Record<GameCreator, string>> = {

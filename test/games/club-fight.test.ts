@@ -24,8 +24,7 @@ function state(
     gridDeck: [],
     hand: [],
     grid: Array.from({ length: 9 }, () => null),
-    clubsDiscard: [],
-    gridDiscard: [],
+    discard: [],
     ended: false,
     won: false,
     winLoseMessage: "",
@@ -42,9 +41,43 @@ describe("Club Fight rules", () => {
     expect(clubFightRules.createDecks("easy").clubs).toHaveLength(13);
     expect(clubFightRules.createDecks("easy").grid).toHaveLength(40);
     expect(clubFightRules.createDecks("hard").grid).toHaveLength(41);
+    expect(clubFightRules.createDiscard("easy")).toHaveLength(53);
+    expect(clubFightRules.createDiscard("hard")).toHaveLength(54);
   });
 
-  test("blocks Line, Up/Down, and Run after three relevant suits", () => {
+  test("collects every card face-down before shuffling a new deal", () => {
+    const game = state({
+      clubsDeck: [card("A", "clubs-deck")],
+      gridDeck: [card("2", "grid-deck", "diamonds")],
+      hand: [card("3", "hand")],
+      grid: [
+        card("4", "grid", "hearts"),
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+      ],
+      discard: [card("5", "discard", "spades")],
+    });
+
+    expect(clubFightRules.collectCards(game)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "clubs-deck", faceUp: false }),
+        expect.objectContaining({ id: "grid-deck", faceUp: false }),
+        expect.objectContaining({ id: "hand", faceUp: false }),
+        expect.objectContaining({ id: "grid", faceUp: false }),
+        expect.objectContaining({ id: "discard", faceUp: false }),
+      ]),
+    );
+    expect(clubFightRules.shuffleCards([], "easy")).toHaveLength(53);
+    expect(clubFightRules.shuffleCards([], "hard")).toHaveLength(54);
+  });
+
+  test("blocks Row/Column, Up/Down, and Run after three relevant suits", () => {
     const diamonds = state({
       grid: [
         card("2", "a", "diamonds"),
@@ -86,6 +119,8 @@ describe("Club Fight rules", () => {
     });
 
     expect(clubFightRules.isBlocked(diamonds.grid, "line")).toBe(true);
+    expect(clubFightRules.isBlocked(diamonds.grid, "row")).toBe(true);
+    expect(clubFightRules.isBlocked(diamonds.grid, "column")).toBe(true);
     expect(clubFightRules.isBlocked(spades.grid, "up")).toBe(true);
     expect(clubFightRules.isBlocked(hearts.grid, "run")).toBe(true);
   });
@@ -128,6 +163,94 @@ describe("Club Fight rules", () => {
     ).toBe(false);
   });
 
+  test("returns clear indexes only for directly executable actions", () => {
+    const game = state({
+      grid: [
+        card("6", "six", "diamonds"),
+        card("4", "four", "spades"),
+        card("7", "seven", "hearts"),
+        card("8", "eight", "spades"),
+        card("9", "nine", "hearts"),
+        null,
+        null,
+        null,
+        null,
+      ],
+    });
+    const club = card("6", "club");
+
+    expect(
+      clubFightRules.getActionClearIndexes(game, club, "match", []),
+    ).toEqual([0]);
+    expect(
+      clubFightRules.getActionClearIndexes(game, club, "match", [1]),
+    ).toEqual([]);
+    expect(
+      clubFightRules.getActionClearIndexes(game, club, "sum", [1, 2]),
+    ).toEqual([]);
+    expect(
+      clubFightRules.getActionClearIndexes(game, club, "sum", [1]),
+    ).toEqual([]);
+    expect(
+      clubFightRules.getActionClearIndexes(game, club, "any", [1]),
+    ).toEqual([1]);
+    expect(
+      clubFightRules.getActionClearIndexes(game, club, "any", [1, 2]),
+    ).toEqual([]);
+    expect(
+      clubFightRules.getActionClearIndexes(game, club, "row", [0]),
+    ).toEqual([0, 1, 2]);
+    expect(
+      clubFightRules.getActionClearIndexes(game, club, "column", [0]),
+    ).toEqual([0, 3]);
+    expect(
+      clubFightRules.getActionClearIndexes(game, club, "row", [1]),
+    ).toEqual([]);
+    expect(clubFightRules.getActionClearIndexes(game, club, "up", [])).toEqual(
+      [],
+    );
+    expect(
+      clubFightRules.getActionClearIndexes(
+        game,
+        card("7", "seven-club"),
+        "up",
+        [],
+      ),
+    ).toEqual([3, 4]);
+    expect(
+      clubFightRules.getActionClearIndexes(
+        game,
+        card("7", "seven-club"),
+        "up",
+        [0],
+      ),
+    ).toEqual([]);
+    expect(
+      clubFightRules.getActionClearIndexes(
+        game,
+        card("7", "seven-club"),
+        "down",
+        [],
+      ),
+    ).toEqual([0, 1]);
+    expect(
+      clubFightRules.getActionClearIndexes(
+        game,
+        card("7", "seven-club"),
+        "down",
+        [0],
+      ),
+    ).toEqual([]);
+    expect(
+      clubFightRules.getActionClearIndexes(
+        game,
+        card("6", "run-club"),
+        "run",
+        [2, 3],
+      ),
+    ).toEqual([2, 3]);
+  });
+
   test("clears a matching Line, refreshes slots, and spends exactly one Club", () => {
     const game = state({
       hand: [card("6", "club")],
@@ -150,8 +273,8 @@ describe("Club Fight rules", () => {
     });
 
     expect(clubFightRules.playAction(game, "club", "line", [], 0)).toBe(true);
-    expect(game.clubsDiscard.map((entry) => entry.id)).toEqual(["club"]);
-    expect(game.gridDiscard.map((entry) => entry.id)).toEqual([
+    expect(game.discard.map((entry) => entry.id)).toEqual([
+      "club",
       "match",
       "joker",
       "other",

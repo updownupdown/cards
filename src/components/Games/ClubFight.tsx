@@ -3,16 +3,19 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { Colors, rgba } from "@/styles/styles";
 import { useMemo, useRef, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { View } from "react-native";
 import { Button } from "../Button/Button";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
+  flipAllToBack,
   flipToBack,
   flipToFace,
   rankValue,
   shuffle,
-  type CardRank,
+  sortCardsByRank,
+  SUIT_SYMBOLS,
+  zoneFanOffset,
   type CardSuit,
   type PlayingCard,
 } from "../Cards/card-utils";
@@ -24,17 +27,53 @@ import {
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
+import { flexStyles } from "@/styles/flexStyles";
+import { darkenHexColor, firstLetterUppercase, delay } from "@/utils/utils";
+import { Icon, IconName } from "@/icons";
+import { DeckPreviewModal } from "../Modals/DeckPreviewModal";
+import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 
 type ClubFightDifficulty = "easy" | "hard";
-type Action = "match" | "sum" | "any" | "line" | "down" | "up" | "run";
+type Action =
+  | "match"
+  | "sum"
+  | "any"
+  | "line"
+  | "row"
+  | "column"
+  | "down"
+  | "up"
+  | "run";
+
+const ActionNames: Record<Action, string> = {
+  match: "Match",
+  sum: "Sum",
+  any: "Any",
+  line: "♦ Line",
+  row: "♦ Row",
+  column: "♦ Col",
+  down: "♠ Down",
+  up: "♠ Up",
+  run: "♥ Sequence",
+};
+
+const ActionIcons: Partial<Record<Action, IconName>> = {
+  match: "equal-outline",
+  sum: "plus-outline",
+  any: "help-outline",
+  row: "card-row",
+  column: "card-column",
+  down: "arrow-down",
+  up: "arrow-up",
+  run: "sequence",
+};
 
 export type ClubFightGameState = {
   clubsDeck: PlayingCard[];
   gridDeck: PlayingCard[];
   hand: PlayingCard[];
   grid: (PlayingCard | null)[];
-  clubsDiscard: PlayingCard[];
-  gridDiscard: PlayingCard[];
+  discard: PlayingCard[];
   ended: boolean;
   won: boolean;
   winLoseMessage: string;
@@ -48,8 +87,7 @@ const gameStateInitial: ClubFightGameState = {
   gridDeck: [],
   hand: [],
   grid: Array.from({ length: GRID_SIZE }, () => null),
-  clubsDiscard: [],
-  gridDiscard: [],
+  discard: [],
   ended: false,
   won: false,
   winLoseMessage: "",
@@ -66,6 +104,42 @@ function createClubFightDecks(difficulty: ClubFightDifficulty) {
   };
 }
 
+function createClubFightDiscard(difficulty: ClubFightDifficulty) {
+  const deck = createDeck({ faceUp: false });
+  const jokers = createDeck({ includeJokers: true })
+    .filter((card) => card.rank === "Joker")
+    .slice(0, difficulty === "hard" ? 2 : 1);
+  return [...deck, ...jokers];
+}
+
+function collectClubFightCards(state: Readonly<ClubFightGameState>) {
+  return flipAllToBack([
+    ...state.clubsDeck,
+    ...state.gridDeck,
+    ...state.hand,
+    ...state.grid.filter((card): card is PlayingCard => card !== null),
+    ...state.discard,
+  ]);
+}
+
+function shuffleClubFightCards(
+  cards: PlayingCard[],
+  difficulty: ClubFightDifficulty,
+) {
+  const jokerCount = difficulty === "hard" ? 2 : 1;
+  const collectedCards =
+    cards.length > 0 ? cards : createDeck({ faceUp: false });
+  const jokers = collectedCards.filter((card) => card.rank === "Joker");
+  const additionalJokers = createDeck({ includeJokers: true })
+    .filter((card) => card.rank === "Joker")
+    .slice(jokers.length, jokerCount);
+  return shuffle([
+    ...collectedCards.filter((card) => card.rank !== "Joker"),
+    ...jokers.slice(0, jokerCount),
+    ...additionalJokers,
+  ]);
+}
+
 function isValued(card: PlayingCard | null): card is PlayingCard {
   return card !== null && card.rank !== "Joker";
 }
@@ -75,7 +149,9 @@ function suitCount(grid: readonly (PlayingCard | null)[], suit: CardSuit) {
 }
 
 function isBlocked(grid: readonly (PlayingCard | null)[], action: Action) {
-  if (action === "line") return suitCount(grid, "diamonds") >= 3;
+  if (["line", "row", "column"].includes(action)) {
+    return suitCount(grid, "diamonds") >= 3;
+  }
   if (action === "down" || action === "up") {
     return suitCount(grid, "spades") >= 3;
   }
@@ -107,6 +183,13 @@ function lineIndexes(line: number) {
   return line < 3
     ? [line * 3, line * 3 + 1, line * 3 + 2]
     : [line - 3, line, line + 3];
+}
+
+function actionLine(action: Action, selectedIndexes: number[]) {
+  const selectedIndex = selectedIndexes[0];
+  if (action === "row") return Math.floor(selectedIndex / 3);
+  if (action === "column") return (selectedIndex % 3) + 3;
+  return null;
 }
 
 function getClearIndexes(
@@ -164,6 +247,39 @@ function getClearIndexes(
   return isRunWithClub(club, selectedCards) ? selectedIndexes : [];
 }
 
+function getActionClearIndexes(
+  state: Readonly<ClubFightGameState>,
+  club: PlayingCard,
+  action: Action,
+  selectedIndexes: number[],
+) {
+  if (isBlocked(state.grid, action)) return [];
+  if (
+    (action === "match" || action === "up" || action === "down") &&
+    selectedIndexes.length > 0
+  ) {
+    return [];
+  }
+  if (action === "row" || action === "column") {
+    const selectedCard = state.grid[selectedIndexes[0]];
+    if (
+      selectedIndexes.length !== 1 ||
+      !isValued(selectedCard) ||
+      rankValue(selectedCard) !== rankValue(club)
+    ) {
+      return [];
+    }
+    return getClearIndexes(
+      state,
+      club,
+      "line",
+      selectedIndexes,
+      actionLine(action, selectedIndexes),
+    );
+  }
+  return getClearIndexes(state, club, action, selectedIndexes, null);
+}
+
 function refreshGrid(draft: ClubFightGameState) {
   for (let index = 0; index < GRID_SIZE; index += 1) {
     if (draft.grid[index] !== null) continue;
@@ -178,6 +294,7 @@ function refreshHand(draft: ClubFightGameState) {
     const card = draft.clubsDeck.pop();
     if (!card) break;
     draft.hand.push(flipToFace(card));
+    draft.hand = sortCardsByRank(draft.hand);
   }
 }
 
@@ -217,11 +334,11 @@ function playAction(
   if (clearIndexes.length === 0) return false;
 
   draft.hand.splice(clubIndex, 1);
-  draft.clubsDiscard.push(flipToFace(club));
+  draft.discard.push(flipToBack(club));
   for (const index of clearIndexes) {
     const card = draft.grid[index];
     if (!card) continue;
-    draft.gridDiscard.push(flipToFace(card));
+    draft.discard.push(flipToBack(card));
     draft.grid[index] = null;
   }
   refreshGrid(draft);
@@ -232,11 +349,15 @@ function playAction(
 
 export const clubFightRules = {
   createDecks: createClubFightDecks,
+  createDiscard: createClubFightDiscard,
+  collectCards: collectClubFightCards,
+  shuffleCards: shuffleClubFightCards,
   suitCount,
   isBlocked,
   isRunWithClub,
   lineIndexes,
   getClearIndexes,
+  getActionClearIndexes,
   refreshGrid,
   refreshHand,
   evaluateOutcome,
@@ -245,37 +366,52 @@ export const clubFightRules = {
 
 export default function ClubFight() {
   const { spacing } = useResponsiveMetrics();
+  const { height: viewportHeight } = useViewportDimensions();
   const difficulty = useGameSettingValue(
     "clubFightDifficulty",
   ) as ClubFightDifficulty;
   const difficultyRef = useRef(difficulty);
   difficultyRef.current = difficulty;
   const [selectedClubId, setSelectedClubId] = useState<string | null>(null);
-  const [selectedAction, setSelectedAction] = useState<Action | null>(null);
   const [selectedGridIndexes, setSelectedGridIndexes] = useState<number[]>([]);
-  const [selectedLine, setSelectedLine] = useState<number | null>(null);
+  const [showDeckPreview, setShowDeckPreview] = useState(false);
 
   const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
     useStateManager({
       gameStateInitial,
       resetNonGameStates: () => {
         setSelectedClubId(null);
-        setSelectedAction(null);
         setSelectedGridIndexes([]);
-        setSelectedLine(null);
       },
       resetAndSetup: async () => {
         setGame((draft) => {
-          const decks = createClubFightDecks(difficultyRef.current);
-          draft.clubsDeck = decks.clubs;
-          draft.gridDeck = decks.grid;
+          draft.discard = collectClubFightCards(draft);
+          if (draft.discard.length === 0) {
+            draft.discard = createClubFightDiscard(difficultyRef.current);
+          }
+          draft.clubsDeck = [];
+          draft.gridDeck = [];
           draft.hand = [];
           draft.grid = Array.from({ length: GRID_SIZE }, () => null);
-          draft.clubsDiscard = [];
-          draft.gridDiscard = [];
           draft.ended = false;
           draft.won = false;
           draft.winLoseMessage = "";
+        });
+
+        await delay();
+
+        setGame((draft) => {
+          const shuffledCards = shuffleClubFightCards(
+            draft.discard,
+            difficultyRef.current,
+          );
+          draft.clubsDeck = shuffledCards.filter(
+            (card) => card.suit === "clubs",
+          );
+          draft.gridDeck = shuffledCards.filter(
+            (card) => card.suit !== "clubs",
+          );
+          draft.discard = [];
           refreshGrid(draft);
           refreshHand(draft);
         });
@@ -284,35 +420,28 @@ export default function ClubFight() {
 
   const selectedClub =
     game.hand.find((card) => card.id === selectedClubId) ?? null;
-  const blocked = selectedAction ? isBlocked(game.grid, selectedAction) : false;
 
-  function chooseAction(action: Action) {
-    setSelectedAction(action);
+  function clearSelections() {
+    setSelectedClubId(null);
     setSelectedGridIndexes([]);
-    setSelectedLine(null);
   }
 
   function toggleGridCard(index: number) {
-    if (!selectedAction || !["sum", "any", "run"].includes(selectedAction))
-      return;
     if (game.grid[index] === null) return;
     setSelectedGridIndexes((current) =>
       current.includes(index)
         ? current.filter((value) => value !== index)
-        : selectedAction === "any"
-          ? [index]
-          : [...current, index],
+        : [...current, index],
     );
   }
 
-  function execute(line: number | null = selectedLine) {
-    if (!selectedClubId || !selectedClub || !selectedAction || blocked) return;
-    const clearIndexes = getClearIndexes(
+  function execute(action: Action) {
+    if (!selectedClubId || !selectedClub) return;
+    const clearIndexes = getActionClearIndexes(
       game,
       selectedClub,
-      selectedAction,
+      action,
       selectedGridIndexes,
-      line,
     );
     if (clearIndexes.length === 0) return;
     saveUndoState(structuredClone(game));
@@ -320,23 +449,20 @@ export default function ClubFight() {
       playAction(
         draft,
         selectedClubId,
-        selectedAction,
+        action === "row" || action === "column" ? "line" : action,
         selectedGridIndexes,
-        line,
+        actionLine(action, selectedGridIndexes),
       );
     });
-    setSelectedClubId(null);
-    setSelectedAction(null);
-    setSelectedGridIndexes([]);
-    setSelectedLine(null);
+    clearSelections();
   }
 
   const zones: MapZone[] = useMemo(() => {
     const gridZones = getGridColRows({
       cols: 3,
       rows: 3,
-      colOffset: 2.5,
-      rowOffset: 1.15,
+      colOffset: 2,
+      rowOffset: 0,
     }).map((position, index) => ({
       id: `grid-${index}`,
       name: "grid",
@@ -348,82 +474,105 @@ export default function ClubFight() {
       placeholder: {},
     }));
     return [
-      { id: "hud", col: 0, row: 0, width: 3, height: 1 },
       {
-        id: "clubsDeck",
-        name: "clubsDeck",
-        cards: game.clubsDeck,
-        col: 3.5,
-        row: 0,
-        fan: { maxVisible: 3 },
-        placeholder: { text: "Clubs", infoPos: "above" },
-      },
-      {
-        id: "gridDeck",
-        name: "gridDeck",
+        id: "grid",
+        name: "grid",
         cards: game.gridDeck,
-        col: 4.75,
+        col: 0,
         row: 0,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Grid", infoPos: "above" },
+        placeholder: { text: "Grid", infoPos: "right" },
       },
       {
-        id: "clubsDiscard",
-        name: "clubsDiscard",
-        cards: game.clubsDiscard,
-        col: 6,
-        row: 0,
+        id: "discard",
+        name: "discard",
+        cards: game.discard,
+        col: 0,
+        row: 1,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Spent", infoPos: "above" },
+        placeholder: { text: "Dscrd", infoPos: "right" },
       },
       {
-        id: "gridDiscard",
-        name: "gridDiscard",
-        cards: game.gridDiscard,
-        col: 7.25,
-        row: 0,
+        id: "clubs",
+        name: "clubs",
+        cards: game.clubsDeck,
+        col: 0,
+        row: 2,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Clear", infoPos: "above" },
+        placeholder: { text: "Clubs", infoPos: "right" },
       },
       ...gridZones,
+      {
+        id: "leftActions",
+        name: "leftActions",
+        col: 0,
+        row: 3.1,
+        width: 2,
+        height: 2.7,
+      },
+      {
+        id: "bottomActions",
+        name: "bottomActions",
+        col: 2,
+        row: 4.8,
+        width: 3,
+        height: 1,
+      },
+      {
+        id: "clearButton",
+        name: "clearButton",
+        col: 2,
+        row: 3.1,
+        width: 3,
+        height: 0.5,
+      },
       {
         id: "hand",
         name: "hand",
         cards: game.hand,
-        col: 0,
-        row: 4.35,
-        width: 4.3,
-        fan: { direction: "right", offset: 0.65, center: true },
-        placeholder: { text: "Hand", infoPos: "above" },
+        col: 2,
+        row: 3.7,
+        width: 3,
+        fan: {
+          direction: "right",
+          offset: zoneFanOffset(game.hand.length, 3.5),
+        },
+        placeholder: {},
       },
-      { id: "actions", col: 4.45, row: 4.25, width: 3.8, height: 2.1 },
     ];
   }, [game]);
 
   const cardMapper = (
     mappedCard: MappedCard,
   ): AnimatedCardMapping | undefined => {
-    if (mappedCard.zoneName === "hand") {
+    if (mappedCard.zoneName === "discard") {
+      return { clickThroughCards: true };
+    } else if (mappedCard.zoneName === "hand") {
       const isSelected = mappedCard.card.id === selectedClubId;
       return {
         isSelected,
         isDisabled: game.ended,
-        selectColor: isSelected ? "green" : "none",
-        onPress: () => setSelectedClubId(mappedCard.card.id),
+        selectColor: isSelected ? "blue" : "none",
+        onPress: () => {
+          setSelectedClubId((current) =>
+            current === mappedCard.card.id ? null : mappedCard.card.id,
+          );
+        },
       };
-    }
-    if (mappedCard.zoneName === "grid" && mappedCard.pileIndex !== undefined) {
+    } else if (
+      mappedCard.zoneName === "grid" &&
+      mappedCard.pileIndex !== undefined
+    ) {
       const index = mappedCard.pileIndex;
-      const selectable =
-        !!selectedAction && ["sum", "any", "run"].includes(selectedAction);
       const isSelected = selectedGridIndexes.includes(index);
       return {
         isSelected,
-        isDisabled: game.ended || !selectable,
+        isDisabled: game.ended,
         selectColor: isSelected ? "blue" : "none",
         onPress: () => toggleGridCard(index),
       };
     }
+
     return { isDisabled: true };
   };
 
@@ -431,113 +580,168 @@ export default function ClubFight() {
     game,
     zones,
     cardMapper,
+    zoneMapper: (zone) => {
+      if (zone.id !== "discard") return;
+
+      return {
+        onPress: () => setShowDeckPreview(true),
+        isDisabled: game.discard.length === 0,
+      };
+    },
     cardSize: "small",
-    fixedCols: 8.25,
-    fixedRows: 6.6,
-    paddingTop: 0.25,
-    paddingBottom: 0.25,
   });
 
-  const actionNeedsTarget =
-    selectedAction === "sum" ||
-    selectedAction === "any" ||
-    selectedAction === "run";
-  const canExecute =
-    !!selectedClub &&
-    !!selectedAction &&
-    !blocked &&
-    (!actionNeedsTarget || selectedGridIndexes.length > 0);
+  function canExecute(action: Action) {
+    return (
+      !!selectedClub &&
+      getActionClearIndexes(game, selectedClub, action, selectedGridIndexes)
+        .length > 0
+    );
+  }
 
   return (
     <GameWrapper
       ended={game.ended}
       won={game.won}
-      score={game.gridDiscard.length}
+      score={game.discard.length}
       reset={reset}
       isLoaded={isLoaded}
       canUndo={canUndo}
       undo={undo}
       winLoseMessage={game.winLoseMessage}
     >
+      <DeckPreviewModal
+        visible={showDeckPreview}
+        cards={game.discard}
+        onClose={() => setShowDeckPreview(false)}
+        title="Deck Preview"
+        sortCards
+      />
+
       {cardMap}
-      <View style={[getZoneStylesById("hud"), { justifyContent: "center" }]}>
-        <Text size="xs" color={rgba(Colors.white, 0.72)}>
-          CLUBS SPENT: {game.clubsDiscard.length} / 13
-        </Text>
-        <Text size="lg" weight="bold" color="#e4f1c8">
-          Grid cards cleared: {game.gridDiscard.length}
-        </Text>
-        <Text size="xs" color={rgba(Colors.white, 0.82)}>
-          {selectedClub
-            ? `Selected: ${selectedClub.rank} of Clubs`
-            : "Choose a Club card"}
-        </Text>
+
+      {/* Left Action */}
+      <View
+        style={[
+          flexStyles.rowCentered,
+          getZoneStylesById("leftActions"),
+          {
+            flexWrap: "wrap",
+            columnGap: "6%",
+            rowGap: "4%",
+          },
+        ]}
+      >
+        {(
+          [
+            { suit: "diamonds", actions: ["column", "row"] },
+            { suit: "spades", actions: ["up", "down"] },
+            { suit: "hearts", actions: ["run"] },
+          ] as { suit: string; actions: Action[] }[]
+        ).map((group, groupIndex) => {
+          const count = suitCount(game.grid, group.suit as CardSuit);
+          const isBlocked = game.hand.length === 0 || count >= 3;
+
+          return (
+            <View
+              key={groupIndex}
+              style={[
+                flexStyles.spaceBetween,
+                {
+                  flexDirection: group.suit === "hearts" ? "row" : "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: group.suit === "hearts" ? "100%" : "47%",
+                  height: group.suit === "hearts" ? "28%" : "68%",
+                  borderRadius: spacing(6),
+                  padding: spacing(8),
+                  gap: spacing(8),
+                  backgroundColor: isBlocked
+                    ? rgba(Colors.K850, 0.3)
+                    : rgba(Colors.K850, 0.8),
+                },
+              ]}
+            >
+              <View style={[flexStyles.colCentered, { padding: spacing(6) }]}>
+                <Icon
+                  name={group.suit as IconName}
+                  size={20}
+                  color={
+                    isBlocked ? Colors.cardSelectRed : Colors.cardSelectGreen
+                  }
+                />
+              </View>
+
+              {group.actions.map((action) => (
+                <Button
+                  key={action}
+                  iconName={ActionIcons[action]}
+                  size="md"
+                  theme={canExecute(action) ? "green" : "blue"}
+                  onPress={() => execute(action)}
+                  disabled={game.ended || !canExecute(action)}
+                  iconSize={
+                    viewportHeight < 600 ? 18 : viewportHeight < 700 ? 22 : 24
+                  }
+                  style={[
+                    {
+                      width: "100%",
+                      flex: 1,
+                      paddingHorizontal: 0,
+                      paddingVertical: 0,
+                      opacity: isBlocked ? 0.3 : 1,
+                      boxShadow: isBlocked ? "none" : undefined,
+                      backgroundColor: isBlocked ? "none" : undefined,
+                    },
+                  ]}
+                />
+              ))}
+            </View>
+          );
+        })}
       </View>
 
-      <View style={[getZoneStylesById("actions"), { gap: spacing(6) }]}>
-        <View
-          style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing(5) }}
-        >
-          {(
-            ["match", "sum", "any", "line", "down", "up", "run"] as Action[]
-          ).map((action) => (
-            <Button
-              key={action}
-              text={
-                action === "down"
-                  ? "Down"
-                  : action === "up"
-                    ? "Up"
-                    : action[0].toUpperCase() + action.slice(1)
-              }
-              size="xs"
-              theme={selectedAction === action ? "orange" : "blue"}
-              onPress={() => chooseAction(action)}
-              disabled={
-                !selectedClub || game.ended || isBlocked(game.grid, action)
-              }
-            />
-          ))}
-        </View>
-        {selectedAction === "line" ? (
-          <View
-            style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing(5) }}
-          >
-            {Array.from({ length: 6 }, (_, line) => (
-              <Button
-                key={line}
-                text={line < 3 ? `Row ${line + 1}` : `Col ${line - 2}`}
-                size="xs"
-                theme={selectedLine === line ? "orange" : "purple"}
-                onPress={() => {
-                  setSelectedLine(line);
-                  execute(line);
-                }}
-                disabled={!selectedClub || blocked || game.ended}
-              />
-            ))}
-          </View>
-        ) : (
-          <>
-            <Text
-              size="xs"
-              color={blocked ? Colors.buttonRed : rgba(Colors.white, 0.82)}
-            >
-              {blocked
-                ? "Blocked by three matching suits in the grid."
-                : actionNeedsTarget
-                  ? "Select grid cards, then clear them."
-                  : "Use the selected Club card."}
-            </Text>
-            <Button
-              text="Use Action"
-              theme="green"
-              fullWidth
-              onPress={() => execute()}
-              disabled={!canExecute}
-            />
-          </>
-        )}
+      {/* Clear button */}
+      <View style={[getZoneStylesById("clearButton")]}>
+        <Button
+          text="Clear"
+          size={
+            viewportHeight < 600 ? "xxs" : viewportHeight < 700 ? "xs" : "sm"
+          }
+          theme="blue"
+          onPress={clearSelections}
+          disabled={
+            game.ended || (!selectedClub && selectedGridIndexes.length === 0)
+          }
+          style={{ width: "100%", height: "100%" }}
+        />
+      </View>
+
+      {/* Bottom Actions */}
+      <View
+        style={[
+          flexStyles.rowCentered,
+          getZoneStylesById("bottomActions"),
+          { gap: spacing(10) },
+        ]}
+      >
+        {(["match", "sum", "any"] as Action[]).map((action) => (
+          <Button
+            key={action}
+            text={ActionNames[action]}
+            iconName={ActionIcons[action]}
+            size={
+              viewportHeight < 600 ? "xxs" : viewportHeight < 700 ? "xs" : "sm"
+            }
+            theme={canExecute(action) ? "green" : "blue"}
+            onPress={() => execute(action)}
+            disabled={game.ended || !canExecute(action)}
+            iconSize={
+              viewportHeight < 600 ? 20 : viewportHeight < 700 ? 26 : 32
+            }
+            style={[{ flex: 1, height: "100%", flexDirection: "column" }]}
+          />
+        ))}
       </View>
     </GameWrapper>
   );

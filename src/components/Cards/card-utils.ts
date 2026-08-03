@@ -313,15 +313,17 @@ export function createNullArray(length: number) {
   return Array.from({ length }, () => null);
 }
 
+export const SUIT_SYMBOLS: Record<CardSuit, string> = {
+  clubs: "♣",
+  diamonds: "♦",
+  hearts: "♥",
+  spades: "♠",
+};
+
 export function cardLabel(card: PlayingCard | undefined) {
   if (!card) return "card";
 
-  const suitSymbol = {
-    clubs: "♣",
-    diamonds: "♦",
-    hearts: "♥",
-    spades: "♠",
-  }[card.suit];
+  const suitSymbol = SUIT_SYMBOLS[card.suit];
 
   return `${card.rank}${suitSymbol}`;
 }
