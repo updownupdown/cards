@@ -1,6 +1,6 @@
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
-import { Colors, rgba } from "@/styles/styles";
+import { Colors, rgba, transitionStyles } from "@/styles/styles";
 import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { Button } from "../Button/Button";
@@ -21,6 +21,7 @@ import { delay } from "@/utils/utils";
 import { flexStyles } from "@/styles/flexStyles";
 
 const HORROR_RANKS = ["2", "3", "4", "5", "6", "7", "8", "9"] as const;
+const HORROR_DECK_SIZE = HORROR_RANKS.length * 4;
 type HorrorRank = (typeof HORROR_RANKS)[number];
 
 export type HeWillNeverStopGameState = {
@@ -38,6 +39,49 @@ const gameStateInitial: HeWillNeverStopGameState = {
   ended: false,
   won: false,
 };
+
+function RouteDots({
+  discardCount,
+  handCount,
+  dotSpacing,
+}: {
+  discardCount: number;
+  handCount: number;
+  dotSpacing: (base: number) => number;
+}) {
+  const himIndex = discardCount;
+  const herIndex = himIndex + handCount + 1;
+
+  return Array.from({ length: HORROR_DECK_SIZE + 2 }, (_, index) => {
+    const isCharacter = index === himIndex || index === herIndex;
+    const isDiscard = index < himIndex;
+    const isHand = index > himIndex && index < herIndex;
+    const isHim = index === himIndex;
+    const diameter = dotSpacing(isCharacter ? 14 : 6);
+
+    return (
+      <View
+        key={index}
+        style={{
+          width: diameter,
+          height: diameter,
+          borderRadius: dotSpacing(isCharacter ? 7 : 3),
+          borderWidth: isCharacter ? dotSpacing(1) : 0,
+          borderColor: Colors.white,
+          backgroundColor: isCharacter
+            ? isHim
+              ? Colors.cardSelectRed
+              : Colors.cardSelectBlue
+            : isDiscard
+              ? rgba(Colors.white, 0.25)
+              : isHand
+                ? rgba(Colors.white, 1)
+                : rgba(Colors.white, 0.4),
+        }}
+      />
+    );
+  });
+}
 
 function createHorrorDeck() {
   return createDeck({ faceUp: true }).filter((card) =>
@@ -341,10 +385,11 @@ export default function HeWillNeverStop() {
 
   const zones: MapZone[] = useMemo(() => {
     return [
+      { id: "route", col: 0, row: 0, width: 7, height: 0.5 },
       {
         id: "discard",
         col: 0,
-        row: 0,
+        row: 1,
         cards: game.discard,
         baseZIndex: 10,
         fan: { maxVisible: 3, direction: "right", offset: 0.1 },
@@ -353,19 +398,18 @@ export default function HeWillNeverStop() {
       {
         id: "deck",
         col: 6,
-        row: 0,
+        row: 1,
         cards: game.deck,
         baseZIndex: 10,
         fan: { maxVisible: 3, direction: "left", offset: 0.1 },
         placeholder: { text: "Draw", infoPos: "above" },
       },
-
       {
         id: "hand",
         name: "hand",
         cards: displayedHand,
         col: 0.5,
-        row: 0,
+        row: 1,
         width: 6,
         baseZIndex: 50,
         fan: {
@@ -373,18 +417,17 @@ export default function HeWillNeverStop() {
           offset: zoneFanOffset(displayedHand.length, 6, 0.1, 0.9),
         },
       },
-
       {
         id: "searchAction",
         col: 0,
-        row: 1.5,
+        row: 2.5,
         width: 2,
         height: 2,
       },
       {
         id: "escapeAction",
         col: 2.5,
-        row: 1.5,
+        row: 2.5,
         width: 4.5,
         height: 2,
         baseZIndex: 50,
@@ -432,9 +475,7 @@ export default function HeWillNeverStop() {
     zones,
     cardMapper,
     cardSize: "small",
-    visualizer: true,
     gap: 0,
-    paddingTop: 0.4,
   });
 
   return (
@@ -454,6 +495,22 @@ export default function HeWillNeverStop() {
       }
     >
       {cardMap}
+
+      {(displayedHand.length > 0 || game.discard.length > 0) && (
+        <View
+          style={[
+            flexStyles.rowCentered,
+            getZoneStylesById("route"),
+            { gap: spacing(4) },
+          ]}
+        >
+          <RouteDots
+            discardCount={game.discard.length}
+            handCount={displayedHand.length}
+            dotSpacing={spacing}
+          />
+        </View>
+      )}
 
       <View style={[flexStyles.colCentered, getZoneStylesById("searchAction")]}>
         <Button

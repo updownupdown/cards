@@ -3,7 +3,6 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameAnimations } from "@/animations";
 
 export const heWillNeverStop: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/he-will-never-stop",
   title: "He Will Never Stop",
   tags: [GameTag.ModernMechanics, GameTag.SequenceBuilding],
