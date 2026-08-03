@@ -43,6 +43,8 @@ export const Colors = {
   lose: "#CE3566",
   loseDark: darkenHexColor("#CE3566", 0.25),
   favoriteStar: "#ff922d",
+  trophyGold: "#ffc74f",
+
   suitsRed: "#C62440",
   suitsBlack: "#313C3F",
   suitsColoredDiamonds: "#AF75CA",
@@ -129,6 +131,8 @@ export const FontWeight = {
 export const layoutDims = {
   menuBarPadding: 6,
   menuBarHeight: 58,
+  tabBarHeight: 64,
+  tabBarPadding: 8,
   cardToggleHeight: 48,
   menuIconSize: 28,
   menuButtonSize: 52,

@@ -9,21 +9,17 @@ import ArrowBackIcon from "./ArrowBack.svg";
 import ArrowForwardIcon from "./ArrowForward.svg";
 import AttributionIcon from "./Attribution.svg";
 import ChartIcon from "./Chart.svg";
-import CheckIcon from "./Check.svg";
 import CheckBoxOffIcon from "./CheckBoxOff.svg";
 import CheckBoxOnIcon from "./CheckBoxOn.svg";
 import CheckCircleIcon from "./CheckCircle.svg";
 import ChevronLeftIcon from "./ChevronLeft.svg";
 import CloseIcon from "./Close.svg";
 import ClubsIcon from "./Clubs.svg";
-import CoinsIcon from "./Coins.svg";
-import CollectionsIcon from "./Collections.svg";
 import DeleteIcon from "./Delete.svg";
 import DiamondsIcon from "./Diamonds.svg";
 import DiceIcon from "./Dice.svg";
 import DoorIcon from "./Door.svg";
 import DragonIcon from "./Dragon.svg";
-import DrawIcon from "./Draw.svg";
 import DungeonIcon from "./Dungeon.svg";
 import EquipIcon from "./Equip.svg";
 import ExpandLessIcon from "./ExpandLess.svg";
@@ -34,15 +30,12 @@ import FeaturedIcon from "./Featured.svg";
 import FilterIcon from "./Filter.svg";
 import FistIcon from "./Fist.svg";
 import GamesIcon from "./Games.svg";
-import GemIcon from "./Gem.svg";
 import HeartIcon from "./Heart.svg";
 import HeartsIcon from "./Hearts.svg";
-import HelpOutlineIcon from "./HelpOutline.svg";
 import HomeIcon from "./Home.svg";
 import InfoIcon from "./Info.svg";
 import InfoOutlineIcon from "./InfoOutline.svg";
 import InstructionsIcon from "./Instructions.svg";
-import LearnIcon from "./Learn.svg";
 import ListLargeIcon from "./ListLarge.svg";
 import ListMediumIcon from "./ListMedium.svg";
 import ListSmallIcon from "./ListSmall.svg";
@@ -54,36 +47,31 @@ import ResetIcon from "./Reset.svg";
 import SearchIcon from "./Search.svg";
 import SettingsIcon from "./Settings.svg";
 import SkullIcon from "./Skull.svg";
-import SofaIcon from "./Sofa.svg";
 import SolitaireIcon from "./Solitaire.svg";
 import SpadesIcon from "./Spades.svg";
 import StarIcon from "./Star.svg";
 import StarOutlineIcon from "./StarOutline.svg";
 import SwordIcon from "./Sword.svg";
 import TagIcon from "./Tag.svg";
+import TrophyIcon from "./Trophy.svg";
 import UndoIcon from "./Undo.svg";
-import WhaleIcon from "./Whale.svg";
 
 export type IconName =
   | "arrow-back"
   | "arrow-forward"
   | "attribution"
   | "chart"
-  | "check"
   | "check-box-off"
   | "check-box-on"
   | "check-circle"
   | "chevron-left"
   | "close"
   | "clubs"
-  | "coins"
-  | "collections"
   | "delete"
   | "diamonds"
   | "dice"
   | "door"
   | "dragon"
-  | "draw"
   | "dungeon"
   | "equip"
   | "expand-less"
@@ -94,15 +82,12 @@ export type IconName =
   | "filter"
   | "fist"
   | "games"
-  | "gem"
   | "heart"
   | "hearts"
-  | "help-outline"
   | "home"
   | "info"
   | "info-outline"
   | "instructions"
-  | "learn"
   | "list-large"
   | "list-medium"
   | "list-small"
@@ -114,36 +99,31 @@ export type IconName =
   | "search"
   | "settings"
   | "skull"
-  | "sofa"
   | "solitaire"
   | "spades"
   | "star"
   | "star-outline"
   | "sword"
   | "tag"
-  | "undo"
-  | "whale";
+  | "trophy"
+  | "undo";
 
 export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "arrow-back": ArrowBackIcon,
   "arrow-forward": ArrowForwardIcon,
   "attribution": AttributionIcon,
   "chart": ChartIcon,
-  "check": CheckIcon,
   "check-box-off": CheckBoxOffIcon,
   "check-box-on": CheckBoxOnIcon,
   "check-circle": CheckCircleIcon,
   "chevron-left": ChevronLeftIcon,
   "close": CloseIcon,
   "clubs": ClubsIcon,
-  "coins": CoinsIcon,
-  "collections": CollectionsIcon,
   "delete": DeleteIcon,
   "diamonds": DiamondsIcon,
   "dice": DiceIcon,
   "door": DoorIcon,
   "dragon": DragonIcon,
-  "draw": DrawIcon,
   "dungeon": DungeonIcon,
   "equip": EquipIcon,
   "expand-less": ExpandLessIcon,
@@ -154,15 +134,12 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "filter": FilterIcon,
   "fist": FistIcon,
   "games": GamesIcon,
-  "gem": GemIcon,
   "heart": HeartIcon,
   "hearts": HeartsIcon,
-  "help-outline": HelpOutlineIcon,
   "home": HomeIcon,
   "info": InfoIcon,
   "info-outline": InfoOutlineIcon,
   "instructions": InstructionsIcon,
-  "learn": LearnIcon,
   "list-large": ListLargeIcon,
   "list-medium": ListMediumIcon,
   "list-small": ListSmallIcon,
@@ -174,13 +151,12 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "search": SearchIcon,
   "settings": SettingsIcon,
   "skull": SkullIcon,
-  "sofa": SofaIcon,
   "solitaire": SolitaireIcon,
   "spades": SpadesIcon,
   "star": StarIcon,
   "star-outline": StarOutlineIcon,
   "sword": SwordIcon,
   "tag": TagIcon,
+  "trophy": TrophyIcon,
   "undo": UndoIcon,
-  "whale": WhaleIcon,
 };

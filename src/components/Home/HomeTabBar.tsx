@@ -64,9 +64,9 @@ export function HomeTabBar({
             flexStyles.rowCentered,
             {
               width: "100%",
-              padding: spacing(layoutDims.menuBarPadding),
-              height: spacing(layoutDims.menuBarHeight),
-              borderRadius: spacing(layoutDims.menuBarHeight / 2),
+              padding: spacing(layoutDims.tabBarPadding),
+              height: spacing(layoutDims.tabBarHeight),
+              borderRadius: spacing(layoutDims.tabBarHeight / 2),
               backgroundColor: rgba(Colors.K950, 0.9),
               boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.K900, 0.4)}, ${spacing(2)}px ${spacing(4)}px ${spacing(10)}px ${rgba(
                 Colors.K900,
@@ -91,7 +91,9 @@ export function HomeTabBar({
                     flex: 1,
                     height: "100%",
                     paddingVertical: spacing(12),
-                    borderRadius: spacing(layoutDims.menuBarHeight / 2 - 6),
+                    borderRadius: spacing(
+                      layoutDims.tabBarHeight / 2 - layoutDims.tabBarPadding,
+                    ),
                     backgroundColor: isActive ? Colors.suitsRed : "transparent",
                     outline: "none",
                   },

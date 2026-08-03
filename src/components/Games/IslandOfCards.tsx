@@ -199,8 +199,10 @@ export default function IslandOfCards() {
           draft.draw = shuffle(allCards.map(flipToBack));
           draft.discard = [];
 
-          // Update deck if jokers setting changed
-          if (jokersRef.current !== draft.usingJokers) {
+          if (
+            allCards.length === 0 ||
+            jokersRef.current !== draft.usingJokers
+          ) {
             draft.draw = shuffle(
               createDeck({ includeJokers: jokersRef.current }).map(flipToBack),
             );

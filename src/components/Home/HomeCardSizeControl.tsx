@@ -9,22 +9,22 @@ export type HomeCardSize = "small" | "medium" | "large";
 const CARD_SIZE_OPTIONS: {
   value: HomeCardSize;
   iconName: IconName;
-  accessibilityLabel: string;
+  label: string;
 }[] = [
   {
     value: "small",
     iconName: "list-small",
-    accessibilityLabel: "Small game cards",
+    label: "List",
   },
   {
     value: "medium",
     iconName: "list-medium",
-    accessibilityLabel: "Medium game cards",
+    label: "Cards",
   },
   {
     value: "large",
     iconName: "list-large",
-    accessibilityLabel: "Large game cards",
+    label: "Details",
   },
 ];
 

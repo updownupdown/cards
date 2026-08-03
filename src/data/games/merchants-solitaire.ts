@@ -11,9 +11,10 @@ export const merchantsSolitaire: GameDefinition = {
     difficulty: 65,
     luck: 35,
   },
+  thumbnail: "MerchantSolitaire.jpg",
   background: GAME_BACKGROUNDS.oldRoom,
-  gameColorDark: "#243226",
-  gameColorPale: "#f1e5c6",
+  gameColorDark: "#1c2c28",
+  gameColorPale: "#d6f1c6",
   cardDescription:
     "Match exact offers, manage stock, and earn enough standing to stay in the guild.",
   quickStart: [

@@ -11,9 +11,10 @@ export const heWillNeverStop: GameDefinition = {
     difficulty: 70,
     luck: 45,
   },
+  thumbnail: "HeWillNeverStop.jpg",
   background: GAME_BACKGROUNDS.oldRoom,
   gameColorDark: "#211b24",
-  gameColorPale: "#f2e5de",
+  gameColorPale: "#ffdfee",
   cardDescription:
     "Keep a fragile line of cards between the final girl and an unstoppable pursuer.",
   quickStart: [

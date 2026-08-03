@@ -28,7 +28,7 @@ export function Icon({
         transitionTimingFunction: "ease",
         flexShrink: 0,
         ...(shadow
-          ? { filter: `drop-shadow(1px 2px 4px rgba(0, 0, 0, 0.4))` }
+          ? { filter: `drop-shadow(1px 2px 4px rgba(0, 0, 0, 0.3))` }
           : {}),
       }}
       {...svgProps}

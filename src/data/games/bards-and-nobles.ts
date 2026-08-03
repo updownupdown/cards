@@ -9,10 +9,11 @@ export const bardsAndNobles: GameDefinition = {
   title: "Bards & Nobles",
   tags: [GameTag.EasyToLearn, GameTag.ModernMechanics, GameTag.ScoringPuzzles],
   rating: { complexity: 45, difficulty: 55, luck: 50 },
+  thumbnail: "BardsAndNobles.jpg",
   background: GAME_BACKGROUNDS.castle,
   animation: GameAnimations.Dust,
-  gameColorDark: "#2F473C",
-  gameColorPale: "#F5EBD0",
+  gameColorDark: "#2e2d27",
+  gameColorPale: "#f0e9d7",
   cardDescription:
     "Match customer offers with your bookstore shelves and build Guild Standing.",
   quickStart: [

@@ -102,7 +102,7 @@ export function ExploreTab({
           { gap: spacing(12), paddingVertical: spacing(24) },
         ]}
       >
-        {EXPLORE_TAGS.map(({ tag, color }) => {
+        {EXPLORE_TAGS.map(({ tag }) => {
           const games = gamesByTag.get(tag) ?? [];
           const wonCount = games.filter(
             ([path]) => (settingsMap[path]?.stats.wins ?? 0) > 0,
@@ -160,7 +160,7 @@ export function ExploreTab({
                       cy={progressSize / 2}
                       r={radius}
                       fill="none"
-                      stroke={rgba(color, 0.1)}
+                      stroke={Colors.K850}
                       strokeWidth={strokeWidth}
                     />
                     <Circle
@@ -168,7 +168,7 @@ export function ExploreTab({
                       cy={progressSize / 2}
                       r={radius}
                       fill="none"
-                      stroke={color}
+                      stroke={Colors.win}
                       strokeWidth={strokeWidth}
                       strokeDasharray={`${circumference} ${circumference}`}
                       strokeDashoffset={circumference * (1 - percentage / 100)}
@@ -176,15 +176,17 @@ export function ExploreTab({
                       transform={`rotate(-90 ${progressSize / 2} ${progressSize / 2})`}
                     />
                   </Svg>
-                  <Text size="xxs" weight={500} color={color}>
-                    {percentage}%
-                  </Text>
+                  <Icon
+                    name="trophy"
+                    size={spacing(18)}
+                    color={percentage === 1 ? Colors.trophyGold : Colors.K600}
+                  />
                 </View>
 
                 <Text
                   size="md"
                   weight={500}
-                  color={color}
+                  color={Colors.K200}
                   style={{ flex: 1, paddingHorizontal: spacing(8) }}
                 >
                   {GameTagNames[tag]}

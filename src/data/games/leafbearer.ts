@@ -11,9 +11,10 @@ export const leafbearer: GameDefinition = {
     difficulty: 75,
     luck: 25,
   },
+  thumbnail: "Leafbearer.jpg",
   background: GAME_BACKGROUNDS.forest,
-  gameColorDark: "#1c3327",
-  gameColorPale: "#e5f0c7",
+  gameColorDark: "#1c331d",
+  gameColorPale: "#e1ffba",
   cardDescription:
     "Sow herbs across the realm to heal creatures in order before the forest runs dry.",
   quickStart: [

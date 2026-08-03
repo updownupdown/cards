@@ -27,14 +27,14 @@ const config = {
   web: {
     output: "static",
     favicon: "./assets/app-icon/icon.png",
-    themeColor: "#343f49",
+    themeColor: "#C62440",
     name: "SoloSuite",
     shortName: "SoloSuite",
     description: "A collection of solo playing card games.",
     display: "standalone",
     startUrl: "./",
     scope: "./",
-    backgroundColor: "#343f49",
+    backgroundColor: "#C62440",
     orientation: "any",
   },
   plugins: [

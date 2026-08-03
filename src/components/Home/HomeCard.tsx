@@ -179,15 +179,15 @@ export function HomeCard({
             style={[
               flexStyles.rowCentered,
               {
-                width: spacing(20),
-                height: spacing(20),
-                borderRadius: spacing(10),
-                backgroundColor: Colors.win,
-                boxShadow: `0 ${spacing(1)}px ${spacing(6)}px ${rgba(Colors.black, 0.3)}`,
+                width: spacing(24),
+                height: spacing(24),
+                borderRadius: spacing(12),
+                backgroundColor: rgba(Colors.black, 0.7),
+                boxShadow: `0 ${spacing(1)}px ${spacing(6)}px ${rgba(Colors.black, 0.4)}`,
               },
             ]}
           >
-            <Icon name="check" size={spacing(16)} color={Colors.white} />
+            <Icon name="trophy" size={spacing(14)} color={Colors.trophyGold} />
           </View>
         </View>
       )}

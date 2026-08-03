@@ -1,6 +1,7 @@
 import { Text } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon, IconName } from "@/icons";
+import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight, rgba, transitionStyles } from "@/styles/styles";
 import {
   Pressable,
@@ -67,6 +68,7 @@ export function RadioButtons<T extends string>({
         const isSelected = option.value === selectedValue;
         const selectedBg =
           option.selectedBackgroundColor ?? selectedBackgroundColor;
+        const itemColor = isSelected ? Colors.K100 : Colors.K500;
 
         return (
           <Pressable
@@ -75,16 +77,15 @@ export function RadioButtons<T extends string>({
             accessibilityLabel={option.accessibilityLabel ?? option.label}
             accessibilityState={{ selected: isSelected }}
             style={[
+              flexStyles.rowCentered,
               {
                 ...transitionStyles.limited04sec,
                 flex: flexAllButFirst && i !== 0 ? 1 : undefined,
                 borderRadius: spacing(6),
                 paddingVertical: spacing(2),
                 paddingHorizontal: spacing(12),
+                gap: spacing(8),
                 height: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
                 backgroundColor: isSelected ? selectedBg : "transparent",
                 boxShadow: isSelected
                   ? `0 1px 2px ${rgba(Colors.K950, 0.18)}`
@@ -99,7 +100,7 @@ export function RadioButtons<T extends string>({
               <Icon
                 name={option.iconName}
                 size={iconSize ?? 24}
-                color={Colors.K100}
+                color={itemColor}
               />
             )}
             {option.label && (
@@ -111,12 +112,10 @@ export function RadioButtons<T extends string>({
                     ...transitionStyles.limited04sec,
                     fontFamily: FontWeight[400],
                     textAlign: "center",
-                    color: Colors.K400,
+                    color: itemColor,
                   },
                   textStyle,
-                  isSelected
-                    ? [{ color: Colors.K100 }, selectedTextStyle]
-                    : null,
+                  isSelected ? [{ color: itemColor }, selectedTextStyle] : null,
                 ]}
               >
                 {option.label}

@@ -7,7 +7,7 @@ import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { Colors, layoutDims } from "@/styles/styles";
-import { roundToPixel } from "@/utils/utils";
+import { isLocalDevEnvironment, roundToPixel } from "@/utils/utils";
 import { useMemo } from "react";
 import { ScrollView, View } from "react-native";
 import { Text } from "../common/Text";
@@ -123,6 +123,10 @@ export function HomeTab({
     return easyToLearnGames.sort(() => Math.random() - 0.5).slice(0, 5);
   }, [allEnabledGames]);
 
+  const localOnlyGames = Object.entries(GAMES_DATA).filter(
+    ([, game]) => game.enabledOnLocalOnly,
+  );
+
   return (
     <ScrollView
       style={{ flex: 1 }}
@@ -133,6 +137,45 @@ export function HomeTab({
       }}
       showsVerticalScrollIndicator={false}
     >
+      {/* Local-only games */}
+      {isLocalDevEnvironment() && localOnlyGames.length > 0 && (
+        <View
+          style={{
+            width: "100%",
+            maxWidth: contentMaxWidth,
+            alignSelf: "center",
+          }}
+        >
+          <HomeSectionTitle
+            title="Local-only Games"
+            pageSidePadding={scaledPageSidePadding}
+            contentMaxWidth={contentMaxWidth}
+          />
+
+          <View
+            style={{
+              width: "100%",
+              paddingHorizontal: scaledPageSidePadding,
+              paddingTop: sectionTopPadding,
+              paddingBottom: sectionBottomPadding,
+              gap: cardGap,
+            }}
+          >
+            {localOnlyGames.map(([path, game]) => (
+              <HomeCard
+                key={path}
+                path={path}
+                game={game}
+                size="small"
+                onToggleFavorite={onToggleFavorite}
+                isFavorite={favorites.has(path)}
+                style={{ width: "100%" }}
+              />
+            ))}
+          </View>
+        </View>
+      )}
+
       {/* No played games */}
       {fewPlayedGames && (
         <View

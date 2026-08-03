@@ -4,7 +4,6 @@ import { GameCreators } from "../game-creators";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const swamp: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/swamp",
   title: "Swamp",
   tags: [GameTag.EasyToLearn, GameTag.ModernMechanics, GameTag.SpatialControl],

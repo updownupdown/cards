@@ -38,7 +38,6 @@ type Persona = {
   key: string;
   title: string;
   subtitle: string;
-  icon: IconName;
   row: StatsRow;
 };
 
@@ -183,30 +182,17 @@ export function StatsTab({
       key: string,
       title: string,
       subtitle: string,
-      icon: IconName,
       row: StatsRow | undefined,
     ) => {
       if (row) {
-        entries.push({ key, title: title, subtitle, icon, row });
+        entries.push({ key, title: title, subtitle, row });
       }
     };
 
-    push("nemesis", "The Nemesis", "Lowest win rate", "skull", nemesis);
-    push("comfort", "The Comfort Pick", "Highest win rate", "heart", comfort);
-    push(
-      "whale",
-      "The White Whale",
-      "Most attempts without wins",
-      "whale",
-      whale,
-    );
-    push(
-      "underdog",
-      "The Underdog",
-      "High win rate, low attempts",
-      "dice",
-      underdog,
-    );
+    push("nemesis", "The Nemesis", "Lowest win rate", nemesis);
+    push("comfort", "The Comfort Pick", "Highest win rate", comfort);
+    push("whale", "The White Whale", "Most attempts without wins", whale);
+    push("underdog", "The Underdog", "High win rate, low attempts", underdog);
 
     return entries;
   }, [playedRows]);
