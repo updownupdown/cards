@@ -362,8 +362,7 @@ export default function IslandOfCards() {
 
   return (
     <GameWrapper
-      ended={game.ended}
-      won={game.won}
+      outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       score={score}
       reset={reset}
       isLoaded={isLoaded}

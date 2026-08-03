@@ -861,8 +861,7 @@ export default function AlpineSolitaire() {
 
   return (
     <GameWrapper
-      ended={game.ended}
-      won={game.won}
+      outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       score={game.trail.length}
       reset={reset}
       isLoaded={isLoaded}

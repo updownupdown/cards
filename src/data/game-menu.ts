@@ -38,6 +38,8 @@ export type GameSettings = {
   merchantVandals: 0 | 1 | 2;
   clubFightDifficulty: "easy" | "hard";
   leafbearerOpenStables: boolean;
+  lastResultSessionId?: string;
+  lastResultWon?: boolean;
   stats: GameStats;
 };
 
@@ -100,11 +102,12 @@ export const GAME_SETTINGS_STORAGE_KEY = "cards.gameSettings.v1";
 export const RECENT_GAMES_STORAGE_KEY = "cards.recentGames.v1";
 export const GAME_SESSION_STORAGE_KEY = "cards.gameSession.v1";
 export const MAX_RECENT_GAMES = 10;
-const GAME_SESSION_VERSION = 2;
+const GAME_SESSION_VERSION = 3;
 const MAX_SESSION_AGE_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 export type SavedGameSession<T = unknown> = {
   version: number;
+  sessionId: string;
   path: string;
   savedAt: number;
   state: T;
@@ -252,6 +255,7 @@ export async function loadLastGameSession<T = unknown>() {
     const parsed = JSON.parse(raw) as Partial<SavedGameSession<T>>;
 
     if (parsed.version !== GAME_SESSION_VERSION) return null;
+    if (typeof parsed.sessionId !== "string" || !parsed.sessionId) return null;
     if (typeof parsed.path !== "string" || !isGamePath(parsed.path)) {
       return null;
     }
@@ -274,6 +278,7 @@ export async function loadLastGameSession<T = unknown>() {
 
     return {
       version: GAME_SESSION_VERSION,
+      sessionId: parsed.sessionId,
       path: normalizeGamePath(parsed.path),
       savedAt: parsed.savedAt,
       state: parsed.state as T,
@@ -286,12 +291,14 @@ export async function loadLastGameSession<T = unknown>() {
 export async function saveLastGameSession<T = unknown>(
   pathname: string,
   state: T,
+  sessionId: string,
 ) {
   const path = normalizeGamePath(pathname);
-  if (!isGamePath(path)) return;
+  if (!isGamePath(path) || !sessionId) return;
 
   const payload: SavedGameSession<T> = {
     version: GAME_SESSION_VERSION,
+    sessionId,
     path,
     savedAt: Date.now(),
     state,
@@ -510,23 +517,54 @@ export async function recordResult(
   pathname: string,
   won: boolean,
   score?: number | string,
+  sessionId?: string,
 ) {
   const numericScore = parseNumericScore(score);
 
-  await updateGameSettings(pathname, (settings) => ({
-    ...settings,
-    stats: {
-      ...settings.stats,
-      wins: settings.stats.wins + (won ? 1 : 0),
-      losses: settings.stats.losses + (won ? 0 : 1),
-      highestScore:
-        numericScore === null
-          ? settings.stats.highestScore
-          : settings.stats.highestScore === null
-            ? numericScore
-            : Math.max(settings.stats.highestScore, numericScore),
-    },
-  }));
+  await updateGameSettings(pathname, (settings) => {
+    if (sessionId && settings.lastResultSessionId === sessionId) {
+      return settings;
+    }
+
+    return {
+      ...settings,
+      lastResultSessionId: sessionId ?? settings.lastResultSessionId,
+      lastResultWon: sessionId ? won : settings.lastResultWon,
+      stats: {
+        ...settings.stats,
+        wins: settings.stats.wins + (won ? 1 : 0),
+        losses: settings.stats.losses + (won ? 0 : 1),
+        highestScore:
+          numericScore === null
+            ? settings.stats.highestScore
+            : settings.stats.highestScore === null
+              ? numericScore
+              : Math.max(settings.stats.highestScore, numericScore),
+      },
+    };
+  });
+}
+
+export async function undoRecordedLoss(pathname: string, sessionId: string) {
+  await updateGameSettings(pathname, (settings) => {
+    if (
+      settings.lastResultSessionId !== sessionId ||
+      settings.lastResultWon !== false ||
+      settings.stats.losses === 0
+    ) {
+      return settings;
+    }
+
+    return {
+      ...settings,
+      lastResultSessionId: undefined,
+      lastResultWon: undefined,
+      stats: {
+        ...settings.stats,
+        losses: settings.stats.losses - 1,
+      },
+    };
+  });
 }
 
 /*

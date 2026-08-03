@@ -12,11 +12,11 @@ const COLORS = ["#7ff7ff", "#bda0ff", "#ff9ee8", "#fff3a3", "#8dffcf"];
 function Spark({ index, width, height }: SceneProps & { index: number }) {
   const progress = useRef(new RNAnimated.Value(seeded(index, 100))).current;
   const size = 1 + Math.floor(seeded(index, 101) * 3);
-  const originX = width * (0.12 + seeded(index, 102) * 0.76);
-  const originY = height * (0.45 + seeded(index, 103) * 0.5);
-  const rise = height * (0.12 + seeded(index, 104) * 0.28);
-  const orbit = 8 + seeded(index, 105) * 20;
-  const duration = 1800 + seeded(index, 106) * 2200;
+  const originX = width * seeded(index, 102);
+  const originY = height * (0.45 + seeded(index, 103));
+  const rise = height * (0.05 + seeded(index, 104) * 0.4);
+  const orbit = 8 + seeded(index, 105) * 5;
+  const duration = 6000 + seeded(index, 106) * 6000;
 
   useEffect(() => {
     const animation = RNAnimated.loop(
@@ -81,7 +81,7 @@ function Spark({ index, width, height }: SceneProps & { index: number }) {
 export function ManaDust(props: SceneProps) {
   return (
     <>
-      {Array.from({ length: 42 }, (_, index) => (
+      {Array.from({ length: 22 }, (_, index) => (
         <Spark key={index} {...props} index={index} />
       ))}
     </>

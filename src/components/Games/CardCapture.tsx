@@ -726,8 +726,7 @@ export default function CardCapture() {
 
   return (
     <GameWrapper
-      ended={game.ended}
-      won={game.won}
+      outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={reset}
       isLoaded={isLoaded}
       canUndo={canUndo}

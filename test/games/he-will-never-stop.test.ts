@@ -65,6 +65,28 @@ describe("He Will Never Stop rules", () => {
     expect(game.discard.map((entry) => entry.rank)).toEqual(["9"]);
   });
 
+  test("moves a previewed card without changing the original hand", () => {
+    const hand = [card("2", "two"), card("4", "four"), card("6", "six")];
+
+    const preview = heWillNeverStopRules.moveCard(hand, 1, 0);
+
+    expect(preview.map((entry) => entry.id)).toEqual(["four", "two", "six"]);
+    expect(hand.map((entry) => entry.id)).toEqual(["two", "four", "six"]);
+  });
+
+  test("reports two escape draws only when the moved card joins a sequence", () => {
+    const hand = [
+      card("2", "two"),
+      card("3", "three"),
+      card("4", "four"),
+      card("7", "seven"),
+      card("5", "five"),
+    ];
+
+    expect(heWillNeverStopRules.escapeDrawCount(hand, 4, 3)).toBe(2);
+    expect(heWillNeverStopRules.escapeDrawCount(hand, 4, 4)).toBe(0);
+  });
+
   test("search discards every matching rank and draws replacements to the right", () => {
     const game = state({
       hand: [card("2", "first"), card("4", "remove"), card("2", "second")],

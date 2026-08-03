@@ -514,8 +514,7 @@ export default function Pyramid() {
 
   return (
     <GameWrapper
-      ended={ended}
-      won={won}
+      outcome={!ended ? "playing" : won ? "won" : "lost"}
       winLoseMessage={
         won
           ? "You won!"

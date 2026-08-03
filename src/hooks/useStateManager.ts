@@ -11,6 +11,16 @@ import { useGlobalSettings } from "./useGlobalSettings";
 import { isLocalDevEnvironment } from "@/utils/utils";
 import { appendUndoState, popUndoState } from "./state-history";
 
+const activeGameSessionIds = new Map<string, string>();
+
+function createGameSessionId() {
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+}
+
+export function getActiveGameSessionId(pathname: string) {
+  return activeGameSessionIds.get(normalizeGamePath(pathname));
+}
+
 type Props<T> = {
   gameStateInitial: T;
   resetNonGameStates?: () => void;
@@ -46,7 +56,16 @@ export function useStateManager<T>({
   // —— Initiate First Deal ————————————————————————
   const hasDealtRef = useRef(false);
   const [isResumeHydrated, setIsResumeHydrated] = useState(false);
+  const sessionIdRef = useRef<string | null>(null);
   const isDev = isLocalDevEnvironment();
+
+  const startSession = useCallback(
+    (sessionId = createGameSessionId()) => {
+      sessionIdRef.current = sessionId;
+      activeGameSessionIds.set(pathname, sessionId);
+    },
+    [pathname],
+  );
 
   useEffect(() => {
     if (isGlobalSettingsLoading) {
@@ -65,6 +84,7 @@ export function useStateManager<T>({
       if (!active) return;
 
       if (session && session.path === pathname) {
+        startSession(session.sessionId);
         setGame(session.state);
         hasDealtRef.current = true;
         setIsSettingUp(false);
@@ -81,10 +101,12 @@ export function useStateManager<T>({
     isGlobalSettingsLoading,
     pathname,
     setGame,
+    startSession,
   ]);
 
   async function firstDeal() {
     hasDealtRef.current = true;
+    startSession();
     await resetAndSetup();
     await postSetupAction?.();
     setIsSettingUp(false);
@@ -104,7 +126,10 @@ export function useStateManager<T>({
     if (isSettingUp) return;
 
     const timer = setTimeout(() => {
-      void saveLastGameSession(pathname, game);
+      const sessionId = sessionIdRef.current;
+      if (sessionId) {
+        void saveLastGameSession(pathname, game, sessionId);
+      }
     }, 350);
 
     return () => clearTimeout(timer);
@@ -153,6 +178,7 @@ export function useStateManager<T>({
   // —— Reset ————————————————————————
   async function reset() {
     isAnimatingRef.current = false;
+    startSession();
     setIsSettingUp(true);
     clearHistory();
     resetNonGameStates?.();

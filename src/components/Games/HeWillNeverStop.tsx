@@ -2,23 +2,26 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { Colors, rgba } from "@/styles/styles";
 import { useEffect, useMemo, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { View } from "react-native";
 import { Button } from "../Button/Button";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
   createDeck,
+  flipToBack,
+  flipToFace,
   rankValue,
   shuffle,
-  type CardRank,
+  zoneFanOffset,
   type PlayingCard,
 } from "../Cards/card-utils";
 import { Text } from "../common/Text";
 import { GameWrapper } from "../common/GameWrapper";
+import { delay } from "@/utils/utils";
+import { flexStyles } from "@/styles/flexStyles";
 
 const HORROR_RANKS = ["2", "3", "4", "5", "6", "7", "8", "9"] as const;
 type HorrorRank = (typeof HORROR_RANKS)[number];
-type ActionMode = "search" | "escape";
 
 export type HeWillNeverStopGameState = {
   deck: PlayingCard[];
@@ -93,7 +96,7 @@ function drawCards(draft: HeWillNeverStopGameState, count: number) {
   for (let index = 0; index < count; index += 1) {
     const card = draft.deck.pop();
     if (!card) break;
-    draft.hand.push(card);
+    draft.hand.push(flipToFace(card));
   }
 }
 
@@ -101,13 +104,13 @@ function pursue(draft: HeWillNeverStopGameState) {
   const originalSequenceLength = sequenceLengthFrom(draft.hand, 0);
   const first = draft.hand.shift();
   if (!first) return;
-  draft.discard.push(first);
+  draft.discard.push(flipToBack(first));
 
   if (originalSequenceLength < 3) return;
   while (sequenceLengthFrom(draft.hand, 0) >= 3) {
     const next = draft.hand.shift();
     if (!next) break;
-    draft.discard.push(next);
+    draft.discard.push(flipToBack(next));
   }
 }
 
@@ -117,17 +120,45 @@ function searchRank(draft: HeWillNeverStopGameState, rank: HorrorRank) {
   if (discarded.length === 0) return false;
 
   draft.hand = draft.hand.filter((card) => card.rank !== rank);
-  draft.discard.push(...discarded);
+  draft.discard.push(...discarded.map(flipToBack));
   evaluateEnd(draft);
   if (!draft.ended) {
     drawCards(draft, discarded.length);
     evaluateEnd(draft);
   }
+
   if (!draft.ended) {
     pursue(draft);
     evaluateEnd(draft);
   }
+
   return true;
+}
+
+function moveCard(
+  cards: readonly PlayingCard[],
+  cardIndex: number,
+  destinationIndex: number,
+) {
+  const nextCards = [...cards];
+  const [card] = nextCards.splice(cardIndex, 1);
+  if (!card) return nextCards;
+  const target = Math.max(0, Math.min(destinationIndex, nextCards.length));
+  nextCards.splice(target, 0, card);
+  return nextCards;
+}
+
+function escapeDrawCount(
+  cards: readonly PlayingCard[],
+  cardIndex: number,
+  destinationIndex: number,
+) {
+  const reorderedHand = moveCard(cards, cardIndex, destinationIndex);
+  const target = Math.max(
+    0,
+    Math.min(destinationIndex, reorderedHand.length - 1),
+  );
+  return isCardInSequence(reorderedHand, target) ? 2 : 0;
 }
 
 function escapeCard(
@@ -144,16 +175,17 @@ function escapeCard(
     return false;
   }
 
-  const [card] = draft.hand.splice(cardIndex, 1);
-  const target = Math.max(0, Math.min(destinationIndex, draft.hand.length));
-  draft.hand.splice(target, 0, card);
+  const drawCount = escapeDrawCount(draft.hand, cardIndex, destinationIndex);
+  draft.hand = moveCard(draft.hand, cardIndex, destinationIndex);
 
-  if (isCardInSequence(draft.hand, target)) drawCards(draft, 2);
+  if (drawCount > 0) drawCards(draft, drawCount);
   evaluateEnd(draft);
+
   if (!draft.ended) {
     pursue(draft);
     evaluateEnd(draft);
   }
+
   return true;
 }
 
@@ -161,13 +193,28 @@ async function resetAndSetup(
   setGame: (updater: (draft: HeWillNeverStopGameState) => void) => void,
 ) {
   setGame((draft) => {
-    draft.deck = shuffle(createHorrorDeck());
+    let allCards = [...draft.deck, ...draft.hand, ...draft.discard];
+    if (allCards.length === 0) {
+      allCards = createHorrorDeck();
+    }
+
+    draft.deck = shuffle(allCards.map(flipToBack));
     draft.hand = [];
     draft.discard = [];
     draft.ended = false;
     draft.won = false;
+  });
+
+  await delay();
+
+  setGame((draft) => {
     drawCards(draft, 8);
     evaluateEnd(draft);
+  });
+
+  await delay();
+
+  setGame((draft) => {
     if (!draft.ended) {
       pursue(draft);
       evaluateEnd(draft);
@@ -182,19 +229,16 @@ export const heWillNeverStopRules = {
   hasFourOfAKind,
   evaluateEnd,
   pursue,
+  moveCard,
+  escapeDrawCount,
   searchRank,
   escapeCard,
 };
 
-const HAND_COLUMNS = 8;
-
 export default function HeWillNeverStop() {
   const { spacing } = useResponsiveMetrics();
-  const [mode, setMode] = useState<ActionMode>("search");
-  const [selectedRank, setSelectedRank] = useState<HorrorRank | null>(null);
-  const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(
-    null,
-  );
+  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+  const [mockHand, setMockHand] = useState<PlayingCard[] | null>(null);
 
   const {
     isLoaded,
@@ -211,9 +255,8 @@ export default function HeWillNeverStop() {
       await resetAndSetup(setGame);
     },
     resetNonGameStates: () => {
-      setMode("search");
-      setSelectedRank(null);
-      setSelectedCardIndex(null);
+      setSelectedCardId(null);
+      setMockHand(null);
     },
   });
 
@@ -226,107 +269,160 @@ export default function HeWillNeverStop() {
     }
   }, [game, isSettingUp, setGame]);
 
-  function chooseMode(nextMode: ActionMode) {
-    setMode(nextMode);
-    setSelectedRank(null);
-    setSelectedCardIndex(null);
-  }
-
   function takeSearch() {
-    if (!selectedRank || game.ended) return;
+    const selectedCard = game.hand.find((card) => card.id === selectedCardId);
+    if (!selectedCard || game.ended || mockHand) return;
     saveUndoState(structuredClone(game));
     setGame((draft) => {
-      searchRank(draft, selectedRank);
+      searchRank(draft, selectedCard.rank as HorrorRank);
     });
-    setSelectedRank(null);
+    setSelectedCardId(null);
   }
 
-  function chooseEscapeCard(index: number) {
-    if (game.ended || isCardInSequence(game.hand, index)) return;
-    setSelectedCardIndex(index);
+  function selectCard(index: number) {
+    if (game.ended || mockHand) return;
+    const cardId = game.hand[index].id;
+    setSelectedCardId((currentCardId) =>
+      currentCardId === cardId ? null : cardId,
+    );
   }
 
-  function takeEscape(destinationIndex: number) {
-    if (selectedCardIndex === null || game.ended) return;
+  function moveSelectedCard(direction: -1 | 1) {
+    if (!selectedCardId || game.ended) return;
+    const hand = mockHand ?? game.hand;
+    const cardIndex = hand.findIndex((card) => card.id === selectedCardId);
+    const destinationIndex = cardIndex + direction;
+    if (
+      cardIndex < 0 ||
+      destinationIndex < 0 ||
+      destinationIndex >= hand.length
+    ) {
+      return;
+    }
+    setMockHand(moveCard(hand, cardIndex, destinationIndex));
+  }
+
+  function cancelEscape() {
+    setMockHand(null);
+  }
+
+  function takeEscape() {
+    if (!selectedCardId || !mockHand || game.ended) return;
+    const cardIndex = game.hand.findIndex((card) => card.id === selectedCardId);
+    const destinationIndex = mockHand.findIndex(
+      (card) => card.id === selectedCardId,
+    );
+    if (cardIndex < 0 || destinationIndex < 0) return;
     saveUndoState(structuredClone(game));
     setGame((draft) => {
-      escapeCard(draft, selectedCardIndex, destinationIndex);
+      escapeCard(draft, cardIndex, destinationIndex);
     });
-    setSelectedCardIndex(null);
+    setSelectedCardId(null);
+    setMockHand(null);
   }
+
+  const displayedHand = mockHand ?? game.hand;
+  const selectedCardIndex = selectedCardId
+    ? displayedHand.findIndex((card) => card.id === selectedCardId)
+    : -1;
+  const selectedCard = selectedCardId
+    ? game.hand.find((card) => card.id === selectedCardId)
+    : undefined;
+  const selectedCardGameIndex = selectedCard
+    ? game.hand.findIndex((card) => card.id === selectedCard.id)
+    : -1;
+  const selectedCardCanEscape =
+    selectedCardGameIndex >= 0 &&
+    !isCardInSequence(game.hand, selectedCardGameIndex);
+  const pendingEscapeDrawCount =
+    mockHand && selectedCardGameIndex >= 0 && selectedCardIndex >= 0
+      ? escapeDrawCount(game.hand, selectedCardGameIndex, selectedCardIndex)
+      : 0;
 
   const zones: MapZone[] = useMemo(() => {
-    const handZones = game.hand.map((card, index) => ({
-      id: `hand-${card.id}`,
-      name: "hand",
-      pileIndex: index,
-      cards: [card],
-      col: index % HAND_COLUMNS,
-      row: Math.floor(index / HAND_COLUMNS),
-      baseZIndex: 10,
-      placeholder: {},
-    }));
-
     return [
-      ...handZones,
       {
-        id: "status",
+        id: "discard",
         col: 0,
-        row: 4.2,
-        width: "full",
-        height: 0.75,
-        baseZIndex: 50,
+        row: 0,
+        cards: game.discard,
+        baseZIndex: 10,
+        fan: { maxVisible: 3, direction: "right", offset: 0.1 },
+        placeholder: { text: "Dscrd", infoPos: "above" },
       },
       {
-        id: "modes",
-        col: 0,
-        row: 5.1,
-        width: "full",
-        height: 0.55,
+        id: "deck",
+        col: 6,
+        row: 0,
+        cards: game.deck,
+        baseZIndex: 10,
+        fan: { maxVisible: 3, direction: "left", offset: 0.1 },
+        placeholder: { text: "Draw", infoPos: "above" },
+      },
+
+      {
+        id: "hand",
+        name: "hand",
+        cards: displayedHand,
+        col: 0.5,
+        row: 0,
+        width: 6,
         baseZIndex: 50,
+        fan: {
+          direction: "right",
+          offset: zoneFanOffset(displayedHand.length, 6, 0.1, 0.9),
+        },
+      },
+
+      {
+        id: "searchAction",
+        col: 0,
+        row: 1.5,
+        width: 2,
+        height: 2,
       },
       {
-        id: "action",
-        col: 0,
-        row: 5.8,
-        width: "full",
-        height: 1.45,
+        id: "escapeAction",
+        col: 2.5,
+        row: 1.5,
+        width: 4.5,
+        height: 2,
         baseZIndex: 50,
       },
     ];
-  }, [game.hand]);
+  }, [displayedHand, game.deck, game.discard]);
 
   const cardMapper = (
     mappedCard: MappedCard,
   ): AnimatedCardMapping | undefined => {
-    if (mappedCard.zoneName !== "hand" || mappedCard.pileIndex === undefined) {
+    if (mappedCard.zoneName !== "hand" || mappedCard.cardIndex === undefined) {
       return undefined;
     }
 
-    const index = mappedCard.pileIndex;
-    const inSequence = isCardInSequence(game.hand, index);
-    const selected =
-      mode === "search"
-        ? selectedRank === mappedCard.card.rank
-        : selectedCardIndex === index;
-    const selectable = !game.ended && (mode === "search" || !inSequence);
+    const gameHandIndex = game.hand.findIndex(
+      (card) => card.id === mappedCard.card.id,
+    );
+    const selected = selectedCardId === mappedCard.card.id;
+    const related =
+      !selected &&
+      selectedCard !== undefined &&
+      selectedCard.rank === mappedCard.card.rank;
+    const isMockingEscape = mockHand !== null;
 
     return {
-      isDisabled: !selectable,
+      isDisabled: game.ended || mockHand !== null,
       isSelected: selected,
-      selectColor: selected
-        ? "orange"
-        : mode === "escape" && !inSequence
-          ? "blue"
+      selectColor: isMockingEscape
+        ? selected
+          ? "green"
+          : "grey"
+        : related || selected
+          ? "purple"
           : "none",
-      forceSelectColor: selected,
-      forceOverlayColor: selected,
+      forceSelectColor: !isMockingEscape && selected,
+      forceOverlayColor: isMockingEscape || selected || related,
       onPress: () => {
-        if (mode === "search") {
-          setSelectedRank(mappedCard.card.rank as HorrorRank);
-        } else {
-          chooseEscapeCard(index);
-        }
+        selectCard(gameHandIndex);
       },
     };
   };
@@ -336,16 +432,14 @@ export default function HeWillNeverStop() {
     zones,
     cardMapper,
     cardSize: "small",
-    fixedCols: HAND_COLUMNS,
-    fixedRows: 7.5,
-    paddingTop: 0.25,
-    paddingBottom: 0.25,
+    visualizer: true,
+    gap: 0,
+    paddingTop: 0.4,
   });
 
   return (
     <GameWrapper
-      ended={game.ended}
-      won={game.won}
+      outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={reset}
       isLoaded={isLoaded}
       canUndo={canUndo}
@@ -360,92 +454,75 @@ export default function HeWillNeverStop() {
       }
     >
       {cardMap}
+
+      <View style={[flexStyles.colCentered, getZoneStylesById("searchAction")]}>
+        <Button
+          text={`Search\nRoute`}
+          theme="purple"
+          disabled={!selectedCard || game.ended || mockHand !== null}
+          onPress={takeSearch}
+          taller
+          fullWidth
+          lineHeight={1.1}
+        />
+      </View>
+
       <View
         style={[
-          getZoneStylesById("status"),
-          { paddingHorizontal: spacing(4), gap: spacing(4) },
+          flexStyles.colCentered,
+          getZoneStylesById("escapeAction"),
+          { gap: spacing(12) },
         ]}
       >
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text size="xs" weight="medium" color={rgba(Colors.white, 0.82)}>
-            Pursuer <Text weight="bold">left</Text>
-          </Text>
-          <Text size="xs" weight="medium" color={rgba(Colors.white, 0.82)}>
-            Safety <Text weight="bold">right</Text>
-          </Text>
-        </View>
         <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            paddingHorizontal: spacing(4),
-            borderRadius: 6,
-          }}
+          style={[flexStyles.rowCentered, { width: "100%", gap: spacing(12) }]}
         >
-          <Text size="xs">Deck: {game.deck.length}</Text>
-          <Text size="xs">Discard: {game.discard.length}</Text>
-          <Text size="xs">Line: {game.hand.length}</Text>
+          <Button
+            iconName="arrow-back"
+            theme="green"
+            onPress={() => moveSelectedCard(-1)}
+            style={{ flex: 1 }}
+            disabled={
+              !selectedCardCanEscape || selectedCardIndex <= 0 || game.ended
+            }
+            taller
+          />
+          <Button
+            iconName="arrow-forward"
+            theme="green"
+            onPress={() => moveSelectedCard(1)}
+            style={{ flex: 1 }}
+            disabled={
+              selectedCardIndex < 0 ||
+              selectedCardIndex >= displayedHand.length - 1 ||
+              !selectedCardCanEscape ||
+              game.ended
+            }
+            taller
+          />
         </View>
-      </View>
 
-      <View
-        style={[
-          getZoneStylesById("modes"),
-          { flexDirection: "row", gap: spacing(8) },
-        ]}
-      >
-        <Button
-          text="Search"
-          theme={mode === "search" ? "orange" : "purple"}
-          onPress={() => chooseMode("search")}
-          style={{ flex: 1 }}
-          disabled={game.ended}
-        />
-        <Button
-          text="Escape"
-          theme={mode === "escape" ? "orange" : "purple"}
-          onPress={() => chooseMode("escape")}
-          style={{ flex: 1 }}
-          disabled={game.ended}
-        />
-      </View>
-
-      <View style={[getZoneStylesById("action"), { gap: spacing(8) }]}>
-        {mode === "search" ? (
-          <>
-            <Text size="sm" color={rgba(Colors.white, 0.82)}>
-              Select a card to search for every card of that rank.
-            </Text>
-            <Button
-              text="Search the Line"
-              theme="green"
-              fullWidth
-              disabled={!selectedRank || game.ended}
-              onPress={takeSearch}
-            />
-          </>
-        ) : (
-          <>
-            <Text size="sm" color={rgba(Colors.white, 0.82)}>
-              Select a card not in a run, then choose its new position.
-            </Text>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ gap: spacing(7) }}
-            >
-              {Array.from({ length: game.hand.length + 1 }, (_, index) => (
-                <Button
-                  key={`gap-${index}`}
-                  text={`To ${index + 1}`}
-                  theme="blue"
-                  onPress={() => takeEscape(index)}
-                  disabled={selectedCardIndex === null || game.ended}
-                />
-              ))}
-            </ScrollView>
-          </>
-        )}
+        <View
+          style={[flexStyles.rowCentered, { width: "100%", gap: spacing(12) }]}
+        >
+          <Button
+            text="Cancel"
+            theme="orange"
+            onPress={cancelEscape}
+            disabled={mockHand === null || game.ended}
+            taller
+          />
+          <Button
+            text={`Escape\n(Draw ${pendingEscapeDrawCount})`}
+            theme="green"
+            onPress={takeEscape}
+            disabled={mockHand === null || game.ended}
+            fullWidth
+            style={{ flex: 1 }}
+            lineHeight={1.1}
+            taller
+          />
+        </View>
       </View>
     </GameWrapper>
   );

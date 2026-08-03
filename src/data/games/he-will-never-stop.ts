@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameAnimations } from "@/animations";
 
 export const heWillNeverStop: GameDefinition = {
   enabledOnLocalOnly: true,
@@ -13,6 +14,7 @@ export const heWillNeverStop: GameDefinition = {
   },
   thumbnail: "HeWillNeverStop.jpg",
   background: GAME_BACKGROUNDS.treeRain,
+  animation: GameAnimations.Rain,
   gameColorDark: "#1b2224",
   gameColorPale: "#daf1f1",
   cardDescription:

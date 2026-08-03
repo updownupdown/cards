@@ -1,4 +1,7 @@
-import { useStateManager } from "@/hooks/useStateManager";
+import {
+  getActiveGameSessionId,
+  useStateManager,
+} from "@/hooks/useStateManager";
 import { act, renderHook } from "@testing-library/react-native";
 import { loadLastGameSession, saveLastGameSession } from "@/data/game-menu";
 
@@ -76,7 +79,8 @@ describe("useStateManager", () => {
   test("hydrates a matching resume session and debounces persistence", async () => {
     mockResumeLastGame = true;
     mockLoadLastGameSession.mockResolvedValue({
-      version: 2,
+      version: 3,
+      sessionId: "resumed-session",
       path: "/test-game",
       savedAt: Date.now(),
       state: { turn: 7 },
@@ -104,9 +108,11 @@ describe("useStateManager", () => {
     expect(mockSaveLastGameSession).not.toHaveBeenCalled();
 
     await act(async () => jest.advanceTimersByTimeAsync(1));
-    expect(mockSaveLastGameSession).toHaveBeenCalledWith("/test-game", {
-      turn: 8,
-    });
+    expect(mockSaveLastGameSession).toHaveBeenCalledWith(
+      "/test-game",
+      { turn: 8 },
+      "resumed-session",
+    );
     await unmount();
   });
 
@@ -121,6 +127,7 @@ describe("useStateManager", () => {
       }),
     );
     await flushEffects();
+    const firstSessionId = getActiveGameSessionId("/test-game");
 
     await act(async () => {
       result.current.saveUndoState({ turn: 0 });
@@ -135,7 +142,11 @@ describe("useStateManager", () => {
 
     await act(async () => result.current.saveUndoState({ turn: 0 }));
     await act(async () => result.current.reset());
+    const secondSessionId = getActiveGameSessionId("/test-game");
     expect(result.current.canUndo).toBe(false);
+    expect(firstSessionId).toBeTruthy();
+    expect(secondSessionId).toBeTruthy();
+    expect(secondSessionId).not.toBe(firstSessionId);
     expect(resetAndSetup).toHaveBeenCalledTimes(2);
     expect(resetNonGameStates).toHaveBeenCalledTimes(2);
     await unmount();

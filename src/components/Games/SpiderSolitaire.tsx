@@ -755,8 +755,7 @@ export default function SpiderSolitaire() {
 
   return (
     <GameWrapper
-      ended={won}
-      won={won}
+      outcome={won ? "won" : "playing"}
       score={completedRuns * 13}
       reset={() => {
         void reset();

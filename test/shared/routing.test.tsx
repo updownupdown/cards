@@ -71,7 +71,8 @@ describe("routing", () => {
   test("resumes a saved game exactly once after global settings load", async () => {
     mockGlobalSettingsLoading = true;
     mockLoadLastGameSession.mockResolvedValue({
-      version: 2,
+      version: 3,
+      sessionId: "session-1",
       path: "/alpha",
       savedAt: Date.now(),
       state: { turn: 4 },

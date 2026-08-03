@@ -15,6 +15,7 @@ import {
   resetAllSettings,
   saveLastGameSession,
   toggleFavoriteGame,
+  undoRecordedLoss,
   updateGameSettings,
 } from "@/data/game-menu";
 
@@ -61,9 +62,10 @@ describe("game menu storage", () => {
   test("saves valid sessions and rejects malformed, expired, and unknown sessions", async () => {
     jest.spyOn(Date, "now").mockReturnValue(2_000_000_000_000);
 
-    await saveLastGameSession("/alpha/", { turn: 3 });
+    await saveLastGameSession("/alpha/", { turn: 3 }, "session-1");
     await expect(loadLastGameSession()).resolves.toMatchObject({
-      version: 2,
+      version: 3,
+      sessionId: "session-1",
       path: "/alpha",
       savedAt: 2_000_000_000_000,
       state: { turn: 3 },
@@ -101,7 +103,7 @@ describe("game menu storage", () => {
       await expect(loadLastGameSession()).resolves.toBeNull();
     }
 
-    await saveLastGameSession("/unknown", { turn: 4 });
+    await saveLastGameSession("/unknown", { turn: 4 }, "session-2");
     await expect(loadLastGameSession()).resolves.toBeNull();
   });
 
@@ -180,6 +182,45 @@ describe("game menu storage", () => {
       wins: 1,
       losses: 2,
       highestScore: 50,
+    });
+  });
+
+  test("records a game session result at most once", async () => {
+    await recordResult("/alpha", true, 40, "session-1");
+    await recordResult("/alpha", true, 40, "session-1");
+    await recordResult("/alpha", false, 20, "session-2");
+
+    expect((await loadGameSettingsMap())["/alpha"]).toMatchObject({
+      lastResultSessionId: "session-2",
+      stats: {
+        attempts: 0,
+        wins: 1,
+        losses: 1,
+        highestScore: 40,
+      },
+    });
+  });
+
+  test("undoes only the active session loss and allows it to be recorded again", async () => {
+    await recordResult("/alpha", false, undefined, "session-1");
+    await undoRecordedLoss("/alpha", "other-session");
+    await undoRecordedLoss("/alpha", "session-1");
+    await undoRecordedLoss("/alpha", "session-1");
+
+    expect((await loadGameSettingsMap())["/alpha"].stats.losses).toBe(0);
+
+    await recordResult("/alpha", false, undefined, "session-1");
+    expect((await loadGameSettingsMap())["/alpha"].stats.losses).toBe(1);
+  });
+
+  test("does not undo a recorded win", async () => {
+    await recordResult("/alpha", false, undefined, "older-loss");
+    await recordResult("/alpha", true, undefined, "session-1");
+    await undoRecordedLoss("/alpha", "session-1");
+
+    expect((await loadGameSettingsMap())["/alpha"].stats).toMatchObject({
+      wins: 1,
+      losses: 1,
     });
   });
 

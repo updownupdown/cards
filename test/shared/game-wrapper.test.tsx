@@ -2,7 +2,11 @@ import React from "react";
 import { Animated, View } from "react-native";
 import { render, screen } from "@testing-library/react-native";
 import { GameWrapper } from "@/components/common/GameWrapper";
-import { recordAttempt, recordResult } from "@/data/game-menu";
+import {
+  recordAttempt,
+  recordResult,
+  undoRecordedLoss,
+} from "@/data/game-menu";
 
 jest.unmock("@/components/common/GameWrapper");
 
@@ -21,6 +25,7 @@ jest.mock("@/data/game-menu", () => ({
   }),
   recordAttempt: jest.fn().mockResolvedValue(undefined),
   recordResult: jest.fn().mockResolvedValue(undefined),
+  undoRecordedLoss: jest.fn().mockResolvedValue(undefined),
 }));
 
 jest.mock("@/hooks/useGameSettings", () => ({
@@ -30,6 +35,11 @@ jest.mock("@/hooks/useGameSettings", () => ({
     },
     isLoading: false,
   }),
+}));
+
+let mockSessionId = "session-1";
+jest.mock("@/hooks/useStateManager", () => ({
+  getActiveGameSessionId: () => mockSessionId,
 }));
 
 let mockShowAnimations = true;
@@ -71,8 +81,9 @@ jest.mock("@/animations/BackgroundAnimation", () => ({
 jest.mock("@/components/common/LoadingOverlay", () => ({
   LoadingOverlay: () => null,
 }));
+const mockWinLoseBox = jest.fn((_props: any) => null);
 jest.mock("@/components/common/WinLoseBox", () => ({
-  WinLoseBox: () => null,
+  WinLoseBox: (props: any) => mockWinLoseBox(props),
 }));
 jest.mock("@/components/common/TipsBox", () => ({ TipsBox: () => null }));
 jest.mock("@/components/common/ResetButton", () => ({
@@ -82,22 +93,30 @@ jest.mock("@/components/Modals/GameModal", () => () => null);
 jest.mock("@/components/Modals/RulesModal", () => ({
   RulesModal: () => null,
 }));
-jest.mock("@/components/Button/Button", () => ({ Button: () => null }));
+const mockButton = jest.fn((_props: any) => null);
+jest.mock("@/components/Button/Button", () => ({
+  Button: (props: any) => mockButton(props),
+}));
 
 const mockRecordAttempt = jest.mocked(recordAttempt);
 const mockRecordResult = jest.mocked(recordResult);
+const mockUndoRecordedLoss = jest.mocked(undoRecordedLoss);
 
 describe("GameWrapper result recording", () => {
   beforeEach(() => {
+    mockSessionId = "session-1";
     mockShowAnimations = true;
     mockRecordAttempt.mockClear();
     mockRecordResult.mockClear();
+    mockUndoRecordedLoss.mockClear();
+    mockWinLoseBox.mockClear();
+    mockButton.mockClear();
   });
 
-  test("records one attempt and only the first terminal result", async () => {
+  test("records each result once when ended transitions to true", async () => {
     const reset = jest.fn();
     const view = await render(
-      <GameWrapper ended={false} won={false} reset={reset} score={10}>
+      <GameWrapper outcome="playing" reset={reset} score={10}>
         <View />
       </GameWrapper>,
     );
@@ -107,25 +126,99 @@ describe("GameWrapper result recording", () => {
     expect(mockRecordResult).not.toHaveBeenCalled();
 
     await view.rerender(
-      <GameWrapper ended won reset={reset} score={42}>
+      <GameWrapper outcome="won" reset={reset} score={42}>
         <View />
       </GameWrapper>,
     );
-    expect(mockRecordResult).toHaveBeenCalledWith("/test-game", true, 42);
+    expect(mockRecordResult).toHaveBeenCalledWith(
+      "/test-game",
+      true,
+      42,
+      "session-1",
+    );
 
     await view.rerender(
-      <GameWrapper ended won={false} reset={reset} score={99}>
+      <GameWrapper outcome="lost" reset={reset} score={99}>
         <View />
       </GameWrapper>,
     );
     expect(mockRecordResult).toHaveBeenCalledTimes(1);
+
+    await view.rerender(
+      <GameWrapper outcome="playing" reset={reset} score={99}>
+        <View />
+      </GameWrapper>,
+    );
+    mockSessionId = "session-2";
+    await view.rerender(
+      <GameWrapper outcome="lost" reset={reset} score={25}>
+        <View />
+      </GameWrapper>,
+    );
+
+    expect(mockRecordResult).toHaveBeenCalledTimes(2);
+    expect(mockRecordResult).toHaveBeenLastCalledWith(
+      "/test-game",
+      false,
+      25,
+      "session-2",
+    );
     expect(mockRecordAttempt).toHaveBeenCalledTimes(1);
+  });
+
+  test("does not record an already-ended restored game", async () => {
+    await render(
+      <GameWrapper outcome="won" reset={jest.fn()} score={42}>
+        <View />
+      </GameWrapper>,
+    );
+
+    expect(mockRecordResult).not.toHaveBeenCalled();
+  });
+
+  test("undoes a recorded loss before restoring game state", async () => {
+    const undo = jest.fn();
+    const view = await render(
+      <GameWrapper outcome="playing" reset={jest.fn()} canUndo undo={undo}>
+        <View />
+      </GameWrapper>,
+    );
+    await view.rerender(
+      <GameWrapper outcome="lost" reset={jest.fn()} canUndo undo={undo}>
+        <View />
+      </GameWrapper>,
+    );
+
+    const overlayProps = mockWinLoseBox.mock.calls.at(-1)![0];
+    await overlayProps.handleUndo();
+
+    expect(mockUndoRecordedLoss).toHaveBeenCalledWith(
+      "/test-game",
+      "session-1",
+    );
+    expect(undo).toHaveBeenCalledTimes(1);
+  });
+
+  test("does not support undo after a win", async () => {
+    await render(
+      <GameWrapper outcome="won" reset={jest.fn()} canUndo undo={jest.fn()}>
+        <View />
+      </GameWrapper>,
+    );
+
+    const overlayProps = mockWinLoseBox.mock.calls.at(-1)![0];
+    const headerUndoProps = mockButton.mock.calls
+      .map(([props]) => props)
+      .find((props) => props.iconName === "undo")!;
+
+    expect(overlayProps.handleUndo).toBeUndefined();
+    expect(headerUndoProps.disabled).toBe(true);
   });
 
   test("does not render background animations when disabled", async () => {
     mockShowAnimations = false;
     const view = await render(
-      <GameWrapper ended={false} won={false} reset={jest.fn()}>
+      <GameWrapper outcome="playing" reset={jest.fn()}>
         <View />
       </GameWrapper>,
     );

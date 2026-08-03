@@ -626,8 +626,7 @@ export default function BlackjackRiverResearch() {
 
   return (
     <GameWrapper
-      ended={game.ended}
-      won={score >= 9}
+      outcome={!game.ended ? "playing" : score >= 9 ? "won" : "lost"}
       score={score}
       reset={reset}
       isLoaded={isLoaded}

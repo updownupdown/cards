@@ -442,8 +442,7 @@ export default function Foursquare() {
 
   return (
     <GameWrapper
-      ended={game.ended}
-      won={game.won}
+      outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       score={game.draw.length * (game.won ? 1 : -1)}
       reset={reset}
       isLoaded={isLoaded}

@@ -316,8 +316,7 @@ export default function Baroness() {
 
   return (
     <GameWrapper
-      ended={game.ended}
-      won={game.won}
+      outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={reset}
       isLoaded={isLoaded}
       winLoseMessage={game.won ? "All cleared!" : "No thirteen left to make."}

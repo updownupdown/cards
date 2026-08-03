@@ -479,8 +479,7 @@ export default function Leafbearer() {
 
   return (
     <GameWrapper
-      ended={game.ended}
-      won={game.won}
+      outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       score={uneatenHerbCount(game)}
       reset={reset}
       isLoaded={isLoaded}

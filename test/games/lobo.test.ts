@@ -92,6 +92,23 @@ describe("Lobo rules", () => {
     });
   });
 
+  test("records a loss when the Wolf reaches 100", () => {
+    const result = loboRules.scoreRound(
+      state({ wolf: [card("8"), card("5")], wolfScore: 90 }),
+      false,
+    );
+
+    expect(result).toMatchObject({
+      playerScore: 0,
+      wolfScore: 103,
+      roundPoints: 13,
+      roundWon: false,
+      roundOver: true,
+      ended: true,
+      won: false,
+    });
+  });
+
   test("executes a capture atomically with its compensating draw", () => {
     const player = card("8", "player");
     const wolf = card("3", "wolf");

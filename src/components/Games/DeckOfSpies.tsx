@@ -432,8 +432,7 @@ export default function DeckOfSpies() {
     <GameWrapper
       reset={reset}
       isLoaded={isLoaded}
-      ended={game.ended}
-      won={game.won}
+      outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       winLoseMessage={game.winLoseMessage ?? undefined}
       canUndo={canUndo}
       undo={undo}

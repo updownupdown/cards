@@ -916,8 +916,7 @@ export default function FortyThieves() {
 
   return (
     <GameWrapper
-      ended={ended}
-      won={won}
+      outcome={!ended ? "playing" : won ? "won" : "lost"}
       reset={() => {
         void reset();
       }}

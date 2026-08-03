@@ -601,8 +601,7 @@ export default function ClubFight() {
 
   return (
     <GameWrapper
-      ended={game.ended}
-      won={game.won}
+      outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       score={game.discard.length}
       reset={reset}
       isLoaded={isLoaded}

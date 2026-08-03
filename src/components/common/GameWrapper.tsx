@@ -5,11 +5,13 @@ import {
   normalizeGamePath,
   recordAttempt,
   recordResult,
+  undoRecordedLoss,
 } from "@/data/game-menu";
 import { DEFAULT_GAME_BACKGROUND } from "@/data/games-data";
 import { useFade } from "@/hooks/useFade";
 import { useGameSettings } from "@/hooks/useGameSettings";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
+import { getActiveGameSessionId } from "@/hooks/useStateManager";
 import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { flexStyles } from "@/styles/flexStyles";
@@ -34,10 +36,11 @@ import { WinLoseBox } from "./WinLoseBox";
 
 const TIPS_MORPH_DURATION = 350;
 
+export type GameOutcome = "playing" | "won" | "lost";
+
 interface Props {
   isLoaded?: boolean;
-  ended: boolean;
-  won: boolean;
+  outcome: GameOutcome;
   score?: number | string;
   winLoseMessage?: string;
   reset: () => void;
@@ -51,8 +54,7 @@ interface Props {
 
 export const GameWrapper = ({
   isLoaded,
-  ended,
-  won,
+  outcome,
   score,
   winLoseMessage,
   reset,
@@ -71,6 +73,22 @@ export const GameWrapper = ({
   const { settings, isLoading } = useGameSettings(pathname);
   const { settings: globalSettings } = useGlobalSettings();
   const spacing = (value: number) => value * ui.scale;
+  const ended = outcome !== "playing";
+  const won = outcome === "won";
+  const canUndoLoss = outcome === "lost" && canUndo && !!handleUndo;
+
+  const handleLossUndo = canUndoLoss
+    ? async () => {
+        const sessionId = getActiveGameSessionId(pathname);
+        try {
+          if (sessionId) {
+            await undoRecordedLoss(pathname, sessionId);
+          }
+        } finally {
+          handleUndo();
+        }
+      }
+    : undefined;
 
   const [showMenu, setShowMenu] = useState(false);
   const [showRulesModal, setShowRulesModal] = useState(false);
@@ -111,12 +129,8 @@ export const GameWrapper = ({
   }, [instructionsHighlight, tipsDismissed]);
 
   // Record stats
-  const prevEndedRef = useRef(false);
+  const resultStateRef = useRef({ pathname, outcome });
   const attemptedPathRef = useRef<string | null>(null);
-
-  useEffect(() => {
-    prevEndedRef.current = false;
-  }, [pathname]);
 
   useEffect(() => {
     if (attemptedPathRef.current === pathname) return;
@@ -126,12 +140,22 @@ export const GameWrapper = ({
   }, [pathname]);
 
   useEffect(() => {
-    if (!ended || prevEndedRef.current) return;
-    prevEndedRef.current = true;
-    if (typeof won !== "boolean") return;
+    const previous = resultStateRef.current;
+    const didEnd =
+      previous.pathname === pathname &&
+      previous.outcome === "playing" &&
+      outcome !== "playing";
 
-    recordResult(pathname, won, score).catch(() => {});
-  }, [ended, pathname, score, won]);
+    resultStateRef.current = { pathname, outcome };
+    if (!didEnd) return;
+
+    recordResult(
+      pathname,
+      outcome === "won",
+      score,
+      getActiveGameSessionId(pathname),
+    ).catch(() => {});
+  }, [outcome, pathname, score]);
 
   if (!gameInfo) return null;
 
@@ -175,7 +199,7 @@ export const GameWrapper = ({
         score={score}
         reset={reset}
         message={winLoseMessage}
-        handleUndo={handleUndo}
+        handleUndo={handleLossUndo}
       />
 
       {(showMenu || openMenu) && (
@@ -349,8 +373,10 @@ export const GameWrapper = ({
                 handleUndo?.();
               }}
               iconName="undo"
-              iconColor={canUndo ? titleColor : rgba(Colors.white, 0.3)}
-              disabled={!canUndo || handleUndo === undefined}
+              iconColor={
+                !ended && canUndo ? titleColor : rgba(Colors.white, 0.3)
+              }
+              disabled={ended || !canUndo || handleUndo === undefined}
               style={{ flex: 1, paddingHorizontal: 0 }}
             />
 

@@ -920,8 +920,7 @@ export default function DungeonBounty() {
 
   return (
     <GameWrapper
-      ended={game.ended}
-      won={game.won}
+      outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       score={game.score}
       reset={reset}
       isLoaded={isLoaded}

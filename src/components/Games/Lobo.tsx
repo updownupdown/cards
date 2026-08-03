@@ -627,8 +627,7 @@ export default function Lobo() {
 
   return (
     <GameWrapper
-      ended={game.ended}
-      won={game.won}
+      outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       score={game.playerScore}
       reset={reset}
       isLoaded={isLoaded}

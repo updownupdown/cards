@@ -419,8 +419,7 @@ export default function Swamp() {
 
   return (
     <GameWrapper
-      ended={game.ended}
-      won={game.won}
+      outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={reset}
       isLoaded={isLoaded}
       score={`Round ${game.round}, turn ${game.turn}, move ${game.movesMade}`}

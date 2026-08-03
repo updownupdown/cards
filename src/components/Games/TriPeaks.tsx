@@ -371,8 +371,7 @@ export default function TriPeaks() {
 
   return (
     <GameWrapper
-      ended={ended}
-      won={won}
+      outcome={!ended ? "playing" : won ? "won" : "lost"}
       // winLoseMessage={lost ? "No moves left." : undefined}
       reset={reset}
       isLoaded={isLoaded}

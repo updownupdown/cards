@@ -447,8 +447,7 @@ export default function Skyway() {
 
   return (
     <GameWrapper
-      ended={game.ended}
-      won={won}
+      outcome={!game.ended ? "playing" : won ? "won" : "lost"}
       reset={reset}
       isLoaded={isLoaded}
       winLoseMessage={

@@ -753,8 +753,7 @@ export default function FreeCell() {
 
   return (
     <GameWrapper
-      ended={won}
-      won={won}
+      outcome={won ? "won" : "playing"}
       reset={() => {
         void reset();
       }}

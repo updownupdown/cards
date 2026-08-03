@@ -793,8 +793,7 @@ export default function Scoundrel() {
 
   return (
     <GameWrapper
-      ended={game.ended}
-      won={game.won}
+      outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       score={game.score}
       winLoseMessage={game.won ? "You made it through the dungeon." : undefined}
       reset={reset}

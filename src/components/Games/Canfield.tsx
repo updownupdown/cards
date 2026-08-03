@@ -1148,8 +1148,7 @@ export default function Canfield() {
 
   return (
     <GameWrapper
-      ended={won}
-      won={won}
+      outcome={won ? "won" : "playing"}
       reset={() => {
         void reset();
       }}

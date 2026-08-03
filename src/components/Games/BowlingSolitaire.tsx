@@ -993,8 +993,7 @@ export default function BowlingSolitaire() {
 
   return (
     <GameWrapper
-      ended={game.phase === "gameEnd"}
-      won={true}
+      outcome={game.phase === "gameEnd" ? "won" : "playing"}
       reset={reset}
       isLoaded={isLoaded}
       canUndo={canUndo}

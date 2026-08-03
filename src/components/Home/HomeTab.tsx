@@ -62,24 +62,27 @@ export function HomeTab({
     return { path, game } as { path: string; game: GameMenuInfo };
   }, [allEnabledGamePaths]);
 
-  const jumpBackInGames = useMemo(() => {
-    const orderedPaths: string[] = [...recentPaths];
+  const jumpBackInGames = useMemo(
+    () =>
+      recentPaths
+        .map((path) => [path, GAMES_DATA[path]] as HomeGameEntry)
+        .filter(([, game]) => isGameEnabled(game))
+        .slice(0, 4),
+    [recentPaths],
+  );
 
-    Array.from(favorites)
-      .sort((a, b) =>
-        (GAMES_DATA[a]?.title ?? "").localeCompare(GAMES_DATA[b]?.title ?? ""),
-      )
-      .forEach((path) => {
-        if (!orderedPaths.includes(path)) {
-          orderedPaths.push(path);
-        }
-      });
-
-    return orderedPaths
-      .map((path) => [path, GAMES_DATA[path]] as HomeGameEntry)
-      .filter(([, game]) => isGameEnabled(game))
-      .slice(0, 12);
-  }, [recentPaths, favorites]);
+  const favoriteGames = useMemo(
+    () =>
+      Array.from(favorites)
+        .sort((a, b) =>
+          (GAMES_DATA[a]?.title ?? "").localeCompare(
+            GAMES_DATA[b]?.title ?? "",
+          ),
+        )
+        .map((path) => [path, GAMES_DATA[path]] as HomeGameEntry)
+        .filter(([, game]) => isGameEnabled(game)),
+    [favorites],
+  );
 
   const becauseYouLiked = useMemo(() => {
     const favoritePaths = Array.from(favorites).filter((path) =>
@@ -296,6 +299,47 @@ export function HomeTab({
             }}
           >
             {jumpBackInGames.map(([path, game]) => (
+              <HomeCard
+                key={path}
+                path={path}
+                game={game}
+                size="medium"
+                onToggleFavorite={onToggleFavorite}
+                isFavorite={favorites.has(path)}
+                style={{ width: mediumCardWidth, flexShrink: 0 }}
+              />
+            ))}
+          </View>
+        </View>
+      )}
+
+      {/* Favorites */}
+      {favoriteGames.length > 0 && (
+        <View
+          style={{
+            width: "100%",
+            maxWidth: contentMaxWidth,
+            alignSelf: "center",
+          }}
+        >
+          <HomeSectionTitle
+            title="Favorites"
+            iconName="star"
+            pageSidePadding={scaledPageSidePadding}
+            contentMaxWidth={contentMaxWidth}
+          />
+          <View
+            style={{
+              width: "100%",
+              paddingHorizontal: scaledPageSidePadding,
+              paddingTop: sectionTopPadding,
+              paddingBottom: sectionBottomPadding,
+              gap: cardGap,
+              flexDirection: "row",
+              flexWrap: "wrap",
+            }}
+          >
+            {favoriteGames.map(([path, game]) => (
               <HomeCard
                 key={path}
                 path={path}

@@ -61,29 +61,48 @@ function isBadStartCard(card: LoopCard) {
   return isJoker(card) || isAce(card) || isFace(card);
 }
 
-function getLoopDeck(): LoopCard[] {
-  const base: LoopCard[] = createDeck({ faceUp: false }).map((card) => ({
-    ...card,
-    rank: card.rank as LoopRank,
-    faceUp: false,
-  }));
+function hasViableSecondTurn(deck: LoopCard[]) {
+  return deck.slice(0, 2).some((card) => {
+    if (!isNumberRank(card.rank)) return false;
 
-  const withJoker: LoopCard[] = [
-    ...base,
-    { id: "joker-loop", suit: "spades", rank: "Joker", faceUp: false },
+    const targetIndex = rankValue(card, 1, 0) % deck.length;
+    return ![deck[targetIndex], deck[(targetIndex + 1) % deck.length]].every(
+      isBadStartCard,
+    );
+  });
+}
+
+function hasSafeLoopStart(deck: LoopCard[]) {
+  return (
+    deck.length > 1 &&
+    !deck.slice(0, 2).every(isBadStartCard) &&
+    hasViableSecondTurn(deck)
+  );
+}
+
+function getLoopDeck(cards?: LoopCard[]): LoopCard[] {
+  const deckToShuffle = cards ?? [
+    ...createDeck({ faceUp: false }).map((card) => ({
+      ...card,
+      rank: card.rank as LoopRank,
+      faceUp: false,
+    })),
+    { id: "joker-loop", suit: "spades" as const, rank: "Joker", faceUp: false },
   ];
 
   let deck: LoopCard[];
-  // Ensure first two cards are not both face cards
+  // Ensure an Explore action can reach a viable next turn.
   do {
-    deck = shuffle(withJoker);
-  } while (isBadStartCard(deck[0]) && isBadStartCard(deck[1]));
+    deck = shuffle(deckToShuffle);
+  } while (!hasSafeLoopStart(deck));
 
   return deck;
 }
 
 export const lootTheLoopRules = {
   isBadStartCard,
+  hasViableSecondTurn,
+  hasSafeLoopStart,
   getLoopDeck,
   maxMarkedPaths,
 };
@@ -129,7 +148,7 @@ async function resetAndSetup(
 
   // Deal new cards from dealDeck to deck
   setGame((draft) => {
-    draft.deck = shuffle(draft.dealDeck);
+    draft.deck = getLoopDeck(draft.dealDeck);
     draft.dealDeck = [];
   });
 }
@@ -639,8 +658,7 @@ export default function LootTheLoop() {
 
   return (
     <GameWrapper
-      ended={game.ended}
-      won={game.won}
+      outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={reset}
       isLoaded={isLoaded}
       score={game.acesPile.length + game.trinketsPile.length}

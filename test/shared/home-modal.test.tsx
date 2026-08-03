@@ -80,6 +80,7 @@ jest.mock("@/components/common/Text", () => ({ Text: () => null }));
 jest.mock("@/components/Modals/ModalFull", () => ({
   __esModule: true,
   default: mockModalFull,
+  ModalHeading: () => null,
 }));
 
 jest.mock("@/components/common/SettingControl", () => ({
@@ -151,14 +152,14 @@ describe("HomeModal", () => {
       />,
     );
 
-    await fireEvent.press(screen.getByTestId("button-Reset all game data"));
+    await fireEvent.press(screen.getByTestId("button-Reset all app data"));
     expect(screen.getByTestId("button-Confirm reset")).toBeTruthy();
     await fireEvent.press(screen.getByTestId("button-Confirm reset"));
 
     expect(mockUpdateSettings).toHaveBeenCalledWith(DEFAULT_GLOBAL_SETTINGS);
     expect(mockResetAllSettings).toHaveBeenCalledTimes(1);
     expect(onHomeDataInvalidated).toHaveBeenCalledTimes(1);
-    expect(screen.getByTestId("button-Reset all game data")).toBeTruthy();
+    expect(screen.getByTestId("button-Reset all app data")).toBeTruthy();
     await view.unmount();
   });
 });

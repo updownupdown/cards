@@ -28,6 +28,24 @@ describe("Loot the Loop rules", () => {
     const deck = lootTheLoopRules.getLoopDeck();
 
     expect(deck.slice(0, 2).every(lootTheLoopRules.isBadStartCard)).toBe(false);
+    expect(lootTheLoopRules.hasViableSecondTurn(deck)).toBe(true);
     expect(lootTheLoopRules.maxMarkedPaths).toBe(3);
+  });
+
+  test("rejects an opening when every available Explore leads to a trap", () => {
+    const deck = Array.from({ length: 12 }, (_, index) => card("4"));
+    deck[4] = card("J");
+    deck[5] = card("Q");
+
+    expect(lootTheLoopRules.hasSafeLoopStart(deck)).toBe(false);
+  });
+
+  test("accepts an opening when one Explore reaches a viable next turn", () => {
+    const deck = Array.from({ length: 12 }, (_, index) => card("4"));
+    deck[4] = card("J");
+    deck[5] = card("Q");
+    deck[0] = card("3");
+
+    expect(lootTheLoopRules.hasSafeLoopStart(deck)).toBe(true);
   });
 });

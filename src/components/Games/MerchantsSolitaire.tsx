@@ -519,8 +519,7 @@ export default function MerchantsSolitaire() {
 
   return (
     <GameWrapper
-      ended={game.ended}
-      won={game.won}
+      outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       score={game.guildStanding.length}
       reset={reset}
       isLoaded={isLoaded}

@@ -374,8 +374,7 @@ export default function HideAndSeek() {
 
   return (
     <GameWrapper
-      ended={game.ended}
-      won={game.won}
+      outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       winLoseMessage={game.winLoseMessage}
       reset={reset}
       isLoaded={isLoaded}
