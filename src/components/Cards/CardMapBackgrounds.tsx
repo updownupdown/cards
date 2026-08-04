@@ -7,6 +7,7 @@ import { CardMapBGMapping } from "./AnimatedCard";
 import { cardDims } from "./card-utils";
 import { CardPosition, MapZone } from "./CardMap";
 import { CardOverlay, getCardShadow, getUnderlayStyle } from "./CardStyles";
+import { Icon } from "@/icons";
 
 export type DeckFanDirection =
   | "none"
@@ -211,15 +212,26 @@ export const CardMapBackgrounds = ({
 
             {/* Card Underlay */}
             <View
-              style={getUnderlayStyle(
-                cardWidth,
-                colorDark,
-                colorPale,
-                zone.placeholder.backgroundColor,
-                zone.placeholder.hideBackground,
-                zone.placeholder.hideShadow,
+              style={[
+                getUnderlayStyle(
+                  cardWidth,
+                  colorDark,
+                  colorPale,
+                  zone.placeholder.backgroundColor,
+                  zone.placeholder.hideBackground,
+                  zone.placeholder.hideShadow,
+                ),
+                flexStyles.colCentered,
+              ]}
+            >
+              {zone.placeholder.iconName && (
+                <Icon
+                  name={zone.placeholder.iconName}
+                  size={cardWidth * (zone.placeholder.iconSize ?? 0.7)}
+                  color={rgba(colorPale, 0.3)}
+                />
               )}
-            />
+            </View>
           </Pressable>
         );
       })}

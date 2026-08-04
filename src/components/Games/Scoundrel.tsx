@@ -747,6 +747,11 @@ export default function Scoundrel() {
         col: weaponsZoneInset + 0.05,
         row: weaponsRow + weaponsZoneInset,
         baseZIndex: 1,
+        placeholder: {
+          iconName: "equip",
+          hideBackground: true,
+          hideShadow: true,
+        },
       },
       {
         id: "weaponUsedOn",
@@ -757,6 +762,12 @@ export default function Scoundrel() {
         width: 2.75,
         fan: { direction: "right", offset: 0.32 },
         baseZIndex: 1,
+        placeholder: {
+          iconName: "dragon",
+          iconSize: 1,
+          hideBackground: true,
+          hideShadow: true,
+        },
       },
       ...roomZones,
       ...roomActionZones,

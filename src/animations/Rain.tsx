@@ -44,7 +44,7 @@ function RainDrop({ index, width, height }: SceneProps & { index: number }) {
         styles.drop,
         {
           height: length,
-          opacity: 0.08 + seeded(index, 55) * 0.3,
+          opacity: 0.06 + seeded(index, 55) * 0.2,
           transform: [
             {
               translateX: progress.interpolate({

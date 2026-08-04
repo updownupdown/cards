@@ -22,6 +22,7 @@ import {
 import { CardMapVisualizer } from "./CardMapVisualizer";
 import { CardSizes } from "./CardStyles";
 import { getHeaderHeightWithInset } from "@/styles/styles";
+import { IconName } from "@/icons/generated";
 
 export type CardPosition = {
   x: number;
@@ -73,6 +74,8 @@ export type MapZone = {
     hideBackground?: boolean;
     hideShadow?: boolean;
     backgroundColor?: string;
+    iconName?: IconName;
+    iconSize?: number;
   };
   clickThroughCards?: boolean;
 };

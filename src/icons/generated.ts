@@ -39,6 +39,7 @@ import GamesIcon from "./Games.svg";
 import HeartIcon from "./Heart.svg";
 import HeartsIcon from "./Hearts.svg";
 import HelpOutlineIcon from "./HelpOutline.svg";
+import HerbsIcon from "./Herbs.svg";
 import HomeIcon from "./Home.svg";
 import InfoIcon from "./Info.svg";
 import InfoOutlineIcon from "./InfoOutline.svg";
@@ -56,8 +57,8 @@ import SearchIcon from "./Search.svg";
 import SequenceIcon from "./Sequence.svg";
 import SettingsIcon from "./Settings.svg";
 import SkullIcon from "./Skull.svg";
-import SolitaireIcon from "./Solitaire.svg";
 import SpadesIcon from "./Spades.svg";
+import StablesIcon from "./Stables.svg";
 import StarIcon from "./Star.svg";
 import StarOutlineIcon from "./StarOutline.svg";
 import SwordIcon from "./Sword.svg";
@@ -100,6 +101,7 @@ export type IconName =
   | "heart"
   | "hearts"
   | "help-outline"
+  | "herbs"
   | "home"
   | "info"
   | "info-outline"
@@ -117,8 +119,8 @@ export type IconName =
   | "sequence"
   | "settings"
   | "skull"
-  | "solitaire"
   | "spades"
+  | "stables"
   | "star"
   | "star-outline"
   | "sword"
@@ -161,6 +163,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "heart": HeartIcon,
   "hearts": HeartsIcon,
   "help-outline": HelpOutlineIcon,
+  "herbs": HerbsIcon,
   "home": HomeIcon,
   "info": InfoIcon,
   "info-outline": InfoOutlineIcon,
@@ -178,8 +181,8 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "sequence": SequenceIcon,
   "settings": SettingsIcon,
   "skull": SkullIcon,
-  "solitaire": SolitaireIcon,
   "spades": SpadesIcon,
+  "stables": StablesIcon,
   "star": StarIcon,
   "star-outline": StarOutlineIcon,
   "sword": SwordIcon,

@@ -342,14 +342,14 @@ export const GameWrapper = ({
                     borderRadius: spacing(layoutDims.menuButtonSize / 2),
                     backgroundColor: titleColor,
                     opacity: instructionsHighlight.interpolate({
-                      inputRange: [0, 0.18, 0.7, 1],
-                      outputRange: [0, 1, 0.55, 0],
+                      inputRange: [0, 0.2, 0.7, 1],
+                      outputRange: [0, 0.8, 0.7, 0],
                     }),
                     transform: [
                       {
                         scale: instructionsHighlight.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: [0, 2],
+                          inputRange: [0, 0.6, 0.7, 1],
+                          outputRange: [1.5, 1.5, 0.8, 0],
                         }),
                       },
                     ],

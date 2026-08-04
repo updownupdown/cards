@@ -1,25 +1,36 @@
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
-import { Colors, rgba } from "@/styles/styles";
+import { delay } from "@/utils/utils";
 import { useMemo, useRef } from "react";
-import { View } from "react-native";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
+  flipAllToBack,
   flipToBack,
   flipToFace,
   rankValue,
   shuffle,
+  zoneFanOffset,
   type PlayingCard,
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { View } from "react-native";
+import { Colors, rgba, transitionStyles } from "@/styles/styles";
 import { Text } from "../common/Text";
+import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { flexStyles } from "@/styles/flexStyles";
 
+const ZONE_ROW_MULT = 1.1;
 const LOCATION_COUNT = 9;
 const STABLES_INDEX = 4;
+const STABLES_ROW = 4 + 4 * (ZONE_ROW_MULT - 1);
 const REALM_INDEXES = [0, 1, 2, 3, 5, 6, 7, 8];
+const CREATURE_COL = 0.2;
+const EATEN_COL_OFFSET = 0.2;
+const fixedCols = 7;
+const fixedRows = 9 + 8 * (ZONE_ROW_MULT - 1);
 
 type Creature = {
   card: PlayingCard;
@@ -192,7 +203,7 @@ function dropHerb(draft: LeafbearerGameState, herbId: string) {
 
   const [herb] = draft.carriedHerbs.splice(herbIndex, 1);
   const destination = draft.nextLocation;
-  draft.herbStacks[destination].unshift(flipToFace(herb));
+  draft.herbStacks[destination].push(flipToFace(herb));
   draft.nextLocation = (destination + 1) % LOCATION_COUNT;
 
   if (
@@ -245,6 +256,7 @@ export const leafbearerRules = {
 
 export default function Leafbearer() {
   const { spacing } = useResponsiveMetrics();
+  const { colorDark, colorPale } = useGameZoneBackground();
   const openStables = useGameSettingValue("leafbearerOpenStables");
   const openStablesRef = useRef(openStables);
   openStablesRef.current = openStables;
@@ -254,32 +266,47 @@ export default function Leafbearer() {
       gameStateInitial,
       resetAndSetup: async () => {
         setGame((draft) => {
-          const decks = createLeafbearerDecks();
-          draft.stables = decks.creatures.splice(0, 4).map(flipToBack);
-          draft.creatures = Array.from({ length: LOCATION_COUNT }, () => null);
-          for (const index of REALM_INDEXES) {
-            const card = decks.creatures.pop();
-            if (card)
-              draft.creatures[index] = {
-                card: flipToFace(card),
-                healthy: false,
-              };
-          }
-          draft.herbStacks = Array.from(
-            { length: LOCATION_COUNT },
-            (_, index) =>
-              decks.herbs
-                .splice(0, index === STABLES_INDEX ? 4 : 2)
-                .map(flipToFace),
+          const allCards = [
+            ...draft.stables,
+            ...draft.creatures.flatMap((creature) =>
+              creature ? [creature.card] : [],
+            ),
+            ...draft.herbStacks.flat(),
+            ...draft.eatenHerbs.flat(),
+            ...(draft.noble ? [draft.noble] : []),
+            ...draft.nobleEaten,
+            ...(draft.jester ? [draft.jester] : []),
+            ...draft.jesterEaten,
+            ...draft.carriedHerbs,
+          ];
+          const initialDecks =
+            allCards.length === 0 ? createLeafbearerDecks() : null;
+          const jester =
+            initialDecks?.jester ??
+            (allCards.some((card) => card.rank === "Joker")
+              ? null
+              : createLeafbearerDecks().jester);
+
+          draft.stables = shuffle(
+            flipAllToBack(
+              initialDecks
+                ? [
+                    ...initialDecks.creatures,
+                    ...initialDecks.herbs,
+                    ...(openStablesRef.current ? [initialDecks.jester] : []),
+                  ]
+                : [
+                    ...allCards,
+                    ...(openStablesRef.current && jester ? [jester] : []),
+                  ],
+            ),
           );
+          draft.creatures = Array.from({ length: LOCATION_COUNT }, () => null);
           draft.eatenHerbs = Array.from({ length: LOCATION_COUNT }, () => []);
-          draft.noble = openStablesRef.current
-            ? flipToFace(draft.stables.pop()!)
-            : null;
+          draft.herbStacks = Array.from({ length: LOCATION_COUNT }, () => []);
+          draft.noble = null;
           draft.nobleEaten = [];
-          draft.jester = openStablesRef.current
-            ? flipToFace(decks.jester)
-            : null;
+          draft.jester = null;
           draft.jesterEaten = [];
           draft.carriedHerbs = [];
           draft.nextLocation = null;
@@ -288,6 +315,39 @@ export default function Leafbearer() {
           draft.ended = false;
           draft.won = false;
           draft.winLoseMessage = "";
+        });
+
+        await delay();
+
+        setGame((draft) => {
+          const creatures = draft.stables.filter((card) =>
+            ["J", "Q", "K"].includes(card.rank),
+          );
+          const herbs = draft.stables.filter((card) =>
+            ["A", "2", "3", "4", "5"].includes(card.rank),
+          );
+          const jester = draft.stables.find((card) => card.rank === "Joker");
+
+          draft.stables = creatures.splice(0, 4).map(flipToBack);
+          for (const index of REALM_INDEXES) {
+            const card = creatures.pop();
+            if (card) {
+              draft.creatures[index] = {
+                card: flipToFace(card),
+                healthy: false,
+              };
+            }
+          }
+          draft.herbStacks = Array.from(
+            { length: LOCATION_COUNT },
+            (_, index) =>
+              herbs.splice(0, index === STABLES_INDEX ? 4 : 2).map(flipToFace),
+          );
+          draft.noble = openStablesRef.current
+            ? flipToFace(draft.stables.pop()!)
+            : null;
+          draft.jester =
+            openStablesRef.current && jester ? flipToFace(jester) : null;
         });
       },
     });
@@ -308,6 +368,7 @@ export default function Leafbearer() {
   }
 
   const zones: MapZone[] = useMemo(() => {
+    // ---------- Creatures ---------- //
     const creatureZones: MapZone[] = Array.from(
       { length: LOCATION_COUNT },
       (_, index) => {
@@ -317,165 +378,190 @@ export default function Leafbearer() {
           name: "creature",
           pileIndex: index,
           cards: creature ? [creature.card] : undefined,
-          col: index,
-          row: 0.75,
+          col: CREATURE_COL,
+          row: index * ZONE_ROW_MULT,
           rotation: creature && !creature.healthy ? 90 : 0,
-          baseZIndex: 20,
-          placeholder:
-            index === STABLES_INDEX
-              ? { text: "Stables", infoPos: "above" }
-              : {},
+          baseZIndex: 80,
         };
       },
     );
+
+    // ---------- Herbs ---------- //
     const herbZones: MapZone[] = game.herbStacks.map((herbs, index) => ({
       id: `herbs-${index}`,
       name: "herbs",
       pileIndex: index,
       cards: herbs,
-      col: index,
-      row: 2.05,
-      baseZIndex: 10,
-      fan: { direction: "down", offset: 0.26, maxVisible: 5 },
-      placeholder: { showCount: true },
+      col: 1.8,
+      row: index * ZONE_ROW_MULT,
+      baseZIndex: 1,
+      fan: { direction: "right", offset: 0.4 },
+      placeholder: { showCount: true, iconName: "stables" },
     }));
-    const eatenZones: MapZone[] = game.eatenHerbs.flatMap((herbs, index) =>
-      herbs.length > 0
-        ? [
-            {
-              id: `eaten-${index}`,
-              name: "eaten",
-              cards: herbs,
-              col: index,
-              row: 1.05,
-              baseZIndex: 5,
-              fan: { direction: "down", offset: 0.16, maxVisible: 3 },
-            },
-          ]
-        : [],
-    );
-    return [
+
+    // ---------- Eaten Herbs ---------- //
+    const eatenZones: MapZone[] = game.eatenHerbs.map((herbs, index) => ({
+      id: `eaten-${index}`,
+      name: "eaten",
+      cards: herbs,
+      col: CREATURE_COL - EATEN_COL_OFFSET,
+      row: index * ZONE_ROW_MULT,
+      baseZIndex: 1,
+      fan: { maxVisible: 1 },
+    }));
+
+    const zones: MapZone[] = [
       ...creatureZones,
+      ...herbZones,
+      ...eatenZones,
+      // ---------- Carried Herbs ---------- //
+      {
+        id: `carried`,
+        name: "carried",
+        cards: game.carriedHerbs,
+        col: 5.6,
+        row: 5 * ZONE_ROW_MULT,
+        width: 1.4,
+        height: 4 + 3 * (ZONE_ROW_MULT - 1),
+        baseZIndex: 50,
+        fan: {
+          direction: "down",
+          offset: zoneFanOffset(
+            game.carriedHerbs.length,
+            4 + 3 * (ZONE_ROW_MULT - 1) - 0.3,
+            0.1,
+            1.1,
+          ),
+        },
+        placeholder: {
+          iconName: "herbs",
+        },
+      },
       {
         id: "stablesPile",
         name: "stablesPile",
         cards: game.stables,
-        col: STABLES_INDEX,
-        row: 0.75,
-        baseZIndex: 15,
-        fan: { maxVisible: 3 },
-      },
-      ...(game.noble
-        ? [
-            {
-              id: "noble",
-              name: "noble",
-              cards: [game.noble],
-              col: STABLES_INDEX,
-              row: 0.75,
-              baseZIndex: 30,
-            },
-          ]
-        : []),
-      ...(game.jester
-        ? [
-            {
-              id: "jester",
-              name: "jester",
-              cards: [game.jester],
-              col: STABLES_INDEX,
-              row: 0,
-              baseZIndex: 35,
-            },
-          ]
-        : []),
-      ...(game.nobleEaten.length > 0
-        ? [
-            {
-              id: "nobleEaten",
-              name: "nobleEaten",
-              cards: game.nobleEaten,
-              col: STABLES_INDEX,
-              row: 1.05,
-              baseZIndex: 25,
-              fan: { direction: "down" as const, offset: 0.16, maxVisible: 3 },
-            },
-          ]
-        : []),
-      ...(game.jesterEaten.length > 0
-        ? [
-            {
-              id: "jesterEaten",
-              name: "jesterEaten",
-              cards: game.jesterEaten,
-              col: STABLES_INDEX,
-              row: 0.3,
-              baseZIndex: 25,
-              fan: { direction: "down" as const, offset: 0.16, maxVisible: 3 },
-            },
-          ]
-        : []),
-      ...herbZones,
-      ...eatenZones,
-      {
-        id: "carried",
-        name: "carried",
-        cards: game.carriedHerbs,
-        col: 1,
-        row: 4.15,
-        width: 7,
-        baseZIndex: 40,
-        fan: { direction: "right", offset: 0.7, center: true },
-        placeholder: { text: "Herbs in hand", infoPos: "above" },
-      },
-      {
-        id: "status",
-        col: 0,
-        row: 5.35,
-        width: "full",
-        height: 0.8,
-        baseZIndex: 40,
+        col: CREATURE_COL,
+        row: STABLES_ROW,
+        baseZIndex: 1,
+        fan: { maxVisible: 1 },
       },
     ];
+
+    const openStablesZones: MapZone[] = [];
+
+    if (game.noble) {
+      openStablesZones.push({
+        id: "noble",
+        name: "noble",
+        cards: [game.noble],
+        col: CREATURE_COL,
+        row: STABLES_ROW,
+        baseZIndex: 20,
+        placeholder: {
+          text: "Noble",
+          infoPos: "right",
+          showCount: false,
+        },
+      });
+
+      openStablesZones.push({
+        id: "jester",
+        name: "jester",
+        cards: game.jester ? [game.jester] : [],
+        col: fixedCols - 1 - EATEN_COL_OFFSET,
+        row: STABLES_ROW,
+        baseZIndex: 35,
+        placeholder: {
+          text: "Jester",
+          infoPos: "left",
+          showCount: false,
+        },
+      });
+
+      openStablesZones.push({
+        id: "nobleEaten",
+        name: "nobleEaten",
+        cards: game.nobleEaten,
+        col: CREATURE_COL - EATEN_COL_OFFSET,
+        row: STABLES_ROW,
+        baseZIndex: 1,
+        fan: { maxVisible: 1 },
+      });
+
+      openStablesZones.push({
+        id: "jesterEaten",
+        name: "jesterEaten",
+        cards: game.jesterEaten,
+        col: fixedCols - 1,
+        row: STABLES_ROW,
+        baseZIndex: 25,
+        fan: { direction: "up", offset: 0.16, maxVisible: 3 },
+      });
+    }
+
+    return [...zones, ...(game.noble ? openStablesZones : [])];
   }, [game]);
+
+  console.log(game);
 
   const cardMapper = (
     mappedCard: MappedCard,
   ): AnimatedCardMapping | undefined => {
     if (mappedCard.zoneName === "herbs" && mappedCard.pileIndex !== undefined) {
       const canPickUp = game.phase === "chooseSource" && !game.ended;
+      const distributeTarget = game.nextLocation === mappedCard.pileIndex;
+
       return {
         isDisabled: !canPickUp,
-        selectColor: canPickUp ? "blue" : "none",
-        forceSelectColor: canPickUp,
+        selectColor: distributeTarget ? "purple" : "lightGrey",
+        forceOverlayColor: game.phase === "distribute",
         onPress: () => selectSource(mappedCard.pileIndex!),
       };
-    }
-    if (mappedCard.zoneName === "carried") {
+    } else if (mappedCard.zoneName === "creature") {
+      const distributeTarget = game.nextLocation === mappedCard.pileIndex;
+      return {
+        selectColor: distributeTarget ? "purple" : "lightGrey",
+        forceOverlayColor: game.phase === "distribute",
+      };
+    } else if (mappedCard.zoneName === "noble") {
+      const distributeTarget = game.nextLocation === STABLES_INDEX;
+      return {
+        selectColor: distributeTarget ? "purple" : "lightGrey",
+        forceOverlayColor: game.phase === "distribute",
+      };
+    } else if (mappedCard.zoneName === "carried") {
       return {
         isDisabled: game.phase !== "distribute" || game.ended,
         selectColor: "green",
-        forceSelectColor: true,
+        forceOverlayColor: true,
         onPress: () => placeHerb(mappedCard.card.id),
       };
     }
     return { isDisabled: true };
   };
 
-  const { cardMap, getZoneStylesById } = useCardMap({
+  const { cardMap, cardWidth, cardHeight, getZoneStylesById } = useCardMap({
     game,
     zones,
     cardMapper,
-    cardSize: "small",
-    fixedCols: 9,
-    fixedRows: 6.5,
-    paddingTop: 0.2,
-    paddingBottom: 0.2,
-  });
+    zoneMapper: (zone) => {
+      if (zone.name === "herbs") {
+        const distributeTarget = game.nextLocation === zone.pileIndex;
 
-  const nextLocationLabel =
-    game.nextLocation === null ? null : game.nextLocation + 1;
-  const healingRank = currentHealingRank(game);
+        return {
+          forceOverlayColor: distributeTarget,
+          forceSelectColor: distributeTarget,
+          selectColor: distributeTarget ? "purple" : "none",
+        };
+      }
+    },
+    cardSize: "small",
+    gap: 0,
+    fixedCols,
+    fixedRows,
+    // visualizer: true,
+  });
 
   return (
     <GameWrapper
@@ -488,19 +574,66 @@ export default function Leafbearer() {
       winLoseMessage={game.winLoseMessage}
     >
       {cardMap}
-      <View style={[getZoneStylesById("status"), { gap: spacing(4) }]}>
-        <Text size="sm" weight="bold" color="#e5f0c7">
-          {game.phase === "chooseSource"
-            ? "Choose a herb stack to sow."
-            : `Drop any herb into Location ${nextLocationLabel}.`}
-        </Text>
-        <Text size="xs" color={rgba(Colors.white, 0.82)}>
-          {healingRank
-            ? `Healing order: ${healingRank}s`
-            : "All creatures healed."}{" "}
-          Uneaten herbs: {uneatenHerbCount(game)}
-        </Text>
-      </View>
+
+      {game.herbStacks.map((herbs, index) => {
+        const showStack = game.creatures[index]?.healthy === false;
+        const creatureCard = game.creatures[index]?.card;
+
+        if (!showStack || !creatureCard) return null;
+
+        const creatureRank = rankValue(creatureCard);
+        const total = herbTotal(herbs);
+        const progress = total / creatureRank;
+
+        return (
+          <View
+            key={`herbs-total-${index}`}
+            style={[
+              flexStyles.colCentered,
+              getZoneStylesById(`creature-${index}`),
+              {
+                overflow: "hidden",
+                marginTop: cardHeight * 0.49,
+                marginLeft: cardWidth * -0.15,
+                width: cardWidth * 1.3,
+                height: cardWidth * 0.46,
+                backgroundColor: colorDark,
+                borderWidth: 1,
+                borderRadius: spacing(6),
+                borderColor: rgba(colorPale, 0.3),
+                zIndex: 100,
+              },
+            ]}
+          >
+            <Text
+              size="sm"
+              weight={500}
+              color={Colors.white}
+              style={{ zIndex: 2 }}
+            >
+              {total}
+            </Text>
+
+            <View
+              style={[
+                transitionStyles.all05sec,
+                {
+                  position: "absolute",
+                  zIndex: 1,
+                  bottom: 0,
+                  left: 0,
+                  top: 0,
+                  height: "100%",
+                  backgroundColor:
+                    progress > 1 ? Colors.cardSelectRed : colorPale,
+                  opacity: 0.3,
+                  width: `${progress * 100}%`,
+                },
+              ]}
+            />
+          </View>
+        );
+      })}
     </GameWrapper>
   );
 }

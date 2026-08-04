@@ -340,3 +340,7 @@ export function zoneFanOffset(
     Math.min(maxOffset, (widthUnits - 1) / (count - 1)),
   );
 }
+
+export function sumCardValues(cards: PlayingCard[]) {
+  return cards.reduce((sum, card) => sum + rankValue(card), 0);
+}

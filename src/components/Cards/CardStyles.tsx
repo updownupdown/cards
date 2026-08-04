@@ -1,7 +1,6 @@
 import { Colors, rgba, transitionStyles } from "@/styles/styles";
 import { cardDims } from "./card-utils";
 import { StyleSheet, View, ViewStyle } from "react-native";
-import { lightenHexColor } from "@/utils/utils";
 
 export type CardSizes =
   | "small"
@@ -21,6 +20,7 @@ const cardSelectColorMap = {
   yellow: Colors.cardSelectYellow,
   pink: Colors.cardSelectPink,
   grey: Colors.cardSelectGrey,
+  lightGrey: Colors.cardSelectGrey,
 } as const;
 
 export type CardColor = keyof typeof cardSelectColorMap;
