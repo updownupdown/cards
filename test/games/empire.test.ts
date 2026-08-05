@@ -1,4 +1,4 @@
-import { type PlayingCard } from "@/components/Cards/card-utils";
+import { cardLabel, type PlayingCard } from "@/components/Cards/card-utils";
 import { empireRules } from "@/components/Games/Empire";
 
 jest.mock("@/components/common/GameWrapper", () => ({
@@ -45,8 +45,8 @@ describe("Empire rules", () => {
 
     const cards = empireRules.collectCards({
       board,
-      stock: [card("stock")],
-      reserve: card("reserve"),
+      reserve: [card("reserve")],
+      reserveActive: card("reserve-active"),
       discard: [card("discard")],
       ended: false,
       won: false,
@@ -55,8 +55,8 @@ describe("Empire rules", () => {
     expect(cards.map(({ id }) => id)).toEqual([
       "under",
       "top",
-      "stock",
       "reserve",
+      "reserve-active",
       "discard",
     ]);
   });
@@ -125,5 +125,73 @@ describe("Empire rules", () => {
         7,
       ),
     ).toBe(false);
+  });
+
+  test("finds an exposed card with no matching rank or suit", () => {
+    const isolated = card("isolated", "8", "clubs");
+    const gameBoard = board([
+      [0, isolated],
+      [1, card("same-rank", "8", "hearts")],
+      [2, card("same-suit", "K", "clubs")],
+      [3, card("other", "K", "diamonds")],
+    ]);
+
+    expect(empireRules.findIsolatedCard(gameBoard)).toBeUndefined();
+    gameBoard[1] = [card("different-rank", "7", "hearts")];
+    gameBoard[2] = [card("different-suit", "K", "spades")];
+    expect(empireRules.findIsolatedCard(gameBoard)).toEqual(isolated);
+    expect(cardLabel(isolated)).toBe("8♣");
+  });
+
+  test("retries initial deals until board and reserve cards have no isolates", () => {
+    const badDeal = [
+      ...Array.from({ length: 17 }, (_, index) =>
+        card(`heart-${index}`, "A", "hearts"),
+      ),
+      card("isolated", "K", "spades"),
+    ];
+    const validDeal = Array.from({ length: 18 }, (_, index) =>
+      card(`valid-${index}`, "A", "hearts"),
+    );
+    const shuffleCards = jest
+      .fn<PlayingCard[], [PlayingCard[]]>()
+      .mockReturnValueOnce(badDeal)
+      .mockReturnValueOnce(validDeal);
+
+    const game = empireRules.dealInitialGame(badDeal, shuffleCards);
+
+    expect(shuffleCards).toHaveBeenCalledTimes(2);
+    expect(
+      empireRules.findIsolatedCard(game.board, game.reserve),
+    ).toBeUndefined();
+  });
+
+  test("only loses on isolated cards after reserve cards are exhausted", () => {
+    const game = {
+      board: board([
+        [0, card("isolated", "8", "clubs")],
+        [1, card("unmatched", "K", "diamonds")],
+      ]),
+      reserve: [card("unused-reserve", "2", "hearts")],
+      reserveActive: null as PlayingCard | null,
+      discard: [],
+      ended: false,
+      won: false,
+    };
+
+    empireRules.updateOutcome(game);
+
+    expect(game).toMatchObject({ ended: false, won: false });
+
+    game.reserve = [];
+    game.reserveActive = card("active-reserve", "3", "spades");
+    empireRules.updateOutcome(game);
+
+    expect(game).toMatchObject({ ended: false, won: false });
+
+    game.reserveActive = null;
+    empireRules.updateOutcome(game);
+
+    expect(game).toMatchObject({ ended: true, won: false });
   });
 });

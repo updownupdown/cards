@@ -14,8 +14,8 @@ export const leafbearer: GameDefinition = {
   thumbnail: "Leafbearer.jpg",
   background: GAME_BACKGROUNDS.forest,
   animation: GameAnimations.Firefly,
-  gameColorDark: "#1c331d",
-  gameColorPale: "#e1ffba",
+  gameColorDark: "#1b3a1f",
+  gameColorPale: "#edffba",
   cardDescription:
     "Sow herbs across the realm to heal creatures in order before the forest runs dry.",
   quickStart: [

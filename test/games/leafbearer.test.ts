@@ -136,6 +136,31 @@ describe("Leafbearer rules", () => {
     expect(game.herbStacks[1].map((entry) => entry.id)).toEqual(["first"]);
   });
 
+  test("identifies locations that will receive a carried herb", () => {
+    const game = state({
+      carriedHerbs: [card("2", "first"), card("3", "second")],
+      nextLocation: 8,
+      phase: "distribute",
+    });
+
+    expect(leafbearerRules.willReceiveHerbThisDistribution(game, 8)).toBe(true);
+    expect(leafbearerRules.willReceiveHerbThisDistribution(game, 0)).toBe(true);
+    expect(leafbearerRules.willReceiveHerbThisDistribution(game, 1)).toBe(
+      false,
+    );
+    expect(leafbearerRules.willReceiveHerbThisDistribution(game, 4)).toBe(
+      false,
+    );
+
+    game.carriedHerbs.push(
+      card("4", "third"),
+      card("5", "fourth"),
+      card("A", "fifth"),
+      card("2", "sixth"),
+    );
+    expect(leafbearerRules.willReceiveHerbThisDistribution(game, 4)).toBe(true);
+  });
+
   test("Open Stables Jester eats the final herb dropped into the Stables", () => {
     const game = state({
       openStables: true,

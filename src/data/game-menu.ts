@@ -36,6 +36,10 @@ export type GameSettings = {
   merchantCheckBack: boolean;
   merchantSuperExclusive: boolean;
   merchantVandals: 0 | 1 | 2;
+  bardsLoyalPatrons: boolean;
+  bardsCheckBack: boolean;
+  bardsSuperExclusive: boolean;
+  bardsVandals: "off" | "one" | "two";
   clubFightDifficulty: "easy" | "hard";
   leafbearerOpenStables: boolean;
   lastResultSessionId?: string;
@@ -141,6 +145,10 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   merchantCheckBack: false,
   merchantSuperExclusive: false,
   merchantVandals: 0,
+  bardsLoyalPatrons: false,
+  bardsCheckBack: false,
+  bardsSuperExclusive: false,
+  bardsVandals: "off",
   clubFightDifficulty: "easy",
   leafbearerOpenStables: false,
   stats: {
@@ -377,6 +385,13 @@ export function getGameSettings(
       merged.merchantVandals === 1 || merged.merchantVandals === 2
         ? merged.merchantVandals
         : 0,
+    bardsLoyalPatrons: merged.bardsLoyalPatrons === true,
+    bardsCheckBack: merged.bardsCheckBack === true,
+    bardsSuperExclusive: merged.bardsSuperExclusive === true,
+    bardsVandals:
+      merged.bardsVandals === "one" || merged.bardsVandals === "two"
+        ? merged.bardsVandals
+        : "off",
     clubFightDifficulty:
       merged.clubFightDifficulty === "hard" ? "hard" : "easy",
     leafbearerOpenStables: merged.leafbearerOpenStables === true,

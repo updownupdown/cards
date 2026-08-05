@@ -1,6 +1,6 @@
 import type { AlpineChallenge } from "@/data/game-menu";
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
@@ -382,7 +382,7 @@ function getGroupedFanOffsets(groups: AlpineRouteRecord[]) {
 
 export default function AlpineSolitaire() {
   const { spacing } = useResponsiveMetrics();
-  const { colorDark, colorPale } = useGameZoneBackground();
+  const { colorDark, colorPale } = useGameColors();
   const difficulty = useGameSettingValue(
     "alpineDifficulty",
   ) as AlpineDifficulty;

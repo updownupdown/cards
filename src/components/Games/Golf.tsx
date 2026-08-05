@@ -1,4 +1,4 @@
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 import { useEffect, useMemo } from "react";
@@ -125,7 +125,7 @@ export const golfRules = {
 
 // ========== Main Component ========== //
 export default function Golf() {
-  const { colorDark } = useGameZoneBackground();
+  const { colorDark } = useGameColors();
 
   const {
     isLoaded,

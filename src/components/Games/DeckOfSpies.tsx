@@ -1,8 +1,9 @@
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors } from "@/styles/styles";
+import { delay } from "@/utils/utils";
 import { useMemo } from "react";
 import { View } from "react-native";
 import { Button } from "../Button/Button";
@@ -39,9 +40,9 @@ export type DeckOfSpiesGameState = {
 
 const gameStateInitial: DeckOfSpiesGameState = {
   spyDeck: [],
-  spyDiscard: createDeck(),
+  spyDiscard: [],
   drawDeck: [],
-  drawDiscard: [],
+  drawDiscard: createDeck().map(flipToBack),
   hand: [],
   selectedCards: [],
   phase: "action",
@@ -180,7 +181,30 @@ async function setupGame(
     updater: (draft: DeckOfSpiesGameState) => DeckOfSpiesGameState | void,
   ) => void,
 ) {
-  setGame(() => createGame());
+  setGame((draft) => {
+    draft.drawDiscard = shuffle(
+      [
+        ...draft.spyDeck,
+        ...draft.spyDiscard,
+        ...draft.drawDeck,
+        ...draft.drawDiscard,
+        ...draft.hand,
+      ].map(flipToBack),
+    );
+    draft.spyDeck = [];
+    draft.spyDiscard = [];
+    draft.drawDeck = [];
+    draft.hand = [];
+    draft.selectedCards = [];
+    draft.phase = "action";
+    draft.ended = false;
+    draft.won = false;
+    draft.winLoseMessage = null;
+  });
+
+  await delay();
+
+  setGame((draft) => createGame(draft.drawDiscard));
 }
 
 function removeSelected(hand: PlayingCard[], selectedCards: PlayingCard[]) {
@@ -190,7 +214,7 @@ function removeSelected(hand: PlayingCard[], selectedCards: PlayingCard[]) {
 
 export default function DeckOfSpies() {
   const { spacing } = useResponsiveMetrics();
-  const { colorZone } = useGameZoneBackground();
+  const { colorZone } = useGameColors();
   const { game, setGame, reset, isLoaded, canUndo, undo, saveUndoState } =
     useStateManager<DeckOfSpiesGameState>({
       gameStateInitial,

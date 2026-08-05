@@ -1,4 +1,4 @@
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
@@ -424,7 +424,7 @@ export const bowlingSolitaireRules = {
 
 // ========== Main Component ========== //
 export default function BowlingSolitaire() {
-  const { colorZone, colorDark, colorPale } = useGameZoneBackground();
+  const { colorZone, colorDark, colorPale } = useGameColors();
   const { spacing, font } = useResponsiveMetrics();
 
   const { game, setGame, reset, isLoaded, canUndo, undo, saveUndoState } =

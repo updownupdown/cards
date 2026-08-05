@@ -1,5 +1,5 @@
 import { Text } from "@/components/common/Text";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight, rgba } from "@/styles/styles";
 import { Pressable, TextStyle, View, ViewStyle } from "react-native";
@@ -40,7 +40,7 @@ export const CardMapBackgrounds = ({
   cardHeight,
   zoneMapper,
 }: Props) => {
-  const { colorPale, colorDark } = useGameZoneBackground();
+  const { colorPale, colorDark } = useGameColors();
 
   return (
     <>
@@ -228,7 +228,12 @@ export const CardMapBackgrounds = ({
                 <Icon
                   name={zone.placeholder.iconName}
                   size={cardWidth * (zone.placeholder.iconSize ?? 0.7)}
-                  color={rgba(colorPale, 0.3)}
+                  color={rgba(
+                    forceOverlayColor ? (selectColor ?? colorPale) : colorPale,
+                    forceSelectColor
+                      ? 0.7
+                      : (zone.placeholder.iconOpacity ?? 0.3),
+                  )}
                 />
               )}
             </View>

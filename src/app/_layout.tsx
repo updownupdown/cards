@@ -1,5 +1,5 @@
 import { ToastProvider } from "@/components/common/Toast";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { getGameInfo, isGamePath } from "@/data/game-menu";
 import { Colors } from "@/styles/styles";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -20,7 +20,7 @@ import { View, Platform } from "react-native";
 SplashScreen.preventAutoHideAsync();
 
 export default function Layout() {
-  const { colorDark } = useGameZoneBackground();
+  const { colorDark } = useGameColors();
   const pathname = usePathname();
   const [fontsLoaded] = useFonts({
     Outfit_200ExtraLight,

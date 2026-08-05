@@ -1,5 +1,5 @@
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 import { useMemo, useState } from "react";
@@ -198,7 +198,7 @@ export const optritaLinesRules = {
 // ── Component ────────────────────────────────────────────────────────────────
 export default function OptritaLines() {
   const { spacing } = useResponsiveMetrics();
-  const { colorDark, colorPale } = useGameZoneBackground();
+  const { colorDark, colorPale } = useGameColors();
   const hardMode = useGameSettingValue("optritaHard") as boolean;
 
   const [selectedHand, setSelectedHand] = useState<number | null>(null);

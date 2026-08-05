@@ -3,6 +3,7 @@ import { delay } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
+  cardLabel,
   createDeck,
   flipToBack,
   flipToFace,
@@ -21,11 +22,12 @@ const BOARD_COLS = 5;
 const BOARD_ROWS = 3;
 const BOARD_CELLS = BOARD_COLS * BOARD_ROWS;
 const RESERVE_SIZE = 3;
+const MAX_INITIAL_DEAL_ATTEMPTS = 20;
 
 type GameState = {
   board: PlayingCard[][];
-  stock: PlayingCard[];
-  reserve: PlayingCard | null;
+  reserve: PlayingCard[];
+  reserveActive: PlayingCard | null;
   discard: PlayingCard[];
   ended: boolean;
   won: boolean;
@@ -33,8 +35,8 @@ type GameState = {
 
 const gameStateInitial: GameState = {
   board: Array.from({ length: BOARD_CELLS }, () => []),
-  stock: [],
-  reserve: null,
+  reserve: [],
+  reserveActive: null,
   discard: createDeck().map(flipToBack),
   ended: false,
   won: false,
@@ -47,8 +49,8 @@ function topCard(pile: PlayingCard[]) {
 function collectCards(game: GameState) {
   return [
     ...game.board.flat(),
-    ...game.stock,
-    ...(game.reserve ? [game.reserve] : []),
+    ...game.reserve,
+    ...(game.reserveActive ? [game.reserveActive] : []),
     ...game.discard,
   ];
 }
@@ -125,24 +127,80 @@ function hasConquest(board: PlayingCard[][]) {
   );
 }
 
+function findIsolatedCard(board: PlayingCard[][], reserve: PlayingCard[] = []) {
+  const exposedCards = board
+    .map((pile) => topCard(pile))
+    .filter((card): card is PlayingCard => !!card);
+  const cardsInPlay = [...exposedCards, ...reserve];
+
+  return cardsInPlay.find(
+    (card) =>
+      !cardsInPlay.some(
+        (other) =>
+          other !== card &&
+          (other.rank === card.rank || other.suit === card.suit),
+      ),
+  );
+}
+
+function dealInitialGame(
+  cards: PlayingCard[],
+  shuffleCards: (cards: PlayingCard[]) => PlayingCard[] = shuffle,
+) {
+  let deck = cards;
+
+  for (let attempt = 0; attempt < MAX_INITIAL_DEAL_ATTEMPTS; attempt += 1) {
+    deck = shuffleCards(cards);
+    const board = deck.slice(0, BOARD_CELLS).map((card) => [flipToFace(card)]);
+    const reserve = deck
+      .slice(BOARD_CELLS, BOARD_CELLS + RESERVE_SIZE)
+      .map(flipToBack);
+
+    if (!findIsolatedCard(board, reserve)) {
+      return {
+        board,
+        reserve,
+        discard: deck.slice(BOARD_CELLS + RESERVE_SIZE).map(flipToBack),
+      };
+    }
+  }
+
+  return {
+    board: deck.slice(0, BOARD_CELLS).map((card) => [flipToFace(card)]),
+    reserve: deck
+      .slice(BOARD_CELLS, BOARD_CELLS + RESERVE_SIZE)
+      .map(flipToBack),
+    discard: deck.slice(BOARD_CELLS + RESERVE_SIZE).map(flipToBack),
+  };
+}
+
 export const empireRules = {
   topCard,
   collectCards,
   canConquer,
   conquerPile,
+  dealInitialGame,
+  findIsolatedCard,
+  updateOutcome,
 };
 
 function updateOutcome(draft: GameState) {
-  if (draft.reserve) return;
+  if (draft.reserveActive) return;
 
   const cardsInPlay = draft.board.filter((pile) => pile.length > 0).length;
-  if (cardsInPlay === 1 && draft.stock.length === 0) {
+  if (cardsInPlay === 1 && draft.reserve.length === 0) {
     draft.ended = true;
     draft.won = true;
     return;
   }
 
-  const canDrawReserve = draft.stock.length > 0 && cardsInPlay < BOARD_CELLS;
+  if (draft.reserve.length === 0 && findIsolatedCard(draft.board)) {
+    draft.ended = true;
+    draft.won = false;
+    return;
+  }
+
+  const canDrawReserve = draft.reserve.length > 0 && cardsInPlay < BOARD_CELLS;
   if (!hasConquest(draft.board) && !canDrawReserve) {
     draft.ended = true;
     draft.won = false;
@@ -157,8 +215,8 @@ async function resetAndSetup(
     const allCards = collectCards(draft);
 
     draft.board = Array.from({ length: BOARD_CELLS }, () => []);
-    draft.stock = [];
-    draft.reserve = null;
+    draft.reserve = [];
+    draft.reserveActive = null;
     draft.discard = allCards.map(flipToBack);
     draft.ended = false;
     draft.won = false;
@@ -167,12 +225,10 @@ async function resetAndSetup(
   await delay();
 
   setGame((draft) => {
-    const deck = shuffle(draft.discard);
-    draft.board = deck.slice(0, BOARD_CELLS).map((card) => [flipToFace(card)]);
-    draft.stock = deck
-      .slice(BOARD_CELLS, BOARD_CELLS + RESERVE_SIZE)
-      .map(flipToBack);
-    draft.discard = deck.slice(BOARD_CELLS + RESERVE_SIZE).map(flipToBack);
+    const nextDeal = dealInitialGame(draft.discard);
+    draft.board = nextDeal.board;
+    draft.reserve = nextDeal.reserve;
+    draft.discard = nextDeal.discard;
     updateOutcome(draft);
   });
 }
@@ -207,7 +263,7 @@ export default function Empire() {
   function conquer(targetIndex: number) {
     if (
       game.ended ||
-      game.reserve ||
+      game.reserveActive ||
       selectedIndex === null ||
       !canConquer(game.board, selectedIndex, targetIndex)
     ) {
@@ -225,7 +281,7 @@ export default function Empire() {
   }
 
   function pressBoardCard(index: number) {
-    if (game.ended || game.reserve) return;
+    if (game.ended || game.reserveActive) return;
     if (selectedIndex === index) {
       setSelectedIndex(null);
     } else if (selectedIndex !== null && legalTargets.includes(index)) {
@@ -238,8 +294,8 @@ export default function Empire() {
   function drawReserve() {
     if (
       game.ended ||
-      game.reserve ||
-      game.stock.length === 0 ||
+      game.reserveActive ||
+      game.reserve.length === 0 ||
       !game.board.some((pile) => pile.length === 0)
     ) {
       return;
@@ -247,20 +303,22 @@ export default function Empire() {
 
     saveUndoState(structuredClone(game));
     setGame((draft) => {
-      const next = draft.stock.pop();
-      draft.reserve = next ? flipToFace(next) : null;
+      const next = draft.reserve.pop();
+      draft.reserveActive = next ? flipToFace(next) : null;
+      updateOutcome(draft);
     });
     setSelectedIndex(null);
   }
 
   function placeReserve(index: number) {
-    if (game.ended || !game.reserve || game.board[index].length > 0) return;
+    if (game.ended || !game.reserveActive || game.board[index].length > 0)
+      return;
 
     saveUndoState(structuredClone(game));
     setGame((draft) => {
-      if (!draft.reserve || draft.board[index].length > 0) return;
-      draft.board[index] = [draft.reserve];
-      draft.reserve = null;
+      if (!draft.reserveActive || draft.board[index].length > 0) return;
+      draft.board[index] = [draft.reserveActive];
+      draft.reserveActive = null;
       updateOutcome(draft);
     });
   }
@@ -290,13 +348,13 @@ export default function Empire() {
         col: BOARD_COLS - 1,
         row: 0,
         baseZIndex: 20,
-        placeholder: { text: "Discard", showCount: true },
+        placeholder: { text: "Discard", infoPos: "left", showCount: false },
         fan: { maxVisible: 3 },
       },
       {
-        id: "stock",
-        name: "stock",
-        cards: game.stock,
+        id: "reserve",
+        name: "reserve",
+        cards: game.reserve,
         col: 0,
         row: 0,
         baseZIndex: 30,
@@ -304,9 +362,9 @@ export default function Empire() {
         placeholder: { text: "Reserve", infoPos: "right", showCount: true },
       },
       {
-        id: "reserve",
-        name: "reserve",
-        cards: game.reserve ? [game.reserve] : [],
+        id: "reserveActive",
+        name: "reserveActive",
+        cards: game.reserveActive ? [game.reserveActive] : [],
         col: 2,
         row: 0,
         baseZIndex: 35,
@@ -314,23 +372,23 @@ export default function Empire() {
       },
       ...boardZones,
     ];
-  }, [game.board, game.discard, game.reserve, game.stock]);
+  }, [game.board, game.discard, game.reserve, game.reserveActive]);
 
   const cardMapper = (
     mappedCard: MappedCard,
   ): AnimatedCardMapping | undefined => {
-    if (mappedCard.zoneName === "stock") {
+    if (mappedCard.zoneName === "reserve") {
       const canDraw =
         mappedCard.topOfZone &&
         !game.ended &&
-        !game.reserve &&
+        !game.reserveActive &&
         game.board.some((pile) => pile.length === 0);
 
       return {
         onPress: drawReserve,
         isDisabled: !canDraw,
       };
-    } else if (mappedCard.zoneName === "reserve") {
+    } else if (mappedCard.zoneName === "reserveActive") {
       return {
         isDisabled: true,
         selectColor: "purple",
@@ -348,7 +406,7 @@ export default function Empire() {
 
       return {
         onPress: () => pressBoardCard(index),
-        isDisabled: !mappedCard.topOfZone || game.ended || !!game.reserve,
+        isDisabled: !mappedCard.topOfZone || game.ended || !!game.reserveActive,
         isSelected: isSelected,
         selectColor: isLegalTarget ? "green" : "blue",
         forceOverlayColor: isSelected || isLegalTarget,
@@ -357,13 +415,13 @@ export default function Empire() {
   };
 
   const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
-    if (zone.name === "stock") {
+    if (zone.name === "reserve") {
       return {
         onPress: drawReserve,
         isDisabled:
           game.ended ||
-          !!game.reserve ||
-          game.stock.length === 0 ||
+          !!game.reserveActive ||
+          game.reserve.length === 0 ||
           !game.board.some((pile) => pile.length === 0),
       };
     }
@@ -372,8 +430,9 @@ export default function Empire() {
       const index = zone.pileIndex;
       return {
         onPress: () => placeReserve(index),
-        isDisabled: game.ended || !game.reserve || game.board[index].length > 0,
-        isSelected: !!game.reserve && game.board[index].length === 0,
+        isDisabled:
+          game.ended || !game.reserveActive || game.board[index].length > 0,
+        isSelected: !!game.reserveActive && game.board[index].length === 0,
         forceOverlayColor: true,
       };
     }
@@ -400,7 +459,9 @@ export default function Empire() {
       winLoseMessage={
         game.won
           ? "All eighteen cards belong to one empire."
-          : "No conquests or reserve placements remain."
+          : findIsolatedCard(game.board)
+            ? `The ${cardLabel(findIsolatedCard(game.board))} was isolated, with no matching rank or suit.`
+            : "No conquests or reserve placements remain."
       }
       canUndo={canUndo}
       undo={undo}

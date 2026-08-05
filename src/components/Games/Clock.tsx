@@ -1,7 +1,7 @@
 import ClockHandHours from "@/assets/images/ClockHandHours.svg";
 import ClockHandMinutes from "@/assets/images/ClockHandMinutes.svg";
 import { MappedCard, MapZone, useCardMap } from "@/components/Cards/CardMap";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
@@ -119,7 +119,7 @@ export const clockRules = {
 
 export default function Clock() {
   const AnimatedCircle = Animated.createAnimatedComponent(Circle);
-  const { colorPale, colorDark, colorZone } = useGameZoneBackground();
+  const { colorPale, colorDark, colorZone } = useGameColors();
   const { scale: responsiveScale } = useResponsiveMetrics();
 
   const {

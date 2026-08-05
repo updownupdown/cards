@@ -5,7 +5,7 @@ import { Colors, LayerZIndexes, layoutDims, rgba } from "@/styles/styles";
 import { useEffect, useRef } from "react";
 import { Animated, Easing, Platform, View } from "react-native";
 import { Button } from "../Button/Button";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { LinearGradient } from "expo-linear-gradient";
 import { clearLastGameSession } from "@/data/game-menu";
 import { router } from "expo-router";
@@ -30,7 +30,7 @@ export const WinLoseBox = ({
   handleUndo,
 }: Props) => {
   const { ui, spacing } = useResponsiveMetrics();
-  const { colorDark } = useGameZoneBackground();
+  const { colorDark } = useGameColors();
 
   // Win/lose animations
   const wlmAnim = useRef(new Animated.Value(0)).current;

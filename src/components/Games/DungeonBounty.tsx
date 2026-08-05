@@ -1,5 +1,5 @@
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 import { useMemo, useRef, useState } from "react";
@@ -238,7 +238,7 @@ export const dungeonBountyRules = {
 };
 
 export default function DungeonBounty() {
-  const { colorDark, colorPale } = useGameZoneBackground();
+  const { colorDark, colorPale } = useGameColors();
   const difficulty = useGameSettingValue("dungeonDifficulty") as Difficulty;
   const difficultyRef = useRef(difficulty);
   difficultyRef.current = difficulty;

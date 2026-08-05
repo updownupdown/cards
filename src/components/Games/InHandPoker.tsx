@@ -1,5 +1,5 @@
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 import { useMemo, useRef, useState } from "react";
@@ -291,7 +291,7 @@ function buildDeck(jokers: boolean) {
 // ── Component ────────────────────────────────────────────────────────────────
 export default function InHandPoker() {
   const { spacing } = useResponsiveMetrics();
-  const { colorDark, colorPale } = useGameZoneBackground();
+  const { colorDark, colorPale } = useGameColors();
   const jokers = useGameSettingValue("pokerJokers") as boolean;
   const jokersRef = useRef(jokers);
   jokersRef.current = jokers;

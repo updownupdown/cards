@@ -1,6 +1,6 @@
 import { Text } from "@/components/common/Text";
 import { useFade } from "@/hooks/useFade";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
@@ -156,7 +156,7 @@ export const bobaTeaShopRules = {
 // ========== Main Game Component ========== //
 export default function TheBobaTeaShop() {
   const { spacing } = useResponsiveMetrics();
-  const { colorZone, colorPale } = useGameZoneBackground();
+  const { colorZone, colorPale } = useGameColors();
   const [showDeckPreview, setShowDeckPreview] = useState(false);
   const [isResolvingCustomerAction, setIsResolvingCustomerAction] =
     useState(false);

@@ -1,5 +1,5 @@
 import { Text } from "@/components/common/Text";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
@@ -134,7 +134,7 @@ export const calculationRules = {
 
 // ================ Game Component ========== //
 export default function Calculation() {
-  const { colorZone } = useGameZoneBackground();
+  const { colorZone } = useGameColors();
   const { spacing } = useResponsiveMetrics();
 
   const {

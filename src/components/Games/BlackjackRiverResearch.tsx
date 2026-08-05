@@ -1,4 +1,4 @@
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, rgba } from "@/styles/styles";
@@ -262,7 +262,7 @@ export const blackjackRiverResearchRules = {
 // ========== Component ========== //
 export default function BlackjackRiverResearch() {
   const { spacing } = useResponsiveMetrics();
-  const { colorPale } = useGameZoneBackground();
+  const { colorPale } = useGameColors();
   const [selection, setSelection] = useState<Selection | null>(null);
 
   const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =

@@ -1,4 +1,4 @@
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
 import { delay } from "@/utils/utils";
@@ -200,7 +200,7 @@ async function resetAndSetup(
 }
 
 export default function TheBogey() {
-  const { colorZone } = useGameZoneBackground();
+  const { colorZone } = useGameColors();
 
   const { game, setGame, reset, isLoaded, canUndo, undo, saveUndoState } =
     useStateManager({

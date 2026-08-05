@@ -1,5 +1,5 @@
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 import { useEffect, useMemo, useRef } from "react";
@@ -179,7 +179,7 @@ export const islandOfCardsRules = {
 export default function IslandOfCards() {
   const showToast = useToast();
   const { spacing } = useResponsiveMetrics();
-  const { colorPale } = useGameZoneBackground();
+  const { colorPale } = useGameColors();
   const useJokers = useGameSettingValue("islandJokers");
   const jokersRef = useRef(useJokers);
   jokersRef.current = useJokers;

@@ -19,7 +19,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { View } from "react-native";
 import { Colors, rgba, transitionStyles } from "@/styles/styles";
 import { Text } from "../common/Text";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { flexStyles } from "@/styles/flexStyles";
 
 const ZONE_ROW_MULT = 1.1;
@@ -225,6 +225,18 @@ function dropHerb(draft: LeafbearerGameState, herbId: string) {
   return true;
 }
 
+function willReceiveHerbThisDistribution(
+  state: Readonly<LeafbearerGameState>,
+  location: number,
+) {
+  if (state.phase !== "distribute" || state.nextLocation === null) {
+    return false;
+  }
+  const distance =
+    (location - state.nextLocation + LOCATION_COUNT) % LOCATION_COUNT;
+  return distance < state.carriedHerbs.length;
+}
+
 function createLeafbearerDecks() {
   const deck = createDeck({ faceUp: false });
   return {
@@ -251,12 +263,13 @@ export const leafbearerRules = {
   evaluateOutcome,
   beginDistribution,
   dropHerb,
+  willReceiveHerbThisDistribution,
   createDecks: createLeafbearerDecks,
 };
 
 export default function Leafbearer() {
   const { spacing } = useResponsiveMetrics();
-  const { colorDark, colorPale } = useGameZoneBackground();
+  const { colorDark, colorPale } = useGameColors();
   const openStables = useGameSettingValue("leafbearerOpenStables");
   const openStablesRef = useRef(openStables);
   openStablesRef.current = openStables;
@@ -362,6 +375,7 @@ export default function Leafbearer() {
 
   function placeHerb(herbId: string) {
     if (game.phase !== "distribute" || game.ended) return;
+    saveUndoState(structuredClone(game));
     setGame((draft) => {
       dropHerb(draft, herbId);
     });
@@ -394,9 +408,13 @@ export default function Leafbearer() {
       cards: herbs,
       col: 1.8,
       row: index * ZONE_ROW_MULT,
-      baseZIndex: 1,
+      baseZIndex: 20,
       fan: { direction: "right", offset: 0.4 },
-      placeholder: { showCount: true, iconName: "stables" },
+      placeholder: {
+        showCount: true,
+        iconName: "herbs",
+        iconOpacity: 0.4,
+      },
     }));
 
     // ---------- Eaten Herbs ---------- //
@@ -420,21 +438,23 @@ export default function Leafbearer() {
         name: "carried",
         cards: game.carriedHerbs,
         col: 5.6,
-        row: 5 * ZONE_ROW_MULT,
+        row: 5.1 * ZONE_ROW_MULT,
         width: 1.4,
-        height: 4 + 3 * (ZONE_ROW_MULT - 1),
+        height: 3.9 + 3 * (ZONE_ROW_MULT - 1),
         baseZIndex: 50,
         fan: {
           direction: "down",
           offset: zoneFanOffset(
             game.carriedHerbs.length,
-            4 + 3 * (ZONE_ROW_MULT - 1) - 0.3,
+            3.9 + 3 * (ZONE_ROW_MULT - 1) - 0.3,
             0.1,
             1.1,
           ),
         },
         placeholder: {
-          iconName: "herbs",
+          iconName: "herbs-bowl",
+          iconOpacity: 0.4,
+          iconSize: 1.2,
         },
       },
       {
@@ -457,7 +477,7 @@ export default function Leafbearer() {
         cards: [game.noble],
         col: CREATURE_COL,
         row: STABLES_ROW,
-        baseZIndex: 20,
+        baseZIndex: 10,
         placeholder: {
           text: "Noble",
           infoPos: "right",
@@ -503,38 +523,57 @@ export default function Leafbearer() {
     return [...zones, ...(game.noble ? openStablesZones : [])];
   }, [game]);
 
-  console.log(game);
-
   const cardMapper = (
     mappedCard: MappedCard,
   ): AnimatedCardMapping | undefined => {
     if (mappedCard.zoneName === "herbs" && mappedCard.pileIndex !== undefined) {
       const canPickUp = game.phase === "chooseSource" && !game.ended;
-      const distributeTarget = game.nextLocation === mappedCard.pileIndex;
+      const isDistributeTarget = game.nextLocation === mappedCard.pileIndex;
+      const willReceiveHerb = willReceiveHerbThisDistribution(
+        game,
+        mappedCard.pileIndex,
+      );
 
       return {
         isDisabled: !canPickUp,
-        selectColor: distributeTarget ? "purple" : "lightGrey",
+        selectColor: isDistributeTarget
+          ? "purple"
+          : willReceiveHerb
+            ? "none"
+            : "lightGrey",
         forceOverlayColor: game.phase === "distribute",
         onPress: () => selectSource(mappedCard.pileIndex!),
       };
     } else if (mappedCard.zoneName === "creature") {
-      const distributeTarget = game.nextLocation === mappedCard.pileIndex;
+      const isDistributeTarget = game.nextLocation === mappedCard.pileIndex;
+      const willReceiveHerb = willReceiveHerbThisDistribution(
+        game,
+        mappedCard.pileIndex!,
+      );
       return {
-        selectColor: distributeTarget ? "purple" : "lightGrey",
+        selectColor: isDistributeTarget
+          ? "purple"
+          : willReceiveHerb
+            ? "none"
+            : "lightGrey",
         forceOverlayColor: game.phase === "distribute",
       };
     } else if (mappedCard.zoneName === "noble") {
-      const distributeTarget = game.nextLocation === STABLES_INDEX;
+      const isDistributeTarget = game.nextLocation === STABLES_INDEX;
+      const willReceiveHerb = willReceiveHerbThisDistribution(
+        game,
+        STABLES_INDEX,
+      );
       return {
-        selectColor: distributeTarget ? "purple" : "lightGrey",
+        selectColor: isDistributeTarget
+          ? "purple"
+          : willReceiveHerb
+            ? "none"
+            : "lightGrey",
         forceOverlayColor: game.phase === "distribute",
       };
     } else if (mappedCard.zoneName === "carried") {
       return {
-        isDisabled: game.phase !== "distribute" || game.ended,
-        selectColor: "green",
-        forceOverlayColor: true,
         onPress: () => placeHerb(mappedCard.card.id),
       };
     }
@@ -550,9 +589,17 @@ export default function Leafbearer() {
         const distributeTarget = game.nextLocation === zone.pileIndex;
 
         return {
-          forceOverlayColor: distributeTarget,
+          selectColor: distributeTarget ? Colors.cardSelectPurple : colorPale,
+          forceOverlayColor: true,
           forceSelectColor: distributeTarget,
-          selectColor: distributeTarget ? "purple" : "none",
+        };
+      } else if (zone.name === "carried") {
+        const isDistributing = game.phase === "distribute";
+
+        return {
+          selectColor: isDistributing ? Colors.cardSelectPurple : colorPale,
+          forceOverlayColor: true,
+          forceSelectColor: isDistributing,
         };
       }
     },
@@ -560,7 +607,6 @@ export default function Leafbearer() {
     gap: 0,
     fixedCols,
     fixedRows,
-    // visualizer: true,
   });
 
   return (
@@ -584,6 +630,12 @@ export default function Leafbearer() {
         const creatureRank = rankValue(creatureCard);
         const total = herbTotal(herbs);
         const progress = total / creatureRank;
+        const isDistributeTarget = game.nextLocation === index;
+        const progressColor = isDistributeTarget
+          ? rgba(Colors.cardSelectPurple, 0.6)
+          : progress > 1
+            ? rgba(Colors.cardSelectRed, 0.5)
+            : rgba(colorPale, 0.3);
 
         return (
           <View
@@ -600,7 +652,7 @@ export default function Leafbearer() {
                 backgroundColor: colorDark,
                 borderWidth: 1,
                 borderRadius: spacing(6),
-                borderColor: rgba(colorPale, 0.3),
+                borderColor: progressColor,
                 zIndex: 100,
               },
             ]}
@@ -624,9 +676,7 @@ export default function Leafbearer() {
                   left: 0,
                   top: 0,
                   height: "100%",
-                  backgroundColor:
-                    progress > 1 ? Colors.cardSelectRed : colorPale,
-                  opacity: 0.3,
+                  backgroundColor: progressColor,
                   width: `${progress * 100}%`,
                 },
               ]}

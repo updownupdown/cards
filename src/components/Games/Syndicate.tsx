@@ -1,5 +1,5 @@
 import { Text } from "@/components/common/Text";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
@@ -145,7 +145,7 @@ export const syndicateRules = {
 
 // ========== Main Component ========== //
 export default function Syndicate() {
-  const { colorZone } = useGameZoneBackground(0.6);
+  const { colorZone } = useGameColors(0.6);
 
   const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
     useStateManager({

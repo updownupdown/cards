@@ -1,5 +1,5 @@
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
@@ -176,7 +176,7 @@ export const clearTheDungeonRules = {
 // ── Component ────────────────────────────────────────────────────────────────
 export default function ClearTheDungeon() {
   const { spacing } = useResponsiveMetrics();
-  const { colorPale } = useGameZoneBackground();
+  const { colorPale } = useGameColors();
   const level = useGameSettingValue("dungeonLevel") as number;
   const boomer = useGameSettingValue("boomerAce") as boolean;
   const powerReserveOn = useGameSettingValue("powerReserve") as boolean;

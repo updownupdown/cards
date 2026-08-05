@@ -1,5 +1,5 @@
 import { Text } from "@/components/common/Text";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { Icon } from "@/icons";
@@ -241,7 +241,7 @@ export const skywayRules = {
 
 // ========== Main Component ========== //
 export default function Skyway() {
-  const { colorZone } = useGameZoneBackground();
+  const { colorZone } = useGameColors();
   const { spacing } = useResponsiveMetrics();
 
   const [selectedMarket, setSelectedMarket] = useState<number | null>(null);

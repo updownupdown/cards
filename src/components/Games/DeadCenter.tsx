@@ -6,7 +6,7 @@ import {
   useCardMap,
 } from "@/components/Cards/CardMap";
 import { Text } from "@/components/common/Text";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
 import { FontWeight } from "@/styles/styles";
@@ -313,7 +313,7 @@ export const deadCenterRules = {
 };
 
 export default function DeadCenter() {
-  const { colorZone, colorPale } = useGameZoneBackground();
+  const { colorZone, colorPale } = useGameColors();
   const [showDeckPreview, setShowDeckPreview] = useState(false);
 
   const {

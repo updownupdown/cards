@@ -19,6 +19,10 @@ export type GameSpecificSettingKey =
   | "merchantCheckBack"
   | "merchantSuperExclusive"
   | "merchantVandals"
+  | "bardsLoyalPatrons"
+  | "bardsCheckBack"
+  | "bardsSuperExclusive"
+  | "bardsVandals"
   | "clubFightDifficulty"
   | "leafbearerOpenStables";
 export type GameSpecificSettingApplyBehavior = "immediate" | "next-game";
@@ -438,6 +442,58 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
           { label: "Off", value: 0 },
           { label: "1 Joker (Hard)", value: 1 },
           { label: "2 Jokers (Harder)", value: 2 },
+        ],
+      },
+    ],
+    "/bards-and-nobles": [
+      {
+        key: "bardsLoyalPatrons",
+        label: "Loyal Patrons",
+        type: "boolean",
+        booleanType: "toggle",
+        applyBehavior: "next-game",
+        description:
+          "Offers using four or more Books add the Customer to Guild Standing.",
+        options: [
+          { label: "Off", value: false },
+          { label: "On (Easy)", value: true },
+        ],
+      },
+      {
+        key: "bardsCheckBack",
+        label: "Let Me Check in the Back",
+        type: "boolean",
+        booleanType: "toggle",
+        applyBehavior: "next-game",
+        description: "The top Book in Inventory can be included in an offer.",
+        options: [
+          { label: "Off", value: false },
+          { label: "On (Easy)", value: true },
+        ],
+      },
+      {
+        key: "bardsSuperExclusive",
+        label: "Super Exclusive Offer",
+        type: "boolean",
+        booleanType: "toggle",
+        applyBehavior: "next-game",
+        description: "Books matching the Used Book's genre or value cost $0.",
+        options: [
+          { label: "Off", value: false },
+          { label: "On (Hard)", value: true },
+        ],
+      },
+      {
+        key: "bardsVandals",
+        label: "Vandals!",
+        type: "string",
+        applyBehavior: "next-game",
+        description:
+          "Jokers lock the first available Bookstore shelf when they reach the Line.",
+        options: [
+          { label: "Off", value: "off" },
+          { label: "1 Joker (Hard)", value: "one" },
+          { label: "2 Jokers (Harder)", value: "two" },
         ],
       },
     ],

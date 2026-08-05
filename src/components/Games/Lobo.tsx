@@ -1,6 +1,6 @@
 import { useFade } from "@/hooks/useFade";
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
@@ -380,7 +380,7 @@ export const loboRules = {
 // ── Component ────────────────────────────────────────────────────────────────
 export default function Lobo() {
   const { spacing } = useResponsiveMetrics();
-  const { colorPale } = useGameZoneBackground();
+  const { colorPale } = useGameColors();
   const mode = useGameSettingValue("loboMode") as LoboMode;
   const modeRef = useRef(mode);
   modeRef.current = mode;

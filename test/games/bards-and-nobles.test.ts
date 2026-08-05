@@ -37,6 +37,15 @@ describe("Bards & Nobles rules", () => {
     ).toBe(4);
   });
 
+  test("makes matching book values free with Super Exclusive Offer", () => {
+    const usedBook = card("4", "spades");
+    const books = [card("4", "hearts"), card("3", "clubs")];
+
+    expect(
+      bardsAndNoblesRules.selectedOfferValue(books, usedBook, new Set(), true),
+    ).toBe(3);
+  });
+
   test("maps final Guild Standing to the documented result", () => {
     expect(bardsAndNoblesRules.outcomeMessage(9)).toBe("Terminated");
     expect(bardsAndNoblesRules.outcomeMessage(10)).toBe(

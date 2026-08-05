@@ -20,7 +20,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
 import { Pressable, View } from "react-native";
 import { flexStyles } from "@/styles/flexStyles";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 
 const GRID_CONFIG = {
   veryeasy: { cols: 4, rows: 3 },
@@ -131,7 +131,7 @@ export default function Memory() {
   const [matchedPair, setMatchedPair] = useState<MatchedPair | null>(null);
   const [isGameModalOpen, setIsGameModalOpen] = useState(false);
   const pendingPair = useRef<PendingPair | null>(null);
-  const { colorPale } = useGameZoneBackground();
+  const { colorPale } = useGameColors();
 
   const { isLoaded, game, setGame, reset } = useStateManager({
     resetAndSetup: async () => {

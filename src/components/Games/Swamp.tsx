@@ -14,7 +14,7 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { View } from "react-native";
 import { Text } from "../common/Text";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { flexStyles } from "@/styles/flexStyles";
 
 const BOARD_COLS = 4;
@@ -283,7 +283,7 @@ async function resetAndSetup(
 }
 
 export default function Swamp() {
-  const { colorPale } = useGameZoneBackground();
+  const { colorPale } = useGameColors();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
     useStateManager({

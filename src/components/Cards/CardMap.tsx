@@ -76,6 +76,7 @@ export type MapZone = {
     backgroundColor?: string;
     iconName?: IconName;
     iconSize?: number;
+    iconOpacity?: number;
   };
   clickThroughCards?: boolean;
 };

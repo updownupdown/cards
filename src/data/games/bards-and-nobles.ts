@@ -4,13 +4,12 @@ import { GameCreators } from "../game-creators";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const bardsAndNobles: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/bards-and-nobles",
   title: "Bards & Nobles",
   tags: [GameTag.EasyToLearn, GameTag.ModernMechanics, GameTag.ScoringPuzzles],
   rating: { complexity: 45, difficulty: 55, luck: 50 },
   thumbnail: "BardsAndNobles.jpg",
-  background: GAME_BACKGROUNDS.castle,
+  background: GAME_BACKGROUNDS.bookstore,
   animation: GameAnimations.Dust,
   gameColorDark: "#2e2d27",
   gameColorPale: "#f0e9d7",

@@ -8,7 +8,7 @@ import { DeckInfoPosition } from "@/components/Cards/CardMapBackgrounds";
 import { Text } from "@/components/common/Text";
 import { useToast } from "@/components/common/Toast";
 import { useFade } from "@/hooks/useFade";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
@@ -43,7 +43,7 @@ import {
 
 export default function TheEmissary() {
   const { spacing } = useResponsiveMetrics();
-  const { colorZone, colorDark, colorPale } = useGameZoneBackground();
+  const { colorZone, colorDark, colorPale } = useGameColors();
   const showToast = useToast();
 
   const [selectedAdvisor, setSelectedAdvisor] = useState<

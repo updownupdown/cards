@@ -1,4 +1,4 @@
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { Icon } from "@/icons";
@@ -318,7 +318,7 @@ export const regicideRules = {
 // ---------- Main Component ---------- //
 export default function Regicide() {
   const { spacing } = useResponsiveMetrics();
-  const { colorZone, colorDark, colorPale } = useGameZoneBackground();
+  const { colorZone, colorDark, colorPale } = useGameColors();
 
   const {
     game,

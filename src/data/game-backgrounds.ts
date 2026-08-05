@@ -157,6 +157,11 @@ export const GAME_BACKGROUNDS = {
     authorName: "Aleksandr Popov",
     authorLink: "https://unsplash.com/@5tep5",
   },
+  bookstore: {
+    source: require("@/assets/backgrounds/bookstore.jpg"),
+    authorName: "Ashley Byrd",
+    authorLink: "https://unsplash.com/@byrdman85",
+  },
 } satisfies Record<string, GameBackground>;
 
 export const {
@@ -190,4 +195,5 @@ export const {
   greenhouse,
   cherryBlossoms,
   club,
+  bookstore,
 } = GAME_BACKGROUNDS;

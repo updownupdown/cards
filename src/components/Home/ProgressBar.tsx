@@ -34,6 +34,7 @@ interface Props {
   previewProgressValue?: number;
   iconName?: IconName;
   color: string;
+  backgroundColor?: string;
   scaledHeight?: number;
   labelText?: string;
   tallyText?: string | number;
@@ -46,6 +47,7 @@ export const ProgressBar = ({
   previewProgressValue,
   iconName,
   color,
+  backgroundColor,
   labelText,
   tallyText,
   totalValue,
@@ -159,7 +161,7 @@ export const ProgressBar = ({
         {
           position: "relative",
           height,
-          backgroundColor: rgba(Colors.K400, 0.12),
+          backgroundColor: backgroundColor ?? rgba(Colors.K400, 0.12),
           borderRadius: roundToPixel(height / 2),
           width: "100%",
           boxShadow: `inset 0 0 0 ${roundToPixel(height * 0.03)}px ${rgba(

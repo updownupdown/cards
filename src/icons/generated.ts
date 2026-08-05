@@ -40,6 +40,7 @@ import HeartIcon from "./Heart.svg";
 import HeartsIcon from "./Hearts.svg";
 import HelpOutlineIcon from "./HelpOutline.svg";
 import HerbsIcon from "./Herbs.svg";
+import HerbsBowlIcon from "./HerbsBowl.svg";
 import HomeIcon from "./Home.svg";
 import InfoIcon from "./Info.svg";
 import InfoOutlineIcon from "./InfoOutline.svg";
@@ -49,6 +50,7 @@ import ListMediumIcon from "./ListMedium.svg";
 import ListSmallIcon from "./ListSmall.svg";
 import MenuIcon from "./Menu.svg";
 import MoreVerticalIcon from "./MoreVertical.svg";
+import OfferIcon from "./Offer.svg";
 import PlusOutlineIcon from "./PlusOutline.svg";
 import PotionIcon from "./Potion.svg";
 import RecentIcon from "./Recent.svg";
@@ -58,7 +60,6 @@ import SequenceIcon from "./Sequence.svg";
 import SettingsIcon from "./Settings.svg";
 import SkullIcon from "./Skull.svg";
 import SpadesIcon from "./Spades.svg";
-import StablesIcon from "./Stables.svg";
 import StarIcon from "./Star.svg";
 import StarOutlineIcon from "./StarOutline.svg";
 import SwordIcon from "./Sword.svg";
@@ -102,6 +103,7 @@ export type IconName =
   | "hearts"
   | "help-outline"
   | "herbs"
+  | "herbs-bowl"
   | "home"
   | "info"
   | "info-outline"
@@ -111,6 +113,7 @@ export type IconName =
   | "list-small"
   | "menu"
   | "more-vertical"
+  | "offer"
   | "plus-outline"
   | "potion"
   | "recent"
@@ -120,7 +123,6 @@ export type IconName =
   | "settings"
   | "skull"
   | "spades"
-  | "stables"
   | "star"
   | "star-outline"
   | "sword"
@@ -164,6 +166,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "hearts": HeartsIcon,
   "help-outline": HelpOutlineIcon,
   "herbs": HerbsIcon,
+  "herbs-bowl": HerbsBowlIcon,
   "home": HomeIcon,
   "info": InfoIcon,
   "info-outline": InfoOutlineIcon,
@@ -173,6 +176,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "list-small": ListSmallIcon,
   "menu": MenuIcon,
   "more-vertical": MoreVerticalIcon,
+  "offer": OfferIcon,
   "plus-outline": PlusOutlineIcon,
   "potion": PotionIcon,
   "recent": RecentIcon,
@@ -182,7 +186,6 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "settings": SettingsIcon,
   "skull": SkullIcon,
   "spades": SpadesIcon,
-  "stables": StablesIcon,
   "star": StarIcon,
   "star-outline": StarOutlineIcon,
   "sword": SwordIcon,

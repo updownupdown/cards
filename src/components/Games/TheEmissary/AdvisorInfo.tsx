@@ -1,6 +1,6 @@
 import { Text } from "@/components/common/Text";
 import { useFade } from "@/hooks/useFade";
-import { useGameZoneBackground } from "@/hooks/useGameZoneBackground";
+import { useGameColors } from "@/hooks/useGameColors";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, FontWeight } from "@/styles/styles";
 import { Animated, View, ViewStyle } from "react-native";
@@ -33,7 +33,7 @@ export const AdvisorInfo = ({
   cardWidth,
 }: AdvisorInfoProps) => {
   const { spacing } = useResponsiveMetrics();
-  const { colorDark } = useGameZoneBackground();
+  const { colorDark } = useGameColors();
   const { isRendered: renderAdvisorInfo, opacity: advisorInfoOpacity } =
     useFade(!!selectedAdvisor || discardFromHand !== 0, 300);
 
