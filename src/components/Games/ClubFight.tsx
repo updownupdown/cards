@@ -266,12 +266,12 @@ function getActionClearIndexes(
   if (action === "row" || action === "column") {
     const selectedLine = actionLine(action, selectedIndexes);
     const indexes = selectedLine === null ? [] : lineIndexes(selectedLine);
+    const occupiedIndexes = indexes.filter(
+      (index) => state.grid[index] !== null,
+    );
     if (
-      selectedIndexes.length !== indexes.length ||
-      indexes.some(
-        (index) =>
-          !selectedIndexes.includes(index) || state.grid[index] === null,
-      )
+      selectedIndexes.length !== occupiedIndexes.length ||
+      occupiedIndexes.some((index) => !selectedIndexes.includes(index))
     ) {
       return [];
     }

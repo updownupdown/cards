@@ -98,6 +98,42 @@ describe("Deck of Spies rules", () => {
     ).toBe(false);
   });
 
+  test("identifies when a hand has a set available for retirement", () => {
+    expect(
+      deckOfSpiesRules.hasRetireSet([
+        card("2", "clubs", "two-clubs"),
+        card("2", "hearts", "two-hearts"),
+      ]),
+    ).toBe(true);
+    expect(
+      deckOfSpiesRules.hasRetireSet([
+        card("2", "clubs", "two-clubs"),
+        card("3", "hearts", "three-hearts"),
+      ]),
+    ).toBe(false);
+  });
+
+  test("selects and clears an entire matching retire set", () => {
+    const hand = [
+      card("2", "clubs", "two-clubs"),
+      card("2", "hearts", "two-hearts"),
+      card("3", "spades", "three-spades"),
+    ];
+
+    const selected = deckOfSpiesRules.toggleRetireSetSelection(
+      hand,
+      [hand[2]],
+      hand[0],
+    );
+    expect(selected).toEqual([hand[0], hand[1]]);
+    expect(
+      deckOfSpiesRules.toggleRetireSetSelection(hand, selected, hand[1]),
+    ).toEqual([]);
+    expect(
+      deckOfSpiesRules.toggleRetireSetSelection(hand, [], hand[2]),
+    ).toEqual([]);
+  });
+
   test("recycles the discard face down while refilling to five", () => {
     const result = deckOfSpiesRules.drawToFive(
       [],
@@ -109,6 +145,11 @@ describe("Deck of Spies rules", () => {
     expect(result.drawDiscard).toEqual([]);
     expect(result.hand).toHaveLength(3);
     expect(result.hand.every((entry) => entry.faceUp)).toBe(true);
+    expect(result.hand.map((entry) => entry.id)).toEqual([
+      "seven",
+      "six",
+      "two",
+    ]);
   });
 
   test("wins only with more Key Spies than the Spy Discard", () => {

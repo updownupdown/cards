@@ -4,7 +4,7 @@ import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors } from "@/styles/styles";
 import { delay } from "@/utils/utils";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { View } from "react-native";
 import { Button } from "../Button/Button";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
@@ -22,6 +22,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
+import { ProgressBar } from "../Home/ProgressBar";
 
 type GamePhase = "action" | "retire" | "assassinate";
 type AceSource = "hand" | "drawDeck" | "drawDiscard";
@@ -88,6 +89,34 @@ function canRetire(cards: PlayingCard[]) {
     cards.length <= 4 &&
     cards.every((card) => card.rank === cards[0].rank)
   );
+}
+
+function hasRetireSet(hand: PlayingCard[]) {
+  return hand.some(
+    (card) =>
+      hand.filter((handCard) => handCard.rank === card.rank).length >= 2,
+  );
+}
+
+function toggleRetireSetSelection(
+  hand: PlayingCard[],
+  selectedCards: PlayingCard[],
+  card: PlayingCard,
+) {
+  const matchingCards = hand.filter((handCard) => handCard.rank === card.rank);
+
+  if (matchingCards.length < 2) return selectedCards;
+
+  const selectedIds = new Set(
+    selectedCards.map((selectedCard) => selectedCard.id),
+  );
+  if (selectedIds.has(card.id)) {
+    return selectedCards.filter(
+      (selectedCard) => selectedCard.rank !== card.rank,
+    );
+  }
+
+  return matchingCards;
 }
 
 function drawToFive(
@@ -174,6 +203,8 @@ export const deckOfSpiesRules = {
   isMinimalCounter,
   canRecruit,
   canRetire,
+  hasRetireSet,
+  toggleRetireSetSelection,
   drawToFive,
   createGame,
   keySpyCount,
@@ -237,11 +268,29 @@ export default function DeckOfSpies() {
   const counterValid = spy ? isMinimalCounter(game.selectedCards, spy) : false;
   const recruitValid = spy ? canRecruit(game.selectedCards, spy) : false;
   const retireValid = canRetire(game.selectedCards);
+  const retireSetAvailable = hasRetireSet(game.hand);
 
   function toggleCard(card: PlayingCard) {
     if (game.ended || game.phase === "assassinate") return;
 
     setGame((draft) => {
+      if (draft.phase === "retire") {
+        const selectedCards = toggleRetireSetSelection(
+          draft.hand,
+          draft.selectedCards,
+          card,
+        );
+        if (canRetire(selectedCards)) {
+          draft.hand = removeSelected(draft.hand, selectedCards);
+          draft.removedDeck.push(...selectedCards.map(flipToBack));
+          finishTurn(draft);
+          return;
+        }
+
+        draft.selectedCards = selectedCards;
+        return;
+      }
+
       const selected = draft.selectedCards.some(
         (selectedCard) => selectedCard.id === card.id,
       );
@@ -277,6 +326,20 @@ export default function DeckOfSpies() {
     }
   }
 
+  useEffect(() => {
+    if (game.phase !== "retire" || retireSetAvailable) return;
+
+    const timeout = setTimeout(() => {
+      setGame((draft) => {
+        if (draft.phase === "retire" && !hasRetireSet(draft.hand)) {
+          finishTurn(draft);
+        }
+      });
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [game.phase, retireSetAvailable, setGame]);
+
   function resolvePrimary(action: "counter" | "recruit") {
     if (!spy || (action === "counter" ? !counterValid : !recruitValid)) {
       return;
@@ -301,16 +364,6 @@ export default function DeckOfSpies() {
   function finishWithoutRetiring() {
     if (game.phase !== "retire") return;
     setGame((draft) => finishTurn(draft));
-  }
-
-  function retire() {
-    if (game.phase !== "retire" || !retireValid) return;
-
-    setGame((draft) => {
-      draft.hand = removeSelected(draft.hand, draft.selectedCards);
-      draft.removedDeck.push(...draft.selectedCards.map(flipToBack));
-      finishTurn(draft);
-    });
   }
 
   function chooseAssassinationSource(source: AceSource) {
@@ -367,7 +420,7 @@ export default function DeckOfSpies() {
         col: 0,
         row: 0,
         cards: game.spyDiscard,
-        fan: { maxVisible: 1 },
+        fan: { maxVisible: 3 },
         placeholder: {
           text: "Discard",
           infoPos: "right",
@@ -381,7 +434,7 @@ export default function DeckOfSpies() {
         col: 0,
         row: 1,
         cards: game.spyDeck,
-        fan: { maxVisible: 1 },
+        fan: { maxVisible: 3 },
         placeholder: { text: "Spies", infoPos: "right", showCount: true },
         baseZIndex: 20,
       },
@@ -391,7 +444,7 @@ export default function DeckOfSpies() {
         col: 1.5,
         row: 0,
         cards: game.removedDeck,
-        fan: { maxVisible: 1 },
+        fan: { maxVisible: 3 },
         placeholder: {
           text: "Rem.",
           infoPos: "below",
@@ -405,7 +458,7 @@ export default function DeckOfSpies() {
         col: 3,
         row: 0,
         cards: game.drawDiscard,
-        fan: { maxVisible: 1 },
+        fan: { maxVisible: 3 },
         placeholder: {
           text: "Discard",
           infoPos: "left",
@@ -420,7 +473,7 @@ export default function DeckOfSpies() {
         col: 3,
         row: 1,
         cards: game.drawDeck,
-        fan: { maxVisible: 1 },
+        fan: { maxVisible: 3 },
         placeholder: { text: "Draw", infoPos: "left", showCount: true },
         baseZIndex: 20,
       },
@@ -434,7 +487,7 @@ export default function DeckOfSpies() {
         cards: game.hand,
         fan: {
           direction: "right",
-          offset: zoneFanOffset(game.hand.length, 4.7, 0.1, 1),
+          offset: zoneFanOffset(game.hand.length, 4.7, 0.1, 0.75),
           center: true,
         },
         baseZIndex: 30,
@@ -444,6 +497,7 @@ export default function DeckOfSpies() {
         col: 0,
         row: 3.3,
         width: 4,
+        height: 1.04,
       },
     ],
     [game],
@@ -456,21 +510,28 @@ export default function DeckOfSpies() {
     const selected = game.selectedCards.some(
       (card) => card.id === mappedCard.card.id,
     );
+    const isRetireSingleton =
+      game.phase === "retire" &&
+      game.hand.filter((card) => card.rank === mappedCard.card.rank).length ===
+        1;
 
     return {
       isSelected: selected,
-      selectColor: selected
-        ? game.phase === "retire"
-          ? retireValid
-            ? "purple"
-            : "orange"
-          : "blue"
-        : "none",
+      selectColor: isRetireSingleton
+        ? "grey"
+        : selected
+          ? game.phase === "retire"
+            ? retireValid
+              ? "purple"
+              : "orange"
+            : "blue"
+          : "none",
+      forceOverlayColor: isRetireSingleton,
       onPress: () => toggleCard(mappedCard.card),
     };
   };
 
-  const { cardMap, getZoneStylesById } = useCardMap({
+  const { cardMap, cardHeight, cardWidth, getZoneStylesById } = useCardMap({
     game,
     zones,
     cardMapper,
@@ -504,27 +565,53 @@ export default function DeckOfSpies() {
         <View
           style={[
             flexStyles.rowCentered,
-            flexStyles.fullWidth,
             flexStyles.spaceBetween,
+            {
+              gap: spacing(20),
+            },
           ]}
         >
-          <Text size="md" weight={400} color={colorPale}>
-            {game.phase === "retire"
-              ? "Retire a matching set, or finish"
-              : game.phase === "assassinate"
-                ? "Remove a Double Agent from:"
-                : spy
-                  ? `${selectionTotal} / ${spy.rank}`
+          {game.phase === "action" && spy ? (
+            <ProgressBar
+              progressValue={selectionTotal}
+              totalValue={rankValue(spy)}
+              color={
+                selectionTotal > rankValue(spy)
+                  ? "red"
+                  : selectionTotal === rankValue(spy)
+                    ? "green"
+                    : "blue"
+              }
+              style={{ flex: 1, width: cardWidth * 2 }}
+              scaledHeight={cardHeight * 0.33}
+              autoTallyText
+            />
+          ) : (
+            <Text
+              size="md"
+              weight={400}
+              color={colorPale}
+              style={{ flex: 1, textAlign: "center" }}
+            >
+              {game.phase === "retire"
+                ? retireSetAvailable
+                  ? "Retire a matching set, or skip"
+                  : "No sets available for retirement"
+                : game.phase === "assassinate"
+                  ? "Remove a Double Agent from:"
                   : "No spies remain"}
-          </Text>
+            </Text>
+          )}
 
-          <Button
-            text="Clear"
-            size="sm"
-            theme="blue"
-            onPress={clearSelection}
-            disabled={game.selectedCards.length === 0}
-          />
+          {game.phase === "action" && (
+            <Button
+              text="Clear"
+              size="sm"
+              theme="blue"
+              onPress={clearSelection}
+              disabled={game.selectedCards.length === 0}
+            />
+          )}
         </View>
         <View style={[flexStyles.rowCentered, flexStyles.fullWidth]}></View>
 
@@ -565,25 +652,14 @@ export default function DeckOfSpies() {
             </>
           )}
           {game.phase === "retire" && (
-            <>
-              <Button
-                text="Retire"
-                size="sm"
-                theme="purple"
-                disabled={!retireValid}
-                onPress={retire}
-                style={{ flex: 1 }}
-                taller
-              />
-              <Button
-                text="Finish"
-                size="sm"
-                theme="green"
-                onPress={finishWithoutRetiring}
-                style={{ flex: 1 }}
-                taller
-              />
-            </>
+            <Button
+              text="Skip"
+              size="sm"
+              theme="green"
+              onPress={finishWithoutRetiring}
+              style={{ flex: 1 }}
+              taller
+            />
           )}
           {game.phase === "assassinate" &&
             aceSources.map((source) => (
