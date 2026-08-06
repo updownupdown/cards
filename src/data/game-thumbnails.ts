@@ -37,7 +37,6 @@ export const GAME_THUMBNAIL_ASSETS = {
   "Lobo.jpg": require("@/assets/thumbnails/Lobo.jpg"),
   "LootTheLoop.jpg": require("@/assets/thumbnails/LootTheLoop.jpg"),
   "Memory.jpg": require("@/assets/thumbnails/Memory.jpg"),
-  "MerchantSolitaire.jpg": require("@/assets/thumbnails/MerchantSolitaire.jpg"),
   "MonteCarlo.jpg": require("@/assets/thumbnails/MonteCarlo.jpg"),
   "OptritaLines.jpg": require("@/assets/thumbnails/OptritaLines.jpg"),
   "Penguin.jpg": require("@/assets/thumbnails/Penguin.jpg"),

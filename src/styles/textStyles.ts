@@ -6,7 +6,7 @@ export const textStyles = StyleSheet.create({
     ...Platform.select({
       // Web uses the unified standard CSS textShadow string
       web: {
-        textShadow: "0 1px 2px rgba(0, 0, 0, 0.4)",
+        textShadow: "0 1px 3px rgba(0, 0, 0, 0.3)",
       },
       // iOS and Android use the separate mobile style props
       default: {

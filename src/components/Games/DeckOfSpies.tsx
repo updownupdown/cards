@@ -16,6 +16,7 @@ import {
   rankValue,
   shuffle,
   sortCardsBySuit,
+  zoneFanOffset,
   type PlayingCard,
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
@@ -28,6 +29,7 @@ type AceSource = "hand" | "drawDeck" | "drawDiscard";
 export type DeckOfSpiesGameState = {
   spyDeck: PlayingCard[];
   spyDiscard: PlayingCard[];
+  removedDeck: PlayingCard[];
   drawDeck: PlayingCard[];
   drawDiscard: PlayingCard[];
   hand: PlayingCard[];
@@ -41,6 +43,7 @@ export type DeckOfSpiesGameState = {
 const gameStateInitial: DeckOfSpiesGameState = {
   spyDeck: [],
   spyDiscard: [],
+  removedDeck: [],
   drawDeck: [],
   drawDiscard: createDeck().map(flipToBack),
   hand: [],
@@ -136,6 +139,7 @@ function createGame(
   return {
     spyDeck: [...pileFour, ...pileThree, ...pileTwo].map(flipToFace),
     spyDiscard: [],
+    removedDeck: [],
     ...dealt,
     selectedCards: [],
     phase: "action",
@@ -186,6 +190,7 @@ async function setupGame(
       [
         ...draft.spyDeck,
         ...draft.spyDiscard,
+        ...draft.removedDeck,
         ...draft.drawDeck,
         ...draft.drawDiscard,
         ...draft.hand,
@@ -193,6 +198,7 @@ async function setupGame(
     );
     draft.spyDeck = [];
     draft.spyDiscard = [];
+    draft.removedDeck = [];
     draft.drawDeck = [];
     draft.hand = [];
     draft.selectedCards = [];
@@ -214,7 +220,7 @@ function removeSelected(hand: PlayingCard[], selectedCards: PlayingCard[]) {
 
 export default function DeckOfSpies() {
   const { spacing } = useResponsiveMetrics();
-  const { colorZone } = useGameColors();
+  const { colorPale } = useGameColors();
   const { game, setGame, reset, isLoaded, canUndo, undo, saveUndoState } =
     useStateManager<DeckOfSpiesGameState>({
       gameStateInitial,
@@ -244,6 +250,12 @@ export default function DeckOfSpies() {
             (selectedCard) => selectedCard.id !== card.id,
           )
         : [...draft.selectedCards, card];
+    });
+  }
+
+  function clearSelection() {
+    setGame((draft) => {
+      draft.selectedCards = [];
     });
   }
 
@@ -296,7 +308,7 @@ export default function DeckOfSpies() {
 
     setGame((draft) => {
       draft.hand = removeSelected(draft.hand, draft.selectedCards);
-      draft.spyDiscard.push(...draft.selectedCards.map(flipToBack));
+      draft.removedDeck.push(...draft.selectedCards.map(flipToBack));
       finishTurn(draft);
     });
   }
@@ -312,7 +324,10 @@ export default function DeckOfSpies() {
 
       const cards = draft[source];
       const aceIndex = cards.findIndex((card) => card.rank === "A");
-      if (aceIndex >= 0) cards.splice(aceIndex, 1);
+      if (aceIndex >= 0) {
+        const [ace] = cards.splice(aceIndex, 1);
+        if (ace) draft.removedDeck.push(flipToBack(ace));
+      }
       if (source === "drawDeck") draft.drawDeck = shuffle(draft.drawDeck);
 
       draft.drawDiscard.push(...draft.hand.map(flipToFace));
@@ -348,41 +363,47 @@ export default function DeckOfSpies() {
   const zones: MapZone[] = useMemo(
     () => [
       {
-        id: "spyDeck",
-        name: "spyDeck",
-        col: 0.5,
-        row: 0,
-        cards: game.spyDeck,
-        fan: { maxVisible: 1 },
-        placeholder: { text: "Spies", infoPos: "right", showCount: true },
-        baseZIndex: 20,
-      },
-      {
         id: "spyDiscard",
-        col: 2.5,
+        col: 0,
         row: 0,
         cards: game.spyDiscard,
         fan: { maxVisible: 1 },
         placeholder: {
           text: "Discard",
-          infoPos: "left",
+          infoPos: "right",
           showCount: true,
         },
         baseZIndex: 20,
       },
       {
-        id: "drawDeck",
-        col: 0.5,
+        id: "spyDeck",
+        name: "spyDeck",
+        col: 0,
         row: 1,
-        cards: game.drawDeck,
+        cards: game.spyDeck,
         fan: { maxVisible: 1 },
-        placeholder: { text: "Draw", infoPos: "right", showCount: true },
+        placeholder: { text: "Spies", infoPos: "right", showCount: true },
         baseZIndex: 20,
       },
+
+      {
+        id: "removedDeck",
+        col: 1.5,
+        row: 0,
+        cards: game.removedDeck,
+        fan: { maxVisible: 1 },
+        placeholder: {
+          text: "Rem.",
+          infoPos: "below",
+          showCount: true,
+        },
+        baseZIndex: 20,
+      },
+
       {
         id: "drawDiscard",
-        col: 2.5,
-        row: 1,
+        col: 3,
+        row: 0,
         cards: game.drawDiscard,
         fan: { maxVisible: 1 },
         placeholder: {
@@ -393,23 +414,36 @@ export default function DeckOfSpies() {
         },
         baseZIndex: 20,
       },
+
+      {
+        id: "drawDeck",
+        col: 3,
+        row: 1,
+        cards: game.drawDeck,
+        fan: { maxVisible: 1 },
+        placeholder: { text: "Draw", infoPos: "left", showCount: true },
+        baseZIndex: 20,
+      },
+
       {
         id: "hand",
         name: "hand",
         col: 0,
-        row: 2.25,
+        row: 2.2,
         width: 4,
         cards: game.hand,
-        fan: { direction: "right", offset: 0.56, center: true },
-        placeholder: { text: "Hand", infoPos: "above" },
+        fan: {
+          direction: "right",
+          offset: zoneFanOffset(game.hand.length, 4.7, 0.1, 1),
+          center: true,
+        },
         baseZIndex: 30,
       },
       {
         id: "actions",
         col: 0,
-        row: 3.25,
+        row: 3.3,
         width: 4,
-        // height: 1,
       },
     ],
     [game],
@@ -425,15 +459,12 @@ export default function DeckOfSpies() {
 
     return {
       isSelected: selected,
-      yOffset: selected ? -0.16 : 0,
       selectColor: selected
         ? game.phase === "retire"
           ? retireValid
             ? "purple"
             : "orange"
-          : counterValid || recruitValid
-            ? "blue"
-            : "orange"
+          : "blue"
         : "none",
       onPress: () => toggleCard(mappedCard.card),
     };
@@ -444,12 +475,13 @@ export default function DeckOfSpies() {
     zones,
     cardMapper,
     cardSize: "regular",
+    // visualizer: true,
   });
 
   const sourceNames: Record<AceSource, string> = {
-    hand: "Hand A",
-    drawDeck: "Deck A",
-    drawDiscard: "Discard A",
+    hand: "Hand",
+    drawDeck: "Deck",
+    drawDiscard: "Discard",
   };
 
   return (
@@ -466,38 +498,60 @@ export default function DeckOfSpies() {
         style={[
           getZoneStylesById("actions"),
           flexStyles.colCentered,
-          {
-            position: "absolute",
-            justifyContent: "space-evenly",
-            paddingHorizontal: spacing(8),
-            backgroundColor: colorZone,
-            borderRadius: spacing(8),
-          },
+          flexStyles.spaceBetween,
         ]}
       >
-        <Text size="sm" color={Colors.white}>
-          {game.phase === "retire"
-            ? "Retire a matching set, or finish"
-            : game.phase === "assassinate"
-              ? "Remove a Double Agent"
-              : spy
-                ? `${spy.rank} target · selected ${selectionTotal}`
-                : "No spies remain"}
-        </Text>
         <View
           style={[
             flexStyles.rowCentered,
-            { width: "100%", gap: spacing(6), flexWrap: "wrap" },
+            flexStyles.fullWidth,
+            flexStyles.spaceBetween,
+          ]}
+        >
+          <Text size="md" weight={400} color={colorPale}>
+            {game.phase === "retire"
+              ? "Retire a matching set, or finish"
+              : game.phase === "assassinate"
+                ? "Remove a Double Agent from:"
+                : spy
+                  ? `${selectionTotal} / ${spy.rank}`
+                  : "No spies remain"}
+          </Text>
+
+          <Button
+            text="Clear"
+            size="sm"
+            theme="blue"
+            onPress={clearSelection}
+            disabled={game.selectedCards.length === 0}
+          />
+        </View>
+        <View style={[flexStyles.rowCentered, flexStyles.fullWidth]}></View>
+
+        <View
+          style={[
+            flexStyles.rowCentered,
+            { width: "100%", gap: spacing(12), flexWrap: "wrap" },
           ]}
         >
           {game.phase === "action" && (
             <>
               <Button
+                text="Assassinate"
+                size="sm"
+                theme="red"
+                onPress={beginAssassination}
+                style={{ flex: 1 }}
+                taller
+              />
+              <Button
                 text="Counter"
                 size="sm"
-                theme="blue"
+                theme="orange"
                 disabled={!counterValid}
                 onPress={() => resolvePrimary("counter")}
+                style={{ flex: 1 }}
+                taller
               />
               <Button
                 text="Recruit"
@@ -505,12 +559,8 @@ export default function DeckOfSpies() {
                 theme="green"
                 disabled={!recruitValid}
                 onPress={() => resolvePrimary("recruit")}
-              />
-              <Button
-                text="Assassinate"
-                size="sm"
-                theme="red"
-                onPress={beginAssassination}
+                taller
+                style={{ flex: 1 }}
               />
             </>
           )}
@@ -522,12 +572,16 @@ export default function DeckOfSpies() {
                 theme="purple"
                 disabled={!retireValid}
                 onPress={retire}
+                style={{ flex: 1 }}
+                taller
               />
               <Button
                 text="Finish"
                 size="sm"
-                theme="blue"
+                theme="green"
                 onPress={finishWithoutRetiring}
+                style={{ flex: 1 }}
+                taller
               />
             </>
           )}
@@ -540,6 +594,8 @@ export default function DeckOfSpies() {
                 theme="red"
                 disabled={!game[source].some((card) => card.rank === "A")}
                 onPress={() => chooseAssassinationSource(source)}
+                taller
+                style={{ flex: 1 }}
               />
             ))}
         </View>

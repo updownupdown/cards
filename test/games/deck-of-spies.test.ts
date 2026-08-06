@@ -24,6 +24,7 @@ describe("Deck of Spies rules", () => {
     expect(game.spyDeck).toHaveLength(36);
     expect(game.drawDeck).toHaveLength(11);
     expect(game.hand).toHaveLength(5);
+    expect(game.removedDeck).toEqual([]);
     expect(
       game.hand.every((entry) => ["A", "2", "3", "4"].includes(entry.rank)),
     ).toBe(true);

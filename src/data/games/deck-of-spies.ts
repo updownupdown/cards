@@ -2,7 +2,6 @@ import { london } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const deckOfSpies: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/deck-of-spies",
   title: "Deck of Spies",
   tags: [GameTag.ModernMechanics],
@@ -30,9 +29,9 @@ export const deckOfSpies: GameDefinition = {
     "## Recruit",
     "Discard cards totaling at least the spy's value, all matching its suit. A matching-suit **Ace** is a Double Agent that converts every other played card to its suit for the turn. The recruited spy and played cards enter your Draw Discard.",
     "## Retire",
-    "After Countering or Recruiting, you may permanently remove **2–4 cards of one rank** from your hand to the Spy Discard.",
+    "After Countering or Recruiting, you may permanently remove **2–4 cards of one rank** from your hand to the Removed Deck.",
     "## Assassinate",
-    "Instead of matching the spy, remove an **Ace** from your hand, Draw Deck, or Draw Discard. Discard the target spy and your remaining hand. If the Ace came from the Draw Deck, shuffle it. With no Ace remaining, you lose immediately.",
+    "Instead of matching the spy, move an **Ace** from your hand, Draw Deck, or Draw Discard to the Removed Deck. Discard the target spy and your remaining hand. If the Ace came from the Draw Deck, shuffle it. With no Ace remaining, you lose immediately.",
     "## End of turn",
     "Keep unplayed cards and refill to five. Whenever the Draw Deck empties, shuffle the Draw Discard to form a new face-down deck.",
     "## Winning",

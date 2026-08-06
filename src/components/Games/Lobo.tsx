@@ -778,22 +778,29 @@ export default function Lobo() {
               text="Fold"
               size="md"
               onPress={fold}
-              fullWidth
               taller
               disabled={game.ended || game.roundOver}
               theme="red"
               style={{ flex: 1 }}
             />
-            <Button
-              text={actionLabel}
-              size="md"
-              onPress={executeCapture}
-              fullWidth
-              taller
-              disabled={game.ended || game.roundOver || !action}
-              theme={action ? actionColourMap[action] : "none"}
-              style={{ flex: 2, opacity: action ? 1 : 0 }}
-            />
+
+            <View style={[flexStyles.colCentered, { flex: 2 }]}>
+              {actionLabel ? (
+                <Button
+                  text={actionLabel}
+                  size="md"
+                  onPress={executeCapture}
+                  taller
+                  disabled={game.ended || game.roundOver || !action}
+                  theme={action ? actionColourMap[action] : "none"}
+                  style={{ width: "100%", opacity: action ? 1 : 0 }}
+                />
+              ) : (
+                <Text size="sm" weight={300} color={rgba(colorPale, 0.6)}>
+                  Select cards to capture
+                </Text>
+              )}
+            </View>
           </Animated.View>
         )}
       </View>

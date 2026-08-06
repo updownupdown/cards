@@ -37,6 +37,20 @@ describe("Bards & Nobles rules", () => {
     ).toBe(4);
   });
 
+  test("prioritizes an Ace's exclusive offer over its limited-time offer", () => {
+    const usedBook = card("4", "spades");
+    const ace = card("A", "spades");
+
+    expect(bardsAndNoblesRules.isExclusiveOffer(ace, usedBook)).toBe(true);
+    expect(
+      bardsAndNoblesRules.selectedOfferValue(
+        [ace],
+        usedBook,
+        new Set([ace.id]),
+      ),
+    ).toBe(0);
+  });
+
   test("makes matching book values free with Super Exclusive Offer", () => {
     const usedBook = card("4", "spades");
     const books = [card("4", "hearts"), card("3", "clubs")];

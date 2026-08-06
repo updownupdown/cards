@@ -87,6 +87,17 @@ function customerPenalty(card: PlayingCard) {
   return card.rank === "J" ? 1 : card.rank === "Q" ? 2 : 3;
 }
 
+function isExclusiveOffer(
+  book: PlayingCard,
+  usedBook: PlayingCard | undefined,
+  superExclusive = false,
+) {
+  return (
+    usedBook?.suit === book.suit ||
+    (superExclusive && usedBook?.rank === book.rank)
+  );
+}
+
 function selectedOfferValue(
   selectedBooks: readonly PlayingCard[],
   usedBook: PlayingCard,
@@ -94,12 +105,7 @@ function selectedOfferValue(
   superExclusive = false,
 ) {
   return selectedBooks.reduce((total, book) => {
-    if (
-      book.suit === usedBook.suit ||
-      (superExclusive && book.rank === usedBook.rank)
-    ) {
-      return total;
-    }
+    if (isExclusiveOffer(book, usedBook, superExclusive)) return total;
     return total + bookValue(book, aceAtOneIds.has(book.id));
   }, 0);
 }
@@ -117,6 +123,7 @@ export const bardsAndNoblesRules = {
   bookValue,
   customerMoney,
   customerPenalty,
+  isExclusiveOffer,
   selectedOfferValue,
   outcomeMessage,
 };
@@ -307,7 +314,15 @@ export default function BardsAndNobles() {
       return;
     }
 
-    if (book.rank === "A" && !aceAtOneIds.includes(book.id)) {
+    if (
+      book.rank === "A" &&
+      !aceAtOneIds.includes(book.id) &&
+      !isExclusiveOffer(
+        book,
+        top(game.usedBooks),
+        settingsRef.current.superExclusive,
+      )
+    ) {
       setAceAtOneIds((ids) => [...ids, book.id]);
       return;
     }
@@ -521,10 +536,11 @@ export default function BardsAndNobles() {
     if (!book) return undefined;
     const isSelected = selectedIds.includes(book.id);
     const aceAtOne = aceAtOneIds.includes(book.id);
-    const exclusiveOffer =
-      top(game.usedBooks)?.suit === book.suit ||
-      (settingsRef.current.superExclusive &&
-        top(game.usedBooks)?.rank === book.rank);
+    const exclusiveOffer = isExclusiveOffer(
+      book,
+      top(game.usedBooks),
+      settingsRef.current.superExclusive,
+    );
 
     return {
       isSelected,
@@ -600,10 +616,11 @@ export default function BardsAndNobles() {
         const selected = selectedIds.includes(book.id);
         const limitedTimeOfferAvailable = book.rank === "A";
         const limitedTimeOfferOn = aceAtOneIds.includes(book.id);
-        const exclusiveOffer =
-          top(game.usedBooks)?.suit === book.suit ||
-          (settingsRef.current.superExclusive &&
-            top(game.usedBooks)?.rank === book.rank);
+        const exclusiveOffer = isExclusiveOffer(
+          book,
+          top(game.usedBooks),
+          settingsRef.current.superExclusive,
+        );
 
         const offerBadges: {
           text: string;
@@ -616,7 +633,14 @@ export default function BardsAndNobles() {
           };
         }[] = [];
 
-        if (limitedTimeOfferAvailable) {
+        if (exclusiveOffer) {
+          // Exclusive offer ($0)
+          offerBadges.push({
+            text: "$0",
+            color: Colors.buttonGreen,
+            position: { bottom: cardWidth * 0.05, left: cardWidth * 0.05 },
+          });
+        } else if (limitedTimeOfferAvailable) {
           // Limited-time offer ($1/$11)
           offerBadges.push({
             text: selected ? (limitedTimeOfferOn ? "$1" : "$11") : "?",
@@ -626,13 +650,6 @@ export default function BardsAndNobles() {
                 : Colors.buttonBlue
               : rgba(Colors.buttonDisabled, 0.4),
             position: { top: cardWidth * 0.05, right: cardWidth * 0.05 },
-          });
-        } else if (exclusiveOffer) {
-          // Exclusive offer ($0)
-          offerBadges.push({
-            text: "$0",
-            color: Colors.buttonGreen,
-            position: { bottom: cardWidth * 0.05, left: cardWidth * 0.05 },
           });
         }
 

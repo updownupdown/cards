@@ -63,6 +63,7 @@ interface Props {
   lineHeight?: number;
   uppercase?: boolean;
   taller?: boolean;
+  halfTaller?: boolean;
   preventWebLongPressMenu?: boolean;
   autoProgress?: number;
   autoProgressColor?: string;
@@ -89,6 +90,7 @@ export const Button = ({
   onPressIn,
   onPressOut,
   taller = false,
+  halfTaller = false,
   preventWebLongPressMenu = false,
   autoProgress,
   autoProgressColor = rgba(Colors.white, 0.3),
@@ -141,7 +143,7 @@ export const Button = ({
 
   let fontSize = roundToPixel(baseFontSize * textScale);
   let height: number | undefined = roundToPixel(
-    40 * uiScale * sizeScale * (taller ? 1.4 : 1),
+    40 * uiScale * sizeScale * (taller ? 1.4 : halfTaller ? 1.2 : 1),
   );
   let borderRadius = height / 2;
   let gap = height / 6;

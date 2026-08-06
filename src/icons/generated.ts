@@ -13,6 +13,7 @@ import AttributionIcon from "./Attribution.svg";
 import CancelIcon from "./Cancel.svg";
 import CardColumnIcon from "./CardColumn.svg";
 import CardRowIcon from "./CardRow.svg";
+import CardRowColumnIcon from "./CardRowColumn.svg";
 import ChartIcon from "./Chart.svg";
 import CheckBoxOffIcon from "./CheckBoxOff.svg";
 import CheckBoxOnIcon from "./CheckBoxOn.svg";
@@ -76,6 +77,7 @@ export type IconName =
   | "cancel"
   | "card-column"
   | "card-row"
+  | "card-row-column"
   | "chart"
   | "check-box-off"
   | "check-box-on"
@@ -139,6 +141,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "cancel": CancelIcon,
   "card-column": CardColumnIcon,
   "card-row": CardRowIcon,
+  "card-row-column": CardRowColumnIcon,
   "chart": ChartIcon,
   "check-box-off": CheckBoxOffIcon,
   "check-box-on": CheckBoxOnIcon,

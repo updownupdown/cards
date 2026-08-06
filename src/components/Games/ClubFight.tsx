@@ -7,6 +7,7 @@ import { View } from "react-native";
 import { Button } from "../Button/Button";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
+  cardDims,
   createDeck,
   flipAllToBack,
   flipToBack,
@@ -32,6 +33,8 @@ import { darkenHexColor, firstLetterUppercase, delay } from "@/utils/utils";
 import { Icon, IconName } from "@/icons";
 import { DeckPreviewModal } from "../Modals/DeckPreviewModal";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
+import { ProgressBar } from "../Home/ProgressBar";
+import { textStyles } from "@/styles/textStyles";
 
 type ClubFightDifficulty = "easy" | "hard";
 type Action =
@@ -261,21 +264,18 @@ function getActionClearIndexes(
     return [];
   }
   if (action === "row" || action === "column") {
-    const selectedCard = state.grid[selectedIndexes[0]];
+    const selectedLine = actionLine(action, selectedIndexes);
+    const indexes = selectedLine === null ? [] : lineIndexes(selectedLine);
     if (
-      selectedIndexes.length !== 1 ||
-      !isValued(selectedCard) ||
-      rankValue(selectedCard) !== rankValue(club)
+      selectedIndexes.length !== indexes.length ||
+      indexes.some(
+        (index) =>
+          !selectedIndexes.includes(index) || state.grid[index] === null,
+      )
     ) {
       return [];
     }
-    return getClearIndexes(
-      state,
-      club,
-      "line",
-      selectedIndexes,
-      actionLine(action, selectedIndexes),
-    );
+    return getClearIndexes(state, club, "line", selectedIndexes, selectedLine);
   }
   return getClearIndexes(state, club, action, selectedIndexes, null);
 }
@@ -462,7 +462,7 @@ export default function ClubFight() {
       cols: 3,
       rows: 3,
       colOffset: 2,
-      rowOffset: 0,
+      rowOffset: 1.5,
     }).map((position, index) => ({
       id: `grid-${index}`,
       name: "grid",
@@ -481,48 +481,49 @@ export default function ClubFight() {
         col: 0,
         row: 0,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Grid", infoPos: "right" },
+        placeholder: { text: "Grid", infoPos: "right", showCount: false },
+      },
+      {
+        id: "bars",
+        name: "bars",
+        col: 0,
+        row: 1,
+        width: "full",
+        height: 0.5,
       },
       {
         id: "discard",
         name: "discard",
         cards: game.discard,
-        col: 0,
-        row: 1,
+        col: 2,
+        row: 0,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Dscrd", infoPos: "right" },
+        placeholder: {},
       },
       {
         id: "clubs",
         name: "clubs",
         cards: game.clubsDeck,
-        col: 0,
-        row: 2,
+        col: 4,
+        row: 0,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Clubs", infoPos: "right" },
+        placeholder: { text: "Clubs", infoPos: "left", showCount: false },
       },
       ...gridZones,
       {
-        id: "leftActions",
-        name: "leftActions",
+        id: "actions",
+        name: "actions",
         col: 0,
-        row: 3.1,
+        row: 1.5,
         width: 2,
-        height: 2.7,
+        height: 4.5,
       },
-      {
-        id: "bottomActions",
-        name: "bottomActions",
-        col: 2,
-        row: 4.8,
-        width: 3,
-        height: 1,
-      },
+
       {
         id: "clearButton",
         name: "clearButton",
         col: 2,
-        row: 3.1,
+        row: 4.5,
         width: 3,
         height: 0.5,
       },
@@ -531,7 +532,7 @@ export default function ClubFight() {
         name: "hand",
         cards: game.hand,
         col: 2,
-        row: 3.7,
+        row: 5,
         width: 3,
         fan: {
           direction: "right",
@@ -576,7 +577,7 @@ export default function ClubFight() {
     return { isDisabled: true };
   };
 
-  const { cardMap, getZoneStylesById } = useCardMap({
+  const { cardMap, cardWidth, cardHeight, getZoneStylesById } = useCardMap({
     game,
     zones,
     cardMapper,
@@ -589,6 +590,7 @@ export default function ClubFight() {
       };
     },
     cardSize: "small",
+    // visualizer: true,
   });
 
   function canExecute(action: Action) {
@@ -619,24 +621,76 @@ export default function ClubFight() {
 
       {cardMap}
 
-      {/* Left Action */}
+      {/* Progress Bars */}
+      <View style={[flexStyles.rowCentered, getZoneStylesById("bars")]}>
+        <Text
+          size="xl"
+          weight={700}
+          color={Colors.accentRed}
+          style={[
+            textStyles.shadowText,
+            { width: cardWidth * 0.6, textAlign: "left" },
+          ]}
+        >
+          {game.gridDeck.length +
+            game.grid.filter((card) => card !== null).length}
+        </Text>
+
+        <ProgressBar
+          progressValue={
+            game.gridDeck.length +
+            game.grid.filter((card) => card !== null).length
+          }
+          totalValue={40}
+          color={Colors.accentRed}
+          style={{ flex: 1, marginRight: spacing(20) }}
+          scaledHeight={cardHeight * 0.2}
+          backgroundColor={rgba(Colors.buttonRed, 0.3)}
+        />
+
+        <ProgressBar
+          progressValue={game.clubsDeck.length + game.hand.length}
+          totalValue={13}
+          color={Colors.accentBlue}
+          style={{ flex: 1, transform: [{ rotate: "180deg" }] }}
+          scaledHeight={cardHeight * 0.2}
+          backgroundColor={rgba(Colors.buttonBlue, 0.3)}
+        />
+
+        <Text
+          size="xl"
+          weight={700}
+          color={Colors.accentBlue}
+          style={[
+            textStyles.shadowText,
+            {
+              width: cardWidth * 0.6,
+              textAlign: "right",
+              paddingRight: cardWidth * 0.08,
+            },
+          ]}
+        >
+          {game.clubsDeck.length + game.hand.length}
+        </Text>
+      </View>
+
+      {/* Actions */}
       <View
         style={[
-          flexStyles.rowCentered,
-          getZoneStylesById("leftActions"),
+          flexStyles.colCentered,
+          getZoneStylesById("actions"),
           {
-            flexWrap: "wrap",
-            columnGap: "6%",
-            rowGap: "4%",
+            gap: spacing(12),
           },
         ]}
       >
+        {/* Suit Actions */}
         {(
           [
-            { suit: "diamonds", actions: ["column", "row"] },
-            { suit: "spades", actions: ["up", "down"] },
-            { suit: "hearts", actions: ["run"] },
-          ] as { suit: string; actions: Action[] }[]
+            { label: "Row/Col", suit: "diamonds", actions: ["column", "row"] },
+            { label: "Up/Down", suit: "spades", actions: ["up", "down"] },
+            { label: "Sequence", suit: "hearts", actions: ["run"] },
+          ] as { label: string; suit: string; actions: Action[] }[]
         ).map((group, groupIndex) => {
           const count = suitCount(game.grid, group.suit as CardSuit);
           const isBlocked = game.hand.length === 0 || count >= 3;
@@ -645,19 +699,16 @@ export default function ClubFight() {
             <View
               key={groupIndex}
               style={[
-                flexStyles.spaceBetween,
+                flexStyles.rowCentered,
+                flexStyles.fullWidth,
+                flexStyles.flex1,
                 {
-                  flexDirection: group.suit === "hearts" ? "row" : "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: group.suit === "hearts" ? "100%" : "47%",
-                  height: group.suit === "hearts" ? "28%" : "68%",
-                  borderRadius: spacing(6),
-                  padding: spacing(8),
-                  gap: spacing(8),
+                  borderRadius: spacing(12),
+                  padding: spacing(6),
+                  gap: spacing(6),
                   backgroundColor: isBlocked
-                    ? rgba(Colors.K850, 0.3)
-                    : rgba(Colors.K850, 0.8),
+                    ? rgba(Colors.K900, 0.8)
+                    : rgba(Colors.K900, 0.8),
                 },
               ]}
             >
@@ -665,39 +716,60 @@ export default function ClubFight() {
                 <Icon
                   name={group.suit as IconName}
                   size={20}
-                  color={
-                    isBlocked ? Colors.cardSelectRed : Colors.cardSelectGreen
-                  }
+                  color={isBlocked ? Colors.accentRed : Colors.accentBlue}
                 />
               </View>
 
-              {group.actions.map((action) => (
-                <Button
-                  key={action}
-                  iconName={ActionIcons[action]}
-                  size="md"
-                  theme={canExecute(action) ? "green" : "blue"}
-                  onPress={() => execute(action)}
-                  disabled={game.ended || !canExecute(action)}
-                  iconSize={
-                    viewportHeight < 600 ? 18 : viewportHeight < 700 ? 22 : 24
-                  }
-                  style={[
-                    {
-                      width: "100%",
-                      flex: 1,
-                      paddingHorizontal: 0,
-                      paddingVertical: 0,
-                      opacity: isBlocked ? 0.3 : 1,
-                      boxShadow: isBlocked ? "none" : undefined,
-                      backgroundColor: isBlocked ? "none" : undefined,
-                    },
-                  ]}
-                />
-              ))}
+              {group.actions.map((action) => {
+                const canExecuteAction = !game.ended && canExecute(action);
+
+                return (
+                  <Button
+                    key={action}
+                    iconName={ActionIcons[action]}
+                    size="md"
+                    theme={canExecuteAction ? "green" : "blue"}
+                    onPress={() => execute(action)}
+                    disabled={!canExecuteAction}
+                    halfTaller
+                    style={[
+                      {
+                        flex: 1,
+                        paddingHorizontal: 0,
+                        paddingVertical: 0,
+                        opacity: isBlocked ? 0.3 : 1,
+                        boxShadow: isBlocked ? "none" : undefined,
+                        backgroundColor: isBlocked ? "none" : undefined,
+                        borderRadius: spacing(10),
+                      },
+                    ]}
+                  />
+                );
+              })}
             </View>
           );
         })}
+
+        {/* Always Available Actions */}
+        {(["match", "sum", "any"] as Action[]).map((action) => (
+          <Button
+            key={action}
+            text={ActionNames[action]}
+            iconName={ActionIcons[action]}
+            size="md"
+            theme={canExecute(action) ? "green" : "blue"}
+            onPress={() => execute(action)}
+            disabled={game.ended || !canExecute(action)}
+            fullWidth
+            style={{
+              opacity: 1,
+              borderRadius: spacing(10),
+              paddingLeft: spacing(10),
+            }}
+            textStyle={{ flex: 1 }}
+            halfTaller
+          />
+        ))}
       </View>
 
       {/* Clear button */}
@@ -705,42 +777,15 @@ export default function ClubFight() {
         <Button
           text="Clear"
           size={
-            viewportHeight < 600 ? "xxs" : viewportHeight < 700 ? "xs" : "sm"
+            viewportHeight < 600 ? "xs" : viewportHeight < 700 ? "sm" : "md"
           }
           theme="blue"
           onPress={clearSelections}
           disabled={
             game.ended || (!selectedClub && selectedGridIndexes.length === 0)
           }
-          style={{ width: "100%", height: "100%" }}
+          style={{ width: "100%", height: "100%", borderRadius: spacing(10) }}
         />
-      </View>
-
-      {/* Bottom Actions */}
-      <View
-        style={[
-          flexStyles.rowCentered,
-          getZoneStylesById("bottomActions"),
-          { gap: spacing(10) },
-        ]}
-      >
-        {(["match", "sum", "any"] as Action[]).map((action) => (
-          <Button
-            key={action}
-            text={ActionNames[action]}
-            iconName={ActionIcons[action]}
-            size={
-              viewportHeight < 600 ? "xxs" : viewportHeight < 700 ? "xs" : "sm"
-            }
-            theme={canExecute(action) ? "green" : "blue"}
-            onPress={() => execute(action)}
-            disabled={game.ended || !canExecute(action)}
-            iconSize={
-              viewportHeight < 600 ? 20 : viewportHeight < 700 ? 26 : 32
-            }
-            style={[{ flex: 1, height: "100%", flexDirection: "column" }]}
-          />
-        ))}
       </View>
     </GameWrapper>
   );

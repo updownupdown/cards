@@ -172,7 +172,7 @@ describe("Club Fight rules", () => {
         card("8", "eight", "spades"),
         card("9", "nine", "hearts"),
         null,
-        null,
+        card("7", "seven-diamonds", "diamonds"),
         null,
         null,
       ],
@@ -199,10 +199,19 @@ describe("Club Fight rules", () => {
     ).toEqual([]);
     expect(
       clubFightRules.getActionClearIndexes(game, club, "row", [0]),
-    ).toEqual([0, 1, 2]);
+    ).toEqual([]);
     expect(
       clubFightRules.getActionClearIndexes(game, club, "column", [0]),
-    ).toEqual([0, 3]);
+    ).toEqual([]);
+    expect(
+      clubFightRules.getActionClearIndexes(game, club, "row", [0, 1, 2]),
+    ).toEqual([0, 1, 2]);
+    expect(
+      clubFightRules.getActionClearIndexes(game, club, "column", [0, 3, 6]),
+    ).toEqual([0, 3, 6]);
+    expect(
+      clubFightRules.getActionClearIndexes(game, club, "row", [0, 1, 3]),
+    ).toEqual([]);
     expect(
       clubFightRules.getActionClearIndexes(game, club, "row", [1]),
     ).toEqual([]);
