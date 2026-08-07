@@ -64,7 +64,9 @@ const DEFAULT_CARD_BACK = "DefaultCardBack.png";
 
 function generateCardBacks() {
   const dir = path.join(projectRoot, "assets", "card-backs");
-  const files = listImages(dir).filter((f) => f.toLowerCase().endsWith(".png"));
+  const files = listImages(dir).filter(
+    (f) => f.toLowerCase().endsWith(".png") || f.toLowerCase().endsWith(".jpg"),
+  );
   const resolvedDefault = files.includes(DEFAULT_CARD_BACK)
     ? DEFAULT_CARD_BACK
     : files[0] || DEFAULT_CARD_BACK;

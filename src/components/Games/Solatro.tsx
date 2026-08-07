@@ -28,6 +28,7 @@ import { Text } from "../common/Text";
 import { ProgressBar } from "../Home/ProgressBar";
 import { useToast } from "../common/Toast";
 import { Icon } from "@/icons";
+import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 
 const BASE_HAND_LIMIT = 8;
 const BASE_PLAYS = 3;
@@ -136,9 +137,9 @@ function emptyBonuses(): BonusInventory {
 
 export function createInitialSolatroState(): SolatroGameState {
   return {
-    deck: [],
+    deck: flipAllToBack(createDeck({ includeJokers: true })),
     hand: [],
-    discard: flipAllToBack(createDeck({ includeJokers: true })),
+    discard: [],
     scoring: [],
     bankedJoker: false,
     bankedJokerCard: null,
@@ -279,7 +280,7 @@ function drawToLimit(state: SolatroGameState, limit = state.handLimit) {
     state.bankedJoker = false;
     state.bankedJokerCard = null;
   }
-  state.hand = sortCardsBySuit(state.hand);
+  state.hand = sortCardsBySuit(state.hand, 14);
 }
 
 function gatherToDiscard(state: SolatroGameState) {
@@ -298,8 +299,10 @@ function gatherToDiscard(state: SolatroGameState) {
 }
 
 function dealFromDiscard(state: SolatroGameState) {
-  state.deck = state.discard;
-  state.discard = [];
+  if (state.deck.length === 0) {
+    state.deck = state.discard;
+    state.discard = [];
+  }
   drawToLimit(state);
   state.phase = "playing";
 }
@@ -316,7 +319,7 @@ function finishRound(state: SolatroGameState) {
       const roundsSurvived = state.round - 1;
       const rating = ratingForRounds(roundsSurvived);
       state.ended = true;
-      state.won = false;
+      state.won = state.totalExcess >= 500;
       state.winLoseMessage = `${roundsSurvived} rounds survived${rating ? ` - ${rating}` : ""}. Final score: ${state.totalExcess}.`;
       return true;
     }
@@ -411,16 +414,18 @@ const gameStateInitial = createInitialSolatroState();
 function ScoringPointsAnimation({
   points,
   zoneHeight,
+  round,
 }: {
   points: number;
   zoneHeight: number;
+  round: number;
 }) {
   const opacity = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     opacity.setValue(0);
-    translateY.setValue(0);
+    translateY.setValue(zoneHeight * 0.2);
 
     const animation = Animated.parallel([
       Animated.sequence([
@@ -437,7 +442,7 @@ function ScoringPointsAnimation({
         }),
       ]),
       Animated.timing(translateY, {
-        toValue: -zoneHeight,
+        toValue: -zoneHeight * 0.4,
         duration: 1200,
         useNativeDriver: Platform.OS !== "web",
       }),
@@ -445,14 +450,14 @@ function ScoringPointsAnimation({
 
     animation.start();
     return () => animation.stop();
-  }, [opacity, translateY, zoneHeight]);
+  }, [zoneHeight]);
 
   return (
     <Animated.View
-      pointerEvents="none"
       style={{
         position: "relative",
         alignItems: "center",
+        pointerEvents: "none",
         opacity,
         transform: [{ translateY }],
       }}
@@ -465,6 +470,7 @@ function ScoringPointsAnimation({
           fontSize: zoneHeight * 0.6,
           lineHeight: zoneHeight * 0.6,
         }}
+        color={progressColorForRound(round)}
       >
         {`+${points}`}
       </Text>
@@ -489,10 +495,16 @@ function ScoringPointsAnimation({
 export default function Solatro() {
   const { colorDark, colorPale } = useGameColors();
   const { spacing } = useResponsiveMetrics();
+  const { width: windowWidth } = useViewportDimensions();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [useBankedJoker, setUseBankedJoker] = useState(false);
   const showToast = useToast();
   const previousUsedShield = useRef(false);
+  const bankedJokerConsumedRef = useRef(false);
+  const bankedJokerShadowScale = useRef(new Animated.Value(1)).current;
+  const bankedJokerShadowOpacity = useRef(new Animated.Value(0)).current;
+  const [bankedJokerShadowColor, setBankedJokerShadowColor] =
+    useState<string>("");
 
   const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
     useStateManager({
@@ -504,7 +516,8 @@ export default function Solatro() {
       resetAndSetup: async () => {
         setGame((draft) => {
           gatherToDiscard(draft);
-          draft.discard = shuffle(draft.discard);
+          draft.deck = shuffle(draft.discard);
+          draft.discard = [];
           draft.round = 1;
           draft.roundScore = 0;
           draft.totalExcess = 0;
@@ -526,13 +539,48 @@ export default function Solatro() {
         setGame((draft) => dealFromDiscard(draft));
       },
     });
+  const previousBankedJoker = useRef(game.bankedJoker);
 
   useEffect(() => {
     if (game.usedShield && !previousUsedShield.current) {
       showToast("Shielf has been used");
     }
     previousUsedShield.current = game.usedShield;
-  }, [game.usedShield, showToast]);
+  }, [game.usedShield]);
+
+  useEffect(() => {
+    const wasBanked = previousBankedJoker.current;
+    const wasConsumedForPlay = bankedJokerConsumedRef.current;
+    const wasAdded = game.bankedJoker && !wasBanked;
+    const wasRemovedDuringPlay =
+      !game.bankedJoker &&
+      wasBanked &&
+      !wasConsumedForPlay &&
+      game.phase === "playing";
+
+    if (wasAdded || wasRemovedDuringPlay) {
+      setBankedJokerShadowColor(
+        wasAdded ? Colors.cardSelectGreen : Colors.cardSelectRed,
+      );
+      bankedJokerShadowScale.setValue(1);
+      bankedJokerShadowOpacity.setValue(1);
+      Animated.parallel([
+        Animated.timing(bankedJokerShadowScale, {
+          toValue: 1.3,
+          duration: 1800,
+          useNativeDriver: Platform.OS !== "web",
+        }),
+        Animated.timing(bankedJokerShadowOpacity, {
+          toValue: 0,
+          duration: 1800,
+          useNativeDriver: Platform.OS !== "web",
+        }),
+      ]).start();
+    }
+
+    bankedJokerConsumedRef.current = false;
+    previousBankedJoker.current = game.bankedJoker;
+  }, [game.bankedJoker]);
 
   const selectedCards = game.hand.filter((card) =>
     selectedIds.includes(card.id),
@@ -584,6 +632,7 @@ export default function Solatro() {
         draft.doubleNextPlay = false;
       }
       if (useBankedJoker && draft.bankedJokerCard) {
+        bankedJokerConsumedRef.current = true;
         draft.scoring.push(draft.bankedJokerCard);
         draft.bankedJoker = false;
         draft.bankedJokerCard = null;
@@ -597,14 +646,12 @@ export default function Solatro() {
     setSelectedIds([]);
     setUseBankedJoker(false);
 
-    await delay(2500);
-
     setGame((draft) => {
       draft.roundScore += draft.lastHandPoints;
       if (draft.playsRemaining === 0) finishRound(draft);
     });
 
-    await delay(500);
+    await delay(2000);
 
     setGame((draft) => {
       draft.discard.push(...flipAllToBack(draft.scoring));
@@ -645,6 +692,7 @@ export default function Solatro() {
   }
 
   function purchaseBonus(bonus: BonusName) {
+    saveUndoState(structuredClone(game));
     setGame((draft) => {
       buyBonus(draft, bonus);
     });
@@ -663,31 +711,37 @@ export default function Solatro() {
 
   const zones: MapZone[] = useMemo(
     () => [
-      { id: "hud", col: 1.4, row: 0, width: 3.2, height: 1.3 },
+      { id: "hud", col: 1.4, row: 0.1, width: 3.2, height: 1.3 },
+      {
+        id: "top-background",
+        col: 0,
+        row: 0,
+        width: 6,
+        height: 1.5,
+        placeholder: {},
+      },
       {
         id: "deck",
         name: "deck",
         cards: game.deck,
-        col: 0,
-        row: 0,
+        col: 0.1,
+        row: 0.25,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Deck", infoPos: "below" },
       },
       {
         id: "discard",
         name: "discard",
         cards: game.discard,
-        col: 5,
-        row: 0,
+        col: 4.9,
+        row: 0.25,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Dscrd", infoPos: "below" },
       },
       {
         id: "scoring",
         name: "scoring",
         cards: game.scoring,
         col: 0,
-        row: 1.5,
+        row: 1.6,
         width: 6,
         height: 1.2,
         fan: {
@@ -698,17 +752,17 @@ export default function Solatro() {
       {
         id: "items",
         col: 0,
-        row: 1.5,
+        row: 1.6,
         width: 1.4,
         height: 2.4,
       },
-      { id: "message", col: 1.5, row: 2.9, width: 3.4, height: 1 },
+      { id: "message", col: 1.5, row: 3, width: 3.4, height: 1 },
       {
         id: "banked-joker",
         name: "bankedJoker",
         cards: game.bankedJokerCard ? [game.bankedJokerCard] : [],
         col: 5,
-        row: 2.9,
+        row: 3,
         placeholder: { iconName: "joker" },
       },
       {
@@ -716,7 +770,7 @@ export default function Solatro() {
         name: "hand",
         cards: game.hand,
         col: 0,
-        row: 4.1,
+        row: 4.2,
         width: 6,
         height: 1.2,
         placeholder: {},
@@ -725,8 +779,8 @@ export default function Solatro() {
           offset: zoneFanOffset(game.hand.length, 5.7, 0.1, 0.95),
         },
       },
-      { id: "controls", col: 0, row: 5.5, width: "full", height: 0.8 },
-      { id: "shop", col: 0, row: 1.5, width: 6, height: 4.8 },
+      { id: "controls", col: 0, row: 5.6, width: "full", height: 0.8 },
+      { id: "shop", col: 0, row: 1.6, width: 6, height: 4.8 },
     ],
     [game],
   );
@@ -783,23 +837,37 @@ export default function Solatro() {
     >
       {cardMap}
 
+      <Animated.View
+        style={[
+          getZoneStylesById("banked-joker"),
+          {
+            boxShadow: `0 0 ${spacing(10)}px ${spacing(4)}px ${bankedJokerShadowColor}`,
+            borderRadius: spacing(8),
+            opacity: bankedJokerShadowOpacity,
+            transform: [{ scale: bankedJokerShadowScale }],
+            zIndex: 100,
+            pointerEvents: "none",
+          },
+        ]}
+      />
+
       {/* ---------- Score Animation ---------- */}
       {game.phase === "scoring" && (
         <View
-          pointerEvents="none"
           style={[
             getZoneStylesById("scoring"),
             {
               alignItems: "center",
               overflow: "visible",
-              paddingTop: cardHeight * 0.1,
               zIndex: 100,
+              pointerEvents: "none",
             },
           ]}
         >
           <ScoringPointsAnimation
             points={game.lastHandPoints}
             zoneHeight={cardHeight}
+            round={game.round}
           />
         </View>
       )}
@@ -808,7 +876,7 @@ export default function Solatro() {
       <View
         style={[
           flexStyles.colCentered,
-          flexStyles.spaceBetween,
+          flexStyles.spaceAround,
           getZoneStylesById("hud"),
         ]}
       >
@@ -819,33 +887,42 @@ export default function Solatro() {
           color={progressColorForRound(game.round)}
           autoTallyText
           scaledHeight={cardHeight * 0.42}
-          style={{ marginVertical: "auto" }}
           backgroundColor={rgba(colorDark, 0.5)}
         />
 
         <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            gap: spacing(28),
-          }}
+          style={[
+            flexStyles.rowCentered,
+            flexStyles.spaceBetween,
+            flexStyles.fullWidth,
+            { paddingHorizontal: windowWidth > 400 ? spacing(12) : 0 },
+          ]}
         >
           {[
-            { label: "Plays", value: game.playsRemaining },
-            { label: "Discards", value: game.discardsRemaining },
+            {
+              label: "Discards",
+              value: game.discardsRemaining,
+              color: Colors.cardSelectRed,
+            },
+            {
+              label: "Plays",
+              value: game.playsRemaining,
+              color: Colors.cardSelectGreen,
+            },
             {
               label: "Bonus",
               value: `${Math.max(0, game.roundScore - target)}`,
+              color: Colors.trophyGold,
             },
-          ].map(({ label, value }) => (
+          ].map(({ label, value, color }) => (
             <View key={label} style={[flexStyles.colCentered]}>
-              <Text size="sm" weight={400} color={colorPale}>
+              <Text size="sm" weight={400} color={color}>
                 {label}
               </Text>
               <Text
                 size="xxl"
                 weight={600}
-                color={rgba(colorPale, Number(value) === 0 ? 0.4 : 1)}
+                color={rgba(color, Number(value) === 0 ? 0.4 : 1)}
               >
                 {value}
               </Text>
@@ -874,7 +951,13 @@ export default function Solatro() {
             onPress={() => activateOwnedBonus(bonus)}
             disabled={bonus === "shield"}
             fullWidth
-            style={{ paddingHorizontal: 0, borderRadius: spacing(6) }}
+            style={{
+              paddingHorizontal: 0,
+              paddingVertical: 0,
+              borderRadius: spacing(6),
+              height: ownedBonuses.length === 6 ? "13%" : "16%",
+            }}
+            halfTaller
           />
         ))}
       </View>
@@ -982,10 +1065,20 @@ export default function Solatro() {
                 { alignItems: "flex-end", gap: spacing(6) },
               ]}
             >
-              <Text size="xxxl" weight={600} color={"#fcc653"} lineHeight={1}>
+              <Text
+                size="xxxl"
+                weight={600}
+                color={Colors.trophyGold}
+                lineHeight={1}
+              >
                 {game.shopPoints}
               </Text>
-              <Text size="lg" weight={400} color={"#fcc653"} lineHeight={1}>
+              <Text
+                size="lg"
+                weight={400}
+                color={Colors.trophyGold}
+                lineHeight={1}
+              >
                 points
               </Text>
             </View>
@@ -1058,7 +1151,9 @@ export default function Solatro() {
                         size="md"
                         weight={700}
                         color={
-                          game.shopPoints < details.cost ? "#cc2222" : "#fcc653"
+                          game.shopPoints < details.cost
+                            ? Colors.cardSelectRed
+                            : Colors.trophyGold
                         }
                       >
                         {details.cost}

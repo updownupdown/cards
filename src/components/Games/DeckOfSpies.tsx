@@ -28,7 +28,7 @@ import { ProgressBar } from "../Home/ProgressBar";
 const AUTO_PROGRESS_DELAY = 1000;
 const FACE_SPIES = 12;
 const NUMBER_SPIES = 24;
-const TOP_ROW = 0.6;
+const TOP_ROW = 0.8;
 
 type GamePhase = "action" | "retire" | "assassinate";
 type AceSource = "hand" | "drawDeck" | "drawDiscard";
@@ -584,7 +584,7 @@ export default function DeckOfSpies() {
         id: "hand",
         name: "hand",
         col: 0,
-        row: 2,
+        row: 2.2,
         width: 4,
         cards: game.hand,
         fan: {
@@ -597,9 +597,9 @@ export default function DeckOfSpies() {
       {
         id: "actions",
         col: 0,
-        row: 3.16,
+        row: 3.35,
         width: 4,
-        height: 1.04,
+        height: 1,
       },
     ],
     [game],

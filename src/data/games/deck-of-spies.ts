@@ -15,6 +15,7 @@ export const deckOfSpies: GameDefinition = {
   background: GAME_BACKGROUNDS.darkAlley,
   animation: GameAnimations.Dust,
   thumbnail: "DeckOfSpies.jpg",
+  cardBack: "DeckOfSpies.jpg",
   gameColorDark: "#182326",
   gameColorPale: "#dce8df",
   cardDescription:

@@ -13,12 +13,12 @@ function card(
 }
 
 describe("Solatro rules", () => {
-  test("starts with all 54 cards face down in the discard pile", () => {
+  test("starts with all 54 cards face down in the deck", () => {
     const state = createInitialSolatroState();
 
-    expect(state.deck).toHaveLength(0);
-    expect(state.discard).toHaveLength(54);
-    expect(state.discard.every((entry) => !entry.faceUp)).toBe(true);
+    expect(state.deck).toHaveLength(54);
+    expect(state.discard).toHaveLength(0);
+    expect(state.deck.every((entry) => !entry.faceUp)).toBe(true);
   });
 
   test.each([
@@ -112,7 +112,7 @@ describe("Solatro rules", () => {
 
   test("gathers every card zone and the banked Joker into discard", () => {
     const state = createInitialSolatroState();
-    const cards = state.discard.splice(0);
+    const cards = state.deck.splice(0);
     state.deck = cards.splice(0, 20);
     state.hand = cards.splice(0, 8);
     state.scoring = cards.splice(0, 5);

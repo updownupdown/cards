@@ -9,6 +9,7 @@ export const bardsAndNobles: GameDefinition = {
   tags: [GameTag.EasyToLearn, GameTag.ModernMechanics, GameTag.ScoringPuzzles],
   rating: { complexity: 45, difficulty: 55, luck: 50 },
   thumbnail: "BardsAndNobles.jpg",
+  cardBack: "BardsAndNobles.jpg",
   background: GAME_BACKGROUNDS.bookstore,
   animation: GameAnimations.Dust,
   gameColorDark: "#2e2d27",

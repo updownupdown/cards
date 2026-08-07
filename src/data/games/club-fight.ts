@@ -13,8 +13,9 @@ export const clubFight: GameDefinition = {
   },
   thumbnail: "ClubFight.jpg",
   background: GAME_BACKGROUNDS.club,
+  cardBack: "ClubFight.jpg",
   gameColorDark: "#221b20",
-  gameColorPale: "#bff8ff",
+  gameColorPale: "#d6fbff",
   cardDescription:
     "Spend the thirteen Clubs wisely to clear a shifting 3x3 grid before time runs out.",
   quickStart: [

@@ -13,6 +13,7 @@ export const heWillNeverStop: GameDefinition = {
     luck: 45,
   },
   thumbnail: "HeWillNeverStop.jpg",
+  cardBack: "HeWillNeverStop.jpg",
   background: GAME_BACKGROUNDS.treeRain,
   animation: GameAnimations.Rain,
   gameColorDark: "#1b2224",

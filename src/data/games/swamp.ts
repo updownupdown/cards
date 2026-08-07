@@ -15,6 +15,7 @@ export const swamp: GameDefinition = {
   background: GAME_BACKGROUNDS.swamp,
   animation: GameAnimations.Firefly,
   thumbnail: "Swamp.jpg",
+  cardBack: "Swamp.jpg",
   gameColorDark: "#173b32",
   gameColorPale: "#e4f0c2",
   cardDescription:

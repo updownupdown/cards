@@ -81,14 +81,14 @@ export const CardMapBackgrounds = ({
         let textStyle: TextStyle = {
           userSelect: "none",
           fontSize: cardWidth * 0.15,
-          color: rgba(Colors.white, 0.8),
+          // color: rgba(Colors.white, 0.8),
           fontFamily: FontWeight[400],
           textTransform: "uppercase",
         };
         let countStyle: TextStyle = {
           userSelect: "none",
           fontSize: cardWidth * 0.2,
-          color: rgba(Colors.white, 0.8),
+          // color: rgba(Colors.white, 0.8),
           fontFamily: FontWeight[500],
           textTransform: "uppercase",
         };
@@ -202,11 +202,17 @@ export const CardMapBackgrounds = ({
               <View style={infoStyles}>
                 {hasText && (
                   <View style={textContainerStyle}>
-                    <Text style={textStyle}>{zone.placeholder.text}</Text>
+                    <Text style={textStyle} color={colorPale}>
+                      {zone.placeholder.text}
+                    </Text>
                   </View>
                 )}
 
-                {showCount && <Text style={countStyle}>{count}</Text>}
+                {showCount && (
+                  <Text style={countStyle} color={colorPale}>
+                    {count}
+                  </Text>
+                )}
               </View>
             )}
 
