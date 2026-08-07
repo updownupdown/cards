@@ -36,5 +36,5 @@ export const bardsAndNobles: GameDefinition = {
   about: [
     "A solitaire trading puzzle by Gregg Jewell. Every offer asks you to balance immediate shelf value against the genres that will strengthen your Guild Standing.",
   ],
-  credits: { creators: [GameCreators.GreggJewell] },
+  credits: { creators: [GameCreators.GreggJewell], creationDate: "2024" },
 };

@@ -25,6 +25,9 @@ export const GameCreators = {
   WilSu: "Wil Su",
   ZachGage: "Zach Gage",
   DTeuber: "D. Teuber",
+  JamesNewman: "James Newman",
+  ZoeCappallo: "Zoë Cappallo",
+  TechDweeb: "TechDweeb",
 } as const;
 
 export const CREATOR_LINKS: Partial<Record<GameCreator, string>> = {
@@ -69,6 +72,11 @@ export const CREATOR_LINKS: Partial<Record<GameCreator, string>> = {
     "https://boardgamegeek.com/boardgamedesigner/121533/wilhelm-su",
   [GameCreators.ZachGage]:
     "https://boardgamegeek.com/boardgamedesigner/60260/zach-gage",
+  [GameCreators.JamesNewman]:
+    "https://boardgamegeek.com/boardgamedesigner/142185/james-newman-i",
+  [GameCreators.ZoeCappallo]:
+    "https://boardgamegeek.com/boardgamedesigner/34055/zoe-cappallo",
+  [GameCreators.TechDweeb]: "https://techdweeb.itch.io/",
 };
 
 export type GameCreator = (typeof GameCreators)[keyof typeof GameCreators];

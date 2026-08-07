@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameAnimations } from "@/animations";
+import { GameCreators } from "../game-creators";
 
 export const heWillNeverStop: GameDefinition = {
   path: "/he-will-never-stop",
@@ -31,4 +32,8 @@ export const heWillNeverStop: GameDefinition = {
     "## Try To Escape",
     "Move one card to a new position. You cannot move a card already in a run of three or more. If the move creates or extends a run of three or more, draw two cards onto the right end of the line.",
   ],
+  credits: {
+    creators: [GameCreators.ZoeCappallo],
+    creationDate: "2025",
+  },
 };

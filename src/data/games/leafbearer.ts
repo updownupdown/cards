@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameAnimations } from "@/animations";
+import { GameCreators } from "../game-creators";
 
 export const leafbearer: GameDefinition = {
   path: "/leafbearer",
@@ -33,4 +34,5 @@ export const leafbearer: GameDefinition = {
     "## Open Stables",
     "The optional expansion adds a healthy Noble in the Stables and a Jester. The Noble eats matching herbs; the Jester eats the final herb dropped into the Stables.",
   ],
+  credits: { creators: [GameCreators.GreggJewell], creationDate: "2025" },
 };

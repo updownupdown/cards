@@ -2,8 +2,8 @@ import { useGameColors } from "@/hooks/useGameColors";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors } from "@/styles/styles";
-import { delay } from "@/utils/utils";
+import { Colors, rgba, transitionStyles } from "@/styles/styles";
+import { delay, roundToPixel } from "@/utils/utils";
 import { useEffect, useMemo } from "react";
 import { View } from "react-native";
 import { Button } from "../Button/Button";
@@ -13,6 +13,7 @@ import {
   flipToBack,
   flipToFace,
   isFace,
+  isNumberRank,
   rankValue,
   shuffle,
   sortCardsBySuit,
@@ -24,13 +25,19 @@ import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
 import { ProgressBar } from "../Home/ProgressBar";
 
+const AUTO_PROGRESS_DELAY = 1000;
+const FACE_SPIES = 12;
+const NUMBER_SPIES = 24;
+const TOP_ROW = 0.6;
+
 type GamePhase = "action" | "retire" | "assassinate";
 type AceSource = "hand" | "drawDeck" | "drawDiscard";
 
 export type DeckOfSpiesGameState = {
   spyDeck: PlayingCard[];
   spyDiscard: PlayingCard[];
-  removedDeck: PlayingCard[];
+  neutralizedSpies: PlayingCard[];
+  recruitedSpies: PlayingCard[];
   drawDeck: PlayingCard[];
   drawDiscard: PlayingCard[];
   hand: PlayingCard[];
@@ -44,7 +51,8 @@ export type DeckOfSpiesGameState = {
 const gameStateInitial: DeckOfSpiesGameState = {
   spyDeck: [],
   spyDiscard: [],
-  removedDeck: [],
+  neutralizedSpies: [],
+  recruitedSpies: [],
   drawDeck: [],
   drawDiscard: createDeck().map(flipToBack),
   hand: [],
@@ -168,7 +176,8 @@ function createGame(
   return {
     spyDeck: [...pileFour, ...pileThree, ...pileTwo].map(flipToFace),
     spyDiscard: [],
-    removedDeck: [],
+    neutralizedSpies: [],
+    recruitedSpies: [],
     ...dealt,
     selectedCards: [],
     phase: "action",
@@ -197,6 +206,104 @@ function scoreGame(state: DeckOfSpiesGameState) {
   };
 }
 
+function getSpyScore(state: DeckOfSpiesGameState) {
+  const nextSpy = state.spyDeck.at(-1);
+  const isFacePhase = nextSpy ? isFace(nextSpy) : true;
+  const isCurrentPhaseSpy = (card: PlayingCard) =>
+    isFacePhase ? isFace(card) : isNumberRank(card.rank);
+
+  return {
+    isFacePhase,
+    total: isFacePhase ? FACE_SPIES : NUMBER_SPIES,
+    neutralizedCount: (state.neutralizedSpies ?? []).filter(isCurrentPhaseSpy)
+      .length,
+    recruitedCount: (state.recruitedSpies ?? []).filter(isCurrentPhaseSpy)
+      .length,
+  };
+}
+
+function SpyScoreBar({
+  recruitedCount,
+  neutralizedCount,
+  total,
+  height,
+  isFacePhase,
+}: {
+  recruitedCount: number;
+  neutralizedCount: number;
+  total: number;
+  height: number;
+  isFacePhase: boolean;
+}) {
+  const percentage = (count: number) =>
+    `${Math.min((count / total) * 100, 100)}%` as `${number}%`;
+
+  return (
+    <View
+      style={{
+        position: "relative",
+        overflow: "hidden",
+        height,
+        width: "100%",
+        borderRadius: roundToPixel(height / 2),
+        backgroundColor: rgba(Colors.K850, 0.4),
+        boxShadow: `inset 0 0 0 ${roundToPixel(height * 0.03)}px ${rgba(
+          Colors.white,
+          0.2,
+        )}, inset 0 0 ${roundToPixel(height * 0.2)}px ${rgba(
+          Colors.K200,
+          0.2,
+        )}, 0 0 ${roundToPixel(height * 0.2)}px ${rgba(Colors.K950, 0.2)}`,
+      }}
+    >
+      <View
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          bottom: 0,
+          width: percentage(neutralizedCount),
+          backgroundColor: isFacePhase ? Colors.buttonRed : Colors.K750,
+          borderTopLeftRadius: roundToPixel(height / 2),
+          borderBottomLeftRadius: roundToPixel(height / 2),
+          transitionDuration: "0.4s",
+          transitionProperty: "width",
+          transitionTimingFunction: "ease",
+          boxShadow: `inset 0 0 0 ${roundToPixel(height * 0.03)}px ${rgba(
+            Colors.white,
+            0.3,
+          )}, inset 0 0 ${roundToPixel(height * 0.4)}px ${rgba(
+            Colors.white,
+            0.4,
+          )}`,
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          right: 0,
+          top: 0,
+          bottom: 0,
+          width: percentage(recruitedCount),
+          backgroundColor: isFacePhase ? Colors.buttonGreen : Colors.K750,
+          borderTopRightRadius: roundToPixel(height / 2),
+          borderBottomRightRadius: roundToPixel(height / 2),
+          transitionDuration: "0.4s",
+          transitionProperty: "width",
+          transitionTimingFunction: "ease",
+          boxShadow: `inset 0 0 0 ${roundToPixel(height * 0.03)}px ${rgba(
+            Colors.white,
+            0.3,
+          )}, inset 0 0 ${roundToPixel(height * 0.4)}px ${rgba(
+            Colors.white,
+            0.4,
+          )}`,
+        }}
+      />
+    </View>
+  );
+}
+
 export const deckOfSpiesRules = {
   cardValue,
   selectedValue,
@@ -209,6 +316,7 @@ export const deckOfSpiesRules = {
   createGame,
   keySpyCount,
   scoreGame,
+  getSpyScore,
 };
 
 async function setupGame(
@@ -221,7 +329,6 @@ async function setupGame(
       [
         ...draft.spyDeck,
         ...draft.spyDiscard,
-        ...draft.removedDeck,
         ...draft.drawDeck,
         ...draft.drawDiscard,
         ...draft.hand,
@@ -229,7 +336,8 @@ async function setupGame(
     );
     draft.spyDeck = [];
     draft.spyDiscard = [];
-    draft.removedDeck = [];
+    draft.neutralizedSpies = [];
+    draft.recruitedSpies = [];
     draft.drawDeck = [];
     draft.hand = [];
     draft.selectedCards = [];
@@ -251,7 +359,7 @@ function removeSelected(hand: PlayingCard[], selectedCards: PlayingCard[]) {
 
 export default function DeckOfSpies() {
   const { spacing } = useResponsiveMetrics();
-  const { colorPale } = useGameColors();
+  const { colorPale, colorDark } = useGameColors();
   const { game, setGame, reset, isLoaded, canUndo, undo, saveUndoState } =
     useStateManager<DeckOfSpiesGameState>({
       gameStateInitial,
@@ -282,7 +390,7 @@ export default function DeckOfSpies() {
         );
         if (canRetire(selectedCards)) {
           draft.hand = removeSelected(draft.hand, selectedCards);
-          draft.removedDeck.push(...selectedCards.map(flipToBack));
+          draft.spyDiscard.push(...selectedCards.map(flipToBack));
           finishTurn(draft);
           return;
         }
@@ -335,7 +443,7 @@ export default function DeckOfSpies() {
           finishTurn(draft);
         }
       });
-    }, 1000);
+    }, AUTO_PROGRESS_DELAY);
 
     return () => clearTimeout(timeout);
   }, [game.phase, retireSetAvailable, setGame]);
@@ -355,7 +463,12 @@ export default function DeckOfSpies() {
         ...draft.selectedCards.map(flipToFace),
         ...(action === "recruit" ? [flipToFace(target)] : []),
       );
-      if (action === "counter") draft.spyDiscard.push(flipToBack(target));
+      if (action === "counter") {
+        draft.spyDiscard.push(flipToBack(target));
+        (draft.neutralizedSpies ??= []).push(flipToBack(target));
+      } else {
+        (draft.recruitedSpies ??= []).push(flipToFace(target));
+      }
       draft.selectedCards = [];
       draft.phase = "retire";
     });
@@ -373,13 +486,16 @@ export default function DeckOfSpies() {
     saveUndoState({ ...structuredClone(game), phase: "action" });
     setGame((draft) => {
       const target = draft.spyDeck.pop();
-      if (target) draft.spyDiscard.push(flipToBack(target));
+      if (target) {
+        draft.spyDiscard.push(flipToBack(target));
+        (draft.neutralizedSpies ??= []).push(flipToBack(target));
+      }
 
       const cards = draft[source];
       const aceIndex = cards.findIndex((card) => card.rank === "A");
       if (aceIndex >= 0) {
         const [ace] = cards.splice(aceIndex, 1);
-        if (ace) draft.removedDeck.push(flipToBack(ace));
+        if (ace) draft.spyDiscard.push(flipToBack(ace));
       }
       if (source === "drawDeck") draft.drawDeck = shuffle(draft.drawDeck);
 
@@ -415,16 +531,17 @@ export default function DeckOfSpies() {
 
   const zones: MapZone[] = useMemo(
     () => [
+      { id: "score", name: "score", col: 0, row: 0, width: 4, height: 0.6 },
       {
         id: "spyDiscard",
-        col: 0,
-        row: 0,
+        col: 1,
+        row: TOP_ROW,
         cards: game.spyDiscard,
         fan: { maxVisible: 3 },
         placeholder: {
-          text: "Discard",
-          infoPos: "right",
-          showCount: true,
+          text: "Retired",
+          infoPos: "below",
+          showCount: false,
         },
         baseZIndex: 20,
       },
@@ -432,38 +549,23 @@ export default function DeckOfSpies() {
         id: "spyDeck",
         name: "spyDeck",
         col: 0,
-        row: 1,
+        row: TOP_ROW,
         cards: game.spyDeck,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Spies", infoPos: "right", showCount: true },
-        baseZIndex: 20,
-      },
-
-      {
-        id: "removedDeck",
-        col: 1.5,
-        row: 0,
-        cards: game.removedDeck,
-        fan: { maxVisible: 3 },
-        placeholder: {
-          text: "Rem.",
-          infoPos: "below",
-          showCount: true,
-        },
+        placeholder: { text: "Spies", infoPos: "below" },
         baseZIndex: 20,
       },
 
       {
         id: "drawDiscard",
-        col: 3,
-        row: 0,
+        col: 2,
+        row: TOP_ROW,
         cards: game.drawDiscard,
         fan: { maxVisible: 3 },
         placeholder: {
           text: "Discard",
-          infoPos: "left",
-
-          showCount: true,
+          infoPos: "below",
+          showCount: false,
         },
         baseZIndex: 20,
       },
@@ -471,10 +573,10 @@ export default function DeckOfSpies() {
       {
         id: "drawDeck",
         col: 3,
-        row: 1,
+        row: TOP_ROW,
         cards: game.drawDeck,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Draw", infoPos: "left", showCount: true },
+        placeholder: { text: "Draw", infoPos: "below" },
         baseZIndex: 20,
       },
 
@@ -482,7 +584,7 @@ export default function DeckOfSpies() {
         id: "hand",
         name: "hand",
         col: 0,
-        row: 2.2,
+        row: 2,
         width: 4,
         cards: game.hand,
         fan: {
@@ -495,7 +597,7 @@ export default function DeckOfSpies() {
       {
         id: "actions",
         col: 0,
-        row: 3.3,
+        row: 3.16,
         width: 4,
         height: 1.04,
       },
@@ -536,7 +638,6 @@ export default function DeckOfSpies() {
     zones,
     cardMapper,
     cardSize: "regular",
-    // visualizer: true,
   });
 
   const sourceNames: Record<AceSource, string> = {
@@ -544,6 +645,8 @@ export default function DeckOfSpies() {
     drawDeck: "Deck",
     drawDiscard: "Discard",
   };
+  const { isFacePhase, total, neutralizedCount, recruitedCount } =
+    getSpyScore(game);
 
   return (
     <GameWrapper
@@ -555,6 +658,78 @@ export default function DeckOfSpies() {
       undo={undo}
     >
       {cardMap}
+
+      <View
+        style={[
+          flexStyles.rowCentered,
+          flexStyles.spaceBetween,
+          getZoneStylesById("score"),
+          { gap: spacing(12) },
+        ]}
+      >
+        <View
+          style={[
+            flexStyles.colCentered,
+            { width: cardWidth, height: "100%", gap: spacing(8) },
+          ]}
+        >
+          <Text
+            size="xxs"
+            weight={400}
+            color={colorPale}
+            textTransform="uppercase"
+          >
+            Lost
+          </Text>
+          <Text size="xl" weight={600} color={colorPale}>
+            {neutralizedCount}
+          </Text>
+        </View>
+
+        <View
+          style={[
+            flexStyles.colCentered,
+            { flex: 1, height: "100%", gap: spacing(8) },
+          ]}
+        >
+          <Text
+            size="xxs"
+            weight={400}
+            color={colorPale}
+            textTransform="uppercase"
+          >
+            {isFacePhase ? "Key Spies" : "Supporting Spies"}
+          </Text>
+          <SpyScoreBar
+            recruitedCount={recruitedCount}
+            neutralizedCount={neutralizedCount}
+            total={total}
+            height={cardHeight * 0.25}
+            isFacePhase={isFacePhase}
+          />
+        </View>
+
+        <View
+          style={[
+            flexStyles.colCentered,
+
+            { width: cardWidth, height: "100%", gap: spacing(8) },
+          ]}
+        >
+          <Text
+            size="xxs"
+            weight={400}
+            color={colorPale}
+            textTransform="uppercase"
+          >
+            Recruited
+          </Text>
+          <Text size="xl" weight={600} color={colorPale}>
+            {recruitedCount}
+          </Text>
+        </View>
+      </View>
+
       <View
         style={[
           getZoneStylesById("actions"),
@@ -566,6 +741,7 @@ export default function DeckOfSpies() {
           style={[
             flexStyles.rowCentered,
             flexStyles.spaceBetween,
+            flexStyles.fullWidth,
             {
               gap: spacing(20),
             },
@@ -575,16 +751,11 @@ export default function DeckOfSpies() {
             <ProgressBar
               progressValue={selectionTotal}
               totalValue={rankValue(spy)}
-              color={
-                selectionTotal > rankValue(spy)
-                  ? "red"
-                  : selectionTotal === rankValue(spy)
-                    ? "green"
-                    : "blue"
-              }
-              style={{ flex: 1, width: cardWidth * 2 }}
+              color={Colors.K750}
+              style={{ width: cardWidth * 2.5 }}
               scaledHeight={cardHeight * 0.33}
               autoTallyText
+              backgroundColor={rgba(Colors.K850, 0.4)}
             />
           ) : (
             <Text
@@ -607,7 +778,7 @@ export default function DeckOfSpies() {
             <Button
               text="Clear"
               size="sm"
-              theme="blue"
+              theme={Colors.K750}
               onPress={clearSelection}
               disabled={game.selectedCards.length === 0}
             />
@@ -634,7 +805,7 @@ export default function DeckOfSpies() {
               <Button
                 text="Counter"
                 size="sm"
-                theme="orange"
+                theme="purple"
                 disabled={!counterValid}
                 onPress={() => resolvePrimary("counter")}
                 style={{ flex: 1 }}
@@ -655,10 +826,14 @@ export default function DeckOfSpies() {
             <Button
               text="Skip"
               size="sm"
-              theme="green"
+              theme={Colors.K750}
               onPress={finishWithoutRetiring}
               style={{ flex: 1 }}
               taller
+              disabled={!retireSetAvailable}
+              autoProgress={
+                retireSetAvailable ? undefined : AUTO_PROGRESS_DELAY
+              }
             />
           )}
           {game.phase === "assassinate" &&

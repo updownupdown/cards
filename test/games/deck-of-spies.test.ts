@@ -24,7 +24,7 @@ describe("Deck of Spies rules", () => {
     expect(game.spyDeck).toHaveLength(36);
     expect(game.drawDeck).toHaveLength(11);
     expect(game.hand).toHaveLength(5);
-    expect(game.removedDeck).toEqual([]);
+    expect(game.spyDiscard).toEqual([]);
     expect(
       game.hand.every((entry) => ["A", "2", "3", "4"].includes(entry.rank)),
     ).toBe(true);
@@ -175,5 +175,38 @@ describe("Deck of Spies rules", () => {
         spyDiscard: discarded,
       }).won,
     ).toBe(false);
+  });
+
+  test("shows number spies until the first face spy is revealed", () => {
+    const base = deckOfSpiesRules.createGame(createDeck(), noShuffle);
+    const neutralized = [card("5", "clubs", "five")];
+    const recruited = [card("6", "hearts", "six")];
+
+    expect(
+      deckOfSpiesRules.getSpyScore({
+        ...base,
+        neutralizedSpies: neutralized,
+        recruitedSpies: recruited,
+      }),
+    ).toMatchObject({
+      isFacePhase: false,
+      total: 24,
+      neutralizedCount: 1,
+      recruitedCount: 1,
+    });
+
+    expect(
+      deckOfSpiesRules.getSpyScore({
+        ...base,
+        spyDeck: [card("J", "spades", "jack")],
+        neutralizedSpies: [...neutralized, card("Q", "clubs", "queen")],
+        recruitedSpies: [...recruited, card("K", "hearts", "king")],
+      }),
+    ).toMatchObject({
+      isFacePhase: true,
+      total: 12,
+      neutralizedCount: 1,
+      recruitedCount: 1,
+    });
   });
 });

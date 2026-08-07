@@ -46,12 +46,14 @@ import HomeIcon from "./Home.svg";
 import InfoIcon from "./Info.svg";
 import InfoOutlineIcon from "./InfoOutline.svg";
 import InstructionsIcon from "./Instructions.svg";
+import JokerIcon from "./Joker.svg";
 import ListLargeIcon from "./ListLarge.svg";
 import ListMediumIcon from "./ListMedium.svg";
 import ListSmallIcon from "./ListSmall.svg";
 import MenuIcon from "./Menu.svg";
 import MoreVerticalIcon from "./MoreVertical.svg";
 import OfferIcon from "./Offer.svg";
+import PlayHandIcon from "./PlayHand.svg";
 import PlusOutlineIcon from "./PlusOutline.svg";
 import PotionIcon from "./Potion.svg";
 import RecentIcon from "./Recent.svg";
@@ -110,12 +112,14 @@ export type IconName =
   | "info"
   | "info-outline"
   | "instructions"
+  | "joker"
   | "list-large"
   | "list-medium"
   | "list-small"
   | "menu"
   | "more-vertical"
   | "offer"
+  | "play-hand"
   | "plus-outline"
   | "potion"
   | "recent"
@@ -174,12 +178,14 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "info": InfoIcon,
   "info-outline": InfoOutlineIcon,
   "instructions": InstructionsIcon,
+  "joker": JokerIcon,
   "list-large": ListLargeIcon,
   "list-medium": ListMediumIcon,
   "list-small": ListSmallIcon,
   "menu": MenuIcon,
   "more-vertical": MoreVerticalIcon,
   "offer": OfferIcon,
+  "play-hand": PlayHandIcon,
   "plus-outline": PlusOutlineIcon,
   "potion": PotionIcon,
   "recent": RecentIcon,

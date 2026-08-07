@@ -162,6 +162,16 @@ export const GAME_BACKGROUNDS = {
     authorName: "Ashley Byrd",
     authorLink: "https://unsplash.com/@byrdman85",
   },
+  darkAlley: {
+    source: require("@/assets/backgrounds/dark-alley.jpg"),
+    authorName: "Adam Sprouse",
+    authorLink: "https://unsplash.com/@asprouse97",
+  },
+  painting: {
+    source: require("@/assets/backgrounds/painting.jpg"),
+    authorName: "Susan Wilkinson",
+    authorLink: "https://unsplash.com/@susan_wilkinson",
+  },
 } satisfies Record<string, GameBackground>;
 
 export const {
@@ -196,4 +206,6 @@ export const {
   cherryBlossoms,
   club,
   bookstore,
+  darkAlley,
+  painting,
 } = GAME_BACKGROUNDS;

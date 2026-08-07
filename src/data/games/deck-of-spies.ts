@@ -1,4 +1,6 @@
-import { london } from "../game-backgrounds";
+import { GameAnimations } from "@/animations";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameCreators } from "../game-creators";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const deckOfSpies: GameDefinition = {
@@ -10,7 +12,8 @@ export const deckOfSpies: GameDefinition = {
     difficulty: 65,
     luck: 45,
   },
-  background: london,
+  background: GAME_BACKGROUNDS.darkAlley,
+  animation: GameAnimations.Dust,
   thumbnail: "DeckOfSpies.jpg",
   gameColorDark: "#182326",
   gameColorPale: "#dce8df",
@@ -40,4 +43,8 @@ export const deckOfSpies: GameDefinition = {
   about: [
     "Deck of Spies is a compact deck-building game of calculated overpayment, suit planning, and carefully timed Double Agents.",
   ],
+  credits: {
+    creators: [GameCreators.JamesNewman],
+    creationDate: "2021",
+  },
 };

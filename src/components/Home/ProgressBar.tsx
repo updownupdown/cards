@@ -123,7 +123,7 @@ export const ProgressBar = ({
   const getEffectiveProgressPercentage = (normalizedPercentage: number) => {
     const rawPercentage = normalizedPercentage * 100;
 
-    if (barWidth <= 0) {
+    if (barWidth <= 0 || !iconName) {
       return rawPercentage;
     }
 
@@ -160,6 +160,7 @@ export const ProgressBar = ({
       style={[
         {
           position: "relative",
+          overflow: "hidden",
           height,
           backgroundColor: backgroundColor ?? rgba(Colors.K400, 0.12),
           borderRadius: roundToPixel(height / 2),
@@ -273,6 +274,10 @@ export const ProgressBar = ({
               previewProgressValue === undefined ? 1 : 0.5,
             ),
             borderRadius: roundToPixel(height / 2),
+            borderTopRightRadius:
+              progressPercentage === 100 ? roundToPixel(height / 2) : 0,
+            borderBottomRightRadius:
+              progressPercentage === 100 ? roundToPixel(height / 2) : 0,
           },
         ]}
       />
@@ -290,12 +295,16 @@ export const ProgressBar = ({
             left: 0,
             backgroundColor: progressColor,
             borderRadius: roundToPixel(height / 2),
+            borderTopRightRadius:
+              previewProgressPercentage === 100 ? roundToPixel(height / 2) : 0,
+            borderBottomRightRadius:
+              previewProgressPercentage === 100 ? roundToPixel(height / 2) : 0,
             boxShadow: `inset 0 0 0 ${roundToPixel(height * 0.03)}px ${rgba(
               Colors.white,
-              0.3,
+              0.2,
             )}, inset 0 0 ${roundToPixel(height * 0.4)}px ${rgba(
               Colors.white,
-              0.4,
+              0.3,
             )}, 0 0 ${roundToPixel(height * 0.2)}px ${rgba(progressColor, 0.8)}`,
           },
         ]}

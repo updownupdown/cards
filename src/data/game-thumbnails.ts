@@ -49,6 +49,7 @@ export const GAME_THUMBNAIL_ASSETS = {
   "Scoundrel.jpg": require("@/assets/thumbnails/Scoundrel.jpg"),
   "SirTommy.jpg": require("@/assets/thumbnails/SirTommy.jpg"),
   "Skyway.jpg": require("@/assets/thumbnails/Skyway.jpg"),
+  "Solatro.jpg": require("@/assets/thumbnails/Solatro.jpg"),
   "SpiderSolitaire.jpg": require("@/assets/thumbnails/SpiderSolitaire.jpg"),
   "StreetsAndAlleys.jpg": require("@/assets/thumbnails/StreetsAndAlleys.jpg"),
   "Swamp.jpg": require("@/assets/thumbnails/Swamp.jpg"),
