@@ -1,6 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
-import { GameCreators } from "../game-creators";
 import { GameAnimations } from "@/animations/types";
 
 export const yukon: GameDefinition = {
@@ -35,11 +34,4 @@ export const yukon: GameDefinition = {
     "- Only Kings may be moved to an empty column.",
     "- Double-tap or drag single cards to the foundations, building up by suit.",
   ],
-  about: [
-    "Yukon takes Klondike's layout but lets you haul entire piles of mixed cards in a single move.",
-    "With no stock and almost everything face up, wins reward untangling the columns in the right order.",
-  ],
-  credits: {
-    creators: [GameCreators.Unknown],
-  },
 };

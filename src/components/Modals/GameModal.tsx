@@ -1,6 +1,4 @@
-import { RichText } from "@/components/common/RichText";
 import { Text } from "@/components/common/Text";
-import { CREATOR_LINKS, isValidLink } from "@/data/game-creators";
 import { getSettingApplyBehaviorText } from "@/data/game-settings";
 import {
   useGameSettings,
@@ -10,7 +8,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
 import { Colors, rgba } from "@/styles/styles";
-import { darkenHexColor, lightenHexColor } from "@/utils/utils";
+import { darkenHexColor, isValidLink, lightenHexColor } from "@/utils/utils";
 import { usePathname } from "expo-router";
 import { useRef } from "react";
 import { Linking, ScrollView, View, ViewStyle } from "react-native";
@@ -23,9 +21,8 @@ import {
 import { Button } from "../Button/Button";
 import { SettingControl } from "../common/SettingControl";
 import { FavButton } from "../Home/FavButton";
-import ModalFull, { ModalHeading } from "./ModalFull";
-import { RatingsBars } from "../Home/RatingBars";
 import { shouldReloadGameAfterSettingChange } from "./game-modal-policy";
+import ModalFull, { ModalHeading } from "./ModalFull";
 
 type Props = {
   onClose: () => void;
@@ -82,11 +79,6 @@ export default function GameModal({
         onClose={handleClose}
         title={gameInfo.title}
         titleColor={gameInfo.gameColorPale}
-        subtitle={
-          gameInfo.credits?.creators?.length
-            ? `by ${gameInfo.credits.creators.join(", ")}`
-            : undefined
-        }
         backgroundColor={gameInfo.gameColorDark}
       >
         {/* Scroll view */}
@@ -203,7 +195,7 @@ export default function GameModal({
             )}
 
             {/* About */}
-            <View
+            {/* <View
               style={[
                 flexStyles.colStart,
                 flexStyles.fullWidth,
@@ -218,18 +210,17 @@ export default function GameModal({
 
               {gameInfo.about && (
                 <RichText content={gameInfo.about} size="md" weight={300} />
-              )}
+              )} */}
 
-              {/* Stats */}
-              <RatingsBars
+            {/* Stats */}
+            {/* <RatingsBars
                 rating={gameInfo.rating}
                 gameColor={gameInfo.gameColorPale}
                 style={{ marginBottom: spacing(30) }}
-              />
-            </View>
+              /> */}
+            {/* </View> */}
 
-            {/* Credits */}
-            {gameInfo.credits && <CreditsSection />}
+            {gameInfo.background?.authorName && <CreditsSection />}
 
             {/* How to Play */}
             <Button
@@ -258,7 +249,6 @@ type CreditsSectionProps = {
 export const CreditsSection = ({ style }: CreditsSectionProps) => {
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);
-  const credits = gameInfo.credits;
   const { spacing } = useResponsiveMetrics();
 
   const background = gameInfo.background;
@@ -266,7 +256,7 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
     ? background.authorLink
     : undefined;
 
-  if (!credits) return null;
+  if (!background?.authorName) return null;
 
   return (
     <View
@@ -277,6 +267,7 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
         {
           gap: spacing(12),
           padding: spacing(20),
+          marginTop: spacing(20),
           paddingTop: spacing(16),
           borderRadius: spacing(12),
           borderWidth: 1,
@@ -290,34 +281,6 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
         title="Credits"
         iconName="attribution"
       />
-
-      {credits.creators?.length && (
-        <Text size="sm" weight={300} color={Colors.white}>
-          Game design:{" "}
-          {credits.creators.map((creator, index) => {
-            const creatorLink = CREATOR_LINKS[creator];
-
-            return (
-              <Text key={index} size="md" weight={300} color={Colors.white}>
-                {index > 0 && ", "}
-                {creatorLink ? (
-                  <Text
-                    size="sm"
-                    weight={500}
-                    color={Colors.accentBlue}
-                    onPress={() => void Linking.openURL(creatorLink)}
-                  >
-                    {creator}
-                  </Text>
-                ) : (
-                  creator
-                )}
-              </Text>
-            );
-          })}
-          {credits.creationDate ? `, ${credits.creationDate}` : ""}
-        </Text>
-      )}
 
       {background?.authorName && (
         <Text size="sm" weight={300} color={Colors.white}>

@@ -1,6 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
-import { GameCreators } from "../game-creators";
 
 export const memory: GameDefinition = {
   path: "/memory",
@@ -30,8 +29,4 @@ export const memory: GameDefinition = {
     "- Matching cards move to the discard pile. Mismatched cards are turned face down again.",
     "- You can tap cards while two of them are face up to set them face down again faster.",
   ],
-  about: ["A playing card based adaptation of the classic memory game."],
-  credits: {
-    creators: [GameCreators.Unknown],
-  },
 };

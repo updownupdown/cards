@@ -22,36 +22,36 @@ export type GameSettings = {
     | "extreme";
   drawCount: 1 | 3;
   islandJokers: boolean;
-  loboMode: "hard" | "medium" | "easy";
+  wolfsGambitMode: "hard" | "medium" | "easy";
   dungeonLevel: 1 | 2 | 3 | 4 | 5;
   boomerAce: boolean;
   powerReserve: boolean;
   specialAbilities: boolean;
-  optritaHard: boolean;
+  gridlinesHard: boolean;
   pokerJokers: boolean;
-  alpineDifficulty: "gentle" | "standard" | "intense";
-  alpineChallenge: AlpineChallenge;
+  ascentDifficulty: "gentle" | "standard" | "intense";
+  ascentChallenge: AscentChallenge;
   dungeonDifficulty: "beginner" | "intermediate" | "advanced" | "bloodlust";
   merchantLoyalPatrons: boolean;
   merchantCheckBack: boolean;
   merchantSuperExclusive: boolean;
   merchantVandals: 0 | 1 | 2;
-  bardsLoyalPatrons: boolean;
-  bardsCheckBack: boolean;
-  bardsSuperExclusive: boolean;
-  bardsVandals: "off" | "one" | "two";
-  clubFightDifficulty: "easy" | "hard";
-  leafbearerOpenStables: boolean;
-  jacksDreamHardMode: boolean;
+  booksellerLoyalPatrons: boolean;
+  booksellerCheckBack: boolean;
+  booksellerSuperExclusive: boolean;
+  booksellerVandals: "off" | "one" | "two";
+  thirteenClubsDifficulty: "easy" | "hard";
+  herbkeeperOpenStables: boolean;
+  royalRestHardMode: boolean;
   pyramidDifficulty: "easy" | "hard";
-  solunaDifficulty: "easy" | "normal" | "hard";
-  theBogeyDifficulty: "easy" | "hard";
+  seerDifficulty: "easy" | "normal" | "hard";
+  unwantedHelpDifficulty: "easy" | "hard";
   lastResultSessionId?: string;
   lastResultWon?: boolean;
   stats: GameStats;
 };
 
-export type AlpineChallenge =
+export type AscentChallenge =
   | "none"
   | "cho-oyu"
   | "shishapangma"
@@ -68,7 +68,7 @@ export type AlpineChallenge =
   | "k2"
   | "annapurna";
 
-export const ALPINE_CHALLENGES: AlpineChallenge[] = [
+export const ASCENT_CHALLENGES: AscentChallenge[] = [
   "none",
   "cho-oyu",
   "shishapangma",
@@ -135,30 +135,30 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   memoryDifficulty: "easy",
   drawCount: 1,
   islandJokers: false,
-  loboMode: "medium",
+  wolfsGambitMode: "medium",
   dungeonLevel: 1,
   boomerAce: false,
   powerReserve: false,
   specialAbilities: false,
-  optritaHard: false,
+  gridlinesHard: false,
   pokerJokers: false,
-  alpineDifficulty: "standard",
-  alpineChallenge: "none",
+  ascentDifficulty: "standard",
+  ascentChallenge: "none",
   dungeonDifficulty: "beginner",
   merchantLoyalPatrons: false,
   merchantCheckBack: false,
   merchantSuperExclusive: false,
   merchantVandals: 0,
-  bardsLoyalPatrons: false,
-  bardsCheckBack: false,
-  bardsSuperExclusive: false,
-  bardsVandals: "off",
-  clubFightDifficulty: "easy",
-  leafbearerOpenStables: false,
-  jacksDreamHardMode: false,
+  booksellerLoyalPatrons: false,
+  booksellerCheckBack: false,
+  booksellerSuperExclusive: false,
+  booksellerVandals: "off",
+  thirteenClubsDifficulty: "easy",
+  herbkeeperOpenStables: false,
+  royalRestHardMode: false,
   pyramidDifficulty: "hard",
-  solunaDifficulty: "normal",
-  theBogeyDifficulty: "easy",
+  seerDifficulty: "normal",
+  unwantedHelpDifficulty: "easy",
   stats: {
     attempts: 0,
     wins: 0,
@@ -359,9 +359,9 @@ export function getGameSettings(
     difficulty: merged.difficulty === "difficult" ? "difficult" : "easy",
     drawCount: merged.drawCount === 3 ? 3 : 1,
     islandJokers: merged.islandJokers === true,
-    loboMode:
-      merged.loboMode === "hard" || merged.loboMode === "easy"
-        ? merged.loboMode
+    wolfsGambitMode:
+      merged.wolfsGambitMode === "hard" || merged.wolfsGambitMode === "easy"
+        ? merged.wolfsGambitMode
         : "medium",
     dungeonLevel:
       merged.dungeonLevel >= 1 && merged.dungeonLevel <= 5
@@ -370,15 +370,15 @@ export function getGameSettings(
     boomerAce: merged.boomerAce === true,
     powerReserve: merged.powerReserve === true,
     specialAbilities: merged.specialAbilities === true,
-    optritaHard: merged.optritaHard === true,
+    gridlinesHard: merged.gridlinesHard === true,
     pokerJokers: merged.pokerJokers === true,
-    alpineDifficulty:
-      merged.alpineDifficulty === "gentle" ||
-      merged.alpineDifficulty === "intense"
-        ? merged.alpineDifficulty
+    ascentDifficulty:
+      merged.ascentDifficulty === "gentle" ||
+      merged.ascentDifficulty === "intense"
+        ? merged.ascentDifficulty
         : "standard",
-    alpineChallenge: ALPINE_CHALLENGES.includes(merged.alpineChallenge)
-      ? merged.alpineChallenge
+    ascentChallenge: ASCENT_CHALLENGES.includes(merged.ascentChallenge)
+      ? merged.ascentChallenge
       : "none",
     dungeonDifficulty:
       merged.dungeonDifficulty === "intermediate" ||
@@ -393,16 +393,16 @@ export function getGameSettings(
       merged.merchantVandals === 1 || merged.merchantVandals === 2
         ? merged.merchantVandals
         : 0,
-    bardsLoyalPatrons: merged.bardsLoyalPatrons === true,
-    bardsCheckBack: merged.bardsCheckBack === true,
-    bardsSuperExclusive: merged.bardsSuperExclusive === true,
-    bardsVandals:
-      merged.bardsVandals === "one" || merged.bardsVandals === "two"
-        ? merged.bardsVandals
+    booksellerLoyalPatrons: merged.booksellerLoyalPatrons === true,
+    booksellerCheckBack: merged.booksellerCheckBack === true,
+    booksellerSuperExclusive: merged.booksellerSuperExclusive === true,
+    booksellerVandals:
+      merged.booksellerVandals === "one" || merged.booksellerVandals === "two"
+        ? merged.booksellerVandals
         : "off",
-    clubFightDifficulty:
-      merged.clubFightDifficulty === "hard" ? "hard" : "easy",
-    leafbearerOpenStables: merged.leafbearerOpenStables === true,
+    thirteenClubsDifficulty:
+      merged.thirteenClubsDifficulty === "hard" ? "hard" : "easy",
+    herbkeeperOpenStables: merged.herbkeeperOpenStables === true,
     stats: {
       ...DEFAULT_GAME_SETTINGS.stats,
       ...(existing.stats ?? {}),

@@ -1,6 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
-import { GameCreators } from "../game-creators";
 
 export const golf: GameDefinition = {
   path: "/golf",
@@ -34,10 +33,4 @@ export const golf: GameDefinition = {
     "- Sequences do **not** wrap: since Aces are low and Kings are high, the run never loops from King back to Ace.",
     "- When stuck, turn a card from the stock to the waste.",
   ],
-  about: [
-    "Golf Solitaire is a breezy race to sweep seven columns onto a single waste pile.",
-  ],
-  credits: {
-    creators: [GameCreators.Unknown],
-  },
 };

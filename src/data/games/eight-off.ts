@@ -1,6 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
-import { GameCreators } from "../game-creators";
 import { GameAnimations } from "@/animations";
 
 export const eightOff: GameDefinition = {
@@ -18,7 +17,7 @@ export const eightOff: GameDefinition = {
   gameColorDark: "#0e2741",
   gameColorPale: "#d9ffff",
   cardDescription:
-    "A roomy, same-suit FreeCell relative, with eight cells and Kings-only columns.",
+    "A roomy, same-suit Four Reserves relative, with eight cells and Kings-only columns.",
   quickStart: ["Use 8 cells; tableau down in suit; only kings fill empty."],
   howToPlay: [
     "## Objective",
@@ -31,12 +30,4 @@ export const eightOff: GameDefinition = {
     "- Only a **King** (with any cards it carries) may move into an **empty column**.",
     "- Send cards to the foundations up by suit from the Aces.",
   ],
-  about: [
-    "Eight Off gives you eight free cells instead of four, but demands same-suit tableau building.",
-    "The extra cells make most deals winnable — the challenge is not clogging them all at once.",
-  ],
-  credits: {
-    creators: [GameCreators.Unknown],
-    creationDate: "Popularized by C. L. Baker in the 1920s",
-  },
 };

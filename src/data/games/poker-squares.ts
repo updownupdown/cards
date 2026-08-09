@@ -1,6 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
-import { GameCreators } from "../game-creators";
 
 export const pokerSquares: GameDefinition = {
   path: "/poker-squares",
@@ -45,10 +44,4 @@ export const pokerSquares: GameDefinition = {
     "- **Two Pair:** 5",
     "- **One Pair:** 2",
   ],
-  about: [
-    "Poker Squares rewards planning and probability: every card is committed to the grid forever.",
-  ],
-  credits: {
-    creators: [GameCreators.Unknown],
-  },
 };

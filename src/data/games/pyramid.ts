@@ -1,6 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
-import { GameCreators } from "../game-creators";
 
 export const pyramid: GameDefinition = {
   path: "/pyramid",
@@ -30,12 +29,4 @@ export const pyramid: GameDefinition = {
     "- A King totals 13 by itself, so it is removed alone.",
     "- When stuck, turn cards from the stock to the waste; the top waste card can be paired with any available card.",
   ],
-  about: [
-    "Pyramid is a quick adding-up patience built on a 28-card pyramid.",
-    "The simple mechanics mask the fact that the odds of winning are roughly 0.5% to 5%",
-  ],
-  credits: {
-    creators: [GameCreators.Unknown],
-    creationDate: "First documented in 1949",
-  },
 };

@@ -61,8 +61,7 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
             headingColor={headingColor}
           />
 
-          {/* Credits */}
-          {gameInfo.credits && (
+          {gameInfo.background?.authorName && (
             <CreditsSection style={{ marginTop: spacing(40) }} />
           )}
         </View>

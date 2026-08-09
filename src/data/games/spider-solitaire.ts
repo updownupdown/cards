@@ -1,6 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
-import { GameCreators } from "../game-creators";
 import { GameAnimations } from "@/animations";
 
 export const spiderSolitaire: GameDefinition = {
@@ -33,8 +32,4 @@ export const spiderSolitaire: GameDefinition = {
     "## Stock",
     "Tap the stock to deal one card onto every column at once. You may only deal when no column is empty.",
   ],
-  credits: {
-    creators: [GameCreators.Unknown],
-    creationDate: "First documented in 1917",
-  },
 };

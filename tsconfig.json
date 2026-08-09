@@ -3,7 +3,7 @@
   "compilerOptions": {
     "strict": true,
     "allowUnreachableCode": true,
-    "types": ["jest", "node"],
+    "types": ["node"],
     "paths": {
       "@/*": ["./src/*"],
       "@/assets/*": ["./assets/*"]

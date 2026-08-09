@@ -1,6 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
-import { GameCreators } from "../game-creators";
 
 export const scorpion: GameDefinition = {
   path: "/scorpion",
@@ -35,12 +34,4 @@ export const scorpion: GameDefinition = {
     "## Stock",
     "When no useful move remains, deal the three stock cards, one onto each of the first three columns.",
   ],
-  about: [
-    "Scorpion is a tense, tangle-heavy cousin of Spider played with a single deck.",
-    "Because you can drag buried cards along with their cover, freeing a key card is a puzzle in itself.",
-  ],
-  credits: {
-    creators: [GameCreators.Unknown],
-    creationDate: "First documented in the 1940s",
-  },
 };

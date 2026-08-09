@@ -33,13 +33,13 @@ Use this checklist after changing responsive tokens, typography scale, or constr
 
 ## Game Overlays (Example Games)
 
-### Regicide
+### Crownslayer
 
 - Enemy stats panel spacing and border radius remain consistent.
 - Attack/Defend action bars keep button/icon/value alignment.
 - Glow/shadow thickness looks balanced at tablet and desktop widths.
 
-### Scoundrel
+### Rogue's Descent
 
 - Room info panel gap and run button spacing remain stable.
 - Action buttons keep icon/text alignment in each room slot.

@@ -1,6 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
-import { GameCreators } from "../game-creators";
 
 export const clock: GameDefinition = {
   path: "/clock",
@@ -32,11 +31,4 @@ export const clock: GameDefinition = {
     "## Winning & Losing",
     "You win if every pile is turned face up. You lose the moment the **fourth King** is revealed.",
   ],
-  about: [
-    "Unlike most solitaire games that involve strategy, Clock Solitaire is purely mechanical, and the odds are entirely up to luck, with winning odds of 1/13.",
-  ],
-  credits: {
-    creators: [GameCreators.Unknown],
-    creationDate: "Known since at least the 19th century",
-  },
 };

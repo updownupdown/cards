@@ -10,13 +10,12 @@ import { useModalStyles } from "@/styles/modalStyles";
 import { Colors } from "@/styles/styles";
 import Constants from "expo-constants";
 import React from "react";
-import { Linking, ScrollView, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Button } from "../Button/Button";
 import { AddToHomeScreenNotice } from "../common/AddToHomeScreenNotice";
 import { SettingControl } from "../common/SettingControl";
 import { Text } from "../common/Text";
-import { GameCreators } from "./GameCreators";
-import ModalFull, { ModalHeading } from "./ModalFull";
+import ModalFull from "./ModalFull";
 
 function formatBuildDate(iso: string): string {
   const d = new Date(iso);
@@ -95,58 +94,6 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
         </View>
 
         <AddToHomeScreenNotice />
-
-        <View
-          style={[
-            flexStyles.colStart,
-            flexStyles.fullWidth,
-            flexStyles.spaceBetween,
-            {
-              gap: spacing(12),
-              padding: spacing(20),
-              paddingTop: spacing(16),
-              borderRadius: spacing(12),
-              borderWidth: 1,
-              borderColor: Colors.K800,
-            },
-          ]}
-        >
-          <ModalHeading
-            color={Colors.K200}
-            title="Design & Development"
-            iconName="attribution"
-          />
-
-          <Text>James Carmichael</Text>
-          <Text
-            size="sm"
-            weight={500}
-            color={Colors.accentBlue}
-            onPress={() =>
-              void Linking.openURL("https://github.com/updownupdown/")
-            }
-          >
-            GitHub
-          </Text>
-        </View>
-
-        <View
-          style={[
-            flexStyles.colStart,
-            flexStyles.fullWidth,
-            flexStyles.spaceBetween,
-            {
-              gap: spacing(12),
-              padding: spacing(20),
-              paddingTop: spacing(16),
-              borderRadius: spacing(12),
-              borderWidth: 1,
-              borderColor: Colors.K800,
-            },
-          ]}
-        >
-          <GameCreators />
-        </View>
 
         {isResetConfirmationVisible ? (
           <View

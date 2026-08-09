@@ -1,6 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
-import { GameCreators } from "../game-creators";
 import { GameAnimations } from "@/animations";
 
 export const accordion: GameDefinition = {
@@ -36,12 +35,4 @@ export const accordion: GameDefinition = {
     "## Tips",
     '- **Use the "Sweeper" Technique**: Before playing, scan your layout for four cards of the same rank (e.g., four 8s) located near the end of the board. Protect them by never moving any other card on top of a sweeper. Your ultimate goal is to get down to exactly four piles, each topped with a sweeper. Since they have the same rank, you can then stack them on top of each other to win.',
   ],
-  about: [
-    "Accordion Solitaire traces its origins to the late 19th century. The earliest known description was published in 1883 by Manhattan-based publisher William B. Dick.",
-    'Originally called "Idle Year" (a humorous nod to its incredibly low win rate of about 1%) it was also historically known as "Methuselah" and "Tower of Babel".',
-  ],
-  credits: {
-    creators: [GameCreators.Unknown],
-    creationDate: "First documented by William B. Dick in 1883",
-  },
 };

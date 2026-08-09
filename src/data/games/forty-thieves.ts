@@ -1,6 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
-import { GameCreators } from "../game-creators";
 import { GameAnimations } from "@/animations";
 
 export const fortyThieves: GameDefinition = {
@@ -36,13 +35,4 @@ export const fortyThieves: GameDefinition = {
     "-- Easy mode has infinite redeal.",
     "-- Hard mode has no redeal.",
   ],
-  about: [
-    "Forty Thieves, also called Napoleon at St Helena, is a two-deck patience game.",
-    "Strict single-card moves and suit-matched building make it a low-luck test of planning.",
-  ],
-  credits: {
-    creators: [GameCreators.Unknown],
-    creationDate:
-      'First recorded around 1870 under the name "Napoleon at St. Helena"',
-  },
 };

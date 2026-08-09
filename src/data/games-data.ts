@@ -1,4 +1,3 @@
-import { GameCreator } from "./game-creators";
 import { city, GameBackground } from "./game-backgrounds";
 import { GameThumbnailName } from "./game-thumbnails";
 import { isLocalDevEnvironment } from "@/utils/utils";
@@ -6,7 +5,6 @@ import type { GameAnimation } from "@/animations/types";
 
 export enum GameTag {
   EasyToLearn = "EasyToLearn",
-  IsaludoCollection = "IsaludoCollection",
   TableauBuilding = "TableauBuilding",
   ModernMechanics = "ModernMechanics",
   DungeonCrawler = "DungeonCrawler",
@@ -22,7 +20,6 @@ export enum GameTag {
 
 export const GameTagNames: Record<GameTag, string> = {
   [GameTag.EasyToLearn]: "Easy to Learn",
-  [GameTag.IsaludoCollection]: "Isaludo Collection",
   [GameTag.TableauBuilding]: "Tableau Building",
   [GameTag.ModernMechanics]: "Modern Mechanics",
   [GameTag.DungeonCrawler]: "Dungeon Crawler",
@@ -71,14 +68,6 @@ export type GameMenuInfo = {
   // How to Play
   quickStart?: string[]; // Plain text only
   howToPlay?: string[]; // Supports markdown-ish blocks
-
-  // About and credits
-  about?: string[]; // Supports markdown-ish blocks
-  credits?: {
-    creators?: GameCreator[];
-    creationDate?: string;
-    creatorLink?: string;
-  };
 };
 
 /** A single game entry authored in src/data/games/<slug>.ts. */

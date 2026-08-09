@@ -1,12 +1,11 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
-import { GameCreators } from "../game-creators";
 import { GameDefinition, GameTag } from "../games-data";
 
-export const soluna: GameDefinition = {
+export const seer: GameDefinition = {
   enabledOnLocalOnly: true,
-  path: "/soluna",
-  title: "Soluna",
+  path: "/seer",
+  title: "Seer",
   tags: [GameTag.EasyToLearn, GameTag.ModernMechanics, GameTag.SpatialControl],
   rating: {
     complexity: 35,
@@ -42,10 +41,4 @@ export const soluna: GameDefinition = {
     "- Completed predictions may be chosen again to free more stones.",
     "- A failed replay stops counting as complete until its exposed stones are removed or it succeeds again.",
   ],
-  about: [
-    "Soluna is a compact prediction solitaire game played on a two-by-four board.",
-  ],
-  credits: {
-    creators: [GameCreators.Unknown],
-  },
 };

@@ -1,6 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
-import { GameCreators } from "../game-creators";
 import { GameAnimations } from "@/animations";
 
 export const russianSolitaire: GameDefinition = {
@@ -34,10 +33,4 @@ export const russianSolitaire: GameDefinition = {
     "- Only Kings can be moved to empty columns.",
     "- Double-tap or drag single cards to the foundations, up by suit.",
   ],
-  about: [
-    "Russian Solitaire is Yukon with same-suit building, making it one of the toughest games around.",
-  ],
-  credits: {
-    creators: [GameCreators.Unknown],
-  },
 };

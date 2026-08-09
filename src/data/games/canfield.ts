@@ -1,6 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
-import { GameCreators } from "../game-creators";
 import { GameAnimations } from "@/animations/types";
 
 export const canfield: GameDefinition = {
@@ -40,12 +39,4 @@ export const canfield: GameDefinition = {
     "## Stock",
     "Turn cards from the stock (one or three at a time, depending on your settings) to the waste. You may redeal as often as you like.",
   ],
-  about: [
-    "Canfield is a famously tough gambling-hall patience with a big face-up reserve.",
-    "The random base rank and awkward reserve mean most deals are lost, so a win is a real prize.",
-  ],
-  credits: {
-    creators: [GameCreators.Unknown],
-    creationDate: "First documented by Mary Whitmore Jones in 1891",
-  },
 };

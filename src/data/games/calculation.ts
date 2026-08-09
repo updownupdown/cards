@@ -1,6 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
-import { GameCreators } from "../game-creators";
 
 export const calculation: GameDefinition = {
   path: "/calculation",
@@ -38,7 +37,4 @@ export const calculation: GameDefinition = {
     "- You can play a Draw card to one of the 4 waste piles.",
     "- You cannot move cards between waste piles.",
   ],
-  credits: {
-    creators: [GameCreators.Unknown],
-  },
 };

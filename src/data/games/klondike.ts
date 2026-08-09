@@ -1,6 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
-import { GameCreators } from "../game-creators";
 import { GameAnimations } from "@/animations";
 
 export const klondike: GameDefinition = {
@@ -36,11 +35,4 @@ export const klondike: GameDefinition = {
     "## Stock",
     "Turn cards from the stock to the waste pile (one or three at a time, depending on your settings). The top waste card is available to play, and you can redeal the stock when it empties.",
   ],
-  about: [
-    'Klondike is the solitaire most people simply call "Solitaire".',
-    "Dig through the tableau and stock to free the cards you need and move all 52 to the foundations.",
-  ],
-  credits: {
-    creators: [GameCreators.Unknown],
-  },
 };

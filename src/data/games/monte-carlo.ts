@@ -1,6 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
-import { GameCreators } from "../game-creators";
 
 export const monteCarlo: GameDefinition = {
   path: "/monte-carlo",
@@ -30,7 +29,4 @@ export const monteCarlo: GameDefinition = {
     "- When you run out of pairs, **consolidate** the grid. The remaining cards shift to close the gaps, and new cards are dealt from the stock to fill the gaps.",
     "- Consolidation reorders cards, so new matching pairs may be unlocked.",
   ],
-  credits: {
-    creators: [GameCreators.Unknown],
-  },
 };

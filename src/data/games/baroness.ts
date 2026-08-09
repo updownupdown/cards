@@ -1,6 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
-import { GameCreators } from "../game-creators";
 import { GameAnimations } from "@/animations";
 
 export const baroness: GameDefinition = {
@@ -34,12 +33,4 @@ export const baroness: GameDefinition = {
     "- When no move remains, **tap the stock** deck to deal one card onto each pile.",
     "- Aces are worth 1.",
   ],
-  about: [
-    "Baroness — also called Thirteens or Five Piles — is a brisk thirteen-matching game.",
-    "The order you clear pairs decides whether later cards ever become reachable.",
-  ],
-  credits: {
-    creators: [GameCreators.Unknown],
-    creationDate: "First documented by Mary Whitmore Jones in 1890",
-  },
 };

@@ -1,6 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
-import { GameCreators } from "../game-creators";
 import { GameAnimations } from "@/animations";
 
 export const nestor: GameDefinition = {
@@ -30,8 +29,4 @@ export const nestor: GameDefinition = {
     "- Only the **bottom (exposed)** cards of each column are available, as well as **the reserve cards**.",
     "- Tap two available cards of the **same rank** to send them face down to the discard pile.",
   ],
-  credits: {
-    creators: [GameCreators.Unknown],
-    creationDate: "First documented in 1877",
-  },
 };

@@ -1,6 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
-import { GameCreators } from "../game-creators";
 import { GameAnimations } from "@/animations";
 
 export const cribbageSquares: GameDefinition = {
@@ -55,11 +54,4 @@ export const cribbageSquares: GameDefinition = {
     "- **His Heels (2 pts):**",
     "-- If the starter is a Jack, his heels adds two points to the total score.",
   ],
-  about: [
-    "Cribbage Squares combines a spatial placement puzzle with the many scoring combinations of cribbage.",
-  ],
-  credits: {
-    creators: [GameCreators.Unknown],
-    creationDate: "Appeared in the 1950s",
-  },
 };

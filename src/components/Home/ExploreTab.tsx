@@ -16,7 +16,6 @@ import { flexStyles } from "@/styles/flexStyles";
 export const EXPLORE_TAGS: { tag: GameTag; color: string }[] = [
   { tag: GameTag.EasyToLearn, color: "#9df3af" },
   { tag: GameTag.ModernMechanics, color: "#a7bbc9" },
-  { tag: GameTag.IsaludoCollection, color: "#9de2ee" },
   { tag: GameTag.CardCombat, color: "#fa7b7b" },
   { tag: GameTag.DungeonCrawler, color: "#ecaf69" },
   { tag: GameTag.GridPlacement, color: "#e39dff" },

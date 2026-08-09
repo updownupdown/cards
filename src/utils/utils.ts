@@ -147,3 +147,14 @@ export function desaturateHexColor(hexColor: string, amount: number) {
 export function commaFormattedNumber(num: number) {
   return num.toLocaleString("en-US");
 }
+
+export function isValidLink(link: string | undefined): link is string {
+  if (!link) return false;
+
+  try {
+    const url = new URL(link);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+}

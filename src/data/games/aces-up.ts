@@ -1,6 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
-import { GameCreators } from "../game-creators";
 import { GameAnimations } from "@/animations";
 
 export const acesUp: GameDefinition = {
@@ -35,12 +34,4 @@ export const acesUp: GameDefinition = {
     "- Any top card may be moved into an **empty pile**.",
     "- When no more discards or moves are possible, deal another 4 cards, one onto each pile.",
   ],
-  about: [
-    "Aces Up, also known as Idiot's Delight, is a compact, luck-heavy discard game.",
-    "It looks simple, but wins are rare and every empty-pile move matters.",
-  ],
-  credits: {
-    creators: [GameCreators.Unknown],
-    creationDate: "First documented in 1900",
-  },
 };

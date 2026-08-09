@@ -117,8 +117,8 @@ export const GAME_BACKGROUNDS = {
     authorName: "Barney Goodman",
     authorLink: "https://unsplash.com/@bgoodpic",
   },
-  swamp: {
-    source: require("@/assets/backgrounds/swamp.jpg"),
+  marsh: {
+    source: require("@/assets/backgrounds/marsh.jpg"),
     authorName: "Žan Janžekovič",
     authorLink: "https://unsplash.com/@zanjanzekovic",
   },
@@ -207,7 +207,7 @@ export const {
   forest,
   oldRoom,
   brickStreet,
-  swamp,
+  marsh,
   city,
   savanah,
   treeRain,

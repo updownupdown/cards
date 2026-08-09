@@ -1,6 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
-import { GameCreators } from "../game-creators";
 
 export const sirTommy: GameDefinition = {
   path: "/sir-tommy",
@@ -35,11 +34,4 @@ export const sirTommy: GameDefinition = {
     "- **Single-tap** a waste pile to place the stock card there.",
     "- **Double-tap** an exposed stock or waste card to move it to a valid foundation.",
   ],
-  about: [
-    "Sir Tommy is often called the oldest recorded solitaire, and it still teaches the core lesson: where you set a card down matters.",
-    "You can't rearrange a waste pile, so a King dropped onto a low card buries everything beneath it.",
-  ],
-  credits: {
-    creators: [GameCreators.Unknown],
-  },
 };

@@ -51,7 +51,7 @@ self.addEventListener("message", (event) => {
 });
 
 // Content-hashed resources are immutable: Expo fingerprints their filenames on
-// every export (e.g. Scoundrel.c6c46ac5....png, entry-64ef....js), so a change
+// every export (e.g. RoguesDescent.c6c46ac5....png, entry-64ef....js), so a change
 // always produces a new URL. These are safe to serve cache-first forever, which
 // means large assets (backgrounds, thumbnails, card backs, fonts) are only ever
 // downloaded once and load instantly on subsequent visits and offline.
