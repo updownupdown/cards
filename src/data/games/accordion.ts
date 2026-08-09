@@ -15,7 +15,7 @@ export const accordion: GameDefinition = {
   thumbnail: "Accordion.jpg",
   background: GAME_BACKGROUNDS.fallLeaves,
   animation: GameAnimations.Leaves,
-  cardBack: "Accordion.png",
+  cardBack: "Accordion.jpg",
   gameColorDark: "#351219",
   gameColorPale: "#fffccf",
   cardDescription:

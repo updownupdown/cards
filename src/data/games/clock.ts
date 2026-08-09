@@ -13,7 +13,7 @@ export const clock: GameDefinition = {
   },
   thumbnail: "Clock.jpg",
   background: GAME_BACKGROUNDS.oldRoom,
-  cardBack: "Clock.png",
+  cardBack: "Clock.jpg",
   gameColorDark: "#1d1610",
   gameColorPale: "#eed9c2",
   cardDescription:

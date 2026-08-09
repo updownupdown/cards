@@ -15,7 +15,6 @@ export const soluna: GameDefinition = {
   },
   background: GAME_BACKGROUNDS.nightSky,
   animation: GameAnimations.Stars,
-  cardBack: "DefaultCardBack.png",
   gameColorDark: "#202536",
   gameColorPale: "#edf0db",
   cardDescription:

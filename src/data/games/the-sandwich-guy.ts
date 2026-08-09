@@ -13,7 +13,7 @@ export const theSandwichGuy: GameDefinition = {
   },
   thumbnail: "SandwichGuy.jpg",
   background: GAME_BACKGROUNDS.london,
-  cardBack: "SandwichGuy.png",
+  cardBack: "SandwichGuy.jpg",
   gameColorDark: "#102524",
   gameColorPale: "#b0eee9",
   cardDescription:

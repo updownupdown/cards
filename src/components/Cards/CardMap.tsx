@@ -548,6 +548,7 @@ export function useCardMap({
     getZoneBasePos,
     cardWidth,
     cardHeight,
+    customBack,
   };
 }
 

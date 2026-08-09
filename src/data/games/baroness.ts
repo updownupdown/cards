@@ -15,7 +15,6 @@ export const baroness: GameDefinition = {
   thumbnail: "Baroness.jpg",
   background: GAME_BACKGROUNDS.oldRoom,
   animation: GameAnimations.Dust,
-  cardBack: "DefaultCardBack.png",
   gameColorDark: "#3a1620",
   gameColorPale: "#f3d6dd",
   cardDescription:

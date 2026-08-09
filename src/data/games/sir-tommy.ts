@@ -13,7 +13,6 @@ export const sirTommy: GameDefinition = {
   },
   thumbnail: "SirTommy.jpg",
   background: GAME_BACKGROUNDS.london,
-  cardBack: "DefaultCardBack.png",
   gameColorDark: "#1a2c33",
   gameColorPale: "#fdf7d9",
   cardDescription:

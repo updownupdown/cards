@@ -18,7 +18,7 @@ export const skyway: GameDefinition = {
   },
   thumbnail: "Skyway.jpg",
   background: GAME_BACKGROUNDS.interchange,
-  cardBack: "Skyway.png",
+  cardBack: "Skyway.jpg",
   gameColorDark: "#1d2a35",
   gameColorPale: "#b3d5ec",
   cardDescription:

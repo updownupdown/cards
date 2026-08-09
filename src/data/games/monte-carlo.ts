@@ -13,7 +13,7 @@ export const monteCarlo: GameDefinition = {
   },
   thumbnail: "MonteCarlo.jpg",
   background: GAME_BACKGROUNDS.monteCarlo,
-  cardBack: "MonteCarlo.png",
+  cardBack: "MonteCarlo.jpg",
   gameColorDark: "#152635",
   gameColorPale: "#fffce5",
   cardDescription: "Match adjacent pairs of equal rank to clear the grid.",

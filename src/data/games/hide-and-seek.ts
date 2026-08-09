@@ -15,7 +15,7 @@ export const hideAndSeek: GameDefinition = {
   thumbnail: "HideAndSeek.jpg",
   background: GAME_BACKGROUNDS.fallLeaves,
   animation: GameAnimations.Leaves,
-  cardBack: "HideAndSeek.png",
+  cardBack: "HideAndSeek.jpg",
   gameColorDark: "#221815",
   gameColorPale: "#c5f7da",
   cardDescription:

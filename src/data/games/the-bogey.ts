@@ -15,7 +15,7 @@ export const theBogey: GameDefinition = {
   thumbnail: "TheBogey.jpg",
   background: GAME_BACKGROUNDS.treeRain,
   animation: GameAnimations.Firefly,
-  cardBack: "TheBogey.png",
+  cardBack: "TheBogey.jpg",
   gameColorDark: "#1c423f",
   gameColorPale: "#e7f5ce",
   cardDescription:

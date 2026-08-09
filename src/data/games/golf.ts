@@ -13,7 +13,7 @@ export const golf: GameDefinition = {
   },
   thumbnail: "Golf.jpg",
   background: GAME_BACKGROUNDS.golf,
-  cardBack: "Golf.png",
+  cardBack: "Golf.jpg",
   gameColorDark: "#1d301e",
   gameColorPale: "#f2fccc",
   cardDescription:

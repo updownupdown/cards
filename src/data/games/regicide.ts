@@ -15,7 +15,7 @@ export const regicide: GameDefinition = {
   thumbnail: "Regicide.jpg",
   background: GAME_BACKGROUNDS.monteCarlo,
   animation: GameAnimations.Clouds,
-  cardBack: "Regicide.png",
+  cardBack: "Regicide.jpg",
   gameColorDark: "#1b1727",
   gameColorPale: "#e2e9ff",
   cardDescription: "Topple the 12 royals using suit-powered combos.",

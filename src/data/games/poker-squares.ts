@@ -17,7 +17,6 @@ export const pokerSquares: GameDefinition = {
   },
   thumbnail: "PokerSquares.jpg",
   background: GAME_BACKGROUNDS.casino,
-  cardBack: "DefaultCardBack.png",
   gameColorDark: "#112c1f",
   gameColorPale: "#fff4ce",
   cardDescription:

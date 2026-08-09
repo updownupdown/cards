@@ -19,7 +19,7 @@ export const area52: GameDefinition = {
   thumbnail: "Area52.jpg",
   background: GAME_BACKGROUNDS.nightSky,
   animation: GameAnimations.Stars,
-  cardBack: "Area52.png",
+  cardBack: "Area52.jpg",
   gameColorDark: "#2a2836",
   gameColorPale: "#b5faff",
   cardDescription:

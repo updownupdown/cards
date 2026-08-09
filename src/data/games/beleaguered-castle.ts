@@ -15,7 +15,6 @@ export const beleagueredCastle: GameDefinition = {
   thumbnail: "BeleagueredCastle.jpg",
   background: GAME_BACKGROUNDS.castle,
   animation: GameAnimations.Clouds,
-  cardBack: "DefaultCardBack.png",
   gameColorDark: "#2e2620",
   gameColorPale: "#f0e2c4",
   cardDescription:

@@ -22,9 +22,11 @@ import {
   flipAllToBack,
   PlayingCard,
   shuffle,
+  zoneFanOffset,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 
+const cardSize = "small";
 const TABLEAU_COUNT = 5;
 const HAND_COUNT = 4;
 const NUMBER_RANKS = new Set(["A", "2", "3", "4", "5", "6", "7", "8"]);
@@ -374,9 +376,13 @@ export default function JacksDream() {
       pileIndex,
       cards: pile,
       col: pileIndex,
-      row: 1.5,
+      row: 1.25,
       baseZIndex: 10 + pileIndex,
-      fan: { direction: "down" as const, offset: cardDims.tableauOffset },
+      fan: {
+        direction: "down" as const,
+        offset: zoneFanOffset(pile.length, 5, 0.1, cardDims.smallCardOffset),
+        center: false,
+      },
       placeholder: { text: "Column", showCount: true },
     }));
 
@@ -442,15 +448,16 @@ export default function JacksDream() {
     };
   };
 
-  const { cardMap, getZoneBasePos, cardWidth, cardHeight } = useCardMap({
-    game,
-    zones,
-    cardMapper,
-    zoneMapper,
-    gap: 0.14,
-    cardSize: "tableau",
-    fixedRows: 7,
-  });
+  const { cardMap, getZoneBasePos, cardWidth, cardHeight, customBack } =
+    useCardMap({
+      game,
+      zones,
+      cardMapper,
+      zoneMapper,
+      gap: 0.14,
+      cardSize,
+      fixedRows: 6.25,
+    });
 
   function getSourceRect(source: JacksDreamMoveSource) {
     const zone = zones.find(
@@ -463,7 +470,7 @@ export default function JacksDream() {
     const cardIndex = source.zone === "tableau" ? source.cardIndex : 0;
     return createRect(
       base.x,
-      base.y + cardIndex * cardDims.tableauOffset * cardHeight,
+      base.y + cardIndex * cardDims.smallCardOffset * cardHeight,
       cardWidth,
       cardHeight,
     );
@@ -499,7 +506,7 @@ export default function JacksDream() {
           source,
           rect: createRect(
             base.x,
-            base.y + cardIndex * cardDims.tableauOffset * cardHeight,
+            base.y + cardIndex * cardDims.smallCardOffset * cardHeight,
             cardWidth,
             cardHeight,
           ),
@@ -524,7 +531,7 @@ export default function JacksDream() {
         const pile = game.tableau[zone.pileIndex];
         const pileHeight =
           cardHeight +
-          Math.max(0, pile.length - 1) * cardDims.tableauOffset * cardHeight;
+          Math.max(0, pile.length - 1) * cardDims.smallCardOffset * cardHeight;
         return [
           {
             target: { zone: "tableau" as const, pileIndex: zone.pileIndex },
@@ -587,6 +594,14 @@ export default function JacksDream() {
 
   function onSourcePress(source: JacksDreamMoveSource) {
     if (dragGhost) return;
+    if (
+      selected?.zone === "hand" &&
+      source.zone === "hand" &&
+      selected.pileIndex === source.pileIndex
+    ) {
+      setSelected(null);
+      return;
+    }
     if (selected) {
       moveSourceToTableau(selected, source.pileIndex);
       return;
@@ -679,7 +694,8 @@ export default function JacksDream() {
                 <Card
                   card={card}
                   cardWidth={cardWidth}
-                  cardSize="tableau"
+                  cardSize={cardSize}
+                  customBack={customBack}
                   selectColor={ghostHasValidDrop ? "green" : "none"}
                   isSelected={ghostHasValidDrop}
                 />

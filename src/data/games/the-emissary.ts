@@ -13,7 +13,7 @@ export const theEmissary: GameDefinition = {
   },
   thumbnail: "Emissary.jpg",
   background: GAME_BACKGROUNDS.castle,
-  cardBack: "TheEmissary.png",
+  cardBack: "TheEmissary.jpg",
   gameColorDark: "#241e33",
   gameColorPale: "#acdeff",
   cardDescription:

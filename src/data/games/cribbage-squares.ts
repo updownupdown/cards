@@ -19,7 +19,6 @@ export const cribbageSquares: GameDefinition = {
   thumbnail: "CribbageSquares.jpg",
   background: GAME_BACKGROUNDS.cozyCabin,
   animation: GameAnimations.Snow,
-  cardBack: "DefaultCardBack.png",
   gameColorDark: "#15221c",
   gameColorPale: "#d6f0ec",
   cardDescription:

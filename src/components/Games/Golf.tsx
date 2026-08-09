@@ -15,6 +15,7 @@ import {
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { flexStyles } from "@/styles/flexStyles";
 
 const tableauSize = {
   rows: 5,
@@ -125,8 +126,6 @@ export const golfRules = {
 
 // ========== Main Component ========== //
 export default function Golf() {
-  const { colorDark } = useGameColors();
-
   const {
     isLoaded,
     isSettingUp,
@@ -273,6 +272,8 @@ export default function Golf() {
     zones,
     cardMapper,
     gap: 0.14,
+    fixedRows: 7.3,
+    fixedCols: 7,
     cardSize: "small",
   });
 
@@ -289,14 +290,14 @@ export default function Golf() {
     >
       {cardMap}
 
-      <View style={[getZoneStylesById("button")]}>
+      <View style={[flexStyles.colCentered, getZoneStylesById("button")]}>
         <Button
           onPress={drawCard}
           disabled={game.draw.length === 0 || game.ended}
           text="Draw"
           size="lg"
           fullWidth
-          taller
+          halfTaller
           theme={"#37611f"}
         />
       </View>

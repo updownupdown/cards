@@ -13,7 +13,7 @@ export const calculation: GameDefinition = {
   },
   thumbnail: "Calculation.jpg",
   background: GAME_BACKGROUNDS.oldRoom,
-  cardBack: "Calculation.png",
+  cardBack: "Calculation.jpg",
   gameColorDark: "#12122b",
   gameColorPale: "#eccfff",
   cardDescription:

@@ -13,7 +13,7 @@ export const theBobaTeaShop: GameDefinition = {
   },
   thumbnail: "BobaTea.jpg",
   background: GAME_BACKGROUNDS.london,
-  cardBack: "BobaTeaShop.png",
+  cardBack: "BobaTeaShop.jpg",
   gameColorDark: "#2b1c29",
   gameColorPale: "#eed5a0",
   cardDescription:

@@ -2,72 +2,74 @@
 // Run: npm run assets:generate
 
 export type CardBackName =
-  | "Accordion.png"
-  | "AcesUp.png"
-  | "Area52.png"
+  | "Accordion.jpg"
+  | "AcesUp.jpg"
+  | "Area52.jpg"
   | "BardsAndNobles.jpg"
-  | "BobaTeaShop.png"
-  | "Calculation.png"
-  | "CardCapture.png"
-  | "Clock.png"
+  | "BobaTeaShop.jpg"
+  | "Calculation.jpg"
+  | "CardCapture.jpg"
+  | "Clock.jpg"
   | "ClubFight.jpg"
-  | "DeadCenter.png"
+  | "DeadCenter.jpg"
   | "DeckOfSpies.jpg"
   | "DefaultCardBack.png"
   | "Empire.jpg"
   | "Foursquare.jpg"
-  | "Golf.png"
+  | "Golf.jpg"
   | "HeWillNeverStop.jpg"
-  | "HideAndSeek.png"
-  | "LootTheLoop.png"
+  | "HideAndSeek.jpg"
+  | "JacksDream.jpg"
+  | "LootTheLoop.jpg"
   | "Memory.jpg"
-  | "MonteCarlo.png"
+  | "MonteCarlo.jpg"
   | "Nestor.jpg"
   | "OptritaLines.jpg"
   | "Osmosis.jpg"
-  | "Regicide.png"
-  | "SandwichGuy.png"
-  | "Scoundrel.png"
-  | "Skyway.png"
+  | "Regicide.jpg"
+  | "SandwichGuy.jpg"
+  | "Scoundrel.jpg"
+  | "Skyway.jpg"
   | "Solatro.jpg"
   | "Swamp.jpg"
-  | "Syndicate.png"
-  | "TheBogey.png"
-  | "TheEmissary.png";
+  | "Syndicate.jpg"
+  | "TheBogey.jpg"
+  | "TheEmissary.jpg";
 
 export const defaultCardBackName = "DefaultCardBack.png";
 
 export const cardBackAssets: Record<string, any> = {
-  "Accordion.png": require("@/assets/card-backs/Accordion.png"),
-  "AcesUp.png": require("@/assets/card-backs/AcesUp.png"),
-  "Area52.png": require("@/assets/card-backs/Area52.png"),
+  "Accordion.jpg": require("@/assets/card-backs/Accordion.jpg"),
+  "AcesUp.jpg": require("@/assets/card-backs/AcesUp.jpg"),
+  "Area52.jpg": require("@/assets/card-backs/Area52.jpg"),
   "BardsAndNobles.jpg": require("@/assets/card-backs/BardsAndNobles.jpg"),
-  "BobaTeaShop.png": require("@/assets/card-backs/BobaTeaShop.png"),
-  "Calculation.png": require("@/assets/card-backs/Calculation.png"),
-  "CardCapture.png": require("@/assets/card-backs/CardCapture.png"),
-  "Clock.png": require("@/assets/card-backs/Clock.png"),
+  "BobaTeaShop.jpg": require("@/assets/card-backs/BobaTeaShop.jpg"),
+  "Calculation.jpg": require("@/assets/card-backs/Calculation.jpg"),
+  "CardCapture.jpg": require("@/assets/card-backs/CardCapture.jpg"),
+  "Clock.jpg": require("@/assets/card-backs/Clock.jpg"),
   "ClubFight.jpg": require("@/assets/card-backs/ClubFight.jpg"),
-  "DeadCenter.png": require("@/assets/card-backs/DeadCenter.png"),
+  "DeadCenter.jpg": require("@/assets/card-backs/DeadCenter.jpg"),
   "DeckOfSpies.jpg": require("@/assets/card-backs/DeckOfSpies.jpg"),
   "DefaultCardBack.png": require("@/assets/card-backs/DefaultCardBack.png"),
   "Empire.jpg": require("@/assets/card-backs/Empire.jpg"),
   "Foursquare.jpg": require("@/assets/card-backs/Foursquare.jpg"),
-  "Golf.png": require("@/assets/card-backs/Golf.png"),
+  "Golf.jpg": require("@/assets/card-backs/Golf.jpg"),
   "HeWillNeverStop.jpg": require("@/assets/card-backs/HeWillNeverStop.jpg"),
-  "HideAndSeek.png": require("@/assets/card-backs/HideAndSeek.png"),
-  "LootTheLoop.png": require("@/assets/card-backs/LootTheLoop.png"),
+  "HideAndSeek.jpg": require("@/assets/card-backs/HideAndSeek.jpg"),
+  "JacksDream.jpg": require("@/assets/card-backs/JacksDream.jpg"),
+  "LootTheLoop.jpg": require("@/assets/card-backs/LootTheLoop.jpg"),
   "Memory.jpg": require("@/assets/card-backs/Memory.jpg"),
-  "MonteCarlo.png": require("@/assets/card-backs/MonteCarlo.png"),
+  "MonteCarlo.jpg": require("@/assets/card-backs/MonteCarlo.jpg"),
   "Nestor.jpg": require("@/assets/card-backs/Nestor.jpg"),
   "OptritaLines.jpg": require("@/assets/card-backs/OptritaLines.jpg"),
   "Osmosis.jpg": require("@/assets/card-backs/Osmosis.jpg"),
-  "Regicide.png": require("@/assets/card-backs/Regicide.png"),
-  "SandwichGuy.png": require("@/assets/card-backs/SandwichGuy.png"),
-  "Scoundrel.png": require("@/assets/card-backs/Scoundrel.png"),
-  "Skyway.png": require("@/assets/card-backs/Skyway.png"),
+  "Regicide.jpg": require("@/assets/card-backs/Regicide.jpg"),
+  "SandwichGuy.jpg": require("@/assets/card-backs/SandwichGuy.jpg"),
+  "Scoundrel.jpg": require("@/assets/card-backs/Scoundrel.jpg"),
+  "Skyway.jpg": require("@/assets/card-backs/Skyway.jpg"),
   "Solatro.jpg": require("@/assets/card-backs/Solatro.jpg"),
   "Swamp.jpg": require("@/assets/card-backs/Swamp.jpg"),
-  "Syndicate.png": require("@/assets/card-backs/Syndicate.png"),
-  "TheBogey.png": require("@/assets/card-backs/TheBogey.png"),
-  "TheEmissary.png": require("@/assets/card-backs/TheEmissary.png"),
+  "Syndicate.jpg": require("@/assets/card-backs/Syndicate.jpg"),
+  "TheBogey.jpg": require("@/assets/card-backs/TheBogey.jpg"),
+  "TheEmissary.jpg": require("@/assets/card-backs/TheEmissary.jpg"),
 };
