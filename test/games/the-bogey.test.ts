@@ -1,5 +1,6 @@
 import { type PlayingCard } from "@/components/Cards/card-utils";
 import {
+  getTheBogeyHandSize,
   theBogeyRules,
   type TheBogeyGameState,
 } from "@/components/Games/TheBogey";
@@ -33,6 +34,11 @@ function state(overrides: Partial<TheBogeyGameState> = {}): TheBogeyGameState {
 }
 
 describe("The Bogey rules", () => {
+  test("uses the configured hand size for each difficulty", () => {
+    expect(getTheBogeyHandSize("easy")).toBe(5);
+    expect(getTheBogeyHandSize("hard")).toBe(4);
+  });
+
   test("allows any empty column up to the twelve-column limit", () => {
     expect(theBogeyRules.canPlayCard(card("7"), emptyColumns())).toEqual(
       Array.from({ length: 12 }, (_, index) => index),

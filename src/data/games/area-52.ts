@@ -25,16 +25,17 @@ export const area52: GameDefinition = {
   cardDescription:
     "Fight off waves of alien invaders before running out of defenders.",
   quickStart: [
-    "Beat back 2 waves of attackers via attacks or sacrifices.",
-    "Single attacks: opposite color, and of strictly larger value",
-    "Double attacks: sum must be of equal value.",
+    "Beat back 2 waves of attackers using attacks and sacrifices.",
+    "Single attacks: opposite color and larger value",
+    "Double attacks: sum of defenders must be of equal value to attacker.",
   ],
   howToPlay: [
     "## Objective",
-    "To win, you must survive both waves of alien invaders before running out of defenders.",
+    "Win by surviving both waves of alien invaders before running out of defenders.",
 
-    "## Gameplay",
-    "Each wave is made up of a series of attacks. Choose one or two defenders to tackle the lead attacker.",
+    "## Waves",
+    "Each wave is made up of a series of attacks. You must tackle the leading attacker for each attack.",
+    "The second wave differs from the first in that, during dual attacks, defenders of the same color as the attacker are lost.",
 
     "## Actions",
     "- **Single attacks** can be done with a defender of greater value and opposite color to the attacker. After a single attack, the defender is lost, and is replaced with the attacker.",
@@ -43,12 +44,10 @@ export const area52: GameDefinition = {
   ],
   about: [
     "Strategically command your defenders to fight off two waves of invading aliens.",
-    "This game is adapted from Wil Su's Isaludo collection.",
+    "This game is part of Wil Su's Isaludo collection.",
   ],
   credits: {
     creators: [GameCreators.WilSu],
     creationDate: "2021",
-    creatorLink:
-      "https://boardgamegeek.com/boardgamedesigner/121533/wilhelm-su",
   },
 };

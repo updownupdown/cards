@@ -238,7 +238,7 @@ export default function Scorpion() {
         row: 0,
         baseZIndex: 35,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Deal", infoPos: "below" },
+        placeholder: { text: "Stock", infoPos: "below" },
       },
       {
         id: "foundation-0",
@@ -248,8 +248,7 @@ export default function Scorpion() {
         col: 3,
         row: 0,
         baseZIndex: 20,
-        fan: { maxVisible: 1 },
-        placeholder: { text: "Done", infoPos: "below" },
+        fan: { maxVisible: 3 },
       },
       {
         id: "foundation-1",
@@ -259,8 +258,7 @@ export default function Scorpion() {
         col: 4,
         row: 0,
         baseZIndex: 20,
-        fan: { maxVisible: 1 },
-        placeholder: { text: "Done", infoPos: "below" },
+        fan: { maxVisible: 3 },
       },
       {
         id: "foundation-2",
@@ -270,8 +268,7 @@ export default function Scorpion() {
         col: 5,
         row: 0,
         baseZIndex: 20,
-        fan: { maxVisible: 1 },
-        placeholder: { text: "Done", infoPos: "below" },
+        fan: { maxVisible: 3 },
       },
       {
         id: "foundation-3",
@@ -281,8 +278,7 @@ export default function Scorpion() {
         col: 6,
         row: 0,
         baseZIndex: 20,
-        fan: { maxVisible: 1 },
-        placeholder: { text: "Done", infoPos: "below" },
+        fan: { maxVisible: 3 },
       },
       ...tableauZones,
     ];

@@ -716,7 +716,7 @@ export default function AlpineSolitaire() {
         col: 4.75,
         row: 0,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Deck", infoPos: "below" },
+        placeholder: { text: "Stock", infoPos: "below" },
       },
       {
         id: "discard",
@@ -918,7 +918,7 @@ export default function AlpineSolitaire() {
               minWidth: spacing(14),
               backgroundColor: Colors.win,
               borderRadius: spacing(7),
-              boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.black, 0.2)}`,
+              boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(8)}px ${rgba(Colors.black, 0.16)}`,
             }}
           />
 
@@ -943,7 +943,7 @@ export default function AlpineSolitaire() {
                   borderRadius: spacing(7),
                   borderWidth: spacing(3),
                   borderColor: reached ? Colors.win : Colors.K750,
-                  backgroundColor: reached ? Colors.white : Colors.K950,
+                  backgroundColor: reached ? Colors.white : Colors.K875,
                 }}
               />
             );

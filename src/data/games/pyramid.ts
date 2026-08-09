@@ -23,23 +23,16 @@ export const pyramid: GameDefinition = {
   howToPlay: [
     "## Objective",
     "Dismantle the entire **pyramid** of 28 cards by removing them in pairs that sum to **13**.",
-    "## Setup",
-    "- Deal 28 cards into a pyramid of 7 rows, each card overlapping the two below it.",
-    "- The remaining 24 cards form the **stock**.",
-    "## Card values",
-    "- Ace = 1, and number cards are worth their face value.",
-    "- Jack = 11, Queen = 12, King = 13.",
+
     "## Playing",
     "- A card is available only when it is **fully uncovered**, with nothing overlapping it.",
-    "- Remove two available cards whose values total 13 (for example {9H} + {4S}, or {AD} + {QC}).",
-    "- A **King** totals 13 by itself, so it is removed alone.",
-    "- Turn cards from the stock to the waste; the top waste card can be paired with any available card.",
-    "## Winning",
-    "You win when the whole pyramid has been cleared.",
+    "- Remove two available cards whose values total 13 (Aces are worth 1).",
+    "- A King totals 13 by itself, so it is removed alone.",
+    "- When stuck, turn cards from the stock to the waste; the top waste card can be paired with any available card.",
   ],
   about: [
     "Pyramid is a quick adding-up patience built on a 28-card pyramid.",
-    "The challenge is timing: uncover the cards you need before the stock runs dry.",
+    "The simple mechanics mask the fact that the odds of winning are roughly 0.5% to 5%",
   ],
   credits: {
     creators: [GameCreators.Unknown],

@@ -28,10 +28,10 @@ const SUIT_GLYPH = {
 } as const;
 
 const SUIT_COLOR = {
-  H: Colors.white,
-  D: Colors.white,
-  C: Colors.white,
-  S: Colors.white,
+  H: Colors.suitsRed,
+  D: Colors.suitsRed,
+  C: Colors.K400,
+  S: Colors.K400,
 } as const;
 
 type SuitLetter = keyof typeof SUIT_GLYPH;
@@ -160,9 +160,19 @@ function parseBlocks(content: string | string[]): Block[] {
 
 function CardToken({ rank, suit }: { rank: string; suit: SuitLetter }) {
   return (
-    <Text weight={600}>
+    <Text
+      weight={600}
+      color={Colors.white}
+      style={{
+        backgroundColor: rgba(Colors.white, 0.12),
+        borderRadius: 2,
+        paddingHorizontal: 4,
+        aspectRatio: 2.5 / 3.5,
+        textAlign: "center",
+      }}
+    >
       {rank.toUpperCase()}
-      <Text weight={600} color={SUIT_COLOR[suit]}>
+      <Text weight={600} color={SUIT_COLOR[suit]} style={{ marginLeft: 2 }}>
         {SUIT_GLYPH[suit]}
       </Text>
     </Text>

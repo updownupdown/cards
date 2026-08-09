@@ -18,21 +18,32 @@ export const leafbearer: GameDefinition = {
   gameColorDark: "#1b3a1f",
   gameColorPale: "#edffba",
   cardDescription:
-    "Sow herbs across the realm to heal creatures in order before the forest runs dry.",
+    "Distribute herbs across your stables to heal all the resident creatures.",
   quickStart: [
-    "Pick up one herb stack, then distribute its cards to the right in any order.",
+    "Select a stack of herbs, and distribute them to the adjacent locations, one at a time.",
+    "Heal Js, Qs, and Ks in order, using herb stacks of the same value (11, 12, and 13).",
   ],
   howToPlay: [
     "## Objective",
-    "Heal all eight sick creatures. Your score is the number of herbs left on the board.",
-    "## Sow Herbs",
-    "Choose any herb stack. Drop its cards one at a time into the next locations, wrapping from the ninth location back to the first. You decide the order of cards in your hand.",
+    "**Win** by healing all eight sick creatures before running out of cards. Your score is the number of herbs left on the board.",
+
+    "## Distribute Herbs",
+    "- Select a herb stack to pick up all its cards.",
+    "- Choose the order in which to drop the carried herbs.",
+    "- Assign them one at a time, starting with the location next to the one you picked the herbs from, eventually looping back to the top.",
+
     "## Heal Order",
-    "Jacks must all heal before Queens, then Kings. A creature heals when its local herbs exactly match its rank value and include its suit.",
+    "- All Jacks must heal before Queens, and all Queens before Kings.",
+    "- A creature heals when the herbs at its location total exactly its rank value, **and** include at least one herb of its suit.",
+
     "## Eating",
-    "Healthy creatures immediately eat every herb of their suit from their own stack.",
+    "- A healthy creature immediately eats every herb of its suit from its own stack.",
+    "- Eaten herbs cannot be redistributed.",
+
     "## Open Stables",
-    "The optional expansion adds a healthy Noble in the Stables and a Jester. The Noble eats matching herbs; the Jester eats the final herb dropped into the Stables.",
+    'The optional expansion (enabled from the settings) adds a healthy creature, "Noble" and a Jester:',
+    "- The Noble is located in the Stables, the middle location. Noble eats herbs dropped in its location if they match its own suit.",
+    "- The Jester eats the herb dropped into the stables if it is the last dropped herb, regardless of suit.",
   ],
   credits: { creators: [GameCreators.GreggJewell], creationDate: "2025" },
 };

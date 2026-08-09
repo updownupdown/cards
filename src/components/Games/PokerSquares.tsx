@@ -1,9 +1,16 @@
+import { useFade } from "@/hooks/useFade";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
+import { flexStyles } from "@/styles/flexStyles";
+import { Colors, rgba } from "@/styles/styles";
 import { delay } from "@/utils/utils";
 import { useMemo } from "react";
+import { Animated } from "react-native";
+import { Button } from "../Button/Button";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
+  flipToBack,
   flipToFace,
   rankValue,
   shuffle,
@@ -17,6 +24,8 @@ import {
   useCardMap,
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { Text } from "../common/Text";
+import { useGameColors } from "@/hooks/useGameColors";
 
 const GRID_SIZE = 5;
 const TARGET_SCORE = 200;
@@ -27,6 +36,8 @@ type GameState = {
   deck: PlayingCard[];
   grid: (PlayingCard | null)[];
   score: number;
+  scoresReady: boolean;
+  isTransitioning: boolean;
   ended: boolean;
   won: boolean;
 };
@@ -37,6 +48,8 @@ const gameStateInitial: GameState = {
   deck: [],
   grid: Array.from({ length: GRID_SIZE * GRID_SIZE }, () => null),
   score: 0,
+  scoresReady: false,
+  isTransitioning: false,
   ended: false,
   won: false,
 };
@@ -80,26 +93,55 @@ function handCategory(hand: PlayingCard[]) {
   return 0;
 }
 
+function handCategoryName(category: number) {
+  return [
+    "No hand",
+    "One pair",
+    "Two pair",
+    "x3",
+    "Straight",
+    "Flush",
+    "Full house",
+    "x4",
+    "Straight flush",
+    "Royal flush",
+  ][category];
+}
+
+type LineScore = {
+  category: number;
+  score: number;
+};
+
+function getLineScores(grid: (PlayingCard | null)[]) {
+  const scoreHand = (hand: (PlayingCard | null)[]): LineScore => {
+    const category = handCategory(
+      hand.filter((card): card is PlayingCard => card !== null),
+    );
+    return { category, score: AMERICAN_POINTS[category] };
+  };
+
+  const rows = Array.from({ length: GRID_SIZE }, (_, row) =>
+    scoreHand(grid.slice(row * GRID_SIZE, (row + 1) * GRID_SIZE)),
+  );
+  const columns = Array.from({ length: GRID_SIZE }, (_, col) =>
+    scoreHand(
+      Array.from(
+        { length: GRID_SIZE },
+        (_, row) => grid[row * GRID_SIZE + col],
+      ),
+    ),
+  );
+
+  return { rows, columns };
+}
+
 function scoreGrid(grid: (PlayingCard | null)[]) {
-  const lines: PlayingCard[][] = [];
-
-  for (let row = 0; row < GRID_SIZE; row += 1) {
-    const hand = grid.slice(row * GRID_SIZE, (row + 1) * GRID_SIZE);
-    lines.push(hand.filter((card): card is PlayingCard => card !== null));
-  }
-
-  for (let col = 0; col < GRID_SIZE; col += 1) {
-    const hand: PlayingCard[] = [];
-    for (let row = 0; row < GRID_SIZE; row += 1) {
-      const card = grid[row * GRID_SIZE + col];
-      if (card) hand.push(card);
-    }
-    lines.push(hand);
-  }
-
-  return lines.reduce((total, hand) => {
-    return total + AMERICAN_POINTS[handCategory(hand)];
-  }, 0);
+  const lineScores = getLineScores(grid);
+  return [...lineScores.rows, ...lineScores.columns].reduce(
+    (total, line) => total + line.score,
+    0,
+  );
 }
 
 function revealDeckTop(deck: PlayingCard[]) {
@@ -108,8 +150,23 @@ function revealDeckTop(deck: PlayingCard[]) {
   if (card) deck[topIndex] = flipToFace(card);
 }
 
+function gatherCards(state: GameState) {
+  const cards = [
+    ...state.grid.filter((card): card is PlayingCard => card !== null),
+    ...state.deck,
+  ];
+  return shuffle((cards.length === 52 ? cards : createDeck()).map(flipToBack));
+}
+
 function placeCardOnGrid(state: GameState, index: number) {
-  if (state.ended || state.grid[index] || !top(state.deck)) return false;
+  if (
+    state.ended ||
+    state.isTransitioning ||
+    state.grid[index] ||
+    !top(state.deck)
+  ) {
+    return false;
+  }
 
   const card = state.deck.pop();
   if (!card || state.grid[index]) return false;
@@ -118,8 +175,7 @@ function placeCardOnGrid(state: GameState, index: number) {
   revealDeckTop(state.deck);
   if (state.grid.every((cell) => cell !== null)) {
     state.score = scoreGrid(state.grid);
-    state.ended = true;
-    state.won = state.score >= TARGET_SCORE;
+    state.scoresReady = true;
   }
   return true;
 }
@@ -127,7 +183,10 @@ function placeCardOnGrid(state: GameState, index: number) {
 export const pokerSquaresRules = {
   cardValue,
   handCategory,
+  handCategoryName,
+  getLineScores,
   scoreGrid,
+  gatherCards,
   revealDeckTop,
   placeCard: placeCardOnGrid,
   gridSize: GRID_SIZE,
@@ -139,18 +198,26 @@ async function resetAndSetup(
   setGame: (updater: (draft: GameState) => void) => void,
 ) {
   setGame((draft) => {
-    draft.deck = shuffle(createDeck());
-    revealDeckTop(draft.deck);
+    draft.deck = gatherCards(draft);
     draft.grid = Array.from({ length: GRID_SIZE * GRID_SIZE }, () => null);
     draft.score = 0;
+    draft.scoresReady = false;
+    draft.isTransitioning = true;
     draft.ended = false;
     draft.won = false;
   });
 
   await delay();
+
+  setGame((draft) => {
+    revealDeckTop(draft.deck);
+    draft.isTransitioning = false;
+  });
 }
 
 export default function PokerSquares() {
+  const { colorPale } = useGameColors();
+  const { spacing } = useResponsiveMetrics();
   const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
     useStateManager({
       resetAndSetup: async () => {
@@ -159,8 +226,37 @@ export default function PokerSquares() {
       gameStateInitial,
     });
 
+  const lineScores = useMemo(
+    () => (game.scoresReady ? getLineScores(game.grid) : null),
+    [game.grid, game.scoresReady],
+  );
+  const scoreLabels = useMemo(
+    () =>
+      lineScores
+        ? [
+            ...lineScores.rows.map((line, index) => ({
+              id: `row-score-${index}`,
+              line,
+            })),
+            ...lineScores.columns.map((line, index) => ({
+              id: `column-score-${index}`,
+              line,
+            })),
+          ]
+        : [],
+    [lineScores],
+  );
+  const scoreFade = useFade(game.scoresReady, 1000);
+
   function placeCard(index: number) {
-    if (game.ended || game.grid[index] || !top(game.deck)) return;
+    if (
+      game.ended ||
+      game.isTransitioning ||
+      game.grid[index] ||
+      !top(game.deck)
+    ) {
+      return;
+    }
 
     saveUndoState(structuredClone(game));
     setGame((draft) => {
@@ -178,8 +274,8 @@ export default function PokerSquares() {
       name: "grid",
       pileIndex: index,
       cards: game.grid[index] ? [game.grid[index]!] : undefined,
-      col: position.c,
-      row: position.r,
+      col: position.c + 1,
+      row: position.r + 1,
       baseZIndex: 10,
       placeholder: {},
     }));
@@ -189,15 +285,45 @@ export default function PokerSquares() {
         id: "deck",
         name: "deck",
         cards: game.deck,
-        col: 2,
+        col: 0,
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: "Deal", infoPos: "right" },
+        placeholder: { text: "Stock", infoPos: "right" },
       },
+      {
+        id: "end-game",
+        name: "end-game",
+        col: 2,
+        row: 0,
+        width: GRID_SIZE - 1,
+        baseZIndex: 40,
+      },
+      ...Array.from({ length: GRID_SIZE }, (_, row) => ({
+        id: `row-score-${row}`,
+        name: "row-score",
+        col: 0,
+        row: row + 1 + 1.3,
+        baseZIndex: 10,
+        placeholder: {
+          hideBackground: !lineScores,
+          hideShadow: !lineScores,
+        },
+      })),
+      ...Array.from({ length: GRID_SIZE }, (_, col) => ({
+        id: `column-score-${col}`,
+        name: "column-score",
+        col: col + 1,
+        row: 1.3,
+        baseZIndex: 10,
+        placeholder: {
+          hideBackground: !lineScores,
+          hideShadow: !lineScores,
+        },
+      })),
       ...gridZones,
     ];
-  }, [game]);
+  }, [game, lineScores]);
 
   const cardMapper = (
     mappedCard: MappedCard,
@@ -216,21 +342,28 @@ export default function PokerSquares() {
       const isEmpty = game.grid[index] === null;
       return {
         onPress: () => placeCard(index),
-        isDisabled: game.ended || !isEmpty || !top(game.deck),
+        isDisabled:
+          game.ended || game.isTransitioning || !isEmpty || !top(game.deck),
       };
     }
     return {};
   };
 
-  const { cardMap } = useCardMap({
+  function endGame() {
+    if (!game.scoresReady) return;
+    setGame((draft) => {
+      draft.ended = true;
+      draft.won = draft.score >= TARGET_SCORE;
+    });
+  }
+
+  const { cardMap, getZoneStylesById } = useCardMap({
     game,
     zones,
     zoneMapper,
     cardMapper,
     cardSize: "small",
     gap: 0.1,
-    fixedCols: GRID_SIZE,
-    fixedRows: 6.3,
   });
 
   return (
@@ -248,6 +381,62 @@ export default function PokerSquares() {
       undo={undo}
     >
       {cardMap}
+
+      {scoreFade.isRendered && (
+        <Animated.View
+          style={[
+            flexStyles.colCentered,
+            flexStyles.fullWidth,
+            getZoneStylesById("end-game"),
+            { gap: spacing(10), opacity: scoreFade.opacity },
+          ]}
+        >
+          <Text size="lg" weight={500} color={colorPale}>
+            {`Score: ${game.score} pts`}
+          </Text>
+          <Button
+            text="End Game"
+            onPress={endGame}
+            size="sm"
+            fullWidth
+            theme={Colors.buttonRed}
+          />
+        </Animated.View>
+      )}
+
+      {scoreFade.isRendered &&
+        scoreLabels.map(({ id, line }) => (
+          <Animated.View
+            key={id}
+            style={[
+              getZoneStylesById(id),
+              flexStyles.colCentered,
+              {
+                padding: spacing(8),
+                gap: spacing(2),
+                opacity: scoreFade.opacity,
+              },
+            ]}
+          >
+            <Text
+              size="xxs"
+              weight={400}
+              color={rgba(Colors.white, line.score > 0 ? 1 : 0.5)}
+              lineHeight={1}
+              style={{ textAlign: "center" }}
+            >
+              {handCategoryName(line.category)}
+            </Text>
+            <Text
+              size="xxl"
+              weight={500}
+              color={rgba(colorPale, line.score > 0 ? 1 : 0.3)}
+              style={{ textAlign: "center" }}
+            >
+              {line.score}
+            </Text>
+          </Animated.View>
+        ))}
     </GameWrapper>
   );
 }

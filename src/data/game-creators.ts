@@ -11,7 +11,9 @@ export const GameCreators = {
   JimOwen: "Jim Owen",
   JohnBurton: "John Burton",
   KatharineTurner: "Katharine Turner",
+  KendallWoffinden: "Kendall Woffinden",
   KurtBieg: "Kurt Bieg",
+  Kikwik: "Kikwik",
   LucasGentry: "Lucas Gentry",
   LukeBadger: "Luke Badger",
   MarkSBall: "Mark S. Ball",
@@ -28,6 +30,8 @@ export const GameCreators = {
   JamesNewman: "James Newman",
   ZoeCappallo: "Zoë Cappallo",
   TechDweeb: "TechDweeb",
+  AkosPlesznivy: "Ákos Plesznivy",
+  PetraHahn: "Petra Hahn",
 } as const;
 
 export const CREATOR_LINKS: Partial<Record<GameCreator, string>> = {
@@ -51,6 +55,7 @@ export const CREATOR_LINKS: Partial<Record<GameCreator, string>> = {
     "https://boardgamegeek.com/boardgamedesigner/130937/john-burton",
   [GameCreators.KatharineTurner]:
     "https://boardgamegeek.com/boardgamedesigner/92670/katharine-turner",
+  [GameCreators.KendallWoffinden]: "https://boardgamegeek.com/profile/woffpack",
   [GameCreators.KurtBieg]:
     "https://boardgamegeek.com/boardgamedesigner/12161/kurt-bieg",
   [GameCreators.LucasGentry]:
@@ -77,6 +82,8 @@ export const CREATOR_LINKS: Partial<Record<GameCreator, string>> = {
   [GameCreators.ZoeCappallo]:
     "https://boardgamegeek.com/boardgamedesigner/34055/zoe-cappallo",
   [GameCreators.TechDweeb]: "https://techdweeb.itch.io/",
+  [GameCreators.AkosPlesznivy]: "https://deck.unlessgames.com/",
+  [GameCreators.PetraHahn]: "https://deck.unlessgames.com/",
 };
 
 export type GameCreator = (typeof GameCreators)[keyof typeof GameCreators];

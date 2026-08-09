@@ -17,23 +17,20 @@ export const memory: GameDefinition = {
   gameColorDark: "#243b35",
   gameColorPale: "#e8f1df",
   cardDescription: "Reveal hidden pairs and clear the board using your memory.",
-  quickStart: ["Find matching pairs by remembering where each card is hidden."],
+  quickStart: [
+    "Clear the board by finding all matching pairs.",
+    "You must match both rank and suit.",
+  ],
   howToPlay: [
     "## Objective",
-    "Find every matching pair and clear the board.",
-    "## Setup",
-    "- Cards are dealt face down in a grid. Every card has one matching clone.",
-    "- Choose Easy (4 x 5), Medium (5 x 6), or Hard (6 x 7) in the game settings.",
-    "## Playing",
+    "Clear the board by finding all matching pairs.",
+
+    "## Matching",
     "- Tap one card to select it, then tap a second card to reveal both.",
-    "- Tap the selected card again to unselect it.",
-    "- Matching cards move to the discard pile. Mismatched cards turn face down again.",
-    "## Winning",
-    "Clear every card from the grid.",
+    "- Matching cards move to the discard pile. Mismatched cards are turned face down again.",
+    "- You can tap cards while two of them are face up to set them face down again faster.",
   ],
-  about: [
-    "Memory is a concentration game: every revealed card gives you information for a future turn.",
-  ],
+  about: ["A playing card based adaptation of the classic memory game."],
   credits: {
     creators: [GameCreators.Unknown],
   },

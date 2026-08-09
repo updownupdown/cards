@@ -300,7 +300,7 @@ export default function IslandOfCards() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 40,
-        placeholder: { text: "Deck", infoPos: "right", showCount: true },
+        placeholder: { text: "Stock", infoPos: "right", showCount: true },
       },
       { id: "hud", col: 1.75, row: 0, width: 3.5, height: 1, baseZIndex: 1 },
       {

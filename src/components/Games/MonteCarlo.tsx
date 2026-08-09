@@ -396,7 +396,7 @@ export default function MonteCarlo() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: "Draw", infoPos: "left" },
+        placeholder: { text: "Stock", infoPos: "left" },
       },
       {
         id: "trash",
@@ -406,15 +406,15 @@ export default function MonteCarlo() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: "Trash", infoPos: "right" },
+        placeholder: { text: "Dscrd", infoPos: "right" },
       },
       ...gridZones,
       {
         id: "button",
         col: 0,
-        row: 6.4,
+        row: 6.45,
         width: "full",
-        height: 0.7,
+        height: 0.72,
       },
     ];
   }, [game]);
@@ -467,6 +467,7 @@ export default function MonteCarlo() {
           text="Consolidate"
           fullWidth
           size="lg"
+          halfTaller
         />
       </View>
     </GameWrapper>

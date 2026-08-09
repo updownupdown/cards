@@ -1,0 +1,61 @@
+import { GameDefinition, GameTag } from "../games-data";
+import { GameCreators } from "../game-creators";
+
+export const jacksDream: GameDefinition = {
+  enabledOnLocalOnly: true,
+  path: "/jacks-dream",
+  title: "Jacks' Dream",
+  tags: [GameTag.EasyToLearn, GameTag.TableauBuilding, GameTag.ModernMechanics],
+  rating: {
+    complexity: 30,
+    difficulty: 45,
+    luck: 55,
+  },
+  gameColorDark: "#26343a",
+  gameColorPale: "#e8eee4",
+  cardDescription:
+    "Build matching number cards into pillows and tuck every Jack between two pillows.",
+  quickStart: [
+    "Stack matching ranks into pillows, then place each Jack between two pillows.",
+  ],
+  about: [
+    "It's way past bedtime but the Jacks are still wide awake and the room is a mess, you are here to create order and tuck everyone in for a good night's sleep.",
+  ],
+  howToPlay: [
+    "## Objective",
+    "In this lightweight solitaire game you are trying to stack number cards into groups of four, with the help of Jacks to reach the intended table configuration.",
+    "## Setup",
+    "- Separate the Jacks from the deck into a single pile.",
+    "- Remove all cards ranked above 8 from the deck (all 9s, 10s, Queens and Kings).",
+    "- Shuffle the deck of 32 remaining number cards (from Aces to 8s).",
+    "- Deal 5 columns face up with 6 cards each.",
+    "- Place the remaining 2 cards face up on top of the first and last column.",
+    "- Take the four Jacks into your hand.",
+    "- The starting table state is 5 columns of number cards with the Jacks in hand.",
+    "As with any solitaire, you are moving cards around to turn the initial chaos into order. There are three types of cards in this game, each with its own rule for movement.",
+    "## Number cards",
+    "- Can be moved from the top of the columns onto other cards with the same rank.",
+    "- Cards with the same rank form a stack that can be moved together.",
+    "- Can be moved to empty columns when they become available.",
+    "## Pillows",
+    "- If a stack grows to have all 4 cards of the given rank, it becomes a pillow.",
+    "- Turn one card of the stack face down and set aside the rest.",
+    "- A pillow can only be moved onto a Jack or an empty column.",
+    "- Multiple pillows do not stack on each other.",
+    "- You cannot place number cards and their stacks on pillows.",
+    "## Jacks",
+    "- Jacks can be placed from your hand onto columns any time.",
+    "- Put them on a pillow or onto any column without another unseparated Jack.",
+    "- You can move them to other columns following the rule above.",
+    "- Any number card, stack or pillow can be put onto a Jack.",
+    "- You cannot take back Jacks into your hand once placed.",
+    "## Ending",
+    "You win when:",
+    "- All number cards have been turned into pillows.",
+    "- Jacks lie on separate columns with a pillow underneath and a pillow above.",
+  ],
+  credits: {
+    creators: [GameCreators.AkosPlesznivy, GameCreators.PetraHahn],
+    creatorLink: "https://deck.unlessgames.com/",
+  },
+};

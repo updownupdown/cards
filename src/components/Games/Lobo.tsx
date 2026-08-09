@@ -553,7 +553,7 @@ export default function Lobo() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 40,
-        placeholder: { text: "Draw", infoPos: "below", showCount: true },
+        placeholder: { text: "Stock", infoPos: "below", showCount: true },
       },
       {
         id: "discard",

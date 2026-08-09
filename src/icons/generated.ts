@@ -58,6 +58,7 @@ import PlusOutlineIcon from "./PlusOutline.svg";
 import PotionIcon from "./Potion.svg";
 import RecentIcon from "./Recent.svg";
 import ResetIcon from "./Reset.svg";
+import RotateDeviceIcon from "./RotateDevice.svg";
 import SearchIcon from "./Search.svg";
 import SequenceIcon from "./Sequence.svg";
 import SettingsIcon from "./Settings.svg";
@@ -124,6 +125,7 @@ export type IconName =
   | "potion"
   | "recent"
   | "reset"
+  | "rotate-device"
   | "search"
   | "sequence"
   | "settings"
@@ -190,6 +192,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "potion": PotionIcon,
   "recent": RecentIcon,
   "reset": ResetIcon,
+  "rotate-device": RotateDeviceIcon,
   "search": SearchIcon,
   "sequence": SequenceIcon,
   "settings": SettingsIcon,

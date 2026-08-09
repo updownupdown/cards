@@ -397,7 +397,7 @@ export default function TheBobaTeaShop() {
         row: 1.4,
         baseZIndex: 50,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Draw", infoPos: "left" },
+        placeholder: { text: "Stock", infoPos: "left" },
       },
       {
         id: "discard",

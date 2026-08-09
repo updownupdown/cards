@@ -297,7 +297,7 @@ export default function HideAndSeek() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: "Draw", infoPos: "left" },
+        placeholder: { text: "Stock", infoPos: "left" },
       },
       {
         id: "discard",

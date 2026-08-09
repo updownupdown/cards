@@ -19,30 +19,37 @@ export const deckOfSpies: GameDefinition = {
   gameColorDark: "#182326",
   gameColorPale: "#dce8df",
   cardDescription:
-    "Counter, recruit, and retire cards to capture a majority of the Key Spies.",
+    "Capture a majority of the Key Spies through careful recruitment, countering, and assassination.",
   quickStart: [
-    "Select cards totaling the visible spy's value, then Counter or Recruit. Afterward, optionally Retire a matching set before refilling to five cards.",
+    "Win by recruiting more than half of the Key Spies (J, Q, K).",
+    "Build your deck by recruiting spies of increasing value.",
+    "Recruit by matching suit and rank (Aces are wild).",
+    "Counter or assassinate when necessary.",
   ],
   howToPlay: [
     "## Objective",
-    "Finish with **more than half** of all Key Spies — the Jacks, Queens, and Kings — in your hand, Draw Deck, and Draw Discard.",
-    "## Setup",
-    "The Spy Deck is built in tiers: **5–7** on top, then **8–10**, then **J–K**. Your Draw Deck begins with the Aces through 4s, and you draw five cards.",
-    "## Counter",
-    "Discard a minimal combination totaling at least the visible spy's value. You may overpay only when removing any one selected card would leave the total below the target. The spy goes face down to the Spy Discard.",
-    "## Recruit",
-    "Discard cards totaling at least the spy's value, all matching its suit. A matching-suit **Ace** is a Double Agent that converts every other played card to its suit for the turn. The recruited spy and played cards enter your Draw Discard.",
-    "## Retire",
-    "After Countering or Recruiting, you may permanently remove **2–4 cards of one rank** from your hand to the Removed Deck.",
-    "## Assassinate",
-    "Instead of matching the spy, move an **Ace** from your hand, Draw Deck, or Draw Discard to the Removed Deck. Discard the target spy and your remaining hand. If the Ace came from the Draw Deck, shuffle it. With no Ace remaining, you lose immediately.",
-    "## End of turn",
-    "Keep unplayed cards and refill to five. Whenever the Draw Deck empties, shuffle the Draw Discard to form a new face-down deck.",
-    "## Winning",
-    "After the final spy, count Jacks, Queens, and Kings across your personal deck. You win when that count exceeds the Key Spies in the Spy Discard.",
-  ],
-  about: [
-    "Deck of Spies is a compact deck-building game of calculated overpayment, suit planning, and carefully timed Double Agents.",
+    "**Win** by having recruited **more than half** of all Key Spies (Jacks, Queens, and Kings) by the time the Spy Deck is depleted.",
+
+    "## Decks and Gameplay",
+    "- The Spy Deck is built in tiers: **5-7** on top, then **8-10**, then **J-K**.",
+    "- Your draw deck begins with the Aces through 4s.",
+    "- Your draw deck will reshuffle frequently. Build your deck by recruiting high-value spies and retiring low-value pairs of spies.",
+    "- The **Supporting Spies** only help towards acquiring Key Spies.",
+    "- The **Key Spies** are the only cards that count toward your final score.",
+
+    "## Actions",
+    "- **Counter**:",
+    "-- Discard any number of cards totaling the spy's value **or more**. You may overpay only when removing any one selected card would leave the total below the target.",
+
+    "- **Recruit**:",
+    "-- Discard cards totaling at least the spy's value, all matching its suit. A matching-suit **Ace** is a Double Agent that converts every other played card to its suit for the turn.",
+
+    "- **Retire**:",
+    "-- After Countering or Recruiting, you may permanently remove a set of matching-rank cards from your hand.",
+    "-- You generally want to remove low-value cards as you progress through the game, to increase the average strength of your deck.",
+
+    "- **Assassinate**:",
+    "-- When stuck, you can sacrifice an **Ace** from your hand, Draw deck, or Discard deck to assassinate a spy. You lose if you have no Aces left.",
   ],
   credits: {
     creators: [GameCreators.JamesNewman],

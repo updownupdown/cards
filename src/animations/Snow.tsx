@@ -10,16 +10,16 @@ export function Snow(props: SceneProps) {
 
   return (
     <>
-      {Array.from({ length: 32 }, (_, index) => (
+      {Array.from({ length: 42 }, (_, index) => (
         <FallingParticle
           key={index}
           {...props}
-          color={`rgba(255, 255, 255, ${seeded(index, 6) * 0.5 + 0.5})`}
-          duration={7000 + seeded(index, 1) * 7000}
+          color={`rgba(255, 255, 255, ${seeded(index, 6) * 0.6 + 0.4})`}
+          duration={9000 + seeded(index, 1) * 7000}
           gentleSway
           phase={seeded(index, 2)}
-          size={1 + seeded(index, 3) * 3}
-          sway={2 + seeded(index, 4) * 4}
+          size={0.5 + seeded(index, 3) * 2}
+          sway={2 + seeded(index, 4) * 6}
           wind={wind}
           x={seeded(index, 5)}
         />

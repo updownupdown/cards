@@ -704,7 +704,7 @@ export default function Scoundrel() {
         fan: { maxVisible: 3 },
         placeholder: {
           infoPos: "right",
-          text: "Draw",
+          text: "Stock",
         },
         baseZIndex: 50,
       },

@@ -25,12 +25,14 @@ export const blackHole: GameDefinition = {
   ],
   howToPlay: [
     "## Objective",
-    "- Pull every card into the central black hole.",
-    "- If no exposed card can be played, the game is over.",
+    "- **Win** by pulling every card into the black hole.",
+    "- **Lose** if no exposed card can be played.",
+
     "## Rules",
     "- Move an exposed card into the black hole if it is **one rank above or below** the hole's current card.",
     "- Only the **exposed** (top) card of each pile is available.",
     "- Ranks **wrap around**: after a King you may play an Ace, and vice-versa.",
+
     "## Tips",
     "- There is no stock and no reshuffle, so plan your moves in order and as far in advance as possible.",
     "- Avoid dead ends, or getting to the end game with cards that are not adjacent in rank.",

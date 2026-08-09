@@ -3,7 +3,7 @@ import { useViewportDimensions } from "./useViewportDimensions";
 import { layoutDims } from "@/styles/styles";
 
 const MAX_CONTENT_WIDTH = 420;
-const TABLET_BREAKPOINT = 768;
+export const TABLET_BREAKPOINT = 768;
 const TABLET_SCALE = 1.25;
 
 export type ResponsiveUiLayout = {

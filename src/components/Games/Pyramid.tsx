@@ -443,7 +443,7 @@ export default function Pyramid() {
         row: 4.3,
         baseZIndex: 50,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Draw", infoPos: "left", showCount: true },
+        placeholder: { text: "Stock", infoPos: "left", showCount: true },
       },
       {
         id: "waste",

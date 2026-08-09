@@ -219,7 +219,7 @@ export default function Golf() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: "Draw", infoPos: "left" },
+        placeholder: { text: "Stock", infoPos: "left" },
       },
       {
         id: "discard",
@@ -297,7 +297,7 @@ export default function Golf() {
           size="lg"
           fullWidth
           taller
-          theme={colorDark}
+          theme={"#37611f"}
         />
       </View>
     </GameWrapper>

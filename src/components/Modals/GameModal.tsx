@@ -203,30 +203,30 @@ export default function GameModal({
             )}
 
             {/* About */}
-            {gameInfo.about && (
-              <View
-                style={[
-                  flexStyles.colStart,
-                  flexStyles.fullWidth,
-                  { gap: spacing(2), marginTop: spacing(20) },
-                ]}
-              >
-                <ModalHeading
-                  color={gameInfo.gameColorPale}
-                  title="About"
-                  iconName="info"
-                />
+            <View
+              style={[
+                flexStyles.colStart,
+                flexStyles.fullWidth,
+                { gap: spacing(2), marginTop: spacing(20) },
+              ]}
+            >
+              <ModalHeading
+                color={gameInfo.gameColorPale}
+                title="About"
+                iconName="info"
+              />
 
+              {gameInfo.about && (
                 <RichText content={gameInfo.about} size="md" weight={300} />
-              </View>
-            )}
+              )}
 
-            {/* Stats */}
-            <RatingsBars
-              rating={gameInfo.rating}
-              gameColor={gameInfo.gameColorPale}
-              style={{ marginBottom: spacing(30) }}
-            />
+              {/* Stats */}
+              <RatingsBars
+                rating={gameInfo.rating}
+                gameColor={gameInfo.gameColorPale}
+                style={{ marginBottom: spacing(30) }}
+              />
+            </View>
 
             {/* Credits */}
             {gameInfo.credits && <CreditsSection />}

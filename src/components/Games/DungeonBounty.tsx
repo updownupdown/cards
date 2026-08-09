@@ -772,7 +772,7 @@ export default function DungeonBounty() {
       cards: game.deck.length > 0 ? [game.deck[game.deck.length - 1]] : [],
       col: 5.4,
       row: 1.5,
-      placeholder: { text: "Deck" },
+      placeholder: { text: "Stock" },
     });
 
     result.push({

@@ -20,23 +20,20 @@ export const yukon: GameDefinition = {
   cardDescription:
     "Klondike unleashed: move whole groups of cards, in any order, across the tableau.",
   quickStart: [
-    "Move any face-up stack; build down alt color; kings fill empty.",
+    "Build the four foundations up by suit (A to K).",
+    "Build columns down by alternating colors.",
+    "Move any face-up stack.",
+    "Only kings can fill empty columns.",
   ],
   howToPlay: [
     "## Objective",
-    "Build the four **foundations** up by suit from Ace to King.",
-    "## Setup",
-    "- Cards are dealt into **7 columns**; column 1 has a single card and each later column adds more.",
-    "- Every column has some face-down cards beneath its face-up cards (except the first).",
-    "## Playing",
-    "- Pick up **any face-up card** and it brings **all cards on top of it** along.",
-    "- The card you grab must land on a card **one rank higher of the opposite colour** (for example a {6H} onto a {7S}).",
+    "Build the four foundations up by suit, from Ace to King.",
+
+    "## Rules",
+    "- Move any **face-up card** or **stack of cards** onto a card **one rank higher and of the opposite colour**.",
     "- The carried cards do **not** need to be in sequence.",
-    "- A face-down card flips up when it becomes the bottom of a column.",
-    "- Only a **King** (and its group) may move to an **empty column**.",
-    "- Send single cards to the foundations up by suit; double-tap the bottom card for a quick play.",
-    "## Winning",
-    "You win when all four foundations are complete.",
+    "- Only Kings may be moved to an empty column.",
+    "- Double-tap or drag single cards to the foundations, building up by suit.",
   ],
   about: [
     "Yukon takes Klondike's layout but lets you haul entire piles of mixed cards in a single move.",

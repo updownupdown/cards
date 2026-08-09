@@ -19,13 +19,24 @@ export const theBobaTeaShop: GameDefinition = {
   cardDescription:
     "A push-your-luck game where you must manage ordered queues of customers.",
   quickStart: [
-    "Fill orders with legal stacks; avoid deadlocks; peek reshuffles.",
+    "Select a queue position for the next customer.",
+    "Queues must remain in descending order of rank.",
+    "If a customer doesn't fit, discard the queue, or turn away two customers.",
   ],
   howToPlay: [
-    "Play cards into valid stacks to satisfy order constraints.",
-    "Plan around blocked stacks so you do not run out of legal moves.",
-    "Complete all required stacks to win.",
-    "You are allowed to tap the deck at any time to see who else is waiting, but the deck will be reshuffled afterwards.",
+    "## Objective",
+    "Deal the entire deck without discarding all four cards from the same rank.",
+
+    "## Placing Customers",
+    "- Choose a numbered position from one of the queues, then reveal the next customer.",
+    "- A customer may join the queue only if its ranks fits within the descending order of the queue (from high to low).",
+    "- If the customer does not fit, you can:",
+    "-- seat it by discarding the selected queue, or",
+    "-- turn them away, along with the next customer.",
+    "- Lose immediately when four cards from the same rank have been discarded.",
+
+    "## Peek",
+    "You may tap the deck to see the waiting customers. The deck will be reshuffled afterwards.",
   ],
   credits: {
     creators: [GameCreators.WilSu],

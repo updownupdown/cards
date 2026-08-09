@@ -103,7 +103,7 @@ export function ResetButton({
           />
 
           <Text
-            weight={300}
+            weight={400}
             size="sm"
             color={Colors.K100}
             style={{

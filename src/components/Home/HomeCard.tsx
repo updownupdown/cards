@@ -68,7 +68,6 @@ export function HomeCard({
           overflow: "hidden",
           position: "relative",
           height,
-          padding,
           borderRadius,
           boxShadow: `${shadowUnit * 0.5}px ${shadowUnit * 1}px ${shadowUnit * 4}px ${rgba(Colors.K900, 0.6)}, ${shadowUnit * 1}px ${shadowUnit * 2}px ${shadowUnit * 8}px ${rgba(Colors.K900, 0.6)}`,
         },
@@ -95,12 +94,12 @@ export function HomeCard({
             ? [rgba(game.gameColorDark, 0.94), rgba(game.gameColorDark, 0.3)]
             : [
                 rgba(game.gameColorDark, 0.9),
-                rgba(game.gameColorDark, 0.9),
-                rgba(game.gameColorDark, 0.6),
+                rgba(game.gameColorDark, 0.8),
+                rgba(game.gameColorDark, 0.4),
               ]
         }
         start={size === "medium" ? { x: 0.5, y: 1 } : { x: 0.2, y: 1 }}
-        end={size === "medium" ? { x: 0.5, y: 0 } : { x: 0.6, y: 0 }}
+        end={size === "medium" ? { x: 0.5, y: 0 } : { x: 0.5, y: 0 }}
         style={{
           position: "absolute",
           top: 0,
@@ -113,6 +112,7 @@ export function HomeCard({
       <Pressable
         style={{
           gap: spacing(14),
+          padding,
           height: size === "large" ? undefined : "100%",
         }}
         onPress={handleOpen}
@@ -122,6 +122,7 @@ export function HomeCard({
             flexDirection: "column",
             alignItems: size === "medium" ? "center" : "flex-start",
             height: size === "large" ? undefined : "100%",
+            minHeight: size === "large" ? spacing(100) : undefined,
             gap: spacing(8),
             flex: 1,
             justifyContent: size === "medium" ? "flex-end" : "center",

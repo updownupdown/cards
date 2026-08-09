@@ -286,7 +286,7 @@ export default function TheSandwichGuy() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 1,
-        placeholder: { text: "Draw", infoPos: "left" },
+        placeholder: { text: "Stock", infoPos: "left" },
       },
       {
         id: "discard",
@@ -362,7 +362,8 @@ export default function TheSandwichGuy() {
           onPress={commitSandwich}
           disabled={selectedCards.length !== 3 || invalidSandwichSelected}
           text="Serve Sandwich"
-          size="xl"
+          size="lg"
+          halfTaller
           fullWidth
         />
       </View>

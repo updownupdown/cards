@@ -220,7 +220,7 @@ export default function FortyThieves() {
         row: 0,
         baseZIndex: 40,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Draw", infoPos: "below", showCount: true },
+        placeholder: { text: "Stock", infoPos: "below", showCount: true },
       },
       {
         id: "waste",
@@ -923,6 +923,7 @@ export default function FortyThieves() {
       isLoaded={isLoaded}
       canUndo={canUndo}
       undo={undo}
+      showDeviceRotateHint
     >
       <View style={{ flex: 1, width: "100%", gap: 12 }}>
         <View

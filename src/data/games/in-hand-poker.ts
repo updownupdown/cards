@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const inHandPoker: GameDefinition = {
   path: "/in-hand-poker",
@@ -12,32 +13,34 @@ export const inHandPoker: GameDefinition = {
     luck: 50,
   },
   thumbnail: "InHandPoker.jpg",
-  background: GAME_BACKGROUNDS.casino2,
-  gameColorDark: "#123a2a",
-  gameColorPale: "#f0d98a",
+  background: GAME_BACKGROUNDS.casino,
+  animation: GameAnimations.Dust,
+  gameColorDark: "#142e1f",
+  gameColorPale: "#fff5bd",
   cardDescription:
     "A pocket poker duel: draw, bet, and out-rank an opponent dealt from the same deck.",
   quickStart: [
-    "Build hand, then bet; bigger bets make rival draw more; reach 10.",
+    "Build a poker hand, then bet.",
+    "Bigger bets make your rival draw more cards.",
+    "Reach 10 points to win, or 0 to lose.",
   ],
   howToPlay: [
     "## Objective",
-    "Start at **5 points** and reach **10** without dropping to **0**.",
-    "## Each round",
-    "1. **Draw 5 cards.**",
-    "2. **Play or fold.** Folding costs nothing, but folding **three times in a row** loses the game.",
+    "You start with 5 points. **Win** by reaching 10, or **lose** by dropping to 0.",
+
+    "## Turn Order",
+    "1. **Draw 5 cards**",
+    "2. **Play or fold:** folding costs nothing, but folding **three times in a row** loses the game.",
     "3. **Discard & redraw** up to **3 times** to improve your hand.",
-    "4. **Bet.** Your minimum bet equals the number of times you drew:",
-    "- Drew once \u2192 bet 1 (raise to 2 or 3)",
-    "- Drew twice \u2192 bet 2 (raise to 3)",
-    "- Drew thrice \u2192 bet 3",
-    "5. **Opponent draws** 5 cards plus one extra per point you bet (6, 7, or 8), and keeps its **best five**.",
-    "6. **Compare hands** by standard poker ranking; ties break on the highest cards.",
-    "## Scoring",
-    "- Win the round: **add** your bet. Lose: **subtract** it.",
-    "- Reach **10** to win; fall to **0** and you bust.",
-    "## Jokers (Settings)",
-    "- Turn on **Wild Jokers** to add two jokers that count as any card not already in the hand.",
+    "4. **Bet:** your minimum bet equals the number of times you drew:",
+    "- 1 draw \u2192 bet 1, 2, or 3",
+    "- 2 draws \u2192 bet 2 or 3",
+    "- 3 draws \u2192 bet 3",
+    "\n5. **Opponent draws** 5 cards plus one extra per point you bet (6, 7, or 8), and keeps its **best five**.",
+    "6. **Compare hands** by standard poker ranking. Ties are broken by the highest card.",
+
+    "## Jokers",
+    "Turn on **Wild Jokers** in the settings to add two jokers that count as any card not already in the hand.",
   ],
   about: [
     "In-Hand Poker is a solitaire poker game you can play with a single deck.",

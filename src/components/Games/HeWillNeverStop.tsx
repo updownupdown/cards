@@ -15,7 +15,6 @@ import {
   zoneFanOffset,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { Text } from "../common/Text";
 import { GameWrapper } from "../common/GameWrapper";
 import { delay } from "@/utils/utils";
 import { flexStyles } from "@/styles/flexStyles";
@@ -158,6 +157,10 @@ function pursue(draft: HeWillNeverStopGameState) {
   }
 }
 
+function searchDrawCount(cards: readonly PlayingCard[], rank: HorrorRank) {
+  return cards.filter((card) => card.rank === rank).length;
+}
+
 function searchRank(draft: HeWillNeverStopGameState, rank: HorrorRank) {
   if (draft.ended) return false;
   const discarded = draft.hand.filter((card) => card.rank === rank);
@@ -275,6 +278,7 @@ export const heWillNeverStopRules = {
   pursue,
   moveCard,
   escapeDrawCount,
+  searchDrawCount,
   searchRank,
   escapeCard,
 };
@@ -382,6 +386,11 @@ export default function HeWillNeverStop() {
     mockHand && selectedCardGameIndex >= 0 && selectedCardIndex >= 0
       ? escapeDrawCount(game.hand, selectedCardGameIndex, selectedCardIndex)
       : 0;
+  const isSearchDisabled = !selectedCard || game.ended || mockHand !== null;
+  const pendingSearchDrawCount =
+    !isSearchDisabled && selectedCard
+      ? searchDrawCount(game.hand, selectedCard.rank as HorrorRank)
+      : 0;
 
   const zones: MapZone[] = useMemo(() => {
     return [
@@ -402,7 +411,7 @@ export default function HeWillNeverStop() {
         cards: game.deck,
         baseZIndex: 10,
         fan: { maxVisible: 3, direction: "left", offset: 0.1 },
-        placeholder: { text: "Draw", infoPos: "above" },
+        placeholder: { text: "Stock", infoPos: "above" },
       },
       {
         id: "hand",
@@ -514,9 +523,9 @@ export default function HeWillNeverStop() {
 
       <View style={[flexStyles.colCentered, getZoneStylesById("searchAction")]}>
         <Button
-          text={`Search\nRoute`}
+          text={`Search\n(Draw ${pendingSearchDrawCount})`}
           theme="purple"
-          disabled={!selectedCard || game.ended || mockHand !== null}
+          disabled={isSearchDisabled}
           onPress={takeSearch}
           taller
           fullWidth

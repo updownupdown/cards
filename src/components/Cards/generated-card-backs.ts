@@ -14,13 +14,17 @@ export type CardBackName =
   | "DeadCenter.png"
   | "DeckOfSpies.jpg"
   | "DefaultCardBack.png"
-  | "Foursquare.png"
+  | "Empire.jpg"
+  | "Foursquare.jpg"
   | "Golf.png"
   | "HeWillNeverStop.jpg"
   | "HideAndSeek.png"
   | "LootTheLoop.png"
   | "Memory.jpg"
   | "MonteCarlo.png"
+  | "Nestor.jpg"
+  | "OptritaLines.jpg"
+  | "Osmosis.jpg"
   | "Regicide.png"
   | "SandwichGuy.png"
   | "Scoundrel.png"
@@ -46,13 +50,17 @@ export const cardBackAssets: Record<string, any> = {
   "DeadCenter.png": require("@/assets/card-backs/DeadCenter.png"),
   "DeckOfSpies.jpg": require("@/assets/card-backs/DeckOfSpies.jpg"),
   "DefaultCardBack.png": require("@/assets/card-backs/DefaultCardBack.png"),
-  "Foursquare.png": require("@/assets/card-backs/Foursquare.png"),
+  "Empire.jpg": require("@/assets/card-backs/Empire.jpg"),
+  "Foursquare.jpg": require("@/assets/card-backs/Foursquare.jpg"),
   "Golf.png": require("@/assets/card-backs/Golf.png"),
   "HeWillNeverStop.jpg": require("@/assets/card-backs/HeWillNeverStop.jpg"),
   "HideAndSeek.png": require("@/assets/card-backs/HideAndSeek.png"),
   "LootTheLoop.png": require("@/assets/card-backs/LootTheLoop.png"),
   "Memory.jpg": require("@/assets/card-backs/Memory.jpg"),
   "MonteCarlo.png": require("@/assets/card-backs/MonteCarlo.png"),
+  "Nestor.jpg": require("@/assets/card-backs/Nestor.jpg"),
+  "OptritaLines.jpg": require("@/assets/card-backs/OptritaLines.jpg"),
+  "Osmosis.jpg": require("@/assets/card-backs/Osmosis.jpg"),
   "Regicide.png": require("@/assets/card-backs/Regicide.png"),
   "SandwichGuy.png": require("@/assets/card-backs/SandwichGuy.png"),
   "Scoundrel.png": require("@/assets/card-backs/Scoundrel.png"),

@@ -237,7 +237,7 @@ export default function Klondike() {
         row: 0,
         baseZIndex: 40,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Draw", infoPos: "below" },
+        placeholder: { text: "Stock", infoPos: "below" },
       },
       {
         id: "waste",

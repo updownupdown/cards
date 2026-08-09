@@ -109,60 +109,58 @@ export function SearchTab({
       ? ({ id: "home-tab-search", name: "home-tab-search" } as any)
       : undefined;
 
-  const FiltersSection = () => {
-    return (
-      <View
-        style={{
-          width: "100%",
-          gap: spacing(12),
-          padding: spacing(20),
-          paddingTop: 0,
+  const filtersSection = (
+    <View
+      style={{
+        width: "100%",
+        gap: spacing(12),
+        padding: spacing(20),
+        paddingTop: 0,
+      }}
+    >
+      <RadioButtons
+        options={[
+          { value: "all", label: "All" },
+          { value: "unplayed", label: "Unplayed" },
+        ]}
+        selectedValue={filters.played}
+        onChange={(value) =>
+          setFilters((draft) => {
+            draft.played = value;
+          })
+        }
+        selectedBackgroundColor={Colors.K850}
+        buttonStyle={{
+          height: spacing(40),
+          borderRadius: spacing(20),
+          flex: 1,
         }}
-      >
-        <RadioButtons
-          options={[
-            { value: "all", label: "All" },
-            { value: "unplayed", label: "Unplayed" },
-          ]}
-          selectedValue={filters.played}
-          onChange={(value) =>
+        containerStyle={{
+          width: "100%",
+          backgroundColor: Colors.K950,
+          height: spacing(52),
+          borderRadius: spacing(26),
+          padding: spacing(6),
+          marginBottom: spacing(12),
+        }}
+      />
+
+      {statKeys.map((statName) => (
+        <RangeSlider
+          key={statName}
+          label={statName}
+          min={0}
+          max={100}
+          value={filters.statsFilters[statName]}
+          onRangeChange={(range) =>
             setFilters((draft) => {
-              draft.played = value;
+              draft.statsFilters[statName] = range;
             })
           }
-          selectedBackgroundColor={Colors.K850}
-          buttonStyle={{
-            height: spacing(40),
-            borderRadius: spacing(20),
-            flex: 1,
-          }}
-          containerStyle={{
-            width: "100%",
-            backgroundColor: Colors.K950,
-            height: spacing(52),
-            borderRadius: spacing(26),
-            padding: spacing(6),
-            marginBottom: spacing(12),
-          }}
         />
-
-        {statKeys.map((statName) => (
-          <RangeSlider
-            key={statName}
-            label={statName}
-            min={0}
-            max={100}
-            value={filters.statsFilters[statName]}
-            onRangeChange={(range) =>
-              setFilters((draft) => {
-                draft.statsFilters[statName] = range;
-              })
-            }
-          />
-        ))}
-      </View>
-    );
-  };
+      ))}
+    </View>
+  );
 
   return (
     <ScrollView
@@ -201,19 +199,18 @@ export function SearchTab({
                   flex: 1,
                   minWidth: 0,
                   borderRadius,
-                  backgroundColor:
-                    mode === "search" ? Colors.K900 : Colors.K875,
+                  backgroundColor: Colors.K875,
                   flexDirection: "row",
                   alignItems: "center",
                   paddingHorizontal: spacing(12),
                   gap: spacing(10),
-                  boxShadow: `inset 0 0 ${spacing(12)}px ${rgba(Colors.black, mode === "search" ? 0.24 : 0.16)}`,
+                  boxShadow: `inset 0 0 ${spacing(12)}px ${rgba(Colors.black, 0.12)}`,
                 },
               ]}
             >
               <Icon
                 name="search"
-                size={spacing(24)}
+                size={spacing(28)}
                 color={mode === "search" ? Colors.K200 : Colors.K500}
               />
               <TextInput
@@ -246,7 +243,7 @@ export function SearchTab({
                   { opacity: mode === "search" ? 1 : 0 },
                 ]}
               >
-                <Icon name="close" size={spacing(24)} color={Colors.K500} />
+                <Icon name="close" size={spacing(28)} color={Colors.K500} />
               </Pressable>
             </View>
           )}
@@ -304,7 +301,7 @@ export function SearchTab({
                   </Pressable>
                 </View>
 
-                <FiltersSection />
+                {filtersSection}
               </View>
             ) : (
               <Pressable

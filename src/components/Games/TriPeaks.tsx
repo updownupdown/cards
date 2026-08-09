@@ -268,7 +268,7 @@ export default function TriPeaks() {
         row: 0,
         baseZIndex: 50,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Draw", infoPos: "below" },
+        placeholder: { text: "Stock", infoPos: "below" },
       },
       {
         id: "waste",
@@ -372,11 +372,11 @@ export default function TriPeaks() {
   return (
     <GameWrapper
       outcome={!ended ? "playing" : won ? "won" : "lost"}
-      // winLoseMessage={lost ? "No moves left." : undefined}
       reset={reset}
       isLoaded={isLoaded}
       canUndo={canUndo}
       undo={undo}
+      showDeviceRotateHint
     >
       {cardMap}
     </GameWrapper>

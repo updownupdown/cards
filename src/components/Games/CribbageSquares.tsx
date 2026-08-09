@@ -1,6 +1,12 @@
+import { useFade } from "@/hooks/useFade";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
+import { flexStyles } from "@/styles/flexStyles";
+import { Colors, rgba } from "@/styles/styles";
 import { delay } from "@/utils/utils";
 import { useMemo } from "react";
+import { Animated } from "react-native";
+import { Button } from "../Button/Button";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
@@ -18,10 +24,7 @@ import {
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
-import { View } from "react-native";
-import { Button } from "../Button/Button";
-import { flexStyles } from "@/styles/flexStyles";
-import { Colors, rgba } from "@/styles/styles";
+import { useGameColors } from "@/hooks/useGameColors";
 
 const GRID_SIZE = 4;
 const GRID_CELLS = GRID_SIZE * GRID_SIZE;
@@ -34,6 +37,7 @@ type GameState = {
   starter: PlayingCard | null;
   score: number;
   scoresReady: boolean;
+  isTransitioning: boolean;
   ended: boolean;
   won: boolean;
 };
@@ -47,6 +51,7 @@ const gameStateInitial: GameState = {
   starter: null,
   score: 0,
   scoresReady: false,
+  isTransitioning: false,
   ended: false,
   won: false,
 };
@@ -186,6 +191,16 @@ function getLegalCells(grid: (PlayingCard | null)[]) {
   });
 }
 
+function gatherCards(state: GameState) {
+  const cards = [
+    ...state.grid.filter((card): card is PlayingCard => card !== null),
+    ...state.stock,
+    ...(state.current ? [state.current] : []),
+    ...(state.starter ? [state.starter] : []),
+  ];
+  return shuffle((cards.length === 52 ? cards : createDeck()).map(flipToBack));
+}
+
 export const cribbageSquaresRules = {
   countFifteens,
   countPairs,
@@ -194,6 +209,7 @@ export const cribbageSquaresRules = {
   scoreDeal,
   getLineScores,
   getLegalCells,
+  gatherCards,
   gridSize: GRID_SIZE,
   targetScore: TARGET_SCORE,
 };
@@ -202,20 +218,13 @@ async function resetAndSetup(
   setGame: (updater: (draft: GameState) => void) => void,
 ) {
   setGame((draft) => {
-    const allCards = [
-      ...draft.grid.filter((card): card is PlayingCard => card !== null),
-      ...draft.stock,
-      ...(draft.current ? [draft.current] : []),
-      ...(draft.starter ? [draft.starter] : []),
-    ];
-    draft.stock = shuffle(
-      (allCards.length === 52 ? allCards : createDeck()).map(flipToBack),
-    ).slice(0, GRID_CELLS + 1);
+    draft.stock = gatherCards(draft);
     draft.grid = Array.from({ length: GRID_CELLS }, () => null);
     draft.current = null;
     draft.starter = null;
     draft.score = 0;
     draft.scoresReady = false;
+    draft.isTransitioning = true;
     draft.ended = false;
     draft.won = false;
   });
@@ -225,10 +234,13 @@ async function resetAndSetup(
   setGame((draft) => {
     const next = draft.stock.pop();
     draft.current = next ? flipToFace(next) : null;
+    draft.isTransitioning = false;
   });
 }
 
 export default function CribbageSquares() {
+  const { colorPale } = useGameColors();
+  const { spacing } = useResponsiveMetrics();
   const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
     useStateManager({
       resetAndSetup: async () => {
@@ -258,10 +270,12 @@ export default function CribbageSquares() {
         : [],
     [lineScores],
   );
+  const scoreFade = useFade(game.scoresReady, 1000);
 
   function placeCard(index: number) {
     if (
       game.ended ||
+      game.isTransitioning ||
       !game.current ||
       game.grid[index] !== null ||
       !legalCells.includes(index)
@@ -294,14 +308,14 @@ export default function CribbageSquares() {
     const gridZones = getGridColRows({
       cols: GRID_SIZE,
       rows: GRID_SIZE,
-      rowOffset: 1.45,
+      rowOffset: 1.2,
     }).map((position, index) => ({
       id: `grid-${index}`,
       name: "grid",
       pileIndex: index,
       cards: game.grid[index] ? [game.grid[index]!] : [],
-      col: position.c,
-      row: position.r,
+      col: position.c + 1,
+      row: position.r + 1,
       baseZIndex: 10,
       placeholder: {},
     }));
@@ -313,11 +327,11 @@ export default function CribbageSquares() {
       {
         id: "current",
         name: "current",
-        cards: current ? [...game.stock, current] : [],
+        cards: current ? [...game.stock, current] : game.stock,
         col: 0,
         row: 0,
         baseZIndex: 40,
-        placeholder: { text: "Deal", infoPos: "right" },
+        placeholder: { text: "Stock", infoPos: "right" },
         fan: { maxVisible: 3 },
       },
       {
@@ -332,8 +346,8 @@ export default function CribbageSquares() {
       ...Array.from({ length: GRID_SIZE }, (_, row) => ({
         id: `row-score-${row}`,
         name: "row-score",
-        col: GRID_SIZE,
-        row: row + 1.45,
+        col: 0,
+        row: row + 2.2,
         baseZIndex: 10,
         placeholder: {
           hideBackground: !lineScores,
@@ -343,8 +357,8 @@ export default function CribbageSquares() {
       ...Array.from({ length: GRID_SIZE }, (_, col) => ({
         id: `column-score-${col}`,
         name: "column-score",
-        col,
-        row: GRID_SIZE + 1.45,
+        col: col + 1,
+        row: 1.2,
         baseZIndex: 10,
         placeholder: {
           hideBackground: !lineScores,
@@ -355,8 +369,8 @@ export default function CribbageSquares() {
         id: "starter",
         name: "starter",
         cards: starter ? [starter] : [],
-        col: GRID_SIZE,
-        row: GRID_SIZE + 1.45,
+        col: 0,
+        row: 1.2,
         baseZIndex: 10,
         placeholder: { hideBackground: !starter, hideShadow: !starter },
       },
@@ -383,7 +397,8 @@ export default function CribbageSquares() {
     const index = zone.pileIndex;
     return {
       onPress: () => placeCard(index),
-      isDisabled: game.ended || !legalCells.includes(index),
+      isDisabled:
+        game.ended || game.isTransitioning || !legalCells.includes(index),
     };
   };
 
@@ -394,8 +409,6 @@ export default function CribbageSquares() {
     cardMapper,
     cardSize: "small",
     gap: 0.12,
-    fixedCols: GRID_SIZE + 1,
-    fixedRows: 7.2,
   });
 
   return (
@@ -414,28 +427,31 @@ export default function CribbageSquares() {
     >
       {cardMap}
 
-      {game.scoresReady && (
-        <View
+      {scoreFade.isRendered && (
+        <Animated.View
           style={[
             flexStyles.colCentered,
             flexStyles.fullWidth,
             getZoneStylesById("end-game"),
+            { gap: spacing(10), opacity: scoreFade.opacity },
           ]}
         >
+          <Text size="lg" weight={500} color={colorPale}>
+            {`Score: ${game.score} pts`}
+          </Text>
           <Button
-            text={`End Game (${game.score} pts)`}
+            text="End Game"
             onPress={endGame}
-            size="md"
-            taller
-            lineHeight={1.1}
+            size="sm"
             fullWidth
+            theme={Colors.buttonRed}
           />
-        </View>
+        </Animated.View>
       )}
 
-      {game.scoresReady &&
+      {scoreFade.isRendered &&
         scoreLabels.map(({ id, score }) => (
-          <View
+          <Animated.View
             key={id}
             style={[
               getZoneStylesById(id),
@@ -443,17 +459,18 @@ export default function CribbageSquares() {
                 alignItems: "center",
                 justifyContent: "center",
                 zIndex: 20,
+                opacity: scoreFade.opacity,
               },
             ]}
           >
             <Text
               size="xxxl"
               weight={500}
-              color={rgba(Colors.white, score > 0 ? 1 : 0.3)}
+              color={rgba(colorPale, score > 0 ? 1 : 0.3)}
             >
               {score}
             </Text>
-          </View>
+          </Animated.View>
         ))}
     </GameWrapper>
   );

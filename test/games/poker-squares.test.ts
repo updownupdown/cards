@@ -20,6 +20,8 @@ function state(
     deck: [],
     grid: Array.from({ length: 25 }, () => null),
     score: 0,
+    scoresReady: false,
+    isTransitioning: false,
     ended: false,
     won: false,
     ...overrides,
@@ -126,6 +128,20 @@ describe("Poker Squares rules", () => {
     expect(deck[1].faceUp).toBe(true);
   });
 
+  test("gathers all cards into a face-down shuffled stock", () => {
+    const grid = Array.from<PlayingCard | null>({ length: 25 }).fill(null);
+    grid[0] = card("A", "spades", "grid-card", true);
+    const deck = Array.from({ length: 51 }, (_, index) =>
+      card("2", "clubs", `deck-${index}`, index === 0),
+    );
+
+    const stock = pokerSquaresRules.gatherCards(state({ grid, deck }));
+
+    expect(stock).toHaveLength(52);
+    expect(stock.every((playingCard) => !playingCard.faceUp)).toBe(true);
+    expect(stock.map((playingCard) => playingCard.id)).toContain("grid-card");
+  });
+
   test("places the deck top once and rejects occupied cells", () => {
     const game = state({ deck: [card("4", "clubs", "dealt", false)] });
 
@@ -135,7 +151,7 @@ describe("Poker Squares rules", () => {
     expect(pokerSquaresRules.placeCard(game, 12)).toBe(false);
   });
 
-  test("scores and ends the game after the 25th placement", () => {
+  test("scores but leaves the game open for review after the 25th placement", () => {
     const grid = Array.from({ length: 25 }, (_, index): PlayingCard | null =>
       index === 24 ? null : card("2", "clubs", `grid-${index}`),
     );
@@ -146,8 +162,20 @@ describe("Poker Squares rules", () => {
 
     pokerSquaresRules.placeCard(game, 24);
 
-    expect(game.ended).toBe(true);
+    expect(game.ended).toBe(false);
+    expect(game.scoresReady).toBe(true);
     expect(game.score).toBe(pokerSquaresRules.scoreGrid(game.grid));
-    expect(game.won).toBe(game.score >= pokerSquaresRules.targetScore);
+  });
+
+  test("returns each row and column score with its hand category", () => {
+    const grid = Array.from<PlayingCard | null>({ length: 25 }).fill(null);
+    grid.splice(0, 5, card("A"), card("K"), card("Q"), card("J"), card("10"));
+
+    const lineScores = pokerSquaresRules.getLineScores(grid);
+
+    expect(lineScores.rows[0]).toEqual({ category: 9, score: 100 });
+    expect(
+      pokerSquaresRules.handCategoryName(lineScores.rows[0].category),
+    ).toBe("Royal flush");
   });
 });

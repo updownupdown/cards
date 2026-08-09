@@ -21,6 +21,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { View } from "react-native";
 import { Text } from "../common/Text";
 import { flexStyles } from "@/styles/flexStyles";
+import { useGameColors } from "@/hooks/useGameColors";
 
 const reserveCount = 4;
 const reserveSize = 4;
@@ -140,6 +141,7 @@ export const osmosisRules = {
 
 // ========== Main Component ========== //
 export default function Osmosis() {
+  const { colorPale } = useGameColors();
   const configuredDrawCount = useGameSettingValue("drawCount");
 
   const {
@@ -365,8 +367,12 @@ export default function Osmosis() {
       {cardMap}
 
       <View style={[getZoneStylesById("base-card"), flexStyles.colCentered]}>
-        <Text size="sm">Key</Text>
-        <Text size="xxxl">{game.baseCard ? cardLabel(game.baseCard) : ""}</Text>
+        <Text size="sm" weight={500}>
+          Key
+        </Text>
+        <Text size="xxxl" weight={500} color={colorPale}>
+          {game.baseCard ? cardLabel(game.baseCard) : `\u0020`}
+        </Text>
       </View>
     </GameWrapper>
   );

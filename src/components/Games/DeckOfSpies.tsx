@@ -576,7 +576,7 @@ export default function DeckOfSpies() {
         row: TOP_ROW,
         cards: game.drawDeck,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Draw", infoPos: "below" },
+        placeholder: { text: "Stock", infoPos: "below" },
         baseZIndex: 20,
       },
 
@@ -642,7 +642,7 @@ export default function DeckOfSpies() {
 
   const sourceNames: Record<AceSource, string> = {
     hand: "Hand",
-    drawDeck: "Deck",
+    drawDeck: "Stock",
     drawDiscard: "Discard",
   };
   const { isFacePhase, total, neutralizedCount, recruitedCount } =

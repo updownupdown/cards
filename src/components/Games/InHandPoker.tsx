@@ -492,7 +492,7 @@ export default function InHandPoker() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 30,
-        placeholder: { text: "Draw", infoPos: "right" },
+        placeholder: { text: "Stock", infoPos: "right" },
       },
       { id: "hud", col: 1.9, row: 0, width: 3.2 },
       {

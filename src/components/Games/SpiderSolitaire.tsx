@@ -334,7 +334,7 @@ export default function SpiderSolitaire() {
         row: 0,
         baseZIndex: 30,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Deal", infoPos: "below" },
+        placeholder: { text: "Stock", infoPos: "below" },
       },
       ...foundationZones,
       ...tableauZones,
@@ -766,6 +766,7 @@ export default function SpiderSolitaire() {
       winLoseMessage={
         won ? "All eight K-to-A suit runs are complete." : undefined
       }
+      showDeviceRotateHint
     >
       <View style={{ flex: 1, width: "100%", gap: 12 }}>
         <View

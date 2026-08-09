@@ -34,23 +34,16 @@ describe("Canfield rules", () => {
     expect(canfieldRules.rankFromValue(13)).toBe("K");
   });
 
-  test("starts foundations at the base rank and builds up by suit with wrap", () => {
+  test("locks each foundation to its first base-rank card suit", () => {
     expect(
-      canfieldRules.canPlaceOnFoundation(card("7"), [], "hearts", "7"),
+      canfieldRules.canPlaceOnFoundation(card("7", "spades"), [], "7"),
+    ).toBe(true);
+    expect(canfieldRules.canPlaceOnFoundation(card("A"), [], "7")).toBe(false);
+    expect(
+      canfieldRules.canPlaceOnFoundation(card("A"), [card("K")], "7"),
     ).toBe(true);
     expect(
-      canfieldRules.canPlaceOnFoundation(card("A"), [], "hearts", "7"),
-    ).toBe(false);
-    expect(
-      canfieldRules.canPlaceOnFoundation(card("A"), [card("K")], "hearts", "7"),
-    ).toBe(true);
-    expect(
-      canfieldRules.canPlaceOnFoundation(
-        card("8", "spades"),
-        [card("7")],
-        "hearts",
-        "7",
-      ),
+      canfieldRules.canPlaceOnFoundation(card("8", "spades"), [card("7")], "7"),
     ).toBe(false);
   });
 
@@ -120,6 +113,10 @@ describe("Canfield rules", () => {
       expect(game.stock).toHaveLength(34);
       expect(game.drawCount).toBe(drawCount);
       expect(game.foundations.flat()[0].rank).toBe(game.baseRank);
+      expect(game.foundations[0]).toHaveLength(1);
+      expect(game.foundations.slice(1).every((pile) => pile.length === 0)).toBe(
+        true,
+      );
     },
   );
 });

@@ -18,20 +18,31 @@ export const heWillNeverStop: GameDefinition = {
   animation: GameAnimations.Rain,
   gameColorDark: "#1b2224",
   gameColorPale: "#daf1f1",
-  cardDescription:
-    "Keep a fragile line of cards between the final girl and an unstoppable pursuer.",
+  cardDescription: "Maintain your precarious lead over an unstoppable pursuer.",
   quickStart: [
+    "Reach the end of the stock deck without being caught.",
     "Search a rank or move a safe card. Survive until the 32-card deck is empty.",
   ],
   howToPlay: [
     "## Objective",
-    "Keep at least one card in the line until the deck is empty. Four adjacent cards of one rank also win immediately.",
-    "## Pursuit",
-    "At the start of each turn, he discards the left-most card. If that card begins a run of three or more consecutive ranks, he keeps taking cards until fewer than three from that run remain.",
-    "## Search",
-    "Choose a rank in the line. Discard every card of that rank, then draw the same number of cards onto the right end of the line.",
-    "## Try To Escape",
-    "Move one card to a new position. You cannot move a card already in a run of three or more. If the move creates or extends a run of three or more, draw two cards onto the right end of the line.",
+    "Reach the end of the stock deck, keeping at least one card (obstacle) between you and your pursuer.",
+    "Four adjacent cards of the same rank (building a trap) also win immediately.",
+
+    "## Pursuer",
+    "At the start of each turn, the pursuer discards the left-most card.",
+    "If that card was at the beginning of a run of three or more consecutive ranks, the pursuer keeps taking cards until fewer than three cards from that run remain.",
+
+    "## Actions",
+    "- **Search:**",
+    "-- Choose a card in the line, and discard every card of that rank.",
+    "-- This allows you to draw the same number of cards onto the right end of the line.",
+    "-- Since the pursuer will remove one card, this action always shortens the line by 1 card.",
+
+    "- **(Try To) Escape:**",
+    "-- Select a card and shift it to a new position.",
+    "-- You cannot move a card already in a run of three or more.",
+    "-- If the move creates or extends a run of three or more, draw two cards onto the right end of the line. Otherwise, do not draw any cards.",
+    "-- This action may shorten or extend the line, depending on how many cards are drawn.",
   ],
   credits: {
     creators: [GameCreators.ZoeCappallo],

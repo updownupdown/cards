@@ -17,15 +17,26 @@ export const theEmissary: GameDefinition = {
   gameColorDark: "#241e33",
   gameColorPale: "#acdeff",
   cardDescription:
-    "Win exactly the right number of debates in each kingdom while managing one-time advisors.",
+    "Win exactly the right number of debates in each kingdom, using your advisors.",
   quickStart: [
-    "Pick a kingdom and win exactly its listed number of debates. Draw next topic; when possible, follow topic suit.",
+    "Choose a kingdom and win exactly its listed number of debates.",
+    "Follow the topic suit when possible",
+    "Use the ruler's suit as trump.",
+    "Use advisor powers at strategic times.",
   ],
   howToPlay: [
-    "You must visit each kingdom, and win the exact number of debates indicated by the number of that kingdom (1 through 8).",
-    "You start each visit with 8 cards, and four advisors (Jacks). When winning over a kingdom, its ruler joins you as an advisor (Queen/King), but you may only use their services once, whereas your own advisors can be used anew each kingdom.",
-    "When ready, select the next topic to debate. When able, you must be a card of the same suit.",
-    "Each ruler has a trump suit (its own). To win a debate, you must play a card of higher value and of the same suit, or any card of the trump suit.",
+    "## Objective",
+    "Win exactly the number of debates shown on each of the eight kingdoms. Winning too few or too many debates in any kingdom loses the game.",
+
+    "## Debates",
+    "- Start each kingdom with eight cards in hand. Choose a topic by revealing a card from the stock deck, then play a card from your hand.",
+    "- When possible, you **must** follow the topic's suit.",
+    "- Win by playing a higher card of the topic suit, or by playing the ruler's trump suit when the topic is not trump.",
+
+    "## Advisors",
+    "- You may use any number of advisors at a time, but only between debates (and not while a topic is active).",
+    "- Select a Jack advisor to see and use its powers. Your four Jack advisors refresh for each kingdom.",
+    "- When you win a kingdom, its Queen or King becomes a temporary advisor. Each such ruler advisor may be used only once.",
   ],
   about: [
     "You are a young noble, send by your father to gather support from eight neighboring kingdoms. You must engage in a series of debates to win over each kingdom's ruler.",

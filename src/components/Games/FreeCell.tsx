@@ -357,6 +357,7 @@ export default function FreeCell() {
     zoneMapper,
     cardSize: "tableau",
     fixedRows: 6,
+    gap: 0.12,
   });
 
   // ── Hit areas ───────────────────────────────────────────────────────────────

@@ -77,11 +77,6 @@ export const GAME_BACKGROUNDS = {
     authorName: "Leo_Visions",
     authorLink: "https://unsplash.com/@leo_visions_",
   },
-  casino2: {
-    source: require("@/assets/backgrounds/casino-2.jpg"),
-    authorName: "Zoshua Colah",
-    authorLink: "https://unsplash.com/@zoshuacolah",
-  },
   monteCarlo: {
     source: require("@/assets/backgrounds/monte-carlo.jpg"),
     authorName: "Braden Egli",
@@ -129,8 +124,8 @@ export const GAME_BACKGROUNDS = {
   },
   city: {
     source: require("@/assets/backgrounds/city.jpg"),
-    authorName: "ben o'bro",
-    authorLink: "https://unsplash.com/@benobro",
+    authorName: "Thomas Habr",
+    authorLink: "https://unsplash.com/@thomashabr",
   },
   savanah: {
     source: require("@/assets/backgrounds/savanah.jpg"),
@@ -172,6 +167,21 @@ export const GAME_BACKGROUNDS = {
     authorName: "Susan Wilkinson",
     authorLink: "https://unsplash.com/@susan_wilkinson",
   },
+  cozyCabin: {
+    source: require("@/assets/backgrounds/cozy-cabin.jpg"),
+    authorName: "Ian Keefe",
+    authorLink: "https://unsplash.com/@iankeefe",
+  },
+  cabinInterior: {
+    source: require("@/assets/backgrounds/cabin-interior.jpg"),
+    authorName: "Clay Banks",
+    authorLink: "https://unsplash.com/@claybanks",
+  },
+  greece: {
+    source: require("@/assets/backgrounds/greece.jpg"),
+    authorName: "Tânia Mousinho",
+    authorLink: "https://unsplash.com/@shotsbytania",
+  },
 } satisfies Record<string, GameBackground>;
 
 export const {
@@ -189,7 +199,6 @@ export const {
   stoneTunnel,
   london,
   casino,
-  casino2,
   monteCarlo,
   golf,
   fallLeaves,
@@ -208,4 +217,7 @@ export const {
   bookstore,
   darkAlley,
   painting,
+  cozyCabin,
+  cabinInterior,
+  greece,
 } = GAME_BACKGROUNDS;

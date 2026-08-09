@@ -1,7 +1,10 @@
 import { useStateManager } from "@/hooks/useStateManager";
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
+import { useGameColors } from "@/hooks/useGameColors";
 import { delay } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
+import { View } from "react-native";
+import { Button } from "../Button/Button";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   cardDims,
@@ -15,6 +18,7 @@ import {
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { flexStyles } from "@/styles/flexStyles";
 
 const pileCount = 5;
 
@@ -108,6 +112,7 @@ export const baronessRules = {
 
 // ========== Main Component ========== //
 export default function Baroness() {
+  const { colorDark } = useGameColors();
   const difficulty = useGameSettingValue("difficulty");
   const allowMoveToEmptyPile = difficulty !== "difficult";
   const [selected, setSelected] = useState<number | undefined>(undefined);
@@ -229,7 +234,7 @@ export default function Baroness() {
       pileIndex: i,
       cards: pile,
       col: i,
-      row: 1.5,
+      row: 1.2,
       baseZIndex: 10 + i,
       fan: { direction: "down", offset: cardDims.tableauOffset, center: false },
       placeholder: {},
@@ -244,7 +249,7 @@ export default function Baroness() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 60,
-        placeholder: { text: "Deal", infoPos: "right", showCount: true },
+        placeholder: { text: "Stock", infoPos: "right", showCount: true },
       },
       {
         id: "discard",
@@ -257,6 +262,13 @@ export default function Baroness() {
         placeholder: { text: "Discard", infoPos: "left" },
       },
       ...pileZones,
+      {
+        id: "button",
+        col: 0,
+        row: 5.2,
+        width: "full",
+        height: 0.8,
+      },
     ];
   }, [game]);
 
@@ -305,7 +317,7 @@ export default function Baroness() {
     return {};
   };
 
-  const { cardMap } = useCardMap({
+  const { getZoneStylesById, cardMap } = useCardMap({
     game,
     zones,
     cardMapper,
@@ -324,6 +336,18 @@ export default function Baroness() {
       undo={undo}
     >
       {cardMap}
+
+      <View style={[flexStyles.colCentered, getZoneStylesById("button")]}>
+        <Button
+          text="Deal"
+          size="md"
+          onPress={dealRow}
+          fullWidth
+          halfTaller
+          disabled={game.draw.length === 0 || game.ended}
+          theme={"#80262e"}
+        />
+      </View>
     </GameWrapper>
   );
 }

@@ -595,7 +595,7 @@ export default function OptritaLines() {
         isSelected,
         forceOverlayColor: game.trumpPhase,
         selectColor: game.trumpPhase
-          ? "orange"
+          ? "pink"
           : resolvedCell && isSelected
             ? resolvedCell.color
             : "blue",
@@ -737,7 +737,7 @@ export default function OptritaLines() {
               fullWidth
               theme={colorDark}
               style={{
-                borderRadius: 4,
+                borderRadius: spacing(8),
                 padding: 0,
                 width: "100%",
                 height: "100%",

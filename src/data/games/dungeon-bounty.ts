@@ -3,9 +3,9 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
 
 export const dungeonBounty: GameDefinition = {
+  enabledOnLocalOnly: true,
   path: "/dungeon-bounty",
   title: "Dungeon Bounty",
-  enabledOnLocalOnly: true,
   tags: [GameTag.ModernMechanics, GameTag.DungeonCrawler, GameTag.CardCombat],
   rating: {
     complexity: 85,

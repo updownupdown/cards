@@ -255,9 +255,9 @@ export default function Memory() {
       {
         id: "hud",
         name: "hud",
-        col: 1.5,
+        col: 2,
         row: 0,
-        width: cols - 1.5,
+        width: cols - 2,
         baseZIndex: 1,
       },
       {

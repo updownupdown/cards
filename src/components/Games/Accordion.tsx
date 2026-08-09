@@ -195,7 +195,7 @@ export default function Accordion() {
   function selectColor(idx: number): string {
     if (selectedIndex === idx) {
       // Current card
-      return "green";
+      return "blue";
     } else if (
       selectedIndex &&
       (idx === selectedIndex - 3 ||
@@ -204,7 +204,7 @@ export default function Accordion() {
       // Card 1 or 3 to the left
       return canMerge(top(game.line[idx]), top(game.line[selectedIndex]))
         ? "green"
-        : "purple";
+        : "lightGrey";
     } else {
       // Other cards
       return "none";

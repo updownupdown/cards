@@ -5,6 +5,7 @@ import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   cardDims,
   createDeck,
+  flipAllToBack,
   flipToFace,
   shuffle,
   top,
@@ -21,6 +22,7 @@ type Selection = { zone: "col" | "reserve"; index: number } | undefined;
 type GameState = {
   columns: PlayingCard[][];
   reserve: PlayingCard[];
+  discard: PlayingCard[];
   ended: boolean;
   won: boolean;
 };
@@ -31,6 +33,7 @@ export type NestorSelection = Selection;
 const gameStateInitial: GameState = {
   columns: Array.from({ length: columnCount }, () => []),
   reserve: [],
+  discard: flipAllToBack(shuffle(createDeck())),
   ended: false,
   won: false,
 };
@@ -63,30 +66,50 @@ function dealNestor(deckCards: PlayingCard[]): GameState {
   return {
     columns,
     reserve,
+    discard: [],
     ended: false,
     won: false,
   };
+}
+
+function prepareDiscard(state: GameState) {
+  return shuffle(
+    flipAllToBack([
+      ...state.columns.flat(),
+      ...state.reserve,
+      ...state.discard,
+    ]),
+  );
+}
+
+function setupFromDiscard(draft: GameState) {
+  const next = dealNestor(draft.discard);
+  draft.columns = next.columns;
+  draft.reserve = next.reserve;
+  draft.discard = next.discard;
+  draft.ended = next.ended;
+  draft.won = next.won;
 }
 
 async function resetAndSetup(
   setGame: (updater: (draft: GameState) => void) => void,
 ) {
   setGame((draft) => {
-    const deck = shuffle(createDeck({ faceUp: true }));
-    const next = dealNestor(deck);
-    draft.columns = next.columns;
-    draft.reserve = next.reserve;
-    draft.ended = next.ended;
-    draft.won = next.won;
+    draft.discard = prepareDiscard(draft);
+    draft.columns = Array.from({ length: columnCount }, () => []);
+    draft.reserve = [];
+    draft.ended = false;
+    draft.won = false;
   });
 
   await delay();
+  setGame((draft) => setupFromDiscard(draft));
 }
 
 function exposedCard(state: GameState, sel: Selection) {
   if (!sel) return undefined;
   return sel.zone === "reserve"
-    ? top(state.reserve)
+    ? state.reserve[sel.index]
     : top(state.columns[sel.index]);
 }
 
@@ -103,8 +126,7 @@ function evaluateEnd(state: GameState, isSettingUp = false) {
     const card = top(col);
     if (card) exposed.push(card);
   });
-  const reserveTop = top(state.reserve);
-  if (reserveTop) exposed.push(reserveTop);
+  exposed.push(...state.reserve);
 
   const rankCounts = new Map<string, number>();
   for (const card of exposed) {
@@ -117,6 +139,7 @@ function evaluateEnd(state: GameState, isSettingUp = false) {
 
 export const nestorRules = {
   dealNestor,
+  prepareDiscard,
   exposedCard,
   evaluateEnd,
   columnCount,
@@ -164,12 +187,19 @@ export default function Nestor() {
   ) {
     saveUndoState(structuredClone(game));
     setGame((draft) => {
-      const pop = (sel: Exclude<Selection, undefined>) => {
-        if (sel.zone === "reserve") draft.reserve.pop();
-        else draft.columns[sel.index].pop();
-      };
-      pop(a);
-      pop(b);
+      const cards = [a, b]
+        .map((sel) => exposedCard(draft, sel))
+        .filter((card): card is PlayingCard => card !== undefined);
+
+      [a, b]
+        .filter((sel) => sel.zone === "reserve")
+        .sort((first, second) => second.index - first.index)
+        .forEach((sel) => draft.reserve.splice(sel.index, 1));
+      [a, b]
+        .filter((sel) => sel.zone === "col")
+        .forEach((sel) => draft.columns[sel.index].pop());
+
+      draft.discard.push(...flipAllToBack(cards));
     });
     setSelected(undefined);
   }
@@ -198,6 +228,17 @@ export default function Nestor() {
 
   // ========== Card Mapping ========== //
   const zones: MapZone[] = useMemo(() => {
+    const discardZone: MapZone = {
+      id: "discard",
+      name: "discard",
+      cards: game.discard,
+      col: 0,
+      row: 0,
+      fan: { maxVisible: 2 },
+      baseZIndex: 60,
+      placeholder: { text: "Discard", infoPos: "right", showCount: true },
+    };
+
     const columnZones: MapZone[] = game.columns.map((pile, i) => ({
       id: `col-${i}`,
       name: "col",
@@ -215,19 +256,17 @@ export default function Nestor() {
       placeholder: {},
     }));
 
-    return [
-      {
-        id: "reserve",
-        name: "reserve",
-        cards: game.reserve,
-        col: 5.4,
-        row: 0,
-        fan: { direction: "right", offset: 0.4, maxVisible: 4 },
-        baseZIndex: 60,
-        placeholder: { text: "Reserve", infoPos: "left" },
-      },
-      ...columnZones,
-    ];
+    const reserveZones: MapZone[] = game.reserve.map((card, i) => ({
+      id: `reserve-${i}`,
+      name: "reserve",
+      pileIndex: i,
+      cards: [card],
+      col: 4 + i,
+      row: 0,
+      baseZIndex: 60 + i,
+    }));
+
+    return [discardZone, ...reserveZones, ...columnZones];
   }, [game]);
 
   const cardMapper = (
@@ -238,8 +277,11 @@ export default function Nestor() {
     let sel: Selection;
     if (mappedCard.zoneName === "col" && mappedCard.pileIndex !== undefined) {
       sel = { zone: "col", index: mappedCard.pileIndex };
-    } else if (mappedCard.zoneName === "reserve") {
-      sel = { zone: "reserve", index: 0 };
+    } else if (
+      mappedCard.zoneName === "reserve" &&
+      mappedCard.pileIndex !== undefined
+    ) {
+      sel = { zone: "reserve", index: mappedCard.pileIndex };
     } else {
       return {};
     }
@@ -270,6 +312,7 @@ export default function Nestor() {
       winLoseMessage={game.won ? "Board cleared!" : "No matching pair remains."}
       canUndo={canUndo}
       undo={undo}
+      showDeviceRotateHint
     >
       {cardMap}
     </GameWrapper>

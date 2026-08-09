@@ -437,7 +437,7 @@ export default function TheEmissary() {
     };
     const drawZone: MapZone = {
       cards: game.draw,
-      ...debateDeckProps("draw", "Draw", 0),
+      ...debateDeckProps("draw", "Stock", 0),
     };
     const topicZone: MapZone = {
       cards: game.visit?.debateTopic ? [game.visit.debateTopic] : undefined,

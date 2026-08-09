@@ -24,7 +24,10 @@ export type GameSpecificSettingKey =
   | "bardsSuperExclusive"
   | "bardsVandals"
   | "clubFightDifficulty"
-  | "leafbearerOpenStables";
+  | "leafbearerOpenStables"
+  | "jacksDreamHardMode"
+  | "solunaDifficulty"
+  | "theBogeyDifficulty";
 export type GameSpecificSettingApplyBehavior = "immediate" | "next-game";
 
 type GameSpecificSettingOptionValue = GameSettings[GameSpecificSettingKey];
@@ -45,6 +48,47 @@ export type GameSpecificSettingDefinition = {
 
 const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
   {
+    "/the-bogey": [
+      {
+        key: "theBogeyDifficulty",
+        label: "Hand Size",
+        type: "string",
+        applyBehavior: "next-game",
+        options: [
+          { label: "5 (Easy)", value: "easy" },
+          { label: "4 (Hard)", value: "hard" },
+        ],
+      },
+    ],
+    "/soluna": [
+      {
+        key: "solunaDifficulty",
+        label: "Difficulty",
+        type: "string",
+        applyBehavior: "immediate",
+        description: "Controls which neighboring stones a success can free.",
+        options: [
+          { label: "Easy (including diagonals)", value: "easy" },
+          { label: "Normal (orthogonal)", value: "normal" },
+          { label: "Hard (choose one)", value: "hard" },
+        ],
+      },
+    ],
+    "/jacks-dream": [
+      {
+        key: "jacksDreamHardMode",
+        label: "Hard Mode",
+        type: "boolean",
+        booleanType: "toggle",
+        applyBehavior: "immediate",
+        description:
+          "Jacks cannot move onto a column containing another Jack, even when a pillow separates them.",
+        options: [
+          { label: "Off", value: false },
+          { label: "On", value: true },
+        ],
+      },
+    ],
     "/leafbearer": [
       {
         key: "leafbearerOpenStables",
@@ -92,8 +136,16 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         type: "string",
         applyBehavior: "next-game",
         options: [
-          { label: "Easy", value: "easy" },
-          { label: "Difficult", value: "difficult" },
+          {
+            label: "Easy",
+            value: "easy",
+            description: "Allows infinite redeals.",
+          },
+          {
+            label: "Difficult",
+            value: "difficult",
+            description: "No redeals allowed.",
+          },
         ],
       },
     ],

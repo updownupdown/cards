@@ -364,7 +364,7 @@ export default function Skyway() {
         row: 0,
         baseZIndex: 50,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Draw", infoPos: "right" },
+        placeholder: { text: "Stock", infoPos: "right" },
       },
       {
         id: "discard",

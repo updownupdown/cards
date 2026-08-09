@@ -236,7 +236,7 @@ export default function AcesUp() {
         fan: { maxVisible: 3 },
         placeholder: {
           infoPos: "left",
-          text: "Draw",
+          text: "Stock",
         },
       },
       {
@@ -281,7 +281,7 @@ export default function AcesUp() {
     mappedCard: MappedCard,
   ): AnimatedCardMapping | undefined => {
     if (mappedCard.zoneName === "draw" && mappedCard.topOfZone) {
-      //  Draw pile
+      //  Stock pile
       return {
         onPress: dealCards,
       };
@@ -345,7 +345,7 @@ export default function AcesUp() {
           fullWidth
           taller
           disabled={game.draw.length === 0 || game.ended}
-          theme={colorDark}
+          theme={"#80262e"}
         />
       </View>
     </GameWrapper>

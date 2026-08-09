@@ -168,9 +168,11 @@ export function useDragDrop<TSource, TTarget>({
   const hoverTargetRef = useRef<TTarget | null>(null);
   const justDroppedCardIds = useRef<Set<string> | null>(null);
   const [hideDraggedCards, setHideDraggedCards] = useState(false);
+  const pendingGhostCardsRef = useRef<PlayingCard[]>([]);
 
   const dragTranslate = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
   const pendingDragOffsetRef = useRef<{ x: number; y: number } | null>(null);
+  const dragStartOffsetRef = useRef({ x: 0, y: 0 });
 
   const boardRef = useRef<RNView | null>(null);
   const [boardPageOffset, setBoardPageOffset] = useState({ x: 0, y: 0 });
@@ -217,16 +219,22 @@ export function useDragDrop<TSource, TTarget>({
     [dragGhost, hideDraggedCards],
   );
 
-  // Keep the source card visible for the first frame after mounting the ghost.
-  // This makes the handoff overlap instead of hiding the source and mounting
-  // the replacement in the same React commit, which can flash intermittently.
   useEffect(() => {
-    if (dragGhost === null) {
-      setHideDraggedCards(false);
-      return;
-    }
+    if (dragGhost === null || dragGhost.cards.length > 0) return;
 
-    const frame = requestAnimationFrame(() => setHideDraggedCards(true));
+    const frame = requestAnimationFrame(() => {
+      const activeGhost = dragGhostRef.current;
+      if (!activeGhost) return;
+
+      const revealedGhost = {
+        ...activeGhost,
+        cards: pendingGhostCardsRef.current,
+      };
+      dragGhostRef.current = revealedGhost;
+      setHideDraggedCards(true);
+      setDragGhostState(revealedGhost);
+    });
+
     return () => cancelAnimationFrame(frame);
   }, [dragGhost]);
 
@@ -261,8 +269,11 @@ export function useDragDrop<TSource, TTarget>({
 
   function clearDragGhost() {
     setDragGhost(null);
+    setHideDraggedCards(false);
+    pendingGhostCardsRef.current = [];
     hoverTargetRef.current = null;
     notifyHoverTargetChange(null);
+    dragStartOffsetRef.current = { x: 0, y: 0 };
     dragTranslate.setValue({ x: 0, y: 0 });
   }
 
@@ -271,12 +282,21 @@ export function useDragDrop<TSource, TTarget>({
     cards: PlayingCard[],
     origin: { x: number; y: number },
   ) {
-    const initialOffset = pendingDragOffsetRef.current;
+    const initialOffset = pendingDragOffsetRef.current ?? { x: 0, y: 0 };
     pendingDragOffsetRef.current = null;
-    dragTranslate.setValue(initialOffset ?? { x: 0, y: 0 });
+    dragStartOffsetRef.current = initialOffset;
+    dragTranslate.setValue({ x: 0, y: 0 });
     hoverTargetRef.current = null;
     notifyHoverTargetChange(null);
-    setDragGhost({ source, cards, origin });
+    pendingGhostCardsRef.current = cards;
+    setDragGhost({
+      source,
+      cards: [],
+      origin: {
+        x: origin.x + initialOffset.x,
+        y: origin.y + initialOffset.y,
+      },
+    });
   }
 
   const updateBoardOffset = useCallback(() => {
@@ -354,7 +374,14 @@ export function useDragDrop<TSource, TTarget>({
     const target = resolveValidDropTarget(source, pageX, pageY, dragX, dragY);
 
     if (!target || !canDropOnTargetRef.current(source, target)) {
-      await runTiming(dragTranslate, { x: 0, y: 0 }, 250);
+      await runTiming(
+        dragTranslate,
+        {
+          x: -dragStartOffsetRef.current.x,
+          y: -dragStartOffsetRef.current.y,
+        },
+        250,
+      );
       return;
     }
 
@@ -399,7 +426,10 @@ export function useDragDrop<TSource, TTarget>({
           onDragStart(source, event);
         }
 
-        dragTranslate.setValue({ x: gesture.dx, y: gesture.dy });
+        dragTranslate.setValue({
+          x: gesture.dx - dragStartOffsetRef.current.x,
+          y: gesture.dy - dragStartOffsetRef.current.y,
+        });
         const activeSource = dragGhostRef.current?.source ?? source;
         internalUpdateHoverTarget(
           activeSource,

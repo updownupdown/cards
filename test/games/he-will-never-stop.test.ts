@@ -103,6 +103,13 @@ describe("He Will Never Stop rules", () => {
     ]);
   });
 
+  test("search draw count matches the selected rank in hand", () => {
+    const hand = [card("2", "first"), card("4", "other"), card("2", "second")];
+
+    expect(heWillNeverStopRules.searchDrawCount(hand, "2")).toBe(2);
+    expect(heWillNeverStopRules.searchDrawCount(hand, "3")).toBe(0);
+  });
+
   test("cannot move a card already in a three-card sequence", () => {
     const game = state({ hand: [card("2"), card("3"), card("4"), card("7")] });
     const before = structuredClone(game);

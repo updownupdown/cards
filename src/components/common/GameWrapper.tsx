@@ -29,6 +29,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button } from "../Button/Button";
 import GameModal from "../Modals/GameModal";
 import { RulesModal } from "../Modals/RulesModal";
+import { DeviceRotateHint } from "./DeviceRotateHint";
 import { LoadingOverlay } from "./LoadingOverlay";
 import { ResetButton } from "./ResetButton";
 import { TipsBox } from "./TipsBox";
@@ -50,6 +51,7 @@ interface Props {
   undo?: () => void;
   openMenu?: boolean;
   onMenuClose?: () => void;
+  showDeviceRotateHint?: boolean;
 }
 
 export const GameWrapper = ({
@@ -63,6 +65,7 @@ export const GameWrapper = ({
   undo: handleUndo,
   openMenu = false,
   onMenuClose,
+  showDeviceRotateHint = false,
 }: Props) => {
   const pathname = normalizeGamePath(usePathname());
   const gameInfo = getGameInfo(pathname);
@@ -270,6 +273,8 @@ export const GameWrapper = ({
             />
           </View>
         )}
+
+        <DeviceRotateHint enabled={showDeviceRotateHint} />
 
         {/* Game header */}
         <Animated.View

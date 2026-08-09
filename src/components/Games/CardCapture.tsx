@@ -612,7 +612,7 @@ export default function CardCapture() {
         row: 2,
         baseZIndex: 40,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Deck", infoPos: "below" },
+        placeholder: { text: "Stock", infoPos: "below" },
       },
       ...handSlots,
       {

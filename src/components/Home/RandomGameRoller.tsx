@@ -111,43 +111,43 @@ export function RandomGameRoller({
         alignSelf: "center",
         flex: 1,
         paddingHorizontal: pageSidePadding,
+        gap: spacing(20),
       }}
     >
       <View
-        style={{
-          flex: 1,
-          width: "100%",
-          position: "relative",
-        }}
+        style={[
+          flexStyles.colCentered,
+          {
+            flex: 1,
+            width: "100%",
+            position: "relative",
+            gap: spacing(20),
+          },
+        ]}
       >
-        {isCardRendered && (
-          <ScrollView
-            style={{ flex: 1 }}
-            contentContainerStyle={{
-              flexGrow: 1,
-              justifyContent: "center",
-              gap: spacing(20),
-            }}
-            showsVerticalScrollIndicator={false}
-          >
-            {entries.map(([path, game]) => (
-              <Animated.View
-                key={path}
-                style={{ width: "100%", opacity: cardOpacity }}
-              >
-                <HomeCard
-                  path={path}
-                  game={game}
-                  size="large"
-                  onToggleFavorite={onToggleFavorite}
-                  isFavorite={favorites.has(path)}
-                  style={{ width: "100%" }}
-                  showCompleted={!!settingsMap[path]?.stats.wins}
-                />
-              </Animated.View>
-            ))}
-          </ScrollView>
-        )}
+        {isCardRendered &&
+          entries.map(([path, game]) => (
+            <Animated.View
+              key={path}
+              style={{
+                // flex: 1,
+                justifyContent: "center",
+                gap: spacing(20),
+                width: "100%",
+                opacity: cardOpacity,
+              }}
+            >
+              <HomeCard
+                path={path}
+                game={game}
+                size="large"
+                onToggleFavorite={onToggleFavorite}
+                isFavorite={favorites.has(path)}
+                style={{ width: "100%" }}
+                showCompleted={!!settingsMap[path]?.stats.wins}
+              />
+            </Animated.View>
+          ))}
 
         {isDiceRendered && (
           <Animated.View
@@ -205,7 +205,7 @@ export function RandomGameRoller({
           size="lg"
           onPress={onReroll}
           disabled={rolling}
-          style={{ flex: 1 }}
+          style={{ flex: 1, height: spacing(52), borderRadius: spacing(26) }}
           theme={Colors.suitsRed}
         />
       </View>

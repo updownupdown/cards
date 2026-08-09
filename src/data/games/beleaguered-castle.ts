@@ -21,25 +21,23 @@ export const beleagueredCastle: GameDefinition = {
   cardDescription:
     "Storm the castle: build every suit up from Ace to King with open tableau play.",
   quickStart: [
-    "Expose Aces early; columns down any suit; foundations up suit.",
+    "Build all foundations, up by suit, from A to K.",
+    "Build columns down by rank, regardless of suit, one card at a time.",
   ],
   howToPlay: [
     "## Objective",
-    "Build all four **foundations** up by suit from **Ace to King**.",
-    "## Setup",
-    "- The four **Aces** are placed as foundations.",
-    "- The other 48 cards are dealt into **8 columns of 6**, all face up.",
+    "- **Win** by building all four **foundations** up by suit from **Ace to King**.",
+    "- **Lose** if no legal moves remain and the foundations are incomplete.",
+
     "## Playing",
-    "- Tap an **exposed** card (the outer end of a column) to pick it up, then tap a destination.",
     "- Build columns **down by rank**, regardless of suit (for example a {7C} onto an {8H}).",
-    "- Move cards **one at a time**.",
     "- Send a card to its **foundation** when it is the next rank up in the same suit.",
+    "- Tap an exposed card to pick it up, then tap a destination.",
+    "- Move cards **one at a time**.",
     "- An **empty column** may be filled with any single card.",
-    "## Winning",
-    "Complete all four foundations to win. If no legal move remains, the siege is lost.",
   ],
   about: [
-    "Beleaguered Castle is an open builder — everything is face up, so wins reward careful sequencing.",
+    "Beleaguered Castle is an open builder — everything is face up, so careful sequencing is rewarded.",
     "The temptation to fill an empty column too soon is what strands most games.",
   ],
   credits: {

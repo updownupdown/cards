@@ -812,7 +812,7 @@ export default function Regicide() {
         col: 3,
         row: 0.25,
         cards: game.discardPile,
-        placeholder: { infoPos: "above", text: "Discard" },
+        placeholder: { infoPos: "above", text: "Dscrd" },
         fan: { maxVisible: 3 },
         baseZIndex: 40,
       },

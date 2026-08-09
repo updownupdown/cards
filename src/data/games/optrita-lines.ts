@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
+import { GameAnimations } from "@/animations";
 
 export const optritaLines: GameDefinition = {
   path: "/optrita-lines",
@@ -12,30 +13,36 @@ export const optritaLines: GameDefinition = {
     luck: 30,
   },
   thumbnail: "OptritaLines.jpg",
-  background: GAME_BACKGROUNDS.castle,
+  cardBack: "OptritaLines.jpg",
+  background: GAME_BACKGROUNDS.club,
+  animation: GameAnimations.Firefly,
   gameColorDark: "#1b2233",
-  gameColorPale: "#dce6ff",
+  gameColorPale: "#ffffe2",
   cardDescription:
-    "A one-player trick-taking duel against a 6x6 grid that fights only by hiding its cards.",
+    "A one-player trick-taking duel against a grid that fights only by hiding its cards.",
   quickStart: [
-    "Pick a card and line; first suit match wins by rank, otherwise trump suit wins.",
+    "Pick a trump suit before the round starts.",
+    "Pick a card and a line: the first matching suit wins based on rank, otherwise the trump suit wins.",
+    "Win 21 tricks before the grid does.",
   ],
   howToPlay: [
     "## Objective",
     "Win **21 tricks** before the grid does.",
-    "## Setup",
-    "- A **6x6 grid** is dealt face down, except the bottom-left to top-right diagonal, which starts face up.",
-    "- Each round you're dealt **7 cards**; pick **one as trump** (it only helps the grid), leaving **6** for six tricks.",
-    "## Each trick",
-    "- Select a hand card and **challenge a line** (a full row or column) from one of its ends using the arrows.",
-    "- Cards flip inward one at a time until one **matches your suit**; that card is removed.",
-    "- **Higher rank wins** (Aces high): win and it's your trick, lose and it's the grid's.",
-    "- **No matching suit?** The line's **lowest trump** card beats you (trump always wins).",
-    "- **No matching suit and no trump?** You capture **any** card in the line and win the trick.",
-    "- A challenged line and the crossing line both lose a card, so you can't challenge them again this round.",
-    "## Winning",
-    "- Each trick is one point. **First to 21** wins.",
-    "- **Hard mode** (Settings) lowers the grid's target, giving it the edge.",
+
+    "## Turn Order",
+    "- Choose a trump suit from your hand.",
+    "- Select a hand card.",
+    "- Select a row or column and direction, using the arrows. You cannot challenge lines that have gaps in them.",
+
+    "## Tricks",
+    "Cards are flipped face up, one at a time from the selected direction, until one matches the selected card suit.",
+    "If your card is higher than the grid's, you win the trick; otherwise, the grid does.",
+    "- **Higher rank wins**; Aces are high.",
+    "- **No matching suit?** The line's **lowest trump** card beats you.",
+    "- **No matching suit and no trump?** You win the trick. Select a card to remove from the line.",
+
+    "## Hard Mode",
+    "Change the difficulty from the settings to lower the grid's target, giving it a higher chance to win.",
   ],
   about: [
     "Optrita: Lines is a solitaire trick-taker: you attack lines of a face-down grid, revealing one card at a time.",

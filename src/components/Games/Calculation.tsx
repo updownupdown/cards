@@ -284,7 +284,7 @@ export default function Calculation() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 20,
-        placeholder: { text: "Draw", infoPos: "left" },
+        placeholder: { text: "Stock", infoPos: "left" },
       },
       ...wasteZones,
       ...foundationZones,

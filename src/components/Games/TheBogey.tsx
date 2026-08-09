@@ -1,4 +1,5 @@
 import { useGameColors } from "@/hooks/useGameColors";
+import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
 import { delay } from "@/utils/utils";
@@ -18,9 +19,19 @@ import {
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 const MAX_COLUMNS = 12;
-const HAND_SIZE = 5;
+const HAND_SIZE_BY_DIFFICULTY = {
+  easy: 5,
+  hard: 4,
+} as const;
+
+export type TheBogeyDifficulty = keyof typeof HAND_SIZE_BY_DIFFICULTY;
+
+export function getTheBogeyHandSize(difficulty: TheBogeyDifficulty) {
+  return HAND_SIZE_BY_DIFFICULTY[difficulty];
+}
 
 type GameState = {
   hand: (PlayingCard | null)[];
@@ -121,7 +132,8 @@ export const theBogeyRules = {
   usedColumnCount,
   finishCompletedGame,
   maxColumns: MAX_COLUMNS,
-  handSize: HAND_SIZE,
+  handSize: getTheBogeyHandSize("easy"),
+  getHandSize: getTheBogeyHandSize,
 };
 
 function recycleDiscardIntoDeck(draft: GameState) {
@@ -136,8 +148,8 @@ function drawFromDeck(draft: GameState): PlayingCard | null {
   return draft.deck.pop() ?? null;
 }
 
-function refillPlayerHand(draft: GameState) {
-  for (let i = 0; i < HAND_SIZE; i += 1) {
+function refillPlayerHand(draft: GameState, handSize: number) {
+  for (let i = 0; i < handSize; i += 1) {
     const hasCard = !!draft.hand[i];
     if (hasCard) continue;
 
@@ -163,6 +175,7 @@ const gameStateInitial: GameState = {
 
 async function resetAndSetup(
   setGame: (updater: (draft: GameState) => void) => void,
+  handSize: number,
 ) {
   setGame((draft) => {
     const allCards = [
@@ -190,7 +203,7 @@ async function resetAndSetup(
   await delay();
 
   setGame((draft) => {
-    while (draft.hand.length < HAND_SIZE) {
+    while (draft.hand.length < handSize) {
       const next = draft.deck.pop();
       if (!next) break;
 
@@ -200,13 +213,15 @@ async function resetAndSetup(
 }
 
 export default function TheBogey() {
-  const { colorZone } = useGameColors();
+  const { spacing } = useResponsiveMetrics();
+  const difficulty = useGameSettingValue("theBogeyDifficulty");
+  const handSize = getTheBogeyHandSize(difficulty);
 
   const { game, setGame, reset, isLoaded, canUndo, undo, saveUndoState } =
     useStateManager({
       gameStateInitial,
       resetAndSetup: async () => {
-        await resetAndSetup(setGame);
+        await resetAndSetup(setGame, handSize);
       },
     });
 
@@ -219,6 +234,12 @@ export default function TheBogey() {
         : null,
     [game.hand, game.selectedHandCardId],
   );
+
+  const canDiscard =
+    !game.ended &&
+    !game.playerTurnEnded &&
+    !game.awaitingBogeyPlacement &&
+    !!selectedHandCard;
 
   const { validPlacementTargets } = useMemo(() => {
     const placementCard = game.awaitingBogeyPlacement
@@ -238,7 +259,7 @@ export default function TheBogey() {
     selectedHandCard,
   ]);
 
-  // Refill player hand to 5 when a player turn starts (including after Bogey placement).
+  // Refill the player hand when a turn starts (including after Bogey placement).
   useEffect(() => {
     if (
       game.ended ||
@@ -250,13 +271,14 @@ export default function TheBogey() {
     }
 
     setGame((draft) => {
-      refillPlayerHand(draft);
+      refillPlayerHand(draft, handSize);
     });
   }, [
     game.awaitingBogeyPlacement,
     game.currentBogeyCard,
     game.ended,
     game.playerTurnEnded,
+    handSize,
     setGame,
   ]);
 
@@ -419,7 +441,7 @@ export default function TheBogey() {
       }),
     );
 
-    const handZones: MapZone[] = Array.from({ length: HAND_SIZE }).map(
+    const handZones: MapZone[] = Array.from({ length: handSize }).map(
       (_, idx) => {
         const card = game.hand[idx];
         return {
@@ -444,23 +466,23 @@ export default function TheBogey() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: "Deck", infoPos: "right" },
+        placeholder: { text: "Stock", infoPos: "right" },
       },
       {
         id: "discard",
         name: "discard",
         cards: game.discard,
-        col: 1.5,
+        col: 5,
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: "Discard", infoPos: "right" },
+        placeholder: { text: "Discard", infoPos: "left" },
       },
       {
         id: "bogey",
         name: "bogey",
         cards: game.currentBogeyCard ? [game.currentBogeyCard] : [],
-        col: 5,
+        col: 2.5,
         row: 0,
         baseZIndex: 50,
         placeholder: { text: "Bogey", infoPos: "left", showCount: false },
@@ -476,7 +498,14 @@ export default function TheBogey() {
         baseZIndex: 1,
       },
     ];
-  }, [game.columns, game.currentBogeyCard, game.deck, game.discard, game.hand]);
+  }, [
+    game.columns,
+    game.currentBogeyCard,
+    game.deck,
+    game.discard,
+    game.hand,
+    handSize,
+  ]);
 
   const cardMapper = (
     mappedCard: MappedCard,
@@ -488,9 +517,14 @@ export default function TheBogey() {
         onPress: () => handleSelectHandCard(mappedCard.card.id),
         isDisabled:
           game.ended || game.playerTurnEnded || game.awaitingBogeyPlacement,
-        selectColor: isSelected ? "blue" : "none",
+        selectColor: game.awaitingBogeyPlacement
+          ? "lightGrey"
+          : isSelected
+            ? "blue"
+            : "none",
         isSelected,
         forceSelectColor: isSelected,
+        forceOverlayColor: game.awaitingBogeyPlacement,
       };
     } else if (
       mappedCard.zoneName === "column" &&
@@ -511,14 +545,10 @@ export default function TheBogey() {
         selectColor: isValidTarget && isTopCard ? "green" : "none",
         forceOverlayColor: isValidTarget && isTopCard,
       };
-    } else if (mappedCard.zoneName === "discard") {
-      return {
-        clickThroughCards: true,
-      };
     } else if (mappedCard.zoneName === "bogey") {
       return {
         isSelected: true,
-        selectColor: "blue",
+        selectColor: "purple",
       };
     }
 
@@ -534,24 +564,6 @@ export default function TheBogey() {
       return {
         onPress: () => handleColumnSelection(zone.pileIndex!),
         isDisabled: !isValid,
-        // selectColor: isValid ? "green" : "none",
-        // forceOverlayColor: isValid,
-      };
-    } else if (zone.name === "discard") {
-      const isDisabled =
-        game.ended ||
-        game.playerTurnEnded ||
-        game.awaitingBogeyPlacement ||
-        !selectedHandCard;
-
-      return {
-        onPress: () => {
-          if (game.awaitingBogeyPlacement) return;
-          handleDiscardSelectedCard();
-        },
-        isDisabled,
-        selectColor: isDisabled ? "none" : "orange",
-        forceOverlayColor: !isDisabled,
       };
     }
 
@@ -577,7 +589,20 @@ export default function TheBogey() {
     >
       {cardMap}
 
-      <View style={[getZoneStylesById("actions"), flexStyles.colCentered]}>
+      <View
+        style={[
+          getZoneStylesById("actions"),
+          flexStyles.rowCentered,
+          { gap: spacing(12) },
+        ]}
+      >
+        <Button
+          text="Discard"
+          theme="orange"
+          onPress={handleDiscardSelectedCard}
+          disabled={!canDiscard}
+          halfTaller
+        />
         <Button
           text="End Turn"
           theme="blue"
@@ -585,8 +610,8 @@ export default function TheBogey() {
           disabled={
             game.ended || game.playerTurnEnded || game.awaitingBogeyPlacement
           }
-          fullWidth
-          taller
+          style={{ flex: 1 }}
+          halfTaller
         />
       </View>
     </GameWrapper>

@@ -42,6 +42,9 @@ export type GameSettings = {
   bardsVandals: "off" | "one" | "two";
   clubFightDifficulty: "easy" | "hard";
   leafbearerOpenStables: boolean;
+  jacksDreamHardMode: boolean;
+  solunaDifficulty: "easy" | "normal" | "hard";
+  theBogeyDifficulty: "easy" | "hard";
   lastResultSessionId?: string;
   lastResultWon?: boolean;
   stats: GameStats;
@@ -151,6 +154,9 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   bardsVandals: "off",
   clubFightDifficulty: "easy",
   leafbearerOpenStables: false,
+  jacksDreamHardMode: false,
+  solunaDifficulty: "normal",
+  theBogeyDifficulty: "easy",
   stats: {
     attempts: 0,
     wins: 0,

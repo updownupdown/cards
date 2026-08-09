@@ -1,6 +1,7 @@
 import { Button } from "@/components/Button/Button";
 import { MappedCard, MapZone, useCardMap } from "@/components/Cards/CardMap";
 import { useGameColors } from "@/hooks/useGameColors";
+import { useFade } from "@/hooks/useFade";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
@@ -648,7 +649,6 @@ export default function Solatro() {
 
     setGame((draft) => {
       draft.roundScore += draft.lastHandPoints;
-      if (draft.playsRemaining === 0) finishRound(draft);
     });
 
     await delay(2000);
@@ -657,8 +657,12 @@ export default function Solatro() {
       draft.discard.push(...flipAllToBack(draft.scoring));
       draft.scoring = [];
       if (draft.phase === "scoring") {
-        draft.phase = "playing";
-        drawToLimit(draft);
+        if (draft.playsRemaining === 0) {
+          finishRound(draft);
+        } else {
+          draft.phase = "playing";
+          drawToLimit(draft);
+        }
       }
     });
   }
@@ -824,6 +828,9 @@ export default function Solatro() {
 
   const target = targetForRound(game.round);
   const ownedBonuses = BONUS_NAMES.filter((bonus) => game.bonuses[bonus]);
+  const { isRendered: isShopRendered, opacity: shopOpacity } = useFade(
+    game.phase === "shop",
+  );
 
   return (
     <GameWrapper
@@ -1035,8 +1042,8 @@ export default function Solatro() {
       </View>
 
       {/* ---------- Shoppe ---------- */}
-      {game.phase === "shop" && (
-        <View
+      {isShopRendered && (
+        <Animated.View
           style={[
             getZoneStylesById("shop"),
             flexStyles.colCentered,
@@ -1046,6 +1053,7 @@ export default function Solatro() {
               backgroundColor: colorDark,
               borderRadius: spacing(24),
               zIndex: 90,
+              opacity: shopOpacity,
               boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(8)}px ${rgba(colorDark, 0.4)}, ${spacing(2)}px ${spacing(4)}px ${spacing(20)}px ${rgba(colorDark, 0.4)}`,
             },
           ]}
@@ -1172,7 +1180,7 @@ export default function Solatro() {
             fullWidth
             halfTaller
           />
-        </View>
+        </Animated.View>
       )}
     </GameWrapper>
   );

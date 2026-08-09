@@ -1,4 +1,4 @@
-import { GameDefinition, DEFAULT_GAME_THUMBNAIL, GameTag } from "../games-data";
+import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameCreators } from "../game-creators";
 import { GameAnimations } from "@/animations";
@@ -12,28 +12,24 @@ export const eightOff: GameDefinition = {
     difficulty: 40,
     luck: 25,
   },
-  thumbnail: DEFAULT_GAME_THUMBNAIL,
-  background: GAME_BACKGROUNDS.treeRain,
-  animation: GameAnimations.Rain,
-  gameColorDark: "#101b2b",
-  gameColorPale: "#d9e6ff",
+  thumbnail: "EightOff.jpg",
+  background: GAME_BACKGROUNDS.cherryBlossoms,
+  animation: GameAnimations.CherryBlossom,
+  gameColorDark: "#0e2741",
+  gameColorPale: "#d9ffff",
   cardDescription:
-    "A roomy, same-suit FreeCell relative with eight cells and Kings-only columns.",
+    "A roomy, same-suit FreeCell relative, with eight cells and Kings-only columns.",
   quickStart: ["Use 8 cells; tableau down in suit; only kings fill empty."],
   howToPlay: [
     "## Objective",
-    "Move all 52 cards to the four **foundations**, each built up by suit from Ace to King.",
-    "## Setup",
-    "- 48 cards are dealt into **8 columns of 6**, all face up.",
-    "- The remaining **4 cards** each start in one of the **8 free cells**.",
-    "## Playing",
-    "- Build tableau columns **down in rank in the same suit** (for example a {9S} on a {10S}).",
-    "- Each **free cell** holds a single card; move one card at a time.",
-    "- Moving a sequence is a shortcut, limited by your free cells and empty columns.",
+    "Move all 52 cards to the four foundations, each built up by suit from Ace to King.",
+
+    "## Rules",
+    "- Build tableau columns **down in rank and in the same suit**.",
+    "- Each **free cell** holds a single card.",
+    "- You can move one card at a time. You may move groups of cards together, but only if you have enough free cells and empty columns to have been able to make the equivalent move one card at a time.",
     "- Only a **King** (with any cards it carries) may move into an **empty column**.",
     "- Send cards to the foundations up by suit from the Aces.",
-    "## Winning",
-    "You win when all four foundations are built from Ace to King.",
   ],
   about: [
     "Eight Off gives you eight free cells instead of four, but demands same-suit tableau building.",

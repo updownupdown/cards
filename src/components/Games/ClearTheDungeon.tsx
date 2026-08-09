@@ -583,7 +583,7 @@ export default function ClearTheDungeon() {
         col: 0,
         row: 0,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Draw", infoPos: "right" },
+        placeholder: { text: "Stock", infoPos: "right" },
       },
       {
         id: "hud",

@@ -20,11 +20,19 @@ export const hideAndSeek: GameDefinition = {
   gameColorPale: "#c5f7da",
   cardDescription:
     "Find your hidden playmates through careful planning and deduction.",
-  quickStart: ["Make legal moves to uncover hidden cards; avoid burying them."],
+  quickStart: [
+    "Place guesses around the hidden playmates.",
+    "Reveal playmates and score for each guess of the same suit on the same line.",
+  ],
   howToPlay: [
-    "Reveal hidden cards through legal uncover moves.",
-    "Avoid locking hidden cards under unusable stacks.",
-    "Finish by uncovering and resolving the final hidden sets.",
+    "## Objective",
+    "Score at least 20 points after revealing all 12 hidden playmates.",
+
+    "## Gameplay",
+    "- The 12 face-down playmates are Jacks, Queens, and Kings. The remaining cards form the stock.",
+    "- Place the top stock card in an empty guess space around the playmate grid.",
+    "- You may withdraw a guess card, at the cost of also discarding the next stock card.",
+    "- At any time, reveal a hidden playmate. Every guess card of the same suit in the same horizontal or vertical line is moved to your score pile.",
   ],
   credits: {
     creators: [GameCreators.WilSu],

@@ -11,7 +11,14 @@ import { useStateManager } from "@/hooks/useStateManager";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { DOUBLE_TAP_MS } from "@/utils/utils";
 import { useNavigation } from "expo-router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type { GestureResponderEvent } from "react-native";
 import { Animated, Pressable, StyleSheet, View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
@@ -26,7 +33,6 @@ import {
   RANKS,
   shuffle,
   StandardRank,
-  SUITS,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 
@@ -80,17 +86,17 @@ function popReserveTop(reserve: PlayingCard[]) {
 function canPlaceOnFoundation(
   card: PlayingCard,
   destination: PlayingCard[],
-  foundationSuit: PlayingCard["suit"],
   baseRank: StandardRank,
 ) {
-  if (card.suit !== foundationSuit) return false;
-
   if (destination.length === 0) {
     return card.rank === baseRank;
   }
 
   const top = destination[destination.length - 1];
-  return nextRankWrap(top.rank as StandardRank) === card.rank;
+  return (
+    card.suit === destination[0].suit &&
+    nextRankWrap(top.rank as StandardRank) === card.rank
+  );
 }
 
 function canPlaceOnTableau(card: PlayingCard, destinationTop?: PlayingCard) {
@@ -152,8 +158,7 @@ function createInitialState(drawCount: 1 | 3 = 1): GameState {
   }
 
   const baseRank = baseCard.rank as StandardRank;
-  const foundationIndex = SUITS.indexOf(baseCard.suit);
-  foundations[Math.max(0, foundationIndex)].push({ ...baseCard, faceUp: true });
+  foundations[0].push({ ...baseCard, faceUp: true });
 
   const tableau = Array.from({ length: 4 }, () => [] as PlayingCard[]);
   for (let i = 0; i < 4; i += 1) {
@@ -220,6 +225,10 @@ export default function Canfield() {
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
 
   const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
+  const pendingAutoFoundationRef = useRef<{
+    cardId: string;
+    targetPileIndex: number;
+  } | null>(null);
 
   const handleHoverTargetChange = useCallback((next: DropTarget | null) => {
     setHoverTarget((prev) => (sameDropTarget(prev, next) ? prev : next));
@@ -274,7 +283,7 @@ export default function Canfield() {
       placeholder: { text: "Tab", showCount: true },
     }));
 
-    const foundationZones: MapZone[] = SUITS.map((suit, pileIndex) => ({
+    const foundationZones: MapZone[] = game.foundations.map((_, pileIndex) => ({
       id: `foundation-${pileIndex}`,
       name: "foundation",
       cards: game.foundations[pileIndex] ?? [],
@@ -283,11 +292,7 @@ export default function Canfield() {
       row: 0,
       baseZIndex: 30,
       fan: {},
-      placeholder: {
-        text: suit,
-        infoPos: "below",
-        showCount: false,
-      },
+      placeholder: {},
     }));
 
     return [
@@ -297,10 +302,10 @@ export default function Canfield() {
         cards: game.stock,
         pileIndex: 0,
         col: 0,
-        row: 0,
+        row: 5,
         baseZIndex: 1,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Draw", infoPos: "right", showCount: true },
+        placeholder: { text: "Stock", infoPos: "right", showCount: true },
       },
       {
         id: "waste",
@@ -308,10 +313,10 @@ export default function Canfield() {
         cards: game.waste,
         pileIndex: 0,
         col: 0,
-        row: 1,
+        row: 3.8,
         baseZIndex: 50,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Waste", infoPos: "right", showCount: true },
+        placeholder: { text: "Waste", infoPos: "right", showCount: false },
       },
       {
         id: "reserve",
@@ -319,7 +324,7 @@ export default function Canfield() {
         cards: game.reserve,
         pileIndex: 0,
         col: 0,
-        row: 2.5,
+        row: 0,
         baseZIndex: 40,
         fan: { maxVisible: 3 },
         placeholder: { text: "Reserve", infoPos: "right", showCount: true },
@@ -349,21 +354,16 @@ export default function Canfield() {
       };
     }
 
-    // if (mappedCard.zoneName === "reserve" && mappedCard.topOfZone) {
-    //   const isHoverTargetTop =
-    //     !!dragGhost &&
-    //     hoverTarget?.zone === "tableau" &&
-    //     hoverTarget.pileIndex >= 0;
-
-    //   return {
-    //     selectColor: isHoverTargetTop ? "green" : "blue",
-    //     isSelected: selected?.zone === "reserve" || isHoverTargetTop,
-    //     isDisabled:
-    //       (game.reserve[game.reserve.length - 1]?.faceUp ?? false) === false,
-    //     isVisible: !isBeingDragged,
-    //     animDuration,
-    //   };
-    // }
+    if (mappedCard.zoneName === "reserve" && mappedCard.topOfZone) {
+      return {
+        selectColor: "blue",
+        isSelected: selected?.zone === "reserve",
+        isDisabled:
+          (game.reserve[game.reserve.length - 1]?.faceUp ?? false) === false,
+        isVisible: !isBeingDragged,
+        animDuration,
+      };
+    }
 
     if (mappedCard.zoneName === "waste") {
       return {
@@ -666,6 +666,17 @@ export default function Canfield() {
   );
   const won = foundationCount === 52;
 
+  useLayoutEffect(() => {
+    const pending = pendingAutoFoundationRef.current;
+    if (!pending) return;
+
+    const targetPile = game.foundations[pending.targetPileIndex];
+    if (targetPile[targetPile.length - 1]?.id !== pending.cardId) return;
+
+    pendingAutoFoundationRef.current = null;
+    clearDragGhost();
+  }, [clearDragGhost, game.foundations]);
+
   useEffect(() => {
     navigation.setOptions({ gestureEnabled: false });
     return () => {
@@ -765,12 +776,7 @@ export default function Canfield() {
     }
 
     const targetPile = snapshot.foundations[targetPileIndex];
-    return canPlaceOnFoundation(
-      moving,
-      targetPile,
-      SUITS[targetPileIndex],
-      snapshot.baseRank,
-    );
+    return canPlaceOnFoundation(moving, targetPile, snapshot.baseRank);
   }
 
   async function animateSourceToFoundation(
@@ -795,8 +801,6 @@ export default function Canfield() {
       x: targetRect.x - sourceRect.x,
       y: targetRect.y - sourceRect.y,
     });
-
-    clearDragGhost();
   }
 
   async function moveSourceToFoundation(
@@ -809,8 +813,17 @@ export default function Canfield() {
       return;
     }
 
-    if (options?.animate && !dragGhost) {
+    const isAutoFoundationAnimation = options?.animate && !dragGhost;
+    if (isAutoFoundationAnimation) {
       await animateSourceToFoundation(source, targetPileIndex);
+      const movingCard = getSourceCards(source, game)[0];
+      if (movingCard) {
+        justDroppedCardIds.current = new Set([movingCard.id]);
+        pendingAutoFoundationRef.current = {
+          cardId: movingCard.id,
+          targetPileIndex,
+        };
+      }
     }
 
     saveUndoState(structuredClone(game));
@@ -834,14 +847,7 @@ export default function Canfield() {
       if (!moving) return;
 
       const targetPile = draft.foundations[targetPileIndex];
-      if (
-        !canPlaceOnFoundation(
-          moving,
-          targetPile,
-          SUITS[targetPileIndex],
-          draft.baseRank,
-        )
-      ) {
+      if (!canPlaceOnFoundation(moving, targetPile, draft.baseRank)) {
         return;
       }
 

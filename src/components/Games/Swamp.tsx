@@ -373,7 +373,7 @@ export default function Swamp() {
         row: 0,
         baseZIndex: 30,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Deck", infoPos: "right", showCount: true },
+        placeholder: { text: "Stock", infoPos: "right", showCount: true },
       },
       {
         id: "discard",
