@@ -1,6 +1,6 @@
 import { useStateManager } from "@/hooks/useStateManager";
-import { delay } from "@/utils/utils";
-import { useEffect, useMemo } from "react";
+import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
+import { useEffect, useMemo, useRef } from "react";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   cardDims,
@@ -47,40 +47,36 @@ function foundationFor(state: GameState, card: PlayingCard): number {
   });
 }
 
-/** Reveal or promote one automatic card action. Returns whether anything changed. */
-function advanceOne(draft: GameState) {
-  const stockTop = top(draft.stock);
-  if (stockTop && !stockTop.faceUp) {
-    draft.stock[draft.stock.length - 1] = flipToFace(stockTop);
-    return true;
-  }
+function moveWasteToFoundation(draft: GameState, wasteIndex: number) {
+  const waste = draft.waste[wasteIndex];
+  const card = top(waste);
+  if (!card) return false;
 
-  if (stockTop) {
-    const foundationIndex = foundationFor(draft, stockTop);
-    if (foundationIndex !== -1) {
-      const moved = draft.stock.pop();
-      if (moved) draft.foundations[foundationIndex].push(flipToFace(moved));
+  const foundationIndex = foundationFor(draft, card);
+  if (foundationIndex === -1) return false;
 
-      const nextStockTop = top(draft.stock);
-      if (nextStockTop) {
-        draft.stock[draft.stock.length - 1] = flipToFace(nextStockTop);
-      }
-      return true;
-    }
-  }
+  const moved = waste.pop();
+  if (moved) draft.foundations[foundationIndex].push(moved);
+  return true;
+}
 
-  for (let index = 0; index < draft.waste.length; index += 1) {
-    const wasteTop = top(draft.waste[index]);
-    if (!wasteTop) continue;
-    const foundationIndex = foundationFor(draft, wasteTop);
-    if (foundationIndex !== -1) {
-      const moved = draft.waste[index].pop();
-      if (moved) draft.foundations[foundationIndex].push(moved);
-      return true;
-    }
-  }
+function moveStockToFoundation(draft: GameState) {
+  const card = top(draft.stock);
+  if (!card) return false;
 
-  return false;
+  const foundationIndex = foundationFor(draft, card);
+  if (foundationIndex === -1) return false;
+
+  const moved = draft.stock.pop();
+  if (moved) draft.foundations[foundationIndex].push(flipToFace(moved));
+  revealStockTop(draft.stock);
+  return true;
+}
+
+function revealStockTop(stock: PlayingCard[]) {
+  const stockTop = top(stock);
+  if (!stockTop || stockTop.faceUp) return;
+  stock[stock.length - 1] = flipToFace(stockTop);
 }
 
 async function resetAndSetup(
@@ -88,6 +84,7 @@ async function resetAndSetup(
 ) {
   setGame((draft) => {
     draft.stock = shuffle(createDeck()).map(flipToBack);
+    revealStockTop(draft.stock);
     draft.waste = Array.from({ length: wasteCount }, () => []);
     draft.foundations = Array.from({ length: 4 }, () => []);
     draft.ended = false;
@@ -103,8 +100,11 @@ function evaluateEnd(state: GameState, isSettingUp = false) {
   if (state.foundations.every((f) => f.length === 13)) {
     return { ended: true, won: true };
   }
-  // State is always advanced/stable, so empty stock means no more moves remain.
-  if (state.stock.length === 0) {
+  const hasFoundationMove = state.waste.some((waste) => {
+    const card = top(waste);
+    return card ? foundationFor(state, card) !== -1 : false;
+  });
+  if (state.stock.length === 0 && !hasFoundationMove) {
     return { ended: true, won: false };
   }
   return { ended: false, won: false };
@@ -112,7 +112,9 @@ function evaluateEnd(state: GameState, isSettingUp = false) {
 
 export const sirTommyRules = {
   foundationFor,
-  advanceOne,
+  moveWasteToFoundation,
+  moveStockToFoundation,
+  revealStockTop,
   evaluateEnd,
   wasteCount,
 };
@@ -134,6 +136,12 @@ export default function SirTommy() {
     },
     gameStateInitial,
   });
+  const pendingWasteTapRef = useRef<{
+    index: number;
+    timer: ReturnType<typeof setTimeout>;
+  } | null>(null);
+  const pendingStockTapRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastSingleTapAtRef = useRef(0);
 
   useEffect(() => {
     const { ended, won } = evaluateEnd(game, isSettingUp);
@@ -145,26 +153,91 @@ export default function SirTommy() {
     }
   }, [game, isSettingUp, setGame]);
 
-  useEffect(() => {
-    if (isSettingUp || game.ended) return;
-
-    const timer = setTimeout(() => {
-      setGame((draft) => {
-        advanceOne(draft);
-      });
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [game, game.ended, isSettingUp, setGame]);
+  useEffect(
+    () => () => {
+      const pendingTap = pendingWasteTapRef.current;
+      if (pendingTap) clearTimeout(pendingTap.timer);
+      if (pendingStockTapRef.current) {
+        clearTimeout(pendingStockTapRef.current);
+      }
+    },
+    [],
+  );
 
   function placeOnWaste(index: number) {
     if (game.ended || !top(game.stock)) return;
+    const now = Date.now();
+    if (now - lastSingleTapAtRef.current < DOUBLE_TAP_MS) return;
+
+    lastSingleTapAtRef.current = now;
     saveUndoState(structuredClone(game));
     setGame((draft) => {
       const moved = draft.stock.pop();
       if (!moved) return;
       draft.waste[index].push(flipToFace(moved));
+      revealStockTop(draft.stock);
     });
+  }
+
+  function onWasteCardPress(index: number, isTopCard: boolean) {
+    if (!isTopCard) {
+      placeOnWaste(index);
+      return;
+    }
+
+    const pendingTap = pendingWasteTapRef.current;
+    const card = top(game.waste[index]);
+    if (!card || foundationFor(game, card) === -1) {
+      if (pendingTap) {
+        clearTimeout(pendingTap.timer);
+        pendingWasteTapRef.current = null;
+        placeOnWaste(pendingTap.index);
+      }
+      placeOnWaste(index);
+      return;
+    }
+
+    if (pendingTap?.index === index) {
+      clearTimeout(pendingTap.timer);
+      pendingWasteTapRef.current = null;
+      saveUndoState(structuredClone(game));
+      setGame((draft) => {
+        moveWasteToFoundation(draft, index);
+      });
+      return;
+    }
+
+    if (pendingTap) {
+      clearTimeout(pendingTap.timer);
+      placeOnWaste(pendingTap.index);
+    }
+
+    pendingWasteTapRef.current = {
+      index,
+      timer: setTimeout(() => {
+        pendingWasteTapRef.current = null;
+        placeOnWaste(index);
+      }, DOUBLE_TAP_MS),
+    };
+  }
+
+  function onStockCardPress() {
+    const card = top(game.stock);
+    if (game.ended || !card || foundationFor(game, card) === -1) return;
+
+    if (pendingStockTapRef.current) {
+      clearTimeout(pendingStockTapRef.current);
+      pendingStockTapRef.current = null;
+      saveUndoState(structuredClone(game));
+      setGame((draft) => {
+        moveStockToFoundation(draft);
+      });
+      return;
+    }
+
+    pendingStockTapRef.current = setTimeout(() => {
+      pendingStockTapRef.current = null;
+    }, DOUBLE_TAP_MS);
   }
 
   const foundationTotal = useMemo(
@@ -179,7 +252,7 @@ export default function SirTommy() {
       name: "foundation",
       pileIndex: i,
       cards: pile,
-      col: i + 1,
+      col: i + 1.2,
       row: 0,
       baseZIndex: 40,
       fan: { maxVisible: 3 },
@@ -191,7 +264,7 @@ export default function SirTommy() {
       name: "waste",
       pileIndex: i,
       cards: pile,
-      col: i + 1,
+      col: i + 1.2,
       row: 1.2,
       height: 1,
       baseZIndex: 10 + i,
@@ -212,8 +285,8 @@ export default function SirTommy() {
         col: 0,
         row: 1.2,
         fan: { maxVisible: 3 },
-        baseZIndex: 60,
-        placeholder: { text: "Stock", infoPos: "above", showCount: true },
+        baseZIndex: 100,
+        placeholder: { text: "Stock", infoPos: "below", showCount: true },
       },
       ...wasteZones,
     ];
@@ -226,9 +299,15 @@ export default function SirTommy() {
     if (mappedCard.zoneName === "waste" && mappedCard.pileIndex !== undefined) {
       const index = mappedCard.pileIndex;
       return {
-        isDisabled: !hasPlayableStock,
+        isDisabled: game.ended,
         selectColor: hasPlayableStock ? "green" : "none",
-        onPress: () => placeOnWaste(index),
+        onPress: () => onWasteCardPress(index, mappedCard.topOfZone),
+      };
+    }
+    if (mappedCard.zoneName === "stock" && mappedCard.topOfZone) {
+      return {
+        isDisabled: game.ended,
+        onPress: onStockCardPress,
       };
     }
     return {};
@@ -253,6 +332,7 @@ export default function SirTommy() {
     zoneMapper,
     cardSize: "tableau",
     fixedRows: 6,
+    gap: 0.14,
   });
 
   return (

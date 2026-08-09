@@ -44,6 +44,28 @@ describe("Pyramid rules", () => {
     ).toBe(true);
   });
 
+  test("allows a card covered only by the selected card in easy mode", () => {
+    const covered = card("8", 5, 0, "covered");
+    const selectedBlocker = card("5", 6, 0, "selected-blocker");
+
+    expect(
+      pyramidRules.isPyramidCardSelectable(
+        covered,
+        [covered, selectedBlocker, null],
+        selectedBlocker,
+        "easy",
+      ),
+    ).toBe(true);
+    expect(
+      pyramidRules.isPyramidCardSelectable(
+        covered,
+        [covered, selectedBlocker, null],
+        selectedBlocker,
+        "hard",
+      ),
+    ).toBe(false);
+  });
+
   test("finds an exposed King in the pyramid or waste", () => {
     expect(
       pyramidRules.hasAvailableMove(
@@ -90,5 +112,23 @@ describe("Pyramid rules", () => {
         }),
       ),
     ).toBe(false);
+  });
+
+  test("finds easy-mode pairs where the first card covers the second", () => {
+    const coveredEight = card("8", 5, 0, "covered-eight");
+    const exposedFive = card("5", 6, 0, "exposed-five");
+
+    expect(
+      pyramidRules.hasAvailableMove(
+        state({ pyramid: [coveredEight, exposedFive, null] }),
+        "hard",
+      ),
+    ).toBe(false);
+    expect(
+      pyramidRules.hasAvailableMove(
+        state({ pyramid: [coveredEight, exposedFive, null] }),
+        "easy",
+      ),
+    ).toBe(true);
   });
 });

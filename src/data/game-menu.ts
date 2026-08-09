@@ -43,6 +43,7 @@ export type GameSettings = {
   clubFightDifficulty: "easy" | "hard";
   leafbearerOpenStables: boolean;
   jacksDreamHardMode: boolean;
+  pyramidDifficulty: "easy" | "hard";
   solunaDifficulty: "easy" | "normal" | "hard";
   theBogeyDifficulty: "easy" | "hard";
   lastResultSessionId?: string;
@@ -155,6 +156,7 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   clubFightDifficulty: "easy",
   leafbearerOpenStables: false,
   jacksDreamHardMode: false,
+  pyramidDifficulty: "hard",
   solunaDifficulty: "normal",
   theBogeyDifficulty: "easy",
   stats: {

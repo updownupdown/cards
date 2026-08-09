@@ -26,6 +26,7 @@ export type GameSpecificSettingKey =
   | "clubFightDifficulty"
   | "leafbearerOpenStables"
   | "jacksDreamHardMode"
+  | "pyramidDifficulty"
   | "solunaDifficulty"
   | "theBogeyDifficulty";
 export type GameSpecificSettingApplyBehavior = "immediate" | "next-game";
@@ -114,6 +115,20 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         options: [
           { label: "Easy (1 Joker)", value: "easy" },
           { label: "Hard (2 Jokers)", value: "hard" },
+        ],
+      },
+    ],
+    "/pyramid": [
+      {
+        key: "pyramidDifficulty",
+        label: "Difficulty",
+        type: "string",
+        applyBehavior: "immediate",
+        description:
+          "Easy mode lets you select a second card if it is only covered by the first selected card. It's not actually much easier, but it is more forgiving.",
+        options: [
+          { label: "Easy", value: "easy" },
+          { label: "Hard", value: "hard" },
         ],
       },
     ],

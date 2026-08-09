@@ -42,62 +42,60 @@ describe("Sir Tommy rules", () => {
     expect(sirTommyRules.foundationFor(game, card("3", "clubs"))).toBe(-1);
   });
 
-  test("reveals and promotes stock cards one at a time", () => {
+  test("moves only an exposed waste card to a valid foundation", () => {
     const game = state({
-      stock: [
-        card("4", "clubs", false),
-        card("3", "hearts", false),
-        card("2", "diamonds", false),
-      ],
+      waste: [[card("3"), card("2")], [], [], []],
       foundations: [[card("A")], [], [], []],
     });
 
-    expect(sirTommyRules.advanceOne(game)).toBe(true);
-    expect(game.stock.map(({ rank, faceUp }) => ({ rank, faceUp }))).toEqual([
-      { rank: "4", faceUp: false },
-      { rank: "3", faceUp: false },
-      { rank: "2", faceUp: true },
-    ]);
-
-    expect(sirTommyRules.advanceOne(game)).toBe(true);
+    expect(sirTommyRules.moveWasteToFoundation(game, 0)).toBe(true);
+    expect(game.waste[0].map(({ rank }) => rank)).toEqual(["3"]);
     expect(game.foundations[0].map(({ rank }) => rank)).toEqual(["A", "2"]);
-    expect(game.stock.map(({ rank, faceUp }) => ({ rank, faceUp }))).toEqual([
-      { rank: "4", faceUp: false },
-      { rank: "3", faceUp: true },
-    ]);
-
-    sirTommyRules.advanceOne(game);
-    sirTommyRules.advanceOne(game);
-
+    expect(sirTommyRules.moveWasteToFoundation(game, 0)).toBe(true);
+    expect(game.waste[0]).toEqual([]);
     expect(game.foundations[0].map(({ rank }) => rank)).toEqual([
       "A",
       "2",
       "3",
-      "4",
     ]);
-    expect(game.stock).toEqual([]);
   });
 
-  test("promotes exposed waste cards but not cards buried below a blocker", () => {
-    const blocked = state({
+  test("does not move an invalid waste card to a foundation", () => {
+    const game = state({
       waste: [[card("2"), card("K")], [], [], []],
       foundations: [[card("A")], [], [], []],
     });
-    sirTommyRules.advanceOne(blocked);
-    expect(blocked.waste[0].map(({ rank }) => rank)).toEqual(["2", "K"]);
 
-    const chain = state({
-      waste: [[card("3"), card("2")], [], [], []],
+    expect(sirTommyRules.moveWasteToFoundation(game, 0)).toBe(false);
+    expect(game.waste[0].map(({ rank }) => rank)).toEqual(["2", "K"]);
+  });
+
+  test("moves a valid top stock card to a foundation and reveals the next card", () => {
+    const game = state({
+      stock: [card("3", "clubs", false), card("2", "hearts")],
       foundations: [[card("A")], [], [], []],
     });
-    sirTommyRules.advanceOne(chain);
-    expect(chain.waste[0].map(({ rank }) => rank)).toEqual(["3"]);
-    sirTommyRules.advanceOne(chain);
-    expect(chain.waste[0]).toEqual([]);
-    expect(chain.foundations[0].map(({ rank }) => rank)).toEqual([
-      "A",
-      "2",
-      "3",
+
+    expect(sirTommyRules.moveStockToFoundation(game)).toBe(true);
+    expect(game.foundations[0].map(({ rank }) => rank)).toEqual(["A", "2"]);
+    expect(game.stock).toEqual([card("3", "clubs")]);
+  });
+
+  test("does not move an invalid top stock card to a foundation", () => {
+    const game = state({ stock: [card("K")] });
+
+    expect(sirTommyRules.moveStockToFoundation(game)).toBe(false);
+    expect(game.stock).toEqual([card("K")]);
+  });
+
+  test("reveals only the top stock card", () => {
+    const stock = [card("3", "clubs", false), card("2", "hearts", false)];
+
+    sirTommyRules.revealStockTop(stock);
+
+    expect(stock.map(({ rank, faceUp }) => ({ rank, faceUp }))).toEqual([
+      { rank: "3", faceUp: false },
+      { rank: "2", faceUp: true },
     ]);
   });
 
@@ -119,6 +117,9 @@ describe("Sir Tommy rules", () => {
     });
     expect(
       sirTommyRules.evaluateEnd(state({ stock: [card("K", "hearts")] })),
+    ).toEqual({ ended: false, won: false });
+    expect(
+      sirTommyRules.evaluateEnd(state({ waste: [[card("A")], [], [], []] })),
     ).toEqual({ ended: false, won: false });
   });
 

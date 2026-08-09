@@ -9,6 +9,7 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
+import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 
@@ -18,6 +19,7 @@ export type PyramidCard = PlayingCard & {
 };
 
 type Selection = { zone: "pyramid"; index: number } | { zone: "waste" } | null;
+type PyramidDifficulty = "easy" | "hard";
 
 type GameState = {
   pyramid: (PyramidCard | null)[];
@@ -57,6 +59,25 @@ function isCardExposed(card: PyramidCard, pyramid: (PyramidCard | null)[]) {
   );
 
   return !leftCoveredBy && !rightCoveredBy;
+}
+
+function isPyramidCardSelectable(
+  card: PyramidCard,
+  pyramid: (PyramidCard | null)[],
+  selectedCard: PyramidCard | null,
+  difficulty: PyramidDifficulty,
+) {
+  if (isCardExposed(card, pyramid)) return true;
+  if (difficulty !== "easy" || !selectedCard) return false;
+
+  const coveringCards = pyramid.filter(
+    (candidate) =>
+      candidate &&
+      candidate.row === card.row + 1 &&
+      (candidate.col === card.col || candidate.col === card.col + 1),
+  );
+
+  return coveringCards.length === 1 && coveringCards[0]?.id === selectedCard.id;
 }
 
 function createInitialState(): GameState {
@@ -110,7 +131,10 @@ function cardValue(card: PlayingCard) {
   return RANK_VALUE[card.rank];
 }
 
-function hasAvailableMove(snapshot: GameState) {
+function hasAvailableMove(
+  snapshot: GameState,
+  difficulty: PyramidDifficulty = "hard",
+) {
   type ExposedSelection = Exclude<Selection, null>;
 
   const exposedSelections: ExposedSelection[] = snapshot.pyramid
@@ -161,11 +185,40 @@ function hasAvailableMove(snapshot: GameState) {
     }
   }
 
+  if (difficulty === "easy") {
+    for (const selection of exposedSelections) {
+      if (selection.zone !== "pyramid") continue;
+
+      const firstCard = snapshot.pyramid[selection.index];
+      if (!firstCard) continue;
+
+      for (const secondCard of snapshot.pyramid) {
+        if (
+          !secondCard ||
+          secondCard.id === firstCard.id ||
+          !isPyramidCardSelectable(
+            secondCard,
+            snapshot.pyramid,
+            firstCard,
+            difficulty,
+          )
+        ) {
+          continue;
+        }
+
+        if (cardValue(firstCard) + cardValue(secondCard) === 13) {
+          return true;
+        }
+      }
+    }
+  }
+
   return false;
 }
 
 export const pyramidRules = {
   isCardExposed,
+  isPyramidCardSelectable,
   cardValue,
   hasAvailableMove,
   createInitialState,
@@ -174,6 +227,9 @@ export const pyramidRules = {
 };
 
 export default function Pyramid() {
+  const difficulty = useGameSettingValue(
+    "pyramidDifficulty",
+  ) as PyramidDifficulty;
   const [selected, setSelected] = useState<Selection>(null);
 
   const {
@@ -202,7 +258,10 @@ export default function Pyramid() {
 
   const won = !isSettingUp && removedCount === PYRAMID_SIZE;
   const lost =
-    !isSettingUp && !won && game.stockCount === 0 && !hasAvailableMove(game);
+    !isSettingUp &&
+    !won &&
+    game.stockCount === 0 &&
+    !hasAvailableMove(game, difficulty);
   const ended = !isSettingUp && (won || lost);
 
   function stockCards(snapshot = game) {
@@ -258,7 +317,19 @@ export default function Pyramid() {
 
     if (second.zone === "pyramid") {
       const pyramidCard = snapshot.pyramid[second.index];
-      if (!pyramidCard || !isCardExposed(pyramidCard, snapshot.pyramid)) {
+      const firstPyramidCard =
+        first.zone === "pyramid"
+          ? (snapshot.pyramid[first.index] ?? null)
+          : null;
+      if (
+        !pyramidCard ||
+        !isPyramidCardSelectable(
+          pyramidCard,
+          snapshot.pyramid,
+          firstPyramidCard,
+          difficulty,
+        )
+      ) {
         return false;
       }
     }
@@ -360,7 +431,21 @@ export default function Pyramid() {
     if (ended) return;
 
     const card = game.pyramid[index];
-    if (!card || !isCardExposed(card, game.pyramid)) return;
+    const selectedPyramidCard =
+      selected?.zone === "pyramid"
+        ? (game.pyramid[selected.index] ?? null)
+        : null;
+    if (
+      !card ||
+      !isPyramidCardSelectable(
+        card,
+        game.pyramid,
+        selectedPyramidCard,
+        difficulty,
+      )
+    ) {
+      return;
+    }
 
     if (!selected) {
       if (!removeSingleKing({ zone: "pyramid", index })) {
@@ -433,7 +518,7 @@ export default function Pyramid() {
         row: 4.3,
         baseZIndex: 100,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Discard", infoPos: "right", showCount: true },
+        placeholder: { text: "Discard", infoPos: "right" },
       },
       {
         id: "stock",
@@ -443,7 +528,7 @@ export default function Pyramid() {
         row: 4.3,
         baseZIndex: 50,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "left", showCount: true },
+        placeholder: { text: "Stock", infoPos: "left" },
       },
       {
         id: "waste",
@@ -453,7 +538,7 @@ export default function Pyramid() {
         row: 4.3,
         baseZIndex: 55,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Waste", infoPos: "right", showCount: false },
+        placeholder: { text: "Waste", infoPos: "right" },
       },
 
       ...pyramidZones,
@@ -480,13 +565,24 @@ export default function Pyramid() {
     ) {
       const index = mappedCard.pileIndex;
       const card = game.pyramid[index];
-      const exposed = card ? isCardExposed(card, game.pyramid) : false;
+      const selectedPyramidCard =
+        selected?.zone === "pyramid"
+          ? (game.pyramid[selected.index] ?? null)
+          : null;
+      const selectable = card
+        ? isPyramidCardSelectable(
+            card,
+            game.pyramid,
+            selectedPyramidCard,
+            difficulty,
+          )
+        : false;
       const isSelected =
         selected?.zone === "pyramid" && selected.index === index;
 
       return {
         onPress: () => onPyramidPress(index),
-        isDisabled: ended || !exposed,
+        isDisabled: ended || !selectable,
         selectColor: "blue",
         isSelected,
       };

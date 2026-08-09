@@ -35,6 +35,19 @@ describe("Nestor rules", () => {
         (column) => new Set(column.map(({ rank }) => rank)).size === 6,
       ),
     ).toBe(true);
+    const rankRowCounts = new Map<PlayingCard["rank"], Map<number, number>>();
+    game.columns.forEach((column) => {
+      column.forEach(({ rank }, row) => {
+        const rowCounts = rankRowCounts.get(rank) ?? new Map<number, number>();
+        rowCounts.set(row, (rowCounts.get(row) ?? 0) + 1);
+        rankRowCounts.set(rank, rowCounts);
+      });
+    });
+    expect(
+      [...rankRowCounts.values()].every((rowCounts) =>
+        [...rowCounts.values()].every((count) => count <= 2),
+      ),
+    ).toBe(true);
     expect(
       new Set([...game.columns.flat(), ...game.reserve].map(({ id }) => id))
         .size,
@@ -88,6 +101,19 @@ describe("Nestor rules", () => {
         state({ columns: [[card("7", "first")], [card("7", "second")]] }),
       ),
     ).toEqual({ ended: false, won: false });
+  });
+
+  test("does not count pairs buried below column tops", () => {
+    expect(
+      nestorRules.evaluateEnd(
+        state({
+          columns: [
+            [card("7", "buried"), card("2", "first-top")],
+            [card("7", "exposed"), card("3", "second-top")],
+          ],
+        }),
+      ),
+    ).toEqual({ ended: true, won: false });
   });
 
   test("loses when all exposed ranks are distinct", () => {

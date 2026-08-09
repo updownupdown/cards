@@ -51,12 +51,23 @@ function dealNestor(deckCards: PlayingCard[]): GameState {
     () => [],
   );
 
-  [...cardsByRank.values()].forEach((cards, rankIndex) => {
-    const firstColumn = rankIndex % 2 === 0 ? 0 : 4;
-    cards.forEach((card, cardIndex) => {
-      columns[firstColumn + cardIndex].push(flipToFace(card));
-    });
-  });
+  const rankGroups = shuffle([...cardsByRank.values()]).map((cards) =>
+    shuffle(cards),
+  );
+
+  [rankGroups.slice(0, 7), rankGroups.slice(7)].forEach(
+    (rankGroup, groupIndex) => {
+      const rowOffsets = shuffle([...rankGroup.keys()]).slice(0, 4);
+      const firstColumn = groupIndex * 4;
+
+      rowOffsets.forEach((rowOffset, cardIndex) => {
+        rankGroup.forEach((cards, rankIndex) => {
+          const row = (rankIndex + rowOffset) % rankGroup.length;
+          columns[firstColumn + cardIndex][row] = flipToFace(cards[cardIndex]);
+        });
+      });
+    },
+  );
 
   const reserve = columns.slice(0, 4).map((column, columnIndex) => {
     const [card] = column.splice(columnIndex, 1);

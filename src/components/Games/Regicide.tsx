@@ -10,6 +10,7 @@ import { Animated, Easing, Platform, View } from "react-native";
 import { Button } from "../Button/Button";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
+  CardSuit,
   createDeck,
   flipAllToFace,
   flipToBack,
@@ -67,6 +68,20 @@ const ENEMY_STATS: Record<EnemyType, { health: number; attack: number }> = {
   J: { health: 20, attack: 10 },
   Q: { health: 30, attack: 15 },
   K: { health: 40, attack: 20 },
+};
+
+const SUIT_EFFECTS_TEXT: Record<CardSuit, string> = {
+  hearts: "Heal",
+  diamonds: "Draw",
+  clubs: "x2 Dmg.",
+  spades: "- Att.",
+};
+
+const SUIT_EFFECTS_COLOR: Record<CardSuit, string> = {
+  hearts: Colors.buttonGreen,
+  diamonds: Colors.buttonRed,
+  clubs: Colors.buttonBlue,
+  spades: Colors.buttonPurple,
 };
 
 function createEnemy(card: PlayingCard): Enemy {
@@ -879,9 +894,11 @@ export default function Regicide() {
       const isSelected = game.selectedCards.some(
         (c) => c.id === mappedCard.card.id,
       );
+      const enemyIsImmune =
+        game.currentEnemy?.card.suit === mappedCard.card.suit;
 
       const selectedColor = () => {
-        if (!isSelected) return "none";
+        if (!isSelected) return enemyIsImmune ? "lightGrey" : "none";
         if (game.phase === "attack") {
           return playSelection.isValid ? "blue" : "orange";
         } else {
@@ -895,6 +912,7 @@ export default function Regicide() {
         isSelected,
         yOffset: isSelected ? -0.2 : 0,
         selectColor: selectedColor(),
+        forceOverlayColor: enemyIsImmune,
         onPress: () =>
           game.phase === "attack"
             ? selectCardForAttack(mappedCard.card)
@@ -1003,7 +1021,6 @@ export default function Regicide() {
               left: 0,
               paddingVertical: spacing(6),
               paddingHorizontal: spacing(16),
-              gap: spacing(16),
               backfaceVisibility: "hidden",
               opacity: attackFaceOpacity,
               transform: [{ perspective: 900 }, { rotateX: attackFaceRotateX }],
@@ -1016,12 +1033,32 @@ export default function Regicide() {
         >
           {/* Powers/Suits */}
           <View
-            style={[flexStyles.rowCentered, { width: "20%", gap: spacing(6) }]}
+            style={[flexStyles.colCentered, { width: "30%", gap: spacing(8) }]}
           >
             {playSelection.isValid &&
-              playSummary.suitEffects.length > 0 &&
               playSummary.suitEffects.map((suit) => (
-                <Icon key={suit} name={suit} size={22} color={Colors.white} />
+                <View
+                  key={suit}
+                  style={[
+                    flexStyles.rowCentered,
+                    { width: "100%", gap: spacing(6) },
+                  ]}
+                >
+                  <Icon
+                    key={suit}
+                    name={suit}
+                    size={22}
+                    color={SUIT_EFFECTS_COLOR[suit]}
+                  />
+                  <Text
+                    size="sm"
+                    weight={500}
+                    color={SUIT_EFFECTS_COLOR[suit]}
+                    style={{ flex: 1 }}
+                  >
+                    {SUIT_EFFECTS_TEXT[suit]}
+                  </Text>
+                </View>
               ))}
           </View>
 

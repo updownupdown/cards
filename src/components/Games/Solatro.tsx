@@ -6,7 +6,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, rgba } from "@/styles/styles";
-import { delay } from "@/utils/utils";
+import { darkenHexColor, delay } from "@/utils/utils";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Animated, Platform, View } from "react-native";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
@@ -426,7 +426,7 @@ function ScoringPointsAnimation({
 
   useEffect(() => {
     opacity.setValue(0);
-    translateY.setValue(zoneHeight * 0.2);
+    translateY.setValue(zoneHeight * 0.3);
 
     const animation = Animated.parallel([
       Animated.sequence([
@@ -443,7 +443,7 @@ function ScoringPointsAnimation({
         }),
       ]),
       Animated.timing(translateY, {
-        toValue: -zoneHeight * 0.4,
+        toValue: -zoneHeight * 1.2,
         duration: 1200,
         useNativeDriver: Platform.OS !== "web",
       }),
@@ -466,16 +466,39 @@ function ScoringPointsAnimation({
       <Text
         weight={600}
         style={{
-          position: "relative",
-          zIndex: 2,
-          fontSize: zoneHeight * 0.6,
-          lineHeight: zoneHeight * 0.6,
+          position: "absolute",
+          zIndex: 1,
+          alignSelf: "center",
+          fontSize: zoneHeight * 0.5,
+          lineHeight: zoneHeight * 0.5,
+          ...Platform.select({
+            web: {
+              WebkitTextStroke: `3px rgba(255,255,255,1)`,
+            },
+            default: {
+              textShadowColor: darkenHexColor(Colors.white, 0.5),
+              textShadowOffset: { width: 0, height: 0 },
+              textShadowRadius: 3,
+            },
+          }),
         }}
-        color={progressColorForRound(round)}
+        color={Colors.white}
       >
         {`+${points}`}
       </Text>
       <Text
+        weight={600}
+        style={{
+          position: "relative",
+          zIndex: 2,
+          fontSize: zoneHeight * 0.5,
+          lineHeight: zoneHeight * 0.5,
+        }}
+        color={darkenHexColor(progressColorForRound(round), 0.3)}
+      >
+        {`+${points}`}
+      </Text>
+      {/* <Text
         weight={600}
         style={{
           position: "absolute",
@@ -488,7 +511,7 @@ function ScoringPointsAnimation({
         color={rgba(Colors.K950, 0.5)}
       >
         {`+${points}`}
-      </Text>
+      </Text> */}
     </Animated.View>
   );
 }
