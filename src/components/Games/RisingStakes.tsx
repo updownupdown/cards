@@ -168,19 +168,19 @@ function targetForRound(round: number) {
 }
 
 function ratingForRounds(rounds: number) {
-  if (rounds >= 10) return "Ultra Mega Uber Giga-Dweeb";
-  if (rounds >= 7) return "Official Dweeb";
-  if (rounds >= 5) return "Little Dweeb";
-  if (rounds >= 3) return "Cat Food";
+  if (rounds >= 10) return "♠♠♠♠";
+  if (rounds >= 7) return "♠♠♠";
+  if (rounds >= 5) return "♠♠";
+  if (rounds >= 3) return "♠";
   return null;
 }
 
 function progressColorForRound(round: number) {
   const rating = ratingForRounds(round);
-  if (rating === "Ultra Mega Uber Giga-Dweeb") return "#c5104c";
-  if (rating === "Official Dweeb") return "#e0610b";
-  if (rating === "Little Dweeb") return "#750db1";
-  if (rating === "Cat Food") return "#1378bb";
+  if (rating === "♠♠♠♠") return "#c5104c";
+  if (rating === "♠♠♠") return "#e0610b";
+  if (rating === "♠♠") return "#750db1";
+  if (rating === "♠") return "#1378bb";
   return "#0f9674";
 }
 

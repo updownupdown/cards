@@ -61,9 +61,9 @@ export const risingStakes: GameDefinition = {
 
     "## Score Rating",
     "Your final score is the sum of all surplus points earned. Ratings are:",
-    "- **Cat Food**: 3 rounds",
-    "- **Little Dweeb**: 5 rounds",
-    "- **Official Dweeb**: 7 rounds",
-    "- **Ultra Mega Uber Giga-Dweeb**: 10+ rounds",
+    "- **♠**: 3 rounds",
+    "- **♠♠**: 5 rounds",
+    "- **♠♠♠**: 7 rounds",
+    "- **♠♠♠♠**: 10+ rounds",
   ],
 };

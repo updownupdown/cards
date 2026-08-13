@@ -31,6 +31,7 @@ export const beleagueredCastle: GameDefinition = {
     "- Build columns **down by rank**, regardless of suit (for example a {7C} onto an {8H}).",
     "- Send a card to its **foundation** when it is the next rank up in the same suit.",
     "- Tap an exposed card to pick it up, then tap a destination.",
+    "- Double-tap an exposed card to send it to a valid foundation.",
     "- Move cards **one at a time**.",
     "- An **empty column** may be filled with any single card.",
   ],

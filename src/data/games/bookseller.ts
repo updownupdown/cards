@@ -14,15 +14,15 @@ export const bookseller: GameDefinition = {
   gameColorDark: "#2e2d27",
   gameColorPale: "#f0e9d7",
   cardDescription:
-    "Match customer offers with available books and offers to maximize your Guild Standing.",
+    "Match customer offers with available books and offers to maximize your score.",
   quickStart: [
     "Match the customer offers exactly by selecting from available books.",
     "Customer preferences and used books affect book pricing.",
   ],
   howToPlay: [
     "## Objective",
-    "- **Win** by completing 12 customer trades, trying to maximize your **Guild Standing**.",
-    "- **Lose** by being fired when your Guild Standing reaches 0.",
+    "- **Win** by completing 12 customer trades, trying to maximize your score.",
+    "- **Lose** by being fired when your score reaches 0.",
 
     "## Customer Offers",
     "For each of the 12 customers, a used book is revealed and a customer offer is made.",
@@ -32,18 +32,18 @@ export const bookseller: GameDefinition = {
     "- **Limited-time offers:**: Aces normally cost $11, but can be offered for $1 (tap to toggle their value).",
 
     "## Increasing Guild Standing",
-    "- After a trade, **selected books matching the customer's suit** join your Guild Standing; the others are discarded.",
+    "- After a trade, **selected books matching the customer's suit** are added to your score; the others are discarded.",
 
     "## Passing",
-    "- If you cannot match the offer, you may **pass** and lose Guild Standing based on the customer's rank: J = 1, Q = 2, K = 3.",
+    "- If you cannot match the offer, you may **pass** and lose score based on the customer's rank: J = 1, Q = 2, K = 3.",
 
     "## Scoring",
-    "Your Guild Standing determines your end-of-game rating:",
-    "- Below 10: Terminated",
-    "- 10-11: Employee of the Month",
-    "- 12-13: Performance Bonus",
-    "- 14-15: Promotion to District Manager",
-    "- 16-17: Company Livestock Options",
-    "- 18+: Executive Lordship Program",
+    "Your score determines your end-of-game rating:",
+    "- Below 10: No books for you! You are fired!",
+    "- 10-11: 🕮",
+    "- 12-13: 🕮🕮",
+    "- 14-15: 🕮🕮🕮",
+    "- 16-17: 🕮🕮🕮🕮",
+    "- 18+: 🕮🕮🕮🕮🕮",
   ],
 };

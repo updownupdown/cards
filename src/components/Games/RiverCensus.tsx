@@ -1,9 +1,10 @@
 import { useGameColors } from "@/hooks/useGameColors";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, rgba } from "@/styles/styles";
-import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { delay } from "@/utils/utils";
+import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
@@ -17,7 +18,6 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
-import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 const cardSize = "regular";
 

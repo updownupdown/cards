@@ -210,7 +210,9 @@ export default function Singularity() {
       reset={reset}
       isLoaded={isLoaded}
       winLoseMessage={
-        game.won ? "Every star collapsed in!" : "No card can reach the hole."
+        game.won
+          ? "Every star collapsed in!"
+          : "No card can reach the singularity."
       }
       canUndo={canUndo}
       undo={undo}

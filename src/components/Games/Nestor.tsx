@@ -39,40 +39,31 @@ const gameStateInitial: GameState = {
 };
 
 function dealNestor(deckCards: PlayingCard[]): GameState {
-  const cardsByRank = new Map<PlayingCard["rank"], PlayingCard[]>();
-  for (const card of deckCards) {
-    const cards = cardsByRank.get(card.rank) ?? [];
-    cards.push(card);
-    cardsByRank.set(card.rank, cards);
-  }
-
   const columns: PlayingCard[][] = Array.from(
     { length: columnCount },
     () => [],
   );
+  const remaining = shuffle(deckCards);
 
-  const rankGroups = shuffle([...cardsByRank.values()]).map((cards) =>
-    shuffle(cards),
-  );
+  for (let row = 0; row < columnHeight; row += 1) {
+    const rowCards: PlayingCard[] = [];
+    const usedRanks = new Set<PlayingCard["rank"]>();
 
-  [rankGroups.slice(0, 7), rankGroups.slice(7)].forEach(
-    (rankGroup, groupIndex) => {
-      const rowOffsets = shuffle([...rankGroup.keys()]).slice(0, 4);
-      const firstColumn = groupIndex * 4;
+    while (rowCards.length < columnCount) {
+      const cardIndex = remaining.findIndex(
+        (card) => !usedRanks.has(card.rank),
+      );
+      const [card] = remaining.splice(cardIndex, 1);
+      rowCards.push(flipToFace(card));
+      usedRanks.add(card.rank);
+    }
 
-      rowOffsets.forEach((rowOffset, cardIndex) => {
-        rankGroup.forEach((cards, rankIndex) => {
-          const row = (rankIndex + rowOffset) % rankGroup.length;
-          columns[firstColumn + cardIndex][row] = flipToFace(cards[cardIndex]);
-        });
-      });
-    },
-  );
+    shuffle(rowCards).forEach((card, column) => {
+      columns[column].push(card);
+    });
+  }
 
-  const reserve = columns.slice(0, 4).map((column, columnIndex) => {
-    const [card] = column.splice(columnIndex, 1);
-    return card;
-  });
+  const reserve = shuffle(remaining).map(flipToFace);
 
   return {
     columns,

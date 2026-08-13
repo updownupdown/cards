@@ -1,5 +1,5 @@
 import { useStateManager } from "@/hooks/useStateManager";
-import { delay } from "@/utils/utils";
+import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
@@ -121,6 +121,9 @@ export const beleagueredCastleRules = {
 // ========== Main Component ========== //
 export default function BeleagueredCastle() {
   const [selectedCol, setSelectedCol] = useState<number | undefined>(undefined);
+  const [lastTap, setLastTap] = useState<{ key: string; at: number } | null>(
+    null,
+  );
 
   const {
     isLoaded,
@@ -174,6 +177,20 @@ export default function BeleagueredCastle() {
 
   function onColumnPress(index: number) {
     if (game.ended) return;
+
+    const now = Date.now();
+    const tapKey = `col-${index}`;
+    if (lastTap?.key === tapKey && now - lastTap.at < DOUBLE_TAP_MS) {
+      setLastTap(null);
+      const card = top(game.columns[index]);
+      const foundationIndex = game.foundations.findIndex((foundation) =>
+        card ? canPlaceFoundation(card, top(foundation)) : false,
+      );
+      if (foundationIndex >= 0) moveToFoundation(index, foundationIndex);
+      return;
+    }
+
+    setLastTap({ key: tapKey, at: now });
 
     if (selectedCol === undefined) {
       if (game.columns[index].length > 0) setSelectedCol(index);
@@ -306,6 +323,7 @@ export default function BeleagueredCastle() {
     cardMapper,
     zoneMapper,
     cardSize: "tableau",
+    gap: 0.14,
   });
 
   return (
