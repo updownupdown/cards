@@ -37,6 +37,7 @@ import FeaturedIcon from "./Featured.svg";
 import FilterIcon from "./Filter.svg";
 import FistIcon from "./Fist.svg";
 import GamesIcon from "./Games.svg";
+import GrappleHookIcon from "./GrappleHook.svg";
 import HeartIcon from "./Heart.svg";
 import HeartsIcon from "./Hearts.svg";
 import HelpOutlineIcon from "./HelpOutline.svg";
@@ -63,6 +64,7 @@ import SearchIcon from "./Search.svg";
 import SequenceIcon from "./Sequence.svg";
 import SettingsIcon from "./Settings.svg";
 import SkullIcon from "./Skull.svg";
+import SmokeBombIcon from "./SmokeBomb.svg";
 import SpadesIcon from "./Spades.svg";
 import StarIcon from "./Star.svg";
 import StarOutlineIcon from "./StarOutline.svg";
@@ -104,6 +106,7 @@ export type IconName =
   | "filter"
   | "fist"
   | "games"
+  | "grapple-hook"
   | "heart"
   | "hearts"
   | "help-outline"
@@ -130,6 +133,7 @@ export type IconName =
   | "sequence"
   | "settings"
   | "skull"
+  | "smoke-bomb"
   | "spades"
   | "star"
   | "star-outline"
@@ -171,6 +175,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "filter": FilterIcon,
   "fist": FistIcon,
   "games": GamesIcon,
+  "grapple-hook": GrappleHookIcon,
   "heart": HeartIcon,
   "hearts": HeartsIcon,
   "help-outline": HelpOutlineIcon,
@@ -197,6 +202,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "sequence": SequenceIcon,
   "settings": SettingsIcon,
   "skull": SkullIcon,
+  "smoke-bomb": SmokeBombIcon,
   "spades": SpadesIcon,
   "star": StarIcon,
   "star-outline": StarOutlineIcon,

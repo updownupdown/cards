@@ -28,7 +28,8 @@ export type GameSpecificSettingKey =
   | "royalRestHardMode"
   | "pyramidDifficulty"
   | "seerDifficulty"
-  | "unwantedHelpDifficulty";
+  | "unwantedHelpDifficulty"
+  | "midnightVigilDifficulty";
 export type GameSpecificSettingApplyBehavior = "immediate" | "next-game";
 
 type GameSpecificSettingOptionValue = GameSettings[GameSpecificSettingKey];
@@ -49,6 +50,31 @@ export type GameSpecificSettingDefinition = {
 
 const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
   {
+    "/midnight-vigil": [
+      {
+        key: "midnightVigilDifficulty",
+        label: "Difficulty",
+        type: "string",
+        applyBehavior: "next-game",
+        options: [
+          {
+            label: "Street Level",
+            value: "street",
+            description: "Kings deal 1 additional damage.",
+          },
+          {
+            label: "Kingpin Case",
+            value: "kingpin",
+            description: "Queens and Kings deal 1 additional damage.",
+          },
+          {
+            label: "City in Shadows",
+            value: "city",
+            description: "Queens deal 1 and Kings deal 2 additional damage.",
+          },
+        ],
+      },
+    ],
     "/unwanted-help": [
       {
         key: "unwantedHelpDifficulty",

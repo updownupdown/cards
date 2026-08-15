@@ -46,6 +46,7 @@ export type GameSettings = {
   pyramidDifficulty: "easy" | "hard";
   seerDifficulty: "easy" | "normal" | "hard";
   unwantedHelpDifficulty: "easy" | "hard";
+  midnightVigilDifficulty: "street" | "kingpin" | "city";
   lastResultSessionId?: string;
   lastResultWon?: boolean;
   stats: GameStats;
@@ -159,6 +160,7 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   pyramidDifficulty: "hard",
   seerDifficulty: "normal",
   unwantedHelpDifficulty: "easy",
+  midnightVigilDifficulty: "kingpin",
   stats: {
     attempts: 0,
     wins: 0,

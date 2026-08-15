@@ -4,7 +4,6 @@ import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
-import { delay } from "@/utils/utils";
 import { useMemo, useState } from "react";
 import { Pressable, View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
@@ -15,15 +14,19 @@ import {
   isRed,
   rankValue,
   shuffle,
+  zoneFanOffset,
   type PlayingCard,
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
+import { Colors, rgba } from "@/styles/styles";
 
 const BOARD_COLS = 4;
 const BOARD_ROWS = 2;
 const BOARD_CELLS = BOARD_COLS * BOARD_ROWS;
+
+const cardSize = "regular";
 
 export type SeerDifficulty = "easy" | "normal" | "hard";
 
@@ -32,7 +35,7 @@ export type SeerGameState = {
   table: PlayingCard[];
   board: PlayingCard[][];
   discard: PlayingCard[];
-  pendingFreed: PlayingCard[];
+  pendingFreed: string[];
   pendingHardChoice: number[];
   ended: boolean;
   won: boolean;
@@ -43,32 +46,40 @@ const PREDICTIONS: readonly {
   subtitle: string;
 }[] = [
   { subtitle: "Red" },
-  { subtitle: "Red odd · Black even" },
+  { subtitle: "RO  ·  BE" },
   { subtitle: "Even" },
-  { subtitle: "Diamonds · Hearts" },
-  { subtitle: "Spades · Clubs" },
+  { subtitle: "♦  ·  ♥" },
+  { subtitle: "♠  ·  ♣" },
   { subtitle: "Odd" },
-  { subtitle: "Black odd · Red even" },
+  { subtitle: "BO  ·  RE" },
   { subtitle: "Black" },
 ];
 
 function PredictionMark({ index }: { index: number }) {
-  const red = "#c92f38";
-  const black = "#111318";
+  const red = Colors.suitsRed;
+  const black = Colors.suitsBlack;
   const markProps = {
-    size: "xs" as const,
+    size: "xxl" as const,
     weight: 600 as const,
-    lineHeight: 1,
+    lineHeight: 1.2,
     style: { textAlign: "center" as const },
   };
 
   if (index === 1 || index === 6) {
     return (
-      <View style={[flexStyles.rowCentered, { gap: 8 }]}>
-        <Text {...markProps} color={index === 1 ? red : black}>
+      <View style={[flexStyles.rowCentered, { gap: 10 }]}>
+        <Text
+          {...markProps}
+          color={index === 1 ? red : black}
+          lineHeight={markProps.lineHeight}
+        >
           {"1\n3\n5"}
         </Text>
-        <Text {...markProps} color={index === 1 ? black : red}>
+        <Text
+          {...markProps}
+          color={index === 1 ? black : red}
+          lineHeight={markProps.lineHeight}
+        >
           {"2\n4\n6"}
         </Text>
       </View>
@@ -77,8 +88,19 @@ function PredictionMark({ index }: { index: number }) {
 
   const marks = ["●", "", "2\n4\n6", "♦\n♥", "♠\n♣", "1\n3\n5", "", "●"];
   const isRedMark = index === 0 || index === 3;
+  const isDotMark = index === 0 || index === 7;
+  const isSuitMark = index === 3 || index === 4;
+
   return (
-    <Text {...markProps} color={isRedMark ? red : black}>
+    <Text
+      {...markProps}
+      color={isRedMark ? red : black}
+      style={{
+        fontSize: isDotMark ? 80 : isSuitMark ? 42 : undefined,
+        textAlign: "center",
+      }}
+      lineHeight={isSuitMark ? 1.8 : markProps.lineHeight}
+    >
       {marks[index]}
     </Text>
   );
@@ -176,7 +198,7 @@ function updateOutcome(draft: SeerGameState) {
 function freeStone(draft: SeerGameState, index: number) {
   const top = draft.board[index][draft.board[index].length - 1];
   if (!top || top.faceUp) return;
-  draft.pendingFreed.push(draft.board[index].pop()!);
+  draft.pendingFreed.push(top.id);
 }
 
 function resolveSuccess(
@@ -220,20 +242,20 @@ function playPrediction(
 }
 
 function collectCards(game: SeerGameState) {
-  return [
-    ...game.stock,
-    ...game.table,
-    ...game.board.flat(),
-    ...game.discard,
-    ...game.pendingFreed,
-  ];
+  return [...game.stock, ...game.table, ...game.board.flat(), ...game.discard];
 }
 
 function disposeFreed(draft: SeerGameState, returnToDeck: boolean) {
+  const freedIds = new Set(draft.pendingFreed);
+  const freedCards = draft.board.flat().filter((card) => freedIds.has(card.id));
+  draft.board = draft.board.map((pile) =>
+    pile.filter((card) => !freedIds.has(card.id)),
+  );
+
   if (returnToDeck) {
-    draft.stock = [...draft.pendingFreed.map(flipToBack), ...draft.stock];
+    draft.stock = [...freedCards.map(flipToBack), ...draft.stock];
   } else {
-    draft.table.push(...draft.pendingFreed.map(flipToFace));
+    draft.table.push(...freedCards.map(flipToFace));
   }
   draft.pendingFreed = [];
   updateOutcome(draft);
@@ -255,10 +277,10 @@ export const seerRules = {
 };
 
 const gameStateInitial: SeerGameState = {
-  stock: [],
+  stock: shuffle(createSeerDeck()),
   table: [],
   board: Array.from({ length: BOARD_CELLS }, () => []),
-  discard: createSeerDeck(),
+  discard: [],
   pendingFreed: [],
   pendingHardChoice: [],
   ended: false,
@@ -271,24 +293,17 @@ async function resetSeer(
 ) {
   setGame((draft) => {
     const gathered = collectCards(draft);
-    draft.stock = [];
+    draft.stock = shuffle(
+      (gathered.length === 24 ? gathered : createSeerDeck()).map(flipToBack),
+    );
     draft.table = [];
     draft.board = Array.from({ length: BOARD_CELLS }, () => []);
-    draft.discard = (gathered.length === 24 ? gathered : createSeerDeck()).map(
-      flipToBack,
-    );
+    draft.discard = [];
     draft.pendingFreed = [];
     draft.pendingHardChoice = [];
     draft.ended = false;
     draft.won = false;
     draft.winLoseMessage = "";
-  });
-
-  await delay();
-
-  setGame((draft) => {
-    draft.stock = shuffle(draft.discard).map(flipToBack);
-    draft.discard = [];
   });
 }
 
@@ -335,15 +350,12 @@ export default function Seer() {
   }
 
   const completedCount = game.board.filter(isCompleted).length;
-  const stockCards =
-    showBottom && game.stock[0]
-      ? [
-          {
-            ...flipToFace(game.stock[0]),
-            id: `${game.stock[0].id}-bottom-preview`,
-          },
-        ]
-      : game.stock;
+  const stockCards = showBottom
+    ? game.stock.map((card, index) =>
+        index === game.stock.length - 1 ? flipToFace(card) : card,
+      )
+    : game.stock;
+  const pendingFreedIds = new Set(game.pendingFreed);
 
   const zones: MapZone[] = useMemo(
     () => [
@@ -355,17 +367,22 @@ export default function Seer() {
         row: 0,
         baseZIndex: 30,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "right", showCount: false },
+        placeholder: { text: "Deck", infoPos: "right" },
       },
       {
         id: "table",
         name: "table",
         cards: game.table,
-        col: 2.75,
+        col: 1.5,
         row: 0,
+        width: 2.5,
         baseZIndex: 30,
-        fan: { maxVisible: 5, direction: "left", offset: 0.18 },
-        placeholder: { text: "Table", infoPos: "left", showCount: true },
+        fan: {
+          maxVisible: 5,
+          direction: "left",
+          offset: zoneFanOffset(game.table.length, 2.5, 0.1, 0.28),
+        },
+        placeholder: {},
       },
       ...game.board.map((pile, index) => ({
         id: `prediction-${index}`,
@@ -373,7 +390,7 @@ export default function Seer() {
         pileIndex: index,
         cards: pile,
         col: index % BOARD_COLS,
-        row: Math.floor(index / BOARD_COLS) + 1.25,
+        row: Math.floor(index / BOARD_COLS) + 1.9,
         baseZIndex: 10,
         fan: { maxVisible: 5 },
         placeholder: { hideBackground: true, showCount: false },
@@ -382,9 +399,9 @@ export default function Seer() {
         id: "actions",
         name: "actions",
         col: 0,
-        row: 3.5,
+        row: 1,
         width: "full",
-        height: 0.55,
+        height: 0.7,
       },
     ],
     [game.board, game.table, stockCards],
@@ -423,6 +440,7 @@ export default function Seer() {
       return {
         onPress: () => setShowBottom((current) => !current),
         isDisabled: !mappedCard.topOfZone,
+        isSelected: showBottom && mappedCard.topOfZone,
       };
     }
     if (
@@ -431,6 +449,7 @@ export default function Seer() {
     ) {
       const index = mappedCard.pileIndex;
       const hardTarget = game.pendingHardChoice.includes(index);
+      const isFreed = pendingFreedIds.has(mappedCard.card.id);
       const isUnavailable =
         game.ended ||
         game.pendingFreed.length > 0 ||
@@ -441,9 +460,9 @@ export default function Seer() {
         onPress: () =>
           hardTarget ? chooseHardStone(index) : choosePrediction(index),
         isDisabled: !mappedCard.topOfZone || isUnavailable,
-        isSelected: hardTarget,
-        selectColor: hardTarget ? "green" : "blue",
-        forceOverlayColor: hardTarget,
+        isSelected: hardTarget || isFreed,
+        selectColor: isFreed || hardTarget ? "green" : "blue",
+        forceOverlayColor: isFreed || hardTarget,
       };
     }
     return { isDisabled: true };
@@ -454,8 +473,8 @@ export default function Seer() {
     zones,
     zoneMapper,
     cardMapper,
-    cardSize: "small-colored",
-    gap: 0.1,
+    cardSize,
+    gap: 0.16,
     fixedCols: BOARD_COLS,
     fixedRows: 4.15,
   });
@@ -465,7 +484,7 @@ export default function Seer() {
       ? "Choose one highlighted stone"
       : game.pendingFreed.length > 0
         ? `${game.pendingFreed.length} freed ${game.pendingFreed.length === 1 ? "stone" : "stones"}`
-        : `Deck ${game.stock.length} · Completed ${completedCount}/8`;
+        : "";
 
   return (
     <GameWrapper
@@ -487,6 +506,8 @@ export default function Seer() {
           game.ended ||
           game.pendingFreed.length > 0 ||
           (game.pendingHardChoice.length > 0 ? !hardTarget : blocked);
+        const firstFour = index < 4;
+
         return (
           <Pressable
             key={prediction.subtitle}
@@ -502,28 +523,52 @@ export default function Seer() {
               flexStyles.colCentered,
               {
                 zIndex: 5,
-                borderWidth: spacing(1.5),
-                borderColor: blocked
-                  ? "#d94343"
-                  : complete
-                    ? "#68b87a"
-                    : colorPale,
                 borderRadius: spacing(5),
-                backgroundColor: colorPale,
-                padding: spacing(4),
-                opacity: blocked ? 0.55 : 0.9,
+                backgroundColor: rgba(colorPale, 1),
               },
             ]}
           >
             <PredictionMark index={index} />
-            <Text size="xxs" color={colorDark} style={{ textAlign: "center" }}>
+
+            <Text
+              size="xs"
+              weight={500}
+              color={blocked ? Colors.suitsRed : colorPale}
+              style={[
+                flexStyles.colCentered,
+                {
+                  textAlign: "center",
+                  position: "absolute",
+                  top: firstFour ? spacing(24) * -1 : "100%",
+                  marginTop: firstFour ? spacing(8) * -1 : spacing(8),
+                  left: 0,
+                  height: spacing(24),
+                },
+              ]}
+            >
               {prediction.subtitle}
             </Text>
+
             {stoneCount(game.board[index]) > 0 && (
-              <Text size="xxs" color={blocked ? "#a91520" : colorDark}>
-                {stoneCount(game.board[index])} stone
-                {stoneCount(game.board[index]) === 1 ? "" : "s"}
-              </Text>
+              <View
+                style={[
+                  flexStyles.colCentered,
+                  {
+                    position: "absolute",
+                    top: firstFour ? spacing(24) * -1 : "100%",
+                    right: 0,
+                    height: spacing(24),
+                    width: spacing(24),
+                    marginTop: firstFour ? spacing(8) * -1 : spacing(8),
+                    backgroundColor: blocked ? Colors.suitsRed : colorPale,
+                    borderRadius: spacing(12),
+                  },
+                ]}
+              >
+                <Text size="xs" color={colorDark} weight={600}>
+                  {stoneCount(game.board[index])}
+                </Text>
+              </View>
             )}
           </Pressable>
         );
@@ -532,28 +577,36 @@ export default function Seer() {
       <View
         style={[
           getZoneStylesById("actions"),
-          flexStyles.colCentered,
-          { gap: spacing(5) },
+          flexStyles.rowCentered,
+          { gap: spacing(10) },
         ]}
       >
-        <Text size="xs" color={colorPale} style={{ textAlign: "center" }}>
+        <Text
+          size="md"
+          weight={500}
+          color={colorPale}
+          style={{ flex: 1, textAlign: "center" }}
+        >
           {prompt}
         </Text>
+
         {game.pendingFreed.length > 0 && (
-          <View style={[flexStyles.rowCentered, { gap: spacing(8) }]}>
+          <>
             <Button
-              size="xs"
+              size="md"
               text="Reveal"
               theme="orange"
+              taller
               onPress={() => chooseFreedDisposition(false)}
             />
             <Button
-              size="xs"
+              size="md"
               text="Return"
-              theme="green"
+              theme="purple"
+              taller
               onPress={() => chooseFreedDisposition(true)}
             />
-          </View>
+          </>
         )}
       </View>
     </GameWrapper>

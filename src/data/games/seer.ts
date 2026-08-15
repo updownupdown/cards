@@ -3,7 +3,6 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const seer: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/seer",
   title: "Seer",
   tags: [GameTag.EasyToLearn, GameTag.ModernMechanics, GameTag.SpatialControl],
@@ -14,8 +13,8 @@ export const seer: GameDefinition = {
   },
   background: GAME_BACKGROUNDS.nightSky,
   animation: GameAnimations.Stars,
-  gameColorDark: "#202536",
-  gameColorPale: "#edf0db",
+  gameColorDark: "#1b2135",
+  gameColorPale: "#d2d3c0",
   cardDescription:
     "Read a short deck, complete eight predictions, and keep stones from blocking the board.",
   quickStart: [
