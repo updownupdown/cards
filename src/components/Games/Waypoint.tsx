@@ -10,6 +10,7 @@ import { useMemo } from "react";
 import { View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
+  cardDims,
   createDeck,
   flipToBack,
   flipToFace,
@@ -18,8 +19,14 @@ import {
   shuffle,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
+import { Colors } from "@/styles/styles";
+import { ProgressBar } from "../Home/ProgressBar";
 
-type StagePhase = "chooseStart" | "racing";
+const cardSize = "tableau";
+
+const topHugHeight = 1;
+const gearRow = 6;
+
 type GearName = "gearOne" | "gearTwo" | "gearThree";
 
 type StageConfig = {
@@ -36,12 +43,12 @@ const STAGE_CONFIGS: Record<number, StageConfig> = {
 
 export type WaypointGameState = {
   stage: number;
-  phase: StagePhase;
   gearOne: PlayingCard[];
   gearTwo: PlayingCard[];
   gearThree: PlayingCard[];
-  sectors: PlayingCard[];
-  currentPlays: PlayingCard[];
+  shuffle: PlayingCard[];
+  sectors: PlayingCard[][];
+  sectorRows: number[];
   boosts: PlayingCard[];
   brakes: PlayingCard[];
   completedSectors: number;
@@ -53,57 +60,138 @@ export type WaypointGameState = {
   winLoseMessage: string;
 };
 
-function numberedDeck() {
+function waypointDeck() {
   return createDeck({ faceUp: false })
-    .filter((card) => rankValue(card) <= 10)
+    .filter((card) => card.rank !== "K")
     .map(flipToBack);
 }
 
-function modifierCards(rank: "J" | "Q", count: number) {
-  return createDeck({ faceUp: true })
-    .filter((card) => card.rank === rank)
-    .slice(0, count)
-    .map(flipToFace);
+function takeCards(
+  shufflePile: PlayingCard[],
+  count: number,
+  predicate: (card: PlayingCard) => boolean,
+) {
+  const cards: PlayingCard[] = [];
+  for (
+    let index = shufflePile.length - 1;
+    index >= 0 && cards.length < count;
+    index -= 1
+  ) {
+    if (predicate(shufflePile[index])) {
+      cards.push(shufflePile.splice(index, 1)[0]);
+    }
+  }
+  return cards;
+}
+
+function collectCards(draft: WaypointGameState) {
+  const cards = [
+    ...draft.shuffle,
+    ...draft.gearOne,
+    ...draft.gearTwo,
+    ...draft.gearThree,
+    ...draft.sectors.flat(),
+    ...draft.boosts,
+    ...draft.brakes,
+  ];
+  return cards.length > 0 ? cards : waypointDeck();
+}
+
+function createLoopRows(sectors: number) {
+  const topLaneLength = Math.ceil(sectors / 2);
+  const bottomLaneLength = sectors - topLaneLength;
+  const createLaneRows = (
+    laneLength: number,
+    edgeRow: number,
+    middleShift: number,
+  ) => {
+    let wave = 0;
+    return Array.from({ length: laneLength }, (_, index) => {
+      const progress = laneLength <= 1 ? 0 : index / (laneLength - 1);
+      const isTurn = index === 0 || index === laneLength - 1;
+
+      if (isTurn) {
+        wave = 0;
+      } else {
+        const delta = (Math.floor(Math.random() * 3) - 1) * 0.14;
+        wave = Math.max(-0.24, Math.min(0.24, wave + delta));
+      }
+
+      return edgeRow + middleShift * Math.sin(Math.PI * progress) + wave;
+    });
+  };
+
+  return [
+    ...createLaneRows(topLaneLength, 0.45, -0.4),
+    ...createLaneRows(bottomLaneLength, 1.6, 0.4),
+  ];
+}
+
+function sectorColumn(index: number, sectors: number) {
+  const topLaneLength = Math.ceil(sectors / 2);
+  const isTopLane = index < topLaneLength;
+  const laneIndex = isTopLane ? index : index - topLaneLength;
+  const laneLength = isTopLane ? topLaneLength : sectors - topLaneLength;
+
+  if (laneLength <= 1) return isTopLane ? 0 : 6;
+  const progress = laneIndex / (laneLength - 1);
+  return isTopLane ? progress * 6 : (1 - progress) * 6;
 }
 
 function setupStage(draft: WaypointGameState, stage: number) {
   const config = STAGE_CONFIGS[stage];
+  draft.shuffle = shuffle(collectCards(draft).map(flipToBack));
   const groups = [
-    shuffle(numberedDeck().filter((card) => rankValue(card) <= 3)),
-    shuffle(
-      numberedDeck().filter(
-        (card) => rankValue(card) >= 4 && rankValue(card) <= 6,
-      ),
+    takeCards(draft.shuffle, 12, (card) => rankValue(card) <= 3),
+    takeCards(
+      draft.shuffle,
+      12,
+      (card) => rankValue(card) >= 4 && rankValue(card) <= 6,
     ),
-    shuffle(numberedDeck().filter((card) => rankValue(card) >= 7)),
+    takeCards(
+      draft.shuffle,
+      16,
+      (card) => rankValue(card) >= 7 && rankValue(card) <= 10,
+    ),
   ];
-  const sectorCards = shuffle([
+  const shuffledSectors = shuffle([
     ...groups[0].splice(0, config.gears[0]),
     ...groups[1].splice(0, config.gears[1]),
     ...groups[2].splice(0, config.gears[2]),
   ]).map(flipToBack);
+  const startIndex = Math.floor(Math.random() * shuffledSectors.length);
+  const sectorCards = [
+    ...shuffledSectors.slice(startIndex),
+    ...shuffledSectors.slice(0, startIndex),
+  ].map((card) => [card]);
+  const queens = takeCards(draft.shuffle, 4, (card) => card.rank === "Q");
+  const jacks = takeCards(draft.shuffle, 4, (card) => card.rank === "J");
+  const stackModifiers = (cards: PlayingCard[]) => [
+    ...cards.slice(config.modifiers).map(flipToBack),
+    ...cards.slice(0, config.modifiers).map(flipToFace),
+  ];
 
   draft.stage = stage;
-  draft.phase = "chooseStart";
   draft.gearOne = groups[0].map(flipToBack);
   draft.gearTwo = groups[1].map(flipToBack);
   draft.gearThree = groups[2].map(flipToBack);
   draft.sectors = sectorCards;
-  draft.currentPlays = [];
-  draft.boosts = modifierCards("Q", config.modifiers);
-  draft.brakes = modifierCards("J", config.modifiers);
+  draft.boosts = stackModifiers(queens);
+  draft.brakes = stackModifiers(jacks);
   draft.completedSectors = 0;
+  draft.sectorRows = createLoopRows(sectorCards.length);
+  draft.sectors[0][0] = flipToFace(draft.sectors[0][0]);
 }
 
 function createInitialState(): WaypointGameState {
   const game: WaypointGameState = {
     stage: 1,
-    phase: "chooseStart",
     gearOne: [],
     gearTwo: [],
     gearThree: [],
+    shuffle: [],
     sectors: [],
-    currentPlays: [],
+    sectorRows: [],
     boosts: [],
     brakes: [],
     completedSectors: 0,
@@ -118,22 +206,19 @@ function createInitialState(): WaypointGameState {
   return game;
 }
 
-function chooseStart(draft: WaypointGameState, fromRight: boolean) {
-  if (
-    draft.ended ||
-    draft.phase !== "chooseStart" ||
-    draft.sectors.length === 0
-  ) {
-    return false;
-  }
-  if (fromRight) draft.sectors.reverse();
-  draft.sectors[0] = flipToFace(draft.sectors[0]);
-  draft.phase = "racing";
-  return true;
+function resetGame(draft: WaypointGameState) {
+  draft.bonuses = 0;
+  draft.penalties = 0;
+  draft.damage = 0;
+  draft.ended = false;
+  draft.won = false;
+  draft.winLoseMessage = "";
+  setupStage(draft, 1);
 }
 
 function currentTotal(game: WaypointGameState) {
-  return game.currentPlays.reduce((total, card) => {
+  const currentSector = game.sectors[game.completedSectors] ?? [];
+  return currentSector.slice(1).reduce((total, card) => {
     if (card.rank === "J") return total - 1;
     if (card.rank === "Q") return total + 1;
     return total + rankValue(card);
@@ -144,13 +229,18 @@ function playCard(
   draft: WaypointGameState,
   source: GearName | "boosts" | "brakes",
 ) {
-  if (draft.ended || draft.phase !== "racing") return false;
+  if (draft.ended) return false;
   const card = draft[source].pop();
-  if (!card) return false;
-  draft.currentPlays.push({
-    ...flipToFace(card),
-    id: `${card.id}-stage-${draft.stage}-sector-${draft.completedSectors}-play-${draft.currentPlays.length}`,
-  });
+
+  const isFaceDownBoostOrBrake =
+    (source === "boosts" || source === "brakes") && !card?.faceUp;
+
+  if (!card || isFaceDownBoostOrBrake) {
+    if (card) draft[source].push(card);
+    return false;
+  }
+
+  draft.sectors[draft.completedSectors]?.push(flipToFace(card));
   return true;
 }
 
@@ -171,16 +261,15 @@ function finishGame(draft: WaypointGameState) {
 function finishSector(draft: WaypointGameState) {
   if (
     draft.ended ||
-    draft.phase !== "racing" ||
-    draft.currentPlays.length === 0 ||
-    draft.sectors.length === 0
+    (draft.sectors[draft.completedSectors]?.length ?? 0) <= 1 ||
+    draft.completedSectors >= draft.sectors.length
   ) {
     return false;
   }
 
-  const target = rankValue(draft.sectors[0]);
+  const target = rankValue(draft.sectors[draft.completedSectors][0]);
   const total = currentTotal(draft);
-  if (total === target && draft.currentPlays.length === 1) {
+  if (total === target && draft.sectors[draft.completedSectors].length === 2) {
     draft.bonuses = Math.min(16, draft.bonuses + 1);
   } else if (total > target) {
     draft.penalties = Math.min(16, draft.penalties + 1);
@@ -202,12 +291,12 @@ function finishSector(draft: WaypointGameState) {
     return true;
   }
 
-  draft.sectors.shift();
-  draft.currentPlays = [];
   draft.completedSectors += 1;
 
-  if (draft.sectors.length > 0) {
-    draft.sectors[0] = flipToFace(draft.sectors[0]);
+  if (draft.completedSectors < draft.sectors.length) {
+    draft.sectors[draft.completedSectors][0] = flipToFace(
+      draft.sectors[draft.completedSectors][0],
+    );
   } else if (draft.stage < 3) {
     setupStage(draft, draft.stage + 1);
   } else {
@@ -216,18 +305,8 @@ function finishSector(draft: WaypointGameState) {
   return true;
 }
 
-function jokerCard(index: number, damage: number): PlayingCard {
-  return {
-    id: `damage-joker-${index}`,
-    suit: index === 0 ? "spades" : "hearts",
-    rank: "Joker",
-    faceUp: damage <= index,
-  };
-}
-
 export const waypointRules = {
   STAGE_CONFIGS,
-  chooseStart,
   createInitialState,
   currentTotal,
   finishSector,
@@ -244,7 +323,7 @@ export default function Waypoint() {
     useStateManager<WaypointGameState>({
       gameStateInitial,
       resetAndSetup: async () => {
-        setGame((draft) => Object.assign(draft, createInitialState()));
+        setGame((draft) => resetGame(draft));
         await delay(400);
       },
     });
@@ -258,224 +337,208 @@ export default function Waypoint() {
 
   const score = game.bonuses - game.penalties;
   const total = currentTotal(game);
-  const target = game.sectors[0] ? rankValue(game.sectors[0]) : 0;
-
-  const clockReadings = useMemo(
-    () =>
-      [
-        {
-          id: "bonus-a",
-          total: game.bonuses,
-          offset: 0,
-          suit: "hearts" as const,
-          col: 0,
-        },
-        {
-          id: "bonus-b",
-          total: game.bonuses,
-          offset: 8,
-          suit: "diamonds" as const,
-          col: 1,
-        },
-        {
-          id: "penalty-a",
-          total: game.penalties,
-          offset: 0,
-          suit: "clubs" as const,
-          col: 0,
-        },
-        {
-          id: "penalty-b",
-          total: game.penalties,
-          offset: 8,
-          suit: "spades" as const,
-          col: 1,
-        },
-      ].map((entry) => ({
-        ...entry,
-        ticks: Math.max(0, Math.min(8, entry.total - entry.offset)),
-      })),
-    [game.bonuses, game.penalties],
-  );
-
-  const clockZones = useMemo(
-    () =>
-      clockReadings.map((entry, index): MapZone => {
-        const ticks = Math.max(0, Math.min(8, entry.total - entry.offset));
-        return {
-          id: entry.id,
-          name: "clock",
-          cards: [],
-          col: entry.col,
-          row: index < 2 ? 3.05 : 4.1,
-          placeholder: { text: ticks === 8 ? "Done" : undefined },
-        };
-      }),
-    [clockReadings],
-  );
+  const target = game.sectors[game.completedSectors]
+    ? rankValue(game.sectors[game.completedSectors][0])
+    : 0;
 
   const zones: MapZone[] = useMemo(() => {
-    const sectorZones = game.sectors.map(
-      (sector, index): MapZone => ({
+    const sectorZones = game.sectors.map((sector, index): MapZone => {
+      const current = index === game.completedSectors;
+
+      return {
         id: `sector-${index}`,
         name: "sector",
         pileIndex: index,
-        cards: index === 0 ? [sector, ...game.currentPlays] : [sector],
-        col: index % 7,
-        row: Math.floor(index / 7),
-        baseZIndex: 20,
-        fan:
-          index === 0
-            ? { direction: "down", offset: 0.2, maxVisible: 5 }
-            : undefined,
-        placeholder: { text: index === 0 ? "Current" : undefined },
-      }),
-    );
+        cards: sector,
+        col: sectorColumn(index, game.sectors.length),
+        row: game.sectorRows[index] + topHugHeight,
+        baseZIndex: current ? 30 : 1,
+        fan: {
+          direction: "down",
+          offset: current ? cardDims.tableauOffset : 0.05,
+        },
+        placeholder: {
+          text: current ? "Current" : undefined,
+        },
+      };
+    });
 
     return [
       ...sectorZones,
-      ...clockZones,
       {
-        id: "gear-one",
-        name: "gearOne",
-        cards: game.gearOne,
-        col: 2.3,
-        row: 3.2,
+        id: "shuffle",
+        name: "shuffle",
+        cards: game.shuffle,
+        col: 3,
+        row: 1,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Gear 1", showCount: true },
+      },
+
+      // HUDs
+      {
+        id: "hud-top-left",
+        col: 0,
+        row: 0,
+        width: 2,
+        height: topHugHeight,
       },
       {
-        id: "gear-two",
-        name: "gearTwo",
-        cards: game.gearTwo,
-        col: 3.3,
-        row: 3.2,
-        fan: { maxVisible: 3 },
-        placeholder: { text: "Gear 2", showCount: true },
+        id: "hud-top-right",
+        col: 4,
+        row: 0,
+        width: 3,
+        height: topHugHeight,
       },
       {
-        id: "gear-three",
-        name: "gearThree",
-        cards: game.gearThree,
-        col: 4.3,
-        row: 3.2,
-        fan: { maxVisible: 3 },
-        placeholder: { text: "Gear 3", showCount: true },
+        id: "hud-progress",
+        col: 0,
+        row: 4.5,
+        width: 7,
+        height: 1,
+      },
+
+      // Brake, Gas, Gears
+      {
+        id: "brakes",
+        name: "brakes",
+        cards: game.brakes,
+        col: 0,
+        row: gearRow,
+        fan: {},
+        placeholder: { text: "Brake", infoPos: "above" },
       },
       {
         id: "boosts",
         name: "boosts",
         cards: game.boosts,
-        col: 5.4,
-        row: 3.2,
-        fan: { direction: "right", offset: 0.12, maxVisible: 4 },
-        placeholder: { text: "Boost +1", showCount: true },
+        col: 1,
+        row: gearRow,
+        fan: {},
+        placeholder: { text: "Gas", infoPos: "above" },
+      },
+
+      {
+        id: "gear-one",
+        name: "gearOne",
+        cards: game.gearOne,
+        col: 2.25,
+        row: gearRow,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "[1]", infoPos: "above" },
       },
       {
-        id: "brakes",
-        name: "brakes",
-        cards: game.brakes,
-        col: 5.4,
-        row: 4.25,
-        fan: { direction: "right", offset: 0.12, maxVisible: 4 },
-        placeholder: { text: "Brake -1", showCount: true },
+        id: "gear-two",
+        name: "gearTwo",
+        cards: game.gearTwo,
+        col: 3.25,
+        row: gearRow,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "[2]", infoPos: "above" },
       },
       {
-        id: "damage-one",
-        name: "damage",
-        cards: [jokerCard(0, game.damage)],
-        col: 2.6,
-        row: 4.25,
+        id: "gear-three",
+        name: "gearThree",
+        cards: game.gearThree,
+        col: 4.25,
+        row: gearRow,
+        fan: { maxVisible: 3 },
+        placeholder: { text: "[3]", infoPos: "above" },
       },
+
+      // Actions
       {
-        id: "damage-two",
-        name: "damage",
-        cards: [jokerCard(1, game.damage)],
-        col: 3.6,
-        row: 4.25,
+        id: "actions",
+        col: 5.5,
+        row: gearRow,
+        width: 1.5,
       },
-      { id: "actions", col: 0, row: 5.45, width: 7, height: 0.65 },
     ];
-  }, [clockZones, game]);
+  }, [game]);
 
   const playSource = (source: GearName | "boosts" | "brakes") =>
     act((draft) => playCard(draft, source));
 
   const zoneMapper = (zone: MapZone): CardMapBGMapping => {
-    if (
-      zone.name === "sector" &&
-      game.phase === "chooseStart" &&
-      zone.pileIndex !== undefined
-    ) {
-      const isEnd =
-        zone.pileIndex === 0 || zone.pileIndex === game.sectors.length - 1;
-      return {
-        onPress: () =>
-          isEnd && act((draft) => chooseStart(draft, zone.pileIndex !== 0)),
-        isDisabled: !isEnd,
-        isSelected: isEnd,
-        selectColor: "green",
-      };
+    if (zone.name === "sector" && zone.pileIndex !== undefined) {
+      const isCompleted = zone.pileIndex < game.completedSectors;
+      const isCurrent = zone.pileIndex === game.completedSectors;
+
+      if (isCompleted || isCurrent) {
+        return {
+          forceOverlayColor: true,
+          selectColor: isCompleted ? "grey" : "green",
+        };
+      }
     }
     if (
       ["gearOne", "gearTwo", "gearThree", "boosts", "brakes"].includes(
         zone.name ?? "",
       )
     ) {
+      const source = zone.name as GearName | "boosts" | "brakes";
+      const topCard = game[source][game[source].length - 1];
+      const isFaceDownBoostOrBrake =
+        (source === "boosts" || source === "brakes") && !topCard?.faceUp;
+
       return {
-        onPress: () => playSource(zone.name as GearName | "boosts" | "brakes"),
-        isDisabled: game.phase !== "racing" || game.ended,
+        onPress: () => playSource(source),
+        isDisabled: game.ended || isFaceDownBoostOrBrake,
       };
     }
     return {};
   };
 
   const cardMapper = (mappedCard: MappedCard): AnimatedCardMapping => {
-    if (mappedCard.zoneName === "sector" && game.phase === "chooseStart") {
-      const isEnd =
-        mappedCard.pileIndex === 0 ||
-        mappedCard.pileIndex === game.sectors.length - 1;
-      return {
-        onPress: () =>
-          isEnd &&
-          act((draft) => chooseStart(draft, mappedCard.pileIndex !== 0)),
-        isDisabled: !isEnd,
-        forceOverlayColor: isEnd,
-        selectColor: "green",
-        animDuration: 0,
-      };
+    if (mappedCard.zoneName === "sector") {
+      const isCompleted = mappedCard.pileIndex! < game.completedSectors;
+      const isCurrent = mappedCard.pileIndex === game.completedSectors;
+
+      if (isCompleted || isCurrent) {
+        return {
+          clickThroughCards: true,
+          isDisabled: true,
+          forceOverlayColor: true,
+          selectColor: isCompleted ? "grey" : "green",
+          // yOffset: isCompleted ? 0.05 : 0.15,
+        };
+      }
     }
-    if (
-      ["gearOne", "gearTwo", "gearThree", "boosts", "brakes"].includes(
-        mappedCard.zoneName ?? "",
-      )
-    ) {
-      return {
-        onPress: () =>
-          playSource(mappedCard.zoneName as GearName | "boosts" | "brakes"),
-        isDisabled:
-          !mappedCard.topOfZone || game.phase !== "racing" || game.ended,
-        animDuration: 0,
-      };
-    }
-    return { isDisabled: true, animDuration: 0 };
+
+    return { clickThroughCards: true };
   };
 
-  const { cardMap, getZoneStylesById } = useCardMap({
+  const { cardMap, cardHeight, cardWidth, getZoneStylesById } = useCardMap({
     game,
     zones,
     zoneMapper,
     cardMapper,
-    cardSize: "small-colored",
-    fixedCols: 7,
-    fixedRows: 6.2,
-    gap: 0.08,
+    cardSize,
+    gap: 0.1,
   });
 
-  const prompt =
-    game.phase === "chooseStart"
-      ? `Stage ${game.stage}: choose either highlighted end`
-      : `Stage ${game.stage} · Sector ${game.completedSectors + 1}/${STAGE_CONFIGS[game.stage].sectors} · ${total}/${target}`;
+  const HudText = ({
+    label,
+    value,
+    leftAlign,
+  }: {
+    label: string;
+    value: string;
+    leftAlign?: boolean;
+  }) => (
+    <View
+      style={[
+        flexStyles.colStart,
+        { alignItems: leftAlign ? "flex-start" : "flex-end" },
+      ]}
+    >
+      <Text size="xs" color={colorPale} weight={300} textTransform="uppercase">
+        {label}
+      </Text>
+      <Text size="xl" color={Colors.white} weight={600}>
+        {value}
+      </Text>
+    </View>
+  );
 
   return (
     <GameWrapper
@@ -488,62 +551,94 @@ export default function Waypoint() {
       undo={undo}
     >
       {cardMap}
-      {clockReadings.map((entry) => (
-        <View
-          key={`${entry.id}-ticks`}
-          style={[
-            getZoneStylesById(entry.id),
-            {
-              zIndex: 70,
-              justifyContent: "center",
-              alignItems: "center",
-              pointerEvents: "none",
-            },
-          ]}
-        >
-          <Text
-            size="xxs"
-            color={colorPale}
-            style={{
-              backgroundColor: colorDark,
-              paddingHorizontal: spacing(3),
-              textAlign: "center",
-            }}
-          >
-            {entry.suit === "hearts"
-              ? "K♥"
-              : entry.suit === "diamonds"
-                ? "K♦"
-                : entry.suit === "clubs"
-                  ? "K♣"
-                  : "K♠"}
-            {"\n"}
-            {entry.ticks}/8
-          </Text>
-        </View>
-      ))}
+
+      {/* TOP LEFT */}
       <View
         style={[
-          getZoneStylesById("actions"),
-          flexStyles.colCentered,
-          { gap: spacing(4) },
+          flexStyles.rowStart,
+          getZoneStylesById("hud-top-left"),
+          { justifyContent: "flex-start" },
         ]}
       >
-        <Text size="xs" color={colorPale} style={{ textAlign: "center" }}>
-          {prompt} · Bonus {game.bonuses} · Penalty {game.penalties} · Damage{" "}
-          {Math.min(game.damage, 2)}/2
-        </Text>
-        {game.phase === "racing" && !game.ended && (
-          <Button
-            text="Finish sector"
-            size="xs"
-            theme={
-              total === target ? "green" : total > target ? "red" : colorDark
-            }
-            disabled={game.currentPlays.length === 0}
-            onPress={() => act(finishSector)}
-          />
-        )}
+        <HudText
+          label="Time"
+          value={`${score >= 0 ? "+" : ""}${score}`}
+          leftAlign
+        />
+      </View>
+
+      {/* TOP RIGHT */}
+      <View
+        style={[
+          flexStyles.rowStart,
+          getZoneStylesById("hud-top-right"),
+          { justifyContent: "flex-end", gap: spacing(20) },
+        ]}
+      >
+        <HudText label="Penalty" value={`${game.penalties}/16`} />
+        <HudText label="Damage" value={`${game.damage}/2`} />
+      </View>
+
+      {/* Progress */}
+      <View
+        style={[
+          getZoneStylesById("hud-progress"),
+          flexStyles.rowCentered,
+          flexStyles.spaceBetween,
+        ]}
+      >
+        <ProgressBar
+          labelText="Stage"
+          progressValue={game.stage}
+          totalValue={3}
+          autoTallyText
+          color={Colors.cardSelectOrange}
+          style={{ width: cardWidth * 1.5 }}
+          scaledHeight={cardHeight * 0.3}
+        />
+
+        <ProgressBar
+          labelText="Sector"
+          progressValue={game.completedSectors}
+          totalValue={STAGE_CONFIGS[game.stage].sectors}
+          autoTallyText
+          color={Colors.cardSelectPurple}
+          style={{ width: cardWidth * 2.9 }}
+          scaledHeight={cardHeight * 0.3}
+        />
+
+        <ProgressBar
+          progressValue={total}
+          totalValue={target}
+          autoTallyText
+          color={
+            total === target
+              ? Colors.cardSelectGreen
+              : total > target
+                ? Colors.cardSelectRed
+                : Colors.cardSelectBlue
+          }
+          style={{ width: cardWidth * 2.9 }}
+          scaledHeight={cardHeight * 0.3}
+          labelText="Speed"
+        />
+      </View>
+
+      {/* ACTIONS */}
+      <View style={[getZoneStylesById("actions"), flexStyles.rowCentered]}>
+        <Button
+          text={`Finish\nSector`}
+          size="sm"
+          theme={
+            total === target ? "green" : total > target ? "red" : colorDark
+          }
+          disabled={
+            game.ended ||
+            (game.sectors[game.completedSectors]?.length ?? 0) <= 1
+          }
+          onPress={() => act(finishSector)}
+          style={{ width: "100%", height: "100%" }}
+        />
       </View>
     </GameWrapper>
   );

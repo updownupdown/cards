@@ -3,7 +3,6 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const waypoint: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/waypoint",
   title: "Waypoint",
   tags: [GameTag.EasyToLearn, GameTag.ModernMechanics, GameTag.ScoringPuzzles],

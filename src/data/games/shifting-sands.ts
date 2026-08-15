@@ -3,7 +3,6 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const shiftingSands: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/shifting-sands",
   title: "Shifting Sands",
   tags: [GameTag.TableauBuilding, GameTag.ModernMechanics],

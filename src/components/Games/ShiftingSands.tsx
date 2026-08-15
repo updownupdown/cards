@@ -7,7 +7,7 @@ import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, rgba } from "@/styles/styles";
 import { delay } from "@/utils/utils";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
@@ -18,9 +18,13 @@ import {
   PlayingCard,
   rankValue,
   shuffle,
+  zoneFanOffset,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 import { useToast } from "../common/Toast";
+
+const cardSize = "tableau";
+const minCols = 10;
 
 type Phase = "gather" | "play";
 type Direction = -1 | 1 | null;
@@ -265,6 +269,7 @@ export default function ShiftingSands() {
     (legal.includes(-1) ? 1 : 0) +
     (legal.includes(game.columns.length) ? 1 : 0);
   const leftShift = legal.includes(-1) ? 1 : 0;
+  const columnOffset = Math.max(minCols - displayColumnCount, 0) / 2;
 
   function gather(count: number) {
     saveUndoState(structuredClone(game));
@@ -291,14 +296,27 @@ export default function ShiftingSands() {
     });
   }
 
+  useEffect(() => {
+    if (game.direction === null || game.hand.length === 0) return;
+
+    const nextColumn = legalColumns(game)[0];
+    const timer = setTimeout(() => {
+      setGame((draft) => {
+        playCard(draft, nextColumn);
+      });
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [game, setGame]);
+
   const zones: MapZone[] = useMemo(() => {
     const columnZones: MapZone[] = game.columns.map((column, index) => ({
       id: `column-${index}`,
       name: "column",
       pileIndex: index,
       cards: column,
-      col: index + leftShift,
-      row: 2.25,
+      col: columnOffset + index + leftShift,
+      row: 1.2,
       baseZIndex: 10,
       fan: { direction: "down", offset: 0.26, center: false },
       placeholder: {
@@ -316,8 +334,8 @@ export default function ShiftingSands() {
         name: "column",
         pileIndex: -1,
         cards: [],
-        col: 0,
-        row: 2.25,
+        col: columnOffset,
+        row: 1.2,
         baseZIndex: 10,
         placeholder: { text: "New" },
       });
@@ -328,8 +346,8 @@ export default function ShiftingSands() {
         name: "column",
         pileIndex: game.columns.length,
         cards: [],
-        col: game.columns.length + leftShift,
-        row: 2.25,
+        col: columnOffset + game.columns.length + leftShift,
+        row: 1.2,
         baseZIndex: 10,
         placeholder: { text: "New" },
       });
@@ -341,43 +359,51 @@ export default function ShiftingSands() {
         name: "deck",
         cards: game.deck,
         col: 0,
-        row: 1,
+        row: 0,
         baseZIndex: 40,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", showCount: true },
+        placeholder: { text: "Stock", infoPos: "right" },
       },
       {
         id: "hand",
         name: "hand",
         cards: game.hand,
-        col: 1.35,
-        row: 1,
-        width: Math.max(1, displayColumnCount - 2.7),
+        col: 1.75,
+        row: 0,
+        width: Math.max(minCols - 3.5, displayColumnCount - 3.5),
         baseZIndex: 50,
-        fan: { direction: "right", offset: 0.42, center: true },
-        placeholder: { text: game.phase === "gather" ? "Gather sand" : "Hand" },
+        fan: {
+          direction: "right",
+          offset: zoneFanOffset(
+            game.hand.length,
+            Math.max(minCols - 3.5, displayColumnCount - 3.5),
+            0.1,
+            1.2,
+          ),
+        },
       },
       {
         id: "discard",
         name: "discard",
         cards: game.discard,
-        col: Math.max(displayColumnCount - 1, 2),
-        row: 1,
+        col: Math.max(displayColumnCount - 1, minCols - 1),
+        row: 0,
         baseZIndex: 40,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Tide", showCount: true },
+        placeholder: { text: "Tide", infoPos: "left" },
       },
+      { id: "stats", col: 0, row: 2, width: 2, height: 2 },
       {
         id: "actions",
-        col: 0,
-        row: 0,
-        width: Math.max(displayColumnCount, 3),
+        col: 2,
+        row: 3.25,
+        width: minCols - 2,
         height: 0.75,
         baseZIndex: 80,
       },
       ...columnZones,
     ];
-  }, [displayColumnCount, game, leftShift, legal]);
+  }, [columnOffset, displayColumnCount, game, leftShift, legal]);
 
   const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
     if (zone.name === "column" && zone.pileIndex !== undefined) {
@@ -412,10 +438,10 @@ export default function ShiftingSands() {
     zones,
     zoneMapper,
     cardMapper,
-    cardSize: "small",
-    fixedCols: Math.max(displayColumnCount, 5),
-    fixedRows: 6.4,
-    gap: 0.12,
+    cardSize,
+    fixedCols: Math.max(displayColumnCount, minCols),
+    fixedRows: 4,
+    gap: 0.1,
   });
 
   const standing = game.columns.filter(isStanding).length;
@@ -432,46 +458,91 @@ export default function ShiftingSands() {
       undo={undo}
     >
       {cardMap}
+
+      <View
+        style={[
+          getZoneStylesById("stats"),
+          flexStyles.colStart,
+          { gap: spacing(4), justifyContent: "flex-end" },
+        ]}
+      >
+        <Text size="sm" color={colorPale}>
+          Face up:{" "}
+          <Text size="md" color={Colors.white} weight={500}>
+            {castleCards}
+          </Text>
+        </Text>
+        <Text size="sm" color={colorPale}>
+          Discard:{" "}
+          <Text size="md" color={Colors.white} weight={500}>
+            {game.discard.length}
+          </Text>
+        </Text>
+
+        <Text size="sm" color={colorPale}>
+          Standing:{" "}
+          <Text size="md" color={Colors.white} weight={500}>
+            {standing}
+          </Text>
+        </Text>
+      </View>
+
       <View
         style={[
           getZoneStylesById("actions"),
           flexStyles.rowCentered,
-          { gap: spacing(5), justifyContent: "center" },
+          { gap: spacing(12), justifyContent: "center" },
         ]}
       >
-        {game.phase === "gather" ? (
-          <>
-            <Text size="xs" color={colorPale}>
-              Draw
+        <View
+          style={[
+            flexStyles.rowCentered,
+            flexStyles.flex1,
+            { gap: spacing(8) },
+          ]}
+        >
+          {game.phase === "gather" ? (
+            <>
+              <Text size="sm" color={Colors.white} weight={500}>
+                Draw:
+              </Text>
+              {Array.from(
+                { length: Math.min(7, game.deck.length) },
+                (_, index) => (
+                  <Button
+                    key={index + 1}
+                    text={`${index + 1}`}
+                    size="sm"
+                    theme={colorDark}
+                    onPress={() => gather(index + 1)}
+                  />
+                ),
+              )}
+            </>
+          ) : game.lastColumn === null ? (
+            <>
+              <Text
+                size="sm"
+                color={Colors.white}
+                weight={500}
+                style={{ flex: 1, textAlign: "center" }}
+              >
+                Select starting column
+              </Text>
+              <Button
+                text={game.reversed ? "Reversed" : "Reverse"}
+                size="sm"
+                theme="orange"
+                disabled={game.lastColumn !== null || game.hand.length < 2}
+                onPress={reverse}
+              />
+            </>
+          ) : (
+            <Text size="sm" weight={500} color={Colors.white}>
+              Select direction
             </Text>
-            {Array.from(
-              { length: Math.min(7, game.deck.length) },
-              (_, index) => (
-                <Button
-                  key={index + 1}
-                  text={`${index + 1}`}
-                  size="xs"
-                  theme={colorDark}
-                  onPress={() => gather(index + 1)}
-                />
-              ),
-            )}
-          </>
-        ) : (
-          <>
-            <Text size="xs" color={colorPale}>
-              {game.hand.length} card{game.hand.length === 1 ? "" : "s"} ·{" "}
-              {standing} standing
-            </Text>
-            <Button
-              text={game.reversed ? "Reversed" : "Reverse"}
-              size="xs"
-              theme="orange"
-              disabled={game.lastColumn !== null || game.hand.length < 2}
-              onPress={reverse}
-            />
-          </>
-        )}
+          )}
+        </View>
       </View>
     </GameWrapper>
   );
