@@ -11,7 +11,6 @@ export const suitedCells: GameDefinition = {
     difficulty: 55,
     luck: 30,
   },
-  thumbnail: "SuitedCells.jpg",
   background: GAME_BACKGROUNDS.cherryBlossoms,
   animation: GameAnimations.CherryBlossom,
   gameColorDark: "#1b2a24",

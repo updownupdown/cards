@@ -13,6 +13,7 @@ export const midnightVigil: GameDefinition = {
   },
   background: GAME_BACKGROUNDS.city,
   animation: GameAnimations.Rain,
+  thumbnail: "MidnightVigil.jpg",
   gameColorDark: "#11161a",
   gameColorPale: "#e7edf0",
   cardDescription:

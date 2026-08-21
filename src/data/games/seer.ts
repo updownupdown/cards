@@ -13,6 +13,7 @@ export const seer: GameDefinition = {
   },
   background: GAME_BACKGROUNDS.nightSky,
   animation: GameAnimations.Stars,
+  thumbnail: "Seer.jpg",
   gameColorDark: "#1b2135",
   gameColorPale: "#d2d3c0",
   cardDescription:

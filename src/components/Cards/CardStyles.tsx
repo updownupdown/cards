@@ -2,12 +2,7 @@ import { Colors, rgba, transitionStyles } from "@/styles/styles";
 import { cardDims } from "./card-utils";
 import { StyleSheet, View, ViewStyle } from "react-native";
 
-export type CardSizes =
-  | "small"
-  | "regular"
-  | "small-colored"
-  | "tableau"
-  | "classic";
+export type CardSizes = "small" | "regular" | "tableau" | "classic";
 
 // ===== Card Select Colors ===== //
 const cardSelectColorMap = {
@@ -21,6 +16,7 @@ const cardSelectColorMap = {
   pink: Colors.cardSelectPink,
   grey: Colors.cardSelectGrey,
   lightGrey: Colors.cardSelectGrey,
+  lightPurple: Colors.cardSelectLightPurple,
 } as const;
 
 export type CardColor = keyof typeof cardSelectColorMap;

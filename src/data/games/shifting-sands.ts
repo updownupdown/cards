@@ -13,6 +13,7 @@ export const shiftingSands: GameDefinition = {
   },
   background: GAME_BACKGROUNDS.sahara,
   animation: GameAnimations.Sand,
+  thumbnail: "ShiftingSands.jpg",
   gameColorDark: "#385d68",
   gameColorPale: "#f4d99b",
   cardDescription:

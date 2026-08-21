@@ -225,7 +225,7 @@ export default function BakersSolitaire() {
       name: "tableau",
       pileIndex: columnIndex,
       cards: pile,
-      col: columnIndex,
+      col: columnIndex + (COLUMN_COUNT - game.tableau.length) / 2,
       row: 1.2,
       baseZIndex: 10 + columnIndex,
       fan: { direction: "down" as const, offset: cardDims.tableauOffset },
@@ -271,7 +271,7 @@ export default function BakersSolitaire() {
     cardMapper,
     cardSize: "tableau",
     fixedCols: COLUMN_COUNT,
-    fixedRows: 4,
+    fixedRows: 4.6,
     gap: 0.1,
   });
 

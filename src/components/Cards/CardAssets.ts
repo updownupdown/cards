@@ -10,7 +10,6 @@ const CARD_SIZES = [
   "classic",
   "regular",
   "small",
-  "small-colored",
   "tableau",
 ] as const satisfies readonly CardSizes[];
 const CARD_RANKS = [

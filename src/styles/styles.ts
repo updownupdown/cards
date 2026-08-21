@@ -31,6 +31,7 @@ export const Colors = {
   cardSelectRed: "#e0485c",
   cardSelectBlue: "#7bd5ff",
   cardSelectPurple: "#bb55ff",
+  cardSelectLightPurple: "#bf91dd",
   cardSelectPink: "#ff74b9",
   cardSelectOrange: "#ff8432",
   cardSelectYellow: "#ffea2d",

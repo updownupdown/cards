@@ -13,6 +13,7 @@ export const waypoint: GameDefinition = {
   },
   background: GAME_BACKGROUNDS.interchange,
   animation: GameAnimations.Dust,
+  thumbnail: "Waypoint.jpg",
   gameColorDark: "#263b38",
   gameColorPale: "#f5e4ad",
   cardDescription:
