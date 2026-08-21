@@ -44,6 +44,7 @@ export type GameSettings = {
   herbkeeperOpenStables: boolean;
   royalRestHardMode: boolean;
   pyramidDifficulty: "easy" | "hard";
+  golfDifficulty: "easy" | "hard";
   seerDifficulty: "easy" | "normal" | "hard";
   unwantedHelpDifficulty: "easy" | "hard";
   midnightVigilDifficulty: "street" | "kingpin" | "city";
@@ -158,6 +159,7 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   herbkeeperOpenStables: false,
   royalRestHardMode: false,
   pyramidDifficulty: "hard",
+  golfDifficulty: "easy",
   seerDifficulty: "normal",
   unwantedHelpDifficulty: "easy",
   midnightVigilDifficulty: "kingpin",

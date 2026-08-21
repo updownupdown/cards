@@ -140,7 +140,7 @@ export const ModalHeading = ({ color, iconName, title }: ModalHeadingProps) => {
         flexStyles.spaceBetween,
       ]}
     >
-      <Text size="xxl" weight={300} color={color} style={flexStyles.flex1}>
+      <Text size="xxl" weight={300} color={color} style={{ flexGrow: 1 }}>
         {title}
       </Text>
       {iconName && <Icon name={iconName} size={28} color={color} />}

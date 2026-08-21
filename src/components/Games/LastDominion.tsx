@@ -458,7 +458,7 @@ export default function LastDominion() {
       isLoaded={isLoaded}
       winLoseMessage={
         game.won
-          ? "All eighteen cards belong to one lastDominion."
+          ? "All eighteen cards belong to one dominion."
           : findIsolatedCard(game.board)
             ? `The ${cardLabel(findIsolatedCard(game.board))} was isolated, with no matching rank or suit.`
             : "No conquests or reserve placements remain."

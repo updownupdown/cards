@@ -1,4 +1,5 @@
 import { useGameColors } from "@/hooks/useGameColors";
+import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 import { useEffect, useMemo } from "react";
@@ -91,30 +92,40 @@ async function resetAndSetup(
 }
 
 // ========== Helper Functions ========== //
-function canDiscard(card: PlayingCard, discardTop?: PlayingCard) {
+type GolfDifficulty = "easy" | "hard";
+
+function canDiscard(
+  card: PlayingCard,
+  discardTop?: PlayingCard,
+  difficulty: GolfDifficulty = "hard",
+) {
   if (!discardTop) return false;
 
   const a = rankValue(card);
   const b = rankValue(discardTop);
   const diff = Math.abs(a - b);
-  return diff === 1;
+  return diff === 1 || (difficulty === "easy" && diff === 12);
 }
 
-function hasAnyMove(state: GameState) {
+function hasAnyMove(state: GameState, difficulty: GolfDifficulty = "hard") {
   const wasteTop = state.discard[state.discard.length - 1] ?? null;
   return state.piles.some((col) => {
     const top = col[col.length - 1] ?? null;
-    return top ? canDiscard(top, wasteTop) : false;
+    return top ? canDiscard(top, wasteTop, difficulty) : false;
   });
 }
 
-function evaluateEnd(state: GameState, isSettingUp = false) {
+function evaluateEnd(
+  state: GameState,
+  isSettingUp = false,
+  difficulty: GolfDifficulty = "hard",
+) {
   if (isSettingUp) return { ended: false, won: false };
 
   const tableauCount = state.piles.reduce((sum, col) => sum + col.length, 0);
   if (tableauCount === 0) return { ended: true, won: true };
   if (state.draw.length > 0) return { ended: false, won: false };
-  if (hasAnyMove(state)) return { ended: false, won: false };
+  if (hasAnyMove(state, difficulty)) return { ended: false, won: false };
   return { ended: true, won: false };
 }
 
@@ -126,6 +137,7 @@ export const golfRules = {
 
 // ========== Main Component ========== //
 export default function Golf() {
+  const difficulty = useGameSettingValue("golfDifficulty");
   const {
     isLoaded,
     isSettingUp,
@@ -145,14 +157,14 @@ export default function Golf() {
   useEffect(() => {
     if (game.ended) return;
 
-    const result = evaluateEnd(game, isSettingUp);
+    const result = evaluateEnd(game, isSettingUp, difficulty);
     if (!result.ended) return;
 
     setGame((draft) => {
       draft.ended = result.ended;
       draft.won = result.won;
     });
-  }, [game, isSettingUp, setGame]);
+  }, [difficulty, game, isSettingUp, setGame]);
 
   async function playCard(pileIndex: number, cardIndex: number) {
     if (game.ended) return;
@@ -259,7 +271,8 @@ export default function Golf() {
     const isBottomCard =
       mappedCard.refIndex === game.piles[mappedCard.pileIndex].length - 1;
     const canPlay =
-      isBottomCard && canDiscard(mappedCard.card, top(game.discard));
+      isBottomCard &&
+      canDiscard(mappedCard.card, top(game.discard), difficulty);
 
     return {
       isDisabled: game.ended || !isBottomCard || !canPlay,

@@ -55,8 +55,9 @@ async function resetAndSetup(
 
   await delay();
 
-  // Distribute to line
+  // Start every new game with a complete shuffled deck.
   setGame((draft) => {
+    draft.setupPile = shuffle(createDeck());
     draft.line = draft.setupPile.map((card) => [card]);
     draft.setupPile = [];
   });

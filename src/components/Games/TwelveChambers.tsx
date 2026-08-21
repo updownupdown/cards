@@ -887,7 +887,7 @@ export default function TwelveChambers() {
                         }}
                         theme="red"
                       />
-                      <Text style={{ flex: 1, textAlign: "center" }}>
+                      <Text style={{ flexGrow: 1, textAlign: "center" }}>
                         {kingHint(
                           kingMode.type === "return"
                             ? "hearts-action"

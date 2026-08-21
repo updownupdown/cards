@@ -27,6 +27,7 @@ export type GameSpecificSettingKey =
   | "herbkeeperOpenStables"
   | "royalRestHardMode"
   | "pyramidDifficulty"
+  | "golfDifficulty"
   | "seerDifficulty"
   | "unwantedHelpDifficulty"
   | "midnightVigilDifficulty";
@@ -50,6 +51,19 @@ export type GameSpecificSettingDefinition = {
 
 const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
   {
+    "/golf": [
+      {
+        key: "golfDifficulty",
+        label: "Difficulty",
+        type: "string",
+        applyBehavior: "immediate",
+        description: "Easy mode lets Aces and Kings play on each other.",
+        options: [
+          { label: "Easy", value: "easy" },
+          { label: "Hard", value: "hard" },
+        ],
+      },
+    ],
     "/midnight-vigil": [
       {
         key: "midnightVigilDifficulty",
