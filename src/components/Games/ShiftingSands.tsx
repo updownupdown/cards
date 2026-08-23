@@ -5,12 +5,13 @@ import { useGameColors } from "@/hooks/useGameColors";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, rgba } from "@/styles/styles";
+import { Colors, FontWeight, rgba } from "@/styles/styles";
 import { delay } from "@/utils/utils";
 import { useMemo } from "react";
 import { View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
+  cardDims,
   createDeck,
   flipAllToBack,
   flipToFace,
@@ -18,8 +19,10 @@ import {
   PlayingCard,
   rankValue,
   shuffle,
+  zoneFanOffset,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
+import { ProgressBar } from "../Home/ProgressBar";
 
 const cardSize = "tableau";
 const minCols = 10;
@@ -400,9 +403,19 @@ export default function ShiftingSands() {
           pileIndex: index,
           cards: preview ? [...column, preview] : column,
           col: columnOffset + offset,
-          row: 1.2,
+          row: 1,
+          // height: 2.7,
           baseZIndex: 10,
-          fan: { direction: "down", offset: 0.26, center: false },
+          fan: {
+            direction: "down",
+            offset: zoneFanOffset(
+              preview ? [...column, preview].length : column.length,
+              3,
+              0.1,
+              cardDims.tableauOffset,
+            ),
+            center: false,
+          },
           placeholder: {
             text: column.length === 0 ? "Empty" : undefined,
             showCount: column.length > 0,
@@ -445,7 +458,7 @@ export default function ShiftingSands() {
       {
         id: "actions",
         col: 0,
-        row: 3.5,
+        row: 3.8,
         width: "full",
         height: 0.75,
         baseZIndex: 80,
@@ -501,36 +514,19 @@ export default function ShiftingSands() {
     return { isDisabled: true };
   };
 
-  const { cardMap, getZoneStylesById } = useCardMap({
+  const { cardMap, cardHeight, getZoneStylesById } = useCardMap({
     game,
     zones,
     zoneMapper,
     cardMapper,
     cardSize,
     fixedCols: Math.max(displayColumnCount, minCols),
-    fixedRows: 4,
+    fixedRows: 4.5,
     gap: 0.1,
   });
 
-  const standing = game.columns.filter(isStanding).length;
+  // const standing = game.columns.filter(isStanding).length;
   const castleCards = faceUpCount(game.columns);
-
-  const Stat = ({
-    label,
-    value,
-  }: {
-    label: string;
-    value: string | number;
-  }) => (
-    <View style={[flexStyles.colCentered]}>
-      <Text size="sm" color={colorPale}>
-        {label}
-      </Text>
-      <Text size="xxl" color={Colors.white} weight={600}>
-        {value}
-      </Text>
-    </View>
-  );
 
   return (
     <GameWrapper
@@ -541,6 +537,7 @@ export default function ShiftingSands() {
       winLoseMessage={game.winLoseMessage}
       canUndo={canUndo}
       undo={undo}
+      showDeviceRotateHint
     >
       {cardMap}
 
@@ -551,12 +548,26 @@ export default function ShiftingSands() {
           { gap: spacing(24) },
         ]}
       >
-        <Stat label="Face Up" value={castleCards} />
-        <Stat label="Discard" value={game.discard.length} />
-        <Stat label="Standing" value={standing} />
-        <Stat
-          label="Stock to Tide"
-          value={game.phase === "play" ? placementPreview.stockToTide : "--"}
+        <ProgressBar
+          progressValue={castleCards}
+          totalValue={30}
+          color={"#8d693b"}
+          labelText="Dunes"
+          style={{ flex: 1 }}
+          tallyText={castleCards}
+          scaledHeight={cardHeight * 0.5}
+          backgroundColor={rgba(Colors.K900, 0.5)}
+        />
+        <ProgressBar
+          progressValue={game.discard.length}
+          totalValue={30}
+          color={"#8d693b"}
+          labelText="Eroded"
+          style={{ flex: 1 }}
+          tallyText={game.discard.length}
+          scaledHeight={cardHeight * 0.5}
+          backgroundColor={rgba(Colors.K900, 0.5)}
+          flipDirection
         />
       </View>
 
@@ -576,8 +587,8 @@ export default function ShiftingSands() {
         >
           {game.phase === "gather" ? (
             <>
-              <Text size="sm" color={Colors.white} weight={500}>
-                Draw cards:
+              <Text size="md" color={Colors.white} weight={500}>
+                Draw:
               </Text>
               {Array.from(
                 { length: Math.min(7, game.deck.length) },
@@ -588,8 +599,15 @@ export default function ShiftingSands() {
                     size="sm"
                     theme={colorDark}
                     onPress={() => gather(index + 1)}
-                    style={{ minWidth: spacing(60) }}
-                    taller
+                    style={{
+                      width: spacing(52),
+                      height: spacing(52),
+                      borderRadius: spacing(26),
+                    }}
+                    textStyle={{
+                      fontSize: spacing(20),
+                      fontFamily: FontWeight[500],
+                    }}
                   />
                 ),
               )}
@@ -597,9 +615,26 @@ export default function ShiftingSands() {
           ) : (
             <>
               <Button
+                text="Place"
+                size="sm"
+                theme="green"
+                taller
+                onPress={() => updatePreview(placeHand)}
+              />
+
+              <View style={[flexStyles.colCentered, flexStyles.flex1]}>
+                <Text size="sm" color={colorPale}>
+                  Stock to Tide
+                </Text>
+                <Text size="xxl" color={Colors.white} weight={600}>
+                  {game.phase === "play" ? placementPreview.stockToTide : "--"}
+                </Text>
+              </View>
+
+              <Button
                 text={"Reverse"}
                 size="sm"
-                theme="orange"
+                theme="#8d693b"
                 disabled={game.hand.length < 2}
                 onPress={reverse}
                 taller
@@ -622,20 +657,14 @@ export default function ShiftingSands() {
                 taller
                 iconName="arrow-forward"
               />
-              <Button
+
+              {/* <Button
                 text="Flip direction"
                 size="sm"
                 theme={colorDark}
                 taller
                 onPress={() => updatePreview(flipDirection)}
-              />
-              <Button
-                text="Place"
-                size="sm"
-                theme="green"
-                taller
-                onPress={() => updatePreview(placeHand)}
-              />
+              /> */}
             </>
           )}
         </View>

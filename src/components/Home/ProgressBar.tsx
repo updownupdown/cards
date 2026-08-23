@@ -39,6 +39,7 @@ interface Props {
   labelText?: string;
   tallyText?: string | number;
   autoTallyText?: boolean;
+  flipDirection?: boolean;
   style?: ViewStyle | ViewStyle[];
 }
 
@@ -53,6 +54,7 @@ export const ProgressBar = ({
   totalValue,
   autoTallyText = false,
   scaledHeight,
+  flipDirection = false,
   style,
 }: Props) => {
   const { scale, textScale } = useResponsiveMetrics();
@@ -147,6 +149,9 @@ export const ProgressBar = ({
     snappedBarWidth > 0
       ? roundToPixel((previewProgressPercentage / 100) * snappedBarWidth)
       : (`${previewProgressPercentage}%` as `${number}%`);
+  const progressBorderRadius = roundToPixel(height / 2);
+  const isProgressFull = progressPercentage === 100;
+  const isPreviewProgressFull = previewProgressPercentage === 100;
 
   const showText =
     tallyText ||
@@ -183,7 +188,8 @@ export const ProgressBar = ({
           style={{
             position: "absolute",
             zIndex: 10,
-            left: roundToPixel(height * 0.4),
+            left: flipDirection ? undefined : roundToPixel(height * 0.4),
+            right: flipDirection ? roundToPixel(height * 0.4) : undefined,
             top: "50%",
             transform: [{ translateY: "-50%" }],
             fontSize: clamp(
@@ -208,7 +214,8 @@ export const ProgressBar = ({
               position: "absolute",
               zIndex: 10,
               top: iconWrapperInset,
-              left: iconWrapperInset,
+              left: flipDirection ? iconWrapperInset : undefined,
+              right: flipDirection ? undefined : iconWrapperInset,
               width: iconWrapperSize,
               height: iconWrapperSize,
               borderRadius: roundToPixel(iconWrapperSize / 2),
@@ -244,7 +251,8 @@ export const ProgressBar = ({
         style={{
           position: "absolute",
           zIndex: 10,
-          right: roundToPixel(scale * height * 0.5),
+          right: flipDirection ? undefined : roundToPixel(scale * height * 0.5),
+          left: flipDirection ? roundToPixel(scale * height * 0.5) : undefined,
           top: "50%",
           transform: [{ translateY: "-50%" }],
           fontSize: clamp(
@@ -268,16 +276,33 @@ export const ProgressBar = ({
             width: progressWidth,
             top: 0,
             bottom: 0,
-            left: 0,
+            left: flipDirection ? undefined : 0,
+            right: flipDirection ? 0 : undefined,
             backgroundColor: rgba(
               progressColor,
               previewProgressValue === undefined ? 1 : 0.5,
             ),
-            borderRadius: roundToPixel(height / 2),
-            borderTopRightRadius:
-              progressPercentage === 100 ? roundToPixel(height / 2) : 0,
-            borderBottomRightRadius:
-              progressPercentage === 100 ? roundToPixel(height / 2) : 0,
+            borderRadius: progressBorderRadius,
+            borderTopRightRadius: flipDirection
+              ? 0
+              : isProgressFull
+                ? progressBorderRadius
+                : 0,
+            borderTopLeftRadius: flipDirection
+              ? isProgressFull
+                ? progressBorderRadius
+                : 0
+              : 0,
+            borderBottomRightRadius: flipDirection
+              ? 0
+              : isProgressFull
+                ? progressBorderRadius
+                : 0,
+            borderBottomLeftRadius: flipDirection
+              ? isProgressFull
+                ? progressBorderRadius
+                : 0
+              : 0,
           },
         ]}
       />
@@ -292,13 +317,30 @@ export const ProgressBar = ({
             width: previewProgressWidth,
             top: 0,
             bottom: 0,
-            left: 0,
+            left: flipDirection ? undefined : 0,
+            right: flipDirection ? 0 : undefined,
             backgroundColor: progressColor,
-            borderRadius: roundToPixel(height / 2),
-            borderTopRightRadius:
-              previewProgressPercentage === 100 ? roundToPixel(height / 2) : 0,
-            borderBottomRightRadius:
-              previewProgressPercentage === 100 ? roundToPixel(height / 2) : 0,
+            borderRadius: progressBorderRadius,
+            borderTopRightRadius: flipDirection
+              ? 0
+              : isPreviewProgressFull
+                ? progressBorderRadius
+                : 0,
+            borderTopLeftRadius: flipDirection
+              ? isPreviewProgressFull
+                ? progressBorderRadius
+                : 0
+              : 0,
+            borderBottomLeftRadius: flipDirection
+              ? isPreviewProgressFull
+                ? progressBorderRadius
+                : 0
+              : 0,
+            borderBottomRightRadius: flipDirection
+              ? 0
+              : isPreviewProgressFull
+                ? progressBorderRadius
+                : 0,
             boxShadow: `inset 0 0 0 ${roundToPixel(height * 0.03)}px ${rgba(
               Colors.white,
               0.2,

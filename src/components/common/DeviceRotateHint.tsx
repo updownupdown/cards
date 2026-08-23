@@ -46,7 +46,6 @@ export const DeviceRotateHint = ({ enabled = false }: Props) => {
 
   return (
     <Animated.View
-      pointerEvents="none"
       style={{
         position: "absolute",
         zIndex: LayerZIndexes.boardContent + 1,
@@ -58,13 +57,14 @@ export const DeviceRotateHint = ({ enabled = false }: Props) => {
     >
       <Button
         text={`Landscape mode\nrecommended`}
-        size="sm"
-        iconSize={30}
+        size="md"
+        iconSize={40}
         iconName="rotate-device"
         autoProgress={HINT_DURATION}
         autoProgressColor={rgba(Colors.white, 0.1)}
         onPress={() => {}}
         theme={rgba(Colors.K950, 0.65)}
+        lineHeight={1.3}
         style={{
           borderRadius: spacing(12),
           paddingHorizontal: spacing(14),

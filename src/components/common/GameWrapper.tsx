@@ -12,7 +12,10 @@ import { useFade } from "@/hooks/useFade";
 import { useGameSettings } from "@/hooks/useGameSettings";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { getActiveGameSessionId } from "@/hooks/useStateManager";
-import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
+import {
+  TABLET_BREAKPOINT,
+  useResponsiveUiLayoutFromWidth,
+} from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { flexStyles } from "@/styles/flexStyles";
 import {
@@ -166,6 +169,8 @@ export const GameWrapper = ({
   const backgroundColor = gameInfo.gameColorDark;
   const headerHeight = getHeaderHeightWithInset(insets.top, ui.scale);
   const background = gameInfo.background ?? DEFAULT_GAME_BACKGROUND;
+  const isLandscape =
+    viewportWidth < TABLET_BREAKPOINT && viewportWidth > viewportHeight;
 
   return (
     <>

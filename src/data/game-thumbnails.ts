@@ -64,6 +64,7 @@ export const GAME_THUMBNAIL_ASSETS = {
   "ThirteenClubs.jpg": require("@/assets/thumbnails/ThirteenClubs.jpg"),
   "ThreeSliceDeli.jpg": require("@/assets/thumbnails/ThreeSliceDeli.jpg"),
   "ThreeSummits.jpg": require("@/assets/thumbnails/ThreeSummits.jpg"),
+  "TowerOfHanoi.jpg": require("@/assets/thumbnails/TowerOfHanoi.jpg"),
   "TwelveChambers.jpg": require("@/assets/thumbnails/TwelveChambers.jpg"),
   "UnwantedHelp.jpg": require("@/assets/thumbnails/UnwantedHelp.jpg"),
   "Waypoint.jpg": require("@/assets/thumbnails/Waypoint.jpg"),

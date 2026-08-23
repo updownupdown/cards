@@ -491,7 +491,7 @@ export default function Seer() {
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={reset}
       isLoaded={isLoaded}
-      score={`${completedCount} / 8`}
+      score={completedCount}
       winLoseMessage={game.winLoseMessage}
       canUndo={canUndo}
       undo={undo}
