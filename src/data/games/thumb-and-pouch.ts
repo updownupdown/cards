@@ -3,7 +3,6 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const thumbAndPouch: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/thumb-and-pouch",
   title: "Thumb and Pouch",
   tags: [GameTag.StockAndWaste, GameTag.TableauBuilding],

@@ -1,7 +1,6 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 export const congress: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/congress",
   title: "Congress",
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],

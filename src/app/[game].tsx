@@ -1,5 +1,10 @@
 import { getGameComponentByPath } from "@/data/games-router";
+import { GAME_DEFINITIONS } from "@/data/games-registry";
 import { useLocalSearchParams, Redirect } from "expo-router";
+
+export function generateStaticParams() {
+  return GAME_DEFINITIONS.map(({ path }) => ({ game: path.slice(1) }));
+}
 
 export default function DynamicGameRoute() {
   const { game } = useLocalSearchParams<{ game: string }>();

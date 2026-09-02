@@ -150,6 +150,14 @@ function getLockedIndices(grid: (PlayingCard | null)[]) {
   return locked;
 }
 
+function findMoveSource(grid: (PlayingCard | null)[], gap: number) {
+  const locked = getLockedIndices(grid);
+  return grid.findIndex(
+    (card, source) =>
+      !!card && !locked.has(source) && canMove(grid, source, gap),
+  );
+}
+
 function redealGrid(grid: (PlayingCard | null)[]) {
   const locked = getLockedIndices(grid);
   const cards = shuffle(
@@ -177,6 +185,7 @@ function redealGrid(grid: (PlayingCard | null)[]) {
 export const gapsRules = {
   canMove,
   createInitialState,
+  findMoveSource,
   getLockedIndices,
   hasMove,
   isWon,
@@ -223,11 +232,15 @@ export default function Gaps() {
   }
 
   function onGapPress(index: number) {
-    if (selected === null || !canMove(game.grid, selected, index)) return;
+    if (game.ended || isSettingUp || game.grid[index] !== null) return;
+    const locked = getLockedIndices(game.grid);
+    const source = selected ?? findMoveSource(game.grid, index);
+    if (source < 0 || locked.has(source) || !canMove(game.grid, source, index))
+      return;
     saveUndoState(structuredClone(game));
     setGame((draft) => {
-      draft.grid[index] = draft.grid[selected];
-      draft.grid[selected] = null;
+      draft.grid[index] = draft.grid[source];
+      draft.grid[source] = null;
     });
     setSelected(null);
   }
@@ -293,9 +306,7 @@ export default function Gaps() {
       return {
         onPress: () => onGapPress(zone.pileIndex!),
         isDisabled:
-          isSettingUp ||
-          selected === null ||
-          game.grid[zone.pileIndex] !== null,
+          isSettingUp || game.ended || game.grid[zone.pileIndex] !== null,
       };
     return {};
   };
@@ -309,9 +320,9 @@ export default function Gaps() {
     fixedRows: 5.4,
     gap: 0.08,
     paddingTop: 0,
-    paddingBottom: 0,
-    paddingLeft: 0,
-    paddingRight: 0,
+    paddingBottom: 0.1,
+    paddingLeft: 0.1,
+    paddingRight: 0.1,
   });
   return (
     <GameWrapper

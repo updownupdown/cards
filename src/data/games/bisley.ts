@@ -3,7 +3,6 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const bisley: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/bisley",
   title: "Bisley",
   tags: [GameTag.TableauBuilding],
@@ -22,6 +21,7 @@ export const bisley: GameDefinition = {
   howToPlay: [
     "## Objective",
     "Move every card to eight foundations: four building up from Aces and four building down from Kings.",
+
     "## Rules",
     "- Aces begin on their ascending foundations.",
     "- Build tableau one rank up or down in the same suit.",

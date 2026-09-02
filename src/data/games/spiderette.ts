@@ -1,7 +1,6 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 export const spiderette: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/spiderette",
   title: "Spiderette",
   tags: [GameTag.TableauBuilding, GameTag.SequenceBuilding],

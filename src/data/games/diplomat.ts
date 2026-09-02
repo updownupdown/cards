@@ -3,7 +3,6 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const diplomat: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/diplomat",
   title: "Diplomat",
   tags: [GameTag.StockAndWaste, GameTag.TableauBuilding],

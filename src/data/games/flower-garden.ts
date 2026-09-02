@@ -3,7 +3,6 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const flowerGarden: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/flower-garden",
   title: "Flower Garden",
   aliases: ["The Bouquet", "The Garden"],

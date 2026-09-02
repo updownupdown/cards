@@ -3,7 +3,6 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const shamrocks: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/shamrocks",
   title: "Shamrocks",
   tags: [GameTag.TableauBuilding],

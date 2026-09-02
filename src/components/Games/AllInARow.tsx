@@ -171,7 +171,7 @@ export default function AllInARow() {
     cardMapper,
     cardSize: "small",
     fixedCols: 13,
-    fixedRows: 5.5,
+    fixedRows: 3.5,
     gap: 0.08,
   });
 

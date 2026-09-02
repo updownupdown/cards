@@ -3,6 +3,7 @@ import { DOUBLE_TAP_MS } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
+  cardDims,
   createDeck,
   rankValue,
   shuffle,
@@ -14,6 +15,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+const cardSize = "tableau";
 const COLUMN_SIZES = [3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4];
 
 export type BisleyGameState = {
@@ -210,8 +212,8 @@ export default function Bisley() {
               name: direction,
               pileIndex: suitIndex,
               cards: pile,
-              col: 4.5 + suitIndex,
-              row: row * 1.1,
+              col: 2 + suitIndex + row * 5,
+              row: 0,
               fan: { maxVisible: 1 },
               placeholder: {},
             }) as MapZone,
@@ -223,8 +225,8 @@ export default function Bisley() {
       pileIndex: index,
       cards: pile,
       col: index,
-      row: 2.4,
-      fan: { direction: "down" as const, offset: 0.3 },
+      row: 1.2,
+      fan: { direction: "down" as const, offset: cardDims.tableauOffset },
       placeholder: { hideBackground: pile.length === 0 },
     }));
     return [...foundations, ...columns];
@@ -265,9 +267,9 @@ export default function Bisley() {
     zones,
     cardMapper,
     zoneMapper,
-    cardSize: "small",
+    cardSize,
     fixedCols: 13,
-    fixedRows: 6,
+    fixedRows: 5,
     gap: 0.08,
   });
   const score = 52 - game.columns.reduce((sum, pile) => sum + pile.length, 0);

@@ -1,7 +1,6 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 export const simpleSimon: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/simple-simon",
   title: "Simple Simon",
   tags: [GameTag.TableauBuilding, GameTag.SequenceBuilding],

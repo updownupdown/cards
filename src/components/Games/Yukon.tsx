@@ -17,6 +17,7 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
   cardDims,
   createDeck,
+  flipToBack,
   flipToFace,
   isRed,
   PlayingCard,
@@ -25,11 +26,12 @@ import {
   top,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-import { DOUBLE_TAP_MS } from "@/utils/utils";
+import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
 
 const columnCount = 7;
 
 type GameState = {
+  setupPile: PlayingCard[];
   columns: PlayingCard[][];
   foundations: PlayingCard[][];
 };
@@ -69,7 +71,15 @@ function canPlaceOnFoundation(
 // ─── Setup ────────────────────────────────────────────────────────────────────
 
 export function createYukonState(): GameState {
-  const deck = shuffle(createDeck());
+  return {
+    setupPile: shuffle(createDeck()).map(flipToBack),
+    columns: Array.from({ length: columnCount }, () => [] as PlayingCard[]),
+    foundations: Array.from({ length: 4 }, () => [] as PlayingCard[]),
+  };
+}
+
+function dealYukon(deckCards: PlayingCard[]): GameState {
+  const deck = [...deckCards];
   const columns: PlayingCard[][] = Array.from(
     { length: columnCount },
     () => [],
@@ -83,6 +93,7 @@ export function createYukonState(): GameState {
   }
 
   return {
+    setupPile: [],
     columns,
     foundations: Array.from({ length: 4 }, () => [] as PlayingCard[]),
   };
@@ -123,7 +134,30 @@ export function YukonBoard({
         clearDragGhostRef.current?.();
       },
       resetAndSetup: async () => {
-        setGame(createYukonState());
+        setGame((draft) => {
+          draft.setupPile = [
+            ...draft.setupPile,
+            ...draft.columns.flat(),
+            ...draft.foundations.flat(),
+          ].map(flipToBack);
+          draft.columns = Array.from(
+            { length: columnCount },
+            () => [] as PlayingCard[],
+          );
+          draft.foundations = Array.from(
+            { length: 4 },
+            () => [] as PlayingCard[],
+          );
+        });
+
+        await delay();
+
+        setGame((draft) => {
+          const next = dealYukon(shuffle(draft.setupPile));
+          draft.setupPile = next.setupPile;
+          draft.columns = next.columns;
+          draft.foundations = next.foundations;
+        });
       },
     });
 
@@ -226,6 +260,16 @@ export function YukonBoard({
       placeholder: {},
     }));
 
+    const setupZone: MapZone = {
+      id: "setup",
+      name: "setup",
+      cards: game.setupPile,
+      col: 0,
+      row: 0,
+      baseZIndex: 1,
+      fan: { maxVisible: 3 },
+    };
+
     const columnZones: MapZone[] = game.columns.map((pile, i) => ({
       id: `cascade-${i}`,
       name: "cascade",
@@ -242,7 +286,7 @@ export function YukonBoard({
       placeholder: {},
     }));
 
-    return [sizingZone, ...foundationZones, ...columnZones];
+    return [sizingZone, setupZone, ...foundationZones, ...columnZones];
   }, [game]);
 
   // ── Card / zone mappers ─────────────────────────────────────────────────────

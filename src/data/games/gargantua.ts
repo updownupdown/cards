@@ -3,7 +3,6 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const gargantua: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/gargantua",
   title: "Gargantua",
   aliases: ["Double Klondike"],

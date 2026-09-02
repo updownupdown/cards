@@ -3,7 +3,6 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const moosehide: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/moosehide",
   title: "Moosehide",
   tags: [GameTag.TableauBuilding],
@@ -15,17 +14,19 @@ export const moosehide: GameDefinition = {
   cardDescription:
     "A Yukon relative that descends on every suit except its own.",
   quickStart: [
-    "Build down on any suit except the same suit.",
-    "Move arbitrary face-up groups together.",
-    "Only Kings fill empty columns.",
+    "Build foundations up by suit, A to K.",
+    "Build columns down on any suit except the same suit.",
+    "Move any face-up stack.",
+    "Only Kings can fill empty columns.",
   ],
   howToPlay: [
     "## Objective",
-    "Build four foundations from Ace to King by suit.",
+    "Build the four foundations up by suit, from Ace to King.",
+
     "## Rules",
-    "- Moosehide uses Yukon's seven-column deal with no stock.",
-    "- Build down by rank on any different suit.",
-    "- Any face-up card may move with all cards covering it, regardless of their order.",
-    "- Only Kings or groups headed by Kings fill empty columns.",
+    "- Move any face-up card or **stack** of cards, **building down by rank, and on a card of a different suit.**.",
+    "- The carried cards do **not** need to be in sequence.",
+    "- Empty columns can only be filled with Kings.",
+    "- Double-tap or drag single cards to the foundations.",
   ],
 };

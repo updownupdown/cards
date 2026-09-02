@@ -3,7 +3,6 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const rankAndFile: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/rank-and-file",
   title: "Rank and File",
   aliases: ["Dress Parade"],

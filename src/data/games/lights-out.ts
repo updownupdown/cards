@@ -1,7 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 
 export const lightsOut: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/lights-out",
   title: "Lights Out",
   tags: [GameTag.EasyToLearn, GameTag.SpatialControl, GameTag.ModernMechanics],

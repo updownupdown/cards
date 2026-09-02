@@ -1,7 +1,6 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 export const whitehead: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/whitehead",
   title: "Whitehead",
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],

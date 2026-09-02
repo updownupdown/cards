@@ -37,7 +37,10 @@ export default function Layout() {
     const updateMeta = (name: string, content: string) => {
       const meta = document.querySelector(`meta[name="${name}"]`);
       if (!meta) return;
-      meta.setAttribute("content", content);
+
+      const replacement = meta.cloneNode() as HTMLMetaElement;
+      replacement.setAttribute("content", content);
+      meta.replaceWith(replacement);
     };
 
     updateMeta("theme-color", colorDark);

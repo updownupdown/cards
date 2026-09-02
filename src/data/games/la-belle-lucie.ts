@@ -3,7 +3,6 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const laBelleLucie: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/la-belle-lucie",
   title: "La Belle Lucie",
   aliases: ["Lovely Lucy", "The Fan"],

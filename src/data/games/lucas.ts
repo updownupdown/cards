@@ -3,7 +3,6 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const lucas: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/lucas",
   title: "Lucas",
   tags: [GameTag.StockAndWaste, GameTag.TableauBuilding],

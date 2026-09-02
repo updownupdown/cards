@@ -1,7 +1,6 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 export const easthaven: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/easthaven",
   title: "Easthaven",
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],

@@ -1,7 +1,6 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 export const australianPatience: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/australian-patience",
   title: "Australian Patience",
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],

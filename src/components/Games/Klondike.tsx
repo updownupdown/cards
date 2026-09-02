@@ -25,7 +25,9 @@ import {
   SUITS,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
-import { DOUBLE_TAP_MS } from "@/utils/utils";
+import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
+
+const cardSize = "tableau";
 
 type GameState = {
   tableau: PlayingCard[][];
@@ -108,6 +110,17 @@ function createInitialState(drawCount: 1 | 3 = 1): GameState {
     ),
   );
 
+  return {
+    tableau: Array.from({ length: 7 }, () => [] as PlayingCard[]),
+    stock: fullDeck,
+    waste: [],
+    foundations: Array.from({ length: 4 }, () => [] as PlayingCard[]),
+    drawCount,
+  };
+}
+
+function dealFromStock(stock: PlayingCard[], drawCount: 1 | 3): GameState {
+  const fullDeck = [...stock];
   const tableau: PlayingCard[][] = Array.from({ length: 7 }, () => []);
   let cursor = 0;
 
@@ -142,18 +155,51 @@ export default function Klondike() {
     null,
   );
 
-  const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
-    useStateManager<GameState>({
-      gameStateInitial,
-      resetNonGameStates: () => {
-        setSelected(null);
-        setLastTap(null);
-        clearDragGhost();
-      },
-      resetAndSetup: async () => {
-        setGame(createInitialState(configuredDrawCount));
-      },
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<GameState>({
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelected(null);
+      setLastTap(null);
+      clearDragGhost();
+    },
+    resetAndSetup: async () => {
+      setGame((draft) => {
+        draft.stock = [
+          ...draft.stock,
+          ...draft.waste,
+          ...draft.tableau.flat(),
+          ...draft.foundations.flat(),
+        ].map((card) => ({ ...card, faceUp: false }));
+        draft.tableau = Array.from({ length: 7 }, () => [] as PlayingCard[]);
+        draft.waste = [];
+        draft.foundations = Array.from(
+          { length: 4 },
+          () => [] as PlayingCard[],
+        );
+        draft.drawCount = configuredDrawCount;
+      });
+
+      await delay();
+
+      setGame((draft) => {
+        const next = dealFromStock(shuffle(draft.stock), configuredDrawCount);
+        draft.tableau = next.tableau;
+        draft.stock = next.stock;
+        draft.waste = next.waste;
+        draft.foundations = next.foundations;
+        draft.drawCount = next.drawCount;
+      });
+    },
+  });
 
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
 
@@ -237,18 +283,17 @@ export default function Klondike() {
         row: 0,
         baseZIndex: 40,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "below" },
+        placeholder: {},
       },
       {
         id: "waste",
         name: "waste",
         cards: game.waste,
         pileIndex: 0,
-        col: 1,
+        col: 1.25,
         row: 0,
         baseZIndex: 30,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Waste", infoPos: "below" },
       },
       ...foundationZones,
       ...tableauZones,
@@ -278,7 +323,8 @@ export default function Klondike() {
         selectColor: "blue",
         isSelected: selected?.zone === "stock",
         onPress: drawFromStock,
-        isDisabled: game.stock.length === 0 && game.waste.length === 0,
+        isDisabled:
+          isSettingUp || (game.stock.length === 0 && game.waste.length === 0),
         isVisible: !isBeingDragged,
         animDuration: animDuration,
       };
@@ -332,7 +378,8 @@ export default function Klondike() {
     if (zone.name === "stock") {
       return {
         onPress: drawFromStock,
-        isDisabled: game.stock.length === 0 && game.waste.length === 0,
+        isDisabled:
+          isSettingUp || (game.stock.length === 0 && game.waste.length === 0),
         isSelected: selected?.zone === "stock",
       };
     }
@@ -382,7 +429,7 @@ export default function Klondike() {
     zones,
     cardMapper,
     zoneMapper,
-    cardSize: "small",
+    cardSize,
     fixedRows: 6.5,
     gap: 0.16,
   });
@@ -996,7 +1043,7 @@ export default function Klondike() {
                 <Card
                   card={card}
                   cardWidth={cardWidth}
-                  cardSize="small"
+                  cardSize={cardSize}
                   selectColor={ghostHasValidDrop ? "green" : "none"}
                   isSelected={ghostHasValidDrop}
                 />

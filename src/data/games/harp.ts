@@ -3,7 +3,6 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const harp: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/harp",
   title: "Harp",
   tags: [GameTag.StockAndWaste, GameTag.TableauBuilding],

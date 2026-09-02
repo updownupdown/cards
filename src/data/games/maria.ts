@@ -3,7 +3,6 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const maria: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/maria",
   title: "Maria",
   aliases: ["Thirty-Six Card Tableau"],

@@ -3,7 +3,6 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const westcliff: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/westcliff",
   title: "Westcliff",
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],

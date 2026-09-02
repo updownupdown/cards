@@ -3,7 +3,6 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const numberTen: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/number-ten",
   title: "Number Ten",
   tags: [GameTag.StockAndWaste, GameTag.TableauBuilding],

@@ -3,7 +3,6 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const alaska: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/alaska",
   title: "Alaska",
   tags: [GameTag.TableauBuilding],
@@ -15,17 +14,19 @@ export const alaska: GameDefinition = {
   cardDescription:
     "A Yukon expedition where suited cards may climb or descend.",
   quickStart: [
-    "Build tableau one rank up or down in the same suit.",
-    "Move any face-up card with every card covering it.",
-    "Only Kings fill empty columns.",
+    "Build foundations up by suit, A to K.",
+    "Build columns one rank up or down in the same suit.",
+    "Move any face-up stack.",
+    "Only Kings can fill empty columns.",
   ],
   howToPlay: [
     "## Objective",
-    "Build four foundations from Ace to King by suit.",
+    "Build the four foundations up by suit, from Ace to King.",
+
     "## Rules",
-    "- Alaska uses Yukon's seven-column deal with no stock.",
-    "- Build tableau one rank up or down in the same suit.",
-    "- Move any face-up card together with all cards covering it.",
-    "- Only Kings or groups headed by Kings fill empty columns.",
+    "- Move any face-up card or **stack** of cards onto a card, **building down or up in rank, in the same suit**.",
+    "- The carried cards do **not** need to be in sequence.",
+    "- Empty columns can only be filled with Kings.",
+    "- Double-tap or drag single cards to the foundations.",
   ],
 };

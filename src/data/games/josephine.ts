@@ -1,7 +1,6 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 export const josephine: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/josephine",
   title: "Josephine",
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
