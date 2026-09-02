@@ -5,6 +5,7 @@ import { GameAnimations } from "@/animations/types";
 export const threeSummits: GameDefinition = {
   path: "/three-summits",
   title: "Three Summits",
+  aliases: ["TriPeaks", "Tri Peaks"],
   tags: [GameTag.EasyToLearn, GameTag.SequenceBuilding, GameTag.StockAndWaste],
   rating: {
     complexity: 15,

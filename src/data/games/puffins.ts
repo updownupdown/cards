@@ -5,6 +5,7 @@ import { GameAnimations } from "@/animations";
 export const puffins: GameDefinition = {
   path: "/puffins",
   title: "Puffins",
+  aliases: ["Penguin"],
   tags: [GameTag.TableauBuilding],
   rating: {
     complexity: 0,

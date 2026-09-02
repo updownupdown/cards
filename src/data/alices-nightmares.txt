@@ -1,0 +1,170 @@
+Here is the plain text version of the game document, structured with markdown headings and lists for clarity. I have also included descriptive breakdowns of the visual card layout diagrams (Figures 1-4) so an AI can understand the spatial and mechanical requirements of the game board.
+
+---
+
+# Alice's Nightmares
+
+**Created by:** the brothers Ighalen and Musella
+**Players:** 1 | **Time:** 20-30 Minutes | **Age:** 12+
+
+*"GUARDIANS, WAKE UP! THE NIGHT IS LONG AND THE NIGHTMARES ARE LURKING. ALICE NEEDS YOU!"*
+
+---
+
+## LEGEND
+
+* **Guardians:** 2 - 10 (Hearts, Diamonds)
+* **Nightmares:** 2 - 10 (Spades, Clubs)
+* **Special Guardians:** A / J=11 / Q=12 / K=13 / Joker (Hearts, Diamonds)
+* **Special Nightmares:** A / J=11 / Q=12 / K=13 / Joker (Spades, Clubs)
+* **Guardians Deck:** Player’s deck
+* **Dream Deck:** Main deck
+
+---
+
+## PURPOSE OF THE GAME
+
+In Alice's Nightmares, you are Alice's subconscious, capable of shaping powerful Guardians to defeat the Nightmares and lead her towards a peaceful awakening. To ensure a happy awakening for Alice, you must eliminate the Nightmares from the Dream deck. To succeed, you must strengthen the Guardians deck by shaping increasingly powerful Guardians from the game board. However, be careful: while you try to empower yourself, the Nightmares will attempt to overwhelm Alice. Don't let that happen!
+
+## COMPONENTS
+
+* 1 deck of 52 traditional cards and two Jokers of different colors.
+* 1 counter (digital or physical) or paper and pen to keep track of Life points.
+
+---
+
+## SETUP (Fig. 1)
+
+1. **Life points:** Set the counter to 40. They represent the vitality of Alice's subconscious.
+2. **Guardian Deck:** Separate the cards 2 to 5 of Hearts and Diamonds and one Ace (Hearts or Diamonds) from the playing deck. These cards form the player's deck. Shuffle the deck and draw 4 cards. Leave space for a discard pile.
+3. **Dream Deck:** Set aside all Special Guardians and Nightmares from the remaining deck, shuffle it, and reveal the top three cards. Then add the set-aside cards back to the deck and shuffle. These cards form the Dream deck. Leave space for a discard pile.
+4. **Removed cards:** Set aside space for two removed piles: one for Guardians and one for Nightmares.
+
+### [Image Description: FIG. 1 - Game Board Layout]
+
+The diagram illustrates the spatial arrangement of the cards on the table:
+
+* **Top Row (Dream Zone):** On the far left is the "Dream Discards" pile and the "Dream Deck". Next to them is the "Board", consisting of 3 face-up cards drawn in a horizontal row. On the far right are two "Removed" piles: one for Nightmares, one for Guardians.
+* **Bottom Row (Player Zone):** Below the Dream zone is the "Guardians Discards" pile and the "Guardians Deck". In the bottom center is the "Player's Hand" (showing 4 face-up cards). To the far right is the "Life Points" counter tracker.
+
+---
+
+## THE GAME TURN
+
+A game turn in Alice's Nightmares has 5 phases:
+
+1. Draw Cards
+2. Play Cards
+3. Resolution Phase
+4. Board Update
+5. Endgame check
+
+### 1. DRAW CARDS
+
+If you have no cards in hand, draw three cards. If you have at least one card remaining, draw up to a maximum of four cards.
+
+### 2. PLAY CARDS / USE ABILITIES
+
+You can perform as many actions as you want as long as you have Guardian cards in hand. To execute them, place any number of Guardians under one or more cards on the board. The actions you can take are:
+
+* **Molding Guardians:** This action allows you to purchase Guardians from the board and add them to the discard pile of the Guardians deck. To perform this action, the total value of the cards played from your hand must be equal to or greater than the value of the Guardian you wish to purchase. The suit does not matter: you can use any combination of suits (the only exception is the Ace Special Guardian. See “SPECIAL RULES”). This action is only allowed if the value of the cards played meets the minimum requirement; otherwise, the action cannot be executed.
+* **Eliminate Nightmares:** This action allows you to remove Nightmares from the game. To perform it, the total value of cards played from your hand must be HIGHER than the Nightmare's value. You may play a maximum of TWO GUARDIANS to execute this action. If the condition is met, remove the Nightmare from the game.
+* *IMPORTANT: The Ace Special Guardian does not count towards the two-card limit under Nightmare cards, allowing it to be played as a third card.*
+
+
+* **Defending Against an Attack:** The Nightmare cards on the board, if not eliminated, will attack Alice's subconscious each turn. You can play Guardians from your hand to reduce the damage taken. The total value of the played Guardians is subtracted from the Nightmare's value. If the result equals the Nightmare's value, the damage is completely nullified. You may play a maximum of TWO GUARDIANS to execute this action. If Alice's subconscious life points reach 0, the player immediately loses the game.
+* **Deep breath:** If you haven’t played any cards during this turn, you may discard a card from your hand. Then proceed to the Resolution Phase.
+
+#### Special Actions
+
+In addition to these basic actions, the player has two special actions at his disposal:
+
+* **Exile (once per turn):** You may discard one card from your hand and lose 5 Life Points to place a Nightmare from the game board into the discard pile of the Dream Deck. This action may be repeated as long as you have at least one card to discard and at least 6 Life Points.
+* **REM Sleep (once per game):** If you have 10 or fewer Life Points, you may perform one final desperate action:
+1. Combine all cards from the Dream Deck, its discard pile, and the game board. Shuffle them together, then reveal the top three cards to form the new game board.
+2. Combine all cards from the Guardians Deck, its discard pile, and your hand. Shuffle them together, then draw 4 cards (even if you had no cards in hand when performing this action).
+3. Proceed with your turn.
+
+
+
+---
+
+## SPECIAL RULES (Fig. 2)
+
+Nightmares and Guardians come in different types, as some possess unique special effects:
+
+* **Ace Special Guardian:** Can only be molded using a Special Guardian. They have a value of 0 when played but double the value of the associated Guardians to perform a powerful action.
+* *NOTE: You may associate only one Ace with one or more Guardians. Additionally, if there is an Ace Special Nightmare on the game board, the halving effect for the cards it is associated with is canceled.*
+
+
+* **Ace Special Nightmares:** While this card is on the board, the value of played Guardians is halved. It has a value of 0 and can only be destroyed by using a Special Guardian (Ace/J/Q/K).
+* **Special Nightmares:** When you eliminate a Special Nightmare (J/Q/K; Ace and Joker do not count), you receive 3 life points (you cannot exceed 40 life points). Their value is: J=11, Q=12 and K=13.
+* **Joker Special Guardian (Red):** Its value is equal to the card on top of the removed Guardian cards pile. If you wish to summon it, you must pay the corresponding value. Instead of purchasing the Joker, add the top card from the removed Guardian cards pile to your discard pile and remove the Joker from the game.
+* *NOTE: If the top card of the pile is an Ace Special Guardian, the player must follow the standard purchasing rules for the Ace Special Guardian; they will need to summon it using a Special Guardian.*
+
+
+* **Joker Special Nightmare (Black):** Its value is equal to the card on top of the removed Nightmare cards pile. To eliminate it, you must exceed the corresponding value. If you do, remove the Joker from the game.
+* *NOTE: The Joker Nightmare only copies the VALUE of the card and not its ABILITIES. If it copies an Ace Special Nightmares, the Joker will have a value of 0 and can be eliminated with any card. If it copies a figure, it will not grant Life Points.*
+
+
+
+### [Image Description: FIG. 2 - Playing Cards Layout]
+
+The diagram illustrates a player targeting the board:
+
+* A Nightmare card on the board has two Guardian cards from the player's hand placed directly beneath it, showing how a player groups cards to beat a Nightmare's value.
+* A Guardian card on the board has a standard Guardian card and a Special Ace Guardian placed beneath it, demonstrating the use of an Ace to double the value to 8 for molding.
+
+---
+
+## 3. RESOLUTION PHASE (Fig. 3)
+
+Actions are resolved in sequence, starting from the rightmost card on the board and moving to the left, following the instructions below:
+
+* **If the card is a Nightmare and you have played cards underneath it:** If the total value of the played Guardians is greater than the Nightmare’s value, remove the Nightmare from the game. If the value is equal to or less than the Nightmare’s value, subtract an amount of life points equal to the difference between the Nightmare’s value and the total value of the Guardians played beneath it.
+* **If the card is a Nightmare and there are no Guardians positioned beneath it:** Decrease the life points by an amount equal to the value of the Nightmare.
+* **If the card is a Guardian and there are cards positioned beneath it:** If the total value of the positioned cards is equal to or greater than the Guardian's value, add this card to the discard pile of the Guardians deck.
+* **If the card is a Guardian and there are no cards positioned beneath it:** Nothing happens.
+
+After resolving all actions, all cards played by the player are placed in the discard pile of the Guardians deck.
+
+### [Image Description: FIG. 3 - Resolution Phase Diagram]
+
+The diagram shows the 3-card board being resolved from right to left:
+
+1. **Leftmost Card (e.g., 10 Spades Nightmare):** No cards played beneath it. An arrow shows nothing is physically moved (it stays on the board, but inflicts damage).
+2. **Middle Card (e.g., 6 Spades Nightmare):** Cards were played successfully beneath it. An arrow points from this Nightmare to the "Nightmares Removed" pile.
+3. **Rightmost Card (e.g., 8 Hearts Guardian):** Cards were played beneath it successfully. An arrow points from this Guardian to the "Guardians Discards" pile.
+4. **Played Cards:** An arrow points from the cards the player placed under the board down to the "Guardians Discards" pile.
+
+---
+
+## 4. BOARD UPDATE (Fig. 4)
+
+In this phase, the remaining cards on the board are shifted one position to the right, starting from the rightmost card. The cards to the left of the rightmost card move one position to the right.
+
+If the rightmost card needs to be moved off the board entirely, perform one of the following actions:
+
+* **If the card is a Nightmare:** Place it in the discard pile of the Dream deck. When the Dream deck runs out, its discard pile will be shuffled to create a new deck.
+* **If the card is a Guardian:** Remove it from the game.
+
+After shifting the remaining cards, draw new cards from the Dream deck until there are 3 cards back on the board.
+
+### [Image Description: FIG. 4 - Board Update Shift]
+
+The diagram illustrates the board's conveyor belt mechanic:
+
+* The card currently in the rightmost slot is pushed entirely off the board (either to the Dream Discards or removed, based on the rules).
+* The remaining cards slide to the right to fill the empty spaces.
+* Two new cards are drawn from the top of the Dream deck and placed into the now-empty leftmost slots to bring the board back to 3 cards.
+
+---
+
+## 5. ENDGAME CHECK
+
+Perform the check when the Dream deck runs out for the first time. If Life points are above 0, the following conditions are checked:
+
+* **Player Victory:** If the Dream deck has no more Nightmares, the player wins, and Alice happily awakens! To confirm, ensure the removed Nightmare pile contains all cards from 2 to 10, J, Q, and K of Spades and Clubs. If the last card or the last two cards remaining are Ace Special Nightmares, the player has won the game.
+* **Player Defeat:** If all Special Guardians are in the removed Guardian pile (the aces don't count), the player loses.
+
+If neither condition is met, return to step 1 (Draw Cards).

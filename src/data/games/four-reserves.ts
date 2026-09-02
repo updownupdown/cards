@@ -5,6 +5,7 @@ import { GameAnimations } from "@/animations";
 export const fourReserves: GameDefinition = {
   path: "/four-reserves",
   title: "Four Reserves",
+  aliases: ["FreeCell"],
   tags: [GameTag.TableauBuilding],
   rating: {
     complexity: 20,

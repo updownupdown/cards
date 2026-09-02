@@ -39,7 +39,7 @@ const gameStateInitial: GameState = {
 };
 
 /** Rank is adjacent on a 13-rank loop: a step of 1, or the wrap between Ace and King. */
-function adjacentWrap(a: PlayingCard, b: PlayingCard) {
+export function adjacentWrap(a: PlayingCard, b: PlayingCard) {
   const diff = Math.abs(rankValue(a) - rankValue(b));
   return diff === 1 || diff === 12;
 }

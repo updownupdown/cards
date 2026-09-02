@@ -45,6 +45,7 @@ export type GameSettings = {
   royalRestHardMode: boolean;
   pyramidDifficulty: "easy" | "hard";
   golfDifficulty: "easy" | "hard";
+  gapsDifficulty: "easy" | "hard";
   seerDifficulty: "easy" | "normal" | "hard";
   unwantedHelpDifficulty: "easy" | "hard";
   midnightVigilDifficulty: "street" | "kingpin" | "city";
@@ -160,6 +161,7 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   royalRestHardMode: false,
   pyramidDifficulty: "hard",
   golfDifficulty: "easy",
+  gapsDifficulty: "easy",
   seerDifficulty: "normal",
   unwantedHelpDifficulty: "easy",
   midnightVigilDifficulty: "kingpin",

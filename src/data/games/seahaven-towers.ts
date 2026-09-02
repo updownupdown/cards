@@ -1,0 +1,33 @@
+import { GameAnimations } from "@/animations";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameDefinition, GameTag } from "../games-data";
+
+export const seahavenTowers: GameDefinition = {
+  enabledOnLocalOnly: true,
+  path: "/seahaven-towers",
+  title: "Seahaven Towers",
+  aliases: ["Sea Towers"],
+  tags: [GameTag.TableauBuilding],
+  rating: { complexity: 35, difficulty: 50, luck: 25 },
+  background: GAME_BACKGROUNDS.island,
+  animation: GameAnimations.Clouds,
+  gameColorDark: "#173946",
+  gameColorPale: "#dceff0",
+  cardDescription:
+    "Ten open columns and four compact towers reward careful same-suit planning.",
+  quickStart: [
+    "Build foundations up by suit from Ace to King.",
+    "Build tableau down in the same suit.",
+    "Use four cells; only Kings may fill empty columns.",
+  ],
+  howToPlay: [
+    "## Objective",
+    "Move all 52 cards to four foundations, building up by suit from Ace to King.",
+    "## Rules",
+    "- Ten columns begin with five face-up cards each.",
+    "- Two of the four free cells begin occupied; each cell holds one card.",
+    "- Build tableau down in the same suit.",
+    "- Ordered same-suit runs may move when enough cells are free.",
+    "- Only a King or King-led run may fill an empty column.",
+  ],
+};

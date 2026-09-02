@@ -79,7 +79,10 @@ export function SearchTab({
     return allEnabledGames.filter(([path, game]) => {
       if (mode === "search") {
         return (
-          !normalizedQuery || game.title.toLowerCase().includes(normalizedQuery)
+          !normalizedQuery ||
+          [game.title, ...(game.aliases ?? [])].some((name) =>
+            name.toLowerCase().includes(normalizedQuery),
+          )
         );
       }
       if (mode !== "filter") return true;

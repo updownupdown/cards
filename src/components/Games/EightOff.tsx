@@ -34,6 +34,12 @@ type GameState = {
 };
 
 export type EightOffGameState = GameState;
+export type ReserveCellGameState = GameState;
+
+type ReserveCellBoardProps = {
+  columnCount: number;
+  createState: () => GameState;
+};
 
 type Selection = { zone: "free"; slotIndex: number } | null;
 
@@ -70,7 +76,7 @@ function canPlaceOnFoundation(
   );
 }
 
-function createInitialState(): GameState {
+function createEightOffState(): GameState {
   const deck = shuffle(
     SUITS.flatMap((suit) =>
       RANKS.map((rank) => ({
@@ -113,15 +119,16 @@ function isDescendingSameSuitStack(cards: PlayingCard[]): boolean {
 export const eightOffRules = {
   canPlaceOnCascade,
   canPlaceOnFoundation,
-  createInitialState,
+  createInitialState: createEightOffState,
   isDescendingSameSuitStack,
 };
 
-const gameStateInitial = createInitialState();
-
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export default function EightOff() {
+export function ReserveCellBoard({
+  columnCount,
+  createState,
+}: ReserveCellBoardProps) {
   const navigation = useNavigation();
 
   const [selected, setSelected] = useState<Selection>(null);
@@ -130,6 +137,7 @@ export default function EightOff() {
     null,
   );
   const clearDragGhostRef = useRef<(() => void) | null>(null);
+  const gameStateInitial = useMemo(() => createState(), [createState]);
 
   const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
     useStateManager<GameState>({
@@ -140,7 +148,7 @@ export default function EightOff() {
         clearDragGhostRef.current?.();
       },
       resetAndSetup: async () => {
-        setGame(createInitialState());
+        setGame(createState());
       },
     });
 
@@ -201,7 +209,7 @@ export default function EightOff() {
       name: "foundation",
       pileIndex: i,
       cards: pile,
-      col: 2 + i,
+      col: (columnCount - 4) / 2 + i,
       row: 0,
       baseZIndex: 100,
       fan: { maxVisible: 1 },
@@ -362,6 +370,7 @@ export default function EightOff() {
     cardMapper,
     zoneMapper,
     cardSize: "tableau",
+    fixedCols: columnCount,
     fixedRows: 7,
     gap: 0.12,
   });
@@ -888,4 +897,8 @@ export default function EightOff() {
       </View>
     </GameWrapper>
   );
+}
+
+export default function EightOff() {
+  return <ReserveCellBoard columnCount={8} createState={createEightOffState} />;
 }

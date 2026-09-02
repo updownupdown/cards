@@ -15,8 +15,6 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
-const columnCount = 8;
-
 type GameState = {
   columns: PlayingCard[][];
   foundations: PlayingCard[][];
@@ -26,8 +24,17 @@ type GameState = {
 
 export type BeleagueredCastleGameState = GameState;
 
+export type CastleGameState = GameState;
+
+type CastleBoardProps = {
+  columnCount: number;
+  createState: () => GameState;
+  canStack: (card: PlayingCard, destTop: PlayingCard | undefined) => boolean;
+  winMessage: string;
+};
+
 const gameStateInitial: GameState = {
-  columns: Array.from({ length: columnCount }, () => []),
+  columns: [],
   foundations: Array.from({ length: 4 }, () => []),
   ended: false,
   won: false,
@@ -49,37 +56,21 @@ function canPlaceFoundation(
   );
 }
 
-async function resetAndSetup(
-  setGame: (updater: (draft: GameState) => void) => void,
-) {
-  setGame((draft) => {
-    const deck = shuffle(createDeck({ faceUp: true }));
-
-    // Pull the aces out to seed the foundations.
-    const foundations: PlayingCard[][] = SUITS.map((suit) => {
-      const index = deck.findIndex(
-        (card) => card.rank === "A" && card.suit === suit,
-      );
-      const [ace] = deck.splice(index, 1);
-      return ace ? [flipToFace(ace)] : [];
-    });
-
-    const columns: PlayingCard[][] = Array.from(
-      { length: columnCount },
-      () => [],
+function createBeleagueredCastleState(): GameState {
+  const deck = shuffle(createDeck({ faceUp: true }));
+  const foundations: PlayingCard[][] = SUITS.map((suit) => {
+    const index = deck.findIndex(
+      (card) => card.rank === "A" && card.suit === suit,
     );
-    deck.forEach((card, i) => columns[i % columnCount].push(flipToFace(card)));
-
-    draft.foundations = foundations;
-    draft.columns = columns;
-    draft.ended = false;
-    draft.won = false;
+    const [ace] = deck.splice(index, 1);
+    return ace ? [flipToFace(ace)] : [];
   });
-
-  await delay();
+  const columns: PlayingCard[][] = Array.from({ length: 8 }, () => []);
+  deck.forEach((card, index) => columns[index % 8].push(flipToFace(card)));
+  return { columns, foundations, ended: false, won: false };
 }
 
-function anyLegalMove(state: GameState) {
+function anyLegalMove(state: GameState, canStack = canStackDown) {
   for (let c = 0; c < state.columns.length; c += 1) {
     const card = top(state.columns[c]);
     if (!card) continue;
@@ -95,19 +86,23 @@ function anyLegalMove(state: GameState) {
         if (state.columns[c].length > 1) return true;
         continue;
       }
-      if (canStackDown(card, destTop)) return true;
+      if (canStack(card, destTop)) return true;
     }
   }
   return false;
 }
 
-function evaluateEnd(state: GameState, isSettingUp = false) {
+function evaluateEnd(
+  state: GameState,
+  isSettingUp = false,
+  canStack = canStackDown,
+) {
   if (isSettingUp) return { ended: false, won: false };
 
   if (state.foundations.every((f) => f.length === 13)) {
     return { ended: true, won: true };
   }
-  if (!anyLegalMove(state)) return { ended: true, won: false };
+  if (!anyLegalMove(state, canStack)) return { ended: true, won: false };
   return { ended: false, won: false };
 }
 
@@ -116,10 +111,16 @@ export const beleagueredCastleRules = {
   canPlaceFoundation,
   anyLegalMove,
   evaluateEnd,
+  createBeleagueredCastleState,
 };
 
 // ========== Main Component ========== //
-export default function BeleagueredCastle() {
+export function CastleBoard({
+  columnCount,
+  createState,
+  canStack,
+  winMessage,
+}: CastleBoardProps) {
   const [selectedCol, setSelectedCol] = useState<number | undefined>(undefined);
   const [lastTap, setLastTap] = useState<{ key: string; at: number } | null>(
     null,
@@ -136,21 +137,22 @@ export default function BeleagueredCastle() {
     reset,
   } = useStateManager({
     resetAndSetup: async () => {
-      await resetAndSetup(setGame);
+      setGame(createState());
+      await delay();
     },
     gameStateInitial,
     resetNonGameStates: () => setSelectedCol(undefined),
   });
 
   useEffect(() => {
-    const { ended, won } = evaluateEnd(game, isSettingUp);
+    const { ended, won } = evaluateEnd(game, isSettingUp, canStack);
     if (ended !== game.ended || won !== game.won) {
       setGame((draft) => {
         draft.ended = ended;
         draft.won = won;
       });
     }
-  }, [game, isSettingUp, setGame]);
+  }, [canStack, game, isSettingUp, setGame]);
 
   const foundationTotal = useMemo(
     () => game.foundations.reduce((sum, f) => sum + f.length, 0),
@@ -202,7 +204,7 @@ export default function BeleagueredCastle() {
     }
 
     const card = top(game.columns[selectedCol]);
-    if (card && canStackDown(card, top(game.columns[index]))) {
+    if (card && canStack(card, top(game.columns[index]))) {
       moveToColumn(selectedCol, index);
     } else if (game.columns[index].length > 0) {
       setSelectedCol(index);
@@ -244,7 +246,7 @@ export default function BeleagueredCastle() {
       pileIndex: i,
       cards: pile,
       col: i < columnCount / 2 ? 0 : 4,
-      row: i % 4,
+      row: i % (columnCount / 2),
       width: colWidth,
       baseZIndex: 10 + i,
       fan: {
@@ -292,7 +294,7 @@ export default function BeleagueredCastle() {
       const canDrop =
         !!selectedCard &&
         selectedCol !== index &&
-        canStackDown(selectedCard, top(game.columns[index]));
+        canStack(selectedCard, top(game.columns[index]));
       return {
         isSelected,
         selectColor: canDrop ? "green" : "blue",
@@ -332,11 +334,22 @@ export default function BeleagueredCastle() {
       reset={reset}
       isLoaded={isLoaded}
       score={foundationTotal}
-      winLoseMessage={game.won ? "The castle falls!" : "No moves remain."}
+      winLoseMessage={game.won ? winMessage : "No moves remain."}
       canUndo={canUndo}
       undo={undo}
     >
       {cardMap}
     </GameWrapper>
+  );
+}
+
+export default function BeleagueredCastle() {
+  return (
+    <CastleBoard
+      columnCount={8}
+      createState={createBeleagueredCastleState}
+      canStack={canStackDown}
+      winMessage="The castle falls!"
+    />
   );
 }

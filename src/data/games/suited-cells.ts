@@ -5,6 +5,7 @@ import { GameAnimations } from "@/animations";
 export const suitedCells: GameDefinition = {
   path: "/suited-cells",
   title: "Suited Cells",
+  aliases: ["Baker's Game"],
   tags: [GameTag.TableauBuilding],
   rating: {
     complexity: 25,

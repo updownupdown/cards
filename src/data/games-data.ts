@@ -50,6 +50,7 @@ export const DEFAULT_GAME_BACKGROUND: GameBackground = city;
 export type GameMenuInfo = {
   // Basic
   title: string;
+  aliases?: string[];
   enabledOnLocalOnly?: boolean;
   tags?: GameTag[];
   rating: GameRating;

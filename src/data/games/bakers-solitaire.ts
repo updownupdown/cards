@@ -4,6 +4,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const bakersSolitaire: GameDefinition = {
   path: "/bakers-solitaire",
   title: "Baker's Solitaire",
+  aliases: ["Baker's Dozen"],
   tags: [GameTag.TableauBuilding, GameTag.EasyToLearn],
   rating: {
     complexity: 25,

@@ -28,6 +28,7 @@ export type GameSpecificSettingKey =
   | "royalRestHardMode"
   | "pyramidDifficulty"
   | "golfDifficulty"
+  | "gapsDifficulty"
   | "seerDifficulty"
   | "unwantedHelpDifficulty"
   | "midnightVigilDifficulty";
@@ -51,6 +52,20 @@ export type GameSpecificSettingDefinition = {
 
 const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
   {
+    "/gaps": [
+      {
+        key: "gapsDifficulty",
+        label: "Difficulty",
+        type: "string",
+        applyBehavior: "next-game",
+        description:
+          "Controls how many times the unordered cards may be redealt.",
+        options: [
+          { label: "Easy (3 redeals)", value: "easy" },
+          { label: "Hard (2 redeals)", value: "hard" },
+        ],
+      },
+    ],
     "/golf": [
       {
         key: "golfDifficulty",
