@@ -1,9 +1,11 @@
 import { GameDefinition, GameTag } from "../games-data";
 
 export const fortunesCall: GameDefinition = {
+  // The Fortune Teller
   enabledOnLocalOnly: true,
   path: "/fortunes-call",
   title: "Fortune's Call",
+  thumbnail: "FortunesCall.jpg",
   tags: [GameTag.EasyToLearn, GameTag.ModernMechanics, GameTag.ScoringPuzzles],
   rating: { complexity: 20, difficulty: 45, luck: 70 },
   gameColorDark: "#302b23",

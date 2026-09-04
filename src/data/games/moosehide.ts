@@ -7,6 +7,7 @@ export const moosehide: GameDefinition = {
   title: "Moosehide",
   tags: [GameTag.TableauBuilding],
   rating: { complexity: 40, difficulty: 45, luck: 35 },
+  thumbnail: "Moosehide.jpg",
   background: GAME_BACKGROUNDS.yukon,
   animation: GameAnimations.Snow,
   gameColorDark: "#29362e",

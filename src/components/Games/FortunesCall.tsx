@@ -157,7 +157,7 @@ export default function FortunesCall() {
       outcome={game.ended ? (game.won ? "won" : "lost") : "playing"}
       reset={() => void reset()}
       isLoaded={isLoaded}
-      score={game.score}
+      score={game.score - game.misses}
       canUndo={canUndo}
       undo={undo}
     >

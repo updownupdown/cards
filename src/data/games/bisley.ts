@@ -7,6 +7,7 @@ export const bisley: GameDefinition = {
   title: "Bisley",
   tags: [GameTag.TableauBuilding],
   rating: { complexity: 45, difficulty: 55, luck: 25 },
+  thumbnail: "Bisley.jpg",
   background: GAME_BACKGROUNDS.london,
   animation: GameAnimations.Rain,
   gameColorDark: "#30343a",

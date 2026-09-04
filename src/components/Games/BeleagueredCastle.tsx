@@ -5,6 +5,7 @@ import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   cardDims,
   createDeck,
+  flipAllToBack,
   flipToFace,
   rankValue,
   shuffle,
@@ -29,6 +30,7 @@ export type CastleGameState = GameState;
 type CastleBoardProps = {
   columnCount: number;
   createState: () => GameState;
+  deal: (state: GameState) => void;
   canStack: (card: PlayingCard, destTop: PlayingCard | undefined) => boolean;
   winMessage: string;
 };
@@ -68,6 +70,22 @@ function createBeleagueredCastleState(): GameState {
   const columns: PlayingCard[][] = Array.from({ length: 8 }, () => []);
   deck.forEach((card, index) => columns[index % 8].push(flipToFace(card)));
   return { columns, foundations, ended: false, won: false };
+}
+
+function dealBeleagueredCastle(state: GameState) {
+  const cards = state.foundations[0].splice(0);
+  state.columns = Array.from({ length: 8 }, () => []);
+  state.foundations = Array.from({ length: 4 }, () => []);
+
+  const tableauCards = cards.filter((card) => card.rank !== "A");
+  cards.forEach((card) => {
+    if (card.rank === "A") {
+      state.foundations[SUITS.indexOf(card.suit)].push(flipToFace(card));
+    }
+  });
+  tableauCards.forEach((card, index) => {
+    state.columns[index % 8].push(flipToFace(card));
+  });
 }
 
 function anyLegalMove(state: GameState, canStack = canStackDown) {
@@ -112,12 +130,14 @@ export const beleagueredCastleRules = {
   anyLegalMove,
   evaluateEnd,
   createBeleagueredCastleState,
+  dealBeleagueredCastle,
 };
 
 // ========== Main Component ========== //
 export function CastleBoard({
   columnCount,
   createState,
+  deal,
   canStack,
   winMessage,
 }: CastleBoardProps) {
@@ -137,8 +157,24 @@ export function CastleBoard({
     reset,
   } = useStateManager({
     resetAndSetup: async () => {
-      setGame(createState());
+      const currentCards = [...game.columns.flat(), ...game.foundations.flat()];
+      const isInitialDeal = currentCards.length === 0;
+      const initialState = isInitialDeal ? createState() : undefined;
+      const cards = isInitialDeal
+        ? [...initialState!.columns.flat(), ...initialState!.foundations.flat()]
+        : shuffle(currentCards);
+
+      setGame((draft) => {
+        draft.columns = Array.from({ length: columnCount }, () => []);
+        draft.foundations = [
+          flipAllToBack(cards),
+          ...Array.from({ length: 3 }, () => [] as PlayingCard[]),
+        ];
+        draft.ended = false;
+        draft.won = false;
+      });
       await delay();
+      setGame((draft) => deal(draft));
     },
     gameStateInitial,
     resetNonGameStates: () => setSelectedCol(undefined),
@@ -234,7 +270,7 @@ export function CastleBoard({
       col: 3,
       row: i,
       baseZIndex: 40,
-      fan: { maxVisible: 1 },
+      fan: { maxVisible: 3 },
       placeholder: {},
     }));
 
@@ -348,6 +384,7 @@ export default function BeleagueredCastle() {
     <CastleBoard
       columnCount={8}
       createState={createBeleagueredCastleState}
+      deal={dealBeleagueredCastle}
       canStack={canStackDown}
       winMessage="The castle falls!"
     />

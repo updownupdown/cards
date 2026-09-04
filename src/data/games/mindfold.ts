@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 
 export const mindfold: GameDefinition = {
+  // Galdor's Grip
   enabledOnLocalOnly: true,
   path: "/mindfold",
   title: "Mindfold",

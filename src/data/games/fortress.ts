@@ -3,11 +3,11 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const fortress: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/fortress",
   title: "Fortress",
   tags: [GameTag.TableauBuilding],
   rating: { complexity: 40, difficulty: 70, luck: 35 },
+  thumbnail: "Fortress.jpg",
   background: GAME_BACKGROUNDS.castle,
   animation: GameAnimations.Clouds,
   gameColorDark: "#302a24",

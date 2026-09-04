@@ -8,6 +8,7 @@ export const gargantua: GameDefinition = {
   aliases: ["Double Klondike"],
   tags: [GameTag.StockAndWaste, GameTag.TableauBuilding],
   rating: { complexity: 35, difficulty: 45, luck: 45 },
+  thumbnail: "Gargantua.jpg",
   background: GAME_BACKGROUNDS.mountain1,
   animation: GameAnimations.Clouds,
   gameColorDark: "#24323a",

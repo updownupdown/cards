@@ -3,12 +3,12 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const crescent: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/crescent",
   title: "Crescent",
   aliases: ["La Demi-Lune"],
   tags: [GameTag.TableauBuilding],
   rating: { complexity: 45, difficulty: 55, luck: 40 },
+  thumbnail: "Crescent.jpg",
   background: GAME_BACKGROUNDS.nightSky,
   animation: GameAnimations.Stars,
   gameColorDark: "#182334",
@@ -23,11 +23,13 @@ export const crescent: GameDefinition = {
   howToPlay: [
     "## Objective",
     "Move both decks to eight foundations: four build up from Aces and four build down from Kings.",
+
     "## Rules",
     "- Only the exposed card of each of the sixteen piles is playable.",
-    "- Build tableau one rank up or down in the same suit; Ace and King are adjacent.",
-    "- Move one card at a time, and never fill an empty tableau pile.",
-    "- Non-base cards may transfer between the paired foundations.",
-    "- Three times per game, move the bottom card of every pile to its top.",
+    '- Build tableau one rank up or down in the same suit; Ace and King are adjacent and "wrap around".',
+    "- Move one card at a time.",
+    "- Empty tableau cards cannot be filled.",
+    "- Non-base cards may transfer between foundations.",
+    '- Three times per game, you can "restack" to move the bottom card of every pile to its top.',
   ],
 };

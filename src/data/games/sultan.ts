@@ -6,6 +6,7 @@ export const sultan: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/sultan",
   title: "Sultan",
+  thumbnail: "Sultan.jpg",
   aliases: ["Sultan of Turkey", "Emperor of Germany"],
   tags: [GameTag.StockAndWaste, GameTag.SequenceBuilding],
   rating: { complexity: 35, difficulty: 35, luck: 55 },

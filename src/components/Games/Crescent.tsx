@@ -1,8 +1,11 @@
 import { useStateManager } from "@/hooks/useStateManager";
+import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
+  cardDims,
   createDeck,
+  flipAllToBack,
   flipToBack,
   flipToFace,
   rankValue,
@@ -13,13 +16,18 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
+import { Button } from "../Button/Button";
 import { GameWrapper } from "../common/GameWrapper";
+import { View } from "react-native";
+import { useGameColors } from "@/hooks/useGameColors";
 
+const cardSize = "tableau";
 const MAX_RESTACKS = 3;
 type Direction = "ascending" | "descending";
 type FoundationTarget = { direction: Direction; suitIndex: number };
 
 export type CrescentGameState = {
+  setupPile: PlayingCard[];
   tableau: PlayingCard[][];
   ascending: PlayingCard[][];
   descending: PlayingCard[][];
@@ -46,7 +54,19 @@ function canBuildFoundation(
 }
 
 function createInitialState(): CrescentGameState {
-  const deck = shuffle(createDeck({ deckCount: 2 }));
+  return {
+    setupPile: shuffle(createDeck({ deckCount: 2 })).map(flipToBack),
+    tableau: Array.from({ length: 16 }, () => [] as PlayingCard[]),
+    ascending: SUITS.map(() => [] as PlayingCard[]),
+    descending: SUITS.map(() => [] as PlayingCard[]),
+    restacksUsed: 0,
+    ended: false,
+    won: false,
+  };
+}
+
+function dealCrescent(setupPile: PlayingCard[]) {
+  const deck = shuffle(setupPile);
   const ascending = SUITS.map((suit) => {
     const index = deck.findIndex(
       (card) => card.suit === suit && card.rank === "A",
@@ -69,6 +89,7 @@ function createInitialState(): CrescentGameState {
       ),
   );
   return {
+    setupPile: [],
     tableau,
     ascending,
     descending,
@@ -76,6 +97,40 @@ function createInitialState(): CrescentGameState {
     ended: false,
     won: false,
   };
+}
+
+async function resetAndSetup(
+  setGame: (updater: (draft: CrescentGameState) => void) => void,
+) {
+  setGame((draft) => {
+    draft.setupPile = shuffle(
+      flipAllToBack([
+        ...draft.setupPile,
+        ...draft.tableau.flat(),
+        ...draft.ascending.flat(),
+        ...draft.descending.flat(),
+      ]),
+    );
+    draft.tableau = Array.from({ length: 16 }, () => [] as PlayingCard[]);
+    draft.ascending = SUITS.map(() => [] as PlayingCard[]);
+    draft.descending = SUITS.map(() => [] as PlayingCard[]);
+    draft.restacksUsed = 0;
+    draft.ended = false;
+    draft.won = false;
+  });
+
+  await delay();
+
+  setGame((draft) => {
+    const next = dealCrescent(draft.setupPile);
+    draft.setupPile = next.setupPile;
+    draft.tableau = next.tableau;
+    draft.ascending = next.ascending;
+    draft.descending = next.descending;
+    draft.restacksUsed = next.restacksUsed;
+    draft.ended = next.ended;
+    draft.won = next.won;
+  });
 }
 
 function hasMove(state: CrescentGameState) {
@@ -119,12 +174,17 @@ export const crescentRules = {
   canBuildFoundation,
   canBuildTableau,
   createInitialState,
+  dealCrescent,
   hasMove,
   restackTableau,
 };
 
 export default function Crescent() {
+  const { colorDark } = useGameColors();
   const [selectedPile, setSelectedPile] = useState<number | null>(null);
+  const [lastTap, setLastTap] = useState<{ index: number; at: number } | null>(
+    null,
+  );
   const [selectedFoundation, setSelectedFoundation] =
     useState<FoundationTarget | null>(null);
   const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
@@ -133,9 +193,10 @@ export default function Crescent() {
       resetNonGameStates: () => {
         setSelectedPile(null);
         setSelectedFoundation(null);
+        setLastTap(null);
       },
       resetAndSetup: async () => {
-        setGame(createInitialState());
+        await resetAndSetup(setGame);
       },
     });
 
@@ -178,10 +239,6 @@ export default function Crescent() {
       return false;
     saveUndoState(structuredClone(game));
     setGame((draft) => {
-      const covered = top(draft.tableau[destination]);
-      if (covered)
-        draft.tableau[destination][draft.tableau[destination].length - 1] =
-          flipToBack(covered);
       const card = removeSelected(draft);
       if (card) draft.tableau[destination].push(flipToFace(card));
     });
@@ -234,6 +291,25 @@ export default function Crescent() {
 
   function onTableauPress(index: number) {
     if (game.ended || game.tableau[index].length === 0) return;
+    const now = Date.now();
+    if (lastTap?.index === index && now - lastTap.at < DOUBLE_TAP_MS) {
+      setLastTap(null);
+      const card = top(game.tableau[index]);
+      const suitIndex = card ? SUITS.indexOf(card.suit) : -1;
+      const target = (["ascending", "descending"] as const).find(
+        (direction) =>
+          card &&
+          canBuildFoundation(
+            card,
+            top(game[direction][suitIndex]),
+            direction,
+            card.suit,
+          ),
+      );
+      if (target && moveToFoundation({ direction: target, suitIndex })) return;
+    } else {
+      setLastTap({ index, at: now });
+    }
     setSelectedFoundation(null);
     if (selectedPile === null) return setSelectedPile(index);
     if (selectedPile === index) return setSelectedPile(null);
@@ -253,7 +329,7 @@ export default function Crescent() {
 
   const zones: MapZone[] = useMemo(() => {
     const foundations = (["ascending", "descending"] as const).flatMap(
-      (direction, row) =>
+      (direction, directionIndex) =>
         game[direction].map(
           (pile, suitIndex) =>
             ({
@@ -261,8 +337,8 @@ export default function Crescent() {
               name: direction,
               pileIndex: suitIndex,
               cards: pile,
-              col: 2 + suitIndex,
-              row: row * 1.1,
+              col: suitIndex + directionIndex * 12,
+              row: 0,
               fan: { maxVisible: 1 },
               placeholder: {},
             }) as MapZone,
@@ -273,23 +349,29 @@ export default function Crescent() {
       name: "tableau",
       pileIndex: index,
       cards: pile,
-      col: index % 8,
-      row: 2.4 + Math.floor(index / 8) * 2.2,
-      fan: { direction: "down" as const, offset: 0.25 },
+      col: index,
+      row: 1.2,
+      fan: { direction: "down" as const, offset: cardDims.tableauOffset },
       placeholder: { hideBackground: pile.length === 0 },
     }));
     return [
+      {
+        id: "setup",
+        name: "setup",
+        cards: game.setupPile,
+        col: 0,
+        row: 0.6,
+        fan: { maxVisible: 3 },
+      },
       ...foundations,
       {
         id: "restack",
         name: "restack",
         cards: [],
-        col: 6.5,
-        row: 0.55,
-        placeholder: {
-          text: `Restack ${MAX_RESTACKS - game.restacksUsed}`,
-          hideBackground: game.restacksUsed >= MAX_RESTACKS,
-        },
+        col: 6,
+        row: 0.2,
+        width: 4,
+        height: 0.6,
       },
       ...tableau,
     ];
@@ -323,11 +405,6 @@ export default function Crescent() {
     return {};
   };
   const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
-    if (zone.name === "restack")
-      return {
-        onPress: restack,
-        isDisabled: game.restacksUsed >= MAX_RESTACKS,
-      };
     if (
       (zone.name === "ascending" || zone.name === "descending") &&
       zone.pileIndex !== undefined
@@ -348,14 +425,15 @@ export default function Crescent() {
       };
     return {};
   };
-  const { cardMap } = useCardMap({
+  const { cardMap, getZoneStylesById } = useCardMap({
     game,
     zones,
     cardMapper,
     zoneMapper,
-    cardSize: "small",
-    fixedCols: 8,
-    fixedRows: 7.2,
+    cardSize,
+    fixedCols: 16,
+    fixedRows: 5.3,
+    paddingTop: 0,
     gap: 0.1,
   });
   const score = [...game.ascending, ...game.descending].reduce(
@@ -374,6 +452,18 @@ export default function Crescent() {
       showDeviceRotateHint
     >
       {cardMap}
+
+      <View style={getZoneStylesById("restack")}>
+        <Button
+          text={`Restack (${MAX_RESTACKS - game.restacksUsed})`}
+          size="xs"
+          onPress={restack}
+          disabled={game.ended || game.restacksUsed >= MAX_RESTACKS}
+          style={{ flex: 1 }}
+          theme={colorDark}
+          taller
+        />
+      </View>
     </GameWrapper>
   );
 }

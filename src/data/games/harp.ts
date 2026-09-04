@@ -7,6 +7,7 @@ export const harp: GameDefinition = {
   title: "Harp",
   tags: [GameTag.StockAndWaste, GameTag.TableauBuilding],
   rating: { complexity: 35, difficulty: 35, luck: 40 },
+  thumbnail: "Harp.jpg",
   background: GAME_BACKGROUNDS.field,
   animation: GameAnimations.Leaves,
   gameColorDark: "#293a31",

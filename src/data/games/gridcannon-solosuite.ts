@@ -5,6 +5,7 @@ export const gridcannonSoloSuite: GameDefinition = {
   path: "/gridcannon-solosuite",
   title: "Gridcannon: SoloSuite",
   aliases: ["Gridcannon"],
+  thumbnail: "Gridcannon.jpg",
   tags: [GameTag.ModernMechanics, GameTag.CardCombat, GameTag.SpatialControl],
   rating: { complexity: 65, difficulty: 70, luck: 35 },
   gameColorDark: "#283526",

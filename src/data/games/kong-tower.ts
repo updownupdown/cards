@@ -6,6 +6,7 @@ export const kongTower: GameDefinition = {
   enabledOnLocalOnly: true,
   path: "/kong-tower",
   title: "Kong Tower",
+  thumbnail: "KongTower.jpg",
   tags: [GameTag.ModernMechanics, GameTag.SpatialControl],
   rating: { complexity: 65, difficulty: 65, luck: 45 },
   background: GAME_BACKGROUNDS.city,

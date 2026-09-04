@@ -9,6 +9,7 @@ export const diamond: GameDefinition = {
     difficulty: 55,
     luck: 55,
   },
+  thumbnail: "Diamond.jpg",
   gameColorDark: "#30171B",
   gameColorPale: "#FFE4E4",
   cardDescription:

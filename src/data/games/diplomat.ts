@@ -7,6 +7,7 @@ export const diplomat: GameDefinition = {
   title: "Diplomat",
   tags: [GameTag.StockAndWaste, GameTag.TableauBuilding],
   rating: { complexity: 30, difficulty: 25, luck: 35 },
+  thumbnail: "Diplomat.jpg",
   background: GAME_BACKGROUNDS.london,
   animation: GameAnimations.Rain,
   gameColorDark: "#25343a",
