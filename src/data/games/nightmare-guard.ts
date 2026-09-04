@@ -3,6 +3,7 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const nightmareGuard: GameDefinition = {
+  enabledOnLocalOnly: true,
   path: "/nightmare-guard",
   title: "Nightmare Guard",
   aliases: ["Alice's Nightmares"],

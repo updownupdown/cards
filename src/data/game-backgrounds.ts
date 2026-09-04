@@ -182,6 +182,26 @@ export const GAME_BACKGROUNDS = {
     authorName: "Tânia Mousinho",
     authorLink: "https://unsplash.com/@shotsbytania",
   },
+  alhambra: {
+    source: require("@/assets/backgrounds/alhambra.jpg"),
+    authorName: "Gio Almonte",
+    authorLink: "https://unsplash.com/@gpenguin",
+  },
+  fortress: {
+    source: require("@/assets/backgrounds/fortress.jpg"),
+    authorName: "Ruben Hanssen",
+    authorLink: "https://unsplash.com/@rhfhanssen",
+  },
+  flowerGarden: {
+    source: require("@/assets/backgrounds/flower-garden.jpg"),
+    authorName: "Jean Carlo Emer",
+    authorLink: "https://unsplash.com/@jeancarloemer",
+  },
+  castleIndoors: {
+    source: require("@/assets/backgrounds/castle-indoors.jpg"),
+    authorName: "Bart van der Lugt",
+    authorLink: "https://unsplash.com/@bartvanderlugt",
+  },
 } satisfies Record<string, GameBackground>;
 
 export const {
@@ -220,4 +240,8 @@ export const {
   cozyCabin,
   cabinInterior,
   greece,
+  alhambra,
+  fortress,
+  flowerGarden,
+  castleIndoors,
 } = GAME_BACKGROUNDS;

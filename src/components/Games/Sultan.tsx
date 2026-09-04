@@ -1,4 +1,6 @@
+import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useStateManager } from "@/hooks/useStateManager";
+import { DOUBLE_TAP_MS } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
@@ -83,7 +85,7 @@ function getFoundationTarget(state: SultanGameState, card: PlayingCard) {
   return index < 0 ? null : index;
 }
 
-function hasMove(state: SultanGameState) {
+function hasMove(state: SultanGameState, autoRefillReserves: boolean) {
   if (
     state.stock.length > 0 ||
     (state.waste.length > 0 && state.redealsUsed < MAX_REDEALS)
@@ -93,7 +95,12 @@ function hasMove(state: SultanGameState) {
     ...(top(state.waste) ? [top(state.waste)!] : []),
     ...state.reserve.filter((card): card is PlayingCard => card !== null),
   ];
-  return cards.some((card) => getFoundationTarget(state, card) !== null);
+  return (
+    cards.some((card) => getFoundationTarget(state, card) !== null) ||
+    (!autoRefillReserves &&
+      state.reserve.some((card) => card === null) &&
+      cards.length > 0)
+  );
 }
 
 export const sultanRules = {
@@ -104,11 +111,18 @@ export const sultanRules = {
 };
 
 export default function Sultan() {
+  const autoRefillReserves = useGameSettingValue("sultanAutoRefillReserves");
   const [selected, setSelected] = useState<Selection>(null);
+  const [lastTap, setLastTap] = useState<{ key: string; at: number } | null>(
+    null,
+  );
   const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
     useStateManager<SultanGameState>({
       gameStateInitial: createInitialState(),
-      resetNonGameStates: () => setSelected(null),
+      resetNonGameStates: () => {
+        setSelected(null);
+        setLastTap(null);
+      },
       resetAndSetup: async () => {
         setGame(createInitialState());
       },
@@ -116,36 +130,62 @@ export default function Sultan() {
 
   useEffect(() => {
     const won = game.foundations.every((pile) => top(pile)?.rank === "Q");
-    const ended = won || !hasMove(game);
+    const ended = won || !hasMove(game, autoRefillReserves);
     if (won !== game.won || ended !== game.ended) {
       setGame((draft) => {
         draft.won = won;
         draft.ended = ended;
       });
     }
-  }, [game, setGame]);
+  }, [autoRefillReserves, game, setGame]);
 
   const selectedCard = getSelectedCard(game, selected);
 
-  function moveToFoundation(index: number) {
+  function moveToFoundation(index: number, source: Selection = selected) {
+    const sourceCard = getSelectedCard(game, source);
     if (
-      !selected ||
-      !selectedCard ||
-      !canBuildFoundation(selectedCard, top(game.foundations[index]))
+      !source ||
+      !sourceCard ||
+      !canBuildFoundation(sourceCard, top(game.foundations[index]))
     )
       return false;
     saveUndoState(structuredClone(game));
     setGame((draft) => {
       let card: PlayingCard | undefined;
-      if (selected.zone === "waste") card = draft.waste.pop();
+      if (source.zone === "waste") card = draft.waste.pop();
       else {
-        card = draft.reserve[selected.index] ?? undefined;
-        const replacement = draft.stock.pop();
-        draft.reserve[selected.index] = replacement
-          ? flipToFace(replacement)
-          : null;
+        card = draft.reserve[source.index] ?? undefined;
+        if (autoRefillReserves) {
+          const replacement = draft.waste.pop() ?? draft.stock.pop();
+          draft.reserve[source.index] = replacement
+            ? flipToFace(replacement)
+            : null;
+        } else draft.reserve[source.index] = null;
       }
       if (card) draft.foundations[index].push(card);
+    });
+    setSelected(null);
+    return true;
+  }
+
+  function moveToReserve(destination: number) {
+    if (
+      autoRefillReserves ||
+      !selected ||
+      !selectedCard ||
+      game.reserve[destination] !== null ||
+      (selected.zone === "reserve" && selected.index === destination)
+    ) {
+      return false;
+    }
+    saveUndoState(structuredClone(game));
+    setGame((draft) => {
+      const card =
+        selected.zone === "waste"
+          ? draft.waste.pop()
+          : draft.reserve[selected.index];
+      if (selected.zone === "reserve") draft.reserve[selected.index] = null;
+      if (card) draft.reserve[destination] = card;
     });
     setSelected(null);
     return true;
@@ -162,6 +202,22 @@ export default function Sultan() {
     )
       return setSelected(null);
     setSelected(next);
+  }
+
+  function onSourcePress(next: Exclude<Selection, null>) {
+    if (game.ended || !getSelectedCard(game, next)) return;
+    const key = next.zone === "waste" ? "waste" : `reserve-${next.index}`;
+    const now = Date.now();
+    if (lastTap?.key === key && now - lastTap.at < DOUBLE_TAP_MS) {
+      setLastTap(null);
+      const target = getFoundationTarget(game, getSelectedCard(game, next)!);
+      if (target !== null) {
+        moveToFoundation(target, next);
+      }
+      return;
+    }
+    setLastTap({ key, at: now });
+    selectSource(next);
   }
 
   function drawStock() {
@@ -184,14 +240,14 @@ export default function Sultan() {
   }
 
   const foundationPositions = [
-    [2, 0],
-    [3, 0],
-    [4, 0],
-    [2, 1.15],
-    [4, 1.15],
-    [2, 2.3],
-    [3, 2.3],
-    [4, 2.3],
+    [1.5, 0],
+    [2.5, 0],
+    [3.5, 0],
+    [1.5, 1],
+    [3.5, 1],
+    [1.5, 2],
+    [2.5, 2],
+    [3.5, 2],
   ];
   const zones: MapZone[] = useMemo(
     () => [
@@ -212,9 +268,8 @@ export default function Sultan() {
         id: "center",
         name: "center",
         cards: [game.center],
-        col: 3,
-        row: 1.15,
-        fan: { maxVisible: 1 },
+        col: 2.5,
+        row: 1,
       },
       ...game.reserve.map(
         (card, index) =>
@@ -223,8 +278,8 @@ export default function Sultan() {
             name: "reserve",
             pileIndex: index,
             cards: card ? [card] : [],
-            col: index < 4 ? 0 : 6,
-            row: (index % 4) * 1.15,
+            col: index < 4 ? 0 : 5,
+            row: (index % 4) * 1,
             placeholder: {},
           }) as MapZone,
       ),
@@ -232,37 +287,42 @@ export default function Sultan() {
         id: "stock",
         name: "stock",
         cards: game.stock,
-        col: 2.5,
+        col: 2,
         row: 3.6,
         fan: { maxVisible: 1 },
-        placeholder: { text: "Stock", showCount: true },
+        placeholder: { text: "Stock", showCount: true, infoPos: "left" },
       },
       {
         id: "waste",
         name: "waste",
         cards: game.waste,
-        col: 3.5,
+        col: 3,
         row: 3.6,
         fan: { maxVisible: 1 },
-        placeholder: { text: "Waste", showCount: true },
+        placeholder: { text: "Waste", showCount: true, infoPos: "right" },
       },
     ],
     [game],
   );
 
   const cardMapper = (card: MappedCard): AnimatedCardMapping | undefined => {
+    if (card.zoneName === "center")
+      return {
+        forceOverlayColor: true,
+        selectColor: "lightGrey",
+      };
     if (card.zoneName === "stock" && card.topOfZone)
       return { onPress: drawStock };
     if (card.zoneName === "waste" && card.topOfZone)
       return {
-        onPress: () => selectSource({ zone: "waste" }),
+        onPress: () => onSourcePress({ zone: "waste" }),
         isSelected: selected?.zone === "waste",
         selectColor: "blue",
       };
     if (card.zoneName === "reserve" && card.pileIndex !== undefined)
       return {
         onPress: () =>
-          selectSource({ zone: "reserve", index: card.pileIndex! }),
+          onSourcePress({ zone: "reserve", index: card.pileIndex! }),
         isSelected:
           selected?.zone === "reserve" && selected.index === card.pileIndex,
         selectColor: "blue",
@@ -278,15 +338,20 @@ export default function Sultan() {
     if (zone.name === "stock") return { onPress: drawStock };
     if (zone.name === "waste")
       return {
-        onPress: () => selectSource({ zone: "waste" }),
+        onPress: () => onSourcePress({ zone: "waste" }),
         isDisabled: game.waste.length === 0,
       };
-    if (zone.name === "reserve" && zone.pileIndex !== undefined)
+    if (zone.name === "reserve" && zone.pileIndex !== undefined) {
+      const reserveIndex = zone.pileIndex;
       return {
-        onPress: () =>
-          selectSource({ zone: "reserve", index: zone.pileIndex! }),
-        isDisabled: game.reserve[zone.pileIndex] === null,
+        onPress: () => {
+          if (game.reserve[reserveIndex] === null) {
+            moveToReserve(reserveIndex);
+          } else onSourcePress({ zone: "reserve", index: reserveIndex });
+        },
+        isDisabled: game.reserve[reserveIndex] === null && !selectedCard,
       };
+    }
     if (zone.name === "foundation" && zone.pileIndex !== undefined)
       return {
         onPress: () => moveToFoundation(zone.pileIndex!),
@@ -299,10 +364,8 @@ export default function Sultan() {
     zones,
     cardMapper,
     zoneMapper,
-    cardSize: "tableau",
-    fixedCols: 7,
-    fixedRows: 5.2,
-    gap: 0.12,
+    cardSize: "small",
+    gap: 0.2,
   });
   const score =
     game.foundations.reduce((sum, pile) => sum + pile.length, 0) + 1;

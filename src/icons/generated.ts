@@ -63,6 +63,7 @@ import RotateDeviceIcon from "./RotateDevice.svg";
 import SearchIcon from "./Search.svg";
 import SequenceIcon from "./Sequence.svg";
 import SettingsIcon from "./Settings.svg";
+import ShieldIcon from "./Shield.svg";
 import SkullIcon from "./Skull.svg";
 import SmokeBombIcon from "./SmokeBomb.svg";
 import SpadesIcon from "./Spades.svg";
@@ -132,6 +133,7 @@ export type IconName =
   | "search"
   | "sequence"
   | "settings"
+  | "shield"
   | "skull"
   | "smoke-bomb"
   | "spades"
@@ -201,6 +203,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "search": SearchIcon,
   "sequence": SequenceIcon,
   "settings": SettingsIcon,
+  "shield": ShieldIcon,
   "skull": SkullIcon,
   "smoke-bomb": SmokeBombIcon,
   "spades": SpadesIcon,

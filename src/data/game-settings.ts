@@ -31,7 +31,8 @@ export type GameSpecificSettingKey =
   | "gapsDifficulty"
   | "seerDifficulty"
   | "unwantedHelpDifficulty"
-  | "midnightVigilDifficulty";
+  | "midnightVigilDifficulty"
+  | "sultanAutoRefillReserves";
 export type GameSpecificSettingApplyBehavior = "immediate" | "next-game";
 
 type GameSpecificSettingOptionValue = GameSettings[GameSpecificSettingKey];
@@ -52,6 +53,21 @@ export type GameSpecificSettingDefinition = {
 
 const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
   {
+    "/sultan": [
+      {
+        key: "sultanAutoRefillReserves",
+        label: "Auto refill reserves",
+        type: "boolean",
+        booleanType: "toggle",
+        applyBehavior: "immediate",
+        description:
+          "Refills an emptied reserve from the waste pile or stock automatically.",
+        options: [
+          { label: "Off", value: false },
+          { label: "On", value: true },
+        ],
+      },
+    ],
     "/gaps": [
       {
         key: "gapsDifficulty",

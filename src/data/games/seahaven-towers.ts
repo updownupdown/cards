@@ -3,14 +3,13 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const seahavenTowers: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/seahaven-towers",
   title: "Seahaven Towers",
   aliases: ["Sea Towers"],
   tags: [GameTag.TableauBuilding],
   rating: { complexity: 35, difficulty: 50, luck: 25 },
   background: GAME_BACKGROUNDS.island,
-  animation: GameAnimations.Clouds,
+  // animation: GameAnimations.Clouds,
   gameColorDark: "#173946",
   gameColorPale: "#dceff0",
   cardDescription:

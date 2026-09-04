@@ -49,6 +49,7 @@ export type GameSettings = {
   seerDifficulty: "easy" | "normal" | "hard";
   unwantedHelpDifficulty: "easy" | "hard";
   midnightVigilDifficulty: "street" | "kingpin" | "city";
+  sultanAutoRefillReserves: boolean;
   lastResultSessionId?: string;
   lastResultWon?: boolean;
   stats: GameStats;
@@ -165,6 +166,7 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   seerDifficulty: "normal",
   unwantedHelpDifficulty: "easy",
   midnightVigilDifficulty: "kingpin",
+  sultanAutoRefillReserves: false,
   stats: {
     attempts: 0,
     wins: 0,

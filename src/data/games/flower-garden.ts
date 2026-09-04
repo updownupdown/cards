@@ -9,7 +9,7 @@ export const flowerGarden: GameDefinition = {
   tags: [GameTag.TableauBuilding],
   rating: { complexity: 30, difficulty: 65, luck: 35 },
   thumbnail: "FlowerGarden.jpg",
-  background: GAME_BACKGROUNDS.greenhouse,
+  background: GAME_BACKGROUNDS.flowerGarden,
   animation: GameAnimations.Pollen,
   gameColorDark: "#24402f",
   gameColorPale: "#f2e4c2",

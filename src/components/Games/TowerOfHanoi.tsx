@@ -363,19 +363,17 @@ export default function TowerOfHanoi() {
       <View ref={boardRef} style={styles.board}>
         {cardMap}
 
-        <View pointerEvents="box-none" style={styles.interactionLayer}>
-          {interactionTargets}
-        </View>
+        <View style={styles.interactionLayer}>{interactionTargets}</View>
 
         {dragGhost && (
           <Animated.View
-            pointerEvents="none"
             style={{
               position: "absolute",
               zIndex: 4000,
               left: dragGhost.origin.x,
               top: dragGhost.origin.y,
               transform: dragTranslate.getTranslateTransform(),
+              pointerEvents: "none",
             }}
           >
             {dragGhost.cards.map((card, index) => (
@@ -418,5 +416,6 @@ const styles = StyleSheet.create({
     zIndex: 3000,
     touchAction: "none",
     overscrollBehaviorX: "contain",
+    pointerEvents: "box-none",
   },
 });

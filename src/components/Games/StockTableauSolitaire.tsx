@@ -183,7 +183,7 @@ const CONFIGS: Record<StockTableauVariant, Config> = {
     move: "built-run",
     empty: "any",
     stock: "waste",
-    redeals: 2,
+    redeals: 0,
   },
   lucas: {
     decks: 2,
@@ -589,6 +589,18 @@ export function StockTableauSolitaire({
     if (!moveToTableau(pile)) setSelected(next);
   }
 
+  function onWastePress() {
+    if (game.ended || game.waste.length === 0) return;
+    const next: Selection = { zone: "waste" };
+    const now = Date.now();
+    if (lastTap?.key === "waste" && now - lastTap.at < DOUBLE_TAP_MS) {
+      setLastTap(null);
+      if (moveToFoundation(next)) return;
+    } else setLastTap({ key: "waste", at: now });
+    if (selected?.zone === "waste") return setSelected(null);
+    setSelected(next);
+  }
+
   function drawStock() {
     if (game.ended) return;
     if (game.stock.length === 0) {
@@ -708,7 +720,7 @@ export function StockTableauSolitaire({
       };
     if (card.zoneName === "waste" && card.topOfZone)
       return {
-        onPress: () => setSelected({ zone: "waste" }),
+        onPress: onWastePress,
         isSelected: selected?.zone === "waste",
         selectColor: "blue",
         isVisible: !isBeingDragged,
@@ -759,7 +771,7 @@ export function StockTableauSolitaire({
       };
     if (zone.name === "waste")
       return {
-        onPress: () => setSelected({ zone: "waste" }),
+        onPress: onWastePress,
         isDisabled: game.waste.length === 0,
       };
     if (zone.name === "foundation" && zone.pileIndex !== undefined)
@@ -925,7 +937,7 @@ export function StockTableauSolitaire({
   );
   tapHandlerResolverRef.current = (source) =>
     source.zone === "waste"
-      ? () => setSelected({ zone: "waste" })
+      ? onWastePress
       : () => onTableauPress(source.pile, source.card);
 
   const interactionTargets = useMemo(

@@ -1,8 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 
 export const fortunesCall: GameDefinition = {
-  // The Fortune Teller
-  enabledOnLocalOnly: true,
+  // The Fortune Teller? Unclear if there's an actual source game.
   path: "/fortunes-call",
   title: "Fortune's Call",
   thumbnail: "FortunesCall.jpg",
@@ -20,6 +19,7 @@ export const fortunesCall: GameDefinition = {
   howToPlay: [
     "## Objective",
     "Score twelve points before making three incorrect calls.",
+
     "## Predictions",
     "- Red or Black predicts the hidden card's colour and scores one point.",
     "- Higher or Lower compares its rank with the face-up anchor and scores two points.",

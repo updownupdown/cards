@@ -221,7 +221,7 @@ function createInitialState(): GameState {
   return state;
 }
 
-export const gridcannonRules = {
+export const dynastyRules = {
   attackValue,
   canPlaceNumber,
   resolveAttacks,
@@ -230,7 +230,7 @@ export const gridcannonRules = {
 
 const gameStateInitial = createInitialState();
 
-export default function GridcannonSoloSuite() {
+export default function Dynasty() {
   const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
     useStateManager<GameState>({
       gameStateInitial,

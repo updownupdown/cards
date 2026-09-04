@@ -8,7 +8,7 @@ export const fortress: GameDefinition = {
   tags: [GameTag.TableauBuilding],
   rating: { complexity: 40, difficulty: 70, luck: 35 },
   thumbnail: "Fortress.jpg",
-  background: GAME_BACKGROUNDS.castle,
+  background: GAME_BACKGROUNDS.fortress,
   animation: GameAnimations.Clouds,
   gameColorDark: "#302a24",
   gameColorPale: "#ead9b8",
