@@ -3,7 +3,6 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const nightmareGuard: GameDefinition = {
-  enabledOnLocalOnly: true,
   path: "/nightmare-guard",
   title: "Nightmare Guard",
   aliases: ["Alice's Nightmares"],
@@ -13,10 +12,10 @@ export const nightmareGuard: GameDefinition = {
     difficulty: 70,
     luck: 45,
   },
-  background: GAME_BACKGROUNDS.oldRoom,
+  background: GAME_BACKGROUNDS.painting,
   animation: GameAnimations.Dust,
-  gameColorDark: "#201b25",
-  gameColorPale: "#f0d8e8",
+  gameColorDark: "#1b1f25",
+  gameColorPale: "#efd8f0",
   cardDescription:
     "Build Alice's Guardian deck, defeat the Dream deck's Nightmares, and protect her life.",
   quickStart: [

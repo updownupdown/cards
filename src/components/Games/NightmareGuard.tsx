@@ -8,6 +8,7 @@ import { View } from "react-native";
 import { Button } from "../Button/Button";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
+  cardDims,
   createDeck,
   flipToBack,
   flipToFace,
@@ -15,10 +16,12 @@ import {
   isJoker,
   rankValue,
   shuffle,
+  zoneFanOffset,
   type PlayingCard,
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { ProgressBar } from "../Home/ProgressBar";
 import { Text } from "../common/Text";
 import { useToast } from "../common/Toast";
 
@@ -89,15 +92,15 @@ function isNightmareAce(card: PlayingCard | null) {
 function isAceDestroyer(card: PlayingCard) {
   return (
     isGuardian(card) &&
-    (card.rank === "A" || card.rank === "J" || card.rank === "Q" || card.rank === "K")
+    (card.rank === "A" ||
+      card.rank === "J" ||
+      card.rank === "Q" ||
+      card.rank === "K")
   );
 }
 
 function isNonAceSpecialGuardian(card: PlayingCard) {
-  return (
-    isGuardian(card) &&
-    (isFace(card) || isJoker(card))
-  );
+  return isGuardian(card) && (isFace(card) || isJoker(card));
 }
 
 function copiedCardValue(card: PlayingCard | undefined) {
@@ -114,9 +117,7 @@ function dreamCardValue(
   if (card.rank === "A") return 0;
   if (!isJoker(card)) return rankValue(card);
 
-  const copiedPile = isGuardian(card)
-    ? removedGuardians
-    : removedNightmares;
+  const copiedPile = isGuardian(card) ? removedGuardians : removedNightmares;
   return copiedCardValue(copiedPile.at(-1));
 }
 
@@ -176,12 +177,7 @@ function canAssignToTarget(
       state.board,
       state.removedGuardians,
       state.removedNightmares,
-    ) >=
-    dreamCardValue(
-      target,
-      state.removedGuardians,
-      state.removedNightmares,
-    )
+    ) >= dreamCardValue(target, state.removedGuardians, state.removedNightmares)
   );
 }
 
@@ -281,8 +277,7 @@ function resolveBoard(state: NightmareGuardGameState) {
         state.removedNightmares,
       );
       const copiesAce =
-        isJoker(target) &&
-        state.removedNightmares.at(-1)?.rank === "A";
+        isJoker(target) && state.removedNightmares.at(-1)?.rank === "A";
       const eliminated =
         assigned.length > 0 &&
         (target.rank === "A"
@@ -362,15 +357,13 @@ function createGame(cards = createDeck({ includeJokers: true })) {
   const startingGuardians = cards.filter(
     (card) =>
       isGuardian(card) &&
-      (["2", "3", "4", "5"].includes(card.rank) ||
-        card.id === startingAce.id),
+      (["2", "3", "4", "5"].includes(card.rank) || card.id === startingAce.id),
   );
   const startingIds = new Set(startingGuardians.map((card) => card.id));
   const dreamCards = cards.filter((card) => !startingIds.has(card.id));
   const openingCards = shuffle(
     dreamCards.filter(
-      (card) =>
-        card.rank !== "A" && !isFace(card) && !isJoker(card),
+      (card) => card.rank !== "A" && !isFace(card) && !isJoker(card),
     ),
   );
   const openingBoard = openingCards.slice(0, BOARD_SIZE).map(flipToFace);
@@ -382,9 +375,7 @@ function createGame(cards = createDeck({ includeJokers: true })) {
     assignments: [[], [], []],
     guardianDeck: shuffle(startingGuardians.map(flipToBack)),
     dreamDeck: shuffle(
-      dreamCards
-        .filter((card) => !openingIds.has(card.id))
-        .map(flipToBack),
+      dreamCards.filter((card) => !openingIds.has(card.id)).map(flipToBack),
     ),
   };
   while (state.hand.length < MAX_HAND) {
@@ -460,8 +451,7 @@ export default function NightmareGuard() {
   );
   const canDeepBreath =
     selectedCards.length === 1 && !game.playedThisTurn && noAssignments;
-  const canRemSleep =
-    game.life <= 10 && !game.remSleepUsed && noAssignments;
+  const canRemSleep = game.life <= 10 && !game.remSleepUsed && noAssignments;
   const selectedValue = playedValue(
     selectedCards,
     game.board,
@@ -574,8 +564,8 @@ export default function NightmareGuard() {
       name: "board",
       pileIndex: slot,
       cards: card ? [card] : [],
-      col: 2 + slot,
-      row: 0,
+      col: 2.25 + slot,
+      row: 0.75,
       baseZIndex: 20,
       placeholder: {},
     }));
@@ -584,11 +574,10 @@ export default function NightmareGuard() {
       name: "assignment",
       pileIndex: slot,
       cards,
-      col: 2 + slot,
-      row: 1.08,
+      col: 2.25 + slot,
+      row: 1.5,
       baseZIndex: 30,
-      fan: { direction: "down" as const, offset: 0.28 },
-      placeholder: { text: "Guard", infoPos: "below" as const },
+      fan: { direction: "down" as const, offset: cardDims.smallCardOffset },
     }));
 
     return [
@@ -597,16 +586,16 @@ export default function NightmareGuard() {
         name: "dreamDiscard",
         cards: game.dreamDiscard,
         col: 0,
-        row: 0,
+        row: 0.75,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Dream Out", infoPos: "below" },
+        placeholder: { text: "Dscrd", infoPos: "below" },
       },
       {
         id: "dream-deck",
         name: "dreamDeck",
         cards: game.dreamDeck,
         col: 1,
-        row: 0,
+        row: 0.75,
         fan: { maxVisible: 3 },
         placeholder: { text: "Dream", infoPos: "below", showCount: true },
       },
@@ -615,19 +604,19 @@ export default function NightmareGuard() {
         id: "removed-nightmares",
         name: "removedNightmares",
         cards: game.removedNightmares,
-        col: 5,
-        row: 0,
+        col: 5.5,
+        row: 0.75,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Banished", infoPos: "below", showCount: true },
+        placeholder: { text: "Rmvd", infoPos: "below", showCount: true },
       },
       {
         id: "removed-guardians",
         name: "removedGuardians",
         cards: game.removedGuardians,
-        col: 6,
-        row: 0,
+        col: 5.5,
+        row: 3,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Lost", infoPos: "below", showCount: true },
+        placeholder: { text: "Rmvd", infoPos: "above", showCount: true },
       },
       ...assignmentZones,
       {
@@ -635,44 +624,43 @@ export default function NightmareGuard() {
         name: "guardianDiscard",
         cards: game.guardianDiscard,
         col: 0,
-        row: 3.05,
+        row: 3,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Guard Out", infoPos: "below" },
+        placeholder: { text: "Dscrd", infoPos: "above" },
       },
       {
         id: "guardian-deck",
         name: "guardianDeck",
         cards: game.guardianDeck,
         col: 1,
-        row: 3.05,
+        row: 3,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Guard", infoPos: "below", showCount: true },
+        placeholder: { text: "Guard", infoPos: "above", showCount: true },
       },
       {
         id: "hand",
         name: "hand",
         cards: game.hand,
-        col: 2,
-        row: 3.05,
+        col: 2.25,
+        row: 3,
         width: 3,
-        fan: { direction: "right", offset: 0.62 },
-        placeholder: { text: "Hand", infoPos: "below" },
+        fan: { direction: "right", offset: zoneFanOffset(game.hand.length, 3) },
+        placeholder: {},
       },
       {
         id: "life",
-        col: 5,
-        row: 3.05,
-        width: 2,
-        height: 1,
+        col: 0,
+        row: 0,
+        width: "full",
+        height: 0.4,
         baseZIndex: 10,
       },
       {
         id: "actions",
         col: 0,
-        row: 4.45,
-        width: 7,
-        height: 1.75,
-        baseZIndex: 40,
+        row: 4.25,
+        width: "full",
+        height: 2,
       },
     ];
   }, [game]);
@@ -696,7 +684,9 @@ export default function NightmareGuard() {
         isSelected: selected,
         selectColor: isNightmare(mappedCard.card) ? "red" : "green",
         onPress: () =>
-          setSelectedBoardSlot(selected ? null : mappedCard.pileIndex ?? null),
+          setSelectedBoardSlot(
+            selected ? null : (mappedCard.pileIndex ?? null),
+          ),
       };
     }
 
@@ -720,11 +710,6 @@ export default function NightmareGuard() {
     cardMapper,
     zoneMapper,
     cardSize: "small",
-    fixedCols: 7.2,
-    fixedRows: 6.45,
-    gap: 0.18,
-    paddingTop: 0.1,
-    paddingBottom: 0.1,
   });
 
   const targetValue = selectedTarget
@@ -734,11 +719,10 @@ export default function NightmareGuard() {
         game.removedNightmares,
       )
     : null;
-  const instruction = selectedTarget
-    ? `${isNightmare(selectedTarget) ? "Nightmare" : "Guardian"} ${targetValue} | Selected ${selectedValue}`
-    : selectedCards.length > 0
-      ? `Selected ${selectedCards.length} card${selectedCards.length === 1 ? "" : "s"} (${selectedValue})`
-      : "Select Guardians and a Dream card";
+
+  const lifePreview = structuredClone(game);
+
+  resolveBoard(lifePreview);
 
   return (
     <GameWrapper
@@ -752,29 +736,27 @@ export default function NightmareGuard() {
     >
       {cardMap}
 
-      <View
-        style={[
-          getZoneStylesById("life"),
-          flexStyles.colCentered,
-          {
-            borderRadius: cardHeight * 0.08,
-            backgroundColor: colorZone,
-          },
-        ]}
-      >
-        <Text size="xxs" color={Colors.K300} textTransform="uppercase">
-          Alice
+      <View style={[getZoneStylesById("life"), flexStyles.rowCentered]}>
+        <Text size="md" weight={600} color={Colors.K100} style={{ flex: 1 }}>
+          Turn {game.turn}
         </Text>
-        <Text
-          size="xl"
-          weight={700}
-          color={game.life <= 10 ? Colors.brightRed : Colors.K100}
-        >
-          {game.life}
-        </Text>
-        <Text size="xxs" color={Colors.K400}>
-          Life | Turn {game.turn}
-        </Text>
+
+        <ProgressBar
+          totalValue={MAX_LIFE}
+          progressValue={game.life}
+          previewProgressValue={lifePreview.life}
+          autoTallyText
+          color={
+            game.life / MAX_LIFE <= 0.25
+              ? "red"
+              : game.life / MAX_LIFE <= 0.5
+                ? "orange"
+                : "green"
+          }
+          iconName="heart"
+          scaledHeight={cardHeight * 0.4}
+          style={{ flex: 3.4 }}
+        />
       </View>
 
       <View
@@ -782,59 +764,73 @@ export default function NightmareGuard() {
           getZoneStylesById("actions"),
           flexStyles.colCentered,
           {
-            gap: cardHeight * 0.08,
-            padding: cardHeight * 0.08,
-            borderRadius: cardHeight * 0.08,
-            backgroundColor: colorZone,
-            borderWidth: 1,
-            borderColor: rgba(Colors.white, 0.12),
+            gap: cardHeight * 0.2,
           },
         ]}
       >
-        <Text size="xxs" color={Colors.K200}>
-          {instruction}
-        </Text>
+        <View
+          style={[
+            flexStyles.rowCentered,
+            {
+              gap: cardHeight * 0.2,
+            },
+          ]}
+        >
+          <Text size="md" weight={500} color={Colors.K200}>
+            {selectedTarget
+              ? `${isNightmare(selectedTarget) ? "Nightmare" : "Guardian"}: ${targetValue}`
+              : "Select nightmare or guardian"}
+          </Text>
+          <Text size="md" weight={500} color={Colors.K200}>
+            {`Selected: ${selectedValue}`}
+          </Text>
+        </View>
+
         <View
           style={[
             flexStyles.rowCentered,
             flexStyles.fullWidth,
-            { gap: cardHeight * 0.06 },
+            { gap: cardHeight * 0.2 },
           ]}
         >
           <Button
             text="Assign"
-            size="xs"
+            size="sm"
             theme="green"
             disabled={!canAssign}
             onPress={assignCards}
             style={[flexStyles.flex1]}
+            taller
           />
           <Button
             text="Exile"
-            size="xs"
+            size="sm"
             theme="red"
             disabled={!canExile}
             onPress={exileNightmare}
             style={[flexStyles.flex1]}
+            taller
           />
           <Button
             text="Resolve"
-            size="xs"
+            size="sm"
             theme="blue"
             onPress={resolveTurn}
             style={[flexStyles.flex1]}
+            taller
           />
         </View>
+
         <View
           style={[
             flexStyles.rowCentered,
             flexStyles.fullWidth,
-            { gap: cardHeight * 0.06 },
+            { gap: cardHeight * 0.2 },
           ]}
         >
           <Button
             text="Deep Breath"
-            size="xs"
+            size="sm"
             theme="purple"
             disabled={!canDeepBreath}
             onPress={deepBreath}
@@ -842,7 +838,7 @@ export default function NightmareGuard() {
           />
           <Button
             text={game.remSleepUsed ? "REM Used" : "REM Sleep"}
-            size="xs"
+            size="sm"
             theme="orange"
             disabled={!canRemSleep}
             onPress={remSleep}
