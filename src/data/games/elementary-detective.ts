@@ -15,7 +15,7 @@ export const elementaryDetective: GameDefinition = {
   background: GAME_BACKGROUNDS.fallLeaves,
   animation: GameAnimations.Leaves,
   gameColorDark: "#221815",
-  gameColorMid: "#52aa64",
+  gameColorMid: "#6b8333",
   gameColorPale: "#c5f7da",
   cardDescription:
     "Find your hidden playmates through careful planning and deduction.",

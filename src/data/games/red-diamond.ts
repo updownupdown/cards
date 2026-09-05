@@ -1,3 +1,5 @@
+import { GameAnimations } from "@/animations";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const redDiamond: GameDefinition = {
@@ -9,10 +11,12 @@ export const redDiamond: GameDefinition = {
     difficulty: 55,
     luck: 55,
   },
+  background: GAME_BACKGROUNDS.sahara,
+  animation: GameAnimations.ManaDust,
   thumbnail: "RedDiamond.jpg",
-  gameColorDark: "#30171B",
-  gameColorMid: "#af5a60",
-  gameColorPale: "#FFE4E4",
+  gameColorDark: "#36251b",
+  gameColorMid: "#a8222b",
+  gameColorPale: "#ffd8d8",
   cardDescription:
     "Place every Club and Spade around four Diamonds using arithmetic matches.",
   quickStart: [

@@ -10,7 +10,7 @@ export const indian: GameDefinition = {
   thumbnail: "Indian.jpg",
   background: GAME_BACKGROUNDS.indianLandscape,
   gameColorDark: "#49362a",
-  gameColorMid: "#ae8958",
+  gameColorMid: "#378641",
   gameColorPale: "#ead6ad",
   cardDescription:
     "Build two-deck columns down while carefully avoiding matching suits.",

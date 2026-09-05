@@ -15,7 +15,7 @@ export const spiderSolitaire: GameDefinition = {
   background: GAME_BACKGROUNDS.dungeon,
   animation: GameAnimations.Embers,
   gameColorDark: "#25111e",
-  gameColorMid: "#ab5aaf",
+  gameColorMid: "#512353",
   gameColorPale: "#f6e6ff",
   cardDescription:
     "Build same-suit runs from King to Ace across a tangled double deck.",

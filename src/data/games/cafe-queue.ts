@@ -13,7 +13,7 @@ export const cafeQueue: GameDefinition = {
   thumbnail: "CafeQueue.jpg",
   background: GAME_BACKGROUNDS.london,
   gameColorDark: "#2b1c29",
-  gameColorMid: "#a3794f",
+  gameColorMid: "#643b12",
   gameColorPale: "#eed5a0",
   cardDescription:
     "A push-your-luck game where you must manage ordered queues of customers.",

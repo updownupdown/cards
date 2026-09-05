@@ -1,5 +1,4 @@
 import ClockHandHours from "@/assets/images/ClockHandHours.svg";
-import ClockHandMinutes from "@/assets/images/ClockHandMinutes.svg";
 import { MappedCard, MapZone, useCardMap } from "@/components/Cards/CardMap";
 import { useGameColors } from "@/hooks/useGameColors";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";

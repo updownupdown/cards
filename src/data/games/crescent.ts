@@ -12,7 +12,7 @@ export const crescent: GameDefinition = {
   background: GAME_BACKGROUNDS.nightSky,
   animation: GameAnimations.Stars,
   gameColorDark: "#182334",
-  gameColorMid: "#54ac54",
+  gameColorMid: "#173b64",
   gameColorPale: "#e5dfca",
   cardDescription:
     "Turn sixteen moonlit piles toward foundations growing from both Aces and Kings.",

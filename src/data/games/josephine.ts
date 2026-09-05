@@ -8,7 +8,7 @@ export const josephine: GameDefinition = {
   thumbnail: "Josephine.jpg",
   background: GAME_BACKGROUNDS.greece,
   gameColorDark: "#332e40",
-  gameColorMid: "#af5a5a",
+  gameColorMid: "#812e4a",
   gameColorPale: "#efe3d2",
   cardDescription:
     "A two-deck Forty Thieves relative where suited sequences move as a unit.",

@@ -42,6 +42,14 @@ export default function Home() {
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [homeDataRefreshToken, setHomeDataRefreshToken] = useState(0);
   const [activeTab, setActiveTab] = useState<HomeTabIndex>(initialActiveTab);
+  const [mountedTabs, setMountedTabs] = useState<Set<HomeTabIndex>>(
+    () =>
+      new Set(
+        [initialActiveTab - 1, initialActiveTab, initialActiveTab + 1].filter(
+          (index): index is HomeTabIndex => index >= 0 && index <= 4,
+        ),
+      ),
+  );
   const activeTabRef = useRef<HomeTabIndex>(initialActiveTab);
   const isTabPressScrollRef = useRef(false);
 
@@ -124,6 +132,7 @@ export default function Home() {
     // highlight doesn't flicker.
     if (isTabPressScrollRef.current) return;
     activeTabRef.current = index;
+    mountTab(index);
     setActiveHomeTab(index);
     setActiveTab(index);
   };
@@ -132,14 +141,41 @@ export default function Home() {
     syncActiveTab(event.nativeEvent.contentOffset.x);
   };
 
+  const onPagerSettled = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    onScroll(event);
+    mountTabAndNeighbours(activeTabRef.current);
+  };
+
   const onSelectTab = (requestedIndex: number) => {
     const index = Math.max(0, Math.min(4, requestedIndex)) as HomeTabIndex;
     if (index === activeTabRef.current) return;
+    mountTab(index);
     isTabPressScrollRef.current = true;
     activeTabRef.current = index;
     setActiveHomeTab(index);
     setActiveTab(index);
     pagerRef.current?.scrollTo({ x: index * pageWidth, animated: true });
+  };
+
+  const mountTab = (index: HomeTabIndex) => {
+    setMountedTabs((current) => {
+      if (current.has(index)) return current;
+      const next = new Set(current);
+      next.add(index);
+      return next;
+    });
+  };
+
+  const mountTabAndNeighbours = (index: HomeTabIndex) => {
+    setMountedTabs((current) => {
+      const next = new Set(current);
+      for (const candidate of [index - 1, index, index + 1]) {
+        if (candidate >= 0 && candidate <= 4) {
+          next.add(candidate as HomeTabIndex);
+        }
+      }
+      return next.size === current.size ? current : next;
+    });
   };
 
   // On web the screen height comes from window.innerHeight and is applied via a
@@ -181,65 +217,75 @@ export default function Home() {
 
   const pages = [
     <View key="tab-home" style={[pageStyle, webSnapChild]}>
-      <HomeTab
-        onSelectTab={onSelectTab}
-        allEnabledGames={allEnabledGames}
-        allEnabledGamePaths={allEnabledGamePaths}
-        favorites={favorites}
-        recentPaths={recentPaths}
-        onToggleFavorite={toggleFavorite}
-        contentPaddingTop={contentPaddingTop}
-        contentPaddingBottom={contentPaddingBottom}
-      />
+      {mountedTabs.has(0) && (
+        <HomeTab
+          onSelectTab={onSelectTab}
+          allEnabledGames={allEnabledGames}
+          allEnabledGamePaths={allEnabledGamePaths}
+          favorites={favorites}
+          recentPaths={recentPaths}
+          onToggleFavorite={toggleFavorite}
+          contentPaddingTop={contentPaddingTop}
+          contentPaddingBottom={contentPaddingBottom}
+        />
+      )}
     </View>,
     <View key="tab-explore" style={[pageStyle, webSnapChild]}>
-      <ExploreTab
-        allEnabledGames={allEnabledGames}
-        settingsMap={settingsMap}
-        favorites={favorites}
-        onToggleFavorite={toggleFavorite}
-        cardSize={cardSize}
-        onCardSizeChange={(value) =>
-          updateSettings({ discoverCardSize: value })
-        }
-        contentPaddingTop={contentPaddingTop}
-        contentPaddingBottom={contentPaddingBottom}
-      />
+      {mountedTabs.has(1) && (
+        <ExploreTab
+          allEnabledGames={allEnabledGames}
+          settingsMap={settingsMap}
+          favorites={favorites}
+          onToggleFavorite={toggleFavorite}
+          cardSize={cardSize}
+          onCardSizeChange={(value) =>
+            updateSettings({ discoverCardSize: value })
+          }
+          contentPaddingTop={contentPaddingTop}
+          contentPaddingBottom={contentPaddingBottom}
+        />
+      )}
     </View>,
     <View key="tab-search" style={[pageStyle, webSnapChild]}>
-      <SearchTab
-        allEnabledGames={allEnabledGames}
-        unplayedGamePaths={unplayedGamePaths}
-        favorites={favorites}
-        onToggleFavorite={toggleFavorite}
-        cardSize={cardSize}
-        onCardSizeChange={(value) =>
-          updateSettings({ discoverCardSize: value })
-        }
-        contentPaddingTop={contentPaddingTop}
-        contentPaddingBottom={contentPaddingBottom}
-      />
+      {mountedTabs.has(2) && (
+        <SearchTab
+          allEnabledGames={allEnabledGames}
+          unplayedGamePaths={unplayedGamePaths}
+          favorites={favorites}
+          onToggleFavorite={toggleFavorite}
+          cardSize={cardSize}
+          onCardSizeChange={(value) =>
+            updateSettings({ discoverCardSize: value })
+          }
+          contentPaddingTop={contentPaddingTop}
+          contentPaddingBottom={contentPaddingBottom}
+        />
+      )}
     </View>,
     <View key="tab-random" style={[pageStyle, webSnapChild]}>
-      <RandomTab
-        allEnabledGames={allEnabledGames}
-        unplayedGamePaths={unplayedGamePaths}
-        settingsMap={settingsMap}
-        isActive={activeTab === 3}
-        favorites={favorites}
-        onToggleFavorite={toggleFavorite}
-        contentPaddingTop={contentPaddingTop}
-        contentPaddingBottom={contentPaddingBottom}
-      />
+      {mountedTabs.has(3) && (
+        <RandomTab
+          allEnabledGames={allEnabledGames}
+          unplayedGamePaths={unplayedGamePaths}
+          settingsMap={settingsMap}
+          isActive={activeTab === 3}
+          favorites={favorites}
+          onToggleFavorite={toggleFavorite}
+          contentPaddingTop={contentPaddingTop}
+          contentPaddingBottom={contentPaddingBottom}
+        />
+      )}
     </View>,
     <View key="tab-stats" style={[pageStyle, webSnapChild]}>
-      <StatsTab
-        settingsMap={settingsMap}
-        favorites={favorites}
-        onToggleFavorite={toggleFavorite}
-        contentPaddingTop={contentPaddingTop}
-        contentPaddingBottom={contentPaddingBottom}
-      />
+      {mountedTabs.has(4) && (
+        <StatsTab
+          settingsMap={settingsMap}
+          favorites={favorites}
+          onToggleFavorite={toggleFavorite}
+          contentPaddingTop={contentPaddingTop}
+          contentPaddingBottom={contentPaddingBottom}
+        />
+      )}
     </View>,
   ];
 
@@ -262,7 +308,7 @@ export default function Home() {
             pagingEnabled={!isWeb}
             showsHorizontalScrollIndicator={false}
             onScroll={onScroll}
-            onMomentumScrollEnd={onScroll}
+            onMomentumScrollEnd={onPagerSettled}
             scrollEventThrottle={16}
             style={[{ flex: 1 }, webSnapContainer]}
             contentContainerStyle={{ height: screenHeight || "100%" }}

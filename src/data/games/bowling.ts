@@ -13,7 +13,7 @@ export const bowling: GameDefinition = {
   thumbnail: "Bowling.jpg",
   background: GAME_BACKGROUNDS.bowling,
   gameColorDark: "#331e0f",
-  gameColorMid: "#4fa394",
+  gameColorMid: "#23947f",
   gameColorPale: "#a9e9f1",
   cardDescription:
     "Bowl a full game of 10-pin using cards, chasing strikes and spares.",

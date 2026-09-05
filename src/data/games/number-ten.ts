@@ -11,7 +11,7 @@ export const numberTen: GameDefinition = {
   background: GAME_BACKGROUNDS.interchange,
   animation: GameAnimations.Clouds,
   gameColorDark: "#25343b",
-  gameColorMid: "#5aa8af",
+  gameColorMid: "#45898f",
   gameColorPale: "#dde4df",
   cardDescription:
     "Uncover ten columns and move alternating-color sequences as complete units.",

@@ -15,7 +15,7 @@ export const invaders: GameDefinition = {
   background: GAME_BACKGROUNDS.nightSky,
   animation: GameAnimations.Stars,
   gameColorDark: "#2a2836",
-  gameColorMid: "#5a9baf",
+  gameColorMid: "#29a4b4",
   gameColorPale: "#b5faff",
   cardDescription:
     "Fight off waves of alien invaders before running out of defenders.",

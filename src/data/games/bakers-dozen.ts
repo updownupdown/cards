@@ -14,7 +14,7 @@ export const bakersDozen: GameDefinition = {
   thumbnail: "BakersDozen.jpg",
   background: GAME_BACKGROUNDS.london,
   gameColorDark: "#253b36",
-  gameColorMid: "#5aaf7a",
+  gameColorMid: "#134b70",
   gameColorPale: "#edf7e8",
   cardDescription: "Clear thirteen compact columns into four suit foundations.",
   quickStart: [

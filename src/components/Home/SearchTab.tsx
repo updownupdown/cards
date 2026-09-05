@@ -15,7 +15,7 @@ import {
   transitionStyles,
 } from "@/styles/styles";
 import { useMemo, useRef, useState } from "react";
-import { Platform, Pressable, ScrollView, TextInput, View } from "react-native";
+import { FlatList, Platform, Pressable, TextInput, View } from "react-native";
 import { useImmer } from "use-immer";
 import { HomeCardSizeControl, type HomeCardSize } from "./HomeCardSizeControl";
 import { flexStyles } from "@/styles/flexStyles";
@@ -64,9 +64,14 @@ export function SearchTab({
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useImmer<Filters>(DEFAULT_FILTERS);
   const pageSidePadding = spacing(layoutDims.pagePadding);
-  const contentWidth = Math.min(ui.contentMaxWidth, viewportWidth);
+  const contentWidth = Math.min(
+    ui.contentMaxWidth,
+    viewportWidth - pageSidePadding * 2,
+  );
   const cardGap = spacing(12);
-  const mediumCardWidth: `${number}%` = ui.isTablet ? "31.5%" : "48.5%";
+  const cardColumns = cardSize === "medium" ? (ui.isTablet ? 3 : 2) : 1;
+  const cardColumnWidth =
+    (contentWidth - cardGap * (cardColumns - 1)) / cardColumns;
   const controlHeight = spacing(52);
   const borderRadius = spacing(8);
   const unplayedPaths = useMemo(
@@ -166,197 +171,216 @@ export function SearchTab({
   );
 
   return (
-    <ScrollView
+    <FlatList
+      key={`${cardSize}-${cardColumns}`}
+      data={filteredGames}
+      keyExtractor={([path]) => path}
+      numColumns={cardColumns}
       style={{ flex: 1 }}
       keyboardShouldPersistTaps="handled"
       contentContainerStyle={{
         paddingTop: contentPaddingTop,
         paddingBottom: contentPaddingBottom,
         paddingHorizontal: pageSidePadding,
-        gap: spacing(16),
+        rowGap: cardGap,
       }}
+      columnWrapperStyle={
+        cardColumns > 1
+          ? {
+              alignSelf: "center",
+              gap: cardGap,
+              justifyContent: "flex-start",
+            }
+          : undefined
+      }
       showsVerticalScrollIndicator={false}
-    >
-      <View
-        style={{
-          width: "100%",
-          maxWidth: ui.contentMaxWidth,
-          alignSelf: "center",
-          gap: spacing(40),
-        }}
-      >
-        <HomeCardSizeControl
-          contentWidth={contentWidth}
-          value={cardSize}
-          onChange={onCardSizeChange}
-        />
-
-        <View style={{ flexDirection: "row", gap: spacing(12), minWidth: 0 }}>
-          {mode !== "filter" && (
-            <View
-              accessibilityRole="search"
-              style={[
-                transitionStyles.all05sec,
-                {
-                  height: controlHeight,
-                  flex: 1,
-                  minWidth: 0,
-                  borderRadius,
-                  backgroundColor: Colors.K875,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  paddingHorizontal: spacing(12),
-                  gap: spacing(10),
-                  boxShadow: `inset 0 0 ${spacing(12)}px ${rgba(Colors.black, 0.12)}`,
-                },
-              ]}
-            >
-              <Icon
-                name="search"
-                size={spacing(28)}
-                color={mode === "search" ? Colors.K200 : Colors.K500}
-              />
-              <TextInput
-                ref={inputRef}
-                {...webInputProps}
-                value={query}
-                onFocus={() => setMode("search")}
-                onChangeText={setQuery}
-                placeholder="Search..."
-                placeholderTextColor={Colors.K600}
-                autoCapitalize="none"
-                style={{
-                  flex: 1,
-                  minWidth: 0,
-                  height: "100%",
-                  color: Colors.K100,
-                  fontSize: font(16),
-                  fontFamily: FontWeight[300],
-                  outline: "none",
-                }}
-              />
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="Clear search"
-                onPress={clearSearch}
-                hitSlop={spacing(8)}
-                disabled={mode !== "search"}
-                style={[
-                  transitionStyles.all05sec,
-                  { opacity: mode === "search" ? 1 : 0 },
-                ]}
-              >
-                <Icon name="close" size={spacing(28)} color={Colors.K500} />
-              </Pressable>
-            </View>
-          )}
-
-          {mode !== "search" &&
-            (mode === "filter" ? (
-              <View
-                style={[
-                  flexStyles.colCentered,
-                  {
-                    width: "100%",
-                    gap: spacing(6),
-                    backgroundColor: Colors.K900,
-                    borderRadius,
-                    boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(12)}px ${rgba(Colors.black, 0.4)}`,
-                  },
-                ]}
-              >
-                <View
-                  style={{
-                    width: "100%",
-                    height: controlHeight,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    paddingRight: spacing(16),
-                    paddingLeft: spacing(12),
-                    gap: spacing(8),
-                  }}
-                >
-                  <Icon name="filter" size={spacing(24)} color={Colors.K300} />
-                  <Text
-                    size="md"
-                    weight={400}
-                    color={Colors.K200}
-                    style={{ flex: 1 }}
-                  >
-                    Filter
-                  </Text>
-
-                  <Pressable
-                    accessibilityRole="button"
-                    accessibilityLabel="Reset filters"
-                    onPress={resetFilters}
-                    style={{
-                      marginLeft: "auto",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: spacing(6),
-                    }}
-                  >
-                    <Text size="sm" weight={500} color={Colors.K600}>
-                      Reset filters
-                    </Text>
-                    <Icon name="close" size={spacing(24)} color={Colors.K600} />
-                  </Pressable>
-                </View>
-
-                {filtersSection}
-              </View>
-            ) : (
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="Filters"
-                onPress={() => setMode("filter")}
-                style={{
-                  height: controlHeight,
-                  borderRadius,
-                  backgroundColor: Colors.K900,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  paddingRight: spacing(16),
-                  paddingLeft: spacing(12),
-                  gap: spacing(8),
-                  boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(12)}px ${rgba(Colors.black, 0.25)}`,
-                }}
-              >
-                <Icon name="filter" size={spacing(24)} color={Colors.K300} />
-                <Text size="md" weight={400} color={Colors.K200}>
-                  Filter
-                </Text>
-              </Pressable>
-            ))}
-        </View>
-
+      initialNumToRender={8}
+      maxToRenderPerBatch={8}
+      windowSize={5}
+      ListHeaderComponent={
         <View
           style={{
             width: "100%",
-            flexDirection: "row",
-            flexWrap: "wrap",
-            justifyContent: "space-between",
-            rowGap: cardGap,
+            maxWidth: ui.contentMaxWidth,
+            alignSelf: "center",
+            gap: spacing(40),
+            marginBottom: cardGap,
           }}
         >
-          {filteredGames.map(([path, game]) => (
-            <HomeCard
-              key={path}
-              path={path}
-              game={game}
-              size={cardSize}
-              onToggleFavorite={onToggleFavorite}
-              isFavorite={favorites.has(path)}
-              style={{
-                width: cardSize === "medium" ? mediumCardWidth : "100%",
-                flexGrow: cardSize === "medium" ? 0 : 1,
-              }}
-            />
-          ))}
+          <HomeCardSizeControl
+            contentWidth={contentWidth}
+            value={cardSize}
+            onChange={onCardSizeChange}
+          />
+
+          <View style={{ flexDirection: "row", gap: spacing(12), minWidth: 0 }}>
+            {mode !== "filter" && (
+              <View
+                accessibilityRole="search"
+                style={[
+                  transitionStyles.all05sec,
+                  {
+                    height: controlHeight,
+                    flex: 1,
+                    minWidth: 0,
+                    borderRadius,
+                    backgroundColor: Colors.K875,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    paddingHorizontal: spacing(12),
+                    gap: spacing(10),
+                    boxShadow: `inset 0 0 ${spacing(12)}px ${rgba(Colors.black, 0.12)}`,
+                  },
+                ]}
+              >
+                <Icon
+                  name="search"
+                  size={spacing(28)}
+                  color={mode === "search" ? Colors.K200 : Colors.K500}
+                />
+                <TextInput
+                  ref={inputRef}
+                  {...webInputProps}
+                  value={query}
+                  onFocus={() => setMode("search")}
+                  onChangeText={setQuery}
+                  placeholder="Search..."
+                  placeholderTextColor={Colors.K600}
+                  autoCapitalize="none"
+                  style={{
+                    flex: 1,
+                    minWidth: 0,
+                    height: "100%",
+                    color: Colors.K100,
+                    fontSize: font(16),
+                    fontFamily: FontWeight[300],
+                    outline: "none",
+                  }}
+                />
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Clear search"
+                  onPress={clearSearch}
+                  hitSlop={spacing(8)}
+                  disabled={mode !== "search"}
+                  style={[
+                    transitionStyles.all05sec,
+                    { opacity: mode === "search" ? 1 : 0 },
+                  ]}
+                >
+                  <Icon name="close" size={spacing(28)} color={Colors.K500} />
+                </Pressable>
+              </View>
+            )}
+
+            {mode !== "search" &&
+              (mode === "filter" ? (
+                <View
+                  style={[
+                    flexStyles.colCentered,
+                    {
+                      width: "100%",
+                      gap: spacing(6),
+                      backgroundColor: Colors.K900,
+                      borderRadius,
+                      boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(12)}px ${rgba(Colors.black, 0.4)}`,
+                    },
+                  ]}
+                >
+                  <View
+                    style={{
+                      width: "100%",
+                      height: controlHeight,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      paddingRight: spacing(16),
+                      paddingLeft: spacing(12),
+                      gap: spacing(8),
+                    }}
+                  >
+                    <Icon
+                      name="filter"
+                      size={spacing(24)}
+                      color={Colors.K300}
+                    />
+                    <Text
+                      size="md"
+                      weight={400}
+                      color={Colors.K200}
+                      style={{ flex: 1 }}
+                    >
+                      Filter
+                    </Text>
+
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel="Reset filters"
+                      onPress={resetFilters}
+                      style={{
+                        marginLeft: "auto",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: spacing(6),
+                      }}
+                    >
+                      <Text size="sm" weight={500} color={Colors.K600}>
+                        Reset filters
+                      </Text>
+                      <Icon
+                        name="close"
+                        size={spacing(24)}
+                        color={Colors.K600}
+                      />
+                    </Pressable>
+                  </View>
+
+                  {filtersSection}
+                </View>
+              ) : (
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Filters"
+                  onPress={() => setMode("filter")}
+                  style={{
+                    height: controlHeight,
+                    borderRadius,
+                    backgroundColor: Colors.K900,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    paddingRight: spacing(16),
+                    paddingLeft: spacing(12),
+                    gap: spacing(8),
+                    boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(12)}px ${rgba(Colors.black, 0.25)}`,
+                  }}
+                >
+                  <Icon name="filter" size={spacing(24)} color={Colors.K300} />
+                  <Text size="md" weight={400} color={Colors.K200}>
+                    Filter
+                  </Text>
+                </Pressable>
+              ))}
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      }
+      renderItem={({ item: [path, game] }) => (
+        <View
+          style={{
+            alignSelf: "center",
+            width: cardColumnWidth,
+            maxWidth: cardColumnWidth,
+          }}
+        >
+          <HomeCard
+            path={path}
+            game={game}
+            size={cardSize}
+            onToggleFavorite={onToggleFavorite}
+            isFavorite={favorites.has(path)}
+            style={{ width: "100%" }}
+          />
+        </View>
+      )}
+    />
   );
 }

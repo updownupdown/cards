@@ -235,7 +235,7 @@ export type RichTextProps = {
 export function RichText({
   content,
   color = rgba(Colors.white, 0.9),
-  headingColor = Colors.headings,
+  headingColor = Colors.K200,
   gap = 20,
 }: RichTextProps) {
   const { spacing } = useResponsiveMetrics();

@@ -11,7 +11,7 @@ export const fortress: GameDefinition = {
   background: GAME_BACKGROUNDS.fortress,
   animation: GameAnimations.Clouds,
   gameColorDark: "#302a24",
-  gameColorMid: "#a98a52",
+  gameColorMid: "#584d37",
   gameColorPale: "#ead9b8",
   cardDescription:
     "Maneuver ten open lanes up or down by suit to free every foundation.",

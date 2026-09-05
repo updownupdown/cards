@@ -17,9 +17,6 @@ export default function CardBackColorsScreen() {
   return (
     <SafeAreaView style={styles.screen} edges={["top"]}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text size="xxxl" weight="bold" color={Colors.headings}>
-          Card Back Colors
-        </Text>
         <View style={styles.grid}>
           {games.map((game) => (
             <View
@@ -40,9 +37,6 @@ export default function CardBackColorsScreen() {
                 style={styles.title}
               >
                 {game.title}
-              </Text>
-              <Text size="xs" color={game.gameColorPale} style={styles.color}>
-                {game.gameColorMid}
               </Text>
             </View>
           ))}
