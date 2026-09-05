@@ -1,3 +1,5 @@
+import { GameAnimations } from "@/animations/types";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const fortunesCall: GameDefinition = {
@@ -7,8 +9,11 @@ export const fortunesCall: GameDefinition = {
   thumbnail: "FortunesCall.jpg",
   tags: [GameTag.EasyToLearn, GameTag.ModernMechanics, GameTag.ScoringPuzzles],
   rating: { complexity: 20, difficulty: 45, luck: 70 },
-  gameColorDark: "#302b23",
-  gameColorPale: "#f1e4b8",
+  gameColorDark: "#272330",
+  gameColorMid: "#883450",
+  gameColorPale: "#b8f1c6",
+  background: GAME_BACKGROUNDS.alaska,
+  animation: GameAnimations.Snow,
   cardDescription:
     "Predict each hidden card's colour or direction before three misses.",
   quickStart: [

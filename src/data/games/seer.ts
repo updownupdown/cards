@@ -15,6 +15,7 @@ export const seer: GameDefinition = {
   animation: GameAnimations.Stars,
   thumbnail: "Seer.jpg",
   gameColorDark: "#1b2135",
+  gameColorMid: "#4f8ea3",
   gameColorPale: "#d2d3c0",
   cardDescription:
     "Read a short deck, complete eight predictions, and keep stones from blocking the board.",

@@ -12,8 +12,8 @@ export const calculation: GameDefinition = {
   },
   thumbnail: "Calculation.jpg",
   background: GAME_BACKGROUNDS.oldRoom,
-  cardBack: "Calculation.jpg",
   gameColorDark: "#12122b",
+  gameColorMid: "#7958ae",
   gameColorPale: "#eccfff",
   cardDescription:
     "Build four foundations in steps of 1, 2, 3, and 4, up to Kings.",

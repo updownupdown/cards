@@ -15,6 +15,7 @@ export const klondike: GameDefinition = {
   background: GAME_BACKGROUNDS.yukon,
   animation: GameAnimations.Clouds,
   gameColorDark: "#2c3a36",
+  gameColorMid: "#627685",
   gameColorPale: "#EEF0FF",
   cardDescription:
     "The classic solitaire: build four suit foundations from Ace to King.",

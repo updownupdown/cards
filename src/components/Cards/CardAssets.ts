@@ -1,7 +1,6 @@
 import { Image } from "expo-image";
 import { ImageSourcePropType } from "react-native";
 import { CardSizes } from "./CardStyles";
-import { cardBackAssets, defaultCardBackName } from "./generated-card-backs";
 
 type ImageLoadSource = Parameters<typeof Image.loadAsync>[0];
 type LoadedImage = Awaited<ReturnType<typeof Image.loadAsync>>;
@@ -38,8 +37,16 @@ const cardContext = require.context(
   true,
   /^\.\/(?:classic|regular|small|small-colored|tableau)\/[^/]+\.png$/,
 );
+const cardBackContext = require.context(
+  "../../../assets/cards/backs",
+  false,
+  /^\.\/[^/]+\.png$/,
+);
+
+export const CARD_BACK_IMAGE = require("@/assets/cards/CardBack.png");
 
 const cardFilesBySize = buildCardFilesBySize();
+const cardBackFiles = buildCardBackFiles();
 
 const preloadPromises = new Map<string, Promise<void>>();
 const loadedImages = new Map<string, LoadedImage[]>();
@@ -63,27 +70,32 @@ export function getCardImageSource(
   return source;
 }
 
-export function getCardBackAsset(filename?: string) {
-  if (!filename) return cardBackAssets[defaultCardBackName];
-  return cardBackAssets[filename] ?? cardBackAssets[defaultCardBackName];
+export function getCardBackImage(gamePath?: string) {
+  const fileName = gamePath?.replace(/^\//, "");
+  return (
+    cardBackFiles[fileName ?? ""] ?? cardBackFiles.default ?? CARD_BACK_IMAGE
+  );
 }
 
 export function isCardImageSetPreloaded(
   cardSize: CardSizes,
-  customBack?: string,
+  cardBackPath?: string,
 ) {
-  return loadedImages.has(getPreloadKey(cardSize, customBack));
+  return loadedImages.has(getPreloadKey(cardSize, cardBackPath));
 }
 
-export function preloadCardImageSet(cardSize: CardSizes, customBack?: string) {
-  const preloadKey = getPreloadKey(cardSize, customBack);
+export function preloadCardImageSet(
+  cardSize: CardSizes,
+  cardBackPath?: string,
+) {
+  const preloadKey = getPreloadKey(cardSize, cardBackPath);
   const existing = preloadPromises.get(preloadKey);
 
   if (existing) return existing;
 
   const sources = [
     ...Object.values(getCardFilesForSize(cardSize)),
-    getCardBackAsset(customBack),
+    getCardBackImage(cardBackPath),
   ];
 
   const promise = Promise.allSettled(
@@ -107,8 +119,21 @@ export function preloadCardImageSet(cardSize: CardSizes, customBack?: string) {
   return promise;
 }
 
-function getPreloadKey(cardSize: CardSizes, customBack?: string) {
-  return `${cardSize}:${customBack ?? defaultCardBackName}`;
+function getPreloadKey(cardSize: CardSizes, cardBackPath?: string) {
+  return `${cardSize}:${cardBackPath ?? "default"}`;
+}
+
+function buildCardBackFiles() {
+  const cardBackFiles: Record<string, ImageSourcePropType> = {};
+
+  for (const key of cardBackContext.keys()) {
+    const fileName = key.match(/^\.\/([^/]+)\.png$/)?.[1];
+    if (!fileName) continue;
+
+    cardBackFiles[fileName] = cardBackContext(key) as ImageSourcePropType;
+  }
+
+  return cardBackFiles;
 }
 
 function buildCardFilesBySize() {

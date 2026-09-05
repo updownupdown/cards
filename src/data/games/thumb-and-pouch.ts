@@ -10,6 +10,7 @@ export const thumbAndPouch: GameDefinition = {
   background: GAME_BACKGROUNDS.cozyCabin,
   animation: GameAnimations.Dust,
   gameColorDark: "#3b3028",
+  gameColorMid: "#ad8a56",
   gameColorPale: "#ead9b8",
   cardDescription:
     "A flexible Klondike where cards avoid their own suit and any card fills a gap.",

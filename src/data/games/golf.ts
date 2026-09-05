@@ -12,8 +12,8 @@ export const golf: GameDefinition = {
   },
   thumbnail: "Golf.jpg",
   background: GAME_BACKGROUNDS.golf,
-  cardBack: "Golf.jpg",
   gameColorDark: "#1d301e",
+  gameColorMid: "#1e750d",
   gameColorPale: "#f2fccc",
   cardDescription:
     "Clear seven columns by playing cards one rank away from the waste.",

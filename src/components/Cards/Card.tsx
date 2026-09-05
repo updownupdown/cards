@@ -1,7 +1,7 @@
 import { Image } from "expo-image";
 import React, { memo } from "react";
 import { View, ViewStyle } from "react-native";
-import { getCardBackAsset, getCardImageSource } from "./CardAssets";
+import { getCardBackImage, getCardImageSource } from "./CardAssets";
 import { cardDims, PlayingCard } from "./card-utils";
 import { CardColor, CardOverlay, CardSizes, getCardShadow } from "./CardStyles";
 import { transitionStyles } from "@/styles/styles";
@@ -19,7 +19,7 @@ export type CardProps = {
   cardSize?: CardSizes;
   isPlaceholder?: boolean;
   isHiddenUnderDeck?: boolean;
-  customBack?: string;
+  cardBackPath?: string;
 };
 
 const CardComponent = ({
@@ -35,7 +35,7 @@ const CardComponent = ({
   cardWidth,
   isPlaceholder,
   isHiddenUnderDeck,
-  customBack,
+  cardBackPath,
 }: CardProps) => {
   let cardName = "BackH";
 
@@ -47,8 +47,6 @@ const CardComponent = ({
   const imageSource = isFaceDown
     ? undefined
     : getCardImageSource(cardSize, cardName);
-  const backAsset = getCardBackAsset(customBack);
-
   if (!isFaceDown && !imageSource) return null;
 
   return (
@@ -92,10 +90,10 @@ const CardComponent = ({
 
       {isFaceDown ? (
         <Image
-          source={backAsset}
+          source={getCardBackImage(cardBackPath)}
           cachePolicy="memory-disk"
+          contentFit="fill"
           style={{ width: "100%", height: "100%" }}
-          transition={0}
         />
       ) : (
         <Image
@@ -131,7 +129,7 @@ function areCardPropsEqual(prev: CardProps, next: CardProps) {
     prev.cardSize === next.cardSize &&
     prev.isPlaceholder === next.isPlaceholder &&
     prev.isHiddenUnderDeck === next.isHiddenUnderDeck &&
-    prev.customBack === next.customBack &&
+    prev.cardBackPath === next.cardBackPath &&
     prev.card?.id === next.card?.id &&
     prev.card?.faceUp === next.card?.faceUp &&
     prev.card?.rank === next.card?.rank &&

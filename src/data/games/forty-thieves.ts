@@ -15,6 +15,7 @@ export const fortyThieves: GameDefinition = {
   background: GAME_BACKGROUNDS.field,
   animation: GameAnimations.Birds,
   gameColorDark: "#2E2D34",
+  gameColorMid: "#705aaf",
   gameColorPale: "#EFE8FF",
   cardDescription: "A demanding two-deck foundation building patience.",
   quickStart: [

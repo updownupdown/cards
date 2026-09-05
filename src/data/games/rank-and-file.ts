@@ -8,9 +8,11 @@ export const rankAndFile: GameDefinition = {
   aliases: ["Dress Parade"],
   tags: [GameTag.StockAndWaste, GameTag.TableauBuilding],
   rating: { complexity: 40, difficulty: 30, luck: 35 },
+  thumbnail: "RankAndFile.jpg",
   background: GAME_BACKGROUNDS.city,
   animation: GameAnimations.Clouds,
   gameColorDark: "#26343b",
+  gameColorMid: "#5aaf8f",
   gameColorPale: "#dfe2d4",
   cardDescription:
     "Reveal ten disciplined columns and maneuver alternating-color formations.",

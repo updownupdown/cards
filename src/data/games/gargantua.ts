@@ -12,6 +12,7 @@ export const gargantua: GameDefinition = {
   background: GAME_BACKGROUNDS.mountain1,
   animation: GameAnimations.Clouds,
   gameColorDark: "#24323a",
+  gameColorMid: "#578386",
   gameColorPale: "#dce5df",
   cardDescription:
     "Climb a nine-column, two-deck Klondike with eight foundations.",

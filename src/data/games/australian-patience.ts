@@ -8,6 +8,7 @@ export const australianPatience: GameDefinition = {
   thumbnail: "AustralianPatience.jpg",
   background: GAME_BACKGROUNDS.savanah,
   gameColorDark: "#29382a",
+  gameColorMid: "#a35a38",
   gameColorPale: "#f4d88d",
   cardDescription:
     "Yukon-style freedom meets strict suit building and a one-pass stock.",

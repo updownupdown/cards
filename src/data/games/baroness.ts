@@ -15,6 +15,7 @@ export const baroness: GameDefinition = {
   background: GAME_BACKGROUNDS.oldRoom,
   animation: GameAnimations.Dust,
   gameColorDark: "#3a1620",
+  gameColorMid: "#a83e5a",
   gameColorPale: "#f3d6dd",
   cardDescription:
     "Clear five piles by discarding cards that add up to thirteen.",

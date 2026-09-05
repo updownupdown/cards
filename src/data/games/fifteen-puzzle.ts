@@ -11,6 +11,7 @@ export const fifteenPuzzle: GameDefinition = {
   background: GAME_BACKGROUNDS.bookstore,
   animation: GameAnimations.Dust,
   gameColorDark: "#293b32",
+  gameColorMid: "#1a587c",
   gameColorPale: "#f6edcf",
   cardDescription:
     "Re-order the cards in a 4x4 grid by sliding cards one at a time.",

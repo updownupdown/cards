@@ -11,6 +11,7 @@ export const harp: GameDefinition = {
   background: GAME_BACKGROUNDS.field,
   animation: GameAnimations.Leaves,
   gameColorDark: "#293a31",
+  gameColorMid: "#404928",
   gameColorPale: "#e7dfc4",
   cardDescription:
     "A more forgiving Double Klondike with four passes through the stock.",

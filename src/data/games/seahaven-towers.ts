@@ -8,9 +8,11 @@ export const seahavenTowers: GameDefinition = {
   aliases: ["Sea Towers"],
   tags: [GameTag.TableauBuilding],
   rating: { complexity: 35, difficulty: 50, luck: 25 },
+  thumbnail: "SeahavenTowers.jpg",
   background: GAME_BACKGROUNDS.island,
   // animation: GameAnimations.Clouds,
   gameColorDark: "#173946",
+  gameColorMid: "#5a9daf",
   gameColorPale: "#dceff0",
   cardDescription:
     "Ten open columns and four compact towers reward careful same-suit planning.",

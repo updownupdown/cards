@@ -53,26 +53,20 @@ async function resetAndSetup(
     draft.won = false;
   });
 
-  await delay();
+  await delay(100);
 
   // Start every new game with a complete shuffled deck.
   setGame((draft) => {
     draft.setupPile = shuffle(createDeck());
-    draft.line = draft.setupPile.map((card) => [card]);
-    draft.setupPile = [];
   });
 
   await delay();
 
-  // Flip all cards to face, with 100ms delay between each
-  for (let i = 0; i < 52; i += 1) {
-    setGame((draft) => {
-      if (draft.line[i]) {
-        draft.line[i] = draft.line[i]!.map(flipToFace);
-      }
-    });
-    await delay(10);
-  }
+  // Start every new game with a complete shuffled deck.
+  setGame((draft) => {
+    draft.line = draft.setupPile.map((card) => [flipToFace(card)]);
+    draft.setupPile = [];
+  });
 }
 
 function canMerge(source?: PlayingCard, target?: PlayingCard) {
@@ -178,7 +172,7 @@ export default function Accordion() {
           draft.line[i - 1] = draft.line[i];
           draft.line[i] = null;
         });
-        await delay(10);
+        await delay(5);
       }
     }
 
@@ -223,6 +217,7 @@ export default function Accordion() {
       row: 3,
       baseZIndex: 1,
       pileIndex: 1,
+      fan: { maxVisible: 3 },
     };
 
     const gridZones: MapZone[] = getGridColRows({

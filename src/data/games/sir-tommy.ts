@@ -13,6 +13,7 @@ export const sirTommy: GameDefinition = {
   thumbnail: "SirTommy.jpg",
   background: GAME_BACKGROUNDS.london,
   gameColorDark: "#1a2c33",
+  gameColorMid: "#27545f",
   gameColorPale: "#fdf7d9",
   cardDescription:
     "The granddaddy of solitaire: sort the deck across four piles into four Ace-to-King stacks.",

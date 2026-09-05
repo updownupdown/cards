@@ -5,7 +5,7 @@ export type GameSpecificSettingKey =
   | "memoryDifficulty"
   | "drawCount"
   | "islandJokers"
-  | "wolfsGambitMode"
+  | "lycanMode"
   | "dungeonLevel"
   | "boomerAce"
   | "powerReserve"
@@ -19,19 +19,19 @@ export type GameSpecificSettingKey =
   | "merchantCheckBack"
   | "merchantSuperExclusive"
   | "merchantVandals"
-  | "booksellerLoyalPatrons"
-  | "booksellerCheckBack"
-  | "booksellerSuperExclusive"
-  | "booksellerVandals"
-  | "thirteenClubsDifficulty"
-  | "herbkeeperOpenStables"
+  | "chapterAndVerseLoyalPatrons"
+  | "chapterAndVerseCheckBack"
+  | "chapterAndVerseSuperExclusive"
+  | "chapterAndVerseVandals"
+  | "fightClubsDifficulty"
+  | "herbalistOpenStables"
   | "royalRestHardMode"
   | "pyramidDifficulty"
   | "golfDifficulty"
   | "gapsDifficulty"
   | "seerDifficulty"
-  | "unwantedHelpDifficulty"
-  | "midnightVigilDifficulty"
+  | "gremlinDifficulty"
+  | "nightVigilDifficulty"
   | "sultanAutoRefillReserves";
 export type GameSpecificSettingApplyBehavior = "immediate" | "next-game";
 
@@ -95,9 +95,9 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         ],
       },
     ],
-    "/midnight-vigil": [
+    "/night-vigil": [
       {
-        key: "midnightVigilDifficulty",
+        key: "nightVigilDifficulty",
         label: "Difficulty",
         type: "string",
         applyBehavior: "next-game",
@@ -120,9 +120,9 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         ],
       },
     ],
-    "/unwanted-help": [
+    "/gremlin": [
       {
-        key: "unwantedHelpDifficulty",
+        key: "gremlinDifficulty",
         label: "Hand Size",
         type: "string",
         applyBehavior: "next-game",
@@ -161,9 +161,9 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         ],
       },
     ],
-    "/herbkeeper": [
+    "/herbalist": [
       {
-        key: "herbkeeperOpenStables",
+        key: "herbalistOpenStables",
         label: "Open Stables",
         type: "boolean",
         booleanType: "toggle",
@@ -176,9 +176,9 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         ],
       },
     ],
-    "/thirteen-clubs": [
+    "/fight-clubs": [
       {
-        key: "thirteenClubsDifficulty",
+        key: "fightClubsDifficulty",
         label: "Difficulty",
         type: "string",
         applyBehavior: "next-game",
@@ -318,9 +318,9 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         ],
       },
     ],
-    "/wolfs-gambit": [
+    "/lycan": [
       {
-        key: "wolfsGambitMode",
+        key: "lycanMode",
         label: "Difficulty",
         type: "string",
         applyBehavior: "next-game",
@@ -332,7 +332,7 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         ],
       },
     ],
-    "/twelve-chambers": [
+    "/twelve-trials": [
       {
         key: "dungeonLevel",
         label: "Dungeon Layout",
@@ -398,7 +398,7 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         ],
       },
     ],
-    "/pocket-showdown": [
+    "/pocket-poker": [
       {
         key: "pokerJokers",
         label: "Jokers",
@@ -583,9 +583,9 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         ],
       },
     ],
-    "/bookseller": [
+    "/chapter-and-verse": [
       {
-        key: "booksellerLoyalPatrons",
+        key: "chapterAndVerseLoyalPatrons",
         label: "Loyal Patrons",
         type: "boolean",
         booleanType: "toggle",
@@ -598,7 +598,7 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         ],
       },
       {
-        key: "booksellerCheckBack",
+        key: "chapterAndVerseCheckBack",
         label: "Let Me Check in the Back",
         type: "boolean",
         booleanType: "toggle",
@@ -610,7 +610,7 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         ],
       },
       {
-        key: "booksellerSuperExclusive",
+        key: "chapterAndVerseSuperExclusive",
         label: "Super Exclusive Offer",
         type: "boolean",
         booleanType: "toggle",
@@ -622,7 +622,7 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         ],
       },
       {
-        key: "booksellerVandals",
+        key: "chapterAndVerseVandals",
         label: "Vandals!",
         type: "string",
         applyBehavior: "next-game",

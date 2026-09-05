@@ -15,6 +15,7 @@ export const archipelago: GameDefinition = {
   background: GAME_BACKGROUNDS.island,
   animation: GameAnimations.Birds,
   gameColorDark: "#153846",
+  gameColorMid: "#1f916b",
   gameColorPale: "#ffe6a3",
   cardDescription:
     "Grow an island across a 7x7 grid, one rank-linked card at a time.",

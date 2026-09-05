@@ -12,6 +12,7 @@ export const flowerGarden: GameDefinition = {
   background: GAME_BACKGROUNDS.flowerGarden,
   animation: GameAnimations.Pollen,
   gameColorDark: "#24402f",
+  gameColorMid: "#98af5a",
   gameColorPale: "#f2e4c2",
   cardDescription:
     "Cultivate six flower beds with every card in the sixteen-card bouquet available.",

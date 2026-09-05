@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-// Generates the static asset maps for thumbnails and card backs. Drop an image
-// into the relevant assets/ folder, then run:
+// Generates the static asset map for thumbnails. Drop an image into the
+// relevant assets/ folder, then run:
 //   npm run assets:generate
 //
 // Metro requires static require() strings, so these maps must be generated
@@ -32,12 +32,6 @@ function mapEntries(files, aliasDir) {
     .join("\n");
 }
 
-function unionType(files) {
-  return files.length > 0
-    ? files.map((file) => `  | "${file}"`).join("\n")
-    : "  | never";
-}
-
 // --- Thumbnails ---------------------------------------------------------
 function generateThumbnails() {
   const dir = path.join(projectRoot, "assets", "thumbnails");
@@ -59,50 +53,9 @@ export type GameThumbnailName = keyof typeof GAME_THUMBNAIL_ASSETS;
   return files.length;
 }
 
-// --- Card backs ---------------------------------------------------------
-const DEFAULT_CARD_BACK = "DefaultCardBack.png";
-
-function generateCardBacks() {
-  const dir = path.join(projectRoot, "assets", "card-backs");
-  const files = listImages(dir).filter(
-    (f) => f.toLowerCase().endsWith(".png") || f.toLowerCase().endsWith(".jpg"),
-  );
-  const resolvedDefault = files.includes(DEFAULT_CARD_BACK)
-    ? DEFAULT_CARD_BACK
-    : files[0] || DEFAULT_CARD_BACK;
-
-  const output = `// AUTO-GENERATED FILE. DO NOT EDIT.
-// Run: npm run assets:generate
-
-export type CardBackName =
-${unionType(files)};
-
-export const defaultCardBackName = "${resolvedDefault}";
-
-export const cardBackAssets: Record<string, any> = {
-${mapEntries(files, "card-backs")}
-};
-`;
-  fs.writeFileSync(
-    path.join(
-      projectRoot,
-      "src",
-      "components",
-      "Cards",
-      "generated-card-backs.ts",
-    ),
-    output,
-    "utf8",
-  );
-  return files.length;
-}
-
 function main() {
   const thumbs = generateThumbnails();
-  const backs = generateCardBacks();
-  console.log(
-    `Generated asset maps: ${thumbs} thumbnails, ${backs} card backs.`,
-  );
+  console.log(`Generated asset map: ${thumbs} thumbnails.`);
 }
 
 main();

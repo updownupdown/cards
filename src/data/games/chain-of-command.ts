@@ -13,9 +13,10 @@ export const chainOfCommand: GameDefinition = {
   thumbnail: "ChainOfCommand.jpg",
   background: GAME_BACKGROUNDS.brickStreet,
   gameColorDark: "#252220",
+  gameColorMid: "#4fa590",
   gameColorPale: "#b2eee1",
   cardDescription:
-    "Strategically promote members and candidates to the top of the chainOfCommand hierarchy.",
+    "Strategically promote members and candidates to the top of the chain of command hierarchy.",
   quickStart: [
     "Win by promoting a member beyond rank 1.",
     "Select a member to promote to the next rank, and replace it by a candidate.",

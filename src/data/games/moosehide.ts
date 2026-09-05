@@ -11,6 +11,7 @@ export const moosehide: GameDefinition = {
   background: GAME_BACKGROUNDS.yukon,
   animation: GameAnimations.Snow,
   gameColorDark: "#29362e",
+  gameColorMid: "#92af58",
   gameColorPale: "#e2dfca",
   cardDescription:
     "A Yukon relative that descends on every suit except its own.",

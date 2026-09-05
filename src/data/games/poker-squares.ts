@@ -17,6 +17,7 @@ export const pokerSquares: GameDefinition = {
   thumbnail: "PokerSquares.jpg",
   background: GAME_BACKGROUNDS.casino,
   gameColorDark: "#112c1f",
+  gameColorMid: "#93af58",
   gameColorPale: "#fff4ce",
   cardDescription:
     "Build ten poker hands within a grid to achieve the highest score possible.",

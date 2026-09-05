@@ -7,6 +7,7 @@ export const whitehead: GameDefinition = {
   rating: { complexity: 35, difficulty: 50, luck: 40 },
   background: GAME_BACKGROUNDS.london,
   gameColorDark: "#30383a",
+  gameColorMid: "#5a94af",
   gameColorPale: "#edf0e6",
   cardDescription:
     "An open Klondike relative built by color, with suited runs moving together.",

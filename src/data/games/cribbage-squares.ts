@@ -19,6 +19,7 @@ export const cribbageSquares: GameDefinition = {
   background: GAME_BACKGROUNDS.cozyCabin,
   animation: GameAnimations.Snow,
   gameColorDark: "#15221c",
+  gameColorMid: "#53ac95",
   gameColorPale: "#d6f0ec",
   cardDescription:
     "Build sixteen connected cards, then score every row and column with a starter card.",

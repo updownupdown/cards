@@ -11,6 +11,7 @@ export const shamrocks: GameDefinition = {
   background: GAME_BACKGROUNDS.field,
   animation: GameAnimations.Leaves,
   gameColorDark: "#183b2a",
+  gameColorMid: "#45963f",
   gameColorPale: "#dff3cc",
   cardDescription:
     "Build eighteen tiny fans without ever letting one grow beyond three cards.",

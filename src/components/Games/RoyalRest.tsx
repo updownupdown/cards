@@ -448,7 +448,7 @@ export default function RoyalRest() {
     };
   };
 
-  const { cardMap, getZoneBasePos, cardWidth, cardHeight, customBack } =
+  const { cardMap, getZoneBasePos, cardWidth, cardHeight, cardBackPath } =
     useCardMap({
       game,
       zones,
@@ -695,7 +695,7 @@ export default function RoyalRest() {
                   card={card}
                   cardWidth={cardWidth}
                   cardSize={cardSize}
-                  customBack={customBack}
+                  cardBackPath={cardBackPath}
                   selectColor={ghostHasValidDrop ? "green" : "none"}
                   isSelected={ghostHasValidDrop}
                 />

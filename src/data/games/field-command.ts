@@ -14,8 +14,8 @@ export const fieldCommand: GameDefinition = {
   thumbnail: "FieldCommand.jpg",
   background: GAME_BACKGROUNDS.field,
   animation: GameAnimations.Clouds,
-  // cardBack: "FieldCommand.jpg",
   gameColorDark: "#2b2d42",
+  gameColorMid: "#8054ac",
   gameColorPale: "#d4cdc3",
   cardDescription:
     "Use low cards and jokers to dismantle enemy forces, while protecting every Ace and face card from capture.",

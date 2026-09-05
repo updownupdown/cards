@@ -15,6 +15,7 @@ export const singularity: GameDefinition = {
   background: GAME_BACKGROUNDS.nightSky,
   animation: GameAnimations.Stars,
   gameColorDark: "#150e25",
+  gameColorMid: "#502694",
   gameColorPale: "#d4cbff",
   cardDescription:
     "Pull all 52 cards into a central singularity, one rank at a time.",

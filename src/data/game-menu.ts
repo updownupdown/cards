@@ -22,7 +22,7 @@ export type GameSettings = {
     | "extreme";
   drawCount: 1 | 3;
   islandJokers: boolean;
-  wolfsGambitMode: "hard" | "medium" | "easy";
+  lycanMode: "hard" | "medium" | "easy";
   dungeonLevel: 1 | 2 | 3 | 4 | 5;
   boomerAce: boolean;
   powerReserve: boolean;
@@ -36,19 +36,19 @@ export type GameSettings = {
   merchantCheckBack: boolean;
   merchantSuperExclusive: boolean;
   merchantVandals: 0 | 1 | 2;
-  booksellerLoyalPatrons: boolean;
-  booksellerCheckBack: boolean;
-  booksellerSuperExclusive: boolean;
-  booksellerVandals: "off" | "one" | "two";
-  thirteenClubsDifficulty: "easy" | "hard";
-  herbkeeperOpenStables: boolean;
+  chapterAndVerseLoyalPatrons: boolean;
+  chapterAndVerseCheckBack: boolean;
+  chapterAndVerseSuperExclusive: boolean;
+  chapterAndVerseVandals: "off" | "one" | "two";
+  fightClubsDifficulty: "easy" | "hard";
+  herbalistOpenStables: boolean;
   royalRestHardMode: boolean;
   pyramidDifficulty: "easy" | "hard";
   golfDifficulty: "easy" | "hard";
   gapsDifficulty: "easy" | "hard";
   seerDifficulty: "easy" | "normal" | "hard";
-  unwantedHelpDifficulty: "easy" | "hard";
-  midnightVigilDifficulty: "street" | "kingpin" | "city";
+  gremlinDifficulty: "easy" | "hard";
+  nightVigilDifficulty: "street" | "kingpin" | "city";
   sultanAutoRefillReserves: boolean;
   lastResultSessionId?: string;
   lastResultWon?: boolean;
@@ -97,6 +97,7 @@ export type GlobalSettings = {
   dismissHomeInstallPrompt: boolean;
   resumeLastGame: boolean;
   showAnimations: boolean;
+  showTipsForNewGames: boolean;
 };
 
 export type HomeGameEntry = {
@@ -130,6 +131,7 @@ export const DEFAULT_GLOBAL_SETTINGS: GlobalSettings = {
   dismissHomeInstallPrompt: false,
   resumeLastGame: true,
   showAnimations: true,
+  showTipsForNewGames: true,
 };
 
 export const DEFAULT_GAME_SETTINGS: GameSettings = {
@@ -139,7 +141,7 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   memoryDifficulty: "easy",
   drawCount: 1,
   islandJokers: false,
-  wolfsGambitMode: "medium",
+  lycanMode: "medium",
   dungeonLevel: 1,
   boomerAce: false,
   powerReserve: false,
@@ -153,19 +155,19 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   merchantCheckBack: false,
   merchantSuperExclusive: false,
   merchantVandals: 0,
-  booksellerLoyalPatrons: false,
-  booksellerCheckBack: false,
-  booksellerSuperExclusive: false,
-  booksellerVandals: "off",
-  thirteenClubsDifficulty: "easy",
-  herbkeeperOpenStables: false,
+  chapterAndVerseLoyalPatrons: false,
+  chapterAndVerseCheckBack: false,
+  chapterAndVerseSuperExclusive: false,
+  chapterAndVerseVandals: "off",
+  fightClubsDifficulty: "easy",
+  herbalistOpenStables: false,
   royalRestHardMode: false,
   pyramidDifficulty: "hard",
   golfDifficulty: "easy",
   gapsDifficulty: "easy",
   seerDifficulty: "normal",
-  unwantedHelpDifficulty: "easy",
-  midnightVigilDifficulty: "kingpin",
+  gremlinDifficulty: "easy",
+  nightVigilDifficulty: "kingpin",
   sultanAutoRefillReserves: false,
   stats: {
     attempts: 0,
@@ -244,6 +246,7 @@ export async function loadGlobalSettings(): Promise<GlobalSettings> {
       dismissHomeInstallPrompt: merged.dismissHomeInstallPrompt === true,
       resumeLastGame: merged.resumeLastGame !== false,
       showAnimations: merged.showAnimations !== false,
+      showTipsForNewGames: merged.showTipsForNewGames !== false,
     };
   } catch {
     return DEFAULT_GLOBAL_SETTINGS;
@@ -367,9 +370,9 @@ export function getGameSettings(
     difficulty: merged.difficulty === "difficult" ? "difficult" : "easy",
     drawCount: merged.drawCount === 3 ? 3 : 1,
     islandJokers: merged.islandJokers === true,
-    wolfsGambitMode:
-      merged.wolfsGambitMode === "hard" || merged.wolfsGambitMode === "easy"
-        ? merged.wolfsGambitMode
+    lycanMode:
+      merged.lycanMode === "hard" || merged.lycanMode === "easy"
+        ? merged.lycanMode
         : "medium",
     dungeonLevel:
       merged.dungeonLevel >= 1 && merged.dungeonLevel <= 5
@@ -401,16 +404,18 @@ export function getGameSettings(
       merged.merchantVandals === 1 || merged.merchantVandals === 2
         ? merged.merchantVandals
         : 0,
-    booksellerLoyalPatrons: merged.booksellerLoyalPatrons === true,
-    booksellerCheckBack: merged.booksellerCheckBack === true,
-    booksellerSuperExclusive: merged.booksellerSuperExclusive === true,
-    booksellerVandals:
-      merged.booksellerVandals === "one" || merged.booksellerVandals === "two"
-        ? merged.booksellerVandals
+    chapterAndVerseLoyalPatrons: merged.chapterAndVerseLoyalPatrons === true,
+    chapterAndVerseCheckBack: merged.chapterAndVerseCheckBack === true,
+    chapterAndVerseSuperExclusive:
+      merged.chapterAndVerseSuperExclusive === true,
+    chapterAndVerseVandals:
+      merged.chapterAndVerseVandals === "one" ||
+      merged.chapterAndVerseVandals === "two"
+        ? merged.chapterAndVerseVandals
         : "off",
-    thirteenClubsDifficulty:
-      merged.thirteenClubsDifficulty === "hard" ? "hard" : "easy",
-    herbkeeperOpenStables: merged.herbkeeperOpenStables === true,
+    fightClubsDifficulty:
+      merged.fightClubsDifficulty === "hard" ? "hard" : "easy",
+    herbalistOpenStables: merged.herbalistOpenStables === true,
     stats: {
       ...DEFAULT_GAME_SETTINGS.stats,
       ...(existing.stats ?? {}),

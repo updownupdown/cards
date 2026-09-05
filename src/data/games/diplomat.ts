@@ -11,6 +11,7 @@ export const diplomat: GameDefinition = {
   background: GAME_BACKGROUNDS.london,
   animation: GameAnimations.Rain,
   gameColorDark: "#25343a",
+  gameColorMid: "#5aaf9a",
   gameColorPale: "#dfe0d5",
   cardDescription:
     "Negotiate eight open columns with rank-only packing and single-card moves.",

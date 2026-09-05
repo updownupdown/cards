@@ -12,10 +12,10 @@ export const acesUp: GameDefinition = {
     luck: 80,
   },
   thumbnail: "AcesUp.jpg",
-  background: GAME_BACKGROUNDS.castle,
-  animation: GameAnimations.Birds,
-  cardBack: "AcesUp.jpg",
+  background: GAME_BACKGROUNDS.castleIndoors,
+  animation: GameAnimations.Dust,
   gameColorDark: "#1d0f0a",
+  gameColorMid: "#8b2c28",
   gameColorPale: "#eee0ca",
   cardDescription:
     "Discard low cards of non-unique suits until only the four Aces remain.",

@@ -68,7 +68,7 @@ export type AnimatedCardProps = CardMapBGMapping & {
   yOffset?: number;
   orbitConfig?: OrbitConfig;
   clickThroughCards?: boolean;
-  customBack?: string;
+  cardBackPath?: string;
 };
 
 export type AnimatedCardMapping = Omit<
@@ -93,7 +93,7 @@ export const AnimatedCard = ({
   forceOverlayColor,
   isPlaceholder,
   clickThroughCards,
-  customBack,
+  cardBackPath,
   zIndexOffset = 0,
 }: AnimatedCardProps) => {
   const initialYOffset = (yOffset ?? 0) * cardHeight;
@@ -364,7 +364,7 @@ export const AnimatedCard = ({
             cardSize={cardSize}
             isPlaceholder={isPlaceholder}
             isHiddenUnderDeck={targetState.isHiddenUnderDeck}
-            customBack={customBack}
+            cardBackPath={cardBackPath}
           />
         </Animated.View>
 
@@ -380,7 +380,7 @@ export const AnimatedCard = ({
             cardSize={cardSize}
             isPlaceholder={isPlaceholder}
             isHiddenUnderDeck={targetState.isHiddenUnderDeck}
-            customBack={customBack}
+            cardBackPath={cardBackPath}
           />
         </Animated.View>
       </Pressable>

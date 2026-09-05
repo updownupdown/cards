@@ -10,6 +10,7 @@ export const gaps: GameDefinition = {
   thumbnail: "Gaps.jpg",
   background: GAME_BACKGROUNDS.mountain1,
   gameColorDark: "#2c322f",
+  gameColorMid: "#ada356",
   gameColorPale: "#e7ddc2",
   cardDescription: "Arrange the rows in order by suit by filling the gaps.",
   quickStart: [

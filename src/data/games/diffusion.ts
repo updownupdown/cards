@@ -14,8 +14,8 @@ export const diffusion: GameDefinition = {
   thumbnail: "Diffusion.jpg",
   background: GAME_BACKGROUNDS.painting,
   animation: GameAnimations.Firefly,
-  // cardBack: "Diffusion.jpg",
   gameColorDark: "#2f1236",
+  gameColorMid: "#726fa8",
   gameColorPale: "#dcf7ff",
   cardDescription:
     "A tableau building game where the ranks above seep into the rows below.",

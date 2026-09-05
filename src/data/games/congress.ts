@@ -5,8 +5,10 @@ export const congress: GameDefinition = {
   title: "Congress",
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 35, difficulty: 60, luck: 50 },
+  thumbnail: "Congress.jpg",
   background: GAME_BACKGROUNDS.city,
   gameColorDark: "#292f38",
+  gameColorMid: "#776940",
   gameColorPale: "#e9dfca",
   cardDescription:
     "Guide two decks through eight columns with one-card moves and a single stock pass.",

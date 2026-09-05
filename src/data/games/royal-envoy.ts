@@ -12,8 +12,8 @@ export const royalEnvoy: GameDefinition = {
   },
   thumbnail: "RoyalEnvoy.jpg",
   background: GAME_BACKGROUNDS.castle,
-  // cardBack: "RoyalEnvoy.jpg",
   gameColorDark: "#241e33",
+  gameColorMid: "#547cad",
   gameColorPale: "#acdeff",
   cardDescription:
     "Win exactly the right number of debates in each kingdom, using your advisors.",

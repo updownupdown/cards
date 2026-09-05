@@ -14,8 +14,8 @@ export const marsh: GameDefinition = {
   background: GAME_BACKGROUNDS.marsh,
   animation: GameAnimations.Firefly,
   thumbnail: "Marsh.jpg",
-  // cardBack: "Marsh.jpg",
   gameColorDark: "#173b32",
+  gameColorMid: "#34806f",
   gameColorPale: "#e4f0c2",
   cardDescription:
     "Manage a hungry ecosystem of gators, bears, hogs, and ducks.",

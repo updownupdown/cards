@@ -6,7 +6,6 @@ export const royalRest: GameDefinition = {
   path: "/royal-rest",
   title: "Royal Rest",
   thumbnail: "RoyalRest.jpg",
-  // cardBack: "RoyalRest.jpg",
   background: GAME_BACKGROUNDS.cabinInterior,
   animation: GameAnimations.Dust,
   tags: [GameTag.EasyToLearn, GameTag.TableauBuilding, GameTag.ModernMechanics],
@@ -16,6 +15,7 @@ export const royalRest: GameDefinition = {
     luck: 55,
   },
   gameColorDark: "#332518",
+  gameColorMid: "#466c81",
   gameColorPale: "#def7ff",
   cardDescription:
     "Collapse matching rank cards into pillows, and tuck in all the Jacks to bed.",

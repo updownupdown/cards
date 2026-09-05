@@ -15,6 +15,7 @@ export const ascent: GameDefinition = {
   background: GAME_BACKGROUNDS.mountain1,
   animation: GameAnimations.Snow,
   gameColorDark: "#2a3b4d",
+  gameColorMid: "#5a83af",
   gameColorPale: "#e8f2ff",
   cardDescription:
     "A solo climbing game: play ever-higher routes to reach three camps before the deck runs out.",

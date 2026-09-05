@@ -14,8 +14,8 @@ export const crownslayer: GameDefinition = {
   thumbnail: "Crownslayer.jpg",
   background: GAME_BACKGROUNDS.monteCarlo,
   animation: GameAnimations.Clouds,
-  // cardBack: "Crownslayer.jpg",
   gameColorDark: "#1b1727",
+  gameColorMid: "#5a5eaf",
   gameColorPale: "#e2e9ff",
   cardDescription: "Topple the 12 royals using suit-powered combos.",
   quickStart: [

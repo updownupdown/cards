@@ -11,6 +11,7 @@ export const bisley: GameDefinition = {
   background: GAME_BACKGROUNDS.london,
   animation: GameAnimations.Rain,
   gameColorDark: "#30343a",
+  gameColorMid: "#46535a",
   gameColorPale: "#e8e1d3",
   cardDescription:
     "Build each suit from both ends while thirteen open columns tighten around you.",

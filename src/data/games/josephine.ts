@@ -5,8 +5,10 @@ export const josephine: GameDefinition = {
   title: "Josephine",
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 40, difficulty: 65, luck: 45 },
+  thumbnail: "Josephine.jpg",
   background: GAME_BACKGROUNDS.greece,
   gameColorDark: "#332e40",
+  gameColorMid: "#af5a5a",
   gameColorPale: "#efe3d2",
   cardDescription:
     "A two-deck Forty Thieves relative where suited sequences move as a unit.",

@@ -11,6 +11,7 @@ export const towerOfHanoi: GameDefinition = {
   },
   thumbnail: "TowerOfHanoi.jpg",
   gameColorDark: "#304f63",
+  gameColorMid: "#5a9eaf",
   gameColorPale: "#d8efe8",
   cardDescription:
     "Rebuild all nine cards into one descending tower using only legal top-card moves.",

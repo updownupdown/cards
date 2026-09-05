@@ -11,6 +11,7 @@ export const russianSolitaire: GameDefinition = {
   background: GAME_BACKGROUNDS.siberia,
   animation: GameAnimations.Snow,
   gameColorDark: "#152c47",
+  gameColorMid: "#556780",
   gameColorPale: "#fff0c1",
   cardDescription:
     "Yukon at its most brutal: haul mixed groups, and build the tableau down in suit.",

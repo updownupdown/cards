@@ -1,5 +1,5 @@
 import type { View as RNView } from "react-native";
-import { LoopRank } from "../Games/RingOfRiches";
+import { LoopRank } from "../Games/Ouroboros";
 
 export const cardDims = {
   aspectRatio: 2.5 / 3.5,

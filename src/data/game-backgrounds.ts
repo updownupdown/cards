@@ -202,6 +202,21 @@ export const GAME_BACKGROUNDS = {
     authorName: "Bart van der Lugt",
     authorLink: "https://unsplash.com/@bartvanderlugt",
   },
+  dirtRoad: {
+    source: require("@/assets/backgrounds/dirt-road.jpg"),
+    authorName: "Julian Hochgesang",
+    authorLink: "https://unsplash.com/@julianhochgesang",
+  },
+  indianLandscape: {
+    source: require("@/assets/backgrounds/indian-landscape.jpg"),
+    authorName: "Nandhu Kumar",
+    authorLink: "https://unsplash.com/@nandhukumarndd",
+  },
+  alaska: {
+    source: require("@/assets/backgrounds/alaska.jpg"),
+    authorName: "McKayla Crump",
+    authorLink: "https://unsplash.com/@funkmastacrump",
+  },
 } satisfies Record<string, GameBackground>;
 
 export const {
@@ -244,4 +259,7 @@ export const {
   fortress,
   flowerGarden,
   castleIndoors,
+  dirtRoad,
+  indianLandscape,
+  alaska,
 } = GAME_BACKGROUNDS;

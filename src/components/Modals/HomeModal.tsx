@@ -91,6 +91,14 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               void updateSettings({ showAnimations: val });
             }}
           />
+          <SettingControl
+            label="Show tips for new games"
+            value={settings.showTipsForNewGames}
+            type="boolean"
+            onChange={(val) => {
+              void updateSettings({ showTipsForNewGames: val });
+            }}
+          />
         </View>
 
         <AddToHomeScreenNotice />

@@ -12,10 +12,10 @@ export const gridlines: GameDefinition = {
     luck: 30,
   },
   thumbnail: "Gridlines.jpg",
-  // cardBack: "Gridlines.jpg",
   background: GAME_BACKGROUNDS.club,
   animation: GameAnimations.Firefly,
   gameColorDark: "#1b2233",
+  gameColorMid: "#22356b",
   gameColorPale: "#ffffe2",
   cardDescription:
     "A one-player trick-taking duel against a grid that fights only by hiding its cards.",

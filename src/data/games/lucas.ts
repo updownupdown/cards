@@ -7,9 +7,11 @@ export const lucas: GameDefinition = {
   title: "Lucas",
   tags: [GameTag.StockAndWaste, GameTag.TableauBuilding],
   rating: { complexity: 35, difficulty: 40, luck: 45 },
+  thumbnail: "Lucas.jpg",
   background: GAME_BACKGROUNDS.oldRoom,
   animation: GameAnimations.Dust,
   gameColorDark: "#372f2a",
+  gameColorMid: "#1f4e74",
   gameColorPale: "#e4d7bf",
   cardDescription:
     "Thirteen compact columns begin beneath eight pre-seeded Aces.",

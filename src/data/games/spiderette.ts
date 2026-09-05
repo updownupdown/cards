@@ -5,8 +5,10 @@ export const spiderette: GameDefinition = {
   title: "Spiderette",
   tags: [GameTag.TableauBuilding, GameTag.SequenceBuilding],
   rating: { complexity: 35, difficulty: 60, luck: 40 },
+  thumbnail: "Spiderette.jpg",
   background: GAME_BACKGROUNDS.forest,
   gameColorDark: "#202e27",
+  gameColorMid: "#88335a",
   gameColorPale: "#dae6cf",
   cardDescription:
     "A compact single-deck Spider played across seven Klondike-shaped columns.",

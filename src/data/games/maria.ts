@@ -8,9 +8,11 @@ export const maria: GameDefinition = {
   aliases: ["Thirty-Six Card Tableau"],
   tags: [GameTag.StockAndWaste, GameTag.TableauBuilding],
   rating: { complexity: 30, difficulty: 35, luck: 45 },
+  thumbnail: "Maria.jpg",
   background: GAME_BACKGROUNDS.cherryBlossoms,
   animation: GameAnimations.CherryBlossom,
   gameColorDark: "#3c2d36",
+  gameColorMid: "#852749",
   gameColorPale: "#efd9dd",
   cardDescription:
     "A nine-column Forty Thieves relative packed by alternating color.",

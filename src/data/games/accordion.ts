@@ -14,8 +14,8 @@ export const accordion: GameDefinition = {
   thumbnail: "Accordion.jpg",
   background: GAME_BACKGROUNDS.fallLeaves,
   animation: GameAnimations.Leaves,
-  cardBack: "Accordion.jpg",
   gameColorDark: "#351219",
+  gameColorMid: "#a3381d",
   gameColorPale: "#fffccf",
   cardDescription:
     "Collapse the whole deck into a single pile, matching adjacent suits or ranks one at a time.",

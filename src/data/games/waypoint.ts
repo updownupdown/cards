@@ -11,10 +11,11 @@ export const waypoint: GameDefinition = {
     difficulty: 62,
     luck: 48,
   },
-  background: GAME_BACKGROUNDS.interchange,
+  background: GAME_BACKGROUNDS.dirtRoad,
   animation: GameAnimations.Dust,
   thumbnail: "Waypoint.jpg",
   gameColorDark: "#263b38",
+  gameColorMid: "#703f28",
   gameColorPale: "#f5e4ad",
   cardDescription:
     "Shift through three rally stages, match every sector exactly, and stay ahead of the clock.",

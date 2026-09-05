@@ -39,7 +39,7 @@ Use this checklist after changing responsive tokens, typography scale, or constr
 - Attack/Defend action bars keep button/icon/value alignment.
 - Glow/shadow thickness looks balanced at tablet and desktop widths.
 
-### Rogue's Descent
+### Rogue Run
 
 - Room info panel gap and run button spacing remain stable.
 - Action buttons keep icon/text alignment in each room slot.

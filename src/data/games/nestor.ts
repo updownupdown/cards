@@ -14,8 +14,8 @@ export const nestor: GameDefinition = {
   thumbnail: "Nestor.jpg",
   background: GAME_BACKGROUNDS.greece,
   animation: GameAnimations.Clouds,
-  cardBack: "Nestor.jpg",
   gameColorDark: "#112e49",
+  gameColorMid: "#5a8baf",
   gameColorPale: "#e7f7ff",
   cardDescription: "Pair off matching ranks to empty every column.",
   quickStart: [

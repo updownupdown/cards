@@ -7,9 +7,10 @@ export const indian: GameDefinition = {
   title: "Indian",
   tags: [GameTag.StockAndWaste, GameTag.TableauBuilding],
   rating: { complexity: 35, difficulty: 30, luck: 40 },
-  background: GAME_BACKGROUNDS.sahara,
-  animation: GameAnimations.Sand,
+  thumbnail: "Indian.jpg",
+  background: GAME_BACKGROUNDS.indianLandscape,
   gameColorDark: "#49362a",
+  gameColorMid: "#ae8958",
   gameColorPale: "#ead6ad",
   cardDescription:
     "Build two-deck columns down while carefully avoiding matching suits.",

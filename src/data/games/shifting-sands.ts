@@ -14,7 +14,8 @@ export const shiftingSands: GameDefinition = {
   background: GAME_BACKGROUNDS.sahara,
   animation: GameAnimations.Sand,
   thumbnail: "ShiftingSands.jpg",
-  gameColorDark: "#385d68",
+  gameColorDark: "#645641",
+  gameColorMid: "#a32f11",
   gameColorPale: "#f4d99b",
   cardDescription:
     "Gather sand, build outward without changing direction, and make a castle strong enough to survive high tide.",

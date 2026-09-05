@@ -15,6 +15,7 @@ export const canfield: GameDefinition = {
   background: GAME_BACKGROUNDS.oldRoom,
   animation: GameAnimations.Dust,
   gameColorDark: "#311a1e",
+  gameColorMid: "#8f4d4b",
   gameColorPale: "#E4F6FF",
   cardDescription:
     "Build suit foundations from a random base rank, fed by a 13-card reserve.",

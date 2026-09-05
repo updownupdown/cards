@@ -8,6 +8,7 @@ export const easthaven: GameDefinition = {
   thumbnail: "Easthaven.jpg",
   background: GAME_BACKGROUNDS.river,
   gameColorDark: "#203638",
+  gameColorMid: "#5aafaf",
   gameColorPale: "#dcefed",
   cardDescription:
     "Build seven compact columns, then deal each new stock row straight onto the tableau.",

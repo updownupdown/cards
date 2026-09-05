@@ -12,8 +12,8 @@ export const memory: GameDefinition = {
   },
   thumbnail: "Memory.jpg",
   background: GAME_BACKGROUNDS.savanah,
-  cardBack: "Memory.jpg",
   gameColorDark: "#243b35",
+  gameColorMid: "#177a92",
   gameColorPale: "#e8f1df",
   cardDescription: "Reveal hidden pairs and clear the board using your memory.",
   quickStart: [

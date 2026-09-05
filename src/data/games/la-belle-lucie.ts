@@ -8,9 +8,11 @@ export const laBelleLucie: GameDefinition = {
   aliases: ["Lovely Lucy", "The Fan"],
   tags: [GameTag.TableauBuilding],
   rating: { complexity: 30, difficulty: 80, luck: 55 },
+  thumbnail: "LaBelleLucie.jpg",
   background: GAME_BACKGROUNDS.cherryBlossoms,
   animation: GameAnimations.CherryBlossom,
   gameColorDark: "#28352d",
+  gameColorMid: "#af5a5a",
   gameColorPale: "#f5dce4",
   cardDescription:
     "Uncover a compact field of fans, with two reshuffles to loosen the knots.",

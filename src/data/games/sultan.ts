@@ -12,6 +12,7 @@ export const sultan: GameDefinition = {
   background: GAME_BACKGROUNDS.alhambra,
   animation: GameAnimations.Clouds,
   gameColorDark: "#362d2a",
+  gameColorMid: "#af8a58",
   gameColorPale: "#f0dfbd",
   cardDescription:
     "Raise eight royal foundations until the central Sultan is surrounded by Queens.",

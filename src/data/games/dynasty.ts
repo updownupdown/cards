@@ -11,6 +11,7 @@ export const dynasty: GameDefinition = {
   tags: [GameTag.ModernMechanics, GameTag.CardCombat, GameTag.SpatialControl],
   rating: { complexity: 65, difficulty: 70, luck: 35 },
   gameColorDark: "#262f35",
+  gameColorMid: "#54ac9b",
   gameColorPale: "#b5f4e1",
   cardDescription:
     "Bring down all twelve royals by placing cards on a 3x3 grid.",

@@ -1,5 +1,4 @@
 import { cardDims, PlayingCard } from "@/components/Cards/card-utils";
-import { GAMES_DATA } from "@/data/games-registry";
 import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { roundToPixel } from "@/utils/utils";
@@ -113,10 +112,10 @@ export function useCardMap({
   zoneMapper,
 }: MapConfig) {
   const pathname = usePathname();
-  const customBack = GAMES_DATA[pathname]?.cardBack;
+  const cardBackPath = pathname;
   const insets = useSafeAreaInsets();
   const [cardImagesLoaded, setCardImagesLoaded] = useState(() =>
-    isCardImageSetPreloaded(cardSize, customBack),
+    isCardImageSetPreloaded(cardSize, cardBackPath),
   );
 
   const { width: screenWidthActual, height: screenHeightActual } =
@@ -130,9 +129,9 @@ export function useCardMap({
   useEffect(() => {
     let cancelled = false;
 
-    setCardImagesLoaded(isCardImageSetPreloaded(cardSize, customBack));
+    setCardImagesLoaded(isCardImageSetPreloaded(cardSize, cardBackPath));
 
-    preloadCardImageSet(cardSize, customBack).finally(() => {
+    preloadCardImageSet(cardSize, cardBackPath).finally(() => {
       if (!cancelled) {
         setCardImagesLoaded(true);
       }
@@ -141,7 +140,7 @@ export function useCardMap({
     return () => {
       cancelled = true;
     };
-  }, [cardSize, customBack]);
+  }, [cardBackPath, cardSize]);
 
   // Calculate the end column (col + height) for each zone
   // and find the maximum value among them.
@@ -478,11 +477,11 @@ export function useCardMap({
           cardWidth={cardWidth}
           cardHeight={cardHeight}
           cardSize={cardSize}
-          customBack={customBack}
+          cardBackPath={cardBackPath}
           {...cardMapper(mappedCard)}
         />
       )),
-    [cardHeight, cardMapper, cardPositions, cardSize, cardWidth, customBack],
+    [cardBackPath, cardHeight, cardMapper, cardPositions, cardSize, cardWidth],
   );
 
   const mapBackgrounds = useMemo(
@@ -548,7 +547,7 @@ export function useCardMap({
     getZoneBasePos,
     cardWidth,
     cardHeight,
-    customBack,
+    cardBackPath,
   };
 }
 

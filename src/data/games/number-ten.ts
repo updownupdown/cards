@@ -7,9 +7,11 @@ export const numberTen: GameDefinition = {
   title: "Number Ten",
   tags: [GameTag.StockAndWaste, GameTag.TableauBuilding],
   rating: { complexity: 40, difficulty: 35, luck: 40 },
+  thumbnail: "NumberTen.jpg",
   background: GAME_BACKGROUNDS.interchange,
   animation: GameAnimations.Clouds,
   gameColorDark: "#25343b",
+  gameColorMid: "#5aa8af",
   gameColorPale: "#dde4df",
   cardDescription:
     "Uncover ten columns and move alternating-color sequences as complete units.",

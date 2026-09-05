@@ -14,8 +14,8 @@ export const cabinSiege: GameDefinition = {
   thumbnail: "CabinSiege.jpg",
   background: GAME_BACKGROUNDS.forest,
   animation: GameAnimations.Leaves,
-  // cardBack: "CabinSiege.jpg",
   gameColorDark: "#201207",
+  gameColorMid: "#54665f",
   gameColorPale: "#e9f1d9",
   cardDescription:
     "Defend your cabin against a siege of zombies, using supporting cards strategically.",

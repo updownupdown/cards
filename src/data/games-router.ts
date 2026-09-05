@@ -2,7 +2,7 @@ import type { ComponentType } from "react";
 import { GAMES_DATA } from "./games-registry";
 
 /**
- * Maps each game route path (e.g. `/rogues-descent`) to its screen component in
+ * Maps each game route path (e.g. `/rogue-run`) to its screen component in
  * `src/components/Games`, so a single dynamic route (`src/app/[game].tsx`) can
  * render every game. Components are auto-discovered — there is no per-game file
  * to maintain under `src/app`.

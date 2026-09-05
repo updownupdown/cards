@@ -105,7 +105,11 @@ export const GameWrapper = ({
   // Wait for settings before deciding whether the tips box should appear.
   const hasPlayedGame =
     settings && (settings.stats.wins > 0 || settings.stats.losses > 0);
-  const showTipsBox = !isLoading && !hasPlayedGame && !tipsDismissed;
+  const showTipsBox =
+    !isLoading &&
+    globalSettings.showTipsForNewGames &&
+    !hasPlayedGame &&
+    !tipsDismissed;
 
   const tipsFade = useFade(showTipsBox, TIPS_MORPH_DURATION);
   const headerFade = useFade(!showTipsBox, TIPS_MORPH_DURATION);
@@ -169,8 +173,6 @@ export const GameWrapper = ({
   const backgroundColor = gameInfo.gameColorDark;
   const headerHeight = getHeaderHeightWithInset(insets.top, ui.scale);
   const background = gameInfo.background ?? DEFAULT_GAME_BACKGROUND;
-  const isLandscape =
-    viewportWidth < TABLET_BREAKPOINT && viewportWidth > viewportHeight;
 
   return (
     <>

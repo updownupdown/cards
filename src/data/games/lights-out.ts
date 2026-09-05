@@ -5,7 +5,9 @@ export const lightsOut: GameDefinition = {
   title: "Lights Out",
   tags: [GameTag.EasyToLearn, GameTag.SpatialControl, GameTag.ModernMechanics],
   rating: { complexity: 20, difficulty: 55, luck: 0 },
+  thumbnail: "LightsOut.jpg",
   gameColorDark: "#17252b",
+  gameColorMid: "#283f55",
   gameColorPale: "#f4e8a4",
   cardDescription:
     "Extinguish a grid of cards where every move flips its neighbours.",

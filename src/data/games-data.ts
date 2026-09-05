@@ -1,5 +1,5 @@
 import { city, GameBackground } from "./game-backgrounds";
-import { GameThumbnailName } from "./game-thumbnails";
+import type { GameThumbnailName } from "./game-thumbnails";
 import { isLocalDevEnvironment } from "@/utils/utils";
 import type { GameAnimation } from "@/animations/types";
 
@@ -59,10 +59,10 @@ export type GameMenuInfo = {
   thumbnail?: GameThumbnailName;
   background?: GameBackground;
   animation?: GameAnimation;
-  cardBack?: string;
 
   // Colors
   gameColorDark: HexColor;
+  gameColorMid: HexColor;
   gameColorPale: HexColor;
   cardDescription: string;
 
