@@ -5,11 +5,11 @@ import { GameAnimations } from "@/animations";
 export const fortyThieves: GameDefinition = {
   path: "/forty-thieves",
   title: "Forty Thieves",
-  tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
+  tags: [GameTag.StockAndWaste],
   rating: {
-    complexity: 0,
-    difficulty: 0,
-    luck: 0,
+    complexity: 45,
+    difficulty: 85,
+    luck: 60,
   },
   thumbnail: "FortyThieves.jpg",
   background: GAME_BACKGROUNDS.field,

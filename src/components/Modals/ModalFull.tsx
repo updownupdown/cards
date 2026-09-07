@@ -4,7 +4,7 @@ import { useModalStyles } from "@/styles/modalStyles";
 import { Colors, rgba, layoutDims } from "@/styles/styles";
 import { lightenHexColor } from "@/utils/utils";
 import React from "react";
-import { Modal, View } from "react-native";
+import { Modal, Pressable, View } from "react-native";
 import { Button } from "../Button/Button";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { IconName } from "@/icons/generated";
@@ -37,7 +37,8 @@ export default function ModalFull({
 
   return (
     <Modal visible transparent animationType="fade" onRequestClose={onClose}>
-      <View
+      <Pressable
+        onPress={onClose}
         style={[
           modalStyles.modalBackdrop,
           {
@@ -45,7 +46,10 @@ export default function ModalFull({
           },
         ]}
       >
-        <View style={[modalStyles.modalCard, { backgroundColor }]}>
+        <Pressable
+          onPress={(event) => event.stopPropagation()}
+          style={[modalStyles.modalCard, { backgroundColor }]}
+        >
           <View
             style={[
               modalStyles.modalHeader,
@@ -119,8 +123,8 @@ export default function ModalFull({
           </View>
 
           {children}
-        </View>
-      </View>
+        </Pressable>
+      </Pressable>
     </Modal>
   );
 }

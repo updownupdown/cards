@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { usePathname } from "expo-router";
+import { useLocalSearchParams, usePathname } from "expo-router";
 import {
   isGamePath,
   loadLastGameSession,
@@ -35,6 +35,8 @@ export function useStateManager<T>({
   postSetupAction,
 }: Props<T>) {
   const pathname = normalizeGamePath(usePathname());
+  const { mode } = useLocalSearchParams<{ mode?: string }>();
+  const launchMode = mode === "nodes" ? "nodes" : "standard";
   const { settings: globalSettings, isLoading: isGlobalSettingsLoading } =
     useGlobalSettings();
 
@@ -83,7 +85,11 @@ export function useStateManager<T>({
       const session = await loadLastGameSession<T>();
       if (!active) return;
 
-      if (session && session.path === pathname) {
+      if (
+        session &&
+        session.path === pathname &&
+        session.launchMode === launchMode
+      ) {
         startSession(session.sessionId);
         setGame(session.state);
         hasDealtRef.current = true;
@@ -99,6 +105,7 @@ export function useStateManager<T>({
   }, [
     globalSettings.resumeLastGame,
     isGlobalSettingsLoading,
+    launchMode,
     pathname,
     setGame,
     startSession,
@@ -128,12 +135,12 @@ export function useStateManager<T>({
     const timer = setTimeout(() => {
       const sessionId = sessionIdRef.current;
       if (sessionId) {
-        void saveLastGameSession(pathname, game, sessionId);
+        void saveLastGameSession(pathname, game, sessionId, launchMode);
       }
     }, 350);
 
     return () => clearTimeout(timer);
-  }, [game, globalSettings.resumeLastGame, isSettingUp, pathname]);
+  }, [game, globalSettings.resumeLastGame, isSettingUp, launchMode, pathname]);
 
   // —— Animation Lock ————————————————————————
   const isAnimatingRef = useRef(false);

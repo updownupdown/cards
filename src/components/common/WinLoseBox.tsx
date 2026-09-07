@@ -7,8 +7,6 @@ import { Animated, Easing, Platform, View } from "react-native";
 import { Button } from "../Button/Button";
 import { useGameColors } from "@/hooks/useGameColors";
 import { LinearGradient } from "expo-linear-gradient";
-import { clearLastGameSession } from "@/data/game-menu";
-import { router } from "expo-router";
 
 interface Props {
   gameEnded: boolean;
@@ -18,6 +16,8 @@ interface Props {
   won: boolean;
   reset: () => void;
   handleUndo?: () => void;
+  isNodesMode?: boolean;
+  onExit?: () => void;
 }
 
 export const WinLoseBox = ({
@@ -28,6 +28,8 @@ export const WinLoseBox = ({
   gameEnded,
   reset,
   handleUndo,
+  isNodesMode = false,
+  onExit,
 }: Props) => {
   const { ui, spacing } = useResponsiveMetrics();
   const { colorDark } = useGameColors();
@@ -169,15 +171,10 @@ export const WinLoseBox = ({
         >
           <Button
             size="md"
-            onPress={async () => {
-              try {
-                await clearLastGameSession();
-              } finally {
-                router.push("/");
-              }
-            }}
+            accessibilityLabel={isNodesMode ? "Nodes" : "Home"}
+            onPress={() => fadeOutWLM(onExit)}
             taller
-            iconName="home"
+            iconName={isNodesMode ? "nodes" : "home"}
             theme={won ? "winDark" : "loseDark"}
           />
 

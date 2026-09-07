@@ -5,7 +5,7 @@ import { GameAnimations } from "@/animations";
 export const lycan: GameDefinition = {
   path: "/lycan",
   title: "Lycan",
-  tags: [GameTag.ModernMechanics, GameTag.CardCombat],
+  tags: [GameTag.CardCombat],
   rating: {
     complexity: 60,
     difficulty: 85,

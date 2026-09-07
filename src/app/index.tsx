@@ -21,7 +21,11 @@ export default function HomeScreen() {
     (async () => {
       const session = await loadLastGameSession();
       if (!active || !session) return;
-      router.replace(session.path as Href);
+      router.replace(
+        session.launchMode === "nodes"
+          ? ({ pathname: session.path, params: { mode: "nodes" } } as Href)
+          : (session.path as Href),
+      );
     })();
 
     return () => {

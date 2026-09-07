@@ -5,7 +5,7 @@ import { GameAnimations } from "@/animations";
 export const twelveTrials: GameDefinition = {
   path: "/twelve-trials",
   title: "Twelve Trials",
-  tags: [GameTag.ModernMechanics, GameTag.DungeonCrawler, GameTag.CardCombat],
+  tags: [GameTag.DungeonCrawler, GameTag.CardCombat],
   rating: {
     complexity: 75,
     difficulty: 75,

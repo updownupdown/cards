@@ -5,7 +5,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const indian: GameDefinition = {
   path: "/indian",
   title: "Indian",
-  tags: [GameTag.StockAndWaste, GameTag.TableauBuilding],
+  tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 35, difficulty: 30, luck: 40 },
   thumbnail: "Indian.jpg",
   background: GAME_BACKGROUNDS.indianLandscape,

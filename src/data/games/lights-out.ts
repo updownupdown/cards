@@ -3,7 +3,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const lightsOut: GameDefinition = {
   path: "/lights-out",
   title: "Lights Out",
-  tags: [GameTag.EasyToLearn, GameTag.SpatialControl, GameTag.ModernMechanics],
+  tags: [GameTag.EasyToLearn, GameTag.SpatialControl],
   rating: { complexity: 20, difficulty: 55, luck: 0 },
   thumbnail: "LightsOut.jpg",
   gameColorDark: "#17252b",

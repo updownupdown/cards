@@ -5,7 +5,7 @@ import { GameAnimations } from "@/animations";
 export const herbalist: GameDefinition = {
   path: "/herbalist",
   title: "Herbalist",
-  tags: [GameTag.ModernMechanics, GameTag.SpatialControl],
+  tags: [GameTag.SpatialControl],
   rating: {
     complexity: 75,
     difficulty: 75,

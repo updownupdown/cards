@@ -5,7 +5,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const chapterAndVerse: GameDefinition = {
   path: "/chapter-and-verse",
   title: "Chapter & Verse",
-  tags: [GameTag.EasyToLearn, GameTag.ModernMechanics, GameTag.ScoringPuzzles],
+  tags: [GameTag.ModernMechanics, GameTag.ScoringPuzzles],
   rating: { complexity: 45, difficulty: 55, luck: 50 },
   thumbnail: "ChapterAndVerse.jpg",
   background: GAME_BACKGROUNDS.bookstore,

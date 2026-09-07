@@ -6,7 +6,6 @@ export const ouroboros: GameDefinition = {
   path: "/ouroboros",
   title: "Ouroboros",
   tags: [
-    GameTag.ModernMechanics,
     GameTag.DungeonCrawler,
     GameTag.ScoringPuzzles,
     GameTag.SpatialControl,

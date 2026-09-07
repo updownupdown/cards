@@ -2,6 +2,7 @@ import { Text } from "@/components/common/Text";
 import { RadioButtons } from "@/components/common/RadioButtons";
 import { RangeSlider } from "@/components/common/RangeSlider";
 import { HomeCard } from "@/components/Home/HomeCard";
+import { RandomGameRoller } from "@/components/Home/RandomGameRoller";
 import { GameStatsNames, statKeys } from "@/data/games-data";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
@@ -14,11 +15,12 @@ import {
   rgba,
   transitionStyles,
 } from "@/styles/styles";
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FlatList, Platform, Pressable, TextInput, View } from "react-native";
 import { useImmer } from "use-immer";
 import { HomeCardSizeControl, type HomeCardSize } from "./HomeCardSizeControl";
 import { flexStyles } from "@/styles/flexStyles";
+import { DICE_ROLL_DURATION, ROLLING_DICE_COUNT } from "./RollingDice";
 
 type StatsFilters = Record<GameStatsNames, { min: number; max: number }>;
 type Filters = {
@@ -62,7 +64,14 @@ export function SearchTab({
   const inputRef = useRef<TextInput>(null);
   const [mode, setMode] = useState<SearchMode>(null);
   const [query, setQuery] = useState("");
+  const [isRandomMode, setIsRandomMode] = useState(false);
+  const [randomEntries, setRandomEntries] = useState<HomeGameEntry[]>([]);
+  const [isRandomRolling, setIsRandomRolling] = useState(false);
+  const [randomRollKey, setRandomRollKey] = useState(0);
   const [filters, setFilters] = useImmer<Filters>(DEFAULT_FILTERS);
+  const randomRollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
   const pageSidePadding = spacing(layoutDims.pagePadding);
   const contentWidth = Math.min(
     ui.contentMaxWidth,
@@ -100,11 +109,58 @@ export function SearchTab({
       });
     });
   }, [allEnabledGames, filters, mode, query, unplayedPaths]);
+  const hasSearchText = query.trim().length > 0;
+
+  const rollRandomGames = useCallback(() => {
+    const available = [...filteredGames];
+    const selected: HomeGameEntry[] = [];
+
+    while (available.length > 0 && selected.length < ROLLING_DICE_COUNT) {
+      const index = Math.floor(Math.random() * available.length);
+      selected.push(available[index]);
+      available.splice(index, 1);
+    }
+    if (selected.length === 0) return;
+
+    setIsRandomMode(true);
+    setIsRandomRolling(true);
+    setRandomRollKey((current) => current + 1);
+    if (randomRollTimeoutRef.current)
+      clearTimeout(randomRollTimeoutRef.current);
+    randomRollTimeoutRef.current = setTimeout(() => {
+      setRandomEntries(selected);
+      setIsRandomRolling(false);
+      randomRollTimeoutRef.current = null;
+    }, DICE_ROLL_DURATION);
+  }, [filteredGames]);
+
+  const clearRandomGames = useCallback(() => {
+    if (randomRollTimeoutRef.current)
+      clearTimeout(randomRollTimeoutRef.current);
+    randomRollTimeoutRef.current = null;
+    setIsRandomRolling(false);
+    setRandomEntries([]);
+    setIsRandomMode(false);
+  }, []);
+
+  useEffect(
+    () => () => {
+      if (randomRollTimeoutRef.current)
+        clearTimeout(randomRollTimeoutRef.current);
+    },
+    [],
+  );
 
   const clearSearch = () => {
     setQuery("");
+    setIsRandomMode(false);
     setMode(null);
     inputRef.current?.blur();
+  };
+
+  const onChangeSearchText = (value: string) => {
+    if (value) setIsRandomMode(false);
+    setQuery(value);
   };
 
   const resetFilters = () => {
@@ -172,8 +228,8 @@ export function SearchTab({
 
   return (
     <FlatList
-      key={`${cardSize}-${cardColumns}`}
-      data={filteredGames}
+      key={isRandomMode ? "random" : `${cardSize}-${cardColumns}`}
+      data={isRandomMode ? [] : filteredGames}
       keyExtractor={([path]) => path}
       numColumns={cardColumns}
       style={{ flex: 1 }}
@@ -243,7 +299,7 @@ export function SearchTab({
                   {...webInputProps}
                   value={query}
                   onFocus={() => setMode("search")}
-                  onChangeText={setQuery}
+                  onChangeText={onChangeSearchText}
                   placeholder="Search..."
                   placeholderTextColor={Colors.K600}
                   autoCapitalize="none"
@@ -361,6 +417,20 @@ export function SearchTab({
                 </Pressable>
               ))}
           </View>
+
+          {!hasSearchText && (
+            <RandomGameRoller
+              availableEntries={filteredGames}
+              entries={randomEntries}
+              favorites={favorites}
+              onToggleFavorite={onToggleFavorite}
+              rolling={isRandomRolling}
+              rollKey={randomRollKey}
+              onRoll={rollRandomGames}
+              onClear={clearRandomGames}
+              isRandomMode={isRandomMode}
+            />
+          )}
         </View>
       }
       renderItem={({ item: [path, game] }) => (

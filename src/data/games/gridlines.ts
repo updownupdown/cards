@@ -5,7 +5,7 @@ import { GameAnimations } from "@/animations";
 export const gridlines: GameDefinition = {
   path: "/gridlines",
   title: "Gridlines",
-  tags: [GameTag.ModernMechanics, GameTag.SpatialControl],
+  tags: [GameTag.SpatialControl, GameTag.GridPlacement],
   rating: {
     complexity: 40,
     difficulty: 50,

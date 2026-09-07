@@ -5,7 +5,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const shamrocks: GameDefinition = {
   path: "/shamrocks",
   title: "Shamrocks",
-  tags: [GameTag.TableauBuilding],
+  tags: [GameTag.SequenceBuilding],
   rating: { complexity: 25, difficulty: 85, luck: 60 },
   thumbnail: "Shamrocks.jpg",
   background: GAME_BACKGROUNDS.field,

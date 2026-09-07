@@ -4,11 +4,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const blackberryPie: GameDefinition = {
   path: "/blackberry-pie",
   title: "Blackberry Pie",
-  tags: [
-    GameTag.EasyToLearn,
-    GameTag.SequenceBuilding,
-    GameTag.TableauBuilding,
-  ],
+  tags: [GameTag.ModernMechanics, GameTag.SequenceBuilding],
   rating: {
     complexity: 38,
     difficulty: 62,

@@ -5,7 +5,7 @@ import { GameAnimations } from "@/animations";
 export const klondike: GameDefinition = {
   path: "/klondike",
   title: "Klondike",
-  tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
+  tags: [GameTag.StockAndWaste],
   rating: {
     complexity: 20,
     difficulty: 35,

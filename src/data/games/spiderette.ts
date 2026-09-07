@@ -3,7 +3,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const spiderette: GameDefinition = {
   path: "/spiderette",
   title: "Spiderette",
-  tags: [GameTag.TableauBuilding, GameTag.SequenceBuilding],
+  tags: [GameTag.SequenceBuilding],
   rating: { complexity: 35, difficulty: 60, luck: 40 },
   thumbnail: "Spiderette.jpg",
   background: GAME_BACKGROUNDS.forest,

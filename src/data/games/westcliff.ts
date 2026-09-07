@@ -12,6 +12,7 @@ export const westcliff: GameDefinition = {
   gameColorDark: "#27363b",
   gameColorMid: "#5aa8af",
   gameColorPale: "#e4ece9",
+  thumbnail: "Westcliff.jpg",
   cardDescription:
     "A broad ten-column Klondike relative with generous open-column play.",
   quickStart: [

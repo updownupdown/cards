@@ -5,7 +5,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const numberTen: GameDefinition = {
   path: "/number-ten",
   title: "Number Ten",
-  tags: [GameTag.StockAndWaste, GameTag.TableauBuilding],
+  tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 40, difficulty: 35, luck: 40 },
   thumbnail: "NumberTen.jpg",
   background: GAME_BACKGROUNDS.interchange,

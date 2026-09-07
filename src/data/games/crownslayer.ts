@@ -5,7 +5,7 @@ import { GameAnimations } from "@/animations";
 export const crownslayer: GameDefinition = {
   path: "/crownslayer",
   title: "Crownslayer",
-  tags: [GameTag.ModernMechanics, GameTag.CardCombat],
+  tags: [GameTag.CardCombat],
   rating: {
     complexity: 70,
     difficulty: 80,

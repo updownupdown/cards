@@ -20,7 +20,7 @@ export enum GameTag {
 
 export const GameTagNames: Record<GameTag, string> = {
   [GameTag.EasyToLearn]: "Easy to Learn",
-  [GameTag.TableauBuilding]: "Tableau Building",
+  [GameTag.TableauBuilding]: "Tableau Solitaire",
   [GameTag.ModernMechanics]: "Modern Mechanics",
   [GameTag.DungeonCrawler]: "Dungeon Crawler",
   [GameTag.CardCombat]: "Card Combat",
@@ -52,7 +52,7 @@ export type GameMenuInfo = {
   title: string;
   aliases?: string[];
   enabledOnLocalOnly?: boolean;
-  tags?: GameTag[];
+  tags: [GameTag, ...GameTag[]];
   rating: GameRating;
 
   // Images

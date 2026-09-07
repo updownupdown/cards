@@ -5,7 +5,7 @@ export const bakersDozen: GameDefinition = {
   path: "/bakers-dozen",
   title: "Baker's Dozen",
   aliases: ["Baker's Dozen"],
-  tags: [GameTag.TableauBuilding, GameTag.EasyToLearn],
+  tags: [GameTag.EasyToLearn, GameTag.SequenceBuilding],
   rating: {
     complexity: 25,
     difficulty: 70,

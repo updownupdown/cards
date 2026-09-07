@@ -5,7 +5,7 @@ import { GameAnimations } from "@/animations";
 export const fieldCommand: GameDefinition = {
   path: "/field-command",
   title: "Field Command",
-  tags: [GameTag.ModernMechanics, GameTag.CardCombat],
+  tags: [GameTag.CardCombat],
   rating: {
     complexity: 60,
     difficulty: 50,

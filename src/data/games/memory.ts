@@ -4,7 +4,7 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 export const memory: GameDefinition = {
   path: "/memory",
   title: "Memory",
-  tags: [GameTag.EasyToLearn, GameTag.PairMatching],
+  tags: [GameTag.PairMatching, GameTag.EasyToLearn],
   rating: {
     complexity: 15,
     difficulty: 35,

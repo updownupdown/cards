@@ -37,6 +37,11 @@ const cardContext = require.context(
   true,
   /^\.\/(?:classic|regular|small|small-colored|tableau)\/[^/]+\.png$/,
 );
+const collectibleCardContext = require.context(
+  "../../../assets/cards",
+  true,
+  /^\.\/(?:pale|dark)\/[^/]+\.png$/,
+);
 const cardBackContext = require.context(
   "../../../assets/cards/backs",
   false,
@@ -46,6 +51,7 @@ const cardBackContext = require.context(
 export const CARD_BACK_IMAGE = require("@/assets/cards/CardBack.png");
 
 const cardFilesBySize = buildCardFilesBySize();
+const collectibleCardFiles = buildCollectibleCardFiles();
 const cardBackFiles = buildCardBackFiles();
 
 const preloadPromises = new Map<string, Promise<void>>();
@@ -75,6 +81,13 @@ export function getCardBackImage(gamePath?: string) {
   return (
     cardBackFiles[fileName ?? ""] ?? cardBackFiles.default ?? CARD_BACK_IMAGE
   );
+}
+
+export function getCollectibleCardImageSource(
+  deck: "white" | "black",
+  cardName: string,
+) {
+  return collectibleCardFiles[deck === "white" ? "pale" : "dark"][cardName];
 }
 
 export function isCardImageSetPreloaded(
@@ -134,6 +147,25 @@ function buildCardBackFiles() {
   }
 
   return cardBackFiles;
+}
+
+function buildCollectibleCardFiles() {
+  const cardFiles = { pale: {}, dark: {} } as Record<
+    "pale" | "dark",
+    Record<string, ImageSourcePropType>
+  >;
+
+  for (const key of collectibleCardContext.keys()) {
+    const match = key.match(/^\.\/(pale|dark)\/([^/]+)\.png$/);
+    if (!match) continue;
+
+    const [, deck, cardName] = match as [string, "pale" | "dark", string];
+    cardFiles[deck][cardName] = collectibleCardContext(
+      key,
+    ) as ImageSourcePropType;
+  }
+
+  return cardFiles;
 }
 
 function buildCardFilesBySize() {

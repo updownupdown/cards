@@ -43,6 +43,7 @@ const THEME_COLORS = {
 } as const;
 
 interface Props {
+  accessibilityLabel?: string;
   style?: ViewStyle | ViewStyle[];
   textStyle?: TextStyle | TextStyle[];
   size?: TextSize;
@@ -70,6 +71,7 @@ interface Props {
 }
 
 export const Button = ({
+  accessibilityLabel,
   style,
   textStyle,
   size = "md",
@@ -165,6 +167,8 @@ export const Button = ({
 
   return (
     <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
       style={[
         {
           ...transitionStyles.limited04sec,

@@ -3,7 +3,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const simpleSimon: GameDefinition = {
   path: "/simple-simon",
   title: "Simple Simon",
-  tags: [GameTag.TableauBuilding, GameTag.SequenceBuilding],
+  tags: [GameTag.SequenceBuilding],
   rating: { complexity: 35, difficulty: 55, luck: 25 },
   thumbnail: "SimpleSimon.jpg",
   background: GAME_BACKGROUNDS.oldRoom,

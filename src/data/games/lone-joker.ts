@@ -5,7 +5,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const loneJoker: GameDefinition = {
   path: "/lone-joker",
   title: "Lone Joker",
-  tags: [GameTag.PokerAndCribbage, GameTag.ModernMechanics],
+  tags: [GameTag.PokerAndCribbage],
   rating: {
     complexity: 62,
     difficulty: 72,

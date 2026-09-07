@@ -5,7 +5,7 @@ import { GameAnimations } from "@/animations";
 export const rogueRun: GameDefinition = {
   path: "/rogue-run",
   title: "Rogue Run",
-  tags: [GameTag.ModernMechanics, GameTag.DungeonCrawler, GameTag.CardCombat],
+  tags: [GameTag.DungeonCrawler, GameTag.CardCombat],
   rating: {
     complexity: 55,
     difficulty: 70,

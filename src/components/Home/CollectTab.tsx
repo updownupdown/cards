@@ -13,7 +13,7 @@ import Svg, { Circle } from "react-native-svg";
 import { HomeCardSizeControl, type HomeCardSize } from "./HomeCardSizeControl";
 import { flexStyles } from "@/styles/flexStyles";
 
-export const EXPLORE_TAGS: { tag: GameTag; color: string }[] = [
+export const COLLECT_TAGS: { tag: GameTag; color: string }[] = [
   { tag: GameTag.EasyToLearn, color: "#9df3af" },
   { tag: GameTag.ModernMechanics, color: "#a7bbc9" },
   { tag: GameTag.CardCombat, color: "#fa7b7b" },
@@ -28,7 +28,7 @@ export const EXPLORE_TAGS: { tag: GameTag; color: string }[] = [
   { tag: GameTag.PokerAndCribbage, color: "#f5c781" },
 ];
 
-type ExploreTabProps = {
+type CollectTabProps = {
   allEnabledGames: HomeGameEntry[];
   settingsMap: GameSettingsMap;
   favorites: Set<string>;
@@ -39,7 +39,7 @@ type ExploreTabProps = {
   contentPaddingBottom: number;
 };
 
-export function ExploreTab({
+export function CollectTab({
   allEnabledGames,
   settingsMap,
   favorites,
@@ -48,7 +48,7 @@ export function ExploreTab({
   onCardSizeChange,
   contentPaddingTop,
   contentPaddingBottom,
-}: ExploreTabProps) {
+}: CollectTabProps) {
   const { ui, spacing } = useResponsiveMetrics();
   const { width: viewportWidth } = useViewportDimensions();
   const [openTags, setOpenTags] = useState<Set<GameTag>>(new Set());
@@ -60,9 +60,9 @@ export function ExploreTab({
   const gamesByTag = useMemo(
     () =>
       new Map(
-        EXPLORE_TAGS.map(({ tag }) => [
+        COLLECT_TAGS.map(({ tag }) => [
           tag,
-          allEnabledGames.filter(([, game]) => game.tags?.includes(tag)),
+          allEnabledGames.filter(([, game]) => game.tags[0] === tag),
         ]),
       ),
     [allEnabledGames],
@@ -101,7 +101,7 @@ export function ExploreTab({
           { gap: spacing(12), paddingVertical: spacing(24) },
         ]}
       >
-        {EXPLORE_TAGS.map(({ tag }) => {
+        {COLLECT_TAGS.map(({ tag }) => {
           const games = gamesByTag.get(tag) ?? [];
           const wonCount = games.filter(
             ([path]) => (settingsMap[path]?.stats.wins ?? 0) > 0,
@@ -167,7 +167,9 @@ export function ExploreTab({
                       cy={progressSize / 2}
                       r={radius}
                       fill="none"
-                      stroke={Colors.win}
+                      stroke={
+                        percentage === 100 ? Colors.trophyGold : Colors.win
+                      }
                       strokeWidth={strokeWidth}
                       strokeDasharray={`${circumference} ${circumference}`}
                       strokeDashoffset={circumference * (1 - percentage / 100)}
@@ -178,7 +180,7 @@ export function ExploreTab({
                   <Icon
                     name="trophy"
                     size={spacing(18)}
-                    color={percentage === 1 ? Colors.trophyGold : Colors.K600}
+                    color={percentage === 100 ? Colors.trophyGold : Colors.K600}
                   />
                 </View>
 

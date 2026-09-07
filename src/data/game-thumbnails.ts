@@ -10,6 +10,7 @@ export const GAME_THUMBNAIL_ASSETS = {
   "Ascent.jpg": require("@/assets/thumbnails/Ascent.jpg"),
   "AustralianPatience.jpg": require("@/assets/thumbnails/AustralianPatience.jpg"),
   "BakersDozen.jpg": require("@/assets/thumbnails/BakersDozen.jpg"),
+  "BakersGame.jpg": require("@/assets/thumbnails/BakersGame.jpg"),
   "Baroness.jpg": require("@/assets/thumbnails/Baroness.jpg"),
   "BeleagueredCastle.jpg": require("@/assets/thumbnails/BeleagueredCastle.jpg"),
   "Bisley.jpg": require("@/assets/thumbnails/Bisley.jpg"),
@@ -96,10 +97,13 @@ export const GAME_THUMBNAIL_ASSETS = {
   "StreetsAndAlleys.jpg": require("@/assets/thumbnails/StreetsAndAlleys.jpg"),
   "Sultan.jpg": require("@/assets/thumbnails/Sultan.jpg"),
   "ThreePeaks.jpg": require("@/assets/thumbnails/ThreePeaks.jpg"),
+  "ThumbAndPouch.jpg": require("@/assets/thumbnails/ThumbAndPouch.jpg"),
   "TowerOfHanoi.jpg": require("@/assets/thumbnails/TowerOfHanoi.jpg"),
   "TripleStack.jpg": require("@/assets/thumbnails/TripleStack.jpg"),
   "TwelveTrials.jpg": require("@/assets/thumbnails/TwelveTrials.jpg"),
   "Waypoint.jpg": require("@/assets/thumbnails/Waypoint.jpg"),
+  "Westcliff.jpg": require("@/assets/thumbnails/Westcliff.jpg"),
+  "Whitehead.jpg": require("@/assets/thumbnails/Whitehead.jpg"),
   "Yukon.jpg": require("@/assets/thumbnails/Yukon.jpg"),
 } as const;
 

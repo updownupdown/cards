@@ -4,7 +4,7 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 export const fightClubs: GameDefinition = {
   path: "/fight-clubs",
   title: "Fight Clubs",
-  tags: [GameTag.GridPlacement, GameTag.ScoringPuzzles],
+  tags: [GameTag.CardCombat, GameTag.ScoringPuzzles],
   rating: {
     complexity: 70,
     difficulty: 70,

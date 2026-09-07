@@ -4,11 +4,7 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 export const cityGrid: GameDefinition = {
   path: "/city-grid",
   title: "City Grid",
-  tags: [
-    GameTag.ModernMechanics,
-    GameTag.GridPlacement,
-    GameTag.SpatialControl,
-  ],
+  tags: [GameTag.GridPlacement, GameTag.SpatialControl],
   rating: {
     complexity: 30,
     difficulty: 50,

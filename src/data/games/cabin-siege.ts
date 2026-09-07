@@ -5,7 +5,7 @@ import { GameAnimations } from "@/animations";
 export const cabinSiege: GameDefinition = {
   path: "/cabin-siege",
   title: "Cabin Siege",
-  tags: [GameTag.ModernMechanics, GameTag.CardCombat, GameTag.SpatialControl],
+  tags: [GameTag.CardCombat, GameTag.SpatialControl],
   rating: {
     complexity: 70,
     difficulty: 50,

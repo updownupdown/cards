@@ -4,11 +4,11 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 export const scorpion: GameDefinition = {
   path: "/scorpion",
   title: "Scorpion",
-  tags: [GameTag.TableauBuilding],
+  tags: [GameTag.SequenceBuilding],
   rating: {
-    complexity: 0,
-    difficulty: 0,
-    luck: 0,
+    complexity: 40,
+    difficulty: 75,
+    luck: 50,
   },
   thumbnail: "Scorpion.jpg",
   background: GAME_BACKGROUNDS.sahara,

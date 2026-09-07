@@ -4,7 +4,7 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 export const monteCarlo: GameDefinition = {
   path: "/monte-carlo",
   title: "Monte Carlo",
-  tags: [GameTag.EasyToLearn, GameTag.PairMatching],
+  tags: [GameTag.PairMatching, GameTag.EasyToLearn],
   rating: {
     complexity: 10,
     difficulty: 20,

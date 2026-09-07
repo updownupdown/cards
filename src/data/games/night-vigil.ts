@@ -5,7 +5,7 @@ import { GameAnimations } from "@/animations";
 export const nightVigil: GameDefinition = {
   path: "/night-vigil",
   title: "Night Vigil",
-  tags: [GameTag.ModernMechanics, GameTag.CardCombat],
+  tags: [GameTag.CardCombat],
   rating: {
     complexity: 72,
     difficulty: 76,

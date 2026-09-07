@@ -5,11 +5,11 @@ import { GameAnimations } from "@/animations";
 export const spiderSolitaire: GameDefinition = {
   path: "/spider-solitaire",
   title: "Spider Solitaire",
-  tags: [GameTag.TableauBuilding],
+  tags: [GameTag.SequenceBuilding],
   rating: {
-    complexity: 0,
-    difficulty: 0,
-    luck: 0,
+    complexity: 50,
+    difficulty: 85,
+    luck: 55,
   },
   thumbnail: "SpiderSolitaire.jpg",
   background: GAME_BACKGROUNDS.dungeon,

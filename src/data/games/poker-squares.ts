@@ -5,8 +5,8 @@ export const pokerSquares: GameDefinition = {
   path: "/poker-squares",
   title: "Poker Squares",
   tags: [
-    GameTag.GridPlacement,
     GameTag.PokerAndCribbage,
+    GameTag.GridPlacement,
     GameTag.ScoringPuzzles,
   ],
   rating: {

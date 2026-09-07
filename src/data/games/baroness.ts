@@ -5,7 +5,7 @@ import { GameAnimations } from "@/animations";
 export const baroness: GameDefinition = {
   path: "/baroness",
   title: "Baroness",
-  tags: [GameTag.EasyToLearn, GameTag.PairMatching],
+  tags: [GameTag.PairMatching, GameTag.EasyToLearn],
   rating: {
     complexity: 15,
     difficulty: 50,

@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { NODES_PROGRESS_STORAGE_KEY } from "./storage-keys";
 import { GameMenuInfo, isGameEnabled } from "./games-data";
 import { GAMES_DATA } from "./games-registry";
 
@@ -110,6 +111,8 @@ export type RecentGameEntry = {
   playedAt: number;
 };
 
+export type GameLaunchMode = "standard" | "nodes";
+
 export const GLOBAL_SETTINGS_STORAGE_KEY = "cards.globalSettings.v1";
 export const GAME_SETTINGS_STORAGE_KEY = "cards.gameSettings.v1";
 export const RECENT_GAMES_STORAGE_KEY = "cards.recentGames.v1";
@@ -122,6 +125,7 @@ export type SavedGameSession<T = unknown> = {
   version: number;
   sessionId: string;
   path: string;
+  launchMode?: GameLaunchMode;
   savedAt: number;
   state: T;
 };
@@ -265,11 +269,32 @@ export async function resetAllSettings() {
     AsyncStorage.setItem(GLOBAL_SETTINGS_STORAGE_KEY, ""),
     AsyncStorage.setItem(RECENT_GAMES_STORAGE_KEY, ""),
     clearLastGameSession(),
+    AsyncStorage.removeItem(NODES_PROGRESS_STORAGE_KEY),
   ]);
 
   await runWithGameSettingsMapWriteLock((map) => {
     Object.keys(map).forEach((key) => {
       delete map[key];
+    });
+  });
+}
+
+export async function populateTestGameProgress() {
+  await runWithGameSettingsMapWriteLock((map) => {
+    homeGameList.forEach(({ path }, index) => {
+      const current = getGameSettings(map, path);
+      const wins = (index % 7) + 1;
+      const losses = (index * 3) % 6;
+
+      map[path] = {
+        ...current,
+        stats: {
+          attempts: wins + losses + (index % 3),
+          wins,
+          losses,
+          highestScore: index % 4 === 0 ? (index + 1) * 100 : null,
+        },
+      };
     });
   });
 }
@@ -307,6 +332,7 @@ export async function loadLastGameSession<T = unknown>() {
       version: GAME_SESSION_VERSION,
       sessionId: parsed.sessionId,
       path: normalizeGamePath(parsed.path),
+      launchMode: parsed.launchMode === "nodes" ? "nodes" : "standard",
       savedAt: parsed.savedAt,
       state: parsed.state as T,
     };
@@ -319,6 +345,7 @@ export async function saveLastGameSession<T = unknown>(
   pathname: string,
   state: T,
   sessionId: string,
+  launchMode: GameLaunchMode = "standard",
 ) {
   const path = normalizeGamePath(pathname);
   if (!isGamePath(path) || !sessionId) return;
@@ -327,6 +354,7 @@ export async function saveLastGameSession<T = unknown>(
     version: GAME_SESSION_VERSION,
     sessionId,
     path,
+    launchMode,
     savedAt: Date.now(),
     state,
   };

@@ -8,7 +8,7 @@ export const royalRest: GameDefinition = {
   thumbnail: "RoyalRest.jpg",
   background: GAME_BACKGROUNDS.cabinInterior,
   animation: GameAnimations.Dust,
-  tags: [GameTag.EasyToLearn, GameTag.TableauBuilding, GameTag.ModernMechanics],
+  tags: [GameTag.EasyToLearn, GameTag.SequenceBuilding],
   rating: {
     complexity: 30,
     difficulty: 45,

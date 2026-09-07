@@ -6,7 +6,7 @@ export const somnus: GameDefinition = {
   path: "/somnus",
   title: "Somnus",
   aliases: ["Alice's Nightmares"],
-  tags: [GameTag.ModernMechanics, GameTag.CardCombat],
+  tags: [GameTag.CardCombat],
   rating: {
     complexity: 75,
     difficulty: 70,

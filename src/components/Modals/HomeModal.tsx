@@ -1,16 +1,22 @@
 import {
   clearLastGameSession,
   DEFAULT_GLOBAL_SETTINGS,
+  populateTestGameProgress,
   resetAllSettings,
 } from "@/data/game-menu";
+import {
+  populateTestNodesProgress,
+  resetNodesProgress,
+} from "@/data/nodes-progress";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
 import { Colors } from "@/styles/styles";
+import { isLocalDevEnvironment } from "@/utils/utils";
 import Constants from "expo-constants";
 import React from "react";
-import { ScrollView, View } from "react-native";
+import { Linking, ScrollView, View } from "react-native";
 import { Button } from "../Button/Button";
 import { AddToHomeScreenNotice } from "../common/AddToHomeScreenNotice";
 import { SettingControl } from "../common/SettingControl";
@@ -39,6 +45,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
   const [isResetConfirmationVisible, setIsResetConfirmationVisible] =
     React.useState(false);
   const [isResettingData, setIsResettingData] = React.useState(false);
+  const [isPopulatingTestData, setIsPopulatingTestData] = React.useState(false);
   const { spacing } = useResponsiveMetrics();
 
   const onCloseAndRefresh = () => {
@@ -103,6 +110,30 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
 
         <AddToHomeScreenNotice />
 
+        {isLocalDevEnvironment() && (
+          <Button
+            size="md"
+            uppercase={false}
+            text="Populate test progress"
+            iconName="nodes"
+            theme="blue"
+            disabled={isPopulatingTestData}
+            onPress={async () => {
+              setIsPopulatingTestData(true);
+              try {
+                await Promise.all([
+                  populateTestGameProgress(),
+                  populateTestNodesProgress(),
+                ]);
+                onHomeDataInvalidated();
+                onClose();
+              } finally {
+                setIsPopulatingTestData(false);
+              }
+            }}
+          />
+        )}
+
         {isResetConfirmationVisible ? (
           <View
             style={[
@@ -126,6 +157,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                 try {
                   updateSettings(DEFAULT_GLOBAL_SETTINGS);
                   await resetAllSettings();
+                  await resetNodesProgress();
                   onHomeDataInvalidated();
                   setIsResetConfirmationVisible(false);
                   onClose();
@@ -146,6 +178,20 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
             text="Reset all app data"
           />
         )}
+
+        <Text size="sm" weight={300} color={Colors.K600}>
+          Starfield background image by{" "}
+          <Text
+            size="sm"
+            weight={500}
+            color={Colors.accentBlue}
+            onPress={() =>
+              void Linking.openURL("https://unsplash.com/@olenkasergienko")
+            }
+          >
+            Olena Bohovyk
+          </Text>
+        </Text>
 
         <Text size="sm" weight={300} color={Colors.K600}>
           {"Last build: " +

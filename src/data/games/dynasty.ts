@@ -8,7 +8,7 @@ export const dynasty: GameDefinition = {
   thumbnail: "Dynasty.jpg",
   background: GAME_BACKGROUNDS.castleIndoors,
   animation: GameAnimations.Dust,
-  tags: [GameTag.ModernMechanics, GameTag.CardCombat, GameTag.SpatialControl],
+  tags: [GameTag.CardCombat, GameTag.SpatialControl],
   rating: { complexity: 65, difficulty: 70, luck: 35 },
   gameColorDark: "#262f35",
   gameColorMid: "#389c88",

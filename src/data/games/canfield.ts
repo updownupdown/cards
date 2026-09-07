@@ -5,11 +5,11 @@ import { GameAnimations } from "@/animations/types";
 export const canfield: GameDefinition = {
   path: "/canfield",
   title: "Canfield",
-  tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
+  tags: [GameTag.StockAndWaste],
   rating: {
-    complexity: 0,
-    difficulty: 0,
-    luck: 0,
+    complexity: 40,
+    difficulty: 75,
+    luck: 70,
   },
   thumbnail: "Canfield.jpg",
   background: GAME_BACKGROUNDS.oldRoom,

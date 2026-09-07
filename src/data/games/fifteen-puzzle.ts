@@ -5,7 +5,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const fifteenPuzzle: GameDefinition = {
   path: "/fifteen-puzzle",
   title: "Fifteen Puzzle",
-  tags: [GameTag.EasyToLearn, GameTag.SpatialControl],
+  tags: [GameTag.SpatialControl, GameTag.EasyToLearn],
   rating: { complexity: 20, difficulty: 30, luck: 0 },
   thumbnail: "FifteenPuzzle.jpg",
   background: GAME_BACKGROUNDS.bookstore,

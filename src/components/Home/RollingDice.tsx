@@ -11,6 +11,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 export const DICE_ROLL_DURATION = 2800;
+export const ROLLING_DICE_COUNT = 3;
 
 // 3x3 grid slot indices used by each face value.
 //   0 1 2
@@ -31,6 +32,8 @@ type RollingDiceProps = {
   /** Whether a roll is currently in progress. */
   rolling: boolean;
   size?: number;
+  slotHeight: number;
+  gap: number;
 };
 
 type DieProps = {
@@ -138,34 +141,37 @@ function Die({
   );
 }
 
-export function RollingDice({ rollKey, rolling, size }: RollingDiceProps) {
+export function RollingDice({
+  rollKey,
+  rolling,
+  size,
+  slotHeight,
+  gap,
+}: RollingDiceProps) {
   const { spacing } = useResponsiveMetrics();
   const dieSize = size ?? spacing(56);
-  const stageWidth = Math.max(300, dieSize * 4.8);
-  const [faces, setFaces] = useState<[number, number]>([2, 5]);
-  const [rollConfig, setRollConfig] = useState([
-    {
-      turns: 1.25,
-      spinDuration: 2400,
-      settleDelay: 2400,
+  const [faces, setFaces] = useState<number[]>(() =>
+    Array.from({ length: ROLLING_DICE_COUNT }, (_, index) => index + 1),
+  );
+  const [rollConfig, setRollConfig] = useState(() =>
+    Array.from({ length: ROLLING_DICE_COUNT }, (_, index) => ({
+      turns: 1.25 + index * 0.25,
+      spinDuration: 2400 - index * 100,
+      settleDelay: 2400 - index * 100,
       shuffleInterval: 160,
-    },
-    {
-      turns: 1.75,
-      spinDuration: 2200,
-      settleDelay: 2200,
-      shuffleInterval: 160,
-    },
-  ]);
+    })),
+  );
 
   useEffect(() => {
     if (!rolling) return;
-    setFaces([
-      1 + Math.floor(Math.random() * 6),
-      1 + Math.floor(Math.random() * 6),
-    ]);
+    setFaces(
+      Array.from(
+        { length: ROLLING_DICE_COUNT },
+        () => 1 + Math.floor(Math.random() * 6),
+      ),
+    );
     setRollConfig(
-      [0, 1].map(() => {
+      Array.from({ length: ROLLING_DICE_COUNT }, () => {
         const settleDelay = 1850 + Math.round(Math.random() * 600);
         const fullTurns = 1 + Math.floor(Math.random() * 2);
         const quarterTurns = Math.floor(Math.random() * 4);
@@ -183,27 +189,32 @@ export function RollingDice({ rollKey, rolling, size }: RollingDiceProps) {
     <View
       style={{
         width: dieSize,
-        height: dieSize * 4,
+        height:
+          slotHeight * ROLLING_DICE_COUNT + gap * (ROLLING_DICE_COUNT - 1),
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
-        gap: dieSize * 2,
+        gap,
       }}
     >
-      <Die
-        faceValue={faces[0]}
-        rolling={rolling}
-        rollKey={rollKey}
-        size={dieSize}
-        {...rollConfig[0]}
-      />
-      <Die
-        faceValue={faces[1]}
-        rolling={rolling}
-        rollKey={rollKey}
-        size={dieSize}
-        {...rollConfig[1]}
-      />
+      {faces.map((faceValue, index) => (
+        <View
+          key={index}
+          style={{
+            width: "100%",
+            height: slotHeight,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Die
+            faceValue={faceValue}
+            rolling={rolling}
+            rollKey={rollKey}
+            size={dieSize}
+            {...rollConfig[index]}
+          />
+        </View>
+      ))}
     </View>
   );
 }

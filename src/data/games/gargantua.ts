@@ -6,7 +6,7 @@ export const gargantua: GameDefinition = {
   path: "/gargantua",
   title: "Gargantua",
   aliases: ["Double Klondike"],
-  tags: [GameTag.StockAndWaste, GameTag.TableauBuilding],
+  tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 35, difficulty: 45, luck: 45 },
   thumbnail: "Gargantua.jpg",
   background: GAME_BACKGROUNDS.mountain1,

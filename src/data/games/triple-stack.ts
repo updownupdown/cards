@@ -4,7 +4,7 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 export const tripleStack: GameDefinition = {
   path: "/triple-stack",
   title: "Triple Stack",
-  tags: [GameTag.ModernMechanics],
+  tags: [GameTag.EasyToLearn, GameTag.ModernMechanics],
   rating: {
     complexity: 20,
     difficulty: 70,

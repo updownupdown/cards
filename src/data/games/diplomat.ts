@@ -5,7 +5,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const diplomat: GameDefinition = {
   path: "/diplomat",
   title: "Diplomat",
-  tags: [GameTag.StockAndWaste, GameTag.TableauBuilding],
+  tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 30, difficulty: 25, luck: 35 },
   thumbnail: "Diplomat.jpg",
   background: GAME_BACKGROUNDS.london,

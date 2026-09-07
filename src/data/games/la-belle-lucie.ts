@@ -6,7 +6,7 @@ export const laBelleLucie: GameDefinition = {
   path: "/la-belle-lucie",
   title: "La Belle Lucie",
   aliases: ["Lovely Lucy", "The Fan"],
-  tags: [GameTag.TableauBuilding],
+  tags: [GameTag.SequenceBuilding],
   rating: { complexity: 30, difficulty: 80, luck: 55 },
   thumbnail: "LaBelleLucie.jpg",
   background: GAME_BACKGROUNDS.cherryBlossoms,

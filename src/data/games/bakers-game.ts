@@ -6,7 +6,7 @@ export const bakersGame: GameDefinition = {
   path: "/bakers-game",
   title: "Baker's Game",
   aliases: ["Baker's Game"],
-  tags: [GameTag.TableauBuilding],
+  tags: [GameTag.SequenceBuilding],
   rating: {
     complexity: 25,
     difficulty: 55,
@@ -14,6 +14,7 @@ export const bakersGame: GameDefinition = {
   },
   background: GAME_BACKGROUNDS.cherryBlossoms,
   animation: GameAnimations.CherryBlossom,
+  thumbnail: "BakersGame.jpg",
   gameColorDark: "#1b2a24",
   gameColorMid: "#5a94af",
   gameColorPale: "#dcefe4",

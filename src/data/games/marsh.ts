@@ -5,7 +5,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const marsh: GameDefinition = {
   path: "/marsh",
   title: "Marsh",
-  tags: [GameTag.EasyToLearn, GameTag.ModernMechanics, GameTag.SpatialControl],
+  tags: [GameTag.SpatialControl, GameTag.EasyToLearn],
   rating: {
     complexity: 45,
     difficulty: 55,

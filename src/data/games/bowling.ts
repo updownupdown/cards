@@ -4,7 +4,7 @@ import { GAME_BACKGROUNDS } from "../game-backgrounds";
 export const bowling: GameDefinition = {
   path: "/bowling",
   title: "Bowling",
-  tags: [GameTag.ModernMechanics, GameTag.ScoringPuzzles],
+  tags: [GameTag.ScoringPuzzles],
   rating: {
     complexity: 30,
     difficulty: 30,

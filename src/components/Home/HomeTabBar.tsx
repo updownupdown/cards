@@ -10,14 +10,13 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-export type HomeTabKey = "home" | "explore" | "search" | "random" | "stats";
+export type HomeTabKey = "home" | "collect" | "search" | "nodes";
 
 export const HOME_TABS: { key: HomeTabKey; label: string; icon: IconName }[] = [
   { key: "home", label: "Home", icon: "home" },
-  { key: "explore", label: "Explore", icon: "explore" },
+  { key: "collect", label: "Collect", icon: "trophy" },
   { key: "search", label: "Search", icon: "search" },
-  { key: "random", label: "Random", icon: "dice" },
-  { key: "stats", label: "Stats", icon: "chart" },
+  { key: "nodes", label: "Nodes", icon: "nodes" },
 ];
 
 type HomeTabBarProps = {

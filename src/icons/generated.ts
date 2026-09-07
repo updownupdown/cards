@@ -51,12 +51,15 @@ import JokerIcon from "./Joker.svg";
 import ListLargeIcon from "./ListLarge.svg";
 import ListMediumIcon from "./ListMedium.svg";
 import ListSmallIcon from "./ListSmall.svg";
+import LockIcon from "./Lock.svg";
 import MenuIcon from "./Menu.svg";
 import MoreVerticalIcon from "./MoreVertical.svg";
+import NodesIcon from "./Nodes.svg";
 import OfferIcon from "./Offer.svg";
 import PlayHandIcon from "./PlayHand.svg";
 import PlusOutlineIcon from "./PlusOutline.svg";
 import PotionIcon from "./Potion.svg";
+import QuoteIcon from "./Quote.svg";
 import RecentIcon from "./Recent.svg";
 import ResetIcon from "./Reset.svg";
 import RotateDeviceIcon from "./RotateDevice.svg";
@@ -71,6 +74,7 @@ import StarIcon from "./Star.svg";
 import StarOutlineIcon from "./StarOutline.svg";
 import SwordIcon from "./Sword.svg";
 import TagIcon from "./Tag.svg";
+import TaoIcon from "./Tao.svg";
 import TrophyIcon from "./Trophy.svg";
 import UndoIcon from "./Undo.svg";
 
@@ -121,12 +125,15 @@ export type IconName =
   | "list-large"
   | "list-medium"
   | "list-small"
+  | "lock"
   | "menu"
   | "more-vertical"
+  | "nodes"
   | "offer"
   | "play-hand"
   | "plus-outline"
   | "potion"
+  | "quote"
   | "recent"
   | "reset"
   | "rotate-device"
@@ -141,6 +148,7 @@ export type IconName =
   | "star-outline"
   | "sword"
   | "tag"
+  | "tao"
   | "trophy"
   | "undo";
 
@@ -191,12 +199,15 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "list-large": ListLargeIcon,
   "list-medium": ListMediumIcon,
   "list-small": ListSmallIcon,
+  "lock": LockIcon,
   "menu": MenuIcon,
   "more-vertical": MoreVerticalIcon,
+  "nodes": NodesIcon,
   "offer": OfferIcon,
   "play-hand": PlayHandIcon,
   "plus-outline": PlusOutlineIcon,
   "potion": PotionIcon,
+  "quote": QuoteIcon,
   "recent": RecentIcon,
   "reset": ResetIcon,
   "rotate-device": RotateDeviceIcon,
@@ -211,6 +222,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "star-outline": StarOutlineIcon,
   "sword": SwordIcon,
   "tag": TagIcon,
+  "tao": TaoIcon,
   "trophy": TrophyIcon,
   "undo": UndoIcon,
 };

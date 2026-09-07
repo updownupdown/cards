@@ -5,7 +5,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const russianSolitaire: GameDefinition = {
   path: "/russian-solitaire",
   title: "Russian Solitaire",
-  tags: [GameTag.TableauBuilding],
+  tags: [GameTag.TableauBuilding, GameTag.SequenceBuilding],
   rating: { complexity: 35, difficulty: 80, luck: 30 },
   thumbnail: "RussianSolitaire.jpg",
   background: GAME_BACKGROUNDS.siberia,

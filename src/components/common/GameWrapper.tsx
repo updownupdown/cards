@@ -7,6 +7,7 @@ import {
   recordResult,
   undoRecordedLoss,
 } from "@/data/game-menu";
+import { recordNodesWin, type NodesWinResult } from "@/data/nodes-progress";
 import { DEFAULT_GAME_BACKGROUND } from "@/data/games-data";
 import { useFade } from "@/hooks/useFade";
 import { useGameSettings } from "@/hooks/useGameSettings";
@@ -17,6 +18,8 @@ import {
   useResponsiveUiLayoutFromWidth,
 } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
+import { selectNodesHomeTab } from "@/components/Home/home-view-state";
+import { NodesWinOverlay } from "@/components/Nodes/NodesWinOverlay";
 import { flexStyles } from "@/styles/flexStyles";
 import {
   Colors,
@@ -25,7 +28,7 @@ import {
   layoutDims,
   rgba,
 } from "@/styles/styles";
-import { router, usePathname } from "expo-router";
+import { router, useLocalSearchParams, usePathname } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { Animated, ImageBackground, Platform, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -71,6 +74,8 @@ export const GameWrapper = ({
   showDeviceRotateHint = false,
 }: Props) => {
   const pathname = normalizeGamePath(usePathname());
+  const { mode } = useLocalSearchParams<{ mode?: string }>();
+  const isNodesMode = mode === "nodes";
   const gameInfo = getGameInfo(pathname);
   const insets = useSafeAreaInsets();
   const { width: viewportWidth, height: viewportHeight } =
@@ -79,9 +84,15 @@ export const GameWrapper = ({
   const { settings, isLoading } = useGameSettings(pathname);
   const { settings: globalSettings } = useGlobalSettings();
   const spacing = (value: number) => value * ui.scale;
-  const ended = outcome !== "playing";
-  const won = outcome === "won";
+  const [isDevWin, setIsDevWin] = useState(false);
+  const displayedOutcome = isDevWin ? "won" : outcome;
+  const ended = displayedOutcome !== "playing";
+  const won = displayedOutcome === "won";
   const canUndoLoss = outcome === "lost" && canUndo && !!handleUndo;
+  const handleReset = () => {
+    setIsDevWin(false);
+    reset();
+  };
 
   const handleLossUndo = canUndoLoss
     ? async () => {
@@ -98,6 +109,9 @@ export const GameWrapper = ({
 
   const [showMenu, setShowMenu] = useState(false);
   const [showRulesModal, setShowRulesModal] = useState(false);
+  const [nodesWinResult, setNodesWinResult] = useState<NodesWinResult | null>(
+    null,
+  );
   const [tipsDismissed, setTipsDismissed] = useState(false);
   const tipsMorphProgress = useRef(new Animated.Value(0)).current;
   const instructionsHighlight = useRef(new Animated.Value(0)).current;
@@ -139,7 +153,7 @@ export const GameWrapper = ({
   }, [instructionsHighlight, tipsDismissed]);
 
   // Record stats
-  const resultStateRef = useRef({ pathname, outcome });
+  const resultStateRef = useRef({ pathname, outcome: displayedOutcome });
   const attemptedPathRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -150,22 +164,45 @@ export const GameWrapper = ({
   }, [pathname]);
 
   useEffect(() => {
+    let active = true;
     const previous = resultStateRef.current;
     const didEnd =
       previous.pathname === pathname &&
       previous.outcome === "playing" &&
-      outcome !== "playing";
+      displayedOutcome !== "playing";
 
-    resultStateRef.current = { pathname, outcome };
-    if (!didEnd) return;
+    resultStateRef.current = { pathname, outcome: displayedOutcome };
+    if (displayedOutcome === "playing") {
+      setNodesWinResult(null);
+    }
+    if (!didEnd) {
+      return () => {
+        active = false;
+      };
+    }
 
-    recordResult(
-      pathname,
-      outcome === "won",
-      score,
-      getActiveGameSessionId(pathname),
-    ).catch(() => {});
-  }, [outcome, pathname, score]);
+    const sessionId = getActiveGameSessionId(pathname);
+    recordResult(pathname, displayedOutcome === "won", score, sessionId).catch(
+      () => {},
+    );
+    if (isNodesMode && displayedOutcome === "won") {
+      recordNodesWin(pathname, sessionId)
+        .then((result) => {
+          if (
+            active &&
+            !result.duplicate &&
+            (result.awardedReward || result.newlyUnlockedPaths.length > 0)
+          ) {
+            setNodesWinResult(result);
+          }
+        })
+        .catch(() => {});
+    }
+
+    return () => {
+      active = false;
+    };
+  }, [displayedOutcome, isNodesMode, pathname, score]);
 
   if (!gameInfo) return null;
 
@@ -207,10 +244,27 @@ export const GameWrapper = ({
         headerBottom={headerHeight}
         won={won}
         score={score}
-        reset={reset}
+        reset={handleReset}
         message={winLoseMessage}
         handleUndo={handleLossUndo}
+        isNodesMode={isNodesMode}
+        onExit={async () => {
+          setNodesWinResult(null);
+          try {
+            await clearLastGameSession();
+          } finally {
+            if (isNodesMode) selectNodesHomeTab();
+            router.push(isNodesMode ? "/?tab=nodes" : "/");
+          }
+        }}
       />
+      {nodesWinResult && (
+        <NodesWinOverlay
+          path={pathname}
+          result={nodesWinResult}
+          onClose={() => setNodesWinResult(null)}
+        />
+      )}
 
       {(showMenu || openMenu) && (
         <GameModal
@@ -218,7 +272,7 @@ export const GameWrapper = ({
             setShowMenu(false);
             onMenuClose?.();
           }}
-          onReloadGame={reset}
+          onReloadGame={handleReset}
           showRulesModal={() => setShowRulesModal(true)}
         />
       )}
@@ -313,17 +367,32 @@ export const GameWrapper = ({
           >
             <Button
               headerButton
+              accessibilityLabel={isNodesMode ? "Nodes" : "Home"}
               onPress={async () => {
                 try {
                   await clearLastGameSession();
                 } finally {
-                  router.push("/");
+                  if (isNodesMode) selectNodesHomeTab();
+                  router.push(isNodesMode ? "/?tab=nodes" : "/");
                 }
               }}
-              iconName={"home"}
+              iconName={isNodesMode ? "nodes" : "home"}
               iconColor={titleColor}
               style={{ flex: 1, paddingHorizontal: 0 }}
             />
+
+            {/* Local only instant win test button */}
+            {__DEV__ && (
+              <Button
+                headerButton
+                accessibilityLabel="Instant win"
+                onPress={() => setIsDevWin(true)}
+                iconName="trophy"
+                iconColor={titleColor}
+                disabled={ended}
+                style={{ flex: 1, paddingHorizontal: 0 }}
+              />
+            )}
 
             <View
               style={{
@@ -393,7 +462,7 @@ export const GameWrapper = ({
             />
 
             <ResetButton
-              reset={reset}
+              reset={handleReset}
               iconColor={titleColor}
               pressedIconColor={rgba(titleColor, 0.7)}
             />

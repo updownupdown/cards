@@ -6,8 +6,8 @@ export const cribbageSquares: GameDefinition = {
   path: "/cribbage-squares",
   title: "Cribbage Squares",
   tags: [
-    GameTag.GridPlacement,
     GameTag.PokerAndCribbage,
+    GameTag.GridPlacement,
     GameTag.ScoringPuzzles,
   ],
   rating: {

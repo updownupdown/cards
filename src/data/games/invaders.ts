@@ -5,7 +5,7 @@ import { GameAnimations } from "@/animations";
 export const invaders: GameDefinition = {
   path: "/invaders",
   title: "Invaders",
-  tags: [GameTag.ModernMechanics, GameTag.CardCombat],
+  tags: [GameTag.CardCombat],
   rating: {
     complexity: 40,
     difficulty: 70,

@@ -6,7 +6,7 @@ export const seahavenTowers: GameDefinition = {
   path: "/seahaven-towers",
   title: "Seahaven Towers",
   aliases: ["Sea Towers"],
-  tags: [GameTag.TableauBuilding],
+  tags: [GameTag.SequenceBuilding],
   rating: { complexity: 35, difficulty: 50, luck: 25 },
   thumbnail: "SeahavenTowers.jpg",
   background: GAME_BACKGROUNDS.island,

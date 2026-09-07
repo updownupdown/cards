@@ -1,17 +1,18 @@
 import { LoadingOverlay } from "@/components/common/LoadingOverlay";
-import { ExploreTab } from "@/components/Home/ExploreTab";
+import { CollectTab } from "@/components/Home/CollectTab";
 import { HomeHeader } from "@/components/Home/HomeHeader";
 import { HomeTab } from "@/components/Home/HomeTab";
 import { HomeTabBar } from "@/components/Home/HomeTabBar";
-import { RandomTab } from "@/components/Home/RandomTab";
 import { SearchTab } from "@/components/Home/SearchTab";
+import { NodesTab } from "@/components/Nodes/NodesTab";
 import {
   getActiveHomeTab,
+  NODES_HOME_TAB_INDEX,
   setActiveHomeTab,
   type HomeTabIndex,
 } from "./home-view-state";
 import { HomeModal } from "@/components/Modals/HomeModal";
-import { StatsTab } from "@/components/Home/StatsTab";
+import { StatsModal } from "@/components/Modals/StatsModal";
 import { useHomeData } from "@/hooks/useHomeData";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
@@ -27,8 +28,10 @@ import {
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useLocalSearchParams } from "expo-router";
 
 export default function Home() {
+  const { tab } = useLocalSearchParams<{ tab?: string }>();
   const initialActiveTab = useRef(getActiveHomeTab()).current;
   const insets = useSafeAreaInsets();
   const { ui, spacing } = useResponsiveMetrics();
@@ -40,13 +43,15 @@ export default function Home() {
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showStatsModal, setShowStatsModal] = useState(false);
   const [homeDataRefreshToken, setHomeDataRefreshToken] = useState(0);
   const [activeTab, setActiveTab] = useState<HomeTabIndex>(initialActiveTab);
   const [mountedTabs, setMountedTabs] = useState<Set<HomeTabIndex>>(
     () =>
       new Set(
         [initialActiveTab - 1, initialActiveTab, initialActiveTab + 1].filter(
-          (index): index is HomeTabIndex => index >= 0 && index <= 4,
+          (index): index is HomeTabIndex =>
+            index >= 0 && index <= NODES_HOME_TAB_INDEX,
         ),
       ),
   );
@@ -122,7 +127,7 @@ export default function Home() {
     if (pageWidth <= 0) return;
     const index = Math.max(
       0,
-      Math.min(4, Math.round(offsetX / pageWidth)),
+      Math.min(NODES_HOME_TAB_INDEX, Math.round(offsetX / pageWidth)),
     ) as HomeTabIndex;
     if (index === activeTabRef.current) {
       isTabPressScrollRef.current = false;
@@ -147,7 +152,10 @@ export default function Home() {
   };
 
   const onSelectTab = (requestedIndex: number) => {
-    const index = Math.max(0, Math.min(4, requestedIndex)) as HomeTabIndex;
+    const index = Math.max(
+      0,
+      Math.min(NODES_HOME_TAB_INDEX, requestedIndex),
+    ) as HomeTabIndex;
     if (index === activeTabRef.current) return;
     mountTab(index);
     isTabPressScrollRef.current = true;
@@ -156,6 +164,12 @@ export default function Home() {
     setActiveTab(index);
     pagerRef.current?.scrollTo({ x: index * pageWidth, animated: true });
   };
+
+  useEffect(() => {
+    if (tab === "nodes" && activeTabRef.current !== NODES_HOME_TAB_INDEX) {
+      onSelectTab(NODES_HOME_TAB_INDEX);
+    }
+  }, [pageWidth, tab]);
 
   const mountTab = (index: HomeTabIndex) => {
     setMountedTabs((current) => {
@@ -170,7 +184,7 @@ export default function Home() {
     setMountedTabs((current) => {
       const next = new Set(current);
       for (const candidate of [index - 1, index, index + 1]) {
-        if (candidate >= 0 && candidate <= 4) {
+        if (candidate >= 0 && candidate <= NODES_HOME_TAB_INDEX) {
           next.add(candidate as HomeTabIndex);
         }
       }
@@ -230,9 +244,9 @@ export default function Home() {
         />
       )}
     </View>,
-    <View key="tab-explore" style={[pageStyle, webSnapChild]}>
+    <View key="tab-collect" style={[pageStyle, webSnapChild]}>
       {mountedTabs.has(1) && (
-        <ExploreTab
+        <CollectTab
           allEnabledGames={allEnabledGames}
           settingsMap={settingsMap}
           favorites={favorites}
@@ -262,28 +276,11 @@ export default function Home() {
         />
       )}
     </View>,
-    <View key="tab-random" style={[pageStyle, webSnapChild]}>
-      {mountedTabs.has(3) && (
-        <RandomTab
-          allEnabledGames={allEnabledGames}
-          unplayedGamePaths={unplayedGamePaths}
+    <View key="tab-nodes" style={[pageStyle, webSnapChild]}>
+      {mountedTabs.has(NODES_HOME_TAB_INDEX) && (
+        <NodesTab
           settingsMap={settingsMap}
-          isActive={activeTab === 3}
-          favorites={favorites}
-          onToggleFavorite={toggleFavorite}
           contentPaddingTop={contentPaddingTop}
-          contentPaddingBottom={contentPaddingBottom}
-        />
-      )}
-    </View>,
-    <View key="tab-stats" style={[pageStyle, webSnapChild]}>
-      {mountedTabs.has(4) && (
-        <StatsTab
-          settingsMap={settingsMap}
-          favorites={favorites}
-          onToggleFavorite={toggleFavorite}
-          contentPaddingTop={contentPaddingTop}
-          contentPaddingBottom={contentPaddingBottom}
         />
       )}
     </View>,
@@ -300,11 +297,21 @@ export default function Home() {
         />
       )}
 
+      {showStatsModal && (
+        <StatsModal
+          settingsMap={settingsMap}
+          favorites={favorites}
+          onToggleFavorite={toggleFavorite}
+          onClose={() => setShowStatsModal(false)}
+        />
+      )}
+
       <View style={containerStyle} onLayout={onPagerLayout}>
         {isScreenReady && (
           <ScrollView
             ref={pagerRef}
             horizontal
+            scrollEnabled={activeTab !== NODES_HOME_TAB_INDEX}
             pagingEnabled={!isWeb}
             showsHorizontalScrollIndicator={false}
             onScroll={onScroll}
@@ -317,7 +324,11 @@ export default function Home() {
           </ScrollView>
         )}
 
-        <HomeHeader onOpenSettings={() => setShowSettingsModal(true)} />
+        <HomeHeader
+          onOpenSettings={() => setShowSettingsModal(true)}
+          onOpenStats={() => setShowStatsModal(true)}
+          hideBackground={activeTab === NODES_HOME_TAB_INDEX}
+        />
 
         <HomeTabBar activeIndex={activeTab} onSelectTab={onSelectTab} />
       </View>

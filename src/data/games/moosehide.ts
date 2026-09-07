@@ -5,7 +5,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const moosehide: GameDefinition = {
   path: "/moosehide",
   title: "Moosehide",
-  tags: [GameTag.TableauBuilding],
+  tags: [GameTag.TableauBuilding, GameTag.SequenceBuilding],
   rating: { complexity: 40, difficulty: 45, luck: 35 },
   thumbnail: "Moosehide.jpg",
   background: GAME_BACKGROUNDS.yukon,

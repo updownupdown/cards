@@ -5,13 +5,14 @@ import { GameDefinition, GameTag } from "../games-data";
 export const thumbAndPouch: GameDefinition = {
   path: "/thumb-and-pouch",
   title: "Thumb and Pouch",
-  tags: [GameTag.StockAndWaste, GameTag.TableauBuilding],
+  tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 25, difficulty: 30, luck: 35 },
   background: GAME_BACKGROUNDS.cozyCabin,
   animation: GameAnimations.Dust,
   gameColorDark: "#3b3028",
   gameColorMid: "#ad8a56",
   gameColorPale: "#ead9b8",
+  thumbnail: "ThumbAndPouch.jpg",
   cardDescription:
     "A flexible Klondike where cards avoid their own suit and any card fills a gap.",
   quickStart: [

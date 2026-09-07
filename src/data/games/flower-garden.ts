@@ -6,7 +6,7 @@ export const flowerGarden: GameDefinition = {
   path: "/flower-garden",
   title: "Flower Garden",
   aliases: ["The Bouquet", "The Garden"],
-  tags: [GameTag.TableauBuilding],
+  tags: [GameTag.SequenceBuilding],
   rating: { complexity: 30, difficulty: 65, luck: 35 },
   thumbnail: "FlowerGarden.jpg",
   background: GAME_BACKGROUNDS.flowerGarden,

@@ -5,7 +5,7 @@ export const gaps: GameDefinition = {
   path: "/gaps",
   title: "Gaps",
   aliases: ["Montana", "Addiction", "Addiction Solitaire"],
-  tags: [GameTag.SequenceBuilding, GameTag.SpatialControl],
+  tags: [GameTag.SpatialControl, GameTag.SequenceBuilding],
   rating: { complexity: 30, difficulty: 60, luck: 45 },
   thumbnail: "Gaps.jpg",
   background: GAME_BACKGROUNDS.mountain1,
