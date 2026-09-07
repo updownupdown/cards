@@ -2,12 +2,15 @@ import { GAMES_DATA } from "@/data/games-registry";
 import { NodesBackground } from "@/components/Nodes/NodesBackground";
 import {
   getNodeVisualState,
+  getUnlockedNodePaths,
+  NODES_BY_PATH,
   NODE_DEFINITIONS,
   type NodeDefinition,
+  type NodeVisualState,
 } from "@/data/nodes-map";
 import { Colors, rgba } from "@/styles/styles";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import {
   Platform,
   Pressable,
@@ -46,6 +49,16 @@ const STATE_COLORS = {
   complete: Colors.cardSelectGreen,
 } as const;
 
+const NODE_CONNECTIONS = NODE_DEFINITIONS.flatMap((node) =>
+  node.connections
+    .filter((path) => node.path < path)
+    .map((path) => ({
+      key: `${node.path}-${path}`,
+      node,
+      target: NODES_BY_PATH.get(path)!,
+    })),
+);
+
 function getNodeSizeMultiplier(path: string) {
   let hash = 2166136261;
   for (let index = 0; index < path.length; index += 1) {
@@ -67,6 +80,84 @@ type Props = {
   collectedQuoteIds: ReadonlySet<number>;
 };
 
+const NodeConnections = memo(function NodeConnections({
+  nodeStates,
+}: {
+  nodeStates: ReadonlyMap<string, NodeVisualState>;
+}) {
+  return (
+    <Svg
+      width={WORLD_SIZE}
+      height={WORLD_SIZE}
+      style={{ position: "absolute" }}
+    >
+      {NODE_CONNECTIONS.map(({ key, node, target }) => {
+        const nodeState = nodeStates.get(node.path)!;
+        const targetState = nodeStates.get(target.path)!;
+        const strokeColor =
+          nodeState === "locked" || targetState === "locked"
+            ? Colors.K800
+            : nodeState === "complete" && targetState === "complete"
+              ? Colors.cardSelectGreen
+              : nodeState === "connected" || targetState === "connected"
+                ? Colors.cardSelectPurple
+                : Colors.accentBlue;
+
+        return (
+          <Line
+            key={key}
+            x1={(node.x + 1) * WORLD_SIZE * 0.5}
+            y1={(node.y + 1) * WORLD_SIZE * 0.5}
+            x2={(target.x + 1) * WORLD_SIZE * 0.5}
+            y2={(target.y + 1) * WORLD_SIZE * 0.5}
+            stroke={rgba(strokeColor, 0.7)}
+            strokeWidth={1.5}
+          />
+        );
+      })}
+    </Svg>
+  );
+});
+
+const MapNode = memo(function MapNode({
+  node,
+  state,
+  selected,
+  onSelectNode,
+}: {
+  node: NodeDefinition;
+  state: NodeVisualState;
+  selected: boolean;
+  onSelectNode: (node: NodeDefinition) => void;
+}) {
+  const sizeMultiplier = getNodeSizeMultiplier(node.path);
+  const dotSize = NODE_SIZE * sizeMultiplier * (state === "locked" ? 0.65 : 1);
+  const glowColor = rgba(STATE_COLORS[state], 0.8);
+  const game = GAMES_DATA[node.path];
+  const selectionShadow = selected
+    ? `0 0 0 2px ${game.gameColorMid}, 0 0 0 6px ${game.gameColorPale}, `
+    : `0 0 4px 2px ${game.gameColorDark}, `;
+
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`${game.title}, ${state}`}
+      onPress={() => onSelectNode(node)}
+      style={{
+        position: "absolute",
+        outline: "none",
+        left: (node.x + 1) * WORLD_SIZE * 0.5 - dotSize / 2,
+        top: (node.y + 1) * WORLD_SIZE * 0.5 - dotSize / 2,
+        width: dotSize,
+        height: dotSize,
+        borderRadius: dotSize / 2,
+        backgroundColor: STATE_COLORS[state],
+        boxShadow: `${selectionShadow}0 0 12px ${glowColor}, inset 0 1px 6px ${rgba(game.gameColorPale, 0.6)}, inset -1px -2px 6px -2px ${rgba(game.gameColorDark, 0.8)}`,
+      }}
+    />
+  );
+});
+
 export function NodesMap({
   selectedPath,
   onSelectNode,
@@ -84,6 +175,26 @@ export function NodesMap({
   const startScale = useSharedValue(1);
   const containerRef = useRef<View>(null);
   const hasCenteredInitialNode = useRef(false);
+  const unlockedPaths = useMemo(
+    () => getUnlockedNodePaths(wonPaths),
+    [wonPaths],
+  );
+  const nodeStates = useMemo(
+    () =>
+      new Map(
+        NODE_DEFINITIONS.map((node) => [
+          node.path,
+          getNodeVisualState(
+            node,
+            wonPaths,
+            collectedTaoIds,
+            collectedQuoteIds,
+            unlockedPaths,
+          ),
+        ]),
+      ),
+    [collectedQuoteIds, collectedTaoIds, unlockedPaths, wonPaths],
+  );
 
   const centerNode = (node: NodeDefinition, animated = true) => {
     const nextX = -node.x * WORLD_SIZE * 0.5 * scale.value;
@@ -127,43 +238,45 @@ export function NodesMap({
     return () => element.removeEventListener("wheel", onWheel);
   }, [scale, translateX, translateY]);
 
-  const pan = Gesture.Pan()
-    .onStart(() => {
-      startX.value = translateX.value;
-      startY.value = translateY.value;
-    })
-    .onUpdate((event) => {
-      const limitX = NODE_EXTENT_X * scale.value;
-      const limitY = NODE_EXTENT_Y * scale.value;
-      translateX.value = Math.max(
-        -limitX,
-        Math.min(limitX, startX.value + event.translationX),
-      );
-      translateY.value = Math.max(
-        -limitY,
-        Math.min(limitY, startY.value + event.translationY),
-      );
-    });
-  const pinch = Gesture.Pinch()
-    .onStart(() => {
-      startScale.value = scale.value;
-    })
-    .onUpdate((event) => {
-      const nextScale = Math.max(
-        MIN_SCALE,
-        Math.min(MAX_SCALE, startScale.value * event.scale),
-      );
-      scale.value = nextScale;
-      translateX.value = Math.max(
-        -NODE_EXTENT_X * nextScale,
-        Math.min(NODE_EXTENT_X * nextScale, translateX.value),
-      );
-      translateY.value = Math.max(
-        -NODE_EXTENT_Y * nextScale,
-        Math.min(NODE_EXTENT_Y * nextScale, translateY.value),
-      );
-    });
-  const cameraGesture = Gesture.Simultaneous(pan, pinch);
+  const cameraGesture = useMemo(() => {
+    const pan = Gesture.Pan()
+      .onStart(() => {
+        startX.value = translateX.value;
+        startY.value = translateY.value;
+      })
+      .onUpdate((event) => {
+        const limitX = NODE_EXTENT_X * scale.value;
+        const limitY = NODE_EXTENT_Y * scale.value;
+        translateX.value = Math.max(
+          -limitX,
+          Math.min(limitX, startX.value + event.translationX),
+        );
+        translateY.value = Math.max(
+          -limitY,
+          Math.min(limitY, startY.value + event.translationY),
+        );
+      });
+    const pinch = Gesture.Pinch()
+      .onStart(() => {
+        startScale.value = scale.value;
+      })
+      .onUpdate((event) => {
+        const nextScale = Math.max(
+          MIN_SCALE,
+          Math.min(MAX_SCALE, startScale.value * event.scale),
+        );
+        scale.value = nextScale;
+        translateX.value = Math.max(
+          -NODE_EXTENT_X * nextScale,
+          Math.min(NODE_EXTENT_X * nextScale, translateX.value),
+        );
+        translateY.value = Math.max(
+          -NODE_EXTENT_Y * nextScale,
+          Math.min(NODE_EXTENT_Y * nextScale, translateY.value),
+        );
+      });
+    return Gesture.Simultaneous(pan, pinch);
+  }, [scale, startScale, startX, startY, translateX, translateY]);
 
   const worldStyle = useAnimatedStyle(() => ({
     transform: [
@@ -199,89 +312,16 @@ export function NodesMap({
             worldStyle,
           ]}
         >
-          <Svg
-            width={WORLD_SIZE}
-            height={WORLD_SIZE}
-            style={{ position: "absolute" }}
-          >
-            {NODE_DEFINITIONS.flatMap((node) =>
-              node.connections
-                .filter((path) => node.path < path)
-                .map((path) => {
-                  const target = NODE_DEFINITIONS.find(
-                    (entry) => entry.path === path,
-                  )!;
-                  const nodeState = getNodeVisualState(
-                    node,
-                    wonPaths,
-                    collectedTaoIds,
-                    collectedQuoteIds,
-                  );
-                  const targetState = getNodeVisualState(
-                    target,
-                    wonPaths,
-                    collectedTaoIds,
-                    collectedQuoteIds,
-                  );
-                  const strokeColor =
-                    nodeState === "locked" || targetState === "locked"
-                      ? Colors.K800
-                      : nodeState === "complete" && targetState === "complete"
-                        ? Colors.cardSelectGreen
-                        : nodeState === "connected" ||
-                            targetState === "connected"
-                          ? Colors.cardSelectPurple
-                          : Colors.accentBlue;
-                  return (
-                    <Line
-                      key={`${node.path}-${path}`}
-                      x1={(node.x + 1) * WORLD_SIZE * 0.5}
-                      y1={(node.y + 1) * WORLD_SIZE * 0.5}
-                      x2={(target.x + 1) * WORLD_SIZE * 0.5}
-                      y2={(target.y + 1) * WORLD_SIZE * 0.5}
-                      stroke={rgba(strokeColor, 0.7)}
-                      strokeWidth={1.5}
-                    />
-                  );
-                }),
-            )}
-          </Svg>
+          <NodeConnections nodeStates={nodeStates} />
 
           {NODE_DEFINITIONS.map((node) => {
-            const state = getNodeVisualState(
-              node,
-              wonPaths,
-              collectedTaoIds,
-              collectedQuoteIds,
-            );
-            const selected = selectedPath === node.path;
-            const sizeMultiplier = getNodeSizeMultiplier(node.path);
-            const dotSize =
-              NODE_SIZE * sizeMultiplier * (state === "locked" ? 0.65 : 1);
-            const glowColor = rgba(STATE_COLORS[state], 0.8);
-            const selectionShadow = selected
-              ? `0 0 0 2px ${GAMES_DATA[node.path].gameColorMid}, 0 0 0 6px ${GAMES_DATA[node.path].gameColorPale}, `
-              : `0 0 4px 2px ${GAMES_DATA[node.path].gameColorDark}, `;
-
             return (
-              <Pressable
+              <MapNode
                 key={node.path}
-                accessibilityRole="button"
-                accessibilityLabel={`${GAMES_DATA[node.path].title}, ${state}`}
-                onPress={() => {
-                  onSelectNode(node);
-                }}
-                style={{
-                  position: "absolute",
-                  outline: "none",
-                  left: (node.x + 1) * WORLD_SIZE * 0.5 - dotSize / 2,
-                  top: (node.y + 1) * WORLD_SIZE * 0.5 - dotSize / 2,
-                  width: dotSize,
-                  height: dotSize,
-                  borderRadius: dotSize / 2,
-                  backgroundColor: STATE_COLORS[state],
-                  boxShadow: `${selectionShadow}0 0 12px ${glowColor}, inset 0 1px 6px ${rgba(GAMES_DATA[node.path].gameColorPale, 0.6)}, inset -1px -2px 6px -2px ${rgba(GAMES_DATA[node.path].gameColorDark, 0.8)}`,
-                }}
+                node={node}
+                state={nodeStates.get(node.path)!}
+                selected={selectedPath === node.path}
+                onSelectNode={onSelectNode}
               />
             );
           })}

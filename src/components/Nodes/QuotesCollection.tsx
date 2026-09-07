@@ -1,6 +1,6 @@
 import { getCollectibleCardImageSource } from "@/components/Cards/CardAssets";
 import { Text } from "@/components/common/Text";
-import { text as legacyQuotes } from "@/components/Collectibles/QuotedWay";
+import { quotes } from "@/components/Collectibles/QuotesText";
 import type { QuoteCard } from "@/data/collectibles";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Colors, rgba } from "@/styles/styles";
@@ -8,21 +8,7 @@ import { Image } from "expo-image";
 import { View } from "react-native";
 import type { CollectionEntry } from "./TaoChapters";
 
-function splitLastParagraph(value: string): [string, string | undefined] {
-  const separatorIndex = value.lastIndexOf("\n\n");
-  return separatorIndex < 0
-    ? [value, undefined]
-    : [value.slice(0, separatorIndex), value.slice(separatorIndex + 2)];
-}
-
-function parseQuote(value: string): CollectionEntry {
-  const [quoteAndAuthor, source] = splitLastParagraph(value);
-  const [text, author] = splitLastParagraph(quoteAndAuthor);
-  return { text, author, source };
-}
-
-export const QUOTES_COLLECTION: readonly CollectionEntry[] =
-  legacyQuotes.map(parseQuote);
+export const QUOTES_COLLECTION: readonly CollectionEntry[] = quotes;
 
 type QuoteProps = {
   quote: CollectionEntry;

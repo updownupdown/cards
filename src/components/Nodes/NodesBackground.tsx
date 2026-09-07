@@ -62,7 +62,7 @@ function seededStars(count: number, salt: number) {
 
 type StarPoint = ReturnType<typeof seededStars>[number];
 
-function FlickeringStar({
+function NativeFlickeringStar({
   star,
   index,
   animationsEnabled,
@@ -85,13 +85,13 @@ function FlickeringStar({
           toValue: Math.min(1, star.opacity + 0.3),
           duration: 280 + ((index * 97) % 420),
           easing: RNEasing.inOut(RNEasing.sin),
-          useNativeDriver: Platform.OS !== "web",
+          useNativeDriver: true,
         }),
         RNAnimated.timing(opacity, {
           toValue: star.opacity,
           duration: 360 + ((index * 61) % 500),
           easing: RNEasing.inOut(RNEasing.sin),
-          useNativeDriver: Platform.OS !== "web",
+          useNativeDriver: true,
         }),
       ]),
     );
@@ -112,6 +112,56 @@ function FlickeringStar({
         opacity,
       }}
     />
+  );
+}
+
+function WebFlickeringStar({
+  star,
+  index,
+  animationsEnabled,
+}: {
+  star: StarPoint;
+  index: number;
+  animationsEnabled: boolean;
+}) {
+  const animationStyle = animationsEnabled
+    ? ({
+        animationName: "nodes-star-flicker",
+        animationDelay: `${500 + ((index * 379) % 2400)}ms`,
+        animationDuration: `${2600 + ((index * 97) % 1400)}ms`,
+        animationIterationCount: "infinite",
+        animationTimingFunction: "ease-in-out",
+      } as Record<string, unknown>)
+    : null;
+
+  return (
+    <View
+      style={[
+        {
+          position: "absolute",
+          left: `${star.x * 100}%`,
+          top: `${star.y * 100}%`,
+          width: star.size,
+          height: star.size,
+          borderRadius: star.size,
+          backgroundColor: star.color,
+          opacity: star.opacity,
+        },
+        animationStyle,
+      ]}
+    />
+  );
+}
+
+function FlickeringStar(props: {
+  star: StarPoint;
+  index: number;
+  animationsEnabled: boolean;
+}) {
+  return Platform.OS === "web" ? (
+    <WebFlickeringStar {...props} />
+  ) : (
+    <NativeFlickeringStar {...props} />
   );
 }
 

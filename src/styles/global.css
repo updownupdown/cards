@@ -16,6 +16,18 @@
   --font-serif: Georgia, "Times New Roman", serif;
 }
 
+@keyframes nodes-star-flicker {
+  0%,
+  72%,
+  100% {
+    filter: brightness(1);
+  }
+
+  82% {
+    filter: brightness(1.8);
+  }
+}
+
 html,
 body {
   margin: 0;

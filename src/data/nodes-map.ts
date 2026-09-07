@@ -41,8 +41,8 @@ export function getNodeVisualState(
   wonPaths: ReadonlySet<string>,
   collectedTaoIds: ReadonlySet<number>,
   collectedQuoteIds: ReadonlySet<number>,
+  unlockedPaths = getUnlockedNodePaths(wonPaths),
 ): NodeVisualState {
-  const unlockedPaths = getUnlockedNodePaths(wonPaths);
   if (!unlockedPaths.has(node.path)) return "locked";
   if (!wonPaths.has(node.path)) return "connected";
 

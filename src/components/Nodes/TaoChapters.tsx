@@ -1,5 +1,5 @@
 import { Text } from "@/components/common/Text";
-import { text as legacyChapters } from "@/components/Collectibles/PlainWay";
+import { tao } from "@/components/Collectibles/TaoText";
 import { Colors } from "@/styles/styles";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { View } from "react-native";
@@ -10,9 +10,7 @@ export type CollectionEntry = {
   source?: string;
 };
 
-export const TAO_CHAPTERS: readonly CollectionEntry[] = legacyChapters.map(
-  (text) => ({ text }),
-);
+export const TAO_CHAPTERS: readonly CollectionEntry[] = tao;
 
 type TaoChapterProps = {
   chapter: CollectionEntry;

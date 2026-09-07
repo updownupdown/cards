@@ -6,14 +6,14 @@ import type { GameSettingsMap } from "@/data/game-menu";
 import {
   getNodeDefinition,
   getNodeVisualState,
-  getUnlockedNodePaths,
   NODE_DEFINITIONS,
   NODES_START_PATH,
+  type NodeDefinition,
 } from "@/data/nodes-map";
 import { useNodesProgress } from "@/hooks/useNodesProgress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Colors, rgba } from "@/styles/styles";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { View } from "react-native";
 import { NodeDetailsPanel } from "./NodeDetailsPanel";
 import { NodesMap } from "./NodesMap";
@@ -27,8 +27,13 @@ type Props = {
 
 export function NodesTab({ settingsMap, contentPaddingTop }: Props) {
   const { spacing, ui } = useResponsiveMetrics();
-  const { progress, wonPaths, collectedTaoIds, collectedQuoteIds } =
-    useNodesProgress();
+  const {
+    progress,
+    wonPaths,
+    unlockedPaths,
+    collectedTaoIds,
+    collectedQuoteIds,
+  } = useNodesProgress();
   const [selectedPath, setSelectedPath] = useState(NODES_START_PATH);
   const [showTao, setShowTao] = useState(false);
   const [showQuotes, setShowQuotes] = useState(false);
@@ -45,8 +50,12 @@ export function NodesTab({ settingsMap, contentPaddingTop }: Props) {
     wonPaths,
     collectedTaoIds,
     collectedQuoteIds,
+    unlockedPaths,
   );
-  const unlockedNodeCount = getUnlockedNodePaths(wonPaths).size;
+  const unlockedNodeCount = unlockedPaths.size;
+  const selectNode = useCallback((node: NodeDefinition) => {
+    setSelectedPath(node.path);
+  }, []);
 
   return (
     <View
@@ -124,7 +133,7 @@ export function NodesTab({ settingsMap, contentPaddingTop }: Props) {
 
       <NodesMap
         selectedPath={selectedNode.path}
-        onSelectNode={(node) => setSelectedPath(node.path)}
+        onSelectNode={selectNode}
         wonPaths={wonPaths}
         collectedTaoIds={collectedTaoIds}
         collectedQuoteIds={collectedQuoteIds}

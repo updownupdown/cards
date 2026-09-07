@@ -28,10 +28,11 @@ import {
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useLocalSearchParams } from "expo-router";
+import { useIsFocused, useLocalSearchParams } from "expo-router";
 
 export default function Home() {
   const { tab } = useLocalSearchParams<{ tab?: string }>();
+  const isFocused = useIsFocused();
   const initialActiveTab = useRef(getActiveHomeTab()).current;
   const insets = useSafeAreaInsets();
   const { ui, spacing } = useResponsiveMetrics();
@@ -277,7 +278,7 @@ export default function Home() {
       )}
     </View>,
     <View key="tab-nodes" style={[pageStyle, webSnapChild]}>
-      {mountedTabs.has(NODES_HOME_TAB_INDEX) && (
+      {isFocused && activeTab === NODES_HOME_TAB_INDEX && (
         <NodesTab
           settingsMap={settingsMap}
           contentPaddingTop={contentPaddingTop}

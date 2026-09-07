@@ -1,7 +1,12 @@
-// Each array element is one complete chapter; Chapter 1 is at index 0.
-export const text = [
-  // Chapter 1
-  `The way that can be spoken
+export type TaoText = {
+  chapter: number;
+  text: string;
+};
+
+export const tao = [
+  {
+    chapter: 1,
+    text: `The way that can be spoken
 is not the lasting way.
 The name that can be named
 is not the lasting name.
@@ -15,9 +20,11 @@ Both rise from one source,
 though they bear different names.
 Deep within the deep:
 the door to all wonder.`,
+  },
 
-  // Chapter 2
-  `When beauty is called beautiful,
+  {
+    chapter: 2,
+    text: `When beauty is called beautiful,
 ugliness appears.
 When good is called good,
 bad appears.
@@ -35,9 +42,11 @@ They let things come and go.
 They work without owning,
 finish without claiming,
 and so their work remains.`,
+  },
 
-  // Chapter 3
-  `Do not praise a few above the rest,
+  {
+    chapter: 3,
+    text: `Do not praise a few above the rest,
 and people will not compete.
 Do not prize rare goods,
 and people will not steal.
@@ -52,9 +61,11 @@ and strengthening the body.
 They keep clever schemes from ruling.
 By not forcing,
 nothing is left out of order.`,
+  },
 
-  // Chapter 4
-  `The way is empty,
+  {
+    chapter: 4,
+    text: `The way is empty,
 yet use cannot drain it.
 Deep and still,
 it seems the source of all things.
@@ -67,9 +78,11 @@ and joins the dust.
 Hidden, it is always here.
 I do not know its parent.
 It is older than every god.`,
+  },
 
-  // Chapter 5
-  `Heaven and earth take no side.
+  {
+    chapter: 5,
+    text: `Heaven and earth take no side.
 They treat all things like straw offerings.
 The wise take no side.
 They treat all people the same.
@@ -81,9 +94,11 @@ the more it moves, the more it gives.
 
 Too many words soon fail.
 Better to hold to the center.`,
+  },
 
-  // Chapter 6
-  `The valley spirit never dies.
+  {
+    chapter: 6,
+    text: `The valley spirit never dies.
 It is called the hidden mother.
 
 Her gate is the root
@@ -92,9 +107,11 @@ of heaven and earth.
 Fine as a thread, she endures.
 Draw from her;
 she is never used up.`,
+  },
 
-  // Chapter 7
-  `Heaven lasts. Earth endures.
+  {
+    chapter: 7,
+    text: `Heaven lasts. Earth endures.
 They last because they do not live for themselves.
 
 So the wise stand behind
@@ -104,9 +121,11 @@ and remain whole.
 
 Because they seek no gain,
 their true needs are met.`,
+  },
 
-  // Chapter 8
-  `The highest good is like water.
+  {
+    chapter: 8,
+    text: `The highest good is like water.
 Water helps all things
 and does not compete.
 It settles in low places others avoid,
@@ -122,9 +141,11 @@ In action, choose the right time.
 
 Do not compete,
 and no blame follows.`,
+  },
 
-  // Chapter 9
-  `Fill a cup to the brim
+  {
+    chapter: 9,
+    text: `Fill a cup to the brim
 and it will spill.
 Sharpen a blade too much
 and it will not last.
@@ -136,9 +157,11 @@ and ruin follows.
 
 Do the work, then step back.
 This is the way of heaven.`,
+  },
 
-  // Chapter 10
-  `Can you hold body and spirit as one
+  {
+    chapter: 10,
+    text: `Can you hold body and spirit as one
 without letting them part?
 Can you breathe softly
 like a newborn child?
@@ -156,9 +179,11 @@ Do not own them.
 Work without holding on.
 Lead without ruling.
 This is deep power.`,
+  },
 
-  // Chapter 11
-  `Thirty spokes meet at one hub,
+  {
+    chapter: 11,
+    text: `Thirty spokes meet at one hub,
 but the empty center makes the wheel useful.
 
 Clay forms a bowl,
@@ -169,9 +194,11 @@ but doors and windows make it useful.
 
 What is gives form.
 What is not gives use.`,
+  },
 
-  // Chapter 12
-  `Too much color blinds the eye.
+  {
+    chapter: 12,
+    text: `Too much color blinds the eye.
 Too much sound dulls the ear.
 Too much flavor numbs the tongue.
 The chase unsettles the heart.
@@ -181,9 +208,11 @@ The wise care for what feeds life,
 not what excites the eye.
 They leave one
 and choose the other.`,
+  },
 
-  // Chapter 13
-  `Favor and disgrace both bring fear.
+  {
+    chapter: 13,
+    text: `Favor and disgrace both bring fear.
 Honor and trouble both cling to the self.
 
 Why do favor and disgrace bring fear?
@@ -199,9 +228,11 @@ Trust the world to one
 who cares for it as their own body.
 Give the world to one
 who loves it as themselves.`,
+  },
 
-  // Chapter 14
-  `Look for it; it cannot be seen.
+  {
+    chapter: 14,
+    text: `Look for it; it cannot be seen.
 Listen; it cannot be heard.
 Reach; it cannot be held.
 
@@ -221,9 +252,11 @@ Follow the old way
 to meet the present.
 Know the first beginning:
 this is the thread of the way.`,
+  },
 
-  // Chapter 15
-  `The old masters were subtle,
+  {
+    chapter: 15,
+    text: `The old masters were subtle,
 deep, and hard to know.
 We can only describe their manner:
 
@@ -243,9 +276,11 @@ until the right action rises?
 Those who follow the way do not seek fullness.
 Not being full,
 they can grow old and be renewed.`,
+  },
 
-  // Chapter 16
-  `Become fully empty.
+  {
+    chapter: 16,
+    text: `Become fully empty.
 Rest in deep stillness.
 
 All things rise together;
@@ -265,9 +300,11 @@ The kingly follows heaven.
 Heaven follows the way.
 The way endures.
 The body ends, but there is no fear.`,
+  },
 
-  // Chapter 17
-  `The best rulers are barely known.
+  {
+    chapter: 17,
+    text: `The best rulers are barely known.
 Next come those who are loved and praised.
 Next, those who are feared.
 Last, those who are hated.
@@ -279,9 +316,11 @@ The best rulers speak with care.
 When the work is done,
 the people say,
 “We did it ourselves.”`,
+  },
 
-  // Chapter 18
-  `When the great way is lost,
+  {
+    chapter: 18,
+    text: `When the great way is lost,
 kindness and duty appear.
 When cleverness rises,
 pretense follows.
@@ -290,9 +329,11 @@ When families lose harmony,
 devotion is praised.
 When the country falls into disorder,
 loyal ministers appear.`,
+  },
 
-  // Chapter 19
-  `Drop holiness and cleverness;
+  {
+    chapter: 19,
+    text: `Drop holiness and cleverness;
 people will gain a hundredfold.
 Drop forced kindness and duty;
 people will return to natural care.
@@ -304,9 +345,11 @@ Stay plain.
 Hold to what is simple.
 Think less of self.
 Want less.`,
+  },
 
-  // Chapter 20
-  `Leave learned approval behind,
+  {
+    chapter: 20,
+    text: `Leave learned approval behind,
 and worry fades.
 How far is yes from no?
 How far is good from bad?
@@ -329,9 +372,11 @@ Others have a purpose.
 I alone seem rough and strange.
 I differ from others:
 I am fed by the mother.`,
+  },
 
-  // Chapter 21
-  `Great power follows only the way.
+  {
+    chapter: 21,
+    text: `Great power follows only the way.
 
 The way is dim and hard to grasp,
 yet within it are shapes.
@@ -346,9 +391,11 @@ Through it we see the source of all.
 
 How do I know the source?
 By this.`,
+  },
 
-  // Chapter 22
-  `Bend and remain whole.
+  {
+    chapter: 22,
+    text: `Bend and remain whole.
 Curve and become straight.
 Empty and become full.
 Wear out and become new.
@@ -368,9 +415,11 @@ no one can compete with them.
 “Bend and remain whole”
 is no empty saying.
 Yield, and return whole.`,
+  },
 
-  // Chapter 23
-  `Few words are natural.
+  {
+    chapter: 23,
+    text: `Few words are natural.
 A storm does not last all morning.
 Hard rain does not last all day.
 If heaven and earth cannot force things to last,
@@ -389,9 +438,11 @@ Loss welcomes those who choose it.
 
 When trust is thin,
 trust is not returned.`,
+  },
 
-  // Chapter 24
-  `Standing on tiptoe gives no balance.
+  {
+    chapter: 24,
+    text: `Standing on tiptoe gives no balance.
 Taking long strides gives no progress.
 
 Those who show off do not shine.
@@ -402,9 +453,11 @@ Those who praise themselves do not last.
 To the way, these are scraps and burdens.
 People turn from them.
 So one who follows the way does not cling to them.`,
+  },
 
-  // Chapter 25
-  `Something whole existed
+  {
+    chapter: 25,
+    text: `Something whole existed
 before heaven and earth.
 Silent and empty,
 alone and unchanged,
@@ -428,9 +481,11 @@ People follow earth.
 Earth follows heaven.
 Heaven follows the way.
 The way follows what is natural.`,
+  },
 
-  // Chapter 26
-  `The heavy is the root of the light.
+  {
+    chapter: 26,
+    text: `The heavy is the root of the light.
 Stillness rules unrest.
 
 So the wise may travel all day
@@ -442,9 +497,11 @@ How can a leader of many
 treat the world lightly?
 Lightness loses the root.
 Restlessness loses command.`,
+  },
 
-  // Chapter 27
-  `A good traveler leaves no trail.
+  {
+    chapter: 27,
+    text: `A good traveler leaves no trail.
 A good speaker leaves no fault.
 A good counter needs no tally.
 A good door needs no lock,
@@ -464,9 +521,11 @@ Fail to honor the teacher
 or care for the lesson,
 and cleverness becomes confusion.
 This is the heart of the matter.`,
+  },
 
-  // Chapter 28
-  `Know strength,
+  {
+    chapter: 28,
+    text: `Know strength,
 but keep to gentleness.
 Be a valley for the world.
 Then lasting power will not leave you,
@@ -487,9 +546,11 @@ and you will return to plain wood.
 When plain wood is cut, tools are made.
 The wise use them as leaders.
 The greatest shaping does not cut.`,
+  },
 
-  // Chapter 29
-  `Whoever tries to take the world
+  {
+    chapter: 29,
+    text: `Whoever tries to take the world
 and remake it
 will fail.
 
@@ -506,9 +567,11 @@ rise or fall.
 The wise avoid excess,
 pride,
 and force.`,
+  },
 
-  // Chapter 30
-  `One who guides a ruler by the way
+  {
+    chapter: 30,
+    text: `One who guides a ruler by the way
 does not use arms to master the world.
 Force returns upon itself.
 
@@ -530,9 +593,11 @@ soon fades.
 This is not the way.
 What is not the way
 ends early.`,
+  },
 
-  // Chapter 31
-  `Weapons are tools of fear.
+  {
+    chapter: 31,
+    text: `Weapons are tools of fear.
 All creatures hate them.
 One who follows the way avoids them.
 
@@ -548,9 +613,11 @@ cannot guide the world.
 
 Treat victory like a funeral.
 Mourn every death.`,
+  },
 
-  // Chapter 32
-  `The way has no name.
+  {
+    chapter: 32,
+    text: `The way has no name.
 Plain and small,
 it is greater than any power.
 
@@ -567,9 +634,11 @@ and danger ends.
 
 The way moves through the world
 as rivers move toward the sea.`,
+  },
 
-  // Chapter 33
-  `Knowing others is clever.
+  {
+    chapter: 33,
+    text: `Knowing others is clever.
 Knowing yourself is clear sight.
 Mastering others takes strength.
 Mastering yourself takes true power.
@@ -579,9 +648,11 @@ One who keeps going has resolve.
 One who stays rooted lasts.
 One who dies but is not forgotten
 has long life.`,
+  },
 
-  // Chapter 34
-  `The great way flows everywhere,
+  {
+    chapter: 34,
+    text: `The great way flows everywhere,
 left and right.
 All things depend on it for life,
 and it does not refuse them.
@@ -599,9 +670,11 @@ it may be called great.
 
 The wise never try to be great.
 Therefore they become great.`,
+  },
 
-  // Chapter 35
-  `Hold to the great image,
+  {
+    chapter: 35,
+    text: `Hold to the great image,
 and the world will come.
 It will come without harm,
 finding peace and rest.
@@ -614,9 +687,11 @@ seem plain and without flavor.
 Look: it cannot be seen.
 Listen: it cannot be heard.
 Use it: it cannot be spent.`,
+  },
 
-  // Chapter 36
-  `To shrink something,
+  {
+    chapter: 36,
+    text: `To shrink something,
 first let it stretch.
 To weaken something,
 first let it grow strong.
@@ -632,9 +707,11 @@ the weak overcomes the strong.
 Fish should stay in deep water.
 A state's sharp tools
 should not be displayed.`,
+  },
 
-  // Chapter 37
-  `The way never forces,
+  {
+    chapter: 37,
+    text: `The way never forces,
 yet nothing is left undone.
 
 If rulers could hold to it,
@@ -646,9 +723,11 @@ with nameless simplicity.
 Without names, desire rests.
 Without desire, there is peace.
 The world settles by itself.`,
+  },
 
-  // Chapter 38
-  `Highest power does not cling to power,
+  {
+    chapter: 38,
+    text: `Highest power does not cling to power,
 and so it is true power.
 Lower power never lets power go,
 and so it has none.
@@ -670,9 +749,11 @@ and the start of folly.
 
 The wise choose the fruit, not the flower;
 the solid, not the shell.`,
+  },
 
-  // Chapter 39
-  `From ancient times, those who held the one:
+  {
+    chapter: 39,
+    text: `From ancient times, those who held the one:
 
 Heaven became clear.
 Earth became steady.
@@ -694,16 +775,20 @@ So rulers call themselves orphaned and poor.
 
 Do not glitter like jade.
 Be plain like stone.`,
+  },
 
-  // Chapter 40
-  `Returning is the movement of the way.
+  {
+    chapter: 40,
+    text: `Returning is the movement of the way.
 Yielding is the use of the way.
 
 All things under heaven arise from being.
 Being arises from nonbeing.`,
+  },
 
-  // Chapter 41
-  `When a wise student hears of the way,
+  {
+    chapter: 41,
+    text: `When a wise student hears of the way,
 they practice it with care.
 When an average student hears of it,
 they partly keep it and partly lose it.
@@ -729,9 +814,11 @@ The great image has no shape.
 
 The way is hidden and unnamed,
 yet it alone gives and completes.`,
+  },
 
-  // Chapter 42
-  `The way gives birth to one.
+  {
+    chapter: 42,
+    text: `The way gives birth to one.
 One gives birth to two.
 Two gives birth to three.
 Three gives birth to all things.
@@ -748,9 +835,11 @@ Some lose by gaining.
 What others teach, I also teach:
 the violent do not die a natural death.
 This is the root of my teaching.`,
+  },
 
-  // Chapter 43
-  `The softest thing in the world
+  {
+    chapter: 43,
+    text: `The softest thing in the world
 runs through the hardest.
 What has no form
 enters where there is no space.
@@ -761,9 +850,11 @@ of acting without force.
 Teaching without words
 and working without force
 are understood by few.`,
+  },
 
-  // Chapter 44
-  `Which matters more:
+  {
+    chapter: 44,
+    text: `Which matters more:
 your name or your life?
 Which is worth more:
 your life or your wealth?
@@ -778,9 +869,11 @@ the more you lose.
 Know enough, and avoid shame.
 Know when to stop, and avoid danger.
 Then you can last.`,
+  },
 
-  // Chapter 45
-  `Great completion seems unfinished,
+  {
+    chapter: 45,
+    text: `Great completion seems unfinished,
 yet its use never fails.
 Great fullness seems empty,
 yet its use never ends.
@@ -792,9 +885,11 @@ Great speech seems halting.
 Movement overcomes cold.
 Stillness overcomes heat.
 Clear calm sets the world right.`,
+  },
 
-  // Chapter 46
-  `When the world follows the way,
+  {
+    chapter: 46,
+    text: `When the world follows the way,
 horses work the fields.
 When the world loses the way,
 warhorses breed at the border.
@@ -805,9 +900,11 @@ No loss is greater than greed.
 
 Know that enough is enough,
 and you will always have enough.`,
+  },
 
-  // Chapter 47
-  `Without leaving home,
+  {
+    chapter: 47,
+    text: `Without leaving home,
 you may know the world.
 Without looking through the window,
 you may see the way of heaven.
@@ -818,9 +915,11 @@ the less you may know.
 The wise know without travel,
 see without looking,
 and finish without forcing.`,
+  },
 
-  // Chapter 48
-  `In the search for learning,
+  {
+    chapter: 48,
+    text: `In the search for learning,
 something is added each day.
 In following the way,
 something is dropped each day.
@@ -833,9 +932,11 @@ nothing is left undone.
 Win the world by letting things be.
 Those who meddle
 cannot win the world.`,
+  },
 
-  // Chapter 49
-  `The wise have no fixed mind.
+  {
+    chapter: 49,
+    text: `The wise have no fixed mind.
 They take the people's mind as their own.
 
 They are good to the good.
@@ -850,9 +951,11 @@ The wise meet the world openly,
 without taking sides.
 People turn their eyes and ears toward them.
 They care for everyone like a child.`,
+  },
 
-  // Chapter 50
-  `We enter life and leave in death.
+  {
+    chapter: 50,
+    text: `We enter life and leave in death.
 Some follow life,
 some follow death,
 and some rush toward death
@@ -866,9 +969,11 @@ The blade finds no place to cut.
 
 Why?
 Because death finds no hold.`,
+  },
 
-  // Chapter 51
-  `The way gives birth.
+  {
+    chapter: 51,
+    text: `The way gives birth.
 Power raises.
 Matter gives shape.
 Conditions bring growth.
@@ -886,9 +991,11 @@ Create without owning.
 Work without claiming.
 Guide without ruling.
 This is deep power.`,
+  },
 
-  // Chapter 52
-  `The world has a beginning,
+  {
+    chapter: 52,
+    text: `The world has a beginning,
 the mother of all things.
 Know the mother,
 and you know her children.
@@ -909,9 +1016,11 @@ Use the light,
 then return to clear sight.
 Leave no harm behind.
 This is following what lasts.`,
+  },
 
-  // Chapter 53
-  `If I had a little sense,
+  {
+    chapter: 53,
+    text: `If I had a little sense,
 I would walk the great way
 and fear only leaving it.
 
@@ -926,9 +1035,11 @@ rich food, and hoarded wealth:
 this is robbery dressed as rule.
 
 It is not the way.`,
+  },
 
-  // Chapter 54
-  `What is well planted cannot be pulled up.
+  {
+    chapter: 54,
+    text: `What is well planted cannot be pulled up.
 What is well held cannot slip away.
 Its honor passes through generations.
 
@@ -951,9 +1062,11 @@ the world through the world.
 
 How do I know the world is so?
 By this.`,
+  },
 
-  // Chapter 55
-  `One filled with true power
+  {
+    chapter: 55,
+    text: `One filled with true power
 is like a newborn child.
 Stinging insects do not harm it.
 Wild beasts do not seize it.
@@ -975,9 +1088,11 @@ Driving the breath makes you rigid.
 What grows rigid soon grows old.
 This is not the way.
 What is not the way ends early.`,
+  },
 
-  // Chapter 56
-  `Those who know do not talk much.
+  {
+    chapter: 56,
+    text: `Those who know do not talk much.
 Those who talk much do not know.
 
 Close the mouth.
@@ -996,9 +1111,11 @@ honor cannot crown you,
 disgrace cannot stain you.
 
 So you become precious to the world.`,
+  },
 
-  // Chapter 57
-  `Rule a country with fairness.
+  {
+    chapter: 57,
+    text: `Rule a country with fairness.
 Meet war with surprise.
 Win the world by leaving it alone.
 
@@ -1017,9 +1134,11 @@ I do not force, and people change themselves.
 I love stillness, and people set themselves right.
 I do not meddle, and people prosper.
 I want little, and people become simple.`,
+  },
 
-  // Chapter 58
-  `When rule is quiet,
+  {
+    chapter: 58,
+    text: `When rule is quiet,
 people are open and honest.
 When rule is harsh,
 people become sly and troubled.
@@ -1036,9 +1155,11 @@ So the wise are square but do not cut,
 sharp but do not wound,
 straight but do not strain,
 bright but do not glare.`,
+  },
 
-  // Chapter 59
-  `In leading people and serving heaven,
+  {
+    chapter: 59,
+    text: `In leading people and serving heaven,
 nothing is better than restraint.
 
 Restraint means returning early.
@@ -1055,9 +1176,11 @@ and the country can last.
 
 Deep roots and a firm base:
 the way of long life and clear sight.`,
+  },
 
-  // Chapter 60
-  `Rule a large country
+  {
+    chapter: 60,
+    text: `Rule a large country
 as you cook a small fish:
 do not keep poking it.
 
@@ -1069,9 +1192,11 @@ The wise also harm no one.
 
 When neither causes harm,
 their powers return to the whole.`,
+  },
 
-  // Chapter 61
-  `A great country is like low ground,
+  {
+    chapter: 61,
+    text: `A great country is like low ground,
 where the world's streams meet.
 It is the receptive part of the world.
 
@@ -1087,9 +1212,11 @@ the other lowers itself to be welcomed.
 
 Both gain what they need.
 The greater should stay low.`,
+  },
 
-  // Chapter 62
-  `The way is the shelter of all things,
+  {
+    chapter: 62,
+    text: `The way is the shelter of all things,
 the treasure of the good
 and the refuge of those not good.
 
@@ -1105,9 +1232,11 @@ Why did the old ones value it?
 Those who seek may find,
 and those at fault may be freed.
 So it is the world's greatest treasure.`,
+  },
 
-  // Chapter 63
-  `Act without forcing.
+  {
+    chapter: 63,
+    text: `Act without forcing.
 Work without strain.
 Taste what has no flavor.
 
@@ -1127,9 +1256,11 @@ Quick promises earn little trust.
 Taking things lightly brings trouble.
 The wise expect the hard,
 and so are never overcome by it.`,
+  },
 
-  // Chapter 64
-  `What is still is easy to hold.
+  {
+    chapter: 64,
+    text: `What is still is easy to hold.
 What has not begun is easy to guide.
 What is brittle is easy to break.
 What is small is easy to scatter.
@@ -1158,9 +1289,11 @@ do not prize rare goods,
 learn to unlearn,
 and help all things return to themselves
 without daring to force them.`,
+  },
 
-  // Chapter 65
-  `The old masters of the way
+  {
+    chapter: 65,
+    text: `The old masters of the way
 did not make people clever.
 They helped them remain simple.
 
@@ -1179,9 +1312,11 @@ and deep power is yours.
 Deep power reaches far
 and returns with all things
 to simple harmony.`,
+  },
 
-  // Chapter 66
-  `Rivers and seas rule the valleys
+  {
+    chapter: 66,
+    text: `Rivers and seas rule the valleys
 because they stay below them.
 By staying low,
 they receive every stream.
@@ -1199,9 +1334,11 @@ yet people feel no block.
 The world supports them without tiring.
 Because they do not compete,
 no one competes with them.`,
+  },
 
-  // Chapter 67
-  `The world says my way is great
+  {
+    chapter: 67,
+    text: `The world says my way is great
 but unlike anything else.
 It is great because it has no likeness.
 If it had a likeness,
@@ -1224,9 +1361,11 @@ lead to death.
 Care wins the fight
 and holds the defense.
 Heaven guards with care.`,
+  },
 
-  // Chapter 68
-  `The best fighter is not fierce.
+  {
+    chapter: 68,
+    text: `The best fighter is not fierce.
 The best warrior is not angry.
 The best winner does not seek battle.
 The best leader stays below the people.
@@ -1235,9 +1374,11 @@ This is the power of not competing.
 This is the skill of working with people.
 This is called matching heaven,
 the old and highest way.`,
+  },
 
-  // Chapter 69
-  `A saying among soldiers goes:
+  {
+    chapter: 69,
+    text: `A saying among soldiers goes:
 I would rather be the guest than the host.
 I would rather step back a foot
 than advance an inch.
@@ -1253,9 +1394,11 @@ That almost costs my treasures.
 
 When equal forces meet,
 the one that grieves will win.`,
+  },
 
-  // Chapter 70
-  `My words are easy to understand
+  {
+    chapter: 70,
+    text: `My words are easy to understand
 and easy to follow,
 yet no one understands them
 or follows them.
@@ -1270,9 +1413,11 @@ so what I carry is precious.
 
 The wise wear plain cloth
 and keep jade within.`,
+  },
 
-  // Chapter 71
-  `To know that you do not know
+  {
+    chapter: 71,
+    text: `To know that you do not know
 is best.
 To think you know when you do not
 is a sickness.
@@ -1282,9 +1427,11 @@ and you are free of it.
 
 The wise are free of sickness
 because they see it clearly.`,
+  },
 
-  // Chapter 72
-  `When people no longer fear power,
+  {
+    chapter: 72,
+    text: `When people no longer fear power,
 a greater power arrives.
 
 Do not crowd their homes.
@@ -1299,9 +1446,11 @@ but do not seek praise.
 
 They leave one
 and choose the other.`,
+  },
 
-  // Chapter 73
-  `Bold daring may lead to death.
+  {
+    chapter: 73,
+    text: `Bold daring may lead to death.
 Bold restraint may save life.
 Of these two,
 one helps and one harms.
@@ -1320,9 +1469,11 @@ yet plans well.
 Heaven's net is vast.
 Its mesh is wide,
 yet nothing slips through.`,
+  },
 
-  // Chapter 74
-  `If people do not fear death,
+  {
+    chapter: 74,
+    text: `If people do not fear death,
 why threaten them with death?
 If they always feared death
 and lawbreakers could be caught and killed,
@@ -1333,9 +1484,11 @@ To kill in that master's place
 is to cut wood in place of a master carpenter.
 Few who take the carpenter's place
 avoid cutting their own hands.`,
+  },
 
-  // Chapter 75
-  `People go hungry
+  {
+    chapter: 75,
+    text: `People go hungry
 because rulers take too much grain.
 That is why they hunger.
 
@@ -1349,9 +1502,11 @@ That is why death does not frighten them.
 
 Those who do not strain after life
 are wiser than those who prize it too much.`,
+  },
 
-  // Chapter 76
-  `A living person is soft and yielding.
+  {
+    chapter: 76,
+    text: `A living person is soft and yielding.
 In death, hard and stiff.
 
 Living plants are tender and flexible.
@@ -1365,9 +1520,11 @@ A rigid tree will break.
 
 The hard and great fall below.
 The soft and gentle rise above.`,
+  },
 
-  // Chapter 77
-  `Heaven's way is like drawing a bow:
+  {
+    chapter: 77,
+    text: `Heaven's way is like drawing a bow:
 the high is lowered,
 the low is raised,
 the full is reduced,
@@ -1384,9 +1541,11 @@ Only one who follows the way.
 The wise work without claiming,
 finish without holding,
 and do not wish to appear better than others.`,
+  },
 
-  // Chapter 78
-  `Nothing in the world
+  {
+    chapter: 78,
+    text: `Nothing in the world
 is softer or weaker than water.
 Yet nothing is better
 at wearing down the hard and strong.
@@ -1404,9 +1563,11 @@ One who bears the country's trouble
 may rule the world.
 
 True words often sound backward.`,
+  },
 
-  // Chapter 79
-  `After a bitter quarrel is settled,
+  {
+    chapter: 79,
+    text: `After a bitter quarrel is settled,
 some bitterness remains.
 How can this be made right?
 
@@ -1417,9 +1578,11 @@ Those without it demand payment.
 
 Heaven's way favors no one,
 yet stays with those who live well.`,
+  },
 
-  // Chapter 80
-  `Let there be a small country
+  {
+    chapter: 80,
+    text: `Let there be a small country
 with few people.
 Though it has many tools,
 let them go unused.
@@ -1441,9 +1604,11 @@ Neighboring lands may be so close
 that dogs and roosters can be heard,
 yet people grow old and die
 without needing to visit.`,
+  },
 
-  // Chapter 81
-  `True words are not polished.
+  {
+    chapter: 81,
+    text: `True words are not polished.
 Polished words are not true.
 Good people do not argue.
 Those who argue are not good.
@@ -1458,10 +1623,5 @@ the richer they become.
 
 Heaven's way helps and does not harm.
 The wise person's way acts and does not compete.`,
-] as const;
-
-export function getChapter(chapter: number): string | undefined {
-  return Number.isInteger(chapter) && chapter >= 1 && chapter <= text.length
-    ? text[chapter - 1]
-    : undefined;
-}
+  },
+] as const satisfies readonly TaoText[];

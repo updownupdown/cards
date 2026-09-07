@@ -75,6 +75,7 @@ import StarOutlineIcon from "./StarOutline.svg";
 import SwordIcon from "./Sword.svg";
 import TagIcon from "./Tag.svg";
 import TaoIcon from "./Tao.svg";
+import TouchIcon from "./Touch.svg";
 import TrophyIcon from "./Trophy.svg";
 import UndoIcon from "./Undo.svg";
 
@@ -149,6 +150,7 @@ export type IconName =
   | "sword"
   | "tag"
   | "tao"
+  | "touch"
   | "trophy"
   | "undo";
 
@@ -223,6 +225,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "sword": SwordIcon,
   "tag": TagIcon,
   "tao": TaoIcon,
+  "touch": TouchIcon,
   "trophy": TrophyIcon,
   "undo": UndoIcon,
 };
