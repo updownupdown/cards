@@ -34,7 +34,10 @@ const config = {
   web: {
     output: "static",
     favicon: "./assets/app-icon/icon.png",
-    themeColor: "#C62440",
+    // Chrome 152 can pin installed PWAs to this color and ignore runtime
+    // theme-color updates (crbug.com/554055703). Keep the splash itself red
+    // via backgroundColor, but use the Home color as the status-bar fallback.
+    themeColor: "#343f49",
     name: "SoloSuite",
     shortName: "SoloSuite",
     description: "A collection of solo playing card games.",

@@ -61,8 +61,7 @@ export function QuotesCollectionModal({ collectedIds, onClose }: Props) {
                   style={{
                     position: "absolute",
                     inset: 0,
-                    backgroundColor: rgba(Colors.cardSelectBlue, 0.3),
-                    boxShadow: `inset 0 0 6px 1px ${Colors.cardSelectBlue}`,
+                    backgroundColor: rgba(Colors.cardSelectBlue, 0.35),
                   }}
                 />
               )}

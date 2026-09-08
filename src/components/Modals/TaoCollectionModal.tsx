@@ -43,16 +43,18 @@ export function TaoCollectionModal({ collectedIds, onClose }: Props) {
               justifyContent: "center",
               borderRadius: spacing(4),
               backgroundColor: selected
-                ? rgba(Colors.accentRed, 0.24)
+                ? Colors.cardSelectBlue
                 : collected
-                  ? Colors.K950
+                  ? Colors.K200
                   : Colors.K900,
             }}
           >
             <Text
-              size="lg"
-              weight={500}
-              color={collected ? Colors.accentRed : Colors.K700}
+              size="xl"
+              weight={400}
+              color={
+                selected ? Colors.K800 : collected ? Colors.K800 : Colors.K600
+              }
             >
               {id}
             </Text>

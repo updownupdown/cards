@@ -1,12 +1,6 @@
 import { Button } from "@/components/Button/Button";
-import { getCollectibleCardImageSource } from "@/components/Cards/CardAssets";
 import { Text } from "@/components/common/Text";
-import {
-  getQuote,
-  getQuoteCard,
-  getTaoChapter,
-  type CollectibleReward,
-} from "@/data/collectibles";
+import { getQuote, getTaoChapter } from "@/data/collectibles";
 import { GAMES_DATA } from "@/data/games-registry";
 import { getNodeDefinition, getNodeVisualState } from "@/data/nodes-map";
 import type { NodesWinResult } from "@/data/nodes-progress";
@@ -14,17 +8,14 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, rgba } from "@/styles/styles";
-import { Image } from "expo-image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   Animated,
   Easing,
   Platform,
   Pressable,
   ScrollView,
-  useWindowDimensions,
   View,
-  ViewStyle,
 } from "react-native";
 
 type NodesWinOverlayProps = {
@@ -33,159 +24,86 @@ type NodesWinOverlayProps = {
   onClose: () => void;
 };
 
-function isRewardEarned(reward: CollectibleReward, result: NodesWinResult) {
-  const earned =
-    reward.type === "tao"
-      ? result.progress.collectedTaoIds.includes(reward.id)
-      : result.progress.collectedQuoteIds.includes(reward.id);
-  return earned;
-}
-
-type RewardCardProps = {
-  reward: CollectibleReward;
+type RewardDetailsProps = {
+  reward: NonNullable<NodesWinResult["awardedReward"]>;
   chapter: ReturnType<typeof getTaoChapter>;
   quote: ReturnType<typeof getQuote>;
-  quoteCard: ReturnType<typeof getQuoteCard>;
 };
 
-function RewardCard({ reward, chapter, quote, quoteCard }: RewardCardProps) {
+function RewardDetails({ reward, chapter, quote }: RewardDetailsProps) {
   const { spacing } = useResponsiveMetrics();
-  const { width } = useWindowDimensions();
-  const [isRevealed, setIsRevealed] = useState(false);
-  const flip = useRef(new Animated.Value(0)).current;
-  const cardWidth = Math.min(width - spacing(80), spacing(280));
-  const quoteCardName = quoteCard
-    ? `${quoteCard.rank}${quoteCard.suit.charAt(0).toUpperCase()}`
-    : undefined;
-  const quoteCardImage =
-    quoteCard && quoteCardName
-      ? getCollectibleCardImageSource(quoteCard.deck, quoteCardName)
-      : undefined;
-  const frontRotation = flip.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0deg", "180deg"],
-  });
-  const backRotation = flip.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["180deg", "360deg"],
-  });
-
-  const toggleReveal = () => {
-    Animated.timing(flip, {
-      toValue: isRevealed ? 0 : 1,
-      duration: 500,
-      easing: Easing.inOut(Easing.ease),
-      useNativeDriver: Platform.OS !== "web",
-    }).start();
-    setIsRevealed((revealed) => !revealed);
-  };
-
-  const cardStyle: ViewStyle = {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-    backfaceVisibility: "hidden",
-    borderRadius: spacing(12),
-    backgroundColor: Colors.K950,
-    boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(12)}px ${rgba(Colors.K950, 0.2)}, ${spacing(2)}px ${spacing(4)}px ${spacing(20)}px ${rgba(Colors.K950, 0.2)}`,
-  };
 
   return (
-    <Pressable
-      accessibilityLabel={
-        isRevealed ? "Hide collectible" : "Reveal collectible"
-      }
-      accessibilityRole="button"
-      onPress={toggleReveal}
+    <View
       style={{
-        alignSelf: "center",
-        width: cardWidth,
-        aspectRatio: 2.5 / 3.5,
-        outline: "none",
+        flex: 1,
+        width: "100%",
+        alignItems: "center",
+        gap: spacing(2),
       }}
     >
-      <Animated.View
-        style={{
-          ...cardStyle,
-          transform: [{ perspective: 1000 }, { rotateY: frontRotation }],
-        }}
-      >
-        {reward.type === "tao" ? (
-          <View style={{ alignItems: "center", gap: spacing(16) }}>
-            <Icon name="tao" size={spacing(120)} color={Colors.K200} />
-            <Text size="xl" weight={300} color={Colors.K500}>
-              Chapter {reward.id}
-            </Text>
-          </View>
-        ) : (
-          quoteCardImage && (
-            <Image
-              source={quoteCardImage}
-              contentFit="cover"
-              style={{ width: "100%", height: "100%" }}
-            />
-          )
-        )}
-        <View
-          style={{
-            position: "absolute",
-            right: spacing(14),
-            bottom: spacing(14),
-            width: spacing(60),
-            height: spacing(60),
-            borderRadius: spacing(30),
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: Colors.K200,
-            boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(12)}px ${Colors.K900}`,
-          }}
-        >
-          <Icon name="touch" size={spacing(30)} color={Colors.K800} />
-        </View>
-      </Animated.View>
+      {/* Icon and Title */}
+      <View style={[flexStyles.rowCentered, { gap: spacing(8) }]}>
+        <Icon
+          name={reward.type === "tao" ? "tao" : "quote"}
+          size={spacing(24)}
+          color={Colors.K500}
+        />
+        <Text size="lg" weight={300} color={Colors.K500}>
+          {reward.type === "tao"
+            ? `Chapter ${reward.id}`
+            : `Quote ${reward.id}`}
+        </Text>
+      </View>
 
-      <Animated.View
-        style={{
-          ...cardStyle,
-          transform: [{ perspective: 1000 }, { rotateY: backRotation }],
-        }}
-      >
+      {/* Tao Chapter Text */}
+      {chapter && reward.type === "tao" && (
         <ScrollView
           contentContainerStyle={{
-            flexGrow: 1,
-            justifyContent: "center",
-            padding: spacing(30),
+            gap: spacing(12),
+            paddingVertical: spacing(32),
           }}
+          style={{ alignSelf: "stretch" }}
           showsVerticalScrollIndicator={false}
         >
-          {chapter && reward.type === "tao" && (
-            <Text size="md" weight={300} color={Colors.K100}>
-              {chapter.text}
+          <Text size="lg" weight={300} color={Colors.K100}>
+            {chapter.text}
+          </Text>
+        </ScrollView>
+      )}
+
+      {/* Quote Text */}
+      {quote && reward.type === "quote" && (
+        <ScrollView
+          contentContainerStyle={[
+            flexStyles.colCentered,
+            { gap: spacing(8), flexGrow: 1, alignItems: "flex-start" },
+          ]}
+          style={{ alignSelf: "stretch", flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
+        >
+          <Text size="xl" weight={300} color={Colors.K100}>
+            {quote.text}
+          </Text>
+
+          {quote.author && (
+            <Text
+              size="lg"
+              weight={400}
+              color={Colors.K500}
+              style={{ marginTop: spacing(12) }}
+            >
+              {quote.author}
             </Text>
           )}
-          {quote && reward.type === "quote" && (
-            <View style={{ gap: spacing(12) }}>
-              <Text size="md" weight={300} color={Colors.K100}>
-                {quote.text}
-              </Text>
-              {quote.author && (
-                <Text size="sm" weight={400} color={Colors.K200}>
-                  {quote.author}
-                </Text>
-              )}
-              {quote.source && (
-                <Text size="sm" weight={300} color={Colors.K400}>
-                  {quote.source}
-                </Text>
-              )}
-            </View>
+          {quote.source && (
+            <Text size="xs" weight={300} color={Colors.K500}>
+              {quote.source}
+            </Text>
           )}
         </ScrollView>
-      </Animated.View>
-    </Pressable>
+      )}
+    </View>
   );
 }
 
@@ -213,8 +131,6 @@ export function NodesWinOverlay({
   if (!node) return null;
 
   const quote = reward?.type === "quote" ? getQuote(reward.id) : undefined;
-  const quoteCard =
-    reward?.type === "quote" ? getQuoteCard(reward.id) : undefined;
   const chapter = reward?.type === "tao" ? getTaoChapter(reward.id) : undefined;
 
   return (
@@ -255,7 +171,7 @@ export function NodesWinOverlay({
             height: "100%",
             maxWidth: ui.contentMaxWidth - spacing(24),
             maxHeight: spacing(620),
-            padding: spacing(20),
+            padding: spacing(30),
             gap: spacing(30),
             borderRadius: spacing(12),
             backgroundColor: rgba(Colors.K875, 1),
@@ -266,8 +182,10 @@ export function NodesWinOverlay({
         <Button
           accessibilityLabel="Dismiss collectible notification"
           iconName="close"
-          size="sm"
+          size="lg"
           theme="transparent"
+          iconColor={Colors.K700}
+          iconSize={spacing(30)}
           onPress={onClose}
           style={{
             position: "absolute",
@@ -280,17 +198,12 @@ export function NodesWinOverlay({
           }}
         />
 
-        <Text size="xxl" weight={300} color={Colors.K200}>
+        <Text size="xl" weight={500} color={Colors.K200}>
           {reward ? "New collectible earned!" : "New nodes unlocked!"}
         </Text>
 
         {reward && (chapter || quote) && (
-          <RewardCard
-            reward={reward}
-            chapter={chapter}
-            quote={quote}
-            quoteCard={quoteCard}
-          />
+          <RewardDetails reward={reward} chapter={chapter} quote={quote} />
         )}
 
         {/* Unlocked games */}
