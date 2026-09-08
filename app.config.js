@@ -10,10 +10,13 @@ const config = {
   icon: "./assets/app-icon/icon.png",
   scheme: "cards",
   userInterfaceStyle: "automatic",
+  backgroundColor: "#343f49",
+  primaryColor: "#C62440",
   ios: {
     icon: "./assets/app-icon/icon.png",
   },
   android: {
+    backgroundColor: "#343f49",
     softwareKeyboardLayoutMode: "resize",
     adaptiveIcon: {
       backgroundColor: "#343f49",
@@ -23,6 +26,10 @@ const config = {
     },
     predictiveBackGestureEnabled: false,
     package: "com.updownupdown.cards",
+  },
+  androidStatusBar: {
+    barStyle: "light-content",
+    backgroundColor: "#343f49",
   },
   web: {
     output: "static",

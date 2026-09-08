@@ -194,6 +194,22 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
         </Text>
 
         <Text size="sm" weight={300} color={Colors.K600}>
+          Tao Te Ching translation by{" "}
+          <Text
+            size="sm"
+            weight={500}
+            color={Colors.accentBlue}
+            onPress={() =>
+              void Linking.openURL(
+                "https://www.goodreads.com/author/show/5667733.John_H_McDonald",
+              )
+            }
+          >
+            John H. McDonald
+          </Text>
+        </Text>
+
+        <Text size="sm" weight={300} color={Colors.K600}>
           {"Last build: " +
             (Constants.expoConfig?.extra?.buildDate
               ? formatBuildDate(Constants.expoConfig.extra.buildDate)

@@ -6,1622 +6,1546 @@ export type TaoText = {
 export const tao = [
   {
     chapter: 1,
-    text: `The way that can be spoken
-is not the lasting way.
-The name that can be named
-is not the lasting name.
+    text: `The tao that can be described
+is not the eternal Tao.
+The name that can be spoken
+is not the eternal Name.
 
-The nameless begins heaven and earth.
-The named gives birth to all things.
+The nameless is the boundary of Heaven and Earth.
+The named is the mother of creation.
 
-Free of desire, see the mystery.
-Full of desire, see its forms.
-Both rise from one source,
-though they bear different names.
-Deep within the deep:
-the door to all wonder.`,
+Freed from desire, you can see the hidden mystery.
+By having desire, you can only see what is visibly real.
+
+Yet mystery and reality
+emerge from the same source.
+This source is called darkness.
+
+Darkness born from darkness.
+The beginning of all understanding.`,
   },
-
   {
     chapter: 2,
-    text: `When beauty is called beautiful,
-ugliness appears.
-When good is called good,
-bad appears.
+    text: `When people see things as beautiful,
+ugliness is created.
+When people see things as good,
+evil is created.
 
-Being and nonbeing shape each other.
-Hard and easy complete each other.
-Long and short measure each other.
-High and low rest on each other.
-Sound and silence answer each other.
-Before and after follow each other.
+Being and non-being produce each other.
+Difficult and easy complement each other.
+Long and short define each other.
+High and low oppose each other.
+Fore and aft follow each other.
 
-So the wise act without forcing
-and teach without words.
-They let things come and go.
-They work without owning,
-finish without claiming,
-and so their work remains.`,
+Therefore the Master
+can act without doing anything
+and teach without saying a word.
+Things come her way and she does not stop them;
+things leave and she lets them go.
+She has without possessing,
+and acts without any expectations.
+When her work is done, she takes no credit.
+That is why it will last forever.`,
   },
-
   {
     chapter: 3,
-    text: `Do not praise a few above the rest,
-and people will not compete.
-Do not prize rare goods,
-and people will not steal.
-Do not parade desire,
-and hearts will stay clear.
+    text: `If you over esteem talented individuals,
+people will become overly competitive.
+If you overvalue possessions,
+people will begin to steal.
 
-The wise lead by clearing the mind,
-filling the belly,
-softening ambition,
-and strengthening the body.
+Do not display your treasures
+or people will become envious.
 
-They keep clever schemes from ruling.
-By not forcing,
-nothing is left out of order.`,
+The Master leads by
+emptying people's minds,
+filling their bellies,
+weakening their ambitions,
+and making them become strong.
+Preferring simplicity and freedom from desires,
+avoiding the pitfalls of knowledge and wrong action.
+
+For those who practice not-doing,
+everything will fall into place.`,
   },
-
   {
     chapter: 4,
-    text: `The way is empty,
-yet use cannot drain it.
-Deep and still,
-it seems the source of all things.
+    text: `The Tao is like an empty container:
+it can never be emptied and can never be filled.
+Infinitely deep, it is the source of all things.
+It dulls the sharp, unties the knotted,
+shades the lighted, and unites all of creation with dust.
 
-It blunts sharp edges,
-loosens knots,
-softens glare,
-and joins the dust.
-
-Hidden, it is always here.
-I do not know its parent.
-It is older than every god.`,
+It is hidden but always present.
+I don't know who gave birth to it.
+It is older than the concept of God.`,
   },
-
   {
     chapter: 5,
-    text: `Heaven and earth take no side.
-They treat all things like straw offerings.
-The wise take no side.
-They treat all people the same.
+    text: `Heaven and Earth are impartial;
+they treat all of creation as straw dogs.
+The Master doesn't take sides;
+she treats everyone like a straw dog.
 
-The space between heaven and earth
-is like a bellows:
-empty, yet never spent;
-the more it moves, the more it gives.
+The space between Heaven and Earth is like a bellows;
+it is empty, yet has not lost its power.
+The more it is used, the more it produces;
+the more you talk of it, the less you comprehend.
 
-Too many words soon fail.
-Better to hold to the center.`,
+It is better not to speak of things you do not understand.`,
   },
-
   {
     chapter: 6,
-    text: `The valley spirit never dies.
-It is called the hidden mother.
+    text: `The spirit of emptiness is immortal.
+It is called the Great Mother
+because it gives birth to Heaven and Earth.
 
-Her gate is the root
-of heaven and earth.
-
-Fine as a thread, she endures.
-Draw from her;
-she is never used up.`,
+It is like a vapor,
+barely seen but always present.
+Use it effortlessly.`,
   },
-
   {
     chapter: 7,
-    text: `Heaven lasts. Earth endures.
-They last because they do not live for themselves.
+    text: `The Tao of Heaven is eternal,
+and the earth is long enduring.
+Why are they long enduring?
+They do not live for themselves;
+thus they are present for all beings.
 
-So the wise stand behind
-and find themselves ahead.
-They let go of self
-and remain whole.
-
-Because they seek no gain,
-their true needs are met.`,
+The Master puts herself last;
+And finds herself in the place of authority.
+She detaches herself from all things;
+Therefore she is united with all things.
+She gives no thought to self.
+She is perfectly fulfilled.`,
   },
-
   {
     chapter: 8,
-    text: `The highest good is like water.
-Water helps all things
-and does not compete.
-It settles in low places others avoid,
-and so it is close to the way.
+    text: `The supreme good is like water,
+which benefits all of creation
+without trying to compete with it.
+It gathers in unpopular places.
+Thus it is like the Tao.
 
-In dwelling, stay near the ground.
-In thought, go deep.
-In friendship, be kind.
-In speech, be true.
-In rule, be fair.
-In work, be able.
-In action, choose the right time.
+The location makes the dwelling good.
+Depth of understanding makes the mind good.
+A kind heart makes the giving good.
+Integrity makes the government good.
+Accomplishment makes your labors good.
+Proper timing makes a decision good.
 
-Do not compete,
-and no blame follows.`,
+Only when there is no competition
+will we all live in peace.`,
   },
-
   {
     chapter: 9,
-    text: `Fill a cup to the brim
-and it will spill.
-Sharpen a blade too much
-and it will not last.
+    text: `It is easier to carry an empty cup
+than one that is filled to the brim.
 
-Fill a hall with treasure
-and no one can guard it.
-Hold wealth and rank with pride
-and ruin follows.
+The sharper the knife
+the easier it is to dull.
+The more wealth you possess
+the harder it is to protect.
+Pride brings its own trouble.
 
-Do the work, then step back.
-This is the way of heaven.`,
+When you have accomplished your goal
+simply walk away.
+This is the pathway to Heaven.`,
   },
-
   {
     chapter: 10,
-    text: `Can you hold body and spirit as one
-without letting them part?
-Can you breathe softly
-like a newborn child?
-Can you clear your sight
-until nothing clouds it?
-Can you love and lead people
-without trying to control them?
-Can you open and close heaven's gate
-and remain gentle?
-Can you understand all things
-without relying on cleverness?
+    text: `Nurture the darkness of your soul
+until you become whole.
+Can you do this and not fail?
+Can you focus your life-breath until you become
+supple as a newborn child?
+While you cleanse your inner vision
+will you be found without fault?
+Can you love people and lead them
+without forcing your will on them?
+When Heaven gives and takes away
+can you be content with the outcome?
+When you understand all things
+can you step back from your own understanding?
 
-Give birth and care for things.
-Do not own them.
-Work without holding on.
-Lead without ruling.
-This is deep power.`,
+Giving birth and nourishing,
+making without possessing,
+expecting nothing in return.
+To grow, yet not to control:
+This is the mysterious virtue.`,
   },
-
   {
     chapter: 11,
-    text: `Thirty spokes meet at one hub,
-but the empty center makes the wheel useful.
+    text: `Thirty spokes are joined together in a wheel,
+but it is the center hole
+that allows the wheel to function.
 
-Clay forms a bowl,
-but the empty space makes it useful.
+We mold clay into a pot,
+but it is the emptiness inside
+that makes the vessel useful.
 
-Walls shape a room,
-but doors and windows make it useful.
+We fashion wood for a house,
+but it is the emptiness inside
+that makes it livable.
 
-What is gives form.
-What is not gives use.`,
+We work with the substantial,
+but the emptiness is what we use.`,
   },
-
   {
     chapter: 12,
-    text: `Too much color blinds the eye.
-Too much sound dulls the ear.
-Too much flavor numbs the tongue.
-The chase unsettles the heart.
-Rare goods lead us astray.
-
-The wise care for what feeds life,
-not what excites the eye.
-They leave one
-and choose the other.`,
+    text: `Five colors blind the eye.
+Five notes deafen the ear.
+Five flavors make the palate go stale.
+Too much activity deranges the mind.
+Too much wealth causes crime.
+The Master acts on what she feels and not what she sees.
+She shuns the latter, and prefers to seek the former.`,
   },
-
   {
     chapter: 13,
-    text: `Favor and disgrace both bring fear.
-Honor and trouble both cling to the self.
+    text: `Success is as dangerous as failure,
+and we are often our own worst enemy.
 
-Why do favor and disgrace bring fear?
-We fear losing one
-and gaining the other.
+What does it mean that success is as dangerous as failure?
+He who is superior is also someone's subordinate.
+Receiving favor and losing it both cause alarm.
+That is what is meant by success is as dangerous as failure.
+What does it mean that we are often our own worst enemy?
+The reason I have an enemy is because I have "self".
+If I no longer had a "self", I would no longer have an enemy.
 
-Why does trouble cling to the self?
-Because we guard the self.
-Without that grasping,
-what trouble could remain?
-
-Trust the world to one
-who cares for it as their own body.
-Give the world to one
-who loves it as themselves.`,
+Love the whole world as if it were your self;
+then you will truly care for all things.`,
   },
-
   {
     chapter: 14,
-    text: `Look for it; it cannot be seen.
-Listen; it cannot be heard.
-Reach; it cannot be held.
+    text: `Look for it, and it can't be seen.
+Listen for it, and it can't be heard.
+Grasp for it, and it can't be caught.
+These three cannot be further described,
+so we treat them as The One.
 
-These three cannot be divided.
-They are woven into one.
+Its highest is not bright.
+Its depths are not dark.
+Unending, unnamable, it returns to nothingness.
+Formless forms, and imageless images,
+subtle, beyond all understanding.
 
-Above, it is not bright.
-Below, it is not dark.
-Unbroken and unnamed,
-it returns to nothing.
-
-Form without form,
-image without image,
-it cannot be grasped.
-
-Follow the old way
-to meet the present.
-Know the first beginning:
-this is the thread of the way.`,
+Approach it and you will not see a beginning;
+follow it and there will be no end.
+When we grasp the Tao of the ancient ones,
+we can use it to direct our life today.
+To know the ancient origin of Tao:
+this is the beginning of wisdom.`,
   },
-
   {
     chapter: 15,
-    text: `The old masters were subtle,
-deep, and hard to know.
-We can only describe their manner:
+    text: `The Sages of old were profound
+and knew the ways of subtlety and discernment.
+Their wisdom is beyond our comprehension.
+Because their knowledge was so far superior
+I can only give a poor description.
 
-careful as one crossing winter ice,
-watchful as one among strangers,
-polite as a guest,
-yielding as melting snow,
-plain as uncarved wood,
-open as a valley,
-clouded as muddy water.
+They were careful
+as someone crossing a frozen stream in winter.
+Alert as if surrounded on all sides by the enemy.
+Courteous as a guest.
+Fluid as melting ice.
+Whole as an uncarved block of wood.
+Receptive as a valley.
+Turbid as muddied water.
 
-Who can wait quietly
-while mud settles and water clears?
-Who can stay still
-until the right action rises?
+Who can be still
+until their mud settles
+and the water is cleared by itself?
+Can you remain tranquil until right action occurs by itself?
 
-Those who follow the way do not seek fullness.
-Not being full,
-they can grow old and be renewed.`,
+The Master doesn't seek fulfillment.
+For only those who are not full are able to be used
+which brings the feeling of completeness.`,
   },
-
   {
     chapter: 16,
-    text: `Become fully empty.
-Rest in deep stillness.
+    text: `If you can empty your mind of all thoughts
+your heart will embrace the tranquility of peace.
+Watch the workings of all of creation,
+but contemplate their return to the source.
 
-All things rise together;
-watch them return.
-Each grows and flowers,
-then goes back to its root.
+All creatures in the universe
+return to the point where they began.
+Returning to the source is tranquility
+because we submit to Heavens mandate.
 
-Returning to the root is peace.
-Peace is returning to what is.
-Knowing what is brings clear sight.
-Ignoring it brings harm.
-
-Clear sight makes room for all.
-Making room brings fairness.
-Fairness is kingly.
-The kingly follows heaven.
-Heaven follows the way.
-The way endures.
-The body ends, but there is no fear.`,
+Returning to Heavens mandate is called being constant.
+Knowing the constant is called 'enlightenment'.
+Not knowing the constant is the source of evil deeds
+because we have no roots.
+By knowing the constant we can accept things as they are.
+By accepting things as they are, we become impartial.
+By being impartial, we become one with Heaven.
+By being one with Heaven, we become one with Tao.
+Being one with Tao, we are no longer concerned about
+losing our life because we know the Tao is constant
+and we are one with Tao.`,
   },
-
   {
     chapter: 17,
-    text: `The best rulers are barely known.
-Next come those who are loved and praised.
-Next, those who are feared.
-Last, those who are hated.
+    text: `The best leaders are those the people hardly know exist.
+The next best is a leader who is loved and praised.
+Next comes the one who is feared.
+The worst one is the leader that is despised.
 
-Without trust,
-no trust is returned.
+If you don't trust the people,
+they will become untrustworthy.
 
-The best rulers speak with care.
-When the work is done,
-the people say,
-“We did it ourselves.”`,
+The best leaders value their words, and use them sparingly.
+When she has accomplished her task,
+the people say, "Amazing:
+we did it, all by ourselves!"`,
   },
-
   {
     chapter: 18,
-    text: `When the great way is lost,
-kindness and duty appear.
-When cleverness rises,
-pretense follows.
+    text: `When the great Tao is abandoned,
+charity and righteousness appear.
+When intellectualism arises,
+hypocrisy is close behind.
 
-When families lose harmony,
-devotion is praised.
-When the country falls into disorder,
-loyal ministers appear.`,
+When there is strife in the family unit,
+people talk about 'brotherly love'.
+
+When the country falls into chaos,
+politicians talk about 'patriotism'.`,
   },
-
   {
     chapter: 19,
-    text: `Drop holiness and cleverness;
-people will gain a hundredfold.
-Drop forced kindness and duty;
-people will return to natural care.
-Drop craft and profit;
-thieves will disappear.
+    text: `Forget about knowledge and wisdom,
+and people will be a hundred times better off.
+Throw away charity and righteousness,
+and people will return to brotherly love.
+Throw away profit and greed,
+and there won't be any thieves.
 
-These sayings alone are not enough.
-Stay plain.
-Hold to what is simple.
-Think less of self.
-Want less.`,
+These three are superficial and aren't enough
+to keep us at the center of the circle, so we must also:
+
+Embrace simplicity.
+Put others first.
+Desire little.`,
   },
-
   {
     chapter: 20,
-    text: `Leave learned approval behind,
-and worry fades.
-How far is yes from no?
-How far is good from bad?
-Must I fear what others fear?
-The question has no end.
+    text: `Renounce knowledge and your problems will end.
+What is the difference between yes and no?
+What is the difference between good and evil?
+Must you fear what others fear?
+Nonsense, look how far you have missed the mark!
 
-Others glow as if at a feast
-or climbing a tower in spring.
-I alone am still,
-like a child before its first smile.
-Others have plenty;
-I seem to have nothing.
+Other people are joyous,
+as though they were at a spring festival.
+I alone am unconcerned and expressionless,
+like an infant before it has learned to smile.
+Other people have more than they need;
+I alone seem to possess nothing.
+I am lost and drift about with no place to go.
+I am like a fool, my mind is in chaos.
 
-Others are sharp and sure.
-I seem dull and unsure,
-drifting like the sea,
-moving like the wind.
+Ordinary people are bright;
+I alone am dark.
+Ordinary people are clever;
+I alone am dull.
+Ordinary people seem discriminating;
+I alone am muddled and confused.
+I drift on the waves on the ocean,
+blown at the mercy of the wind.
+Other people have their goals,
+I alone am dull and uncouth.
 
-Others have a purpose.
-I alone seem rough and strange.
-I differ from others:
-I am fed by the mother.`,
+I am different from ordinary people.
+I nurse from the Great Mother's breasts.`,
   },
-
   {
     chapter: 21,
-    text: `Great power follows only the way.
+    text: `The greatest virtue you can have
+comes from following only the Tao;
+which takes a form that is intangible and evasive.
 
-The way is dim and hard to grasp,
-yet within it are shapes.
-It is dark and hard to grasp,
-yet within it are things.
-It is deep and hidden,
-yet within it is a true seed.
+Even though the Tao is intangible and evasive,
+we are able to know it exists.
+Intangible and evasive, yet it has a manifestation.
+Secluded and dark, yet there is a vitality within it.
+Its vitality is very genuine.
+Within it we can find order.
 
-From the beginning until now,
-its name has not left us.
-Through it we see the source of all.
-
-How do I know the source?
-By this.`,
+Since the beginning of time, the Tao has always existed.
+It is beyond existing and not existing.
+How do I know where creation comes from?
+I look inside myself and see it.`,
   },
-
   {
     chapter: 22,
-    text: `Bend and remain whole.
-Curve and become straight.
-Empty and become full.
-Wear out and become new.
-Have little and receive.
-Have much and lose your way.
+    text: `If you want to become whole,
+first let yourself become broken.
+If you want to become straight,
+first let yourself become twisted.
+If you want to become full,
+first let yourself become empty.
+If you want to become new,
+first let yourself become old.
+Those whose desires are few get them,
+those whose desires are great go astray.
 
-The wise hold to the one
-and become a guide for the world.
-They do not show off, so they shine.
-They do not insist, so they are seen.
-They do not boast, so their work matters.
-They do not praise themselves, so they last.
+For this reason the Master embraces the Tao,
+as an example for the world to follow.
+Because she isn't self centered,
+people can see the light in her.
+Because she does not boast of herself,
+she becomes a shining example.
+Because she does not glorify herself,
+she becomes a person of merit.
+Because she wants nothing from the world,
+the world can not overcome her.
 
-Because they do not compete,
-no one can compete with them.
-
-“Bend and remain whole”
-is no empty saying.
-Yield, and return whole.`,
+When the ancient Masters said,
+"If you want to become whole,
+then first let yourself be broken,"
+they weren't using empty words.
+All who do this will be made complete.`,
   },
-
   {
     chapter: 23,
-    text: `Few words are natural.
-A storm does not last all morning.
-Hard rain does not last all day.
-If heaven and earth cannot force things to last,
-how can we?
+    text: `Nature uses few words:
+when the gale blows, it will not last long;
+when it rains hard, it lasts but a little while;
+What causes these to happen? Heaven and Earth.
 
-One who follows the way
-is one with the way.
-One who follows true power
-is one with true power.
-One who follows loss
-is one with loss.
+Why do we humans go on endlessly about little
+when nature does much in a little time?
+If you open yourself to the Tao,
+you and Tao become one.
+If you open yourself to Virtue,
+then you can become virtuous.
+If you open yourself to loss,
+then you will become lost.
 
-The way welcomes those who choose it.
-Power welcomes those who choose it.
-Loss welcomes those who choose it.
+If you open yourself to the Tao,
+the Tao will eagerly welcome you.
+If you open yourself to virtue,
+virtue will become a part of you.
+If you open yourself to loss,
+the lost are glad to see you.
 
-When trust is thin,
-trust is not returned.`,
+"When you do not trust people,
+people will become untrustworthy."`,
   },
-
   {
     chapter: 24,
-    text: `Standing on tiptoe gives no balance.
-Taking long strides gives no progress.
+    text: `Those who stand on tiptoes
+do not stand firmly.
+Those who rush ahead
+don't get very far.
+Those who try to outshine others
+dim their own light.
+Those who call themselves righteous
+can't know how wrong they are.
+Those who boast of their accomplishments
+diminish the things they have done.
 
-Those who show off do not shine.
-Those who insist are not believed.
-Those who boast earn no credit.
-Those who praise themselves do not last.
-
-To the way, these are scraps and burdens.
-People turn from them.
-So one who follows the way does not cling to them.`,
+Compared to the Tao, these actions are unworthy.
+If we are to follow the Tao, we must not do these things.`,
   },
-
   {
     chapter: 25,
-    text: `Something whole existed
-before heaven and earth.
-Silent and empty,
-alone and unchanged,
-moving everywhere without tiring,
-it may be the mother of the world.
+    text: `Before the universe was born
+there was something in the chaos of the heavens.
+It stands alone and empty,
+solitary and unchanging.
+It is ever present and secure.
+It may be regarded as the Mother of the universe.
+Because I do not know its name,
+I call it the Tao.
+If forced to give it a name,
+I would call it 'Great'.
 
-I do not know its name.
-I call it the way.
-If pressed, I call it great.
+Because it is Great means it is everywhere.
+Being everywhere means it is eternal.
+Being eternal means everything returns to it.
 
-Great means flowing on.
-Flowing on means going far.
-Going far means returning.
-
-The way is great.
+Tao is great.
 Heaven is great.
 Earth is great.
-Humanity is also great.
+Humanity is great.
+Within the universe, these are the four great things.
 
-People follow earth.
-Earth follows heaven.
-Heaven follows the way.
-The way follows what is natural.`,
+Humanity follows the earth.
+Earth follows Heaven.
+Heaven follows the Tao.
+The Tao follows only itself.`,
   },
-
   {
     chapter: 26,
-    text: `The heavy is the root of the light.
-Stillness rules unrest.
+    text: `Heaviness is the basis of lightness.
+Stillness is the standard of activity.
 
-So the wise may travel all day
-without leaving their center.
-Though wonders surround them,
-they remain calm and free.
+Thus the Master travels all day
+without ever leaving her wagon.
+Even though she has much to see,
+she is at peace in her indifference.
 
-How can a leader of many
-treat the world lightly?
-Lightness loses the root.
-Restlessness loses command.`,
+Why should the lord of a thousand chariots
+be amused at the foolishness of the world?
+If you abandon yourself to foolishness,
+you lose touch with your beginnings.
+If you let yourself become distracted,
+you will lose the basis of your power.`,
   },
-
   {
     chapter: 27,
-    text: `A good traveler leaves no trail.
-A good speaker leaves no fault.
-A good counter needs no tally.
-A good door needs no lock,
-yet cannot be opened.
-A good knot needs no rope,
-yet cannot be untied.
+    text: `A good traveler leaves no tracks,
+and a skillful speaker is well rehearsed.
+A good bookkeeper has an excellent memory,
+and a well made door is easy to open and needs no locks.
+A good knot needs no rope and it can not come undone.
 
-The wise are good at saving people,
-so no one is cast away.
-They are good at saving things,
-so nothing is wasted.
-This is called seeing clearly.
+Thus the Master is willing to help everyone,
+and doesn't know the meaning of rejection.
+She is there to help all of creation,
+and doesn't abandon even the smallest creature.
+This is called embracing the light.
 
-The good teach those who are not good.
-Those who are not good give the good their work.
-Fail to honor the teacher
-or care for the lesson,
-and cleverness becomes confusion.
-This is the heart of the matter.`,
+What is a good person but a bad person's teacher?
+What is a bad person but raw material for his teacher?
+If you fail to honor your teacher or fail to enjoy your student,
+you will become deluded no matter how smart you are.
+It is the secret of prime importance.`,
   },
-
   {
     chapter: 28,
-    text: `Know strength,
-but keep to gentleness.
-Be a valley for the world.
-Then lasting power will not leave you,
-and you will return to childhood.
+    text: `Know the masculine,
+but keep to the feminine:
+and become a watershed to the world.
+If you embrace the world,
+the Tao will never leave you
+and you become as a little child.
 
-Know brightness,
-but keep to shadow.
-Be a pattern for the world.
-Then lasting power will not fail,
-and you will return to the boundless.
+Know the white,
+yet keep to the black:
+be a model for the world.
+If you are a model for the world,
+the Tao inside you will strengthen
+and you will return whole to your eternal beginning.
 
-Know honor,
-but keep to humility.
-Be a low place for the world.
-Then lasting power will be full,
-and you will return to plain wood.
+Know the honorable,
+but do not shun the disgraced:
+embracing the world as it is.
+If you embrace the world with compassion,
+then your virtue will return you to the Uncarved Block.
 
-When plain wood is cut, tools are made.
-The wise use them as leaders.
-The greatest shaping does not cut.`,
+The block of wood is carved into utensils
+by carving void into the wood.
+The Master uses the utensils, yet prefers to keep to the block
+because of its limitless possibilities.
+Great works do not involve discarding substance.`,
   },
-
   {
     chapter: 29,
-    text: `Whoever tries to take the world
-and remake it
-will fail.
+    text: `Do you want to rule the world and control it?
+I don't think it can ever be done.
 
-The world is a sacred vessel.
-It cannot be forced.
-Force it, and you spoil it.
-Hold it, and you lose it.
+The world is sacred vessel
+and it can not be controlled.
+You will only make it worse if you try.
+It may slip through your fingers and disappear.
 
-Things lead or follow,
-breathe warm or cold,
-grow strong or weak,
-rise or fall.
+Some are meant to lead,
+and others are meant to follow;
+Some must always strain,
+and others have an easy time;
+Some are naturally big and strong,
+and others will always be small;
+Some will be protected and nurtured,
+and others will meet with destruction.
 
-The wise avoid excess,
-pride,
-and force.`,
+The Master accepts things as they are,
+and out of compassion avoids extravagance,
+excess and the extremes.`,
   },
-
   {
     chapter: 30,
-    text: `One who guides a ruler by the way
-does not use arms to master the world.
-Force returns upon itself.
+    text: `Those who lead people by following the Tao
+don't use weapons to enforce their will.
+Using force always leads to unseen troubles.
 
-Where armies camp,
-thorns grow.
-After great wars
-come hungry years.
+In the places where armies march,
+thorns and briars bloom and grow.
+After armies take to war,
+bad years must always follow.
+The skillful commander
+strikes a decisive blow then stops.
+When victory is won over the enemy through war
+it is not a thing of great pride.
+When the battle is over,
+arrogance is the new enemy.
+War can result when no other alternative is given,
+so the one who overcomes an enemy should not dominate them.
+The strong always weakened with time.
 
-Do what must be done,
-then stop.
-Do not boast,
-do not glory,
-do not become proud.
-Act from need,
-not from hunger for power.
-
-What grows strong too soon
-soon fades.
-This is not the way.
-What is not the way
-ends early.`,
+This is not the way of the Tao.
+That which is not of the Tao will soon end.`,
   },
-
   {
     chapter: 31,
-    text: `Weapons are tools of fear.
-All creatures hate them.
-One who follows the way avoids them.
+    text: `Weapons are the bearers of bad news;
+all people should detest them.
 
-In peace, honor the gentle side.
-In war, honor the grieving side.
-Weapons are not the tools of the wise.
-Use them only when there is no choice,
-with calm and without joy.
-
-To enjoy victory is to enjoy killing.
-One who enjoys killing
-cannot guide the world.
-
-Treat victory like a funeral.
-Mourn every death.`,
+The wise man values the left side,
+and in time of war he values the right.
+Weapons are meant for destruction,
+and thus are avoided by the wise.
+Only as a last resort
+will a wise person use a deadly weapon.
+If peace is her true objective
+how can she rejoice in the victory of war?
+Those who rejoice in victory
+delight in the slaughter of humanity.
+Those who resort to violence
+will never bring peace to the world.
+The left side is a place of honor on happy occasions.
+The right side is reserved for mourning at a funeral.
+When the lieutenants take the left side to prepare for war,
+the general should be on the right side,
+because he knows the outcome will be death.
+The death of many should be greeted with great sorrow,
+and the victory celebration should honor those who have died.`,
   },
-
   {
     chapter: 32,
-    text: `The way has no name.
-Plain and small,
-it is greater than any power.
+    text: `The Tao is nameless and unchanging.
+Although it appears insignificant,
+nothing in the world can contain it.
 
-If rulers could hold to it,
-all things would settle on their own.
-Heaven and earth would join,
-and gentle rain would fall.
-No one would command,
-yet all would be in balance.
+If a ruler abides by its principles,
+then her people will willingly follow.
+Heaven would then reign on earth,
+like sweet rain falling on paradise.
+People would have no need for laws,
+because the law would be written on their hearts.
 
-Names begin when things are divided.
-Know when to stop naming,
-and danger ends.
+Naming is a necessity for order,
+but naming can not order all things.
+Naming often makes things impersonal,
+so we should know when naming should end.
+Knowing when to stop naming,
+you can avoid the pitfall it brings.
 
-The way moves through the world
-as rivers move toward the sea.`,
+All things end in the Tao
+just as the small streams and the largest rivers
+flow through valleys to the sea.`,
   },
-
   {
     chapter: 33,
-    text: `Knowing others is clever.
-Knowing yourself is clear sight.
-Mastering others takes strength.
-Mastering yourself takes true power.
+    text: `Those who know others are intelligent;
+those who know themselves are truly wise.
+Those who master others are strong;
+those who master themselves have true power.
 
-One who knows enough is rich.
-One who keeps going has resolve.
-One who stays rooted lasts.
-One who dies but is not forgotten
-has long life.`,
+Those who know they have enough are truly wealthy.
+
+Those who persist will reach their goal.
+
+Those who keep their course have a strong will.
+Those who embrace death will not perish,
+but have life everlasting.`,
   },
-
   {
     chapter: 34,
-    text: `The great way flows everywhere,
-left and right.
-All things depend on it for life,
-and it does not refuse them.
-
-It finishes its work
-and makes no claim.
-It clothes and feeds all things
-but does not rule them.
-
-Because it wants nothing,
-it may be called small.
-Because all things return to it
-and it does not rule them,
-it may be called great.
-
-The wise never try to be great.
-Therefore they become great.`,
+    text: `The great Tao flows unobstructed in every direction.
+All things rely on it to conceive and be born,
+and it does not deny even the smallest of creation.
+When it has accomplished great wonders,
+it does not claim them for itself.
+It nourishes infinite worlds,
+yet it doesn't seek to master the smallest creature.
+Since it is without wants and desires,
+it can be considered humble.
+All of creation seeks it for refuge
+yet it does not seek to master or control.
+Because it does not seek greatness;
+it is able to accomplish truly great things.`,
   },
-
   {
     chapter: 35,
-    text: `Hold to the great image,
-and the world will come.
-It will come without harm,
-finding peace and rest.
+    text: `She who follows the way of the Tao
+will draw the world to her steps.
+She can go without fear of being injured,
+because she has found peace and tranquility in her heart.
 
-Music and fine food
-make travelers pause.
-Words about the way
-seem plain and without flavor.
-
-Look: it cannot be seen.
-Listen: it cannot be heard.
-Use it: it cannot be spent.`,
+Where there is music and good food,
+people will stop to enjoy it.
+But words spoken of the Tao
+seem to them boring and stale.
+When looked at, there is nothing for them to see.
+When listen for, there is nothing for them to hear.
+Yet if they put it to use, it would never be exhausted.`,
   },
-
   {
     chapter: 36,
-    text: `To shrink something,
-first let it stretch.
-To weaken something,
-first let it grow strong.
-To bring something down,
-first let it rise.
-To receive something,
-first give.
+    text: `If you want something to return to the source,
+you must first allow it to spread out.
+If you want something to weaken,
+you must first allow it to become strong.
+If you want something to be removed,
+you must first allow it to flourish.
+If you want to possess something,
+you must first give it away.
 
-This is quiet insight:
-the soft overcomes the hard,
-the weak overcomes the strong.
+This is called the subtle understanding
+of how things are meant to be.
 
-Fish should stay in deep water.
-A state's sharp tools
-should not be displayed.`,
+The soft and pliable overcomes the hard and inflexible.
+
+Just as fish remain hidden in deep waters,
+it is best to keep weapons out of sight.`,
   },
-
   {
     chapter: 37,
-    text: `The way never forces,
-yet nothing is left undone.
+    text: `The Tao never acts with force,
+yet there is nothing that it can not do.
 
-If rulers could hold to it,
-all things would change by themselves.
-If desire rose during change,
-I would quiet it
-with nameless simplicity.
+If rulers could follow the way of the Tao,
+then all of creation would willingly follow their example.
+If selfish desires were to arise after their transformation,
+I would erase them with the power of the Uncarved Block.
 
-Without names, desire rests.
-Without desire, there is peace.
-The world settles by itself.`,
+By the power of the Uncarved Block,
+future generations would lose their selfish desires.
+By losing their selfish desires,
+the world would naturally settle into peace.`,
   },
-
   {
     chapter: 38,
-    text: `Highest power does not cling to power,
-and so it is true power.
-Lower power never lets power go,
-and so it has none.
+    text: `The highest good is not to seek to do good,
+but to allow yourself to become it.
+The ordinary person seeks to do good things,
+and finds that they can not do them continually.
 
-Highest power acts without forcing
-and seeks no result.
-Lower power acts
-and seeks a result.
+The Master does not force virtue on others,
+thus she is able to accomplish her task.
+The ordinary person who uses force,
+will find that they accomplish nothing.
 
-When the way is lost, power appears.
-When power is lost, kindness appears.
-When kindness is lost, duty appears.
-When duty is lost, ritual appears.
+The kind person acts from the heart,
+and accomplishes a multitude of things.
+The righteous person acts out of pity,
+yet leaves many things undone.
+The moral person will act out of duty,
+and when no one will respond
+will roll up his sleeves and use force.
 
-Ritual is the thin shell of trust
-and the start of disorder.
-Foreknowledge is the flower of the way
-and the start of folly.
+When the Tao is forgotten, there is righteousness.
+When righteousness is forgotten, there is morality.
+When morality is forgotten, there is the law.
+The law is the husk of faith,
+and trust is the beginning of chaos.
 
-The wise choose the fruit, not the flower;
-the solid, not the shell.`,
+Our basic understandings are not from the Tao
+because they come from the depths of our misunderstanding.
+The master abides in the fruit and not in the husk.
+She dwells in the Tao,
+and not with the things that hide it.
+This is how she increases in wisdom.`,
   },
-
   {
     chapter: 39,
-    text: `From ancient times, those who held the one:
+    text: `The masters of old attained unity with the Tao.
+Heaven attained unity and became pure.
+The earth attained unity and found peace.
+The spirits attained unity so they could minister.
+The valleys attained unity that they might be full.
+Humanity attained unity that they might flourish.
+Their leaders attained unity that they might set the example.
+This is the power of unity.
 
-Heaven became clear.
-Earth became steady.
-Spirits became alive.
-Valleys became full.
-All things came to life.
-Rulers became true guides.
+Without unity, the sky becomes filthy.
+Without unity, the earth becomes unstable.
+Without unity, the spirits become unresponsive and disappear.
+Without unity, the valleys become dry as a desert.
+Without unity, human kind can't reproduce and becomes extinct.
+Without unity, our leaders become corrupt and fall.
 
-Without clarity, heaven would split.
-Without steadiness, earth would shake.
-Without life, spirits would fade.
-Without fullness, valleys would dry.
-Without the source, creatures would die.
-Without humility, rulers would fall.
-
-The high rests on the low.
-The noble rests on the common.
-So rulers call themselves orphaned and poor.
-
-Do not glitter like jade.
-Be plain like stone.`,
+The great view the small as their source,
+and the high takes the low as their foundation.
+Their greatest asset becomes their humility.
+They speak of themselves as orphans and widows,
+thus they truly seek humility.
+Do not shine like the precious gem,
+but be as dull as a common stone.`,
   },
-
   {
     chapter: 40,
-    text: `Returning is the movement of the way.
-Yielding is the use of the way.
+    text: `All movement returns to the Tao.
+Weakness is how the Tao works.
 
-All things under heaven arise from being.
-Being arises from nonbeing.`,
+All of creation is born from substance.
+Substance is born of nothing-ness.`,
   },
-
   {
     chapter: 41,
-    text: `When a wise student hears of the way,
-they practice it with care.
-When an average student hears of it,
-they partly keep it and partly lose it.
-When a poor student hears of it,
-they laugh.
-Without that laughter,
-it would not be the way.
+    text: `When a superior person hears of the Tao,
+She diligently puts it into practice.
+When an average person hears of the Tao,
+he believes half of it, and doubts the other half.
+When a foolish person hears of the Tao,
+he laughs out loud at the very idea.
+If he didn't laugh,
+it wouldn't be the Tao.
 
-So it is said:
-the bright way seems dark,
-the forward way seems to retreat,
-the smooth way seems rough.
-Highest power seems empty.
-Great purity seems stained.
-Wide power seems lacking.
-Firm power seems weak.
-Plain truth seems to change.
+Thus it is said:
+The brightness of the Tao seems like darkness,
+the advancement of the Tao seems like retreat,
+the level path seems rough,
+the superior path seems empty,
+the pure seems to be tarnished,
+and true virtue doesn't seem to be enough.
+The virtue of caution seems like cowardice,
+the pure seems to be polluted,
+the true square seems to have no corners,
+the best vessels take the most time to finish,
+the greatest sounds cannot be heard,
+and the greatest image has no form.
 
-The great square has no corners.
-The great vessel takes long to finish.
-The great sound is rarely heard.
-The great image has no shape.
-
-The way is hidden and unnamed,
-yet it alone gives and completes.`,
+The Tao hides in the unnamed,
+Yet it alone nourishes and completes all things.`,
   },
-
   {
     chapter: 42,
-    text: `The way gives birth to one.
-One gives birth to two.
-Two gives birth to three.
-Three gives birth to all things.
+    text: `The Tao gave birth to One.
+The One gave birth to Two.
+The Two gave birth to Three.
+The Three gave birth to all of creation.
 
-All things carry shadow
-and hold light.
-Their mingling breath makes harmony.
+All things carry Yin
+yet embrace Yang.
+They blend their life breaths
+in order to produce harmony.
 
-People hate being alone, poor, and low,
-yet rulers use these names for themselves.
-Some gain by losing.
-Some lose by gaining.
+People despise being orphaned, widowed and poor.
+But the noble ones take these as their titles.
+In losing, much is gained,
+and in gaining, much is lost.
 
-What others teach, I also teach:
-the violent do not die a natural death.
-This is the root of my teaching.`,
+What others teach I too will teach:
+"The strong and violent will not die a natural death."`,
   },
-
   {
     chapter: 43,
-    text: `The softest thing in the world
-runs through the hardest.
-What has no form
-enters where there is no space.
+    text: `That which offers no resistance,
+overcomes the hardest substances.
+That which offers no resistance
+can enter where there is no space.
 
-From this I know the worth
-of acting without force.
-
-Teaching without words
-and working without force
-are understood by few.`,
+Few in the world can comprehend
+the teaching without words,
+or understand the value of non-action.`,
   },
-
   {
     chapter: 44,
-    text: `Which matters more:
-your name or your life?
-Which is worth more:
-your life or your wealth?
-Which hurts more:
-gain or loss?
+    text: `Which is more important, your honor or your life?
+Which is more valuable, your possessions or your person?
+Which is more destructive, success or failure?
 
-The more you cling,
-the more you spend.
-The more you store,
-the more you lose.
+Because of this, great love extracts a great cost
+and true wealth requires greater loss.
 
-Know enough, and avoid shame.
-Know when to stop, and avoid danger.
-Then you can last.`,
+Knowing when you have enough avoids dishonor,
+and knowing when to stop will keep you from danger
+and bring you a long, happy life.`,
   },
-
   {
     chapter: 45,
-    text: `Great completion seems unfinished,
-yet its use never fails.
-Great fullness seems empty,
-yet its use never ends.
+    text: `The greatest accomplishments seem imperfect,
+yet their usefulness is not diminished.
+The greatest fullness seems empty,
+yet it will be inexhaustible.
 
-Great straightness seems bent.
-Great skill seems clumsy.
-Great speech seems halting.
+The greatest straightness seems crooked.
+The most valued skill seems like clumsiness.
+The greatest speech seems full of stammers.
 
-Movement overcomes cold.
-Stillness overcomes heat.
-Clear calm sets the world right.`,
+Movement overcomes the cold,
+and stillness overcomes the heat.
+That which is pure and still is the universal ideal.`,
   },
-
   {
     chapter: 46,
-    text: `When the world follows the way,
-horses work the fields.
-When the world loses the way,
-warhorses breed at the border.
+    text: `When the world follows the Tao,
+horses run free to fertilize the fields.
+When the world does not follow the Tao,
+war horses are bred outside the cities.
 
-No fault is greater than endless desire.
-No trouble is greater than discontent.
-No loss is greater than greed.
+There is no greater transgression
+than condoning people's selfish desires,
+no greater disaster than being discontent,
+and no greater retribution than for greed.
 
-Know that enough is enough,
-and you will always have enough.`,
+Whoever knows contentment will be at peace forever.`,
   },
-
   {
     chapter: 47,
-    text: `Without leaving home,
-you may know the world.
-Without looking through the window,
-you may see the way of heaven.
+    text: `Without opening your door,
+you can know the whole world.
+Without looking out your window,
+you can understand the way of the Tao.
 
-The farther you roam,
-the less you may know.
+The more knowledge you seek,
+the less you will understand.
 
-The wise know without travel,
-see without looking,
-and finish without forcing.`,
+The Master understands without leaving,
+sees clearly without looking,
+accomplishes much without doing anything.`,
   },
-
   {
     chapter: 48,
-    text: `In the search for learning,
-something is added each day.
-In following the way,
-something is dropped each day.
+    text: `One who seeks knowledge learns something new every day.
+One who seeks the Tao unlearns something new every day.
+Less and less remains until you arrive at non-action.
+When you arrive at non-action,
+nothing will be left undone.
 
-Drop and drop again
-until no force remains.
-When nothing is forced,
-nothing is left undone.
-
-Win the world by letting things be.
-Those who meddle
-cannot win the world.`,
+Mastery of the world is achieved
+by letting things take their natural course.
+You can not master the world by changing the natural way.`,
   },
-
   {
     chapter: 49,
-    text: `The wise have no fixed mind.
-They take the people's mind as their own.
+    text: `The Master has no mind of her own.
+She understands the mind of the people.
 
-They are good to the good.
-They are also good to those not good.
-This is true goodness.
+To those who are good she treats as good.
+To those who aren't good she also treats as good.
+This is how she attains true goodness.
 
-They trust the trustworthy.
-They also trust those not trustworthy.
-This is true trust.
+She trusts people who are trustworthy.
+She also trusts people who aren't trustworthy.
+This is how she gains true trust.
 
-The wise meet the world openly,
-without taking sides.
-People turn their eyes and ears toward them.
-They care for everyone like a child.`,
+The Master's mind is shut off from the world.
+Only for the sake of the people does she muddle her mind.
+They look to her in anticipation. Yet she treats them all as her children.`,
   },
-
   {
     chapter: 50,
-    text: `We enter life and leave in death.
-Some follow life,
-some follow death,
-and some rush toward death
-because they cling too hard to life.
+    text: `Those who leave the womb at birth
+and those who enter their source at death,
+of these; three out of ten celebrate life,
+three out of ten celebrate death,
+and three out of ten simply go from life to death.
+What is the reason for this?
+Because they are afraid of dying,
+therefore they can not live.
 
-One who knows how to live
-walks through wild land without fear,
-enters battle without armor.
-The beast finds no place to strike.
-The blade finds no place to cut.
-
-Why?
-Because death finds no hold.`,
+I have heard that those who celebrate life
+walk safely among the wild animals.
+When they go into battle, they remain unharmed.
+The animals find no place to attack them
+and the weapons are unable to harm them.
+Why? Because they can find no place for death in them.`,
   },
-
   {
     chapter: 51,
-    text: `The way gives birth.
-Power raises.
-Matter gives shape.
-Conditions bring growth.
+    text: `The Tao gives birth to all of creation.
+The virtue of Tao in nature nurtures them,
+and their family gives them their form.
+Their environment then shapes them into completion.
+That is why every creature honors the Tao and its virtue.
 
-So all things honor the way
-and value its power,
-not by command,
-but by their own nature.
+No one tells them to honor the Tao and its virtue,
+it happens all by itself.
+So the Tao gives them birth,
+and its virtue cultivates them,
+cares for them,
+nurtures them,
+gives them a place of refuge and peace,
+helps them to grow and shelters them.
 
-The way gives birth and feeds,
-raises and cares,
-shelters and protects.
-
-Create without owning.
-Work without claiming.
-Guide without ruling.
-This is deep power.`,
+It gives them life without wanting to possess them,
+and cares for them expecting nothing in return.
+It is their master, but it does not seek to dominate them.
+This is called the dark and mysterious virtue.`,
   },
-
   {
     chapter: 52,
-    text: `The world has a beginning,
-the mother of all things.
-Know the mother,
-and you know her children.
-Know the children,
-then return to the mother,
-and your life will be free of danger.
+    text: `The world had a beginning
+which we call the Great Mother.
+Once we have found the Mother,
+we begin to know what Her children should be.
 
-Close the mouth.
-Guard the senses.
-Life will not wear you out.
-Open the mouth.
-Chase each concern.
-Life cannot save you.
+When we know we are the Mothers child,
+we begin to guard the qualities of the Mother in us.
+She will protect us from all danger
+even if we lose our life.
 
-Seeing the small is clear sight.
-Keeping gentle is strength.
-Use the light,
-then return to clear sight.
-Leave no harm behind.
-This is following what lasts.`,
+Keep your mouth closed
+and embrace a simple life,
+and you will live care-free until the end of your days.
+If you try to talk your way into a better life
+there will be no end to your trouble.
+
+To understand the small is called clarity.
+Knowing how to yield is called strength.
+To use your inner light for understanding
+regardless of the danger
+is called depending on the Constant.`,
   },
-
   {
     chapter: 53,
-    text: `If I had a little sense,
-I would walk the great way
-and fear only leaving it.
+    text: `If I understood only one thing,
+I would want to use it to follow the Tao.
+My only fear would be one of pride.
+The Tao goes in the level places,
+but people prefer to take the short cuts.
 
-The great way is easy,
-yet people prefer side roads.
-
-Courts are splendid
-while fields are overgrown
-and stores stand empty.
-Fine clothes, sharp swords,
-rich food, and hoarded wealth:
-this is robbery dressed as rule.
-
-It is not the way.`,
+If too much time is spent cleaning the house
+the land will become neglected and full of weeds,
+and the granaries will soon become empty
+because there is no one out working the fields.
+To wear fancy clothes and ornaments,
+to have your fill of food and drink
+and to waste all of your money buying possessions
+is called the crime of excess.
+Oh, how these things go against the way of the Tao!`,
   },
-
   {
     chapter: 54,
-    text: `What is well planted cannot be pulled up.
-What is well held cannot slip away.
-Its honor passes through generations.
+    text: `That which is well built
+will never be torn down.
+That which is well latched
+can not slip away.
+Those who do things well
+will be honored from generation to generation.
 
-Practice it in yourself,
-and power becomes real.
-Practice it in the family,
-and power grows.
-Practice it in the village,
-and power lasts.
-Practice it in the country,
-and power becomes rich.
-Practice it in the world,
-and power reaches everywhere.
+If this idea is cultivated in the individual,
+then his virtue will become genuine.
+If this idea is cultivated in your family,
+then virtue in your family will be great.
+If this idea is cultivated in your community,
+then virtue will go a long way.
+If this idea is cultivated in your country,
+then virtue will be in many places.
+If this idea is cultivated in the world,
+then virtue will be with everyone.
 
-See the self through the self,
-the family through the family,
-the village through the village,
-the country through the country,
-the world through the world.
-
-How do I know the world is so?
-By this.`,
+Then observe the person for what the person does,
+and observe the family for what it does,
+and observe the community for what it does,
+and observe the country for what it does,
+and observe the world for what it does.
+How do I know this saying is true?
+I observe these things and see.`,
   },
-
   {
     chapter: 55,
-    text: `One filled with true power
+    text: `One who is filled with the Tao
 is like a newborn child.
-Stinging insects do not harm it.
-Wild beasts do not seize it.
-Birds of prey do not strike it.
+The infant is protected from
+the stinging insects, wild beasts, and birds of prey.
+Its bones are soft, its muscles are weak,
+but its grip is firm and strong.
+It doesn't know about the union
+of male and female,
+yet his penis can stand erect,
+because of the power of life within him.
+It can cry all day and never become hoarse.
+This is perfect harmony.
 
-Its bones are soft,
-its grip is firm.
-It knows nothing of union,
-yet holds life whole.
-It cries all day
-and does not grow hoarse.
-Its harmony is complete.
-
-To know harmony is to know what lasts.
-To know what lasts is clear sight.
-Forcing life brings bad luck.
-Driving the breath makes you rigid.
-
-What grows rigid soon grows old.
-This is not the way.
-What is not the way ends early.`,
+To understand harmony is to understand the Constant.
+To know the Constant is to be called 'enlightened'.
+To unnaturally try to extend life is not appropriate.
+To try and alter the life-breath is unnatural.
+The master understands that when something reaches its prime
+it will soon begin to decline.
+Changing the natural is against the way of the Tao.
+Those who do it will come to an early end.`,
   },
-
   {
     chapter: 56,
-    text: `Those who know do not talk much.
-Those who talk much do not know.
+    text: `Those who know do not talk.
+Those who talk do not know.
 
-Close the mouth.
-Guard the senses.
-Blunt sharp edges.
-Loosen knots.
-Soften glare.
-Join the dust.
-This is deep union.
+Stop talking,
+meditate in silence,
+blunt your sharpness,
+release your worries,
+harmonize your inner light,
+and become one with the dust.
+Doing this is called the dark and mysterious identity.
 
-Then closeness cannot win you,
-distance cannot harm you,
-gain cannot lift you,
-loss cannot lower you,
-honor cannot crown you,
-disgrace cannot stain you.
-
-So you become precious to the world.`,
+Those who have achieved the mysterious identity
+can not be approached, and they can not be alienated.
+They can not be benefited nor harmed.
+They can not be made noble nor to suffer disgrace.
+This makes them the most noble of all under the heavens.`,
   },
-
   {
     chapter: 57,
-    text: `Rule a country with fairness.
-Meet war with surprise.
-Win the world by leaving it alone.
+    text: `Govern your country with integrity,
+Weapons of war can be used with great cunning,
+but loyalty is only won by not-doing.
+How do I know the way things are?
+By these:
 
-How do I know this?
-The more bans there are,
-the poorer people become.
-The more weapons people own,
-the more troubled the land becomes.
-The more clever people grow,
-the stranger their schemes become.
-The more laws are posted,
-the more thieves appear.
+The more prohibitions you make,
+the poorer people will be.
+The more weapons you posses,
+the greater the chaos in your country.
+The more knowledge that is acquired,
+the stranger the world will become.
+The more laws that you make,
+the greater the number of criminals.
 
-So the wise say:
-I do not force, and people change themselves.
-I love stillness, and people set themselves right.
-I do not meddle, and people prosper.
-I want little, and people become simple.`,
+Therefore the Master says:
+I do nothing,
+and people become good by themselves.
+I seek peace,
+and people take care of their own problems.
+I do not meddle in their personal lives,
+and the people become prosperous.
+I let go of all my desires,
+and the people return to the Uncarved Block.`,
   },
-
   {
     chapter: 58,
-    text: `When rule is quiet,
-people are open and honest.
-When rule is harsh,
-people become sly and troubled.
+    text: `If a government is unobtrusive,
+the people become whole.
+If a government is repressive,
+the people become treacherous.
 
-Good fortune rests on trouble.
-Trouble hides within good fortune.
-Who knows where one ends?
+Good fortune has its roots in disaster,
+and disaster lurks with good fortune.
+Who knows why these things happen,
+or when this cycle will end?
+Good things seem to change into bad,
+and bad things often turn out for good.
+These things have always been hard to comprehend.
 
-Right can turn strange.
-Good can turn harmful.
-People have been confused for a long time.
-
-So the wise are square but do not cut,
-sharp but do not wound,
-straight but do not strain,
-bright but do not glare.`,
+Thus the Master makes things change
+without interfering.
+She is probing yet causes no harm.
+Straightforward, yet does not impose her will.
+Radiant, and easy on the eye.`,
   },
-
   {
     chapter: 59,
-    text: `In leading people and serving heaven,
-nothing is better than restraint.
+    text: `There is nothing better than moderation
+for teaching people or serving Heaven.
+Those who use moderation
+are already on the path to the Tao.
 
-Restraint means returning early.
-Returning early gathers deep power.
-With deep power,
-nothing cannot be met.
-When nothing cannot be met,
-no one knows your limits.
+Those who follow the Tao early
+will have an abundance of virtue.
+When there is an abundance of virtue,
+there is nothing that can not be done.
+Where there is limitless ability,
+then the kingdom is within your grasp.
+When you know the Mother of the kingdom,
+then you will be long enduring.
 
-One whose limits are unknown
-can care for a country.
-Hold to its mother,
-and the country can last.
-
-Deep roots and a firm base:
-the way of long life and clear sight.`,
+This is spoken of as the deep root and the firm trunk,
+the Way to a long life and great spiritual vision.`,
   },
-
   {
     chapter: 60,
-    text: `Rule a large country
-as you cook a small fish:
-do not keep poking it.
+    text: `Governing a large country
+is like frying small fish.
+Too much poking spoils the meat.
 
-Let the way guide the world,
-and spirits lose their power to harm.
-Not that spirits lose their power,
-but their power harms no one.
-The wise also harm no one.
+When the Tao is used to govern the world
+then evil will lose its power to harm the people.
+Not that evil will no longer exist,
+but only because it has lost its power.
+Just as evil can lose its ability to harm,
+the Master shuns the use of violence.
 
-When neither causes harm,
-their powers return to the whole.`,
+If you give evil nothing to oppose,
+then virtue will return by itself.`,
   },
-
   {
     chapter: 61,
-    text: `A great country is like low ground,
-where the world's streams meet.
-It is the receptive part of the world.
+    text: `A large country should take the low place like a great watershed,
+which from its low position assumes the female role.
+The female overcomes the male by the power of her position.
+Her tranquility gives rise to her humility.
 
-The receptive overcomes the forceful
-by being still and staying low.
+If a large country takes the low position,
+it will be able to influence smaller countries.
+If smaller countries take the lower position,
+then they can allow themselves to be influenced.
+So both seek to take the lower position
+in order to influence the other, or be influenced.
 
-A great country that lowers itself
-can join with a small country.
-A small country that lowers itself
-can join with a great country.
-One lowers itself to welcome;
-the other lowers itself to be welcomed.
-
-Both gain what they need.
-The greater should stay low.`,
+Large countries should desire to protect and help the people,
+and small countries should desire to serve others.
+Both large and small countries benefit greatly from humility.`,
   },
-
   {
     chapter: 62,
-    text: `The way is the shelter of all things,
-the treasure of the good
-and the refuge of those not good.
+    text: `The Tao is the tabernacle of creation,
+it is a treasure for those who are good,
+and a place of refuge for those who are not.
 
-Fine words can win honor.
-Fine deeds can win praise.
-But why cast anyone away?
+How can those who are not good be abandoned?
+Words that are beautiful are worth much,
+but good behavior can only be learned by example.
 
-At the crowning of a ruler,
-do not offer jade and horses.
-Sit quietly and offer the way.
+When a new leader takes office,
+don't give him gifts and offerings.
+These things are not as valuable
+as teaching him about the Tao.
 
-Why did the old ones value it?
-Those who seek may find,
-and those at fault may be freed.
-So it is the world's greatest treasure.`,
+Why was the Tao esteemed by the ancient Masters?
+Is it not said: "With it we find without looking.
+With it we find forgiveness for our transgressions."
+That is why the world can not understand it.`,
   },
-
   {
     chapter: 63,
-    text: `Act without forcing.
-Work without strain.
-Taste what has no flavor.
+    text: `Act by not acting;
+do by not doing.
+Enjoy the plain and simple.
+Find that greatness in the small.
+Take care of difficult problems
+while they are still easy;
+Do easy things before they become too hard.
 
-Treat the small as great
-and the few as many.
-Answer harm with care.
+Difficult problems are best solved while they are easy.
+Great projects are best started while they are small.
+The Master never takes on more than she can handle,
+which means that she leaves nothing undone.
 
-Meet the hard while it is easy.
-Do the great while it is small.
-The hardest tasks begin easily.
-The greatest works begin small.
-
-The wise never chase greatness,
-and so achieve what is great.
-
-Quick promises earn little trust.
-Taking things lightly brings trouble.
-The wise expect the hard,
-and so are never overcome by it.`,
+When an affirmation is given too lightly,
+keep your eyes open for trouble ahead.
+When something seems too easy,
+difficulty is hiding in the details.
+The master expects great difficulty,
+so the task is always easier than planned.`,
   },
-
   {
     chapter: 64,
-    text: `What is still is easy to hold.
-What has not begun is easy to guide.
-What is brittle is easy to break.
-What is small is easy to scatter.
+    text: `Things are easier to control while things are quiet.
+Things are easier to plan far in advance.
+Things break easier while they are still brittle.
+Things are easier hid while they are still small.
 
-Act before trouble appears.
-Set things right before disorder begins.
-
-A tree wide enough to fill your arms
-starts as a tiny shoot.
-A tower nine floors high
-starts with a basket of earth.
+Prevent problems before they arise.
+Take action before things get out of hand.
+The tallest tree
+begins as a tiny sprout.
+The tallest building
+starts with one shovel of dirt.
 A journey of a thousand miles
-starts beneath your feet.
+starts with a single footstep.
 
-Force a thing, and you spoil it.
-Hold a thing, and you lose it.
-The wise do not force, so they do not spoil.
-They do not cling, so they do not lose.
+If you rush into action, you will fail.
+If you hold on too tight, you will lose your grip.
 
-People often fail when success is near.
-Care for the end as for the start,
-and the work will not fail.
-
-The wise desire no desire,
-do not prize rare goods,
-learn to unlearn,
-and help all things return to themselves
-without daring to force them.`,
+Therefore the Master lets things take their course
+and thus never fails.
+She doesn't hold on to things
+and never loses them.
+By pursuing your goals too relentlessly,
+you let them slip away.
+If you are as concerned about the outcome
+as you are about the beginning,
+then it is hard to do things wrong.
+The master seeks no possessions.
+She learns by unlearning,
+thus she is able to understand all things.
+This gives her the ability to help all of creation.`,
   },
-
   {
     chapter: 65,
-    text: `The old masters of the way
-did not make people clever.
-They helped them remain simple.
+    text: `The ancient Masters
+who understood the way of the Tao,
+did not educate people, but made them forget.
 
-People are hard to lead
-when cleverness rules them.
-To rule through cleverness
-harms the country.
-To rule without clever schemes
-blesses the country.
+Smart people are difficult to guide,
+because they think they are too clever.
+To use cleverness to rule a country,
+is to lead the country to ruin.
+To avoid cleverness in ruling a country,
+is to lead the country to prosperity.
 
-Know these two paths
-and you know the pattern.
-Keep the pattern,
-and deep power is yours.
-
-Deep power reaches far
-and returns with all things
-to simple harmony.`,
+Knowing the two alternatives is a pattern.
+Remaining aware of the pattern is a virtue.
+This dark and mysterious virtue is profound.
+It is opposite our natural inclination,
+but leads to harmony with the heavens.`,
   },
-
   {
     chapter: 66,
-    text: `Rivers and seas rule the valleys
-because they stay below them.
-By staying low,
-they receive every stream.
+    text: `Rivers and seas are rulers
+of the streams of hundreds of valleys
+because of the power of their low position.
 
-So the wise, wishing to lead,
-speak from below.
-Wishing to guide,
-they walk behind.
+If you want to be the ruler of people,
+you must speak to them like you are their servant.
+If you want to lead other people,
+you must put their interest ahead of your own.
 
-They stand above,
-yet people feel no weight.
-They walk ahead,
-yet people feel no block.
-
-The world supports them without tiring.
-Because they do not compete,
-no one competes with them.`,
+The people will not feel burdened,
+if a wise person is in a position of power.
+The people will not feel like they are being manipulated,
+if a wise person is in front as their leader.
+The whole world will ask for her guidance,
+and will never get tired of her.
+Because she does not like to compete,
+no one can compete with the things she accomplishes.`,
   },
-
   {
     chapter: 67,
-    text: `The world says my way is great
-but unlike anything else.
-It is great because it has no likeness.
-If it had a likeness,
-it would have become small long ago.
+    text: `The world talks about honoring the Tao,
+but you can't tell it from their actions.
+Because it is thought of as great,
+the world makes light of it.
+It seems too easy for anyone to use.
 
-I have three treasures:
-care,
-restraint,
-and not trying to lead the world.
-
-From care comes courage.
-From restraint comes plenty.
-From staying behind comes true leadership.
-
-Courage without care,
-plenty without restraint,
-and leadership without humility
-lead to death.
-
-Care wins the fight
-and holds the defense.
-Heaven guards with care.`,
+There are three jewels that I cherish:
+compassion, moderation, and humility.
+With compassion, you will be able to be brave,
+With moderation, you will be able to give to others,
+With humility, you will be able to become a great leader.
+To abandon compassion while seeking to be brave,
+or abandoning moderation while being benevolent,
+or abandoning humility while seeking to lead
+will only lead to greater trouble.
+The compassionate warrior will be the winner,
+and if compassion is your defense you will be secure.
+Compassion is the protector of Heavens salvation.`,
   },
-
   {
     chapter: 68,
-    text: `The best fighter is not fierce.
-The best warrior is not angry.
-The best winner does not seek battle.
-The best leader stays below the people.
+    text: `The best warriors
+do not use violence.
+The best generals
+do not destroy indiscriminately.
+The best tacticians
+try to avoid confrontation.
+The best leaders
+becomes servants of their people.
 
-This is the power of not competing.
-This is the skill of working with people.
-This is called matching heaven,
-the old and highest way.`,
+This is called the virtue of non-competition.
+This is called the power to manage others.
+This is called attaining harmony with the heavens.`,
   },
-
   {
     chapter: 69,
-    text: `A saying among soldiers goes:
-I would rather be the guest than the host.
-I would rather step back a foot
-than advance an inch.
+    text: `There is an old saying:
+"It is better to become the passive
+in order to see what will happen.
+It is better to retreat a foot
+than to advance only an inch."
 
-This is moving without showing force,
-raising no arm,
-grasping no weapon,
-facing no enemy.
+This is called
+being flexible while advancing,
+pushing back without using force,
+and destroying the enemy without engaging him.
 
-No danger is greater
-than taking an enemy lightly.
-That almost costs my treasures.
-
-When equal forces meet,
-the one that grieves will win.`,
+There is no greater disaster
+than underestimating your enemy.
+Underestimating your enemy
+means losing your greatest assets.
+When equal forces meet in battle,
+victory will go to the one
+that enters with the greatest sorrow.`,
   },
-
   {
     chapter: 70,
     text: `My words are easy to understand
-and easy to follow,
-yet no one understands them
-or follows them.
+and easier to put into practice.
+Yet no one in the world seems to understand them,
+and are not able to apply what I teach.
 
-Words have a source.
-Deeds have a guide.
-Because people do not know these,
-they do not know me.
+My teachings come from the ancients,
+the things I do are done for a reason.
 
-Those who know me are few,
-so what I carry is precious.
-
-The wise wear plain cloth
-and keep jade within.`,
+Because you do not know me,
+you are not able to understand my teachings.
+Because those who know me are few,
+my teachings become even more precious.`,
   },
-
   {
     chapter: 71,
-    text: `To know that you do not know
-is best.
-To think you know when you do not
-is a sickness.
+    text: `Knowing you don't know is wholeness.
+Thinking you know is a disease.
+Only by recognizing that you have an illness
+can you move to seek a cure.
 
-See the sickness as sickness,
-and you are free of it.
-
-The wise are free of sickness
-because they see it clearly.`,
+The Master is whole because
+she sees her illnesses and treats them,
+and thus is able to remain whole.`,
   },
-
   {
     chapter: 72,
-    text: `When people no longer fear power,
-a greater power arrives.
+    text: `When people become overly bold,
+then disaster will soon arrive.
 
-Do not crowd their homes.
-Do not burden their lives.
-If you do not press them,
-they will not grow tired of you.
+Do not meddle with people's livelihood;
+by respecting them they will in turn respect you.
 
-The wise know themselves
-but do not display themselves.
-They value themselves
-but do not seek praise.
-
-They leave one
-and choose the other.`,
+Therefore, the Master knows herself but is not arrogant.
+She loves herself but also loves others.
+This is how she is able to make appropriate choices.`,
   },
-
   {
     chapter: 73,
-    text: `Bold daring may lead to death.
-Bold restraint may save life.
-Of these two,
-one helps and one harms.
-Who knows why heaven chooses?
-Even the wise find it hard.
+    text: `Being overbold and confident is deadly.
+The wise use of caution will keep you alive.
 
-Heaven's way does not fight,
-yet it wins.
-It does not speak,
-yet it answers.
-It does not call,
-yet things come.
-It seems slow,
-yet plans well.
+One is the way to death,
+and the other is the way to preserve your life.
+Who can understand the workings of Heaven?
 
-Heaven's net is vast.
-Its mesh is wide,
-yet nothing slips through.`,
+The Tao of the universe
+does not compete, yet wins;
+does not speak, yet responds;
+does not command, yet is obeyed;
+and does act, but is good at directing.
+
+The nets of Heaven are wide,
+but nothing escapes its grasp.`,
   },
-
   {
     chapter: 74,
-    text: `If people do not fear death,
-why threaten them with death?
-If they always feared death
-and lawbreakers could be caught and killed,
-who would dare break the law?
+    text: `If you do not fear death,
+then how can it intimidate you?
+If you aren't afraid of dying,
+there is nothing you can not do.
 
-There is always a master executioner.
-To kill in that master's place
-is to cut wood in place of a master carpenter.
-Few who take the carpenter's place
-avoid cutting their own hands.`,
+Those who harm others
+are like inexperienced boys
+trying to take the place of a great lumberjack. Trying to fill his shoes will only get them seriously hurt.`,
   },
-
   {
     chapter: 75,
-    text: `People go hungry
-because rulers take too much grain.
-That is why they hunger.
+    text: `When people go hungry,
+the government's taxes are too high.
+When people become rebellious,
+the government has become too intrusive.
 
-People are hard to lead
-because rulers interfere too much.
-That is why they resist.
+When people begin to view death lightly,
+wealthy people have too much
+which causes others to starve.
 
-People take death lightly
-because the search for life costs too much.
-That is why death does not frighten them.
-
-Those who do not strain after life
-are wiser than those who prize it too much.`,
+Only those who do not cling to their life can save it.`,
   },
-
   {
     chapter: 76,
-    text: `A living person is soft and yielding.
-In death, hard and stiff.
+    text: `The living are soft and yielding;
+the dead are rigid and stiff.
+Living plants are flexible and tender;
+the dead are brittle and dry.
 
-Living plants are tender and flexible.
-In death, dry and brittle.
+Those who are stiff and rigid
+are the disciples of death.
+Those who are soft and yielding
+are the disciples of life.
 
-So the hard and stiff belong to death.
-The soft and yielding belong to life.
-
-A rigid army will not win.
-A rigid tree will break.
-
-The hard and great fall below.
-The soft and gentle rise above.`,
+The rigid and stiff will be broken.
+The soft and yielding will overcome.`,
   },
-
   {
     chapter: 77,
-    text: `Heaven's way is like drawing a bow:
-the high is lowered,
-the low is raised,
-the full is reduced,
-the lacking is filled.
+    text: `The Tao of Heaven works in the world
+like the drawing of a bow.
+The top is bent downward;
+the bottom is bent up.
+The excess is taken from,
+and the deficient is given to.
 
-Heaven's way takes from excess
-and gives where there is need.
-The human way often takes from need
-and gives to excess.
+The Tao works to use the excess,
+and gives to that which is depleted.
+The way of people is to take from the depleted,
+and give to those who already have an excess.
 
-Who can offer their excess to the world?
-Only one who follows the way.
+Who is able to give to the needy from their excess?
+Only someone who is following the way of the Tao.
 
-The wise work without claiming,
-finish without holding,
-and do not wish to appear better than others.`,
+This is why the Master gives
+expecting nothing in return.
+She does not dwell on her past accomplishments,
+and does not glory in any praise.`,
   },
-
   {
     chapter: 78,
-    text: `Nothing in the world
-is softer or weaker than water.
-Yet nothing is better
-at wearing down the hard and strong.
-Nothing can replace it.
+    text: `Water is the softest and most yielding substance.
+Yet nothing is better than water,
+for overcoming the hard and rigid,
+because nothing can compete with it.
 
-The weak overcomes the strong.
-The soft overcomes the hard.
-Everyone knows this,
-but few live it.
+Everyone knows that the soft and yielding
+overcomes the rigid and hard,
+but few can put this knowledge into practice.
 
-So the wise say:
-One who bears the country's shame
-may lead its sacred work.
-One who bears the country's trouble
-may rule the world.
+Therefore the Master says:
+"Only he who is the lowest servant of the kingdom,
+is worthy to become its ruler.
+He who is willing to tackle the most unpleasant tasks,
+is the best ruler in the world."
 
-True words often sound backward.`,
+True sayings seem contradictory.`,
   },
-
   {
     chapter: 79,
-    text: `After a bitter quarrel is settled,
-some bitterness remains.
-How can this be made right?
+    text: `Difficulties remain, even after solving a problem.
+How then can we consider that as good?
 
-The wise keep their side of an agreement
-but do not press the other side.
-Those with true power meet their duty.
-Those without it demand payment.
+Therefore the Master
+does what she knows is right,
+and makes no demands of others.
+A virtuous person will do the right thing,
+and persons with no virtue will take advantage of others.
 
-Heaven's way favors no one,
-yet stays with those who live well.`,
+The Tao does not choose sides,
+the good person receives from the Tao
+because she is on its side.`,
   },
-
   {
     chapter: 80,
-    text: `Let there be a small country
-with few people.
-Though it has many tools,
-let them go unused.
-Let people value life
-and not wander far.
-
-Though there are boats and carts,
-let no one need to ride them.
-Though there are arms and armor,
-let no one need to display them.
-
-Let people return to simple records.
-Let their food be good,
-their clothes enough,
-their homes safe,
-their customs joyful.
-
-Neighboring lands may be so close
-that dogs and roosters can be heard,
-yet people grow old and die
-without needing to visit.`,
+    text: `Small countries with few people are best.
+Give them all of the things they want,
+and they will see that they do not need them.
+Teach them that death is a serious thing,
+and to be content to never leave their homes.
+Even though they have plenty
+of horses, wagons and boats,
+they won't feel that they need to use them.
+Even if they have weapons and shields,
+they will keep them out of sight.
+Let people enjoy the simple technologies,
+let them enjoy their food,
+let them make their own clothes,
+let them be content with their own homes,
+and delight in the customs that they cherish.
+Although the next country is close enough
+that they can hear their roosters crowing and dogs barking,
+they are content never to visit each other
+all of the days of their life.`,
   },
-
   {
     chapter: 81,
-    text: `True words are not polished.
-Polished words are not true.
-Good people do not argue.
-Those who argue are not good.
-Those who know are not stuffed with facts.
-Those stuffed with facts do not know.
+    text: `True words do not sound beautiful;
+beautiful sounding words are not true.
+Wise men don't need to debate;
+men who need to debate are not wise.
 
-The wise do not hoard.
-The more they do for others,
-the more they have.
-The more they give,
-the richer they become.
+Wise men are not scholars,
+and scholars are not wise.
+The Master desires no possessions.
+Since the things she does are for the people,
+she has more than she needs.
+The more she gives to others,
+the more she has for herself.
 
-Heaven's way helps and does not harm.
-The wise person's way acts and does not compete.`,
+The Tao of Heaven nourishes by not forcing.
+The Tao of the Wise person acts by not competing.`,
   },
 ] as const satisfies readonly TaoText[];

@@ -346,7 +346,9 @@ export const GameWrapper = ({
             width: "100%",
             maxWidth: ui.contentMaxWidth,
             alignSelf: "center",
-            padding: spacing(layoutDims.pagePadding / 2),
+            paddingHorizontal: spacing(layoutDims.pagePadding / 2),
+            paddingTop: insets.top + spacing(layoutDims.pagePadding / 2),
+            paddingBottom: spacing(layoutDims.pagePadding / 2),
           }}
         >
           <View
