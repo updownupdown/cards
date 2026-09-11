@@ -105,12 +105,12 @@ function hasFaceDownCards(grid: (PlayingCard | null)[]) {
 function hasPair(grid: (PlayingCard | null)[]) {
   for (let i = 0; i < 25; i += 1) {
     const base = grid[i];
-    if (!base) continue;
+    if (!base?.faceUp) continue;
 
     for (let j = 0; j < 25; j += 1) {
       if (i === j) continue;
       const other = grid[j];
-      if (other && other.rank === base.rank && isAdjacent(i, j)) {
+      if (other?.faceUp && other.rank === base.rank && isAdjacent(i, j)) {
         return true;
       }
     }
@@ -122,7 +122,11 @@ function hasPair(grid: (PlayingCard | null)[]) {
 function evaluateEnd(state: GameState) {
   const cardsInPlay = countCards(state.grid) + state.draw.length;
   if (cardsInPlay === 0) return { ended: true, won: true };
-  if (!hasPair(state.grid)) return { ended: true, won: false };
+
+  if (!hasPair(state.grid) && state.draw.length === 0) {
+    return { ended: true, won: false };
+  }
+
   return { ended: false, won: false };
 }
 
@@ -355,7 +359,7 @@ export default function MonteCarlo() {
     }
 
     setGame((draft) => {
-      consolidateAndDealAction(draft);
+      Object.assign(draft, evaluateEnd(draft));
     });
   }
 

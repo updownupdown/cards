@@ -309,7 +309,7 @@ export default function Klondike() {
         ? 0
         : undefined;
 
-    if (mappedCard.zoneName === "waste") {
+    if (mappedCard.zoneName === "waste" && mappedCard.topOfZone) {
       return {
         selectColor: "blue",
         isSelected: selected?.zone === "waste",
