@@ -85,7 +85,7 @@ function isAdjacent(indexA: number, indexB: number) {
 function countCards(grid: (PlayingCard | null)[]) {
   let total = 0;
   for (const cell of grid) {
-    if (cell?.faceUp) total += 1;
+    if (cell) total += 1;
   }
   return total;
 }
@@ -123,7 +123,10 @@ function evaluateEnd(state: GameState) {
   const cardsInPlay = countCards(state.grid) + state.draw.length;
   if (cardsInPlay === 0) return { ended: true, won: true };
 
-  if (!hasPair(state.grid) && state.draw.length === 0) {
+  const noFaceDownCards = !hasFaceDownCards(state.grid);
+  const noValidPairs = !hasPair(state.grid);
+
+  if (noFaceDownCards && noValidPairs) {
     return { ended: true, won: false };
   }
 
@@ -313,7 +316,7 @@ export default function MonteCarlo() {
         draft.trash.push(faceDownCard);
       });
 
-      await delay(100);
+      await delay(50);
 
       setGame(gameState);
     }
@@ -333,7 +336,7 @@ export default function MonteCarlo() {
 
           setGame(gameState);
 
-          await delay(100);
+          await delay(50);
         }
       }
     }
@@ -355,7 +358,7 @@ export default function MonteCarlo() {
 
       setGame(gameState);
 
-      await delay(100);
+      await delay(50);
     }
 
     setGame((draft) => {
@@ -472,6 +475,7 @@ export default function MonteCarlo() {
           fullWidth
           size="lg"
           halfTaller
+          theme="#508083"
         />
       </View>
     </GameWrapper>

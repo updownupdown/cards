@@ -15,7 +15,7 @@ export const rogueRun: GameDefinition = {
   background: GAME_BACKGROUNDS.stoneTunnel,
   animation: GameAnimations.Embers,
   gameColorDark: "#292116",
-  gameColorMid: "#af865a",
+  gameColorMid: "#6b4925",
   gameColorPale: "#faefe3",
   cardDescription:
     "A dungeon crawl where you manage weapon strength and potion usage.",

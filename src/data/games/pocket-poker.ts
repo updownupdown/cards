@@ -15,7 +15,7 @@ export const pocketPoker: GameDefinition = {
   background: GAME_BACKGROUNDS.casino,
   animation: GameAnimations.Dust,
   gameColorDark: "#142e1f",
-  gameColorMid: "#99ac54",
+  gameColorMid: "#36691e",
   gameColorPale: "#fff5bd",
   cardDescription:
     "A pocket poker duel: draw, bet, and out-rank an opponent dealt from the same deck.",

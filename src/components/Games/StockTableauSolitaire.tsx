@@ -37,6 +37,7 @@ export type StockTableauVariant =
   | "westcliff"
   | "gargantua"
   | "harp"
+  | "raglan"
   | "thumb-and-pouch"
   | "lucas"
   | "rank-and-file"
@@ -174,6 +175,17 @@ const CONFIGS: Record<StockTableauVariant, Config> = {
     empty: "king",
     stock: "waste",
     redeals: 3,
+  },
+  raglan: {
+    decks: 1,
+    foundations: 4,
+    deal: { columns: 7, sizes: [1, 2, 3, 4, 5, 6, 7], faceUp: 1 },
+    build: "alternating",
+    move: "built-run",
+    empty: "king",
+    stock: "waste",
+    redeals: 0,
+    seedAces: true,
   },
   "thumb-and-pouch": {
     decks: 1,

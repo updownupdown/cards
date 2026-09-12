@@ -13,7 +13,7 @@ export const pyramid: GameDefinition = {
   thumbnail: "Pyramid.jpg",
   background: GAME_BACKGROUNDS.sahara,
   gameColorDark: "#251703",
-  gameColorMid: "#a98551",
+  gameColorMid: "#684b23",
   gameColorPale: "#FFEACC",
   cardDescription:
     "Clear the pyramid by removing pairs of cards that add up to 13.",

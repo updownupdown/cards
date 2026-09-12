@@ -10,7 +10,7 @@ export const thumbAndPouch: GameDefinition = {
   background: GAME_BACKGROUNDS.cozyCabin,
   animation: GameAnimations.Dust,
   gameColorDark: "#3b3028",
-  gameColorMid: "#ad8a56",
+  gameColorMid: "#884130",
   gameColorPale: "#ead9b8",
   thumbnail: "ThumbAndPouch.jpg",
   cardDescription:
