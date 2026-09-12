@@ -4,7 +4,8 @@ const buildDate = new Date().toISOString();
 const config = {
   name: "SoloSuite",
   description: "A collection of solo playing card games.",
-  slug: "cards",
+  owner: "updowngames",
+  slug: "solosuite",
   version: "1.0.0",
   orientation: "default",
   icon: "./assets/app-icon/icon.png",
@@ -68,7 +69,7 @@ const config = {
   extra: {
     router: {},
     eas: {
-      projectId: "30ebd444-354d-47f5-a779-13c1576fbf48",
+      projectId: "a82abc24-6db7-4465-9ad5-ca9ce212447b",
     },
     buildDate,
   },
