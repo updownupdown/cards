@@ -3,7 +3,7 @@ import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { roundToPixel } from "@/utils/utils";
 import { usePathname } from "expo-router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LoadingOverlay } from "../common/LoadingOverlay";
@@ -13,6 +13,7 @@ import {
   CardMapBGMapping,
 } from "./AnimatedCard";
 import { isCardImageSetPreloaded, preloadCardImageSet } from "./CardAssets";
+import { isBoardInputLocked } from "./input-lock";
 import {
   CardMapBackgrounds,
   DeckFanDirection,
@@ -468,20 +469,60 @@ export function useCardMap({
     return positionMap;
   }, [game, getCardPosition, zones]);
 
+  // Games build a new onPress closure for each card on every render. Passing
+  // those straight through would defeat AnimatedCard's memo, so each card gets
+  // a stable wrapper that calls the latest handler from this render.
+  const pressHandlersRef = useRef(new Map<string, () => void>());
+  const stablePressHandlersRef = useRef(new Map<string, () => void>());
+
+  const getStablePressHandler = useCallback((cardId: string) => {
+    let handler = stablePressHandlersRef.current.get(cardId);
+    if (!handler) {
+      handler = () => {
+        if (isBoardInputLocked()) return;
+        pressHandlersRef.current.get(cardId)?.();
+      };
+      stablePressHandlersRef.current.set(cardId, handler);
+    }
+    return handler;
+  }, []);
+
   const mappedCards = useMemo(
     () =>
-      Object.values(cardPositions).map((mappedCard) => (
-        <AnimatedCard
-          key={mappedCard.card.id}
-          targetState={mappedCard}
-          cardWidth={cardWidth}
-          cardHeight={cardHeight}
-          cardSize={cardSize}
-          cardBackPath={cardBackPath}
-          {...cardMapper(mappedCard)}
-        />
-      )),
-    [cardBackPath, cardHeight, cardMapper, cardPositions, cardSize, cardWidth],
+      Object.values(cardPositions).map((mappedCard) => {
+        const cardId = mappedCard.card.id;
+        const mapping = cardMapper(mappedCard);
+
+        if (mapping?.onPress) {
+          pressHandlersRef.current.set(cardId, mapping.onPress);
+        } else {
+          pressHandlersRef.current.delete(cardId);
+        }
+
+        return (
+          <AnimatedCard
+            key={cardId}
+            targetState={mappedCard}
+            cardWidth={cardWidth}
+            cardHeight={cardHeight}
+            cardSize={cardSize}
+            cardBackPath={cardBackPath}
+            {...mapping}
+            onPress={
+              mapping?.onPress ? getStablePressHandler(cardId) : undefined
+            }
+          />
+        );
+      }),
+    [
+      cardBackPath,
+      cardHeight,
+      cardMapper,
+      cardPositions,
+      cardSize,
+      cardWidth,
+      getStablePressHandler,
+    ],
   );
 
   const mapBackgrounds = useMemo(

@@ -10,7 +10,7 @@ export const calculation: GameDefinition = {
     difficulty: 80,
     luck: 50,
   },
-  thumbnail: "Calculation.jpg",
+  thumbnail: "Calculation.webp",
   background: GAME_BACKGROUNDS.oldRoom,
   gameColorDark: "#12122b",
   gameColorMid: "#7958ae",

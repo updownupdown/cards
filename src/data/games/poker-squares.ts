@@ -14,7 +14,7 @@ export const pokerSquares: GameDefinition = {
     difficulty: 65,
     luck: 75,
   },
-  thumbnail: "PokerSquares.jpg",
+  thumbnail: "PokerSquares.webp",
   background: GAME_BACKGROUNDS.casino,
   gameColorDark: "#112c1f",
   gameColorMid: "#266e1d",

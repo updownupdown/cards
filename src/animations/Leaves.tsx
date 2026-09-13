@@ -1,253 +1,218 @@
 import Leaf from "@/assets/images/leaf.svg";
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
+import { StyleSheet } from "react-native";
+import Animated, {
+  type SharedValue,
+  useAnimatedStyle,
+  useFrameCallback,
+  useSharedValue,
+} from "react-native-reanimated";
 import {
-  Platform,
-  Animated as RNAnimated,
-  Easing as RNEasing,
-  StyleSheet,
-} from "react-native";
-import { type SceneProps, seeded } from "./BackgroundAnimations";
+  hash01,
+  type SceneProps,
+  seeded,
+  useAnimationsPaused,
+} from "./BackgroundAnimations";
 
-type LeafParticleProps = SceneProps & {
-  color: string;
-  index: number;
-  wind: RNAnimated.Value;
-  windCurrent: { current: number };
+const LEAF_COUNT = 24;
+const LEAF_COLORS = ["#9b3f24", "#c35b28", "#d8892f", "#b79a36", "#7f4828"];
+
+// Runs entirely on the UI thread: one frame callback advances every leaf. This
+// used to be Animated sequences restarted from JS, with the wind value and all
+// 24 leaves subscribed to wind updates via listeners — which, on a native-
+// driven value, sends every frame's value back to the JS thread 25 times.
+
+type LeafState = {
+  cycle: number;
+  startTime: number;
+  delay: number;
+  duration: number;
+  startX: number;
+  startY: number;
+  windAtStart: number;
+  response: number;
+  scale: number;
+  staticX: number;
+  turnsX: number;
+  turnsY: number;
+  turnsZ: number;
 };
 
-function useLeafWind(width: number) {
-  const wind = useRef(new RNAnimated.Value(0)).current;
-  const windCurrent = useRef(0);
-
-  useEffect(() => {
-    let animation: RNAnimated.CompositeAnimation | undefined;
-    let cancelled = false;
-    const listener = wind.addListener(({ value }) => {
-      windCurrent.current = value;
-    });
-
-    function gust() {
-      const magnitude = Math.random();
-      const duration = 8000 + magnitude * 400;
-      const displacement = width * (-0 + magnitude * 0.4);
-
-      animation = RNAnimated.timing(wind, {
-        toValue: windCurrent.current - displacement,
-        duration,
-        easing: RNEasing.inOut(RNEasing.sin),
-        useNativeDriver: Platform.OS !== "web",
-      });
-      animation.start(({ finished }) => {
-        if (finished && !cancelled) gust();
-      });
-    }
-
-    gust();
-
-    return () => {
-      cancelled = true;
-      animation?.stop();
-      wind.removeListener(listener);
-    };
-  }, [width, wind]);
-
-  return { wind, windCurrent };
+/** Wind displacement over time: a slow leftward drift with a gentle surge. */
+function windAt(time: number, width: number) {
+  "worklet";
+  const drift = -(time / 8000) * 0.2 * width;
+  const surge = 0.05 * width * Math.sin((time / 8000) * Math.PI * 2);
+  return drift + surge;
 }
 
+function createLeaf(
+  index: number,
+  cycle: number,
+  now: number,
+  initialDelay: number,
+  size: number,
+  width: number,
+  wind: number,
+): LeafState {
+  "worklet";
+  const random = (salt: number) => hash01(index * 31 + salt, cycle * 17 + 1);
+  const depth = random(1);
+  const axis = random(2);
+  const rotationSpeed = axis < 0.25 ? 0.5 + random(3) : 2 + random(3) * 4;
+  const staticX = axis < 0.5 ? random(4) * 360 - 180 : 0;
+  const turns = 360 * rotationSpeed;
+
+  return {
+    cycle,
+    startTime: now,
+    delay: cycle === 0 ? initialDelay : 500 + random(5) * 5000,
+    duration: 18000 + random(6) * 7000,
+    startX: random(7) * width,
+    startY: -size * (1.5 + random(8) * 2),
+    windAtStart: wind,
+    response: 0.5 + depth * 0.5,
+    scale: 0.7 + depth * 0.4,
+    staticX,
+    turnsX: axis > 0.5 ? turns : staticX,
+    turnsY: axis > 0.25 && axis <= 0.5 ? turns : 0,
+    turnsZ: axis <= 0.25 ? turns : 0,
+  };
+}
+
+type LeafParticleProps = {
+  index: number;
+  color: string;
+  size: number;
+  height: number;
+  width: number;
+  time: SharedValue<number>;
+  leaves: SharedValue<LeafState[]>;
+};
+
 function LeafParticle({
-  color,
   index,
-  width,
+  color,
+  size,
   height,
-  wind,
-  windCurrent,
+  width,
+  time,
+  leaves,
 }: LeafParticleProps) {
-  const size = 4 + seeded(index, 8) * 10;
-  const x = useRef(new RNAnimated.Value(0)).current;
-  const y = useRef(new RNAnimated.Value(0)).current;
-  const scale = useRef(new RNAnimated.Value(1)).current;
-  const windResponse = useRef(new RNAnimated.Value(1)).current;
-  const rotationX = useRef(new RNAnimated.Value(0)).current;
-  const rotationY = useRef(new RNAnimated.Value(0)).current;
-  const rotationZ = useRef(new RNAnimated.Value(0)).current;
-  const startX = useRef(0);
-  const windAtReset = useRef(0);
-  const windResponseCurrent = useRef(1);
+  const animatedStyle = useAnimatedStyle(() => {
+    const leaf = leaves.value[index];
+    if (!leaf) return { opacity: 0 };
 
-  useEffect(() => {
-    let animation: RNAnimated.CompositeAnimation | undefined;
-    let cancelled = false;
-    let resetting = false;
+    const now = time.value;
+    const elapsed = now - leaf.startTime - leaf.delay;
+    const progress = elapsed <= 0 ? 0 : Math.min(elapsed / leaf.duration, 1);
+    const x =
+      leaf.startX + (windAt(now, width) - leaf.windAtStart) * leaf.response;
+    const y = leaf.startY + (height + size - leaf.startY) * progress;
+    const rotateX = leaf.staticX + (leaf.turnsX - leaf.staticX) * progress;
 
-    function reset(initial: boolean) {
-      const particleStartX = Math.random() * width;
-      const startY = -size * (1.5 + Math.random() * 2);
-      const delay = initial
-        ? index * 350 + seeded(index, 7) * 16000
-        : 500 + Math.random() * 5000;
-      const depth = Math.random();
-      const response = 0.5 + depth * 0.5;
-      const duration = 18000 + Math.random() * 7000;
-      const axis = Math.random();
-      const rotationSpeed =
-        axis < 0.25 ? 0.5 + Math.random() : 2 + Math.random() * 4;
-      const staticX = axis < 0.5 ? Math.random() * 360 - 180 : 0;
-
-      startX.current = particleStartX;
-      windAtReset.current = windCurrent.current;
-      windResponseCurrent.current = response;
-      x.setValue(particleStartX - windAtReset.current * response);
-      y.setValue(startY);
-      scale.setValue(0.7 + depth * 0.4);
-      windResponse.setValue(response);
-      rotationX.setValue(staticX);
-      rotationY.setValue(0);
-      rotationZ.setValue(0);
-
-      const turns = 360 * rotationSpeed;
-      const rotationTargets = {
-        x: axis > 0.5 ? turns : staticX,
-        y: axis > 0.25 && axis <= 0.5 ? turns : 0,
-        z: axis <= 0.25 ? turns : 0,
-      };
-
-      animation = RNAnimated.sequence([
-        RNAnimated.delay(delay),
-        RNAnimated.parallel([
-          RNAnimated.timing(y, {
-            toValue: height + size,
-            duration,
-            easing: RNEasing.linear,
-            useNativeDriver: Platform.OS !== "web",
-          }),
-          RNAnimated.timing(rotationX, {
-            toValue: rotationTargets.x,
-            duration,
-            easing: RNEasing.linear,
-            useNativeDriver: Platform.OS !== "web",
-          }),
-          RNAnimated.timing(rotationY, {
-            toValue: rotationTargets.y,
-            duration,
-            easing: RNEasing.linear,
-            useNativeDriver: Platform.OS !== "web",
-          }),
-          RNAnimated.timing(rotationZ, {
-            toValue: rotationTargets.z,
-            duration,
-            easing: RNEasing.linear,
-            useNativeDriver: Platform.OS !== "web",
-          }),
-        ]),
-      ]);
-      animation.start(({ finished }) => {
-        if (finished && !cancelled) reset(false);
-      });
-    }
-
-    const windListener = wind.addListener(({ value }) => {
-      if (
-        resetting ||
-        value === undefined ||
-        startX.current +
-          (value - windAtReset.current) * windResponseCurrent.current <
-          -size ||
-        startX.current +
-          (value - windAtReset.current) * windResponseCurrent.current >
-          width
-      ) {
-        if (!resetting && value !== undefined) {
-          resetting = true;
-          animation?.stop();
-          reset(false);
-          resetting = false;
-        }
-      }
-    });
-
-    reset(true);
-
-    return () => {
-      cancelled = true;
-      animation?.stop();
-      wind.removeListener(windListener);
+    return {
+      opacity: 1,
+      transform: [
+        { perspective: 400 },
+        { translateX: x },
+        { translateY: y },
+        { scale: leaf.scale },
+        { rotateX: `${rotateX}deg` },
+        { rotateY: `${leaf.turnsY * progress}deg` },
+        { rotateZ: `${leaf.turnsZ * progress}deg` },
+      ],
     };
-  }, [
-    height,
-    index,
-    rotationX,
-    rotationY,
-    rotationZ,
-    scale,
-    size,
-    width,
-    windCurrent,
-    windResponse,
-    x,
-    y,
-    wind,
-  ]);
-
-  const rotationInput = [-3600, 3600];
+  });
 
   return (
-    <RNAnimated.View
-      style={[
-        styles.leaf,
-        {
-          height: size,
-          width: size,
-          transform: [
-            { perspective: 400 },
-            {
-              translateX: RNAnimated.add(
-                x,
-                RNAnimated.multiply(wind, windResponse),
-              ),
-            },
-            { translateY: y },
-            { scale },
-            {
-              rotateX: rotationX.interpolate({
-                inputRange: rotationInput,
-                outputRange: ["-3600deg", "3600deg"],
-              }),
-            },
-            {
-              rotateY: rotationY.interpolate({
-                inputRange: rotationInput,
-                outputRange: ["-3600deg", "3600deg"],
-              }),
-            },
-            {
-              rotateZ: rotationZ.interpolate({
-                inputRange: rotationInput,
-                outputRange: ["-3600deg", "3600deg"],
-              }),
-            },
-          ],
-        },
-      ]}
+    <Animated.View
+      style={[styles.leaf, { width: size, height: size }, animatedStyle]}
     >
       <Leaf color={color} width={size} height={size} />
-    </RNAnimated.View>
+    </Animated.View>
   );
 }
 
-export function Leaves(props: SceneProps) {
-  const colors = ["#9b3f24", "#c35b28", "#d8892f", "#b79a36", "#7f4828"];
-  const { wind, windCurrent } = useLeafWind(props.width);
+export function Leaves({ width, height }: SceneProps) {
+  const [sizes] = useState(() =>
+    Array.from({ length: LEAF_COUNT }, (_, index) => 4 + seeded(index, 8) * 10),
+  );
+  const [initialDelays] = useState(() =>
+    Array.from(
+      { length: LEAF_COUNT },
+      (_, index) => index * 350 + seeded(index, 7) * 16000,
+    ),
+  );
+
+  const time = useSharedValue(0);
+  const leaves = useSharedValue<LeafState[]>([]);
+
+  const paused = useAnimationsPaused();
+
+  // The scene's own clock advances only while running, so a pause freezes the
+  // leaves instead of letting their falls finish unseen.
+  const frameCallback = useFrameCallback((frame) => {
+    "worklet";
+    const now = time.value + (frame.timeSincePreviousFrame ?? 0);
+    const wind = windAt(now, width);
+    time.value = now;
+
+    leaves.modify((list) => {
+      "worklet";
+      for (let index = 0; index < LEAF_COUNT; index++) {
+        const size = sizes[index];
+        const leaf = list[index];
+
+        if (!leaf) {
+          list[index] = createLeaf(
+            index,
+            0,
+            now,
+            initialDelays[index],
+            size,
+            width,
+            wind,
+          );
+          continue;
+        }
+
+        const elapsed = now - leaf.startTime - leaf.delay;
+        const x = leaf.startX + (wind - leaf.windAtStart) * leaf.response;
+
+        // Start a new fall once this one ends, or the wind blows it off screen.
+        if (elapsed >= leaf.duration || x < -size || x > width) {
+          list[index] = createLeaf(
+            index,
+            leaf.cycle + 1,
+            now,
+            0,
+            size,
+            width,
+            wind,
+          );
+        }
+      }
+      return list;
+    });
+  });
+
+  useEffect(() => {
+    frameCallback.setActive(!paused);
+  }, [frameCallback, paused]);
 
   return (
     <>
-      {Array.from({ length: 24 }, (_, index) => (
+      {sizes.map((size, index) => (
         <LeafParticle
           key={index}
-          {...props}
-          color={colors[index % colors.length]}
           index={index}
-          wind={wind}
-          windCurrent={windCurrent}
+          color={LEAF_COLORS[index % LEAF_COLORS.length]}
+          size={size}
+          width={width}
+          height={height}
+          time={time}
+          leaves={leaves}
         />
       ))}
     </>

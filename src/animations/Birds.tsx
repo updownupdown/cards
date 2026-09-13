@@ -1,14 +1,24 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
+import { Platform, StyleSheet, View } from "react-native";
+import Animated, {
+  cancelAnimation,
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from "react-native-reanimated";
 import {
-  Platform,
-  Animated as RNAnimated,
-  Easing as RNEasing,
-  StyleSheet,
-  View,
-} from "react-native";
-import { Drifter, type SceneProps, seeded } from "./BackgroundAnimations";
+  Drifter,
+  type SceneProps,
+  seeded,
+  useAnimationsPaused,
+} from "./BackgroundAnimations";
 
 const BIRD_COLORS = ["#111111", "#2b2b2b", "#38291f", "#4a4038"];
+const FLAP_BURSTS = 3;
 
 function Bird({ color }: { color: string }) {
   return (
@@ -21,111 +31,108 @@ function Bird({ color }: { color: string }) {
   );
 }
 
+type Flap = {
+  compression: number;
+  lift: number;
+  downDuration: number;
+  upDuration: number;
+};
+
 function FlappingBird({ index, scale }: { index: number; scale: number }) {
-  const wingScale = useRef(new RNAnimated.Value(1)).current;
-  const flapLift = useRef(new RNAnimated.Value(0)).current;
-  const gravity = useRef(
-    new RNAnimated.Value((seeded(index, 40) - 0.5) * 20),
-  ).current;
   const color = BIRD_COLORS[index % BIRD_COLORS.length];
 
+  // A few bursts of flaps picked at mount and repeated on the UI thread
+  // (previously each burst was re-rolled and restarted from JS). The wing and
+  // the lift share step durations so they stay in step across repeats.
+  const [bursts] = useState(() =>
+    Array.from({ length: FLAP_BURSTS }, (_, burst) => ({
+      pause:
+        burst === 0
+          ? 1000 + seeded(index, 45) * 9000
+          : 2500 + Math.random() * 7000,
+      flaps: Array.from(
+        { length: 1 + Math.floor(Math.random() * 5) },
+        (): Flap => ({
+          compression: 0.2 + Math.random() * 0.2,
+          lift: -(3 + Math.random() * 5),
+          downDuration: 200 + Math.random() * 190,
+          upDuration: 420 + Math.random() * 380,
+        }),
+      ),
+    })),
+  );
+
+  const wingScale = useSharedValue(1);
+  const flapLift = useSharedValue(0);
+  const gravity = useSharedValue((seeded(index, 40) - 0.5) * 20);
+  const paused = useAnimationsPaused();
+
   useEffect(() => {
-    let flapAnimation: RNAnimated.CompositeAnimation | undefined;
-    let altitudeAnimation: RNAnimated.CompositeAnimation | undefined;
-    let cancelled = false;
+    if (paused) return;
+    const sine = Easing.inOut(Easing.sin);
+    const wingSteps = bursts.flatMap(({ pause, flaps }) =>
+      flaps.flatMap((flap, flapIndex) => {
+        const down = withTiming(flap.compression, {
+          duration: flap.downDuration,
+          easing: sine,
+        });
+        return [
+          flapIndex === 0 ? withDelay(pause, down) : down,
+          withTiming(1, {
+            duration: flap.upDuration,
+            easing: Easing.out(Easing.sin),
+          }),
+        ];
+      }),
+    );
+    const liftSteps = bursts.flatMap(({ pause, flaps }) =>
+      flaps.flatMap((flap, flapIndex) => {
+        const up = withTiming(flap.lift, {
+          duration: flap.downDuration,
+          easing: Easing.out(Easing.sin),
+        });
+        return [
+          flapIndex === 0 ? withDelay(pause, up) : up,
+          withTiming(0, { duration: flap.upDuration, easing: sine }),
+        ];
+      }),
+    );
 
-    function flap(isFirstBurst = false) {
-      const flapCount = 1 + Math.floor(Math.random() * 5);
-      const flaps: RNAnimated.CompositeAnimation[] = [];
-
-      for (let count = 0; count < flapCount; count += 1) {
-        const compression = 0.2 + Math.random() * 0.2;
-        const lift = -(3 + Math.random() * 5);
-
-        flaps.push(
-          RNAnimated.parallel([
-            RNAnimated.timing(wingScale, {
-              toValue: compression,
-              duration: 180 + Math.random() * 170,
-              easing: RNEasing.inOut(RNEasing.sin),
-              useNativeDriver: Platform.OS !== "web",
-            }),
-            RNAnimated.timing(flapLift, {
-              toValue: lift,
-              duration: 220 + Math.random() * 220,
-              easing: RNEasing.out(RNEasing.sin),
-              useNativeDriver: Platform.OS !== "web",
-            }),
-          ]),
-          RNAnimated.parallel([
-            RNAnimated.timing(wingScale, {
-              toValue: 1,
-              duration: 260 + Math.random() * 260,
-              easing: RNEasing.out(RNEasing.sin),
-              useNativeDriver: Platform.OS !== "web",
-            }),
-            RNAnimated.timing(flapLift, {
-              toValue: 0,
-              duration: 420 + Math.random() * 380,
-              easing: RNEasing.inOut(RNEasing.sin),
-              useNativeDriver: Platform.OS !== "web",
-            }),
-          ]),
-        );
-      }
-
-      flapAnimation = RNAnimated.sequence([
-        RNAnimated.delay(
-          isFirstBurst
-            ? 1000 + seeded(index, 45) * 9000
-            : 2500 + Math.random() * 7000,
-        ),
-        ...flaps,
-      ]);
-      flapAnimation.start(({ finished }) => {
-        if (finished && !cancelled) flap();
-      });
-    }
-
-    function fallWithGravity() {
-      altitudeAnimation = RNAnimated.timing(gravity, {
-        toValue: 42 + seeded(index, 42) * 25,
-        duration: 15000 + seeded(index, 43) * 9000,
-        easing: RNEasing.linear,
-        useNativeDriver: Platform.OS !== "web",
-      });
-      altitudeAnimation.start(({ finished }) => {
-        if (!finished || cancelled) return;
-
-        gravity.setValue(-24 - seeded(index, 44) * 20);
-        fallWithGravity();
-      });
-    }
-
-    flap(true);
-    fallWithGravity();
+    wingScale.value = withRepeat(withSequence(...wingSteps), -1, false);
+    flapLift.value = withRepeat(withSequence(...liftSteps), -1, false);
+    gravity.value = withRepeat(
+      withSequence(
+        withTiming(42 + seeded(index, 42) * 25, {
+          duration: 15000 + seeded(index, 43) * 9000,
+          easing: Easing.linear,
+        }),
+        withTiming(-24 - seeded(index, 44) * 20, { duration: 0 }),
+      ),
+      -1,
+      false,
+    );
 
     return () => {
-      cancelled = true;
-      flapAnimation?.stop();
-      altitudeAnimation?.stop();
+      cancelAnimation(wingScale);
+      cancelAnimation(flapLift);
+      cancelAnimation(gravity);
     };
-  }, [flapLift, gravity, index, wingScale]);
+  }, [bursts, flapLift, gravity, index, paused, wingScale]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateY: gravity.value + flapLift.value },
+      { scale },
+      { scaleX: wingScale.value },
+    ],
+  }));
 
   return (
-    <RNAnimated.View
-      style={{
-        transform: [
-          { translateY: RNAnimated.add(gravity, flapLift) },
-          { scale },
-          { scaleX: wingScale },
-        ],
-      }}
-    >
+    <Animated.View style={animatedStyle}>
       <View style={styles.blur}>
         <Bird color={color} />
       </View>
-    </RNAnimated.View>
+    </Animated.View>
   );
 }
 

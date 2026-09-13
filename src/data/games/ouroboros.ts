@@ -15,7 +15,7 @@ export const ouroboros: GameDefinition = {
     difficulty: 40,
     luck: 40,
   },
-  thumbnail: "Ouroboros.jpg",
+  thumbnail: "Ouroboros.webp",
   background: GAME_BACKGROUNDS.stoneTunnel,
   animation: GameAnimations.ManaDust,
   gameColorDark: "#1d120e",

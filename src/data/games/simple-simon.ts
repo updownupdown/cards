@@ -5,7 +5,7 @@ export const simpleSimon: GameDefinition = {
   title: "Simple Simon",
   tags: [GameTag.SequenceBuilding],
   rating: { complexity: 35, difficulty: 55, luck: 25 },
-  thumbnail: "SimpleSimon.jpg",
+  thumbnail: "SimpleSimon.webp",
   background: GAME_BACKGROUNDS.oldRoom,
   gameColorDark: "#312d29",
   gameColorMid: "#941f1f",

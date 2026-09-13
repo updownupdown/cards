@@ -12,7 +12,7 @@ export const penguin: GameDefinition = {
     difficulty: 60,
     luck: 25,
   },
-  thumbnail: "Penguin.jpg",
+  thumbnail: "Penguin.webp",
   background: GAME_BACKGROUNDS.antarctica,
   animation: GameAnimations.Snow,
   gameColorDark: "#111b27",

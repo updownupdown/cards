@@ -35,20 +35,18 @@ const EXPECTED_CARD_NAMES = [
 const cardContext = require.context(
   "../../../assets/cards",
   true,
-  /^\.\/(?:classic|regular|small|small-colored|tableau)\/[^/]+\.png$/,
+  /^\.\/(?:classic|regular|small|small-colored|tableau)\/[^/]+\.webp$/,
 );
 const collectibleCardContext = require.context(
   "../../../assets/cards",
   true,
-  /^\.\/(?:pale|dark)\/[^/]+\.png$/,
+  /^\.\/(?:pale|dark)\/[^/]+\.webp$/,
 );
 const cardBackContext = require.context(
   "../../../assets/cards/backs",
   false,
-  /^\.\/[^/]+\.png$/,
+  /^\.\/[^/]+\.webp$/,
 );
-
-export const CARD_BACK_IMAGE = require("@/assets/cards/CardBack.png");
 
 const cardFilesBySize = buildCardFilesBySize();
 const collectibleCardFiles = buildCollectibleCardFiles();
@@ -79,7 +77,7 @@ export function getCardImageSource(
 export function getCardBackImage(gamePath?: string) {
   const fileName = gamePath?.replace(/^\//, "");
   return (
-    cardBackFiles[fileName ?? ""] ?? cardBackFiles.default ?? CARD_BACK_IMAGE
+    cardBackFiles[fileName ?? ""] ?? cardBackFiles.default
   );
 }
 
@@ -94,22 +92,41 @@ export function isCardImageSetPreloaded(
   cardSize: CardSizes,
   cardBackPath?: string,
 ) {
-  return loadedImages.has(getPreloadKey(cardSize, cardBackPath));
+  return (
+    loadedImages.has(getFacesPreloadKey(cardSize)) &&
+    loadedImages.has(getBackPreloadKey(cardBackPath))
+  );
 }
 
 export function preloadCardImageSet(
   cardSize: CardSizes,
   cardBackPath?: string,
 ) {
-  const preloadKey = getPreloadKey(cardSize, cardBackPath);
+  // Faces are shared by every game with this card size, so they're decoded
+  // (and held in memory) once per size rather than once per game; only the
+  // back differs between games.
+  return Promise.all([
+    preloadImages(
+      getFacesPreloadKey(cardSize),
+      Object.values(getCardFilesForSize(cardSize)),
+      cardSize,
+    ),
+    preloadImages(
+      getBackPreloadKey(cardBackPath),
+      [getCardBackImage(cardBackPath)],
+      "card back",
+    ),
+  ]).then(() => undefined);
+}
+
+function preloadImages(
+  preloadKey: string,
+  sources: ImageSourcePropType[],
+  label: string,
+) {
   const existing = preloadPromises.get(preloadKey);
 
   if (existing) return existing;
-
-  const sources = [
-    ...Object.values(getCardFilesForSize(cardSize)),
-    getCardBackImage(cardBackPath),
-  ];
 
   const promise = Promise.allSettled(
     sources.map((source) => Image.loadAsync(source as ImageLoadSource)),
@@ -123,7 +140,7 @@ export function preloadCardImageSet(
 
     if (failedCount > 0) {
       console.warn(
-        `Failed to preload ${failedCount} card image${failedCount === 1 ? "" : "s"} for ${cardSize}.`,
+        `Failed to preload ${failedCount} card image${failedCount === 1 ? "" : "s"} for ${label}.`,
       );
     }
   });
@@ -132,15 +149,19 @@ export function preloadCardImageSet(
   return promise;
 }
 
-function getPreloadKey(cardSize: CardSizes, cardBackPath?: string) {
-  return `${cardSize}:${cardBackPath ?? "default"}`;
+function getFacesPreloadKey(cardSize: CardSizes) {
+  return `faces:${cardSize}`;
+}
+
+function getBackPreloadKey(cardBackPath?: string) {
+  return `back:${cardBackPath ?? "default"}`;
 }
 
 function buildCardBackFiles() {
   const cardBackFiles: Record<string, ImageSourcePropType> = {};
 
   for (const key of cardBackContext.keys()) {
-    const fileName = key.match(/^\.\/([^/]+)\.png$/)?.[1];
+    const fileName = key.match(/^\.\/([^/]+)\.webp$/)?.[1];
     if (!fileName) continue;
 
     cardBackFiles[fileName] = cardBackContext(key) as ImageSourcePropType;
@@ -156,7 +177,7 @@ function buildCollectibleCardFiles() {
   >;
 
   for (const key of collectibleCardContext.keys()) {
-    const match = key.match(/^\.\/(pale|dark)\/([^/]+)\.png$/);
+    const match = key.match(/^\.\/(pale|dark)\/([^/]+)\.webp$/);
     if (!match) continue;
 
     const [, deck, cardName] = match as [string, "pale" | "dark", string];
@@ -174,7 +195,7 @@ function buildCardFilesBySize() {
   ) as Record<CardSizes, Record<string, ImageSourcePropType>>;
 
   for (const key of cardContext.keys()) {
-    const match = key.match(/^\.\/([^/]+)\/([^/]+)\.png$/);
+    const match = key.match(/^\.\/([^/]+)\/([^/]+)\.webp$/);
     if (!match) continue;
 
     const [, folder, cardName] = match;
@@ -209,7 +230,7 @@ function validateCardFiles(
     if (missing.length > 0) {
       console.error(
         `[CardAssets] Missing ${missing.length} card image${missing.length === 1 ? "" : "s"} for cardSize "${cardSize}": ${missing
-          .map((cardName) => `assets/cards/${cardSize}/${cardName}.png`)
+          .map((cardName) => `assets/cards/${cardSize}/${cardName}.webp`)
           .join(", ")}`,
       );
     }
@@ -217,7 +238,7 @@ function validateCardFiles(
     if (unexpected.length > 0) {
       console.warn(
         `[CardAssets] Unexpected card image${unexpected.length === 1 ? "" : "s"} for cardSize "${cardSize}": ${unexpected
-          .map((cardName) => `assets/cards/${cardSize}/${cardName}.png`)
+          .map((cardName) => `assets/cards/${cardSize}/${cardName}.webp`)
           .join(", ")}`,
       );
     }
@@ -230,6 +251,6 @@ function logMissingCardImage(cardSize: CardSizes, cardName: string) {
 
   loggedMissingCards.add(key);
   console.error(
-    `[CardAssets] Missing card image for cardSize "${cardSize}" and card "${cardName}". Expected assets/cards/${cardSize}/${cardName}.png`,
+    `[CardAssets] Missing card image for cardSize "${cardSize}" and card "${cardName}". Expected assets/cards/${cardSize}/${cardName}.webp`,
   );
 }

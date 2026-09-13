@@ -2,7 +2,7 @@ import SoloSuiteLogo from "@/assets/images/SoloSuiteLogo.svg";
 import { Button } from "@/components/Button/Button";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, rgba, layoutDims } from "@/styles/styles";
+import { Colors, rgba, layoutDims, webDropShadow } from "@/styles/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect } from "react";
 import { Platform, StyleSheet, View } from "react-native";
@@ -100,7 +100,7 @@ export function HomeHeader({
             height={32}
             style={{
               marginRight: "auto",
-              filter: `drop-shadow(1px 2px 4px rgba(0, 0, 0, 0.16))`,
+              ...webDropShadow("1px 2px 4px rgba(0, 0, 0, 0.16)"),
             }}
           />
 
@@ -116,7 +116,7 @@ export function HomeHeader({
             <Button
               headerButton
               size="xl"
-              iconName="menu"
+              iconName="settings"
               onPress={onOpenSettings}
               style={[styles.headerBtn]}
               iconColor={rgba(Colors.white, 0.7)}
@@ -130,8 +130,15 @@ export function HomeHeader({
 
 const styles = StyleSheet.create({
   headerBtn: {
-    backgroundColor: "unset",
-    boxShadow: "unset",
+    // Don't stretch like other header buttons. Web needs longhands: flex:0
+    // compiles to flex-basis 0% with shrink 1 there, collapsing the button to
+    // its padding so the icons touch. Native (Yoga) needs flex:0 itself.
+    ...Platform.select({
+      web: { flexGrow: 0, flexShrink: 0, flexBasis: "auto" },
+      default: { flex: 0 },
+    }),
+    backgroundColor: "transparent",
+    boxShadow: "none",
     paddingHorizontal: 12,
   },
 });

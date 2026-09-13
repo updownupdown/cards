@@ -1,4 +1,3 @@
-import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -7,7 +6,7 @@ export const indian: GameDefinition = {
   title: "Indian",
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 35, difficulty: 30, luck: 40 },
-  thumbnail: "Indian.jpg",
+  thumbnail: "Indian.webp",
   background: GAME_BACKGROUNDS.indianLandscape,
   gameColorDark: "#49362a",
   gameColorMid: "#378641",

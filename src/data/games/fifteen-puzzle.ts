@@ -7,7 +7,7 @@ export const fifteenPuzzle: GameDefinition = {
   title: "Fifteen Puzzle",
   tags: [GameTag.SpatialControl, GameTag.EasyToLearn],
   rating: { complexity: 20, difficulty: 30, luck: 0 },
-  thumbnail: "FifteenPuzzle.jpg",
+  thumbnail: "FifteenPuzzle.webp",
   background: GAME_BACKGROUNDS.bookstore,
   animation: GameAnimations.Dust,
   gameColorDark: "#293b32",

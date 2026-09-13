@@ -11,7 +11,7 @@ export const nestor: GameDefinition = {
     difficulty: 60,
     luck: 65,
   },
-  thumbnail: "Nestor.jpg",
+  thumbnail: "Nestor.webp",
   background: GAME_BACKGROUNDS.greece,
   animation: GameAnimations.Clouds,
   gameColorDark: "#112e49",

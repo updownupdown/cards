@@ -12,7 +12,7 @@ export const freeCell: GameDefinition = {
     difficulty: 40,
     luck: 30,
   },
-  thumbnail: "FreeCell.jpg",
+  thumbnail: "FreeCell.webp",
   background: GAME_BACKGROUNDS.cabinInterior,
   animation: GameAnimations.Dust,
   gameColorDark: "#2b231b",

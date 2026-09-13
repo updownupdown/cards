@@ -7,7 +7,7 @@ export const lucas: GameDefinition = {
   title: "Lucas",
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 35, difficulty: 40, luck: 45 },
-  thumbnail: "Lucas.jpg",
+  thumbnail: "Lucas.webp",
   background: GAME_BACKGROUNDS.oldRoom,
   animation: GameAnimations.Dust,
   gameColorDark: "#372f2a",

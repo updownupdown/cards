@@ -10,7 +10,7 @@ export const pyramid: GameDefinition = {
     difficulty: 65,
     luck: 65,
   },
-  thumbnail: "Pyramid.jpg",
+  thumbnail: "Pyramid.webp",
   background: GAME_BACKGROUNDS.sahara,
   gameColorDark: "#251703",
   gameColorMid: "#684b23",

@@ -6,7 +6,7 @@ export const fortunesCall: GameDefinition = {
   // The Fortune Teller? Unclear if there's an actual source game.
   path: "/fortunes-call",
   title: "Fortune's Call",
-  thumbnail: "FortunesCall.jpg",
+  thumbnail: "FortunesCall.webp",
   tags: [GameTag.EasyToLearn, GameTag.ScoringPuzzles],
   rating: { complexity: 20, difficulty: 45, luck: 70 },
   gameColorDark: "#272330",

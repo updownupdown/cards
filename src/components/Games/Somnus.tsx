@@ -1,7 +1,6 @@
-import { useGameColors } from "@/hooks/useGameColors";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, rgba } from "@/styles/styles";
+import { Colors,} from "@/styles/styles";
 import { delay } from "@/utils/utils";
 import { useMemo, useState } from "react";
 import { View } from "react-native";
@@ -401,7 +400,6 @@ export const somnusRules = {
 };
 
 export default function Somnus() {
-  const { colorZone } = useGameColors(0.72);
   const showToast = useToast();
   const [selectedHandIds, setSelectedHandIds] = useState<string[]>([]);
   const [selectedBoardSlot, setSelectedBoardSlot] = useState<number | null>(

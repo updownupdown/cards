@@ -2,18 +2,15 @@ import {
   CardHitArea,
   createRect,
   DropHitArea,
-  pointInRect,
   useDragDrop,
 } from "@/hooks/useDragDrop";
+import { DragGhostCards, DragHandle } from "@/components/Cards/DragDrop";
 import { useStateManager } from "@/hooks/useStateManager";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { DOUBLE_TAP_MS } from "@/utils/utils";
-import { useNavigation } from "expo-router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { GestureResponderEvent } from "react-native";
-import { Animated, StyleSheet, View } from "react-native";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
-import { Card } from "../Cards/Card";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
   cardDims,
@@ -127,10 +124,7 @@ const gameStateInitial = createInitialState();
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function BakersGame() {
-  const navigation = useNavigation();
-
   const [selected, setSelected] = useState<Selection>(null);
-  const [hoverTarget, setHoverTarget] = useState<DropTarget | null>(null);
   const [lastTap, setLastTap] = useState<{ key: string; at: number } | null>(
     null,
   );
@@ -154,11 +148,8 @@ export default function BakersGame() {
   // ── Drag & drop ─────────────────────────────────────────────────────────────
 
   const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
-  const handleHoverTargetChange = useCallback((next: DropTarget | null) => {
-    setHoverTarget((prev) => (sameDropTarget(prev, next) ? prev : next));
-  }, []);
-
   const {
+    hoverTarget,
     dragGhost,
     draggedCardIds,
     justDroppedCardIds,
@@ -170,14 +161,7 @@ export default function BakersGame() {
     updateBoardOffset,
     makeDragHandlers,
   } = useDragDrop<MoveSource, DropTarget>({
-    findDropTarget: (pageX, pageY) => {
-      const hit = [...dropHitAreasRef.current]
-        .filter(({ rect }) => pointInRect(pageX, pageY, rect))
-        .sort((a, b) => b.priority - a.priority)[0];
-      return hit?.target ?? null;
-    },
     canDropOnTarget,
-    sameTarget: sameDropTarget,
     onSuccessfulDrop: (source, target) => {
       applyMove(source, target);
     },
@@ -186,7 +170,7 @@ export default function BakersGame() {
     },
     getDropHitAreas: () => dropHitAreasRef.current,
     getSourceRect,
-    onHoverTargetChange: handleHoverTargetChange,
+    getTapHandler,
   });
 
   clearDragGhostRef.current = clearDragGhost;
@@ -481,30 +465,7 @@ export default function BakersGame() {
   // Keep ref in sync so the hook's findDropTarget always sees fresh areas.
   dropHitAreasRef.current = dropHitAreas;
 
-  // ── Navigation ──────────────────────────────────────────────────────────────
-
-  useEffect(() => {
-    navigation.setOptions({ gestureEnabled: false });
-    return () => {
-      navigation.setOptions({ gestureEnabled: true });
-    };
-  }, [navigation]);
-
   // ── Game logic ──────────────────────────────────────────────────────────────
-
-  function sameDropTarget(a: DropTarget | null, b: DropTarget | null): boolean {
-    if (!a || !b) return a === b;
-    if (a.zone !== b.zone) return false;
-    if (a.zone === "cascade" && b.zone === "cascade")
-      return a.pileIndex === b.pileIndex;
-    if (a.zone === "free" && b.zone === "free")
-      return a.slotIndex === b.slotIndex;
-    return (
-      a.zone === "foundation" &&
-      b.zone === "foundation" &&
-      a.pileIndex === b.pileIndex
-    );
-  }
 
   function getTopCard(
     source: MoveSource,
@@ -638,7 +599,6 @@ export default function BakersGame() {
 
     const base = getZoneBasePos(zone);
     if (source.zone === "cascade") {
-      const pile = game.cascades[source.pileIndex];
       return {
         x: base.x,
         y: base.y + source.startIndex * cardDims.tableauOffset * cardHeight,
@@ -653,7 +613,7 @@ export default function BakersGame() {
     return createRect(origin.x, origin.y, cardWidth, cardHeight);
   }
 
-  function startGhostDrag(source: MoveSource, _event: GestureResponderEvent) {
+  function startGhostDrag(source: MoveSource) {
     const cards = getDraggedCards(source, game);
     if (
       cards.length === 0 ||
@@ -749,21 +709,14 @@ export default function BakersGame() {
 
   // ── Render ────────────────────────────────────────────────────────────────────
 
-  const ghostLeft = dragGhost ? dragGhost.origin.x : 0;
-  const ghostTop = dragGhost ? dragGhost.origin.y : 0;
-  const ghostHasValidDrop = !!dragGhost && hoverTarget !== null;
 
-  const tapHandlerResolverRef = useRef(
-    (_source: MoveSource): (() => void) =>
-      () => {},
-  );
-  tapHandlerResolverRef.current = (source: MoveSource) => {
+  function getTapHandler(source: MoveSource) {
     if (source.zone === "cascade") {
       return () => onCascadePress(source.pileIndex, source);
     }
 
     return () => onFreeCellPress(source.slotIndex);
-  };
+  }
 
   const interactionTargets = useMemo(
     () =>
@@ -775,7 +728,7 @@ export default function BakersGame() {
             : `free-${source.slotIndex}`;
 
         return (
-          <View
+          <DragHandle
             key={key}
             collapsable={false}
             style={[
@@ -788,9 +741,7 @@ export default function BakersGame() {
                 height: rect.height,
               },
             ]}
-            {...makeHandlers(source, () =>
-              tapHandlerResolverRef.current(source)(),
-            )}
+            gesture={makeHandlers(source)}
           />
         );
       }),
@@ -835,52 +786,14 @@ export default function BakersGame() {
           </View>
 
           {dragGhost && (
-            <Animated.View
-              style={[
-                {
-                  position: "absolute",
-                  zIndex: 4000,
-                  pointerEvents: "none",
-                  left: ghostLeft,
-                  top: ghostTop,
-                  transform: dragTranslate.getTranslateTransform(),
-                },
-              ]}
-            >
-              <View
-                style={[
-                  {
-                    position: "absolute",
-                    left: 0,
-                    top: 0,
-                    opacity: 1,
-                    width: cardWidth,
-                    height: cardHeight,
-                  },
-                ]}
-              >
-                {dragGhost.cards.map((card, index) => (
-                  <View
-                    key={card.id}
-                    style={{
-                      position: "absolute",
-                      left: 0,
-                      top: index * cardDims.tableauOffset * cardHeight,
-                      width: cardWidth,
-                      height: cardHeight,
-                    }}
-                  >
-                    <Card
-                      card={card}
-                      cardWidth={cardWidth}
-                      cardSize={cardSize}
-                      selectColor={ghostHasValidDrop ? "green" : "none"}
-                      isSelected={ghostHasValidDrop}
-                    />
-                  </View>
-                ))}
-              </View>
-            </Animated.View>
+            <DragGhostCards
+              ghost={dragGhost}
+              translate={dragTranslate}
+              cardWidth={cardWidth}
+              cardHeight={cardHeight}
+              cardSize={cardSize}
+              isValidDrop={hoverTarget !== null}
+            />
           )}
         </View>
       </View>

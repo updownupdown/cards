@@ -12,7 +12,7 @@ import {
 } from "@/data/nodes-map";
 import { useNodesProgress } from "@/hooks/useNodesProgress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-import { Colors, rgba } from "@/styles/styles";
+import { Colors } from "@/styles/styles";
 import { useCallback, useEffect, useState } from "react";
 import { View } from "react-native";
 import { NodeDetailsPanel } from "./NodeDetailsPanel";

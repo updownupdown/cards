@@ -13,7 +13,7 @@ export const waypoint: GameDefinition = {
   },
   background: GAME_BACKGROUNDS.dirtRoad,
   animation: GameAnimations.Dust,
-  thumbnail: "Waypoint.jpg",
+  thumbnail: "Waypoint.webp",
   gameColorDark: "#263b38",
   gameColorMid: "#703f28",
   gameColorPale: "#f5e4ad",

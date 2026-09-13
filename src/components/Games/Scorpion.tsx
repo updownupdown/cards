@@ -3,16 +3,13 @@ import {
   CardHitArea,
   createRect,
   DropHitArea,
-  pointInRect,
   useDragDrop,
 } from "@/hooks/useDragDrop";
-import { useNavigation } from "expo-router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { GestureResponderEvent } from "react-native";
-import { Animated, Pressable, StyleSheet, View } from "react-native";
+import { DragGhostCards, DragHandle } from "@/components/Cards/DragDrop";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
-import { Card } from "../Cards/Card";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
   CardRank,
@@ -162,9 +159,7 @@ export const scorpionRules = {
 const gameStateInitial = createInitialState();
 
 export default function Scorpion() {
-  const navigation = useNavigation();
   const [selected, setSelected] = useState<Selection>(null);
-  const [hoverTarget, setHoverTarget] = useState<DropTarget | null>(null);
 
   const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
     useStateManager<ScorpionState>({
@@ -182,11 +177,8 @@ export default function Scorpion() {
 
   const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
 
-  const handleHoverTargetChange = useCallback((next: DropTarget | null) => {
-    setHoverTarget((prev) => (sameDropTarget(prev, next) ? prev : next));
-  }, []);
-
   const {
+    hoverTarget,
     dragGhost,
     draggedCardIds,
     justDroppedCardIds,
@@ -198,14 +190,7 @@ export default function Scorpion() {
     updateBoardOffset,
     makeDragHandlers,
   } = useDragDrop<MoveSource, DropTarget>({
-    findDropTarget: (pageX, pageY) => {
-      const hit = [...dropHitAreasRef.current]
-        .filter(({ rect }) => pointInRect(pageX, pageY, rect))
-        .sort((a, b) => b.priority - a.priority)[0];
-      return hit?.target ?? null;
-    },
     canDropOnTarget,
-    sameTarget: sameDropTarget,
     onSuccessfulDrop: async (source, target) => {
       moveSourceToTableau(source, target.pileIndex);
     },
@@ -213,7 +198,7 @@ export default function Scorpion() {
       getSourceCards(source, game).map((card) => card.id),
     getDropHitAreas: () => dropHitAreasRef.current,
     getSourceRect,
-    onHoverTargetChange: handleHoverTargetChange,
+    getTapHandler,
   });
 
   const zones: MapZone[] = useMemo(() => {
@@ -476,22 +461,10 @@ export default function Scorpion() {
 
   dropHitAreasRef.current = dropHitAreas;
 
-  const completedStacks = useMemo(
-    () => game.foundations.filter((pile) => pile.length === 13).length,
-    [game.foundations],
-  );
   const won = useMemo(
     () => game.foundations.every((pile) => pile.length === 13),
     [game.foundations],
   );
-
-  useEffect(() => {
-    navigation.setOptions({ gestureEnabled: false });
-
-    return () => {
-      navigation.setOptions({ gestureEnabled: true });
-    };
-  }, [navigation]);
 
   function clearSelection() {
     setSelected(null);
@@ -508,7 +481,7 @@ export default function Scorpion() {
     return cards;
   }
 
-  function startGhostDrag(source: MoveSource, _event: GestureResponderEvent) {
+  function startGhostDrag(source: MoveSource) {
     const cards = getSourceCards(source, game);
     if (cards.length === 0) return;
 
@@ -632,11 +605,6 @@ export default function Scorpion() {
     moveSourceToTableau(selected, pileIndex);
   }
 
-  function sameDropTarget(a: DropTarget | null, b: DropTarget | null) {
-    if (!a || !b) return a === b;
-    return a.zone === b.zone && a.pileIndex === b.pileIndex;
-  }
-
   function canDropOnTarget(
     source: MoveSource,
     target: DropTarget,
@@ -658,17 +626,10 @@ export default function Scorpion() {
     return makeDragHandlers(source, startGhostDrag, onTap);
   }
 
-  const ghostLeft = dragGhost ? dragGhost.origin.x : 0;
-  const ghostTop = dragGhost ? dragGhost.origin.y : 0;
-  const ghostHasValidDrop = !!dragGhost && hoverTarget !== null;
 
-  const tapHandlerResolverRef = useRef(
-    (_source: MoveSource): (() => void) =>
-      () => {},
-  );
-  tapHandlerResolverRef.current = (source: MoveSource) => {
+  function getTapHandler(source: MoveSource) {
     return () => onTableauCardPress(source.pileIndex, source.cardIndex);
-  };
+  }
 
   const interactionTargets = useMemo(
     () =>
@@ -677,7 +638,7 @@ export default function Scorpion() {
         const rect = hit.rect;
 
         return (
-          <View
+          <DragHandle
             key={`tableau-${source.pileIndex}-${source.cardIndex}`}
             collapsable={false}
             style={{
@@ -688,9 +649,7 @@ export default function Scorpion() {
               width: rect.width,
               height: rect.height,
             }}
-            {...makeHandlers(source, () =>
-              tapHandlerResolverRef.current(source)(),
-            )}
+            gesture={makeHandlers(source)}
           />
         );
       }),
@@ -747,45 +706,15 @@ export default function Scorpion() {
         </View>
 
         {dragGhost && (
-          <Animated.View
-            style={[
-              {
-                pointerEvents: "none",
-                position: "absolute",
-                zIndex: 4000,
-                left: ghostLeft,
-                top: ghostTop,
-                transform: dragTranslate.getTranslateTransform(),
-              },
-            ]}
-          >
-            {dragGhost.cards.map((card, index) => (
-              <View
-                key={`ghost-${card.id}`}
-                style={[
-                  {
-                    position: "absolute",
-                    left: 0,
-                    opacity: 1,
-                    width: cardWidth,
-                    height: cardHeight,
-                  },
-                  {
-                    top: index * TABLEAU_FAN_OFFSET * cardHeight,
-                    zIndex: index + 1,
-                  },
-                ]}
-              >
-                <Card
-                  card={card}
-                  cardWidth={cardWidth}
-                  cardSize="tableau"
-                  selectColor={ghostHasValidDrop ? "green" : "none"}
-                  isSelected={ghostHasValidDrop}
-                />
-              </View>
-            ))}
-          </Animated.View>
+          <DragGhostCards
+            ghost={dragGhost}
+            translate={dragTranslate}
+            cardWidth={cardWidth}
+            cardHeight={cardHeight}
+            cardSize="tableau"
+            fanOffset={TABLEAU_FAN_OFFSET}
+            isValidDrop={hoverTarget !== null}
+          />
         )}
       </View>
     </GameWrapper>

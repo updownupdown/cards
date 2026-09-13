@@ -12,38 +12,65 @@ import { DEFAULT_GAME_BACKGROUND } from "@/data/games-data";
 import { useFade } from "@/hooks/useFade";
 import { useGameSettings } from "@/hooks/useGameSettings";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
-import { getActiveGameSessionId } from "@/hooks/useStateManager";
 import {
-  TABLET_BREAKPOINT,
-  useResponsiveUiLayoutFromWidth,
-} from "@/hooks/useResponsiveLayout";
+  getActiveGameSessionId,
+  getSessionPlayTimeMs,
+} from "@/hooks/useStateManager";
+import { maybeRequestStoreReview } from "@/utils/review-prompt";
+import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
+import { haptics } from "@/utils/haptics";
 import { selectNodesHomeTab } from "@/components/Home/home-view-state";
 import { NodesWinOverlay } from "@/components/Nodes/NodesWinOverlay";
 import { flexStyles } from "@/styles/flexStyles";
 import {
-  Colors,
   getHeaderHeightWithInset,
   LayerZIndexes,
   layoutDims,
-  rgba,
 } from "@/styles/styles";
 import { router, useLocalSearchParams, usePathname } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { Animated, ImageBackground, Platform, View } from "react-native";
+import {
+  Animated,
+  BackHandler,
+  ImageBackground,
+  Platform,
+  Pressable,
+  View,
+} from "react-native";
+import { setBoardInputLocked } from "@/components/Cards/input-lock";
+import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Button } from "../Button/Button";
 import GameModal from "../Modals/GameModal";
 import { RulesModal } from "../Modals/RulesModal";
 import { DeviceRotateHint } from "./DeviceRotateHint";
 import { LoadingOverlay } from "./LoadingOverlay";
-import { ResetButton } from "./ResetButton";
 import { TipsBox } from "./TipsBox";
 import { WinLoseBox } from "./WinLoseBox";
+import { GameHeader } from "./GameHeader";
+import { useStableCallback } from "@/hooks/useStableCallback";
 
 const TIPS_MORPH_DURATION = 350;
+const KEEP_AWAKE_TAG = "solosuite-game";
+const KEEP_AWAKE_MS = 10 * 60 * 1000;
+// Scene effects start after the game has loaded and its deal has played.
+const SCENE_START_DELAY_MS = 1000;
 
 export type GameOutcome = "playing" | "won" | "lost";
+
+/**
+ * Return to the home screen already underneath the game instead of pushing a
+ * new one: pushing stacked another home (and kept the finished game mounted)
+ * on every round trip, which added memory and background work over a session.
+ */
+function goHome(isNodesMode: boolean) {
+  const href = isNodesMode ? "/?tab=nodes" : "/";
+  if (router.canGoBack()) {
+    router.dismissTo(href);
+  } else {
+    router.replace(href);
+  }
+}
 
 interface Props {
   isLoaded?: boolean;
@@ -58,6 +85,8 @@ interface Props {
   openMenu?: boolean;
   onMenuClose?: () => void;
   showDeviceRotateHint?: boolean;
+  /** The game is auto-completing: block card input and undo meanwhile. */
+  autoCompleting?: boolean;
 }
 
 export const GameWrapper = ({
@@ -72,6 +101,7 @@ export const GameWrapper = ({
   openMenu = false,
   onMenuClose,
   showDeviceRotateHint = false,
+  autoCompleting = false,
 }: Props) => {
   const pathname = normalizeGamePath(usePathname());
   const { mode } = useLocalSearchParams<{ mode?: string }>();
@@ -82,7 +112,8 @@ export const GameWrapper = ({
     useViewportDimensions();
   const ui = useResponsiveUiLayoutFromWidth(viewportWidth, viewportHeight);
   const { settings, isLoading } = useGameSettings(pathname);
-  const { settings: globalSettings } = useGlobalSettings();
+  const { settings: globalSettings, isLoading: isGlobalSettingsLoading } =
+    useGlobalSettings();
   const spacing = (value: number) => value * ui.scale;
   const [isDevWin, setIsDevWin] = useState(false);
   const displayedOutcome = isDevWin ? "won" : outcome;
@@ -93,6 +124,22 @@ export const GameWrapper = ({
     setIsDevWin(false);
     reset();
   };
+
+  // Stable header callbacks, so the memoized header skips re-rendering when
+  // only the board changes.
+  const onHeaderHome = useStableCallback(async () => {
+    try {
+      await clearLastGameSession();
+    } finally {
+      if (isNodesMode) selectNodesHomeTab();
+      goHome(isNodesMode);
+    }
+  });
+  const onHeaderInstantWin = useStableCallback(() => setIsDevWin(true));
+  const onHeaderRules = useStableCallback(() => setShowRulesModal(true));
+  const onHeaderUndo = useStableCallback(() => handleUndo?.());
+  const onHeaderReset = useStableCallback(handleReset);
+  const onHeaderMenu = useStableCallback(() => setShowMenu(true));
 
   const handleLossUndo = canUndoLoss
     ? async () => {
@@ -126,7 +173,75 @@ export const GameWrapper = ({
     !tipsDismissed;
 
   const tipsFade = useFade(showTipsBox, TIPS_MORPH_DURATION);
+
+  // Background effects wait for the game to load, and freeze while a modal
+  // or overlay (menu, rules, tips, the win/lose box) covers the board.
+  const [isSceneReady, setIsSceneReady] = useState(false);
+  useEffect(() => {
+    if (!isLoaded) return;
+    const timer = setTimeout(() => setIsSceneReady(true), SCENE_START_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [isLoaded]);
+  const isScenePaused =
+    showMenu ||
+    openMenu ||
+    showRulesModal ||
+    !!nodesWinResult ||
+    tipsFade.isRendered ||
+    ended;
+
+  useEffect(() => {
+    setBoardInputLocked(autoCompleting);
+    return () => setBoardInputLocked(false);
+  }, [autoCompleting]);
+
+  // "Keep screen awake during games": the screen stays on for 10 minutes after
+  // the game opens or the board was last touched.
+  const keepAwakeEnabled =
+    globalSettings.keepScreenAwake && !isGlobalSettingsLoading;
+  const keepAwakeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const keepAwakeActiveRef = useRef(false);
+
+  const releaseKeepAwake = () => {
+    if (keepAwakeTimerRef.current) clearTimeout(keepAwakeTimerRef.current);
+    keepAwakeTimerRef.current = null;
+    if (!keepAwakeActiveRef.current) return;
+    keepAwakeActiveRef.current = false;
+    deactivateKeepAwake(KEEP_AWAKE_TAG).catch(() => {});
+  };
+
+  const extendKeepAwake = () => {
+    if (!keepAwakeEnabled) return;
+    if (!keepAwakeActiveRef.current) {
+      keepAwakeActiveRef.current = true;
+      activateKeepAwakeAsync(KEEP_AWAKE_TAG).catch(() => {});
+    }
+    if (keepAwakeTimerRef.current) clearTimeout(keepAwakeTimerRef.current);
+    keepAwakeTimerRef.current = setTimeout(releaseKeepAwake, KEEP_AWAKE_MS);
+  };
+
+  useEffect(() => {
+    if (!keepAwakeEnabled) return;
+    extendKeepAwake();
+    return releaseKeepAwake;
+  }, [keepAwakeEnabled]);
   const headerFade = useFade(!showTipsBox, TIPS_MORPH_DURATION);
+
+  // Android's back button closes the quick-start tips first, instead of
+  // leaving the game.
+  useEffect(() => {
+    if (Platform.OS !== "android" || !showTipsBox) return;
+
+    const subscription = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        setTipsDismissed(true);
+        return true;
+      },
+    );
+
+    return () => subscription.remove();
+  }, [showTipsBox]);
 
   useEffect(() => {
     if (showTipsBox) {
@@ -137,7 +252,9 @@ export const GameWrapper = ({
     Animated.timing(tipsMorphProgress, {
       toValue: 0,
       duration: TIPS_MORPH_DURATION,
-      useNativeDriver: Platform.OS !== "web",
+      // TipsBox interpolates width/height from this value, which the native
+      // driver can't animate.
+      useNativeDriver: false,
     }).start();
   }, [showTipsBox, tipsMorphProgress]);
 
@@ -181,10 +298,23 @@ export const GameWrapper = ({
       };
     }
 
+    if (displayedOutcome === "won") haptics.win();
+
     const sessionId = getActiveGameSessionId(pathname);
-    recordResult(pathname, displayedOutcome === "won", score, sessionId).catch(
-      () => {},
-    );
+    // Only a real win is timed (not the dev instant-win button).
+    const winTimeMs =
+      outcome === "won" ? getSessionPlayTimeMs(pathname) : null;
+    recordResult(
+      pathname,
+      displayedOutcome === "won",
+      score,
+      sessionId,
+      winTimeMs,
+    )
+      .then(() => {
+        if (displayedOutcome === "won") void maybeRequestStoreReview();
+      })
+      .catch(() => {});
     if (isNodesMode && displayedOutcome === "won") {
       recordNodesWin(pathname, sessionId)
         .then((result) => {
@@ -213,7 +343,7 @@ export const GameWrapper = ({
 
   return (
     <>
-      <LoadingOverlay isLoaded={!!isLoaded} />
+      <LoadingOverlay isLoaded={!!isLoaded} endsGameLaunch />
 
       {tipsFade.isRendered && (
         <Animated.View
@@ -254,7 +384,7 @@ export const GameWrapper = ({
             await clearLastGameSession();
           } finally {
             if (isNodesMode) selectNodesHomeTab();
-            router.push(isNodesMode ? "/?tab=nodes" : "/");
+            goHome(isNodesMode);
           }
         }}
       />
@@ -278,6 +408,7 @@ export const GameWrapper = ({
       )}
 
       <View
+        onTouchStart={extendKeepAwake}
         style={{
           flex: 1,
           position: "relative",
@@ -314,7 +445,9 @@ export const GameWrapper = ({
           }}
         />
 
-        {globalSettings.showAnimations && (
+        {globalSettings.showAnimations &&
+          !isGlobalSettingsLoading &&
+          isSceneReady && (
           <View
             style={{
               position: "absolute",
@@ -331,6 +464,7 @@ export const GameWrapper = ({
               animation={gameInfo.animation}
               width={viewportWidth}
               height={viewportHeight}
+              paused={isScenePaused}
             />
           </View>
         )}
@@ -338,146 +472,28 @@ export const GameWrapper = ({
         <DeviceRotateHint enabled={showDeviceRotateHint} />
 
         {/* Game header */}
-        <Animated.View
-          style={{
-            opacity: headerFade.opacity,
-            position: "relative",
-            zIndex: LayerZIndexes.header,
-            width: "100%",
-            maxWidth: ui.contentMaxWidth,
-            alignSelf: "center",
-            paddingHorizontal: spacing(layoutDims.pagePadding / 2),
-            paddingTop: insets.top + spacing(layoutDims.pagePadding / 2),
-            paddingBottom: spacing(layoutDims.pagePadding / 2),
-          }}
-        >
-          <View
-            style={[
-              flexStyles.rowCentered,
-              {
-                width: "100%",
-                height: spacing(layoutDims.menuBarHeight),
-                paddingHorizontal: spacing(layoutDims.pagePadding / 2),
-                borderRadius: spacing(layoutDims.menuBarHeight / 2),
-                backgroundColor: rgba(backgroundColor, 0.8),
-                boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.black, 0.2)}, ${spacing(2)}px ${spacing(4)}px ${spacing(10)}px ${rgba(
-                  Colors.black,
-                  0.2,
-                )}`,
-              },
-            ]}
-          >
-            <Button
-              headerButton
-              accessibilityLabel={isNodesMode ? "Nodes" : "Home"}
-              onPress={async () => {
-                try {
-                  await clearLastGameSession();
-                } finally {
-                  if (isNodesMode) selectNodesHomeTab();
-                  router.push(isNodesMode ? "/?tab=nodes" : "/");
-                }
-              }}
-              iconName={isNodesMode ? "nodes" : "home"}
-              iconColor={titleColor}
-              style={{ flex: 1, paddingHorizontal: 0 }}
-            />
-
-            {/* Local only instant win test button */}
-            {__DEV__ && (
-              <Button
-                headerButton
-                accessibilityLabel="Instant win"
-                onPress={() => setIsDevWin(true)}
-                iconName="trophy"
-                iconColor={titleColor}
-                disabled={ended}
-                style={{ flex: 1, paddingHorizontal: 0 }}
-              />
-            )}
-
-            <View
-              style={{
-                position: "relative",
-                height: "100%",
-                alignItems: "center",
-                justifyContent: "center",
-                flex: 1,
-                paddingHorizontal: 0,
-              }}
-            >
-              <View
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  bottom: 0,
-                  left: 0,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  pointerEvents: "none",
-                }}
-              >
-                <Animated.View
-                  style={{
-                    width: spacing(layoutDims.menuButtonSize),
-                    height: spacing(layoutDims.menuButtonSize),
-                    borderRadius: spacing(layoutDims.menuButtonSize / 2),
-                    backgroundColor: titleColor,
-                    opacity: instructionsHighlight.interpolate({
-                      inputRange: [0, 0.2, 0.7, 1],
-                      outputRange: [0, 0.8, 0.7, 0],
-                    }),
-                    transform: [
-                      {
-                        scale: instructionsHighlight.interpolate({
-                          inputRange: [0, 0.6, 0.7, 1],
-                          outputRange: [1.5, 1.5, 0.8, 0],
-                        }),
-                      },
-                    ],
-                  }}
-                />
-              </View>
-
-              <Button
-                headerButton
-                onPress={() => {
-                  setShowRulesModal(true);
-                }}
-                iconName={"instructions"}
-                iconColor={titleColor}
-              />
-            </View>
-
-            <Button
-              headerButton
-              onPress={() => {
-                handleUndo?.();
-              }}
-              iconName="undo"
-              iconColor={
-                !ended && canUndo ? titleColor : rgba(Colors.white, 0.3)
-              }
-              disabled={ended || !canUndo || handleUndo === undefined}
-              style={{ flex: 1, paddingHorizontal: 0 }}
-            />
-
-            <ResetButton
-              reset={handleReset}
-              iconColor={titleColor}
-              pressedIconColor={rgba(titleColor, 0.7)}
-            />
-
-            <Button
-              headerButton
-              onPress={() => setShowMenu(true)}
-              iconName="more-vertical"
-              iconColor={titleColor}
-              style={{ flex: 1, paddingHorizontal: 0 }}
-            />
-          </View>
-        </Animated.View>
+        <GameHeader
+          isNodesMode={isNodesMode}
+          titleColor={titleColor}
+          backgroundColor={backgroundColor}
+          scale={ui.scale}
+          contentMaxWidth={ui.contentMaxWidth}
+          insetTop={insets.top}
+          hidden={showTipsBox}
+          opacity={headerFade.opacity}
+          instructionsHighlight={instructionsHighlight}
+          ended={ended}
+          canUndo={!!canUndo}
+          undoDisabled={
+            ended || !canUndo || handleUndo === undefined || autoCompleting
+          }
+          onHome={onHeaderHome}
+          onInstantWin={onHeaderInstantWin}
+          onRules={onHeaderRules}
+          onUndo={onHeaderUndo}
+          onReset={onHeaderReset}
+          onMenu={onHeaderMenu}
+        />
 
         <View
           style={[
@@ -492,6 +508,22 @@ export const GameWrapper = ({
           ]}
         >
           {children}
+
+          {/* Swallows touches on the board while auto-complete plays. */}
+          {autoCompleting && (
+            <Pressable
+              accessible={false}
+              onPress={() => {}}
+              style={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
+                zIndex: 10000,
+              }}
+            />
+          )}
         </View>
       </View>
     </>

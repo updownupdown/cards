@@ -11,7 +11,7 @@ export const baroness: GameDefinition = {
     difficulty: 50,
     luck: 70,
   },
-  thumbnail: "Baroness.jpg",
+  thumbnail: "Baroness.webp",
   background: GAME_BACKGROUNDS.oldRoom,
   animation: GameAnimations.Dust,
   gameColorDark: "#3a1620",

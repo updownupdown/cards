@@ -2,7 +2,7 @@ import { Text } from "@/components/common/Text";
 import { TaoChapter } from "@/components/Nodes/TaoChapters";
 import { getTaoChapter, TAO_CHAPTER_COUNT } from "@/data/collectibles";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-import { Colors, rgba } from "@/styles/styles";
+import { Colors } from "@/styles/styles";
 import { useState } from "react";
 import { View } from "react-native";
 import { CollectionViewer } from "./CollectionViewer";

@@ -5,7 +5,7 @@ export function Sand(props: SceneProps) {
   return (
     <>
       <View style={styles.haze} />
-      {Array.from({ length: 60 }, (_, index) => {
+      {Array.from({ length: 45 }, (_, index) => {
         const size = 1 + Math.floor(seeded(index, 10) * 2);
 
         return (

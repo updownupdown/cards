@@ -10,7 +10,7 @@ export const royalEnvoy: GameDefinition = {
     difficulty: 80,
     luck: 35,
   },
-  thumbnail: "RoyalEnvoy.jpg",
+  thumbnail: "RoyalEnvoy.webp",
   background: GAME_BACKGROUNDS.castle,
   gameColorDark: "#241e33",
   gameColorMid: "#547cad",

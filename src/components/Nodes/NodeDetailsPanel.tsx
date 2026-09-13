@@ -12,9 +12,11 @@ import { GAMES_DATA } from "@/data/games-registry";
 import type { NodeDefinition, NodeVisualState } from "@/data/nodes-map";
 import { setLastPlayedNode } from "@/data/nodes-progress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-import { Colors, layoutDims, rgba } from "@/styles/styles";
-import { router, type Href } from "expo-router";
+import { layoutDims, rgba } from "@/styles/styles";
+import { launchGame } from "@/components/common/GameLaunchOverlay";
+import { type Href } from "expo-router";
 import { View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { type ReactNode, useLayoutEffect, useRef } from "react";
@@ -173,6 +175,7 @@ export function NodeDetailsPanel({
   collectedQuoteIds,
 }: Props) {
   const { spacing, ui } = useResponsiveMetrics();
+  const insets = useSafeAreaInsets();
   const game = GAMES_DATA[node.path];
   const stats = getGameSettings(settingsMap, node.path).stats;
   const locked = state === "locked";
@@ -225,6 +228,10 @@ export function NodeDetailsPanel({
     progress.value = withTiming(1, { duration: THEME_TRANSITION_DURATION });
   }, [game, progress]);
 
+  // Resolved outside the worklet: on native, useAnimatedStyle runs on the UI
+  // thread, where plain JS helpers like spacing() aren't callable.
+  const panelShadowOffset = spacing(4);
+  const panelShadowBlur = spacing(18);
   const panelStyle = useAnimatedStyle(() => ({
     backgroundColor: interpolateColor(
       progress.value,
@@ -238,7 +245,7 @@ export function NodeDetailsPanel({
       [fromBorder.value, toBorder.value],
       "RGB",
     ),
-    boxShadow: `0 ${spacing(4)}px ${spacing(18)}px ${interpolateColor(
+    boxShadow: `0 ${panelShadowOffset}px ${panelShadowBlur}px ${interpolateColor(
       progress.value,
       [0, 1],
       [fromShadow.value, toShadow.value],
@@ -268,7 +275,9 @@ export function NodeDetailsPanel({
       style={{
         position: "absolute",
         right: 0,
-        bottom: spacing(88),
+        // The tab bar grows by the bottom safe-area inset (Android button or
+        // gesture navigation), which is 0 on desktop web.
+        bottom: spacing(88) + insets.bottom,
         left: 0,
         alignItems: "center",
         paddingHorizontal: spacing(layoutDims.pagePadding / 2),
@@ -391,7 +400,7 @@ export function NodeDetailsPanel({
             disabled={locked}
             onPress={() => {
               void setLastPlayedNode(node.path);
-              router.push({
+              launchGame({
                 pathname: node.path,
                 params: { mode: "nodes" },
               } as Href);

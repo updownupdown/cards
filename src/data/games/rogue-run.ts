@@ -11,7 +11,7 @@ export const rogueRun: GameDefinition = {
     difficulty: 70,
     luck: 30,
   },
-  thumbnail: "RogueRun.jpg",
+  thumbnail: "RogueRun.webp",
   background: GAME_BACKGROUNDS.stoneTunnel,
   animation: GameAnimations.Embers,
   gameColorDark: "#292116",

@@ -1,19 +1,17 @@
 import { useStateManager } from "@/hooks/useStateManager";
+import { useAutoComplete } from "@/hooks/useAutoComplete";
 import {
   CardHitArea,
   createRect,
   DropHitArea,
-  pointInRect,
   useDragDrop,
 } from "@/hooks/useDragDrop";
+import { DragGhostCards, DragHandle } from "@/components/Cards/DragDrop";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
-import { useNavigation } from "expo-router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { GestureResponderEvent } from "react-native";
-import { Animated, Pressable, StyleSheet, View } from "react-native";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
-import { Card } from "../Cards/Card";
 import {
   cardDims,
   createDeck,
@@ -47,11 +45,7 @@ export type StockTableauVariant =
   | "number-ten";
 
 type BuildRule =
-  | "alternating"
-  | "same-color"
-  | "same-suit"
-  | "not-same-suit"
-  | "rank";
+  "alternating" | "same-color" | "same-suit" | "not-same-suit" | "rank";
 type MoveRule = "single" | "suited-run" | "built-run" | "any-tail";
 type DealConfig = {
   columns: number;
@@ -81,19 +75,11 @@ export type StockTableauState = {
 };
 
 type Selection =
-  | { zone: "tableau"; pile: number; card: number }
-  | { zone: "waste" }
-  | null;
+  { zone: "tableau"; pile: number; card: number } | { zone: "waste" } | null;
 
 type MoveSource = Exclude<Selection, null>;
 type DropTarget =
-  | { zone: "tableau"; pile: number }
-  | { zone: "foundation"; pile: number };
-
-function sameDropTarget(a: DropTarget | null, b: DropTarget | null) {
-  if (!a || !b) return a === b;
-  return a.zone === b.zone && a.pile === b.pile;
-}
+  { zone: "tableau"; pile: number } | { zone: "foundation"; pile: number };
 
 const CONFIGS: Record<StockTableauVariant, Config> = {
   "australian-patience": {
@@ -422,65 +408,66 @@ export function StockTableauSolitaire({
   variant: StockTableauVariant;
 }) {
   const config = CONFIGS[variant];
-  const navigation = useNavigation();
   const initial = useMemo(() => createInitialState(variant), [variant]);
   const [selected, setSelected] = useState<Selection>(null);
-  const [hoverTarget, setHoverTarget] = useState<DropTarget | null>(null);
   const [lastTap, setLastTap] = useState<{ key: string; at: number } | null>(
     null,
   );
-  const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
-    useStateManager<StockTableauState>({
-      gameStateInitial: initial,
-      resetNonGameStates: () => {
-        setSelected(null);
-        setLastTap(null);
-        clearDragGhost();
-      },
-      resetAndSetup: async () => {
-        setGame((draft) => {
-          const cards = [
-            ...draft.stock,
-            ...draft.waste,
-            ...draft.tableau.flat(),
-            ...draft.foundations.flat(),
-          ];
-          const next = createInitialState(variant);
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<StockTableauState>({
+    gameStateInitial: initial,
+    resetNonGameStates: () => {
+      setSelected(null);
+      setLastTap(null);
+      clearDragGhost();
+    },
+    resetAndSetup: async () => {
+      setGame((draft) => {
+        const cards = [
+          ...draft.stock,
+          ...draft.waste,
+          ...draft.tableau.flat(),
+          ...draft.foundations.flat(),
+        ];
+        const next = createInitialState(variant);
 
-          draft.tableau = next.tableau;
-          draft.stock = cards.map(flipToBack);
-          draft.waste = [];
-          draft.foundations = next.foundations;
-          draft.redealsUsed = 0;
-          draft.ended = false;
-          draft.won = false;
-        });
+        draft.tableau = next.tableau;
+        draft.stock = cards.map(flipToBack);
+        draft.waste = [];
+        draft.foundations = next.foundations;
+        draft.redealsUsed = 0;
+        draft.ended = false;
+        draft.won = false;
+      });
 
-        await delay();
+      await delay();
 
-        setGame((draft) => {
-          const next = dealFromStock(shuffle(draft.stock), config);
-          draft.tableau = next.tableau;
-          draft.stock = next.stock;
-          draft.waste = next.waste;
-          draft.foundations = next.foundations;
-          draft.redealsUsed = next.redealsUsed;
-          draft.ended = next.ended;
-          draft.won = next.won;
-        });
-      },
-    });
+      setGame((draft) => {
+        const next = dealFromStock(shuffle(draft.stock), config);
+        draft.tableau = next.tableau;
+        draft.stock = next.stock;
+        draft.waste = next.waste;
+        draft.foundations = next.foundations;
+        draft.redealsUsed = next.redealsUsed;
+        draft.ended = next.ended;
+        draft.won = next.won;
+      });
+    },
+  });
 
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
   const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
 
-  const handleHoverTargetChange = useCallback((next: DropTarget | null) => {
-    setHoverTarget((current) =>
-      sameDropTarget(current, next) ? current : next,
-    );
-  }, []);
-
   const {
+    hoverTarget,
     dragGhost,
     draggedCardIds,
     justDroppedCardIds,
@@ -492,14 +479,7 @@ export function StockTableauSolitaire({
     updateBoardOffset,
     makeDragHandlers,
   } = useDragDrop<MoveSource, DropTarget>({
-    findDropTarget: (pageX, pageY) => {
-      const hit = [...dropHitAreasRef.current]
-        .filter(({ rect }) => pointInRect(pageX, pageY, rect))
-        .sort((a, b) => b.priority - a.priority)[0];
-      return hit?.target ?? null;
-    },
     canDropOnTarget,
-    sameTarget: sameDropTarget,
     onSuccessfulDrop: (source, target) => {
       if (target.zone === "foundation") {
         moveToFoundation(source, target.pile);
@@ -511,7 +491,26 @@ export function StockTableauSolitaire({
       getCards(game, source).map((card) => card.id),
     getDropHitAreas: () => dropHitAreasRef.current,
     getSourceRect,
-    onHoverTargetChange: handleHoverTargetChange,
+    getTapHandler,
+  });
+
+  // Once the stock and waste are empty and every card is face up, finish the
+  // game automatically.
+  const { isAutoCompleting } = useAutoComplete({
+    game,
+    setGame,
+    isSettingUp,
+    won: game.won,
+    isBlocked: !!dragGhost,
+    getSources: (state) =>
+      state.stock.length === 0 &&
+      state.waste.length === 0 &&
+      state.tableau.every((pile) => pile.every((card) => card.faceUp))
+        ? state.tableau
+        : null,
+    getFoundations: (state) => state.foundations,
+    canPlaceOnFoundation: canBuildFoundation,
+    onStart: () => setSelected(null),
   });
 
   useEffect(() => {
@@ -929,12 +928,7 @@ export function StockTableauSolitaire({
 
   dropHitAreasRef.current = dropHitAreas;
 
-  useEffect(() => {
-    navigation.setOptions({ gestureEnabled: false });
-    return () => navigation.setOptions({ gestureEnabled: true });
-  }, [navigation]);
-
-  function startGhostDrag(source: MoveSource, _event: GestureResponderEvent) {
+  function startGhostDrag(source: MoveSource) {
     if (game.ended) return;
     const cards = getCards(game, source);
     if (!isMovableRun(cards, config.move, config)) return;
@@ -943,19 +937,16 @@ export function StockTableauSolitaire({
     startDrag(source, cards, { x: rect.x, y: rect.y });
   }
 
-  const tapHandlerResolverRef = useRef(
-    (_source: MoveSource): (() => void) =>
-      () => {},
-  );
-  tapHandlerResolverRef.current = (source) =>
-    source.zone === "waste"
+  function getTapHandler(source: MoveSource) {
+    return source.zone === "waste"
       ? onWastePress
       : () => onTableauPress(source.pile, source.card);
+  }
 
   const interactionTargets = useMemo(
     () =>
       cardHitAreas.map(({ source, rect }) => (
-        <View
+        <DragHandle
           key={
             source.zone === "waste"
               ? "waste"
@@ -970,9 +961,7 @@ export function StockTableauSolitaire({
             width: rect.width,
             height: rect.height,
           }}
-          {...makeDragHandlers(source, startGhostDrag, () =>
-            tapHandlerResolverRef.current(source)(),
-          )}
+          gesture={makeDragHandlers(source, startGhostDrag)}
         />
       )),
     [cardHitAreas],
@@ -987,7 +976,6 @@ export function StockTableauSolitaire({
         cardHeight,
       )
     : null;
-  const ghostHasValidDrop = !!dragGhost && hoverTarget !== null;
   const score = game.foundations.reduce((sum, pile) => sum + pile.length, 0);
   return (
     <GameWrapper
@@ -997,6 +985,7 @@ export function StockTableauSolitaire({
       score={score}
       canUndo={canUndo}
       undo={undo}
+      autoCompleting={isAutoCompleting}
       winLoseMessage={game.won ? "Every suit is home!" : "No moves remain."}
       showDeviceRotateHint
     >
@@ -1039,40 +1028,15 @@ export function StockTableauSolitaire({
           {interactionTargets}
         </View>
         {dragGhost && (
-          <Animated.View
-            style={{
-              pointerEvents: "none",
-              position: "absolute",
-              zIndex: 4000,
-              left: dragGhost.origin.x,
-              top: dragGhost.origin.y,
-              transform: dragTranslate.getTranslateTransform(),
-            }}
-          >
-            {dragGhost.cards.map((card, index) => (
-              <View
-                key={`ghost-${card.id}`}
-                style={{
-                  position: "absolute",
-                  left: 0,
-                  top: index * cardDims.tableauOffset * cardHeight,
-                  width: cardWidth,
-                  height: cardHeight,
-                  zIndex: index + 1,
-                }}
-              >
-                <Card
-                  card={card}
-                  cardWidth={cardWidth}
-                  cardSize="tableau"
-                  selectColor={
-                    ghostHasValidDrop && index === 0 ? "green" : "none"
-                  }
-                  isSelected={ghostHasValidDrop && index === 0}
-                />
-              </View>
-            ))}
-          </Animated.View>
+          <DragGhostCards
+            ghost={dragGhost}
+            translate={dragTranslate}
+            cardWidth={cardWidth}
+            cardHeight={cardHeight}
+            cardSize="tableau"
+            isValidDrop={hoverTarget !== null}
+            highlightLeadOnly
+          />
         )}
       </View>
     </GameWrapper>

@@ -6,7 +6,7 @@ import { getGameInfo, normalizeGamePath } from "@/data/game-menu";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, rgba } from "@/styles/styles";
+import { Colors } from "@/styles/styles";
 import { usePathname } from "expo-router";
 import { View, ViewStyle } from "react-native";
 import { RichText } from "../common/RichText";

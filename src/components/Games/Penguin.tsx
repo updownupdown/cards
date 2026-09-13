@@ -3,16 +3,13 @@ import {
   CardHitArea,
   createRect,
   DropHitArea,
-  pointInRect,
   useDragDrop,
 } from "@/hooks/useDragDrop";
-import { useNavigation } from "expo-router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { GestureResponderEvent } from "react-native";
-import { Animated, StyleSheet, View } from "react-native";
+import { DragGhostCards, DragHandle } from "@/components/Cards/DragDrop";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
-import { Card } from "../Cards/Card";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
   CardSuit,
@@ -279,10 +276,7 @@ const gameStateInitial = createInitialState();
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function Penguin() {
-  const navigation = useNavigation();
-
   const [selected, setSelected] = useState<Selection>(null);
-  const [hoverTarget, setHoverTarget] = useState<DropTarget | null>(null);
 
   const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
     useStateManager<GameState>({
@@ -301,11 +295,8 @@ export default function Penguin() {
   // ── Drag & drop ─────────────────────────────────────────────────────────────
 
   const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
-  const handleHoverTargetChange = useCallback((next: DropTarget | null) => {
-    setHoverTarget((prev) => (sameDropTarget(prev, next) ? prev : next));
-  }, []);
-
   const {
+    hoverTarget,
     dragGhost,
     draggedCardIds,
     justDroppedCardIds,
@@ -317,14 +308,7 @@ export default function Penguin() {
     updateBoardOffset,
     makeDragHandlers,
   } = useDragDrop<MoveSource, DropTarget>({
-    findDropTarget: (pageX, pageY) => {
-      const hit = [...dropHitAreasRef.current]
-        .filter(({ rect }) => pointInRect(pageX, pageY, rect))
-        .sort((a, b) => b.priority - a.priority)[0];
-      return hit?.target ?? null;
-    },
     canDropOnTarget,
-    sameTarget: sameDropTarget,
     onSuccessfulDrop: (source, target) => {
       applyMove(source, target);
     },
@@ -332,7 +316,7 @@ export default function Penguin() {
       getRunFromSource(source, game).map((card) => card.id),
     getDropHitAreas: () => dropHitAreasRef.current,
     getSourceRect,
-    onHoverTargetChange: handleHoverTargetChange,
+    getTapHandler,
   });
 
   // ── CardMap zones ───────────────────────────────────────────────────────────
@@ -637,29 +621,7 @@ export default function Penguin() {
 
   dropHitAreasRef.current = dropHitAreas;
 
-  // ── Navigation ──────────────────────────────────────────────────────────────
-
-  useEffect(() => {
-    navigation.setOptions({ gestureEnabled: false });
-    return () => {
-      navigation.setOptions({ gestureEnabled: true });
-    };
-  }, [navigation]);
-
   // ── Game logic ──────────────────────────────────────────────────────────────
-
-  function sameDropTarget(a: DropTarget | null, b: DropTarget | null): boolean {
-    if (!a || !b) return a === b;
-    if (a.zone !== b.zone) return false;
-    if (a.zone === "tableau" && b.zone === "tableau")
-      return a.pileIndex === b.pileIndex;
-    if (a.zone === "reserve" && b.zone === "reserve") {
-      return a.slotIndex === b.slotIndex;
-    }
-    return (
-      a.zone === "foundation" && b.zone === "foundation" && a.suit === b.suit
-    );
-  }
 
   function getRunFromSource(source: MoveSource, snapshot: GameState) {
     if (source.zone === "tableau") {
@@ -740,7 +702,7 @@ export default function Penguin() {
 
   // ── Drag helpers ─────────────────────────────────────────────────────────────
 
-  function startGhostDrag(source: MoveSource, _event: GestureResponderEvent) {
+  function startGhostDrag(source: MoveSource) {
     const run = getRunFromSource(source, game);
     if (run.length === 0) return;
 
@@ -875,18 +837,13 @@ export default function Penguin() {
 
   // ── Render ────────────────────────────────────────────────────────────────────
 
-  const ghostLeft = dragGhost ? dragGhost.origin.x : 0;
-  const ghostTop = dragGhost ? dragGhost.origin.y : 0;
-  const ghostHasValidDrop = !!dragGhost && hoverTarget !== null;
 
-  const tapHandlerResolverRef = useRef(
-    (_source: MoveSource): (() => void) =>
-      () => {},
-  );
-  tapHandlerResolverRef.current = (source: MoveSource) => () =>
-    source.zone === "tableau"
-      ? onTableauCardTap(source.pileIndex, source.cardIndex)
-      : onReserveTap(source.slotIndex);
+  function getTapHandler(source: MoveSource) {
+    return () =>
+      source.zone === "tableau"
+        ? onTableauCardTap(source.pileIndex, source.cardIndex)
+        : onReserveTap(source.slotIndex);
+  }
 
   const interactionTargets = useMemo(
     () =>
@@ -894,7 +851,7 @@ export default function Penguin() {
         const { source, rect } = hit;
 
         return (
-          <View
+          <DragHandle
             key={
               source.zone === "tableau"
                 ? `t-${source.pileIndex}-${source.cardIndex}`
@@ -911,9 +868,7 @@ export default function Penguin() {
                 height: rect.height,
               },
             ]}
-            {...makeHandlers(source, () =>
-              tapHandlerResolverRef.current(source)(),
-            )}
+            gesture={makeHandlers(source)}
           />
         );
       }),
@@ -956,50 +911,18 @@ export default function Penguin() {
           </View>
 
           {dragGhost && (
-            <Animated.View
-              style={[
-                {
-                  position: "absolute",
-                  zIndex: 4000,
-                  pointerEvents: "none",
-                  left: ghostLeft,
-                  top: ghostTop,
-                  transform: dragTranslate.getTranslateTransform(),
-                },
-              ]}
-            >
-              {dragGhost.cards.map((card, i) => (
-                <View
-                  key={`ghost-${card.id}`}
-                  style={[
-                    {
-                      position: "absolute",
-                      left: 0,
-                      opacity: 1,
-                      width: cardWidth,
-                      height: cardHeight,
-                      top: i * TABLEAU_FAN_OFFSET * cardHeight,
-                      zIndex: i + 1,
-                    },
-                  ]}
-                >
-                  <Card
-                    card={card}
-                    cardWidth={cardWidth}
-                    cardSize={cardSize}
-                    selectColor={ghostHasValidDrop ? "green" : "none"}
-                    isSelected={ghostHasValidDrop}
-                  />
-                </View>
-              ))}
-            </Animated.View>
+            <DragGhostCards
+              ghost={dragGhost}
+              translate={dragTranslate}
+              cardWidth={cardWidth}
+              cardHeight={cardHeight}
+              cardSize={cardSize}
+              fanOffset={TABLEAU_FAN_OFFSET}
+              isValidDrop={hoverTarget !== null}
+            />
           )}
         </View>
       </View>
     </GameWrapper>
   );
 }
-
-// ─── Styles ───────────────────────────────────────────────────────────────────
-
-const styles = StyleSheet.create({});

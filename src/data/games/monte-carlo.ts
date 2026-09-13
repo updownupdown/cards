@@ -10,7 +10,7 @@ export const monteCarlo: GameDefinition = {
     difficulty: 20,
     luck: 35,
   },
-  thumbnail: "MonteCarlo.jpg",
+  thumbnail: "MonteCarlo.webp",
   background: GAME_BACKGROUNDS.monteCarlo,
   gameColorDark: "#152635",
   gameColorMid: "#508083",

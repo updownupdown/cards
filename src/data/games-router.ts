@@ -17,29 +17,20 @@ function toRouteKey(value: string) {
 // Relative path (not the `@/` alias) so Metro's require.context resolves it.
 const componentContext = require.context("../components/Games", true, /\.tsx$/);
 
-const componentByKey: Record<string, ComponentType> = {};
+// Game modules are evaluated only when a game is opened. Requiring all of them
+// here ran every game file (and everything it imports) at startup.
+const contextKeyByRouteKey: Record<string, string> = {};
 for (const key of componentContext.keys()) {
   const fileName = key
     .split("/")
     .pop()
     ?.replace(/\.tsx$/, "");
-  if (!fileName) continue;
-
-  const mod = componentContext(key) as { default?: ComponentType };
-  if (typeof mod.default === "function") {
-    componentByKey[toRouteKey(fileName)] = mod.default;
-  }
-}
-
-const componentByPath: Record<string, ComponentType> = {};
-for (const path of Object.keys(GAMES_DATA)) {
-  const component = componentByKey[toRouteKey(path)];
-  if (component) componentByPath[path] = component;
+  if (fileName) contextKeyByRouteKey[toRouteKey(fileName)] = key;
 }
 
 if (__DEV__) {
   const missing = Object.keys(GAMES_DATA).filter(
-    (path) => !componentByPath[path],
+    (path) => !contextKeyByRouteKey[toRouteKey(path)],
   );
   if (missing.length > 0) {
     console.warn(
@@ -48,8 +39,20 @@ if (__DEV__) {
   }
 }
 
+const componentByPath: Record<string, ComponentType | null> = {};
+
 export function getGameComponentByPath(game: string): ComponentType | null {
   const path = game.startsWith("/") ? game : `/${game}`;
   if (!GAMES_DATA[path]) return null;
-  return componentByPath[path] ?? null;
+
+  if (!(path in componentByPath)) {
+    const key = contextKeyByRouteKey[toRouteKey(path)];
+    const mod = key
+      ? (componentContext(key) as { default?: ComponentType })
+      : undefined;
+    componentByPath[path] =
+      typeof mod?.default === "function" ? mod.default : null;
+  }
+
+  return componentByPath[path];
 }

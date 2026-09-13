@@ -10,7 +10,7 @@ export const scorpion: GameDefinition = {
     difficulty: 75,
     luck: 50,
   },
-  thumbnail: "Scorpion.jpg",
+  thumbnail: "Scorpion.webp",
   background: GAME_BACKGROUNDS.sahara,
   gameColorDark: "#352b21",
   gameColorMid: "#aa5743",

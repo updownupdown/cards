@@ -10,7 +10,7 @@ export const bowling: GameDefinition = {
     difficulty: 30,
     luck: 35,
   },
-  thumbnail: "Bowling.jpg",
+  thumbnail: "Bowling.webp",
   background: GAME_BACKGROUNDS.bowling,
   gameColorDark: "#331e0f",
   gameColorMid: "#23947f",
@@ -24,7 +24,7 @@ export const bowling: GameDefinition = {
   ],
   howToPlay: [
     "## Objective",
-    "Maximize your score across ten frames.",
+    "Maximize your score across ten frames. You **win** with a final score of **120** or more; otherwise it's a loss.",
 
     "## Throwing Balls",
     "- Choose a face-up ball card and knock down **1, 2, or 3 adjacent pins** whose values **sum to a number ending in the ball card's digit**:",

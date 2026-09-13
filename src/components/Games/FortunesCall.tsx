@@ -1,5 +1,4 @@
 import { Button } from "@/components/Button/Button";
-import { useGameColors } from "@/hooks/useGameColors";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
 import { delay } from "@/utils/utils";
@@ -67,7 +66,6 @@ export const fortunesCallRules = { predictionMatches };
 const gameStateInitial = createInitialState();
 
 export default function FortunesCall() {
-  const { colorPale } = useGameColors();
   const { spacing } = useResponsiveMetrics();
   const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
     useStateManager<GameState>({

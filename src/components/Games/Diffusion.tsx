@@ -4,7 +4,6 @@ import { delay } from "@/utils/utils";
 import { useEffect, useMemo } from "react";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
-  cardDims,
   cardLabel,
   createDeck,
   flipAllToBack,

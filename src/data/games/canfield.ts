@@ -11,7 +11,7 @@ export const canfield: GameDefinition = {
     difficulty: 75,
     luck: 70,
   },
-  thumbnail: "Canfield.jpg",
+  thumbnail: "Canfield.webp",
   background: GAME_BACKGROUNDS.oldRoom,
   animation: GameAnimations.Dust,
   gameColorDark: "#311a1e",

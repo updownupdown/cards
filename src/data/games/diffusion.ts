@@ -11,7 +11,7 @@ export const diffusion: GameDefinition = {
     difficulty: 30,
     luck: 30,
   },
-  thumbnail: "Diffusion.jpg",
+  thumbnail: "Diffusion.webp",
   background: GAME_BACKGROUNDS.painting,
   animation: GameAnimations.Firefly,
   gameColorDark: "#2f1236",

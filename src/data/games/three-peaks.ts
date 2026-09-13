@@ -12,7 +12,7 @@ export const threePeaks: GameDefinition = {
     difficulty: 40,
     luck: 70,
   },
-  thumbnail: "ThreePeaks.jpg",
+  thumbnail: "ThreePeaks.webp",
   background: GAME_BACKGROUNDS.yukon,
   animation: GameAnimations.Clouds,
   gameColorDark: "#24343a",

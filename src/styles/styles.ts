@@ -84,40 +84,57 @@ export const Colors = {
  * @param hexColor A hex color string starting with "#"
  * @param opacity Opacity percentage (0 to 0.1)
  */
-export function rgba(hexColor: string, opacity: number): string {
-  const hex = hexColor.replace("#", "");
-  const r = parseInt(hex.substring(0, 2), 16);
-  const g = parseInt(hex.substring(2, 4), 16);
-  const b = parseInt(hex.substring(4, 6), 16);
-  const a = opacity;
-  return `rgba(${r}, ${g}, ${b}, ${a})`;
+/**
+ * Apply an opacity to a colour. Accepts hex (#rgb, #rrggbb, or #rrggbbaa, whose
+ * own alpha is replaced) and rgb()/rgba() strings. Anything else is returned
+ * unchanged: this used to assume hex and turn e.g. an rgba() input into an
+ * invalid "rgba(NaN, …)", which crashed Reanimated on native.
+ */
+export function rgba(color: string, opacity: number): string {
+  const channels = parseRgbChannels(color);
+
+  if (!channels) {
+    if (__DEV__) console.warn(`rgba(): unsupported colour "${color}"`);
+    return color;
+  }
+
+  const [r, g, b] = channels;
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 }
 
-export const Fonts = Platform.select({
-  ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
-    sans: "system-ui",
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
-    serif: "ui-serif",
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
-    rounded: "ui-rounded",
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
-    mono: "ui-monospace",
-  },
-  default: {
-    // sans: "normal",
-    sans: "Outfit_500Medium",
-    serif: "serif",
-    rounded: "normal",
-    mono: "monospace",
-  },
-  web: {
-    sans: "var(--font-sans)",
-    serif: "var(--font-serif)",
-    rounded: "var(--font-rounded)",
-    mono: "var(--font-mono)",
-  },
-});
+function parseRgbChannels(color: string): [number, number, number] | null {
+  const value = color.trim();
+
+  const hexMatch = /^#?([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i.exec(value);
+  if (hexMatch) {
+    let hex = hexMatch[1];
+    if (hex.length === 3) {
+      hex = hex
+        .split("")
+        .map((digit) => digit + digit)
+        .join("");
+    }
+    return [
+      parseInt(hex.slice(0, 2), 16),
+      parseInt(hex.slice(2, 4), 16),
+      parseInt(hex.slice(4, 6), 16),
+    ];
+  }
+
+  const functionMatch =
+    /^rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*(?:,\s*[\d.]+%?\s*)?\)$/i.exec(
+      value,
+    );
+  if (functionMatch) {
+    return [
+      Number(functionMatch[1]),
+      Number(functionMatch[2]),
+      Number(functionMatch[3]),
+    ];
+  }
+
+  return null;
+}
 
 export const FontWeight = {
   200: "Outfit_200ExtraLight",
@@ -161,7 +178,11 @@ export function getHeaderHeightWithInset(
   );
 }
 
-export const transitionStyles = StyleSheet.create({
+// CSS transitions, authored for the web build. On native the equivalent
+// motion is driven by Reanimated, so applying these here is pure overhead -
+// animating `box-shadow` on every card in particular is expensive to render
+// on Android. Keep the keys so callers spread them unconditionally.
+const webTransitionStyles = StyleSheet.create({
   all02sec: {
     transitionDuration: "0.2s",
     transitionProperty: "all",
@@ -195,3 +216,18 @@ export const transitionStyles = StyleSheet.create({
     transitionTimingFunction: "ease",
   },
 });
+
+const emptyTransitionStyles = Object.fromEntries(
+  Object.keys(webTransitionStyles).map((key) => [key, {}]),
+) as Record<keyof typeof webTransitionStyles, object>;
+
+export const transitionStyles =
+  Platform.OS === "web" ? webTransitionStyles : emptyTransitionStyles;
+
+/**
+ * A CSS `drop-shadow()` filter, applied on web only. On Android a `filter`
+ * forces the view into an offscreen render pass, which is a real cost on
+ * elements that appear as often as icons and buttons do.
+ */
+export const webDropShadow = (value: string) =>
+  Platform.OS === "web" ? ({ filter: `drop-shadow(${value})` } as const) : null;

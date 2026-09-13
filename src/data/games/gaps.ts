@@ -7,7 +7,7 @@ export const gaps: GameDefinition = {
   aliases: ["Montana", "Addiction", "Addiction Solitaire"],
   tags: [GameTag.SpatialControl, GameTag.SequenceBuilding],
   rating: { complexity: 30, difficulty: 60, luck: 45 },
-  thumbnail: "Gaps.jpg",
+  thumbnail: "Gaps.webp",
   background: GAME_BACKGROUNDS.mountain1,
   gameColorDark: "#2c322f",
   gameColorMid: "#ada356",

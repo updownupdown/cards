@@ -11,7 +11,7 @@ export const pocketPoker: GameDefinition = {
     difficulty: 30,
     luck: 50,
   },
-  thumbnail: "PocketPoker.jpg",
+  thumbnail: "PocketPoker.webp",
   background: GAME_BACKGROUNDS.casino,
   animation: GameAnimations.Dust,
   gameColorDark: "#142e1f",

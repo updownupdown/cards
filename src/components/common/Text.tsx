@@ -1,9 +1,26 @@
 import { HexColor } from "@/data/games-data";
 import { Colors, FontWeight as FontFamilies } from "@/styles/styles";
 import { useResponsiveUiLayout } from "@/hooks/useResponsiveLayout";
-import { forwardRef, useMemo } from "react";
-import { Text as RNText } from "react-native";
+import { createElement, forwardRef, useMemo, type ReactNode } from "react";
+import { Platform, Text as RNText } from "react-native";
 import type { TextProps as RNTextProps } from "react-native";
+
+const SUIT_WITHOUT_TEXT_PRESENTATION = /([♠♣♥♦])(?!\uFE0E)/g;
+
+/**
+ * Android draws ♠♥♦♣ as colour emoji, ignoring the text colour. U+FE0E asks
+ * for the plain text glyph instead, which takes the surrounding colour.
+ */
+export function withTextPresentationSuits(value: string) {
+  return value.replace(SUIT_WITHOUT_TEXT_PRESENTATION, "$1\uFE0E");
+}
+
+function textPresentationChildren(children: ReactNode): ReactNode[] {
+  const list = Array.isArray(children) ? children : [children];
+  return list.map((child) =>
+    typeof child === "string" ? withTextPresentationSuits(child) : child,
+  );
+}
 
 export const Typography = {
   size: {
@@ -65,24 +82,26 @@ export const Text = forwardRef<React.ElementRef<typeof RNText>, TextProps>(
     const fontFamily = Typography.fontFamily[weight];
     const resolvedLineHeight = fontSize * lineHeight;
 
-    return (
-      <RNText
-        style={[
-          {
-            fontSize,
-            fontFamily,
-            color,
-            textTransform,
-            lineHeight: resolvedLineHeight,
-            flexShrink: 1,
-          },
-          style,
-        ]}
-        ref={ref}
-        {...otherProps}
-      >
-        {children}
-      </RNText>
+    const textStyle = [
+      {
+        fontSize,
+        fontFamily,
+        color,
+        textTransform,
+        lineHeight: resolvedLineHeight,
+        flexShrink: 1,
+      },
+      style,
+    ];
+
+    // createElement with spread children, so an array of children isn't
+    // treated as a keyed list.
+    return createElement(
+      RNText,
+      { style: textStyle, ref, ...otherProps },
+      ...(Platform.OS === "web"
+        ? [children]
+        : textPresentationChildren(children)),
     );
   },
 );

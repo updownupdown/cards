@@ -1,11 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
+import { Animated as RNAnimated, StyleSheet } from "react-native";
 import {
-  Platform,
-  Animated as RNAnimated,
-  Easing as RNEasing,
-  StyleSheet,
-} from "react-native";
-import { type SceneProps, seeded } from "./BackgroundAnimations";
+  type SceneProps,
+  seeded,
+  useAnimatedValueLoop,
+} from "./BackgroundAnimations";
 
 function DustParticle({
   index,
@@ -22,31 +21,7 @@ function DustParticle({
   const duration = 100000 + seeded(index, 134) * 5000;
   const opacity = 0.2 + seeded(index, 135) * 0.4;
 
-  useEffect(() => {
-    let animation: RNAnimated.CompositeAnimation | undefined;
-    let cancelled = false;
-
-    function fall(fromProgress: number) {
-      animation = RNAnimated.timing(progress, {
-        toValue: 1,
-        duration: duration * (1 - fromProgress),
-        easing: RNEasing.linear,
-        useNativeDriver: Platform.OS !== "web",
-      });
-      animation.start(({ finished }) => {
-        if (!finished || cancelled) return;
-
-        progress.setValue(0);
-        fall(0);
-      });
-    }
-
-    fall(phase);
-    return () => {
-      cancelled = true;
-      animation?.stop();
-    };
-  }, [duration, phase, progress]);
+  useAnimatedValueLoop(progress, duration);
 
   return (
     <RNAnimated.View
@@ -80,7 +55,7 @@ function DustParticle({
 export function Dust({ width, height }: SceneProps) {
   return (
     <>
-      {Array.from({ length: 86 }, (_, index) => (
+      {Array.from({ length: 65 }, (_, index) => (
         <DustParticle key={index} width={width} height={height} index={index} />
       ))}
     </>

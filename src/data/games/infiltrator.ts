@@ -13,7 +13,7 @@ export const infiltrator: GameDefinition = {
   },
   background: GAME_BACKGROUNDS.darkAlley,
   animation: GameAnimations.Dust,
-  thumbnail: "Infiltrator.jpg",
+  thumbnail: "Infiltrator.webp",
   gameColorDark: "#182326",
   gameColorMid: "#54ac96",
   gameColorPale: "#dce8df",

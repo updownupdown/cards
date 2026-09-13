@@ -104,7 +104,7 @@ export function CollectTab({
         {COLLECT_TAGS.map(({ tag }) => {
           const games = gamesByTag.get(tag) ?? [];
           const wonCount = games.filter(
-            ([path]) => (settingsMap[path]?.stats.wins ?? 0) > 0,
+            ([path]) => (settingsMap[path]?.stats?.wins ?? 0) > 0,
           ).length;
           const percentage = games.length
             ? Math.round((wonCount / games.length) * 100)
@@ -222,7 +222,7 @@ export function CollectTab({
                         width: cardSize === "medium" ? mediumCardWidth : "100%",
                         flexGrow: cardSize === "medium" ? 0 : 1,
                       }}
-                      showCompleted={!!settingsMap[path]?.stats.wins}
+                      showCompleted={!!settingsMap[path]?.stats?.wins}
                     />
                   ))}
                 </View>

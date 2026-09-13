@@ -1,14 +1,10 @@
-import { useEffect, useRef } from "react";
-import {
-  Platform,
-  Animated as RNAnimated,
-  Easing as RNEasing,
-  StyleSheet,
-} from "react-native";
+import { useRef } from "react";
+import { Animated as RNAnimated, StyleSheet } from "react-native";
 import {
   animationStyles,
   type SceneProps,
   seeded,
+  useAnimatedValueLoop,
 } from "./BackgroundAnimations";
 
 function RainDrop({ index, width, height }: SceneProps & { index: number }) {
@@ -23,19 +19,7 @@ function RainDrop({ index, width, height }: SceneProps & { index: number }) {
     -overshoot + seeded(index, 51) * (width + overshoot * 2 - horizontalTravel);
   const duration = 550 + seeded(index, 54) * 500;
 
-  useEffect(() => {
-    const animation = RNAnimated.loop(
-      RNAnimated.timing(progress, {
-        toValue: 1,
-        duration,
-        easing: RNEasing.linear,
-        useNativeDriver: Platform.OS !== "web",
-      }),
-    );
-
-    animation.start();
-    return () => animation.stop();
-  }, [duration, progress]);
+  useAnimatedValueLoop(progress, duration);
 
   return (
     <RNAnimated.View
@@ -69,7 +53,7 @@ function RainDrop({ index, width, height }: SceneProps & { index: number }) {
 export function Rain(props: SceneProps) {
   return (
     <>
-      {Array.from({ length: 72 }, (_, index) => (
+      {Array.from({ length: 54 }, (_, index) => (
         <RainDrop key={index} {...props} index={index} />
       ))}
     </>

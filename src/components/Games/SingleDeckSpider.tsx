@@ -3,16 +3,13 @@ import {
   CardHitArea,
   createRect,
   DropHitArea,
-  pointInRect,
   useDragDrop,
 } from "@/hooks/useDragDrop";
+import { DragGhostCards, DragHandle } from "@/components/Cards/DragDrop";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
-import { useNavigation } from "expo-router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { GestureResponderEvent } from "react-native";
-import { Animated, Pressable, StyleSheet, View } from "react-native";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
-import { Card } from "../Cards/Card";
 import {
   cardDims,
   createDeck,
@@ -37,11 +34,6 @@ export type SingleDeckSpiderState = {
 type Selection = { pile: number; card: number } | null;
 type MoveSource = Exclude<Selection, null>;
 type DropTarget = { pile: number };
-
-function sameDropTarget(a: DropTarget | null, b: DropTarget | null) {
-  if (!a || !b) return a === b;
-  return a.pile === b.pile;
-}
 
 const CONFIGS = {
   "simple-simon": {
@@ -132,10 +124,8 @@ export function SingleDeckSpider({
 }: {
   variant: SingleDeckSpiderVariant;
 }) {
-  const navigation = useNavigation();
   const initial = useMemo(() => createInitialState(variant), [variant]);
   const [selected, setSelected] = useState<Selection>(null);
-  const [hoverTarget, setHoverTarget] = useState<DropTarget | null>(null);
   const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
     useStateManager<SingleDeckSpiderState>({
       gameStateInitial: initial,
@@ -151,13 +141,8 @@ export function SingleDeckSpider({
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
   const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
 
-  const handleHoverTargetChange = useCallback((next: DropTarget | null) => {
-    setHoverTarget((current) =>
-      sameDropTarget(current, next) ? current : next,
-    );
-  }, []);
-
   const {
+    hoverTarget,
     dragGhost,
     draggedCardIds,
     justDroppedCardIds,
@@ -169,14 +154,7 @@ export function SingleDeckSpider({
     updateBoardOffset,
     makeDragHandlers,
   } = useDragDrop<MoveSource, DropTarget>({
-    findDropTarget: (pageX, pageY) => {
-      const hit = [...dropHitAreasRef.current]
-        .filter(({ rect }) => pointInRect(pageX, pageY, rect))
-        .sort((a, b) => b.priority - a.priority)[0];
-      return hit?.target ?? null;
-    },
     canDropOnTarget,
-    sameTarget: sameDropTarget,
     onSuccessfulDrop: (source, target) => {
       move(target.pile, source);
     },
@@ -184,7 +162,7 @@ export function SingleDeckSpider({
       getSourceCards(source, game).map((card) => card.id),
     getDropHitAreas: () => dropHitAreasRef.current,
     getSourceRect,
-    onHoverTargetChange: handleHoverTargetChange,
+    getTapHandler,
   });
 
   useEffect(() => {
@@ -434,12 +412,7 @@ export function SingleDeckSpider({
 
   dropHitAreasRef.current = dropHitAreas;
 
-  useEffect(() => {
-    navigation.setOptions({ gestureEnabled: false });
-    return () => navigation.setOptions({ gestureEnabled: true });
-  }, [navigation]);
-
-  function startGhostDrag(source: MoveSource, _event: GestureResponderEvent) {
+  function startGhostDrag(source: MoveSource) {
     if (game.ended) return;
     const cards = getSourceCards(source, game);
     if (cards.length === 0) return;
@@ -448,17 +421,14 @@ export function SingleDeckSpider({
     startDrag(source, cards, { x: rect.x, y: rect.y });
   }
 
-  const tapHandlerResolverRef = useRef(
-    (_source: MoveSource): (() => void) =>
-      () => {},
-  );
-  tapHandlerResolverRef.current = (source) => () =>
-    onCardPress(source.pile, source.card);
+  function getTapHandler(source: MoveSource) {
+    return () => onCardPress(source.pile, source.card);
+  }
 
   const interactionTargets = useMemo(
     () =>
       cardHitAreas.map(({ source, rect }) => (
-        <View
+        <DragHandle
           key={`tableau-${source.pile}-${source.card}`}
           collapsable={false}
           style={{
@@ -469,9 +439,7 @@ export function SingleDeckSpider({
             width: rect.width,
             height: rect.height,
           }}
-          {...makeDragHandlers(source, startGhostDrag, () =>
-            tapHandlerResolverRef.current(source)(),
-          )}
+          gesture={makeDragHandlers(source, startGhostDrag)}
         />
       )),
     [cardHitAreas],
@@ -479,7 +447,6 @@ export function SingleDeckSpider({
 
   const stockZone = zones.find((zone) => zone.name === "stock");
   const stockPosition = stockZone ? getZoneBasePos(stockZone) : null;
-  const ghostHasValidDrop = !!dragGhost && hoverTarget !== null;
   return (
     <GameWrapper
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
@@ -532,40 +499,15 @@ export function SingleDeckSpider({
           {interactionTargets}
         </View>
         {dragGhost && (
-          <Animated.View
-            style={{
-              pointerEvents: "none",
-              position: "absolute",
-              zIndex: 4000,
-              left: dragGhost.origin.x,
-              top: dragGhost.origin.y,
-              transform: dragTranslate.getTranslateTransform(),
-            }}
-          >
-            {dragGhost.cards.map((card, index) => (
-              <View
-                key={`ghost-${card.id}`}
-                style={{
-                  position: "absolute",
-                  left: 0,
-                  top: index * cardDims.tableauOffset * cardHeight,
-                  width: cardWidth,
-                  height: cardHeight,
-                  zIndex: index + 1,
-                }}
-              >
-                <Card
-                  card={card}
-                  cardWidth={cardWidth}
-                  cardSize="tableau"
-                  selectColor={
-                    ghostHasValidDrop && index === 0 ? "green" : "none"
-                  }
-                  isSelected={ghostHasValidDrop && index === 0}
-                />
-              </View>
-            ))}
-          </Animated.View>
+          <DragGhostCards
+            ghost={dragGhost}
+            translate={dragTranslate}
+            cardWidth={cardWidth}
+            cardHeight={cardHeight}
+            cardSize="tableau"
+            isValidDrop={hoverTarget !== null}
+            highlightLeadOnly
+          />
         )}
       </View>
     </GameWrapper>

@@ -58,6 +58,10 @@ export default function Home() {
   );
   const activeTabRef = useRef<HomeTabIndex>(initialActiveTab);
   const isTabPressScrollRef = useRef(false);
+  // True while the pager is re-aligning after a width change (rotation /
+  // resize). Scroll events in that window carry offsets for the old width, so
+  // reading a tab from them would jump to the wrong page.
+  const isRealigningRef = useRef(false);
 
   const renderedContentWidth = Math.min(ui.contentMaxWidth, viewportWidth);
   const { settings, updateSettings } = useGlobalSettings();
@@ -88,7 +92,11 @@ export default function Home() {
     ui.gameHeaderHeight +
     spacing(layoutDims.pagePadding * 0.5);
   const contentPaddingTop = headerReserved + spacing(10);
-  const contentPaddingBottom = spacing(layoutDims.menuBarHeight + 40);
+  // Clear the floating tab bar, which grows by the bottom safe-area inset
+  // (Android's navigation bar), with a comfortable gap after the last item.
+  const contentPaddingBottom =
+    spacing(layoutDims.tabBarHeight + layoutDims.pagePadding * 0.5 + 48) +
+    insets.bottom;
 
   const onInvalidateHomeData = () => {
     setHomeDataRefreshToken((current) => current + 1);
@@ -109,11 +117,17 @@ export default function Home() {
       x: activeTabRef.current * pageWidth,
       animated: false,
     });
+    // Fallback in case no content-size change arrives to end the re-align.
+    const timer = setTimeout(() => {
+      isRealigningRef.current = false;
+    }, 300);
+    return () => clearTimeout(timer);
   }, [pageWidth]);
 
   const onPagerLayout = (event: LayoutChangeEvent) => {
     const { width, height } = event.nativeEvent.layout;
     if (width > 0 && Math.abs(width - pageWidth) > 1) {
+      isRealigningRef.current = true;
       setPageWidth(width);
     }
     if (height > 0 && Math.abs(height - pagerHeight) > 1) {
@@ -125,7 +139,7 @@ export default function Home() {
   // scroll-snap both guarantee it rests on a page; `scroll-snap-stop: always`
   // (web) additionally stops a single swipe from skipping past a neighbour.
   const syncActiveTab = (offsetX: number) => {
-    if (pageWidth <= 0) return;
+    if (pageWidth <= 0 || isRealigningRef.current) return;
     const index = Math.max(
       0,
       Math.min(NODES_HOME_TAB_INDEX, Math.round(offsetX / pageWidth)),
@@ -144,7 +158,33 @@ export default function Home() {
   };
 
   const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    syncActiveTab(event.nativeEvent.contentOffset.x);
+    const { contentOffset, layoutMeasurement } = event.nativeEvent;
+    // A viewport that no longer matches the page width means a resize is in
+    // progress. The browser can fire this before onLayout reports the new
+    // width, so check here rather than relying on the layout event alone.
+    if (
+      layoutMeasurement &&
+      layoutMeasurement.width > 0 &&
+      Math.abs(layoutMeasurement.width - pageWidth) > 1
+    ) {
+      isRealigningRef.current = true;
+      return;
+    }
+    syncActiveTab(contentOffset.x);
+  };
+
+  // The pages only take their new width after layout, so the scroll issued when
+  // the width changed can be clamped against the old content size and leave
+  // the pager between pages. Re-align once the new content size lands.
+  const onPagerContentSizeChange = () => {
+    if (!isRealigningRef.current) return;
+    pagerRef.current?.scrollTo({
+      x: activeTabRef.current * pageWidth,
+      animated: false,
+    });
+    requestAnimationFrame(() => {
+      isRealigningRef.current = false;
+    });
   };
 
   const onPagerSettled = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -317,6 +357,7 @@ export default function Home() {
             showsHorizontalScrollIndicator={false}
             onScroll={onScroll}
             onMomentumScrollEnd={onPagerSettled}
+            onContentSizeChange={onPagerContentSizeChange}
             scrollEventThrottle={16}
             style={[{ flex: 1 }, webSnapContainer]}
             contentContainerStyle={{ height: screenHeight || "100%" }}

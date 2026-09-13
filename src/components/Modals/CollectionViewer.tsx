@@ -9,7 +9,13 @@ type CollectionViewerProps = {
   collectedIds: ReadonlySet<number>;
   selectedId?: number;
   onSelect: (id: number) => void;
-  renderItem: (id: number, selected: boolean, collected: boolean) => ReactNode;
+  /** `size` is the room inside the item's slot in the navigator. */
+  renderItem: (
+    id: number,
+    selected: boolean,
+    collected: boolean,
+    size: { width: number; height: number },
+  ) => ReactNode;
   children: ReactNode;
 };
 
@@ -25,6 +31,11 @@ export function CollectionViewer({
   const listRef = useRef<ScrollView>(null);
   const [listWidth, setListWidth] = useState(0);
   const itemWidth = listWidth / 5;
+  const itemPadding = spacing(3);
+  const itemSize = {
+    width: (itemWidth || spacing(48)) - itemPadding * 2,
+    height: spacing(96) - spacing(10) * 2,
+  };
 
   useEffect(() => {
     if (!selectedId || itemWidth <= 0) return;
@@ -115,10 +126,10 @@ export function CollectionViewer({
                   alignItems: "center",
                   justifyContent: "center",
                   opacity: collected ? 1 : 0.38,
-                  paddingHorizontal: spacing(3),
+                  paddingHorizontal: itemPadding,
                 }}
               >
-                {renderItem(id, selected, collected)}
+                {renderItem(id, selected, collected, itemSize)}
               </Pressable>
             );
           })}

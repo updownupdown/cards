@@ -1,0 +1,104 @@
+import type { DragGhost, DragTranslate } from "@/hooks/useDragDrop";
+import type { ComponentProps } from "react";
+import { View, type ViewProps } from "react-native";
+import { GestureDetector } from "react-native-gesture-handler";
+import Animated, { useAnimatedStyle } from "react-native-reanimated";
+import { Card, type CardProps } from "./Card";
+import { cardDims } from "./card-utils";
+
+type DragGesture = ComponentProps<typeof GestureDetector>["gesture"];
+
+/** A drag/tap hit area for a gesture created by useDragDrop's makeDragHandlers. */
+export function DragHandle({
+  gesture,
+  ...viewProps
+}: ViewProps & { gesture: DragGesture }) {
+  return (
+    <GestureDetector gesture={gesture}>
+      <View collapsable={false} {...viewProps} />
+    </GestureDetector>
+  );
+}
+
+/** Container for a drag ghost, offset by the live drag translation. */
+export function DragGhostView({
+  translate,
+  style,
+  ...viewProps
+}: ComponentProps<typeof Animated.View> & { translate: DragTranslate }) {
+  const translateStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateX: translate.x.value },
+      { translateY: translate.y.value },
+    ],
+  }));
+
+  return <Animated.View {...viewProps} style={[style, translateStyle]} />;
+}
+
+type DragGhostCardsProps = {
+  ghost: DragGhost<unknown>;
+  translate: DragTranslate;
+  cardWidth: number;
+  cardHeight: number;
+  cardSize?: CardProps["cardSize"];
+  /** Vertical gap between dragged cards, as a fraction of the card height. */
+  fanOffset?: number;
+  cardBackPath?: string;
+  /** Over a valid drop target: the dragged cards are outlined green. */
+  isValidDrop: boolean;
+  /** Outline only the lead card of a dragged run. */
+  highlightLeadOnly?: boolean;
+};
+
+/** The cards being dragged, fanned downwards and following the finger. */
+export function DragGhostCards({
+  ghost,
+  translate,
+  cardWidth,
+  cardHeight,
+  cardSize,
+  fanOffset = cardDims.tableauOffset,
+  cardBackPath,
+  isValidDrop,
+  highlightLeadOnly = false,
+}: DragGhostCardsProps) {
+  return (
+    <DragGhostView
+      translate={translate}
+      style={{
+        position: "absolute",
+        zIndex: 4000,
+        pointerEvents: "none",
+        left: ghost.origin.x,
+        top: ghost.origin.y,
+      }}
+    >
+      {ghost.cards.map((card, index) => {
+        const highlighted = isValidDrop && (!highlightLeadOnly || index === 0);
+        return (
+          <View
+            key={`ghost-${card.id}`}
+            style={{
+              position: "absolute",
+              left: 0,
+              top: index * fanOffset * cardHeight,
+              width: cardWidth,
+              height: cardHeight,
+              zIndex: index + 1,
+            }}
+          >
+            <Card
+              card={card}
+              cardWidth={cardWidth}
+              cardSize={cardSize}
+              cardBackPath={cardBackPath}
+              selectColor={highlighted ? "green" : "none"}
+              isSelected={highlighted}
+            />
+          </View>
+        );
+      })}
+    </DragGhostView>
+  );
+}

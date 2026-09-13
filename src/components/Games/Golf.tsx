@@ -1,4 +1,3 @@
-import { useGameColors } from "@/hooks/useGameColors";
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";

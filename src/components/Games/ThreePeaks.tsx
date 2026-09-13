@@ -1,6 +1,5 @@
 import { useStateManager } from "@/hooks/useStateManager";
-import { useNavigation } from "expo-router";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
@@ -211,8 +210,6 @@ async function resetAndSetup(
 }
 
 export default function ThreePeaks() {
-  const navigation = useNavigation();
-
   const {
     isSettingUp,
     isLoaded,
@@ -318,14 +315,6 @@ export default function ThreePeaks() {
     gap: 0.14,
     cardSize: "small",
   });
-
-  useEffect(() => {
-    navigation.setOptions({ gestureEnabled: false });
-
-    return () => {
-      navigation.setOptions({ gestureEnabled: true });
-    };
-  }, [navigation]);
 
   function drawFromStock() {
     if (game.draw.length === 0 || ended) {

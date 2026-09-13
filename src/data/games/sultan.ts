@@ -5,7 +5,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const sultan: GameDefinition = {
   path: "/sultan",
   title: "Sultan",
-  thumbnail: "Sultan.jpg",
+  thumbnail: "Sultan.webp",
   aliases: ["Sultan of Turkey", "Emperor of Germany"],
   tags: [GameTag.StockAndWaste, GameTag.SequenceBuilding],
   rating: { complexity: 35, difficulty: 35, luck: 55 },
@@ -36,8 +36,6 @@ export const sultan: GameDefinition = {
     "- The waste may be redealt twice.",
 
     "## Replacing Reserve Cards",
-    "This behaviour depends on the selected game setting:",
-    "- If auto refill is enabled, reserve cards are automatically replaced from the stock when possible.",
-    "- If auto refill is disabled, cards can be moved from the stock (or other reserves) manually.",
+    "- When a reserve card is played, its space is refilled automatically from the waste, or from the stock if the waste is empty.",
   ],
 };

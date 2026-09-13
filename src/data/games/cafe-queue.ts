@@ -10,7 +10,7 @@ export const cafeQueue: GameDefinition = {
     difficulty: 60,
     luck: 55,
   },
-  thumbnail: "CafeQueue.jpg",
+  thumbnail: "CafeQueue.webp",
   background: GAME_BACKGROUNDS.london,
   gameColorDark: "#2b1c29",
   gameColorMid: "#643b12",

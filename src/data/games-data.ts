@@ -44,7 +44,7 @@ export type GameRating = {
 export type GameStatsNames = keyof GameRating;
 export const statKeys: GameStatsNames[] = ["complexity", "difficulty", "luck"];
 
-export const DEFAULT_GAME_THUMBNAIL: GameThumbnailName = "DefaultThumbnail.jpg";
+export const DEFAULT_GAME_THUMBNAIL: GameThumbnailName = "DefaultThumbnail.webp";
 export const DEFAULT_GAME_BACKGROUND: GameBackground = city;
 
 export type GameMenuInfo = {

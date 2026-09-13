@@ -1,11 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
+import { Animated as RNAnimated, StyleSheet } from "react-native";
 import {
-  Platform,
-  Animated as RNAnimated,
-  Easing as RNEasing,
-  StyleSheet,
-} from "react-native";
-import { type SceneProps, seeded } from "./BackgroundAnimations";
+  type SceneProps,
+  seeded,
+  useAnimatedValueLoop,
+} from "./BackgroundAnimations";
 
 const COLORS = ["#7ff7ff", "#bda0ff", "#ff9ee8", "#fff3a3", "#8dffcf"];
 
@@ -18,19 +17,7 @@ function Spark({ index, width, height }: SceneProps & { index: number }) {
   const orbit = 8 + seeded(index, 105) * 5;
   const duration = 6000 + seeded(index, 106) * 6000;
 
-  useEffect(() => {
-    const animation = RNAnimated.loop(
-      RNAnimated.timing(progress, {
-        toValue: 1,
-        duration,
-        easing: RNEasing.linear,
-        useNativeDriver: Platform.OS !== "web",
-      }),
-    );
-
-    animation.start();
-    return () => animation.stop();
-  }, [duration, progress]);
+  useAnimatedValueLoop(progress, duration);
 
   return (
     <RNAnimated.View

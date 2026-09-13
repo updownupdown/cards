@@ -2,7 +2,7 @@ import { Button } from "@/components/Button/Button";
 import { Text } from "@/components/common/Text";
 import { getQuote, getTaoChapter } from "@/data/collectibles";
 import { GAMES_DATA } from "@/data/games-registry";
-import { getNodeDefinition, getNodeVisualState } from "@/data/nodes-map";
+import { getNodeDefinition } from "@/data/nodes-map";
 import type { NodesWinResult } from "@/data/nodes-progress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon } from "@/icons";
@@ -194,7 +194,7 @@ export function NodesWinOverlay({
             right: spacing(8),
             width: spacing(36),
             paddingHorizontal: 0,
-            boxShadow: "unset",
+            boxShadow: "none",
           }}
         />
 

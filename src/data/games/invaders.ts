@@ -11,7 +11,7 @@ export const invaders: GameDefinition = {
     difficulty: 70,
     luck: 30,
   },
-  thumbnail: "Invaders.jpg",
+  thumbnail: "Invaders.webp",
   background: GAME_BACKGROUNDS.nightSky,
   animation: GameAnimations.Stars,
   gameColorDark: "#2a2836",

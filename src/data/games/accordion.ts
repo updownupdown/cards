@@ -11,7 +11,7 @@ export const accordion: GameDefinition = {
     difficulty: 95,
     luck: 65,
   },
-  thumbnail: "Accordion.jpg",
+  thumbnail: "Accordion.webp",
   background: GAME_BACKGROUNDS.fallLeaves,
   animation: GameAnimations.Leaves,
   gameColorDark: "#351219",

@@ -5,7 +5,7 @@ export const easthaven: GameDefinition = {
   title: "Easthaven",
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 35, difficulty: 60, luck: 45 },
-  thumbnail: "Easthaven.jpg",
+  thumbnail: "Easthaven.webp",
   background: GAME_BACKGROUNDS.river,
   gameColorDark: "#203638",
   gameColorMid: "#5aafaf",

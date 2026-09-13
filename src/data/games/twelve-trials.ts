@@ -11,7 +11,7 @@ export const twelveTrials: GameDefinition = {
     difficulty: 75,
     luck: 45,
   },
-  thumbnail: "TwelveTrials.jpg",
+  thumbnail: "TwelveTrials.webp",
   background: GAME_BACKGROUNDS.stoneTunnel,
   animation: GameAnimations.ManaDust,
   gameColorDark: "#352820",

@@ -11,7 +11,7 @@ export const fieldCommand: GameDefinition = {
     difficulty: 50,
     luck: 40,
   },
-  thumbnail: "FieldCommand.jpg",
+  thumbnail: "FieldCommand.webp",
   background: GAME_BACKGROUNDS.field,
   animation: GameAnimations.Clouds,
   gameColorDark: "#2b2d42",

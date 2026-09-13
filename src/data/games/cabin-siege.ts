@@ -11,7 +11,7 @@ export const cabinSiege: GameDefinition = {
     difficulty: 50,
     luck: 20,
   },
-  thumbnail: "CabinSiege.jpg",
+  thumbnail: "CabinSiege.webp",
   background: GAME_BACKGROUNDS.forest,
   animation: GameAnimations.Leaves,
   gameColorDark: "#201207",

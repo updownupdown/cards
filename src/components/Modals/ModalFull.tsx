@@ -1,10 +1,12 @@
 import { Text } from "@/components/common/Text";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
-import { Colors, rgba, layoutDims } from "@/styles/styles";
+import { Colors, rgba, layoutDims, webDropShadow } from "@/styles/styles";
 import { lightenHexColor } from "@/utils/utils";
 import React from "react";
-import { Modal, Pressable, View } from "react-native";
+import { Modal, Pressable, StyleSheet, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button } from "../Button/Button";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { IconName } from "@/icons/generated";
@@ -34,22 +36,26 @@ export default function ModalFull({
 }: Props) {
   const modalStyles = useModalStyles();
   const { spacing } = useResponsiveMetrics();
+  const insets = useSafeAreaInsets();
 
   return (
     <Modal visible transparent animationType="fade" onRequestClose={onClose}>
-      <Pressable
-        onPress={onClose}
+      {/* A native Modal is its own root, so gesture-handler scroll views
+          inside it need their own GestureHandlerRootView. */}
+      <GestureHandlerRootView
         style={[
           modalStyles.modalBackdrop,
           {
+            paddingTop: spacing(layoutDims.pagePadding / 2) + insets.top,
+            paddingBottom: spacing(layoutDims.pagePadding / 2) + insets.bottom,
             backgroundColor: rgba(lightenHexColor(backgroundColor, 0.2), 0.8),
           },
         ]}
       >
-        <Pressable
-          onPress={(event) => event.stopPropagation()}
-          style={[modalStyles.modalCard, { backgroundColor }]}
-        >
+        {/* The backdrop press sits behind the card instead of wrapping it, so
+            it never competes with scrolling inside the card. */}
+        <Pressable onPress={onClose} style={StyleSheet.absoluteFill} />
+        <View style={[modalStyles.modalCard, { backgroundColor }]}>
           <View
             style={[
               modalStyles.modalHeader,
@@ -65,7 +71,7 @@ export default function ModalFull({
                 height={28}
                 style={{
                   marginRight: "auto",
-                  filter: `drop-shadow(1px 2px 3px rgba(0, 0, 0, 0.12))`,
+                  ...webDropShadow("1px 2px 3px rgba(0, 0, 0, 0.12)"),
                 }}
               />
             )}
@@ -111,7 +117,7 @@ export default function ModalFull({
                   padding: 0,
                   width: spacing(layoutDims.menuButtonSize),
                   height: spacing(layoutDims.menuButtonSize),
-                  boxShadow: "unset",
+                  boxShadow: "none",
                   borderWidth: 0,
                 },
               ]}
@@ -123,8 +129,8 @@ export default function ModalFull({
           </View>
 
           {children}
-        </Pressable>
-      </Pressable>
+        </View>
+      </GestureHandlerRootView>
     </Modal>
   );
 }

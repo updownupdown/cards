@@ -5,7 +5,7 @@ export const josephine: GameDefinition = {
   title: "Josephine",
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 40, difficulty: 65, luck: 45 },
-  thumbnail: "Josephine.jpg",
+  thumbnail: "Josephine.webp",
   background: GAME_BACKGROUNDS.greece,
   gameColorDark: "#332e40",
   gameColorMid: "#812e4a",

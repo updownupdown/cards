@@ -7,7 +7,7 @@ export const shamrocks: GameDefinition = {
   title: "Shamrocks",
   tags: [GameTag.SequenceBuilding],
   rating: { complexity: 25, difficulty: 85, luck: 60 },
-  thumbnail: "Shamrocks.jpg",
+  thumbnail: "Shamrocks.webp",
   background: GAME_BACKGROUNDS.field,
   animation: GameAnimations.Leaves,
   gameColorDark: "#183b2a",

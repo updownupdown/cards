@@ -11,7 +11,7 @@ export const fortyThieves: GameDefinition = {
     difficulty: 85,
     luck: 60,
   },
-  thumbnail: "FortyThieves.jpg",
+  thumbnail: "FortyThieves.webp",
   background: GAME_BACKGROUNDS.field,
   animation: GameAnimations.Birds,
   gameColorDark: "#2E2D34",

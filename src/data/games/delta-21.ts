@@ -11,7 +11,7 @@ export const delta21: GameDefinition = {
     difficulty: 40,
     luck: 30,
   },
-  thumbnail: "Delta21.jpg",
+  thumbnail: "Delta21.webp",
   background: GAME_BACKGROUNDS.river,
   animation: GameAnimations.Birds,
   gameColorDark: "#11343d",

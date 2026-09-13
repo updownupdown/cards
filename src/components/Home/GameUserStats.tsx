@@ -1,11 +1,12 @@
 import { getScaledTextSize, Typography } from "@/components/common/Text";
 import {
   calculateWinRate,
+  formatPlayTime,
   EMPTY_STATS,
   type GameStats,
 } from "@/data/game-menu";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-import { Colors, rgba } from "@/styles/styles";
+import { Colors } from "@/styles/styles";
 import { View, type ViewStyle } from "react-native";
 import Animated, {
   interpolateColor,
@@ -78,6 +79,8 @@ type GameUserStatsProps = {
   toValueColor?: ReadonlyColorSharedValue;
   style?: ViewStyle;
   showPlayed?: boolean;
+  /** Adds the fastest winning time (shown in the Stats modal only). */
+  showFastestTime?: boolean;
 };
 
 /**
@@ -95,6 +98,7 @@ export function GameUserStats({
   toValueColor,
   style,
   showPlayed = true,
+  showFastestTime = false,
 }: GameUserStatsProps) {
   const { spacing } = useResponsiveMetrics();
 
@@ -111,6 +115,17 @@ export function GameUserStats({
       label: "Best",
       value: hasBestScore ? (stats.highestScore as number) : "N/A",
     },
+    ...(showFastestTime
+      ? [
+          {
+            label: "Fastest",
+            value:
+              stats.fastestTimeMs == null
+                ? "N/A"
+                : formatPlayTime(stats.fastestTimeMs),
+          },
+        ]
+      : []),
   ];
 
   return (

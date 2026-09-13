@@ -13,7 +13,7 @@ export const nightVigil: GameDefinition = {
   },
   background: GAME_BACKGROUNDS.city,
   animation: GameAnimations.Rain,
-  thumbnail: "NightVigil.jpg",
+  thumbnail: "NightVigil.webp",
   gameColorDark: "#11161a",
   gameColorMid: "#548fad",
   gameColorPale: "#e7edf0",

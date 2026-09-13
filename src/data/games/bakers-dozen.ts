@@ -11,7 +11,7 @@ export const bakersDozen: GameDefinition = {
     difficulty: 70,
     luck: 65,
   },
-  thumbnail: "BakersDozen.jpg",
+  thumbnail: "BakersDozen.webp",
   background: GAME_BACKGROUNDS.london,
   gameColorDark: "#253b36",
   gameColorMid: "#134b70",

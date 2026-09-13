@@ -5,7 +5,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const dynasty: GameDefinition = {
   path: "/dynasty",
   title: "Dynasty",
-  thumbnail: "Dynasty.jpg",
+  thumbnail: "Dynasty.webp",
   background: GAME_BACKGROUNDS.castleIndoors,
   animation: GameAnimations.Dust,
   tags: [GameTag.CardCombat, GameTag.SpatialControl],

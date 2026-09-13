@@ -1,3 +1,4 @@
+import { GameLaunchOverlay } from "@/components/common/GameLaunchOverlay";
 import { ToastProvider } from "@/components/common/Toast";
 import {
   getActiveHomeTab,
@@ -7,6 +8,7 @@ import {
 import { useGameColors } from "@/hooks/useGameColors";
 import { getGameInfo, isGamePath } from "@/data/game-menu";
 import { Colors } from "@/styles/styles";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import {
   Outfit_200ExtraLight,
@@ -40,14 +42,23 @@ export default function Layout() {
     : activeHomeTab === NODES_HOME_TAB_INDEX
       ? NODES_THEME_COLOR
       : Colors.background;
-  const [fontsLoaded] = useFonts({
-    Outfit_200ExtraLight,
-    Outfit_300Light,
-    Outfit_400Regular,
-    Outfit_500Medium,
-    Outfit_600SemiBold,
-    Outfit_700Bold,
-  });
+  // Android embeds the fonts at build time (expo-font plugin in app.config.js),
+  // so they're ready from the first frame and the splash can hide straight
+  // away. Other platforms load them at runtime.
+  const embedsFonts = Platform.OS === "android";
+  const [fontsLoadedAtRuntime] = useFonts(
+    embedsFonts
+      ? {}
+      : {
+          Outfit_200ExtraLight,
+          Outfit_300Light,
+          Outfit_400Regular,
+          Outfit_500Medium,
+          Outfit_600SemiBold,
+          Outfit_700Bold,
+        },
+  );
+  const fontsLoaded = embedsFonts || fontsLoadedAtRuntime;
 
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -114,28 +125,31 @@ export default function Layout() {
   }
 
   return (
-    <SafeAreaProvider>
-      <StatusBar style="light" />
-      <ToastProvider>
-        <View
-          style={[
-            {
-              flex: 1,
-              userSelect: "none",
-              backgroundColor: Colors.background,
-            },
-          ]}
-        >
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              gestureEnabled: false,
-              fullScreenGestureEnabled: false,
-              contentStyle: { backgroundColor: Colors.background },
-            }}
-          />
-        </View>
-      </ToastProvider>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <StatusBar style="light" />
+        <ToastProvider>
+          <View
+            style={[
+              {
+                flex: 1,
+                userSelect: "none",
+                backgroundColor: Colors.background,
+              },
+            ]}
+          >
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                gestureEnabled: false,
+                fullScreenGestureEnabled: false,
+                contentStyle: { backgroundColor: Colors.background },
+              }}
+            />
+            <GameLaunchOverlay />
+          </View>
+        </ToastProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }

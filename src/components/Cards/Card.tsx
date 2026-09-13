@@ -3,7 +3,12 @@ import React, { memo } from "react";
 import { View, ViewStyle } from "react-native";
 import { getCardBackImage, getCardImageSource } from "./CardAssets";
 import { cardDims, PlayingCard } from "./card-utils";
-import { CardColor, CardOverlay, CardSizes, getCardShadow } from "./CardStyles";
+import {
+  CardColor,
+  CardOverlay,
+  CardSizes,
+  getCardShadowStyle,
+} from "./CardStyles";
 import { transitionStyles } from "@/styles/styles";
 
 export type CardProps = {
@@ -49,13 +54,17 @@ const CardComponent = ({
     : getCardImageSource(cardSize, cardName);
   if (!isFaceDown && !imageSource) return null;
 
+  const borderRadius = Math.max(cardWidth, 1) * cardDims.ratioRadius;
+
   return (
     <View
       collapsable={false}
       style={[
         style,
         {
-          overflow: "hidden",
+          // overflow:hidden (needed below to clip the card image's corners)
+          // would also clip this view's own box-shadow on native, so the
+          // shadow lives on this outer, non-clipping view instead.
           width: "100%",
           height: "auto",
           aspectRatio: cardDims.aspectRatio,
@@ -65,44 +74,52 @@ const CardComponent = ({
           position: "relative",
           zIndex: 3,
           outlineWidth: 0,
-          boxShadow: isHiddenUnderDeck
-            ? "none"
-            : getCardShadow({
-                cardWidth,
-                selectColor,
-                isSelected,
-                isSelectable,
-                forceSelectColor,
-                isPlaceholder,
-              }),
-          borderRadius: Math.max(cardWidth, 1) * cardDims.ratioRadius,
+          ...getCardShadowStyle({
+            cardWidth,
+            selectColor,
+            isSelected,
+            isSelectable,
+            forceSelectColor,
+            isPlaceholder,
+            isHiddenUnderDeck,
+          }),
+          borderRadius,
           backfaceVisibility: "hidden",
         },
         !isVisible && { opacity: 0 },
       ]}
     >
-      <CardOverlay
-        cardWidth={cardWidth}
-        isSelected={isSelected}
-        forceOverlayColor={forceOverlayColor}
-        selectColor={selectColor}
-      />
+      <View
+        style={{
+          overflow: "hidden",
+          width: "100%",
+          height: "100%",
+          borderRadius,
+        }}
+      >
+        <CardOverlay
+          cardWidth={cardWidth}
+          isSelected={isSelected}
+          forceOverlayColor={forceOverlayColor}
+          selectColor={selectColor}
+        />
 
-      {isFaceDown ? (
-        <Image
-          source={getCardBackImage(cardBackPath)}
-          cachePolicy="memory-disk"
-          contentFit="fill"
-          style={{ width: "100%", height: "100%" }}
-        />
-      ) : (
-        <Image
-          source={imageSource}
-          cachePolicy="memory-disk"
-          style={{ width: "100%", height: "100%" }}
-          transition={0}
-        />
-      )}
+        {isFaceDown ? (
+          <Image
+            source={getCardBackImage(cardBackPath)}
+            cachePolicy="memory-disk"
+            contentFit="fill"
+            style={{ width: "100%", height: "100%" }}
+          />
+        ) : (
+          <Image
+            source={imageSource}
+            cachePolicy="memory-disk"
+            style={{ width: "100%", height: "100%" }}
+            transition={0}
+          />
+        )}
+      </View>
     </View>
   );
 };

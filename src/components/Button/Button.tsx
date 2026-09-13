@@ -7,14 +7,23 @@ import {
   layoutDims,
   rgba,
   transitionStyles,
+  webDropShadow,
 } from "@/styles/styles";
 import { useResponsiveUiLayout } from "@/hooks/useResponsiveLayout";
 import { useEffect, useRef } from "react";
+import Reanimated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import {
   Animated,
   Platform,
   Pressable,
+  processColor,
+  StyleSheet,
   TextStyle,
+  type StyleProp,
   ViewStyle,
   Easing as RNEasing,
 } from "react-native";
@@ -41,6 +50,13 @@ const THEME_COLORS = {
   lose: Colors.lose,
   loseDark: Colors.loseDark,
 } as const;
+
+const isHexColor = (value: string) => /^#[0-9a-f]{6}$/i.test(value);
+
+// Animated so state changes (e.g. enabled/disabled) fade on native, where the
+// CSS transition in transitionStyles is ignored.
+const AnimatedPressable = Reanimated.createAnimatedComponent(Pressable);
+const STATE_TRANSITION_MS = 400;
 
 interface Props {
   accessibilityLabel?: string;
@@ -111,7 +127,8 @@ export const Button = ({
       toValue: 1,
       duration: autoProgress,
       easing: RNEasing.linear,
-      useNativeDriver: false,
+      // Drives scaleX (not width) so this can run off the JS thread.
+      useNativeDriver: true,
     });
     animation.start();
 
@@ -165,53 +182,101 @@ export const Button = ({
     iconSize = spacing(layoutDims.menuIconSize);
   }
 
+  const pressableStyle: StyleProp<ViewStyle> = [
+    {
+      ...transitionStyles.limited04sec,
+      outlineWidth: 0,
+      opacity: disabled ? 0.6 : 1,
+      // Only clip when there's an autoProgress bar to contain: on native,
+      // overflow:hidden also clips the button's own drop shadow.
+      overflow: autoProgress === undefined ? undefined : "hidden",
+      display: "flex",
+      flexDirection: iconName === "close" ? "row-reverse" : "row",
+      justifyContent: "center",
+      alignItems: "center",
+      width: fullWidth ? "100%" : undefined,
+      height,
+      paddingVertical,
+      paddingHorizontal,
+      gap,
+      borderRadius,
+      outline: "none",
+      // Only for hex themes: rgba() and lightenHexColor() expect hex, and an
+      // rgba() theme (e.g. TipsBox) produced "rgba(NaN, …)". Web and plain RN
+      // silently dropped that shadow; Reanimated's animated component throws
+      // on it, so leave the shadow out, as it effectively was before.
+      boxShadow:
+        height && isHexColor(borderColor)
+          ? `inset 0 0 1px 1px ${rgba(lightenHexColor(borderColor, 0.3), disabled ? 0.2 : 1)}, ${roundToPixel(height * 0.04)}px ${roundToPixel(height * 0.08)}px ${roundToPixel(height * (disabled ? 0.1 : 0.24))}px ${rgba(Colors.black, disabled ? 0.1 : 0.3)}`
+          : undefined,
+      // Invalid values (e.g. theme="none") were always ignored; drop them so
+      // Reanimated's animated component doesn't throw on them.
+      backgroundColor:
+        textOnly || processColor(themeColor) == null ? undefined : themeColor,
+      ...(Platform.OS === "web" && preventWebLongPressMenu
+        ? ({
+            userSelect: "none",
+            WebkitUserSelect: "none",
+            WebkitTouchCallout: "none",
+            touchAction: "manipulation",
+          } as const)
+        : null),
+    },
+    headerButton && {
+      ...flexStyles.rowCentered,
+      flex: 1,
+      padding: 0,
+      width: spacing(layoutDims.menuButtonSize),
+      height: spacing(layoutDims.menuButtonSize),
+      boxShadow: "none",
+      borderWidth: 0,
+      borderRadius: 0,
+      backgroundColor: "transparent",
+    },
+    style,
+  ];
+
+  const flatStyle = StyleSheet.flatten(pressableStyle);
+  // Only animate colours native can parse: e.g. a disabled rgba() theme goes
+  // through the hex-only colour helpers and comes out invalid, which RN
+  // silently ignores but Reanimated throws on.
+  const targetBackground =
+    typeof flatStyle.backgroundColor === "string" &&
+    processColor(flatStyle.backgroundColor) != null
+      ? flatStyle.backgroundColor
+      : undefined;
+  const targetOpacity =
+    typeof flatStyle.opacity === "number" ? flatStyle.opacity : 1;
+  const animatedBackground = useSharedValue(targetBackground ?? "transparent");
+  const animatedOpacity = useSharedValue(targetOpacity);
+
+  useEffect(() => {
+    if (Platform.OS === "web") return;
+    const config = { duration: STATE_TRANSITION_MS };
+    if (targetBackground !== undefined) {
+      animatedBackground.value = withTiming(targetBackground, config);
+    }
+    animatedOpacity.value = withTiming(targetOpacity, config);
+  }, [animatedBackground, animatedOpacity, targetBackground, targetOpacity]);
+
+  // Web keeps its CSS transition; this only takes over on native.
+  const isNative = Platform.OS !== "web";
+  const animateBackground = isNative && targetBackground !== undefined;
+  const stateTransitionStyle = useAnimatedStyle(() => {
+    if (!isNative) return {};
+    return animateBackground
+      ? {
+          backgroundColor: animatedBackground.value,
+          opacity: animatedOpacity.value,
+        }
+      : { opacity: animatedOpacity.value };
+  });
+
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
-      style={[
-        {
-          ...transitionStyles.limited04sec,
-          outlineWidth: 0,
-          opacity: disabled ? 0.6 : 1,
-          overflow: "hidden", // needed for autoProgress bar
-          display: "flex",
-          flexDirection: iconName === "close" ? "row-reverse" : "row",
-          justifyContent: "center",
-          alignItems: "center",
-          width: fullWidth ? "100%" : undefined,
-          height,
-          paddingVertical,
-          paddingHorizontal,
-          gap,
-          borderRadius,
-          outline: "none",
-          boxShadow: height
-            ? `inset 0 0 1px 1px ${rgba(lightenHexColor(borderColor, 0.3), disabled ? 0.2 : 1)}, ${roundToPixel(height * 0.04)}px ${roundToPixel(height * 0.08)}px ${roundToPixel(height * (disabled ? 0.1 : 0.24))}px ${rgba(Colors.black, disabled ? 0.1 : 0.3)}`
-            : undefined,
-          backgroundColor: textOnly ? undefined : themeColor,
-          ...(Platform.OS === "web" && preventWebLongPressMenu
-            ? ({
-                userSelect: "none",
-                WebkitUserSelect: "none",
-                WebkitTouchCallout: "none",
-                touchAction: "manipulation",
-              } as const)
-            : null),
-        },
-        headerButton && {
-          ...flexStyles.rowCentered,
-          flex: 1,
-          padding: 0,
-          width: spacing(layoutDims.menuButtonSize),
-          height: spacing(layoutDims.menuButtonSize),
-          boxShadow: "unset",
-          borderWidth: 0,
-          borderRadius: "unset",
-          backgroundColor: "unset",
-        },
-        style,
-      ]}
+      style={[pressableStyle, stateTransitionStyle]}
       onPress={() => {
         if (Platform.OS === "web" && typeof document !== "undefined") {
           (document.activeElement as HTMLElement)?.blur?.();
@@ -234,10 +299,9 @@ export const Button = ({
             top: 0,
             bottom: 0,
             left: 0,
-            width: autoProgressValue.interpolate({
-              inputRange: [0, 1],
-              outputRange: ["0%", "100%"],
-            }),
+            right: 0,
+            transformOrigin: "left",
+            transform: [{ scaleX: autoProgressValue }],
             backgroundColor: autoProgressColor,
           }}
         />
@@ -251,7 +315,7 @@ export const Button = ({
             {
               ...transitionStyles.limited04sec,
               flexShrink: 0,
-              filter: `drop-shadow(0 1px 3px rgba(0, 0, 0, 0.2))`,
+              ...webDropShadow("0 1px 3px rgba(0, 0, 0, 0.2)"),
             },
           ]}
         />
@@ -275,6 +339,6 @@ export const Button = ({
           {text}
         </Text>
       )}
-    </Pressable>
+    </AnimatedPressable>
   );
 };

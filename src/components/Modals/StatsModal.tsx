@@ -1,5 +1,6 @@
 import { StatsTab } from "@/components/Home/StatsTab";
 import type { GameSettingsMap } from "@/data/game-menu";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import ModalFull from "./ModalFull";
 
 type StatsModalProps = {
@@ -15,6 +16,8 @@ export function StatsModal({
   onToggleFavorite,
   onClose,
 }: StatsModalProps) {
+  const { spacing } = useResponsiveMetrics();
+
   return (
     <ModalFull title="Stats" iconName="chart" onClose={onClose}>
       <StatsTab
@@ -22,7 +25,7 @@ export function StatsModal({
         favorites={favorites}
         onToggleFavorite={onToggleFavorite}
         contentPaddingTop={0}
-        contentPaddingBottom={0}
+        contentPaddingBottom={spacing(30)}
       />
     </ModalFull>
   );

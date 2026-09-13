@@ -11,7 +11,7 @@ export const klondike: GameDefinition = {
     difficulty: 35,
     luck: 30,
   },
-  thumbnail: "Klondike.jpg",
+  thumbnail: "Klondike.webp",
   background: GAME_BACKGROUNDS.yukon,
   animation: GameAnimations.Clouds,
   gameColorDark: "#2c3a36",

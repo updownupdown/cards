@@ -8,7 +8,7 @@ export const flowerGarden: GameDefinition = {
   aliases: ["The Bouquet", "The Garden"],
   tags: [GameTag.SequenceBuilding],
   rating: { complexity: 30, difficulty: 65, luck: 35 },
-  thumbnail: "FlowerGarden.jpg",
+  thumbnail: "FlowerGarden.webp",
   background: GAME_BACKGROUNDS.flowerGarden,
   animation: GameAnimations.Pollen,
   gameColorDark: "#24402f",

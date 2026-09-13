@@ -1,4 +1,3 @@
-import { Text } from "@/components/common/Text";
 import { getCollectibleCardImageSource } from "@/components/Cards/CardAssets";
 import { Quote } from "@/components/Nodes/QuotesCollection";
 import { getQuote, getQuoteCard, QUOTE_COUNT } from "@/data/collectibles";
@@ -34,18 +33,21 @@ export function QuotesCollectionModal({ collectedIds, onClose }: Props) {
         collectedIds={collectedIds}
         selectedId={selectedId}
         onSelect={setSelectedId}
-        renderItem={(id, selected, collected) => {
+        renderItem={(id, selected, collected, size) => {
           const identity = getQuoteCard(id)!;
           const cardName = `${identity.rank}${identity.suit.charAt(0).toUpperCase()}`;
           const imageSource = getCollectibleCardImageSource(
             identity.deck,
             cardName,
           );
+          // Fit the card inside its slot. Sizing it from the slot height alone
+          // made it wider than narrow (phone) slots, closing the gaps.
+          const thumbWidth = Math.min(size.width, (size.height * 2.5) / 3.5);
           return (
             <View
               style={{
-                height: "100%",
-                aspectRatio: 2.5 / 3.5,
+                width: thumbWidth,
+                height: (thumbWidth * 3.5) / 2.5,
                 overflow: "hidden",
                 borderRadius: spacing(4),
               }}

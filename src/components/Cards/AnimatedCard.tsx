@@ -1,5 +1,6 @@
-import React from "react";
-import { Pressable, StyleSheet } from "react-native";
+import React, { memo, useCallback, useEffect, useState } from "react";
+import { scheduleOnRN } from "react-native-worklets";
+import { Platform, Pressable, StyleSheet } from "react-native";
 import {
   bufferedDefaultAnimDuration,
   defaultAnimDuration,
@@ -14,21 +15,15 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { Card } from "./Card";
+import { getDropOffset } from "./drop-flight";
 import { PlayingCard } from "./card-utils";
 import { CardColor, CardSizes } from "./CardStyles";
 
-export { defaultAnimDuration, bufferedDefaultAnimDuration };
+const DROP_FLIGHT_DURATION = 180;
+/** Added to a moving card's zIndex so it passes over resting cards. */
+const MOVING_Z_OFFSET = 500;
 
-export type CardRegistration = {
-  card: PlayingCard | null;
-  zoneId: string;
-  index: number;
-  total: number;
-  baseZIndex?: number;
-  type?: string;
-  yOffset?: number;
-  misc?: any;
-};
+export { defaultAnimDuration, bufferedDefaultAnimDuration };
 
 export type TargetState = {
   card: PlayingCard;
@@ -76,7 +71,7 @@ export type AnimatedCardMapping = Omit<
   "cardWidth" | "cardHeight" | "targetState"
 >;
 
-export const AnimatedCard = ({
+const AnimatedCardComponent = ({
   targetState,
   cardWidth,
   cardHeight,
@@ -99,10 +94,18 @@ export const AnimatedCard = ({
   const initialYOffset = (yOffset ?? 0) * cardHeight;
   const duration = animDuration ?? defaultAnimDuration;
 
+  // A card that was just dropped flies from where it was released instead of
+  // snapping (games pass animDuration 0 for just-dropped cards).
+  const dropOffset =
+    animDuration === 0 && targetState.card
+      ? getDropOffset(targetState.card.id)
+      : undefined;
+  const dropOffsetX = dropOffset?.x;
+  const dropOffsetY = dropOffset?.y;
+
   const startX = useSharedValue(targetState.x);
   const startY = useSharedValue(targetState.y);
   const startYOffset = useSharedValue(initialYOffset);
-  const startZ = useSharedValue(targetState.zIndex + zIndexOffset);
   const startRotation = useSharedValue(targetState.rotation);
   const moveProgress = useSharedValue(1); // Default to 1 (already at destination)
   const shouldOrbitMove = useSharedValue(false);
@@ -110,8 +113,34 @@ export const AnimatedCard = ({
   const currentVisualX = useSharedValue(targetState.x);
   const currentVisualY = useSharedValue(targetState.y);
   const currentVisualYOffset = useSharedValue(initialYOffset + zIndexOffset);
-  const currentVisualZ = useSharedValue(targetState.zIndex);
   const currentRotation = useSharedValue(targetState.rotation);
+
+  // While moving, a card sits above resting cards but keeps its target order
+  // among other moving cards (e.g. a whole deal in flight), then settles to its
+  // target zIndex on landing. The zIndex is set through React, not the animated
+  // style: on Android, Reanimated's synchronous prop updates change a view's
+  // zIndex without re-sorting it among its siblings, so moving cards were drawn
+  // in the wrong order until the animation's end was committed.
+  const targetZ = targetState.zIndex + zIndexOffset;
+  const moveKey = [
+    targetState.zoneId,
+    targetState.x,
+    targetState.y,
+    targetZ,
+    targetState.rotation,
+    yOffset,
+    targetState.card?.faceUp,
+  ].join("|");
+  const [lastMoveKey, setLastMoveKey] = useState(moveKey);
+  const [movingKey, setMovingKey] = useState<string | null>(null);
+  if (lastMoveKey !== moveKey) {
+    setLastMoveKey(moveKey);
+    // Mirrors the reaction below: only a drop flight or a timed move animates.
+    setMovingKey(dropOffset !== undefined || duration !== 0 ? moveKey : null);
+  }
+  const endMove = useCallback((key: string) => {
+    setMovingKey((current) => (current === key ? null : current));
+  }, []);
 
   useAnimatedReaction(
     () => ({
@@ -142,24 +171,48 @@ export const AnimatedCard = ({
           curr.loc.startsWith("loop-")
         );
 
-        if (duration === 0) {
+        if (dropOffsetX !== undefined && dropOffsetY !== undefined) {
+          startX.value = currentVisualX.value + dropOffsetX;
+          startY.value = currentVisualY.value + dropOffsetY;
+          startYOffset.value = currentVisualYOffset.value;
+          startRotation.value = currentRotation.value;
+
+          moveProgress.value = 0;
+          moveProgress.value = withTiming(
+            1,
+            {
+              duration: DROP_FLIGHT_DURATION,
+              easing: Easing.out(Easing.cubic),
+            },
+            (finished) => {
+              if (finished) scheduleOnRN(endMove, moveKey);
+            },
+          );
+        } else if (duration === 0) {
           moveProgress.value = 1;
         } else {
           startX.value = currentVisualX.value;
           startY.value = currentVisualY.value;
           startYOffset.value = currentVisualYOffset.value;
-          startZ.value = currentVisualZ.value;
           startRotation.value = currentRotation.value;
 
           moveProgress.value = 0;
-          moveProgress.value = withTiming(1, {
-            duration,
-            easing: Easing.out(Easing.quad),
-          });
+          moveProgress.value = withTiming(
+            1,
+            {
+              duration,
+              easing: Easing.out(Easing.quad),
+            },
+            (finished) => {
+              if (finished) scheduleOnRN(endMove, moveKey);
+            },
+          );
         }
       }
     },
     [
+      moveKey,
+      endMove,
       targetState.zoneId,
       targetState.x,
       targetState.y,
@@ -170,6 +223,8 @@ export const AnimatedCard = ({
       duration,
       zIndexOffset,
       orbitConfig?.enabled,
+      dropOffsetX,
+      dropOffsetY,
     ],
   );
 
@@ -179,6 +234,30 @@ export const AnimatedCard = ({
       easing: Easing.out(Easing.quad),
     });
   }, [targetState.card?.faceUp]);
+
+  const isHidden = isVisible === false;
+
+  // Render only the visible face; both are mounted just for the flip. Each
+  // face is a full card view tree (image, shadow, clip), so this halves them.
+  const isFaceUp = !!targetState.card?.faceUp;
+  const [renderedFaceUp, setRenderedFaceUp] = useState(isFaceUp);
+  const [isFlipping, setIsFlipping] = useState(false);
+  if (renderedFaceUp !== isFaceUp) {
+    setRenderedFaceUp(isFaceUp);
+    setIsFlipping(true);
+  }
+
+  useEffect(() => {
+    if (!isFlipping) return;
+    const timer = setTimeout(
+      () => setIsFlipping(false),
+      bufferedDefaultAnimDuration,
+    );
+    return () => clearTimeout(timer);
+  }, [isFlipping, isFaceUp]);
+
+  const showFront = isFaceUp || isFlipping;
+  const showBack = !isFaceUp || isFlipping;
 
   const animatedStyle = useAnimatedStyle(() => {
     const rawXBaseLinear = interpolate(
@@ -259,16 +338,10 @@ export const AnimatedCard = ({
     const rawX = rawXBase;
     const rawY = rawYBase;
 
-    const rawZ =
-      moveProgress.value < 0.5
-        ? startZ.value
-        : targetState.zIndex + zIndexOffset;
-
     // Save current visual state for graceful mid-flight interruptions
     currentVisualX.value = rawX;
     currentVisualY.value = rawY;
     currentVisualYOffset.value = rawYOffset;
-    currentVisualZ.value = rawZ;
 
     const finalYOffset = Math.round(rawYOffset);
     //   const finalYOffset =
@@ -277,9 +350,6 @@ export const AnimatedCard = ({
     // Snap to integer pixel grid to fix SVG blur
     const finalX = Math.round(rawX);
     const finalY = Math.round(rawY);
-
-    // zIndex must always be an integer, so we round the interpolated value
-    const finalZ = Math.round(rawZ);
 
     const startRotationDegrees = startRotation.value ?? 0;
     const targetRotationDegrees = targetState.rotation ?? 0;
@@ -292,13 +362,11 @@ export const AnimatedCard = ({
 
     currentRotation.value = rotation;
 
+    // Only the transform here. On native, any layout prop (position,
+    // left/top, width/height) in an update sends the whole update through a
+    // shadow-tree commit instead of Reanimated's direct UI-prop path — once per
+    // card per frame. Those values are static, so they're set outside.
     return {
-      position: "absolute",
-      left: 0,
-      top: 0,
-      zIndex: finalZ,
-      width: cardWidth,
-      height: cardHeight,
       transform: [
         { translateX: finalX },
         { translateY: finalY + finalYOffset },
@@ -311,8 +379,6 @@ export const AnimatedCard = ({
     targetState.x,
     targetState.y,
     targetState.rotation,
-    targetState.zIndex,
-    zIndexOffset,
     yOffset,
     orbitConfig,
     cardWidth,
@@ -320,28 +386,34 @@ export const AnimatedCard = ({
   ]);
 
   const frontStyle = useAnimatedStyle(() => ({
-    ...StyleSheet.absoluteFill,
     opacity: spinY.value >= 90 ? 0 : 1,
   }));
 
   const backStyle = useAnimatedStyle(() => ({
-    ...StyleSheet.absoluteFill,
     opacity: spinY.value >= 90 ? 1 : 0,
-    transform: [{ rotateY: "180deg" }],
   }));
-
-  const isHidden = isVisible === false;
 
   return (
     <Animated.View
       style={[
+        {
+          position: "absolute",
+          left: 0,
+          top: 0,
+          width: cardWidth,
+          height: cardHeight,
+          zIndex: movingKey === moveKey ? targetZ + MOVING_Z_OFFSET : targetZ,
+        },
         animatedStyle,
         {
           userSelect: "none",
-          pointerEvents: "none",
+          // Native needs "box-none": "none" there disables the whole subtree,
+          // including the Pressable below. Web needs "none": Reanimated writes
+          // this as an inline CSS value, where "box-none" is invalid and falls
+          // back to auto (blocking taps meant for zones under clickThroughCards
+          // cards); the Pressable re-enables its own events.
+          pointerEvents: Platform.OS === "web" ? "none" : "box-none",
         },
-        // Hide via opacity instead of unmounting; avoids flashes
-        isHidden && { opacity: 0 },
       ]}
     >
       <Pressable
@@ -352,38 +424,99 @@ export const AnimatedCard = ({
           pointerEvents: isHidden || clickThroughCards ? "none" : "auto",
         }}
       >
-        <Animated.View style={[frontStyle]}>
-          <Card
-            cardWidth={cardWidth}
-            card={{ ...targetState.card, faceUp: true }}
-            selectColor={selectColor ?? "none"}
-            isSelected={isSelected}
-            forceSelectColor={forceSelectColor}
-            forceOverlayColor={forceOverlayColor}
-            isVisible={isVisible}
-            cardSize={cardSize}
-            isPlaceholder={isPlaceholder}
-            isHiddenUnderDeck={targetState.isHiddenUnderDeck}
-            cardBackPath={cardBackPath}
-          />
-        </Animated.View>
+        {showFront && (
+          <Animated.View style={[StyleSheet.absoluteFill, frontStyle]}>
+            <Card
+              cardWidth={cardWidth}
+              card={{ ...targetState.card, faceUp: true }}
+              selectColor={selectColor ?? "none"}
+              isSelected={isSelected}
+              forceSelectColor={forceSelectColor}
+              forceOverlayColor={forceOverlayColor}
+              isVisible={isVisible}
+              cardSize={cardSize}
+              isPlaceholder={isPlaceholder}
+              isHiddenUnderDeck={targetState.isHiddenUnderDeck}
+              cardBackPath={cardBackPath}
+            />
+          </Animated.View>
+        )}
 
-        <Animated.View style={[backStyle]}>
-          <Card
-            cardWidth={cardWidth}
-            card={{ ...targetState.card, faceUp: false }}
-            selectColor={selectColor ?? "none"}
-            isSelected={isSelected}
-            forceSelectColor={forceSelectColor}
-            forceOverlayColor={forceOverlayColor}
-            isVisible={isVisible}
-            cardSize={cardSize}
-            isPlaceholder={isPlaceholder}
-            isHiddenUnderDeck={targetState.isHiddenUnderDeck}
-            cardBackPath={cardBackPath}
-          />
-        </Animated.View>
+        {showBack && (
+          <Animated.View
+            style={[StyleSheet.absoluteFill, styles.backFace, backStyle]}
+          >
+            <Card
+              cardWidth={cardWidth}
+              card={{ ...targetState.card, faceUp: false }}
+              selectColor={selectColor ?? "none"}
+              isSelected={isSelected}
+              forceSelectColor={forceSelectColor}
+              forceOverlayColor={forceOverlayColor}
+              isVisible={isVisible}
+              cardSize={cardSize}
+              isPlaceholder={isPlaceholder}
+              isHiddenUnderDeck={targetState.isHiddenUnderDeck}
+              cardBackPath={cardBackPath}
+            />
+          </Animated.View>
+        )}
       </Pressable>
     </Animated.View>
   );
 };
+
+const styles = StyleSheet.create({
+  backFace: { transform: [{ rotateY: "180deg" }] },
+});
+
+// Every game state change (a hover highlight, a drag starting, one card
+// moving) re-renders the whole card map. Comparing by value lets unchanged
+// cards skip rendering, which matters most on Hermes. targetState is a fresh
+// object each time, so its fields are compared; onPress must be stable (see
+// useCardMap) for this to skip anything.
+function areAnimatedCardPropsEqual(
+  prev: AnimatedCardProps,
+  next: AnimatedCardProps,
+) {
+  const a = prev.targetState;
+  const b = next.targetState;
+
+  return (
+    a.card?.id === b.card?.id &&
+    a.card?.faceUp === b.card?.faceUp &&
+    a.card?.rank === b.card?.rank &&
+    a.card?.suit === b.card?.suit &&
+    a.zoneId === b.zoneId &&
+    a.x === b.x &&
+    a.y === b.y &&
+    a.zIndex === b.zIndex &&
+    a.rotation === b.rotation &&
+    a.isHiddenUnderDeck === b.isHiddenUnderDeck &&
+    a.type === b.type &&
+    a.index === b.index &&
+    a.misc === b.misc &&
+    prev.cardWidth === next.cardWidth &&
+    prev.cardHeight === next.cardHeight &&
+    prev.cardSize === next.cardSize &&
+    prev.onPress === next.onPress &&
+    prev.isSelected === next.isSelected &&
+    prev.isDisabled === next.isDisabled &&
+    prev.isVisible === next.isVisible &&
+    prev.animDuration === next.animDuration &&
+    prev.selectColor === next.selectColor &&
+    prev.yOffset === next.yOffset &&
+    prev.orbitConfig?.enabled === next.orbitConfig?.enabled &&
+    prev.forceSelectColor === next.forceSelectColor &&
+    prev.forceOverlayColor === next.forceOverlayColor &&
+    prev.isPlaceholder === next.isPlaceholder &&
+    prev.clickThroughCards === next.clickThroughCards &&
+    prev.cardBackPath === next.cardBackPath &&
+    prev.zIndexOffset === next.zIndexOffset
+  );
+}
+
+export const AnimatedCard = memo(
+  AnimatedCardComponent,
+  areAnimatedCardPropsEqual,
+);

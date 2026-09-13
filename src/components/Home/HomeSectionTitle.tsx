@@ -3,7 +3,6 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon, type IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors } from "@/styles/styles";
-import { roundToPixel } from "@/utils/utils";
 import { View } from "react-native";
 
 type HomeSectionTitleProps = {
@@ -21,7 +20,7 @@ export function HomeSectionTitle({
   pageSidePadding,
   contentMaxWidth,
 }: HomeSectionTitleProps) {
-  const { ui, spacing } = useResponsiveMetrics();
+  const { spacing } = useResponsiveMetrics();
 
   return (
     <View

@@ -10,7 +10,7 @@ export const tripleStack: GameDefinition = {
     difficulty: 70,
     luck: 40,
   },
-  thumbnail: "TripleStack.jpg",
+  thumbnail: "TripleStack.webp",
   background: GAME_BACKGROUNDS.london,
   gameColorDark: "#102524",
   gameColorMid: "#4c9e98",

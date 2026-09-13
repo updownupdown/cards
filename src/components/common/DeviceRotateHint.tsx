@@ -4,7 +4,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { Colors, LayerZIndexes, layoutDims, rgba } from "@/styles/styles";
 import { useEffect, useState } from "react";
-import { Animated, View } from "react-native";
+import { Animated } from "react-native";
 import { Button } from "../Button/Button";
 
 const HINT_DURATION = 8_000;

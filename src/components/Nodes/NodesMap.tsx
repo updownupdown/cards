@@ -18,6 +18,7 @@ import {
   type LayoutChangeEvent,
 } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { scheduleOnRN } from "react-native-worklets";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -27,6 +28,8 @@ import Svg, { Line } from "react-native-svg";
 
 const WORLD_SIZE = 920;
 const NODE_SIZE = 18;
+/** How close (in screen points) a native tap must be to select a node. */
+const NODE_TAP_RADIUS = 28;
 const MIN_NODE_SIZE_MULTIPLIER = 0.6;
 const MAX_NODE_SIZE_MULTIPLIER = 1.4;
 
@@ -146,6 +149,8 @@ const MapNode = memo(function MapNode({
       style={{
         position: "absolute",
         outline: "none",
+        // Native taps are handled by the map's tap gesture (see NodesMap).
+        pointerEvents: Platform.OS === "web" ? "auto" : "none",
         left: (node.x + 1) * WORLD_SIZE * 0.5 - dotSize / 2,
         top: (node.y + 1) * WORLD_SIZE * 0.5 - dotSize / 2,
         width: dotSize,
@@ -238,8 +243,49 @@ export function NodesMap({
     return () => element.removeEventListener("wheel", onWheel);
   }, [scale, translateX, translateY]);
 
+  // Native: a tap selects the nearest node to the tap point. Per-node
+  // Pressables missed most taps there: the dots are small, and the map moves
+  // by transforms that Reanimated applies outside the shadow tree, which
+  // Fabric's press handling doesn't see. Web keeps the node Pressables.
+  const selectNodeAt = (x: number, y: number) => {
+    const s = scale.value;
+    const localX =
+      (x - viewport.width / 2 - translateX.value) / s + WORLD_SIZE / 2;
+    const localY =
+      (y - viewport.height / 2 - translateY.value) / s + WORLD_SIZE / 2;
+
+    let nearest: NodeDefinition | undefined;
+    let nearestDistance = Infinity;
+    for (const node of NODE_DEFINITIONS) {
+      const distance = Math.hypot(
+        ((node.x + 1) * WORLD_SIZE * 0.5 - localX) * s,
+        ((node.y + 1) * WORLD_SIZE * 0.5 - localY) * s,
+      );
+      if (distance < nearestDistance) {
+        nearest = node;
+        nearestDistance = distance;
+      }
+    }
+
+    if (nearest && nearestDistance <= NODE_TAP_RADIUS) onSelectNode(nearest);
+  };
+  const selectNodeAtRef = useRef(selectNodeAt);
+  selectNodeAtRef.current = selectNodeAt;
+
   const cameraGesture = useMemo(() => {
+    const handleTap = (x: number, y: number) => selectNodeAtRef.current(x, y);
+
+    const tap = Gesture.Tap()
+      .enabled(Platform.OS !== "web")
+      .maxDistance(10)
+      .onEnd((event, success) => {
+        "worklet";
+        if (success) scheduleOnRN(handleTap, event.x, event.y);
+      });
+
     const pan = Gesture.Pan()
+      // Small finger movement during a tap shouldn't start panning.
+      .minDistance(8)
       .onStart(() => {
         startX.value = translateX.value;
         startY.value = translateY.value;
@@ -275,7 +321,7 @@ export function NodesMap({
           Math.min(NODE_EXTENT_Y * nextScale, translateY.value),
         );
       });
-    return Gesture.Simultaneous(pan, pinch);
+    return Gesture.Race(Gesture.Simultaneous(pan, pinch), tap);
   }, [scale, startScale, startX, startY, translateX, translateY]);
 
   const worldStyle = useAnimatedStyle(() => ({

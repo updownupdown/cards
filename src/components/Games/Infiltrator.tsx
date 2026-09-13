@@ -2,7 +2,7 @@ import { useGameColors } from "@/hooks/useGameColors";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, rgba, transitionStyles } from "@/styles/styles";
+import { Colors, rgba } from "@/styles/styles";
 import { delay, roundToPixel } from "@/utils/utils";
 import { useEffect, useMemo } from "react";
 import { View } from "react-native";
@@ -359,7 +359,7 @@ function removeSelected(hand: PlayingCard[], selectedCards: PlayingCard[]) {
 
 export default function Infiltrator() {
   const { spacing } = useResponsiveMetrics();
-  const { colorPale, colorDark } = useGameColors();
+  const { colorPale,} = useGameColors();
   const { game, setGame, reset, isLoaded, canUndo, undo, saveUndoState } =
     useStateManager<InfiltratorGameState>({
       gameStateInitial,

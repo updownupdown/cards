@@ -261,7 +261,7 @@ export const dynastyRules = {
 const gameStateInitial = createInitialState();
 
 export default function Dynasty() {
-  const { colorPale, colorDark } = useGameColors();
+  const { colorDark } = useGameColors();
   const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
     useStateManager<GameState>({
       gameStateInitial,

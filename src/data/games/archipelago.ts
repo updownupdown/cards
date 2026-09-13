@@ -11,7 +11,7 @@ export const archipelago: GameDefinition = {
     difficulty: 50,
     luck: 45,
   },
-  thumbnail: "Archipelago.jpg",
+  thumbnail: "Archipelago.webp",
   background: GAME_BACKGROUNDS.island,
   animation: GameAnimations.Birds,
   gameColorDark: "#153846",

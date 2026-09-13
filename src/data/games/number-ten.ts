@@ -7,7 +7,7 @@ export const numberTen: GameDefinition = {
   title: "Number Ten",
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 40, difficulty: 35, luck: 40 },
-  thumbnail: "NumberTen.jpg",
+  thumbnail: "NumberTen.webp",
   background: GAME_BACKGROUNDS.interchange,
   animation: GameAnimations.Clouds,
   gameColorDark: "#25343b",

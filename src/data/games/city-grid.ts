@@ -10,7 +10,7 @@ export const cityGrid: GameDefinition = {
     difficulty: 50,
     luck: 40,
   },
-  thumbnail: "CityGrid.jpg",
+  thumbnail: "CityGrid.webp",
   background: GAME_BACKGROUNDS.city,
   gameColorDark: "#383d4e",
   gameColorMid: "#5a83af",

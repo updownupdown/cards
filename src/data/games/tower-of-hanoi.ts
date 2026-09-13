@@ -11,7 +11,7 @@ export const towerOfHanoi: GameDefinition = {
     luck: 0,
   },
   background: GAME_BACKGROUNDS.indianLandscape,
-  thumbnail: "TowerOfHanoi.jpg",
+  thumbnail: "TowerOfHanoi.webp",
   gameColorDark: "#304f63",
   gameColorMid: "#266170",
   gameColorPale: "#d8efe8",

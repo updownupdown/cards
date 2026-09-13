@@ -13,7 +13,7 @@ export const loneJoker: GameDefinition = {
   },
   background: GAME_BACKGROUNDS.painting,
   animation: GameAnimations.Firefly,
-  thumbnail: "LoneJoker.jpg",
+  thumbnail: "LoneJoker.webp",
   gameColorDark: "#111e35",
   gameColorMid: "#7b388b",
   gameColorPale: "#d8ffeb",
@@ -26,8 +26,8 @@ export const loneJoker: GameDefinition = {
   howToPlay: [
     "## Objective",
     "Survive as many rounds as possible by meeting each round's score target. The target starts at **25** and rises by **25** every round.",
-    "- Win by scoring 500 total bonus points across all rounds.",
     "- The game ends when you fail to meet a round's target (and a Shield bonus is not available).",
+    "- When the game ends, you **win** if your final score (total surplus points) is **500** or more; otherwise it's a loss.",
 
     "## Turn Order",
     "- Each round starts by drawing your hand to **8 cards**, with **3 plays** and **3 discards**.",

@@ -10,7 +10,7 @@ export const clock: GameDefinition = {
     difficulty: 10,
     luck: 100,
   },
-  thumbnail: "Clock.jpg",
+  thumbnail: "Clock.webp",
   background: GAME_BACKGROUNDS.oldRoom,
   gameColorDark: "#1d1610",
   gameColorMid: "#a1794e",

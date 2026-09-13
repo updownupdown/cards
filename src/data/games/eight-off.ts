@@ -11,7 +11,7 @@ export const eightOff: GameDefinition = {
     difficulty: 40,
     luck: 25,
   },
-  thumbnail: "EightOff.jpg",
+  thumbnail: "EightOff.webp",
   background: GAME_BACKGROUNDS.cherryBlossoms,
   animation: GameAnimations.CherryBlossom,
   gameColorDark: "#0e2741",

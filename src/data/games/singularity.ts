@@ -11,7 +11,7 @@ export const singularity: GameDefinition = {
     difficulty: 55,
     luck: 30,
   },
-  thumbnail: "Singularity.jpg",
+  thumbnail: "Singularity.webp",
   background: GAME_BACKGROUNDS.nightSky,
   animation: GameAnimations.Stars,
   gameColorDark: "#150e25",

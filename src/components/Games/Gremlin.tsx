@@ -1,4 +1,3 @@
-import { useGameColors } from "@/hooks/useGameColors";
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
@@ -309,11 +308,16 @@ export default function Gremlin() {
       const validColumns = canPlayCard(helperCard, draft.columns);
       draft.currentHelperCard = flipToFace(helperCard);
 
-      if (validColumns.length === 0) {
+      // As in The Bogey: you lose when a card can't be placed and all
+      // 12 columns are already in use.
+      if (
+        validColumns.length === 0 &&
+        usedColumnCount(draft.columns) >= MAX_COLUMNS
+      ) {
         draft.awaitingHelperPlacement = false;
         draft.ended = true;
         draft.won = false;
-        draft.winLoseMessage = `Helper card cannot be played.`;
+        draft.winLoseMessage = `No room for the helper's card in ${MAX_COLUMNS} columns.`;
         return;
       }
 

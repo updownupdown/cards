@@ -2,19 +2,16 @@ import {
   CardHitArea,
   createRect,
   DropHitArea,
-  pointInRect,
   useDragDrop,
 } from "@/hooks/useDragDrop";
+import { DragGhostCards, DragHandle } from "@/components/Cards/DragDrop";
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useStateManager } from "@/hooks/useStateManager";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { DOUBLE_TAP_MS } from "@/utils/utils";
-import { useNavigation } from "expo-router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { GestureResponderEvent } from "react-native";
-import { Animated, Pressable, StyleSheet, View } from "react-native";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
-import { Card } from "../Cards/Card";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
   cardDims,
@@ -40,7 +37,6 @@ type Selection =
   | { zone: "stock" }
   | { zone: "waste" }
   | { zone: "tableau"; pileIndex: number; cardIndex: number }
-  | { zone: "foundation"; pileIndex: number }
   | null;
 
 type MoveSource = Exclude<Selection, null | { zone: "stock" }>;
@@ -106,21 +102,13 @@ function canPlaceOnTableau(card: PlayingCard, destinationTop?: PlayingCard) {
   );
 }
 
-function sameDropTarget(a: DropTarget | null, b: DropTarget | null) {
-  if (!a || !b) return a === b;
-  if (a.zone !== b.zone) return false;
-  return a.pileIndex === b.pileIndex;
-}
-
 const gameStateInitial = createInitialState();
 
 export default function FortyThieves() {
   const difficulty = useGameSettingValue("difficulty");
   const allowInfiniteRedeals = difficulty !== "difficult";
 
-  const navigation = useNavigation();
   const [selected, setSelected] = useState<Selection>(null);
-  const [hoverTarget, setHoverTarget] = useState<DropTarget | null>(null);
   const [lastTap, setLastTap] = useState<{ key: string; at: number } | null>(
     null,
   );
@@ -142,11 +130,8 @@ export default function FortyThieves() {
 
   const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
 
-  const handleHoverTargetChange = useCallback((next: DropTarget | null) => {
-    setHoverTarget((prev) => (sameDropTarget(prev, next) ? prev : next));
-  }, []);
-
   const {
+    hoverTarget,
     dragGhost,
     draggedCardIds,
     justDroppedCardIds,
@@ -158,14 +143,7 @@ export default function FortyThieves() {
     updateBoardOffset,
     makeDragHandlers,
   } = useDragDrop<MoveSource, DropTarget>({
-    findDropTarget: (pageX, pageY) => {
-      const hit = [...dropHitAreasRef.current]
-        .filter(({ rect }) => pointInRect(pageX, pageY, rect))
-        .sort((a, b) => b.priority - a.priority)[0];
-      return hit?.target ?? null;
-    },
     canDropOnTarget,
-    sameTarget: sameDropTarget,
     onSuccessfulDrop: async (source, target) => {
       if (target.zone === "foundation") {
         await moveSourceToFoundation(source, target.pileIndex);
@@ -177,7 +155,7 @@ export default function FortyThieves() {
       getSourceCards(source, game).map((c) => c.id),
     getDropHitAreas: () => dropHitAreasRef.current,
     getSourceRect,
-    onHoverTargetChange: handleHoverTargetChange,
+    getTapHandler,
   });
 
   const wasteTop = game.waste[game.waste.length - 1];
@@ -279,10 +257,7 @@ export default function FortyThieves() {
 
       return {
         selectColor: "green",
-        isSelected:
-          (selected?.zone === "foundation" &&
-            selected.pileIndex === mappedCard.pileIndex) ||
-          isHoverTargetTop,
+        isSelected: isHoverTargetTop,
         isVisible: !isBeingDragged,
         animDuration,
       };
@@ -336,9 +311,6 @@ export default function FortyThieves() {
 
     if (zone.name === "foundation" && zone.pileIndex !== undefined) {
       const foundationPileIndex = zone.pileIndex;
-      const selectedFoundation =
-        selected?.zone === "foundation" &&
-        selected.pileIndex === foundationPileIndex;
       const isHoverDropTarget =
         !!dragGhost &&
         hoverTarget?.zone === "foundation" &&
@@ -347,7 +319,7 @@ export default function FortyThieves() {
       return {
         onPress: () => onFoundationPress(foundationPileIndex),
         isDisabled: !!dragGhost,
-        isSelected: selectedFoundation || isHoverDropTarget,
+        isSelected: isHoverDropTarget,
         selectColor: isHoverDropTarget ? "green" : "blue",
       };
     }
@@ -392,11 +364,6 @@ export default function FortyThieves() {
   function getSourceRect(source: MoveSource) {
     const zone = zones.find((entry) => {
       if (source.zone === "waste") return entry.name === "waste";
-      if (source.zone === "foundation") {
-        return (
-          entry.name === "foundation" && entry.pileIndex === source.pileIndex
-        );
-      }
       return entry.name === "tableau" && entry.pileIndex === source.pileIndex;
     });
 
@@ -434,20 +401,7 @@ export default function FortyThieves() {
         return;
       }
 
-      if (zone.name === "foundation" && zone.pileIndex !== undefined) {
-        const top =
-          game.foundations[zone.pileIndex][
-            game.foundations[zone.pileIndex].length - 1
-          ];
-        if (top) {
-          areas.push({
-            source: { zone: "foundation", pileIndex: zone.pileIndex },
-            rect: createRect(zoneRect.x, zoneRect.y, cardWidth, cardHeight),
-            priority: 90,
-          });
-        }
-        return;
-      }
+      // Foundation cards are locked: no drag or tap area.
 
       if (zone.name === "tableau" && zone.pileIndex !== undefined) {
         const pile = game.tableau[zone.pileIndex];
@@ -544,14 +498,6 @@ export default function FortyThieves() {
     return !hasAnyLegalMove(game, allowInfiniteRedeals);
   }, [allowInfiniteRedeals, game, won]);
 
-  useEffect(() => {
-    navigation.setOptions({ gestureEnabled: false });
-
-    return () => {
-      navigation.setOptions({ gestureEnabled: true });
-    };
-  }, [navigation]);
-
   function clearSelection() {
     setSelected(null);
   }
@@ -562,13 +508,6 @@ export default function FortyThieves() {
       return top ? [top] : [];
     }
 
-    if (source.zone === "foundation") {
-      const top =
-        snapshot.foundations[source.pileIndex][
-          snapshot.foundations[source.pileIndex].length - 1
-        ];
-      return top ? [top] : [];
-    }
 
     const pile = snapshot.tableau[source.pileIndex];
     if (source.cardIndex !== pile.length - 1) return [];
@@ -576,7 +515,7 @@ export default function FortyThieves() {
     return top ? [top] : [];
   }
 
-  function startGhostDrag(source: MoveSource, _event: GestureResponderEvent) {
+  function startGhostDrag(source: MoveSource) {
     const cards = getSourceCards(source, game);
     if (cards.length === 0) return;
 
@@ -658,14 +597,6 @@ export default function FortyThieves() {
         moving = draft.waste[draft.waste.length - 1] ?? null;
         if (!moving) return;
         draft.waste.pop();
-      } else if (source.zone === "foundation") {
-        if (source.pileIndex === targetPileIndex) return;
-        moving =
-          draft.foundations[source.pileIndex][
-            draft.foundations[source.pileIndex].length - 1
-          ] ?? null;
-        if (!moving) return;
-        draft.foundations[source.pileIndex].pop();
       } else {
         const sourcePile = draft.tableau[source.pileIndex];
         if (source.cardIndex !== sourcePile.length - 1) return;
@@ -705,11 +636,6 @@ export default function FortyThieves() {
         movingCard = draft.waste[draft.waste.length - 1] ?? null;
         if (!movingCard) return;
         draft.waste.pop();
-      } else if (source.zone === "foundation") {
-        const sourcePile = draft.foundations[source.pileIndex];
-        movingCard = sourcePile[sourcePile.length - 1] ?? null;
-        if (!movingCard) return;
-        sourcePile.pop();
       } else {
         const sourcePile = draft.tableau[source.pileIndex];
         if (source.cardIndex !== sourcePile.length - 1) return;
@@ -768,27 +694,9 @@ export default function FortyThieves() {
       return;
     }
 
-    const now = Date.now();
-    const tapKey = `foundation-${pileIndex}`;
-
-    if (lastTap?.key === tapKey && now - lastTap.at < DOUBLE_TAP_MS) {
-      setLastTap(null);
-      void tryAutoFoundation({ zone: "foundation", pileIndex });
-      return;
-    }
-
-    setLastTap({ key: tapKey, at: now });
-
-    if (selected?.zone === "stock") {
+    // Foundations are locked: a tap only places the selected card there.
+    if (!selected || selected.zone === "stock") {
       clearSelection();
-      return;
-    }
-
-    if (!selected) {
-      const pile = game.foundations[pileIndex];
-      if (pile.length > 0) {
-        setSelected({ zone: "foundation", pileIndex });
-      }
       return;
     }
 
@@ -861,25 +769,15 @@ export default function FortyThieves() {
     return makeDragHandlers(source, startGhostDrag, onTap);
   }
 
-  const ghostLeft = dragGhost ? dragGhost.origin.x : 0;
-  const ghostTop = dragGhost ? dragGhost.origin.y : 0;
-  const ghostHasValidDrop = !!dragGhost && hoverTarget !== null;
 
-  const tapHandlerResolverRef = useRef(
-    (_source: MoveSource): (() => void) =>
-      () => {},
-  );
-  tapHandlerResolverRef.current = (source: MoveSource) => {
+  function getTapHandler(source: MoveSource) {
     if (source.zone === "waste") {
       return onWastePress;
     }
 
-    if (source.zone === "foundation") {
-      return () => onFoundationPress(source.pileIndex);
-    }
 
     return () => onTableauCardPress(source.pileIndex, source.cardIndex);
-  };
+  }
 
   const interactionTargets = useMemo(
     () =>
@@ -888,13 +786,11 @@ export default function FortyThieves() {
         const rect = hit.rect;
 
         return (
-          <View
+          <DragHandle
             key={
               source.zone === "waste"
                 ? "waste"
-                : source.zone === "foundation"
-                  ? `foundation-${source.pileIndex}`
-                  : `tableau-${source.pileIndex}-${source.cardIndex}`
+                : `tableau-${source.pileIndex}-${source.cardIndex}`
             }
             collapsable={false}
             style={{
@@ -905,9 +801,7 @@ export default function FortyThieves() {
               width: rect.width,
               height: rect.height,
             }}
-            {...makeHandlers(source, () =>
-              tapHandlerResolverRef.current(source)(),
-            )}
+            gesture={makeHandlers(source)}
           />
         );
       }),
@@ -965,45 +859,14 @@ export default function FortyThieves() {
           </View>
 
           {dragGhost && (
-            <Animated.View
-              style={[
-                {
-                  pointerEvents: "none",
-                  position: "absolute",
-                  zIndex: 4000,
-                  left: ghostLeft,
-                  top: ghostTop,
-                  transform: dragTranslate.getTranslateTransform(),
-                },
-              ]}
-            >
-              {dragGhost.cards.map((card, index) => (
-                <View
-                  key={`ghost-${card.id}`}
-                  style={[
-                    {
-                      position: "absolute",
-                      left: 0,
-                      opacity: 1,
-                      width: cardWidth,
-                      height: cardHeight,
-                    },
-                    {
-                      top: index * cardDims.tableauOffset * cardHeight,
-                      zIndex: index + 1,
-                    },
-                  ]}
-                >
-                  <Card
-                    card={card}
-                    cardWidth={cardWidth}
-                    cardSize="tableau"
-                    selectColor={ghostHasValidDrop ? "green" : "none"}
-                    isSelected={ghostHasValidDrop}
-                  />
-                </View>
-              ))}
-            </Animated.View>
+            <DragGhostCards
+              ghost={dragGhost}
+              translate={dragTranslate}
+              cardWidth={cardWidth}
+              cardHeight={cardHeight}
+              cardSize="tableau"
+              isValidDrop={hoverTarget !== null}
+            />
           )}
         </View>
       </View>

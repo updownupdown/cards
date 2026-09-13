@@ -857,7 +857,7 @@ export default function LoneJoker() {
 
   return (
     <GameWrapper
-      outcome={game.ended ? "lost" : "playing"}
+      outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       score={game.totalExcess}
       reset={reset}
       isLoaded={isLoaded}

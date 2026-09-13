@@ -14,7 +14,6 @@ import {
   shuffle,
   SUITS,
   type CardRank,
-  type CardSuit,
   type PlayingCard,
   zoneFanOffset,
   sortCardsBySuit,
@@ -291,7 +290,7 @@ function buildDeck(jokers: boolean) {
 // ── Component ────────────────────────────────────────────────────────────────
 export default function PocketPoker() {
   const { spacing } = useResponsiveMetrics();
-  const { colorDark, colorPale } = useGameColors();
+  const { colorPale } = useGameColors();
   const jokers = useGameSettingValue("pokerJokers") as boolean;
   const jokersRef = useRef(jokers);
   jokersRef.current = jokers;

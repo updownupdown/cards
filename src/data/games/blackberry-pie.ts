@@ -11,7 +11,7 @@ export const blackberryPie: GameDefinition = {
     luck: 52,
   },
   background: GAME_BACKGROUNDS.forest,
-  thumbnail: "BlackberryPie.jpg",
+  thumbnail: "BlackberryPie.webp",
   cardDescription:
     "Build matching trios under berry cards to help the Queen bake her pie.",
   gameColorDark: "#2a1c33",

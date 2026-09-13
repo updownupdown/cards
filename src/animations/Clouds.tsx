@@ -1,15 +1,6 @@
-import { useEffect } from "react";
 import { Image, StyleSheet, View } from "react-native";
-import Animated, {
-  cancelAnimation,
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withDelay,
-  withRepeat,
-  withTiming,
-} from "react-native-reanimated";
-import { type SceneProps, seeded } from "./BackgroundAnimations";
+import Animated, { useAnimatedStyle } from "react-native-reanimated";
+import { type SceneProps, seeded, useLoop } from "./BackgroundAnimations";
 
 const CLOUD_WIDTH = 240;
 const CLOUD_HEIGHT = 120;
@@ -43,7 +34,6 @@ function PassingCloud({
   width,
   height,
 }: SceneProps & { index: number }) {
-  const progress = useSharedValue(0);
   const baseScale = 0.65 + (seeded(index, 26) * 0.75 * width) / 1000;
   const scale = baseScale * (0.8 + seeded(index, 34) * 0.6);
   const duration = 60000 + seeded(index, 23) * 300000;
@@ -59,14 +49,7 @@ function PassingCloud({
   const startOpacity = fadesIn ? opacityFloor : opacityFloor + opacityShift;
   const endOpacity = fadesIn ? opacityFloor + opacityShift : opacityFloor;
 
-  useEffect(() => {
-    progress.value = withDelay(
-      startDelay,
-      withRepeat(withTiming(1, { duration, easing: Easing.linear }), -1, false),
-    );
-
-    return () => cancelAnimation(progress);
-  }, [duration, progress, startDelay]);
+  const progress = useLoop(duration, startDelay);
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: startOpacity + (endOpacity - startOpacity) * progress.value,

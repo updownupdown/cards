@@ -4,6 +4,8 @@ import { HomeCard } from "@/components/Home/HomeCard";
 import { HomeSectionTitle } from "@/components/Home/HomeSectionTitle";
 import {
   calculateWinRate,
+  formatPlayTime,
+  getGameSettings,
   EMPTY_STATS,
   type GameSettingsMap,
   type GameStats,
@@ -12,7 +14,6 @@ import { isGameEnabled } from "@/data/games-data";
 import { GAMES_DATA } from "@/data/games-registry";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
-import type { IconName } from "@/icons";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, rgba, layoutDims } from "@/styles/styles";
@@ -41,7 +42,8 @@ type Persona = {
   row: StatsRow;
 };
 
-type SortKey = "title" | "attempts" | "wins" | "losses" | "winRate" | "best";
+type SortKey = "title" | "attempts" | "wins" | "losses" | "winRate" | "best"
+  | "time";
 
 type SortState = {
   key: SortKey;
@@ -82,7 +84,11 @@ export function StatsTab({
         .map(([path, gameInfo]) => ({
           path,
           title: gameInfo.title,
-          stats: settingsMap[path]?.stats ?? EMPTY_STATS,
+          // Stored entries omit default values (and stats added later, like
+          // fastestTimeMs), so normalize them before display.
+          stats: settingsMap[path]
+            ? getGameSettings(settingsMap, path).stats
+            : EMPTY_STATS,
         }))
         .sort((a, b) => a.title.localeCompare(b.title)),
     [settingsMap],
@@ -115,6 +121,16 @@ export function StatsTab({
             return (
               (left.stats.highestScore ?? 0) - (right.stats.highestScore ?? 0)
             );
+          case "time": {
+            // Games without a timed win sort after those with one.
+            const leftTime = left.stats.fastestTimeMs;
+            const rightTime = right.stats.fastestTimeMs;
+            if (leftTime == null || rightTime == null) {
+              if (leftTime == null && rightTime == null) return 0;
+              return leftTime == null ? 1 : -1;
+            }
+            return leftTime - rightTime;
+          }
         }
       })();
 
@@ -346,34 +362,34 @@ export function StatsTab({
               }}
             >
               {playedRows.length > 0 && (
-                <ScrollView
-                  style={{ maxHeight: fullStatsMaxHeight }}
-                  showsVerticalScrollIndicator
-                  nestedScrollEnabled
-                >
-                  <View style={[flexStyles.fullWidth]}>
-                    {/* Header */}
-                    <View
-                      style={{
-                        position: "sticky",
-                        zIndex: 2,
-                        top: 0,
-                        flexDirection: "row",
-                        alignItems: "center",
-                        paddingBottom: 8,
-                        borderBottomWidth: StyleSheet.hairlineWidth,
-                        borderBottomColor: Colors.K750,
-                        marginBottom: 8,
-                        backgroundColor: Colors.K875,
-                      }}
-                    >
-                      {renderSortableHeader("Game", "title")}
-                      {renderSortableHeader("Won", "wins")}
-                      {renderSortableHeader("Lost", "losses")}
-                      {renderSortableHeader("W%", "winRate")}
-                      {renderSortableHeader("Best", "best")}
-                    </View>
+                <View style={[flexStyles.fullWidth]}>
+                  {/* Header, outside the scrolling rows so it stays
+                        visible on every platform (position:sticky only works
+                        on web) */}
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      paddingBottom: 8,
+                      borderBottomWidth: StyleSheet.hairlineWidth,
+                      borderBottomColor: Colors.K750,
+                      marginBottom: 8,
+                      backgroundColor: Colors.K875,
+                    }}
+                  >
+                    {renderSortableHeader("Game", "title")}
+                    {renderSortableHeader("Won", "wins")}
+                    {renderSortableHeader("Lost", "losses")}
+                    {renderSortableHeader("W%", "winRate")}
+                    {renderSortableHeader("Best", "best")}
+                    {renderSortableHeader("Time", "time")}
+                  </View>
 
+                  <ScrollView
+                    style={{ maxHeight: fullStatsMaxHeight }}
+                    showsVerticalScrollIndicator
+                    nestedScrollEnabled
+                  >
                     {/* Rows */}
                     {sortedPlayedRows.map((row, index) => (
                       <View
@@ -449,71 +465,80 @@ export function StatsTab({
                             ? "-"
                             : row.stats.highestScore}
                         </Text>
+                        <Text
+                          size="sm"
+                          weight={500}
+                          style={{ flex: 1, textAlign: "right" }}
+                          color={
+                            row.stats.fastestTimeMs == null
+                              ? Colors.K700
+                              : Colors.K200
+                          }
+                        >
+                          {row.stats.fastestTimeMs == null
+                            ? "-"
+                            : formatPlayTime(row.stats.fastestTimeMs)}
+                        </Text>
                       </View>
                     ))}
+                  </ScrollView>
 
-                    {/* Sticky total row */}
-                    <View
-                      style={{
-                        position: "sticky",
-                        zIndex: 2,
-                        bottom: 0,
-                        flexDirection: "row",
-                        alignItems: "center",
-                        paddingTop: 8,
-                        paddingBottom: 8,
-                        borderTopWidth: StyleSheet.hairlineWidth,
-                        borderTopColor: Colors.K750,
-                        marginTop: 8,
-                        backgroundColor: Colors.K875,
-                      }}
+                  {/* Total row, below the scrolling rows */}
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      paddingTop: 8,
+                      paddingBottom: 8,
+                      borderTopWidth: StyleSheet.hairlineWidth,
+                      borderTopColor: Colors.K750,
+                      marginTop: 8,
+                      backgroundColor: Colors.K875,
+                    }}
+                  >
+                    <Text
+                      size="sm"
+                      weight={600}
+                      style={{ flex: gameTitleFlex }}
                     >
-                      <Text
-                        size="sm"
-                        weight={600}
-                        style={{ flex: gameTitleFlex }}
-                      >
-                        Total
-                      </Text>
-                      <Text
-                        size="sm"
-                        weight={600}
-                        style={{ flex: 1, textAlign: "right" }}
-                        color={totals.wins === 0 ? Colors.K700 : Colors.K200}
-                      >
-                        {totals.wins}
-                      </Text>
-                      <Text
-                        size="sm"
-                        weight={600}
-                        style={{ flex: 1, textAlign: "right" }}
-                        color={totals.losses === 0 ? Colors.K700 : Colors.K200}
-                      >
-                        {totals.losses}
-                      </Text>
-                      <Text
-                        size="sm"
-                        weight={600}
-                        style={{ flex: 1, textAlign: "right" }}
-                        color={
-                          totals.attempts === 0 ? Colors.K700 : Colors.K200
-                        }
-                      >
-                        {totals.wins > 0 && totals.losses > 0
-                          ? `${Math.round((totals.wins / (totals.wins + totals.losses)) * 100)}%`
-                          : "-"}
-                      </Text>
-                      <Text
-                        size="sm"
-                        weight={600}
-                        style={{ flex: 1, textAlign: "right" }}
-                        color={totals.best === null ? Colors.K700 : Colors.K200}
-                      >
-                        {totals.best === null ? "-" : totals.best}
-                      </Text>
-                    </View>
+                      Total
+                    </Text>
+                    <Text
+                      size="sm"
+                      weight={600}
+                      style={{ flex: 1, textAlign: "right" }}
+                      color={totals.wins === 0 ? Colors.K700 : Colors.K200}
+                    >
+                      {totals.wins}
+                    </Text>
+                    <Text
+                      size="sm"
+                      weight={600}
+                      style={{ flex: 1, textAlign: "right" }}
+                      color={totals.losses === 0 ? Colors.K700 : Colors.K200}
+                    >
+                      {totals.losses}
+                    </Text>
+                    <Text
+                      size="sm"
+                      weight={600}
+                      style={{ flex: 1, textAlign: "right" }}
+                      color={totals.attempts === 0 ? Colors.K700 : Colors.K200}
+                    >
+                      {totals.wins > 0 && totals.losses > 0
+                        ? `${Math.round((totals.wins / (totals.wins + totals.losses)) * 100)}%`
+                        : "-"}
+                    </Text>
+                    <Text
+                      size="sm"
+                      weight={600}
+                      style={{ flex: 1, textAlign: "right" }}
+                      color={totals.best === null ? Colors.K700 : Colors.K200}
+                    >
+                      {totals.best === null ? "-" : totals.best}
+                    </Text>
                   </View>
-                </ScrollView>
+                </View>
               )}
             </View>
           </View>
@@ -564,6 +589,7 @@ export function StatsTab({
 
               <GameUserStats
                 stats={persona.row.stats}
+                showFastestTime
                 accentColor={game.gameColorPale}
               />
             </View>

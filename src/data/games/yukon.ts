@@ -7,7 +7,7 @@ export const yukon: GameDefinition = {
   title: "Yukon",
   tags: [GameTag.TableauBuilding, GameTag.SequenceBuilding],
   rating: { complexity: 35, difficulty: 55, luck: 35 },
-  thumbnail: "Yukon.jpg",
+  thumbnail: "Yukon.webp",
   background: GAME_BACKGROUNDS.yukon,
   animation: GameAnimations.Clouds,
   gameColorDark: "#20303a",

@@ -5,7 +5,11 @@ import {
   Easing as RNEasing,
   StyleSheet,
 } from "react-native";
-import { type SceneProps, seeded } from "./BackgroundAnimations";
+import {
+  type SceneProps,
+  seeded,
+  useAnimationsPaused,
+} from "./BackgroundAnimations";
 
 const GREEN_COLORS = [
   { light: "#e8ff75", glow: "#d7ff52" },
@@ -30,8 +34,10 @@ function FireflyLight({
   const size = 2 + seeded(index, 60) * 2.5;
   const palette = index < 9 ? GREEN_COLORS : WARM_COLORS;
   const color = palette[index % palette.length];
+  const paused = useAnimationsPaused();
 
   useEffect(() => {
+    if (paused) return;
     const nativeDriver = Platform.OS !== "web";
     const drift = RNAnimated.loop(
       RNAnimated.sequence([
@@ -105,7 +111,7 @@ function FireflyLight({
       drift.stop();
       pulse.stop();
     };
-  }, [driftX, driftY, height, index, opacity, scale, width]);
+  }, [driftX, driftY, height, index, opacity, paused, scale, width]);
 
   return (
     <RNAnimated.View

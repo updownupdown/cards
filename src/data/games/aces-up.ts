@@ -11,7 +11,7 @@ export const acesUp: GameDefinition = {
     difficulty: 80,
     luck: 80,
   },
-  thumbnail: "AcesUp.jpg",
+  thumbnail: "AcesUp.webp",
   background: GAME_BACKGROUNDS.castleIndoors,
   animation: GameAnimations.Dust,
   gameColorDark: "#1d0f0a",

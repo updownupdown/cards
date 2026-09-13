@@ -7,7 +7,7 @@ export const allInARow: GameDefinition = {
   title: "All in a Row",
   tags: [GameTag.SequenceBuilding],
   rating: { complexity: 10, difficulty: 90, luck: 25 },
-  thumbnail: "AllInARow.jpg",
+  thumbnail: "AllInARow.webp",
   background: GAME_BACKGROUNDS.flowerGarden,
   animation: GameAnimations.ManaDust,
   gameColorDark: "#182532",

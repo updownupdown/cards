@@ -1,21 +1,19 @@
 import { useStateManager } from "@/hooks/useStateManager";
+import { useAutoComplete } from "@/hooks/useAutoComplete";
 import { useGameColors } from "@/hooks/useGameColors";
 import {
   CardHitArea,
   createRect,
   DropHitArea,
-  pointInRect,
   useDragDrop,
 } from "@/hooks/useDragDrop";
+import { DragGhostCards, DragHandle } from "@/components/Cards/DragDrop";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
-import { useNavigation } from "expo-router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { GestureResponderEvent } from "react-native";
-import { Animated, StyleSheet, View } from "react-native";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { Button } from "../Button/Button";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
-import { Card } from "../Cards/Card";
 import {
   cardDims,
   createDeck,
@@ -58,13 +56,7 @@ type Selection =
 
 type MoveSource = Exclude<Selection, null>;
 type DropTarget =
-  | { zone: "tableau"; index: number }
-  | { zone: "foundation"; index: number };
-
-function sameDropTarget(a: DropTarget | null, b: DropTarget | null) {
-  if (!a || !b) return a === b;
-  return a.zone === b.zone && a.index === b.index;
-}
+  { zone: "tableau"; index: number } | { zone: "foundation"; index: number };
 
 const CONFIGS: Record<FanVariant, FanConfig> = {
   "la-belle-lucie": {
@@ -229,10 +221,8 @@ export const fanSolitaireRules = {
 
 export function FanSolitaire({ variant }: { variant: FanVariant }) {
   const config = CONFIGS[variant];
-  const navigation = useNavigation();
   const { colorDark } = useGameColors();
   const [selected, setSelected] = useState<Selection>(null);
-  const [hoverTarget, setHoverTarget] = useState<DropTarget | null>(null);
   const [lastTap, setLastTap] = useState<{ key: string; at: number } | null>(
     null,
   );
@@ -297,13 +287,8 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
   const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
 
-  const handleHoverTargetChange = useCallback((next: DropTarget | null) => {
-    setHoverTarget((current) =>
-      sameDropTarget(current, next) ? current : next,
-    );
-  }, []);
-
   const {
+    hoverTarget,
     dragGhost,
     draggedCardIds,
     justDroppedCardIds,
@@ -315,14 +300,7 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
     updateBoardOffset,
     makeDragHandlers,
   } = useDragDrop<MoveSource, DropTarget>({
-    findDropTarget: (pageX, pageY) => {
-      const hit = [...dropHitAreasRef.current]
-        .filter(({ rect }) => pointInRect(pageX, pageY, rect))
-        .sort((a, b) => b.priority - a.priority)[0];
-      return hit?.target ?? null;
-    },
     canDropOnTarget,
-    sameTarget: sameDropTarget,
     onSuccessfulDrop: (source, target) => {
       if (target.zone === "foundation") {
         moveToFoundation(target.index, source);
@@ -336,7 +314,21 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
     },
     getDropHitAreas: () => dropHitAreasRef.current,
     getSourceRect,
-    onHoverTargetChange: handleHoverTargetChange,
+    getTapHandler,
+  });
+
+  // Once the reserve is empty and every remaining card can go straight to the
+  // foundations, finish the game automatically.
+  const { isAutoCompleting } = useAutoComplete({
+    game,
+    setGame,
+    isSettingUp,
+    won: game.won,
+    isBlocked: !!dragGhost,
+    getSources: (state) => (state.reserve.length === 0 ? state.tableau : null),
+    getFoundations: (state) => state.foundations,
+    canPlaceOnFoundation: canBuildFoundation,
+    onStart: () => setSelected(null),
   });
 
   useEffect(() => {
@@ -763,12 +755,7 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
 
   dropHitAreasRef.current = dropHitAreas;
 
-  useEffect(() => {
-    navigation.setOptions({ gestureEnabled: false });
-    return () => navigation.setOptions({ gestureEnabled: true });
-  }, [navigation]);
-
-  function startGhostDrag(source: MoveSource, _event: GestureResponderEvent) {
+  function startGhostDrag(source: MoveSource) {
     if (game.ended) return;
     const card = getSelectedCard(game, source);
     const rect = getSourceRect(source);
@@ -776,16 +763,14 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
     startDrag(source, [card], { x: rect.x, y: rect.y });
   }
 
-  const tapHandlerResolverRef = useRef(
-    (_source: MoveSource): (() => void) =>
-      () => {},
-  );
-  tapHandlerResolverRef.current = (source) => () => selectOrMove(source);
+  function getTapHandler(source: MoveSource) {
+    return () => selectOrMove(source);
+  }
 
   const interactionTargets = useMemo(
     () =>
       cardHitAreas.map(({ source, rect }) => (
-        <View
+        <DragHandle
           key={`${source.zone}-${source.index}`}
           collapsable={false}
           style={{
@@ -796,15 +781,12 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
             width: rect.width,
             height: rect.height,
           }}
-          {...makeDragHandlers(source, startGhostDrag, () =>
-            tapHandlerResolverRef.current(source)(),
-          )}
+          gesture={makeDragHandlers(source, startGhostDrag)}
         />
       )),
     [cardHitAreas],
   );
 
-  const ghostHasValidDrop = !!dragGhost && hoverTarget !== null;
 
   const score = game.foundations.reduce((sum, pile) => sum + pile.length, 0);
 
@@ -816,6 +798,7 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
       score={score}
       canUndo={canUndo}
       undo={undo}
+      autoCompleting={isAutoCompleting}
       winLoseMessage={
         game.won ? "The foundations are complete!" : "No moves remain."
       }
@@ -861,31 +844,14 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
         </View>
 
         {dragGhost && (
-          <Animated.View
-            style={{
-              pointerEvents: "none",
-              position: "absolute",
-              zIndex: 4000,
-              left: dragGhost.origin.x,
-              top: dragGhost.origin.y,
-              transform: dragTranslate.getTranslateTransform(),
-            }}
-          >
-            {dragGhost.cards.map((card) => (
-              <View
-                key={`ghost-${card.id}`}
-                style={{ width: cardWidth, height: cardHeight }}
-              >
-                <Card
-                  card={card}
-                  cardWidth={cardWidth}
-                  cardSize="tableau"
-                  selectColor={ghostHasValidDrop ? "green" : "none"}
-                  isSelected={ghostHasValidDrop}
-                />
-              </View>
-            ))}
-          </Animated.View>
+          <DragGhostCards
+            ghost={dragGhost}
+            translate={dragTranslate}
+            cardWidth={cardWidth}
+            cardHeight={cardHeight}
+            cardSize="tableau"
+            isValidDrop={hoverTarget !== null}
+          />
         )}
       </View>
     </GameWrapper>

@@ -14,7 +14,7 @@ export const bakersGame: GameDefinition = {
   },
   background: GAME_BACKGROUNDS.cherryBlossoms,
   animation: GameAnimations.CherryBlossom,
-  thumbnail: "BakersGame.jpg",
+  thumbnail: "BakersGame.webp",
   gameColorDark: "#1b2a24",
   gameColorMid: "#5a94af",
   gameColorPale: "#dcefe4",

@@ -7,7 +7,7 @@ export const chapterAndVerse: GameDefinition = {
   title: "Chapter & Verse",
   tags: [GameTag.ModernMechanics, GameTag.ScoringPuzzles],
   rating: { complexity: 45, difficulty: 55, luck: 50 },
-  thumbnail: "ChapterAndVerse.jpg",
+  thumbnail: "ChapterAndVerse.webp",
   background: GAME_BACKGROUNDS.bookstore,
   animation: GameAnimations.Dust,
   gameColorDark: "#2e2d27",

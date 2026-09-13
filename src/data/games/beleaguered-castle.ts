@@ -11,7 +11,7 @@ export const beleagueredCastle: GameDefinition = {
     difficulty: 55,
     luck: 30,
   },
-  thumbnail: "BeleagueredCastle.jpg",
+  thumbnail: "BeleagueredCastle.webp",
   background: GAME_BACKGROUNDS.castle,
   animation: GameAnimations.Clouds,
   gameColorDark: "#2e2620",

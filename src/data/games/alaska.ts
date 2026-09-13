@@ -7,7 +7,7 @@ export const alaska: GameDefinition = {
   title: "Alaska",
   tags: [GameTag.TableauBuilding, GameTag.SequenceBuilding],
   rating: { complexity: 45, difficulty: 60, luck: 30 },
-  thumbnail: "Alaska.jpg",
+  thumbnail: "Alaska.webp",
   background: GAME_BACKGROUNDS.alaska,
   animation: GameAnimations.Snow,
   gameColorDark: "#20343e",

@@ -10,7 +10,7 @@ export const golf: GameDefinition = {
     difficulty: 50,
     luck: 70,
   },
-  thumbnail: "Golf.jpg",
+  thumbnail: "Golf.webp",
   background: GAME_BACKGROUNDS.golf,
   gameColorDark: "#1d301e",
   gameColorMid: "#1e750d",

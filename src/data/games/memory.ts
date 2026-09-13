@@ -10,7 +10,7 @@ export const memory: GameDefinition = {
     difficulty: 35,
     luck: 5,
   },
-  thumbnail: "Memory.jpg",
+  thumbnail: "Memory.webp",
   background: GAME_BACKGROUNDS.savanah,
   gameColorDark: "#243b35",
   gameColorMid: "#177a92",

@@ -11,7 +11,7 @@ export const stalker: GameDefinition = {
     difficulty: 70,
     luck: 45,
   },
-  thumbnail: "Stalker.jpg",
+  thumbnail: "Stalker.webp",
   background: GAME_BACKGROUNDS.treeRain,
   animation: GameAnimations.Rain,
   gameColorDark: "#1b2224",

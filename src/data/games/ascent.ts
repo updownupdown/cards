@@ -11,7 +11,7 @@ export const ascent: GameDefinition = {
     difficulty: 85,
     luck: 40,
   },
-  thumbnail: "Ascent.jpg",
+  thumbnail: "Ascent.webp",
   background: GAME_BACKGROUNDS.mountain1,
   animation: GameAnimations.Snow,
   gameColorDark: "#2a3b4d",

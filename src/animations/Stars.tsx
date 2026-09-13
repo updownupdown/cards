@@ -1,120 +1,93 @@
 import { useEffect, useRef, useState } from "react";
+import { StyleSheet, View } from "react-native";
+import Animated, {
+  cancelAnimation,
+  Easing,
+  useAnimatedReaction,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from "react-native-reanimated";
 import {
-  Platform,
-  Animated as RNAnimated,
-  Easing as RNEasing,
-  StyleSheet,
-  View,
-} from "react-native";
-import { type SceneProps, seeded } from "./BackgroundAnimations";
+  hash01,
+  loopFrom,
+  type SceneProps,
+  seeded,
+  useAnimationsPaused,
+} from "./BackgroundAnimations";
 
 const STAR_COLORS = ["#ffffff", "#eef8ff", "#d9efff", "#b9ddff", "#91c7ff"];
+const STAR_COUNT = 60;
+
+// Everything here loops on the UI thread. Previously three "shimmer lanes"
+// were restarted from JS after every twinkle (several times a second), and
+// each shooting star re-rendered React to pick its angle and colour.
+
+const SHOT_FADE_IN = 0.12;
+const SHOT_FADE_OUT = 0.35;
 
 function ShootingStar({ width, height }: SceneProps) {
-  const opacity = useRef(new RNAnimated.Value(0)).current;
-  const translateX = useRef(new RNAnimated.Value(0)).current;
-  const translateY = useRef(new RNAnimated.Value(0)).current;
-  const [appearance, setAppearance] = useState({
-    angle: 0,
-    color: "#ffffff",
-    trailLength: 40,
-  });
+  // Picked once at mount (previously re-rolled per shot via a React render).
+  const [appearance] = useState(() => ({
+    color: STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)],
+    trailLength: 28 + Math.random() * 44,
+    wait: 6000 + Math.random() * 14000,
+    travel: 320 + Math.random() * 980,
+  }));
+  const total = appearance.wait + appearance.travel;
+
+  const progress = useSharedValue(0);
+  const cycle = useSharedValue(0);
+
+  const paused = useAnimationsPaused();
 
   useEffect(() => {
-    let timer: ReturnType<typeof setTimeout>;
-    let animation: RNAnimated.CompositeAnimation | undefined;
-    let cancelled = false;
+    if (paused) return;
+    progress.value = loopFrom(progress.value, total);
+    return () => cancelAnimation(progress);
+  }, [paused, progress, total]);
 
-    function schedule() {
-      timer = setTimeout(
-        () => {
-          const startX = Math.random() * width;
-          const startY = Math.random() * height;
-          let endX = Math.random() * width;
-          let endY = Math.random() * height;
-          const minimumDistance = Math.min(width, height) * 0.3;
+  // A new path for every shot.
+  useAnimatedReaction(
+    () => progress.value,
+    (current, previous) => {
+      if (previous !== null && current < previous) cycle.value += 1;
+    },
+  );
 
-          while (Math.hypot(endX - startX, endY - startY) < minimumDistance) {
-            endX = Math.random() * width;
-            endY = Math.random() * height;
-          }
+  const animatedStyle = useAnimatedStyle(() => {
+    const shot = (progress.value * total - appearance.wait) / appearance.travel;
+    if (shot <= 0) return { opacity: 0 };
 
-          const angle = Math.atan2(endY - startY, endX - startX);
-          const fadeInDuration = 20 + Math.random() * 80;
-          const holdDuration = 200 + Math.random() * 600;
-          const fadeOutDuration = 100 + Math.random() * 300;
-          const travelDuration =
-            fadeInDuration + holdDuration + fadeOutDuration;
+    const random = (salt: number) => hash01(salt, cycle.value + 1);
+    const startX = random(1) * width;
+    const startY = random(2) * height;
+    const angle = random(3) * Math.PI * 2;
+    const length =
+      Math.min(width, height) * 0.3 + random(4) * Math.max(width, height) * 0.4;
 
-          setAppearance({
-            angle,
-            color: STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)],
-            trailLength: 28 + Math.random() * 44,
-          });
-          translateX.setValue(startX);
-          translateY.setValue(startY);
-          opacity.setValue(0);
+    const opacity =
+      shot < SHOT_FADE_IN
+        ? shot / SHOT_FADE_IN
+        : shot > 1 - SHOT_FADE_OUT
+          ? Math.max(0, (1 - shot) / SHOT_FADE_OUT)
+          : 1;
 
-          animation = RNAnimated.parallel([
-            RNAnimated.timing(translateX, {
-              toValue: endX,
-              duration: travelDuration,
-              easing: RNEasing.linear,
-              useNativeDriver: Platform.OS !== "web",
-            }),
-            RNAnimated.timing(translateY, {
-              toValue: endY,
-              duration: travelDuration,
-              easing: RNEasing.linear,
-              useNativeDriver: Platform.OS !== "web",
-            }),
-            RNAnimated.sequence([
-              RNAnimated.timing(opacity, {
-                toValue: 1,
-                duration: fadeInDuration,
-                easing: RNEasing.out(RNEasing.quad),
-                useNativeDriver: Platform.OS !== "web",
-              }),
-              RNAnimated.delay(holdDuration),
-              RNAnimated.timing(opacity, {
-                toValue: 0,
-                duration: fadeOutDuration,
-                easing: RNEasing.in(RNEasing.quad),
-                useNativeDriver: Platform.OS !== "web",
-              }),
-            ]),
-          ]);
-          animation.start(({ finished }) => {
-            if (finished && !cancelled) schedule();
-          });
-        },
-        6000 + Math.random() * 14000,
-      );
-    }
-
-    schedule();
-
-    return () => {
-      cancelled = true;
-      clearTimeout(timer);
-      animation?.stop();
+    return {
+      opacity,
+      transform: [
+        { translateX: startX + Math.cos(angle) * length * shot },
+        { translateY: startY + Math.sin(angle) * length * shot },
+        { rotate: `${angle}rad` },
+      ],
     };
-  }, [height, opacity, translateX, translateY, width]);
+  });
 
   return (
-    <RNAnimated.View
-      style={[
-        styles.shootingStar,
-        {
-          opacity,
-          transform: [
-            { translateX },
-            { translateY },
-            { rotate: `${appearance.angle}rad` },
-          ],
-        },
-      ]}
-    >
+    <Animated.View style={[styles.shootingStar, animatedStyle]}>
       <View
         style={[
           styles.shootingStarTrail,
@@ -128,93 +101,87 @@ function ShootingStar({ width, height }: SceneProps) {
       <View
         style={[styles.shootingStarHead, { backgroundColor: appearance.color }]}
       />
-    </RNAnimated.View>
+    </Animated.View>
+  );
+}
+
+function TwinklingStar({
+  index,
+  width,
+  height,
+}: SceneProps & { index: number }) {
+  const size = 1 + Math.floor(seeded(index, 36) * 3);
+  const baseOpacity = 0.1 + seeded(index, 35) * 0.525;
+
+  // Each star twinkles on its own slow cycle; across 80 stars that's a similar
+  // rate of twinkles to the previous three lanes.
+  const [timing] = useState(() => ({
+    twinkle: (300 + Math.random() * 700) / 1.5,
+    pause: 4000 + Math.random() * 44000,
+  }));
+
+  const opacity = useSharedValue(baseOpacity);
+  const paused = useAnimationsPaused();
+  const hasStartedRef = useRef(false);
+
+  useEffect(() => {
+    if (paused) return;
+    const sine = Easing.inOut(Easing.sin);
+    // The staggered start applies once; after a pause the twinkles carry on.
+    const startDelay = hasStartedRef.current ? 0 : seeded(index, 34) * timing.pause;
+    if (!hasStartedRef.current) opacity.value = baseOpacity;
+    hasStartedRef.current = true;
+    opacity.value = withDelay(
+      startDelay,
+      withRepeat(
+        withSequence(
+          withTiming(1, { duration: timing.twinkle * 0.45, easing: sine }),
+          withTiming(baseOpacity, {
+            duration: timing.twinkle * 0.55,
+            easing: sine,
+          }),
+          withDelay(timing.pause, withTiming(baseOpacity, { duration: 0 })),
+        ),
+        -1,
+        false,
+      ),
+    );
+
+    return () => cancelAnimation(opacity);
+  }, [baseOpacity, index, opacity, paused, timing]);
+
+  const animatedStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));
+
+  return (
+    <Animated.View
+      style={[
+        styles.star,
+        {
+          backgroundColor:
+            STAR_COLORS[Math.floor(seeded(index, 37) * STAR_COLORS.length)],
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          left: seeded(index, 38) * width,
+          top: seeded(index, 39) * height,
+        },
+        animatedStyle,
+      ]}
+    />
   );
 }
 
 export function Stars({ width, height }: SceneProps) {
-  const stars = useRef(
-    Array.from({ length: 80 }, (_, index) => {
-      const baseOpacity = 0.1 + seeded(index, 35) * 0.525;
-
-      return {
-        baseOpacity,
-        opacity: new RNAnimated.Value(baseOpacity),
-      };
-    }),
-  ).current;
-
-  useEffect(() => {
-    let cancelled = false;
-    const activeStars = new Set<number>();
-    const animations = new Set<RNAnimated.CompositeAnimation>();
-
-    function startShimmerLane() {
-      let starIndex = Math.floor(Math.random() * stars.length);
-      while (activeStars.has(starIndex)) {
-        starIndex = Math.floor(Math.random() * stars.length);
-      }
-
-      const star = stars[starIndex];
-      const shimmerDuration = (300 + Math.random() * 700) / 1.5;
-      const animation = RNAnimated.sequence([
-        RNAnimated.timing(star.opacity, {
-          toValue: 1,
-          duration: shimmerDuration * 0.45,
-          easing: RNEasing.inOut(RNEasing.sin),
-          useNativeDriver: Platform.OS !== "web",
-        }),
-        RNAnimated.timing(star.opacity, {
-          toValue: star.baseOpacity,
-          duration: shimmerDuration * 0.55,
-          easing: RNEasing.inOut(RNEasing.sin),
-          useNativeDriver: Platform.OS !== "web",
-        }),
-      ]);
-
-      activeStars.add(starIndex);
-      animations.add(animation);
-      animation.start(({ finished }) => {
-        activeStars.delete(starIndex);
-        animations.delete(animation);
-        if (finished && !cancelled) startShimmerLane();
-      });
-    }
-
-    Array.from({ length: 3 }, startShimmerLane);
-
-    return () => {
-      cancelled = true;
-      animations.forEach((animation) => animation.stop());
-    };
-  }, [stars]);
-
   return (
     <>
-      {stars.map((star, index) => {
-        const size = 1 + Math.floor(seeded(index, 36) * 3);
-
-        return (
-          <RNAnimated.View
-            key={index}
-            style={[
-              styles.star,
-              {
-                backgroundColor:
-                  STAR_COLORS[
-                    Math.floor(seeded(index, 37) * STAR_COLORS.length)
-                  ],
-                width: size,
-                height: size,
-                borderRadius: size / 2,
-                left: seeded(index, 38) * width,
-                top: seeded(index, 39) * height,
-                opacity: star.opacity,
-              },
-            ]}
-          />
-        );
-      })}
+      {Array.from({ length: STAR_COUNT }, (_, index) => (
+        <TwinklingStar
+          key={index}
+          index={index}
+          width={width}
+          height={height}
+        />
+      ))}
       <ShootingStar width={width} height={height} />
     </>
   );

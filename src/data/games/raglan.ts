@@ -7,7 +7,7 @@ export const raglan: GameDefinition = {
   title: "Raglan",
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 55, difficulty: 55, luck: 25 },
-  thumbnail: "Raglan.jpg",
+  thumbnail: "Raglan.webp",
   background: GAME_BACKGROUNDS.field,
   animation: GameAnimations.Leaves,
   gameColorDark: "#2f3d35",

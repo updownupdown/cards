@@ -12,7 +12,7 @@ export const somnus: GameDefinition = {
     difficulty: 70,
     luck: 45,
   },
-  thumbnail: "Somnus.jpg",
+  thumbnail: "Somnus.webp",
   background: GAME_BACKGROUNDS.painting,
   animation: GameAnimations.Dust,
   gameColorDark: "#1b1f25",

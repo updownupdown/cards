@@ -1,4 +1,3 @@
-import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -8,7 +7,7 @@ export const seahavenTowers: GameDefinition = {
   aliases: ["Sea Towers"],
   tags: [GameTag.SequenceBuilding],
   rating: { complexity: 35, difficulty: 50, luck: 25 },
-  thumbnail: "SeahavenTowers.jpg",
+  thumbnail: "SeahavenTowers.webp",
   background: GAME_BACKGROUNDS.island,
   // animation: GameAnimations.Clouds,
   gameColorDark: "#173946",

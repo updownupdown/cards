@@ -1,6 +1,5 @@
 import { useStateManager } from "@/hooks/useStateManager";
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
-import { useGameColors } from "@/hooks/useGameColors";
 import { delay } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
@@ -112,7 +111,6 @@ export const baronessRules = {
 
 // ========== Main Component ========== //
 export default function Baroness() {
-  const { colorDark } = useGameColors();
   const difficulty = useGameSettingValue("difficulty");
   const allowMoveToEmptyPile = difficulty !== "difficult";
   const [selected, setSelected] = useState<number | undefined>(undefined);

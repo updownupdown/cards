@@ -7,6 +7,7 @@ import { Animated, Easing, Platform, View } from "react-native";
 import { Button } from "../Button/Button";
 import { useGameColors } from "@/hooks/useGameColors";
 import { LinearGradient } from "expo-linear-gradient";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface Props {
   gameEnded: boolean;
@@ -33,6 +34,8 @@ export const WinLoseBox = ({
 }: Props) => {
   const { ui, spacing } = useResponsiveMetrics();
   const { colorDark } = useGameColors();
+  const insets = useSafeAreaInsets();
+  const restingBottom = spacing(layoutDims.pagePadding) + insets.bottom;
 
   // Win/lose animations
   const wlmAnim = useRef(new Animated.Value(0)).current;
@@ -115,10 +118,18 @@ export const WinLoseBox = ({
               : `0 0 20px ${rgba(Colors.lose, 0.6)}, 0 0 40px ${rgba(Colors.lose, 0.6)}`,
             width: "100%",
             maxWidth: ui.contentMaxWidth - spacing(layoutDims.pagePadding) * 2,
-            bottom: wlmAnim.interpolate({
-              inputRange: [0, 1],
-              outputRange: [-200, spacing(layoutDims.pagePadding)],
-            }),
+            // Clear of the bottom safe area (Android's navigation bar).
+            bottom: restingBottom,
+            // Slides up via transform: the native driver can't animate
+            // `bottom` (it threw an error on native).
+            transform: [
+              {
+                translateY: wlmAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [restingBottom + 200, 0],
+                }),
+              },
+            ],
           },
         ]}
       >

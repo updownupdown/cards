@@ -2,16 +2,15 @@ import {
   CardHitArea,
   createRect,
   DropHitArea,
-  pointInRect,
   useDragDrop,
 } from "@/hooks/useDragDrop";
+import { DragGhostCards, DragHandle } from "@/components/Cards/DragDrop";
 import { useStateManager } from "@/hooks/useStateManager";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { delay } from "@/utils/utils";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Animated, StyleSheet, View } from "react-native";
+import { useEffect, useMemo, useRef,} from "react";
+import { StyleSheet, View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
-import { Card } from "../Cards/Card";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
   cardDims,
@@ -79,21 +78,13 @@ export const towerOfHanoiRules = { canPlaceOnPile, isWinningPile };
 const gameStateInitial = createInitialState();
 
 export default function TowerOfHanoi() {
-  const [hoverTarget, setHoverTarget] = useState<DropTarget | null>(null);
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
   const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
-
-  const handleHoverTargetChange = useCallback((next: DropTarget | null) => {
-    setHoverTarget((previous) =>
-      previous?.pileIndex === next?.pileIndex ? previous : next,
-    );
-  }, []);
 
   const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
     useStateManager<GameState>({
       gameStateInitial,
       resetNonGameStates: () => {
-        setHoverTarget(null);
         clearDragGhost();
       },
       resetAndSetup: async () => {
@@ -143,6 +134,7 @@ export default function TowerOfHanoi() {
   }, [game]);
 
   const {
+    hoverTarget,
     dragGhost,
     draggedCardIds,
     justDroppedCardIds,
@@ -154,12 +146,6 @@ export default function TowerOfHanoi() {
     updateBoardOffset,
     makeDragHandlers,
   } = useDragDrop<MoveSource, DropTarget>({
-    findDropTarget: (pageX, pageY) => {
-      const hit = [...dropHitAreasRef.current]
-        .filter(({ rect }) => pointInRect(pageX, pageY, rect))
-        .sort((first, second) => second.priority - first.priority)[0];
-      return hit?.target ?? null;
-    },
     canDropOnTarget: (source, target) => {
       if (source.pileIndex === target.pileIndex) return false;
 
@@ -167,7 +153,6 @@ export default function TowerOfHanoi() {
       const destination = game.piles[target.pileIndex].at(-1);
       return !!moving && canPlaceOnPile(moving, destination);
     },
-    sameTarget: (first, second) => first?.pileIndex === second?.pileIndex,
     onSuccessfulDrop: (source, target) => {
       saveUndoState(structuredClone(game));
       setGame((draft) => {
@@ -191,7 +176,6 @@ export default function TowerOfHanoi() {
     },
     getDropHitAreas: () => dropHitAreasRef.current,
     getSourceRect,
-    onHoverTargetChange: handleHoverTargetChange,
   });
 
   const cardMapper = (
@@ -330,7 +314,7 @@ export default function TowerOfHanoi() {
   const interactionTargets = useMemo(
     () =>
       cardHitAreas.map(({ source, rect }) => (
-        <View
+        <DragHandle
           key={`pile-${source.pileIndex}`}
           collapsable={false}
           style={{
@@ -341,14 +325,13 @@ export default function TowerOfHanoi() {
             width: rect.width,
             height: rect.height,
           }}
-          {...makeDragHandlers(source, startGhostDrag)}
+          gesture={makeDragHandlers(source, startGhostDrag)}
         />
       )),
     [cardHitAreas],
   );
 
   const won = useMemo(() => game.piles.some(isWinningPile), [game.piles]);
-  const ghostHasValidDrop = !!dragGhost && hoverTarget !== null;
 
   return (
     <GameWrapper
@@ -366,37 +349,14 @@ export default function TowerOfHanoi() {
         <View style={styles.interactionLayer}>{interactionTargets}</View>
 
         {dragGhost && (
-          <Animated.View
-            style={{
-              position: "absolute",
-              zIndex: 4000,
-              left: dragGhost.origin.x,
-              top: dragGhost.origin.y,
-              transform: dragTranslate.getTranslateTransform(),
-              pointerEvents: "none",
-            }}
-          >
-            {dragGhost.cards.map((card, index) => (
-              <View
-                key={`ghost-${card.id}`}
-                style={{
-                  position: "absolute",
-                  top: index * cardDims.tableauOffset * cardHeight,
-                  width: cardWidth,
-                  height: cardHeight,
-                  zIndex: index + 1,
-                }}
-              >
-                <Card
-                  card={card}
-                  cardWidth={cardWidth}
-                  cardSize="small"
-                  selectColor={ghostHasValidDrop ? "green" : "none"}
-                  isSelected={ghostHasValidDrop}
-                />
-              </View>
-            ))}
-          </Animated.View>
+          <DragGhostCards
+            ghost={dragGhost}
+            translate={dragTranslate}
+            cardWidth={cardWidth}
+            cardHeight={cardHeight}
+            cardSize="small"
+            isValidDrop={hoverTarget !== null}
+          />
         )}
       </View>
     </GameWrapper>

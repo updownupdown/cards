@@ -8,7 +8,7 @@ export const laBelleLucie: GameDefinition = {
   aliases: ["Lovely Lucy", "The Fan"],
   tags: [GameTag.SequenceBuilding],
   rating: { complexity: 30, difficulty: 80, luck: 55 },
-  thumbnail: "LaBelleLucie.jpg",
+  thumbnail: "LaBelleLucie.webp",
   background: GAME_BACKGROUNDS.cherryBlossoms,
   animation: GameAnimations.CherryBlossom,
   gameColorDark: "#28352d",

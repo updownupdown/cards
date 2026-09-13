@@ -27,6 +27,9 @@ const BACK_ROW = new Set([6, 7, 8, 9]);
 const CENTER_PIN = 4;
 const PINS_COUNT = 10;
 const FRAMES_COUNT = 10;
+// Simulated play: always taking the biggest hit scores ~94 on average
+// (3% reach 120), while planning each ball well scores ~205.
+const WIN_SCORE = 120;
 
 // Pyramid indices are front-to-back rows: [0], [1,2], [3,4,5], [6,7,8,9]
 const PIN_ADJACENCY: Record<number, number[]> = {
@@ -424,7 +427,7 @@ export const bowlingRules = {
 
 // ========== Main Component ========== //
 export default function Bowling() {
-  const { colorZone, colorDark, colorPale } = useGameColors();
+  const { colorZone } = useGameColors();
   const { spacing, font } = useResponsiveMetrics();
 
   const { game, setGame, reset, isLoaded, canUndo, undo, saveUndoState } =
@@ -489,7 +492,10 @@ export default function Bowling() {
   const endGame = (draft: GameState, message?: string) => {
     updateTotalScore(draft);
     draft.phase = "gameEnd";
-    draft.winLoseMessage = `Game Over! Final Score: ${draft.totalScore}`;
+    draft.winLoseMessage =
+      draft.totalScore >= WIN_SCORE
+        ? `Final Score: ${draft.totalScore}. You beat ${WIN_SCORE}!`
+        : `Final Score: ${draft.totalScore}. You needed ${WIN_SCORE}.`;
   };
 
   const finishBonusBall = (draft: GameState, ballPins: number) => {
@@ -644,9 +650,6 @@ export default function Bowling() {
 
       draft.selectedBallPile = pileIdx;
       draft.phase = "pinSelect";
-      const ball =
-        draft.ballPiles[pileIdx][draft.ballPiles[pileIdx].length - 1];
-      // draft.message = `Selected ${ball.rank}. Pick 1-3 legal adjacent pins, sum ending in ${getCardValue(ball) % 10}.`;
     });
   };
 
@@ -993,7 +996,14 @@ export default function Bowling() {
 
   return (
     <GameWrapper
-      outcome={game.phase === "gameEnd" ? "won" : "playing"}
+      outcome={
+        game.phase !== "gameEnd"
+          ? "playing"
+          : game.totalScore >= WIN_SCORE
+            ? "won"
+            : "lost"
+      }
+      winLoseMessage={game.winLoseMessage}
       reset={reset}
       isLoaded={isLoaded}
       canUndo={canUndo}

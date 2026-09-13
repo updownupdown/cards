@@ -10,7 +10,7 @@ export const fightClubs: GameDefinition = {
     difficulty: 70,
     luck: 35,
   },
-  thumbnail: "FightClubs.jpg",
+  thumbnail: "FightClubs.webp",
   background: GAME_BACKGROUNDS.club,
   gameColorDark: "#221b20",
   gameColorMid: "#523277",

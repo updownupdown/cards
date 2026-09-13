@@ -5,7 +5,7 @@ import { GameAnimations } from "@/animations";
 export const royalRest: GameDefinition = {
   path: "/royal-rest",
   title: "Royal Rest",
-  thumbnail: "RoyalRest.jpg",
+  thumbnail: "RoyalRest.webp",
   background: GAME_BACKGROUNDS.cabinInterior,
   animation: GameAnimations.Dust,
   tags: [GameTag.EasyToLearn, GameTag.SequenceBuilding],

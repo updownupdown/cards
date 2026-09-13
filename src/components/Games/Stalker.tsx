@@ -1,6 +1,6 @@
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
-import { Colors, rgba, transitionStyles } from "@/styles/styles";
+import { Colors, rgba } from "@/styles/styles";
 import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { Button } from "../Button/Button";

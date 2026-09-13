@@ -11,7 +11,7 @@ export const herbalist: GameDefinition = {
     difficulty: 75,
     luck: 25,
   },
-  thumbnail: "Herbalist.jpg",
+  thumbnail: "Herbalist.webp",
   background: GAME_BACKGROUNDS.forest,
   animation: GameAnimations.Firefly,
   gameColorDark: "#1b3a1f",

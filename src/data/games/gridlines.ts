@@ -11,7 +11,7 @@ export const gridlines: GameDefinition = {
     difficulty: 50,
     luck: 30,
   },
-  thumbnail: "Gridlines.jpg",
+  thumbnail: "Gridlines.webp",
   background: GAME_BACKGROUNDS.club,
   animation: GameAnimations.Firefly,
   gameColorDark: "#1b2233",

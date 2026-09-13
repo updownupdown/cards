@@ -11,7 +11,7 @@ export const spiderSolitaire: GameDefinition = {
     difficulty: 85,
     luck: 55,
   },
-  thumbnail: "SpiderSolitaire.jpg",
+  thumbnail: "SpiderSolitaire.webp",
   background: GAME_BACKGROUNDS.dungeon,
   animation: GameAnimations.Embers,
   gameColorDark: "#25111e",

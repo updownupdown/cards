@@ -11,7 +11,7 @@ export const lycan: GameDefinition = {
     difficulty: 85,
     luck: 40,
   },
-  thumbnail: "Lycan.jpg",
+  thumbnail: "Lycan.webp",
   background: GAME_BACKGROUNDS.forest,
   animation: GameAnimations.Leaves,
   gameColorDark: "#311a20",

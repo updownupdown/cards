@@ -10,7 +10,7 @@ export const chainOfCommand: GameDefinition = {
     difficulty: 70,
     luck: 30,
   },
-  thumbnail: "ChainOfCommand.jpg",
+  thumbnail: "ChainOfCommand.webp",
   background: GAME_BACKGROUNDS.brickStreet,
   gameColorDark: "#252220",
   gameColorMid: "#4fa590",

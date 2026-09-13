@@ -1,7 +1,7 @@
 import { RadioButtons } from "@/components/common/RadioButtons";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import type { IconName } from "@/icons";
-import { Colors, layoutDims, rgba } from "@/styles/styles";
+import { Colors, layoutDims } from "@/styles/styles";
 import { View } from "react-native";
 
 export type HomeCardSize = "small" | "medium" | "large";

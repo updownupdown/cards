@@ -11,7 +11,7 @@ export const gremlin: GameDefinition = {
     difficulty: 75,
     luck: 35,
   },
-  thumbnail: "Gremlin.jpg",
+  thumbnail: "Gremlin.webp",
   background: GAME_BACKGROUNDS.treeRain,
   animation: GameAnimations.Firefly,
   gameColorDark: "#1c423f",
@@ -21,7 +21,7 @@ export const gremlin: GameDefinition = {
     "Build columns of cards in decreasing suit-matched sequences while managing unwanted help.",
   quickStart: [
     "Draw to 5, then play/discard/hold.",
-    "Lose if the helper's card is unplayable.",
+    "Lose if a card can't be placed and all 12 columns are used.",
   ],
   howToPlay: [
     "## Objective",
@@ -36,7 +36,7 @@ export const gremlin: GameDefinition = {
 
     "## Gremlin's Turn",
     "After your turn, the helper plays the next card from the deck. You choose which column it goes to.",
-    "If the helper's card cannot be played legally, you lose immediately.",
+    "If the helper's card cannot be placed on any column and you already have 12 columns, you lose immediately.",
 
     "## Scoring",
     "Your score is the number of columns you have built when the deck runs out:",

@@ -396,11 +396,12 @@ export default function CabinSiege() {
     if (game.ended || game.phase !== "kill" || currentAttacks.length > 0)
       return;
 
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setGame((draft) => {
         draft.phase = phaseAfterKill(draft.zombies);
       });
     }, 1500);
+    return () => clearTimeout(timer);
   }, [currentAttacks]);
 
   // Manage win/lose condition

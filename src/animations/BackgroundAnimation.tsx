@@ -1,5 +1,9 @@
 import { StyleSheet, View } from "react-native";
-import { animationStyles, type SceneProps } from "./BackgroundAnimations";
+import {
+  AnimationPausedContext,
+  animationStyles,
+  type SceneProps,
+} from "./BackgroundAnimations";
 import { Birds } from "./Birds";
 import { CherryBlossom } from "./CherryBlossom";
 import { Clouds } from "./Clouds";
@@ -17,9 +21,16 @@ import { GameAnimation, GameAnimations } from "./types";
 
 type Props = SceneProps & {
   animation?: GameAnimation;
+  /** Freeze the scene in place, e.g. while a modal covers the game. */
+  paused?: boolean;
 };
 
-export function BackgroundAnimation({ animation, width, height }: Props) {
+export function BackgroundAnimation({
+  animation,
+  width,
+  height,
+  paused = false,
+}: Props) {
   if (!animation || width <= 0 || height <= 0) return null;
 
   const sceneProps = { width, height };
@@ -71,7 +82,9 @@ export function BackgroundAnimation({ animation, width, height }: Props) {
     <View
       style={[StyleSheet.absoluteFillObject, animationStyles.nonInteractive]}
     >
-      {scene}
+      <AnimationPausedContext.Provider value={paused}>
+        {scene}
+      </AnimationPausedContext.Provider>
     </View>
   );
 }

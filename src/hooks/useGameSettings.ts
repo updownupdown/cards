@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo, useRef } from "react";
 import {
   GameSettings,
   DEFAULT_GAME_SETTINGS,
+  getCachedGameSettingsMap,
   loadGameSettingsMap,
   getGameSettings,
   updateGameSettings,
@@ -31,21 +32,39 @@ function emitGameSettings(path: string, settings: GameSettings) {
   settingsListeners.get(path)?.forEach((listener) => listener(settings));
 }
 
-export function useGameSettings(pathname: string) {
-  const [settings, setSettings] = useState<GameSettings | undefined>(undefined);
-  const settingsRef = useRef<GameSettings | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(true);
+function getInitialSettings(normalizedPath: string) {
+  const cachedMap = getCachedGameSettingsMap();
+  return cachedMap ? getGameSettings(cachedMap, normalizedPath) : undefined;
+}
 
+export function useGameSettings(pathname: string) {
   const normalizedPath = normalizeGamePath(pathname);
+
+  // On native the settings map is usually already in memory: start from it so
+  // the first render is final, instead of rendering without settings and then
+  // again once an async load resolves.
+  const [settings, setSettings] = useState<GameSettings | undefined>(() =>
+    getInitialSettings(normalizedPath),
+  );
+  const settingsRef = useRef<GameSettings | undefined>(settings);
+  const [isLoading, setIsLoading] = useState(() => settings === undefined);
+  const loadedPathRef = useRef<string | null>(
+    settings === undefined ? null : normalizedPath,
+  );
+
   const applySettings = (nextSettings: GameSettings) => {
     settingsRef.current = nextSettings;
     setSettings(nextSettings);
   };
 
   useEffect(() => {
+    // Already initialised from the cache for this path.
+    if (loadedPathRef.current === normalizedPath) return;
+
     let active = true;
     loadGameSettingsMap().then((map) => {
       if (active) {
+        loadedPathRef.current = normalizedPath;
         applySettings(getGameSettings(map, normalizedPath));
         setIsLoading(false);
       }

@@ -15,7 +15,7 @@ export const cribbageSquares: GameDefinition = {
     difficulty: 60,
     luck: 75,
   },
-  thumbnail: "CribbageSquares.jpg",
+  thumbnail: "CribbageSquares.webp",
   background: GAME_BACKGROUNDS.cozyCabin,
   animation: GameAnimations.Snow,
   gameColorDark: "#15221c",

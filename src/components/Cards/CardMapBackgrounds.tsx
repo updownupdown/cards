@@ -1,7 +1,7 @@
 import { Text } from "@/components/common/Text";
 import { useGameColors } from "@/hooks/useGameColors";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, FontWeight, rgba } from "@/styles/styles";
+import { FontWeight, rgba } from "@/styles/styles";
 import { Pressable, TextStyle, View, ViewStyle } from "react-native";
 import { CardMapBGMapping } from "./AnimatedCard";
 import { cardDims } from "./card-utils";
@@ -10,12 +10,7 @@ import { CardOverlay, getCardShadow, getUnderlayStyle } from "./CardStyles";
 import { Icon } from "@/icons";
 
 export type DeckFanDirection =
-  | "none"
-  | "up"
-  | "down"
-  | "left"
-  | "right"
-  | "diagonal-depth";
+  "none" | "up" | "down" | "left" | "right" | "diagonal-depth";
 
 export type DeckInfoPosition = "above" | "below" | "left" | "right";
 

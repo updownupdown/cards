@@ -1,0 +1,324 @@
+import { jest } from "@jest/globals";
+// Test harness for game screens. Games render for real, but:
+// - useStateManager can start from a fixture position instead of dealing,
+// - useCardMap records each game's zones and card handlers instead of laying
+//   out cards, so tests press cards through the game's own onPress handlers,
+// - GameWrapper records its props (outcome, score) instead of rendering chrome.
+// Import "./game-mocks" at the top of a test file to install the mocks.
+import type {
+  MappedCard,
+  MapZone,
+} from "@/components/Cards/CardMap";
+import type { CardRank, CardSuit, PlayingCard } from "@/components/Cards/card-utils";
+import React from "react";
+import {
+  act,
+  create,
+  type ReactTestInstance,
+  type ReactTestRenderer,
+} from "react-test-renderer";
+
+type WrapperProps = {
+  outcome?: "playing" | "won" | "lost";
+  score?: number | string;
+  [key: string]: unknown;
+};
+
+type MapConfig = {
+  zones: MapZone[];
+  cardMapper: (card: MappedCard) => { onPress?: () => void } | undefined;
+  zoneMapper?: (zone: MapZone) => { onPress?: () => void } | undefined;
+};
+
+type DragOptions = {
+  canDropOnTarget: (source: unknown, target: unknown) => boolean;
+  onSuccessfulDrop: (source: unknown, target: unknown) => void | Promise<void>;
+};
+
+export const harness = {
+  path: "/",
+  fixture: undefined as unknown,
+  wrapperProps: null as WrapperProps | null,
+  mapConfig: null as MapConfig | null,
+  dragOptions: null as DragOptions | null,
+};
+
+const noopSetup = async () => {};
+
+// ── Module mocks (used from game-mocks.ts) ─────────────────────────────────
+
+export function mockGameWrapperModule() {
+  return {
+    GameWrapper: (props: WrapperProps & { children?: React.ReactNode }) => {
+      harness.wrapperProps = props;
+      return props.children ?? null;
+    },
+  };
+}
+
+export function mockCardMapModule() {
+  const actual = jest.requireActual<object>("@/components/Cards/CardMap");
+  return {
+    ...actual,
+    useCardMap: (config: MapConfig) => {
+      harness.mapConfig = config;
+      return {
+        cardMap: null,
+        getZoneStyles: () => ({}),
+        getZoneStylesById: () => ({}),
+        getZoneBasePos: () => ({ x: 0, y: 0, width: 50, height: 70 }),
+        cardWidth: 50,
+        cardHeight: 70,
+        cardBackPath: harness.path,
+      };
+    },
+  };
+}
+
+export function mockStateManagerModule() {
+  const actual = jest.requireActual<{
+    useStateManager: (props: Record<string, unknown>) => unknown;
+  }>("@/hooks/useStateManager");
+  return {
+    ...actual,
+    useStateManager: (props: Record<string, unknown>) =>
+      actual.useStateManager(
+        harness.fixture === undefined
+          ? props
+          : {
+              ...props,
+              gameStateInitial: harness.fixture,
+              resetAndSetup: noopSetup,
+              postSetupAction: undefined,
+            },
+      ),
+  };
+}
+
+export function mockDragDropModule() {
+  const actual = jest.requireActual<{
+    useDragDrop: (options: DragOptions) => unknown;
+  }>("@/hooks/useDragDrop");
+  return {
+    ...actual,
+    useDragDrop: (options: DragOptions) => {
+      harness.dragOptions = options;
+      return actual.useDragDrop(options);
+    },
+  };
+}
+
+export function mockExpoRouterModule() {
+  return {
+    usePathname: () => harness.path,
+    useLocalSearchParams: () => ({}),
+    useNavigation: () => ({ setOptions: () => {} }),
+    router: {
+      push: jest.fn(),
+      replace: jest.fn(),
+      back: jest.fn(),
+      dismissTo: jest.fn(),
+      canGoBack: () => false,
+    },
+    Link: ({ children }: { children?: React.ReactNode }) => children ?? null,
+  };
+}
+
+// ── Rendering and time ─────────────────────────────────────────────────────
+
+/** Let deals, animations and delays finish (fake timers must be on). */
+export async function settle(rounds = 40) {
+  for (let round = 0; round < rounds; round += 1) {
+    await act(async () => {
+      jest.advanceTimersByTime(250);
+    });
+  }
+}
+
+/**
+ * Render a game. With a fixture it starts from that position (no deal);
+ * without one it deals normally.
+ */
+export async function renderGame(
+  path: string,
+  Game: React.ComponentType,
+  fixture?: unknown,
+) {
+  harness.path = path;
+  harness.fixture = fixture;
+  harness.wrapperProps = null;
+  harness.mapConfig = null;
+  harness.dragOptions = null;
+
+  let renderer!: ReactTestRenderer;
+  await act(async () => {
+    renderer = create(<Game />);
+  });
+  await settle();
+  return renderer;
+}
+
+export function outcome() {
+  return harness.wrapperProps?.outcome;
+}
+
+// ── Interacting ────────────────────────────────────────────────────────────
+
+/** Every card as CardMap would map it, in zone order. */
+export function mappedCards(): MappedCard[] {
+  const zones = harness.mapConfig?.zones ?? [];
+  return zones.flatMap((zone) =>
+    (zone.cards ?? []).map((card, cardIndex, cards) => ({
+      card,
+      cardIndex,
+      zoneId: zone.id,
+      zoneName: zone.name,
+      pileIndex: zone.pileIndex,
+      refIndex: zone.refIndex,
+      x: 0,
+      y: 0,
+      zIndex: 0,
+      rotation: zone.rotation,
+      clickThroughCards: zone.clickThroughCards,
+      topOfZone: cardIndex === cards.length - 1,
+    })),
+  );
+}
+
+function describeCard(card: MappedCard) {
+  return `${card.card.rank} of ${card.card.suit} (${card.zoneId} #${card.cardIndex})`;
+}
+
+type PressOptions = {
+  /**
+   * Let timers run after the press (default). Pass false for the first tap of
+   * a double-tap, which must land before the double-tap window passes.
+   */
+  settle?: boolean;
+};
+
+/** Press the first card matching `match`, through the game's handler. */
+export async function pressCard(
+  match: (card: MappedCard) => boolean,
+  { settle: shouldSettle = true }: PressOptions = {},
+) {
+  const target = mappedCards().find(match);
+  if (!target) throw new Error("No card matches");
+  const onPress = harness.mapConfig?.cardMapper(target)?.onPress;
+  if (!onPress) throw new Error(`${describeCard(target)} has no press handler`);
+  await act(async () => {
+    onPress();
+  });
+  if (shouldSettle) await settle();
+}
+
+/** Press the card with this id. */
+export function pressCardId(id: string, options?: PressOptions) {
+  return pressCard((card) => card.card.id === id, options);
+}
+
+/** Double-tap the card with this id. */
+export async function doubleTapCardId(id: string) {
+  await pressCardId(id, { settle: false });
+  await pressCardId(id);
+}
+
+/** Press a zone's background (e.g. an empty pile or the stock). */
+export async function pressZone(match: (zone: MapZone) => boolean) {
+  const zone = harness.mapConfig?.zones.find(match);
+  if (!zone) throw new Error("No zone matches");
+  const onPress = harness.mapConfig?.zoneMapper?.(zone)?.onPress;
+  if (!onPress) throw new Error(`Zone ${zone.id} has no press handler`);
+  await act(async () => {
+    onPress();
+  });
+  await settle();
+}
+
+/**
+ * Complete a drag from `source` to `target`: the game's own drop rule must
+ * allow it, then its drop handler runs, as when a real drag is released.
+ */
+export async function dropMove(source: unknown, target: unknown) {
+  const options = harness.dragOptions;
+  if (!options) throw new Error("This game has no drag and drop");
+  if (!options.canDropOnTarget(source, target)) {
+    throw new Error(
+      `Drop not allowed: ${JSON.stringify(source)} -> ${JSON.stringify(target)}`,
+    );
+  }
+  await act(async () => {
+    await options.onSuccessfulDrop(source, target);
+  });
+  await settle();
+}
+
+function findPressable(renderer: ReactTestRenderer, label: string) {
+  return renderer.root.findAll(
+    (node: ReactTestInstance) =>
+      typeof node.props.onPress === "function" &&
+      ((typeof node.props.text === "string" &&
+        node.props.text.split("\n")[0] === label) ||
+        node.props.accessibilityLabel === label),
+  )[0];
+}
+
+/**
+ * Press a Button (or labelled pressable) by its accessibility label or the
+ * first line of its text, e.g. "Search" for "Search\n(Draw 2)".
+ */
+export async function pressButton(renderer: ReactTestRenderer, label: string) {
+  const button = findPressable(renderer, label);
+  if (!button) throw new Error(`No button labelled "${label}"`);
+  await act(async () => {
+    button.props.onPress();
+  });
+  await settle();
+}
+
+// ── Fixtures ───────────────────────────────────────────────────────────────
+
+let cardCount = 0;
+
+/** A card for fixtures, e.g. card("Q", "hearts"). */
+export function card(
+  rank: CardRank,
+  suit: CardSuit,
+  faceUp = true,
+): PlayingCard {
+  cardCount += 1;
+  return { id: `${suit}-${rank}-t${cardCount}`, rank, suit, faceUp };
+}
+
+const RUN_RANKS: CardRank[] = [
+  "A",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+  "J",
+  "Q",
+  "K",
+];
+
+/** Cards of one suit from `from` to `to` inclusive, e.g. a foundation A–Q. */
+export function run(
+  suit: CardSuit,
+  from: CardRank = "A",
+  to: CardRank = "K",
+  faceUp = true,
+): PlayingCard[] {
+  const start = RUN_RANKS.indexOf(from);
+  const end = RUN_RANKS.indexOf(to);
+  const step = start <= end ? 1 : -1;
+  const cards: PlayingCard[] = [];
+  for (let index = start; index !== end + step; index += step) {
+    cards.push(card(RUN_RANKS[index], suit, faceUp));
+  }
+  return cards;
+}

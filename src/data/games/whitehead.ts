@@ -9,7 +9,7 @@ export const whitehead: GameDefinition = {
   gameColorDark: "#30383a",
   gameColorMid: "#5a94af",
   gameColorPale: "#edf0e6",
-  thumbnail: "Whitehead.jpg",
+  thumbnail: "Whitehead.webp",
   cardDescription:
     "An open Klondike relative built by color, with suited runs moving together.",
   quickStart: [

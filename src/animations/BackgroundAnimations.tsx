@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import {
   Platform,
   Animated as RNAnimated,
@@ -8,11 +8,15 @@ import {
 import Animated, {
   cancelAnimation,
   Easing,
+  interpolate,
+  useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
   withRepeat,
+  withSequence,
   withTiming,
+  type SharedValue,
 } from "react-native-reanimated";
 
 export type SceneProps = {
@@ -28,7 +32,7 @@ type FallingParticleProps = SceneProps & {
   sway: number;
   x: number;
   gentleSway?: boolean;
-  wind?: RNAnimated.Value;
+  wind?: SharedValue<number>;
   renderParticle?: (color: string, size: number) => React.ReactNode;
   flicker?: boolean;
 };
@@ -42,6 +46,87 @@ type DrifterProps = SceneProps & {
   y: number;
 };
 
+/**
+ * True while a modal or overlay covers the game. Scenes freeze in place and
+ * carry on from there when it closes.
+ */
+export const AnimationPausedContext = createContext(false);
+
+export function useAnimationsPaused() {
+  return useContext(AnimationPausedContext);
+}
+
+/** A linear 0→1 loop that continues from `from` rather than restarting. */
+export function loopFrom(from: number, duration: number) {
+  const linear = { easing: Easing.linear };
+  return withSequence(
+    withTiming(1, { ...linear, duration: duration * (1 - from) }),
+    withRepeat(
+      withSequence(
+        withTiming(0, { duration: 0 }),
+        withTiming(1, { ...linear, duration }),
+      ),
+      -1,
+      false,
+    ),
+  );
+}
+
+/**
+ * The same loop for a core Animated value (native-driven scenes): finishes the
+ * current pass from wherever it was paused, then repeats from 0.
+ */
+export function useAnimatedValueLoop(
+  progress: RNAnimated.Value,
+  duration: number,
+) {
+  const paused = useAnimationsPaused();
+
+  useEffect(() => {
+    if (paused) return;
+
+    let cancelled = false;
+    let animation: RNAnimated.CompositeAnimation | undefined;
+    const useNativeDriver = Platform.OS !== "web";
+
+    const repeat = () => {
+      if (cancelled) return;
+      progress.setValue(0);
+      animation = RNAnimated.loop(
+        RNAnimated.timing(progress, {
+          toValue: 1,
+          duration,
+          easing: RNEasing.linear,
+          useNativeDriver,
+        }),
+      );
+      animation.start();
+    };
+
+    progress.stopAnimation((current) => {
+      if (cancelled) return;
+      if (current <= 0 || current >= 1) {
+        repeat();
+        return;
+      }
+      animation = RNAnimated.timing(progress, {
+        toValue: 1,
+        duration: duration * (1 - current),
+        easing: RNEasing.linear,
+        useNativeDriver,
+      });
+      animation.start(({ finished }) => {
+        if (finished) repeat();
+      });
+    });
+
+    return () => {
+      cancelled = true;
+      animation?.stop();
+    };
+  }, [duration, paused, progress]);
+}
+
 export const seeded = (index: number, salt: number) => {
   const value = Math.sin(index * 12.9898 + salt * 78.233) * 43758.5453;
   return value - Math.floor(value);
@@ -49,17 +134,35 @@ export const seeded = (index: number, salt: number) => {
 
 export function useLoop(duration: number, delay: number) {
   const progress = useSharedValue(0);
+  const paused = useAnimationsPaused();
+  const hasStartedRef = useRef(false);
 
   useEffect(() => {
-    progress.value = withDelay(
-      delay,
-      withRepeat(withTiming(1, { duration, easing: Easing.linear }), -1, false),
-    );
+    if (paused) return;
+
+    // The start delay applies once; after a pause the loop carries on from
+    // where it stopped.
+    const loop = loopFrom(progress.value, duration);
+    progress.value = hasStartedRef.current ? loop : withDelay(delay, loop);
+    hasStartedRef.current = true;
 
     return () => cancelAnimation(progress);
-  }, [delay, duration, progress]);
+  }, [delay, duration, paused, progress]);
 
   return progress;
+}
+
+// The loops below run entirely on the UI thread (Reanimated). They used to be
+// Animated sequences restarted from a JS callback at the end of every cycle,
+// so each particle woke the JS thread every few seconds. Randomness that was
+// re-rolled per cycle is now either picked once at mount, or derived on the UI
+// thread from the cycle count with a hash.
+
+/** Pseudo-random 0..1 from two numbers; usable inside worklets. */
+export function hash01(a: number, b: number) {
+  "worklet";
+  const value = Math.sin(a * 12.9898 + b * 78.233) * 43758.5453;
+  return value - Math.floor(value);
 }
 
 function useFallingLoop(
@@ -68,127 +171,116 @@ function useFallingLoop(
   initialX: number,
   width: number,
 ) {
-  const progress = useRef(new RNAnimated.Value(phase)).current;
-  const x = useRef(new RNAnimated.Value(initialX * width)).current;
+  // Picked once per particle (previously re-rolled each fall).
+  const [cycleDuration] = useState(
+    () => duration * (0.75 + Math.random() * 0.5),
+  );
+  const [seed] = useState(() => Math.random() * 1000);
+  const progress = useSharedValue(phase);
+  const cycle = useSharedValue(0);
+  const paused = useAnimationsPaused();
 
+  // Starts at `phase` (the initial value), and after a pause from where it
+  // stopped.
   useEffect(() => {
-    let animation: RNAnimated.CompositeAnimation | undefined;
-    let cancelled = false;
+    if (paused) return;
+    progress.value = loopFrom(progress.value, cycleDuration);
+    return () => cancelAnimation(progress);
+  }, [cycleDuration, paused, progress]);
 
-    function startFall(fromProgress: number) {
-      const cycleDuration = duration * (0.75 + Math.random() * 0.5);
+  // Count each wrap back to the top, so the particle re-enters at a new x.
+  useAnimatedReaction(
+    () => progress.value,
+    (current, previous) => {
+      if (previous !== null && current < previous) {
+        cycle.value += 1;
+      }
+    },
+  );
 
-      animation = RNAnimated.timing(progress, {
-        toValue: 1,
-        duration: cycleDuration * (1 - fromProgress),
-        easing: RNEasing.linear,
-        useNativeDriver: Platform.OS !== "web",
-      });
-      animation.start(({ finished }) => {
-        if (!finished || cancelled) return;
-
-        progress.setValue(0);
-        x.setValue(Math.random() * width);
-        startFall(0);
-      });
-    }
-
-    startFall(phase);
-
-    return () => {
-      cancelled = true;
-      animation?.stop();
-    };
-  }, [duration, phase, progress, width, x]);
-
-  return { progress, x };
+  return { progress, cycle, seed, initialX: initialX * width };
 }
 
 export function useWind(width: number) {
-  const wind = useRef(new RNAnimated.Value(0)).current;
+  const wind = useSharedValue(-width * (0.04 + Math.random() * 0.08));
+
+  // A calm → gust → calm → opposite gust cycle, with timings picked at mount.
+  const [params] = useState(() => ({
+    calm: 7000 + Math.random() * 2000,
+    pause: 2000 + Math.random() * 1500,
+    build: 7000 + Math.random() * 3000,
+    strength: 0.04 + Math.random() * 0.08,
+  }));
+
+  const paused = useAnimationsPaused();
 
   useEffect(() => {
-    let animation: RNAnimated.CompositeAnimation | undefined;
-    let cancelled = false;
+    if (paused) return;
+    const sine = { easing: Easing.inOut(Easing.sin) };
+    const strength = width * params.strength;
 
-    function swing(direction: -1 | 1) {
-      const calmDuration = 7000 + Math.random() * 2000;
-      const calmPause = 2000 + Math.random() * 1500;
-      const buildDuration = 7000 + Math.random() * 3000;
-      const strength = width * (0.04 + Math.random() * 0.08);
+    wind.value = withRepeat(
+      withSequence(
+        withTiming(0, { ...sine, duration: params.calm }),
+        withDelay(
+          params.pause,
+          withTiming(strength, { ...sine, duration: params.build }),
+        ),
+        withTiming(0, { ...sine, duration: params.calm }),
+        withDelay(
+          params.pause,
+          withTiming(-strength, { ...sine, duration: params.build }),
+        ),
+      ),
+      -1,
+      false,
+    );
 
-      animation = RNAnimated.sequence([
-        RNAnimated.timing(wind, {
-          toValue: 0,
-          duration: calmDuration,
-          easing: RNEasing.inOut(RNEasing.sin),
-          useNativeDriver: Platform.OS !== "web",
-        }),
-        RNAnimated.delay(calmPause),
-        RNAnimated.timing(wind, {
-          toValue: direction * strength,
-          duration: buildDuration,
-          easing: RNEasing.inOut(RNEasing.sin),
-          useNativeDriver: Platform.OS !== "web",
-        }),
-      ]);
-      animation.start(({ finished }) => {
-        if (finished && !cancelled) swing(direction === 1 ? -1 : 1);
-      });
-    }
-
-    wind.setValue(-width * (0.04 + Math.random() * 0.08));
-    swing(1);
-
-    return () => {
-      cancelled = true;
-      animation?.stop();
-    };
-  }, [width, wind]);
+    return () => cancelAnimation(wind);
+  }, [params, paused, width, wind]);
 
   return wind;
 }
 
+const FLICKER_PULSES = 4;
+
 function useFlicker(enabled: boolean) {
-  const opacity = useRef(new RNAnimated.Value(enabled ? 0.03 : 0.75)).current;
+  const opacity = useSharedValue(enabled ? 0.03 : 0.75);
+
+  // A few random pulses picked at mount, repeated.
+  const [pulses] = useState(() =>
+    Array.from({ length: FLICKER_PULSES }, () => ({
+      delay: 180 + Math.random() * 1300,
+      peak: 0.7 + Math.random() * 0.3,
+      rise: 35 + Math.random() * 80,
+      baseline: 0.02 + Math.random() * 0.05,
+      fall: 60 + Math.random() * 140,
+    })),
+  );
+
+  const paused = useAnimationsPaused();
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || paused) return;
 
-    let animation: RNAnimated.CompositeAnimation | undefined;
-    let cancelled = false;
-
-    function pulse() {
-      const baseline = 0.02 + Math.random() * 0.05;
-      const peak = 0.7 + Math.random() * 0.3;
-
-      animation = RNAnimated.sequence([
-        RNAnimated.delay(180 + Math.random() * 1300),
-        RNAnimated.timing(opacity, {
-          toValue: peak,
-          duration: 35 + Math.random() * 80,
-          easing: RNEasing.out(RNEasing.quad),
-          useNativeDriver: Platform.OS !== "web",
+    const steps = pulses.flatMap((pulse) => [
+      withDelay(
+        pulse.delay,
+        withTiming(pulse.peak, {
+          duration: pulse.rise,
+          easing: Easing.out(Easing.quad),
         }),
-        RNAnimated.timing(opacity, {
-          toValue: baseline,
-          duration: 60 + Math.random() * 140,
-          easing: RNEasing.in(RNEasing.quad),
-          useNativeDriver: Platform.OS !== "web",
-        }),
-      ]);
-      animation.start(({ finished }) => {
-        if (finished && !cancelled) pulse();
-      });
-    }
+      ),
+      withTiming(pulse.baseline, {
+        duration: pulse.fall,
+        easing: Easing.in(Easing.quad),
+      }),
+    ]);
 
-    pulse();
+    opacity.value = withRepeat(withSequence(...steps), -1, false);
 
-    return () => {
-      cancelled = true;
-      animation?.stop();
-    };
-  }, [enabled, opacity]);
+    return () => cancelAnimation(opacity);
+  }, [enabled, opacity, paused, pulses]);
 
   return opacity;
 }
@@ -207,20 +299,46 @@ export function FallingParticle({
   renderParticle,
   flicker = false,
 }: FallingParticleProps) {
-  const fall = useFallingLoop(duration, phase, x, width);
+  const { progress, cycle, seed, initialX } = useFallingLoop(
+    duration,
+    phase,
+    x,
+    width,
+  );
   const flickerOpacity = useFlicker(flicker);
-  const swayOffset = gentleSway
-    ? fall.progress.interpolate({
-        inputRange: [0, 1],
-        outputRange: [-sway, sway],
-      })
-    : fall.progress.interpolate({
-        inputRange: [0, 0.25, 0.5, 0.75, 1],
-        outputRange: [-sway, sway, -sway, sway, -sway],
-      });
+  const spins = !!renderParticle;
+
+  const animatedStyle = useAnimatedStyle(() => {
+    const t = progress.value;
+    // First fall starts at the given x; later falls re-enter at a random x.
+    const baseX =
+      cycle.value === 0 ? initialX : hash01(seed, cycle.value) * width;
+    const swayOffset = gentleSway
+      ? interpolate(t, [0, 1], [-sway, sway])
+      : interpolate(
+          t,
+          [0, 0.25, 0.5, 0.75, 1],
+          [-sway, sway, -sway, sway, -sway],
+        );
+
+    return {
+      opacity: flicker ? flickerOpacity.value : 0.75,
+      transform: [
+        { translateX: baseX + swayOffset + (wind ? wind.value : 0) },
+        {
+          translateY: interpolate(
+            t,
+            [0, 1],
+            [-size * 1.5, height + size * 1.5],
+          ),
+        },
+        { rotate: spins ? `${t * 540}deg` : "0deg" },
+      ],
+    };
+  }, [flicker, gentleSway, height, initialX, seed, size, spins, sway, width]);
 
   return (
-    <RNAnimated.View
+    <Animated.View
       style={[
         animationStyles.particle,
         {
@@ -228,34 +346,12 @@ export function FallingParticle({
           borderRadius: renderParticle ? 0 : size / 2,
           height: size,
           width: size,
-          opacity: flicker ? flickerOpacity : 0.75,
-          transform: [
-            {
-              translateX: RNAnimated.add(
-                RNAnimated.add(fall.x, swayOffset),
-                wind ?? 0,
-              ),
-            },
-            {
-              translateY: fall.progress.interpolate({
-                inputRange: [0, 1],
-                outputRange: [-size * 1.5, height + size * 1.5],
-              }),
-            },
-            {
-              rotate: renderParticle
-                ? fall.progress.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: ["0deg", "540deg"],
-                  })
-                : "0deg",
-            },
-          ],
         },
+        animatedStyle,
       ]}
     >
       {renderParticle?.(color, size)}
-    </RNAnimated.View>
+    </Animated.View>
   );
 }
 

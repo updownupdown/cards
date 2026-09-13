@@ -5,7 +5,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
 import { layoutDims, Colors, rgba } from "@/styles/styles";
 import React, { useRef, useState } from "react";
-import { Animated, Easing, Platform } from "react-native";
+import { Animated, Easing } from "react-native";
 
 const holdToResetDuration = 900;
 const minDisplayDuration = holdToResetDuration;
@@ -43,7 +43,8 @@ export function ResetButton({
       toValue: 1,
       duration: holdToResetDuration,
       easing: Easing.linear,
-      useNativeDriver: Platform.OS !== "web",
+      // Drives scaleX (not width) so this can run off the JS thread.
+      useNativeDriver: true,
     }).start();
   };
 
@@ -53,7 +54,7 @@ export function ResetButton({
       toValue: 0,
       duration: 150,
       easing: Easing.linear,
-      useNativeDriver: Platform.OS !== "web",
+      useNativeDriver: true,
     }).start();
   };
 
@@ -94,11 +95,10 @@ export function ResetButton({
               top: 0,
               bottom: 0,
               left: 0,
+              right: 0,
               backgroundColor: rgba(Colors.lose, 0.7),
-              width: resetProgress.interpolate({
-                inputRange: [0, 1],
-                outputRange: ["0%", "100%"],
-              }),
+              transformOrigin: "left",
+              transform: [{ scaleX: resetProgress }],
             }}
           />
 

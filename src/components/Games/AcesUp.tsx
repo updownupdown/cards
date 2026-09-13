@@ -1,4 +1,3 @@
-import { useGameColors } from "@/hooks/useGameColors";
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
@@ -117,8 +116,6 @@ export const acesUpRules = {
 
 // ========== Main Component ========== //
 export default function AcesUp() {
-  const { colorDark } = useGameColors();
-
   const [selectedPile, setSelectedPile] = useState<number | undefined>(
     undefined,
   );

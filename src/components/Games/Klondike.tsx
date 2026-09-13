@@ -2,18 +2,16 @@ import {
   CardHitArea,
   createRect,
   DropHitArea,
-  pointInRect,
   useDragDrop,
 } from "@/hooks/useDragDrop";
+import { DragGhostCards, DragHandle } from "@/components/Cards/DragDrop";
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useStateManager } from "@/hooks/useStateManager";
+import { useAutoComplete } from "@/hooks/useAutoComplete";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
-import { useNavigation } from "expo-router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { GestureResponderEvent } from "react-native";
-import { Animated, Pressable, StyleSheet, View } from "react-native";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
-import { Card } from "../Cards/Card";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
   cardDims,
@@ -41,7 +39,6 @@ type Selection =
   | { zone: "stock" }
   | { zone: "waste" }
   | { zone: "tableau"; pileIndex: number; cardIndex: number }
-  | { zone: "foundation"; pileIndex: number }
   | null;
 
 type MoveSource = Exclude<Selection, null | { zone: "stock" }>;
@@ -148,9 +145,7 @@ const gameStateInitial = createInitialState();
 export default function Klondike() {
   const configuredDrawCount = useGameSettingValue("drawCount");
 
-  const navigation = useNavigation();
   const [selected, setSelected] = useState<Selection>(null);
-  const [hoverTarget, setHoverTarget] = useState<DropTarget | null>(null);
   const [lastTap, setLastTap] = useState<{ key: string; at: number } | null>(
     null,
   );
@@ -207,11 +202,8 @@ export default function Klondike() {
   // findDropTarget closure always reads the latest values without forward-ref issues.
   const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
 
-  const handleHoverTargetChange = useCallback((next: DropTarget | null) => {
-    setHoverTarget((prev) => (sameDropTarget(prev, next) ? prev : next));
-  }, []);
-
   const {
+    hoverTarget,
     dragGhost,
     draggedCardIds,
     justDroppedCardIds,
@@ -223,14 +215,7 @@ export default function Klondike() {
     updateBoardOffset,
     makeDragHandlers,
   } = useDragDrop<MoveSource, DropTarget>({
-    findDropTarget: (pageX, pageY) => {
-      const hit = [...dropHitAreasRef.current]
-        .filter(({ rect }) => pointInRect(pageX, pageY, rect))
-        .sort((a, b) => b.priority - a.priority)[0];
-      return hit?.target ?? null;
-    },
     canDropOnTarget,
-    sameTarget: sameDropTarget,
     onSuccessfulDrop: async (source, target) => {
       if (target.zone === "foundation") {
         await moveSourceToFoundation(source, target.pileIndex);
@@ -242,7 +227,7 @@ export default function Klondike() {
       getSourceCards(source, game).map((c) => c.id),
     getDropHitAreas: () => dropHitAreasRef.current,
     getSourceRect,
-    onHoverTargetChange: handleHoverTargetChange,
+    getTapHandler,
   });
 
   const wasteTop = game.waste[game.waste.length - 1];
@@ -444,11 +429,6 @@ export default function Klondike() {
   function getSourceRect(source: MoveSource) {
     const zone = zones.find((entry) => {
       if (source.zone === "waste") return entry.name === "waste";
-      if (source.zone === "foundation") {
-        return (
-          entry.name === "foundation" && entry.pileIndex === source.pileIndex
-        );
-      }
       return entry.name === "tableau" && entry.pileIndex === source.pileIndex;
     });
 
@@ -486,14 +466,7 @@ export default function Klondike() {
         return;
       }
 
-      if (zone.name === "foundation" && zone.pileIndex !== undefined) {
-        areas.push({
-          source: { zone: "foundation", pileIndex: zone.pileIndex },
-          rect: createRect(zoneRect.x, zoneRect.y, cardWidth, cardHeight),
-          priority: 90,
-        });
-        return;
-      }
+      // Foundation cards are locked: no drag or tap area.
 
       if (zone.name === "tableau" && zone.pileIndex !== undefined) {
         const pile = game.tableau[zone.pileIndex];
@@ -587,13 +560,24 @@ export default function Klondike() {
     [game.foundations],
   );
 
-  useEffect(() => {
-    navigation.setOptions({ gestureEnabled: false });
-
-    return () => {
-      navigation.setOptions({ gestureEnabled: true });
-    };
-  }, [navigation]);
+  // Once the stock and waste are empty and every card is face up, finish the
+  // game automatically.
+  const { isAutoCompleting } = useAutoComplete({
+    game,
+    setGame,
+    isSettingUp,
+    won,
+    isBlocked: !!dragGhost,
+    getSources: (state) =>
+      state.stock.length === 0 &&
+      state.waste.length === 0 &&
+      state.tableau.every((pile) => pile.every((card) => card.faceUp))
+        ? state.tableau
+        : null,
+    getFoundations: (state) => state.foundations,
+    canPlaceOnFoundation,
+    onStart: clearSelection,
+  });
 
   function clearSelection() {
     setSelected(null);
@@ -605,13 +589,6 @@ export default function Klondike() {
       return top ? [top] : [];
     }
 
-    if (source.zone === "foundation") {
-      const top =
-        snapshot.foundations[source.pileIndex][
-          snapshot.foundations[source.pileIndex].length - 1
-        ];
-      return top ? [top] : [];
-    }
 
     const pile = snapshot.tableau[source.pileIndex];
     const cards = pile.slice(source.cardIndex);
@@ -620,7 +597,7 @@ export default function Klondike() {
     return cards;
   }
 
-  function startGhostDrag(source: MoveSource, event: GestureResponderEvent) {
+  function startGhostDrag(source: MoveSource) {
     const cards = getSourceCards(source, game);
     if (cards.length === 0) return;
 
@@ -705,14 +682,6 @@ export default function Klondike() {
         moving = draft.waste[draft.waste.length - 1] ?? null;
         if (!moving) return;
         draft.waste.pop();
-      } else if (source.zone === "foundation") {
-        if (source.pileIndex === targetPileIndex) return;
-        moving =
-          draft.foundations[source.pileIndex][
-            draft.foundations[source.pileIndex].length - 1
-          ] ?? null;
-        if (!moving) return;
-        draft.foundations[source.pileIndex].pop();
       } else {
         const sourcePile = draft.tableau[source.pileIndex];
         if (source.cardIndex !== sourcePile.length - 1) return;
@@ -755,12 +724,6 @@ export default function Klondike() {
         if (!top) return;
         movingCards = [top];
         draft.waste.pop();
-      } else if (source.zone === "foundation") {
-        const sourcePile = draft.foundations[source.pileIndex];
-        const top = sourcePile[sourcePile.length - 1];
-        if (!top) return;
-        movingCards = [top];
-        sourcePile.pop();
       } else {
         const sourcePile = draft.tableau[source.pileIndex];
         movingCards = sourcePile.slice(source.cardIndex);
@@ -867,19 +830,6 @@ export default function Klondike() {
     moveSourceToTableau(selected, pileIndex);
   }
 
-  function sameDropTarget(a: DropTarget | null, b: DropTarget | null) {
-    if (!a || !b) return a === b;
-    if (a.zone !== b.zone) return false;
-    if (a.zone === "tableau" && b.zone === "tableau") {
-      return a.pileIndex === b.pileIndex;
-    }
-    return (
-      a.zone === "foundation" &&
-      b.zone === "foundation" &&
-      a.pileIndex === b.pileIndex
-    );
-  }
-
   function canDropOnTarget(
     source: MoveSource,
     target: DropTarget,
@@ -903,25 +853,14 @@ export default function Klondike() {
     return makeDragHandlers(source, startGhostDrag, onTap);
   }
 
-  const ghostLeft = dragGhost ? dragGhost.origin.x : 0;
-  const ghostTop = dragGhost ? dragGhost.origin.y : 0;
-  const ghostHasValidDrop = !!dragGhost && hoverTarget !== null;
 
-  const tapHandlerResolverRef = useRef(
-    (_source: MoveSource): (() => void) =>
-      () => {},
-  );
-  tapHandlerResolverRef.current = (source: MoveSource) => {
+  function getTapHandler(source: MoveSource) {
     if (source.zone === "waste") {
       return onWastePress;
     }
 
-    if (source.zone === "foundation") {
-      return () => {};
-    }
-
     return () => onTableauCardPress(source.pileIndex, source.cardIndex);
-  };
+  }
 
   const interactionTargets = useMemo(
     () =>
@@ -930,13 +869,11 @@ export default function Klondike() {
         const rect = hit.rect;
 
         return (
-          <View
+          <DragHandle
             key={
               source.zone === "waste"
                 ? "waste"
-                : source.zone === "foundation"
-                  ? `foundation-${source.pileIndex}`
-                  : `tableau-${source.pileIndex}-${source.cardIndex}`
+                : `tableau-${source.pileIndex}-${source.cardIndex}`
             }
             collapsable={false}
             style={{
@@ -947,12 +884,7 @@ export default function Klondike() {
               width: rect.width,
               height: rect.height,
             }}
-            {...makeHandlers(
-              source,
-              source.zone === "foundation"
-                ? undefined
-                : () => tapHandlerResolverRef.current(source)(),
-            )}
+            gesture={makeHandlers(source)}
           />
         );
       }),
@@ -968,6 +900,7 @@ export default function Klondike() {
       isLoaded={isLoaded}
       canUndo={canUndo}
       undo={undo}
+      autoCompleting={isAutoCompleting}
     >
       <View
         ref={boardRef}
@@ -1011,45 +944,14 @@ export default function Klondike() {
         </View>
 
         {dragGhost && (
-          <Animated.View
-            style={[
-              {
-                pointerEvents: "none",
-                position: "absolute",
-                zIndex: 4000,
-                left: ghostLeft,
-                top: ghostTop,
-                transform: dragTranslate.getTranslateTransform(),
-              },
-            ]}
-          >
-            {dragGhost.cards.map((card, index) => (
-              <View
-                key={`ghost-${card.id}`}
-                style={[
-                  {
-                    position: "absolute",
-                    left: 0,
-                    opacity: 1,
-                    width: cardWidth,
-                    height: cardHeight,
-                  },
-                  {
-                    top: index * cardDims.tableauOffset * cardHeight,
-                    zIndex: index + 1,
-                  },
-                ]}
-              >
-                <Card
-                  card={card}
-                  cardWidth={cardWidth}
-                  cardSize={cardSize}
-                  selectColor={ghostHasValidDrop ? "green" : "none"}
-                  isSelected={ghostHasValidDrop}
-                />
-              </View>
-            ))}
-          </Animated.View>
+          <DragGhostCards
+            ghost={dragGhost}
+            translate={dragTranslate}
+            cardWidth={cardWidth}
+            cardHeight={cardHeight}
+            cardSize={cardSize}
+            isValidDrop={hoverTarget !== null}
+          />
         )}
       </View>
     </GameWrapper>

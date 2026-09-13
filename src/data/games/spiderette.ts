@@ -5,7 +5,7 @@ export const spiderette: GameDefinition = {
   title: "Spiderette",
   tags: [GameTag.SequenceBuilding],
   rating: { complexity: 35, difficulty: 60, luck: 40 },
-  thumbnail: "Spiderette.jpg",
+  thumbnail: "Spiderette.webp",
   background: GAME_BACKGROUNDS.forest,
   gameColorDark: "#202e27",
   gameColorMid: "#88335a",

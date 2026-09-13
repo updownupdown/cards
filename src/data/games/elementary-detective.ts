@@ -11,7 +11,7 @@ export const elementaryDetective: GameDefinition = {
     difficulty: 60,
     luck: 65,
   },
-  thumbnail: "ElementaryDetective.jpg",
+  thumbnail: "ElementaryDetective.webp",
   background: GAME_BACKGROUNDS.fallLeaves,
   animation: GameAnimations.Leaves,
   gameColorDark: "#221815",

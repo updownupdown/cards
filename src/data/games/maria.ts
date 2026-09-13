@@ -8,7 +8,7 @@ export const maria: GameDefinition = {
   aliases: ["Thirty-Six Card Tableau"],
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 30, difficulty: 35, luck: 45 },
-  thumbnail: "Maria.jpg",
+  thumbnail: "Maria.webp",
   background: GAME_BACKGROUNDS.cherryBlossoms,
   animation: GameAnimations.CherryBlossom,
   gameColorDark: "#3c2d36",

@@ -1,4 +1,3 @@
-import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useStateManager } from "@/hooks/useStateManager";
 import { DOUBLE_TAP_MS } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
@@ -85,7 +84,7 @@ function getFoundationTarget(state: SultanGameState, card: PlayingCard) {
   return index < 0 ? null : index;
 }
 
-function hasMove(state: SultanGameState, autoRefillReserves: boolean) {
+function hasMove(state: SultanGameState) {
   if (
     state.stock.length > 0 ||
     (state.waste.length > 0 && state.redealsUsed < MAX_REDEALS)
@@ -95,12 +94,7 @@ function hasMove(state: SultanGameState, autoRefillReserves: boolean) {
     ...(top(state.waste) ? [top(state.waste)!] : []),
     ...state.reserve.filter((card): card is PlayingCard => card !== null),
   ];
-  return (
-    cards.some((card) => getFoundationTarget(state, card) !== null) ||
-    (!autoRefillReserves &&
-      state.reserve.some((card) => card === null) &&
-      cards.length > 0)
-  );
+  return cards.some((card) => getFoundationTarget(state, card) !== null);
 }
 
 export const sultanRules = {
@@ -111,7 +105,6 @@ export const sultanRules = {
 };
 
 export default function Sultan() {
-  const autoRefillReserves = useGameSettingValue("sultanAutoRefillReserves");
   const [selected, setSelected] = useState<Selection>(null);
   const [lastTap, setLastTap] = useState<{ key: string; at: number } | null>(
     null,
@@ -130,14 +123,14 @@ export default function Sultan() {
 
   useEffect(() => {
     const won = game.foundations.every((pile) => top(pile)?.rank === "Q");
-    const ended = won || !hasMove(game, autoRefillReserves);
+    const ended = won || !hasMove(game);
     if (won !== game.won || ended !== game.ended) {
       setGame((draft) => {
         draft.won = won;
         draft.ended = ended;
       });
     }
-  }, [autoRefillReserves, game, setGame]);
+  }, [game, setGame]);
 
   const selectedCard = getSelectedCard(game, selected);
 
@@ -155,37 +148,12 @@ export default function Sultan() {
       if (source.zone === "waste") card = draft.waste.pop();
       else {
         card = draft.reserve[source.index] ?? undefined;
-        if (autoRefillReserves) {
-          const replacement = draft.waste.pop() ?? draft.stock.pop();
-          draft.reserve[source.index] = replacement
-            ? flipToFace(replacement)
-            : null;
-        } else draft.reserve[source.index] = null;
+        const replacement = draft.waste.pop() ?? draft.stock.pop();
+        draft.reserve[source.index] = replacement
+          ? flipToFace(replacement)
+          : null;
       }
       if (card) draft.foundations[index].push(card);
-    });
-    setSelected(null);
-    return true;
-  }
-
-  function moveToReserve(destination: number) {
-    if (
-      autoRefillReserves ||
-      !selected ||
-      !selectedCard ||
-      game.reserve[destination] !== null ||
-      (selected.zone === "reserve" && selected.index === destination)
-    ) {
-      return false;
-    }
-    saveUndoState(structuredClone(game));
-    setGame((draft) => {
-      const card =
-        selected.zone === "waste"
-          ? draft.waste.pop()
-          : draft.reserve[selected.index];
-      if (selected.zone === "reserve") draft.reserve[selected.index] = null;
-      if (card) draft.reserve[destination] = card;
     });
     setSelected(null);
     return true;
@@ -344,12 +312,8 @@ export default function Sultan() {
     if (zone.name === "reserve" && zone.pileIndex !== undefined) {
       const reserveIndex = zone.pileIndex;
       return {
-        onPress: () => {
-          if (game.reserve[reserveIndex] === null) {
-            moveToReserve(reserveIndex);
-          } else onSourcePress({ zone: "reserve", index: reserveIndex });
-        },
-        isDisabled: game.reserve[reserveIndex] === null && !selectedCard,
+        onPress: () => onSourcePress({ zone: "reserve", index: reserveIndex }),
+        isDisabled: game.reserve[reserveIndex] === null,
       };
     }
     if (zone.name === "foundation" && zone.pileIndex !== undefined)

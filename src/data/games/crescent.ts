@@ -8,7 +8,7 @@ export const crescent: GameDefinition = {
   aliases: ["La Demi-Lune"],
   tags: [GameTag.SequenceBuilding],
   rating: { complexity: 45, difficulty: 55, luck: 40 },
-  thumbnail: "Crescent.jpg",
+  thumbnail: "Crescent.webp",
   background: GAME_BACKGROUNDS.nightSky,
   animation: GameAnimations.Stars,
   gameColorDark: "#182334",

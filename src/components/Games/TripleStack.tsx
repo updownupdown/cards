@@ -183,10 +183,9 @@ export default function TripleStack() {
   async function refillHand(maxToRefill = 8) {
     for (let i = 0; i < maxToRefill; i++) {
       setGame((draft) => {
+        if (draft.hand.every((card) => card !== null)) return;
         const topOfDeck = draft.deck.pop();
-        if (!topOfDeck || draft.hand.every((card) => card !== null)) {
-          return;
-        }
+        if (!topOfDeck) return;
         const emptyIndex = draft.hand.findIndex((card) => card === null);
         draft.hand[emptyIndex] = flipToFace(topOfDeck);
 

@@ -10,6 +10,8 @@ import { Pressable, View } from "react-native";
 type SettingControlProps<T> = {
   label: string;
   labelColor?: string;
+  /** Short explanation shown directly under the label. */
+  description?: string;
   helpText?: string;
   applyBehaviorText?: string;
   value: T;
@@ -22,6 +24,7 @@ type SettingControlProps<T> = {
 export function SettingControl<T>({
   label,
   labelColor = Colors.K200,
+  description,
   helpText,
   applyBehaviorText,
   value,
@@ -84,9 +87,23 @@ export function SettingControl<T>({
           }
           onPress={() => onChange(!value as any)}
         >
-          <Text weight={500} size="lg" color={labelColor} lineHeight={1}>
-            {label}
-          </Text>
+          <View
+            style={[
+              flexStyles.colStart,
+              booleanType === "toggle" && flexStyles.flex1,
+              { gap: spacing(4), paddingRight: spacing(12) },
+            ]}
+          >
+            {/* Default line height: 1 clipped descenders (g, p) on Android. */}
+            <Text weight={500} size="lg" color={labelColor}>
+              {label}
+            </Text>
+            {description && (
+              <Text size="sm" weight={300} color={rgba(Colors.white, 0.6)}>
+                {description}
+              </Text>
+            )}
+          </View>
 
           {booleanType === "toggle" ? (
             <View

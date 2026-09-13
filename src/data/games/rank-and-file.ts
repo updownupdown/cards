@@ -8,7 +8,7 @@ export const rankAndFile: GameDefinition = {
   aliases: ["Dress Parade"],
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 40, difficulty: 30, luck: 35 },
-  thumbnail: "RankAndFile.jpg",
+  thumbnail: "RankAndFile.webp",
   background: GAME_BACKGROUNDS.city,
   animation: GameAnimations.Clouds,
   gameColorDark: "#26343b",

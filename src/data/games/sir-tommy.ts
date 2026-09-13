@@ -10,7 +10,7 @@ export const sirTommy: GameDefinition = {
     difficulty: 60,
     luck: 55,
   },
-  thumbnail: "SirTommy.jpg",
+  thumbnail: "SirTommy.webp",
   background: GAME_BACKGROUNDS.london,
   gameColorDark: "#1a2c33",
   gameColorMid: "#27545f",

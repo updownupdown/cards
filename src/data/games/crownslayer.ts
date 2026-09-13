@@ -11,7 +11,7 @@ export const crownslayer: GameDefinition = {
     difficulty: 80,
     luck: 30,
   },
-  thumbnail: "Crownslayer.jpg",
+  thumbnail: "Crownslayer.webp",
   background: GAME_BACKGROUNDS.monteCarlo,
   animation: GameAnimations.Clouds,
   gameColorDark: "#1b1727",

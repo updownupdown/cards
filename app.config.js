@@ -1,5 +1,3 @@
-const buildDate = new Date().toISOString();
-
 /** @type {import('expo/config').ExpoConfig} */
 const config = {
   name: "SoloSuite",
@@ -60,6 +58,35 @@ const config = {
         },
       },
     ],
+    [
+      "expo-font",
+      {
+        // Embedded at build time so text renders from the first frame, with no
+        // runtime font load holding up the splash screen. On Android the file
+        // name is the fontFamily, matching FontWeight in styles.ts.
+        android: {
+          fonts: [
+            "./node_modules/@expo-google-fonts/outfit/200ExtraLight/Outfit_200ExtraLight.ttf",
+            "./node_modules/@expo-google-fonts/outfit/300Light/Outfit_300Light.ttf",
+            "./node_modules/@expo-google-fonts/outfit/400Regular/Outfit_400Regular.ttf",
+            "./node_modules/@expo-google-fonts/outfit/500Medium/Outfit_500Medium.ttf",
+            "./node_modules/@expo-google-fonts/outfit/600SemiBold/Outfit_600SemiBold.ttf",
+            "./node_modules/@expo-google-fonts/outfit/700Bold/Outfit_700Bold.ttf",
+          ],
+        },
+      },
+    ],
+    [
+      "expo-build-properties",
+      {
+        android: {
+          // R8 code shrinking and unused-resource removal for a smaller,
+          // faster-starting release app.
+          enableMinifyInReleaseBuilds: true,
+          enableShrinkResourcesInReleaseBuilds: true,
+        },
+      },
+    ],
   ],
   experiments: {
     baseUrl: "/",
@@ -71,7 +98,6 @@ const config = {
     eas: {
       projectId: "a82abc24-6db7-4465-9ad5-ca9ce212447b",
     },
-    buildDate,
   },
 };
 

@@ -5,7 +5,7 @@ export const congress: GameDefinition = {
   title: "Congress",
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 35, difficulty: 60, luck: 50 },
-  thumbnail: "Congress.jpg",
+  thumbnail: "Congress.webp",
   background: GAME_BACKGROUNDS.city,
   gameColorDark: "#292f38",
   gameColorMid: "#776940",

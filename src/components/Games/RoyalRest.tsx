@@ -2,19 +2,16 @@ import {
   CardHitArea,
   createRect,
   DropHitArea,
-  pointInRect,
   useDragDrop,
 } from "@/hooks/useDragDrop";
+import { DragGhostCards, DragHandle } from "@/components/Cards/DragDrop";
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useStateManager } from "@/hooks/useStateManager";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { delay } from "@/utils/utils";
-import { useNavigation } from "expo-router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { GestureResponderEvent } from "react-native";
-import { Animated, StyleSheet, View } from "react-native";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
-import { Card } from "../Cards/Card";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
   cardDims,
@@ -271,16 +268,9 @@ export const royalRestRules = {
 
 const gameStateInitial = createInitialState();
 
-function sameDropTarget(first: DropTarget | null, second: DropTarget | null) {
-  if (!first || !second) return first === second;
-  return first.pileIndex === second.pileIndex;
-}
-
 export default function RoyalRest() {
   const hardMode = useGameSettingValue("royalRestHardMode");
-  const navigation = useNavigation();
   const [selected, setSelected] = useState<RoyalRestMoveSource | null>(null);
-  const [hoverTarget, setHoverTarget] = useState<DropTarget | null>(null);
 
   const {
     isSettingUp,
@@ -322,13 +312,8 @@ export default function RoyalRest() {
 
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
   const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
-  const handleHoverTargetChange = useCallback((next: DropTarget | null) => {
-    setHoverTarget((previous) =>
-      sameDropTarget(previous, next) ? previous : next,
-    );
-  }, []);
-
   const {
+    hoverTarget,
     dragGhost,
     draggedCardIds,
     justDroppedCardIds,
@@ -340,15 +325,8 @@ export default function RoyalRest() {
     updateBoardOffset,
     makeDragHandlers,
   } = useDragDrop<RoyalRestMoveSource, DropTarget>({
-    findDropTarget: (pageX, pageY) => {
-      const hit = [...dropHitAreasRef.current]
-        .filter(({ rect }) => pointInRect(pageX, pageY, rect))
-        .sort((first, second) => second.priority - first.priority)[0];
-      return hit?.target ?? null;
-    },
     canDropOnTarget: (source, target) =>
       canMove(source, target.pileIndex, game, hardMode),
-    sameTarget: sameDropTarget,
     onSuccessfulDrop: async (source, target) => {
       moveSourceToTableau(source, target.pileIndex);
     },
@@ -356,7 +334,7 @@ export default function RoyalRest() {
       getSourceCards(source, game).map((card) => card.id),
     getDropHitAreas: () => dropHitAreasRef.current,
     getSourceRect,
-    onHoverTargetChange: handleHoverTargetChange,
+    getTapHandler,
   });
 
   const zones: MapZone[] = useMemo(() => {
@@ -557,15 +535,7 @@ export default function RoyalRest() {
   );
   dropHitAreasRef.current = dropHitAreas;
 
-  useEffect(() => {
-    navigation.setOptions({ gestureEnabled: false });
-    return () => navigation.setOptions({ gestureEnabled: true });
-  }, [navigation]);
-
-  function startGhostDrag(
-    source: RoyalRestMoveSource,
-    _event: GestureResponderEvent,
-  ) {
+  function startGhostDrag(source: RoyalRestMoveSource) {
     const cards = getSourceCards(source, game);
     const rect = getSourceRect(source);
     if (cards.length === 0 || !rect) return;
@@ -609,16 +579,14 @@ export default function RoyalRest() {
     setSelected(source);
   }
 
-  const tapHandlerResolverRef = useRef(
-    (_source: RoyalRestMoveSource): (() => void) =>
-      () => {},
-  );
-  tapHandlerResolverRef.current = (source) => () => onSourcePress(source);
+  function getTapHandler(source: RoyalRestMoveSource) {
+    return () => onSourcePress(source);
+  }
 
   const interactionTargets = useMemo(
     () =>
       cardHitAreas.map(({ source, rect }) => (
-        <View
+        <DragHandle
           key={`${source.zone}-${source.pileIndex}-${source.zone === "tableau" ? source.cardIndex : 0}`}
           collapsable={false}
           style={{
@@ -629,16 +597,13 @@ export default function RoyalRest() {
             width: rect.width,
             height: rect.height,
           }}
-          {...makeDragHandlers(source, startGhostDrag, () =>
-            tapHandlerResolverRef.current(source)(),
-          )}
+          gesture={makeDragHandlers(source, startGhostDrag)}
         />
       )),
     [cardHitAreas],
   );
 
   const won = !isSettingUp && isWinningState(game);
-  const ghostHasValidDrop = !!dragGhost && hoverTarget !== null;
 
   return (
     <GameWrapper
@@ -670,38 +635,15 @@ export default function RoyalRest() {
           {interactionTargets}
         </View>
         {dragGhost && (
-          <Animated.View
-            style={{
-              pointerEvents: "none",
-              position: "absolute",
-              zIndex: 4000,
-              left: dragGhost.origin.x,
-              top: dragGhost.origin.y,
-              transform: dragTranslate.getTranslateTransform(),
-            }}
-          >
-            {dragGhost.cards.map((card, index) => (
-              <View
-                key={`ghost-${card.id}`}
-                style={{
-                  position: "absolute",
-                  top: index * cardDims.tableauOffset * cardHeight,
-                  width: cardWidth,
-                  height: cardHeight,
-                  zIndex: index + 1,
-                }}
-              >
-                <Card
-                  card={card}
-                  cardWidth={cardWidth}
-                  cardSize={cardSize}
-                  cardBackPath={cardBackPath}
-                  selectColor={ghostHasValidDrop ? "green" : "none"}
-                  isSelected={ghostHasValidDrop}
-                />
-              </View>
-            ))}
-          </Animated.View>
+          <DragGhostCards
+            ghost={dragGhost}
+            translate={dragTranslate}
+            cardWidth={cardWidth}
+            cardHeight={cardHeight}
+            cardSize={cardSize}
+            cardBackPath={cardBackPath}
+            isValidDrop={hoverTarget !== null}
+          />
         )}
       </View>
     </GameWrapper>

@@ -1,18 +1,16 @@
 import { useStateManager } from "@/hooks/useStateManager";
+import { useAutoComplete } from "@/hooks/useAutoComplete";
 import {
   CardHitArea,
   createRect,
   DropHitArea,
-  pointInRect,
   useDragDrop,
 } from "@/hooks/useDragDrop";
-import { useNavigation } from "expo-router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { GestureResponderEvent } from "react-native";
-import { Animated, StyleSheet, View } from "react-native";
+import { DragGhostCards, DragHandle } from "@/components/Cards/DragDrop";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
-import { Card } from "../Cards/Card";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
   cardDims,
@@ -116,66 +114,61 @@ export function YukonBoard({
   canStack = yukonCanStack,
   winMessage = "You cleared the board!",
 }: YukonProps) {
-  const navigation = useNavigation();
-
   const [selected, setSelected] = useState<MoveSource | null>(null);
-  const [hoverTarget, setHoverTarget] = useState<DropTarget | null>(null);
   const [lastTap, setLastTap] = useState<{ key: string; at: number } | null>(
     null,
   );
   const clearDragGhostRef = useRef<(() => void) | null>(null);
 
-  const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
-    useStateManager<GameState>({
-      gameStateInitial: createYukonState(),
-      resetNonGameStates: () => {
-        setSelected(null);
-        setLastTap(null);
-        clearDragGhostRef.current?.();
-      },
-      resetAndSetup: async () => {
-        setGame((draft) => {
-          draft.setupPile = [
-            ...draft.setupPile,
-            ...draft.columns.flat(),
-            ...draft.foundations.flat(),
-          ].map(flipToBack);
-          draft.columns = Array.from(
-            { length: columnCount },
-            () => [] as PlayingCard[],
-          );
-          draft.foundations = Array.from(
-            { length: 4 },
-            () => [] as PlayingCard[],
-          );
-        });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<GameState>({
+    gameStateInitial: createYukonState(),
+    resetNonGameStates: () => {
+      setSelected(null);
+      setLastTap(null);
+      clearDragGhostRef.current?.();
+    },
+    resetAndSetup: async () => {
+      setGame((draft) => {
+        draft.setupPile = [
+          ...draft.setupPile,
+          ...draft.columns.flat(),
+          ...draft.foundations.flat(),
+        ].map(flipToBack);
+        draft.columns = Array.from(
+          { length: columnCount },
+          () => [] as PlayingCard[],
+        );
+        draft.foundations = Array.from(
+          { length: 4 },
+          () => [] as PlayingCard[],
+        );
+      });
 
-        await delay();
+      await delay();
 
-        setGame((draft) => {
-          const next = dealYukon(shuffle(draft.setupPile));
-          draft.setupPile = next.setupPile;
-          draft.columns = next.columns;
-          draft.foundations = next.foundations;
-        });
-      },
-    });
+      setGame((draft) => {
+        const next = dealYukon(shuffle(draft.setupPile));
+        draft.setupPile = next.setupPile;
+        draft.columns = next.columns;
+        draft.foundations = next.foundations;
+      });
+    },
+  });
 
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
 
   const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
-  const handleHoverTargetChange = useCallback((next: DropTarget | null) => {
-    setHoverTarget((prev) => (sameDropTarget(prev, next) ? prev : next));
-  }, []);
-
   function movingCards(source: MoveSource, snapshot: GameState): PlayingCard[] {
     return snapshot.columns[source.pileIndex].slice(source.cardIndex);
-  }
-
-  function sameDropTarget(a: DropTarget | null, b: DropTarget | null): boolean {
-    if (!a || !b) return a === b;
-    if (a.zone !== b.zone) return false;
-    return a.pileIndex === b.pileIndex;
   }
 
   function canDropOnTarget(source: MoveSource, target: DropTarget): boolean {
@@ -196,6 +189,7 @@ export function YukonBoard({
   }
 
   const {
+    hoverTarget,
     dragGhost,
     draggedCardIds,
     justDroppedCardIds,
@@ -207,19 +201,12 @@ export function YukonBoard({
     updateBoardOffset,
     makeDragHandlers,
   } = useDragDrop<MoveSource, DropTarget>({
-    findDropTarget: (pageX, pageY) => {
-      const hit = [...dropHitAreasRef.current]
-        .filter(({ rect }) => pointInRect(pageX, pageY, rect))
-        .sort((a, b) => b.priority - a.priority)[0];
-      return hit?.target ?? null;
-    },
     canDropOnTarget,
-    sameTarget: sameDropTarget,
     onSuccessfulDrop: (source, target) => applyMove(source, target),
     getDroppedCardIds: (source) => movingCards(source, game).map((c) => c.id),
     getDropHitAreas: () => dropHitAreasRef.current,
     getSourceRect,
-    onHoverTargetChange: handleHoverTargetChange,
+    getTapHandler,
   });
 
   clearDragGhostRef.current = clearDragGhost;
@@ -228,6 +215,23 @@ export function YukonBoard({
     () => game.foundations.every((pile) => pile.length === 13),
     [game.foundations],
   );
+
+  // Once every card is face up, finish the game automatically.
+  const { isAutoCompleting } = useAutoComplete({
+    game,
+    setGame,
+    isSettingUp,
+    won,
+    isBlocked: !!dragGhost,
+    getSources: (state) =>
+      state.setupPile.length === 0 &&
+      state.columns.every((pile) => pile.every((card) => card.faceUp))
+        ? state.columns
+        : null,
+    getFoundations: (state) => state.foundations,
+    canPlaceOnFoundation,
+    onStart: () => setSelected(null),
+  });
 
   // ── Zones ─────────────────────────────────────────────────────────────────
   const zones: MapZone[] = useMemo(() => {
@@ -458,13 +462,6 @@ export function YukonBoard({
 
   dropHitAreasRef.current = dropHitAreas;
 
-  useEffect(() => {
-    navigation.setOptions({ gestureEnabled: false });
-    return () => {
-      navigation.setOptions({ gestureEnabled: true });
-    };
-  }, [navigation]);
-
   // ── Move application ─────────────────────────────────────────────────────────
   function applyMove(source: MoveSource, target: DropTarget) {
     if (!canDropOnTarget(source, target)) {
@@ -528,7 +525,7 @@ export function YukonBoard({
     return createRect(origin.x, origin.y, cardWidth, cardHeight);
   }
 
-  function startGhostDrag(source: MoveSource, _event: GestureResponderEvent) {
+  function startGhostDrag(source: MoveSource) {
     const moving = movingCards(source, game);
     if (moving.length === 0) return;
     const origin = getSourceOrigin(source);
@@ -589,12 +586,9 @@ export function YukonBoard({
   }
 
   // ── Interaction overlay ──────────────────────────────────────────────────────
-  const tapHandlerResolverRef = useRef(
-    (_s: MoveSource): (() => void) =>
-      () => {},
-  );
-  tapHandlerResolverRef.current = (source: MoveSource) => () =>
-    onColumnCardTap(source.pileIndex, source.cardIndex);
+  function getTapHandler(source: MoveSource) {
+    return () => onColumnCardTap(source.pileIndex, source.cardIndex);
+  }
 
   const interactionTargets = useMemo(
     () =>
@@ -602,7 +596,7 @@ export function YukonBoard({
         const { source, rect } = hit;
         const key = `card-${source.pileIndex}-${source.cardIndex}`;
         return (
-          <View
+          <DragHandle
             key={key}
             collapsable={false}
             style={{
@@ -613,18 +607,13 @@ export function YukonBoard({
               width: rect.width,
               height: rect.height,
             }}
-            {...makeHandlers(source, () =>
-              tapHandlerResolverRef.current(source)(),
-            )}
+            gesture={makeHandlers(source)}
           />
         );
       }),
     [cardHitAreas],
   );
 
-  const ghostLeft = dragGhost ? dragGhost.origin.x : 0;
-  const ghostTop = dragGhost ? dragGhost.origin.y : 0;
-  const ghostHasValidDrop = !!dragGhost && hoverTarget !== null;
 
   return (
     <GameWrapper
@@ -633,6 +622,7 @@ export function YukonBoard({
       isLoaded={isLoaded}
       canUndo={canUndo}
       undo={undo}
+      autoCompleting={isAutoCompleting}
       winLoseMessage={winMessage}
     >
       <View style={{ flex: 1, width: "100%", gap: 12 }}>
@@ -661,39 +651,15 @@ export function YukonBoard({
           </View>
 
           {dragGhost && (
-            <Animated.View
-              style={{
-                position: "absolute",
-                zIndex: 4000,
-                pointerEvents: "none",
-                left: ghostLeft,
-                top: ghostTop,
-                transform: dragTranslate.getTranslateTransform(),
-              }}
-            >
-              {dragGhost.cards.map((card, index) => (
-                <View
-                  key={card.id}
-                  style={{
-                    position: "absolute",
-                    left: 0,
-                    top: index * cardDims.tableauOffset * cardHeight,
-                    width: cardWidth,
-                    height: cardHeight,
-                  }}
-                >
-                  <Card
-                    card={card}
-                    cardWidth={cardWidth}
-                    cardSize="tableau"
-                    selectColor={
-                      ghostHasValidDrop && index === 0 ? "green" : "none"
-                    }
-                    isSelected={ghostHasValidDrop && index === 0}
-                  />
-                </View>
-              ))}
-            </Animated.View>
+            <DragGhostCards
+              ghost={dragGhost}
+              translate={dragTranslate}
+              cardWidth={cardWidth}
+              cardHeight={cardHeight}
+              cardSize="tableau"
+              isValidDrop={hoverTarget !== null}
+              highlightLeadOnly
+            />
           )}
         </View>
       </View>

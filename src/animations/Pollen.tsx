@@ -1,11 +1,18 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
+import { StyleSheet } from "react-native";
+import Animated, {
+  cancelAnimation,
+  useAnimatedReaction,
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
 import {
-  Platform,
-  Animated as RNAnimated,
-  Easing as RNEasing,
-  StyleSheet,
-} from "react-native";
-import { type SceneProps, seeded } from "./BackgroundAnimations";
+  hash01,
+  loopFrom,
+  type SceneProps,
+  seeded,
+  useAnimationsPaused,
+} from "./BackgroundAnimations";
 
 const POLLEN_COLORS = [
   "#fffdf0",
@@ -17,67 +24,61 @@ const POLLEN_COLORS = [
 ];
 
 function PollenSpeck({ index, width, height }: SceneProps & { index: number }) {
-  const fall = useRef(new RNAnimated.Value(0)).current;
-  const horizontalPosition = useRef(new RNAnimated.Value(0)).current;
   const initialPhase = seeded(index, 116);
   const size = 1.05 + seeded(index, 110) * 2.1;
   const duration = 26000 + seeded(index, 114) * 18000;
   const startY = -size * (2 + seeded(index, 115) * 10);
+  const endY = height + size * 2;
+  const direction = seeded(index, 112) < 0.5 ? -1 : 1;
 
+  // Picked once per speck (previously re-rolled from JS after every drift).
+  const [cycleDuration] = useState(
+    () => duration * (0.8 + Math.random() * 0.4),
+  );
+
+  const progress = useSharedValue(initialPhase);
+  const cycle = useSharedValue(0);
+
+  const paused = useAnimationsPaused();
+
+  // Drifts down on a loop, all on the UI thread: from its initial phase, and
+  // after a pause from where it stopped.
   useEffect(() => {
-    let animation: RNAnimated.CompositeAnimation | undefined;
-    let cancelled = false;
-    const direction = seeded(index, 112) < 0.5 ? -1 : 1;
+    if (paused) return;
+    progress.value = loopFrom(progress.value, cycleDuration);
+    return () => cancelAnimation(progress);
+  }, [cycleDuration, paused, progress]);
 
-    function drift(fromProgress: number) {
-      const verticalDistance = height + size * 2 - startY;
-      const startX =
-        direction === 1
-          ? -width * 0.2 + Math.random() * width * 0.45
-          : width * 0.75 + Math.random() * width * 0.45;
-      const travel = direction * verticalDistance * (0.6 + Math.random() * 0.4);
-      const cycleDuration = duration * (0.8 + Math.random() * 0.4);
+  // Each new drift enters from a different place.
+  useAnimatedReaction(
+    () => progress.value,
+    (current, previous) => {
+      if (previous !== null && current < previous) cycle.value += 1;
+    },
+  );
 
-      fall.setValue(fromProgress);
-      horizontalPosition.setValue(startX + travel * fromProgress);
-      animation = RNAnimated.parallel([
-        RNAnimated.timing(fall, {
-          toValue: 1,
-          duration: cycleDuration * (1 - fromProgress),
-          easing: RNEasing.linear,
-          useNativeDriver: Platform.OS !== "web",
-        }),
-        RNAnimated.timing(horizontalPosition, {
-          toValue: startX + travel,
-          duration: cycleDuration * (1 - fromProgress),
-          easing: RNEasing.inOut(RNEasing.sin),
-          useNativeDriver: Platform.OS !== "web",
-        }),
-      ]);
-      animation.start(({ finished }) => {
-        if (finished && !cancelled) drift(0);
-      });
-    }
+  const animatedStyle = useAnimatedStyle(() => {
+    const p = progress.value;
+    const entry = hash01(index * 7 + 1, cycle.value + 1);
+    const spread = hash01(index * 7 + 2, cycle.value + 1);
 
-    drift(initialPhase);
-    return () => {
-      cancelled = true;
-      animation?.stop();
+    const startX =
+      direction === 1
+        ? -width * 0.2 + entry * width * 0.45
+        : width * 0.75 + entry * width * 0.45;
+    const travel = direction * (endY - startY) * (0.6 + spread * 0.4);
+    const eased = -(Math.cos(Math.PI * p) - 1) / 2;
+
+    return {
+      transform: [
+        { translateX: startX + travel * eased },
+        { translateY: startY + (endY - startY) * p },
+      ],
     };
-  }, [
-    duration,
-    fall,
-    height,
-    horizontalPosition,
-    index,
-    initialPhase,
-    size,
-    startY,
-    width,
-  ]);
+  });
 
   return (
-    <RNAnimated.View
+    <Animated.View
       style={[
         styles.pollen,
         {
@@ -86,16 +87,8 @@ function PollenSpeck({ index, width, height }: SceneProps & { index: number }) {
           borderRadius: size / 2,
           backgroundColor: POLLEN_COLORS[index % POLLEN_COLORS.length],
           opacity: 0.225 + seeded(index, 120) * 0.225,
-          transform: [
-            { translateX: horizontalPosition },
-            {
-              translateY: fall.interpolate({
-                inputRange: [0, 1],
-                outputRange: [startY, height + size * 2],
-              }),
-            },
-          ],
         },
+        animatedStyle,
       ]}
     />
   );

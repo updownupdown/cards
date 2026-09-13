@@ -9,16 +9,6 @@ export function roundToPixel(value: number) {
   return PixelRatio.roundToNearestPixel(value);
 }
 
-export function floorToPixel(value: number) {
-  const ratio = PixelRatio.get();
-  return Math.floor(value * ratio) / ratio;
-}
-
-export function ceilToPixel(value: number) {
-  const ratio = PixelRatio.get();
-  return Math.ceil(value * ratio) / ratio;
-}
-
 function toDevicePixels(value: number) {
   return Math.round(value * PixelRatio.get());
 }
@@ -77,7 +67,7 @@ export function isLocalDevEnvironment() {
     return true;
   }
 
-  if (typeof window === "undefined") {
+  if (typeof window === "undefined" || !window.location) {
     return false;
   }
 

@@ -1,21 +1,16 @@
-import { Text } from "@/components/common/Text";
 import { useStateManager } from "@/hooks/useStateManager";
 import {
   CardHitArea,
   createRect,
   DropHitArea,
-  pointInRect,
   useDragDrop,
 } from "@/hooks/useDragDrop";
-import { useNavigation } from "expo-router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { GestureResponderEvent } from "react-native";
-import { Animated, Pressable, StyleSheet, View } from "react-native";
+import { DragGhostCards, DragHandle } from "@/components/Cards/DragDrop";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { delay } from "@/utils/utils";
-import { Button } from "../Button/Button";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
-import { Card } from "../Cards/Card";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
   PlayingCard,
@@ -237,9 +232,7 @@ export const spiderRules = {
 const gameStateInitial = createInitialState();
 
 export default function SpiderSolitaire() {
-  const navigation = useNavigation();
   const [selected, setSelected] = useState<Selection>(null);
-  const [hoverTarget, setHoverTarget] = useState<DropTarget | null>(null);
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
 
   const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
@@ -256,11 +249,8 @@ export default function SpiderSolitaire() {
 
   const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
 
-  const handleHoverTargetChange = useCallback((next: DropTarget | null) => {
-    setHoverTarget((prev) => (sameDropTarget(prev, next) ? prev : next));
-  }, []);
-
   const {
+    hoverTarget,
     dragGhost,
     draggedCardIds,
     justDroppedCardIds,
@@ -272,14 +262,7 @@ export default function SpiderSolitaire() {
     updateBoardOffset,
     makeDragHandlers,
   } = useDragDrop<MoveSource, DropTarget>({
-    findDropTarget: (pageX, pageY) => {
-      const hit = [...dropHitAreasRef.current]
-        .filter(({ rect }) => pointInRect(pageX, pageY, rect))
-        .sort((a, b) => b.priority - a.priority)[0];
-      return hit?.target ?? null;
-    },
     canDropOnTarget,
-    sameTarget: sameDropTarget,
     onSuccessfulDrop: async (source, target) => {
       moveSourceToTableau(source, target.pileIndex);
     },
@@ -287,7 +270,7 @@ export default function SpiderSolitaire() {
       getSourceCards(source, game).map((card) => card.id),
     getDropHitAreas: () => dropHitAreasRef.current,
     getSourceRect,
-    onHoverTargetChange: handleHoverTargetChange,
+    getTapHandler,
   });
 
   const canDeal = useMemo(() => canDealStock(game), [game]);
@@ -547,14 +530,6 @@ export default function SpiderSolitaire() {
 
   dropHitAreasRef.current = dropHitAreas;
 
-  useEffect(() => {
-    navigation.setOptions({ gestureEnabled: false });
-
-    return () => {
-      navigation.setOptions({ gestureEnabled: true });
-    };
-  }, [navigation]);
-
   function clearSelection() {
     setSelected(null);
   }
@@ -577,7 +552,7 @@ export default function SpiderSolitaire() {
     return cards;
   }
 
-  function startGhostDrag(source: MoveSource, _event: GestureResponderEvent) {
+  function startGhostDrag(source: MoveSource) {
     const cards = getSourceCards(source, game);
     if (cards.length === 0) return;
 
@@ -688,11 +663,6 @@ export default function SpiderSolitaire() {
     moveSourceToTableau(selected, pileIndex);
   }
 
-  function sameDropTarget(a: DropTarget | null, b: DropTarget | null) {
-    if (!a || !b) return a === b;
-    return a.zone === b.zone && a.pileIndex === b.pileIndex;
-  }
-
   function canDropOnTarget(
     source: MoveSource,
     target: DropTarget,
@@ -714,17 +684,10 @@ export default function SpiderSolitaire() {
     return makeDragHandlers(source, startGhostDrag, onTap);
   }
 
-  const ghostLeft = dragGhost ? dragGhost.origin.x : 0;
-  const ghostTop = dragGhost ? dragGhost.origin.y : 0;
-  const ghostHasValidDrop = !!dragGhost && hoverTarget !== null;
 
-  const tapHandlerResolverRef = useRef(
-    (_source: MoveSource): (() => void) =>
-      () => {},
-  );
-  tapHandlerResolverRef.current = (source: MoveSource) => {
+  function getTapHandler(source: MoveSource) {
     return () => onTableauCardPress(source.pileIndex, source.cardIndex);
-  };
+  }
 
   const interactionTargets = useMemo(
     () =>
@@ -733,7 +696,7 @@ export default function SpiderSolitaire() {
         const rect = hit.rect;
 
         return (
-          <View
+          <DragHandle
             key={`tableau-${source.pileIndex}-${source.cardIndex}`}
             collapsable={false}
             style={{
@@ -744,9 +707,7 @@ export default function SpiderSolitaire() {
               width: rect.width,
               height: rect.height,
             }}
-            {...makeHandlers(source, () =>
-              tapHandlerResolverRef.current(source)(),
-            )}
+            gesture={makeHandlers(source)}
           />
         );
       }),
@@ -808,45 +769,15 @@ export default function SpiderSolitaire() {
           </View>
 
           {dragGhost && (
-            <Animated.View
-              style={[
-                {
-                  pointerEvents: "none",
-                  position: "absolute",
-                  zIndex: 4000,
-                  left: ghostLeft,
-                  top: ghostTop,
-                  transform: dragTranslate.getTranslateTransform(),
-                },
-              ]}
-            >
-              {dragGhost.cards.map((card, index) => (
-                <View
-                  key={`ghost-${card.id}`}
-                  style={[
-                    {
-                      position: "absolute",
-                      left: 0,
-                      opacity: 1,
-                      width: cardWidth,
-                      height: cardHeight,
-                    },
-                    {
-                      top: index * TABLEAU_FAN_OFFSET * cardHeight,
-                      zIndex: index + 1,
-                    },
-                  ]}
-                >
-                  <Card
-                    card={card}
-                    cardWidth={cardWidth}
-                    cardSize="small"
-                    selectColor={ghostHasValidDrop ? "green" : "none"}
-                    isSelected={ghostHasValidDrop}
-                  />
-                </View>
-              ))}
-            </Animated.View>
+            <DragGhostCards
+              ghost={dragGhost}
+              translate={dragTranslate}
+              cardWidth={cardWidth}
+              cardHeight={cardHeight}
+              cardSize="small"
+              fanOffset={TABLEAU_FAN_OFFSET}
+              isValidDrop={hoverTarget !== null}
+            />
           )}
         </View>
       </View>

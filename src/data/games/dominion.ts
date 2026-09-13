@@ -13,7 +13,7 @@ export const dominion: GameDefinition = {
   },
   background: GAME_BACKGROUNDS.nightSky,
   animation: GameAnimations.Stars,
-  thumbnail: "Dominion.jpg",
+  thumbnail: "Dominion.webp",
   gameColorDark: "#1d2231",
   gameColorMid: "#2b4b66",
   gameColorPale: "#dbe9eb",

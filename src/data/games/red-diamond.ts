@@ -13,7 +13,7 @@ export const redDiamond: GameDefinition = {
   },
   background: GAME_BACKGROUNDS.sahara,
   animation: GameAnimations.ManaDust,
-  thumbnail: "RedDiamond.jpg",
+  thumbnail: "RedDiamond.webp",
   gameColorDark: "#36251b",
   gameColorMid: "#a8222b",
   gameColorPale: "#ffd8d8",

@@ -16,6 +16,7 @@ import React, {
   useState,
 } from "react";
 import { Animated, Platform } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // Define the type for the function our hook will return
 type ShowToastFn = (message: string, duration?: number) => void;
@@ -33,6 +34,7 @@ interface ToastState {
 
 export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
   const { spacing } = useResponsiveMetrics();
+  const insets = useSafeAreaInsets();
   const [toast, setToast] = useState<ToastState>({
     visible: false,
     message: "",
@@ -74,10 +76,11 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
                 inputRange: [0, 1],
                 outputRange: [
                   spacing(-100),
-                  spacing(
-                    layoutDims.pagePadding * 0.5 + layoutDims.menuBarPadding,
-                  ),
-                ], // Slide in from top
+                  insets.top +
+                    spacing(
+                      layoutDims.pagePadding * 0.5 + layoutDims.menuBarPadding,
+                    ),
+                ], // Slide in from top, below the status bar
               }),
               position: "absolute",
               minHeight: spacing(

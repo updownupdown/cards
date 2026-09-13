@@ -7,7 +7,6 @@ import { View } from "react-native";
 import { Button } from "../Button/Button";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
-  cardDims,
   createDeck,
   flipAllToBack,
   flipToBack,
@@ -15,7 +14,6 @@ import {
   rankValue,
   shuffle,
   sortCardsByRank,
-  SUIT_SYMBOLS,
   zoneFanOffset,
   type CardSuit,
   type PlayingCard,
@@ -29,7 +27,7 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
 import { flexStyles } from "@/styles/flexStyles";
-import { darkenHexColor, firstLetterUppercase, delay } from "@/utils/utils";
+import { delay } from "@/utils/utils";
 import { Icon, IconName } from "@/icons";
 import { DeckPreviewModal } from "../Modals/DeckPreviewModal";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
@@ -38,15 +36,7 @@ import { textStyles } from "@/styles/textStyles";
 
 type FightClubsDifficulty = "easy" | "hard";
 type Action =
-  | "match"
-  | "sum"
-  | "any"
-  | "line"
-  | "row"
-  | "column"
-  | "down"
-  | "up"
-  | "run";
+  "match" | "sum" | "any" | "line" | "row" | "column" | "down" | "up" | "run";
 
 const ActionNames: Record<Action, string> = {
   match: "Match",

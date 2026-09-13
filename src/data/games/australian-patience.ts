@@ -5,7 +5,7 @@ export const australianPatience: GameDefinition = {
   title: "Australian Patience",
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 35, difficulty: 70, luck: 45 },
-  thumbnail: "AustralianPatience.jpg",
+  thumbnail: "AustralianPatience.webp",
   background: GAME_BACKGROUNDS.savanah,
   gameColorDark: "#29382a",
   gameColorMid: "#a35a38",

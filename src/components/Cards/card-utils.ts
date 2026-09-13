@@ -1,4 +1,3 @@
-import type { View as RNView } from "react-native";
 import { LoopRank } from "../Games/Ouroboros";
 
 export const cardDims = {
@@ -40,8 +39,6 @@ export type PlayingCard = {
 };
 
 export const SUITS: CardSuit[] = ["hearts", "clubs", "diamonds", "spades"];
-
-export const numRanks = 13;
 
 export const RANKS: StandardRank[] = [
   "A",
@@ -117,42 +114,6 @@ export function nameFromRankValue(rank: number, shortName = false) {
   }
 }
 
-export function areRanksConsecutive(
-  rank1: number,
-  rank2: number,
-  looping: boolean,
-) {
-  if (looping) return Math.abs(rank1 - rank2) % 13 === 1;
-
-  if (rank1 === 1) {
-    return rank2 === 2;
-  } else if (rank1 === 13) {
-    return rank2 === 12;
-  } else {
-    return Math.abs(rank1 - rank2) === 1;
-  }
-}
-
-export function areRanksTwoAway(
-  rank1: number,
-  rank2: number,
-  looping: boolean,
-) {
-  if (looping) return Math.abs(rank1 - rank2) % 13 === 2;
-
-  if (rank1 === 2) {
-    return rank2 === 13 || rank2 === 4;
-  } else if (rank1 === 1) {
-    return rank2 === 12 || rank2 === 3;
-  } else if (rank1 === 13) {
-    return rank2 === 11 || rank2 === 2;
-  } else if (rank1 === 12) {
-    return rank2 === 10 || rank2 === 1;
-  } else {
-    return Math.abs(rank1 - rank2) === 2;
-  }
-}
-
 export function isRed(suit: CardSuit) {
   return suit === "hearts" || suit === "diamonds";
 }
@@ -168,13 +129,6 @@ export function isAce(card: PlayingCard) {
 export function isJoker(card: PlayingCard) {
   return card.rank === "Joker";
 }
-export function isSameColor(card1: PlayingCard, card2: PlayingCard) {
-  const card1Red = isRed(card1.suit) ? "red" : "black";
-  const card2Red = isRed(card2.suit) ? "red" : "black";
-
-  return card1Red === card2Red;
-}
-
 export function isNumberRank(rank: CardRank | LoopRank) {
   return ["2", "3", "4", "5", "6", "7", "8", "9", "10"].includes(rank);
 }
@@ -200,12 +154,6 @@ export function flipTopCardToFace(cards: PlayingCard[]) {
   newCards[newCards.length - 1] = flipToFace(newCards[newCards.length - 1]);
   return newCards;
 }
-export function flipTopCardToBack(cards: PlayingCard[]) {
-  let newCards = [...cards];
-  newCards[newCards.length - 1] = flipToBack(newCards[newCards.length - 1]);
-  return newCards;
-}
-
 export function shuffle<T>(items: T[], random: () => number = Math.random) {
   const next = [...items];
   for (let i = next.length - 1; i > 0; i -= 1) {
@@ -284,7 +232,6 @@ export type Rect = {
   height: number;
 };
 
-export const DRAG_CAPTURE_THRESHOLD = 6;
 export const DRAG_MOVE_THRESHOLD = 6;
 
 export function pointInRect(pageX: number, pageY: number, rect: Rect) {
@@ -294,19 +241,6 @@ export function pointInRect(pageX: number, pageY: number, rect: Rect) {
     pageY >= rect.y &&
     pageY <= rect.y + rect.height
   );
-}
-
-export function measureNode(node: RNView | null): Promise<Rect | null> {
-  return new Promise((resolve) => {
-    if (!node) {
-      resolve(null);
-      return;
-    }
-
-    node.measureInWindow((x, y, width, height) => {
-      resolve({ x, y, width, height });
-    });
-  });
 }
 
 export function createNullArray(length: number) {
@@ -341,6 +275,3 @@ export function zoneFanOffset(
   );
 }
 
-export function sumCardValues(cards: PlayingCard[]) {
-  return cards.reduce((sum, card) => sum + rankValue(card), 0);
-}
