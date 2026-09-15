@@ -1,6 +1,11 @@
 import { getCollectibleCardImageSource } from "@/components/Cards/CardAssets";
 import { Quote } from "@/components/Nodes/QuotesCollection";
-import { getQuote, getQuoteCard, QUOTE_COUNT } from "@/data/collectibles";
+import {
+  getQuote,
+  getQuoteCard,
+  getQuoteCardName,
+  QUOTE_COUNT,
+} from "@/data/collectibles";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Colors, rgba } from "@/styles/styles";
 import { useState } from "react";
@@ -35,10 +40,9 @@ export function QuotesCollectionModal({ collectedIds, onClose }: Props) {
         onSelect={setSelectedId}
         renderItem={(id, selected, collected, size) => {
           const identity = getQuoteCard(id)!;
-          const cardName = `${identity.rank}${identity.suit.charAt(0).toUpperCase()}`;
           const imageSource = getCollectibleCardImageSource(
             identity.deck,
-            cardName,
+            getQuoteCardName(identity),
           );
           // Fit the card inside its slot. Sizing it from the slot height alone
           // made it wider than narrow (phone) slots, closing the gaps.

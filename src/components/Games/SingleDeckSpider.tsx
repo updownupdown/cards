@@ -18,12 +18,26 @@ import {
   rankValue,
   shuffle,
   top,
+  zoneFanOffset,
   type PlayingCard,
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 export type SingleDeckSpiderVariant = "simple-simon" | "spiderette";
+
+const TABLEAU_ROW = 1.2;
+const BOARD_ROWS = 7;
+
+/** A column's fan offset, tightened once it would run off the board. */
+function pileOffset(count: number) {
+  return zoneFanOffset(
+    count,
+    BOARD_ROWS - TABLEAU_ROW,
+    cardDims.tableauOffsetMin,
+    cardDims.tableauOffset,
+  );
+}
 export type SingleDeckSpiderState = {
   tableau: PlayingCard[][];
   stock: PlayingCard[];
@@ -269,8 +283,8 @@ export function SingleDeckSpider({
         pileIndex: index,
         cards: pile,
         col: index,
-        row: 1.2,
-        fan: { direction: "down" as const, offset: cardDims.tableauOffset },
+        row: TABLEAU_ROW,
+        fan: { direction: "down" as const, offset: pileOffset(pile.length) },
         placeholder: {},
       })),
     ],
@@ -327,7 +341,7 @@ export function SingleDeckSpider({
     zoneMapper,
     cardSize: "tableau",
     fixedCols: game.tableau.length,
-    fixedRows: 7,
+    fixedRows: BOARD_ROWS,
     gap: 0.1,
   });
 
@@ -339,7 +353,8 @@ export function SingleDeckSpider({
     const base = getZoneBasePos(zone);
     return createRect(
       base.x,
-      base.y + source.card * cardDims.tableauOffset * cardHeight,
+      base.y +
+        source.card * pileOffset(game.tableau[source.pile].length) * cardHeight,
       cardWidth,
       cardHeight,
     );
@@ -352,6 +367,7 @@ export function SingleDeckSpider({
       if (zone.name !== "tableau" || zone.pileIndex === undefined) return;
       const base = getZoneBasePos(zone);
       const pile = game.tableau[zone.pileIndex];
+      const offset = pileOffset(pile.length);
 
       pile.forEach((card, cardIndex) => {
         if (!card.faceUp) return;
@@ -359,11 +375,9 @@ export function SingleDeckSpider({
           source: { pile: zone.pileIndex!, card: cardIndex },
           rect: createRect(
             base.x,
-            base.y + cardIndex * cardDims.tableauOffset * cardHeight,
+            base.y + cardIndex * offset * cardHeight,
             cardWidth,
-            cardIndex === pile.length - 1
-              ? cardHeight
-              : cardDims.tableauOffset * cardHeight,
+            cardIndex === pile.length - 1 ? cardHeight : offset * cardHeight,
           ),
           priority: 10 + cardIndex,
         });
@@ -385,7 +399,7 @@ export function SingleDeckSpider({
       const pile = game.tableau[zone.pileIndex];
       const pileHeight =
         cardHeight +
-        Math.max(0, pile.length - 1) * cardDims.tableauOffset * cardHeight;
+        Math.max(0, pile.length - 1) * pileOffset(pile.length) * cardHeight;
 
       return [
         {

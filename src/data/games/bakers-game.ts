@@ -10,7 +10,7 @@ export const bakersGame: GameDefinition = {
   rating: {
     complexity: 25,
     difficulty: 55,
-    luck: 30,
+    luck: 25,
   },
   background: GAME_BACKGROUNDS.cherryBlossoms,
   animation: GameAnimations.CherryBlossom,

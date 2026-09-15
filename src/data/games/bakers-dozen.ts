@@ -9,7 +9,7 @@ export const bakersDozen: GameDefinition = {
   rating: {
     complexity: 25,
     difficulty: 70,
-    luck: 65,
+    luck: 40,
   },
   thumbnail: "BakersDozen.webp",
   background: GAME_BACKGROUNDS.london,

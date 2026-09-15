@@ -6,7 +6,7 @@ export const westcliff: GameDefinition = {
   path: "/westcliff",
   title: "Westcliff",
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
-  rating: { complexity: 25, difficulty: 35, luck: 45 },
+  rating: { complexity: 25, difficulty: 35, luck: 55 },
   background: GAME_BACKGROUNDS.interchange,
   animation: GameAnimations.Clouds,
   gameColorDark: "#27363b",

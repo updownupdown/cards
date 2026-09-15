@@ -13,7 +13,7 @@ export const cribbageSquares: GameDefinition = {
   rating: {
     complexity: 40,
     difficulty: 60,
-    luck: 75,
+    luck: 40,
   },
   thumbnail: "CribbageSquares.webp",
   background: GAME_BACKGROUNDS.cozyCabin,

@@ -8,8 +8,8 @@ export const fortyThieves: GameDefinition = {
   tags: [GameTag.StockAndWaste],
   rating: {
     complexity: 45,
-    difficulty: 85,
-    luck: 60,
+    difficulty: 65,
+    luck: 40,
   },
   thumbnail: "FortyThieves.webp",
   background: GAME_BACKGROUNDS.field,
@@ -21,7 +21,7 @@ export const fortyThieves: GameDefinition = {
   quickStart: [
     "Build all 8 foundations up by suit from A to K.",
     "Build tableau columns down by suit, moving one card at a time.",
-    "Turn cards from the stock to the waste one at a time; no redeal.",
+    "Turn cards from the stock to the waste one at a time; redeals depend on difficulty.",
   ],
   howToPlay: [
     "## Objective",

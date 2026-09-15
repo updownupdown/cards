@@ -9,13 +9,12 @@ import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
 import { Colors, rgba } from "@/styles/styles";
 import { darkenHexColor, isValidLink, lightenHexColor } from "@/utils/utils";
-import { usePathname } from "expo-router";
+import { useGamePath } from "@/hooks/useGamePath";
 import { useRef } from "react";
 import { Linking, ScrollView, View, ViewStyle } from "react-native";
 import {
   calculateWinRate,
   getGameInfo,
-  normalizeGamePath,
   type GameSettings,
 } from "../../data/game-menu";
 import { Button } from "../Button/Button";
@@ -35,7 +34,7 @@ export default function GameModal({
   onReloadGame,
   showRulesModal,
 }: Props) {
-  const pathname = normalizeGamePath(usePathname());
+  const pathname = useGamePath();
   const gameInfo = getGameInfo(pathname);
   const { settings, updateSettings, isLoading } = useGameSettings(pathname);
   const gameSpecificSettings = useGameSpecificSettings(pathname);
@@ -247,7 +246,7 @@ type CreditsSectionProps = {
 };
 
 export const CreditsSection = ({ style }: CreditsSectionProps) => {
-  const pathname = normalizeGamePath(usePathname());
+  const pathname = useGamePath();
   const gameInfo = getGameInfo(pathname);
   const { spacing } = useResponsiveMetrics();
 

@@ -145,7 +145,15 @@ export default function Layout() {
                 fullScreenGestureEnabled: false,
                 contentStyle: { backgroundColor: Colors.background },
               }}
-            />
+            >
+              {/* One game screen at a time: opening a game while another is
+                  open (e.g. from a link) replaces it instead of stacking every
+                  earlier game, still running, underneath. */}
+              <Stack.Screen
+                name="[game]"
+                dangerouslySingular={() => "game"}
+              />
+            </Stack>
             <GameLaunchOverlay />
           </View>
         </ToastProvider>

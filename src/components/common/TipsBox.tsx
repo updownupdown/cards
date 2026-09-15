@@ -1,9 +1,9 @@
 import { Text } from "@/components/common/Text";
-import { getGameInfo, normalizeGamePath } from "@/data/game-menu";
+import { getGameInfo } from "@/data/game-menu";
+import { useGamePath } from "@/hooks/useGamePath";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, layoutDims, rgba } from "@/styles/styles";
-import { usePathname } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Animated, LayoutChangeEvent, View } from "react-native";
 import { Button } from "../Button/Button";
@@ -19,7 +19,7 @@ type Props = {
 
 export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
   const onCloseRef = useRef(onClose);
-  const pathname = normalizeGamePath(usePathname());
+  const pathname = useGamePath();
   const gameInfo = getGameInfo(pathname);
   const { spacing, ui } = useResponsiveMetrics();
   const [expandedWidth, setExpandedWidth] = useState<number>();

@@ -33,7 +33,10 @@ type MapConfig = {
 type DragOptions = {
   canDropOnTarget: (source: unknown, target: unknown) => boolean;
   onSuccessfulDrop: (source: unknown, target: unknown) => void | Promise<void>;
+  getDropHitAreas?: () => { target: unknown }[];
 };
+
+type MakeDragHandlers = (source: unknown, ...rest: unknown[]) => unknown;
 
 export const harness = {
   path: "/",
@@ -41,6 +44,8 @@ export const harness = {
   wrapperProps: null as WrapperProps | null,
   mapConfig: null as MapConfig | null,
   dragOptions: null as DragOptions | null,
+  /** Sources the latest render passed to makeDragHandlers: what can be dragged now. */
+  dragSources: [] as unknown[],
 };
 
 const noopSetup = async () => {};
@@ -97,13 +102,33 @@ export function mockStateManagerModule() {
 
 export function mockDragDropModule() {
   const actual = jest.requireActual<{
-    useDragDrop: (options: DragOptions) => unknown;
+    useDragDrop: (options: DragOptions) => {
+      makeDragHandlers?: MakeDragHandlers;
+    };
   }>("@/hooks/useDragDrop");
+  let renderCount = 0;
+  let recordedRender = -1;
   return {
     ...actual,
     useDragDrop: (options: DragOptions) => {
       harness.dragOptions = options;
-      return actual.useDragDrop(options);
+      const result = actual.useDragDrop(options);
+      const render = ++renderCount;
+      const { makeDragHandlers } = result;
+      if (!makeDragHandlers) return result;
+      // A fresh wrapper each render makes games rebuild their handlers, so the
+      // recorded sources always match the cards on the table.
+      return {
+        ...result,
+        makeDragHandlers: (source: unknown, ...rest: unknown[]) => {
+          if (recordedRender !== render) {
+            harness.dragSources = [];
+            recordedRender = render;
+          }
+          harness.dragSources.push(source);
+          return makeDragHandlers(source, ...rest);
+        },
+      };
     },
   };
 }
@@ -149,6 +174,7 @@ export async function renderGame(
   harness.wrapperProps = null;
   harness.mapConfig = null;
   harness.dragOptions = null;
+  harness.dragSources = [];
 
   let renderer!: ReactTestRenderer;
   await act(async () => {

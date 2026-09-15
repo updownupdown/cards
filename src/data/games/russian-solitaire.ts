@@ -6,7 +6,7 @@ export const russianSolitaire: GameDefinition = {
   path: "/russian-solitaire",
   title: "Russian Solitaire",
   tags: [GameTag.TableauBuilding, GameTag.SequenceBuilding],
-  rating: { complexity: 35, difficulty: 80, luck: 30 },
+  rating: { complexity: 35, difficulty: 80, luck: 35 },
   thumbnail: "RussianSolitaire.webp",
   background: GAME_BACKGROUNDS.siberia,
   animation: GameAnimations.Snow,

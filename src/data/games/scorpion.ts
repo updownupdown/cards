@@ -8,7 +8,7 @@ export const scorpion: GameDefinition = {
   rating: {
     complexity: 40,
     difficulty: 75,
-    luck: 50,
+    luck: 40,
   },
   thumbnail: "Scorpion.webp",
   background: GAME_BACKGROUNDS.sahara,

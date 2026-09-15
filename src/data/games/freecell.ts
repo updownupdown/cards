@@ -10,7 +10,7 @@ export const freeCell: GameDefinition = {
   rating: {
     complexity: 20,
     difficulty: 40,
-    luck: 30,
+    luck: 25,
   },
   thumbnail: "FreeCell.webp",
   background: GAME_BACKGROUNDS.cabinInterior,

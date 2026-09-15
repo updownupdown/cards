@@ -14,11 +14,6 @@ export type GameSpecificSettingKey =
   | "pokerJokers"
   | "ascentDifficulty"
   | "ascentChallenge"
-  | "dungeonDifficulty"
-  | "merchantLoyalPatrons"
-  | "merchantCheckBack"
-  | "merchantSuperExclusive"
-  | "merchantVandals"
   | "chapterAndVerseLoyalPatrons"
   | "chapterAndVerseCheckBack"
   | "chapterAndVerseSuperExclusive"
@@ -277,18 +272,6 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         ],
       },
     ],
-    "/diffusion": [
-      {
-        key: "drawCount",
-        label: "Stock Draw",
-        type: "string",
-        applyBehavior: "immediate",
-        options: [
-          { label: "Draw 1", value: 1 },
-          { label: "Draw 3", value: 3 },
-        ],
-      },
-    ],
     "/archipelago": [
       {
         key: "islandJokers",
@@ -516,57 +499,6 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         ],
       },
     ],
-    "/merchants-solitaire": [
-      {
-        key: "merchantLoyalPatrons",
-        label: "Loyal Patrons",
-        type: "boolean",
-        booleanType: "toggle",
-        applyBehavior: "next-game",
-        description:
-          "Offers using four or more items add the customer to Guild Standing.",
-        options: [
-          { label: "Off", value: false },
-          { label: "On (Easy)", value: true },
-        ],
-      },
-      {
-        key: "merchantCheckBack",
-        label: "Check in the Back",
-        type: "boolean",
-        booleanType: "toggle",
-        applyBehavior: "next-game",
-        description: "The top Inventory item can be included in an offer.",
-        options: [
-          { label: "Off", value: false },
-          { label: "On (Easy)", value: true },
-        ],
-      },
-      {
-        key: "merchantSuperExclusive",
-        label: "Super Exclusive Offer",
-        type: "boolean",
-        booleanType: "toggle",
-        applyBehavior: "next-game",
-        description: "Items matching the Used Item's suit or rank cost $0.",
-        options: [
-          { label: "Off", value: false },
-          { label: "On (Hard)", value: true },
-        ],
-      },
-      {
-        key: "merchantVandals",
-        label: "Vandals!",
-        type: "string",
-        applyBehavior: "next-game",
-        description: "Jokers permanently lock the next available shop shelf.",
-        options: [
-          { label: "Off", value: 0 },
-          { label: "1 Joker (Hard)", value: 1 },
-          { label: "2 Jokers (Harder)", value: 2 },
-        ],
-      },
-    ],
     "/chapter-and-verse": [
       {
         key: "chapterAndVerseLoyalPatrons",
@@ -616,22 +548,6 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
           { label: "Off", value: "off" },
           { label: "1 Joker (Hard)", value: "one" },
           { label: "2 Jokers (Harder)", value: "two" },
-        ],
-      },
-    ],
-    "/relic-run": [
-      {
-        key: "dungeonDifficulty",
-        label: "Difficulty",
-        type: "string",
-        applyBehavior: "next-game",
-        description:
-          "Higher tiers start with less strength; only Beginner ignores enemy suit powers.",
-        options: [
-          { label: "Beginner (5, no powers)", value: "beginner" },
-          { label: "Intermediate (5)", value: "intermediate" },
-          { label: "Advanced (3)", value: "advanced" },
-          { label: "Bloodlust (1)", value: "bloodlust" },
         ],
       },
     ],

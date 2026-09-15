@@ -2,12 +2,12 @@ import React from "react";
 import ModalFull from "./ModalFull";
 import { Text } from "@/components/common/Text";
 import { INSTRUCTIONS_UNAVAILABLE } from "@/constants/constants";
-import { getGameInfo, normalizeGamePath } from "@/data/game-menu";
+import { getGameInfo } from "@/data/game-menu";
+import { useGamePath } from "@/hooks/useGamePath";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors } from "@/styles/styles";
-import { usePathname } from "expo-router";
 import { View, ViewStyle } from "react-native";
 import { RichText } from "../common/RichText";
 import { lightenHexColor } from "@/utils/utils";
@@ -16,7 +16,7 @@ import { useModalStyles } from "@/styles/modalStyles";
 import { CreditsSection } from "./GameModal";
 
 export const RulesModal = ({ onClose }: { onClose: () => void }) => {
-  const pathname = normalizeGamePath(usePathname());
+  const pathname = useGamePath();
   const gameInfo = getGameInfo(pathname);
   const { spacing } = useResponsiveMetrics();
   const modalStyles = useModalStyles();

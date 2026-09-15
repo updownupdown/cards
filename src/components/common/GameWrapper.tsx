@@ -2,7 +2,6 @@ import { BackgroundAnimation } from "@/animations/BackgroundAnimation";
 import {
   clearLastGameSession,
   getGameInfo,
-  normalizeGamePath,
   recordAttempt,
   recordResult,
   undoRecordedLoss,
@@ -28,7 +27,8 @@ import {
   LayerZIndexes,
   layoutDims,
 } from "@/styles/styles";
-import { router, useLocalSearchParams, usePathname } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
+import { useGamePath } from "@/hooks/useGamePath";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
@@ -103,7 +103,7 @@ export const GameWrapper = ({
   showDeviceRotateHint = false,
   autoCompleting = false,
 }: Props) => {
-  const pathname = normalizeGamePath(usePathname());
+  const pathname = useGamePath();
   const { mode } = useLocalSearchParams<{ mode?: string }>();
   const isNodesMode = mode === "nodes";
   const gameInfo = getGameInfo(pathname);
@@ -469,7 +469,7 @@ export const GameWrapper = ({
           </View>
         )}
 
-        <DeviceRotateHint enabled={showDeviceRotateHint} />
+        <DeviceRotateHint landscapeRecommended={showDeviceRotateHint} />
 
         {/* Game header */}
         <GameHeader

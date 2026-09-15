@@ -8,7 +8,7 @@ export const golf: GameDefinition = {
   rating: {
     complexity: 15,
     difficulty: 50,
-    luck: 70,
+    luck: 55,
   },
   thumbnail: "Golf.webp",
   background: GAME_BACKGROUNDS.golf,

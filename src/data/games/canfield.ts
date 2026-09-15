@@ -8,8 +8,8 @@ export const canfield: GameDefinition = {
   tags: [GameTag.StockAndWaste],
   rating: {
     complexity: 40,
-    difficulty: 75,
-    luck: 70,
+    difficulty: 65,
+    luck: 55,
   },
   thumbnail: "Canfield.webp",
   background: GAME_BACKGROUNDS.oldRoom,

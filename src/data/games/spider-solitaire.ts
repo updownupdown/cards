@@ -9,7 +9,7 @@ export const spiderSolitaire: GameDefinition = {
   rating: {
     complexity: 50,
     difficulty: 85,
-    luck: 55,
+    luck: 40,
   },
   thumbnail: "SpiderSolitaire.webp",
   background: GAME_BACKGROUNDS.dungeon,

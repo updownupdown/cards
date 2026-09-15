@@ -10,7 +10,6 @@ import {
 } from "../../../jest/game-harness";
 import type { PlayingCard } from "@/components/Cards/card-utils";
 import BlackberryPie from "@/components/Games/BlackberryPie";
-import Diffusion from "@/components/Games/Diffusion";
 import ThreePeaks from "@/components/Games/ThreePeaks";
 import TowerOfHanoi from "@/components/Games/TowerOfHanoi";
 
@@ -112,46 +111,6 @@ describe("Blackberry Pie", () => {
 
     await pressCardId(nine.id);
     await pressCardId(berry.id);
-
-    expect(outcome()).toBe("lost");
-  });
-});
-
-describe("Diffusion", () => {
-  test("placing the 52nd card wins", async () => {
-    const king = card("K", "clubs");
-    const spades = run("spades");
-    await renderGame("/diffusion", Diffusion, {
-      baseCard: spades[0],
-      reserves: [[king], [], [], []],
-      foundations: [spades, run("hearts"), run("diamonds"), run("clubs", "A", "Q")],
-      stock: [],
-      waste: [],
-      ended: false,
-      won: false,
-    });
-    expect(outcome()).toBe("playing");
-
-    await pressCardId(king.id);
-
-    expect(outcome()).toBe("won");
-  });
-
-  test("nothing left to play loses", async () => {
-    const ace = card("A", "spades");
-    const two = card("2", "spades");
-    await renderGame("/diffusion", Diffusion, {
-      baseCard: ace,
-      reserves: [[two], [card("5", "hearts")], [], []],
-      foundations: [[ace], [], [], []],
-      stock: [],
-      waste: [],
-      ended: false,
-      won: false,
-    });
-    expect(outcome()).toBe("playing");
-
-    await pressCardId(two.id);
 
     expect(outcome()).toBe("lost");
   });

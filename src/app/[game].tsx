@@ -129,7 +129,6 @@ export default function DynamicGameRoute() {
 
   // Verify parameters exist in your core definitions structure
   const GameComponent = game ? getGameComponentByPath(game) : null;
-
   // Gracefully boot back to root if game routing configurations fail
   if (!GameComponent) {
     return <Redirect href="/" />;
@@ -139,5 +138,7 @@ export default function DynamicGameRoute() {
     return <GameSpinner />;
   }
 
-  return <GameComponent />;
+  // Keyed by game: when one game replaces another on this screen, the new one
+  // starts fresh instead of inheriting the previous game's state.
+  return <GameComponent key={game} />;
 }

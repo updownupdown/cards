@@ -1,9 +1,9 @@
-import { getGameInfo, normalizeGamePath } from "@/data/game-menu";
+import { getGameInfo } from "@/data/game-menu";
 import { Colors, rgba } from "@/styles/styles";
-import { usePathname } from "expo-router";
+import { useGamePath } from "./useGamePath";
 
 export function useGameColors(opacity = 0.7) {
-  const pathname = normalizeGamePath(usePathname());
+  const pathname = useGamePath();
   const gameInfo = getGameInfo(pathname);
   const fallbackColor = Colors.background;
 

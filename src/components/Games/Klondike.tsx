@@ -21,11 +21,27 @@ import {
   RANKS,
   shuffle,
   SUITS,
+  zoneFanOffset,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
 
 const cardSize = "tableau";
+const TABLEAU_ROW = 1.4;
+// Room for a King-to-Ace run before a column starts to tighten.
+const TABLEAU_ROWS = 1 + 12 * cardDims.tableauOffset;
+// Bottom row for the stock and waste, below the tableau and its labels.
+const STOCK_ROW = TABLEAU_ROW + TABLEAU_ROWS + 0.35;
+
+/** A column's fan offset, tightened once it would run past the tableau area. */
+function pileOffset(count: number) {
+  return zoneFanOffset(
+    count,
+    TABLEAU_ROWS,
+    cardDims.tableauOffsetMin,
+    cardDims.tableauOffset,
+  );
+}
 
 type GameState = {
   tableau: PlayingCard[][];
@@ -239,9 +255,9 @@ export default function Klondike() {
       pileIndex,
       cards: pile,
       col: pileIndex,
-      row: 1.4,
+      row: TABLEAU_ROW,
       baseZIndex: 10 + pileIndex,
-      fan: { direction: "down", offset: cardDims.tableauOffset },
+      fan: { direction: "down", offset: pileOffset(pile.length) },
       placeholder: { showCount: false },
     }));
     const foundationZones: MapZone[] = game.foundations.map(
@@ -250,7 +266,7 @@ export default function Klondike() {
         name: "foundation",
         pileIndex,
         cards: pile,
-        col: 3 + pileIndex,
+        col: pileIndex,
         row: 0,
         baseZIndex: 20 + pileIndex,
         fan: { maxVisible: 1 },
@@ -258,27 +274,29 @@ export default function Klondike() {
       }),
     );
 
+    // Stock and waste sit at the bottom right, within easy thumb reach.
     return [
       {
         id: "stock",
         name: "stock",
         cards: game.stock,
         pileIndex: 0,
-        col: 0,
-        row: 0,
+        col: 6,
+        row: STOCK_ROW,
         baseZIndex: 40,
         fan: { maxVisible: 3 },
-        placeholder: {},
+        placeholder: { text: "Stock", infoPos: "above", showCount: true },
       },
       {
         id: "waste",
         name: "waste",
         cards: game.waste,
         pileIndex: 0,
-        col: 1.25,
-        row: 0,
+        col: 4.75,
+        row: STOCK_ROW,
         baseZIndex: 30,
         fan: { maxVisible: 3 },
+        placeholder: { text: "Waste", infoPos: "above", showCount: true },
       },
       ...foundationZones,
       ...tableauZones,
@@ -415,7 +433,7 @@ export default function Klondike() {
     cardMapper,
     zoneMapper,
     cardSize,
-    fixedRows: 6.5,
+    fixedRows: STOCK_ROW + 1,
     gap: 0.16,
   });
 
@@ -439,7 +457,10 @@ export default function Klondike() {
     if (source.zone === "tableau") {
       return createRect(
         base.x,
-        base.y + source.cardIndex * cardDims.tableauOffset * cardHeight,
+        base.y +
+          source.cardIndex *
+            pileOffset(game.tableau[source.pileIndex].length) *
+            cardHeight,
         cardWidth,
         cardHeight,
       );
@@ -482,7 +503,7 @@ export default function Klondike() {
             },
             rect: createRect(
               zoneRect.x,
-              zoneRect.y + cardIndex * cardDims.tableauOffset * cardHeight,
+              zoneRect.y + cardIndex * pileOffset(pile.length) * cardHeight,
               cardWidth,
               cardHeight,
             ),
@@ -526,7 +547,7 @@ export default function Klondike() {
         const pile = game.tableau[zone.pileIndex];
         const pileHeight =
           cardHeight +
-          Math.max(0, pile.length - 1) * cardDims.tableauOffset * cardHeight;
+          Math.max(0, pile.length - 1) * pileOffset(pile.length) * cardHeight;
 
         areas.push({
           target: { zone: "tableau", pileIndex: zone.pileIndex },

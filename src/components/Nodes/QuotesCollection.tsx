@@ -1,7 +1,7 @@
 import { getCollectibleCardImageSource } from "@/components/Cards/CardAssets";
 import { Text } from "@/components/common/Text";
 import { quotes } from "@/components/Collectibles/QuotesText";
-import type { QuoteCard } from "@/data/collectibles";
+import { getQuoteCardName, type QuoteCard } from "@/data/collectibles";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Colors, rgba } from "@/styles/styles";
 import { Image } from "expo-image";
@@ -18,9 +18,7 @@ type QuoteProps = {
 
 export function Quote({ quote, card, showCard = false }: QuoteProps) {
   const { spacing } = useResponsiveMetrics();
-  const cardName = card
-    ? `${card.rank}${card.suit.charAt(0).toUpperCase()}`
-    : undefined;
+  const cardName = card ? getQuoteCardName(card) : undefined;
   const cardImage =
     card && cardName
       ? getCollectibleCardImageSource(card.deck, cardName)

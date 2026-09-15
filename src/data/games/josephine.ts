@@ -4,7 +4,7 @@ export const josephine: GameDefinition = {
   path: "/josephine",
   title: "Josephine",
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
-  rating: { complexity: 40, difficulty: 65, luck: 45 },
+  rating: { complexity: 40, difficulty: 65, luck: 40 },
   thumbnail: "Josephine.webp",
   background: GAME_BACKGROUNDS.greece,
   gameColorDark: "#332e40",

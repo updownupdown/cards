@@ -12,7 +12,7 @@ export const pokerSquares: GameDefinition = {
   rating: {
     complexity: 35,
     difficulty: 65,
-    luck: 75,
+    luck: 40,
   },
   thumbnail: "PokerSquares.webp",
   background: GAME_BACKGROUNDS.casino,

@@ -9,7 +9,7 @@ export const rogueRun: GameDefinition = {
   rating: {
     complexity: 55,
     difficulty: 70,
-    luck: 30,
+    luck: 35,
   },
   thumbnail: "RogueRun.webp",
   background: GAME_BACKGROUNDS.stoneTunnel,

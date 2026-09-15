@@ -8,7 +8,7 @@ import { TAO_CHAPTERS } from "@/components/Nodes/TaoChapters";
 import { QUOTES_COLLECTION } from "@/components/Nodes/QuotesCollection";
 
 export const TAO_CHAPTER_COUNT = 81;
-export const QUOTE_COUNT = 104;
+export const QUOTE_COUNT = 156;
 
 export type TaoId = number;
 export type QuoteId = number;
@@ -17,11 +17,16 @@ export type CollectibleReward =
   | { type: "tao"; id: TaoId }
   | { type: "quote"; id: QuoteId };
 
+export type QuoteDeck = "white" | "black" | "gold";
+
 export type QuoteCard = {
-  deck: "white" | "black";
+  deck: QuoteDeck;
   suit: CardSuit;
   rank: StandardRank;
 };
+
+const DECK_SIZE = SUITS.length * RANKS.length;
+const QUOTE_DECKS: QuoteDeck[] = ["white", "black", "gold"];
 
 export function getTaoChapter(id: TaoId) {
   return id >= 1 && id <= TAO_CHAPTER_COUNT ? TAO_CHAPTERS[id - 1] : undefined;
@@ -31,17 +36,27 @@ export function getQuote(id: QuoteId) {
   return id >= 1 && id <= QUOTE_COUNT ? QUOTES_COLLECTION[id - 1] : undefined;
 }
 
+/**
+ * Each quote is shown on a collectible card: IDs 1-52 are the white deck,
+ * 53-104 the black deck and 105-156 the gold deck, each from Ace to King in
+ * the suit order in card-utils.ts.
+ */
 export function getQuoteCard(id: QuoteId): QuoteCard | undefined {
   if (!Number.isInteger(id) || id < 1 || id > QUOTE_COUNT) return undefined;
 
   const zeroBasedId = id - 1;
-  const cardIndex = zeroBasedId % 52;
+  const cardIndex = zeroBasedId % DECK_SIZE;
 
   return {
-    deck: zeroBasedId < 52 ? "white" : "black",
+    deck: QUOTE_DECKS[Math.floor(zeroBasedId / DECK_SIZE)],
     suit: SUITS[Math.floor(cardIndex / RANKS.length)],
     rank: RANKS[cardIndex % RANKS.length],
   };
+}
+
+/** Card image name, e.g. "QH". */
+export function getQuoteCardName(card: QuoteCard) {
+  return `${card.rank}${card.suit.charAt(0).toUpperCase()}`;
 }
 
 export function validateCollectibleCatalogs() {

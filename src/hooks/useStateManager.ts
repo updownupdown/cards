@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useLocalSearchParams, usePathname } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
+import { useGamePath } from "./useGamePath";
 import {
   isGamePath,
   loadLastGameSession,
@@ -115,7 +116,7 @@ export function useStateManager<T>({
   resetAndSetup,
   postSetupAction,
 }: Props<T>) {
-  const pathname = normalizeGamePath(usePathname());
+  const pathname = useGamePath();
   const { mode } = useLocalSearchParams<{ mode?: string }>();
   const launchMode = mode === "nodes" ? "nodes" : "standard";
   const { settings: globalSettings, isLoading: isGlobalSettingsLoading } =

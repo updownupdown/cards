@@ -2,7 +2,7 @@ import { cardDims, PlayingCard } from "@/components/Cards/card-utils";
 import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { roundToPixel } from "@/utils/utils";
-import { usePathname } from "expo-router";
+import { useGamePath } from "@/hooks/useGamePath";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -112,7 +112,7 @@ export function useCardMap({
   cardMapper,
   zoneMapper,
 }: MapConfig) {
-  const pathname = usePathname();
+  const pathname = useGamePath();
   const cardBackPath = pathname;
   const insets = useSafeAreaInsets();
   const [cardImagesLoaded, setCardImagesLoaded] = useState(() =>
@@ -174,7 +174,11 @@ export function useCardMap({
     gridHeightPadded,
   } = useMemo(() => {
     const headerHeight = getHeaderHeightWithInset(insets.top, responsiveScale);
-    const containerHeight = Math.max(screenHeightActual - headerHeight, 0);
+    // Keep the board clear of the system navigation bar at the bottom.
+    const containerHeight = Math.max(
+      screenHeightActual - headerHeight - insets.bottom,
+      0,
+    );
     const containerWidth = screenWidthActual;
 
     const gapYUnits = gap * cardDims.aspectRatio;
@@ -238,6 +242,7 @@ export function useCardMap({
     gap,
     gridCols,
     gridRows,
+    insets.bottom,
     insets.top,
     paddingBottom,
     paddingLeft,

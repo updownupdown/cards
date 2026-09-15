@@ -30,7 +30,6 @@ export const GAME_THUMBNAIL_ASSETS = {
   "Crownslayer.webp": require("@/assets/thumbnails/Crownslayer.webp"),
   "DefaultThumbnail.webp": require("@/assets/thumbnails/DefaultThumbnail.webp"),
   "Delta21.webp": require("@/assets/thumbnails/Delta21.webp"),
-  "Diffusion.webp": require("@/assets/thumbnails/Diffusion.webp"),
   "Diplomat.webp": require("@/assets/thumbnails/Diplomat.webp"),
   "Dominion.webp": require("@/assets/thumbnails/Dominion.webp"),
   "Dynasty.webp": require("@/assets/thumbnails/Dynasty.webp"),

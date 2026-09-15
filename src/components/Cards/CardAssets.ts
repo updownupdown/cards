@@ -1,5 +1,5 @@
 import { Image } from "expo-image";
-import { ImageSourcePropType } from "react-native";
+import { ImageSourcePropType, Platform } from "react-native";
 import { CardSizes } from "./CardStyles";
 
 type ImageLoadSource = Parameters<typeof Image.loadAsync>[0];
@@ -40,7 +40,7 @@ const cardContext = require.context(
 const collectibleCardContext = require.context(
   "../../../assets/cards",
   true,
-  /^\.\/(?:pale|dark)\/[^/]+\.webp$/,
+  /^\.\/(?:pale|dark|gold)\/[^/]+\.webp$/,
 );
 const cardBackContext = require.context(
   "../../../assets/cards/backs",
@@ -81,11 +81,17 @@ export function getCardBackImage(gamePath?: string) {
   );
 }
 
+const COLLECTIBLE_DECK_FOLDERS = {
+  white: "pale",
+  black: "dark",
+  gold: "gold",
+} as const;
+
 export function getCollectibleCardImageSource(
-  deck: "white" | "black",
+  deck: keyof typeof COLLECTIBLE_DECK_FOLDERS,
   cardName: string,
 ) {
-  return collectibleCardFiles[deck === "white" ? "pale" : "dark"][cardName];
+  return collectibleCardFiles[COLLECTIBLE_DECK_FOLDERS[deck]][cardName];
 }
 
 export function isCardImageSetPreloaded(
@@ -136,7 +142,14 @@ function preloadImages(
     );
     const failedCount = results.length - loaded.length;
 
-    loadedImages.set(preloadKey, loaded);
+    // On native, card views decode their own copies at the size they're shown,
+    // so these full-size decodes only confirm the images are ready. Holding on
+    // to them kept every card size and every visited game's back in memory for
+    // the whole session (over 400 MB after a dozen games), so release them.
+    if (Platform.OS !== "web") {
+      loaded.forEach((image) => image.release());
+    }
+    loadedImages.set(preloadKey, Platform.OS === "web" ? loaded : []);
 
     if (failedCount > 0) {
       console.warn(
@@ -171,16 +184,17 @@ function buildCardBackFiles() {
 }
 
 function buildCollectibleCardFiles() {
-  const cardFiles = { pale: {}, dark: {} } as Record<
-    "pale" | "dark",
+  type DeckFolder = "pale" | "dark" | "gold";
+  const cardFiles = { pale: {}, dark: {}, gold: {} } as Record<
+    DeckFolder,
     Record<string, ImageSourcePropType>
   >;
 
   for (const key of collectibleCardContext.keys()) {
-    const match = key.match(/^\.\/(pale|dark)\/([^/]+)\.webp$/);
+    const match = key.match(/^\.\/(pale|dark|gold)\/([^/]+)\.webp$/);
     if (!match) continue;
 
-    const [, deck, cardName] = match as [string, "pale" | "dark", string];
+    const [, deck, cardName] = match as [string, DeckFolder, string];
     cardFiles[deck][cardName] = collectibleCardContext(
       key,
     ) as ImageSourcePropType;

@@ -6,7 +6,7 @@ export const thumbAndPouch: GameDefinition = {
   path: "/thumb-and-pouch",
   title: "Thumb and Pouch",
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
-  rating: { complexity: 25, difficulty: 30, luck: 35 },
+  rating: { complexity: 25, difficulty: 30, luck: 55 },
   background: GAME_BACKGROUNDS.cozyCabin,
   animation: GameAnimations.Dust,
   gameColorDark: "#3b3028",

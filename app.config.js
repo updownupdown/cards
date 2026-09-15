@@ -8,7 +8,10 @@ const config = {
   orientation: "default",
   icon: "./assets/app-icon/icon.png",
   scheme: "cards",
-  userInterfaceStyle: "automatic",
+  // The app is always dark. On a light-mode phone, "automatic" gave native
+  // modals (which React Native draws edge-to-edge with a contrast scrim) a
+  // light navigation bar with dark buttons.
+  userInterfaceStyle: "dark",
   backgroundColor: "#343f49",
   primaryColor: "#C62440",
   ios: {
@@ -25,6 +28,14 @@ const config = {
     },
     predictiveBackGestureEnabled: false,
     package: "com.updownupdown.cards",
+    // Added by the native template but unused: the app keeps everything in its
+    // own storage, and the overlay permission is only for development tools.
+    // Play flags SYSTEM_ALERT_WINDOW in review.
+    blockedPermissions: [
+      "android.permission.SYSTEM_ALERT_WINDOW",
+      "android.permission.READ_EXTERNAL_STORAGE",
+      "android.permission.WRITE_EXTERNAL_STORAGE",
+    ],
   },
   androidStatusBar: {
     barStyle: "light-content",
@@ -48,6 +59,17 @@ const config = {
   },
   plugins: [
     "expo-router",
+    [
+      "expo-navigation-bar",
+      {
+        // Without this, Android lays a light translucent scrim under the
+        // three-button navigation bar. Screens draw under it (edge-to-edge)
+        // and pad their content by the bottom inset, so keep it transparent
+        // with light buttons over the dark app backgrounds.
+        enforceContrast: false,
+        barStyle: "light",
+      },
+    ],
     [
       "expo-splash-screen",
       {

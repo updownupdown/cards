@@ -22,12 +22,26 @@ import {
   rankValue,
   shuffle,
   top,
+  zoneFanOffset,
   type PlayingCard,
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 export type FanVariant = "la-belle-lucie" | "shamrocks" | "flower-garden";
+
+/**
+ * A fan's offset, tightened once it would run into the next row of fans (or,
+ * in Flower Garden, off the bottom of the board).
+ */
+function fanOffset(count: number, variant: FanVariant) {
+  return zoneFanOffset(
+    count,
+    variant === "flower-garden" ? 3.7 : 1.8,
+    cardDims.tableauOffsetMin,
+    cardDims.tableauOffset,
+  );
+}
 
 type FanConfig = {
   tableauCount: number;
@@ -509,7 +523,7 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
         col: 1 + index,
         row: 3.5,
         baseZIndex: 10 + index,
-        fan: { direction: "down", offset: cardDims.tableauOffset },
+        fan: { direction: "down", offset: fanOffset(pile.length, variant) },
         placeholder: {},
       }));
       return [setupZone, ...foundationZones, ...reserveZones, ...tableauZones];
@@ -523,7 +537,7 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
       col: index % 6,
       row: 1.2 + Math.floor(index / 6) * 2,
       baseZIndex: 10 + index,
-      fan: { direction: "down", offset: cardDims.tableauOffset },
+      fan: { direction: "down", offset: fanOffset(pile.length, variant) },
       placeholder: { hideBackground: pile.length === 0 },
     }));
     const redealZone: MapZone[] = config.redeals
@@ -668,7 +682,9 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
     return createRect(
       base.x,
       base.y +
-        Math.max(0, pileLength - 1) * cardDims.tableauOffset * cardHeight,
+        Math.max(0, pileLength - 1) *
+          fanOffset(pileLength, variant) *
+          cardHeight,
       cardWidth,
       cardHeight,
     );
@@ -692,7 +708,8 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
         source: { zone: zone.name, index: zone.pileIndex },
         rect: createRect(
           base.x,
-          base.y + cardIndex * cardDims.tableauOffset * cardHeight,
+          base.y +
+            cardIndex * fanOffset(zone.cards.length, variant) * cardHeight,
           cardWidth,
           cardHeight,
         ),
@@ -701,7 +718,7 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
     });
 
     return areas;
-  }, [cardHeight, cardWidth, getZoneBasePos, zones]);
+  }, [cardHeight, cardWidth, getZoneBasePos, variant, zones]);
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => updateBoardOffset());
@@ -727,7 +744,9 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
       const height =
         zone.name === "tableau"
           ? cardHeight +
-            Math.max(0, pile.length - 1) * cardDims.tableauOffset * cardHeight
+            Math.max(0, pile.length - 1) *
+              fanOffset(pile.length, variant) *
+              cardHeight
           : cardHeight;
 
       areas.push({

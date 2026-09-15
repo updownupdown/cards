@@ -9,7 +9,7 @@ export const acesUp: GameDefinition = {
   rating: {
     complexity: 15,
     difficulty: 80,
-    luck: 80,
+    luck: 75,
   },
   thumbnail: "AcesUp.webp",
   background: GAME_BACKGROUNDS.castleIndoors,

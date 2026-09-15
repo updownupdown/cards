@@ -1,0 +1,39 @@
+import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameAnimations } from "@/animations";
+
+export const pussInTheCorner: GameDefinition = {
+  path: "/puss-in-the-corner",
+  title: "Puss in the Corner",
+  tags: [GameTag.StockAndWaste, GameTag.EasyToLearn],
+  rating: {
+    complexity: 25,
+    difficulty: 40,
+    luck: 55,
+  },
+  thumbnail: "DefaultThumbnail.webp",
+  background: GAME_BACKGROUNDS.greenhouse,
+  animation: GameAnimations.Pollen,
+  gameColorDark: "#2e2418",
+  gameColorMid: "#b8843c",
+  gameColorPale: "#fbeccd",
+  cardDescription:
+    "Steer the stock into four corner piles, building by colour with one redeal.",
+  quickStart: [
+    "Foundations build up by colour from the Aces.",
+    "Tap a waste pile to drop the stock card on it.",
+    "When the stock runs out, tap it once to redeal.",
+  ],
+  howToPlay: [
+    "## Objective",
+    "Move all 52 cards onto the four foundations, built up from Ace to King **by colour**.",
+
+    "## Rules",
+    "- The four **Aces** start on the foundations.",
+    "- A foundation accepts the next rank in **either suit of its colour**.",
+    "- Each stock card must be placed on one of the **four waste piles**, or played to a foundation.",
+    "- Any card may go on any waste pile, but cards can never move between waste piles.",
+    "- **Double-tap** the stock card or a waste pile's top card to play it to a foundation.",
+    "- When the stock is empty, tap it to gather the waste piles in order for **one redeal**.",
+  ],
+};

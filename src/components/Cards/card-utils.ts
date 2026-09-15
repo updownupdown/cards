@@ -8,6 +8,8 @@ export const cardDims = {
   layoutPadding: 0.4, // $ of card width or height
   layoutGap: 0.25, // % of card width
   tableauOffset: 0.34,
+  // Tightest a tableau fan may overlap while each card's index stays readable.
+  tableauOffsetMin: 0.22,
   tableauOffsetHorizontal: 0.37,
   smallCardOffset: 0.45,
 };

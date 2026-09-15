@@ -6,7 +6,7 @@ export const fortress: GameDefinition = {
   path: "/fortress",
   title: "Fortress",
   tags: [GameTag.SequenceBuilding],
-  rating: { complexity: 40, difficulty: 70, luck: 35 },
+  rating: { complexity: 40, difficulty: 70, luck: 25 },
   thumbnail: "Fortress.webp",
   background: GAME_BACKGROUNDS.fortress,
   animation: GameAnimations.Clouds,

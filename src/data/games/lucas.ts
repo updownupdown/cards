@@ -6,7 +6,7 @@ export const lucas: GameDefinition = {
   path: "/lucas",
   title: "Lucas",
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
-  rating: { complexity: 35, difficulty: 40, luck: 45 },
+  rating: { complexity: 35, difficulty: 40, luck: 40 },
   thumbnail: "Lucas.webp",
   background: GAME_BACKGROUNDS.oldRoom,
   animation: GameAnimations.Dust,

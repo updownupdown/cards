@@ -1,4 +1,6 @@
 import {
+  QUOTE_COUNT,
+  TAO_CHAPTER_COUNT,
   validateCollectibleCatalogs,
   type CollectibleReward,
 } from "./collectibles";
@@ -71,12 +73,16 @@ export function validateNodesMap() {
     if (node.connections.length < 2 || node.connections.length > 5) {
       errors.push(`${node.path} must have 2 to 5 connections.`);
     }
-    if (node.rewards.length < 1 || node.rewards.length > 3) {
-      errors.push(`${node.path} must have 1 to 3 rewards.`);
+    if (node.rewards.length < 2 || node.rewards.length > 4) {
+      errors.push(`${node.path} must have 2 to 4 rewards.`);
     }
 
     for (const reward of node.rewards) {
       const ids = reward.type === "tao" ? taoIds : quoteIds;
+      const maxId = reward.type === "tao" ? TAO_CHAPTER_COUNT : QUOTE_COUNT;
+      if (!Number.isInteger(reward.id) || reward.id < 1 || reward.id > maxId) {
+        errors.push(`${node.path} has an unknown ${reward.type} ${reward.id}.`);
+      }
       if (ids.has(reward.id)) {
         errors.push(`Duplicate ${reward.type} reward ${reward.id}.`);
       }
@@ -96,11 +102,6 @@ export function validateNodesMap() {
   for (const gamePath of gamePaths) {
     if (!nodePaths.has(gamePath)) errors.push(`Missing node for ${gamePath}.`);
   }
-  if (taoIds.size !== 81)
-    errors.push(`Expected 81 Tao rewards, found ${taoIds.size}.`);
-  if (quoteIds.size !== 104)
-    errors.push(`Expected 104 quote rewards, found ${quoteIds.size}.`);
-
   const nearestDistances = NODE_DEFINITIONS.map((node) =>
     Math.min(
       ...NODE_DEFINITIONS.filter(

@@ -630,4 +630,318 @@ Every cubic inch of space is a miracle.`,
     author: `Ralph Waldo Emerson`,
     source: `"Civilization," Society and Solitude (1870)`,
   },
+
+  // Quotes 105 onwards, sourced from Wikiquote.
+
+  {
+    text: `Trying to define yourself is like trying to bite your own teeth.`,
+    author: `Alan Watts`,
+    source: `As quoted in Life magazine (April 21, 1961)`,
+  },
+
+  {
+    text: `A very great deal more truth can become known than can be proven.`,
+    author: `Richard Feynman`,
+    source: `Nobel Lecture (December 11, 1965)`,
+  },
+
+  {
+    text: `Life is the spirit incarnate in time.`,
+    author: `Buckminster Fuller`,
+    source: `4D Timelock (1928)`,
+  },
+
+  {
+    text: `To have faith is to trust yourself to the water. When you swim you don't grab hold of the water, because if you do you will sink and drown. Instead you relax, and float.`,
+    author: `Alan Watts`,
+    source: `The Essence of Alan Watts (1977)`,
+  },
+
+  {
+    text: `Science is the belief in the ignorance of experts.`,
+    author: `Richard Feynman`,
+    source: `"What is Science?", address to the National Science Teachers Association (1966)`,
+  },
+
+  {
+    text: `Don't fight forces, use them.`,
+    author: `Buckminster Fuller`,
+    source: `Shelter (1932)`,
+  },
+
+  {
+    text: `This is the real secret of life—to be completely engaged with what you are doing in the here and now. And instead of calling it work, realize it is play.`,
+    author: `Alan Watts`,
+    source: `The Essence of Alan Watts (1977)`,
+  },
+
+  {
+    text: `The first principle is that you must not fool yourself — and you are the easiest person to fool.`,
+    author: `Richard Feynman`,
+    source: `"Cargo Cult Science," Caltech commencement address (1974)`,
+  },
+
+  {
+    text: `God, to me, it seems is a verb, not a noun, proper or improper.`,
+    author: `Buckminster Fuller`,
+    source: `No More Secondhand God (1963)`,
+  },
+
+  {
+    text: `The more we struggle for life (as pleasure), the more we are actually killing what we love.`,
+    author: `Alan Watts`,
+    source: `The Wisdom of Insecurity (1951)`,
+  },
+
+  {
+    text: `The opposite of nature is impossible.`,
+    author: `Buckminster Fuller`,
+    source: `Public lecture at Columbia University (1965)`,
+  },
+
+  {
+    text: `The greater part of human activity is designed to make permanent those experiences and joys which are only lovable because they are changing.`,
+    author: `Alan Watts`,
+    source: `The Wisdom of Insecurity (1951)`,
+  },
+
+  {
+    text: `What I cannot create, I do not understand.`,
+    author: `Richard Feynman`,
+    source: `Written on his blackboard at the time of his death (1988)`,
+  },
+
+  {
+    text: `Thinking is a momentary dismissal of irrelevancies.`,
+    author: `Buckminster Fuller`,
+    source: `Utopia or Oblivion: The Prospects of Humanity (1969)`,
+  },
+
+  {
+    text: `It must be obvious... that there is a contradiction in wanting to be perfectly secure in a universe whose very nature is momentariness and fluidity.`,
+    author: `Alan Watts`,
+    source: `The Wisdom of Insecurity (1951)`,
+  },
+
+  {
+    text: `The imagination of nature is far, far greater than the imagination of man.`,
+    author: `Richard Feynman`,
+    source: `"The Value of Science" (1955)`,
+  },
+
+  {
+    text: `I live on Earth at present, and I don't know what I am. I know that I am not a category. I am not a thing — a noun. I seem to be a verb, an evolutionary process — an integral function of the universe.`,
+    author: `Buckminster Fuller`,
+    source: `I Seem to Be a Verb (1970)`,
+  },
+
+  {
+    text: `Running away from fear is fear; fighting pain is pain; trying to be brave is being scared. If the mind is in pain, the mind is pain. The thinker has no other form than his thought.`,
+    author: `Alan Watts`,
+    source: `The Wisdom of Insecurity (1951)`,
+  },
+
+  {
+    text: `The "paradox" is only a conflict between reality and your feeling of what reality "ought to be."`,
+    author: `Richard Feynman`,
+    source: `The Feynman Lectures on Physics (1964)`,
+  },
+
+  {
+    text: `Pollution is nothing but resources we're not harvesting. We allow them to disperse because we've been ignorant of their value.`,
+    author: `Buckminster Fuller`,
+    source: `As quoted in LIFE magazine (February 26, 1971)`,
+  },
+
+  {
+    text: `There is no formula for generating the authentic warmth of love. It cannot be copied.`,
+    author: `Alan Watts`,
+    source: `The Wisdom of Insecurity (1951)`,
+  },
+
+  {
+    text: `Nature uses only the longest threads to weave her patterns, so each small piece of her fabric reveals the organization of the entire tapestry.`,
+    author: `Richard Feynman`,
+    source: `The Character of Physical Law (1965)`,
+  },
+
+  {
+    text: `I am convinced all of humanity is born with more gifts than we know. Most are born geniuses and just get de-geniused rapidly.`,
+    author: `Buckminster Fuller`,
+    source: `As quoted in People magazine (1974)`,
+  },
+
+  {
+    text: `To be free from convention is not to spurn it but not to be deceived by it. It is to be able to use it as an instrument instead of being used by it.`,
+    author: `Alan Watts`,
+    source: `The Way of Zen (1957)`,
+  },
+
+  {
+    text: `Our imagination is stretched to the utmost, not, as in fiction, to imagine things which are not really there, but just to comprehend those things which are there.`,
+    author: `Richard Feynman`,
+    source: `The Character of Physical Law (1965)`,
+  },
+
+  {
+    text: `Dare to be naïve.`,
+    author: `Buckminster Fuller`,
+    source: `Synergetics: Explorations in the Geometry of Thinking (1975)`,
+  },
+
+  {
+    text: `I think I can safely say that nobody understands quantum mechanics.`,
+    author: `Richard Feynman`,
+    source: `The Character of Physical Law (1965)`,
+  },
+
+  {
+    text: `Synergy means behavior of whole systems unpredicted by the behavior of their parts taken separately.`,
+    author: `Buckminster Fuller`,
+    source: `Synergetics: Explorations in the Geometry of Thinking (1975)`,
+  },
+
+  {
+    text: `When a man no longer confuses himself with the definition of himself that others have given him, he is at once universal and unique.`,
+    author: `Alan Watts`,
+    source: `Psychotherapy, East and West (1961)`,
+  },
+
+  {
+    text: `Unity is plural and, at minimum, is two.`,
+    author: `Buckminster Fuller`,
+    source: `Synergetics: Explorations in the Geometry of Thinking (1975)`,
+  },
+
+  {
+    text: `If you get the message, hang up the phone.`,
+    author: `Alan Watts`,
+    source: `The Joyous Cosmology (1962)`,
+  },
+
+  {
+    text: `The theory of quantum electrodynamics describes Nature as absurd from the point of view of common sense. And it agrees fully with experiment. So I hope you accept Nature as She is — absurd.`,
+    author: `Richard Feynman`,
+    source: `QED: The Strange Theory of Light and Matter (1985)`,
+  },
+
+  {
+    text: `How is it possible that a being with such sensitive jewels as the eyes, such enchanted musical instruments as the ears, and such fabulous arabesque of nerves as the brain can experience itself anything less than a god.`,
+    author: `Alan Watts`,
+    source: `The Book on the Taboo Against Knowing Who You Are (1966)`,
+  },
+
+  {
+    text: `I don't know what's the matter with people: they don't learn by understanding; they learn by some other way — by rote or something. Their knowledge is so fragile!`,
+    author: `Richard Feynman`,
+    source: `Surely You're Joking, Mr. Feynman! (1985)`,
+  },
+
+  {
+    text: `Every individual is a unique manifestation of the Whole, as every branch is a particular outreaching of the tree.`,
+    author: `Alan Watts`,
+    source: `The Book on the Taboo Against Knowing Who You Are (1966)`,
+  },
+
+  {
+    text: `Realistic thinking accrues only after mistake making, which is the cosmic wisdom's most cogent way of teaching each of us how to carry on.`,
+    author: `Buckminster Fuller`,
+    source: `Humans in Universe (1983)`,
+  },
+
+  {
+    text: `There is nothing wrong with meditating just to meditate, in the same way that you listen to music just for the music.`,
+    author: `Alan Watts`,
+    source: `The Book on the Taboo Against Knowing Who You Are (1966)`,
+  },
+
+  {
+    text: `My mother ... had a wonderful sense of humor, and I learned from her that the highest forms of understanding we can achieve are laughter and human compassion.`,
+    author: `Richard Feynman`,
+    source: `What Do You Care What Other People Think? (1988)`,
+  },
+
+  {
+    text: `Are you spontaneously enthusiastic about everyone having everything you can have?`,
+    author: `Buckminster Fuller`,
+    source: `Critical Path (1981)`,
+  },
+
+  {
+    text: `I don't like honors. ... I've already got the prize: the prize is the pleasure of finding the thing out, the kick in the discovery, the observation that other people use it. Those are the real things.`,
+    author: `Richard Feynman`,
+    source: `No Ordinary Genius (1994)`,
+  },
+
+  {
+    text: `There is no joy equal to that of being able to work for all humanity and doing what you're doing well.`,
+    author: `Buckminster Fuller`,
+    source: `Critical Path (1981)`,
+  },
+
+  {
+    text: `Living, loving, being natural or sincere—all these are spontaneous forms of behavior: they happen "of themselves" like digesting food or growing hair.`,
+    author: `Alan Watts`,
+    source: `The Book on the Taboo Against Knowing Who You Are (1966)`,
+  },
+
+  {
+    text: `Some people say, "How can you live without knowing?" I do not know what they mean. I always live without knowing. That is easy. How you get to know is what I want to know.`,
+    author: `Richard Feynman`,
+    source: `The Meaning of It All (1999)`,
+  },
+
+  {
+    text: `The nearest each of us can come to God is by loving the truth.`,
+    author: `Buckminster Fuller`,
+    source: `Critical Path (1981)`,
+  },
+
+  {
+    text: `Love is metaphysical gravity.`,
+    author: `Buckminster Fuller`,
+    source: `Critical Path (1981)`,
+  },
+
+  {
+    text: `In the same way as the fruit comes out of the tree, the egg from the chicken, and the baby from the womb, we are symptomatic of the universe.`,
+    author: `Alan Watts`,
+    source: `Ways of Liberation (1983)`,
+  },
+
+  {
+    text: `I don't know anything, but I do know that everything is interesting if you go into it deeply enough.`,
+    author: `Richard Feynman`,
+    source: `The Pleasure of Finding Things Out (1999)`,
+  },
+
+  {
+    text: `A person who thinks all the time has nothing to think about except thoughts. So he loses touch with reality, and lives in a world of illusion.`,
+    author: `Alan Watts`,
+    source: `Alan Watts Teaches Meditation (1992)`,
+  },
+
+  {
+    text: `Study hard what interests you the most in the most undisciplined, irreverent and original manner possible.`,
+    author: `Richard Feynman`,
+    source: `Perfectly Reasonable Deviations from the Beaten Track (2005)`,
+  },
+
+  {
+    text: `Do not read so much, look about you and think of what you see there.`,
+    author: `Richard Feynman`,
+    source: `Perfectly Reasonable Deviations from the Beaten Track (2005)`,
+  },
+
+  {
+    text: `We must progress to the stage of doing all the right things for all the right reasons instead of doing all the right things for all the wrong reasons.`,
+    author: `Buckminster Fuller`,
+    source: `Cosmography (1992)`,
+  },
+
+  {
+    text: `Have you really looked at a seashell? There's not an aesthetic fault in it anywhere - it's absolutely perfect.`,
+    author: `Alan Watts`,
+    source: `Out of Your Mind (2017)`,
+  },
 ] as const satisfies readonly QuoteText[];

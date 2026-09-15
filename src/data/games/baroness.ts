@@ -9,7 +9,7 @@ export const baroness: GameDefinition = {
   rating: {
     complexity: 15,
     difficulty: 50,
-    luck: 70,
+    luck: 55,
   },
   thumbnail: "Baroness.webp",
   background: GAME_BACKGROUNDS.oldRoom,

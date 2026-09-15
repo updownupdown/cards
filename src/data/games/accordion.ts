@@ -9,7 +9,7 @@ export const accordion: GameDefinition = {
   rating: {
     complexity: 10,
     difficulty: 95,
-    luck: 65,
+    luck: 25,
   },
   thumbnail: "Accordion.webp",
   background: GAME_BACKGROUNDS.fallLeaves,

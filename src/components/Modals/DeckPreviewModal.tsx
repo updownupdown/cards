@@ -17,8 +17,8 @@ import { roundToPixel } from "@/utils/utils";
 import { ScrollView, View } from "react-native";
 import { Card } from "../Cards/Card";
 import ModalFull from "./ModalFull";
-import { getGameInfo, normalizeGamePath } from "@/data/game-menu";
-import { usePathname } from "expo-router";
+import { getGameInfo } from "@/data/game-menu";
+import { useGamePath } from "@/hooks/useGamePath";
 
 type Props = {
   visible: boolean;
@@ -39,7 +39,7 @@ export function DeckPreviewModal({
   shuffleOnClose = false,
   sortCards = false,
 }: Props) {
-  const pathname = normalizeGamePath(usePathname());
+  const pathname = useGamePath();
   const gameInfo = getGameInfo(pathname);
   const { width: screenWidthActual } = useViewportDimensions();
   const ui = useResponsiveUiLayout();

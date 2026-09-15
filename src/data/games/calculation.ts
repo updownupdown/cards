@@ -8,7 +8,7 @@ export const calculation: GameDefinition = {
   rating: {
     complexity: 60,
     difficulty: 80,
-    luck: 50,
+    luck: 40,
   },
   thumbnail: "Calculation.webp",
   background: GAME_BACKGROUNDS.oldRoom,

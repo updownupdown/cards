@@ -21,6 +21,7 @@ import {
   rankValue,
   shuffle,
   top,
+  zoneFanOffset,
   type PlayingCard,
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
@@ -42,7 +43,8 @@ export type StockTableauVariant =
   | "indian"
   | "diplomat"
   | "maria"
-  | "number-ten";
+  | "number-ten"
+  | "busy-aces";
 
 type BuildRule =
   "alternating" | "same-color" | "same-suit" | "not-same-suit" | "rank";
@@ -78,6 +80,32 @@ type Selection =
   { zone: "tableau"; pile: number; card: number } | { zone: "waste" } | null;
 
 type MoveSource = Exclude<Selection, null>;
+
+const TABLEAU_ROW = 1.2;
+
+/**
+ * Rows of height the tableau gets before its piles start to tighten: room for
+ * the tallest dealt pile plus a long build, and at least a King-to-Ace run.
+ */
+function tableauRows(config: Config) {
+  const cards = Math.max(13, Math.max(...config.deal.sizes) + 6);
+  return 1 + (cards - 1) * cardDims.tableauOffset;
+}
+
+/** Bottom row for the stock and waste, leaving room for their labels above. */
+function stockRow(config: Config) {
+  return TABLEAU_ROW + tableauRows(config) + 0.35;
+}
+
+/** A pile's fan offset, tightened once it would run past the tableau area. */
+function pileOffset(count: number, config: Config) {
+  return zoneFanOffset(
+    count,
+    tableauRows(config),
+    cardDims.tableauOffsetMin,
+    cardDims.tableauOffset,
+  );
+}
 type DropTarget =
   { zone: "tableau"; pile: number } | { zone: "foundation"; pile: number };
 
@@ -240,6 +268,16 @@ const CONFIGS: Record<StockTableauVariant, Config> = {
     deal: { columns: 10, sizes: Array(10).fill(4), faceUp: 2 },
     build: "alternating",
     move: "built-run",
+    empty: "any",
+    stock: "waste",
+    redeals: 0,
+  },
+  "busy-aces": {
+    decks: 2,
+    foundations: 8,
+    deal: { columns: 12, sizes: Array(12).fill(2), faceUp: 1 },
+    build: "same-suit",
+    move: "single",
     empty: "any",
     stock: "waste",
     redeals: 0,
@@ -669,11 +707,8 @@ export function StockTableauSolitaire({
       name: "foundation",
       pileIndex: index,
       cards: pile,
-      col:
-        config.foundations > 4
-          ? config.deal.columns - 4 + (index % 4)
-          : config.deal.columns - config.foundations + index,
-      row: config.foundations > 4 && index >= 4 ? 1.1 : 0,
+      col: index,
+      row: 0,
       fan: { maxVisible: 3 },
       placeholder: {},
     }));
@@ -683,19 +718,20 @@ export function StockTableauSolitaire({
       pileIndex: index,
       cards: pile,
       col: index,
-      row: config.foundations > 4 ? 2.3 : 1.2,
-      fan: { direction: "down", offset: cardDims.tableauOffset },
+      row: TABLEAU_ROW,
+      fan: { direction: "down", offset: pileOffset(pile.length, config) },
       placeholder: {},
     }));
+    // Stock and waste sit at the bottom right, within easy thumb reach.
     return [
       {
         id: "stock",
         name: "stock",
         cards: game.stock,
-        col: 0,
-        row: 0,
+        col: config.deal.columns - 1,
+        row: stockRow(config),
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", showCount: true },
+        placeholder: { text: "Stock", showCount: true, infoPos: "above" },
       },
       ...(config.stock === "waste"
         ? [
@@ -703,9 +739,10 @@ export function StockTableauSolitaire({
               id: "waste",
               name: "waste",
               cards: game.waste,
-              col: 1.25,
-              row: 0,
+              col: config.deal.columns - 2.25,
+              row: stockRow(config),
               fan: { maxVisible: 3 },
+              placeholder: { text: "Waste", showCount: true, infoPos: "above" },
             } as MapZone,
           ]
         : []),
@@ -816,7 +853,7 @@ export function StockTableauSolitaire({
     zoneMapper,
     cardSize: "tableau",
     fixedCols: config.deal.columns,
-    fixedRows: 7,
+    fixedRows: stockRow(config) + 1,
     gap: 0.12,
   });
 
@@ -833,7 +870,9 @@ export function StockTableauSolitaire({
       base.x,
       base.y +
         (source.zone === "tableau"
-          ? source.card * cardDims.tableauOffset * cardHeight
+          ? source.card *
+            pileOffset(game.tableau[source.pile].length, config) *
+            cardHeight
           : 0),
       cardWidth,
       cardHeight,
@@ -856,17 +895,16 @@ export function StockTableauSolitaire({
 
       if (zone.name !== "tableau" || zone.pileIndex === undefined) return;
       const pile = game.tableau[zone.pileIndex];
+      const offset = pileOffset(pile.length, config);
       pile.forEach((card, cardIndex) => {
         if (!card.faceUp) return;
         areas.push({
           source: { zone: "tableau", pile: zone.pileIndex!, card: cardIndex },
           rect: createRect(
             base.x,
-            base.y + cardIndex * cardDims.tableauOffset * cardHeight,
+            base.y + cardIndex * offset * cardHeight,
             cardWidth,
-            cardIndex === pile.length - 1
-              ? cardHeight
-              : cardDims.tableauOffset * cardHeight,
+            cardIndex === pile.length - 1 ? cardHeight : offset * cardHeight,
           ),
           priority: 10 + cardIndex,
         });
@@ -874,7 +912,7 @@ export function StockTableauSolitaire({
     });
 
     return areas;
-  }, [cardHeight, cardWidth, game, getZoneBasePos, zones]);
+  }, [cardHeight, cardWidth, config, game, getZoneBasePos, zones]);
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => updateBoardOffset());
@@ -900,7 +938,9 @@ export function StockTableauSolitaire({
       const height =
         zone.name === "tableau"
           ? cardHeight +
-            Math.max(0, pile.length - 1) * cardDims.tableauOffset * cardHeight
+            Math.max(0, pile.length - 1) *
+              pileOffset(pile.length, config) *
+              cardHeight
           : cardHeight;
 
       areas.push({
@@ -921,6 +961,7 @@ export function StockTableauSolitaire({
     boardPageOffset.y,
     cardHeight,
     cardWidth,
+    config,
     game,
     getZoneBasePos,
     zones,

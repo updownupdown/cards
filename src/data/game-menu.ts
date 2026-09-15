@@ -30,11 +30,6 @@ export type GameSettings = {
   pokerJokers: boolean;
   ascentDifficulty: "gentle" | "standard" | "intense";
   ascentChallenge: AscentChallenge;
-  dungeonDifficulty: "beginner" | "intermediate" | "advanced" | "bloodlust";
-  merchantLoyalPatrons: boolean;
-  merchantCheckBack: boolean;
-  merchantSuperExclusive: boolean;
-  merchantVandals: 0 | 1 | 2;
   chapterAndVerseLoyalPatrons: boolean;
   chapterAndVerseCheckBack: boolean;
   chapterAndVerseSuperExclusive: boolean;
@@ -160,11 +155,6 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   pokerJokers: false,
   ascentDifficulty: "standard",
   ascentChallenge: "none",
-  dungeonDifficulty: "beginner",
-  merchantLoyalPatrons: false,
-  merchantCheckBack: false,
-  merchantSuperExclusive: false,
-  merchantVandals: 0,
   chapterAndVerseLoyalPatrons: false,
   chapterAndVerseCheckBack: false,
   chapterAndVerseSuperExclusive: false,
@@ -543,19 +533,6 @@ export function getGameSettings(
     ascentChallenge: ASCENT_CHALLENGES.includes(merged.ascentChallenge)
       ? merged.ascentChallenge
       : "none",
-    dungeonDifficulty:
-      merged.dungeonDifficulty === "intermediate" ||
-      merged.dungeonDifficulty === "advanced" ||
-      merged.dungeonDifficulty === "bloodlust"
-        ? merged.dungeonDifficulty
-        : "beginner",
-    merchantLoyalPatrons: merged.merchantLoyalPatrons === true,
-    merchantCheckBack: merged.merchantCheckBack === true,
-    merchantSuperExclusive: merged.merchantSuperExclusive === true,
-    merchantVandals:
-      merged.merchantVandals === 1 || merged.merchantVandals === 2
-        ? merged.merchantVandals
-        : 0,
     chapterAndVerseLoyalPatrons: merged.chapterAndVerseLoyalPatrons === true,
     chapterAndVerseCheckBack: merged.chapterAndVerseCheckBack === true,
     chapterAndVerseSuperExclusive:

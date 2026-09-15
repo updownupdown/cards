@@ -1,6 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NODES_PROGRESS_STORAGE_KEY } from "./storage-keys";
-import type { CollectibleReward } from "./collectibles";
+import {
+  QUOTE_COUNT,
+  TAO_CHAPTER_COUNT,
+  type CollectibleReward,
+} from "./collectibles";
 import {
   getNodeDefinition,
   getUnlockedNodePaths,
@@ -9,7 +13,22 @@ import {
   NODES_START_PATH,
 } from "./nodes-map";
 
-const NODES_PROGRESS_VERSION = 1;
+const NODES_PROGRESS_VERSION = 2;
+
+// Version 2 cut the quotes to three 52-card decks: these version 1 quotes were
+// dropped, and the quotes after them moved down to close the gaps.
+const V1_REMOVED_QUOTE_IDS = [
+  115, 132, 136, 140, 143, 145, 150, 156, 157, 161, 164, 165,
+];
+
+function migrateV1QuoteIds(value: unknown) {
+  if (!Array.isArray(value)) return value;
+  return value.flatMap((id) =>
+    typeof id !== "number" || V1_REMOVED_QUOTE_IDS.includes(id)
+      ? []
+      : [id - V1_REMOVED_QUOTE_IDS.filter((removed) => removed < id).length],
+  );
+}
 
 export type NodesProgress = {
   version: number;
@@ -91,8 +110,13 @@ function normalizeNodesProgress(value: unknown): NodesProgress {
       (entry): entry is number =>
         typeof entry === "number" && Number.isInteger(entry) && entry > 0,
     ),
-    collectedTaoIds: validIds(candidate.collectedTaoIds, 81),
-    collectedQuoteIds: validIds(candidate.collectedQuoteIds, 104),
+    collectedTaoIds: validIds(candidate.collectedTaoIds, TAO_CHAPTER_COUNT),
+    collectedQuoteIds: validIds(
+      candidate.version === 1
+        ? migrateV1QuoteIds(candidate.collectedQuoteIds)
+        : candidate.collectedQuoteIds,
+      QUOTE_COUNT,
+    ),
     lastResultSessionIds: validPathRecord(
       candidate.lastResultSessionIds,
       (entry): entry is string => typeof entry === "string" && entry.length > 0,

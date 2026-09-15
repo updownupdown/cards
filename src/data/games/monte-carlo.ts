@@ -8,7 +8,7 @@ export const monteCarlo: GameDefinition = {
   rating: {
     complexity: 10,
     difficulty: 20,
-    luck: 35,
+    luck: 55,
   },
   thumbnail: "MonteCarlo.webp",
   background: GAME_BACKGROUNDS.monteCarlo,

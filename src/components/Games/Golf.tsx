@@ -172,9 +172,16 @@ export default function Golf() {
 
     setGame((draft) => {
       const currentDiscard = top(draft.discard);
-      const cardToDiscard = draft.piles[pileIndex][cardIndex];
+      const pile = draft.piles[pileIndex];
+      const cardToDiscard = pile[cardIndex];
 
-      if (!currentDiscard || !cardToDiscard) {
+      // Only a pile's exposed card that fits the discard may be played.
+      if (
+        !currentDiscard ||
+        !cardToDiscard ||
+        cardIndex !== pile.length - 1 ||
+        !canDiscard(cardToDiscard, currentDiscard, difficulty)
+      ) {
         return;
       }
 

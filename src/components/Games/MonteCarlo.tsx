@@ -137,6 +137,16 @@ function createGame(
   cards: PlayingCard[] = createDeck({ faceUp: false }),
   random: () => number = Math.random,
 ): GameState {
+  // A grid with no adjacent pair is lost before the first move, so shuffle
+  // again until the opening deal has at least one play.
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    const dealt = dealGame(cards, random);
+    if (!dealt.ended || attempt === 19) return dealt;
+  }
+  return dealGame(cards, random);
+}
+
+function dealGame(cards: PlayingCard[], random: () => number): GameState {
   const draw = shuffle(flipAllToBack(cards), random);
   const grid = [
     ...flipAllToFace(draw.splice(-25)),

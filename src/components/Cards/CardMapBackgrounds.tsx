@@ -22,6 +22,10 @@ type Props = {
   zoneMapper?: (zone: MapZone) => CardMapBGMapping | undefined;
 };
 
+// Generous advance of an uppercase letter and of a digit, in font sizes.
+const LETTER_WIDTH = 0.78;
+const DIGIT_WIDTH = 0.64;
+
 export const infoSize = {
   aboveBelow: 0.32,
   aboveBelowAdjust: 0.8,
@@ -63,6 +67,15 @@ export const CardMapBackgrounds = ({
         let placeholderOffsetX = 0;
         let placeholderOffsetY = 0;
 
+        const text = zone.placeholder.text ?? "";
+        const countFontSize = cardWidth * 0.2;
+        const countWidth = showCount
+          ? String(count).length * countFontSize * DIGIT_WIDTH
+          : 0;
+        // Room along the label for the text; the count keeps its size and the
+        // text shrinks to fit what's left.
+        let textRoom = Infinity;
+
         let infoStyles: ViewStyle = {
           userSelect: "none",
           position: "absolute",
@@ -83,6 +96,8 @@ export const CardMapBackgrounds = ({
         let countStyle: TextStyle = {
           userSelect: "none",
           fontSize: cardWidth * 0.2,
+          // The count keeps its size; only the label text gives way.
+          flexShrink: 0,
           // color: rgba(Colors.white, 0.8),
           fontFamily: FontWeight[500],
           textTransform: "uppercase",
@@ -96,14 +111,20 @@ export const CardMapBackgrounds = ({
 
           switch (infoPosition) {
             case "above":
-            case "below":
+            case "below": {
+              const sidePadding = cardWidth * 0.08;
+              const gap = hasText && showCount ? cardWidth * 0.08 : 0;
               placeholderHeight += cardHeight * infoSize.aboveBelow;
               infoStyles.height =
                 cardHeight * infoSize.aboveBelow * infoSize.aboveBelowAdjust;
               infoStyles.width = "100%";
-              infoStyles.gap = cardWidth * 0.1;
+              infoStyles.paddingHorizontal = sidePadding;
+              infoStyles.gap = gap;
               infoStyles.flexDirection = "row";
+              textRoom = pos.width - sidePadding * 2 - gap - countWidth;
+              countStyle.lineHeight = countFontSize * 1.2;
               break;
+            }
             case "left":
             case "right": {
               const sidePadding = cardHeight * 0.08;
@@ -136,8 +157,20 @@ export const CardMapBackgrounds = ({
               textStyle.textAlign = "center";
               textStyle.transform = [{ rotate: `-90deg` }];
               countStyle.lineHeight = countBlockHeight;
+              textRoom = Math.min(rotatedTextWidth, availableTextHeight);
               break;
             }
+          }
+
+          if (hasText) {
+            const textFontSize = Math.min(
+              cardWidth * 0.15,
+              Math.max(0, textRoom) / (text.length * LETTER_WIDTH),
+            );
+            textStyle.fontSize = textFontSize;
+            // Set explicitly: the Text component's default line height is
+            // sized for regular UI text and overflows these small labels.
+            textStyle.lineHeight = textFontSize * 1.2;
           }
           switch (infoPosition) {
             case "above":
@@ -197,14 +230,20 @@ export const CardMapBackgrounds = ({
               <View style={infoStyles}>
                 {hasText && (
                   <View style={textContainerStyle}>
-                    <Text style={textStyle} color={colorPale}>
-                      {zone.placeholder.text}
+                    <Text
+                      style={textStyle}
+                      color={colorPale}
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
+                      minimumFontScale={0.5}
+                    >
+                      {text}
                     </Text>
                   </View>
                 )}
 
                 {showCount && (
-                  <Text style={countStyle} color={colorPale}>
+                  <Text style={countStyle} color={colorPale} numberOfLines={1}>
                     {count}
                   </Text>
                 )}

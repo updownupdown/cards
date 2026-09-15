@@ -6,7 +6,7 @@ export const gaps: GameDefinition = {
   title: "Gaps",
   aliases: ["Montana", "Addiction", "Addiction Solitaire"],
   tags: [GameTag.SpatialControl, GameTag.SequenceBuilding],
-  rating: { complexity: 30, difficulty: 60, luck: 45 },
+  rating: { complexity: 30, difficulty: 60, luck: 40 },
   thumbnail: "Gaps.webp",
   background: GAME_BACKGROUNDS.mountain1,
   gameColorDark: "#2c322f",
@@ -16,7 +16,7 @@ export const gaps: GameDefinition = {
   quickStart: [
     "Arrange the rows in order (2 to K).",
     "Cards can be moved to gaps when they are the same suit, and one rank above, its left neighbor.",
-    "Redeal when stuck (easy: 2 redeals, hard: 3).",
+    "Redeal when stuck (easy: 3 redeals, hard: 2).",
   ],
   howToPlay: [
     "## Objective",
