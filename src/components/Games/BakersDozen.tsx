@@ -286,7 +286,7 @@ export default function BakersDozen() {
       canUndo={canUndo}
       undo={undo}
       winLoseMessage={i18n.t("games:bakersDozen.allFourSuitsAreComplete")}
-      showDeviceRotateHint
+      showDeviceRotateHint="landscape"
     >
       {cardMap}
     </GameWrapper>

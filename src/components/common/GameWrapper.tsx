@@ -84,7 +84,7 @@ interface Props {
   undo?: () => void;
   openMenu?: boolean;
   onMenuClose?: () => void;
-  showDeviceRotateHint?: boolean;
+  showDeviceRotateHint?: "landscape" | "portrait" | null;
   /** The game is auto-completing: block card input and undo meanwhile. */
   autoCompleting?: boolean;
 }
@@ -100,7 +100,7 @@ export const GameWrapper = ({
   undo: handleUndo,
   openMenu = false,
   onMenuClose,
-  showDeviceRotateHint = false,
+  showDeviceRotateHint = null,
   autoCompleting = false,
 }: Props) => {
   const pathname = useGamePath();
@@ -468,7 +468,7 @@ export const GameWrapper = ({
             </View>
           )}
 
-        <DeviceRotateHint landscapeRecommended={showDeviceRotateHint} />
+        <DeviceRotateHint orientation={showDeviceRotateHint} />
 
         {/* Game header */}
         <GameHeader

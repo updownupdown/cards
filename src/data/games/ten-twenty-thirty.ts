@@ -13,11 +13,11 @@ export const tenTwentyThirty: GameDefinition = {
     luck: 70,
   },
   thumbnail: "TenTwentyThirty.webp",
-  background: GAME_BACKGROUNDS.casino,
-  animation: GameAnimations.Stars,
-  gameColorDark: "#1b2430",
-  gameColorMid: "#3f8f8a",
-  gameColorPale: "#d8f3ee",
+  background: GAME_BACKGROUNDS.alhambra,
+  animation: GameAnimations.Firefly,
+  gameColorDark: "#132d35",
+  gameColorMid: "#254366",
+  gameColorPale: "#e1f5ff",
   cardDescription:
     "Deal a growing line and clear runs of cards that total 10, 20 or 30.",
   quickStart: [

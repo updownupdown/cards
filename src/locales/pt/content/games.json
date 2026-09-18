@@ -3047,39 +3047,6 @@
       "value": "Paciência russa"
     }
   },
-  "salic-law": {
-    "cardDescription": {
-      "hash": "323b2f0b",
-      "value": "Distribua dois baralhos sobre uma fileira de Reis, afaste as Damas e leve cada Ás até o seu Valete."
-    },
-    "howToPlay": {
-      "hash": "e07704cf",
-      "value": [
-        "## Objetivo",
-        "Construa as oito fundações do Ás ao Valete, deixando só os Reis na mesa.",
-        "## Distribuição",
-        "- Um **Rei** abre a mesa. Toque no **monte** para distribuir cartas, uma de cada vez, sobre a pilha do Rei mais recente.",
-        "- Quando sai um **Rei**, ele começa uma nova pilha.",
-        "- Os **Ases** vão direto para as fundações; as **Damas** são deixadas de lado e não participam.",
-        "## Regras",
-        "- A qualquer momento, toque na carta do topo de uma pilha para jogá-la numa fundação, que é construída **em ordem crescente, independentemente do naipe**, até o Valete.",
-        "- Caso contrário, toque nela para pegá-la e depois toque num **Rei sem cartas em cima** para movê-la para lá.",
-        "- Não há outra forma de construir na mesa, nem redistribuição."
-      ]
-    },
-    "quickStart": {
-      "hash": "4e6e6a53",
-      "value": [
-        "Toque no monte para distribuir sobre o Rei mais recente.",
-        "As fundações são construídas do Ás ao Valete, independentemente do naipe.",
-        "Um Rei sozinho aceita qualquer carta avulsa."
-      ]
-    },
-    "title": {
-      "hash": "06960a5f",
-      "value": "Lei sálica"
-    }
-  },
   "scorpion": {
     "cardDescription": {
       "hash": "959e0b20",

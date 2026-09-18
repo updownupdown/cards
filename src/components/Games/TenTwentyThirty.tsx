@@ -137,7 +137,9 @@ export default function TenTwentyThirty() {
 
     saveUndoState(structuredClone(game));
     setGame((draft) => {
-      draft.discard.push(...draft.line.splice(start, end - start + 1));
+      draft.discard.push(
+        ...draft.line.splice(start, end - start + 1).map(flipToBack),
+      );
     });
     setAnchorId(null);
   }
@@ -152,16 +154,13 @@ export default function TenTwentyThirty() {
   }
 
   const zones: MapZone[] = useMemo(() => {
-    const rows = Math.max(1, Math.ceil(game.line.length / lineCols));
-    const rowStep = rows > 1 ? Math.min(1.1, (lineRows - 1) / (rows - 1)) : 1.1;
-
     const lineZones: MapZone[] = game.line.map((card, i) => ({
       id: `line-${i}`,
       name: "line",
       pileIndex: i,
       cards: [card],
       col: i % lineCols,
-      row: Math.floor(i / lineCols) * rowStep,
+      row: Math.floor(i / lineCols),
       baseZIndex: 10 + i,
     }));
 
@@ -171,12 +170,12 @@ export default function TenTwentyThirty() {
         id: "discard",
         name: "discard",
         cards: game.discard,
-        col: lineCols - 2.25,
+        col: lineCols - 2.5,
         row: stockRow,
         fan: { maxVisible: 3 },
         placeholder: {
           text: i18n.t("cards:discard"),
-          infoPos: "above",
+          infoPos: "left",
           showCount: true,
         },
       },
@@ -189,7 +188,7 @@ export default function TenTwentyThirty() {
         fan: { maxVisible: 3 },
         placeholder: {
           text: i18n.t("cards:stock"),
-          infoPos: "above",
+          infoPos: "left",
           showCount: true,
         },
       },

@@ -727,7 +727,7 @@ export default function SpiderSolitaire() {
       winLoseMessage={
         won ? i18n.t("games:spiderSolitaire.allEightKToA") : undefined
       }
-      showDeviceRotateHint
+      showDeviceRotateHint="landscape"
     >
       <View style={{ flex: 1, width: "100%", gap: 12 }}>
         <View

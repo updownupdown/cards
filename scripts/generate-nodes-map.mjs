@@ -19,6 +19,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import ts from "typescript";
 
 const root = process.cwd();
 const gamesDirectory = path.join(root, "src/data/games");
@@ -99,12 +100,57 @@ function compareGames(left, right) {
 function readExistingNodes() {
   if (!fs.existsSync(outputPath)) return [];
   const source = fs.readFileSync(outputPath, "utf8");
-  const start = source.indexOf("= [");
-  const end = source.lastIndexOf("];");
-  if (start === -1 || end === -1) {
+  const sourceFile = ts.createSourceFile(
+    outputPath,
+    source,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TS,
+  );
+  const declaration = sourceFile.statements
+    .filter(ts.isVariableStatement)
+    .flatMap((statement) => [...statement.declarationList.declarations])
+    .find(
+      (candidate) =>
+        ts.isIdentifier(candidate.name) &&
+        candidate.name.text === "NODE_DEFINITIONS",
+    );
+  if (!declaration?.initializer) {
     throw new Error(`Could not read the node list in ${outputPath}.`);
   }
-  return JSON.parse(source.slice(start + 2, end + 1));
+
+  function readLiteral(node) {
+    if (ts.isArrayLiteralExpression(node)) {
+      return node.elements.map(readLiteral);
+    }
+    if (ts.isObjectLiteralExpression(node)) {
+      return Object.fromEntries(
+        node.properties.map((property) => {
+          if (
+            !ts.isPropertyAssignment(property) ||
+            (!ts.isIdentifier(property.name) &&
+              !ts.isStringLiteral(property.name) &&
+              !ts.isNumericLiteral(property.name))
+          ) {
+            throw new Error("Only literal node properties may be generated.");
+          }
+          return [property.name.text, readLiteral(property.initializer)];
+        }),
+      );
+    }
+    if (ts.isStringLiteral(node)) return node.text;
+    if (ts.isNumericLiteral(node)) return Number(node.text);
+    if (
+      ts.isPrefixUnaryExpression(node) &&
+      node.operator === ts.SyntaxKind.MinusToken &&
+      ts.isNumericLiteral(node.operand)
+    ) {
+      return -Number(node.operand.text);
+    }
+    throw new Error("Only literal node values may be generated.");
+  }
+
+  return readLiteral(declaration.initializer);
 }
 
 const distance = (left, right) =>

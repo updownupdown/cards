@@ -22,13 +22,15 @@ const quiltCells = quiltSize * quiltSize;
 const gap = 0;
 // Each quilt cell is a square a little larger than a card's long side, so
 // upright and sideways cards interlock without touching.
-const cellSize = 0.94;
+const cellSize = 0.92;
 const pitchCol = cellSize / cardDims.aspectRatio / (1 + gap);
 const pitchRow = cellSize / (1 + gap * cardDims.aspectRatio);
 const halfCardCols = 0.5 / (1 + gap);
 const halfCardRows = 0.5 / (1 + gap * cardDims.aspectRatio);
-const quiltRow = 1.3;
+const quiltRow = 1.4;
 const quiltWidth = quiltSize * pitchCol;
+const foundationGap = 1.8;
+const foundationSpacing = (quiltWidth - 1 - foundationGap) / 6;
 // Bottom row for the stock and waste, leaving room for their labels above.
 const stockRow = quiltRow + quiltSize * pitchRow + 0.5;
 const redeals = 1;
@@ -244,7 +246,10 @@ export default function CrazyQuilt() {
       name: "foundation",
       pileIndex: i,
       cards: pile,
-      col: (i * (quiltWidth - 1)) / 7,
+      col:
+        i < 4
+          ? i * foundationSpacing
+          : 3 * foundationSpacing + foundationGap + (i - 4) * foundationSpacing,
       row: 0,
       fan: { maxVisible: 3 },
       placeholder: {},
@@ -272,7 +277,7 @@ export default function CrazyQuilt() {
         id: "waste",
         name: "waste",
         cards: game.waste,
-        col: quiltWidth - 3.5,
+        col: quiltWidth - 3,
         row: stockRow,
         fan: { maxVisible: 3 },
         placeholder: {
@@ -285,12 +290,12 @@ export default function CrazyQuilt() {
         id: "stock",
         name: "stock",
         cards: game.stock,
-        col: quiltWidth - 2,
+        col: quiltWidth - 1.25,
         row: stockRow,
         fan: { maxVisible: 3 },
         placeholder: {
           text: i18n.t("cards:stock"),
-          infoPos: "right",
+          infoPos: "left",
           showCount: true,
         },
       },

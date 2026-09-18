@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-// Pre-renders the SVG card-back color filter into one PNG per game. Run:
+// Pre-renders the SVG card-back color filter into one WebP per game. Run:
 //   npm run card-backs:generate
 
 import fs from "fs/promises";
@@ -78,7 +78,11 @@ async function renderCardBack(game) {
     .toBuffer({ resolveWithObject: true });
   colorBackPixels(data, game.color);
 
-  const outputFile = path.join(outputDirectory, `${game.path.slice(1)}.png`);
+  const outputBaseName = game.path.slice(1);
+  const outputFile = path.join(outputDirectory, `${outputBaseName}.webp`);
+  await fs.rm(path.join(outputDirectory, `${outputBaseName}.png`), {
+    force: true,
+  });
   await sharp(data, {
     raw: {
       width: info.width,
@@ -86,7 +90,7 @@ async function renderCardBack(game) {
       channels: info.channels,
     },
   })
-    .png()
+    .webp()
     .toFile(outputFile);
 }
 

@@ -189,7 +189,7 @@ export default function AllInARow() {
           ? i18n.t("games:allInARow.youClearedTheBoard")
           : i18n.t("games:allInARow.noAdjacentRankRemains")
       }
-      showDeviceRotateHint
+      showDeviceRotateHint="landscape"
     >
       {cardMap}
     </GameWrapper>

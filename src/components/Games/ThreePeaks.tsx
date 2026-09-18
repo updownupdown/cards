@@ -366,7 +366,7 @@ export default function ThreePeaks() {
       isLoaded={isLoaded}
       canUndo={canUndo}
       undo={undo}
-      showDeviceRotateHint
+      showDeviceRotateHint="landscape"
     >
       {cardMap}
     </GameWrapper>

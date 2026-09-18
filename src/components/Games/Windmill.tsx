@@ -15,7 +15,7 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
-const colStep = 1.15;
+const colStep = 1.1;
 const rowStep = 1.1;
 // Grid cells as [col, row] in a 5x5 cross: two sails on each side of the
 // centre, with the corner foundations between them.
@@ -37,7 +37,7 @@ const cornerCells: [number, number][] = [
   [1, 3],
 ];
 // Bottom row for the stock and waste, leaving room for their labels above.
-const stockRow = 4 * rowStep + 1.35;
+const stockRow = 4 * rowStep + 0.75;
 const centerTotal = 52;
 const cornerTotal = 13;
 
@@ -314,7 +314,7 @@ export default function Windmill() {
         id: "waste",
         name: "waste",
         cards: game.waste,
-        col: 4 * colStep - 1.25,
+        col: 4 * colStep - 0.75,
         row: stockRow,
         fan: { maxVisible: 3 },
         placeholder: {
@@ -327,7 +327,7 @@ export default function Windmill() {
         id: "stock",
         name: "stock",
         cards: game.stock,
-        col: 4 * colStep,
+        col: 4 * colStep + 0.4,
         row: stockRow,
         fan: { maxVisible: 3 },
         placeholder: {

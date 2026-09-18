@@ -426,10 +426,6 @@
     "jack": "Vale",
     "column": "Sütun"
   },
-  "salicLaw": {
-    "queens": "Kızlar",
-    "theKingsStandAlone": "Papazlar yalnız kaldı!"
-  },
   "scorpion": {
     "allFourSuitStacksAre": "Dört takım yığınının hepsi tamamlandı."
   },
@@ -480,6 +476,7 @@
     "theStockIsSpent": "Deste bitti."
   },
   "slyFox": {
+    "dealing": "Dağıtılıyor",
     "place": "{{toPlace}} yerleştir",
     "outfoxedTheDeck": "Desteyi kurnazlıkla yendin!"
   },

@@ -29,7 +29,6 @@ export const parallels: GameDefinition = {
     "Move all 104 cards onto the eight foundations.",
 
     "## Foundations",
-    "- One **Ace** and one **King** of each suit start the foundations, Aces on the left and Kings on the right.",
     "- Aces build **up** by suit; Kings build **down** by suit.",
 
     "## Rules",

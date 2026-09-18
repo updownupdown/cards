@@ -23,7 +23,8 @@ const HAND_LIMIT = 3;
 const BOTTOM_ROW = 3.6;
 
 type CardSource =
-  { type: "hand"; cardId: string } | { type: "retainer"; cardId: string };
+  | { type: "hand"; cardId: string }
+  | { type: "retainer"; cardId: string };
 
 export type BlackberryPieGameState = {
   queen: PlayingCard[];
@@ -365,7 +366,7 @@ export default function BlackberryPie() {
       isLoaded={isLoaded}
       canUndo={canUndo}
       undo={undo}
-      showDeviceRotateHint
+      showDeviceRotateHint="landscape"
       winLoseMessage={
         game.won
           ? i18n.t("games:blackberryPie.thePieIsReadyYou", { BERRY_COUNT })

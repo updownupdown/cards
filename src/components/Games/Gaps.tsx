@@ -337,7 +337,7 @@ export default function Gaps() {
           ? i18n.t("games:gaps.everyRowIsInOrder")
           : i18n.t("cards:noMovesRemain")
       }
-      showDeviceRotateHint
+      showDeviceRotateHint="landscape"
     >
       {cardMap}
 

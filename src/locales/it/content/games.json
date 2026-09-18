@@ -3047,39 +3047,6 @@
       "value": "Solitario russo"
     }
   },
-  "salic-law": {
-    "cardDescription": {
-      "hash": "323b2f0b",
-      "value": "Distribuisci due mazzi su una fila di Re, escludi le Donne e porta ogni Asso fino al suo Fante."
-    },
-    "howToPlay": {
-      "hash": "e07704cf",
-      "value": [
-        "## Obiettivo",
-        "Costruisci tutte e otto le fondazioni dall'Asso al Fante, lasciando sul tavolo solo i Re.",
-        "## Distribuire",
-        "- Un **Re** apre il tavolo. Tocca il **mazzo** per distribuire le carte, una alla volta, sulla pila del Re più recente.",
-        "- Quando esce un **Re**, inizia una nuova pila.",
-        "- Gli **Assi** vanno subito sulle fondazioni; le **Donne** vengono messe da parte e non partecipano.",
-        "## Regole",
-        "- In qualsiasi momento, tocca la carta in cima a una pila per giocarla su una fondazione, che si costruisce **in ordine crescente a prescindere dal seme** fino al Fante.",
-        "- Altrimenti, toccala per prenderla, poi tocca un **Re senza carte sopra** per spostarla lì.",
-        "- Sul tavolo non si costruisce in nessun altro modo e non si ridistribuisce."
-      ]
-    },
-    "quickStart": {
-      "hash": "4e6e6a53",
-      "value": [
-        "Tocca il mazzo per distribuire sul Re più recente.",
-        "Le fondazioni si costruiscono dall'Asso al Fante, a prescindere dal seme.",
-        "Un Re da solo accetta qualsiasi carta singola."
-      ]
-    },
-    "title": {
-      "hash": "06960a5f",
-      "value": "Legge salica"
-    }
-  },
   "scorpion": {
     "cardDescription": {
       "hash": "959e0b20",

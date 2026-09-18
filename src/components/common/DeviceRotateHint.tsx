@@ -20,11 +20,10 @@ const canRotate =
     !!window.matchMedia?.("(pointer: coarse)").matches);
 
 interface Props {
-  /** Landscape suits this game; otherwise portrait is recommended. */
-  landscapeRecommended?: boolean;
+  orientation?: "landscape" | "portrait" | null;
 }
 
-export const DeviceRotateHint = ({ landscapeRecommended = false }: Props) => {
+export const DeviceRotateHint = ({ orientation = null }: Props) => {
   const { width, height } = useViewportDimensions();
   const { spacing } = useResponsiveMetrics();
   const { t } = useTranslation("game");
@@ -34,8 +33,11 @@ export const DeviceRotateHint = ({ landscapeRecommended = false }: Props) => {
   const isPhone =
     width > 0 && height > 0 && Math.min(width, height) < TABLET_BREAKPOINT;
   const qualifies =
+    orientation !== null &&
     isPhone &&
-    (landscapeRecommended ? width < height : canRotate && width > height);
+    (orientation === "landscape"
+      ? width < height
+      : canRotate && width > height);
   const fade = useFade(started && !dismissed && qualifies, FADE_DURATION);
 
   useEffect(() => {
@@ -53,7 +55,7 @@ export const DeviceRotateHint = ({ landscapeRecommended = false }: Props) => {
     return () => clearTimeout(timeout);
   }, [dismissed, started]);
 
-  if (!fade.isRendered) return null;
+  if (orientation === null || !fade.isRendered) return null;
 
   return (
     <Animated.View
@@ -68,7 +70,9 @@ export const DeviceRotateHint = ({ landscapeRecommended = false }: Props) => {
     >
       <Button
         text={t(
-          landscapeRecommended ? "rotateHint.landscape" : "rotateHint.portrait",
+          orientation === "landscape"
+            ? "rotateHint.landscape"
+            : "rotateHint.portrait",
         )}
         size="md"
         iconSize={40}

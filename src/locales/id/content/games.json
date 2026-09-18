@@ -3047,39 +3047,6 @@
       "value": "Solitaire Rusia"
     }
   },
-  "salic-law": {
-    "cardDescription": {
-      "hash": "323b2f0b",
-      "value": "Bagikan dua dek ke barisan King, singkirkan para Queen, dan naikkan setiap As sampai Jack-nya."
-    },
-    "howToPlay": {
-      "hash": "e07704cf",
-      "value": [
-        "## Tujuan",
-        "Susun kedelapan fondasi dari As sampai Jack, hingga hanya King yang tersisa di meja.",
-        "## Membagikan",
-        "- Satu **King** memulai meja. Ketuk **dek** untuk membagikan kartu satu per satu ke tumpukan King terbaru.",
-        "- Jika **King** dibagikan, King itu memulai tumpukan baru.",
-        "- **As** langsung ke fondasi; **Queen** disisihkan dan tidak ikut bermain.",
-        "## Aturan",
-        "- Kapan saja, ketuk kartu teratas tumpukan untuk memainkannya ke fondasi, yang disusun **naik apa pun jenisnya** sampai Jack.",
-        "- Jika tidak, ketuk untuk mengambilnya, lalu ketuk **King yang belum tertumpuk kartu** untuk memindahkan kartu ke sana.",
-        "- Tidak ada penyusunan lain di meja, dan tidak ada bagi ulang."
-      ]
-    },
-    "quickStart": {
-      "hash": "4e6e6a53",
-      "value": [
-        "Ketuk dek untuk membagikan ke King terbaru.",
-        "Fondasi disusun dari As sampai Jack, apa pun jenisnya.",
-        "King yang sendirian menerima satu kartu apa pun."
-      ]
-    },
-    "title": {
-      "hash": "06960a5f",
-      "value": "Hukum Salik"
-    }
-  },
   "scorpion": {
     "cardDescription": {
       "hash": "959e0b20",

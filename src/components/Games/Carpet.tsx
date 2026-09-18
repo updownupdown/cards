@@ -20,9 +20,9 @@ const carpetCols = 5;
 const carpetRows = 4;
 const carpetSize = carpetCols * carpetRows;
 const carpetRow = 1.2;
-const carpetRowStep = 1.1;
+const carpetRowStep = 1;
 // Bottom row for the stock and waste, leaving room for their labels above.
-const stockRow = carpetRow + (carpetRows - 1) * carpetRowStep + 1.55;
+const stockRow = carpetRow + (carpetRows - 1) * carpetRowStep + 1.25;
 
 type GameState = {
   stock: PlayingCard[];
@@ -195,12 +195,12 @@ export default function Carpet() {
         id: "waste",
         name: "waste",
         cards: game.waste,
-        col: carpetCols - 2.25,
+        col: carpetCols - 2.5,
         row: stockRow,
         fan: { maxVisible: 3 },
         placeholder: {
           text: i18n.t("cards:waste"),
-          infoPos: "above",
+          infoPos: "left",
           showCount: true,
         },
       },
@@ -213,7 +213,7 @@ export default function Carpet() {
         fan: { maxVisible: 3 },
         placeholder: {
           text: i18n.t("cards:stock"),
-          infoPos: "above",
+          infoPos: "left",
           showCount: true,
         },
       },

@@ -5,7 +5,7 @@ import { GameAnimations } from "@/animations";
 export const carpet: GameDefinition = {
   path: "/carpet",
   title: "Carpet",
-  tags: [GameTag.StockAndWaste, GameTag.EasyToLearn],
+  tags: [GameTag.EasyToLearn, GameTag.StockAndWaste],
   rating: {
     complexity: 15,
     difficulty: 25,

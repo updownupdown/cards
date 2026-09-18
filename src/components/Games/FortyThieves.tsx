@@ -826,7 +826,7 @@ export default function FortyThieves() {
       isLoaded={isLoaded}
       canUndo={canUndo}
       undo={undo}
-      showDeviceRotateHint
+      showDeviceRotateHint="landscape"
     >
       <View style={{ flex: 1, width: "100%", gap: 12 }}>
         <View

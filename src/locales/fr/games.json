@@ -426,10 +426,6 @@
     "jack": "Valet",
     "column": "Colonne"
   },
-  "salicLaw": {
-    "queens": "Dames",
-    "theKingsStandAlone": "Les Rois restent seuls !"
-  },
   "scorpion": {
     "allFourSuitStacksAre": "Les quatre piles par couleur sont complètes."
   },
@@ -480,6 +476,7 @@
     "theStockIsSpent": "La pioche est épuisée."
   },
   "slyFox": {
+    "dealing": "Distribution",
     "place": "Placer {{toPlace}}",
     "outfoxedTheDeck": "Le paquet est déjoué !"
   },

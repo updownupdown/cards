@@ -7,7 +7,7 @@ export const fortunesCall: GameDefinition = {
   path: "/fortunes-call",
   title: "Fortune's Call",
   thumbnail: "FortunesCall.webp",
-  tags: [GameTag.EasyToLearn, GameTag.ScoringPuzzles],
+  tags: [GameTag.ScoringPuzzles, GameTag.EasyToLearn],
   rating: { complexity: 20, difficulty: 45, luck: 70 },
   gameColorDark: "#272330",
   gameColorMid: "#883450",

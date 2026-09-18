@@ -365,7 +365,6 @@ export function RowsSolitaire({ variant }: { variant: RowsVariant }) {
       winLoseMessage={game.won ? config.winMessage() : config.loseMessage()}
       canUndo={canUndo}
       undo={undo}
-      showDeviceRotateHint={config.landscape}
     >
       {cardMap}
     </GameWrapper>

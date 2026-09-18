@@ -3,1878 +3,2272 @@ import type { NodeDefinition } from "./nodes-map";
 
 export const NODE_DEFINITIONS: NodeDefinition[] = [
   {
-    path: "/klondike",
-    x: 0,
-    y: 0,
-    connections: ["/fifteen-puzzle", "/memory", "/monte-carlo"],
-    rewards: [
-      {
-        type: "tao",
-        id: 12,
-      },
-      {
-        type: "quote",
-        id: 23,
-      },
+    "path": "/klondike",
+    "x": 0,
+    "y": 0,
+    "connections": [
+      "/fifteen-puzzle",
+      "/memory",
+      "/monte-carlo"
     ],
-  },
-  {
-    path: "/monte-carlo",
-    x: 0.111,
-    y: 0.012,
-    connections: ["/grandfathers-clock", "/klondike", "/tower-of-hanoi"],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 2,
+        "type": "tao",
+        "id": 12
       },
       {
-        type: "quote",
-        id: 3,
-      },
-    ],
+        "type": "quote",
+        "id": 23
+      }
+    ]
   },
   {
-    path: "/fifteen-puzzle",
-    x: -0.1015,
-    y: 0.0673,
-    connections: ["/bowling", "/diplomat", "/klondike"],
-    rewards: [
-      {
-        type: "tao",
-        id: 6,
-      },
-      {
-        type: "quote",
-        id: 11,
-      },
+    "path": "/monte-carlo",
+    "x": 0.111,
+    "y": 0.012,
+    "connections": [
+      "/klondike",
+      "/tower-of-hanoi"
     ],
-  },
-  {
-    path: "/memory",
-    x: -0.0025,
-    y: -0.154,
-    connections: ["/klondike", "/rank-and-file"],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 14,
+        "type": "tao",
+        "id": 2
       },
       {
-        type: "quote",
-        id: 27,
-      },
-    ],
+        "type": "quote",
+        "id": 3
+      }
+    ]
   },
   {
-    path: "/tower-of-hanoi",
-    x: 0.0854,
-    y: 0.1689,
-    connections: ["/indian", "/monte-carlo", "/thumb-and-pouch"],
-    rewards: [
-      {
-        type: "tao",
-        id: 28,
-      },
-      {
-        type: "quote",
-        id: 45,
-      },
+    "path": "/fifteen-puzzle",
+    "x": -0.102,
+    "y": 0.0676,
+    "connections": [
+      "/diplomat",
+      "/eight-off",
+      "/klondike"
     ],
-  },
-  {
-    path: "/diplomat",
-    x: -0.206,
-    y: 0.0107,
-    connections: ["/delta-21", "/fifteen-puzzle", "/lights-out"],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 3,
+        "type": "tao",
+        "id": 6
       },
       {
-        type: "quote",
-        id: 5,
-      },
-    ],
+        "type": "quote",
+        "id": 11
+      }
+    ]
   },
   {
-    path: "/grandfathers-clock",
-    x: 0.1598,
-    y: -0.1119,
-    connections: ["/eight-off", "/freecell", "/monte-carlo"],
-    rewards: [
-      {
-        type: "quote",
-        id: 4,
-      },
-      {
-        type: "quote",
-        id: 104,
-      },
+    "path": "/memory",
+    "x": -0.0025,
+    "y": -0.1547,
+    "connections": [
+      "/bowling",
+      "/klondike",
+      "/rank-and-file"
     ],
-  },
-  {
-    path: "/bowling",
-    x: -0.0823,
-    y: 0.232,
-    connections: ["/fifteen-puzzle", "/harp", "/indian"],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 4,
+        "type": "tao",
+        "id": 14
       },
       {
-        type: "quote",
-        id: 7,
-      },
-    ],
+        "type": "quote",
+        "id": 27
+      }
+    ]
   },
   {
-    path: "/rank-and-file",
-    x: -0.1468,
-    y: -0.2196,
-    connections: ["/delta-21", "/memory", "/number-ten", "/ouroboros"],
-    rewards: [
-      {
-        type: "tao",
-        id: 9,
-      },
-      {
-        type: "quote",
-        id: 17,
-      },
+    "path": "/tower-of-hanoi",
+    "x": 0.0858,
+    "y": 0.1696,
+    "connections": [
+      "/grandfathers-clock",
+      "/indian",
+      "/lights-out",
+      "/monte-carlo"
     ],
-  },
-  {
-    path: "/thumb-and-pouch",
-    x: 0.2223,
-    y: 0.1357,
-    connections: ["/seahaven-towers", "/tower-of-hanoi"],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 10,
+        "type": "tao",
+        "id": 28
       },
       {
-        type: "quote",
-        id: 19,
-      },
-    ],
+        "type": "quote",
+        "id": 45
+      }
+    ]
   },
   {
-    path: "/lights-out",
-    x: -0.2271,
-    y: 0.1624,
-    connections: ["/diplomat", "/harp", "/moosehide"],
-    rewards: [
-      {
-        type: "tao",
-        id: 43,
-      },
-      {
-        type: "quote",
-        id: 60,
-      },
+    "path": "/diplomat",
+    "x": -0.207,
+    "y": 0.0108,
+    "connections": [
+      "/eight-off",
+      "/fifteen-puzzle",
+      "/maria"
     ],
-  },
-  {
-    path: "/eight-off",
-    x: 0.1362,
-    y: -0.2234,
-    connections: ["/grandfathers-clock", "/maria"],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 19,
+        "type": "tao",
+        "id": 3
       },
       {
-        type: "quote",
-        id: 36,
-      },
-    ],
+        "type": "quote",
+        "id": 5
+      }
+    ]
   },
   {
-    path: "/indian",
-    x: 0.076,
-    y: 0.2637,
-    connections: ["/bowling", "/cabin-siege", "/gridlines", "/tower-of-hanoi"],
-    rewards: [
-      {
-        type: "tao",
-        id: 7,
-      },
-      {
-        type: "quote",
-        id: 13,
-      },
+    "path": "/bowling",
+    "x": 0.1373,
+    "y": -0.1359,
+    "connections": [
+      "/freecell",
+      "/memory"
     ],
-  },
-  {
-    path: "/delta-21",
-    x: -0.2605,
-    y: -0.1163,
-    connections: ["/diplomat", "/pocket-poker", "/rank-and-file"],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 18,
+        "type": "tao",
+        "id": 4
       },
       {
-        type: "quote",
-        id: 35,
-      },
-    ],
+        "type": "quote",
+        "id": 7
+      }
+    ]
   },
   {
-    path: "/freecell",
-    x: 0.3205,
-    y: -0.1322,
-    connections: ["/bisley", "/grandfathers-clock"],
-    rewards: [
-      {
-        type: "tao",
-        id: 20,
-      },
-      {
-        type: "quote",
-        id: 37,
-      },
+    "path": "/grandfathers-clock",
+    "x": -0.0458,
+    "y": 0.2066,
+    "connections": [
+      "/number-ten",
+      "/tower-of-hanoi"
     ],
-  },
-  {
-    path: "/harp",
-    x: -0.2146,
-    y: 0.2556,
-    connections: ["/bowling", "/carpet", "/lights-out"],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 11,
+        "type": "quote",
+        "id": 4
       },
       {
-        type: "quote",
-        id: 21,
-      },
-    ],
+        "type": "quote",
+        "id": 104
+      }
+    ]
   },
   {
-    path: "/number-ten",
-    x: -0.0449,
-    y: -0.3401,
-    connections: ["/queens-audience", "/raglan", "/rank-and-file"],
-    rewards: [
-      {
-        type: "tao",
-        id: 15,
-      },
-      {
-        type: "quote",
-        id: 29,
-      },
+    "path": "/rank-and-file",
+    "x": -0.1499,
+    "y": -0.2202,
+    "connections": [
+      "/cabin-siege",
+      "/delta-21",
+      "/memory",
+      "/seahaven-towers"
     ],
-  },
-  {
-    path: "/cabin-siege",
-    x: 0.2275,
-    y: 0.3134,
-    connections: ["/field-command", "/gridlines", "/indian"],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 31,
+        "type": "tao",
+        "id": 9
       },
       {
-        type: "quote",
-        id: 48,
-      },
-    ],
+        "type": "quote",
+        "id": 17
+      }
+    ]
   },
   {
-    path: "/pocket-poker",
-    x: -0.3632,
-    y: -0.0095,
-    connections: ["/delta-21", "/lucas"],
-    rewards: [
-      {
-        type: "tao",
-        id: 8,
-      },
-      {
-        type: "quote",
-        id: 15,
-      },
+    "path": "/lights-out",
+    "x": 0.2018,
+    "y": 0.1438,
+    "connections": [
+      "/harp",
+      "/pocket-poker",
+      "/tower-of-hanoi"
     ],
-  },
-  {
-    path: "/maria",
-    x: 0.2456,
-    y: -0.2919,
-    connections: ["/bakers-game", "/eight-off"],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 13,
+        "type": "tao",
+        "id": 43
       },
       {
-        type: "quote",
-        id: 25,
-      },
-    ],
+        "type": "quote",
+        "id": 60
+      }
+    ]
   },
   {
-    path: "/westcliff",
-    x: -0.0044,
-    y: 0.4077,
-    connections: ["/beleaguered-castle", "/gridlines"],
-    rewards: [
-      {
-        type: "tao",
-        id: 17,
-      },
-      {
-        type: "quote",
-        id: 33,
-      },
+    "path": "/eight-off",
+    "x": -0.2147,
+    "y": 0.1571,
+    "connections": [
+      "/diplomat",
+      "/fifteen-puzzle"
     ],
-  },
-  {
-    path: "/ouroboros",
-    x: -0.2827,
-    y: -0.2717,
-    connections: ["/gargantua", "/rank-and-file"],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 22,
+        "type": "tao",
+        "id": 19
       },
       {
-        type: "quote",
-        id: 39,
-      },
-    ],
+        "type": "quote",
+        "id": 36
+      }
+    ]
   },
   {
-    path: "/seahaven-towers",
-    x: 0.3704,
-    y: 0.0962,
-    connections: ["/simple-simon", "/singularity", "/thumb-and-pouch"],
-    rewards: [
-      {
-        type: "tao",
-        id: 36,
-      },
-      {
-        type: "quote",
-        id: 53,
-      },
+    "path": "/freecell",
+    "x": 0.186,
+    "y": -0.2289,
+    "connections": [
+      "/bowling",
+      "/lucas",
+      "/queens-audience"
     ],
-  },
-  {
-    path: "/moosehide",
-    x: -0.324,
-    y: 0.2057,
-    connections: ["/lights-out", "/sultan"],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 26,
+        "type": "tao",
+        "id": 20
       },
       {
-        type: "quote",
-        id: 43,
-      },
-    ],
+        "type": "quote",
+        "id": 37
+      }
+    ]
   },
   {
-    path: "/queens-audience",
-    x: 0.1083,
-    y: -0.422,
-    connections: ["/alaska", "/clock", "/number-ten"],
-    rewards: [
-      {
-        type: "quote",
-        id: 28,
-      },
-      {
-        type: "quote",
-        id: 74,
-      },
+    "path": "/indian",
+    "x": 0.0763,
+    "y": 0.2649,
+    "connections": [
+      "/ouroboros",
+      "/tower-of-hanoi"
     ],
-  },
-  {
-    path: "/gridlines",
-    x: 0.1134,
-    y: 0.3801,
-    connections: ["/cabin-siege", "/field-command", "/indian", "/westcliff"],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 35,
+        "type": "tao",
+        "id": 7
       },
       {
-        type: "quote",
-        id: 52,
-      },
-    ],
+        "type": "quote",
+        "id": 13
+      }
+    ]
   },
   {
-    path: "/lucas",
-    x: -0.4258,
-    y: -0.1498,
-    connections: ["/chapter-and-verse", "/pocket-poker", "/puss-in-the-corner"],
-    rewards: [
-      {
-        type: "tao",
-        id: 21,
-      },
-      {
-        type: "quote",
-        id: 38,
-      },
+    "path": "/delta-21",
+    "x": -0.2464,
+    "y": -0.2347,
+    "connections": [
+      "/rank-and-file",
+      "/seahaven-towers"
     ],
-  },
-  {
-    path: "/bisley",
-    x: 0.4191,
-    y: -0.1617,
-    connections: ["/crescent", "/freecell"],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 40,
+        "type": "tao",
+        "id": 18
       },
       {
-        type: "quote",
-        id: 57,
-      },
-    ],
+        "type": "quote",
+        "id": 35
+      }
+    ]
   },
   {
-    path: "/carpet",
-    x: -0.2651,
-    y: 0.3413,
-    connections: ["/frog", "/harp"],
-    rewards: [
-      {
-        type: "tao",
-        id: 5,
-      },
-      {
-        type: "quote",
-        id: 9,
-      },
+    "path": "/harp",
+    "x": 0.3362,
+    "y": -0.0175,
+    "connections": [
+      "/lights-out",
+      "/thumb-and-pouch"
     ],
-  },
-  {
-    path: "/raglan",
-    x: -0.0886,
-    y: -0.5031,
-    connections: ["/clock", "/labyrinth", "/number-ten"],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 44,
+        "type": "tao",
+        "id": 11
       },
       {
-        type: "quote",
-        id: 61,
-      },
-    ],
+        "type": "quote",
+        "id": 21
+      }
+    ]
   },
   {
-    path: "/simple-simon",
-    x: 0.3995,
-    y: 0.2561,
-    connections: ["/royal-rest", "/seahaven-towers"],
-    rewards: [
-      {
-        type: "tao",
-        id: 47,
-      },
-      {
-        type: "quote",
-        id: 64,
-      },
+    "path": "/number-ten",
+    "x": -0.1494,
+    "y": 0.3373,
+    "connections": [
+      "/carpet",
+      "/grandfathers-clock",
+      "/moosehide"
     ],
-  },
-  {
-    path: "/sultan",
-    x: -0.4651,
-    y: 0.22,
-    connections: ["/moosehide", "/penguin"],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 16,
+        "type": "tao",
+        "id": 15
       },
       {
-        type: "quote",
-        id: 31,
-      },
-    ],
+        "type": "quote",
+        "id": 29
+      }
+    ]
   },
   {
-    path: "/bakers-game",
-    x: 0.3388,
-    y: -0.3648,
-    connections: ["/maria", "/whitehead"],
-    rewards: [
-      {
-        type: "tao",
-        id: 38,
-      },
-      {
-        type: "quote",
-        id: 55,
-      },
+    "path": "/cabin-siege",
+    "x": -0.04,
+    "y": -0.3522,
+    "connections": [
+      "/raglan",
+      "/rank-and-file"
     ],
-  },
-  {
-    path: "/beleaguered-castle",
-    x: -0.0016,
-    y: 0.5421,
-    connections: ["/cruel", "/salic-law", "/westcliff"],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 39,
+        "type": "tao",
+        "id": 31
       },
       {
-        type: "quote",
-        id: 56,
-      },
-    ],
+        "type": "quote",
+        "id": 48
+      }
+    ]
   },
   {
-    path: "/gargantua",
-    x: -0.3045,
-    y: -0.3969,
-    connections: ["/labyrinth", "/ouroboros"],
-    rewards: [
-      {
-        type: "tao",
-        id: 25,
-      },
-      {
-        type: "quote",
-        id: 42,
-      },
+    "path": "/pocket-poker",
+    "x": 0.2796,
+    "y": 0.2237,
+    "connections": [
+      "/gridlines",
+      "/lights-out",
+      "/simple-simon"
     ],
-  },
-  {
-    path: "/singularity",
-    x: 0.5559,
-    y: 0.0616,
-    connections: ["/seahaven-towers", "/sly-fox", "/windmill"],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 48,
+        "type": "tao",
+        "id": 8
       },
       {
-        type: "quote",
-        id: 65,
-      },
-    ],
+        "type": "quote",
+        "id": 15
+      }
+    ]
   },
   {
-    path: "/city-grid",
-    x: -0.2779,
-    y: 0.4878,
-    connections: ["/chain-of-command", "/cruel", "/frog", "/spiderette"],
-    rewards: [
-      {
-        type: "tao",
-        id: 32,
-      },
-      {
-        type: "quote",
-        id: 49,
-      },
+    "path": "/maria",
+    "x": -0.3699,
+    "y": 0.0482,
+    "connections": [
+      "/bakers-game",
+      "/diplomat",
+      "/sultan"
     ],
-  },
-  {
-    path: "/clock",
-    x: 0.0626,
-    y: -0.5138,
-    connections: ["/queens-audience", "/raglan"],
-    rewards: [
-      {
-        type: "tao",
-        id: 1,
-      },
+    "rewards": [
       {
-        type: "quote",
-        id: 108,
+        "type": "tao",
+        "id": 13
       },
       {
-        type: "quote",
-        id: 109,
-      },
-    ],
+        "type": "quote",
+        "id": 25
+      }
+    ]
   },
   {
-    path: "/field-command",
-    x: 0.2317,
-    y: 0.4618,
-    connections: ["/archipelago", "/busy-aces", "/cabin-siege", "/gridlines"],
-    rewards: [
-      {
-        type: "tao",
-        id: 33,
-      },
-      {
-        type: "quote",
-        id: 50,
-      },
+    "path": "/lucas",
+    "x": 0.3418,
+    "y": -0.2343,
+    "connections": [
+      "/bisley",
+      "/freecell",
+      "/westcliff"
     ],
-  },
-  {
-    path: "/penguin",
-    x: -0.5449,
-    y: 0.0935,
-    connections: ["/fortress", "/sultan", "/ten-twenty-thirty"],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 58,
+        "type": "tao",
+        "id": 21
       },
       {
-        type: "quote",
-        id: 75,
-      },
-    ],
+        "type": "quote",
+        "id": 38
+      }
+    ]
   },
   {
-    path: "/whitehead",
-    x: 0.4405,
-    y: -0.3438,
-    connections: ["/bakers-game", "/crescent", "/rogue-run"],
-    rewards: [
-      {
-        type: "tao",
-        id: 37,
-      },
-      {
-        type: "quote",
-        id: 54,
-      },
+    "path": "/ouroboros",
+    "x": 0.0638,
+    "y": 0.3757,
+    "connections": [
+      "/carpet",
+      "/indian"
     ],
-  },
-  {
-    path: "/cruel",
-    x: -0.132,
-    y: 0.5602,
-    connections: ["/beleaguered-castle", "/city-grid", "/dominion"],
-    rewards: [
+    "rewards": [
       {
-        type: "quote",
-        id: 34,
+        "type": "tao",
+        "id": 22
       },
       {
-        type: "quote",
-        id: 103,
-      },
-    ],
+        "type": "quote",
+        "id": 39
+      }
+    ]
   },
   {
-    path: "/labyrinth",
-    x: -0.215,
-    y: -0.4991,
-    connections: ["/gargantua", "/parallels", "/raglan"],
-    rewards: [
-      {
-        type: "quote",
-        id: 26,
-      },
-      {
-        type: "quote",
-        id: 72,
-      },
+    "path": "/seahaven-towers",
+    "x": -0.2608,
+    "y": -0.3403,
+    "connections": [
+      "/delta-21",
+      "/rank-and-file",
+      "/whitehead"
     ],
-  },
-  {
-    path: "/windmill",
-    x: 0.549,
-    y: 0.1677,
-    connections: ["/royal-rest", "/singularity"],
-    rewards: [
+    "rewards": [
       {
-        type: "quote",
-        id: 12,
+        "type": "tao",
+        "id": 36
       },
       {
-        type: "quote",
-        id: 100,
-      },
-    ],
+        "type": "quote",
+        "id": 53
+      }
+    ]
   },
   {
-    path: "/yukon",
-    x: -0.4938,
-    y: 0.3499,
-    connections: ["/frog", "/invaders"],
-    rewards: [
-      {
-        type: "tao",
-        id: 49,
-      },
-      {
-        type: "quote",
-        id: 66,
-      },
+    "path": "/thumb-and-pouch",
+    "x": 0.4356,
+    "y": 0.0116,
+    "connections": [
+      "/harp",
+      "/singularity"
     ],
-  },
-  {
-    path: "/alaska",
-    x: 0.2309,
-    y: -0.5083,
-    connections: ["/queens-audience", "/royal-cotillion", "/three-peaks"],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 50,
+        "type": "tao",
+        "id": 10
       },
       {
-        type: "quote",
-        id: 67,
-      },
-    ],
+        "type": "quote",
+        "id": 19
+      }
+    ]
   },
   {
-    path: "/archipelago",
-    x: 0.3523,
-    y: 0.4634,
-    connections: ["/cafe-queue", "/field-command"],
-    rewards: [
-      {
-        type: "tao",
-        id: 29,
-      },
-      {
-        type: "quote",
-        id: 46,
-      },
+    "path": "/moosehide",
+    "x": -0.2793,
+    "y": 0.3206,
+    "connections": [
+      "/city-grid",
+      "/number-ten",
+      "/parallels"
     ],
-  },
-  {
-    path: "/puss-in-the-corner",
-    x: -0.4732,
-    y: -0.3118,
-    connections: ["/chapter-and-verse", "/herbalist", "/infiltrator", "/lucas"],
-    rewards: [
+    "rewards": [
       {
-        type: "quote",
-        id: 10,
+        "type": "tao",
+        "id": 26
       },
       {
-        type: "quote",
-        id: 102,
-      },
-    ],
+        "type": "quote",
+        "id": 43
+      }
+    ]
   },
   {
-    path: "/crescent",
-    x: 0.5435,
-    y: -0.2517,
-    connections: ["/bisley", "/whitehead"],
-    rewards: [
-      {
-        type: "tao",
-        id: 42,
-      },
-      {
-        type: "quote",
-        id: 59,
-      },
+    "path": "/queens-audience",
+    "x": 0.1767,
+    "y": -0.371,
+    "connections": [
+      "/clock",
+      "/freecell"
     ],
-  },
-  {
-    path: "/frog",
-    x: -0.3803,
-    y: 0.4113,
-    connections: ["/carpet", "/city-grid", "/spiderette", "/yukon"],
-    rewards: [
+    "rewards": [
       {
-        type: "quote",
-        id: 20,
+        "type": "quote",
+        "id": 28
       },
       {
-        type: "quote",
-        id: 95,
-      },
-    ],
+        "type": "quote",
+        "id": 74
+      }
+    ]
   },
   {
-    path: "/parallels",
-    x: -0.2819,
-    y: -0.5736,
-    connections: ["/crazy-quilt", "/easthaven", "/labyrinth", "/triple-stack"],
-    rewards: [
-      {
-        type: "quote",
-        id: 8,
-      },
-      {
-        type: "quote",
-        id: 96,
-      },
+    "path": "/gridlines",
+    "x": 0.2405,
+    "y": 0.3683,
+    "connections": [
+      "/archipelago",
+      "/pocket-poker"
     ],
-  },
-  {
-    path: "/royal-rest",
-    x: 0.5283,
-    y: 0.3122,
-    connections: ["/fight-clubs", "/josephine", "/simple-simon", "/windmill"],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 27,
+        "type": "tao",
+        "id": 35
       },
       {
-        type: "quote",
-        id: 44,
-      },
-    ],
+        "type": "quote",
+        "id": 52
+      }
+    ]
   },
   {
-    path: "/ten-twenty-thirty",
-    x: -0.6242,
-    y: 0.2193,
-    connections: ["/penguin", "/seer"],
-    rewards: [
-      {
-        type: "quote",
-        id: 22,
-      },
-      {
-        type: "quote",
-        id: 24,
-      },
+    "path": "/bakers-game",
+    "x": -0.4337,
+    "y": -0.067,
+    "connections": [
+      "/gargantua",
+      "/maria"
     ],
-  },
-  {
-    path: "/royal-cotillion",
-    x: 0.3294,
-    y: -0.6028,
-    connections: ["/alaska", "/australian-patience", "/rogue-run"],
-    rewards: [
+    "rewards": [
       {
-        type: "quote",
-        id: 114,
+        "type": "tao",
+        "id": 38
       },
       {
-        type: "quote",
-        id: 121,
-      },
-    ],
+        "type": "quote",
+        "id": 55
+      }
+    ]
   },
   {
-    path: "/salic-law",
-    x: 0.0856,
-    y: 0.6794,
-    connections: ["/beleaguered-castle", "/busy-aces", "/cribbage-squares"],
-    rewards: [
-      {
-        type: "tao",
-        id: 74,
-      },
-      {
-        type: "quote",
-        id: 14,
-      },
+    "path": "/bisley",
+    "x": 0.421,
+    "y": -0.1624,
+    "connections": [
+      "/frog",
+      "/lucas"
     ],
-  },
-  {
-    path: "/crazy-quilt",
-    x: -0.4358,
-    y: -0.5224,
-    connections: ["/infiltrator", "/parallels", "/russian-solitaire"],
-    rewards: [
+    "rewards": [
       {
-        type: "quote",
-        id: 18,
+        "type": "tao",
+        "id": 40
       },
       {
-        type: "quote",
-        id: 87,
-      },
-    ],
+        "type": "quote",
+        "id": 57
+      }
+    ]
   },
   {
-    path: "/sly-fox",
-    x: 0.706,
-    y: -0.0681,
-    connections: ["/red-diamond", "/singularity"],
-    rewards: [
-      {
-        type: "quote",
-        id: 16,
-      },
-      {
-        type: "quote",
-        id: 98,
-      },
+    "path": "/carpet",
+    "x": -0.0698,
+    "y": 0.4601,
+    "connections": [
+      "/beleaguered-castle",
+      "/number-ten",
+      "/ouroboros",
+      "/three-peaks"
     ],
-  },
-  {
-    path: "/spiderette",
-    x: -0.4026,
-    y: 0.5051,
-    connections: ["/city-grid", "/congress", "/frog"],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 61,
+        "type": "tao",
+        "id": 5
       },
       {
-        type: "quote",
-        id: 78,
-      },
-    ],
+        "type": "quote",
+        "id": 9
+      }
+    ]
   },
   {
-    path: "/three-peaks",
-    x: 0.1611,
-    y: -0.6291,
-    connections: ["/alaska", "/australian-patience", "/elementary-detective"],
-    rewards: [
+    "path": "/raglan",
+    "x": -0.1084,
+    "y": -0.4299,
+    "connections": [
+      "/cabin-siege",
+      "/royal-rest",
+      "/whitehead"
+    ],
+    "rewards": [
       {
-        type: "tao",
-        id: 23,
+        "type": "tao",
+        "id": 44
       },
       {
-        type: "quote",
-        id: 40,
-      },
-    ],
+        "type": "quote",
+        "id": 61
+      }
+    ]
   },
   {
-    path: "/busy-aces",
-    x: 0.2094,
-    y: 0.5919,
-    connections: [
-      "/cafe-queue",
-      "/field-command",
-      "/fortunes-call",
-      "/salic-law",
+    "path": "/simple-simon",
+    "x": 0.3667,
+    "y": 0.3092,
+    "connections": [
+      "/cruel",
+      "/pocket-poker"
     ],
-    rewards: [
+    "rewards": [
       {
-        type: "quote",
-        id: 32,
+        "type": "tao",
+        "id": 47
       },
       {
-        type: "quote",
-        id: 86,
-      },
-    ],
+        "type": "quote",
+        "id": 64
+      }
+    ]
   },
   {
-    path: "/chapter-and-verse",
-    x: -0.6156,
-    y: -0.185,
-    connections: ["/fortress", "/lucas", "/puss-in-the-corner"],
-    rewards: [
-      {
-        type: "tao",
-        id: 41,
-      },
-      {
-        type: "quote",
-        id: 58,
-      },
+    "path": "/sultan",
+    "x": -0.4853,
+    "y": 0.0576,
+    "connections": [
+      "/maria",
+      "/windmill"
     ],
-  },
-  {
-    path: "/flower-garden",
-    x: 0.5669,
-    y: -0.4541,
-    connections: ["/canfield", "/rogue-run", "/waypoint"],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 65,
+        "type": "tao",
+        "id": 16
       },
       {
-        type: "quote",
-        id: 82,
-      },
-    ],
+        "type": "quote",
+        "id": 31
+      }
+    ]
   },
   {
-    path: "/chain-of-command",
-    x: -0.2965,
-    y: 0.6877,
-    connections: ["/city-grid", "/dominion", "/sir-tommy"],
-    rewards: [
+    "path": "/westcliff",
+    "x": 0.353,
+    "y": -0.3419,
+    "connections": [
+      "/alaska",
+      "/lucas",
+      "/yukon"
+    ],
+    "rewards": [
       {
-        type: "tao",
-        id: 72,
+        "type": "tao",
+        "id": 17
       },
       {
-        type: "quote",
-        id: 89,
-      },
-    ],
+        "type": "quote",
+        "id": 33
+      }
+    ]
   },
   {
-    path: "/easthaven",
-    x: -0.2022,
-    y: -0.6487,
-    connections: ["/dynasty", "/parallels"],
-    rewards: [
+    "path": "/beleaguered-castle",
+    "x": -0.0016,
+    "y": 0.5445,
+    "connections": [
+      "/carpet",
+      "/crazy-quilt",
+      "/three-peaks"
+    ],
+    "rewards": [
       {
-        type: "tao",
-        id: 54,
+        "type": "tao",
+        "id": 39
       },
       {
-        type: "quote",
-        id: 71,
-      },
-    ],
+        "type": "quote",
+        "id": 56
+      }
+    ]
   },
   {
-    path: "/gaps",
-    x: 0.7405,
-    y: 0.1758,
-    connections: ["/josephine", "/red-diamond"],
-    rewards: [
+    "path": "/gargantua",
+    "x": -0.4842,
+    "y": -0.2306,
+    "connections": [
+      "/bakers-game",
+      "/crescent",
+      "/gaps",
+      "/penguin"
+    ],
+    "rewards": [
       {
-        type: "tao",
-        id: 56,
+        "type": "tao",
+        "id": 25
       },
       {
-        type: "quote",
-        id: 73,
-      },
-    ],
+        "type": "quote",
+        "id": 42
+      }
+    ]
   },
   {
-    path: "/invaders",
-    x: -0.6382,
-    y: 0.4009,
-    connections: ["/seer", "/stalker", "/yukon"],
-    rewards: [
+    "path": "/singularity",
+    "x": 0.5334,
+    "y": 0.0863,
+    "connections": [
+      "/baroness",
+      "/thumb-and-pouch"
+    ],
+    "rewards": [
       {
-        type: "quote",
-        id: 30,
+        "type": "tao",
+        "id": 48
       },
       {
-        type: "quote",
-        id: 93,
-      },
-    ],
+        "type": "quote",
+        "id": 65
+      }
+    ]
   },
   {
-    path: "/rogue-run",
-    x: 0.4486,
-    y: -0.5169,
-    connections: ["/flower-garden", "/royal-cotillion", "/whitehead"],
-    rewards: [
+    "path": "/city-grid",
+    "x": -0.4147,
+    "y": 0.3451,
+    "connections": [
+      "/labyrinth",
+      "/moosehide",
+      "/parallels"
+    ],
+    "rewards": [
       {
-        type: "tao",
-        id: 71,
+        "type": "tao",
+        "id": 32
       },
       {
-        type: "quote",
-        id: 94,
-      },
-    ],
+        "type": "quote",
+        "id": 49
+      }
+    ]
   },
   {
-    path: "/fortunes-call",
-    x: 0.2381,
-    y: 0.7368,
-    connections: [
-      "/busy-aces",
+    "path": "/clock",
+    "x": 0.1235,
+    "y": -0.5361,
+    "connections": [
       "/cribbage-squares",
-      "/nestor",
-      "/spider-solitaire",
+      "/queens-audience"
     ],
-    rewards: [
+    "rewards": [
       {
-        type: "quote",
-        id: 150,
+        "type": "tao",
+        "id": 1
       },
       {
-        type: "quote",
-        id: 151,
+        "type": "quote",
+        "id": 108
       },
-    ],
+      {
+        "type": "quote",
+        "id": 109
+      }
+    ]
   },
   {
-    path: "/herbalist",
-    x: -0.6224,
-    y: -0.4082,
-    connections: [
-      "/golf",
-      "/infiltrator",
-      "/puss-in-the-corner",
+    "path": "/field-command",
+    "x": 0.3437,
+    "y": 0.4784,
+    "connections": [
+      "/archipelago",
+      "/ten-twenty-thirty"
+    ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 33
+      },
+      {
+        "type": "quote",
+        "id": 50
+      }
+    ]
+  },
+  {
+    "path": "/penguin",
+    "x": -0.5801,
+    "y": -0.1159,
+    "connections": [
+      "/gargantua",
+      "/red-diamond"
+    ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 58
+      },
+      {
+        "type": "quote",
+        "id": 75
+      }
+    ]
+  },
+  {
+    "path": "/puss-in-the-corner",
+    "x": 0.5369,
+    "y": -0.2253,
+    "connections": [
+      "/forty-thieves",
+      "/frog",
+      "/golf"
+    ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 10
+      },
+      {
+        "type": "quote",
+        "id": 102
+      }
+    ]
+  },
+  {
+    "path": "/three-peaks",
+    "x": -0.134,
+    "y": 0.5482,
+    "connections": [
+      "/beleaguered-castle",
+      "/carpet",
+      "/spiderette"
+    ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 23
+      },
+      {
+        "type": "quote",
+        "id": 40
+      }
+    ]
+  },
+  {
+    "path": "/whitehead",
+    "x": -0.1902,
+    "y": -0.4971,
+    "connections": [
+      "/raglan",
+      "/royal-rest",
+      "/seahaven-towers",
+      "/sly-fox"
+    ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 37
+      },
+      {
+        "type": "quote",
+        "id": 54
+      }
+    ]
+  },
+  {
+    "path": "/cruel",
+    "x": 0.5086,
+    "y": 0.2457,
+    "connections": [
+      "/chapter-and-verse",
+      "/simple-simon"
+    ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 34
+      },
+      {
+        "type": "quote",
+        "id": 103
+      }
+    ]
+  },
+  {
+    "path": "/labyrinth",
+    "x": -0.5233,
+    "y": 0.2876,
+    "connections": [
+      "/city-grid",
+      "/flower-garden"
+    ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 26
+      },
+      {
+        "type": "quote",
+        "id": 72
+      }
+    ]
+  },
+  {
+    "path": "/yukon",
+    "x": 0.3173,
+    "y": -0.5135,
+    "connections": [
+      "/dynasty",
+      "/westcliff"
+    ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 49
+      },
+      {
+        "type": "quote",
+        "id": 66
+      }
+    ]
+  },
+  {
+    "path": "/archipelago",
+    "x": 0.2489,
+    "y": 0.5215,
+    "connections": [
+      "/field-command",
+      "/fortress",
+      "/gridlines"
+    ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 29
+      },
+      {
+        "type": "quote",
+        "id": 46
+      }
+    ]
+  },
+  {
+    "path": "/crescent",
+    "x": -0.5108,
+    "y": -0.3922,
+    "connections": [
+      "/australian-patience",
+      "/fortunes-call",
+      "/gargantua"
+    ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 42
+      },
+      {
+        "type": "quote",
+        "id": 59
+      }
+    ]
+  },
+  {
+    "path": "/frog",
+    "x": 0.5383,
+    "y": -0.1226,
+    "connections": [
+      "/bisley",
+      "/forty-thieves",
+      "/puss-in-the-corner"
+    ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 20
+      },
+      {
+        "type": "quote",
+        "id": 95
+      }
+    ]
+  },
+  {
+    "path": "/parallels",
+    "x": -0.4076,
+    "y": 0.4428,
+    "connections": [
+      "/city-grid",
+      "/congress",
+      "/moosehide"
+    ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 8
+      },
+      {
+        "type": "quote",
+        "id": 96
+      }
+    ]
+  },
+  {
+    "path": "/royal-rest",
+    "x": -0.0482,
+    "y": -0.5614,
+    "connections": [
+      "/raglan",
+      "/whitehead"
+    ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 27
+      },
+      {
+        "type": "quote",
+        "id": 44
+      }
+    ]
+  },
+  {
+    "path": "/ten-twenty-thirty",
+    "x": 0.5028,
+    "y": 0.4522,
+    "connections": [
+      "/field-command",
+      "/poker-squares",
+      "/stalker"
+    ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 22
+      },
+      {
+        "type": "quote",
+        "id": 24
+      }
+    ]
+  },
+  {
+    "path": "/windmill",
+    "x": -0.6471,
+    "y": 0.1489,
+    "connections": [
+      "/sultan",
+      "/triple-stack"
+    ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 12
+      },
+      {
+        "type": "quote",
+        "id": 100
+      }
+    ]
+  },
+  {
+    "path": "/alaska",
+    "x": 0.4635,
+    "y": -0.4481,
+    "connections": [
+      "/gremlin",
+      "/westcliff"
+    ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 50
+      },
+      {
+        "type": "quote",
+        "id": 67
+      }
+    ]
+  },
+  {
+    "path": "/crazy-quilt",
+    "x": 0.0368,
+    "y": 0.6313,
+    "connections": [
+      "/beleaguered-castle",
+      "/invaders"
+    ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 18
+      },
+      {
+        "type": "quote",
+        "id": 87
+      }
+    ]
+  },
+  {
+    "path": "/sly-fox",
+    "x": -0.3634,
+    "y": -0.5694,
+    "connections": [
+      "/rogue-run",
+      "/whitehead"
+    ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 16
+      },
+      {
+        "type": "quote",
+        "id": 98
+      }
+    ]
+  },
+  {
+    "path": "/baroness",
+    "x": 0.6444,
+    "y": 0.0178,
+    "connections": [
+      "/singularity",
+      "/sir-tommy",
+      "/waypoint"
+    ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 30
+      },
+      {
+        "type": "quote",
+        "id": 47
+      }
+    ]
+  },
+  {
+    "path": "/congress",
+    "x": -0.4964,
+    "y": 0.512,
+    "connections": [
+      "/herbalist",
+      "/parallels"
+    ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 52
+      },
+      {
+        "type": "quote",
+        "id": 69
+      }
+    ]
+  },
+  {
+    "path": "/cribbage-squares",
+    "x": 0.07,
+    "y": -0.6843,
+    "connections": [
+      "/chain-of-command",
+      "/clock",
+      "/infiltrator"
+    ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 53
+      },
+      {
+        "type": "quote",
+        "id": 70
+      }
+    ]
+  },
+  {
+    "path": "/fortress",
+    "x": 0.254,
+    "y": 0.6715,
+    "connections": [
+      "/archipelago",
+      "/bakers-dozen",
+      "/seer"
+    ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 73
+      },
+      {
+        "type": "quote",
+        "id": 92
+      }
+    ]
+  },
+  {
+    "path": "/gaps",
+    "x": -0.6052,
+    "y": -0.255,
+    "connections": [
+      "/canfield",
+      "/gargantua"
+    ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 56
+      },
+      {
+        "type": "quote",
+        "id": 73
+      }
+    ]
+  },
+  {
+    "path": "/golf",
+    "x": 0.5722,
+    "y": -0.3559,
+    "connections": [
+      "/cafe-queue",
+      "/gremlin",
+      "/puss-in-the-corner"
+    ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 34
+      },
+      {
+        "type": "quote",
+        "id": 51
+      }
+    ]
+  },
+  {
+    "path": "/spiderette",
+    "x": -0.2603,
+    "y": 0.6809,
+    "connections": [
+      "/easthaven",
+      "/fight-clubs",
+      "/three-peaks"
+    ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 61
+      },
+      {
+        "type": "quote",
+        "id": 78
+      }
+    ]
+  },
+  {
+    "path": "/busy-aces",
+    "x": -0.1195,
+    "y": -0.7451,
+    "connections": [
+      "/josephine",
+      "/pyramid",
+      "/rogue-run",
+      "/somnus"
+    ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 32
+      },
+      {
+        "type": "quote",
+        "id": 86
+      }
+    ]
+  },
+  {
+    "path": "/chapter-and-verse",
+    "x": 0.6294,
+    "y": 0.2575,
+    "connections": [
+      "/cruel",
       "/royal-envoy",
+      "/sir-tommy"
     ],
-    rewards: [
+    "rewards": [
       {
-        type: "tao",
-        id: 55,
+        "type": "tao",
+        "id": 41
       },
       {
-        type: "quote",
-        id: 101,
-      },
-    ],
+        "type": "quote",
+        "id": 58
+      }
+    ]
   },
   {
-    path: "/red-diamond",
-    x: 0.7812,
-    y: 0.0242,
-    connections: ["/gaps", "/shamrocks", "/sly-fox"],
-    rewards: [
-      {
-        type: "tao",
-        id: 45,
-      },
-      {
-        type: "quote",
-        id: 62,
-      },
+    "path": "/flower-garden",
+    "x": -0.6608,
+    "y": 0.3613,
+    "connections": [
+      "/labyrinth",
+      "/triple-stack"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 65
+      },
+      {
+        "type": "quote",
+        "id": 82
+      }
+    ]
   },
   {
-    path: "/congress",
-    x: -0.4743,
-    y: 0.5851,
-    connections: ["/baroness", "/spiderette"],
-    rewards: [
-      {
-        type: "tao",
-        id: 52,
-      },
-      {
-        type: "quote",
-        id: 69,
-      },
+    "path": "/chain-of-command",
+    "x": 0.2023,
+    "y": -0.7099,
+    "connections": [
+      "/cribbage-squares",
+      "/infiltrator",
+      "/night-vigil"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 72
+      },
+      {
+        "type": "quote",
+        "id": 89
+      }
+    ]
   },
   {
-    path: "/dynasty",
-    x: -0.0646,
-    y: -0.685,
-    connections: ["/blackberry-pie", "/easthaven"],
-    rewards: [
-      {
-        type: "tao",
-        id: 57,
-      },
-      {
-        type: "quote",
-        id: 90,
-      },
+    "path": "/invaders",
+    "x": 0.0956,
+    "y": 0.7325,
+    "connections": [
+      "/crazy-quilt",
+      "/seer",
+      "/twelve-trials"
     ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 30
+      },
+      {
+        "type": "quote",
+        "id": 93
+      }
+    ]
   },
   {
-    path: "/fight-clubs",
-    x: 0.5986,
-    y: 0.3865,
-    connections: ["/gremlin", "/josephine", "/poker-squares", "/royal-rest"],
-    rewards: [
-      {
-        type: "quote",
-        id: 6,
-      },
-      {
-        type: "quote",
-        id: 91,
-      },
+    "path": "/fortunes-call",
+    "x": -0.5392,
+    "y": -0.5198,
+    "connections": [
+      "/australian-patience",
+      "/crescent",
+      "/shamrocks"
     ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 150
+      },
+      {
+        "type": "quote",
+        "id": 151
+      }
+    ]
   },
   {
-    path: "/fortress",
-    x: -0.7435,
-    y: 0.0073,
-    connections: ["/chapter-and-verse", "/penguin"],
-    rewards: [
-      {
-        type: "tao",
-        id: 73,
-      },
-      {
-        type: "quote",
-        id: 92,
-      },
+    "path": "/forty-thieves",
+    "x": 0.6618,
+    "y": -0.1523,
+    "connections": [
+      "/calculation",
+      "/frog",
+      "/puss-in-the-corner",
+      "/waypoint"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 76
+      },
+      {
+        "type": "quote",
+        "id": 41
+      }
+    ]
   },
   {
-    path: "/waypoint",
-    x: 0.6665,
-    y: -0.4223,
-    connections: ["/flower-garden", "/lycan", "/night-vigil"],
-    rewards: [
-      {
-        type: "tao",
-        id: 63,
-      },
-      {
-        type: "quote",
-        id: 80,
-      },
+    "path": "/herbalist",
+    "x": -0.4581,
+    "y": 0.6133,
+    "connections": [
+      "/congress",
+      "/dominion",
+      "/royal-cotillion"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 55
+      },
+      {
+        "type": "quote",
+        "id": 101
+      }
+    ]
   },
   {
-    path: "/dominion",
-    x: -0.1615,
-    y: 0.7138,
-    connections: ["/chain-of-command", "/crownslayer", "/cruel"],
-    rewards: [
-      {
-        type: "tao",
-        id: 64,
-      },
-      {
-        type: "quote",
-        id: 81,
-      },
+    "path": "/josephine",
+    "x": -0.2599,
+    "y": -0.7596,
+    "connections": [
+      "/busy-aces",
+      "/pyramid",
+      "/rogue-run"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 67
+      },
+      {
+        "type": "quote",
+        "id": 84
+      }
+    ]
   },
   {
-    path: "/infiltrator",
-    x: -0.5255,
-    y: -0.4591,
-    connections: ["/crazy-quilt", "/golf", "/herbalist", "/puss-in-the-corner"],
-    rewards: [
-      {
-        type: "tao",
-        id: 66,
-      },
-      {
-        type: "quote",
-        id: 83,
-      },
+    "path": "/poker-squares",
+    "x": 0.448,
+    "y": 0.5746,
+    "connections": [
+      "/bakers-dozen",
+      "/lone-joker",
+      "/ten-twenty-thirty"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 68
+      },
+      {
+        "type": "quote",
+        "id": 85
+      }
+    ]
   },
   {
-    path: "/josephine",
-    x: 0.6312,
-    y: 0.2904,
-    connections: ["/fight-clubs", "/gaps", "/pyramid", "/royal-rest"],
-    rewards: [
-      {
-        type: "tao",
-        id: 67,
-      },
-      {
-        type: "quote",
-        id: 84,
-      },
+    "path": "/red-diamond",
+    "x": -0.7,
+    "y": -0.0344,
+    "connections": [
+      "/accordion",
+      "/blackberry-pie",
+      "/penguin"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 45
+      },
+      {
+        "type": "quote",
+        "id": 62
+      }
+    ]
   },
   {
-    path: "/baroness",
-    x: -0.5635,
-    y: 0.5247,
-    connections: ["/congress", "/stalker"],
-    rewards: [
-      {
-        type: "tao",
-        id: 30,
-      },
-      {
-        type: "quote",
-        id: 47,
-      },
+    "path": "/dynasty",
+    "x": 0.4387,
+    "y": -0.6238,
+    "connections": [
+      "/ascent",
+      "/scorpion",
+      "/yukon"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 57
+      },
+      {
+        "type": "quote",
+        "id": 90
+      }
+    ]
   },
   {
-    path: "/blackberry-pie",
-    x: 0.0347,
-    y: -0.7655,
-    connections: ["/dynasty", "/elementary-detective"],
-    rewards: [
-      {
-        type: "tao",
-        id: 62,
-      },
-      {
-        type: "quote",
-        id: 79,
-      },
+    "path": "/fight-clubs",
+    "x": -0.184,
+    "y": 0.7735,
+    "connections": [
+      "/easthaven",
+      "/la-belle-lucie",
+      "/spiderette"
     ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 6
+      },
+      {
+        "type": "quote",
+        "id": 91
+      }
+    ]
   },
   {
-    path: "/cafe-queue",
-    x: 0.3494,
-    y: 0.6332,
-    connections: ["/archipelago", "/busy-aces", "/nestor"],
-    rewards: [
-      {
-        type: "tao",
-        id: 51,
-      },
-      {
-        type: "quote",
-        id: 68,
-      },
+    "path": "/rogue-run",
+    "x": -0.2997,
+    "y": -0.6741,
+    "connections": [
+      "/busy-aces",
+      "/josephine",
+      "/shifting-sands",
+      "/sly-fox"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 71
+      },
+      {
+        "type": "quote",
+        "id": 94
+      }
+    ]
   },
   {
-    path: "/golf",
-    x: -0.7222,
-    y: -0.3843,
-    connections: ["/ascent", "/herbalist", "/infiltrator", "/royal-envoy"],
-    rewards: [
-      {
-        type: "tao",
-        id: 34,
-      },
-      {
-        type: "quote",
-        id: 51,
-      },
+    "path": "/waypoint",
+    "x": 0.7428,
+    "y": -0.0114,
+    "connections": [
+      "/baroness",
+      "/calculation",
+      "/crownslayer",
+      "/forty-thieves"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 63
+      },
+      {
+        "type": "quote",
+        "id": 80
+      }
+    ]
   },
   {
-    path: "/shifting-sands",
-    x: 0.7981,
-    y: -0.2041,
-    connections: ["/lycan", "/somnus"],
-    rewards: [
-      {
-        type: "tao",
-        id: 59,
-      },
-      {
-        type: "quote",
-        id: 76,
-      },
+    "path": "/dominion",
+    "x": -0.5702,
+    "y": 0.606,
+    "connections": [
+      "/aces-up",
+      "/herbalist",
+      "/royal-cotillion"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 64
+      },
+      {
+        "type": "quote",
+        "id": 81
+      }
+    ]
   },
   {
-    path: "/sir-tommy",
-    x: -0.2712,
-    y: 0.7835,
-    connections: ["/bakers-dozen", "/chain-of-command", "/twelve-trials"],
-    rewards: [
-      {
-        type: "tao",
-        id: 60,
-      },
-      {
-        type: "quote",
-        id: 77,
-      },
+    "path": "/infiltrator",
+    "x": 0.0909,
+    "y": -0.8051,
+    "connections": [
+      "/chain-of-command",
+      "/cribbage-squares",
+      "/night-vigil",
+      "/somnus"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 66
+      },
+      {
+        "type": "quote",
+        "id": 83
+      }
+    ]
   },
   {
-    path: "/triple-stack",
-    x: -0.3907,
-    y: -0.709,
-    connections: ["/calculation", "/forty-thieves", "/parallels"],
-    rewards: [
-      {
-        type: "quote",
-        id: 2,
-      },
-      {
-        type: "quote",
-        id: 97,
-      },
+    "path": "/bakers-dozen",
+    "x": 0.3578,
+    "y": 0.6836,
+    "connections": [
+      "/fortress",
+      "/poker-squares"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 24
+      },
+      {
+        "type": "quote",
+        "id": 88
+      }
+    ]
   },
   {
-    path: "/gremlin",
-    x: 0.7028,
-    y: 0.4554,
-    connections: ["/fight-clubs", "/poker-squares", "/pyramid"],
-    rewards: [
-      {
-        type: "quote",
-        id: 126,
-      },
-      {
-        type: "quote",
-        id: 145,
-      },
+    "path": "/blackberry-pie",
+    "x": -0.6931,
+    "y": -0.1321,
+    "connections": [
+      "/canfield",
+      "/red-diamond"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 62
+      },
+      {
+        "type": "quote",
+        "id": 79
+      }
+    ]
   },
   {
-    path: "/seer",
-    x: -0.7114,
-    y: 0.3051,
-    connections: ["/aces-up", "/invaders", "/ten-twenty-thirty"],
-    rewards: [
-      {
-        type: "tao",
-        id: 46,
-      },
-      {
-        type: "quote",
-        id: 63,
-      },
+    "path": "/cafe-queue",
+    "x": 0.6865,
+    "y": -0.3431,
+    "connections": [
+      "/golf",
+      "/gremlin"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 51
+      },
+      {
+        "type": "quote",
+        "id": 68
+      }
+    ]
   },
   {
-    path: "/australian-patience",
-    x: 0.2959,
-    y: -0.696,
-    connections: ["/lone-joker", "/royal-cotillion", "/three-peaks"],
-    rewards: [
-      {
-        type: "quote",
-        id: 127,
-      },
-      {
-        type: "quote",
-        id: 147,
-      },
+    "path": "/easthaven",
+    "x": -0.3,
+    "y": 0.7886,
+    "connections": [
+      "/fight-clubs",
+      "/la-belle-lucie",
+      "/royal-cotillion",
+      "/spiderette"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 54
+      },
+      {
+        "type": "quote",
+        "id": 71
+      }
+    ]
   },
   {
-    path: "/crownslayer",
-    x: -0.0397,
-    y: 0.8567,
-    connections: ["/dominion", "/twelve-trials"],
-    rewards: [
-      {
-        type: "quote",
-        id: 125,
-      },
-      {
-        type: "quote",
-        id: 128,
-      },
+    "path": "/shifting-sands",
+    "x": -0.3966,
+    "y": -0.6767,
+    "connections": [
+      "/nestor",
+      "/rogue-run"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 59
+      },
+      {
+        "type": "quote",
+        "id": 76
+      }
+    ]
   },
   {
-    path: "/russian-solitaire",
-    x: -0.5318,
-    y: -0.6213,
-    connections: ["/all-in-a-row", "/crazy-quilt"],
-    rewards: [
-      {
-        type: "quote",
-        id: 123,
-      },
-      {
-        type: "quote",
-        id: 129,
-      },
+    "path": "/sir-tommy",
+    "x": 0.7284,
+    "y": 0.2011,
+    "connections": [
+      "/baroness",
+      "/chapter-and-verse"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 60
+      },
+      {
+        "type": "quote",
+        "id": 77
+      }
+    ]
   },
   {
-    path: "/somnus",
-    x: 0.8656,
-    y: -0.1252,
-    connections: ["/shamrocks", "/shifting-sands"],
-    rewards: [
-      {
-        type: "quote",
-        id: 130,
-      },
-      {
-        type: "quote",
-        id: 154,
-      },
+    "path": "/triple-stack",
+    "x": -0.7526,
+    "y": 0.2206,
+    "connections": [
+      "/flower-garden",
+      "/russian-solitaire",
+      "/windmill"
     ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 2
+      },
+      {
+        "type": "quote",
+        "id": 97
+      }
+    ]
   },
   {
-    path: "/stalker",
-    x: -0.6625,
-    y: 0.5278,
-    connections: ["/baroness", "/invaders", "/scorpion"],
-    rewards: [
-      {
-        type: "quote",
-        id: 155,
-      },
-      {
-        type: "quote",
-        id: 156,
-      },
+    "path": "/gremlin",
+    "x": 0.5815,
+    "y": -0.4665,
+    "connections": [
+      "/alaska",
+      "/cafe-queue",
+      "/golf",
+      "/scorpion"
     ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 126
+      },
+      {
+        "type": "quote",
+        "id": 145
+      }
+    ]
   },
   {
-    path: "/elementary-detective",
-    x: 0.1647,
-    y: -0.7862,
-    connections: ["/accordion", "/blackberry-pie", "/three-peaks"],
-    rewards: [
-      {
-        type: "quote",
-        id: 148,
-      },
-      {
-        type: "quote",
-        id: 149,
-      },
+    "path": "/seer",
+    "x": 0.1769,
+    "y": 0.7823,
+    "connections": [
+      "/fortress",
+      "/invaders",
+      "/lycan",
+      "/twelve-trials"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 46
+      },
+      {
+        "type": "quote",
+        "id": 63
+      }
+    ]
   },
   {
-    path: "/nestor",
-    x: 0.3756,
-    y: 0.7993,
-    connections: ["/cafe-queue", "/fortunes-call"],
-    rewards: [
-      {
-        type: "quote",
-        id: 152,
-      },
-      {
-        type: "quote",
-        id: 153,
-      },
+    "path": "/australian-patience",
+    "x": -0.6568,
+    "y": -0.4962,
+    "connections": [
+      "/all-in-a-row",
+      "/crescent",
+      "/fortunes-call"
     ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 127
+      },
+      {
+        "type": "quote",
+        "id": 147
+      }
+    ]
   },
   {
-    path: "/royal-envoy",
-    x: -0.8447,
-    y: -0.3341,
-    connections: ["/ascent", "/golf", "/herbalist"],
-    rewards: [
-      {
-        type: "quote",
-        id: 122,
-      },
-      {
-        type: "quote",
-        id: 131,
-      },
+    "path": "/crownslayer",
+    "x": 0.8396,
+    "y": 0.0047,
+    "connections": [
+      "/calculation",
+      "/spider-solitaire",
+      "/waypoint"
     ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 125
+      },
+      {
+        "type": "quote",
+        "id": 128
+      }
+    ]
   },
   {
-    path: "/night-vigil",
-    x: 0.7023,
-    y: -0.5866,
-    connections: ["/canfield", "/waypoint"],
-    rewards: [
-      {
-        type: "quote",
-        id: 132,
-      },
-      {
-        type: "quote",
-        id: 138,
-      },
+    "path": "/royal-cotillion",
+    "x": -0.5049,
+    "y": 0.75,
+    "connections": [
+      "/aces-up",
+      "/dominion",
+      "/easthaven",
+      "/herbalist"
     ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 14
+      },
+      {
+        "type": "quote",
+        "id": 114
+      },
+      {
+        "type": "quote",
+        "id": 121
+      }
+    ]
   },
   {
-    path: "/twelve-trials",
-    x: -0.1969,
-    y: 0.8443,
-    connections: ["/bakers-dozen", "/crownslayer", "/sir-tommy"],
-    rewards: [
-      {
-        type: "quote",
-        id: 133,
-      },
-      {
-        type: "quote",
-        id: 141,
-      },
+    "path": "/somnus",
+    "x": -0.0289,
+    "y": -0.8628,
+    "connections": [
+      "/busy-aces",
+      "/infiltrator"
     ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 130
+      },
+      {
+        "type": "quote",
+        "id": 154
+      }
+    ]
   },
   {
-    path: "/all-in-a-row",
-    x: -0.6413,
-    y: -0.6692,
-    connections: ["/forty-thieves", "/russian-solitaire"],
-    rewards: [
-      {
-        type: "tao",
-        id: 80,
-      },
-      {
-        type: "quote",
-        id: 110,
-      },
-      {
-        type: "quote",
-        id: 111,
-      },
+    "path": "/stalker",
+    "x": 0.565,
+    "y": 0.5263,
+    "connections": [
+      "/lone-joker",
+      "/royal-envoy",
+      "/ten-twenty-thirty"
     ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 155
+      },
+      {
+        "type": "quote",
+        "id": 156
+      }
+    ]
   },
   {
-    path: "/pyramid",
-    x: 0.7681,
-    y: 0.332,
-    connections: ["/gremlin", "/josephine"],
-    rewards: [
-      {
-        type: "quote",
-        id: 134,
-      },
-      {
-        type: "quote",
-        id: 146,
-      },
+    "path": "/canfield",
+    "x": -0.7355,
+    "y": -0.2541,
+    "connections": [
+      "/all-in-a-row",
+      "/blackberry-pie",
+      "/gaps"
     ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 1
+      },
+      {
+        "type": "quote",
+        "id": 99
+      }
+    ]
   },
   {
-    path: "/scorpion",
-    x: -0.7908,
-    y: 0.4842,
-    connections: ["/aces-up", "/la-belle-lucie", "/stalker"],
-    rewards: [
-      {
-        type: "quote",
-        id: 135,
-      },
-      {
-        type: "quote",
-        id: 144,
-      },
+    "path": "/scorpion",
+    "x": 0.5562,
+    "y": -0.5694,
+    "connections": [
+      "/ascent",
+      "/dynasty",
+      "/gremlin"
     ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 135
+      },
+      {
+        "type": "quote",
+        "id": 144
+      }
+    ]
   },
   {
-    path: "/lone-joker",
-    x: 0.4117,
-    y: -0.7969,
-    connections: ["/accordion", "/australian-patience"],
-    rewards: [
-      {
-        type: "quote",
-        id: 124,
-      },
-      {
-        type: "quote",
-        id: 136,
-      },
+    "path": "/elementary-detective",
+    "x": 0.0106,
+    "y": 0.9207,
+    "connections": [
+      "/lycan",
+      "/twelve-trials"
     ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 148
+      },
+      {
+        "type": "quote",
+        "id": 149
+      }
+    ]
   },
   {
-    path: "/cribbage-squares",
-    x: 0.1492,
-    y: 0.7807,
-    connections: ["/fortunes-call", "/salic-law", "/spider-solitaire"],
-    rewards: [
-      {
-        type: "tao",
-        id: 53,
-      },
-      {
-        type: "quote",
-        id: 70,
-      },
+    "path": "/nestor",
+    "x": -0.4508,
+    "y": -0.8063,
+    "connections": [
+      "/shamrocks",
+      "/shifting-sands"
     ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 152
+      },
+      {
+        "type": "quote",
+        "id": 153
+      }
+    ]
   },
   {
-    path: "/ascent",
-    x: -0.8494,
-    y: -0.2244,
-    connections: ["/golf", "/royal-envoy"],
-    rewards: [
-      {
-        type: "tao",
-        id: 75,
-      },
-      {
-        type: "quote",
-        id: 112,
-      },
-      {
-        type: "quote",
-        id: 113,
-      },
+    "path": "/royal-envoy",
+    "x": 0.8132,
+    "y": 0.4714,
+    "connections": [
+      "/chapter-and-verse",
+      "/stalker"
     ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 122
+      },
+      {
+        "type": "quote",
+        "id": 131
+      }
+    ]
   },
   {
-    path: "/lycan",
-    x: 0.7618,
-    y: -0.2988,
-    connections: ["/shifting-sands", "/waypoint"],
-    rewards: [
-      {
-        type: "tao",
-        id: 77,
-      },
-      {
-        type: "quote",
-        id: 115,
-      },
-      {
-        type: "quote",
-        id: 137,
-      },
+    "path": "/russian-solitaire",
+    "x": -0.8221,
+    "y": 0.1375,
+    "connections": [
+      "/accordion",
+      "/triple-stack"
     ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 123
+      },
+      {
+        "type": "quote",
+        "id": 129
+      }
+    ]
   },
   {
-    path: "/bakers-dozen",
-    x: -0.3309,
-    y: 0.8832,
-    connections: ["/sir-tommy", "/twelve-trials"],
-    rewards: [
-      {
-        type: "tao",
-        id: 24,
-      },
-      {
-        type: "quote",
-        id: 88,
-      },
+    "path": "/night-vigil",
+    "x": 0.2647,
+    "y": -0.9138,
+    "connections": [
+      "/chain-of-command",
+      "/infiltrator"
     ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 132
+      },
+      {
+        "type": "quote",
+        "id": 138
+      }
+    ]
   },
   {
-    path: "/calculation",
-    x: -0.3043,
-    y: -0.924,
-    connections: ["/forty-thieves", "/triple-stack"],
-    rewards: [
-      {
-        type: "tao",
-        id: 70,
-      },
-      {
-        type: "quote",
-        id: 118,
-      },
-      {
-        type: "quote",
-        id: 119,
-      },
+    "path": "/twelve-trials",
+    "x": 0.1324,
+    "y": 0.8651,
+    "connections": [
+      "/elementary-detective",
+      "/invaders",
+      "/lycan",
+      "/seer"
     ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 133
+      },
+      {
+        "type": "quote",
+        "id": 141
+      }
+    ]
   },
   {
-    path: "/poker-squares",
-    x: 0.7282,
-    y: 0.5526,
-    connections: ["/fight-clubs", "/gremlin"],
-    rewards: [
-      {
-        type: "tao",
-        id: 68,
-      },
-      {
-        type: "quote",
-        id: 85,
-      },
+    "path": "/all-in-a-row",
+    "x": -0.777,
+    "y": -0.3543,
+    "connections": [
+      "/australian-patience",
+      "/canfield"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 80
+      },
+      {
+        "type": "quote",
+        "id": 110
+      },
+      {
+        "type": "quote",
+        "id": 111
+      }
+    ]
   },
   {
-    path: "/la-belle-lucie",
-    x: -0.9131,
-    y: 0.3243,
-    connections: ["/aces-up", "/scorpion"],
-    rewards: [
-      {
-        type: "quote",
-        id: 120,
-      },
-      {
-        type: "quote",
-        id: 139,
-      },
+    "path": "/calculation",
+    "x": 0.8223,
+    "y": -0.101,
+    "connections": [
+      "/crownslayer",
+      "/forty-thieves",
+      "/spider-solitaire",
+      "/waypoint"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 70
+      },
+      {
+        "type": "quote",
+        "id": 118
+      },
+      {
+        "type": "quote",
+        "id": 119
+      }
+    ]
   },
   {
-    path: "/canfield",
-    x: 0.678,
-    y: -0.6981,
-    connections: ["/flower-garden", "/night-vigil"],
-    rewards: [
-      {
-        type: "quote",
-        id: 1,
-      },
-      {
-        type: "quote",
-        id: 99,
-      },
+    "path": "/la-belle-lucie",
+    "x": -0.3123,
+    "y": 0.8851,
+    "connections": [
+      "/easthaven",
+      "/fight-clubs"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 74
+      },
+      {
+        "type": "quote",
+        "id": 120
+      },
+      {
+        "type": "quote",
+        "id": 139
+      }
+    ]
   },
   {
-    path: "/spider-solitaire",
-    x: 0.2144,
-    y: 0.9199,
-    connections: ["/cribbage-squares", "/fortunes-call"],
-    rewards: [
-      {
-        type: "tao",
-        id: 79,
-      },
-      {
-        type: "quote",
-        id: 117,
-      },
-      {
-        type: "quote",
-        id: 140,
-      },
+    "path": "/pyramid",
+    "x": -0.252,
+    "y": -0.8721,
+    "connections": [
+      "/busy-aces",
+      "/josephine"
     ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 134
+      },
+      {
+        "type": "quote",
+        "id": 146
+      }
+    ]
   },
   {
-    path: "/forty-thieves",
-    x: -0.5204,
-    y: -0.8344,
-    connections: ["/all-in-a-row", "/calculation", "/triple-stack"],
-    rewards: [
-      {
-        type: "tao",
-        id: 76,
-      },
-      {
-        type: "quote",
-        id: 41,
-      },
+    "path": "/lone-joker",
+    "x": 0.5117,
+    "y": 0.6547,
+    "connections": [
+      "/poker-squares",
+      "/stalker"
     ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 124
+      },
+      {
+        "type": "quote",
+        "id": 136
+      }
+    ]
   },
   {
-    path: "/shamrocks",
-    x: 0.9144,
-    y: 0.0323,
-    connections: ["/red-diamond", "/somnus"],
-    rewards: [
-      {
-        type: "tao",
-        id: 78,
-      },
-      {
-        type: "quote",
-        id: 116,
-      },
-      {
-        type: "quote",
-        id: 142,
-      },
+    "path": "/accordion",
+    "x": -0.9132,
+    "y": -0.0443,
+    "connections": [
+      "/red-diamond",
+      "/russian-solitaire"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 81
+      },
+      {
+        "type": "quote",
+        "id": 106
+      },
+      {
+        "type": "quote",
+        "id": 107
+      }
+    ]
   },
   {
-    path: "/aces-up",
-    x: -0.7405,
-    y: 0.3986,
-    connections: ["/la-belle-lucie", "/scorpion", "/seer"],
-    rewards: [
-      {
-        type: "tao",
-        id: 69,
-      },
-      {
-        type: "quote",
-        id: 105,
-      },
-      {
-        type: "quote",
-        id: 143,
-      },
+    "path": "/ascent",
+    "x": 0.5559,
+    "y": -0.7217,
+    "connections": [
+      "/dynasty",
+      "/scorpion"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 75
+      },
+      {
+        "type": "quote",
+        "id": 112
+      },
+      {
+        "type": "quote",
+        "id": 113
+      }
+    ]
   },
   {
-    path: "/accordion",
-    x: 0.2863,
-    y: -0.8905,
-    connections: ["/elementary-detective", "/lone-joker"],
-    rewards: [
-      {
-        type: "tao",
-        id: 81,
-      },
-      {
-        type: "quote",
-        id: 106,
-      },
-      {
-        type: "quote",
-        id: 107,
-      },
+    "path": "/lycan",
+    "x": 0.1675,
+    "y": 0.9597,
+    "connections": [
+      "/elementary-detective",
+      "/seer",
+      "/twelve-trials"
     ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 77
+      },
+      {
+        "type": "quote",
+        "id": 115
+      },
+      {
+        "type": "quote",
+        "id": 137
+      }
+    ]
   },
+  {
+    "path": "/shamrocks",
+    "x": -0.5836,
+    "y": -0.6704,
+    "connections": [
+      "/fortunes-call",
+      "/nestor"
+    ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 78
+      },
+      {
+        "type": "quote",
+        "id": 116
+      },
+      {
+        "type": "quote",
+        "id": 142
+      }
+    ]
+  },
+  {
+    "path": "/spider-solitaire",
+    "x": 0.9845,
+    "y": -0.0357,
+    "connections": [
+      "/calculation",
+      "/crownslayer"
+    ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 79
+      },
+      {
+        "type": "quote",
+        "id": 117
+      },
+      {
+        "type": "quote",
+        "id": 140
+      }
+    ]
+  },
+  {
+    "path": "/aces-up",
+    "x": -0.7266,
+    "y": 0.7041,
+    "connections": [
+      "/dominion",
+      "/royal-cotillion"
+    ],
+    "rewards": [
+      {
+        "type": "tao",
+        "id": 69
+      },
+      {
+        "type": "quote",
+        "id": 105
+      },
+      {
+        "type": "quote",
+        "id": 143
+      }
+    ]
+  }
 ];

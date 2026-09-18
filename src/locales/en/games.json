@@ -426,10 +426,6 @@
     "jack": "Jack",
     "column": "Column"
   },
-  "salicLaw": {
-    "queens": "Queens",
-    "theKingsStandAlone": "The Kings stand alone!"
-  },
   "scorpion": {
     "allFourSuitStacksAre": "All four suit stacks are complete."
   },
@@ -480,6 +476,7 @@
     "theStockIsSpent": "The stock is spent."
   },
   "slyFox": {
+    "dealing": "Dealing",
     "place": "Place {{toPlace}}",
     "outfoxedTheDeck": "Outfoxed the deck!"
   },

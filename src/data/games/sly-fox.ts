@@ -15,7 +15,7 @@ export const slyFox: GameDefinition = {
   background: GAME_BACKGROUNDS.fallLeaves,
   animation: GameAnimations.Leaves,
   gameColorDark: "#2b1a10",
-  gameColorMid: "#c0652b",
+  gameColorMid: "#7a4320",
   gameColorPale: "#fde2cc",
   cardDescription:
     "Stash each twenty-card deal across twenty reserve piles, then dig out what you hid.",
@@ -29,7 +29,6 @@ export const slyFox: GameDefinition = {
     "Move all 104 cards onto the eight foundations.",
 
     "## Foundations",
-    "- One **Ace** and one **King** of each suit start the foundations.",
     "- Aces build **up** by suit; Kings build **down** by suit.",
 
     "## Rules",

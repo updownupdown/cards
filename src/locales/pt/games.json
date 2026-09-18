@@ -426,10 +426,6 @@
     "jack": "Valete",
     "column": "Coluna"
   },
-  "salicLaw": {
-    "queens": "Damas",
-    "theKingsStandAlone": "Os Reis ficam sozinhos!"
-  },
   "scorpion": {
     "allFourSuitStacksAre": "As quatro pilhas de naipe estão completas."
   },
@@ -480,6 +476,7 @@
     "theStockIsSpent": "O monte acabou."
   },
   "slyFox": {
+    "dealing": "Distribuindo",
     "place": "Colocar {{toPlace}}",
     "outfoxedTheDeck": "Você passou a perna no baralho!"
   },

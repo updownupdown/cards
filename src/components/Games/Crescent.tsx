@@ -457,7 +457,7 @@ export default function Crescent() {
           ? i18n.t("games:crescent.theCrescentIsClear")
           : i18n.t("cards:noMovesRemain")
       }
-      showDeviceRotateHint
+      showDeviceRotateHint="landscape"
     >
       {cardMap}
 

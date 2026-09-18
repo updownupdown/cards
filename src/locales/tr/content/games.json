@@ -3045,39 +3045,6 @@
       "value": "Rus pasyansı"
     }
   },
-  "salic-law": {
-    "cardDescription": {
-      "hash": "323b2f0b",
-      "value": "İki desteyi bir sıra Papaz'a dağıt, Kızları dışarıda bırak ve her As'ı Vale'sine kadar yükselt."
-    },
-    "howToPlay": {
-      "hash": "e07704cf",
-      "value": [
-        "## Amaç",
-        "Masada yalnızca Papazları bırakarak sekiz temelin hepsini As'tan Vale'ye diz.",
-        "## Dağıtım",
-        "- Masa bir **Papaz**'la başlar. Kartları en son Papaz'ın yığınına birer birer dağıtmak için **desteye** dokun.",
-        "- Bir **Papaz** dağıtıldığında yeni bir yığın başlatır.",
-        "- **Aslar** doğrudan temellere gider; **Kızlar** kenara ayrılır ve oyuna katılmaz.",
-        "## Kurallar",
-        "- İstediğin zaman bir yığının en üstteki kartına dokunarak onu Vale'ye kadar **takımı fark etmeksizin artan sırayla** dizilen bir temele oyna.",
-        "- Aksi halde almak için ona dokun, sonra kartı oraya taşımak için **üstünde kart olmayan bir Papaz'a** dokun.",
-        "- Masada başka dizme yapılmaz ve yeniden dağıtma yoktur."
-      ]
-    },
-    "quickStart": {
-      "hash": "4e6e6a53",
-      "value": [
-        "En son Papaz'a dağıtmak için desteye dokun.",
-        "Temeller takımı fark etmeksizin As'tan Vale'ye dizilir.",
-        "Tek başına duran bir Papaz herhangi bir tek kartı kabul eder."
-      ]
-    },
-    "title": {
-      "hash": "06960a5f",
-      "value": "Salik yasası"
-    }
-  },
   "scorpion": {
     "cardDescription": {
       "hash": "959e0b20",

@@ -27,7 +27,6 @@ import GrandfathersClock, {
 import Labyrinth from "@/components/Games/Labyrinth";
 import Parallels from "@/components/Games/Parallels";
 import QueensAudience from "@/components/Games/QueensAudience";
-import SalicLaw from "@/components/Games/SalicLaw";
 import SlyFox from "@/components/Games/SlyFox";
 import TenTwentyThirty from "@/components/Games/TenTwentyThirty";
 import Windmill from "@/components/Games/Windmill";
@@ -237,72 +236,6 @@ describe("Crazy Quilt", () => {
     await pressCardId(blocked.id);
 
     expect(zoneCardIds("quilt-9")).toEqual([blocked.id]);
-  });
-});
-
-describe("Salic Law", () => {
-  test("playing the last Jack wins", async () => {
-    const jack = card("J", "diamonds");
-    await renderGame("/salic-law", SalicLaw, {
-      stock: [],
-      tableau: [[card("K", "spades"), jack]],
-      queens: [],
-      foundations: [
-        ...Array.from({ length: 7 }, () => run("hearts", "A", "J")),
-        run("clubs", "A", "10"),
-      ],
-      ended: false,
-      won: false,
-    });
-    expect(outcome()).toBe("playing");
-
-    await pressCardId(jack.id);
-
-    expect(outcome()).toBe("won");
-  });
-
-  test("no foundation play and no useful King move loses", async () => {
-    const two = card("2", "hearts");
-    await renderGame("/salic-law", SalicLaw, {
-      stock: [],
-      tableau: [
-        [card("K", "spades"), two],
-        [card("K", "clubs"), card("9", "diamonds")],
-      ],
-      queens: [],
-      foundations: [[card("A", "hearts")], ...emptyPiles(7)],
-      ended: false,
-      won: false,
-    });
-    expect(outcome()).toBe("playing");
-
-    await pressCardId(two.id);
-
-    expect(outcome()).toBe("lost");
-  });
-
-  test("dealing routes Queens, Aces and Kings", async () => {
-    const five = card("5", "spades", false);
-    const queen = card("Q", "clubs", false);
-    const ace = card("A", "hearts", false);
-    const king = card("K", "diamonds", false);
-    await renderGame("/salic-law", SalicLaw, {
-      stock: [king, ace, queen, five],
-      tableau: [[card("K", "spades")]],
-      queens: [],
-      foundations: emptyPiles(8),
-      ended: false,
-      won: false,
-    });
-
-    for (let deal = 0; deal < 4; deal += 1) {
-      await pressZone((zone) => zone.name === "stock");
-    }
-
-    expect(zoneCardIds("tableau-0")).toContain(five.id);
-    expect(zoneCardIds("queens")).toEqual([queen.id]);
-    expect(zoneCardIds("foundation-0")).toEqual([ace.id]);
-    expect(zoneCardIds("tableau-1")).toEqual([king.id]);
   });
 });
 

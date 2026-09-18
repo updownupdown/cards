@@ -3047,39 +3047,6 @@
       "value": "Solitario ruso"
     }
   },
-  "salic-law": {
-    "cardDescription": {
-      "hash": "323b2f0b",
-      "value": "Reparte dos barajas sobre una fila de Reyes, aparta a las Reinas y sube cada As hasta su Jota."
-    },
-    "howToPlay": {
-      "hash": "e07704cf",
-      "value": [
-        "## Objetivo",
-        "Sube las ocho fundaciones del As a la Jota, dejando solo los Reyes en la mesa.",
-        "## Reparto",
-        "- Un **Rey** empieza la mesa. Toca el **mazo** para repartir cartas de una en una sobre la pila del Rey más reciente.",
-        "- Cuando sale un **Rey**, empieza una pila nueva.",
-        "- Los **Ases** van directamente a las fundaciones; las **Reinas** se apartan y no participan.",
-        "## Reglas",
-        "- En cualquier momento, toca la carta superior de una pila para jugarla en una fundación, que sube **sin importar el palo** hasta la Jota.",
-        "- Si no, tócala para cogerla y luego toca un **Rey sin cartas encima** para moverla allí.",
-        "- No se construye de ninguna otra forma en la mesa y no se vuelve a repartir."
-      ]
-    },
-    "quickStart": {
-      "hash": "4e6e6a53",
-      "value": [
-        "Toca el mazo para repartir sobre el Rey más reciente.",
-        "Las fundaciones suben del As a la Jota, sin importar el palo.",
-        "Un Rey sin cartas encima acepta cualquier carta suelta."
-      ]
-    },
-    "title": {
-      "hash": "06960a5f",
-      "value": "Ley sálica"
-    }
-  },
   "scorpion": {
     "cardDescription": {
       "hash": "959e0b20",

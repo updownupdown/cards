@@ -71,7 +71,8 @@ type Selection =
 
 type MoveSource = Exclude<Selection, null>;
 type DropTarget =
-  { zone: "tableau"; index: number } | { zone: "foundation"; index: number };
+  | { zone: "tableau"; index: number }
+  | { zone: "foundation"; index: number };
 
 const CONFIGS: Record<FanVariant, FanConfig> = {
   "la-belle-lucie": {
@@ -823,7 +824,7 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
           ? i18n.t("games:fanSolitaire.theFoundationsAreComplete")
           : i18n.t("cards:noMovesRemain")
       }
-      showDeviceRotateHint
+      showDeviceRotateHint="landscape"
     >
       <View
         ref={boardRef}

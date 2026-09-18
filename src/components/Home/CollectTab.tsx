@@ -14,19 +14,19 @@ import Svg, { Circle } from "react-native-svg";
 import { HomeCardSizeControl, type HomeCardSize } from "./HomeCardSizeControl";
 import { flexStyles } from "@/styles/flexStyles";
 
-export const COLLECT_TAGS: { tag: GameTag; color: string }[] = [
-  { tag: GameTag.EasyToLearn, color: "#9df3af" },
-  { tag: GameTag.ModernMechanics, color: "#a7bbc9" },
-  { tag: GameTag.CardCombat, color: "#fa7b7b" },
-  { tag: GameTag.DungeonCrawler, color: "#ecaf69" },
-  { tag: GameTag.GridPlacement, color: "#e39dff" },
-  { tag: GameTag.PairMatching, color: "#b5f18c" },
-  { tag: GameTag.SpatialControl, color: "#8fe7be" },
-  { tag: GameTag.TableauBuilding, color: "#f589b6" },
-  { tag: GameTag.StockAndWaste, color: "#c1a1d3" },
-  { tag: GameTag.ScoringPuzzles, color: "#daf58f" },
-  { tag: GameTag.SequenceBuilding, color: "#a1e7dc" },
-  { tag: GameTag.PokerAndCribbage, color: "#f5c781" },
+export const COLLECT_TAGS: GameTag[] = [
+  GameTag.EasyToLearn,
+  GameTag.ModernMechanics,
+  GameTag.CardCombat,
+  GameTag.DungeonCrawler,
+  GameTag.GridPlacement,
+  GameTag.PairMatching,
+  GameTag.SpatialControl,
+  GameTag.TableauBuilding,
+  GameTag.StockAndWaste,
+  GameTag.ScoringPuzzles,
+  GameTag.SequenceBuilding,
+  GameTag.PokerAndCribbage,
 ];
 
 type CollectTabProps = {
@@ -62,7 +62,7 @@ export function CollectTab({
   const gamesByTag = useMemo(
     () =>
       new Map(
-        COLLECT_TAGS.map(({ tag }) => [
+        COLLECT_TAGS.map((tag) => [
           tag,
           allEnabledGames.filter(([, game]) => game.tags[0] === tag),
         ]),
@@ -103,7 +103,7 @@ export function CollectTab({
           { gap: spacing(12), paddingVertical: spacing(24) },
         ]}
       >
-        {COLLECT_TAGS.map(({ tag }) => {
+        {COLLECT_TAGS.map((tag) => {
           const games = gamesByTag.get(tag) ?? [];
           const wonCount = games.filter(
             ([path]) => (settingsMap[path]?.stats?.wins ?? 0) > 0,

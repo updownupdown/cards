@@ -30,7 +30,6 @@ export const crazyQuilt: GameDefinition = {
     "Move all 104 cards onto the eight foundations.",
 
     "## Foundations",
-    "- One **Ace** and one **King** of each suit start the foundations.",
     "- Aces build **up** by suit to Kings; Kings build **down** by suit to Aces.",
 
     "## Rules",

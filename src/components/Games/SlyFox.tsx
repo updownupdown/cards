@@ -1,6 +1,7 @@
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 import { useEffect, useMemo } from "react";
+import { View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
@@ -14,16 +15,21 @@ import {
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { ProgressBar } from "../Home/ProgressBar";
 
 import { i18n } from "@/i18n";
 const reserveCount = 20;
 const reserveCols = 5;
 const dealSize = 20;
 const reserveCol = 1.2;
-const rowStep = 1.1;
+const rowStep = 1;
 const kingCol = reserveCol + reserveCols + 0.2;
-// Bottom row for the stock, leaving room for its label above.
-const stockRow = 3 * rowStep + 1 + 0.25;
+const dealingCol = 0;
+const progressBarWidth = 3.5;
+const progressBarCol = (dealingCol + kingCol + 1 - progressBarWidth) / 2;
+// Keep the stock, dealing pile, and deal progress together above the tableau.
+const stockRow = 0;
+const tableauRowOffset = 1.5;
 
 /**
  * "opening": reserve gaps refill from the stock.
@@ -34,6 +40,7 @@ type Phase = "opening" | "dealing" | "play";
 
 type GameState = {
   stock: PlayingCard[];
+  dealing: PlayingCard[];
   reserves: PlayingCard[][];
   /** 0-3 build up from the Aces by suit; 4-7 down from the Kings. */
   foundations: PlayingCard[][];
@@ -48,6 +55,7 @@ export type SlyFoxGameState = GameState;
 
 const gameStateInitial: GameState = {
   stock: shuffle(createDeck({ deckCount: 2 })).map(flipToBack),
+  dealing: [],
   reserves: Array.from({ length: reserveCount }, () => []),
   foundations: Array.from({ length: 8 }, () => []),
   phase: "opening",
@@ -82,16 +90,15 @@ function evaluateEnd(state: GameState, isSettingUp = false) {
   return hasMove ? playing : { ended: true, won: false };
 }
 
-/** Ends the deal once every card is placed, hiding the next stock card again. */
+/** Ends the deal once every batch card is placed. */
 function settleDeal(draft: GameState) {
-  const stockTop = top(draft.stock);
-  if (draft.toPlace > 0 && stockTop) {
-    draft.stock[draft.stock.length - 1] = flipToFace(stockTop);
+  const dealingTop = top(draft.dealing);
+  if (draft.toPlace > 0 && dealingTop) {
+    draft.dealing[draft.dealing.length - 1] = flipToFace(dealingTop);
     return;
   }
   draft.phase = "play";
   draft.toPlace = 0;
-  if (stockTop) draft.stock[draft.stock.length - 1] = flipToBack(stockTop);
 }
 
 export const slyFoxRules = { foundationFor, evaluateEnd };
@@ -116,6 +123,7 @@ export default function SlyFox() {
           ...draft.foundations.flat(),
         ];
         draft.stock = shuffle(cards).map(flipToBack);
+        draft.dealing = [];
         draft.reserves = Array.from({ length: reserveCount }, () => []);
         draft.foundations = Array.from({ length: 8 }, () => []);
         draft.phase = "opening";
@@ -164,10 +172,10 @@ export default function SlyFox() {
     if (game.ended) return;
 
     if (game.phase === "dealing") {
-      if (!top(game.stock)) return;
+      if (!top(game.dealing)) return;
       saveUndoState(structuredClone(game));
       setGame((draft) => {
-        const card = draft.stock.pop();
+        const card = draft.dealing.pop();
         if (card) draft.reserves[index].push(flipToFace(card));
         draft.toPlace -= 1;
         settleDeal(draft);
@@ -195,13 +203,15 @@ export default function SlyFox() {
 
     if (game.phase === "dealing") {
       // A dealt card may go straight up without counting towards the deal.
-      const card = top(game.stock)!;
+      const card = top(game.dealing);
+      if (!card) return;
       const target = foundationFor(game, card);
       if (target < 0) return;
       saveUndoState(structuredClone(game));
       setGame((draft) => {
-        const moved = draft.stock.pop();
+        const moved = draft.dealing.pop();
         if (moved) draft.foundations[target].push(flipToFace(moved));
+        draft.toPlace -= 1;
         settleDeal(draft);
       });
       return;
@@ -210,7 +220,10 @@ export default function SlyFox() {
     saveUndoState(structuredClone(game));
     setGame((draft) => {
       draft.phase = "dealing";
-      draft.toPlace = Math.min(dealSize, draft.stock.length);
+      draft.dealing = draft.stock.splice(
+        Math.max(0, draft.stock.length - dealSize),
+      );
+      draft.toPlace = draft.dealing.length;
       settleDeal(draft);
     });
   }
@@ -222,7 +235,7 @@ export default function SlyFox() {
       pileIndex: i,
       cards: pile,
       col: i < 4 ? 0 : kingCol,
-      row: (i % 4) * rowStep,
+      row: tableauRowOffset + (i % 4) * rowStep,
       fan: { maxVisible: 3 },
       placeholder: {},
     }));
@@ -233,7 +246,7 @@ export default function SlyFox() {
       pileIndex: i,
       cards: pile,
       col: reserveCol + (i % reserveCols),
-      row: Math.floor(i / reserveCols) * rowStep,
+      row: tableauRowOffset + Math.floor(i / reserveCols) * rowStep,
       fan: { maxVisible: 3 },
       placeholder: {},
     }));
@@ -249,13 +262,31 @@ export default function SlyFox() {
         row: stockRow,
         fan: { maxVisible: 3 },
         placeholder: {
-          text:
-            game.phase === "dealing"
-              ? i18n.t("games:slyFox.place", { toPlace: game.toPlace })
-              : i18n.t("cards:stock"),
+          text: i18n.t("cards:stock"),
           infoPos: "left",
-          showCount: game.phase !== "dealing",
         },
+      },
+      {
+        id: "dealing",
+        name: "dealing",
+        cards: game.dealing,
+        col: dealingCol,
+        row: stockRow,
+        fan: { maxVisible: 3 },
+        placeholder:
+          game.phase === "dealing"
+            ? {
+                text: i18n.t("games:slyFox.dealing"),
+                infoPos: "right",
+                showCount: false,
+              }
+            : undefined,
+      },
+      {
+        id: "dealing-progress",
+        col: progressBarCol,
+        row: stockRow,
+        width: progressBarWidth,
       },
     ];
   }, [game]);
@@ -280,6 +311,24 @@ export default function SlyFox() {
     if (mappedCard.zoneName === "stock") {
       return { isDisabled: game.ended, onPress: onStockPress };
     }
+    if (mappedCard.zoneName === "dealing") {
+      const card = top(game.dealing);
+      if (!card) return {};
+      return {
+        isDisabled: game.ended,
+        onPress: () => {
+          const target = foundationFor(game, card);
+          if (target < 0) return;
+          saveUndoState(structuredClone(game));
+          setGame((draft) => {
+            const moved = draft.dealing.pop();
+            if (moved) draft.foundations[target].push(flipToFace(moved));
+            draft.toPlace -= 1;
+            settleDeal(draft);
+          });
+        },
+      };
+    }
     return {};
   };
 
@@ -299,16 +348,34 @@ export default function SlyFox() {
         isDisabled: game.ended || game.stock.length === 0,
       };
     }
+    if (zone.name === "dealing") {
+      return {
+        onPress: () => {
+          const card = top(game.dealing);
+          if (!card) return;
+          const target = foundationFor(game, card);
+          if (target < 0) return;
+          saveUndoState(structuredClone(game));
+          setGame((draft) => {
+            const moved = draft.dealing.pop();
+            if (moved) draft.foundations[target].push(flipToFace(moved));
+            draft.toPlace -= 1;
+            settleDeal(draft);
+          });
+        },
+        isDisabled: game.ended || game.phase !== "dealing",
+      };
+    }
     return {};
   };
 
-  const { cardMap } = useCardMap({
+  const { cardMap, cardHeight, getZoneStylesById } = useCardMap({
     game,
     zones,
     cardMapper,
     zoneMapper,
     cardSize: "tableau",
-    fixedRows: stockRow + 1,
+    fixedRows: tableauRowOffset + 4 * rowStep + 0.5,
     gap: 0.14,
   });
 
@@ -329,6 +396,23 @@ export default function SlyFox() {
       undo={undo}
     >
       {cardMap}
+
+      {game.phase === "dealing" && (
+        <View
+          style={[
+            getZoneStylesById("dealing-progress"),
+            { alignItems: "center", justifyContent: "center" },
+          ]}
+        >
+          <ProgressBar
+            progressValue={game.toPlace}
+            totalValue={dealSize}
+            color="green"
+            autoTallyText
+            scaledHeight={cardHeight * 0.5}
+          />
+        </View>
+      )}
     </GameWrapper>
   );
 }

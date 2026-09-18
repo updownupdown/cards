@@ -7,7 +7,7 @@ export const sultan: GameDefinition = {
   title: "Sultan",
   thumbnail: "Sultan.webp",
   aliases: ["Sultan of Turkey", "Emperor of Germany"],
-  tags: [GameTag.StockAndWaste, GameTag.SequenceBuilding],
+  tags: [GameTag.SequenceBuilding, GameTag.StockAndWaste],
   rating: { complexity: 35, difficulty: 35, luck: 55 },
   background: GAME_BACKGROUNDS.alhambra,
   animation: GameAnimations.Clouds,

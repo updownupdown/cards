@@ -3047,39 +3047,6 @@
       "value": "Réussite russe"
     }
   },
-  "salic-law": {
-    "cardDescription": {
-      "hash": "323b2f0b",
-      "value": "Distribuez deux paquets sur une rangée de Rois, écartez les Dames et montez chaque As jusqu'à son Valet."
-    },
-    "howToPlay": {
-      "hash": "e07704cf",
-      "value": [
-        "## Objectif",
-        "Montez les huit fondations de l'As au Valet, en ne laissant que les Rois dans le tableau.",
-        "## Distribution",
-        "- Un **Roi** commence le tableau. Touchez la **pioche** pour distribuer les cartes une à une sur la pile du Roi le plus récent.",
-        "- Quand un **Roi** est distribué, il commence une nouvelle pile.",
-        "- Les **As** vont directement sur les fondations\u00a0; les **Dames** sont mises de côté et ne jouent aucun rôle.",
-        "## Règles",
-        "- À tout moment, touchez la carte du dessus d'une pile pour la jouer sur une fondation, qui monte **sans tenir compte de la couleur** jusqu'au Valet.",
-        "- Sinon, touchez-la pour la prendre, puis touchez un **Roi sans aucune carte** pour y déplacer la carte.",
-        "- Il n'y a pas d'autre construction dans le tableau, ni de redistribution."
-      ]
-    },
-    "quickStart": {
-      "hash": "4e6e6a53",
-      "value": [
-        "Touchez la pioche pour distribuer sur le Roi le plus récent.",
-        "Les fondations montent de l'As au Valet, sans tenir compte de la couleur.",
-        "Un Roi sans carte accepte n'importe quelle carte seule."
-      ]
-    },
-    "title": {
-      "hash": "06960a5f",
-      "value": "Loi salique"
-    }
-  },
   "scorpion": {
     "cardDescription": {
       "hash": "959e0b20",

@@ -544,7 +544,7 @@ export default function ShiftingSands() {
       winLoseMessage={game.winLoseMessage}
       canUndo={canUndo}
       undo={undo}
-      showDeviceRotateHint
+      showDeviceRotateHint="landscape"
     >
       {cardMap}
 

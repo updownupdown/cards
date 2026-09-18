@@ -426,10 +426,6 @@
     "jack": "Jota",
     "column": "Columna"
   },
-  "salicLaw": {
-    "queens": "Reinas",
-    "theKingsStandAlone": "¡Los Reyes se quedan solos!"
-  },
   "scorpion": {
     "allFourSuitStacksAre": "Las cuatro pilas por palo están completas."
   },
@@ -480,6 +476,7 @@
     "theStockIsSpent": "El mazo se ha agotado."
   },
   "slyFox": {
+    "dealing": "Repartiendo",
     "place": "Colocar {{toPlace}}",
     "outfoxedTheDeck": "¡Has burlado al mazo!"
   },

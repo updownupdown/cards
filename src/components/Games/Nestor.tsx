@@ -323,7 +323,7 @@ export default function Nestor() {
       }
       canUndo={canUndo}
       undo={undo}
-      showDeviceRotateHint
+      showDeviceRotateHint="landscape"
     >
       {cardMap}
     </GameWrapper>

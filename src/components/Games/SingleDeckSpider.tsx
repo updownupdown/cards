@@ -476,7 +476,7 @@ export function SingleDeckSpider({
       canUndo={canUndo}
       undo={undo}
       winLoseMessage={i18n.t("games:singleDeckSpider.fourCompleteSuits")}
-      showDeviceRotateHint
+      showDeviceRotateHint="landscape"
     >
       <View
         ref={boardRef}

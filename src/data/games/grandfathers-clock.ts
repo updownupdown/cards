@@ -5,7 +5,7 @@ import { GameAnimations } from "@/animations";
 export const grandfathersClock: GameDefinition = {
   path: "/grandfathers-clock",
   title: "Grandfather's Clock",
-  tags: [GameTag.TableauBuilding, GameTag.SequenceBuilding],
+  tags: [GameTag.SequenceBuilding, GameTag.TableauBuilding],
   rating: {
     complexity: 30,
     difficulty: 30,

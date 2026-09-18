@@ -786,7 +786,7 @@ export function StockTableauSolitaire({
         placeholder: {
           text: i18n.t("cards:stock"),
           showCount: true,
-          infoPos: "above",
+          infoPos: side ? "above" : "left",
         },
       },
       ...(config.stock === "waste"
@@ -795,13 +795,13 @@ export function StockTableauSolitaire({
               id: "waste",
               name: "waste",
               cards: game.waste,
-              col: side ? stockCol : config.deal.columns - 2.25,
+              col: side ? stockCol : config.deal.columns - 2.75,
               row: stockRow(config, layout) - (side ? 1.35 : 0),
               fan: { maxVisible: 3 },
               placeholder: {
                 text: i18n.t("cards:waste"),
                 showCount: true,
-                infoPos: "above",
+                infoPos: side ? "above" : "left",
               },
             } as MapZone,
           ]
@@ -1111,7 +1111,6 @@ export function StockTableauSolitaire({
           ? i18n.t("games:stockTableauSolitaire.everySuitIsHome")
           : i18n.t("cards:noMovesRemain")
       }
-      showDeviceRotateHint
     >
       <View
         ref={boardRef}

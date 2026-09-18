@@ -5,7 +5,7 @@ import { GameAnimations } from "@/animations";
 export const windmill: GameDefinition = {
   path: "/windmill",
   title: "Windmill",
-  tags: [GameTag.StockAndWaste, GameTag.SequenceBuilding],
+  tags: [GameTag.SequenceBuilding, GameTag.StockAndWaste],
   rating: {
     complexity: 35,
     difficulty: 45,

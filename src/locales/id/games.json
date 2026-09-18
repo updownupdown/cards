@@ -426,10 +426,6 @@
     "jack": "Jack",
     "column": "Kolom"
   },
-  "salicLaw": {
-    "queens": "Queen",
-    "theKingsStandAlone": "Para King berdiri sendiri!"
-  },
   "scorpion": {
     "allFourSuitStacksAre": "Keempat tumpukan jenis sudah lengkap."
   },
@@ -480,6 +476,7 @@
     "theStockIsSpent": "Dek sudah habis."
   },
   "slyFox": {
+    "dealing": "Membagikan",
     "place": "Taruh {{toPlace}}",
     "outfoxedTheDeck": "Dek berhasil dikecoh!"
   },

@@ -287,7 +287,7 @@ export default function Bisley() {
           ? i18n.t("games:bisley.theFoundationsMeet")
           : i18n.t("cards:noMovesRemain")
       }
-      showDeviceRotateHint
+      showDeviceRotateHint="landscape"
     >
       {cardMap}
     </GameWrapper>

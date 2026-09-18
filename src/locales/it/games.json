@@ -426,10 +426,6 @@
     "jack": "Fante",
     "column": "Colonna"
   },
-  "salicLaw": {
-    "queens": "Donne",
-    "theKingsStandAlone": "I Re restano soli!"
-  },
   "scorpion": {
     "allFourSuitStacksAre": "Tutte e quattro le pile per seme sono complete."
   },
@@ -480,6 +476,7 @@
     "theStockIsSpent": "Il mazzo è esaurito."
   },
   "slyFox": {
+    "dealing": "Distribuzione",
     "place": "Piazza {{toPlace}}",
     "outfoxedTheDeck": "Hai battuto il mazzo in astuzia!"
   },

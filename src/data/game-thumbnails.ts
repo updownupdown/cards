@@ -91,7 +91,6 @@ export const GAME_THUMBNAIL_ASSETS = {
   "RoyalEnvoy.webp": require("@/assets/thumbnails/RoyalEnvoy.webp"),
   "RoyalRest.webp": require("@/assets/thumbnails/RoyalRest.webp"),
   "RussianSolitaire.webp": require("@/assets/thumbnails/RussianSolitaire.webp"),
-  "SalicLaw.webp": require("@/assets/thumbnails/SalicLaw.webp"),
   "Scorpion.webp": require("@/assets/thumbnails/Scorpion.webp"),
   "SeahavenTowers.webp": require("@/assets/thumbnails/SeahavenTowers.webp"),
   "Seer.webp": require("@/assets/thumbnails/Seer.webp"),

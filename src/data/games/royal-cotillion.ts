@@ -5,7 +5,7 @@ import { GameAnimations } from "@/animations";
 export const royalCotillion: GameDefinition = {
   path: "/royal-cotillion",
   title: "Royal Cotillion",
-  tags: [GameTag.StockAndWaste, GameTag.SequenceBuilding],
+  tags: [GameTag.SequenceBuilding, GameTag.StockAndWaste],
   rating: {
     complexity: 45,
     difficulty: 50,
