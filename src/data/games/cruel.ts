@@ -11,7 +11,7 @@ export const cruel: GameDefinition = {
     difficulty: 55,
     luck: 35,
   },
-  thumbnail: "DefaultThumbnail.webp",
+  thumbnail: "Cruel.webp",
   background: GAME_BACKGROUNDS.dungeon,
   animation: GameAnimations.Embers,
   gameColorDark: "#2a1111",

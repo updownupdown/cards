@@ -1,4 +1,11 @@
-import { afterEach, beforeEach, describe, expect, jest, test } from "@jest/globals";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from "@jest/globals";
 import "../../../jest/game-mocks";
 import {
   card,
@@ -20,7 +27,11 @@ afterEach(() => {
 });
 
 describe("Chapter and Verse", () => {
-  function shopState(customer: PlayingCard, guildScore: number, interactions: number) {
+  function shopState(
+    customer: PlayingCard,
+    guildScore: number,
+    interactions: number,
+  ) {
     return {
       inventory: [card("9", "clubs")],
       shelves: Array.from({ length: 8 }, (_, index) =>
@@ -65,7 +76,11 @@ describe("Chapter and Verse", () => {
 });
 
 describe("Gridlines", () => {
-  function tableState(hand: PlayingCard[], firstRow: PlayingCard[], scores: { youScore: number; gridScore: number }) {
+  function tableState(
+    hand: PlayingCard[],
+    firstRow: PlayingCard[],
+    scores: { youScore: number; gridScore: number },
+  ) {
     const grid = Array.from({ length: 36 }, () => ({
       card: null as PlayingCard | null,
       faceUp: false,

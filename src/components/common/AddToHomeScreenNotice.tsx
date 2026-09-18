@@ -3,9 +3,10 @@ import { Button } from "@/components/Button/Button";
 import { Icon } from "@/icons";
 import { usePwaInstallPrompt } from "@/hooks/usePwaInstallPrompt";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useTranslation } from "@/i18n";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, rgba } from "@/styles/styles";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { View } from "react-native";
 
 type AddToHomeScreenNoticeProps = {
@@ -18,33 +19,24 @@ export function AddToHomeScreenNotice({
   onDismiss,
 }: AddToHomeScreenNoticeProps) {
   const { spacing } = useResponsiveMetrics();
+  const { t } = useTranslation("home");
   const { isWeb, isIos, isStandalone, canPromptInstall, promptInstall } =
     usePwaInstallPrompt();
   const [installState, setInstallState] = useState<
     "idle" | "accepted" | "dismissed"
   >("idle");
 
-  const title = useMemo(() => {
-    if (isIos) {
-      return "Add SoloSuite to your Home Screen";
-    }
-    if (canPromptInstall) {
-      return "Install SoloSuite";
-    }
-    return "Add SoloSuite to your device";
-  }, [canPromptInstall, isIos]);
+  const title = isIos
+    ? t("install.titleIos")
+    : canPromptInstall
+      ? t("install.titleInstall")
+      : t("install.titleDevice");
 
-  const instructions = useMemo(() => {
-    if (isIos) {
-      return "In Safari, tap the Share button, then choose “Add to Home Screen”.";
-    }
-
-    if (canPromptInstall) {
-      return "Install for faster launches, a full-screen experience, and offline play.";
-    }
-
-    return "Open your browser menu and choose “Install app” or “Add to Home screen”.";
-  }, [canPromptInstall, isIos]);
+  const instructions = isIos
+    ? t("install.instructionsIos")
+    : canPromptInstall
+      ? t("install.instructionsInstall")
+      : t("install.instructionsBrowser");
 
   if (!isWeb || isStandalone) {
     return null;
@@ -80,13 +72,13 @@ export function AddToHomeScreenNotice({
 
       {installState === "accepted" && (
         <Text size="xs" color={Colors.accentGreen}>
-          Nice! Your browser is finishing the install in the background.
+          {t("install.accepted")}
         </Text>
       )}
 
       {installState === "dismissed" && (
         <Text size="xs" color={Colors.K400}>
-          No problem — you can install any time from your browser menu.
+          {t("install.dismissed")}
         </Text>
       )}
 
@@ -103,7 +95,7 @@ export function AddToHomeScreenNotice({
         >
           {canPromptInstall && !hideInstallButton && (
             <Button
-              text="Install now"
+              text={t("install.installNow")}
               theme="blue"
               iconName="home"
               uppercase={false}
@@ -120,7 +112,7 @@ export function AddToHomeScreenNotice({
           {dismissible && (
             <Button
               size="sm"
-              text="Not now"
+              text={t("install.notNow")}
               textOnly
               uppercase={false}
               onPress={() => onDismiss?.()}

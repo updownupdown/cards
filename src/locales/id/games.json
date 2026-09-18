@@ -1,0 +1,630 @@
+{
+  "accordion": {
+    "youCompressedTheDeckTo": "Kamu memadatkan dek menjadi satu kartu."
+  },
+  "allInARow": {
+    "youClearedTheBoard": "Kamu membersihkan meja!",
+    "noAdjacentRankRemains": "Tidak ada nilai berurutan lagi."
+  },
+  "archipelago": {
+    "out": "Keluar",
+    "notALegalPlacement": "Penempatan tidak sah",
+    "islandComplete": "Pulau selesai!",
+    "islandUnfinished": "Pulau belum selesai!"
+  },
+  "ascent": {
+    "lhotseRoutesNeed2Cards": "Lhotse: rute butuh 2+ kartu.",
+    "gasherbrumIAnchorMustBe": "Gasherbrum I: jangkar harus genap.",
+    "broadPeakChangeYourApproach": "Broad Peak: ganti pendekatanmu.",
+    "fatigue": "Lelah",
+    "noCardsSelected": "Belum ada kartu dipilih",
+    "lastSelectedCardIsThe": "Kartu terakhir yang dipilih adalah jangkar",
+    "camps": "Kemah",
+    "routes": "Rute",
+    "skipDiscard": "Lewati buang",
+    "rest": "Istirahat",
+    "playRoute": "Mainkan rute",
+    "invalid": "tidak sah",
+    "approachCautious": "Hati-hati",
+    "approachReckless": "Nekat",
+    "approachTechnical": "Teknis",
+    "approachFreeClimbing": "Panjat bebas",
+    "drawHigherInHand": "Ambil: kartu di tangan > jangkar",
+    "drawLowerInHand": "Ambil: kartu di tangan < jangkar",
+    "drawDiamondsInHand": "Ambil: wajik di tangan",
+    "drawNonSpadesInRoute": "Ambil: jenis selain sekop di rute",
+    "youSummitedTheMountain": "Kamu mencapai puncak gunung!",
+    "outOfCardsWhileMakingCamp": "Kartu habis saat mendirikan kemah.",
+    "deckAndFatigueRanDry": "Dek dan tumpukan kelelahan sudah habis.",
+    "handOverflowed": "Tanganmu kepenuhan (18+ kartu).",
+    "baseClimb": "Pendakian dasar"
+  },
+  "bakersDozen": {
+    "allFourSuitsAreComplete": "Keempat jenis sudah lengkap!"
+  },
+  "baroness": {
+    "allCleared": "Semua bersih!",
+    "noThirteenLeftToMake": "Tidak ada lagi yang bisa menjadi tiga belas."
+  },
+  "bisley": {
+    "theFoundationsMeet": "Fondasi-fondasi bertemu!"
+  },
+  "blackberryPie": {
+    "thePieIsReadyYou": "Pai sudah siap! Kamu mengumpulkan semua {{BERRY_COUNT}} beri.",
+    "youCollectedOfBerries": "Kamu mengumpulkan {{collectedCount}} dari {{BERRY_COUNT}} beri."
+  },
+  "bowling": {
+    "endBall": "Akhiri bola",
+    "pins": "Pin",
+    "ball": "Bola",
+    "throw": "Lempar",
+    "finalScoreWon": "Skor akhir: {{score}}. Kamu melampaui {{target}}!",
+    "finalScoreLost": "Skor akhir: {{score}}. Kamu butuh {{target}}."
+  },
+  "cabinSiege": {
+    "youKilledAllTheZombies": "Kamu membunuh semua zombi!",
+    "noCardsLeftToDraw": "Tidak ada kartu lagi untuk diambil!",
+    "unableToPlaceCard": "Kartu tidak bisa ditempatkan.",
+    "youLost": "Kamu kalah.",
+    "revealAZombie": "Buka satu zombi",
+    "placeACard": "Tempatkan satu kartu",
+    "killAZombie": "Bunuh satu zombi",
+    "noKillableZombies": "Tidak ada zombi yang bisa dibunuh!"
+  },
+  "cafeQueue": {
+    "discardedTheFourthCardOf": "Kartu keempat dari satu nilai terbuang.",
+    "selectQueuePositionForNext": "Pilih posisi antrean untuk pelanggan berikutnya",
+    "revealNextCustomer": "Buka pelanggan berikutnya",
+    "letThemStay": "Biarkan tinggal",
+    "kickThemOut": "Usir"
+  },
+  "calculation": {
+    "all52CardsAreOn": "Ke-52 kartu ada di fondasi."
+  },
+  "carpet": {
+    "theCarpetIsRolledUp": "Karpet sudah digulung!"
+  },
+  "chainOfCommand": {
+    "selectAMemberToPromote": "Pilih anggota untuk dipromosikan",
+    "selectAValidReplacement": "Pilih pengganti yang sah",
+    "noValidReplacement": "Tidak ada pengganti yang sah",
+    "sacrificeNeededForMemberPromotion": "(Perlu pengorbanan untuk promosi)",
+    "promoteAsA": "Promosikan sebagai:",
+    "dead": "Gugur",
+    "youWonByPromotingFrom": "Kamu menang dengan promosi dari Pangkat 1. Skor akhir: {{score}}",
+    "noValidPromotionReplacementRemains": "Tidak ada promosi/penggantian yang sah lagi. Kamu kalah.",
+    "rk": "Pkt",
+    "members": "Anggota",
+    "candidates": "Kandidat",
+    "member": "Anggota",
+    "candidate": "Kandidat"
+  },
+  "chapterAndVerse": {
+    "terminated": "Dipecat",
+    "employeeOfTheMonth": "Karyawan Terbaik Bulan Ini",
+    "performanceBonus": "Bonus kinerja",
+    "promotionToDistrictManager": "Promosi jadi Manajer Wilayah",
+    "companyLivestockOptions": "Opsi ternak perusahaan",
+    "executiveLordshipProgram": "Program Kebangsawanan Eksekutif",
+    "line": "Antrean",
+    "used": "Bekas",
+    "firedForLosingYourGuild": "Dipecat karena kehilangan reputasi di Serikat.",
+    "guildPts": "Poin Serikat",
+    "pass": "Lewati",
+    "trade": "Jual",
+    "offer": "Tawaran"
+  },
+  "cityGrid": {
+    "pileIsFull": "Tumpukan penuh!",
+    "mustPlaceOnExistingOr": "Harus ditaruh di tumpukan yang ada atau di sebelahnya!",
+    "placingHereWouldResultIn": "Menaruh di sini membuat terlalu banyak kartu terbuka!",
+    "youRanOutOfCards": "Kartumu habis!",
+    "youRanOutOfPlacements": "Tidak ada penempatan sah lagi!"
+  },
+  "clock": {
+    "youRevealedAll52Cards": "Kamu membuka ke-52 kartu.",
+    "theFourthKingAppearedBefore": "King keempat muncul sebelum semua kartu terbuka."
+  },
+  "crazyQuilt": {
+    "theQuiltIsUnstitched": "Selimut perca sudah terurai!"
+  },
+  "crescent": {
+    "theCrescentIsClear": "Bulan sabit sudah bersih!",
+    "restack": "Putar ({{value}})"
+  },
+  "cribbageSquares": {
+    "youScoredPoints": "Kamu mencetak {{score}} poin!",
+    "youScoredReachToWin": "Skormu {{score}}. Capai {{TARGET_SCORE}} untuk menang."
+  },
+  "crownslayer": {
+    "castle": "Kastel",
+    "tavern": "Kedai",
+    "jesters": "Badut",
+    "attack": "Serang",
+    "defend": "Bertahan",
+    "powerHeal": "Pulih",
+    "powerDraw": "Ambil",
+    "powerDouble": "Rusak x2",
+    "powerShield": "- Srg.",
+    "noPlayableCards": "Tidak ada kartu yang bisa dimainkan. Permainan berakhir!",
+    "noDiscardCanCover": "Tidak ada buangan yang bisa menahan kerusakan musuh. Permainan berakhir!",
+    "victoryGold": "Semua musuh kalah! Kemenangan EMAS!",
+    "victorySilver": "Semua musuh kalah! Kemenangan PERAK!",
+    "victoryBronze": "Semua musuh kalah! Kemenangan PERUNGGU!",
+    "failedToBlock": "Gagal menahan {{damage}} kerusakan. Permainan berakhir!"
+  },
+  "cruel": {
+    "crueltyConquered": "Kekejaman ditaklukkan!"
+  },
+  "delta21": {
+    "fldSt": "Stasiun",
+    "score": "Skor:",
+    "studies": "Studi:",
+    "ratingReshapes": "Karyamu mengubah ilmu ekologi air tawar!\n\n🐟🐟🐟🐟",
+    "ratingAdvances": "Risetmu memajukan pengetahuan tentang ekosistem sungai.\n\n🐟🐟🐟",
+    "ratingAids": "Temuanmu membantu studi lokal populasi ikan.\n\n🐟🐟",
+    "ratingLittle": "Catatanmu hanya sedikit menambah pemahaman tentang sungai.\n\n🐟"
+  },
+  "dominion": {
+    "allEighteenCardsBelongTo": "Kedelapan belas kartu menjadi milik satu wilayah.",
+    "theWasIsolatedWithNo": "Kartu {{value}} terisolasi, tanpa nilai atau jenis yang cocok.",
+    "noConquestsOrReservePlacements": "Tidak ada penaklukan atau penempatan cadangan lagi."
+  },
+  "dynasty": {
+    "extract": "Tarik",
+    "reassign": "Pindahkan",
+    "allTwelveRoyalsAreDown": "Kedua belas bangsawan sudah tumbang.",
+    "youRanOutOfCards": "Kartumu habis sebelum semua bangsawan dikalahkan."
+  },
+  "elementaryDetective": {
+    "youScored20ToWin": "Skormu {{score}} (20 untuk menang)",
+    "score": "Skor"
+  },
+  "fanSolitaire": {
+    "theFoundationsAreComplete": "Fondasi sudah lengkap!"
+  },
+  "fieldCommand": {
+    "invalidCaptureSuitValueRequirement": "Tangkapan tidak sah: syarat jenis/nilai tidak terpenuhi.",
+    "cannotSacrificeACombatantCard": "Kartu petarung tidak bisa dikorbankan.",
+    "enemy": "Musuh",
+    "capture": "Tangkap",
+    "doneDiscarding": "Selesai membuang",
+    "letCapture": "Biarkan ditangkap",
+    "combatantCaptured": "Seorang petarung masuk ke tumpukan tangkapan musuh.",
+    "allEnemiesCleared": "Semua kartu musuh dibersihkan tanpa kehilangan petarung.",
+    "combatantCapturedYouLose": "Seorang petarung masuk ke tumpukan tangkapan musuh. Kamu kalah.",
+    "noCardsToPlay": "Tidak ada kartu untuk dimainkan."
+  },
+  "fifteenPuzzle": {
+    "theCardsAreBackIn": "Kartu-kartu kembali berurutan."
+  },
+  "fightClubs": {
+    "grid": "Kisi",
+    "clubs": "Keriting",
+    "rowCol": "Baris/Kol.",
+    "upDown": "Naik/Turun",
+    "sequence": "Urutan",
+    "actionMatch": "Cocok",
+    "actionSum": "Jumlah",
+    "actionAny": "Bebas",
+    "actionLine": "♦ Garis",
+    "actionRow": "♦ Baris",
+    "actionColumn": "♦ Kol.",
+    "actionDown": "♠ Turun",
+    "actionUp": "♠ Naik",
+    "actionRun": "♥ Urutan",
+    "gridClearWon": "Kisi sudah bersih. Kamu menang!",
+    "allClubsSpent": "Ke-13 kartu keriting sudah terpakai."
+  },
+  "fortunesCall": {
+    "red": "Merah",
+    "higher": "Lebih tinggi",
+    "lower": "Lebih rendah",
+    "misses": "Meleset"
+  },
+  "gaps": {
+    "everyRowIsInOrder": "Semua baris sudah berurutan!"
+  },
+  "golf": {
+    "youClearedTheTableau": "Kamu membersihkan semua kolom!",
+    "noMorePlayableCards": "Tidak ada kartu yang bisa dimainkan lagi."
+  },
+  "grandfathersClock": {
+    "everyHourStruck": "Semua jam sudah berdentang!"
+  },
+  "gremlin": {
+    "helper": "Pembantu",
+    "endTurn": "Akhiri giliran",
+    "tierNovice": "PEMULA",
+    "tierNormal": "NORMAL",
+    "tierAdvanced": "MAHIR",
+    "tierLegendary": "LEGENDARIS",
+    "tierEpic": "EPIK",
+    "columnsUsedWin": "{{count}} kolom terpakai. Kemenangan {{tier}}.",
+    "allCardsPlayedInColumns": "Semua kartu dimainkan dalam {{count}} kolom.",
+    "noRoomForHelper": "Tidak ada tempat untuk kartu pembantu di {{count}} kolom."
+  },
+  "gridlines": {
+    "trump": "Truf",
+    "chooseATrumpCard": "Pilih kartu truf",
+    "pickARevealedCard": "Pilih kartu yang terbuka",
+    "selectALine": "Pilih satu garis",
+    "selectAHandCard": "Pilih kartu di tangan",
+    "youBeatTheGrid": "Kamu mengalahkan kisi {{youScore}}-{{gridScore}}!",
+    "theGridWins": "Kisi menang {{gridScore}}-{{youScore}}."
+  },
+  "herbalist": {
+    "noble": "Bangsawan",
+    "jester": "Badut",
+    "harvestFair": "Panen lumayan: tersisa {{count}} tanaman obat.",
+    "harvestGood": "Panen bagus: tersisa {{count}} tanaman obat.",
+    "harvestExcellent": "Panen luar biasa: tersisa {{count}} tanaman obat.",
+    "harvestPerfect": "Panen sempurna: tersisa {{count}} tanaman obat.",
+    "noHerbsRemain": "Tidak ada tanaman obat tersisa untuk menyembuhkan negeri."
+  },
+  "infiltrator": {
+    "retired": "Pensiun",
+    "spies": "Mata-mata",
+    "lost": "Hilang",
+    "keySpies": "Mata-mata kunci",
+    "supportingSpies": "Mata-mata pendukung",
+    "recruited": "Direkrut",
+    "retireAMatchingSetOr": "Pensiunkan satu set yang cocok, atau lewati",
+    "noSetsAvailableForRetirement": "Tidak ada set untuk dipensiunkan",
+    "removeADoubleAgentFrom": "Singkirkan agen ganda dari:",
+    "noSpiesRemain": "Tidak ada mata-mata tersisa",
+    "assassinate": "Bunuh",
+    "counter": "Tangkal",
+    "recruit": "Rekrut",
+    "skip": "Lewati",
+    "missionComplete": "Misi selesai: {{count}} mata-mata kunci direkrut.",
+    "missionFailed": "Misi gagal: {{count}} mata-mata kunci direkrut, {{lost}} hilang.",
+    "noDoubleAgentsRemain": "Tidak ada agen ganda tersisa. Misi gagal.",
+    "sourceHand": "Tangan"
+  },
+  "invaders": {
+    "wave2": "Gelombang 2",
+    "atks": "Srg.",
+    "defs": "Thn.",
+    "defenders": "Pembela",
+    "attack": "Serang{{value}}",
+    "attackersWave": "Penyerang (Gelombang {{wave}})",
+    "noCardsLeftToPlay": "Kartumu habis untuk dimainkan!",
+    "scoreHigherIsBetter": "{{score}} (makin tinggi makin baik)",
+    "scoreCloserToZero": "{{score}} (makin dekat nol makin baik)"
+  },
+  "lightsOut": {
+    "everyLightIsOut": "Semua lampu padam."
+  },
+  "loneJoker": {
+    "straightFlush": "Straight Flush",
+    "fourOfAKind": "Four of a Kind",
+    "fullHouse": "Full House",
+    "flush": "Flush",
+    "straight": "Straight",
+    "threeOfAKind": "Three of a Kind",
+    "twoPair": "Two Pair",
+    "pair": "Pair",
+    "shieldHasBeenUsed": "Perisai sudah dipakai",
+    "discards": "Buang",
+    "plays": "Main",
+    "bonus": "Bonus",
+    "shield": "Perisai",
+    "chooseUpTo5Cards": "Pilih hingga 5 kartu",
+    "bonusShoppe": "Toko bonus",
+    "points": "poin",
+    "startRound": "Mulai ronde {{value}}",
+    "bonuses": {
+      "extraCard": "+ Kartu",
+      "extraDiscard": "+ Buang",
+      "pocketPoints": "+ 25 poin",
+      "extraHand": "+ Main",
+      "doubleScore": "Skor x2",
+      "shield": "Perisai"
+    },
+    "roundsSurvived": "Bertahan {{count}} ronde{{rating}}. Skor akhir: {{score}}.",
+    "roundNumber": "Ronde {{round}}"
+  },
+  "lycan": {
+    "youBeatTheWolf": "Kamu mengalahkan Serigala {{playerScore}}-{{wolfScore}}!",
+    "theWolfBeatYou": "Serigala mengalahkanmu {{wolfScore}}-{{playerScore}}.",
+    "wolf": "Serigala",
+    "round": "Ronde",
+    "selectCardsToCapture": "Pilih kartu untuk ditangkap"
+  },
+  "memory": {
+    "matched": "Cocok",
+    "youFoundEveryPair": "Kamu menemukan semua pasangan!",
+    "guesses": "Tebakan",
+    "difficulty": "Kesulitan",
+    "difficultyVeryEasy": "Sangat mudah",
+    "difficultyEasy": "Mudah",
+    "difficultyMedium": "Sedang",
+    "difficultyHard": "Sulit",
+    "difficultyVeryHard": "Sangat sulit",
+    "difficultyExtreme": "Ekstrem"
+  },
+  "monteCarlo": {
+    "youClearedAllCards": "Kamu membersihkan semua kartu!",
+    "noAdjacentPairsLeft": "Tidak ada pasangan bersebelahan lagi.",
+    "consolidate": "Rapatkan"
+  },
+  "nestor": {
+    "boardCleared": "Meja bersih!",
+    "noMatchingPairRemains": "Tidak ada pasangan yang cocok lagi."
+  },
+  "nightVigil": {
+    "city": "Kota",
+    "villain": "Penjahat",
+    "response": "Respons",
+    "damage": "Luka:",
+    "heal": "Pulih:"
+  },
+  "ouroboros": {
+    "jewels": "Permata",
+    "trinkets": "Pernak-pernik",
+    "markPath": "Tandai jalan",
+    "explore": "Jelajahi",
+    "returnToPath": "Kembali ke jalan",
+    "lookAround": "Lihat sekitar",
+    "landedOnTrap": "Kamu mendarat di perangkap!",
+    "gotAllJewels": "Kamu mendapat keempat permata dan menemukan pintu keluar!",
+    "lostWithLoot": "Kamu tersesat di dungeon tanpa jalan keluar! Kamu mati bersama jarahanmu.",
+    "lostInDungeon": "Kamu tersesat di dungeon tanpa jalan keluar!"
+  },
+  "pocketPoker": {
+    "youHit10PointsYou": "Kamu mencapai 10 poin — kamu menang!",
+    "foldedThreeTimesInA": "Menyerah tiga kali berturut-turut.",
+    "youBustedOut": "Poinmu habis.",
+    "tapCardsToDiscard": "Ketuk kartu untuk dibuang",
+    "minBet": "Taruhan min.",
+    "opponentDraws5YourBet": "Lawan mengambil: 5 + (taruhanmu)",
+    "youWin": "Kamu menang",
+    "youLose": "Kamu kalah",
+    "pushTie": "Seri",
+    "draw": "Ambil {{value}}",
+    "setHand": "Kunci kartu",
+    "bet": "Taruh {{value}}",
+    "nextRound": "Ronde berikutnya",
+    "opponent": "Lawan",
+    "hands": {
+      "highCard": "High Card",
+      "onePair": "One Pair",
+      "twoPair": "Two Pair",
+      "threeOfAKind": "Three of a Kind",
+      "straight": "Straight",
+      "flush": "Flush",
+      "fullHouse": "Full House",
+      "fourOfAKind": "Four of a Kind",
+      "straightFlush": "Straight Flush"
+    }
+  },
+  "pokerSquares": {
+    "greatHandYouScored": "Kartu hebat! Skormu {{score}}.",
+    "youScoredTryForNext": "Skormu {{score}}. Coba capai {{TARGET_SCORE}} lain kali.",
+    "noHand": "Tidak ada"
+  },
+  "pyramid": {
+    "noMoreMovesAndThe": "Tidak ada langkah lagi dan dek sudah habis."
+  },
+  "queensAudience": {
+    "theQueensCourtIsComplete": "Istana Ratu sudah lengkap!"
+  },
+  "redDiamond": {
+    "diamonds": "Wajik",
+    "allBlackCardsHaveBeen": "Semua kartu hitam sudah dimainkan.",
+    "thereAreNotEnoughDiamond": "Kartu wajik tidak cukup untuk mengisi ulang tumpukan."
+  },
+  "rogueRun": {
+    "youMadeItThroughThe": "Kamu berhasil melewati dungeon.",
+    "run": "Kabur"
+  },
+  "royalCotillion": {
+    "theLastDanceIsDone": "Dansa terakhir selesai!"
+  },
+  "royalRest": {
+    "jack": "Jack",
+    "column": "Kolom"
+  },
+  "salicLaw": {
+    "queens": "Queen",
+    "theKingsStandAlone": "Para King berdiri sendiri!"
+  },
+  "scorpion": {
+    "allFourSuitStacksAre": "Keempat tumpukan jenis sudah lengkap."
+  },
+  "seer": {
+    "deck": "Dek",
+    "reveal": "Buka",
+    "return": "Kembalikan",
+    "predictions": {
+      "red": "Merah",
+      "redOddBlackEven": "MGj  ·  HGn",
+      "even": "Genap",
+      "diamondsHearts": "♦  ·  ♥",
+      "spadesClubs": "♠  ·  ♣",
+      "odd": "Ganjil",
+      "blackOddRedEven": "HGj  ·  MGn",
+      "black": "Hitam"
+    },
+    "predictionLabel_one": "Ramalan {{label}}, {{count}} batu",
+    "predictionLabel_other": "Ramalan {{label}}, {{count}} batu",
+    "complete": ", selesai",
+    "blocked": ", terblokir",
+    "allPredictionsComplete": "Kedelapan ramalan sudah selesai.",
+    "deckRanOut": "Dek habis sebelum semua ramalan selesai.",
+    "allPredictionsBlocked": "Kedelapan ramalan terblokir batu.",
+    "chooseHighlightedStone": "Pilih satu batu yang disorot",
+    "freedStones_one": "{{count}} batu bebas",
+    "freedStones_other": "{{count}} batu bebas"
+  },
+  "shiftingSands": {
+    "draw": "Ambil:",
+    "place": "Taruh",
+    "stockToTide": "Dek ke pasang",
+    "reverse": "Balik",
+    "castleHeld": "Istanamu bertahan: {{castle}} lawan {{tide}}.",
+    "tideWon": "Air pasang menang: {{castle}} lawan {{tide}}.",
+    "dunes": "Bukit pasir",
+    "eroded": "Terkikis"
+  },
+  "singleDeckSpider": {
+    "fourCompleteSuits": "Empat jenis lengkap!"
+  },
+  "singularity": {
+    "everyStarCollapsedIn": "Semua bintang telah runtuh!",
+    "noCardCanReachThe": "Tidak ada kartu yang bisa mencapai singularitas."
+  },
+  "sirTommy": {
+    "allFourSuitsHome": "Keempat jenis sudah di tempatnya!",
+    "theStockIsSpent": "Dek sudah habis."
+  },
+  "slyFox": {
+    "place": "Taruh {{toPlace}}",
+    "outfoxedTheDeck": "Dek berhasil dikecoh!"
+  },
+  "somnus": {
+    "thatAssignmentDoesNotMeet": "Penugasan itu tidak memenuhi aturan target",
+    "dream": "Mimpi",
+    "rmvd": "Hps.",
+    "guard": "Pjg.",
+    "turn": "Giliran",
+    "selectNightmareOrGuardian": "Pilih mimpi buruk atau penjaga",
+    "selected": "Dipilih: {{selectedValue}}",
+    "assign": "Tugaskan",
+    "exile": "Asingkan",
+    "deepBreath": "Tarik napas",
+    "remUsed": "REM terpakai",
+    "remSleep": "Tidur REM",
+    "nightmareValue": "Mimpi buruk: {{value}}",
+    "guardianValue": "Penjaga: {{value}}",
+    "aliceAwakened": "Alice terbangun dengan {{count}} nyawa.",
+    "guardiansLost": "Semua Penjaga khusus yang bukan As telah hilang.",
+    "nightmaresOverwhelmed": "Para Mimpi Buruk menguasai Alice."
+  },
+  "spiderSolitaire": {
+    "allEightKToA": "Kedelapan urutan K sampai A sudah lengkap."
+  },
+  "stalker": {
+    "youMadeItToDawn": "Kamu bertahan sampai fajar.",
+    "theTrapSnapsShut": "Perangkap tertutup.",
+    "heCaughtYou": "Dia menangkapmu.",
+    "searchDraw": "Cari\n(Ambil {{pendingSearchDrawCount}})",
+    "escapeDraw": "Kabur\n(Ambil {{pendingEscapeDrawCount}})"
+  },
+  "stockTableauSolitaire": {
+    "everySuitIsHome": "Semua jenis sudah di tempatnya!"
+  },
+  "sultan": {
+    "theSultanIsSurrounded": "Sultan sudah dikelilingi!"
+  },
+  "tenTwentyThirty": {
+    "everyDecadeCounted": "Semua puluhan terhitung!",
+    "noSumsRemain": "Tidak ada jumlah yang tersisa."
+  },
+  "tripleStack": {
+    "sandwichServedNewCards": "Roti lapis disajikan ({{replacementsPossible}} kartu baru)",
+    "noValidSandwichAvailableYou": "Tidak ada roti lapis yang sah. Kamu kalah.",
+    "serveSandwich": "Sajikan roti lapis",
+    "youWonByDrawingOut": "Kamu menang dengan menghabiskan dek. Skor akhir (makin rendah makin baik): {{score}}"
+  },
+  "twelveTrials": {
+    "buryAHandCard": "Kubur satu kartu di tangan",
+    "selectHandCard": "Pilih kartu di tangan",
+    "doubleAnAttack": "Gandakan satu serangan",
+    "chooseAnAttack": "Pilih serangan",
+    "chooseWhetherToMoveCard": "Pilih apakah kartu dipindah",
+    "moveBottomCardToTop": "Pindahkan kartu bawah ke atas",
+    "drawACard": "Ambil satu kartu",
+    "notAValidPlacement": "Penempatan tidak sah",
+    "dungeonClearedScore": "Dungeon selesai! Skor {{score}}.",
+    "youRanOutOfHealth": "Nyawamu habis.",
+    "youRanOutOfAttacks": "Seranganmu habis.",
+    "special": "Khusus",
+    "hand": "Tangan",
+    "setReserve2": "Simpan cadangan ({{length}}/2)",
+    "moveToTop": "Pindahkan {{value}} ke atas",
+    "doNothing": "Jangan lakukan apa-apa",
+    "noKingSelected": "Belum ada King dipilih"
+  },
+  "waypoint": {
+    "current": "Saat ini",
+    "brake": "Rem",
+    "gas": "Gas",
+    "time": "Waktu",
+    "penalty": "Penalti",
+    "damage": "Rusak",
+    "finishSector": "Selesai",
+    "ratingRecord": "Rekor reli baru: +{{score}}.",
+    "ratingPodium": "Naik podium: {{score}}.",
+    "ratingMiddle": "Di tengah rombongan: {{score}}.",
+    "ratingBack": "Di belakang rombongan: {{score}}.",
+    "dnf": "DNF: mobil terlalu banyak rusak.",
+    "dsq": "DSQ: jam mencapai 16 penalti waktu.",
+    "stage": "Etape",
+    "sector": "Sektor",
+    "speed": "Kecepatan"
+  },
+  "windmill": {
+    "theSailsTurnFreely": "Baling-baling berputar bebas!"
+  },
+  "advisorInfo": {
+    "advisor": "Penasihat",
+    "cancel": "Batal",
+    "discardToContinue_one": "Buang {{count}} kartu untuk lanjut",
+    "discardToContinue_other": "Buang {{count}} kartu untuk lanjut",
+    "diplomacy": "Diplomasi",
+    "diplomacyText": "Buang semua kartu di tanganmu yang sejenis dengan truf kerajaan saat ini.",
+    "discardCards_one": "Buang {{count}} kartu",
+    "discardCards_other": "Buang {{count}} kartu",
+    "military": "Militer",
+    "militaryText": "Ambil satu kartu untuk setiap keriting di tanganmu.",
+    "drawCards_one": "Ambil {{count}} kartu",
+    "drawCards_other": "Ambil {{count}} kartu",
+    "political": "Politik",
+    "politicalText": "Pilih penguasa dari kerajaan yang belum dikunjungi di atas untuk ditukar dengan penguasa saat ini.",
+    "swapRuler": "Tukar penguasa",
+    "commerce": "Perdagangan",
+    "commerceText": "Ambil dua kartu, lalu pilih dua kartu dari tanganmu untuk dibuang.",
+    "drawTwoCards": "Ambil kartu"
+  },
+  "royalEnvoy": {
+    "youWonOverKingdom": "Kamu memenangkan Kerajaan #{{value}}!",
+    "chooseAKingdom": "Pilih kerajaan",
+    "wins": "Menang",
+    "nextTopic": "Topik berikutnya",
+    "advisors": "Penasihat",
+    "hand": "Tangan",
+    "topic": "Topik",
+    "lost": "Kalah",
+    "won": "Menang",
+    "tooManyDebates": "Kamu memenangkan terlalu banyak debat dan menghina sang penguasa!",
+    "wonAllKingdoms": "Kemampuan debatmu yang luar biasa memikat para penguasa kedelapan kerajaan!",
+    "tooFewDebates": "Kamu tidak memenangkan cukup debat; sang penguasa tidak menganggapmu serius."
+  },
+  "alaska": {
+    "everyAlaskanSuitIsHome": "Semua jenis Alaska sudah di tempatnya!"
+  },
+  "fortress": {
+    "theFortressIsComplete": "Benteng sudah lengkap!"
+  },
+  "moosehide": {
+    "everyTrailLeadsHome": "Semua jejak menuju rumah!"
+  },
+  "beleagueredCastle": {
+    "theCastleFalls": "Kastel jatuh!"
+  },
+  "labyrinth": {
+    "youFoundTheWayOut": "Kamu menemukan jalan keluar!",
+    "lostInTheLabyrinth": "Tersesat di labirin."
+  },
+  "parallels": {
+    "everyRowLinesUp": "Semua baris sudah berjajar!"
+  },
+  "frog": {
+    "everyFrogMadeItHome": "Semua katak sudah pulang!"
+  },
+  "pussInTheCorner": {
+    "allFourCornersFilled": "Keempat sudut sudah terisi!"
+  }
+}

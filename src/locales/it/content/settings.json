@@ -1,0 +1,553 @@
+{
+  "archipelago": {
+    "islandJokers": {
+      "hash": "71b79671",
+      "value": {
+        "description": "Aggiunge due carte jolly che puoi piazzare ovunque.",
+        "label": "Usa i Jolly",
+        "options": [
+          {
+            "label": "No"
+          },
+          {
+            "label": "Sì (più facile)"
+          }
+        ]
+      }
+    }
+  },
+  "ascent": {
+    "ascentChallenge": {
+      "hash": "11a33a3b",
+      "value": {
+        "description": "Sfide facoltative che modificano la lunghezza del sentiero e le regole.",
+        "label": "Gli Ottomila",
+        "options": [
+          {
+            "label": "Salita base (7500 m)",
+            "description": "Lunghezza del sentiero: 3. Nessuna regola speciale."
+          },
+          {
+            "label": "Cho Oyu (8188 m)",
+            "description": "Lunghezza del sentiero: 2. Quando raggiungi un campo, non aggiungere al sentiero il suo traguardo a meno che non abbia almeno 6 carte."
+          },
+          {
+            "label": "Shishapangma (8027 m)",
+            "description": "Lunghezza del sentiero: 3. Quando giochi una via con approccio tecnico (quadri) o arrampicata libera (picche), pesca una carta in più. Quando giochi una via con approccio prudente (cuori) o spericolato (fiori), pesca una carta in meno. Non peschi comunque più carte di quante ne contiene la via giocata."
+          },
+          {
+            "label": "Manaslu (8163 m)",
+            "description": "Lunghezza del sentiero: 4. Quando raggiungi un campo, non aggiungere altre carte alla pila della fatica. Quando riposi, dopo aver messo in mano le carte della pila della fatica, aggiungi una sola carta alla pila della fatica."
+          },
+          {
+            "label": "Broad Peak (8051 m)",
+            "description": "Lunghezza del sentiero: 3. Non puoi giocare una via se il suo approccio non è diverso da quello della via precedente. Quando raggiungi un campo, non aggiungere al sentiero il suo traguardo a meno che il suo approccio non sia diverso da quello di tutte le vie precedenti del sentiero."
+          },
+          {
+            "label": "Gasherbrum II (8035 m)",
+            "description": "Lunghezza del sentiero: 4. Quando giochi una via, riduci di uno il numero di carte da pescare prima di pescarle. Se così il numero di carte da pescare diventasse negativo, pesca invece tante carte quante ne contiene la via."
+          },
+          {
+            "label": "Everest (8848 m)",
+            "description": "Lunghezza del sentiero: 5. Nella preparazione, e ogni volta che raggiungi un campo, pesca solo sette carte invece di dieci."
+          },
+          {
+            "label": "Dhaulagiri (8167 m)",
+            "description": "Lunghezza del sentiero: 3. Quando raggiungi un campo, non aggiungere al sentiero il suo traguardo a meno che nell'area di gioco ci sia un traverso di almeno due carte, compreso il traguardo stesso."
+          },
+          {
+            "label": "Gasherbrum I (8080 m)",
+            "description": "Lunghezza del sentiero: 3. Non puoi giocare una via con un'ancora di valore dispari, compresi Assi, Fanti e Re."
+          },
+          {
+            "label": "Kangchenjunga (8586 m)",
+            "description": "Lunghezza del sentiero: 4. Quando giochi una via, non devi giocare le carte in ordine, quindi qualsiasi carta della via può essere l'ancora. Un Jolly non può comunque essere l'ancora di una via."
+          },
+          {
+            "label": "Lhotse (8516 m)",
+            "description": "Lunghezza del sentiero: 3. Non puoi giocare una via se non contiene almeno due carte."
+          },
+          {
+            "label": "Makalu (8481 m)",
+            "description": "Lunghezza del sentiero: 4. Quando giochi una via, puoi anche scartare una carta qualsiasi dalla mano."
+          },
+          {
+            "label": "Nanga Parbat (8126 m)",
+            "description": "Lunghezza del sentiero: 3. Non puoi giocare traversi né discese. Le carte di una salita non devono essere consecutive, ma la distanza tra una carta e l'altra deve essere sempre la stessa."
+          },
+          {
+            "label": "K2 (8611 m)",
+            "description": "Lunghezza del sentiero: 3. Quando giochi una via, il numero di carte da pescare non è limitato dal numero di carte della via giocata."
+          },
+          {
+            "label": "Annapurna I (8091 m)",
+            "description": "Lunghezza del sentiero: 4. Quando peschi dopo aver giocato una via, se una delle carte pescate è dello stesso seme dell'ancora della via, rimetti in mano tutte le carte della via giocata. Non farlo quando raggiungi un campo. Se in qualsiasi momento hai 18 o più carte in mano, perdi subito la partita."
+          }
+        ]
+      }
+    },
+    "ascentDifficulty": {
+      "hash": "4f582426",
+      "value": {
+        "label": "Difficoltà",
+        "options": [
+          {
+            "label": "Tranquilla",
+            "description": "Quando raggiungi un campo, aggiungi sempre al sentiero il traguardo giocato, anche se non è più alto del precedente."
+          },
+          {
+            "label": "Normale",
+            "description": "Nessuna modifica."
+          },
+          {
+            "label": "Intensa",
+            "description": "Quando raggiungi un campo, aggiungi al sentiero il traguardo giocato solo se contiene più carte del precedente."
+          }
+        ]
+      }
+    }
+  },
+  "baroness": {
+    "difficulty": {
+      "hash": "9cf97680",
+      "value": {
+        "label": "Difficoltà",
+        "options": [
+          {
+            "label": "Facile"
+          },
+          {
+            "label": "Difficile"
+          }
+        ]
+      }
+    }
+  },
+  "canfield": {
+    "drawCount": {
+      "hash": "ecd6b2f3",
+      "value": {
+        "label": "Carte dal mazzo",
+        "options": [
+          {
+            "label": "Gira 1"
+          },
+          {
+            "label": "Gira 3"
+          }
+        ]
+      }
+    }
+  },
+  "chapter-and-verse": {
+    "chapterAndVerseCheckBack": {
+      "hash": "90e8b983",
+      "value": {
+        "description": "Il primo libro dell'inventario può far parte di un'offerta.",
+        "label": "Controllo in magazzino",
+        "options": [
+          {
+            "label": "No"
+          },
+          {
+            "label": "Sì (facile)"
+          }
+        ]
+      }
+    },
+    "chapterAndVerseLoyalPatrons": {
+      "hash": "2cdf2aa1",
+      "value": {
+        "description": "Le offerte con quattro o più libri aggiungono il cliente alla reputazione presso la gilda.",
+        "label": "Clienti fedeli",
+        "options": [
+          {
+            "label": "No"
+          },
+          {
+            "label": "Sì (facile)"
+          }
+        ]
+      }
+    },
+    "chapterAndVerseSuperExclusive": {
+      "hash": "3444cc88",
+      "value": {
+        "description": "I libri dello stesso genere o valore del libro usato costano 0 $.",
+        "label": "Offerta superesclusiva",
+        "options": [
+          {
+            "label": "No"
+          },
+          {
+            "label": "Sì (difficile)"
+          }
+        ]
+      }
+    },
+    "chapterAndVerseVandals": {
+      "hash": "bf41e3e4",
+      "value": {
+        "description": "Quando arrivano in coda, i Jolly bloccano il primo scaffale libero della libreria.",
+        "label": "Vandali!",
+        "options": [
+          {
+            "label": "No"
+          },
+          {
+            "label": "1 Jolly (difficile)"
+          },
+          {
+            "label": "2 Jolly (più difficile)"
+          }
+        ]
+      }
+    }
+  },
+  "fight-clubs": {
+    "fightClubsDifficulty": {
+      "hash": "d82ad464",
+      "value": {
+        "description": "La modalità difficile aggiunge un secondo Jolly al mazzo della griglia.",
+        "label": "Difficoltà",
+        "options": [
+          {
+            "label": "Facile (1 Jolly)"
+          },
+          {
+            "label": "Difficile (2 Jolly)"
+          }
+        ]
+      }
+    }
+  },
+  "forty-thieves": {
+    "difficulty": {
+      "hash": "7161d2c1",
+      "value": {
+        "label": "Difficoltà",
+        "options": [
+          {
+            "label": "Facile",
+            "description": "Ridistribuzioni illimitate."
+          },
+          {
+            "label": "Difficile",
+            "description": "Nessuna ridistribuzione."
+          }
+        ]
+      }
+    }
+  },
+  "gaps": {
+    "gapsDifficulty": {
+      "hash": "6d279a0e",
+      "value": {
+        "description": "Stabilisce quante volte si possono ridistribuire le carte fuori posto.",
+        "label": "Difficoltà",
+        "options": [
+          {
+            "label": "Facile (3 ridistribuzioni)"
+          },
+          {
+            "label": "Difficile (2 ridistribuzioni)"
+          }
+        ]
+      }
+    }
+  },
+  "golf": {
+    "golfDifficulty": {
+      "hash": "1fb5445b",
+      "value": {
+        "description": "In modalità facile Assi e Re si possono giocare l'uno sull'altro.",
+        "label": "Difficoltà",
+        "options": [
+          {
+            "label": "Facile"
+          },
+          {
+            "label": "Difficile"
+          }
+        ]
+      }
+    }
+  },
+  "gremlin": {
+    "gremlinDifficulty": {
+      "hash": "22944911",
+      "value": {
+        "label": "Carte in mano",
+        "options": [
+          {
+            "label": "5 (Facile)"
+          },
+          {
+            "label": "4 (Difficile)"
+          }
+        ]
+      }
+    }
+  },
+  "gridlines": {
+    "gridlinesHard": {
+      "hash": "cdabae36",
+      "value": {
+        "description": "In modalità difficile la griglia ha un obiettivo più basso da raggiungere.",
+        "label": "Modalità",
+        "options": [
+          {
+            "label": "Normale"
+          },
+          {
+            "label": "Difficile"
+          }
+        ]
+      }
+    }
+  },
+  "herbalist": {
+    "herbalistOpenStables": {
+      "hash": "d3ef883f",
+      "value": {
+        "description": "Aggiunge il Nobile e il Buffone nelle Scuderie, il posto centrale.",
+        "label": "Scuderie aperte",
+        "options": [
+          {
+            "label": "No"
+          },
+          {
+            "label": "Sì"
+          }
+        ]
+      }
+    }
+  },
+  "klondike": {
+    "drawCount": {
+      "hash": "ecd6b2f3",
+      "value": {
+        "label": "Carte dal mazzo",
+        "options": [
+          {
+            "label": "Gira 1"
+          },
+          {
+            "label": "Gira 3"
+          }
+        ]
+      }
+    }
+  },
+  "lycan": {
+    "lycanMode": {
+      "hash": "a77f03e5",
+      "value": {
+        "description": "Con meno carte alte il Lupo è più facile da battere.",
+        "label": "Difficoltà",
+        "options": [
+          {
+            "label": "Facile (senza 9 e 10)"
+          },
+          {
+            "label": "Media (senza 10)"
+          },
+          {
+            "label": "Difficile (tutte le carte)"
+          }
+        ]
+      }
+    }
+  },
+  "memory": {
+    "memoryDifficulty": {
+      "hash": "4ec0fa07",
+      "value": {
+        "label": "Dimensioni della griglia",
+        "options": [
+          {
+            "label": "Molto facile (4 x 3)"
+          },
+          {
+            "label": "Facile (5 x 4)"
+          },
+          {
+            "label": "Media (6 x 5)"
+          },
+          {
+            "label": "Difficile (7 x 6)"
+          },
+          {
+            "label": "Molto difficile (8 x 7)"
+          },
+          {
+            "label": "Estrema (8 x 9)"
+          }
+        ]
+      }
+    }
+  },
+  "night-vigil": {
+    "nightVigilDifficulty": {
+      "hash": "d5901a95",
+      "value": {
+        "label": "Difficoltà",
+        "options": [
+          {
+            "label": "Livello strada",
+            "description": "I Re infliggono 1 danno in più."
+          },
+          {
+            "label": "Caso del boss",
+            "description": "Donne e Re infliggono 1 danno in più."
+          },
+          {
+            "label": "Città nell'ombra",
+            "description": "Le Donne infliggono 1 danno in più e i Re 2."
+          }
+        ]
+      }
+    }
+  },
+  "pocket-poker": {
+    "pokerJokers": {
+      "hash": "8bf4ba75",
+      "value": {
+        "description": "Aggiunge al mazzo due Jolly che valgono come qualsiasi carta.",
+        "label": "Jolly",
+        "options": [
+          {
+            "label": "Senza Jolly"
+          },
+          {
+            "label": "Jolly liberi"
+          }
+        ]
+      }
+    }
+  },
+  "pyramid": {
+    "pyramidDifficulty": {
+      "hash": "d38b6ca4",
+      "value": {
+        "description": "In modalità facile puoi selezionare una seconda carta se è coperta solo dalla prima carta selezionata. Non è molto più facile, ma perdona di più.",
+        "label": "Difficoltà",
+        "options": [
+          {
+            "label": "Facile"
+          },
+          {
+            "label": "Difficile"
+          }
+        ]
+      }
+    }
+  },
+  "royal-rest": {
+    "royalRestHardMode": {
+      "hash": "9895d840",
+      "value": {
+        "description": "I Fanti non possono andare su una colonna che contiene un altro Fante, nemmeno se un cuscino li separa.",
+        "label": "Modalità difficile",
+        "options": [
+          {
+            "label": "No"
+          },
+          {
+            "label": "Sì"
+          }
+        ]
+      }
+    }
+  },
+  "seer": {
+    "seerDifficulty": {
+      "hash": "e0c908ab",
+      "value": {
+        "description": "Stabilisce quali pietre vicine può liberare una previsione giusta.",
+        "label": "Difficoltà",
+        "options": [
+          {
+            "label": "Facile (anche in diagonale)"
+          },
+          {
+            "label": "Normale (in orizzontale e in verticale)"
+          },
+          {
+            "label": "Difficile (una a scelta)"
+          }
+        ]
+      }
+    }
+  },
+  "twelve-trials": {
+    "boomerAce": {
+      "hash": "6ab63f67",
+      "value": {
+        "description": "Gli Assi valgono 11 e tornano in mano quando li usi come innesco.",
+        "label": "Asso boomerang",
+        "options": [
+          {
+            "label": "No"
+          },
+          {
+            "label": "Sì"
+          }
+        ]
+      }
+    },
+    "dungeonLevel": {
+      "hash": "6b11e248",
+      "value": {
+        "label": "Disposizione del dungeon",
+        "options": [
+          {
+            "label": "Livello 1 (Principiante)"
+          },
+          {
+            "label": "Livello 2"
+          },
+          {
+            "label": "Livello 3"
+          },
+          {
+            "label": "Livello 4"
+          },
+          {
+            "label": "Livello 5 (Estremo)"
+          }
+        ]
+      }
+    },
+    "powerReserve": {
+      "hash": "4005b3b7",
+      "value": {
+        "description": "Al primo turno peschi cinque carte e ne metti da parte due da usare quando vuoi.",
+        "label": "Riserva di potere",
+        "options": [
+          {
+            "label": "No"
+          },
+          {
+            "label": "Sì"
+          }
+        ]
+      }
+    },
+    "specialAbilities": {
+      "hash": "c8b26a2e",
+      "value": {
+        "description": "I Re sconfitti danno abilità da usare una volta.",
+        "label": "Abilità speciali",
+        "options": [
+          {
+            "label": "No"
+          },
+          {
+            "label": "Sì"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -16,6 +16,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 type GameState = {
   columns: PlayingCard[][];
   foundations: PlayingCard[][];
@@ -370,7 +371,7 @@ export function CastleBoard({
       reset={reset}
       isLoaded={isLoaded}
       score={foundationTotal}
-      winLoseMessage={game.won ? winMessage : "No moves remain."}
+      winLoseMessage={game.won ? winMessage : i18n.t("cards:noMovesRemain")}
       canUndo={canUndo}
       undo={undo}
     >
@@ -386,7 +387,7 @@ export default function BeleagueredCastle() {
       createState={createBeleagueredCastleState}
       deal={dealBeleagueredCastle}
       canStack={canStackDown}
-      winMessage="The castle falls!"
+      winMessage={i18n.t("games:beleagueredCastle.theCastleFalls")}
     />
   );
 }

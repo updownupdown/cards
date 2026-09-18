@@ -1,4 +1,11 @@
-import { afterEach, beforeEach, describe, expect, jest, test } from "@jest/globals";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from "@jest/globals";
 import "../../../jest/game-mocks";
 import {
   harness,
@@ -10,12 +17,14 @@ import {
 import { getGameComponentByPath } from "@/data/games-router";
 import { GAME_DEFINITIONS } from "@/data/games-registry";
 import { act } from "react-test-renderer";
+import { i18n } from "@/i18n";
 
 // Every game must survive a burst of random taps, double-taps, zone presses and
 // legal drags, made faster than animations finish, without errors or cards
 // appearing twice. Like the real UI, taps skip disabled cards and zones. Set
-// RANDOM_PLAY_SEEDS to play more games per title, and RANDOM_PLAY_FIRST_SEED to
-// split a long run into batches (one Jest run holds a few hundred games).
+// RANDOM_PLAY_SEEDS to play more games per title, RANDOM_PLAY_FIRST_SEED to
+// split a long run into batches (one Jest run holds a few hundred games), and
+// RANDOM_PLAY_LANGUAGE (e.g. "fr") to play in another language.
 
 const STEPS = 60;
 const SETTLE_ROUNDS = 6;
@@ -43,8 +52,7 @@ async function tapRandomCard(random: () => number) {
   const config = harness.mapConfig!;
   const pressable = mappedCards().filter((card) => {
     const mapping = config.cardMapper(card) as
-      | { onPress?: () => void; isDisabled?: boolean }
-      | undefined;
+      { onPress?: () => void; isDisabled?: boolean } | undefined;
     return mapping?.onPress && !mapping.isDisabled;
   });
   if (pressable.length === 0) return "no card to tap";
@@ -55,8 +63,7 @@ async function tapRandomCard(random: () => number) {
     const card = mappedCards().find((candidate) => candidate.card.id === id);
     const mapping = card
       ? (harness.mapConfig!.cardMapper(card) as
-          | { onPress?: () => void; isDisabled?: boolean }
-          | undefined)
+          { onPress?: () => void; isDisabled?: boolean } | undefined)
       : undefined;
     const onPress = mapping?.isDisabled ? undefined : mapping?.onPress;
     if (!onPress) break;
@@ -71,8 +78,7 @@ async function pressRandomZone(random: () => number) {
   const config = harness.mapConfig!;
   const zones = config.zones.filter((zone) => {
     const mapping = config.zoneMapper?.(zone) as
-      | { onPress?: () => void; isDisabled?: boolean }
-      | undefined;
+      { onPress?: () => void; isDisabled?: boolean } | undefined;
     return mapping?.onPress && !mapping.isDisabled;
   });
   if (zones.length === 0) return "no zone to press";
@@ -85,8 +91,7 @@ async function pressRandomZone(random: () => number) {
 
 async function dragRandomCard(random: () => number) {
   const options = harness.dragOptions;
-  const targets =
-    options?.getDropHitAreas?.().map((area) => area.target) ?? [];
+  const targets = options?.getDropHitAreas?.().map((area) => area.target) ?? [];
   if (!options || harness.dragSources.length === 0 || targets.length === 0) {
     return "nothing to drag";
   }
@@ -117,6 +122,9 @@ function duplicateCardIds() {
 let consoleErrors: unknown[][] = [];
 
 beforeEach(() => {
+  if (process.env.RANDOM_PLAY_LANGUAGE) {
+    void i18n.changeLanguage(process.env.RANDOM_PLAY_LANGUAGE);
+  }
   jest.useFakeTimers();
   consoleErrors = [];
   jest.spyOn(console, "error").mockImplementation((...args) => {

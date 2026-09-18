@@ -2,6 +2,8 @@ import { Text } from "@/components/common/Text";
 import { GAME_THUMBNAIL_ASSETS } from "@/data/game-thumbnails";
 import { DEFAULT_GAME_THUMBNAIL, GameMenuInfo } from "@/data/games-data";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useDisplayLanguage } from "@/i18n";
+import { localizeGame } from "@/i18n/content";
 import { Colors, rgba } from "@/styles/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import { launchGame } from "@/components/common/GameLaunchOverlay";
@@ -40,6 +42,11 @@ export function HomeCard({
   onOpen,
 }: Props) {
   const { spacing } = useResponsiveMetrics();
+  const { title, cardDescription } = localizeGame(
+    game,
+    path,
+    useDisplayLanguage(),
+  );
 
   const handleOpen = () => {
     onOpen?.();
@@ -164,7 +171,7 @@ export function HomeCard({
               }}
               lineHeight={1.2}
             >
-              {game.title}
+              {title}
             </Text>
 
             {/* Description */}
@@ -175,7 +182,7 @@ export function HomeCard({
                 color={Colors.K100}
                 lineHeight={1.25}
               >
-                {game.cardDescription}
+                {cardDescription}
               </Text>
             )}
           </View>

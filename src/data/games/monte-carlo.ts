@@ -17,7 +17,7 @@ export const monteCarlo: GameDefinition = {
   gameColorPale: "#fffce5",
   cardDescription: "Match adjacent pairs of equal rank to clear the grid.",
   quickStart: [
-    "Tap adjacent cards of equal ranks to flip them.",
+    "Tap adjacent cards of equal rank to remove them.",
     "Consolidate the grid to unlock new pairs.",
   ],
   howToPlay: [

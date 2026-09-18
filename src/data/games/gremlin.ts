@@ -26,7 +26,7 @@ export const gremlin: GameDefinition = {
   howToPlay: [
     "## Objective",
     "Build columns of cards in decreasing, suit-matched sequences while managing the helper's plays.",
-    "You win by building columns efficiently; the fewer columns used is better.",
+    "You win by building columns efficiently; the fewer columns used, the better.",
 
     "## Your Turn",
     "At the beginning of your turn, your hand is refilled. For each card, you may:",

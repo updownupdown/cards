@@ -1,0 +1,3940 @@
+{
+  "accordion": {
+    "cardDescription": {
+      "hash": "7e489b6e",
+      "value": "Reúne todo el mazo en una sola pila, emparejando de una en una cartas contiguas del mismo palo o valor."
+    },
+    "howToPlay": {
+      "hash": "5a32be9c",
+      "value": [
+        "## Objetivo",
+        "Gana reuniendo las 52 cartas en una **sola pila**.",
+        "## Apilar",
+        "- Una carta puede ir sobre la carta **justo a su izquierda** o sobre la carta **tres posiciones a su izquierda**, si ambas cartas **coinciden en palo o valor**.",
+        "- Solo cuenta la carta superior de cada pila (las de debajo se pueden ignorar).",
+        "- Tras un movimiento, las cartas se desplazan a la izquierda para cerrar el hueco.",
+        "## Consejos",
+        "- **Usa la técnica del «barredor»**: antes de jugar, busca cuatro cartas del mismo valor (por ejemplo, cuatro 8) cerca del final de la fila. Protégelas no poniendo nunca otra carta encima de un barredor. Tu objetivo final es quedarte con exactamente cuatro pilas, cada una con un barredor encima. Como tienen el mismo valor, podrás apilarlas unas sobre otras para ganar."
+      ]
+    },
+    "quickStart": {
+      "hash": "704152e7",
+      "value": [
+        "Reúne todo el mazo en una sola pila.",
+        "Una carta puede moverse 1 o 3 posiciones a su izquierda, sobre una carta del mismo palo o valor."
+      ]
+    },
+    "title": {
+      "hash": "42e92421",
+      "value": "Acordeón"
+    }
+  },
+  "aces-up": {
+    "cardDescription": {
+      "hash": "7afc29df",
+      "value": "Descarta las cartas bajas de palos repetidos hasta que solo queden los cuatro Ases."
+    },
+    "howToPlay": {
+      "hash": "0c45e0c2",
+      "value": [
+        "## Objetivo",
+        "Descarta todo el mazo excepto los cuatro Ases, dejando un As en cada pila.",
+        "## Reglas de descarte",
+        "- Compara la carta superior de cada pila. Si dos o más pilas muestran **el mismo palo**, descarta la carta o las **cartas de menor valor**.",
+        "- **Los Ases son altos** y nunca se pueden descartar.",
+        "- Cualquier carta superior se puede mover a una **pila vacía**.",
+        "- Cuando no puedas descartar ni mover más, reparte otras 4 cartas, una sobre cada pila."
+      ]
+    },
+    "quickStart": {
+      "hash": "f8cf218d",
+      "value": [
+        "Descarta una carta visible si otra carta más alta del mismo palo también está visible.",
+        "Gana descartando todas las cartas excepto los cuatro Ases.",
+        "Mueve cartas a las pilas vacías y reparte cuando no puedas seguir."
+      ]
+    },
+    "title": {
+      "hash": "b66e842c",
+      "value": "Ases arriba"
+    }
+  },
+  "alaska": {
+    "cardDescription": {
+      "hash": "ddd9f660",
+      "value": "Una expedición Yukon en la que las cartas del mismo palo pueden subir o bajar."
+    },
+    "howToPlay": {
+      "hash": "f9800a76",
+      "value": [
+        "## Objetivo",
+        "Sube las cuatro fundaciones por palo, del As al Rey.",
+        "## Reglas",
+        "- Mueve cualquier carta boca arriba o **grupo** de cartas sobre una carta, **bajando o subiendo un valor, en el mismo palo**.",
+        "- Las cartas que se mueven **no** tienen que estar en secuencia.",
+        "- Las columnas vacías solo se pueden ocupar con Reyes.",
+        "- Toca dos veces o arrastra una carta para llevarla a las fundaciones."
+      ]
+    },
+    "quickStart": {
+      "hash": "377b21a0",
+      "value": [
+        "Sube las fundaciones por palo, de A a K.",
+        "Construye las columnas subiendo o bajando un valor, en el mismo palo.",
+        "Mueve cualquier grupo de cartas boca arriba.",
+        "Solo los Reyes pueden ocupar las columnas vacías."
+      ]
+    },
+    "title": {
+      "hash": "9a8eab96",
+      "value": "Alaska"
+    }
+  },
+  "all-in-a-row": {
+    "cardDescription": {
+      "hash": "cf60e740",
+      "value": "Despeja trece columnas eligiendo valores contiguos."
+    },
+    "howToPlay": {
+      "hash": "535c19cf",
+      "value": [
+        "## Objetivo",
+        "Lleva las 52 cartas de las trece columnas a una sola fundación.",
+        "## Reglas",
+        "- Elige cualquier carta visible como valor inicial.",
+        "- Después, juega un valor más alto o más bajo que la carta superior de la fundación, sin importar el palo.",
+        "- El As y el Rey son consecutivos, así que Q, K, A, 2, A, K, etc. es una secuencia válida."
+      ]
+    },
+    "quickStart": {
+      "hash": "8d1e2ded",
+      "value": [
+        "Despeja las trece columnas para ganar.",
+        "Elige cualquier carta visible para empezar.",
+        "Juega un valor más alto o más bajo, sin importar el palo.",
+        "El As y el Rey son contiguos."
+      ]
+    },
+    "title": {
+      "hash": "408219ba",
+      "value": "Todo en fila"
+    }
+  },
+  "archipelago": {
+    "cardDescription": {
+      "hash": "2580ab5d",
+      "value": "Haz crecer una isla en una cuadrícula de 7x7, con cartas enlazadas por valor de una en una."
+    },
+    "howToPlay": {
+      "hash": "9ab35e64",
+      "value": [
+        "## Objetivo",
+        "Llena toda la cuadrícula de la isla y consigue la mayor puntuación posible.",
+        "Tu puntuación es 49, menos 1 por cada carta descartada, más 1 por cada carta que quede en el mazo.",
+        "## Cómo se juega",
+        "- Coloca una carta cada vez, en ortogonal junto a una carta **de un valor más o menos**.",
+        "- La secuencia **es circular**: **los Reyes y los Ases** son contiguos, así que un As puede ir junto a un **2** o a un **Rey**.",
+        "- **No** puedes colocar una carta junto a otra del mismo valor en ninguna de las ocho casillas de alrededor.",
+        "- **El palo y el color no importan.**",
+        "- Si la carta robada no se puede colocar, se **descarta**.",
+        "## Modo fácil",
+        "- Activa los **Comodines** en los ajustes para añadir dos cartas comodín, que puedes colocar en cualquier casilla conectada (los Comodines no cuentan para la puntuación)."
+      ]
+    },
+    "quickStart": {
+      "hash": "a28614f6",
+      "value": [
+        "Coloca cada carta junto a otra de un valor más o menos (A<->K son contiguos).",
+        "Nunca se puede colocar una carta junto a otra del mismo valor.",
+        "Llena la cuadrícula de la isla para ganar."
+      ]
+    },
+    "title": {
+      "hash": "dd58357c",
+      "value": "Archipiélago"
+    }
+  },
+  "ascent": {
+    "cardDescription": {
+      "hash": "301e448f",
+      "value": "Un juego de escalada en solitario: juega rutas cada vez más altas para llegar a tres campamentos antes de que se acabe el mazo."
+    },
+    "howToPlay": {
+      "hash": "acb5c7a2",
+      "value": [
+        "## Objetivo",
+        "Gana superando los tres campamentos; llega a un campamento vaciando tu mano; vacía tu mano jugando rutas.",
+        "Pierdes si te quedas sin cartas antes de llegar al último campamento.",
+        "## Tipos de ruta",
+        "Cada ruta jugada debe ser de uno de estos tres tipos, cada uno con una carta ancla.",
+        "La **última carta seleccionada es el ancla**.",
+        "- **Ascenso:** dos o más cartas consecutivas en orden creciente (el ancla es la más alta):",
+        "-- {3S} {4S} {5S} (el ancla es {5S})",
+        "-- {8D} {9C} {10H} {JC} (el ancla es {JC})",
+        "- **Travesía:** una o más cartas del mismo valor (elige cualquier ancla).",
+        "-- {5S} {5D} {5H} (el ancla es cualquiera de los 5)",
+        "-- {9C} {9D} (el ancla es cualquiera de los 9)",
+        "- **Descenso:** dos o más cartas de un mismo palo en valor decreciente (el ancla es la más baja).",
+        "-- {10C} {9C} {8C} (el ancla es {8C})",
+        "-- {KD} {JD} {10D} {2D} (el ancla es {2D})",
+        "## Secuencia de rutas",
+        "Cada ruta debe ser más alta que la anterior:",
+        "- Más cartas = más alta",
+        "- Ascenso > Travesía > Descenso",
+        "- Si no, el ancla más alta determina la ruta más alta.",
+        "## Robo de cartas",
+        "Tras una ruta, el número de cartas que robas depende del palo del ancla:",
+        "- **♥ Corazones (Prudente):** una por cada carta de la mano de valor superior al ancla.",
+        "- **♣ Tréboles (Temerario):** una por cada carta de la mano de valor inferior al ancla.",
+        "- **♦ Diamantes (Técnico):** una por cada diamante en la mano.",
+        "- **♠ Picas (Escalada libre):** una por cada palo distinto de picas en la ruta.",
+        "Nunca robas más cartas que las que tiene la ruta jugada.",
+        "## Descanso",
+        "**Descansar** descarta tu zona de juego y pasa la pila de fatiga a tu mano (y luego aumenta la pila de fatiga).",
+        "## Campamentos",
+        "Al vaciar tu mano, si tu ruta es más alta que la última ruta jugada en el campamento anterior, cuenta como hito y llegas a un campamento más alto. Se reparte una mano nueva y debes intentar llegar al siguiente campamento.",
+        "Si la última ruta jugada no supera el hito del campamento anterior, no llegas al siguiente campamento y debes volver a intentarlo con una mano nueva.",
+        "## Ajustes",
+        "- **Dificultad:** Suave, Estándar o Intensa cambian cómo se valida un hito.",
+        "- **Retos de los ochomiles:** catorce cumbres con nombre ofrecen cada una variantes de las reglas y distintas longitudes de recorrido."
+      ]
+    },
+    "quickStart": {
+      "hash": "fd5b20c9",
+      "value": [
+        "Juega rutas cada vez «más altas» para vaciar tu mano y llegar a un campamento.",
+        "Descansar renueva tu mano, pero aumenta la fatiga.",
+        "Gana ascendiendo por todos los campamentos."
+      ]
+    },
+    "title": {
+      "hash": "689a25ff",
+      "value": "Ascenso"
+    }
+  },
+  "australian-patience": {
+    "cardDescription": {
+      "hash": "3e888b8b",
+      "value": "La libertad del Yukon se une a la construcción estricta por palo y a un mazo de una sola pasada."
+    },
+    "howToPlay": {
+      "hash": "1faa036d",
+      "value": [
+        "## Objetivo",
+        "Sube las cuatro fundaciones por palo, del As al Rey.",
+        "## Reglas",
+        "- Siete columnas empiezan con cuatro cartas boca arriba.",
+        "- Baja por palo; solo los Reyes ocupan las columnas vacías.",
+        "- Mueve cualquier carta boca arriba junto con todas las cartas que tiene encima.",
+        "- Pasa el mazo de carta en carta, sin volver a repartir."
+      ]
+    },
+    "quickStart": {
+      "hash": "6ef4e415",
+      "value": [
+        "Sube las fundaciones por palo.",
+        "Baja las columnas por palo; solo los Reyes ocupan los huecos.",
+        "Mueve cualquier final de columna visible y recorre el mazo una sola vez."
+      ]
+    },
+    "title": {
+      "hash": "fcc6929e",
+      "value": "Solitario australiano"
+    }
+  },
+  "bakers-dozen": {
+    "cardDescription": {
+      "hash": "1616b54c",
+      "value": "Despeja trece columnas compactas hacia cuatro fundaciones por palo."
+    },
+    "howToPlay": {
+      "hash": "33a6a3c4",
+      "value": [
+        "## Objetivo",
+        "Lleva las 52 cartas a las cuatro fundaciones.",
+        "## Reglas",
+        "- Las fundaciones suben **por palo** del As al Rey.",
+        "- Las columnas bajan **por valor**, sin importar el palo.",
+        "- Mueve solo una carta descubierta cada vez.",
+        "- Las columnas vacías se cierran de inmediato y no se pueden volver a llenar.",
+        "- Toca una columna para seleccionar su carta inferior y luego toca una columna de destino válida.",
+        "- Toca dos veces una carta descubierta para llevarla a su fundación cuando sea posible."
+      ]
+    },
+    "quickStart": {
+      "hash": "a4b03b07",
+      "value": [
+        "Sube las fundaciones por palo, del As al Rey.",
+        "Baja las columnas por valor, sin importar el palo.",
+        "Mueve una carta cada vez; las columnas vacías no se pueden usar."
+      ]
+    },
+    "title": {
+      "hash": "1f8df454",
+      "value": "Docena del panadero"
+    }
+  },
+  "bakers-game": {
+    "cardDescription": {
+      "hash": "07005d70",
+      "value": "El antepasado más difícil de FreeCell: baja las columnas en el mismo palo, no alternando colores."
+    },
+    "howToPlay": {
+      "hash": "a01e3e7a",
+      "value": [
+        "## Objetivo",
+        "Lleva las 52 cartas a las cuatro **fundaciones**, cada una ordenada por palo del As al Rey.",
+        "## Reglas",
+        "- Sube las fundaciones por palo, del As al Rey.",
+        "-- Toca dos veces una carta para llevarla a una fundación válida.",
+        "- Construye las columnas **bajando un valor, en el mismo palo** (por ejemplo, un {9S} sobre un {10S}).",
+        "- Cualquier carta puede ir a una columna vacía.",
+        "- Mueve una carta cada vez; cada **celda libre** guarda una sola carta.",
+        "-- Puedes mover una secuencia apilada si tienes suficientes celdas libres y columnas vacías."
+      ]
+    },
+    "quickStart": {
+      "hash": "aba9ed00",
+      "value": [
+        "Sube las fundaciones por palo (de A a K).",
+        "Baja las columnas por palo.",
+        "Usa 4 celdas libres para mover cartas."
+      ]
+    },
+    "title": {
+      "hash": "315c84d0",
+      "value": "Juego del panadero"
+    }
+  },
+  "baroness": {
+    "cardDescription": {
+      "hash": "32a23d8a",
+      "value": "Despeja cinco pilas descartando cartas que sumen trece."
+    },
+    "howToPlay": {
+      "hash": "e0cdb3c4",
+      "value": [
+        "## Objetivo",
+        "- **Gana** descartando las 52 cartas.",
+        "- **Pierdes** cuando el mazo está vacío y no queda ningún movimiento.",
+        "## Descartar",
+        "- Descarta cualquier **Rey** por sí solo, o dos cartas disponibles cuyos valores sumen **13** (por ejemplo, {5H} + {8S}, o {AS} + {QC}).",
+        "- Solo está disponible la carta **superior** de cada pila.",
+        "- Cuando no quede ningún movimiento, **toca el mazo** para repartir una carta sobre cada pila.",
+        "- Los Ases valen 1."
+      ]
+    },
+    "quickStart": {
+      "hash": "4a558a6e",
+      "value": [
+        "Descarta Reyes sueltos o parejas que sumen 13.",
+        "As = 1. Reparte cuando no puedas seguir."
+      ]
+    },
+    "title": {
+      "hash": "c3cec216",
+      "value": "Baronesa"
+    }
+  },
+  "beleaguered-castle": {
+    "cardDescription": {
+      "hash": "f890639b",
+      "value": "Asalta el castillo: sube cada palo del As al Rey con las columnas al descubierto."
+    },
+    "howToPlay": {
+      "hash": "8fb5fdcb",
+      "value": [
+        "## Objetivo",
+        "- **Gana** subiendo las cuatro **fundaciones** por palo del **As al Rey**.",
+        "- **Pierdes** si no quedan movimientos válidos y las fundaciones están incompletas.",
+        "## Cómo jugar",
+        "- Baja las columnas **por valor**, sin importar el palo (por ejemplo, un {7C} sobre un {8H}).",
+        "- Lleva una carta a su **fundación** cuando sea el siguiente valor del mismo palo.",
+        "- Toca una carta descubierta para cogerla y luego toca un destino.",
+        "- Toca dos veces una carta descubierta para llevarla a una fundación válida.",
+        "- Mueve las cartas **de una en una**.",
+        "- Cualquier carta suelta puede ocupar una **columna vacía**."
+      ]
+    },
+    "quickStart": {
+      "hash": "3cf0fa17",
+      "value": [
+        "Sube todas las fundaciones por palo, de A a K.",
+        "Baja las columnas por valor, sin importar el palo, de carta en carta."
+      ]
+    },
+    "title": {
+      "hash": "6ee50aa6",
+      "value": "Castillo asediado"
+    }
+  },
+  "bisley": {
+    "cardDescription": {
+      "hash": "5480127a",
+      "value": "Construye cada palo desde ambos extremos mientras trece columnas abiertas te van cercando."
+    },
+    "howToPlay": {
+      "hash": "9a5911e7",
+      "value": [
+        "## Objetivo",
+        "Lleva todas las cartas a ocho fundaciones: cuatro suben desde los Ases y cuatro bajan desde los Reyes.",
+        "## Reglas",
+        "- Los Ases empiezan en sus fundaciones ascendentes.",
+        "- Construye las columnas subiendo o bajando un valor en el mismo palo.",
+        "- Solo se puede jugar la carta descubierta inferior de cada columna.",
+        "- Mueve una carta cada vez.",
+        "- Las columnas vacías no se pueden llenar."
+      ]
+    },
+    "quickStart": {
+      "hash": "db6b2f70",
+      "value": [
+        "Sube las fundaciones de Ases y baja las de Reyes, por palo.",
+        "Construye las columnas subiendo o bajando un valor en el mismo palo.",
+        "Mueve una carta descubierta cada vez; las columnas vacías quedan cerradas."
+      ]
+    },
+    "title": {
+      "hash": "0dea4321",
+      "value": "Bisley"
+    }
+  },
+  "blackberry-pie": {
+    "cardDescription": {
+      "hash": "efcdf8a7",
+      "value": "Forma tríos a juego bajo las cartas de mora para ayudar a la Reina a hornear su tarta."
+    },
+    "howToPlay": {
+      "hash": "4a9fa370",
+      "value": [
+        "## Objetivo",
+        "**Recoge las diez cartas de mora de tréboles** completando un conjunto adecuado bajo cada una.",
+        "",
+        "## Tu turno",
+        "- Tu mano se rellena hasta tres cartas desde el mazo siempre que sea posible.",
+        "- Elige una carta de tu mano o de cualquiera de las reservas y luego elige una columna de mora.",
+        "- Tras la primera carta, juega justo a la izquierda o a la derecha de la columna anterior.",
+        "- Un Comodín permite colocar tu siguiente carta bajo cualquier mora sin recoger, incluso en la misma columna.",
+        "",
+        "## Recoger moras",
+        "Un conjunto son tres cartas cualesquiera (sin Comodines) bajo una mora que incluyen su valor y que forman:",
+        "- Una escalera de tres valores consecutivos.",
+        "- Tres cartas del mismo palo.",
+        "- Tres figuras (Jotas, Reinas o Reyes).",
+        "Pueden quedar cartas de más bajo una mora recogida.",
+        "",
+        "## Puntuación",
+        "Suma los valores de las moras recogidas, **5 puntos extra** por recogerlas todas y **1 punto** por cada carta que te quede en la mano."
+      ]
+    },
+    "quickStart": {
+      "hash": "81cd3c78",
+      "value": [
+        "Elige una carta de la mano o de una reserva y colócala bajo una mora disponible.",
+        "Tras la primera jugada, coloca junto a la columna anterior, salvo que hayas jugado un Comodín.",
+        "Recoge todas las cartas de mora para ganar."
+      ]
+    },
+    "title": {
+      "hash": "d3fd95cc",
+      "value": "Tarta de moras"
+    }
+  },
+  "bowling": {
+    "cardDescription": {
+      "hash": "57809475",
+      "value": "Juega una partida completa de bolos de 10 con cartas, en busca de strikes y spares."
+    },
+    "howToPlay": {
+      "hash": "467c3b31",
+      "value": [
+        "## Objetivo",
+        "Consigue la máxima puntuación en diez rondas. **Ganas** con una puntuación final de **120** o más; si no, pierdes.",
+        "## Lanzar bolas",
+        "- Elige una carta de bola boca arriba y derriba **1, 2 o 3 bolos adyacentes** cuyos valores **sumen un número que termine en la cifra de la carta de bola**:",
+        "-- 2 + 7 + 5 = 14, que corresponde a una bola 4",
+        "-- A + 4 = 5, que corresponde a una bola 5",
+        "-- 10 + 10 = 20, que corresponde a una bola 10.",
+        "- Cuando no quede ninguna jugada válida, selecciona «Terminar bola».",
+        "## Restricciones",
+        "- En el **primer lanzamiento de una ronda**, no puedes retirar un bolo de la fila trasera, y el bolo central no se puede derribar solo.",
+        "- Después de la apertura, cada golpe debe incluir **al menos un bolo adyacente a un hueco** dejado por un golpe anterior.",
+        "## Puntuación",
+        "La puntuación es similar a la de los bolos: una ronda permite hasta dos bolas y termina antes si haces strike. En la ronda 10, un strike o un spare da 2 o 1 bolas extra.",
+        "- **Strike**: 10 más las dos bolas siguientes",
+        "- **Spare** (todos los bolos en dos bolas): 10 más la bola siguiente",
+        "- **Ronda abierta**: el número de bolos derribados"
+      ]
+    },
+    "quickStart": {
+      "hash": "43fe21eb",
+      "value": [
+        "Elige una carta de bola y de 1 a 3 cartas de bolos adyacentes.",
+        "La bola se puede lanzar si coinciden las últimas cifras.",
+        "Termina la bola si no hay ninguna combinación válida."
+      ]
+    },
+    "title": {
+      "hash": "68228d1b",
+      "value": "Bolos"
+    }
+  },
+  "busy-aces": {
+    "cardDescription": {
+      "hash": "86e347ed",
+      "value": "Mantén en movimiento doce columnas cortas de dos barajas, de carta en carta y por palo."
+    },
+    "howToPlay": {
+      "hash": "e1ebb3ac",
+      "value": [
+        "## Objetivo",
+        "Sube las ocho fundaciones por palo, del As al Rey.",
+        "## Reglas",
+        "- Doce columnas empiezan con una carta boca abajo y otra boca arriba.",
+        "- Baja por palo, moviendo una carta cada vez.",
+        "- Cualquier carta puede ocupar una columna vacía.",
+        "- Pasa el mazo de carta en carta, sin volver a repartir."
+      ]
+    },
+    "quickStart": {
+      "hash": "612615e7",
+      "value": [
+        "Sube las fundaciones por palo.",
+        "Baja las columnas por palo, de carta en carta.",
+        "Cualquier carta ocupa un hueco; el mazo se pasa una sola vez."
+      ]
+    },
+    "title": {
+      "hash": "a2f312a2",
+      "value": "Ases atareados"
+    }
+  },
+  "cabin-siege": {
+    "cardDescription": {
+      "hash": "d080e51a",
+      "value": "Defiende tu cabaña de un asedio zombi usando con estrategia tus cartas de apoyo."
+    },
+    "howToPlay": {
+      "hash": "669496da",
+      "value": [
+        "## Objetivo",
+        "Mata a todos los zombis antes de quedarte sin cartas.",
+        "## Orden del turno",
+        "- **Descubrir**: descubre zombis, si quedan.",
+        "- **Jugar**: coloca la carta superior del mazo en una pila válida de la cabaña.",
+        "- **Matar**: si es posible, mata a un zombi adyacente a la última carta jugada.",
+        "## Colocación de cartas",
+        "Una carta robada puede colocarse sobre una pila existente si esa carta es:",
+        "- del mismo valor,",
+        "- del mismo color **y** de mayor valor, o",
+        "- de color opuesto **y** de menor valor.",
+        "## Matar zombis",
+        "Que puedas matar a un zombi depende de su valor, de la carta jugada y de **las dos cartas de apoyo que están en la misma línea que el zombi y la última carta jugada**.",
+        "Un zombi puede morir si:",
+        "- es adyacente a la última carta jugada;",
+        "- las dos cartas de apoyo suman al menos 10 (los Ases valen 1 y los Comodines, 0);",
+        "- en el caso de los Reyes, ambas cartas de apoyo son del palo del Rey;",
+        "- en el caso de las Reinas, ambas cartas de apoyo son del color de la Reina;",
+        "- las Jotas no tienen restricciones."
+      ]
+    },
+    "quickStart": {
+      "hash": "aa829b03",
+      "value": [
+        "Mata zombis colocando cartas en posiciones adyacentes válidas.",
+        "Las otras dos cartas de esa línea deben sumar al menos 10 y coincidir en palo (Reyes) o en color (Reinas).",
+        "Los Ases valen 1; los Comodines pueden colocarse en cualquier sitio y valen 0."
+      ]
+    },
+    "title": {
+      "hash": "8b7b55e1",
+      "value": "Asedio a la cabaña"
+    }
+  },
+  "cafe-queue": {
+    "cardDescription": {
+      "hash": "98f19edd",
+      "value": "Un juego de tentar a la suerte en el que debes gestionar colas ordenadas de clientes."
+    },
+    "howToPlay": {
+      "hash": "22d411d4",
+      "value": [
+        "## Objetivo",
+        "Reparte todo el mazo sin descartar las cuatro cartas de un mismo valor.",
+        "## Colocar clientes",
+        "- Elige una posición numerada de una de las colas y luego descubre al siguiente cliente.",
+        "- Un cliente solo puede unirse a la cola si su valor encaja en el orden descendente de la cola (de mayor a menor).",
+        "- Si el cliente no encaja, puedes:",
+        "-- sentarlo descartando la cola seleccionada, o",
+        "-- rechazarlo junto con el siguiente cliente.",
+        "- Pierdes de inmediato cuando se han descartado las cuatro cartas de un mismo valor.",
+        "## Echar un vistazo",
+        "Puedes tocar el mazo para ver a los clientes que esperan. Después, el mazo se vuelve a barajar."
+      ]
+    },
+    "quickStart": {
+      "hash": "01b76d80",
+      "value": [
+        "Elige un lugar en una cola para el siguiente cliente.",
+        "Las colas deben mantenerse en orden descendente de valor.",
+        "Si un cliente no encaja, descarta la cola o rechaza a dos clientes."
+      ]
+    },
+    "title": {
+      "hash": "d7db086f",
+      "value": "Cola del café"
+    }
+  },
+  "calculation": {
+    "cardDescription": {
+      "hash": "158cca43",
+      "value": "Sube cuatro fundaciones de 1 en 1, de 2 en 2, de 3 en 3 y de 4 en 4, hasta los Reyes."
+    },
+    "howToPlay": {
+      "hash": "08af239e",
+      "value": [
+        "## Objetivo",
+        "**Gana** subiendo las cuatro **fundaciones** hasta los Reyes.",
+        "## Fundaciones",
+        "Cada fundación sube **con un incremento fijo** (+1, +2, +3 o +4) y da la vuelta después del Rey (al As, luego al 2, etc.).",
+        "- **Fundación 1**: A, 2, 3, 4 … K",
+        "- **Fundación 2**: 2, 4, 6, 8, 10, Q, A, 3 … K",
+        "- **Fundación 3**: 3, 6, 9, Q, 2, 5 … K",
+        "- **Fundación 4**: 4, 8, Q, 3, 7 … K",
+        "## Cómo se juega",
+        "- Juega la carta superior del mazo o de cualquier montón en cualquier fundación si sigue el incremento de esa fundación.",
+        "- Puedes jugar la carta robada en uno de los 4 montones.",
+        "- No puedes mover cartas entre montones."
+      ]
+    },
+    "quickStart": {
+      "hash": "22eb825e",
+      "value": [
+        "Sube cuatro fundaciones de 1 en 1, de 2 en 2, de 3 en 3 y de 4 en 4, hasta los Reyes.",
+        "Los montones sirven para guardar cartas en cualquier orden."
+      ]
+    },
+    "title": {
+      "hash": "16599adc",
+      "value": "Cálculo"
+    }
+  },
+  "canfield": {
+    "cardDescription": {
+      "hash": "a81515a3",
+      "value": "Sube fundaciones por palo desde un valor base aleatorio, con la ayuda de una reserva de 13 cartas."
+    },
+    "howToPlay": {
+      "hash": "5bad9813",
+      "value": [
+        "## Objetivo",
+        "Lleva las 52 cartas a sus fundaciones.",
+        "## Fundaciones",
+        "- Sube las fundaciones **por palo** desde el valor base.",
+        "- Las fundaciones dan la vuelta del Rey al As, por ejemplo: 10, J, Q, K, A, 2, 3, etc.",
+        "## Columnas",
+        "- Baja las columnas **alternando colores** (pasando del As al Rey).",
+        "- Mueve cartas sueltas o grupos ordenados de cartas entre columnas.",
+        "- Cuando una columna se vacía, se rellena desde la **reserva** (o, cuando se acaba la reserva, con cualquier carta).",
+        "## Mazo",
+        "Pasa cartas del mazo al montón (de una en una o de tres en tres, según tus ajustes). Puedes volver a repartir tantas veces como quieras."
+      ]
+    },
+    "quickStart": {
+      "hash": "4ad05a24",
+      "value": [
+        "Sube las fundaciones por palo.",
+        "Baja las columnas alternando colores.",
+        "Los huecos se llenan desde la reserva."
+      ]
+    },
+    "title": {
+      "hash": "64360cff",
+      "value": "Canfield"
+    }
+  },
+  "carpet": {
+    "cardDescription": {
+      "hash": "bf2e1ad7",
+      "value": "Sube una alfombra de veinte cartas a las fundaciones mientras el mazo tapa cada hueco."
+    },
+    "howToPlay": {
+      "hash": "2b1cbaa6",
+      "value": [
+        "## Objetivo",
+        "Lleva las 52 cartas a las cuatro fundaciones, subiendo por palo del As al Rey.",
+        "## Reglas",
+        "- Los cuatro **Ases** empiezan en las fundaciones; veinte cartas forman la **alfombra**.",
+        "- Cualquier carta de la alfombra, y la carta superior del montón, se puede jugar en su fundación.",
+        "- Un hueco en la alfombra se rellena en el acto con la carta superior del **montón**, o desde el **mazo** si el montón está vacío.",
+        "- Toca el **mazo** para pasar una carta al montón. No se vuelve a repartir."
+      ]
+    },
+    "quickStart": {
+      "hash": "760fc5c7",
+      "value": [
+        "Sube las fundaciones por palo desde los Ases.",
+        "Toca una carta de la alfombra o del montón para subirla.",
+        "Los huecos de la alfombra se rellenan desde el montón y después desde el mazo."
+      ]
+    },
+    "title": {
+      "hash": "51e11c90",
+      "value": "Alfombra"
+    }
+  },
+  "chain-of-command": {
+    "cardDescription": {
+      "hash": "26aaf0b8",
+      "value": "Asciende con estrategia a miembros y candidatos hasta la cima de la cadena de mando."
+    },
+    "howToPlay": {
+      "hash": "4b1772c7",
+      "value": [
+        "## Objetivo",
+        "**Gana** ascendiendo a un miembro más allá del rango 1.",
+        "**Pierdes** cuando no queda ninguna sustitución válida.",
+        "## Sustituir miembros",
+        "- Elige una franja de rango con exactamente tres miembros y luego elige un miembro para ascender.",
+        "- Sustitúyelo por un candidato cuyo valor sea igual a la última cifra de la suma **o** el producto de los dos miembros restantes. Los 10 cuentan como 0.",
+        "- Asciende al miembro sustituido al siguiente rango, como miembro o como candidato.",
+        "- Un rango puede tener como máximo tres miembros. Si un ascenso supera este límite, descarta un miembro de ese rango."
+      ]
+    },
+    "quickStart": {
+      "hash": "2ee1d233",
+      "value": [
+        "Gana ascendiendo a un miembro más allá del rango 1.",
+        "Elige un miembro para ascenderlo al siguiente rango y sustitúyelo por un candidato.",
+        "Los candidatos válidos dependen de la última cifra de la suma o el producto de los miembros restantes."
+      ]
+    },
+    "title": {
+      "hash": "73544d7c",
+      "value": "Cadena de mando"
+    }
+  },
+  "chapter-and-verse": {
+    "cardDescription": {
+      "hash": "f6ff591c",
+      "value": "Iguala las ofertas de los clientes con los libros disponibles para conseguir la máxima puntuación."
+    },
+    "howToPlay": {
+      "hash": "2558e4ff",
+      "value": [
+        "## Objetivo",
+        "- **Gana** completando 12 intercambios con clientes e intentando conseguir la máxima puntuación.",
+        "- **Pierdes** si te despiden cuando tu puntuación llega a 0.",
+        "## Ofertas de los clientes",
+        "Con cada uno de los 12 clientes se descubre un libro usado y el cliente hace una oferta.",
+        "- El valor de la oferta es la suma del valor del cliente (J = 11, Q = 12, K = 13) y el del libro usado descubierto.",
+        "- Elige libros de la estantería cuyo total iguale exactamente esa oferta.",
+        "- **Ofertas exclusivas**: los libros de la estantería del mismo palo que el libro usado **cuestan 0 $**.",
+        "- **Ofertas por tiempo limitado:** los Ases cuestan normalmente 11 $, pero pueden ofrecerse por 1 $ (tócalos para cambiar su valor).",
+        "## Mejorar tu reputación en el gremio",
+        "- Tras un intercambio, los **libros seleccionados del mismo palo que el cliente** se suman a tu puntuación; los demás se descartan.",
+        "## Pasar",
+        "- Si no puedes igualar la oferta, puedes **pasar** y perder puntuación según el valor del cliente: J = 1, Q = 2, K = 3.",
+        "## Puntuación",
+        "Tu puntuación determina tu valoración al final de la partida:",
+        "- Menos de 10: ¡No hay libros para ti! ¡Estás despedido!",
+        "- 10-11: 🕮",
+        "- 12-13: 🕮🕮",
+        "- 14-15: 🕮🕮🕮",
+        "- 16-17: 🕮🕮🕮🕮",
+        "- 18+: 🕮🕮🕮🕮🕮"
+      ]
+    },
+    "quickStart": {
+      "hash": "dc388d3c",
+      "value": [
+        "Iguala exactamente las ofertas de los clientes eligiendo entre los libros disponibles.",
+        "Las preferencias de los clientes y los libros usados afectan al precio de los libros."
+      ]
+    },
+    "title": {
+      "hash": "047bda25",
+      "value": "Capítulo y versículo"
+    }
+  },
+  "city-grid": {
+    "cardDescription": {
+      "hash": "b923e9bb",
+      "value": "Un juego de colocar losetas en el que cada movimiento puede alterar la precaria cuadrícula."
+    },
+    "howToPlay": {
+      "hash": "316682c7",
+      "value": [
+        "## Objetivo",
+        "**Gana** consiguiendo que las cartas superiores de las 16 pilas estén boca arriba.",
+        "**Pierdes** si en algún momento hay más de 4 pilas con la carta superior boca abajo.",
+        "## Cómo se juega",
+        "La partida se juega con las cartas del As al 10 de los cuatro palos.",
+        "En cada turno, coloca la carta superior del mazo en una pila de la cuadrícula:",
+        "- puedes empezar una pila nueva si es adyacente a una pila existente, o",
+        "- puedes añadirla a una pila que tenga menos de 4 cartas.",
+        "\nTras colocar una carta, si es la más alta o la más baja de su fila o columna, se voltean las cartas de esa fila o columna (boca arriba o boca abajo).",
+        "- El valor de las cartas boca abajo no se tiene en cuenta para decidir qué cartas se voltean.",
+        "- Los Ases valen 1."
+      ]
+    },
+    "quickStart": {
+      "hash": "c0b328dd",
+      "value": [
+        "Llena la cuadrícula con todas las cartas superiores boca arriba.",
+        "Coloca sobre pilas existentes o junto a ellas, hasta 4 cartas de alto.",
+        "Si la carta colocada es la más alta o la más baja de su línea, se voltean todas las cartas de esa línea."
+      ]
+    },
+    "title": {
+      "hash": "95cf8f14",
+      "value": "Cuadrícula urbana"
+    }
+  },
+  "clock": {
+    "cardDescription": {
+      "hash": "61261ec5",
+      "value": "Un solitario de puro azar: sigue las cartas alrededor del reloj antes de que aparezcan todos los Reyes."
+    },
+    "howToPlay": {
+      "hash": "36c70a77",
+      "value": [
+        "## Objetivo",
+        "Pon todas las cartas boca arriba, colocando las 52 en su posición del reloj, antes de que se descubran los cuatro Reyes.",
+        "## Cómo jugar",
+        "- Descubre la carta superior de la pila central para empezar.",
+        "- Toca la pila de la hora correspondiente: los Ases a la 1, los números en su hora, la Jota a las 11, la Reina a las 12 y los Reyes en el centro.",
+        "## Ganar y perder",
+        "Ganas si todas las pilas quedan boca arriba. Pierdes en cuanto se descubre el **cuarto Rey**."
+      ]
+    },
+    "quickStart": {
+      "hash": "70061575",
+      "value": [
+        "Toca la pila central para empezar y luego toca la pila de la hora que corresponde a la última carta descubierta."
+      ]
+    },
+    "title": {
+      "hash": "9787c661",
+      "value": "Solitario del reloj"
+    }
+  },
+  "congress": {
+    "cardDescription": {
+      "hash": "fe8ab4a0",
+      "value": "Guía dos barajas por ocho columnas con movimientos de una carta y una sola pasada del mazo."
+    },
+    "howToPlay": {
+      "hash": "a237b48a",
+      "value": [
+        "## Objetivo",
+        "Sube ocho fundaciones por palo, del As al Rey.",
+        "## Reglas",
+        "- Baja las columnas por valor, sin importar el palo.",
+        "- Mueve una carta descubierta cada vez.",
+        "- Cualquier carta puede ocupar una columna vacía.",
+        "- Pasa el mazo de carta en carta, sin volver a repartir."
+      ]
+    },
+    "quickStart": {
+      "hash": "c4fd113b",
+      "value": [
+        "Sube ocho fundaciones por palo.",
+        "Baja las columnas sin importar el palo.",
+        "Mueve una carta cada vez; cualquier carta ocupa un hueco."
+      ]
+    },
+    "title": {
+      "hash": "a9276573",
+      "value": "Congreso"
+    }
+  },
+  "crazy-quilt": {
+    "cardDescription": {
+      "hash": "e28c27ea",
+      "value": "Deshaz una colcha de cartas verticales y horizontales, por un extremo libre cada vez."
+    },
+    "howToPlay": {
+      "hash": "ce4eb32e",
+      "value": [
+        "## Objetivo",
+        "Lleva las 104 cartas a las ocho fundaciones.",
+        "## Fundaciones",
+        "- Un **As** y un **Rey** de cada palo empiezan las fundaciones.",
+        "- Los Ases **suben** por palo hasta los Reyes; los Reyes **bajan** por palo hasta los Ases.",
+        "## Reglas",
+        "- 64 cartas forman la **colcha**, alternando cartas verticales y horizontales como un tablero de ajedrez.",
+        "- Una carta de la colcha está **libre** cuando al menos uno de sus **lados cortos** no toca otra carta.",
+        "- Toca una carta libre para jugarla en una fundación o, si no es posible, en el **montón** si tiene un valor más o menos que la carta superior del montón, del mismo palo.",
+        "- Los huecos de la colcha nunca se rellenan.",
+        "- Toca el **mazo** para pasar una carta al montón. Cuando se acabe, tócalo para dar la vuelta al montón **una sola vez**, sin barajar."
+      ]
+    },
+    "quickStart": {
+      "hash": "be5c8a85",
+      "value": [
+        "Una carta de la colcha está libre cuando uno de sus lados cortos queda al descubierto.",
+        "Los Ases suben y los Reyes bajan, por palo.",
+        "Una carta libre que no puede ir a una fundación puede ir al montón, subiendo o bajando en el mismo palo."
+      ]
+    },
+    "title": {
+      "hash": "2c607fe7",
+      "value": "Colcha loca"
+    }
+  },
+  "crescent": {
+    "cardDescription": {
+      "hash": "4de6a2cd",
+      "value": "Lleva dieciséis pilas a la luz de la luna hacia fundaciones que crecen desde los Ases y desde los Reyes."
+    },
+    "howToPlay": {
+      "hash": "2122d621",
+      "value": [
+        "## Objetivo",
+        "Lleva las dos barajas a ocho fundaciones: cuatro suben desde los Ases y cuatro bajan desde los Reyes.",
+        "## Reglas",
+        "- Solo se puede jugar la carta descubierta de cada una de las dieciséis pilas.",
+        "- Construye las pilas subiendo o bajando un valor en el mismo palo; el As y el Rey son contiguos y «dan la vuelta».",
+        "- Mueve una carta cada vez.",
+        "- Las pilas vacías no se pueden rellenar.",
+        "- Las cartas que no son la base pueden pasar de una fundación a otra.",
+        "- Tres veces por partida puedes «reapilar» para pasar la carta inferior de cada pila a la parte superior."
+      ]
+    },
+    "quickStart": {
+      "hash": "f9edde34",
+      "value": [
+        "Sube las fundaciones de Ases y baja las de Reyes, por palo.",
+        "Construye las columnas subiendo o bajando un valor en el mismo palo; el As y el Rey son contiguos.",
+        "Mueve una carta descubierta; reapila cada pila hasta tres veces."
+      ]
+    },
+    "title": {
+      "hash": "500f31c8",
+      "value": "Media luna"
+    }
+  },
+  "cribbage-squares": {
+    "cardDescription": {
+      "hash": "4ff9ff90",
+      "value": "Forma un cuadro de dieciséis cartas conectadas y puntúa cada fila y columna con una carta inicial."
+    },
+    "howToPlay": {
+      "hash": "d49f4554",
+      "value": [
+        "## Objetivo",
+        "Consigue al menos 61 puntos con las cuatro filas y las cuatro columnas, cada una puntuada como una mano de cribbage con la carta inicial.",
+        "## Cómo se juega",
+        "- Cada carta posterior debe tocar una carta que ya esté en la cuadrícula (en horizontal, vertical o diagonal).",
+        "- Las cartas no se pueden mover una vez colocadas.",
+        "- Tras colocar las dieciséis cartas, una decimoséptima se convierte en la carta inicial.",
+        "## Puntuación",
+        "Cada fila y cada columna puntúa como una mano de cribbage (con la carta inicial):",
+        "- **Quinces (2 ptos.):**",
+        "-- Dos o más cartas que suman 15. Las figuras valen 10 y los Ases, 1.",
+        "- **Parejas (2, 6 o 12 ptos.):**",
+        "-- Pareja (2 cartas del mismo valor) = 2 ptos.",
+        "-- Trío (3 cartas) = 6 ptos.",
+        "-- Póquer (4 cartas) = 12 ptos.",
+        "- **Escaleras (1 pto. por carta):**",
+        "-- Una secuencia de tres o más cartas consecutivas (sin importar el palo) da 1 punto por carta.",
+        "- **Color (4 o 5 ptos.):**",
+        "-- Cuatro cartas del mismo palo = 4 ptos.",
+        "-- Si la carta inicial también es de ese palo = 5 ptos.",
+        "- **His Nobs (1 pto.):**",
+        "-- Si una fila o columna contiene una Jota del mismo palo que la carta inicial, suma 1 punto extra.",
+        "- **His Heels (2 ptos.):**",
+        "-- Si la carta inicial es una Jota, «his heels» suma dos puntos a la puntuación total."
+      ]
+    },
+    "quickStart": {
+      "hash": "c7bb9e3a",
+      "value": [
+        "Coloca cada carta junto a otra carta de la cuadrícula.",
+        "Tras colocar las dieciséis, se descubre una carta «inicial».",
+        "Las filas y las columnas puntúan como manos de cribbage."
+      ]
+    },
+    "title": {
+      "hash": "f080a538",
+      "value": "Cuadros de cribbage"
+    }
+  },
+  "crownslayer": {
+    "cardDescription": {
+      "hash": "60d95812",
+      "value": "Derroca a los 12 miembros de la realeza con combos potenciados por los palos."
+    },
+    "howToPlay": {
+      "hash": "82061d43",
+      "value": [
+        "## Objetivo",
+        "**Gana** derrotando a los 12 enemigos reales (Jotas, Reinas y Reyes).",
+        "**Pierdes** si no puedes cubrir el ataque de un enemigo.",
+        "## Orden del turno",
+        "**Ataque**",
+        "- Infligir a un enemigo **más** daño que su salud lo envía al descarte.",
+        "- Dejar su salud en **exactamente 0** lo envía al mazo de la Taberna, lo que te permite robarlo más tarde.",
+        "-- Valores de ataque de los enemigos robados:\nJotas = 10, Reinas = 15, Reyes = 20",
+        "\n**Defensa**",
+        "- Si el enemigo sobrevive a tu último ataque, contraataca.",
+        "- Descarta cartas de tu mano que sumen al menos su valor de ataque.",
+        "- El poder de las **♠ Picas** puede usarse para reducir el valor de ataque.",
+        "## Poderes de los palos",
+        "La fuerza del poder depende del valor de la carta. Los enemigos son **inmunes al poder de su propio palo**.",
+        "- **♥ Corazones** (curación): baraja esa cantidad de cartas del descarte y las devuelve debajo del mazo.",
+        "- **♦ Diamantes:** roba esa cantidad de cartas.",
+        "- **♣ Tréboles:** duplica el daño infligido.",
+        "- **♠ Picas** (escudo): reduce de forma permanente el ataque de este enemigo en ese valor.",
+        "## Combos",
+        "- Juega un **As** (compañero animal) con otra carta para sumar sus valores y activar ambos poderes.",
+        "- Juega **de dos a cuatro cartas del mismo valor**, que sumen 10 o menos, como un solo combo.",
+        "## Los enemigos",
+        "- **Jotas**: 20 de salud, 10 de ataque.",
+        "- **Reinas**: 30 de salud, 15 de ataque.",
+        "- **Reyes**: 40 de salud, 20 de ataque.",
+        "## Bufones",
+        "- Los Bufones se pueden activar para **descartar tu mano y rellenarla** hasta 8 cartas.",
+        "- Usa menos Bufones para obtener mejores puntuaciones:",
+        "-- Oro: 0 Bufones usados",
+        "-- Plata: 1 Bufón usado",
+        "-- Bronce: 2 Bufones usados"
+      ]
+    },
+    "quickStart": {
+      "hash": "b3570aa9",
+      "value": [
+        "Derrota a 12 miembros de la realeza, de uno en uno.",
+        "Los palos tienen poderes; los enemigos son inmunes a su propio palo; los Ases permiten combos.",
+        "Fase de ataque: juega una o varias cartas para infligir daño.",
+        "Fase de defensa: las cartas descartadas deben sumar al menos el ataque del enemigo."
+      ]
+    },
+    "title": {
+      "hash": "73e35ce0",
+      "value": "Matacoronas"
+    }
+  },
+  "cruel": {
+    "cardDescription": {
+      "hash": "3a229ead",
+      "value": "Doce pilas descubiertas, sin mazo, y un nuevo reparto que cambia todo lo que has construido."
+    },
+    "howToPlay": {
+      "hash": "959bc755",
+      "value": [
+        "## Objetivo",
+        "Lleva las 52 cartas a las cuatro fundaciones, subiendo por palo del As al Rey.",
+        "## Reglas",
+        "- Los cuatro **Ases** empiezan en las fundaciones; el resto se reparte boca arriba en **doce pilas de cuatro**.",
+        "- Solo se puede mover la carta superior de una pila, a una fundación o a una pila **de un valor más en el mismo palo**.",
+        "- Las pilas vacías **nunca** se rellenan.",
+        "- Toca la pila de **reparto** para recoger las pilas en orden, sin barajar, y volver a repartirlas de cuatro en cuatro.",
+        "- Puedes volver a repartir tantas veces como quieras, pero solo después de hacer un movimiento desde el último reparto."
+      ]
+    },
+    "quickStart": {
+      "hash": "fd1b5503",
+      "value": [
+        "Sube las fundaciones por palo desde los Ases.",
+        "Baja por palo moviendo cartas superiores; los huecos quedan vacíos.",
+        "Tras cualquier movimiento, toca la pila de reparto para volver a formar las pilas de cuatro en cuatro."
+      ]
+    },
+    "title": {
+      "hash": "aaedc2bc",
+      "value": "Cruel"
+    }
+  },
+  "delta-21": {
+    "cardDescription": {
+      "hash": "0886780b",
+      "value": "Equilibra cuatro poblaciones de peces de río en exactamente 21 y publica tus estudios."
+    },
+    "howToPlay": {
+      "hash": "b75491fc",
+      "value": [
+        "## Objetivo",
+        "Completa estudios del río formando columnas de población de **exactamente 21 peces**.",
+        "**Consigue la máxima puntuación** completando tantos estudios como puedas y logrando avances científicos.",
+        "La **partida termina** cuando la «estación de campo» (el mazo) se vacía o si alguna columna llega a **25 o más**.",
+        "## Tipos de cartas",
+        "- **Bancos de peces:**",
+        "-- Del As al 10; los Ases cuentan como 1.",
+        "-- El valor de la carta representa el número de peces de ese «banco».",
+        "- **Pescadores:**",
+        "-- Jotas, Reinas y Reyes",
+        "-- Se pueden añadir a un banco de peces para reducir su población **hasta en** 1 (Jota), 2 (Reina) o 3 (Rey). La población de un banco no puede bajar de 0.",
+        "## Cómo se juega",
+        "En cada turno, vacía tu mano realizando una de estas acciones:",
+        "- **Soltar peces:** añade un banco al final de una columna (selecciona una carta de la mano y luego toca una columna).",
+        "- **Pescar:** coloca un pescador sobre un banco que aún no tenga ninguno (selecciona una carta de la mano y luego toca un banco).",
+        "- **Trasladar peces:** traslada peces de una columna a otra a cambio de una carta de tu mano. Sin nada seleccionado, toca el banco inferior de una columna para levantarlo, toca otra columna para apuntar y luego toca una carta de la mano para descartarla y mover el banco. No puedes mover el único banco de una columna ni un banco que tenga un pescador encima.",
+        "\nCuando tu mano esté vacía:",
+        "- cualquier columna que sume **exactamente 21** se aparta como estudio completado;",
+        "- el hueco que queda se rellena con un banco nuevo;",
+        "- tu mano se repone desde el mazo y empieza un turno nuevo.",
+        "## Avances científicos",
+        "- **Especialización de especies:**",
+        "-- un estudio con un solo palo.",
+        "- **Diversidad de especies:**",
+        "-- un estudio con los cuatro palos.",
+        "- **Cardúmenes densos:**",
+        "-- un estudio con cinco o más bancos.",
+        "- **Grupos de población:**",
+        "-- un estudio con dos o más bancos del mismo valor.",
+        "- **Pesca selectiva:**",
+        "-- un pescador que captura peces de su propio palo.",
+        "- **Presión pesquera:**",
+        "-- un estudio con dos o más pescadores.",
+        "## Puntuación",
+        "- Consigue **1 punto** por estudio más **2 puntos** por avance científico.",
+        "- Contribución científica:",
+        "-- **0-8:** poca aportación",
+        "-- **9-13:** ayuda al estudio local",
+        "-- **14-17:** hace avanzar el conocimiento",
+        "-- **18+:** transforma la ciencia"
+      ]
+    },
+    "quickStart": {
+      "hash": "ca30a0a4",
+      "value": [
+        "Forma columnas de 21 y cumple objetivos de investigación por el camino.",
+        "Usa las figuras para reducir los totales. Evita totales de 25 o más."
+      ]
+    },
+    "title": {
+      "hash": "32fc9f4c",
+      "value": "Delta 21"
+    }
+  },
+  "diplomat": {
+    "cardDescription": {
+      "hash": "1e3f9a93",
+      "value": "Negocia ocho columnas abiertas, apiladas solo por valor y con movimientos de una carta."
+    },
+    "howToPlay": {
+      "hash": "a56f9add",
+      "value": [
+        "## Objetivo",
+        "Lleva las dos barajas a ocho fundaciones, del As al Rey por palo.",
+        "## Reglas",
+        "- Se reparten boca arriba ocho columnas de cuatro cartas.",
+        "- Baja las columnas sin importar el palo.",
+        "- Mueve una carta cada vez y llena las columnas vacías con cualquier carta.",
+        "- Pasa el mazo una sola vez, de carta en carta."
+      ]
+    },
+    "quickStart": {
+      "hash": "2569bb52",
+      "value": [
+        "Baja las columnas por valor, sin importar el palo.",
+        "Mueve una carta cada vez; cualquier carta ocupa un hueco.",
+        "Sube ocho fundaciones por palo en una sola pasada del mazo."
+      ]
+    },
+    "title": {
+      "hash": "9d04570b",
+      "value": "Diplomático"
+    }
+  },
+  "dominion": {
+    "cardDescription": {
+      "hash": "747f9f9d",
+      "value": "Conquista cartas del mismo valor o palo hasta que solo quede un dominio."
+    },
+    "howToPlay": {
+      "hash": "65da5614",
+      "value": [
+        "## Objetivo",
+        "**Gana** reduciendo las dieciocho cartas a una sola carta en el tablero.",
+        "**Pierdes** cuando no es posible ninguna conquista y no se puede sacar ni colocar ninguna carta de reserva, o cuando queda una carta que no coincide con ninguna otra.",
+        "## Conquistar",
+        "- Selecciona cualquier carta y luego una carta adyacente del mismo valor o palo para conquistarla.",
+        "- Las cartas pueden conquistar en horizontal, vertical o diagonal.",
+        "- Una carta también puede conquistar otra más lejana de la misma fila o columna si todos los espacios entre ellas están vacíos.",
+        "- La carta conquistadora pasa al espacio de la carta conquistada y deja vacío su espacio anterior.",
+        "## Reserva",
+        "- En cuanto haya un espacio vacío, puedes dar la vuelta a la carta superior de la reserva.",
+        "- Debes colocar esa carta en cualquier espacio vacío antes de hacer otra conquista.",
+        "- Las tres cartas de reserva deben entrar en juego antes de que puedas ganar."
+      ]
+    },
+    "quickStart": {
+      "hash": "44c79ad0",
+      "value": [
+        "Conquista cartas adyacentes del mismo palo o valor.",
+        "Las cartas de reserva pueden (y deben) jugarse en los espacios vacíos."
+      ]
+    },
+    "title": {
+      "hash": "03ea7964",
+      "value": "Dominio"
+    }
+  },
+  "dynasty": {
+    "cardDescription": {
+      "hash": "0faabfb3",
+      "value": "Derriba a los doce miembros de la realeza colocando cartas en una cuadrícula de 3x3."
+    },
+    "howToPlay": {
+      "hash": "5c37ed1c",
+      "value": [
+        "## Objetivo",
+        "Derrota a las doce Jotas, Reinas y Reyes que rodean la cuadrícula antes de quedarte sin cartas para robar.",
+        "## Ataques",
+        "- Una carta recién colocada dispara hacia cada miembro de la realeza situado frente a ella. Solo las dos cartas de la cuadrícula que hay entre ambos causan daño.",
+        "-- Las **Jotas** no tienen restricciones de ataque",
+        "-- Las **Reinas** solo reciben daño de atacantes **del mismo color**",
+        "-- Los **Reyes** solo reciben daño de atacantes **del mismo palo**",
+        "## Tretas",
+        "- **Extraer**: gasta un As para devolver una pila de la cuadrícula al fondo del mazo.",
+        "- **Reasignar**: gasta un Comodín para mover una carta superior de la cuadrícula a otra pila válida.",
+        "## Puntuación",
+        "Tu puntuación es el número de tretas sin usar."
+      ]
+    },
+    "quickStart": {
+      "hash": "1d94d89b",
+      "value": [
+        "Roba y coloca cartas numéricas sobre cartas de la cuadrícula de valor igual o inferior.",
+        "Cada colocación dispara a través de las dos cartas situadas frente a un miembro de la realeza adyacente.",
+        "Los Ases extraen pilas; los Comodines reasignan cartas superiores."
+      ]
+    },
+    "title": {
+      "hash": "01424f17",
+      "value": "Dinastía"
+    }
+  },
+  "easthaven": {
+    "cardDescription": {
+      "hash": "bd4d84bb",
+      "value": "Construye siete columnas compactas y reparte cada nueva fila del mazo directamente sobre ellas."
+    },
+    "howToPlay": {
+      "hash": "e0fd6ce1",
+      "value": [
+        "## Objetivo",
+        "Sube cuatro fundaciones por palo, del As al Rey.",
+        "## Reglas",
+        "- Baja las columnas por valor.",
+        "- Mueve juntas las secuencias descendentes del mismo palo.",
+        "- Solo los Reyes ocupan las columnas vacías.",
+        "- Cada toque en el mazo reparte una carta a cada columna."
+      ]
+    },
+    "quickStart": {
+      "hash": "cbb52fcc",
+      "value": [
+        "Sube las fundaciones por palo.",
+        "Baja las columnas por valor.",
+        "Reparte una carta del mazo a cada columna; los Reyes ocupan los huecos."
+      ]
+    },
+    "title": {
+      "hash": "33fffba2",
+      "value": "Easthaven"
+    }
+  },
+  "eight-off": {
+    "cardDescription": {
+      "hash": "0443457b",
+      "value": "Un pariente espacioso de FreeCell, por palo, con ocho celdas y columnas solo para Reyes."
+    },
+    "howToPlay": {
+      "hash": "aa5d6660",
+      "value": [
+        "## Objetivo",
+        "Lleva las 52 cartas a las cuatro fundaciones, cada una ordenada por palo del As al Rey.",
+        "## Reglas",
+        "- Construye las columnas **bajando de valor y en el mismo palo**.",
+        "- Cada **celda libre** guarda una sola carta.",
+        "- Puedes mover una carta cada vez. Puedes mover grupos de cartas juntas, pero solo si tienes suficientes celdas libres y columnas vacías para hacer el mismo movimiento de carta en carta.",
+        "- Solo un **Rey** (con las cartas que lleve encima) puede ir a una **columna vacía**.",
+        "- Lleva las cartas a las fundaciones subiendo por palo desde los Ases."
+      ]
+    },
+    "quickStart": {
+      "hash": "8fb0be18",
+      "value": [
+        "Usa 8 celdas libres; baja las columnas en el mismo palo; solo los Reyes ocupan las columnas vacías."
+      ]
+    },
+    "title": {
+      "hash": "ad01c195",
+      "value": "Ocho celdas"
+    }
+  },
+  "elementary-detective": {
+    "cardDescription": {
+      "hash": "efdce805",
+      "value": "Encuentra a tus compañeros de juego ocultos con planificación y deducción."
+    },
+    "howToPlay": {
+      "hash": "cc00bd38",
+      "value": [
+        "## Objetivo",
+        "Consigue al menos 20 puntos tras descubrir a los 12 compañeros de juego ocultos.",
+        "## Cómo se juega",
+        "- Los 12 compañeros boca abajo son Jotas, Reinas y Reyes. El resto de las cartas forman el mazo.",
+        "- Coloca la carta superior del mazo en un espacio de suposición vacío alrededor de la cuadrícula de compañeros.",
+        "- Puedes retirar una carta de suposición, a cambio de descartar también la siguiente carta del mazo.",
+        "- En cualquier momento, descubre a un compañero oculto. Cada carta de suposición del mismo palo en la misma línea horizontal o vertical pasa a tu pila de puntuación."
+      ]
+    },
+    "quickStart": {
+      "hash": "6714c08f",
+      "value": [
+        "Coloca suposiciones alrededor de los compañeros ocultos.",
+        "Descubre compañeros y puntúa por cada suposición del mismo palo en la misma línea."
+      ]
+    },
+    "title": {
+      "hash": "1f84944a",
+      "value": "Detective elemental"
+    }
+  },
+  "field-command": {
+    "cardDescription": {
+      "hash": "046a65e6",
+      "value": "Usa cartas bajas y Comodines para desmantelar las fuerzas enemigas mientras evitas que capturen tus Ases y figuras."
+    },
+    "howToPlay": {
+      "hash": "14749a82",
+      "value": [
+        "## Objetivo",
+        "**Gana** vaciando el mazo enemigo y todas las posiciones enemigas.",
+        "**Pierdes** si alguna Jota, Reina, Rey o As entra en la pila de capturas enemiga.",
+        "## Cómo se juega",
+        "Al principio de un turno, puedes descartar las cartas de tu mano que quieras.",
+        "Después elige exactamente una opción de captura:",
+        "- **Capturar una carta enemiga**: selecciona cualquier carta enemiga y cualquier número de cartas de tu mano del mismo palo con un valor total igual o superior.",
+        "- **Dejar que el enemigo capture**: selecciona una carta de tu mano para que la capture la carta enemiga situada más a la derecha.",
+        "- **Sacrificio**: selecciona dos cartas de tu mano y una carta enemiga (no puedes seleccionar J/Q/K/A, ya que perderías la partida de inmediato).",
+        "## Ases y Comodines",
+        "- Los Ases valen 14",
+        "- Los Comodines sirven como cualquier palo o valor."
+      ]
+    },
+    "quickStart": {
+      "hash": "a14a111d",
+      "value": [
+        "La línea enemiga se desplaza a la derecha y luego se rellena desde el mazo enemigo."
+      ]
+    },
+    "title": {
+      "hash": "946d7b10",
+      "value": "Mando de campo"
+    }
+  },
+  "fifteen-puzzle": {
+    "cardDescription": {
+      "hash": "8d1fa8fb",
+      "value": "Reordena las cartas de una cuadrícula de 4x4 deslizándolas de una en una."
+    },
+    "howToPlay": {
+      "hash": "dc55b9d9",
+      "value": [
+        "## Objetivo",
+        "Ordena las filas para que cada una sea As, 2, 3, 4, por palo:",
+        "- **Corazones**",
+        "- **Tréboles**",
+        "- **Diamantes**",
+        "- **Picas** (no tiene carta 4)",
+        "## Cómo se juega",
+        "- Toca una carta situada encima, debajo, a la izquierda o a la derecha del espacio vacío para deslizarla hasta él.",
+        "- Las cartas se vuelven verdes cuando están en su posición correcta.",
+        "- Cada puzle barajado se genera con movimientos válidos y tiene solución."
+      ]
+    },
+    "quickStart": {
+      "hash": "2e731eeb",
+      "value": [
+        "Ordena las cartas del As al 4 en cada fila: Corazones, Tréboles, Diamantes y Picas.",
+        "Toca una carta junto al espacio vacío para deslizarla."
+      ]
+    },
+    "title": {
+      "hash": "9be99190",
+      "value": "Juego del 15"
+    }
+  },
+  "fight-clubs": {
+    "cardDescription": {
+      "hash": "da6e6079",
+      "value": "Usa con cabeza tus trece tréboles para despejar una cuadrícula de 3x3 cambiante."
+    },
+    "howToPlay": {
+      "hash": "1c19d9ff",
+      "value": [
+        "## Objetivo",
+        "Despeja la cuadrícula y su mazo antes de gastar los 13 tréboles.",
+        "## Acciones",
+        "Algunas acciones están siempre disponibles:",
+        "- **Igualar**: retira todas las cartas del mismo valor:",
+        "-- {6C} retira {6D} {6H}",
+        "-- {JC} retira {JS} {JD} {6H}",
+        "- **Sumar**: retira las cartas seleccionadas que suman el valor del trébol:",
+        "-- {8C} retira {3D} {4H} {AD}",
+        "-- {QC} retira {9H} {5H}",
+        "- **Cualquiera**: retira una carta seleccionada cualquiera:",
+        "-- {5C} retira {7D}",
+        "-- {AC} retira un Comodín",
+        "\nAlgunas acciones se bloquean si hay 3 cartas del mismo palo en la cuadrícula:",
+        "- **Fila/Columna**: retira tres cartas seleccionadas de una fila o columna que contengan el mismo valor que el trébol seleccionado.",
+        "-- {7C} retira una fila de {KD} {7H} {JS}",
+        "-- {AC} retira una columna de {AH} Comodín {3H}",
+        "-- Se bloquea con 3 diamantes en la cuadrícula.",
+        "- **Arriba/Abajo**: retira todas las cartas de la cuadrícula de valor superior o inferior al trébol seleccionado. Del 2 al 7 retira las inferiores, y del 7 a la Q, las superiores.",
+        "-- {4C} retira {3D} {3H} {AS}",
+        "-- {9C} retira {10H} {10S} {JS} {QD}",
+        "-- Se bloquea con 3 picas en la cuadrícula.",
+        "- **Secuencia**: retira las cartas seleccionadas que forman una secuencia consecutiva con tu trébol.",
+        "-- {5C} retira {4D} {6H} {7S}",
+        "-- {KC} retira {8S} {9D} {JD} {QH}",
+        "-- Se bloquea con 3 corazones en la cuadrícula.",
+        "## Ases y Comodines",
+        "- Los Ases valen 1 punto.",
+        "- Los Comodines no tienen valor y solo se pueden retirar con las acciones **Cualquiera** o **Fila/Columna**.",
+        "## Dificultad",
+        "**Fácil** usa un Comodín; **Difícil** añade un segundo Comodín al mazo de la cuadrícula."
+      ]
+    },
+    "quickStart": {
+      "hash": "68a4607e",
+      "value": [
+        "Usa un trébol por turno para retirar una o más cartas de la cuadrícula.",
+        "Algunas acciones están siempre disponibles.",
+        "Otras acciones se bloquean si hay 3 cartas de un mismo palo en la cuadrícula."
+      ]
+    },
+    "title": {
+      "hash": "44b00bbe",
+      "value": "Tréboles de combate"
+    }
+  },
+  "flower-garden": {
+    "cardDescription": {
+      "hash": "4b5c020b",
+      "value": "Cultiva seis parterres de flores con todas las cartas del ramo de dieciséis a tu disposición."
+    },
+    "howToPlay": {
+      "hash": "e4cc4b14",
+      "value": [
+        "## Objetivo",
+        "Lleva las 52 cartas a cuatro fundaciones, subiendo por palo del As al Rey.",
+        "## Jardín",
+        "- Solo se puede jugar la carta descubierta inferior de cada uno de los seis parterres.",
+        "- Baja los parterres por valor, sin importar el palo, moviendo una carta cada vez.",
+        "- Cualquier carta puede ocupar un parterre vacío.",
+        "- Las dieciséis cartas del ramo están descubiertas y disponibles en todo momento."
+      ]
+    },
+    "quickStart": {
+      "hash": "4cb14090",
+      "value": [
+        "Sube las fundaciones por palo, del As al Rey.",
+        "Baja los parterres por valor, sin importar el palo.",
+        "Todas las cartas del ramo están disponibles; cualquier carta ocupa un parterre vacío."
+      ]
+    },
+    "title": {
+      "hash": "83ea16df",
+      "value": "Jardín de flores"
+    }
+  },
+  "fortress": {
+    "cardDescription": {
+      "hash": "49b04b9f",
+      "value": "Maniobra diez calles abiertas, subiendo o bajando por palo, para liberar cada fundación."
+    },
+    "howToPlay": {
+      "hash": "0591fc6a",
+      "value": [
+        "## Objetivo",
+        "Lleva las 52 cartas a cuatro fundaciones, subiendo por palo del As al Rey.",
+        "## Calles",
+        "- Solo se puede jugar la carta descubierta de cada calle.",
+        "- Construye subiendo o bajando un valor en el mismo palo.",
+        "- Mueve una carta cada vez.",
+        "- Cualquier carta puede ocupar una calle vacía."
+      ]
+    },
+    "quickStart": {
+      "hash": "0f1f4350",
+      "value": [
+        "Sube las fundaciones por palo, del As al Rey.",
+        "Construye las calles subiendo o bajando un valor en el mismo palo.",
+        "Mueve una carta cada vez; cualquier carta ocupa una calle vacía."
+      ]
+    },
+    "title": {
+      "hash": "e1ba0e4b",
+      "value": "Fortaleza"
+    }
+  },
+  "fortunes-call": {
+    "cardDescription": {
+      "hash": "49133345",
+      "value": "Predice el color o la dirección de cada carta oculta antes de fallar tres veces."
+    },
+    "howToPlay": {
+      "hash": "a76b0266",
+      "value": [
+        "## Objetivo",
+        "Consigue doce puntos antes de hacer tres predicciones incorrectas.",
+        "## Predicciones",
+        "- Rojo o Negro predice el color de la carta oculta y da un punto.",
+        "- Más alta o Más baja compara su valor con la carta de referencia boca arriba y da dos puntos.",
+        "- Un valor igual no cumple ninguna predicción de dirección.",
+        "- Tras descubrirla, la nueva carta pasa a ser la siguiente referencia."
+      ]
+    },
+    "quickStart": {
+      "hash": "59931bd6",
+      "value": [
+        "Acertar el color da 1 punto.",
+        "Acertar «más alta» o «más baja» da 2 puntos.",
+        "Llega a 12 puntos antes de fallar tres veces."
+      ]
+    },
+    "title": {
+      "hash": "ca08b79e",
+      "value": "La llamada de la fortuna"
+    }
+  },
+  "forty-thieves": {
+    "cardDescription": {
+      "hash": "e81e4597",
+      "value": "Un exigente solitario de dos barajas en el que hay que construir fundaciones."
+    },
+    "howToPlay": {
+      "hash": "a424bb2d",
+      "value": [
+        "## Objetivo",
+        "Lleva las 104 cartas a las ocho fundaciones, cada una ordenada por palo del As al Rey.",
+        "## Reglas",
+        "- Lleva las cartas a las fundaciones subiendo por palo, del As al Rey.",
+        "- Construye las columnas **bajando de valor y en el mismo palo**.",
+        "- Mueve solo una carta cada vez entre columnas.",
+        "- Cualquier carta suelta puede colocarse en una columna vacía.",
+        "- Pasa las cartas del mazo al montón de una en una. La carta superior del montón se puede jugar.",
+        "-- El modo fácil permite repartir de nuevo sin límite.",
+        "-- El modo difícil no permite volver a repartir."
+      ]
+    },
+    "quickStart": {
+      "hash": "4355938b",
+      "value": [
+        "Sube las 8 fundaciones por palo, de A a K.",
+        "Baja las columnas por palo, moviendo una carta cada vez.",
+        "Pasa cartas del mazo al montón de una en una; los nuevos repartos dependen de la dificultad."
+      ]
+    },
+    "title": {
+      "hash": "f7d2814b",
+      "value": "Cuarenta ladrones"
+    }
+  },
+  "freecell": {
+    "cardDescription": {
+      "hash": "50d37ce8",
+      "value": "Un clásico con toda la información a la vista, en el que casi cualquier reparto se puede ganar con cuidado."
+    },
+    "howToPlay": {
+      "hash": "3add4428",
+      "value": [
+        "## Objetivo",
+        "Lleva las 52 cartas a las cuatro **fundaciones**, cada una ordenada por palo del As al Rey.",
+        "## Reglas",
+        "- Construye las columnas **bajando de valor y alternando colores**.",
+        "- Mueve una carta cada vez; cada **celda libre** guarda una sola carta.",
+        "- Puedes mover una carta cada vez. Puedes mover grupos de cartas juntas, pero solo si tienes suficientes celdas libres y columnas vacías para hacer el mismo movimiento de carta en carta.",
+        "- Cualquier carta se puede colocar en una columna vacía."
+      ]
+    },
+    "quickStart": {
+      "hash": "6e99a6bc",
+      "value": [
+        "Sube las fundaciones por palo, de A a K.",
+        "Baja las columnas por valor, alternando colores.",
+        "Usa las celdas libres para guardar una carta cada una."
+      ]
+    },
+    "title": {
+      "hash": "77b73c0f",
+      "value": "FreeCell"
+    }
+  },
+  "frog": {
+    "cardDescription": {
+      "hash": "ab1e9fc2",
+      "value": "Haz saltar dos barajas a ocho fundaciones, repartiendo el mazo entre cinco pilas de nenúfares."
+    },
+    "howToPlay": {
+      "hash": "1d6a9640",
+      "value": [
+        "## Objetivo",
+        "Lleva las 104 cartas a las ocho fundaciones, cada una ordenada del As al Rey **sin importar el palo**.",
+        "## Reglas",
+        "- Trece cartas forman la **reserva**; los Ases que salgan en ella van directamente a las fundaciones.",
+        "- Solo está disponible la carta superior de la reserva.",
+        "- Cada carta del mazo debe colocarse en uno de los **cinco montones** o jugarse en una fundación.",
+        "- Cualquier carta puede ir a cualquier montón, pero las cartas nunca pueden pasar de un montón a otro.",
+        "- Solo se puede jugar la carta superior de cada montón.",
+        "- **Toca dos veces** una carta disponible para jugarla en una fundación. No se vuelve a repartir."
+      ]
+    },
+    "quickStart": {
+      "hash": "45d42e10",
+      "value": [
+        "Sube las fundaciones de A a K, sin importar el palo.",
+        "Toca un montón para dejar en él la carta del mazo.",
+        "Toca dos veces una carta del mazo, la reserva o un montón para subirla."
+      ]
+    },
+    "title": {
+      "hash": "d519595f",
+      "value": "Rana"
+    }
+  },
+  "gaps": {
+    "cardDescription": {
+      "hash": "3edac6c4",
+      "value": "Ordena las filas por palo rellenando los huecos."
+    },
+    "howToPlay": {
+      "hash": "bdf0ca39",
+      "value": [
+        "## Objetivo",
+        "Ordena cuatro filas por palo del 2 al Rey, dejando vacía la última columna (a la derecha).",
+        "## Movimientos",
+        "- Tras el reparto inicial se retiran los Ases para crear cuatro huecos.",
+        "- Un hueco en el borde izquierdo acepta cualquier 2.",
+        "- Cualquier otro hueco solo acepta la carta siguiente, del mismo palo, a la que tiene justo a su izquierda.",
+        "- Un hueco después de un Rey no se puede rellenar.",
+        "## Nuevo reparto",
+        "- Cuando no quedan movimientos, puedes volver a repartir las cartas que no forman parte de una secuencia correcta.",
+        "- Las secuencias correctas que empiezan por un 2 se quedan en su sitio. Si no hay secuencia para ese palo, el hueco de la izquierda queda vacío.",
+        "- Ajuste de dificultad: Fácil permite 3 repartos; Difícil permite 2."
+      ]
+    },
+    "quickStart": {
+      "hash": "99cfe10d",
+      "value": [
+        "Ordena las filas (del 2 a la K).",
+        "Una carta puede ir a un hueco si es del mismo palo que su vecina de la izquierda y tiene un valor más.",
+        "Vuelve a repartir cuando no puedas seguir (fácil: 3 repartos; difícil: 2)."
+      ]
+    },
+    "title": {
+      "hash": "8c58d522",
+      "value": "Huecos"
+    }
+  },
+  "gargantua": {
+    "cardDescription": {
+      "hash": "9a18d2a2",
+      "value": "Escala un Klondike de nueve columnas y dos barajas con ocho fundaciones."
+    },
+    "howToPlay": {
+      "hash": "9dbf8f96",
+      "value": [
+        "## Objetivo",
+        "Lleva las dos barajas a ocho fundaciones, del As al Rey por palo.",
+        "## Reglas",
+        "- Se reparten nueve columnas en escalera, como en el Klondike.",
+        "- Baja alternando colores y mueve secuencias ordenadas.",
+        "- Solo los Reyes pueden ocupar las columnas vacías.",
+        "- Pasa las cartas del mazo de una en una; el mazo se puede repartir dos veces."
+      ]
+    },
+    "quickStart": {
+      "hash": "a5b88634",
+      "value": [
+        "Baja las columnas alternando colores.",
+        "Mueve secuencias ordenadas; solo los Reyes ocupan las columnas vacías.",
+        "Sube ocho fundaciones por palo; el mazo tiene dos pasadas."
+      ]
+    },
+    "title": {
+      "hash": "07ed9b4d",
+      "value": "Gargantúa"
+    }
+  },
+  "golf": {
+    "cardDescription": {
+      "hash": "df8ad9d9",
+      "value": "Despeja siete columnas jugando cartas a un valor de distancia de la del montón."
+    },
+    "howToPlay": {
+      "hash": "24a82fa3",
+      "value": [
+        "## Objetivo",
+        "**Gana retirando las 35 cartas de las columnas.**",
+        "**Pierdes** si el mazo está vacío y no se puede llevar ninguna carta de las columnas al montón.",
+        "## Retirar cartas",
+        "- Solo está disponible la carta **inferior (descubierta)** de cada columna.",
+        "- Lleva una carta disponible al montón si tiene **un valor más o menos** que la carta actual del montón.",
+        "- Las secuencias **no** dan la vuelta: como los Ases son bajos y los Reyes altos, nunca se pasa del Rey al As.",
+        "- Cuando no puedas seguir, pasa una carta del mazo al montón."
+      ]
+    },
+    "quickStart": {
+      "hash": "2f6866eb",
+      "value": [
+        "Retira todas las cartas para ganar.",
+        "Retira cartas descubiertas de un valor más o menos que la carta superior del montón.",
+        "Roba del mazo cuando no puedas seguir."
+      ]
+    },
+    "title": {
+      "hash": "b4ee0341",
+      "value": "Golf"
+    }
+  },
+  "grandfathers-clock": {
+    "cardDescription": {
+      "hash": "929d905b",
+      "value": "Da cuerda a doce fundaciones alrededor de una esfera de reloj hasta que cada hora muestre su número."
+    },
+    "howToPlay": {
+      "hash": "a9d1159a",
+      "value": [
+        "## Objetivo",
+        "Sube cada fundación del reloj hasta que su carta superior coincida con su hora. Las Jotas cuentan 11 y las Reinas 12.",
+        "## Reglas",
+        "- Doce cartas forman el reloj, desde el **10♥** a la 1 hasta el **9♣** a las 12.",
+        "- Las fundaciones suben **por palo**, pasando del Rey al As, y se detienen en su hora.",
+        "- El resto de la baraja se reparte en **ocho pilas de cinco**.",
+        "- Mueve las cartas superiores de una en una. Baja las columnas **sin importar el palo**, colocando un Rey sobre un As.",
+        "- Cualquier carta puede ocupar una pila vacía.",
+        "- **Toca dos veces** una carta, o arrástrala, para jugarla en su fundación."
+      ]
+    },
+    "quickStart": {
+      "hash": "7fa8c31a",
+      "value": [
+        "Sube cada fundación del reloj por palo hasta que muestre su hora.",
+        "Baja las columnas sin importar el palo; la K va sobre el A.",
+        "Cualquier carta ocupa una pila vacía. Toca dos veces para subir una carta."
+      ]
+    },
+    "title": {
+      "hash": "397d1ceb",
+      "value": "El reloj del abuelo"
+    }
+  },
+  "gremlin": {
+    "cardDescription": {
+      "hash": "277c9762",
+      "value": "Construye columnas de cartas en secuencias descendentes del mismo palo mientras lidias con una ayuda no deseada."
+    },
+    "howToPlay": {
+      "hash": "24c4d019",
+      "value": [
+        "## Objetivo",
+        "Construye columnas de cartas en secuencias descendentes del mismo palo mientras lidias con las jugadas del ayudante.",
+        "Ganas construyendo columnas con eficiencia: cuantas menos columnas uses, mejor.",
+        "## Tu turno",
+        "Al principio de tu turno, tu mano se rellena. Con cada carta puedes:",
+        "- guardarla,",
+        "- descartarla, o",
+        "- jugarla en una columna, si es del mismo palo y la carta superior tiene más valor.",
+        "## Turno del Gremlin",
+        "Tras tu turno, el ayudante juega la siguiente carta del mazo. Tú eliges a qué columna va.",
+        "Si la carta del ayudante no se puede colocar en ninguna columna y ya tienes 12 columnas, pierdes de inmediato.",
+        "## Puntuación",
+        "Tu puntuación es el número de columnas que has construido cuando se acaba el mazo:",
+        "- 12: Novato",
+        "- 11: Normal",
+        "- 10: Avanzado",
+        "- 9: Legendario",
+        "- 8: Épico",
+        "## Dificultad",
+        "En los ajustes puedes elegir una mano de 5 cartas (Fácil) o de 4 (Difícil). Una mano más pequeña hace que el ayudante juegue más a menudo."
+      ]
+    },
+    "quickStart": {
+      "hash": "14456b3c",
+      "value": [
+        "Roba hasta tener 5 y luego juega, descarta o guarda.",
+        "Pierdes si una carta no se puede colocar y ya usas las 12 columnas."
+      ]
+    },
+    "title": {
+      "hash": "60018515",
+      "value": "Gremlin"
+    }
+  },
+  "gridlines": {
+    "cardDescription": {
+      "hash": "3c660785",
+      "value": "Un duelo de bazas en solitario contra una cuadrícula que solo lucha escondiendo sus cartas."
+    },
+    "howToPlay": {
+      "hash": "91a6b9ce",
+      "value": [
+        "## Objetivo",
+        "Gana **21 bazas** antes que la cuadrícula.",
+        "## Orden del turno",
+        "- Elige un palo de triunfo de tu mano.",
+        "- Selecciona una carta de la mano.",
+        "- Selecciona una fila o columna y una dirección con las flechas. No puedes desafiar líneas que tengan huecos.",
+        "## Bazas",
+        "Las cartas se ponen boca arriba de una en una desde la dirección elegida, hasta que una coincide con el palo de la carta seleccionada.",
+        "Si tu carta es más alta que la de la cuadrícula, ganas la baza; si no, la gana la cuadrícula.",
+        "- **Gana el valor más alto**; los Ases son altos.",
+        "- **¿Ningún palo coincide?** El **triunfo más bajo** de la línea te gana.",
+        "- **¿Ningún palo coincide y no hay triunfo?** Ganas la baza. Selecciona una carta para retirarla de la línea.",
+        "## Modo difícil",
+        "Cambia la dificultad en los ajustes para reducir el objetivo de la cuadrícula y darle más posibilidades de ganar."
+      ]
+    },
+    "quickStart": {
+      "hash": "5baacb84",
+      "value": [
+        "Elige un palo de triunfo antes de que empiece la ronda.",
+        "Elige una carta y una línea: la primera carta del mismo palo gana según su valor; si no, gana el triunfo.",
+        "Gana 21 bazas antes que la cuadrícula."
+      ]
+    },
+    "title": {
+      "hash": "2255babe",
+      "value": "Líneas de cuadrícula"
+    }
+  },
+  "harp": {
+    "cardDescription": {
+      "hash": "70db0dcf",
+      "value": "Un Doble Klondike más indulgente, con cuatro pasadas por el mazo."
+    },
+    "howToPlay": {
+      "hash": "5c190f4e",
+      "value": [
+        "## Objetivo",
+        "Lleva las dos barajas a ocho fundaciones por palo.",
+        "## Reglas",
+        "- Arpa usa la disposición Klondike de nueve columnas de Gargantúa.",
+        "- Baja alternando colores y mueve secuencias ordenadas.",
+        "- Solo los Reyes pueden ocupar las columnas vacías.",
+        "- Pasa las cartas del mazo de una en una, con cuatro pasadas en total."
+      ]
+    },
+    "quickStart": {
+      "hash": "125ca15a",
+      "value": [
+        "Baja las columnas alternando colores.",
+        "Solo los Reyes ocupan las columnas vacías.",
+        "Usa cuatro pasadas del mazo para completar ocho fundaciones."
+      ]
+    },
+    "title": {
+      "hash": "f8e78326",
+      "value": "Arpa"
+    }
+  },
+  "herbalist": {
+    "cardDescription": {
+      "hash": "820b189b",
+      "value": "Reparte hierbas por tus establos para curar a todas las criaturas que viven en ellos."
+    },
+    "howToPlay": {
+      "hash": "49f3dd1e",
+      "value": [
+        "## Objetivo",
+        "**Gana** curando a las ocho criaturas enfermas antes de quedarte sin cartas. Tu puntuación es el número de hierbas que quedan en el tablero.",
+        "## Repartir hierbas",
+        "- Selecciona una pila de hierbas para recoger todas sus cartas.",
+        "- Elige el orden en que vas a soltar las hierbas recogidas.",
+        "- Colócalas de una en una, empezando por la posición siguiente a aquella de la que las recogiste y volviendo al principio cuando sea necesario.",
+        "## Orden de curación",
+        "- Todas las Jotas deben curarse antes que las Reinas, y todas las Reinas antes que los Reyes.",
+        "- Una criatura se cura cuando las hierbas de su posición suman exactamente su valor **e** incluyen al menos una hierba de su palo.",
+        "## Comer",
+        "- Una criatura sana se come de inmediato todas las hierbas de su palo que haya en su propia pila.",
+        "- Las hierbas comidas no se pueden volver a repartir.",
+        "## Establos abiertos",
+        "La expansión opcional (se activa en los ajustes) añade una criatura sana, el «Noble», y un Bufón:",
+        "- El Noble está en los Establos, la posición central. Se come las hierbas que se sueltan en su posición si son de su palo.",
+        "- El Bufón se come la hierba soltada en los establos si es la última hierba soltada, sea cual sea su palo."
+      ]
+    },
+    "quickStart": {
+      "hash": "82049199",
+      "value": [
+        "Selecciona una pila de hierbas y repártelas de una en una por las posiciones contiguas.",
+        "Cura a las J, las Q y los K en orden, con pilas de hierbas del mismo valor (11, 12 y 13)."
+      ]
+    },
+    "title": {
+      "hash": "4b40804d",
+      "value": "El herbolario"
+    }
+  },
+  "indian": {
+    "cardDescription": {
+      "hash": "bbc78988",
+      "value": "Baja columnas de dos barajas evitando con cuidado coincidir de palo."
+    },
+    "howToPlay": {
+      "hash": "96bf0d1c",
+      "value": [
+        "## Objetivo",
+        "Sube ocho fundaciones del As al Rey por palo.",
+        "## Reglas",
+        "- Se reparten diez columnas de tres cartas; la primera de cada una está boca abajo.",
+        "- Baja por valor sobre cualquier palo excepto el de la carta de destino.",
+        "- Mueve una carta descubierta cada vez.",
+        "- Las columnas vacías aceptan cualquier carta y el mazo se reparte una sola vez."
+      ]
+    },
+    "quickStart": {
+      "hash": "81c90e2d",
+      "value": [
+        "Baja sobre cualquier palo excepto el mismo.",
+        "Mueve una carta descubierta cada vez.",
+        "Cualquier carta ocupa una columna vacía; el mazo se pasa una vez."
+      ]
+    },
+    "title": {
+      "hash": "f6a8222c",
+      "value": "La India"
+    }
+  },
+  "infiltrator": {
+    "cardDescription": {
+      "hash": "dff09eb2",
+      "value": "Capta a la mayoría de los Espías clave reclutando, contrarrestando y asesinando con cuidado."
+    },
+    "howToPlay": {
+      "hash": "a0f2ce9e",
+      "value": [
+        "## Objetivo",
+        "**Gana** habiendo reclutado a **más de la mitad** de los Espías clave (Jotas, Reinas y Reyes) cuando se agote el mazo de espías.",
+        "## Mazos y desarrollo",
+        "- El mazo de espías se forma por niveles: **5-7** arriba, luego **8-10** y luego **J-K**.",
+        "- Tu mazo de robo empieza con las cartas del As al 4.",
+        "- Tu mazo de robo se barajará a menudo. Construye tu mazo reclutando espías de valor alto y retirando parejas de espías de valor bajo.",
+        "- Los **Espías de apoyo** solo ayudan a conseguir Espías clave.",
+        "- Los **Espías clave** son las únicas cartas que cuentan para tu puntuación final.",
+        "## Acciones",
+        "- **Contrarrestar**:",
+        "-- Descarta cualquier número de cartas que sumen el valor del espía **o más**. Solo puedes pagar de más si, al quitar cualquiera de las cartas seleccionadas, el total quedara por debajo del objetivo.",
+        "- **Reclutar**:",
+        "-- Descarta cartas que sumen al menos el valor del espía, todas de su palo. Un **As** del mismo palo es un agente doble que convierte todas las demás cartas jugadas a su palo durante ese turno.",
+        "- **Retirar**:",
+        "-- Después de contrarrestar o reclutar, puedes retirar de forma permanente de tu mano un conjunto de cartas del mismo valor.",
+        "-- Por lo general, conviene retirar cartas de valor bajo a medida que avanza la partida, para aumentar la fuerza media de tu mazo.",
+        "- **Asesinar**:",
+        "-- Si no puedes seguir, puedes sacrificar un **As** de tu mano, de tu mazo de robo o de tu descarte para asesinar a un espía. Pierdes si no te quedan Ases."
+      ]
+    },
+    "quickStart": {
+      "hash": "286481af",
+      "value": [
+        "Gana reclutando a más de la mitad de los Espías clave (J, Q, K).",
+        "Construye tu mazo reclutando espías de valor creciente.",
+        "Recluta haciendo coincidir palo y valor (los Ases son comodines).",
+        "Contrarresta o asesina cuando sea necesario."
+      ]
+    },
+    "title": {
+      "hash": "07ed75f3",
+      "value": "El infiltrado"
+    }
+  },
+  "invaders": {
+    "cardDescription": {
+      "hash": "beef4003",
+      "value": "Rechaza oleadas de invasores alienígenas antes de quedarte sin defensores."
+    },
+    "howToPlay": {
+      "hash": "5644ce85",
+      "value": [
+        "## Objetivo",
+        "Gana sobreviviendo a las dos oleadas de invasores alienígenas antes de quedarte sin defensores.",
+        "## Oleadas",
+        "Cada oleada consiste en una serie de ataques. En cada ataque debes enfrentarte al atacante que va en cabeza.",
+        "La segunda oleada se diferencia de la primera en que, durante los ataques dobles, se pierden los defensores del mismo color que el atacante.",
+        "## Acciones",
+        "- Los **ataques simples** se hacen con un defensor de mayor valor y de color opuesto al atacante. Tras un ataque simple, el defensor se pierde y lo sustituye el atacante.",
+        "- Los **ataques dobles** se hacen con dos cartas cuyo valor total es igual al del atacante. No se pierde ningún defensor en los ataques dobles, salvo en la segunda oleada, en la que se pierden los defensores del mismo color que el atacante.",
+        "- Los **sacrificios** sirven para enviar al atacante en cabeza al fondo del mazo de atacantes; el defensor sacrificado se pierde."
+      ]
+    },
+    "quickStart": {
+      "hash": "b8dff99e",
+      "value": [
+        "Rechaza 2 oleadas de atacantes con ataques y sacrificios.",
+        "Ataques simples: color opuesto y valor mayor.",
+        "Ataques dobles: los dos defensores deben sumar el valor del atacante."
+      ]
+    },
+    "title": {
+      "hash": "0a12466f",
+      "value": "Invasores"
+    }
+  },
+  "josephine": {
+    "cardDescription": {
+      "hash": "7308e533",
+      "value": "Un pariente de Cuarenta ladrones de dos barajas en el que las secuencias del mismo palo se mueven juntas."
+    },
+    "howToPlay": {
+      "hash": "1631d117",
+      "value": [
+        "## Objetivo",
+        "Sube ocho fundaciones por palo, del As al Rey.",
+        "## Reglas",
+        "- Baja las columnas por palo.",
+        "- Mueve juntas las secuencias descendentes completas del mismo palo.",
+        "- Cualquier carta puede ocupar una columna vacía.",
+        "- Pasa el mazo de carta en carta, sin volver a repartir."
+      ]
+    },
+    "quickStart": {
+      "hash": "4a41664c",
+      "value": [
+        "Sube ocho fundaciones por palo.",
+        "Baja las columnas por palo.",
+        "Mueve secuencias del mismo palo y pasa el mazo una vez."
+      ]
+    },
+    "title": {
+      "hash": "b4ef5342",
+      "value": "Josefina"
+    }
+  },
+  "klondike": {
+    "cardDescription": {
+      "hash": "1873d35c",
+      "value": "El solitario clásico: forma cuatro fundaciones por palo, del As al Rey."
+    },
+    "howToPlay": {
+      "hash": "6b0bf248",
+      "value": [
+        "## Objetivo",
+        "Lleva las 52 cartas a las cuatro fundaciones, cada una ordenada por palo, del As al Rey.",
+        "## Reglas",
+        "- Construye las columnas **en orden descendente, alternando colores**.",
+        "- Mueve una sola carta o un grupo bien ordenado entre columnas.",
+        "- Solo un **Rey** (o una secuencia que empiece por un Rey) puede ir a una columna vacía.",
+        "## Mazo",
+        "Pasa cartas del mazo al montón (de una en una o de tres en tres, según tus ajustes). La carta superior del montón se puede jugar, y puedes volver a repartir el mazo cuando se vacíe."
+      ]
+    },
+    "quickStart": {
+      "hash": "6358aab0",
+      "value": [
+        "Sube las fundaciones por palo.",
+        "Baja las columnas alternando colores.",
+        "Solo los Reyes pueden ocupar las columnas vacías."
+      ]
+    },
+    "title": {
+      "hash": "7f77bcf6",
+      "value": "Klondike"
+    }
+  },
+  "la-belle-lucie": {
+    "cardDescription": {
+      "hash": "1fb69740",
+      "value": "Descubre un campo compacto de abanicos, con dos rebarajados para deshacer los nudos."
+    },
+    "howToPlay": {
+      "hash": "3c31ae43",
+      "value": [
+        "## Objetivo",
+        "Lleva las 52 cartas a cuatro fundaciones, subiendo por palo del As al Rey.",
+        "## Abanicos",
+        "- Solo se puede jugar la carta descubierta inferior de cada abanico.",
+        "- Baja por palo, de carta en carta.",
+        "- Los abanicos vacíos no se pueden llenar.",
+        "- Dos veces por partida, vuelve a barajar todas las cartas que queden en los abanicos y repártelas en grupos de tres."
+      ]
+    },
+    "quickStart": {
+      "hash": "9b574be1",
+      "value": [
+        "Sube las fundaciones por palo, del As al Rey.",
+        "Baja los abanicos por palo, moviendo una carta descubierta cada vez.",
+        "Los abanicos vacíos quedan vacíos; vuelve a barajar los abanicos hasta dos veces."
+      ]
+    },
+    "title": {
+      "hash": "82260922",
+      "value": "La Bella Lucía"
+    }
+  },
+  "labyrinth": {
+    "cardDescription": {
+      "hash": "46c8506f",
+      "value": "Reparte fila tras fila y libera cartas por arriba y por abajo del laberinto."
+    },
+    "howToPlay": {
+      "hash": "3a50b244",
+      "value": [
+        "## Objetivo",
+        "Lleva las 52 cartas a las cuatro fundaciones, subiendo por palo del As al Rey.",
+        "## Reglas",
+        "- Los cuatro **Ases** empiezan en las fundaciones, con una primera fila de ocho cartas debajo.",
+        "- Una carta está **libre** cuando el espacio justo encima o justo debajo está vacío, así que las filas superior e inferior siempre están libres.",
+        "- Toca una carta libre para jugarla en su fundación.",
+        "- Un hueco en la **primera fila** se rellena en el acto desde el mazo. Los huecos más abajo quedan vacíos.",
+        "- Toca el **mazo** para repartir una fila nueva de ocho cartas abajo. No se vuelve a repartir."
+      ]
+    },
+    "quickStart": {
+      "hash": "3970b955",
+      "value": [
+        "Sube las fundaciones por palo desde los Ases.",
+        "Solo están libres las cartas con un espacio vacío encima o debajo.",
+        "Toca el mazo para repartir una fila nueva cuando no puedas seguir."
+      ]
+    },
+    "title": {
+      "hash": "3c13c0fe",
+      "value": "Laberinto"
+    }
+  },
+  "lights-out": {
+    "cardDescription": {
+      "hash": "d9f86dc4",
+      "value": "Apaga una cuadrícula de cartas en la que cada movimiento voltea a sus vecinas."
+    },
+    "howToPlay": {
+      "hash": "246e4fe2",
+      "value": [
+        "## Objetivo",
+        "Pon las 25 cartas boca abajo.",
+        "## Cómo se juega",
+        "- Al tocar una carta, se voltean esa carta y las que están justo encima, debajo, a la izquierda y a la derecha.",
+        "- Las cartas en diagonal no se ven afectadas.",
+        "- Cada reparto se genera aplicando movimientos válidos a un tablero resuelto, así que siempre tiene solución."
+      ]
+    },
+    "quickStart": {
+      "hash": "12991fef",
+      "value": [
+        "Toca una carta para voltearla junto con sus vecinas ortogonales.",
+        "Pon todas las cartas boca abajo para ganar."
+      ]
+    },
+    "title": {
+      "hash": "73fcdfa6",
+      "value": "Apaga las luces"
+    }
+  },
+  "lone-joker": {
+    "cardDescription": {
+      "hash": "6ff380b4",
+      "value": "Forma manos de póker, guarda Comodines y gasta los puntos sobrantes para sobrevivir a rondas cada vez más duras."
+    },
+    "howToPlay": {
+      "hash": "11835fe7",
+      "value": [
+        "## Objetivo",
+        "Sobrevive tantas rondas como puedas alcanzando el objetivo de puntuación de cada ronda. El objetivo empieza en **25** y sube **25** cada ronda.",
+        "- La partida termina cuando no alcanzas el objetivo de una ronda (y no tienes disponible el bonus Escudo).",
+        "- Al terminar la partida, **ganas** si tu puntuación final (total de puntos sobrantes) es de **500** o más; si no, pierdes.",
+        "## Orden del turno",
+        "- Cada ronda empieza robando hasta tener **8 cartas** en la mano, con **3 jugadas** y **3 descartes**.",
+        "- Puedes **descartar** hasta **5 cartas** a la pila de descarte y luego robar hasta tu límite de mano.",
+        "- Puedes **jugar** hasta **5 cartas** para formar una mano de póker.",
+        "- Cada jugada suma a tu puntuación de esa ronda. Los puntos que superen el objetivo se pueden gastar en la Tienda de bonus entre rondas.",
+        "## Comodines",
+        "Los Comodines sirven como cualquier carta y se pueden usar en tu mano en cualquier momento. Cuando robas uno, se guarda aparte y robas una carta de reemplazo. Si aparece otro Comodín mientras tienes uno guardado, se pierden los dos.",
+        "## Puntuación de las manos",
+        "- Carta alta: **5**",
+        "- Pareja: **10**",
+        "- Doble pareja: **20**",
+        "- Trío: **30**",
+        "- Escalera: **40**",
+        "- Color: **50**",
+        "- Full: **60**",
+        "- Póker: **100**",
+        "- Escalera de color: **125**",
+        "- Escalera real: **150**",
+        "## Tienda de bonus",
+        "Tras cada ronda, los puntos que superan el objetivo se convierten en puntos de tienda. Los puntos de tienda sin gastar caducan al empezar la siguiente ronda. Solo puedes tener uno de cada bonus a la vez.",
+        "- **+ Carta** (10): aumenta en uno tu límite de mano en esta ronda",
+        "- **+ Descarte** (25): consigue un descarte más en esta ronda",
+        "- **+ 25 pts** (50): suma 25 puntos en esta ronda",
+        "- **+ Mano** (75): consigue una jugada más en esta ronda.",
+        "- **Puntos x2** (100): duplica tu siguiente jugada",
+        "- **Escudo** (150): sobrevive automáticamente a una ronda fallida",
+        "## Valoración",
+        "Tu puntuación final es la suma de todos los puntos sobrantes conseguidos. Las valoraciones son:",
+        "- **♠**: 3 rondas",
+        "- **♠♠**: 5 rondas",
+        "- **♠♠♠**: 7 rondas",
+        "- **♠♠♠♠**: 10 rondas o más"
+      ]
+    },
+    "quickStart": {
+      "hash": "324912f1",
+      "value": [
+        "Selecciona hasta cinco cartas para jugar manos de póker (o descartarlas).",
+        "Alcanza el objetivo de la ronda para pasar a la siguiente."
+      ]
+    },
+    "title": {
+      "hash": "55791384",
+      "value": "Comodín solitario"
+    }
+  },
+  "lucas": {
+    "cardDescription": {
+      "hash": "a20338dd",
+      "value": "Trece columnas compactas empiezan bajo ocho Ases ya colocados."
+    },
+    "howToPlay": {
+      "hash": "da244aaf",
+      "value": [
+        "## Objetivo",
+        "Sube las ocho fundaciones del As al Rey por palo.",
+        "## Reglas",
+        "- Los Ases se retiran antes de repartir trece columnas de tres cartas.",
+        "- Baja las columnas por palo.",
+        "- Mueve solo una carta descubierta cada vez.",
+        "- Llena las columnas vacías con cualquier carta y reparte el mazo una sola vez."
+      ]
+    },
+    "quickStart": {
+      "hash": "162499d8",
+      "value": [
+        "Los ocho Ases empiezan en las fundaciones.",
+        "Baja las columnas por palo, de carta en carta.",
+        "Las columnas vacías aceptan cualquier carta; el mazo se pasa una vez."
+      ]
+    },
+    "title": {
+      "hash": "6c1095df",
+      "value": "Lucas"
+    }
+  },
+  "lycan": {
+    "cardDescription": {
+      "hash": "9561f249",
+      "value": "Vacía la mano del Lobo con capturas astutas… y aprende cuándo retirarte."
+    },
+    "howToPlay": {
+      "hash": "d62c9ca0",
+      "value": [
+        "## Objetivo",
+        "Vacía la **mano del Lobo** en cada ronda y gánale la carrera a los **100 puntos**.",
+        "## Cómo se juega",
+        "Gana una ronda capturando todas las cartas del Lobo con una de las acciones siguientes. El Lobo no juega turnos. Cuando no haya acciones disponibles, o cuando sea una buena estrategia, puedes **retirarte** para terminar la ronda.",
+        "- **Perfecta:**",
+        "-- Una de tus cartas es **del mismo valor** que una carta del Lobo.",
+        "-- La siguiente carta va a **tu** mano.",
+        "- **Suma:**",
+        "-- Dos o más de tus cartas suman lo mismo que una carta del Lobo (por ejemplo, un 6 y un 4 pueden capturar un 10).",
+        "-- La siguiente carta va a **tu** mano.",
+        "- **División:**",
+        "-- Varias cartas del Lobo suman lo mismo que una de las tuyas (por ejemplo, un 9 puede capturar un 6 y un 3).",
+        "-- La siguiente carta va a la mano del **Lobo**.",
+        "- **Superar:**",
+        "-- Una de tus cartas captura una carta del Lobo **de menor valor**.",
+        "-- El Lobo roba tantas cartas como la **diferencia** (un 6 que captura un 4 le da 2 cartas al Lobo).",
+        "- **Retirarse:**",
+        "-- Puedes retirarte en cualquier momento, o cuando no te queden capturas. Esto termina la ronda.",
+        "## Puntuación",
+        "- Si vacías la mano del Lobo, ganas la ronda y sumas el total de las cartas que te quedan en la mano.",
+        "- Si no, el Lobo suma el total de **sus** cartas restantes.",
+        "- El primero en llegar a **100** puntos gana la partida.",
+        "## Consejos",
+        "- Fíjate en la siguiente carta del mazo y en quién se la llevará según la acción de captura que elijas.",
+        "- A veces, retirarse pronto es la mejor jugada, porque minimiza la puntuación del Lobo.",
+        "- Puedes cambiar la dificultad para aprender el juego. Con menos cartas altas, el Lobo es más fácil de vencer."
+      ]
+    },
+    "quickStart": {
+      "hash": "bbf495a4",
+      "value": [
+        "Captura las cartas del Lobo con las acciones Perfecta, Suma, División y Superar.",
+        "Retírate cuando no puedas capturar, o para minimizar una derrota inevitable.",
+        "El primero en llegar a 100 puntos gana."
+      ]
+    },
+    "title": {
+      "hash": "f0a2a7aa",
+      "value": "Licántropo"
+    }
+  },
+  "maria": {
+    "cardDescription": {
+      "hash": "ae9582d4",
+      "value": "Un pariente de Cuarenta ladrones de nueve columnas en el que se apila alternando colores."
+    },
+    "howToPlay": {
+      "hash": "6c526e2a",
+      "value": [
+        "## Objetivo",
+        "Sube ocho fundaciones del As al Rey por palo.",
+        "## Reglas",
+        "- Se reparten boca arriba nueve columnas de cuatro cartas.",
+        "- Baja alternando colores y mueve una carta cada vez.",
+        "- Las columnas vacías aceptan cualquier carta.",
+        "- Pasa el mazo una sola vez, de carta en carta."
+      ]
+    },
+    "quickStart": {
+      "hash": "8771c4fd",
+      "value": [
+        "Baja las columnas alternando colores.",
+        "Mueve una carta cada vez.",
+        "Cualquier carta ocupa una columna vacía; el mazo se pasa una vez."
+      ]
+    },
+    "title": {
+      "hash": "0309ae85",
+      "value": "María"
+    }
+  },
+  "memory": {
+    "cardDescription": {
+      "hash": "bb8a7bd4",
+      "value": "Descubre parejas ocultas y despeja el tablero con tu memoria."
+    },
+    "howToPlay": {
+      "hash": "fd06d530",
+      "value": [
+        "## Objetivo",
+        "Despeja el tablero encontrando todas las parejas.",
+        "## Emparejar",
+        "- Toca una carta para seleccionarla y luego toca otra para descubrir ambas.",
+        "- Las parejas van a la pila de descarte. Las cartas que no coinciden se vuelven a poner boca abajo.",
+        "- Mientras haya dos cartas boca arriba, puedes tocar cartas para volver a ponerlas boca abajo más rápido."
+      ]
+    },
+    "quickStart": {
+      "hash": "9fd3675c",
+      "value": [
+        "Despeja el tablero encontrando todas las parejas.",
+        "Las cartas deben coincidir en valor y en palo."
+      ]
+    },
+    "title": {
+      "hash": "8483c9a4",
+      "value": "Memoria"
+    }
+  },
+  "monte-carlo": {
+    "cardDescription": {
+      "hash": "752d12bd",
+      "value": "Empareja cartas adyacentes del mismo valor para despejar la cuadrícula."
+    },
+    "howToPlay": {
+      "hash": "9447fa02",
+      "value": [
+        "## Objetivo",
+        "Retira las 52 cartas emparejando valores iguales hasta vaciar la cuadrícula.",
+        "## Cómo jugar",
+        "- Retira dos cartas **del mismo valor** cuando sean **adyacentes** en horizontal, vertical o diagonal.",
+        "- Cuando te quedes sin parejas, **consolida** la cuadrícula. Las cartas restantes se desplazan para cerrar los huecos y se reparten cartas nuevas del mazo para llenar los espacios.",
+        "- La consolidación reordena las cartas, así que pueden aparecer nuevas parejas."
+      ]
+    },
+    "quickStart": {
+      "hash": "7d8ec4dd",
+      "value": [
+        "Toca dos cartas adyacentes del mismo valor para retirarlas.",
+        "Consolida la cuadrícula para desbloquear nuevas parejas."
+      ]
+    },
+    "title": {
+      "hash": "7b4538a5",
+      "value": "Montecarlo"
+    }
+  },
+  "moosehide": {
+    "cardDescription": {
+      "hash": "30dc2d60",
+      "value": "Un pariente del Yukon que baja sobre cualquier palo excepto el suyo."
+    },
+    "howToPlay": {
+      "hash": "15907878",
+      "value": [
+        "## Objetivo",
+        "Sube las cuatro fundaciones por palo, del As al Rey.",
+        "## Reglas",
+        "- Mueve cualquier carta boca arriba o **grupo** de cartas **bajando de valor, sobre una carta de otro palo**.",
+        "- Las cartas que se mueven **no** tienen que estar en secuencia.",
+        "- Las columnas vacías solo se pueden ocupar con Reyes.",
+        "- Toca dos veces o arrastra cartas sueltas a las fundaciones."
+      ]
+    },
+    "quickStart": {
+      "hash": "7142a388",
+      "value": [
+        "Sube las fundaciones por palo, de A a K.",
+        "Baja las columnas sobre cualquier palo excepto el mismo.",
+        "Mueve cualquier grupo boca arriba.",
+        "Solo los Reyes pueden ocupar las columnas vacías."
+      ]
+    },
+    "title": {
+      "hash": "ace36eec",
+      "value": "Piel de alce"
+    }
+  },
+  "nestor": {
+    "cardDescription": {
+      "hash": "8afbbddb",
+      "value": "Forma parejas del mismo valor para vaciar todas las columnas."
+    },
+    "howToPlay": {
+      "hash": "5a96cea6",
+      "value": [
+        "## Objetivo",
+        "Descarta las 52 cartas retirando parejas.",
+        "## Reglas",
+        "- Solo están disponibles las cartas **inferiores (descubiertas)** de cada columna, además de **las cartas de la reserva**.",
+        "- Toca dos cartas disponibles **del mismo valor** para enviarlas boca abajo a la pila de descarte."
+      ]
+    },
+    "quickStart": {
+      "hash": "25ae690c",
+      "value": [
+        "Retira todas las cartas quitando parejas del mismo valor de la parte inferior de las columnas o de la reserva."
+      ]
+    },
+    "title": {
+      "hash": "142bf888",
+      "value": "Néstor"
+    }
+  },
+  "night-vigil": {
+    "cardDescription": {
+      "hash": "7d07c621",
+      "value": "Responde a las amenazas con respuestas tácticas ante doce maleantes, en pleno cine negro."
+    },
+    "howToPlay": {
+      "hash": "ca40e560",
+      "value": [
+        "## Objetivo",
+        "Sobrevive a los **12 encuentros** y derrota al {KD}, el Rey Bufón. Pierdes cuando tu Salud llega a 0.",
+        "## Preparación",
+        "- Las Jotas, Reinas y Reyes forman el mazo de Encuentros por orden de valor. El {KD} siempre va el último.",
+        "- El {10S} marca 10 de Armadura y el {10H} marca 10 de Salud.",
+        "- Las cartas numéricas, los Ases y dos Comodines forman el mazo de juego.",
+        "## Cada encuentro",
+        "- Descubre 4 Amenazas. Cada Comodín añade una más, hasta 6. El encuentro final siempre tiene 6.",
+        "- Roba Respuestas de una en una, hasta el número de Amenazas. Un Comodín robado como Respuesta se convierte en una nueva Amenaza.",
+        "- **Estándar:** apila una o más Respuestas sobre una Amenaza. Su total debe igualar la Amenaza o superarla en 3 como máximo.",
+        "- **Humo:** una vez por ronda, juega una Respuesta boca abajo para eliminar una Amenaza. No sirve contra un Comodín ni contra una Amenaza del palo del Encuentro.",
+        "- **Garfio:** una vez por ronda, conecta dos Amenazas adyacentes. Las Respuestas jugadas de lado deben igualar el total de las dos Amenazas o superarlo en 3 como máximo. Si fallas, recibes 2 de daño.",
+        "## Agentes dobles y caos",
+        "- Un As como Amenaza vale lo mismo que la Amenaza más alta de la ronda.",
+        "- Un As como Respuesta vale lo mismo que la Amenaza más baja de la ronda.",
+        "- Un Comodín como Amenaza vale lo mismo que la Amenaza más alta y no se puede eliminar con Humo.",
+        "## Daño y curación",
+        "- Cada Amenaza sin resolver causa 1 de daño. Un Garfio fallido causa 2 en su lugar por su pareja.",
+        "- «A pie de calle» añade 1 de daño con los Reyes. «El caso del capo» añade 1 con las Reinas y los Reyes. «Ciudad en sombras» añade 1 con las Reinas y 2 con los Reyes.",
+        "- Cúrate 1 tras un encuentro si no has usado Humo, o si has robado menos Respuestas que Amenazas había. La curación y el daño se compensan.",
+        "## Puntuación",
+        "Tu puntuación es la Armadura más la Salud restantes, más 5 en «El caso del capo» o 10 en «Ciudad en sombras»."
+      ]
+    },
+    "quickStart": {
+      "hash": "f045d224",
+      "value": [
+        "Roba Respuestas de una en una. Iguala cada Amenaza con un margen de 0 a 3 puntos, o gasta la Bomba de humo o el Garfio de la ronda. Resuelve cuando estés listo."
+      ]
+    },
+    "title": {
+      "hash": "01d23c78",
+      "value": "Vigilia nocturna"
+    }
+  },
+  "number-ten": {
+    "cardDescription": {
+      "hash": "e3d8f8d0",
+      "value": "Descubre diez columnas y mueve secuencias de colores alternos como bloques completos."
+    },
+    "howToPlay": {
+      "hash": "eed05a0f",
+      "value": [
+        "## Objetivo",
+        "Lleva las dos barajas a ocho fundaciones por palo.",
+        "## Reglas",
+        "- Se reparten diez columnas de cuatro cartas, cada una con dos boca abajo y dos boca arriba.",
+        "- Baja alternando colores.",
+        "- Mueve juntas las secuencias completas bien apiladas.",
+        "- Cualquier carta o secuencia ocupa un espacio vacío; el mazo se pasa una vez."
+      ]
+    },
+    "quickStart": {
+      "hash": "021b43ee",
+      "value": [
+        "Las dos primeras cartas de cada columna empiezan boca abajo.",
+        "Baja alternando colores.",
+        "Mueve secuencias ordenadas; cualquier carta ocupa un hueco."
+      ]
+    },
+    "title": {
+      "hash": "1a6aecb7",
+      "value": "Número Diez"
+    }
+  },
+  "ouroboros": {
+    "cardDescription": {
+      "hash": "9249639e",
+      "value": "Captura las cartas del bucle que puntúan, manteniendo el impulso y evitando rupturas."
+    },
+    "howToPlay": {
+      "hash": "23113eb3",
+      "value": [
+        "## Objetivo",
+        "- Saquea las cuatro joyas (Ases) y escapa con vida atravesando la salida (Comodín).",
+        "- Caer en una trampa (figura) mientras está boca arriba supone la muerte instantánea.",
+        "- Consigue baratijas (cartas numéricas) para ganar puntos extra.",
+        "## Reglas",
+        "- Avanzas por la mazmorra dando vueltas al mazo y explorando cada vez un número de casillas por delante de ti.",
+        "- Caer en una **carta boca abajo siempre es seguro** y no activa ninguna acción, sea cual sea su valor.",
+        "- Caer en una **carta boca arriba activa su efecto**, si lo tiene.",
+        "## Tipos de cartas",
+        "- **Joyas (Ases)**:",
+        "-- Debes conseguir las cuatro, cayendo en ellas boca arriba, para ganar la partida.",
+        "-- Caer en un As boca abajo no lo consigue.",
+        "- **Trampas (J, Q, K)**",
+        "-- Si caes en una boca arriba, mueres al instante.",
+        "-- Caer en una boca abajo, o descubrirla con la acción **Mirar alrededor**, **no** activa la trampa.",
+        "- **Baratijas (1, 2, 3… 10)**",
+        "-- Si caes en una boca arriba, la consigues y obtienes puntos extra.",
+        "-- Caer en una boca abajo, o descubrirla con la acción **Mirar alrededor**, **no** te da la baratija.",
+        "-- Usa las cartas numéricas para avanzar por el bucle, contando desde la parte superior del mazo, tantas casillas como su valor.",
+        "- **Salida (Comodín)**",
+        "-- Debes caer en ella, boca arriba, después de conseguir todas las joyas, para escapar de la mazmorra y ganar.",
+        "-- Caer en el Comodín boca abajo no activa ninguna acción.",
+        "- Los palos de las cartas no tienen ningún significado ni efecto.",
+        "## Acciones",
+        "- **Mirar alrededor:** pon boca arriba las dos cartas superiores del mazo; solo se puede hacer si la carta superior está boca abajo.",
+        "- **Explorar**: elige una de las dos cartas superiores, si está boca arriba y es numérica. Avanza por el bucle tantas casillas como su valor.",
+        "- **Marcar camino**: puedes marcar hasta tres caminos moviendo una de las dos cartas superiores a un hueco de camino vacío, si esa carta está boca arriba y es numérica.",
+        "- **Volver al camino**: puedes seleccionar un camino marcado y moverlo a la parte superior del mazo.",
+        "## Consejos",
+        "- **¡Marca caminos siempre que puedas!** Si las dos cartas superiores no son numéricas y no tienes ningún camino marcado, **pierdes al instante**. Tener más caminos marcados también te da más opciones para avanzar un número concreto de casillas y evitar trampas.",
+        "- Puedes usar las acciones **Marcar camino** y **Volver al camino** varias veces seguidas sin explorar. Así puedes manipular el orden de las cartas superiores para controlar cuánto avanzas y en qué carta caes."
+      ]
+    },
+    "quickStart": {
+      "hash": "7a29acb2",
+      "value": [
+        "Consigue todos los Ases y sal por el Comodín para ganar.",
+        "Pierdes si caes en una figura boca arriba.",
+        "Usa las cartas numéricas para marcar caminos y explorar."
+      ]
+    },
+    "title": {
+      "hash": "7df776c7",
+      "value": "Uróboros"
+    }
+  },
+  "parallels": {
+    "cardDescription": {
+      "hash": "31eac556",
+      "value": "Apila filas paralelas de dos barajas entre fundaciones de Ases y de Reyes, liberando cartas por cualquiera de los bordes."
+    },
+    "howToPlay": {
+      "hash": "395db908",
+      "value": [
+        "## Objetivo",
+        "Lleva las 104 cartas a las ocho fundaciones.",
+        "## Fundaciones",
+        "- Un **As** y un **Rey** de cada palo empiezan las fundaciones, los Ases a la izquierda y los Reyes a la derecha.",
+        "- Los Ases **suben** por palo; los Reyes **bajan** por palo.",
+        "## Reglas",
+        "- La mesa empieza con una fila de diez cartas.",
+        "- Mientras haya una o dos filas, todas las cartas están disponibles.",
+        "- A partir de tres filas, una carta solo está **libre** cuando el espacio justo encima o justo debajo está vacío.",
+        "- Toca el **mazo** para rellenar todos los huecos de la mesa. Si no hay huecos, reparte una fila nueva de diez cartas abajo.",
+        "- No se construye en la mesa y no se vuelve a repartir."
+      ]
+    },
+    "quickStart": {
+      "hash": "2c0f4b7f",
+      "value": [
+        "Los Ases suben y los Reyes bajan, por palo.",
+        "Con tres filas o más, una carta necesita un espacio vacío encima o debajo.",
+        "Toca el mazo para rellenar huecos, o para añadir una fila cuando no quede ninguno."
+      ]
+    },
+    "title": {
+      "hash": "df814823",
+      "value": "Paralelas"
+    }
+  },
+  "penguin": {
+    "cardDescription": {
+      "hash": "a45ab2f6",
+      "value": "Un juego parecido a FreeCell en el que se construyen secuencias por palo desde un valor de «pico» aleatorio."
+    },
+    "howToPlay": {
+      "hash": "362cf9e1",
+      "value": [
+        "## Objetivo",
+        "Sube las cuatro fundaciones por palo desde el «valor del pico» hasta que cada una tenga 13 cartas.",
+        "## Fundaciones",
+        "- La primera fundación empieza con la **carta del pico**, elegida al azar en cada partida.",
+        "- Sube las fundaciones **por palo** desde el valor del pico, pasando del Rey al As.",
+        "## Columnas",
+        "- Baja las columnas **por palo**, pasando del As al Rey.",
+        "- Cada **celda libre** guarda una carta.",
+        "- Puedes mover una carta cada vez. Puedes mover grupos de cartas juntas, pero solo si tienes suficientes celdas libres y columnas vacías para hacer el mismo movimiento de carta en carta.",
+        "- Una **columna vacía** solo puede ocuparse con una carta **un valor por debajo del pico** (o una secuencia encabezada por ella)."
+      ]
+    },
+    "quickStart": {
+      "hash": "04c72813",
+      "value": [
+        "Desde el valor del pico, sube las fundaciones por palo y baja las columnas en el mismo palo."
+      ]
+    },
+    "title": {
+      "hash": "a09162a7",
+      "value": "Pingüino"
+    }
+  },
+  "pocket-poker": {
+    "cardDescription": {
+      "hash": "d28135be",
+      "value": "Un duelo de póker de bolsillo: roba, apuesta y supera a un rival que recibe cartas del mismo mazo."
+    },
+    "howToPlay": {
+      "hash": "79beb74f",
+      "value": [
+        "## Objetivo",
+        "Empiezas con 5 puntos. **Ganas** al llegar a 10 y **pierdes** si bajas a 0.",
+        "## Orden del turno",
+        "1. **Roba 5 cartas**",
+        "2. **Juega o retírate:** retirarse no cuesta nada, pero retirarse **tres veces seguidas** hace perder la partida.",
+        "3. **Descarta y vuelve a robar** hasta **3 veces** para mejorar tu mano.",
+        "4. **Apuesta:** tu apuesta mínima es igual al número de veces que has robado:",
+        "- 1 robo → apuesta 1, 2 o 3",
+        "- 2 robos → apuesta 2 o 3",
+        "- 3 robos → apuesta 3",
+        "\n5. **El rival roba** 5 cartas más una por cada punto apostado (6, 7 u 8) y se queda con sus **cinco mejores**.",
+        "6. **Compara las manos** según la clasificación habitual del póker. Los empates se deciden por la carta más alta.",
+        "## Comodines",
+        "Activa los **Comodines** en los ajustes para añadir dos comodines que cuentan como cualquier carta que no esté ya en la mano."
+      ]
+    },
+    "quickStart": {
+      "hash": "bedf6ddc",
+      "value": [
+        "Forma una mano de póker y luego apuesta.",
+        "Cuanto más apuestes, más cartas roba tu rival.",
+        "Llega a 10 puntos para ganar; si bajas a 0, pierdes."
+      ]
+    },
+    "title": {
+      "hash": "e6a10a58",
+      "value": "Póker de bolsillo"
+    }
+  },
+  "poker-squares": {
+    "cardDescription": {
+      "hash": "8ed02b35",
+      "value": "Forma diez manos de póker en una cuadrícula para conseguir la máxima puntuación posible."
+    },
+    "howToPlay": {
+      "hash": "ef2f0865",
+      "value": [
+        "## Objetivo",
+        "Consigue al menos 200 puntos formando manos de póker en las filas y columnas.",
+        "## Reglas",
+        "- Toca cualquier casilla vacía para colocar la carta superior del mazo.",
+        "- Las cartas no se pueden mover una vez colocadas.",
+        "- Sigue hasta llenar las 25 casillas.",
+        "## Puntuación",
+        "Las cinco filas y las cinco columnas se puntúan según el sistema americano para manos de póker:",
+        "- **Escalera real:** 100",
+        "- **Escalera de color:** 75",
+        "- **Póker:** 50",
+        "- **Full:** 25",
+        "- **Color:** 20",
+        "- **Escalera:** 15",
+        "- **Trío:** 10",
+        "- **Doble pareja:** 5",
+        "- **Pareja:** 2"
+      ]
+    },
+    "quickStart": {
+      "hash": "d7e99c35",
+      "value": [
+        "Coloca con cuidado cada carta repartida; las filas y columnas puntúan como manos de póker."
+      ]
+    },
+    "title": {
+      "hash": "0e89dbe8",
+      "value": "Cuadros de póker"
+    }
+  },
+  "puss-in-the-corner": {
+    "cardDescription": {
+      "hash": "2b9e278c",
+      "value": "Dirige el mazo hacia cuatro pilas de esquina, construyendo por color, con un nuevo reparto."
+    },
+    "howToPlay": {
+      "hash": "a0ac1fb9",
+      "value": [
+        "## Objetivo",
+        "Lleva las 52 cartas a las cuatro fundaciones, subiendo del As al Rey **por color**.",
+        "## Reglas",
+        "- Los cuatro **Ases** empiezan en las fundaciones.",
+        "- Una fundación acepta el valor siguiente de **cualquiera de los dos palos de su color**.",
+        "- Cada carta del mazo debe colocarse en uno de los **cuatro montones** o jugarse en una fundación.",
+        "- Cualquier carta puede ir a cualquier montón, pero las cartas nunca pueden pasar de un montón a otro.",
+        "- **Toca dos veces** la carta del mazo o la carta superior de un montón para jugarla en una fundación.",
+        "- Cuando el mazo esté vacío, tócalo para recoger los montones en orden y hacer **un nuevo reparto**."
+      ]
+    },
+    "quickStart": {
+      "hash": "bd0b5046",
+      "value": [
+        "Las fundaciones suben por color desde los Ases.",
+        "Toca un montón para dejar en él la carta del mazo.",
+        "Cuando se acabe el mazo, tócalo una vez para volver a repartir."
+      ]
+    },
+    "title": {
+      "hash": "6e4b050d",
+      "value": "Las cuatro esquinas"
+    }
+  },
+  "pyramid": {
+    "cardDescription": {
+      "hash": "659fff1e",
+      "value": "Despeja la pirámide retirando parejas de cartas que sumen 13."
+    },
+    "howToPlay": {
+      "hash": "05b90345",
+      "value": [
+        "## Objetivo",
+        "Desmonta toda la **pirámide** de 28 cartas retirándolas en parejas que sumen **13**.",
+        "## Cómo jugar",
+        "- Una carta solo está disponible cuando está **totalmente descubierta**, sin nada encima.",
+        "- Retira dos cartas disponibles cuyos valores sumen 13 (los Ases valen 1).",
+        "- Un Rey suma 13 por sí solo, así que se retira solo.",
+        "- Cuando no puedas seguir, pasa cartas del mazo al montón; la carta superior del montón se puede emparejar con cualquier carta disponible."
+      ]
+    },
+    "quickStart": {
+      "hash": "38a2c4ea",
+      "value": [
+        "Retira Reyes, o parejas descubiertas que sumen 13. Roba para encontrar más parejas."
+      ]
+    },
+    "title": {
+      "hash": "8026845f",
+      "value": "Pirámide"
+    }
+  },
+  "queens-audience": {
+    "cardDescription": {
+      "hash": "b7f94eaa",
+      "value": "Haz pasar a las parejas reales a la sala de audiencias y deja que cada Jota guíe su palo hacia abajo."
+    },
+    "howToPlay": {
+      "hash": "d0759133",
+      "value": [
+        "## Objetivo",
+        "Lleva las 52 cartas a la **sala de audiencias** del centro.",
+        "## Reglas",
+        "- Dieciséis cartas forman la **antecámara**, un marco alrededor de la sala. Todas están disponibles, junto con la carta superior del **montón**.",
+        "- Cuando un **Rey y una Reina** del mismo palo estén disponibles, toca cualquiera de los dos para que entren juntos.",
+        "- Cuando una **Jota y un As** del mismo palo estén disponibles, toca cualquiera de los dos para empezar la fundación de ese palo.",
+        "- Después, cada fundación baja **por palo** de la Jota al Dos.",
+        "- Un hueco en la antecámara se rellena en el acto desde el montón, o desde el mazo si el montón está vacío.",
+        "- Toca el **mazo** para pasar una carta al montón. No se vuelve a repartir."
+      ]
+    },
+    "quickStart": {
+      "hash": "b9c1cb40",
+      "value": [
+        "Toca un Rey o una Reina cuando su pareja también esté disponible.",
+        "Toca una Jota o un As cuando su pareja esté disponible para empezar una fundación.",
+        "Las fundaciones bajan por palo, de la Jota al Dos."
+      ]
+    },
+    "title": {
+      "hash": "c7d7a92f",
+      "value": "La audiencia de la Reina"
+    }
+  },
+  "raglan": {
+    "cardDescription": {
+      "hash": "2a08f282",
+      "value": "Un clásico de una baraja que se construye alternando colores, con un ritmo sencillo y cuidadoso."
+    },
+    "howToPlay": {
+      "hash": "55ea0480",
+      "value": [
+        "## Objetivo",
+        "Lleva todas las cartas a las cuatro fundaciones por palo, del As al Rey.",
+        "## Reglas",
+        "- La mesa tiene siete columnas con pilas de tamaño creciente.",
+        "- Baja las cartas de la mesa alternando colores.",
+        "- Solo los Reyes pueden ocupar los espacios vacíos de la mesa.",
+        "- El mazo se pasa al montón de carta en carta, sin nuevo reparto en esta versión."
+      ]
+    },
+    "quickStart": {
+      "hash": "97e420c9",
+      "value": [
+        "Forma secuencias descendentes alternando colores.",
+        "Mueve grupos válidos de la mesa y usa las columnas vacías con cuidado.",
+        "Lleva todas las cartas a las fundaciones para ganar."
+      ]
+    },
+    "title": {
+      "hash": "1dfbe9f2",
+      "value": "Raglan"
+    }
+  },
+  "rank-and-file": {
+    "cardDescription": {
+      "hash": "54303353",
+      "value": "Descubre diez columnas disciplinadas y maniobra formaciones de colores alternos."
+    },
+    "howToPlay": {
+      "hash": "d1c2c009",
+      "value": [
+        "## Objetivo",
+        "Lleva las dos barajas a ocho fundaciones por palo.",
+        "## Reglas",
+        "- Se reparten diez columnas de cuatro cartas, con solo la carta superior descubierta.",
+        "- Baja alternando colores.",
+        "- Mueve cualquier secuencia bien apilada, completa o parcial.",
+        "- Cualquier carta o secuencia puede ocupar una columna vacía; el mazo se pasa una vez."
+      ]
+    },
+    "quickStart": {
+      "hash": "06819848",
+      "value": [
+        "Solo la carta descubierta de cada columna empieza boca arriba.",
+        "Baja alternando colores.",
+        "Mueve secuencias ordenadas, completas o parciales."
+      ]
+    },
+    "title": {
+      "hash": "5818b042",
+      "value": "Filas cerradas"
+    }
+  },
+  "red-diamond": {
+    "cardDescription": {
+      "hash": "8f0b8b18",
+      "value": "Coloca cada trébol y cada pica alrededor de cuatro diamantes mediante coincidencias aritméticas."
+    },
+    "howToPlay": {
+      "hash": "a23e76cc",
+      "value": [
+        "## Objetivo",
+        "Juega las **26 cartas negras** alrededor de los cuatro diamantes antes de que se acabe el mazo de diamantes.",
+        "## Jugar cartas negras",
+        "- Selecciona cualquiera de las dos cartas de tu mano y luego toca una pila válida. Cuando hayas jugado las dos cartas de la mano, se reparten otras dos automáticamente.",
+        "- Las cartas de cada pila deben alternar entre tréboles y picas.",
+        "-- Las pilas exteriores deben coincidir con el valor de su diamante adyacente y admiten hasta **3 cartas**.",
+        "-- Las pilas interiores tocan dos diamantes. Una carta puede coincidir con cualquiera de los dos valores, o con su suma, diferencia positiva, producto o cociente entero. Las pilas interiores admiten hasta **4 cartas**.",
+        "-- La pila central acepta cualquier carta y admite hasta **5 cartas**.",
+        "## Reponer diamantes",
+        "- Una pila negra llena se vacía automáticamente. Cada diamante adyacente se descarta y se sustituye desde el mazo de diamantes.",
+        "- Para vaciar una pila antes, deselecciona tu carta y toca la pila.",
+        "- Si no puedes seguir, toca el mazo de diamantes y luego uno de los cuatro diamantes para sustituirlo.",
+        "- Pierdes si hay que vaciar una pila y el mazo no tiene suficientes diamantes para sustituir todas las cartas adyacentes.",
+        "## Valor de las cartas",
+        "Los Ases valen 1, las Jotas 11, las Reinas 12 y los Reyes 13."
+      ]
+    },
+    "quickStart": {
+      "hash": "9e019746",
+      "value": [
+        "Coloca todas las cartas negras antes de quedarte sin diamantes.",
+        "Las cartas colocadas deben alternar de palo.",
+        "Carta central: cualquier valor. Cartas exteriores: valor exacto.",
+        "Cartas interiores: el valor de uno de los diamantes adyacentes, o su suma, diferencia, producto o cociente.",
+        "Si no puedes seguir, toca una pila negra para vaciarla o sustituye un diamante."
+      ]
+    },
+    "title": {
+      "hash": "15870806",
+      "value": "Diamante rojo"
+    }
+  },
+  "rogue-run": {
+    "cardDescription": {
+      "hash": "833255e0",
+      "value": "Una exploración de mazmorras en la que gestionas la fuerza de tus armas y el uso de pociones."
+    },
+    "howToPlay": {
+      "hash": "852f99a5",
+      "value": [
+        "## Objetivo",
+        "- Resuelve todas las salas antes de quedarte sin salud.",
+        "- Tu puntuación depende de la salud restante, con un bonus si terminas con una poción sin usar.",
+        "## Tipos de cartas",
+        "- **Las cartas negras son Monstruos**: elimínalos recibiendo un daño igual a su valor.",
+        "- **Los diamantes son Armas**: equípalas para reducir el daño de los monstruos en el valor del arma. Un arma solo puede usarse contra monstruos de valor igual o inferior al último monstruo que mató.",
+        "- **Los corazones son Pociones**: cúrate según el valor de la poción. A diferencia del juego original, esta versión no te limita a una poción por sala.",
+        "## Salas",
+        "- La mazmorra se divide en salas de 4 cartas cada una.",
+        "- Debes resolver 3 cartas cualesquiera de esa sala para pasar a la siguiente. La 4.ª carta sin resolver pasa a la siguiente sala.",
+        "- Puedes saltarte (o «Huir» de) una sala si no te saltaste la anterior. Las cartas de las salas saltadas van al fondo del mazo, así que tendrás que resolverlas más adelante.",
+        "- El daño de los monstruos se reduce en el valor del arma equipada. Cuando un arma mata a un monstruo, solo puede usarse contra monstruos de valor igual o inferior al último que mató.",
+        "## Consejos",
+        "- Sáltate las salas demasiado difíciles, **o** las fáciles o con armas de valor alto que conviene usar más tarde. Recuerda que las cartas de las salas saltadas tendrán que resolverse en salas futuras; planifica en consecuencia.",
+        "- Optimiza el uso de las armas usándolas primero contra un monstruo del valor más alto posible y luego intentando que el valor de los siguientes monstruos baje lo más despacio posible.",
+        "- Ataca a puño limpio cuando usar tu arma reduciría demasiado su valor.",
+        "- Toca el mazo para ver las cartas que quedan en la mazmorra (se muestran en orden, pero después se vuelven a barajar)."
+      ]
+    },
+    "quickStart": {
+      "hash": "740b0e22",
+      "value": [
+        "Resuelve 3 cartas cualesquiera para despejar una sala. No puedes saltarte dos salas seguidas.",
+        "Equípate armas para reducir el daño recibido. Reutilízalas contra monstruos de valor igual o inferior.",
+        "Usa pociones para curarte."
+      ]
+    },
+    "title": {
+      "hash": "445b3c56",
+      "value": "La huida del pícaro"
+    }
+  },
+  "royal-cotillion": {
+    "cardDescription": {
+      "hash": "78d83f7f",
+      "value": "Dos barajas bailan por las fundaciones de dos en dos, desde los Ases y desde los Doses."
+    },
+    "howToPlay": {
+      "hash": "6c824cdb",
+      "value": [
+        "## Objetivo",
+        "Lleva las 104 cartas a las ocho fundaciones.",
+        "## Fundaciones",
+        "- Un **As** y un **Dos** de cada palo empiezan las fundaciones.",
+        "- Cada fundación sube **por palo de dos en dos**, dando la vuelta después del Rey.",
+        "- Fundaciones de As: A, 3, 5, 7, 9, J, K, 2, 4, 6, 8, 10, Q.",
+        "- Fundaciones de Dos: 2, 4, 6, 8, 10, Q, A, 3, 5, 7, 9, J, K.",
+        "## Reglas",
+        "- A la **izquierda**, cuatro columnas de tres cartas: solo está disponible la carta inferior de cada una, y los espacios nunca se rellenan.",
+        "- A la **derecha**, las dieciséis cartas están disponibles.",
+        "- Toca un espacio vacío de la derecha para llenarlo con la carta superior del **montón**, o desde el **mazo** si el montón está vacío.",
+        "- Toca el **mazo** para pasar una carta al montón. No se vuelve a repartir."
+      ]
+    },
+    "quickStart": {
+      "hash": "5849dd6d",
+      "value": [
+        "Los Ases suben A, 3, 5… K, 2, 4… Q por palo.",
+        "Los Doses suben 2, 4, 6… Q, A, 3… K por palo.",
+        "Toca un espacio vacío de la derecha para llenarlo desde el montón o el mazo."
+      ]
+    },
+    "title": {
+      "hash": "5c911639",
+      "value": "Cotillón real"
+    }
+  },
+  "royal-envoy": {
+    "cardDescription": {
+      "hash": "1cc10e97",
+      "value": "Gana exactamente el número justo de debates en cada reino con ayuda de tus consejeros."
+    },
+    "howToPlay": {
+      "hash": "f119c81a",
+      "value": [
+        "## Objetivo",
+        "Gana exactamente el número de debates que muestra cada uno de los ocho reinos. Ganar pocos o demasiados debates en cualquier reino hace perder la partida.",
+        "## Debates",
+        "- Empieza cada reino con ocho cartas en la mano. Elige un tema descubriendo una carta del mazo y luego juega una carta de tu mano.",
+        "- Cuando sea posible, **debes** seguir el palo del tema.",
+        "- Gana jugando una carta más alta del palo del tema, o jugando el palo de triunfo del gobernante cuando el tema no es de triunfo.",
+        "## Consejeros",
+        "- Puedes usar tantos consejeros como quieras a la vez, pero solo entre debates (y no mientras haya un tema en juego).",
+        "- Selecciona una Jota consejera para ver y usar sus poderes. Tus cuatro Jotas consejeras se renuevan en cada reino.",
+        "- Cuando ganas un reino, su Reina o su Rey se convierte en consejero temporal. Cada uno de estos gobernantes consejeros solo puede usarse una vez."
+      ]
+    },
+    "quickStart": {
+      "hash": "1025a358",
+      "value": [
+        "Elige un reino y gana exactamente el número de debates indicado.",
+        "Sigue el palo del tema cuando sea posible.",
+        "El palo del gobernante es el triunfo.",
+        "Usa los poderes de los consejeros en momentos estratégicos."
+      ]
+    },
+    "title": {
+      "hash": "850a8f8b",
+      "value": "Enviado real"
+    }
+  },
+  "royal-rest": {
+    "cardDescription": {
+      "hash": "298cb8cb",
+      "value": "Junta cartas del mismo valor en almohadas y arropa a todas las Jotas en la cama."
+    },
+    "howToPlay": {
+      "hash": "ad734452",
+      "value": [
+        "## Objetivo",
+        "Arropa a todas las Jotas reduciendo el tablero a **cuatro pilas separadas de almohada-Jota-almohada** (Jotas con una almohada debajo y otra encima).",
+        "Forma almohadas apilando las cuatro cartas del mismo valor.",
+        "## Cartas numéricas",
+        "- Se pueden mover desde la parte superior de las columnas sobre otras cartas del mismo valor.",
+        "- Se pueden mover a las columnas vacías cuando las haya.",
+        "- Las cartas del mismo valor forman una pila que se mueve junta.",
+        "## Almohadas",
+        "- Una pila de cuatro cartas del mismo valor se convierte en almohada.",
+        "- Una almohada solo puede moverse sobre una Jota o a una columna vacía.",
+        "- Las almohadas no se apilan unas sobre otras.",
+        "- No puedes colocar cartas numéricas ni sus pilas sobre almohadas.",
+        "## Jotas",
+        "- Pueden colocarse sobre almohadas o en cualquier columna sin otra Jota no separada.",
+        "- Cualquier carta numérica, pila o almohada puede colocarse sobre una Jota.",
+        "- Una vez colocadas, no puedes devolver las Jotas a tu mano (su posición inicial, arriba)."
+      ]
+    },
+    "quickStart": {
+      "hash": "dcc92fe7",
+      "value": [
+        "Forma cuatro pilas de almohada-Jota-almohada.",
+        "Forma almohadas apilando cuatro cartas del mismo valor.",
+        "Las Jotas pueden ir sobre almohadas, columnas vacías o columnas sin otra Jota no separada.",
+        "Cualquier carta numérica, pila o almohada puede ir sobre una Jota."
+      ]
+    },
+    "title": {
+      "hash": "d7bb23d4",
+      "value": "Descanso real"
+    }
+  },
+  "russian-solitaire": {
+    "cardDescription": {
+      "hash": "f6e3baba",
+      "value": "El Yukon en su versión más brutal: arrastra grupos mezclados y baja las columnas en el mismo palo."
+    },
+    "howToPlay": {
+      "hash": "a44626e1",
+      "value": [
+        "## Objetivo",
+        "Sube las cuatro fundaciones por palo, del As al Rey.",
+        "## Reglas",
+        "- Mueve cualquier carta boca arriba o **grupo** de cartas **bajando de valor, en el mismo palo**.",
+        "- Las cartas que se mueven **no** tienen que estar en secuencia.",
+        "- Las columnas vacías solo se pueden ocupar con Reyes.",
+        "- Toca dos veces o arrastra cartas sueltas a las fundaciones."
+      ]
+    },
+    "quickStart": {
+      "hash": "fae453f1",
+      "value": [
+        "Sube las fundaciones por palo, de A a K.",
+        "Baja las columnas por palo.",
+        "Mueve cualquier grupo boca arriba.",
+        "Solo los Reyes pueden ocupar las columnas vacías."
+      ]
+    },
+    "title": {
+      "hash": "3d081f1c",
+      "value": "Solitario ruso"
+    }
+  },
+  "salic-law": {
+    "cardDescription": {
+      "hash": "323b2f0b",
+      "value": "Reparte dos barajas sobre una fila de Reyes, aparta a las Reinas y sube cada As hasta su Jota."
+    },
+    "howToPlay": {
+      "hash": "e07704cf",
+      "value": [
+        "## Objetivo",
+        "Sube las ocho fundaciones del As a la Jota, dejando solo los Reyes en la mesa.",
+        "## Reparto",
+        "- Un **Rey** empieza la mesa. Toca el **mazo** para repartir cartas de una en una sobre la pila del Rey más reciente.",
+        "- Cuando sale un **Rey**, empieza una pila nueva.",
+        "- Los **Ases** van directamente a las fundaciones; las **Reinas** se apartan y no participan.",
+        "## Reglas",
+        "- En cualquier momento, toca la carta superior de una pila para jugarla en una fundación, que sube **sin importar el palo** hasta la Jota.",
+        "- Si no, tócala para cogerla y luego toca un **Rey sin cartas encima** para moverla allí.",
+        "- No se construye de ninguna otra forma en la mesa y no se vuelve a repartir."
+      ]
+    },
+    "quickStart": {
+      "hash": "4e6e6a53",
+      "value": [
+        "Toca el mazo para repartir sobre el Rey más reciente.",
+        "Las fundaciones suben del As a la Jota, sin importar el palo.",
+        "Un Rey sin cartas encima acepta cualquier carta suelta."
+      ]
+    },
+    "title": {
+      "hash": "06960a5f",
+      "value": "Ley sálica"
+    }
+  },
+  "scorpion": {
+    "cardDescription": {
+      "hash": "959e0b20",
+      "value": "Desenreda columnas boca arriba para formar cuatro secuencias del mismo palo, del Rey al As."
+    },
+    "howToPlay": {
+      "hash": "3a69ad79",
+      "value": [
+        "## Objetivo",
+        "Forma **cuatro secuencias completas del mismo palo**, cada una del Rey al As.",
+        "## Reglas",
+        "- Construye las columnas **bajando de valor y en el mismo palo**.",
+        "- Puedes coger **cualquier carta boca arriba** y moverla junto con **todas las cartas que tiene encima**, aunque no estén en secuencia.",
+        "- Solo un **Rey** (con las cartas que lleve encima) puede ir a una **columna vacía**.",
+        "- Las secuencias completas se retiran de la mesa y se colocan en las fundaciones.",
+        "## Mazo",
+        "Cuando no quede ningún movimiento útil, reparte las tres cartas del mazo, una sobre cada una de las tres primeras columnas."
+      ]
+    },
+    "quickStart": {
+      "hash": "faaa0ff2",
+      "value": [
+        "Completa las cuatro fundaciones por palo, de K a A.",
+        "Mueve cualquier grupo boca arriba, aunque no esté en secuencia.",
+        "Solo los Reyes pueden ocupar las columnas vacías."
+      ]
+    },
+    "title": {
+      "hash": "8ee6db3e",
+      "value": "Escorpión"
+    }
+  },
+  "seahaven-towers": {
+    "cardDescription": {
+      "hash": "fb19dd37",
+      "value": "Diez columnas abiertas y cuatro torres compactas premian una planificación cuidadosa por palo."
+    },
+    "howToPlay": {
+      "hash": "86a13dbd",
+      "value": [
+        "## Objetivo",
+        "Lleva las 52 cartas a cuatro fundaciones, subiendo por palo del As al Rey.",
+        "## Reglas",
+        "- Diez columnas empiezan con cinco cartas boca arriba cada una.",
+        "- Dos de las cuatro celdas libres empiezan ocupadas; cada celda guarda una carta.",
+        "- Baja las columnas en el mismo palo.",
+        "- Las secuencias ordenadas del mismo palo se pueden mover si hay suficientes celdas libres.",
+        "- Solo un Rey o una secuencia encabezada por un Rey puede ocupar una columna vacía."
+      ]
+    },
+    "quickStart": {
+      "hash": "4eb4b58b",
+      "value": [
+        "Sube las fundaciones por palo, del As al Rey.",
+        "Baja las columnas en el mismo palo.",
+        "Usa cuatro celdas; solo los Reyes pueden ocupar las columnas vacías."
+      ]
+    },
+    "title": {
+      "hash": "71609ebc",
+      "value": "Torres de Seahaven"
+    }
+  },
+  "seer": {
+    "cardDescription": {
+      "hash": "6d0878cd",
+      "value": "Lee un mazo corto, completa ocho predicciones y evita que las piedras bloqueen el tablero."
+    },
+    "howToPlay": {
+      "hash": "4094b088",
+      "value": [
+        "## Objetivo",
+        "Completa las ocho predicciones antes de que se acabe el mazo de 24 cartas o de que todas las casillas queden bloqueadas.",
+        "## Preparación",
+        "- Usa las cartas del As al 6 de los cuatro palos.",
+        "- Las cartas barajadas forman un mazo boca abajo. Tócalo para ver u ocultar su carta inferior.",
+        "## Predicciones",
+        "- Elige Rojo, Rojo impar / Negro par, Par, Diamantes / Corazones, Picas / Tréboles, Impar, Negro impar / Rojo par, o Negro.",
+        "- Si aciertas, coloca la carta descubierta en esa casilla.",
+        "- Si fallas, coloca la carta descubierta boca arriba en la mesa y luego pon la siguiente carta boca abajo sobre la predicción como piedra.",
+        "- Una predicción con tres piedras queda bloqueada.",
+        "## Liberar piedras",
+        "- Un acierto libera una piedra descubierta de cada casilla vecina: también en diagonal en Fácil, en ortogonal en Normal, o un solo vecino ortogonal elegido en Difícil.",
+        "- Elige si todas las piedras liberadas por ese acierto se descubren en la mesa o vuelven boca abajo debajo del mazo.",
+        "- Las piedras cubiertas por una carta acertada quedan atrapadas.",
+        "## Repetir",
+        "- Las predicciones completadas se pueden volver a elegir para liberar más piedras.",
+        "- Un intento fallido deja de contar como completado hasta que se retiren sus piedras descubiertas o vuelva a acertarse."
+      ]
+    },
+    "quickStart": {
+      "hash": "4249e832",
+      "value": [
+        "Elige una casilla de predicción para descubrir la carta superior.",
+        "Los aciertos completan casillas y liberan piedras vecinas; los fallos añaden piedras."
+      ]
+    },
+    "title": {
+      "hash": "e33b153c",
+      "value": "El vidente"
+    }
+  },
+  "shamrocks": {
+    "cardDescription": {
+      "hash": "8c7ab364",
+      "value": "Construye dieciocho abanicos diminutos sin dejar nunca que uno supere las tres cartas."
+    },
+    "howToPlay": {
+      "hash": "4d892287",
+      "value": [
+        "## Objetivo",
+        "Lleva las 52 cartas a cuatro fundaciones, subiendo por palo del As al Rey.",
+        "## Abanicos",
+        "- Solo se puede jugar la carta descubierta inferior de cada abanico.",
+        "- Construye subiendo o bajando un valor, sin importar el palo.",
+        "- Ningún abanico puede tener más de tres cartas.",
+        "- Los abanicos vacíos no se pueden llenar y no se vuelve a repartir."
+      ]
+    },
+    "quickStart": {
+      "hash": "fccb73df",
+      "value": [
+        "Sube las fundaciones por palo, del As al Rey.",
+        "Construye los abanicos subiendo o bajando un valor, sin importar el palo.",
+        "Los abanicos tienen como máximo tres cartas; los vacíos quedan vacíos."
+      ]
+    },
+    "title": {
+      "hash": "07f9f314",
+      "value": "Tréboles irlandeses"
+    }
+  },
+  "shifting-sands": {
+    "cardDescription": {
+      "hash": "146a620a",
+      "value": "Recoge arena, construye hacia fuera sin cambiar de dirección y levanta un castillo lo bastante sólido para resistir la marea alta."
+    },
+    "howToPlay": {
+      "hash": "91681187",
+      "value": [
+        "## Objetivo",
+        "Termina con **más cartas boca arriba en el castillo** que cartas arrastradas por la marea.",
+        "## Recoger arena",
+        "- Roba entre **1 y 7 cartas** sin cambiar su orden.",
+        "- Antes de jugar tu primera carta, puedes **invertir toda la mano** una vez o devolverla a su orden.",
+        "## Mejorar tu castillo",
+        "- Juega la primera carta en cualquier **columna no vacía**. Si el castillo está vacío, empieza donde quieras.",
+        "- Cada carta siguiente va en la columna justo a la izquierda o a la derecha de la jugada anterior.",
+        "- En cuanto tu segunda carta marque una dirección, sigue en esa dirección durante todo el turno.",
+        "- Puedes jugar a través de columnas derrumbadas y vacías, y crear una columna nueva en cualquiera de los bordes.",
+        "## En pie o derrumbadas",
+        "- Una columna sigue en pie cuando su nueva carta es **de mayor valor** que la carta boca arriba que tiene debajo o es **del mismo palo**.",
+        "- Si no, todas las cartas de esa columna se ponen boca abajo y la columna se derrumba.",
+        "- Jugar una carta normal en una columna derrumbada o vacía la vuelve a poner en pie.",
+        "- Un Comodín copia la carta de mayor valor de su columna. Un Comodín jugado como primera carta boca arriba se derrumba de inmediato.",
+        "## Marea alta",
+        "- Después de vaciar tu mano, descarta del mazo tantas cartas como **la mitad del número de columnas en pie, redondeando hacia arriba**.",
+        "- Si el mazo no puede pagar toda la marea, el resto sale de las cartas boca arriba del castillo.",
+        "- Cuando el mazo se vacía, la marea alta termina la partida. Solo ganas si el castillo tiene más cartas boca arriba que la pila de descarte."
+      ]
+    },
+    "quickStart": {
+      "hash": "c4b3e47b",
+      "value": [
+        "Roba de 1 a 7 cartas, inviértelas si quieres y juégalas en columnas adyacentes en una sola dirección."
+      ]
+    },
+    "title": {
+      "hash": "298bcd04",
+      "value": "Arenas movedizas"
+    }
+  },
+  "simple-simon": {
+    "cardDescription": {
+      "hash": "64c1cf9e",
+      "value": "Las 52 cartas empiezan descubiertas en diez columnas en este pariente reflexivo de la Araña."
+    },
+    "howToPlay": {
+      "hash": "c280dcc9",
+      "value": [
+        "## Objetivo",
+        "Retira cuatro escaleras completas del mismo palo, del Rey al As.",
+        "## Reglas",
+        "- Baja las columnas por valor, sin importar el palo.",
+        "- Solo las secuencias descendentes del mismo palo se mueven juntas.",
+        "- Cualquier carta o secuencia válida puede ocupar una columna vacía.",
+        "- Una escalera completa del mismo palo del Rey al As sale de la mesa automáticamente."
+      ]
+    },
+    "quickStart": {
+      "hash": "3620793d",
+      "value": [
+        "Baja por valor.",
+        "Mueve secuencias descendentes del mismo palo.",
+        "Completa escaleras del mismo palo del Rey al As."
+      ]
+    },
+    "title": {
+      "hash": "39c12e95",
+      "value": "Simón el Simple"
+    }
+  },
+  "singularity": {
+    "cardDescription": {
+      "hash": "6bb9e80b",
+      "value": "Atrae las 52 cartas hacia una singularidad central, de valor en valor."
+    },
+    "howToPlay": {
+      "hash": "b20ca939",
+      "value": [
+        "## Objetivo",
+        "- **Gana** atrayendo todas las cartas a la singularidad.",
+        "- **Pierdes** si no se puede jugar ninguna carta descubierta.",
+        "## Reglas",
+        "- Lleva una carta descubierta a la singularidad si tiene **un valor más o menos** que su carta actual.",
+        "- Solo está disponible la carta **descubierta** (superior) de cada pila.",
+        "- Los valores **dan la vuelta**: después de un Rey puedes jugar un As, y viceversa.",
+        "## Consejos",
+        "- No hay mazo ni se vuelve a barajar, así que planifica tus movimientos en orden y con la mayor antelación posible.",
+        "- Evita los callejones sin salida y llegar al final con cartas de valores que no son contiguos."
+      ]
+    },
+    "quickStart": {
+      "hash": "f703e406",
+      "value": [
+        "Se pueden retirar las cartas de valor contiguo a la carta del agujero. Retíralas todas para ganar. A<->K son contiguos."
+      ]
+    },
+    "title": {
+      "hash": "4d136a3a",
+      "value": "Singularidad"
+    }
+  },
+  "sir-tommy": {
+    "cardDescription": {
+      "hash": "980ec70d",
+      "value": "El abuelo de los solitarios: reparte el mazo en cuatro pilas para formar cuatro montones del As al Rey."
+    },
+    "howToPlay": {
+      "hash": "eadd39e5",
+      "value": [
+        "## Objetivo",
+        "Sube cuatro fundaciones del As al Rey, **sin importar el palo**.",
+        "**En este juego los palos no importan.**",
+        "## Reglas",
+        "- Cada carta que sale del mazo debe dejarse en uno de los cuatro montones.",
+        "- **No** puedes reorganizar los montones.",
+        "- Solo la carta **superior** de cada montón puede ir a las fundaciones.",
+        "- **Toca una vez** un montón para dejar en él la carta del mazo.",
+        "- **Toca dos veces** una carta descubierta del mazo o de un montón para llevarla a una fundación válida."
+      ]
+    },
+    "quickStart": {
+      "hash": "33592120",
+      "value": [
+        "Sube las fundaciones de A a K, sin importar el palo.",
+        "Las cartas de los montones no se pueden mover.",
+        "Toca una vez un montón para dejar en él la carta del mazo.",
+        "Toca dos veces una carta descubierta del mazo o de un montón para llevarla a una fundación."
+      ]
+    },
+    "title": {
+      "hash": "37ef843f",
+      "value": "Sir Tommy"
+    }
+  },
+  "sly-fox": {
+    "cardDescription": {
+      "hash": "77dd0eeb",
+      "value": "Esconde cada reparto de veinte cartas en veinte pilas de reserva y luego desentierra lo que escondiste."
+    },
+    "howToPlay": {
+      "hash": "53ee1a81",
+      "value": [
+        "## Objetivo",
+        "Lleva las 104 cartas a las ocho fundaciones.",
+        "## Fundaciones",
+        "- Un **As** y un **Rey** de cada palo empiezan las fundaciones.",
+        "- Los Ases **suben** por palo; los Reyes **bajan** por palo.",
+        "## Reglas",
+        "- Veinte pilas de **reserva** empiezan con una carta cada una. Solo se pueden jugar sus cartas superiores, y nunca unas sobre otras.",
+        "- Al principio, una pila de reserva que se vacía al jugar en una fundación se rellena desde el mazo.",
+        "- Toca el **mazo** para empezar un reparto de **20 cartas**. Cada una debe colocarse en la pila de reserva que elijas, o jugarse directamente en una fundación, lo que no cuenta para las 20.",
+        "- No se puede jugar ninguna carta de reserva hasta colocar todo el reparto. Después, las pilas vaciadas quedan vacías hasta el siguiente reparto.",
+        "- Vuelve a repartir cuando quieras hasta que se acabe el mazo."
+      ]
+    },
+    "quickStart": {
+      "hash": "51f19cb4",
+      "value": [
+        "Los Ases suben y los Reyes bajan, por palo.",
+        "Toca el mazo para repartir 20 cartas y coloca cada una en una pila de reserva.",
+        "Toca la carta superior de una pila de reserva para subirla."
+      ]
+    },
+    "title": {
+      "hash": "dd4eaf16",
+      "value": "Zorro astuto"
+    }
+  },
+  "somnus": {
+    "cardDescription": {
+      "hash": "317aad94",
+      "value": "Construye el mazo de Guardianes de Alice, derrota a las Pesadillas del mazo de Sueños y protege su vida."
+    },
+    "howToPlay": {
+      "hash": "fc9dcb5c",
+      "value": [
+        "## Objetivo",
+        "Elimina todas las Pesadillas antes de que la vida de Alice baje de **40** a 0.",
+        "Construye tu mazo personal moldeando Guardianes rojos más fuertes desde el tablero.",
+        "## Tu turno",
+        "1. Roba hasta tener cuatro cartas, o roba tres si tu mano está vacía.",
+        "2. Asigna cualquier número de cartas de la mano a cartas de Sueño y luego resuelve de derecha a izquierda.",
+        "3. Las cartas de Sueño supervivientes avanzan una casilla a la derecha. La carta más a la derecha sale del juego y entran cartas nuevas por la izquierda.",
+        "## Guardianes y Pesadillas",
+        "- **Moldear un Guardián:** el valor asignado debe igualar o superar el valor de la carta roja. La carta moldeada va a tu pila de descarte.",
+        "- **Combatir una Pesadilla:** el valor asignado debe superar el valor de la carta negra para eliminarla. Si no, Alice pierde la diferencia en vida.",
+        "- A una Pesadilla se le pueden asignar como máximo dos Guardianes que no sean Ases. Se puede añadir un As como tercera carta.",
+        "- Las Pesadillas sin oposición causan su valor completo como daño.",
+        "## Cartas especiales",
+        "- Un As Guardián aporta 0 y duplica sus cartas asociadas. Mientras haya un As Pesadilla, esa duplicación anula en cambio el efecto de reducción a la mitad de la Pesadilla.",
+        "- Los Ases Guardianes solo se pueden moldear con un Guardián especial. Los Ases Pesadilla solo se pueden eliminar con un Guardián especial.",
+        "- Eliminar una Pesadilla Jota, Reina o Rey restaura 3 de vida, hasta 40.",
+        "- Los Comodines rojo y negro copian el valor de la carta superior de su pila de retiradas correspondiente.",
+        "## Acciones especiales",
+        "- **Respiración profunda:** si no has asignado ninguna carta este turno, descarta una carta de la mano antes de resolver.",
+        "- **Exiliar:** una vez por turno, descarta una carta de la mano y pierde 5 de vida para enviar una Pesadilla seleccionada al descarte de Sueños.",
+        "- **Sueño REM:** una vez por partida, con 10 de vida o menos, vuelve a barajar los dos mazos activos y reparte de nuevo el tablero y la mano.",
+        "## Final de la partida",
+        "Cuando se vacía el mazo de Sueños, ganas si no queda ninguna Pesadilla que no sea un As. Pierdes si se han retirado todos los Guardianes especiales que no son Ases."
+      ]
+    },
+    "quickStart": {
+      "hash": "cab0b466",
+      "value": [
+        "Selecciona Guardianes de tu mano, selecciona una carta de Sueño y asígnalos.",
+        "Iguala el valor de un Guardián para reclutarlo; supera el de una Pesadilla para eliminarla.",
+        "Resuelve el tablero antes de terminar cada turno. Mantén la vida de Alice por encima de 0."
+      ]
+    },
+    "title": {
+      "hash": "19561a22",
+      "value": "Somnus"
+    }
+  },
+  "spider-solitaire": {
+    "cardDescription": {
+      "hash": "d9fbe47f",
+      "value": "Forma escaleras del mismo palo del Rey al As en una doble baraja enredada."
+    },
+    "howToPlay": {
+      "hash": "d87f89fb",
+      "value": [
+        "## Objetivo",
+        "Forma **8 secuencias completas del mismo palo**, cada una del Rey al As. Las escaleras terminadas se retiran de la mesa.",
+        "## Reglas",
+        "- Construye las columnas **bajando de valor, sin importar el palo**.",
+        "- Solo puedes mover un grupo de cartas cuando forman una **escalera descendente del mismo palo**.",
+        "- Cualquier carta o escalera válida se puede colocar en una columna vacía.",
+        "- Cuando se forma una secuencia completa **del Rey al As** del mismo palo, se retira automáticamente.",
+        "## Mazo",
+        "Toca el mazo para repartir a la vez una carta sobre cada columna. Solo puedes repartir cuando no hay ninguna columna vacía."
+      ]
+    },
+    "quickStart": {
+      "hash": "50b8bd5d",
+      "value": [
+        "Baja por valor; mueve escaleras del mismo palo; reparte cuando no puedas seguir."
+      ]
+    },
+    "title": {
+      "hash": "de90184a",
+      "value": "Araña"
+    }
+  },
+  "spiderette": {
+    "cardDescription": {
+      "hash": "f8691a69",
+      "value": "Una Araña compacta de una sola baraja jugada en siete columnas con forma de Klondike."
+    },
+    "howToPlay": {
+      "hash": "07143aa9",
+      "value": [
+        "## Objetivo",
+        "Retira cuatro escaleras completas del mismo palo, del Rey al As.",
+        "## Reglas",
+        "- Baja las columnas por valor, sin importar el palo.",
+        "- Solo las secuencias descendentes del mismo palo se mueven juntas.",
+        "- Cualquier carta o secuencia válida puede ocupar una columna vacía.",
+        "- El mazo reparte una carta a cada columna, pero solo cuando no hay ninguna columna vacía."
+      ]
+    },
+    "quickStart": {
+      "hash": "2fb1fe19",
+      "value": [
+        "Baja por valor.",
+        "Mueve secuencias descendentes del mismo palo.",
+        "Reparte filas del mazo solo cuando todas las columnas estén ocupadas."
+      ]
+    },
+    "title": {
+      "hash": "dac6b9bc",
+      "value": "Arañita"
+    }
+  },
+  "stalker": {
+    "cardDescription": {
+      "hash": "bf48bf06",
+      "value": "Mantén tu precaria ventaja sobre un perseguidor imparable."
+    },
+    "howToPlay": {
+      "hash": "304772d4",
+      "value": [
+        "## Objetivo",
+        "Llega al final del mazo manteniendo al menos una carta (obstáculo) entre tú y tu perseguidor.",
+        "Cuatro cartas adyacentes del mismo valor (que forman una trampa) también dan la victoria inmediata.",
+        "## Perseguidor",
+        "Al principio de cada turno, el perseguidor descarta la carta situada más a la izquierda.",
+        "Si esa carta estaba al principio de una escalera de tres o más valores consecutivos, el perseguidor sigue cogiendo cartas hasta que queden menos de tres cartas de esa escalera.",
+        "## Acciones",
+        "- **Buscar:**",
+        "-- Elige una carta de la fila y descarta todas las cartas de ese valor.",
+        "-- Así puedes robar el mismo número de cartas al extremo derecho de la fila.",
+        "-- Como el perseguidor retira una carta, esta acción siempre acorta la fila en 1 carta.",
+        "- **(Intentar) Escapar:**",
+        "-- Selecciona una carta y muévela a una nueva posición.",
+        "-- No puedes mover una carta que ya forme parte de una escalera de tres o más.",
+        "-- Si el movimiento crea o alarga una escalera de tres o más, roba dos cartas al extremo derecho de la fila. Si no, no robas ninguna carta.",
+        "-- Esta acción puede acortar o alargar la fila, según cuántas cartas robes."
+      ]
+    },
+    "quickStart": {
+      "hash": "b734f738",
+      "value": [
+        "Llega al final del mazo sin que te atrapen.",
+        "Busca un valor o mueve una carta segura. Sobrevive hasta que se vacíe el mazo de 32 cartas."
+      ]
+    },
+    "title": {
+      "hash": "1072421b",
+      "value": "El perseguidor"
+    }
+  },
+  "sultan": {
+    "cardDescription": {
+      "hash": "e649013d",
+      "value": "Sube ocho fundaciones reales hasta que el Sultán del centro quede rodeado de Reinas."
+    },
+    "howToPlay": {
+      "hash": "9b72d9f3",
+      "value": [
+        "## Objetivo",
+        "Completa ocho fundaciones exteriores con Reinas rodeando al Rey de corazones central.",
+        "## Fundaciones",
+        "- Siete fundaciones empiezan con Reyes y siguen con el As, el 2 y así hasta la Reina.",
+        "- La fundación del As de corazones sube de forma normal hasta la Reina.",
+        "- El Rey de corazones central es el Sultán y nunca recibe cartas.",
+        "## Reserva y mazo",
+        "- Juega cartas desde el montón o desde cualquiera de los ocho espacios de reserva.",
+        "- El mazo se pasa de carta en carta.",
+        "- El montón se puede volver a repartir dos veces.",
+        "## Reponer cartas de reserva",
+        "- Cuando se juega una carta de reserva, su espacio se rellena automáticamente desde el montón, o desde el mazo si el montón está vacío."
+      ]
+    },
+    "quickStart": {
+      "hash": "7c426ffc",
+      "value": [
+        "Sube las ocho fundaciones exteriores por palo hasta las Reinas.",
+        "Juega desde el montón o desde cualquiera de las ocho cartas de reserva.",
+        "Las cartas de reserva se reponen desde el mazo; el montón se puede volver a repartir dos veces."
+      ]
+    },
+    "title": {
+      "hash": "5ac8c364",
+      "value": "Sultán"
+    }
+  },
+  "ten-twenty-thirty": {
+    "cardDescription": {
+      "hash": "5aef36ef",
+      "value": "Reparte una fila cada vez más larga y retira grupos de cartas que sumen 10, 20 o 30."
+    },
+    "howToPlay": {
+      "hash": "da150979",
+      "value": [
+        "## Objetivo",
+        "Descarta las 52 cartas.",
+        "## Reglas",
+        "- Las cartas valen su número; las Jotas, Reinas y Reyes valen **10**.",
+        "- La fila empieza con tres cartas y se lee de izquierda a derecha, línea tras línea.",
+        "- Toca el **mazo** para añadir la siguiente carta al final de la fila.",
+        "- Se pueden descartar **dos o más cartas contiguas** de la fila que sumen **10, 20 o 30**.",
+        "- Toca la primera carta del grupo y luego la última; la fila se cierra.",
+        "- Pierdes cuando el mazo está vacío y ningún grupo suma lo necesario."
+      ]
+    },
+    "quickStart": {
+      "hash": "ad5e257b",
+      "value": [
+        "Toca el mazo para añadir una carta al final de la fila.",
+        "Toca la primera y la última carta de un grupo para retirarlo.",
+        "Un grupo de dos o más cartas debe sumar 10, 20 o 30."
+      ]
+    },
+    "title": {
+      "hash": "e0db7d2f",
+      "value": "Diez, veinte, treinta"
+    }
+  },
+  "three-peaks": {
+    "cardDescription": {
+      "hash": "575e4a8f",
+      "value": "Despeja los tres picos jugando cartas de un valor más o menos que la del montón."
+    },
+    "howToPlay": {
+      "hash": "6c8edb31",
+      "value": [
+        "## Objetivo",
+        "Despeja los tres picos retirando cartas de un valor más o menos que la carta del montón.",
+        "## Reglas",
+        "- Una carta descubierta de un pico se puede llevar al montón si tiene **un valor más o menos** que la carta actual del montón.",
+        "- Los valores dan la vuelta: los Reyes se pueden jugar sobre los Ases, y viceversa.",
+        "- Cuando no quede ningún movimiento válido, pasa una carta del mazo al montón."
+      ]
+    },
+    "quickStart": {
+      "hash": "387e2c46",
+      "value": [
+        "Juega cartas descubiertas de +/-1 al montón; A<->K dan la vuelta; roba cuando no puedas seguir."
+      ]
+    },
+    "title": {
+      "hash": "3e09b7df",
+      "value": "Tres Picos"
+    }
+  },
+  "thumb-and-pouch": {
+    "cardDescription": {
+      "hash": "c3b2dd00",
+      "value": "Un Klondike flexible en el que las cartas evitan su propio palo y cualquier carta ocupa un hueco."
+    },
+    "howToPlay": {
+      "hash": "fe290209",
+      "value": [
+        "## Objetivo",
+        "Sube cuatro fundaciones del As al Rey por palo.",
+        "## Reglas",
+        "- La mesa empieza con la disposición clásica de Klondike de siete columnas.",
+        "- Baja por valor, pero nunca coloques una carta sobre el mismo palo.",
+        "- Mueve juntas las secuencias apiladas.",
+        "- Cualquier carta o secuencia puede ocupar una columna vacía."
+      ]
+    },
+    "quickStart": {
+      "hash": "491a0950",
+      "value": [
+        "Baja sobre cualquier palo excepto el mismo.",
+        "Mueve las secuencias bien apiladas.",
+        "Cualquier carta o secuencia puede ocupar una columna vacía."
+      ]
+    },
+    "title": {
+      "hash": "920b9615",
+      "value": "Pulgar y bolsa"
+    }
+  },
+  "tower-of-hanoi": {
+    "cardDescription": {
+      "hash": "d44cd598",
+      "value": "Reconstruye las nueve cartas en una sola torre descendente moviendo solo las cartas superiores."
+    },
+    "howToPlay": {
+      "hash": "441fdb6b",
+      "value": [
+        "## Objetivo",
+        "Forma una sola pila ordenada del **9** abajo hasta el **As** arriba.",
+        "## Cómo se juega",
+        "- Arrastra solo la carta superior de una pila.",
+        "- Mueve una carta cada vez.",
+        "- Una carta puede colocarse en una pila vacía o sobre una carta de **mayor valor**.",
+        "- No se puede perder. Sigue moviendo hasta completar la torre."
+      ]
+    },
+    "quickStart": {
+      "hash": "fd272cd3",
+      "value": [
+        "Mueve solo la carta superior de una pila.",
+        "Coloca una carta solo sobre un valor mayor o en una pila vacía.",
+        "Forma una sola pila, del 9 abajo al As arriba."
+      ]
+    },
+    "title": {
+      "hash": "9399e5ae",
+      "value": "Torres de Hanói"
+    }
+  },
+  "triple-stack": {
+    "cardDescription": {
+      "hash": "ccdd2c75",
+      "value": "Sirve sándwiches eligiendo cartas con valores equidistantes; ¡no te quedes sin ingredientes!"
+    },
+    "howToPlay": {
+      "hash": "882965ff",
+      "value": [
+        "## Objetivo",
+        "**Gana** vaciando tu reserva de ingredientes (el mazo) usándolos para servir sándwiches.",
+        "**Pierdes** cuando no queda ningún sándwich válido y todavía hay cartas en el mazo.",
+        "## Servir",
+        "- Selecciona tres cartas con valores equidistantes. Los Ases, Jotas, Reinas y Reyes valen 1, 11, 12 y 13.",
+        "- Los valores dan la vuelta entre el Rey y el As, así que, por ejemplo, 9, Reina y 2 forman un sándwich válido.",
+        "## Reponer",
+        "Tu mano se repone tras servir un sándwich. El número de cartas repuestas depende de la calidad del sándwich:",
+        "- Cuatro cartas para sándwiches del mismo palo",
+        "- Tres cartas para sándwiches del mismo color (con dos palos)",
+        "- Dos cartas para los demás sándwiches"
+      ]
+    },
+    "quickStart": {
+      "hash": "6bfdd281",
+      "value": [
+        "Elige 3 cartas con valores equidistantes (los valores dan la vuelta de A a K).",
+        "Los sándwiches mejores (mismo palo o mismo color) reponen más cartas.",
+        "Vacía el mazo para ganar."
+      ]
+    },
+    "title": {
+      "hash": "7ce9a039",
+      "value": "Triple pila"
+    }
+  },
+  "twelve-trials": {
+    "cardDescription": {
+      "hash": "6c6923c8",
+      "value": "Derrota a doce monstruos de mazmorra planificando bien tus ataques."
+    },
+    "howToPlay": {
+      "hash": "c8d9dd27",
+      "value": [
+        "## Objetivo",
+        "- **Gana** derrotando a los **12 monstruos** (las Jotas, Reinas y Reyes)",
+        "- **Pierdes** si se acaba tu mazo o tu salud.",
+        "- Tu puntuación es el número de cartas que quedan en el mazo de poder.",
+        "## Ataques",
+        "- Solo se puede atacar a los monstruos **descubiertos**; al eliminarlos se descubren los que están detrás.",
+        "- Hacen falta **tres cartas** para derrotar a un monstruo:",
+        "-- dos **atacantes** que sumen su poder o más (J = 11, Q = 12, K = 13), y",
+        "-- un **detonante** cuyo palo coincida con el del monstruo (el valor no importa).",
+        "- Los **Comodines** son libres:",
+        "-- valen **10** como atacantes",
+        "-- cuentan como cualquier palo como detonantes",
+        "- Las cartas colocadas sobre un monstruo se quedan ahí hasta que lo derrotes, así que puedes preparar un ataque a lo largo de varios turnos.",
+        "- **Descarta** cualquier carta que no puedas o no quieras jugar; los descartes te cuestan salud.",
+        "## Variantes",
+        "Puedes jugar con cualquier combinación de estas variantes (se activan en los ajustes):",
+        "- **Disposición de la mazmorra:** hay 5 disposiciones a elegir, con dificultad creciente.",
+        "- **As bumerán:** los Ases valen 11 y vuelven a tu mano cuando se usan como detonante.",
+        "- **Reserva de poder:** roba cinco cartas en el primer turno y guarda dos cartas boca arriba para usarlas cuando quieras (cada una que sobre suma un punto).",
+        "- **Habilidades especiales:** los Reyes derrotados conceden poderes de un solo uso:",
+        "-- {KH}: coloca una carta de tu mano en el fondo del mazo",
+        "-- {KD}: mira la carta del fondo del mazo y súbela arriba si quieres",
+        "-- {KS}: duplica el valor de una carta de ataque",
+        "-- {KC}: roba una carta del mazo de inmediato"
+      ]
+    },
+    "quickStart": {
+      "hash": "7f4d535a",
+      "value": [
+        "Derrota a cada monstruo con tres cartas (se pueden jugar a lo largo de varios turnos).",
+        "Las dos primeras cartas deben sumar (o superar) el valor del monstruo.",
+        "La última carta debe coincidir con el palo del monstruo."
+      ]
+    },
+    "title": {
+      "hash": "b2932b01",
+      "value": "Las doce pruebas"
+    }
+  },
+  "waypoint": {
+    "cardDescription": {
+      "hash": "ae467716",
+      "value": "Recorre tres tramos de rally, iguala cada sector con exactitud y mantente por delante del crono."
+    },
+    "howToPlay": {
+      "hash": "7bb3bc13",
+      "value": [
+        "## Objetivo",
+        "Completa tres tramos de rally consiguiendo más bonificaciones de tiempo que penalizaciones y evitando el abandono o la descalificación.",
+        "## Preparación",
+        "- Del As al 3 forman la **marcha 1**, del 4 al 6 la **marcha 2** y del 7 al 10 la **marcha 3**.",
+        "- El tramo 1 toma 2, 4 y 8 cartas de esas marchas para formar 14 sectores boca abajo.",
+        "- Elige cualquiera de los dos extremos destacados del tramo como sector inicial.",
+        "- Las Reinas son **Gas (+1)**. Las Jotas son **Frenos (-1)**. Los dos Comodines marcan los daños.",
+        "## Correr un sector",
+        "- Toca la carta superior de cualquier marcha para sumar su valor a tu velocidad actual.",
+        "- Toca tantos Gas o Frenos como quieras para ajustar el total en +1 o -1.",
+        "- Toca **Terminar sector** cuando quieras aceptar el resultado.",
+        "- Igualar el sector con exactamente una carta jugada da **1 bonificación de tiempo**.",
+        "- Igualarlo con varias cartas no afecta al tiempo.",
+        "- Terminar por debajo del objetivo cuesta tantas penalizaciones de tiempo como la diferencia.",
+        "- Terminar por encima del objetivo cuesta 1 penalización de tiempo y 1 daño. Puedes jugar Frenos antes de terminar para corregir un exceso sin penalización ni daño.",
+        "- Un sector de As se puede igualar jugando una Reina, y da la bonificación de una sola carta.",
+        "## El crono y los daños",
+        "- Los Reyes rojos cuentan hasta 16 bonificaciones; los Reyes negros, hasta 16 penalizaciones. Cada giro de 45 grados es una muesca, y cada Rey tiene 8 muescas.",
+        "- Tu puntuación son las **bonificaciones menos las penalizaciones** y se mantiene entre tramos.",
+        "- Llegar a 16 penalizaciones es una **descalificación**.",
+        "- Tus dos primeros excesos sin corregir ponen los Comodines boca abajo. Un tercer exceso sin corregir es un **abandono**.",
+        "## Tramos siguientes",
+        "- El tramo 2 tiene 12 sectores: 2 de la marcha 1, 4 de la marcha 2 y 6 de la marcha 3, con 3 Gas y 3 Frenos.",
+        "- El tramo 3 tiene 10 sectores: 2 de la marcha 1, 3 de la marcha 2 y 5 de la marcha 3, con 2 Gas y 2 Frenos.",
+        "- Las cartas de marcha se recogen y se vuelven a barajar entre tramos. El crono y los daños se mantienen.",
+        "## Puntuación final",
+        "- **1 o más:** nuevo récord del rally.",
+        "- **0 a -2:** podio.",
+        "- **-3 a -6:** mitad de la tabla.",
+        "- **-7 o menos:** cola de la tabla."
+      ]
+    },
+    "quickStart": {
+      "hash": "efaef51d",
+      "value": [
+        "Elige uno de los extremos del tramo y luego toca marchas, gas y frenos para igualar el sector actual.",
+        "Termina el sector cuando estés listo. Acertar con una sola carta da tiempo; los fallos y los excesos sin corregir lo cuestan."
+      ]
+    },
+    "title": {
+      "hash": "17e87cc8",
+      "value": "Punto de paso"
+    }
+  },
+  "westcliff": {
+    "cardDescription": {
+      "hash": "63e50d5a",
+      "value": "Un amplio pariente del Klondike de diez columnas, generoso con las columnas vacías."
+    },
+    "howToPlay": {
+      "hash": "3b649110",
+      "value": [
+        "## Objetivo",
+        "Lleva las 52 cartas a cuatro fundaciones, subiendo por palo del As al Rey.",
+        "## Reglas",
+        "- Diez columnas empiezan con tres cartas cada una; solo la carta inferior está boca arriba.",
+        "- Baja alternando colores.",
+        "- Las secuencias bien ordenadas se pueden mover juntas.",
+        "- Cualquier carta o secuencia puede ocupar una columna vacía.",
+        "- Pasa el mazo de carta en carta, sin volver a repartir."
+      ]
+    },
+    "quickStart": {
+      "hash": "912a5d6b",
+      "value": [
+        "Sube las fundaciones por palo, del As al Rey.",
+        "Baja las columnas alternando colores.",
+        "Mueve secuencias ordenadas; cualquier carta puede ocupar una columna vacía."
+      ]
+    },
+    "title": {
+      "hash": "d0a94482",
+      "value": "Westcliff"
+    }
+  },
+  "whitehead": {
+    "cardDescription": {
+      "hash": "38b3a363",
+      "value": "Un pariente abierto del Klondike que se construye por color, con escaleras del mismo palo que se mueven juntas."
+    },
+    "howToPlay": {
+      "hash": "60370154",
+      "value": [
+        "## Objetivo",
+        "Sube cuatro fundaciones por palo, del As al Rey.",
+        "## Reglas",
+        "- Todas las cartas de la mesa están boca arriba.",
+        "- Baja en el mismo color.",
+        "- Las escaleras bien ordenadas del mismo palo se mueven juntas.",
+        "- Cualquier carta puede ocupar una columna vacía."
+      ]
+    },
+    "quickStart": {
+      "hash": "a6fd3cc6",
+      "value": [
+        "Sube las fundaciones por palo.",
+        "Baja en el mismo color.",
+        "Mueve escaleras del mismo palo; cualquier carta ocupa un hueco."
+      ]
+    },
+    "title": {
+      "hash": "34471776",
+      "value": "Whitehead"
+    }
+  },
+  "windmill": {
+    "cardDescription": {
+      "hash": "5828d1de",
+      "value": "Alimenta el eje del molino con cuatro escaleras completas mientras sus esquinas cuentan hacia atrás desde los Reyes."
+    },
+    "howToPlay": {
+      "hash": "9a8acfb4",
+      "value": [
+        "## Objetivo",
+        "Lleva las 104 cartas a las fundaciones.",
+        "## Fundaciones",
+        "- El **centro** empieza con un As y sube **sin importar el palo**, del As al Rey, cuatro veces seguidas.",
+        "- Cada **esquina** empieza con cualquier **Rey** y baja **sin importar el palo** hasta un As.",
+        "## Reglas",
+        "- Las ocho **aspas** y la carta superior del **montón** están disponibles.",
+        "- Un aspa vacía se rellena en el acto desde el montón, o desde el mazo si el montón está vacío.",
+        "- La carta superior de una esquina puede ir al centro, pero la **siguiente** carta jugada al centro debe venir entonces de un aspa o del montón.",
+        "- Cuando una carta puede ir a más de un sitio, tócala y luego toca su destino.",
+        "- Toca el **mazo** para pasar una carta al montón. No se vuelve a repartir."
+      ]
+    },
+    "quickStart": {
+      "hash": "9d156e94",
+      "value": [
+        "El centro sube de A a K cuatro veces, sin importar el palo.",
+        "Las esquinas empiezan con un Rey y bajan hasta el As, sin importar el palo.",
+        "Las aspas se reponen desde el montón y después desde el mazo."
+      ]
+    },
+    "title": {
+      "hash": "4c29a775",
+      "value": "Molino de viento"
+    }
+  },
+  "yukon": {
+    "cardDescription": {
+      "hash": "81c89142",
+      "value": "El Klondike desatado: mueve grupos enteros de cartas, en cualquier orden, por toda la mesa."
+    },
+    "howToPlay": {
+      "hash": "85f184a6",
+      "value": [
+        "## Objetivo",
+        "Sube las cuatro fundaciones por palo, del As al Rey.",
+        "## Reglas",
+        "- Mueve cualquier carta boca arriba o **grupo** de cartas **bajando de valor, alternando colores**.",
+        "- Las cartas que se mueven **no** tienen que estar en secuencia.",
+        "- Las columnas vacías solo se pueden ocupar con Reyes.",
+        "- Toca dos veces o arrastra cartas sueltas a las fundaciones."
+      ]
+    },
+    "quickStart": {
+      "hash": "7f7cfdd7",
+      "value": [
+        "Sube las fundaciones por palo, de A a K.",
+        "Baja las columnas alternando colores.",
+        "Mueve cualquier grupo boca arriba.",
+        "Solo los Reyes pueden ocupar las columnas vacías."
+      ]
+    },
+    "title": {
+      "hash": "c03b3169",
+      "value": "Yukon"
+    }
+  }
+}

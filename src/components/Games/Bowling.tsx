@@ -23,6 +23,7 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
 
+import { i18n } from "@/i18n";
 const BACK_ROW = new Set([6, 7, 8, 9]);
 const CENTER_PIN = 4;
 const PINS_COUNT = 10;
@@ -494,8 +495,14 @@ export default function Bowling() {
     draft.phase = "gameEnd";
     draft.winLoseMessage =
       draft.totalScore >= WIN_SCORE
-        ? `Final Score: ${draft.totalScore}. You beat ${WIN_SCORE}!`
-        : `Final Score: ${draft.totalScore}. You needed ${WIN_SCORE}.`;
+        ? i18n.t("games:bowling.finalScoreWon", {
+            score: draft.totalScore,
+            target: WIN_SCORE,
+          })
+        : i18n.t("games:bowling.finalScoreLost", {
+            score: draft.totalScore,
+            target: WIN_SCORE,
+          });
   };
 
   const finishBonusBall = (draft: GameState, ballPins: number) => {
@@ -1128,7 +1135,7 @@ export default function Bowling() {
           taller
           // flat
           onPress={endBallNow}
-          text="End Ball"
+          text={i18n.t("games:bowling.endBall")}
           theme="blue"
           fullWidth
           disabled={game.phase === "gameEnd"}
@@ -1142,12 +1149,15 @@ export default function Bowling() {
             { gap: spacing(8) },
           ]}
         >
-          <CountText count={selectedPinSum} label="Pins" />
+          <CountText
+            count={selectedPinSum}
+            label={i18n.t("games:bowling.pins")}
+          />
           <CountText
             count={
               selectedBallCard ? getCardValue(selectedBallCard) % 10 : undefined
             }
-            label="Ball"
+            label={i18n.t("games:bowling.ball")}
           />
         </View>
 
@@ -1156,7 +1166,7 @@ export default function Bowling() {
           size="md"
           taller
           onPress={knockSelectedPins}
-          text="Throw"
+          text={i18n.t("games:bowling.throw")}
           theme="green"
           fullWidth
           disabled={!canKnockSelectedPins}

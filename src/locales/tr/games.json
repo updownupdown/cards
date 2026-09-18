@@ -1,0 +1,630 @@
+{
+  "accordion": {
+    "youCompressedTheDeckTo": "Desteyi tek karta indirdin."
+  },
+  "allInARow": {
+    "youClearedTheBoard": "Masayı temizledin!",
+    "noAdjacentRankRemains": "Ardışık değer kalmadı."
+  },
+  "archipelago": {
+    "out": "Dışarı",
+    "notALegalPlacement": "Geçersiz yerleştirme",
+    "islandComplete": "Ada tamamlandı!",
+    "islandUnfinished": "Ada tamamlanmadı!"
+  },
+  "ascent": {
+    "lhotseRoutesNeed2Cards": "Lhotse: rotalar en az 2 kart ister.",
+    "gasherbrumIAnchorMustBe": "Gasherbrum I: çapa çift olmalı.",
+    "broadPeakChangeYourApproach": "Broad Peak: yaklaşımını değiştir.",
+    "fatigue": "Yorgunluk",
+    "noCardsSelected": "Kart seçilmedi",
+    "lastSelectedCardIsThe": "Son seçilen kart çapadır",
+    "camps": "Kamplar",
+    "routes": "Rotalar",
+    "skipDiscard": "Iskartayı geç",
+    "rest": "Dinlen",
+    "playRoute": "Rotayı oyna",
+    "invalid": "geçersiz",
+    "approachCautious": "Temkinli",
+    "approachReckless": "Gözü kara",
+    "approachTechnical": "Teknik",
+    "approachFreeClimbing": "Serbest tırmanış",
+    "drawHigherInHand": "Çekiş: eldeki kartlar > çapa",
+    "drawLowerInHand": "Çekiş: eldeki kartlar < çapa",
+    "drawDiamondsInHand": "Çekiş: eldeki karolar",
+    "drawNonSpadesInRoute": "Çekiş: rotadaki maça dışı takımlar",
+    "youSummitedTheMountain": "Zirveye ulaştın!",
+    "outOfCardsWhileMakingCamp": "Kamp kurarken kartların bitti.",
+    "deckAndFatigueRanDry": "Deste ve yorgunluk yığını tükendi.",
+    "handOverflowed": "Elin taştı (18+ kart).",
+    "baseClimb": "Temel tırmanış"
+  },
+  "bakersDozen": {
+    "allFourSuitsAreComplete": "Dört takım da tamamlandı!"
+  },
+  "baroness": {
+    "allCleared": "Hepsi temizlendi!",
+    "noThirteenLeftToMake": "On üç yapılacak kart kalmadı."
+  },
+  "bisley": {
+    "theFoundationsMeet": "Temeller buluştu!"
+  },
+  "blackberryPie": {
+    "thePieIsReadyYou": "Turta hazır! {{BERRY_COUNT}} böğürtlenin hepsini topladın.",
+    "youCollectedOfBerries": "{{BERRY_COUNT}} böğürtlenden {{collectedCount}} tanesini topladın."
+  },
+  "bowling": {
+    "endBall": "Atışı bitir",
+    "pins": "Lobut",
+    "ball": "Top",
+    "throw": "At",
+    "finalScoreWon": "Son puan: {{score}}. Hedefi ({{target}}) geçtin!",
+    "finalScoreLost": "Son puan: {{score}}. Gereken: {{target}}."
+  },
+  "cabinSiege": {
+    "youKilledAllTheZombies": "Bütün zombileri öldürdün!",
+    "noCardsLeftToDraw": "Çekilecek kart kalmadı!",
+    "unableToPlaceCard": "Kart yerleştirilemiyor.",
+    "youLost": "Kaybettin.",
+    "revealAZombie": "Bir zombi aç",
+    "placeACard": "Bir kart yerleştir",
+    "killAZombie": "Bir zombi öldür",
+    "noKillableZombies": "Öldürülebilecek zombi yok!"
+  },
+  "cafeQueue": {
+    "discardedTheFourthCardOf": "Bir değerin dördüncü kartı ıskartaya gitti.",
+    "selectQueuePositionForNext": "Sıradaki müşteri için kuyrukta bir yer seç",
+    "revealNextCustomer": "Sıradaki müşteriyi aç",
+    "letThemStay": "Kalsın",
+    "kickThemOut": "Gönder"
+  },
+  "calculation": {
+    "all52CardsAreOn": "52 kartın hepsi temellerde."
+  },
+  "carpet": {
+    "theCarpetIsRolledUp": "Halı toplandı!"
+  },
+  "chainOfCommand": {
+    "selectAMemberToPromote": "Terfi ettirilecek bir üye seç",
+    "selectAValidReplacement": "Geçerli bir yedek seç",
+    "noValidReplacement": "Geçerli yedek yok",
+    "sacrificeNeededForMemberPromotion": "(Terfi için fedakârlık gerekli)",
+    "promoteAsA": "Şu olarak terfi ettir:",
+    "dead": "Ölüler",
+    "youWonByPromotingFrom": "1. rütbeden terfi ettirerek kazandın. Son puan: {{score}}",
+    "noValidPromotionReplacementRemains": "Geçerli terfi ya da değişim kalmadı. Kaybettin.",
+    "rk": "Rtb.",
+    "members": "Üyeler",
+    "candidates": "Adaylar",
+    "member": "Üye",
+    "candidate": "Aday"
+  },
+  "chapterAndVerse": {
+    "terminated": "Kovuldun",
+    "employeeOfTheMonth": "Ayın çalışanı",
+    "performanceBonus": "Performans primi",
+    "promotionToDistrictManager": "Bölge müdürlüğüne terfi",
+    "companyLivestockOptions": "Şirket hayvancılık opsiyonları",
+    "executiveLordshipProgram": "Yönetici lordluk programı",
+    "line": "Kuyruk",
+    "used": "Kullanılan",
+    "firedForLosingYourGuild": "Loncadaki itibarını kaybettiğin için kovuldun.",
+    "guildPts": "Lonca p.",
+    "pass": "Pas",
+    "trade": "Takas",
+    "offer": "Teklif"
+  },
+  "cityGrid": {
+    "pileIsFull": "Yığın dolu!",
+    "mustPlaceOnExistingOr": "Mevcut ya da bitişik bir yığına koymalısın!",
+    "placingHereWouldResultIn": "Buraya koyarsan çok fazla açık kart olur!",
+    "youRanOutOfCards": "Kartların bitti!",
+    "youRanOutOfPlacements": "Geçerli yerleştirme kalmadı!"
+  },
+  "clock": {
+    "youRevealedAll52Cards": "52 kartın hepsini açtın.",
+    "theFourthKingAppearedBefore": "Tüm kartlar açılmadan dördüncü Papaz çıktı."
+  },
+  "crazyQuilt": {
+    "theQuiltIsUnstitched": "Yorgan söküldü!"
+  },
+  "crescent": {
+    "theCrescentIsClear": "Hilal temizlendi!",
+    "restack": "Döndür ({{value}})"
+  },
+  "cribbageSquares": {
+    "youScoredPoints": "{{score}} puan aldın!",
+    "youScoredReachToWin": "Puanın: {{score}}. Kazanmak için hedef: {{TARGET_SCORE}}."
+  },
+  "crownslayer": {
+    "castle": "Kale",
+    "tavern": "Meyhane",
+    "jesters": "Soytarılar",
+    "attack": "Saldır",
+    "defend": "Savun",
+    "powerHeal": "Şifa",
+    "powerDraw": "Çek",
+    "powerDouble": "Hasar x2",
+    "powerShield": "- Sald.",
+    "noPlayableCards": "Oynanabilir kart kalmadı. Oyun bitti!",
+    "noDiscardCanCover": "Hiçbir ıskarta düşman hasarını karşılayamaz. Oyun bitti!",
+    "victoryGold": "Bütün düşmanlar yenildi! ALTIN zafer!",
+    "victorySilver": "Bütün düşmanlar yenildi! GÜMÜŞ zafer!",
+    "victoryBronze": "Bütün düşmanlar yenildi! BRONZ zafer!",
+    "failedToBlock": "{{damage}} hasar engellenemedi. Oyun bitti!"
+  },
+  "cruel": {
+    "crueltyConquered": "Zulüm yenildi!"
+  },
+  "delta21": {
+    "fldSt": "Ist.",
+    "score": "Puan:",
+    "studies": "Çalışma:",
+    "ratingReshapes": "Çalışman tatlı su ekolojisi bilimini yeniden şekillendiriyor!\n\n🐟🐟🐟🐟",
+    "ratingAdvances": "Araştırman nehir ekosistemlerine dair bilgiyi ilerletiyor.\n\n🐟🐟🐟",
+    "ratingAids": "Bulguların yerel balık nüfusu çalışmalarına yardım ediyor.\n\n🐟🐟",
+    "ratingLittle": "Kayıtların nehri anlamaya pek bir şey katmıyor.\n\n🐟"
+  },
+  "dominion": {
+    "allEighteenCardsBelongTo": "On sekiz kartın hepsi tek bir egemenliğe ait.",
+    "theWasIsolatedWithNo": "Değeri ya da takımı eşleşmeyen {{value}} yalnız kaldı.",
+    "noConquestsOrReservePlacements": "Fetih ya da yedek yerleştirme kalmadı."
+  },
+  "dynasty": {
+    "extract": "Çıkar",
+    "reassign": "Yeniden ata",
+    "allTwelveRoyalsAreDown": "On iki soylunun hepsi düştü.",
+    "youRanOutOfCards": "On iki soylunun hepsini yenemeden kartların bitti."
+  },
+  "elementaryDetective": {
+    "youScored20ToWin": "Puanın: {{score}} (kazanmak için 20)",
+    "score": "Puan"
+  },
+  "fanSolitaire": {
+    "theFoundationsAreComplete": "Temeller tamamlandı!"
+  },
+  "fieldCommand": {
+    "invalidCaptureSuitValueRequirement": "Geçersiz ele geçirme: takım/değer şartı karşılanmadı.",
+    "cannotSacrificeACombatantCard": "Savaşan bir kart feda edilemez.",
+    "enemy": "Düşman",
+    "capture": "Ele geçir",
+    "doneDiscarding": "Iskarta bitti",
+    "letCapture": "Ele geçirsin",
+    "combatantCaptured": "Bir savaşçı düşmanın ele geçirme yığınına girdi.",
+    "allEnemiesCleared": "Hiç savaşçı kaybetmeden bütün düşman kartları temizlendi.",
+    "combatantCapturedYouLose": "Bir savaşçı düşmanın ele geçirme yığınına girdi. Kaybettin.",
+    "noCardsToPlay": "Oynanacak kart yok."
+  },
+  "fifteenPuzzle": {
+    "theCardsAreBackIn": "Kartlar yeniden sıraya girdi."
+  },
+  "fightClubs": {
+    "grid": "Izgara",
+    "clubs": "Sinekler",
+    "rowCol": "Satır/Süt.",
+    "upDown": "Üst/Alt",
+    "sequence": "Dizi",
+    "actionMatch": "Eşleştir",
+    "actionSum": "Toplam",
+    "actionAny": "Herhangi",
+    "actionLine": "♦ Hat",
+    "actionRow": "♦ Satır",
+    "actionColumn": "♦ Süt.",
+    "actionDown": "♠ Alt",
+    "actionUp": "♠ Üst",
+    "actionRun": "♥ Dizi",
+    "gridClearWon": "Izgara temizlendi. Kazandın!",
+    "allClubsSpent": "13 sineğin hepsi harcandı."
+  },
+  "fortunesCall": {
+    "red": "Kırmızı",
+    "higher": "Yüksek",
+    "lower": "Düşük",
+    "misses": "Iska"
+  },
+  "gaps": {
+    "everyRowIsInOrder": "Tüm satırlar sırada!"
+  },
+  "golf": {
+    "youClearedTheTableau": "Sütunları temizledin!",
+    "noMorePlayableCards": "Oynanabilir kart kalmadı."
+  },
+  "grandfathersClock": {
+    "everyHourStruck": "Bütün saatler çaldı!"
+  },
+  "gremlin": {
+    "helper": "Yardımcı",
+    "endTurn": "Turu bitir",
+    "tierNovice": "ACEMİ",
+    "tierNormal": "NORMAL",
+    "tierAdvanced": "İLERİ",
+    "tierLegendary": "EFSANEVİ",
+    "tierEpic": "DESTANSI",
+    "columnsUsedWin": "{{count}} sütun kullanıldı. {{tier}} zafer.",
+    "allCardsPlayedInColumns": "Bütün kartlar {{count}} sütunda oynandı.",
+    "noRoomForHelper": "Yardımcının kartına {{count}} sütunda yer yok."
+  },
+  "gridlines": {
+    "trump": "Koz",
+    "chooseATrumpCard": "Bir koz kartı seç",
+    "pickARevealedCard": "Açık bir kart seç",
+    "selectALine": "Bir hat seç",
+    "selectAHandCard": "Elinden bir kart seç",
+    "youBeatTheGrid": "Izgarayı {{youScore}}-{{gridScore}} yendin!",
+    "theGridWins": "Izgara kazandı: {{gridScore}}-{{youScore}}."
+  },
+  "herbalist": {
+    "noble": "Soylu",
+    "jester": "Soytarı",
+    "harvestFair": "İdare eder bir mahsul: {{count}} ot kaldı.",
+    "harvestGood": "İyi mahsul: {{count}} ot kaldı.",
+    "harvestExcellent": "Harika mahsul: {{count}} ot kaldı.",
+    "harvestPerfect": "Kusursuz mahsul: {{count}} ot kaldı.",
+    "noHerbsRemain": "Diyarı iyileştirecek ot kalmadı."
+  },
+  "infiltrator": {
+    "retired": "Emekli",
+    "spies": "Casuslar",
+    "lost": "Kayıp",
+    "keySpies": "Kilit casuslar",
+    "supportingSpies": "Destek casuslar",
+    "recruited": "Devşirilen",
+    "retireAMatchingSetOr": "Eşleşen bir seti emekli et ya da geç",
+    "noSetsAvailableForRetirement": "Emekli edilecek set yok",
+    "removeADoubleAgentFrom": "Şuradan bir çift ajan çıkar:",
+    "noSpiesRemain": "Casus kalmadı",
+    "assassinate": "Suikast",
+    "counter": "Karşı koy",
+    "recruit": "Devşir",
+    "skip": "Geç",
+    "missionComplete": "Görev tamamlandı: {{count}} kilit casus devşirildi.",
+    "missionFailed": "Görev başarısız: {{count}} kilit casus devşirildi, {{lost}} kaybedildi.",
+    "noDoubleAgentsRemain": "Çift ajan kalmadı. Görev başarısız.",
+    "sourceHand": "El"
+  },
+  "invaders": {
+    "wave2": "2. dalga",
+    "atks": "Sald.",
+    "defs": "Sav.",
+    "defenders": "Savunucular",
+    "attack": "Saldır{{value}}",
+    "attackersWave": "Saldırganlar (Dalga {{wave}})",
+    "noCardsLeftToPlay": "Oynayacak kartın kalmadı!",
+    "scoreHigherIsBetter": "{{score}} (yüksek olan iyidir)",
+    "scoreCloserToZero": "{{score}} (sıfıra yakın olan iyidir)"
+  },
+  "lightsOut": {
+    "everyLightIsOut": "Bütün ışıklar söndü."
+  },
+  "loneJoker": {
+    "straightFlush": "Straight Flush",
+    "fourOfAKind": "Kare",
+    "fullHouse": "Full",
+    "flush": "Floş",
+    "straight": "Kent",
+    "threeOfAKind": "Üçlü",
+    "twoPair": "Döper",
+    "pair": "Per",
+    "shieldHasBeenUsed": "Kalkan kullanıldı",
+    "discards": "Iskarta",
+    "plays": "Eller",
+    "bonus": "Bonus",
+    "shield": "Kalkan",
+    "chooseUpTo5Cards": "En fazla 5 kart seç",
+    "bonusShoppe": "Bonus dükkânı",
+    "points": "puan",
+    "startRound": "{{value}}. turu başlat",
+    "bonuses": {
+      "extraCard": "+ Kart",
+      "extraDiscard": "+ Iskarta",
+      "pocketPoints": "+ 25 p",
+      "extraHand": "+ El",
+      "doubleScore": "Puan x2",
+      "shield": "Kalkan"
+    },
+    "roundsSurvived": "{{count}} tur dayanıldı{{rating}}. Son puan: {{score}}.",
+    "roundNumber": "{{round}}. tur"
+  },
+  "lycan": {
+    "youBeatTheWolf": "Kurdu {{playerScore}}-{{wolfScore}} yendin!",
+    "theWolfBeatYou": "Kurt seni {{wolfScore}}-{{playerScore}} yendi.",
+    "wolf": "Kurt",
+    "round": "Tur",
+    "selectCardsToCapture": "Alınacak kartları seç"
+  },
+  "memory": {
+    "matched": "Eşleşen",
+    "youFoundEveryPair": "Bütün çiftleri buldun!",
+    "guesses": "Tahmin",
+    "difficulty": "Zorluk",
+    "difficultyVeryEasy": "Çok kolay",
+    "difficultyEasy": "Kolay",
+    "difficultyMedium": "Orta",
+    "difficultyHard": "Zor",
+    "difficultyVeryHard": "Çok zor",
+    "difficultyExtreme": "Aşırı zor"
+  },
+  "monteCarlo": {
+    "youClearedAllCards": "Bütün kartları temizledin!",
+    "noAdjacentPairsLeft": "Bitişik çift kalmadı.",
+    "consolidate": "Sıkıştır"
+  },
+  "nestor": {
+    "boardCleared": "Masa temizlendi!",
+    "noMatchingPairRemains": "Eşleşen çift kalmadı."
+  },
+  "nightVigil": {
+    "city": "Şehir",
+    "villain": "Kötü adam",
+    "response": "Karşılık",
+    "damage": "Hasar:",
+    "heal": "İyileşme:"
+  },
+  "ouroboros": {
+    "jewels": "Mücevherler",
+    "trinkets": "Biblolar",
+    "markPath": "Yolu işaretle",
+    "explore": "Keşfet",
+    "returnToPath": "Yola dön",
+    "lookAround": "Etrafa bak",
+    "landedOnTrap": "Bir tuzağa bastın!",
+    "gotAllJewels": "Dört mücevheri de aldın ve çıkışı buldun!",
+    "lostWithLoot": "Zindanda çıkışsız kayboldun! Ganimetinle birlikte öldün.",
+    "lostInDungeon": "Zindanda çıkışsız kayboldun!"
+  },
+  "pocketPoker": {
+    "youHit10PointsYou": "10 puana ulaştın, kazandın!",
+    "foldedThreeTimesInA": "Üst üste üç kez çekildin.",
+    "youBustedOut": "Puanın bitti.",
+    "tapCardsToDiscard": "Iskartaya atmak için kartlara dokun",
+    "minBet": "Min. bahis",
+    "opponentDraws5YourBet": "Rakip çeker: 5 + (bahisin)",
+    "youWin": "Kazandın",
+    "youLose": "Kaybettin",
+    "pushTie": "Berabere",
+    "draw": "{{value}} çek",
+    "setHand": "Eli onayla",
+    "bet": "Bahis {{value}}",
+    "nextRound": "Sonraki tur",
+    "opponent": "Rakip",
+    "hands": {
+      "highCard": "Yüksek kart",
+      "onePair": "Per",
+      "twoPair": "Döper",
+      "threeOfAKind": "Üçlü",
+      "straight": "Kent",
+      "flush": "Floş",
+      "fullHouse": "Full",
+      "fourOfAKind": "Kare",
+      "straightFlush": "Straight Flush"
+    }
+  },
+  "pokerSquares": {
+    "greatHandYouScored": "Harika el! Puanın: {{score}}.",
+    "youScoredTryForNext": "Puanın: {{score}}. Bir dahaki sefere hedef: {{TARGET_SCORE}}.",
+    "noHand": "El yok"
+  },
+  "pyramid": {
+    "noMoreMovesAndThe": "Hamle kalmadı ve deste boş."
+  },
+  "queensAudience": {
+    "theQueensCourtIsComplete": "Kraliçenin sarayı tamamlandı!"
+  },
+  "redDiamond": {
+    "diamonds": "Karolar",
+    "allBlackCardsHaveBeen": "Bütün siyah kartlar oynandı.",
+    "thereAreNotEnoughDiamond": "Yığını yenilemeye yetecek karo kartı yok."
+  },
+  "rogueRun": {
+    "youMadeItThroughThe": "Zindandan çıkmayı başardın.",
+    "run": "Kaç"
+  },
+  "royalCotillion": {
+    "theLastDanceIsDone": "Son dans bitti!"
+  },
+  "royalRest": {
+    "jack": "Vale",
+    "column": "Sütun"
+  },
+  "salicLaw": {
+    "queens": "Kızlar",
+    "theKingsStandAlone": "Papazlar yalnız kaldı!"
+  },
+  "scorpion": {
+    "allFourSuitStacksAre": "Dört takım yığınının hepsi tamamlandı."
+  },
+  "seer": {
+    "deck": "Deste",
+    "reveal": "Aç",
+    "return": "Geri koy",
+    "predictions": {
+      "red": "Kırmızı",
+      "redOddBlackEven": "KT  ·  SÇ",
+      "even": "Çift",
+      "diamondsHearts": "♦  ·  ♥",
+      "spadesClubs": "♠  ·  ♣",
+      "odd": "Tek",
+      "blackOddRedEven": "ST  ·  KÇ",
+      "black": "Siyah"
+    },
+    "predictionLabel_one": "{{label}} tahmini, {{count}} taş",
+    "predictionLabel_other": "{{label}} tahmini, {{count}} taş",
+    "complete": ", tamamlandı",
+    "blocked": ", engellendi",
+    "allPredictionsComplete": "Sekiz tahminin hepsi tamamlandı.",
+    "deckRanOut": "Bütün tahminler tamamlanmadan deste bitti.",
+    "allPredictionsBlocked": "Sekiz tahminin hepsi taşlarla tıkandı.",
+    "chooseHighlightedStone": "Vurgulanan bir taş seç",
+    "freedStones_one": "{{count}} taş serbest",
+    "freedStones_other": "{{count}} taş serbest"
+  },
+  "shiftingSands": {
+    "draw": "Çek:",
+    "place": "Yerleştir",
+    "stockToTide": "Desteyi dalgaya",
+    "reverse": "Ters çevir",
+    "castleHeld": "Kalen dayandı: {{castle}} - {{tide}}.",
+    "tideWon": "Dalga kazandı: {{castle}} - {{tide}}.",
+    "dunes": "Kum tepeleri",
+    "eroded": "Aşınan"
+  },
+  "singleDeckSpider": {
+    "fourCompleteSuits": "Dört takım tamamlandı!"
+  },
+  "singularity": {
+    "everyStarCollapsedIn": "Bütün yıldızlar çöktü!",
+    "noCardCanReachThe": "Hiçbir kart tekilliğe ulaşamıyor."
+  },
+  "sirTommy": {
+    "allFourSuitsHome": "Dört takımın hepsi yerinde!",
+    "theStockIsSpent": "Deste bitti."
+  },
+  "slyFox": {
+    "place": "{{toPlace}} yerleştir",
+    "outfoxedTheDeck": "Desteyi kurnazlıkla yendin!"
+  },
+  "somnus": {
+    "thatAssignmentDoesNotMeet": "Bu atama hedefin kurallarına uymuyor",
+    "dream": "Rüya",
+    "rmvd": "Çkr.",
+    "guard": "Kor.",
+    "turn": "Tur",
+    "selectNightmareOrGuardian": "Kâbus ya da koruyucu seç",
+    "selected": "Seçilen: {{selectedValue}}",
+    "assign": "Ata",
+    "exile": "Sürgün et",
+    "deepBreath": "Derin nefes",
+    "remUsed": "REM kullanıldı",
+    "remSleep": "REM uykusu",
+    "nightmareValue": "Kâbus: {{value}}",
+    "guardianValue": "Koruyucu: {{value}}",
+    "aliceAwakened": "Alice {{count}} canla uyandı.",
+    "guardiansLost": "As olmayan bütün özel koruyucular kaybedildi.",
+    "nightmaresOverwhelmed": "Kâbuslar Alice'i alt etti."
+  },
+  "spiderSolitaire": {
+    "allEightKToA": "K'dan A'ya sekiz takım dizisinin hepsi tamamlandı."
+  },
+  "stalker": {
+    "youMadeItToDawn": "Şafağa kadar dayandın.",
+    "theTrapSnapsShut": "Tuzak kapandı.",
+    "heCaughtYou": "Seni yakaladı.",
+    "searchDraw": "Ara\n({{pendingSearchDrawCount}} çek)",
+    "escapeDraw": "Kaç\n({{pendingEscapeDrawCount}} çek)"
+  },
+  "stockTableauSolitaire": {
+    "everySuitIsHome": "Bütün takımlar yerinde!"
+  },
+  "sultan": {
+    "theSultanIsSurrounded": "Sultan çevrelendi!"
+  },
+  "tenTwentyThirty": {
+    "everyDecadeCounted": "Bütün onluklar sayıldı!",
+    "noSumsRemain": "Toplam kalmadı."
+  },
+  "tripleStack": {
+    "sandwichServedNewCards": "Sandviç servis edildi ({{replacementsPossible}} yeni kart)",
+    "noValidSandwichAvailableYou": "Geçerli sandviç yok. Kaybettin.",
+    "serveSandwich": "Sandviçi servis et",
+    "youWonByDrawingOut": "Desteyi bitirerek kazandın. Son puan (düşük olan iyidir): {{score}}"
+  },
+  "twelveTrials": {
+    "buryAHandCard": "Elinden bir kart göm",
+    "selectHandCard": "Elinden kart seç",
+    "doubleAnAttack": "Bir saldırıyı ikiye katla",
+    "chooseAnAttack": "Bir saldırı seç",
+    "chooseWhetherToMoveCard": "Kartı taşıyıp taşımayacağını seç",
+    "moveBottomCardToTop": "Alttaki kartı üste taşı",
+    "drawACard": "Bir kart çek",
+    "notAValidPlacement": "Geçersiz yerleştirme",
+    "dungeonClearedScore": "Zindan temizlendi! Puan: {{score}}.",
+    "youRanOutOfHealth": "Canın bitti.",
+    "youRanOutOfAttacks": "Saldırıların bitti.",
+    "special": "Özel",
+    "hand": "El",
+    "setReserve2": "Yedeğe koy ({{length}}/2)",
+    "moveToTop": "{{value}} üste taşı",
+    "doNothing": "Hiçbir şey yapma",
+    "noKingSelected": "Papaz seçilmedi"
+  },
+  "waypoint": {
+    "current": "Şu an",
+    "brake": "Fren",
+    "gas": "Gaz",
+    "time": "Süre",
+    "penalty": "Ceza",
+    "damage": "Hasar",
+    "finishSector": "Bitir",
+    "ratingRecord": "Yeni ralli rekoru: +{{score}}.",
+    "ratingPodium": "Podyumda: {{score}}.",
+    "ratingMiddle": "Grubun ortası: {{score}}.",
+    "ratingBack": "Grubun sonu: {{score}}.",
+    "dnf": "DNF: araç çok fazla hasar aldı.",
+    "dsq": "DSQ: saat 16 süre cezasına ulaştı.",
+    "stage": "Etap",
+    "sector": "Sektör",
+    "speed": "Hız"
+  },
+  "windmill": {
+    "theSailsTurnFreely": "Kanatlar serbestçe dönüyor!"
+  },
+  "advisorInfo": {
+    "advisor": "Danışman",
+    "cancel": "İptal",
+    "discardToContinue_one": "Devam etmek için {{count}} kart at",
+    "discardToContinue_other": "Devam etmek için {{count}} kart at",
+    "diplomacy": "Diplomasi",
+    "diplomacyText": "Elindeki, mevcut krallığın koz takımından bütün kartları at.",
+    "discardCards_one": "{{count}} kart at",
+    "discardCards_other": "{{count}} kart at",
+    "military": "Ordu",
+    "militaryText": "Elindeki her sinek için bir kart çek.",
+    "drawCards_one": "{{count}} kart çek",
+    "drawCards_other": "{{count}} kart çek",
+    "political": "Siyaset",
+    "politicalText": "Mevcut hükümdarla değiştirmek için yukarıdan ziyaret edilmemiş bir krallığın hükümdarını seç.",
+    "swapRuler": "Hükümdarı değiştir",
+    "commerce": "Ticaret",
+    "commerceText": "İki kart çek, sonra elinden atılacak iki kart seç.",
+    "drawTwoCards": "Kart çek"
+  },
+  "royalEnvoy": {
+    "youWonOverKingdom": "{{value}} numaralı krallığı kazandın!",
+    "chooseAKingdom": "Bir krallık seç",
+    "wins": "Galibiyet",
+    "nextTopic": "Sonraki konu",
+    "advisors": "Danışmanlar",
+    "hand": "El",
+    "topic": "Konu",
+    "lost": "Kaybedilen",
+    "won": "Kazanılan",
+    "tooManyDebates": "Çok fazla tartışma kazanıp hükümdarı aşağıladın!",
+    "wonAllKingdoms": "Muhteşem tartışma becerinle sekiz krallığın hükümdarlarının hepsini kazandın!",
+    "tooFewDebates": "Yeterince tartışma kazanamadın; hükümdar seni ciddiye almıyor."
+  },
+  "alaska": {
+    "everyAlaskanSuitIsHome": "Alaska'nın bütün takımları yerinde!"
+  },
+  "fortress": {
+    "theFortressIsComplete": "Kale tamamlandı!"
+  },
+  "moosehide": {
+    "everyTrailLeadsHome": "Bütün patikalar eve çıkıyor!"
+  },
+  "beleagueredCastle": {
+    "theCastleFalls": "Kale düştü!"
+  },
+  "labyrinth": {
+    "youFoundTheWayOut": "Çıkış yolunu buldun!",
+    "lostInTheLabyrinth": "Labirentte kayboldun."
+  },
+  "parallels": {
+    "everyRowLinesUp": "Bütün sıralar hizalandı!"
+  },
+  "frog": {
+    "everyFrogMadeItHome": "Bütün kurbağalar evine ulaştı!"
+  },
+  "pussInTheCorner": {
+    "allFourCornersFilled": "Dört köşe de doldu!"
+  }
+}

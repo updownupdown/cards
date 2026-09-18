@@ -1,4 +1,11 @@
-import { afterEach, beforeEach, describe, expect, jest, test } from "@jest/globals";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from "@jest/globals";
 import "../../../jest/game-mocks";
 import {
   card,
@@ -20,11 +27,24 @@ afterEach(() => {
 });
 
 describe("Ouroboros", () => {
-  async function exploreTwoSteps(landing: { id: string; suit: PlayingCard["suit"]; rank: string; faceUp: boolean }, aces: PlayingCard[]) {
+  async function exploreTwoSteps(
+    landing: {
+      id: string;
+      suit: PlayingCard["suit"];
+      rank: string;
+      faceUp: boolean;
+    },
+    aces: PlayingCard[],
+  ) {
     const two = card("2", "spades");
     const renderer = await renderGame("/ouroboros", Ouroboros, {
       // Exploring with the 2 moves two places along the loop.
-      deck: [two, card("5", "hearts", false), landing, card("7", "clubs", false)],
+      deck: [
+        two,
+        card("5", "hearts", false),
+        landing,
+        card("7", "clubs", false),
+      ],
       dealDeck: [],
       deckPos: 0,
       paths: [null, null, null],
@@ -43,7 +63,12 @@ describe("Ouroboros", () => {
   test("reaching the exit with all four jewels wins", async () => {
     await exploreTwoSteps(
       { id: "joker-exit", suit: "spades", rank: "Joker", faceUp: true },
-      [card("A", "spades"), card("A", "hearts"), card("A", "diamonds"), card("A", "clubs")],
+      [
+        card("A", "spades"),
+        card("A", "hearts"),
+        card("A", "diamonds"),
+        card("A", "clubs"),
+      ],
     );
 
     expect(outcome()).toBe("won");
@@ -58,8 +83,20 @@ describe("Ouroboros", () => {
 
 describe("Cafe Queue", () => {
   const noDiscards = () => ({
-    A: 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0,
-    "8": 0, "9": 0, "10": 0, J: 0, Q: 0, K: 0, Joker: 0,
+    A: 0,
+    "2": 0,
+    "3": 0,
+    "4": 0,
+    "5": 0,
+    "6": 0,
+    "7": 0,
+    "8": 0,
+    "9": 0,
+    "10": 0,
+    J: 0,
+    Q: 0,
+    K: 0,
+    Joker: 0,
   });
 
   test("seating the last customer from the stock wins", async () => {

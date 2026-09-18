@@ -29,6 +29,7 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
 
+import { i18n } from "@/i18n";
 // ── Rules configuration ────────────────────────────────────────────────────
 export type AscentRouteType = "ascent" | "traverse" | "descent";
 export type AscentDifficulty = "gentle" | "standard" | "intense";
@@ -44,18 +45,18 @@ const APPROACH_GLYPH: Record<string, string> = {
   traverse: "\u2192",
   descent: "\u2198",
 };
-const APPROACH_NAME: Record<string, string> = {
-  hearts: "Cautious",
-  clubs: "Reckless",
-  diamonds: "Technical",
-  spades: "Free-Climbing",
-};
-const APPROACH_DESCRIPTION: Record<string, string> = {
-  hearts: "Draw #: ranks in hand > anchor",
-  clubs: "Draw #: ranks in hand < anchor",
-  diamonds: "Draw #: diamonds in hand",
-  spades: "Draw #: non-spades in route",
-};
+const APPROACH_NAME = {
+  hearts: "games:ascent.approachCautious",
+  clubs: "games:ascent.approachReckless",
+  diamonds: "games:ascent.approachTechnical",
+  spades: "games:ascent.approachFreeClimbing",
+} as const;
+const APPROACH_DESCRIPTION = {
+  hearts: "games:ascent.drawHigherInHand",
+  clubs: "games:ascent.drawLowerInHand",
+  diamonds: "games:ascent.drawDiamondsInHand",
+  spades: "games:ascent.drawNonSpadesInRoute",
+} as const;
 
 const TYPE_RANK: Record<AscentRouteType, number> = {
   ascent: 2,
@@ -247,13 +248,13 @@ function canPlayRoute(
   if (challenge === "lhotse" && route.size < 2)
     return {
       ok: false,
-      reason: "Lhotse: routes need 2+ cards.",
+      reason: i18n.t("games:ascent.lhotseRoutesNeed2Cards"),
       comparisonField: "Cards",
     };
   if (challenge === "gasherbrum-i" && route.anchorValue % 2 === 1)
     return {
       ok: false,
-      reason: "Gasherbrum I: anchor must be even.",
+      reason: i18n.t("games:ascent.gasherbrumIAnchorMustBe"),
       comparisonField: "Anchor",
     };
   if (
@@ -261,7 +262,10 @@ function canPlayRoute(
     prevApproach !== null &&
     route.anchorSuit === prevApproach
   )
-    return { ok: false, reason: "Broad Peak: change your approach." };
+    return {
+      ok: false,
+      reason: i18n.t("games:ascent.broadPeakChangeYourApproach"),
+    };
   if (prev && compareRoutes(route, prev) <= 0) {
     const comparisonField =
       route.size !== prev.size
@@ -521,7 +525,7 @@ export default function Ascent() {
       if (draft.trail.length >= TRAIL_LENGTH[challenge]) {
         draft.ended = true;
         draft.won = true;
-        draft.winLoseMessage = "You summited the mountain!";
+        draft.winLoseMessage = i18n.t("games:ascent.youSummitedTheMountain");
         return;
       }
       // Camp reached; milestone added to the trail
@@ -537,7 +541,7 @@ export default function Ascent() {
     if (defeat) {
       draft.ended = true;
       draft.won = false;
-      draft.winLoseMessage = "Out of cards while making camp.";
+      draft.winLoseMessage = i18n.t("games:ascent.outOfCardsWhileMakingCamp");
       return;
     }
     if (challenge !== "manaslu" && draft.deck.length > 0) {
@@ -607,7 +611,7 @@ export default function Ascent() {
         draft.hand = sortCardsBySuit(draft.hand);
         draft.ended = true;
         draft.won = false;
-        draft.winLoseMessage = "The deck and fatigue pile ran dry.";
+        draft.winLoseMessage = i18n.t("games:ascent.deckAndFatigueRanDry");
         return;
       }
       draft.hand.push(...cards);
@@ -624,7 +628,7 @@ export default function Ascent() {
         if (draft.hand.length >= HAND_LIMIT) {
           draft.ended = true;
           draft.won = false;
-          draft.winLoseMessage = "Your hand overflowed (18+ cards).";
+          draft.winLoseMessage = i18n.t("games:ascent.handOverflowed");
           return;
         }
       }
@@ -707,7 +711,7 @@ export default function Ascent() {
         col: 3.5,
         row: 0,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Fatigue", infoPos: "below" },
+        placeholder: { text: i18n.t("games:ascent.fatigue"), infoPos: "below" },
       },
       {
         id: "deck",
@@ -716,7 +720,7 @@ export default function Ascent() {
         col: 4.75,
         row: 0,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "below" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "below" },
       },
       {
         id: "discard",
@@ -725,7 +729,7 @@ export default function Ascent() {
         col: 6,
         row: 0,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Dscrd", infoPos: "below" },
+        placeholder: { text: i18n.t("cards:dscrd"), infoPos: "below" },
       },
 
       // Trail (milestones)
@@ -849,7 +853,7 @@ export default function Ascent() {
 
   const challengeName =
     challenge === "none"
-      ? "Base Climb"
+      ? i18n.t("games:ascent.baseClimb")
       : challenge
           .split("-")
           .map((w) => firstLetterUppercase(w))
@@ -956,10 +960,10 @@ export default function Ascent() {
         {!analysis && (
           <View style={[flexStyles.colStart, flexStyles.fullWidth]}>
             <Text size="md" weight={400} color={rgba(colorPale, 0.4)}>
-              No cards selected
+              {i18n.t("games:ascent.noCardsSelected")}
             </Text>
             <Text size="sm" weight={300} color={rgba(colorPale, 0.7)}>
-              Last selected card is the anchor
+              {i18n.t("games:ascent.lastSelectedCardIsThe")}
             </Text>
           </View>
         )}
@@ -971,7 +975,7 @@ export default function Ascent() {
             color={Colors.cardSelectRed}
             style={[{ textAlign: "center" }]}
           >
-            {`${playCheck.reason ?? "invalid"}`}
+            {`${playCheck.reason ?? i18n.t("games:ascent.invalid")}`}
           </Text>
         )}
 
@@ -979,11 +983,19 @@ export default function Ascent() {
           <>
             <View style={[flexStyles.colStart, { flex: 2 }]}>
               <Text size="md" weight={500} color={colorPale}>
-                {APPROACH_NAME[analysis.anchorSuit]}{" "}
+                {i18n.t(
+                  APPROACH_NAME[
+                    analysis.anchorSuit as keyof typeof APPROACH_NAME
+                  ],
+                )}{" "}
                 {firstLetterUppercase(analysis.type)}
               </Text>
               <Text size="sm" weight={300} color={rgba(colorPale, 0.7)}>
-                {APPROACH_DESCRIPTION[analysis.anchorSuit]}
+                {i18n.t(
+                  APPROACH_DESCRIPTION[
+                    analysis.anchorSuit as keyof typeof APPROACH_DESCRIPTION
+                  ],
+                )}
               </Text>
             </View>
 
@@ -992,7 +1004,7 @@ export default function Ascent() {
             >
               <View style={[flexStyles.rowCentered, { gap: spacing(7) }]}>
                 <Text size="lg" weight={300} color={rgba(colorPale, 0.7)}>
-                  Draw
+                  {i18n.t("cards:draw")}
                 </Text>
                 <Text size="lg" weight={600} color={Colors.white}>
                   {drawPreview}
@@ -1045,11 +1057,11 @@ export default function Ascent() {
       {[
         {
           id: "trail",
-          label: "Camps",
+          label: i18n.t("games:ascent.camps"),
         },
         {
           id: "play",
-          label: "Routes",
+          label: i18n.t("games:ascent.routes"),
         },
         {
           id: "hand",
@@ -1088,7 +1100,7 @@ export default function Ascent() {
           <View style={{ flexDirection: "row", gap: 10 }}>
             <View style={{ flex: 1 }}>
               <Button
-                text="Skip discard"
+                text={i18n.t("games:ascent.skipDiscard")}
                 size="md"
                 onPress={skipMakalu}
                 style={{ flex: 1 }}
@@ -1106,7 +1118,7 @@ export default function Ascent() {
             ]}
           >
             <Button
-              text="Rest"
+              text={i18n.t("games:ascent.rest")}
               size="md"
               onPress={rest}
               fullWidth
@@ -1116,7 +1128,7 @@ export default function Ascent() {
               taller
             />
             <Button
-              text="Clear"
+              text={i18n.t("cards:clear")}
               size="md"
               onPress={clearSelection}
               fullWidth
@@ -1126,7 +1138,7 @@ export default function Ascent() {
               taller
             />
             <Button
-              text="Play Route"
+              text={i18n.t("games:ascent.playRoute")}
               size="md"
               onPress={playRoute}
               fullWidth

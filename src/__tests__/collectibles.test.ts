@@ -17,12 +17,36 @@ describe("Quote cards", () => {
   });
 
   test("quotes fill the white, black and gold decks in order", () => {
-    expect(getQuoteCard(1)).toEqual({ deck: "white", suit: "hearts", rank: "A" });
-    expect(getQuoteCard(52)).toEqual({ deck: "white", suit: "spades", rank: "K" });
-    expect(getQuoteCard(53)).toEqual({ deck: "black", suit: "hearts", rank: "A" });
-    expect(getQuoteCard(104)).toEqual({ deck: "black", suit: "spades", rank: "K" });
-    expect(getQuoteCard(105)).toEqual({ deck: "gold", suit: "hearts", rank: "A" });
-    expect(getQuoteCard(156)).toEqual({ deck: "gold", suit: "spades", rank: "K" });
+    expect(getQuoteCard(1)).toEqual({
+      deck: "white",
+      suit: "hearts",
+      rank: "A",
+    });
+    expect(getQuoteCard(52)).toEqual({
+      deck: "white",
+      suit: "spades",
+      rank: "K",
+    });
+    expect(getQuoteCard(53)).toEqual({
+      deck: "black",
+      suit: "hearts",
+      rank: "A",
+    });
+    expect(getQuoteCard(104)).toEqual({
+      deck: "black",
+      suit: "spades",
+      rank: "K",
+    });
+    expect(getQuoteCard(105)).toEqual({
+      deck: "gold",
+      suit: "hearts",
+      rank: "A",
+    });
+    expect(getQuoteCard(156)).toEqual({
+      deck: "gold",
+      suit: "spades",
+      rank: "K",
+    });
     expect(getQuoteCard(157)).toBeUndefined();
     expect(getQuoteCardName(getQuoteCard(156)!)).toBe("KS");
   });
@@ -42,8 +66,14 @@ describe("Quote cards", () => {
       node.rewards.map((reward) => `${reward.type}:${reward.id}`),
     );
     const expected = [
-      ...Array.from({ length: TAO_CHAPTER_COUNT }, (_, index) => `tao:${index + 1}`),
-      ...Array.from({ length: QUOTE_COUNT }, (_, index) => `quote:${index + 1}`),
+      ...Array.from(
+        { length: TAO_CHAPTER_COUNT },
+        (_, index) => `tao:${index + 1}`,
+      ),
+      ...Array.from(
+        { length: QUOTE_COUNT },
+        (_, index) => `quote:${index + 1}`,
+      ),
     ];
     expect([...rewards].sort()).toEqual([...expected].sort());
   });

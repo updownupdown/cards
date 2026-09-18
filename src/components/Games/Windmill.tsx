@@ -14,6 +14,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const colStep = 1.15;
 const rowStep = 1.1;
 // Grid cells as [col, row] in a 5x5 cross: two sails on each side of the
@@ -316,7 +317,11 @@ export default function Windmill() {
         col: 4 * colStep - 1.25,
         row: stockRow,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Waste", infoPos: "above", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:waste"),
+          infoPos: "above",
+          showCount: true,
+        },
       },
       {
         id: "stock",
@@ -325,7 +330,11 @@ export default function Windmill() {
         col: 4 * colStep,
         row: stockRow,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "above", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:stock"),
+          infoPos: "above",
+          showCount: true,
+        },
       },
     ],
     [game],
@@ -356,7 +365,8 @@ export default function Windmill() {
       const isDestination = selectedDestinations.includes(`corner-${index}`);
       return {
         isDisabled: game.ended,
-        isSelected: isDestination || isSelectedSource({ zone: "corner", index }),
+        isSelected:
+          isDestination || isSelectedSource({ zone: "corner", index }),
         selectColor: isDestination ? "green" : "blue",
         onPress: () => {
           if (!onDestinationPress({ zone: "corner", index }))
@@ -424,7 +434,11 @@ export default function Windmill() {
       reset={reset}
       isLoaded={isLoaded}
       score={placed}
-      winLoseMessage={game.won ? "The sails turn freely!" : "No moves remain."}
+      winLoseMessage={
+        game.won
+          ? i18n.t("games:windmill.theSailsTurnFreely")
+          : i18n.t("cards:noMovesRemain")
+      }
       canUndo={canUndo}
       undo={undo}
     >

@@ -19,7 +19,9 @@ export const eightOff: GameDefinition = {
   gameColorPale: "#d9ffff",
   cardDescription:
     "A roomy, same-suit FreeCell relative, with eight cells and Kings-only columns.",
-  quickStart: ["Use 8 cells; tableau down in suit; only kings fill empty."],
+  quickStart: [
+    "Use 8 free cells; build tableau down in suit; only Kings fill empty columns.",
+  ],
   howToPlay: [
     "## Objective",
     "Move all 52 cards to the four foundations, each built up by suit from Ace to King.",

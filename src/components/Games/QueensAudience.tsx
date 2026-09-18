@@ -16,6 +16,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const colStep = 1.15;
 const rowStep = 1.1;
 // The antechamber is the outer ring of a 5x5 grid, as [col, row].
@@ -132,7 +133,8 @@ function playFor(state: GameState, location: Location): Play | null {
     return {
       pile,
       suit,
-      locations: card.rank === lower ? [location, partner] : [partner, location],
+      locations:
+        card.rank === lower ? [location, partner] : [partner, location],
     };
   };
 
@@ -298,7 +300,11 @@ export default function QueensAudience() {
         col: 4 * colStep - 1.25,
         row: stockRow,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Waste", infoPos: "above", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:waste"),
+          infoPos: "above",
+          showCount: true,
+        },
       },
       {
         id: "stock",
@@ -307,7 +313,11 @@ export default function QueensAudience() {
         col: 4 * colStep,
         row: stockRow,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "above", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:stock"),
+          infoPos: "above",
+          showCount: true,
+        },
       },
     ],
     [game],
@@ -370,7 +380,9 @@ export default function QueensAudience() {
       isLoaded={isLoaded}
       score={placed}
       winLoseMessage={
-        game.won ? "The Queen's court is complete!" : "No moves remain."
+        game.won
+          ? i18n.t("games:queensAudience.theQueensCourtIsComplete")
+          : i18n.t("cards:noMovesRemain")
       }
       canUndo={canUndo}
       undo={undo}

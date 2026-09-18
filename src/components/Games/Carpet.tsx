@@ -15,6 +15,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const carpetCols = 5;
 const carpetRows = 4;
 const carpetSize = carpetCols * carpetRows;
@@ -197,7 +198,11 @@ export default function Carpet() {
         col: carpetCols - 2.25,
         row: stockRow,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Waste", infoPos: "above", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:waste"),
+          infoPos: "above",
+          showCount: true,
+        },
       },
       {
         id: "stock",
@@ -206,7 +211,11 @@ export default function Carpet() {
         col: carpetCols - 1,
         row: stockRow,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "above", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:stock"),
+          infoPos: "above",
+          showCount: true,
+        },
       },
     ];
   }, [game]);
@@ -215,7 +224,10 @@ export default function Carpet() {
     mappedCard: MappedCard,
   ): AnimatedCardMapping | undefined => {
     if (!mappedCard.topOfZone) return {};
-    if (mappedCard.zoneName === "carpet" && mappedCard.pileIndex !== undefined) {
+    if (
+      mappedCard.zoneName === "carpet" &&
+      mappedCard.pileIndex !== undefined
+    ) {
       const index = mappedCard.pileIndex;
       return { isDisabled: game.ended, onPress: () => playFromCarpet(index) };
     }
@@ -256,7 +268,11 @@ export default function Carpet() {
       reset={reset}
       isLoaded={isLoaded}
       score={placed}
-      winLoseMessage={game.won ? "The carpet is rolled up!" : "No moves remain."}
+      winLoseMessage={
+        game.won
+          ? i18n.t("games:carpet.theCarpetIsRolledUp")
+          : i18n.t("cards:noMovesRemain")
+      }
       canUndo={canUndo}
       undo={undo}
     >

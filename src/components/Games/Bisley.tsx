@@ -15,6 +15,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const cardSize = "tableau";
 const COLUMN_SIZES = [3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4];
 
@@ -281,7 +282,11 @@ export default function Bisley() {
       score={score}
       canUndo={canUndo}
       undo={undo}
-      winLoseMessage={game.won ? "The foundations meet!" : "No moves remain."}
+      winLoseMessage={
+        game.won
+          ? i18n.t("games:bisley.theFoundationsMeet")
+          : i18n.t("cards:noMovesRemain")
+      }
       showDeviceRotateHint
     >
       {cardMap}

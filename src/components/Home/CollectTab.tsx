@@ -1,10 +1,11 @@
 import { Text } from "@/components/common/Text";
 import { HomeCard } from "@/components/Home/HomeCard";
 import type { GameSettingsMap } from "@/data/game-menu";
-import { GameTag, GameTagNames } from "@/data/games-data";
+import { GameTag } from "@/data/games-data";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
+import { useTranslation } from "@/i18n";
 import { Icon } from "@/icons";
 import { Colors, layoutDims, rgba } from "@/styles/styles";
 import { useMemo, useState } from "react";
@@ -50,6 +51,7 @@ export function CollectTab({
   contentPaddingBottom,
 }: CollectTabProps) {
   const { ui, spacing } = useResponsiveMetrics();
+  const { t } = useTranslation("home");
   const { width: viewportWidth } = useViewportDimensions();
   const [openTags, setOpenTags] = useState<Set<GameTag>>(new Set());
   const pageSidePadding = spacing(layoutDims.pagePadding);
@@ -130,7 +132,10 @@ export function CollectTab({
             >
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel={`${GameTagNames[tag]}, ${percentage}% won`}
+                accessibilityLabel={t("collect.tagProgress", {
+                  tag: t(`tags.${tag}`),
+                  percentage,
+                })}
                 accessibilityState={{ expanded: isOpen }}
                 onPress={() => toggleTag(tag)}
                 style={{
@@ -190,7 +195,7 @@ export function CollectTab({
                   color={Colors.K200}
                   style={{ flex: 1, paddingHorizontal: spacing(8) }}
                 >
-                  {GameTagNames[tag]}
+                  {t(`tags.${tag}`)}
                 </Text>
 
                 <Icon

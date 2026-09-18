@@ -7,6 +7,7 @@ import {
   QUOTE_COUNT,
 } from "@/data/collectibles";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useTranslation } from "@/i18n";
 import { Colors, rgba } from "@/styles/styles";
 import { useState } from "react";
 import { Image } from "expo-image";
@@ -21,6 +22,7 @@ type Props = {
 
 export function QuotesCollectionModal({ collectedIds, onClose }: Props) {
   const { spacing } = useResponsiveMetrics();
+  const { t } = useTranslation("nodes");
   const firstCollected = [...collectedIds].sort((a, b) => a - b)[0];
   const [selectedId, setSelectedId] = useState(firstCollected);
   const card = selectedId ? getQuoteCard(selectedId) : undefined;
@@ -28,8 +30,11 @@ export function QuotesCollectionModal({ collectedIds, onClose }: Props) {
 
   return (
     <ModalFull
-      title="Quotes"
-      subtitle={`${collectedIds.size}/${QUOTE_COUNT} collected quote cards`}
+      title={t("quotes.title")}
+      subtitle={t("quotes.subtitle", {
+        collected: collectedIds.size,
+        total: QUOTE_COUNT,
+      })}
       iconName="quote"
       onClose={onClose}
     >
@@ -90,7 +95,7 @@ export function QuotesCollectionModal({ collectedIds, onClose }: Props) {
           card &&
           getQuote(selectedId) && (
             <View style={{ width: "100%", gap: spacing(8) }}>
-              <Quote quote={getQuote(selectedId)!} />
+              <Quote id={selectedId} quote={getQuote(selectedId)!} />
             </View>
           )}
       </CollectionViewer>

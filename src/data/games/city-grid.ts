@@ -19,7 +19,7 @@ export const cityGrid: GameDefinition = {
     "A tile-laying game where each move can disrupt the precarious grid.",
   quickStart: [
     "Fill up the grid with all top cards facing up.",
-    "All near existing pile, up to 4 cards tall.",
+    "Add to or beside existing piles, up to 4 cards tall.",
     "If placed card is highest/lowest in its line, all line cards are flipped.",
   ],
   howToPlay: [
@@ -34,7 +34,7 @@ export const cityGrid: GameDefinition = {
     "- you can add to a pile if it has less than 4 cards.",
 
     "\nAfter a card is placed, if that card is the highest or lowest of its row or column, the cards in that row or column are flipped (face up or down).",
-    "- The value of face down cards are not used to determined which cards must be flipped.",
+    "- The value of face down cards is not used to determine which cards must be flipped.",
     "- Aces are worth 1.",
   ],
 };

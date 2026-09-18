@@ -1,0 +1,630 @@
+{
+  "accordion": {
+    "youCompressedTheDeckTo": "You compressed the deck to one card."
+  },
+  "allInARow": {
+    "youClearedTheBoard": "You cleared the board!",
+    "noAdjacentRankRemains": "No adjacent rank remains."
+  },
+  "archipelago": {
+    "out": "Out",
+    "notALegalPlacement": "Not a legal placement",
+    "islandComplete": "Island complete!",
+    "islandUnfinished": "Island unfinished!"
+  },
+  "ascent": {
+    "lhotseRoutesNeed2Cards": "Lhotse: routes need 2+ cards.",
+    "gasherbrumIAnchorMustBe": "Gasherbrum I: anchor must be even.",
+    "broadPeakChangeYourApproach": "Broad Peak: change your approach.",
+    "fatigue": "Fatigue",
+    "noCardsSelected": "No cards selected",
+    "lastSelectedCardIsThe": "Last selected card is the anchor",
+    "camps": "Camps",
+    "routes": "Routes",
+    "skipDiscard": "Skip discard",
+    "rest": "Rest",
+    "playRoute": "Play Route",
+    "invalid": "invalid",
+    "approachCautious": "Cautious",
+    "approachReckless": "Reckless",
+    "approachTechnical": "Technical",
+    "approachFreeClimbing": "Free-Climbing",
+    "drawHigherInHand": "Draw #: ranks in hand > anchor",
+    "drawLowerInHand": "Draw #: ranks in hand < anchor",
+    "drawDiamondsInHand": "Draw #: diamonds in hand",
+    "drawNonSpadesInRoute": "Draw #: non-spades in route",
+    "youSummitedTheMountain": "You summited the mountain!",
+    "outOfCardsWhileMakingCamp": "Out of cards while making camp.",
+    "deckAndFatigueRanDry": "The deck and fatigue pile ran dry.",
+    "handOverflowed": "Your hand overflowed (18+ cards).",
+    "baseClimb": "Base Climb"
+  },
+  "bakersDozen": {
+    "allFourSuitsAreComplete": "All four suits are complete!"
+  },
+  "baroness": {
+    "allCleared": "All cleared!",
+    "noThirteenLeftToMake": "No thirteen left to make."
+  },
+  "bisley": {
+    "theFoundationsMeet": "The foundations meet!"
+  },
+  "blackberryPie": {
+    "thePieIsReadyYou": "The pie is ready! You collected all {{BERRY_COUNT}} berries.",
+    "youCollectedOfBerries": "You collected {{collectedCount}} of {{BERRY_COUNT}} berries."
+  },
+  "bowling": {
+    "endBall": "End Ball",
+    "pins": "Pins",
+    "ball": "Ball",
+    "throw": "Throw",
+    "finalScoreWon": "Final Score: {{score}}. You beat {{target}}!",
+    "finalScoreLost": "Final Score: {{score}}. You needed {{target}}."
+  },
+  "cabinSiege": {
+    "youKilledAllTheZombies": "You killed all the zombies!",
+    "noCardsLeftToDraw": "No cards left to draw!",
+    "unableToPlaceCard": "Unable to place card.",
+    "youLost": "You lost.",
+    "revealAZombie": "Reveal a zombie",
+    "placeACard": "Place a card",
+    "killAZombie": "Kill a zombie",
+    "noKillableZombies": "No killable zombies!"
+  },
+  "cafeQueue": {
+    "discardedTheFourthCardOf": "Discarded the fourth card of a rank.",
+    "selectQueuePositionForNext": "Select queue position for next customer",
+    "revealNextCustomer": "Reveal next customer",
+    "letThemStay": "Let them stay",
+    "kickThemOut": "Kick them out"
+  },
+  "calculation": {
+    "all52CardsAreOn": "All 52 cards are on the foundations."
+  },
+  "carpet": {
+    "theCarpetIsRolledUp": "The carpet is rolled up!"
+  },
+  "chainOfCommand": {
+    "selectAMemberToPromote": "Select a member to promote",
+    "selectAValidReplacement": "Select a valid replacement",
+    "noValidReplacement": "No valid replacement",
+    "sacrificeNeededForMemberPromotion": "(Sacrifice needed for member promotion)",
+    "promoteAsA": "Promote as a:",
+    "dead": "Dead",
+    "youWonByPromotingFrom": "You won by promoting from Rank 1. Final score: {{score}}",
+    "noValidPromotionReplacementRemains": "No valid promotion/replacement remains. You lose.",
+    "rk": "Rk",
+    "members": "Members",
+    "candidates": "Candidates",
+    "member": "Member",
+    "candidate": "Candidate"
+  },
+  "chapterAndVerse": {
+    "terminated": "Terminated",
+    "employeeOfTheMonth": "Employee of the Month",
+    "performanceBonus": "Performance Bonus",
+    "promotionToDistrictManager": "Promotion to District Manager",
+    "companyLivestockOptions": "Company Livestock Options",
+    "executiveLordshipProgram": "Executive Lordship Program",
+    "line": "Line",
+    "used": "Used",
+    "firedForLosingYourGuild": "Fired for losing your Guild Standing.",
+    "guildPts": "Guild Pts.",
+    "pass": "Pass",
+    "trade": "Trade",
+    "offer": "Offer"
+  },
+  "cityGrid": {
+    "pileIsFull": "Pile is full!",
+    "mustPlaceOnExistingOr": "Must place on existing or adjacent pile!",
+    "placingHereWouldResultIn": "Placing here would result in too many face up cards!",
+    "youRanOutOfCards": "You ran out of cards!",
+    "youRanOutOfPlacements": "You ran out of valid placements!"
+  },
+  "clock": {
+    "youRevealedAll52Cards": "You revealed all 52 cards.",
+    "theFourthKingAppearedBefore": "The fourth king appeared before all cards were revealed."
+  },
+  "crazyQuilt": {
+    "theQuiltIsUnstitched": "The quilt is unstitched!"
+  },
+  "crescent": {
+    "theCrescentIsClear": "The crescent is clear!",
+    "restack": "Restack ({{value}})"
+  },
+  "cribbageSquares": {
+    "youScoredPoints": "You scored {{score}} points!",
+    "youScoredReachToWin": "You scored {{score}}. Reach {{TARGET_SCORE}} to win."
+  },
+  "crownslayer": {
+    "castle": "Castle",
+    "tavern": "Tavern",
+    "jesters": "Jesters",
+    "attack": "Attack",
+    "defend": "Defend",
+    "powerHeal": "Heal",
+    "powerDraw": "Draw",
+    "powerDouble": "x2 Dmg.",
+    "powerShield": "- Att.",
+    "noPlayableCards": "No playable cards remain. Game Over!",
+    "noDiscardCanCover": "No possible discard can cover enemy damage. Game Over!",
+    "victoryGold": "All enemies defeated! GOLD victory!",
+    "victorySilver": "All enemies defeated! SILVER victory!",
+    "victoryBronze": "All enemies defeated! BRONZE victory!",
+    "failedToBlock": "Failed to block {{damage}} damage. Game Over!"
+  },
+  "cruel": {
+    "crueltyConquered": "Cruelty conquered!"
+  },
+  "delta21": {
+    "fldSt": "Fld.St.",
+    "score": "Score:",
+    "studies": "Studies:",
+    "ratingReshapes": "Your work reshapes the science of freshwater ecology!\n\n🐟🐟🐟🐟",
+    "ratingAdvances": "Your research advances knowledge of river ecosystems.\n\n🐟🐟🐟",
+    "ratingAids": "Your findings aid local study of fish populations.\n\n🐟🐟",
+    "ratingLittle": "Your records add little to the understanding of the river.\n\n🐟"
+  },
+  "dominion": {
+    "allEighteenCardsBelongTo": "All eighteen cards belong to one dominion.",
+    "theWasIsolatedWithNo": "The {{value}} was isolated, with no matching rank or suit.",
+    "noConquestsOrReservePlacements": "No conquests or reserve placements remain."
+  },
+  "dynasty": {
+    "extract": "Extract",
+    "reassign": "Reassign",
+    "allTwelveRoyalsAreDown": "All twelve royals are down.",
+    "youRanOutOfCards": "You ran out of cards before defeating all twelve royals."
+  },
+  "elementaryDetective": {
+    "youScored20ToWin": "You scored {{score}} (20 to win)",
+    "score": "Score"
+  },
+  "fanSolitaire": {
+    "theFoundationsAreComplete": "The foundations are complete!"
+  },
+  "fieldCommand": {
+    "invalidCaptureSuitValueRequirement": "Invalid capture: suit/value requirement not met.",
+    "cannotSacrificeACombatantCard": "Cannot sacrifice a combatant card.",
+    "enemy": "Enemy",
+    "capture": "Capture",
+    "doneDiscarding": "Done Discarding",
+    "letCapture": "Let Capture",
+    "combatantCaptured": "A combatant entered the enemy capture pile.",
+    "allEnemiesCleared": "All enemy cards cleared without losing combatants.",
+    "combatantCapturedYouLose": "A combatant entered the enemy capture pile. You lose.",
+    "noCardsToPlay": "No cards available to play."
+  },
+  "fifteenPuzzle": {
+    "theCardsAreBackIn": "The cards are back in order."
+  },
+  "fightClubs": {
+    "grid": "Grid",
+    "clubs": "Clubs",
+    "rowCol": "Row/Col",
+    "upDown": "Up/Down",
+    "sequence": "Sequence",
+    "actionMatch": "Match",
+    "actionSum": "Sum",
+    "actionAny": "Any",
+    "actionLine": "♦ Line",
+    "actionRow": "♦ Row",
+    "actionColumn": "♦ Col",
+    "actionDown": "♠ Down",
+    "actionUp": "♠ Up",
+    "actionRun": "♥ Sequence",
+    "gridClearWon": "The grid is clear. Fight Clubs won!",
+    "allClubsSpent": "All 13 Clubs are spent."
+  },
+  "fortunesCall": {
+    "red": "Red",
+    "higher": "Higher",
+    "lower": "Lower",
+    "misses": "Misses"
+  },
+  "gaps": {
+    "everyRowIsInOrder": "Every row is in order!"
+  },
+  "golf": {
+    "youClearedTheTableau": "You cleared the tableau!",
+    "noMorePlayableCards": "No more playable cards."
+  },
+  "grandfathersClock": {
+    "everyHourStruck": "Every hour struck!"
+  },
+  "gremlin": {
+    "helper": "Helper",
+    "endTurn": "End Turn",
+    "tierNovice": "NOVICE",
+    "tierNormal": "NORMAL",
+    "tierAdvanced": "ADVANCED",
+    "tierLegendary": "LEGENDARY",
+    "tierEpic": "EPIC",
+    "columnsUsedWin": "{{count}} columns used. {{tier}} win.",
+    "allCardsPlayedInColumns": "All cards played in {{count}} columns.",
+    "noRoomForHelper": "No room for the helper's card in {{count}} columns."
+  },
+  "gridlines": {
+    "trump": "Trump",
+    "chooseATrumpCard": "Choose a trump card",
+    "pickARevealedCard": "Pick a revealed card",
+    "selectALine": "Select a line",
+    "selectAHandCard": "Select a hand card",
+    "youBeatTheGrid": "You beat the grid {{youScore}}-{{gridScore}}!",
+    "theGridWins": "The grid wins {{gridScore}}-{{youScore}}."
+  },
+  "herbalist": {
+    "noble": "Noble",
+    "jester": "Jester",
+    "harvestFair": "Fair harvest: {{count}} herbs remain.",
+    "harvestGood": "Good harvest: {{count}} herbs remain.",
+    "harvestExcellent": "Excellent harvest: {{count}} herbs remain.",
+    "harvestPerfect": "Perfect harvest: {{count}} herbs remain.",
+    "noHerbsRemain": "No herbs remain to heal the realm."
+  },
+  "infiltrator": {
+    "retired": "Retired",
+    "spies": "Spies",
+    "lost": "Lost",
+    "keySpies": "Key Spies",
+    "supportingSpies": "Supporting Spies",
+    "recruited": "Recruited",
+    "retireAMatchingSetOr": "Retire a matching set, or skip",
+    "noSetsAvailableForRetirement": "No sets available for retirement",
+    "removeADoubleAgentFrom": "Remove a Double Agent from:",
+    "noSpiesRemain": "No spies remain",
+    "assassinate": "Assassinate",
+    "counter": "Counter",
+    "recruit": "Recruit",
+    "skip": "Skip",
+    "missionComplete": "Mission complete: {{count}} Key Spies recruited.",
+    "missionFailed": "Mission failed: {{count}} Key Spies recruited, {{lost}} lost.",
+    "noDoubleAgentsRemain": "No Double Agents remain. Mission failed.",
+    "sourceHand": "Hand"
+  },
+  "invaders": {
+    "wave2": "Wave 2",
+    "atks": "Atks",
+    "defs": "Defs",
+    "defenders": "Defenders",
+    "attack": "Attack{{value}}",
+    "attackersWave": "Attackers (Wave {{wave}})",
+    "noCardsLeftToPlay": "You have no cards left to play!",
+    "scoreHigherIsBetter": "{{score}} (higher is better)",
+    "scoreCloserToZero": "{{score}} (closer to zero is better)"
+  },
+  "lightsOut": {
+    "everyLightIsOut": "Every light is out."
+  },
+  "loneJoker": {
+    "straightFlush": "Straight Flush",
+    "fourOfAKind": "Four of a Kind",
+    "fullHouse": "Full House",
+    "flush": "Flush",
+    "straight": "Straight",
+    "threeOfAKind": "Three of a Kind",
+    "twoPair": "Two Pair",
+    "pair": "Pair",
+    "shieldHasBeenUsed": "Shield has been used",
+    "discards": "Discards",
+    "plays": "Plays",
+    "bonus": "Bonus",
+    "shield": "Shield",
+    "chooseUpTo5Cards": "Choose up to 5 cards",
+    "bonusShoppe": "Bonus Shoppe",
+    "points": "points",
+    "startRound": "Start Round {{value}}",
+    "bonuses": {
+      "extraCard": "+ Card",
+      "extraDiscard": "+ Discard",
+      "pocketPoints": "+ 25 pts",
+      "extraHand": "+ Hand",
+      "doubleScore": "x2 Score",
+      "shield": "Shield"
+    },
+    "roundsSurvived": "{{count}} rounds survived{{rating}}. Final score: {{score}}.",
+    "roundNumber": "Round {{round}}"
+  },
+  "lycan": {
+    "youBeatTheWolf": "You beat the Wolf {{playerScore}}-{{wolfScore}}!",
+    "theWolfBeatYou": "The Wolf beat you {{wolfScore}}-{{playerScore}}.",
+    "wolf": "Wolf",
+    "round": "Round",
+    "selectCardsToCapture": "Select cards to capture"
+  },
+  "memory": {
+    "matched": "Matched",
+    "youFoundEveryPair": "You found every pair!",
+    "guesses": "Guesses",
+    "difficulty": "Difficulty",
+    "difficultyVeryEasy": "Very Easy",
+    "difficultyEasy": "Easy",
+    "difficultyMedium": "Medium",
+    "difficultyHard": "Hard",
+    "difficultyVeryHard": "Very Hard",
+    "difficultyExtreme": "Extreme"
+  },
+  "monteCarlo": {
+    "youClearedAllCards": "You cleared all cards!",
+    "noAdjacentPairsLeft": "No adjacent pairs left.",
+    "consolidate": "Consolidate"
+  },
+  "nestor": {
+    "boardCleared": "Board cleared!",
+    "noMatchingPairRemains": "No matching pair remains."
+  },
+  "nightVigil": {
+    "city": "City",
+    "villain": "Villain",
+    "response": "Response",
+    "damage": "Damage:",
+    "heal": "Heal:"
+  },
+  "ouroboros": {
+    "jewels": "Jewels",
+    "trinkets": "Trinkets",
+    "markPath": "Mark Path",
+    "explore": "Explore",
+    "returnToPath": "Return to Path",
+    "lookAround": "Look Around",
+    "landedOnTrap": "You landed on a trap!",
+    "gotAllJewels": "You got all four jewels and found the exit!",
+    "lostWithLoot": "You got lost in the dungeon with no way out! You die with your loot.",
+    "lostInDungeon": "You got lost in the dungeon with no way out!"
+  },
+  "pocketPoker": {
+    "youHit10PointsYou": "You hit 10 points — you win!",
+    "foldedThreeTimesInA": "Folded three times in a row.",
+    "youBustedOut": "You busted out.",
+    "tapCardsToDiscard": "Tap cards to discard",
+    "minBet": "Min bet",
+    "opponentDraws5YourBet": "Opponent draws: 5 + (your bet)",
+    "youWin": "You win",
+    "youLose": "You lose",
+    "pushTie": "Push (tie)",
+    "draw": "Draw {{value}}",
+    "setHand": "Set Hand",
+    "bet": "Bet {{value}}",
+    "nextRound": "Next Round",
+    "opponent": "Opponent",
+    "hands": {
+      "highCard": "High Card",
+      "onePair": "One Pair",
+      "twoPair": "Two Pair",
+      "threeOfAKind": "Three of a Kind",
+      "straight": "Straight",
+      "flush": "Flush",
+      "fullHouse": "Full House",
+      "fourOfAKind": "Four of a Kind",
+      "straightFlush": "Straight Flush"
+    }
+  },
+  "pokerSquares": {
+    "greatHandYouScored": "Great hand! You scored {{score}}.",
+    "youScoredTryForNext": "You scored {{score}}. Try for {{TARGET_SCORE}} next time.",
+    "noHand": "No hand"
+  },
+  "pyramid": {
+    "noMoreMovesAndThe": "No more moves and the stock is empty."
+  },
+  "queensAudience": {
+    "theQueensCourtIsComplete": "The Queen's court is complete!"
+  },
+  "redDiamond": {
+    "diamonds": "Diamonds",
+    "allBlackCardsHaveBeen": "All black cards have been played.",
+    "thereAreNotEnoughDiamond": "There are not enough Diamond cards to replenish the pile."
+  },
+  "rogueRun": {
+    "youMadeItThroughThe": "You made it through the dungeon.",
+    "run": "Run"
+  },
+  "royalCotillion": {
+    "theLastDanceIsDone": "The last dance is done!"
+  },
+  "royalRest": {
+    "jack": "Jack",
+    "column": "Column"
+  },
+  "salicLaw": {
+    "queens": "Queens",
+    "theKingsStandAlone": "The Kings stand alone!"
+  },
+  "scorpion": {
+    "allFourSuitStacksAre": "All four suit stacks are complete."
+  },
+  "seer": {
+    "deck": "Deck",
+    "reveal": "Reveal",
+    "return": "Return",
+    "predictions": {
+      "red": "Red",
+      "redOddBlackEven": "RO  ·  BE",
+      "even": "Even",
+      "diamondsHearts": "♦  ·  ♥",
+      "spadesClubs": "♠  ·  ♣",
+      "odd": "Odd",
+      "blackOddRedEven": "BO  ·  RE",
+      "black": "Black"
+    },
+    "predictionLabel_one": "{{label}} prediction, {{count}} stone",
+    "predictionLabel_other": "{{label}} prediction, {{count}} stones",
+    "complete": ", complete",
+    "blocked": ", blocked",
+    "allPredictionsComplete": "All eight predictions are complete.",
+    "deckRanOut": "The deck ran out before all predictions were complete.",
+    "allPredictionsBlocked": "All eight predictions are blocked by stones.",
+    "chooseHighlightedStone": "Choose one highlighted stone",
+    "freedStones_one": "{{count}} freed stone",
+    "freedStones_other": "{{count}} freed stones"
+  },
+  "shiftingSands": {
+    "draw": "Draw:",
+    "place": "Place",
+    "stockToTide": "Stock to Tide",
+    "reverse": "Reverse",
+    "castleHeld": "Your castle held: {{castle}} to {{tide}}.",
+    "tideWon": "The tide won: {{castle}} to {{tide}}.",
+    "dunes": "Dunes",
+    "eroded": "Eroded"
+  },
+  "singleDeckSpider": {
+    "fourCompleteSuits": "Four complete suits!"
+  },
+  "singularity": {
+    "everyStarCollapsedIn": "Every star collapsed in!",
+    "noCardCanReachThe": "No card can reach the singularity."
+  },
+  "sirTommy": {
+    "allFourSuitsHome": "All four suits home!",
+    "theStockIsSpent": "The stock is spent."
+  },
+  "slyFox": {
+    "place": "Place {{toPlace}}",
+    "outfoxedTheDeck": "Outfoxed the deck!"
+  },
+  "somnus": {
+    "thatAssignmentDoesNotMeet": "That assignment does not meet the target's rules",
+    "dream": "Dream",
+    "rmvd": "Rmvd",
+    "guard": "Guard",
+    "turn": "Turn",
+    "selectNightmareOrGuardian": "Select nightmare or guardian",
+    "selected": "Selected: {{selectedValue}}",
+    "assign": "Assign",
+    "exile": "Exile",
+    "deepBreath": "Deep Breath",
+    "remUsed": "REM Used",
+    "remSleep": "REM Sleep",
+    "nightmareValue": "Nightmare: {{value}}",
+    "guardianValue": "Guardian: {{value}}",
+    "aliceAwakened": "Alice awakened with {{count}} life.",
+    "guardiansLost": "Every non-Ace special Guardian was lost.",
+    "nightmaresOverwhelmed": "The Nightmares overwhelmed Alice."
+  },
+  "spiderSolitaire": {
+    "allEightKToA": "All eight K-to-A suit runs are complete."
+  },
+  "stalker": {
+    "youMadeItToDawn": "You made it to dawn.",
+    "theTrapSnapsShut": "The trap snaps shut.",
+    "heCaughtYou": "He caught you.",
+    "searchDraw": "Search\n(Draw {{pendingSearchDrawCount}})",
+    "escapeDraw": "Escape\n(Draw {{pendingEscapeDrawCount}})"
+  },
+  "stockTableauSolitaire": {
+    "everySuitIsHome": "Every suit is home!"
+  },
+  "sultan": {
+    "theSultanIsSurrounded": "The Sultan is surrounded!"
+  },
+  "tenTwentyThirty": {
+    "everyDecadeCounted": "Every decade counted!",
+    "noSumsRemain": "No sums remain."
+  },
+  "tripleStack": {
+    "sandwichServedNewCards": "Sandwich served ({{replacementsPossible}} new cards)",
+    "noValidSandwichAvailableYou": "No valid sandwich available. You lose.",
+    "serveSandwich": "Serve Sandwich",
+    "youWonByDrawingOut": "You won by drawing out the deck. Final score (lower is better): {{score}}"
+  },
+  "twelveTrials": {
+    "buryAHandCard": "Bury a hand card",
+    "selectHandCard": "Select hand card",
+    "doubleAnAttack": "Double an attack",
+    "chooseAnAttack": "Choose an attack",
+    "chooseWhetherToMoveCard": "Choose whether to move card",
+    "moveBottomCardToTop": "Move bottom card to top",
+    "drawACard": "Draw a card",
+    "notAValidPlacement": "Not a valid placement",
+    "dungeonClearedScore": "Dungeon cleared! Score {{score}}.",
+    "youRanOutOfHealth": "You ran out of health.",
+    "youRanOutOfAttacks": "You ran out of attacks.",
+    "special": "Special",
+    "hand": "Hand",
+    "setReserve2": "Set Reserve ({{length}}/2)",
+    "moveToTop": "Move {{value}} to top",
+    "doNothing": "Do nothing",
+    "noKingSelected": "No King selected"
+  },
+  "waypoint": {
+    "current": "Current",
+    "brake": "Brake",
+    "gas": "Gas",
+    "time": "Time",
+    "penalty": "Penalty",
+    "damage": "Damage",
+    "finishSector": "Finish",
+    "ratingRecord": "New rally record: +{{score}}.",
+    "ratingPodium": "Podium finish: {{score}}.",
+    "ratingMiddle": "Middle of the pack: {{score}}.",
+    "ratingBack": "Back of the pack: {{score}}.",
+    "dnf": "DNF: the car took too much damage.",
+    "dsq": "DSQ: the clock reached 16 time penalties.",
+    "stage": "Stage",
+    "sector": "Sector",
+    "speed": "Speed"
+  },
+  "windmill": {
+    "theSailsTurnFreely": "The sails turn freely!"
+  },
+  "advisorInfo": {
+    "advisor": "Advisor",
+    "cancel": "Cancel",
+    "discardToContinue_one": "Discard {{count}} card to continue",
+    "discardToContinue_other": "Discard {{count}} cards to continue",
+    "diplomacy": "Diplomacy",
+    "diplomacyText": "Discard all cards in your hand that match the current kingdom's trump suit.",
+    "discardCards_one": "Discard {{count}} card",
+    "discardCards_other": "Discard {{count}} cards",
+    "military": "Military",
+    "militaryText": "Draw a card for each club in your hand.",
+    "drawCards_one": "Draw {{count}} card",
+    "drawCards_other": "Draw {{count}} cards",
+    "political": "Political",
+    "politicalText": "Select a ruler from an unvisited kingdom above to swap with the current ruler.",
+    "swapRuler": "Swap ruler",
+    "commerce": "Commerce",
+    "commerceText": "Draw two cards, then choose and discard two cards from your hand.",
+    "drawTwoCards": "Draw cards"
+  },
+  "royalEnvoy": {
+    "youWonOverKingdom": "You won over Kingdom #{{value}}!",
+    "chooseAKingdom": "Choose a kingdom",
+    "wins": "Wins",
+    "nextTopic": "Next Topic",
+    "advisors": "Advisors",
+    "hand": "Hand",
+    "topic": "Topic",
+    "lost": "Lost",
+    "won": "Won",
+    "tooManyDebates": "You won too many debates, insulting the ruler!",
+    "wonAllKingdoms": "You won over the rulers of all eight kingdoms with your spectacular debating skills!",
+    "tooFewDebates": "You failed to win enough debates; the ruler doesn't take you seriously enough."
+  },
+  "alaska": {
+    "everyAlaskanSuitIsHome": "Every Alaskan suit is home!"
+  },
+  "fortress": {
+    "theFortressIsComplete": "The fortress is complete!"
+  },
+  "moosehide": {
+    "everyTrailLeadsHome": "Every trail leads home!"
+  },
+  "beleagueredCastle": {
+    "theCastleFalls": "The castle falls!"
+  },
+  "labyrinth": {
+    "youFoundTheWayOut": "You found the way out!",
+    "lostInTheLabyrinth": "Lost in the labyrinth."
+  },
+  "parallels": {
+    "everyRowLinesUp": "Every row lines up!"
+  },
+  "frog": {
+    "everyFrogMadeItHome": "Every frog made it home!"
+  },
+  "pussInTheCorner": {
+    "allFourCornersFilled": "All four corners filled!"
+  }
+}

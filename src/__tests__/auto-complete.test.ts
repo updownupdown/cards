@@ -27,9 +27,12 @@ describe("planAutoComplete", () => {
 
     expect(moves).toHaveLength(5);
     // Lowest ranks first: both aces before any two.
-    expect(moves!.slice(0, 2).map((move) => move.source).sort()).toEqual([
-      1, 2,
-    ]);
+    expect(
+      moves!
+        .slice(0, 2)
+        .map((move) => move.source)
+        .sort(),
+    ).toEqual([1, 2]);
     // The input piles are not modified.
     expect(sources.map((pile) => pile.length)).toEqual([2, 2, 1]);
   });

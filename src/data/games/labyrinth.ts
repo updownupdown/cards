@@ -11,7 +11,7 @@ export const labyrinth: GameDefinition = {
     difficulty: 35,
     luck: 65,
   },
-  thumbnail: "DefaultThumbnail.webp",
+  thumbnail: "Labyrinth.webp",
   background: GAME_BACKGROUNDS.stoneTunnel,
   animation: GameAnimations.ManaDust,
   gameColorDark: "#1c1f26",

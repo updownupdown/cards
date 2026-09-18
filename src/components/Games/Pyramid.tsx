@@ -13,6 +13,7 @@ import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 
+import { i18n } from "@/i18n";
 export type PyramidCard = PlayingCard & {
   row: number;
   col: number;
@@ -518,7 +519,7 @@ export default function Pyramid() {
         row: 4.3,
         baseZIndex: 100,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Discard", infoPos: "right" },
+        placeholder: { text: i18n.t("cards:discard"), infoPos: "right" },
       },
       {
         id: "stock",
@@ -528,7 +529,7 @@ export default function Pyramid() {
         row: 4.3,
         baseZIndex: 50,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "left" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "left" },
       },
       {
         id: "waste",
@@ -538,7 +539,7 @@ export default function Pyramid() {
         row: 4.3,
         baseZIndex: 55,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Waste", infoPos: "right" },
+        placeholder: { text: i18n.t("cards:waste"), infoPos: "right" },
       },
 
       ...pyramidZones,
@@ -613,9 +614,9 @@ export default function Pyramid() {
       outcome={!ended ? "playing" : won ? "won" : "lost"}
       winLoseMessage={
         won
-          ? "You won!"
+          ? i18n.t("cards:youWon")
           : lost
-            ? "No more moves and the stock is empty."
+            ? i18n.t("games:pyramid.noMoreMovesAndThe")
             : undefined
       }
       reset={reset}

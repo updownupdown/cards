@@ -30,6 +30,7 @@ import { Text } from "../common/Text";
 import { flexStyles } from "@/styles/flexStyles";
 import { rgba } from "@/styles/styles";
 
+import { i18n } from "@/i18n";
 const maxDamage = 7;
 
 // Row sizes (top to bottom) per dungeon level; each sums to 12.
@@ -95,19 +96,19 @@ const kingHint = (
 ) => {
   switch (suit) {
     case "hearts":
-      return "Bury a hand card";
+      return i18n.t("games:twelveTrials.buryAHandCard");
     case "hearts-action":
-      return "Select hand card";
+      return i18n.t("games:twelveTrials.selectHandCard");
     case "spades":
-      return "Double an attack";
+      return i18n.t("games:twelveTrials.doubleAnAttack");
     case "spades-action":
-      return "Choose an attack";
+      return i18n.t("games:twelveTrials.chooseAnAttack");
     case "diamonds-action":
-      return "Choose whether to move card";
+      return i18n.t("games:twelveTrials.chooseWhetherToMoveCard");
     case "diamonds":
-      return "Move bottom card to top";
+      return i18n.t("games:twelveTrials.moveBottomCardToTop");
     case "clubs":
-      return "Draw a card";
+      return i18n.t("games:twelveTrials.drawACard");
   }
 };
 
@@ -360,7 +361,7 @@ export default function TwelveTrials() {
     if (game.ended || game.reserveSetup || !selected || !selectedCard) return;
     const doubling = kingMode?.type === "double";
     if (!canPlace(game.slots, idx, selectedCard, boomer, doubling)) {
-      showToast("Not a valid placement");
+      showToast(i18n.t("games:twelveTrials.notAValidPlacement"));
       return;
     }
 
@@ -583,7 +584,7 @@ export default function TwelveTrials() {
         col: 0,
         row: 0,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "right" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "right" },
       },
       {
         id: "hud",
@@ -599,7 +600,7 @@ export default function TwelveTrials() {
         col: 5,
         row: 0,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Dscrd", infoPos: "left" },
+        placeholder: { text: i18n.t("cards:dscrd"), infoPos: "left" },
       },
     );
 
@@ -759,10 +760,10 @@ export default function TwelveTrials() {
       isLoaded={isLoaded}
       winLoseMessage={
         game.won
-          ? `Dungeon cleared! Score ${score}.`
+          ? i18n.t("games:twelveTrials.dungeonClearedScore", { score })
           : game.damage >= maxDamage
-            ? "Your ran out of health."
-            : "You ran out of attacks."
+            ? i18n.t("games:twelveTrials.youRanOutOfHealth")
+            : i18n.t("games:twelveTrials.youRanOutOfAttacks")
       }
       canUndo={canUndo}
       undo={undo}
@@ -792,11 +793,11 @@ export default function TwelveTrials() {
       {[
         {
           id: "reserve",
-          label: "Special",
+          label: i18n.t("games:twelveTrials.special"),
         },
         {
           id: "hand",
-          label: "Hand",
+          label: i18n.t("games:twelveTrials.hand"),
         },
       ].map((label) => {
         if (label.id === "reserve" && !powerReserveOn && !abilitiesOn)
@@ -834,7 +835,9 @@ export default function TwelveTrials() {
       >
         {game.reserveSetup ? (
           <Button
-            text={`Set Reserve (${reservePick.length}/2)`}
+            text={i18n.t("games:twelveTrials.setReserve2", {
+              length: reservePick.length,
+            })}
             size="md"
             onPress={confirmReserve}
             taller
@@ -856,14 +859,16 @@ export default function TwelveTrials() {
                       ]}
                     >
                       <Button
-                        text={`Move ${cardLabel(game.deck[0])} to top`}
+                        text={i18n.t("games:twelveTrials.moveToTop", {
+                          value: cardLabel(game.deck[0]),
+                        })}
                         size="sm"
                         onPress={() => resolveMoveKing(true)}
                         theme="green"
                         taller
                       />
                       <Button
-                        text="Do nothing"
+                        text={i18n.t("games:twelveTrials.doNothing")}
                         size="sm"
                         onPress={() => resolveMoveKing(false)}
                         theme="red"
@@ -879,7 +884,7 @@ export default function TwelveTrials() {
                       ]}
                     >
                       <Button
-                        text="Cancel"
+                        text={i18n.t("cards:cancel")}
                         size="sm"
                         onPress={() => {
                           setKingMode(null);
@@ -901,7 +906,7 @@ export default function TwelveTrials() {
                     text={
                       selectedKing
                         ? kingHint(selectedKing.suit)
-                        : "No King selected"
+                        : i18n.t("games:twelveTrials.noKingSelected")
                     }
                     size="md"
                     onPress={() => {
@@ -920,7 +925,7 @@ export default function TwelveTrials() {
             </View>
 
             <Button
-              text="Discard"
+              text={i18n.t("cards:discard")}
               size="md"
               onPress={discardSelected}
               taller

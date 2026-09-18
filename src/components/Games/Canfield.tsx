@@ -10,13 +10,7 @@ import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useStateManager } from "@/hooks/useStateManager";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { DOUBLE_TAP_MS } from "@/utils/utils";
-import {
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
@@ -32,6 +26,7 @@ import {
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const cardSize = "tableau";
 
 type GameState = {
@@ -257,7 +252,7 @@ export default function Canfield() {
       row: 1.6,
       baseZIndex: 12 + pileIndex,
       fan: { direction: "down", offset: cardDims.tableauOffset },
-      placeholder: { text: "Tab", showCount: true },
+      placeholder: { text: i18n.t("cards:tab"), showCount: true },
     }));
 
     const foundationZones: MapZone[] = game.foundations.map((_, pileIndex) => ({
@@ -282,7 +277,11 @@ export default function Canfield() {
         row: 5,
         baseZIndex: 1,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "right", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:stock"),
+          infoPos: "right",
+          showCount: true,
+        },
       },
       {
         id: "waste",
@@ -293,7 +292,11 @@ export default function Canfield() {
         row: 3.8,
         baseZIndex: 50,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Waste", infoPos: "right", showCount: false },
+        placeholder: {
+          text: i18n.t("cards:waste"),
+          infoPos: "right",
+          showCount: false,
+        },
       },
       {
         id: "reserve",
@@ -304,7 +307,11 @@ export default function Canfield() {
         row: 0,
         baseZIndex: 40,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Reserve", infoPos: "right", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:reserve"),
+          infoPos: "right",
+          showCount: true,
+        },
       },
       ...foundationZones,
       ...tableauZones,
@@ -644,7 +651,6 @@ export default function Canfield() {
       const top = snapshot.waste[snapshot.waste.length - 1];
       return top ? [top] : [];
     }
-
 
     const pile = snapshot.tableau[source.pileIndex];
     const cards = pile.slice(source.cardIndex);
@@ -1006,7 +1012,6 @@ export default function Canfield() {
     return makeDragHandlers(source, startGhostDrag, onTap);
   }
 
-
   function getTapHandler(source: MoveSource) {
     if (source.zone === "reserve") {
       return onReservePress;
@@ -1015,7 +1020,6 @@ export default function Canfield() {
     if (source.zone === "waste") {
       return onWastePress;
     }
-
 
     return () => onTableauCardPress(source.pileIndex, source.cardIndex);
   }

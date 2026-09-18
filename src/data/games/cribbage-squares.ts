@@ -24,7 +24,7 @@ export const cribbageSquares: GameDefinition = {
   cardDescription:
     "Build sixteen connected cards, then score every row and column with a starter card.",
   quickStart: [
-    "Place each card beside each other in the grid.",
+    "Place each card beside another card in the grid.",
     'A "starter" card is revealed after all sixteen are placed.',
     "Rows and columns score as cribbage hands.",
   ],

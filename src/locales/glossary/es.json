@@ -1,0 +1,72 @@
+{
+  "style": {
+    "formality": "Use neutral international Spanish with \"tú\".",
+    "gameTitles": "Translate game titles: use the established Spanish name of a classic solitaire when there is one, translate descriptive titles, and keep proper names. The current titles are the `title` entries in content/games.json; when rules mention another game, use its Spanish title.",
+    "cardIndices": "Keep single-letter card indices (A, K, Q, J) as they are. Translate full rank and suit words, with plurals.",
+    "typography": "Use opening ¡ and ¿. Use « » for quotation marks.",
+    "markup": "Keep {{placeholders}}, <tags>, line breaks and markdown (##, -, **) exactly."
+  },
+  "ranks": {
+    "Ace": {
+      "one": "As",
+      "other": "Ases"
+    },
+    "King": {
+      "one": "Rey",
+      "other": "Reyes"
+    },
+    "Queen": {
+      "one": "Reina",
+      "other": "Reinas"
+    },
+    "Jack": {
+      "one": "Jota",
+      "other": "Jotas"
+    },
+    "Joker": {
+      "one": "Comodín",
+      "other": "Comodines"
+    }
+  },
+  "suits": {
+    "hearts": {
+      "one": "corazón",
+      "other": "corazones"
+    },
+    "diamonds": {
+      "one": "diamante",
+      "other": "diamantes"
+    },
+    "clubs": {
+      "one": "trébol",
+      "other": "tréboles"
+    },
+    "spades": {
+      "one": "pica",
+      "other": "picas"
+    }
+  },
+  "terms": {
+    "suit": "palo",
+    "alternating colors (red and black)": "alternando colores",
+    "foundation": "fundación",
+    "tableau": "columnas (el tablero)",
+    "column": "columna",
+    "stock": "mazo",
+    "waste (pile of turned stock cards)": "montón",
+    "discard (pile of discarded or removed cards)": "descarte",
+    "reserve": "reserva",
+    "free cell": "celda libre",
+    "deal": "repartir",
+    "redeal": "volver a repartir",
+    "build up / build down": "subir / bajar",
+    "run / sequence": "secuencia",
+    "pile": "pila",
+    "empty column": "columna vacía",
+    "undo": "deshacer",
+    "node (progression map)": "nodo",
+    "collectible": "coleccionable",
+    "quote": "cita",
+    "chapter": "capítulo"
+  }
+}

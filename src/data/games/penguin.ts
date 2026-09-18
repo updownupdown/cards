@@ -20,7 +20,9 @@ export const penguin: GameDefinition = {
   gameColorPale: "#ff944d",
   cardDescription:
     "A FreeCell-like game building suit runs from a random beak rank.",
-  quickStart: ["From beak rank: foundations up suit; tableau down in suit."],
+  quickStart: [
+    "From the beak rank, build foundations up by suit and tableau down in suit.",
+  ],
   howToPlay: [
     "## Objective",
     'Build all four foundations up by suit, from the "beak rank" until each holds 13 cards.',

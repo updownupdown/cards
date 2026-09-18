@@ -28,6 +28,7 @@ import { ProgressBar } from "../Home/ProgressBar";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors } from "@/styles/styles";
 
+import { i18n } from "@/i18n";
 const SIZE = 6;
 const CELLS = SIZE * SIZE;
 const winTarget = 21;
@@ -463,7 +464,11 @@ export default function Gridlines() {
         row: 0,
         cards: game.discard,
         baseZIndex: 60,
-        placeholder: { text: "Discard", infoPos: "right", showCount: false },
+        placeholder: {
+          text: i18n.t("cards:discard"),
+          infoPos: "right",
+          showCount: false,
+        },
       },
       // HUD
       { id: "hud", col: 1.75, row: 0, width: 4, baseZIndex: 1 },
@@ -475,7 +480,11 @@ export default function Gridlines() {
         col: 6.6,
         row: 0,
         baseZIndex: 60,
-        placeholder: { text: "Trump", infoPos: "left", showCount: false },
+        placeholder: {
+          text: i18n.t("games:gridlines.trump"),
+          infoPos: "left",
+          showCount: false,
+        },
       },
 
       // Player won cards
@@ -662,12 +671,12 @@ export default function Gridlines() {
   }
 
   const statusText = game.trumpPhase
-    ? "Choose a trump card"
+    ? i18n.t("games:gridlines.chooseATrumpCard")
     : pendingPick
-      ? "Pick a revealed card"
+      ? i18n.t("games:gridlines.pickARevealedCard")
       : selectedHand !== null
-        ? "Select a line"
-        : "Select a hand card";
+        ? i18n.t("games:gridlines.selectALine")
+        : i18n.t("games:gridlines.selectAHandCard");
 
   return (
     <GameWrapper
@@ -676,8 +685,14 @@ export default function Gridlines() {
       isLoaded={isLoaded}
       winLoseMessage={
         game.won
-          ? `You beat the grid ${game.youScore}-${game.gridScore}!`
-          : `The grid wins ${game.gridScore}-${game.youScore}.`
+          ? i18n.t("games:gridlines.youBeatTheGrid", {
+              youScore: game.youScore,
+              gridScore: game.gridScore,
+            })
+          : i18n.t("games:gridlines.theGridWins", {
+              gridScore: game.gridScore,
+              youScore: game.youScore,
+            })
       }
       canUndo={canUndo}
       undo={undo}

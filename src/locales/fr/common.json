@@ -1,0 +1,20 @@
+{
+  "cancel": "Annuler",
+  "close": "Fermer",
+  "reset": "Réinitialiser",
+  "play": "Jouer",
+  "home": "Accueil",
+  "notAvailable": "N/D",
+  "stats": {
+    "complexity": "Complexité",
+    "difficulty": "Difficulté",
+    "luck": "Chance",
+    "played": "Jouées",
+    "won": "Gagnées",
+    "lost": "Perdues",
+    "winRate": "Taux de victoire",
+    "winPercent": "% victoires",
+    "best": "Meilleur",
+    "fastest": "Plus rapide"
+  }
+}

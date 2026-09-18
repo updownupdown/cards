@@ -1,0 +1,119 @@
+{
+  "tabs": {
+    "home": "Ana sayfa",
+    "collect": "Koleksiyon",
+    "search": "Ara",
+    "nodes": "Harita"
+  },
+  "cardSize": {
+    "small": "Liste",
+    "medium": "Kartlar",
+    "large": "Ayrıntılar"
+  },
+  "random": {
+    "roll": "Rastgele oyunlar",
+    "clear": "Rastgele oyunları temizle"
+  },
+  "favorites": {
+    "add": "Favorilere ekle",
+    "remove": "Favorilerden çıkar"
+  },
+  "search": {
+    "placeholder": "Ara...",
+    "clear": "Aramayı temizle",
+    "filters": "Filtreler",
+    "filter": "Filtrele",
+    "resetFilters": "Filtreleri sıfırla",
+    "all": "Tümü",
+    "unplayed": "Oynanmamış"
+  },
+  "sections": {
+    "localOnly": "Yalnızca yerel oyunlar",
+    "startEasy": "Kolaydan başla!",
+    "startEasyIntro": "Başlamak için öğrenmesi kolay birkaç oyun. Daha fazlasını Koleksiyon sekmesinde bulabilirsin.",
+    "discoverMore": "Daha fazla oyun keşfet",
+    "gameOfTheDay": "Günün oyunu",
+    "jumpBackIn": "Kaldığın yerden devam et",
+    "favorites": "Favoriler",
+    "becauseYouLiked": "“{{title}}” oyununu sevdiğin için"
+  },
+  "collect": {
+    "tagProgress": "{{tag}}, %{{percentage}} kazanıldı"
+  },
+  "tags": {
+    "EasyToLearn": "Öğrenmesi kolay",
+    "TableauBuilding": "Sütunlu pasyans",
+    "ModernMechanics": "Modern mekanikler",
+    "DungeonCrawler": "Zindan macerası",
+    "CardCombat": "Kart savaşı",
+    "GridPlacement": "Izgaraya yerleştirme",
+    "PokerAndCribbage": "Poker ve cribbage",
+    "PairMatching": "Çift eşleştirme",
+    "SequenceBuilding": "Dizi kurma",
+    "StockAndWaste": "Deste ve açık deste",
+    "ScoringPuzzles": "Puanlı bulmacalar",
+    "SpatialControl": "Alan kontrolü"
+  },
+  "statsTab": {
+    "personas": {
+      "nemesis": {
+        "title": "Baş düşman",
+        "subtitle": "En düşük kazanma oranı"
+      },
+      "comfort": {
+        "title": "Güvenli liman",
+        "subtitle": "En yüksek kazanma oranı"
+      },
+      "whale": {
+        "title": "Beyaz balina",
+        "subtitle": "Kazanmadan en çok deneme"
+      },
+      "underdog": {
+        "title": "Sürpriz aday",
+        "subtitle": "Yüksek kazanma, az deneme"
+      }
+    },
+    "sortBy": "Sırala: {{column}}",
+    "columns": {
+      "game": "Oyun",
+      "won": "Kzn.",
+      "lost": "Kyb.",
+      "winPercent": "% K",
+      "best": "Rek.",
+      "time": "Süre"
+    },
+    "columnNames": {
+      "game": "Oyun",
+      "won": "Kazanılan oyunlar",
+      "lost": "Kaybedilen oyunlar",
+      "winPercent": "Kazanma oranı",
+      "best": "En iyi puan",
+      "time": "En hızlı süre"
+    },
+    "empty": {
+      "title": "Eyvah, gösterilecek istatistik yok!",
+      "body": "Birkaç oyun oynadıktan sonra istatistiklerini burada görebilirsin."
+    },
+    "fullStats": {
+      "title": "Tüm istatistikler",
+      "noStats": "Gösterilecek istatistik yok",
+      "onlyPlayed": "Yalnızca oynanan oyunlar gösterilir"
+    },
+    "total": "Toplam"
+  },
+  "statsModal": {
+    "title": "İstatistikler"
+  },
+  "install": {
+    "titleIos": "SoloSuite'i ana ekranına ekle",
+    "titleInstall": "SoloSuite'i yükle",
+    "titleDevice": "SoloSuite'i cihazına ekle",
+    "instructionsIos": "Safari'de Paylaş düğmesine dokun, ardından “Ana Ekrana Ekle”yi seç.",
+    "instructionsInstall": "Daha hızlı açılış, tam ekran deneyim ve çevrimdışı oyun için yükle.",
+    "instructionsBrowser": "Tarayıcı menünü aç ve “Uygulamayı yükle” ya da “Ana ekrana ekle”yi seç.",
+    "accepted": "Harika! Tarayıcın yüklemeyi arka planda tamamlıyor.",
+    "dismissed": "Sorun değil; istediğin zaman tarayıcı menüsünden yükleyebilirsin.",
+    "installNow": "Şimdi yükle",
+    "notNow": "Şimdi değil"
+  }
+}

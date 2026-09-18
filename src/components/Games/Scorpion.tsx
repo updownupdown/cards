@@ -20,6 +20,7 @@ import {
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const TABLEAU_FAN_OFFSET = 0.35;
 
 export type ScorpionState = {
@@ -211,7 +212,7 @@ export default function Scorpion() {
       row: 1.6,
       baseZIndex: 10 + pileIndex,
       fan: { direction: "down", offset: TABLEAU_FAN_OFFSET },
-      placeholder: { showCount: false, text: "Empty" },
+      placeholder: { showCount: false, text: i18n.t("cards:empty") },
     }));
 
     return [
@@ -223,7 +224,7 @@ export default function Scorpion() {
         row: 0,
         baseZIndex: 35,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "below" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "below" },
       },
       {
         id: "foundation-0",
@@ -626,7 +627,6 @@ export default function Scorpion() {
     return makeDragHandlers(source, startGhostDrag, onTap);
   }
 
-
   function getTapHandler(source: MoveSource) {
     return () => onTableauCardPress(source.pileIndex, source.cardIndex);
   }
@@ -665,7 +665,9 @@ export default function Scorpion() {
       isLoaded={isLoaded}
       canUndo={canUndo}
       undo={undo}
-      winLoseMessage={won ? "All four suit stacks are complete." : undefined}
+      winLoseMessage={
+        won ? i18n.t("games:scorpion.allFourSuitStacksAre") : undefined
+      }
     >
       <View
         ref={boardRef}

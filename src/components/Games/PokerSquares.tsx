@@ -27,6 +27,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
 import { useGameColors } from "@/hooks/useGameColors";
 
+import { i18n } from "@/i18n";
 const GRID_SIZE = 5;
 const TARGET_SCORE = 200;
 
@@ -95,16 +96,16 @@ function handCategory(hand: PlayingCard[]) {
 
 function handCategoryName(category: number) {
   return [
-    "No hand",
-    "One pair",
-    "Two pair",
+    i18n.t("games:pokerSquares.noHand"),
+    i18n.t("games:pocketPoker.hands.onePair"),
+    i18n.t("games:pocketPoker.hands.twoPair"),
     "x3",
-    "Straight",
-    "Flush",
-    "Full house",
+    i18n.t("games:pocketPoker.hands.straight"),
+    i18n.t("games:pocketPoker.hands.flush"),
+    i18n.t("games:pocketPoker.hands.fullHouse"),
     "x4",
-    "Straight flush",
-    "Royal flush",
+    i18n.t("games:pocketPoker.hands.straightFlush"),
+    i18n.t("cards:royalFlush"),
   ][category];
 }
 
@@ -289,7 +290,7 @@ export default function PokerSquares() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: "Stock", infoPos: "right" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "right" },
       },
       {
         id: "end-game",
@@ -374,8 +375,13 @@ export default function PokerSquares() {
       isLoaded={isLoaded}
       winLoseMessage={
         game.won
-          ? `Great hand! You scored ${game.score}.`
-          : `You scored ${game.score}. Try for ${TARGET_SCORE} next time.`
+          ? i18n.t("games:pokerSquares.greatHandYouScored", {
+              score: game.score,
+            })
+          : i18n.t("games:pokerSquares.youScoredTryForNext", {
+              score: game.score,
+              TARGET_SCORE,
+            })
       }
       canUndo={canUndo}
       undo={undo}
@@ -392,10 +398,10 @@ export default function PokerSquares() {
           ]}
         >
           <Text size="lg" weight={500} color={colorPale}>
-            {`Score: ${game.score} pts`}
+            {i18n.t("cards:scorePts", { score: game.score })}
           </Text>
           <Button
-            text="End Game"
+            text={i18n.t("cards:endGame")}
             onPress={endGame}
             size="sm"
             fullWidth

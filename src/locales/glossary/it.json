@@ -1,0 +1,73 @@
+{
+  "style": {
+    "formality": "Use informal \"tu\" throughout, as Italian apps and games do.",
+    "gameTitles": "Translate game titles: use the established Italian name of a classic solitaire when there is one, translate descriptive titles, and keep proper names. The current titles are the `title` entries in content/games.json; when rules mention another game, use its Italian title.",
+    "cardIndices": "Keep single-letter card indices (A, K, Q, J) as they are. Translate full rank and suit words, with plurals.",
+    "typography": "Use « » for quotation marks. No space before : ; ! ?",
+    "markup": "Keep {{placeholders}}, <tags>, line breaks and markdown (##, -, **) exactly."
+  },
+  "ranks": {
+    "Ace": {
+      "one": "Asso",
+      "other": "Assi"
+    },
+    "King": {
+      "one": "Re",
+      "other": "Re"
+    },
+    "Queen": {
+      "one": "Donna",
+      "other": "Donne"
+    },
+    "Jack": {
+      "one": "Fante",
+      "other": "Fanti"
+    },
+    "Joker": {
+      "one": "Jolly",
+      "other": "Jolly"
+    }
+  },
+  "suits": {
+    "hearts": {
+      "one": "cuori",
+      "other": "cuori"
+    },
+    "diamonds": {
+      "one": "quadri",
+      "other": "quadri"
+    },
+    "clubs": {
+      "one": "fiori",
+      "other": "fiori"
+    },
+    "spades": {
+      "one": "picche",
+      "other": "picche"
+    }
+  },
+  "terms": {
+    "suit": "seme (picche, cuori, quadri, fiori)",
+    "rank": "valore",
+    "alternating colors (red and black)": "alternando rosso e nero",
+    "foundation": "fondazione",
+    "tableau": "colonne (il tableau)",
+    "column": "colonna",
+    "stock": "mazzo",
+    "waste (pile of turned stock cards)": "pozzo",
+    "discard (pile of discarded or removed cards)": "scarti",
+    "reserve": "riserva",
+    "free cell": "cella libera",
+    "deal": "distribuire",
+    "redeal": "ridistribuire",
+    "build up / build down": "costruire in ordine crescente / decrescente",
+    "run / sequence": "sequenza",
+    "pile": "pila",
+    "empty column": "colonna vuota",
+    "undo": "annulla",
+    "node (progression map)": "nodo",
+    "collectible": "collezionabile",
+    "quote": "citazione",
+    "chapter": "capitolo"
+  }
+}

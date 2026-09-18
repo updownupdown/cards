@@ -27,6 +27,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useToast } from "../common/Toast";
 import { rgba } from "@/styles/styles";
 
+import { i18n } from "@/i18n";
 const SIZE = 7;
 const CELLS = SIZE * SIZE;
 const baseScore = 49;
@@ -300,7 +301,11 @@ export default function Archipelago() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 40,
-        placeholder: { text: "Stock", infoPos: "right", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:stock"),
+          infoPos: "right",
+          showCount: true,
+        },
       },
       { id: "hud", col: 1.75, row: 0, width: 3.5, height: 1, baseZIndex: 1 },
       {
@@ -319,7 +324,7 @@ export default function Archipelago() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 40,
-        placeholder: { text: "Out", infoPos: "left" },
+        placeholder: { text: i18n.t("games:archipelago.out"), infoPos: "left" },
       },
       ...cellZones,
     ];
@@ -341,7 +346,7 @@ export default function Archipelago() {
       return {
         onPress: () => {
           if (!isLegal || game.ended) {
-            showToast("Not a legal placement");
+            showToast(i18n.t("games:archipelago.notALegalPlacement"));
           } else {
             place(cell);
           }
@@ -366,7 +371,11 @@ export default function Archipelago() {
       score={score}
       reset={reset}
       isLoaded={isLoaded}
-      winLoseMessage={game.won ? `Island complete!` : `Island unfinished!`}
+      winLoseMessage={
+        game.won
+          ? i18n.t("games:archipelago.islandComplete")
+          : i18n.t("games:archipelago.islandUnfinished")
+      }
       canUndo={canUndo}
       undo={undo}
     >

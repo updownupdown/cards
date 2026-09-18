@@ -1,3 +1,4 @@
+import { i18n } from "@/i18n";
 import { useStateManager } from "@/hooks/useStateManager";
 import { useAutoComplete } from "@/hooks/useAutoComplete";
 import {
@@ -112,7 +113,7 @@ type YukonProps = {
 
 export function YukonBoard({
   canStack = yukonCanStack,
-  winMessage = "You cleared the board!",
+  winMessage = i18n.t("games:allInARow.youClearedTheBoard"),
 }: YukonProps) {
   const [selected, setSelected] = useState<MoveSource | null>(null);
   const [lastTap, setLastTap] = useState<{ key: string; at: number } | null>(
@@ -613,7 +614,6 @@ export function YukonBoard({
       }),
     [cardHitAreas],
   );
-
 
   return (
     <GameWrapper

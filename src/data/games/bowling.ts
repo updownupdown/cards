@@ -20,7 +20,7 @@ export const bowling: GameDefinition = {
   quickStart: [
     "Pick a ball card, and 1 to 3 adjacent pins cards.",
     "The ball can be thrown if the last digits match.",
-    "End ball if not valid match is found.",
+    "End the ball if no valid match is found.",
   ],
   howToPlay: [
     "## Objective",

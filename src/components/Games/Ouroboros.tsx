@@ -29,6 +29,7 @@ import {
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const maxMarkedPaths = 3;
 
 export type LoopRank = PlayingCard["rank"] | "Joker";
@@ -306,14 +307,14 @@ export default function Ouroboros() {
         // Lose condition: landed directly on face card
         draft.ended = true;
         draft.won = false;
-        draft.winLoseMessage = "You landed on a trap!";
+        draft.winLoseMessage = i18n.t("games:ouroboros.landedOnTrap");
         return;
       } else if (newTopCard.faceUp && isJoker(newTopCard)) {
         // Win condition: found all aces and landed on joker (exit)
         if (draft.acesPile.length === 4) {
           draft.ended = true;
           draft.won = true;
-          draft.winLoseMessage = "You got all four jewels and found the exit!";
+          draft.winLoseMessage = i18n.t("games:ouroboros.gotAllJewels");
           return;
         } else {
           // Landed on joker without all aces does nothing
@@ -384,8 +385,8 @@ export default function Ouroboros() {
         draft.won = false;
         draft.winLoseMessage =
           draft.acesPile.length + draft.trinketsPile.length > 0
-            ? "You got lost in the dungeon with no way out! You die with your loot."
-            : "You got lost in the dungeon with no way out!";
+            ? i18n.t("games:ouroboros.lostWithLoot")
+            : i18n.t("games:ouroboros.lostInDungeon");
       });
     }
   }, [game]);
@@ -510,7 +511,7 @@ export default function Ouroboros() {
         cards: game.acesPile,
         placeholder: {
           infoPos: "left",
-          text: "Jewels",
+          text: i18n.t("games:ouroboros.jewels"),
         },
         fan: {},
       },
@@ -520,7 +521,10 @@ export default function Ouroboros() {
         col: 2 * dims.colOffset + dims.colStart - infoSize.leftRight,
         row: dims.acesRow,
         cards: game.trinketsPile,
-        placeholder: { infoPos: "right", text: "Trinkets" },
+        placeholder: {
+          infoPos: "right",
+          text: i18n.t("games:ouroboros.trinkets"),
+        },
         fan: { maxVisible: 3 },
       },
       {
@@ -681,7 +685,7 @@ export default function Ouroboros() {
             ]}
           >
             <Button
-              text="Mark Path"
+              text={i18n.t("games:ouroboros.markPath")}
               size="xs"
               textOnly
               onPress={() => {
@@ -712,7 +716,7 @@ export default function Ouroboros() {
         ]}
       >
         <Button
-          text="Explore"
+          text={i18n.t("games:ouroboros.explore")}
           onPress={() => {
             if (selectedCardIndex !== undefined) {
               explore(selectedCardIndex);
@@ -729,7 +733,7 @@ export default function Ouroboros() {
         />
 
         <Button
-          text="Return to Path"
+          text={i18n.t("games:ouroboros.returnToPath")}
           onPress={returnToSelectedMarkedPath}
           disabled={selectedPath === undefined}
           style={[flexStyles.flex1]}
@@ -739,7 +743,7 @@ export default function Ouroboros() {
         />
 
         <Button
-          text="Look Around"
+          text={i18n.t("games:ouroboros.lookAround")}
           onPress={lookAround}
           disabled={
             game.ended ||

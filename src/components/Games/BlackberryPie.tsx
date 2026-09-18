@@ -16,14 +16,14 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const cardSize = "tableau";
 const BERRY_COUNT = 10;
 const HAND_LIMIT = 3;
 const BOTTOM_ROW = 3.6;
 
 type CardSource =
-  | { type: "hand"; cardId: string }
-  | { type: "retainer"; cardId: string };
+  { type: "hand"; cardId: string } | { type: "retainer"; cardId: string };
 
 export type BlackberryPieGameState = {
   queen: PlayingCard[];
@@ -281,7 +281,7 @@ export default function BlackberryPie() {
         col: 9,
         row: BOTTOM_ROW,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "left" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "left" },
       },
       {
         id: "hand",
@@ -368,8 +368,11 @@ export default function BlackberryPie() {
       showDeviceRotateHint
       winLoseMessage={
         game.won
-          ? `The pie is ready! You collected all ${BERRY_COUNT} berries.`
-          : `You collected ${collectedCount} of ${BERRY_COUNT} berries.`
+          ? i18n.t("games:blackberryPie.thePieIsReadyYou", { BERRY_COUNT })
+          : i18n.t("games:blackberryPie.youCollectedOfBerries", {
+              collectedCount,
+              BERRY_COUNT,
+            })
       }
     >
       {cardMap}

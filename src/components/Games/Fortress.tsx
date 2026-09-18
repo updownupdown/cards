@@ -1,3 +1,4 @@
+import { i18n } from "@/i18n";
 import {
   beleagueredCastleRules,
   CastleBoard,
@@ -67,7 +68,7 @@ export default function Fortress() {
       createState={createFortressState}
       deal={dealFortress}
       canStack={fortressCanStack}
-      winMessage="The fortress is complete!"
+      winMessage={i18n.t("games:fortress.theFortressIsComplete")}
     />
   );
 }

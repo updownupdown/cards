@@ -22,6 +22,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
 import { Colors, rgba } from "@/styles/styles";
 
+import { i18n } from "@/i18n";
 const BOARD_COLS = 4;
 const BOARD_ROWS = 2;
 const BOARD_CELLS = BOARD_COLS * BOARD_ROWS;
@@ -43,16 +44,25 @@ export type SeerGameState = {
 };
 
 const PREDICTIONS: readonly {
-  subtitle: string;
+  /** The prediction's label, in games:seer.predictions. */
+  subtitle:
+    | "red"
+    | "redOddBlackEven"
+    | "even"
+    | "diamondsHearts"
+    | "spadesClubs"
+    | "odd"
+    | "blackOddRedEven"
+    | "black";
 }[] = [
-  { subtitle: "Red" },
-  { subtitle: "RO  ·  BE" },
-  { subtitle: "Even" },
-  { subtitle: "♦  ·  ♥" },
-  { subtitle: "♠  ·  ♣" },
-  { subtitle: "Odd" },
-  { subtitle: "BO  ·  RE" },
-  { subtitle: "Black" },
+  { subtitle: "red" },
+  { subtitle: "redOddBlackEven" },
+  { subtitle: "even" },
+  { subtitle: "diamondsHearts" },
+  { subtitle: "spadesClubs" },
+  { subtitle: "odd" },
+  { subtitle: "blackOddRedEven" },
+  { subtitle: "black" },
 ];
 
 function PredictionMark({ index }: { index: number }) {
@@ -182,16 +192,15 @@ function updateOutcome(draft: SeerGameState) {
   if (draft.board.every(isCompleted)) {
     draft.ended = true;
     draft.won = true;
-    draft.winLoseMessage = "All eight predictions are complete.";
+    draft.winLoseMessage = i18n.t("games:seer.allPredictionsComplete");
   } else if (draft.stock.length === 0) {
     draft.ended = true;
     draft.won = false;
-    draft.winLoseMessage =
-      "The deck ran out before all predictions were complete.";
+    draft.winLoseMessage = i18n.t("games:seer.deckRanOut");
   } else if (draft.board.every(isBlocked)) {
     draft.ended = true;
     draft.won = false;
-    draft.winLoseMessage = "All eight predictions are blocked by stones.";
+    draft.winLoseMessage = i18n.t("games:seer.allPredictionsBlocked");
   }
 }
 
@@ -367,7 +376,7 @@ export default function Seer() {
         row: 0,
         baseZIndex: 30,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Deck", infoPos: "right" },
+        placeholder: { text: i18n.t("games:seer.deck"), infoPos: "right" },
       },
       {
         id: "table",
@@ -481,9 +490,9 @@ export default function Seer() {
 
   const prompt =
     game.pendingHardChoice.length > 0
-      ? "Choose one highlighted stone"
+      ? i18n.t("games:seer.chooseHighlightedStone")
       : game.pendingFreed.length > 0
-        ? `${game.pendingFreed.length} freed ${game.pendingFreed.length === 1 ? "stone" : "stones"}`
+        ? i18n.t("games:seer.freedStones", { count: game.pendingFreed.length })
         : "";
 
   return (
@@ -512,7 +521,14 @@ export default function Seer() {
           <Pressable
             key={prediction.subtitle}
             accessibilityRole="button"
-            accessibilityLabel={`${prediction.subtitle} prediction, ${stoneCount(game.board[index])} stones${complete ? ", complete" : ""}${blocked ? ", blocked" : ""}`}
+            accessibilityLabel={
+              i18n.t("games:seer.predictionLabel", {
+                label: i18n.t(`games:seer.predictions.${prediction.subtitle}`),
+                count: stoneCount(game.board[index]),
+              }) +
+              (complete ? i18n.t("games:seer.complete") : "") +
+              (blocked ? i18n.t("games:seer.blocked") : "")
+            }
             accessibilityState={{ disabled, selected: hardTarget }}
             onPress={() =>
               hardTarget ? chooseHardStone(index) : choosePrediction(index)
@@ -546,7 +562,7 @@ export default function Seer() {
                 },
               ]}
             >
-              {prediction.subtitle}
+              {i18n.t(`games:seer.predictions.${prediction.subtitle}`)}
             </Text>
 
             {stoneCount(game.board[index]) > 0 && (
@@ -594,14 +610,14 @@ export default function Seer() {
           <>
             <Button
               size="md"
-              text="Reveal"
+              text={i18n.t("games:seer.reveal")}
               theme="orange"
               taller
               onPress={() => chooseFreedDisposition(false)}
             />
             <Button
               size="md"
-              text="Return"
+              text={i18n.t("games:seer.return")}
               theme="purple"
               taller
               onPress={() => chooseFreedDisposition(true)}

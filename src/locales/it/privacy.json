@@ -1,0 +1,33 @@
+{
+  "title": "Informativa sulla privacy",
+  "lastUpdated": "Ultimo aggiornamento: {{date}}",
+  "translationNote": "Questa traduzione è fornita per comodità. In caso di differenze con la versione inglese di questa informativa, prevale la versione inglese.",
+  "summary": {
+    "title": "In breve",
+    "body": "SoloSuite non raccoglie, conserva né condivide alcuna informazione personale. L'app non ha account, strumenti di analisi, pubblicità né server. Tutto ciò che fai nell'app resta sul tuo dispositivo."
+  },
+  "stored": {
+    "title": "Dati salvati sul tuo dispositivo",
+    "body": "SoloSuite salva le statistiche di gioco, i preferiti, le impostazioni e le partite in corso nella memoria locale del dispositivo. Queste informazioni non lasciano mai il dispositivo, non vengono mai trasmesse a noi né a terzi e vengono rimosse automaticamente se disinstalli l'app o ne cancelli i dati."
+  },
+  "collected": {
+    "title": "Dati che raccogliamo",
+    "body": "Nessuno. SoloSuite non usa servizi di analisi, di segnalazione degli arresti anomali o di pubblicità, e non chiede né conserva il tuo nome, il tuo indirizzo email, la tua posizione o altre informazioni personali."
+  },
+  "links": {
+    "title": "Link esterni",
+    "body": "Alcune schermate includono link facoltativi a siti web esterni (per esempio i crediti delle fotografie). Toccandone uno si apre il browser del dispositivo o direttamente il sito collegato. SoloSuite non ha alcun controllo sulle pratiche di privacy di quei siti esterni e non ne è responsabile."
+  },
+  "children": {
+    "title": "Privacy dei minori",
+    "body": "SoloSuite non raccoglie consapevolmente informazioni da nessuno, minori compresi, perché non raccoglie informazioni da alcun utente."
+  },
+  "changes": {
+    "title": "Modifiche a questa informativa",
+    "body": "Se questa informativa dovesse cambiare, una versione aggiornata verrà pubblicata a questo stesso indirizzo, con una nuova data qui sopra."
+  },
+  "contact": {
+    "title": "Contatti",
+    "body": "Le domande su questa informativa possono essere inviate a <link>{{email}}</link>."
+  }
+}

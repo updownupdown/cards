@@ -15,6 +15,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const reserveCount = 20;
 const reserveCols = 5;
 const dealSize = 20;
@@ -22,7 +23,7 @@ const reserveCol = 1.2;
 const rowStep = 1.1;
 const kingCol = reserveCol + reserveCols + 0.2;
 // Bottom row for the stock, leaving room for its label above.
-const stockRow = 3 * rowStep + 1 + 0.55;
+const stockRow = 3 * rowStep + 1 + 0.25;
 
 /**
  * "opening": reserve gaps refill from the stock.
@@ -130,7 +131,9 @@ export default function SlyFox() {
         const take = (rank: "A" | "K", suit: PlayingCard["suit"]) =>
           flipToFace(
             deck.splice(
-              deck.findIndex((card) => card.rank === rank && card.suit === suit),
+              deck.findIndex(
+                (card) => card.rank === rank && card.suit === suit,
+              ),
               1,
             )[0],
           );
@@ -246,8 +249,11 @@ export default function SlyFox() {
         row: stockRow,
         fan: { maxVisible: 3 },
         placeholder: {
-          text: game.phase === "dealing" ? `Place ${game.toPlace}` : "Stock",
-          infoPos: "above",
+          text:
+            game.phase === "dealing"
+              ? i18n.t("games:slyFox.place", { toPlace: game.toPlace })
+              : i18n.t("cards:stock"),
+          infoPos: "left",
           showCount: game.phase !== "dealing",
         },
       },
@@ -260,7 +266,10 @@ export default function SlyFox() {
     mappedCard: MappedCard,
   ): AnimatedCardMapping | undefined => {
     if (!mappedCard.topOfZone) return {};
-    if (mappedCard.zoneName === "reserve" && mappedCard.pileIndex !== undefined) {
+    if (
+      mappedCard.zoneName === "reserve" &&
+      mappedCard.pileIndex !== undefined
+    ) {
       const index = mappedCard.pileIndex;
       return {
         isDisabled: game.ended,
@@ -311,7 +320,11 @@ export default function SlyFox() {
       reset={reset}
       isLoaded={isLoaded}
       score={placed}
-      winLoseMessage={game.won ? "Outfoxed the deck!" : "No moves remain."}
+      winLoseMessage={
+        game.won
+          ? i18n.t("games:slyFox.outfoxedTheDeck")
+          : i18n.t("cards:noMovesRemain")
+      }
       canUndo={canUndo}
       undo={undo}
     >

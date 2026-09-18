@@ -54,10 +54,16 @@ describe("klondikeRules", () => {
       ]),
     ).toBe(true);
     expect(
-      klondikeRules.isValidTableauRun([card("K", "spades"), card("Q", "clubs")]),
+      klondikeRules.isValidTableauRun([
+        card("K", "spades"),
+        card("Q", "clubs"),
+      ]),
     ).toBe(false);
     expect(
-      klondikeRules.isValidTableauRun([card("K", "spades"), card("J", "hearts")]),
+      klondikeRules.isValidTableauRun([
+        card("K", "spades"),
+        card("J", "hearts"),
+      ]),
     ).toBe(false);
   });
 

@@ -1,4 +1,11 @@
-import { afterEach, beforeEach, describe, expect, jest, test } from "@jest/globals";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from "@jest/globals";
 import "../../../jest/game-mocks";
 import {
   card,
@@ -47,7 +54,10 @@ describe("Delta 21", () => {
   // Score is studies + 2 per breakthrough; 9 or more wins when play ends.
   async function playLastCard(studyCount: number) {
     const two = card("2", "spades");
-    const segments = Array.from({ length: 4 }, () => [] as { school: PlayingCard; fisherman: PlayingCard | null }[]);
+    const segments = Array.from(
+      { length: 4 },
+      () => [] as { school: PlayingCard; fisherman: PlayingCard | null }[],
+    );
     segments[0] = [{ school: card("5", "spades"), fisherman: null }];
     await renderGame("/delta-21", Delta21, {
       station: [],

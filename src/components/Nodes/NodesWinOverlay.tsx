@@ -4,11 +4,20 @@ import { getQuote, getTaoChapter } from "@/data/collectibles";
 import { GAMES_DATA } from "@/data/games-registry";
 import { getNodeDefinition } from "@/data/nodes-map";
 import type { NodesWinResult } from "@/data/nodes-progress";
+import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useDisplayLanguage, useTranslation } from "@/i18n";
+import {
+  isQuoteTranslated,
+  isTaoChapterTranslated,
+  localizeGameTitle,
+  localizeQuote,
+  localizeTaoChapter,
+} from "@/i18n/content";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, rgba } from "@/styles/styles";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Animated,
   Easing,
@@ -17,6 +26,7 @@ import {
   ScrollView,
   View,
 } from "react-native";
+import { ShowOriginalToggle } from "./ShowOriginalToggle";
 
 type NodesWinOverlayProps = {
   path: string;
@@ -32,6 +42,28 @@ type RewardDetailsProps = {
 
 function RewardDetails({ reward, chapter, quote }: RewardDetailsProps) {
   const { spacing } = useResponsiveMetrics();
+  const { t } = useTranslation("nodes");
+  const language = useDisplayLanguage();
+  const { translateCollectibles } = useGlobalSettings().settings;
+  const [showOriginal, setShowOriginal] = useState(false);
+  const toggleOriginal = () => setShowOriginal((current) => !current);
+
+  const chapterTranslated =
+    translateCollectibles &&
+    !!chapter &&
+    isTaoChapterTranslated(reward.id, chapter, language);
+  const shownChapter =
+    chapter && chapterTranslated && !showOriginal
+      ? localizeTaoChapter(reward.id, chapter, language)
+      : chapter;
+  const quoteTranslated =
+    translateCollectibles &&
+    !!quote &&
+    isQuoteTranslated(reward.id, quote, language);
+  const shownQuote =
+    quote && quoteTranslated && !showOriginal
+      ? localizeQuote(reward.id, quote, language)
+      : quote;
 
   return (
     <View
@@ -51,13 +83,13 @@ function RewardDetails({ reward, chapter, quote }: RewardDetailsProps) {
         />
         <Text size="lg" weight={300} color={Colors.K500}>
           {reward.type === "tao"
-            ? `Chapter ${reward.id}`
-            : `Quote ${reward.id}`}
+            ? t("reward.chapter", { number: reward.id })
+            : t("reward.quote", { number: reward.id })}
         </Text>
       </View>
 
       {/* Tao Chapter Text */}
-      {chapter && reward.type === "tao" && (
+      {shownChapter && reward.type === "tao" && (
         <ScrollView
           contentContainerStyle={{
             gap: spacing(12),
@@ -67,13 +99,20 @@ function RewardDetails({ reward, chapter, quote }: RewardDetailsProps) {
           showsVerticalScrollIndicator={false}
         >
           <Text size="lg" weight={300} color={Colors.K100}>
-            {chapter.text}
+            {shownChapter.text}
           </Text>
+
+          {chapterTranslated && (
+            <ShowOriginalToggle
+              showOriginal={showOriginal}
+              onToggle={toggleOriginal}
+            />
+          )}
         </ScrollView>
       )}
 
       {/* Quote Text */}
-      {quote && reward.type === "quote" && (
+      {shownQuote && reward.type === "quote" && (
         <ScrollView
           contentContainerStyle={[
             flexStyles.colCentered,
@@ -83,23 +122,32 @@ function RewardDetails({ reward, chapter, quote }: RewardDetailsProps) {
           showsVerticalScrollIndicator={false}
         >
           <Text size="xl" weight={300} color={Colors.K100}>
-            {quote.text}
+            {shownQuote.text}
           </Text>
 
-          {quote.author && (
+          {shownQuote.author && (
             <Text
               size="lg"
               weight={400}
               color={Colors.K500}
               style={{ marginTop: spacing(12) }}
             >
-              {quote.author}
+              {shownQuote.author}
             </Text>
           )}
-          {quote.source && (
+          {shownQuote.source && (
             <Text size="xs" weight={300} color={Colors.K500}>
-              {quote.source}
+              {shownQuote.source}
             </Text>
+          )}
+
+          {quoteTranslated && (
+            <View style={{ marginTop: spacing(12) }}>
+              <ShowOriginalToggle
+                showOriginal={showOriginal}
+                onToggle={toggleOriginal}
+              />
+            </View>
           )}
         </ScrollView>
       )}
@@ -113,6 +161,8 @@ export function NodesWinOverlay({
   onClose,
 }: NodesWinOverlayProps) {
   const { spacing, ui } = useResponsiveMetrics();
+  const { t } = useTranslation("nodes");
+  const language = useDisplayLanguage();
   const overlayOpacity = useRef(new Animated.Value(0)).current;
   const node = getNodeDefinition(path);
   const reward = result.awardedReward;
@@ -150,7 +200,7 @@ export function NodesWinOverlay({
       }}
     >
       <Pressable
-        accessibilityLabel="Dismiss collectible notification"
+        accessibilityLabel={t("reward.dismiss")}
         onPress={onClose}
         style={{
           position: "absolute",
@@ -180,7 +230,7 @@ export function NodesWinOverlay({
         ]}
       >
         <Button
-          accessibilityLabel="Dismiss collectible notification"
+          accessibilityLabel={t("reward.dismiss")}
           iconName="close"
           size="lg"
           theme="transparent"
@@ -199,7 +249,7 @@ export function NodesWinOverlay({
         />
 
         <Text size="xl" weight={500} color={Colors.K200}>
-          {reward ? "New collectible earned!" : "New nodes unlocked!"}
+          {reward ? t("reward.earned") : t("reward.unlocked")}
         </Text>
 
         {reward && (chapter || quote) && (
@@ -209,10 +259,18 @@ export function NodesWinOverlay({
         {/* Unlocked games */}
         {result.newlyUnlockedPaths.length > 0 && (
           <Text size="md" weight={500} color={Colors.K200}>
-            Unlocked game{result.newlyUnlockedPaths.length > 1 ? "s" : ""}:{" "}
+            {t("reward.unlockedGames", {
+              count: result.newlyUnlockedPaths.length,
+            })}{" "}
             <Text size="md" color={Colors.K400}>
               {result.newlyUnlockedPaths
-                .map((unlockedPath) => GAMES_DATA[unlockedPath].title)
+                .map((unlockedPath) =>
+                  localizeGameTitle(
+                    GAMES_DATA[unlockedPath],
+                    unlockedPath,
+                    language,
+                  ),
+                )
                 .join(", ")}
             </Text>
           </Text>

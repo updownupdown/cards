@@ -16,6 +16,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const pileCount = 8;
 const tableauRow = 1.2;
 // Rows of height each King's pile may fan into.
@@ -233,7 +234,11 @@ export default function SalicLaw() {
         col: pileCount - 2.25,
         row: stockRow,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Queens", infoPos: "above", showCount: true },
+        placeholder: {
+          text: i18n.t("games:salicLaw.queens"),
+          infoPos: "above",
+          showCount: true,
+        },
       },
       {
         id: "stock",
@@ -242,7 +247,11 @@ export default function SalicLaw() {
         col: pileCount - 1,
         row: stockRow,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "above", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:stock"),
+          infoPos: "above",
+          showCount: true,
+        },
       },
     ];
   }, [game]);
@@ -250,7 +259,10 @@ export default function SalicLaw() {
   const cardMapper = (
     mappedCard: MappedCard,
   ): AnimatedCardMapping | undefined => {
-    if (mappedCard.zoneName === "tableau" && mappedCard.pileIndex !== undefined) {
+    if (
+      mappedCard.zoneName === "tableau" &&
+      mappedCard.pileIndex !== undefined
+    ) {
       const pile = mappedCard.pileIndex;
       const isTarget =
         selected !== null &&
@@ -298,7 +310,11 @@ export default function SalicLaw() {
       reset={reset}
       isLoaded={isLoaded}
       score={placed}
-      winLoseMessage={game.won ? "The Kings stand alone!" : "No moves remain."}
+      winLoseMessage={
+        game.won
+          ? i18n.t("games:salicLaw.theKingsStandAlone")
+          : i18n.t("cards:noMovesRemain")
+      }
       canUndo={canUndo}
       undo={undo}
     >

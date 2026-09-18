@@ -1,4 +1,11 @@
-import { afterEach, beforeEach, describe, expect, jest, test } from "@jest/globals";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from "@jest/globals";
 import "../../../jest/game-mocks";
 import {
   card,
@@ -23,7 +30,11 @@ afterEach(() => {
 
 describe("Three Peaks", () => {
   // Bottom-row cards (indices 18-27) have no blockers.
-  const exposed = (rank: PlayingCard["rank"], suit: PlayingCard["suit"], col: number) => ({
+  const exposed = (
+    rank: PlayingCard["rank"],
+    suit: PlayingCard["suit"],
+    col: number,
+  ) => ({
     ...card(rank, suit),
     row: 3,
     col,

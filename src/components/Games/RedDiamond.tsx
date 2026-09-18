@@ -12,6 +12,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 
+import { i18n } from "@/i18n";
 type AnchorIndex = 0 | 1 | 2 | 3;
 
 type PileDefinition = {
@@ -325,7 +326,10 @@ export default function RedDiamond() {
         row: 5.25,
         baseZIndex: 50,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Diamonds", infoPos: "left" },
+        placeholder: {
+          text: i18n.t("games:redDiamond.diamonds"),
+          infoPos: "left",
+        },
       },
       {
         id: "black-stock",
@@ -335,7 +339,7 @@ export default function RedDiamond() {
         row: 5.25,
         baseZIndex: 50,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Black", infoPos: "right" },
+        placeholder: { text: i18n.t("cards:black"), infoPos: "right" },
       },
       {
         id: "discard",
@@ -460,9 +464,9 @@ export default function RedDiamond() {
       outcome={!ended ? "playing" : won ? "won" : "lost"}
       winLoseMessage={
         won
-          ? "All black cards have been played."
+          ? i18n.t("games:redDiamond.allBlackCardsHaveBeen")
           : game.lost
-            ? "There are not enough Diamond cards to replenish the pile."
+            ? i18n.t("games:redDiamond.thereAreNotEnoughDiamond")
             : undefined
       }
       reset={reset}

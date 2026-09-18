@@ -1,0 +1,553 @@
+{
+  "archipelago": {
+    "islandJokers": {
+      "hash": "71b79671",
+      "value": {
+        "description": "Ajoute deux Jokers libres que vous pouvez placer n'importe où.",
+        "label": "Utiliser les Jokers",
+        "options": [
+          {
+            "label": "Non"
+          },
+          {
+            "label": "Oui (plus facile)"
+          }
+        ]
+      }
+    }
+  },
+  "ascent": {
+    "ascentChallenge": {
+      "hash": "11a33a3b",
+      "value": {
+        "description": "Défis optionnels qui modifient la longueur du parcours et les règles.",
+        "label": "Les huit-mille",
+        "options": [
+          {
+            "label": "Ascension de base (7\u00a0500\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 3. Aucune règle spéciale."
+          },
+          {
+            "label": "Cho Oyu (8\u00a0188\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 2. Quand vous atteignez un camp, n'ajoutez le jalon de ce camp à votre parcours que s'il contient au moins 6 cartes."
+          },
+          {
+            "label": "Shishapangma (8\u00a0027\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 3. Quand vous jouez une voie avec une approche technique (carreau) ou en escalade libre (pique), piochez une carte de plus. Quand vous jouez une voie avec une approche prudente (cœur) ou téméraire (trèfle), piochez une carte de moins. Vous ne piochez toujours pas plus de cartes que la voie jouée n'en contient."
+          },
+          {
+            "label": "Manaslu (8\u00a0163\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 4. Quand vous atteignez un camp, n'ajoutez aucune carte à la pile de fatigue. Quand vous vous reposez, après avoir repris en main les cartes de la pile de fatigue, n'ajoutez qu'une seule carte à la pile de fatigue."
+          },
+          {
+            "label": "Broad Peak (8\u00a0051\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 3. Vous ne pouvez jouer une voie que si son approche est différente de celle de la voie précédente. Quand vous atteignez un camp, n'ajoutez le jalon de ce camp au parcours que si son approche est différente de celles de toutes les voies précédentes du parcours."
+          },
+          {
+            "label": "Gasherbrum II (8\u00a0035\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 4. Quand vous jouez une voie, réduisez de un le nombre de cartes à piocher avant de piocher. Si ce nombre devenait négatif, piochez plutôt autant de cartes que la voie en contient."
+          },
+          {
+            "label": "Mount Everest (8\u00a0848\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 5. Lors de la mise en place et chaque fois que vous atteignez un camp, ne piochez que sept cartes au lieu de dix."
+          },
+          {
+            "label": "Dhaulagiri (8\u00a0167\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 3. Quand vous atteignez un camp, n'ajoutez le jalon de ce camp à votre parcours que si une traversée d'au moins deux cartes se trouve dans la zone de jeu, le jalon lui-même compris."
+          },
+          {
+            "label": "Gasherbrum I (8\u00a0080\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 3. Vous ne pouvez pas jouer de voie dont l'ancre est de valeur impaire, y compris les As, les Valets et les Rois."
+          },
+          {
+            "label": "Kangchenjunga (8\u00a0586\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 4. Quand vous jouez une voie, vous n'êtes pas obligé de jouer les cartes dans l'ordre\u00a0: n'importe quelle carte de la voie peut être l'ancre. Vous ne pouvez toujours pas jouer un Joker comme ancre d'une voie."
+          },
+          {
+            "label": "Lhotse (8\u00a0516\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 3. Vous ne pouvez jouer une voie que si elle contient au moins deux cartes."
+          },
+          {
+            "label": "Makalu (8\u00a0481\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 4. Quand vous jouez une voie, vous pouvez aussi défausser n'importe quelle carte de votre main."
+          },
+          {
+            "label": "Nanga Parbat (8\u00a0126\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 3. Vous ne pouvez jouer ni traversée ni descente. Les cartes d'une ascension n'ont pas besoin d'être consécutives, mais l'écart entre chaque carte doit être le même."
+          },
+          {
+            "label": "K2 (8\u00a0611\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 3. Quand vous jouez une voie, le nombre de cartes piochées n'est pas limité par le nombre de cartes de la voie jouée."
+          },
+          {
+            "label": "Annapurna I (8\u00a0091\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 4. Quand vous piochez des cartes après avoir joué une voie, si l'une des cartes piochées est de la même couleur que l'ancre de la voie, reprenez en main toutes les cartes de la voie jouée. Ne le faites pas quand vous atteignez un camp. Si vous avez 18 cartes ou plus en main, vous perdez immédiatement la partie."
+          }
+        ]
+      }
+    },
+    "ascentDifficulty": {
+      "hash": "4f582426",
+      "value": {
+        "label": "Difficulté",
+        "options": [
+          {
+            "label": "Douce",
+            "description": "Quand vous atteignez un camp, ajoutez toujours le jalon joué à votre parcours, même s'il n'est pas plus haut que le précédent."
+          },
+          {
+            "label": "Standard",
+            "description": "Aucun changement."
+          },
+          {
+            "label": "Intense",
+            "description": "Quand vous atteignez un camp, n'ajoutez le jalon joué à votre parcours que s'il contient plus de cartes que le précédent."
+          }
+        ]
+      }
+    }
+  },
+  "baroness": {
+    "difficulty": {
+      "hash": "9cf97680",
+      "value": {
+        "label": "Difficulté",
+        "options": [
+          {
+            "label": "Facile"
+          },
+          {
+            "label": "Difficile"
+          }
+        ]
+      }
+    }
+  },
+  "canfield": {
+    "drawCount": {
+      "hash": "ecd6b2f3",
+      "value": {
+        "label": "Pioche",
+        "options": [
+          {
+            "label": "1 carte"
+          },
+          {
+            "label": "3 cartes"
+          }
+        ]
+      }
+    }
+  },
+  "chapter-and-verse": {
+    "chapterAndVerseCheckBack": {
+      "hash": "90e8b983",
+      "value": {
+        "description": "Le livre du dessus de l'inventaire peut être inclus dans une offre.",
+        "label": "Je vais voir en réserve",
+        "options": [
+          {
+            "label": "Désactivé"
+          },
+          {
+            "label": "Activé (plus facile)"
+          }
+        ]
+      }
+    },
+    "chapterAndVerseLoyalPatrons": {
+      "hash": "2cdf2aa1",
+      "value": {
+        "description": "Les offres utilisant quatre livres ou plus ajoutent le client à votre réputation auprès de la guilde.",
+        "label": "Clients fidèles",
+        "options": [
+          {
+            "label": "Désactivé"
+          },
+          {
+            "label": "Activé (plus facile)"
+          }
+        ]
+      }
+    },
+    "chapterAndVerseSuperExclusive": {
+      "hash": "3444cc88",
+      "value": {
+        "description": "Les livres du même genre ou de la même valeur que le livre d'occasion coûtent 0\u00a0$.",
+        "label": "Offre super exclusive",
+        "options": [
+          {
+            "label": "Désactivé"
+          },
+          {
+            "label": "Activé (difficile)"
+          }
+        ]
+      }
+    },
+    "chapterAndVerseVandals": {
+      "hash": "bf41e3e4",
+      "value": {
+        "description": "Les Jokers bloquent le premier rayon disponible de la librairie quand ils arrivent dans la file.",
+        "label": "Vandales\u00a0!",
+        "options": [
+          {
+            "label": "Désactivé"
+          },
+          {
+            "label": "1 Joker (difficile)"
+          },
+          {
+            "label": "2 Jokers (plus difficile)"
+          }
+        ]
+      }
+    }
+  },
+  "fight-clubs": {
+    "fightClubsDifficulty": {
+      "hash": "d82ad464",
+      "value": {
+        "description": "Le mode difficile ajoute un second Joker au paquet de la grille.",
+        "label": "Difficulté",
+        "options": [
+          {
+            "label": "Facile (1 Joker)"
+          },
+          {
+            "label": "Difficile (2 Jokers)"
+          }
+        ]
+      }
+    }
+  },
+  "forty-thieves": {
+    "difficulty": {
+      "hash": "7161d2c1",
+      "value": {
+        "label": "Difficulté",
+        "options": [
+          {
+            "label": "Facile",
+            "description": "Redistributions illimitées."
+          },
+          {
+            "label": "Difficile",
+            "description": "Aucune redistribution."
+          }
+        ]
+      }
+    }
+  },
+  "gaps": {
+    "gapsDifficulty": {
+      "hash": "6d279a0e",
+      "value": {
+        "description": "Détermine combien de fois les cartes mal placées peuvent être redistribuées.",
+        "label": "Difficulté",
+        "options": [
+          {
+            "label": "Facile (3 redistributions)"
+          },
+          {
+            "label": "Difficile (2 redistributions)"
+          }
+        ]
+      }
+    }
+  },
+  "golf": {
+    "golfDifficulty": {
+      "hash": "1fb5445b",
+      "value": {
+        "description": "Le mode facile permet de jouer les As et les Rois l'un sur l'autre.",
+        "label": "Difficulté",
+        "options": [
+          {
+            "label": "Facile"
+          },
+          {
+            "label": "Difficile"
+          }
+        ]
+      }
+    }
+  },
+  "gremlin": {
+    "gremlinDifficulty": {
+      "hash": "22944911",
+      "value": {
+        "label": "Taille de la main",
+        "options": [
+          {
+            "label": "5 (Facile)"
+          },
+          {
+            "label": "4 (Difficile)"
+          }
+        ]
+      }
+    }
+  },
+  "gridlines": {
+    "gridlinesHard": {
+      "hash": "cdabae36",
+      "value": {
+        "description": "Le mode difficile donne à la grille un objectif plus bas à atteindre.",
+        "label": "Mode",
+        "options": [
+          {
+            "label": "Normal"
+          },
+          {
+            "label": "Difficile"
+          }
+        ]
+      }
+    }
+  },
+  "herbalist": {
+    "herbalistOpenStables": {
+      "hash": "d3ef883f",
+      "value": {
+        "description": "Ajoute les compagnons Noble et Bouffon à l'emplacement central des Écuries.",
+        "label": "Écuries ouvertes",
+        "options": [
+          {
+            "label": "Désactivé"
+          },
+          {
+            "label": "Activé"
+          }
+        ]
+      }
+    }
+  },
+  "klondike": {
+    "drawCount": {
+      "hash": "ecd6b2f3",
+      "value": {
+        "label": "Pioche",
+        "options": [
+          {
+            "label": "1 carte"
+          },
+          {
+            "label": "3 cartes"
+          }
+        ]
+      }
+    }
+  },
+  "lycan": {
+    "lycanMode": {
+      "hash": "a77f03e5",
+      "value": {
+        "description": "Avec moins de cartes de rang élevé, le Loup est plus facile à battre.",
+        "label": "Difficulté",
+        "options": [
+          {
+            "label": "Facile (sans 9 ni 10)"
+          },
+          {
+            "label": "Moyen (sans 10)"
+          },
+          {
+            "label": "Difficile (toutes les cartes)"
+          }
+        ]
+      }
+    }
+  },
+  "memory": {
+    "memoryDifficulty": {
+      "hash": "4ec0fa07",
+      "value": {
+        "label": "Taille de la grille",
+        "options": [
+          {
+            "label": "Très facile (4 x 3)"
+          },
+          {
+            "label": "Facile (5 x 4)"
+          },
+          {
+            "label": "Moyenne (6 x 5)"
+          },
+          {
+            "label": "Difficile (7 x 6)"
+          },
+          {
+            "label": "Très difficile (8 x 7)"
+          },
+          {
+            "label": "Extrême (8 x 9)"
+          }
+        ]
+      }
+    }
+  },
+  "night-vigil": {
+    "nightVigilDifficulty": {
+      "hash": "d5901a95",
+      "value": {
+        "label": "Difficulté",
+        "options": [
+          {
+            "label": "Niveau de la rue",
+            "description": "Les Rois infligent 1 dégât de plus."
+          },
+          {
+            "label": "Affaire du caïd",
+            "description": "Les Dames et les Rois infligent 1 dégât de plus."
+          },
+          {
+            "label": "Ville dans l'ombre",
+            "description": "Les Dames infligent 1 dégât de plus et les Rois 2."
+          }
+        ]
+      }
+    }
+  },
+  "pocket-poker": {
+    "pokerJokers": {
+      "hash": "8bf4ba75",
+      "value": {
+        "description": "Ajoute deux Jokers libres au paquet.",
+        "label": "Jokers",
+        "options": [
+          {
+            "label": "Sans Jokers"
+          },
+          {
+            "label": "Jokers libres"
+          }
+        ]
+      }
+    }
+  },
+  "pyramid": {
+    "pyramidDifficulty": {
+      "hash": "d38b6ca4",
+      "value": {
+        "description": "Le mode facile permet de sélectionner une deuxième carte si elle n'est recouverte que par la première carte sélectionnée. Ce n'est pas vraiment plus facile, mais c'est plus indulgent.",
+        "label": "Difficulté",
+        "options": [
+          {
+            "label": "Facile"
+          },
+          {
+            "label": "Difficile"
+          }
+        ]
+      }
+    }
+  },
+  "royal-rest": {
+    "royalRestHardMode": {
+      "hash": "9895d840",
+      "value": {
+        "description": "Les Valets ne peuvent pas aller sur une colonne contenant un autre Valet, même si un oreiller les sépare.",
+        "label": "Mode difficile",
+        "options": [
+          {
+            "label": "Désactivé"
+          },
+          {
+            "label": "Activé"
+          }
+        ]
+      }
+    }
+  },
+  "seer": {
+    "seerDifficulty": {
+      "hash": "e0c908ab",
+      "value": {
+        "description": "Détermine quelles pierres voisines une réussite peut libérer.",
+        "label": "Difficulté",
+        "options": [
+          {
+            "label": "Facile (diagonales comprises)"
+          },
+          {
+            "label": "Normal (orthogonal)"
+          },
+          {
+            "label": "Difficile (une seule au choix)"
+          }
+        ]
+      }
+    }
+  },
+  "twelve-trials": {
+    "boomerAce": {
+      "hash": "6ab63f67",
+      "value": {
+        "description": "Les As valent 11 et reviennent en main quand ils servent de déclencheur.",
+        "label": "As boomerang",
+        "options": [
+          {
+            "label": "Désactivé"
+          },
+          {
+            "label": "Activé"
+          }
+        ]
+      }
+    },
+    "dungeonLevel": {
+      "hash": "6b11e248",
+      "value": {
+        "label": "Disposition du donjon",
+        "options": [
+          {
+            "label": "Niveau 1 (Débutant)"
+          },
+          {
+            "label": "Niveau 2"
+          },
+          {
+            "label": "Niveau 3"
+          },
+          {
+            "label": "Niveau 4"
+          },
+          {
+            "label": "Niveau 5 (Extrême)"
+          }
+        ]
+      }
+    },
+    "powerReserve": {
+      "hash": "4005b3b7",
+      "value": {
+        "description": "Piochez cinq cartes au premier tour et mettez-en deux de côté, utilisables à tout moment.",
+        "label": "Réserve de puissance",
+        "options": [
+          {
+            "label": "Désactivé"
+          },
+          {
+            "label": "Activé"
+          }
+        ]
+      }
+    },
+    "specialAbilities": {
+      "hash": "c8b26a2e",
+      "value": {
+        "description": "Les Rois battus accordent des capacités à usage unique.",
+        "label": "Capacités spéciales",
+        "options": [
+          {
+            "label": "Désactivé"
+          },
+          {
+            "label": "Activé"
+          }
+        ]
+      }
+    }
+  }
+}

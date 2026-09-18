@@ -20,6 +20,7 @@ import {
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const TABLEAU_FAN_OFFSET = 0.26;
 
 type SpiderState = {
@@ -291,7 +292,7 @@ export default function SpiderSolitaire() {
       row: 1.6,
       baseZIndex: 10 + pileIndex,
       fan: { direction: "down", offset: TABLEAU_FAN_OFFSET, maxVisible: 104 },
-      placeholder: { showCount: false, text: "Empty" },
+      placeholder: { showCount: false, text: i18n.t("cards:empty") },
     }));
 
     const foundationZones: MapZone[] = game.foundations.map(
@@ -317,7 +318,7 @@ export default function SpiderSolitaire() {
         row: 0,
         baseZIndex: 30,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "below" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "below" },
       },
       ...foundationZones,
       ...tableauZones,
@@ -684,7 +685,6 @@ export default function SpiderSolitaire() {
     return makeDragHandlers(source, startGhostDrag, onTap);
   }
 
-
   function getTapHandler(source: MoveSource) {
     return () => onTableauCardPress(source.pileIndex, source.cardIndex);
   }
@@ -725,7 +725,7 @@ export default function SpiderSolitaire() {
       canUndo={canUndo}
       undo={undo}
       winLoseMessage={
-        won ? "All eight K-to-A suit runs are complete." : undefined
+        won ? i18n.t("games:spiderSolitaire.allEightKToA") : undefined
       }
       showDeviceRotateHint
     >

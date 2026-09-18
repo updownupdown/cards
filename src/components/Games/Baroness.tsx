@@ -19,6 +19,7 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { flexStyles } from "@/styles/flexStyles";
 
+import { i18n } from "@/i18n";
 const pileCount = 5;
 
 type GameState = {
@@ -247,7 +248,11 @@ export default function Baroness() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 60,
-        placeholder: { text: "Stock", infoPos: "right", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:stock"),
+          infoPos: "right",
+          showCount: true,
+        },
       },
       {
         id: "discard",
@@ -257,7 +262,7 @@ export default function Baroness() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 60,
-        placeholder: { text: "Discard", infoPos: "left" },
+        placeholder: { text: i18n.t("cards:discard"), infoPos: "left" },
       },
       ...pileZones,
       {
@@ -329,7 +334,11 @@ export default function Baroness() {
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={reset}
       isLoaded={isLoaded}
-      winLoseMessage={game.won ? "All cleared!" : "No thirteen left to make."}
+      winLoseMessage={
+        game.won
+          ? i18n.t("games:baroness.allCleared")
+          : i18n.t("games:baroness.noThirteenLeftToMake")
+      }
       canUndo={canUndo}
       undo={undo}
     >
@@ -337,7 +346,7 @@ export default function Baroness() {
 
       <View style={[flexStyles.colCentered, getZoneStylesById("button")]}>
         <Button
-          text="Deal"
+          text={i18n.t("cards:deal")}
           size="md"
           onPress={dealRow}
           fullWidth

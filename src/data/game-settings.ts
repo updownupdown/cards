@@ -553,17 +553,6 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
     ],
   };
 
-const APPLY_BEHAVIOR_TEXT: Record<GameSpecificSettingApplyBehavior, string> = {
-  immediate: "Applies without resetting the game.",
-  "next-game": "Resets the game on change.",
-};
-
-export function getSettingApplyBehaviorText(
-  applyBehavior: GameSpecificSettingApplyBehavior,
-) {
-  return APPLY_BEHAVIOR_TEXT[applyBehavior];
-}
-
 export function getGameSpecificSettingDefinitions(pathname: string) {
   const key = normalizeGamePath(pathname);
   return GAME_SPECIFIC_SETTINGS[key] ?? [];

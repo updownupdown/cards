@@ -14,6 +14,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const columnCount = 8;
 const columnHeight = 6;
 
@@ -238,7 +239,11 @@ export default function Nestor() {
       row: 0,
       fan: { maxVisible: 2 },
       baseZIndex: 60,
-      placeholder: { text: "Discard", infoPos: "right", showCount: true },
+      placeholder: {
+        text: i18n.t("cards:discard"),
+        infoPos: "right",
+        showCount: true,
+      },
     };
 
     const columnZones: MapZone[] = game.columns.map((pile, i) => ({
@@ -311,7 +316,11 @@ export default function Nestor() {
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={reset}
       isLoaded={isLoaded}
-      winLoseMessage={game.won ? "Board cleared!" : "No matching pair remains."}
+      winLoseMessage={
+        game.won
+          ? i18n.t("games:nestor.boardCleared")
+          : i18n.t("games:nestor.noMatchingPairRemains")
+      }
       canUndo={canUndo}
       undo={undo}
       showDeviceRotateHint

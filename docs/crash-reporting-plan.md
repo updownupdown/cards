@@ -19,6 +19,7 @@ Use `@sentry/react-native`, which has an Expo config plugin and an official Expo
 - **Cost:** a free plan exists for a single developer. Check the current error quota when signing up.
 
 Alternatives:
+
 - **Firebase Crashlytics:** free, but needs a Firebase project, `google-services.json` and `@react-native-firebase`. JavaScript errors have to be recorded by hand, and Hermes stack traces are less readable.
 - **BugSnag:** similar to Sentry, but its paid plans are more restrictive.
 - **EAS Insights:** usage metrics only, no crash reporting.

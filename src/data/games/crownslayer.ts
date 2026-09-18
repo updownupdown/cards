@@ -22,7 +22,7 @@ export const crownslayer: GameDefinition = {
     "Defeat 12 royals, one at a time.",
     "Suits have powers; enemies are immune to their own suit; Aces allow combos.",
     "Attack phase: play any card(s) to deal damage.",
-    "Defend phase: cards total must (at least) match enemy attack.",
+    "Defend phase: discarded cards must total at least the enemy attack.",
   ],
   howToPlay: [
     "## Objective",

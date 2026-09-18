@@ -1,0 +1,73 @@
+{
+  "style": {
+    "formality": "Use the informal \"sen\" throughout, as Turkish mobile games do. Buttons use the plain imperative (Dağıt, Çek, Oyna).",
+    "gameTitles": "Translate game titles: use the established Turkish name of a classic solitaire (pasyans) when there is one, translate descriptive titles, and keep proper names. The current titles are the `title` entries in content/games.json; when rules mention another game, use its Turkish title.",
+    "cardIndices": "Keep single-letter card indices (A, K, Q, J) as they are. Translate full rank and suit words; Turkish nouns take no plural after numbers (dört As).",
+    "typography": "Use “ ” for quotation marks. Add suffixes to numbers and names with an apostrophe (10'a, Klondike'ta).",
+    "markup": "Keep {{placeholders}}, <tags>, line breaks and markdown (##, -, **) exactly. Word order differs from English, so move whole placeholders but never change them; avoid attaching suffixes directly to a placeholder."
+  },
+  "ranks": {
+    "Ace": {
+      "one": "As",
+      "other": "Aslar"
+    },
+    "King": {
+      "one": "Papaz",
+      "other": "Papazlar"
+    },
+    "Queen": {
+      "one": "Kız",
+      "other": "Kızlar"
+    },
+    "Jack": {
+      "one": "Vale",
+      "other": "Valeler"
+    },
+    "Joker": {
+      "one": "Joker",
+      "other": "Jokerler"
+    }
+  },
+  "suits": {
+    "hearts": {
+      "one": "kupa",
+      "other": "kupalar"
+    },
+    "diamonds": {
+      "one": "karo",
+      "other": "karolar"
+    },
+    "clubs": {
+      "one": "sinek",
+      "other": "sinekler"
+    },
+    "spades": {
+      "one": "maça",
+      "other": "maçalar"
+    }
+  },
+  "terms": {
+    "suit": "takım (maça, kupa, karo, sinek); \"renk\" means only red or black",
+    "rank": "değer",
+    "alternating colors (red and black)": "kırmızı ve siyah sırayla (renk)",
+    "foundation": "temel",
+    "tableau": "sütunlar (masa)",
+    "column": "sütun",
+    "stock": "deste",
+    "waste (pile of turned stock cards)": "açık deste",
+    "discard (pile of discarded or removed cards)": "ıskarta",
+    "reserve": "yedek",
+    "free cell": "boş hücre",
+    "deal": "dağıtmak",
+    "redeal": "yeniden dağıtmak",
+    "build up / build down": "artan / azalan sırayla dizmek",
+    "run / sequence": "dizi",
+    "pile": "yığın",
+    "empty column": "boş sütun",
+    "undo": "geri al",
+    "node (progression map)": "düğüm",
+    "collectible": "koleksiyon öğesi",
+    "quote": "alıntı",
+    "chapter": "bölüm"
+  }
+}

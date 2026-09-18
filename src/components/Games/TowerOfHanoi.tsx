@@ -8,7 +8,7 @@ import { DragGhostCards, DragHandle } from "@/components/Cards/DragDrop";
 import { useStateManager } from "@/hooks/useStateManager";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { delay } from "@/utils/utils";
-import { useEffect, useMemo, useRef,} from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { StyleSheet, View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";

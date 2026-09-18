@@ -18,21 +18,6 @@ export enum GameTag {
   SpatialControl = "SpatialControl",
 }
 
-export const GameTagNames: Record<GameTag, string> = {
-  [GameTag.EasyToLearn]: "Easy to Learn",
-  [GameTag.TableauBuilding]: "Tableau Solitaire",
-  [GameTag.ModernMechanics]: "Modern Mechanics",
-  [GameTag.DungeonCrawler]: "Dungeon Crawler",
-  [GameTag.CardCombat]: "Card Combat",
-  [GameTag.GridPlacement]: "Grid Placement",
-  [GameTag.PokerAndCribbage]: "Poker & Cribbage",
-  [GameTag.PairMatching]: "Pair Matching",
-  [GameTag.SequenceBuilding]: "Sequence Building",
-  [GameTag.StockAndWaste]: "Stock & Waste",
-  [GameTag.ScoringPuzzles]: "Scoring Puzzles",
-  [GameTag.SpatialControl]: "Spatial Control",
-};
-
 export type HexColor = `#${string}`;
 
 export type GameRating = {
@@ -44,7 +29,8 @@ export type GameRating = {
 export type GameStatsNames = keyof GameRating;
 export const statKeys: GameStatsNames[] = ["complexity", "difficulty", "luck"];
 
-export const DEFAULT_GAME_THUMBNAIL: GameThumbnailName = "DefaultThumbnail.webp";
+export const DEFAULT_GAME_THUMBNAIL: GameThumbnailName =
+  "DefaultThumbnail.webp";
 export const DEFAULT_GAME_BACKGROUND: GameBackground = city;
 
 export type GameMenuInfo = {

@@ -26,7 +26,7 @@ export const moosehide: GameDefinition = {
     "Build the four foundations up by suit, from Ace to King.",
 
     "## Rules",
-    "- Move any face-up card or **stack** of cards, **building down by rank, and on a card of a different suit.**.",
+    "- Move any face-up card or **stack** of cards, **building down by rank, on a card of a different suit**.",
     "- The carried cards do **not** need to be in sequence.",
     "- Empty columns can only be filled with Kings.",
     "- Double-tap or drag single cards to the foundations.",

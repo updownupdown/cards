@@ -2,6 +2,7 @@ import { useFade } from "@/hooks/useFade";
 import { TABLET_BREAKPOINT } from "@/hooks/useResponsiveLayout";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
+import { useTranslation } from "@/i18n";
 import { Colors, LayerZIndexes, layoutDims, rgba } from "@/styles/styles";
 import { useEffect, useState } from "react";
 import { Animated, Platform } from "react-native";
@@ -26,6 +27,7 @@ interface Props {
 export const DeviceRotateHint = ({ landscapeRecommended = false }: Props) => {
   const { width, height } = useViewportDimensions();
   const { spacing } = useResponsiveMetrics();
+  const { t } = useTranslation("game");
   const insets = useSafeAreaInsets();
   const [started, setStarted] = useState(false);
   const [dismissed, setDismissed] = useState(false);
@@ -65,7 +67,9 @@ export const DeviceRotateHint = ({ landscapeRecommended = false }: Props) => {
       }}
     >
       <Button
-        text={`${landscapeRecommended ? "Landscape" : "Portrait"} mode\nrecommended`}
+        text={t(
+          landscapeRecommended ? "rotateHint.landscape" : "rotateHint.portrait",
+        )}
         size="md"
         iconSize={40}
         iconName="rotate-device"

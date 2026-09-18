@@ -15,6 +15,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 export type RowsVariant = "labyrinth" | "parallels";
 
 type Config = {
@@ -29,8 +30,8 @@ type Config = {
   /** Rows of height the tableau may grow into before rows overlap. */
   tableauRows: number;
   landscape: boolean;
-  winMessage: string;
-  loseMessage: string;
+  winMessage: () => string;
+  loseMessage: () => string;
 };
 
 const CONFIGS: Record<RowsVariant, Config> = {
@@ -42,8 +43,8 @@ const CONFIGS: Record<RowsVariant, Config> = {
     openRows: 0,
     tableauRows: 6.3,
     landscape: false,
-    winMessage: "You found the way out!",
-    loseMessage: "Lost in the labyrinth.",
+    winMessage: () => i18n.t("games:labyrinth.youFoundTheWayOut"),
+    loseMessage: () => i18n.t("games:labyrinth.lostInTheLabyrinth"),
   },
   parallels: {
     decks: 2,
@@ -53,8 +54,8 @@ const CONFIGS: Record<RowsVariant, Config> = {
     openRows: 2,
     tableauRows: 7.5,
     landscape: true,
-    winMessage: "Every row lines up!",
-    loseMessage: "No moves remain.",
+    winMessage: () => i18n.t("games:parallels.everyRowLinesUp"),
+    loseMessage: () => i18n.t("cards:noMovesRemain"),
   },
 };
 
@@ -88,7 +89,12 @@ function foundationFor(state: RowsState, card: PlayingCard) {
 }
 
 /** A card is free when the space directly above or below it is open. */
-function isAvailable(state: RowsState, config: Config, row: number, col: number) {
+function isAvailable(
+  state: RowsState,
+  config: Config,
+  row: number,
+  col: number,
+) {
   if (!state.rows[row]?.[col]) return false;
   if (state.rows.length <= config.openRows) return true;
   const above = row > 0 ? state.rows[row - 1][col] : null;
@@ -300,7 +306,11 @@ export function RowsSolitaire({ variant }: { variant: RowsVariant }) {
         col: config.kingFoundations ? rightCol : config.columns - 1,
         row: tableauRow + config.tableauRows + 0.35,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "above", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:stock"),
+          infoPos: "above",
+          showCount: true,
+        },
       },
     ];
   }, [config, game]);
@@ -352,7 +362,7 @@ export function RowsSolitaire({ variant }: { variant: RowsVariant }) {
       reset={reset}
       isLoaded={isLoaded}
       score={placed}
-      winLoseMessage={game.won ? config.winMessage : config.loseMessage}
+      winLoseMessage={game.won ? config.winMessage() : config.loseMessage()}
       canUndo={canUndo}
       undo={undo}
       showDeviceRotateHint={config.landscape}

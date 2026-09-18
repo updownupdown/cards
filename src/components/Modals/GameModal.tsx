@@ -1,10 +1,11 @@
 import { Text } from "@/components/common/Text";
-import { getSettingApplyBehaviorText } from "@/data/game-settings";
 import {
   useGameSettings,
   useGameSpecificSettings,
 } from "@/hooks/useGameSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useDisplayLanguage, useTranslation } from "@/i18n";
+import { localizeGameTitle, localizeSettingDefinitions } from "@/i18n/content";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
 import { Colors, rgba } from "@/styles/styles";
@@ -18,6 +19,7 @@ import {
   type GameSettings,
 } from "../../data/game-menu";
 import { Button } from "../Button/Button";
+import { RatingsBars } from "../Home/RatingBars";
 import { SettingControl } from "../common/SettingControl";
 import { FavButton } from "../Home/FavButton";
 import { shouldReloadGameAfterSettingChange } from "./game-modal-policy";
@@ -38,6 +40,14 @@ export default function GameModal({
   const gameInfo = getGameInfo(pathname);
   const { settings, updateSettings, isLoading } = useGameSettings(pathname);
   const gameSpecificSettings = useGameSpecificSettings(pathname);
+  const displayLanguage = useDisplayLanguage();
+  const localizedSettings = localizeSettingDefinitions(
+    pathname,
+    gameSpecificSettings,
+    displayLanguage,
+  );
+  const { t } = useTranslation("game");
+  const { t: tCommon } = useTranslation("common");
   const { spacing } = useResponsiveMetrics();
   const modalStyles = useModalStyles();
 
@@ -76,7 +86,7 @@ export default function GameModal({
     <>
       <ModalFull
         onClose={handleClose}
-        title={gameInfo.title}
+        title={localizeGameTitle(gameInfo, pathname, displayLanguage)}
         titleColor={gameInfo.gameColorPale}
         backgroundColor={gameInfo.gameColorDark}
       >
@@ -103,21 +113,27 @@ export default function GameModal({
 
             <View style={modalStyles.stats}>
               <View style={modalStyles.stat}>
-                <Text style={modalStyles.statsTextLabel}>Won</Text>
+                <Text style={modalStyles.statsTextLabel}>
+                  {tCommon("stats.won")}
+                </Text>
                 <Text style={modalStyles.statsTextValue}>
                   {settings.stats.wins}
                 </Text>
               </View>
 
               <View style={modalStyles.stat}>
-                <Text style={modalStyles.statsTextLabel}>Lost</Text>
+                <Text style={modalStyles.statsTextLabel}>
+                  {tCommon("stats.lost")}
+                </Text>
                 <Text style={modalStyles.statsTextValue}>
                   {settings.stats.losses}
                 </Text>
               </View>
 
               <View style={modalStyles.stat}>
-                <Text style={modalStyles.statsTextLabel}>Win %</Text>
+                <Text style={modalStyles.statsTextLabel}>
+                  {tCommon("stats.winPercent")}
+                </Text>
                 <Text style={modalStyles.statsTextValue}>
                   {calculateWinRate(settings.stats)}
                 </Text>
@@ -125,7 +141,9 @@ export default function GameModal({
 
               {settings.stats.highestScore !== null && (
                 <View style={modalStyles.stat}>
-                  <Text style={modalStyles.statsTextLabel}>Best</Text>
+                  <Text style={modalStyles.statsTextLabel}>
+                    {tCommon("stats.best")}
+                  </Text>
                   <Text style={modalStyles.statsTextValue}>
                     {settings.stats.highestScore}
                   </Text>
@@ -146,11 +164,11 @@ export default function GameModal({
             {/* Game Settings */}
             <ModalHeading
               color={gameInfo.gameColorPale}
-              title="Settings"
+              title={t("settings.title")}
               iconName="settings"
             />
 
-            {gameSpecificSettings.map((setting) => (
+            {localizedSettings.map((setting) => (
               <View
                 key={setting.key}
                 style={[
@@ -171,8 +189,10 @@ export default function GameModal({
                   label={setting.label}
                   labelColor={gameInfo.gameColorPale}
                   helpText={setting.description}
-                  applyBehaviorText={getSettingApplyBehaviorText(
-                    setting.applyBehavior,
+                  applyBehaviorText={t(
+                    setting.applyBehavior === "immediate"
+                      ? "settings.appliesNow"
+                      : "settings.appliesNextGame",
                   )}
                   value={settings[setting.key]}
                   type={setting.type}
@@ -189,12 +209,14 @@ export default function GameModal({
 
             {gameSpecificSettings.length === 0 && (
               <Text size="sm" weight={300} color={rgba(Colors.white, 0.5)}>
-                No game settings
+                {t("settings.none")}
               </Text>
             )}
 
-            {/* About */}
-            {/* <View
+            {gameInfo.background?.authorName && <CreditsSection />}
+
+            {/* Difficulty rating */}
+            <View
               style={[
                 flexStyles.colStart,
                 flexStyles.fullWidth,
@@ -203,27 +225,19 @@ export default function GameModal({
             >
               <ModalHeading
                 color={gameInfo.gameColorPale}
-                title="About"
-                iconName="info"
+                title={t("rating.title")}
+                iconName="chart"
               />
 
-              {gameInfo.about && (
-                <RichText content={gameInfo.about} size="md" weight={300} />
-              )} */}
-
-            {/* Stats */}
-            {/* <RatingsBars
+              <RatingsBars
                 rating={gameInfo.rating}
                 gameColor={gameInfo.gameColorPale}
-                style={{ marginBottom: spacing(30) }}
-              /> */}
-            {/* </View> */}
-
-            {gameInfo.background?.authorName && <CreditsSection />}
+              />
+            </View>
 
             {/* How to Play */}
             <Button
-              text="How to Play"
+              text={t("rules.title")}
               iconName="instructions"
               onPress={() => {
                 handleClose();
@@ -249,6 +263,7 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
   const pathname = useGamePath();
   const gameInfo = getGameInfo(pathname);
   const { spacing } = useResponsiveMetrics();
+  const { t } = useTranslation("game");
 
   const background = gameInfo.background;
   const backgroundAuthorLink = isValidLink(background?.authorLink)
@@ -277,13 +292,13 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
     >
       <ModalHeading
         color={gameInfo.gameColorPale}
-        title="Credits"
+        title={t("credits.title")}
         iconName="attribution"
       />
 
       {background?.authorName && (
         <Text size="sm" weight={300} color={Colors.white}>
-          Background image:{" "}
+          {t("credits.backgroundImage")}{" "}
           {backgroundAuthorLink ? (
             <Text
               size="sm"

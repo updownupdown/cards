@@ -2,22 +2,37 @@ import { getCollectibleCardImageSource } from "@/components/Cards/CardAssets";
 import { Text } from "@/components/common/Text";
 import { quotes } from "@/components/Collectibles/QuotesText";
 import { getQuoteCardName, type QuoteCard } from "@/data/collectibles";
+import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useDisplayLanguage } from "@/i18n";
+import { isQuoteTranslated, localizeQuote } from "@/i18n/content";
 import { Colors, rgba } from "@/styles/styles";
 import { Image } from "expo-image";
+import { useState } from "react";
 import { View } from "react-native";
+import { ShowOriginalToggle } from "./ShowOriginalToggle";
 import type { CollectionEntry } from "./TaoChapters";
 
 export const QUOTES_COLLECTION: readonly CollectionEntry[] = quotes;
 
 type QuoteProps = {
+  id: number;
   quote: CollectionEntry;
   card?: QuoteCard;
   showCard?: boolean;
 };
 
-export function Quote({ quote, card, showCard = false }: QuoteProps) {
+export function Quote({ id, quote, card, showCard = false }: QuoteProps) {
   const { spacing } = useResponsiveMetrics();
+  const language = useDisplayLanguage();
+  const { settings } = useGlobalSettings();
+  const [showOriginal, setShowOriginal] = useState(false);
+  const hasTranslation =
+    settings.translateCollectibles && isQuoteTranslated(id, quote, language);
+  const shown =
+    hasTranslation && !showOriginal
+      ? localizeQuote(id, quote, language)
+      : quote;
   const cardName = card ? getQuoteCardName(card) : undefined;
   const cardImage =
     card && cardName
@@ -46,19 +61,26 @@ export function Quote({ quote, card, showCard = false }: QuoteProps) {
       )}
 
       <Text size="xl" weight={300} color={Colors.K200}>
-        {quote.text}
+        {shown.text}
       </Text>
 
-      {quote.author && (
+      {shown.author && (
         <Text size="lg" weight={400} color={Colors.K300}>
-          {quote.author}
+          {shown.author}
         </Text>
       )}
 
-      {quote.source && (
+      {shown.source && (
         <Text size="sm" weight={300} color={Colors.K500}>
-          {quote.source}
+          {shown.source}
         </Text>
+      )}
+
+      {hasTranslation && (
+        <ShowOriginalToggle
+          showOriginal={showOriginal}
+          onToggle={() => setShowOriginal((current) => !current)}
+        />
       )}
     </View>
   );

@@ -1,3 +1,4 @@
+import { useTranslation } from "@/i18n";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, LayerZIndexes, layoutDims, rgba } from "@/styles/styles";
 import { memo } from "react";
@@ -53,6 +54,7 @@ export const GameHeader = memo(function GameHeader({
   onMenu,
 }: Props) {
   const spacing = (value: number) => value * scale;
+  const { t } = useTranslation("game");
 
   return (
     <Animated.View
@@ -87,7 +89,7 @@ export const GameHeader = memo(function GameHeader({
       >
         <Button
           headerButton
-          accessibilityLabel={isNodesMode ? "Nodes" : "Home"}
+          accessibilityLabel={isNodesMode ? t("menu.nodes") : t("menu.home")}
           onPress={onHome}
           iconName={isNodesMode ? "nodes" : "home"}
           iconColor={titleColor}
@@ -98,7 +100,7 @@ export const GameHeader = memo(function GameHeader({
         {__DEV__ && (
           <Button
             headerButton
-            accessibilityLabel="Instant win"
+            accessibilityLabel={t("menu.instantWin")}
             onPress={onInstantWin}
             iconName="trophy"
             iconColor={titleColor}

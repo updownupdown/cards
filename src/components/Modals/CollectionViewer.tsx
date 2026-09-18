@@ -1,5 +1,6 @@
 import { Button } from "@/components/Button/Button";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useTranslation } from "@/i18n";
 import { Colors, rgba } from "@/styles/styles";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
@@ -28,6 +29,7 @@ export function CollectionViewer({
   children,
 }: CollectionViewerProps) {
   const { spacing } = useResponsiveMetrics();
+  const { t } = useTranslation("nodes");
   const listRef = useRef<ScrollView>(null);
   const [listWidth, setListWidth] = useState(0);
   const itemWidth = listWidth / 5;
@@ -85,7 +87,7 @@ export function CollectionViewer({
         }}
       >
         <Button
-          accessibilityLabel="Previous collected item"
+          accessibilityLabel={t("collection.previous")}
           iconName="arrow-back"
           size="sm"
           theme={Colors.K800}
@@ -115,7 +117,9 @@ export function CollectionViewer({
                 key={id}
                 accessibilityRole="button"
                 accessibilityLabel={
-                  collected ? `Select item ${id}` : `Locked item ${id}`
+                  collected
+                    ? t("collection.select", { id })
+                    : t("collection.locked", { id })
                 }
                 disabled={!collected}
                 onPress={() => onSelect(id)}
@@ -136,7 +140,7 @@ export function CollectionViewer({
         </ScrollView>
 
         <Button
-          accessibilityLabel="Next collected item"
+          accessibilityLabel={t("collection.next")}
           iconName="arrow-forward"
           size="sm"
           theme={Colors.K800}

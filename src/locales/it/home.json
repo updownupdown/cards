@@ -1,0 +1,119 @@
+{
+  "tabs": {
+    "home": "Home",
+    "collect": "Collezione",
+    "search": "Cerca",
+    "nodes": "Nodi"
+  },
+  "cardSize": {
+    "small": "Elenco",
+    "medium": "Schede",
+    "large": "Dettagli"
+  },
+  "random": {
+    "roll": "Giochi a caso",
+    "clear": "Cancella i giochi a caso"
+  },
+  "favorites": {
+    "add": "Aggiungi ai preferiti",
+    "remove": "Rimuovi dai preferiti"
+  },
+  "search": {
+    "placeholder": "Cerca...",
+    "clear": "Cancella la ricerca",
+    "filters": "Filtri",
+    "filter": "Filtra",
+    "resetFilters": "Azzera i filtri",
+    "all": "Tutti",
+    "unplayed": "Mai giocati"
+  },
+  "sections": {
+    "localOnly": "Giochi solo in locale",
+    "startEasy": "Inizia dai facili!",
+    "startEasyIntro": "Ecco alcuni giochi facili da imparare per cominciare. Ne trovi altri nella scheda Collezione.",
+    "discoverMore": "Scopri altri giochi",
+    "gameOfTheDay": "Gioco del giorno",
+    "jumpBackIn": "Riprendi",
+    "favorites": "Preferiti",
+    "becauseYouLiked": "Perché ti è piaciuto «{{title}}»"
+  },
+  "collect": {
+    "tagProgress": "{{tag}}, {{percentage}}% vinti"
+  },
+  "tags": {
+    "EasyToLearn": "Facili da imparare",
+    "TableauBuilding": "Solitari a colonne",
+    "ModernMechanics": "Meccaniche moderne",
+    "DungeonCrawler": "Esplorazione di dungeon",
+    "CardCombat": "Combattimento di carte",
+    "GridPlacement": "Piazzamento su griglia",
+    "PokerAndCribbage": "Poker e cribbage",
+    "PairMatching": "Abbinamento di coppie",
+    "SequenceBuilding": "Costruzione di sequenze",
+    "StockAndWaste": "Mazzo e pozzo",
+    "ScoringPuzzles": "Rompicapi a punti",
+    "SpatialControl": "Controllo dello spazio"
+  },
+  "statsTab": {
+    "personas": {
+      "nemesis": {
+        "title": "La Nemesi",
+        "subtitle": "Percentuale di vittorie più bassa"
+      },
+      "comfort": {
+        "title": "La Scelta Sicura",
+        "subtitle": "Percentuale di vittorie più alta"
+      },
+      "whale": {
+        "title": "La Balena Bianca",
+        "subtitle": "Più tentativi senza vittorie"
+      },
+      "underdog": {
+        "title": "Lo Sfavorito",
+        "subtitle": "Molte vittorie, pochi tentativi"
+      }
+    },
+    "sortBy": "Ordina per {{column}}",
+    "columns": {
+      "game": "Gioco",
+      "won": "Vit.",
+      "lost": "Sco.",
+      "winPercent": "% V",
+      "best": "Max",
+      "time": "Tem."
+    },
+    "columnNames": {
+      "game": "Gioco",
+      "won": "Partite vinte",
+      "lost": "Partite perse",
+      "winPercent": "Percentuale di vittorie",
+      "best": "Punteggio migliore",
+      "time": "Tempo migliore"
+    },
+    "empty": {
+      "title": "Ops, nessuna statistica da mostrare!",
+      "body": "Torna dopo aver giocato qualche partita per vedere qui le tue statistiche."
+    },
+    "fullStats": {
+      "title": "Statistiche complete",
+      "noStats": "Nessuna statistica da mostrare",
+      "onlyPlayed": "Sono mostrati solo i giochi giocati"
+    },
+    "total": "Totale"
+  },
+  "statsModal": {
+    "title": "Statistiche"
+  },
+  "install": {
+    "titleIos": "Aggiungi SoloSuite alla schermata Home",
+    "titleInstall": "Installa SoloSuite",
+    "titleDevice": "Aggiungi SoloSuite al tuo dispositivo",
+    "instructionsIos": "In Safari, tocca il pulsante Condividi, poi scegli «Aggiungi alla schermata Home».",
+    "instructionsInstall": "Installa l'app per avvii più rapidi, lo schermo intero e il gioco offline.",
+    "instructionsBrowser": "Apri il menu del browser e scegli «Installa app» o «Aggiungi a schermata Home».",
+    "accepted": "Perfetto! Il browser sta completando l'installazione in background.",
+    "dismissed": "Nessun problema: puoi installarla quando vuoi dal menu del browser.",
+    "installNow": "Installa ora",
+    "notNow": "Non ora"
+  }
+}

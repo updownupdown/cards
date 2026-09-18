@@ -11,7 +11,7 @@ export const slyFox: GameDefinition = {
     difficulty: 55,
     luck: 45,
   },
-  thumbnail: "DefaultThumbnail.webp",
+  thumbnail: "SlyFox.webp",
   background: GAME_BACKGROUNDS.fallLeaves,
   animation: GameAnimations.Leaves,
   gameColorDark: "#2b1a10",

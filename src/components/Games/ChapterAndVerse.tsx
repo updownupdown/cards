@@ -28,6 +28,7 @@ import { useGameColors } from "@/hooks/useGameColors";
 import { Icon } from "@/icons";
 import { ProgressBar } from "../Home/ProgressBar";
 
+import { i18n } from "@/i18n";
 type GameState = {
   inventory: PlayingCard[];
   shelves: (PlayingCard | null)[];
@@ -111,12 +112,14 @@ function selectedOfferValue(
 }
 
 function outcomeMessage(score: number) {
-  if (score < 10) return "Terminated";
-  if (score < 12) return "Employee of the Month";
-  if (score < 14) return "Performance Bonus";
-  if (score < 16) return "Promotion to District Manager";
-  if (score < 18) return "Company Livestock Options";
-  return "Executive Lordship Program";
+  if (score < 10) return i18n.t("games:chapterAndVerse.terminated");
+  if (score < 12) return i18n.t("games:chapterAndVerse.employeeOfTheMonth");
+  if (score < 14) return i18n.t("games:chapterAndVerse.performanceBonus");
+  if (score < 16)
+    return i18n.t("games:chapterAndVerse.promotionToDistrictManager");
+  if (score < 18)
+    return i18n.t("games:chapterAndVerse.companyLivestockOptions");
+  return i18n.t("games:chapterAndVerse.executiveLordshipProgram");
 }
 
 export const chapterAndVerseRules = {
@@ -445,7 +448,10 @@ export default function ChapterAndVerse() {
         row: 0.3,
         baseZIndex: 10,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Line", infoPos: "above" },
+        placeholder: {
+          text: i18n.t("games:chapterAndVerse.line"),
+          infoPos: "above",
+        },
       },
       {
         id: "used-book",
@@ -455,7 +461,10 @@ export default function ChapterAndVerse() {
         row: 0.3,
         baseZIndex: 10,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Used", infoPos: "above" },
+        placeholder: {
+          text: i18n.t("games:chapterAndVerse.used"),
+          infoPos: "above",
+        },
       },
       {
         id: "inventory",
@@ -465,7 +474,7 @@ export default function ChapterAndVerse() {
         row: 0.3,
         baseZIndex: 5,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "above" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "above" },
       },
       {
         id: "discard",
@@ -475,7 +484,11 @@ export default function ChapterAndVerse() {
         row: 0.3,
         baseZIndex: 5,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Dscrd", infoPos: "above", showCount: false },
+        placeholder: {
+          text: i18n.t("cards:dscrd"),
+          infoPos: "above",
+          showCount: false,
+        },
       },
 
       // HUD
@@ -568,7 +581,7 @@ export default function ChapterAndVerse() {
       winLoseMessage={
         game.won
           ? outcomeMessage(game.guildScore)
-          : "Fired for losing your Guild Standing."
+          : i18n.t("games:chapterAndVerse.firedForLosingYourGuild")
       }
     >
       {cardMap}
@@ -596,12 +609,12 @@ export default function ChapterAndVerse() {
           tallyText={`$${selectionValue} / ${offerValue}`}
           scaledHeight={cardHeight * 0.4}
           style={{ flex: 3 }}
-          labelText={"Offer"}
+          labelText={i18n.t("games:chapterAndVerse.offer")}
         />
 
         <View style={[flexStyles.colCentered, { flex: 1 }]}>
           <Text size="sm" weight={400} color={colorPale}>
-            Guild Pts.
+            {i18n.t("games:chapterAndVerse.guildPts")}
           </Text>
           <Text size="xxxl" weight={600} color={Colors.white}>
             {game.guildScore}
@@ -718,7 +731,7 @@ export default function ChapterAndVerse() {
         ]}
       >
         <Button
-          text="Pass"
+          text={i18n.t("games:chapterAndVerse.pass")}
           theme="red"
           onPress={pass}
           disabled={vandalShown || game.ended}
@@ -726,7 +739,7 @@ export default function ChapterAndVerse() {
           taller
         />
         <Button
-          text="Trade"
+          text={i18n.t("games:chapterAndVerse.trade")}
           theme="green"
           onPress={trade}
           disabled={vandalShown || !canTrade || game.ended}

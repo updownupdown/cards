@@ -24,6 +24,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 export type SingleDeckSpiderVariant = "simple-simon" | "spiderette";
 
 const TABLEAU_ROW = 1.2;
@@ -469,7 +470,7 @@ export function SingleDeckSpider({
       score={game.completed.length}
       canUndo={canUndo}
       undo={undo}
-      winLoseMessage="Four complete suits!"
+      winLoseMessage={i18n.t("games:singleDeckSpider.fourCompleteSuits")}
       showDeviceRotateHint
     >
       <View

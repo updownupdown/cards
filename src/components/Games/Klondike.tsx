@@ -26,6 +26,7 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
 
+import { i18n } from "@/i18n";
 const cardSize = "tableau";
 const TABLEAU_ROW = 1.4;
 // Room for a King-to-Ace run before a column starts to tighten.
@@ -285,7 +286,11 @@ export default function Klondike() {
         row: STOCK_ROW,
         baseZIndex: 40,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "above", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:stock"),
+          infoPos: "above",
+          showCount: true,
+        },
       },
       {
         id: "waste",
@@ -296,7 +301,11 @@ export default function Klondike() {
         row: STOCK_ROW,
         baseZIndex: 30,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Waste", infoPos: "above", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:waste"),
+          infoPos: "above",
+          showCount: true,
+        },
       },
       ...foundationZones,
       ...tableauZones,
@@ -610,7 +619,6 @@ export default function Klondike() {
       return top ? [top] : [];
     }
 
-
     const pile = snapshot.tableau[source.pileIndex];
     const cards = pile.slice(source.cardIndex);
     if (cards.length === 0 || !cards[0].faceUp) return [];
@@ -873,7 +881,6 @@ export default function Klondike() {
   function makeHandlers(source: MoveSource, onTap?: () => void) {
     return makeDragHandlers(source, startGhostDrag, onTap);
   }
-
 
   function getTapHandler(source: MoveSource) {
     if (source.zone === "waste") {

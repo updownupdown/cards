@@ -1,4 +1,11 @@
-import { afterEach, beforeEach, describe, expect, jest, test } from "@jest/globals";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from "@jest/globals";
 import "../../../jest/game-mocks";
 import {
   card,
@@ -83,7 +90,10 @@ describe("Dynasty", () => {
 });
 
 describe("Cabin Siege", () => {
-  function setup(supportRanks: [PlayingCard["rank"], PlayingCard["rank"]], draw: PlayingCard[]) {
+  function setup(
+    supportRanks: [PlayingCard["rank"], PlayingCard["rank"]],
+    draw: PlayingCard[],
+  ) {
     const zombies = Array.from({ length: 12 }, (_, index) => ({
       id: `z-${index}`,
       card: card("K", "clubs"),
@@ -150,7 +160,9 @@ describe("Seer", () => {
     });
     expect(outcome()).toBe("playing");
 
-    await pressZone((zone) => zone.name === "prediction" && zone.pileIndex === 0);
+    await pressZone(
+      (zone) => zone.name === "prediction" && zone.pileIndex === 0,
+    );
 
     expect(outcome()).toBe("won");
   });
@@ -163,7 +175,9 @@ describe("Seer", () => {
     });
     expect(outcome()).toBe("playing");
 
-    await pressZone((zone) => zone.name === "prediction" && zone.pileIndex === 0);
+    await pressZone(
+      (zone) => zone.name === "prediction" && zone.pileIndex === 0,
+    );
 
     expect(outcome()).toBe("lost");
   });

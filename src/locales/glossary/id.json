@@ -1,0 +1,73 @@
+{
+  "style": {
+    "formality": "Use \"kamu\", friendly and neutral, as Indonesian games do. Buttons use the plain imperative (Bagikan, Ambil, Mainkan).",
+    "gameTitles": "Translate game titles: use the established Indonesian name of a classic solitaire when there is one (many are known by their English names, such as Klondike and FreeCell), translate descriptive titles, and keep proper names. The current titles are the `title` entries in content/games.json; when rules mention another game, use its Indonesian title.",
+    "cardIndices": "Keep single-letter card indices (A, K, Q, J) as they are. Translate full rank and suit words. Indonesian nouns don't change for plurals; after a number use the singular (empat As).",
+    "typography": "Use “ ” for quotation marks.",
+    "markup": "Keep {{placeholders}}, <tags>, line breaks and markdown (##, -, **) exactly."
+  },
+  "ranks": {
+    "Ace": {
+      "one": "As",
+      "other": "As"
+    },
+    "King": {
+      "one": "King",
+      "other": "King"
+    },
+    "Queen": {
+      "one": "Queen",
+      "other": "Queen"
+    },
+    "Jack": {
+      "one": "Jack",
+      "other": "Jack"
+    },
+    "Joker": {
+      "one": "Joker",
+      "other": "Joker"
+    }
+  },
+  "suits": {
+    "hearts": {
+      "one": "hati",
+      "other": "hati"
+    },
+    "diamonds": {
+      "one": "wajik",
+      "other": "wajik"
+    },
+    "clubs": {
+      "one": "keriting",
+      "other": "keriting"
+    },
+    "spades": {
+      "one": "sekop",
+      "other": "sekop"
+    }
+  },
+  "terms": {
+    "suit": "jenis (sekop, hati, wajik, keriting)",
+    "rank": "nilai",
+    "alternating colors (red and black)": "berselang warna (merah dan hitam)",
+    "foundation": "fondasi",
+    "tableau": "kolom (meja)",
+    "column": "kolom",
+    "stock": "dek",
+    "waste (pile of turned stock cards)": "tumpukan terbuka",
+    "discard (pile of discarded or removed cards)": "buangan",
+    "reserve": "cadangan",
+    "free cell": "sel kosong",
+    "deal": "membagikan",
+    "redeal": "membagikan ulang",
+    "build up / build down": "menyusun naik / turun",
+    "run / sequence": "urutan",
+    "pile": "tumpukan",
+    "empty column": "kolom kosong",
+    "undo": "urungkan",
+    "node (progression map)": "simpul",
+    "collectible": "koleksi",
+    "quote": "kutipan",
+    "chapter": "bab"
+  }
+}

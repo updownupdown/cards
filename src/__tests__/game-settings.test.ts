@@ -21,7 +21,13 @@ describe("getGameSettings", () => {
           pyramidDifficulty: "nonsense" as never,
           seerDifficulty: "impossible" as never,
           memoryDifficulty: "legendary" as never,
-          stats: { attempts: -3, wins: 2.7, losses: NaN, highestScore: null, fastestTimeMs: null },
+          stats: {
+            attempts: -3,
+            wins: 2.7,
+            losses: NaN,
+            highestScore: null,
+            fastestTimeMs: null,
+          },
         },
       },
       path,
@@ -65,12 +71,24 @@ describe("compactGameSettings", () => {
     const settings: GameSettings = {
       ...DEFAULT_GAME_SETTINGS,
       drawCount: 3,
-      stats: { attempts: 4, wins: 1, losses: 2, highestScore: 120, fastestTimeMs: 61000 },
+      stats: {
+        attempts: 4,
+        wins: 1,
+        losses: 2,
+        highestScore: 120,
+        fastestTimeMs: 61000,
+      },
     };
 
     expect(compactGameSettings(settings)).toEqual({
       drawCount: 3,
-      stats: { attempts: 4, wins: 1, losses: 2, highestScore: 120, fastestTimeMs: 61000 },
+      stats: {
+        attempts: 4,
+        wins: 1,
+        losses: 2,
+        highestScore: 120,
+        fastestTimeMs: 61000,
+      },
     });
   });
 
@@ -81,7 +99,13 @@ describe("compactGameSettings", () => {
       nightVigilDifficulty: "city",
       lastResultSessionId: "session-1",
       lastResultWon: false,
-      stats: { attempts: 9, wins: 3, losses: 5, highestScore: null, fastestTimeMs: null },
+      stats: {
+        attempts: 9,
+        wins: 3,
+        losses: 5,
+        highestScore: null,
+        fastestTimeMs: null,
+      },
     };
 
     const stored = compactGameSettings(settings);

@@ -1,4 +1,11 @@
-import { afterEach, beforeEach, describe, expect, jest, test } from "@jest/globals";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from "@jest/globals";
 import "../../../jest/game-mocks";
 import {
   card,
@@ -155,7 +162,10 @@ describe("Twelve Trials", () => {
           row: 0,
           x: 0,
           defeated: false,
-          placed: placed.map((attacker) => ({ card: attacker, role: "attack" })),
+          placed: placed.map((attacker) => ({
+            card: attacker,
+            role: "attack",
+          })),
         },
       ],
       deck: [card("6", "diamonds", false)],

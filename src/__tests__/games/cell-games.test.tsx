@@ -1,4 +1,11 @@
-import { afterEach, beforeEach, describe, expect, jest, test } from "@jest/globals";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from "@jest/globals";
 import "../../../jest/game-mocks";
 import {
   card,
@@ -24,14 +31,38 @@ afterEach(() => {
 
 describe.each<[string, string, ComponentType, number, number, object]>([
   ["FreeCell", "/freecell", FreeCell, 8, 4, { zone: "cascade", pileIndex: 0 }],
-  ["Baker's Game", "/bakers-game", BakersGame, 8, 4, { zone: "cascade", pileIndex: 0, startIndex: 0 }],
-  ["Eight Off", "/eight-off", EightOff, 8, 8, { zone: "cascade", pileIndex: 0, startIndex: 0 }],
-  ["Seahaven Towers", "/seahaven-towers", SeahavenTowers, 10, 4, { zone: "cascade", pileIndex: 0, startIndex: 0 }],
+  [
+    "Baker's Game",
+    "/bakers-game",
+    BakersGame,
+    8,
+    4,
+    { zone: "cascade", pileIndex: 0, startIndex: 0 },
+  ],
+  [
+    "Eight Off",
+    "/eight-off",
+    EightOff,
+    8,
+    8,
+    { zone: "cascade", pileIndex: 0, startIndex: 0 },
+  ],
+  [
+    "Seahaven Towers",
+    "/seahaven-towers",
+    SeahavenTowers,
+    10,
+    4,
+    { zone: "cascade", pileIndex: 0, startIndex: 0 },
+  ],
 ])(
   "%s (no lose condition)",
   (_name, path, Game, cascadeCount, cellCount, kingSource) => {
     test("playing the last king to the foundations wins", async () => {
-      const cascades = Array.from({ length: cascadeCount }, () => [] as PlayingCard[]);
+      const cascades = Array.from(
+        { length: cascadeCount },
+        () => [] as PlayingCard[],
+      );
       cascades[0] = [card("K", "spades")];
       await renderGame(path, Game, {
         cascades,

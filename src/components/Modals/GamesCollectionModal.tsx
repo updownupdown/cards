@@ -3,8 +3,11 @@ import { GAME_DEFINITIONS } from "@/data/games-registry";
 import { getNodeDefinition, getUnlockedNodePaths } from "@/data/nodes-map";
 import { useNodesProgress } from "@/hooks/useNodesProgress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useDisplayLanguage, useTranslation } from "@/i18n";
+import { localizeGameTitle } from "@/i18n/content";
 import { Icon } from "@/icons";
 import { Colors, rgba } from "@/styles/styles";
+import { useMemo } from "react";
 import { ScrollView, View } from "react-native";
 import ModalFull from "./ModalFull";
 
@@ -12,22 +15,31 @@ type Props = {
   onClose: () => void;
 };
 
-const SORTED_GAMES = [...GAME_DEFINITIONS].sort((a, b) =>
-  a.title.localeCompare(b.title),
-);
-
 export function GamesCollectionModal({ onClose }: Props) {
   const { spacing } = useResponsiveMetrics();
+  const { t } = useTranslation("nodes");
+  const language = useDisplayLanguage();
   const { wonPaths, collectedTaoIds, collectedQuoteIds } = useNodesProgress();
   const unlockedPaths = getUnlockedNodePaths(wonPaths);
-  const unlockedGameCount = SORTED_GAMES.filter((game) =>
+  const sortedGames = useMemo(
+    () =>
+      GAME_DEFINITIONS.map((game) => ({
+        ...game,
+        title: localizeGameTitle(game, game.path, language),
+      })).sort((a, b) => a.title.localeCompare(b.title, language)),
+    [language],
+  );
+  const unlockedGameCount = sortedGames.filter((game) =>
     unlockedPaths.has(game.path),
   ).length;
 
   return (
     <ModalFull
-      title="Games"
-      subtitle={`${unlockedGameCount}/${SORTED_GAMES.length} unlocked games`}
+      title={t("games.title")}
+      subtitle={t("games.subtitle", {
+        unlocked: unlockedGameCount,
+        total: sortedGames.length,
+      })}
       iconName="trophy"
       onClose={onClose}
     >
@@ -40,7 +52,7 @@ export function GamesCollectionModal({ onClose }: Props) {
           gap: spacing(8),
         }}
       >
-        {SORTED_GAMES.map((game) => {
+        {sortedGames.map((game) => {
           const node = getNodeDefinition(game.path);
           const unlocked = unlockedPaths.has(game.path);
 

@@ -28,7 +28,7 @@ export const cafeQueue: GameDefinition = {
 
     "## Placing Customers",
     "- Choose a numbered position from one of the queues, then reveal the next customer.",
-    "- A customer may join the queue only if its ranks fits within the descending order of the queue (from high to low).",
+    "- A customer may join the queue only if its rank fits within the descending order of the queue (from high to low).",
     "- If the customer does not fit, you can:",
     "-- seat it by discarding the selected queue, or",
     "-- turn them away, along with the next customer.",

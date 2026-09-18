@@ -23,6 +23,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 type GameState = {
   draw: PlayingCard[];
   foundations: PlayingCard[][];
@@ -284,7 +285,7 @@ export default function Calculation() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 20,
-        placeholder: { text: "Stock", infoPos: "left" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "left" },
       },
       ...wasteZones,
       ...foundationZones,
@@ -430,8 +431,8 @@ export default function Calculation() {
       isLoaded={isLoaded}
       winLoseMessage={
         game.won
-          ? "All 52 cards are on the foundations."
-          : "No legal moves remain."
+          ? i18n.t("games:calculation.all52CardsAreOn")
+          : i18n.t("cards:noLegalMovesRemain")
       }
       canUndo={canUndo}
       undo={undo}

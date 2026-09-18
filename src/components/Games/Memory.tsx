@@ -22,6 +22,7 @@ import { Pressable, View } from "react-native";
 import { flexStyles } from "@/styles/flexStyles";
 import { useGameColors } from "@/hooks/useGameColors";
 
+import { i18n } from "@/i18n";
 const GRID_CONFIG = {
   veryeasy: { cols: 4, rows: 3 },
   easy: { cols: 5, rows: 4 },
@@ -35,14 +36,14 @@ type MemoryDifficulty = keyof typeof GRID_CONFIG;
 
 export type MemoryGameDifficulty = MemoryDifficulty;
 
-const DIFFICULTY_LABELS: Record<MemoryDifficulty, string> = {
-  veryeasy: "Very Easy",
-  easy: "Easy",
-  medium: "Medium",
-  hard: "Hard",
-  veryhard: "Very Hard",
-  extreme: "Extreme",
-};
+const DIFFICULTY_LABELS = {
+  veryeasy: "games:memory.difficultyVeryEasy",
+  easy: "games:memory.difficultyEasy",
+  medium: "games:memory.difficultyMedium",
+  hard: "games:memory.difficultyHard",
+  veryhard: "games:memory.difficultyVeryHard",
+  extreme: "games:memory.difficultyExtreme",
+} as const satisfies Record<MemoryDifficulty, string>;
 
 type GameState = {
   grid: (PlayingCard | null)[];
@@ -268,7 +269,7 @@ export default function Memory() {
         row: 0,
         baseZIndex: 40,
         fan: { maxVisible: 1 },
-        placeholder: { text: "Matched", infoPos: "right" },
+        placeholder: { text: i18n.t("games:memory.matched"), infoPos: "right" },
       },
       ...gridZones,
     ];
@@ -315,14 +316,14 @@ export default function Memory() {
       reset={reset}
       isLoaded={isLoaded}
       score={guesses}
-      winLoseMessage="You found every pair!"
+      winLoseMessage={i18n.t("games:memory.youFoundEveryPair")}
       openMenu={isGameModalOpen}
       onMenuClose={() => setIsGameModalOpen(false)}
     >
       <View style={[getZoneStylesById("hud"), flexStyles.rowCentered]}>
         <View style={[flexStyles.colCentered, flexStyles.flex1]}>
           <Text size="sm" weight={300} color={colorPale}>
-            Guesses
+            {i18n.t("games:memory.guesses")}
           </Text>
           <Text size="xl" weight={500} color={colorPale}>
             {guesses}
@@ -331,11 +332,11 @@ export default function Memory() {
 
         <View style={[flexStyles.colCentered, flexStyles.flex1]}>
           <Text size="sm" weight={300} color={colorPale}>
-            Difficulty
+            {i18n.t("games:memory.difficulty")}
           </Text>
           <Pressable onPress={() => setIsGameModalOpen(true)}>
             <Text size="xl" weight={500} color={colorPale}>
-              {DIFFICULTY_LABELS[difficulty]}
+              {i18n.t(DIFFICULTY_LABELS[difficulty])}
             </Text>
           </Pressable>
         </View>

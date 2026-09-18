@@ -11,7 +11,7 @@ export const queensAudience: GameDefinition = {
     difficulty: 25,
     luck: 65,
   },
-  thumbnail: "DefaultThumbnail.webp",
+  thumbnail: "QueensAudience.webp",
   background: GAME_BACKGROUNDS.greece,
   animation: GameAnimations.Stars,
   gameColorDark: "#24162b",

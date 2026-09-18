@@ -31,6 +31,7 @@ import { useToast } from "../common/Toast";
 import { Icon } from "@/icons";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 
+import { i18n } from "@/i18n";
 const BASE_HAND_LIMIT = 8;
 const BASE_PLAYS = 3;
 const BASE_DISCARDS = 3;
@@ -49,6 +50,20 @@ const HAND_POINTS = {
 } as const;
 
 type HandName = keyof typeof HAND_POINTS;
+
+/** Translation keys for the hand names shown to players. */
+const HAND_LABELS = {
+  "High Card": "cards:highCard",
+  Pair: "games:loneJoker.pair",
+  "Two Pair": "games:loneJoker.twoPair",
+  "Three of a Kind": "games:loneJoker.threeOfAKind",
+  Straight: "games:loneJoker.straight",
+  Flush: "games:loneJoker.flush",
+  "Full House": "games:loneJoker.fullHouse",
+  "Four of a Kind": "games:loneJoker.fourOfAKind",
+  "Straight Flush": "games:loneJoker.straightFlush",
+  "Royal Flush": "cards:royalFlush",
+} as const satisfies Record<HandName, string>;
 type Phase = "dealing" | "playing" | "scoring" | "shop";
 type BonusName =
   | "extraCard"
@@ -85,16 +100,13 @@ export type LoneJokerGameState = {
   winLoseMessage: string;
 };
 
-const BONUS_DETAILS: Record<
-  BonusName,
-  { label: string; cost: number; theme: string }
-> = {
-  extraCard: { label: "+ Card", cost: 10, theme: "#8d0000" },
-  extraDiscard: { label: "+ Discard", cost: 25, theme: "#006391" },
-  pocketPoints: { label: "+ 25 pts", cost: 50, theme: "#006636" },
-  extraHand: { label: "+ Hand", cost: 75, theme: "#6500a8" },
-  doubleScore: { label: "x2 Score", cost: 100, theme: "#ca5b00" },
-  shield: { label: "Shield", cost: 150, theme: "#940063" },
+const BONUS_DETAILS: Record<BonusName, { cost: number; theme: string }> = {
+  extraCard: { cost: 10, theme: "#8d0000" },
+  extraDiscard: { cost: 25, theme: "#006391" },
+  pocketPoints: { cost: 50, theme: "#006636" },
+  extraHand: { cost: 75, theme: "#6500a8" },
+  doubleScore: { cost: 100, theme: "#ca5b00" },
+  shield: { cost: 150, theme: "#940063" },
 };
 
 const BONUS_NAMES = Object.keys(BONUS_DETAILS) as BonusName[];
@@ -321,7 +333,11 @@ function finishRound(state: LoneJokerGameState) {
       const rating = ratingForRounds(roundsSurvived);
       state.ended = true;
       state.won = state.totalExcess >= 500;
-      state.winLoseMessage = `${roundsSurvived} rounds survived${rating ? ` - ${rating}` : ""}. Final score: ${state.totalExcess}.`;
+      state.winLoseMessage = i18n.t("games:loneJoker.roundsSurvived", {
+        count: roundsSurvived,
+        rating: rating ? ` - ${rating}` : "",
+        score: state.totalExcess,
+      });
       return true;
     }
     state.bonuses.shield = false;
@@ -567,7 +583,7 @@ export default function LoneJoker() {
 
   useEffect(() => {
     if (game.usedShield && !previousUsedShield.current) {
-      showToast("Shielf has been used");
+      showToast(i18n.t("games:loneJoker.shieldHasBeenUsed"));
     }
     previousUsedShield.current = game.usedShield;
   }, [game.usedShield]);
@@ -911,7 +927,9 @@ export default function LoneJoker() {
         ]}
       >
         <ProgressBar
-          labelText={`Round ${game.round}`}
+          labelText={i18n.t("games:loneJoker.roundNumber", {
+            round: game.round,
+          })}
           progressValue={game.roundScore}
           totalValue={target}
           color={progressColorForRound(game.round)}
@@ -930,17 +948,17 @@ export default function LoneJoker() {
         >
           {[
             {
-              label: "Discards",
+              label: i18n.t("games:loneJoker.discards"),
               value: game.discardsRemaining,
               color: Colors.cardSelectRed,
             },
             {
-              label: "Plays",
+              label: i18n.t("games:loneJoker.plays"),
               value: game.playsRemaining,
               color: Colors.cardSelectGreen,
             },
             {
-              label: "Bonus",
+              label: i18n.t("games:loneJoker.bonus"),
               value: `${Math.max(0, game.roundScore - target)}`,
               color: Colors.trophyGold,
             },
@@ -975,7 +993,7 @@ export default function LoneJoker() {
         {ownedBonuses.map((bonus) => (
           <Button
             key={bonus}
-            text={bonus === "shield" ? "Shield" : BONUS_DETAILS[bonus].label}
+            text={i18n.t(`games:loneJoker.bonuses.${bonus}`)}
             theme={BONUS_DETAILS[bonus].theme}
             size="xs"
             onPress={() => activateOwnedBonus(bonus)}
@@ -997,7 +1015,7 @@ export default function LoneJoker() {
         {preview ? (
           <View style={[flexStyles.colCentered]}>
             <Text size="lg" weight={400} color={colorPale}>
-              {preview.name}
+              {i18n.t(HAND_LABELS[preview.name])}
             </Text>
             <Text size="xxxl" weight={600} color={colorPale}>
               {`${preview.points}${game.doubleNextPlay ? " x2" : ""}`}
@@ -1005,7 +1023,7 @@ export default function LoneJoker() {
           </View>
         ) : (
           <Text size="sm" weight={300} color={rgba(colorPale, 0.5)}>
-            Choose up to 5 cards
+            {i18n.t("games:loneJoker.chooseUpTo5Cards")}
           </Text>
         )}
       </View>
@@ -1026,7 +1044,7 @@ export default function LoneJoker() {
             ]}
           >
             <Button
-              text="Clear"
+              text={i18n.t("cards:clear")}
               theme="blue"
               size="md"
               onPress={clearSelection}
@@ -1037,7 +1055,7 @@ export default function LoneJoker() {
               taller
             />
             <Button
-              text="Discard"
+              text={i18n.t("cards:discard")}
               theme="red"
               size="md"
               onPress={discardCards}
@@ -1050,7 +1068,7 @@ export default function LoneJoker() {
               taller
             />
             <Button
-              text="Play"
+              text={i18n.t("cards:play")}
               theme="green"
               size="md"
               onPress={playHand}
@@ -1088,7 +1106,7 @@ export default function LoneJoker() {
               color={rgba(Colors.white, 0.7)}
               textTransform="uppercase"
             >
-              Bonus Shoppe
+              {i18n.t("games:loneJoker.bonusShoppe")}
             </Text>
             <View
               style={[
@@ -1110,7 +1128,7 @@ export default function LoneJoker() {
                 color={Colors.trophyGold}
                 lineHeight={1}
               >
-                points
+                {i18n.t("games:loneJoker.points")}
               </Text>
             </View>
           </View>
@@ -1134,7 +1152,7 @@ export default function LoneJoker() {
                   style={[flexStyles.colCentered, { width: "48%" }]}
                 >
                   <Button
-                    text={details.label}
+                    text={i18n.t(`games:loneJoker.bonuses.${bonus}`)}
                     theme={
                       game.bonuses[bonus] || game.shopPoints < details.cost
                         ? Colors.K850
@@ -1196,7 +1214,9 @@ export default function LoneJoker() {
             })}
           </View>
           <Button
-            text={`Start Round ${game.round + 1}`}
+            text={i18n.t("games:loneJoker.startRound", {
+              value: game.round + 1,
+            })}
             theme={colorDark}
             size="md"
             onPress={nextRound}

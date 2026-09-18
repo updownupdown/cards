@@ -16,6 +16,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const wasteCount = 4;
 
 type GameState = {
@@ -286,7 +287,11 @@ export default function SirTommy() {
         row: 1.2,
         fan: { maxVisible: 3 },
         baseZIndex: 100,
-        placeholder: { text: "Stock", infoPos: "below", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:stock"),
+          infoPos: "below",
+          showCount: true,
+        },
       },
       ...wasteZones,
     ];
@@ -341,7 +346,11 @@ export default function SirTommy() {
       reset={reset}
       isLoaded={isLoaded}
       score={foundationTotal}
-      winLoseMessage={game.won ? "All four suits home!" : "The stock is spent."}
+      winLoseMessage={
+        game.won
+          ? i18n.t("games:sirTommy.allFourSuitsHome")
+          : i18n.t("games:sirTommy.theStockIsSpent")
+      }
       canUndo={canUndo}
       undo={undo}
     >

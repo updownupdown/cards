@@ -19,6 +19,7 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
 
+import { i18n } from "@/i18n";
 const cardSize = "regular";
 
 const layout = {
@@ -234,13 +235,10 @@ function resolveTurn(draft: GameState) {
 }
 
 function scoreTier(score: number) {
-  if (score >= 18)
-    return "Your work reshapes the science of freshwater ecology!\n\n🐟🐟🐟🐟";
-  if (score >= 14)
-    return "Your research advances knowledge of river ecosystems.\n\n🐟🐟🐟";
-  if (score >= 9)
-    return "Your findings aid local study of fish populations.\n\n🐟🐟";
-  return "Your records add little to the understanding of the river.\n\n🐟";
+  if (score >= 18) return i18n.t("games:delta21.ratingReshapes");
+  if (score >= 14) return i18n.t("games:delta21.ratingAdvances");
+  if (score >= 9) return i18n.t("games:delta21.ratingAids");
+  return i18n.t("games:delta21.ratingLittle");
 }
 
 export const delta21Rules = {
@@ -489,7 +487,7 @@ export default function Delta21() {
       row: 0,
       baseZIndex: 90,
       cards: game.station,
-      placeholder: { text: "Fld.St.", infoPos: "below" },
+      placeholder: { text: i18n.t("games:delta21.fldSt"), infoPos: "below" },
       fan: { maxVisible: 3 },
     };
 
@@ -509,7 +507,7 @@ export default function Delta21() {
       row: layout.estuaryHeight + layout.handRowTopOffset,
       baseZIndex: 90,
       cards: game.discard,
-      placeholder: { text: "Dscrd", infoPos: "above" },
+      placeholder: { text: i18n.t("cards:dscrd"), infoPos: "above" },
       fan: { maxVisible: 3 },
     };
 
@@ -653,7 +651,7 @@ export default function Delta21() {
           ]}
         >
           <Text size="sm" color={colorPale}>
-            Score:
+            {i18n.t("games:delta21.score")}
           </Text>
           <Text size="sm" weight={500} color={colorPale}>
             {score}
@@ -668,7 +666,7 @@ export default function Delta21() {
           ]}
         >
           <Text size="sm" color={colorPale}>
-            Studies:
+            {i18n.t("games:delta21.studies")}
           </Text>
           <Text size="sm" weight={500} color={colorPale}>
             {game.studyCount}

@@ -302,8 +302,7 @@ export const GameWrapper = ({
 
     const sessionId = getActiveGameSessionId(pathname);
     // Only a real win is timed (not the dev instant-win button).
-    const winTimeMs =
-      outcome === "won" ? getSessionPlayTimeMs(pathname) : null;
+    const winTimeMs = outcome === "won" ? getSessionPlayTimeMs(pathname) : null;
     recordResult(
       pathname,
       displayedOutcome === "won",
@@ -448,26 +447,26 @@ export const GameWrapper = ({
         {globalSettings.showAnimations &&
           !isGlobalSettingsLoading &&
           isSceneReady && (
-          <View
-            style={{
-              position: "absolute",
-              zIndex: LayerZIndexes.boardAnimation,
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0,
-              overflow: "hidden",
-              pointerEvents: "none",
-            }}
-          >
-            <BackgroundAnimation
-              animation={gameInfo.animation}
-              width={viewportWidth}
-              height={viewportHeight}
-              paused={isScenePaused}
-            />
-          </View>
-        )}
+            <View
+              style={{
+                position: "absolute",
+                zIndex: LayerZIndexes.boardAnimation,
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
+                overflow: "hidden",
+                pointerEvents: "none",
+              }}
+            >
+              <BackgroundAnimation
+                animation={gameInfo.animation}
+                width={viewportWidth}
+                height={viewportHeight}
+                paused={isScenePaused}
+              />
+            </View>
+          )}
 
         <DeviceRotateHint landscapeRecommended={showDeviceRotateHint} />
 

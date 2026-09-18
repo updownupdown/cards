@@ -1,3 +1,4 @@
+import { useTranslation } from "@/i18n";
 import { Icon } from "@/icons";
 import { Colors } from "@/styles/styles";
 import { useEffect, useRef, useState } from "react";
@@ -30,6 +31,7 @@ export function FavButton({
   disabled = false,
   style,
 }: Props) {
+  const { t } = useTranslation("home");
   const flipValue = useRef(new Animated.Value(1)).current;
   const burstValue = useRef(new Animated.Value(0)).current;
   const flipInProgress = useRef(false);
@@ -84,7 +86,7 @@ export function FavButton({
   return (
     <Pressable
       accessibilityLabel={
-        displayFavorite ? "Remove from favorites" : "Add to favorites"
+        displayFavorite ? t("favorites.remove") : t("favorites.add")
       }
       accessibilityRole="button"
       onPress={toggleFavorite}

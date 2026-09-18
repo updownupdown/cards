@@ -13,9 +13,7 @@ describe("rgba", () => {
   });
 
   test("replaces the alpha of rgb() and rgba() colours", () => {
-    expect(rgba("rgba(170, 186, 200, 0.2)", 1)).toBe(
-      "rgba(170, 186, 200, 1)",
-    );
+    expect(rgba("rgba(170, 186, 200, 0.2)", 1)).toBe("rgba(170, 186, 200, 1)");
     expect(rgba("rgb(1,2,3)", 0.4)).toBe("rgba(1, 2, 3, 0.4)");
   });
 

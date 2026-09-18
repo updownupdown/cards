@@ -34,21 +34,22 @@ import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { ProgressBar } from "../Home/ProgressBar";
 import { textStyles } from "@/styles/textStyles";
 
+import { i18n } from "@/i18n";
 type FightClubsDifficulty = "easy" | "hard";
 type Action =
   "match" | "sum" | "any" | "line" | "row" | "column" | "down" | "up" | "run";
 
-const ActionNames: Record<Action, string> = {
-  match: "Match",
-  sum: "Sum",
-  any: "Any",
-  line: "♦ Line",
-  row: "♦ Row",
-  column: "♦ Col",
-  down: "♠ Down",
-  up: "♠ Up",
-  run: "♥ Sequence",
-};
+const ActionNames = {
+  match: "games:fightClubs.actionMatch",
+  sum: "games:fightClubs.actionSum",
+  any: "games:fightClubs.actionAny",
+  line: "games:fightClubs.actionLine",
+  row: "games:fightClubs.actionRow",
+  column: "games:fightClubs.actionColumn",
+  down: "games:fightClubs.actionDown",
+  up: "games:fightClubs.actionUp",
+  run: "games:fightClubs.actionRun",
+} as const satisfies Record<Action, string>;
 
 const ActionIcons: Partial<Record<Action, IconName>> = {
   match: "equal-outline",
@@ -295,11 +296,11 @@ function evaluateOutcome(draft: FightClubsGameState) {
   ) {
     draft.ended = true;
     draft.won = true;
-    draft.winLoseMessage = "The grid is clear. Fight Clubs won!";
+    draft.winLoseMessage = i18n.t("games:fightClubs.gridClearWon");
   } else if (draft.hand.length === 0 && draft.clubsDeck.length === 0) {
     draft.ended = true;
     draft.won = false;
-    draft.winLoseMessage = "All 13 Clubs are spent.";
+    draft.winLoseMessage = i18n.t("games:fightClubs.allClubsSpent");
   }
 }
 
@@ -471,7 +472,11 @@ export default function FightClubs() {
         col: 0,
         row: 0,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Grid", infoPos: "right", showCount: false },
+        placeholder: {
+          text: i18n.t("games:fightClubs.grid"),
+          infoPos: "right",
+          showCount: false,
+        },
       },
       {
         id: "bars",
@@ -497,7 +502,11 @@ export default function FightClubs() {
         col: 4,
         row: 0,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Clubs", infoPos: "left", showCount: false },
+        placeholder: {
+          text: i18n.t("games:fightClubs.clubs"),
+          infoPos: "left",
+          showCount: false,
+        },
       },
       ...gridZones,
       {
@@ -605,7 +614,7 @@ export default function FightClubs() {
         visible={showDeckPreview}
         cards={game.discard}
         onClose={() => setShowDeckPreview(false)}
-        title="Deck Preview"
+        title={i18n.t("cards:deckPreview")}
         sortCards
       />
 
@@ -677,9 +686,21 @@ export default function FightClubs() {
         {/* Suit Actions */}
         {(
           [
-            { label: "Row/Col", suit: "diamonds", actions: ["column", "row"] },
-            { label: "Up/Down", suit: "spades", actions: ["up", "down"] },
-            { label: "Sequence", suit: "hearts", actions: ["run"] },
+            {
+              label: i18n.t("games:fightClubs.rowCol"),
+              suit: "diamonds",
+              actions: ["column", "row"],
+            },
+            {
+              label: i18n.t("games:fightClubs.upDown"),
+              suit: "spades",
+              actions: ["up", "down"],
+            },
+            {
+              label: i18n.t("games:fightClubs.sequence"),
+              suit: "hearts",
+              actions: ["run"],
+            },
           ] as { label: string; suit: string; actions: Action[] }[]
         ).map((group, groupIndex) => {
           const count = suitCount(game.grid, group.suit as CardSuit);
@@ -729,7 +750,7 @@ export default function FightClubs() {
                         paddingVertical: 0,
                         opacity: isBlocked ? 0.3 : 1,
                         boxShadow: isBlocked ? "none" : undefined,
-                        backgroundColor: isBlocked ? "none" : undefined,
+                        backgroundColor: isBlocked ? "transparent" : undefined,
                         borderRadius: spacing(10),
                       },
                     ]}
@@ -744,7 +765,7 @@ export default function FightClubs() {
         {(["match", "sum", "any"] as Action[]).map((action) => (
           <Button
             key={action}
-            text={ActionNames[action]}
+            text={i18n.t(ActionNames[action])}
             iconName={ActionIcons[action]}
             size="md"
             theme={canExecute(action) ? "green" : "blue"}
@@ -765,7 +786,7 @@ export default function FightClubs() {
       {/* Clear button */}
       <View style={[getZoneStylesById("clearButton")]}>
         <Button
-          text="Clear"
+          text={i18n.t("cards:clear")}
           size={
             viewportHeight < 600 ? "xs" : viewportHeight < 700 ? "sm" : "md"
           }

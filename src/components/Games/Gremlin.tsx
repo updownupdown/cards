@@ -20,6 +20,7 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
+import { i18n } from "@/i18n";
 const MAX_COLUMNS = 12;
 const HAND_SIZE_BY_DIFFICULTY = {
   easy: 5,
@@ -48,7 +49,15 @@ type GameState = {
 
 export type GremlinGameState = GameState;
 
-function getWinTier(columnCount: number) {
+const WIN_TIER_NAMES = {
+  novice: "games:gremlin.tierNovice",
+  normal: "games:gremlin.tierNormal",
+  advanced: "games:gremlin.tierAdvanced",
+  legendary: "games:gremlin.tierLegendary",
+  epic: "games:gremlin.tierEpic",
+} as const;
+
+function getWinTier(columnCount: number): keyof typeof WIN_TIER_NAMES | null {
   switch (columnCount) {
     case 12:
       return "novice";
@@ -118,9 +127,14 @@ function finishCompletedGame(draft: GameState) {
   draft.currentHelperCard = null;
 
   if (tier) {
-    draft.winLoseMessage = `${columnCount} columns used. ${tier.toUpperCase()} win.`;
+    draft.winLoseMessage = i18n.t("games:gremlin.columnsUsedWin", {
+      count: columnCount,
+      tier: i18n.t(WIN_TIER_NAMES[tier]),
+    });
   } else {
-    draft.winLoseMessage = `All cards played in ${columnCount} columns.`;
+    draft.winLoseMessage = i18n.t("games:gremlin.allCardsPlayedInColumns", {
+      count: columnCount,
+    });
   }
 }
 
@@ -317,7 +331,9 @@ export default function Gremlin() {
         draft.awaitingHelperPlacement = false;
         draft.ended = true;
         draft.won = false;
-        draft.winLoseMessage = `No room for the helper's card in ${MAX_COLUMNS} columns.`;
+        draft.winLoseMessage = i18n.t("games:gremlin.noRoomForHelper", {
+          count: MAX_COLUMNS,
+        });
         return;
       }
 
@@ -470,7 +486,7 @@ export default function Gremlin() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: "Stock", infoPos: "right" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "right" },
       },
       {
         id: "discard",
@@ -480,7 +496,7 @@ export default function Gremlin() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: "Discard", infoPos: "left" },
+        placeholder: { text: i18n.t("cards:discard"), infoPos: "left" },
       },
       {
         id: "helper",
@@ -489,7 +505,11 @@ export default function Gremlin() {
         col: 2.5,
         row: 0,
         baseZIndex: 50,
-        placeholder: { text: "Helper", infoPos: "left", showCount: false },
+        placeholder: {
+          text: i18n.t("games:gremlin.helper"),
+          infoPos: "left",
+          showCount: false,
+        },
       },
       ...columnZones,
       ...handZones,
@@ -601,14 +621,14 @@ export default function Gremlin() {
         ]}
       >
         <Button
-          text="Discard"
+          text={i18n.t("cards:discard")}
           theme="orange"
           onPress={handleDiscardSelectedCard}
           disabled={!canDiscard}
           halfTaller
         />
         <Button
-          text="End Turn"
+          text={i18n.t("games:gremlin.endTurn")}
           theme="blue"
           onPress={handleEndTurn}
           disabled={

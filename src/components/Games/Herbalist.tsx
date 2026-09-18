@@ -22,6 +22,7 @@ import { Text } from "../common/Text";
 import { useGameColors } from "@/hooks/useGameColors";
 import { flexStyles } from "@/styles/flexStyles";
 
+import { i18n } from "@/i18n";
 const ZONE_ROW_MULT = 1.1;
 const LOCATION_COUNT = 9;
 const STABLES_INDEX = 4;
@@ -160,16 +161,16 @@ function evaluateOutcome(draft: HerbalistGameState) {
     const score = uneatenHerbCount(draft);
     draft.winLoseMessage =
       score <= 7
-        ? `Fair harvest: ${score} herbs remain.`
+        ? i18n.t("games:herbalist.harvestFair", { count: score })
         : score <= 9
-          ? `Good harvest: ${score} herbs remain.`
+          ? i18n.t("games:herbalist.harvestGood", { count: score })
           : score <= 11
-            ? `Excellent harvest: ${score} herbs remain.`
-            : `Perfect harvest: ${score} herbs remain.`;
+            ? i18n.t("games:herbalist.harvestExcellent", { count: score })
+            : i18n.t("games:herbalist.harvestPerfect", { count: score });
   } else if (uneatenHerbCount(draft) === 0 && draft.carriedHerbs.length === 0) {
     draft.ended = true;
     draft.won = false;
-    draft.winLoseMessage = "No herbs remain to heal the realm.";
+    draft.winLoseMessage = i18n.t("games:herbalist.noHerbsRemain");
   }
 }
 
@@ -479,7 +480,7 @@ export default function Herbalist() {
         row: STABLES_ROW,
         baseZIndex: 10,
         placeholder: {
-          text: "Noble",
+          text: i18n.t("games:herbalist.noble"),
           infoPos: "right",
           showCount: false,
         },
@@ -493,7 +494,7 @@ export default function Herbalist() {
         row: STABLES_ROW,
         baseZIndex: 35,
         placeholder: {
-          text: "Jester",
+          text: i18n.t("games:herbalist.jester"),
           infoPos: "left",
           showCount: false,
         },

@@ -1,5 +1,6 @@
 import { Text } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useTranslation } from "@/i18n";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, LayerZIndexes, layoutDims, rgba } from "@/styles/styles";
 import { useEffect, useRef } from "react";
@@ -33,6 +34,7 @@ export const WinLoseBox = ({
   onExit,
 }: Props) => {
   const { ui, spacing } = useResponsiveMetrics();
+  const { t } = useTranslation("game");
   const { colorDark } = useGameColors();
   const insets = useSafeAreaInsets();
   const restingBottom = spacing(layoutDims.pagePadding) + insets.bottom;
@@ -142,7 +144,7 @@ export const WinLoseBox = ({
           ]}
         >
           <Text size="xl" weight={400} color={Colors.white}>
-            {won ? "You won!" : "You lost"}
+            {won ? t("result.won") : t("result.lost")}
           </Text>
 
           {message && (
@@ -166,7 +168,7 @@ export const WinLoseBox = ({
                 textAlign: "center",
               }}
             >
-              Score: {score}
+              {t("result.score", { score })}
             </Text>
           )}
         </View>
@@ -182,7 +184,7 @@ export const WinLoseBox = ({
         >
           <Button
             size="md"
-            accessibilityLabel={isNodesMode ? "Nodes" : "Home"}
+            accessibilityLabel={isNodesMode ? t("menu.nodes") : t("menu.home")}
             onPress={() => fadeOutWLM(onExit)}
             taller
             iconName={isNodesMode ? "nodes" : "home"}
@@ -203,7 +205,7 @@ export const WinLoseBox = ({
             onPress={() => fadeOutWLM(reset)}
             size="md"
             iconName="reset"
-            text={won ? "Play again" : "Try again"}
+            text={won ? t("result.playAgain") : t("result.tryAgain")}
             theme={won ? "winDark" : "loseDark"}
             taller
             style={{

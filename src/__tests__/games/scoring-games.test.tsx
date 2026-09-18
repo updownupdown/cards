@@ -1,4 +1,11 @@
-import { afterEach, beforeEach, describe, expect, jest, test } from "@jest/globals";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from "@jest/globals";
 import "../../../jest/game-mocks";
 import {
   card,
@@ -154,8 +161,9 @@ describe("Cribbage Squares", () => {
 
   test("scoring 61 or more wins", async () => {
     // Every line of fives (with a five starter) scores 40.
-    const grid: (PlayingCard | null)[] = Array.from({ length: 16 }, (_, index) =>
-      card("5", SUITS[index % 4]),
+    const grid: (PlayingCard | null)[] = Array.from(
+      { length: 16 },
+      (_, index) => card("5", SUITS[index % 4]),
     );
     grid[15] = null;
 
@@ -167,11 +175,14 @@ describe("Cribbage Squares", () => {
   test("scoring under 61 loses", async () => {
     // K, J, 9, 7 in every line: no fifteens, pairs, runs or flushes.
     const ranks: CardRank[] = ["K", "J", "9", "7"];
-    const grid: (PlayingCard | null)[] = Array.from({ length: 16 }, (_, index) => {
-      const row = Math.floor(index / 4);
-      const col = index % 4;
-      return card(ranks[(row + col) % 4], SUITS[(2 * row + col) % 4]);
-    });
+    const grid: (PlayingCard | null)[] = Array.from(
+      { length: 16 },
+      (_, index) => {
+        const row = Math.floor(index / 4);
+        const col = index % 4;
+        return card(ranks[(row + col) % 4], SUITS[(2 * row + col) % 4]);
+      },
+    );
     const last = grid[15]!;
     grid[15] = null;
 
@@ -190,10 +201,22 @@ describe("Calculation", () => {
     await renderGame("/calculation", Calculation, {
       draw: [king],
       foundations: [
-        sequence(["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q"], "spades"),
-        sequence(["2", "4", "6", "8", "10", "Q", "A", "3", "5", "7", "9", "J", "K"], "hearts"),
-        sequence(["3", "6", "9", "Q", "2", "5", "8", "J", "A", "4", "7", "10", "K"], "diamonds"),
-        sequence(["4", "8", "Q", "3", "7", "J", "2", "6", "10", "A", "5", "9", "K"], "clubs"),
+        sequence(
+          ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q"],
+          "spades",
+        ),
+        sequence(
+          ["2", "4", "6", "8", "10", "Q", "A", "3", "5", "7", "9", "J", "K"],
+          "hearts",
+        ),
+        sequence(
+          ["3", "6", "9", "Q", "2", "5", "8", "J", "A", "4", "7", "10", "K"],
+          "diamonds",
+        ),
+        sequence(
+          ["4", "8", "Q", "3", "7", "J", "2", "6", "10", "A", "5", "9", "K"],
+          "clubs",
+        ),
       ],
       wastes: [[], [], [], []],
       ended: false,

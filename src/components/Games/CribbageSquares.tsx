@@ -26,6 +26,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
 import { useGameColors } from "@/hooks/useGameColors";
 
+import { i18n } from "@/i18n";
 const GRID_SIZE = 4;
 const GRID_CELLS = GRID_SIZE * GRID_SIZE;
 const TARGET_SCORE = 61;
@@ -331,7 +332,7 @@ export default function CribbageSquares() {
         col: 0,
         row: 0,
         baseZIndex: 40,
-        placeholder: { text: "Stock", infoPos: "right" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "right" },
         fan: { maxVisible: 3 },
       },
       {
@@ -419,8 +420,13 @@ export default function CribbageSquares() {
       score={game.score}
       winLoseMessage={
         game.won
-          ? `You scored ${game.score} points!`
-          : `You scored ${game.score}. Reach ${TARGET_SCORE} to win.`
+          ? i18n.t("games:cribbageSquares.youScoredPoints", {
+              score: game.score,
+            })
+          : i18n.t("games:cribbageSquares.youScoredReachToWin", {
+              score: game.score,
+              TARGET_SCORE,
+            })
       }
       canUndo={canUndo}
       undo={undo}
@@ -437,10 +443,10 @@ export default function CribbageSquares() {
           ]}
         >
           <Text size="lg" weight={500} color={colorPale}>
-            {`Score: ${game.score} pts`}
+            {i18n.t("cards:scorePts", { score: game.score })}
           </Text>
           <Button
-            text="End Game"
+            text={i18n.t("cards:endGame")}
             onPress={endGame}
             size="sm"
             fullWidth

@@ -6,6 +6,7 @@ import {
   loadLastGameSession,
 } from "@/data/game-menu";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
+import { i18n } from "@/i18n";
 import { isLocalDevEnvironment } from "@/utils/utils";
 import { router, type Href } from "expo-router";
 import { useEffect, useRef } from "react";
@@ -30,7 +31,7 @@ export default function HomeScreen() {
         // could crash-loop, so start from the home screen instead.
         if (await consumeInterruptedGameLaunch()) {
           await clearLastGameSession();
-          if (active) showToast("Your last game couldn't be resumed.");
+          if (active) showToast(i18n.t("game:errors.resumeFailed"));
           return;
         }
 

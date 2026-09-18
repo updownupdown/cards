@@ -1,0 +1,553 @@
+{
+  "archipelago": {
+    "islandJokers": {
+      "hash": "71b79671",
+      "value": {
+        "description": "Her yere konabilen iki joker ekler.",
+        "label": "Joker kullan",
+        "options": [
+          {
+            "label": "Hayır"
+          },
+          {
+            "label": "Evet (daha kolay)"
+          }
+        ]
+      }
+    }
+  },
+  "ascent": {
+    "ascentChallenge": {
+      "hash": "11a33a3b",
+      "value": {
+        "description": "Patika uzunluğunu ve kuralları değiştiren isteğe bağlı meydan okumalar.",
+        "label": "Sekiz binlik zirveler",
+        "options": [
+          {
+            "label": "Temel tırmanış (7.500 m)",
+            "description": "Patika uzunluğu: 3. Özel kural yok."
+          },
+          {
+            "label": "Cho Oyu (8.188 m)",
+            "description": "Patika uzunluğu: 2. Bir kampa ulaştığında, kampın kilometre taşında en az 6 kart yoksa onu patikaya ekleme."
+          },
+          {
+            "label": "Shishapangma (8.027 m)",
+            "description": "Patika uzunluğu: 3. Teknik (karo) ya da serbest tırmanış (maça) yaklaşımlı bir rota oynadığında bir kart fazla çek. Temkinli (kupa) ya da gözü kara (sinek) yaklaşımlı bir rota oynadığında bir kart eksik çek. Yine de oynanan rotadaki kart sayısından fazla kart çekmezsin."
+          },
+          {
+            "label": "Manaslu (8.163 m)",
+            "description": "Patika uzunluğu: 4. Bir kampa ulaştığında yorgunluk yığınına kart ekleme. Dinlendiğinde, yorgunluk yığınındaki kartları eline aldıktan sonra yorgunluk yığınına yalnızca bir kart ekle."
+          },
+          {
+            "label": "Broad Peak (8.051 m)",
+            "description": "Patika uzunluğu: 3. Yaklaşımı bir önceki rotanınkinden farklı değilse bir rota oynayamazsın. Bir kampa ulaştığında, kampın kilometre taşının yaklaşımı patikadaki önceki bütün rotalarınkinden farklı değilse onu patikaya ekleme."
+          },
+          {
+            "label": "Gasherbrum II (8.035 m)",
+            "description": "Patika uzunluğu: 4. Bir rota oynadığında, kart çekmeden önce çekeceğin kart sayısını bir azalt. Bu, çekilecek kart sayısını negatif yapacaksa onun yerine rotadaki kart sayısı kadar kart çek."
+          },
+          {
+            "label": "Everest (8.848 m)",
+            "description": "Patika uzunluğu: 5. Hazırlıkta ve bir kampa her ulaştığında on yerine yalnızca yedi kart çek."
+          },
+          {
+            "label": "Dhaulagiri (8.167 m)",
+            "description": "Patika uzunluğu: 3. Bir kampa ulaştığında, oyun alanında kilometre taşının kendisi dahil en az iki kartlık bir travers yoksa kampın kilometre taşını patikaya ekleme."
+          },
+          {
+            "label": "Gasherbrum I (8.080 m)",
+            "description": "Patika uzunluğu: 3. Aslar, Valeler ve Papazlar dahil tek değerli bir çapayla rota oynayamazsın."
+          },
+          {
+            "label": "Kangchenjunga (8.586 m)",
+            "description": "Patika uzunluğu: 4. Bir rota oynadığında kartları sırayla oynaman gerekmez; rotadaki herhangi bir kart çapa olabilir. Yine de bir Joker'i rotanın çapası olarak oynayamazsın."
+          },
+          {
+            "label": "Lhotse (8.516 m)",
+            "description": "Patika uzunluğu: 3. En az iki kart içermeyen bir rota oynayamazsın."
+          },
+          {
+            "label": "Makalu (8.481 m)",
+            "description": "Patika uzunluğu: 4. Bir rota oynadığında elinden herhangi bir kartı da atabilirsin."
+          },
+          {
+            "label": "Nanga Parbat (8.126 m)",
+            "description": "Patika uzunluğu: 3. Travers ya da iniş oynayamazsın. Tırmanıştaki kartların ardışık olması gerekmez, ama kartlar arasındaki aralık hep aynı olmalıdır."
+          },
+          {
+            "label": "K2 (8.611 m)",
+            "description": "Patika uzunluğu: 3. Bir rota oynadığında çektiğin kart sayısı, oynanan rotadaki kart sayısıyla sınırlı değildir."
+          },
+          {
+            "label": "Annapurna I (8.091 m)",
+            "description": "Patika uzunluğu: 4. Bir rota oynadıktan sonra kart çektiğinde, çekilen kartlardan biri rotanın çapasıyla aynı takımdansa oynanan rotadaki bütün kartları eline geri al. Bunu bir kampa ulaştığında yapma. Elinde herhangi bir anda 18 ya da daha fazla kart olursa oyunu hemen kaybedersin."
+          }
+        ]
+      }
+    },
+    "ascentDifficulty": {
+      "hash": "4f582426",
+      "value": {
+        "label": "Zorluk",
+        "options": [
+          {
+            "label": "Yumuşak",
+            "description": "Bir kampa ulaştığında, oynanan kilometre taşını öncekinden yüksek olmasa bile her zaman patikaya ekle."
+          },
+          {
+            "label": "Standart",
+            "description": "Değişiklik yok."
+          },
+          {
+            "label": "Yoğun",
+            "description": "Bir kampa ulaştığında, oynanan kilometre taşını yalnızca öncekinden daha çok kart içeriyorsa patikaya ekle."
+          }
+        ]
+      }
+    }
+  },
+  "baroness": {
+    "difficulty": {
+      "hash": "9cf97680",
+      "value": {
+        "label": "Zorluk",
+        "options": [
+          {
+            "label": "Kolay"
+          },
+          {
+            "label": "Zor"
+          }
+        ]
+      }
+    }
+  },
+  "canfield": {
+    "drawCount": {
+      "hash": "ecd6b2f3",
+      "value": {
+        "label": "Desteden çekiş",
+        "options": [
+          {
+            "label": "1 kart"
+          },
+          {
+            "label": "3 kart"
+          }
+        ]
+      }
+    }
+  },
+  "chapter-and-verse": {
+    "chapterAndVerseCheckBack": {
+      "hash": "90e8b983",
+      "value": {
+        "description": "Envanterdeki en üst kitap bir teklife dahil edilebilir.",
+        "label": "Depoya bir bakayım",
+        "options": [
+          {
+            "label": "Kapalı"
+          },
+          {
+            "label": "Açık (Kolay)"
+          }
+        ]
+      }
+    },
+    "chapterAndVerseLoyalPatrons": {
+      "hash": "2cdf2aa1",
+      "value": {
+        "description": "Dört ya da daha fazla kitaplı teklifler müşteriyi lonca itibarına ekler.",
+        "label": "Sadık müşteriler",
+        "options": [
+          {
+            "label": "Kapalı"
+          },
+          {
+            "label": "Açık (Kolay)"
+          }
+        ]
+      }
+    },
+    "chapterAndVerseSuperExclusive": {
+      "hash": "3444cc88",
+      "value": {
+        "description": "İkinci el kitapla aynı türden ya da aynı değerdeki kitaplar 0 $ tutar.",
+        "label": "Süper özel teklif",
+        "options": [
+          {
+            "label": "Kapalı"
+          },
+          {
+            "label": "Açık (Zor)"
+          }
+        ]
+      }
+    },
+    "chapterAndVerseVandals": {
+      "hash": "bf41e3e4",
+      "value": {
+        "description": "Jokerler kuyruğa ulaştığında kitapçının ilk boş rafını kilitler.",
+        "label": "Vandallar!",
+        "options": [
+          {
+            "label": "Kapalı"
+          },
+          {
+            "label": "1 Joker (Zor)"
+          },
+          {
+            "label": "2 Joker (Daha zor)"
+          }
+        ]
+      }
+    }
+  },
+  "fight-clubs": {
+    "fightClubsDifficulty": {
+      "hash": "d82ad464",
+      "value": {
+        "description": "Zor mod ızgara destesine ikinci bir Joker ekler.",
+        "label": "Zorluk",
+        "options": [
+          {
+            "label": "Kolay (1 Joker)"
+          },
+          {
+            "label": "Zor (2 Joker)"
+          }
+        ]
+      }
+    }
+  },
+  "forty-thieves": {
+    "difficulty": {
+      "hash": "7161d2c1",
+      "value": {
+        "label": "Zorluk",
+        "options": [
+          {
+            "label": "Kolay",
+            "description": "Sınırsız yeniden dağıtma."
+          },
+          {
+            "label": "Zor",
+            "description": "Yeniden dağıtma yok."
+          }
+        ]
+      }
+    }
+  },
+  "gaps": {
+    "gapsDifficulty": {
+      "hash": "6d279a0e",
+      "value": {
+        "description": "Yerinde olmayan kartların kaç kez yeniden dağıtılabileceğini belirler.",
+        "label": "Zorluk",
+        "options": [
+          {
+            "label": "Kolay (3 yeniden dağıtma)"
+          },
+          {
+            "label": "Zor (2 yeniden dağıtma)"
+          }
+        ]
+      }
+    }
+  },
+  "golf": {
+    "golfDifficulty": {
+      "hash": "1fb5445b",
+      "value": {
+        "description": "Kolay modda Aslar ve Papazlar birbirinin üstüne oynanabilir.",
+        "label": "Zorluk",
+        "options": [
+          {
+            "label": "Kolay"
+          },
+          {
+            "label": "Zor"
+          }
+        ]
+      }
+    }
+  },
+  "gremlin": {
+    "gremlinDifficulty": {
+      "hash": "22944911",
+      "value": {
+        "label": "El büyüklüğü",
+        "options": [
+          {
+            "label": "5 (Kolay)"
+          },
+          {
+            "label": "4 (Zor)"
+          }
+        ]
+      }
+    }
+  },
+  "gridlines": {
+    "gridlinesHard": {
+      "hash": "cdabae36",
+      "value": {
+        "description": "Zor modda ızgaranın ulaşması gereken hedef daha düşüktür.",
+        "label": "Mod",
+        "options": [
+          {
+            "label": "Normal"
+          },
+          {
+            "label": "Zor"
+          }
+        ]
+      }
+    }
+  },
+  "herbalist": {
+    "herbalistOpenStables": {
+      "hash": "d3ef883f",
+      "value": {
+        "description": "Ortadaki Ahır'a Soylu ve Soytarı yoldaşlarını ekler.",
+        "label": "Açık ahır",
+        "options": [
+          {
+            "label": "Kapalı"
+          },
+          {
+            "label": "Açık"
+          }
+        ]
+      }
+    }
+  },
+  "klondike": {
+    "drawCount": {
+      "hash": "ecd6b2f3",
+      "value": {
+        "label": "Desteden çekiş",
+        "options": [
+          {
+            "label": "1 kart"
+          },
+          {
+            "label": "3 kart"
+          }
+        ]
+      }
+    }
+  },
+  "lycan": {
+    "lycanMode": {
+      "hash": "a77f03e5",
+      "value": {
+        "description": "Daha az yüksek kart, Kurt'u yenmeyi kolaylaştırır.",
+        "label": "Zorluk",
+        "options": [
+          {
+            "label": "Kolay (9 ve 10 yok)"
+          },
+          {
+            "label": "Orta (10 yok)"
+          },
+          {
+            "label": "Zor (bütün kartlar)"
+          }
+        ]
+      }
+    }
+  },
+  "memory": {
+    "memoryDifficulty": {
+      "hash": "4ec0fa07",
+      "value": {
+        "label": "Izgara boyutu",
+        "options": [
+          {
+            "label": "Çok kolay (4 x 3)"
+          },
+          {
+            "label": "Kolay (5 x 4)"
+          },
+          {
+            "label": "Orta (6 x 5)"
+          },
+          {
+            "label": "Zor (7 x 6)"
+          },
+          {
+            "label": "Çok zor (8 x 7)"
+          },
+          {
+            "label": "Aşırı zor (8 x 9)"
+          }
+        ]
+      }
+    }
+  },
+  "night-vigil": {
+    "nightVigilDifficulty": {
+      "hash": "d5901a95",
+      "value": {
+        "label": "Zorluk",
+        "options": [
+          {
+            "label": "Sokak seviyesi",
+            "description": "Papazlar 1 fazla hasar verir."
+          },
+          {
+            "label": "Baba dosyası",
+            "description": "Kızlar ve Papazlar 1 fazla hasar verir."
+          },
+          {
+            "label": "Gölgedeki şehir",
+            "description": "Kızlar 1, Papazlar 2 fazla hasar verir."
+          }
+        ]
+      }
+    }
+  },
+  "pocket-poker": {
+    "pokerJokers": {
+      "hash": "8bf4ba75",
+      "value": {
+        "description": "Desteye her kartın yerine geçebilen iki joker ekler.",
+        "label": "Jokerler",
+        "options": [
+          {
+            "label": "Joker yok"
+          },
+          {
+            "label": "Serbest jokerler"
+          }
+        ]
+      }
+    }
+  },
+  "pyramid": {
+    "pyramidDifficulty": {
+      "hash": "d38b6ca4",
+      "value": {
+        "description": "Kolay modda, yalnızca ilk seçilen kartın örttüğü ikinci bir kartı seçebilirsin. Aslında pek kolaylaşmaz ama daha affedicidir.",
+        "label": "Zorluk",
+        "options": [
+          {
+            "label": "Kolay"
+          },
+          {
+            "label": "Zor"
+          }
+        ]
+      }
+    }
+  },
+  "royal-rest": {
+    "royalRestHardMode": {
+      "hash": "9895d840",
+      "value": {
+        "description": "Valeler, aralarında yastık olsa bile başka bir Vale bulunan sütuna taşınamaz.",
+        "label": "Zor mod",
+        "options": [
+          {
+            "label": "Kapalı"
+          },
+          {
+            "label": "Açık"
+          }
+        ]
+      }
+    }
+  },
+  "seer": {
+    "seerDifficulty": {
+      "hash": "e0c908ab",
+      "value": {
+        "description": "Bir başarının hangi komşu taşları serbest bırakabileceğini belirler.",
+        "label": "Zorluk",
+        "options": [
+          {
+            "label": "Kolay (çaprazlar dahil)"
+          },
+          {
+            "label": "Normal (yatay ve dikey)"
+          },
+          {
+            "label": "Zor (birini seç)"
+          }
+        ]
+      }
+    }
+  },
+  "twelve-trials": {
+    "boomerAce": {
+      "hash": "6ab63f67",
+      "value": {
+        "description": "Aslar 11 değerindedir ve tetikleyici olarak kullanılınca ele döner.",
+        "label": "Bumerang As",
+        "options": [
+          {
+            "label": "Kapalı"
+          },
+          {
+            "label": "Açık"
+          }
+        ]
+      }
+    },
+    "dungeonLevel": {
+      "hash": "6b11e248",
+      "value": {
+        "label": "Zindan düzeni",
+        "options": [
+          {
+            "label": "Seviye 1 (Acemi)"
+          },
+          {
+            "label": "Seviye 2"
+          },
+          {
+            "label": "Seviye 3"
+          },
+          {
+            "label": "Seviye 4"
+          },
+          {
+            "label": "Seviye 5 (Aşırı)"
+          }
+        ]
+      }
+    },
+    "powerReserve": {
+      "hash": "4005b3b7",
+      "value": {
+        "description": "İlk turda beş kart çek ve istediğin zaman kullanmak üzere ikisini kenara ayır.",
+        "label": "Güç yedeği",
+        "options": [
+          {
+            "label": "Kapalı"
+          },
+          {
+            "label": "Açık"
+          }
+        ]
+      }
+    },
+    "specialAbilities": {
+      "hash": "c8b26a2e",
+      "value": {
+        "description": "Yenilen Papazlar tek kullanımlık yetenekler verir.",
+        "label": "Özel yetenekler",
+        "options": [
+          {
+            "label": "Kapalı"
+          },
+          {
+            "label": "Açık"
+          }
+        ]
+      }
+    }
+  }
+}

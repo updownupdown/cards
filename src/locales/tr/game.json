@@ -1,0 +1,51 @@
+{
+  "menu": {
+    "home": "Ana sayfa",
+    "nodes": "Harita",
+    "instantWin": "Anında kazan"
+  },
+  "result": {
+    "won": "Kazandın!",
+    "lost": "Kaybettin",
+    "score": "Puan: {{score}}",
+    "playAgain": "Tekrar oyna",
+    "tryAgain": "Tekrar dene"
+  },
+  "reset": {
+    "hold": "Oyunu sıfırlamak için basılı tut"
+  },
+  "tips": {
+    "quickStart": "Hızlı başlangıç",
+    "viewRules": "Kuralları gör"
+  },
+  "rules": {
+    "title": "Nasıl oynanır",
+    "unavailable": "Bu oyun için talimat yok."
+  },
+  "settings": {
+    "title": "Ayarlar",
+    "none": "Oyun ayarı yok",
+    "appliesNow": "Oyunu sıfırlamadan uygulanır.",
+    "appliesNextGame": "Değiştirince oyun sıfırlanır."
+  },
+  "rating": {
+    "title": "Zorluk"
+  },
+  "credits": {
+    "title": "Emeği geçenler",
+    "backgroundImage": "Arka plan görseli:"
+  },
+  "deckPreview": {
+    "title": "Deste önizlemesi",
+    "shuffleNotice": "Önizlemeden sonra deste karıştırılacak.",
+    "empty": "Destede kart yok."
+  },
+  "rotateHint": {
+    "landscape": "Yatay mod\nönerilir",
+    "portrait": "Dikey mod\nönerilir"
+  },
+  "errors": {
+    "gameCrashed": "Bu oyunda bir sorun oluştu.",
+    "resumeFailed": "Son oyunun devam ettirilemedi."
+  }
+}

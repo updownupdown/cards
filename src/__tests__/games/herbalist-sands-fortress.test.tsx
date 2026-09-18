@@ -1,4 +1,11 @@
-import { afterEach, beforeEach, describe, expect, jest, test } from "@jest/globals";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from "@jest/globals";
 import "../../../jest/game-mocks";
 import {
   card,
@@ -108,7 +115,9 @@ describe("Shifting Sands", () => {
     won: false,
   };
 
-  async function drawOneAndPlace(renderer: Awaited<ReturnType<typeof renderGame>>) {
+  async function drawOneAndPlace(
+    renderer: Awaited<ReturnType<typeof renderGame>>,
+  ) {
     await pressButton(renderer, "1");
     await pressButton(renderer, "Place");
   }
@@ -117,7 +126,9 @@ describe("Shifting Sands", () => {
     const renderer = await renderGame("/shifting-sands", ShiftingSands, {
       ...baseState,
       deck: [card("2", "clubs", false), card("9", "spades", false)],
-      columns: [[card("3", "spades"), card("4", "spades"), card("5", "spades")]],
+      columns: [
+        [card("3", "spades"), card("4", "spades"), card("5", "spades")],
+      ],
     });
     expect(outcome()).toBe("playing");
 
@@ -141,7 +152,8 @@ describe("Shifting Sands", () => {
 });
 
 describe("Fortress", () => {
-  const emptyColumns = () => Array.from({ length: 10 }, () => [] as PlayingCard[]);
+  const emptyColumns = () =>
+    Array.from({ length: 10 }, () => [] as PlayingCard[]);
 
   test("playing the last king home wins", async () => {
     const king = card("K", "spades");

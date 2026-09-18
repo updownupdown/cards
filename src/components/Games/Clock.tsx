@@ -28,6 +28,7 @@ import {
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 type GameState = {
   piles: PlayingCard[][];
   nextPileIndex?: number;
@@ -314,8 +315,8 @@ export default function Clock() {
       isLoaded={isLoaded}
       winLoseMessage={
         game.won
-          ? "You revealed all 52 cards."
-          : "The fourth king appeared before all cards were revealed."
+          ? i18n.t("games:clock.youRevealedAll52Cards")
+          : i18n.t("games:clock.theFourthKingAppearedBefore")
       }
       canUndo={canUndo}
       undo={undo}

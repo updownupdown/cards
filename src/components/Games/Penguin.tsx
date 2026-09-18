@@ -837,7 +837,6 @@ export default function Penguin() {
 
   // ── Render ────────────────────────────────────────────────────────────────────
 
-
   function getTapHandler(source: MoveSource) {
     return () =>
       source.zone === "tableau"

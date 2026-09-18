@@ -1,0 +1,73 @@
+{
+  "style": {
+    "formality": "Use Brazilian Portuguese with \"você\".",
+    "gameTitles": "Translate game titles: use the established Brazilian Portuguese name of a classic solitaire (paciência) when there is one, translate descriptive titles, and keep proper names. The current titles are the `title` entries in content/games.json; when rules mention another game, use its Portuguese title.",
+    "cardIndices": "Keep single-letter card indices (A, K, Q, J) as they are. Translate full rank and suit words, with plurals.",
+    "typography": "Use “ ” for quotation marks.",
+    "markup": "Keep {{placeholders}}, <tags>, line breaks and markdown (##, -, **) exactly."
+  },
+  "ranks": {
+    "Ace": {
+      "one": "Ás",
+      "other": "Ases"
+    },
+    "King": {
+      "one": "Rei",
+      "other": "Reis"
+    },
+    "Queen": {
+      "one": "Dama",
+      "other": "Damas"
+    },
+    "Jack": {
+      "one": "Valete",
+      "other": "Valetes"
+    },
+    "Joker": {
+      "one": "Coringa",
+      "other": "Coringas"
+    }
+  },
+  "suits": {
+    "hearts": {
+      "one": "copas",
+      "other": "copas"
+    },
+    "diamonds": {
+      "one": "ouros",
+      "other": "ouros"
+    },
+    "clubs": {
+      "one": "paus",
+      "other": "paus"
+    },
+    "spades": {
+      "one": "espadas",
+      "other": "espadas"
+    }
+  },
+  "terms": {
+    "suit": "naipe (espadas, copas, ouros, paus)",
+    "rank": "valor",
+    "alternating colors (red and black)": "alternando cores (vermelho e preto)",
+    "foundation": "fundação",
+    "tableau": "colunas (a mesa)",
+    "column": "coluna",
+    "stock": "monte",
+    "waste (pile of turned stock cards)": "descarte (pilha de descarte)",
+    "discard (pile of discarded or removed cards)": "lixo",
+    "reserve": "reserva",
+    "free cell": "célula livre",
+    "deal": "distribuir",
+    "redeal": "redistribuir",
+    "build up / build down": "construir em ordem crescente / decrescente",
+    "run / sequence": "sequência",
+    "pile": "pilha",
+    "empty column": "coluna vazia",
+    "undo": "desfazer",
+    "node (progression map)": "nó",
+    "collectible": "colecionável",
+    "quote": "citação",
+    "chapter": "capítulo"
+  }
+}

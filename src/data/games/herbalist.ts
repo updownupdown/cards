@@ -41,8 +41,8 @@ export const herbalist: GameDefinition = {
     "- Eaten herbs cannot be redistributed.",
 
     "## Open Stables",
-    'The optional expansion (enabled from the settings) adds a healthy creature, "Noble" and a Jester:',
-    "- The Noble is located in the Stables, the middle location. Noble eats herbs dropped in its location if they match its own suit.",
+    'The optional expansion (enabled from the settings) adds a healthy creature, the "Noble", and a Jester:',
+    "- The Noble is located in the Stables, the middle location. The Noble eats herbs dropped in its location if they match its own suit.",
     "- The Jester eats the herb dropped into the stables if it is the last dropped herb, regardless of suit.",
   ],
 };

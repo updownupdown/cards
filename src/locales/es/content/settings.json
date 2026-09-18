@@ -1,0 +1,553 @@
+{
+  "archipelago": {
+    "islandJokers": {
+      "hash": "71b79671",
+      "value": {
+        "description": "Añade dos Comodines que puedes colocar en cualquier sitio.",
+        "label": "Usar Comodines",
+        "options": [
+          {
+            "label": "No"
+          },
+          {
+            "label": "Sí (más fácil)"
+          }
+        ]
+      }
+    }
+  },
+  "ascent": {
+    "ascentChallenge": {
+      "hash": "11a33a3b",
+      "value": {
+        "description": "Retos opcionales que modifican la longitud del recorrido y las reglas.",
+        "label": "Los ochomiles",
+        "options": [
+          {
+            "label": "Ascenso base (7500 m)",
+            "description": "Longitud del recorrido: 3. Sin reglas especiales."
+          },
+          {
+            "label": "Cho Oyu (8188 m)",
+            "description": "Longitud del recorrido: 2. Cuando llegas a un campamento, añade el hito del campamento a tu recorrido solo si tiene al menos 6 cartas."
+          },
+          {
+            "label": "Shishapangma (8027 m)",
+            "description": "Longitud del recorrido: 3. Cuando juegas una ruta con una aproximación técnica (diamantes) o de escalada libre (picas), roba una carta más. Cuando juegas una ruta con una aproximación prudente (corazones) o temeraria (tréboles), roba una carta menos. Sigues sin robar más cartas que las que tiene la ruta jugada."
+          },
+          {
+            "label": "Manaslu (8163 m)",
+            "description": "Longitud del recorrido: 4. Cuando llegas a un campamento, no añadas ninguna carta a la pila de fatiga. Cuando descansas, después de pasar las cartas de la pila de fatiga a tu mano, añade solo una carta a la pila de fatiga."
+          },
+          {
+            "label": "Broad Peak (8051 m)",
+            "description": "Longitud del recorrido: 3. No puedes jugar una ruta salvo que su aproximación sea distinta de la de la ruta anterior. Cuando llegas a un campamento, añade el hito de ese campamento al recorrido solo si su aproximación es distinta de la de todas las rutas anteriores del recorrido."
+          },
+          {
+            "label": "Gasherbrum II (8035 m)",
+            "description": "Longitud del recorrido: 4. Cuando juegas una ruta, reduce en uno el número de cartas que robarías antes de robarlas. Si así el número quedara en negativo, roba tantas cartas como tenga la ruta."
+          },
+          {
+            "label": "Mount Everest (8848 m)",
+            "description": "Longitud del recorrido: 5. En la preparación, y cada vez que llegas a un campamento, roba solo siete cartas en lugar de diez."
+          },
+          {
+            "label": "Dhaulagiri (8167 m)",
+            "description": "Longitud del recorrido: 3. Cuando llegas a un campamento, añade el hito de ese campamento a tu recorrido solo si hay una travesía de al menos dos cartas en la zona de juego, incluido el propio hito."
+          },
+          {
+            "label": "Gasherbrum I (8080 m)",
+            "description": "Longitud del recorrido: 3. No puedes jugar una ruta cuya ancla tenga un valor impar, incluidos Ases, Jotas y Reyes."
+          },
+          {
+            "label": "Kangchenjunga (8586 m)",
+            "description": "Longitud del recorrido: 4. Cuando juegas una ruta, no tienes que jugar las cartas en orden, así que cualquier carta de la ruta puede ser el ancla. Sigues sin poder jugar un Comodín como ancla de una ruta."
+          },
+          {
+            "label": "Lhotse (8516 m)",
+            "description": "Longitud del recorrido: 3. No puedes jugar una ruta salvo que tenga al menos dos cartas."
+          },
+          {
+            "label": "Makalu (8481 m)",
+            "description": "Longitud del recorrido: 4. Cuando juegas una ruta, también puedes descartar cualquier carta de tu mano."
+          },
+          {
+            "label": "Nanga Parbat (8126 m)",
+            "description": "Longitud del recorrido: 3. No puedes jugar travesías ni descensos. Las cartas de un ascenso no tienen que ser consecutivas, pero la distancia entre cada carta debe ser la misma."
+          },
+          {
+            "label": "K2 (8611 m)",
+            "description": "Longitud del recorrido: 3. Cuando juegas una ruta, el número de cartas que robas no está limitado por el número de cartas de la ruta jugada."
+          },
+          {
+            "label": "Annapurna I (8091 m)",
+            "description": "Longitud del recorrido: 4. Cuando robas cartas tras jugar una ruta, si alguna de las cartas robadas coincide con el palo del ancla de la ruta, devuelve a tu mano todas las cartas de la ruta jugada. No lo hagas cuando llegas a un campamento. Si alguna vez tienes 18 cartas o más en la mano, pierdes la partida de inmediato."
+          }
+        ]
+      }
+    },
+    "ascentDifficulty": {
+      "hash": "4f582426",
+      "value": {
+        "label": "Dificultad",
+        "options": [
+          {
+            "label": "Suave",
+            "description": "Cuando llegas a un campamento, añade siempre el hito jugado a tu recorrido, aunque no sea más alto que el anterior."
+          },
+          {
+            "label": "Estándar",
+            "description": "Sin cambios."
+          },
+          {
+            "label": "Intensa",
+            "description": "Cuando llegas a un campamento, añade el hito jugado a tu recorrido solo si tiene más cartas que el anterior."
+          }
+        ]
+      }
+    }
+  },
+  "baroness": {
+    "difficulty": {
+      "hash": "9cf97680",
+      "value": {
+        "label": "Dificultad",
+        "options": [
+          {
+            "label": "Fácil"
+          },
+          {
+            "label": "Difícil"
+          }
+        ]
+      }
+    }
+  },
+  "canfield": {
+    "drawCount": {
+      "hash": "ecd6b2f3",
+      "value": {
+        "label": "Robo del mazo",
+        "options": [
+          {
+            "label": "1 carta"
+          },
+          {
+            "label": "3 cartas"
+          }
+        ]
+      }
+    }
+  },
+  "chapter-and-verse": {
+    "chapterAndVerseCheckBack": {
+      "hash": "90e8b983",
+      "value": {
+        "description": "El libro superior del inventario se puede incluir en una oferta.",
+        "label": "Voy a mirar en el almacén",
+        "options": [
+          {
+            "label": "Desactivado"
+          },
+          {
+            "label": "Activado (fácil)"
+          }
+        ]
+      }
+    },
+    "chapterAndVerseLoyalPatrons": {
+      "hash": "2cdf2aa1",
+      "value": {
+        "description": "Las ofertas que usan cuatro o más libros añaden al cliente a tu reputación en el gremio.",
+        "label": "Clientes fieles",
+        "options": [
+          {
+            "label": "Desactivado"
+          },
+          {
+            "label": "Activado (fácil)"
+          }
+        ]
+      }
+    },
+    "chapterAndVerseSuperExclusive": {
+      "hash": "3444cc88",
+      "value": {
+        "description": "Los libros del mismo género o valor que el libro usado cuestan 0 $.",
+        "label": "Oferta superexclusiva",
+        "options": [
+          {
+            "label": "Desactivado"
+          },
+          {
+            "label": "Activado (difícil)"
+          }
+        ]
+      }
+    },
+    "chapterAndVerseVandals": {
+      "hash": "bf41e3e4",
+      "value": {
+        "description": "Los Comodines bloquean la primera estantería libre de la librería cuando llegan a la cola.",
+        "label": "¡Vándalos!",
+        "options": [
+          {
+            "label": "Desactivado"
+          },
+          {
+            "label": "1 Comodín (difícil)"
+          },
+          {
+            "label": "2 Comodines (más difícil)"
+          }
+        ]
+      }
+    }
+  },
+  "fight-clubs": {
+    "fightClubsDifficulty": {
+      "hash": "d82ad464",
+      "value": {
+        "description": "El modo difícil añade un segundo Comodín al mazo de la cuadrícula.",
+        "label": "Dificultad",
+        "options": [
+          {
+            "label": "Fácil (1 Comodín)"
+          },
+          {
+            "label": "Difícil (2 Comodines)"
+          }
+        ]
+      }
+    }
+  },
+  "forty-thieves": {
+    "difficulty": {
+      "hash": "7161d2c1",
+      "value": {
+        "label": "Dificultad",
+        "options": [
+          {
+            "label": "Fácil",
+            "description": "Permite repartir de nuevo sin límite."
+          },
+          {
+            "label": "Difícil",
+            "description": "No permite volver a repartir."
+          }
+        ]
+      }
+    }
+  },
+  "gaps": {
+    "gapsDifficulty": {
+      "hash": "6d279a0e",
+      "value": {
+        "description": "Determina cuántas veces se pueden volver a repartir las cartas desordenadas.",
+        "label": "Dificultad",
+        "options": [
+          {
+            "label": "Fácil (3 repartos)"
+          },
+          {
+            "label": "Difícil (2 repartos)"
+          }
+        ]
+      }
+    }
+  },
+  "golf": {
+    "golfDifficulty": {
+      "hash": "1fb5445b",
+      "value": {
+        "description": "El modo fácil permite jugar Ases y Reyes uno sobre otro.",
+        "label": "Dificultad",
+        "options": [
+          {
+            "label": "Fácil"
+          },
+          {
+            "label": "Difícil"
+          }
+        ]
+      }
+    }
+  },
+  "gremlin": {
+    "gremlinDifficulty": {
+      "hash": "22944911",
+      "value": {
+        "label": "Tamaño de la mano",
+        "options": [
+          {
+            "label": "5 (Fácil)"
+          },
+          {
+            "label": "4 (Difícil)"
+          }
+        ]
+      }
+    }
+  },
+  "gridlines": {
+    "gridlinesHard": {
+      "hash": "cdabae36",
+      "value": {
+        "description": "El modo difícil le da a la cuadrícula un objetivo más bajo que alcanzar.",
+        "label": "Modo",
+        "options": [
+          {
+            "label": "Normal"
+          },
+          {
+            "label": "Difícil"
+          }
+        ]
+      }
+    }
+  },
+  "herbalist": {
+    "herbalistOpenStables": {
+      "hash": "d3ef883f",
+      "value": {
+        "description": "Añade a los compañeros Noble y Bufón a la posición central de los Establos.",
+        "label": "Establos abiertos",
+        "options": [
+          {
+            "label": "Desactivado"
+          },
+          {
+            "label": "Activado"
+          }
+        ]
+      }
+    }
+  },
+  "klondike": {
+    "drawCount": {
+      "hash": "ecd6b2f3",
+      "value": {
+        "label": "Robo del mazo",
+        "options": [
+          {
+            "label": "1 carta"
+          },
+          {
+            "label": "3 cartas"
+          }
+        ]
+      }
+    }
+  },
+  "lycan": {
+    "lycanMode": {
+      "hash": "a77f03e5",
+      "value": {
+        "description": "Con menos cartas altas, el Lobo es más fácil de vencer.",
+        "label": "Dificultad",
+        "options": [
+          {
+            "label": "Fácil (sin 9 ni 10)"
+          },
+          {
+            "label": "Media (sin 10)"
+          },
+          {
+            "label": "Difícil (todas las cartas)"
+          }
+        ]
+      }
+    }
+  },
+  "memory": {
+    "memoryDifficulty": {
+      "hash": "4ec0fa07",
+      "value": {
+        "label": "Tamaño de la cuadrícula",
+        "options": [
+          {
+            "label": "Muy fácil (4 x 3)"
+          },
+          {
+            "label": "Fácil (5 x 4)"
+          },
+          {
+            "label": "Media (6 x 5)"
+          },
+          {
+            "label": "Difícil (7 x 6)"
+          },
+          {
+            "label": "Muy difícil (8 x 7)"
+          },
+          {
+            "label": "Extrema (8 x 9)"
+          }
+        ]
+      }
+    }
+  },
+  "night-vigil": {
+    "nightVigilDifficulty": {
+      "hash": "d5901a95",
+      "value": {
+        "label": "Dificultad",
+        "options": [
+          {
+            "label": "A pie de calle",
+            "description": "Los Reyes causan 1 de daño adicional."
+          },
+          {
+            "label": "El caso del capo",
+            "description": "Las Reinas y los Reyes causan 1 de daño adicional."
+          },
+          {
+            "label": "Ciudad en sombras",
+            "description": "Las Reinas causan 1 y los Reyes 2 de daño adicional."
+          }
+        ]
+      }
+    }
+  },
+  "pocket-poker": {
+    "pokerJokers": {
+      "hash": "8bf4ba75",
+      "value": {
+        "description": "Incluye dos comodines en el mazo.",
+        "label": "Comodines",
+        "options": [
+          {
+            "label": "Sin Comodines"
+          },
+          {
+            "label": "Con Comodines"
+          }
+        ]
+      }
+    }
+  },
+  "pyramid": {
+    "pyramidDifficulty": {
+      "hash": "d38b6ca4",
+      "value": {
+        "description": "El modo fácil te deja seleccionar una segunda carta si solo está cubierta por la primera carta seleccionada. En realidad no es mucho más fácil, pero sí más indulgente.",
+        "label": "Dificultad",
+        "options": [
+          {
+            "label": "Fácil"
+          },
+          {
+            "label": "Difícil"
+          }
+        ]
+      }
+    }
+  },
+  "royal-rest": {
+    "royalRestHardMode": {
+      "hash": "9895d840",
+      "value": {
+        "description": "Las Jotas no pueden ir a una columna que contenga otra Jota, aunque las separe una almohada.",
+        "label": "Modo difícil",
+        "options": [
+          {
+            "label": "Desactivado"
+          },
+          {
+            "label": "Activado"
+          }
+        ]
+      }
+    }
+  },
+  "seer": {
+    "seerDifficulty": {
+      "hash": "e0c908ab",
+      "value": {
+        "description": "Determina qué piedras vecinas puede liberar un acierto.",
+        "label": "Dificultad",
+        "options": [
+          {
+            "label": "Fácil (con diagonales)"
+          },
+          {
+            "label": "Normal (ortogonal)"
+          },
+          {
+            "label": "Difícil (elige una)"
+          }
+        ]
+      }
+    }
+  },
+  "twelve-trials": {
+    "boomerAce": {
+      "hash": "6ab63f67",
+      "value": {
+        "description": "Los Ases valen 11 y vuelven a la mano cuando se usan como detonante.",
+        "label": "As bumerán",
+        "options": [
+          {
+            "label": "Desactivado"
+          },
+          {
+            "label": "Activado"
+          }
+        ]
+      }
+    },
+    "dungeonLevel": {
+      "hash": "6b11e248",
+      "value": {
+        "label": "Disposición de la mazmorra",
+        "options": [
+          {
+            "label": "Nivel 1 (Principiante)"
+          },
+          {
+            "label": "Nivel 2"
+          },
+          {
+            "label": "Nivel 3"
+          },
+          {
+            "label": "Nivel 4"
+          },
+          {
+            "label": "Nivel 5 (Extremo)"
+          }
+        ]
+      }
+    },
+    "powerReserve": {
+      "hash": "4005b3b7",
+      "value": {
+        "description": "Roba cinco cartas en el primer turno y aparta dos para usarlas cuando quieras.",
+        "label": "Reserva de poder",
+        "options": [
+          {
+            "label": "Desactivado"
+          },
+          {
+            "label": "Activado"
+          }
+        ]
+      }
+    },
+    "specialAbilities": {
+      "hash": "c8b26a2e",
+      "value": {
+        "description": "Los Reyes derrotados conceden habilidades de un solo uso.",
+        "label": "Habilidades especiales",
+        "options": [
+          {
+            "label": "Desactivado"
+          },
+          {
+            "label": "Activado"
+          }
+        ]
+      }
+    }
+  }
+}

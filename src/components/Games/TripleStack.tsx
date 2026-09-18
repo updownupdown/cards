@@ -28,6 +28,7 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 import { useToast } from "../common/Toast";
 
+import { i18n } from "@/i18n";
 type GameState = {
   deck: PlayingCard[];
   hand: (PlayingCard | null)[];
@@ -230,7 +231,11 @@ export default function TripleStack() {
     // Refill
     await refillHand(replacementsPossible);
 
-    showToast(`Sandwich served (${replacementsPossible} new cards)`);
+    showToast(
+      i18n.t("games:tripleStack.sandwichServedNewCards", {
+        replacementsPossible,
+      }),
+    );
 
     setGame((prev) => {
       return produce(prev, (draft) => {
@@ -285,7 +290,7 @@ export default function TripleStack() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 1,
-        placeholder: { text: "Stock", infoPos: "left" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "left" },
       },
       {
         id: "discard",
@@ -296,7 +301,7 @@ export default function TripleStack() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 1,
-        placeholder: { text: "Discard", infoPos: "right" },
+        placeholder: { text: i18n.t("cards:discard"), infoPos: "right" },
       },
       ...handZones,
       {
@@ -347,9 +352,8 @@ export default function TripleStack() {
       isLoaded={isLoaded}
       winLoseMessage={
         game.won
-          ? `You won by drawing out the deck. Final score (lower is better):{" "}
-            ${score}`
-          : "No valid sandwich available. You lose."
+          ? i18n.t("games:tripleStack.youWonByDrawingOut", { score })
+          : i18n.t("games:tripleStack.noValidSandwichAvailableYou")
       }
       canUndo={canUndo}
       undo={undo}
@@ -360,7 +364,7 @@ export default function TripleStack() {
         <Button
           onPress={commitSandwich}
           disabled={selectedCards.length !== 3 || invalidSandwichSelected}
-          text="Serve Sandwich"
+          text={i18n.t("games:tripleStack.serveSandwich")}
           size="lg"
           halfTaller
           fullWidth

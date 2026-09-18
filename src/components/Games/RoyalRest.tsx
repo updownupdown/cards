@@ -23,6 +23,7 @@ import {
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const cardSize = "small";
 const TABLEAU_COUNT = 5;
 const HAND_COUNT = 4;
@@ -346,7 +347,7 @@ export default function RoyalRest() {
       col: pileIndex,
       row: 0,
       baseZIndex: 40,
-      placeholder: { text: "Jack", showCount: false },
+      placeholder: { text: i18n.t("games:royalRest.jack"), showCount: false },
     }));
     const tableauZones = game.tableau.map((pile, pileIndex) => ({
       id: `tableau-${pileIndex}`,
@@ -361,7 +362,7 @@ export default function RoyalRest() {
         offset: zoneFanOffset(pile.length, 5, 0.1, cardDims.smallCardOffset),
         center: false,
       },
-      placeholder: { text: "Column", showCount: true },
+      placeholder: { text: i18n.t("games:royalRest.column"), showCount: true },
     }));
 
     return [
@@ -375,7 +376,7 @@ export default function RoyalRest() {
         row: 0,
         baseZIndex: 30,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Discard", showCount: true },
+        placeholder: { text: i18n.t("cards:discard"), showCount: true },
       },
       ...tableauZones,
     ];

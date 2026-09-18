@@ -7,6 +7,8 @@ import { GameStatsNames, statKeys } from "@/data/games-data";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
+import { useDisplayLanguage, useTranslation } from "@/i18n";
+import { foldForSearch, localizeGameTitle } from "@/i18n/content";
 import { Icon } from "@/icons";
 import {
   Colors,
@@ -60,6 +62,9 @@ export function SearchTab({
   contentPaddingBottom,
 }: SearchTabProps) {
   const { ui, spacing, font } = useResponsiveMetrics();
+  const { t } = useTranslation("home");
+  const { t: tCommon } = useTranslation("common");
+  const language = useDisplayLanguage();
   const { width: viewportWidth } = useViewportDimensions();
   const inputRef = useRef<TextInput>(null);
   const [mode, setMode] = useState<SearchMode>(null);
@@ -89,14 +94,17 @@ export function SearchTab({
   );
 
   const filteredGames = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase();
+    const normalizedQuery = foldForSearch(query.trim());
     return allEnabledGames.filter(([path, game]) => {
       if (mode === "search") {
+        // Match the translated title, the English title and its aliases.
         return (
           !normalizedQuery ||
-          [game.title, ...(game.aliases ?? [])].some((name) =>
-            name.toLowerCase().includes(normalizedQuery),
-          )
+          [
+            localizeGameTitle(game, path, language),
+            game.title,
+            ...(game.aliases ?? []),
+          ].some((name) => foldForSearch(name).includes(normalizedQuery))
         );
       }
       if (mode !== "filter") return true;
@@ -108,7 +116,7 @@ export function SearchTab({
         return value >= range.min && value <= range.max;
       });
     });
-  }, [allEnabledGames, filters, mode, query, unplayedPaths]);
+  }, [allEnabledGames, filters, language, mode, query, unplayedPaths]);
   const hasSearchText = query.trim().length > 0;
 
   const rollRandomGames = useCallback(() => {
@@ -184,8 +192,8 @@ export function SearchTab({
     >
       <RadioButtons
         options={[
-          { value: "all", label: "All" },
-          { value: "unplayed", label: "Unplayed" },
+          { value: "all", label: t("search.all") },
+          { value: "unplayed", label: t("search.unplayed") },
         ]}
         selectedValue={filters.played}
         onChange={(value) =>
@@ -212,7 +220,7 @@ export function SearchTab({
       {statKeys.map((statName) => (
         <RangeSlider
           key={statName}
-          label={statName}
+          label={tCommon(`stats.${statName}`)}
           min={0}
           max={100}
           value={filters.statsFilters[statName]}
@@ -300,7 +308,7 @@ export function SearchTab({
                   value={query}
                   onFocus={() => setMode("search")}
                   onChangeText={onChangeSearchText}
-                  placeholder="Search..."
+                  placeholder={t("search.placeholder")}
                   placeholderTextColor={Colors.K600}
                   autoCapitalize="none"
                   style={{
@@ -315,7 +323,7 @@ export function SearchTab({
                 />
                 <Pressable
                   accessibilityRole="button"
-                  accessibilityLabel="Clear search"
+                  accessibilityLabel={t("search.clear")}
                   onPress={clearSearch}
                   hitSlop={spacing(8)}
                   disabled={mode !== "search"}
@@ -365,12 +373,12 @@ export function SearchTab({
                       color={Colors.K200}
                       style={{ flex: 1 }}
                     >
-                      Filter
+                      {t("search.filter")}
                     </Text>
 
                     <Pressable
                       accessibilityRole="button"
-                      accessibilityLabel="Reset filters"
+                      accessibilityLabel={t("search.resetFilters")}
                       onPress={resetFilters}
                       style={{
                         marginLeft: "auto",
@@ -380,7 +388,7 @@ export function SearchTab({
                       }}
                     >
                       <Text size="sm" weight={500} color={Colors.K600}>
-                        Reset filters
+                        {t("search.resetFilters")}
                       </Text>
                       <Icon
                         name="close"
@@ -395,7 +403,7 @@ export function SearchTab({
               ) : (
                 <Pressable
                   accessibilityRole="button"
-                  accessibilityLabel="Filters"
+                  accessibilityLabel={t("search.filters")}
                   onPress={() => setMode("filter")}
                   style={{
                     height: controlHeight,
@@ -412,7 +420,7 @@ export function SearchTab({
                 >
                   <Icon name="filter" size={spacing(24)} color={Colors.K300} />
                   <Text size="md" weight={400} color={Colors.K200}>
-                    Filter
+                    {t("search.filter")}
                   </Text>
                 </Pressable>
               ))}

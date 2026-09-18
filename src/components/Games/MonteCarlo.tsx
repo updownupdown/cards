@@ -24,6 +24,7 @@ import {
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 type GameState = {
   grid: (PlayingCard | null)[];
   draw: PlayingCard[];
@@ -413,7 +414,7 @@ export default function MonteCarlo() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: "Stock", infoPos: "left" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "left" },
       },
       {
         id: "trash",
@@ -423,7 +424,7 @@ export default function MonteCarlo() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: "Dscrd", infoPos: "right" },
+        placeholder: { text: i18n.t("cards:dscrd"), infoPos: "right" },
       },
       ...gridZones,
       {
@@ -470,7 +471,9 @@ export default function MonteCarlo() {
       reset={reset}
       isLoaded={isLoaded}
       winLoseMessage={
-        game.won ? "You cleared all cards!" : "No adjacent pairs left."
+        game.won
+          ? i18n.t("games:monteCarlo.youClearedAllCards")
+          : i18n.t("games:monteCarlo.noAdjacentPairsLeft")
       }
       canUndo={canUndo}
       undo={undo}
@@ -481,7 +484,7 @@ export default function MonteCarlo() {
         <Button
           onPress={consolidateAndDeal}
           disabled={game.ended || !hasFaceDownCard}
-          text="Consolidate"
+          text={i18n.t("games:monteCarlo.consolidate")}
           fullWidth
           size="lg"
           halfTaller

@@ -1,3 +1,4 @@
+import { i18n } from "@/i18n";
 import { PlayingCard, RANK_VALUE } from "../Cards/card-utils";
 import { YukonBoard } from "./Yukon";
 
@@ -18,6 +19,9 @@ export const russianSolitaireRules = {
 
 export default function RussianSolitaire() {
   return (
-    <YukonBoard canStack={russianCanStack} winMessage="Every suit is home!" />
+    <YukonBoard
+      canStack={russianCanStack}
+      winMessage={i18n.t("games:stockTableauSolitaire.everySuitIsHome")}
+    />
   );
 }

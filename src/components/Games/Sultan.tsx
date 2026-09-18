@@ -14,6 +14,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const MAX_REDEALS = 2;
 type Selection = { zone: "reserve"; index: number } | { zone: "waste" } | null;
 
@@ -258,7 +259,11 @@ export default function Sultan() {
         col: 2,
         row: 3.6,
         fan: { maxVisible: 1 },
-        placeholder: { text: "Stock", showCount: true, infoPos: "left" },
+        placeholder: {
+          text: i18n.t("cards:stock"),
+          showCount: true,
+          infoPos: "left",
+        },
       },
       {
         id: "waste",
@@ -267,7 +272,11 @@ export default function Sultan() {
         col: 3,
         row: 3.6,
         fan: { maxVisible: 1 },
-        placeholder: { text: "Waste", showCount: true, infoPos: "right" },
+        placeholder: {
+          text: i18n.t("cards:waste"),
+          showCount: true,
+          infoPos: "right",
+        },
       },
     ],
     [game],
@@ -342,7 +351,9 @@ export default function Sultan() {
       canUndo={canUndo}
       undo={undo}
       winLoseMessage={
-        game.won ? "The Sultan is surrounded!" : "No moves remain."
+        game.won
+          ? i18n.t("games:sultan.theSultanIsSurrounded")
+          : i18n.t("cards:noMovesRemain")
       }
     >
       {cardMap}

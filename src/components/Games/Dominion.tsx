@@ -18,6 +18,7 @@ import {
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const BOARD_COLS = 5;
 const BOARD_ROWS = 3;
 const BOARD_CELLS = BOARD_COLS * BOARD_ROWS;
@@ -348,7 +349,11 @@ export default function Dominion() {
         col: BOARD_COLS - 1,
         row: 0,
         baseZIndex: 20,
-        placeholder: { text: "Discard", infoPos: "left", showCount: false },
+        placeholder: {
+          text: i18n.t("cards:discard"),
+          infoPos: "left",
+          showCount: false,
+        },
         fan: { maxVisible: 3 },
       },
       {
@@ -359,7 +364,11 @@ export default function Dominion() {
         row: 0,
         baseZIndex: 30,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Reserve", infoPos: "right", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:reserve"),
+          infoPos: "right",
+          showCount: true,
+        },
       },
       {
         id: "reserveActive",
@@ -458,10 +467,12 @@ export default function Dominion() {
       isLoaded={isLoaded}
       winLoseMessage={
         game.won
-          ? "All eighteen cards belong to one dominion."
+          ? i18n.t("games:dominion.allEighteenCardsBelongTo")
           : findIsolatedCard(game.board)
-            ? `The ${cardLabel(findIsolatedCard(game.board))} was isolated, with no matching rank or suit.`
-            : "No conquests or reserve placements remain."
+            ? i18n.t("games:dominion.theWasIsolatedWithNo", {
+                value: cardLabel(findIsolatedCard(game.board)),
+              })
+            : i18n.t("games:dominion.noConquestsOrReservePlacements")
       }
       canUndo={canUndo}
       undo={undo}

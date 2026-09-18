@@ -2,6 +2,7 @@ import { Text } from "@/components/common/Text";
 import { TaoChapter } from "@/components/Nodes/TaoChapters";
 import { getTaoChapter, TAO_CHAPTER_COUNT } from "@/data/collectibles";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useTranslation } from "@/i18n";
 import { Colors } from "@/styles/styles";
 import { useState } from "react";
 import { View } from "react-native";
@@ -15,6 +16,7 @@ type Props = {
 
 export function TaoCollectionModal({ collectedIds, onClose }: Props) {
   const { spacing } = useResponsiveMetrics();
+  const { t } = useTranslation("nodes");
   const firstCollected = [...collectedIds].sort((a, b) => a - b)[0];
   const [selectedId, setSelectedId] = useState(firstCollected);
   const chapterIds = Array.from(
@@ -24,8 +26,11 @@ export function TaoCollectionModal({ collectedIds, onClose }: Props) {
 
   return (
     <ModalFull
-      title="Tao Te Ching"
-      subtitle={`${collectedIds.size}/${TAO_CHAPTER_COUNT} collected chapters`}
+      title={t("tao.title")}
+      subtitle={t("tao.subtitle", {
+        collected: collectedIds.size,
+        total: TAO_CHAPTER_COUNT,
+      })}
       iconName="tao"
       onClose={onClose}
     >

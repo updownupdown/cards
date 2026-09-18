@@ -27,7 +27,7 @@ export const dynasty: GameDefinition = {
     "## Attacks",
     "- A newly placed card fires toward each royal opposite it. Only the two intervening grid cards deal damage.",
     "-- **Jacks** have no attack restrictions",
-    "-- **Queens** can only be damaged with **matching-colour** attackers",
+    "-- **Queens** can only be damaged with **matching-color** attackers",
     "-- **Kings** can only be damaged with **matching-suit** attackers",
 
     "## Ploys",

@@ -1,4 +1,11 @@
-import { afterEach, beforeEach, describe, expect, jest, test } from "@jest/globals";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from "@jest/globals";
 import "../../../jest/game-mocks";
 import {
   card,
@@ -115,7 +122,12 @@ describe.each<RowsCase>([
       rows: [row(last)],
       foundations: kings
         ? aceKingAlmostDone()
-        : [run("hearts"), run("clubs"), run("diamonds"), run("spades", "A", "Q")],
+        : [
+            run("hearts"),
+            run("clubs"),
+            run("diamonds"),
+            run("spades", "A", "Q"),
+          ],
       ended: false,
       won: false,
     });
@@ -148,11 +160,7 @@ describe.each<RowsCase>([
     const middle = card("2", "clubs");
     await renderGame(path, Game, {
       stock: [card("9", "diamonds", false)],
-      rows: [
-        row(card("7", "spades")),
-        row(middle),
-        row(card("8", "spades")),
-      ],
+      rows: [row(card("7", "spades")), row(middle), row(card("8", "spades"))],
       foundations: kings
         ? aceKingSeeds()
         : SUITS.map((suit) => [card("A", suit)]),
@@ -303,7 +311,19 @@ describe("Grandfather's Clock", () => {
 
   test("striking the last hour wins", async () => {
     const queen = card("Q", "clubs");
-    const hours = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J"] as const;
+    const hours = [
+      "A",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "J",
+    ] as const;
     const tableau = emptyPiles(8);
     tableau[0] = [queen];
     await renderGame("/grandfathers-clock", GrandfathersClock, {

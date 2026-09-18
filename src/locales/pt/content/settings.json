@@ -1,0 +1,553 @@
+{
+  "archipelago": {
+    "islandJokers": {
+      "hash": "71b79671",
+      "value": {
+        "description": "Adiciona dois coringas que podem ser colocados em qualquer lugar.",
+        "label": "Usar Coringas",
+        "options": [
+          {
+            "label": "Não"
+          },
+          {
+            "label": "Sim (mais fácil)"
+          }
+        ]
+      }
+    }
+  },
+  "ascent": {
+    "ascentChallenge": {
+      "hash": "11a33a3b",
+      "value": {
+        "description": "Desafios opcionais que alteram o tamanho da trilha e as regras.",
+        "label": "Os Oito Mil",
+        "options": [
+          {
+            "label": "Subida básica (7.500 m)",
+            "description": "Tamanho da trilha: 3. Sem regras especiais."
+          },
+          {
+            "label": "Cho Oyu (8.188 m)",
+            "description": "Tamanho da trilha: 2. Ao chegar a um acampamento, não acrescente o marco dele à trilha, a menos que tenha pelo menos 6 cartas."
+          },
+          {
+            "label": "Shishapangma (8.027 m)",
+            "description": "Tamanho da trilha: 3. Ao jogar uma rota com abordagem técnica (ouros) ou de escalada livre (espadas), compre uma carta a mais. Ao jogar uma rota com abordagem cautelosa (copas) ou imprudente (paus), compre uma carta a menos. Você continua sem poder comprar mais cartas do que as da rota jogada."
+          },
+          {
+            "label": "Manaslu (8.163 m)",
+            "description": "Tamanho da trilha: 4. Ao chegar a um acampamento, não acrescente cartas à pilha de fadiga. Ao descansar, depois de pôr na mão as cartas da pilha de fadiga, acrescente só uma carta à pilha de fadiga."
+          },
+          {
+            "label": "Broad Peak (8.051 m)",
+            "description": "Tamanho da trilha: 3. Você só pode jogar uma rota se a abordagem dela for diferente da abordagem da rota anterior. Ao chegar a um acampamento, não acrescente o marco dele à trilha, a menos que a abordagem dele seja diferente da de todas as rotas anteriores da trilha."
+          },
+          {
+            "label": "Gasherbrum II (8.035 m)",
+            "description": "Tamanho da trilha: 4. Ao jogar uma rota, reduza em um o número de cartas a comprar antes de comprá-las. Se com isso o número de cartas ficar negativo, compre o mesmo número de cartas que há na rota."
+          },
+          {
+            "label": "Monte Everest (8.848 m)",
+            "description": "Tamanho da trilha: 5. Na preparação, e sempre que chegar a um acampamento, compre só sete cartas em vez de dez."
+          },
+          {
+            "label": "Dhaulagiri (8.167 m)",
+            "description": "Tamanho da trilha: 3. Ao chegar a um acampamento, não acrescente o marco dele à trilha, a menos que haja na área de jogo uma travessia com pelo menos duas cartas, incluindo o próprio marco."
+          },
+          {
+            "label": "Gasherbrum I (8.080 m)",
+            "description": "Tamanho da trilha: 3. Você não pode jogar uma rota com âncora de valor ímpar, incluindo Ases, Valetes e Reis."
+          },
+          {
+            "label": "Kangchenjunga (8.586 m)",
+            "description": "Tamanho da trilha: 4. Ao jogar uma rota, você não precisa jogar as cartas em ordem, então qualquer carta da rota pode ser a âncora. Um Coringa continua não podendo ser a âncora de uma rota."
+          },
+          {
+            "label": "Lhotse (8.516 m)",
+            "description": "Tamanho da trilha: 3. Você só pode jogar uma rota se ela tiver pelo menos duas cartas."
+          },
+          {
+            "label": "Makalu (8.481 m)",
+            "description": "Tamanho da trilha: 4. Ao jogar uma rota, você também pode descartar qualquer carta da mão."
+          },
+          {
+            "label": "Nanga Parbat (8.126 m)",
+            "description": "Tamanho da trilha: 3. Você não pode jogar travessias nem descidas. As cartas de uma subida não precisam ser consecutivas, mas a distância entre cada carta deve ser a mesma."
+          },
+          {
+            "label": "K2 (8.611 m)",
+            "description": "Tamanho da trilha: 3. Ao jogar uma rota, o número de cartas compradas não é limitado pelo número de cartas da rota jogada."
+          },
+          {
+            "label": "Annapurna I (8.091 m)",
+            "description": "Tamanho da trilha: 4. Ao comprar cartas depois de jogar uma rota, se alguma carta comprada for do naipe da âncora da rota, devolva à mão todas as cartas da rota jogada. Não faça isso ao chegar a um acampamento. Se em algum momento você tiver 18 cartas ou mais na mão, perde a partida na hora."
+          }
+        ]
+      }
+    },
+    "ascentDifficulty": {
+      "hash": "4f582426",
+      "value": {
+        "label": "Dificuldade",
+        "options": [
+          {
+            "label": "Suave",
+            "description": "Ao chegar a um acampamento, sempre acrescente à trilha o marco jogado, mesmo que ele não seja mais alto que o anterior."
+          },
+          {
+            "label": "Padrão",
+            "description": "Sem mudanças."
+          },
+          {
+            "label": "Intensa",
+            "description": "Ao chegar a um acampamento, só acrescente à trilha o marco jogado se ele tiver mais cartas que o anterior."
+          }
+        ]
+      }
+    }
+  },
+  "baroness": {
+    "difficulty": {
+      "hash": "9cf97680",
+      "value": {
+        "label": "Dificuldade",
+        "options": [
+          {
+            "label": "Fácil"
+          },
+          {
+            "label": "Difícil"
+          }
+        ]
+      }
+    }
+  },
+  "canfield": {
+    "drawCount": {
+      "hash": "ecd6b2f3",
+      "value": {
+        "label": "Cartas do monte",
+        "options": [
+          {
+            "label": "Virar 1"
+          },
+          {
+            "label": "Virar 3"
+          }
+        ]
+      }
+    }
+  },
+  "chapter-and-verse": {
+    "chapterAndVerseCheckBack": {
+      "hash": "90e8b983",
+      "value": {
+        "description": "O primeiro livro do estoque pode entrar numa oferta.",
+        "label": "Vou ver no estoque",
+        "options": [
+          {
+            "label": "Desativado"
+          },
+          {
+            "label": "Ativado (fácil)"
+          }
+        ]
+      }
+    },
+    "chapterAndVerseLoyalPatrons": {
+      "hash": "2cdf2aa1",
+      "value": {
+        "description": "Ofertas com quatro livros ou mais somam o cliente à reputação na guilda.",
+        "label": "Clientes fiéis",
+        "options": [
+          {
+            "label": "Desativado"
+          },
+          {
+            "label": "Ativado (fácil)"
+          }
+        ]
+      }
+    },
+    "chapterAndVerseSuperExclusive": {
+      "hash": "3444cc88",
+      "value": {
+        "description": "Livros do mesmo gênero ou valor do livro usado custam US$ 0.",
+        "label": "Oferta superexclusiva",
+        "options": [
+          {
+            "label": "Desativado"
+          },
+          {
+            "label": "Ativado (difícil)"
+          }
+        ]
+      }
+    },
+    "chapterAndVerseVandals": {
+      "hash": "bf41e3e4",
+      "value": {
+        "description": "Ao chegar à fila, os Coringas bloqueiam a primeira prateleira livre da livraria.",
+        "label": "Vândalos!",
+        "options": [
+          {
+            "label": "Desativado"
+          },
+          {
+            "label": "1 Coringa (difícil)"
+          },
+          {
+            "label": "2 Coringas (mais difícil)"
+          }
+        ]
+      }
+    }
+  },
+  "fight-clubs": {
+    "fightClubsDifficulty": {
+      "hash": "d82ad464",
+      "value": {
+        "description": "O modo difícil adiciona um segundo Coringa ao baralho da grade.",
+        "label": "Dificuldade",
+        "options": [
+          {
+            "label": "Fácil (1 Coringa)"
+          },
+          {
+            "label": "Difícil (2 Coringas)"
+          }
+        ]
+      }
+    }
+  },
+  "forty-thieves": {
+    "difficulty": {
+      "hash": "7161d2c1",
+      "value": {
+        "label": "Dificuldade",
+        "options": [
+          {
+            "label": "Fácil",
+            "description": "Redistribuições ilimitadas."
+          },
+          {
+            "label": "Difícil",
+            "description": "Sem redistribuições."
+          }
+        ]
+      }
+    }
+  },
+  "gaps": {
+    "gapsDifficulty": {
+      "hash": "6d279a0e",
+      "value": {
+        "description": "Define quantas vezes as cartas fora de ordem podem ser redistribuídas.",
+        "label": "Dificuldade",
+        "options": [
+          {
+            "label": "Fácil (3 redistribuições)"
+          },
+          {
+            "label": "Difícil (2 redistribuições)"
+          }
+        ]
+      }
+    }
+  },
+  "golf": {
+    "golfDifficulty": {
+      "hash": "1fb5445b",
+      "value": {
+        "description": "No modo fácil, Ases e Reis podem ser jogados um sobre o outro.",
+        "label": "Dificuldade",
+        "options": [
+          {
+            "label": "Fácil"
+          },
+          {
+            "label": "Difícil"
+          }
+        ]
+      }
+    }
+  },
+  "gremlin": {
+    "gremlinDifficulty": {
+      "hash": "22944911",
+      "value": {
+        "label": "Tamanho da mão",
+        "options": [
+          {
+            "label": "5 (Fácil)"
+          },
+          {
+            "label": "4 (Difícil)"
+          }
+        ]
+      }
+    }
+  },
+  "gridlines": {
+    "gridlinesHard": {
+      "hash": "cdabae36",
+      "value": {
+        "description": "No modo difícil, a grade tem uma meta mais baixa a atingir.",
+        "label": "Modo",
+        "options": [
+          {
+            "label": "Normal"
+          },
+          {
+            "label": "Difícil"
+          }
+        ]
+      }
+    }
+  },
+  "herbalist": {
+    "herbalistOpenStables": {
+      "hash": "d3ef883f",
+      "value": {
+        "description": "Adiciona o Nobre e o Bobo aos Estábulos, o local central.",
+        "label": "Estábulos abertos",
+        "options": [
+          {
+            "label": "Desativado"
+          },
+          {
+            "label": "Ativado"
+          }
+        ]
+      }
+    }
+  },
+  "klondike": {
+    "drawCount": {
+      "hash": "ecd6b2f3",
+      "value": {
+        "label": "Cartas do monte",
+        "options": [
+          {
+            "label": "Virar 1"
+          },
+          {
+            "label": "Virar 3"
+          }
+        ]
+      }
+    }
+  },
+  "lycan": {
+    "lycanMode": {
+      "hash": "a77f03e5",
+      "value": {
+        "description": "Com menos cartas altas, fica mais fácil vencer o Lobo.",
+        "label": "Dificuldade",
+        "options": [
+          {
+            "label": "Fácil (sem 9 e 10)"
+          },
+          {
+            "label": "Médio (sem 10)"
+          },
+          {
+            "label": "Difícil (todas as cartas)"
+          }
+        ]
+      }
+    }
+  },
+  "memory": {
+    "memoryDifficulty": {
+      "hash": "4ec0fa07",
+      "value": {
+        "label": "Tamanho da grade",
+        "options": [
+          {
+            "label": "Muito fácil (4 x 3)"
+          },
+          {
+            "label": "Fácil (5 x 4)"
+          },
+          {
+            "label": "Médio (6 x 5)"
+          },
+          {
+            "label": "Difícil (7 x 6)"
+          },
+          {
+            "label": "Muito difícil (8 x 7)"
+          },
+          {
+            "label": "Extremo (8 x 9)"
+          }
+        ]
+      }
+    }
+  },
+  "night-vigil": {
+    "nightVigilDifficulty": {
+      "hash": "d5901a95",
+      "value": {
+        "label": "Dificuldade",
+        "options": [
+          {
+            "label": "Nível da rua",
+            "description": "Os Reis causam 1 de dano a mais."
+          },
+          {
+            "label": "Caso do chefão",
+            "description": "Damas e Reis causam 1 de dano a mais."
+          },
+          {
+            "label": "Cidade nas sombras",
+            "description": "As Damas causam 1 de dano a mais e os Reis, 2."
+          }
+        ]
+      }
+    }
+  },
+  "pocket-poker": {
+    "pokerJokers": {
+      "hash": "8bf4ba75",
+      "value": {
+        "description": "Inclui no baralho dois Coringas que valem como qualquer carta.",
+        "label": "Coringas",
+        "options": [
+          {
+            "label": "Sem Coringas"
+          },
+          {
+            "label": "Coringas livres"
+          }
+        ]
+      }
+    }
+  },
+  "pyramid": {
+    "pyramidDifficulty": {
+      "hash": "d38b6ca4",
+      "value": {
+        "description": "No modo fácil, você pode selecionar uma segunda carta se ela estiver coberta só pela primeira carta selecionada. Não fica muito mais fácil, mas é mais tolerante.",
+        "label": "Dificuldade",
+        "options": [
+          {
+            "label": "Fácil"
+          },
+          {
+            "label": "Difícil"
+          }
+        ]
+      }
+    }
+  },
+  "royal-rest": {
+    "royalRestHardMode": {
+      "hash": "9895d840",
+      "value": {
+        "description": "Os Valetes não podem ir para uma coluna que tenha outro Valete, mesmo que um travesseiro os separe.",
+        "label": "Modo difícil",
+        "options": [
+          {
+            "label": "Desativado"
+          },
+          {
+            "label": "Ativado"
+          }
+        ]
+      }
+    }
+  },
+  "seer": {
+    "seerDifficulty": {
+      "hash": "e0c908ab",
+      "value": {
+        "description": "Define quais pedras vizinhas um acerto pode liberar.",
+        "label": "Dificuldade",
+        "options": [
+          {
+            "label": "Fácil (inclui diagonais)"
+          },
+          {
+            "label": "Normal (horizontal e vertical)"
+          },
+          {
+            "label": "Difícil (escolha uma)"
+          }
+        ]
+      }
+    }
+  },
+  "twelve-trials": {
+    "boomerAce": {
+      "hash": "6ab63f67",
+      "value": {
+        "description": "Os Ases valem 11 e voltam para a mão quando usados como gatilho.",
+        "label": "Ás bumerangue",
+        "options": [
+          {
+            "label": "Desativado"
+          },
+          {
+            "label": "Ativado"
+          }
+        ]
+      }
+    },
+    "dungeonLevel": {
+      "hash": "6b11e248",
+      "value": {
+        "label": "Layout da masmorra",
+        "options": [
+          {
+            "label": "Nível 1 (Iniciante)"
+          },
+          {
+            "label": "Nível 2"
+          },
+          {
+            "label": "Nível 3"
+          },
+          {
+            "label": "Nível 4"
+          },
+          {
+            "label": "Nível 5 (Extremo)"
+          }
+        ]
+      }
+    },
+    "powerReserve": {
+      "hash": "4005b3b7",
+      "value": {
+        "description": "Compre cinco cartas no primeiro turno e separe duas para usar quando quiser.",
+        "label": "Reserva de poder",
+        "options": [
+          {
+            "label": "Desativado"
+          },
+          {
+            "label": "Ativado"
+          }
+        ]
+      }
+    },
+    "specialAbilities": {
+      "hash": "c8b26a2e",
+      "value": {
+        "description": "Os Reis derrotados concedem habilidades de uso único.",
+        "label": "Habilidades especiais",
+        "options": [
+          {
+            "label": "Desativado"
+          },
+          {
+            "label": "Ativado"
+          }
+        ]
+      }
+    }
+  }
+}

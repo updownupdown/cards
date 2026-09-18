@@ -31,7 +31,7 @@ export const fieldCommand: GameDefinition = {
     "Then choose exactly one capture option:",
     "- **Capture an enemy card**: select any enemy card and any number of hand cards of the same suit with equal or greater total value.",
     "- **Let the enemy capture**: select a hand card to be captured by the right-most enemy card.",
-    "- **Sacrifice**: select two hand cards and an enemy card (you may not select J/Q/K/A, since would immediately lose the game).",
+    "- **Sacrifice**: select two hand cards and an enemy card (you may not select J/Q/K/A, since that would immediately lose the game).",
 
     "## Aces and Jokers",
     "- Aces are worth 14",

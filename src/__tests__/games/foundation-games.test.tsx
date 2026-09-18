@@ -1,4 +1,11 @@
-import { afterEach, beforeEach, describe, expect, jest, test } from "@jest/globals";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from "@jest/globals";
 import "../../../jest/game-mocks";
 import {
   card,
@@ -141,7 +148,8 @@ describe("Elementary Detective", () => {
 });
 
 describe("Beleaguered Castle", () => {
-  const emptyColumns = () => Array.from({ length: 8 }, () => [] as PlayingCard[]);
+  const emptyColumns = () =>
+    Array.from({ length: 8 }, () => [] as PlayingCard[]);
 
   test("playing the last king home wins", async () => {
     const king = card("K", "spades");

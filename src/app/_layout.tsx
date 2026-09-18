@@ -6,7 +6,10 @@ import {
   subscribeActiveHomeTab,
 } from "@/components/Home/home-view-state";
 import { useGameColors } from "@/hooks/useGameColors";
+import { useLanguageSync } from "@/hooks/useLanguageSync";
 import { getGameInfo, isGamePath } from "@/data/game-menu";
+import { useDisplayLanguage } from "@/i18n";
+import { localizeGameTitle } from "@/i18n/content";
 import { Colors } from "@/styles/styles";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -59,6 +62,8 @@ export default function Layout() {
         },
   );
   const fontsLoaded = embedsFonts || fontsLoadedAtRuntime;
+  const languageReady = useLanguageSync();
+  const displayLanguage = useDisplayLanguage();
 
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -97,11 +102,11 @@ export default function Layout() {
 
     const rootTitle = "SoloSuite";
     const pageTitle = isGamePath(pathname)
-      ? `${getGameInfo(pathname).title} ♠ ${rootTitle}`
+      ? `${localizeGameTitle(getGameInfo(pathname), pathname, displayLanguage)} ♠ ${rootTitle}`
       : rootTitle;
 
     document.title = pageTitle;
-  }, [pathname]);
+  }, [displayLanguage, pathname]);
 
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -111,16 +116,16 @@ export default function Layout() {
     }
   }, [pathname]);
 
-  // Add this new useEffect to hide the splash screen once fonts are ready
+  // Hide the splash screen once fonts are ready and the saved language applied.
   useEffect(() => {
-    if (fontsLoaded) {
+    if (fontsLoaded && languageReady) {
       SplashScreen.hideAsync();
     }
-  }, [fontsLoaded]);
+  }, [fontsLoaded, languageReady]);
 
   // Native apps will crash if fonts aren't loaded, so we return null.
   // Web browsers handle missing fonts gracefully, and returning null breaks SSR/Hydration.
-  if (!fontsLoaded && Platform.OS !== "web") {
+  if ((!fontsLoaded || !languageReady) && Platform.OS !== "web") {
     return null;
   }
 
@@ -149,10 +154,7 @@ export default function Layout() {
               {/* One game screen at a time: opening a game while another is
                   open (e.g. from a link) replaces it instead of stacking every
                   earlier game, still running, underneath. */}
-              <Stack.Screen
-                name="[game]"
-                dangerouslySingular={() => "game"}
-              />
+              <Stack.Screen name="[game]" dangerouslySingular={() => "game"} />
             </Stack>
             <GameLaunchOverlay />
           </View>

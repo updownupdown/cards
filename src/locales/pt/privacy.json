@@ -1,0 +1,33 @@
+{
+  "title": "Política de Privacidade",
+  "lastUpdated": "Última atualização: {{date}}",
+  "translationNote": "Esta tradução é oferecida por conveniência. Se ela divergir da versão em inglês desta política, vale a versão em inglês.",
+  "summary": {
+    "title": "Resumo",
+    "body": "O SoloSuite não coleta, armazena nem compartilha nenhuma informação pessoal. O app não tem contas, ferramentas de análise, publicidade nem servidor. Tudo o que você faz no app fica no seu dispositivo."
+  },
+  "stored": {
+    "title": "Dados armazenados no seu dispositivo",
+    "body": "O SoloSuite salva suas estatísticas de jogo, favoritos, configurações e partidas em andamento no armazenamento local do dispositivo. Essas informações nunca saem do seu dispositivo, nunca são enviadas para nós nem para terceiros e são removidas automaticamente se você desinstalar o app ou limpar os dados dele."
+  },
+  "collected": {
+    "title": "Dados que coletamos",
+    "body": "Nenhum. O SoloSuite não usa serviços de análise, de relatório de falhas nem de publicidade, e não pede nem armazena seu nome, endereço de e-mail, localização ou qualquer outra informação pessoal."
+  },
+  "links": {
+    "title": "Links externos",
+    "body": "Algumas telas incluem links opcionais para sites externos (por exemplo, créditos de fotos). Tocar em um deles abre o navegador do dispositivo ou o site vinculado diretamente. O SoloSuite não tem controle sobre as práticas de privacidade desses sites externos e não é responsável por elas."
+  },
+  "children": {
+    "title": "Privacidade de crianças",
+    "body": "O SoloSuite não coleta intencionalmente informações de ninguém, incluindo crianças, porque não coleta informações de nenhum usuário."
+  },
+  "changes": {
+    "title": "Alterações nesta política",
+    "body": "Se esta política mudar, uma versão atualizada será publicada neste mesmo endereço, com uma nova data acima."
+  },
+  "contact": {
+    "title": "Contato",
+    "body": "Dúvidas sobre esta política podem ser enviadas para <link>{{email}}</link>."
+  }
+}

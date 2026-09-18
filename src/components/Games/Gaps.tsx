@@ -17,6 +17,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { View } from "react-native";
 import { useGameColors } from "@/hooks/useGameColors";
 
+import { i18n } from "@/i18n";
 const ROWS = 4;
 const COLS = 13;
 
@@ -331,14 +332,20 @@ export default function Gaps() {
       isLoaded={isLoaded}
       canUndo={canUndo}
       undo={undo}
-      winLoseMessage={game.won ? "Every row is in order!" : "No moves remain."}
+      winLoseMessage={
+        game.won
+          ? i18n.t("games:gaps.everyRowIsInOrder")
+          : i18n.t("cards:noMovesRemain")
+      }
       showDeviceRotateHint
     >
       {cardMap}
 
       <View style={[getZoneStylesById("reveal")]}>
         <Button
-          text={`Redeal (${maxRedeals - game.redealsUsed})`}
+          text={i18n.t("cards:redeal", {
+            value: maxRedeals - game.redealsUsed,
+          })}
           size="xs"
           onPress={redeal}
           disabled={isSettingUp || game.ended || game.redealsUsed >= maxRedeals}

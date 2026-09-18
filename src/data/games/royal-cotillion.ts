@@ -11,7 +11,7 @@ export const royalCotillion: GameDefinition = {
     difficulty: 50,
     luck: 75,
   },
-  thumbnail: "DefaultThumbnail.webp",
+  thumbnail: "RoyalCotillion.webp",
   background: GAME_BACKGROUNDS.alhambra,
   animation: GameAnimations.ManaDust,
   gameColorDark: "#211a36",

@@ -19,7 +19,7 @@ export const royalEnvoy: GameDefinition = {
     "Win exactly the right number of debates in each kingdom, using your advisors.",
   quickStart: [
     "Choose a kingdom and win exactly its listed number of debates.",
-    "Follow the topic suit when possible",
+    "Follow the topic suit when possible.",
     "Use the ruler's suit as trump.",
     "Use advisor powers at strategic times.",
   ],

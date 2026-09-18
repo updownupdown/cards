@@ -27,6 +27,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const pileCount = 8;
 const pileSize = 5;
 // Starting cards for the 1 o'clock to 12 o'clock foundations.
@@ -210,9 +211,7 @@ export default function GrandfathersClock() {
           ),
         ]);
         draft.tableau = Array.from({ length: pileCount }, (_, index) =>
-          deck
-            .slice(index * pileSize, (index + 1) * pileSize)
-            .map(flipToFace),
+          deck.slice(index * pileSize, (index + 1) * pileSize).map(flipToFace),
         );
         draft.deck = [];
       });
@@ -314,10 +313,7 @@ export default function GrandfathersClock() {
           100,
         row:
           Math.round(
-            clockRadius *
-              cardDims.aspectRatio *
-              (1 + Math.sin(angle)) *
-              100,
+            clockRadius * cardDims.aspectRatio * (1 + Math.sin(angle)) * 100,
           ) / 100,
         fan: { maxVisible: 2 },
         placeholder: {},
@@ -521,7 +517,11 @@ export default function GrandfathersClock() {
       score={completed}
       canUndo={canUndo}
       undo={undo}
-      winLoseMessage={game.won ? "Every hour struck!" : "No moves remain."}
+      winLoseMessage={
+        game.won
+          ? i18n.t("games:grandfathersClock.everyHourStruck")
+          : i18n.t("cards:noMovesRemain")
+      }
     >
       <View
         ref={boardRef}

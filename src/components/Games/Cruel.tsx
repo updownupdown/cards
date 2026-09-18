@@ -26,6 +26,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const pileCount = 12;
 const pileSize = 4;
 const pilesPerRow = 6;
@@ -288,8 +289,7 @@ export default function Cruel() {
       pileIndex: i,
       cards: pile,
       col: i % pilesPerRow,
-      row:
-        tableauRow + Math.floor(i / pilesPerRow) * (pileRows + pileRowGap),
+      row: tableauRow + Math.floor(i / pilesPerRow) * (pileRows + pileRowGap),
       fan: { direction: "down", offset: pileOffset(pile.length) },
       placeholder: {},
     }));
@@ -485,7 +485,11 @@ export default function Cruel() {
       score={placed}
       canUndo={canUndo}
       undo={undo}
-      winLoseMessage={game.won ? "Cruelty conquered!" : "No moves remain."}
+      winLoseMessage={
+        game.won
+          ? i18n.t("games:cruel.crueltyConquered")
+          : i18n.t("cards:noMovesRemain")
+      }
     >
       <View
         ref={boardRef}

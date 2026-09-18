@@ -1,0 +1,3940 @@
+{
+  "accordion": {
+    "cardDescription": {
+      "hash": "7e489b6e",
+      "value": "Reduza o baralho inteiro a uma só pilha, combinando uma a uma cartas vizinhas do mesmo naipe ou valor."
+    },
+    "howToPlay": {
+      "hash": "5a32be9c",
+      "value": [
+        "## Objetivo",
+        "Vença reduzindo as 52 cartas a uma **só pilha**.",
+        "## Empilhamento",
+        "- Uma carta pode ir para a carta **logo à sua esquerda** ou para a carta **três posições à sua esquerda**, se as duas cartas forem **do mesmo naipe ou valor**.",
+        "- Só a carta do topo de cada pilha conta para as combinações (as cartas de baixo podem ser ignoradas).",
+        "- Depois de uma jogada, as cartas deslizam para a esquerda para fechar o espaço.",
+        "## Dicas",
+        "- **Use a técnica do “varredor”**: antes de jogar, procure quatro cartas do mesmo valor (por exemplo, quatro 8) perto do fim da fileira. Proteja-as nunca colocando outra carta sobre um varredor. Seu objetivo final é chegar a exatamente quatro pilhas, cada uma com um varredor no topo. Como elas têm o mesmo valor, você pode então empilhá-las umas sobre as outras e vencer."
+      ]
+    },
+    "quickStart": {
+      "hash": "704152e7",
+      "value": [
+        "Reduza o baralho inteiro a uma só pilha.",
+        "Uma carta pode ir 1 ou 3 posições para a esquerda, sobre uma carta do mesmo naipe ou valor."
+      ]
+    },
+    "title": {
+      "hash": "42e92421",
+      "value": "Acordeão"
+    }
+  },
+  "aces-up": {
+    "cardDescription": {
+      "hash": "7afc29df",
+      "value": "Descarte as cartas baixas dos naipes repetidos até restarem só os quatro Ases."
+    },
+    "howToPlay": {
+      "hash": "0c45e0c2",
+      "value": [
+        "## Objetivo",
+        "Descarte o baralho inteiro, menos os quatro Ases, deixando um Ás em cada pilha.",
+        "## Regras de descarte",
+        "- Compare as cartas do topo das pilhas. Se duas ou mais pilhas mostrarem **o mesmo naipe**, descarte a(s) carta(s) **de menor valor**.",
+        "- **Os Ases são altos** e nunca podem ser descartados.",
+        "- Qualquer carta do topo pode ir para uma **pilha vazia**.",
+        "- Quando não houver mais descartes nem jogadas, distribua mais 4 cartas, uma em cada pilha."
+      ]
+    },
+    "quickStart": {
+      "hash": "f8cf218d",
+      "value": [
+        "Descarte uma carta exposta se houver outra carta exposta do mesmo naipe, mas de valor maior.",
+        "Vença descartando todas as cartas, menos os quatro Ases.",
+        "Mova cartas para pilhas vazias e distribua quando não houver jogadas."
+      ]
+    },
+    "title": {
+      "hash": "b66e842c",
+      "value": "Ases no topo"
+    }
+  },
+  "alaska": {
+    "cardDescription": {
+      "hash": "ddd9f660",
+      "value": "Uma expedição ao Yukon em que as cartas do mesmo naipe podem subir ou descer."
+    },
+    "howToPlay": {
+      "hash": "f9800a76",
+      "value": [
+        "## Objetivo",
+        "Construa as quatro fundações por naipe em ordem crescente, do Ás ao Rei.",
+        "## Regras",
+        "- Mova qualquer carta virada para cima ou **grupo** de cartas sobre uma carta, **em ordem crescente ou decrescente, no mesmo naipe**.",
+        "- As cartas levadas **não** precisam estar em sequência.",
+        "- As colunas vazias só podem ser ocupadas por Reis.",
+        "- Toque duas vezes ou arraste cartas avulsas para as fundações."
+      ]
+    },
+    "quickStart": {
+      "hash": "377b21a0",
+      "value": [
+        "Construa as fundações por naipe em ordem crescente, de A a K.",
+        "Construa as colunas um valor acima ou abaixo, no mesmo naipe.",
+        "Mova qualquer grupo de cartas viradas para cima.",
+        "Só os Reis podem ocupar colunas vazias."
+      ]
+    },
+    "title": {
+      "hash": "9a8eab96",
+      "value": "Alasca"
+    }
+  },
+  "all-in-a-row": {
+    "cardDescription": {
+      "hash": "cf60e740",
+      "value": "Esvazie treze colunas escolhendo valores consecutivos."
+    },
+    "howToPlay": {
+      "hash": "535c19cf",
+      "value": [
+        "## Objetivo",
+        "Mova as 52 cartas das treze colunas para uma única fundação.",
+        "## Regras",
+        "- Escolha qualquer carta exposta como valor inicial.",
+        "- Depois, jogue uma carta um valor acima ou abaixo da carta do topo da fundação, independentemente do naipe.",
+        "- Ás e Rei são consecutivos, então Q, K, A, 2, A, K etc. é uma sequência válida."
+      ]
+    },
+    "quickStart": {
+      "hash": "8d1e2ded",
+      "value": [
+        "Esvazie as treze colunas para vencer.",
+        "Escolha qualquer carta exposta para começar.",
+        "Jogue um valor acima ou abaixo, independentemente do naipe.",
+        "Ás e Rei são consecutivos."
+      ]
+    },
+    "title": {
+      "hash": "408219ba",
+      "value": "Tudo em fila"
+    }
+  },
+  "archipelago": {
+    "cardDescription": {
+      "hash": "2580ab5d",
+      "value": "Faça uma ilha crescer numa grade 7x7, uma carta ligada por valor de cada vez."
+    },
+    "howToPlay": {
+      "hash": "9ab35e64",
+      "value": [
+        "## Objetivo",
+        "Preencha toda a grade da ilha, com a maior pontuação possível.",
+        "Sua pontuação é 49, menos 1 por carta descartada, mais 1 por carta que sobrar no monte.",
+        "## Como jogar",
+        "- Coloque uma carta de cada vez de forma que ela fique ao lado (na horizontal ou vertical) de uma carta **um valor acima ou abaixo**.",
+        "- A sequência **é circular**: **Reis e Ases** são vizinhos, então um Ás pode ficar ao lado de um **2** ou de um **Rei**.",
+        "- Você **não** pode colocar uma carta ao lado de um valor igual em nenhuma das oito casas ao redor.",
+        "- **Naipe e cor não importam.**",
+        "- Se a carta comprada não puder ser colocada, ela é **descartada**.",
+        "## Modo fácil",
+        "- Ative os **Coringas** nas configurações para adicionar dois coringas extras, que podem ir em qualquer casa ligada (os Coringas não contam para a pontuação)."
+      ]
+    },
+    "quickStart": {
+      "hash": "a28614f6",
+      "value": [
+        "Coloque cada carta ao lado de uma com valor +/-1 (A<->K se ligam).",
+        "Uma carta nunca pode ficar ao lado de um valor igual.",
+        "Preencha a grade da ilha para vencer."
+      ]
+    },
+    "title": {
+      "hash": "dd58357c",
+      "value": "Arquipélago"
+    }
+  },
+  "ascent": {
+    "cardDescription": {
+      "hash": "301e448f",
+      "value": "Um jogo de escalada solo: jogue rotas cada vez mais altas para chegar a três acampamentos antes que o baralho acabe."
+    },
+    "howToPlay": {
+      "hash": "acb5c7a2",
+      "value": [
+        "## Objetivo",
+        "Vença subindo pelos três acampamentos; chegue a um acampamento esvaziando a mão; esvazie a mão jogando rotas.",
+        "Você perde se as cartas acabarem antes de chegar ao último acampamento.",
+        "## Tipos de rota",
+        "Cada rota jogada deve ser de um de três tipos, cada um com uma carta âncora.",
+        "A **última carta selecionada é a âncora**.",
+        "- **Subida:** duas ou mais cartas em ordem crescente consecutiva (a âncora é a mais alta):",
+        "-- {3S} {4S} {5S} (a âncora é {5S})",
+        "-- {8D} {9C} {10H} {JC} (a âncora é {JC})",
+        "- **Travessia:** uma ou mais cartas do mesmo valor (escolha qualquer âncora).",
+        "-- {5S} {5D} {5H} (a âncora é qualquer um dos 5)",
+        "-- {9C} {9D} (a âncora é qualquer um dos 9)",
+        "- **Descida:** duas ou mais cartas de um naipe em valor decrescente (a âncora é a mais baixa).",
+        "-- {10C} {9C} {8C} (a âncora é {8C})",
+        "-- {KD} {JD} {10D} {2D} (a âncora é {2D})",
+        "## Sequência de rotas",
+        "Cada rota deve ser mais alta que a anterior:",
+        "- Mais cartas = mais alta",
+        "- Subida > Travessia > Descida",
+        "- Caso contrário, a âncora mais alta define a rota mais alta.",
+        "## Compras",
+        "Depois de uma rota, o número de cartas compradas depende do naipe da âncora:",
+        "- **♥ Copas (cauteloso):** uma por carta na mão de valor maior que a âncora.",
+        "- **♣ Paus (imprudente):** uma por carta na mão de valor menor que a âncora.",
+        "- **♦ Ouros (técnico):** uma por carta de ouros na mão.",
+        "- **♠ Espadas (escalada livre):** uma por naipe diferente de espadas na rota.",
+        "Você nunca compra mais cartas do que as da rota jogada.",
+        "## Descansar",
+        "**Descansar** descarta sua área de jogo e troca a pilha de fadiga pela sua mão (depois, a pilha de fadiga cresce).",
+        "## Acampamentos",
+        "Ao esvaziar a mão, se sua rota for mais alta que a última rota jogada no acampamento anterior, ela vale como marco e você chega a um acampamento mais alto. Você recebe uma nova mão e deve tentar chegar ao próximo acampamento.",
+        "Se a última rota jogada não superar o marco do acampamento anterior, você não chega ao próximo acampamento e precisa tentar de novo com uma nova mão.",
+        "## Configurações",
+        "- **Dificuldade:** Suave, Padrão ou Intensa mudam as condições dos marcos.",
+        "- **Desafios dos Oito Mil:** quatorze picos com nome alteram as regras e definem trilhas de tamanhos diferentes."
+      ]
+    },
+    "quickStart": {
+      "hash": "fd5b20c9",
+      "value": [
+        "Construa rotas cada vez mais “altas” para esvaziar a mão e chegar a um acampamento.",
+        "Descansar renova a mão, mas aumenta a fadiga.",
+        "Vença subindo por todos os acampamentos."
+      ]
+    },
+    "title": {
+      "hash": "689a25ff",
+      "value": "Escalada"
+    }
+  },
+  "australian-patience": {
+    "cardDescription": {
+      "hash": "3e888b8b",
+      "value": "A liberdade do Yukon encontra a construção rígida por naipe e um monte de uma só passada."
+    },
+    "howToPlay": {
+      "hash": "1faa036d",
+      "value": [
+        "## Objetivo",
+        "Construa as quatro fundações por naipe, do Ás ao Rei.",
+        "## Regras",
+        "- As sete colunas começam com quatro cartas viradas para cima.",
+        "- Construa em ordem decrescente por naipe; só Reis ocupam colunas vazias.",
+        "- Mova qualquer carta virada para cima junto com todas as cartas abaixo dela.",
+        "- Vire o monte uma carta de cada vez, sem redistribuir."
+      ]
+    },
+    "quickStart": {
+      "hash": "6ef4e415",
+      "value": [
+        "Construa as fundações por naipe em ordem crescente.",
+        "Construa as colunas em ordem decrescente por naipe; só Reis ocupam espaços vazios.",
+        "Mova qualquer grupo exposto e passe pelo monte uma só vez."
+      ]
+    },
+    "title": {
+      "hash": "fcc6929e",
+      "value": "Paciência australiana"
+    }
+  },
+  "bakers-dozen": {
+    "cardDescription": {
+      "hash": "1616b54c",
+      "value": "Esvazie treze colunas compactas nas quatro fundações por naipe."
+    },
+    "howToPlay": {
+      "hash": "33a6a3c4",
+      "value": [
+        "## Objetivo",
+        "Leve as 52 cartas para as quatro fundações.",
+        "## Regras",
+        "- As fundações são construídas **em ordem crescente por naipe**, do Ás ao Rei.",
+        "- As colunas são construídas **em ordem decrescente**, independentemente do naipe.",
+        "- Mova só uma carta exposta do fim da coluna de cada vez.",
+        "- As colunas vazias se fecham na hora e não podem ser preenchidas.",
+        "- Toque numa coluna para selecionar a última carta, depois toque numa coluna de destino válida.",
+        "- Toque duas vezes numa carta exposta para enviá-la à sua fundação, quando possível."
+      ]
+    },
+    "quickStart": {
+      "hash": "a4b03b07",
+      "value": [
+        "Construa as fundações por naipe, do Ás ao Rei.",
+        "Construa as colunas em ordem decrescente, independentemente do naipe.",
+        "Mova uma carta de cada vez; colunas vazias não podem ser usadas."
+      ]
+    },
+    "title": {
+      "hash": "1f8df454",
+      "value": "Dúzia do padeiro"
+    }
+  },
+  "bakers-game": {
+    "cardDescription": {
+      "hash": "07005d70",
+      "value": "O ancestral mais difícil do FreeCell: construa as colunas em ordem decrescente por naipe, não por cor."
+    },
+    "howToPlay": {
+      "hash": "a01e3e7a",
+      "value": [
+        "## Objetivo",
+        "Leve as 52 cartas para as quatro **fundações**, cada uma construída por naipe do Ás ao Rei.",
+        "## Regras",
+        "- Construa as fundações por naipe em ordem crescente, do Ás ao Rei.",
+        "-- Toque duas vezes numa carta para enviá-la a uma fundação válida.",
+        "- Construa as colunas **em ordem decrescente e no mesmo naipe** (por exemplo, um {9S} sobre um {10S}).",
+        "- Qualquer carta pode ir para uma coluna vazia.",
+        "- Mova uma carta de cada vez; cada **célula livre** guarda uma só carta.",
+        "-- Você pode mover uma sequência de cartas empilhadas, se tiver células livres e colunas vazias suficientes."
+      ]
+    },
+    "quickStart": {
+      "hash": "aba9ed00",
+      "value": [
+        "Construa as fundações por naipe (de A a K).",
+        "Construa as colunas em ordem decrescente por naipe.",
+        "Use as 4 células livres para mover cartas."
+      ]
+    },
+    "title": {
+      "hash": "315c84d0",
+      "value": "Jogo do padeiro"
+    }
+  },
+  "baroness": {
+    "cardDescription": {
+      "hash": "32a23d8a",
+      "value": "Esvazie cinco pilhas descartando cartas que somam treze."
+    },
+    "howToPlay": {
+      "hash": "e0cdb3c4",
+      "value": [
+        "## Objetivo",
+        "- **Vença** descartando as 52 cartas.",
+        "- **Perca** quando o monte estiver vazio e não restarem jogadas.",
+        "## Descarte",
+        "- Descarte qualquer **Rei** sozinho, ou duas cartas disponíveis cujos valores somem **13** (por exemplo, {5H} + {8S}, ou {AS} + {QC}).",
+        "- Só a carta do **topo** de cada pilha está disponível.",
+        "- Quando não restarem jogadas, **toque no monte** para distribuir uma carta em cada pilha.",
+        "- Os Ases valem 1."
+      ]
+    },
+    "quickStart": {
+      "hash": "4a558a6e",
+      "value": [
+        "Descarte Reis sozinhos, ou pares que somam 13.",
+        "Ás = 1. Distribua quando não houver jogadas."
+      ]
+    },
+    "title": {
+      "hash": "c3cec216",
+      "value": "Baronesa"
+    }
+  },
+  "beleaguered-castle": {
+    "cardDescription": {
+      "hash": "f890639b",
+      "value": "Tome o castelo de assalto: construa cada naipe do Ás ao Rei, com todas as colunas abertas."
+    },
+    "howToPlay": {
+      "hash": "8fb5fdcb",
+      "value": [
+        "## Objetivo",
+        "- **Vença** construindo as quatro **fundações** por naipe, **do Ás ao Rei**.",
+        "- **Perca** se não restarem jogadas válidas e as fundações estiverem incompletas.",
+        "## Como jogar",
+        "- Construa as colunas **em ordem decrescente**, independentemente do naipe (por exemplo, um {7C} sobre um {8H}).",
+        "- Envie uma carta para sua **fundação** quando ela for o próximo valor do mesmo naipe.",
+        "- Toque numa carta exposta para pegá-la, depois toque num destino.",
+        "- Toque duas vezes numa carta exposta para enviá-la a uma fundação válida.",
+        "- Mova as cartas **uma de cada vez**.",
+        "- Uma **coluna vazia** pode receber qualquer carta avulsa."
+      ]
+    },
+    "quickStart": {
+      "hash": "3cf0fa17",
+      "value": [
+        "Construa todas as fundações por naipe em ordem crescente, de A a K.",
+        "Construa as colunas em ordem decrescente, independentemente do naipe, uma carta de cada vez."
+      ]
+    },
+    "title": {
+      "hash": "6ee50aa6",
+      "value": "Castelo sitiado"
+    }
+  },
+  "bisley": {
+    "cardDescription": {
+      "hash": "5480127a",
+      "value": "Construa cada naipe pelas duas pontas enquanto treze colunas abertas se fecham ao seu redor."
+    },
+    "howToPlay": {
+      "hash": "9a5911e7",
+      "value": [
+        "## Objetivo",
+        "Leve todas as cartas para oito fundações: quatro crescentes a partir dos Ases e quatro decrescentes a partir dos Reis.",
+        "## Regras",
+        "- Os Ases começam nas suas fundações crescentes.",
+        "- Construa as colunas um valor acima ou abaixo, no mesmo naipe.",
+        "- Só a última carta exposta de cada coluna pode ser jogada.",
+        "- Mova uma carta de cada vez.",
+        "- As colunas vazias não podem ser preenchidas."
+      ]
+    },
+    "quickStart": {
+      "hash": "db6b2f70",
+      "value": [
+        "Construa as fundações dos Ases em ordem crescente e as dos Reis em ordem decrescente, por naipe.",
+        "Construa as colunas um valor acima ou abaixo, no mesmo naipe.",
+        "Mova uma carta exposta de cada vez; colunas vazias ficam fechadas."
+      ]
+    },
+    "title": {
+      "hash": "0dea4321",
+      "value": "Bisley"
+    }
+  },
+  "blackberry-pie": {
+    "cardDescription": {
+      "hash": "efcdf8a7",
+      "value": "Forme trios sob as cartas de amora para ajudar a Rainha a assar sua torta."
+    },
+    "howToPlay": {
+      "hash": "4a9fa370",
+      "value": [
+        "## Objetivo",
+        "**Colete as dez amoras de paus** completando um conjunto adequado sob cada uma.",
+        "",
+        "## Sua vez",
+        "- Sempre que possível, sua mão volta a ter três cartas compradas do monte.",
+        "- Escolha uma carta da mão ou de um dos dois criados, depois escolha uma coluna de amora.",
+        "- Depois da primeira carta, jogue logo à esquerda ou à direita da coluna anterior.",
+        "- Um coringa deixa sua próxima carta ir para baixo de qualquer amora ainda não colhida, inclusive na mesma coluna.",
+        "",
+        "## Colher amoras",
+        "Um conjunto é formado por três cartas quaisquer (sem coringas) sob uma amora, incluindo o valor dela, e deve ser:",
+        "- Uma sequência de três valores consecutivos.",
+        "- Três cartas do mesmo naipe.",
+        "- Três figuras (Valetes, Damas ou Reis).",
+        "Cartas a mais podem ficar sob uma amora colhida.",
+        "",
+        "## Pontuação",
+        "Some o valor das amoras colhidas, **5 pontos de bônus** por colher as dez e **1 ponto** por carta que sobrar na mão."
+      ]
+    },
+    "quickStart": {
+      "hash": "81cd3c78",
+      "value": [
+        "Escolha uma carta da mão ou um criado, depois coloque-a sob uma amora disponível.",
+        "Depois da primeira jogada, coloque ao lado da coluna anterior, a menos que tenha jogado um coringa.",
+        "Colete todas as cartas de amora para vencer."
+      ]
+    },
+    "title": {
+      "hash": "d3fd95cc",
+      "value": "Torta de amora"
+    }
+  },
+  "bowling": {
+    "cardDescription": {
+      "hash": "57809475",
+      "value": "Jogue uma partida completa de boliche de 10 pinos com cartas, em busca de strikes e spares."
+    },
+    "howToPlay": {
+      "hash": "467c3b31",
+      "value": [
+        "## Objetivo",
+        "Faça a maior pontuação possível em dez frames. Você **vence** com pontuação final de **120** ou mais; caso contrário, perde.",
+        "## Lançar bolas",
+        "- Escolha uma carta de bola virada para cima e derrube **1, 2 ou 3 pinos vizinhos** cujos valores **somem um número terminado no dígito da carta de bola**:",
+        "-- 2 + 7 + 5 = 14, que combina com uma bola 4",
+        "-- A + 4 = 5, que combina com uma bola 5",
+        "-- 10 + 10 = 20, que combina com uma bola 10.",
+        "- Quando não restar jogada válida, selecione “Encerrar bola”.",
+        "## Restrições",
+        "- No **primeiro lançamento de um frame**, você não pode derrubar um pino da fileira de trás, e o pino central não pode ser derrubado sozinho.",
+        "- Depois da abertura, todo lance deve incluir **pelo menos um pino ao lado de um espaço** deixado por um lance anterior.",
+        "## Pontuação",
+        "A pontuação é parecida com a do boliche: um frame permite até duas bolas e termina antes em caso de strike. No frame 10, um strike ou spare dá 2 ou 1 bola(s) de bônus.",
+        "- **Strike**: 10 mais as duas bolas seguintes",
+        "- **Spare** (todos os pinos em duas bolas): 10 mais a bola seguinte",
+        "- **Frame aberto**: o número de pinos derrubados"
+      ]
+    },
+    "quickStart": {
+      "hash": "43fe21eb",
+      "value": [
+        "Escolha uma carta de bola e de 1 a 3 cartas de pino vizinhas.",
+        "A bola pode ser lançada se os últimos dígitos forem iguais.",
+        "Encerre a bola se não houver combinação válida."
+      ]
+    },
+    "title": {
+      "hash": "68228d1b",
+      "value": "Boliche"
+    }
+  },
+  "busy-aces": {
+    "cardDescription": {
+      "hash": "86e347ed",
+      "value": "Mantenha doze colunas curtas de dois baralhos em movimento, uma carta do mesmo naipe de cada vez."
+    },
+    "howToPlay": {
+      "hash": "e1ebb3ac",
+      "value": [
+        "## Objetivo",
+        "Construa as oito fundações por naipe, do Ás ao Rei.",
+        "## Regras",
+        "- As doze colunas começam com uma carta virada para baixo e uma virada para cima.",
+        "- Construa em ordem decrescente por naipe, movendo uma carta de cada vez.",
+        "- Qualquer carta pode ocupar uma coluna vazia.",
+        "- Vire o monte uma carta de cada vez, sem redistribuir."
+      ]
+    },
+    "quickStart": {
+      "hash": "612615e7",
+      "value": [
+        "Construa as fundações por naipe em ordem crescente.",
+        "Construa as colunas em ordem decrescente por naipe, uma carta de cada vez.",
+        "Qualquer carta ocupa um espaço vazio; passe pelo monte uma só vez."
+      ]
+    },
+    "title": {
+      "hash": "a2f312a2",
+      "value": "Ases ocupados"
+    }
+  },
+  "cabin-siege": {
+    "cardDescription": {
+      "hash": "d080e51a",
+      "value": "Defenda sua cabana de um cerco de zumbis, usando as cartas de apoio com estratégia."
+    },
+    "howToPlay": {
+      "hash": "669496da",
+      "value": [
+        "## Objetivo",
+        "Mate todos os zumbis antes que suas cartas acabem.",
+        "## Ordem do turno",
+        "- **Revelar**: revele os zumbis, se ainda houver algum.",
+        "- **Jogar**: coloque a carta do topo do baralho numa pilha válida da cabana.",
+        "- **Matar**: se possível, mate um zumbi vizinho à última carta jogada.",
+        "## Colocação das cartas",
+        "Uma carta comprada pode ir sobre uma pilha existente se ela for:",
+        "- de valor igual,",
+        "- da mesma cor **e** de valor maior, ou",
+        "- de cor oposta **e** de valor menor.",
+        "## Matar zumbis",
+        "Poder matar um zumbi depende do valor dele, da carta jogada e **das duas cartas de apoio que estão na mesma linha do zumbi e da última carta jogada**.",
+        "Um zumbi pode ser morto se:",
+        "- Estiver ao lado da última carta jogada",
+        "- As duas cartas de apoio somarem pelo menos 10 (Ases valem 1, Coringas 0)",
+        "- Para os Reis, as duas cartas de apoio precisam ser do naipe do Rei",
+        "- Para as Damas, as duas cartas de apoio precisam ser da cor da Dama",
+        "- Não há restrições para matar Valetes"
+      ]
+    },
+    "quickStart": {
+      "hash": "aa829b03",
+      "value": [
+        "Mate zumbis colocando cartas em posições vizinhas válidas.",
+        "As outras duas cartas dessa linha devem somar pelo menos 10 e ter o mesmo naipe (K) ou a mesma cor (Q).",
+        "Ases valem 1; Coringas podem ir em qualquer lugar e valem 0."
+      ]
+    },
+    "title": {
+      "hash": "8b7b55e1",
+      "value": "Cerco à cabana"
+    }
+  },
+  "cafe-queue": {
+    "cardDescription": {
+      "hash": "98f19edd",
+      "value": "Um jogo de arriscar a sorte em que você administra filas ordenadas de clientes."
+    },
+    "howToPlay": {
+      "hash": "22d411d4",
+      "value": [
+        "## Objetivo",
+        "Distribua o baralho inteiro sem descartar as quatro cartas de um mesmo valor.",
+        "## Acomodar clientes",
+        "- Escolha uma posição numerada numa das filas, depois revele o próximo cliente.",
+        "- Um cliente só entra na fila se o valor dele respeitar a ordem decrescente da fila (do maior para o menor).",
+        "- Se o cliente não couber, você pode:",
+        "-- acomodá-lo descartando a fila selecionada, ou",
+        "-- mandá-lo embora, junto com o próximo cliente.",
+        "- Você perde na hora quando quatro cartas do mesmo valor forem descartadas.",
+        "## Espiar",
+        "Você pode tocar no baralho para ver os clientes na espera. Depois, o baralho será embaralhado de novo."
+      ]
+    },
+    "quickStart": {
+      "hash": "01b76d80",
+      "value": [
+        "Escolha um lugar na fila para o próximo cliente.",
+        "As filas devem ficar em ordem decrescente de valor.",
+        "Se um cliente não couber, descarte a fila ou mande embora dois clientes."
+      ]
+    },
+    "title": {
+      "hash": "d7db086f",
+      "value": "Fila do café"
+    }
+  },
+  "calculation": {
+    "cardDescription": {
+      "hash": "158cca43",
+      "value": "Construa quatro fundações em passos de 1, 2, 3 e 4, até os Reis."
+    },
+    "howToPlay": {
+      "hash": "08af239e",
+      "value": [
+        "## Objetivo",
+        "**Vença** construindo as quatro **fundações** até os Reis.",
+        "## Fundações",
+        "Cada fundação sobe **em passos fixos** (+1, +2, +3 ou +4) e, depois do Rei, recomeça (no Ás, depois no 2 etc.).",
+        "- **Fundação 1**: A, 2, 3, 4 … K",
+        "- **Fundação 2**: 2, 4, 6, 8, 10, Q, A, 3 … K",
+        "- **Fundação 3**: 3, 6, 9, Q, 2, 5 … K",
+        "- **Fundação 4**: 4, 8, Q, 3, 7 … K",
+        "## Como jogar",
+        "- Jogue a carta do topo do monte ou de qualquer pilha de descarte em qualquer fundação, se ela seguir o passo da fundação.",
+        "- Você pode colocar a carta comprada numa das 4 pilhas de descarte.",
+        "- Não é possível mover cartas de uma pilha de descarte para outra."
+      ]
+    },
+    "quickStart": {
+      "hash": "22eb825e",
+      "value": [
+        "Construa quatro fundações em passos de 1, 2, 3 e 4, até os Reis.",
+        "As pilhas de descarte guardam cartas em qualquer ordem."
+      ]
+    },
+    "title": {
+      "hash": "16599adc",
+      "value": "Cálculo"
+    }
+  },
+  "canfield": {
+    "cardDescription": {
+      "hash": "a81515a3",
+      "value": "Construa as fundações por naipe a partir de um valor base aleatório, alimentadas por uma reserva de 13 cartas."
+    },
+    "howToPlay": {
+      "hash": "5bad9813",
+      "value": [
+        "## Objetivo",
+        "Envie as 52 cartas para suas fundações.",
+        "## Fundações",
+        "- Construa as fundações **em ordem crescente por naipe** a partir do valor base.",
+        "- Depois do Rei, as fundações voltam ao Ás, por exemplo: 10, J, Q, K, A, 2, 3 etc.",
+        "## Colunas",
+        "- Construa as colunas em ordem decrescente, **alternando cores** (do Ás se passa ao Rei).",
+        "- Mova cartas avulsas ou grupos ordenados de cartas entre as colunas.",
+        "- Quando uma coluna fica vazia, ela é preenchida pela **reserva** (ou, quando a reserva acabar, por qualquer carta).",
+        "## Monte",
+        "Vire cartas do monte para o descarte (uma ou três de cada vez, conforme suas configurações). Você pode redistribuir quantas vezes quiser."
+      ]
+    },
+    "quickStart": {
+      "hash": "4ad05a24",
+      "value": [
+        "Construa as fundações por naipe em ordem crescente.",
+        "Construa as colunas em ordem decrescente, alternando cores.",
+        "Espaços vazios são preenchidos pela reserva."
+      ]
+    },
+    "title": {
+      "hash": "64360cff",
+      "value": "Canfield"
+    }
+  },
+  "carpet": {
+    "cardDescription": {
+      "hash": "bf2e1ad7",
+      "value": "Leve um tapete de vinte cartas para as fundações enquanto o monte remenda cada buraco."
+    },
+    "howToPlay": {
+      "hash": "2b1cbaa6",
+      "value": [
+        "## Objetivo",
+        "Leve as 52 cartas para as quatro fundações, construídas por naipe do Ás ao Rei.",
+        "## Regras",
+        "- Os quatro **Ases** começam nas fundações; vinte cartas formam o **tapete**.",
+        "- Qualquer carta do tapete, e a carta do topo do descarte, pode ir para sua fundação.",
+        "- Um buraco no tapete é preenchido na hora com a carta do topo do **descarte**, ou pelo **monte** se o descarte estiver vazio.",
+        "- Toque no **monte** para virar uma carta no descarte. Não há redistribuição."
+      ]
+    },
+    "quickStart": {
+      "hash": "760fc5c7",
+      "value": [
+        "Construa as fundações por naipe a partir dos Ases.",
+        "Toque numa carta do tapete ou do descarte para enviá-la.",
+        "Os buracos do tapete são preenchidos pelo descarte, depois pelo monte."
+      ]
+    },
+    "title": {
+      "hash": "51e11c90",
+      "value": "Tapete"
+    }
+  },
+  "chain-of-command": {
+    "cardDescription": {
+      "hash": "26aaf0b8",
+      "value": "Promova com estratégia membros e candidatos até o topo da cadeia de comando."
+    },
+    "howToPlay": {
+      "hash": "4b1772c7",
+      "value": [
+        "## Objetivo",
+        "**Vença** promovendo um membro além do posto 1.",
+        "**Perca** quando não restarem substituições válidas.",
+        "## Substituir membros",
+        "- Escolha uma faixa de posto com exatamente três membros, depois escolha um membro para promover.",
+        "- Substitua-o por um candidato cujo valor seja igual ao último dígito da soma **ou** do produto dos dois membros restantes. Os 10 valem 0.",
+        "- Promova o membro substituído ao próximo posto, como membro ou como candidato.",
+        "- Um posto pode ter no máximo três membros. Se uma promoção passar desse limite, descarte um membro desse posto."
+      ]
+    },
+    "quickStart": {
+      "hash": "2ee1d233",
+      "value": [
+        "Vença promovendo um membro além do posto 1.",
+        "Escolha um membro para promover ao próximo posto e substitua-o por um candidato.",
+        "Os candidatos válidos dependem do último dígito da soma ou do produto dos membros restantes."
+      ]
+    },
+    "title": {
+      "hash": "73544d7c",
+      "value": "Cadeia de comando"
+    }
+  },
+  "chapter-and-verse": {
+    "cardDescription": {
+      "hash": "f6ff591c",
+      "value": "Atenda às ofertas dos clientes com os livros disponíveis para fazer a maior pontuação."
+    },
+    "howToPlay": {
+      "hash": "2558e4ff",
+      "value": [
+        "## Objetivo",
+        "- **Vença** concluindo 12 trocas com clientes, tentando fazer a maior pontuação.",
+        "- **Perca** sendo demitido quando sua pontuação chegar a 0.",
+        "## Ofertas dos clientes",
+        "Para cada um dos 12 clientes, um livro usado é revelado e o cliente faz uma oferta.",
+        "- O valor da oferta é a soma do valor do cliente (J = 11, Q = 12, K = 13) com o valor do livro usado revelado.",
+        "- Escolha livros da estante cujo total seja exatamente igual à oferta.",
+        "- **Ofertas exclusivas**: livros da estante do mesmo naipe do livro usado **custam US$ 0**.",
+        "- **Ofertas por tempo limitado:** os Ases normalmente custam US$ 11, mas podem ser oferecidos por US$ 1 (toque para alternar o valor).",
+        "## Melhorar a reputação na guilda",
+        "- Depois de uma troca, os **livros selecionados do mesmo naipe do cliente** somam à sua pontuação; os outros são descartados.",
+        "## Passar",
+        "- Se não conseguir atender à oferta, você pode **passar** e perder pontos conforme o valor do cliente: J = 1, Q = 2, K = 3.",
+        "## Pontuação",
+        "Sua pontuação define sua avaliação no fim da partida:",
+        "- Abaixo de 10: nada de livros para você! Você está demitido!",
+        "- 10-11: 🕮",
+        "- 12-13: 🕮🕮",
+        "- 14-15: 🕮🕮🕮",
+        "- 16-17: 🕮🕮🕮🕮",
+        "- 18+: 🕮🕮🕮🕮🕮"
+      ]
+    },
+    "quickStart": {
+      "hash": "dc388d3c",
+      "value": [
+        "Atenda exatamente às ofertas dos clientes escolhendo entre os livros disponíveis.",
+        "As preferências dos clientes e os livros usados afetam o preço dos livros."
+      ]
+    },
+    "title": {
+      "hash": "047bda25",
+      "value": "Capítulo e versículo"
+    }
+  },
+  "city-grid": {
+    "cardDescription": {
+      "hash": "b923e9bb",
+      "value": "Um jogo de colocar peças em que cada jogada pode bagunçar uma grade instável."
+    },
+    "howToPlay": {
+      "hash": "316682c7",
+      "value": [
+        "## Objetivo",
+        "**Vença** quando as 16 pilhas tiverem a carta do topo virada para cima.",
+        "**Perca** se, a qualquer momento, mais de 4 pilhas tiverem a carta do topo virada para baixo.",
+        "## Como jogar",
+        "O jogo usa as cartas do Ás ao 10 dos quatro naipes.",
+        "A cada turno, coloque a carta do topo do monte numa pilha da grade:",
+        "- você pode começar uma nova pilha se ela ficar ao lado de uma pilha existente, ou",
+        "- você pode adicionar uma carta a uma pilha que tenha menos de 4 cartas.",
+        "\nDepois de colocar uma carta, se ela for a maior ou a menor da sua linha ou coluna, as cartas dessa linha ou coluna são viradas (para cima ou para baixo).",
+        "- O valor das cartas viradas para baixo não conta para decidir quais cartas virar.",
+        "- Os Ases valem 1."
+      ]
+    },
+    "quickStart": {
+      "hash": "c0b328dd",
+      "value": [
+        "Preencha a grade com todas as cartas do topo viradas para cima.",
+        "Coloque cartas sobre pilhas existentes ou ao lado delas, até 4 cartas de altura.",
+        "Se a carta colocada for a maior ou a menor da sua linha, todas as cartas da linha são viradas."
+      ]
+    },
+    "title": {
+      "hash": "95cf8f14",
+      "value": "Malha urbana"
+    }
+  },
+  "clock": {
+    "cardDescription": {
+      "hash": "61261ec5",
+      "value": "Uma paciência de pura sorte: siga as cartas ao redor do relógio antes que todos os Reis apareçam."
+    },
+    "howToPlay": {
+      "hash": "36c70a77",
+      "value": [
+        "## Objetivo",
+        "Vire todas as cartas para cima, colocando as 52 nas suas posições do relógio, antes que os quatro Reis sejam revelados.",
+        "## Como jogar",
+        "- Vire a carta do topo da pilha central para começar.",
+        "- Toque na pilha da hora correspondente: Ases à 1 hora, números na sua hora, Valete às 11, Dama às 12 e Reis no centro.",
+        "## Vitória e derrota",
+        "Você vence se todas as pilhas estiverem viradas para cima. Você perde assim que o **quarto Rei** for revelado."
+      ]
+    },
+    "quickStart": {
+      "hash": "70061575",
+      "value": [
+        "Toque na pilha central para começar, depois toque na pilha da hora que corresponde à última carta revelada."
+      ]
+    },
+    "title": {
+      "hash": "9787c661",
+      "value": "Paciência do relógio"
+    }
+  },
+  "congress": {
+    "cardDescription": {
+      "hash": "fe8ab4a0",
+      "value": "Guie dois baralhos por oito colunas, com jogadas de uma carta e uma única passada pelo monte."
+    },
+    "howToPlay": {
+      "hash": "a237b48a",
+      "value": [
+        "## Objetivo",
+        "Construa oito fundações por naipe, do Ás ao Rei.",
+        "## Regras",
+        "- Construa as colunas em ordem decrescente, independentemente do naipe.",
+        "- Mova uma carta exposta de cada vez.",
+        "- Qualquer carta pode ocupar uma coluna vazia.",
+        "- Vire o monte uma carta de cada vez, sem redistribuir."
+      ]
+    },
+    "quickStart": {
+      "hash": "c4fd113b",
+      "value": [
+        "Construa oito fundações por naipe em ordem crescente.",
+        "Construa as colunas em ordem decrescente, independentemente do naipe.",
+        "Mova uma carta de cada vez; qualquer carta ocupa um espaço vazio."
+      ]
+    },
+    "title": {
+      "hash": "a9276573",
+      "value": "Congresso"
+    }
+  },
+  "crazy-quilt": {
+    "cardDescription": {
+      "hash": "e28c27ea",
+      "value": "Descosture uma colcha de cartas em pé e deitadas, uma ponta livre de cada vez."
+    },
+    "howToPlay": {
+      "hash": "ce4eb32e",
+      "value": [
+        "## Objetivo",
+        "Leve as 104 cartas para as oito fundações.",
+        "## Fundações",
+        "- Um **Ás** e um **Rei** de cada naipe começam as fundações.",
+        "- Os Ases sobem **em ordem crescente** por naipe até os Reis; os Reis descem **em ordem decrescente** por naipe até os Ases.",
+        "## Regras",
+        "- 64 cartas formam a **colcha**, alternando cartas em pé e deitadas como num tabuleiro de xadrez.",
+        "- Uma carta da colcha fica **livre** quando pelo menos um dos seus **lados curtos** não encosta em outra carta.",
+        "- Toque numa carta livre para jogá-la numa fundação ou, se não der, no **descarte**, se ela for um valor acima ou abaixo da carta do topo do descarte, no mesmo naipe.",
+        "- Os buracos da colcha nunca são preenchidos.",
+        "- Toque no **monte** para virar uma carta no descarte. Quando ele acabar, toque nele para virar o descarte **uma única vez**, sem embaralhar."
+      ]
+    },
+    "quickStart": {
+      "hash": "be5c8a85",
+      "value": [
+        "Uma carta da colcha fica livre quando um dos seus lados curtos está descoberto.",
+        "Os Ases sobem e os Reis descem, por naipe.",
+        "Uma carta livre que não vai para as fundações é empilhada no descarte, um valor acima ou abaixo no mesmo naipe."
+      ]
+    },
+    "title": {
+      "hash": "2c607fe7",
+      "value": "Colcha maluca"
+    }
+  },
+  "crescent": {
+    "cardDescription": {
+      "hash": "4de6a2cd",
+      "value": "Gire dezesseis pilhas ao luar rumo a fundações que crescem a partir dos Ases e dos Reis."
+    },
+    "howToPlay": {
+      "hash": "2122d621",
+      "value": [
+        "## Objetivo",
+        "Leve os dois baralhos para oito fundações: quatro crescentes a partir dos Ases e quatro decrescentes a partir dos Reis.",
+        "## Regras",
+        "- Só a carta exposta de cada uma das dezesseis pilhas pode ser jogada.",
+        "- Construa as pilhas um valor acima ou abaixo no mesmo naipe; Ás e Rei são vizinhos e “dão a volta”.",
+        "- Mova uma carta de cada vez.",
+        "- As pilhas vazias não podem ser preenchidas.",
+        "- As cartas que não são de base podem passar de uma fundação para outra.",
+        "- Três vezes por partida, você pode “reempilhar” para levar a carta de baixo de cada pilha para o topo."
+      ]
+    },
+    "quickStart": {
+      "hash": "f9edde34",
+      "value": [
+        "Construa as fundações dos Ases em ordem crescente e as dos Reis em ordem decrescente, por naipe.",
+        "Construa as pilhas um valor acima ou abaixo no mesmo naipe; Ás e Rei são vizinhos.",
+        "Mova uma carta exposta; gire cada pilha até três vezes."
+      ]
+    },
+    "title": {
+      "hash": "500f31c8",
+      "value": "Lua crescente"
+    }
+  },
+  "cribbage-squares": {
+    "cardDescription": {
+      "hash": "4ff9ff90",
+      "value": "Monte dezesseis cartas ligadas, depois pontue cada linha e coluna com uma carta inicial."
+    },
+    "howToPlay": {
+      "hash": "d49f4554",
+      "value": [
+        "## Objetivo",
+        "Faça pelo menos 61 pontos com as quatro linhas e as quatro colunas, cada uma pontuada como uma mão de cribbage, usando a carta inicial.",
+        "## Como jogar",
+        "- Cada carta depois da primeira deve encostar numa carta que já está na grade (na horizontal, na vertical ou na diagonal).",
+        "- As cartas não podem ser movidas depois de colocadas.",
+        "- Depois que as dezesseis cartas forem colocadas, uma décima sétima carta se torna a carta inicial.",
+        "## Pontuação",
+        "Cada linha e coluna é pontuada como uma mão de cribbage (com a carta inicial):",
+        "- **Quinzes (2 pts):**",
+        "-- Duas ou mais cartas que somam 15. Figuras valem 10 e Ases valem 1.",
+        "- **Pares (2, 6 ou 12 pts):**",
+        "-- Par (2 cartas do mesmo valor) = 2 pts",
+        "-- Par real / trinca (3 cartas) = 6 pts",
+        "-- Duplo par real / quadra (4 cartas) = 12 pts.",
+        "- **Sequências (1 pt por carta):**",
+        "-- Uma sequência de três ou mais cartas consecutivas (independentemente do naipe) vale 1 ponto por carta.",
+        "- **Flush (4 ou 5 pts):**",
+        "-- Quatro cartas do mesmo naipe = 4 pts.",
+        "-- Se a carta inicial também for desse naipe = 5 pts.",
+        "- **His Nobs (1 pt):**",
+        "-- Se uma linha ou coluna tiver um Valete do mesmo naipe da carta inicial, ela ganha 1 ponto extra.",
+        "- **His Heels (2 pts):**",
+        "-- Se a carta inicial for um Valete, ela soma dois pontos à pontuação total."
+      ]
+    },
+    "quickStart": {
+      "hash": "c7bb9e3a",
+      "value": [
+        "Coloque cada carta ao lado de outra carta na grade.",
+        "Uma carta “inicial” é revelada depois que as dezesseis forem colocadas.",
+        "Linhas e colunas pontuam como mãos de cribbage."
+      ]
+    },
+    "title": {
+      "hash": "f080a538",
+      "value": "Quadrados de cribbage"
+    }
+  },
+  "crownslayer": {
+    "cardDescription": {
+      "hash": "60d95812",
+      "value": "Derrube as 12 figuras da realeza com combos turbinados pelos naipes."
+    },
+    "howToPlay": {
+      "hash": "82061d43",
+      "value": [
+        "## Objetivo",
+        "**Vença** derrotando os 12 inimigos da realeza (Valetes, Damas e Reis).",
+        "**Perca** se não conseguir cobrir o ataque de um inimigo.",
+        "## Ordem do turno",
+        "**Ataque**",
+        "- Causar a um inimigo **mais** dano do que a vida dele o envia para o lixo.",
+        "- Deixar a vida dele em **exatamente 0** o envia para o baralho da Taverna, e você poderá comprá-lo mais tarde.",
+        "-- Valores de ataque dos inimigos comprados:\nValetes = 10, Damas = 15, Reis = 20",
+        "\n**Defesa**",
+        "- Se o inimigo sobreviver ao seu último ataque, ele contra-ataca.",
+        "- Descarte cartas da mão que somem pelo menos o valor de ataque dele.",
+        "- O poder do naipe **♠ Espadas** pode reduzir o valor de ataque.",
+        "## Poderes dos naipes",
+        "A força do poder depende do valor da carta. Os inimigos são **imunes ao poder do próprio naipe**.",
+        "- **♥ Copas** (cura): embaralha essa quantidade de cartas do lixo de volta para o fundo do baralho.",
+        "- **♦ Ouros:** compre essa quantidade de cartas.",
+        "- **♣ Paus:** dobra o dano causado.",
+        "- **♠ Espadas** (escudo): reduz para sempre o ataque deste inimigo nesse valor.",
+        "## Combos",
+        "- Jogue um **Ás** (companheiro animal) com outra carta para somar os valores e ativar os dois poderes.",
+        "- Jogue **de duas a quatro cartas do mesmo valor**, somando 10 ou menos, como um único combo.",
+        "## Os inimigos",
+        "- **Valetes**: 20 de vida, 10 de ataque.",
+        "- **Damas**: 30 de vida, 15 de ataque.",
+        "- **Reis**: 40 de vida, 20 de ataque.",
+        "## Bobos",
+        "- Os Bobos podem ser ativados para **descartar sua mão e completá-la** até 8 cartas.",
+        "- Use menos Bobos para ter pontuações melhores:",
+        "-- Ouro: 0 Bobos usados",
+        "-- Prata: 1 Bobo usado",
+        "-- Bronze: 2 Bobos usados"
+      ]
+    },
+    "quickStart": {
+      "hash": "b3570aa9",
+      "value": [
+        "Derrote 12 figuras da realeza, uma de cada vez.",
+        "Os naipes têm poderes; os inimigos são imunes ao próprio naipe; os Ases permitem combos.",
+        "Fase de ataque: jogue uma ou mais cartas quaisquer para causar dano.",
+        "Fase de defesa: as cartas descartadas devem somar pelo menos o ataque do inimigo."
+      ]
+    },
+    "title": {
+      "hash": "73e35ce0",
+      "value": "Mata-coroas"
+    }
+  },
+  "cruel": {
+    "cardDescription": {
+      "hash": "3a229ead",
+      "value": "Doze pilhas abertas, nenhum monte e uma redistribuição que muda tudo o que você construiu."
+    },
+    "howToPlay": {
+      "hash": "959bc755",
+      "value": [
+        "## Objetivo",
+        "Leve as 52 cartas para as quatro fundações, construídas por naipe do Ás ao Rei.",
+        "## Regras",
+        "- Os quatro **Ases** começam nas fundações; as outras cartas são distribuídas viradas para cima em **doze pilhas de quatro**.",
+        "- Só a carta do topo de uma pilha pode se mover, para uma fundação ou para uma pilha **um valor acima no mesmo naipe**.",
+        "- As pilhas vazias **nunca** são preenchidas.",
+        "- Toque na pilha de **redistribuição** para juntar as pilhas em ordem, sem embaralhar, e distribuí-las de novo de quatro em quatro.",
+        "- Você pode redistribuir quantas vezes quiser, mas só depois de fazer uma jogada desde a última redistribuição."
+      ]
+    },
+    "quickStart": {
+      "hash": "fd1b5503",
+      "value": [
+        "Construa as fundações por naipe a partir dos Ases.",
+        "Mova as cartas do topo em ordem decrescente por naipe; os espaços ficam vazios.",
+        "Depois de qualquer jogada, toque na pilha de redistribuição para refazer as pilhas de quatro em quatro."
+      ]
+    },
+    "title": {
+      "hash": "aaedc2bc",
+      "value": "Cruel"
+    }
+  },
+  "delta-21": {
+    "cardDescription": {
+      "hash": "0886780b",
+      "value": "Equilibre quatro populações de peixes de rio em exatamente 21 e publique seus estudos."
+    },
+    "howToPlay": {
+      "hash": "b75491fc",
+      "value": [
+        "## Objetivo",
+        "Conclua estudos do rio criando colunas de populações de peixes com **exatamente 21 peixes**.",
+        "**Faça a maior pontuação** concluindo o máximo de estudos possível e conquistando descobertas científicas.",
+        "A **partida termina** quando a “estação de campo” (o baralho) fica vazia, ou se alguma coluna chegar a **25 ou mais**.",
+        "## Tipos de carta",
+        "- **Cardumes:**",
+        "-- Do Ás ao 10; o Ás vale 1.",
+        "-- O valor da carta representa o número de peixes daquele “cardume”.",
+        "- **Pescadores:**",
+        "-- Valetes, Damas e Reis",
+        "-- Podem ser colocados num cardume para reduzir sua população **em até** 1 (Valete), 2 (Dama) ou 3 (Rei). A população de um cardume não pode ficar abaixo de 0.",
+        "## Como jogar",
+        "A cada turno, esvazie sua mão fazendo uma destas ações:",
+        "- **Soltar peixes:** coloque um cardume no fim de uma coluna (selecione uma carta da mão, depois toque numa coluna).",
+        "- **Pescar:** coloque um pescador num cardume que ainda não tenha um (selecione uma carta da mão, depois toque num cardume).",
+        "- **Transferir peixes:** passe peixes de uma coluna para outra, ao custo de uma carta da mão. Sem nada selecionado, toque no último cardume de uma coluna para levantá-lo, toque em outra coluna para mirar, depois toque numa carta da mão para descartá-la e mover o cardume. Não é possível mover o único cardume de uma coluna nem um cardume sob um pescador.",
+        "\nQuando sua mão estiver vazia:",
+        "- toda coluna que somar **exatamente 21** é separada como estudo concluído",
+        "- o espaço deixado é preenchido com um novo cardume",
+        "- sua mão é reposta com cartas do baralho e começa um novo turno.",
+        "## Descobertas científicas",
+        "- **Especialização de espécies:**",
+        "-- um estudo com um só naipe.",
+        "- **Diversidade de espécies:**",
+        "-- um estudo com os quatro naipes.",
+        "- **Cardumes densos:**",
+        "-- um estudo com cinco ou mais cardumes.",
+        "- **Agrupamentos populacionais:**",
+        "-- um estudo com dois ou mais cardumes do mesmo valor.",
+        "- **Pesca seletiva:**",
+        "-- um pescador que pesca peixes do próprio naipe.",
+        "- **Pressão pesqueira:**",
+        "-- um estudo com dois ou mais pescadores.",
+        "## Pontuação",
+        "- Ganhe **1 ponto** por estudo mais **2 pontos** por descoberta científica.",
+        "- Contribuição científica:",
+        "-- **0-8:** pouco acrescentou",
+        "-- **9-13:** ajuda o estudo local",
+        "-- **14-17:** faz o conhecimento avançar",
+        "-- **18+:** transforma a ciência"
+      ]
+    },
+    "quickStart": {
+      "hash": "ca30a0a4",
+      "value": [
+        "Crie colunas de 21 e cumpra metas de pesquisa pelo caminho.",
+        "Use as figuras para baixar os totais. Evite totais de 25 ou mais."
+      ]
+    },
+    "title": {
+      "hash": "32fc9f4c",
+      "value": "Delta 21"
+    }
+  },
+  "diplomat": {
+    "cardDescription": {
+      "hash": "1e3f9a93",
+      "value": "Negocie com oito colunas abertas, empilhando só por valor e movendo uma carta de cada vez."
+    },
+    "howToPlay": {
+      "hash": "a56f9add",
+      "value": [
+        "## Objetivo",
+        "Leve os dois baralhos para oito fundações, do Ás ao Rei por naipe.",
+        "## Regras",
+        "- São distribuídas oito colunas de quatro cartas viradas para cima.",
+        "- Construa as colunas em ordem decrescente, independentemente do naipe.",
+        "- Mova uma carta de cada vez e ocupe as colunas vazias com qualquer carta.",
+        "- Distribua o monte uma única vez, uma carta de cada vez."
+      ]
+    },
+    "quickStart": {
+      "hash": "2569bb52",
+      "value": [
+        "Construa as colunas em ordem decrescente, independentemente do naipe.",
+        "Mova uma carta de cada vez; qualquer carta ocupa um espaço vazio.",
+        "Construa oito fundações por naipe numa única passada pelo monte."
+      ]
+    },
+    "title": {
+      "hash": "9d04570b",
+      "value": "Diplomata"
+    }
+  },
+  "dominion": {
+    "cardDescription": {
+      "hash": "747f9f9d",
+      "value": "Conquiste cartas do mesmo valor ou naipe até restar um só domínio."
+    },
+    "howToPlay": {
+      "hash": "65da5614",
+      "value": [
+        "## Objetivo",
+        "**Vença** reduzindo as dezoito cartas a uma só carta na mesa.",
+        "**Perca** quando nenhuma conquista for possível e nenhuma carta de reserva puder ser comprada e colocada, ou quando restar uma carta isolada sem correspondência.",
+        "## Conquistar",
+        "- Selecione qualquer carta, depois selecione uma carta vizinha do mesmo valor ou naipe para conquistá-la.",
+        "- As cartas podem conquistar na horizontal, na vertical ou na diagonal.",
+        "- Uma carta também pode conquistar uma carta mais distante na mesma linha ou coluna, se todos os espaços entre elas estiverem vazios.",
+        "- A carta conquistadora vai para o lugar da carta conquistada, deixando vazio seu lugar anterior.",
+        "## Reserva",
+        "- Quando houver um espaço vazio, você pode virar a primeira carta da reserva.",
+        "- Você precisa colocar essa carta num espaço vazio antes de fazer outra conquista.",
+        "- As três cartas de reserva precisam entrar em jogo antes que você possa vencer."
+      ]
+    },
+    "quickStart": {
+      "hash": "44c79ad0",
+      "value": [
+        "Conquiste cartas vizinhas do mesmo naipe ou valor.",
+        "As cartas de reserva podem (e devem) ir para os espaços vazios."
+      ]
+    },
+    "title": {
+      "hash": "03ea7964",
+      "value": "Domínio"
+    }
+  },
+  "dynasty": {
+    "cardDescription": {
+      "hash": "0faabfb3",
+      "value": "Derrube as doze figuras colocando cartas numa grade 3x3."
+    },
+    "howToPlay": {
+      "hash": "5c37ed1c",
+      "value": [
+        "## Objetivo",
+        "Derrote os doze Valetes, Damas e Reis ao redor da grade antes que as cartas para comprar acabem.",
+        "## Ataques",
+        "- Uma carta recém-colocada dispara em direção a cada figura à sua frente. Só as duas cartas da grade no meio do caminho causam dano.",
+        "-- Os **Valetes** não têm restrições de ataque",
+        "-- As **Damas** só sofrem dano de atacantes **da mesma cor**",
+        "-- Os **Reis** só sofrem dano de atacantes **do mesmo naipe**",
+        "## Artimanhas",
+        "- **Extrair**: gaste um Ás para devolver uma pilha da grade ao fundo do baralho.",
+        "- **Reatribuir**: gaste um Coringa para mover uma carta do topo da grade para outra pilha válida.",
+        "## Pontuação",
+        "Sua pontuação é o número de artimanhas não usadas."
+      ]
+    },
+    "quickStart": {
+      "hash": "1d94d89b",
+      "value": [
+        "Compre e coloque cartas numéricas sobre cartas da grade de valor igual ou menor.",
+        "Uma colocação dispara através das duas cartas em frente a uma figura vizinha.",
+        "Ases extraem pilhas; Coringas reatribuem cartas do topo."
+      ]
+    },
+    "title": {
+      "hash": "01424f17",
+      "value": "Dinastia"
+    }
+  },
+  "easthaven": {
+    "cardDescription": {
+      "hash": "bd4d84bb",
+      "value": "Construa sete colunas compactas, depois distribua cada nova fileira do monte direto nas colunas."
+    },
+    "howToPlay": {
+      "hash": "e0fd6ce1",
+      "value": [
+        "## Objetivo",
+        "Construa quatro fundações por naipe, do Ás ao Rei.",
+        "## Regras",
+        "- Construa as colunas em ordem decrescente.",
+        "- Mova juntas as sequências decrescentes do mesmo naipe.",
+        "- Só Reis ocupam colunas vazias.",
+        "- Cada toque no monte distribui uma carta em cada coluna."
+      ]
+    },
+    "quickStart": {
+      "hash": "cbb52fcc",
+      "value": [
+        "Construa as fundações por naipe em ordem crescente.",
+        "Construa as colunas em ordem decrescente.",
+        "Distribua uma carta do monte em cada coluna; Reis ocupam os espaços vazios."
+      ]
+    },
+    "title": {
+      "hash": "33fffba2",
+      "value": "Easthaven"
+    }
+  },
+  "eight-off": {
+    "cardDescription": {
+      "hash": "0443457b",
+      "value": "Um parente espaçoso do FreeCell por naipe, com oito células e colunas vazias só para Reis."
+    },
+    "howToPlay": {
+      "hash": "aa5d6660",
+      "value": [
+        "## Objetivo",
+        "Leve as 52 cartas para as quatro fundações, cada uma construída por naipe do Ás ao Rei.",
+        "## Regras",
+        "- Construa as colunas **em ordem decrescente e no mesmo naipe**.",
+        "- Cada **célula livre** guarda uma só carta.",
+        "- Você pode mover uma carta de cada vez. Pode mover grupos de cartas juntos, mas só se tiver células livres e colunas vazias suficientes para fazer a mesma jogada uma carta de cada vez.",
+        "- Só um **Rei** (com as cartas que carrega) pode ir para uma **coluna vazia**.",
+        "- Envie as cartas para as fundações por naipe, em ordem crescente a partir dos Ases."
+      ]
+    },
+    "quickStart": {
+      "hash": "8fb0be18",
+      "value": [
+        "Use 8 células livres; construa as colunas em ordem decrescente por naipe; só Reis ocupam colunas vazias."
+      ]
+    },
+    "title": {
+      "hash": "ad01c195",
+      "value": "Oito células"
+    }
+  },
+  "elementary-detective": {
+    "cardDescription": {
+      "hash": "efdce805",
+      "value": "Encontre seus companheiros de brincadeira escondidos com planejamento e dedução."
+    },
+    "howToPlay": {
+      "hash": "cc00bd38",
+      "value": [
+        "## Objetivo",
+        "Faça pelo menos 20 pontos depois de revelar os 12 companheiros de brincadeira escondidos.",
+        "## Como jogar",
+        "- Os 12 companheiros virados para baixo são Valetes, Damas e Reis. As outras cartas formam o monte.",
+        "- Coloque a carta do topo do monte num espaço de palpite vazio ao redor da grade dos companheiros.",
+        "- Você pode retirar uma carta de palpite, ao custo de também descartar a próxima carta do monte.",
+        "- A qualquer momento, revele um companheiro escondido. Toda carta de palpite do mesmo naipe na mesma linha horizontal ou vertical vai para sua pilha de pontos."
+      ]
+    },
+    "quickStart": {
+      "hash": "6714c08f",
+      "value": [
+        "Coloque palpites ao redor dos companheiros escondidos.",
+        "Revele os companheiros e pontue por cada palpite do mesmo naipe na mesma linha."
+      ]
+    },
+    "title": {
+      "hash": "1f84944a",
+      "value": "Detetive elementar"
+    }
+  },
+  "field-command": {
+    "cardDescription": {
+      "hash": "046a65e6",
+      "value": "Use cartas baixas e coringas para desmontar as forças inimigas, protegendo da captura cada Ás e cada figura."
+    },
+    "howToPlay": {
+      "hash": "14749a82",
+      "value": [
+        "## Objetivo",
+        "**Vença** esvaziando o baralho inimigo e todas as posições inimigas.",
+        "**Perca** se algum Valete, Dama, Rei ou Ás entrar na pilha de capturas do inimigo.",
+        "## Como jogar",
+        "No início do turno, você pode, se quiser, descartar qualquer número de cartas da mão.",
+        "Depois, escolha exatamente uma opção de captura:",
+        "- **Capturar uma carta inimiga**: selecione qualquer carta inimiga e qualquer número de cartas da mão do mesmo naipe, com valor total igual ou maior.",
+        "- **Deixar o inimigo capturar**: selecione uma carta da mão para ser capturada pela carta inimiga mais à direita.",
+        "- **Sacrifício**: selecione duas cartas da mão e uma carta inimiga (você não pode selecionar J/Q/K/A, porque perderia a partida na hora).",
+        "## Ases e Coringas",
+        "- Os Ases valem 14",
+        "- Os Coringas são curingas e podem valer como qualquer naipe ou valor."
+      ]
+    },
+    "quickStart": {
+      "hash": "a14a111d",
+      "value": [
+        "A linha inimiga avança para a direita e depois é reabastecida pelo baralho inimigo."
+      ]
+    },
+    "title": {
+      "hash": "946d7b10",
+      "value": "Comando de campo"
+    }
+  },
+  "fifteen-puzzle": {
+    "cardDescription": {
+      "hash": "8d1fa8fb",
+      "value": "Ponha em ordem as cartas de uma grade 4x4 deslizando uma de cada vez."
+    },
+    "howToPlay": {
+      "hash": "dc55b9d9",
+      "value": [
+        "## Objetivo",
+        "Organize as linhas de modo que cada uma seja Ás, 2, 3, 4, por naipe:",
+        "- **Copas**",
+        "- **Paus**",
+        "- **Ouros**",
+        "- **Espadas** (sem o 4)",
+        "## Como jogar",
+        "- Toque numa carta acima, abaixo, à esquerda ou à direita do espaço vazio para deslizá-la até ele.",
+        "- As cartas ficam verdes quando estão na posição certa.",
+        "- Todo quebra-cabeça embaralhado é gerado com jogadas válidas e tem solução."
+      ]
+    },
+    "quickStart": {
+      "hash": "2e731eeb",
+      "value": [
+        "Ordene as cartas do Ás ao 4 em cada linha: copas, paus, ouros e depois espadas.",
+        "Toque numa carta ao lado do espaço vazio para deslizá-la."
+      ]
+    },
+    "title": {
+      "hash": "9be99190",
+      "value": "Jogo do 15"
+    }
+  },
+  "fight-clubs": {
+    "cardDescription": {
+      "hash": "da6e6079",
+      "value": "Use bem as suas treze cartas de paus para limpar uma grade 3x3 que não para de mudar."
+    },
+    "howToPlay": {
+      "hash": "1c19d9ff",
+      "value": [
+        "## Objetivo",
+        "Limpe a grade e o baralho dela antes de gastar as 13 cartas de paus.",
+        "## Ações",
+        "Algumas ações estão sempre disponíveis:",
+        "- **Igual**: remove todas as cartas do mesmo valor:",
+        "-- {6C} remove {6D} {6H}",
+        "-- {JC} remove {JS} {JD} {6H}",
+        "- **Soma**: remove as cartas selecionadas cujo total é igual ao valor da carta de paus:",
+        "-- {8C} remove {3D} {4H} {AD}",
+        "-- {QC} remove {9H} {5H}",
+        "- **Qualquer**: remove uma carta selecionada qualquer:",
+        "-- {5C} remove {7D}",
+        "-- {AC} remove um Coringa",
+        "\nAlgumas ações ficam bloqueadas quando há 3 cartas do mesmo naipe na grade:",
+        "- **Linha/Coluna**: remove três cartas selecionadas de uma linha ou coluna que contenha o mesmo valor da carta de paus selecionada.",
+        "-- {7C} remove uma linha com {KD} {7H} {JS}",
+        "-- {AC} remove uma coluna com {AH} Coringa {3H}",
+        "-- Bloqueada por 3 cartas de ouros na grade.",
+        "- **Cima/Baixo**: remove todas as cartas da grade de valor maior ou menor que a carta de paus selecionada. Do 2 ao 7 remove as menores, do 7 à Q remove as maiores.",
+        "-- {4C} remove {3D} {3H} {AS}",
+        "-- {9C} remove {10H} {10S} {JS} {QD}",
+        "-- Bloqueada por 3 cartas de espadas na grade.",
+        "- **Sequência**: remove as cartas selecionadas que formam uma sequência consecutiva com sua carta de paus.",
+        "-- {5C} remove {4D} {6H} {7S}",
+        "-- {KC} remove {8S} {9D} {JD} {QH}",
+        "-- Bloqueada por 3 cartas de copas na grade.",
+        "## Ases e Coringas",
+        "- Os Ases valem 1 ponto.",
+        "- Os Coringas não têm valor e só podem ser removidos pelas ações **Qualquer** ou **Linha/Coluna**.",
+        "## Dificuldade",
+        "**Fácil** usa um Coringa; **Difícil** adiciona um segundo Coringa ao baralho da grade."
+      ]
+    },
+    "quickStart": {
+      "hash": "68a4607e",
+      "value": [
+        "Use uma carta de paus por turno para remover uma ou mais cartas da grade.",
+        "Algumas ações estão sempre disponíveis.",
+        "Outras ações ficam bloqueadas se houver 3 cartas de um certo naipe na grade."
+      ]
+    },
+    "title": {
+      "hash": "44b00bbe",
+      "value": "Paus de briga"
+    }
+  },
+  "flower-garden": {
+    "cardDescription": {
+      "hash": "4b5c020b",
+      "value": "Cultive seis canteiros com todas as dezesseis cartas do buquê sempre disponíveis."
+    },
+    "howToPlay": {
+      "hash": "e4cc4b14",
+      "value": [
+        "## Objetivo",
+        "Leve as 52 cartas para quatro fundações, construídas por naipe do Ás ao Rei.",
+        "## Jardim",
+        "- Só a última carta exposta de cada um dos seis canteiros pode ser jogada.",
+        "- Construa os canteiros em ordem decrescente, independentemente do naipe, movendo uma carta de cada vez.",
+        "- Qualquer carta pode ocupar um canteiro vazio.",
+        "- As dezesseis cartas do buquê ficam expostas e disponíveis o tempo todo."
+      ]
+    },
+    "quickStart": {
+      "hash": "4cb14090",
+      "value": [
+        "Construa as fundações por naipe, do Ás ao Rei.",
+        "Construa os canteiros em ordem decrescente, independentemente do naipe.",
+        "Todas as cartas do buquê estão disponíveis; qualquer carta ocupa um canteiro vazio."
+      ]
+    },
+    "title": {
+      "hash": "83ea16df",
+      "value": "Jardim florido"
+    }
+  },
+  "fortress": {
+    "cardDescription": {
+      "hash": "49b04b9f",
+      "value": "Manobre dez corredores abertos para cima ou para baixo por naipe para liberar cada fundação."
+    },
+    "howToPlay": {
+      "hash": "0591fc6a",
+      "value": [
+        "## Objetivo",
+        "Leve as 52 cartas para quatro fundações, construídas por naipe do Ás ao Rei.",
+        "## Corredores",
+        "- Só a carta exposta de cada corredor pode ser jogada.",
+        "- Construa um valor acima ou abaixo, no mesmo naipe.",
+        "- Mova uma carta de cada vez.",
+        "- Qualquer carta pode ocupar um corredor vazio."
+      ]
+    },
+    "quickStart": {
+      "hash": "0f1f4350",
+      "value": [
+        "Construa as fundações por naipe, do Ás ao Rei.",
+        "Construa os corredores um valor acima ou abaixo, no mesmo naipe.",
+        "Mova uma carta de cada vez; qualquer carta ocupa um corredor vazio."
+      ]
+    },
+    "title": {
+      "hash": "e1ba0e4b",
+      "value": "Fortaleza"
+    }
+  },
+  "fortunes-call": {
+    "cardDescription": {
+      "hash": "49133345",
+      "value": "Adivinhe a cor ou a direção de cada carta escondida antes de errar três vezes."
+    },
+    "howToPlay": {
+      "hash": "a76b0266",
+      "value": [
+        "## Objetivo",
+        "Faça doze pontos antes de errar três previsões.",
+        "## Previsões",
+        "- Vermelho ou Preto prevê a cor da carta escondida e vale um ponto.",
+        "- Maior ou Menor compara o valor dela com a carta de referência virada para cima e vale dois pontos.",
+        "- Valores iguais não acertam nenhuma das previsões de direção.",
+        "- Depois da revelação, a nova carta passa a ser a próxima referência."
+      ]
+    },
+    "quickStart": {
+      "hash": "59931bd6",
+      "value": [
+        "Acertar a cor vale 1 ponto.",
+        "Acertar “maior” ou “menor” vale 2 pontos.",
+        "Chegue a 12 pontos antes de errar três vezes."
+      ]
+    },
+    "title": {
+      "hash": "ca08b79e",
+      "value": "O chamado da sorte"
+    }
+  },
+  "forty-thieves": {
+    "cardDescription": {
+      "hash": "e81e4597",
+      "value": "Uma paciência exigente de dois baralhos em que se constroem as fundações."
+    },
+    "howToPlay": {
+      "hash": "a424bb2d",
+      "value": [
+        "## Objetivo",
+        "Leve as 104 cartas para as oito fundações, cada uma construída por naipe do Ás ao Rei.",
+        "## Regras",
+        "- Envie as cartas para as fundações por naipe, em ordem crescente do Ás ao Rei.",
+        "- Construa as colunas **em ordem decrescente e no mesmo naipe**.",
+        "- Mova só uma carta de cada vez entre as colunas.",
+        "- Qualquer carta avulsa pode ir para uma coluna vazia.",
+        "- Vire as cartas do monte uma de cada vez para a pilha de descarte. A carta do topo do descarte pode ser jogada.",
+        "-- No modo fácil, as redistribuições são ilimitadas.",
+        "-- No modo difícil, não há redistribuição."
+      ]
+    },
+    "quickStart": {
+      "hash": "4355938b",
+      "value": [
+        "Construa as 8 fundações por naipe, de A a K.",
+        "Construa as colunas em ordem decrescente por naipe, movendo uma carta de cada vez.",
+        "Vire as cartas do monte para o descarte uma de cada vez; as redistribuições dependem da dificuldade."
+      ]
+    },
+    "title": {
+      "hash": "f7d2814b",
+      "value": "Quarenta ladrões"
+    }
+  },
+  "freecell": {
+    "cardDescription": {
+      "hash": "50d37ce8",
+      "value": "Um clássico de cartas abertas em que quase toda partida pode ser vencida com cuidado."
+    },
+    "howToPlay": {
+      "hash": "3add4428",
+      "value": [
+        "## Objetivo",
+        "Leve as 52 cartas para as quatro **fundações**, cada uma construída por naipe do Ás ao Rei.",
+        "## Regras",
+        "- Construa as colunas **em ordem decrescente, alternando cores**.",
+        "- Mova uma carta de cada vez; cada **célula livre** guarda uma só carta.",
+        "- Você pode mover uma carta de cada vez. Pode mover grupos de cartas juntos, mas só se tiver células livres e colunas vazias suficientes para fazer a mesma jogada uma carta de cada vez.",
+        "- Qualquer carta pode ir para uma coluna vazia."
+      ]
+    },
+    "quickStart": {
+      "hash": "6e99a6bc",
+      "value": [
+        "Construa as fundações por naipe, de A a K.",
+        "Construa as colunas em ordem decrescente, alternando cores.",
+        "Use as células livres para guardar uma carta cada."
+      ]
+    },
+    "title": {
+      "hash": "77b73c0f",
+      "value": "FreeCell"
+    }
+  },
+  "frog": {
+    "cardDescription": {
+      "hash": "ab1e9fc2",
+      "value": "Faça dois baralhos pularem para oito fundações, distribuindo o monte em cinco pilhas de vitórias-régias."
+    },
+    "howToPlay": {
+      "hash": "1d6a9640",
+      "value": [
+        "## Objetivo",
+        "Leve as 104 cartas para as oito fundações, cada uma construída do Ás ao Rei **independentemente do naipe**.",
+        "## Regras",
+        "- Treze cartas formam a **reserva**; os Ases distribuídos ali vão direto para as fundações.",
+        "- Só a carta do topo da reserva está disponível.",
+        "- Cada carta do monte deve ir para uma das **cinco pilhas de descarte** ou ser jogada numa fundação.",
+        "- Qualquer carta pode ir para qualquer pilha de descarte, mas as cartas nunca passam de uma pilha de descarte para outra.",
+        "- Só a carta do topo de cada pilha de descarte pode ser jogada.",
+        "- **Toque duas vezes** numa carta disponível para jogá-la numa fundação. Não há redistribuição."
+      ]
+    },
+    "quickStart": {
+      "hash": "45d42e10",
+      "value": [
+        "Construa as fundações de A a K, independentemente do naipe.",
+        "Toque numa pilha de descarte para colocar nela a carta do monte.",
+        "Toque duas vezes numa carta do monte, da reserva ou do descarte para enviá-la."
+      ]
+    },
+    "title": {
+      "hash": "d519595f",
+      "value": "Sapo"
+    }
+  },
+  "gaps": {
+    "cardDescription": {
+      "hash": "3edac6c4",
+      "value": "Ponha as linhas em ordem por naipe preenchendo as lacunas."
+    },
+    "howToPlay": {
+      "hash": "bdf0ca39",
+      "value": [
+        "## Objetivo",
+        "Organize quatro linhas por naipe, do 2 ao Rei, deixando vazia a última coluna (à direita).",
+        "## Mover",
+        "- Os Ases são retirados depois da distribuição inicial, criando quatro lacunas.",
+        "- Uma lacuna na borda esquerda aceita qualquer 2.",
+        "- Qualquer outra lacuna só aceita a carta seguinte, do mesmo naipe, da carta logo à sua esquerda.",
+        "- Uma lacuna depois de um Rei não pode ser preenchida.",
+        "## Redistribuir",
+        "- Quando não houver mais jogadas, você pode redistribuir as cartas que não fazem parte de uma sequência correta.",
+        "- As sequências corretas que começam com um 2 ficam no lugar. Se não houver sequência desse naipe, a lacuna da esquerda fica vazia.",
+        "- Dificuldade: Fácil permite 3 redistribuições; Difícil permite 2."
+      ]
+    },
+    "quickStart": {
+      "hash": "99cfe10d",
+      "value": [
+        "Ponha as linhas em ordem (do 2 ao K).",
+        "Uma carta pode ir para uma lacuna se for do mesmo naipe da carta à esquerda e um valor acima.",
+        "Redistribua quando não houver jogadas (fácil: 3 redistribuições, difícil: 2)."
+      ]
+    },
+    "title": {
+      "hash": "8c58d522",
+      "value": "Lacunas"
+    }
+  },
+  "gargantua": {
+    "cardDescription": {
+      "hash": "9a18d2a2",
+      "value": "Encare um Klondike de nove colunas e dois baralhos, com oito fundações."
+    },
+    "howToPlay": {
+      "hash": "9dbf8f96",
+      "value": [
+        "## Objetivo",
+        "Leve os dois baralhos para oito fundações, construídas do Ás ao Rei por naipe.",
+        "## Regras",
+        "- As nove colunas são distribuídas em escada, como no Klondike.",
+        "- Construa em ordem decrescente, alternando cores, e mova sequências ordenadas.",
+        "- Só Reis podem ocupar colunas vazias.",
+        "- Vire as cartas do monte uma de cada vez; o monte pode ser distribuído duas vezes."
+      ]
+    },
+    "quickStart": {
+      "hash": "a5b88634",
+      "value": [
+        "Construa as colunas em ordem decrescente, alternando cores.",
+        "Mova sequências ordenadas; só Reis ocupam colunas vazias.",
+        "Construa oito fundações por naipe; o monte tem duas passadas."
+      ]
+    },
+    "title": {
+      "hash": "07ed9b4d",
+      "value": "Gargântua"
+    }
+  },
+  "golf": {
+    "cardDescription": {
+      "hash": "df8ad9d9",
+      "value": "Esvazie sete colunas jogando cartas a um valor de distância da carta do descarte."
+    },
+    "howToPlay": {
+      "hash": "24a82fa3",
+      "value": [
+        "## Objetivo",
+        "**Vença removendo as 35 cartas das colunas.**",
+        "**Perca** se o monte estiver vazio e nenhuma carta das colunas puder ir para o descarte.",
+        "## Remover cartas",
+        "- Só a **última carta (exposta)** de cada coluna está disponível.",
+        "- Mova uma carta disponível para o descarte se ela for **um valor acima ou abaixo** da carta atual do descarte.",
+        "- As sequências **não** dão a volta: como os Ases são baixos e os Reis altos, nunca se passa do Rei ao Ás.",
+        "- Quando não houver jogadas, vire uma carta do monte para o descarte."
+      ]
+    },
+    "quickStart": {
+      "hash": "2f6866eb",
+      "value": [
+        "Remova todas as cartas para vencer.",
+        "Remova cartas expostas um valor acima ou abaixo da carta do topo do descarte.",
+        "Compre do monte quando não houver jogadas."
+      ]
+    },
+    "title": {
+      "hash": "b4ee0341",
+      "value": "Golfe"
+    }
+  },
+  "grandfathers-clock": {
+    "cardDescription": {
+      "hash": "929d905b",
+      "value": "Dê corda em doze fundações ao redor do mostrador até cada hora mostrar seu número."
+    },
+    "howToPlay": {
+      "hash": "a9d1159a",
+      "value": [
+        "## Objetivo",
+        "Construa cada fundação do relógio até a carta do topo corresponder à sua hora. Os Valetes valem 11 e as Damas 12.",
+        "## Regras",
+        "- Doze cartas formam o relógio, do **10♥** à 1 hora até o **9♣** às 12 horas.",
+        "- As fundações são construídas **em ordem crescente por naipe**, passando do Rei ao Ás, e param na sua hora.",
+        "- O resto do baralho é distribuído em **oito pilhas de cinco**.",
+        "- Mova as cartas do topo uma de cada vez. Construa as pilhas **em ordem decrescente, independentemente do naipe**, colocando um Rei sobre um Ás.",
+        "- Qualquer carta pode ocupar uma pilha vazia.",
+        "- **Toque duas vezes** numa carta, ou arraste-a, para jogá-la na sua fundação."
+      ]
+    },
+    "quickStart": {
+      "hash": "7fa8c31a",
+      "value": [
+        "Construa cada fundação do relógio por naipe até ela mostrar sua hora.",
+        "Construa as pilhas em ordem decrescente, independentemente do naipe; o K vai sobre o A.",
+        "Qualquer carta ocupa uma pilha vazia. Toque duas vezes para enviar uma carta."
+      ]
+    },
+    "title": {
+      "hash": "397d1ceb",
+      "value": "O relógio do vovô"
+    }
+  },
+  "gremlin": {
+    "cardDescription": {
+      "hash": "277c9762",
+      "value": "Construa colunas de cartas em sequências decrescentes do mesmo naipe, enquanto lida com uma ajuda que você não pediu."
+    },
+    "howToPlay": {
+      "hash": "24c4d019",
+      "value": [
+        "## Objetivo",
+        "Construa colunas de cartas em sequências decrescentes do mesmo naipe, enquanto lida com as jogadas do ajudante.",
+        "Você vence construindo as colunas com eficiência: quanto menos colunas usar, melhor.",
+        "## Sua vez",
+        "No início da sua vez, sua mão é reposta. Para cada carta, você pode:",
+        "- guardá-la,",
+        "- descartá-la, ou",
+        "- jogá-la numa coluna, se for do mesmo naipe e a carta do topo tiver valor maior.",
+        "## Vez do Gremlin",
+        "Depois da sua vez, o ajudante joga a próxima carta do baralho. Você escolhe em qual coluna ela vai.",
+        "Se a carta do ajudante não puder ir para nenhuma coluna e você já tiver 12 colunas, você perde na hora.",
+        "## Pontuação",
+        "Sua pontuação é o número de colunas construídas quando o baralho acabar:",
+        "- 12: Iniciante",
+        "- 11: Normal",
+        "- 10: Avançado",
+        "- 9: Lendário",
+        "- 8: Épico",
+        "## Dificuldade",
+        "Nas configurações, você pode escolher uma mão de 5 cartas (Fácil) ou de 4 (Difícil). Com uma mão menor, o ajudante joga mais vezes."
+      ]
+    },
+    "quickStart": {
+      "hash": "14456b3c",
+      "value": [
+        "Compre até ter 5, depois jogue, descarte ou guarde.",
+        "Você perde se uma carta não puder ser colocada e as 12 colunas já estiverem em uso."
+      ]
+    },
+    "title": {
+      "hash": "60018515",
+      "value": "Gremlin"
+    }
+  },
+  "gridlines": {
+    "cardDescription": {
+      "hash": "3c660785",
+      "value": "Um duelo de vazas para um jogador contra uma grade que só luta escondendo suas cartas."
+    },
+    "howToPlay": {
+      "hash": "91a6b9ce",
+      "value": [
+        "## Objetivo",
+        "Ganhe **21 vazas** antes da grade.",
+        "## Ordem do turno",
+        "- Escolha um naipe de trunfo da sua mão.",
+        "- Selecione uma carta da mão.",
+        "- Selecione uma linha ou coluna e uma direção, usando as setas. Não é possível desafiar linhas com espaços vazios.",
+        "## Vazas",
+        "As cartas são viradas para cima, uma de cada vez a partir da direção escolhida, até aparecer uma do mesmo naipe da carta selecionada.",
+        "Se sua carta for maior que a da grade, a vaza é sua; caso contrário, é da grade.",
+        "- **O maior valor vence**; os Ases são altos.",
+        "- **Nenhuma carta do mesmo naipe?** O **trunfo mais baixo** da linha vence você.",
+        "- **Nenhuma carta do mesmo naipe e nenhum trunfo?** A vaza é sua. Selecione uma carta para remover da linha.",
+        "## Modo difícil",
+        "Mude a dificuldade nas configurações para baixar a meta da grade, dando a ela mais chance de vencer."
+      ]
+    },
+    "quickStart": {
+      "hash": "5baacb84",
+      "value": [
+        "Escolha um naipe de trunfo antes de a rodada começar.",
+        "Escolha uma carta e uma linha: a primeira carta do mesmo naipe vence pelo valor; senão, vence o trunfo.",
+        "Ganhe 21 vazas antes da grade."
+      ]
+    },
+    "title": {
+      "hash": "2255babe",
+      "value": "Linhas da grade"
+    }
+  },
+  "harp": {
+    "cardDescription": {
+      "hash": "70db0dcf",
+      "value": "Um Klondike Duplo mais tolerante, com quatro passadas pelo monte."
+    },
+    "howToPlay": {
+      "hash": "5c190f4e",
+      "value": [
+        "## Objetivo",
+        "Leve os dois baralhos para oito fundações por naipe.",
+        "## Regras",
+        "- Harpa usa a disposição Klondike de nove colunas de Gargântua.",
+        "- Construa em ordem decrescente, alternando cores, e mova sequências ordenadas.",
+        "- Só Reis podem ocupar colunas vazias.",
+        "- Vire uma carta do monte de cada vez, com quatro passadas no total."
+      ]
+    },
+    "quickStart": {
+      "hash": "125ca15a",
+      "value": [
+        "Construa as colunas em ordem decrescente, alternando cores.",
+        "Só Reis ocupam colunas vazias.",
+        "Use quatro passadas pelo monte para completar oito fundações."
+      ]
+    },
+    "title": {
+      "hash": "f8e78326",
+      "value": "Harpa"
+    }
+  },
+  "herbalist": {
+    "cardDescription": {
+      "hash": "820b189b",
+      "value": "Distribua ervas pelos seus estábulos para curar todas as criaturas que vivem lá."
+    },
+    "howToPlay": {
+      "hash": "49f3dd1e",
+      "value": [
+        "## Objetivo",
+        "**Vença** curando as oito criaturas doentes antes que suas cartas acabem. Sua pontuação é o número de ervas que sobrarem na mesa.",
+        "## Distribuir ervas",
+        "- Selecione uma pilha de ervas para pegar todas as cartas dela.",
+        "- Escolha a ordem em que vai deixar as ervas que está levando.",
+        "- Distribua-as uma de cada vez, começando pelo local ao lado daquele de onde as pegou e voltando ao topo quando chegar ao fim.",
+        "## Ordem de cura",
+        "- Todos os Valetes precisam ser curados antes das Damas, e todas as Damas antes dos Reis.",
+        "- Uma criatura é curada quando as ervas do seu local somam exatamente o valor dela **e** incluem pelo menos uma erva do seu naipe.",
+        "## Comer",
+        "- Uma criatura saudável come na hora todas as ervas do seu naipe na própria pilha.",
+        "- As ervas comidas não podem ser redistribuídas.",
+        "## Estábulos abertos",
+        "A expansão opcional (ativada nas configurações) adiciona uma criatura saudável, o “Nobre”, e um Bobo:",
+        "- O Nobre fica nos Estábulos, o local do meio. O Nobre come as ervas deixadas no seu local se forem do seu naipe.",
+        "- O Bobo come a erva deixada nos estábulos se ela for a última erva deixada, independentemente do naipe."
+      ]
+    },
+    "quickStart": {
+      "hash": "82049199",
+      "value": [
+        "Selecione uma pilha de ervas e distribua-as, uma de cada vez, pelos locais vizinhos.",
+        "Cure J, Q e K, nessa ordem, com pilhas de ervas do mesmo valor (11, 12 e 13)."
+      ]
+    },
+    "title": {
+      "hash": "4b40804d",
+      "value": "O herbalista"
+    }
+  },
+  "indian": {
+    "cardDescription": {
+      "hash": "bbc78988",
+      "value": "Construa colunas de dois baralhos em ordem decrescente, evitando com cuidado o mesmo naipe."
+    },
+    "howToPlay": {
+      "hash": "96bf0d1c",
+      "value": [
+        "## Objetivo",
+        "Construa oito fundações por naipe, do Ás ao Rei.",
+        "## Regras",
+        "- São distribuídas dez colunas de três cartas; a primeira carta de cada uma fica virada para baixo.",
+        "- Construa em ordem decrescente sobre qualquer naipe, menos o naipe da carta de destino.",
+        "- Mova uma carta exposta de cada vez.",
+        "- As colunas vazias aceitam qualquer carta, e o monte é distribuído uma só vez."
+      ]
+    },
+    "quickStart": {
+      "hash": "81c90e2d",
+      "value": [
+        "Construa em ordem decrescente sobre qualquer naipe, menos o mesmo.",
+        "Mova uma carta exposta de cada vez.",
+        "Qualquer carta ocupa uma coluna vazia; o monte tem uma só passada."
+      ]
+    },
+    "title": {
+      "hash": "f6a8222c",
+      "value": "Paciência indiana"
+    }
+  },
+  "infiltrator": {
+    "cardDescription": {
+      "hash": "dff09eb2",
+      "value": "Conquiste a maioria dos espiões-chave com recrutamentos, neutralizações e assassinatos bem pensados."
+    },
+    "howToPlay": {
+      "hash": "a0f2ce9e",
+      "value": [
+        "## Objetivo",
+        "**Vença** se, quando o baralho de espiões acabar, você tiver recrutado **mais da metade** de todos os espiões-chave (Valetes, Damas e Reis).",
+        "## Baralhos e jogo",
+        "- O baralho de espiões é montado em camadas: **5-7** no topo, depois **8-10**, depois **J-K**.",
+        "- Seu baralho de compra começa com as cartas do Ás ao 4.",
+        "- Seu baralho de compra será embaralhado com frequência. Monte-o recrutando espiões de valor alto e aposentando pares de espiões de valor baixo.",
+        "- Os **espiões de apoio** só ajudam a conseguir espiões-chave.",
+        "- Os **espiões-chave** são as únicas cartas que contam para a pontuação final.",
+        "## Ações",
+        "- **Neutralizar**:",
+        "-- Descarte qualquer número de cartas que somem o valor do espião **ou mais**. Você só pode pagar a mais se, ao retirar qualquer uma das cartas selecionadas, o total ficar abaixo da meta.",
+        "- **Recrutar**:",
+        "-- Descarte cartas que somem pelo menos o valor do espião, todas do naipe dele. Um **Ás** do mesmo naipe é um agente duplo que, nesse turno, converte todas as outras cartas jogadas para o naipe dele.",
+        "- **Aposentar**:",
+        "-- Depois de neutralizar ou recrutar, você pode retirar para sempre da mão um conjunto de cartas do mesmo valor.",
+        "-- Em geral, convém retirar as cartas de valor baixo à medida que a partida avança, para aumentar a força média do seu baralho.",
+        "- **Assassinar**:",
+        "-- Quando não houver jogadas, você pode sacrificar um **Ás** da mão, do baralho de compra ou do lixo para assassinar um espião. Você perde se não tiver mais Ases."
+      ]
+    },
+    "quickStart": {
+      "hash": "286481af",
+      "value": [
+        "Vença recrutando mais da metade dos espiões-chave (J, Q, K).",
+        "Monte seu baralho recrutando espiões de valor crescente.",
+        "Recrute com cartas do mesmo naipe e valor (os Ases são curingas).",
+        "Neutralize ou assassine quando necessário."
+      ]
+    },
+    "title": {
+      "hash": "07ed75f3",
+      "value": "O infiltrado"
+    }
+  },
+  "invaders": {
+    "cardDescription": {
+      "hash": "beef4003",
+      "value": "Repila ondas de invasores alienígenas antes que seus defensores acabem."
+    },
+    "howToPlay": {
+      "hash": "5644ce85",
+      "value": [
+        "## Objetivo",
+        "Vença sobrevivendo às duas ondas de invasores alienígenas antes que seus defensores acabem.",
+        "## Ondas",
+        "Cada onda é formada por uma série de ataques. Em cada ataque, você precisa enfrentar o atacante da frente.",
+        "A segunda onda é diferente da primeira: nos ataques duplos, os defensores da mesma cor do atacante são perdidos.",
+        "## Ações",
+        "- **Ataques simples** são feitos com um defensor de valor maior e de cor oposta à do atacante. Depois de um ataque simples, o defensor é perdido e substituído pelo atacante.",
+        "- **Ataques duplos** são feitos com duas cartas cujo valor total é igual ao do atacante. Nenhum defensor é perdido nos ataques duplos, exceto na segunda onda, em que se perdem os defensores da mesma cor do atacante.",
+        "- **Sacrifícios** mandam o atacante da frente para o fundo do baralho de atacantes; o defensor sacrificado é perdido."
+      ]
+    },
+    "quickStart": {
+      "hash": "b8dff99e",
+      "value": [
+        "Repila 2 ondas de atacantes com ataques e sacrifícios.",
+        "Ataques simples: cor oposta e valor maior.",
+        "Ataques duplos: os dois defensores precisam somar o valor do atacante."
+      ]
+    },
+    "title": {
+      "hash": "0a12466f",
+      "value": "Invasores"
+    }
+  },
+  "josephine": {
+    "cardDescription": {
+      "hash": "7308e533",
+      "value": "Um parente de dois baralhos de Quarenta ladrões, em que as sequências do mesmo naipe se movem juntas."
+    },
+    "howToPlay": {
+      "hash": "1631d117",
+      "value": [
+        "## Objetivo",
+        "Construa oito fundações por naipe, do Ás ao Rei.",
+        "## Regras",
+        "- Construa as colunas em ordem decrescente por naipe.",
+        "- Mova juntas sequências decrescentes completas do mesmo naipe.",
+        "- Qualquer carta pode ocupar uma coluna vazia.",
+        "- Vire o monte uma carta de cada vez, sem redistribuir."
+      ]
+    },
+    "quickStart": {
+      "hash": "4a41664c",
+      "value": [
+        "Construa oito fundações por naipe em ordem crescente.",
+        "Construa as colunas em ordem decrescente por naipe.",
+        "Mova sequências do mesmo naipe e passe pelo monte uma só vez."
+      ]
+    },
+    "title": {
+      "hash": "b4ef5342",
+      "value": "Josefina"
+    }
+  },
+  "klondike": {
+    "cardDescription": {
+      "hash": "1873d35c",
+      "value": "A paciência clássica: construa quatro fundações por naipe, do Ás ao Rei."
+    },
+    "howToPlay": {
+      "hash": "6b0bf248",
+      "value": [
+        "## Objetivo",
+        "Leve as 52 cartas para as quatro fundações, cada uma construída por naipe, do Ás ao Rei.",
+        "## Regras",
+        "- Construa as colunas **em ordem decrescente, alternando cores**.",
+        "- Mova entre as colunas uma carta avulsa ou um grupo na ordem correta.",
+        "- Só um **Rei** (ou uma sequência começando por um Rei) pode ir para uma coluna vazia.",
+        "## Monte",
+        "Vire as cartas do monte para a pilha de descarte (uma ou três de cada vez, conforme suas configurações). A carta do topo do descarte pode ser jogada, e você pode redistribuir o monte quando ele acabar."
+      ]
+    },
+    "quickStart": {
+      "hash": "6358aab0",
+      "value": [
+        "Construa as fundações por naipe em ordem crescente.",
+        "Construa as colunas em ordem decrescente, alternando cores.",
+        "Só Reis podem ocupar colunas vazias."
+      ]
+    },
+    "title": {
+      "hash": "7f77bcf6",
+      "value": "Klondike"
+    }
+  },
+  "la-belle-lucie": {
+    "cardDescription": {
+      "hash": "1fb69740",
+      "value": "Descubra um campo compacto de leques, com duas reembaralhadas para desfazer os nós."
+    },
+    "howToPlay": {
+      "hash": "3c31ae43",
+      "value": [
+        "## Objetivo",
+        "Leve as 52 cartas para quatro fundações, construídas por naipe do Ás ao Rei.",
+        "## Leques",
+        "- Só a última carta exposta de cada leque pode ser jogada.",
+        "- Construa em ordem decrescente por naipe, uma carta de cada vez.",
+        "- Os leques vazios não podem ser preenchidos.",
+        "- Duas vezes por partida, reembaralhe todas as cartas que ainda estão nos leques e redistribua-as em grupos de três."
+      ]
+    },
+    "quickStart": {
+      "hash": "9b574be1",
+      "value": [
+        "Construa as fundações por naipe, do Ás ao Rei.",
+        "Construa os leques em ordem decrescente por naipe, movendo uma carta exposta de cada vez.",
+        "Leques vazios continuam vazios; reembaralhe as cartas da mesa até duas vezes."
+      ]
+    },
+    "title": {
+      "hash": "82260922",
+      "value": "A bela Lúcia"
+    }
+  },
+  "labyrinth": {
+    "cardDescription": {
+      "hash": "46c8506f",
+      "value": "Distribua fileira após fileira e liberte cartas pelo topo e pelo fundo do labirinto."
+    },
+    "howToPlay": {
+      "hash": "3a50b244",
+      "value": [
+        "## Objetivo",
+        "Leve as 52 cartas para as quatro fundações, construídas por naipe do Ás ao Rei.",
+        "## Regras",
+        "- Os quatro **Ases** começam nas fundações, com uma primeira fileira de oito cartas abaixo.",
+        "- Uma carta fica **livre** quando o espaço logo acima ou logo abaixo dela está vazio, então a primeira e a última fileira estão sempre livres.",
+        "- Toque numa carta livre para jogá-la na sua fundação.",
+        "- Um buraco na **primeira fileira** é preenchido na hora pelo monte. Os buracos mais abaixo ficam vazios.",
+        "- Toque no **monte** para distribuir uma nova fileira de oito cartas embaixo. Não há redistribuição."
+      ]
+    },
+    "quickStart": {
+      "hash": "3970b955",
+      "value": [
+        "Construa as fundações por naipe a partir dos Ases.",
+        "Só ficam livres as cartas com um espaço vazio acima ou abaixo.",
+        "Toque no monte para distribuir uma nova fileira quando não houver jogadas."
+      ]
+    },
+    "title": {
+      "hash": "3c13c0fe",
+      "value": "Labirinto"
+    }
+  },
+  "lights-out": {
+    "cardDescription": {
+      "hash": "d9f86dc4",
+      "value": "Apague uma grade de cartas em que cada jogada vira as vizinhas."
+    },
+    "howToPlay": {
+      "hash": "246e4fe2",
+      "value": [
+        "## Objetivo",
+        "Vire as 25 cartas para baixo.",
+        "## Como jogar",
+        "- Tocar numa carta vira essa carta e as cartas logo acima, abaixo, à esquerda e à direita dela.",
+        "- As cartas na diagonal não mudam.",
+        "- Cada partida é gerada aplicando jogadas válidas a uma grade resolvida, então sempre tem solução."
+      ]
+    },
+    "quickStart": {
+      "hash": "12991fef",
+      "value": [
+        "Toque numa carta para virá-la junto com as vizinhas na horizontal e na vertical.",
+        "Vire todas as cartas para baixo para vencer."
+      ]
+    },
+    "title": {
+      "hash": "73fcdfa6",
+      "value": "Luzes apagadas"
+    }
+  },
+  "lone-joker": {
+    "cardDescription": {
+      "hash": "6ff380b4",
+      "value": "Forme mãos de pôquer, guarde Coringas e gaste os pontos extras para sobreviver a rodadas cada vez mais difíceis."
+    },
+    "howToPlay": {
+      "hash": "11835fe7",
+      "value": [
+        "## Objetivo",
+        "Sobreviva ao maior número possível de rodadas atingindo a meta de pontos de cada uma. A meta começa em **25** e sobe **25** a cada rodada.",
+        "- A partida termina quando você não atinge a meta de uma rodada (e não tem o bônus Escudo).",
+        "- No fim da partida, você **vence** se sua pontuação final (o total de pontos excedentes) for **500** ou mais; caso contrário, perde.",
+        "## Ordem do turno",
+        "- Cada rodada começa com você comprando até ter **8 cartas** na mão, com **3 jogadas** e **3 descartes**.",
+        "- Você pode **descartar** até **5 cartas** no lixo e depois comprar de novo até o limite da mão.",
+        "- Você pode **jogar** até **5 cartas** para formar uma mão de pôquer.",
+        "- Cada jogada soma à pontuação da rodada. Os pontos acima da meta podem ser gastos na Loja de bônus entre as rodadas.",
+        "## Coringas",
+        "Os Coringas são curingas e podem ser usados na mão a qualquer momento. Quando você compra um, ele é guardado e uma carta de reposição vai para sua mão. Se aparecer outro Coringa enquanto você já tiver um guardado, os dois são perdidos.",
+        "## Pontos das mãos",
+        "- Carta alta: **5**",
+        "- Par: **10**",
+        "- Dois pares: **20**",
+        "- Trinca: **30**",
+        "- Sequência: **40**",
+        "- Flush: **50**",
+        "- Full House: **60**",
+        "- Quadra: **100**",
+        "- Straight Flush: **125**",
+        "- Royal Flush: **150**",
+        "## Loja de bônus",
+        "Depois de uma rodada, os pontos acima da meta viram pontos da loja. Os pontos não gastos expiram quando a próxima rodada começa. Você só pode ter um de cada bônus por vez.",
+        "- **+ Carta** (10): aumenta em um o limite da mão nesta rodada",
+        "- **+ Descarte** (25): ganha um descarte nesta rodada",
+        "- **+ 25 pts** (50): soma 25 pontos nesta rodada",
+        "- **+ Mão** (75): ganha uma jogada nesta rodada.",
+        "- **Pontos x2** (100): dobra sua próxima jogada",
+        "- **Escudo** (150): sobrevive automaticamente a uma rodada perdida",
+        "## Avaliação",
+        "Sua pontuação final é a soma de todos os pontos excedentes. As avaliações são:",
+        "- **♠**: 3 rodadas",
+        "- **♠♠**: 5 rodadas",
+        "- **♠♠♠**: 7 rodadas",
+        "- **♠♠♠♠**: 10+ rodadas"
+      ]
+    },
+    "quickStart": {
+      "hash": "324912f1",
+      "value": [
+        "Selecione até cinco cartas para jogar mãos de pôquer (ou descartar).",
+        "Atinja a meta da rodada para passar para a próxima."
+      ]
+    },
+    "title": {
+      "hash": "55791384",
+      "value": "Coringa solitário"
+    }
+  },
+  "lucas": {
+    "cardDescription": {
+      "hash": "a20338dd",
+      "value": "Treze colunas compactas começam sob oito Ases já colocados."
+    },
+    "howToPlay": {
+      "hash": "da244aaf",
+      "value": [
+        "## Objetivo",
+        "Construa as oito fundações por naipe, do Ás ao Rei.",
+        "## Regras",
+        "- Os Ases são retirados antes de distribuir treze colunas de três cartas.",
+        "- Construa as colunas em ordem decrescente por naipe.",
+        "- Mova só uma carta exposta de cada vez.",
+        "- Ocupe as colunas vazias com qualquer carta e distribua o monte uma só vez."
+      ]
+    },
+    "quickStart": {
+      "hash": "162499d8",
+      "value": [
+        "Os oito Ases começam nas fundações.",
+        "Construa as colunas em ordem decrescente por naipe, uma carta de cada vez.",
+        "Colunas vazias aceitam qualquer carta; o monte tem uma só passada."
+      ]
+    },
+    "title": {
+      "hash": "6c1095df",
+      "value": "Lucas"
+    }
+  },
+  "lycan": {
+    "cardDescription": {
+      "hash": "9561f249",
+      "value": "Esvazie a mão do Lobo com capturas espertas... e saiba a hora de desistir."
+    },
+    "howToPlay": {
+      "hash": "d62c9ca0",
+      "value": [
+        "## Objetivo",
+        "Esvazie a **mão do Lobo** a cada rodada e dispute com o Lobo quem chega primeiro a **100 pontos**.",
+        "## Como jogar",
+        "Vença uma rodada capturando todas as cartas do Lobo com uma das ações abaixo. O Lobo não joga turnos. Quando não houver ações disponíveis, ou quando for estrategicamente esperto, você pode **desistir** para encerrar a rodada.",
+        "- **Igual:**",
+        "-- Uma das suas cartas tem **o mesmo valor** de uma carta do Lobo.",
+        "-- A próxima carta vai para a **sua** mão.",
+        "- **Soma:**",
+        "-- Duas ou mais das suas cartas somam uma carta do Lobo (por exemplo, um 6 e um 4 podem capturar um 10).",
+        "-- A próxima carta vai para a **sua** mão.",
+        "- **Divisão:**",
+        "-- Várias cartas do Lobo somam uma das suas (por exemplo, um 9 pode capturar um 6 e um 3).",
+        "-- A próxima carta vai para a mão **do Lobo**.",
+        "- **Superação:**",
+        "-- Uma das suas cartas pega uma carta do Lobo de **valor menor**.",
+        "-- O Lobo compra um número de cartas igual à **diferença** (um 6 que pega um 4 dá 2 cartas ao Lobo).",
+        "- **Desistir:**",
+        "-- Você pode desistir a qualquer momento, ou quando não tiver mais capturas. Isso encerra a rodada.",
+        "## Pontuação",
+        "- Se você esvaziar a mão do Lobo, vence a rodada e marca o total das cartas que sobraram na sua mão.",
+        "- Caso contrário, o Lobo marca o total das cartas que sobraram **com ele**.",
+        "- Vence a partida quem chegar primeiro a **100** pontos.",
+        "## Dicas",
+        "- Fique de olho na próxima carta do baralho e em quem vai recebê-la conforme a ação de captura que você escolher.",
+        "- Às vezes, desistir cedo é a jogada certa, porque reduz a pontuação do Lobo.",
+        "- Você pode mudar a dificuldade nas configurações para aprender o jogo. Com menos cartas altas, fica mais fácil vencer o Lobo."
+      ]
+    },
+    "quickStart": {
+      "hash": "bbf495a4",
+      "value": [
+        "Capture as cartas do Lobo com as ações igual, soma, divisão e superação.",
+        "Desista quando não puder capturar, ou para reduzir uma derrota inevitável.",
+        "Vence quem chegar primeiro a 100 pontos."
+      ]
+    },
+    "title": {
+      "hash": "f0a2a7aa",
+      "value": "Licantropo"
+    }
+  },
+  "maria": {
+    "cardDescription": {
+      "hash": "ae9582d4",
+      "value": "Um parente de nove colunas de Quarenta ladrões, empilhado alternando cores."
+    },
+    "howToPlay": {
+      "hash": "6c526e2a",
+      "value": [
+        "## Objetivo",
+        "Construa oito fundações por naipe, do Ás ao Rei.",
+        "## Regras",
+        "- São distribuídas nove colunas de quatro cartas viradas para cima.",
+        "- Construa em ordem decrescente, alternando cores, e mova uma carta de cada vez.",
+        "- As colunas vazias aceitam qualquer carta.",
+        "- Distribua o monte uma só vez, uma carta de cada vez."
+      ]
+    },
+    "quickStart": {
+      "hash": "8771c4fd",
+      "value": [
+        "Construa as colunas em ordem decrescente, alternando cores.",
+        "Mova uma carta de cada vez.",
+        "Qualquer carta ocupa uma coluna vazia; o monte tem uma só passada."
+      ]
+    },
+    "title": {
+      "hash": "0309ae85",
+      "value": "Maria"
+    }
+  },
+  "memory": {
+    "cardDescription": {
+      "hash": "bb8a7bd4",
+      "value": "Revele pares escondidos e limpe a mesa usando a memória."
+    },
+    "howToPlay": {
+      "hash": "fd06d530",
+      "value": [
+        "## Objetivo",
+        "Limpe a mesa encontrando todos os pares.",
+        "## Formar pares",
+        "- Toque numa carta para selecioná-la, depois toque numa segunda carta para revelar as duas.",
+        "- As cartas iguais vão para o lixo. As cartas diferentes voltam a ficar viradas para baixo.",
+        "- Enquanto duas cartas estiverem viradas para cima, você pode tocar em outras cartas para desvirá-las mais rápido."
+      ]
+    },
+    "quickStart": {
+      "hash": "9fd3675c",
+      "value": [
+        "Limpe a mesa encontrando todos os pares.",
+        "As cartas precisam ter o mesmo valor e o mesmo naipe."
+      ]
+    },
+    "title": {
+      "hash": "8483c9a4",
+      "value": "Jogo da memória"
+    }
+  },
+  "monte-carlo": {
+    "cardDescription": {
+      "hash": "752d12bd",
+      "value": "Forme pares vizinhos de mesmo valor para limpar a grade."
+    },
+    "howToPlay": {
+      "hash": "9447fa02",
+      "value": [
+        "## Objetivo",
+        "Remova as 52 cartas formando pares de mesmo valor até a grade ficar vazia.",
+        "## Como jogar",
+        "- Remova duas cartas **do mesmo valor** quando estiverem **vizinhas** na horizontal, na vertical ou na diagonal.",
+        "- Quando os pares acabarem, **compacte** a grade. As cartas restantes deslizam para fechar os buracos, e novas cartas são distribuídas do monte para preencher os espaços.",
+        "- Compactar muda a ordem das cartas, então novos pares podem ser liberados."
+      ]
+    },
+    "quickStart": {
+      "hash": "7d8ec4dd",
+      "value": [
+        "Toque em cartas vizinhas de mesmo valor para removê-las.",
+        "Compacte a grade para liberar novos pares."
+      ]
+    },
+    "title": {
+      "hash": "7b4538a5",
+      "value": "Monte Carlo"
+    }
+  },
+  "moosehide": {
+    "cardDescription": {
+      "hash": "30dc2d60",
+      "value": "Um parente do Yukon que desce sobre qualquer naipe, menos o próprio."
+    },
+    "howToPlay": {
+      "hash": "15907878",
+      "value": [
+        "## Objetivo",
+        "Construa as quatro fundações por naipe em ordem crescente, do Ás ao Rei.",
+        "## Regras",
+        "- Mova qualquer carta virada para cima ou **grupo** de cartas **em ordem decrescente, sobre uma carta de outro naipe**.",
+        "- As cartas levadas **não** precisam estar em sequência.",
+        "- As colunas vazias só podem ser ocupadas por Reis.",
+        "- Toque duas vezes ou arraste cartas avulsas para as fundações."
+      ]
+    },
+    "quickStart": {
+      "hash": "7142a388",
+      "value": [
+        "Construa as fundações por naipe em ordem crescente, de A a K.",
+        "Construa as colunas em ordem decrescente sobre qualquer naipe, menos o mesmo.",
+        "Mova qualquer grupo de cartas viradas para cima.",
+        "Só os Reis podem ocupar colunas vazias."
+      ]
+    },
+    "title": {
+      "hash": "ace36eec",
+      "value": "Pele de alce"
+    }
+  },
+  "nestor": {
+    "cardDescription": {
+      "hash": "8afbbddb",
+      "value": "Forme pares de valores iguais para esvaziar todas as colunas."
+    },
+    "howToPlay": {
+      "hash": "5a96cea6",
+      "value": [
+        "## Objetivo",
+        "Descarte as 52 cartas removendo pares iguais.",
+        "## Regras",
+        "- Só estão disponíveis as **últimas cartas (expostas)** de cada coluna e **as cartas da reserva**.",
+        "- Toque em duas cartas disponíveis **do mesmo valor** para enviá-las viradas para baixo ao lixo."
+      ]
+    },
+    "quickStart": {
+      "hash": "25ae690c",
+      "value": [
+        "Remova todas as cartas tirando pares do mesmo valor do fim das colunas ou da reserva."
+      ]
+    },
+    "title": {
+      "hash": "142bf888",
+      "value": "Nestor"
+    }
+  },
+  "night-vigil": {
+    "cardDescription": {
+      "hash": "7d07c621",
+      "value": "Responda às ameaças com táticas certeiras num desafio noir contra doze vilões."
+    },
+    "howToPlay": {
+      "hash": "ca40e560",
+      "value": [
+        "## Objetivo",
+        "Sobreviva aos **12 confrontos** e derrote o {KD}, o Rei Palhaço. Você perde quando a vida chega a 0.",
+        "## Preparação",
+        "- Valetes, Damas e Reis formam o baralho de confrontos, em ordem de valor. O {KD} é sempre o último.",
+        "- O {10S} marca 10 de armadura e o {10H} marca 10 de vida.",
+        "- As cartas numéricas, os Ases e dois Coringas formam o baralho de jogo.",
+        "## Cada confronto",
+        "- Revele 4 ameaças. Cada Coringa acrescenta mais uma, até 6. O último confronto sempre tem 6.",
+        "- Compre respostas uma de cada vez, até o número de ameaças. Um Coringa comprado como resposta vira uma nova ameaça.",
+        "- **Padrão:** empilhe uma ou mais respostas sobre uma ameaça. O total delas deve ser igual à ameaça ou superá-la em no máximo 3.",
+        "- **Fumaça:** uma vez por rodada, jogue uma resposta virada para baixo para eliminar uma ameaça. Não serve para um Coringa nem para uma ameaça do naipe do confronto.",
+        "- **Gancho:** uma vez por rodada, ligue duas ameaças vizinhas. As respostas jogadas deitadas devem ser iguais ao total das duas ameaças ou superá-lo em no máximo 3. Se falhar, você sofre 2 de dano.",
+        "## Agentes duplos e caos",
+        "- Um Ás como ameaça vale o mesmo que a maior ameaça da rodada.",
+        "- Um Ás como resposta vale o mesmo que a menor ameaça da rodada.",
+        "- Um Coringa como ameaça vale o mesmo que a maior ameaça e não pode ser eliminado com fumaça.",
+        "## Dano e cura",
+        "- Cada ameaça não resolvida causa 1 de dano. Um gancho que falha causa 2 de dano pelo par.",
+        "- Nível da rua acrescenta 1 de dano para os Reis. Caso do chefão acrescenta 1 para Damas e Reis. Cidade nas sombras acrescenta 1 para as Damas e 2 para os Reis.",
+        "- Recupere 1 de vida depois de um confronto se não tiver usado a fumaça, ou se tiver comprado menos respostas do que havia ameaças. Cura e dano se anulam.",
+        "## Pontuação",
+        "Sua pontuação é a armadura mais a vida que sobraram, mais 5 no Caso do chefão ou 10 na Cidade nas sombras."
+      ]
+    },
+    "quickStart": {
+      "hash": "f045d224",
+      "value": [
+        "Compre respostas uma de cada vez. Cubra cada ameaça com uma margem de 0 a 3 pontos, ou use a bomba de fumaça ou o gancho da rodada. Resolva quando estiver pronto."
+      ]
+    },
+    "title": {
+      "hash": "01d23c78",
+      "value": "Vigília noturna"
+    }
+  },
+  "number-ten": {
+    "cardDescription": {
+      "hash": "e3d8f8d0",
+      "value": "Descubra dez colunas e mova sequências de cores alternadas como uma unidade."
+    },
+    "howToPlay": {
+      "hash": "eed05a0f",
+      "value": [
+        "## Objetivo",
+        "Leve os dois baralhos para oito fundações por naipe.",
+        "## Regras",
+        "- São distribuídas dez colunas de quatro cartas, cada uma com duas viradas para baixo e duas para cima.",
+        "- Construa em ordem decrescente, alternando cores.",
+        "- Mova juntas sequências completas e bem ordenadas.",
+        "- Qualquer carta ou sequência ocupa um espaço vazio; o monte tem uma só passada."
+      ]
+    },
+    "quickStart": {
+      "hash": "021b43ee",
+      "value": [
+        "As duas cartas de baixo de cada coluna começam escondidas.",
+        "Construa em ordem decrescente, alternando cores.",
+        "Mova sequências ordenadas; qualquer carta ocupa um espaço vazio."
+      ]
+    },
+    "title": {
+      "hash": "1a6aecb7",
+      "value": "Número Dez"
+    }
+  },
+  "ouroboros": {
+    "cardDescription": {
+      "hash": "9249639e",
+      "value": "Capture as cartas do círculo que dão pontos, mantendo o ritmo e evitando interrupções perigosas."
+    },
+    "howToPlay": {
+      "hash": "23113eb3",
+      "value": [
+        "## Objetivo",
+        "- Roube as quatro joias (os Ases) e fuja com vida passando pela saída (o Coringa).",
+        "- Parar numa armadilha (uma figura) enquanto ela está virada para cima significa morte instantânea.",
+        "- Colete bugigangas (cartas numéricas) para ganhar pontos extras.",
+        "## Regras",
+        "- Você avança pela masmorra dando voltas pelo baralho, explorando a cada vez um certo número de casas à sua frente.",
+        "- Parar numa **carta virada para baixo é sempre seguro** e não ativa nenhuma ação, qualquer que seja o valor dela.",
+        "- Parar numa **carta virada para cima ativa o efeito dela**, se houver.",
+        "## Tipos de carta",
+        "- **Joias (Ases)**:",
+        "-- Para vencer, você precisa coletar as quatro, parando nelas enquanto estão viradas para cima.",
+        "-- Parar num Ás virado para baixo não o coleta.",
+        "- **Armadilhas (J, Q, K)**",
+        "-- Se você parar numa delas virada para cima, morre na hora.",
+        "-- Parar numa delas virada para baixo, ou revelá-la com a ação **Olhar em volta**, **não** ativa a armadilha.",
+        "- **Bugigangas (1, 2, 3... 10)**",
+        "-- Se você parar numa delas virada para cima, ela é coletada e dá pontos extras.",
+        "-- Parar numa delas virada para baixo, ou revelá-la com a ação **Olhar em volta**, **não** a coleta.",
+        "-- Use as cartas numéricas para avançar pelo círculo, contando a partir do topo do baralho, tantas casas quanto o valor da carta.",
+        "- **Saída (Coringa)**",
+        "-- Depois de coletar todas as joias, você precisa parar nela, virada para cima, para fugir da masmorra e vencer.",
+        "-- Parar no Coringa virado para baixo não ativa nenhuma ação.",
+        "- Os naipes das cartas não têm nenhum significado nem efeito.",
+        "## Ações",
+        "- **Olhar em volta:** vire as duas primeiras cartas do baralho; só é possível se a primeira carta estiver virada para baixo.",
+        "- **Explorar**: escolha uma das duas primeiras cartas, se estiver virada para cima e for numérica. Avance pelo círculo tantas casas quanto o valor dela.",
+        "- **Marcar caminho**: você pode marcar até três caminhos movendo uma das duas primeiras cartas para um espaço de caminho vazio, se ela estiver virada para cima e for numérica.",
+        "- **Voltar ao caminho**: você pode selecionar um caminho marcado e colocá-lo no topo do baralho.",
+        "## Dicas",
+        "- **Marque caminhos sempre que puder!** Se as duas primeiras cartas não forem numéricas e você não tiver nenhum caminho marcado, **você perde na hora**. Ter mais caminhos marcados também dá mais opções para avançar um número exato de casas e evitar armadilhas.",
+        "- Você pode usar as ações **Marcar caminho** e **Voltar ao caminho** várias vezes seguidas sem explorar. Assim você controla a ordem das primeiras cartas para decidir quanto explorar e em qual carta parar."
+      ]
+    },
+    "quickStart": {
+      "hash": "7a29acb2",
+      "value": [
+        "Colete todos os Ases e saia pelo Coringa para vencer.",
+        "Você perde se parar numa figura virada para cima.",
+        "Use as cartas numéricas para marcar caminhos e explorar."
+      ]
+    },
+    "title": {
+      "hash": "7df776c7",
+      "value": "Ouroboros"
+    }
+  },
+  "parallels": {
+    "cardDescription": {
+      "hash": "31eac556",
+      "value": "Empilhe fileiras paralelas de dois baralhos entre fundações de Ases e de Reis, libertando cartas pelas duas bordas."
+    },
+    "howToPlay": {
+      "hash": "395db908",
+      "value": [
+        "## Objetivo",
+        "Leve as 104 cartas para as oito fundações.",
+        "## Fundações",
+        "- Um **Ás** e um **Rei** de cada naipe começam as fundações, os Ases à esquerda e os Reis à direita.",
+        "- Os Ases sobem **em ordem crescente** por naipe; os Reis descem **em ordem decrescente** por naipe.",
+        "## Regras",
+        "- A mesa começa com uma fileira de dez cartas.",
+        "- Enquanto houver uma ou duas fileiras, todas as cartas estão disponíveis.",
+        "- A partir de três fileiras, uma carta só fica **livre** quando o espaço logo acima ou logo abaixo dela está vazio.",
+        "- Toque no **monte** para preencher todos os buracos da mesa. Se não houver buracos, ele distribui uma nova fileira de dez cartas embaixo.",
+        "- Não se constrói na mesa e não há redistribuição."
+      ]
+    },
+    "quickStart": {
+      "hash": "2c0f4b7f",
+      "value": [
+        "Os Ases sobem e os Reis descem, por naipe.",
+        "Com três fileiras ou mais, uma carta precisa de um espaço livre acima ou abaixo.",
+        "Toque no monte para preencher os buracos, ou para adicionar uma fileira quando não houver buracos."
+      ]
+    },
+    "title": {
+      "hash": "df814823",
+      "value": "Paralelas"
+    }
+  },
+  "penguin": {
+    "cardDescription": {
+      "hash": "a45ab2f6",
+      "value": "Um jogo parecido com o FreeCell que constrói sequências por naipe a partir de um valor “bico” aleatório."
+    },
+    "howToPlay": {
+      "hash": "362cf9e1",
+      "value": [
+        "## Objetivo",
+        "Construa as quatro fundações por naipe em ordem crescente, a partir do “valor do bico”, até cada uma ter 13 cartas.",
+        "## Fundações",
+        "- A primeira fundação começa com a **carta bico**, sorteada a cada partida.",
+        "- Construa as fundações **por naipe** em ordem crescente a partir do valor do bico; depois do Rei, volta-se ao Ás.",
+        "## Colunas",
+        "- Construa as colunas em ordem decrescente **por naipe**; do Ás se passa ao Rei.",
+        "- Cada **célula livre** guarda uma carta.",
+        "- Você pode mover uma carta de cada vez. Pode mover grupos de cartas juntos, mas só se tiver células livres e colunas vazias suficientes para fazer a mesma jogada uma carta de cada vez.",
+        "- Uma **coluna vazia** só pode ser ocupada por uma carta **um valor abaixo do bico** (ou por uma sequência que comece com ela)."
+      ]
+    },
+    "quickStart": {
+      "hash": "04c72813",
+      "value": [
+        "A partir do valor do bico, construa as fundações por naipe em ordem crescente e as colunas em ordem decrescente no mesmo naipe."
+      ]
+    },
+    "title": {
+      "hash": "a09162a7",
+      "value": "Pinguim"
+    }
+  },
+  "pocket-poker": {
+    "cardDescription": {
+      "hash": "d28135be",
+      "value": "Um duelo de pôquer de bolso: compre, aposte e supere um oponente servido pelo mesmo baralho."
+    },
+    "howToPlay": {
+      "hash": "79beb74f",
+      "value": [
+        "## Objetivo",
+        "Você começa com 5 pontos. **Vença** chegando a 10, ou **perca** caindo para 0.",
+        "## Ordem do turno",
+        "1. **Compre 5 cartas**",
+        "2. **Jogue ou desista:** desistir não custa nada, mas desistir **três vezes seguidas** faz você perder a partida.",
+        "3. **Descarte e compre de novo** até **3 vezes** para melhorar sua mão.",
+        "4. **Aposte:** sua aposta mínima é igual ao número de vezes que você comprou:",
+        "- 1 compra → aposte 1, 2 ou 3",
+        "- 2 compras → aposte 2 ou 3",
+        "- 3 compras → aposte 3",
+        "\n5. **O oponente compra** 5 cartas mais uma por ponto apostado (6, 7 ou 8) e fica com as suas **cinco melhores**.",
+        "6. **Compare as mãos** pela classificação normal do pôquer. Os empates são decididos pela carta mais alta.",
+        "## Coringas",
+        "Ative **Coringas livres** nas configurações para adicionar dois coringas que valem como qualquer carta que ainda não esteja na mão."
+      ]
+    },
+    "quickStart": {
+      "hash": "bedf6ddc",
+      "value": [
+        "Monte uma mão de pôquer e depois aposte.",
+        "Quanto maior a aposta, mais cartas seu rival compra.",
+        "Chegue a 10 pontos para vencer; com 0, você perde."
+      ]
+    },
+    "title": {
+      "hash": "e6a10a58",
+      "value": "Pôquer de bolso"
+    }
+  },
+  "poker-squares": {
+    "cardDescription": {
+      "hash": "8ed02b35",
+      "value": "Forme dez mãos de pôquer numa grade para fazer a maior pontuação possível."
+    },
+    "howToPlay": {
+      "hash": "ef2f0865",
+      "value": [
+        "## Objetivo",
+        "Faça pelo menos 200 pontos formando mãos de pôquer nas linhas e nas colunas.",
+        "## Regras",
+        "- Toque em qualquer casa vazia para colocar a carta do topo do monte.",
+        "- As cartas não podem ser movidas depois de colocadas.",
+        "- Continue até as 25 casas estarem preenchidas.",
+        "## Pontuação",
+        "As cinco linhas e as cinco colunas são pontuadas pela tabela americana de mãos de pôquer:",
+        "- **Royal Flush:** 100",
+        "- **Straight Flush:** 75",
+        "- **Quadra:** 50",
+        "- **Full House:** 25",
+        "- **Flush:** 20",
+        "- **Sequência:** 15",
+        "- **Trinca:** 10",
+        "- **Dois pares:** 5",
+        "- **Par:** 2"
+      ]
+    },
+    "quickStart": {
+      "hash": "d7e99c35",
+      "value": [
+        "Coloque com cuidado cada carta distribuída; linhas e colunas pontuam como mãos de pôquer."
+      ]
+    },
+    "title": {
+      "hash": "0e89dbe8",
+      "value": "Quadrados de pôquer"
+    }
+  },
+  "puss-in-the-corner": {
+    "cardDescription": {
+      "hash": "2b9e278c",
+      "value": "Conduza o monte para quatro pilhas de canto, construindo por cor com uma redistribuição."
+    },
+    "howToPlay": {
+      "hash": "a0ac1fb9",
+      "value": [
+        "## Objetivo",
+        "Leve as 52 cartas para as quatro fundações, construídas do Ás ao Rei **por cor**.",
+        "## Regras",
+        "- Os quatro **Ases** começam nas fundações.",
+        "- Uma fundação aceita o valor seguinte de **qualquer um dos dois naipes da sua cor**.",
+        "- Cada carta do monte deve ir para uma das **quatro pilhas de descarte** ou ser jogada numa fundação.",
+        "- Qualquer carta pode ir para qualquer pilha de descarte, mas as cartas nunca passam de uma pilha de descarte para outra.",
+        "- **Toque duas vezes** na carta do monte ou na carta do topo de uma pilha de descarte para jogá-la numa fundação.",
+        "- Quando o monte estiver vazio, toque nele para juntar as pilhas de descarte em ordem e fazer **uma redistribuição**."
+      ]
+    },
+    "quickStart": {
+      "hash": "bd0b5046",
+      "value": [
+        "As fundações são construídas por cor a partir dos Ases.",
+        "Toque numa pilha de descarte para colocar nela a carta do monte.",
+        "Quando o monte acabar, toque nele uma vez para redistribuir."
+      ]
+    },
+    "title": {
+      "hash": "6e4b050d",
+      "value": "Quatro cantos"
+    }
+  },
+  "pyramid": {
+    "cardDescription": {
+      "hash": "659fff1e",
+      "value": "Desmonte a pirâmide removendo pares de cartas que somam 13."
+    },
+    "howToPlay": {
+      "hash": "05b90345",
+      "value": [
+        "## Objetivo",
+        "Desmonte a **pirâmide** inteira de 28 cartas removendo-as em pares que somam **13**.",
+        "## Como jogar",
+        "- Uma carta só fica disponível quando está **totalmente descoberta**, sem nada sobre ela.",
+        "- Remova duas cartas disponíveis cujos valores somem 13 (os Ases valem 1).",
+        "- Um Rei soma 13 sozinho, então é removido sozinho.",
+        "- Quando não houver jogadas, vire cartas do monte para o descarte; a carta do topo do descarte pode formar par com qualquer carta disponível."
+      ]
+    },
+    "quickStart": {
+      "hash": "38a2c4ea",
+      "value": [
+        "Remova Reis, ou pares expostos que somam 13. Compre para achar mais pares."
+      ]
+    },
+    "title": {
+      "hash": "8026845f",
+      "value": "Pirâmide"
+    }
+  },
+  "queens-audience": {
+    "cardDescription": {
+      "hash": "b7f94eaa",
+      "value": "Conduza os casais reais à sala de audiências e deixe cada Valete guiar seu naipe para baixo."
+    },
+    "howToPlay": {
+      "hash": "d0759133",
+      "value": [
+        "## Objetivo",
+        "Leve as 52 cartas para a **sala de audiências** no centro.",
+        "## Regras",
+        "- Dezesseis cartas formam a **antecâmara**, uma moldura ao redor da sala. Todas estão disponíveis, junto com a carta do topo do **descarte**.",
+        "- Quando um **Rei e uma Dama** do mesmo naipe estiverem disponíveis, toque num deles para trazê-los juntos.",
+        "- Quando um **Valete e um Ás** do mesmo naipe estiverem disponíveis, toque num deles para começar a fundação desse naipe.",
+        "- Depois, cada fundação é construída **em ordem decrescente por naipe**, do Valete ao 2.",
+        "- Um buraco na antecâmara é preenchido na hora pelo descarte, ou pelo monte se o descarte estiver vazio.",
+        "- Toque no **monte** para virar uma carta no descarte. Não há redistribuição."
+      ]
+    },
+    "quickStart": {
+      "hash": "b9c1cb40",
+      "value": [
+        "Toque num Rei ou numa Dama quando o par dele também estiver disponível.",
+        "Toque num Valete ou num Ás quando o par dele estiver disponível para começar uma fundação.",
+        "As fundações são construídas em ordem decrescente por naipe, do Valete ao 2."
+      ]
+    },
+    "title": {
+      "hash": "c7d7a92f",
+      "value": "A audiência da Rainha"
+    }
+  },
+  "raglan": {
+    "cardDescription": {
+      "hash": "2a08f282",
+      "value": "Um clássico de um baralho com colunas em cores alternadas e um ritmo simples e cuidadoso."
+    },
+    "howToPlay": {
+      "hash": "55ea0480",
+      "value": [
+        "## Objetivo",
+        "Leve todas as cartas para as quatro fundações por naipe, do Ás ao Rei.",
+        "## Regras",
+        "- Joga-se com sete colunas, distribuídas com quantidades crescentes de cartas.",
+        "- Construa as colunas em ordem decrescente, alternando cores.",
+        "- Só Reis podem ocupar espaços vazios.",
+        "- O monte é virado para o descarte uma carta de cada vez e, nesta versão, não há redistribuição."
+      ]
+    },
+    "quickStart": {
+      "hash": "97e420c9",
+      "value": [
+        "Construa sequências decrescentes alternando cores.",
+        "Mova grupos de cartas quando forem válidos e use as colunas vazias com cuidado.",
+        "Leve todas as cartas para as fundações para vencer."
+      ]
+    },
+    "title": {
+      "hash": "1dfbe9f2",
+      "value": "Raglan"
+    }
+  },
+  "rank-and-file": {
+    "cardDescription": {
+      "hash": "54303353",
+      "value": "Descubra dez colunas disciplinadas e manobre formações de cores alternadas."
+    },
+    "howToPlay": {
+      "hash": "d1c2c009",
+      "value": [
+        "## Objetivo",
+        "Leve os dois baralhos para oito fundações por naipe.",
+        "## Regras",
+        "- São distribuídas dez colunas de quatro cartas, só com a carta do topo exposta.",
+        "- Construa em ordem decrescente, alternando cores.",
+        "- Mova qualquer sequência bem ordenada, completa ou em parte.",
+        "- Qualquer carta ou sequência pode ocupar uma coluna vazia; o monte tem uma só passada."
+      ]
+    },
+    "quickStart": {
+      "hash": "06819848",
+      "value": [
+        "No início, só a última carta de cada coluna fica virada para cima.",
+        "Construa em ordem decrescente, alternando cores.",
+        "Mova sequências ordenadas, completas ou em parte."
+      ]
+    },
+    "title": {
+      "hash": "5818b042",
+      "value": "Fileiras cerradas"
+    }
+  },
+  "red-diamond": {
+    "cardDescription": {
+      "hash": "8f0b8b18",
+      "value": "Coloque todas as cartas de paus e espadas ao redor de quatro cartas de ouros, com combinações aritméticas."
+    },
+    "howToPlay": {
+      "hash": "a23e76cc",
+      "value": [
+        "## Objetivo",
+        "Jogue as **26 cartas pretas** ao redor das quatro cartas de ouros antes que o monte de ouros acabe.",
+        "## Jogar as cartas pretas",
+        "- Selecione uma das cartas da mão e depois toque numa pilha válida. Quando as duas cartas da mão forem jogadas, você recebe mais duas automaticamente.",
+        "- As cartas de cada pilha devem alternar entre paus e espadas.",
+        "-- As pilhas externas devem ter o valor da carta de ouros vizinha e comportam até **3 cartas**.",
+        "-- As pilhas internas encostam em duas cartas de ouros. Uma carta pode ter qualquer um dos dois valores, ou a soma, diferença positiva, produto ou quociente inteiro deles. As pilhas internas comportam até **4 cartas**.",
+        "-- A pilha central aceita qualquer carta e comporta até **5 cartas**.",
+        "## Repor as cartas de ouros",
+        "- Uma pilha preta cheia é esvaziada automaticamente. Cada carta de ouros vizinha é descartada e substituída pelo monte de ouros.",
+        "- Para esvaziar uma pilha antes, desmarque a carta da mão e toque na pilha.",
+        "- Quando não houver jogadas, toque no monte de ouros e depois numa das quatro cartas de ouros para substituí-la.",
+        "- Você perde se uma pilha precisar ser esvaziada e o monte não tiver cartas de ouros suficientes para substituir todas as cartas vizinhas.",
+        "## Valor das cartas",
+        "Os Ases valem 1, os Valetes 11, as Damas 12 e os Reis 13."
+      ]
+    },
+    "quickStart": {
+      "hash": "9e019746",
+      "value": [
+        "Coloque todas as cartas pretas antes que as cartas de ouros acabem.",
+        "As cartas colocadas devem alternar o naipe.",
+        "Pilha central: qualquer carta. Pilhas externas: valor exato.",
+        "Pilhas internas: valor de uma das duas cartas de ouros vizinhas, ou a soma, diferença, produto ou quociente delas.",
+        "Quando não houver jogadas, toque numa pilha preta para esvaziá-la, ou troque uma carta de ouros."
+      ]
+    },
+    "title": {
+      "hash": "15870806",
+      "value": "Diamante vermelho"
+    }
+  },
+  "rogue-run": {
+    "cardDescription": {
+      "hash": "833255e0",
+      "value": "Uma exploração de masmorra em que você administra a força das armas e o uso das poções."
+    },
+    "howToPlay": {
+      "hash": "852f99a5",
+      "value": [
+        "## Objetivo",
+        "- Resolva todas as salas antes que sua vida acabe.",
+        "- Sua pontuação depende da vida restante, com um bônus se terminar com uma poção não usada.",
+        "## Tipos de carta",
+        "- **Cartas pretas são monstros**: elimine-os sofrendo dano igual ao valor deles.",
+        "- **Ouros são armas**: equipe-as para reduzir o dano dos monstros no valor da arma. Uma arma só pode ser usada em monstros de valor igual ou menor que o último monstro que ela matou.",
+        "- **Copas são poções**: curam de acordo com o valor da poção. Esta versão do jogo é diferente da original: não há limite de uma poção por sala.",
+        "## Salas",
+        "- A masmorra é dividida em salas de 4 cartas cada.",
+        "- Você precisa resolver 3 cartas quaisquer de uma sala para avançar para a próxima. A 4ª carta não resolvida passa para a sala seguinte.",
+        "- Você pode pular (ou “fugir de”) uma sala se não tiver pulado a anterior. As cartas das salas puladas vão para o fundo do monte, então você ainda vai ter que resolvê-las depois.",
+        "- O dano dos monstros é reduzido pelo valor da arma equipada. Depois que uma arma mata um monstro, ela só pode ser usada em monstros de valor igual ou menor que o último que matou.",
+        "## Dicas",
+        "- Pule salas muito difíceis, **ou** salas fáceis ou com armas de valor alto que valem mais se usadas depois. Lembre-se de que as cartas das salas puladas terão que ser resolvidas em salas futuras; planeje-se.",
+        "- Aproveite melhor uma arma usando-a primeiro num monstro do maior valor possível e depois tentando baixar o valor dos monstros seguintes o mais devagar possível.",
+        "- Lute de mãos vazias quando usar a arma baixaria demais o valor dela.",
+        "- Toque no monte para ver as cartas que restam na masmorra (elas aparecem em ordem, mas são embaralhadas depois)."
+      ]
+    },
+    "quickStart": {
+      "hash": "740b0e22",
+      "value": [
+        "Resolva 3 cartas quaisquer para concluir uma sala. Você não pode pular duas salas seguidas.",
+        "Equipe armas para causar mais dano. Reutilize armas em monstros de valor igual ou menor.",
+        "Use poções para se curar."
+      ]
+    },
+    "title": {
+      "hash": "445b3c56",
+      "value": "A fuga do ladino"
+    }
+  },
+  "royal-cotillion": {
+    "cardDescription": {
+      "hash": "78d83f7f",
+      "value": "Dois baralhos dançam pelas fundações em passos de dois, a partir dos Ases e dos 2."
+    },
+    "howToPlay": {
+      "hash": "6c824cdb",
+      "value": [
+        "## Objetivo",
+        "Leve as 104 cartas para as oito fundações.",
+        "## Fundações",
+        "- Um **Ás** e um **2** de cada naipe começam as fundações.",
+        "- Cada fundação é construída **por naipe em ordem crescente, em passos de dois**, recomeçando depois do Rei.",
+        "- Fundações dos Ases: A, 3, 5, 7, 9, J, K, 2, 4, 6, 8, 10, Q.",
+        "- Fundações dos 2: 2, 4, 6, 8, 10, Q, A, 3, 5, 7, 9, J, K.",
+        "## Regras",
+        "- À **esquerda**, quatro colunas de três cartas: só a última carta de cada uma está disponível, e os espaços nunca são preenchidos.",
+        "- À **direita**, dezesseis cartas, todas disponíveis.",
+        "- Toque num espaço vazio à direita para preenchê-lo com a carta do topo do **descarte**, ou pelo **monte** se o descarte estiver vazio.",
+        "- Toque no **monte** para virar uma carta no descarte. Não há redistribuição."
+      ]
+    },
+    "quickStart": {
+      "hash": "5849dd6d",
+      "value": [
+        "Os Ases constroem A, 3, 5... K, 2, 4... Q por naipe.",
+        "Os 2 constroem 2, 4, 6... Q, A, 3... K por naipe.",
+        "Toque num espaço vazio à direita para preenchê-lo pelo descarte ou pelo monte."
+      ]
+    },
+    "title": {
+      "hash": "5c911639",
+      "value": "Cotilhão real"
+    }
+  },
+  "royal-envoy": {
+    "cardDescription": {
+      "hash": "1cc10e97",
+      "value": "Vença exatamente o número certo de debates em cada reino, com a ajuda dos seus conselheiros."
+    },
+    "howToPlay": {
+      "hash": "f119c81a",
+      "value": [
+        "## Objetivo",
+        "Vença exatamente o número de debates mostrado em cada um dos oito reinos. Vencer debates de menos ou demais em qualquer reino faz você perder a partida.",
+        "## Debates",
+        "- Comece cada reino com oito cartas na mão. Escolha um tema revelando uma carta do monte e depois jogue uma carta da mão.",
+        "- Quando puder, você **precisa** seguir o naipe do tema.",
+        "- Vença jogando uma carta mais alta do naipe do tema, ou jogando o naipe de trunfo do governante quando o tema não for de trunfo.",
+        "## Conselheiros",
+        "- Você pode usar quantos conselheiros quiser de uma vez, mas só entre os debates (e não enquanto um tema estiver em andamento).",
+        "- Selecione um Valete conselheiro para ver e usar seus poderes. Seus quatro Valetes conselheiros são renovados a cada reino.",
+        "- Quando você vence um reino, a Dama ou o Rei dele vira um conselheiro temporário. Cada um desses governantes conselheiros só pode ser usado uma vez."
+      ]
+    },
+    "quickStart": {
+      "hash": "1025a358",
+      "value": [
+        "Escolha um reino e vença exatamente o número de debates indicado.",
+        "Siga o naipe do tema quando puder.",
+        "O naipe do governante é o trunfo.",
+        "Use os poderes dos conselheiros na hora certa."
+      ]
+    },
+    "title": {
+      "hash": "850a8f8b",
+      "value": "Enviado real"
+    }
+  },
+  "royal-rest": {
+    "cardDescription": {
+      "hash": "298cb8cb",
+      "value": "Junte cartas do mesmo valor em travesseiros e ponha todos os Valetes para dormir."
+    },
+    "howToPlay": {
+      "hash": "ad734452",
+      "value": [
+        "## Objetivo",
+        "Ponha todos os Valetes para dormir reduzindo a mesa inteira a **quatro pilhas separadas de travesseiro-Valete-travesseiro** (Valetes com um travesseiro embaixo e outro em cima).",
+        "Crie travesseiros empilhando as quatro cartas do mesmo valor.",
+        "## Cartas numéricas",
+        "- Podem ser movidas do topo das colunas para outras cartas do mesmo valor.",
+        "- Podem ser movidas para colunas vazias quando houver alguma.",
+        "- Cartas do mesmo valor formam uma pilha que se move junta.",
+        "## Travesseiros",
+        "- Uma pilha de quatro cartas do mesmo valor vira um travesseiro.",
+        "- Um travesseiro só pode ir para um Valete ou para uma coluna vazia.",
+        "- Os travesseiros não são empilhados uns sobre os outros.",
+        "- Não é possível colocar cartas numéricas ou suas pilhas sobre travesseiros.",
+        "## Valetes",
+        "- Podem ir para travesseiros ou para qualquer coluna sem outro Valete não separado.",
+        "- Qualquer carta numérica, pilha ou travesseiro pode ir sobre um Valete.",
+        "- Depois de colocados, os Valetes não podem voltar para a sua mão (a posição inicial deles, no alto)."
+      ]
+    },
+    "quickStart": {
+      "hash": "dcc92fe7",
+      "value": [
+        "Crie quatro pilhas travesseiro-Valete-travesseiro.",
+        "Crie travesseiros empilhando quatro cartas do mesmo valor.",
+        "Os Valetes podem ir para travesseiros, colunas vazias ou colunas sem outro Valete não separado.",
+        "Qualquer carta numérica, pilha ou travesseiro pode ir sobre um Valete."
+      ]
+    },
+    "title": {
+      "hash": "d7bb23d4",
+      "value": "Descanso real"
+    }
+  },
+  "russian-solitaire": {
+    "cardDescription": {
+      "hash": "f6e3baba",
+      "value": "O Yukon na versão mais cruel: leve grupos misturados e construa as colunas em ordem decrescente por naipe."
+    },
+    "howToPlay": {
+      "hash": "a44626e1",
+      "value": [
+        "## Objetivo",
+        "Construa as quatro fundações por naipe em ordem crescente, do Ás ao Rei.",
+        "## Regras",
+        "- Mova qualquer carta virada para cima ou **grupo** de cartas **em ordem decrescente, no mesmo naipe**.",
+        "- As cartas levadas **não** precisam estar em sequência.",
+        "- As colunas vazias só podem ser ocupadas por Reis.",
+        "- Toque duas vezes ou arraste cartas avulsas para as fundações."
+      ]
+    },
+    "quickStart": {
+      "hash": "fae453f1",
+      "value": [
+        "Construa as fundações por naipe em ordem crescente, de A a K.",
+        "Construa as colunas em ordem decrescente por naipe.",
+        "Mova qualquer grupo de cartas viradas para cima.",
+        "Só os Reis podem ocupar colunas vazias."
+      ]
+    },
+    "title": {
+      "hash": "3d081f1c",
+      "value": "Paciência russa"
+    }
+  },
+  "salic-law": {
+    "cardDescription": {
+      "hash": "323b2f0b",
+      "value": "Distribua dois baralhos sobre uma fileira de Reis, afaste as Damas e leve cada Ás até o seu Valete."
+    },
+    "howToPlay": {
+      "hash": "e07704cf",
+      "value": [
+        "## Objetivo",
+        "Construa as oito fundações do Ás ao Valete, deixando só os Reis na mesa.",
+        "## Distribuição",
+        "- Um **Rei** abre a mesa. Toque no **monte** para distribuir cartas, uma de cada vez, sobre a pilha do Rei mais recente.",
+        "- Quando sai um **Rei**, ele começa uma nova pilha.",
+        "- Os **Ases** vão direto para as fundações; as **Damas** são deixadas de lado e não participam.",
+        "## Regras",
+        "- A qualquer momento, toque na carta do topo de uma pilha para jogá-la numa fundação, que é construída **em ordem crescente, independentemente do naipe**, até o Valete.",
+        "- Caso contrário, toque nela para pegá-la e depois toque num **Rei sem cartas em cima** para movê-la para lá.",
+        "- Não há outra forma de construir na mesa, nem redistribuição."
+      ]
+    },
+    "quickStart": {
+      "hash": "4e6e6a53",
+      "value": [
+        "Toque no monte para distribuir sobre o Rei mais recente.",
+        "As fundações são construídas do Ás ao Valete, independentemente do naipe.",
+        "Um Rei sozinho aceita qualquer carta avulsa."
+      ]
+    },
+    "title": {
+      "hash": "06960a5f",
+      "value": "Lei sálica"
+    }
+  },
+  "scorpion": {
+    "cardDescription": {
+      "hash": "959e0b20",
+      "value": "Desembarace colunas abertas em quatro sequências do mesmo naipe, do Rei ao Ás."
+    },
+    "howToPlay": {
+      "hash": "3a69ad79",
+      "value": [
+        "## Objetivo",
+        "Forme **quatro sequências completas do mesmo naipe**, cada uma do Rei ao Ás.",
+        "## Regras",
+        "- Construa as colunas **em ordem decrescente e no mesmo naipe**.",
+        "- Você pode pegar **qualquer carta virada para cima** e movê-la junto com **todas as cartas sobre ela**, mesmo que não estejam em sequência.",
+        "- Só um **Rei** (com as cartas que estiverem sobre ele) pode ir para uma **coluna vazia**.",
+        "- As sequências completas são retiradas das colunas e colocadas nas fundações.",
+        "## Monte",
+        "Quando não restar jogada útil, distribua as três cartas do monte, uma em cada uma das três primeiras colunas."
+      ]
+    },
+    "quickStart": {
+      "hash": "faaa0ff2",
+      "value": [
+        "Construa as quatro fundações por naipe, de K a A.",
+        "Mova qualquer grupo de cartas viradas para cima, mesmo fora de sequência.",
+        "Só os Reis podem ocupar colunas vazias."
+      ]
+    },
+    "title": {
+      "hash": "8ee6db3e",
+      "value": "Escorpião"
+    }
+  },
+  "seahaven-towers": {
+    "cardDescription": {
+      "hash": "fb19dd37",
+      "value": "Dez colunas abertas e quatro torres compactas recompensam um planejamento cuidadoso por naipe."
+    },
+    "howToPlay": {
+      "hash": "86a13dbd",
+      "value": [
+        "## Objetivo",
+        "Leve as 52 cartas para quatro fundações, construídas por naipe do Ás ao Rei.",
+        "## Regras",
+        "- As dez colunas começam com cinco cartas viradas para cima cada.",
+        "- Duas das quatro células livres começam ocupadas; cada célula guarda uma carta.",
+        "- Construa as colunas em ordem decrescente no mesmo naipe.",
+        "- Sequências ordenadas do mesmo naipe podem ser movidas se houver células livres suficientes.",
+        "- Só um Rei, ou uma sequência começando por um Rei, pode ocupar uma coluna vazia."
+      ]
+    },
+    "quickStart": {
+      "hash": "4eb4b58b",
+      "value": [
+        "Construa as fundações por naipe, do Ás ao Rei.",
+        "Construa as colunas em ordem decrescente no mesmo naipe.",
+        "Use quatro células; só Reis podem ocupar colunas vazias."
+      ]
+    },
+    "title": {
+      "hash": "71609ebc",
+      "value": "Torres de Seahaven"
+    }
+  },
+  "seer": {
+    "cardDescription": {
+      "hash": "6d0878cd",
+      "value": "Leia um baralho curto, complete oito previsões e não deixe as pedras bloquearem a mesa."
+    },
+    "howToPlay": {
+      "hash": "4094b088",
+      "value": [
+        "## Objetivo",
+        "Complete as oito previsões antes que o baralho de 24 cartas acabe ou que todos os espaços fiquem bloqueados.",
+        "## Preparação",
+        "- Usam-se as cartas do Ás ao 6 dos quatro naipes.",
+        "- As cartas embaralhadas formam um baralho virado para baixo. Toque nele para ver ou esconder a carta de baixo.",
+        "## Previsões",
+        "- Escolha entre Vermelho, Vermelho ímpar / Preto par, Par, Ouros / Copas, Espadas / Paus, Ímpar, Preto ímpar / Vermelho par, ou Preto.",
+        "- Se acertar, coloque a carta revelada nesse espaço.",
+        "- Se errar, coloque a carta revelada virada para cima na mesa e depois coloque a carta seguinte virada para baixo sobre a previsão, como pedra.",
+        "- Uma previsão com três pedras fica bloqueada.",
+        "## Liberar pedras",
+        "- Um acerto libera uma pedra exposta de cada espaço vizinho: também na diagonal no Fácil, na horizontal e na vertical no Normal, ou de um só vizinho à sua escolha (na horizontal ou na vertical) no Difícil.",
+        "- Escolha se todas as pedras liberadas por esse acerto são reveladas na mesa ou devolvidas viradas para baixo ao fundo do baralho.",
+        "- As pedras cobertas por uma carta acertada ficam presas.",
+        "## Jogar de novo",
+        "- As previsões completas podem ser escolhidas de novo para liberar mais pedras.",
+        "- Um novo erro num espaço completo faz ele deixar de contar como completo, até que suas pedras expostas sejam removidas ou ele seja acertado de novo."
+      ]
+    },
+    "quickStart": {
+      "hash": "4249e832",
+      "value": [
+        "Escolha um espaço de previsão para revelar a carta do topo.",
+        "Acertos completam espaços e liberam as pedras vizinhas; erros acrescentam pedras."
+      ]
+    },
+    "title": {
+      "hash": "e33b153c",
+      "value": "O vidente"
+    }
+  },
+  "shamrocks": {
+    "cardDescription": {
+      "hash": "8c7ab364",
+      "value": "Construa dezoito leques pequenos sem nunca deixar um passar de três cartas."
+    },
+    "howToPlay": {
+      "hash": "4d892287",
+      "value": [
+        "## Objetivo",
+        "Leve as 52 cartas para quatro fundações, construídas por naipe do Ás ao Rei.",
+        "## Leques",
+        "- Só a última carta exposta de cada leque pode ser jogada.",
+        "- Construa um valor acima ou abaixo, independentemente do naipe.",
+        "- Nenhum leque pode ter mais de três cartas.",
+        "- Os leques vazios não podem ser preenchidos, e não há redistribuições."
+      ]
+    },
+    "quickStart": {
+      "hash": "fccb73df",
+      "value": [
+        "Construa as fundações por naipe, do Ás ao Rei.",
+        "Construa os leques um valor acima ou abaixo, independentemente do naipe.",
+        "Os leques têm no máximo três cartas; leques vazios continuam vazios."
+      ]
+    },
+    "title": {
+      "hash": "07f9f314",
+      "value": "Trevos"
+    }
+  },
+  "shifting-sands": {
+    "cardDescription": {
+      "hash": "146a620a",
+      "value": "Junte areia, construa para fora sem mudar de direção e faça um castelo forte o bastante para resistir à maré alta."
+    },
+    "howToPlay": {
+      "hash": "91681187",
+      "value": [
+        "## Objetivo",
+        "Termine com **mais cartas viradas para cima no castelo** do que cartas levadas pela maré.",
+        "## Juntar areia",
+        "- Compre de **1 a 7 cartas** sem mudar a ordem delas.",
+        "- Antes de jogar a primeira carta, você pode **inverter a mão inteira** uma vez, ou desfazer a inversão.",
+        "## Melhorar o castelo",
+        "- Jogue a primeira carta em qualquer **coluna não vazia**. Se o castelo estiver vazio, comece onde quiser.",
+        "- Cada carta seguinte vai para a coluna logo à esquerda ou à direita da jogada anterior.",
+        "- Quando a segunda carta definir uma direção, siga nessa direção durante todo o turno.",
+        "- Você pode passar por colunas desmoronadas e vazias, e criar uma nova coluna em qualquer uma das bordas.",
+        "## De pé ou desmoronada",
+        "- Uma coluna continua de pé quando a nova carta tem **valor maior** que a carta virada para cima abaixo dela ou é **do mesmo naipe**.",
+        "- Caso contrário, todas as cartas dessa coluna são viradas para baixo e a coluna desmorona.",
+        "- Jogar uma carta normal numa coluna desmoronada ou vazia a coloca de pé de novo.",
+        "- Um Coringa copia a carta de maior valor da sua coluna. Um Coringa jogado como primeira carta virada para cima desmorona na hora.",
+        "## Maré alta",
+        "- Depois de esvaziar a mão, descarte do baralho um número de cartas igual à **metade das colunas de pé, arredondada para cima**.",
+        "- Se o baralho não tiver cartas suficientes para pagar a maré, o resto sai das cartas viradas para cima do castelo.",
+        "- Quando o baralho estiver vazio, a maré alta encerra a partida. Você só vence se o castelo tiver mais cartas viradas para cima do que o lixo."
+      ]
+    },
+    "quickStart": {
+      "hash": "c4b3e47b",
+      "value": [
+        "Compre de 1 a 7 cartas, inverta-as se quiser e depois jogue-as em colunas vizinhas numa só direção."
+      ]
+    },
+    "title": {
+      "hash": "298bcd04",
+      "value": "Areias movediças"
+    }
+  },
+  "simple-simon": {
+    "cardDescription": {
+      "hash": "64c1cf9e",
+      "value": "As 52 cartas começam expostas em dez colunas neste parente pensativo da Aranha."
+    },
+    "howToPlay": {
+      "hash": "c280dcc9",
+      "value": [
+        "## Objetivo",
+        "Retire quatro sequências completas do mesmo naipe, do Rei ao Ás.",
+        "## Regras",
+        "- Construa as colunas em ordem decrescente, independentemente do naipe.",
+        "- Só sequências decrescentes do mesmo naipe se movem juntas.",
+        "- Qualquer carta ou sequência válida pode ocupar uma coluna vazia.",
+        "- Uma sequência completa do Rei ao Ás no mesmo naipe sai da mesa automaticamente."
+      ]
+    },
+    "quickStart": {
+      "hash": "3620793d",
+      "value": [
+        "Construa em ordem decrescente.",
+        "Mova sequências decrescentes do mesmo naipe.",
+        "Complete sequências do Rei ao Ás no mesmo naipe."
+      ]
+    },
+    "title": {
+      "hash": "39c12e95",
+      "value": "Simão Simplório"
+    }
+  },
+  "singularity": {
+    "cardDescription": {
+      "hash": "6bb9e80b",
+      "value": "Puxe as 52 cartas para uma singularidade central, um valor de cada vez."
+    },
+    "howToPlay": {
+      "hash": "b20ca939",
+      "value": [
+        "## Objetivo",
+        "- **Vença** puxando todas as cartas para a singularidade.",
+        "- **Perca** se nenhuma carta exposta puder ser jogada.",
+        "## Regras",
+        "- Mova uma carta exposta para a singularidade se ela for **um valor acima ou abaixo** da carta atual.",
+        "- Só a carta **exposta** (do topo) de cada pilha está disponível.",
+        "- Os valores **dão a volta**: depois de um Rei você pode jogar um Ás, e vice-versa.",
+        "## Dicas",
+        "- Não há monte nem reembaralhamento, então planeje suas jogadas em ordem e com a maior antecedência possível.",
+        "- Evite becos sem saída e chegar ao fim da partida com cartas de valores não consecutivos."
+      ]
+    },
+    "quickStart": {
+      "hash": "f703e406",
+      "value": [
+        "Cartas de valor vizinho ao da carta do buraco podem ser removidas. Remova todas para vencer. A<->K se ligam."
+      ]
+    },
+    "title": {
+      "hash": "4d136a3a",
+      "value": "Singularidade"
+    }
+  },
+  "sir-tommy": {
+    "cardDescription": {
+      "hash": "980ec70d",
+      "value": "O avô das paciências: distribua o baralho por quatro pilhas para formar quatro montes do Ás ao Rei."
+    },
+    "howToPlay": {
+      "hash": "eadd39e5",
+      "value": [
+        "## Objetivo",
+        "Construa quatro fundações do Ás ao Rei, **independentemente do naipe**.",
+        "**Neste jogo, os naipes não importam.**",
+        "## Regras",
+        "- Cada carta virada do monte deve ir para uma das quatro pilhas de descarte.",
+        "- Você **não** pode reorganizar as pilhas de descarte.",
+        "- Só a carta do **topo** de cada pilha de descarte pode ir para as fundações.",
+        "- **Toque uma vez** numa pilha de descarte para colocar ali a carta do monte.",
+        "- **Toque duas vezes** numa carta exposta do monte ou do descarte para enviá-la a uma fundação válida."
+      ]
+    },
+    "quickStart": {
+      "hash": "33592120",
+      "value": [
+        "Construa as fundações de A a K, independentemente do naipe.",
+        "As cartas nas pilhas de descarte não podem ser movidas.",
+        "Toque uma vez para colocar a carta do monte numa pilha de descarte.",
+        "Toque duas vezes numa carta exposta do monte ou do descarte para enviá-la a uma fundação."
+      ]
+    },
+    "title": {
+      "hash": "37ef843f",
+      "value": "Sir Tommy"
+    }
+  },
+  "sly-fox": {
+    "cardDescription": {
+      "hash": "77dd0eeb",
+      "value": "Esconda cada distribuição de vinte cartas em vinte pilhas de reserva e depois desenterre o que escondeu."
+    },
+    "howToPlay": {
+      "hash": "53ee1a81",
+      "value": [
+        "## Objetivo",
+        "Leve as 104 cartas para as oito fundações.",
+        "## Fundações",
+        "- Um **Ás** e um **Rei** de cada naipe começam as fundações.",
+        "- Os Ases sobem **em ordem crescente** por naipe; os Reis descem **em ordem decrescente** por naipe.",
+        "## Regras",
+        "- Vinte pilhas de **reserva** começam com uma carta cada. Só as cartas do topo podem ser jogadas, e nunca umas sobre as outras.",
+        "- No início, uma pilha de reserva esvaziada por uma jogada nas fundações é preenchida pelo monte.",
+        "- Toque no **monte** para começar uma distribuição de **20 cartas**. Cada uma deve ir para uma pilha de reserva à sua escolha, ou ser jogada direto numa fundação, e nesse caso não conta entre as 20.",
+        "- Nenhuma carta da reserva pode ser jogada até a distribuição terminar. Depois disso, as pilhas esvaziadas ficam vazias até a próxima distribuição.",
+        "- Distribua de novo quando quiser, até o monte acabar."
+      ]
+    },
+    "quickStart": {
+      "hash": "51f19cb4",
+      "value": [
+        "Os Ases sobem e os Reis descem, por naipe.",
+        "Toque no monte para distribuir 20 cartas, colocando cada uma numa pilha de reserva.",
+        "Toque na carta do topo de uma pilha de reserva para enviá-la."
+      ]
+    },
+    "title": {
+      "hash": "dd4eaf16",
+      "value": "Raposa astuta"
+    }
+  },
+  "somnus": {
+    "cardDescription": {
+      "hash": "317aad94",
+      "value": "Monte o baralho de guardiões de Alice, derrote os pesadelos do baralho dos sonhos e proteja a vida dela."
+    },
+    "howToPlay": {
+      "hash": "fc9dcb5c",
+      "value": [
+        "## Objetivo",
+        "Elimine todos os pesadelos antes que a vida de Alice caia de **40** para 0.",
+        "Monte seu baralho moldando guardiões vermelhos cada vez mais fortes a partir da mesa.",
+        "## Sua vez",
+        "1. Compre até ter quatro cartas, ou compre três se sua mão estiver vazia.",
+        "2. Atribua qualquer número de cartas da mão às cartas de sonho e depois resolva da direita para a esquerda.",
+        "3. As cartas de sonho que sobreviverem avançam uma posição para a direita. A carta mais à direita sai do jogo e novas cartas entram pela esquerda.",
+        "## Guardiões e pesadelos",
+        "- **Moldar um guardião:** o valor atribuído deve ser igual ou maior que o valor da carta vermelha. A carta moldada vai para o seu lixo.",
+        "- **Enfrentar um pesadelo:** o valor atribuído deve superar o valor da carta preta para eliminá-la. Caso contrário, Alice perde a diferença em vida.",
+        "- No máximo dois guardiões que não sejam Ases podem ser atribuídos a um pesadelo. Um Ás pode ser acrescentado como terceira carta.",
+        "- Os pesadelos sem oposição causam dano igual ao seu valor total.",
+        "## Cartas especiais",
+        "- Um Ás guardião vale 0 e dobra as cartas associadas a ele. Enquanto houver um Ás pesadelo, essa duplicação passa a anular o efeito de redução pela metade do pesadelo.",
+        "- Os Ases guardiões só podem ser moldados com um guardião especial. Os Ases pesadelo só podem ser eliminados com um guardião especial.",
+        "- Eliminar um pesadelo Valete, Dama ou Rei recupera 3 de vida, até 40.",
+        "- Os Coringas vermelho e preto copiam o valor da carta do topo da pilha de removidas da sua cor.",
+        "## Ações especiais",
+        "- **Respiração profunda:** se você não atribuiu nenhuma carta neste turno, descarte uma carta da mão antes de resolver.",
+        "- **Exilar:** uma vez por turno, descarte uma carta da mão e perca 5 de vida para mandar o pesadelo selecionado para o lixo dos sonhos.",
+        "- **Sono REM:** uma vez por partida, com 10 de vida ou menos, reembaralhe os dois baralhos ativos e redistribua a mesa e a mão.",
+        "## Fim da partida",
+        "Quando o baralho dos sonhos acabar, você vence se não restar nenhum pesadelo que não seja Ás. Você perde se todos os guardiões especiais que não são Ases tiverem sido removidos."
+      ]
+    },
+    "quickStart": {
+      "hash": "cab0b466",
+      "value": [
+        "Selecione guardiões da mão, selecione uma carta de sonho e depois atribua-os.",
+        "Alcance o valor de um guardião para recrutá-lo; supere o valor de um pesadelo para eliminá-lo.",
+        "Resolva a mesa antes de encerrar cada turno. Mantenha a vida de Alice acima de 0."
+      ]
+    },
+    "title": {
+      "hash": "19561a22",
+      "value": "Somnus"
+    }
+  },
+  "spider-solitaire": {
+    "cardDescription": {
+      "hash": "d9fbe47f",
+      "value": "Construa sequências do mesmo naipe do Rei ao Ás num baralho duplo embaralhado."
+    },
+    "howToPlay": {
+      "hash": "d87f89fb",
+      "value": [
+        "## Objetivo",
+        "Monte **8 sequências completas do mesmo naipe**, cada uma do Rei ao Ás. As sequências completas saem da mesa.",
+        "## Regras",
+        "- Construa as colunas **em ordem decrescente, independentemente do naipe**.",
+        "- Você só pode mover um grupo de cartas se ele formar uma **sequência decrescente do mesmo naipe**.",
+        "- Qualquer carta ou sequência válida pode ir para uma coluna vazia.",
+        "- Quando se forma uma sequência completa **do Rei ao Ás** do mesmo naipe, ela é removida automaticamente.",
+        "## Monte",
+        "Toque no monte para distribuir uma carta em cada coluna de uma vez. Só é possível distribuir quando nenhuma coluna estiver vazia."
+      ]
+    },
+    "quickStart": {
+      "hash": "50b8bd5d",
+      "value": [
+        "Construa em ordem decrescente; mova sequências do mesmo naipe; distribua quando não houver jogadas."
+      ]
+    },
+    "title": {
+      "hash": "de90184a",
+      "value": "Aranha"
+    }
+  },
+  "spiderette": {
+    "cardDescription": {
+      "hash": "f8691a69",
+      "value": "Uma Aranha compacta de um só baralho, jogada em sete colunas dispostas como no Klondike."
+    },
+    "howToPlay": {
+      "hash": "07143aa9",
+      "value": [
+        "## Objetivo",
+        "Retire quatro sequências completas do mesmo naipe, do Rei ao Ás.",
+        "## Regras",
+        "- Construa as colunas em ordem decrescente, independentemente do naipe.",
+        "- Só sequências decrescentes do mesmo naipe se movem juntas.",
+        "- Qualquer carta ou sequência válida pode ocupar uma coluna vazia.",
+        "- O monte distribui uma carta em cada coluna, mas só quando nenhuma coluna estiver vazia."
+      ]
+    },
+    "quickStart": {
+      "hash": "2fb1fe19",
+      "value": [
+        "Construa em ordem decrescente.",
+        "Mova sequências decrescentes do mesmo naipe.",
+        "Distribua as fileiras do monte só quando todas as colunas estiverem ocupadas."
+      ]
+    },
+    "title": {
+      "hash": "dac6b9bc",
+      "value": "Aranhinha"
+    }
+  },
+  "stalker": {
+    "cardDescription": {
+      "hash": "bf48bf06",
+      "value": "Mantenha sua frágil vantagem sobre um perseguidor implacável."
+    },
+    "howToPlay": {
+      "hash": "304772d4",
+      "value": [
+        "## Objetivo",
+        "Chegue ao fim do monte, mantendo pelo menos uma carta (um obstáculo) entre você e o seu perseguidor.",
+        "Quatro cartas vizinhas do mesmo valor (formando uma armadilha) também dão a vitória na hora.",
+        "## O perseguidor",
+        "No início de cada turno, o perseguidor descarta a carta mais à esquerda.",
+        "Se essa carta estava no início de uma sequência de três ou mais valores consecutivos, o perseguidor continua pegando cartas até restarem menos de três cartas dessa sequência.",
+        "## Ações",
+        "- **Buscar:**",
+        "-- Escolha uma carta da fila e descarte todas as cartas desse valor.",
+        "-- Assim você compra o mesmo número de cartas para a ponta direita da fila.",
+        "-- Como o perseguidor vai retirar uma carta, essa ação sempre encurta a fila em 1 carta.",
+        "- **(Tentar) fugir:**",
+        "-- Selecione uma carta e mude-a de posição.",
+        "-- Não é possível mover uma carta que já faz parte de uma sequência de três ou mais.",
+        "-- Se a mudança criar ou aumentar uma sequência de três ou mais, compre duas cartas para a ponta direita da fila. Caso contrário, não compre nenhuma carta.",
+        "-- Essa ação pode encurtar ou aumentar a fila, dependendo de quantas cartas forem compradas."
+      ]
+    },
+    "quickStart": {
+      "hash": "b734f738",
+      "value": [
+        "Chegue ao fim do monte sem ser pego.",
+        "Busque um valor ou mova uma carta segura. Sobreviva até o baralho de 32 cartas acabar."
+      ]
+    },
+    "title": {
+      "hash": "1072421b",
+      "value": "O perseguidor"
+    }
+  },
+  "sultan": {
+    "cardDescription": {
+      "hash": "e649013d",
+      "value": "Erga oito fundações reais até o Sultão, no centro, ficar cercado de Damas."
+    },
+    "howToPlay": {
+      "hash": "9b72d9f3",
+      "value": [
+        "## Objetivo",
+        "Complete as oito fundações externas com Damas ao redor do Rei de copas central.",
+        "## Fundações",
+        "- Sete fundações começam com Reis e continuam com Ás, 2 e assim por diante até a Dama.",
+        "- A fundação do Ás de copas sobe normalmente até a Dama.",
+        "- O Rei de copas central é o Sultão e nunca recebe cartas.",
+        "## Reserva e monte",
+        "- Jogue cartas do descarte ou de qualquer um dos oito espaços de reserva.",
+        "- O monte é virado uma carta de cada vez.",
+        "- O descarte pode ser redistribuído duas vezes.",
+        "## Repor as cartas de reserva",
+        "- Quando uma carta de reserva é jogada, seu espaço é preenchido automaticamente pelo descarte, ou pelo monte se o descarte estiver vazio."
+      ]
+    },
+    "quickStart": {
+      "hash": "7c426ffc",
+      "value": [
+        "Construa as oito fundações externas por naipe em ordem crescente até as Damas.",
+        "Jogue do descarte ou de qualquer uma das oito cartas de reserva.",
+        "As cartas de reserva são repostas pelo monte; o descarte pode ser redistribuído duas vezes."
+      ]
+    },
+    "title": {
+      "hash": "5ac8c364",
+      "value": "Sultão"
+    }
+  },
+  "ten-twenty-thirty": {
+    "cardDescription": {
+      "hash": "5aef36ef",
+      "value": "Distribua uma fila cada vez maior e remova grupos de cartas que somam 10, 20 ou 30."
+    },
+    "howToPlay": {
+      "hash": "da150979",
+      "value": [
+        "## Objetivo",
+        "Descarte as 52 cartas.",
+        "## Regras",
+        "- As cartas valem o seu número; Valetes, Damas e Reis valem **10**.",
+        "- A fila começa com três cartas e é lida da esquerda para a direita, linha após linha.",
+        "- Toque no **monte** para acrescentar a próxima carta ao fim da fila.",
+        "- Quaisquer **duas ou mais cartas vizinhas** na fila que somem **10, 20 ou 30** podem ser descartadas.",
+        "- Toque na primeira carta do grupo e depois na última; as cartas ao redor se juntam.",
+        "- Você perde quando o monte estiver vazio e nenhum grupo somar o total certo."
+      ]
+    },
+    "quickStart": {
+      "hash": "ad5e257b",
+      "value": [
+        "Toque no monte para acrescentar uma carta ao fim da fila.",
+        "Toque na primeira e na última carta de um grupo para removê-lo.",
+        "Um grupo de duas ou mais cartas deve somar 10, 20 ou 30."
+      ]
+    },
+    "title": {
+      "hash": "e0db7d2f",
+      "value": "Dez, vinte, trinta"
+    }
+  },
+  "three-peaks": {
+    "cardDescription": {
+      "hash": "575e4a8f",
+      "value": "Limpe os três picos jogando cartas um valor acima ou abaixo da carta do descarte."
+    },
+    "howToPlay": {
+      "hash": "6c8edb31",
+      "value": [
+        "## Objetivo",
+        "Limpe os três picos removendo cartas um valor acima ou abaixo da carta do descarte.",
+        "## Regras",
+        "- Uma carta exposta de um pico pode ir para o descarte se for **um valor acima ou abaixo** da carta atual do descarte.",
+        "- Os valores dão a volta: Reis podem ser jogados sobre Ases, e vice-versa.",
+        "- Quando não restar jogada válida, vire uma carta do monte para o descarte."
+      ]
+    },
+    "quickStart": {
+      "hash": "387e2c46",
+      "value": [
+        "Jogue no descarte cartas expostas +/-1; A<->K se ligam; compre quando não houver jogadas."
+      ]
+    },
+    "title": {
+      "hash": "3e09b7df",
+      "value": "Três picos"
+    }
+  },
+  "thumb-and-pouch": {
+    "cardDescription": {
+      "hash": "c3b2dd00",
+      "value": "Um Klondike flexível em que as cartas evitam o próprio naipe e qualquer carta preenche um espaço."
+    },
+    "howToPlay": {
+      "hash": "fe290209",
+      "value": [
+        "## Objetivo",
+        "Construa quatro fundações por naipe, do Ás ao Rei.",
+        "## Regras",
+        "- As colunas começam na disposição clássica do Klondike, com sete colunas.",
+        "- Construa em ordem decrescente, mas nunca coloque uma carta sobre o mesmo naipe.",
+        "- Mova juntas as sequências empilhadas.",
+        "- Qualquer carta ou sequência pode ocupar uma coluna vazia."
+      ]
+    },
+    "quickStart": {
+      "hash": "491a0950",
+      "value": [
+        "Construa em ordem decrescente sobre qualquer naipe, menos o mesmo.",
+        "Mova sequências bem empilhadas.",
+        "Qualquer carta ou sequência pode ocupar uma coluna vazia."
+      ]
+    },
+    "title": {
+      "hash": "920b9615",
+      "value": "Polegar e bolsa"
+    }
+  },
+  "tower-of-hanoi": {
+    "cardDescription": {
+      "hash": "d44cd598",
+      "value": "Reconstrua as nove cartas numa única torre decrescente, movendo só as cartas do topo."
+    },
+    "howToPlay": {
+      "hash": "441fdb6b",
+      "value": [
+        "## Objetivo",
+        "Forme uma única pilha ordenada, do **9** embaixo até o **Ás** no topo.",
+        "## Como jogar",
+        "- Arraste só a carta do topo de uma pilha.",
+        "- Mova uma carta de cada vez.",
+        "- Uma carta pode ir para uma pilha vazia ou sobre uma carta de **valor maior**.",
+        "- Não dá para perder. Continue movendo até a torre ficar completa."
+      ]
+    },
+    "quickStart": {
+      "hash": "fd272cd3",
+      "value": [
+        "Mova só a carta do topo de uma pilha.",
+        "Coloque uma carta só sobre um valor maior ou numa pilha vazia.",
+        "Forme uma única pilha com o 9 embaixo e o Ás no topo."
+      ]
+    },
+    "title": {
+      "hash": "9399e5ae",
+      "value": "Torre de Hanói"
+    }
+  },
+  "triple-stack": {
+    "cardDescription": {
+      "hash": "ccdd2c75",
+      "value": "Sirva sanduíches escolhendo cartas com intervalos iguais; não deixe os ingredientes acabarem!"
+    },
+    "howToPlay": {
+      "hash": "882965ff",
+      "value": [
+        "## Objetivo",
+        "**Vença** esgotando seu estoque de ingredientes (o baralho) ao usá-los para servir sanduíches.",
+        "**Perca** quando não restar nenhum sanduíche válido e ainda houver cartas no baralho.",
+        "## Servir",
+        "- Escolha três cartas com valores em intervalos iguais. Ases, Valetes, Damas e Reis valem 1, 11, 12 e 13.",
+        "- Os valores dão a volta entre o Rei e o Ás, então, por exemplo, 9, Dama e 2 formam um sanduíche válido.",
+        "## Reposição",
+        "Sua mão é reposta depois de servir um sanduíche. O número de cartas repostas depende da qualidade do sanduíche:",
+        "- Quatro cartas para sanduíches do mesmo naipe",
+        "- Três cartas para sanduíches da mesma cor (com dois naipes)",
+        "- Duas cartas para os outros sanduíches"
+      ]
+    },
+    "quickStart": {
+      "hash": "6bfdd281",
+      "value": [
+        "Escolha 3 cartas com valores em intervalos iguais (depois do K, volta-se ao A).",
+        "Sanduíches melhores (mesmo naipe ou cor) repõem mais cartas.",
+        "Esvazie o baralho para vencer."
+      ]
+    },
+    "title": {
+      "hash": "7ce9a039",
+      "value": "Pilha tripla"
+    }
+  },
+  "twelve-trials": {
+    "cardDescription": {
+      "hash": "6c6923c8",
+      "value": "Derrote doze monstros da masmorra planejando seus ataques com estratégia."
+    },
+    "howToPlay": {
+      "hash": "c8d9dd27",
+      "value": [
+        "## Objetivo",
+        "- **Vença** derrotando os **12 monstros** (os Valetes, as Damas e os Reis)",
+        "- **Perca** se o monte ou sua vida acabarem.",
+        "- Sua pontuação é o número de cartas que sobrarem no baralho de poder (o monte).",
+        "## Ataques",
+        "- Só os monstros **descobertos** podem ser atacados; eliminá-los revela os que estão atrás.",
+        "- São necessárias **três cartas** para derrotar um monstro:",
+        "-- dois **atacantes** que somem pelo menos a força dele (J = 11, Q = 12, K = 13), e",
+        "-- um **gatilho** do mesmo naipe do monstro (o valor não importa).",
+        "- Os **Coringas** são curingas:",
+        "-- valem **10** quando usados como atacantes",
+        "-- valem como qualquer naipe quando usados como gatilho",
+        "- As cartas colocadas num monstro ficam ali até ele ser derrotado, então você pode montar um ataque ao longo de vários turnos.",
+        "- **Descarte** qualquer carta que não possa ou não queira jogar; os descartes fazem você perder vida.",
+        "## Variações",
+        "Você pode jogar com qualquer combinação destas variações (ativadas nas configurações):",
+        "- **Layout da masmorra:** há 5 layouts para escolher, em dificuldade crescente.",
+        "- **Ás bumerangue:** os Ases valem 11 e voltam para sua mão quando usados como gatilho.",
+        "- **Reserva de poder:** compre cinco cartas no primeiro turno e guarde duas cartas viradas para cima para usar quando quiser (cada uma que sobrar vale um ponto a mais).",
+        "- **Habilidades especiais:** os Reis derrotados concedem poderes de uso único:",
+        "-- {KH}: coloque uma carta da mão no fundo do monte",
+        "-- {KD}: veja a carta do fundo do monte e, se quiser, leve-a para o topo",
+        "-- {KS}: dobre o valor de uma carta atacante",
+        "-- {KC}: compre na hora uma carta do monte"
+      ]
+    },
+    "quickStart": {
+      "hash": "7f4d535a",
+      "value": [
+        "Derrote cada monstro com três cartas (que podem ser jogadas em turnos diferentes).",
+        "As duas primeiras cartas precisam somar pelo menos o valor do monstro.",
+        "A última carta precisa ser do naipe do monstro."
+      ]
+    },
+    "title": {
+      "hash": "b2932b01",
+      "value": "As doze provas"
+    }
+  },
+  "waypoint": {
+    "cardDescription": {
+      "hash": "ae467716",
+      "value": "Troque de marcha em três etapas de rali, acerte cada setor em cheio e fique à frente do relógio."
+    },
+    "howToPlay": {
+      "hash": "7bb3bc13",
+      "value": [
+        "## Objetivo",
+        "Complete três etapas de rali ganhando mais bônus de tempo do que penalidades, evitando o abandono (DNF) ou a desclassificação (DSQ).",
+        "## Preparação",
+        "- As cartas do Ás ao 3 formam a **1ª marcha**, do 4 ao 6 a **2ª marcha** e do 7 ao 10 a **3ª marcha**.",
+        "- A etapa 1 pega 2, 4 e 8 cartas dessas marchas para formar 14 setores virados para baixo.",
+        "- Escolha uma das pontas destacadas da etapa como setor de largada.",
+        "- As Damas são **Impulsos (+1)**. Os Valetes são **Freios (-1)**. Os dois Coringas marcam o dano.",
+        "## Correr um setor",
+        "- Toque na carta do topo de qualquer marcha para somar o valor dela à sua velocidade atual.",
+        "- Toque em quantos Impulsos ou Freios quiser para ajustar o total em +1 ou -1.",
+        "- Toque em **Concluir setor** quando estiver pronto para aceitar o resultado.",
+        "- Acertar o setor com exatamente uma carta jogada dá **1 bônus de tempo**.",
+        "- Acertá-lo com várias cartas não afeta o tempo.",
+        "- Terminar abaixo da meta custa penalidades de tempo iguais à diferença.",
+        "- Terminar acima da meta custa 1 penalidade de tempo e 1 de dano. Você pode jogar Freios antes de concluir para corrigir o estouro sem penalidade nem dano.",
+        "- Um setor de Ás pode ser acertado jogando uma Dama, o que dá o bônus de carta única.",
+        "## Relógio e dano",
+        "- Os Reis vermelhos marcam até 16 bônus; os Reis pretos, até 16 penalidades. Cada giro de 45 graus é um tique, e cada Rei marca 8 tiques.",
+        "- Sua pontuação é **bônus menos penalidades** e passa de uma etapa para a outra.",
+        "- Chegar a 16 penalidades é **DSQ**.",
+        "- Os dois primeiros estouros não corrigidos viram os Coringas para baixo. Um terceiro estouro não corrigido é **DNF**.",
+        "## Etapas seguintes",
+        "- A etapa 2 tem 12 setores: 2 da 1ª marcha, 4 da 2ª e 6 da 3ª, com 3 Impulsos e 3 Freios.",
+        "- A etapa 3 tem 10 setores: 2 da 1ª marcha, 3 da 2ª e 5 da 3ª, com 2 Impulsos e 2 Freios.",
+        "- As cartas das marchas são recolhidas e embaralhadas entre as etapas. Os totais do relógio e do dano continuam.",
+        "## Pontuação final",
+        "- **1 ou mais:** novo recorde do rali.",
+        "- **De 0 a -2:** pódio.",
+        "- **De -3 a -6:** meio do pelotão.",
+        "- **-7 ou menos:** fim do pelotão."
+      ]
+    },
+    "quickStart": {
+      "hash": "efaef51d",
+      "value": [
+        "Escolha uma das pontas da etapa e depois toque em marchas, impulsos e freios para acertar o setor atual.",
+        "Conclua o setor quando estiver pronto. Acertar com uma só carta dá tempo; errar ou estourar sem corrigir custa tempo."
+      ]
+    },
+    "title": {
+      "hash": "17e87cc8",
+      "value": "Ponto de passagem"
+    }
+  },
+  "westcliff": {
+    "cardDescription": {
+      "hash": "63e50d5a",
+      "value": "Um amplo parente do Klondike com dez colunas e muita liberdade nas colunas vazias."
+    },
+    "howToPlay": {
+      "hash": "3b649110",
+      "value": [
+        "## Objetivo",
+        "Leve as 52 cartas para quatro fundações, construídas por naipe do Ás ao Rei.",
+        "## Regras",
+        "- As dez colunas começam com três cartas cada; só a última fica virada para cima.",
+        "- Construa em ordem decrescente, alternando cores.",
+        "- Sequências bem ordenadas podem se mover juntas.",
+        "- Qualquer carta ou sequência pode ocupar uma coluna vazia.",
+        "- Vire o monte uma carta de cada vez, sem redistribuir."
+      ]
+    },
+    "quickStart": {
+      "hash": "912a5d6b",
+      "value": [
+        "Construa as fundações por naipe, do Ás ao Rei.",
+        "Construa as colunas em ordem decrescente, alternando cores.",
+        "Mova sequências ordenadas; qualquer carta pode ocupar uma coluna vazia."
+      ]
+    },
+    "title": {
+      "hash": "d0a94482",
+      "value": "Westcliff"
+    }
+  },
+  "whitehead": {
+    "cardDescription": {
+      "hash": "38b3a363",
+      "value": "Um parente aberto do Klondike, construído por cor, em que sequências do mesmo naipe se movem juntas."
+    },
+    "howToPlay": {
+      "hash": "60370154",
+      "value": [
+        "## Objetivo",
+        "Construa quatro fundações por naipe, do Ás ao Rei.",
+        "## Regras",
+        "- Todas as cartas das colunas ficam viradas para cima.",
+        "- Construa em ordem decrescente na mesma cor.",
+        "- Sequências bem ordenadas do mesmo naipe se movem juntas.",
+        "- Qualquer carta pode ocupar uma coluna vazia."
+      ]
+    },
+    "quickStart": {
+      "hash": "a6fd3cc6",
+      "value": [
+        "Construa as fundações por naipe em ordem crescente.",
+        "Construa em ordem decrescente na mesma cor.",
+        "Mova sequências do mesmo naipe; qualquer carta ocupa um espaço vazio."
+      ]
+    },
+    "title": {
+      "hash": "34471776",
+      "value": "Whitehead"
+    }
+  },
+  "windmill": {
+    "cardDescription": {
+      "hash": "5828d1de",
+      "value": "Leve quatro sequências completas ao centro do moinho enquanto os cantos descem a partir dos Reis."
+    },
+    "howToPlay": {
+      "hash": "9a8acfb4",
+      "value": [
+        "## Objetivo",
+        "Leve as 104 cartas para as fundações.",
+        "## Fundações",
+        "- O **centro** começa com um Ás e é construído **em ordem crescente, independentemente do naipe**, do Ás ao Rei quatro vezes.",
+        "- Cada **canto** começa com qualquer **Rei** e é construído **em ordem decrescente, independentemente do naipe**, até um Ás.",
+        "## Regras",
+        "- As oito **pás** e a carta do topo do **descarte** estão disponíveis.",
+        "- Uma pá vazia é reposta na hora pelo descarte, ou pelo monte se o descarte estiver vazio.",
+        "- A carta do topo de um canto pode ir para o centro, mas a **próxima** carta jogada no centro precisa vir de uma pá ou do descarte.",
+        "- Quando uma carta puder ir para mais de um lugar, toque nela e depois toque no destino.",
+        "- Toque no **monte** para virar uma carta no descarte. Não há redistribuição."
+      ]
+    },
+    "quickStart": {
+      "hash": "9d156e94",
+      "value": [
+        "O centro sobe de A a K quatro vezes, com qualquer naipe.",
+        "Os cantos começam com um Rei e descem até o A, com qualquer naipe.",
+        "As pás são repostas pelo descarte e depois pelo monte."
+      ]
+    },
+    "title": {
+      "hash": "4c29a775",
+      "value": "Moinho de vento"
+    }
+  },
+  "yukon": {
+    "cardDescription": {
+      "hash": "81c89142",
+      "value": "O Klondike sem amarras: mova grupos inteiros de cartas, em qualquer ordem, entre as colunas."
+    },
+    "howToPlay": {
+      "hash": "85f184a6",
+      "value": [
+        "## Objetivo",
+        "Construa as quatro fundações por naipe em ordem crescente, do Ás ao Rei.",
+        "## Regras",
+        "- Mova qualquer carta virada para cima ou **grupo** de cartas **em ordem decrescente, alternando cores**.",
+        "- As cartas levadas **não** precisam estar em sequência.",
+        "- As colunas vazias só podem ser ocupadas por Reis.",
+        "- Toque duas vezes ou arraste cartas avulsas para as fundações."
+      ]
+    },
+    "quickStart": {
+      "hash": "7f7cfdd7",
+      "value": [
+        "Construa as fundações por naipe em ordem crescente, de A a K.",
+        "Construa as colunas em ordem decrescente, alternando cores.",
+        "Mova qualquer grupo de cartas viradas para cima.",
+        "Só os Reis podem ocupar colunas vazias."
+      ]
+    },
+    "title": {
+      "hash": "c03b3169",
+      "value": "Yukon"
+    }
+  }
+}

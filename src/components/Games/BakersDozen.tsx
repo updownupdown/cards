@@ -15,6 +15,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const COLUMN_COUNT = 13;
 const CARDS_PER_COLUMN = 4;
 
@@ -284,7 +285,7 @@ export default function BakersDozen() {
       isLoaded={isLoaded}
       canUndo={canUndo}
       undo={undo}
-      winLoseMessage="All four suits are complete!"
+      winLoseMessage={i18n.t("games:bakersDozen.allFourSuitsAreComplete")}
       showDeviceRotateHint
     >
       {cardMap}

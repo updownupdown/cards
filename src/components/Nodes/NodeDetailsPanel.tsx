@@ -1,6 +1,7 @@
 import { Button } from "@/components/Button/Button";
 import {
   getScaledTextSize,
+  toDisplayUpperCase,
   Typography,
   type TextSize,
   type TextWeight,
@@ -12,6 +13,8 @@ import { GAMES_DATA } from "@/data/games-registry";
 import type { NodeDefinition, NodeVisualState } from "@/data/nodes-map";
 import { setLastPlayedNode } from "@/data/nodes-progress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useDisplayLanguage, useTranslation } from "@/i18n";
+import { localizeGameTitle } from "@/i18n/content";
 import { layoutDims, rgba } from "@/styles/styles";
 import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { type Href } from "expo-router";
@@ -69,12 +72,13 @@ function AnimatedPanelText({
           fontFamily: Typography.fontFamily[weight],
           lineHeight: fontSize * 1.3,
           flexShrink: 1,
-          textTransform,
         },
         animatedStyle,
       ]}
     >
-      {children}
+      {textTransform === "uppercase" && typeof children === "string"
+        ? toDisplayUpperCase(children)
+        : children}
     </Animated.Text>
   );
 }
@@ -106,6 +110,7 @@ function AnimatedRatingBar({
   toTrackColor,
   trackHeight,
 }: AnimatedRatingBarProps) {
+  const { t } = useTranslation("common");
   const trackStyle = useAnimatedStyle(() => ({
     backgroundColor: interpolateColor(
       progress.value,
@@ -138,7 +143,7 @@ function AnimatedRatingBar({
         fromColor={fromLabelColor}
         toColor={toLabelColor}
       >
-        {label}
+        {t(`stats.${label}`)}
       </AnimatedPanelText>
       <Animated.View
         style={[
@@ -177,6 +182,9 @@ export function NodeDetailsPanel({
   const { spacing, ui } = useResponsiveMetrics();
   const insets = useSafeAreaInsets();
   const game = GAMES_DATA[node.path];
+  const title = localizeGameTitle(game, node.path, useDisplayLanguage());
+  const { t } = useTranslation("nodes");
+  const { t: tCommon } = useTranslation("common");
   const stats = getGameSettings(settingsMap, node.path).stats;
   const locked = state === "locked";
   const previousGameRef = useRef(game);
@@ -314,7 +322,7 @@ export function NodeDetailsPanel({
               fromColor={fromPale}
               toColor={toPale}
             >
-              {game.title}
+              {title}
             </AnimatedPanelText>
           </View>
 
@@ -391,9 +399,9 @@ export function NodeDetailsPanel({
           />
 
           <Button
-            text={locked ? undefined : "Play"}
+            text={locked ? undefined : tCommon("play")}
             iconName={locked ? "lock" : undefined}
-            accessibilityLabel={locked ? "Locked" : "Play"}
+            accessibilityLabel={locked ? t("details.locked") : tCommon("play")}
             size="md"
             theme={game.gameColorMid}
             iconColor={game.gameColorPale}

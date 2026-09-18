@@ -1,0 +1,630 @@
+{
+  "accordion": {
+    "youCompressedTheDeckTo": "Vous avez réduit le paquet à une seule carte."
+  },
+  "allInARow": {
+    "youClearedTheBoard": "Vous avez vidé le plateau !",
+    "noAdjacentRankRemains": "Plus aucun rang adjacent."
+  },
+  "archipelago": {
+    "out": "Hors jeu",
+    "notALegalPlacement": "Placement non autorisé",
+    "islandComplete": "Île complète !",
+    "islandUnfinished": "Île inachevée !"
+  },
+  "ascent": {
+    "lhotseRoutesNeed2Cards": "Lhotse : les voies exigent au moins 2 cartes.",
+    "gasherbrumIAnchorMustBe": "Gasherbrum I : l'ancre doit être paire.",
+    "broadPeakChangeYourApproach": "Broad Peak : changez d'approche.",
+    "fatigue": "Fatigue",
+    "noCardsSelected": "Aucune carte sélectionnée",
+    "lastSelectedCardIsThe": "La dernière carte sélectionnée est l'ancre",
+    "camps": "Camps",
+    "routes": "Voies",
+    "skipDiscard": "Passer la défausse",
+    "rest": "Repos",
+    "playRoute": "Jouer la voie",
+    "invalid": "invalide",
+    "approachCautious": "Prudente",
+    "approachReckless": "Téméraire",
+    "approachTechnical": "Technique",
+    "approachFreeClimbing": "Escalade libre",
+    "drawHigherInHand": "Pioche : cartes en main > ancre",
+    "drawLowerInHand": "Pioche : cartes en main < ancre",
+    "drawDiamondsInHand": "Pioche : carreaux en main",
+    "drawNonSpadesInRoute": "Pioche : couleurs hors pique dans la voie",
+    "youSummitedTheMountain": "Vous avez atteint le sommet !",
+    "outOfCardsWhileMakingCamp": "Plus de cartes en installant le camp.",
+    "deckAndFatigueRanDry": "La pioche et la pile de fatigue sont épuisées.",
+    "handOverflowed": "Votre main déborde (18 cartes ou plus).",
+    "baseClimb": "Ascension de base"
+  },
+  "bakersDozen": {
+    "allFourSuitsAreComplete": "Les quatre couleurs sont complètes !"
+  },
+  "baroness": {
+    "allCleared": "Tout est dégagé !",
+    "noThirteenLeftToMake": "Plus aucune paire à 13."
+  },
+  "bisley": {
+    "theFoundationsMeet": "Les fondations se rejoignent !"
+  },
+  "blackberryPie": {
+    "thePieIsReadyYou": "La tarte est prête ! Vous avez récolté les {{BERRY_COUNT}} mûres.",
+    "youCollectedOfBerries": "Vous avez récolté {{collectedCount}} mûres sur {{BERRY_COUNT}}."
+  },
+  "bowling": {
+    "endBall": "Fin de la boule",
+    "pins": "Quilles",
+    "ball": "Boule",
+    "throw": "Lancer",
+    "finalScoreWon": "Score final : {{score}}. Vous avez dépassé {{target}} !",
+    "finalScoreLost": "Score final : {{score}}. Il fallait {{target}}."
+  },
+  "cabinSiege": {
+    "youKilledAllTheZombies": "Vous avez tué tous les zombies !",
+    "noCardsLeftToDraw": "Plus aucune carte à piocher !",
+    "unableToPlaceCard": "Impossible de placer la carte.",
+    "youLost": "Vous avez perdu.",
+    "revealAZombie": "Révélez un zombie",
+    "placeACard": "Placez une carte",
+    "killAZombie": "Tuez un zombie",
+    "noKillableZombies": "Aucun zombie à tuer !"
+  },
+  "cafeQueue": {
+    "discardedTheFourthCardOf": "Vous avez défaussé la quatrième carte d'un rang.",
+    "selectQueuePositionForNext": "Choisissez une place dans la file pour le prochain client",
+    "revealNextCustomer": "Révéler le client suivant",
+    "letThemStay": "Le laisser rester",
+    "kickThemOut": "Le mettre dehors"
+  },
+  "calculation": {
+    "all52CardsAreOn": "Les 52 cartes sont sur les fondations."
+  },
+  "carpet": {
+    "theCarpetIsRolledUp": "Le tapis est roulé !"
+  },
+  "chainOfCommand": {
+    "selectAMemberToPromote": "Choisissez un membre à promouvoir",
+    "selectAValidReplacement": "Choisissez un remplaçant valide",
+    "noValidReplacement": "Aucun remplaçant valide",
+    "sacrificeNeededForMemberPromotion": "(Sacrifice nécessaire pour la promotion)",
+    "promoteAsA": "Promouvoir en :",
+    "dead": "Morts",
+    "youWonByPromotingFrom": "Vous avez gagné en promouvant depuis le rang 1. Score final : {{score}}",
+    "noValidPromotionReplacementRemains": "Plus aucune promotion ni aucun remplacement possible. Vous avez perdu.",
+    "rk": "Rg",
+    "members": "Membres",
+    "candidates": "Candidats",
+    "member": "Membre",
+    "candidate": "Candidat"
+  },
+  "chapterAndVerse": {
+    "terminated": "Licencié",
+    "employeeOfTheMonth": "Employé du mois",
+    "performanceBonus": "Prime de performance",
+    "promotionToDistrictManager": "Promotion au poste de directeur régional",
+    "companyLivestockOptions": "Options sur le bétail de l'entreprise",
+    "executiveLordshipProgram": "Programme de seigneurie exécutive",
+    "line": "File",
+    "used": "Utilisés",
+    "firedForLosingYourGuild": "Licencié pour avoir perdu votre réputation auprès de la guilde.",
+    "guildPts": "Pts guilde",
+    "pass": "Passer",
+    "trade": "Échanger",
+    "offer": "Offre"
+  },
+  "cityGrid": {
+    "pileIsFull": "La pile est pleine !",
+    "mustPlaceOnExistingOr": "Placez sur une pile existante ou adjacente !",
+    "placingHereWouldResultIn": "Placer ici laisserait trop de cartes face visible !",
+    "youRanOutOfCards": "Vous n'avez plus de cartes !",
+    "youRanOutOfPlacements": "Plus aucun placement valide !"
+  },
+  "clock": {
+    "youRevealedAll52Cards": "Vous avez révélé les 52 cartes.",
+    "theFourthKingAppearedBefore": "Le quatrième Roi est apparu avant que toutes les cartes soient révélées."
+  },
+  "crazyQuilt": {
+    "theQuiltIsUnstitched": "La courtepointe est décousue !"
+  },
+  "crescent": {
+    "theCrescentIsClear": "Le croissant est dégagé !",
+    "restack": "Rempiler ({{value}})"
+  },
+  "cribbageSquares": {
+    "youScoredPoints": "Vous avez marqué {{score}} points !",
+    "youScoredReachToWin": "Vous avez marqué {{score}}. Atteignez {{TARGET_SCORE}} pour gagner."
+  },
+  "crownslayer": {
+    "castle": "Château",
+    "tavern": "Taverne",
+    "jesters": "Bouffons",
+    "attack": "Attaquer",
+    "defend": "Défendre",
+    "powerHeal": "Soin",
+    "powerDraw": "Pioche",
+    "powerDouble": "Dégâts x2",
+    "powerShield": "- Att.",
+    "noPlayableCards": "Plus aucune carte jouable. Partie terminée !",
+    "noDiscardCanCover": "Aucune défausse ne peut couvrir les dégâts ennemis. Partie terminée !",
+    "victoryGold": "Tous les ennemis sont vaincus ! Victoire OR !",
+    "victorySilver": "Tous les ennemis sont vaincus ! Victoire ARGENT !",
+    "victoryBronze": "Tous les ennemis sont vaincus ! Victoire BRONZE !",
+    "failedToBlock": "Impossible de bloquer {{damage}} dégâts. Partie terminée !"
+  },
+  "cruel": {
+    "crueltyConquered": "La cruauté est vaincue !"
+  },
+  "delta21": {
+    "fldSt": "Ét.terr.",
+    "score": "Score :",
+    "studies": "Études :",
+    "ratingReshapes": "Vos travaux bouleversent l'écologie des eaux douces !\n\n🐟🐟🐟🐟",
+    "ratingAdvances": "Vos recherches font progresser la connaissance des rivières.\n\n🐟🐟🐟",
+    "ratingAids": "Vos résultats aident l'étude locale des poissons.\n\n🐟🐟",
+    "ratingLittle": "Vos relevés apportent peu à la connaissance de la rivière.\n\n🐟"
+  },
+  "dominion": {
+    "allEighteenCardsBelongTo": "Les dix-huit cartes appartiennent à un seul dominion.",
+    "theWasIsolatedWithNo": "La carte {{value}} est isolée, sans rang ni couleur correspondants.",
+    "noConquestsOrReservePlacements": "Plus aucune conquête ni aucun placement de réserve possible."
+  },
+  "dynasty": {
+    "extract": "Extraire",
+    "reassign": "Réattribuer",
+    "allTwelveRoyalsAreDown": "Les douze figures sont tombées.",
+    "youRanOutOfCards": "Vous n'avez plus de cartes avant d'avoir vaincu les douze figures."
+  },
+  "elementaryDetective": {
+    "youScored20ToWin": "Vous avez marqué {{score}} (20 pour gagner)",
+    "score": "Score"
+  },
+  "fanSolitaire": {
+    "theFoundationsAreComplete": "Les fondations sont complètes !"
+  },
+  "fieldCommand": {
+    "invalidCaptureSuitValueRequirement": "Capture invalide : condition de couleur ou de valeur non remplie.",
+    "cannotSacrificeACombatantCard": "Impossible de sacrifier une carte combattante.",
+    "enemy": "Ennemi",
+    "capture": "Capture",
+    "doneDiscarding": "Défausse terminée",
+    "letCapture": "Laisser capturer",
+    "combatantCaptured": "Un combattant est tombé dans la pile de captures ennemie.",
+    "allEnemiesCleared": "Toutes les cartes ennemies éliminées sans perdre de combattant.",
+    "combatantCapturedYouLose": "Un combattant est tombé dans la pile de captures ennemie. Vous avez perdu.",
+    "noCardsToPlay": "Aucune carte à jouer."
+  },
+  "fifteenPuzzle": {
+    "theCardsAreBackIn": "Les cartes sont de nouveau en ordre."
+  },
+  "fightClubs": {
+    "grid": "Grille",
+    "clubs": "Trèfles",
+    "rowCol": "Lig./Col.",
+    "upDown": "Haut/Bas",
+    "sequence": "Suite",
+    "actionMatch": "Assortir",
+    "actionSum": "Somme",
+    "actionAny": "N'importe",
+    "actionLine": "♦ Ligne",
+    "actionRow": "♦ Rangée",
+    "actionColumn": "♦ Col.",
+    "actionDown": "♠ Bas",
+    "actionUp": "♠ Haut",
+    "actionRun": "♥ Suite",
+    "gridClearWon": "La grille est vide. Victoire !",
+    "allClubsSpent": "Les 13 trèfles sont épuisés."
+  },
+  "fortunesCall": {
+    "red": "Rouge",
+    "higher": "Plus haut",
+    "lower": "Plus bas",
+    "misses": "Erreurs"
+  },
+  "gaps": {
+    "everyRowIsInOrder": "Chaque ligne est en ordre !"
+  },
+  "golf": {
+    "youClearedTheTableau": "Vous avez vidé le tableau !",
+    "noMorePlayableCards": "Plus aucune carte jouable."
+  },
+  "grandfathersClock": {
+    "everyHourStruck": "Toutes les heures ont sonné !"
+  },
+  "gremlin": {
+    "helper": "Assistant",
+    "endTurn": "Fin du tour",
+    "tierNovice": "NOVICE",
+    "tierNormal": "NORMAL",
+    "tierAdvanced": "AVANCÉ",
+    "tierLegendary": "LÉGENDAIRE",
+    "tierEpic": "ÉPIQUE",
+    "columnsUsedWin": "{{count}} colonnes utilisées. Victoire {{tier}}.",
+    "allCardsPlayedInColumns": "Toutes les cartes jouées en {{count}} colonnes.",
+    "noRoomForHelper": "Plus de place pour la carte de l'assistant dans les {{count}} colonnes."
+  },
+  "gridlines": {
+    "trump": "Atout",
+    "chooseATrumpCard": "Choisissez une carte d'atout",
+    "pickARevealedCard": "Choisissez une carte révélée",
+    "selectALine": "Choisissez une ligne",
+    "selectAHandCard": "Choisissez une carte de votre main",
+    "youBeatTheGrid": "Vous battez la grille {{youScore}} à {{gridScore}} !",
+    "theGridWins": "La grille gagne {{gridScore}} à {{youScore}}."
+  },
+  "herbalist": {
+    "noble": "Noble",
+    "jester": "Bouffon",
+    "harvestFair": "Récolte honnête : il reste {{count}} herbes.",
+    "harvestGood": "Bonne récolte : il reste {{count}} herbes.",
+    "harvestExcellent": "Excellente récolte : il reste {{count}} herbes.",
+    "harvestPerfect": "Récolte parfaite : il reste {{count}} herbes.",
+    "noHerbsRemain": "Il ne reste plus d'herbes pour soigner le royaume."
+  },
+  "infiltrator": {
+    "retired": "Retirés",
+    "spies": "Espions",
+    "lost": "Perdus",
+    "keySpies": "Espions clés",
+    "supportingSpies": "Espions de soutien",
+    "recruited": "Recrutés",
+    "retireAMatchingSetOr": "Retirez un ensemble assorti, ou passez",
+    "noSetsAvailableForRetirement": "Aucun ensemble à retirer",
+    "removeADoubleAgentFrom": "Retirer un agent double de :",
+    "noSpiesRemain": "Il ne reste aucun espion",
+    "assassinate": "Assassiner",
+    "counter": "Contrer",
+    "recruit": "Recruter",
+    "skip": "Passer",
+    "missionComplete": "Mission accomplie : {{count}} espions clés recrutés.",
+    "missionFailed": "Mission échouée : {{count}} espions clés recrutés, {{lost}} perdus.",
+    "noDoubleAgentsRemain": "Plus aucun agent double. Mission échouée.",
+    "sourceHand": "Main"
+  },
+  "invaders": {
+    "wave2": "Vague 2",
+    "atks": "Atq.",
+    "defs": "Déf.",
+    "defenders": "Défenseurs",
+    "attack": "Attaquer{{value}}",
+    "attackersWave": "Attaquants (vague {{wave}})",
+    "noCardsLeftToPlay": "Vous n'avez plus de cartes à jouer !",
+    "scoreHigherIsBetter": "{{score}} (plus c'est haut, mieux c'est)",
+    "scoreCloserToZero": "{{score}} (plus c'est proche de zéro, mieux c'est)"
+  },
+  "lightsOut": {
+    "everyLightIsOut": "Toutes les lumières sont éteintes."
+  },
+  "loneJoker": {
+    "straightFlush": "Quinte flush",
+    "fourOfAKind": "Carré",
+    "fullHouse": "Full",
+    "flush": "Couleur",
+    "straight": "Quinte",
+    "threeOfAKind": "Brelan",
+    "twoPair": "Double paire",
+    "pair": "Paire",
+    "shieldHasBeenUsed": "Le bouclier a été utilisé",
+    "discards": "Défausses",
+    "plays": "Mains",
+    "bonus": "Bonus",
+    "shield": "Bouclier",
+    "chooseUpTo5Cards": "Choisissez jusqu'à 5 cartes",
+    "bonusShoppe": "Boutique de bonus",
+    "points": "points",
+    "startRound": "Commencer la manche {{value}}",
+    "bonuses": {
+      "extraCard": "+ Carte",
+      "extraDiscard": "+ Défausse",
+      "pocketPoints": "+ 25 pts",
+      "extraHand": "+ Main",
+      "doubleScore": "Score x2",
+      "shield": "Bouclier"
+    },
+    "roundsSurvived": "{{count}} manches survécues{{rating}}. Score final : {{score}}.",
+    "roundNumber": "Manche {{round}}"
+  },
+  "lycan": {
+    "youBeatTheWolf": "Vous battez le Loup {{playerScore}} à {{wolfScore}} !",
+    "theWolfBeatYou": "Le Loup vous bat {{wolfScore}} à {{playerScore}}.",
+    "wolf": "Loup",
+    "round": "Manche",
+    "selectCardsToCapture": "Choisissez des cartes à capturer"
+  },
+  "memory": {
+    "matched": "Paires",
+    "youFoundEveryPair": "Vous avez trouvé toutes les paires !",
+    "guesses": "Essais",
+    "difficulty": "Difficulté",
+    "difficultyVeryEasy": "Très facile",
+    "difficultyEasy": "Facile",
+    "difficultyMedium": "Moyen",
+    "difficultyHard": "Difficile",
+    "difficultyVeryHard": "Très difficile",
+    "difficultyExtreme": "Extrême"
+  },
+  "monteCarlo": {
+    "youClearedAllCards": "Vous avez retiré toutes les cartes !",
+    "noAdjacentPairsLeft": "Plus aucune paire adjacente.",
+    "consolidate": "Regrouper"
+  },
+  "nestor": {
+    "boardCleared": "Plateau dégagé !",
+    "noMatchingPairRemains": "Plus aucune paire assortie."
+  },
+  "nightVigil": {
+    "city": "Ville",
+    "villain": "Méchant",
+    "response": "Réponse",
+    "damage": "Dégâts :",
+    "heal": "Soin :"
+  },
+  "ouroboros": {
+    "jewels": "Joyaux",
+    "trinkets": "Babioles",
+    "markPath": "Marquer le chemin",
+    "explore": "Explorer",
+    "returnToPath": "Revenir au chemin",
+    "lookAround": "Regarder autour",
+    "landedOnTrap": "Vous êtes tombé dans un piège !",
+    "gotAllJewels": "Vous avez les quatre joyaux et avez trouvé la sortie !",
+    "lostWithLoot": "Vous êtes perdu dans le donjon sans issue ! Vous mourez avec votre butin.",
+    "lostInDungeon": "Vous êtes perdu dans le donjon sans issue !"
+  },
+  "pocketPoker": {
+    "youHit10PointsYou": "Vous atteignez 10 points, vous gagnez !",
+    "foldedThreeTimesInA": "Couché trois fois de suite.",
+    "youBustedOut": "Vous êtes à sec.",
+    "tapCardsToDiscard": "Touchez les cartes à défausser",
+    "minBet": "Mise min.",
+    "opponentDraws5YourBet": "L'adversaire pioche : 5 + (votre mise)",
+    "youWin": "Vous gagnez",
+    "youLose": "Vous perdez",
+    "pushTie": "Égalité",
+    "draw": "Piocher {{value}}",
+    "setHand": "Valider la main",
+    "bet": "Miser {{value}}",
+    "nextRound": "Manche suivante",
+    "opponent": "Adversaire",
+    "hands": {
+      "highCard": "Carte haute",
+      "onePair": "Paire",
+      "twoPair": "Double paire",
+      "threeOfAKind": "Brelan",
+      "straight": "Quinte",
+      "flush": "Couleur",
+      "fullHouse": "Full",
+      "fourOfAKind": "Carré",
+      "straightFlush": "Quinte flush"
+    }
+  },
+  "pokerSquares": {
+    "greatHandYouScored": "Belle main ! Vous avez marqué {{score}}.",
+    "youScoredTryForNext": "Vous avez marqué {{score}}. Visez {{TARGET_SCORE}} la prochaine fois.",
+    "noHand": "Aucune main"
+  },
+  "pyramid": {
+    "noMoreMovesAndThe": "Plus aucun coup et la pioche est vide."
+  },
+  "queensAudience": {
+    "theQueensCourtIsComplete": "La cour de la Reine est complète !"
+  },
+  "redDiamond": {
+    "diamonds": "Carreaux",
+    "allBlackCardsHaveBeen": "Toutes les cartes noires ont été jouées.",
+    "thereAreNotEnoughDiamond": "Il n'y a pas assez de carreaux pour regarnir la pile."
+  },
+  "rogueRun": {
+    "youMadeItThroughThe": "Vous avez traversé le donjon.",
+    "run": "Fuir"
+  },
+  "royalCotillion": {
+    "theLastDanceIsDone": "La dernière danse est terminée !"
+  },
+  "royalRest": {
+    "jack": "Valet",
+    "column": "Colonne"
+  },
+  "salicLaw": {
+    "queens": "Dames",
+    "theKingsStandAlone": "Les Rois restent seuls !"
+  },
+  "scorpion": {
+    "allFourSuitStacksAre": "Les quatre piles par couleur sont complètes."
+  },
+  "seer": {
+    "deck": "Paquet",
+    "reveal": "Révéler",
+    "return": "Rendre",
+    "predictions": {
+      "red": "Rouge",
+      "redOddBlackEven": "RI  ·  NP",
+      "even": "Pair",
+      "diamondsHearts": "♦  ·  ♥",
+      "spadesClubs": "♠  ·  ♣",
+      "odd": "Impair",
+      "blackOddRedEven": "NI  ·  RP",
+      "black": "Noir"
+    },
+    "predictionLabel_one": "Prédiction {{label}}, {{count}} pierre",
+    "predictionLabel_other": "Prédiction {{label}}, {{count}} pierres",
+    "complete": ", terminée",
+    "blocked": ", bloquée",
+    "allPredictionsComplete": "Les huit prédictions sont accomplies.",
+    "deckRanOut": "La pioche s'est épuisée avant que toutes les prédictions soient accomplies.",
+    "allPredictionsBlocked": "Les huit prédictions sont bloquées par des pierres.",
+    "chooseHighlightedStone": "Choisissez une pierre en surbrillance",
+    "freedStones_one": "{{count}} pierre libérée",
+    "freedStones_other": "{{count}} pierres libérées"
+  },
+  "shiftingSands": {
+    "draw": "Piocher :",
+    "place": "Placer",
+    "stockToTide": "Pioche vers la marée",
+    "reverse": "Inverser",
+    "castleHeld": "Votre château a tenu : {{castle}} contre {{tide}}.",
+    "tideWon": "La marée l'emporte : {{castle}} contre {{tide}}.",
+    "dunes": "Dunes",
+    "eroded": "Érodées"
+  },
+  "singleDeckSpider": {
+    "fourCompleteSuits": "Quatre couleurs complètes !"
+  },
+  "singularity": {
+    "everyStarCollapsedIn": "Toutes les étoiles se sont effondrées !",
+    "noCardCanReachThe": "Aucune carte ne peut atteindre la singularité."
+  },
+  "sirTommy": {
+    "allFourSuitsHome": "Les quatre couleurs sont arrivées !",
+    "theStockIsSpent": "La pioche est épuisée."
+  },
+  "slyFox": {
+    "place": "Placer {{toPlace}}",
+    "outfoxedTheDeck": "Le paquet est déjoué !"
+  },
+  "somnus": {
+    "thatAssignmentDoesNotMeet": "Cette affectation ne respecte pas les règles de la cible",
+    "dream": "Rêve",
+    "rmvd": "Ret.",
+    "guard": "Gard.",
+    "turn": "Tour",
+    "selectNightmareOrGuardian": "Choisissez un cauchemar ou un gardien",
+    "selected": "Sélection : {{selectedValue}}",
+    "assign": "Affecter",
+    "exile": "Exiler",
+    "deepBreath": "Grande inspiration",
+    "remUsed": "REM utilisé",
+    "remSleep": "Sommeil REM",
+    "nightmareValue": "Cauchemar : {{value}}",
+    "guardianValue": "Gardien : {{value}}",
+    "aliceAwakened": "Alice s'est réveillée avec {{count}} points de vie.",
+    "guardiansLost": "Tous les gardiens spéciaux hors As ont été perdus.",
+    "nightmaresOverwhelmed": "Les cauchemars ont submergé Alice."
+  },
+  "spiderSolitaire": {
+    "allEightKToA": "Les huit suites de K à A par couleur sont complètes."
+  },
+  "stalker": {
+    "youMadeItToDawn": "Vous avez tenu jusqu'à l'aube.",
+    "theTrapSnapsShut": "Le piège se referme.",
+    "heCaughtYou": "Il vous a attrapé.",
+    "searchDraw": "Chercher\n(Piocher {{pendingSearchDrawCount}})",
+    "escapeDraw": "Fuir\n(Piocher {{pendingEscapeDrawCount}})"
+  },
+  "stockTableauSolitaire": {
+    "everySuitIsHome": "Toutes les couleurs sont arrivées !"
+  },
+  "sultan": {
+    "theSultanIsSurrounded": "Le Sultan est encerclé !"
+  },
+  "tenTwentyThirty": {
+    "everyDecadeCounted": "Toutes les dizaines comptées !",
+    "noSumsRemain": "Plus aucune somme possible."
+  },
+  "tripleStack": {
+    "sandwichServedNewCards": "Sandwich servi ({{replacementsPossible}} nouvelles cartes)",
+    "noValidSandwichAvailableYou": "Aucun sandwich valide. Vous avez perdu.",
+    "serveSandwich": "Servir le sandwich",
+    "youWonByDrawingOut": "Vous avez gagné en épuisant le paquet. Score final (le plus bas est le meilleur) : {{score}}"
+  },
+  "twelveTrials": {
+    "buryAHandCard": "Enterrez une carte de votre main",
+    "selectHandCard": "Choisissez une carte de votre main",
+    "doubleAnAttack": "Doublez une attaque",
+    "chooseAnAttack": "Choisissez une attaque",
+    "chooseWhetherToMoveCard": "Choisissez de déplacer ou non la carte",
+    "moveBottomCardToTop": "Mettre la carte du dessous en haut",
+    "drawACard": "Piochez une carte",
+    "notAValidPlacement": "Placement invalide",
+    "dungeonClearedScore": "Donjon terminé ! Score : {{score}}.",
+    "youRanOutOfHealth": "Vous n'avez plus de points de vie.",
+    "youRanOutOfAttacks": "Vous n'avez plus d'attaques.",
+    "special": "Spécial",
+    "hand": "Main",
+    "setReserve2": "Mettre en réserve ({{length}}/2)",
+    "moveToTop": "Mettre {{value}} en haut",
+    "doNothing": "Ne rien faire",
+    "noKingSelected": "Aucun Roi sélectionné"
+  },
+  "waypoint": {
+    "current": "Actuel",
+    "brake": "Frein",
+    "gas": "Gaz",
+    "time": "Temps",
+    "penalty": "Pénalité",
+    "damage": "Dégâts",
+    "finishSector": "Finir",
+    "ratingRecord": "Nouveau record du rallye : +{{score}}.",
+    "ratingPodium": "Sur le podium : {{score}}.",
+    "ratingMiddle": "Milieu de peloton : {{score}}.",
+    "ratingBack": "Fond de peloton : {{score}}.",
+    "dnf": "Abandon : la voiture a subi trop de dégâts.",
+    "dsq": "Disqualifié : le chrono a atteint 16 pénalités.",
+    "stage": "Spéciale",
+    "sector": "Secteur",
+    "speed": "Vitesse"
+  },
+  "windmill": {
+    "theSailsTurnFreely": "Les ailes tournent librement !"
+  },
+  "advisorInfo": {
+    "advisor": "Conseiller",
+    "cancel": "Annuler",
+    "discardToContinue_one": "Défaussez {{count}} carte pour continuer",
+    "discardToContinue_other": "Défaussez {{count}} cartes pour continuer",
+    "diplomacy": "Diplomatie",
+    "diplomacyText": "Défaussez toutes les cartes de votre main de la couleur d'atout du royaume actuel.",
+    "discardCards_one": "Défausser {{count}} carte",
+    "discardCards_other": "Défausser {{count}} cartes",
+    "military": "Armée",
+    "militaryText": "Piochez une carte par trèfle dans votre main.",
+    "drawCards_one": "Piocher {{count}} carte",
+    "drawCards_other": "Piocher {{count}} cartes",
+    "political": "Politique",
+    "politicalText": "Choisissez en haut le souverain d'un royaume non visité pour l'échanger avec le souverain actuel.",
+    "swapRuler": "Échanger le souverain",
+    "commerce": "Commerce",
+    "commerceText": "Piochez deux cartes, puis choisissez-en deux à défausser de votre main.",
+    "drawTwoCards": "Piocher"
+  },
+  "royalEnvoy": {
+    "youWonOverKingdom": "Vous avez conquis le royaume n° {{value}} !",
+    "chooseAKingdom": "Choisissez un royaume",
+    "wins": "Victoires",
+    "nextTopic": "Sujet suivant",
+    "advisors": "Conseillers",
+    "hand": "Main",
+    "topic": "Sujet",
+    "lost": "Perdus",
+    "won": "Gagnés",
+    "tooManyDebates": "Vous avez remporté trop de débats et insulté le souverain !",
+    "wonAllKingdoms": "Vos talents d'orateur ont conquis les souverains des huit royaumes !",
+    "tooFewDebates": "Vous n'avez pas remporté assez de débats ; le souverain ne vous prend pas au sérieux."
+  },
+  "alaska": {
+    "everyAlaskanSuitIsHome": "Toutes les couleurs de l'Alaska sont rentrées !"
+  },
+  "fortress": {
+    "theFortressIsComplete": "La forteresse est achevée !"
+  },
+  "moosehide": {
+    "everyTrailLeadsHome": "Toutes les pistes mènent à la maison !"
+  },
+  "beleagueredCastle": {
+    "theCastleFalls": "Le château tombe !"
+  },
+  "labyrinth": {
+    "youFoundTheWayOut": "Vous avez trouvé la sortie !",
+    "lostInTheLabyrinth": "Perdu dans le labyrinthe."
+  },
+  "parallels": {
+    "everyRowLinesUp": "Toutes les rangées sont alignées !"
+  },
+  "frog": {
+    "everyFrogMadeItHome": "Toutes les grenouilles sont rentrées !"
+  },
+  "pussInTheCorner": {
+    "allFourCornersFilled": "Les quatre coins sont remplis !"
+  }
+}

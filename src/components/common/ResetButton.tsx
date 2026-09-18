@@ -2,6 +2,7 @@ import { Button } from "@/components/Button/Button";
 import { Text } from "@/components/common/Text";
 import { useFade } from "@/hooks/useFade";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useTranslation } from "@/i18n";
 import { flexStyles } from "@/styles/flexStyles";
 import { layoutDims, Colors, rgba } from "@/styles/styles";
 import React, { useRef, useState } from "react";
@@ -23,6 +24,7 @@ export function ResetButton({
   pressedIconColor,
 }: Props) {
   const { spacing } = useResponsiveMetrics();
+  const { t } = useTranslation("game");
   const [showResetHint, setShowResetHint] = useState(false);
   const { isRendered: renderResetHint, opacity: hintOpacity } = useFade(
     showResetHint,
@@ -110,7 +112,7 @@ export function ResetButton({
               textAlign: "center",
             }}
           >
-            Hold to reset game
+            {t("reset.hold")}
           </Text>
         </Animated.View>
       )}

@@ -27,6 +27,7 @@ import { flexStyles } from "@/styles/flexStyles";
 import { Colors, rgba } from "@/styles/styles";
 import { rotatedText } from "@/styles/textStyles";
 
+import { i18n } from "@/i18n";
 const startScore = 5;
 const winScore = 10;
 const maxFoldStreak = 3;
@@ -75,17 +76,18 @@ const ALL_CARDS: PlayingCard[] = SUITS.flatMap((suit) =>
   })),
 );
 
+// Hand categories, weakest first, as keys in games:pocketPoker.hands.
 const CAT_NAMES = [
-  "High Card",
-  "One Pair",
-  "Two Pair",
-  "Three of a Kind",
-  "Straight",
-  "Flush",
-  "Full House",
-  "Four of a Kind",
-  "Straight Flush",
-];
+  "highCard",
+  "onePair",
+  "twoPair",
+  "threeOfAKind",
+  "straight",
+  "flush",
+  "fullHouse",
+  "fourOfAKind",
+  "straightFlush",
+] as const;
 
 /** Rank a concrete (no-joker) 5-card hand as a comparable length-6 array. */
 function handValue(cards: PlayingCard[]): number[] {
@@ -218,8 +220,11 @@ function bestFiveOf(cards: PlayingCard[]) {
 }
 
 function handName(val: number[]) {
-  if (val[0] === 8 && val[1] === 14) return "Royal Flush";
-  return CAT_NAMES[val[0]] ?? "High Card";
+  if (val[0] === 8 && val[1] === 14) return i18n.t("cards:royalFlush");
+  const name = CAT_NAMES[val[0]];
+  return name
+    ? i18n.t(`games:pocketPoker.hands.${name}`)
+    : i18n.t("cards:highCard");
 }
 
 function foldOutcome(foldStreak: number) {
@@ -491,7 +496,7 @@ export default function PocketPoker() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 30,
-        placeholder: { text: "Stock", infoPos: "right" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "right" },
       },
       { id: "hud", col: 1.9, row: 0, width: 3.2 },
       {
@@ -502,7 +507,7 @@ export default function PocketPoker() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 30,
-        placeholder: { text: "Discard", infoPos: "left" },
+        placeholder: { text: i18n.t("cards:discard"), infoPos: "left" },
       },
 
       // Opponent
@@ -635,10 +640,10 @@ export default function PocketPoker() {
       isLoaded={isLoaded}
       winLoseMessage={
         game.won
-          ? "You hit 10 points — you win!"
+          ? i18n.t("games:pocketPoker.youHit10PointsYou")
           : game.foldStreak >= maxFoldStreak
-            ? "Folded three times in a row."
-            : "You busted out."
+            ? i18n.t("games:pocketPoker.foldedThreeTimesInA")
+            : i18n.t("games:pocketPoker.youBustedOut")
       }
       canUndo={canUndo}
       undo={undo}
@@ -646,7 +651,7 @@ export default function PocketPoker() {
       {/* Top */}
       <View style={[flexStyles.colCentered, getZoneStylesById("hud")]}>
         <ProgressBar
-          labelText="Score"
+          labelText={i18n.t("cards:score")}
           progressValue={game.score}
           totalValue={winScore}
           color={
@@ -681,7 +686,7 @@ export default function PocketPoker() {
               color={colorPale}
               textTransform="uppercase"
             >
-              Fold
+              {i18n.t("cards:fold")}
             </Text>
             <Text size="xl" weight={600} color={colorPale}>
               {game.foldStreak}/{maxFoldStreak}
@@ -698,7 +703,7 @@ export default function PocketPoker() {
                 color={colorPale}
                 textTransform="uppercase"
               >
-                Draw
+                {i18n.t("cards:draw")}
               </Text>
               <Text size="xl" weight={600} color={colorPale}>
                 {game.discardCount} / 3
@@ -711,7 +716,7 @@ export default function PocketPoker() {
               color={Colors.white}
               style={{ flex: 2, textAlign: "center" }}
             >
-              Tap cards to discard
+              {i18n.t("games:pocketPoker.tapCardsToDiscard")}
             </Text>
 
             <View style={[flexStyles.colCentered, { flex: 1 }]}>
@@ -721,7 +726,7 @@ export default function PocketPoker() {
                 color={colorPale}
                 textTransform="uppercase"
               >
-                Min bet
+                {i18n.t("games:pocketPoker.minBet")}
               </Text>
               <Text size="xl" weight={600} color={colorPale}>
                 {Math.max(1, game.discardCount || 1)}
@@ -732,7 +737,7 @@ export default function PocketPoker() {
 
         {game.phase === "bet" && (
           <Text size="sm" weight={400} color={Colors.white}>
-            Opponent draws: 5 + (your bet)
+            {i18n.t("games:pocketPoker.opponentDraws5YourBet")}
           </Text>
         )}
 
@@ -771,17 +776,17 @@ export default function PocketPoker() {
           >
             <Text size="md" weight={400} color={Colors.white}>
               {game.roundResult === "win"
-                ? "You win"
+                ? i18n.t("games:pocketPoker.youWin")
                 : game.roundResult === "lose"
-                  ? "You lose"
-                  : "Push (tie)"}
+                  ? i18n.t("games:pocketPoker.youLose")
+                  : i18n.t("games:pocketPoker.pushTie")}
             </Text>
             <Text size="xl" weight={600} color={Colors.white}>
               {game.roundResult === "win"
                 ? `+${game.bet}`
                 : game.roundResult === "lose"
                   ? `-${game.bet}`
-                  : "Push (tie)"}
+                  : i18n.t("games:pocketPoker.pushTie")}
             </Text>
           </View>
         )}
@@ -805,7 +810,7 @@ export default function PocketPoker() {
         {game.phase === "decide" && (
           <>
             <Button
-              text="Fold"
+              text={i18n.t("cards:fold")}
               size="md"
               onPress={fold}
               taller
@@ -814,7 +819,7 @@ export default function PocketPoker() {
               style={{ flex: 1 }}
             />
             <Button
-              text="Play"
+              text={i18n.t("cards:play")}
               size="md"
               onPress={play}
               taller
@@ -827,7 +832,9 @@ export default function PocketPoker() {
         {game.phase === "discard" && (
           <>
             <Button
-              text={`Draw ${selectedDiscards.length ? selectedDiscards.length : ""}`}
+              text={i18n.t("games:pocketPoker.draw", {
+                value: selectedDiscards.length ? selectedDiscards.length : "",
+              })}
               size="md"
               onPress={drawAction}
               taller
@@ -836,7 +843,7 @@ export default function PocketPoker() {
               style={{ flex: 1 }}
             />
             <Button
-              text="Set Hand"
+              text={i18n.t("games:pocketPoker.setHand")}
               size="md"
               onPress={setHand}
               taller
@@ -850,7 +857,7 @@ export default function PocketPoker() {
           Array.from({ length: 3 }, (_, i) => i).map((b) => (
             <Button
               key={b}
-              text={`Bet ${b + 1}`}
+              text={i18n.t("games:pocketPoker.bet", { value: b + 1 })}
               size="md"
               onPress={() => placeBet(b + 1)}
               disabled={b + 1 < minBet}
@@ -862,7 +869,7 @@ export default function PocketPoker() {
 
         {game.phase === "roundEnd" && !game.ended && (
           <Button
-            text="Next Round"
+            text={i18n.t("games:pocketPoker.nextRound")}
             size="md"
             onPress={nextRound}
             fullWidth
@@ -875,11 +882,11 @@ export default function PocketPoker() {
       {[
         {
           id: "oppBackground",
-          label: "Opponent",
+          label: i18n.t("games:pocketPoker.opponent"),
         },
         {
           id: "handBackground",
-          label: "Player",
+          label: i18n.t("cards:player"),
         },
       ].map((label) => {
         return (

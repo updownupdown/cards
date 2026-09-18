@@ -1,0 +1,33 @@
+{
+  "title": "Política de privacidad",
+  "lastUpdated": "Última actualización: {{date}}",
+  "translationNote": "Esta traducción se ofrece solo como referencia. Si difiere de la versión en inglés de esta política, prevalece la versión en inglés.",
+  "summary": {
+    "title": "Resumen",
+    "body": "SoloSuite no recopila, almacena ni comparte ninguna información personal. La app no tiene sistema de cuentas, analíticas, publicidad ni servidor. Todo lo que haces en la app se queda en tu dispositivo."
+  },
+  "stored": {
+    "title": "Datos almacenados en tu dispositivo",
+    "body": "SoloSuite guarda tus estadísticas de juego, favoritos, ajustes y partidas en curso en el almacenamiento local de tu dispositivo. Esta información nunca sale de tu dispositivo, nunca se nos transmite a nosotros ni a terceros, y se elimina automáticamente si desinstalas la app o borras sus datos."
+  },
+  "collected": {
+    "title": "Datos que recopilamos",
+    "body": "Ninguno. SoloSuite no usa servicios de analíticas, informes de errores ni publicidad, y no pide ni guarda tu nombre, correo electrónico, ubicación ni ninguna otra información personal."
+  },
+  "links": {
+    "title": "Enlaces externos",
+    "body": "Algunas pantallas incluyen enlaces opcionales a sitios web externos (por ejemplo, créditos de fotografías). Al tocar uno de ellos, se abre directamente el navegador de tu dispositivo o el sitio enlazado. SoloSuite no controla las prácticas de privacidad de esos sitios externos ni se hace responsable de ellas."
+  },
+  "children": {
+    "title": "Privacidad de los menores",
+    "body": "SoloSuite no recopila a sabiendas información de nadie, incluidos los menores, porque no recopila información de ningún usuario."
+  },
+  "changes": {
+    "title": "Cambios en esta política",
+    "body": "Si esta política cambia, se publicará una versión actualizada en esta misma dirección, con una nueva fecha arriba."
+  },
+  "contact": {
+    "title": "Contacto",
+    "body": "Puedes enviar tus preguntas sobre esta política a <link>{{email}}</link>."
+  }
+}

@@ -28,6 +28,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 export type FanVariant = "la-belle-lucie" | "shamrocks" | "flower-garden";
 
 /**
@@ -806,7 +807,6 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
     [cardHitAreas],
   );
 
-
   const score = game.foundations.reduce((sum, pile) => sum + pile.length, 0);
 
   return (
@@ -819,7 +819,9 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
       undo={undo}
       autoCompleting={isAutoCompleting}
       winLoseMessage={
-        game.won ? "The foundations are complete!" : "No moves remain."
+        game.won
+          ? i18n.t("games:fanSolitaire.theFoundationsAreComplete")
+          : i18n.t("cards:noMovesRemain")
       }
       showDeviceRotateHint
     >
@@ -838,7 +840,9 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
         {config.redeals > 0 && (
           <View style={[getZoneStylesById("redeal")]}>
             <Button
-              text={`Redeal (${config.redeals - game.redealsUsed})`}
+              text={i18n.t("cards:redeal", {
+                value: config.redeals - game.redealsUsed,
+              })}
               size="xs"
               onPress={redeal}
               disabled={

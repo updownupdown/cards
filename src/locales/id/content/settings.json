@@ -1,0 +1,553 @@
+{
+  "archipelago": {
+    "islandJokers": {
+      "hash": "71b79671",
+      "value": {
+        "description": "Menambahkan dua Joker yang bisa ditaruh di mana saja.",
+        "label": "Pakai Joker",
+        "options": [
+          {
+            "label": "Tidak"
+          },
+          {
+            "label": "Ya (lebih mudah)"
+          }
+        ]
+      }
+    }
+  },
+  "ascent": {
+    "ascentChallenge": {
+      "hash": "11a33a3b",
+      "value": {
+        "description": "Tantangan opsional yang mengubah panjang jalur dan aturan.",
+        "label": "Delapan Ribuan",
+        "options": [
+          {
+            "label": "Pendakian dasar (7.500 m)",
+            "description": "Panjang jalur: 3. Tanpa aturan tantangan khusus."
+          },
+          {
+            "label": "Cho Oyu (8.188 m)",
+            "description": "Panjang jalur: 2. Saat mencapai kemah, jangan tambahkan tonggak kemah itu ke jalurmu kecuali berisi minimal 6 kartu."
+          },
+          {
+            "label": "Shishapangma (8.027 m)",
+            "description": "Panjang jalur: 3. Saat memainkan rute dengan pendekatan teknis (wajik) atau panjat bebas (sekop), ambil satu kartu tambahan. Saat memainkan rute dengan pendekatan hati-hati (hati) atau nekat (keriting), ambil satu kartu lebih sedikit. Kamu tetap tidak mengambil lebih banyak kartu daripada jumlah kartu di rute yang dimainkan."
+          },
+          {
+            "label": "Manaslu (8.163 m)",
+            "description": "Panjang jalur: 4. Saat mencapai kemah, jangan tambahkan kartu apa pun ke tumpukan kelelahan. Saat beristirahat, setelah kartu di tumpukan kelelahan masuk ke tanganmu, tambahkan hanya satu kartu ke tumpukan kelelahan."
+          },
+          {
+            "label": "Broad Peak (8.051 m)",
+            "description": "Panjang jalur: 3. Kamu tidak bisa memainkan rute kecuali pendekatannya berbeda dari rute sebelumnya. Saat mencapai kemah, jangan tambahkan tonggak kemah itu ke jalur kecuali pendekatannya berbeda dari semua rute sebelumnya di jalur."
+          },
+          {
+            "label": "Gasherbrum II (8.035 m)",
+            "description": "Panjang jalur: 4. Saat memainkan rute, kurangi satu jumlah kartu yang akan diambil sebelum benar-benar mengambilnya. Jika ini membuat jumlahnya negatif, ambil kartu sebanyak jumlah kartu di rute itu."
+          },
+          {
+            "label": "Gunung Everest (8.848 m)",
+            "description": "Panjang jalur: 5. Saat persiapan, dan setiap kali mencapai kemah, ambil hanya tujuh kartu, bukan sepuluh."
+          },
+          {
+            "label": "Dhaulagiri (8.167 m)",
+            "description": "Panjang jalur: 3. Saat mencapai kemah, jangan tambahkan tonggak kemah itu ke jalurmu kecuali ada lintasan berisi minimal dua kartu di area permainan, termasuk tonggak itu sendiri."
+          },
+          {
+            "label": "Gasherbrum I (8.080 m)",
+            "description": "Panjang jalur: 3. Kamu tidak bisa memainkan rute dengan jangkar bernilai ganjil, termasuk As, Jack, atau King."
+          },
+          {
+            "label": "Kangchenjunga (8.586 m)",
+            "description": "Panjang jalur: 4. Saat memainkan rute, kartu tidak perlu dimainkan berurutan, jadi kartu mana pun di rute bisa menjadi jangkar. Joker tetap tidak bisa dimainkan sebagai jangkar rute."
+          },
+          {
+            "label": "Lhotse (8.516 m)",
+            "description": "Panjang jalur: 3. Kamu tidak bisa memainkan rute kecuali berisi minimal dua kartu."
+          },
+          {
+            "label": "Makalu (8.481 m)",
+            "description": "Panjang jalur: 4. Saat memainkan rute, kamu juga boleh membuang satu kartu apa pun dari tanganmu."
+          },
+          {
+            "label": "Nanga Parbat (8.126 m)",
+            "description": "Panjang jalur: 3. Kamu tidak bisa memainkan lintasan atau turunan. Kartu dalam tanjakan tidak perlu berurutan, tetapi jarak antarkartu harus sama."
+          },
+          {
+            "label": "K2 (8.611 m)",
+            "description": "Panjang jalur: 3. Saat memainkan rute, jumlah kartu yang diambil tidak dibatasi jumlah kartu di rute yang dimainkan."
+          },
+          {
+            "label": "Annapurna I (8.091 m)",
+            "description": "Panjang jalur: 4. Saat mengambil kartu setelah memainkan rute, jika ada kartu yang diambil sejenis dengan jangkar rute, kembalikan semua kartu rute yang dimainkan ke tanganmu. Jangan lakukan ini saat mencapai kemah. Jika kapan pun kamu memegang 18 kartu atau lebih, kamu langsung kalah."
+          }
+        ]
+      }
+    },
+    "ascentDifficulty": {
+      "hash": "4f582426",
+      "value": {
+        "label": "Kesulitan",
+        "options": [
+          {
+            "label": "Santai",
+            "description": "Saat mencapai kemah, selalu tambahkan tonggak yang dimainkan ke jalur, meskipun tidak lebih tinggi dari yang sebelumnya."
+          },
+          {
+            "label": "Standar",
+            "description": "Tidak ada perubahan."
+          },
+          {
+            "label": "Intens",
+            "description": "Saat mencapai kemah, tambahkan tonggak yang dimainkan ke jalur hanya jika berisi lebih banyak kartu daripada yang sebelumnya."
+          }
+        ]
+      }
+    }
+  },
+  "baroness": {
+    "difficulty": {
+      "hash": "9cf97680",
+      "value": {
+        "label": "Kesulitan",
+        "options": [
+          {
+            "label": "Mudah"
+          },
+          {
+            "label": "Sulit"
+          }
+        ]
+      }
+    }
+  },
+  "canfield": {
+    "drawCount": {
+      "hash": "ecd6b2f3",
+      "value": {
+        "label": "Ambil dari dek",
+        "options": [
+          {
+            "label": "Ambil 1"
+          },
+          {
+            "label": "Ambil 3"
+          }
+        ]
+      }
+    }
+  },
+  "chapter-and-verse": {
+    "chapterAndVerseCheckBack": {
+      "hash": "90e8b983",
+      "value": {
+        "description": "Buku teratas di Inventaris boleh dimasukkan ke tawaran.",
+        "label": "Saya cek di gudang dulu",
+        "options": [
+          {
+            "label": "Mati"
+          },
+          {
+            "label": "Nyala (Mudah)"
+          }
+        ]
+      }
+    },
+    "chapterAndVerseLoyalPatrons": {
+      "hash": "2cdf2aa1",
+      "value": {
+        "description": "Tawaran dengan empat Buku atau lebih menambahkan Pelanggan ke reputasi Serikat.",
+        "label": "Pelanggan setia",
+        "options": [
+          {
+            "label": "Mati"
+          },
+          {
+            "label": "Nyala (Mudah)"
+          }
+        ]
+      }
+    },
+    "chapterAndVerseSuperExclusive": {
+      "hash": "3444cc88",
+      "value": {
+        "description": "Buku yang genre atau nilainya sama dengan Buku Bekas berharga $0.",
+        "label": "Tawaran super eksklusif",
+        "options": [
+          {
+            "label": "Mati"
+          },
+          {
+            "label": "Nyala (Sulit)"
+          }
+        ]
+      }
+    },
+    "chapterAndVerseVandals": {
+      "hash": "bf41e3e4",
+      "value": {
+        "description": "Joker mengunci rak Toko Buku pertama yang tersedia saat mencapai Antrean.",
+        "label": "Vandal!",
+        "options": [
+          {
+            "label": "Mati"
+          },
+          {
+            "label": "1 Joker (Sulit)"
+          },
+          {
+            "label": "2 Joker (Lebih sulit)"
+          }
+        ]
+      }
+    }
+  },
+  "fight-clubs": {
+    "fightClubsDifficulty": {
+      "hash": "d82ad464",
+      "value": {
+        "description": "Mode sulit menambahkan Joker kedua ke dek kisi.",
+        "label": "Kesulitan",
+        "options": [
+          {
+            "label": "Mudah (1 Joker)"
+          },
+          {
+            "label": "Sulit (2 Joker)"
+          }
+        ]
+      }
+    }
+  },
+  "forty-thieves": {
+    "difficulty": {
+      "hash": "7161d2c1",
+      "value": {
+        "label": "Kesulitan",
+        "options": [
+          {
+            "label": "Mudah",
+            "description": "Bagi ulang tanpa batas."
+          },
+          {
+            "label": "Sulit",
+            "description": "Tanpa bagi ulang."
+          }
+        ]
+      }
+    }
+  },
+  "gaps": {
+    "gapsDifficulty": {
+      "hash": "6d279a0e",
+      "value": {
+        "description": "Mengatur berapa kali kartu yang belum berurutan boleh dibagi ulang.",
+        "label": "Kesulitan",
+        "options": [
+          {
+            "label": "Mudah (3 kali bagi ulang)"
+          },
+          {
+            "label": "Sulit (2 kali bagi ulang)"
+          }
+        ]
+      }
+    }
+  },
+  "golf": {
+    "golfDifficulty": {
+      "hash": "1fb5445b",
+      "value": {
+        "description": "Mode mudah membolehkan As dan King dimainkan di atas satu sama lain.",
+        "label": "Kesulitan",
+        "options": [
+          {
+            "label": "Mudah"
+          },
+          {
+            "label": "Sulit"
+          }
+        ]
+      }
+    }
+  },
+  "gremlin": {
+    "gremlinDifficulty": {
+      "hash": "22944911",
+      "value": {
+        "label": "Ukuran tangan",
+        "options": [
+          {
+            "label": "5 (Mudah)"
+          },
+          {
+            "label": "4 (Sulit)"
+          }
+        ]
+      }
+    }
+  },
+  "gridlines": {
+    "gridlinesHard": {
+      "hash": "cdabae36",
+      "value": {
+        "description": "Mode sulit memberi kisi target yang lebih rendah untuk dicapai.",
+        "label": "Mode",
+        "options": [
+          {
+            "label": "Normal"
+          },
+          {
+            "label": "Sulit"
+          }
+        ]
+      }
+    }
+  },
+  "herbalist": {
+    "herbalistOpenStables": {
+      "hash": "d3ef883f",
+      "value": {
+        "description": "Menambahkan pendamping Bangsawan dan Badut ke Kandang di tengah.",
+        "label": "Kandang terbuka",
+        "options": [
+          {
+            "label": "Mati"
+          },
+          {
+            "label": "Nyala"
+          }
+        ]
+      }
+    }
+  },
+  "klondike": {
+    "drawCount": {
+      "hash": "ecd6b2f3",
+      "value": {
+        "label": "Ambil dari dek",
+        "options": [
+          {
+            "label": "Ambil 1"
+          },
+          {
+            "label": "Ambil 3"
+          }
+        ]
+      }
+    }
+  },
+  "lycan": {
+    "lycanMode": {
+      "hash": "a77f03e5",
+      "value": {
+        "description": "Dengan lebih sedikit kartu bernilai tinggi, Serigala lebih mudah dikalahkan.",
+        "label": "Kesulitan",
+        "options": [
+          {
+            "label": "Mudah (tanpa 9 dan 10)"
+          },
+          {
+            "label": "Sedang (tanpa 10)"
+          },
+          {
+            "label": "Sulit (semua kartu)"
+          }
+        ]
+      }
+    }
+  },
+  "memory": {
+    "memoryDifficulty": {
+      "hash": "4ec0fa07",
+      "value": {
+        "label": "Ukuran kisi",
+        "options": [
+          {
+            "label": "Sangat mudah (4 x 3)"
+          },
+          {
+            "label": "Mudah (5 x 4)"
+          },
+          {
+            "label": "Sedang (6 x 5)"
+          },
+          {
+            "label": "Sulit (7 x 6)"
+          },
+          {
+            "label": "Sangat sulit (8 x 7)"
+          },
+          {
+            "label": "Ekstrem (8 x 9)"
+          }
+        ]
+      }
+    }
+  },
+  "night-vigil": {
+    "nightVigilDifficulty": {
+      "hash": "d5901a95",
+      "value": {
+        "label": "Kesulitan",
+        "options": [
+          {
+            "label": "Tingkat jalanan",
+            "description": "King memberi 1 kerusakan tambahan."
+          },
+          {
+            "label": "Kasus sang bos",
+            "description": "Queen dan King memberi 1 kerusakan tambahan."
+          },
+          {
+            "label": "Kota dalam bayang",
+            "description": "Queen memberi 1 dan King memberi 2 kerusakan tambahan."
+          }
+        ]
+      }
+    }
+  },
+  "pocket-poker": {
+    "pokerJokers": {
+      "hash": "8bf4ba75",
+      "value": {
+        "description": "Masukkan dua Joker bebas ke dek.",
+        "label": "Joker",
+        "options": [
+          {
+            "label": "Tanpa Joker"
+          },
+          {
+            "label": "Joker bebas"
+          }
+        ]
+      }
+    }
+  },
+  "pyramid": {
+    "pyramidDifficulty": {
+      "hash": "d38b6ca4",
+      "value": {
+        "description": "Mode mudah membolehkanmu memilih kartu kedua jika kartu itu hanya tertutup kartu pertama yang dipilih. Sebenarnya tidak jauh lebih mudah, tetapi lebih pemaaf.",
+        "label": "Kesulitan",
+        "options": [
+          {
+            "label": "Mudah"
+          },
+          {
+            "label": "Sulit"
+          }
+        ]
+      }
+    }
+  },
+  "royal-rest": {
+    "royalRestHardMode": {
+      "hash": "9895d840",
+      "value": {
+        "description": "Jack tidak bisa dipindah ke kolom yang berisi Jack lain, meskipun dipisahkan bantal.",
+        "label": "Mode sulit",
+        "options": [
+          {
+            "label": "Mati"
+          },
+          {
+            "label": "Nyala"
+          }
+        ]
+      }
+    }
+  },
+  "seer": {
+    "seerDifficulty": {
+      "hash": "e0c908ab",
+      "value": {
+        "description": "Mengatur batu tetangga mana yang bisa dibebaskan ramalan yang tepat.",
+        "label": "Kesulitan",
+        "options": [
+          {
+            "label": "Mudah (termasuk diagonal)"
+          },
+          {
+            "label": "Normal (mendatar dan tegak)"
+          },
+          {
+            "label": "Sulit (pilih satu)"
+          }
+        ]
+      }
+    }
+  },
+  "twelve-trials": {
+    "boomerAce": {
+      "hash": "6ab63f67",
+      "value": {
+        "description": "As bernilai 11, dan kembali ke tangan jika dipakai sebagai pemicu.",
+        "label": "As bumerang",
+        "options": [
+          {
+            "label": "Mati"
+          },
+          {
+            "label": "Nyala"
+          }
+        ]
+      }
+    },
+    "dungeonLevel": {
+      "hash": "6b11e248",
+      "value": {
+        "label": "Tata letak dungeon",
+        "options": [
+          {
+            "label": "Level 1 (Pemula)"
+          },
+          {
+            "label": "Level 2"
+          },
+          {
+            "label": "Level 3"
+          },
+          {
+            "label": "Level 4"
+          },
+          {
+            "label": "Level 5 (Ekstrem)"
+          }
+        ]
+      }
+    },
+    "powerReserve": {
+      "hash": "4005b3b7",
+      "value": {
+        "description": "Ambil lima kartu di giliran pertama, dan sisihkan dua untuk dipakai kapan saja.",
+        "label": "Cadangan kekuatan",
+        "options": [
+          {
+            "label": "Mati"
+          },
+          {
+            "label": "Nyala"
+          }
+        ]
+      }
+    },
+    "specialAbilities": {
+      "hash": "c8b26a2e",
+      "value": {
+        "description": "King yang dikalahkan memberi kemampuan sekali pakai.",
+        "label": "Kemampuan khusus",
+        "options": [
+          {
+            "label": "Mati"
+          },
+          {
+            "label": "Nyala"
+          }
+        ]
+      }
+    }
+  }
+}

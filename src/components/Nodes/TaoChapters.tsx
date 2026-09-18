@@ -1,8 +1,13 @@
 import { Text } from "@/components/common/Text";
 import { tao } from "@/components/Collectibles/TaoText";
 import { Colors } from "@/styles/styles";
+import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useDisplayLanguage, useTranslation } from "@/i18n";
+import { isTaoChapterTranslated, localizeTaoChapter } from "@/i18n/content";
+import { useState } from "react";
 import { View } from "react-native";
+import { ShowOriginalToggle } from "./ShowOriginalToggle";
 
 export type CollectionEntry = {
   text: string;
@@ -19,6 +24,17 @@ type TaoChapterProps = {
 
 export function TaoChapter({ chapter, chapterNumber }: TaoChapterProps) {
   const { spacing } = useResponsiveMetrics();
+  const { t } = useTranslation("nodes");
+  const language = useDisplayLanguage();
+  const { settings } = useGlobalSettings();
+  const [showOriginal, setShowOriginal] = useState(false);
+  const hasTranslation =
+    settings.translateCollectibles &&
+    isTaoChapterTranslated(chapterNumber, chapter, language);
+  const shown =
+    hasTranslation && !showOriginal
+      ? localizeTaoChapter(chapterNumber, chapter, language)
+      : chapter;
 
   return (
     <View
@@ -29,11 +45,18 @@ export function TaoChapter({ chapter, chapterNumber }: TaoChapterProps) {
       }}
     >
       <Text size="lg" weight={400} color={Colors.K700}>
-        Chapter {chapterNumber}
+        {t("tao.chapter", { number: chapterNumber })}
       </Text>
       <Text size="xl" weight={300} color={Colors.K200}>
-        {chapter.text}
+        {shown.text}
       </Text>
+
+      {hasTranslation && (
+        <ShowOriginalToggle
+          showOriginal={showOriginal}
+          onToggle={() => setShowOriginal((current) => !current)}
+        />
+      )}
     </View>
   );
 }

@@ -18,6 +18,7 @@ import {
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 type GameState = {
   setupPile: PlayingCard[];
   line: (PlayingCard[] | null)[];
@@ -267,8 +268,8 @@ export default function Accordion() {
       isLoaded={isLoaded}
       winLoseMessage={
         game.won
-          ? "You compressed the deck to one card."
-          : "No legal moves remain."
+          ? i18n.t("games:accordion.youCompressedTheDeckTo")
+          : i18n.t("cards:noLegalMovesRemain")
       }
       canUndo={canUndo}
       undo={undo}

@@ -22,6 +22,7 @@ import {
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const cardSize = "tableau";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -190,7 +191,11 @@ export default function BakersGame() {
       col: i,
       row: 0,
       baseZIndex: 50,
-      placeholder: { text: "Free", infoPos: "below", showCount: false },
+      placeholder: {
+        text: i18n.t("cards:free"),
+        infoPos: "below",
+        showCount: false,
+      },
     }));
 
     const foundationZones: MapZone[] = game.foundations.map((pile, i) => ({
@@ -708,7 +713,6 @@ export default function BakersGame() {
   }
 
   // ── Render ────────────────────────────────────────────────────────────────────
-
 
   function getTapHandler(source: MoveSource) {
     if (source.zone === "cascade") {

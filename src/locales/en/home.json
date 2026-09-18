@@ -1,0 +1,119 @@
+{
+  "tabs": {
+    "home": "Home",
+    "collect": "Collect",
+    "search": "Search",
+    "nodes": "Nodes"
+  },
+  "cardSize": {
+    "small": "List",
+    "medium": "Cards",
+    "large": "Details"
+  },
+  "random": {
+    "roll": "Random games",
+    "clear": "Clear random games"
+  },
+  "favorites": {
+    "add": "Add to favorites",
+    "remove": "Remove from favorites"
+  },
+  "search": {
+    "placeholder": "Search...",
+    "clear": "Clear search",
+    "filters": "Filters",
+    "filter": "Filter",
+    "resetFilters": "Reset filters",
+    "all": "All",
+    "unplayed": "Unplayed"
+  },
+  "sections": {
+    "localOnly": "Local-only Games",
+    "startEasy": "Start Easy!",
+    "startEasyIntro": "Here are some easy-to-learn games to get started. You can find more in the Collect tab.",
+    "discoverMore": "Discover more games",
+    "gameOfTheDay": "Game of the Day",
+    "jumpBackIn": "Jump Back In",
+    "favorites": "Favorites",
+    "becauseYouLiked": "Because you liked \"{{title}}\""
+  },
+  "collect": {
+    "tagProgress": "{{tag}}, {{percentage}}% won"
+  },
+  "tags": {
+    "EasyToLearn": "Easy to Learn",
+    "TableauBuilding": "Tableau Solitaire",
+    "ModernMechanics": "Modern Mechanics",
+    "DungeonCrawler": "Dungeon Crawler",
+    "CardCombat": "Card Combat",
+    "GridPlacement": "Grid Placement",
+    "PokerAndCribbage": "Poker & Cribbage",
+    "PairMatching": "Pair Matching",
+    "SequenceBuilding": "Sequence Building",
+    "StockAndWaste": "Stock & Waste",
+    "ScoringPuzzles": "Scoring Puzzles",
+    "SpatialControl": "Spatial Control"
+  },
+  "statsTab": {
+    "personas": {
+      "nemesis": {
+        "title": "The Nemesis",
+        "subtitle": "Lowest win rate"
+      },
+      "comfort": {
+        "title": "The Comfort Pick",
+        "subtitle": "Highest win rate"
+      },
+      "whale": {
+        "title": "The White Whale",
+        "subtitle": "Most attempts without wins"
+      },
+      "underdog": {
+        "title": "The Underdog",
+        "subtitle": "High win rate, low attempts"
+      }
+    },
+    "sortBy": "Sort by {{column}}",
+    "columns": {
+      "game": "Game",
+      "won": "Won",
+      "lost": "Lost",
+      "winPercent": "W%",
+      "best": "Best",
+      "time": "Time"
+    },
+    "columnNames": {
+      "game": "Game",
+      "won": "Games won",
+      "lost": "Games lost",
+      "winPercent": "Win rate",
+      "best": "Best score",
+      "time": "Fastest time"
+    },
+    "empty": {
+      "title": "Uh-oh, no stats to show!",
+      "body": "Come back after playing a few games to see your stats here."
+    },
+    "fullStats": {
+      "title": "Full Stats",
+      "noStats": "No stats to show",
+      "onlyPlayed": "Only played games are shown"
+    },
+    "total": "Total"
+  },
+  "statsModal": {
+    "title": "Stats"
+  },
+  "install": {
+    "titleIos": "Add SoloSuite to your Home Screen",
+    "titleInstall": "Install SoloSuite",
+    "titleDevice": "Add SoloSuite to your device",
+    "instructionsIos": "In Safari, tap the Share button, then choose “Add to Home Screen”.",
+    "instructionsInstall": "Install for faster launches, a full-screen experience, and offline play.",
+    "instructionsBrowser": "Open your browser menu and choose “Install app” or “Add to Home screen”.",
+    "accepted": "Nice! Your browser is finishing the install in the background.",
+    "dismissed": "No problem — you can install any time from your browser menu.",
+    "installNow": "Install now",
+    "notNow": "Not now"
+  }
+}

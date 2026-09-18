@@ -14,6 +14,9 @@ import { isGameEnabled } from "@/data/games-data";
 import { GAMES_DATA } from "@/data/games-registry";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
+import { useDisplayLanguage, useTranslation } from "@/i18n";
+import { localizeGameTitle } from "@/i18n/content";
+import { formatPercent } from "@/i18n/format";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, rgba, layoutDims } from "@/styles/styles";
@@ -42,8 +45,10 @@ type Persona = {
   row: StatsRow;
 };
 
-type SortKey = "title" | "attempts" | "wins" | "losses" | "winRate" | "best"
-  | "time";
+type StatsColumn = "game" | "won" | "lost" | "winPercent" | "best" | "time";
+
+type SortKey =
+  "title" | "attempts" | "wins" | "losses" | "winRate" | "best" | "time";
 
 type SortState = {
   key: SortKey;
@@ -70,6 +75,8 @@ export function StatsTab({
     direction: "asc",
   });
   const { ui, spacing } = useResponsiveMetrics();
+  const { t } = useTranslation("home");
+  const language = useDisplayLanguage();
   const { height: viewportHeight } = useViewportDimensions();
 
   const scaledPageSidePadding = spacing(layoutDims.pagePadding);
@@ -83,15 +90,15 @@ export function StatsTab({
         .filter(([, gameInfo]) => isGameEnabled(gameInfo))
         .map(([path, gameInfo]) => ({
           path,
-          title: gameInfo.title,
+          title: localizeGameTitle(gameInfo, path, language),
           // Stored entries omit default values (and stats added later, like
           // fastestTimeMs), so normalize them before display.
           stats: settingsMap[path]
             ? getGameSettings(settingsMap, path).stats
             : EMPTY_STATS,
         }))
-        .sort((a, b) => a.title.localeCompare(b.title)),
-    [settingsMap],
+        .sort((a, b) => a.title.localeCompare(b.title, language)),
+    [language, settingsMap],
   );
 
   const playedRows = useMemo(
@@ -205,13 +212,33 @@ export function StatsTab({
       }
     };
 
-    push("nemesis", "The Nemesis", "Lowest win rate", nemesis);
-    push("comfort", "The Comfort Pick", "Highest win rate", comfort);
-    push("whale", "The White Whale", "Most attempts without wins", whale);
-    push("underdog", "The Underdog", "High win rate, low attempts", underdog);
+    push(
+      "nemesis",
+      t("statsTab.personas.nemesis.title"),
+      t("statsTab.personas.nemesis.subtitle"),
+      nemesis,
+    );
+    push(
+      "comfort",
+      t("statsTab.personas.comfort.title"),
+      t("statsTab.personas.comfort.subtitle"),
+      comfort,
+    );
+    push(
+      "whale",
+      t("statsTab.personas.whale.title"),
+      t("statsTab.personas.whale.subtitle"),
+      whale,
+    );
+    push(
+      "underdog",
+      t("statsTab.personas.underdog.title"),
+      t("statsTab.personas.underdog.subtitle"),
+      underdog,
+    );
 
     return entries;
-  }, [playedRows]);
+  }, [playedRows, t]);
 
   const toggleSort = (key: SortKey) => {
     setSortState((current) => {
@@ -229,7 +256,10 @@ export function StatsTab({
     });
   };
 
-  const renderSortableHeader = (label: string, key: SortKey) => {
+  // Headers are abbreviated to fit their columns; screen readers get the
+  // full column name.
+  const renderSortableHeader = (column: StatsColumn, key: SortKey) => {
+    const label = t(`statsTab.columns.${column}`);
     const isActive = sortState.key === key;
     const iconName =
       sortState.direction === "asc" ? "expand-less" : "expand-more";
@@ -237,16 +267,18 @@ export function StatsTab({
     return (
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={`Sort by ${label}`}
+        accessibilityLabel={t("statsTab.sortBy", {
+          column: t(`statsTab.columnNames.${column}`),
+        })}
         key={key}
         onPress={() => toggleSort(key)}
         style={[
           flexStyles.rowCentered,
           {
-            flexDirection: label === "Game" ? "row-reverse" : "row",
+            flexDirection: key === "title" ? "row-reverse" : "row",
             justifyContent: "flex-end",
             gap: 2,
-            flex: label === "Game" ? gameTitleFlex : 1,
+            flex: key === "title" ? gameTitleFlex : 1,
             outline: "none",
           },
         ]}
@@ -258,6 +290,7 @@ export function StatsTab({
         <Text
           size="sm"
           weight={500}
+          numberOfLines={1}
           style={[
             {
               color: isActive ? Colors.white : Colors.K400,
@@ -304,7 +337,7 @@ export function StatsTab({
               },
             ]}
           >
-            Uh-oh, no stats to show!
+            {t("statsTab.empty.title")}
           </Text>
           <Text
             color={Colors.K400}
@@ -315,7 +348,7 @@ export function StatsTab({
               },
             ]}
           >
-            Come back after playing a few games to see your stats here.
+            {t("statsTab.empty.body")}
           </Text>
         </View>
       )}
@@ -344,11 +377,11 @@ export function StatsTab({
             }}
           >
             <HomeSectionTitle
-              title="Full Stats"
+              title={t("statsTab.fullStats.title")}
               subtitle={
                 playedRows.length === 0
-                  ? "No stats to show"
-                  : "Only played games are shown"
+                  ? t("statsTab.fullStats.noStats")
+                  : t("statsTab.fullStats.onlyPlayed")
               }
               iconName="chart"
               pageSidePadding={scaledPageSidePadding}
@@ -377,12 +410,12 @@ export function StatsTab({
                       backgroundColor: Colors.K875,
                     }}
                   >
-                    {renderSortableHeader("Game", "title")}
-                    {renderSortableHeader("Won", "wins")}
-                    {renderSortableHeader("Lost", "losses")}
-                    {renderSortableHeader("W%", "winRate")}
-                    {renderSortableHeader("Best", "best")}
-                    {renderSortableHeader("Time", "time")}
+                    {renderSortableHeader("game", "title")}
+                    {renderSortableHeader("won", "wins")}
+                    {renderSortableHeader("lost", "losses")}
+                    {renderSortableHeader("winPercent", "winRate")}
+                    {renderSortableHeader("best", "best")}
+                    {renderSortableHeader("time", "time")}
                   </View>
 
                   <ScrollView
@@ -501,7 +534,7 @@ export function StatsTab({
                       weight={600}
                       style={{ flex: gameTitleFlex }}
                     >
-                      Total
+                      {t("statsTab.total")}
                     </Text>
                     <Text
                       size="sm"
@@ -526,7 +559,9 @@ export function StatsTab({
                       color={totals.attempts === 0 ? Colors.K700 : Colors.K200}
                     >
                       {totals.wins > 0 && totals.losses > 0
-                        ? `${Math.round((totals.wins / (totals.wins + totals.losses)) * 100)}%`
+                        ? formatPercent(
+                            totals.wins / (totals.wins + totals.losses),
+                          )
                         : "-"}
                     </Text>
                     <Text

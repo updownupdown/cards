@@ -14,8 +14,7 @@ export type TaoId = number;
 export type QuoteId = number;
 
 export type CollectibleReward =
-  | { type: "tao"; id: TaoId }
-  | { type: "quote"; id: QuoteId };
+  { type: "tao"; id: TaoId } | { type: "quote"; id: QuoteId };
 
 export type QuoteDeck = "white" | "black" | "gold";
 

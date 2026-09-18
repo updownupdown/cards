@@ -5,6 +5,7 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const GRID_SIZE = 5;
 const CELL_COUNT = GRID_SIZE * GRID_SIZE;
 
@@ -122,7 +123,7 @@ export default function LightsOut() {
       reset={() => void reset()}
       isLoaded={isLoaded}
       score={game.moves}
-      winLoseMessage="Every light is out."
+      winLoseMessage={i18n.t("games:lightsOut.everyLightIsOut")}
       canUndo={canUndo}
       undo={undo}
     >

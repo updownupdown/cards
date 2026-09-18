@@ -26,6 +26,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
 import { ProgressBar } from "../Home/ProgressBar";
 
+import { i18n } from "@/i18n";
 export type NightVigilDifficulty = "street" | "kingpin" | "city";
 export type NightVigilPlayMode = "standard" | "smoke" | "grapple";
 
@@ -77,10 +78,7 @@ function lowestNumberThreat(threats: NightVigilThreat[]) {
   return Math.min(10, ...values);
 }
 
-function threatValue(
-  threat: NightVigilThreat,
-  threats: NightVigilThreat[],
-) {
+function threatValue(threat: NightVigilThreat, threats: NightVigilThreat[]) {
   if (isAce(threat.card) || isJoker(threat.card)) {
     return highestNumberThreat(threats);
   }
@@ -599,51 +597,45 @@ export default function NightVigil() {
     const threatStartCol =
       game.threats.length > 5 ? 0.5 : game.threats.length > 4 ? 0.75 : 1;
 
-    const threatZones = game.threats.map(
-      (threat, index): MapZone => ({
-        id: `threat-${index}`,
-        name: "threat",
-        pileIndex: index,
-        cards: [threat.card, ...threat.responses],
-        col: index + threatStartCol,
-        row: 1.5,
-        fan: { direction: "down", offset: 0.22 },
-        placeholder: {},
-        baseZIndex: index,
-      }),
-    );
+    const threatZones = game.threats.map((threat, index): MapZone => ({
+      id: `threat-${index}`,
+      name: "threat",
+      pileIndex: index,
+      cards: [threat.card, ...threat.responses],
+      col: index + threatStartCol,
+      row: 1.5,
+      fan: { direction: "down", offset: 0.22 },
+      placeholder: {},
+      baseZIndex: index,
+    }));
 
-    const smokeZones = game.threats.map(
-      (_, index): MapZone => ({
-        id: `smoke-${index}`,
-        col: index + threatStartCol,
-        row: 1,
-        baseZIndex: 50,
-        height: 0.6,
-      }),
-    );
-    const grappleHookZones = game.threats.slice(0, -1).map(
-      (_, index): MapZone => ({
+    const smokeZones = game.threats.map((_, index): MapZone => ({
+      id: `smoke-${index}`,
+      col: index + threatStartCol,
+      row: 1,
+      baseZIndex: 50,
+      height: 0.6,
+    }));
+    const grappleHookZones = game.threats
+      .slice(0, -1)
+      .map((_, index): MapZone => ({
         id: `grapple-hook-${index}`,
         col: index + threatStartCol + 0.5,
         row: 2.4,
         width: 1,
         height: 0.6,
         baseZIndex: 50,
-      }),
-    );
+      }));
 
-    const grappleZones = game.grappleResponses.map(
-      (card, index): MapZone => ({
-        id: `grapple-${index}`,
-        name: "grapple",
-        cards: [card],
-        col: threatStartCol + (game.grapplePair?.[0] ?? 0) + 0.52,
-        row: 1.8 + index * 0.3,
-        rotation: 90,
-        baseZIndex: 50 + index,
-      }),
-    );
+    const grappleZones = game.grappleResponses.map((card, index): MapZone => ({
+      id: `grapple-${index}`,
+      name: "grapple",
+      cards: [card],
+      col: threatStartCol + (game.grapplePair?.[0] ?? 0) + 0.52,
+      row: 1.8 + index * 0.3,
+      rotation: 90,
+      baseZIndex: 50 + index,
+    }));
 
     return [
       {
@@ -659,7 +651,11 @@ export default function NightVigil() {
         col: 0,
         row: 0,
         fan: { maxVisible: 2 },
-        placeholder: { text: "City", showCount: true, infoPos: "right" },
+        placeholder: {
+          text: i18n.t("games:nightVigil.city"),
+          showCount: true,
+          infoPos: "right",
+        },
       },
       {
         id: "encounter",
@@ -667,7 +663,11 @@ export default function NightVigil() {
         cards: game.currentEncounter ? [game.currentEncounter] : [],
         col: 1.5,
         row: 0,
-        placeholder: { text: "Villain", showCount: false, infoPos: "right" },
+        placeholder: {
+          text: i18n.t("games:nightVigil.villain"),
+          showCount: false,
+          infoPos: "right",
+        },
         baseZIndex: 10,
       },
       {
@@ -699,7 +699,7 @@ export default function NightVigil() {
         cards: game.currentResponse ? [game.currentResponse] : [],
         col: 1.5,
         row: responseRow,
-        placeholder: { text: "Response" },
+        placeholder: { text: i18n.t("games:nightVigil.response") },
         baseZIndex: 1,
       },
       {
@@ -875,12 +875,16 @@ export default function NightVigil() {
               },
             ]}
           >
-            <Text>Damage: {roundResult.damage}</Text>
-            <Text>Heal: {roundResult.healing}</Text>
+            <Text>
+              {i18n.t("games:nightVigil.damage")} {roundResult.damage}
+            </Text>
+            <Text>
+              {i18n.t("games:nightVigil.heal")} {roundResult.healing}
+            </Text>
           </View>
 
           <Button
-            text="Resolve"
+            text={i18n.t("cards:resolve")}
             size="md"
             theme="green"
             disabled={!!game.currentResponse || game.ended}
@@ -915,7 +919,7 @@ export default function NightVigil() {
           </View>
 
           <Button
-            text="Draw"
+            text={i18n.t("cards:draw")}
             size="md"
             theme="blue"
             disabled={!canDraw}

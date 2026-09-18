@@ -1,4 +1,11 @@
-import { afterEach, beforeEach, describe, expect, jest, test } from "@jest/globals";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from "@jest/globals";
 import "../../../jest/game-mocks";
 import {
   card,
@@ -68,13 +75,20 @@ describe.each<[string, string, ComponentType, number]>([
   ["Simple Simon", "/simple-simon", SimpleSimon, 10],
 ])("%s (no lose condition)", (_name, path, Game, pileCount) => {
   test("completing the fourth suit wins", async () => {
-    const tableau = Array.from({ length: pileCount }, () => [] as PlayingCard[]);
+    const tableau = Array.from(
+      { length: pileCount },
+      () => [] as PlayingCard[],
+    );
     tableau[0] = run("spades", "K", "2");
     tableau[1] = [card("A", "spades")];
     await renderGame(path, Game, {
       tableau,
       stock: [],
-      completed: [run("hearts", "K", "A"), run("clubs", "K", "A"), run("diamonds", "K", "A")],
+      completed: [
+        run("hearts", "K", "A"),
+        run("clubs", "K", "A"),
+        run("diamonds", "K", "A"),
+      ],
       ended: false,
       won: false,
     });

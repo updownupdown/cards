@@ -1,4 +1,11 @@
-import { afterEach, beforeEach, describe, expect, jest, test } from "@jest/globals";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from "@jest/globals";
 import "../../../jest/game-mocks";
 import {
   card,
@@ -22,7 +29,11 @@ afterEach(() => {
 
 describe("Pyramid", () => {
   // Index 27 is the bottom-right card (row 6, col 6); 26 is its neighbour.
-  const bottomRow = (rank: PlayingCard["rank"], suit: PlayingCard["suit"], col: number) => ({
+  const bottomRow = (
+    rank: PlayingCard["rank"],
+    suit: PlayingCard["suit"],
+    col: number,
+  ) => ({
     ...card(rank, suit),
     row: 6,
     col,

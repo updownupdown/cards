@@ -1,0 +1,41 @@
+{
+  "language": {
+    "label": "Language",
+    "description": "Game names, rules, menus and collectibles use this language.",
+    "system": "Auto ({{language}})"
+  },
+  "translateCollectibles": {
+    "label": "Translate quotes and chapters",
+    "description": "Show quotes and Tao Te Ching chapters in your language. Turn this off to read them in English."
+  },
+  "resumeLastGame": {
+    "label": "Resume game on startup",
+    "description": "Reopen the last game when the app starts."
+  },
+  "showAnimations": {
+    "label": "Show animations",
+    "description": "Weather and scenery effects behind the cards."
+  },
+  "showTips": {
+    "label": "Show tips",
+    "description": "Show a quick start summary for new games."
+  },
+  "keepScreenAwake": {
+    "label": "Keep screen awake",
+    "description": "Keeps the screen on for 10 minutes after your last touch."
+  },
+  "hapticFeedback": {
+    "label": "Haptic feedback",
+    "description": "Vibrates on card drag and drop, and game wins. Haptics must be enabled in your phone settings."
+  },
+  "populateTestProgress": "Populate test progress",
+  "credits": {
+    "starfield": "Starfield background by <link>Olena Bohovyk</link>",
+    "taoTranslation": "Tao Te Ching translation by <link>John H. McDonald</link>"
+  },
+  "privacyPolicy": "Privacy Policy",
+  "resetData": {
+    "button": "Reset all app data",
+    "confirm": "Erase all progress and settings?"
+  }
+}

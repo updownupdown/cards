@@ -720,7 +720,6 @@ export function ReserveCellBoard({
 
   // ── Render ────────────────────────────────────────────────────────────────────
 
-
   function getTapHandler(source: MoveSource) {
     if (source.zone === "cascade") {
       return () => onCascadePress(source.pileIndex, source);

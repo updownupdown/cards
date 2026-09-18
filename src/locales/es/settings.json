@@ -1,0 +1,41 @@
+{
+  "language": {
+    "label": "Idioma",
+    "description": "Los nombres de los juegos, las reglas, los menús y los coleccionables usan este idioma.",
+    "system": "Automático ({{language}})"
+  },
+  "translateCollectibles": {
+    "label": "Traducir citas y capítulos",
+    "description": "Muestra las citas y los capítulos del Tao Te Ching en tu idioma. Desactívalo para leerlos en inglés."
+  },
+  "resumeLastGame": {
+    "label": "Reanudar la partida al iniciar",
+    "description": "Vuelve a abrir la última partida al iniciar la app."
+  },
+  "showAnimations": {
+    "label": "Mostrar animaciones",
+    "description": "Efectos de clima y paisaje detrás de las cartas."
+  },
+  "showTips": {
+    "label": "Mostrar consejos",
+    "description": "Muestra un resumen de inicio rápido en los juegos nuevos."
+  },
+  "keepScreenAwake": {
+    "label": "Mantener la pantalla encendida",
+    "description": "La pantalla se mantiene encendida 10 minutos después de tu último toque."
+  },
+  "hapticFeedback": {
+    "label": "Respuesta háptica",
+    "description": "Vibra al arrastrar y soltar cartas y al ganar. La vibración debe estar activada en los ajustes de tu teléfono."
+  },
+  "populateTestProgress": "Rellenar progreso de prueba",
+  "credits": {
+    "starfield": "Fondo estrellado de <link>Olena Bohovyk</link>",
+    "taoTranslation": "Capítulos del Tao Te Ching traducidos de la versión inglesa de <link>John H. McDonald</link>"
+  },
+  "privacyPolicy": "Política de privacidad",
+  "resetData": {
+    "button": "Restablecer todos los datos",
+    "confirm": "¿Borrar todo el progreso y los ajustes?"
+  }
+}

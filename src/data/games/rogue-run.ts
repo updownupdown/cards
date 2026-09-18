@@ -32,7 +32,7 @@ export const rogueRun: GameDefinition = {
     "## Card Types",
     "- **Black cards are Monsters**: clear them by taking damage equal to their value.",
     "- **Diamonds are Weapons**: equip to reduce monster damage by the weapon's value. Weapons can only be used on monsters of equal or lower value than the last monster they killed.",
-    "- **Hearts are Potions**: heal according to the potion's value. This implementation of the game differs from the original in that you are not limited to one portion per room.",
+    "- **Hearts are Potions**: heal according to the potion's value. This implementation of the game differs from the original in that you are not limited to one potion per room.",
 
     "## Rooms",
     "- The dungeon is divided into rooms of 4 cards each.",

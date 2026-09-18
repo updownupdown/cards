@@ -1,0 +1,51 @@
+{
+  "menu": {
+    "home": "Home",
+    "nodes": "Nodes",
+    "instantWin": "Instant win"
+  },
+  "result": {
+    "won": "You won!",
+    "lost": "You lost",
+    "score": "Score: {{score}}",
+    "playAgain": "Play again",
+    "tryAgain": "Try again"
+  },
+  "reset": {
+    "hold": "Hold to reset game"
+  },
+  "tips": {
+    "quickStart": "Quick Start",
+    "viewRules": "View rules"
+  },
+  "rules": {
+    "title": "How to Play",
+    "unavailable": "Instructions are not available for this game."
+  },
+  "settings": {
+    "title": "Settings",
+    "none": "No game settings",
+    "appliesNow": "Applies without resetting the game.",
+    "appliesNextGame": "Resets the game on change."
+  },
+  "rating": {
+    "title": "Difficulty"
+  },
+  "credits": {
+    "title": "Credits",
+    "backgroundImage": "Background image:"
+  },
+  "deckPreview": {
+    "title": "Deck Preview",
+    "shuffleNotice": "The deck will be shuffled after preview.",
+    "empty": "No cards in deck."
+  },
+  "rotateHint": {
+    "landscape": "Landscape mode\nrecommended",
+    "portrait": "Portrait mode\nrecommended"
+  },
+  "errors": {
+    "gameCrashed": "Something went wrong with that game.",
+    "resumeFailed": "Your last game couldn't be resumed."
+  }
+}

@@ -12,7 +12,7 @@ export const tenTwentyThirty: GameDefinition = {
     difficulty: 35,
     luck: 70,
   },
-  thumbnail: "DefaultThumbnail.webp",
+  thumbnail: "TenTwentyThirty.webp",
   background: GAME_BACKGROUNDS.casino,
   animation: GameAnimations.Stars,
   gameColorDark: "#1b2430",

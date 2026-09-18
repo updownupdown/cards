@@ -12,7 +12,7 @@ export const crazyQuilt: GameDefinition = {
     difficulty: 55,
     luck: 45,
   },
-  thumbnail: "DefaultThumbnail.webp",
+  thumbnail: "CrazyQuilt.webp",
   background: GAME_BACKGROUNDS.cozyCabin,
   animation: GameAnimations.Snow,
   gameColorDark: "#2c1d26",

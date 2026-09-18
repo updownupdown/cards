@@ -17,6 +17,7 @@ import {
 import { useEffect, useState } from "react";
 import { ActivityIndicator, BackHandler, Platform, View } from "react-native";
 import { endGameLaunch } from "@/components/common/GameLaunchOverlay";
+import { i18n } from "@/i18n";
 
 export function generateStaticParams() {
   return GAME_DEFINITIONS.map(({ path }) => ({ game: path.slice(1) }));
@@ -53,7 +54,7 @@ export function ErrorBoundary({ error }: ErrorBoundaryProps) {
       .catch(() => {})
       .finally(() => {
         if (!active) return;
-        showToast("Something went wrong with that game.");
+        showToast(i18n.t("game:errors.gameCrashed"));
         router.replace("/");
       });
 

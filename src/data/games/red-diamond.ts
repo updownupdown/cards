@@ -33,7 +33,7 @@ export const redDiamond: GameDefinition = {
     "## Playing Black Cards",
     "- Select either card in your hand, then tap a legal pile. When both hand cards have been played, two more are dealt automatically.",
     "- Cards in every pile must alternate between Clubs and Spades.",
-    "-- Outside piles must match its adjacent Diamond's value and holds up to **3 cards**.",
+    "-- Outside piles must match their adjacent Diamond's value and hold up to **3 cards**.",
     "-- Inside piles touch two Diamonds. A card may match either value, or their sum, positive difference, product, or whole-number quotient. Inside piles hold up to **4 cards**.",
     "-- The center pile accepts any card, and holds up to **5 cards**.",
 

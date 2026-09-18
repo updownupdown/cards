@@ -1,0 +1,51 @@
+{
+  "menu": {
+    "home": "Beranda",
+    "nodes": "Peta",
+    "instantWin": "Menang instan"
+  },
+  "result": {
+    "won": "Kamu menang!",
+    "lost": "Kamu kalah",
+    "score": "Skor: {{score}}",
+    "playAgain": "Main lagi",
+    "tryAgain": "Coba lagi"
+  },
+  "reset": {
+    "hold": "Tahan untuk mengulang permainan"
+  },
+  "tips": {
+    "quickStart": "Mulai cepat",
+    "viewRules": "Lihat aturan"
+  },
+  "rules": {
+    "title": "Cara bermain",
+    "unavailable": "Petunjuk untuk permainan ini belum tersedia."
+  },
+  "settings": {
+    "title": "Pengaturan",
+    "none": "Tidak ada pengaturan permainan",
+    "appliesNow": "Berlaku tanpa mengulang permainan.",
+    "appliesNextGame": "Permainan diulang saat diubah."
+  },
+  "rating": {
+    "title": "Kesulitan"
+  },
+  "credits": {
+    "title": "Kredit",
+    "backgroundImage": "Gambar latar:"
+  },
+  "deckPreview": {
+    "title": "Pratinjau dek",
+    "shuffleNotice": "Dek akan dikocok setelah pratinjau.",
+    "empty": "Tidak ada kartu di dek."
+  },
+  "rotateHint": {
+    "landscape": "Mode lanskap\ndisarankan",
+    "portrait": "Mode potret\ndisarankan"
+  },
+  "errors": {
+    "gameCrashed": "Terjadi masalah pada permainan itu.",
+    "resumeFailed": "Permainan terakhirmu tidak bisa dilanjutkan."
+  }
+}

@@ -20,6 +20,7 @@ import {
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const gridCols = 4;
 const gridRows = 3;
 
@@ -155,7 +156,7 @@ function resolvePlaymateReveal(
     ended,
     won: ended ? score >= 20 : state.won,
     winLoseMessage: ended
-      ? `You scored ${score} (20 to win)`
+      ? i18n.t("games:elementaryDetective.youScored20ToWin", { score })
       : state.winLoseMessage,
   };
 }
@@ -301,7 +302,7 @@ export default function ElementaryDetective() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: "Stock", infoPos: "left" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "left" },
       },
       {
         id: "discard",
@@ -311,7 +312,7 @@ export default function ElementaryDetective() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: "Discard", infoPos: "left" },
+        placeholder: { text: i18n.t("cards:discard"), infoPos: "left" },
       },
       {
         id: "score",
@@ -321,7 +322,10 @@ export default function ElementaryDetective() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: "Score", infoPos: "left" },
+        placeholder: {
+          text: i18n.t("games:elementaryDetective.score"),
+          infoPos: "left",
+        },
       },
       ...guessZones,
       ...playmatesZones,

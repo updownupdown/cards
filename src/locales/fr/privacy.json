@@ -1,0 +1,33 @@
+{
+  "title": "Politique de confidentialité",
+  "lastUpdated": "Dernière mise à jour : {{date}}",
+  "translationNote": "Cette traduction est fournie à titre indicatif. En cas de différence avec la version anglaise de cette politique, la version anglaise fait foi.",
+  "summary": {
+    "title": "Résumé",
+    "body": "SoloSuite ne collecte, ne stocke et ne partage aucune information personnelle. L'application n'a ni système de compte, ni outil d'analyse, ni publicité, ni serveur. Tout ce que vous faites dans l'application reste sur votre appareil."
+  },
+  "stored": {
+    "title": "Données stockées sur votre appareil",
+    "body": "SoloSuite enregistre vos statistiques de jeu, vos favoris, vos réglages et vos parties en cours dans le stockage local de votre appareil. Ces informations ne quittent jamais votre appareil, ne sont jamais transmises ni à nous ni à des tiers, et sont supprimées automatiquement si vous désinstallez l'application ou effacez ses données."
+  },
+  "collected": {
+    "title": "Données que nous collectons",
+    "body": "Aucune. SoloSuite n'utilise aucun service d'analyse, de rapport de plantage ou de publicité, et ne demande ni ne stocke votre nom, votre adresse e-mail, votre position ou toute autre information personnelle."
+  },
+  "links": {
+    "title": "Liens externes",
+    "body": "Quelques écrans contiennent des liens facultatifs vers des sites web externes (par exemple, les crédits photo). Toucher l'un de ces liens ouvre directement le navigateur de votre appareil ou le site concerné. SoloSuite n'a aucun contrôle sur les pratiques de confidentialité de ces sites externes et n'en est pas responsable."
+  },
+  "children": {
+    "title": "Confidentialité des enfants",
+    "body": "SoloSuite ne collecte sciemment aucune information auprès de quiconque, y compris les enfants, puisque l'application ne collecte aucune information auprès de ses utilisateurs."
+  },
+  "changes": {
+    "title": "Modifications de cette politique",
+    "body": "Si cette politique change, une version mise à jour sera publiée à cette même adresse, avec une nouvelle date ci-dessus."
+  },
+  "contact": {
+    "title": "Contact",
+    "body": "Pour toute question sur cette politique, écrivez à <link>{{email}}</link>."
+  }
+}

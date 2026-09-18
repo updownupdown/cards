@@ -60,6 +60,17 @@ const config = {
   plugins: [
     "expo-router",
     [
+      "expo-localization",
+      {
+        // Lists the app's languages in Android 13+ per-app language settings
+        // (and iOS Settings), and keeps only these languages' resources.
+        supportedLocales: ["en", "fr", "es", "it", "pt", "tr", "id"],
+        // Apply a language change without restarting the app, which would
+        // lose an in-progress game; useLanguageSync picks up the change.
+        allowDynamicLocaleChangesAndroid: true,
+      },
+    ],
+    [
       "expo-navigation-bar",
       {
         // Without this, Android lays a light translucent scrim under the

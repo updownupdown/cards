@@ -1,0 +1,41 @@
+{
+  "language": {
+    "label": "Dil",
+    "description": "Oyun adları, kurallar, menüler ve koleksiyon öğeleri bu dilde gösterilir.",
+    "system": "Otomatik ({{language}})"
+  },
+  "translateCollectibles": {
+    "label": "Alıntıları ve bölümleri çevir",
+    "description": "Alıntıları ve Tao Te Ching bölümlerini kendi dilinde göster. İngilizce okumak için bunu kapat."
+  },
+  "resumeLastGame": {
+    "label": "Açılışta oyuna devam et",
+    "description": "Uygulama başladığında son oyunu yeniden açar."
+  },
+  "showAnimations": {
+    "label": "Animasyonları göster",
+    "description": "Kartların arkasında hava ve manzara efektleri."
+  },
+  "showTips": {
+    "label": "İpuçlarını göster",
+    "description": "Yeni oyunlarda hızlı başlangıç özeti gösterir."
+  },
+  "keepScreenAwake": {
+    "label": "Ekranı açık tut",
+    "description": "Son dokunuşundan sonra ekranı 10 dakika açık tutar."
+  },
+  "hapticFeedback": {
+    "label": "Dokunsal geri bildirim",
+    "description": "Kart sürükleyip bırakırken ve oyun kazanınca titreşir. Titreşimin telefon ayarlarında açık olması gerekir."
+  },
+  "populateTestProgress": "Test ilerlemesi doldur",
+  "credits": {
+    "starfield": "Yıldızlı arka plan: <link>Olena Bohovyk</link>",
+    "taoTranslation": "Tao Te Ching bölümleri, <link>John H. McDonald</link>'ın İngilizce çevirisinden çevrilmiştir"
+  },
+  "privacyPolicy": "Gizlilik Politikası",
+  "resetData": {
+    "button": "Tüm uygulama verilerini sıfırla",
+    "confirm": "Tüm ilerleme ve ayarlar silinsin mi?"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "title": "Gizlilik Politikası",
+  "lastUpdated": "Son güncelleme: {{date}}",
+  "translationNote": "Bu çeviri kolaylık olsun diye sunulmuştur. Politikanın İngilizce sürümüyle farklılık olursa İngilizce sürüm geçerlidir.",
+  "summary": {
+    "title": "Özet",
+    "body": "SoloSuite hiçbir kişisel bilgi toplamaz, saklamaz veya paylaşmaz. Uygulamada hesap sistemi, analiz, reklam veya sunucu altyapısı yoktur. Uygulamada yaptığın her şey cihazında kalır."
+  },
+  "stored": {
+    "title": "Cihazında saklanan veriler",
+    "body": "SoloSuite oyun istatistiklerini, favorilerini, ayarlarını ve devam eden oyunlarını cihazın yerel depolama alanına kaydeder. Bu bilgiler cihazından asla çıkmaz, bize veya herhangi bir üçüncü tarafa asla gönderilmez ve uygulamayı kaldırdığında ya da verilerini temizlediğinde otomatik olarak silinir."
+  },
+  "collected": {
+    "title": "Topladığımız veriler",
+    "body": "Hiçbiri. SoloSuite analiz, hata raporlama veya reklam hizmetleri kullanmaz; adını, e-posta adresini, konumunu veya başka herhangi bir kişisel bilgini istemez ve saklamaz."
+  },
+  "links": {
+    "title": "Dış bağlantılar",
+    "body": "Az sayıda ekran, dış web sitelerine isteğe bağlı bağlantılar içerir (örneğin fotoğraf kaynak bilgileri). Bunlardan birine dokunmak cihazının web tarayıcısını veya bağlantı verilen siteyi doğrudan açar. SoloSuite'in bu dış sitelerin gizlilik uygulamaları üzerinde hiçbir denetimi yoktur ve bunlardan sorumlu değildir."
+  },
+  "children": {
+    "title": "Çocukların gizliliği",
+    "body": "SoloSuite hiçbir kullanıcıdan bilgi toplamadığı için, çocuklar dahil hiç kimseden bilerek bilgi toplamaz."
+  },
+  "changes": {
+    "title": "Bu politikadaki değişiklikler",
+    "body": "Bu politika değişirse, güncel sürümü yukarıdaki tarih yenilenerek aynı adreste yayımlanır."
+  },
+  "contact": {
+    "title": "İletişim",
+    "body": "Bu politikayla ilgili sorularını <link>{{email}}</link> adresine gönderebilirsin."
+  }
+}

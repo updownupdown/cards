@@ -1,0 +1,20 @@
+{
+  "cancel": "İptal",
+  "close": "Kapat",
+  "reset": "Sıfırla",
+  "play": "Oyna",
+  "home": "Ana sayfa",
+  "notAvailable": "Yok",
+  "stats": {
+    "complexity": "Karmaşıklık",
+    "difficulty": "Zorluk",
+    "luck": "Şans",
+    "played": "Oynanan",
+    "won": "Kazanılan",
+    "lost": "Kaybedilen",
+    "winRate": "Kazanma oranı",
+    "winPercent": "Kazanma %",
+    "best": "En iyi",
+    "fastest": "En hızlı"
+  }
+}

@@ -27,6 +27,6 @@ export const raglan: GameDefinition = {
     "- Use a seven-column tableau with cards dealt in ascending stack sizes.",
     "- Build tableau cards down by alternating colors.",
     "- Only Kings may fill empty tableau spaces.",
-    "- The stock is dealt into waste one card at a time, with no re-deal in this version.",
+    "- The stock is dealt into waste one card at a time, with no redeal in this version.",
   ],
 };

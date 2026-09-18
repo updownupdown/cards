@@ -12,6 +12,7 @@ import {
 } from "@/data/nodes-map";
 import { useNodesProgress } from "@/hooks/useNodesProgress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useTranslation } from "@/i18n";
 import { Colors } from "@/styles/styles";
 import { useCallback, useEffect, useState } from "react";
 import { View } from "react-native";
@@ -27,6 +28,7 @@ type Props = {
 
 export function NodesTab({ settingsMap, contentPaddingTop }: Props) {
   const { spacing, ui } = useResponsiveMetrics();
+  const { t } = useTranslation("nodes");
   const {
     progress,
     wonPaths,
@@ -108,24 +110,36 @@ export function NodesTab({ settingsMap, contentPaddingTop }: Props) {
           ]}
         >
           <NodesProgressItem
-            label="Games"
+            label={t("progress.games")}
             iconName="trophy"
             progress={unlockedNodeCount / NODE_DEFINITIONS.length}
-            accessibilityLabel={`Games ${unlockedNodeCount} of ${NODE_DEFINITIONS.length}`}
+            accessibilityLabel={t("progress.summary", {
+              label: t("progress.games"),
+              collected: unlockedNodeCount,
+              total: NODE_DEFINITIONS.length,
+            })}
             onPress={() => setShowGames(true)}
           />
           <NodesProgressItem
-            label="Chapters"
+            label={t("progress.chapters")}
             iconName="tao"
             progress={collectedTaoIds.size / TAO_CHAPTER_COUNT}
-            accessibilityLabel={`Chapters ${collectedTaoIds.size} of ${TAO_CHAPTER_COUNT}`}
+            accessibilityLabel={t("progress.summary", {
+              label: t("progress.chapters"),
+              collected: collectedTaoIds.size,
+              total: TAO_CHAPTER_COUNT,
+            })}
             onPress={() => setShowTao(true)}
           />
           <NodesProgressItem
-            label="Quotes"
+            label={t("progress.quotes")}
             iconName="quote"
             progress={collectedQuoteIds.size / QUOTE_COUNT}
-            accessibilityLabel={`Quotes ${collectedQuoteIds.size} of ${QUOTE_COUNT}`}
+            accessibilityLabel={t("progress.summary", {
+              label: t("progress.quotes"),
+              collected: collectedQuoteIds.size,
+              total: QUOTE_COUNT,
+            })}
             onPress={() => setShowQuotes(true)}
           />
         </View>

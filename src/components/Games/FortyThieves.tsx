@@ -23,6 +23,7 @@ import {
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 type GameState = {
   foundations: PlayingCard[][];
   tableau: PlayingCard[][];
@@ -170,7 +171,7 @@ export default function FortyThieves() {
       row: 1.5,
       baseZIndex: 10 + pileIndex,
       fan: { direction: "down", offset: cardDims.tableauOffset },
-      placeholder: { text: "Tab", showCount: true },
+      placeholder: { text: i18n.t("cards:tab"), showCount: true },
     }));
 
     const foundationZones: MapZone[] = Array.from(
@@ -198,7 +199,11 @@ export default function FortyThieves() {
         row: 0,
         baseZIndex: 40,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "below", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:stock"),
+          infoPos: "below",
+          showCount: true,
+        },
       },
       {
         id: "waste",
@@ -209,7 +214,11 @@ export default function FortyThieves() {
         row: 0,
         baseZIndex: 36,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Waste", infoPos: "below", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:waste"),
+          infoPos: "below",
+          showCount: true,
+        },
       },
       ...foundationZones,
       ...tableauZones,
@@ -508,7 +517,6 @@ export default function FortyThieves() {
       return top ? [top] : [];
     }
 
-
     const pile = snapshot.tableau[source.pileIndex];
     if (source.cardIndex !== pile.length - 1) return [];
     const top = pile[pile.length - 1];
@@ -769,12 +777,10 @@ export default function FortyThieves() {
     return makeDragHandlers(source, startGhostDrag, onTap);
   }
 
-
   function getTapHandler(source: MoveSource) {
     if (source.zone === "waste") {
       return onWastePress;
     }
-
 
     return () => onTableauCardPress(source.pileIndex, source.cardIndex);
   }

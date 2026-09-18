@@ -1,0 +1,119 @@
+{
+  "tabs": {
+    "home": "Beranda",
+    "collect": "Koleksi",
+    "search": "Cari",
+    "nodes": "Peta"
+  },
+  "cardSize": {
+    "small": "Daftar",
+    "medium": "Kartu",
+    "large": "Detail"
+  },
+  "random": {
+    "roll": "Permainan acak",
+    "clear": "Hapus permainan acak"
+  },
+  "favorites": {
+    "add": "Tambahkan ke favorit",
+    "remove": "Hapus dari favorit"
+  },
+  "search": {
+    "placeholder": "Cari...",
+    "clear": "Hapus pencarian",
+    "filters": "Filter",
+    "filter": "Saring",
+    "resetFilters": "Atur ulang filter",
+    "all": "Semua",
+    "unplayed": "Belum dimainkan"
+  },
+  "sections": {
+    "localOnly": "Permainan khusus lokal",
+    "startEasy": "Mulai yang mudah!",
+    "startEasyIntro": "Berikut beberapa permainan yang mudah dipelajari untuk memulai. Kamu bisa menemukan lebih banyak di tab Koleksi.",
+    "discoverMore": "Temukan permainan lain",
+    "gameOfTheDay": "Permainan hari ini",
+    "jumpBackIn": "Lanjutkan bermain",
+    "favorites": "Favorit",
+    "becauseYouLiked": "Karena kamu menyukai “{{title}}”"
+  },
+  "collect": {
+    "tagProgress": "{{tag}}, {{percentage}}% dimenangkan"
+  },
+  "tags": {
+    "EasyToLearn": "Mudah dipelajari",
+    "TableauBuilding": "Solitaire kolom",
+    "ModernMechanics": "Mekanik modern",
+    "DungeonCrawler": "Penjelajahan dungeon",
+    "CardCombat": "Pertarungan kartu",
+    "GridPlacement": "Penempatan di kisi",
+    "PokerAndCribbage": "Poker & cribbage",
+    "PairMatching": "Mencocokkan pasangan",
+    "SequenceBuilding": "Menyusun urutan",
+    "StockAndWaste": "Dek & tumpukan terbuka",
+    "ScoringPuzzles": "Teka-teki skor",
+    "SpatialControl": "Penguasaan ruang"
+  },
+  "statsTab": {
+    "personas": {
+      "nemesis": {
+        "title": "Musuh bebuyutan",
+        "subtitle": "Tingkat menang terendah"
+      },
+      "comfort": {
+        "title": "Pilihan nyaman",
+        "subtitle": "Tingkat menang tertinggi"
+      },
+      "whale": {
+        "title": "Paus putih",
+        "subtitle": "Paling banyak dicoba tanpa menang"
+      },
+      "underdog": {
+        "title": "Kuda hitam",
+        "subtitle": "Sering menang, jarang dicoba"
+      }
+    },
+    "sortBy": "Urutkan menurut {{column}}",
+    "columns": {
+      "game": "Gim",
+      "won": "Mng.",
+      "lost": "Klh.",
+      "winPercent": "% M",
+      "best": "Maks",
+      "time": "Wkt."
+    },
+    "columnNames": {
+      "game": "Permainan",
+      "won": "Permainan dimenangkan",
+      "lost": "Permainan kalah",
+      "winPercent": "Tingkat menang",
+      "best": "Skor terbaik",
+      "time": "Waktu tercepat"
+    },
+    "empty": {
+      "title": "Wah, belum ada statistik!",
+      "body": "Kembali lagi setelah memainkan beberapa permainan untuk melihat statistikmu di sini."
+    },
+    "fullStats": {
+      "title": "Statistik lengkap",
+      "noStats": "Tidak ada statistik",
+      "onlyPlayed": "Hanya permainan yang sudah dimainkan yang ditampilkan"
+    },
+    "total": "Total"
+  },
+  "statsModal": {
+    "title": "Statistik"
+  },
+  "install": {
+    "titleIos": "Tambahkan SoloSuite ke Layar Utama",
+    "titleInstall": "Pasang SoloSuite",
+    "titleDevice": "Tambahkan SoloSuite ke perangkatmu",
+    "instructionsIos": "Di Safari, ketuk tombol Bagikan, lalu pilih “Tambahkan ke Layar Utama”.",
+    "instructionsInstall": "Pasang agar lebih cepat dibuka, tampil layar penuh, dan bisa dimainkan offline.",
+    "instructionsBrowser": "Buka menu browser, lalu pilih “Instal aplikasi” atau “Tambahkan ke Layar utama”.",
+    "accepted": "Mantap! Browser-mu sedang menyelesaikan pemasangan di latar belakang.",
+    "dismissed": "Tidak masalah — kamu bisa memasang kapan saja dari menu browser.",
+    "installNow": "Pasang sekarang",
+    "notNow": "Nanti saja"
+  }
+}

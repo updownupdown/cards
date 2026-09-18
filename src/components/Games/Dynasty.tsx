@@ -18,6 +18,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
 import { rgba } from "@/styles/styles";
 
+import { i18n } from "@/i18n";
 const shieldColor = "#ffc671";
 
 type RoyalSlot = { cards: PlayingCard[]; armour: number; dead: boolean };
@@ -420,7 +421,7 @@ export default function Dynasty() {
         row: 5.5,
         baseZIndex: 30,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Draw", infoPos: "above" },
+        placeholder: { text: i18n.t("cards:draw"), infoPos: "above" },
       },
       {
         id: "pending",
@@ -440,7 +441,11 @@ export default function Dynasty() {
         row: 5.5,
         baseZIndex: 30,
         fan: { direction: "down", offset: 0.1 },
-        placeholder: { text: "Extract", showCount: false, infoPos: "above" },
+        placeholder: {
+          text: i18n.t("games:dynasty.extract"),
+          showCount: false,
+          infoPos: "above",
+        },
       },
       {
         id: "jokers",
@@ -450,7 +455,11 @@ export default function Dynasty() {
         row: 5.5,
         baseZIndex: 30,
         fan: { direction: "down", offset: 0.1 },
-        placeholder: { text: "Reassign", showCount: false, infoPos: "above" },
+        placeholder: {
+          text: i18n.t("games:dynasty.reassign"),
+          showCount: false,
+          infoPos: "above",
+        },
       },
     ],
     [game],
@@ -553,8 +562,8 @@ export default function Dynasty() {
       score={score}
       winLoseMessage={
         game.won
-          ? "All twelve royals are down."
-          : "You ran out of cards before defeating all twelve royals."
+          ? i18n.t("games:dynasty.allTwelveRoyalsAreDown")
+          : i18n.t("games:dynasty.youRanOutOfCards")
       }
       canUndo={canUndo}
       undo={undo}

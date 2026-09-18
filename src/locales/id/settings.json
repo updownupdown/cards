@@ -1,0 +1,41 @@
+{
+  "language": {
+    "label": "Bahasa",
+    "description": "Nama permainan, aturan, menu, dan koleksi memakai bahasa ini.",
+    "system": "Otomatis ({{language}})"
+  },
+  "translateCollectibles": {
+    "label": "Terjemahkan kutipan dan bab",
+    "description": "Tampilkan kutipan dan bab Tao Te Ching dalam bahasamu. Matikan untuk membacanya dalam bahasa Inggris."
+  },
+  "resumeLastGame": {
+    "label": "Lanjutkan permainan saat dibuka",
+    "description": "Membuka kembali permainan terakhir saat aplikasi dimulai."
+  },
+  "showAnimations": {
+    "label": "Tampilkan animasi",
+    "description": "Efek cuaca dan pemandangan di belakang kartu."
+  },
+  "showTips": {
+    "label": "Tampilkan tips",
+    "description": "Tampilkan ringkasan mulai cepat untuk permainan baru."
+  },
+  "keepScreenAwake": {
+    "label": "Biarkan layar tetap menyala",
+    "description": "Layar tetap menyala selama 10 menit setelah sentuhan terakhir."
+  },
+  "hapticFeedback": {
+    "label": "Umpan balik getar",
+    "description": "Bergetar saat kartu diseret dan dilepas, dan saat menang. Getaran harus diaktifkan di pengaturan ponsel."
+  },
+  "populateTestProgress": "Isi progres uji",
+  "credits": {
+    "starfield": "Latar bintang oleh <link>Olena Bohovyk</link>",
+    "taoTranslation": "Bab Tao Te Ching diterjemahkan dari versi bahasa Inggris karya <link>John H. McDonald</link>"
+  },
+  "privacyPolicy": "Kebijakan Privasi",
+  "resetData": {
+    "button": "Atur ulang semua data aplikasi",
+    "confirm": "Hapus semua progres dan pengaturan?"
+  }
+}

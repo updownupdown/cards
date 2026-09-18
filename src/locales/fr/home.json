@@ -1,0 +1,119 @@
+{
+  "tabs": {
+    "home": "Accueil",
+    "collect": "Collection",
+    "search": "Recherche",
+    "nodes": "Nœuds"
+  },
+  "cardSize": {
+    "small": "Liste",
+    "medium": "Cartes",
+    "large": "Détails"
+  },
+  "random": {
+    "roll": "Jeux au hasard",
+    "clear": "Effacer les jeux au hasard"
+  },
+  "favorites": {
+    "add": "Ajouter aux favoris",
+    "remove": "Retirer des favoris"
+  },
+  "search": {
+    "placeholder": "Rechercher…",
+    "clear": "Effacer la recherche",
+    "filters": "Filtres",
+    "filter": "Filtrer",
+    "resetFilters": "Réinitialiser les filtres",
+    "all": "Tous",
+    "unplayed": "Jamais joués"
+  },
+  "sections": {
+    "localOnly": "Jeux locaux uniquement",
+    "startEasy": "Commencez en douceur\u00a0!",
+    "startEasyIntro": "Voici quelques jeux faciles à apprendre pour débuter. Vous en trouverez d'autres dans l'onglet Collection.",
+    "discoverMore": "Découvrir d'autres jeux",
+    "gameOfTheDay": "Jeu du jour",
+    "jumpBackIn": "Reprendre",
+    "favorites": "Favoris",
+    "becauseYouLiked": "Parce que vous avez aimé «\u00a0{{title}}\u00a0»"
+  },
+  "collect": {
+    "tagProgress": "{{tag}}, {{percentage}}\u00a0% gagnés"
+  },
+  "tags": {
+    "EasyToLearn": "Faciles à apprendre",
+    "TableauBuilding": "Solitaires à colonnes",
+    "ModernMechanics": "Mécaniques modernes",
+    "DungeonCrawler": "Exploration de donjon",
+    "CardCombat": "Combat de cartes",
+    "GridPlacement": "Placement sur grille",
+    "PokerAndCribbage": "Poker et cribbage",
+    "PairMatching": "Paires",
+    "SequenceBuilding": "Suites",
+    "StockAndWaste": "Pioche et défausse",
+    "ScoringPuzzles": "Casse-têtes à score",
+    "SpatialControl": "Contrôle de l'espace"
+  },
+  "statsTab": {
+    "personas": {
+      "nemesis": {
+        "title": "La Bête noire",
+        "subtitle": "Taux de victoire le plus bas"
+      },
+      "comfort": {
+        "title": "La Valeur sûre",
+        "subtitle": "Taux de victoire le plus élevé"
+      },
+      "whale": {
+        "title": "La Baleine blanche",
+        "subtitle": "Le plus de parties sans victoire"
+      },
+      "underdog": {
+        "title": "L'Outsider",
+        "subtitle": "Bon taux de victoire, peu de parties"
+      }
+    },
+    "sortBy": "Trier par {{column}}",
+    "columns": {
+      "game": "Jeu",
+      "won": "Vic.",
+      "lost": "Déf.",
+      "winPercent": "% V",
+      "best": "Max",
+      "time": "Tps"
+    },
+    "columnNames": {
+      "game": "Jeu",
+      "won": "Parties gagnées",
+      "lost": "Parties perdues",
+      "winPercent": "Taux de victoire",
+      "best": "Meilleur score",
+      "time": "Meilleur temps"
+    },
+    "empty": {
+      "title": "Oups, aucune statistique à afficher\u00a0!",
+      "body": "Revenez après quelques parties pour voir vos statistiques ici."
+    },
+    "fullStats": {
+      "title": "Statistiques complètes",
+      "noStats": "Aucune statistique à afficher",
+      "onlyPlayed": "Seuls les jeux joués sont affichés"
+    },
+    "total": "Total"
+  },
+  "statsModal": {
+    "title": "Statistiques"
+  },
+  "install": {
+    "titleIos": "Ajouter SoloSuite à votre écran d'accueil",
+    "titleInstall": "Installer SoloSuite",
+    "titleDevice": "Ajouter SoloSuite à votre appareil",
+    "instructionsIos": "Dans Safari, touchez le bouton Partager, puis choisissez «\u00a0Sur l'écran d'accueil\u00a0».",
+    "instructionsInstall": "Installez l'application pour un lancement plus rapide, un affichage plein écran et le jeu hors ligne.",
+    "instructionsBrowser": "Ouvrez le menu de votre navigateur et choisissez «\u00a0Installer l'application\u00a0» ou «\u00a0Ajouter à l'écran d'accueil\u00a0».",
+    "accepted": "Parfait\u00a0! Votre navigateur termine l'installation en arrière-plan.",
+    "dismissed": "Pas de problème, vous pouvez l'installer à tout moment depuis le menu de votre navigateur.",
+    "installNow": "Installer",
+    "notNow": "Plus tard"
+  }
+}

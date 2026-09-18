@@ -22,17 +22,14 @@ import { delay } from "@/utils/utils";
 import { useToast } from "../common/Toast";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
+import { i18n } from "@/i18n";
 const ENEMY_SLOTS = 4;
 const HAND_SIZE = 4;
 
 const PERSONAL_RANKS = ["2", "3", "4", "Joker"] as const;
 
 type GamePhase =
-  | "enemyPhase"
-  | "discardPhase"
-  | "drawPhase"
-  | "capturePhase"
-  | "gameOver";
+  "enemyPhase" | "discardPhase" | "drawPhase" | "capturePhase" | "gameOver";
 type GameState = {
   personalDeck: PlayingCard[];
   personalDiscard: PlayingCard[];
@@ -245,15 +242,12 @@ function finalizeRoundOrWin(draft: GameState) {
   draft.phase = "gameOver";
   draft.won = !enemyCapturedCombatant;
   draft.winLoseMessage = enemyCapturedCombatant
-    ? "A combatant entered the enemy capture pile."
-    : "All enemy cards cleared without losing combatants.";
+    ? i18n.t("games:fieldCommand.combatantCaptured")
+    : i18n.t("games:fieldCommand.allEnemiesCleared");
 }
 
 type FieldCommandActionResult =
-  | "applied"
-  | "invalid"
-  | "invalid-capture"
-  | "combatant-sacrifice";
+  "applied" | "invalid" | "invalid-capture" | "combatant-sacrifice";
 
 function executeCaptureAction(
   draft: GameState,
@@ -294,8 +288,9 @@ function executeEnemyCaptureAction(
     draft.ended = true;
     draft.phase = "gameOver";
     draft.won = false;
-    draft.winLoseMessage =
-      "A combatant entered the enemy capture pile. You lose.";
+    draft.winLoseMessage = i18n.t(
+      "games:fieldCommand.combatantCapturedYouLose",
+    );
     clearCaptureSelections(draft);
     return "applied";
   }
@@ -402,7 +397,7 @@ export default function FieldCommand() {
         draft.ended = true;
         draft.phase = "gameOver";
         draft.won = false;
-        draft.winLoseMessage = "No cards available to play.";
+        draft.winLoseMessage = i18n.t("games:fieldCommand.noCardsToPlay");
         return;
       }
 
@@ -518,7 +513,9 @@ export default function FieldCommand() {
         draft.selectedHandIds,
       );
       if (result === "invalid-capture") {
-        showToast("Invalid capture: suit/value requirement not met.");
+        showToast(
+          i18n.t("games:fieldCommand.invalidCaptureSuitValueRequirement"),
+        );
       }
     });
   }
@@ -548,7 +545,7 @@ export default function FieldCommand() {
         draft.selectedHandIds,
       );
       if (result === "combatant-sacrifice") {
-        showToast("Cannot sacrifice a combatant card.");
+        showToast(i18n.t("games:fieldCommand.cannotSacrificeACombatantCard"));
       }
     });
   }
@@ -591,7 +588,10 @@ export default function FieldCommand() {
         row: 0,
         baseZIndex: 40,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Enemy", infoPos: "below" },
+        placeholder: {
+          text: i18n.t("games:fieldCommand.enemy"),
+          infoPos: "below",
+        },
       },
       ...enemySlots,
       {
@@ -602,7 +602,10 @@ export default function FieldCommand() {
         row: 0,
         baseZIndex: 40,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Capture", infoPos: "below" },
+        placeholder: {
+          text: i18n.t("games:fieldCommand.capture"),
+          infoPos: "below",
+        },
       },
       {
         id: "personal-deck",
@@ -612,7 +615,7 @@ export default function FieldCommand() {
         row: 2,
         baseZIndex: 40,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "below" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "below" },
       },
       ...handSlots,
       {
@@ -623,7 +626,7 @@ export default function FieldCommand() {
         row: 2,
         baseZIndex: 40,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Discard", infoPos: "below" },
+        placeholder: { text: i18n.t("cards:discard"), infoPos: "below" },
       },
       {
         id: "actions",
@@ -744,7 +747,7 @@ export default function FieldCommand() {
       >
         {game.phase === "discardPhase" && (
           <Button
-            text="Done Discarding"
+            text={i18n.t("games:fieldCommand.doneDiscarding")}
             theme="blue"
             size="sm"
             onPress={endDiscardPhase}
@@ -769,7 +772,7 @@ export default function FieldCommand() {
               ]}
             >
               <Button
-                text="Clear"
+                text={i18n.t("cards:clear")}
                 size="sm"
                 theme="blue"
                 onPress={() => {
@@ -783,7 +786,7 @@ export default function FieldCommand() {
               />
 
               <Button
-                text="Sacrifice"
+                text={i18n.t("cards:sacrifice")}
                 size="sm"
                 theme="red"
                 onPress={executeSacrifice}
@@ -793,7 +796,7 @@ export default function FieldCommand() {
               />
 
               <Button
-                text="Let Capture"
+                text={i18n.t("games:fieldCommand.letCapture")}
                 size="sm"
                 theme="orange"
                 onPress={executeEnemyCapture}
@@ -804,7 +807,7 @@ export default function FieldCommand() {
               />
 
               <Button
-                text="Capture"
+                text={i18n.t("games:fieldCommand.capture")}
                 size="sm"
                 theme="green"
                 onPress={executeCapture}

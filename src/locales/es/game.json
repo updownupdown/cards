@@ -1,0 +1,51 @@
+{
+  "menu": {
+    "home": "Inicio",
+    "nodes": "Nodos",
+    "instantWin": "Victoria instantánea"
+  },
+  "result": {
+    "won": "¡Has ganado!",
+    "lost": "Has perdido",
+    "score": "Puntuación: {{score}}",
+    "playAgain": "Jugar de nuevo",
+    "tryAgain": "Reintentar"
+  },
+  "reset": {
+    "hold": "Mantén pulsado para reiniciar"
+  },
+  "tips": {
+    "quickStart": "Inicio rápido",
+    "viewRules": "Ver reglas"
+  },
+  "rules": {
+    "title": "Cómo jugar",
+    "unavailable": "Las instrucciones no están disponibles para este juego."
+  },
+  "settings": {
+    "title": "Ajustes",
+    "none": "Este juego no tiene ajustes",
+    "appliesNow": "Se aplica sin reiniciar la partida.",
+    "appliesNextGame": "Reinicia la partida al cambiarlo."
+  },
+  "rating": {
+    "title": "Dificultad"
+  },
+  "credits": {
+    "title": "Créditos",
+    "backgroundImage": "Imagen de fondo:"
+  },
+  "deckPreview": {
+    "title": "Vista previa del mazo",
+    "shuffleNotice": "El mazo se barajará después de la vista previa.",
+    "empty": "No hay cartas en el mazo."
+  },
+  "rotateHint": {
+    "landscape": "Modo horizontal\nrecomendado",
+    "portrait": "Modo vertical\nrecomendado"
+  },
+  "errors": {
+    "gameCrashed": "Algo salió mal con ese juego.",
+    "resumeFailed": "No se pudo reanudar tu última partida."
+  }
+}

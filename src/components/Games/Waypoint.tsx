@@ -22,6 +22,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { Colors } from "@/styles/styles";
 import { ProgressBar } from "../Home/ProgressBar";
 
+import { i18n } from "@/i18n";
 const cardSize = "tableau";
 
 const topHugHeight = 1;
@@ -250,12 +251,12 @@ function finishGame(draft: WaypointGameState) {
   draft.won = true;
   draft.winLoseMessage =
     score >= 1
-      ? `New rally record: +${score}.`
+      ? i18n.t("games:waypoint.ratingRecord", { score })
       : score >= -2
-        ? `Podium finish: ${score}.`
+        ? i18n.t("games:waypoint.ratingPodium", { score })
         : score >= -6
-          ? `Middle of the pack: ${score}.`
-          : `Back of the pack: ${score}.`;
+          ? i18n.t("games:waypoint.ratingMiddle", { score })
+          : i18n.t("games:waypoint.ratingBack", { score });
 }
 
 function finishSector(draft: WaypointGameState) {
@@ -277,7 +278,7 @@ function finishSector(draft: WaypointGameState) {
     if (draft.damage > 2) {
       draft.ended = true;
       draft.won = false;
-      draft.winLoseMessage = "DNF: the car took too much damage.";
+      draft.winLoseMessage = i18n.t("games:waypoint.dnf");
       return true;
     }
   } else if (total < target) {
@@ -287,7 +288,7 @@ function finishSector(draft: WaypointGameState) {
   if (draft.penalties >= 16) {
     draft.ended = true;
     draft.won = false;
-    draft.winLoseMessage = "DSQ: the clock reached 16 time penalties.";
+    draft.winLoseMessage = i18n.t("games:waypoint.dsq");
     return true;
   }
 
@@ -358,7 +359,7 @@ export default function Waypoint() {
           offset: current ? cardDims.tableauOffset : 0.05,
         },
         placeholder: {
-          text: current ? "Current" : undefined,
+          text: current ? i18n.t("games:waypoint.current") : undefined,
         },
       };
     });
@@ -405,7 +406,7 @@ export default function Waypoint() {
         col: 0,
         row: gearRow,
         fan: {},
-        placeholder: { text: "Brake", infoPos: "above" },
+        placeholder: { text: i18n.t("games:waypoint.brake"), infoPos: "above" },
       },
       {
         id: "boosts",
@@ -414,7 +415,7 @@ export default function Waypoint() {
         col: 1,
         row: gearRow,
         fan: {},
-        placeholder: { text: "Gas", infoPos: "above" },
+        placeholder: { text: i18n.t("games:waypoint.gas"), infoPos: "above" },
       },
 
       {
@@ -561,7 +562,7 @@ export default function Waypoint() {
         ]}
       >
         <HudText
-          label="Time"
+          label={i18n.t("games:waypoint.time")}
           value={`${score >= 0 ? "+" : ""}${score}`}
           leftAlign
         />
@@ -575,8 +576,14 @@ export default function Waypoint() {
           { justifyContent: "flex-end", gap: spacing(20) },
         ]}
       >
-        <HudText label="Penalty" value={`${game.penalties}/16`} />
-        <HudText label="Damage" value={`${game.damage}/2`} />
+        <HudText
+          label={i18n.t("games:waypoint.penalty")}
+          value={`${game.penalties}/16`}
+        />
+        <HudText
+          label={i18n.t("games:waypoint.damage")}
+          value={`${game.damage}/2`}
+        />
       </View>
 
       {/* Progress */}
@@ -588,7 +595,7 @@ export default function Waypoint() {
         ]}
       >
         <ProgressBar
-          labelText="Stage"
+          labelText={i18n.t("games:waypoint.stage")}
           progressValue={game.stage}
           totalValue={3}
           autoTallyText
@@ -598,7 +605,7 @@ export default function Waypoint() {
         />
 
         <ProgressBar
-          labelText="Sector"
+          labelText={i18n.t("games:waypoint.sector")}
           progressValue={game.completedSectors}
           totalValue={STAGE_CONFIGS[game.stage].sectors}
           autoTallyText
@@ -620,14 +627,14 @@ export default function Waypoint() {
           }
           style={{ width: cardWidth * 2.9 }}
           scaledHeight={cardHeight * 0.3}
-          labelText="Speed"
+          labelText={i18n.t("games:waypoint.speed")}
         />
       </View>
 
       {/* ACTIONS */}
       <View style={[getZoneStylesById("actions"), flexStyles.rowCentered]}>
         <Button
-          text={`Finish\nSector`}
+          text={i18n.t("games:waypoint.finishSector")}
           size="sm"
           theme={
             total === target ? "green" : total > target ? "red" : colorDark

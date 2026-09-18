@@ -76,9 +76,7 @@ export function getCardImageSource(
 
 export function getCardBackImage(gamePath?: string) {
   const fileName = gamePath?.replace(/^\//, "");
-  return (
-    cardBackFiles[fileName ?? ""] ?? cardBackFiles.default
-  );
+  return cardBackFiles[fileName ?? ""] ?? cardBackFiles.default;
 }
 
 const COLLECTIBLE_DECK_FOLDERS = {

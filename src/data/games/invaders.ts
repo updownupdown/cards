@@ -21,8 +21,8 @@ export const invaders: GameDefinition = {
     "Fight off waves of alien invaders before running out of defenders.",
   quickStart: [
     "Beat back 2 waves of attackers using attacks and sacrifices.",
-    "Single attacks: opposite color and larger value",
-    "Double attacks: sum of defenders must be of equal value to attacker.",
+    "Single attacks: opposite color and larger value.",
+    "Dual attacks: the two defenders must add up to the attacker's value.",
   ],
   howToPlay: [
     "## Objective",
@@ -34,7 +34,7 @@ export const invaders: GameDefinition = {
 
     "## Actions",
     "- **Single attacks** can be done with a defender of greater value and opposite color to the attacker. After a single attack, the defender is lost, and is replaced with the attacker.",
-    "- **Dual attacks** can be done with two cards whose total value equals the attacker's value. No attackers are lost during dual attacks, except during the second wave, where defenders matching the attacker's color are lost.",
-    "- **Sacrifices** can be used to move the lead attacker to the back of the attacker deck; the sacrified defender is lost.",
+    "- **Dual attacks** can be done with two cards whose total value equals the attacker's value. No defenders are lost during dual attacks, except during the second wave, where defenders matching the attacker's color are lost.",
+    "- **Sacrifices** can be used to move the lead attacker to the back of the attacker deck; the sacrificed defender is lost.",
   ],
 };

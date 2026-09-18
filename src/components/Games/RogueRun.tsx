@@ -26,6 +26,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { ProgressBar } from "../Home/ProgressBar";
 import { DeckPreviewModal } from "../Modals/DeckPreviewModal";
 
+import { i18n } from "@/i18n";
 export type RogueRunCardType = "monster" | "weapon" | "potion";
 
 const MaxHealth = 20;
@@ -191,10 +192,7 @@ function bestHealthAfterRoom(
           solve({
             roomCards: nextRoomCards,
             resolvedCount: nextResolvedCount,
-            health: Math.min(
-              MaxHealth,
-              state.health + rogueRunValue(card),
-            ),
+            health: Math.min(MaxHealth, state.health + rogueRunValue(card)),
             weaponCard: state.weaponCard,
             lastWeaponTargetValue: state.lastWeaponTargetValue,
           }),
@@ -381,10 +379,7 @@ export type RogueRunAction =
   | { type: "fight-bare"; roomIndex: number }
   | { type: "fight-weapon"; roomIndex: number };
 
-function applyRogueRunAction(
-  draft: GameState,
-  action: RogueRunAction,
-) {
+function applyRogueRunAction(draft: GameState, action: RogueRunAction) {
   if (draft.ended) return false;
 
   if (action.type === "run") {
@@ -710,7 +705,7 @@ export default function RogueRun() {
         fan: { maxVisible: 3 },
         placeholder: {
           infoPos: "right",
-          text: "Stock",
+          text: i18n.t("cards:stock"),
         },
         baseZIndex: 50,
       },
@@ -732,7 +727,7 @@ export default function RogueRun() {
         fan: { maxVisible: 3 },
         placeholder: {
           infoPos: "right",
-          text: "Dscrd",
+          text: i18n.t("cards:dscrd"),
         },
         baseZIndex: 50,
       },
@@ -812,7 +807,9 @@ export default function RogueRun() {
     <GameWrapper
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       score={game.score}
-      winLoseMessage={game.won ? "You made it through the dungeon." : undefined}
+      winLoseMessage={
+        game.won ? i18n.t("games:rogueRun.youMadeItThroughThe") : undefined
+      }
       reset={reset}
       isLoaded={isLoaded}
       canUndo={canUndo}
@@ -822,7 +819,7 @@ export default function RogueRun() {
         visible={showDeckPreview}
         cards={game.draw}
         onClose={() => setShowDeckPreview(false)}
-        title="Deck Preview"
+        title={i18n.t("cards:deckPreview")}
         sortCards
       />
 
@@ -868,7 +865,7 @@ export default function RogueRun() {
         />
 
         <Button
-          text="Run"
+          text={i18n.t("games:rogueRun.run")}
           size="lg"
           onPress={runFromRoom}
           disabled={!canRun}

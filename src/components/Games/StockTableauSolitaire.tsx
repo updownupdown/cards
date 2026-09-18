@@ -27,6 +27,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 export type StockTableauVariant =
   | "australian-patience"
   | "whitehead"
@@ -731,7 +732,11 @@ export function StockTableauSolitaire({
         col: config.deal.columns - 1,
         row: stockRow(config),
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", showCount: true, infoPos: "above" },
+        placeholder: {
+          text: i18n.t("cards:stock"),
+          showCount: true,
+          infoPos: "above",
+        },
       },
       ...(config.stock === "waste"
         ? [
@@ -742,7 +747,11 @@ export function StockTableauSolitaire({
               col: config.deal.columns - 2.25,
               row: stockRow(config),
               fan: { maxVisible: 3 },
-              placeholder: { text: "Waste", showCount: true, infoPos: "above" },
+              placeholder: {
+                text: i18n.t("cards:waste"),
+                showCount: true,
+                infoPos: "above",
+              },
             } as MapZone,
           ]
         : []),
@@ -1027,7 +1036,11 @@ export function StockTableauSolitaire({
       canUndo={canUndo}
       undo={undo}
       autoCompleting={isAutoCompleting}
-      winLoseMessage={game.won ? "Every suit is home!" : "No moves remain."}
+      winLoseMessage={
+        game.won
+          ? i18n.t("games:stockTableauSolitaire.everySuitIsHome")
+          : i18n.t("cards:noMovesRemain")
+      }
       showDeviceRotateHint
     >
       <View

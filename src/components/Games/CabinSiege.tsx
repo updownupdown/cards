@@ -30,6 +30,7 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 import { DeckPreviewModal } from "../Modals/DeckPreviewModal";
 
+import { i18n } from "@/i18n";
 const zombieZonesColRows: ColRows[] = [
   { c: 1, r: 1 },
   { c: 2, r: 1 },
@@ -271,7 +272,7 @@ function evaluateOutcome(snapshot: GameState) {
   if (aliveCount(snapshot.zombies) === 0) {
     return {
       won: true,
-      message: "You killed all the zombies!",
+      message: i18n.t("games:cabinSiege.youKilledAllTheZombies"),
     };
   }
 
@@ -280,7 +281,7 @@ function evaluateOutcome(snapshot: GameState) {
 
     return {
       won: false,
-      message: "No cards left to draw!",
+      message: i18n.t("games:cabinSiege.noCardsLeftToDraw"),
     };
   }
 
@@ -292,7 +293,7 @@ function evaluateOutcome(snapshot: GameState) {
   if (!playable) {
     return {
       won: false,
-      message: "Unable to place card.",
+      message: i18n.t("games:cabinSiege.unableToPlaceCard"),
     };
   }
 
@@ -462,7 +463,7 @@ export default function CabinSiege() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: "Stock", infoPos: "left" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "left" },
       },
       ...zombieZones,
       ...pileZones,
@@ -556,7 +557,8 @@ export default function CabinSiege() {
       reset={reset}
       isLoaded={isLoaded}
       winLoseMessage={
-        game.winLoseMessage ?? (game.won ? "You won!" : "You lost.")
+        game.winLoseMessage ??
+        (game.won ? i18n.t("cards:youWon") : i18n.t("games:cabinSiege.youLost"))
       }
       canUndo={canUndo}
       undo={undo}
@@ -565,7 +567,7 @@ export default function CabinSiege() {
         visible={showDeckPreview}
         cards={game.draw}
         onClose={() => setShowDeckPreview(false)}
-        title="Deck Preview"
+        title={i18n.t("cards:deckPreview")}
         sortCards
       />
 
@@ -597,12 +599,12 @@ export default function CabinSiege() {
             },
           ]}
         >
-          {game.phase === "reveal" && "Reveal a zombie"}
-          {game.phase === "play" && "Place a card"}
+          {game.phase === "reveal" && i18n.t("games:cabinSiege.revealAZombie")}
+          {game.phase === "play" && i18n.t("games:cabinSiege.placeACard")}
           {game.phase === "kill" &&
             (currentAttacks.length > 0
-              ? "Kill a zombie"
-              : "No killable zombies!")}
+              ? i18n.t("games:cabinSiege.killAZombie")
+              : i18n.t("games:cabinSiege.noKillableZombies"))}
         </Text>
       </View>
     </GameWrapper>

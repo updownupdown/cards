@@ -23,6 +23,7 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 import { DOUBLE_TAP_MS } from "@/utils/utils";
 
+import { i18n } from "@/i18n";
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type GameState = {
@@ -172,7 +173,11 @@ export default function FreeCell() {
       col: i,
       row: 0,
       baseZIndex: 50,
-      placeholder: { text: "Free", infoPos: "below", showCount: false },
+      placeholder: {
+        text: i18n.t("cards:free"),
+        infoPos: "below",
+        showCount: false,
+      },
     }));
 
     const foundationZones: MapZone[] = game.foundations.map((pile, i) => ({
@@ -662,7 +667,6 @@ export default function FreeCell() {
   }
 
   // ── Render ────────────────────────────────────────────────────────────────────
-
 
   function getTapHandler(source: MoveSource) {
     if (source.zone === "cascade") {

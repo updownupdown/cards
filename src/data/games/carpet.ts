@@ -11,7 +11,7 @@ export const carpet: GameDefinition = {
     difficulty: 25,
     luck: 70,
   },
-  thumbnail: "DefaultThumbnail.webp",
+  thumbnail: "Carpet.webp",
   background: GAME_BACKGROUNDS.castleIndoors,
   animation: GameAnimations.Dust,
   gameColorDark: "#2b1a14",

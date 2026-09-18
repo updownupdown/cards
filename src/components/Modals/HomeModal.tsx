@@ -13,12 +13,27 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
 import { Colors } from "@/styles/styles";
+import {
+  getDeviceLanguageCodes,
+  Trans,
+  useDisplayLanguage,
+  useTranslation,
+} from "@/i18n";
+import {
+  LANGUAGE_NAMES,
+  PSEUDO_LANGUAGE,
+  resolveLanguage,
+  SOURCE_LANGUAGE,
+  SUPPORTED_LANGUAGES,
+  type LanguagePreference,
+} from "@/i18n/languages";
 import { isLocalDevEnvironment } from "@/utils/utils";
 import { router } from "expo-router";
 import React from "react";
 import { Linking, Platform, ScrollView, View } from "react-native";
 import { Button } from "../Button/Button";
 import { AddToHomeScreenNotice } from "../common/AddToHomeScreenNotice";
+import { SelectControl } from "../common/SelectControl";
 import { SettingControl } from "../common/SettingControl";
 import { Text } from "../common/Text";
 import ModalFull from "./ModalFull";
@@ -36,6 +51,9 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
   const [isResettingData, setIsResettingData] = React.useState(false);
   const [isPopulatingTestData, setIsPopulatingTestData] = React.useState(false);
   const { spacing } = useResponsiveMetrics();
+  const { t } = useTranslation("settings");
+  const { t: tCommon } = useTranslation("common");
+  const language = useDisplayLanguage();
 
   const onCloseAndRefresh = () => {
     onHomeDataInvalidated();
@@ -45,6 +63,29 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
   if (isLoading) {
     return null;
   }
+
+  const phoneLanguageName =
+    LANGUAGE_NAMES[resolveLanguage("system", getDeviceLanguageCodes())];
+  // "Auto" always comes first; the language it resolves to is still listed
+  // below, so it can be chosen explicitly.
+  const languageOptions: { label: string; value: LanguagePreference }[] = [
+    {
+      value: "system",
+      label: t("language.system", { language: phoneLanguageName }),
+    },
+    ...SUPPORTED_LANGUAGES.map((language) => ({
+      value: language,
+      label: LANGUAGE_NAMES[language],
+    })),
+    ...(__DEV__
+      ? [
+          {
+            value: PSEUDO_LANGUAGE as LanguagePreference,
+            label: LANGUAGE_NAMES[PSEUDO_LANGUAGE],
+          },
+        ]
+      : []),
+  ];
 
   const footerText = { size: "xs", weight: 300, color: Colors.K600 } as const;
   const footerLink = {
@@ -75,9 +116,43 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
             { gap: spacing(24) },
           ]}
         >
+          {/* Language: follow the phone (Auto), or pick one. */}
+          <View
+            style={[
+              flexStyles.colStart,
+              flexStyles.fullWidth,
+              { gap: spacing(12) },
+            ]}
+          >
+            <Text weight={500} size="lg" color={Colors.K200}>
+              {t("language.label")}
+            </Text>
+            <Text size="sm" weight={400} color={Colors.white}>
+              {t("language.description")}
+            </Text>
+            <SelectControl
+              value={settings.language}
+              options={languageOptions}
+              accessibilityLabel={t("language.label")}
+              onChange={(choice) => {
+                void updateSettings({ language: choice });
+              }}
+            />
+          </View>
+          {language !== SOURCE_LANGUAGE && (
+            <SettingControl
+              label={t("translateCollectibles.label")}
+              description={t("translateCollectibles.description")}
+              value={settings.translateCollectibles}
+              type="boolean"
+              onChange={(val) => {
+                void updateSettings({ translateCollectibles: val });
+              }}
+            />
+          )}
           <SettingControl
-            label="Resume game on startup"
-            description="Reopen the last game when the app starts."
+            label={t("resumeLastGame.label")}
+            description={t("resumeLastGame.description")}
             value={settings.resumeLastGame}
             type="boolean"
             onChange={(val) => {
@@ -88,8 +163,8 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
             }}
           />
           <SettingControl
-            label="Show animations"
-            description="Weather and scenery effects behind the cards."
+            label={t("showAnimations.label")}
+            description={t("showAnimations.description")}
             value={settings.showAnimations}
             type="boolean"
             onChange={(val) => {
@@ -97,8 +172,8 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
             }}
           />
           <SettingControl
-            label="Show tips"
-            description="Show a quick start summary for new games."
+            label={t("showTips.label")}
+            description={t("showTips.description")}
             value={settings.showTipsForNewGames}
             type="boolean"
             onChange={(val) => {
@@ -106,8 +181,8 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
             }}
           />
           <SettingControl
-            label="Keep screen awake"
-            description="Keeps the screen on for 10 minutes after your last touch."
+            label={t("keepScreenAwake.label")}
+            description={t("keepScreenAwake.description")}
             value={settings.keepScreenAwake}
             type="boolean"
             onChange={(val) => {
@@ -117,8 +192,8 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
           {/* Vibration isn't available in browsers, so native only. */}
           {Platform.OS !== "web" && (
             <SettingControl
-              label="Haptic feedback"
-              description="Vibrates on card drag and drop, and game wins. Haptics must be enabled in your phone settings."
+              label={t("hapticFeedback.label")}
+              description={t("hapticFeedback.description")}
               value={settings.hapticFeedback}
               type="boolean"
               onChange={(val) => {
@@ -134,7 +209,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
           <Button
             size="md"
             uppercase={false}
-            text="Populate test progress"
+            text={t("populateTestProgress")}
             iconName="nodes"
             theme="blue"
             disabled={isPopulatingTestData}
@@ -163,29 +238,41 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
           ]}
         >
           <Text {...footerText} style={{ textAlign: "center" }}>
-            Starfield background by{" "}
-            <Text
-              {...footerLink}
-              onPress={() =>
-                void Linking.openURL("https://unsplash.com/@olenkasergienko")
-              }
-            >
-              Olena Bohovyk
-            </Text>
+            <Trans
+              t={t}
+              i18nKey="credits.starfield"
+              components={{
+                link: (
+                  <Text
+                    {...footerLink}
+                    onPress={() =>
+                      void Linking.openURL(
+                        "https://unsplash.com/@olenkasergienko",
+                      )
+                    }
+                  />
+                ),
+              }}
+            />
           </Text>
 
           <Text {...footerText} style={{ textAlign: "center" }}>
-            Tao Te Ching translation by{" "}
-            <Text
-              {...footerLink}
-              onPress={() =>
-                void Linking.openURL(
-                  "https://www.goodreads.com/author/show/5667733.John_H_McDonald",
-                )
-              }
-            >
-              John H. McDonald
-            </Text>
+            <Trans
+              t={t}
+              i18nKey="credits.taoTranslation"
+              components={{
+                link: (
+                  <Text
+                    {...footerLink}
+                    onPress={() =>
+                      void Linking.openURL(
+                        "https://www.goodreads.com/author/show/5667733.John_H_McDonald",
+                      )
+                    }
+                  />
+                ),
+              }}
+            />
           </Text>
 
           <Text
@@ -196,7 +283,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               router.push("/privacy");
             }}
           >
-            Privacy Policy
+            {t("privacyPolicy")}
           </Text>
 
           {isResetConfirmationVisible ? (
@@ -206,12 +293,12 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                 { gap: spacing(14), flexWrap: "wrap" },
               ]}
             >
-              <Text {...footerText}>Erase all progress and settings?</Text>
+              <Text {...footerText}>{t("resetData.confirm")}</Text>
               <Button
                 textOnly
                 size="xs"
                 uppercase={false}
-                text="Cancel"
+                text={tCommon("cancel")}
                 disabled={isResettingData}
                 onPress={() => setIsResetConfirmationVisible(false)}
               />
@@ -219,7 +306,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                 textOnly
                 size="xs"
                 uppercase={false}
-                text="Reset"
+                text={tCommon("reset")}
                 theme={Colors.cardSelectRed}
                 disabled={isResettingData}
                 onPress={async () => {
@@ -242,7 +329,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               textOnly
               size="xs"
               uppercase={false}
-              text="Reset all app data"
+              text={t("resetData.button")}
               theme={Colors.cardSelectRed}
               onPress={() => setIsResetConfirmationVisible(true)}
             />

@@ -26,6 +26,7 @@ import { infoSize } from "../Cards/CardMapBackgrounds";
 import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
 
+import { i18n } from "@/i18n";
 const handWidth = 6;
 const WOLFS_GAMBIT_STARTING_HAND = 4;
 const WOLFS_GAMBIT_WIN_TARGET = 100;
@@ -192,9 +193,7 @@ function assertLycanInvariants(state: Readonly<LycanGameState>) {
     state.playerScore < WOLFS_GAMBIT_WIN_TARGET &&
     state.wolfScore < WOLFS_GAMBIT_WIN_TARGET
   ) {
-    throw new Error(
-      "An ended Lycan game must have a score at the win target",
-    );
+    throw new Error("An ended Lycan game must have a score at the win target");
   }
 }
 
@@ -206,11 +205,7 @@ function keepTopFaceUp(draft: LycanGameState) {
   }
 }
 
-function drawTo(
-  draft: LycanGameState,
-  who: "player" | "wolf",
-  count: number,
-) {
+function drawTo(draft: LycanGameState, who: "player" | "wolf", count: number) {
   for (let i = 0; i < count; i += 1) {
     if (draft.deck.length === 0) break;
     const card = draft.deck.pop();
@@ -564,7 +559,11 @@ export default function Lycan() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 40,
-        placeholder: { text: "Stock", infoPos: "below", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:stock"),
+          infoPos: "below",
+          showCount: true,
+        },
       },
       {
         id: "discard",
@@ -574,7 +573,7 @@ export default function Lycan() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 40,
-        placeholder: { text: "Dscrd", infoPos: "below" },
+        placeholder: { text: i18n.t("cards:dscrd"), infoPos: "below" },
       },
 
       { id: "buttons", col: 0, row: 5.1, width: "full", height: 0.9 },
@@ -644,8 +643,14 @@ export default function Lycan() {
       isLoaded={isLoaded}
       winLoseMessage={
         game.won
-          ? `You beat the Wolf ${game.playerScore}-${game.wolfScore}!`
-          : `The Wolf beat you ${game.wolfScore}-${game.playerScore}.`
+          ? i18n.t("games:lycan.youBeatTheWolf", {
+              playerScore: game.playerScore,
+              wolfScore: game.wolfScore,
+            })
+          : i18n.t("games:lycan.theWolfBeatYou", {
+              wolfScore: game.wolfScore,
+              playerScore: game.playerScore,
+            })
       }
       canUndo={canUndo}
       undo={undo}
@@ -661,7 +666,7 @@ export default function Lycan() {
       >
         <View style={[flexStyles.colCentered, flexStyles.flex1]}>
           <Text size="sm" weight={300} color={colorPale}>
-            Wolf
+            {i18n.t("games:lycan.wolf")}
           </Text>
           <Text size="xl" weight={600} color={colorPale}>
             {game.wolfScore}
@@ -670,7 +675,7 @@ export default function Lycan() {
 
         <View style={[flexStyles.colCentered, flexStyles.flex1]}>
           <Text size="sm" weight={300} color={Colors.white}>
-            Round
+            {i18n.t("games:lycan.round")}
           </Text>
           <Text size="xl" weight={600} color={Colors.white}>
             {game.round}
@@ -679,7 +684,7 @@ export default function Lycan() {
 
         <View style={[flexStyles.colCentered, flexStyles.flex1]}>
           <Text size="sm" weight={300} color={colorPale}>
-            Player
+            {i18n.t("cards:player")}
           </Text>
           <Text size="xl" weight={600} color={colorPale}>
             {game.playerScore}
@@ -763,7 +768,9 @@ export default function Lycan() {
           ]}
         >
           <Text size="md" weight={400} color={Colors.white}>
-            {game.roundWon ? `Player` : `Wolf`}
+            {game.roundWon
+              ? i18n.t("cards:player")
+              : i18n.t("games:lycan.wolf")}
           </Text>
           <Text size="md" weight={600} color={Colors.white}>
             +{game.roundPoints}
@@ -786,7 +793,7 @@ export default function Lycan() {
             ]}
           >
             <Button
-              text="Fold"
+              text={i18n.t("cards:fold")}
               size="md"
               onPress={fold}
               taller
@@ -808,7 +815,7 @@ export default function Lycan() {
                 />
               ) : (
                 <Text size="sm" weight={300} color={rgba(colorPale, 0.6)}>
-                  Select cards to capture
+                  {i18n.t("games:lycan.selectCardsToCapture")}
                 </Text>
               )}
             </View>

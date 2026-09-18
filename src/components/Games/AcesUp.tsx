@@ -22,6 +22,7 @@ import {
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const numberOfPiles = 4;
 
 type GameState = {
@@ -233,7 +234,7 @@ export default function AcesUp() {
         fan: { maxVisible: 3 },
         placeholder: {
           infoPos: "left",
-          text: "Stock",
+          text: i18n.t("cards:stock"),
         },
       },
       {
@@ -245,7 +246,7 @@ export default function AcesUp() {
         fan: { maxVisible: 3 },
         placeholder: {
           infoPos: "right",
-          text: "Discard",
+          text: i18n.t("cards:discard"),
         },
       },
       ...pileZones,
@@ -336,7 +337,7 @@ export default function AcesUp() {
 
       <View style={[getZoneStylesById("button")]}>
         <Button
-          text="Deal"
+          text={i18n.t("cards:deal")}
           size="lg"
           onPress={dealCards}
           fullWidth

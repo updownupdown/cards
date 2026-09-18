@@ -25,6 +25,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
 import { ProgressBar } from "../Home/ProgressBar";
 
+import { i18n } from "@/i18n";
 const AUTO_PROGRESS_DELAY = 1000;
 const FACE_SPIES = 12;
 const NUMBER_SPIES = 24;
@@ -359,7 +360,7 @@ function removeSelected(hand: PlayingCard[], selectedCards: PlayingCard[]) {
 
 export default function Infiltrator() {
   const { spacing } = useResponsiveMetrics();
-  const { colorPale,} = useGameColors();
+  const { colorPale } = useGameColors();
   const { game, setGame, reset, isLoaded, canUndo, undo, saveUndoState } =
     useStateManager<InfiltratorGameState>({
       gameStateInitial,
@@ -429,8 +430,13 @@ export default function Infiltrator() {
       draft.ended = true;
       draft.won = result.won;
       draft.winLoseMessage = result.won
-        ? `Mission complete: ${result.personalCount} Key Spies recruited.`
-        : `Mission failed: ${result.personalCount} Key Spies recruited, ${result.discardedCount} lost.`;
+        ? i18n.t("games:infiltrator.missionComplete", {
+            count: result.personalCount,
+          })
+        : i18n.t("games:infiltrator.missionFailed", {
+            count: result.personalCount,
+            lost: result.discardedCount,
+          });
     }
   }
 
@@ -518,7 +524,7 @@ export default function Infiltrator() {
         draft.ended = true;
         draft.won = false;
         draft.selectedCards = [];
-        draft.winLoseMessage = "No Double Agents remain. Mission failed.";
+        draft.winLoseMessage = i18n.t("games:infiltrator.noDoubleAgentsRemain");
       });
       return;
     }
@@ -539,7 +545,7 @@ export default function Infiltrator() {
         cards: game.spyDiscard,
         fan: { maxVisible: 3 },
         placeholder: {
-          text: "Retired",
+          text: i18n.t("games:infiltrator.retired"),
           infoPos: "below",
           showCount: false,
         },
@@ -552,7 +558,10 @@ export default function Infiltrator() {
         row: TOP_ROW,
         cards: game.spyDeck,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Spies", infoPos: "below" },
+        placeholder: {
+          text: i18n.t("games:infiltrator.spies"),
+          infoPos: "below",
+        },
         baseZIndex: 20,
       },
 
@@ -563,7 +572,7 @@ export default function Infiltrator() {
         cards: game.drawDiscard,
         fan: { maxVisible: 3 },
         placeholder: {
-          text: "Discard",
+          text: i18n.t("cards:discard"),
           infoPos: "below",
           showCount: false,
         },
@@ -576,7 +585,7 @@ export default function Infiltrator() {
         row: TOP_ROW,
         cards: game.drawDeck,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "below" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "below" },
         baseZIndex: 20,
       },
 
@@ -641,9 +650,9 @@ export default function Infiltrator() {
   });
 
   const sourceNames: Record<AceSource, string> = {
-    hand: "Hand",
-    drawDeck: "Stock",
-    drawDiscard: "Discard",
+    hand: i18n.t("games:infiltrator.sourceHand"),
+    drawDeck: i18n.t("cards:stock"),
+    drawDiscard: i18n.t("cards:discard"),
   };
   const { isFacePhase, total, neutralizedCount, recruitedCount } =
     getSpyScore(game);
@@ -679,7 +688,7 @@ export default function Infiltrator() {
             color={colorPale}
             textTransform="uppercase"
           >
-            Lost
+            {i18n.t("games:infiltrator.lost")}
           </Text>
           <Text size="xl" weight={600} color={colorPale}>
             {neutralizedCount}
@@ -698,7 +707,9 @@ export default function Infiltrator() {
             color={colorPale}
             textTransform="uppercase"
           >
-            {isFacePhase ? "Key Spies" : "Supporting Spies"}
+            {isFacePhase
+              ? i18n.t("games:infiltrator.keySpies")
+              : i18n.t("games:infiltrator.supportingSpies")}
           </Text>
           <SpyScoreBar
             recruitedCount={recruitedCount}
@@ -722,7 +733,7 @@ export default function Infiltrator() {
             color={colorPale}
             textTransform="uppercase"
           >
-            Recruited
+            {i18n.t("games:infiltrator.recruited")}
           </Text>
           <Text size="xl" weight={600} color={colorPale}>
             {recruitedCount}
@@ -766,17 +777,17 @@ export default function Infiltrator() {
             >
               {game.phase === "retire"
                 ? retireSetAvailable
-                  ? "Retire a matching set, or skip"
-                  : "No sets available for retirement"
+                  ? i18n.t("games:infiltrator.retireAMatchingSetOr")
+                  : i18n.t("games:infiltrator.noSetsAvailableForRetirement")
                 : game.phase === "assassinate"
-                  ? "Remove a Double Agent from:"
-                  : "No spies remain"}
+                  ? i18n.t("games:infiltrator.removeADoubleAgentFrom")
+                  : i18n.t("games:infiltrator.noSpiesRemain")}
             </Text>
           )}
 
           {game.phase === "action" && (
             <Button
-              text="Clear"
+              text={i18n.t("cards:clear")}
               size="sm"
               theme={Colors.K750}
               onPress={clearSelection}
@@ -795,7 +806,7 @@ export default function Infiltrator() {
           {game.phase === "action" && (
             <>
               <Button
-                text="Assassinate"
+                text={i18n.t("games:infiltrator.assassinate")}
                 size="sm"
                 theme="red"
                 onPress={beginAssassination}
@@ -803,7 +814,7 @@ export default function Infiltrator() {
                 taller
               />
               <Button
-                text="Counter"
+                text={i18n.t("games:infiltrator.counter")}
                 size="sm"
                 theme="purple"
                 disabled={!counterValid}
@@ -812,7 +823,7 @@ export default function Infiltrator() {
                 taller
               />
               <Button
-                text="Recruit"
+                text={i18n.t("games:infiltrator.recruit")}
                 size="sm"
                 theme="green"
                 disabled={!recruitValid}
@@ -824,7 +835,7 @@ export default function Infiltrator() {
           )}
           {game.phase === "retire" && (
             <Button
-              text="Skip"
+              text={i18n.t("games:infiltrator.skip")}
               size="sm"
               theme={Colors.K750}
               onPress={finishWithoutRetiring}

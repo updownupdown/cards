@@ -41,6 +41,7 @@ import {
   RoyalEnvoyKingdom,
 } from "./RoyalEnvoyTypes";
 
+import { i18n } from "@/i18n";
 export default function RoyalEnvoy() {
   const { spacing } = useResponsiveMetrics();
   const { colorZone, colorDark, colorPale } = useGameColors();
@@ -100,7 +101,11 @@ export default function RoyalEnvoy() {
     const wonKingdom = game.visit.wins === game.visit.requiredWins;
 
     if (wonKingdom) {
-      showToast(`You won over Kingdom #${game.visit.kingdomId + 1}!`);
+      showToast(
+        i18n.t("games:royalEnvoy.youWonOverKingdom", {
+          value: game.visit.kingdomId + 1,
+        }),
+      );
     }
 
     saveUndoState(structuredClone(game));
@@ -437,19 +442,19 @@ export default function RoyalEnvoy() {
     };
     const drawZone: MapZone = {
       cards: game.draw,
-      ...debateDeckProps("draw", "Stock", 0),
+      ...debateDeckProps("draw", i18n.t("cards:stock"), 0),
     };
     const topicZone: MapZone = {
       cards: game.visit?.debateTopic ? [game.visit.debateTopic] : undefined,
-      ...debateDeckProps("topic", "Topic", 1),
+      ...debateDeckProps("topic", i18n.t("games:royalEnvoy.topic"), 1),
     };
     const discardLostZone: MapZone = {
       cards: game.discardLost,
-      ...debateDeckProps("lost", "Lost", 2),
+      ...debateDeckProps("lost", i18n.t("games:royalEnvoy.lost"), 2),
     };
     const discardWonZone: MapZone = {
       cards: game.discardWon,
-      ...debateDeckProps("won", "Won", 3),
+      ...debateDeckProps("won", i18n.t("games:royalEnvoy.won"), 3),
     };
 
     const handZones: MapZone = {
@@ -692,7 +697,7 @@ export default function RoyalEnvoy() {
               },
             ]}
           >
-            Choose a kingdom
+            {i18n.t("games:royalEnvoy.chooseAKingdom")}
           </Text>
         </Animated.View>
       )}
@@ -727,7 +732,7 @@ export default function RoyalEnvoy() {
             ]}
             color={Colors.K300}
           >
-            Wins
+            {i18n.t("games:royalEnvoy.wins")}
           </Text>
 
           <View style={[flexStyles.rowCentered, { gap: dotRadius }]}>
@@ -793,7 +798,7 @@ export default function RoyalEnvoy() {
         >
           <Button
             onPress={drawCardToTopic}
-            text="Next Topic"
+            text={i18n.t("games:royalEnvoy.nextTopic")}
             style={[
               {
                 borderRadius: cardWidth * 0.1,
@@ -825,7 +830,7 @@ export default function RoyalEnvoy() {
           ]}
           color={Colors.K300}
         >
-          Advisors
+          {i18n.t("games:royalEnvoy.advisors")}
         </Text>
       </View>
 
@@ -843,7 +848,7 @@ export default function RoyalEnvoy() {
           ]}
           color={Colors.K300}
         >
-          Hand
+          {i18n.t("games:royalEnvoy.hand")}
         </Text>
       </View>
 

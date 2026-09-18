@@ -1,3 +1,4 @@
+import { i18n } from "@/i18n";
 import { delay } from "@/utils/utils";
 import {
   CardSuit,
@@ -167,7 +168,7 @@ export function debateWithCardAction(
     draft.visit = null;
     draft.ended = true;
     draft.won = false;
-    draft.winLoseMessage = "You won too many debates, insulting the ruler!";
+    draft.winLoseMessage = i18n.t("games:royalEnvoy.tooManyDebates");
     return "too-many";
   }
 
@@ -176,10 +177,7 @@ export function debateWithCardAction(
 }
 
 export type FinishVisitActionResult =
-  | "invalid"
-  | "won-kingdom"
-  | "lost-game"
-  | "won-game";
+  "invalid" | "won-kingdom" | "lost-game" | "won-game";
 
 export function finishVisitAction(draft: GameState): FinishVisitActionResult {
   const visit = draft.visit;
@@ -207,9 +205,9 @@ export function finishVisitAction(draft: GameState): FinishVisitActionResult {
   draft.ended = !wonKingdom || allKingdomsWon;
   draft.won = allKingdomsWon;
   draft.winLoseMessage = allKingdomsWon
-    ? "You won over the rulers of all eight kingdoms with your spectacular debating skills!"
+    ? i18n.t("games:royalEnvoy.wonAllKingdoms")
     : !wonKingdom
-      ? "You failed to win enough debates; the ruler doesn't take you seriously enough."
+      ? i18n.t("games:royalEnvoy.tooFewDebates")
       : "";
 
   if (allKingdomsWon) return "won-game";

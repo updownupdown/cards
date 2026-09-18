@@ -17,6 +17,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 export type WastePilesVariant = "frog" | "puss-in-the-corner";
 
 type Config = {
@@ -28,8 +29,8 @@ type Config = {
   /** "all" starts every Ace on a foundation; "one" guarantees at least one. */
   seedAces: "all" | "one";
   redeals: number;
-  winMessage: string;
-  loseMessage: string;
+  winMessage: () => string;
+  loseMessage: () => string;
 };
 
 const CONFIGS: Record<WastePilesVariant, Config> = {
@@ -40,8 +41,8 @@ const CONFIGS: Record<WastePilesVariant, Config> = {
     build: "any-suit",
     seedAces: "one",
     redeals: 0,
-    winMessage: "Every frog made it home!",
-    loseMessage: "The stock is spent.",
+    winMessage: () => i18n.t("games:frog.everyFrogMadeItHome"),
+    loseMessage: () => i18n.t("games:sirTommy.theStockIsSpent"),
   },
   "puss-in-the-corner": {
     decks: 1,
@@ -50,8 +51,8 @@ const CONFIGS: Record<WastePilesVariant, Config> = {
     build: "same-color",
     seedAces: "all",
     redeals: 1,
-    winMessage: "All four corners filled!",
-    loseMessage: "No moves remain.",
+    winMessage: () => i18n.t("games:pussInTheCorner.allFourCornersFilled"),
+    loseMessage: () => i18n.t("cards:noMovesRemain"),
   },
 };
 
@@ -423,7 +424,7 @@ export function WastePilesSolitaire({
               fan: { maxVisible: 3 },
               baseZIndex: 100,
               placeholder: {
-                text: "Reserve",
+                text: i18n.t("cards:reserve"),
                 infoPos: "above",
                 showCount: true,
               },
@@ -438,7 +439,11 @@ export function WastePilesSolitaire({
         row: STOCK_ROW,
         fan: { maxVisible: 3 },
         baseZIndex: 100,
-        placeholder: { text: "Stock", infoPos: "above", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:stock"),
+          infoPos: "above",
+          showCount: true,
+        },
       },
       ...wasteZones,
     ];
@@ -502,7 +507,7 @@ export function WastePilesSolitaire({
       reset={reset}
       isLoaded={isLoaded}
       score={foundationTotal}
-      winLoseMessage={game.won ? config.winMessage : config.loseMessage}
+      winLoseMessage={game.won ? config.winMessage() : config.loseMessage()}
       canUndo={canUndo}
       undo={undo}
     >

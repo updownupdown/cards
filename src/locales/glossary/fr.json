@@ -1,0 +1,72 @@
+{
+  "style": {
+    "formality": "Use \"vous\" throughout.",
+    "gameTitles": "Translate game titles: use the established French name of a classic solitaire when there is one, translate descriptive titles, and keep proper names. The current titles are the `title` entries in content/games.json; when rules mention another game, use its French title.",
+    "cardIndices": "Keep single-letter card indices (A, K, Q, J) as they are. Translate full rank and suit words, with plurals.",
+    "typography": "Put a non-breaking space (U+00A0) before : ; ! ? and inside « ». Use « » for quotation marks.",
+    "markup": "Keep {{placeholders}}, <tags>, line breaks and markdown (##, -, **) exactly."
+  },
+  "ranks": {
+    "Ace": {
+      "one": "As",
+      "other": "As"
+    },
+    "King": {
+      "one": "Roi",
+      "other": "Rois"
+    },
+    "Queen": {
+      "one": "Dame",
+      "other": "Dames"
+    },
+    "Jack": {
+      "one": "Valet",
+      "other": "Valets"
+    },
+    "Joker": {
+      "one": "Joker",
+      "other": "Jokers"
+    }
+  },
+  "suits": {
+    "hearts": {
+      "one": "cœur",
+      "other": "cœurs"
+    },
+    "diamonds": {
+      "one": "carreau",
+      "other": "carreaux"
+    },
+    "clubs": {
+      "one": "trèfle",
+      "other": "trèfles"
+    },
+    "spades": {
+      "one": "pique",
+      "other": "piques"
+    }
+  },
+  "terms": {
+    "suit": "couleur (pique, cœur, carreau, trèfle)",
+    "alternating colors (red and black)": "en alternant rouge et noir",
+    "foundation": "fondation",
+    "tableau": "colonnes (le tableau)",
+    "column": "colonne",
+    "stock": "pioche",
+    "waste (pile of turned stock cards)": "talon",
+    "discard (pile of discarded or removed cards)": "défausse",
+    "reserve": "réserve",
+    "free cell": "cellule libre",
+    "deal": "distribuer",
+    "redeal": "redistribuer",
+    "build up / build down": "monter / descendre",
+    "run / sequence": "séquence",
+    "pile": "pile",
+    "empty column": "colonne vide",
+    "undo": "annuler",
+    "node (progression map)": "nœud",
+    "collectible": "objet de collection",
+    "quote": "citation",
+    "chapter": "chapitre"
+  }
+}

@@ -20,6 +20,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { View } from "react-native";
 import { SingularityGraphic } from "./SingularityGraphic";
 
+import { i18n } from "@/i18n";
 const pileCount = 17;
 
 type GameState = {
@@ -211,8 +212,8 @@ export default function Singularity() {
       isLoaded={isLoaded}
       winLoseMessage={
         game.won
-          ? "Every star collapsed in!"
-          : "No card can reach the singularity."
+          ? i18n.t("games:singularity.everyStarCollapsedIn")
+          : i18n.t("games:singularity.noCardCanReachThe")
       }
       canUndo={canUndo}
       undo={undo}

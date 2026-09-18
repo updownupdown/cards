@@ -29,7 +29,7 @@ export const crescent: GameDefinition = {
     "- Only the exposed card of each of the sixteen piles is playable.",
     '- Build tableau one rank up or down in the same suit; Ace and King are adjacent and "wrap around".',
     "- Move one card at a time.",
-    "- Empty tableau cards cannot be filled.",
+    "- Empty tableau piles cannot be filled.",
     "- Non-base cards may transfer between foundations.",
     '- Three times per game, you can "restack" to move the bottom card of every pile to its top.',
   ],

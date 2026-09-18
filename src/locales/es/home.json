@@ -1,0 +1,119 @@
+{
+  "tabs": {
+    "home": "Inicio",
+    "collect": "Colección",
+    "search": "Buscar",
+    "nodes": "Nodos"
+  },
+  "cardSize": {
+    "small": "Lista",
+    "medium": "Tarjetas",
+    "large": "Detalles"
+  },
+  "random": {
+    "roll": "Juegos al azar",
+    "clear": "Quitar juegos al azar"
+  },
+  "favorites": {
+    "add": "Añadir a favoritos",
+    "remove": "Quitar de favoritos"
+  },
+  "search": {
+    "placeholder": "Buscar…",
+    "clear": "Borrar la búsqueda",
+    "filters": "Filtros",
+    "filter": "Filtrar",
+    "resetFilters": "Restablecer filtros",
+    "all": "Todos",
+    "unplayed": "Sin jugar"
+  },
+  "sections": {
+    "localOnly": "Juegos solo locales",
+    "startEasy": "¡Empieza con lo fácil!",
+    "startEasyIntro": "Aquí tienes algunos juegos fáciles de aprender para empezar. Encontrarás más en la pestaña Colección.",
+    "discoverMore": "Descubrir más juegos",
+    "gameOfTheDay": "Juego del día",
+    "jumpBackIn": "Retomar",
+    "favorites": "Favoritos",
+    "becauseYouLiked": "Porque te gustó «{{title}}»"
+  },
+  "collect": {
+    "tagProgress": "{{tag}}, {{percentage}}\u00a0% ganados"
+  },
+  "tags": {
+    "EasyToLearn": "Fáciles de aprender",
+    "TableauBuilding": "Solitarios de columnas",
+    "ModernMechanics": "Mecánicas modernas",
+    "DungeonCrawler": "Exploración de mazmorras",
+    "CardCombat": "Combate de cartas",
+    "GridPlacement": "Colocación en cuadrícula",
+    "PokerAndCribbage": "Póker y cribbage",
+    "PairMatching": "Parejas",
+    "SequenceBuilding": "Secuencias",
+    "StockAndWaste": "Mazo y descarte",
+    "ScoringPuzzles": "Puzles de puntuación",
+    "SpatialControl": "Control espacial"
+  },
+  "statsTab": {
+    "personas": {
+      "nemesis": {
+        "title": "El Némesis",
+        "subtitle": "Tasa de victorias más baja"
+      },
+      "comfort": {
+        "title": "La Apuesta Segura",
+        "subtitle": "Tasa de victorias más alta"
+      },
+      "whale": {
+        "title": "La Ballena Blanca",
+        "subtitle": "Más intentos sin victorias"
+      },
+      "underdog": {
+        "title": "El Tapado",
+        "subtitle": "Buena tasa de victorias, pocos intentos"
+      }
+    },
+    "sortBy": "Ordenar por {{column}}",
+    "columns": {
+      "game": "Juego",
+      "won": "Gan.",
+      "lost": "Per.",
+      "winPercent": "% V",
+      "best": "Máx",
+      "time": "Tpo."
+    },
+    "columnNames": {
+      "game": "Juego",
+      "won": "Partidas ganadas",
+      "lost": "Partidas perdidas",
+      "winPercent": "Tasa de victorias",
+      "best": "Mejor puntuación",
+      "time": "Mejor tiempo"
+    },
+    "empty": {
+      "title": "¡Vaya, no hay estadísticas que mostrar!",
+      "body": "Vuelve después de jugar algunas partidas para ver tus estadísticas aquí."
+    },
+    "fullStats": {
+      "title": "Estadísticas completas",
+      "noStats": "No hay estadísticas que mostrar",
+      "onlyPlayed": "Solo se muestran los juegos jugados"
+    },
+    "total": "Total"
+  },
+  "statsModal": {
+    "title": "Estadísticas"
+  },
+  "install": {
+    "titleIos": "Añade SoloSuite a tu pantalla de inicio",
+    "titleInstall": "Instalar SoloSuite",
+    "titleDevice": "Añade SoloSuite a tu dispositivo",
+    "instructionsIos": "En Safari, toca el botón Compartir y elige «Añadir a pantalla de inicio».",
+    "instructionsInstall": "Instálala para abrirla más rápido, jugar a pantalla completa y sin conexión.",
+    "instructionsBrowser": "Abre el menú del navegador y elige «Instalar aplicación» o «Añadir a pantalla de inicio».",
+    "accepted": "¡Genial! Tu navegador está terminando la instalación en segundo plano.",
+    "dismissed": "No pasa nada: puedes instalarla cuando quieras desde el menú del navegador.",
+    "installNow": "Instalar ahora",
+    "notNow": "Ahora no"
+  }
+}

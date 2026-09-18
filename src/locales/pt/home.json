@@ -1,0 +1,119 @@
+{
+  "tabs": {
+    "home": "Início",
+    "collect": "Coleção",
+    "search": "Buscar",
+    "nodes": "Mapa"
+  },
+  "cardSize": {
+    "small": "Lista",
+    "medium": "Cartões",
+    "large": "Detalhes"
+  },
+  "random": {
+    "roll": "Jogos aleatórios",
+    "clear": "Limpar jogos aleatórios"
+  },
+  "favorites": {
+    "add": "Adicionar aos favoritos",
+    "remove": "Remover dos favoritos"
+  },
+  "search": {
+    "placeholder": "Buscar...",
+    "clear": "Limpar busca",
+    "filters": "Filtros",
+    "filter": "Filtrar",
+    "resetFilters": "Redefinir filtros",
+    "all": "Todos",
+    "unplayed": "Não jogados"
+  },
+  "sections": {
+    "localOnly": "Jogos só locais",
+    "startEasy": "Comece pelos fáceis!",
+    "startEasyIntro": "Aqui estão alguns jogos fáceis de aprender para começar. Você encontra mais na aba Coleção.",
+    "discoverMore": "Descubra mais jogos",
+    "gameOfTheDay": "Jogo do dia",
+    "jumpBackIn": "Continuar jogando",
+    "favorites": "Favoritos",
+    "becauseYouLiked": "Porque você gostou de “{{title}}”"
+  },
+  "collect": {
+    "tagProgress": "{{tag}}, {{percentage}}% vencidos"
+  },
+  "tags": {
+    "EasyToLearn": "Fáceis de aprender",
+    "TableauBuilding": "Paciências de colunas",
+    "ModernMechanics": "Mecânicas modernas",
+    "DungeonCrawler": "Exploração de masmorras",
+    "CardCombat": "Combate de cartas",
+    "GridPlacement": "Posicionamento em grade",
+    "PokerAndCribbage": "Pôquer e cribbage",
+    "PairMatching": "Formação de pares",
+    "SequenceBuilding": "Construção de sequências",
+    "StockAndWaste": "Monte e descarte",
+    "ScoringPuzzles": "Desafios de pontuação",
+    "SpatialControl": "Controle espacial"
+  },
+  "statsTab": {
+    "personas": {
+      "nemesis": {
+        "title": "A Nêmesis",
+        "subtitle": "Menor taxa de vitórias"
+      },
+      "comfort": {
+        "title": "A Escolha Segura",
+        "subtitle": "Maior taxa de vitórias"
+      },
+      "whale": {
+        "title": "A Baleia Branca",
+        "subtitle": "Mais tentativas sem vitórias"
+      },
+      "underdog": {
+        "title": "O Azarão",
+        "subtitle": "Muitas vitórias, poucas tentativas"
+      }
+    },
+    "sortBy": "Ordenar por {{column}}",
+    "columns": {
+      "game": "Jogo",
+      "won": "Vit.",
+      "lost": "Der.",
+      "winPercent": "% V",
+      "best": "Máx",
+      "time": "Tpo."
+    },
+    "columnNames": {
+      "game": "Jogo",
+      "won": "Partidas vencidas",
+      "lost": "Partidas perdidas",
+      "winPercent": "Taxa de vitórias",
+      "best": "Melhor pontuação",
+      "time": "Melhor tempo"
+    },
+    "empty": {
+      "title": "Ops, nenhuma estatística para mostrar!",
+      "body": "Volte depois de jogar algumas partidas para ver suas estatísticas aqui."
+    },
+    "fullStats": {
+      "title": "Estatísticas completas",
+      "noStats": "Nenhuma estatística para mostrar",
+      "onlyPlayed": "Só aparecem os jogos já jogados"
+    },
+    "total": "Total"
+  },
+  "statsModal": {
+    "title": "Estatísticas"
+  },
+  "install": {
+    "titleIos": "Adicione o SoloSuite à Tela de Início",
+    "titleInstall": "Instale o SoloSuite",
+    "titleDevice": "Adicione o SoloSuite ao seu dispositivo",
+    "instructionsIos": "No Safari, toque no botão Compartilhar e escolha “Adicionar à Tela de Início”.",
+    "instructionsInstall": "Instale para abrir mais rápido, jogar em tela cheia e jogar offline.",
+    "instructionsBrowser": "Abra o menu do navegador e escolha “Instalar app” ou “Adicionar à tela inicial”.",
+    "accepted": "Ótimo! Seu navegador está terminando a instalação em segundo plano.",
+    "dismissed": "Sem problemas: você pode instalar quando quiser pelo menu do navegador.",
+    "installNow": "Instalar agora",
+    "notNow": "Agora não"
+  }
+}

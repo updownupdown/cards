@@ -1,0 +1,51 @@
+{
+  "menu": {
+    "home": "Home",
+    "nodes": "Nodi",
+    "instantWin": "Vittoria istantanea"
+  },
+  "result": {
+    "won": "Hai vinto!",
+    "lost": "Hai perso",
+    "score": "Punteggio: {{score}}",
+    "playAgain": "Gioca ancora",
+    "tryAgain": "Riprova"
+  },
+  "reset": {
+    "hold": "Tieni premuto per ricominciare la partita"
+  },
+  "tips": {
+    "quickStart": "Guida rapida",
+    "viewRules": "Vedi le regole"
+  },
+  "rules": {
+    "title": "Come si gioca",
+    "unavailable": "Le istruzioni non sono disponibili per questo gioco."
+  },
+  "settings": {
+    "title": "Impostazioni",
+    "none": "Nessuna impostazione per questo gioco",
+    "appliesNow": "Si applica senza ricominciare la partita.",
+    "appliesNextGame": "Ricomincia la partita quando la cambi."
+  },
+  "rating": {
+    "title": "Difficoltà"
+  },
+  "credits": {
+    "title": "Crediti",
+    "backgroundImage": "Immagine di sfondo:"
+  },
+  "deckPreview": {
+    "title": "Anteprima del mazzo",
+    "shuffleNotice": "Il mazzo verrà mescolato dopo l'anteprima.",
+    "empty": "Nessuna carta nel mazzo."
+  },
+  "rotateHint": {
+    "landscape": "Modalità orizzontale\nconsigliata",
+    "portrait": "Modalità verticale\nconsigliata"
+  },
+  "errors": {
+    "gameCrashed": "Si è verificato un problema con questo gioco.",
+    "resumeFailed": "Non è stato possibile riprendere l'ultima partita."
+  }
+}

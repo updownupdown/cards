@@ -1,5 +1,6 @@
 import { PlayingCard, RANK_VALUE } from "../Cards/card-utils";
 import { YukonBoard } from "./Yukon";
+import { i18n } from "@/i18n";
 
 export function alaskaCanStack(card: PlayingCard, destination?: PlayingCard) {
   if (!destination) return card.rank === "K";
@@ -13,7 +14,7 @@ export default function Alaska() {
   return (
     <YukonBoard
       canStack={alaskaCanStack}
-      winMessage="Every Alaskan suit is home!"
+      winMessage={i18n.t("games:alaska.everyAlaskanSuitIsHome")}
     />
   );
 }

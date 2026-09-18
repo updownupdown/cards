@@ -29,7 +29,7 @@ export const chapterAndVerse: GameDefinition = {
     "- The value of the offer is the sum of the customer value (J = 11, Q = 12, K = 13) and the revealed used book's value.",
     "- Choose shelf books whose total exactly matches that offer.",
     "- **Exclusive offers**: shelf books matching the used book's suit **cost $0**.",
-    "- **Limited-time offers:**: Aces normally cost $11, but can be offered for $1 (tap to toggle their value).",
+    "- **Limited-time offers:** Aces normally cost $11, but can be offered for $1 (tap to toggle their value).",
 
     "## Increasing Guild Standing",
     "- After a trade, **selected books matching the customer's suit** are added to your score; the others are discarded.",

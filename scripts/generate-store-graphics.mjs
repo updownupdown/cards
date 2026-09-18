@@ -20,6 +20,47 @@ const BG_DARKER = "#14181C";
 const RED = "#C62440";
 const GREY = "#CAD3DC";
 
+// The feature graphic carries the store tagline, so it is rendered per
+// language: `--lang fr` writes feature-graphic-1024x500-fr.png. The icon has
+// no text, so it is only written for English.
+const TAGLINES = {
+  en: [
+    "A collection of 100 solo playing card games,",
+    "including classic solitaire and modern mechanics games.",
+  ],
+  fr: [
+    "Une collection de 100 jeux de cartes en solo,",
+    "des réussites classiques aux jeux aux mécaniques modernes.",
+  ],
+  es: [
+    "Una colección de 100 juegos de cartas en solitario,",
+    "del solitario clásico a los juegos de mecánicas modernas.",
+  ],
+  it: [
+    "Una raccolta di 100 giochi di carte in solitario,",
+    "dai solitari classici ai giochi dalle meccaniche moderne.",
+  ],
+  pt: [
+    "Uma coleção de 100 jogos de cartas para um jogador,",
+    "das paciências clássicas aos jogos de mecânicas modernas.",
+  ],
+  tr: [
+    "Tek kişilik 100 kart oyunundan oluşan bir koleksiyon;",
+    "klasik pasyanslardan modern mekanikli oyunlara.",
+  ],
+  id: [
+    "Koleksi 100 permainan kartu untuk satu pemain,",
+    "dari solitaire klasik hingga permainan bermekanik modern.",
+  ],
+};
+
+const languageIndex = process.argv.indexOf("--lang");
+const LANGUAGE = languageIndex === -1 ? "en" : process.argv[languageIndex + 1];
+if (!TAGLINES[LANGUAGE]) {
+  console.error(`Unknown language "${LANGUAGE}".`);
+  process.exit(1);
+}
+
 fs.mkdirSync(OUT, { recursive: true });
 
 // ---------- 1. Play Store icon: 512x512 from the 1024x1024 source ----------
@@ -109,10 +150,11 @@ async function makeFeatureGraphic() {
   const wordmarkHeight = (wordmarkWidth * 32) / 140;
   const leftMargin = 72;
 
-  const taglineLines = [
-    "A collection of 100 solo playing card games,",
-    "including classic solitaire and modern mechanics games.",
-  ];
+  const taglineLines = TAGLINES[LANGUAGE];
+  const featureGraphicName =
+    LANGUAGE === "en"
+      ? "feature-graphic-1024x500.png"
+      : `feature-graphic-1024x500-${LANGUAGE}.png`;
   const taglineFontSize = 26;
   const taglineLineHeight = taglineFontSize * 1.4;
   const taglineTop = wordmarkHeight + 46;
@@ -166,12 +208,13 @@ async function makeFeatureGraphic() {
     ])
     .flatten({ background: BG_DARKER })
     .png()
-    .toFile(`${OUT}/feature-graphic-1024x500.png`);
-  console.log("wrote feature-graphic-1024x500.png");
+    .toFile(`${OUT}/${featureGraphicName}`);
+  console.log(`wrote ${featureGraphicName}`);
 }
 
 async function main() {
-  await makeStoreIcon();
+  // The icon has no text, so it is the same in every language.
+  if (LANGUAGE === "en") await makeStoreIcon();
   await makeFeatureGraphic();
 }
 

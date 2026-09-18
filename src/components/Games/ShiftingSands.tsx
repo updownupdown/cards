@@ -24,6 +24,7 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 import { ProgressBar } from "../Home/ProgressBar";
 
+import { i18n } from "@/i18n";
 const cardSize = "tableau";
 const minCols = 10;
 
@@ -250,8 +251,14 @@ function resolveTide(draft: ShiftingSandsGameState) {
     draft.ended = true;
     draft.won = castleCards > draft.discard.length;
     draft.winLoseMessage = draft.won
-      ? `Your castle held: ${castleCards} to ${draft.discard.length}.`
-      : `The tide won: ${castleCards} to ${draft.discard.length}.`;
+      ? i18n.t("games:shiftingSands.castleHeld", {
+          castle: castleCards,
+          tide: draft.discard.length,
+        })
+      : i18n.t("games:shiftingSands.tideWon", {
+          castle: castleCards,
+          tide: draft.discard.length,
+        });
     return;
   }
 
@@ -417,7 +424,7 @@ export default function ShiftingSands() {
             center: false,
           },
           placeholder: {
-            text: column.length === 0 ? "Empty" : undefined,
+            text: column.length === 0 ? i18n.t("cards:empty") : undefined,
             showCount: column.length > 0,
             backgroundColor: isStanding(column)
               ? rgba(Colors.cardSelectGreen, 0.22)
@@ -436,7 +443,7 @@ export default function ShiftingSands() {
         row: 0,
         baseZIndex: 40,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "right" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "right" },
       },
       {
         id: "discard",
@@ -446,7 +453,7 @@ export default function ShiftingSands() {
         row: 0,
         baseZIndex: 40,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Discard", infoPos: "left" },
+        placeholder: { text: i18n.t("cards:discard"), infoPos: "left" },
       },
       {
         id: "stats",
@@ -552,7 +559,7 @@ export default function ShiftingSands() {
           progressValue={castleCards}
           totalValue={30}
           color={"#8d693b"}
-          labelText="Dunes"
+          labelText={i18n.t("games:shiftingSands.dunes")}
           style={{ flex: 1 }}
           tallyText={castleCards}
           scaledHeight={cardHeight * 0.5}
@@ -562,7 +569,7 @@ export default function ShiftingSands() {
           progressValue={game.discard.length}
           totalValue={30}
           color={"#8d693b"}
-          labelText="Eroded"
+          labelText={i18n.t("games:shiftingSands.eroded")}
           style={{ flex: 1 }}
           tallyText={game.discard.length}
           scaledHeight={cardHeight * 0.5}
@@ -588,7 +595,7 @@ export default function ShiftingSands() {
           {game.phase === "gather" ? (
             <>
               <Text size="md" color={Colors.white} weight={500}>
-                Draw:
+                {i18n.t("games:shiftingSands.draw")}
               </Text>
               {Array.from(
                 { length: Math.min(7, game.deck.length) },
@@ -615,7 +622,7 @@ export default function ShiftingSands() {
           ) : (
             <>
               <Button
-                text="Place"
+                text={i18n.t("games:shiftingSands.place")}
                 size="sm"
                 theme="green"
                 taller
@@ -624,7 +631,7 @@ export default function ShiftingSands() {
 
               <View style={[flexStyles.colCentered, flexStyles.flex1]}>
                 <Text size="sm" color={colorPale}>
-                  Stock to Tide
+                  {i18n.t("games:shiftingSands.stockToTide")}
                 </Text>
                 <Text size="xxl" color={Colors.white} weight={600}>
                   {game.phase === "play" ? placementPreview.stockToTide : "--"}
@@ -632,7 +639,7 @@ export default function ShiftingSands() {
               </View>
 
               <Button
-                text={"Reverse"}
+                text={i18n.t("games:shiftingSands.reverse")}
                 size="sm"
                 theme="#8d693b"
                 disabled={game.hand.length < 2}

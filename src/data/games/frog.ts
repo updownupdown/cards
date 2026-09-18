@@ -12,7 +12,7 @@ export const frog: GameDefinition = {
     difficulty: 45,
     luck: 55,
   },
-  thumbnail: "DefaultThumbnail.webp",
+  thumbnail: "Frog.webp",
   background: GAME_BACKGROUNDS.marsh,
   animation: GameAnimations.Firefly,
   gameColorDark: "#15261b",

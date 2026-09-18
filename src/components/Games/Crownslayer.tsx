@@ -28,6 +28,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
 import { ProgressBar } from "../Home/ProgressBar";
 
+import { i18n } from "@/i18n";
 // ---------- Types ---------- //
 type EnemyType = "J" | "Q" | "K";
 
@@ -70,12 +71,18 @@ const ENEMY_STATS: Record<EnemyType, { health: number; attack: number }> = {
   K: { health: 40, attack: 20 },
 };
 
-const SUIT_EFFECTS_TEXT: Record<CardSuit, string> = {
-  hearts: "Heal",
-  diamonds: "Draw",
-  clubs: "x2 Dmg.",
-  spades: "- Att.",
-};
+const SUIT_EFFECTS_TEXT = {
+  hearts: "games:crownslayer.powerHeal",
+  diamonds: "games:crownslayer.powerDraw",
+  clubs: "games:crownslayer.powerDouble",
+  spades: "games:crownslayer.powerShield",
+} as const satisfies Record<CardSuit, string>;
+
+const VICTORY_MESSAGE = {
+  gold: "games:crownslayer.victoryGold",
+  silver: "games:crownslayer.victorySilver",
+  bronze: "games:crownslayer.victoryBronze",
+} as const;
 
 const SUIT_EFFECTS_COLOR: Record<CardSuit, string> = {
   hearts: Colors.buttonGreen,
@@ -481,7 +488,7 @@ export default function Crownslayer() {
 
       draft.ended = true;
       draft.won = false;
-      draft.winLoseMessage = "No playable cards remain. Game Over!";
+      draft.winLoseMessage = i18n.t("games:crownslayer.noPlayableCards");
       draft.selectedCards = [];
     });
   }, [
@@ -537,8 +544,7 @@ export default function Crownslayer() {
 
       draft.ended = true;
       draft.won = false;
-      draft.winLoseMessage =
-        "No possible discard can cover enemy damage. Game Over!";
+      draft.winLoseMessage = i18n.t("games:crownslayer.noDiscardCanCover");
       draft.selectedCards = [];
     });
   }, [
@@ -677,7 +683,7 @@ export default function Crownslayer() {
           draft.won = true;
           draft.currentEnemy = undefined;
           draft.victoryType = victoryType;
-          draft.winLoseMessage = `All enemies defeated! ${victoryType.toUpperCase()} victory!`;
+          draft.winLoseMessage = i18n.t(VICTORY_MESSAGE[victoryType]);
         } else {
           // Move to next enemy
           if (draft.castleDeck.length > 0) {
@@ -734,7 +740,9 @@ export default function Crownslayer() {
       setGame((draft) => {
         draft.ended = true;
         draft.won = false;
-        draft.winLoseMessage = `Failed to block ${enemyDamage - discardValue} damage. Game Over!`;
+        draft.winLoseMessage = i18n.t("games:crownslayer.failedToBlock", {
+          damage: enemyDamage - discardValue,
+        });
       });
       return;
     }
@@ -798,7 +806,10 @@ export default function Crownslayer() {
         col: 0,
         row: 0.25,
         cards: game.castleDeck,
-        placeholder: { infoPos: "above", text: "Castle" },
+        placeholder: {
+          infoPos: "above",
+          text: i18n.t("games:crownslayer.castle"),
+        },
         fan: { maxVisible: 3 },
         baseZIndex: 30,
       },
@@ -808,7 +819,10 @@ export default function Crownslayer() {
         col: 1,
         row: 0.25,
         cards: game.tavernDeck,
-        placeholder: { infoPos: "above", text: "Tavern" },
+        placeholder: {
+          infoPos: "above",
+          text: i18n.t("games:crownslayer.tavern"),
+        },
         fan: { maxVisible: 3 },
         baseZIndex: 30,
       },
@@ -818,7 +832,10 @@ export default function Crownslayer() {
         col: 2,
         row: 0.25,
         cards: game.jestersDeck,
-        placeholder: { infoPos: "above", text: "Jesters" },
+        placeholder: {
+          infoPos: "above",
+          text: i18n.t("games:crownslayer.jesters"),
+        },
         fan: { maxVisible: 3 },
         baseZIndex: 30,
       },
@@ -827,7 +844,7 @@ export default function Crownslayer() {
         col: 3,
         row: 0.25,
         cards: game.discardPile,
-        placeholder: { infoPos: "above", text: "Dscrd" },
+        placeholder: { infoPos: "above", text: i18n.t("cards:dscrd") },
         fan: { maxVisible: 3 },
         baseZIndex: 40,
       },
@@ -1056,7 +1073,7 @@ export default function Crownslayer() {
                     color={SUIT_EFFECTS_COLOR[suit]}
                     style={{ flex: 1 }}
                   >
-                    {SUIT_EFFECTS_TEXT[suit]}
+                    {i18n.t(SUIT_EFFECTS_TEXT[suit])}
                   </Text>
                 </View>
               ))}
@@ -1065,7 +1082,7 @@ export default function Crownslayer() {
           {/* Attack Button */}
           <Button
             onPress={playCards}
-            text="Attack"
+            text={i18n.t("games:crownslayer.attack")}
             disabled={!playSelection.isValid}
             theme="blue"
             style={{ flex: 1 }}
@@ -1132,7 +1149,7 @@ export default function Crownslayer() {
           {/* Defend Button */}
           <Button
             onPress={handleEndDamagePhase}
-            text="Defend"
+            text={i18n.t("games:crownslayer.defend")}
             disabled={
               enemyDamageAfterShield === 0 ||
               selectedDefenseValue < currentEnemyAttack

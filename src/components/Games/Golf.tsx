@@ -17,6 +17,7 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { flexStyles } from "@/styles/flexStyles";
 
+import { i18n } from "@/i18n";
 const tableauSize = {
   rows: 5,
   cols: 7,
@@ -236,7 +237,7 @@ export default function Golf() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: "Stock", infoPos: "left" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "left" },
       },
       {
         id: "discard",
@@ -247,7 +248,7 @@ export default function Golf() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: "Discard", infoPos: "right" },
+        placeholder: { text: i18n.t("cards:discard"), infoPos: "right" },
       },
       ...pileZones,
       {
@@ -302,7 +303,9 @@ export default function Golf() {
       reset={reset}
       isLoaded={isLoaded}
       winLoseMessage={
-        game.won ? "You cleared the tableau!" : "No more playable cards."
+        game.won
+          ? i18n.t("games:golf.youClearedTheTableau")
+          : i18n.t("games:golf.noMorePlayableCards")
       }
       canUndo={canUndo}
       undo={undo}
@@ -313,7 +316,7 @@ export default function Golf() {
         <Button
           onPress={drawCard}
           disabled={game.draw.length === 0 || game.ended}
-          text="Draw"
+          text={i18n.t("cards:draw")}
           size="lg"
           fullWidth
           halfTaller

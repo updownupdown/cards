@@ -45,7 +45,7 @@ export const delta21: GameDefinition = {
     "\nOnce your hand is empty:",
     "- any column totalling **exactly 21** is set aside as a completed study",
     "- the gap left refills with a new school",
-    "- your hand is replenished from the deck and a new turn starts. ",
+    "- your hand is replenished from the deck and a new turn starts.",
 
     "## Research Breakthroughs",
     "- **Species Specialization:**",
@@ -59,7 +59,7 @@ export const delta21: GameDefinition = {
     "- **Selective Harvesting:**",
     "-- a fisher catching fish of its own suit.",
     "- **Fishing Pressure:**",
-    "-- a study containing two or more fisher.",
+    "-- a study containing two or more fishers.",
 
     "## Scoring",
     "- Score **1 point** per study plus **2 points** per research breakthrough.",

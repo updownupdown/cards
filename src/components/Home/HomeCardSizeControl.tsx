@@ -1,5 +1,6 @@
 import { RadioButtons } from "@/components/common/RadioButtons";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useTranslation } from "@/i18n";
 import type { IconName } from "@/icons";
 import { Colors, layoutDims } from "@/styles/styles";
 import { View } from "react-native";
@@ -9,22 +10,18 @@ export type HomeCardSize = "small" | "medium" | "large";
 const CARD_SIZE_OPTIONS: {
   value: HomeCardSize;
   iconName: IconName;
-  label: string;
 }[] = [
   {
     value: "small",
     iconName: "list-small",
-    label: "List",
   },
   {
     value: "medium",
     iconName: "list-medium",
-    label: "Cards",
   },
   {
     value: "large",
     iconName: "list-large",
-    label: "Details",
   },
 ];
 
@@ -40,6 +37,7 @@ export function HomeCardSizeControl({
   onChange,
 }: HomeCardSizeControlProps) {
   const { spacing } = useResponsiveMetrics();
+  const { t } = useTranslation("home");
 
   return (
     <View
@@ -50,7 +48,10 @@ export function HomeCardSizeControl({
       }}
     >
       <RadioButtons
-        options={CARD_SIZE_OPTIONS}
+        options={CARD_SIZE_OPTIONS.map((option) => ({
+          ...option,
+          label: t(`cardSize.${option.value}`),
+        }))}
         selectedValue={value}
         selectedBackgroundColor={Colors.background}
         onChange={onChange}

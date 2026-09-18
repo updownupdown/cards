@@ -2,6 +2,8 @@ import { Text } from "@/components/common/Text";
 import { getGameInfo } from "@/data/game-menu";
 import { useGamePath } from "@/hooks/useGamePath";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useDisplayLanguage, useTranslation } from "@/i18n";
+import { localizeGame } from "@/i18n/content";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, layoutDims, rgba } from "@/styles/styles";
 import { useEffect, useRef, useState } from "react";
@@ -20,7 +22,13 @@ type Props = {
 export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
   const onCloseRef = useRef(onClose);
   const pathname = useGamePath();
-  const gameInfo = getGameInfo(pathname);
+  const gameInfo = localizeGame(
+    getGameInfo(pathname),
+    pathname,
+    useDisplayLanguage(),
+  );
+  const { t } = useTranslation("game");
+  const { t: tCommon } = useTranslation("common");
   const { spacing, ui } = useResponsiveMetrics();
   const [expandedWidth, setExpandedWidth] = useState<number>();
   const [contentHeight, setContentHeight] = useState<number>();
@@ -121,13 +129,13 @@ export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
               color={gameInfo.gameColorPale}
               style={{ flex: 1 }}
             >
-              Quick Start
+              {t("tips.quickStart")}
             </Text>
 
             <Button
               size="sm"
               iconName="instructions"
-              text="View rules"
+              text={t("tips.viewRules")}
               onPress={() => {
                 onClose();
                 showRulesModal();
@@ -139,7 +147,7 @@ export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
             <Button
               size="sm"
               iconName="close"
-              text="Close"
+              text={tCommon("close")}
               autoProgress={AUTO_CLOSE_DELAY}
               autoProgressColor={rgba(gameInfo.gameColorPale, 0.2)}
               onPress={onClose}

@@ -25,6 +25,7 @@ import {
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 type RankBand = {
   members: PlayingCard[];
   candidates: PlayingCard[];
@@ -274,12 +275,12 @@ export default function ChainOfCommand() {
 
   const instructionText = () => {
     if (selectedMember === null) {
-      return "Select a member to promote";
+      return i18n.t("games:chainOfCommand.selectAMemberToPromote");
     } else if (selectedReplacement === null) {
       if (validReplacementCards.length) {
-        return "Select a valid replacement";
+        return i18n.t("games:chainOfCommand.selectAValidReplacement");
       } else {
-        return "No valid replacement";
+        return i18n.t("games:chainOfCommand.noValidReplacement");
       }
     } else if (selectedRank !== null) {
       // Check if sacrifice is needed for next rank member
@@ -289,9 +290,9 @@ export default function ChainOfCommand() {
         game.ranks[nextRank].members.length === 3 &&
         !selectedSacrifice
       ) {
-        return "(Sacrifice needed for member promotion)";
+        return i18n.t("games:chainOfCommand.sacrificeNeededForMemberPromotion");
       }
-      return `Promote as a:`;
+      return i18n.t("games:chainOfCommand.promoteAsA");
     }
   };
 
@@ -369,7 +370,10 @@ export default function ChainOfCommand() {
         col: 0,
         row: 6.5,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Dead", infoPos: "above" },
+        placeholder: {
+          text: i18n.t("games:chainOfCommand.dead"),
+          infoPos: "above",
+        },
       },
       ...rankZones.flat(),
       {
@@ -465,8 +469,8 @@ export default function ChainOfCommand() {
       isLoaded={isLoaded}
       winLoseMessage={
         game.won
-          ? `You won by promoting from Rank 1. Final score: ${score}`
-          : "No valid promotion/replacement remains. You lose."
+          ? i18n.t("games:chainOfCommand.youWonByPromotingFrom", { score })
+          : i18n.t("games:chainOfCommand.noValidPromotionReplacementRemains")
       }
       canUndo={canUndo}
       undo={undo}
@@ -501,7 +505,7 @@ export default function ChainOfCommand() {
             },
           ]}
         >
-          Rk
+          {i18n.t("games:chainOfCommand.rk")}
         </Text>
         <Text
           size="xxs"
@@ -510,7 +514,7 @@ export default function ChainOfCommand() {
           color={Colors.K200}
           style={[{ width: cardWidth * 2.2, color: Colors.brightBlue }]}
         >
-          Members
+          {i18n.t("games:chainOfCommand.members")}
         </Text>
         <Text
           size="xxs"
@@ -519,7 +523,7 @@ export default function ChainOfCommand() {
           color={Colors.K200}
           style={[flexStyles.flex1, { color: Colors.brightPurple }]}
         >
-          Candidates
+          {i18n.t("games:chainOfCommand.candidates")}
         </Text>
       </View>
 
@@ -588,7 +592,7 @@ export default function ChainOfCommand() {
         >
           <Button
             onPress={() => promote("members")}
-            text="Member"
+            text={i18n.t("games:chainOfCommand.member")}
             disabled={
               !selectedReplacement ||
               !!(
@@ -604,7 +608,7 @@ export default function ChainOfCommand() {
           />
           <Button
             onPress={() => promote("candidates")}
-            text="Candidate"
+            text={i18n.t("games:chainOfCommand.candidate")}
             disabled={!selectedReplacement}
             style={[flexStyles.flex1]}
             theme="purple"

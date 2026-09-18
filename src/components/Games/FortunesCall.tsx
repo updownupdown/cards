@@ -19,6 +19,7 @@ import { Text } from "../common/Text";
 import { ProgressBar } from "../Home/ProgressBar";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
+import { i18n } from "@/i18n";
 type Prediction = "red" | "black" | "higher" | "lower";
 type GameState = {
   deck: PlayingCard[];
@@ -214,7 +215,7 @@ export default function FortunesCall() {
           scaledHeight={cardHeight * 0.25}
           color="blue"
           style={{ flex: 1.8 }}
-          labelText="Score"
+          labelText={i18n.t("cards:score")}
           autoTallyText
         />
 
@@ -224,7 +225,7 @@ export default function FortunesCall() {
           scaledHeight={cardHeight * 0.25}
           color="red"
           style={{ flex: 1 }}
-          labelText="Misses"
+          labelText={i18n.t("games:fortunesCall.misses")}
           tallyText={game.misses.toString()}
         />
       </View>
@@ -243,7 +244,7 @@ export default function FortunesCall() {
             +1
           </Text>
           <Button
-            text="Red"
+            text={i18n.t("games:fortunesCall.red")}
             size="md"
             theme="green"
             onPress={() => predict("red")}
@@ -252,7 +253,7 @@ export default function FortunesCall() {
             halfTaller
           />
           <Button
-            text="Black"
+            text={i18n.t("cards:black")}
             size="md"
             theme="green"
             onPress={() => predict("black")}
@@ -266,7 +267,7 @@ export default function FortunesCall() {
             +2
           </Text>
           <Button
-            text="Higher"
+            text={i18n.t("games:fortunesCall.higher")}
             size="md"
             theme="blue"
             onPress={() => predict("higher")}
@@ -275,7 +276,7 @@ export default function FortunesCall() {
             halfTaller
           />
           <Button
-            text="Lower"
+            text={i18n.t("games:fortunesCall.lower")}
             size="md"
             theme="blue"
             onPress={() => predict("lower")}

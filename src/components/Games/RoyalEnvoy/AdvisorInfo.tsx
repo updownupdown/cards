@@ -9,6 +9,7 @@ import { type PlayingCard } from "../../Cards/card-utils";
 import { RoyalEnvoySuitsColorMap, RoyalEnvoyVisit } from "./RoyalEnvoyTypes";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
+import { i18n } from "@/i18n";
 interface AdvisorInfoProps {
   lastSelectedAdvisor?: PlayingCard;
   selectedAdvisor?: PlayingCard;
@@ -45,33 +46,34 @@ export const AdvisorInfo = ({
 
   switch (advisorSuit) {
     case "hearts":
-      advisorType = "Diplomacy";
-      advisorText =
-        "Discard all cards in your hand that match the current kingdom's trump suit.";
+      advisorType = i18n.t("games:advisorInfo.diplomacy");
+      advisorText = i18n.t("games:advisorInfo.diplomacyText");
       const cardsToDiscard = hand.filter(
         (c) => c.suit === visit?.trumpSuit,
       ).length;
-      buttonText = `Discard ${cardsToDiscard} card${cardsToDiscard > 1 ? "s" : ""}`;
+      buttonText = i18n.t("games:advisorInfo.discardCards", {
+        count: cardsToDiscard,
+      });
       break;
     case "clubs":
-      advisorType = "Military";
-      advisorText = "Draw a card for each club in your hand.";
+      advisorType = i18n.t("games:advisorInfo.military");
+      advisorText = i18n.t("games:advisorInfo.militaryText");
       const cardsToDraw = hand.filter((c) => c.suit === "clubs").length;
-      buttonText = `Draw ${cardsToDraw} card${cardsToDraw > 1 ? "s" : ""}`;
+      buttonText = i18n.t("games:advisorInfo.drawCards", {
+        count: cardsToDraw,
+      });
 
       break;
     case "spades":
-      advisorType = "Political";
-      advisorText =
-        "Select a ruler from an unvisisted kindgom above to swap with the current ruler.";
-      buttonText = "Swap ruler";
+      advisorType = i18n.t("games:advisorInfo.political");
+      advisorText = i18n.t("games:advisorInfo.politicalText");
+      buttonText = i18n.t("games:advisorInfo.swapRuler");
 
       break;
     case "diamonds":
-      advisorType = "Commerce";
-      advisorText =
-        "Draw two cards, then choose and discard two cards from your hand.";
-      buttonText = "Draw cards";
+      advisorType = i18n.t("games:advisorInfo.commerce");
+      advisorText = i18n.t("games:advisorInfo.commerceText");
+      buttonText = i18n.t("games:advisorInfo.drawTwoCards");
 
       break;
     default:
@@ -112,7 +114,9 @@ export const AdvisorInfo = ({
                 },
               ]}
             >
-              {`Discard ${discardFromHand} card${discardFromHand > 1 ? "s" : ""} to continue`}
+              {i18n.t("games:advisorInfo.discardToContinue", {
+                count: discardFromHand,
+              })}
             </Text>
           )}
 
@@ -140,7 +144,7 @@ export const AdvisorInfo = ({
                     },
                   ]}
                 >
-                  {advisorType} Advisor
+                  {advisorType} {i18n.t("games:advisorInfo.advisor")}
                 </Text>
                 <Text
                   size="sm"
@@ -167,7 +171,7 @@ export const AdvisorInfo = ({
               >
                 <Button
                   onPress={() => setSelectedAdvisor(undefined)}
-                  text="Cancel"
+                  text={i18n.t("games:advisorInfo.cancel")}
                   textOnly
                   theme={Colors.K200}
                 />

@@ -15,6 +15,7 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { adjacentWrap } from "./Singularity";
 
+import { i18n } from "@/i18n";
 export type AllInARowState = {
   piles: PlayingCard[][];
   foundation: PlayingCard[];
@@ -184,7 +185,9 @@ export default function AllInARow() {
       canUndo={canUndo}
       undo={undo}
       winLoseMessage={
-        game.won ? "You cleared the board!" : "No adjacent rank remains."
+        game.won
+          ? i18n.t("games:allInARow.youClearedTheBoard")
+          : i18n.t("games:allInARow.noAdjacentRankRemains")
       }
       showDeviceRotateHint
     >

@@ -1,4 +1,8 @@
-import { getScaledTextSize, Typography } from "@/components/common/Text";
+import {
+  getScaledTextSize,
+  toDisplayUpperCase,
+  Typography,
+} from "@/components/common/Text";
 import {
   calculateWinRate,
   formatPlayTime,
@@ -6,6 +10,7 @@ import {
   type GameStats,
 } from "@/data/game-menu";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useTranslation } from "@/i18n";
 import { Colors } from "@/styles/styles";
 import { View, type ViewStyle } from "react-native";
 import Animated, {
@@ -56,14 +61,15 @@ function StatsText({
           fontSize,
           fontFamily: Typography.fontFamily[weight],
           color,
-          textTransform,
           lineHeight: fontSize * 1.3,
           flexShrink: 1,
         },
         animatedStyle,
       ]}
     >
-      {children}
+      {textTransform === "uppercase"
+        ? toDisplayUpperCase(String(children))
+        : children}
     </Animated.Text>
   );
 }
@@ -101,32 +107,43 @@ export function GameUserStats({
   showFastestTime = false,
 }: GameUserStatsProps) {
   const { spacing } = useResponsiveMetrics();
+  const { t } = useTranslation("common");
 
   const hasBestScore =
     typeof stats.highestScore === "number" &&
     Number.isFinite(stats.highestScore);
 
-  const cells: { label: string; value: string | number }[] = [
-    ...(showPlayed ? [{ label: "Played", value: stats.attempts }] : []),
-    { label: "Won", value: stats.wins },
-    { label: "Lost", value: stats.losses },
-    { label: "Win rate", value: calculateWinRate(stats) ?? "N/A" },
-    {
-      label: "Best",
-      value: hasBestScore ? (stats.highestScore as number) : "N/A",
-    },
-    ...(showFastestTime
-      ? [
-          {
-            label: "Fastest",
-            value:
-              stats.fastestTimeMs == null
-                ? "N/A"
-                : formatPlayTime(stats.fastestTimeMs),
-          },
-        ]
-      : []),
-  ];
+  // A null value has nothing to show yet ("N/A").
+  const cells: { id: string; label: string; value: string | number | null }[] =
+    [
+      ...(showPlayed
+        ? [{ id: "played", label: t("stats.played"), value: stats.attempts }]
+        : []),
+      { id: "won", label: t("stats.won"), value: stats.wins },
+      { id: "lost", label: t("stats.lost"), value: stats.losses },
+      {
+        id: "winRate",
+        label: t("stats.winRate"),
+        value: calculateWinRate(stats) ?? null,
+      },
+      {
+        id: "best",
+        label: t("stats.best"),
+        value: hasBestScore ? (stats.highestScore as number) : null,
+      },
+      ...(showFastestTime
+        ? [
+            {
+              id: "fastest",
+              label: t("stats.fastest"),
+              value:
+                stats.fastestTimeMs == null
+                  ? null
+                  : formatPlayTime(stats.fastestTimeMs),
+            },
+          ]
+        : []),
+    ];
 
   return (
     <View
@@ -140,7 +157,7 @@ export function GameUserStats({
     >
       {cells.map((cell) => (
         <View
-          key={cell.label}
+          key={cell.id}
           style={{
             flex: 1,
             alignItems: "center",
@@ -160,13 +177,13 @@ export function GameUserStats({
           </StatsText>
           <StatsText
             size="md"
-            weight={cell.value === "N/A" ? 300 : 600}
-            color={cell.value === "N/A" ? labelColor : accentColor}
+            weight={cell.value === null ? 300 : 600}
+            color={cell.value === null ? labelColor : accentColor}
             colorProgress={colorProgress}
-            fromColor={cell.value === "N/A" ? fromLabelColor : fromValueColor}
-            toColor={cell.value === "N/A" ? toLabelColor : toValueColor}
+            fromColor={cell.value === null ? fromLabelColor : fromValueColor}
+            toColor={cell.value === null ? toLabelColor : toValueColor}
           >
-            {cell.value}
+            {cell.value ?? t("notAvailable")}
           </StatsText>
         </View>
       ))}

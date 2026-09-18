@@ -12,6 +12,7 @@ import {
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { i18n } from "@/i18n";
 
 const lineCols = 7;
 const startCards = 3;
@@ -70,7 +71,12 @@ function evaluateEnd(state: GameState, isSettingUp = false) {
   return { ended: true, won: false };
 }
 
-export const tenTwentyThirtyRules = { points, isDecade, hasDecade, evaluateEnd };
+export const tenTwentyThirtyRules = {
+  points,
+  isDecade,
+  hasDecade,
+  evaluateEnd,
+};
 
 export default function TenTwentyThirty() {
   const [anchorId, setAnchorId] = useState<string | null>(null);
@@ -147,8 +153,7 @@ export default function TenTwentyThirty() {
 
   const zones: MapZone[] = useMemo(() => {
     const rows = Math.max(1, Math.ceil(game.line.length / lineCols));
-    const rowStep =
-      rows > 1 ? Math.min(1.1, (lineRows - 1) / (rows - 1)) : 1.1;
+    const rowStep = rows > 1 ? Math.min(1.1, (lineRows - 1) / (rows - 1)) : 1.1;
 
     const lineZones: MapZone[] = game.line.map((card, i) => ({
       id: `line-${i}`,
@@ -169,7 +174,11 @@ export default function TenTwentyThirty() {
         col: lineCols - 2.25,
         row: stockRow,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Discard", infoPos: "above", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:discard"),
+          infoPos: "above",
+          showCount: true,
+        },
       },
       {
         id: "stock",
@@ -178,7 +187,11 @@ export default function TenTwentyThirty() {
         col: lineCols - 1,
         row: stockRow,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "above", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:stock"),
+          infoPos: "above",
+          showCount: true,
+        },
       },
     ];
   }, [game]);
@@ -228,7 +241,11 @@ export default function TenTwentyThirty() {
       reset={reset}
       isLoaded={isLoaded}
       score={game.discard.length}
-      winLoseMessage={game.won ? "Every decade counted!" : "No sums remain."}
+      winLoseMessage={
+        game.won
+          ? i18n.t("games:tenTwentyThirty.everyDecadeCounted")
+          : i18n.t("games:tenTwentyThirty.noSumsRemain")
+      }
       canUndo={canUndo}
       undo={undo}
     >

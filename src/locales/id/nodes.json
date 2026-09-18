@@ -1,0 +1,42 @@
+{
+  "progress": {
+    "games": "Permainan",
+    "chapters": "Bab",
+    "quotes": "Kutipan",
+    "summary": "{{label}}: {{collected}} dari {{total}}"
+  },
+  "reward": {
+    "chapter": "Bab {{number}}",
+    "quote": "Kutipan {{number}}",
+    "dismiss": "Tutup notifikasi koleksi",
+    "earned": "Koleksi baru didapat!",
+    "unlocked": "Simpul baru terbuka!",
+    "unlockedGames_one": "Permainan terbuka:",
+    "unlockedGames_other": "Permainan terbuka:"
+  },
+  "details": {
+    "locked": "Terkunci"
+  },
+  "collection": {
+    "previous": "Koleksi sebelumnya",
+    "next": "Koleksi berikutnya",
+    "select": "Pilih item {{id}}",
+    "locked": "Item terkunci {{id}}"
+  },
+  "quotes": {
+    "title": "Kutipan",
+    "subtitle": "{{collected}}/{{total}} kartu kutipan terkumpul"
+  },
+  "tao": {
+    "title": "Tao Te Ching",
+    "subtitle": "{{collected}}/{{total}} bab terkumpul",
+    "chapter": "Bab {{number}}"
+  },
+  "games": {
+    "title": "Permainan",
+    "subtitle": "{{unlocked}}/{{total}} permainan terbuka"
+  },
+  "original": {
+    "label": "Tampilkan aslinya"
+  }
+}

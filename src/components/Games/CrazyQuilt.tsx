@@ -16,20 +16,21 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const quiltSize = 8;
 const quiltCells = quiltSize * quiltSize;
-const gap = 0.1;
+const gap = 0;
 // Each quilt cell is a square a little larger than a card's long side, so
 // upright and sideways cards interlock without touching.
-const cellSize = 1.04;
+const cellSize = 0.94;
 const pitchCol = cellSize / cardDims.aspectRatio / (1 + gap);
 const pitchRow = cellSize / (1 + gap * cardDims.aspectRatio);
 const halfCardCols = 0.5 / (1 + gap);
 const halfCardRows = 0.5 / (1 + gap * cardDims.aspectRatio);
-const quiltRow = 1.2;
+const quiltRow = 1.3;
 const quiltWidth = quiltSize * pitchCol;
 // Bottom row for the stock and waste, leaving room for their labels above.
-const stockRow = quiltRow + quiltSize * pitchRow + 0.55;
+const stockRow = quiltRow + quiltSize * pitchRow + 0.5;
 const redeals = 1;
 
 type GameState = {
@@ -66,7 +67,11 @@ function isAvailable(quilt: (PlayingCard | null)[], index: number) {
   const row = Math.floor(index / quiltSize);
   const col = index % quiltSize;
   const open = (r: number, c: number) =>
-    r < 0 || c < 0 || r >= quiltSize || c >= quiltSize || !quilt[r * quiltSize + c];
+    r < 0 ||
+    c < 0 ||
+    r >= quiltSize ||
+    c >= quiltSize ||
+    !quilt[r * quiltSize + c];
   return isUpright(index)
     ? open(row - 1, col) || open(row + 1, col)
     : open(row, col - 1) || open(row, col + 1);
@@ -156,7 +161,9 @@ export default function CrazyQuilt() {
         const take = (rank: "A" | "K", suit: PlayingCard["suit"]) =>
           flipToFace(
             deck.splice(
-              deck.findIndex((card) => card.rank === rank && card.suit === suit),
+              deck.findIndex(
+                (card) => card.rank === rank && card.suit === suit,
+              ),
               1,
             )[0],
           );
@@ -265,19 +272,27 @@ export default function CrazyQuilt() {
         id: "waste",
         name: "waste",
         cards: game.waste,
-        col: quiltWidth - 2.25,
+        col: quiltWidth - 3.5,
         row: stockRow,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Waste", infoPos: "above", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:waste"),
+          infoPos: "left",
+          showCount: true,
+        },
       },
       {
         id: "stock",
         name: "stock",
         cards: game.stock,
-        col: quiltWidth - 1,
+        col: quiltWidth - 2,
         row: stockRow,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "above", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:stock"),
+          infoPos: "right",
+          showCount: true,
+        },
       },
     ];
   }, [game]);
@@ -327,7 +342,11 @@ export default function CrazyQuilt() {
       reset={reset}
       isLoaded={isLoaded}
       score={placed}
-      winLoseMessage={game.won ? "The quilt is unstitched!" : "No moves remain."}
+      winLoseMessage={
+        game.won
+          ? i18n.t("games:crazyQuilt.theQuiltIsUnstitched")
+          : i18n.t("cards:noMovesRemain")
+      }
       canUndo={canUndo}
       undo={undo}
     >

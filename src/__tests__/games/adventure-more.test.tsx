@@ -1,4 +1,11 @@
-import { afterEach, beforeEach, describe, expect, jest, test } from "@jest/globals";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from "@jest/globals";
 import "../../../jest/game-mocks";
 import {
   card,
@@ -28,7 +35,12 @@ describe("Lone Joker", () => {
     const low = card("2", "clubs");
     const renderer = await renderGame("/lone-joker", LoneJoker, {
       deck: [card("6", "hearts", false), card("8", "spades", false)],
-      hand: [low, card("7", "diamonds"), card("9", "hearts"), card("J", "spades")],
+      hand: [
+        low,
+        card("7", "diamonds"),
+        card("9", "hearts"),
+        card("J", "spades"),
+      ],
       discard: [],
       scoring: [],
       bankedJoker: false,
@@ -111,7 +123,9 @@ describe("Crownslayer", () => {
       ...baseState,
       hand: [card("2", "clubs"), card("3", "diamonds")],
       // A jester in reserve keeps the automatic defeat check from firing.
-      jestersDeck: [{ id: "joker-test", rank: "Joker", suit: "spades", faceUp: true }],
+      jestersDeck: [
+        { id: "joker-test", rank: "Joker", suit: "spades", faceUp: true },
+      ],
       phase: "defend",
       currentEnemy: {
         card: card("J", "spades"),
@@ -142,7 +156,11 @@ describe("Ascent", () => {
     };
   };
 
-  function climbState(hand: PlayingCard[], trail: unknown[], deck: PlayingCard[]) {
+  function climbState(
+    hand: PlayingCard[],
+    trail: unknown[],
+    deck: PlayingCard[],
+  ) {
     return {
       deck,
       fatigue: [],
@@ -164,9 +182,11 @@ describe("Ascent", () => {
     const renderer = await renderGame(
       "/ascent",
       Ascent,
-      climbState([eight, nine], [milestone("2"), milestone("3")], [
-        card("4", "clubs", false),
-      ]),
+      climbState(
+        [eight, nine],
+        [milestone("2"), milestone("3")],
+        [card("4", "clubs", false)],
+      ),
     );
     expect(outcome()).toBe("playing");
 

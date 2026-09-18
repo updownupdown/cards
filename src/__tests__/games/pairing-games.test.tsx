@@ -1,4 +1,11 @@
-import { afterEach, beforeEach, describe, expect, jest, test } from "@jest/globals";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from "@jest/globals";
 import "../../../jest/game-mocks";
 import {
   card,
@@ -178,7 +185,10 @@ describe("Triple Stack", () => {
     card("3", "hearts"),
   ];
 
-  async function serve(renderer: Awaited<ReturnType<typeof renderGame>>, cards: PlayingCard[]) {
+  async function serve(
+    renderer: Awaited<ReturnType<typeof renderGame>>,
+    cards: PlayingCard[],
+  ) {
     for (const selected of cards) await pressCardId(selected.id);
     await pressButton(renderer, "Serve Sandwich");
   }

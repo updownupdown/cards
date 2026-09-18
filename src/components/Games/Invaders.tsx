@@ -32,6 +32,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { useToast } from "../common/Toast";
 import { Colors, rgba } from "@/styles/styles";
 
+import { i18n } from "@/i18n";
 const maxAttackersNum = 3;
 const maxDefendersNum = 6;
 
@@ -297,7 +298,7 @@ export default function Invaders() {
       setGame(finalState);
       return finalState;
     } else {
-      showToast("Wave 2");
+      showToast(i18n.t("games:invaders.wave2"));
       let stateFrame = gameState;
 
       const zippedDiscard = [...stateFrame.discardDeck];
@@ -374,7 +375,7 @@ export default function Invaders() {
       setGame((draft) => {
         draft.ended = true;
         draft.won = false;
-        draft.winLoseMessage = "You have no cards left to play!";
+        draft.winLoseMessage = i18n.t("games:invaders.noCardsLeftToPlay");
       });
     }
   }, [game]);
@@ -421,7 +422,7 @@ export default function Invaders() {
         row: rowOffset * 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: "Atks", infoPos: "above" },
+        placeholder: { text: i18n.t("games:invaders.atks"), infoPos: "above" },
       },
       ...attackers,
       {
@@ -432,7 +433,7 @@ export default function Invaders() {
         row: rowOffset * 1,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: "Dscrd", infoPos: "above" },
+        placeholder: { text: i18n.t("cards:dscrd"), infoPos: "above" },
       },
       {
         id: "defenderDeck",
@@ -442,7 +443,7 @@ export default function Invaders() {
         row: rowOffset * 2,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: "Defs", infoPos: "above" },
+        placeholder: { text: i18n.t("games:invaders.defs"), infoPos: "above" },
       },
       ...defenders,
       {
@@ -521,7 +522,12 @@ export default function Invaders() {
       reset={reset}
       isLoaded={isLoaded}
       winLoseMessage={game.winLoseMessage}
-      score={`${score} (${game.won ? "higher is better" : "closer to zero is better"})`}
+      score={i18n.t(
+        game.won
+          ? "games:invaders.scoreHigherIsBetter"
+          : "games:invaders.scoreCloserToZero",
+        { score },
+      )}
       canUndo={canUndo}
       undo={undo}
     >
@@ -541,7 +547,7 @@ export default function Invaders() {
           },
         ]}
       >
-        Attackers (Wave {game.wave})
+        {i18n.t("games:invaders.attackersWave", { wave: game.wave })}
       </Text>
       <Text
         textTransform="uppercase"
@@ -556,7 +562,7 @@ export default function Invaders() {
           },
         ]}
       >
-        Defenders
+        {i18n.t("games:invaders.defenders")}
       </Text>
 
       {/* Buttons */}
@@ -569,7 +575,7 @@ export default function Invaders() {
       >
         <Button
           onPress={() => applyAction("sacrifice")}
-          text="Sacrifice"
+          text={i18n.t("cards:sacrifice")}
           size="lg"
           disabled={selectedDefenders.length !== 1}
           theme="red"
@@ -580,7 +586,9 @@ export default function Invaders() {
           onPress={() =>
             applyAction(selectedDefenders.length === 2 ? "dual" : "single")
           }
-          text={`Attack${selectedDefenders.length === 2 ? " x2" : ""}`}
+          text={i18n.t("games:invaders.attack", {
+            value: selectedDefenders.length === 2 ? " x2" : "",
+          })}
           size="lg"
           disabled={!canAttack || selectedDefenders.length < 1}
           theme={selectedDefenders.length === 2 ? "purple" : "green"}

@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 
 const scriptDir = path.dirname(
-  process.argv[1] ? path.resolve(process.argv[1]) : process.cwd()
+  process.argv[1] ? path.resolve(process.argv[1]) : process.cwd(),
 );
 const projectRoot = path.resolve(scriptDir, "..");
 const iconsDir = path.join(projectRoot, "src", "icons");

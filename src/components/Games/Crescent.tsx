@@ -21,6 +21,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { View } from "react-native";
 import { useGameColors } from "@/hooks/useGameColors";
 
+import { i18n } from "@/i18n";
 const cardSize = "tableau";
 const MAX_RESTACKS = 3;
 type Direction = "ascending" | "descending";
@@ -369,9 +370,12 @@ export default function Crescent() {
         name: "restack",
         cards: [],
         col: 6,
-        row: 0.2,
+        // Below the tableau piles (they end around row 3.9), not in the top
+        // row: in portrait the small card size put it right where the
+        // quick-start tip banner opens, clipping it.
+        row: 4.5,
         width: 4,
-        height: 0.6,
+        height: 0.7,
       },
       ...tableau,
     ];
@@ -448,14 +452,20 @@ export default function Crescent() {
       score={score}
       canUndo={canUndo}
       undo={undo}
-      winLoseMessage={game.won ? "The crescent is clear!" : "No moves remain."}
+      winLoseMessage={
+        game.won
+          ? i18n.t("games:crescent.theCrescentIsClear")
+          : i18n.t("cards:noMovesRemain")
+      }
       showDeviceRotateHint
     >
       {cardMap}
 
       <View style={getZoneStylesById("restack")}>
         <Button
-          text={`Restack (${MAX_RESTACKS - game.restacksUsed})`}
+          text={i18n.t("games:crescent.restack", {
+            value: MAX_RESTACKS - game.restacksUsed,
+          })}
           size="xs"
           onPress={restack}
           disabled={game.ended || game.restacksUsed >= MAX_RESTACKS}

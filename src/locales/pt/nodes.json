@@ -1,0 +1,42 @@
+{
+  "progress": {
+    "games": "Jogos",
+    "chapters": "Capítulos",
+    "quotes": "Citações",
+    "summary": "{{label}}: {{collected}} de {{total}}"
+  },
+  "reward": {
+    "chapter": "Capítulo {{number}}",
+    "quote": "Citação {{number}}",
+    "dismiss": "Fechar a notificação do colecionável",
+    "earned": "Novo colecionável conquistado!",
+    "unlocked": "Novos nós desbloqueados!",
+    "unlockedGames_one": "Jogo desbloqueado:",
+    "unlockedGames_other": "Jogos desbloqueados:"
+  },
+  "details": {
+    "locked": "Bloqueado"
+  },
+  "collection": {
+    "previous": "Item anterior",
+    "next": "Próximo item",
+    "select": "Selecionar o item {{id}}",
+    "locked": "Item {{id}} bloqueado"
+  },
+  "quotes": {
+    "title": "Citações",
+    "subtitle": "{{collected}}/{{total}} cartas de citação coletadas"
+  },
+  "tao": {
+    "title": "Tao Te Ching",
+    "subtitle": "{{collected}}/{{total}} capítulos coletados",
+    "chapter": "Capítulo {{number}}"
+  },
+  "games": {
+    "title": "Jogos",
+    "subtitle": "{{unlocked}}/{{total}} jogos desbloqueados"
+  },
+  "original": {
+    "label": "Mostrar original"
+  }
+}

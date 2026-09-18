@@ -24,7 +24,7 @@ export const chainOfCommand: GameDefinition = {
   ],
   howToPlay: [
     "## Objective",
-    "**Win** by promoting a chainOfCommand member beyond rank 1.",
+    "**Win** by promoting a member beyond rank 1.",
     "**Lose** when no legal replacement remains.",
 
     "## Replacing Members",

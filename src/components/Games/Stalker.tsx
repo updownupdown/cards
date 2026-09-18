@@ -19,6 +19,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { delay } from "@/utils/utils";
 import { flexStyles } from "@/styles/flexStyles";
 
+import { i18n } from "@/i18n";
 const HORROR_RANKS = ["2", "3", "4", "5", "6", "7", "8", "9"] as const;
 const HORROR_DECK_SIZE = HORROR_RANKS.length * 4;
 type HorrorRank = (typeof HORROR_RANKS)[number];
@@ -402,7 +403,7 @@ export default function Stalker() {
         cards: game.discard,
         baseZIndex: 10,
         fan: { maxVisible: 3, direction: "right", offset: 0.1 },
-        placeholder: { text: "Dscrd", infoPos: "above" },
+        placeholder: { text: i18n.t("cards:dscrd"), infoPos: "above" },
       },
       {
         id: "deck",
@@ -411,7 +412,7 @@ export default function Stalker() {
         cards: game.deck,
         baseZIndex: 10,
         fan: { maxVisible: 3, direction: "left", offset: 0.1 },
-        placeholder: { text: "Stock", infoPos: "above" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "above" },
       },
       {
         id: "hand",
@@ -498,9 +499,9 @@ export default function Stalker() {
       winLoseMessage={
         game.won
           ? game.deck.length === 0
-            ? "You made it to dawn."
-            : "The trap snaps shut."
-          : "He caught you."
+            ? i18n.t("games:stalker.youMadeItToDawn")
+            : i18n.t("games:stalker.theTrapSnapsShut")
+          : i18n.t("games:stalker.heCaughtYou")
       }
     >
       {cardMap}
@@ -523,7 +524,7 @@ export default function Stalker() {
 
       <View style={[flexStyles.colCentered, getZoneStylesById("searchAction")]}>
         <Button
-          text={`Search\n(Draw ${pendingSearchDrawCount})`}
+          text={i18n.t("games:stalker.searchDraw", { pendingSearchDrawCount })}
           theme="purple"
           disabled={isSearchDisabled}
           onPress={takeSearch}
@@ -572,14 +573,16 @@ export default function Stalker() {
           style={[flexStyles.rowCentered, { width: "100%", gap: spacing(12) }]}
         >
           <Button
-            text="Cancel"
+            text={i18n.t("cards:cancel")}
             theme="orange"
             onPress={cancelEscape}
             disabled={mockHand === null || game.ended}
             taller
           />
           <Button
-            text={`Escape\n(Draw ${pendingEscapeDrawCount})`}
+            text={i18n.t("games:stalker.escapeDraw", {
+              pendingEscapeDrawCount,
+            })}
             theme="green"
             onPress={takeEscape}
             disabled={mockHand === null || game.ended}

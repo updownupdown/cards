@@ -5,6 +5,7 @@ import { CardRank, PlayingCard, SUITS } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const GRID_SIZE = 4;
 const CELL_COUNT = GRID_SIZE * GRID_SIZE;
 const PUZZLE_RANKS: CardRank[] = ["A", "2", "3", "4"];
@@ -141,7 +142,7 @@ export default function FifteenPuzzle() {
       reset={() => void reset()}
       isLoaded={isLoaded}
       score={game.moves}
-      winLoseMessage="The cards are back in order."
+      winLoseMessage={i18n.t("games:fifteenPuzzle.theCardsAreBackIn")}
       canUndo={canUndo}
       undo={undo}
     >

@@ -10,6 +10,7 @@ import {
   useResponsiveUiLayout,
 } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
+import { useTranslation } from "@/i18n";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
 import { Colors } from "@/styles/styles";
@@ -35,11 +36,12 @@ export function DeckPreviewModal({
   cards,
   onClose,
   onCardsChange,
-  title = "Deck Preview",
+  title,
   shuffleOnClose = false,
   sortCards = false,
 }: Props) {
   const pathname = useGamePath();
+  const { t } = useTranslation("game");
   const gameInfo = getGameInfo(pathname);
   const { width: screenWidthActual } = useViewportDimensions();
   const ui = useResponsiveUiLayout();
@@ -67,7 +69,7 @@ export function DeckPreviewModal({
 
   return (
     <ModalFull
-      title={title}
+      title={title ?? t("deckPreview.title")}
       onClose={closeModal}
       backgroundColor={gameInfo.gameColorDark}
     >
@@ -90,7 +92,7 @@ export function DeckPreviewModal({
             weight={400}
             style={{ textAlign: "center" }}
           >
-            The deck will be shuffled after preview.
+            {t("deckPreview.shuffleNotice")}
           </Text>
         )}
 
@@ -101,7 +103,7 @@ export function DeckPreviewModal({
             weight={400}
             style={{ textAlign: "center" }}
           >
-            No cards in deck.
+            {t("deckPreview.empty")}
           </Text>
         )}
 

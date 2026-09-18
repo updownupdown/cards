@@ -128,7 +128,9 @@ function TwinklingStar({
     if (paused) return;
     const sine = Easing.inOut(Easing.sin);
     // The staggered start applies once; after a pause the twinkles carry on.
-    const startDelay = hasStartedRef.current ? 0 : seeded(index, 34) * timing.pause;
+    const startDelay = hasStartedRef.current
+      ? 0
+      : seeded(index, 34) * timing.pause;
     if (!hasStartedRef.current) opacity.value = baseOpacity;
     hasStartedRef.current = true;
     opacity.value = withDelay(

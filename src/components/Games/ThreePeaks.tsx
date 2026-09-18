@@ -13,6 +13,7 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 import { delay } from "@/utils/utils";
 
+import { i18n } from "@/i18n";
 const ROW_LAYOUT: readonly (readonly number[])[] = [
   [1.5, 4.5, 7.5],
   [1, 2, 4, 5, 7, 8],
@@ -265,7 +266,7 @@ export default function ThreePeaks() {
         row: 0,
         baseZIndex: 50,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "below" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "below" },
       },
       {
         id: "waste",
@@ -275,7 +276,7 @@ export default function ThreePeaks() {
         row: 0,
         baseZIndex: 100,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Waste", infoPos: "below" },
+        placeholder: { text: i18n.t("cards:waste"), infoPos: "below" },
       },
       ...tableauZones,
     ];

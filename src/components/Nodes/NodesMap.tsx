@@ -10,6 +10,8 @@ import {
 } from "@/data/nodes-map";
 import { Colors, rgba } from "@/styles/styles";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
+import { useDisplayLanguage } from "@/i18n";
+import { localizeGameTitle } from "@/i18n/content";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
 import {
   Platform,
@@ -137,6 +139,7 @@ const MapNode = memo(function MapNode({
   const dotSize = NODE_SIZE * sizeMultiplier * (state === "locked" ? 0.65 : 1);
   const glowColor = rgba(STATE_COLORS[state], 0.8);
   const game = GAMES_DATA[node.path];
+  const title = localizeGameTitle(game, node.path, useDisplayLanguage());
   const selectionShadow = selected
     ? `0 0 0 2px ${game.gameColorMid}, 0 0 0 6px ${game.gameColorPale}, `
     : `0 0 4px 2px ${game.gameColorDark}, `;
@@ -144,7 +147,7 @@ const MapNode = memo(function MapNode({
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${game.title}, ${state}`}
+      accessibilityLabel={`${title}, ${state}`}
       onPress={() => onSelectNode(node)}
       style={{
         position: "absolute",

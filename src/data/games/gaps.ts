@@ -15,7 +15,7 @@ export const gaps: GameDefinition = {
   cardDescription: "Arrange the rows in order by suit by filling the gaps.",
   quickStart: [
     "Arrange the rows in order (2 to K).",
-    "Cards can be moved to gaps when they are the same suit, and one rank above, its left neighbor.",
+    "Cards can be moved to a gap when they are the same suit as, and one rank above, its left neighbor.",
     "Redeal when stuck (easy: 3 redeals, hard: 2).",
   ],
   howToPlay: [

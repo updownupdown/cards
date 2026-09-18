@@ -27,6 +27,7 @@ import { CardColor } from "../Cards/CardStyles";
 import { GameWrapper } from "../common/GameWrapper";
 import { DeckPreviewModal } from "../Modals/DeckPreviewModal";
 
+import { i18n } from "@/i18n";
 type SelectedPos = { queueIndex: number; cardIndex: number };
 
 export type CafeQueueSelectedPos = SelectedPos;
@@ -397,7 +398,7 @@ export default function CafeQueue() {
         row: 1.4,
         baseZIndex: 50,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "left" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "left" },
       },
       {
         id: "discard",
@@ -407,7 +408,7 @@ export default function CafeQueue() {
         row: 1.4,
         baseZIndex: 50,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Discard", infoPos: "right" },
+        placeholder: { text: i18n.t("cards:discard"), infoPos: "right" },
       },
       ...queueZones,
       {
@@ -484,7 +485,9 @@ export default function CafeQueue() {
       reset={reset}
       isLoaded={isLoaded}
       winLoseMessage={
-        game.won ? undefined : "Discarded the fourth card of a rank."
+        game.won
+          ? undefined
+          : i18n.t("games:cafeQueue.discardedTheFourthCardOf")
       }
       score={score}
       canUndo={canUndo}
@@ -499,7 +502,7 @@ export default function CafeQueue() {
             draft.deck = nextDeck;
           });
         }}
-        title="Deck Preview"
+        title={i18n.t("cards:deckPreview")}
         shuffleOnClose
         sortCards
       />
@@ -629,7 +632,12 @@ export default function CafeQueue() {
                   {
                     alignItems: "flex-end",
                     position: "absolute",
-                    padding: spacing(10),
+                    // Horizontal padding used to be spacing(10) on both
+                    // sides, leaving ~0 width for the digit inside the
+                    // (unselected) pill and squeezing it to an unreadable
+                    // sliver on Android; web just let the text overflow.
+                    paddingVertical: spacing(6),
+                    paddingHorizontal: spacing(3),
                     left: 0,
                     width:
                       cardWidth * 0.4 +
@@ -688,7 +696,7 @@ export default function CafeQueue() {
                 textAlign: "center",
               }}
             >
-              Select queue position for next customer
+              {i18n.t("games:cafeQueue.selectQueuePositionForNext")}
             </Text>
           </Animated.View>
         )}
@@ -704,7 +712,7 @@ export default function CafeQueue() {
             ]}
           >
             <Button
-              text="Reveal next customer"
+              text={i18n.t("games:cafeQueue.revealNextCustomer")}
               onPress={() => {
                 revealNextCustomer(game);
               }}
@@ -729,7 +737,7 @@ export default function CafeQueue() {
             ]}
           >
             <Button
-              text="Let them stay"
+              text={i18n.t("games:cafeQueue.letThemStay")}
               onPress={() => {
                 if (game.selectedPos?.queueIndex !== undefined) {
                   setGame((draft) => {
@@ -744,7 +752,7 @@ export default function CafeQueue() {
               theme="blue"
             />
             <Button
-              text="Kick them out"
+              text={i18n.t("games:cafeQueue.kickThemOut")}
               onPress={() => {
                 if (game.selectedPos?.queueIndex !== undefined) {
                   kickOutCustomer(game);

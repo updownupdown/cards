@@ -21,7 +21,7 @@ export const freeCell: GameDefinition = {
   cardDescription:
     "An open-information classic where nearly every deal can be won with care.",
   quickStart: [
-    "Build foundations up by suit, from A to K",
+    "Build foundations up by suit, from A to K.",
     "Build tableau columns down in rank, in alternating colors.",
     "Use free cells to hold one card at a time.",
   ],

@@ -1,0 +1,42 @@
+{
+  "progress": {
+    "games": "Oyunlar",
+    "chapters": "Bölümler",
+    "quotes": "Alıntılar",
+    "summary": "{{label}}: {{collected}} / {{total}}"
+  },
+  "reward": {
+    "chapter": "Bölüm {{number}}",
+    "quote": "Alıntı {{number}}",
+    "dismiss": "Koleksiyon bildirimini kapat",
+    "earned": "Yeni koleksiyon öğesi kazandın!",
+    "unlocked": "Yeni düğümlerin kilidi açıldı!",
+    "unlockedGames_one": "Kilidi açılan oyun:",
+    "unlockedGames_other": "Kilidi açılan oyunlar:"
+  },
+  "details": {
+    "locked": "Kilitli"
+  },
+  "collection": {
+    "previous": "Önceki toplanan öğe",
+    "next": "Sonraki toplanan öğe",
+    "select": "Öğe {{id}} seç",
+    "locked": "Kilitli öğe {{id}}"
+  },
+  "quotes": {
+    "title": "Alıntılar",
+    "subtitle": "{{collected}}/{{total}} alıntı kartı toplandı"
+  },
+  "tao": {
+    "title": "Tao Te Ching",
+    "subtitle": "{{collected}}/{{total}} bölüm toplandı",
+    "chapter": "Bölüm {{number}}"
+  },
+  "games": {
+    "title": "Oyunlar",
+    "subtitle": "{{unlocked}}/{{total}} oyunun kilidi açıldı"
+  },
+  "original": {
+    "label": "Orijinalini göster"
+  }
+}

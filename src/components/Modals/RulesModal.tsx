@@ -1,10 +1,11 @@
 import React from "react";
 import ModalFull from "./ModalFull";
 import { Text } from "@/components/common/Text";
-import { INSTRUCTIONS_UNAVAILABLE } from "@/constants/constants";
 import { getGameInfo } from "@/data/game-menu";
 import { useGamePath } from "@/hooks/useGamePath";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useDisplayLanguage, useTranslation } from "@/i18n";
+import { localizeGame } from "@/i18n/content";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors } from "@/styles/styles";
@@ -17,7 +18,12 @@ import { CreditsSection } from "./GameModal";
 
 export const RulesModal = ({ onClose }: { onClose: () => void }) => {
   const pathname = useGamePath();
-  const gameInfo = getGameInfo(pathname);
+  const gameInfo = localizeGame(
+    getGameInfo(pathname),
+    pathname,
+    useDisplayLanguage(),
+  );
+  const { t } = useTranslation("game");
   const { spacing } = useResponsiveMetrics();
   const modalStyles = useModalStyles();
   const headingColor = gameInfo.gameColorPale ?? Colors.white;
@@ -25,7 +31,7 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
   return (
     <ModalFull
       onClose={onClose}
-      title="How to Play"
+      title={t("rules.title")}
       titleColor={headingColor}
       backgroundColor={gameInfo.gameColorDark}
       iconName="instructions"
@@ -57,7 +63,7 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
           />
 
           <RichText
-            content={gameInfo.howToPlay ?? [INSTRUCTIONS_UNAVAILABLE]}
+            content={gameInfo.howToPlay ?? [t("rules.unavailable")]}
             headingColor={headingColor}
           />
 

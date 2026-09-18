@@ -2,7 +2,8 @@ import { HexColor } from "@/data/games-data";
 import { Colors, FontWeight as FontFamilies } from "@/styles/styles";
 import { useResponsiveUiLayout } from "@/hooks/useResponsiveLayout";
 import { createElement, forwardRef, useMemo, type ReactNode } from "react";
-import { Platform, Text as RNText } from "react-native";
+import { getDisplayLanguage } from "@/i18n";
+import { Platform, StyleSheet, Text as RNText } from "react-native";
 import type { TextProps as RNTextProps } from "react-native";
 
 const SUIT_WITHOUT_TEXT_PRESENTATION = /([♠♣♥♦])(?!\uFE0E)/g;
@@ -15,10 +16,31 @@ export function withTextPresentationSuits(value: string) {
   return value.replace(SUIT_WITHOUT_TEXT_PRESENTATION, "$1\uFE0E");
 }
 
-function textPresentationChildren(children: ReactNode): ReactNode[] {
+/**
+ * Turkish capitalizes i as İ, but textTransform uses the English rule and
+ * gives I. Turkish text is uppercased here instead.
+ */
+export function toTurkishUpperCase(value: string) {
+  return value.replace(/i/g, "İ").toUpperCase();
+}
+
+/**
+ * Uppercases text by the app's language. Use it instead of textTransform on
+ * native, where textTransform follows the phone's language.
+ */
+export function toDisplayUpperCase(value: string) {
+  return getDisplayLanguage() === "tr"
+    ? toTurkishUpperCase(value)
+    : value.toUpperCase();
+}
+
+function mapStringChildren(
+  children: ReactNode,
+  transform: (value: string) => string,
+): ReactNode[] {
   const list = Array.isArray(children) ? children : [children];
   return list.map((child) =>
-    typeof child === "string" ? withTextPresentationSuits(child) : child,
+    typeof child === "string" ? transform(child) : child,
   );
 }
 
@@ -94,6 +116,19 @@ export const Text = forwardRef<React.ElementRef<typeof RNText>, TextProps>(
       style,
     ];
 
+    // Android's textTransform uppercases by the phone's language, which can
+    // differ from the app's (a Turkish phone gives "DİFFİCULTÉ"), so native
+    // text is uppercased here by the app's language. Browsers already use the
+    // page's language.
+    let content = children;
+    if (
+      Platform.OS !== "web" &&
+      StyleSheet.flatten(textStyle).textTransform === "uppercase"
+    ) {
+      content = mapStringChildren(children, toDisplayUpperCase);
+      textStyle.push({ textTransform: "none" });
+    }
+
     // createElement with spread children, so an array of children isn't
     // treated as a keyed list.
     return createElement(
@@ -101,7 +136,7 @@ export const Text = forwardRef<React.ElementRef<typeof RNText>, TextProps>(
       { style: textStyle, ref, ...otherProps },
       ...(Platform.OS === "web"
         ? [children]
-        : textPresentationChildren(children)),
+        : mapStringChildren(content, withTextPresentationSuits)),
     );
   },
 );

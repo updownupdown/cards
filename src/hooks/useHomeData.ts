@@ -7,6 +7,8 @@ import {
 } from "@/data/game-menu";
 import { GAMES_DATA } from "@/data/games-registry";
 import { GameMenuInfo, isGameEnabled } from "@/data/games-data";
+import { useDisplayLanguage } from "@/i18n";
+import { localizeGameTitle } from "@/i18n/content";
 import { useEffect, useMemo, useState } from "react";
 
 export type HomeGameEntry = [string, GameMenuInfo];
@@ -15,13 +17,20 @@ export function useHomeData(refreshToken?: number) {
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [recentPaths, setRecentPaths] = useState<string[]>([]);
   const [settingsMap, setSettingsMap] = useState<GameSettingsMap>({});
+  const language = useDisplayLanguage();
 
+  // Alphabetical by the title the player sees.
   const allEnabledGames = useMemo<HomeGameEntry[]>(
     () =>
       (Object.entries(GAMES_DATA) as HomeGameEntry[])
         .filter(([, game]) => isGameEnabled(game))
-        .sort((a, b) => a[1].title.localeCompare(b[1].title)),
-    [],
+        .map(
+          ([path, game]) =>
+            [path, game, localizeGameTitle(game, path, language)] as const,
+        )
+        .sort((a, b) => a[2].localeCompare(b[2], language))
+        .map(([path, game]) => [path, game] as HomeGameEntry),
+    [language],
   );
 
   const allEnabledGamePaths = useMemo(

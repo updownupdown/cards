@@ -16,6 +16,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
+import { i18n } from "@/i18n";
 const leftCols = 4;
 const leftDepth = 3;
 const rightCols = 4;
@@ -93,7 +94,11 @@ function evaluateEnd(state: GameState, isSettingUp = false) {
   return { ended: true, won: false };
 }
 
-export const royalCotillionRules = { nextRankValue, foundationFor, evaluateEnd };
+export const royalCotillionRules = {
+  nextRankValue,
+  foundationFor,
+  evaluateEnd,
+};
 
 export default function RoyalCotillion() {
   const {
@@ -244,7 +249,11 @@ export default function RoyalCotillion() {
         col: rightCol + rightCols - 2.25,
         row: stockRow,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Waste", infoPos: "above", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:waste"),
+          infoPos: "above",
+          showCount: true,
+        },
       },
       {
         id: "stock",
@@ -253,7 +262,11 @@ export default function RoyalCotillion() {
         col: rightCol + rightCols - 1,
         row: stockRow,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Stock", infoPos: "above", showCount: true },
+        placeholder: {
+          text: i18n.t("cards:stock"),
+          infoPos: "above",
+          showCount: true,
+        },
       },
     ];
   }, [game]);
@@ -327,7 +340,11 @@ export default function RoyalCotillion() {
       reset={reset}
       isLoaded={isLoaded}
       score={placed}
-      winLoseMessage={game.won ? "The last dance is done!" : "No moves remain."}
+      winLoseMessage={
+        game.won
+          ? i18n.t("games:royalCotillion.theLastDanceIsDone")
+          : i18n.t("cards:noMovesRemain")
+      }
       canUndo={canUndo}
       undo={undo}
     >

@@ -1,3 +1,4 @@
+import { i18n } from "@/i18n";
 import { PlayingCard, RANK_VALUE } from "../Cards/card-utils";
 import { YukonBoard } from "./Yukon";
 
@@ -16,7 +17,7 @@ export default function Moosehide() {
   return (
     <YukonBoard
       canStack={moosehideCanStack}
-      winMessage="Every trail leads home!"
+      winMessage={i18n.t("games:moosehide.everyTrailLeadsHome")}
     />
   );
 }

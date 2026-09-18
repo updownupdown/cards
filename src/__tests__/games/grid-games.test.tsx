@@ -1,4 +1,11 @@
-import { afterEach, beforeEach, describe, expect, jest, test } from "@jest/globals";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from "@jest/globals";
 import "../../../jest/game-mocks";
 import {
   card,
@@ -75,7 +82,10 @@ describe("Clock", () => {
 describe("Poker Squares", () => {
   const suits: CardSuit[] = ["spades", "hearts", "diamonds", "clubs"];
 
-  async function fillLastSquareAndEnd(grid: (PlayingCard | null)[], last: PlayingCard) {
+  async function fillLastSquareAndEnd(
+    grid: (PlayingCard | null)[],
+    last: PlayingCard,
+  ) {
     const renderer = await renderGame("/poker-squares", PokerSquares, {
       deck: [last],
       grid,
@@ -93,7 +103,8 @@ describe("Poker Squares", () => {
 
   test("scoring 200 or more wins", async () => {
     // Four royal-flush rows score 400.
-    const royal = (suit: CardSuit) => run(suit, "10", "K").concat(card("A", suit));
+    const royal = (suit: CardSuit) =>
+      run(suit, "10", "K").concat(card("A", suit));
     const grid: (PlayingCard | null)[] = [
       ...suits.flatMap(royal),
       card("2", "spades"),
@@ -111,11 +122,14 @@ describe("Poker Squares", () => {
   test("scoring under 200 loses", async () => {
     // No pair, straight or flush in any row or column.
     const ranks: CardRank[] = ["2", "4", "6", "8", "10"];
-    const grid: (PlayingCard | null)[] = Array.from({ length: 25 }, (_, index) => {
-      const row = Math.floor(index / 5);
-      const col = index % 5;
-      return card(ranks[(row + col) % 5], suits[(row + 2 * col) % 4]);
-    });
+    const grid: (PlayingCard | null)[] = Array.from(
+      { length: 25 },
+      (_, index) => {
+        const row = Math.floor(index / 5);
+        const col = index % 5;
+        return card(ranks[(row + col) % 5], suits[(row + 2 * col) % 4]);
+      },
+    );
     const last = grid[24]!;
     grid[24] = null;
 
@@ -130,10 +144,21 @@ describe("City Grid", () => {
     // The last card is neither the lowest nor highest in its row or column,
     // so it flips nothing back over.
     const ranks: CardRank[] = [
-      "2", "4", "6", "3",
-      "8", "10", "2", "7",
-      "4", "6", "8", "9",
-      "3", "7", "9",
+      "2",
+      "4",
+      "6",
+      "3",
+      "8",
+      "10",
+      "2",
+      "7",
+      "4",
+      "6",
+      "8",
+      "9",
+      "3",
+      "7",
+      "9",
     ];
     const piles = ranks.map((rank) => [card(rank, "spades")]);
     piles.push([]);

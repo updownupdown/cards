@@ -1,0 +1,630 @@
+{
+  "accordion": {
+    "youCompressedTheDeckTo": "Has reducido el mazo a una sola carta."
+  },
+  "allInARow": {
+    "youClearedTheBoard": "¡Has despejado el tablero!",
+    "noAdjacentRankRemains": "No queda ningún valor adyacente."
+  },
+  "archipelago": {
+    "out": "Fuera",
+    "notALegalPlacement": "Colocación no válida",
+    "islandComplete": "¡Isla completa!",
+    "islandUnfinished": "¡Isla sin terminar!"
+  },
+  "ascent": {
+    "lhotseRoutesNeed2Cards": "Lhotse: las rutas necesitan 2 cartas o más.",
+    "gasherbrumIAnchorMustBe": "Gasherbrum I: el ancla debe ser par.",
+    "broadPeakChangeYourApproach": "Broad Peak: cambia de enfoque.",
+    "fatigue": "Fatiga",
+    "noCardsSelected": "Ninguna carta seleccionada",
+    "lastSelectedCardIsThe": "La última carta seleccionada es el ancla",
+    "camps": "Campamentos",
+    "routes": "Rutas",
+    "skipDiscard": "Omitir descarte",
+    "rest": "Descansar",
+    "playRoute": "Jugar ruta",
+    "invalid": "no válida",
+    "approachCautious": "Prudente",
+    "approachReckless": "Temerario",
+    "approachTechnical": "Técnico",
+    "approachFreeClimbing": "Escalada libre",
+    "drawHigherInHand": "Robas: cartas en mano > ancla",
+    "drawLowerInHand": "Robas: cartas en mano < ancla",
+    "drawDiamondsInHand": "Robas: diamantes en mano",
+    "drawNonSpadesInRoute": "Robas: palos que no son picas en la ruta",
+    "youSummitedTheMountain": "¡Has llegado a la cumbre!",
+    "outOfCardsWhileMakingCamp": "Sin cartas al montar el campamento.",
+    "deckAndFatigueRanDry": "El mazo y la pila de fatiga se han agotado.",
+    "handOverflowed": "Tu mano se ha desbordado (18 cartas o más).",
+    "baseClimb": "Ascenso base"
+  },
+  "bakersDozen": {
+    "allFourSuitsAreComplete": "¡Los cuatro palos están completos!"
+  },
+  "baroness": {
+    "allCleared": "¡Todo despejado!",
+    "noThirteenLeftToMake": "No quedan parejas que sumen 13."
+  },
+  "bisley": {
+    "theFoundationsMeet": "¡Las fundaciones se encuentran!"
+  },
+  "blackberryPie": {
+    "thePieIsReadyYou": "¡La tarta está lista! Has recogido las {{BERRY_COUNT}} moras.",
+    "youCollectedOfBerries": "Has recogido {{collectedCount}} de {{BERRY_COUNT}} moras."
+  },
+  "bowling": {
+    "endBall": "Terminar bola",
+    "pins": "Bolos",
+    "ball": "Bola",
+    "throw": "Lanzar",
+    "finalScoreWon": "Puntuación final: {{score}}. ¡Has superado {{target}}!",
+    "finalScoreLost": "Puntuación final: {{score}}. Necesitabas {{target}}."
+  },
+  "cabinSiege": {
+    "youKilledAllTheZombies": "¡Has matado a todos los zombis!",
+    "noCardsLeftToDraw": "¡No quedan cartas para robar!",
+    "unableToPlaceCard": "No se puede colocar la carta.",
+    "youLost": "Has perdido.",
+    "revealAZombie": "Descubre un zombi",
+    "placeACard": "Coloca una carta",
+    "killAZombie": "Mata un zombi",
+    "noKillableZombies": "¡No hay zombis que matar!"
+  },
+  "cafeQueue": {
+    "discardedTheFourthCardOf": "Has descartado la cuarta carta de un valor.",
+    "selectQueuePositionForNext": "Elige un lugar en la cola para el siguiente cliente",
+    "revealNextCustomer": "Mostrar el siguiente cliente",
+    "letThemStay": "Dejar que se quede",
+    "kickThemOut": "Echarlo"
+  },
+  "calculation": {
+    "all52CardsAreOn": "Las 52 cartas están en las fundaciones."
+  },
+  "carpet": {
+    "theCarpetIsRolledUp": "¡La alfombra está enrollada!"
+  },
+  "chainOfCommand": {
+    "selectAMemberToPromote": "Elige un miembro para ascender",
+    "selectAValidReplacement": "Elige un sustituto válido",
+    "noValidReplacement": "No hay sustituto válido",
+    "sacrificeNeededForMemberPromotion": "(Se necesita un sacrificio para el ascenso)",
+    "promoteAsA": "Ascender a:",
+    "dead": "Muertos",
+    "youWonByPromotingFrom": "Has ganado ascendiendo desde el rango 1. Puntuación final: {{score}}",
+    "noValidPromotionReplacementRemains": "No quedan ascensos ni sustituciones válidos. Has perdido.",
+    "rk": "Rgo",
+    "members": "Miembros",
+    "candidates": "Candidatos",
+    "member": "Miembro",
+    "candidate": "Candidato"
+  },
+  "chapterAndVerse": {
+    "terminated": "Despedido",
+    "employeeOfTheMonth": "Empleado del mes",
+    "performanceBonus": "Bono por rendimiento",
+    "promotionToDistrictManager": "Ascenso a gerente de distrito",
+    "companyLivestockOptions": "Opciones sobre el ganado de la empresa",
+    "executiveLordshipProgram": "Programa de señorío ejecutivo",
+    "line": "Cola",
+    "used": "Usados",
+    "firedForLosingYourGuild": "Despedido por perder tu reputación en el gremio.",
+    "guildPts": "Pts gremio",
+    "pass": "Pasar",
+    "trade": "Intercambiar",
+    "offer": "Oferta"
+  },
+  "cityGrid": {
+    "pileIsFull": "¡La pila está llena!",
+    "mustPlaceOnExistingOr": "¡Coloca en una pila existente o adyacente!",
+    "placingHereWouldResultIn": "¡Colocar aquí dejaría demasiadas cartas boca arriba!",
+    "youRanOutOfCards": "¡Te has quedado sin cartas!",
+    "youRanOutOfPlacements": "¡No quedan colocaciones válidas!"
+  },
+  "clock": {
+    "youRevealedAll52Cards": "Has descubierto las 52 cartas.",
+    "theFourthKingAppearedBefore": "El cuarto Rey apareció antes de descubrir todas las cartas."
+  },
+  "crazyQuilt": {
+    "theQuiltIsUnstitched": "¡La colcha está descosida!"
+  },
+  "crescent": {
+    "theCrescentIsClear": "¡La media luna está despejada!",
+    "restack": "Reapilar ({{value}})"
+  },
+  "cribbageSquares": {
+    "youScoredPoints": "¡Has conseguido {{score}} puntos!",
+    "youScoredReachToWin": "Has conseguido {{score}}. Llega a {{TARGET_SCORE}} para ganar."
+  },
+  "crownslayer": {
+    "castle": "Castillo",
+    "tavern": "Taberna",
+    "jesters": "Bufones",
+    "attack": "Atacar",
+    "defend": "Defender",
+    "powerHeal": "Curar",
+    "powerDraw": "Robar",
+    "powerDouble": "Daño x2",
+    "powerShield": "- Atq.",
+    "noPlayableCards": "No quedan cartas jugables. ¡Fin de la partida!",
+    "noDiscardCanCover": "Ningún descarte posible cubre el daño enemigo. ¡Fin de la partida!",
+    "victoryGold": "¡Todos los enemigos derrotados! ¡Victoria de ORO!",
+    "victorySilver": "¡Todos los enemigos derrotados! ¡Victoria de PLATA!",
+    "victoryBronze": "¡Todos los enemigos derrotados! ¡Victoria de BRONCE!",
+    "failedToBlock": "No has podido bloquear {{damage}} de daño. ¡Fin de la partida!"
+  },
+  "cruel": {
+    "crueltyConquered": "¡Crueldad vencida!"
+  },
+  "delta21": {
+    "fldSt": "Est.campo",
+    "score": "Puntos:",
+    "studies": "Estudios:",
+    "ratingReshapes": "¡Tu trabajo transforma la ciencia de la ecología de agua dulce!\n\n🐟🐟🐟🐟",
+    "ratingAdvances": "Tu investigación hace avanzar el conocimiento de los ecosistemas fluviales.\n\n🐟🐟🐟",
+    "ratingAids": "Tus hallazgos ayudan al estudio local de las poblaciones de peces.\n\n🐟🐟",
+    "ratingLittle": "Tus registros aportan poco a la comprensión del río.\n\n🐟"
+  },
+  "dominion": {
+    "allEighteenCardsBelongTo": "Las dieciocho cartas pertenecen a un solo dominio.",
+    "theWasIsolatedWithNo": "La carta {{value}} quedó aislada, sin valor ni palo coincidentes.",
+    "noConquestsOrReservePlacements": "No quedan conquistas ni colocaciones de reserva."
+  },
+  "dynasty": {
+    "extract": "Extraer",
+    "reassign": "Reasignar",
+    "allTwelveRoyalsAreDown": "Las doce figuras han caído.",
+    "youRanOutOfCards": "Te quedaste sin cartas antes de derrotar a las doce figuras."
+  },
+  "elementaryDetective": {
+    "youScored20ToWin": "Has conseguido {{score}} (20 para ganar)",
+    "score": "Puntos"
+  },
+  "fanSolitaire": {
+    "theFoundationsAreComplete": "¡Las fundaciones están completas!"
+  },
+  "fieldCommand": {
+    "invalidCaptureSuitValueRequirement": "Captura no válida: no se cumple el requisito de palo o valor.",
+    "cannotSacrificeACombatantCard": "No se puede sacrificar una carta combatiente.",
+    "enemy": "Enemigo",
+    "capture": "Captura",
+    "doneDiscarding": "Descarte terminado",
+    "letCapture": "Dejar capturar",
+    "combatantCaptured": "Un combatiente ha entrado en la pila de capturas enemiga.",
+    "allEnemiesCleared": "Todas las cartas enemigas eliminadas sin perder combatientes.",
+    "combatantCapturedYouLose": "Un combatiente ha entrado en la pila de capturas enemiga. Has perdido.",
+    "noCardsToPlay": "No hay cartas para jugar."
+  },
+  "fifteenPuzzle": {
+    "theCardsAreBackIn": "Las cartas vuelven a estar en orden."
+  },
+  "fightClubs": {
+    "grid": "Cuadrícula",
+    "clubs": "Tréboles",
+    "rowCol": "Fila/Col.",
+    "upDown": "Arriba/Abajo",
+    "sequence": "Secuencia",
+    "actionMatch": "Igualar",
+    "actionSum": "Suma",
+    "actionAny": "Cualquiera",
+    "actionLine": "♦ Línea",
+    "actionRow": "♦ Fila",
+    "actionColumn": "♦ Col.",
+    "actionDown": "♠ Abajo",
+    "actionUp": "♠ Arriba",
+    "actionRun": "♥ Escalera",
+    "gridClearWon": "La cuadrícula está despejada. ¡Victoria!",
+    "allClubsSpent": "Se han gastado los 13 tréboles."
+  },
+  "fortunesCall": {
+    "red": "Rojo",
+    "higher": "Más alta",
+    "lower": "Más baja",
+    "misses": "Fallos"
+  },
+  "gaps": {
+    "everyRowIsInOrder": "¡Todas las filas están en orden!"
+  },
+  "golf": {
+    "youClearedTheTableau": "¡Has despejado el tablero!",
+    "noMorePlayableCards": "No quedan cartas jugables."
+  },
+  "grandfathersClock": {
+    "everyHourStruck": "¡Han dado todas las horas!"
+  },
+  "gremlin": {
+    "helper": "Ayudante",
+    "endTurn": "Terminar turno",
+    "tierNovice": "NOVATO",
+    "tierNormal": "NORMAL",
+    "tierAdvanced": "AVANZADO",
+    "tierLegendary": "LEGENDARIO",
+    "tierEpic": "ÉPICO",
+    "columnsUsedWin": "{{count}} columnas usadas. Victoria {{tier}}.",
+    "allCardsPlayedInColumns": "Todas las cartas jugadas en {{count}} columnas.",
+    "noRoomForHelper": "No hay sitio para la carta del ayudante en {{count}} columnas."
+  },
+  "gridlines": {
+    "trump": "Triunfo",
+    "chooseATrumpCard": "Elige una carta de triunfo",
+    "pickARevealedCard": "Elige una carta descubierta",
+    "selectALine": "Elige una línea",
+    "selectAHandCard": "Elige una carta de tu mano",
+    "youBeatTheGrid": "¡Has vencido a la cuadrícula {{youScore}}-{{gridScore}}!",
+    "theGridWins": "La cuadrícula gana {{gridScore}}-{{youScore}}."
+  },
+  "herbalist": {
+    "noble": "Noble",
+    "jester": "Bufón",
+    "harvestFair": "Cosecha aceptable: quedan {{count}} hierbas.",
+    "harvestGood": "Buena cosecha: quedan {{count}} hierbas.",
+    "harvestExcellent": "Cosecha excelente: quedan {{count}} hierbas.",
+    "harvestPerfect": "Cosecha perfecta: quedan {{count}} hierbas.",
+    "noHerbsRemain": "No quedan hierbas para sanar el reino."
+  },
+  "infiltrator": {
+    "retired": "Retirados",
+    "spies": "Espías",
+    "lost": "Perdidos",
+    "keySpies": "Espías clave",
+    "supportingSpies": "Espías de apoyo",
+    "recruited": "Reclutados",
+    "retireAMatchingSetOr": "Retira un conjunto a juego, o pasa",
+    "noSetsAvailableForRetirement": "No hay conjuntos para retirar",
+    "removeADoubleAgentFrom": "Retirar un agente doble de:",
+    "noSpiesRemain": "No quedan espías",
+    "assassinate": "Asesinar",
+    "counter": "Contrarrestar",
+    "recruit": "Reclutar",
+    "skip": "Pasar",
+    "missionComplete": "Misión cumplida: {{count}} espías clave reclutados.",
+    "missionFailed": "Misión fallida: {{count}} espías clave reclutados, {{lost}} perdidos.",
+    "noDoubleAgentsRemain": "No quedan agentes dobles. Misión fallida.",
+    "sourceHand": "Mano"
+  },
+  "invaders": {
+    "wave2": "Oleada 2",
+    "atks": "Atq.",
+    "defs": "Def.",
+    "defenders": "Defensores",
+    "attack": "Atacar{{value}}",
+    "attackersWave": "Atacantes (oleada {{wave}})",
+    "noCardsLeftToPlay": "¡No te quedan cartas para jugar!",
+    "scoreHigherIsBetter": "{{score}} (cuanto más alto, mejor)",
+    "scoreCloserToZero": "{{score}} (cuanto más cerca de cero, mejor)"
+  },
+  "lightsOut": {
+    "everyLightIsOut": "Todas las luces están apagadas."
+  },
+  "loneJoker": {
+    "straightFlush": "Escalera de color",
+    "fourOfAKind": "Póker",
+    "fullHouse": "Full",
+    "flush": "Color",
+    "straight": "Escalera",
+    "threeOfAKind": "Trío",
+    "twoPair": "Doble pareja",
+    "pair": "Pareja",
+    "shieldHasBeenUsed": "Se ha usado el escudo",
+    "discards": "Descartes",
+    "plays": "Jugadas",
+    "bonus": "Bonus",
+    "shield": "Escudo",
+    "chooseUpTo5Cards": "Elige hasta 5 cartas",
+    "bonusShoppe": "Tienda de bonus",
+    "points": "puntos",
+    "startRound": "Empezar ronda {{value}}",
+    "bonuses": {
+      "extraCard": "+ Carta",
+      "extraDiscard": "+ Descarte",
+      "pocketPoints": "+ 25 pts",
+      "extraHand": "+ Mano",
+      "doubleScore": "Puntos x2",
+      "shield": "Escudo"
+    },
+    "roundsSurvived": "{{count}} rondas superadas{{rating}}. Puntuación final: {{score}}.",
+    "roundNumber": "Ronda {{round}}"
+  },
+  "lycan": {
+    "youBeatTheWolf": "¡Has vencido al Lobo {{playerScore}}-{{wolfScore}}!",
+    "theWolfBeatYou": "El Lobo te ha vencido {{wolfScore}}-{{playerScore}}.",
+    "wolf": "Lobo",
+    "round": "Ronda",
+    "selectCardsToCapture": "Elige cartas para capturar"
+  },
+  "memory": {
+    "matched": "Parejas",
+    "youFoundEveryPair": "¡Has encontrado todas las parejas!",
+    "guesses": "Intentos",
+    "difficulty": "Dificultad",
+    "difficultyVeryEasy": "Muy fácil",
+    "difficultyEasy": "Fácil",
+    "difficultyMedium": "Media",
+    "difficultyHard": "Difícil",
+    "difficultyVeryHard": "Muy difícil",
+    "difficultyExtreme": "Extrema"
+  },
+  "monteCarlo": {
+    "youClearedAllCards": "¡Has retirado todas las cartas!",
+    "noAdjacentPairsLeft": "No quedan parejas adyacentes.",
+    "consolidate": "Consolidar"
+  },
+  "nestor": {
+    "boardCleared": "¡Tablero despejado!",
+    "noMatchingPairRemains": "No quedan parejas coincidentes."
+  },
+  "nightVigil": {
+    "city": "Ciudad",
+    "villain": "Villano",
+    "response": "Respuesta",
+    "damage": "Daño:",
+    "heal": "Curación:"
+  },
+  "ouroboros": {
+    "jewels": "Joyas",
+    "trinkets": "Baratijas",
+    "markPath": "Marcar camino",
+    "explore": "Explorar",
+    "returnToPath": "Volver al camino",
+    "lookAround": "Mirar alrededor",
+    "landedOnTrap": "¡Has caído en una trampa!",
+    "gotAllJewels": "¡Tienes las cuatro joyas y has encontrado la salida!",
+    "lostWithLoot": "¡Te has perdido en la mazmorra sin salida! Mueres con tu botín.",
+    "lostInDungeon": "¡Te has perdido en la mazmorra sin salida!"
+  },
+  "pocketPoker": {
+    "youHit10PointsYou": "¡Llegas a 10 puntos y ganas!",
+    "foldedThreeTimesInA": "Te has retirado tres veces seguidas.",
+    "youBustedOut": "Te has quedado sin puntos.",
+    "tapCardsToDiscard": "Toca las cartas para descartarlas",
+    "minBet": "Apuesta mín.",
+    "opponentDraws5YourBet": "El rival roba: 5 + (tu apuesta)",
+    "youWin": "Ganas",
+    "youLose": "Pierdes",
+    "pushTie": "Empate",
+    "draw": "Robar {{value}}",
+    "setHand": "Fijar mano",
+    "bet": "Apostar {{value}}",
+    "nextRound": "Siguiente ronda",
+    "opponent": "Rival",
+    "hands": {
+      "highCard": "Carta alta",
+      "onePair": "Pareja",
+      "twoPair": "Doble pareja",
+      "threeOfAKind": "Trío",
+      "straight": "Escalera",
+      "flush": "Color",
+      "fullHouse": "Full",
+      "fourOfAKind": "Póker",
+      "straightFlush": "Escalera de color"
+    }
+  },
+  "pokerSquares": {
+    "greatHandYouScored": "¡Gran mano! Has conseguido {{score}}.",
+    "youScoredTryForNext": "Has conseguido {{score}}. Intenta llegar a {{TARGET_SCORE}} la próxima vez.",
+    "noHand": "Sin jugada"
+  },
+  "pyramid": {
+    "noMoreMovesAndThe": "No quedan movimientos y el mazo está vacío."
+  },
+  "queensAudience": {
+    "theQueensCourtIsComplete": "¡La corte de la Reina está completa!"
+  },
+  "redDiamond": {
+    "diamonds": "Diamantes",
+    "allBlackCardsHaveBeen": "Se han jugado todas las cartas negras.",
+    "thereAreNotEnoughDiamond": "No hay suficientes diamantes para reponer la pila."
+  },
+  "rogueRun": {
+    "youMadeItThroughThe": "Has atravesado la mazmorra.",
+    "run": "Huir"
+  },
+  "royalCotillion": {
+    "theLastDanceIsDone": "¡El último baile ha terminado!"
+  },
+  "royalRest": {
+    "jack": "Jota",
+    "column": "Columna"
+  },
+  "salicLaw": {
+    "queens": "Reinas",
+    "theKingsStandAlone": "¡Los Reyes se quedan solos!"
+  },
+  "scorpion": {
+    "allFourSuitStacksAre": "Las cuatro pilas por palo están completas."
+  },
+  "seer": {
+    "deck": "Mazo",
+    "reveal": "Descubrir",
+    "return": "Devolver",
+    "predictions": {
+      "red": "Rojo",
+      "redOddBlackEven": "RI  ·  NP",
+      "even": "Par",
+      "diamondsHearts": "♦  ·  ♥",
+      "spadesClubs": "♠  ·  ♣",
+      "odd": "Impar",
+      "blackOddRedEven": "NI  ·  RP",
+      "black": "Negro"
+    },
+    "predictionLabel_one": "Predicción {{label}}, {{count}} piedra",
+    "predictionLabel_other": "Predicción {{label}}, {{count}} piedras",
+    "complete": ", completada",
+    "blocked": ", bloqueada",
+    "allPredictionsComplete": "Las ocho predicciones están completas.",
+    "deckRanOut": "El mazo se agotó antes de completar todas las predicciones.",
+    "allPredictionsBlocked": "Las ocho predicciones están bloqueadas por piedras.",
+    "chooseHighlightedStone": "Elige una piedra resaltada",
+    "freedStones_one": "{{count}} piedra liberada",
+    "freedStones_other": "{{count}} piedras liberadas"
+  },
+  "shiftingSands": {
+    "draw": "Robar:",
+    "place": "Colocar",
+    "stockToTide": "Mazo a la marea",
+    "reverse": "Invertir",
+    "castleHeld": "Tu castillo ha resistido: {{castle}} a {{tide}}.",
+    "tideWon": "La marea ha ganado: {{castle}} a {{tide}}.",
+    "dunes": "Dunas",
+    "eroded": "Erosionadas"
+  },
+  "singleDeckSpider": {
+    "fourCompleteSuits": "¡Cuatro palos completos!"
+  },
+  "singularity": {
+    "everyStarCollapsedIn": "¡Todas las estrellas han colapsado!",
+    "noCardCanReachThe": "Ninguna carta puede llegar a la singularidad."
+  },
+  "sirTommy": {
+    "allFourSuitsHome": "¡Los cuatro palos han llegado!",
+    "theStockIsSpent": "El mazo se ha agotado."
+  },
+  "slyFox": {
+    "place": "Colocar {{toPlace}}",
+    "outfoxedTheDeck": "¡Has burlado al mazo!"
+  },
+  "somnus": {
+    "thatAssignmentDoesNotMeet": "Esa asignación no cumple las reglas del objetivo",
+    "dream": "Sueño",
+    "rmvd": "Ret.",
+    "guard": "Guard.",
+    "turn": "Turno",
+    "selectNightmareOrGuardian": "Elige una pesadilla o un guardián",
+    "selected": "Selección: {{selectedValue}}",
+    "assign": "Asignar",
+    "exile": "Exiliar",
+    "deepBreath": "Respiración profunda",
+    "remUsed": "REM usado",
+    "remSleep": "Sueño REM",
+    "nightmareValue": "Pesadilla: {{value}}",
+    "guardianValue": "Guardián: {{value}}",
+    "aliceAwakened": "Alice ha despertado con {{count}} de vida.",
+    "guardiansLost": "Se han perdido todos los guardianes especiales que no son ases.",
+    "nightmaresOverwhelmed": "Las pesadillas han vencido a Alice."
+  },
+  "spiderSolitaire": {
+    "allEightKToA": "Las ocho escaleras de K a A por palo están completas."
+  },
+  "stalker": {
+    "youMadeItToDawn": "Has llegado al amanecer.",
+    "theTrapSnapsShut": "La trampa se cierra.",
+    "heCaughtYou": "Te ha atrapado.",
+    "searchDraw": "Buscar\n(Robar {{pendingSearchDrawCount}})",
+    "escapeDraw": "Escapar\n(Robar {{pendingEscapeDrawCount}})"
+  },
+  "stockTableauSolitaire": {
+    "everySuitIsHome": "¡Todos los palos han llegado!"
+  },
+  "sultan": {
+    "theSultanIsSurrounded": "¡El Sultán está rodeado!"
+  },
+  "tenTwentyThirty": {
+    "everyDecadeCounted": "¡Todas las decenas contadas!",
+    "noSumsRemain": "No quedan sumas posibles."
+  },
+  "tripleStack": {
+    "sandwichServedNewCards": "Sándwich servido ({{replacementsPossible}} cartas nuevas)",
+    "noValidSandwichAvailableYou": "No hay ningún sándwich válido. Has perdido.",
+    "serveSandwich": "Servir sándwich",
+    "youWonByDrawingOut": "Has ganado agotando el mazo. Puntuación final (cuanto más baja, mejor): {{score}}"
+  },
+  "twelveTrials": {
+    "buryAHandCard": "Entierra una carta de tu mano",
+    "selectHandCard": "Elige una carta de tu mano",
+    "doubleAnAttack": "Duplica un ataque",
+    "chooseAnAttack": "Elige un ataque",
+    "chooseWhetherToMoveCard": "Decide si mover la carta",
+    "moveBottomCardToTop": "Mover la carta de abajo arriba",
+    "drawACard": "Roba una carta",
+    "notAValidPlacement": "Colocación no válida",
+    "dungeonClearedScore": "¡Mazmorra superada! Puntuación: {{score}}.",
+    "youRanOutOfHealth": "Te has quedado sin salud.",
+    "youRanOutOfAttacks": "Te has quedado sin ataques.",
+    "special": "Especial",
+    "hand": "Mano",
+    "setReserve2": "Reservar ({{length}}/2)",
+    "moveToTop": "Poner {{value}} arriba",
+    "doNothing": "No hacer nada",
+    "noKingSelected": "Ningún Rey seleccionado"
+  },
+  "waypoint": {
+    "current": "Actual",
+    "brake": "Freno",
+    "gas": "Gas",
+    "time": "Tiempo",
+    "penalty": "Penalización",
+    "damage": "Daños",
+    "finishSector": "Cerrar",
+    "ratingRecord": "Nuevo récord del rally: +{{score}}.",
+    "ratingPodium": "En el podio: {{score}}.",
+    "ratingMiddle": "Mitad del pelotón: {{score}}.",
+    "ratingBack": "Final del pelotón: {{score}}.",
+    "dnf": "Abandono: el coche ha sufrido demasiados daños.",
+    "dsq": "Descalificado: el reloj ha llegado a 16 penalizaciones.",
+    "stage": "Etapa",
+    "sector": "Sector",
+    "speed": "Velocidad"
+  },
+  "windmill": {
+    "theSailsTurnFreely": "¡Las aspas giran libremente!"
+  },
+  "advisorInfo": {
+    "advisor": "Consejero",
+    "cancel": "Cancelar",
+    "discardToContinue_one": "Descarta {{count}} carta para continuar",
+    "discardToContinue_other": "Descarta {{count}} cartas para continuar",
+    "diplomacy": "Diplomacia",
+    "diplomacyText": "Descarta todas las cartas de tu mano del palo de triunfo del reino actual.",
+    "discardCards_one": "Descartar {{count}} carta",
+    "discardCards_other": "Descartar {{count}} cartas",
+    "military": "Ejército",
+    "militaryText": "Roba una carta por cada trébol de tu mano.",
+    "drawCards_one": "Robar {{count}} carta",
+    "drawCards_other": "Robar {{count}} cartas",
+    "political": "Política",
+    "politicalText": "Elige arriba el gobernante de un reino no visitado para cambiarlo por el actual.",
+    "swapRuler": "Cambiar gobernante",
+    "commerce": "Comercio",
+    "commerceText": "Roba dos cartas y luego elige dos cartas de tu mano para descartar.",
+    "drawTwoCards": "Robar cartas"
+  },
+  "royalEnvoy": {
+    "youWonOverKingdom": "¡Has conquistado el reino n.º {{value}}!",
+    "chooseAKingdom": "Elige un reino",
+    "wins": "Victorias",
+    "nextTopic": "Siguiente tema",
+    "advisors": "Consejeros",
+    "hand": "Mano",
+    "topic": "Tema",
+    "lost": "Perdidos",
+    "won": "Ganados",
+    "tooManyDebates": "¡Has ganado demasiados debates y has insultado al gobernante!",
+    "wonAllKingdoms": "¡Tu espectacular habilidad para debatir ha conquistado a los gobernantes de los ocho reinos!",
+    "tooFewDebates": "No has ganado suficientes debates; el gobernante no te toma en serio."
+  },
+  "alaska": {
+    "everyAlaskanSuitIsHome": "¡Todos los palos de Alaska han llegado!"
+  },
+  "fortress": {
+    "theFortressIsComplete": "¡La fortaleza está completa!"
+  },
+  "moosehide": {
+    "everyTrailLeadsHome": "¡Todos los senderos llevan a casa!"
+  },
+  "beleagueredCastle": {
+    "theCastleFalls": "¡El castillo cae!"
+  },
+  "labyrinth": {
+    "youFoundTheWayOut": "¡Has encontrado la salida!",
+    "lostInTheLabyrinth": "Perdido en el laberinto."
+  },
+  "parallels": {
+    "everyRowLinesUp": "¡Todas las filas están alineadas!"
+  },
+  "frog": {
+    "everyFrogMadeItHome": "¡Todas las ranas han llegado a casa!"
+  },
+  "pussInTheCorner": {
+    "allFourCornersFilled": "¡Las cuatro esquinas están llenas!"
+  }
+}

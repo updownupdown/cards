@@ -1,6 +1,6 @@
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors,} from "@/styles/styles";
+import { Colors } from "@/styles/styles";
 import { delay } from "@/utils/utils";
 import { useMemo, useState } from "react";
 import { View } from "react-native";
@@ -24,6 +24,7 @@ import { ProgressBar } from "../Home/ProgressBar";
 import { Text } from "../common/Text";
 import { useToast } from "../common/Toast";
 
+import { i18n } from "@/i18n";
 const MAX_LIFE = 40;
 const BOARD_SIZE = 3;
 const MAX_HAND = 4;
@@ -216,7 +217,9 @@ function checkDreamExhaustion(state: SomnusGameState) {
   if (nonAceNightmares.length === 0) {
     state.ended = true;
     state.won = true;
-    state.winLoseMessage = `Alice awakened with ${state.life} life.`;
+    state.winLoseMessage = i18n.t("games:somnus.aliceAwakened", {
+      count: state.life,
+    });
     return true;
   }
 
@@ -226,7 +229,7 @@ function checkDreamExhaustion(state: SomnusGameState) {
   if (lostSpecialGuardians >= 7) {
     state.ended = true;
     state.won = false;
-    state.winLoseMessage = "Every non-Ace special Guardian was lost.";
+    state.winLoseMessage = i18n.t("games:somnus.guardiansLost");
     return true;
   }
 
@@ -310,7 +313,7 @@ function resolveBoard(state: SomnusGameState) {
       state.life = 0;
       state.ended = true;
       state.won = false;
-      state.winLoseMessage = "The Nightmares overwhelmed Alice.";
+      state.winLoseMessage = i18n.t("games:somnus.nightmaresOverwhelmed");
       return;
     }
   }
@@ -467,7 +470,7 @@ export default function Somnus() {
 
   function assignCards() {
     if (!canAssign || selectedBoardSlot === null) {
-      showToast("That assignment does not meet the target's rules");
+      showToast(i18n.t("games:somnus.thatAssignmentDoesNotMeet"));
       return;
     }
 
@@ -586,7 +589,7 @@ export default function Somnus() {
         col: 0,
         row: 0.75,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Dscrd", infoPos: "below" },
+        placeholder: { text: i18n.t("cards:dscrd"), infoPos: "below" },
       },
       {
         id: "dream-deck",
@@ -595,7 +598,11 @@ export default function Somnus() {
         col: 1,
         row: 0.75,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Dream", infoPos: "below", showCount: true },
+        placeholder: {
+          text: i18n.t("games:somnus.dream"),
+          infoPos: "below",
+          showCount: true,
+        },
       },
       ...boardZones,
       {
@@ -605,7 +612,11 @@ export default function Somnus() {
         col: 5.5,
         row: 0.75,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Rmvd", infoPos: "below", showCount: true },
+        placeholder: {
+          text: i18n.t("games:somnus.rmvd"),
+          infoPos: "below",
+          showCount: true,
+        },
       },
       {
         id: "removed-guardians",
@@ -614,7 +625,11 @@ export default function Somnus() {
         col: 5.5,
         row: 3,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Rmvd", infoPos: "above", showCount: true },
+        placeholder: {
+          text: i18n.t("games:somnus.rmvd"),
+          infoPos: "above",
+          showCount: true,
+        },
       },
       ...assignmentZones,
       {
@@ -624,7 +639,7 @@ export default function Somnus() {
         col: 0,
         row: 3,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Dscrd", infoPos: "above" },
+        placeholder: { text: i18n.t("cards:dscrd"), infoPos: "above" },
       },
       {
         id: "guardian-deck",
@@ -633,7 +648,11 @@ export default function Somnus() {
         col: 1,
         row: 3,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Guard", infoPos: "above", showCount: true },
+        placeholder: {
+          text: i18n.t("games:somnus.guard"),
+          infoPos: "above",
+          showCount: true,
+        },
       },
       {
         id: "hand",
@@ -736,7 +755,7 @@ export default function Somnus() {
 
       <View style={[getZoneStylesById("life"), flexStyles.rowCentered]}>
         <Text size="md" weight={600} color={Colors.K100} style={{ flex: 1 }}>
-          Turn {game.turn}
+          {i18n.t("games:somnus.turn")} {game.turn}
         </Text>
 
         <ProgressBar
@@ -776,11 +795,16 @@ export default function Somnus() {
         >
           <Text size="md" weight={500} color={Colors.K200}>
             {selectedTarget
-              ? `${isNightmare(selectedTarget) ? "Nightmare" : "Guardian"}: ${targetValue}`
-              : "Select nightmare or guardian"}
+              ? i18n.t(
+                  isNightmare(selectedTarget)
+                    ? "games:somnus.nightmareValue"
+                    : "games:somnus.guardianValue",
+                  { value: targetValue },
+                )
+              : i18n.t("games:somnus.selectNightmareOrGuardian")}
           </Text>
           <Text size="md" weight={500} color={Colors.K200}>
-            {`Selected: ${selectedValue}`}
+            {i18n.t("games:somnus.selected", { selectedValue })}
           </Text>
         </View>
 
@@ -792,7 +816,7 @@ export default function Somnus() {
           ]}
         >
           <Button
-            text="Assign"
+            text={i18n.t("games:somnus.assign")}
             size="sm"
             theme="green"
             disabled={!canAssign}
@@ -801,7 +825,7 @@ export default function Somnus() {
             taller
           />
           <Button
-            text="Exile"
+            text={i18n.t("games:somnus.exile")}
             size="sm"
             theme="red"
             disabled={!canExile}
@@ -810,7 +834,7 @@ export default function Somnus() {
             taller
           />
           <Button
-            text="Resolve"
+            text={i18n.t("cards:resolve")}
             size="sm"
             theme="blue"
             onPress={resolveTurn}
@@ -827,7 +851,7 @@ export default function Somnus() {
           ]}
         >
           <Button
-            text="Deep Breath"
+            text={i18n.t("games:somnus.deepBreath")}
             size="sm"
             theme="purple"
             disabled={!canDeepBreath}
@@ -835,7 +859,11 @@ export default function Somnus() {
             style={[flexStyles.flex1]}
           />
           <Button
-            text={game.remSleepUsed ? "REM Used" : "REM Sleep"}
+            text={
+              game.remSleepUsed
+                ? i18n.t("games:somnus.remUsed")
+                : i18n.t("games:somnus.remSleep")
+            }
             size="sm"
             theme="orange"
             disabled={!canRemSleep}

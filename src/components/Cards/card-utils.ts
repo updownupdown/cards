@@ -276,4 +276,3 @@ export function zoneFanOffset(
     Math.min(maxOffset, (widthUnits - 1) / (count - 1)),
   );
 }
-

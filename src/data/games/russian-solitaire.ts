@@ -26,7 +26,7 @@ export const russianSolitaire: GameDefinition = {
     "Build the four foundations up by suit, from Ace to King.",
 
     "## Rules",
-    "- Move any face-up card or **stack** of cards, **building down by rank, and in the same suit.**.",
+    "- Move any face-up card or **stack** of cards, **building down by rank, in the same suit**.",
     "- The carried cards do **not** need to be in sequence.",
     "- Empty columns can only be filled with Kings.",
     "- Double-tap or drag single cards to the foundations.",

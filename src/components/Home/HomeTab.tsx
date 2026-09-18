@@ -6,6 +6,8 @@ import { GAMES_DATA } from "@/data/games-registry";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
+import { useDisplayLanguage, useTranslation } from "@/i18n";
+import { localizeGameTitle } from "@/i18n/content";
 import { Colors, layoutDims } from "@/styles/styles";
 import { isLocalDevEnvironment, roundToPixel } from "@/utils/utils";
 import { useMemo } from "react";
@@ -34,6 +36,8 @@ export function HomeTab({
   contentPaddingBottom,
   onSelectTab,
 }: HomeTabProps) {
+  const { t } = useTranslation("home");
+  const language = useDisplayLanguage();
   const { ui, spacing } = useResponsiveMetrics();
   const { width: viewportWidth } = useViewportDimensions();
 
@@ -74,14 +78,15 @@ export function HomeTab({
   const favoriteGames = useMemo(
     () =>
       Array.from(favorites)
-        .sort((a, b) =>
-          (GAMES_DATA[a]?.title ?? "").localeCompare(
-            GAMES_DATA[b]?.title ?? "",
-          ),
-        )
         .map((path) => [path, GAMES_DATA[path]] as HomeGameEntry)
-        .filter(([, game]) => isGameEnabled(game)),
-    [favorites],
+        .filter(([, game]) => isGameEnabled(game))
+        .sort(([pathA, gameA], [pathB, gameB]) =>
+          localizeGameTitle(gameA, pathA, language).localeCompare(
+            localizeGameTitle(gameB, pathB, language),
+            language,
+          ),
+        ),
+    [favorites, language],
   );
 
   const becauseYouLiked = useMemo(() => {
@@ -114,8 +119,11 @@ export function HomeTab({
       return null;
     }
 
-    return { title: likedGame.title, games: related };
-  }, [allEnabledGames]);
+    return {
+      title: localizeGameTitle(likedGame, likedPath, language),
+      games: related,
+    };
+  }, [allEnabledGames, language]);
 
   const fewPlayedGames = recentPaths.length < 3;
 
@@ -150,7 +158,7 @@ export function HomeTab({
           }}
         >
           <HomeSectionTitle
-            title="Local-only Games"
+            title={t("sections.localOnly")}
             pageSidePadding={scaledPageSidePadding}
             contentMaxWidth={contentMaxWidth}
           />
@@ -190,7 +198,7 @@ export function HomeTab({
           }}
         >
           <HomeSectionTitle
-            title="Start Easy!"
+            title={t("sections.startEasy")}
             iconName="spades"
             pageSidePadding={0}
             contentMaxWidth={contentMaxWidth}
@@ -206,7 +214,7 @@ export function HomeTab({
             }}
           >
             <Text style={{ paddingBottom: spacing(20) }}>
-              {`Here are some easy-to-learn games to get started. You can find more under the "Explore" tab.`}
+              {t("sections.startEasyIntro")}
             </Text>
 
             {getStartedGames.map(([path, game]) => (
@@ -223,10 +231,10 @@ export function HomeTab({
 
             <Button
               onPress={() => {
-                // Switch to the Explore tab
+                // Switch to the Collect tab
                 onSelectTab(1);
               }}
-              text="Discover more games"
+              text={t("sections.discoverMore")}
               style={{ marginTop: spacing(20) }}
               textStyle={{ textTransform: "none" }}
               theme={Colors.suitsRed}
@@ -246,7 +254,7 @@ export function HomeTab({
           }}
         >
           <HomeSectionTitle
-            title="Game of the Day"
+            title={t("sections.gameOfTheDay")}
             iconName="featured"
             pageSidePadding={scaledPageSidePadding}
             contentMaxWidth={contentMaxWidth}
@@ -282,7 +290,7 @@ export function HomeTab({
           }}
         >
           <HomeSectionTitle
-            title="Jump Back In"
+            title={t("sections.jumpBackIn")}
             iconName="recent"
             pageSidePadding={scaledPageSidePadding}
             contentMaxWidth={contentMaxWidth}
@@ -323,7 +331,7 @@ export function HomeTab({
           }}
         >
           <HomeSectionTitle
-            title="Favorites"
+            title={t("sections.favorites")}
             iconName="star"
             pageSidePadding={scaledPageSidePadding}
             contentMaxWidth={contentMaxWidth}
@@ -364,7 +372,9 @@ export function HomeTab({
           }}
         >
           <HomeSectionTitle
-            title={`Because you liked "${becauseYouLiked.title}"`}
+            title={t("sections.becauseYouLiked", {
+              title: becauseYouLiked.title,
+            })}
             iconName="star"
             pageSidePadding={scaledPageSidePadding}
             contentMaxWidth={contentMaxWidth}

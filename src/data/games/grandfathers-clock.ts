@@ -11,7 +11,7 @@ export const grandfathersClock: GameDefinition = {
     difficulty: 30,
     luck: 35,
   },
-  thumbnail: "DefaultThumbnail.webp",
+  thumbnail: "GrandfatherClock.webp",
   background: GAME_BACKGROUNDS.bookstore,
   animation: GameAnimations.Dust,
   gameColorDark: "#2a2118",

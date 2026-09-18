@@ -11,7 +11,7 @@ export const salicLaw: GameDefinition = {
     difficulty: 40,
     luck: 65,
   },
-  thumbnail: "DefaultThumbnail.webp",
+  thumbnail: "SalicLaw.webp",
   background: GAME_BACKGROUNDS.castle,
   animation: GameAnimations.Birds,
   gameColorDark: "#1f1c2b",

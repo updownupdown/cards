@@ -1,4 +1,5 @@
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useTranslation } from "@/i18n";
 import { Icon, type IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, rgba, layoutDims, transitionStyles } from "@/styles/styles";
@@ -12,11 +13,11 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export type HomeTabKey = "home" | "collect" | "search" | "nodes";
 
-export const HOME_TABS: { key: HomeTabKey; label: string; icon: IconName }[] = [
-  { key: "home", label: "Home", icon: "home" },
-  { key: "collect", label: "Collect", icon: "trophy" },
-  { key: "search", label: "Search", icon: "search" },
-  { key: "nodes", label: "Nodes", icon: "nodes" },
+export const HOME_TABS: { key: HomeTabKey; icon: IconName }[] = [
+  { key: "home", icon: "home" },
+  { key: "collect", icon: "trophy" },
+  { key: "search", icon: "search" },
+  { key: "nodes", icon: "nodes" },
 ];
 
 type HomeTabBarProps = {
@@ -32,6 +33,7 @@ export function HomeTabBar({
 }: HomeTabBarProps) {
   const insets = useSafeAreaInsets();
   const { spacing, ui } = useResponsiveMetrics();
+  const { t } = useTranslation("home");
 
   const onLayout = (event: LayoutChangeEvent) => {
     onHeightChange?.(event.nativeEvent.layout.height);
@@ -82,7 +84,7 @@ export function HomeTabBar({
                 key={tab.key}
                 onPress={() => onSelectTab(index)}
                 accessibilityRole="button"
-                accessibilityLabel={tab.label}
+                accessibilityLabel={t(`tabs.${tab.key}`)}
                 style={[
                   flexStyles.rowCentered,
                   {

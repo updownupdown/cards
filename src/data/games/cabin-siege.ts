@@ -21,7 +21,7 @@ export const cabinSiege: GameDefinition = {
     "Defend your cabin against a siege of zombies, using supporting cards strategically.",
   quickStart: [
     "Kill zombies by placing cards in adjacent, valid spots.",
-    "The other two cards in that line must add to 10 and match suit (Ks) or color (Qs).",
+    "The other two cards in that line must add to at least 10 and match suit (Ks) or color (Qs).",
     "Aces are worth 1; Jokers can be placed anywhere and are worth 0.",
   ],
   howToPlay: [
@@ -43,9 +43,9 @@ export const cabinSiege: GameDefinition = {
     "Whether you can kill a zombie depends on its rank, the played card, and **the two support cards that are in the same line as the zombie and the last played card**.",
     "A zombie can be killed if:",
     "- It is adjacent to the last played card",
-    "- Both support cards add up to 10 (Jokers and Aces are worth 1)",
+    "- Both support cards add up to at least 10 (Aces are worth 1, Jokers 0)",
     "- For Kings, both support cards must match the King's suit",
-    "- For Queens, both support cards must match the Queen's suit",
+    "- For Queens, both support cards must match the Queen's color",
     "- There are no restrictions to kill Jacks",
   ],
 };

@@ -1,5 +1,6 @@
-import { GameRating, HexColor } from "@/data/games-data";
+import { GameRating, GameStatsNames, HexColor } from "@/data/games-data";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useTranslation } from "@/i18n";
 import { Colors, rgba } from "@/styles/styles";
 import { View, ViewStyle } from "react-native";
 import { Text } from "../common/Text";
@@ -12,6 +13,7 @@ type Props = {
 
 export const RatingsBars = ({ rating, gameColor, style }: Props) => {
   const { spacing } = useResponsiveMetrics();
+  const { t } = useTranslation("common");
 
   return (
     <View
@@ -28,7 +30,7 @@ export const RatingsBars = ({ rating, gameColor, style }: Props) => {
       {Object.entries(rating).map(([key, value]) => (
         <RatingBar
           key={key}
-          label={key}
+          label={t(`stats.${key as GameStatsNames}`)}
           value={value}
           fillColor={gameColor}
           trackHeight={Math.round(spacing(8))}

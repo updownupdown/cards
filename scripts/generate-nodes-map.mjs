@@ -91,7 +91,8 @@ function compareGames(left, right) {
     );
   }
   return (
-    centerScore(left) - centerScore(right) || left.path.localeCompare(right.path)
+    centerScore(left) - centerScore(right) ||
+    left.path.localeCompare(right.path)
   );
 }
 
@@ -210,7 +211,9 @@ function removeBottlenecks(records, connections) {
     candidates.sort((left, right) => left.distance - right.distance);
     const bypass = candidates[0];
     if (!bypass || !connect(connections, bypass.leftPath, bypass.rightPath)) {
-      throw new Error(`Could not bypass progression bottleneck ${bottleneck.path}.`);
+      throw new Error(
+        `Could not bypass progression bottleneck ${bottleneck.path}.`,
+      );
     }
   }
 }
@@ -266,14 +269,22 @@ function layoutAll(games) {
 
   // Each node links inwards to its nearest already-placed neighbour, so
   // Monte Carlo, the second node, always connects to Klondike.
-  const connections = new Map(records.map((record) => [record.path, new Set()]));
-  const outward = [...records].sort((left, right) => radius(left) - radius(right));
+  const connections = new Map(
+    records.map((record) => [record.path, new Set()]),
+  );
+  const outward = [...records].sort(
+    (left, right) => radius(left) - radius(right),
+  );
   for (let index = 1; index < outward.length; index += 1) {
     const record = outward[index];
     const inward = outward
       .slice(0, index)
       .sort((left, right) => distance(record, left) - distance(record, right));
-    if (!inward.some((candidate) => connect(connections, record.path, candidate.path))) {
+    if (
+      !inward.some((candidate) =>
+        connect(connections, record.path, candidate.path),
+      )
+    ) {
       throw new Error(`Could not connect ${record.path} to the inner map.`);
     }
   }
@@ -305,7 +316,9 @@ function peripheryPoint(game, records, minimumSpacing) {
       return spots[hash(game.path) % spots.length];
     }
   }
-  throw new Error(`Could not find room for ${game.path} at the edge of the map.`);
+  throw new Error(
+    `Could not find room for ${game.path} at the edge of the map.`,
+  );
 }
 
 /** The existing map as-is, with removed games dropped and new games added. */
@@ -345,7 +358,9 @@ function extendMap(existing, games) {
     records.push(record);
     neighbours
       .slice(0, linkCount)
-      .forEach((neighbour) => connect(connections, record.path, neighbour.path));
+      .forEach((neighbour) =>
+        connect(connections, record.path, neighbour.path),
+      );
   }
 
   finishConnections(records, connections);
@@ -442,7 +457,9 @@ function rebalanceRewards(records, existingByPath, gamesByPath) {
       return target.gold + target.plain < REBALANCED_MAX_REWARDS;
     });
     if (!roomy) {
-      throw new Error(`${spare} rewards do not fit within ${REBALANCED_MAX_REWARDS} per node.`);
+      throw new Error(
+        `${spare} rewards do not fit within ${REBALANCED_MAX_REWARDS} per node.`,
+      );
     }
     targets.get(roomy.path).plain += 1;
     spare -= 1;
@@ -508,14 +525,18 @@ function validate(records) {
     errors.push(`minimum node spacing ${minimum.toFixed(4)} permits overlap`);
   }
   if (ratio < SPACING_RATIO.min || ratio > SPACING_RATIO.max) {
-    errors.push(`nearest-node spacing ratio ${ratio.toFixed(2)} is outside ${SPACING_RATIO.min}-${SPACING_RATIO.max}`);
+    errors.push(
+      `nearest-node spacing ratio ${ratio.toFixed(2)} is outside ${SPACING_RATIO.min}-${SPACING_RATIO.max}`,
+    );
   }
   for (const record of records) {
     if (
       record.connections.length < MIN_CONNECTIONS ||
       record.connections.length > MAX_CONNECTIONS
     ) {
-      errors.push(`${record.path} has ${record.connections.length} connections`);
+      errors.push(
+        `${record.path} has ${record.connections.length} connections`,
+      );
     }
     if (
       record.rewards.length < MIN_REWARDS ||

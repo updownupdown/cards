@@ -3,6 +3,7 @@ import { HomeCard } from "@/components/Home/HomeCard";
 import { useFade } from "@/hooks/useFade";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useTranslation } from "@/i18n";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors } from "@/styles/styles";
 import { Animated, View } from "react-native";
@@ -32,6 +33,7 @@ export function RandomGameRoller({
   isRandomMode,
 }: RandomGameRollerProps) {
   const { spacing } = useResponsiveMetrics();
+  const { t } = useTranslation("home");
   const cardGap = spacing(20);
   const largeCardHeight = spacing(180);
 
@@ -51,7 +53,7 @@ export function RandomGameRoller({
     >
       {isRandomMode ? (
         <Button
-          text="Clear random games"
+          text={t("random.clear")}
           // iconName="close"
           uppercase={false}
           size="lg"
@@ -61,7 +63,7 @@ export function RandomGameRoller({
         />
       ) : (
         <Button
-          text="Random games"
+          text={t("random.roll")}
           iconName="dice"
           uppercase={false}
           size="lg"

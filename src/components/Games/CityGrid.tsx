@@ -26,6 +26,7 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 import { useToast } from "../common/Toast";
 
+import { i18n } from "@/i18n";
 function getColRow(index: number) {
   let row: number[] = [];
   let col: number[] = [];
@@ -325,19 +326,19 @@ export default function CityGrid() {
       setGame((draft) => {
         draft.ended = true;
         draft.won = true;
-        draft.winLoseMessage = "You won!";
+        draft.winLoseMessage = i18n.t("cards:youWon");
       });
     } else if (game.draw.length === 0) {
       setGame((draft) => {
         draft.ended = true;
         draft.won = false;
-        draft.winLoseMessage = "You ran out of cards!";
+        draft.winLoseMessage = i18n.t("games:cityGrid.youRanOutOfCards");
       });
     } else if (legal.length === 0) {
       setGame((draft) => {
         draft.ended = true;
         draft.won = false;
-        draft.winLoseMessage = "You ran out of valid placements!";
+        draft.winLoseMessage = i18n.t("games:cityGrid.youRanOutOfPlacements");
       });
     }
   }, [legal, game.draw]);
@@ -370,7 +371,7 @@ export default function CityGrid() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: "Stock", infoPos: "left" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "left" },
       },
       ...pileZones,
     ];
@@ -379,13 +380,13 @@ export default function CityGrid() {
   function handOnPress(isLegal: boolean, pileIndex: number) {
     if (!isLegal) {
       if (game.piles[pileIndex!].length >= 4) {
-        showToast("Pile is full!");
+        showToast(i18n.t("games:cityGrid.pileIsFull"));
       } else {
         const validAdjacentPiles = getAdjacentPiles(game.piles);
         if (!validAdjacentPiles.includes(pileIndex!)) {
-          showToast("Must place on existing or adjacent pile!");
+          showToast(i18n.t("games:cityGrid.mustPlaceOnExistingOr"));
         } else {
-          showToast("Placing here would result in too many face up cards!");
+          showToast(i18n.t("games:cityGrid.placingHereWouldResultIn"));
         }
       }
 

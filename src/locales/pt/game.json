@@ -1,0 +1,51 @@
+{
+  "menu": {
+    "home": "Início",
+    "nodes": "Mapa",
+    "instantWin": "Vitória instantânea"
+  },
+  "result": {
+    "won": "Você venceu!",
+    "lost": "Você perdeu",
+    "score": "Pontuação: {{score}}",
+    "playAgain": "Jogar de novo",
+    "tryAgain": "Tentar de novo"
+  },
+  "reset": {
+    "hold": "Segure para reiniciar a partida"
+  },
+  "tips": {
+    "quickStart": "Início rápido",
+    "viewRules": "Ver regras"
+  },
+  "rules": {
+    "title": "Como jogar",
+    "unavailable": "As instruções não estão disponíveis para este jogo."
+  },
+  "settings": {
+    "title": "Configurações",
+    "none": "Este jogo não tem configurações",
+    "appliesNow": "Vale sem reiniciar a partida.",
+    "appliesNextGame": "Reinicia a partida ao mudar."
+  },
+  "rating": {
+    "title": "Dificuldade"
+  },
+  "credits": {
+    "title": "Créditos",
+    "backgroundImage": "Imagem de fundo:"
+  },
+  "deckPreview": {
+    "title": "Prévia do baralho",
+    "shuffleNotice": "O baralho será embaralhado depois da prévia.",
+    "empty": "Não há cartas no baralho."
+  },
+  "rotateHint": {
+    "landscape": "Modo paisagem\nrecomendado",
+    "portrait": "Modo retrato\nrecomendado"
+  },
+  "errors": {
+    "gameCrashed": "Algo deu errado com esse jogo.",
+    "resumeFailed": "Não foi possível retomar sua última partida."
+  }
+}

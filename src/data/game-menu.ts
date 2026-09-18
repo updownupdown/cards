@@ -1,6 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
 import { NODES_PROGRESS_STORAGE_KEY } from "./storage-keys";
+import { formatPercent } from "@/i18n/format";
+import {
+  isLanguagePreference,
+  type LanguagePreference,
+} from "@/i18n/languages";
 import { GameMenuInfo, isGameEnabled } from "./games-data";
 import { GAMES_DATA } from "./games-registry";
 
@@ -91,6 +96,9 @@ export const ASCENT_CHALLENGES: AscentChallenge[] = [
 export type GameSettingsMap = Record<string, Partial<GameSettings>>;
 
 export type GlobalSettings = {
+  language: LanguagePreference;
+  /** Show quotes and Tao Te Ching chapters translated, when a translation exists. */
+  translateCollectibles: boolean;
   discoverCardSize: "small" | "medium" | "large";
   dismissHomeInstallPrompt: boolean;
   resumeLastGame: boolean;
@@ -130,6 +138,8 @@ export type SavedGameSession<T = unknown> = {
 };
 
 export const DEFAULT_GLOBAL_SETTINGS: GlobalSettings = {
+  language: "system",
+  translateCollectibles: true,
   discoverCardSize: "large",
   dismissHomeInstallPrompt: false,
   resumeLastGame: true,
@@ -292,6 +302,10 @@ async function readGlobalSettings(): Promise<GlobalSettings> {
 
     return {
       ...merged,
+      language: isLanguagePreference(merged.language)
+        ? merged.language
+        : DEFAULT_GLOBAL_SETTINGS.language,
+      translateCollectibles: merged.translateCollectibles !== false,
       discoverCardSize:
         merged.discoverCardSize === "small" ||
         merged.discoverCardSize === "medium" ||
@@ -723,7 +737,7 @@ export function formatPlayTime(ms: number) {
 
 export function calculateWinRate(stats: GameStats) {
   if (stats.wins === 0 && stats.losses === 0) return "-";
-  return `${((stats.wins / (stats.wins + stats.losses)) * 100).toFixed()}%`;
+  return formatPercent(stats.wins / (stats.wins + stats.losses));
 }
 
 // Stats functions directly update Game Settings
