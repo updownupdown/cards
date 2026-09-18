@@ -41,6 +41,10 @@ export type RoyalRestMoveSource =
 
 type DropTarget = { zone: "tableau"; pileIndex: number };
 
+function pileOffset(count: number) {
+  return zoneFanOffset(count, 5, 0.1, cardDims.smallCardOffset);
+}
+
 function isNumberCard(card: PlayingCard) {
   return NUMBER_RANKS.has(card.rank);
 }
@@ -359,7 +363,7 @@ export default function RoyalRest() {
       baseZIndex: 10 + pileIndex,
       fan: {
         direction: "down" as const,
-        offset: zoneFanOffset(pile.length, 5, 0.1, cardDims.smallCardOffset),
+        offset: pileOffset(pile.length),
         center: false,
       },
       placeholder: { text: i18n.t("games:royalRest.column"), showCount: true },
@@ -447,9 +451,11 @@ export default function RoyalRest() {
 
     const base = getZoneBasePos(zone);
     const cardIndex = source.zone === "tableau" ? source.cardIndex : 0;
+    const count =
+      source.zone === "tableau" ? game.tableau[source.pileIndex].length : 1;
     return createRect(
       base.x,
-      base.y + cardIndex * cardDims.smallCardOffset * cardHeight,
+      base.y + cardIndex * pileOffset(count) * cardHeight,
       cardWidth,
       cardHeight,
     );
@@ -485,7 +491,10 @@ export default function RoyalRest() {
           source,
           rect: createRect(
             base.x,
-            base.y + cardIndex * cardDims.smallCardOffset * cardHeight,
+            base.y +
+              cardIndex *
+                pileOffset(game.tableau[zone.pileIndex!].length) *
+                cardHeight,
             cardWidth,
             cardHeight,
           ),
@@ -510,7 +519,7 @@ export default function RoyalRest() {
         const pile = game.tableau[zone.pileIndex];
         const pileHeight =
           cardHeight +
-          Math.max(0, pile.length - 1) * cardDims.smallCardOffset * cardHeight;
+          Math.max(0, pile.length - 1) * pileOffset(pile.length) * cardHeight;
         return [
           {
             target: { zone: "tableau" as const, pileIndex: zone.pileIndex },
@@ -540,7 +549,11 @@ export default function RoyalRest() {
     const cards = getSourceCards(source, game);
     const rect = getSourceRect(source);
     if (cards.length === 0 || !rect) return;
-    startDrag(source, cards, { x: rect.x, y: rect.y });
+    const fanOffset =
+      source.zone === "tableau"
+        ? pileOffset(game.tableau[source.pileIndex].length)
+        : undefined;
+    startDrag(source, cards, { x: rect.x, y: rect.y }, fanOffset);
   }
 
   function moveSourceToTableau(

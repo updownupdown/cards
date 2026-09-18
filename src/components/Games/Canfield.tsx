@@ -463,14 +463,15 @@ export default function Canfield() {
     return undefined;
   };
 
-  const { cardMap, getZoneBasePos, cardWidth, cardHeight } = useCardMap({
-    game,
-    zones,
-    cardMapper,
-    zoneMapper,
-    cardSize,
-    fixedRows: 6,
-  });
+  const { cardMap, getZoneBasePos, getCardPos, cardWidth, cardHeight } =
+    useCardMap({
+      game,
+      zones,
+      cardMapper,
+      zoneMapper,
+      cardSize,
+      fixedRows: 6,
+    });
 
   const stockTapRect = useMemo(() => {
     const stockZone = zones.find((zone) => zone.name === "stock");
@@ -499,7 +500,9 @@ export default function Canfield() {
       );
     }
 
-    return createRect(base.x, base.y, cardWidth, cardHeight);
+    const pile = source.zone === "reserve" ? game.reserve : game.waste;
+    const top = getCardPos(zone, pile.length - 1);
+    return createRect(top.x, top.y, cardWidth, cardHeight);
   }
 
   const cardHitAreas = useMemo<CardHitArea<MoveSource>[]>(() => {
@@ -511,9 +514,10 @@ export default function Canfield() {
       if (zone.name === "reserve") {
         const top = game.reserve[game.reserve.length - 1];
         if (top?.faceUp) {
+          const topPos = getCardPos(zone, game.reserve.length - 1);
           areas.push({
             source: { zone: "reserve" },
-            rect: createRect(zoneRect.x, zoneRect.y, cardWidth, cardHeight),
+            rect: createRect(topPos.x, topPos.y, cardWidth, cardHeight),
             priority: 105,
           });
         }
@@ -523,9 +527,10 @@ export default function Canfield() {
       if (zone.name === "waste") {
         const top = game.waste[game.waste.length - 1];
         if (top) {
+          const topPos = getCardPos(zone, game.waste.length - 1);
           areas.push({
             source: { zone: "waste" },
-            rect: createRect(zoneRect.x, zoneRect.y, cardWidth, cardHeight),
+            rect: createRect(topPos.x, topPos.y, cardWidth, cardHeight),
             priority: 100,
           });
         }
@@ -559,7 +564,7 @@ export default function Canfield() {
     });
 
     return areas;
-  }, [cardHeight, cardWidth, game, getZoneBasePos, zones]);
+  }, [cardHeight, cardWidth, game, getCardPos, getZoneBasePos, zones]);
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
@@ -733,7 +738,10 @@ export default function Canfield() {
       (entry) =>
         entry.name === "foundation" && entry.pileIndex === targetPileIndex,
     );
-    const targetRect = targetZone ? getZoneBasePos(targetZone) : null;
+    // The card lands on top of the foundation's diagonal stack.
+    const targetRect = targetZone
+      ? getCardPos(targetZone, game.foundations[targetPileIndex]?.length ?? 0)
+      : null;
     const cards = getSourceCards(source, game);
 
     if (!sourceRect || !targetRect || cards.length === 0) {

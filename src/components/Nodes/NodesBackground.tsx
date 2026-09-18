@@ -85,13 +85,13 @@ function NativeFlickeringStar({
           toValue: Math.min(1, star.opacity + 0.3),
           duration: 280 + ((index * 97) % 420),
           easing: RNEasing.inOut(RNEasing.sin),
-          useNativeDriver: true,
+          useNativeDriver: Platform.OS !== "web",
         }),
         RNAnimated.timing(opacity, {
           toValue: star.opacity,
           duration: 360 + ((index * 61) % 500),
           easing: RNEasing.inOut(RNEasing.sin),
-          useNativeDriver: true,
+          useNativeDriver: Platform.OS !== "web",
         }),
       ]),
     );

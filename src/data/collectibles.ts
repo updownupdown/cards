@@ -5,7 +5,7 @@ import {
   type StandardRank,
 } from "@/components/Cards/card-utils";
 import { TAO_CHAPTERS } from "@/components/Nodes/TaoChapters";
-import { QUOTES_COLLECTION } from "@/components/Nodes/QuotesCollection";
+import { quotes } from "@/components/Collectibles/QuotesText";
 
 export const TAO_CHAPTER_COUNT = 81;
 export const QUOTE_COUNT = 156;
@@ -32,7 +32,7 @@ export function getTaoChapter(id: TaoId) {
 }
 
 export function getQuote(id: QuoteId) {
-  return id >= 1 && id <= QUOTE_COUNT ? QUOTES_COLLECTION[id - 1] : undefined;
+  return id >= 1 && id <= QUOTE_COUNT ? quotes[id - 1] : undefined;
 }
 
 /**
@@ -65,9 +65,9 @@ export function validateCollectibleCatalogs() {
       `Expected ${TAO_CHAPTER_COUNT} Tao chapters, found ${TAO_CHAPTERS.length}.`,
     );
   }
-  if (QUOTES_COLLECTION.length !== QUOTE_COUNT) {
+  if (quotes.length !== QUOTE_COUNT) {
     errors.push(
-      `Expected ${QUOTE_COUNT} quotes, found ${QUOTES_COLLECTION.length}.`,
+      `Expected ${QUOTE_COUNT} quotes, found ${quotes.length}.`,
     );
   }
   return errors;

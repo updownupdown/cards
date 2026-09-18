@@ -7,7 +7,7 @@ export const busyAces: GameDefinition = {
   title: "Busy Aces",
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 35, difficulty: 55, luck: 50 },
-  thumbnail: "DefaultThumbnail.webp",
+  thumbnail: "BusyAces.webp",
   background: GAME_BACKGROUNDS.interchange,
   animation: GameAnimations.Birds,
   gameColorDark: "#1a2233",

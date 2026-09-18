@@ -42,7 +42,10 @@ type DragGhostCardsProps = {
   cardWidth: number;
   cardHeight: number;
   cardSize?: CardProps["cardSize"];
-  /** Vertical gap between dragged cards, as a fraction of the card height. */
+  /**
+   * Vertical gap between dragged cards, as a fraction of the card height. The
+   * ghost's own fanOffset (set by startDrag) takes precedence.
+   */
   fanOffset?: number;
   cardBackPath?: string;
   /** Over a valid drop target: the dragged cards are outlined green. */
@@ -82,7 +85,7 @@ export function DragGhostCards({
             style={{
               position: "absolute",
               left: 0,
-              top: index * fanOffset * cardHeight,
+              top: index * (ghost.fanOffset ?? fanOffset) * cardHeight,
               width: cardWidth,
               height: cardHeight,
               zIndex: index + 1,

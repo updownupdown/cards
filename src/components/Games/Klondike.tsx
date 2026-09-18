@@ -12,7 +12,13 @@ import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
-import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
+import {
+  fitCardWidth,
+  MappedCard,
+  MapZone,
+  useBoardArea,
+  useCardMap,
+} from "../Cards/CardMap";
 import {
   cardDims,
   isRed,
@@ -29,16 +35,47 @@ import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
 import { i18n } from "@/i18n";
 const cardSize = "tableau";
 const TABLEAU_ROW = 1.4;
-// Room for a King-to-Ace run before a column starts to tighten.
-const TABLEAU_ROWS = 1 + 12 * cardDims.tableauOffset;
-// Bottom row for the stock and waste, below the tableau and its labels.
-const STOCK_ROW = TABLEAU_ROW + TABLEAU_ROWS + 0.35;
+const BOARD_GAP = 0.16;
+
+/**
+ * Where the stock and waste sit, both at the bottom right within thumb reach:
+ * a row under the tableau (portrait), or a column beside it (landscape, where
+ * height is what limits the card size).
+ */
+type StockLayout = "bottom" | "side";
+
+/**
+ * Room for a King-to-Ace run before a column starts to tighten. Beside a side
+ * stock, the run is reserved at the tightest readable fan.
+ */
+function tableauRows(layout: StockLayout) {
+  const offset =
+    layout === "side" ? cardDims.tableauOffsetMin : cardDims.tableauOffset;
+  return 1 + 12 * offset;
+}
+
+/**
+ * Row of the stock: under the tableau, or level with the bottom of the
+ * tableau area.
+ */
+function stockRow(layout: StockLayout) {
+  return layout === "side"
+    ? TABLEAU_ROW + tableauRows(layout) - 1
+    : TABLEAU_ROW + tableauRows(layout) + 0.35;
+}
+
+/** Board size in card slots; the side column leaves room for the labels. */
+function boardSize(layout: StockLayout) {
+  return layout === "side"
+    ? { cols: 8.5, rows: TABLEAU_ROW + tableauRows(layout) }
+    : { cols: 7, rows: stockRow(layout) + 1 };
+}
 
 /** A column's fan offset, tightened once it would run past the tableau area. */
-function pileOffset(count: number) {
+function pileOffset(count: number, layout: StockLayout) {
   return zoneFanOffset(
     count,
-    TABLEAU_ROWS,
+    tableauRows(layout),
     cardDims.tableauOffsetMin,
     cardDims.tableauOffset,
   );
@@ -161,6 +198,12 @@ const gameStateInitial = createInitialState();
 
 export default function Klondike() {
   const configuredDrawCount = useGameSettingValue("drawCount");
+  const boardArea = useBoardArea();
+  const layout: StockLayout =
+    fitCardWidth(boardArea, { ...boardSize("side"), gap: BOARD_GAP }) >
+    fitCardWidth(boardArea, { ...boardSize("bottom"), gap: BOARD_GAP })
+      ? "side"
+      : "bottom";
 
   const [selected, setSelected] = useState<Selection>(null);
   const [lastTap, setLastTap] = useState<{ key: string; at: number } | null>(
@@ -258,7 +301,7 @@ export default function Klondike() {
       col: pileIndex,
       row: TABLEAU_ROW,
       baseZIndex: 10 + pileIndex,
-      fan: { direction: "down", offset: pileOffset(pile.length) },
+      fan: { direction: "down", offset: pileOffset(pile.length, layout) },
       placeholder: { showCount: false },
     }));
     const foundationZones: MapZone[] = game.foundations.map(
@@ -275,20 +318,23 @@ export default function Klondike() {
       }),
     );
 
-    // Stock and waste sit at the bottom right, within easy thumb reach.
+    // Stock and waste sit at the bottom right, within easy thumb reach: side by
+    // side under the tableau, or stacked in a column beside it.
+    const side = layout === "side";
+    const stockCol = side ? 7.5 : 6;
     return [
       {
         id: "stock",
         name: "stock",
         cards: game.stock,
         pileIndex: 0,
-        col: 6,
-        row: STOCK_ROW,
+        col: stockCol,
+        row: stockRow(layout),
         baseZIndex: 40,
         fan: { maxVisible: 3 },
         placeholder: {
           text: i18n.t("cards:stock"),
-          infoPos: "above",
+          infoPos: "left",
           showCount: true,
         },
       },
@@ -297,20 +343,20 @@ export default function Klondike() {
         name: "waste",
         cards: game.waste,
         pileIndex: 0,
-        col: 4.75,
-        row: STOCK_ROW,
+        col: side ? stockCol : 4.5,
+        row: stockRow(layout) - (side ? 1.15 : 0),
         baseZIndex: 30,
         fan: { maxVisible: 3 },
         placeholder: {
           text: i18n.t("cards:waste"),
-          infoPos: "above",
+          infoPos: "left",
           showCount: true,
         },
       },
       ...foundationZones,
       ...tableauZones,
     ];
-  }, [game]);
+  }, [game, layout]);
 
   const cardMapper = (
     mappedCard: MappedCard,
@@ -436,15 +482,17 @@ export default function Klondike() {
     return undefined;
   };
 
-  const { cardMap, getZoneBasePos, cardWidth, cardHeight } = useCardMap({
-    game,
-    zones,
-    cardMapper,
-    zoneMapper,
-    cardSize,
-    fixedRows: STOCK_ROW + 1,
-    gap: 0.16,
-  });
+  const { cardMap, getZoneBasePos, getCardPos, cardWidth, cardHeight } =
+    useCardMap({
+      game,
+      zones,
+      cardMapper,
+      zoneMapper,
+      cardSize,
+      fixedCols: boardSize(layout).cols,
+      fixedRows: boardSize(layout).rows,
+      gap: BOARD_GAP,
+    });
 
   const stockTapRect = useMemo(() => {
     const stockZone = zones.find((zone) => zone.name === "stock");
@@ -468,14 +516,15 @@ export default function Klondike() {
         base.x,
         base.y +
           source.cardIndex *
-            pileOffset(game.tableau[source.pileIndex].length) *
+            pileOffset(game.tableau[source.pileIndex].length, layout) *
             cardHeight,
         cardWidth,
         cardHeight,
       );
     }
 
-    return createRect(base.x, base.y, cardWidth, cardHeight);
+    const top = getCardPos(zone, game.waste.length - 1);
+    return createRect(top.x, top.y, cardWidth, cardHeight);
   }
 
   const cardHitAreas = useMemo<CardHitArea<MoveSource>[]>(() => {
@@ -487,9 +536,10 @@ export default function Klondike() {
       if (zone.name === "waste") {
         const top = game.waste[game.waste.length - 1];
         if (top) {
+          const topPos = getCardPos(zone, game.waste.length - 1);
           areas.push({
             source: { zone: "waste" },
-            rect: createRect(zoneRect.x, zoneRect.y, cardWidth, cardHeight),
+            rect: createRect(topPos.x, topPos.y, cardWidth, cardHeight),
             priority: 100,
           });
         }
@@ -512,7 +562,8 @@ export default function Klondike() {
             },
             rect: createRect(
               zoneRect.x,
-              zoneRect.y + cardIndex * pileOffset(pile.length) * cardHeight,
+              zoneRect.y +
+                cardIndex * pileOffset(pile.length, layout) * cardHeight,
               cardWidth,
               cardHeight,
             ),
@@ -523,7 +574,7 @@ export default function Klondike() {
     });
 
     return areas;
-  }, [cardHeight, cardWidth, game, getZoneBasePos, zones]);
+  }, [cardHeight, cardWidth, game, getCardPos, getZoneBasePos, layout, zones]);
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
@@ -556,7 +607,9 @@ export default function Klondike() {
         const pile = game.tableau[zone.pileIndex];
         const pileHeight =
           cardHeight +
-          Math.max(0, pile.length - 1) * pileOffset(pile.length) * cardHeight;
+          Math.max(0, pile.length - 1) *
+            pileOffset(pile.length, layout) *
+            cardHeight;
 
         areas.push({
           target: { zone: "tableau", pileIndex: zone.pileIndex },
@@ -579,6 +632,7 @@ export default function Klondike() {
     cardWidth,
     game.tableau,
     getZoneBasePos,
+    layout,
     zones,
   ]);
 
@@ -637,7 +691,11 @@ export default function Klondike() {
     const rect = getSourceRect(source);
     if (!rect) return;
 
-    startDrag(source, cards, { x: rect.x, y: rect.y });
+    const fanOffset =
+      source.zone === "tableau"
+        ? pileOffset(game.tableau[source.pileIndex].length, layout)
+        : undefined;
+    startDrag(source, cards, { x: rect.x, y: rect.y }, fanOffset);
   }
 
   function drawFromStock() {

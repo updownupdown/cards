@@ -13,7 +13,6 @@ import { StyleSheet, View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
-  cardDims,
   PlayingCard,
   RANKS,
   RANK_VALUE,
@@ -60,6 +59,10 @@ function dealCards(cards: PlayingCard[]) {
 
 function createInitialState(): GameState {
   return { deal: [], piles: dealCards(createCards(true)) };
+}
+
+function pileOffset(count: number) {
+  return zoneFanOffset(count, 4, 0.1, 0.48);
 }
 
 function canPlaceOnPile(card: PlayingCard, destination?: PlayingCard) {
@@ -114,7 +117,7 @@ export default function TowerOfHanoi() {
       baseZIndex: 10 + pileIndex,
       fan: {
         direction: "down",
-        offset: zoneFanOffset(pile.length, 4, 0.1, 0.48),
+        offset: pileOffset(pile.length),
       },
       placeholder: { showCount: false },
     }));
@@ -228,7 +231,7 @@ export default function TowerOfHanoi() {
     const base = getZoneBasePos(zone);
     return createRect(
       base.x,
-      base.y + (pile.length - 1) * cardDims.tableauOffset * cardHeight,
+      base.y + (pile.length - 1) * pileOffset(pile.length) * cardHeight,
       cardWidth,
       cardHeight,
     );
@@ -248,7 +251,7 @@ export default function TowerOfHanoi() {
             source: { pileIndex },
             rect: createRect(
               base.x,
-              base.y + (pile.length - 1) * cardDims.tableauOffset * cardHeight,
+              base.y + (pile.length - 1) * pileOffset(pile.length) * cardHeight,
               cardWidth,
               cardHeight,
             ),
@@ -266,11 +269,9 @@ export default function TowerOfHanoi() {
 
         const pileIndex = zone.pileIndex;
         const base = getZoneBasePos(zone);
+        const count = game.piles[pileIndex].length;
         const pileHeight =
-          cardHeight +
-          Math.max(0, game.piles[pileIndex].length - 1) *
-            cardDims.tableauOffset *
-            cardHeight;
+          cardHeight + Math.max(0, count - 1) * pileOffset(count) * cardHeight;
 
         return [
           {

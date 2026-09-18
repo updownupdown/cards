@@ -353,15 +353,16 @@ export default function FortyThieves() {
     return undefined;
   };
 
-  const { cardMap, getZoneBasePos, cardWidth, cardHeight } = useCardMap({
-    game,
-    zones,
-    cardMapper,
-    zoneMapper,
-    gap: 0.14,
-    cardSize: "tableau",
-    fixedRows: 5,
-  });
+  const { cardMap, getZoneBasePos, getCardPos, cardWidth, cardHeight } =
+    useCardMap({
+      game,
+      zones,
+      cardMapper,
+      zoneMapper,
+      gap: 0.14,
+      cardSize: "tableau",
+      fixedRows: 5,
+    });
 
   const stockTapRect = useMemo(() => {
     const stockZone = zones.find((zone) => zone.name === "stock");
@@ -389,7 +390,8 @@ export default function FortyThieves() {
       );
     }
 
-    return createRect(base.x, base.y, cardWidth, cardHeight);
+    const top = getCardPos(zone, game.waste.length - 1);
+    return createRect(top.x, top.y, cardWidth, cardHeight);
   }
 
   const cardHitAreas = useMemo<CardHitArea<MoveSource>[]>(() => {
@@ -401,9 +403,10 @@ export default function FortyThieves() {
       if (zone.name === "waste") {
         const top = game.waste[game.waste.length - 1];
         if (top) {
+          const topPos = getCardPos(zone, game.waste.length - 1);
           areas.push({
             source: { zone: "waste" },
-            rect: createRect(zoneRect.x, zoneRect.y, cardWidth, cardHeight),
+            rect: createRect(topPos.x, topPos.y, cardWidth, cardHeight),
             priority: 100,
           });
         }
@@ -435,7 +438,7 @@ export default function FortyThieves() {
     });
 
     return areas;
-  }, [cardHeight, cardWidth, game, getZoneBasePos, zones]);
+  }, [cardHeight, cardWidth, game, getCardPos, getZoneBasePos, zones]);
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {

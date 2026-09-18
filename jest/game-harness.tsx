@@ -72,6 +72,7 @@ export function mockCardMapModule() {
         getZoneStyles: () => ({}),
         getZoneStylesById: () => ({}),
         getZoneBasePos: () => ({ x: 0, y: 0, width: 50, height: 70 }),
+        getCardPos: () => ({ x: 0, y: 0 }),
         cardWidth: 50,
         cardHeight: 70,
         cardBackPath: harness.path,

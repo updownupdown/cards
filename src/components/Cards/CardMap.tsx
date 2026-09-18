@@ -97,6 +97,44 @@ type MapConfig = {
   zoneMapper?: (zone: MapZone) => CardMapBGMapping | undefined;
 };
 
+/** Space a card map can use: the viewport below the header, above the nav bar. */
+export function useBoardArea() {
+  const insets = useSafeAreaInsets();
+  const { width, height } = useViewportDimensions();
+  const ui = useResponsiveUiLayoutFromWidth(width, height);
+  const headerHeight = getHeaderHeightWithInset(insets.top, ui.scale);
+
+  return {
+    width,
+    // Keep the board clear of the system navigation bar at the bottom.
+    height: Math.max(height - headerHeight - insets.bottom, 0),
+  };
+}
+
+/**
+ * Card width a board of `cols` x `rows` card slots gets in `area`, using the
+ * same sizing as useCardMap with its default padding. Lets a game compare
+ * candidate layouts and keep whichever shows the biggest cards.
+ */
+export function fitCardWidth(
+  area: { width: number; height: number },
+  {
+    cols,
+    rows,
+    gap = cardDims.layoutGap,
+  }: { cols: number; rows: number; gap?: number },
+) {
+  const pad = cardDims.layoutPadding;
+  const widthUnits = cols + gap * (cols - 1) + pad * 2;
+  const heightUnits =
+    rows + gap * cardDims.aspectRatio * (rows - 1) + pad * 1.5;
+
+  return Math.min(
+    area.width / widthUnits,
+    (area.height / heightUnits) * cardDims.aspectRatio,
+  );
+}
+
 export function useCardMap({
   game,
   zones,
@@ -114,18 +152,11 @@ export function useCardMap({
 }: MapConfig) {
   const pathname = useGamePath();
   const cardBackPath = pathname;
-  const insets = useSafeAreaInsets();
   const [cardImagesLoaded, setCardImagesLoaded] = useState(() =>
     isCardImageSetPreloaded(cardSize, cardBackPath),
   );
 
-  const { width: screenWidthActual, height: screenHeightActual } =
-    useViewportDimensions();
-  const ui = useResponsiveUiLayoutFromWidth(
-    screenWidthActual,
-    screenHeightActual,
-  );
-  const responsiveScale = ui.scale;
+  const { width: containerWidth, height: containerHeight } = useBoardArea();
 
   useEffect(() => {
     let cancelled = false;
@@ -173,14 +204,6 @@ export function useCardMap({
     gridHeight,
     gridHeightPadded,
   } = useMemo(() => {
-    const headerHeight = getHeaderHeightWithInset(insets.top, responsiveScale);
-    // Keep the board clear of the system navigation bar at the bottom.
-    const containerHeight = Math.max(
-      screenHeightActual - headerHeight - insets.bottom,
-      0,
-    );
-    const containerWidth = screenWidthActual;
-
     const gapYUnits = gap * cardDims.aspectRatio;
 
     const cardWidthUnitsToFit =
@@ -237,20 +260,17 @@ export function useCardMap({
       gridHeightPadded,
     };
   }, [
+    containerHeight,
+    containerWidth,
     fixedCols,
     fixedRows,
     gap,
     gridCols,
     gridRows,
-    insets.bottom,
-    insets.top,
     paddingBottom,
     paddingLeft,
     paddingRight,
     paddingTop,
-    responsiveScale,
-    screenHeightActual,
-    screenWidthActual,
   ]);
 
   const zoneBasePosById = useMemo(() => {
@@ -438,6 +458,20 @@ export function useCardMap({
     [cardHeight, cardWidth, getZoneBasePos],
   );
 
+  /** Where a zone's card is drawn (top-left, board coordinates), fan included. */
+  const getCardPos = useCallback(
+    (zone: MapZone, cardIndex: number) => {
+      const { x, y } = getCardPosition(
+        zone,
+        zone.cards?.length ?? 1,
+        zone.baseZIndex ?? 1,
+        cardIndex,
+      );
+      return { x, y };
+    },
+    [getCardPosition],
+  );
+
   const cardPositions: Record<string, MappedCard> = useMemo(() => {
     const positionMap: Record<string, MappedCard> = {};
 
@@ -591,6 +625,7 @@ export function useCardMap({
     getZoneStyles,
     getZoneStylesById,
     getZoneBasePos,
+    getCardPos,
     cardWidth,
     cardHeight,
     cardBackPath,

@@ -88,6 +88,8 @@ export type DragGhost<TSource> = {
   source: TSource;
   cards: PlayingCard[];
   origin: { x: number; y: number };
+  /** Vertical gap between dragged cards, as a fraction of the card height. */
+  fanOffset?: number;
 };
 
 type DragCallbacks<TSource> = {
@@ -351,6 +353,7 @@ export function useDragDrop<TSource, TTarget>({
     source: TSource,
     cards: PlayingCard[],
     origin: { x: number; y: number },
+    fanOffset?: number,
   ) {
     const gestureOffset = pendingDragOffsetRef.current;
     const initialOffset = gestureOffset ?? { x: 0, y: 0 };
@@ -378,6 +381,7 @@ export function useDragDrop<TSource, TTarget>({
         x: origin.x + initialOffset.x,
         y: origin.y + initialOffset.y,
       },
+      fanOffset,
     });
   }
 

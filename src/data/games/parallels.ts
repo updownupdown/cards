@@ -11,7 +11,7 @@ export const parallels: GameDefinition = {
     difficulty: 45,
     luck: 55,
   },
-  thumbnail: "DefaultThumbnail.webp",
+  thumbnail: "Parallels.webp",
   background: GAME_BACKGROUNDS.brickStreet,
   animation: GameAnimations.Rain,
   gameColorDark: "#1a1f24",

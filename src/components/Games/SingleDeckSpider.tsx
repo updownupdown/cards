@@ -433,7 +433,12 @@ export function SingleDeckSpider({
     if (cards.length === 0) return;
     const rect = getSourceRect(source);
     if (!rect) return;
-    startDrag(source, cards, { x: rect.x, y: rect.y });
+    startDrag(
+      source,
+      cards,
+      { x: rect.x, y: rect.y },
+      pileOffset(game.tableau[source.pile].length),
+    );
   }
 
   function getTapHandler(source: MoveSource) {

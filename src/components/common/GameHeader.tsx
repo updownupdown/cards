@@ -58,8 +58,8 @@ export const GameHeader = memo(function GameHeader({
 
   return (
     <Animated.View
-      pointerEvents={hidden ? "none" : "box-none"}
       style={{
+        pointerEvents: hidden ? "none" : "box-none",
         opacity,
         position: "relative",
         zIndex: LayerZIndexes.header,

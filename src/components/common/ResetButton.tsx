@@ -6,7 +6,7 @@ import { useTranslation } from "@/i18n";
 import { flexStyles } from "@/styles/flexStyles";
 import { layoutDims, Colors, rgba } from "@/styles/styles";
 import React, { useRef, useState } from "react";
-import { Animated, Easing } from "react-native";
+import { Animated, Easing, Platform } from "react-native";
 
 const holdToResetDuration = 900;
 const minDisplayDuration = holdToResetDuration;
@@ -46,7 +46,7 @@ export function ResetButton({
       duration: holdToResetDuration,
       easing: Easing.linear,
       // Drives scaleX (not width) so this can run off the JS thread.
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== "web",
     }).start();
   };
 
@@ -56,7 +56,7 @@ export function ResetButton({
       toValue: 0,
       duration: 150,
       easing: Easing.linear,
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== "web",
     }).start();
   };
 

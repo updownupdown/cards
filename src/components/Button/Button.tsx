@@ -128,7 +128,7 @@ export const Button = ({
       duration: autoProgress,
       easing: RNEasing.linear,
       // Drives scaleX (not width) so this can run off the JS thread.
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== "web",
     });
     animation.start();
 
