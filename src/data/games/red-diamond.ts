@@ -11,12 +11,12 @@ export const redDiamond: GameDefinition = {
     difficulty: 55,
     luck: 55,
   },
-  background: GAME_BACKGROUNDS.sunsetOldCity,
+  background: GAME_BACKGROUNDS.cozyRoom4,
   animation: GameAnimations.ManaDust,
   thumbnail: "RedDiamond.webp",
-  gameColorDark: "#36251b",
+  gameColorDark: "#220a12",
   gameColorMid: "#a8222b",
-  gameColorPale: "#ffd8d8",
+  gameColorPale: "#ffeaea",
   cardDescription:
     "Place every Club and Spade around four Diamonds using arithmetic matches.",
   quickStart: [

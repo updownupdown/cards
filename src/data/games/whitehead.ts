@@ -1,11 +1,14 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
+import { GameAnimations } from "@/animations";
+
 export const whitehead: GameDefinition = {
   path: "/whitehead",
   title: "Whitehead",
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 35, difficulty: 50, luck: 40 },
-  background: GAME_BACKGROUNDS.london,
+  background: GAME_BACKGROUNDS.bloomingTree,
+  animation: GameAnimations.Pollen,
   gameColorDark: "#30383a",
   gameColorMid: "#5a94af",
   gameColorPale: "#edf0e6",

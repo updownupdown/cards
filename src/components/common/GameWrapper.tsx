@@ -20,7 +20,10 @@ import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { haptics } from "@/utils/haptics";
 import { selectNodesHomeTab } from "@/components/Home/home-view-state";
-import { NodesWinOverlay } from "@/components/Nodes/NodesWinOverlay";
+import {
+  NodesWinOverlay,
+  NodesWinRewardPreview,
+} from "@/components/Nodes/NodesWinOverlay";
 import { flexStyles } from "@/styles/flexStyles";
 import {
   getHeaderHeightWithInset,
@@ -159,6 +162,7 @@ export const GameWrapper = ({
   const [nodesWinResult, setNodesWinResult] = useState<NodesWinResult | null>(
     null,
   );
+  const [showNodesWinModal, setShowNodesWinModal] = useState(false);
   const [tipsDismissed, setTipsDismissed] = useState(false);
   const tipsMorphProgress = useRef(new Animated.Value(0)).current;
   const instructionsHighlight = useRef(new Animated.Value(0)).current;
@@ -291,6 +295,7 @@ export const GameWrapper = ({
     resultStateRef.current = { pathname, outcome: displayedOutcome };
     if (displayedOutcome === "playing") {
       setNodesWinResult(null);
+      setShowNodesWinModal(false);
     }
     if (!didEnd) {
       return () => {
@@ -322,6 +327,7 @@ export const GameWrapper = ({
             !result.duplicate &&
             (result.awardedReward || result.newlyUnlockedPaths.length > 0)
           ) {
+            setShowNodesWinModal(false);
             setNodesWinResult(result);
           }
         })
@@ -377,6 +383,14 @@ export const GameWrapper = ({
         message={winLoseMessage}
         handleUndo={handleLossUndo}
         isNodesMode={isNodesMode}
+        rewardPreview={
+          nodesWinResult?.awardedReward ? (
+            <NodesWinRewardPreview
+              result={nodesWinResult}
+              onPress={() => setShowNodesWinModal(true)}
+            />
+          ) : null
+        }
         onExit={async () => {
           setNodesWinResult(null);
           try {
@@ -387,11 +401,11 @@ export const GameWrapper = ({
           }
         }}
       />
-      {nodesWinResult && (
+      {nodesWinResult && showNodesWinModal && (
         <NodesWinOverlay
           path={pathname}
           result={nodesWinResult}
-          onClose={() => setNodesWinResult(null)}
+          onClose={() => setShowNodesWinModal(false)}
         />
       )}
 

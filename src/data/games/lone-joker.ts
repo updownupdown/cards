@@ -11,7 +11,7 @@ export const loneJoker: GameDefinition = {
     difficulty: 72,
     luck: 55,
   },
-  background: GAME_BACKGROUNDS.painting,
+  background: GAME_BACKGROUNDS.painting2,
   animation: GameAnimations.Firefly,
   thumbnail: "LoneJoker.webp",
   gameColorDark: "#111e35",

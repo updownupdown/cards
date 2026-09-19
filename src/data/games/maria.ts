@@ -9,7 +9,7 @@ export const maria: GameDefinition = {
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 30, difficulty: 35, luck: 45 },
   thumbnail: "Maria.webp",
-  background: GAME_BACKGROUNDS.painting2,
+  background: GAME_BACKGROUNDS.painting,
   animation: GameAnimations.CherryBlossom,
   gameColorDark: "#3c2d36",
   gameColorMid: "#852749",

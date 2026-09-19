@@ -25,8 +25,8 @@ const POLLEN_COLORS = [
 
 function PollenSpeck({ index, width, height }: SceneProps & { index: number }) {
   const initialPhase = seeded(index, 116);
-  const size = 1.05 + seeded(index, 110) * 2.1;
-  const duration = 26000 + seeded(index, 114) * 18000;
+  const size = (1.05 + seeded(index, 110) * 2.1) * 0.7;
+  const duration = 52000 + seeded(index, 114) * 36000;
   const startY = -size * (2 + seeded(index, 115) * 10);
   const endY = height + size * 2;
   const direction = seeded(index, 112) < 0.5 ? -1 : 1;

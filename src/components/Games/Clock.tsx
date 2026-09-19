@@ -244,7 +244,7 @@ export default function Clock() {
   const revealedProgress = Math.min(Math.max(game.revealedCards / 52, 0), 1);
   const progressSize = clockRadius * 2 * cardDims.aspectRatio * cardWidth;
   const progressStroke = Math.max(4, cardWidth * 0.08);
-  const progressRadius = (progressSize - progressStroke) / 2;
+  const progressRadius = Math.max(0, (progressSize - progressStroke) / 2);
   const progressCircumference = 2 * Math.PI * progressRadius;
 
   const progressValue = useSharedValue(revealedProgress);

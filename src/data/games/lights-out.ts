@@ -1,4 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { GameAnimations } from "@/animations";
 
 export const lightsOut: GameDefinition = {
   path: "/lights-out",
@@ -6,9 +8,11 @@ export const lightsOut: GameDefinition = {
   tags: [GameTag.EasyToLearn, GameTag.SpatialControl],
   rating: { complexity: 20, difficulty: 55, luck: 0 },
   thumbnail: "LightsOut.webp",
-  gameColorDark: "#17252b",
+  background: GAME_BACKGROUNDS.darkAlley,
+  animation: GameAnimations.Snow,
+  gameColorDark: "#2b2117",
   gameColorMid: "#283f55",
-  gameColorPale: "#f4e8a4",
+  gameColorPale: "#fdf3e8",
   cardDescription:
     "Extinguish a grid of cards where every move flips its neighbors.",
   quickStart: [

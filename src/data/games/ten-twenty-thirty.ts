@@ -13,7 +13,7 @@ export const tenTwentyThirty: GameDefinition = {
     luck: 70,
   },
   thumbnail: "TenTwentyThirty.webp",
-  background: GAME_BACKGROUNDS.alhambra,
+  background: GAME_BACKGROUNDS.modernMetal2,
   animation: GameAnimations.Firefly,
   gameColorDark: "#132d35",
   gameColorMid: "#254366",

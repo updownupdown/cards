@@ -1,5 +1,6 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
+import { GameAnimations } from "@/animations";
 
 export const blackberryPie: GameDefinition = {
   path: "/blackberry-pie",
@@ -10,7 +11,8 @@ export const blackberryPie: GameDefinition = {
     difficulty: 62,
     luck: 52,
   },
-  background: GAME_BACKGROUNDS.forest,
+  background: GAME_BACKGROUNDS.forestGrasses,
+  animation: GameAnimations.Leaves,
   thumbnail: "BlackberryPie.webp",
   cardDescription:
     "Build matching trios under berry cards to help the Queen bake her pie.",

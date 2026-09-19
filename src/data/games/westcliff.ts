@@ -7,10 +7,10 @@ export const westcliff: GameDefinition = {
   title: "Westcliff",
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 25, difficulty: 35, luck: 55 },
-  background: GAME_BACKGROUNDS.bloomingTree,
+  background: GAME_BACKGROUNDS.cliffFields,
   animation: GameAnimations.Pollen,
   gameColorDark: "#27363b",
-  gameColorMid: "#5aa8af",
+  gameColorMid: "#35634c",
   gameColorPale: "#e4ece9",
   thumbnail: "Westcliff.webp",
   cardDescription:

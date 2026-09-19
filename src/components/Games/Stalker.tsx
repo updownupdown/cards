@@ -524,6 +524,7 @@ export default function Stalker() {
 
       <View style={[flexStyles.colCentered, getZoneStylesById("searchAction")]}>
         <Button
+          size="sm"
           text={i18n.t("games:stalker.searchDraw", { pendingSearchDrawCount })}
           theme="purple"
           disabled={isSearchDisabled}
@@ -545,6 +546,7 @@ export default function Stalker() {
           style={[flexStyles.rowCentered, { width: "100%", gap: spacing(12) }]}
         >
           <Button
+            size="sm"
             iconName="arrow-back"
             theme="green"
             onPress={() => moveSelectedCard(-1)}
@@ -555,6 +557,7 @@ export default function Stalker() {
             taller
           />
           <Button
+            size="sm"
             iconName="arrow-forward"
             theme="green"
             onPress={() => moveSelectedCard(1)}
@@ -573,6 +576,7 @@ export default function Stalker() {
           style={[flexStyles.rowCentered, { width: "100%", gap: spacing(12) }]}
         >
           <Button
+            size="sm"
             text={i18n.t("cards:cancel")}
             theme="orange"
             onPress={cancelEscape}
@@ -580,6 +584,7 @@ export default function Stalker() {
             taller
           />
           <Button
+            size="sm"
             text={i18n.t("games:stalker.escapeDraw", {
               pendingEscapeDrawCount,
             })}

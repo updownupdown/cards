@@ -297,7 +297,7 @@ export default function QueensAudience() {
         id: "waste",
         name: "waste",
         cards: game.waste,
-        col: 4 * colStep - 1.25,
+        col: 3 * colStep,
         row: stockRow,
         fan: { maxVisible: 3 },
         placeholder: {
