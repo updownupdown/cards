@@ -8,7 +8,7 @@ export const allInARow: GameDefinition = {
   tags: [GameTag.SequenceBuilding],
   rating: { complexity: 10, difficulty: 90, luck: 25 },
   thumbnail: "AllInARow.webp",
-  background: GAME_BACKGROUNDS.flowerGarden,
+  background: GAME_BACKGROUNDS.waterLogs,
   animation: GameAnimations.ManaDust,
   gameColorDark: "#182532",
   gameColorMid: "#571870",
@@ -18,7 +18,7 @@ export const allInARow: GameDefinition = {
     "Clear all thirteen columns to win.",
     "Choose any exposed card to begin.",
     "Play one rank higher or lower, regardless of suit.",
-    "Ace and King are adjacent.",
+    "A and K are adjacent.",
   ],
   howToPlay: [
     "## Objective",

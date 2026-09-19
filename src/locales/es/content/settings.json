@@ -1,21 +1,4 @@
 {
-  "archipelago": {
-    "islandJokers": {
-      "hash": "71b79671",
-      "value": {
-        "description": "Añade dos Comodines que puedes colocar en cualquier sitio.",
-        "label": "Usar Comodines",
-        "options": [
-          {
-            "label": "No"
-          },
-          {
-            "label": "Sí (más fácil)"
-          }
-        ]
-      }
-    }
-  },
   "ascent": {
     "ascentChallenge": {
       "hash": "11a33a3b",

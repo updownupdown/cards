@@ -6,12 +6,6 @@
     "youClearedTheBoard": "Kamu membersihkan meja!",
     "noAdjacentRankRemains": "Tidak ada nilai berurutan lagi."
   },
-  "archipelago": {
-    "out": "Keluar",
-    "notALegalPlacement": "Penempatan tidak sah",
-    "islandComplete": "Pulau selesai!",
-    "islandUnfinished": "Pulau belum selesai!"
-  },
   "ascent": {
     "lhotseRoutesNeed2Cards": "Lhotse: rute butuh 2+ kartu.",
     "gasherbrumIAnchorMustBe": "Gasherbrum I: jangkar harus genap.",

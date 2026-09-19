@@ -17,6 +17,7 @@
   "endGame": "Oyunu bitir",
   "redeal": "Yeniden dağıt ({{value}})",
   "sacrifice": "Feda et",
+  "redealAction": "Yeniden dağıt",
   "black": "Siyah",
   "royalFlush": "Royal Flush",
   "highCard": "Yüksek kart",

@@ -12,7 +12,7 @@ export const fortyThieves: GameDefinition = {
     luck: 40,
   },
   thumbnail: "FortyThieves.webp",
-  background: GAME_BACKGROUNDS.field,
+  background: GAME_BACKGROUNDS.abandonedSand,
   animation: GameAnimations.Birds,
   gameColorDark: "#2E2D34",
   gameColorMid: "#705aaf",

@@ -120,40 +120,6 @@
       "value": "Tout en ligne"
     }
   },
-  "archipelago": {
-    "cardDescription": {
-      "hash": "2580ab5d",
-      "value": "Faites grandir une île sur une grille de 7x7, une carte liée par le rang à la fois."
-    },
-    "howToPlay": {
-      "hash": "9ab35e64",
-      "value": [
-        "## Objectif",
-        "Remplissez toute la grille de l'île, avec le meilleur score possible.",
-        "Votre score est de 49, moins 1 par carte défaussée, plus 1 par carte restant dans la pioche.",
-        "## Déroulement",
-        "- Placez une carte à la fois, orthogonalement adjacente à une carte **d'un rang de plus ou de moins**.",
-        "- La suite **boucle**\u00a0: **les Rois et les As** sont voisins, donc un As peut aller à côté d'un **2** ou d'un **Roi**.",
-        "- Vous ne pouvez **pas** placer une carte à côté d'une carte de même rang, dans aucune des huit cases voisines.",
-        "- **La couleur et le rouge ou noir ne comptent pas.**",
-        "- Si la carte piochée ne peut pas être placée, elle est **défaussée**.",
-        "## Mode facile",
-        "- Activez les **Jokers** dans les réglages pour ajouter deux cartes libres, que vous pouvez placer sur n'importe quelle case reliée (les Jokers ne comptent pas dans le score)."
-      ]
-    },
-    "quickStart": {
-      "hash": "a28614f6",
-      "value": [
-        "Placez chaque carte à côté d'une carte d'un rang de plus ou de moins (A<->K se suivent).",
-        "Une carte ne peut jamais être placée à côté d'une carte de même rang.",
-        "Remplissez la grille de l'île pour gagner."
-      ]
-    },
-    "title": {
-      "hash": "dd58357c",
-      "value": "Archipel"
-    }
-  },
   "ascent": {
     "cardDescription": {
       "hash": "301e448f",
@@ -485,12 +451,11 @@
       "value": "Faites avancer douze courtes colonnes de deux paquets, carte par carte et couleur par couleur."
     },
     "howToPlay": {
-      "hash": "e1ebb3ac",
+      "hash": "f2b1ffa6",
       "value": [
         "## Objectif",
         "Montez les huit fondations par couleur, de l'As au Roi.",
         "## Règles",
-        "- Douze colonnes commencent avec une carte face cachée et une carte face visible.",
         "- Descendez par couleur, en déplaçant une carte à la fois.",
         "- N'importe quelle carte peut occuper une colonne vide.",
         "- Retournez la pioche une carte à la fois, sans redistribution."
@@ -659,12 +624,11 @@
       "value": "Faites monter un tapis de vingt cartes sur les fondations, pendant que la pioche comble chaque trou."
     },
     "howToPlay": {
-      "hash": "2b1cbaa6",
+      "hash": "e818b0bd",
       "value": [
         "## Objectif",
         "Placez les 52 cartes sur les quatre fondations, montées par couleur de l'As au Roi.",
         "## Règles",
-        "- Les quatre **As** commencent sur les fondations\u00a0; vingt cartes forment le **tapis**.",
         "- N'importe quelle carte du tapis, ainsi que la carte du dessus du talon, peut être jouée sur sa fondation.",
         "- Un trou dans le tapis est aussitôt comblé par la carte du dessus du **talon**, ou par la **pioche** si le talon est vide.",
         "- Touchez la **pioche** pour retourner une carte sur le talon. Il n'y a pas de redistribution."
@@ -855,15 +819,13 @@
       "value": "Défaites une courtepointe de cartes droites et couchées, une extrémité libre à la fois."
     },
     "howToPlay": {
-      "hash": "ce4eb32e",
+      "hash": "ee571b00",
       "value": [
         "## Objectif",
         "Placez les 104 cartes sur les huit fondations.",
         "## Fondations",
-        "- Un **As** et un **Roi** de chaque couleur commencent les fondations.",
         "- Les As **montent** par couleur jusqu'aux Rois\u00a0; les Rois **descendent** par couleur jusqu'aux As.",
         "## Règles",
-        "- 64 cartes forment la **courtepointe**, en alternant cartes droites et couchées comme sur un échiquier.",
         "- Une carte de la courtepointe est **libre** quand au moins l'un de ses **petits côtés** ne touche aucune autre carte.",
         "- Touchez une carte libre pour la jouer sur une fondation ou, à défaut, sur le **talon** si elle est d'un rang au-dessus ou en dessous de la carte du dessus du talon, dans la même couleur.",
         "- Les trous de la courtepointe ne sont jamais comblés.",
@@ -871,10 +833,10 @@
       ]
     },
     "quickStart": {
-      "hash": "be5c8a85",
+      "hash": "a360eef1",
       "value": [
-        "Une carte de la courtepointe est libre quand l'un de ses petits côtés est dégagé.",
-        "Les As montent et les Rois descendent, par couleur.",
+        "Placez les 104 cartes sur les fondations. Montez les As et descendez les Rois, par couleur.",
+        "Jouez une carte de la courtepointe quand l'un de ses petits côtés est dégagé.",
         "Une carte libre qui ne va sur aucune fondation peut aller sur le talon, en montant ou en descendant dans la même couleur."
       ]
     },
@@ -1022,12 +984,11 @@
       "value": "Douze piles à découvert, pas de pioche, et une redistribution qui bouleverse tout ce que vous avez construit."
     },
     "howToPlay": {
-      "hash": "959bc755",
+      "hash": "14e03858",
       "value": [
         "## Objectif",
         "Placez les 52 cartes sur les quatre fondations, montées par couleur de l'As au Roi.",
         "## Règles",
-        "- Les quatre **As** commencent sur les fondations\u00a0; les autres cartes sont distribuées face visible en **douze piles de quatre**.",
         "- Seule la carte du dessus d'une pile peut bouger, vers une fondation ou sur une pile **d'un rang au-dessus dans la même couleur**.",
         "- Les piles vides ne sont **jamais** remplies.",
         "- Touchez la pile de **redistribution** pour ramasser les piles dans l'ordre, sans mélanger, et les redistribuer par quatre.",
@@ -1574,12 +1535,11 @@
       "value": "Faites sauter deux paquets sur huit fondations, en triant la pioche sur cinq piles de nénuphars."
     },
     "howToPlay": {
-      "hash": "1d6a9640",
+      "hash": "2f091e43",
       "value": [
         "## Objectif",
         "Placez les 104 cartes sur les huit fondations, chacune montée de l'As au Roi **sans tenir compte de la couleur**.",
         "## Règles",
-        "- Treize cartes forment la **réserve**\u00a0; les As qui s'y trouvent vont directement sur les fondations.",
         "- Seule la carte du dessus de la réserve est disponible.",
         "- Chaque carte de la pioche doit être posée sur l'un des **cinq talons** ou jouée sur une fondation.",
         "- N'importe quelle carte peut aller sur n'importe quel talon, mais les cartes ne peuvent jamais passer d'un talon à l'autre.",
@@ -1701,14 +1661,12 @@
       "value": "Remontez douze fondations autour d'un cadran jusqu'à ce que chaque heure affiche son chiffre."
     },
     "howToPlay": {
-      "hash": "a9d1159a",
+      "hash": "932afb6b",
       "value": [
         "## Objectif",
         "Montez chaque fondation de l'horloge jusqu'à ce que sa carte du dessus corresponde à son heure. Les Valets comptent 11 et les Dames 12.",
         "## Règles",
-        "- Douze cartes forment l'horloge, du **10♥** à 1\u00a0heure jusqu'au **9♣** à 12\u00a0heures.",
         "- Les fondations montent **par couleur**, en passant du Roi à l'As, et s'arrêtent à leur heure.",
-        "- Le reste du paquet est distribué en **huit piles de cinq**.",
         "- Déplacez les cartes du dessus une à une. Descendez les colonnes **sans tenir compte de la couleur**, en posant un Roi sur un As.",
         "- N'importe quelle carte peut occuper une pile vide.",
         "- **Touchez deux fois** une carte, ou faites-la glisser, pour la jouer sur sa fondation."
@@ -2075,12 +2033,11 @@
       "value": "Distribuez rangée après rangée et libérez les cartes par le haut et par le bas du labyrinthe."
     },
     "howToPlay": {
-      "hash": "3a50b244",
+      "hash": "4c8fa7c7",
       "value": [
         "## Objectif",
         "Placez les 52 cartes sur les quatre fondations, montées par couleur de l'As au Roi.",
         "## Règles",
-        "- Les quatre **As** commencent sur les fondations, avec une première rangée de huit cartes en dessous.",
         "- Une carte est **libre** quand l'espace juste au-dessus ou juste en dessous est vide\u00a0: les rangées du haut et du bas sont donc toujours libres.",
         "- Touchez une carte libre pour la jouer sur sa fondation.",
         "- Un trou dans la **première rangée** est aussitôt comblé depuis la pioche. Les trous plus bas restent vides.",
@@ -2088,9 +2045,9 @@
       ]
     },
     "quickStart": {
-      "hash": "3970b955",
+      "hash": "1432729b",
       "value": [
-        "Montez les fondations par couleur à partir des As.",
+        "Montez les quatre fondations par couleur, de l'As au Roi.",
         "Seules les cartes ayant un espace vide au-dessus ou en dessous sont libres.",
         "Touchez la pioche pour distribuer une nouvelle rangée quand vous êtes bloqué."
       ]
@@ -2541,15 +2498,13 @@
       "value": "Empilez des rangées parallèles de deux paquets entre des fondations d'As et de Rois, en libérant les cartes par l'un ou l'autre bord."
     },
     "howToPlay": {
-      "hash": "395db908",
+      "hash": "a09786ce",
       "value": [
         "## Objectif",
         "Placez les 104 cartes sur les huit fondations.",
         "## Fondations",
-        "- Un **As** et un **Roi** de chaque couleur commencent les fondations, les As à gauche et les Rois à droite.",
         "- Les As **montent** par couleur\u00a0; les Rois **descendent** par couleur.",
         "## Règles",
-        "- Le tableau commence par une rangée de dix cartes.",
         "- Tant qu'il y a une ou deux rangées, toutes les cartes sont disponibles.",
         "- À partir de trois rangées, une carte n'est **libre** que si l'espace juste au-dessus ou juste en dessous est vide.",
         "- Touchez la **pioche** pour combler tous les trous du tableau. S'il n'y en a aucun, elle distribue une nouvelle rangée de dix cartes en bas.",
@@ -2557,9 +2512,9 @@
       ]
     },
     "quickStart": {
-      "hash": "2c0f4b7f",
+      "hash": "28551c93",
       "value": [
-        "Les As montent et les Rois descendent, par couleur.",
+        "Placez les 104 cartes sur les fondations. Montez les As et descendez les Rois, par couleur.",
         "À partir de trois rangées, une carte a besoin d'un espace vide au-dessus ou en dessous.",
         "Touchez la pioche pour combler les trous, ou pour ajouter une rangée s'il n'y en a aucun."
       ]
@@ -2681,12 +2636,11 @@
       "value": "Dirigez la pioche vers quatre piles d'angle, en montant par teinte, avec une redistribution."
     },
     "howToPlay": {
-      "hash": "a0ac1fb9",
+      "hash": "fa562a1b",
       "value": [
         "## Objectif",
         "Placez les 52 cartes sur les quatre fondations, montées de l'As au Roi **par teinte (rouge ou noire)**.",
         "## Règles",
-        "- Les quatre **As** commencent sur les fondations.",
         "- Une fondation accepte le rang suivant dans **l'une ou l'autre des deux couleurs de sa teinte**.",
         "- Chaque carte de la pioche doit être posée sur l'un des **quatre talons** ou jouée sur une fondation.",
         "- N'importe quelle carte peut aller sur n'importe quel talon, mais les cartes ne peuvent jamais passer d'un talon à l'autre.",
@@ -2695,9 +2649,9 @@
       ]
     },
     "quickStart": {
-      "hash": "bd0b5046",
+      "hash": "88ac90c8",
       "value": [
-        "Les fondations montent par teinte (rouge ou noire) à partir des As.",
+        "Montez les quatre fondations par teinte (rouge ou noire), de l'As au Roi.",
         "Touchez un talon pour y poser la carte de la pioche.",
         "Quand la pioche est épuisée, touchez-la une fois pour redistribuer."
       ]
@@ -2741,12 +2695,12 @@
       "value": "Faites entrer les couples royaux dans la salle d'audience, et laissez chaque Valet mener sa couleur en descendant."
     },
     "howToPlay": {
-      "hash": "d0759133",
+      "hash": "d7c16170",
       "value": [
         "## Objectif",
         "Faites entrer les 52 cartes dans la **salle d'audience**, au centre.",
         "## Règles",
-        "- Seize cartes forment l'**antichambre**, un cadre autour de la salle. Elles sont toutes disponibles, ainsi que la carte du dessus du **talon**.",
+        "- Toutes les cartes de l'**antichambre** sont disponibles, ainsi que la carte du dessus du **talon**.",
         "- Quand un **Roi et une Dame** de la même couleur sont tous deux disponibles, touchez l'un d'eux pour les faire entrer ensemble.",
         "- Quand un **Valet et un As** de la même couleur sont tous deux disponibles, touchez l'un d'eux pour commencer la fondation de cette couleur.",
         "- Chaque fondation descend ensuite **par couleur** du Valet au Deux.",
@@ -2755,11 +2709,11 @@
       ]
     },
     "quickStart": {
-      "hash": "b9c1cb40",
+      "hash": "4e43eaf2",
       "value": [
+        "Faites entrer les 52 cartes dans la salle d'audience.",
         "Touchez un Roi ou une Dame quand son partenaire est aussi disponible.",
-        "Touchez un Valet ou un As quand son partenaire est disponible pour commencer une fondation.",
-        "Les fondations descendent par couleur, du Valet au Deux."
+        "Touchez un Valet ou un As quand son partenaire est disponible pour commencer une fondation."
       ]
     },
     "title": {
@@ -2773,23 +2727,22 @@
       "value": "Un classique à un paquet, construit en alternant rouge et noir, à un rythme simple et réfléchi."
     },
     "howToPlay": {
-      "hash": "55ea0480",
+      "hash": "22e39071",
       "value": [
         "## Objectif",
         "Placez toutes les cartes sur les quatre fondations par couleur, de l'As au Roi.",
         "## Règles",
-        "- Le tableau compte sept colonnes, distribuées en piles de taille croissante.",
         "- Descendez les colonnes en alternant rouge et noir.",
         "- Seuls les Rois peuvent occuper les espaces vides du tableau.",
         "- La pioche est retournée sur le talon une carte à la fois, sans redistribution dans cette version."
       ]
     },
     "quickStart": {
-      "hash": "97e420c9",
+      "hash": "87361434",
       "value": [
+        "Placez toutes les cartes sur les quatre fondations par couleur, de l'As au Roi.",
         "Formez des séquences descendantes en alternant rouge et noir.",
-        "Déplacez des groupes de cartes valides et utilisez les colonnes vides avec prudence.",
-        "Placez toutes les cartes sur les fondations pour gagner."
+        "Déplacez des groupes valides du tableau et n'utilisez les colonnes vides que pour les Rois."
       ]
     },
     "title": {
@@ -2913,28 +2866,27 @@
       "value": "Deux paquets dansent sur les fondations par pas de deux, à partir des As et des Deux."
     },
     "howToPlay": {
-      "hash": "6c824cdb",
+      "hash": "55f6e9ce",
       "value": [
         "## Objectif",
         "Placez les 104 cartes sur les huit fondations.",
         "## Fondations",
-        "- Un **As** et un **Deux** de chaque couleur commencent les fondations.",
         "- Chaque fondation monte **par couleur, de deux en deux**, en repassant par l'As après le Roi.",
         "- Fondations des As\u00a0: A, 3, 5, 7, 9, J, K, 2, 4, 6, 8, 10, Q.",
         "- Fondations des Deux\u00a0: 2, 4, 6, 8, 10, Q, A, 3, 5, 7, 9, J, K.",
         "## Règles",
-        "- À **gauche**, quatre colonnes de trois cartes\u00a0: seule la carte du bas de chacune est disponible, et les espaces ne sont jamais remplis.",
-        "- À **droite**, les seize cartes sont toutes disponibles.",
+        "- Seule la carte du bas de chaque colonne de gauche est disponible, et les espaces ne sont jamais remplis.",
+        "- Toutes les cartes de droite sont disponibles.",
         "- Touchez un espace vide à droite pour le remplir avec la carte du dessus du **talon**, ou depuis la **pioche** si le talon est vide.",
         "- Touchez la **pioche** pour retourner une carte sur le talon. Il n'y a pas de redistribution."
       ]
     },
     "quickStart": {
-      "hash": "5849dd6d",
+      "hash": "44c5dd4d",
       "value": [
+        "Placez les 104 cartes sur les huit fondations, en montant par couleur de deux en deux.",
         "Les As montent A, 3, 5… K, 2, 4… Q par couleur.",
-        "Les Deux montent 2, 4, 6… Q, A, 3… K par couleur.",
-        "Touchez un espace vide à droite pour le remplir depuis le talon ou la pioche."
+        "Les Deux montent 2, 4, 6… Q, A, 3… K par couleur."
       ]
     },
     "title": {
@@ -3319,15 +3271,14 @@
       "value": "Cachez chaque donne de vingt cartes dans vingt piles de réserve, puis déterrez ce que vous avez caché."
     },
     "howToPlay": {
-      "hash": "53ee1a81",
+      "hash": "cd900ba6",
       "value": [
         "## Objectif",
         "Placez les 104 cartes sur les huit fondations.",
         "## Fondations",
-        "- Un **As** et un **Roi** de chaque couleur commencent les fondations.",
         "- Les As **montent** par couleur\u00a0; les Rois **descendent** par couleur.",
         "## Règles",
-        "- Vingt piles de **réserve** commencent avec une carte chacune. Seules leurs cartes du dessus peuvent être jouées, et jamais les unes sur les autres.",
+        "- Seules les cartes du dessus des piles de **réserve** peuvent être jouées, et jamais les unes sur les autres.",
         "- Au début, une pile de réserve vidée par un coup sur une fondation est remplie depuis la pioche.",
         "- Touchez la **pioche** pour lancer une donne de **20 cartes**. Chacune doit être posée sur la pile de réserve de votre choix, ou jouée directement sur une fondation, ce qui ne compte pas dans les 20.",
         "- Aucune carte de réserve ne peut être jouée tant que la donne n'est pas posée. Ensuite, les piles vidées restent vides jusqu'à la donne suivante.",
@@ -3335,9 +3286,9 @@
       ]
     },
     "quickStart": {
-      "hash": "51f19cb4",
+      "hash": "7c3677a0",
       "value": [
-        "Les As montent et les Rois descendent, par couleur.",
+        "Placez les 104 cartes sur les fondations. Montez les As et descendez les Rois, par couleur.",
         "Touchez la pioche pour distribuer 20 cartes, en posant chacune sur une pile de réserve.",
         "Touchez la carte du dessus d'une pile de réserve pour l'envoyer sur les fondations."
       ]
@@ -3532,13 +3483,12 @@
       "value": "Distribuez une ligne toujours plus longue et retirez les suites de cartes totalisant 10, 20 ou 30."
     },
     "howToPlay": {
-      "hash": "da150979",
+      "hash": "03753ddd",
       "value": [
         "## Objectif",
         "Défaussez les 52 cartes.",
         "## Règles",
         "- Les cartes valent leur valeur faciale\u00a0; les Valets, Dames et Rois valent **10**.",
-        "- La ligne commence avec trois cartes et se lit de gauche à droite, rangée après rangée.",
         "- Touchez la **pioche** pour ajouter la carte suivante au bout de la ligne.",
         "- **Deux cartes ou plus côte à côte** dans la ligne qui totalisent **10, 20 ou 30** peuvent être défaussées.",
         "- Touchez la première carte d'une suite, puis la dernière\u00a0; la ligne se referme.",
@@ -3546,11 +3496,11 @@
       ]
     },
     "quickStart": {
-      "hash": "ad5e257b",
+      "hash": "a276041b",
       "value": [
+        "Défaussez les 52 cartes en retirant des suites adjacentes totalisant 10, 20 ou 30.",
         "Touchez la pioche pour ajouter une carte au bout de la ligne.",
-        "Touchez la première et la dernière carte d'une suite pour la retirer.",
-        "Une suite de deux cartes ou plus doit totaliser 10, 20 ou 30."
+        "Touchez la première et la dernière carte d'une suite pour la retirer."
       ]
     },
     "title": {
@@ -3845,13 +3795,13 @@
       "value": "Alimentez le moyeu du moulin avec quatre suites complètes pendant que ses coins redescendent depuis les Rois."
     },
     "howToPlay": {
-      "hash": "9a8acfb4",
+      "hash": "44337ae9",
       "value": [
         "## Objectif",
         "Placez les 104 cartes sur les fondations.",
         "## Fondations",
-        "- Le **centre** commence par un As et monte **sans tenir compte de la couleur**, de l'As au Roi, quatre fois de suite.",
-        "- Chaque **coin** commence par n'importe quel **Roi** et descend **sans tenir compte de la couleur** jusqu'à un As.",
+        "- Montez le **centre sans tenir compte de la couleur**, de l'As au Roi, quatre fois de suite.",
+        "- Descendez chaque **coin sans tenir compte de la couleur**, du Roi à l'As.",
         "## Règles",
         "- Les huit **ailes** et la carte du dessus du **talon** sont disponibles.",
         "- Une aile vide est aussitôt remplie depuis le talon, ou depuis la pioche si le talon est vide.",
@@ -3861,10 +3811,10 @@
       ]
     },
     "quickStart": {
-      "hash": "9d156e94",
+      "hash": "d36852ca",
       "value": [
-        "Le centre monte de A à K quatre fois, sans tenir compte de la couleur.",
-        "Les coins commencent par un Roi et descendent jusqu'à l'As, sans tenir compte de la couleur.",
+        "Placez les 104 cartes sur les fondations.",
+        "Montez le centre de l'As au Roi quatre fois et descendez les coins du Roi à l'As, sans tenir compte de la couleur.",
         "Les ailes se remplissent depuis le talon, puis depuis la pioche."
       ]
     },

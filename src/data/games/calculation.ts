@@ -11,14 +11,14 @@ export const calculation: GameDefinition = {
     luck: 40,
   },
   thumbnail: "Calculation.webp",
-  background: GAME_BACKGROUNDS.oldRoom,
+  background: GAME_BACKGROUNDS.geometricCeiling,
   gameColorDark: "#12122b",
   gameColorMid: "#7958ae",
   gameColorPale: "#eccfff",
   cardDescription:
-    "Build four foundations in steps of 1, 2, 3, and 4, up to Kings.",
+    "Build four foundations in steps of 1, 2, 3, and 4, up to K.",
   quickStart: [
-    "Build four foundations in steps of 1, 2, 3, and 4, up to Kings.",
+    "Build four foundations in steps of 1, 2, 3, and 4, up to K.",
     "Waste piles can be used to store cards in any order.",
   ],
   howToPlay: [

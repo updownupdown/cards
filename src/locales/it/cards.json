@@ -17,6 +17,7 @@
   "endGame": "Termina partita",
   "redeal": "Ridistribuisci ({{value}})",
   "sacrifice": "Sacrifica",
+  "redealAction": "Ridistribuisci",
   "black": "Nero",
   "royalFlush": "Scala reale massima",
   "highCard": "Carta alta",

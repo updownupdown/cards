@@ -6,12 +6,6 @@
     "youClearedTheBoard": "Masayı temizledin!",
     "noAdjacentRankRemains": "Ardışık değer kalmadı."
   },
-  "archipelago": {
-    "out": "Dışarı",
-    "notALegalPlacement": "Geçersiz yerleştirme",
-    "islandComplete": "Ada tamamlandı!",
-    "islandUnfinished": "Ada tamamlanmadı!"
-  },
   "ascent": {
     "lhotseRoutesNeed2Cards": "Lhotse: rotalar en az 2 kart ister.",
     "gasherbrumIAnchorMustBe": "Gasherbrum I: çapa çift olmalı.",

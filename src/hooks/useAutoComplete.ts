@@ -9,7 +9,33 @@ import { useEffect, useRef, useState } from "react";
 const START_DELAY_MS = 350;
 const STAGGER_MS = 50;
 
-type Move = { source: number; foundation: number };
+export type AutoCompleteMove = { source: number; foundation: number };
+
+export function getAutoCompleteSourcesWithCells(
+  sourcePiles: PlayingCard[][],
+  cells: (PlayingCard | null)[],
+): PlayingCard[][] {
+  return [...sourcePiles, ...cells.map((card) => (card ? [card] : []))];
+}
+
+export function applyAutoCompleteMoveWithCells(
+  sourcePiles: PlayingCard[][],
+  cells: (PlayingCard | null)[],
+  foundations: PlayingCard[][],
+  move: AutoCompleteMove,
+) {
+  const sourcePileCount = sourcePiles.length;
+  const card =
+    move.source < sourcePileCount
+      ? sourcePiles[move.source].pop()
+      : cells[move.source - sourcePileCount];
+
+  if (!card) return;
+  if (move.source >= sourcePileCount) {
+    cells[move.source - sourcePileCount] = null;
+  }
+  foundations[move.foundation].push(card);
+}
 
 type CanPlaceOnFoundation = (
   card: PlayingCard,
@@ -29,8 +55,8 @@ function findMove(
   sources: PlayingCard[][],
   foundations: PlayingCard[][],
   canPlaceOnFoundation: CanPlaceOnFoundation,
-): Move | null {
-  let best: Move | null = null;
+): AutoCompleteMove | null {
+  let best: AutoCompleteMove | null = null;
   let bestRank = Infinity;
 
   sources.forEach((pile, source) => {
@@ -60,10 +86,10 @@ export function planAutoComplete(
   sources: PlayingCard[][],
   foundations: PlayingCard[][],
   canPlaceOnFoundation: CanPlaceOnFoundation,
-): Move[] | null {
+): AutoCompleteMove[] | null {
   const remaining = sources.map((pile) => [...pile]);
   const built = foundations.map((pile) => [...pile]);
-  const moves: Move[] = [];
+  const moves: AutoCompleteMove[] = [];
 
   for (;;) {
     const move = findMove(remaining, built, canPlaceOnFoundation);
@@ -92,6 +118,8 @@ type Options<T> = {
   /** The foundation piles (the state's own arrays). */
   getFoundations: (state: T) => PlayingCard[][];
   canPlaceOnFoundation: CanPlaceOnFoundation;
+  /** Override how a planned move mutates state when sources aren't arrays. */
+  applyMove?: (draft: T, move: AutoCompleteMove) => void;
   /** Called once when auto-complete starts (e.g. clear the selection). */
   onStart?: () => void;
 };
@@ -141,6 +169,10 @@ export function useAutoComplete<T>(options: Options<T>) {
 
         optionsRef.current.setGame((draft) => {
           const current = optionsRef.current;
+          if (current.applyMove) {
+            current.applyMove(draft, move);
+            return;
+          }
           const card = current.getSources(draft)?.[move.source]?.pop();
           if (card) {
             current.getFoundations(draft)[move.foundation].push({

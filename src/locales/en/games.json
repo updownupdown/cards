@@ -6,12 +6,6 @@
     "youClearedTheBoard": "You cleared the board!",
     "noAdjacentRankRemains": "No adjacent rank remains."
   },
-  "archipelago": {
-    "out": "Out",
-    "notALegalPlacement": "Not a legal placement",
-    "islandComplete": "Island complete!",
-    "islandUnfinished": "Island unfinished!"
-  },
   "ascent": {
     "lhotseRoutesNeed2Cards": "Lhotse: routes need 2+ cards.",
     "gasherbrumIAnchorMustBe": "Gasherbrum I: anchor must be even.",

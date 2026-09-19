@@ -27,6 +27,7 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
     "x": 0.111,
     "y": 0.012,
     "connections": [
+      "/bowling",
       "/klondike",
       "/tower-of-hanoi"
     ],
@@ -43,8 +44,8 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/fifteen-puzzle",
-    "x": -0.102,
-    "y": 0.0676,
+    "x": -0.1024,
+    "y": 0.0679,
     "connections": [
       "/diplomat",
       "/eight-off",
@@ -64,7 +65,7 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   {
     "path": "/memory",
     "x": -0.0025,
-    "y": -0.1547,
+    "y": -0.1554,
     "connections": [
       "/bowling",
       "/klondike",
@@ -83,8 +84,8 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/tower-of-hanoi",
-    "x": 0.0858,
-    "y": 0.1696,
+    "x": 0.0862,
+    "y": 0.1704,
     "connections": [
       "/grandfathers-clock",
       "/indian",
@@ -104,9 +105,10 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/diplomat",
-    "x": -0.207,
+    "x": -0.2079,
     "y": 0.0108,
     "connections": [
+      "/delta-21",
       "/eight-off",
       "/fifteen-puzzle",
       "/maria"
@@ -124,11 +126,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/bowling",
-    "x": 0.1373,
-    "y": -0.1359,
+    "x": 0.1379,
+    "y": -0.1365,
     "connections": [
       "/freecell",
-      "/memory"
+      "/memory",
+      "/monte-carlo"
     ],
     "rewards": [
       {
@@ -143,9 +146,10 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/grandfathers-clock",
-    "x": -0.0458,
-    "y": 0.2066,
+    "x": -0.046,
+    "y": 0.2075,
     "connections": [
+      "/indian",
       "/number-ten",
       "/tower-of-hanoi"
     ],
@@ -162,11 +166,10 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/rank-and-file",
-    "x": -0.1499,
-    "y": -0.2202,
+    "x": -0.1505,
+    "y": -0.2212,
     "connections": [
       "/cabin-siege",
-      "/delta-21",
       "/memory",
       "/seahaven-towers"
     ],
@@ -183,8 +186,8 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/lights-out",
-    "x": 0.2018,
-    "y": 0.1438,
+    "x": 0.2027,
+    "y": 0.1445,
     "connections": [
       "/harp",
       "/pocket-poker",
@@ -203,11 +206,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/eight-off",
-    "x": -0.2147,
-    "y": 0.1571,
+    "x": -0.2156,
+    "y": 0.1578,
     "connections": [
       "/diplomat",
-      "/fifteen-puzzle"
+      "/fifteen-puzzle",
+      "/moosehide"
     ],
     "rewards": [
       {
@@ -222,8 +226,8 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/freecell",
-    "x": 0.186,
-    "y": -0.2289,
+    "x": 0.1869,
+    "y": -0.23,
     "connections": [
       "/bowling",
       "/lucas",
@@ -242,9 +246,10 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/indian",
-    "x": 0.0763,
-    "y": 0.2649,
+    "x": 0.0767,
+    "y": 0.2661,
     "connections": [
+      "/grandfathers-clock",
       "/ouroboros",
       "/tower-of-hanoi"
     ],
@@ -261,11 +266,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/delta-21",
-    "x": -0.2464,
-    "y": -0.2347,
+    "x": -0.2628,
+    "y": -0.1173,
     "connections": [
-      "/rank-and-file",
-      "/seahaven-towers"
+      "/bakers-game",
+      "/diplomat",
+      "/maria"
     ],
     "rewards": [
       {
@@ -280,9 +286,10 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/harp",
-    "x": 0.3362,
-    "y": -0.0175,
+    "x": 0.3378,
+    "y": -0.0176,
     "connections": [
+      "/bisley",
       "/lights-out",
       "/thumb-and-pouch"
     ],
@@ -299,12 +306,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/number-ten",
-    "x": -0.1494,
-    "y": 0.3373,
+    "x": -0.1501,
+    "y": 0.3388,
     "connections": [
       "/carpet",
-      "/grandfathers-clock",
-      "/moosehide"
+      "/grandfathers-clock"
     ],
     "rewards": [
       {
@@ -319,11 +325,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/cabin-siege",
-    "x": -0.04,
-    "y": -0.3522,
+    "x": -0.0402,
+    "y": -0.3538,
     "connections": [
       "/raglan",
-      "/rank-and-file"
+      "/rank-and-file",
+      "/seahaven-towers"
     ],
     "rewards": [
       {
@@ -338,8 +345,8 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/pocket-poker",
-    "x": 0.2796,
-    "y": 0.2237,
+    "x": 0.2808,
+    "y": 0.2247,
     "connections": [
       "/gridlines",
       "/lights-out",
@@ -358,12 +365,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/maria",
-    "x": -0.3699,
-    "y": 0.0482,
+    "x": -0.341,
+    "y": -0.0363,
     "connections": [
-      "/bakers-game",
+      "/delta-21",
       "/diplomat",
-      "/sultan"
+      "/penguin"
     ],
     "rewards": [
       {
@@ -378,8 +385,8 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/lucas",
-    "x": 0.3418,
-    "y": -0.2343,
+    "x": 0.3433,
+    "y": -0.2354,
     "connections": [
       "/bisley",
       "/freecell",
@@ -398,10 +405,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/ouroboros",
-    "x": 0.0638,
-    "y": 0.3757,
+    "x": 0.0641,
+    "y": 0.3774,
     "connections": [
-      "/carpet",
+      "/beleaguered-castle",
+      "/gridlines",
       "/indian"
     ],
     "rewards": [
@@ -417,10 +425,10 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/seahaven-towers",
-    "x": -0.2608,
-    "y": -0.3403,
+    "x": -0.2052,
+    "y": -0.3165,
     "connections": [
-      "/delta-21",
+      "/cabin-siege",
       "/rank-and-file",
       "/whitehead"
     ],
@@ -437,11 +445,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/thumb-and-pouch",
-    "x": 0.4356,
-    "y": 0.0116,
+    "x": 0.4375,
+    "y": 0.0117,
     "connections": [
+      "/bisley",
       "/harp",
-      "/singularity"
+      "/parallels"
     ],
     "rewards": [
       {
@@ -456,12 +465,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/moosehide",
-    "x": -0.2793,
-    "y": 0.3206,
+    "x": -0.3667,
+    "y": 0.252,
     "connections": [
       "/city-grid",
-      "/number-ten",
-      "/parallels"
+      "/eight-off",
+      "/sultan"
     ],
     "rewards": [
       {
@@ -476,11 +485,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/queens-audience",
-    "x": 0.1767,
-    "y": -0.371,
+    "x": 0.1775,
+    "y": -0.3726,
     "connections": [
       "/clock",
-      "/freecell"
+      "/freecell",
+      "/westcliff"
     ],
     "rewards": [
       {
@@ -495,11 +505,14 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/gridlines",
-    "x": 0.2405,
-    "y": 0.3683,
+    "x": 0.2415,
+    "y": 0.3699,
     "connections": [
-      "/archipelago",
-      "/pocket-poker"
+      "/beleaguered-castle",
+      "/field-command",
+      "/ouroboros",
+      "/pocket-poker",
+      "/simple-simon"
     ],
     "rewards": [
       {
@@ -514,11 +527,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/bakers-game",
-    "x": -0.4337,
-    "y": -0.067,
+    "x": -0.3742,
+    "y": -0.2233,
     "connections": [
-      "/gargantua",
-      "/maria"
+      "/delta-21",
+      "/gargantua"
     ],
     "rewards": [
       {
@@ -533,11 +546,14 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/bisley",
-    "x": 0.421,
-    "y": -0.1624,
+    "x": 0.4658,
+    "y": -0.1126,
     "connections": [
-      "/frog",
-      "/lucas"
+      "/harp",
+      "/lucas",
+      "/parallels",
+      "/singularity",
+      "/thumb-and-pouch"
     ],
     "rewards": [
       {
@@ -552,12 +568,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/carpet",
-    "x": -0.0698,
-    "y": 0.4601,
+    "x": -0.1484,
+    "y": 0.4665,
     "connections": [
-      "/beleaguered-castle",
       "/number-ten",
-      "/ouroboros",
+      "/royal-rest",
       "/three-peaks"
     ],
     "rewards": [
@@ -573,11 +588,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/raglan",
-    "x": -0.1084,
-    "y": -0.4299,
+    "x": -0.0877,
+    "y": -0.4689,
     "connections": [
       "/cabin-siege",
-      "/royal-rest",
+      "/ten-twenty-thirty",
       "/whitehead"
     ],
     "rewards": [
@@ -593,10 +608,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/simple-simon",
-    "x": 0.3667,
-    "y": 0.3092,
+    "x": 0.3683,
+    "y": 0.3106,
     "connections": [
       "/cruel",
+      "/gridlines",
       "/pocket-poker"
     ],
     "rewards": [
@@ -612,11 +628,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/sultan",
-    "x": -0.4853,
-    "y": 0.0576,
+    "x": -0.4999,
+    "y": 0.1701,
     "connections": [
-      "/maria",
-      "/windmill"
+      "/alaska",
+      "/moosehide"
     ],
     "rewards": [
       {
@@ -631,12 +647,13 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/westcliff",
-    "x": 0.353,
-    "y": -0.3419,
+    "x": 0.3545,
+    "y": -0.3435,
     "connections": [
-      "/alaska",
+      "/crazy-quilt",
       "/lucas",
-      "/yukon"
+      "/puss-in-the-corner",
+      "/queens-audience"
     ],
     "rewards": [
       {
@@ -651,12 +668,13 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/beleaguered-castle",
-    "x": -0.0016,
-    "y": 0.5445,
+    "x": 0.1971,
+    "y": 0.4793,
     "connections": [
-      "/carpet",
-      "/crazy-quilt",
-      "/three-peaks"
+      "/crescent",
+      "/field-command",
+      "/gridlines",
+      "/ouroboros"
     ],
     "rewards": [
       {
@@ -671,13 +689,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/gargantua",
-    "x": -0.4842,
-    "y": -0.2306,
+    "x": -0.4496,
+    "y": -0.3294,
     "connections": [
       "/bakers-game",
-      "/crescent",
-      "/gaps",
-      "/penguin"
+      "/forty-thieves"
     ],
     "rewards": [
       {
@@ -692,11 +708,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/singularity",
-    "x": 0.5334,
-    "y": 0.0863,
+    "x": 0.5305,
+    "y": -0.1867,
     "connections": [
-      "/baroness",
-      "/thumb-and-pouch"
+      "/bisley",
+      "/congress",
+      "/parallels"
     ],
     "rewards": [
       {
@@ -711,12 +728,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/city-grid",
-    "x": -0.4147,
-    "y": 0.3451,
+    "x": -0.4165,
+    "y": 0.3467,
     "connections": [
       "/labyrinth",
-      "/moosehide",
-      "/parallels"
+      "/moosehide"
     ],
     "rewards": [
       {
@@ -731,11 +747,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/clock",
-    "x": 0.1235,
-    "y": -0.5361,
+    "x": 0.0957,
+    "y": -0.4717,
     "connections": [
-      "/cribbage-squares",
-      "/queens-audience"
+      "/fortress",
+      "/queens-audience",
+      "/ten-twenty-thirty"
     ],
     "rewards": [
       {
@@ -754,11 +771,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/field-command",
-    "x": 0.3437,
-    "y": 0.4784,
+    "x": 0.3084,
+    "y": 0.4456,
     "connections": [
-      "/archipelago",
-      "/ten-twenty-thirty"
+      "/beleaguered-castle",
+      "/gridlines",
+      "/windmill"
     ],
     "rewards": [
       {
@@ -773,11 +791,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/penguin",
-    "x": -0.5801,
-    "y": -0.1159,
+    "x": -0.5158,
+    "y": -0.0206,
     "connections": [
-      "/gargantua",
-      "/red-diamond"
+      "/frog",
+      "/maria"
     ],
     "rewards": [
       {
@@ -792,12 +810,13 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/puss-in-the-corner",
-    "x": 0.5369,
-    "y": -0.2253,
+    "x": 0.3759,
+    "y": -0.4758,
     "connections": [
-      "/forty-thieves",
-      "/frog",
-      "/golf"
+      "/crazy-quilt",
+      "/invaders",
+      "/westcliff",
+      "/yukon"
     ],
     "rewards": [
       {
@@ -812,12 +831,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/three-peaks",
-    "x": -0.134,
-    "y": 0.5482,
+    "x": -0.057,
+    "y": 0.5257,
     "connections": [
-      "/beleaguered-castle",
       "/carpet",
-      "/spiderette"
+      "/royal-rest",
+      "/sly-fox"
     ],
     "rewards": [
       {
@@ -832,13 +851,13 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/whitehead",
-    "x": -0.1902,
-    "y": -0.4971,
+    "x": -0.1874,
+    "y": -0.4948,
     "connections": [
+      "/baroness",
+      "/chapter-and-verse",
       "/raglan",
-      "/royal-rest",
-      "/seahaven-towers",
-      "/sly-fox"
+      "/seahaven-towers"
     ],
     "rewards": [
       {
@@ -853,10 +872,10 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/cruel",
-    "x": 0.5086,
-    "y": 0.2457,
+    "x": 0.5223,
+    "y": 0.2355,
     "connections": [
-      "/chapter-and-verse",
+      "/flower-garden",
       "/simple-simon"
     ],
     "rewards": [
@@ -872,11 +891,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/labyrinth",
-    "x": -0.5233,
-    "y": 0.2876,
+    "x": -0.5127,
+    "y": 0.3762,
     "connections": [
       "/city-grid",
-      "/flower-garden"
+      "/cribbage-squares",
+      "/josephine"
     ],
     "rewards": [
       {
@@ -891,11 +911,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/yukon",
-    "x": 0.3173,
-    "y": -0.5135,
+    "x": 0.3004,
+    "y": -0.5556,
     "connections": [
-      "/dynasty",
-      "/westcliff"
+      "/fortress",
+      "/invaders",
+      "/puss-in-the-corner"
     ],
     "rewards": [
       {
@@ -909,33 +930,13 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
     ]
   },
   {
-    "path": "/archipelago",
-    "x": 0.2489,
-    "y": 0.5215,
-    "connections": [
-      "/field-command",
-      "/fortress",
-      "/gridlines"
-    ],
-    "rewards": [
-      {
-        "type": "tao",
-        "id": 29
-      },
-      {
-        "type": "quote",
-        "id": 46
-      }
-    ]
-  },
-  {
     "path": "/crescent",
-    "x": -0.5108,
-    "y": -0.3922,
+    "x": 0.1646,
+    "y": 0.6209,
     "connections": [
-      "/australian-patience",
-      "/fortunes-call",
-      "/gargantua"
+      "/beleaguered-castle",
+      "/gaps",
+      "/sly-fox"
     ],
     "rewards": [
       {
@@ -950,12 +951,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/frog",
-    "x": 0.5383,
-    "y": -0.1226,
+    "x": -0.5655,
+    "y": -0.1379,
     "connections": [
-      "/bisley",
-      "/forty-thieves",
-      "/puss-in-the-corner"
+      "/dynasty",
+      "/penguin"
     ],
     "rewards": [
       {
@@ -970,12 +970,13 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/parallels",
-    "x": -0.4076,
-    "y": 0.4428,
+    "x": 0.5983,
+    "y": -0.0751,
     "connections": [
-      "/city-grid",
+      "/bisley",
       "/congress",
-      "/moosehide"
+      "/singularity",
+      "/thumb-and-pouch"
     ],
     "rewards": [
       {
@@ -990,11 +991,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/royal-rest",
-    "x": -0.0482,
-    "y": -0.5614,
+    "x": -0.2222,
+    "y": 0.5773,
     "connections": [
-      "/raglan",
-      "/whitehead"
+      "/busy-aces",
+      "/carpet",
+      "/three-peaks"
     ],
     "rewards": [
       {
@@ -1009,12 +1011,13 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/ten-twenty-thirty",
-    "x": 0.5028,
-    "y": 0.4522,
+    "x": -0.0033,
+    "y": -0.6191,
     "connections": [
-      "/field-command",
-      "/poker-squares",
-      "/stalker"
+      "/chapter-and-verse",
+      "/clock",
+      "/fortress",
+      "/raglan"
     ],
     "rewards": [
       {
@@ -1029,11 +1032,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/windmill",
-    "x": -0.6471,
-    "y": 0.1489,
+    "x": 0.4426,
+    "y": 0.5097,
     "connections": [
-      "/sultan",
-      "/triple-stack"
+      "/blackberry-pie",
+      "/field-command",
+      "/red-diamond"
     ],
     "rewards": [
       {
@@ -1048,11 +1052,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/alaska",
-    "x": 0.4635,
-    "y": -0.4481,
+    "x": -0.6684,
+    "y": 0.1426,
     "connections": [
-      "/gremlin",
-      "/westcliff"
+      "/chain-of-command",
+      "/infiltrator",
+      "/sultan"
     ],
     "rewards": [
       {
@@ -1067,11 +1072,13 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/crazy-quilt",
-    "x": 0.0368,
-    "y": 0.6313,
+    "x": 0.5068,
+    "y": -0.3866,
     "connections": [
-      "/beleaguered-castle",
-      "/invaders"
+      "/fight-clubs",
+      "/puss-in-the-corner",
+      "/spiderette",
+      "/westcliff"
     ],
     "rewards": [
       {
@@ -1086,11 +1093,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/sly-fox",
-    "x": -0.3634,
-    "y": -0.5694,
+    "x": 0.0391,
+    "y": 0.5785,
     "connections": [
-      "/rogue-run",
-      "/whitehead"
+      "/crescent",
+      "/fortunes-call",
+      "/three-peaks"
     ],
     "rewards": [
       {
@@ -1105,12 +1113,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/baroness",
-    "x": 0.6444,
-    "y": 0.0178,
+    "x": -0.3456,
+    "y": -0.5965,
     "connections": [
-      "/singularity",
-      "/sir-tommy",
-      "/waypoint"
+      "/waypoint",
+      "/whitehead"
     ],
     "rewards": [
       {
@@ -1125,11 +1132,13 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/congress",
-    "x": -0.4964,
-    "y": 0.512,
+    "x": 0.663,
+    "y": -0.146,
     "connections": [
+      "/easthaven",
       "/herbalist",
-      "/parallels"
+      "/parallels",
+      "/singularity"
     ],
     "rewards": [
       {
@@ -1144,12 +1153,13 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/cribbage-squares",
-    "x": 0.07,
-    "y": -0.6843,
+    "x": -0.6364,
+    "y": 0.3407,
     "connections": [
-      "/chain-of-command",
-      "/clock",
-      "/infiltrator"
+      "/infiltrator",
+      "/labyrinth",
+      "/night-vigil",
+      "/somnus"
     ],
     "rewards": [
       {
@@ -1164,12 +1174,13 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/fortress",
-    "x": 0.254,
-    "y": 0.6715,
+    "x": 0.1512,
+    "y": -0.5946,
     "connections": [
-      "/archipelago",
-      "/bakers-dozen",
-      "/seer"
+      "/clock",
+      "/poker-squares",
+      "/ten-twenty-thirty",
+      "/yukon"
     ],
     "rewards": [
       {
@@ -1184,11 +1195,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/gaps",
-    "x": -0.6052,
-    "y": -0.255,
+    "x": 0.3171,
+    "y": 0.6516,
     "connections": [
-      "/canfield",
-      "/gargantua"
+      "/all-in-a-row",
+      "/crescent"
     ],
     "rewards": [
       {
@@ -1203,12 +1214,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/golf",
-    "x": 0.5722,
-    "y": -0.3559,
+    "x": -0.6634,
+    "y": -0.3182,
     "connections": [
       "/cafe-queue",
-      "/gremlin",
-      "/puss-in-the-corner"
+      "/forty-thieves"
     ],
     "rewards": [
       {
@@ -1223,12 +1233,13 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/spiderette",
-    "x": -0.2603,
-    "y": 0.6809,
+    "x": 0.6495,
+    "y": -0.325,
     "connections": [
-      "/easthaven",
+      "/crazy-quilt",
       "/fight-clubs",
-      "/three-peaks"
+      "/herbalist",
+      "/la-belle-lucie"
     ],
     "rewards": [
       {
@@ -1243,13 +1254,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/busy-aces",
-    "x": -0.1195,
-    "y": -0.7451,
+    "x": -0.3255,
+    "y": 0.6777,
     "connections": [
-      "/josephine",
-      "/pyramid",
-      "/rogue-run",
-      "/somnus"
+      "/nestor",
+      "/royal-rest",
+      "/shifting-sands"
     ],
     "rewards": [
       {
@@ -1264,12 +1274,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/chapter-and-verse",
-    "x": 0.6294,
-    "y": 0.2575,
+    "x": -0.1052,
+    "y": -0.6471,
     "connections": [
-      "/cruel",
-      "/royal-envoy",
-      "/sir-tommy"
+      "/sir-tommy",
+      "/ten-twenty-thirty",
+      "/whitehead"
     ],
     "rewards": [
       {
@@ -1284,11 +1294,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/flower-garden",
-    "x": -0.6608,
-    "y": 0.3613,
+    "x": 0.6236,
+    "y": 0.1361,
     "connections": [
-      "/labyrinth",
-      "/triple-stack"
+      "/cruel",
+      "/dominion"
     ],
     "rewards": [
       {
@@ -1303,12 +1313,13 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/chain-of-command",
-    "x": 0.2023,
-    "y": -0.7099,
+    "x": -0.7505,
+    "y": 0.082,
     "connections": [
-      "/cribbage-squares",
-      "/infiltrator",
-      "/night-vigil"
+      "/alaska",
+      "/dynasty",
+      "/gremlin",
+      "/infiltrator"
     ],
     "rewards": [
       {
@@ -1323,12 +1334,14 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/invaders",
-    "x": 0.0956,
-    "y": 0.7325,
+    "x": 0.423,
+    "y": -0.6029,
     "connections": [
-      "/crazy-quilt",
-      "/seer",
-      "/twelve-trials"
+      "/bakers-dozen",
+      "/elementary-detective",
+      "/lycan",
+      "/puss-in-the-corner",
+      "/yukon"
     ],
     "rewards": [
       {
@@ -1343,12 +1356,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/fortunes-call",
-    "x": -0.5392,
-    "y": -0.5198,
+    "x": 0.0357,
+    "y": 0.7054,
     "connections": [
       "/australian-patience",
-      "/crescent",
-      "/shamrocks"
+      "/rogue-run",
+      "/sly-fox"
     ],
     "rewards": [
       {
@@ -1363,13 +1376,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/forty-thieves",
-    "x": 0.6618,
-    "y": -0.1523,
+    "x": -0.5618,
+    "y": -0.4478,
     "connections": [
-      "/calculation",
-      "/frog",
-      "/puss-in-the-corner",
-      "/waypoint"
+      "/gargantua",
+      "/golf"
     ],
     "rewards": [
       {
@@ -1384,12 +1395,13 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/herbalist",
-    "x": -0.4581,
-    "y": 0.6133,
+    "x": 0.7504,
+    "y": -0.2498,
     "connections": [
       "/congress",
-      "/dominion",
-      "/royal-cotillion"
+      "/easthaven",
+      "/la-belle-lucie",
+      "/spiderette"
     ],
     "rewards": [
       {
@@ -1404,12 +1416,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/josephine",
-    "x": -0.2599,
-    "y": -0.7596,
+    "x": -0.4855,
+    "y": 0.5183,
     "connections": [
-      "/busy-aces",
+      "/labyrinth",
       "/pyramid",
-      "/rogue-run"
+      "/somnus"
     ],
     "rewards": [
       {
@@ -1424,12 +1436,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/poker-squares",
-    "x": 0.448,
-    "y": 0.5746,
+    "x": 0.1407,
+    "y": -0.7559,
     "connections": [
-      "/bakers-dozen",
-      "/lone-joker",
-      "/ten-twenty-thirty"
+      "/fortress",
+      "/stalker"
     ],
     "rewards": [
       {
@@ -1444,12 +1455,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/red-diamond",
-    "x": -0.7,
-    "y": -0.0344,
+    "x": 0.5652,
+    "y": 0.4226,
     "connections": [
       "/accordion",
-      "/blackberry-pie",
-      "/penguin"
+      "/windmill"
     ],
     "rewards": [
       {
@@ -1464,12 +1474,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/dynasty",
-    "x": 0.4387,
-    "y": -0.6238,
+    "x": -0.743,
+    "y": -0.0731,
     "connections": [
       "/ascent",
-      "/scorpion",
-      "/yukon"
+      "/chain-of-command",
+      "/frog"
     ],
     "rewards": [
       {
@@ -1484,11 +1494,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/fight-clubs",
-    "x": -0.184,
-    "y": 0.7735,
+    "x": 0.6622,
+    "y": -0.4237,
     "connections": [
-      "/easthaven",
+      "/crazy-quilt",
       "/la-belle-lucie",
+      "/seer",
       "/spiderette"
     ],
     "rewards": [
@@ -1504,13 +1515,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/rogue-run",
-    "x": -0.2997,
-    "y": -0.6741,
+    "x": -0.0284,
+    "y": 0.815,
     "connections": [
-      "/busy-aces",
-      "/josephine",
-      "/shifting-sands",
-      "/sly-fox"
+      "/australian-patience",
+      "/fortunes-call",
+      "/shamrocks"
     ],
     "rewards": [
       {
@@ -1525,13 +1535,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/waypoint",
-    "x": 0.7428,
-    "y": -0.0114,
+    "x": -0.4487,
+    "y": -0.6052,
     "connections": [
       "/baroness",
-      "/calculation",
-      "/crownslayer",
-      "/forty-thieves"
+      "/crownslayer"
     ],
     "rewards": [
       {
@@ -1546,11 +1554,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/dominion",
-    "x": -0.5702,
-    "y": 0.606,
+    "x": 0.7649,
+    "y": 0.1043,
     "connections": [
       "/aces-up",
-      "/herbalist",
+      "/flower-garden",
       "/royal-cotillion"
     ],
     "rewards": [
@@ -1566,13 +1574,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/infiltrator",
-    "x": 0.0909,
-    "y": -0.8051,
+    "x": -0.7181,
+    "y": 0.2622,
     "connections": [
+      "/alaska",
       "/chain-of-command",
-      "/cribbage-squares",
-      "/night-vigil",
-      "/somnus"
+      "/cribbage-squares"
     ],
     "rewards": [
       {
@@ -1587,11 +1594,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/bakers-dozen",
-    "x": 0.3578,
-    "y": 0.6836,
+    "x": 0.3283,
+    "y": -0.7606,
     "connections": [
-      "/fortress",
-      "/poker-squares"
+      "/invaders",
+      "/stalker",
+      "/twelve-trials"
     ],
     "rewards": [
       {
@@ -1606,11 +1614,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/blackberry-pie",
-    "x": -0.6931,
-    "y": -0.1321,
+    "x": 0.4992,
+    "y": 0.671,
     "connections": [
+      "/all-in-a-row",
       "/canfield",
-      "/red-diamond"
+      "/windmill"
     ],
     "rewards": [
       {
@@ -1625,11 +1634,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/cafe-queue",
-    "x": 0.6865,
-    "y": -0.3431,
+    "x": -0.7628,
+    "y": -0.4048,
     "connections": [
       "/golf",
-      "/gremlin"
+      "/spider-solitaire"
     ],
     "rewards": [
       {
@@ -1644,13 +1653,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/easthaven",
-    "x": -0.3,
-    "y": 0.7886,
+    "x": 0.8294,
+    "y": -0.1736,
     "connections": [
-      "/fight-clubs",
-      "/la-belle-lucie",
-      "/royal-cotillion",
-      "/spiderette"
+      "/congress",
+      "/herbalist",
+      "/royal-cotillion"
     ],
     "rewards": [
       {
@@ -1665,11 +1673,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/shifting-sands",
-    "x": -0.3966,
-    "y": -0.6767,
+    "x": -0.2459,
+    "y": 0.766,
     "connections": [
+      "/busy-aces",
       "/nestor",
-      "/rogue-run"
+      "/shamrocks"
     ],
     "rewards": [
       {
@@ -1684,11 +1693,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/sir-tommy",
-    "x": 0.7284,
-    "y": 0.2011,
+    "x": -0.1556,
+    "y": -0.7727,
     "connections": [
-      "/baroness",
-      "/chapter-and-verse"
+      "/chapter-and-verse",
+      "/lone-joker"
     ],
     "rewards": [
       {
@@ -1703,12 +1712,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/triple-stack",
-    "x": -0.7526,
-    "y": 0.2206,
+    "x": 0.7338,
+    "y": 0.4893,
     "connections": [
-      "/flower-garden",
-      "/russian-solitaire",
-      "/windmill"
+      "/accordion",
+      "/canfield",
+      "/russian-solitaire"
     ],
     "rewards": [
       {
@@ -1723,12 +1732,10 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/gremlin",
-    "x": 0.5815,
-    "y": -0.4665,
+    "x": -0.8722,
+    "y": 0.0803,
     "connections": [
-      "/alaska",
-      "/cafe-queue",
-      "/golf",
+      "/chain-of-command",
       "/scorpion"
     ],
     "rewards": [
@@ -1744,13 +1751,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/seer",
-    "x": 0.1769,
-    "y": 0.7823,
+    "x": 0.6068,
+    "y": -0.5695,
     "connections": [
-      "/fortress",
-      "/invaders",
-      "/lycan",
-      "/twelve-trials"
+      "/elementary-detective",
+      "/fight-clubs"
     ],
     "rewards": [
       {
@@ -1765,12 +1770,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/australian-patience",
-    "x": -0.6568,
-    "y": -0.4962,
+    "x": 0.0655,
+    "y": 0.8429,
     "connections": [
-      "/all-in-a-row",
-      "/crescent",
-      "/fortunes-call"
+      "/fortunes-call",
+      "/rogue-run"
     ],
     "rewards": [
       {
@@ -1785,11 +1789,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/crownslayer",
-    "x": 0.8396,
-    "y": 0.0047,
+    "x": -0.5575,
+    "y": -0.6682,
     "connections": [
       "/calculation",
-      "/spider-solitaire",
+      "/royal-envoy",
       "/waypoint"
     ],
     "rewards": [
@@ -1805,13 +1809,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/royal-cotillion",
-    "x": -0.5049,
-    "y": 0.75,
+    "x": 0.7837,
+    "y": -0.0077,
     "connections": [
       "/aces-up",
       "/dominion",
-      "/easthaven",
-      "/herbalist"
+      "/easthaven"
     ],
     "rewards": [
       {
@@ -1830,11 +1833,13 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/somnus",
-    "x": -0.0289,
-    "y": -0.8628,
+    "x": -0.646,
+    "y": 0.4425,
     "connections": [
-      "/busy-aces",
-      "/infiltrator"
+      "/cribbage-squares",
+      "/josephine",
+      "/night-vigil",
+      "/pyramid"
     ],
     "rewards": [
       {
@@ -1849,12 +1854,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/stalker",
-    "x": 0.565,
-    "y": 0.5263,
+    "x": 0.2061,
+    "y": -0.8259,
     "connections": [
-      "/lone-joker",
-      "/royal-envoy",
-      "/ten-twenty-thirty"
+      "/bakers-dozen",
+      "/poker-squares"
     ],
     "rewards": [
       {
@@ -1869,12 +1873,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/canfield",
-    "x": -0.7355,
-    "y": -0.2541,
+    "x": 0.5984,
+    "y": 0.7014,
     "connections": [
-      "/all-in-a-row",
+      "/accordion",
       "/blackberry-pie",
-      "/gaps"
+      "/triple-stack"
     ],
     "rewards": [
       {
@@ -1889,11 +1893,10 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/scorpion",
-    "x": 0.5562,
-    "y": -0.5694,
+    "x": -0.927,
+    "y": -0.0312,
     "connections": [
       "/ascent",
-      "/dynasty",
       "/gremlin"
     ],
     "rewards": [
@@ -1909,11 +1912,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/elementary-detective",
-    "x": 0.0106,
-    "y": 0.9207,
+    "x": 0.5592,
+    "y": -0.6589,
     "connections": [
+      "/invaders",
       "/lycan",
-      "/twelve-trials"
+      "/seer"
     ],
     "rewards": [
       {
@@ -1928,9 +1932,10 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/nestor",
-    "x": -0.4508,
-    "y": -0.8063,
+    "x": -0.3667,
+    "y": 0.7756,
     "connections": [
+      "/busy-aces",
       "/shamrocks",
       "/shifting-sands"
     ],
@@ -1947,11 +1952,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/royal-envoy",
-    "x": 0.8132,
-    "y": 0.4714,
+    "x": -0.4243,
+    "y": -0.801,
     "connections": [
-      "/chapter-and-verse",
-      "/stalker"
+      "/crownslayer",
+      "/lone-joker"
     ],
     "rewards": [
       {
@@ -1966,8 +1971,8 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/russian-solitaire",
-    "x": -0.8221,
-    "y": 0.1375,
+    "x": 0.8298,
+    "y": 0.3801,
     "connections": [
       "/accordion",
       "/triple-stack"
@@ -1985,11 +1990,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/night-vigil",
-    "x": 0.2647,
-    "y": -0.9138,
+    "x": -0.8176,
+    "y": 0.469,
     "connections": [
-      "/chain-of-command",
-      "/infiltrator"
+      "/cribbage-squares",
+      "/somnus"
     ],
     "rewards": [
       {
@@ -2004,13 +2009,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/twelve-trials",
-    "x": 0.1324,
-    "y": 0.8651,
+    "x": 0.4057,
+    "y": -0.8216,
     "connections": [
-      "/elementary-detective",
-      "/invaders",
-      "/lycan",
-      "/seer"
+      "/bakers-dozen",
+      "/lycan"
     ],
     "rewards": [
       {
@@ -2025,11 +2028,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/all-in-a-row",
-    "x": -0.777,
-    "y": -0.3543,
+    "x": 0.3601,
+    "y": 0.8822,
     "connections": [
-      "/australian-patience",
-      "/canfield"
+      "/blackberry-pie",
+      "/gaps"
     ],
     "rewards": [
       {
@@ -2048,13 +2051,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/calculation",
-    "x": 0.8223,
-    "y": -0.101,
+    "x": -0.6889,
+    "y": -0.6567,
     "connections": [
       "/crownslayer",
-      "/forty-thieves",
-      "/spider-solitaire",
-      "/waypoint"
+      "/spider-solitaire"
     ],
     "rewards": [
       {
@@ -2073,11 +2074,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/la-belle-lucie",
-    "x": -0.3123,
-    "y": 0.8851,
+    "x": 0.8089,
+    "y": -0.3522,
     "connections": [
-      "/easthaven",
-      "/fight-clubs"
+      "/fight-clubs",
+      "/herbalist",
+      "/spiderette"
     ],
     "rewards": [
       {
@@ -2096,11 +2098,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/pyramid",
-    "x": -0.252,
-    "y": -0.8721,
+    "x": -0.6414,
+    "y": 0.6553,
     "connections": [
-      "/busy-aces",
-      "/josephine"
+      "/josephine",
+      "/somnus"
     ],
     "rewards": [
       {
@@ -2115,11 +2117,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/lone-joker",
-    "x": 0.5117,
-    "y": 0.6547,
+    "x": -0.3196,
+    "y": -0.8311,
     "connections": [
-      "/poker-squares",
-      "/stalker"
+      "/royal-envoy",
+      "/sir-tommy"
     ],
     "rewards": [
       {
@@ -2134,11 +2136,13 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/accordion",
-    "x": -0.9132,
-    "y": -0.0443,
+    "x": 0.6389,
+    "y": 0.5184,
     "connections": [
+      "/canfield",
       "/red-diamond",
-      "/russian-solitaire"
+      "/russian-solitaire",
+      "/triple-stack"
     ],
     "rewards": [
       {
@@ -2157,8 +2161,8 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/ascent",
-    "x": 0.5559,
-    "y": -0.7217,
+    "x": -0.9213,
+    "y": -0.152,
     "connections": [
       "/dynasty",
       "/scorpion"
@@ -2180,11 +2184,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/lycan",
-    "x": 0.1675,
-    "y": 0.9597,
+    "x": 0.4715,
+    "y": -0.7225,
     "connections": [
       "/elementary-detective",
-      "/seer",
+      "/invaders",
       "/twelve-trials"
     ],
     "rewards": [
@@ -2204,11 +2208,12 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/shamrocks",
-    "x": -0.5836,
-    "y": -0.6704,
+    "x": -0.2373,
+    "y": 0.8866,
     "connections": [
-      "/fortunes-call",
-      "/nestor"
+      "/nestor",
+      "/rogue-run",
+      "/shifting-sands"
     ],
     "rewards": [
       {
@@ -2227,11 +2232,11 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/spider-solitaire",
-    "x": 0.9845,
-    "y": -0.0357,
+    "x": -0.7901,
+    "y": -0.5407,
     "connections": [
-      "/calculation",
-      "/crownslayer"
+      "/cafe-queue",
+      "/calculation"
     ],
     "rewards": [
       {
@@ -2250,8 +2255,8 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     "path": "/aces-up",
-    "x": -0.7266,
-    "y": 0.7041,
+    "x": 0.9792,
+    "y": 0.0931,
     "connections": [
       "/dominion",
       "/royal-cotillion"

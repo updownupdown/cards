@@ -17,7 +17,6 @@ import {
   run,
 } from "../../../jest/game-harness";
 import type { CardSuit, PlayingCard } from "@/components/Cards/card-utils";
-import Archipelago from "@/components/Games/Archipelago";
 import BeleagueredCastle from "@/components/Games/BeleagueredCastle";
 import ElementaryDetective from "@/components/Games/ElementaryDetective";
 import Sultan from "@/components/Games/Sultan";
@@ -188,50 +187,6 @@ describe("Beleaguered Castle", () => {
     expect(outcome()).toBe("playing");
 
     await doubleTapCardId(two.id);
-
-    expect(outcome()).toBe("lost");
-  });
-});
-
-describe("Archipelago", () => {
-  test("filling the last cell wins", async () => {
-    // Every cell holds a 5 except the empty corner and its three neighbours.
-    const grid: (PlayingCard | null)[] = Array.from({ length: 49 }, () =>
-      card("5", "spades"),
-    );
-    grid[0] = null;
-    grid[1] = card("6", "hearts");
-    grid[7] = card("6", "clubs");
-    grid[8] = card("6", "diamonds");
-    await renderGame("/archipelago", Archipelago, {
-      grid,
-      draw: [card("7", "spades")],
-      discard: [],
-      ended: false,
-      won: false,
-      usingJokers: false,
-    });
-    expect(outcome()).toBe("playing");
-
-    await pressZone((zone) => zone.name === "cell" && zone.pileIndex === 0);
-
-    expect(outcome()).toBe("won");
-  });
-
-  test("running out of cards before the island is full loses", async () => {
-    const grid: (PlayingCard | null)[] = Array(49).fill(null);
-    grid[24] = card("5", "spades");
-    await renderGame("/archipelago", Archipelago, {
-      grid,
-      draw: [card("6", "hearts")],
-      discard: [],
-      ended: false,
-      won: false,
-      usingJokers: false,
-    });
-    expect(outcome()).toBe("playing");
-
-    await pressZone((zone) => zone.name === "cell" && zone.pileIndex === 25);
 
     expect(outcome()).toBe("lost");
   });

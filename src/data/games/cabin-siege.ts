@@ -12,7 +12,7 @@ export const cabinSiege: GameDefinition = {
     luck: 20,
   },
   thumbnail: "CabinSiege.webp",
-  background: GAME_BACKGROUNDS.forest,
+  background: GAME_BACKGROUNDS.dampForest,
   animation: GameAnimations.Leaves,
   gameColorDark: "#201207",
   gameColorMid: "#54665f",
@@ -22,7 +22,7 @@ export const cabinSiege: GameDefinition = {
   quickStart: [
     "Kill zombies by placing cards in adjacent, valid spots.",
     "The other two cards in that line must add to at least 10 and match suit (Ks) or color (Qs).",
-    "Aces are worth 1; Jokers can be placed anywhere and are worth 0.",
+    "As are worth 1; Jokers can be placed anywhere and are worth 0.",
   ],
   howToPlay: [
     "## Objective",

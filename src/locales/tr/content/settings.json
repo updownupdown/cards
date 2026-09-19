@@ -1,21 +1,4 @@
 {
-  "archipelago": {
-    "islandJokers": {
-      "hash": "71b79671",
-      "value": {
-        "description": "Her yere konabilen iki joker ekler.",
-        "label": "Joker kullan",
-        "options": [
-          {
-            "label": "Hayır"
-          },
-          {
-            "label": "Evet (daha kolay)"
-          }
-        ]
-      }
-    }
-  },
   "ascent": {
     "ascentChallenge": {
       "hash": "11a33a3b",

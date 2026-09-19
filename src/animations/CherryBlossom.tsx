@@ -20,11 +20,11 @@ import {
 const PETAL_COLORS = ["#ffd6e3", "#ffc2d6", "#ffe5ed", "#f7a9c2"];
 
 function Petal({ index, width, height }: SceneProps & { index: number }) {
-  const size = 5 + seeded(index, 81) * 5;
+  const size = 4 + seeded(index, 81) * 4;
   const startX = seeded(index, 82) * width * 0.9 - width * 0.1;
   const diagonalTravel = width * (0.18 + seeded(index, 83) * 0.18);
   const sway = 8 + seeded(index, 84) * 16;
-  const duration = 9000 + seeded(index, 85) * 7000;
+  const duration = (9000 + seeded(index, 85) * 7000) * 2;
   const spin = 540 + seeded(index, 86) * 540;
   const startY = -size * (2.5 + seeded(index, 87) * 8);
   const endY = height + size * 2;

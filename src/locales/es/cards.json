@@ -17,6 +17,7 @@
   "endGame": "Terminar partida",
   "redeal": "Redistribuir ({{value}})",
   "sacrifice": "Sacrificar",
+  "redealAction": "Redistribuir",
   "black": "Negro",
   "royalFlush": "Escalera real",
   "highCard": "Carta alta",

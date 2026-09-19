@@ -40,6 +40,7 @@ const GOLD_FIRST_QUOTE_ID = 105;
 const GOLD_PER_GAME = 2;
 const MIN_CONNECTIONS = 2;
 const MAX_CONNECTIONS = 5;
+const TARGET_AVERAGE_CONNECTIONS = 2.9;
 const MIN_SPACING = 0.094;
 const SPACING_RATIO = { min: 2.2, max: 3 };
 
@@ -162,10 +163,21 @@ const nearestDistance = (point, nodes) =>
       .filter((node) => node.path !== point.path)
       .map((node) => distance(point, node)),
   );
+const crossProduct = (start, end, point) =>
+  (end.x - start.x) * (point.y - start.y) -
+  (end.y - start.y) * (point.x - start.x);
+
+function segmentsCross(leftStart, leftEnd, rightStart, rightEnd) {
+  const leftStartSide = crossProduct(rightStart, rightEnd, leftStart);
+  const leftEndSide = crossProduct(rightStart, rightEnd, leftEnd);
+  const rightStartSide = crossProduct(leftStart, leftEnd, rightStart);
+  const rightEndSide = crossProduct(leftStart, leftEnd, rightEnd);
+  return leftStartSide * leftEndSide < 0 && rightStartSide * rightEndSide < 0;
+}
 
 // ── Connections ──────────────────────────────────────────────────────────────
 
-function connect(connections, leftPath, rightPath) {
+function connect(records, connections, leftPath, rightPath) {
   if (leftPath === rightPath) return false;
   const left = connections.get(leftPath);
   const right = connections.get(rightPath);
@@ -175,6 +187,27 @@ function connect(connections, leftPath, rightPath) {
     right.size >= MAX_CONNECTIONS
   ) {
     return false;
+  }
+  const byPath = new Map(records.map((record) => [record.path, record]));
+  const leftRecord = byPath.get(leftPath);
+  const rightRecord = byPath.get(rightPath);
+  for (const record of records) {
+    for (const connection of connections.get(record.path)) {
+      if (record.path >= connection) continue;
+      if (
+        record.path === leftPath ||
+        record.path === rightPath ||
+        connection === leftPath ||
+        connection === rightPath
+      ) {
+        continue;
+      }
+      if (
+        segmentsCross(leftRecord, rightRecord, record, byPath.get(connection))
+      ) {
+        return false;
+      }
+    }
   }
   left.add(rightPath);
   right.add(leftPath);
@@ -188,7 +221,7 @@ function ensureMinimumConnections(records, connections) {
       .sort((left, right) => distance(record, left) - distance(record, right));
     for (const candidate of candidates) {
       if (connections.get(record.path).size >= MIN_CONNECTIONS) break;
-      connect(connections, record.path, candidate.path);
+      connect(records, connections, record.path, candidate.path);
     }
     if (connections.get(record.path).size < MIN_CONNECTIONS) {
       throw new Error(`Could not give ${record.path} enough connections.`);
@@ -255,8 +288,10 @@ function removeBottlenecks(records, connections) {
     }
 
     candidates.sort((left, right) => left.distance - right.distance);
-    const bypass = candidates[0];
-    if (!bypass || !connect(connections, bypass.leftPath, bypass.rightPath)) {
+    const bypass = candidates.find((candidate) =>
+      connect(records, connections, candidate.leftPath, candidate.rightPath),
+    );
+    if (!bypass) {
       throw new Error(
         `Could not bypass progression bottleneck ${bottleneck.path}.`,
       );
@@ -264,9 +299,56 @@ function removeBottlenecks(records, connections) {
   }
 }
 
+/** Give branch endpoints a nearby alternative route without creating crossings. */
+function addShortcutConnections(records, connections) {
+  const targetEdgeCount = Math.ceil(
+    (records.length * TARGET_AVERAGE_CONNECTIONS) / 2,
+  );
+  let edgeCount =
+    [...connections.values()].reduce(
+      (total, neighbours) => total + neighbours.size,
+      0,
+    ) / 2;
+  const candidates = [];
+  for (let left = 0; left < records.length; left += 1) {
+    for (let right = left + 1; right < records.length; right += 1) {
+      candidates.push({
+        leftPath: records[left].path,
+        rightPath: records[right].path,
+        distance: distance(records[left], records[right]),
+      });
+    }
+  }
+  candidates.sort((left, right) => left.distance - right.distance);
+
+  for (const candidate of candidates) {
+    if (edgeCount >= targetEdgeCount) break;
+    const leftConnections = connections.get(candidate.leftPath);
+    const rightConnections = connections.get(candidate.rightPath);
+    if (
+      leftConnections.size > MIN_CONNECTIONS &&
+      rightConnections.size > MIN_CONNECTIONS
+    ) {
+      continue;
+    }
+    if (
+      connect(records, connections, candidate.leftPath, candidate.rightPath)
+    ) {
+      edgeCount += 1;
+    }
+  }
+
+  if (edgeCount < targetEdgeCount) {
+    throw new Error(
+      `Could not reach ${TARGET_AVERAGE_CONNECTIONS} average connections without crossings.`,
+    );
+  }
+}
+
 function finishConnections(records, connections) {
   ensureMinimumConnections(records, connections);
   removeBottlenecks(records, connections);
+  addShortcutConnections(records, connections);
   for (const record of records) {
     record.connections = [...connections.get(record.path)].sort();
   }
@@ -328,7 +410,7 @@ function layoutAll(games) {
       .sort((left, right) => distance(record, left) - distance(record, right));
     if (
       !inward.some((candidate) =>
-        connect(connections, record.path, candidate.path),
+        connect(records, connections, record.path, candidate.path),
       )
     ) {
       throw new Error(`Could not connect ${record.path} to the inner map.`);
@@ -405,7 +487,7 @@ function extendMap(existing, games) {
     neighbours
       .slice(0, linkCount)
       .forEach((neighbour) =>
-        connect(connections, record.path, neighbour.path),
+        connect(records, connections, record.path, neighbour.path),
       );
   }
 

@@ -6,12 +6,6 @@
     "youClearedTheBoard": "Hai liberato il tavolo!",
     "noAdjacentRankRemains": "Nessun valore vicino rimasto."
   },
-  "archipelago": {
-    "out": "Fuori",
-    "notALegalPlacement": "Posizione non valida",
-    "islandComplete": "Isola completata!",
-    "islandUnfinished": "Isola incompiuta!"
-  },
   "ascent": {
     "lhotseRoutesNeed2Cards": "Lhotse: le vie richiedono almeno 2 carte.",
     "gasherbrumIAnchorMustBe": "Gasherbrum I: l'ancora deve essere pari.",

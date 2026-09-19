@@ -20,8 +20,8 @@ export const windmill: GameDefinition = {
   cardDescription:
     "Feed four full runs into the windmill's hub while its corners count down from Kings.",
   quickStart: [
-    "The center builds up from A to K four times, any suit.",
-    "Corners start with a King and build down to A, any suit.",
+    "Move all 104 cards to the foundations.",
+    "Build the center from Ace to King four times, and the corners from King to Ace, regardless of suit.",
     "Sails refill from the waste, then the stock.",
   ],
   howToPlay: [
@@ -29,8 +29,8 @@ export const windmill: GameDefinition = {
     "Move all 104 cards onto the foundations.",
 
     "## Foundations",
-    "- The **center** starts with an Ace and builds **up regardless of suit**, running from Ace to King four times over.",
-    "- Each **corner** starts with any **King** and builds **down regardless of suit** to an Ace.",
+    "- Build the **center up regardless of suit**, running from Ace to King four times over.",
+    "- Build each **corner down regardless of suit**, from King to Ace.",
 
     "## Rules",
     "- The eight **sails** and the top **waste** card are available.",

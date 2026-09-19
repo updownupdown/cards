@@ -417,7 +417,6 @@ export const GameWrapper = ({
         <ImageBackground
           source={background.source}
           resizeMode="cover"
-          blurRadius={3}
           style={{
             position: "absolute",
             top: 0,

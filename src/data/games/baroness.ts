@@ -12,7 +12,7 @@ export const baroness: GameDefinition = {
     luck: 55,
   },
   thumbnail: "Baroness.webp",
-  background: GAME_BACKGROUNDS.oldRoom,
+  background: GAME_BACKGROUNDS.cozyRoom2,
   animation: GameAnimations.Dust,
   gameColorDark: "#3a1620",
   gameColorMid: "#a83e5a",
@@ -20,8 +20,8 @@ export const baroness: GameDefinition = {
   cardDescription:
     "Clear five piles by discarding cards that add up to thirteen.",
   quickStart: [
-    "Discard lone Kings, or pairs that add to 13.",
-    "Aces = 1. Deal when stuck.",
+    "Discard lone Ks, or pairs that add to 13.",
+    "As = 1. Deal when stuck.",
   ],
   howToPlay: [
     "## Objective",

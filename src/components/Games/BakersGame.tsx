@@ -6,6 +6,11 @@ import {
 } from "@/hooks/useDragDrop";
 import { DragGhostCards, DragHandle } from "@/components/Cards/DragDrop";
 import { useStateManager } from "@/hooks/useStateManager";
+import {
+  applyAutoCompleteMoveWithCells,
+  getAutoCompleteSourcesWithCells,
+  useAutoComplete,
+} from "@/hooks/useAutoComplete";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { DOUBLE_TAP_MS } from "@/utils/utils";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -131,18 +136,26 @@ export default function BakersGame() {
   );
   const clearDragGhostRef = useRef<(() => void) | null>(null);
 
-  const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
-    useStateManager<GameState>({
-      gameStateInitial,
-      resetNonGameStates: () => {
-        setSelected(null);
-        setLastTap(null);
-        clearDragGhostRef.current?.();
-      },
-      resetAndSetup: async () => {
-        setGame(createInitialState());
-      },
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<GameState>({
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelected(null);
+      setLastTap(null);
+      clearDragGhostRef.current?.();
+    },
+    resetAndSetup: async () => {
+      setGame(createInitialState());
+    },
+  });
 
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
 
@@ -175,6 +188,26 @@ export default function BakersGame() {
   });
 
   clearDragGhostRef.current = clearDragGhost;
+
+  const { isAutoCompleting } = useAutoComplete({
+    game,
+    setGame,
+    isSettingUp,
+    won: isWon(game),
+    isBlocked: !!dragGhost,
+    getSources: (state) =>
+      getAutoCompleteSourcesWithCells(state.cascades, state.freeCells),
+    getFoundations: (state) => state.foundations,
+    canPlaceOnFoundation,
+    applyMove: (state, move) =>
+      applyAutoCompleteMoveWithCells(
+        state.cascades,
+        state.freeCells,
+        state.foundations,
+        move,
+      ),
+    onStart: () => setSelected(null),
+  });
 
   // ── Derived ─────────────────────────────────────────────────────────────────
 
@@ -761,6 +794,7 @@ export default function BakersGame() {
       isLoaded={isLoaded}
       canUndo={canUndo}
       undo={undo}
+      autoCompleting={isAutoCompleting}
     >
       <View style={{ flex: 1, width: "100%", gap: 12 }}>
         <View

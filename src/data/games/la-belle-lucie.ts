@@ -9,7 +9,7 @@ export const laBelleLucie: GameDefinition = {
   tags: [GameTag.SequenceBuilding],
   rating: { complexity: 30, difficulty: 80, luck: 40 },
   thumbnail: "LaBelleLucie.webp",
-  background: GAME_BACKGROUNDS.cherryBlossoms,
+  background: GAME_BACKGROUNDS.sunsetOldCity,
   animation: GameAnimations.CherryBlossom,
   gameColorDark: "#28352d",
   gameColorMid: "#af5a5a",
@@ -17,7 +17,7 @@ export const laBelleLucie: GameDefinition = {
   cardDescription:
     "Uncover a compact field of fans, with two reshuffles to loosen the knots.",
   quickStart: [
-    "Build foundations up by suit from Ace to King.",
+    "Build foundations up by suit from A to K.",
     "Build fans down by suit, moving one exposed card at a time.",
     "Empty fans stay empty; reshuffle the tableau up to twice.",
   ],

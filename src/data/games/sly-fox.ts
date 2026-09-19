@@ -12,7 +12,7 @@ export const slyFox: GameDefinition = {
     luck: 45,
   },
   thumbnail: "SlyFox.webp",
-  background: GAME_BACKGROUNDS.fallLeaves,
+  background: GAME_BACKGROUNDS.yellowLeaves,
   animation: GameAnimations.Leaves,
   gameColorDark: "#2b1a10",
   gameColorMid: "#7a4320",
@@ -20,7 +20,7 @@ export const slyFox: GameDefinition = {
   cardDescription:
     "Stash each twenty-card deal across twenty reserve piles, then dig out what you hid.",
   quickStart: [
-    "Aces build up and Kings build down, by suit.",
+    "Move all 104 cards to the foundations. Build As up and Ks down by suit.",
     "Tap the stock to deal 20 cards, placing each on a reserve pile.",
     "Tap a reserve pile's top card to send it up.",
   ],
@@ -32,7 +32,7 @@ export const slyFox: GameDefinition = {
     "- Aces build **up** by suit; Kings build **down** by suit.",
 
     "## Rules",
-    "- Twenty **reserve** piles start with one card each. Only their top cards can be played, and never onto each other.",
+    "- Only the top cards of the **reserve** piles can be played, and never onto each other.",
     "- At first, a reserve pile emptied by a foundation play is refilled from the stock.",
     "- Tap the **stock** to start a deal of **20 cards**. Each one must be placed on a reserve pile of your choice, or played straight to a foundation, which doesn't count towards the 20.",
     "- No reserve cards can be played until the deal is placed. After that, emptied piles stay empty until the next deal.",

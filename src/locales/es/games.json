@@ -6,12 +6,6 @@
     "youClearedTheBoard": "¡Has despejado el tablero!",
     "noAdjacentRankRemains": "No queda ningún valor adyacente."
   },
-  "archipelago": {
-    "out": "Fuera",
-    "notALegalPlacement": "Colocación no válida",
-    "islandComplete": "¡Isla completa!",
-    "islandUnfinished": "¡Isla sin terminar!"
-  },
   "ascent": {
     "lhotseRoutesNeed2Cards": "Lhotse: las rutas necesitan 2 cartas o más.",
     "gasherbrumIAnchorMustBe": "Gasherbrum I: el ancla debe ser par.",

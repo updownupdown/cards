@@ -1,4 +1,5 @@
 import { useStateManager } from "@/hooks/useStateManager";
+import { useAutoComplete } from "@/hooks/useAutoComplete";
 import { DOUBLE_TAP_MS, delay } from "@/utils/utils";
 import { useMemo, useState } from "react";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
@@ -101,42 +102,65 @@ export default function BakersDozen() {
     null,
   );
 
-  const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
-    useStateManager<BakersDozenState>({
-      gameStateInitial,
-      resetNonGameStates: () => {
-        setSelectedColumn(null);
-        setLastTap(null);
-      },
-      resetAndSetup: async () => {
-        setGame((draft) => {
-          draft.shuffleZone = flipAllToBack(
-            shuffle([
-              ...draft.shuffleZone,
-              ...draft.tableau.flat(),
-              ...draft.foundations.flat(),
-            ]),
-          );
-          draft.tableau = [];
-          draft.foundations = Array.from(
-            { length: 4 },
-            () => [] as PlayingCard[],
-          );
-        });
-      },
-      postSetupAction: async () => {
-        await delay();
-        setGame((draft) => {
-          draft.tableau = dealTableau(draft.shuffleZone);
-          draft.shuffleZone = [];
-        });
-      },
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<BakersDozenState>({
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelectedColumn(null);
+      setLastTap(null);
+    },
+    resetAndSetup: async () => {
+      setGame((draft) => {
+        draft.shuffleZone = flipAllToBack(
+          shuffle([
+            ...draft.shuffleZone,
+            ...draft.tableau.flat(),
+            ...draft.foundations.flat(),
+          ]),
+        );
+        draft.tableau = [];
+        draft.foundations = Array.from(
+          { length: 4 },
+          () => [] as PlayingCard[],
+        );
+      });
+    },
+    postSetupAction: async () => {
+      await delay();
+      setGame((draft) => {
+        draft.tableau = dealTableau(draft.shuffleZone);
+        draft.shuffleZone = [];
+      });
+    },
+  });
 
   const won = useMemo(
     () => game.foundations.every((pile) => pile.length === 13),
     [game.foundations],
   );
+
+  const { isAutoCompleting } = useAutoComplete({
+    game,
+    setGame,
+    isSettingUp,
+    won,
+    getSources: (state) =>
+      state.shuffleZone.length === 0 ? state.tableau : null,
+    getFoundations: (state) => state.foundations,
+    canPlaceOnFoundation: canBuildOnFoundation,
+    onStart: () => {
+      setSelectedColumn(null);
+      setLastTap(null);
+    },
+  });
 
   function moveToFoundation(columnIndex: number) {
     const card = top(game.tableau[columnIndex]);
@@ -285,6 +309,7 @@ export default function BakersDozen() {
       isLoaded={isLoaded}
       canUndo={canUndo}
       undo={undo}
+      autoCompleting={isAutoCompleting}
       winLoseMessage={i18n.t("games:bakersDozen.allFourSuitsAreComplete")}
       showDeviceRotateHint="landscape"
     >

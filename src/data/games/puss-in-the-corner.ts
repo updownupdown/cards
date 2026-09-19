@@ -20,7 +20,7 @@ export const pussInTheCorner: GameDefinition = {
   cardDescription:
     "Steer the stock into four corner piles, building by color with one redeal.",
   quickStart: [
-    "Foundations build up by color from the Aces.",
+    "Build all four foundations by color, from Ace to King.",
     "Tap a waste pile to drop the stock card on it.",
     "When the stock runs out, tap it once to redeal.",
   ],
@@ -29,7 +29,6 @@ export const pussInTheCorner: GameDefinition = {
     "Move all 52 cards onto the four foundations, built up from Ace to King **by color**.",
 
     "## Rules",
-    "- The four **Aces** start on the foundations.",
     "- A foundation accepts the next rank in **either suit of its color**.",
     "- Each stock card must be placed on one of the **four waste piles**, or played to a foundation.",
     "- Any card may go on any waste pile, but cards can never move between waste piles.",

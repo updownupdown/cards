@@ -1,21 +1,4 @@
 {
-  "archipelago": {
-    "islandJokers": {
-      "hash": "71b79671",
-      "value": {
-        "description": "Aggiunge due carte jolly che puoi piazzare ovunque.",
-        "label": "Usa i Jolly",
-        "options": [
-          {
-            "label": "No"
-          },
-          {
-            "label": "Sì (più facile)"
-          }
-        ]
-      }
-    }
-  },
   "ascent": {
     "ascentChallenge": {
       "hash": "11a33a3b",

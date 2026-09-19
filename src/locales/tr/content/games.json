@@ -47,10 +47,10 @@
       ]
     },
     "quickStart": {
-      "hash": "f8cf218d",
+      "hash": "0e3e609d",
       "value": [
         "Açıkta aynı takımdan daha yüksek bir kart varsa açık bir kartı ıskartaya at.",
-        "Dört As dışındaki bütün kartları atarak kazan.",
+        "Dört A dışındaki bütün kartları atarak kazan.",
         "Kartları boş yığınlara taşı, sıkışınca dağıt."
       ]
     },
@@ -77,12 +77,12 @@
       ]
     },
     "quickStart": {
-      "hash": "377b21a0",
+      "hash": "e1d29bc6",
       "value": [
         "Temelleri takıma göre A'dan K'ya artan sırayla diz.",
         "Sütunları aynı takımda bir değer yukarı ya da aşağı diz.",
         "Açık kartlardan oluşan herhangi bir grubu taşı.",
-        "Boş sütunlara yalnızca Papazlar konabilir."
+        "Boş sütunlara yalnızca K'ler konabilir."
       ]
     },
     "title": {
@@ -107,51 +107,17 @@
       ]
     },
     "quickStart": {
-      "hash": "8d1e2ded",
+      "hash": "f679df79",
       "value": [
         "Kazanmak için on üç sütunun hepsini temizle.",
         "Başlamak için açıktaki herhangi bir kartı seç.",
         "Takımı fark etmeksizin bir değer yüksek ya da düşük kart oyna.",
-        "As ile Papaz ardışıktır."
+        "A ile K ardışıktır."
       ]
     },
     "title": {
       "hash": "408219ba",
       "value": "Hepsi sırada"
-    }
-  },
-  "archipelago": {
-    "cardDescription": {
-      "hash": "2580ab5d",
-      "value": "7x7'lik bir ızgarada, değerle bağlanan kartları tek tek ekleyerek bir ada büyüt."
-    },
-    "howToPlay": {
-      "hash": "9ab35e64",
-      "value": [
-        "## Amaç",
-        "Ada ızgarasının tamamını doldur ve olabildiğince yüksek puan al.",
-        "Puanın 49'dur; ıskartaya giden her kart için 1 düşer, destede kalan her kart için 1 eklenir.",
-        "## Oynanış",
-        "- Her seferinde bir kart koy; kart, yatay ya da dikey olarak **bir değer yüksek veya düşük** bir karta komşu olmalı.",
-        "- Sıra **döngüseldir**: **Papazlar ve Aslar** komşudur, yani bir As bir **2**'nin ya da bir **Papaz**'ın yanına konabilir.",
-        "- Bir kart, çevresindeki sekiz kareden hiçbirinde aynı değerdeki bir kartın yanına **konamaz**.",
-        "- **Takım ve renk önemsizdir.**",
-        "- Çekilen kart kurallara uygun konamıyorsa **ıskartaya** gider.",
-        "## Kolay mod",
-        "- Ayarlardan **Jokerleri** açarak bağlantılı herhangi bir kareye konabilen iki joker ekle (Jokerler puana sayılmaz)."
-      ]
-    },
-    "quickStart": {
-      "hash": "a28614f6",
-      "value": [
-        "Her kartı değeri +/-1 olan bir kartın yanına koy (A<->K birbirine bağlanır).",
-        "Bir kart asla aynı değerdeki bir kartın yanına konamaz.",
-        "Kazanmak için ada ızgarasını doldur."
-      ]
-    },
-    "title": {
-      "hash": "dd58357c",
-      "value": "Takımada"
     }
   },
   "ascent": {
@@ -230,10 +196,10 @@
       ]
     },
     "quickStart": {
-      "hash": "6ef4e415",
+      "hash": "a2c4daeb",
       "value": [
         "Temelleri takıma göre artan sırayla diz.",
-        "Sütunları takıma göre azalan sırayla diz; boşluklara yalnızca Papazlar konur.",
+        "Sütunları takıma göre azalan sırayla diz; boşluklara yalnızca K'ler konur.",
         "Açık herhangi bir grubu taşı ve desteyi bir kez aç."
       ]
     },
@@ -262,9 +228,9 @@
       ]
     },
     "quickStart": {
-      "hash": "a4b03b07",
+      "hash": "9c3be2e3",
       "value": [
-        "Temelleri As'tan Papaz'a, takıma göre artan sırayla diz.",
+        "Temelleri A'dan K'ya, takıma göre artan sırayla diz.",
         "Sütunları takımı fark etmeksizin azalan sırayla diz.",
         "Kartları birer birer taşı; boş sütunlar kullanılamaz."
       ]
@@ -325,10 +291,10 @@
       ]
     },
     "quickStart": {
-      "hash": "4a558a6e",
+      "hash": "8b385734",
       "value": [
-        "Papazları tek başına, toplamı 13 eden çiftleri birlikte at.",
-        "As = 1. Sıkışınca dağıt."
+        "K'leri tek başına, toplamı 13 eden çiftleri birlikte at.",
+        "A = 1. Sıkışınca dağıt."
       ]
     },
     "title": {
@@ -387,9 +353,9 @@
       ]
     },
     "quickStart": {
-      "hash": "db6b2f70",
+      "hash": "ed9ba718",
       "value": [
-        "As temellerini artan, Papaz temellerini azalan sırayla, takıma göre diz.",
+        "A temellerini artan, K temellerini azalan sırayla, takıma göre diz.",
         "Sütunları aynı takımda bir değer yukarı ya da aşağı diz.",
         "Her seferinde açık bir kart taşı; boş sütunlar kapalı kalır."
       ]
@@ -485,12 +451,11 @@
       "value": "İki desteli on iki kısa sütunu, aynı takımdan kartları birer birer taşıyarak hareket halinde tut."
     },
     "howToPlay": {
-      "hash": "e1ebb3ac",
+      "hash": "f2b1ffa6",
       "value": [
         "## Amaç",
         "Sekiz temelin hepsini As'tan Papaz'a, takıma göre artan sırayla diz.",
         "## Kurallar",
-        "- On iki sütunun her biri bir kapalı ve bir açık kartla başlar.",
         "- Kartları birer birer taşıyarak takıma göre azalan sırayla diz.",
         "- Boş bir sütuna herhangi bir kart konabilir.",
         "- Desteyi birer birer aç; yeniden dağıtma yok."
@@ -539,11 +504,11 @@
       ]
     },
     "quickStart": {
-      "hash": "aa829b03",
+      "hash": "823e58bf",
       "value": [
         "Kartları bitişik, geçerli yerlere koyarak zombileri öldür.",
         "O hattaki diğer iki kartın toplamı en az 10 olmalı ve takımı (K) ya da rengi (Q) eşleşmeli.",
-        "Aslar 1 değerindedir; Jokerler her yere konabilir ve 0 değerindedir."
+        "A'lar 1 değerindedir; Jokerler her yere konabilir ve 0 değerindedir."
       ]
     },
     "title": {
@@ -608,9 +573,9 @@
       ]
     },
     "quickStart": {
-      "hash": "22eb825e",
+      "hash": "9cd76283",
       "value": [
-        "Dört temeli Papazlara kadar 1, 2, 3 ve 4'er adımla diz.",
+        "Dört temeli K'lere kadar 1, 2, 3 ve 4'er adımla diz.",
         "Açık yığınlar kartları herhangi bir sırada tutabilir."
       ]
     },
@@ -659,21 +624,20 @@
       "value": "Deste her deliği yamarken yirmi kartlık bir halıyı temellere kaldır."
     },
     "howToPlay": {
-      "hash": "2b1cbaa6",
+      "hash": "e818b0bd",
       "value": [
         "## Amaç",
         "52 kartın hepsini As'tan Papaz'a takıma göre dizilen dört temele taşı.",
         "## Kurallar",
-        "- Dört **As** temellerde başlar; yirmi kart **halıyı** oluşturur.",
         "- Halıdaki herhangi bir kart ve açık destenin en üstteki kartı temeline oynanabilir.",
         "- Halıdaki bir boşluk hemen **açık destenin** en üstteki kartıyla, açık deste boşsa **desteden** doldurulur.",
         "- Açık desteye bir kart açmak için **desteye** dokun. Yeniden dağıtma yok."
       ]
     },
     "quickStart": {
-      "hash": "760fc5c7",
+      "hash": "750bc703",
       "value": [
-        "Temelleri Aslardan başlayarak takıma göre artan sırayla diz.",
+        "Temelleri A'lardan başlayarak takıma göre artan sırayla diz.",
         "Göndermek için halıdaki ya da açık destedeki bir karta dokun.",
         "Halıdaki boşluklar önce açık desteden, sonra desteden dolar."
       ]
@@ -855,15 +819,13 @@
       "value": "Dik ve yan duran kartlardan oluşan bir yorganı, serbest uçlarından tek tek sök."
     },
     "howToPlay": {
-      "hash": "ce4eb32e",
+      "hash": "ee571b00",
       "value": [
         "## Amaç",
         "104 kartın hepsini sekiz temele taşı.",
         "## Temeller",
-        "- Her takımdan bir **As** ve bir **Papaz** temelleri başlatır.",
         "- Aslar takıma göre Papazlara kadar **artan**, Papazlar takıma göre Aslara kadar **azalan** sırayla dizilir.",
         "## Kurallar",
-        "- 64 kart, satranç tahtası gibi dik ve yan dönüşümlü dizilerek **yorganı** oluşturur.",
         "- Bir yorgan kartı, **kısa kenarlarından** en az biri başka bir karta değmiyorsa **serbesttir**.",
         "- Serbest bir karta dokunarak onu bir temele ya da, olmuyorsa, aynı takımda açık destenin en üstteki kartından bir değer yukarı veya aşağıysa **açık desteye** oyna.",
         "- Yorgandaki boşluklar asla doldurulmaz.",
@@ -871,11 +833,12 @@
       ]
     },
     "quickStart": {
-      "hash": "be5c8a85",
+      "hash": "5303a8fc",
       "value": [
-        "Kısa kenarlarından biri açıkta olan yorgan kartı serbesttir.",
-        "Aslar artan, Papazlar azalan sırayla, takıma göre dizilir.",
-        "Temele gidemeyen serbest bir kart, aynı takımda bir değer yukarı ya da aşağı olacak şekilde açık desteye konur."
+        "104 kartın hepsini temellere taşı.",
+        "A'ları takıma göre artan, K'leri azalan sırayla diz.",
+        "Kısa kenarlarından biri açıkta olan bir yorgan kartını oyna.",
+        "Temele gidemeyen serbest bir kartı aynı takımda artan veya azalan sırayla açık desteye koy."
       ]
     },
     "title": {
@@ -903,10 +866,10 @@
       ]
     },
     "quickStart": {
-      "hash": "f9edde34",
+      "hash": "44a61fd6",
       "value": [
-        "As temellerini artan, Papaz temellerini azalan sırayla, takıma göre diz.",
-        "Yığınları aynı takımda bir değer yukarı ya da aşağı diz; As ile Papaz birbirine bağlanır.",
+        "A temellerini artan, K temellerini azalan sırayla, takıma göre diz.",
+        "Yığınları aynı takımda bir değer yukarı ya da aşağı diz; A ile K birbirine bağlanır.",
         "Açık bir kart taşı; her yığını en fazla üç kez döndür."
       ]
     },
@@ -1003,10 +966,10 @@
       ]
     },
     "quickStart": {
-      "hash": "b3570aa9",
+      "hash": "e16dc559",
       "value": [
         "12 soyluyu birer birer yen.",
-        "Takımların güçleri vardır; düşmanlar kendi takımlarına karşı bağışıktır; Aslar kombo sağlar.",
+        "Takımların güçleri vardır; düşmanlar kendi takımlarına karşı bağışıktır; A'lar kombo sağlar.",
         "Saldırı aşaması: hasar vermek için herhangi bir kart ya da kartlar oyna.",
         "Savunma aşaması: attığın kartların toplamı en az düşmanın saldırısı kadar olmalı."
       ]
@@ -1022,12 +985,11 @@
       "value": "On iki açık yığın, deste yok ve kurduğun her şeyi yeniden şekillendiren bir yeniden dağıtım."
     },
     "howToPlay": {
-      "hash": "959bc755",
+      "hash": "14e03858",
       "value": [
         "## Amaç",
         "52 kartın hepsini As'tan Papaz'a takıma göre dizilen dört temele taşı.",
         "## Kurallar",
-        "- Dört **As** temellerde başlar; kalan kartlar açık olarak **dörderli on iki yığına** dağıtılır.",
         "- Yalnızca bir yığının en üstteki kartı taşınabilir; bir temele ya da **aynı takımda bir değer yüksek** bir yığına.",
         "- Boş yığınlar **asla** doldurulmaz.",
         "- Yığınları karıştırmadan sırayla toplayıp yeniden dörderli dağıtmak için **yeniden dağıtma** yığınına dokun.",
@@ -1035,9 +997,9 @@
       ]
     },
     "quickStart": {
-      "hash": "fd1b5503",
+      "hash": "8fb57be7",
       "value": [
-        "Temelleri Aslardan başlayarak takıma göre artan sırayla diz.",
+        "Temelleri A'lardan başlayarak takıma göre artan sırayla diz.",
         "En üstteki kartları takıma göre azalan sırayla taşı; boşluklar boş kalır.",
         "Herhangi bir hamleden sonra, yığınları dörderli yeniden kurmak için yeniden dağıtma yığınına dokun."
       ]
@@ -1196,11 +1158,11 @@
       ]
     },
     "quickStart": {
-      "hash": "1d94d89b",
+      "hash": "60a8fd03",
       "value": [
         "Sayı kartları çek ve ızgarada eşit ya da düşük kartların üstüne koy.",
         "Bir yerleştirme, komşu bir soylunun karşısındaki iki kart üzerinden ateş eder.",
-        "Aslar yığınları çıkarır; Jokerler en üstteki kartları yeniden atar."
+        "A'lar yığınları çıkarır; Jokerler en üstteki kartları yeniden atar."
       ]
     },
     "title": {
@@ -1226,11 +1188,11 @@
       ]
     },
     "quickStart": {
-      "hash": "cbb52fcc",
+      "hash": "d8a3426c",
       "value": [
         "Temelleri takıma göre artan sırayla diz.",
         "Sütunları azalan sırayla diz.",
-        "Her sütuna desteden bir kart dağıt; boşluklara Papazlar konur."
+        "Her sütuna desteden bir kart dağıt; boşluklara K'ler konur."
       ]
     },
     "title": {
@@ -1257,9 +1219,9 @@
       ]
     },
     "quickStart": {
-      "hash": "8fb0be18",
+      "hash": "cd009112",
       "value": [
-        "8 boş hücre kullan; sütunları takıma göre azalan sırayla diz; boş sütunlara yalnızca Papazlar konur."
+        "8 boş hücre kullan; sütunları takıma göre azalan sırayla diz; boş sütunlara yalnızca K'ler konur."
       ]
     },
     "title": {
@@ -1320,7 +1282,9 @@
     },
     "quickStart": {
       "hash": "a14a111d",
-      "value": ["Düşman hattı sağa kayar, sonra düşman destesinden dolar."]
+      "value": [
+        "Düşman hattı sağa kayar, sonra düşman destesinden dolar."
+      ]
     },
     "title": {
       "hash": "946d7b10",
@@ -1348,9 +1312,9 @@
       ]
     },
     "quickStart": {
-      "hash": "2e731eeb",
+      "hash": "f330208b",
       "value": [
-        "Kartları her satırda As'tan 4'e sırala: kupa, sinek, karo, sonra maça.",
+        "Kartları her satırda A'dan 4'e sırala: kupa, sinek, karo, sonra maça.",
         "Kaydırmak için boş yerin yanındaki bir karta dokun."
       ]
     },
@@ -1431,9 +1395,9 @@
       ]
     },
     "quickStart": {
-      "hash": "4cb14090",
+      "hash": "2a0ca0e4",
       "value": [
-        "Temelleri As'tan Papaz'a, takıma göre artan sırayla diz.",
+        "Temelleri A'dan K'ya, takıma göre artan sırayla diz.",
         "Tarhları takımı fark etmeksizin azalan sırayla diz.",
         "Buketteki her kart kullanılabilir; boş tarha herhangi bir kart konur."
       ]
@@ -1461,9 +1425,9 @@
       ]
     },
     "quickStart": {
-      "hash": "0f1f4350",
+      "hash": "549d941c",
       "value": [
-        "Temelleri As'tan Papaz'a, takıma göre artan sırayla diz.",
+        "Temelleri A'dan K'ya, takıma göre artan sırayla diz.",
         "Şeritleri aynı takımda bir değer yukarı ya da aşağı diz.",
         "Kartları birer birer taşı; boş şeride herhangi bir kart konur."
       ]
@@ -1572,12 +1536,11 @@
       "value": "Desteyi beş nilüfer yığınına dağıtarak iki desteyi sekiz temele zıplat."
     },
     "howToPlay": {
-      "hash": "1d6a9640",
+      "hash": "2f091e43",
       "value": [
         "## Amaç",
         "104 kartın hepsini, her biri **takımı fark etmeksizin** As'tan Papaz'a dizilen sekiz temele taşı.",
         "## Kurallar",
-        "- On üç kart **yedeği** oluşturur; oraya dağıtılan Aslar doğrudan temellere gider.",
         "- Yedeğin yalnızca en üstteki kartı kullanılabilir.",
         "- Destedeki her kart **beş açık yığından** birine konmalı ya da bir temele oynanmalıdır.",
         "- Herhangi bir kart herhangi bir açık yığına gidebilir, ama kartlar açık yığınlar arasında asla taşınamaz.",
@@ -1650,10 +1613,10 @@
       ]
     },
     "quickStart": {
-      "hash": "a5b88634",
+      "hash": "87fffab2",
       "value": [
         "Sütunları kırmızı ve siyah sırayla azalan şekilde diz.",
-        "Sıralı dizileri taşı; boş sütunlara yalnızca Papazlar konur.",
+        "Sıralı dizileri taşı; boş sütunlara yalnızca K'ler konur.",
         "Sekiz temeli takıma göre diz; deste iki kez açılır."
       ]
     },
@@ -1699,14 +1662,12 @@
       "value": "Her saat kendi sayısını gösterene kadar kadranın çevresindeki on iki temeli kur."
     },
     "howToPlay": {
-      "hash": "a9d1159a",
+      "hash": "932afb6b",
       "value": [
         "## Amaç",
         "Saatteki her temeli, en üstteki kartı kendi saatine eşit olana kadar diz. Valeler 11, Kızlar 12 sayılır.",
         "## Kurallar",
-        "- Saat, saat 1'deki **10♥**'den saat 12'deki **9♣**'e kadar on iki kartla başlar.",
         "- Temeller **takıma göre artan sırayla** dizilir, Papaz'dan As'a geçer ve kendi saatinde durur.",
-        "- Destenin geri kalanı **beşer kartlık sekiz yığına** dağıtılır.",
         "- En üstteki kartları birer birer taşı. Yığınları **takımı fark etmeksizin azalan sırayla** diz; Papaz, As'ın üstüne konur.",
         "- Boş bir yığına herhangi bir kart konabilir.",
         "- Bir kartı temeline oynamak için ona **iki kez dokun** ya da sürükle."
@@ -1822,10 +1783,10 @@
       ]
     },
     "quickStart": {
-      "hash": "125ca15a",
+      "hash": "dbf48c82",
       "value": [
         "Sütunları kırmızı ve siyah sırayla azalan şekilde diz.",
-        "Boş sütunlara yalnızca Papazlar konur.",
+        "Boş sütunlara yalnızca K'ler konur.",
         "Sekiz temeli tamamlamak için desteden dört geçiş kullan."
       ]
     },
@@ -1931,11 +1892,11 @@
       ]
     },
     "quickStart": {
-      "hash": "286481af",
+      "hash": "1ebc8ea3",
       "value": [
         "Kilit casusların (J, Q, K) yarısından fazlasını devşirerek kazan.",
         "Değeri giderek artan casuslar devşirerek desteni kur.",
-        "Takımı ve değeri eşleştirerek devşir (Aslar joker sayılır).",
+        "Takımı ve değeri eşleştirerek devşir (A'lar joker sayılır).",
         "Gerektiğinde karşı koy ya da suikast yap."
       ]
     },
@@ -2025,11 +1986,11 @@
       ]
     },
     "quickStart": {
-      "hash": "6358aab0",
+      "hash": "4672f616",
       "value": [
         "Temelleri takıma göre artan sırayla diz.",
         "Sütunları kırmızı ve siyah sırayla azalan şekilde diz.",
-        "Boş sütunlara yalnızca Papazlar konabilir."
+        "Boş sütunlara yalnızca K'ler konabilir."
       ]
     },
     "title": {
@@ -2055,9 +2016,9 @@
       ]
     },
     "quickStart": {
-      "hash": "9b574be1",
+      "hash": "b6eebcbd",
       "value": [
-        "Temelleri As'tan Papaz'a, takıma göre artan sırayla diz.",
+        "Temelleri A'dan K'ya, takıma göre artan sırayla diz.",
         "Yelpazeleri takıma göre azalan sırayla, açık kartları birer birer taşıyarak diz.",
         "Boş yelpazeler boş kalır; masadaki kartları en fazla iki kez karıştır."
       ]
@@ -2073,12 +2034,11 @@
       "value": "Sıra sıra kart dağıt ve labirentin üstünden ve altından kartları kurtar."
     },
     "howToPlay": {
-      "hash": "3a50b244",
+      "hash": "4c8fa7c7",
       "value": [
         "## Amaç",
         "52 kartın hepsini As'tan Papaz'a takıma göre dizilen dört temele taşı.",
         "## Kurallar",
-        "- Dört **As** temellerde başlar, altlarında sekiz kartlık ilk sıra bulunur.",
         "- Hemen üstündeki ya da altındaki yer boş olan kart **serbesttir**; bu yüzden en üst ve en alt sıra her zaman serbesttir.",
         "- Serbest bir kartı temeline oynamak için ona dokun.",
         "- **İlk sıradaki** bir boşluk hemen desteden doldurulur. Daha aşağıdaki boşluklar boş kalır.",
@@ -2086,11 +2046,11 @@
       ]
     },
     "quickStart": {
-      "hash": "3970b955",
+      "hash": "27f2c4e7",
       "value": [
-        "Temelleri Aslardan başlayarak takıma göre artan sırayla diz.",
-        "Yalnızca üstünde ya da altında boş yer olan kartlar serbesttir.",
-        "Sıkışınca yeni bir sıra dağıtmak için desteye dokun."
+        "Dört temelin hepsini takıma göre A'dan K'ya diz.",
+        "Yalnızca üstünde veya altında boşluk bulunan kartlar serbesttir.",
+        "Sıkıştığında yeni bir sıra dağıtmak için desteye dokun."
       ]
     },
     "title": {
@@ -2202,9 +2162,9 @@
       ]
     },
     "quickStart": {
-      "hash": "162499d8",
+      "hash": "6522e514",
       "value": [
-        "Sekiz As temellerde başlar.",
+        "Sekiz A temellerde başlar.",
         "Sütunları kartları birer birer taşıyarak takıma göre azalan sırayla diz.",
         "Boş sütunlar herhangi bir kartı kabul eder; deste bir kez açılır."
       ]
@@ -2367,12 +2327,12 @@
       ]
     },
     "quickStart": {
-      "hash": "7142a388",
+      "hash": "5a21febe",
       "value": [
         "Temelleri takıma göre A'dan K'ya artan sırayla diz.",
         "Sütunları aynı takım dışındaki herhangi bir takımın üstüne azalan sırayla diz.",
         "Açık kartlardan oluşan herhangi bir grubu taşı.",
-        "Boş sütunlara yalnızca Papazlar konabilir."
+        "Boş sütunlara yalnızca K'ler konabilir."
       ]
     },
     "title": {
@@ -2521,9 +2481,9 @@
       ]
     },
     "quickStart": {
-      "hash": "7a29acb2",
+      "hash": "76b5f0d2",
       "value": [
-        "Kazanmak için bütün Asları topla ve Joker'den çık.",
+        "Kazanmak için bütün A'ları topla ve Joker'den çık.",
         "Açık resimli kartlara basarsan kaybedersin.",
         "Yol işaretlemek ve keşfetmek için sayı kartlarını kullan."
       ]
@@ -2539,15 +2499,13 @@
       "value": "İki destenin paralel sıralarını As ve Papaz temelleri arasında diz, kartları iki kenardan da kurtar."
     },
     "howToPlay": {
-      "hash": "395db908",
+      "hash": "a09786ce",
       "value": [
         "## Amaç",
         "104 kartın hepsini sekiz temele taşı.",
         "## Temeller",
-        "- Her takımdan bir **As** ve bir **Papaz** temelleri başlatır; Aslar solda, Papazlar sağdadır.",
         "- Aslar takıma göre **artan**, Papazlar takıma göre **azalan** sırayla dizilir.",
         "## Kurallar",
-        "- Masa on kartlık tek bir sırayla başlar.",
         "- Bir ya da iki sıra varken bütün kartlar kullanılabilir.",
         "- Üç sıradan itibaren bir kart, yalnızca hemen üstündeki ya da altındaki yer boşsa **serbesttir**.",
         "- Masadaki bütün boşlukları doldurmak için **desteye** dokun. Boşluk yoksa en alta on kartlık yeni bir sıra dağıtır.",
@@ -2555,11 +2513,11 @@
       ]
     },
     "quickStart": {
-      "hash": "2c0f4b7f",
+      "hash": "333d1355",
       "value": [
-        "Aslar artan, Papazlar azalan sırayla, takıma göre dizilir.",
-        "Üç ya da daha fazla sıra varken bir kartın üstünde ya da altında boş yer olmalıdır.",
-        "Boşlukları doldurmak ya da boşluk yoksa sıra eklemek için desteye dokun."
+        "104 kartın hepsini temellere taşı. A'ları takıma göre artan, K'leri azalan sırayla diz.",
+        "Üç veya daha fazla sıra varken bir kartın üstünde ya da altında boşluk bulunmalıdır.",
+        "Boşlukları doldurmak için desteye dokun; boşluk yoksa yeni bir sıra eklenir."
       ]
     },
     "title": {
@@ -2679,12 +2637,11 @@
       "value": "Desteyi dört köşe yığınına yönlendir; tek yeniden dağıtımla renge göre diz."
     },
     "howToPlay": {
-      "hash": "a0ac1fb9",
+      "hash": "fa562a1b",
       "value": [
         "## Amaç",
         "52 kartın hepsini As'tan Papaz'a **renge göre** dizilen dört temele taşı.",
         "## Kurallar",
-        "- Dört **As** temellerde başlar.",
         "- Bir temel, bir sonraki değeri **kendi rengindeki iki takımdan** herhangi birinden kabul eder.",
         "- Destedeki her kart **dört açık yığından** birine konmalı ya da bir temele oynanmalıdır.",
         "- Herhangi bir kart herhangi bir açık yığına gidebilir, ama kartlar açık yığınlar arasında asla taşınamaz.",
@@ -2693,11 +2650,11 @@
       ]
     },
     "quickStart": {
-      "hash": "bd0b5046",
+      "hash": "48978acc",
       "value": [
-        "Temeller Aslardan başlayarak renge göre artan sırayla dizilir.",
-        "Destedeki kartı bir açık yığına bırakmak için o yığına dokun.",
-        "Deste bitince yeniden dağıtmak için bir kez dokun."
+        "Dört temelin hepsini renge göre A'dan K'ya diz.",
+        "Destedeki kartı üzerine bırakmak için bir açık deste yığınına dokun.",
+        "Deste bittiğinde bir kez yeniden dağıtmak için ona dokun."
       ]
     },
     "title": {
@@ -2723,9 +2680,9 @@
       ]
     },
     "quickStart": {
-      "hash": "38a2c4ea",
+      "hash": "117f36e4",
       "value": [
-        "Papazları ya da toplamı 13 eden açık çiftleri çıkar. Daha çok eşleşme için kart çek."
+        "K'leri ya da toplamı 13 eden açık çiftleri çıkar. Daha çok eşleşme için kart çek."
       ]
     },
     "title": {
@@ -2739,12 +2696,12 @@
       "value": "Kraliyet çiftlerini huzur salonuna al ve her Vale'nin kendi takımını aşağıya taşımasına izin ver."
     },
     "howToPlay": {
-      "hash": "d0759133",
+      "hash": "d7c16170",
       "value": [
         "## Amaç",
         "52 kartın hepsini ortadaki **huzur salonuna** getir.",
         "## Kurallar",
-        "- On altı kart, salonun çevresinde bir çerçeve olan **bekleme odasını** oluşturur. Hepsi, **açık destenin** en üstteki kartıyla birlikte kullanılabilir.",
+        "- **Bekleme salonundaki** bütün kartlar ve **açık destenin** en üstteki kartı kullanılabilir.",
         "- Aynı takımdan bir **Papaz ve Kız** ikisi de uygun olduğunda, ikisini birlikte içeri almak için birine dokun.",
         "- Aynı takımdan bir **Vale ve As** ikisi de uygun olduğunda, o takımın temelini başlatmak için birine dokun.",
         "- Ardından her temel Vale'den 2'ye **takıma göre azalan sırayla** dizilir.",
@@ -2753,11 +2710,11 @@
       ]
     },
     "quickStart": {
-      "hash": "b9c1cb40",
+      "hash": "169d71d8",
       "value": [
-        "Eşi de uygunsa bir Papaz'a ya da Kız'a dokun.",
-        "Bir temel başlatmak için, eşi de uygunsa bir Vale'ye ya da As'a dokun.",
-        "Temeller Vale'den 2'ye, takıma göre azalan sırayla dizilir."
+        "52 kartın hepsini kabul salonuna getir.",
+        "Eşi de müsait olduğunda bir K veya Q'ya dokun.",
+        "Bir temeli başlatmak için eşi müsait olan bir J veya A'ya dokun."
       ]
     },
     "title": {
@@ -2771,23 +2728,22 @@
       "value": "Kırmızı-siyah sıralı sütunlar üzerine kurulu, sade ve dikkatli ilerleyen klasik tek desteli bir oyun."
     },
     "howToPlay": {
-      "hash": "55ea0480",
+      "hash": "22e39071",
       "value": [
         "## Amaç",
         "Bütün kartları As'tan Papaz'a takıma göre dört temele taşı.",
         "## Kurallar",
-        "- Kartların giderek artan yığınlar halinde dağıtıldığı yedi sütunla oynanır.",
         "- Sütunları kırmızı ve siyah sırayla azalan şekilde diz.",
         "- Boş sütunlara yalnızca Papazlar konabilir.",
         "- Deste açık desteye birer birer dağıtılır; bu sürümde yeniden dağıtma yoktur."
       ]
     },
     "quickStart": {
-      "hash": "97e420c9",
+      "hash": "0b04b422",
       "value": [
-        "Kırmızı ve siyah sırayla azalan diziler kur.",
-        "Geçerli olduklarında kart gruplarını taşı ve boş sütunları dikkatli kullan.",
-        "Kazanmak için bütün kartları temellere taşı."
+        "Her kartı takıma göre A'dan K'ya dört temele taşı.",
+        "Kırmızı ve siyah sırayla azalan diziler oluştur.",
+        "Geçerli masa gruplarını taşı ve boş sütunları yalnızca K'ler için kullan."
       ]
     },
     "title": {
@@ -2911,28 +2867,27 @@
       "value": "İki deste, Aslardan ve 2'lerden başlayarak temellerde ikişer adımla dans eder."
     },
     "howToPlay": {
-      "hash": "6c824cdb",
+      "hash": "55f6e9ce",
       "value": [
         "## Amaç",
         "104 kartın hepsini sekiz temele taşı.",
         "## Temeller",
-        "- Her takımdan bir **As** ve bir **2** temelleri başlatır.",
         "- Her temel **takıma göre ikişer adımla artar** ve Papaz'dan sonra başa döner.",
         "- As temelleri: A, 3, 5, 7, 9, J, K, 2, 4, 6, 8, 10, Q.",
         "- 2 temelleri: 2, 4, 6, 8, 10, Q, A, 3, 5, 7, 9, J, K.",
         "## Kurallar",
-        "- **Solda** üçer kartlık dört sütun vardır: her birinin yalnızca en alttaki kartı kullanılabilir ve boşluklar asla doldurulmaz.",
-        "- **Sağda** on altı kartın hepsi kullanılabilir.",
+        "- Soldaki her sütunun yalnızca en alttaki kartı kullanılabilir ve boşluklar asla doldurulmaz.",
+        "- Sağdaki bütün kartlar kullanılabilir.",
         "- Sağdaki boş bir yeri **açık destenin** en üstteki kartıyla, açık deste boşsa **desteden** doldurmak için ona dokun.",
         "- Açık desteye bir kart açmak için **desteye** dokun. Yeniden dağıtma yok."
       ]
     },
     "quickStart": {
-      "hash": "5849dd6d",
+      "hash": "9195fb0f",
       "value": [
-        "Aslar takıma göre A, 3, 5... K, 2, 4... Q diye dizilir.",
-        "2'ler takıma göre 2, 4, 6... Q, A, 3... K diye dizilir.",
-        "Sağdaki boş bir yeri açık desteden ya da desteden doldurmak için ona dokun."
+        "104 kartın hepsini, takıma göre ikişer artan sekiz temele taşı.",
+        "A temelleri takıma göre A, 3, 5… K, 2, 4… Q şeklinde ilerler.",
+        "İkili temelleri takıma göre 2, 4, 6… Q, A, 3… K şeklinde ilerler."
       ]
     },
     "title": {
@@ -3001,12 +2956,12 @@
       ]
     },
     "quickStart": {
-      "hash": "dcc92fe7",
+      "hash": "7b2de717",
       "value": [
-        "Yastık-Vale-yastık şeklinde dört yığın oluştur.",
+        "Yastık-J-yastık şeklinde dört yığın oluştur.",
         "Aynı değerdeki dört kartı üst üste koyarak yastık yap.",
-        "Valeler yastıklara, boş sütunlara ya da ayrılmamış başka bir Vale içermeyen sütunlara konabilir.",
-        "Herhangi bir sayı kartı, yığın ya da yastık bir Vale'nin üstüne konabilir."
+        "J'ler yastıklara, boş sütunlara ya da ayrılmamış başka bir J içermeyen sütunlara konabilir.",
+        "Herhangi bir sayı kartı, yığın ya da yastık bir J'nin üstüne konabilir."
       ]
     },
     "title": {
@@ -3032,12 +2987,12 @@
       ]
     },
     "quickStart": {
-      "hash": "fae453f1",
+      "hash": "64f27d09",
       "value": [
         "Temelleri takıma göre A'dan K'ya artan sırayla diz.",
         "Sütunları takıma göre azalan sırayla diz.",
         "Açık kartlardan oluşan herhangi bir grubu taşı.",
-        "Boş sütunlara yalnızca Papazlar konabilir."
+        "Boş sütunlara yalnızca K'ler konabilir."
       ]
     },
     "title": {
@@ -3065,11 +3020,11 @@
       ]
     },
     "quickStart": {
-      "hash": "faaa0ff2",
+      "hash": "0d757832",
       "value": [
         "Dört temeli takıma göre K'dan A'ya diz.",
         "Sıralı olmasa bile açık kartlardan oluşan herhangi bir grubu taşı.",
-        "Boş sütunlara yalnızca Papazlar konabilir."
+        "Boş sütunlara yalnızca K'ler konabilir."
       ]
     },
     "title": {
@@ -3096,11 +3051,11 @@
       ]
     },
     "quickStart": {
-      "hash": "4eb4b58b",
+      "hash": "79a87ee5",
       "value": [
-        "Temelleri As'tan Papaz'a, takıma göre artan sırayla diz.",
+        "Temelleri A'dan K'ya, takıma göre artan sırayla diz.",
         "Sütunları aynı takımda azalan sırayla diz.",
-        "Dört hücreyi kullan; boş sütunlara yalnızca Papazlar konabilir."
+        "Dört hücreyi kullan; boş sütunlara yalnızca K'ler konabilir."
       ]
     },
     "title": {
@@ -3165,9 +3120,9 @@
       ]
     },
     "quickStart": {
-      "hash": "fccb73df",
+      "hash": "8ae918a3",
       "value": [
-        "Temelleri As'tan Papaz'a, takıma göre artan sırayla diz.",
+        "Temelleri A'dan K'ya, takıma göre artan sırayla diz.",
         "Yelpazeleri takımı fark etmeksizin bir değer yukarı ya da aşağı diz.",
         "Yelpazelerde en fazla üç kart olur; boş yelpazeler boş kalır."
       ]
@@ -3235,11 +3190,11 @@
       ]
     },
     "quickStart": {
-      "hash": "3620793d",
+      "hash": "4048cea9",
       "value": [
         "Azalan sırayla diz.",
         "Aynı takımdan azalan dizileri taşı.",
-        "Papaz'dan As'a aynı takım dizilerini tamamla."
+        "K'dan A'ya aynı takım dizilerini tamamla."
       ]
     },
     "title": {
@@ -3317,15 +3272,14 @@
       "value": "Her yirmi kartlık dağıtımı yirmi yedek yığına sakla, sonra sakladıklarını geri çıkar."
     },
     "howToPlay": {
-      "hash": "53ee1a81",
+      "hash": "cd900ba6",
       "value": [
         "## Amaç",
         "104 kartın hepsini sekiz temele taşı.",
         "## Temeller",
-        "- Her takımdan bir **As** ve bir **Papaz** temelleri başlatır.",
         "- Aslar takıma göre **artan**, Papazlar takıma göre **azalan** sırayla dizilir.",
         "## Kurallar",
-        "- Yirmi **yedek** yığının her biri bir kartla başlar. Yalnızca en üstteki kartları oynanabilir ve asla birbirlerinin üstüne konamaz.",
+        "- **Yedek** yığınlarının yalnızca en üstteki kartları oynanabilir ve asla birbirlerinin üstüne konamaz.",
         "- Başlangıçta, temele oynanarak boşalan bir yedek yığın desteden doldurulur.",
         "- **20 kartlık** bir dağıtım başlatmak için **desteye** dokun. Her kart istediğin bir yedek yığına konmalı ya da doğrudan bir temele oynanmalıdır; temele oynanan kart 20'ye sayılmaz.",
         "- Dağıtım bitene kadar hiçbir yedek kart oynanamaz. Ardından boşalan yığınlar bir sonraki dağıtıma kadar boş kalır.",
@@ -3333,11 +3287,11 @@
       ]
     },
     "quickStart": {
-      "hash": "51f19cb4",
+      "hash": "658a2a22",
       "value": [
-        "Aslar artan, Papazlar azalan sırayla, takıma göre dizilir.",
-        "20 kart dağıtmak için desteye dokun; her birini bir yedek yığına koy.",
-        "Göndermek için bir yedek yığının en üstteki kartına dokun."
+        "104 kartın hepsini temellere taşı. A'ları takıma göre artan, K'leri azalan sırayla diz.",
+        "20 kart dağıtmak için desteye dokun ve her birini bir yedek yığınına koy.",
+        "Temele göndermek için bir yedek yığınının en üstteki kartına dokun."
       ]
     },
     "title": {
@@ -3512,9 +3466,9 @@
       ]
     },
     "quickStart": {
-      "hash": "7c426ffc",
+      "hash": "d2f15592",
       "value": [
-        "Sekiz dış temeli takıma göre Kızlara kadar artan sırayla diz.",
+        "Sekiz dış temeli takıma göre Q'lara kadar artan sırayla diz.",
         "Açık desteden ya da sekiz yedek karttan herhangi birinden oyna.",
         "Yedek kartlar desteden dolar; açık deste iki kez yeniden dağıtılabilir."
       ]
@@ -3530,13 +3484,12 @@
       "value": "Uzayan bir sıra dağıt ve toplamı 10, 20 ya da 30 eden kart gruplarını temizle."
     },
     "howToPlay": {
-      "hash": "da150979",
+      "hash": "03753ddd",
       "value": [
         "## Amaç",
         "52 kartın hepsini ıskartaya at.",
         "## Kurallar",
         "- Kartlar üzerlerindeki sayı kadar sayılır; Valeler, Kızlar ve Papazlar **10** sayılır.",
-        "- Sıra üç kartla başlar ve satır satır soldan sağa okunur.",
         "- Sıradaki kartı sıranın sonuna eklemek için **desteye** dokun.",
         "- Sırada **yan yana duran iki ya da daha fazla kartın** toplamı **10, 20 ya da 30** ise atılabilir.",
         "- Grubun önce ilk, sonra son kartına dokun; aradaki boşluk kapanır.",
@@ -3544,11 +3497,11 @@
       ]
     },
     "quickStart": {
-      "hash": "ad5e257b",
+      "hash": "a276041b",
       "value": [
-        "Sıranın sonuna kart eklemek için desteye dokun.",
-        "Bir grubu çıkarmak için ilk ve son kartına dokun.",
-        "İki ya da daha fazla karttan oluşan grubun toplamı 10, 20 ya da 30 olmalı."
+        "Toplamı 10, 20 veya 30 olan bitişik dizileri kaldırarak 52 kartın hepsini ıskartaya at.",
+        "Sıranın sonuna bir kart eklemek için desteye dokun.",
+        "Kaldırmak için bir dizinin ilk ve son kartına dokun."
       ]
     },
     "title": {
@@ -3631,11 +3584,11 @@
       ]
     },
     "quickStart": {
-      "hash": "fd272cd3",
+      "hash": "85966837",
       "value": [
         "Bir yığından yalnızca en üstteki kartı taşı.",
         "Bir kartı yalnızca daha yüksek bir değerin ya da boş bir yığının üstüne koy.",
-        "Altta 9, üstte As olan tek bir yığın kur."
+        "Altta 9, üstte A olan tek bir yığın kur."
       ]
     },
     "title": {
@@ -3795,9 +3748,9 @@
       ]
     },
     "quickStart": {
-      "hash": "912a5d6b",
+      "hash": "5b3e7587",
       "value": [
-        "Temelleri As'tan Papaz'a, takıma göre artan sırayla diz.",
+        "Temelleri A'dan K'ya, takıma göre artan sırayla diz.",
         "Sütunları kırmızı ve siyah sırayla azalan şekilde diz.",
         "Sıralı dizileri taşı; boş sütuna herhangi bir kart konabilir."
       ]
@@ -3843,13 +3796,13 @@
       "value": "Köşeler Papazlardan geri sayarken değirmenin merkezine dört tam dizi besle."
     },
     "howToPlay": {
-      "hash": "9a8acfb4",
+      "hash": "44337ae9",
       "value": [
         "## Amaç",
         "104 kartın hepsini temellere taşı.",
         "## Temeller",
-        "- **Merkez** bir As'la başlar ve **takımı fark etmeksizin artan sırayla** dört kez As'tan Papaz'a dizilir.",
-        "- Her **köşe** herhangi bir **Papaz**'la başlar ve **takımı fark etmeksizin azalan sırayla** As'a kadar dizilir.",
+        "- **Merkezi takıma bakmadan artan sırayla**, As’tan Papaz’a dört kez diz.",
+        "- Her **köşeyi takıma bakmadan azalan sırayla**, Papaz’dan As’a diz.",
         "## Kurallar",
         "- Sekiz **kanat** ve **açık destenin** en üstteki kartı kullanılabilir.",
         "- Boş bir kanat hemen açık desteden, açık deste boşsa desteden doldurulur.",
@@ -3859,11 +3812,11 @@
       ]
     },
     "quickStart": {
-      "hash": "9d156e94",
+      "hash": "13401944",
       "value": [
-        "Merkez, takımı fark etmeksizin dört kez A'dan K'ya artar.",
-        "Köşeler bir Papaz'la başlar ve takımı fark etmeksizin A'ya iner.",
-        "Kanatlar önce açık desteden, sonra desteden dolar."
+        "104 kartın hepsini temellere taşı.",
+        "Takıma bakmadan merkezi A'dan K'ya dört kez, köşeleri K'dan A'ya diz.",
+        "Kanatlar önce açık desteden, sonra desteden doldurulur."
       ]
     },
     "title": {
@@ -3889,12 +3842,12 @@
       ]
     },
     "quickStart": {
-      "hash": "7f7cfdd7",
+      "hash": "fc01b7cb",
       "value": [
         "Temelleri takıma göre A'dan K'ya artan sırayla diz.",
         "Sütunları kırmızı ve siyah sırayla azalan şekilde diz.",
         "Açık kartlardan oluşan herhangi bir grubu taşı.",
-        "Boş sütunlara yalnızca Papazlar konabilir."
+        "Boş sütunlara yalnızca K'ler konabilir."
       ]
     },
     "title": {

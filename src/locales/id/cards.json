@@ -17,6 +17,7 @@
   "endGame": "Akhiri permainan",
   "redeal": "Bagi ulang ({{value}})",
   "sacrifice": "Korbankan",
+  "redealAction": "Bagi ulang",
   "black": "Hitam",
   "royalFlush": "Royal Flush",
   "highCard": "Kartu tinggi",

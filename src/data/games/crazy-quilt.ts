@@ -21,9 +21,10 @@ export const crazyQuilt: GameDefinition = {
   cardDescription:
     "Unpick a quilt of upright and sideways cards, one free end at a time.",
   quickStart: [
-    "A quilt card is free when one of its short ends is uncovered.",
-    "Aces build up and Kings build down, by suit.",
-    "A free card with no foundation packs onto the waste, up or down in suit.",
+    "Move all 104 cards to the foundations.",
+    "Build Aces up, and Kings down, by suit.",
+    "Play a quilt card when one of its short ends is uncovered.",
+    "A free card with no foundation can be played to the waste pile, up or down in suit.",
   ],
   howToPlay: [
     "## Objective",
@@ -33,7 +34,6 @@ export const crazyQuilt: GameDefinition = {
     "- Aces build **up** by suit to Kings; Kings build **down** by suit to Aces.",
 
     "## Rules",
-    "- 64 cards form the **quilt**, alternating upright and sideways like a chessboard.",
     "- A quilt card is **free** when at least one of its **short ends** is not touching another card.",
     "- Tap a free card to play it to a foundation or, failing that, onto the **waste** if it is one rank above or below the top waste card in the same suit.",
     "- Gaps in the quilt are never refilled.",

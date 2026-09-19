@@ -162,7 +162,7 @@ describe("Fortune's Call", () => {
 });
 
 describe("Baker's Dozen (no lose condition)", () => {
-  test("playing the last king to its foundation wins", async () => {
+  test("automatically plays the last king home", async () => {
     const king = card("K", "spades");
     await renderGame("/bakers-dozen", BakersDozen, {
       shuffleZone: [],
@@ -174,9 +174,6 @@ describe("Baker's Dozen (no lose condition)", () => {
         run("spades", "A", "Q"),
       ],
     });
-    expect(outcome()).toBe("playing");
-
-    await doubleTapCardId(king.id);
 
     expect(outcome()).toBe("won");
   });

@@ -11,7 +11,7 @@ export const redDiamond: GameDefinition = {
     difficulty: 55,
     luck: 55,
   },
-  background: GAME_BACKGROUNDS.sahara,
+  background: GAME_BACKGROUNDS.sunsetOldCity,
   animation: GameAnimations.ManaDust,
   thumbnail: "RedDiamond.webp",
   gameColorDark: "#36251b",

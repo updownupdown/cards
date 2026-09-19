@@ -12,7 +12,7 @@ export const canfield: GameDefinition = {
     luck: 55,
   },
   thumbnail: "Canfield.webp",
-  background: GAME_BACKGROUNDS.oldRoom,
+  background: GAME_BACKGROUNDS.cozyRoom3,
   animation: GameAnimations.Dust,
   gameColorDark: "#311a1e",
   gameColorMid: "#8f4d4b",

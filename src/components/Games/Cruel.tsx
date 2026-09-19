@@ -1,4 +1,6 @@
 import { useStateManager } from "@/hooks/useStateManager";
+import { useAutoComplete } from "@/hooks/useAutoComplete";
+import { Button } from "@/components/Button/Button";
 import {
   CardHitArea,
   createRect,
@@ -25,6 +27,7 @@ import {
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { flexStyles } from "@/styles/flexStyles";
 
 import { i18n } from "@/i18n";
 const pileCount = 12;
@@ -50,7 +53,8 @@ export type CruelGameState = GameState;
 
 type Source = { pile: number };
 type Target =
-  { zone: "tableau"; pile: number } | { zone: "foundation"; pile: number };
+  | { zone: "tableau"; pile: number }
+  | { zone: "foundation"; pile: number };
 
 function emptyPiles(count: number) {
   return Array.from({ length: count }, () => [] as PlayingCard[]);
@@ -65,12 +69,16 @@ const gameStateInitial: GameState = {
   won: false,
 };
 
-function canBuildFoundation(card: PlayingCard, pile: PlayingCard[]) {
-  const pileTop = top(pile);
-  if (!pileTop) return card.rank === "A";
+function canPlaceOnFoundation(card: PlayingCard, destinationTop?: PlayingCard) {
+  if (!destinationTop) return card.rank === "A";
   return (
-    pileTop.suit === card.suit && rankValue(card) === rankValue(pileTop) + 1
+    destinationTop.suit === card.suit &&
+    rankValue(card) === rankValue(destinationTop) + 1
   );
+}
+
+function canBuildFoundation(card: PlayingCard, pile: PlayingCard[]) {
+  return canPlaceOnFoundation(card, top(pile));
 }
 
 /** Build down in suit; empty piles are never filled. */
@@ -129,7 +137,13 @@ function pileOffset(count: number) {
   return zoneFanOffset(count, pileRows, 0.12, cardDims.tableauOffset);
 }
 
-export const cruelRules = { canMove, hasMove, redealPiles, evaluateEnd };
+export const cruelRules = {
+  canMove,
+  canPlaceOnFoundation,
+  hasMove,
+  redealPiles,
+  evaluateEnd,
+};
 
 export default function Cruel() {
   const [selected, setSelected] = useState<number | null>(null);
@@ -214,6 +228,21 @@ export default function Cruel() {
     getTapHandler: (source) => () => onPilePress(source.pile),
   });
 
+  const { isAutoCompleting } = useAutoComplete({
+    game,
+    setGame,
+    isSettingUp,
+    won: game.won,
+    isBlocked: game.ended || !!dragGhost,
+    getSources: (state) => (state.deck.length === 0 ? state.tableau : null),
+    getFoundations: (state) => state.foundations,
+    canPlaceOnFoundation,
+    onStart: () => {
+      setSelected(null);
+      setLastTap(null);
+    },
+  });
+
   useEffect(() => {
     const { ended, won } = evaluateEnd(game, isSettingUp);
     if (ended !== game.ended || won !== game.won) {
@@ -296,13 +325,10 @@ export default function Cruel() {
     return [
       ...foundationZones,
       {
-        id: "deck",
-        name: "deck",
-        cards: game.deck,
-        col: pilesPerRow - 1,
+        id: "redeal",
+        col: pilesPerRow - 1.75,
         row: 0,
-        fan: { maxVisible: 3 },
-        placeholder: { iconName: "reset", iconSize: 0.5 },
+        width: 1.75,
       },
       ...tableauZones,
     ];
@@ -350,9 +376,6 @@ export default function Cruel() {
   };
 
   const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
-    if (zone.name === "deck") {
-      return { onPress: redeal, isDisabled: game.ended || !game.canRedeal };
-    }
     if (zone.name === "foundation" && zone.pileIndex !== undefined) {
       return {
         onPress: () =>
@@ -369,16 +392,17 @@ export default function Cruel() {
     return {};
   };
 
-  const { cardMap, getZoneBasePos, cardWidth, cardHeight } = useCardMap({
-    game,
-    zones,
-    cardMapper,
-    zoneMapper,
-    cardSize: "tableau",
-    fixedCols: pilesPerRow,
-    fixedRows: tableauRow + pileRows * 2 + pileRowGap,
-    gap: 0.14,
-  });
+  const { cardMap, getZoneBasePos, cardWidth, cardHeight, getZoneStylesById } =
+    useCardMap({
+      game,
+      zones,
+      cardMapper,
+      zoneMapper,
+      cardSize: "tableau",
+      fixedCols: pilesPerRow,
+      fixedRows: tableauRow + pileRows * 2 + pileRowGap,
+      gap: 0.14,
+    });
 
   function getSourceRect(source: Source) {
     const zone = zones.find(
@@ -485,6 +509,7 @@ export default function Cruel() {
       score={placed}
       canUndo={canUndo}
       undo={undo}
+      autoCompleting={isAutoCompleting}
       winLoseMessage={
         game.won
           ? i18n.t("games:cruel.crueltyConquered")
@@ -502,6 +527,18 @@ export default function Cruel() {
         }}
       >
         {cardMap}
+        <View style={[flexStyles.colCentered, getZoneStylesById("redeal")]}>
+          <Button
+            text={i18n.t("cards:redealAction")}
+            size="sm"
+            onPress={redeal}
+            fullWidth
+            taller
+            disabled={game.ended || !game.canRedeal}
+            theme="#80262e"
+            style={{ flex: 1 }}
+          />
+        </View>
         <View
           style={{
             ...StyleSheet.absoluteFillObject,

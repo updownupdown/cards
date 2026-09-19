@@ -6,7 +6,6 @@ export const GAME_THUMBNAIL_ASSETS = {
   "AcesUp.webp": require("@/assets/thumbnails/AcesUp.webp"),
   "Alaska.webp": require("@/assets/thumbnails/Alaska.webp"),
   "AllInARow.webp": require("@/assets/thumbnails/AllInARow.webp"),
-  "Archipelago.webp": require("@/assets/thumbnails/Archipelago.webp"),
   "Ascent.webp": require("@/assets/thumbnails/Ascent.webp"),
   "AustralianPatience.webp": require("@/assets/thumbnails/AustralianPatience.webp"),
   "BakersDozen.webp": require("@/assets/thumbnails/BakersDozen.webp"),

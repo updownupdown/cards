@@ -8,7 +8,7 @@ export const harp: GameDefinition = {
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 35, difficulty: 35, luck: 40 },
   thumbnail: "Harp.webp",
-  background: GAME_BACKGROUNDS.field,
+  background: GAME_BACKGROUNDS.cliffFields,
   animation: GameAnimations.Leaves,
   gameColorDark: "#293a31",
   gameColorMid: "#404928",
@@ -17,7 +17,7 @@ export const harp: GameDefinition = {
     "A more forgiving Double Klondike with four passes through the stock.",
   quickStart: [
     "Build tableau down by alternating color.",
-    "Only Kings fill empty columns.",
+    "Only Ks fill empty columns.",
     "Use four stock passes to complete eight foundations.",
   ],
   howToPlay: [

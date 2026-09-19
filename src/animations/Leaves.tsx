@@ -136,7 +136,10 @@ function LeafParticle({
 
 export function Leaves({ width, height }: SceneProps) {
   const [sizes] = useState(() =>
-    Array.from({ length: LEAF_COUNT }, (_, index) => 4 + seeded(index, 8) * 10),
+    Array.from(
+      { length: LEAF_COUNT },
+      (_, index) => 2.4 + seeded(index, 8) * 6,
+    ),
   );
   const [initialDelays] = useState(() =>
     Array.from(

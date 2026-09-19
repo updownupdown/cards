@@ -11,7 +11,7 @@ export const cafeQueue: GameDefinition = {
     luck: 55,
   },
   thumbnail: "CafeQueue.webp",
-  background: GAME_BACKGROUNDS.london,
+  background: GAME_BACKGROUNDS.city2,
   gameColorDark: "#2b1c29",
   gameColorMid: "#643b12",
   gameColorPale: "#eed5a0",

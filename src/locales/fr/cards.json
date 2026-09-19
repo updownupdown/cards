@@ -17,6 +17,7 @@
   "endGame": "Terminer la partie",
   "redeal": "Redistribuer ({{value}})",
   "sacrifice": "Sacrifier",
+  "redealAction": "Redistribuer",
   "black": "Noir",
   "royalFlush": "Quinte flush royale",
   "highCard": "Carte haute",

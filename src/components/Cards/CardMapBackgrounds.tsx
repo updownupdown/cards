@@ -10,7 +10,12 @@ import { CardOverlay, getCardShadow, getUnderlayStyle } from "./CardStyles";
 import { Icon } from "@/icons";
 
 export type DeckFanDirection =
-  "none" | "up" | "down" | "left" | "right" | "diagonal-depth";
+  | "none"
+  | "up"
+  | "down"
+  | "left"
+  | "right"
+  | "diagonal-depth";
 
 export type DeckInfoPosition = "above" | "below" | "left" | "right";
 
@@ -106,14 +111,11 @@ export const CardMapBackgrounds = ({
         const infoPosition = zone.placeholder.infoPos;
 
         if (infoPosition) {
-          const rotatedTextWidth = cardHeight * 0.6;
-          const rotatedTextHeight = cardWidth * infoSize.leftRight;
-
           switch (infoPosition) {
             case "above":
             case "below": {
-              const sidePadding = cardWidth * 0.08;
-              const gap = hasText && showCount ? cardWidth * 0.08 : 0;
+              const sidePadding = cardWidth * 0.056;
+              const gap = hasText && showCount ? cardWidth * 0.056 : 0;
               placeholderHeight += cardHeight * infoSize.aboveBelow;
               infoStyles.height =
                 cardHeight * infoSize.aboveBelow * infoSize.aboveBelowAdjust;
@@ -127,8 +129,8 @@ export const CardMapBackgrounds = ({
             }
             case "left":
             case "right": {
-              const sidePadding = cardHeight * 0.08;
-              const sideGap = cardHeight * 0.08;
+              const sidePadding = cardHeight * 0.056;
+              const sideGap = cardHeight * 0.056;
               const countBlockHeight = showCount ? cardWidth * 0.28 : 0;
               const totalGap = hasText && showCount ? sideGap : 0;
               const availableTextHeight = Math.max(
@@ -144,27 +146,23 @@ export const CardMapBackgrounds = ({
               infoStyles.justifyContent =
                 hasText && showCount ? "space-around" : "center";
               infoStyles.flexDirection = "column";
-              textStyle.width = rotatedTextWidth;
+              textStyle.width = availableTextHeight;
               textStyle.flexShrink = 0;
-              textContainerStyle.width = rotatedTextHeight;
-              textContainerStyle.height = Math.min(
-                rotatedTextWidth,
-                availableTextHeight,
-              );
+              textContainerStyle.height = availableTextHeight;
               textContainerStyle.justifyContent = "center";
               textContainerStyle.alignItems = "center";
               textContainerStyle.overflow = "hidden";
               textStyle.textAlign = "center";
               textStyle.transform = [{ rotate: `-90deg` }];
               countStyle.lineHeight = countBlockHeight;
-              textRoom = Math.min(rotatedTextWidth, availableTextHeight);
+              textRoom = availableTextHeight;
               break;
             }
           }
 
           if (hasText) {
             const textFontSize = Math.min(
-              cardWidth * 0.15,
+              cardWidth * (showCount ? 0.15 : 0.2),
               Math.max(0, textRoom) / (text.length * LETTER_WIDTH),
             );
             textStyle.fontSize = textFontSize;

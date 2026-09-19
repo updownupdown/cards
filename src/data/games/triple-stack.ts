@@ -11,7 +11,7 @@ export const tripleStack: GameDefinition = {
     luck: 40,
   },
   thumbnail: "TripleStack.webp",
-  background: GAME_BACKGROUNDS.london,
+  background: GAME_BACKGROUNDS.modernStairs,
   gameColorDark: "#102524",
   gameColorMid: "#4c9e98",
   gameColorPale: "#b0eee9",

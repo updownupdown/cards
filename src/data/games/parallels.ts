@@ -12,7 +12,7 @@ export const parallels: GameDefinition = {
     luck: 55,
   },
   thumbnail: "Parallels.webp",
-  background: GAME_BACKGROUNDS.brickStreet,
+  background: GAME_BACKGROUNDS.stoneWall,
   animation: GameAnimations.Rain,
   gameColorDark: "#1a1f24",
   gameColorMid: "#6e7f8f",
@@ -20,7 +20,7 @@ export const parallels: GameDefinition = {
   cardDescription:
     "Stack parallel rows of two decks between Ace and King foundations, freeing cards from either edge.",
   quickStart: [
-    "Aces build up and Kings build down, by suit.",
+    "Move all 104 cards to the foundations. Build As up and Ks down by suit.",
     "With three or more rows, a card needs an open space above or below.",
     "Tap the stock to fill gaps, or add a row once there are none.",
   ],
@@ -32,7 +32,6 @@ export const parallels: GameDefinition = {
     "- Aces build **up** by suit; Kings build **down** by suit.",
 
     "## Rules",
-    "- The tableau starts as one row of ten cards.",
     "- While there are one or two rows, every card is available.",
     "- From three rows on, a card is **free** only when the space directly above or below it is empty.",
     "- Tap the **stock** to fill every gap in the tableau. If there are no gaps, it deals a new row of ten across the bottom.",

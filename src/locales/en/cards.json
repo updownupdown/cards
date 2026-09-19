@@ -17,6 +17,7 @@
   "endGame": "End Game",
   "redeal": "Redeal ({{value}})",
   "sacrifice": "Sacrifice",
+  "redealAction": "Redeal",
   "black": "Black",
   "royalFlush": "Royal Flush",
   "highCard": "High Card",

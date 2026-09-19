@@ -155,7 +155,7 @@ describe("Fortress", () => {
   const emptyColumns = () =>
     Array.from({ length: 10 }, () => [] as PlayingCard[]);
 
-  test("playing the last king home wins", async () => {
+  test("automatically plays the last king home", async () => {
     const king = card("K", "spades");
     const columns = emptyColumns();
     columns[0] = [king];
@@ -170,9 +170,6 @@ describe("Fortress", () => {
       ended: false,
       won: false,
     });
-    expect(outcome()).toBe("playing");
-
-    await doubleTapCardId(king.id);
 
     expect(outcome()).toBe("won");
   });

@@ -29,9 +29,9 @@ export const carpet: GameDefinition = {
     "Move all 52 cards onto the four foundations, built up by suit from Ace to King.",
 
     "## Rules",
-    "- The four **Aces** start on the foundations; twenty cards form the **carpet**.",
-    "- Any carpet card, and the top waste card, can be played to its foundation.",
-    "- A gap in the carpet is filled at once with the top **waste** card, or from the **stock** if the waste is empty.",
-    "- Tap the **stock** to turn one card onto the waste. There is no redeal.",
+    "- Any carpet card, and the top waste card, can be played to a foundation.",
+    "- A gap in the carpet is automatically filled with the top **waste** card, or from the **stock** if the waste is empty.",
+    "- Tap the **stock** to turn one card onto the waste.",
+    "- **There is no redeal**.",
   ],
 };

@@ -1,5 +1,9 @@
 import { describe, expect, test } from "@jest/globals";
 import type { PlayingCard } from "@/components/Cards/card-utils";
+import {
+  eightOffRules,
+  type EightOffGameState,
+} from "@/components/Games/EightOff";
 import { klondikeRules } from "@/components/Games/Klondike";
 import { planAutoComplete } from "@/hooks/useAutoComplete";
 
@@ -57,5 +61,25 @@ describe("planAutoComplete", () => {
     expect(
       planAutoComplete([[]], empty(), klondikeRules.canPlaceOnFoundation),
     ).toBeNull();
+  });
+
+  test("plans and applies Eight Off moves from cascades and free cells", () => {
+    const state: EightOffGameState = {
+      cascades: [[card("2", "hearts"), card("A", "hearts")]],
+      freeCells: [card("A", "spades"), null],
+      foundations: empty(),
+    };
+    const moves = planAutoComplete(
+      eightOffRules.getAutoCompleteSources(state),
+      state.foundations,
+      eightOffRules.canPlaceOnFoundation,
+    );
+
+    expect(moves).not.toBeNull();
+    moves!.forEach((move) => eightOffRules.applyAutoCompleteMove(state, move));
+
+    expect(state.cascades).toEqual([[]]);
+    expect(state.freeCells).toEqual([null, null]);
+    expect(state.foundations.flat()).toHaveLength(3);
   });
 });

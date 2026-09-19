@@ -12,7 +12,7 @@ export const bakersGame: GameDefinition = {
     difficulty: 55,
     luck: 25,
   },
-  background: GAME_BACKGROUNDS.cherryBlossoms,
+  background: GAME_BACKGROUNDS.cozyRoom4,
   animation: GameAnimations.CherryBlossom,
   thumbnail: "BakersGame.webp",
   gameColorDark: "#1b2a24",

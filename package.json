@@ -7,6 +7,7 @@
     "icons:generate": "node ./scripts/generate-icons.js",
     "assets:generate": "node ./scripts/generate-assets.js",
     "thumbnails:convert": "node ./scripts/convert-thumbnails.mjs",
+    "backgrounds:convert": "node ./scripts/convert-backgrounds.mjs",
     "store-graphics:generate": "node ./scripts/generate-store-graphics.mjs",
     "card-backs:generate": "node ./scripts/generate-card-backs.mjs",
     "nodes:generate": "node ./scripts/generate-nodes-map.mjs",

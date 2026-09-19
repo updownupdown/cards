@@ -13,6 +13,7 @@ import {
   dropMove,
   harness,
   outcome,
+  pressButton,
   pressCardId,
   pressZone,
   renderGame,
@@ -254,7 +255,7 @@ describe("Puss in the Corner redeal", () => {
 });
 
 describe("Cruel", () => {
-  test("playing the last card wins", async () => {
+  test("automatically plays the last card home", async () => {
     const king = card("K", "spades");
     const tableau = emptyPiles(12);
     tableau[0] = [king];
@@ -271,9 +272,6 @@ describe("Cruel", () => {
       ended: false,
       won: false,
     });
-    expect(outcome()).toBe("playing");
-
-    await doubleTapCardId(king.id);
 
     expect(outcome()).toBe("won");
   });
@@ -284,7 +282,7 @@ describe("Cruel", () => {
     tableau[0] = [six];
     tableau[1] = [card("7", "hearts")];
     tableau[2] = [card("9", "clubs")];
-    await renderGame("/cruel", Cruel, {
+    const renderer = await renderGame("/cruel", Cruel, {
       deck: [],
       tableau,
       foundations: [
@@ -303,7 +301,7 @@ describe("Cruel", () => {
     expect(zoneCardIds("tableau-1")).toContain(six.id);
     expect(outcome()).toBe("playing");
 
-    await pressZone((zone) => zone.name === "deck");
+    await pressButton(renderer, "Redeal");
 
     expect(outcome()).toBe("lost");
   });

@@ -13,7 +13,7 @@ export const threePeaks: GameDefinition = {
     luck: 55,
   },
   thumbnail: "ThreePeaks.webp",
-  background: GAME_BACKGROUNDS.yukon,
+  background: GAME_BACKGROUNDS.smokyMountain,
   animation: GameAnimations.Clouds,
   gameColorDark: "#24343a",
   gameColorMid: "#244661",

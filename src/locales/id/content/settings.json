@@ -1,21 +1,4 @@
 {
-  "archipelago": {
-    "islandJokers": {
-      "hash": "71b79671",
-      "value": {
-        "description": "Menambahkan dua Joker yang bisa ditaruh di mana saja.",
-        "label": "Pakai Joker",
-        "options": [
-          {
-            "label": "Tidak"
-          },
-          {
-            "label": "Ya (lebih mudah)"
-          }
-        ]
-      }
-    }
-  },
   "ascent": {
     "ascentChallenge": {
       "hash": "11a33a3b",

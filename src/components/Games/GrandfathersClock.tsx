@@ -45,11 +45,12 @@ const clockStart: [CardRank, CardSuit][] = [
   ["8", "diamonds"],
   ["9", "clubs"],
 ];
-const clockRadius = 2.8;
-const clockCenterCol = (pileCount - 1) / 2 - 0.5;
+const clockRadius = 2.85;
+const clockCenterCol = (pileCount - 1) / 2;
+const clockColBias = 1.25;
 const tableauRow = clockRadius * cardDims.aspectRatio * 2 + 1.3;
 // Rows of height each tableau pile may fan into.
-const pileRows = 4.5;
+const pileRows = 4.2;
 
 type GameState = {
   /** Cards gathered for the deal; empty during play. */
@@ -65,7 +66,8 @@ export type GrandfathersClockGameState = GameState;
 
 type Source = { pile: number };
 type Target =
-  { zone: "tableau"; pile: number } | { zone: "foundation"; pile: number };
+  | { zone: "tableau"; pile: number }
+  | { zone: "foundation"; pile: number };
 
 function emptyPiles(count: number) {
   return Array.from({ length: count }, () => [] as PlayingCard[]);
@@ -309,8 +311,13 @@ export default function GrandfathersClock() {
         pileIndex: i,
         cards: pile,
         col:
-          Math.round((clockCenterCol + clockRadius * Math.cos(angle)) * 100) /
-          100,
+          Math.round(
+            (clockCenterCol +
+              clockRadius *
+                Math.sign(Math.cos(angle)) *
+                Math.pow(Math.abs(Math.cos(angle)), clockColBias)) *
+              100,
+          ) / 100,
         row:
           Math.round(
             clockRadius * cardDims.aspectRatio * (1 + Math.sin(angle)) * 100,

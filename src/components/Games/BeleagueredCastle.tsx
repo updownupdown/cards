@@ -1,4 +1,5 @@
 import { useStateManager } from "@/hooks/useStateManager";
+import { useAutoComplete } from "@/hooks/useAutoComplete";
 import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
@@ -179,6 +180,18 @@ export function CastleBoard({
     },
     gameStateInitial,
     resetNonGameStates: () => setSelectedCol(undefined),
+  });
+
+  const { isAutoCompleting } = useAutoComplete({
+    game,
+    setGame,
+    isSettingUp,
+    won: game.won,
+    isBlocked: game.ended,
+    getSources: (state) => state.columns,
+    getFoundations: (state) => state.foundations,
+    canPlaceOnFoundation: canPlaceFoundation,
+    onStart: () => setSelectedCol(undefined),
   });
 
   useEffect(() => {
@@ -374,6 +387,7 @@ export function CastleBoard({
       winLoseMessage={game.won ? winMessage : i18n.t("cards:noMovesRemain")}
       canUndo={canUndo}
       undo={undo}
+      autoCompleting={isAutoCompleting}
     >
       {cardMap}
     </GameWrapper>

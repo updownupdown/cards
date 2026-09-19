@@ -1,5 +1,10 @@
 import { useStateManager } from "@/hooks/useStateManager";
 import {
+  applyAutoCompleteMoveWithCells,
+  getAutoCompleteSourcesWithCells,
+  useAutoComplete,
+} from "@/hooks/useAutoComplete";
+import {
   CardHitArea,
   createRect,
   DropHitArea,
@@ -109,18 +114,26 @@ export default function FreeCell() {
   );
   const clearDragGhostRef = useRef<(() => void) | null>(null);
 
-  const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
-    useStateManager<GameState>({
-      gameStateInitial,
-      resetNonGameStates: () => {
-        setSelected(null);
-        setLastTap(null);
-        clearDragGhostRef.current?.();
-      },
-      resetAndSetup: async () => {
-        setGame(createInitialState());
-      },
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<GameState>({
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelected(null);
+      setLastTap(null);
+      clearDragGhostRef.current?.();
+    },
+    resetAndSetup: async () => {
+      setGame(createInitialState());
+    },
+  });
 
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
 
@@ -154,6 +167,26 @@ export default function FreeCell() {
   });
 
   clearDragGhostRef.current = clearDragGhost;
+
+  const { isAutoCompleting } = useAutoComplete({
+    game,
+    setGame,
+    isSettingUp,
+    won: game.foundations.every((pile) => pile.length === 13),
+    isBlocked: !!dragGhost,
+    getSources: (state) =>
+      getAutoCompleteSourcesWithCells(state.cascades, state.freeCells),
+    getFoundations: (state) => state.foundations,
+    canPlaceOnFoundation,
+    applyMove: (state, move) =>
+      applyAutoCompleteMoveWithCells(
+        state.cascades,
+        state.freeCells,
+        state.foundations,
+        move,
+      ),
+    onStart: () => setSelected(null),
+  });
 
   // ── Derived ─────────────────────────────────────────────────────────────────
 
@@ -715,6 +748,7 @@ export default function FreeCell() {
       isLoaded={isLoaded}
       canUndo={canUndo}
       undo={undo}
+      autoCompleting={isAutoCompleting}
     >
       <View style={{ flex: 1, width: "100%", gap: 12 }}>
         <View

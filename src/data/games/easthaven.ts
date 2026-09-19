@@ -6,7 +6,7 @@ export const easthaven: GameDefinition = {
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 35, difficulty: 60, luck: 55 },
   thumbnail: "Easthaven.webp",
-  background: GAME_BACKGROUNDS.river,
+  background: GAME_BACKGROUNDS.stonyBeach,
   gameColorDark: "#203638",
   gameColorMid: "#5aafaf",
   gameColorPale: "#dcefed",
@@ -15,7 +15,7 @@ export const easthaven: GameDefinition = {
   quickStart: [
     "Build foundations up by suit.",
     "Build tableau down by rank.",
-    "Deal one stock card to every column; Kings fill spaces.",
+    "Deal one stock card to every column; Ks fill spaces.",
   ],
   howToPlay: [
     "## Objective",

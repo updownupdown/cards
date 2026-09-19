@@ -11,7 +11,7 @@ export const nightVigil: GameDefinition = {
     difficulty: 76,
     luck: 42,
   },
-  background: GAME_BACKGROUNDS.city,
+  background: GAME_BACKGROUNDS.nightCity,
   animation: GameAnimations.Rain,
   thumbnail: "NightVigil.webp",
   gameColorDark: "#11161a",

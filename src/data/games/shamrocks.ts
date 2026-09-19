@@ -8,7 +8,7 @@ export const shamrocks: GameDefinition = {
   tags: [GameTag.SequenceBuilding],
   rating: { complexity: 25, difficulty: 85, luck: 40 },
   thumbnail: "Shamrocks.webp",
-  background: GAME_BACKGROUNDS.field,
+  background: GAME_BACKGROUNDS.forestGrasses,
   animation: GameAnimations.Leaves,
   gameColorDark: "#183b2a",
   gameColorMid: "#45963f",
@@ -16,7 +16,7 @@ export const shamrocks: GameDefinition = {
   cardDescription:
     "Build eighteen tiny fans without ever letting one grow beyond three cards.",
   quickStart: [
-    "Build foundations up by suit from Ace to King.",
+    "Build foundations up by suit from A to K.",
     "Build fans one rank up or down, regardless of suit.",
     "Fans hold at most three cards; empty fans stay empty.",
   ],

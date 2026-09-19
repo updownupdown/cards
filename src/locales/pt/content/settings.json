@@ -1,21 +1,4 @@
 {
-  "archipelago": {
-    "islandJokers": {
-      "hash": "71b79671",
-      "value": {
-        "description": "Adiciona dois coringas que podem ser colocados em qualquer lugar.",
-        "label": "Usar Coringas",
-        "options": [
-          {
-            "label": "Não"
-          },
-          {
-            "label": "Sim (mais fácil)"
-          }
-        ]
-      }
-    }
-  },
   "ascent": {
     "ascentChallenge": {
       "hash": "11a33a3b",

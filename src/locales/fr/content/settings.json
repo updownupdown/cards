@@ -1,21 +1,4 @@
 {
-  "archipelago": {
-    "islandJokers": {
-      "hash": "71b79671",
-      "value": {
-        "description": "Ajoute deux Jokers libres que vous pouvez placer n'importe où.",
-        "label": "Utiliser les Jokers",
-        "options": [
-          {
-            "label": "Non"
-          },
-          {
-            "label": "Oui (plus facile)"
-          }
-        ]
-      }
-    }
-  },
   "ascent": {
     "ascentChallenge": {
       "hash": "11a33a3b",

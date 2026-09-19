@@ -8,7 +8,7 @@ export const seahavenTowers: GameDefinition = {
   tags: [GameTag.SequenceBuilding],
   rating: { complexity: 35, difficulty: 50, luck: 25 },
   thumbnail: "SeahavenTowers.webp",
-  background: GAME_BACKGROUNDS.island,
+  background: GAME_BACKGROUNDS.shipwreck,
   // animation: GameAnimations.Clouds,
   gameColorDark: "#173946",
   gameColorMid: "#5a9daf",

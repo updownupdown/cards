@@ -30,7 +30,6 @@ export const frog: GameDefinition = {
     "Move all 104 cards onto the eight foundations, each built up from Ace to King **regardless of suit**.",
 
     "## Rules",
-    "- Thirteen cards form the **reserve**; any Aces dealt there go straight to the foundations.",
     "- Only the top card of the reserve is available.",
     "- Each stock card must be placed on one of the **five waste piles**, or played to a foundation.",
     "- Any card may go on any waste pile, but cards can never move between waste piles.",

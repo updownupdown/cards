@@ -9,7 +9,7 @@ export const gargantua: GameDefinition = {
   tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 35, difficulty: 45, luck: 45 },
   thumbnail: "Gargantua.webp",
-  background: GAME_BACKGROUNDS.mountain1,
+  background: GAME_BACKGROUNDS.frozenMountain,
   animation: GameAnimations.Clouds,
   gameColorDark: "#24323a",
   gameColorMid: "#578386",
@@ -18,7 +18,7 @@ export const gargantua: GameDefinition = {
     "Climb a nine-column, two-deck Klondike with eight foundations.",
   quickStart: [
     "Build tableau down by alternating color.",
-    "Move ordered runs; only Kings fill empty columns.",
+    "Move ordered runs; only Ks fill empty columns.",
     "Build eight foundations by suit; the stock has two passes.",
   ],
   howToPlay: [

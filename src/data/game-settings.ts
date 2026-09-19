@@ -272,19 +272,6 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         ],
       },
     ],
-    "/archipelago": [
-      {
-        key: "islandJokers",
-        label: "Use Jokers",
-        type: "string",
-        applyBehavior: "next-game",
-        description: "Adds two Joker wildcards you can place anywhere.",
-        options: [
-          { label: "No", value: false },
-          { label: "Yes (Easier)", value: true },
-        ],
-      },
-    ],
     "/lycan": [
       {
         key: "lycanMode",
