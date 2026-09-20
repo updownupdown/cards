@@ -393,6 +393,18 @@
     }
   },
   "pocket-poker": {
+    "pokerDifficulty": {
+      "hash": "00000000",
+      "value": {
+        "description": "Todos los modos permiten 2 robos y hacen que retirarse cueste 1 punto. Difícil empieza con 3 puntos y concede los empates al rival. Experto también da una carta extra al rival.",
+        "label": "Dificultad",
+        "options": [
+          { "label": "Normal" },
+          { "label": "Difícil" },
+          { "label": "Experto" }
+        ]
+      }
+    },
     "pokerJokers": {
       "hash": "8bf4ba75",
       "value": {

@@ -1,12 +1,13 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
+
 export const simpleSimon: GameDefinition = {
   path: "/simple-simon",
   title: "Simple Simon",
   tags: [GameTag.SequenceBuilding],
   rating: { complexity: 35, difficulty: 55, luck: 25 },
   thumbnail: "SimpleSimon.webp",
-  background: GAME_BACKGROUNDS.oldRoom,
+  background: GAME_BACKGROUNDS.modernStairs,
   gameColorDark: "#312d29",
   gameColorMid: "#941f1f",
   gameColorPale: "#eadfca",

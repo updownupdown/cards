@@ -12,6 +12,7 @@ export type GameSpecificSettingKey =
   | "specialAbilities"
   | "gridlinesHard"
   | "pokerJokers"
+  | "pokerDifficulty"
   | "ascentDifficulty"
   | "ascentChallenge"
   | "chapterAndVerseLoyalPatrons"
@@ -353,6 +354,19 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
       },
     ],
     "/pocket-poker": [
+      {
+        key: "pokerDifficulty",
+        label: "Difficulty",
+        type: "string",
+        applyBehavior: "next-game",
+        description:
+          "Hard mode starts at 3 points (instead of 5) and awards ties to the opponent. Expert also gives the opponent an extra card.",
+        options: [
+          { label: "Normal", value: "normal" },
+          { label: "Hard", value: "hard" },
+          { label: "Expert", value: "expert" },
+        ],
+      },
       {
         key: "pokerJokers",
         label: "Jokers",

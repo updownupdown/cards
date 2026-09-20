@@ -303,6 +303,7 @@ export function useStateManager<T>({
     isSettingUp,
     reset,
     saveUndoState,
+    clearUndoHistory: clearHistory,
     undo,
     canUndo: history.length > 0,
     isLoaded,

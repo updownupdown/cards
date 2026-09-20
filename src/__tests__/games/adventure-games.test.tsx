@@ -10,6 +10,7 @@ import "../../../jest/game-mocks";
 import {
   card,
   dropMove,
+  harness,
   outcome,
   pressButton,
   pressCardId,
@@ -84,11 +85,11 @@ describe.each<[string, string, ComponentType, number]>([
     await renderGame(path, Game, {
       tableau,
       stock: [],
-      completed: [
-        run("hearts", "K", "A"),
-        run("clubs", "K", "A"),
-        run("diamonds", "K", "A"),
-      ],
+      discard: [
+        ...run("hearts", "K", "A"),
+        ...run("clubs", "K", "A"),
+        ...run("diamonds", "K", "A"),
+      ].map((card) => ({ ...card, faceUp: false })),
       ended: false,
       won: false,
     });
@@ -97,8 +98,83 @@ describe.each<[string, string, ComponentType, number]>([
     await dropMove({ pile: 1, card: 0 }, { pile: 0 });
 
     expect(outcome()).toBe("won");
+    const discard = harness.mapConfig?.zones.find(
+      (zone) => zone.name === "discard",
+    );
+    expect(discard?.cards).toHaveLength(52);
+    expect(discard?.cards?.every((card) => !card.faceUp)).toBe(true);
   });
 });
+
+describe.each<
+  [
+    string,
+    string,
+    ComponentType,
+    number,
+    { col: number; row: number },
+    { col: number; row: number },
+    "landscape" | undefined,
+  ]
+>([
+  [
+    "Simple Simon",
+    "/simple-simon",
+    SimpleSimon,
+    10,
+    { col: 10.5, row: 0 },
+    { col: 10.5, row: 0 },
+    "landscape",
+  ],
+  [
+    "Spiderette",
+    "/spiderette",
+    Spiderette,
+    7,
+    { col: 1, row: 6 },
+    { col: 0, row: 6 },
+    undefined,
+  ],
+])(
+  "%s board layout",
+  (
+    _name,
+    path,
+    Game,
+    pileCount,
+    stockPosition,
+    discardPosition,
+    rotateHint,
+  ) => {
+    test("places the decks and tableau as configured", async () => {
+      await renderGame(path, Game, {
+        tableau: Array.from({ length: pileCount }, () => []),
+        stock: [],
+        discard: [],
+        ended: false,
+        won: false,
+      });
+
+      const zones = harness.mapConfig?.zones ?? [];
+      expect(zones.find((zone) => zone.name === "stock")).toMatchObject(
+        stockPosition,
+      );
+      expect(zones.find((zone) => zone.name === "discard")).toMatchObject(
+        discardPosition,
+      );
+      expect(zones.find((zone) => zone.name === "discard")?.placeholder).toBe(
+        undefined,
+      );
+      expect(zones.some((zone) => zone.name === "completed")).toBe(false);
+      expect(
+        zones
+          .filter((zone) => zone.name === "tableau")
+          .every((zone) => zone.row === 0),
+      ).toBe(true);
+      expect(harness.wrapperProps?.showDeviceRotateHint).toBe(rotateHint);
+    });
+  },
+);
 
 describe("Invaders", () => {
   const defenders = (cards: PlayingCard[]) => [

@@ -393,6 +393,18 @@
     }
   },
   "pocket-poker": {
+    "pokerDifficulty": {
+      "hash": "00000000",
+      "value": {
+        "description": "Tüm modlarda 2 yeniden çekiş vardır ve çekilmek 1 puana mal olur. Zor mod 3 puanla başlar ve eşitlikleri rakibe verir. Uzman ayrıca rakibe fazladan bir kart verir.",
+        "label": "Zorluk",
+        "options": [
+          { "label": "Normal" },
+          { "label": "Zor" },
+          { "label": "Uzman" }
+        ]
+      }
+    },
     "pokerJokers": {
       "hash": "8bf4ba75",
       "value": {

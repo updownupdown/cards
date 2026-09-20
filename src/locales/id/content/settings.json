@@ -393,6 +393,18 @@
     }
   },
   "pocket-poker": {
+    "pokerDifficulty": {
+      "hash": "00000000",
+      "value": {
+        "description": "Semua mode mengizinkan 2 kali ambil ulang dan menyerah menghabiskan 1 poin. Sulit dimulai dengan 3 poin dan lawan menang jika seri. Ahli juga memberi lawan satu kartu ekstra.",
+        "label": "Kesulitan",
+        "options": [
+          { "label": "Normal" },
+          { "label": "Sulit" },
+          { "label": "Ahli" }
+        ]
+      }
+    },
     "pokerJokers": {
       "hash": "8bf4ba75",
       "value": {

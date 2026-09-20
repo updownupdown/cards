@@ -368,11 +368,10 @@
   },
   "pocketPoker": {
     "youHit10PointsYou": "You hit 10 points — you win!",
-    "foldedThreeTimesInA": "Folded three times in a row.",
     "youBustedOut": "You busted out.",
     "tapCardsToDiscard": "Tap cards to discard",
     "minBet": "Min bet",
-    "opponentDraws5YourBet": "Opponent draws: 5 + (your bet)",
+    "opponentDrawsYourBet": "Opponent draws: {{value}} + (your bet)",
     "youWin": "You win",
     "youLose": "You lose",
     "pushTie": "Push (tie)",

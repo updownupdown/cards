@@ -2562,26 +2562,30 @@
       "value": "Un duelo de póker de bolsillo: roba, apuesta y supera a un rival que recibe cartas del mismo mazo."
     },
     "howToPlay": {
-      "hash": "79beb74f",
+      "hash": "00000000",
       "value": [
         "## Objetivo",
-        "Empiezas con 5 puntos. **Ganas** al llegar a 10 y **pierdes** si bajas a 0.",
+        "Llega a **10 puntos** para ganar. Pierdes si una apuesta reduce tu puntuación a 0.",
         "## Orden del turno",
         "1. **Roba 5 cartas**",
-        "2. **Juega o retírate:** retirarse no cuesta nada, pero retirarse **tres veces seguidas** hace perder la partida.",
-        "3. **Descarta y vuelve a robar** hasta **3 veces** para mejorar tu mano.",
+        "2. **Juega o retírate:** retirarse cuesta **1 punto**. Después de **dos retiradas seguidas**, o con 1 punto, debes jugar. Jugar reinicia el contador.",
+        "3. **Descarta y vuelve a robar** hasta **2 veces** para mejorar tu mano.",
         "4. **Apuesta:** tu apuesta mínima es igual al número de veces que has robado:",
         "- 1 robo → apuesta 1, 2 o 3",
         "- 2 robos → apuesta 2 o 3",
-        "- 3 robos → apuesta 3",
-        "\n5. **El rival roba** 5 cartas más una por cada punto apostado (6, 7 u 8) y se queda con sus **cinco mejores**.",
+        "\n5. **El rival roba** cartas según la dificultad seleccionada y se queda con sus **cinco mejores**.",
         "6. **Compara las manos** según la clasificación habitual del póker. Los empates se deciden por la carta más alta.",
+        "7. **Deshacer** no está disponible después de que un nuevo robo, la confrontación o un nuevo reparto revele cartas ocultas.",
+        "## Dificultad",
+        "- **Normal:** empieza con 5 puntos; los empates no cambian la puntuación; el rival roba 5 cartas más tu apuesta.",
+        "- **Difícil:** empieza con 3 puntos; la casa gana los empates; el rival roba 5 cartas más tu apuesta.",
+        "- **Experto:** reglas de Difícil, pero el rival roba 6 cartas más tu apuesta.",
         "## Comodines",
         "Activa los **Comodines** en los ajustes para añadir dos comodines que cuentan como cualquier carta que no esté ya en la mano."
       ]
     },
     "quickStart": {
-      "hash": "bedf6ddc",
+      "hash": "00000000",
       "value": [
         "Forma una mano de póker y luego apuesta.",
         "Cuanto más apuestes, más cartas roba tu rival.",

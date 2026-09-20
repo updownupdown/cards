@@ -10,6 +10,7 @@ import "../../../jest/game-mocks";
 import {
   card,
   dropMove,
+  harness,
   outcome,
   pressButton,
   pressCardId,
@@ -18,7 +19,7 @@ import {
 } from "../../../jest/game-harness";
 import type { PlayingCard } from "@/components/Cards/card-utils";
 import Infiltrator from "@/components/Games/Infiltrator";
-import PocketPoker from "@/components/Games/PocketPoker";
+import PocketPoker, { pocketPokerRules } from "@/components/Games/PocketPoker";
 import Somnus from "@/components/Games/Somnus";
 import SpiderSolitaire from "@/components/Games/SpiderSolitaire";
 
@@ -197,19 +198,72 @@ describe("Pocket Poker", () => {
     expect(outcome()).toBe("won");
   });
 
-  test("folding three times in a row loses", async () => {
+  test("difficulty presets tighten only their specified rules", () => {
+    expect(pocketPokerRules.rulesForDifficulty("normal")).toEqual({
+      startScore: 5,
+      maxDraws: 2,
+      foldCost: 1,
+      opponentBaseCards: 5,
+      houseWinsTies: false,
+    });
+    expect(pocketPokerRules.rulesForDifficulty("hard")).toEqual({
+      startScore: 3,
+      maxDraws: 2,
+      foldCost: 1,
+      opponentBaseCards: 5,
+      houseWinsTies: true,
+    });
+    expect(pocketPokerRules.rulesForDifficulty("expert")).toEqual({
+      startScore: 3,
+      maxDraws: 2,
+      foldCost: 1,
+      opponentBaseCards: 6,
+      houseWinsTies: true,
+    });
+  });
+
+  test("folding twice disables folding without losing", async () => {
     const renderer = await renderGame("/pocket-poker", PocketPoker, {
       ...baseState,
       deck: run("clubs", "2", "9", false),
       hand: run("hearts", "2", "6"),
       phase: "decide",
-      foldStreak: 2,
+      foldStreak: 1,
       score: 5,
     });
     expect(outcome()).toBe("playing");
 
     await pressButton(renderer, "Fold");
 
-    expect(outcome()).toBe("lost");
+    expect(outcome()).toBe("playing");
+    expect(
+      renderer.root.findByProps({ totalValue: 10 }).props.progressValue,
+    ).toBe(4);
+    const foldButton = renderer.root.findAll(
+      (node) => node.props.text === "Fold",
+    )[0];
+    expect(foldButton.props.disabled).toBe(true);
+  });
+
+  test("revealing hidden cards clears undo history", async () => {
+    const renderer = await renderGame("/pocket-poker", PocketPoker, {
+      ...baseState,
+      deck: run("clubs", "7", "K", false),
+      hand: run("hearts", "2", "6"),
+      phase: "decide",
+      foldStreak: 0,
+      score: 5,
+      difficulty: "normal",
+    });
+
+    await pressButton(renderer, "Play");
+    expect(harness.wrapperProps?.canUndo).toBe(true);
+
+    await pressCardId(
+      harness.mapConfig!.zones.find((zone) => zone.id === "hand")!.cards![0].id,
+    );
+    await pressButton(renderer, "Draw 1");
+
+    expect(harness.wrapperProps?.canUndo).toBe(false);
   });
 });

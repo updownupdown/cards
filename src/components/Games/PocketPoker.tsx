@@ -28,9 +28,12 @@ import { Colors, rgba } from "@/styles/styles";
 import { rotatedText } from "@/styles/textStyles";
 
 import { i18n } from "@/i18n";
-const startScore = 5;
+const normalStartScore = 5;
+const hardStartScore = 3;
 const winScore = 10;
-const maxFoldStreak = 3;
+const maxFoldStreak = 2;
+const maxDraws = 2;
+type PokerDifficulty = "normal" | "hard" | "expert";
 
 const LAYOUT = {
   cols: 7,
@@ -228,10 +231,21 @@ function handName(val: number[]) {
 }
 
 function foldOutcome(foldStreak: number) {
-  const nextFoldStreak = foldStreak + 1;
+  const nextFoldStreak = Math.min(foldStreak + 1, maxFoldStreak);
   return {
     foldStreak: nextFoldStreak,
-    ended: nextFoldStreak >= maxFoldStreak,
+    canFold: nextFoldStreak < maxFoldStreak,
+  };
+}
+
+function rulesForDifficulty(difficulty: PokerDifficulty) {
+  const hard = difficulty === "hard" || difficulty === "expert";
+  return {
+    startScore: hard ? hardStartScore : normalStartScore,
+    maxDraws,
+    foldCost: 1,
+    opponentBaseCards: difficulty === "expert" ? 6 : 5,
+    houseWinsTies: hard,
   };
 }
 
@@ -243,7 +257,8 @@ export const pocketPokerRules = {
   bestFiveOf,
   handName,
   foldOutcome,
-  startScore,
+  rulesForDifficulty,
+  startScore: normalStartScore,
   winScore,
   maxFoldStreak,
 };
@@ -265,6 +280,7 @@ type GameState = {
   roundResult: "win" | "lose" | "push" | null;
   ended: boolean;
   won: boolean;
+  difficulty?: PokerDifficulty;
 };
 
 export type PocketPokerGameState = GameState;
@@ -279,10 +295,11 @@ const gameStateInitial: GameState = {
   discardCount: 0,
   bet: 0,
   foldStreak: 0,
-  score: startScore,
+  score: normalStartScore,
   roundResult: null,
   ended: false,
   won: false,
+  difficulty: "normal",
 };
 
 function buildDeck(jokers: boolean) {
@@ -297,8 +314,11 @@ export default function PocketPoker() {
   const { spacing } = useResponsiveMetrics();
   const { colorPale } = useGameColors();
   const jokers = useGameSettingValue("pokerJokers") as boolean;
+  const difficulty = useGameSettingValue("pokerDifficulty") as PokerDifficulty;
   const jokersRef = useRef(jokers);
+  const difficultyRef = useRef(difficulty);
   jokersRef.current = jokers;
+  difficultyRef.current = difficulty;
 
   const [selectedDiscards, setSelectedDiscards] = useState<string[]>([]);
 
@@ -310,36 +330,47 @@ export default function PocketPoker() {
     draft.roundResult = null;
   }
 
-  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
-    useStateManager({
-      gameStateInitial,
-      resetNonGameStates: () => setSelectedDiscards([]),
-      resetAndSetup: async () => {
-        setGame((draft) => {
-          const cards = [
-            ...draft.deck,
-            ...draft.hand,
-            ...draft.opponent,
-            ...draft.discard,
-          ];
-          draft.deck = flipAllToBack(
-            shuffle(cards.length > 0 ? cards : buildDeck(jokersRef.current)),
-          );
-          draft.hand = [];
-          draft.opponent = [];
-          draft.discard = [];
-          draft.oppBest = [];
-          draft.score = startScore;
-          draft.foldStreak = 0;
-          draft.ended = false;
-          draft.won = false;
-        });
-        await delay();
-        setGame(distributeHand);
-      },
-    });
+  const {
+    isLoaded,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    clearUndoHistory,
+    reset,
+  } = useStateManager({
+    gameStateInitial,
+    resetNonGameStates: () => setSelectedDiscards([]),
+    resetAndSetup: async () => {
+      setGame((draft) => {
+        const cards = [
+          ...draft.deck,
+          ...draft.hand,
+          ...draft.opponent,
+          ...draft.discard,
+        ];
+        draft.deck = flipAllToBack(
+          shuffle(cards.length > 0 ? cards : buildDeck(jokersRef.current)),
+        );
+        draft.hand = [];
+        draft.opponent = [];
+        draft.discard = [];
+        draft.oppBest = [];
+        draft.score = rulesForDifficulty(difficultyRef.current).startScore;
+        draft.foldStreak = 0;
+        draft.ended = false;
+        draft.won = false;
+        draft.difficulty = difficultyRef.current;
+      });
+      await delay();
+      setGame(distributeHand);
+    },
+  });
+  const difficultyRules = rulesForDifficulty(game.difficulty ?? "normal");
 
   async function dealNextRound() {
+    clearUndoHistory();
     setGame((draft) => {
       draft.deck = flipAllToBack(
         shuffle([
@@ -381,21 +412,20 @@ export default function PocketPoker() {
   }
 
   async function fold() {
-    if (game.phase !== "decide" || game.ended) return;
+    if (
+      game.phase !== "decide" ||
+      game.ended ||
+      game.score <= difficultyRules.foldCost ||
+      game.foldStreak >= maxFoldStreak
+    ) {
+      return;
+    }
     saveUndoState(structuredClone(game));
     const outcome = foldOutcome(game.foldStreak);
 
-    if (outcome.ended) {
-      setGame((draft) => {
-        draft.foldStreak = outcome.foldStreak;
-        draft.ended = true;
-        draft.won = false;
-      });
-      return;
-    }
-
     setGame((draft) => {
       draft.foldStreak = outcome.foldStreak;
+      draft.score -= difficultyRules.foldCost;
     });
     setSelectedDiscards([]);
     await dealNextRound();
@@ -411,7 +441,7 @@ export default function PocketPoker() {
   function drawAction() {
     if (game.phase !== "discard" || game.ended) return;
     const discardIds = new Set(selectedDiscards);
-    saveUndoState(structuredClone(game));
+    clearUndoHistory();
     setGame((draft) => {
       const discarded = draft.hand.filter((c) => discardIds.has(c.id));
       const keep = draft.hand.filter((c) => !discardIds.has(c.id));
@@ -420,7 +450,7 @@ export default function PocketPoker() {
       draft.hand = sortCardsBySuit([...keep, ...drawn]);
       draft.discard.push(...flipAllToBack(discarded));
       draft.discardCount += 1;
-      if (draft.discardCount >= 3) draft.phase = "bet";
+      if (draft.discardCount >= difficultyRules.maxDraws) draft.phase = "bet";
     });
     setSelectedDiscards([]);
   }
@@ -436,14 +466,16 @@ export default function PocketPoker() {
   async function placeBet(amount: number) {
     if (game.phase !== "bet" || game.ended) return;
 
-    saveUndoState(structuredClone(game));
+    clearUndoHistory();
 
     let best: PlayingCard[] = [];
     let val: number[] = [];
 
     setGame((draft) => {
       draft.bet = amount;
-      const oppCards = draft.deck.splice(0, 5 + amount).map(flipToFace);
+      const oppCards = draft.deck
+        .splice(0, difficultyRules.opponentBaseCards + amount)
+        .map(flipToFace);
       draft.opponent = sortCardsBySuit(oppCards);
       const result = bestFiveOf(oppCards);
       best = result.best;
@@ -460,7 +492,7 @@ export default function PocketPoker() {
       if (cmp > 0) {
         draft.roundResult = "win";
         draft.score += amount;
-      } else if (cmp < 0) {
+      } else if (cmp < 0 || difficultyRules.houseWinsTies) {
         draft.roundResult = "lose";
         draft.score -= amount;
       } else {
@@ -641,9 +673,7 @@ export default function PocketPoker() {
       winLoseMessage={
         game.won
           ? i18n.t("games:pocketPoker.youHit10PointsYou")
-          : game.foldStreak >= maxFoldStreak
-            ? i18n.t("games:pocketPoker.foldedThreeTimesInA")
-            : i18n.t("games:pocketPoker.youBustedOut")
+          : i18n.t("games:pocketPoker.youBustedOut")
       }
       canUndo={canUndo}
       undo={undo}
@@ -706,7 +736,7 @@ export default function PocketPoker() {
                 {i18n.t("cards:draw")}
               </Text>
               <Text size="xl" weight={600} color={colorPale}>
-                {game.discardCount} / 3
+                {game.discardCount} / {difficultyRules.maxDraws}
               </Text>
             </View>
 
@@ -737,7 +767,9 @@ export default function PocketPoker() {
 
         {game.phase === "bet" && (
           <Text size="sm" weight={400} color={Colors.white}>
-            {i18n.t("games:pocketPoker.opponentDraws5YourBet")}
+            {i18n.t("games:pocketPoker.opponentDrawsYourBet", {
+              value: difficultyRules.opponentBaseCards,
+            })}
           </Text>
         )}
 
@@ -815,7 +847,11 @@ export default function PocketPoker() {
               onPress={fold}
               taller
               theme="red"
-              disabled={game.ended || game.foldStreak >= maxFoldStreak}
+              disabled={
+                game.ended ||
+                game.score <= difficultyRules.foldCost ||
+                game.foldStreak >= maxFoldStreak
+              }
               style={{ flex: 1 }}
             />
             <Button

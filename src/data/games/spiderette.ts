@@ -1,12 +1,15 @@
+import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { GameDefinition, GameTag } from "../games-data";
+
 export const spiderette: GameDefinition = {
   path: "/spiderette",
   title: "Spiderette",
   tags: [GameTag.SequenceBuilding],
   rating: { complexity: 35, difficulty: 60, luck: 40 },
   thumbnail: "Spiderette.webp",
-  background: GAME_BACKGROUNDS.forest,
+  background: GAME_BACKGROUNDS.forestGrasses,
+  animation: GameAnimations.Firefly,
   gameColorDark: "#202e27",
   gameColorMid: "#88335a",
   gameColorPale: "#dae6cf",

@@ -368,11 +368,10 @@
   },
   "pocketPoker": {
     "youHit10PointsYou": "Você chegou a 10 pontos e venceu!",
-    "foldedThreeTimesInA": "Você desistiu três vezes seguidas.",
     "youBustedOut": "Você ficou sem pontos.",
     "tapCardsToDiscard": "Toque nas cartas para descartar",
     "minBet": "Aposta mín.",
-    "opponentDraws5YourBet": "O oponente compra: 5 + (sua aposta)",
+    "opponentDrawsYourBet": "O oponente compra: {{value}} + (sua aposta)",
     "youWin": "Você venceu",
     "youLose": "Você perdeu",
     "pushTie": "Empate",

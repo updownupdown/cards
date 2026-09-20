@@ -2561,26 +2561,30 @@
       "value": "Un duel de poker de poche\u00a0: piochez, misez et battez un adversaire servi dans le même paquet."
     },
     "howToPlay": {
-      "hash": "79beb74f",
+      "hash": "00000000",
       "value": [
         "## Objectif",
-        "Vous commencez avec 5 points. **Gagnez** en atteignant 10, ou **perdez** en tombant à 0.",
+        "Atteignez **10 points** pour gagner. Vous perdez si une mise fait tomber votre score à 0.",
         "## Déroulement du tour",
         "1. **Piochez 5 cartes**",
-        "2. **Jouez ou couchez-vous\u00a0:** se coucher ne coûte rien, mais se coucher **trois fois de suite** fait perdre la partie.",
-        "3. **Défaussez et repiochez** jusqu'à **3 fois** pour améliorer votre main.",
+        "2. **Jouez ou couchez-vous\u00a0:** se coucher coûte **1 point**. Après **deux abandons consécutifs**, ou à 1 point, vous devez jouer. Jouer remet le compteur à zéro.",
+        "3. **Défaussez et repiochez** jusqu'à **2 fois** pour améliorer votre main.",
         "4. **Misez\u00a0:** votre mise minimale est égale au nombre de fois où vous avez pioché\u00a0:",
         "- 1 pioche → mise de 1, 2 ou 3",
         "- 2 pioches → mise de 2 ou 3",
-        "- 3 pioches → mise de 3",
-        "\n5. **L'adversaire pioche** 5 cartes plus une par point misé (6, 7 ou 8), et garde ses **cinq meilleures**.",
+        "\n5. **L'adversaire pioche** selon la difficulté choisie et garde ses **cinq meilleures**.",
         "6. **Comparez les mains** selon le classement habituel du poker. En cas d'égalité, la carte la plus haute départage.",
+        "7. **Annuler** n'est plus disponible après qu'une nouvelle pioche, l'abattage ou une nouvelle donne révèle des cartes cachées.",
+        "## Difficulté",
+        "- **Normal\u00a0:** commencez avec 5 points; les égalités ne changent pas le score; l'adversaire pioche 5 cartes plus votre mise.",
+        "- **Difficile\u00a0:** commencez avec 3 points; la banque gagne les égalités; l'adversaire pioche 5 cartes plus votre mise.",
+        "- **Expert\u00a0:** règles du mode Difficile, mais l'adversaire pioche 6 cartes plus votre mise.",
         "## Jokers",
         "Activez les **Jokers libres** dans les réglages pour ajouter deux Jokers qui valent n'importe quelle carte absente de la main."
       ]
     },
     "quickStart": {
-      "hash": "bedf6ddc",
+      "hash": "00000000",
       "value": [
         "Formez une main de poker, puis misez.",
         "Plus vous misez, plus votre adversaire pioche de cartes.",

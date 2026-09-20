@@ -368,11 +368,10 @@
   },
   "pocketPoker": {
     "youHit10PointsYou": "Vous atteignez 10 points, vous gagnez !",
-    "foldedThreeTimesInA": "Couché trois fois de suite.",
     "youBustedOut": "Vous êtes à sec.",
     "tapCardsToDiscard": "Touchez les cartes à défausser",
     "minBet": "Mise min.",
-    "opponentDraws5YourBet": "L'adversaire pioche : 5 + (votre mise)",
+    "opponentDrawsYourBet": "L'adversaire pioche : {{value}} + (votre mise)",
     "youWin": "Vous gagnez",
     "youLose": "Vous perdez",
     "pushTie": "Égalité",

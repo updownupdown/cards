@@ -1282,9 +1282,7 @@
     },
     "quickStart": {
       "hash": "a14a111d",
-      "value": [
-        "Düşman hattı sağa kayar, sonra düşman destesinden dolar."
-      ]
+      "value": ["Düşman hattı sağa kayar, sonra düşman destesinden dolar."]
     },
     "title": {
       "hash": "946d7b10",
@@ -2562,26 +2560,30 @@
       "value": "Cep boyu bir poker düellosu: kart çek, bahis yap ve aynı desteden dağıtılan rakibini geç."
     },
     "howToPlay": {
-      "hash": "79beb74f",
+      "hash": "00000000",
       "value": [
         "## Amaç",
-        "5 puanla başlarsın. 10'a ulaşarak **kazan**, 0'a düşersen **kaybedersin**.",
+        "Kazanmak için **10 puana** ulaş. Bir bahis puanını 0'a düşürürse kaybedersin.",
         "## Tur sırası",
         "1. **5 kart çek**",
-        "2. **Oyna ya da çekil:** çekilmek bedava, ama **üst üste üç kez** çekilirsen oyunu kaybedersin.",
-        "3. Elini güçlendirmek için **en fazla 3 kez** **at ve yeniden çek**.",
+        "2. **Oyna ya da çekil:** çekilmek **1 puana** mal olur. **Üst üste iki kez** çekildikten sonra veya 1 puandayken oynamalısın. Oynamak sayacı sıfırlar.",
+        "3. Elini güçlendirmek için **en fazla 2 kez** **at ve yeniden çek**.",
         "4. **Bahis yap:** en düşük bahsin, kart çekme sayına eşittir:",
         "- 1 çekiş → 1, 2 ya da 3 bahis",
         "- 2 çekiş → 2 ya da 3 bahis",
-        "- 3 çekiş → 3 bahis",
-        "\n5. **Rakip çeker:** 5 kart artı bahis yaptığın her puan için bir kart daha (6, 7 ya da 8) ve **en iyi beş** kartını tutar.",
+        "\n5. **Rakip çeker:** seçilen zorluğa göre kart çeker ve **en iyi beş** kartını tutar.",
         "6. **Elleri karşılaştır:** standart poker sıralaması geçerlidir. Eşitlikte en yüksek kart kazanır.",
+        "7. **Geri al**, yeniden çekiş, kart açma veya yeni dağıtım gizli kartları gösterdikten sonra kullanılamaz.",
+        "## Zorluk",
+        "- **Normal:** 5 puanla başla; eşitlikte puan değişmez; rakip 5 kart artı bahsin kadar kart çeker.",
+        "- **Zor:** 3 puanla başla; eşitliği kasa kazanır; rakip 5 kart artı bahsin kadar kart çeker.",
+        "- **Uzman:** Zor kuralları geçerlidir, ancak rakip 6 kart artı bahsin kadar kart çeker.",
         "## Jokerler",
         "Ayarlardan **Serbest jokerler**i açarak eldeki kartlar dışında herhangi bir kart yerine geçen iki joker ekle."
       ]
     },
     "quickStart": {
-      "hash": "bedf6ddc",
+      "hash": "00000000",
       "value": [
         "Bir poker eli kur, sonra bahis yap.",
         "Bahsin büyüdükçe rakibin daha çok kart çeker.",

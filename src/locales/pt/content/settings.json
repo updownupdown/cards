@@ -393,6 +393,18 @@
     }
   },
   "pocket-poker": {
+    "pokerDifficulty": {
+      "hash": "00000000",
+      "value": {
+        "description": "Todos os modos permitem 2 compras e fazem desistir custar 1 ponto. Difícil começa com 3 pontos e concede empates ao oponente. Especialista também dá uma carta extra ao oponente.",
+        "label": "Dificuldade",
+        "options": [
+          { "label": "Normal" },
+          { "label": "Difícil" },
+          { "label": "Especialista" }
+        ]
+      }
+    },
     "pokerJokers": {
       "hash": "8bf4ba75",
       "value": {

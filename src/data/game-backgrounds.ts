@@ -172,11 +172,6 @@ export const GAME_BACKGROUNDS = {
     authorName: "Degleex Ganzorig",
     authorLink: "https://unsplash.com/@degleex",
   },
-  yellowLeaves: {
-    source: require("@/assets/backgrounds/yellow-leaves.webp"),
-    authorName: "Degleex Ganzorig",
-    authorLink: "https://unsplash.com/@degleex",
-  },
   forestGrasses: {
     source: require("@/assets/backgrounds/forest-grasses.webp"),
     authorName: "Degleex Ganzorig",
@@ -393,7 +388,6 @@ export const {
   aridHill,
   forest,
   geometricCeiling,
-  yellowLeaves,
   forestGrasses,
   stoneWall,
   oldRoom,

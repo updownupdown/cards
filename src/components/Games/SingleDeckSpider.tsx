@@ -30,6 +30,23 @@ export type SingleDeckSpiderVariant = "simple-simon" | "spiderette";
 const TABLEAU_ROW = 1.2;
 const BOARD_ROWS = 7;
 
+const LAYOUTS = {
+  "simple-simon": {
+    tableauRow: 0,
+    stock: { col: 10.5, row: 0 },
+    discard: { col: 10.5, row: 0 },
+    fixedCols: 11.5,
+    fixedRows: 5,
+  },
+  spiderette: {
+    tableauRow: 0,
+    stock: { col: 0, row: BOARD_ROWS - 1 },
+    discard: { col: 1, row: BOARD_ROWS - 1 },
+    fixedCols: 7,
+    fixedRows: BOARD_ROWS,
+  },
+} as const;
+
 /** A column's fan offset, tightened once it would run off the board. */
 function pileOffset(count: number) {
   return zoneFanOffset(
@@ -42,7 +59,7 @@ function pileOffset(count: number) {
 export type SingleDeckSpiderState = {
   tableau: PlayingCard[][];
   stock: PlayingCard[];
-  completed: PlayingCard[][];
+  discard: PlayingCard[];
   ended: boolean;
   won: boolean;
 };
@@ -91,14 +108,14 @@ function settle(state: SingleDeckSpiderState) {
   state.tableau.forEach((pile, index) => {
     const tail = pile.slice(-13);
     if (isComplete(tail)) {
-      state.completed.push(...[tail]);
+      state.discard.push(...tail.map(flipToBack));
       pile.splice(-13);
     }
     const exposed = top(pile);
     if (exposed && !exposed.faceUp) pile[pile.length - 1] = flipToFace(exposed);
     state.tableau[index] = pile;
   });
-  state.won = state.completed.length === 4;
+  state.won = state.discard.length === 52;
   state.ended = state.won;
 }
 
@@ -120,7 +137,7 @@ function createInitialState(
   return {
     tableau,
     stock: deck.slice(offset).map(flipToBack),
-    completed: [],
+    discard: [],
     ended: false,
     won: false,
   };
@@ -139,6 +156,7 @@ export function SingleDeckSpider({
 }: {
   variant: SingleDeckSpiderVariant;
 }) {
+  const layout = LAYOUTS[variant];
   const initial = useMemo(() => createInitialState(variant), [variant]);
   const [selected, setSelected] = useState<Selection>(null);
   const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
@@ -263,33 +281,30 @@ export function SingleDeckSpider({
         id: "stock",
         name: "stock",
         cards: game.stock,
-        col: 0,
-        row: 0,
+        col: layout.stock.col,
+        row: layout.stock.row,
         fan: { maxVisible: 3 },
       },
-      ...game.completed.map(
-        (pile, index) =>
-          ({
-            id: `completed-${index}`,
-            name: "completed",
-            cards: pile,
-            col: game.tableau.length - 4 + index,
-            row: 0,
-            fan: { maxVisible: 1 },
-          }) as MapZone,
-      ),
+      {
+        id: "discard",
+        name: "discard",
+        cards: game.discard,
+        col: layout.discard.col,
+        row: layout.discard.row,
+        fan: { maxVisible: 3 },
+      },
       ...game.tableau.map((pile, index) => ({
         id: `tableau-${index}`,
         name: "tableau",
         pileIndex: index,
         cards: pile,
         col: index,
-        row: TABLEAU_ROW,
+        row: layout.tableauRow,
         fan: { direction: "down" as const, offset: pileOffset(pile.length) },
         placeholder: {},
       })),
     ],
-    [game],
+    [game, layout],
   );
 
   const cardMapper = (card: MappedCard): AnimatedCardMapping | undefined => {
@@ -341,8 +356,8 @@ export function SingleDeckSpider({
     cardMapper,
     zoneMapper,
     cardSize: "tableau",
-    fixedCols: game.tableau.length,
-    fixedRows: BOARD_ROWS,
+    fixedCols: layout.fixedCols,
+    fixedRows: layout.fixedRows,
     gap: 0.1,
   });
 
@@ -472,11 +487,13 @@ export function SingleDeckSpider({
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={() => void reset()}
       isLoaded={isLoaded}
-      score={game.completed.length}
+      score={game.discard.length / 13}
       canUndo={canUndo}
       undo={undo}
       winLoseMessage={i18n.t("games:singleDeckSpider.fourCompleteSuits")}
-      showDeviceRotateHint="landscape"
+      showDeviceRotateHint={
+        variant === "simple-simon" ? "landscape" : undefined
+      }
     >
       <View
         ref={boardRef}

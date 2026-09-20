@@ -393,6 +393,18 @@
     }
   },
   "pocket-poker": {
+    "pokerDifficulty": {
+      "hash": "00000000",
+      "value": {
+        "description": "Tous les modes autorisent 2 pioches et font coûter 1 point pour se coucher. Difficile commence à 3 points et accorde les égalités à l'adversaire. Expert donne aussi une carte supplémentaire à l'adversaire.",
+        "label": "Difficulté",
+        "options": [
+          { "label": "Normal" },
+          { "label": "Difficile" },
+          { "label": "Expert" }
+        ]
+      }
+    },
     "pokerJokers": {
       "hash": "8bf4ba75",
       "value": {

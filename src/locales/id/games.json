@@ -368,11 +368,10 @@
   },
   "pocketPoker": {
     "youHit10PointsYou": "Kamu mencapai 10 poin — kamu menang!",
-    "foldedThreeTimesInA": "Menyerah tiga kali berturut-turut.",
     "youBustedOut": "Poinmu habis.",
     "tapCardsToDiscard": "Ketuk kartu untuk dibuang",
     "minBet": "Taruhan min.",
-    "opponentDraws5YourBet": "Lawan mengambil: 5 + (taruhanmu)",
+    "opponentDrawsYourBet": "Lawan mengambil: {{value}} + (taruhanmu)",
     "youWin": "Kamu menang",
     "youLose": "Kamu kalah",
     "pushTie": "Seri",

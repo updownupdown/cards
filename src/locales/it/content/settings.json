@@ -393,6 +393,18 @@
     }
   },
   "pocket-poker": {
+    "pokerDifficulty": {
+      "hash": "00000000",
+      "value": {
+        "description": "Tutte le modalità consentono 2 pescate e fanno costare 1 punto per lasciare. Difficile parte da 3 punti e assegna i pareggi all'avversario. Esperto dà anche una carta extra all'avversario.",
+        "label": "Difficoltà",
+        "options": [
+          { "label": "Normale" },
+          { "label": "Difficile" },
+          { "label": "Esperto" }
+        ]
+      }
+    },
     "pokerJokers": {
       "hash": "8bf4ba75",
       "value": {

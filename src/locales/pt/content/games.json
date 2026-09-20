@@ -2562,26 +2562,30 @@
       "value": "Um duelo de pôquer de bolso: compre, aposte e supere um oponente servido pelo mesmo baralho."
     },
     "howToPlay": {
-      "hash": "79beb74f",
+      "hash": "00000000",
       "value": [
         "## Objetivo",
-        "Você começa com 5 pontos. **Vença** chegando a 10, ou **perca** caindo para 0.",
+        "Chegue a **10 pontos** para vencer. Você perde se uma aposta reduzir sua pontuação a 0.",
         "## Ordem do turno",
         "1. **Compre 5 cartas**",
-        "2. **Jogue ou desista:** desistir não custa nada, mas desistir **três vezes seguidas** faz você perder a partida.",
-        "3. **Descarte e compre de novo** até **3 vezes** para melhorar sua mão.",
+        "2. **Jogue ou desista:** desistir custa **1 ponto**. Depois de **duas desistências seguidas**, ou com 1 ponto, você deve jogar. Jogar zera a contagem.",
+        "3. **Descarte e compre de novo** até **2 vezes** para melhorar sua mão.",
         "4. **Aposte:** sua aposta mínima é igual ao número de vezes que você comprou:",
         "- 1 compra → aposte 1, 2 ou 3",
         "- 2 compras → aposte 2 ou 3",
-        "- 3 compras → aposte 3",
-        "\n5. **O oponente compra** 5 cartas mais uma por ponto apostado (6, 7 ou 8) e fica com as suas **cinco melhores**.",
+        "\n5. **O oponente compra** cartas de acordo com a dificuldade selecionada e fica com as suas **cinco melhores**.",
         "6. **Compare as mãos** pela classificação normal do pôquer. Os empates são decididos pela carta mais alta.",
+        "7. **Desfazer** não fica disponível depois que uma nova compra, a revelação ou uma nova mão mostra cartas ocultas.",
+        "## Dificuldade",
+        "- **Normal:** comece com 5 pontos; empates não alteram a pontuação; o oponente compra 5 cartas mais sua aposta.",
+        "- **Difícil:** comece com 3 pontos; a banca vence empates; o oponente compra 5 cartas mais sua aposta.",
+        "- **Especialista:** regras do Difícil, mas o oponente compra 6 cartas mais sua aposta.",
         "## Coringas",
         "Ative **Coringas livres** nas configurações para adicionar dois coringas que valem como qualquer carta que ainda não esteja na mão."
       ]
     },
     "quickStart": {
-      "hash": "bedf6ddc",
+      "hash": "00000000",
       "value": [
         "Monte uma mão de pôquer e depois aposte.",
         "Quanto maior a aposta, mais cartas seu rival compra.",

@@ -2562,26 +2562,30 @@
       "value": "Duel poker saku: ambil kartu, pasang taruhan, dan kalahkan lawan yang dibagi dari dek yang sama."
     },
     "howToPlay": {
-      "hash": "79beb74f",
+      "hash": "00000000",
       "value": [
         "## Tujuan",
-        "Kamu mulai dengan 5 poin. **Menang** dengan mencapai 10, atau **kalah** jika turun ke 0.",
+        "Capai **10 poin** untuk menang. Kamu kalah jika taruhan menurunkan skormu ke 0.",
         "## Urutan giliran",
         "1. **Ambil 5 kartu**",
-        "2. **Main atau menyerah:** menyerah tidak ada ruginya, tetapi menyerah **tiga kali berturut-turut** membuatmu kalah.",
-        "3. **Buang & ambil lagi** hingga **3 kali** untuk memperbaiki kartumu.",
+        "2. **Main atau menyerah:** menyerah menghabiskan **1 poin**. Setelah **dua kali menyerah berturut-turut**, atau saat tersisa 1 poin, kamu harus bermain. Bermain mereset hitungan.",
+        "3. **Buang & ambil lagi** hingga **2 kali** untuk memperbaiki kartumu.",
         "4. **Taruh:** taruhan minimalmu sama dengan jumlah kali kamu mengambil kartu:",
         "- 1 kali ambil → taruh 1, 2, atau 3",
         "- 2 kali ambil → taruh 2 atau 3",
-        "- 3 kali ambil → taruh 3",
-        "\n5. **Lawan mengambil** 5 kartu ditambah satu untuk setiap poin taruhanmu (6, 7, atau 8), lalu menyimpan **lima terbaiknya**.",
+        "\n5. **Lawan mengambil** kartu berdasarkan tingkat kesulitan yang dipilih, lalu menyimpan **lima terbaiknya**.",
         "6. **Bandingkan kartu** berdasarkan peringkat poker standar. Seri ditentukan oleh kartu tertinggi.",
+        "7. **Urungkan** tidak tersedia setelah pengambilan ulang, pembukaan kartu lawan, atau pembagian baru menampilkan kartu tersembunyi.",
+        "## Kesulitan",
+        "- **Normal:** mulai dengan 5 poin; seri tidak mengubah skor; lawan mengambil 5 kartu ditambah taruhanmu.",
+        "- **Sulit:** mulai dengan 3 poin; lawan menang jika seri; lawan mengambil 5 kartu ditambah taruhanmu.",
+        "- **Ahli:** aturan Sulit, tetapi lawan mengambil 6 kartu ditambah taruhanmu.",
         "## Joker",
         "Aktifkan **Joker bebas** di pengaturan untuk menambahkan dua joker yang berlaku sebagai kartu apa pun yang belum ada di tangan."
       ]
     },
     "quickStart": {
-      "hash": "bedf6ddc",
+      "hash": "00000000",
       "value": [
         "Bentuk kombinasi poker, lalu pasang taruhan.",
         "Makin besar taruhan, makin banyak kartu yang diambil lawan.",

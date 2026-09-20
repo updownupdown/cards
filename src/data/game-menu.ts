@@ -23,7 +23,12 @@ export type GameSettings = {
   isFavorite: boolean;
   difficulty: "easy" | "difficult";
   memoryDifficulty:
-    "veryeasy" | "easy" | "medium" | "hard" | "veryhard" | "extreme";
+    | "veryeasy"
+    | "easy"
+    | "medium"
+    | "hard"
+    | "veryhard"
+    | "extreme";
   drawCount: 1 | 3;
   islandJokers: boolean;
   lycanMode: "hard" | "medium" | "easy";
@@ -33,6 +38,7 @@ export type GameSettings = {
   specialAbilities: boolean;
   gridlinesHard: boolean;
   pokerJokers: boolean;
+  pokerDifficulty: "normal" | "hard" | "expert";
   ascentDifficulty: "gentle" | "standard" | "intense";
   ascentChallenge: AscentChallenge;
   chapterAndVerseLoyalPatrons: boolean;
@@ -163,6 +169,7 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   specialAbilities: false,
   gridlinesHard: false,
   pokerJokers: false,
+  pokerDifficulty: "normal",
   ascentDifficulty: "standard",
   ascentChallenge: "none",
   chapterAndVerseLoyalPatrons: false,
@@ -539,6 +546,10 @@ export function getGameSettings(
     specialAbilities: merged.specialAbilities === true,
     gridlinesHard: merged.gridlinesHard === true,
     pokerJokers: merged.pokerJokers === true,
+    pokerDifficulty:
+      merged.pokerDifficulty === "hard" || merged.pokerDifficulty === "expert"
+        ? merged.pokerDifficulty
+        : "normal",
     ascentDifficulty:
       merged.ascentDifficulty === "gentle" ||
       merged.ascentDifficulty === "intense"

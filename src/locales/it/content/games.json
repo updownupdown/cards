@@ -2561,26 +2561,30 @@
       "value": "Un duello di poker tascabile: pesca, punta e batti un avversario servito dallo stesso mazzo."
     },
     "howToPlay": {
-      "hash": "79beb74f",
+      "hash": "00000000",
       "value": [
         "## Obiettivo",
-        "Parti con 5 punti. **Vinci** arrivando a 10, **perdi** scendendo a 0.",
+        "Raggiungi **10 punti** per vincere. Perdi se una puntata porta il tuo punteggio a 0.",
         "## Ordine del turno",
         "1. **Pesca 5 carte**",
-        "2. **Gioca o lascia:** lasciare non costa nulla, ma se lasci **tre volte di fila** perdi la partita.",
-        "3. **Scarta e ripesca** fino a **3 volte** per migliorare la mano.",
+        "2. **Gioca o lascia:** lasciare costa **1 punto**. Dopo **due rinunce consecutive**, o a 1 punto, devi giocare. Giocando azzeri il conteggio.",
+        "3. **Scarta e ripesca** fino a **2 volte** per migliorare la mano.",
         "4. **Punta:** la puntata minima è pari al numero di volte che hai pescato:",
         "- 1 pescata → punta 1, 2 o 3",
         "- 2 pescate → punta 2 o 3",
-        "- 3 pescate → punta 3",
-        "\n5. **L'avversario pesca** 5 carte più una per ogni punto puntato (6, 7 o 8) e tiene le sue **cinque migliori**.",
+        "\n5. **L'avversario pesca** carte in base alla difficoltà selezionata e tiene le sue **cinque migliori**.",
         "6. **Confronta le mani** secondo la normale classifica del poker. In caso di parità vince la carta più alta.",
+        "7. **Annulla** non è disponibile dopo che una nuova pescata, la rivelazione o una nuova mano mostra carte nascoste.",
+        "## Difficoltà",
+        "- **Normale:** parti con 5 punti; i pareggi non cambiano il punteggio; l'avversario pesca 5 carte più la tua puntata.",
+        "- **Difficile:** parti con 3 punti; il banco vince i pareggi; l'avversario pesca 5 carte più la tua puntata.",
+        "- **Esperto:** regole Difficili, ma l'avversario pesca 6 carte più la tua puntata.",
         "## Jolly",
         "Attiva **Jolly liberi** nelle impostazioni per aggiungere due jolly che valgono come qualsiasi carta non già presente nella mano."
       ]
     },
     "quickStart": {
-      "hash": "bedf6ddc",
+      "hash": "00000000",
       "value": [
         "Forma una mano di poker, poi punta.",
         "Più punti, più carte pesca il tuo avversario.",

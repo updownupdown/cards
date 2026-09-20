@@ -368,11 +368,10 @@
   },
   "pocketPoker": {
     "youHit10PointsYou": "10 puana ulaştın, kazandın!",
-    "foldedThreeTimesInA": "Üst üste üç kez çekildin.",
     "youBustedOut": "Puanın bitti.",
     "tapCardsToDiscard": "Iskartaya atmak için kartlara dokun",
     "minBet": "Min. bahis",
-    "opponentDraws5YourBet": "Rakip çeker: 5 + (bahisin)",
+    "opponentDrawsYourBet": "Rakip çeker: {{value}} + (bahisin)",
     "youWin": "Kazandın",
     "youLose": "Kaybettin",
     "pushTie": "Berabere",

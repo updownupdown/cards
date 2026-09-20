@@ -12,7 +12,7 @@ export const slyFox: GameDefinition = {
     luck: 45,
   },
   thumbnail: "SlyFox.webp",
-  background: GAME_BACKGROUNDS.yellowLeaves,
+  background: GAME_BACKGROUNDS.forestGrasses,
   animation: GameAnimations.Leaves,
   gameColorDark: "#2b1a10",
   gameColorMid: "#7a4320",
