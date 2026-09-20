@@ -246,10 +246,10 @@ export function NodesMap({
     return () => element.removeEventListener("wheel", onWheel);
   }, [scale, translateX, translateY]);
 
-  // Native: a tap selects the nearest node to the tap point. Per-node
-  // Pressables missed most taps there: the dots are small, and the map moves
-  // by transforms that Reanimated applies outside the shadow tree, which
-  // Fabric's press handling doesn't see. Web keeps the node Pressables.
+  // A tap selects the nearest node to the tap point. Per-node Pressables miss
+  // taps after transformed map movement on native, while Safari can cancel
+  // their click inside the map's pan/pinch detector. Web keeps the Pressables
+  // for keyboard and accessibility input, with this gesture as touch fallback.
   const selectNodeAt = (x: number, y: number) => {
     const s = scale.value;
     const localX =
@@ -279,7 +279,6 @@ export function NodesMap({
     const handleTap = (x: number, y: number) => selectNodeAtRef.current(x, y);
 
     const tap = Gesture.Tap()
-      .enabled(Platform.OS !== "web")
       .maxDistance(10)
       .onEnd((event, success) => {
         "worklet";

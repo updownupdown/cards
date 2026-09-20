@@ -352,7 +352,7 @@ export default function Home() {
           <ScrollView
             ref={pagerRef}
             horizontal
-            scrollEnabled={activeTab !== NODES_HOME_TAB_INDEX}
+            scrollEnabled={isWeb || activeTab !== NODES_HOME_TAB_INDEX}
             pagingEnabled={!isWeb}
             showsHorizontalScrollIndicator={false}
             onScroll={onScroll}
