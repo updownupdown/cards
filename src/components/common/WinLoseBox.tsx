@@ -15,6 +15,8 @@ interface Props {
   gameEnded: boolean;
   headerBottom: number;
   score?: string | number;
+  /** Suppress the default "Score: {{score}}" line, e.g. when the message already includes it. */
+  hideScore?: boolean;
   message?: string;
   won: boolean;
   reset: () => void;
@@ -27,6 +29,7 @@ interface Props {
 export const WinLoseBox = ({
   headerBottom,
   score,
+  hideScore = false,
   message,
   won,
   gameEnded,
@@ -179,7 +182,7 @@ export const WinLoseBox = ({
               {message.replace(/\\n/g, "\n")}
             </Text>
           )}
-          {score !== undefined && (
+          {!hideScore && score !== undefined && (
             <Text
               size="md"
               weight={300}

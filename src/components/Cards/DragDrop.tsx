@@ -48,8 +48,9 @@ type DragGhostCardsProps = {
    */
   fanOffset?: number;
   cardBackPath?: string;
-  /** Over a valid drop target: the dragged cards are outlined green. */
+  /** Over a valid drop target: the dragged cards use this overlay color. */
   isValidDrop: boolean;
+  validDropColor?: CardProps["selectColor"];
   /** Outline only the lead card of a dragged run. */
   highlightLeadOnly?: boolean;
 };
@@ -64,6 +65,7 @@ export function DragGhostCards({
   fanOffset = cardDims.tableauOffset,
   cardBackPath,
   isValidDrop,
+  validDropColor = "green",
   highlightLeadOnly = false,
 }: DragGhostCardsProps) {
   return (
@@ -79,13 +81,29 @@ export function DragGhostCards({
     >
       {ghost.cards.map((card, index) => {
         const highlighted = isValidDrop && (!highlightLeadOnly || index === 0);
+        const direction = ghost.fanDirection ?? "down";
+        const offset = ghost.fanOffset ?? fanOffset;
+        const horizontalOffset =
+          direction === "left"
+            ? -offset * cardWidth
+            : direction === "right" || direction === "diagonal-depth"
+              ? offset * cardWidth
+              : 0;
+        const verticalOffset =
+          direction === "up"
+            ? -offset * cardHeight
+            : direction === "down"
+              ? offset * cardHeight
+              : direction === "diagonal-depth"
+                ? -offset * cardHeight
+                : 0;
         return (
           <View
             key={`ghost-${card.id}`}
             style={{
               position: "absolute",
-              left: 0,
-              top: index * (ghost.fanOffset ?? fanOffset) * cardHeight,
+              left: index * horizontalOffset,
+              top: index * verticalOffset,
               width: cardWidth,
               height: cardHeight,
               zIndex: index + 1,
@@ -96,7 +114,7 @@ export function DragGhostCards({
               cardWidth={cardWidth}
               cardSize={cardSize}
               cardBackPath={cardBackPath}
-              selectColor={highlighted ? "green" : "none"}
+              selectColor={highlighted ? validDropColor : "none"}
               isSelected={highlighted}
             />
           </View>

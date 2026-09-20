@@ -29,7 +29,11 @@ const HAND_SIZE = 4;
 const PERSONAL_RANKS = ["2", "3", "4", "Joker"] as const;
 
 type GamePhase =
-  "enemyPhase" | "discardPhase" | "drawPhase" | "capturePhase" | "gameOver";
+  | "enemyPhase"
+  | "discardPhase"
+  | "drawPhase"
+  | "capturePhase"
+  | "gameOver";
 type GameState = {
   personalDeck: PlayingCard[];
   personalDiscard: PlayingCard[];
@@ -247,7 +251,10 @@ function finalizeRoundOrWin(draft: GameState) {
 }
 
 type FieldCommandActionResult =
-  "applied" | "invalid" | "invalid-capture" | "combatant-sacrifice";
+  | "applied"
+  | "invalid"
+  | "invalid-capture"
+  | "combatant-sacrifice";
 
 function executeCaptureAction(
   draft: GameState,
@@ -749,7 +756,7 @@ export default function FieldCommand() {
           <Button
             text={i18n.t("games:fieldCommand.doneDiscarding")}
             theme="blue"
-            size="sm"
+            size="xs"
             onPress={endDiscardPhase}
             fullWidth
             taller
@@ -773,7 +780,7 @@ export default function FieldCommand() {
             >
               <Button
                 text={i18n.t("cards:clear")}
-                size="sm"
+                size="xs"
                 theme="blue"
                 onPress={() => {
                   setGame((draft) => {
@@ -787,7 +794,7 @@ export default function FieldCommand() {
 
               <Button
                 text={i18n.t("cards:sacrifice")}
-                size="sm"
+                size="xs"
                 theme="red"
                 onPress={executeSacrifice}
                 disabled={!canExecuteSacrifice}
@@ -797,7 +804,7 @@ export default function FieldCommand() {
 
               <Button
                 text={i18n.t("games:fieldCommand.letCapture")}
-                size="sm"
+                size="xs"
                 theme="orange"
                 onPress={executeEnemyCapture}
                 disabled={!canExecuteEnemyCapture}
@@ -808,7 +815,7 @@ export default function FieldCommand() {
 
               <Button
                 text={i18n.t("games:fieldCommand.capture")}
-                size="sm"
+                size="xs"
                 theme="green"
                 onPress={executeCapture}
                 disabled={!canExecuteCapture}

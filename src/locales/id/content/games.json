@@ -1728,43 +1728,6 @@
       "value": "Gremlin"
     }
   },
-  "gridlines": {
-    "cardDescription": {
-      "hash": "3c660785",
-      "value": "Duel ambil-trik satu pemain melawan kisi yang bertarung hanya dengan menyembunyikan kartunya."
-    },
-    "howToPlay": {
-      "hash": "91a6b9ce",
-      "value": [
-        "## Tujuan",
-        "Menangkan **21 trik** sebelum kisi.",
-        "## Urutan giliran",
-        "- Pilih jenis truf dari tanganmu.",
-        "- Pilih satu kartu di tangan.",
-        "- Pilih baris atau kolom beserta arahnya, memakai tanda panah. Kamu tidak bisa menantang garis yang berlubang.",
-        "## Trik",
-        "Kartu dibuka satu per satu dari arah yang dipilih, sampai ada yang sejenis dengan kartu terpilih.",
-        "Jika kartumu lebih tinggi dari kartu kisi, kamu memenangkan trik; jika tidak, kisi yang menang.",
-        "- **Nilai lebih tinggi menang**; As bernilai tinggi.",
-        "- **Tidak ada yang sejenis?** **Truf terendah** di garis itu mengalahkanmu.",
-        "- **Tidak ada yang sejenis dan tidak ada truf?** Kamu memenangkan trik. Pilih satu kartu untuk disingkirkan dari garis.",
-        "## Mode sulit",
-        "Ubah kesulitan di pengaturan untuk menurunkan target kisi, sehingga peluang menangnya lebih besar."
-      ]
-    },
-    "quickStart": {
-      "hash": "5baacb84",
-      "value": [
-        "Pilih jenis truf sebelum ronde dimulai.",
-        "Pilih kartu dan garis: kartu sejenis pertama menang berdasarkan nilai; jika tidak ada, truf yang menang.",
-        "Menangkan 21 trik sebelum kisi."
-      ]
-    },
-    "title": {
-      "hash": "2255babe",
-      "value": "Garis kisi"
-    }
-  },
   "harp": {
     "cardDescription": {
       "hash": "70db0dcf",

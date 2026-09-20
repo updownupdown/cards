@@ -26,6 +26,6 @@ export const raglan: GameDefinition = {
     "## Rules",
     "- Build tableau cards down by alternating colors.",
     "- Only Kings may fill empty tableau spaces.",
-    "- The stock is dealt into waste one card at a time, with no redeal in this version.",
+    "- Deal the stock into waste one card at a time. There is no stock redeal.",
   ],
 };

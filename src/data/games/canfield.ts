@@ -26,7 +26,7 @@ export const canfield: GameDefinition = {
   ],
   howToPlay: [
     "## Objective",
-    "Send all 52 cards to their foundations.",
+    "Send all 52 cards to their foundations, building up by suit from the base rank and wrapping from King to Ace.",
 
     "## Foundations",
     "- Build foundations **up by suit** from the base rank.",

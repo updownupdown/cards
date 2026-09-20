@@ -58,7 +58,9 @@ export type GameMenuInfo = {
 };
 
 /** A single game entry authored in src/data/games/<slug>.ts. */
-export type GameDefinition = GameMenuInfo & { path: string };
+export type GameDefinition = GameMenuInfo & {
+  path: string;
+};
 
 export function isGameEnabled(game: GameMenuInfo | undefined) {
   if (!game || (game.enabledOnLocalOnly && !isLocalDevEnvironment())) {

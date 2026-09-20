@@ -36,7 +36,6 @@ export type GameSettings = {
   boomerAce: boolean;
   powerReserve: boolean;
   specialAbilities: boolean;
-  gridlinesHard: boolean;
   pokerJokers: boolean;
   pokerDifficulty: "normal" | "hard" | "expert";
   ascentDifficulty: "gentle" | "standard" | "intense";
@@ -52,6 +51,7 @@ export type GameSettings = {
   golfDifficulty: "easy" | "hard";
   gapsDifficulty: "easy" | "hard";
   seerDifficulty: "easy" | "normal" | "hard";
+  jailbreakDifficulty: "easy" | "normal" | "hard";
   gremlinDifficulty: "easy" | "hard";
   nightVigilDifficulty: "street" | "kingpin" | "city";
   lastResultSessionId?: string;
@@ -167,7 +167,6 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   boomerAce: false,
   powerReserve: false,
   specialAbilities: false,
-  gridlinesHard: false,
   pokerJokers: false,
   pokerDifficulty: "normal",
   ascentDifficulty: "standard",
@@ -183,6 +182,7 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   golfDifficulty: "easy",
   gapsDifficulty: "easy",
   seerDifficulty: "normal",
+  jailbreakDifficulty: "normal",
   gremlinDifficulty: "easy",
   nightVigilDifficulty: "kingpin",
   stats: {
@@ -544,7 +544,6 @@ export function getGameSettings(
     boomerAce: merged.boomerAce === true,
     powerReserve: merged.powerReserve === true,
     specialAbilities: merged.specialAbilities === true,
-    gridlinesHard: merged.gridlinesHard === true,
     pokerJokers: merged.pokerJokers === true,
     pokerDifficulty:
       merged.pokerDifficulty === "hard" || merged.pokerDifficulty === "expert"
@@ -577,6 +576,11 @@ export function getGameSettings(
     seerDifficulty:
       merged.seerDifficulty === "easy" || merged.seerDifficulty === "hard"
         ? merged.seerDifficulty
+        : "normal",
+    jailbreakDifficulty:
+      merged.jailbreakDifficulty === "easy" ||
+      merged.jailbreakDifficulty === "hard"
+        ? merged.jailbreakDifficulty
         : "normal",
     gremlinDifficulty: merged.gremlinDifficulty === "hard" ? "hard" : "easy",
     nightVigilDifficulty:

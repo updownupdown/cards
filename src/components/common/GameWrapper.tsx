@@ -79,6 +79,8 @@ interface Props {
   isLoaded?: boolean;
   outcome: GameOutcome;
   score?: number | string;
+  /** Suppress the default score line in the result box, e.g. when winLoseMessage already includes it. */
+  hideScore?: boolean;
   winLoseMessage?: string;
   reset: () => void;
   children: React.ReactNode;
@@ -96,6 +98,7 @@ export const GameWrapper = ({
   isLoaded,
   outcome,
   score,
+  hideScore = false,
   winLoseMessage,
   reset,
   children,
@@ -379,6 +382,7 @@ export const GameWrapper = ({
         headerBottom={headerHeight}
         won={won}
         score={score}
+        hideScore={hideScore}
         reset={handleReset}
         message={winLoseMessage}
         handleUndo={handleLossUndo}

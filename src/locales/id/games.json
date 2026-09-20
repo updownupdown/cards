@@ -1,4 +1,12 @@
 {
+  "jailbreak": {
+    "red": "Merah",
+    "black": "Hitam",
+    "remainder": "Ambil",
+    "redTotal": "Merah: {{count}}",
+    "blackTotal": "Hitam: {{count}}",
+    "theJokerEscaped": "Joker berhasil kabur!"
+  },
   "accordion": {
     "youCompressedTheDeckTo": "Kamu memadatkan dek menjadi satu kartu."
   },
@@ -36,6 +44,10 @@
   "bakersDozen": {
     "allFourSuitsAreComplete": "Keempat jenis sudah lengkap!"
   },
+  "beehive": {
+    "honeycombComplete": "Sarang lebah sudah lengkap!",
+    "noFurtherMovesPossible": "Tidak ada langkah berikutnya yang mungkin."
+  },
   "baroness": {
     "allCleared": "Semua bersih!",
     "noThirteenLeftToMake": "Tidak ada lagi yang bisa menjadi tiga belas."
@@ -52,8 +64,7 @@
     "pins": "Pin",
     "ball": "Bola",
     "throw": "Lempar",
-    "finalScoreWon": "Skor akhir: {{score}}. Kamu melampaui {{target}}!",
-    "finalScoreLost": "Skor akhir: {{score}}. Kamu butuh {{target}}."
+    "finalScore": "Skor: {{score}} (butuh {{target}} untuk menang)"
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "Kamu membunuh semua zombi!",
@@ -237,15 +248,6 @@
     "columnsUsedWin": "{{count}} kolom terpakai. Kemenangan {{tier}}.",
     "allCardsPlayedInColumns": "Semua kartu dimainkan dalam {{count}} kolom.",
     "noRoomForHelper": "Tidak ada tempat untuk kartu pembantu di {{count}} kolom."
-  },
-  "gridlines": {
-    "trump": "Truf",
-    "chooseATrumpCard": "Pilih kartu truf",
-    "pickARevealedCard": "Pilih kartu yang terbuka",
-    "selectALine": "Pilih satu garis",
-    "selectAHandCard": "Pilih kartu di tangan",
-    "youBeatTheGrid": "Kamu mengalahkan kisi {{youScore}}-{{gridScore}}!",
-    "theGridWins": "Kisi menang {{gridScore}}-{{youScore}}."
   },
   "herbalist": {
     "noble": "Bangsawan",

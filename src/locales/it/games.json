@@ -1,4 +1,12 @@
 {
+  "jailbreak": {
+    "red": "Rosso",
+    "black": "Nero",
+    "remainder": "Pesca",
+    "redTotal": "Rosso: {{count}}",
+    "blackTotal": "Nero: {{count}}",
+    "theJokerEscaped": "Il jolly è fuggito!"
+  },
   "accordion": {
     "youCompressedTheDeckTo": "Hai ridotto il mazzo a una sola carta."
   },
@@ -36,6 +44,10 @@
   "bakersDozen": {
     "allFourSuitsAreComplete": "Tutti e quattro i semi sono completi!"
   },
+  "beehive": {
+    "honeycombComplete": "L'alveare è completo!",
+    "noFurtherMovesPossible": "Non sono possibili altre mosse."
+  },
   "baroness": {
     "allCleared": "Tutto rimosso!",
     "noThirteenLeftToMake": "Non si può più fare tredici."
@@ -52,8 +64,7 @@
     "pins": "Birilli",
     "ball": "Palla",
     "throw": "Tira",
-    "finalScoreWon": "Punteggio finale: {{score}}. Hai superato {{target}}!",
-    "finalScoreLost": "Punteggio finale: {{score}}. Serviva {{target}}."
+    "finalScore": "Punteggio: {{score}} (serve {{target}} per vincere)"
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "Hai ucciso tutti gli zombie!",
@@ -237,15 +248,6 @@
     "columnsUsedWin": "{{count}} colonne usate. Vittoria {{tier}}.",
     "allCardsPlayedInColumns": "Tutte le carte giocate in {{count}} colonne.",
     "noRoomForHelper": "Nessun posto per la carta dell'aiutante nelle {{count}} colonne."
-  },
-  "gridlines": {
-    "trump": "Briscola",
-    "chooseATrumpCard": "Scegli una carta di briscola",
-    "pickARevealedCard": "Scegli una carta scoperta",
-    "selectALine": "Scegli una linea",
-    "selectAHandCard": "Scegli una carta dalla mano",
-    "youBeatTheGrid": "Hai battuto la griglia {{youScore}}-{{gridScore}}!",
-    "theGridWins": "Vince la griglia {{gridScore}}-{{youScore}}."
   },
   "herbalist": {
     "noble": "Nobile",

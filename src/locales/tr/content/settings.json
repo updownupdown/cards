@@ -272,23 +272,6 @@
       }
     }
   },
-  "gridlines": {
-    "gridlinesHard": {
-      "hash": "cdabae36",
-      "value": {
-        "description": "Zor modda ızgaranın ulaşması gereken hedef daha düşüktür.",
-        "label": "Mod",
-        "options": [
-          {
-            "label": "Normal"
-          },
-          {
-            "label": "Zor"
-          }
-        ]
-      }
-    }
-  },
   "herbalist": {
     "herbalistOpenStables": {
       "hash": "d3ef883f",
@@ -399,9 +382,15 @@
         "description": "Tüm modlarda 2 yeniden çekiş vardır ve çekilmek 1 puana mal olur. Zor mod 3 puanla başlar ve eşitlikleri rakibe verir. Uzman ayrıca rakibe fazladan bir kart verir.",
         "label": "Zorluk",
         "options": [
-          { "label": "Normal" },
-          { "label": "Zor" },
-          { "label": "Uzman" }
+          {
+            "label": "Normal"
+          },
+          {
+            "label": "Zor"
+          },
+          {
+            "label": "Uzman"
+          }
         ]
       }
     },

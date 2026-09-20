@@ -65,6 +65,7 @@ export type MapZone = {
     offset?: number; // Multiplier of card dimension (e.g. 0.4 for 40%)
     offsets?: number[]; // Per-card start-to-start offsets, beginning after the first card
     maxVisible?: number;
+    shadowVisibleCount?: number;
     center?: boolean;
   };
   placeholder?: {
@@ -365,6 +366,8 @@ export function useCardMap({
 
       if (zone.fan) {
         let visualIndex = cardIndex;
+        const shadowVisibleCount =
+          zone.fan.shadowVisibleCount ?? zone.fan.maxVisible;
 
         if (zone.fan.maxVisible !== undefined) {
           numCardsVisible = Math.min(zone.fan.maxVisible, numCardsVisible);
@@ -374,10 +377,14 @@ export function useCardMap({
             totalCardsInZone - zone.fan.maxVisible,
           );
           visualIndex = Math.max(0, cardIndex - startVisible);
+        }
 
-          if (cardIndex < startVisible) {
-            isHiddenUnderDeck = true;
-          }
+        if (shadowVisibleCount !== undefined) {
+          const startShadowVisible = Math.max(
+            0,
+            totalCardsInZone - shadowVisibleCount,
+          );
+          if (cardIndex < startShadowVisible) isHiddenUnderDeck = true;
         }
 
         const fanDirection = zone.fan.direction ?? "diagonal-depth";

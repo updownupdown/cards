@@ -151,6 +151,10 @@ export default function Layout() {
                 contentStyle: { backgroundColor: Colors.background },
               }}
             >
+              <Stack.Screen
+                name="index"
+                options={{ orientation: "portrait" }}
+              />
               {/* One game screen at a time: opening a game while another is
                   open (e.g. from a link) replaces it instead of stacking every
                   earlier game, still running, underneath. */}

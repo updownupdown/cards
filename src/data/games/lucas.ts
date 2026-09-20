@@ -16,9 +16,10 @@ export const lucas: GameDefinition = {
   cardDescription:
     "Thirteen compact columns begin beneath eight pre-seeded Aces.",
   quickStart: [
+    "Build all eight foundations from A to K by suit.",
     "The eight Aces begin on the foundations.",
     "Build tableau down by suit, one card at a time.",
-    "Empty columns accept any card; the stock has one pass.",
+    "Empty columns accept any card. There is no stock redeal.",
   ],
   howToPlay: [
     "## Objective",
@@ -27,6 +28,7 @@ export const lucas: GameDefinition = {
     "- The Aces are removed before thirteen columns of three are dealt.",
     "- Build tableau down by suit.",
     "- Move only one exposed card at a time.",
-    "- Fill empty columns with any card and deal the stock once.",
+    "- Fill empty columns with any card.",
+    "- Deal the stock one card at a time. There is no stock redeal.",
   ],
 };

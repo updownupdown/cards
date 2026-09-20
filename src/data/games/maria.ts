@@ -17,9 +17,10 @@ export const maria: GameDefinition = {
   cardDescription:
     "A nine-column Forty Thieves relative packed by alternating color.",
   quickStart: [
+    "Build eight foundations by suit, from A to K.",
     "Build tableau down by alternating color.",
     "Move one card at a time.",
-    "Any card fills an empty column; the stock has one pass.",
+    "Any card fills an empty column. There is no stock redeal.",
   ],
   howToPlay: [
     "## Objective",
@@ -28,6 +29,6 @@ export const maria: GameDefinition = {
     "- Nine columns of four are dealt face up.",
     "- Build down by alternating color and move one card at a time.",
     "- Empty columns accept any card.",
-    "- Deal the stock once, one card at a time.",
+    "- Deal the stock one card at a time. There is no stock redeal.",
   ],
 };

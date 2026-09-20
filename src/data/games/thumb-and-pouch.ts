@@ -16,15 +16,15 @@ export const thumbAndPouch: GameDefinition = {
   cardDescription:
     "A flexible Klondike where cards avoid their own suit and any card fills a gap.",
   quickStart: [
-    "Build down on any suit except the same suit.",
-    "Move correctly packed runs.",
+    "Build four foundations by suit, from A to K.",
+    "Build down on any suit except the same suit; move correctly packed runs.",
     "Any card or run may fill an empty column.",
   ],
   howToPlay: [
     "## Objective",
     "Build four foundations from Ace to King by suit.",
     "## Rules",
-    "- The tableau begins in the standard seven-column Klondike layout.",
+    "- Seven tableau columns are dealt in a 1-to-7-card staircase.",
     "- Build down by rank, but never place a card on the same suit.",
     "- Move packed sequences together.",
     "- Any card or sequence may fill an empty column.",

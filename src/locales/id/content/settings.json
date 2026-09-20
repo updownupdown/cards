@@ -272,23 +272,6 @@
       }
     }
   },
-  "gridlines": {
-    "gridlinesHard": {
-      "hash": "cdabae36",
-      "value": {
-        "description": "Mode sulit memberi kisi target yang lebih rendah untuk dicapai.",
-        "label": "Mode",
-        "options": [
-          {
-            "label": "Normal"
-          },
-          {
-            "label": "Sulit"
-          }
-        ]
-      }
-    }
-  },
   "herbalist": {
     "herbalistOpenStables": {
       "hash": "d3ef883f",
@@ -399,9 +382,15 @@
         "description": "Semua mode mengizinkan 2 kali ambil ulang dan menyerah menghabiskan 1 poin. Sulit dimulai dengan 3 poin dan lawan menang jika seri. Ahli juga memberi lawan satu kartu ekstra.",
         "label": "Kesulitan",
         "options": [
-          { "label": "Normal" },
-          { "label": "Sulit" },
-          { "label": "Ahli" }
+          {
+            "label": "Normal"
+          },
+          {
+            "label": "Sulit"
+          },
+          {
+            "label": "Ahli"
+          }
         ]
       }
     },

@@ -1726,43 +1726,6 @@
       "value": "Gremlin"
     }
   },
-  "gridlines": {
-    "cardDescription": {
-      "hash": "3c660785",
-      "value": "Yalnızca kartlarını saklayarak savaşan bir ızgaraya karşı tek kişilik bir el alma düellosu."
-    },
-    "howToPlay": {
-      "hash": "91a6b9ce",
-      "value": [
-        "## Amaç",
-        "Izgaradan önce **21 el** al.",
-        "## Tur sırası",
-        "- Elinden bir koz takımı seç.",
-        "- Elinden bir kart seç.",
-        "- Oklarla bir satır ya da sütun ve bir yön seç. İçinde boşluk olan hatlara meydan okuyamazsın.",
-        "## Eller",
-        "Seçilen yönden başlayarak, seçili kartla aynı takımdan bir kart çıkana kadar kartlar tek tek açılır.",
-        "Senin kartın ızgaranınkinden yüksekse eli sen alırsın; değilse ızgara alır.",
-        "- **Yüksek değer kazanır**; Aslar yüksektir.",
-        "- **Aynı takımdan kart yok mu?** Hattaki **en düşük koz** seni yener.",
-        "- **Aynı takımdan kart da koz da yok mu?** El senin. Hattan çıkarılacak bir kart seç.",
-        "## Zor mod",
-        "Ayarlardan zorluğu değiştirerek ızgaranın hedefini düşür ve kazanma şansını artır."
-      ]
-    },
-    "quickStart": {
-      "hash": "5baacb84",
-      "value": [
-        "Tur başlamadan bir koz takımı seç.",
-        "Bir kart ve bir hat seç: aynı takımdan ilk kart değere göre kazanır; yoksa koz kazanır.",
-        "Izgaradan önce 21 el al."
-      ]
-    },
-    "title": {
-      "hash": "2255babe",
-      "value": "Izgara çizgileri"
-    }
-  },
   "harp": {
     "cardDescription": {
       "hash": "70db0dcf",

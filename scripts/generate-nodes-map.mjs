@@ -7,7 +7,10 @@
 //
 //   npm run nodes:generate -- --rebuild
 //     Lays out every node again: Klondike at the centre, Monte Carlo next, then
-//     the rest outwards from easy to hard and luck-heavy. Each game keeps the
+//     the rest outwards from easy to hard and luck-heavy, blended with each
+//     game's ranking among others that share its mechanic category (see
+//     DIVERSITY_WEIGHT) so traditional and modern-mechanic games are both
+//     represented near the centre and near the edge. Each game keeps the
 //     rewards it already has. Overwrites manual coordinate and connection edits.
 //
 //   npm run nodes:generate -- --rebalance-rewards
@@ -65,22 +68,79 @@ function hash(value) {
   return result >>> 0;
 }
 
+// Games tagged with any of these lean on newer, non-traditional mechanics
+// (combat, dungeon-crawling, grid placement) rather than classic patience
+// patterns. Used only to spread mechanic variety across the map, never to
+// change a game's actual difficulty or luck rating.
+const MODERN_TAGS = new Set([
+  "ModernMechanics",
+  "DungeonCrawler",
+  "CardCombat",
+  "GridPlacement",
+]);
+// How strongly placement favours mechanic diversity over raw difficulty
+// ranking: 0 places games purely by difficulty/luck (the old behaviour,
+// which let one mechanic category dominate a radius band); 1 spreads each
+// category evenly across every band regardless of its absolute score.
+const DIVERSITY_WEIGHT = 0.65;
+
 function parseGame(filename) {
   const source = fs.readFileSync(path.join(gamesDirectory, filename), "utf8");
   const gamePath = source.match(/path:\s*["']([^"']+)["']/)?.[1];
   const difficulty = Number(source.match(/difficulty:\s*(\d+)/)?.[1]);
   const luck = Number(source.match(/luck:\s*(\d+)/)?.[1]);
+  const tags = [
+    ...(source
+      .match(/tags:\s*\[([^\]]+)\]/s)?.[1]
+      .matchAll(/GameTag\.(\w+)/g) ?? []),
+  ].map((match) => match[1]);
 
   if (!gamePath || !Number.isFinite(difficulty) || !Number.isFinite(luck)) {
     throw new Error(`Could not parse node metadata from ${filename}.`);
   }
 
-  return { path: gamePath, difficulty, luck };
+  const category = tags.some((tag) => MODERN_TAGS.has(tag))
+    ? "modern"
+    : "traditional";
+  return { path: gamePath, difficulty, luck, category };
 }
 
 /** Lower scores sit nearer the centre; hard and luck-heavy games drift out. */
 function centerScore(game) {
   return 0.6 * game.difficulty + 0.4 * game.luck;
+}
+
+/**
+ * Blends each game's difficulty/luck ranking with its ranking among games of
+ * the same mechanic category, so traditional and modern-mechanic games are
+ * both represented near the centre and near the edge instead of one category
+ * settling entirely on one side of the map.
+ */
+function assignPlacementScores(games) {
+  const rankable = games.filter((game) => !FIXED_ORDER.includes(game.path));
+  const scores = rankable.map(centerScore);
+  const minScore = Math.min(...scores);
+  const scoreRange = Math.max(...scores) - minScore || 1;
+
+  const byCategory = new Map();
+  for (const game of rankable) {
+    const list = byCategory.get(game.category) ?? [];
+    list.push(game);
+    byCategory.set(game.category, list);
+  }
+  for (const list of byCategory.values()) {
+    list.sort(
+      (left, right) =>
+        centerScore(left) - centerScore(right) ||
+        left.path.localeCompare(right.path),
+    );
+    list.forEach((game, index) => {
+      const globalRank = (centerScore(game) - minScore) / scoreRange;
+      const categoryRank = list.length > 1 ? index / (list.length - 1) : 0.5;
+      game.placementScore =
+        (1 - DIVERSITY_WEIGHT) * globalRank + DIVERSITY_WEIGHT * categoryRank;
+    });
+  }
 }
 
 function compareGames(left, right) {
@@ -93,7 +153,7 @@ function compareGames(left, right) {
     );
   }
   return (
-    centerScore(left) - centerScore(right) ||
+    left.placementScore - right.placementScore ||
     left.path.localeCompare(right.path)
   );
 }
@@ -163,6 +223,10 @@ const nearestDistance = (point, nodes) =>
       .filter((node) => node.path !== point.path)
       .map((node) => distance(point, node)),
   );
+const spacingRatio = (nodes) => {
+  const nearest = nodes.map((node) => nearestDistance(node, nodes));
+  return Math.max(...nearest) / Math.min(...nearest);
+};
 const crossProduct = (start, end, point) =>
   (end.x - start.x) * (point.y - start.y) -
   (end.y - start.y) * (point.x - start.x);
@@ -387,9 +451,18 @@ function layoutAll(games) {
     if (candidates.length === 0) {
       throw new Error(`Could not place ${game.path} without overlapping.`);
     }
+    const candidate = candidates.reduce((best, current) => {
+      const currentRatio = spacingRatio([...records, current]);
+      const bestRatio = spacingRatio([...records, best]);
+      const targetRatio = (SPACING_RATIO.min + SPACING_RATIO.max) / 2;
+      return Math.abs(currentRatio - targetRatio) <
+        Math.abs(bestRatio - targetRatio)
+        ? current
+        : best;
+    });
     records.push({
       path: game.path,
-      ...candidates[hash(game.path) % candidates.length],
+      ...candidate,
       connections: [],
       rewards: [],
     });
@@ -679,8 +752,9 @@ function validate(records) {
 const games = fs
   .readdirSync(gamesDirectory)
   .filter((filename) => filename.endsWith(".ts"))
-  .map(parseGame)
-  .sort(compareGames);
+  .map(parseGame);
+assignPlacementScores(games);
+games.sort(compareGames);
 
 if (games[0]?.path !== FIXED_ORDER[0]) {
   throw new Error(`${FIXED_ORDER[0]} must exist as the first node.`);

@@ -1,4 +1,12 @@
 {
+  "jailbreak": {
+    "red": "Kırmızı",
+    "black": "Siyah",
+    "remainder": "Çek",
+    "redTotal": "Kırmızı: {{count}}",
+    "blackTotal": "Siyah: {{count}}",
+    "theJokerEscaped": "Joker kaçtı!"
+  },
   "accordion": {
     "youCompressedTheDeckTo": "Desteyi tek karta indirdin."
   },
@@ -36,6 +44,10 @@
   "bakersDozen": {
     "allFourSuitsAreComplete": "Dört takım da tamamlandı!"
   },
+  "beehive": {
+    "honeycombComplete": "Petek tamamlandı!",
+    "noFurtherMovesPossible": "Başka hamle yapılamaz."
+  },
   "baroness": {
     "allCleared": "Hepsi temizlendi!",
     "noThirteenLeftToMake": "On üç yapılacak kart kalmadı."
@@ -52,8 +64,7 @@
     "pins": "Lobut",
     "ball": "Top",
     "throw": "At",
-    "finalScoreWon": "Son puan: {{score}}. Hedefi ({{target}}) geçtin!",
-    "finalScoreLost": "Son puan: {{score}}. Gereken: {{target}}."
+    "finalScore": "Puan: {{score}} (kazanmak için {{target}} gerekli)"
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "Bütün zombileri öldürdün!",
@@ -237,15 +248,6 @@
     "columnsUsedWin": "{{count}} sütun kullanıldı. {{tier}} zafer.",
     "allCardsPlayedInColumns": "Bütün kartlar {{count}} sütunda oynandı.",
     "noRoomForHelper": "Yardımcının kartına {{count}} sütunda yer yok."
-  },
-  "gridlines": {
-    "trump": "Koz",
-    "chooseATrumpCard": "Bir koz kartı seç",
-    "pickARevealedCard": "Açık bir kart seç",
-    "selectALine": "Bir hat seç",
-    "selectAHandCard": "Elinden bir kart seç",
-    "youBeatTheGrid": "Izgarayı {{youScore}}-{{gridScore}} yendin!",
-    "theGridWins": "Izgara kazandı: {{gridScore}}-{{youScore}}."
   },
   "herbalist": {
     "noble": "Soylu",

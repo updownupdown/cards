@@ -1728,43 +1728,6 @@
       "value": "Gremlin"
     }
   },
-  "gridlines": {
-    "cardDescription": {
-      "hash": "3c660785",
-      "value": "Um duelo de vazas para um jogador contra uma grade que só luta escondendo suas cartas."
-    },
-    "howToPlay": {
-      "hash": "91a6b9ce",
-      "value": [
-        "## Objetivo",
-        "Ganhe **21 vazas** antes da grade.",
-        "## Ordem do turno",
-        "- Escolha um naipe de trunfo da sua mão.",
-        "- Selecione uma carta da mão.",
-        "- Selecione uma linha ou coluna e uma direção, usando as setas. Não é possível desafiar linhas com espaços vazios.",
-        "## Vazas",
-        "As cartas são viradas para cima, uma de cada vez a partir da direção escolhida, até aparecer uma do mesmo naipe da carta selecionada.",
-        "Se sua carta for maior que a da grade, a vaza é sua; caso contrário, é da grade.",
-        "- **O maior valor vence**; os Ases são altos.",
-        "- **Nenhuma carta do mesmo naipe?** O **trunfo mais baixo** da linha vence você.",
-        "- **Nenhuma carta do mesmo naipe e nenhum trunfo?** A vaza é sua. Selecione uma carta para remover da linha.",
-        "## Modo difícil",
-        "Mude a dificuldade nas configurações para baixar a meta da grade, dando a ela mais chance de vencer."
-      ]
-    },
-    "quickStart": {
-      "hash": "5baacb84",
-      "value": [
-        "Escolha um naipe de trunfo antes de a rodada começar.",
-        "Escolha uma carta e uma linha: a primeira carta do mesmo naipe vence pelo valor; senão, vence o trunfo.",
-        "Ganhe 21 vazas antes da grade."
-      ]
-    },
-    "title": {
-      "hash": "2255babe",
-      "value": "Linhas da grade"
-    }
-  },
   "harp": {
     "cardDescription": {
       "hash": "70db0dcf",

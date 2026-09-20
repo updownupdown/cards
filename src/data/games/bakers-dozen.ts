@@ -24,7 +24,7 @@ export const bakersDozen: GameDefinition = {
   ],
   howToPlay: [
     "## Objective",
-    "Move all 52 cards to the four foundations.",
+    "Move all 52 cards to the four foundations, building up by suit, from Ace to King.",
 
     "## Rules",
     "- Foundations build **up by suit** from Ace to King.",

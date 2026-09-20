@@ -272,23 +272,6 @@
       }
     }
   },
-  "gridlines": {
-    "gridlinesHard": {
-      "hash": "cdabae36",
-      "value": {
-        "description": "El modo difícil le da a la cuadrícula un objetivo más bajo que alcanzar.",
-        "label": "Modo",
-        "options": [
-          {
-            "label": "Normal"
-          },
-          {
-            "label": "Difícil"
-          }
-        ]
-      }
-    }
-  },
   "herbalist": {
     "herbalistOpenStables": {
       "hash": "d3ef883f",
@@ -399,9 +382,15 @@
         "description": "Todos los modos permiten 2 robos y hacen que retirarse cueste 1 punto. Difícil empieza con 3 puntos y concede los empates al rival. Experto también da una carta extra al rival.",
         "label": "Dificultad",
         "options": [
-          { "label": "Normal" },
-          { "label": "Difícil" },
-          { "label": "Experto" }
+          {
+            "label": "Normal"
+          },
+          {
+            "label": "Difícil"
+          },
+          {
+            "label": "Experto"
+          }
         ]
       }
     },

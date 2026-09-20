@@ -1,4 +1,12 @@
 {
+  "jailbreak": {
+    "red": "Rojo",
+    "black": "Negro",
+    "remainder": "Robar",
+    "redTotal": "Rojo: {{count}}",
+    "blackTotal": "Negro: {{count}}",
+    "theJokerEscaped": "¡El comodín escapó!"
+  },
   "accordion": {
     "youCompressedTheDeckTo": "Has reducido el mazo a una sola carta."
   },
@@ -36,6 +44,10 @@
   "bakersDozen": {
     "allFourSuitsAreComplete": "¡Los cuatro palos están completos!"
   },
+  "beehive": {
+    "honeycombComplete": "¡El panal está completo!",
+    "noFurtherMovesPossible": "No es posible hacer más movimientos."
+  },
   "baroness": {
     "allCleared": "¡Todo despejado!",
     "noThirteenLeftToMake": "No quedan parejas que sumen 13."
@@ -52,8 +64,7 @@
     "pins": "Bolos",
     "ball": "Bola",
     "throw": "Lanzar",
-    "finalScoreWon": "Puntuación final: {{score}}. ¡Has superado {{target}}!",
-    "finalScoreLost": "Puntuación final: {{score}}. Necesitabas {{target}}."
+    "finalScore": "Puntuación: {{score}} (se necesitan {{target}} para ganar)"
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "¡Has matado a todos los zombis!",
@@ -237,15 +248,6 @@
     "columnsUsedWin": "{{count}} columnas usadas. Victoria {{tier}}.",
     "allCardsPlayedInColumns": "Todas las cartas jugadas en {{count}} columnas.",
     "noRoomForHelper": "No hay sitio para la carta del ayudante en {{count}} columnas."
-  },
-  "gridlines": {
-    "trump": "Triunfo",
-    "chooseATrumpCard": "Elige una carta de triunfo",
-    "pickARevealedCard": "Elige una carta descubierta",
-    "selectALine": "Elige una línea",
-    "selectAHandCard": "Elige una carta de tu mano",
-    "youBeatTheGrid": "¡Has vencido a la cuadrícula {{youScore}}-{{gridScore}}!",
-    "theGridWins": "La cuadrícula gana {{gridScore}}-{{youScore}}."
   },
   "herbalist": {
     "noble": "Noble",

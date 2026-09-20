@@ -1727,43 +1727,6 @@
       "value": "Gremlin"
     }
   },
-  "gridlines": {
-    "cardDescription": {
-      "hash": "3c660785",
-      "value": "Un duello a prese in solitario contro una griglia che combatte solo nascondendo le sue carte."
-    },
-    "howToPlay": {
-      "hash": "91a6b9ce",
-      "value": [
-        "## Obiettivo",
-        "Fai **21 prese** prima della griglia.",
-        "## Ordine del turno",
-        "- Scegli un seme di briscola dalla tua mano.",
-        "- Seleziona una carta della mano.",
-        "- Seleziona una riga o una colonna e una direzione, con le frecce. Non puoi sfidare linee con dei buchi.",
-        "## Prese",
-        "Le carte vengono scoperte una alla volta, partendo dalla direzione scelta, finché una è dello stesso seme della carta selezionata.",
-        "Se la tua carta è più alta di quella della griglia, fai tu la presa; altrimenti la fa la griglia.",
-        "- **Vince il valore più alto**; gli Assi sono alti.",
-        "- **Nessuna carta dello stesso seme?** Ti batte la **briscola più bassa** della linea.",
-        "- **Nessuna carta dello stesso seme e nessuna briscola?** La presa è tua. Seleziona una carta da togliere dalla linea.",
-        "## Modalità difficile",
-        "Cambia la difficoltà nelle impostazioni per abbassare l'obiettivo della griglia, dandole più possibilità di vincere."
-      ]
-    },
-    "quickStart": {
-      "hash": "5baacb84",
-      "value": [
-        "Scegli un seme di briscola prima dell'inizio del round.",
-        "Scegli una carta e una linea: vince la prima carta dello stesso seme in base al valore, altrimenti vince la briscola.",
-        "Fai 21 prese prima della griglia."
-      ]
-    },
-    "title": {
-      "hash": "2255babe",
-      "value": "Linee della griglia"
-    }
-  },
   "harp": {
     "cardDescription": {
       "hash": "70db0dcf",

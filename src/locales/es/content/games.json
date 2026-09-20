@@ -1728,43 +1728,6 @@
       "value": "Gremlin"
     }
   },
-  "gridlines": {
-    "cardDescription": {
-      "hash": "3c660785",
-      "value": "Un duelo de bazas en solitario contra una cuadrícula que solo lucha escondiendo sus cartas."
-    },
-    "howToPlay": {
-      "hash": "91a6b9ce",
-      "value": [
-        "## Objetivo",
-        "Gana **21 bazas** antes que la cuadrícula.",
-        "## Orden del turno",
-        "- Elige un palo de triunfo de tu mano.",
-        "- Selecciona una carta de la mano.",
-        "- Selecciona una fila o columna y una dirección con las flechas. No puedes desafiar líneas que tengan huecos.",
-        "## Bazas",
-        "Las cartas se ponen boca arriba de una en una desde la dirección elegida, hasta que una coincide con el palo de la carta seleccionada.",
-        "Si tu carta es más alta que la de la cuadrícula, ganas la baza; si no, la gana la cuadrícula.",
-        "- **Gana el valor más alto**; los Ases son altos.",
-        "- **¿Ningún palo coincide?** El **triunfo más bajo** de la línea te gana.",
-        "- **¿Ningún palo coincide y no hay triunfo?** Ganas la baza. Selecciona una carta para retirarla de la línea.",
-        "## Modo difícil",
-        "Cambia la dificultad en los ajustes para reducir el objetivo de la cuadrícula y darle más posibilidades de ganar."
-      ]
-    },
-    "quickStart": {
-      "hash": "5baacb84",
-      "value": [
-        "Elige un palo de triunfo antes de que empiece la ronda.",
-        "Elige una carta y una línea: la primera carta del mismo palo gana según su valor; si no, gana el triunfo.",
-        "Gana 21 bazas antes que la cuadrícula."
-      ]
-    },
-    "title": {
-      "hash": "2255babe",
-      "value": "Líneas de cuadrícula"
-    }
-  },
   "harp": {
     "cardDescription": {
       "hash": "70db0dcf",

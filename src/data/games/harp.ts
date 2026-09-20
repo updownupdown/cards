@@ -16,16 +16,16 @@ export const harp: GameDefinition = {
   cardDescription:
     "A more forgiving Double Klondike with four passes through the stock.",
   quickStart: [
-    "Build tableau down by alternating color.",
+    "Move all cards to the foundations, built by suit, from A to K.",
+    "Build tableau columns down by alternating color.",
     "Only Ks fill empty columns.",
-    "Use four stock passes to complete eight foundations.",
+    "Use up to four stock passes.",
   ],
   howToPlay: [
     "## Objective",
-    "Move both decks to eight suit foundations.",
+    "Move both decks to eight suit foundations, building up by suit, from Ace to King.",
     "## Rules",
-    "- Harp uses Gargantua's nine-column Klondike layout.",
-    "- Build down by alternating color and move ordered runs.",
+    "- Build tableau columns down by alternating color and move ordered runs.",
     "- Only Kings may fill empty columns.",
     "- Turn one stock card at a time, with four total passes.",
   ],

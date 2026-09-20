@@ -6,6 +6,7 @@ import {
   clearDropOffsets,
   setDropOffsets,
 } from "@/components/Cards/drop-flight";
+import type { DeckFanDirection } from "@/components/Cards/CardMapBackgrounds";
 import { isBoardInputLocked } from "@/components/Cards/input-lock";
 import { haptics } from "@/utils/haptics";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -88,8 +89,9 @@ export type DragGhost<TSource> = {
   source: TSource;
   cards: PlayingCard[];
   origin: { x: number; y: number };
-  /** Vertical gap between dragged cards, as a fraction of the card height. */
+  /** Gap between dragged cards, as a fraction of the relevant card dimension. */
   fanOffset?: number;
+  fanDirection?: DeckFanDirection;
 };
 
 type DragCallbacks<TSource> = {
@@ -354,6 +356,7 @@ export function useDragDrop<TSource, TTarget>({
     cards: PlayingCard[],
     origin: { x: number; y: number },
     fanOffset?: number,
+    fanDirection?: DeckFanDirection,
   ) {
     const gestureOffset = pendingDragOffsetRef.current;
     const initialOffset = gestureOffset ?? { x: 0, y: 0 };
@@ -382,6 +385,7 @@ export function useDragDrop<TSource, TTarget>({
         y: origin.y + initialOffset.y,
       },
       fanOffset,
+      fanDirection,
     });
   }
 

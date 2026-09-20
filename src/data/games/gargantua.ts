@@ -17,9 +17,9 @@ export const gargantua: GameDefinition = {
   cardDescription:
     "Climb a nine-column, two-deck Klondike with eight foundations.",
   quickStart: [
-    "Build tableau down by alternating color.",
-    "Move ordered runs; only Ks fill empty columns.",
-    "Build eight foundations by suit; the stock has two passes.",
+    "Move both decks to eight foundations, built by suit from A to K.",
+    "Build tableau down by alternating color and move ordered runs.",
+    "Only Ks fill empty columns; 1 redeal gives 2 stock passes.",
   ],
   howToPlay: [
     "## Objective",
@@ -28,6 +28,6 @@ export const gargantua: GameDefinition = {
     "- Nine tableau columns are dealt in a Klondike staircase.",
     "- Build down by alternating color and move ordered runs.",
     "- Only Kings may fill empty columns.",
-    "- Turn stock cards one at a time; the stock may be dealt twice.",
+    "- Turn stock cards one at a time; 1 redeal gives 2 passes total.",
   ],
 };

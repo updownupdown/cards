@@ -136,6 +136,7 @@ export function useLoop(duration: number, delay: number) {
   const progress = useSharedValue(0);
   const paused = useAnimationsPaused();
   const hasStartedRef = useRef(false);
+  const remainingDelayRef = useRef(delay);
 
   useEffect(() => {
     if (paused) return;
@@ -143,10 +144,20 @@ export function useLoop(duration: number, delay: number) {
     // The start delay applies once; after a pause the loop carries on from
     // where it stopped.
     const loop = loopFrom(progress.value, duration);
-    progress.value = hasStartedRef.current ? loop : withDelay(delay, loop);
-    hasStartedRef.current = true;
+    const remainingDelay = remainingDelayRef.current;
+    const delayStartedAt = Date.now();
+    progress.value = hasStartedRef.current
+      ? loop
+      : withDelay(remainingDelay, loop);
 
-    return () => cancelAnimation(progress);
+    return () => {
+      if (!hasStartedRef.current) {
+        const elapsed = Date.now() - delayStartedAt;
+        remainingDelayRef.current = Math.max(0, remainingDelay - elapsed);
+        hasStartedRef.current = remainingDelayRef.current === 0;
+      }
+      cancelAnimation(progress);
+    };
   }, [delay, duration, paused, progress]);
 
   return progress;

@@ -493,16 +493,10 @@ export default function Bowling() {
   const endGame = (draft: GameState, message?: string) => {
     updateTotalScore(draft);
     draft.phase = "gameEnd";
-    draft.winLoseMessage =
-      draft.totalScore >= WIN_SCORE
-        ? i18n.t("games:bowling.finalScoreWon", {
-            score: draft.totalScore,
-            target: WIN_SCORE,
-          })
-        : i18n.t("games:bowling.finalScoreLost", {
-            score: draft.totalScore,
-            target: WIN_SCORE,
-          });
+    draft.winLoseMessage = i18n.t("games:bowling.finalScore", {
+      score: draft.totalScore,
+      target: WIN_SCORE,
+    });
   };
 
   const finishBonusBall = (draft: GameState, ballPins: number) => {
@@ -1016,6 +1010,7 @@ export default function Bowling() {
       canUndo={canUndo}
       undo={undo}
       score={String(game.totalScore)}
+      hideScore
     >
       {cardMap}
 

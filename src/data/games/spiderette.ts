@@ -16,8 +16,8 @@ export const spiderette: GameDefinition = {
   cardDescription:
     "A compact single-deck Spider played across seven Klondike-shaped columns.",
   quickStart: [
-    "Build down by rank.",
-    "Move descending same-suit runs.",
+    "Remove four complete suited runs from King to Ace.",
+    "Build down by rank and move descending same-suit runs.",
     "Deal stock rows only when every column is occupied.",
   ],
   howToPlay: [

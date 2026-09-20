@@ -1,4 +1,12 @@
 {
+  "jailbreak": {
+    "red": "Vermelho",
+    "black": "Preto",
+    "remainder": "Comprar",
+    "redTotal": "Vermelho: {{count}}",
+    "blackTotal": "Preto: {{count}}",
+    "theJokerEscaped": "O curinga escapou!"
+  },
   "accordion": {
     "youCompressedTheDeckTo": "Você reduziu o baralho a uma só carta."
   },
@@ -36,6 +44,10 @@
   "bakersDozen": {
     "allFourSuitsAreComplete": "Os quatro naipes estão completos!"
   },
+  "beehive": {
+    "honeycombComplete": "A colmeia está completa!",
+    "noFurtherMovesPossible": "Não há mais jogadas possíveis."
+  },
   "baroness": {
     "allCleared": "Tudo removido!",
     "noThirteenLeftToMake": "Não dá mais para formar treze."
@@ -52,8 +64,7 @@
     "pins": "Pinos",
     "ball": "Bola",
     "throw": "Lançar",
-    "finalScoreWon": "Pontuação final: {{score}}. Você superou {{target}}!",
-    "finalScoreLost": "Pontuação final: {{score}}. Você precisava de {{target}}."
+    "finalScore": "Pontuação: {{score}} (é necessário {{target}} para vencer)"
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "Você matou todos os zumbis!",
@@ -237,15 +248,6 @@
     "columnsUsedWin": "{{count}} colunas usadas. Vitória {{tier}}.",
     "allCardsPlayedInColumns": "Todas as cartas jogadas em {{count}} colunas.",
     "noRoomForHelper": "Não há lugar para a carta do ajudante em {{count}} colunas."
-  },
-  "gridlines": {
-    "trump": "Trunfo",
-    "chooseATrumpCard": "Escolha uma carta de trunfo",
-    "pickARevealedCard": "Escolha uma carta revelada",
-    "selectALine": "Escolha uma linha",
-    "selectAHandCard": "Escolha uma carta da mão",
-    "youBeatTheGrid": "Você venceu a grade por {{youScore}} a {{gridScore}}!",
-    "theGridWins": "A grade venceu por {{gridScore}} a {{youScore}}."
   },
   "herbalist": {
     "noble": "Nobre",

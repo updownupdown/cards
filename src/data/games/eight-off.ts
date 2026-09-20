@@ -20,11 +20,13 @@ export const eightOff: GameDefinition = {
   cardDescription:
     "A roomy, same-suit FreeCell relative, with eight cells and Kings-only columns.",
   quickStart: [
-    "Use 8 free cells; build tableau down in suit; only Kings fill empty columns.",
+    "Move cards to foundations by suit, from A to K.",
+    "Build tableau columns down by suit.",
+    "Use 8 free cells; only Kings fill empty columns.",
   ],
   howToPlay: [
     "## Objective",
-    "Move all 52 cards to the four foundations, each built up by suit from Ace to King.",
+    "Move all 52 cards to the four foundations, each built up by suit, from Ace to King.",
 
     "## Rules",
     "- Build tableau columns **down in rank and in the same suit**.",

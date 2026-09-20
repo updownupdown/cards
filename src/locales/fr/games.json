@@ -1,4 +1,12 @@
 {
+  "jailbreak": {
+    "red": "Rouge",
+    "black": "Noir",
+    "remainder": "Pioche",
+    "redTotal": "Rouge : {{count}}",
+    "blackTotal": "Noir : {{count}}",
+    "theJokerEscaped": "Le Joker s'est échappé !"
+  },
   "accordion": {
     "youCompressedTheDeckTo": "Vous avez réduit le paquet à une seule carte."
   },
@@ -36,6 +44,10 @@
   "bakersDozen": {
     "allFourSuitsAreComplete": "Les quatre couleurs sont complètes !"
   },
+  "beehive": {
+    "honeycombComplete": "La ruche est complète !",
+    "noFurtherMovesPossible": "Aucun autre coup n'est possible."
+  },
   "baroness": {
     "allCleared": "Tout est dégagé !",
     "noThirteenLeftToMake": "Plus aucune paire à 13."
@@ -52,8 +64,7 @@
     "pins": "Quilles",
     "ball": "Boule",
     "throw": "Lancer",
-    "finalScoreWon": "Score final : {{score}}. Vous avez dépassé {{target}} !",
-    "finalScoreLost": "Score final : {{score}}. Il fallait {{target}}."
+    "finalScore": "Score : {{score}} ({{target}} nécessaires pour gagner)"
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "Vous avez tué tous les zombies !",
@@ -237,15 +248,6 @@
     "columnsUsedWin": "{{count}} colonnes utilisées. Victoire {{tier}}.",
     "allCardsPlayedInColumns": "Toutes les cartes jouées en {{count}} colonnes.",
     "noRoomForHelper": "Plus de place pour la carte de l'assistant dans les {{count}} colonnes."
-  },
-  "gridlines": {
-    "trump": "Atout",
-    "chooseATrumpCard": "Choisissez une carte d'atout",
-    "pickARevealedCard": "Choisissez une carte révélée",
-    "selectALine": "Choisissez une ligne",
-    "selectAHandCard": "Choisissez une carte de votre main",
-    "youBeatTheGrid": "Vous battez la grille {{youScore}} à {{gridScore}} !",
-    "theGridWins": "La grille gagne {{gridScore}} à {{youScore}}."
   },
   "herbalist": {
     "noble": "Noble",

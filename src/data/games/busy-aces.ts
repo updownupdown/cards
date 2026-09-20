@@ -16,9 +16,9 @@ export const busyAces: GameDefinition = {
   cardDescription:
     "Keep twelve short two-deck columns moving, one suited card at a time.",
   quickStart: [
-    "Build foundations up by suit.",
+    "Build all eight foundations up by suit, from A to K.",
     "Build tableau down by suit, one card at a time.",
-    "Any card fills a space; play the stock once.",
+    "Any card fills a space. There is no stock redeal.",
   ],
   howToPlay: [
     "## Objective",

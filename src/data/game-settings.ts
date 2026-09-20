@@ -10,7 +10,6 @@ export type GameSpecificSettingKey =
   | "boomerAce"
   | "powerReserve"
   | "specialAbilities"
-  | "gridlinesHard"
   | "pokerJokers"
   | "pokerDifficulty"
   | "ascentDifficulty"
@@ -26,6 +25,7 @@ export type GameSpecificSettingKey =
   | "golfDifficulty"
   | "gapsDifficulty"
   | "seerDifficulty"
+  | "jailbreakDifficulty"
   | "gremlinDifficulty"
   | "nightVigilDifficulty";
 export type GameSpecificSettingApplyBehavior = "immediate" | "next-game";
@@ -48,6 +48,20 @@ export type GameSpecificSettingDefinition = {
 
 const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
   {
+    "/jailbreak": [
+      {
+        key: "jailbreakDifficulty",
+        label: "Difficulty",
+        type: "string",
+        applyBehavior: "next-game",
+        description: "Controls how many cards are dealt to each corner.",
+        options: [
+          { label: "Easy (4 per corner)", value: "easy" },
+          { label: "Normal (2 per corner)", value: "normal" },
+          { label: "Hard (empty corners)", value: "hard" },
+        ],
+      },
+    ],
     "/gaps": [
       {
         key: "gapsDifficulty",
@@ -337,19 +351,6 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         options: [
           { label: "Off", value: false },
           { label: "On", value: true },
-        ],
-      },
-    ],
-    "/gridlines": [
-      {
-        key: "gridlinesHard",
-        label: "Mode",
-        type: "string",
-        applyBehavior: "next-game",
-        description: "Hard mode gives the grid a lower target to reach.",
-        options: [
-          { label: "Normal", value: false },
-          { label: "Hard", value: true },
         ],
       },
     ],

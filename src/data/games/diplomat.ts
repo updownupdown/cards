@@ -16,9 +16,10 @@ export const diplomat: GameDefinition = {
   cardDescription:
     "Negotiate eight open columns with rank-only packing and single-card moves.",
   quickStart: [
+    "Move both decks to eight foundations, built by suit from A to K.",
     "Build tableau down by rank regardless of suit.",
     "Move one card at a time; any card fills a space.",
-    "Build eight suit foundations during one stock pass.",
+    "There is no stock redeal.",
   ],
   howToPlay: [
     "## Objective",
@@ -27,6 +28,6 @@ export const diplomat: GameDefinition = {
     "- Eight columns of four cards are dealt face up.",
     "- Build tableau down regardless of suit.",
     "- Move one card at a time and fill empty columns with any card.",
-    "- Deal the stock once, one card at a time.",
+    "- Deal the stock one card at a time. There is no stock redeal.",
   ],
 };

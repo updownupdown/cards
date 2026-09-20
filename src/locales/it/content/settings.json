@@ -272,23 +272,6 @@
       }
     }
   },
-  "gridlines": {
-    "gridlinesHard": {
-      "hash": "cdabae36",
-      "value": {
-        "description": "In modalità difficile la griglia ha un obiettivo più basso da raggiungere.",
-        "label": "Modalità",
-        "options": [
-          {
-            "label": "Normale"
-          },
-          {
-            "label": "Difficile"
-          }
-        ]
-      }
-    }
-  },
   "herbalist": {
     "herbalistOpenStables": {
       "hash": "d3ef883f",
@@ -399,9 +382,15 @@
         "description": "Tutte le modalità consentono 2 pescate e fanno costare 1 punto per lasciare. Difficile parte da 3 punti e assegna i pareggi all'avversario. Esperto dà anche una carta extra all'avversario.",
         "label": "Difficoltà",
         "options": [
-          { "label": "Normale" },
-          { "label": "Difficile" },
-          { "label": "Esperto" }
+          {
+            "label": "Normale"
+          },
+          {
+            "label": "Difficile"
+          },
+          {
+            "label": "Esperto"
+          }
         ]
       }
     },
