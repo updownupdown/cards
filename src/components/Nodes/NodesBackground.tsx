@@ -485,7 +485,7 @@ export function NodesBackground({
       style={{ flex: 1, overflow: "hidden" }}
     >
       <ImageBackground
-        source={require("../../../assets/images/starfield.jpg")}
+        source={require("../../../assets/images/starfield.webp")}
         resizeMode="cover"
         // ImageBackground only sizes its inner image from an explicit
         // width/height; without them web renders the image at natural width.

@@ -30,8 +30,16 @@
   },
   "populateTestProgress": "Populate test progress",
   "credits": {
-    "starfield": "Starfield background by <link>Olena Bohovyk</link>",
-    "taoTranslation": "Tao Te Ching translation by <link>John H. McDonald</link>"
+    "starfield": {
+      "prefix": "Starfield background by ",
+      "name": "Olena Bohovyk",
+      "suffix": ""
+    },
+    "taoTranslation": {
+      "prefix": "Tao Te Ching translation by ",
+      "name": "John H. McDonald",
+      "suffix": ""
+    }
   },
   "privacyPolicy": "Privacy Policy",
   "resetData": {

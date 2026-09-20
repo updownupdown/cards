@@ -30,8 +30,16 @@
   },
   "populateTestProgress": "Isi progres uji",
   "credits": {
-    "starfield": "Latar bintang oleh <link>Olena Bohovyk</link>",
-    "taoTranslation": "Bab Tao Te Ching diterjemahkan dari versi bahasa Inggris karya <link>John H. McDonald</link>"
+    "starfield": {
+      "prefix": "Latar bintang oleh ",
+      "name": "Olena Bohovyk",
+      "suffix": ""
+    },
+    "taoTranslation": {
+      "prefix": "Bab Tao Te Ching diterjemahkan dari versi bahasa Inggris karya ",
+      "name": "John H. McDonald",
+      "suffix": ""
+    }
   },
   "privacyPolicy": "Kebijakan Privasi",
   "resetData": {

@@ -15,7 +15,6 @@ import { useModalStyles } from "@/styles/modalStyles";
 import { Colors } from "@/styles/styles";
 import {
   getDeviceLanguageCodes,
-  Trans,
   useDisplayLanguage,
   useTranslation,
 } from "@/i18n";
@@ -238,41 +237,19 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
           ]}
         >
           <Text {...footerText} style={{ textAlign: "center" }}>
-            <Trans
-              t={t}
-              i18nKey="credits.starfield"
-              components={{
-                link: (
-                  <Text
-                    {...footerLink}
-                    onPress={() =>
-                      void Linking.openURL(
-                        "https://unsplash.com/@olenkasergienko",
-                      )
-                    }
-                  />
-                ),
-              }}
-            />
-          </Text>
-
-          <Text {...footerText} style={{ textAlign: "center" }}>
-            <Trans
-              t={t}
-              i18nKey="credits.taoTranslation"
-              components={{
-                link: (
-                  <Text
-                    {...footerLink}
-                    onPress={() =>
-                      void Linking.openURL(
-                        "https://www.goodreads.com/author/show/5667733.John_H_McDonald",
-                      )
-                    }
-                  />
-                ),
-              }}
-            />
+            {t("credits.taoTranslation.prefix")}
+            <Text
+              {...footerLink}
+              accessibilityRole="link"
+              onPress={() =>
+                void Linking.openURL(
+                  "https://www.goodreads.com/author/show/5667733.John_H_McDonald",
+                )
+              }
+            >
+              {t("credits.taoTranslation.name")}
+            </Text>
+            {t("credits.taoTranslation.suffix")}
           </Text>
 
           <Text

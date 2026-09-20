@@ -30,8 +30,16 @@
   },
   "populateTestProgress": "Remplir la progression de test",
   "credits": {
-    "starfield": "Fond étoilé par <link>Olena Bohovyk</link>",
-    "taoTranslation": "Chapitres du Tao Te Ching traduits de la version anglaise de <link>John H. McDonald</link>"
+    "starfield": {
+      "prefix": "Fond étoilé par ",
+      "name": "Olena Bohovyk",
+      "suffix": ""
+    },
+    "taoTranslation": {
+      "prefix": "Chapitres du Tao Te Ching traduits de la version anglaise de ",
+      "name": "John H. McDonald",
+      "suffix": ""
+    }
   },
   "privacyPolicy": "Politique de confidentialité",
   "resetData": {

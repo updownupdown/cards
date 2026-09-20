@@ -32,8 +32,8 @@ const WORLD_SIZE = 920;
 const NODE_SIZE = 18;
 /** How close (in screen points) a native tap must be to select a node. */
 const NODE_TAP_RADIUS = 28;
-const MIN_NODE_SIZE_MULTIPLIER = 0.6;
-const MAX_NODE_SIZE_MULTIPLIER = 1.4;
+const MIN_NODE_SIZE_MULTIPLIER = 0.7;
+const MAX_NODE_SIZE_MULTIPLIER = 1.05;
 
 const MIN_SCALE = 0.65;
 const MAX_SCALE = 2.1;
