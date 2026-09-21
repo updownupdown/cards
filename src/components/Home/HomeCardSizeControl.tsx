@@ -2,7 +2,8 @@ import { RadioButtons } from "@/components/common/RadioButtons";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import type { IconName } from "@/icons";
-import { Colors, layoutDims } from "@/styles/styles";
+import { homeSurfaceShadow } from "@/styles/homeSurfaceShadow";
+import { Colors, layoutDims, rgba } from "@/styles/styles";
 import { View } from "react-native";
 
 export type HomeCardSize = "small" | "medium" | "large";
@@ -26,24 +27,22 @@ const CARD_SIZE_OPTIONS: {
 ];
 
 type HomeCardSizeControlProps = {
-  contentWidth: number;
   value: HomeCardSize;
   onChange: (value: HomeCardSize) => void;
 };
 
 export function HomeCardSizeControl({
-  contentWidth,
   value,
   onChange,
 }: HomeCardSizeControlProps) {
-  const { spacing } = useResponsiveMetrics();
+  const { ui, spacing } = useResponsiveMetrics();
   const { t } = useTranslation("home");
 
   return (
     <View
       style={{
         width: "100%",
-        maxWidth: contentWidth,
+        maxWidth: ui.contentMaxWidth,
         alignSelf: "center",
       }}
     >
@@ -53,7 +52,7 @@ export function HomeCardSizeControl({
           label: t(`cardSize.${option.value}`),
         }))}
         selectedValue={value}
-        selectedBackgroundColor={Colors.background}
+        selectedBackgroundColor={Colors.suitsRed}
         onChange={onChange}
         iconSize={spacing(20)}
         buttonStyle={{
@@ -65,7 +64,8 @@ export function HomeCardSizeControl({
           width: "100%",
           height: spacing(layoutDims.cardToggleHeight),
           borderRadius: spacing(layoutDims.cardToggleHeight / 2),
-          backgroundColor: Colors.K900,
+          backgroundColor: rgba(Colors.K900, 0.7),
+          ...homeSurfaceShadow(spacing),
         }}
       />
     </View>

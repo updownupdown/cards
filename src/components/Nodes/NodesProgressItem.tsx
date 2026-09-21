@@ -1,6 +1,7 @@
 import { Text } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon, type IconName } from "@/icons";
+import { homeSurfaceShadow } from "@/styles/homeSurfaceShadow";
 import { Colors, rgba } from "@/styles/styles";
 import { Pressable, View } from "react-native";
 
@@ -70,7 +71,7 @@ export function NodesProgressItem({
         paddingLeft: spacing(12),
         paddingRight: spacing(8),
         backgroundColor: rgba(Colors.K900, 0.9),
-        boxShadow: `1px 2px 8px ${rgba(Colors.K900, 0.3)}, 2px 4px 20px ${rgba(Colors.K900, 0.3)}`,
+        ...homeSurfaceShadow(spacing),
       }}
     >
       {content}

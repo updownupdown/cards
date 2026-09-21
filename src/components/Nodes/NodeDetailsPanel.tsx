@@ -22,6 +22,7 @@ import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
+import { homeSurfaceShadow } from "@/styles/homeSurfaceShadow";
 import { type ReactNode, useLayoutEffect, useRef } from "react";
 import Animated, {
   cancelAnimation,
@@ -189,8 +190,8 @@ export function NodeDetailsPanel({
   const locked = state === "locked";
   const previousGameRef = useRef(game);
   const progress = useSharedValue(1);
-  const fromDark = useSharedValue(game.gameColorDark);
-  const toDark = useSharedValue(game.gameColorDark);
+  const fromDark = useSharedValue(rgba(game.gameColorDark, 0.85));
+  const toDark = useSharedValue(rgba(game.gameColorDark, 0.85));
   const fromPale = useSharedValue(game.gameColorPale);
   const toPale = useSharedValue(game.gameColorPale);
   const fromLabel = useSharedValue(rgba(game.gameColorPale, 0.6));
@@ -199,8 +200,6 @@ export function NodeDetailsPanel({
   const toBorder = useSharedValue<string>(rgba(game.gameColorPale, 0.1));
   const fromPaleTrack = useSharedValue<string>(rgba(game.gameColorPale, 0.16));
   const toPaleTrack = useSharedValue<string>(rgba(game.gameColorPale, 0.16));
-  const fromShadow = useSharedValue<string>(rgba(game.gameColorDark, 0.7));
-  const toShadow = useSharedValue<string>(rgba(game.gameColorDark, 0.7));
   const fromComplexity = useSharedValue(game.rating.complexity);
   const toComplexity = useSharedValue(game.rating.complexity);
   const fromDifficulty = useSharedValue(game.rating.difficulty);
@@ -212,8 +211,8 @@ export function NodeDetailsPanel({
     const previousGame = previousGameRef.current;
     if (previousGame === game) return;
 
-    fromDark.value = previousGame.gameColorDark;
-    toDark.value = game.gameColorDark;
+    fromDark.value = rgba(previousGame.gameColorDark, 0.85);
+    toDark.value = rgba(game.gameColorDark, 0.85);
     fromPale.value = previousGame.gameColorPale;
     toPale.value = game.gameColorPale;
     fromLabel.value = rgba(previousGame.gameColorPale, 0.6);
@@ -222,8 +221,6 @@ export function NodeDetailsPanel({
     toBorder.value = rgba(game.gameColorPale, 0.1);
     fromPaleTrack.value = rgba(previousGame.gameColorPale, 0.16);
     toPaleTrack.value = rgba(game.gameColorPale, 0.16);
-    fromShadow.value = rgba(previousGame.gameColorDark, 0.7);
-    toShadow.value = rgba(game.gameColorDark, 0.7);
     fromComplexity.value = previousGame.rating.complexity;
     toComplexity.value = game.rating.complexity;
     fromDifficulty.value = previousGame.rating.difficulty;
@@ -238,8 +235,6 @@ export function NodeDetailsPanel({
 
   // Resolved outside the worklet: on native, useAnimatedStyle runs on the UI
   // thread, where plain JS helpers like spacing() aren't callable.
-  const panelShadowOffset = spacing(4);
-  const panelShadowBlur = spacing(18);
   const panelStyle = useAnimatedStyle(() => ({
     backgroundColor: interpolateColor(
       progress.value,
@@ -253,12 +248,6 @@ export function NodeDetailsPanel({
       [fromBorder.value, toBorder.value],
       "RGB",
     ),
-    boxShadow: `0 ${panelShadowOffset}px ${panelShadowBlur}px ${interpolateColor(
-      progress.value,
-      [0, 1],
-      [fromShadow.value, toShadow.value],
-      "RGB",
-    )}`,
   }));
   const foregroundFadeStyle = useAnimatedStyle(() => ({
     opacity: interpolate(progress.value, [0, 0.35, 1], [0.35, 0.65, 1]),
@@ -298,11 +287,13 @@ export function NodeDetailsPanel({
           {
             padding: spacing(18),
             gap: spacing(14),
-            borderRadius: spacing(12),
+            borderRadius: spacing(8),
             overflow: "hidden",
             width: "100%",
-            maxWidth: ui.contentMaxWidth,
+            maxWidth:
+              ui.contentMaxWidth - spacing(layoutDims.pagePadding / 2) * 2,
             borderWidth: 1,
+            ...homeSurfaceShadow(spacing),
           },
           panelStyle,
         ]}

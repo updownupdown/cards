@@ -13,7 +13,6 @@ import {
 import { useNodesProgress } from "@/hooks/useNodesProgress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
-import { Colors } from "@/styles/styles";
 import { useCallback, useEffect, useState } from "react";
 import { View } from "react-native";
 import { NodeDetailsPanel } from "./NodeDetailsPanel";
@@ -31,19 +30,23 @@ export function NodesTab({ settingsMap, contentPaddingTop }: Props) {
   const { t } = useTranslation("nodes");
   const {
     progress,
+    isLoading,
     wonPaths,
     unlockedPaths,
     collectedTaoIds,
     collectedQuoteIds,
   } = useNodesProgress();
   const [selectedPath, setSelectedPath] = useState(NODES_START_PATH);
+  const [isMapReady, setIsMapReady] = useState(false);
   const [showTao, setShowTao] = useState(false);
   const [showQuotes, setShowQuotes] = useState(false);
   const [showGames, setShowGames] = useState(false);
 
   useEffect(() => {
+    if (isLoading) return;
     setSelectedPath(progress.lastPlayedPath);
-  }, [progress.lastPlayedPath]);
+    setIsMapReady(true);
+  }, [isLoading, progress.lastPlayedPath]);
 
   const selectedNode =
     getNodeDefinition(selectedPath) ?? getNodeDefinition(NODES_START_PATH)!;
@@ -63,7 +66,6 @@ export function NodesTab({ settingsMap, contentPaddingTop }: Props) {
     <View
       style={{
         flex: 1,
-        backgroundColor: Colors.K950,
       }}
     >
       {showTao && (
@@ -147,6 +149,7 @@ export function NodesTab({ settingsMap, contentPaddingTop }: Props) {
 
       <NodesMap
         selectedPath={selectedNode.path}
+        ready={isMapReady}
         onSelectNode={selectNode}
         wonPaths={wonPaths}
         collectedTaoIds={collectedTaoIds}

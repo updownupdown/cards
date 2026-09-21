@@ -2,7 +2,7 @@ import SoloSuiteLogo from "@/assets/images/SoloSuiteLogo.svg";
 import { Button } from "@/components/Button/Button";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, rgba, layoutDims, webDropShadow } from "@/styles/styles";
+import { Colors, layoutDims, rgba, webDropShadow } from "@/styles/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect } from "react";
 import { Platform, StyleSheet, View } from "react-native";
@@ -16,26 +16,26 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 type HomeHeaderProps = {
   onOpenSettings: () => void;
   onOpenStats: () => void;
-  hideBackground: boolean;
+  showBackground: boolean;
 };
 
 export function HomeHeader({
   onOpenSettings,
   onOpenStats,
-  hideBackground,
+  showBackground,
 }: HomeHeaderProps) {
   const insets = useSafeAreaInsets();
   const { ui, spacing } = useResponsiveMetrics();
-  const backgroundOpacity = useSharedValue(hideBackground ? 0 : 1);
+  const backgroundOpacity = useSharedValue(showBackground ? 1 : 0);
   const backgroundStyle = useAnimatedStyle(() => ({
     opacity: backgroundOpacity.value,
   }));
 
   useEffect(() => {
-    backgroundOpacity.value = withTiming(hideBackground ? 0 : 1, {
-      duration: 300,
+    backgroundOpacity.value = withTiming(showBackground ? 1 : 0, {
+      duration: 350,
     });
-  }, [backgroundOpacity, hideBackground]);
+  }, [backgroundOpacity, showBackground]);
 
   return (
     <View
@@ -49,25 +49,16 @@ export function HomeHeader({
       }}
     >
       <Animated.View
-        style={[
-          {
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            pointerEvents: "none",
-          },
-          backgroundStyle,
-        ]}
+        testID="home-header-background"
+        pointerEvents="none"
+        style={[StyleSheet.absoluteFill, backgroundStyle]}
       >
         <LinearGradient
           colors={[
-            rgba(Colors.background, 1),
-            rgba(Colors.background, 0.8),
-            rgba(Colors.background, 0),
+            rgba(Colors.starfieldOverlay, 1),
+            rgba(Colors.starfieldOverlay, 0),
           ]}
-          start={{ x: 0.5, y: 0.8 }}
+          start={{ x: 0.5, y: 0 }}
           end={{ x: 0.5, y: 1 }}
           style={StyleSheet.absoluteFill}
         />
@@ -111,7 +102,7 @@ export function HomeHeader({
               iconName="chart"
               onPress={onOpenStats}
               style={[styles.headerBtn]}
-              iconColor={rgba(Colors.white, 0.7)}
+              iconColor={Colors.white}
             />
             <Button
               headerButton
@@ -119,7 +110,7 @@ export function HomeHeader({
               iconName="settings"
               onPress={onOpenSettings}
               style={[styles.headerBtn]}
-              iconColor={rgba(Colors.white, 0.7)}
+              iconColor={Colors.white}
             />
           </View>
         </View>

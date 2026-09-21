@@ -79,6 +79,7 @@ function getNodeSizeMultiplier(path: string) {
 
 type Props = {
   selectedPath: string;
+  ready: boolean;
   onSelectNode: (node: NodeDefinition) => void;
   wonPaths: ReadonlySet<string>;
   collectedTaoIds: ReadonlySet<number>;
@@ -137,12 +138,11 @@ const MapNode = memo(function MapNode({
 }) {
   const sizeMultiplier = getNodeSizeMultiplier(node.path);
   const dotSize = NODE_SIZE * sizeMultiplier * (state === "locked" ? 0.65 : 1);
-  const glowColor = rgba(STATE_COLORS[state], 0.8);
   const game = GAMES_DATA[node.path];
   const title = localizeGameTitle(game, node.path, useDisplayLanguage());
   const selectionShadow = selected
-    ? `0 0 0 2px ${game.gameColorMid}, 0 0 0 6px ${game.gameColorPale}, `
-    : `0 0 4px 2px ${game.gameColorDark}, `;
+    ? `0 0 0 2px ${rgba(Colors.black, 0.75)}, 0 0 0 6px ${game.gameColorPale}, `
+    : `0 0 4px 2px ${rgba(Colors.black, 0.25)}, `;
 
   return (
     <Pressable
@@ -160,7 +160,7 @@ const MapNode = memo(function MapNode({
         height: dotSize,
         borderRadius: dotSize / 2,
         backgroundColor: STATE_COLORS[state],
-        boxShadow: `${selectionShadow}0 0 12px ${glowColor}, inset 0 1px 6px ${rgba(game.gameColorPale, 0.6)}, inset -1px -2px 6px -2px ${rgba(game.gameColorDark, 0.8)}`,
+        boxShadow: `${selectionShadow}0 0 12px ${rgba(Colors.black, 0.5)}, inset 0 1px 7px ${rgba(game.gameColorPale, 0.2)}, inset -1px -2px 4px -2px ${rgba(game.gameColorDark, 0.6)}`,
       }}
     />
   );
@@ -168,6 +168,7 @@ const MapNode = memo(function MapNode({
 
 export function NodesMap({
   selectedPath,
+  ready,
   onSelectNode,
   wonPaths,
   collectedTaoIds,
@@ -181,6 +182,7 @@ export function NodesMap({
   const startX = useSharedValue(0);
   const startY = useSharedValue(0);
   const startScale = useSharedValue(1);
+  const worldOpacity = useSharedValue(0);
   const containerRef = useRef<View>(null);
   const hasCenteredInitialNode = useRef(false);
   const unlockedPaths = useMemo(
@@ -213,11 +215,25 @@ export function NodesMap({
 
   useEffect(() => {
     const node = NODE_DEFINITIONS.find((entry) => entry.path === selectedPath);
-    if (!node || viewport.width <= 0) return;
+    if (!ready || !node || viewport.width <= 0) return;
 
-    centerNode(node, hasCenteredInitialNode.current);
+    if (hasCenteredInitialNode.current) {
+      centerNode(node);
+      return;
+    }
+
+    centerNode(node, false);
     hasCenteredInitialNode.current = true;
-  }, [selectedPath, viewport.width]);
+    worldOpacity.value = settings.showAnimations
+      ? withTiming(1, { duration: 250 })
+      : 1;
+  }, [
+    ready,
+    selectedPath,
+    settings.showAnimations,
+    viewport.width,
+    worldOpacity,
+  ]);
 
   useEffect(() => {
     if (Platform.OS !== "web") return;
@@ -327,6 +343,7 @@ export function NodesMap({
   }, [scale, startScale, startX, startY, translateX, translateY]);
 
   const worldStyle = useAnimatedStyle(() => ({
+    opacity: worldOpacity.value,
     transform: [
       { translateX: translateX.value },
       { translateY: translateY.value },
@@ -341,7 +358,6 @@ export function NodesMap({
   return (
     <GestureDetector gesture={cameraGesture}>
       <NodesBackground
-        selectedPath={selectedPath}
         animationsEnabled={settings.showAnimations}
         translateX={translateX}
         translateY={translateY}

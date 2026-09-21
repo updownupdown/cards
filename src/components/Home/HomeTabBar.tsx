@@ -2,6 +2,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { Icon, type IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
+import { homeSurfaceShadow } from "@/styles/homeSurfaceShadow";
 import { Colors, rgba, layoutDims, transitionStyles } from "@/styles/styles";
 import {
   Platform,
@@ -15,9 +16,9 @@ export type HomeTabKey = "home" | "collect" | "search" | "nodes";
 
 export const HOME_TABS: { key: HomeTabKey; icon: IconName }[] = [
   { key: "home", icon: "home" },
+  { key: "nodes", icon: "nodes" },
   { key: "collect", icon: "trophy" },
   { key: "search", icon: "search" },
-  { key: "nodes", icon: "nodes" },
 ];
 
 type HomeTabBarProps = {
@@ -69,10 +70,7 @@ export function HomeTabBar({
               height: spacing(layoutDims.tabBarHeight),
               borderRadius: spacing(layoutDims.tabBarHeight / 2),
               backgroundColor: rgba(Colors.K950, 0.9),
-              boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.K900, 0.4)}, ${spacing(2)}px ${spacing(4)}px ${spacing(10)}px ${rgba(
-                Colors.K900,
-                0.4,
-              )}`,
+              ...homeSurfaceShadow(spacing),
             },
           ]}
         >

@@ -14,6 +14,7 @@ import { FavButton } from "./FavButton";
 import { RatingsBars } from "./RatingBars";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
+import { homeSurfaceShadow } from "@/styles/homeSurfaceShadow";
 
 function getGameThumbnail(game: GameMenuInfo) {
   return GAME_THUMBNAIL_ASSETS[game.thumbnail || DEFAULT_GAME_THUMBNAIL];
@@ -59,8 +60,6 @@ export function HomeCard({
   // leave a content box shorter than one line of text and clip the title on
   // native (web just lets it overflow the padding box).
   const paddingVertical = size === "small" ? spacing(8) : padding;
-  const shadowUnit = spacing(2);
-
   const smallCardHeight = spacing(50);
   const mediumCardHeight = spacing(120);
 
@@ -83,17 +82,10 @@ export function HomeCard({
           position: "relative",
           height,
           borderRadius,
-          // Android: an elevation shadow instead of two blurred box-shadows,
-          // which are costly across a long list of cards while scrolling. It
-          // needs a background to cast from; the thumbnail covers it anyway.
-          ...(Platform.OS === "web"
-            ? {
-                boxShadow: `${shadowUnit * 0.5}px ${shadowUnit * 1}px ${shadowUnit * 4}px ${rgba(Colors.K900, 0.6)}, ${shadowUnit * 1}px ${shadowUnit * 2}px ${shadowUnit * 8}px ${rgba(Colors.K900, 0.6)}`,
-              }
-            : {
-                elevation: shadowUnit * 3,
-                backgroundColor: game.gameColorDark,
-              }),
+          ...homeSurfaceShadow(spacing),
+          ...(Platform.OS === "android"
+            ? { backgroundColor: game.gameColorDark }
+            : null),
         },
         style,
       ]}

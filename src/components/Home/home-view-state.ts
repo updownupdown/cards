@@ -1,8 +1,16 @@
-export const NODES_HOME_TAB_INDEX = 3;
+export const HOME_HOME_TAB_INDEX = 0;
+export const NODES_HOME_TAB_INDEX = 1;
+export const COLLECT_HOME_TAB_INDEX = 2;
+export const SEARCH_HOME_TAB_INDEX = 3;
+export const LAST_HOME_TAB_INDEX = SEARCH_HOME_TAB_INDEX;
 
-export type HomeTabIndex = 0 | 1 | 2 | typeof NODES_HOME_TAB_INDEX;
+export type HomeTabIndex =
+  | typeof HOME_HOME_TAB_INDEX
+  | typeof NODES_HOME_TAB_INDEX
+  | typeof COLLECT_HOME_TAB_INDEX
+  | typeof SEARCH_HOME_TAB_INDEX;
 
-let activeHomeTab: HomeTabIndex = 0;
+let activeHomeTab: HomeTabIndex = HOME_HOME_TAB_INDEX;
 const activeHomeTabListeners = new Set<() => void>();
 
 export const getActiveHomeTab = () => activeHomeTab;

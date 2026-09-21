@@ -11,7 +11,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 export const DICE_ROLL_DURATION = 2800;
-export const ROLLING_DICE_COUNT = 3;
+export const ROLLING_DICE_COUNT = 2;
 
 // 3x3 grid slot indices used by each face value.
 //   0 1 2

@@ -8,6 +8,7 @@ import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { useTranslation } from "@/i18n";
 import { Icon } from "@/icons";
 import { Colors, layoutDims, rgba } from "@/styles/styles";
+import { homeSurfaceShadow } from "@/styles/homeSurfaceShadow";
 import { useMemo, useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import Svg, { Circle } from "react-native-svg";
@@ -36,6 +37,7 @@ type CollectTabProps = {
   onToggleFavorite: (path: string) => void;
   cardSize: HomeCardSize;
   onCardSizeChange: (size: HomeCardSize) => void;
+  onScrolledChange: (isScrolled: boolean) => void;
   contentPaddingTop: number;
   contentPaddingBottom: number;
 };
@@ -47,15 +49,14 @@ export function CollectTab({
   onToggleFavorite,
   cardSize,
   onCardSizeChange,
+  onScrolledChange,
   contentPaddingTop,
   contentPaddingBottom,
 }: CollectTabProps) {
   const { ui, spacing } = useResponsiveMetrics();
   const { t } = useTranslation("home");
-  const { width: viewportWidth } = useViewportDimensions();
   const [openTags, setOpenTags] = useState<Set<GameTag>>(new Set());
   const pageSidePadding = spacing(layoutDims.pagePadding);
-  const contentWidth = Math.min(ui.contentMaxWidth, viewportWidth);
   const cardGap = spacing(12);
   const mediumCardWidth: `${number}%` = ui.isTablet ? "31.5%" : "48.5%";
 
@@ -88,13 +89,13 @@ export function CollectTab({
         paddingHorizontal: pageSidePadding,
         gap: spacing(12),
       }}
+      onScroll={(event) =>
+        onScrolledChange(event.nativeEvent.contentOffset.y > 1)
+      }
+      scrollEventThrottle={16}
       showsVerticalScrollIndicator={false}
     >
-      <HomeCardSizeControl
-        contentWidth={contentWidth}
-        value={cardSize}
-        onChange={onCardSizeChange}
-      />
+      <HomeCardSizeControl value={cardSize} onChange={onCardSizeChange} />
 
       <View
         style={[
@@ -126,8 +127,8 @@ export function CollectTab({
                 alignSelf: "center",
                 borderRadius: spacing(12),
                 overflow: "hidden",
-                backgroundColor: Colors.K900,
-                boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(10)}px ${rgba(Colors.black, 0.2)}`,
+                backgroundColor: rgba(Colors.K900, 0.7),
+                ...homeSurfaceShadow(spacing),
               }}
             >
               <Pressable

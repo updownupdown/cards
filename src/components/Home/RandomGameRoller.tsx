@@ -10,27 +10,21 @@ import { Animated, View } from "react-native";
 import { RollingDice } from "./RollingDice";
 
 type RandomGameRollerProps = {
-  availableEntries: HomeGameEntry[];
   entries: HomeGameEntry[];
   favorites: Set<string>;
   onToggleFavorite: (path: string) => void;
   rolling: boolean;
   rollKey: number;
-  onRoll: () => void;
   onClear: () => void;
-  isRandomMode: boolean;
 };
 
 export function RandomGameRoller({
-  availableEntries,
   entries,
   favorites,
   onToggleFavorite,
   rolling,
   rollKey,
-  onRoll,
   onClear,
-  isRandomMode,
 }: RandomGameRollerProps) {
   const { spacing } = useResponsiveMetrics();
   const { t } = useTranslation("home");
@@ -38,11 +32,8 @@ export function RandomGameRoller({
   const largeCardHeight = spacing(180);
 
   const showCard = !rolling && entries.length > 0;
-  const showDice = rolling;
   const { isRendered: isCardRendered, opacity: cardOpacity } =
     useFade(showCard);
-  const { isRendered: isDiceRendered, opacity: diceOpacity } =
-    useFade(showDice);
 
   return (
     <View
@@ -51,28 +42,14 @@ export function RandomGameRoller({
         gap: cardGap,
       }}
     >
-      {isRandomMode ? (
-        <Button
-          text={t("random.clear")}
-          // iconName="close"
-          uppercase={false}
-          size="lg"
-          onPress={onClear}
-          style={{ height: spacing(52), borderRadius: spacing(26) }}
-          theme={Colors.suitsRed}
-        />
-      ) : (
-        <Button
-          text={t("random.roll")}
-          iconName="dice"
-          uppercase={false}
-          size="lg"
-          onPress={onRoll}
-          disabled={availableEntries.length === 0}
-          style={{ height: spacing(52), borderRadius: spacing(26) }}
-          theme={Colors.suitsRed}
-        />
-      )}
+      <Button
+        text={t("random.clear")}
+        uppercase={false}
+        size="lg"
+        onPress={onClear}
+        style={{ height: spacing(52), borderRadius: spacing(26) }}
+        theme={Colors.suitsRed}
+      />
 
       <View
         style={[
@@ -107,24 +84,15 @@ export function RandomGameRoller({
             </Animated.View>
           ))}
 
-        {isDiceRendered && (
-          <Animated.View
-            style={[
-              flexStyles.colCentered,
-              {
-                borderRadius: spacing(8),
-                backgroundColor: Colors.background,
-                opacity: diceOpacity,
-              },
-            ]}
-          >
+        {rolling && (
+          <View style={flexStyles.colCentered}>
             <RollingDice
               rollKey={rollKey}
               rolling={rolling}
               slotHeight={largeCardHeight}
               gap={cardGap}
             />
-          </Animated.View>
+          </View>
         )}
       </View>
     </View>

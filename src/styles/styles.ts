@@ -76,6 +76,7 @@ export const Colors = {
   K050: "#FCFDFE",
 
   background: "#343f49",
+  starfieldOverlay: "#11181f",
   text: "#DDE5ED",
 } as const;
 

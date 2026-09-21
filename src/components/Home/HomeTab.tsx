@@ -1,4 +1,5 @@
 import { HomeCard } from "@/components/Home/HomeCard";
+import { COLLECT_HOME_TAB_INDEX } from "@/components/Home/home-view-state";
 import { HomeSectionTitle } from "@/components/Home/HomeSectionTitle";
 import { getGameOfTheDayPath } from "@/data/game-of-the-day";
 import { GameMenuInfo, GameTag, isGameEnabled } from "@/data/games-data";
@@ -24,6 +25,7 @@ type HomeTabProps = {
   contentPaddingTop: number;
   contentPaddingBottom: number;
   onSelectTab: (index: number) => void;
+  onScrolledChange: (isScrolled: boolean) => void;
 };
 
 export function HomeTab({
@@ -35,6 +37,7 @@ export function HomeTab({
   contentPaddingTop,
   contentPaddingBottom,
   onSelectTab,
+  onScrolledChange,
 }: HomeTabProps) {
   const { t } = useTranslation("home");
   const language = useDisplayLanguage();
@@ -146,6 +149,10 @@ export function HomeTab({
         paddingBottom: contentPaddingBottom,
         gap: spacing(40),
       }}
+      onScroll={(event) =>
+        onScrolledChange(event.nativeEvent.contentOffset.y > 1)
+      }
+      scrollEventThrottle={16}
       showsVerticalScrollIndicator={false}
     >
       {/* Local-only games */}
@@ -232,7 +239,7 @@ export function HomeTab({
             <Button
               onPress={() => {
                 // Switch to the Collect tab
-                onSelectTab(1);
+                onSelectTab(COLLECT_HOME_TAB_INDEX);
               }}
               text={t("sections.discoverMore")}
               style={{ marginTop: spacing(20) }}
