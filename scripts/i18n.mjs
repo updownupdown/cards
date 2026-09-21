@@ -507,7 +507,7 @@ async function translate(language, english) {
     `${items.length} items in ${batches.length} batches (${items.reduce((sum, item) => sum + words(item.english), 0)} English words).`,
   );
   const system = [
-    `You translate SoloSuite, a mobile app of solo playing-card games, from English into ${LANGUAGE_NAMES[language] ?? language}.`,
+    `You translate SoliNova, a mobile app of solo playing-card games, from English into ${LANGUAGE_NAMES[language] ?? language}.`,
     "Translate each item's English faithfully and naturally for players. Game rules must stay exactly as precise as the English.",
     "Keep {{placeholders}}, <tags>, line breaks, markdown (## headings, - list markers, **bold**) and the JSON structure exactly. Arrays must keep their length.",
     "Translate game titles: use the language's established name for a classic solitaire when there is one, translate descriptive titles, and keep proper names that don't translate. When rules mention another game, use that game's translated title. Quote authors are not included; translate quote sources, but keep book and work titles recognizable.",

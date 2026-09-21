@@ -1,6 +1,6 @@
 # Localization
 
-SoloSuite is translated into French, Spanish, Italian, Portuguese, Turkish and Indonesian. English is the source language, more languages can follow, and translations are made by AI with automatic checks.
+SoliNova is translated into French, Spanish, Italian, Portuguese, Turkish and Indonesian. English is the source language, more languages can follow, and translations are made by AI with automatic checks.
 
 Status: French, Spanish, Italian, Portuguese, Turkish and Indonesian are complete. The UI, the in-game text, every game's title, description, quick start and rules, the game settings, all 156 quotes and all 81 Tao Te Ching chapters are translated, and the checks pass. Turkish was checked on a phone on 2026-09-16 (all 114 games opened, overflowing labels shortened, remaining hard-coded English strings translated). Italian, Portuguese and Indonesian have not yet been checked on a phone.
 

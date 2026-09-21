@@ -1,4 +1,4 @@
-import SoloSuiteLogo from "@/assets/images/SoloSuiteLogo.svg";
+import SoliNovaLogo from "@/assets/images/SoliNovaLogo.svg";
 import { Button } from "@/components/Button/Button";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
@@ -86,7 +86,7 @@ export function HomeHeader({
             },
           ]}
         >
-          <SoloSuiteLogo
+          <SoliNovaLogo
             width={140}
             height={32}
             style={{

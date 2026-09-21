@@ -105,9 +105,9 @@
     "title": "Statistiche"
   },
   "install": {
-    "titleIos": "Aggiungi SoloSuite alla schermata Home",
-    "titleInstall": "Installa SoloSuite",
-    "titleDevice": "Aggiungi SoloSuite al tuo dispositivo",
+    "titleIos": "Aggiungi SoliNova alla schermata Home",
+    "titleInstall": "Installa SoliNova",
+    "titleDevice": "Aggiungi SoliNova al tuo dispositivo",
     "instructionsIos": "In Safari, tocca il pulsante Condividi, poi scegli «Aggiungi alla schermata Home».",
     "instructionsInstall": "Installa l'app per avvii più rapidi, lo schermo intero e il gioco offline.",
     "instructionsBrowser": "Apri il menu del browser e scegli «Installa app» o «Aggiungi a schermata Home».",

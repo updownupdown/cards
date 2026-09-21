@@ -45,7 +45,7 @@ module.exports = defineConfig([
               "[0-9!-/:-@[-`{-~]+",
               "[A-Z_-]+",
               "[\\u2022\\u25E6]",
-              "SoloSuite",
+              "SoliNova",
             ],
           },
           // Translation lookups (t, tCommon, i18n.t) and helpers that take

@@ -105,9 +105,9 @@
     "title": "Estadísticas"
   },
   "install": {
-    "titleIos": "Añade SoloSuite a tu pantalla de inicio",
-    "titleInstall": "Instalar SoloSuite",
-    "titleDevice": "Añade SoloSuite a tu dispositivo",
+    "titleIos": "Añade SoliNova a tu pantalla de inicio",
+    "titleInstall": "Instalar SoliNova",
+    "titleDevice": "Añade SoliNova a tu dispositivo",
     "instructionsIos": "En Safari, toca el botón Compartir y elige «Añadir a pantalla de inicio».",
     "instructionsInstall": "Instálala para abrirla más rápido, jugar a pantalla completa y sin conexión.",
     "instructionsBrowser": "Abre el menú del navegador y elige «Instalar aplicación» o «Añadir a pantalla de inicio».",

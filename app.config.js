@@ -1,9 +1,9 @@
 /** @type {import('expo/config').ExpoConfig} */
 const config = {
-  name: "SoloSuite",
+  name: "SoliNova",
   description: "A collection of solo playing card games.",
   owner: "updowngames",
-  slug: "solosuite",
+  slug: "solinova",
   version: "1.0.0",
   orientation: "default",
   icon: "./assets/app-icon/icon.png",
@@ -48,8 +48,8 @@ const config = {
     // theme-color updates (crbug.com/554055703). Keep the splash itself red
     // via backgroundColor, but use the Home color as the status-bar fallback.
     themeColor: "#343f49",
-    name: "SoloSuite",
-    shortName: "SoloSuite",
+    name: "SoliNova",
+    shortName: "SoliNova",
     description: "A collection of solo playing card games.",
     display: "standalone",
     startUrl: "./",

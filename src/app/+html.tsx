@@ -6,7 +6,7 @@ export default function Root({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>
-        <title>SoloSuite</title>
+        <title>SoliNova</title>
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta
@@ -17,8 +17,8 @@ export default function Root({ children }: { children: ReactNode }) {
           name="description"
           content="A collection of solo playing card games."
         />
-        <meta name="application-name" content="SoloSuite" />
-        <meta name="apple-mobile-web-app-title" content="SoloSuite" />
+        <meta name="application-name" content="SoliNova" />
+        <meta name="apple-mobile-web-app-title" content="SoliNova" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta

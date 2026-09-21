@@ -54,7 +54,7 @@ import { GameHeader } from "./GameHeader";
 import { useStableCallback } from "@/hooks/useStableCallback";
 
 const TIPS_MORPH_DURATION = 350;
-const KEEP_AWAKE_TAG = "solosuite-game";
+const KEEP_AWAKE_TAG = "solinova-game";
 const KEEP_AWAKE_MS = 10 * 60 * 1000;
 // Scene effects start after the game has loaded and its deal has played.
 const SCENE_START_DELAY_MS = 1000;

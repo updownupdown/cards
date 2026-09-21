@@ -4,7 +4,7 @@ Status: plan only, to be implemented in a future session after the localization 
 
 ## Why
 
-Release builds report nothing. SoloSuite already notices when a game launch never settled: `consumeInterruptedGameLaunch` in `src/data/game-menu.ts` catches it, so the next launch doesn't resume into a crash loop. But nobody learns which game crashed or why. Crash reporting sends that information to a dashboard.
+Release builds report nothing. SoliNova already notices when a game launch never settled: `consumeInterruptedGameLaunch` in `src/data/game-menu.ts` catches it, so the next launch doesn't resume into a crash loop. But nobody learns which game crashed or why. Crash reporting sends that information to a dashboard.
 
 ## Recommendation: Sentry
 

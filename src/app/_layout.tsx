@@ -100,7 +100,7 @@ export default function Layout() {
   useEffect(() => {
     if (typeof document === "undefined") return;
 
-    const rootTitle = "SoloSuite";
+    const rootTitle = "SoliNova";
     const pageTitle = isGamePath(pathname)
       ? `${localizeGameTitle(getGameInfo(pathname), pathname, displayLanguage)} ♠ ${rootTitle}`
       : rootTitle;
