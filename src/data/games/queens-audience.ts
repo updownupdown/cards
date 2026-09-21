@@ -33,7 +33,7 @@ export const queensAudience: GameDefinition = {
     "- When a **King and Queen** of the same suit are both available, tap either to bring them in together.",
     "- When a **Jack and Ace** of the same suit are both available, tap either to start that suit's foundation.",
     "- Each foundation then builds **down by suit** from the Jack to the Two.",
-    "- A gap in the antechamber is filled at once from the waste, or from the stock if the waste is empty.",
+    "- A gap in the antechamber is filled automatically from the waste, or from the stock if the waste is empty.",
     "- Tap the **stock** to turn one card onto the waste. There is no redeal.",
   ],
 };

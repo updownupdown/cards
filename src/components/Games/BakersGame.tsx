@@ -225,9 +225,7 @@ export default function BakersGame() {
       row: 0,
       baseZIndex: 50,
       placeholder: {
-        text: i18n.t("cards:free"),
-        infoPos: "below",
-        showCount: false,
+        iconName: "free-cell",
       },
     }));
 
@@ -240,7 +238,9 @@ export default function BakersGame() {
       row: 0,
       baseZIndex: 40,
       fan: { maxVisible: 1 },
-      placeholder: {},
+      placeholder: {
+        iconName: "ace",
+      },
     }));
 
     const cascadeZones: MapZone[] = game.cascades.map((pile, i) => ({

@@ -34,7 +34,7 @@ export const windmill: GameDefinition = {
 
     "## Rules",
     "- The eight **sails** and the top **waste** card are available.",
-    "- An empty sail is refilled at once from the waste, or from the stock if the waste is empty.",
+    "- An empty sail is refilled automatically from the waste, or from the stock if the waste is empty.",
     "- The top card of a corner may move to the center, but the **next** card played to the center must then come from a sail or the waste.",
     "- When a card could go to more than one place, tap it and then tap where it should go.",
     "- Tap the **stock** to turn one card onto the waste. There is no redeal.",

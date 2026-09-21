@@ -354,7 +354,6 @@ export default function BlackberryPie() {
     fixedRows: 4.6,
     gap: 0.08,
     cardSize,
-    // visualizer: true,
   });
 
   const collectedCount = game.queen.length - 1;

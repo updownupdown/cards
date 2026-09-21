@@ -25,6 +25,11 @@ export default function SeahavenTowers() {
     <ReserveCellBoard
       columnCount={10}
       createState={createSeahavenTowersState}
+      foundationStartColumn={6}
+      foundationRow={0}
+      freeCellRow={0}
+      cascadeRow={1.2}
+      fixedRows={5}
     />
   );
 }

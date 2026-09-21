@@ -37,7 +37,15 @@ import { textStyles } from "@/styles/textStyles";
 import { i18n } from "@/i18n";
 type FightClubsDifficulty = "easy" | "hard";
 type Action =
-  "match" | "sum" | "any" | "line" | "row" | "column" | "down" | "up" | "run";
+  | "match"
+  | "sum"
+  | "any"
+  | "line"
+  | "row"
+  | "column"
+  | "down"
+  | "up"
+  | "run";
 
 const ActionNames = {
   match: "games:fightClubs.actionMatch",
@@ -589,7 +597,6 @@ export default function FightClubs() {
       };
     },
     cardSize: "small",
-    // visualizer: true,
   });
 
   function canExecute(action: Action) {

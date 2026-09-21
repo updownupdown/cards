@@ -24,6 +24,7 @@ import {
   RANKS,
   shuffle,
   SUITS,
+  zoneFanOffset,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 
@@ -41,6 +42,15 @@ export type ReserveCellGameState = GameState;
 type ReserveCellBoardProps = {
   columnCount: number;
   createState: () => GameState;
+  canPlaceOnCascade?: (
+    card: PlayingCard,
+    destinationTop?: PlayingCard,
+  ) => boolean;
+  foundationStartColumn?: number;
+  foundationRow?: number;
+  freeCellRow?: number;
+  cascadeRow?: number;
+  fixedRows?: number;
 };
 
 type Selection = { zone: "free"; slotIndex: number } | null;
@@ -148,6 +158,12 @@ export const eightOffRules = {
 export function ReserveCellBoard({
   columnCount,
   createState,
+  canPlaceOnCascade: canPlaceOnCascadeRule = canPlaceOnCascade,
+  foundationStartColumn = (columnCount - 4) / 2,
+  foundationRow = 0,
+  freeCellRow = 1.2,
+  cascadeRow = 2.4,
+  fixedRows = 7,
 }: ReserveCellBoardProps) {
   const [selected, setSelected] = useState<Selection>(null);
   const [lastTap, setLastTap] = useState<{ key: string; at: number } | null>(
@@ -228,6 +244,7 @@ export function ReserveCellBoard({
     () => game.foundations.every((pile) => pile.length === 13),
     [game.foundations],
   );
+  const cascadeHeight = fixedRows - cascadeRow;
 
   // ── CardMap zones ───────────────────────────────────────────────────────────
 
@@ -237,11 +254,13 @@ export function ReserveCellBoard({
       name: "foundation",
       pileIndex: i,
       cards: pile,
-      col: (columnCount - 4) / 2 + i,
-      row: 0,
+      col: foundationStartColumn + i,
+      row: foundationRow,
       baseZIndex: 100,
       fan: { maxVisible: 1 },
-      placeholder: {},
+      placeholder: {
+        iconName: "ace",
+      },
     }));
 
     const freeCellZones: MapZone[] = game.freeCells.map((card, i) => ({
@@ -250,9 +269,11 @@ export function ReserveCellBoard({
       pileIndex: i,
       cards: card ? [card] : [],
       col: i,
-      row: 1.2,
+      row: freeCellRow,
       baseZIndex: 50,
-      placeholder: {},
+      placeholder: {
+        iconName: "free-cell",
+      },
     }));
 
     const cascadeZones: MapZone[] = game.cascades.map((pile, i) => ({
@@ -261,18 +282,30 @@ export function ReserveCellBoard({
       pileIndex: i,
       cards: pile,
       col: i,
-      row: 2.4,
+      row: cascadeRow,
       baseZIndex: 10 + i,
       fan: {
         direction: "down" as const,
-        offset: cardDims.tableauOffset,
+        offset: zoneFanOffset(
+          pile.length,
+          cascadeHeight,
+          0.1,
+          cardDims.tableauOffset,
+        ),
         center: false,
       },
       placeholder: {},
     }));
 
     return [...freeCellZones, ...foundationZones, ...cascadeZones];
-  }, [game]);
+  }, [
+    cascadeHeight,
+    cascadeRow,
+    foundationRow,
+    foundationStartColumn,
+    freeCellRow,
+    game,
+  ]);
 
   // ── CardMap callbacks ───────────────────────────────────────────────────────
 
@@ -399,7 +432,7 @@ export function ReserveCellBoard({
     zoneMapper,
     cardSize: "tableau",
     fixedCols: columnCount,
-    fixedRows: 7,
+    fixedRows,
     gap: 0.12,
   });
 
@@ -426,10 +459,7 @@ export function ReserveCellBoard({
         const maxStackSize = getMaxMovableStackSize(game);
         for (let startIndex = 0; startIndex < pile.length; startIndex++) {
           const cards = pile.slice(startIndex);
-          if (
-            cards.length > maxStackSize ||
-            !isDescendingSameSuitStack(cards)
-          ) {
+          if (cards.length > maxStackSize || !isValidCascadeStack(cards)) {
             continue;
           }
 
@@ -534,7 +564,8 @@ export function ReserveCellBoard({
     snapshot: GameState,
   ): PlayingCard[] {
     if (source.zone === "cascade") {
-      return snapshot.cascades[source.pileIndex].slice(source.startIndex);
+      const pile = snapshot.cascades[source.pileIndex];
+      return pile.slice(source.startIndex);
     }
     const card = snapshot.freeCells[source.slotIndex];
     return card ? [card] : [];
@@ -542,6 +573,13 @@ export function ReserveCellBoard({
 
   function getMaxMovableStackSize(snapshot: GameState): number {
     return snapshot.freeCells.filter((card) => card === null).length + 1;
+  }
+
+  function isValidCascadeStack(cards: PlayingCard[]): boolean {
+    return cards.every(
+      (card, index) =>
+        index === 0 || canPlaceOnCascadeRule(card, cards[index - 1]),
+    );
   }
 
   function canDropOnTarget(source: MoveSource, target: DropTarget): boolean {
@@ -568,7 +606,7 @@ export function ReserveCellBoard({
       game.cascades[target.pileIndex][
         game.cascades[target.pileIndex].length - 1
       ];
-    return isDescendingSameSuitStack(cards) && canPlaceOnCascade(card, top);
+    return isDescendingSameSuitStack(cards) && canPlaceOnCascadeRule(card, top);
   }
 
   function applyMove(source: MoveSource, target: DropTarget) {
@@ -673,7 +711,7 @@ export function ReserveCellBoard({
     if (
       cards.length === 0 ||
       cards.length > getMaxMovableStackSize(game) ||
-      (source.zone === "cascade" && !isDescendingSameSuitStack(cards))
+      (source.zone === "cascade" && !isValidCascadeStack(cards))
     ) {
       return;
     }

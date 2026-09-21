@@ -5,6 +5,7 @@
 import type { ComponentType } from "react";
 import type { SvgProps } from "react-native-svg";
 
+import AceIcon from "./Ace.svg";
 import ArrowBackIcon from "./ArrowBack.svg";
 import ArrowDownIcon from "./ArrowDown.svg";
 import ArrowForwardIcon from "./ArrowForward.svg";
@@ -36,6 +37,7 @@ import FastForwardIcon from "./FastForward.svg";
 import FeaturedIcon from "./Featured.svg";
 import FilterIcon from "./Filter.svg";
 import FistIcon from "./Fist.svg";
+import FreeCellIcon from "./FreeCell.svg";
 import GamesIcon from "./Games.svg";
 import GrappleHookIcon from "./GrappleHook.svg";
 import HeartIcon from "./Heart.svg";
@@ -72,6 +74,7 @@ import SmokeBombIcon from "./SmokeBomb.svg";
 import SpadesIcon from "./Spades.svg";
 import StarIcon from "./Star.svg";
 import StarOutlineIcon from "./StarOutline.svg";
+import SuitsIcon from "./Suits.svg";
 import SwordIcon from "./Sword.svg";
 import TagIcon from "./Tag.svg";
 import TaoIcon from "./Tao.svg";
@@ -80,6 +83,7 @@ import TrophyIcon from "./Trophy.svg";
 import UndoIcon from "./Undo.svg";
 
 export type IconName =
+  | "ace"
   | "arrow-back"
   | "arrow-down"
   | "arrow-forward"
@@ -111,6 +115,7 @@ export type IconName =
   | "featured"
   | "filter"
   | "fist"
+  | "free-cell"
   | "games"
   | "grapple-hook"
   | "heart"
@@ -147,6 +152,7 @@ export type IconName =
   | "spades"
   | "star"
   | "star-outline"
+  | "suits"
   | "sword"
   | "tag"
   | "tao"
@@ -155,6 +161,7 @@ export type IconName =
   | "undo";
 
 export const icons: Record<IconName, ComponentType<SvgProps>> = {
+  "ace": AceIcon,
   "arrow-back": ArrowBackIcon,
   "arrow-down": ArrowDownIcon,
   "arrow-forward": ArrowForwardIcon,
@@ -186,6 +193,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "featured": FeaturedIcon,
   "filter": FilterIcon,
   "fist": FistIcon,
+  "free-cell": FreeCellIcon,
   "games": GamesIcon,
   "grapple-hook": GrappleHookIcon,
   "heart": HeartIcon,
@@ -222,6 +230,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "spades": SpadesIcon,
   "star": StarIcon,
   "star-outline": StarOutlineIcon,
+  "suits": SuitsIcon,
   "sword": SwordIcon,
   "tag": TagIcon,
   "tao": TaoIcon,

@@ -1124,18 +1124,6 @@ export default function Bowling() {
           flexStyles.spaceAround,
         ]}
       >
-        {/* End Ball */}
-        <Button
-          size="sm"
-          taller
-          // flat
-          onPress={endBallNow}
-          text={i18n.t("games:bowling.endBall")}
-          theme="blue"
-          fullWidth
-          disabled={game.phase === "gameEnd"}
-        />
-
         {/* Pins/Ball Count */}
         <View
           style={[
@@ -1156,6 +1144,18 @@ export default function Bowling() {
           />
         </View>
 
+        {/* End Ball */}
+        <Button
+          size="sm"
+          taller
+          // flat
+          onPress={endBallNow}
+          text={i18n.t("games:bowling.endBall")}
+          theme="blue"
+          fullWidth
+          disabled={game.phase === "gameEnd" || canKnockSelectedPins}
+        />
+
         {/* Knock Pins */}
         <Button
           size="md"
@@ -1174,29 +1174,6 @@ export default function Bowling() {
           ]}
         />
       </View>
-
-      {/* Ball Num */}
-      {/* <View
-        style={[
-          getZoneStylesById("ball-num"),
-          flexStyles.colCentered,
-          {
-            borderRadius: spacing(8),
-            gap: spacing(4),
-          },
-        ]}
-      >
-        <Text size="xs" weight={300} lineHeight={1} textTransform="uppercase">
-          {isBonusMode ? "Bonus Ball" : "Ball"}
-        </Text>
-        <Text size="xxl" weight={700} lineHeight={1}>
-          {isBonusMode
-            ? game.bonusBallsRemaining === 2
-              ? "1"
-              : "2"
-            : game.currentBall}
-        </Text>
-      </View> */}
     </GameWrapper>
   );
 }

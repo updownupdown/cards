@@ -188,6 +188,7 @@ function moveAction(
   destination.push(...removed);
 
   if (source.zone === "grid" && state.grid[source.pileIndex].length === 0) {
+    redealWasteAction(state);
     const replacement = state.draw.pop();
     if (replacement) state.grid[source.pileIndex].push(flipToFace(replacement));
   }

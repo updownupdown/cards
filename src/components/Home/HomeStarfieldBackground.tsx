@@ -3,11 +3,11 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useRef, useState } from "react";
 import {
   Animated as RNAnimated,
+  AppState,
   Easing as RNEasing,
   ImageBackground,
   Platform,
   View,
-  type LayoutChangeEvent,
 } from "react-native";
 
 const STAR_COLORS = ["#ffffff", "#eef8ff", "#d9efff", "#b9ddff", "#91c7ff"];
@@ -17,6 +17,8 @@ const SHOOTING_STAR_DURATION_SCALE = 1.25;
 
 type Props = {
   animationsEnabled: boolean;
+  width: number;
+  height: number;
 };
 
 function ShootingStar({
@@ -31,6 +33,10 @@ function ShootingStar({
   const opacity = useRef(new RNAnimated.Value(0)).current;
   const translateX = useRef(new RNAnimated.Value(0)).current;
   const translateY = useRef(new RNAnimated.Value(0)).current;
+  const [isAppActive, setIsAppActive] = useState(
+    AppState.currentState === "active",
+  );
+  const [resumeKey, setResumeKey] = useState(0);
   const [appearance, setAppearance] = useState({
     angle: 0,
     color: STAR_COLORS[0],
@@ -38,10 +44,39 @@ function ShootingStar({
   });
 
   useEffect(() => {
-    if (!animationsEnabled || width <= 0 || height <= 0) {
+    const onAppStateChange = (state: string) => {
+      const isActive = state === "active";
+      setIsAppActive(isActive);
+      if (isActive) setResumeKey((current) => current + 1);
+    };
+    const subscription = AppState.addEventListener("change", onAppStateChange);
+
+    if (Platform.OS !== "web") return () => subscription.remove();
+
+    const restartAfterResume = () => {
+      if (document.visibilityState === "visible") {
+        setIsAppActive(true);
+        setResumeKey((current) => current + 1);
+      }
+    };
+    window.addEventListener("focus", restartAfterResume);
+    window.addEventListener("pageshow", restartAfterResume);
+    document.addEventListener("visibilitychange", restartAfterResume);
+
+    return () => {
+      subscription.remove();
+      window.removeEventListener("focus", restartAfterResume);
+      window.removeEventListener("pageshow", restartAfterResume);
+      document.removeEventListener("visibilitychange", restartAfterResume);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!animationsEnabled || !isAppActive || width <= 0 || height <= 0) {
       opacity.setValue(0);
       return;
     }
+    opacity.setValue(0);
 
     let timer: ReturnType<typeof setTimeout>;
     let animation: RNAnimated.CompositeAnimation | undefined;
@@ -123,7 +158,16 @@ function ShootingStar({
       clearTimeout(timer);
       animation?.stop();
     };
-  }, [animationsEnabled, height, opacity, translateX, translateY, width]);
+  }, [
+    animationsEnabled,
+    height,
+    isAppActive,
+    opacity,
+    resumeKey,
+    translateX,
+    translateY,
+    width,
+  ]);
 
   return (
     <RNAnimated.View
@@ -168,18 +212,26 @@ function ShootingStar({
   );
 }
 
-export function HomeStarfieldBackground({ animationsEnabled }: Props) {
-  const [viewport, setViewport] = useState({ width: 0, height: 0 });
+export function HomeStarfieldBackground({
+  animationsEnabled,
+  width,
+  height,
+}: Props) {
+  const viewportRef = useRef({ width, height });
+  if (Math.abs(viewportRef.current.width - width) > 1) {
+    viewportRef.current = { width, height };
+  } else if (height > viewportRef.current.height) {
+    viewportRef.current.height = height;
+  }
+  const viewport = viewportRef.current;
 
-  const onLayout = (event: LayoutChangeEvent) => {
-    const { width, height } = event.nativeEvent.layout;
-    setViewport({ width, height });
-  };
+  const isLandscape = viewport.width > viewport.height;
+  const imageWidth = isLandscape ? viewport.height : viewport.width;
+  const imageHeight = isLandscape ? viewport.width : viewport.height;
 
   return (
     <View
       testID="home-starfield-background"
-      onLayout={onLayout}
       pointerEvents="none"
       style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
     >
@@ -188,12 +240,11 @@ export function HomeStarfieldBackground({ animationsEnabled }: Props) {
         resizeMode="cover"
         style={{
           position: "absolute",
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
+          left: (viewport.width - imageWidth) / 2,
+          top: (viewport.height - imageHeight) / 2,
+          width: imageWidth,
+          height: imageHeight,
+          transform: isLandscape ? [{ rotate: "90deg" }] : undefined,
         }}
       />
       <View

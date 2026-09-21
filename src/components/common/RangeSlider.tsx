@@ -31,7 +31,7 @@ export const RangeSlider = ({
     width: THUMB_SIZE,
     height: THUMB_SIZE,
     borderRadius: THUMB_SIZE / 2,
-    backgroundColor: Colors.K500,
+    backgroundColor: Colors.K200,
     zIndex: 1,
     boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(10)}px ${rgba(Colors.black, 0.3)}`,
   };

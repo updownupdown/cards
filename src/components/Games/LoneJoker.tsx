@@ -862,7 +862,6 @@ export default function LoneJoker() {
     cardMapper,
     cardSize: "small",
     gap: 0,
-    // visualizer: true,
   });
 
   const target = targetForRound(game.round);

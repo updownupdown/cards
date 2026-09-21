@@ -13,7 +13,7 @@ export const bakersGame: GameDefinition = {
     luck: 25,
   },
   background: GAME_BACKGROUNDS.cozyRoom4,
-  animation: GameAnimations.CherryBlossom,
+  animation: GameAnimations.Dust,
   thumbnail: "BakersGame.webp",
   gameColorDark: "#1b2a24",
   gameColorMid: "#5a94af",

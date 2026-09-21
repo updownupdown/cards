@@ -23,11 +23,12 @@ export const seahavenTowers: GameDefinition = {
   howToPlay: [
     "## Objective",
     "Move all 52 cards to four foundations, building up by suit from Ace to King.",
+
     "## Rules",
     "- Ten columns begin with five face-up cards each.",
     "- Two of the four free cells begin occupied; each cell holds one card.",
     "- Build tableau down in the same suit.",
-    "- Ordered same-suit runs may move when enough cells are free.",
+    "- You can move one card at a time. You may move groups of cards together, but only if you have enough free cells and empty columns to have been able to make the equivalent move one card at a time.",
     "- Only a King or King-led run may fill an empty column.",
   ],
 };

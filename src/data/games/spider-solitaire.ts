@@ -31,6 +31,6 @@ export const spiderSolitaire: GameDefinition = {
     "- When a full **King-to-Ace** same-suit sequence forms, it is cleared automatically.",
 
     "## Stock",
-    "Tap the stock to deal one card onto every column at once. You may only deal when no column is empty.",
+    "Tap the stock to deal one card onto every column. You may only deal when no column is empty.",
   ],
 };

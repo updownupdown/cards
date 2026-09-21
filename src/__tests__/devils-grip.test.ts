@@ -77,6 +77,24 @@ describe("Devil's Grip rules", () => {
     expect(game.grid[1].map((item) => item.rank)).toEqual(["2", "5"]);
   });
 
+  test("redeals waste before refilling an emptied grid pile", () => {
+    const game = state([[card("5")], [card("2")]]);
+    game.waste = [card("K"), card("4", "hearts")];
+
+    expect(
+      devilsGripRules.moveAction(
+        game,
+        { zone: "grid", pileIndex: 0, cardIndex: 0 },
+        1,
+      ),
+    ).toBe(true);
+
+    expect(game.grid[0][0]).toMatchObject({ rank: "K", faceUp: true });
+    expect(game.draw.map((item) => item.rank)).toEqual(["4"]);
+    expect(game.draw.every((item) => !item.faceUp)).toBe(true);
+    expect(game.waste).toEqual([]);
+  });
+
   test("colors only correctly based stacks and greys completed stacks", () => {
     expect(devilsGripRules.pileOverlayColor([card("2")], 0)).toBe("purple");
     expect(devilsGripRules.pileOverlayColor([card("5")], 0)).toBeNull();

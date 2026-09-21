@@ -1,11 +1,8 @@
-import { Button } from "@/components/Button/Button";
 import { HomeCard } from "@/components/Home/HomeCard";
 import { useFade } from "@/hooks/useFade";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-import { useTranslation } from "@/i18n";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors } from "@/styles/styles";
 import { Animated, View } from "react-native";
 import { RollingDice } from "./RollingDice";
 
@@ -15,7 +12,6 @@ type RandomGameRollerProps = {
   onToggleFavorite: (path: string) => void;
   rolling: boolean;
   rollKey: number;
-  onClear: () => void;
 };
 
 export function RandomGameRoller({
@@ -24,10 +20,8 @@ export function RandomGameRoller({
   onToggleFavorite,
   rolling,
   rollKey,
-  onClear,
 }: RandomGameRollerProps) {
   const { spacing } = useResponsiveMetrics();
-  const { t } = useTranslation("home");
   const cardGap = spacing(20);
   const largeCardHeight = spacing(180);
 
@@ -42,15 +36,6 @@ export function RandomGameRoller({
         gap: cardGap,
       }}
     >
-      <Button
-        text={t("random.clear")}
-        uppercase={false}
-        size="lg"
-        onPress={onClear}
-        style={{ height: spacing(52), borderRadius: spacing(26) }}
-        theme={Colors.suitsRed}
-      />
-
       <View
         style={[
           flexStyles.colCentered,

@@ -36,7 +36,8 @@ export default function Home() {
   const initialActiveTab = useRef(getActiveHomeTab()).current;
   const insets = useSafeAreaInsets();
   const { ui, spacing } = useResponsiveMetrics();
-  const { height: viewportHeight } = useViewportDimensions();
+  const { width: viewportWidth, height: viewportHeight } =
+    useViewportDimensions();
   const isWeb = Platform.OS === "web";
 
   const [isLoaded, setIsLoaded] = useState(false);
@@ -80,6 +81,8 @@ export default function Home() {
   const contentPaddingBottom =
     spacing(layoutDims.tabBarHeight + layoutDims.pagePadding * 0.5 + 48) +
     insets.bottom;
+  const searchControlBottom =
+    spacing(layoutDims.tabBarHeight + layoutDims.pagePadding) + insets.bottom;
 
   const onInvalidateHomeData = () => {
     setHomeDataRefreshToken((current) => current + 1);
@@ -176,6 +179,8 @@ export default function Home() {
           <View style={{ flex: 1, height: screenHeight || undefined }}>
             <HomeStarfieldBackground
               animationsEnabled={settings.showAnimations}
+              width={viewportWidth}
+              height={viewportHeight}
             />
 
             <Animated.View
@@ -229,6 +234,7 @@ export default function Home() {
                   onScrolledChange={setShowHeaderBackground}
                   contentPaddingTop={contentPaddingTop}
                   contentPaddingBottom={contentPaddingBottom}
+                  searchControlBottom={searchControlBottom}
                 />
               )}
             </Animated.View>

@@ -597,45 +597,51 @@ export default function NightVigil() {
     const threatStartCol =
       game.threats.length > 5 ? 0.5 : game.threats.length > 4 ? 0.75 : 1;
 
-    const threatZones = game.threats.map((threat, index): MapZone => ({
-      id: `threat-${index}`,
-      name: "threat",
-      pileIndex: index,
-      cards: [threat.card, ...threat.responses],
-      col: index + threatStartCol,
-      row: 1.5,
-      fan: { direction: "down", offset: 0.22 },
-      placeholder: {},
-      baseZIndex: index,
-    }));
+    const threatZones = game.threats.map(
+      (threat, index): MapZone => ({
+        id: `threat-${index}`,
+        name: "threat",
+        pileIndex: index,
+        cards: [threat.card, ...threat.responses],
+        col: index + threatStartCol,
+        row: 1.5,
+        fan: { direction: "down", offset: 0.22 },
+        placeholder: {},
+        baseZIndex: index,
+      }),
+    );
 
-    const smokeZones = game.threats.map((_, index): MapZone => ({
-      id: `smoke-${index}`,
-      col: index + threatStartCol,
-      row: 1,
-      baseZIndex: 50,
-      height: 0.6,
-    }));
-    const grappleHookZones = game.threats
-      .slice(0, -1)
-      .map((_, index): MapZone => ({
+    const smokeZones = game.threats.map(
+      (_, index): MapZone => ({
+        id: `smoke-${index}`,
+        col: index + threatStartCol,
+        row: 1,
+        baseZIndex: 50,
+        height: 0.6,
+      }),
+    );
+    const grappleHookZones = game.threats.slice(0, -1).map(
+      (_, index): MapZone => ({
         id: `grapple-hook-${index}`,
         col: index + threatStartCol + 0.5,
         row: 2.4,
         width: 1,
         height: 0.6,
         baseZIndex: 50,
-      }));
+      }),
+    );
 
-    const grappleZones = game.grappleResponses.map((card, index): MapZone => ({
-      id: `grapple-${index}`,
-      name: "grapple",
-      cards: [card],
-      col: threatStartCol + (game.grapplePair?.[0] ?? 0) + 0.52,
-      row: 1.8 + index * 0.3,
-      rotation: 90,
-      baseZIndex: 50 + index,
-    }));
+    const grappleZones = game.grappleResponses.map(
+      (card, index): MapZone => ({
+        id: `grapple-${index}`,
+        name: "grapple",
+        cards: [card],
+        col: threatStartCol + (game.grapplePair?.[0] ?? 0) + 0.52,
+        row: 1.8 + index * 0.3,
+        rotation: 90,
+        baseZIndex: 50 + index,
+      }),
+    );
 
     return [
       {
@@ -756,7 +762,6 @@ export default function NightVigil() {
     },
     cardSize: "small",
     gap: 0.14,
-    // visualizer: true,
   });
 
   const canDraw =

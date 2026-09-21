@@ -31,7 +31,7 @@ export const labyrinth: GameDefinition = {
     "## Rules",
     "- A card is **free** when the space directly above it or below it is empty, so the top and bottom rows are always free.",
     "- Tap a free card to play it to its foundation.",
-    "- A gap in the **first row** is refilled at once from the stock. Gaps further down stay empty.",
+    "- A gap in the **first row** is refilled automatically from the stock. Gaps further down stay empty.",
     "- Tap the **stock** to deal a new row of eight across the bottom. There is no redeal.",
   ],
 };
