@@ -289,6 +289,26 @@
       }
     }
   },
+  "jailbreak": {
+    "jailbreakDifficulty": {
+      "hash": "73216ddb",
+      "value": {
+        "description": "Détermine le nombre de cartes distribuées dans chaque coin.",
+        "label": "Difficulté",
+        "options": [
+          {
+            "label": "Facile (4 par coin)"
+          },
+          {
+            "label": "Normal (2 par coin)"
+          },
+          {
+            "label": "Difficile (coins vides)"
+          }
+        ]
+      }
+    }
+  },
   "klondike": {
     "drawCount": {
       "hash": "ecd6b2f3",
@@ -377,9 +397,9 @@
   },
   "pocket-poker": {
     "pokerDifficulty": {
-      "hash": "00000000",
+      "hash": "505d7998",
       "value": {
-        "description": "Tous les modes autorisent 2 pioches et font coûter 1 point pour se coucher. Difficile commence à 3 points et accorde les égalités à l'adversaire. Expert donne aussi une carte supplémentaire à l'adversaire.",
+        "description": "Le mode Difficile commence à 3 points (au lieu de 5) et accorde les égalités à l'adversaire. Expert donne aussi une carte supplémentaire à l'adversaire.",
         "label": "Difficulté",
         "options": [
           {

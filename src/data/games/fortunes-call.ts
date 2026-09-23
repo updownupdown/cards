@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations/types";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const fortunesCall: GameDefinition = {
@@ -10,8 +11,8 @@ export const fortunesCall: GameDefinition = {
   tags: [GameTag.ScoringPuzzles, GameTag.EasyToLearn],
   rating: { complexity: 20, difficulty: 45, luck: 70 },
   gameColorDark: "#272330",
-  gameColorMid: "#883450",
   gameColorPale: "#b8f1c6",
+  cardBack: CardBackColors.Rose,
   background: GAME_BACKGROUNDS.alaska,
   animation: GameAnimations.Snow,
   cardDescription:

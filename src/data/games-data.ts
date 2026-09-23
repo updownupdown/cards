@@ -2,6 +2,7 @@ import { city, GameBackground } from "./game-backgrounds";
 import type { GameThumbnailName } from "./game-thumbnails";
 import { isLocalDevEnvironment } from "@/utils/utils";
 import type { GameAnimation } from "@/animations/types";
+import type { CardBackColor } from "./card-backs";
 
 export enum GameTag {
   EasyToLearn = "EasyToLearn",
@@ -48,8 +49,9 @@ export type GameMenuInfo = {
 
   // Colors
   gameColorDark: HexColor;
-  gameColorMid: HexColor;
   gameColorPale: HexColor;
+  /** Which shared card-back ink this game's deck is printed in. */
+  cardBack: CardBackColor;
   cardDescription: string;
 
   // How to Play

@@ -45,6 +45,7 @@
     "allFourSuitsAreComplete": "All four suits are complete!"
   },
   "beehive": {
+    "beehive": "Beehive",
     "honeycombComplete": "The honeycomb is complete!",
     "noFurtherMovesPossible": "No further moves possible."
   },
@@ -618,5 +619,12 @@
   },
   "pussInTheCorner": {
     "allFourCornersFilled": "All four corners filled!"
+  },
+  "devilsGrip": {
+    "everyCardIsInTheGrid": "Every card is in the grid.",
+    "cardsRemain": "{{count}} cards remain.",
+    "cardsRemainGood": "{{count}} cards remain. Good!",
+    "cardsRemainExcellent": "{{count}} cards remain. Excellent!",
+    "cardsRemainBrilliant": "{{count}} cards remain. Brilliant!"
   }
 }

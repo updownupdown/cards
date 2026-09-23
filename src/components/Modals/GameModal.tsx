@@ -29,12 +29,18 @@ type Props = {
   onClose: () => void;
   onReloadGame?: () => void;
   showRulesModal: () => void;
+  /** Only offered in nodes mode, and only while the player holds an unused
+   * mercy skip and hasn't already won this game. */
+  mercySkipsAvailable?: number;
+  onMercySkip?: () => void;
 };
 
 export default function GameModal({
   onClose,
   onReloadGame,
   showRulesModal,
+  mercySkipsAvailable = 0,
+  onMercySkip,
 }: Props) {
   const pathname = useGamePath();
   const gameInfo = getGameInfo(pathname);
@@ -248,6 +254,21 @@ export default function GameModal({
               fullWidth
               style={{ marginTop: spacing(30) }}
             />
+
+            {/* Mercy Skip: only offered in nodes mode, with a skip in hand */}
+            {onMercySkip && mercySkipsAvailable > 0 && (
+              <Button
+                text={t("mercySkip.title", { count: mercySkipsAvailable })}
+                iconName="fast-forward"
+                onPress={() => {
+                  handleClose();
+                  onMercySkip();
+                }}
+                theme={rgba(Colors.brightGreen, 0.2)}
+                taller
+                fullWidth
+              />
+            )}
           </View>
         </ScrollView>
       </ModalFull>

@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const maria: GameDefinition = {
@@ -12,8 +13,8 @@ export const maria: GameDefinition = {
   background: GAME_BACKGROUNDS.painting,
   animation: GameAnimations.CherryBlossom,
   gameColorDark: "#3c2d36",
-  gameColorMid: "#852749",
   gameColorPale: "#efd9dd",
+  cardBack: CardBackColors.Burgundy,
   cardDescription:
     "A nine-column Forty Thieves relative packed by alternating color.",
   quickStart: [

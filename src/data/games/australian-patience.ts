@@ -1,4 +1,5 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 export const australianPatience: GameDefinition = {
   path: "/australian-patience",
@@ -8,8 +9,8 @@ export const australianPatience: GameDefinition = {
   thumbnail: "AustralianPatience.webp",
   background: GAME_BACKGROUNDS.savanah,
   gameColorDark: "#29382a",
-  gameColorMid: "#a35a38",
   gameColorPale: "#f4d88d",
+  cardBack: CardBackColors.Copper,
   cardDescription:
     "Yukon-style freedom meets strict suit building and a one-pass stock.",
   quickStart: [

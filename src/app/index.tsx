@@ -7,6 +7,7 @@ import {
 } from "@/data/game-menu";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { i18n } from "@/i18n";
+import { reportMessage } from "@/utils/crash-reporting";
 import { isLocalDevEnvironment } from "@/utils/utils";
 import { router, type Href } from "expo-router";
 import { useEffect, useRef } from "react";
@@ -28,8 +29,11 @@ export default function HomeScreen() {
     (async () => {
       try {
         // The app died while a game was opening last time: resuming it again
-        // could crash-loop, so start from the home screen instead.
-        if (await consumeInterruptedGameLaunch()) {
+        // could crash-loop, so start from the home screen instead. A native
+        // crash leaves no JavaScript error behind, so name the game here.
+        const interruptedGame = await consumeInterruptedGameLaunch();
+        if (interruptedGame) {
+          reportMessage("Game launch never settled", { game: interruptedGame });
           await clearLastGameSession();
           if (active) showToast(i18n.t("game:errors.resumeFailed"));
           return;

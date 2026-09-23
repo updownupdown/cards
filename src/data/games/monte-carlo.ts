@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 
 export const monteCarlo: GameDefinition = {
   path: "/monte-carlo",
@@ -13,8 +14,8 @@ export const monteCarlo: GameDefinition = {
   thumbnail: "MonteCarlo.webp",
   background: GAME_BACKGROUNDS.monteCarlo,
   gameColorDark: "#152635",
-  gameColorMid: "#508083",
   gameColorPale: "#fffce5",
+  cardBack: CardBackColors.Burgundy,
   cardDescription: "Match adjacent pairs of equal rank to clear the grid.",
   quickStart: [
     "Tap adjacent cards of equal rank to remove them.",

@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const tenTwentyThirty: GameDefinition = {
@@ -16,8 +17,8 @@ export const tenTwentyThirty: GameDefinition = {
   background: GAME_BACKGROUNDS.modernMetal2,
   animation: GameAnimations.Firefly,
   gameColorDark: "#132d35",
-  gameColorMid: "#254366",
   gameColorPale: "#e1f5ff",
+  cardBack: CardBackColors.Navy,
   cardDescription:
     "Deal a growing line and clear runs of cards that total 10, 20 or 30.",
   quickStart: [

@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 
 export const cafeQueue: GameDefinition = {
   path: "/cafe-queue",
@@ -13,8 +14,8 @@ export const cafeQueue: GameDefinition = {
   thumbnail: "CafeQueue.webp",
   background: GAME_BACKGROUNDS.city2,
   gameColorDark: "#2b1c29",
-  gameColorMid: "#643b12",
   gameColorPale: "#eed5a0",
+  cardBack: CardBackColors.Walnut,
   cardDescription:
     "A push-your-luck game where you must manage ordered queues of customers.",
   quickStart: [

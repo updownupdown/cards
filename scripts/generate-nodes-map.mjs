@@ -1,51 +1,168 @@
-// Builds src/data/nodes-map.generated.ts from the game catalog.
+// Builds src/data/nodes-map.generated.ts and assets/images/galaxy-glow.webp
+// from the game catalog.
 //
 //   npm run nodes:generate
-//     Keeps every existing node (position, connections and rewards), so manual
-//     edits and players' progress stay intact. Removed games are dropped, and
-//     new games are placed around the periphery with two new quotes each.
+//     Keeps every existing node (position, links and rewards), so players'
+//     progress and collected rewards stay put. Removed games are dropped, and
+//     new games are placed out towards the rim and linked in.
 //
 //   npm run nodes:generate -- --rebuild
-//     Lays out every node again: Klondike at the centre, Monte Carlo next, then
-//     the rest outwards from easy to hard and luck-heavy, blended with each
-//     game's ranking among others that share its mechanic category (see
-//     DIVERSITY_WEIGHT) so traditional and modern-mechanic games are both
-//     represented near the centre and near the edge. Each game keeps the
-//     rewards it already has. Overwrites manual coordinate and connection edits.
+//     Lays out a fresh spiral galaxy: Klondike at the centre, then the rest
+//     outwards from gentle to punishing, with tags spread so no one genre
+//     clumps together. Deals every reward again, and overwrites manual
+//     coordinate and link edits.
 //
 //   npm run nodes:generate -- --rebalance-rewards
-//     Deals the rewards again by game (and can be combined with --rebuild):
-//     the gold deck goes two quotes at a time to the hardest or luckiest games,
-//     every other game gets two Tao chapters or white and black quotes, and any
-//     spare become a third reward on the hardest gold games. Games keep the
-//     rewards they already hold wherever those still fit.
+//     Keeps the layout and deals every reward again.
+//
+// The galaxy's shape is tuned from the parameter block below.
 
+import { Buffer } from "node:buffer";
 import fs from "node:fs";
 import path from "node:path";
+import sharp from "sharp";
 import ts from "typescript";
 
 const root = process.cwd();
 const gamesDirectory = path.join(root, "src/data/games");
 const outputPath = path.join(root, "src/data/nodes-map.generated.ts");
+const glowPath = path.join(root, "assets/images/galaxy-glow.webp");
 const collectiblesPath = path.join(root, "src/data/collectibles.ts");
 const rebuild = process.argv.includes("--rebuild");
 const rebalance = process.argv.includes("--rebalance-rewards");
 
-// Klondike (the classic) is the first node and Monte Carlo (easy to learn and
-// to beat) the second; every other game is ordered by its centre score.
-const FIXED_ORDER = ["/klondike", "/monte-carlo"];
-const MIN_REWARDS = 2;
-// Manual edits may give a node a fourth reward; rebalancing deals at most three.
-const MAX_REWARDS = 4;
-const REBALANCED_MAX_REWARDS = 3;
-// Quotes 1-104 are the white and black decks; the rest are the gold deck.
-const GOLD_FIRST_QUOTE_ID = 105;
-const GOLD_PER_GAME = 2;
-const MIN_CONNECTIONS = 2;
-const MAX_CONNECTIONS = 5;
-const TARGET_AVERAGE_CONNECTIONS = 2.9;
-const MIN_SPACING = 0.094;
-const SPACING_RATIO = { min: 2.2, max: 3 };
+// ── Map parameters ───────────────────────────────────────────────────────────
+// Everything that shapes the galaxy lives here. Retune the map by editing this
+// block and re-running with --rebuild; nothing below needs to change.
+
+/** Klondike anchors the centre; every other game is placed by its score. */
+const FIXED_ORDER = ["/klondike"];
+
+/** Must match WORLD_SIZE in src/components/Nodes/NodesMap.tsx. */
+const WORLD_SIZE = 1800;
+/** The largest a node dot is ever drawn there: NODE_SIZE * the biggest
+ *  STATE_SIZE_MULTIPLIER. */
+const NODE_DOT_DIAMETER = 18 * 1.2;
+/** Node centres stay at least this many dot-diameters apart. */
+const MIN_SPACING_IN_DOTS = 3;
+/** The same rule in map units, which is the -1..1 space coordinates live in. */
+const MIN_SPACING =
+  (MIN_SPACING_IN_DOTS * NODE_DOT_DIAMETER) / (WORLD_SIZE / 2);
+
+const GALAXY = {
+  /** Main spiral arms. */
+  arms: 4,
+  /** Radians an arm sweeps per e-fold of radius; higher curls tighter. */
+  wind: 2.2,
+  /** Angular half-width of an arm at the core, narrowing outwards. */
+  width: 0.4,
+  /** How far an arm's centre line strays from a true logarithmic spiral, as a
+   *  share of its width. This is what keeps the arms from looking drafted. */
+  wander: 0.2,
+  /** Density between the arms, relative to an arm's centre line. Field stars
+   *  in the gaps stop the map reading as five separate strands. */
+  fieldDensity: 0.02,
+  /** How steeply star density drops with radius, as an exponential disc. */
+  radialFalloff: 1.1,
+  /** How sharply density falls off across an arm; higher packs the spine. */
+  armSharpness: 2,
+  /** Share of an arm's width that counts as its spine for chaining. */
+  armCore: 0.5,
+  /**
+   * A round central bulge, as a share of all nodes and how far out it reaches.
+   * Without it the hub sits in a void: sampling evenly over area puts almost
+   * no darts near the middle, and a real spiral is brightest at its core.
+   */
+  bulgeFraction: 0.16,
+  bulgeRadius: 0.4,
+  /** No node comes closer to the centre than this, nor goes beyond the rim. */
+  coreRadius: 0.085,
+  rimRadius: 1,
+};
+
+const CONNECTIONS = {
+  /** Most links one node may hold. */
+  max: 6,
+  /** Longest link along an arm, in map units. */
+  maxArmEdge: 0.2,
+  /** Longest link between arms, or out to a field star. */
+  maxBridgeEdge: 0.26,
+  /** Links allowed between any one pair of arms, keeping the arms readable. */
+  bridgesPerArmPair: 5,
+  /** A node this well connected is passed over when adding optional links. */
+  comfortable: 4,
+  /** How close a link may pass to a node it does not join, in map units. */
+  nodeClearance: 0.06,
+  /**
+   * A node left with a single link is a dead end at the tip of an arm. If
+   * another node sits within this reach it gets a second link, so tips only
+   * stay lonely when there is genuinely nothing nearby to join.
+   */
+  lonelyTipReach: 0.34,
+};
+
+/**
+ * The glow and dust drawn along the arms (see NodesMap). The glow is baked
+ * into assets/images/galaxy-glow.webp here, with a real Gaussian blur;
+ * widths are in world points, the same units NodesMap draws in.
+ */
+const ARM_ART = {
+  /** Points sampled along each arm's centre line. */
+  spineSamples: 60,
+  /** Glow image size in pixels. The glow has no fine detail, so it is drawn
+   *  well under world resolution and stretched, which keeps it small. */
+  glowResolution: 720,
+  glowColor: "#8fb6ff",
+  /** Overall strength of the finished glow, applied after every layer. */
+  glowStrength: 0.75,
+  /**
+   * Each arm is painted in passes, each blurred on its own and then laid over
+   * the others. A pass is `core + rim` half-width at the centre, easing to
+   * `rim` at the tip. Widths and blur are in world points.
+   */
+  passes: [
+    // Haze: broad, faint and very soft. Where the hazes of neighbouring arms
+    // overlap the gap between them fills in a little, so the arms meld at
+    // their edges while each keeps its own shape.
+    { core: 40, rim: 175, falloff: 1, opacity: 0.05, blur: 70 },
+    // Body: the arm itself, generous all the way out rather than pinching
+    // soon after it leaves the core.
+    { core: 81, rim: 64, falloff: 0.9, opacity: 0.075, blur: 18 },
+    // Spine: narrower and brighter, carrying the arm's strength to its tip.
+    { core: 37.5, rim: 30, falloff: 1, opacity: 0.14, blur: 14 },
+  ],
+  /** The last share of an arm over which it thins to nothing. */
+  tipFade: 0.06,
+  /**
+   * Round glows where the arms meet. Without them the arms' roots overlap
+   * into a cross; with them the centre reads as a galaxy's bulge.
+   */
+  core: [
+    { radius: 96, opacity: 0.068, blur: 16 },
+    { radius: 160, opacity: 0.034, blur: 16 },
+  ],
+  /** Specks of dust scattered along the arms. */
+  dustCount: 1400,
+  /** How far off the spine dust strays, as a share of the arm's half-width.
+   *  Kept in step with the glow's width so the dust fills the arm it sits in. */
+  dustSpread: 1.6,
+  /** Extra scatter per unit of radius: the glow stays broad further out than
+   *  the arm's own half-width does, so the dust has to widen with it. */
+  dustFlare: 0.5,
+  /** Distinct dust tints; NodesMap holds the matching colours. */
+  dustTints: 5,
+};
+
+const REWARDS = {
+  min: 2,
+  max: 3,
+  /**
+   * Quotes past this id stay unassigned. 1-52 white, 53-104 black, 105-156
+   * gold, 157-208 red; the red deck is held back for now, so the assignable
+   * pool is 81 Tao chapters plus 156 quotes.
+   */
+  lastAssignableQuote: 156,
+};
 
 function readCount(name) {
   const source = fs.readFileSync(collectiblesPath, "utf8");
@@ -102,7 +219,8 @@ function parseGame(filename) {
   const category = tags.some((tag) => MODERN_TAGS.has(tag))
     ? "modern"
     : "traditional";
-  return { path: gamePath, difficulty, luck, category };
+  const localOnly = /enabledOnLocalOnly:\s*true/.test(source);
+  return { path: gamePath, difficulty, luck, category, localOnly };
 }
 
 /** Lower scores sit nearer the centre; hard and luck-heavy games drift out. */
@@ -201,6 +319,10 @@ function readExistingNodes() {
     }
     if (ts.isStringLiteral(node)) return node.text;
     if (ts.isNumericLiteral(node)) return Number(node.text);
+    // A field star between the arms carries `arm: null`.
+    if (node.kind === ts.SyntaxKind.NullKeyword) return null;
+    if (node.kind === ts.SyntaxKind.TrueKeyword) return true;
+    if (node.kind === ts.SyntaxKind.FalseKeyword) return false;
     if (
       ts.isPrefixUnaryExpression(node) &&
       node.operator === ts.SyntaxKind.MinusToken &&
@@ -239,287 +361,642 @@ function segmentsCross(leftStart, leftEnd, rightStart, rightEnd) {
   return leftStartSide * leftEndSide < 0 && rightStartSide * rightEndSide < 0;
 }
 
+// ── Galaxy shape ─────────────────────────────────────────────────────────────
+
+/** A deterministic 0..1 value for a label, so every rebuild is identical. */
+function hashUnit(label) {
+  return hash(label) / 0xffffffff;
+}
+
+/** A small deterministic random source, seeded by name. */
+function makeRandom(seed) {
+  let state = hash(seed) || 1;
+  return () => {
+    state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+    return state / 0x100000000;
+  };
+}
+
+/**
+ * How far an arm's centre line strays from a true logarithmic spiral at this
+ * radius. Two slow sine terms with per-arm phases bend each arm differently,
+ * which is what keeps them from looking drafted.
+ */
+function armWander(arm, nodeRadius) {
+  const first = hashUnit(`arm:${arm}:wander:1`) * Math.PI * 2;
+  const second = hashUnit(`arm:${arm}:wander:2`) * Math.PI * 2;
+  return (
+    Math.sin(nodeRadius * 3.7 + first) * 0.62 +
+    Math.sin(nodeRadius * 6.9 + second) * 0.38
+  );
+}
+
+/**
+ * The angle of an arm's centre line at a radius. Map y grows downward (see
+ * toWorld in NodesMap), so subtracting the curl winds anti-clockwise on
+ * screen, and every arm uses the same sign so the galaxy reads as one
+ * rotating disc.
+ */
+function armCentreAngle(arm, nodeRadius) {
+  const base = (arm * Math.PI * 2) / GALAXY.arms;
+  const curl = GALAXY.wind * Math.log(nodeRadius / GALAXY.coreRadius);
+  return (
+    base - curl + armWander(arm, nodeRadius) * GALAXY.width * GALAXY.wander
+  );
+}
+
+/** An arm is widest at the core and tightens as it runs out. */
+function armHalfWidth(nodeRadius) {
+  return GALAXY.width / (1 + nodeRadius * 1.1);
+}
+
+/** The arm whose centre line runs closest to a point, and how far off it is. */
+function nearestArm(x, y) {
+  const nodeRadius = Math.hypot(x, y);
+  const angle = Math.atan2(y, x);
+  let best = { arm: 0, offset: Infinity };
+
+  for (let arm = 0; arm < GALAXY.arms; arm += 1) {
+    const delta = angle - armCentreAngle(arm, nodeRadius);
+    const offset = Math.abs(Math.atan2(Math.sin(delta), Math.cos(delta)));
+    if (offset < best.offset) best = { arm, offset };
+  }
+  return best;
+}
+
+/**
+ * How likely the galaxy is to hold a star at a point: an exponential disc,
+ * brightened along the arms, with a floor between them for field stars.
+ */
+function starDensity(x, y) {
+  const nodeRadius = Math.hypot(x, y);
+  if (nodeRadius < GALAXY.coreRadius || nodeRadius > GALAXY.rimRadius) return 0;
+
+  const across = nearestArm(x, y).offset / armHalfWidth(nodeRadius);
+  const onArm = Math.exp(-across * across * GALAXY.armSharpness);
+  const disc = Math.exp(-nodeRadius * GALAXY.radialFalloff);
+  return disc * (GALAXY.fieldDensity + (1 - GALAXY.fieldDensity) * onArm);
+}
+
+/** Which arm a node sits on, or null for a field star in the gaps. */
+function armOf(point) {
+  const nodeRadius = Math.hypot(point.x, point.y);
+  if (nodeRadius < GALAXY.coreRadius) return null;
+  const { arm, offset } = nearestArm(point.x, point.y);
+  return offset <= armHalfWidth(nodeRadius) * GALAXY.armCore ? arm : null;
+}
+
+/**
+ * Each arm's centre line as a polyline, which the app strokes several times
+ * over at decreasing width to give the arm a soft, blurred spine.
+ */
+function buildArmSpines() {
+  const spines = [];
+  for (let arm = 0; arm < GALAXY.arms; arm += 1) {
+    // Every spine starts at the exact centre, so the arms meet there.
+    const points = [[0, 0]];
+    for (let step = 0; step <= ARM_ART.spineSamples; step += 1) {
+      const nodeRadius =
+        GALAXY.coreRadius +
+        (GALAXY.rimRadius - GALAXY.coreRadius) * (step / ARM_ART.spineSamples);
+      const angle = armCentreAngle(arm, nodeRadius);
+      points.push([
+        Number((Math.cos(angle) * nodeRadius).toFixed(3)),
+        Number((Math.sin(angle) * nodeRadius).toFixed(3)),
+      ]);
+    }
+    spines.push(points);
+  }
+  return spines;
+}
+
+/** One arm's outline for a pass: out along one side, back along the other. */
+function armRibbon(spine, pass, size) {
+  const toPixel = (coordinate) => ((coordinate + 1) * size) / 2;
+  const pixelsPerPoint = size / WORLD_SIZE;
+  const left = [];
+  const right = [];
+
+  for (let index = 0; index < spine.length; index += 1) {
+    const [x, y] = spine[index];
+    const [previousX, previousY] = spine[Math.max(0, index - 1)];
+    const [nextX, nextY] = spine[Math.min(spine.length - 1, index + 1)];
+    const length = Math.hypot(nextX - previousX, nextY - previousY) || 1;
+    const normalX = -(nextY - previousY) / length;
+    const normalY = (nextX - previousX) / length;
+
+    const along = index / (spine.length - 1);
+    const tip = Math.min(1, (1 - along) / ARM_ART.tipFade);
+    const halfWidth =
+      (pass.core * (1 - along) ** pass.falloff + pass.rim) *
+      tip *
+      pixelsPerPoint;
+
+    const px = toPixel(x);
+    const py = toPixel(y);
+    left.push(`${(px + normalX * halfWidth).toFixed(1)},${(py + normalY * halfWidth).toFixed(1)}`);
+    right.push(`${(px - normalX * halfWidth).toFixed(1)},${(py - normalY * halfWidth).toFixed(1)}`);
+  }
+  return `M${left.join(" L")} L${right.reverse().join(" L")} Z`;
+}
+
+/**
+ * Bakes the arms' glow into one soft image. It is painted as a greyscale
+ * coverage mask, blurred, and then used as the alpha of a flat colour:
+ * blurring coloured pixels over transparency would bleed black into the
+ * edges. A real blur is the only way to get arms that fade without visible
+ * steps - stacking translucent shapes always bands - and SVG blur filters are
+ * not dependable in react-native-svg on Android. At runtime this is a single
+ * image instead of dozens of paths, so it is cheaper to draw as well.
+ */
+async function renderGalaxyGlow(spines) {
+  const size = ARM_ART.glowResolution;
+  const pixelsPerPoint = size / WORLD_SIZE;
+
+  // Each layer is its own set of shapes with its own blur: the haze needs a
+  // far softer edge than the arm itself, or its rim would show as an outline.
+  const layers = [
+    {
+      blur: ARM_ART.core[0].blur,
+      shapes: ARM_ART.core.map(
+        (glow) =>
+          `<circle cx="${size / 2}" cy="${size / 2}" r="${glow.radius * pixelsPerPoint}" fill="white" fill-opacity="${glow.opacity}"/>`,
+      ),
+    },
+    ...ARM_ART.passes.map((pass) => ({
+      blur: pass.blur,
+      shapes: spines.map(
+        (spine) =>
+          `<path d="${armRibbon(spine, pass, size)}" fill="white" fill-opacity="${pass.opacity}"/>`,
+      ),
+    })),
+  ];
+
+  // Layers are combined as light adds up: each one lets through only what
+  // the others have not already lit, so overlaps brighten without clipping.
+  const unlit = new Float32Array(size * size).fill(1);
+  for (const layer of layers) {
+    const svg =
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">` +
+      `<rect width="${size}" height="${size}" fill="black"/>${layer.shapes.join("")}</svg>`;
+    const coverage = await sharp(Buffer.from(svg))
+      .extractChannel(0)
+      .raw()
+      .toBuffer();
+    // Kept single-channel explicitly: sharp otherwise hands a blurred
+    // greyscale buffer back as three-channel sRGB.
+    const blurred = await sharp(coverage, {
+      raw: { width: size, height: size, channels: 1 },
+    })
+      .blur(layer.blur * pixelsPerPoint)
+      .toColourspace("b-w")
+      .raw()
+      .toBuffer();
+    if (blurred.length !== size * size) {
+      throw new Error(`Glow layer is ${blurred.length} bytes, expected ${size * size}.`);
+    }
+    for (let index = 0; index < unlit.length; index += 1) {
+      unlit[index] *= 1 - blurred[index] / 255;
+    }
+  }
+
+  const mask = Buffer.alloc(size * size);
+  for (let index = 0; index < mask.length; index += 1) {
+    mask[index] = Math.round((1 - unlit[index]) * ARM_ART.glowStrength * 255);
+  }
+
+  await sharp({
+    create: { width: size, height: size, channels: 3, background: ARM_ART.glowColor },
+  })
+    .joinChannel(mask, { raw: { width: size, height: size, channels: 1 } })
+    .webp({ quality: 90, alphaQuality: 90, effort: 6 })
+    .toFile(glowPath);
+}
+
+/**
+ * Specks of light scattered along the arms. They carry no meaning and are
+ * never interactive; they are there so the spiral reads as a galaxy rather
+ * than as a graph that happens to curve. Density follows the same field the
+ * nodes were placed against, so the dust thins out away from the spines.
+ */
+function buildArmDust() {
+  const random = makeRandom("arm-dust");
+  const dust = [];
+
+  for (let attempt = 0; dust.length < ARM_ART.dustCount && attempt < 400000; attempt += 1) {
+    const nodeRadius = Math.sqrt(
+      GALAXY.coreRadius ** 2 +
+        random() * (GALAXY.rimRadius ** 2 - GALAXY.coreRadius ** 2),
+    );
+    const angle = random() * Math.PI * 2;
+    const x = Math.cos(angle) * nodeRadius;
+    const y = Math.sin(angle) * nodeRadius;
+
+    // Dust clings closer to the spine than the nodes do, which is what makes
+    // the arm read as a band of light rather than a scatter.
+    const across =
+      nearestArm(x, y).offset /
+      (armHalfWidth(nodeRadius) *
+        ARM_ART.dustSpread *
+        (1 + nodeRadius * ARM_ART.dustFlare));
+    if (random() > Math.exp(-across * across * 2.2)) continue;
+
+    dust.push([
+      Number(x.toFixed(3)),
+      Number(y.toFixed(3)),
+      Math.floor(random() * ARM_ART.dustTints),
+      Number((0.35 + random() * 0.65).toFixed(2)),
+    ]);
+  }
+  return dust;
+}
+
 // ── Connections ──────────────────────────────────────────────────────────────
 
-function connect(records, connections, leftPath, rightPath) {
-  if (leftPath === rightPath) return false;
-  const left = connections.get(leftPath);
-  const right = connections.get(rightPath);
-  if (
-    left.has(rightPath) ||
-    left.size >= MAX_CONNECTIONS ||
-    right.size >= MAX_CONNECTIONS
-  ) {
-    return false;
-  }
+/** Distance from a point to the segment `start`-`end`. */
+function pointToSegment(point, start, end) {
+  const dx = end.x - start.x;
+  const dy = end.y - start.y;
+  const lengthSquared = dx * dx + dy * dy;
+  if (lengthSquared === 0) return distance(point, start);
+  let along =
+    ((point.x - start.x) * dx + (point.y - start.y) * dy) / lengthSquared;
+  along = Math.max(0, Math.min(1, along));
+  return distance(point, { x: start.x + along * dx, y: start.y + along * dy });
+}
+
+/** A link that skims past an unrelated node reads as running through it. */
+function passesThroughNode(records, left, right) {
+  return records.some(
+    (record) =>
+      record !== left &&
+      record !== right &&
+      pointToSegment(record, left, right) < CONNECTIONS.nodeClearance,
+  );
+}
+
+/** Crossed lines are the one thing that always looks like a mistake. */
+function crossesExistingLink(records, connections, left, right) {
   const byPath = new Map(records.map((record) => [record.path, record]));
-  const leftRecord = byPath.get(leftPath);
-  const rightRecord = byPath.get(rightPath);
   for (const record of records) {
-    for (const connection of connections.get(record.path)) {
-      if (record.path >= connection) continue;
+    for (const otherPath of connections.get(record.path)) {
+      if (record.path >= otherPath) continue;
       if (
-        record.path === leftPath ||
-        record.path === rightPath ||
-        connection === leftPath ||
-        connection === rightPath
+        record.path === left.path ||
+        record.path === right.path ||
+        otherPath === left.path ||
+        otherPath === right.path
       ) {
         continue;
       }
-      if (
-        segmentsCross(leftRecord, rightRecord, record, byPath.get(connection))
-      ) {
-        return false;
-      }
+      if (segmentsCross(left, right, record, byPath.get(otherPath)))
+        return true;
     }
   }
-  left.add(rightPath);
-  right.add(leftPath);
+  return false;
+}
+
+/**
+ * Joins two nodes if the link is legal. `maxLength` varies by link type, and
+ * `force` is for the repairs that keep the map whole, which must succeed even
+ * where a tidier link would not.
+ */
+function link(records, connections, left, right, maxLength, force = false) {
+  if (left.path === right.path) return false;
+  const leftLinks = connections.get(left.path);
+  const rightLinks = connections.get(right.path);
+  if (leftLinks.has(right.path)) return false;
+  if (leftLinks.size >= CONNECTIONS.max || rightLinks.size >= CONNECTIONS.max) {
+    return false;
+  }
+  if (distance(left, right) > maxLength) return false;
+  if (!force) {
+    if (passesThroughNode(records, left, right)) return false;
+    if (crossesExistingLink(records, connections, left, right)) return false;
+  }
+  leftLinks.add(right.path);
+  rightLinks.add(left.path);
   return true;
 }
 
-function ensureMinimumConnections(records, connections) {
+/** The groups of nodes that can reach each other. */
+function components(records, connections) {
+  const seen = new Set();
+  const groups = [];
   for (const record of records) {
-    const candidates = records
-      .filter((other) => other !== record)
-      .sort((left, right) => distance(record, left) - distance(record, right));
-    for (const candidate of candidates) {
-      if (connections.get(record.path).size >= MIN_CONNECTIONS) break;
-      connect(records, connections, record.path, candidate.path);
-    }
-    if (connections.get(record.path).size < MIN_CONNECTIONS) {
-      throw new Error(`Could not give ${record.path} enough connections.`);
-    }
-  }
-}
-
-function componentsWithout(records, connections, blockedPath) {
-  const visited = new Set([blockedPath]);
-  const components = [];
-
-  for (const record of records) {
-    if (visited.has(record.path)) continue;
-    const component = [];
-    const pending = [record.path];
-    visited.add(record.path);
-
-    while (pending.length > 0) {
-      const current = pending.pop();
-      component.push(current);
-      for (const connection of connections.get(current)) {
-        if (!visited.has(connection)) {
-          visited.add(connection);
-          pending.push(connection);
-        }
+    if (seen.has(record.path)) continue;
+    const group = [];
+    const queue = [record.path];
+    seen.add(record.path);
+    while (queue.length > 0) {
+      const current = queue.pop();
+      group.push(current);
+      for (const next of connections.get(current)) {
+        if (seen.has(next)) continue;
+        seen.add(next);
+        queue.push(next);
       }
     }
-    components.push(component);
+    groups.push(group);
   }
-
-  return components;
+  return groups;
 }
 
-/** No single locked node may cut off part of the map. */
-function removeBottlenecks(records, connections) {
+/**
+ * Wires the map: arms first, because they are the shape the galaxy is read
+ * by, then bridges across the gaps, then whatever repairs are needed so every
+ * game is reachable.
+ */
+function wireGalaxy(records, connections) {
   const byPath = new Map(records.map((record) => [record.path, record]));
 
-  while (true) {
-    const bottleneck = records.find(
-      (record) =>
-        componentsWithout(records, connections, record.path).length > 1,
-    );
-    if (!bottleneck) return;
-
-    const components = componentsWithout(records, connections, bottleneck.path);
-    const candidates = [];
-    for (let left = 0; left < components.length; left += 1) {
-      for (let right = left + 1; right < components.length; right += 1) {
-        for (const leftPath of components[left]) {
-          for (const rightPath of components[right]) {
-            if (
-              connections.get(leftPath).size < MAX_CONNECTIONS &&
-              connections.get(rightPath).size < MAX_CONNECTIONS
-            ) {
-              candidates.push({
-                leftPath,
-                rightPath,
-                distance: distance(byPath.get(leftPath), byPath.get(rightPath)),
-              });
-            }
-          }
-        }
-      }
-    }
-
-    candidates.sort((left, right) => left.distance - right.distance);
-    const bypass = candidates.find((candidate) =>
-      connect(records, connections, candidate.leftPath, candidate.rightPath),
-    );
-    if (!bypass) {
-      throw new Error(
-        `Could not bypass progression bottleneck ${bottleneck.path}.`,
+  // Each arm, chained outwards. These are the map's thick strands.
+  const arms = new Map();
+  for (const record of records) {
+    if (record.arm === null) continue;
+    if (!arms.has(record.arm)) arms.set(record.arm, []);
+    arms.get(record.arm).push(record);
+  }
+  for (const members of arms.values()) {
+    members.sort((left, right) => radius(left) - radius(right));
+    for (let index = 1; index < members.length; index += 1) {
+      link(
+        records,
+        connections,
+        members[index - 1],
+        members[index],
+        CONNECTIONS.maxArmEdge,
       );
     }
   }
-}
 
-/** Give branch endpoints a nearby alternative route without creating crossings. */
-function addShortcutConnections(records, connections) {
-  const targetEdgeCount = Math.ceil(
-    (records.length * TARGET_AVERAGE_CONNECTIONS) / 2,
-  );
-  let edgeCount =
-    [...connections.values()].reduce(
-      (total, neighbours) => total + neighbours.size,
-      0,
-    ) / 2;
+  // Bridges: the short hops that tie arms to each other and pick up the field
+  // stars between them. Shortest first, so the map keeps its nearest links.
   const candidates = [];
   for (let left = 0; left < records.length; left += 1) {
     for (let right = left + 1; right < records.length; right += 1) {
-      candidates.push({
-        leftPath: records[left].path,
-        rightPath: records[right].path,
-        distance: distance(records[left], records[right]),
-      });
+      const from = records[left];
+      const to = records[right];
+      if (from.arm !== null && from.arm === to.arm) continue;
+      const length = distance(from, to);
+      if (length > CONNECTIONS.maxBridgeEdge) continue;
+      candidates.push({ from, to, length });
     }
   }
-  candidates.sort((left, right) => left.distance - right.distance);
+  candidates.sort((left, right) => left.length - right.length);
 
-  for (const candidate of candidates) {
-    if (edgeCount >= targetEdgeCount) break;
-    const leftConnections = connections.get(candidate.leftPath);
-    const rightConnections = connections.get(candidate.rightPath);
+  const perArmPair = new Map();
+  for (const { from, to } of candidates) {
     if (
-      leftConnections.size > MIN_CONNECTIONS &&
-      rightConnections.size > MIN_CONNECTIONS
+      connections.get(from.path).size >= CONNECTIONS.comfortable ||
+      connections.get(to.path).size >= CONNECTIONS.comfortable
     ) {
       continue;
     }
-    if (
-      connect(records, connections, candidate.leftPath, candidate.rightPath)
-    ) {
-      edgeCount += 1;
+    if (from.arm !== null && to.arm !== null) {
+      const key = [from.arm, to.arm].sort().join("-");
+      if ((perArmPair.get(key) ?? 0) >= CONNECTIONS.bridgesPerArmPair) continue;
+      if (link(records, connections, from, to, CONNECTIONS.maxBridgeEdge)) {
+        perArmPair.set(key, (perArmPair.get(key) ?? 0) + 1);
+      }
+    } else {
+      link(records, connections, from, to, CONNECTIONS.maxBridgeEdge);
     }
   }
 
-  if (edgeCount < targetEdgeCount) {
-    throw new Error(
-      `Could not reach ${TARGET_AVERAGE_CONNECTIONS} average connections without crossings.`,
-    );
-  }
-}
-
-function finishConnections(records, connections) {
-  ensureMinimumConnections(records, connections);
-  removeBottlenecks(records, connections);
-  addShortcutConnections(records, connections);
+  // Nobody is left floating: an unlinked node takes its nearest neighbour.
   for (const record of records) {
-    record.connections = [...connections.get(record.path)].sort();
+    if (connections.get(record.path).size > 0) continue;
+    const nearest = records
+      .filter((other) => other !== record)
+      .sort((left, right) => distance(record, left) - distance(record, right));
+    for (const candidate of nearest) {
+      if (link(records, connections, record, candidate, Infinity, true)) break;
+    }
+  }
+
+  // A single-link node is a dead end. Give it a second where anything is in
+  // reach, so an arm tip is only ever isolated when it truly stands alone.
+  for (const record of records) {
+    if (connections.get(record.path).size !== 1) continue;
+    const reachable = records
+      .filter((other) => other !== record)
+      .sort((left, right) => distance(record, left) - distance(record, right));
+    for (const candidate of reachable) {
+      if (distance(record, candidate) > CONNECTIONS.lonelyTipReach) break;
+      if (link(records, connections, record, candidate, CONNECTIONS.lonelyTipReach)) {
+        break;
+      }
+    }
+  }
+
+  // One galaxy, not several: join separate groups by their closest pair. The
+  // map has to be walkable from the hub or games would be unreachable, so
+  // these links are forced through even if they cross something.
+  for (let guard = 0; guard < records.length; guard += 1) {
+    const groups = components(records, connections);
+    if (groups.length <= 1) break;
+
+    const main = groups.reduce((largest, group) =>
+      group.length > largest.length ? group : largest,
+    );
+    const mainSet = new Set(main);
+    let best = null;
+    for (const fromPath of main) {
+      for (const record of records) {
+        if (mainSet.has(record.path)) continue;
+        const length = distance(byPath.get(fromPath), record);
+        if (!best || length < best.length) {
+          best = { from: byPath.get(fromPath), to: record, length };
+        }
+      }
+    }
+    if (!best) break;
+    link(records, connections, best.from, best.to, Infinity, true);
   }
 }
 
 // ── Layout ───────────────────────────────────────────────────────────────────
 
-/** Every node from scratch, on an equal-area golden-angle spiral. */
-function layoutAll(games) {
-  const [center, ...outer] = games;
-  const goldenAngle = Math.PI * (3 - Math.sqrt(5));
-  const records = [
-    { path: center.path, x: 0, y: 0, connections: [], rewards: [] },
-  ];
+/**
+ * Scatters `count` positions across the galaxy by dart-throwing: a candidate
+ * is kept in proportion to the star density there, and only if it clears
+ * MIN_SPACING from everything already placed. Sampling against the density
+ * field is what gives the arms soft, uneven edges; snapping nodes onto an
+ * arm's centre line instead produces a drawn spiral rather than a galaxy.
+ */
+function scatterPositions(count) {
+  const random = makeRandom("galaxy-positions");
+  const positions = [{ x: 0, y: 0 }];
+  const maxAttempts = count * 6000;
 
-  outer.forEach((game, index) => {
-    const equalAreaRadius = Math.max(
-      0.12,
-      0.92 * Math.sqrt((index + 1) / outer.length),
+  // The bulge: a round, evenly packed core the arms then wind out of. It is
+  // filled first so the innermost, easiest games always have somewhere to go.
+  const bulgeCount = Math.round(count * GALAXY.bulgeFraction);
+  for (
+    let attempt = 0;
+    positions.length < bulgeCount && attempt < maxAttempts;
+    attempt += 1
+  ) {
+    const nodeRadius = Math.sqrt(
+      GALAXY.coreRadius ** 2 +
+        random() * (GALAXY.bulgeRadius ** 2 - GALAXY.coreRadius ** 2),
     );
-    const candidates = Array.from({ length: 32 }, (_, candidateIndex) => {
-      const radialNoise =
-        (hash(`${game.path}:radius:${candidateIndex}`) % 1000) / 999 - 0.5;
-      const angularNoise =
-        (hash(`${game.path}:angle:${candidateIndex}`) % 1000) / 999 - 0.5;
-      const nodeRadius = equalAreaRadius * (1 + radialNoise * 0.2);
-      const angle = index * goldenAngle + angularNoise * 0.55;
-      return {
-        x: Number((Math.cos(angle) * nodeRadius).toFixed(4)),
-        y: Number((Math.sin(angle) * nodeRadius).toFixed(4)),
-      };
-    }).filter((candidate) =>
-      records.every((record) => distance(candidate, record) >= MIN_SPACING),
-    );
-
-    if (candidates.length === 0) {
-      throw new Error(`Could not place ${game.path} without overlapping.`);
+    const angle = random() * Math.PI * 2;
+    const candidate = {
+      x: Number((Math.cos(angle) * nodeRadius).toFixed(4)),
+      y: Number((Math.sin(angle) * nodeRadius).toFixed(4)),
+    };
+    if (positions.some((placed) => distance(placed, candidate) < MIN_SPACING)) {
+      continue;
     }
-    const candidate = candidates.reduce((best, current) => {
-      const currentRatio = spacingRatio([...records, current]);
-      const bestRatio = spacingRatio([...records, best]);
-      const targetRatio = (SPACING_RATIO.min + SPACING_RATIO.max) / 2;
-      return Math.abs(currentRatio - targetRatio) <
-        Math.abs(bestRatio - targetRatio)
-        ? current
-        : best;
-    });
-    records.push({
-      path: game.path,
-      ...candidate,
-      connections: [],
-      rewards: [],
-    });
-  });
+    positions.push(candidate);
+  }
 
-  // Each node links inwards to its nearest already-placed neighbour, so
-  // Monte Carlo, the second node, always connects to Klondike.
+  for (
+    let attempt = 0;
+    positions.length < count && attempt < maxAttempts;
+    attempt += 1
+  ) {
+    // Uniform over area first, so density alone shapes the result.
+    const nodeRadius = Math.sqrt(
+      GALAXY.coreRadius ** 2 +
+        random() * (GALAXY.rimRadius ** 2 - GALAXY.coreRadius ** 2),
+    );
+    const angle = random() * Math.PI * 2;
+    const x = Math.cos(angle) * nodeRadius;
+    const y = Math.sin(angle) * nodeRadius;
+
+    if (random() > starDensity(x, y)) continue;
+    const candidate = { x: Number(x.toFixed(4)), y: Number(y.toFixed(4)) };
+    if (positions.some((placed) => distance(placed, candidate) < MIN_SPACING)) {
+      continue;
+    }
+    positions.push(candidate);
+  }
+
+  if (positions.length < count) {
+    throw new Error(
+      `Only placed ${positions.length} of ${count} nodes. The galaxy is too ` +
+        `tight for a ${MIN_SPACING.toFixed(4)} minimum gap: raise WORLD_SIZE, ` +
+        `widen GALAXY.arms/width, or lower GALAXY.radialFalloff.`,
+    );
+  }
+  return positions;
+}
+
+/**
+ * Swaps games between nearby positions when that separates two neighbours
+ * sharing a tag, so no one genre takes over a stretch of the map. Only games
+ * close together in the placement order are swapped, so the easy-inwards,
+ * hard-outwards gradient survives.
+ */
+function spreadTags(records, gamesByPath, neighbours) {
+  const SWAP_WINDOW = 7;
+  const PASSES = 30;
+
+  const clash = (path, others) => {
+    const tags = new Set(gamesByPath.get(path)?.tags ?? []);
+    let cost = 0;
+    for (const other of others) {
+      for (const tag of gamesByPath.get(other)?.tags ?? []) {
+        if (tags.has(tag)) cost += 1;
+      }
+    }
+    return cost;
+  };
+
+  for (let pass = 0; pass < PASSES; pass += 1) {
+    let improved = false;
+    for (let index = 1; index < records.length; index += 1) {
+      const limit = Math.min(index + SWAP_WINDOW, records.length);
+      for (let other = index + 1; other < limit; other += 1) {
+        const here = neighbours[index];
+        const there = neighbours[other];
+        const before =
+          clash(records[index].path, here) + clash(records[other].path, there);
+        const after =
+          clash(records[other].path, here) + clash(records[index].path, there);
+        if (after < before) {
+          const held = records[index].path;
+          records[index].path = records[other].path;
+          records[other].path = held;
+          improved = true;
+        }
+      }
+    }
+    if (!improved) break;
+  }
+}
+
+/** Every node from scratch, as a spiral galaxy. */
+function layoutAll(games, gamesByPath) {
+  const positions = scatterPositions(games.length);
+  const [centre, ...outer] = positions;
+  outer.sort((left, right) => radius(left) - radius(right));
+
+  // The hub takes the centre; the rest follow the order they arrive in
+  // (easiest and most varied first) outwards, so difficulty and luck climb
+  // towards the rim.
+  const ordered = [centre, ...outer];
+  const records = games.map((game, index) => ({
+    path: game.path,
+    x: ordered[index].x,
+    y: ordered[index].y,
+    connections: [],
+    rewards: [],
+    arm: armOf(ordered[index]),
+  }));
+
+  // Who sits beside whom, by position, so tag spreading can run before the
+  // links exist and swapping a game never moves a node.
+  const neighbours = records.map((record) =>
+    records
+      .filter((other) => other !== record)
+      .sort((left, right) => distance(record, left) - distance(record, right))
+      .slice(0, 5)
+      .map((other) => other.path),
+  );
+  spreadTags(records, gamesByPath, neighbours);
+
   const connections = new Map(
     records.map((record) => [record.path, new Set()]),
   );
-  const outward = [...records].sort(
-    (left, right) => radius(left) - radius(right),
-  );
-  for (let index = 1; index < outward.length; index += 1) {
-    const record = outward[index];
-    const inward = outward
-      .slice(0, index)
-      .sort((left, right) => distance(record, left) - distance(record, right));
-    if (
-      !inward.some((candidate) =>
-        connect(records, connections, record.path, candidate.path),
-      )
-    ) {
-      throw new Error(`Could not connect ${record.path} to the inner map.`);
-    }
+  wireGalaxy(records, connections);
+  for (const record of records) {
+    record.connections = [...connections.get(record.path)].sort();
   }
-
-  finishConnections(records, connections);
   return records;
 }
 
-/** A spot at the edge of the map, close to but clear of its outer nodes. */
-function peripheryPoint(game, records, minimumSpacing) {
-  const outerRadius = Math.max(...records.map(radius));
-  const lowest = Math.max(0.11, minimumSpacing);
-  const highest = Math.min(0.16, SPACING_RATIO.max * minimumSpacing);
+/**
+ * A spot for a new game out towards the rim, where the newest and usually
+ * hardest games belong. Keeps the existing map untouched so saved progress
+ * and collected rewards stay where they are.
+ */
+function rimPoint(game, records) {
+  const random = makeRandom(`rim:${game.path}`);
+  let fallback = null;
 
-  for (let ring = 0.9 * outerRadius; ring <= outerRadius + 0.4; ring += 0.01) {
-    const spots = [];
-    for (let step = 0; step < 180; step += 1) {
-      const angle = (step / 180) * Math.PI * 2;
-      const point = {
-        path: game.path,
-        x: Number((Math.cos(angle) * ring).toFixed(4)),
-        y: Number((Math.sin(angle) * ring).toFixed(4)),
-      };
-      if (radius(point) < 0.9 * outerRadius) continue;
-      const nearest = nearestDistance(point, records);
-      if (nearest >= lowest && nearest <= highest) spots.push(point);
-    }
-    if (spots.length > 0) {
-      return spots[hash(game.path) % spots.length];
-    }
+  for (let attempt = 0; attempt < 40000; attempt += 1) {
+    const nodeRadius = Math.sqrt(
+      0.55 ** 2 + random() * (GALAXY.rimRadius ** 2 - 0.55 ** 2),
+    );
+    const angle = random() * Math.PI * 2;
+    const x = Number((Math.cos(angle) * nodeRadius).toFixed(4));
+    const y = Number((Math.sin(angle) * nodeRadius).toFixed(4));
+    if (random() > starDensity(x, y)) continue;
+
+    const point = { x, y };
+    const nearest = nearestDistance(point, records);
+    if (nearest < MIN_SPACING) continue;
+    // Close enough to link to, far enough not to crowd.
+    if (nearest <= CONNECTIONS.maxBridgeEdge) return point;
+    if (!fallback) fallback = point;
   }
-  throw new Error(
-    `Could not find room for ${game.path} at the edge of the map.`,
-  );
+
+  if (fallback) return fallback;
+  throw new Error(`Could not find room for ${game.path} at the rim.`);
 }
 
 /** The existing map as-is, with removed games dropped and new games added. */
@@ -529,230 +1006,248 @@ function extendMap(existing, games) {
     .filter((record) => gamePaths.has(record.path))
     .map((record) => ({
       ...record,
-      connections: record.connections.filter((connection) =>
-        gamePaths.has(connection),
-      ),
+      arm: record.arm ?? armOf(record),
+      connections: record.connections.filter((path) => gamePaths.has(path)),
     }));
+
   const known = new Set(records.map((record) => record.path));
   const added = games.filter((game) => !known.has(game.path));
+
   const connections = new Map(
     records.map((record) => [record.path, new Set(record.connections)]),
   );
-  const minimumSpacing = Math.max(
-    MIN_SPACING,
-    Math.min(...records.map((record) => nearestDistance(record, records))),
-  );
 
   for (const game of added) {
-    const point = peripheryPoint(game, records, minimumSpacing);
-    const record = { ...point, connections: [], rewards: [] };
+    const point = rimPoint(game, records);
+    const record = {
+      path: game.path,
+      ...point,
+      connections: [],
+      rewards: [],
+      arm: armOf(point),
+    };
+    records.push(record);
     connections.set(record.path, new Set());
 
-    const neighbours = records
-      .filter((other) => connections.get(other.path).size < MAX_CONNECTIONS)
+    const nearest = records
+      .filter((other) => other !== record)
       .sort((left, right) => distance(record, left) - distance(record, right));
-    const linkCount =
-      neighbours[2] &&
-      distance(record, neighbours[2]) < distance(record, neighbours[0]) * 1.5
-        ? 3
-        : 2;
-    records.push(record);
-    neighbours
-      .slice(0, linkCount)
-      .forEach((neighbour) =>
-        connect(records, connections, record.path, neighbour.path),
-      );
+    for (const candidate of nearest) {
+      if (connections.get(record.path).size >= 2) break;
+      link(records, connections, record, candidate, CONNECTIONS.maxBridgeEdge);
+    }
+    if (connections.get(record.path).size === 0) {
+      link(records, connections, record, nearest[0], Infinity, true);
+    }
   }
 
-  finishConnections(records, connections);
+  for (const record of records) {
+    record.connections = [...connections.get(record.path)].sort();
+  }
   return { records, added };
 }
 
 // ── Rewards ──────────────────────────────────────────────────────────────────
 
-/**
- * Games keep the rewards they already have, so collected rewards stay with
- * their node. Any node short of two gets the next unused quotes; quote IDs are
- * only ever appended, never recycled from a removed game.
- */
-function assignRewards(records, existingByPath) {
-  const used = { tao: new Set(), quote: new Set() };
-  const maxId = { tao: TAO_COUNT, quote: QUOTE_COUNT };
-
-  for (const record of records) {
-    const previous = existingByPath.get(record.path)?.rewards ?? [];
-    record.rewards = previous
-      .filter(
-        (reward) =>
-          reward.id >= 1 &&
-          reward.id <= maxId[reward.type] &&
-          !used[reward.type].has(reward.id),
-      )
-      .slice(0, MAX_REWARDS);
-    record.rewards.forEach((reward) => used[reward.type].add(reward.id));
-  }
-
-  let nextQuoteId = Math.max(0, ...used.quote) + 1;
-  for (const record of records) {
-    while (record.rewards.length < MIN_REWARDS) {
-      if (nextQuoteId > QUOTE_COUNT) {
-        throw new Error(
-          `Out of quotes for ${record.path}. Every quote deck is full: add a 52-card deck of card images, its quotes in src/components/Collectibles/QuotesText.ts, raise QUOTE_COUNT and extend getQuoteCard in src/data/collectibles.ts.`,
-        );
-      }
-      record.rewards.push({ type: "quote", id: nextQuoteId });
-      nextQuoteId += 1;
-    }
-  }
-}
-
-/** Higher for games that are hard or luck-heavy, whichever is greater. */
-function goldScore(game) {
+/** Higher for games that are hard or luck-heavy, whichever is worse. */
+function grindScore(game) {
+  if (!game) return 0;
   return (
     0.5 * Math.max(game.difficulty, game.luck) +
     0.25 * (game.difficulty + game.luck)
   );
 }
 
-const rewardKey = (reward) => `${reward.type}:${reward.id}`;
-const isGold = (reward) =>
-  reward.type === "quote" && reward.id >= GOLD_FIRST_QUOTE_ID;
-// Tao first, then quotes, which puts gold quotes last.
-const compareRewards = (left, right) =>
-  (left.type === "tao" ? 0 : 1) - (right.type === "tao" ? 0 : 1) ||
-  left.id - right.id;
-
-/** See --rebalance-rewards at the top of this file. */
-function rebalanceRewards(records, existingByPath, gamesByPath) {
-  const ranked = [...records].sort(
-    (left, right) =>
-      goldScore(gamesByPath.get(right.path)) -
-        goldScore(gamesByPath.get(left.path)) ||
-      left.path.localeCompare(right.path),
-  );
-
-  const targets = new Map(
-    records.map((record) => [record.path, { gold: 0, plain: MIN_REWARDS }]),
-  );
-  let goldLeft = QUOTE_COUNT - GOLD_FIRST_QUOTE_ID + 1;
-  for (const record of ranked) {
-    if (goldLeft === 0) break;
-    const target = targets.get(record.path);
-    target.gold = Math.min(GOLD_PER_GAME, goldLeft);
-    target.plain = Math.max(0, MIN_REWARDS - target.gold);
-    goldLeft -= target.gold;
+/**
+ * The rewards still to be handed out, with Tao chapters and quotes woven
+ * together in proportion so both turn up across the whole map instead of the
+ * chapters all landing near the hub.
+ */
+function buildRewardPool(used) {
+  const chapters = [];
+  for (let id = 1; id <= TAO_COUNT; id += 1) {
+    if (!used.tao.has(id)) chapters.push({ type: "tao", id });
+  }
+  const quotes = [];
+  for (let id = 1; id <= REWARDS.lastAssignableQuote; id += 1) {
+    if (!used.quote.has(id)) quotes.push({ type: "quote", id });
   }
 
-  const plainCount = TAO_COUNT + GOLD_FIRST_QUOTE_ID - 1;
-  let spare =
-    plainCount -
-    [...targets.values()].reduce((sum, target) => sum + target.plain, 0);
-  if (spare < 0) {
+  const pool = [];
+  let chapter = 0;
+  let quote = 0;
+  while (chapter < chapters.length || quote < quotes.length) {
+    const takeChapter =
+      chapter < chapters.length &&
+      (quote >= quotes.length ||
+        (chapter + 1) / chapters.length <= (quote + 1) / quotes.length);
+    pool.push(takeChapter ? chapters[chapter++] : quotes[quote++]);
+  }
+  return pool;
+}
+
+/**
+ * Every node gets two rewards, and whatever is left over goes to the games
+ * that are easiest to beat a third time. Nodes keep the rewards they already
+ * have, so anything already collected stays with its node; --rebalance-rewards
+ * deals the whole pool again from scratch.
+ */
+function assignRewards(records, existingByPath, gamesByPath, rebalance) {
+  const used = { tao: new Set(), quote: new Set() };
+  const assignable = (reward) =>
+    Number.isInteger(reward?.id) &&
+    reward.id >= 1 &&
+    (reward.type === "tao"
+      ? reward.id <= TAO_COUNT
+      : reward.type === "quote" && reward.id <= REWARDS.lastAssignableQuote);
+
+  for (const record of records) {
+    const previous = rebalance
+      ? []
+      : (existingByPath.get(record.path)?.rewards ?? []);
+    record.rewards = previous
+      .filter(
+        (reward) => assignable(reward) && !used[reward.type].has(reward.id),
+      )
+      .slice(0, REWARDS.max);
+    record.rewards.forEach((reward) => used[reward.type].add(reward.id));
+  }
+
+  const pool = buildRewardPool(used);
+  let next = 0;
+
+  for (const record of records) {
+    while (record.rewards.length < REWARDS.min) {
+      if (next >= pool.length) {
+        throw new Error(
+          `Out of rewards at ${record.path}. ${records.length} nodes need ` +
+            `${records.length * REWARDS.min}, and the pool holds ` +
+            `${TAO_COUNT} Tao chapters plus ${REWARDS.lastAssignableQuote} ` +
+            `quotes. Raise REWARDS.lastAssignableQuote to open the next deck.`,
+        );
+      }
+      record.rewards.push(pool[next]);
+      next += 1;
+    }
+  }
+
+  // Spare rewards become third collectibles, handed to the gentlest games
+  // first: a third reward means beating the game three times.
+  const spare = pool.slice(next);
+  const gentlestFirst = [...records].sort(
+    (left, right) =>
+      grindScore(gamesByPath.get(left.path)) -
+      grindScore(gamesByPath.get(right.path)),
+  );
+  for (const record of gentlestFirst) {
+    if (spare.length === 0) break;
+    if (record.rewards.length >= REWARDS.max) continue;
+    record.rewards.push(spare.shift());
+  }
+
+  if (spare.length > 0) {
     throw new Error(
-      `${records.length} nodes need ${-spare} more Tao chapters or white and black quotes.`,
+      `${spare.length} rewards do not fit: ${records.length} nodes hold at ` +
+        `most ${records.length * REWARDS.max}. Lower ` +
+        `REWARDS.lastAssignableQuote or add games.`,
     );
   }
-  while (spare > 0) {
-    const roomy = ranked.find((record) => {
-      const target = targets.get(record.path);
-      return target.gold + target.plain < REBALANCED_MAX_REWARDS;
-    });
-    if (!roomy) {
-      throw new Error(
-        `${spare} rewards do not fit within ${REBALANCED_MAX_REWARDS} per node.`,
-      );
-    }
-    targets.get(roomy.path).plain += 1;
-    spare -= 1;
-  }
 
-  // Keep what each game already holds, as far as its new share allows.
-  const used = new Set();
-  const maxId = { tao: TAO_COUNT, quote: QUOTE_COUNT };
-  for (const record of ranked) {
-    const target = targets.get(record.path);
-    const previous = (existingByPath.get(record.path)?.rewards ?? [])
-      .filter(
-        (reward) =>
-          reward.id >= 1 &&
-          reward.id <= maxId[reward.type] &&
-          !used.has(rewardKey(reward)),
-      )
-      .sort(compareRewards);
-    record.rewards = [
-      ...previous.filter(isGold).slice(0, target.gold),
-      ...previous.filter((reward) => !isGold(reward)).slice(0, target.plain),
-    ];
-    record.rewards.forEach((reward) => used.add(rewardKey(reward)));
-  }
-
-  const unused = (type, first, last) =>
-    Array.from({ length: last - first + 1 }, (_, index) => ({
-      type,
-      id: first + index,
-    })).filter((reward) => !used.has(rewardKey(reward)));
-  const goldPool = unused("quote", GOLD_FIRST_QUOTE_ID, QUOTE_COUNT);
-  // Alternate Tao chapters and quotes so games get a mix.
-  const taoPool = unused("tao", 1, TAO_COUNT);
-  const quotePool = unused("quote", 1, GOLD_FIRST_QUOTE_ID - 1);
-  const plainPool = [];
-  while (taoPool.length > 0 || quotePool.length > 0) {
-    if (taoPool.length > 0) plainPool.push(taoPool.shift());
-    if (quotePool.length > 0) plainPool.push(quotePool.shift());
-  }
-
-  for (const record of ranked) {
-    const target = targets.get(record.path);
-    while (record.rewards.filter(isGold).length < target.gold) {
-      record.rewards.push(goldPool.shift());
-    }
-    while (
-      record.rewards.filter((reward) => !isGold(reward)).length < target.plain
-    ) {
-      record.rewards.push(plainPool.shift());
-    }
-    record.rewards.sort(compareRewards);
+  for (const record of records) {
+    record.rewards.sort(
+      (left, right) =>
+        (left.type === "tao" ? 0 : 1) - (right.type === "tao" ? 0 : 1) ||
+        left.id - right.id,
+    );
   }
 }
 
 // ── Validation and output ────────────────────────────────────────────────────
 
+/**
+ * The rules the map must hold to, checked on every run. Each one is here
+ * because breaking it either makes a game unreachable or makes the map look
+ * wrong; nothing is checked purely for tidiness.
+ */
 function validate(records) {
   const errors = [];
-  const nearest = records.map((record) => nearestDistance(record, records));
-  const minimum = Math.min(...nearest);
-  const ratio = Math.max(...nearest) / minimum;
-  if (minimum < MIN_SPACING) {
-    errors.push(`minimum node spacing ${minimum.toFixed(4)} permits overlap`);
-  }
-  if (ratio < SPACING_RATIO.min || ratio > SPACING_RATIO.max) {
+  const byPath = new Map(records.map((record) => [record.path, record]));
+
+  // Nodes must not crowd each other, or the dots overlap when drawn.
+  const closest = Math.min(
+    ...records.map((record) => nearestDistance(record, records)),
+  );
+  if (closest < MIN_SPACING) {
     errors.push(
-      `nearest-node spacing ratio ${ratio.toFixed(2)} is outside ${SPACING_RATIO.min}-${SPACING_RATIO.max}`,
+      `closest pair ${closest.toFixed(4)} is under the ${MIN_SPACING.toFixed(4)} minimum gap`,
     );
   }
+
   for (const record of records) {
-    if (
-      record.connections.length < MIN_CONNECTIONS ||
-      record.connections.length > MAX_CONNECTIONS
-    ) {
+    // A node with no links cannot be reached, and one with too many is a mess.
+    if (record.connections.length < 1) {
+      errors.push(`${record.path} has no connections`);
+    }
+    if (record.connections.length > CONNECTIONS.max) {
       errors.push(
-        `${record.path} has ${record.connections.length} connections`,
+        `${record.path} has ${record.connections.length} connections, over the ${CONNECTIONS.max} limit`,
       );
     }
     if (
-      record.rewards.length < MIN_REWARDS ||
-      record.rewards.length > MAX_REWARDS
+      record.rewards.length < REWARDS.min ||
+      record.rewards.length > REWARDS.max
     ) {
       errors.push(`${record.path} has ${record.rewards.length} rewards`);
     }
+    // Links run both ways, or the map walks differently in each direction.
+    for (const other of record.connections) {
+      if (!byPath.get(other)?.connections.includes(record.path)) {
+        errors.push(`${record.path} -> ${other} is not mutual`);
+      }
+    }
   }
+
+  // Every game has to be reachable from the starting node.
+  const connections = new Map(
+    records.map((record) => [record.path, new Set(record.connections)]),
+  );
+  const groups = components(records, connections);
+  if (groups.length > 1) {
+    errors.push(
+      `the map is in ${groups.length} pieces; ${records.length - Math.max(...groups.map((group) => group.length))} games cannot be reached`,
+    );
+  }
+
+  // Every Tao chapter must be collectable somewhere.
+  const chapters = new Set(
+    records.flatMap((record) =>
+      record.rewards.filter((reward) => reward.type === "tao").map((r) => r.id),
+    ),
+  );
+  for (let id = 1; id <= TAO_COUNT; id += 1) {
+    if (!chapters.has(id)) errors.push(`Tao chapter ${id} is not awarded`);
+  }
+
+  // No reward may be handed out twice, or it cannot be collected twice over.
+  const seen = new Set();
+  for (const record of records) {
+    for (const reward of record.rewards) {
+      const key = `${reward.type}:${reward.id}`;
+      if (seen.has(key)) errors.push(`${key} is awarded more than once`);
+      seen.add(key);
+    }
+  }
+
   if (errors.length > 0) throw new Error(errors.join("\n"));
 }
 
+// Games still marked local-only are in development: they stay off the map
+// until they are enabled, so they do not consume quotes or shift the layout.
 const games = fs
   .readdirSync(gamesDirectory)
   .filter((filename) => filename.endsWith(".ts"))
-  .map(parseGame);
+  .map(parseGame)
+  .filter((game) => !game.localOnly);
 assignPlacementScores(games);
 games.sort(compareGames);
 
@@ -762,11 +1257,12 @@ if (games[0]?.path !== FIXED_ORDER[0]) {
 
 const existing = readExistingNodes();
 const existingByPath = new Map(existing.map((record) => [record.path, record]));
+const gamesByPath = new Map(games.map((game) => [game.path, game]));
 let records;
 let summary;
 
 if (rebuild || existing.length === 0) {
-  records = layoutAll(games);
+  records = layoutAll(games, gamesByPath);
   summary = `Rebuilt ${records.length} nodes`;
 } else {
   const result = extendMap(existing, games);
@@ -777,26 +1273,28 @@ if (rebuild || existing.length === 0) {
       : `No new games; kept all ${records.length} nodes`;
 }
 
-if (rebalance) {
-  rebalanceRewards(
-    records,
-    existingByPath,
-    new Map(games.map((game) => [game.path, game])),
-  );
-  summary += "; rebalanced rewards";
-} else {
-  assignRewards(records, existingByPath);
-}
+// A complete rebuild moves every node anyway, so it deals the rewards fresh
+// too; only an incremental run preserves them, keeping collected rewards with
+// the game they were earned on.
+const freshRewards = rebalance || rebuild || existing.length === 0;
+assignRewards(records, existingByPath, gamesByPath, freshRewards);
+if (rebalance) summary += "; rebalanced rewards";
 validate(records);
+
+const armed = records.filter((record) => record.arm !== null).length;
+summary += ` (${armed} on arms, ${records.length - armed} between them)`;
 
 const output =
   `// Generated by scripts/generate-nodes-map.mjs. Coordinates and entries may be edited manually.\n` +
-  `import type { NodeDefinition } from "./nodes-map";\n\n` +
+  `import type { ArmDust, NodeDefinition } from "./nodes-map";\n\n` +
+  `/** Decorative specks along the arms: x, y, tint index, opacity. */\n` +
+  `export const ARM_DUST: ArmDust[] = ${JSON.stringify(buildArmDust())};\n\n` +
   `export const NODE_DEFINITIONS: NodeDefinition[] = ${JSON.stringify(
-    records.map(({ path: nodePath, x, y, connections, rewards }) => ({
+    records.map(({ path: nodePath, x, y, arm, connections, rewards }) => ({
       path: nodePath,
       x,
       y,
+      arm: arm ?? null,
       connections,
       rewards,
     })),
@@ -805,4 +1303,5 @@ const output =
   )};\n`;
 
 fs.writeFileSync(outputPath, output);
+await renderGalaxyGlow(buildArmSpines());
 console.log(`${summary} in ${path.relative(root, outputPath)}.`);

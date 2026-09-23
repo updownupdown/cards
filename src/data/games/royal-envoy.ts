@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 
 export const royalEnvoy: GameDefinition = {
   path: "/royal-envoy",
@@ -13,8 +14,8 @@ export const royalEnvoy: GameDefinition = {
   thumbnail: "RoyalEnvoy.webp",
   background: GAME_BACKGROUNDS.castle,
   gameColorDark: "#241e33",
-  gameColorMid: "#547cad",
   gameColorPale: "#acdeff",
+  cardBack: CardBackColors.Bicycle,
   cardDescription:
     "Win exactly the right number of debates in each kingdom, using your advisors.",
   quickStart: [

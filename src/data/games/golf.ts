@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 
 export const golf: GameDefinition = {
   path: "/golf",
@@ -13,8 +14,8 @@ export const golf: GameDefinition = {
   thumbnail: "Golf.webp",
   background: GAME_BACKGROUNDS.golf,
   gameColorDark: "#1d301e",
-  gameColorMid: "#1e750d",
   gameColorPale: "#f2fccc",
+  cardBack: CardBackColors.Crimson,
   cardDescription:
     "Clear seven columns by playing cards one rank away from the waste.",
   quickStart: [

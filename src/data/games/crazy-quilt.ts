@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const crazyQuilt: GameDefinition = {
@@ -16,8 +17,8 @@ export const crazyQuilt: GameDefinition = {
   background: GAME_BACKGROUNDS.cozyCabin,
   animation: GameAnimations.Snow,
   gameColorDark: "#2c1d26",
-  gameColorMid: "#b0506e",
   gameColorPale: "#fbe3ea",
+  cardBack: CardBackColors.Rose,
   cardDescription:
     "Unpick a quilt of upright and sideways cards, one free end at a time.",
   quickStart: [

@@ -22,6 +22,11 @@
     "title": "Nasıl oynanır",
     "unavailable": "Bu oyun için talimat yok."
   },
+  "mercySkip": {
+    "title": "Af kullan ({{count}} kaldı)",
+    "grantedTitle": "Bir af!",
+    "grantedBody": "Onu, haritadan açılan herhangi bir oyunun menüsünde bulabilirsin."
+  },
   "settings": {
     "title": "Ayarlar",
     "none": "Oyun ayarı yok",

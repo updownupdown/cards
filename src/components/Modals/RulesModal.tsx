@@ -32,6 +32,7 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
     <ModalFull
       onClose={onClose}
       title={t("rules.title")}
+      subtitle={gameInfo.title}
       titleColor={headingColor}
       backgroundColor={gameInfo.gameColorDark}
       iconName="instructions"

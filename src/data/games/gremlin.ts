@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const gremlin: GameDefinition = {
@@ -15,8 +16,8 @@ export const gremlin: GameDefinition = {
   background: GAME_BACKGROUNDS.treeRain,
   animation: GameAnimations.Firefly,
   gameColorDark: "#1c423f",
-  gameColorMid: "#37491e",
   gameColorPale: "#e7f5ce",
+  cardBack: CardBackColors.Moss,
   cardDescription:
     "Build columns of cards in decreasing suit-matched sequences while managing unwanted help.",
   quickStart: [

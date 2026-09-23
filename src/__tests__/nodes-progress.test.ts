@@ -1,7 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { beforeEach, describe, expect, test } from "@jest/globals";
-import { loadNodesProgress } from "@/data/nodes-progress";
+import {
+  grantMercySkip,
+  loadNodesProgress,
+  spendMercySkip,
+} from "@/data/nodes-progress";
 import { NODES_PROGRESS_STORAGE_KEY } from "@/data/storage-keys";
+import { NODE_DEFINITIONS, NODES_START_PATH } from "@/data/nodes-map";
 
 describe("Nodes progress", () => {
   beforeEach(async () => {
@@ -35,5 +40,62 @@ describe("Nodes progress", () => {
     const progress = await loadNodesProgress();
 
     expect(progress.collectedQuoteIds).toEqual([115, 156]);
+  });
+
+  test("granting a mercy skip increments the count and checkpoints collectibles owned", async () => {
+    await AsyncStorage.setItem(
+      NODES_PROGRESS_STORAGE_KEY,
+      JSON.stringify({
+        version: 2,
+        collectedTaoIds: [1, 2],
+        collectedQuoteIds: [3],
+      }),
+    );
+
+    await grantMercySkip();
+    const progress = await loadNodesProgress();
+
+    expect(progress.mercySkipCount).toBe(1);
+    expect(progress.mercySkipCollectibleCheckpoint).toBe(3);
+  });
+
+  test("spending a mercy skip wins a reachable node without granting a collectible", async () => {
+    await grantMercySkip();
+    const result = await spendMercySkip(NODES_START_PATH);
+    const progress = await loadNodesProgress();
+
+    expect(result.applied).toBe(true);
+    expect(progress.winsByPath[NODES_START_PATH]).toBe(1);
+    expect(progress.mercySkipCount).toBe(0);
+    expect(progress.collectedTaoIds).toEqual([]);
+    expect(progress.collectedQuoteIds).toEqual([]);
+    // Winning the start node should unlock its neighbours.
+    const neighborPath = NODE_DEFINITIONS.find((node) =>
+      node.connections.includes(NODES_START_PATH),
+    )!.path;
+    expect(result.newlyUnlockedPaths).toContain(neighborPath);
+  });
+
+  test("spending a mercy skip with none available does nothing", async () => {
+    const result = await spendMercySkip(NODES_START_PATH);
+    const progress = await loadNodesProgress();
+
+    expect(result.applied).toBe(false);
+    expect(progress.winsByPath[NODES_START_PATH]).toBeUndefined();
+  });
+
+  test("spending a mercy skip on an unreachable node does nothing", async () => {
+    const unreachablePath = NODE_DEFINITIONS.find(
+      (node) =>
+        node.path !== NODES_START_PATH &&
+        !node.connections.includes(NODES_START_PATH),
+    )!.path;
+
+    await grantMercySkip();
+    const result = await spendMercySkip(unreachablePath);
+    const progress = await loadNodesProgress();
+
+    expect(result.applied).toBe(false);
+    expect(progress.mercySkipCount).toBe(1);
   });
 });

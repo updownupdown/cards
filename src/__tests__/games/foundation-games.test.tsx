@@ -150,7 +150,7 @@ describe("Beleaguered Castle", () => {
   const emptyColumns = () =>
     Array.from({ length: 8 }, () => [] as PlayingCard[]);
 
-  test("playing the last king home wins", async () => {
+  test("the last king reaching home wins", async () => {
     const king = card("K", "spades");
     const columns = emptyColumns();
     columns[0] = [king];
@@ -165,10 +165,9 @@ describe("Beleaguered Castle", () => {
       ended: false,
       won: false,
     });
-    expect(outcome()).toBe("playing");
 
-    await doubleTapCardId(king.id);
-
+    // One card and one legal move: auto-complete sends the king home
+    // during setup, so the outcome is read once that has settled.
     expect(outcome()).toBe("won");
   });
 

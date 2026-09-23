@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const diplomat: GameDefinition = {
@@ -11,8 +12,8 @@ export const diplomat: GameDefinition = {
   background: GAME_BACKGROUNDS.oldCityAlley,
   animation: GameAnimations.Rain,
   gameColorDark: "#25343a",
-  gameColorMid: "#436581",
   gameColorPale: "#dfe0d5",
+  cardBack: CardBackColors.Ocean,
   cardDescription:
     "Negotiate eight open columns with rank-only packing and single-card moves.",
   quickStart: [

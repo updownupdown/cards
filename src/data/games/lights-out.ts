@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const lightsOut: GameDefinition = {
@@ -11,8 +12,8 @@ export const lightsOut: GameDefinition = {
   background: GAME_BACKGROUNDS.darkAlley,
   animation: GameAnimations.Snow,
   gameColorDark: "#2b2117",
-  gameColorMid: "#283f55",
   gameColorPale: "#fdf3e8",
+  cardBack: CardBackColors.Charcoal,
   cardDescription:
     "Extinguish a grid of cards where every move flips its neighbors.",
   quickStart: [

@@ -3,6 +3,7 @@ import {
   clearGameLaunchPending,
   clearLastGameSession,
   GAME_LAUNCH_STABLE_MS,
+  getGameInfo,
   markGameLaunchPending,
 } from "@/data/game-menu";
 import { getGameComponentByPath } from "@/data/games-router";
@@ -18,19 +19,25 @@ import { useEffect, useState } from "react";
 import { ActivityIndicator, BackHandler, Platform, View } from "react-native";
 import { endGameLaunch } from "@/components/common/GameLaunchOverlay";
 import { i18n } from "@/i18n";
+import { reportCrash } from "@/utils/crash-reporting";
 
 export function generateStaticParams() {
   return GAME_DEFINITIONS.map(({ path }) => ({ game: path.slice(1) }));
 }
 
-function GameSpinner() {
+function GameSpinner({ gamePath }: { gamePath?: string }) {
+  // The route is already the game's, so the browser chrome has taken its dark
+  // colour: paint the same one here instead of a colour that matches neither
+  // the home screen nor the game.
+  const gameInfo = gamePath ? getGameInfo(`/${gamePath}`) : undefined;
+
   return (
     <View
       style={{
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: Colors.background,
+        backgroundColor: gameInfo?.gameColorDark ?? Colors.background,
       }}
     >
       <ActivityIndicator size="large" color={Colors.K400} />
@@ -48,6 +55,8 @@ export function ErrorBoundary({ error }: ErrorBoundaryProps) {
 
   useEffect(() => {
     console.error("Game crashed, returning home:", error);
+    // The game tag set by the root layout says which game this was.
+    reportCrash(error);
     let active = true;
 
     void clearLastGameSession()
@@ -136,7 +145,7 @@ export default function DynamicGameRoute() {
   }
 
   if (!isReady) {
-    return <GameSpinner />;
+    return <GameSpinner gamePath={game} />;
   }
 
   // Keyed by game: when one game replaces another on this screen, the new one

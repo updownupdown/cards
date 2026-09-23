@@ -28,6 +28,10 @@
     "label": "Respuesta háptica",
     "description": "Vibra al arrastrar y soltar cartas y al ganar. La vibración debe estar activada en los ajustes de tu teléfono."
   },
+  "crashReports": {
+    "label": "Enviar informes de errores",
+    "description": "Envía diagnósticos anónimos cuando algo falla, para que pueda corregirse. No se incluye ninguna información personal."
+  },
   "populateTestProgress": "Rellenar progreso de prueba",
   "credits": {
     "starfield": {

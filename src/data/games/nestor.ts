@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const nestor: GameDefinition = {
@@ -15,8 +16,8 @@ export const nestor: GameDefinition = {
   background: GAME_BACKGROUNDS.greece,
   animation: GameAnimations.Clouds,
   gameColorDark: "#112e49",
-  gameColorMid: "#5a8baf",
   gameColorPale: "#e7f7ff",
+  cardBack: CardBackColors.Ocean,
   cardDescription: "Pair off matching ranks to empty every column.",
   quickStart: [
     "Clear all cards by removing pairs of matching ranks from the bottom of columns or the reserve.",

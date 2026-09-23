@@ -131,8 +131,8 @@ describe.each<
     "/spiderette",
     Spiderette,
     7,
-    { col: 1, row: 6 },
     { col: 0, row: 6 },
+    { col: 1, row: 6 },
     undefined,
   ],
 ])(

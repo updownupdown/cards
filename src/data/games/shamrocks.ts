@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const shamrocks: GameDefinition = {
@@ -11,8 +12,8 @@ export const shamrocks: GameDefinition = {
   background: GAME_BACKGROUNDS.forestGrasses,
   animation: GameAnimations.Leaves,
   gameColorDark: "#183b2a",
-  gameColorMid: "#45963f",
   gameColorPale: "#dff3cc",
+  cardBack: CardBackColors.Moss,
   cardDescription:
     "Build eighteen tiny fans without ever letting one grow beyond three cards.",
   quickStart: [

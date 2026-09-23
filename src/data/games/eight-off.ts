@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const eightOff: GameDefinition = {
@@ -15,8 +16,8 @@ export const eightOff: GameDefinition = {
   background: GAME_BACKGROUNDS.cherryBlossoms,
   animation: GameAnimations.CherryBlossom,
   gameColorDark: "#0e2741",
-  gameColorMid: "#5a96af",
   gameColorPale: "#d9ffff",
+  cardBack: CardBackColors.Ocean,
   cardDescription:
     "A roomy, same-suit FreeCell relative, with eight cells and Kings-only columns.",
   quickStart: [

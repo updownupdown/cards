@@ -4,12 +4,20 @@ import { Icon, type IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { homeSurfaceShadow } from "@/styles/homeSurfaceShadow";
 import { Colors, rgba, layoutDims, transitionStyles } from "@/styles/styles";
+import { LinearGradient } from "expo-linear-gradient";
+import { useEffect } from "react";
 import {
   Platform,
   Pressable,
+  StyleSheet,
   View,
   type LayoutChangeEvent,
 } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export type HomeTabKey = "home" | "collect" | "search" | "nodes";
@@ -25,16 +33,28 @@ type HomeTabBarProps = {
   activeIndex: number;
   onSelectTab: (index: number) => void;
   onHeightChange?: (height: number) => void;
+  showBackground: boolean;
 };
 
 export function HomeTabBar({
   activeIndex,
   onSelectTab,
   onHeightChange,
+  showBackground,
 }: HomeTabBarProps) {
   const insets = useSafeAreaInsets();
   const { spacing, ui } = useResponsiveMetrics();
   const { t } = useTranslation("home");
+  const backgroundOpacity = useSharedValue(showBackground ? 1 : 0);
+  const backgroundStyle = useAnimatedStyle(() => ({
+    opacity: backgroundOpacity.value,
+  }));
+
+  useEffect(() => {
+    backgroundOpacity.value = withTiming(showBackground ? 1 : 0, {
+      duration: 350,
+    });
+  }, [backgroundOpacity, showBackground]);
 
   const onLayout = (event: LayoutChangeEvent) => {
     onHeightChange?.(event.nativeEvent.layout.height);
@@ -52,13 +72,40 @@ export function HomeTabBar({
         pointerEvents: "box-none",
       }}
     >
+      {/* The header's fade, mirrored: content scrolling past the floating pill
+          dissolves into the same colour at both ends of the screen, and the
+          fade runs to the very bottom so it covers the safe-area inset too. */}
+      <Animated.View
+        testID="home-tab-bar-background"
+        style={[
+          StyleSheet.absoluteFill,
+          { pointerEvents: "none" },
+          backgroundStyle,
+        ]}
+      >
+        <LinearGradient
+          colors={[
+            rgba(Colors.starfieldOverlay, 0),
+            rgba(Colors.starfieldOverlay, 1),
+          ]}
+          start={{ x: 0.5, y: 0 }}
+          end={{ x: 0.5, y: 1 }}
+          style={StyleSheet.absoluteFill}
+        />
+      </Animated.View>
+
       <View
         style={{
           width: "100%",
           maxWidth: ui.contentMaxWidth,
           alignSelf: "center",
           padding: spacing(layoutDims.pagePadding * 0.5),
+          // Clear the system bars on every edge: the bottom one on Android (or
+          // the iOS home indicator), and in landscape a display cutout at the
+          // sides.
           paddingBottom: insets.bottom + spacing(layoutDims.pagePadding * 0.5),
+          paddingLeft: insets.left + spacing(layoutDims.pagePadding * 0.5),
+          paddingRight: insets.right + spacing(layoutDims.pagePadding * 0.5),
         }}
       >
         <View

@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const infiltrator: GameDefinition = {
@@ -15,8 +16,8 @@ export const infiltrator: GameDefinition = {
   animation: GameAnimations.Dust,
   thumbnail: "Infiltrator.webp",
   gameColorDark: "#182326",
-  gameColorMid: "#54ac96",
   gameColorPale: "#dce8df",
+  cardBack: CardBackColors.Forest,
   cardDescription:
     "Capture a majority of the Key Spies through careful recruitment, countering, and assassination.",
   quickStart: [

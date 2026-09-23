@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const royalCotillion: GameDefinition = {
@@ -15,8 +16,8 @@ export const royalCotillion: GameDefinition = {
   background: GAME_BACKGROUNDS.alhambra,
   animation: GameAnimations.ManaDust,
   gameColorDark: "#211a36",
-  gameColorMid: "#7a5fb0",
   gameColorPale: "#f1e6ff",
+  cardBack: CardBackColors.Violet,
   cardDescription:
     "Two decks dance up the foundations in steps of two, from Aces and from Twos.",
   quickStart: [

@@ -264,9 +264,11 @@ export function SearchTab({
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{
           paddingTop: contentPaddingTop,
+          // Clear the floating search control, then leave the same
+          // comfortable gap after the last card that the other tabs use.
           paddingBottom: Math.max(
             contentPaddingBottom,
-            searchControlBottom + controlHeight + spacing(20),
+            searchControlBottom + controlHeight + spacing(48),
           ),
           paddingHorizontal: pageSidePadding,
           rowGap: cardGap,

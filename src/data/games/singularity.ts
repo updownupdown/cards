@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const singularity: GameDefinition = {
@@ -15,8 +16,8 @@ export const singularity: GameDefinition = {
   background: GAME_BACKGROUNDS.nightSky,
   animation: GameAnimations.Stars,
   gameColorDark: "#150e25",
-  gameColorMid: "#502694",
   gameColorPale: "#d4cbff",
+  cardBack: CardBackColors.Violet,
   cardDescription:
     "Pull all 52 cards into a central singularity, one rank at a time.",
   quickStart: [

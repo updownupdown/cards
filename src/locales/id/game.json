@@ -22,6 +22,11 @@
     "title": "Cara bermain",
     "unavailable": "Petunjuk untuk permainan ini belum tersedia."
   },
+  "mercySkip": {
+    "title": "Gunakan pengampunan ({{count}} tersisa)",
+    "grantedTitle": "Sebuah pengampunan!",
+    "grantedBody": "Temukan itu di menu game mana pun, dibuka dari peta."
+  },
   "settings": {
     "title": "Pengaturan",
     "none": "Tidak ada pengaturan permainan",

@@ -1,4 +1,5 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 export const easthaven: GameDefinition = {
   path: "/easthaven",
@@ -8,8 +9,8 @@ export const easthaven: GameDefinition = {
   thumbnail: "Easthaven.webp",
   background: GAME_BACKGROUNDS.stonyBeach,
   gameColorDark: "#203638",
-  gameColorMid: "#5aafaf",
   gameColorPale: "#dcefed",
+  cardBack: CardBackColors.Teal,
   cardDescription:
     "Build seven compact columns, then deal each new stock row straight onto the tableau.",
   quickStart: [

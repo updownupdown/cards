@@ -17,6 +17,11 @@
   "details": {
     "locked": "Kilitli"
   },
+  "mercySkip": {
+    "granted": "Bir af! Yıldızlar arasında yolculuk ederken zor bir oyunu atla (oyunun menüsünden).",
+    "ufoLabel": "Geçen bir UFO",
+    "dismiss": "Kapat"
+  },
   "collection": {
     "previous": "Önceki toplanan öğe",
     "next": "Sonraki toplanan öğe",

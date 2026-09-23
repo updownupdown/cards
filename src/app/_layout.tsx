@@ -1,16 +1,17 @@
 import { GameLaunchOverlay } from "@/components/common/GameLaunchOverlay";
 import { ToastProvider } from "@/components/common/Toast";
-import {
-  getActiveHomeTab,
-  NODES_HOME_TAB_INDEX,
-  subscribeActiveHomeTab,
-} from "@/components/Home/home-view-state";
 import { useGameColors } from "@/hooks/useGameColors";
 import { useLanguageSync } from "@/hooks/useLanguageSync";
 import { getGameInfo, isGamePath } from "@/data/game-menu";
 import { useDisplayLanguage } from "@/i18n";
 import { localizeGameTitle } from "@/i18n/content";
 import { Colors } from "@/styles/styles";
+import {
+  addGameBreadcrumb,
+  initCrashReporting,
+  setCrashContext,
+  withCrashReporting,
+} from "@/utils/crash-reporting";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import {
@@ -24,27 +25,19 @@ import {
 import { useFonts } from "expo-font";
 import { Stack, usePathname, SplashScreen } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useSyncExternalStore } from "react";
+import { useEffect } from "react";
 import { View, Platform } from "react-native";
+
+// Install the crash handlers before the first screen mounts, so a failure
+// during startup is still reported.
+initCrashReporting();
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
-const NODES_THEME_COLOR = "#19231D";
-
-export default function Layout() {
+function Layout() {
   const { colorDark } = useGameColors();
   const pathname = usePathname();
-  const activeHomeTab = useSyncExternalStore(
-    subscribeActiveHomeTab,
-    getActiveHomeTab,
-    getActiveHomeTab,
-  );
-  const themeColor = isGamePath(pathname)
-    ? colorDark
-    : activeHomeTab === NODES_HOME_TAB_INDEX
-      ? NODES_THEME_COLOR
-      : Colors.background;
   // Android embeds the fonts at build time (expo-font plugin in app.config.js),
   // so they're ready from the first frame and the splash can hide straight
   // away. Other platforms load them at runtime.
@@ -64,6 +57,19 @@ export default function Layout() {
   const fontsLoaded = embedsFonts || fontsLoadedAtRuntime;
   const languageReady = useLanguageSync();
   const displayLanguage = useDisplayLanguage();
+  const isSplashVisible = !fontsLoaded || !languageReady;
+
+  // Colour for the chrome the app can't draw behind: Chrome mobile's header,
+  // and the page background Chrome samples for Android's button bar in a
+  // standalone PWA. Each value is the flattest match for what the screen
+  // itself shows - the splash red until the app is ready, a game's own dark
+  // colour inside a game, and the starfield's overlay colour on the home
+  // screen, whose tabs all sit on the same background image.
+  const themeColor = isSplashVisible
+    ? Colors.suitsRed
+    : isGamePath(pathname)
+      ? colorDark
+      : Colors.starfieldOverlay;
 
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -78,9 +84,12 @@ export default function Layout() {
     updateMeta("msapplication-navbutton-color", themeColor);
 
     // Tint the Android system navigation (bottom button) bar to match the
-    // current screen. In a standalone PWA Chrome samples the page background
-    // behind the bottom safe area, so keeping the body background in sync with
-    // the active theme color colours the virtual buttons accordingly.
+    // current screen. Chrome paints that area with the canvas background,
+    // which comes from the root element whenever the root has a background of
+    // its own - and global.css gives <html> the splash red so the page is red
+    // before the app mounts. That means body's colour never propagates to the
+    // canvas, so the root has to be updated too or the bar stays red.
+    document.documentElement.style.backgroundColor = themeColor;
     document.body.style.backgroundColor = themeColor;
   }, [themeColor]);
 
@@ -100,12 +109,20 @@ export default function Layout() {
   useEffect(() => {
     if (typeof document === "undefined") return;
 
-    const rootTitle = "SoliNova";
+    const rootTitle = "Solitarius";
     const pageTitle = isGamePath(pathname)
       ? `${localizeGameTitle(getGameInfo(pathname), pathname, displayLanguage)} ♠ ${rootTitle}`
       : rootTitle;
 
     document.title = pageTitle;
+  }, [displayLanguage, pathname]);
+
+  // Breadcrumbs say which screen an event came from, and the tag lets Sentry
+  // group issues by game.
+  useEffect(() => {
+    const game = isGamePath(pathname) ? pathname : undefined;
+    setCrashContext({ game, language: displayLanguage });
+    addGameBreadcrumb(`screen ${pathname}`);
   }, [displayLanguage, pathname]);
 
   useEffect(() => {
@@ -167,3 +184,6 @@ export default function Layout() {
     </GestureHandlerRootView>
   );
 }
+
+// Catches native crashes and errors React itself can't hand to a boundary.
+export default withCrashReporting(Layout);

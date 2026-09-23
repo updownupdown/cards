@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const queensAudience: GameDefinition = {
@@ -15,8 +16,8 @@ export const queensAudience: GameDefinition = {
   background: GAME_BACKGROUNDS.oldRoom,
   animation: GameAnimations.Dust,
   gameColorDark: "#24162b",
-  gameColorMid: "#9c4f8e",
   gameColorPale: "#f7e0f1",
+  cardBack: CardBackColors.Plum,
   cardDescription:
     "Usher royal couples into the audience chamber, and let each Jack lead its suit down.",
   quickStart: [

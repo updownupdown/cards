@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 
 export const pokerSquares: GameDefinition = {
   path: "/poker-squares",
@@ -17,8 +18,8 @@ export const pokerSquares: GameDefinition = {
   thumbnail: "PokerSquares.webp",
   background: GAME_BACKGROUNDS.casino,
   gameColorDark: "#112c1f",
-  gameColorMid: "#266e1d",
   gameColorPale: "#fff4ce",
+  cardBack: CardBackColors.Moss,
   cardDescription:
     "Build ten poker hands within a grid to achieve the highest score possible.",
   quickStart: [

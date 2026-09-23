@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const moosehide: GameDefinition = {
@@ -11,8 +12,8 @@ export const moosehide: GameDefinition = {
   background: GAME_BACKGROUNDS.yukon,
   animation: GameAnimations.Snow,
   gameColorDark: "#29362e",
-  gameColorMid: "#63502e",
   gameColorPale: "#e2dfca",
+  cardBack: CardBackColors.Walnut,
   cardDescription:
     "A Yukon relative that descends on every suit except its own.",
   quickStart: [

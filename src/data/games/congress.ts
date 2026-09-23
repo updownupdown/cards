@@ -1,4 +1,5 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 export const congress: GameDefinition = {
   path: "/congress",
@@ -8,8 +9,8 @@ export const congress: GameDefinition = {
   thumbnail: "Congress.webp",
   background: GAME_BACKGROUNDS.city3,
   gameColorDark: "#292f38",
-  gameColorMid: "#776940",
   gameColorPale: "#e9dfca",
+  cardBack: CardBackColors.Bronze,
   cardDescription:
     "Guide two decks through eight columns with one-card moves and a single stock pass.",
   quickStart: [

@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const accordion: GameDefinition = {
@@ -15,8 +16,8 @@ export const accordion: GameDefinition = {
   background: GAME_BACKGROUNDS.fallLeaves,
   animation: GameAnimations.Leaves,
   gameColorDark: "#351219",
-  gameColorMid: "#a3381d",
   gameColorPale: "#fffccf",
+  cardBack: CardBackColors.Terracotta,
   cardDescription:
     "Collapse the whole deck into a single pile, matching adjacent suits or ranks one at a time.",
   quickStart: [

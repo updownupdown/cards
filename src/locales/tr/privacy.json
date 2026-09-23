@@ -4,23 +4,23 @@
   "translationNote": "Bu çeviri kolaylık olsun diye sunulmuştur. Politikanın İngilizce sürümüyle farklılık olursa İngilizce sürüm geçerlidir.",
   "summary": {
     "title": "Özet",
-    "body": "SoliNova hiçbir kişisel bilgi toplamaz, saklamaz veya paylaşmaz. Uygulamada hesap sistemi, analiz, reklam veya sunucu altyapısı yoktur. Uygulamada yaptığın her şey cihazında kalır."
+    "body": "Solitarius hiçbir kişisel bilgiyi toplamaz, saklamaz veya paylaşmaz. Uygulamada hesap sistemi, analiz aracı, reklam ve sunucu yoktur. Cihazından çıkan tek şey, bir sorun olduğunda gönderilen ve kapatabileceğin anonim bir hata raporudur."
   },
   "stored": {
     "title": "Cihazında saklanan veriler",
-    "body": "SoliNova oyun istatistiklerini, favorilerini, ayarlarını ve devam eden oyunlarını cihazın yerel depolama alanına kaydeder. Bu bilgiler cihazından asla çıkmaz, bize veya herhangi bir üçüncü tarafa asla gönderilmez ve uygulamayı kaldırdığında ya da verilerini temizlediğinde otomatik olarak silinir."
+    "body": "Solitarius oyun istatistiklerini, favorilerini, ayarlarını ve devam eden oyunlarını cihazın yerel depolama alanına kaydeder. Bu bilgiler cihazından asla çıkmaz, bize veya herhangi bir üçüncü tarafa asla gönderilmez ve uygulamayı kaldırdığında ya da verilerini temizlediğinde otomatik olarak silinir."
   },
   "collected": {
     "title": "Topladığımız veriler",
-    "body": "Hiçbiri. SoliNova analiz, hata raporlama veya reklam hizmetleri kullanmaz; adını, e-posta adresini, konumunu veya başka herhangi bir kişisel bilgini istemez ve saklamaz."
+    "body": "Yalnızca hata tanılaması. Uygulama bir hatayla karşılaştığında veya çöktüğünde, sorunun bulunup düzeltilebilmesi için Sentry adlı hata izleme hizmetine bir rapor gönderir. Rapor; hatayı ve koddaki kaynağını, cihazının modelini, işletim sistemi sürümünü ve uygulama sürümünü, ayrıca hemen öncesinde olanların kısa bir listesini (örneğin hangi oyunun açık olduğunu) içerir. Ad, e-posta adresi, konum veya başka bir kişisel bilgi içermez ve IP adresleri saklanmaz. Ayarlardan “Hata raporları gönder” seçeneğini kapatmak bunu tamamen durdurur."
   },
   "links": {
     "title": "Dış bağlantılar",
-    "body": "Az sayıda ekran, dış web sitelerine isteğe bağlı bağlantılar içerir (örneğin fotoğraf kaynak bilgileri). Bunlardan birine dokunmak cihazının web tarayıcısını veya bağlantı verilen siteyi doğrudan açar. SoliNova'nın bu dış sitelerin gizlilik uygulamaları üzerinde hiçbir denetimi yoktur ve bunlardan sorumlu değildir."
+    "body": "Az sayıda ekran, dış web sitelerine isteğe bağlı bağlantılar içerir (örneğin fotoğraf kaynak bilgileri). Bunlardan birine dokunmak cihazının web tarayıcısını veya bağlantı verilen siteyi doğrudan açar. Solitarius'nın bu dış sitelerin gizlilik uygulamaları üzerinde hiçbir denetimi yoktur ve bunlardan sorumlu değildir."
   },
   "children": {
     "title": "Çocukların gizliliği",
-    "body": "SoliNova hiçbir kullanıcıdan bilgi toplamadığı için, çocuklar dahil hiç kimseden bilerek bilgi toplamaz."
+    "body": "Solitarius, çocuklar dahil hiç kimseden bilerek bilgi toplamaz. Uygulamada hesap sistemi yoktur ve kişisel bilgi istenmez; yukarıda anlatılan hata tanılaması da kimseyi tanımlamaz."
   },
   "changes": {
     "title": "Bu politikadaki değişiklikler",

@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const fortyThieves: GameDefinition = {
@@ -15,8 +16,8 @@ export const fortyThieves: GameDefinition = {
   background: GAME_BACKGROUNDS.abandonedSand,
   animation: GameAnimations.Birds,
   gameColorDark: "#2E2D34",
-  gameColorMid: "#705aaf",
   gameColorPale: "#EFE8FF",
+  cardBack: CardBackColors.Violet,
   cardDescription: "A demanding two-deck foundation building patience.",
   quickStart: [
     "Build all 8 foundations up by suit from A to K.",

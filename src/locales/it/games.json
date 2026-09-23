@@ -45,6 +45,7 @@
     "allFourSuitsAreComplete": "Tutti e quattro i semi sono completi!"
   },
   "beehive": {
+    "beehive": "Alveare",
     "honeycombComplete": "L'alveare è completo!",
     "noFurtherMovesPossible": "Non sono possibili altre mosse."
   },
@@ -618,5 +619,12 @@
   },
   "pussInTheCorner": {
     "allFourCornersFilled": "Tutti e quattro gli angoli sono pieni!"
+  },
+  "devilsGrip": {
+    "everyCardIsInTheGrid": "Tutte le carte sono nella griglia.",
+    "cardsRemain": "Restano {{count}} carte.",
+    "cardsRemainGood": "Restano {{count}} carte. Bene!",
+    "cardsRemainExcellent": "Restano {{count}} carte. Ottimo!",
+    "cardsRemainBrilliant": "Restano {{count}} carte. Eccezionale!"
   }
 }

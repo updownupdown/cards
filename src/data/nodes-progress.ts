@@ -37,6 +37,13 @@ export type NodesProgress = {
   collectedTaoIds: number[];
   collectedQuoteIds: number[];
   lastResultSessionIds: Record<string, string>;
+  /** Unused "skip this game and mark it won" tokens, granted by the rare
+   * travelling UFO on the nodes map. */
+  mercySkipCount: number;
+  /** Total collectibles owned when a mercy skip was last granted, or null if
+   * one has never been granted. Gates the UFO from reappearing until the
+   * player has collected several more since. */
+  mercySkipCollectibleCheckpoint: number | null;
 };
 
 export type NodesWinResult = {
@@ -46,6 +53,12 @@ export type NodesWinResult = {
   duplicate: boolean;
 };
 
+export type NodesMercySkipResult = {
+  progress: NodesProgress;
+  newlyUnlockedPaths: string[];
+  applied: boolean;
+};
+
 export const DEFAULT_NODES_PROGRESS: NodesProgress = {
   version: NODES_PROGRESS_VERSION,
   lastPlayedPath: NODES_START_PATH,
@@ -53,6 +66,8 @@ export const DEFAULT_NODES_PROGRESS: NodesProgress = {
   collectedTaoIds: [],
   collectedQuoteIds: [],
   lastResultSessionIds: {},
+  mercySkipCount: 0,
+  mercySkipCollectibleCheckpoint: null,
 };
 
 function createDefaultNodesProgress(): NodesProgress {
@@ -121,6 +136,17 @@ function normalizeNodesProgress(value: unknown): NodesProgress {
       candidate.lastResultSessionIds,
       (entry): entry is string => typeof entry === "string" && entry.length > 0,
     ),
+    mercySkipCount:
+      typeof candidate.mercySkipCount === "number" &&
+      Number.isInteger(candidate.mercySkipCount) &&
+      candidate.mercySkipCount >= 0
+        ? candidate.mercySkipCount
+        : 0,
+    mercySkipCollectibleCheckpoint:
+      typeof candidate.mercySkipCollectibleCheckpoint === "number" &&
+      Number.isInteger(candidate.mercySkipCollectibleCheckpoint)
+        ? candidate.mercySkipCollectibleCheckpoint
+        : null,
   };
 }
 
@@ -220,6 +246,57 @@ export async function recordNodesWin(
     );
 
     return { progress, awardedReward, newlyUnlockedPaths, duplicate: false };
+  });
+}
+
+/**
+ * Marks a reachable, not-yet-won node as won using a mercy skip: unlocks its
+ * neighbours exactly like a real win, but never awards a collectible and
+ * never touches `lastResultSessionIds` (no play session took place).
+ */
+export async function spendMercySkip(
+  path: string,
+): Promise<NodesMercySkipResult> {
+  const node = getNodeDefinition(path);
+  if (!node) {
+    const progress = await loadNodesProgress();
+    return { progress, newlyUnlockedPaths: [], applied: false };
+  }
+
+  return mutateNodesProgress((progress): NodesMercySkipResult => {
+    if (progress.mercySkipCount <= 0 || progress.winsByPath[path]) {
+      return { progress, newlyUnlockedPaths: [], applied: false };
+    }
+
+    const wonPaths = new Set(Object.keys(progress.winsByPath));
+    if (!getUnlockedNodePaths(wonPaths).has(path)) {
+      return { progress, newlyUnlockedPaths: [], applied: false };
+    }
+
+    const unlockedPathsBeforeSkip = getUnlockedNodePaths(wonPaths);
+    progress.winsByPath[path] = 1;
+    progress.lastPlayedPath = path;
+    progress.mercySkipCount -= 1;
+
+    const unlockedPathsAfterSkip = getUnlockedNodePaths(
+      new Set(Object.keys(progress.winsByPath)),
+    );
+    const newlyUnlockedPaths = [...unlockedPathsAfterSkip].filter(
+      (unlockedPath) => !unlockedPathsBeforeSkip.has(unlockedPath),
+    );
+
+    return { progress, newlyUnlockedPaths, applied: true };
+  });
+}
+
+/** Grants one mercy skip and records the collectible count at grant time, so
+ * the UFO knows not to reappear until several more collectibles are owned. */
+export async function grantMercySkip() {
+  return mutateNodesProgress((progress) => {
+    progress.mercySkipCount += 1;
+    progress.mercySkipCollectibleCheckpoint =
+      progress.collectedTaoIds.length + progress.collectedQuoteIds.length;
+    return progress;
   });
 }
 

@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const royalRest: GameDefinition = {
@@ -15,8 +16,8 @@ export const royalRest: GameDefinition = {
     luck: 55,
   },
   gameColorDark: "#332518",
-  gameColorMid: "#466c81",
   gameColorPale: "#def7ff",
+  cardBack: CardBackColors.Ocean,
   cardDescription:
     "Collapse matching rank cards into pillows, and tuck in all the Jacks to bed.",
   quickStart: [

@@ -22,6 +22,11 @@
     "title": "How to Play",
     "unavailable": "Instructions are not available for this game."
   },
+  "mercySkip": {
+    "title": "Use Mercy Skip ({{count}} left)",
+    "grantedTitle": "A Mercy Skip!",
+    "grantedBody": "Find it in any game's menu, opened from the nodes map."
+  },
   "settings": {
     "title": "Settings",
     "none": "No game settings",

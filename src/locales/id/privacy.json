@@ -4,23 +4,23 @@
   "translationNote": "Terjemahan ini disediakan untuk kemudahan. Jika berbeda dengan versi bahasa Inggris kebijakan ini, versi bahasa Inggris yang berlaku.",
   "summary": {
     "title": "Ringkasan",
-    "body": "SoliNova tidak mengumpulkan, menyimpan, atau membagikan informasi pribadi apa pun. Aplikasi ini tidak memiliki sistem akun, analitik, iklan, maupun server. Semua yang kamu lakukan di aplikasi tetap berada di perangkatmu."
+    "body": "Solitarius tidak mengumpulkan, menyimpan, atau membagikan informasi pribadi apa pun. Aplikasi ini tidak memiliki sistem akun, analitik, iklan, maupun server. Satu-satunya hal yang keluar dari perangkatmu adalah laporan kerusakan anonim, yang dikirim saat terjadi masalah, dan bisa kamu matikan."
   },
   "stored": {
     "title": "Data yang disimpan di perangkatmu",
-    "body": "SoliNova menyimpan statistik permainan, favorit, pengaturan, dan permainan yang sedang berjalan di penyimpanan lokal perangkat. Informasi ini tidak pernah meninggalkan perangkatmu, tidak pernah dikirim kepada kami atau pihak ketiga mana pun, dan terhapus otomatis jika kamu mencopot aplikasi atau menghapus datanya."
+    "body": "Solitarius menyimpan statistik permainan, favorit, pengaturan, dan permainan yang sedang berjalan di penyimpanan lokal perangkat. Informasi ini tidak pernah meninggalkan perangkatmu, tidak pernah dikirim kepada kami atau pihak ketiga mana pun, dan terhapus otomatis jika kamu mencopot aplikasi atau menghapus datanya."
   },
   "collected": {
     "title": "Data yang kami kumpulkan",
-    "body": "Tidak ada. SoliNova tidak memakai layanan analitik, pelaporan error, atau iklan, dan tidak meminta atau menyimpan nama, alamat email, lokasi, maupun informasi pribadi lainnya."
+    "body": "Hanya diagnostik kerusakan. Saat aplikasi mengalami error atau berhenti, aplikasi mengirim laporan ke Sentry, layanan pemantauan error, agar masalahnya bisa ditemukan dan diperbaiki. Laporan berisi error dan bagian kode asalnya, model perangkatmu, versi sistem operasi dan versi aplikasi, serta catatan singkat tentang apa yang terjadi sebelumnya, misalnya permainan yang sedang dibuka. Laporan tidak berisi nama, alamat email, lokasi, atau informasi pribadi lainnya, dan alamat IP tidak disimpan. Mematikan “Kirim laporan kerusakan” di pengaturan menghentikannya sepenuhnya."
   },
   "links": {
     "title": "Tautan eksternal",
-    "body": "Beberapa layar berisi tautan opsional ke situs web eksternal (misalnya kredit foto). Mengetuk salah satunya akan langsung membuka browser perangkatmu atau situs yang dituju. SoliNova tidak memiliki kendali atas, dan tidak bertanggung jawab atas, praktik privasi situs-situs tersebut."
+    "body": "Beberapa layar berisi tautan opsional ke situs web eksternal (misalnya kredit foto). Mengetuk salah satunya akan langsung membuka browser perangkatmu atau situs yang dituju. Solitarius tidak memiliki kendali atas, dan tidak bertanggung jawab atas, praktik privasi situs-situs tersebut."
   },
   "children": {
     "title": "Privasi anak-anak",
-    "body": "SoliNova tidak dengan sengaja mengumpulkan informasi dari siapa pun, termasuk anak-anak, karena aplikasi ini tidak mengumpulkan informasi dari pengguna mana pun."
+    "body": "Solitarius tidak dengan sengaja mengumpulkan informasi dari siapa pun, termasuk anak-anak. Aplikasi ini tidak memiliki sistem akun dan tidak meminta data pribadi, dan diagnostik kerusakan yang dijelaskan di atas tidak mengidentifikasi siapa pun."
   },
   "changes": {
     "title": "Perubahan kebijakan ini",

@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const laBelleLucie: GameDefinition = {
@@ -12,8 +13,8 @@ export const laBelleLucie: GameDefinition = {
   background: GAME_BACKGROUNDS.sunsetOldCity,
   animation: GameAnimations.CherryBlossom,
   gameColorDark: "#28352d",
-  gameColorMid: "#af5a5a",
   gameColorPale: "#f5dce4",
+  cardBack: CardBackColors.Rose,
   cardDescription:
     "Uncover a compact field of fans, with two reshuffles to loosen the knots.",
   quickStart: [

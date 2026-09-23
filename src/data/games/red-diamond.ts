@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const redDiamond: GameDefinition = {
@@ -15,8 +16,8 @@ export const redDiamond: GameDefinition = {
   animation: GameAnimations.ManaDust,
   thumbnail: "RedDiamond.webp",
   gameColorDark: "#220a12",
-  gameColorMid: "#a8222b",
   gameColorPale: "#ffeaea",
+  cardBack: CardBackColors.Crimson,
   cardDescription:
     "Place every Club and Spade around four Diamonds using arithmetic matches.",
   quickStart: [

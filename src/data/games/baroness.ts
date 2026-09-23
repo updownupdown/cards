@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const baroness: GameDefinition = {
@@ -15,8 +16,8 @@ export const baroness: GameDefinition = {
   background: GAME_BACKGROUNDS.cozyRoom2,
   animation: GameAnimations.Dust,
   gameColorDark: "#3a1620",
-  gameColorMid: "#a83e5a",
   gameColorPale: "#f3d6dd",
+  cardBack: CardBackColors.Rose,
   cardDescription:
     "Clear five piles by discarding cards that add up to thirteen.",
   quickStart: [

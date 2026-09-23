@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 
 export const fightClubs: GameDefinition = {
   path: "/fight-clubs",
@@ -13,8 +14,8 @@ export const fightClubs: GameDefinition = {
   thumbnail: "FightClubs.webp",
   background: GAME_BACKGROUNDS.club,
   gameColorDark: "#221b20",
-  gameColorMid: "#523277",
   gameColorPale: "#d6fbff",
+  cardBack: CardBackColors.Indigo,
   cardDescription:
     "Use your thirteen Clubs wisely to clear a shifting 3x3 grid.",
   quickStart: [

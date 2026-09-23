@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const gargantua: GameDefinition = {
@@ -12,8 +13,8 @@ export const gargantua: GameDefinition = {
   background: GAME_BACKGROUNDS.frozenMountain,
   animation: GameAnimations.Clouds,
   gameColorDark: "#24323a",
-  gameColorMid: "#578386",
   gameColorPale: "#dce5df",
+  cardBack: CardBackColors.Teal,
   cardDescription:
     "Climb a nine-column, two-deck Klondike with eight foundations.",
   quickStart: [

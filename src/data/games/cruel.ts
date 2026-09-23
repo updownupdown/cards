@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const cruel: GameDefinition = {
@@ -15,8 +16,8 @@ export const cruel: GameDefinition = {
   background: GAME_BACKGROUNDS.darkAlley,
   animation: GameAnimations.Embers,
   gameColorDark: "#2c1919",
-  gameColorMid: "#8f3d3d",
   gameColorPale: "#f7e0da",
+  cardBack: CardBackColors.Burgundy,
   cardDescription:
     "Twelve open piles, no stock, and a redeal that reshapes everything you built.",
   quickStart: [

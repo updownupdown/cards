@@ -6,9 +6,9 @@ import {
   type TextSize,
   type TextWeight,
 } from "@/components/common/Text";
-import { GameUserStats } from "@/components/Home/GameUserStats";
 import { getGameSettings, type GameSettingsMap } from "@/data/game-menu";
 import type { GameRating, HexColor } from "@/data/games-data";
+import { CARD_BACK_INKS } from "@/data/card-backs";
 import { GAMES_DATA } from "@/data/games-registry";
 import type { NodeDefinition, NodeVisualState } from "@/data/nodes-map";
 import { setLastPlayedNode } from "@/data/nodes-progress";
@@ -42,6 +42,7 @@ function AnimatedPanelText({
   size,
   weight,
   textTransform,
+  numberOfLines,
   progress,
   fromColor,
   toColor,
@@ -50,6 +51,7 @@ function AnimatedPanelText({
   size: TextSize;
   weight: TextWeight;
   textTransform?: "uppercase";
+  numberOfLines?: number;
   progress: SharedValue<number>;
   fromColor: ReadonlyColorSharedValue;
   toColor: ReadonlyColorSharedValue;
@@ -67,6 +69,7 @@ function AnimatedPanelText({
 
   return (
     <Animated.Text
+      numberOfLines={numberOfLines}
       style={[
         {
           fontSize,
@@ -140,6 +143,7 @@ function AnimatedRatingBar({
         size="xxs"
         weight={400}
         textTransform="uppercase"
+        numberOfLines={1}
         progress={progress}
         fromColor={fromLabelColor}
         toColor={toLabelColor}
@@ -186,7 +190,6 @@ export function NodeDetailsPanel({
   const title = localizeGameTitle(game, node.path, useDisplayLanguage());
   const { t } = useTranslation("nodes");
   const { t: tCommon } = useTranslation("common");
-  const stats = getGameSettings(settingsMap, node.path).stats;
   const locked = state === "locked";
   const previousGameRef = useRef(game);
   const progress = useSharedValue(1);
@@ -344,57 +347,44 @@ export function NodeDetailsPanel({
           </Animated.View>
         </View>
 
-        <View
-          style={{
-            width: "100%",
-            gap: spacing(12),
-            flexDirection: "row",
-          }}
-        >
-          {ratingBars.map((bar) => (
-            <AnimatedRatingBar
-              key={bar.label}
-              label={bar.label}
-              progress={progress}
-              fromValue={bar.fromValue}
-              toValue={bar.toValue}
-              fromColor={fromPale}
-              toColor={toPale}
-              fromLabelColor={fromLabel}
-              toLabelColor={toLabel}
-              fromTrackColor={fromPaleTrack}
-              toTrackColor={toPaleTrack}
-              trackHeight={spacing(8)}
-            />
-          ))}
-        </View>
-
         <Animated.View
           style={[
             flexStyles.rowCentered,
-            { gap: spacing(20) },
+            { width: "100%", gap: spacing(16) },
             foregroundFadeStyle,
           ]}
         >
-          <GameUserStats
-            stats={stats}
-            accentColor={game.gameColorPale}
-            labelColor={rgba(game.gameColorPale, 0.6)}
-            colorProgress={progress}
-            fromLabelColor={fromLabel}
-            toLabelColor={toLabel}
-            fromValueColor={fromPale}
-            toValueColor={toPale}
-            style={{ width: undefined, flex: 1 }}
-            showPlayed={false}
-          />
+          <View
+            style={{
+              flex: 1,
+              gap: spacing(10),
+              flexDirection: "row",
+            }}
+          >
+            {ratingBars.map((bar) => (
+              <AnimatedRatingBar
+                key={bar.label}
+                label={bar.label}
+                progress={progress}
+                fromValue={bar.fromValue}
+                toValue={bar.toValue}
+                fromColor={fromPale}
+                toColor={toPale}
+                fromLabelColor={fromLabel}
+                toLabelColor={toLabel}
+                fromTrackColor={fromPaleTrack}
+                toTrackColor={toPaleTrack}
+                trackHeight={spacing(8)}
+              />
+            ))}
+          </View>
 
           <Button
             text={locked ? undefined : tCommon("play")}
             iconName={locked ? "lock" : undefined}
             accessibilityLabel={locked ? t("details.locked") : tCommon("play")}
             size="md"
-            theme={game.gameColorMid}
+            theme={CARD_BACK_INKS[game.cardBack]}
             iconColor={game.gameColorPale}
             disabled={locked}
             onPress={() => {

@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const thumbAndPouch: GameDefinition = {
@@ -10,8 +11,8 @@ export const thumbAndPouch: GameDefinition = {
   background: GAME_BACKGROUNDS.cozyCabin,
   animation: GameAnimations.Dust,
   gameColorDark: "#3b3028",
-  gameColorMid: "#884130",
   gameColorPale: "#ead9b8",
+  cardBack: CardBackColors.Terracotta,
   thumbnail: "ThumbAndPouch.webp",
   cardDescription:
     "A flexible Klondike where cards avoid their own suit and any card fills a gap.",

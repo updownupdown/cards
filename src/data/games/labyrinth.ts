@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const labyrinth: GameDefinition = {
@@ -15,8 +16,8 @@ export const labyrinth: GameDefinition = {
   background: GAME_BACKGROUNDS.stoneTunnel,
   animation: GameAnimations.ManaDust,
   gameColorDark: "#1c1f26",
-  gameColorMid: "#5b6b8c",
   gameColorPale: "#dde4f2",
+  cardBack: CardBackColors.Slate,
   cardDescription:
     "Deal row after row, and work cards free from the top and bottom of the maze.",
   quickStart: [

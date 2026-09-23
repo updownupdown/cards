@@ -289,6 +289,26 @@
       }
     }
   },
+  "jailbreak": {
+    "jailbreakDifficulty": {
+      "hash": "73216ddb",
+      "value": {
+        "description": "Controla cuántas cartas se reparten en cada esquina.",
+        "label": "Dificultad",
+        "options": [
+          {
+            "label": "Fácil (4 por esquina)"
+          },
+          {
+            "label": "Normal (2 por esquina)"
+          },
+          {
+            "label": "Difícil (esquinas vacías)"
+          }
+        ]
+      }
+    }
+  },
   "klondike": {
     "drawCount": {
       "hash": "ecd6b2f3",
@@ -377,9 +397,9 @@
   },
   "pocket-poker": {
     "pokerDifficulty": {
-      "hash": "00000000",
+      "hash": "505d7998",
       "value": {
-        "description": "Todos los modos permiten 2 robos y hacen que retirarse cueste 1 punto. Difícil empieza con 3 puntos y concede los empates al rival. Experto también da una carta extra al rival.",
+        "description": "El modo Difícil empieza con 3 puntos (en vez de 5) y concede los empates al rival. Experto también da una carta extra al rival.",
         "label": "Dificultad",
         "options": [
           {

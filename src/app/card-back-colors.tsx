@@ -1,5 +1,10 @@
 import { getCardBackImage } from "@/components/Cards/CardAssets";
 import { Text } from "@/components/common/Text";
+import {
+  ALL_CARD_BACK_COLORS,
+  CARD_BACK_INKS,
+  type CardBackColor,
+} from "@/data/card-backs";
 import { GAME_DEFINITIONS } from "@/data/games-registry";
 import { Colors } from "@/styles/styles";
 import { Image } from "expo-image";
@@ -9,37 +14,49 @@ import { SafeAreaView } from "react-native-safe-area-context";
 const CARD_WIDTH = 96;
 const CARD_HEIGHT = 134;
 
+/**
+ * Dev preview of the shared card backs: one tile per ink, with the games
+ * printed in it. Card backs are no longer per game, so this is the screen to
+ * check after editing CardBack.svg or the ink list and re-running
+ * `npm run card-backs:generate`.
+ */
 export default function CardBackColorsScreen() {
-  const games = [...GAME_DEFINITIONS].sort((first, second) =>
-    first.title.localeCompare(second.title),
+  const gamesByInk = new Map<CardBackColor, string[]>(
+    ALL_CARD_BACK_COLORS.map((color) => [color, []]),
   );
+  for (const game of GAME_DEFINITIONS) {
+    gamesByInk.get(game.cardBack)?.push(game.title);
+  }
 
   return (
     <SafeAreaView style={styles.screen} edges={["top"]}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.grid}>
-          {games.map((game) => (
-            <View
-              key={game.path}
-              style={[styles.item, { backgroundColor: game.gameColorDark }]}
-            >
-              <View style={styles.card}>
-                <Image
-                  source={getCardBackImage(game.path)}
-                  contentFit="fill"
-                  style={styles.image}
-                />
+          {ALL_CARD_BACK_COLORS.map((color) => {
+            const titles = (gamesByInk.get(color) ?? []).sort((a, b) =>
+              a.localeCompare(b),
+            );
+            return (
+              <View key={color} style={styles.item}>
+                <View style={styles.card}>
+                  <Image
+                    source={getCardBackImage(color.toLowerCase())}
+                    contentFit="fill"
+                    style={styles.image}
+                  />
+                </View>
+                <Text size="sm" weight="semibold" color={Colors.white}>
+                  {color}
+                </Text>
+                <Text size="xs" color={Colors.K300} style={styles.color}>
+                  {CARD_BACK_INKS[color]} · {titles.length}
+                </Text>
+                <Text size="xs" color={Colors.K400}>
+                  {titles.join(", ")}
+                </Text>
               </View>
-              <Text
-                size="sm"
-                weight="semibold"
-                color={game.gameColorPale}
-                style={styles.title}
-              >
-                {game.title}
-              </Text>
-            </View>
-          ))}
+            );
+          })}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -64,10 +81,11 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   item: {
-    width: CARD_WIDTH + 20,
+    width: CARD_WIDTH + 80,
     padding: 10,
     gap: 4,
     borderRadius: 8,
+    backgroundColor: Colors.K900,
   },
   card: {
     width: CARD_WIDTH,
@@ -78,9 +96,6 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: "100%",
-  },
-  title: {
-    marginTop: 4,
   },
   color: {
     fontFamily: "monospace",

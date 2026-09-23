@@ -22,6 +22,11 @@
     "title": "Comment jouer",
     "unavailable": "Les instructions ne sont pas disponibles pour ce jeu."
   },
+  "mercySkip": {
+    "title": "Utiliser un passe-droit ({{count}} restants)",
+    "grantedTitle": "Un passe-droit !",
+    "grantedBody": "Retrouvez-le dans le menu de n'importe quelle partie, ouvert depuis la carte des nœuds."
+  },
   "settings": {
     "title": "Réglages",
     "none": "Aucun réglage pour ce jeu",

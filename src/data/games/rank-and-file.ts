@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const rankAndFile: GameDefinition = {
@@ -12,8 +13,8 @@ export const rankAndFile: GameDefinition = {
   background: GAME_BACKGROUNDS.city,
   animation: GameAnimations.Clouds,
   gameColorDark: "#26343b",
-  gameColorMid: "#5aaf8f",
   gameColorPale: "#dfe2d4",
+  cardBack: CardBackColors.Forest,
   cardDescription:
     "Reveal ten disciplined columns and maneuver alternating-color formations.",
   quickStart: [

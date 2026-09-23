@@ -37,7 +37,7 @@ jobs:
         run: npx expo export -p web
 
       - name: Set Pages custom domain
-        run: echo "solinova.site" > dist/CNAME
+        run: echo "solitarius.site" > dist/CNAME
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5

@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const pussInTheCorner: GameDefinition = {
@@ -15,8 +16,8 @@ export const pussInTheCorner: GameDefinition = {
   background: GAME_BACKGROUNDS.greenhouse,
   animation: GameAnimations.Pollen,
   gameColorDark: "#2e2418",
-  gameColorMid: "#b8843c",
   gameColorPale: "#fbeccd",
+  cardBack: CardBackColors.Walnut,
   cardDescription:
     "Steer the stock into four corner piles, building by color with one redeal.",
   quickStart: [

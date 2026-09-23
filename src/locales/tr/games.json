@@ -45,6 +45,7 @@
     "allFourSuitsAreComplete": "Dört takım da tamamlandı!"
   },
   "beehive": {
+    "beehive": "Kovan",
     "honeycombComplete": "Petek tamamlandı!",
     "noFurtherMovesPossible": "Başka hamle yapılamaz."
   },
@@ -618,5 +619,12 @@
   },
   "pussInTheCorner": {
     "allFourCornersFilled": "Dört köşe de doldu!"
+  },
+  "devilsGrip": {
+    "everyCardIsInTheGrid": "Bütün kartlar ızgarada.",
+    "cardsRemain": "{{count}} kart kaldı.",
+    "cardsRemainGood": "{{count}} kart kaldı. İyi!",
+    "cardsRemainExcellent": "{{count}} kart kaldı. Çok iyi!",
+    "cardsRemainBrilliant": "{{count}} kart kaldı. Harika!"
   }
 }

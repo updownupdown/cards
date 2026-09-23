@@ -289,6 +289,26 @@
       }
     }
   },
+  "jailbreak": {
+    "jailbreakDifficulty": {
+      "hash": "73216ddb",
+      "value": {
+        "description": "Mengatur berapa banyak kartu yang dibagikan ke setiap sudut.",
+        "label": "Kesulitan",
+        "options": [
+          {
+            "label": "Mudah (4 per sudut)"
+          },
+          {
+            "label": "Normal (2 per sudut)"
+          },
+          {
+            "label": "Sulit (sudut kosong)"
+          }
+        ]
+      }
+    }
+  },
   "klondike": {
     "drawCount": {
       "hash": "ecd6b2f3",
@@ -377,9 +397,9 @@
   },
   "pocket-poker": {
     "pokerDifficulty": {
-      "hash": "00000000",
+      "hash": "505d7998",
       "value": {
-        "description": "Semua mode mengizinkan 2 kali ambil ulang dan menyerah menghabiskan 1 poin. Sulit dimulai dengan 3 poin dan lawan menang jika seri. Ahli juga memberi lawan satu kartu ekstra.",
+        "description": "Mode Sulit dimulai dengan 3 poin (bukan 5) dan memberikan seri kepada lawan. Ahli juga memberi lawan satu kartu ekstra.",
         "label": "Kesulitan",
         "options": [
           {

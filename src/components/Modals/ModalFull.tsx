@@ -11,7 +11,7 @@ import { Button } from "../Button/Button";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { IconName } from "@/icons/generated";
 import { Icon } from "@/icons";
-import SoliNovaLogo from "@/assets/images/SoliNovaLogo.svg";
+import SolitariusLogo from "@/assets/images/SolitariusLogo.svg";
 
 type Props = {
   children: React.ReactNode;
@@ -66,7 +66,7 @@ export default function ModalFull({
           >
             {/* Logo */}
             {showLogo && (
-              <SoliNovaLogo
+              <SolitariusLogo
                 width={120}
                 height={28}
                 style={{

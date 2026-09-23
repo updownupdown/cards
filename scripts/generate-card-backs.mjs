@@ -1,7 +1,15 @@
 #!/usr/bin/env node
 
-// Pre-renders the SVG card-back color filter into one WebP per game. Run:
+// Renders assets/cards/CardBack.svg once per card-back ink. Run:
 //   npm run card-backs:generate
+//
+// The SVG is a two-tone ornament: black linework on a white rect. Each ink
+// recolours the linework and the rect is replaced by the card stock, so one
+// drawing produces the whole set. Inks come from src/data/card-backs.ts, so
+// editing that list (or the SVG) and re-running is all it takes.
+//
+// Backs are shared across games, so this writes one file per ink rather than
+// one per game. Pass --dry-run to only report what would change.
 
 import fs from "fs/promises";
 import path from "path";
@@ -11,110 +19,94 @@ import sharp from "sharp";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, "..");
-const gamesDirectory = path.join(projectRoot, "src", "data", "games");
-const sourceImage = path.join(projectRoot, "assets", "cards", "CardBack.png");
+const sourceSvg = path.join(projectRoot, "assets", "cards", "CardBack.svg");
+const paletteFile = path.join(projectRoot, "src", "data", "card-backs.ts");
 const outputDirectory = path.join(projectRoot, "assets", "cards", "backs");
-const LUMINANCE = [0.2126, 0.7152, 0.0722];
-const DEFAULT_CARD_BACK = {
-  path: "/default",
-  title: "Default",
-  color: "#315a9b",
-};
 
-function srgbToLinear(channel) {
-  return channel <= 0.04045
-    ? channel / 12.92
-    : ((channel + 0.055) / 1.055) ** 2.4;
-}
+const WIDTH = 500;
+const HEIGHT = 700;
+const QUALITY = 88;
+const dryRun = process.argv.includes("--dry-run");
 
-function linearToSrgb(channel) {
-  return channel <= 0.0031308
-    ? channel * 12.92
-    : 1.055 * channel ** (1 / 2.4) - 0.055;
-}
+/** Reads CARD_BACK_INKS and CARD_BACK_STOCK out of the palette module. */
+async function readPalette() {
+  const source = await fs.readFile(paletteFile, "utf8");
 
-function parseGameDefinition(source, fileName) {
-  const pathMatch = source.match(/\bpath:\s*["']([^"']+)["']/);
-  const titleMatch = source.match(/\btitle:\s*["']([^"']+)["']/);
-  const colorMatch = source.match(/\bgameColorMid:\s*["'](#[0-9a-f]{6})["']/i);
+  const block = source.match(
+    /CARD_BACK_INKS:\s*Record<CardBackColor,\s*HexColor>\s*=\s*\{([\s\S]*?)\n\};/,
+  )?.[1];
+  if (!block) throw new Error(`Could not read CARD_BACK_INKS from ${paletteFile}`);
 
-  if (!pathMatch || !titleMatch || !colorMatch) {
-    throw new Error(`Could not read game metadata from ${fileName}.`);
-  }
-
-  return {
-    path: pathMatch[1],
-    title: titleMatch[1],
-    color: colorMatch[1],
-  };
-}
-
-function colorBackPixels(data, color) {
-  const targetRgb = [1, 3, 5].map((index) =>
-    srgbToLinear(parseInt(color.slice(index, index + 2), 16) / 255),
+  const inks = [...block.matchAll(/(\w+):\s*["'](#[0-9a-fA-F]{6})["']/g)].map(
+    (match) => ({ name: match[1], ink: match[2].toLowerCase() }),
   );
+  if (inks.length === 0) throw new Error("No inks found in CARD_BACK_INKS.");
 
-  for (let index = 0; index < data.length; index += 4) {
-    const sourceLuminance = LUMINANCE.reduce(
-      (total, weight, channel) =>
-        total + weight * srgbToLinear(data[index + channel] / 255),
-      0,
-    );
+  const stock =
+    source.match(/CARD_BACK_STOCK:\s*HexColor\s*=\s*["'](#[0-9a-fA-F]{6})["']/)?.[1] ??
+    "#ffffff";
 
-    for (let channel = 0; channel < 3; channel += 1) {
-      const tinted =
-        targetRgb[channel] + (1 - targetRgb[channel]) * sourceLuminance;
-      data[index + channel] = Math.round(
-        Math.min(1, Math.max(0, linearToSrgb(tinted))) * 255,
-      );
-    }
-  }
+  return { inks, stock: stock.toLowerCase() };
 }
 
-async function renderCardBack(game) {
-  const { data, info } = await sharp(sourceImage)
-    .ensureAlpha()
-    .raw()
-    .toBuffer({ resolveWithObject: true });
-  colorBackPixels(data, game.color);
-
-  const outputBaseName = game.path.slice(1);
-  const outputFile = path.join(outputDirectory, `${outputBaseName}.webp`);
-  await fs.rm(path.join(outputDirectory, `${outputBaseName}.png`), {
-    force: true,
-  });
-  await sharp(data, {
-    raw: {
-      width: info.width,
-      height: info.height,
-      channels: info.channels,
-    },
-  })
-    .webp()
-    .toFile(outputFile);
+/**
+ * The ornament is every black fill; the single white rect is the stock. Both
+ * are swapped textually, which keeps the vector crisp at any output size.
+ */
+function recolor(svg, ink, stock) {
+  return svg
+    .replaceAll('fill="white"', `fill="${stock}"`)
+    .replaceAll('fill="black"', `fill="${ink}"`);
 }
 
 async function main() {
-  const files = (await fs.readdir(gamesDirectory))
-    .filter((file) => file.endsWith(".ts"))
-    .sort((first, second) => first.localeCompare(second));
-  const games = await Promise.all(
-    files.map(async (fileName) =>
-      parseGameDefinition(
-        await fs.readFile(path.join(gamesDirectory, fileName), "utf8"),
-        fileName,
-      ),
-    ),
-  );
+  const [svg, palette] = await Promise.all([
+    fs.readFile(sourceSvg, "utf8"),
+    readPalette(),
+  ]);
+
+  if (!svg.includes('fill="black"') || !svg.includes('fill="white"')) {
+    throw new Error(
+      "CardBack.svg no longer uses plain black/white fills; update recolor().",
+    );
+  }
 
   await fs.mkdir(outputDirectory, { recursive: true });
-  await Promise.all([...games, DEFAULT_CARD_BACK].map(renderCardBack));
+
+  const expected = new Set();
+  for (const { name, ink } of palette.inks) {
+    const fileName = `${name.toLowerCase()}.webp`;
+    expected.add(fileName);
+    console.log(`${dryRun ? "[dry run] " : ""}${fileName.padEnd(16)} ${ink}`);
+    if (dryRun) continue;
+
+    const buffer = await sharp(
+      Buffer.from(recolor(svg, ink, palette.stock)),
+      { density: 300 },
+    )
+      .resize(WIDTH, HEIGHT, { fit: "fill" })
+      .webp({ quality: QUALITY })
+      .toBuffer();
+    await fs.writeFile(path.join(outputDirectory, fileName), buffer);
+  }
+
+  // Backs used to be generated per game; drop anything no longer in the list.
+  const existing = await fs.readdir(outputDirectory).catch(() => []);
+  const stale = existing.filter(
+    (file) => file.endsWith(".webp") && !expected.has(file),
+  );
+  for (const file of stale) {
+    console.log(`${dryRun ? "[dry run] " : ""}remove stale ${file}`);
+    if (!dryRun) await fs.unlink(path.join(outputDirectory, file));
+  }
+
   console.log(
-    `Generated ${games.length} game card backs in ${outputDirectory}.`,
+    `\n${dryRun ? "[dry run] " : ""}${palette.inks.length} card back(s), ` +
+      `${stale.length} stale file(s) removed.`,
   );
 }
 
 main().catch((error) => {
   console.error(error);
-  process.exitCode = 1;
+  process.exit(1);
 });

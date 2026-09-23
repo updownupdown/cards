@@ -944,4 +944,316 @@ Every cubic inch of space is a miracle.`,
     author: `Alan Watts`,
     source: `Out of Your Mind (2017)`,
   },
+
+  {
+    text: `Hatred is never appeased by hatred in this world. By non-hatred alone is hatred appeased. This is a law eternal.`,
+    author: `Dhammapada`,
+    source: `Verse 5, Yamaka Vagga`,
+  },
+
+  {
+    text: `Irrigators channel waters; fletchers straighten arrows; carpenters bend wood; the wise master themselves.`,
+    author: `Dhammapada`,
+    source: `Verse 80, Pandita Vagga`,
+  },
+
+  {
+    text: `Better than a thousand useless words is one useful word, hearing which one attains peace.`,
+    author: `Dhammapada`,
+    source: `Verse 100, Sahassa Vagga`,
+  },
+
+  {
+    text: `Though one may conquer a thousand times a thousand men in battle, yet he indeed is the noblest victor who conquers himself.`,
+    author: `Dhammapada`,
+    source: `Verse 103, Sahassa Vagga`,
+  },
+
+  {
+    text: `To avoid all evil, to cultivate good, and to cleanse one's mind - this is the teaching of the Buddhas.`,
+    author: `Dhammapada`,
+    source: `Verse 183, Buddha Vagga`,
+  },
+
+  {
+    text: `Conquer anger by non-anger. Conquer evil by good. Conquer miserliness by liberality. Conquer a liar by truthfulness.`,
+    author: `Dhammapada`,
+    source: `Verse 223, Kodha Vagga`,
+  },
+
+  {
+    text: `You yourselves must strive; the Buddhas only point the way.`,
+    author: `Dhammapada`,
+    source: `Verse 276, Magga Vagga`,
+  },
+
+  {
+    text: `Compassion is one of the principal things that make our lives meaningful. It is the source of all lasting happiness and joy.`,
+    author: `Dalai Lama XIV`,
+    source: `Ethics for the New Millennium (1999)`,
+  },
+
+  {
+    text: `According to my experience, the principal characteristic of genuine happiness is peace: inner peace.`,
+    author: `Dalai Lama XIV`,
+    source: `Ethics for the New Millennium (1999)`,
+  },
+
+  {
+    text: `Through kindness, through affection, through honesty, through truth and justice toward all others we ensure our own benefit.`,
+    author: `Dalai Lama XIV`,
+    source: `Ethics for the New Millennium (1999)`,
+  },
+
+  {
+    text: `It is essential that we remain sensitive to others and, recognizing their equal right to happiness, do nothing that could contribute to their suffering.`,
+    author: `Dalai Lama XIV`,
+    source: `Ethics for the New Millennium (1999)`,
+  },
+
+  {
+    text: `When we truly experience one another's pain, we learn compassion, which is the basis of morality.`,
+    author: `Dalai Lama XIV`,
+    source: `Ethics for the New Millennium (1999)`,
+  },
+
+  {
+    text: `People usually consider walking on water or in thin air a miracle. But I think the real miracle is not to walk either on water or in thin air, but to walk on earth.`,
+    author: `Thich Nhat Hanh`,
+    source: `The Miracle of Mindfulness (1975)`,
+  },
+
+  {
+    text: `Breath is the bridge which connects life to consciousness, which unites your body to your thoughts.`,
+    author: `Thich Nhat Hanh`,
+    source: `The Miracle of Mindfulness (1975)`,
+  },
+
+  {
+    text: `The most important person is always the person you are with, who is right before you.`,
+    author: `Thich Nhat Hanh`,
+    source: `The Miracle of Mindfulness (1975)`,
+  },
+
+  {
+    text: `Nothing should be treated more carefully than anything else.`,
+    author: `Thich Nhat Hanh`,
+    source: `The Miracle of Mindfulness (1975)`,
+  },
+
+  {
+    text: `In the beginner's mind there are many possibilities, but in the expert's there are few.`,
+    author: `Shunryu Suzuki`,
+    source: `Zen Mind, Beginner's Mind (1970)`,
+  },
+
+  {
+    text: `To give your sheep or cow a large, spacious meadow is the way to control him.`,
+    author: `Shunryu Suzuki`,
+    source: `Zen Mind, Beginner's Mind (1970)`,
+  },
+
+  {
+    text: `Zen is not some fancy, special art of living. Our teaching is just to live, always in reality, in its exact sense.`,
+    author: `Shunryu Suzuki`,
+    source: `Zen Mind, Beginner's Mind (1970)`,
+  },
+
+  {
+    text: `Waste no more time arguing about what a good man should be. Be one.`,
+    author: `Marcus Aurelius`,
+    source: `Meditations, Book X`,
+  },
+
+  {
+    text: `The best revenge is to be unlike him who performed the injury.`,
+    author: `Marcus Aurelius`,
+    source: `Meditations, Book VI`,
+  },
+
+  {
+    text: `Confine yourself to the present.`,
+    author: `Marcus Aurelius`,
+    source: `Meditations, Book VII`,
+  },
+
+  {
+    text: `Look well into thyself; there is a source of strength which will always spring up if thou wilt always look.`,
+    author: `Marcus Aurelius`,
+    source: `Meditations, Book VII`,
+  },
+
+  {
+    text: `Loss is nothing else but change, and change is Nature's delight.`,
+    author: `Marcus Aurelius`,
+    source: `Meditations, Book IX`,
+  },
+
+  {
+    text: `We suffer more often in imagination than in reality.`,
+    author: `Seneca`,
+    source: `Letters to Lucilius, Letter 13`,
+  },
+
+  {
+    text: `It is not that we have a short time to live, but that we waste a lot of it.`,
+    author: `Seneca`,
+    source: `On the Shortness of Life (c. 49)`,
+  },
+
+  {
+    text: `While we are postponing, life speeds by.`,
+    author: `Seneca`,
+    source: `Letters to Lucilius, Letter 1`,
+  },
+
+  {
+    text: `No man is more unhappy than he who never faces adversity, for he is not permitted to prove himself.`,
+    author: `Seneca`,
+    source: `On Providence (c. 64)`,
+  },
+
+  {
+    text: `Men are disturbed not by the things which happen, but by the opinions about the things.`,
+    author: `Epictetus`,
+    source: `Enchiridion, 5`,
+  },
+
+  {
+    text: `Seek not that the things which happen should happen as you wish; but wish the things which happen to be as they are, and you will have a tranquil flow of life.`,
+    author: `Epictetus`,
+    source: `Enchiridion, 8`,
+  },
+
+  {
+    text: `If you wish to be a writer, write.`,
+    author: `Epictetus`,
+    source: `Discourses, Book II`,
+  },
+
+  {
+    text: `You are a function of what the whole universe is doing in the same way that a wave is a function of what the whole ocean is doing.`,
+    author: `Alan Watts`,
+    source: `The Book: On the Taboo Against Knowing Who You Are (1966)`,
+  },
+
+  {
+    text: `We do not come into this world; we come out of it, as leaves from a tree.`,
+    author: `Alan Watts`,
+    source: `The Book: On the Taboo Against Knowing Who You Are (1966)`,
+  },
+
+  {
+    text: `The only way to make sense out of change is to plunge into it, move with it, and join the dance.`,
+    author: `Alan Watts`,
+    source: `The Wisdom of Insecurity (1951)`,
+  },
+
+  {
+    text: `Muddy water is best cleared by leaving it alone.`,
+    author: `Alan Watts`,
+    source: `The Wisdom of Insecurity (1951)`,
+  },
+
+  {
+    text: `If it disagrees with experiment, it's wrong. In that simple statement is the key to science.`,
+    author: `Richard Feynman`,
+    source: `The Character of Physical Law (1965)`,
+  },
+
+  {
+    text: `Nothing in life is to be feared, it is only to be understood. Now is the time to understand more, so that we may fear less.`,
+    author: `Marie Curie`,
+    source: `Lecture at Vassar College (1921)`,
+  },
+
+  {
+    text: `I think it's much more interesting to live not knowing than to have answers which might be wrong.`,
+    author: `Richard Feynman`,
+    source: `BBC Horizon interview (1981)`,
+  },
+
+  {
+    text: `We are trying to prove ourselves wrong as quickly as possible, because only in that way can we find progress.`,
+    author: `Richard Feynman`,
+    source: `The Character of Physical Law (1965)`,
+  },
+
+  {
+    text: `An expert is a person who has made all the mistakes that can be made in a very narrow field.`,
+    author: `Niels Bohr`,
+    source: `Attributed, quoted in Edward Teller's Conversations on the Dark Secrets of Physics (1991)`,
+  },
+
+  {
+    text: `I am not a thing - a noun. I seem to be a verb, an evolutionary process - an integral function of the universe.`,
+    author: `Buckminster Fuller`,
+    source: `I Seem To Be a Verb (1970)`,
+  },
+
+  {
+    text: `We are not going to be able to operate our Spaceship Earth successfully, nor for much longer, unless we see it as a whole spaceship and our fate as common.`,
+    author: `Buckminster Fuller`,
+    source: `Operating Manual for Spaceship Earth (1969)`,
+  },
+
+  {
+    text: `Our life is frittered away by detail. Simplify, simplify.`,
+    author: `Henry David Thoreau`,
+    source: `Walden (1854)`,
+  },
+
+  {
+    text: `It is not enough to be busy. So are the ants. The question is: What are we busy about?`,
+    author: `Henry David Thoreau`,
+    source: `Letter to H. G. O. Blake (1857)`,
+  },
+
+  {
+    text: `The fish trap exists because of the fish; once you've gotten the fish, you can forget the trap.`,
+    author: `Zhuangzi`,
+    source: `Zhuangzi, Chapter 26 (c. 3rd century BC)`,
+  },
+
+  {
+    text: `I do not know whether I was then a man dreaming I was a butterfly, or whether I am now a butterfly dreaming I am a man.`,
+    author: `Zhuangzi`,
+    source: `Zhuangzi, Chapter 2 (c. 3rd century BC)`,
+  },
+
+  {
+    text: `The greatest thing in the world is to know how to belong to oneself.`,
+    author: `Michel de Montaigne`,
+    source: `Essays, Of Solitude (1580)`,
+  },
+
+  {
+    text: `Nothing fixes a thing so intensely in the memory as the wish to forget it.`,
+    author: `Michel de Montaigne`,
+    source: `Essays (1580)`,
+  },
+
+  {
+    text: `We are a way for the cosmos to know itself.`,
+    author: `Carl Sagan`,
+    source: `Cosmos (1980)`,
+  },
+
+  {
+    text: `Extraordinary claims require extraordinary evidence.`,
+    author: `Carl Sagan`,
+    source: `Cosmos (1980)`,
+  },
+
+  {
+    text: `He who is not satisfied with a little, is satisfied with nothing.`,
+    author: `Epicurus`,
+    source: `Vatican Sayings, 68`,
+  },
+
+  {
+    text: `Of all the means which wisdom acquires to ensure happiness throughout the whole of life, by far the most important is friendship.`,
+    author: `Epicurus`,
+    source: `Principal Doctrines, 27`,
+  },
 ] as const satisfies readonly QuoteText[];

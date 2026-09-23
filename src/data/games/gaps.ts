@@ -1,4 +1,5 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const gaps: GameDefinition = {
@@ -10,8 +11,8 @@ export const gaps: GameDefinition = {
   thumbnail: "Gaps.webp",
   background: GAME_BACKGROUNDS.mountain1,
   gameColorDark: "#2c322f",
-  gameColorMid: "#ada356",
   gameColorPale: "#e7ddc2",
+  cardBack: CardBackColors.Bronze,
   cardDescription: "Arrange the rows in order by suit by filling the gaps.",
   quickStart: [
     "Arrange the rows in order (2 to K).",

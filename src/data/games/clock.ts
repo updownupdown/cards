@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 
 export const clock: GameDefinition = {
   path: "/clock",
@@ -13,8 +14,8 @@ export const clock: GameDefinition = {
   thumbnail: "Clock.webp",
   background: GAME_BACKGROUNDS.oldRoom,
   gameColorDark: "#1d1610",
-  gameColorMid: "#a1794e",
   gameColorPale: "#eed9c2",
+  cardBack: CardBackColors.Bronze,
   cardDescription:
     "A pure-luck patience: follow cards around the clock before all the Kings are uncovered.",
   quickStart: [

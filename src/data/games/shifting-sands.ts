@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const shiftingSands: GameDefinition = {
@@ -15,8 +16,8 @@ export const shiftingSands: GameDefinition = {
   animation: GameAnimations.Sand,
   thumbnail: "ShiftingSands.webp",
   gameColorDark: "#645641",
-  gameColorMid: "#a32f11",
   gameColorPale: "#f4d99b",
+  cardBack: CardBackColors.Terracotta,
   cardDescription:
     "Gather sand, build outward without changing direction, and make a castle strong enough to survive high tide.",
   quickStart: [

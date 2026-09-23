@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const seer: GameDefinition = {
@@ -15,8 +16,8 @@ export const seer: GameDefinition = {
   animation: GameAnimations.Stars,
   thumbnail: "Seer.webp",
   gameColorDark: "#1b2135",
-  gameColorMid: "#4f8ea3",
   gameColorPale: "#d2d3c0",
+  cardBack: CardBackColors.Teal,
   cardDescription:
     "Read a short deck, complete eight predictions, and keep stones from blocking the board.",
   quickStart: [

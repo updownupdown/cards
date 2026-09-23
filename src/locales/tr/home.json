@@ -105,9 +105,9 @@
     "title": "İstatistikler"
   },
   "install": {
-    "titleIos": "SoliNova'yı ana ekranına ekle",
-    "titleInstall": "SoliNova'yı yükle",
-    "titleDevice": "SoliNova'yı cihazına ekle",
+    "titleIos": "Solitarius'yı ana ekranına ekle",
+    "titleInstall": "Solitarius'yı yükle",
+    "titleDevice": "Solitarius'yı cihazına ekle",
     "instructionsIos": "Safari'de Paylaş düğmesine dokun, ardından “Ana Ekrana Ekle”yi seç.",
     "instructionsInstall": "Daha hızlı açılış, tam ekran deneyim ve çevrimdışı oyun için yükle.",
     "instructionsBrowser": "Tarayıcı menünü aç ve “Uygulamayı yükle” ya da “Ana ekrana ekle”yi seç.",

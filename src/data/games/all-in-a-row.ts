@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const allInARow: GameDefinition = {
@@ -11,8 +12,8 @@ export const allInARow: GameDefinition = {
   background: GAME_BACKGROUNDS.waterLogs,
   animation: GameAnimations.ManaDust,
   gameColorDark: "#182532",
-  gameColorMid: "#571870",
   gameColorPale: "#e4f7ff",
+  cardBack: CardBackColors.Violet,
   cardDescription: "Clear thirteen columns by selecting adjacent ranks.",
   quickStart: [
     "Clear all thirteen columns to win.",

@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const russianSolitaire: GameDefinition = {
@@ -11,8 +12,8 @@ export const russianSolitaire: GameDefinition = {
   background: GAME_BACKGROUNDS.siberia,
   animation: GameAnimations.Snow,
   gameColorDark: "#152c47",
-  gameColorMid: "#556780",
   gameColorPale: "#fff0c1",
+  cardBack: CardBackColors.Slate,
   cardDescription:
     "Yukon at its most brutal: haul mixed groups, and build the tableau down in suit.",
   quickStart: [

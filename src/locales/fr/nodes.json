@@ -17,6 +17,11 @@
   "details": {
     "locked": "Verrouillé"
   },
+  "mercySkip": {
+    "granted": "Un passe-droit ! Passez une partie difficile en voyageant parmi les étoiles (depuis le menu de la partie).",
+    "ufoLabel": "Un OVNI de passage",
+    "dismiss": "Fermer"
+  },
   "collection": {
     "previous": "Élément précédent",
     "next": "Élément suivant",

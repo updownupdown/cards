@@ -28,6 +28,20 @@
   }
 }
 
+@keyframes nodes-node-pulse {
+  0%,
+  65%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+
+  82% {
+    transform: scale(1.16);
+    filter: brightness(1.4);
+  }
+}
+
 html,
 body {
   margin: 0;
@@ -35,7 +49,11 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: #343f49;
+  /* The splash colour, painted before the app mounts. Chrome takes the canvas
+     background - which is what it paints behind the Android button bar - from
+     the root element, so _layout must swap this on <html> as well as on body
+     once the app knows which screen is showing. */
+  background-color: #c62440;
   font-family: var(--font-sans-fallback);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

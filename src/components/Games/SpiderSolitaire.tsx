@@ -15,8 +15,10 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
   PlayingCard,
   RANK_VALUE,
+  cardDims,
   createDeck,
   shuffle,
+  zoneFanOffset,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 
@@ -289,9 +291,13 @@ export default function SpiderSolitaire() {
       pileIndex,
       cards: pile,
       col: pileIndex,
-      row: 1.6,
+      row: 1.2,
       baseZIndex: 10 + pileIndex,
-      fan: { direction: "down", offset: TABLEAU_FAN_OFFSET, maxVisible: 104 },
+      fan: {
+        direction: "down",
+        offset: zoneFanOffset(pile.length, 4, 0.1, cardDims.tableauOffset),
+        maxVisible: 104,
+      },
       placeholder: { showCount: false, text: i18n.t("cards:empty") },
     }));
 
@@ -304,7 +310,8 @@ export default function SpiderSolitaire() {
         col: 2 + pileIndex,
         row: 0,
         baseZIndex: 20 + pileIndex,
-        fan: { direction: "down", offset: 0.02, maxVisible: 3 },
+        placeholder: {},
+        fan: { maxVisible: 3 },
       }),
     );
 
@@ -318,7 +325,7 @@ export default function SpiderSolitaire() {
         row: 0,
         baseZIndex: 30,
         fan: { maxVisible: 3 },
-        placeholder: { text: i18n.t("cards:stock"), infoPos: "below" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "right" },
       },
       ...foundationZones,
       ...tableauZones,
@@ -420,10 +427,10 @@ export default function SpiderSolitaire() {
   const { cardMap, getZoneBasePos, cardWidth, cardHeight } = useCardMap({
     game,
     zones,
-    gap: 0.18,
+    gap: 0.12,
     cardMapper,
     zoneMapper,
-    cardSize: "small",
+    cardSize: "tableau",
     fixedRows: 6,
   });
 

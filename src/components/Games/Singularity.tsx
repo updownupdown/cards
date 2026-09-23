@@ -22,6 +22,9 @@ import { SingularityGraphic } from "./SingularityGraphic";
 
 import { i18n } from "@/i18n";
 const pileCount = 17;
+/** A deal must offer at least this many absorptions in a row to be playable. */
+const MINIMUM_OPENING_MOVES = 2;
+const DEAL_ATTEMPTS = 200;
 
 type GameState = {
   piles: PlayingCard[][];
@@ -45,10 +48,44 @@ export function adjacentWrap(a: PlayingCard, b: PlayingCard) {
   return diff === 1 || diff === 12;
 }
 
-async function resetAndSetup(
-  setGame: (updater: (draft: GameState) => void) => void,
-) {
-  setGame((draft) => {
+/**
+ * How many absorptions can be made one after another from this position,
+ * counted no further than `limit` so the search stays cheap. Piles are popped
+ * and pushed back as it goes, so they are left exactly as they were found.
+ */
+export function playableRun(
+  piles: PlayingCard[][],
+  holeTop: PlayingCard,
+  limit: number,
+): number {
+  if (limit <= 0) return 0;
+
+  let best = 0;
+  for (const pile of piles) {
+    const exposed = top(pile);
+    if (!exposed || !adjacentWrap(exposed, holeTop)) continue;
+
+    pile.pop();
+    const run = 1 + playableRun(piles, exposed, limit - 1);
+    pile.push(exposed);
+
+    if (run > best) best = run;
+    if (best >= limit) break;
+  }
+  return best;
+}
+
+/**
+ * A deal the player can actually open with. About one shuffle in 35 leaves no
+ * King or Two on top of any pile, which strands the Ace of Spades and ends the
+ * game before the first tap; redealing costs nothing and spares the player a
+ * game that was lost on arrival.
+ */
+export function dealPiles() {
+  let piles: PlayingCard[][] = [];
+  let hole: PlayingCard[] = [];
+
+  for (let attempt = 0; attempt < DEAL_ATTEMPTS; attempt += 1) {
     const deck = shuffle(createDeck({ faceUp: true }));
 
     // The Ace of Spades opens the singularity.
@@ -57,11 +94,31 @@ async function resetAndSetup(
     );
     const [start] = deck.splice(startIndex, 1);
 
-    const piles: PlayingCard[][] = Array.from({ length: pileCount }, () => []);
+    piles = Array.from({ length: pileCount }, () => []);
     deck.forEach((card, i) => piles[i % pileCount].push(flipToFace(card)));
+    hole = start ? [flipToFace(start)] : [];
 
+    const holeTop = top(hole);
+    if (
+      holeTop &&
+      playableRun(piles, holeTop, MINIMUM_OPENING_MOVES) >=
+        MINIMUM_OPENING_MOVES
+    ) {
+      break;
+    }
+  }
+
+  return { piles, hole };
+}
+
+async function resetAndSetup(
+  setGame: (updater: (draft: GameState) => void) => void,
+) {
+  const { piles, hole } = dealPiles();
+
+  setGame((draft) => {
     draft.piles = piles;
-    draft.hole = start ? [flipToFace(start)] : [];
+    draft.hole = hole;
     draft.ended = false;
     draft.won = false;
   });
@@ -88,6 +145,9 @@ function evaluateEnd(state: GameState, isSettingUp = false) {
 export const singularityRules = {
   adjacentWrap,
   evaluateEnd,
+  playableRun,
+  dealPiles,
+  MINIMUM_OPENING_MOVES,
 };
 
 // ========== Main Component ========== //

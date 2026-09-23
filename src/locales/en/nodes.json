@@ -17,6 +17,11 @@
   "details": {
     "locked": "Locked"
   },
+  "mercySkip": {
+    "granted": "A Mercy Skip! Skip a difficult game when travelling the stars (from the game's menu).",
+    "ufoLabel": "A passing UFO",
+    "dismiss": "Dismiss"
+  },
   "collection": {
     "previous": "Previous collected item",
     "next": "Next collected item",

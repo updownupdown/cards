@@ -1,4 +1,5 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 import { GameAnimations } from "@/animations";
 
@@ -11,8 +12,8 @@ export const busyAces: GameDefinition = {
   background: GAME_BACKGROUNDS.modernMetal1,
   animation: GameAnimations.Firefly,
   gameColorDark: "#1a2233",
-  gameColorMid: "#4a78b8",
   gameColorPale: "#dde9ff",
+  cardBack: CardBackColors.Bicycle,
   cardDescription:
     "Keep twelve short two-deck columns moving, one suited card at a time.",
   quickStart: [

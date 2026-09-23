@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const lycan: GameDefinition = {
@@ -15,8 +16,8 @@ export const lycan: GameDefinition = {
   background: GAME_BACKGROUNDS.forest,
   animation: GameAnimations.Leaves,
   gameColorDark: "#311a20",
-  gameColorMid: "#4e2f23",
   gameColorPale: "#f7e2ca",
+  cardBack: CardBackColors.Walnut,
   cardDescription:
     "Empty the Wolf's hand through clever captures... and know when to fold.",
   quickStart: [

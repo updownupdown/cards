@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const devilsGrip: GameDefinition = {
@@ -19,15 +20,15 @@ export const devilsGrip: GameDefinition = {
   background: GAME_BACKGROUNDS.abandonedSand,
   animation: GameAnimations.Embers,
   gameColorDark: "#4e211e",
-  gameColorMid: "#801b14",
   gameColorPale: "#ffecd6",
+  cardBack: CardBackColors.Crimson,
   cardDescription:
     "Build 24 same-suit piles upward by threes in a three-row grid.",
   quickStart: [
     "Build same-suit sequences: 2-5-8-J (top row), 3-6-9-Q (middle row), and 4-7-10-K (bottom row).",
     "Move cards or stacks to create sequences or to swap their position.",
     "Tap the draw deck to deal three cards to the waste.",
-    "The top waste card can be moved on a valid stack.",
+    "The top waste card can be moved onto a valid stack.",
   ],
   howToPlay: [
     "## Objective",

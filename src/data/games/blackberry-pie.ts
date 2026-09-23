@@ -1,4 +1,5 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 import { GameAnimations } from "@/animations";
 
@@ -17,8 +18,8 @@ export const blackberryPie: GameDefinition = {
   cardDescription:
     "Build matching trios under berry cards to help the Queen bake her pie.",
   gameColorDark: "#2a1c33",
-  gameColorMid: "#6a5d81",
   gameColorPale: "#f7e4ff",
+  cardBack: CardBackColors.Mauve,
   quickStart: [
     "Choose a hand or retainer card, then place it under an available berry.",
     "After the first play, place beside the previous column unless you played a joker.",

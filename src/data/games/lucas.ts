@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const lucas: GameDefinition = {
@@ -11,8 +12,8 @@ export const lucas: GameDefinition = {
   background: GAME_BACKGROUNDS.oldRoom,
   animation: GameAnimations.Dust,
   gameColorDark: "#372f2a",
-  gameColorMid: "#1f4e74",
   gameColorPale: "#e4d7bf",
+  cardBack: CardBackColors.Ocean,
   cardDescription:
     "Thirteen compact columns begin beneath eight pre-seeded Aces.",
   quickStart: [

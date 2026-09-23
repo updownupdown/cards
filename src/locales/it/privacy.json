@@ -4,23 +4,23 @@
   "translationNote": "Questa traduzione è fornita per comodità. In caso di differenze con la versione inglese di questa informativa, prevale la versione inglese.",
   "summary": {
     "title": "In breve",
-    "body": "SoliNova non raccoglie, conserva né condivide alcuna informazione personale. L'app non ha account, strumenti di analisi, pubblicità né server. Tutto ciò che fai nell'app resta sul tuo dispositivo."
+    "body": "Solitarius non raccoglie, non memorizza e non condivide nessuna informazione personale. L'app non ha un sistema di account, né strumenti di analisi, né pubblicità, né un server. L'unica cosa che lascia il tuo dispositivo è una segnalazione di errore anonima, inviata quando qualcosa va storto, e che puoi disattivare."
   },
   "stored": {
     "title": "Dati salvati sul tuo dispositivo",
-    "body": "SoliNova salva le statistiche di gioco, i preferiti, le impostazioni e le partite in corso nella memoria locale del dispositivo. Queste informazioni non lasciano mai il dispositivo, non vengono mai trasmesse a noi né a terzi e vengono rimosse automaticamente se disinstalli l'app o ne cancelli i dati."
+    "body": "Solitarius salva le statistiche di gioco, i preferiti, le impostazioni e le partite in corso nella memoria locale del dispositivo. Queste informazioni non lasciano mai il dispositivo, non vengono mai trasmesse a noi né a terzi e vengono rimosse automaticamente se disinstalli l'app o ne cancelli i dati."
   },
   "collected": {
     "title": "Dati che raccogliamo",
-    "body": "Nessuno. SoliNova non usa servizi di analisi, di segnalazione degli arresti anomali o di pubblicità, e non chiede né conserva il tuo nome, il tuo indirizzo email, la tua posizione o altre informazioni personali."
+    "body": "Solo diagnostica degli errori. Quando l'app incontra un errore o si blocca, invia una segnalazione a Sentry, un servizio di monitoraggio degli errori, così il problema può essere individuato e corretto. La segnalazione contiene l'errore e il punto del codice da cui proviene, il modello del dispositivo, la versione del sistema operativo e quella dell'app, e un breve elenco di ciò che è successo poco prima, come il gioco che era aperto. Non contiene nome, indirizzo e-mail, posizione o altre informazioni personali, e gli indirizzi IP non vengono conservati. Disattivare «Invia segnalazioni di errore» nelle impostazioni interrompe del tutto questo invio."
   },
   "links": {
     "title": "Link esterni",
-    "body": "Alcune schermate includono link facoltativi a siti web esterni (per esempio i crediti delle fotografie). Toccandone uno si apre il browser del dispositivo o direttamente il sito collegato. SoliNova non ha alcun controllo sulle pratiche di privacy di quei siti esterni e non ne è responsabile."
+    "body": "Alcune schermate includono link facoltativi a siti web esterni (per esempio i crediti delle fotografie). Toccandone uno si apre il browser del dispositivo o direttamente il sito collegato. Solitarius non ha alcun controllo sulle pratiche di privacy di quei siti esterni e non ne è responsabile."
   },
   "children": {
     "title": "Privacy dei minori",
-    "body": "SoliNova non raccoglie consapevolmente informazioni da nessuno, minori compresi, perché non raccoglie informazioni da alcun utente."
+    "body": "Solitarius non raccoglie consapevolmente informazioni da nessuno, bambini compresi. L'app non ha un sistema di account e non chiede dati personali, e la diagnostica degli errori descritta sopra non identifica nessuno."
   },
   "changes": {
     "title": "Modifiche a questa informativa",

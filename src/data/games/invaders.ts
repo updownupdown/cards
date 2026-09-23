@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const invaders: GameDefinition = {
@@ -15,8 +16,8 @@ export const invaders: GameDefinition = {
   background: GAME_BACKGROUNDS.nightSky,
   animation: GameAnimations.Stars,
   gameColorDark: "#2a2836",
-  gameColorMid: "#29a4b4",
   gameColorPale: "#b5faff",
+  cardBack: CardBackColors.Teal,
   cardDescription:
     "Fight off waves of alien invaders before running out of defenders.",
   quickStart: [

@@ -45,6 +45,7 @@
     "allFourSuitsAreComplete": "Os quatro naipes estão completos!"
   },
   "beehive": {
+    "beehive": "Colmeia",
     "honeycombComplete": "A colmeia está completa!",
     "noFurtherMovesPossible": "Não há mais jogadas possíveis."
   },
@@ -618,5 +619,12 @@
   },
   "pussInTheCorner": {
     "allFourCornersFilled": "Os quatro cantos estão preenchidos!"
+  },
+  "devilsGrip": {
+    "everyCardIsInTheGrid": "Todas as cartas estão na grade.",
+    "cardsRemain": "Restam {{count}} cartas.",
+    "cardsRemainGood": "Restam {{count}} cartas. Bom!",
+    "cardsRemainExcellent": "Restam {{count}} cartas. Excelente!",
+    "cardsRemainBrilliant": "Restam {{count}} cartas. Brilhante!"
   }
 }

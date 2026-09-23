@@ -9,9 +9,15 @@ interface Props {
   isLoaded: boolean;
   /** A game's overlay: once loaded, it hides the tap-time launch overlay. */
   endsGameLaunch?: boolean;
+  /** Match the screen underneath so the fade isn't a colour change as well. */
+  backgroundColor?: string;
 }
 
-export const LoadingOverlay = ({ isLoaded, endsGameLaunch = false }: Props) => {
+export const LoadingOverlay = ({
+  isLoaded,
+  endsGameLaunch = false,
+  backgroundColor = Colors.background,
+}: Props) => {
   const [showLoadingOverlay, setShowLoadingOverlay] = useState(!isLoaded);
   // Native shows the spinner from the first frame; starting hidden made it
   // blink off and on as the game opened.
@@ -63,7 +69,7 @@ export const LoadingOverlay = ({ isLoaded, endsGameLaunch = false }: Props) => {
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: Colors.background,
+          backgroundColor,
         },
       ]}
     >

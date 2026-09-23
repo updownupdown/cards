@@ -462,11 +462,13 @@ describe("Sly Fox", () => {
 });
 
 describe("Queen's Audience", () => {
-  test("bringing in the last royal couple wins", async () => {
+  test("the last royal couple is brought in automatically", async () => {
     const king = card("K", "spades");
+    const queen = card("Q", "spades");
     const frame = Array(16).fill(null);
     frame[0] = king;
-    frame[1] = card("Q", "spades");
+    frame[1] = queen;
+    // Nothing left to turn over, so the forced last move plays itself.
     await renderGame("/queens-audience", QueensAudience, {
       frame,
       stock: [],
@@ -483,11 +485,35 @@ describe("Queen's Audience", () => {
       ended: false,
       won: false,
     });
-    expect(outcome()).toBe("playing");
+
+    expect(zoneCardIds("royal-3")).toEqual([king.id, queen.id]);
+    expect(outcome()).toBe("won");
+  });
+
+  test("a royal couple is brought in a card at a time, then the gaps refill", async () => {
+    const king = card("K", "spades");
+    const queen = card("Q", "spades");
+    const wasteTop = card("7", "hearts");
+    const refill = card("3", "clubs", false);
+    const frame = Array(16).fill(null);
+    frame[0] = king;
+    frame[5] = queen;
+    await renderGame("/queens-audience", QueensAudience, {
+      frame,
+      stock: [refill],
+      waste: [wasteTop],
+      royals: emptyPiles(4),
+      foundations: emptyPiles(4),
+      ended: false,
+      won: false,
+    });
 
     await pressCardId(king.id);
 
-    expect(outcome()).toBe("won");
+    expect(zoneCardIds("royal-3")).toEqual([king.id, queen.id]);
+    // Each gap refills from the waste first, then the stock.
+    expect(zoneCardIds("frame-0")).toEqual([wasteTop.id]);
+    expect(zoneCardIds("frame-5")).toEqual([refill.id]);
   });
 
   test("a Jack pairs with an Ace from the waste, then nothing is left", async () => {

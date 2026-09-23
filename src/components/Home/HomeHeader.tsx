@@ -1,4 +1,4 @@
-import SoliNovaLogo from "@/assets/images/SoliNovaLogo.svg";
+import SolitariusLogo from "@/assets/images/SolitariusLogo.svg";
 import { Button } from "@/components/Button/Button";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
@@ -50,8 +50,11 @@ export function HomeHeader({
     >
       <Animated.View
         testID="home-header-background"
-        pointerEvents="none"
-        style={[StyleSheet.absoluteFill, backgroundStyle]}
+        style={[
+          StyleSheet.absoluteFill,
+          { pointerEvents: "none" },
+          backgroundStyle,
+        ]}
       >
         <LinearGradient
           colors={[
@@ -69,8 +72,12 @@ export function HomeHeader({
           width: "100%",
           maxWidth: ui.contentMaxWidth,
           alignSelf: "center",
+          // Clear the status bar, and in landscape any display cutout at the
+          // sides; the background image still shows behind all of them.
           paddingTop: insets.top + spacing(layoutDims.pagePadding * 0.5),
           paddingBottom: spacing(layoutDims.pagePadding * 0.5),
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
           pointerEvents: "box-none",
         }}
       >
@@ -86,7 +93,7 @@ export function HomeHeader({
             },
           ]}
         >
-          <SoliNovaLogo
+          <SolitariusLogo
             width={140}
             height={32}
             style={{

@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const elementaryDetective: GameDefinition = {
@@ -15,8 +16,8 @@ export const elementaryDetective: GameDefinition = {
   background: GAME_BACKGROUNDS.fallLeaves,
   animation: GameAnimations.Leaves,
   gameColorDark: "#221815",
-  gameColorMid: "#6b8333",
   gameColorPale: "#c5f7da",
+  cardBack: CardBackColors.Olive,
   cardDescription:
     "Find your hidden playmates through careful planning and deduction.",
   quickStart: [

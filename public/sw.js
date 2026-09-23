@@ -1,6 +1,6 @@
 // Bump only when APP_SHELL contents/filenames change. Hashed bundle/asset
 // URLs already self-bust cache and do not require a cache name bump.
-const CACHE_NAME = "solinova-v3";
+const CACHE_NAME = "solitarius-v1";
 const APP_SHELL = [
   "./",
   "./index.html",

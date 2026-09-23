@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 
 export const chainOfCommand: GameDefinition = {
   path: "/chain-of-command",
@@ -13,8 +14,8 @@ export const chainOfCommand: GameDefinition = {
   thumbnail: "ChainOfCommand.webp",
   background: GAME_BACKGROUNDS.brickStreet,
   gameColorDark: "#252220",
-  gameColorMid: "#4fa590",
   gameColorPale: "#b2eee1",
+  cardBack: CardBackColors.Forest,
   cardDescription:
     "Strategically promote members and candidates to the top of the chain of command hierarchy.",
   quickStart: [

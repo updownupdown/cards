@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const windmill: GameDefinition = {
@@ -15,8 +16,8 @@ export const windmill: GameDefinition = {
   background: GAME_BACKGROUNDS.dirtRoad,
   animation: GameAnimations.Birds,
   gameColorDark: "#1e2a1f",
-  gameColorMid: "#7a9a4a",
   gameColorPale: "#eef5d6",
+  cardBack: CardBackColors.Olive,
   cardDescription:
     "Feed four full runs into the windmill's hub while its corners count down from Kings.",
   quickStart: [

@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const bisley: GameDefinition = {
@@ -11,8 +12,8 @@ export const bisley: GameDefinition = {
   background: GAME_BACKGROUNDS.london,
   animation: GameAnimations.Rain,
   gameColorDark: "#30343a",
-  gameColorMid: "#46535a",
   gameColorPale: "#e8e1d3",
+  cardBack: CardBackColors.Slate,
   cardDescription:
     "Build each suit from both ends while thirteen open columns tighten around you.",
   quickStart: [

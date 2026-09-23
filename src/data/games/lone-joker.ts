@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const loneJoker: GameDefinition = {
@@ -15,8 +16,8 @@ export const loneJoker: GameDefinition = {
   animation: GameAnimations.Firefly,
   thumbnail: "LoneJoker.webp",
   gameColorDark: "#111e35",
-  gameColorMid: "#7b388b",
   gameColorPale: "#d8ffeb",
+  cardBack: CardBackColors.Violet,
   cardDescription:
     "Build poker hands, bank wild Jokers, and spend excess points to survive escalating rounds.",
   quickStart: [

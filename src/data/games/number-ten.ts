@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const numberTen: GameDefinition = {
@@ -11,8 +12,8 @@ export const numberTen: GameDefinition = {
   background: GAME_BACKGROUNDS.modernMetal1,
   animation: GameAnimations.ManaDust,
   gameColorDark: "#25343b",
-  gameColorMid: "#45898f",
   gameColorPale: "#dde4df",
+  cardBack: CardBackColors.Teal,
   cardDescription:
     "Uncover ten columns and move alternating-color sequences as complete units.",
   quickStart: [

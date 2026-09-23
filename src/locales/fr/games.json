@@ -3,9 +3,9 @@
     "red": "Rouge",
     "black": "Noir",
     "remainder": "Pioche",
-    "redTotal": "Rouge : {{count}}",
-    "blackTotal": "Noir : {{count}}",
-    "theJokerEscaped": "Le Joker s'est échappé !"
+    "redTotal": "Rouge : {{count}}",
+    "blackTotal": "Noir : {{count}}",
+    "theJokerEscaped": "Le Joker s'est échappé !"
   },
   "accordion": {
     "youCompressedTheDeckTo": "Vous avez réduit le paquet à une seule carte."
@@ -45,6 +45,7 @@
     "allFourSuitsAreComplete": "Les quatre couleurs sont complètes !"
   },
   "beehive": {
+    "beehive": "Ruche",
     "honeycombComplete": "La ruche est complète !",
     "noFurtherMovesPossible": "Aucun autre coup n'est possible."
   },
@@ -64,7 +65,7 @@
     "pins": "Quilles",
     "ball": "Boule",
     "throw": "Lancer",
-    "finalScore": "Score : {{score}} ({{target}} nécessaires pour gagner)"
+    "finalScore": "Score : {{score}} ({{target}} nécessaires pour gagner)"
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "Vous avez tué tous les zombies !",
@@ -618,5 +619,12 @@
   },
   "pussInTheCorner": {
     "allFourCornersFilled": "Les quatre coins sont remplis !"
+  },
+  "devilsGrip": {
+    "everyCardIsInTheGrid": "Toutes les cartes sont dans la grille.",
+    "cardsRemain": "Il reste {{count}} cartes.",
+    "cardsRemainGood": "Il reste {{count}} cartes. Bien !",
+    "cardsRemainExcellent": "Il reste {{count}} cartes. Excellent !",
+    "cardsRemainBrilliant": "Il reste {{count}} cartes. Brillant !"
   }
 }

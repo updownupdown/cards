@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const parallels: GameDefinition = {
@@ -15,8 +16,8 @@ export const parallels: GameDefinition = {
   background: GAME_BACKGROUNDS.stoneWall,
   animation: GameAnimations.Rain,
   gameColorDark: "#1a1f24",
-  gameColorMid: "#6e7f8f",
   gameColorPale: "#e3eaf0",
+  cardBack: CardBackColors.Slate,
   cardDescription:
     "Stack parallel rows of two decks between Ace and King foundations, freeing cards from either edge.",
   quickStart: [

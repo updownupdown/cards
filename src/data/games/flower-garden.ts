@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const flowerGarden: GameDefinition = {
@@ -12,8 +13,8 @@ export const flowerGarden: GameDefinition = {
   background: GAME_BACKGROUNDS.flowerGarden,
   animation: GameAnimations.Pollen,
   gameColorDark: "#24402f",
-  gameColorMid: "#98af5a",
   gameColorPale: "#f2e4c2",
+  cardBack: CardBackColors.Olive,
   cardDescription:
     "Cultivate six flower beds with every card in the sixteen-card bouquet available.",
   quickStart: [

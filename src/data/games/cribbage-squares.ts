@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const cribbageSquares: GameDefinition = {
@@ -19,8 +20,8 @@ export const cribbageSquares: GameDefinition = {
   background: GAME_BACKGROUNDS.cozyCabin,
   animation: GameAnimations.Snow,
   gameColorDark: "#15221c",
-  gameColorMid: "#53ac95",
   gameColorPale: "#d6f0ec",
+  cardBack: CardBackColors.Forest,
   cardDescription:
     "Build sixteen connected cards, then score every row and column with a starter card.",
   quickStart: [

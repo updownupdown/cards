@@ -1,9 +1,9 @@
 /** @type {import('expo/config').ExpoConfig} */
 const config = {
-  name: "SoliNova",
+  name: "Solitarius",
   description: "A collection of solo playing card games.",
   owner: "updowngames",
-  slug: "solinova",
+  slug: "solitarius",
   version: "1.0.0",
   orientation: "default",
   icon: "./assets/app-icon/icon.png",
@@ -38,18 +38,22 @@ const config = {
     ],
   },
   androidStatusBar: {
+    // No backgroundColor: Android enforces edge-to-edge, so the status bar is
+    // always transparent and each screen draws its own background through it.
     barStyle: "light-content",
-    backgroundColor: "#343f49",
   },
   web: {
     output: "static",
     favicon: "./assets/app-icon/icon.png",
     // Chrome 152 can pin installed PWAs to this color and ignore runtime
     // theme-color updates (crbug.com/554055703). Keep the splash itself red
-    // via backgroundColor, but use the Home color as the status-bar fallback.
-    themeColor: "#343f49",
-    name: "SoliNova",
-    shortName: "SoliNova",
+    // via backgroundColor, but use the Home color as the status-bar fallback:
+    // the home screen's starfield overlay (Colors.starfieldOverlay), which is
+    // where the app opens. Mirrored in public/manifest.json, the manifest the
+    // static web build actually ships.
+    themeColor: "#11181f",
+    name: "Solitarius",
+    shortName: "Solitarius",
     description: "A collection of solo playing card games.",
     display: "standalone",
     startUrl: "./",
@@ -120,6 +124,18 @@ const config = {
         },
       },
     ],
+    [
+      "@sentry/react-native/expo",
+      {
+        url: "https://sentry.io/",
+        organization: "james-carmichael",
+        project: "solitarius",
+        // No authToken here: it's read from SENTRY_AUTH_TOKEN (.env.local
+        // locally, an EAS environment variable with sensitive visibility for
+        // EAS builds). A local release build without one needs
+        // SENTRY_DISABLE_AUTO_UPLOAD=true.
+      },
+    ],
   ],
   experiments: {
     baseUrl: "/",
@@ -127,6 +143,14 @@ const config = {
     reactCompiler: true,
   },
   extra: {
+    // The DSN is a public project identifier, so it can be committed. Setting
+    // SENTRY_DSN to an empty string turns crash reporting off.
+    sentryDsn:
+      process.env.SENTRY_DSN ??
+      "https://201eca773021e5dd5382dbcae73dfb45@o4512126348623872.ingest.us.sentry.io/4512127229165568",
+    // Separates releases in Sentry: the EAS build profile ("preview" or
+    // "production"), or a local build.
+    sentryEnvironment: process.env.EAS_BUILD_PROFILE ?? "local",
     router: {},
     eas: {
       projectId: "a82abc24-6db7-4465-9ad5-ca9ce212447b",

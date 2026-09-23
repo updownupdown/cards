@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const ouroboros: GameDefinition = {
@@ -19,8 +20,8 @@ export const ouroboros: GameDefinition = {
   background: GAME_BACKGROUNDS.stoneTunnel,
   animation: GameAnimations.ManaDust,
   gameColorDark: "#1d120e",
-  gameColorMid: "#722920",
   gameColorPale: "#dfd4bd",
+  cardBack: CardBackColors.Burgundy,
   cardDescription:
     "Capture scoring loop cards while preserving momentum and avoiding disruptive breaks.",
   quickStart: [

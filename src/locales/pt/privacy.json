@@ -4,23 +4,23 @@
   "translationNote": "Esta tradução é oferecida por conveniência. Se ela divergir da versão em inglês desta política, vale a versão em inglês.",
   "summary": {
     "title": "Resumo",
-    "body": "O SoliNova não coleta, armazena nem compartilha nenhuma informação pessoal. O app não tem contas, ferramentas de análise, publicidade nem servidor. Tudo o que você faz no app fica no seu dispositivo."
+    "body": "O Solitarius não coleta, armazena nem compartilha nenhuma informação pessoal. O app não tem sistema de contas, nem análise, nem publicidade, nem servidor. A única coisa que sai do seu dispositivo é um relatório de erro anônimo, enviado quando algo dá errado, e que você pode desativar."
   },
   "stored": {
     "title": "Dados armazenados no seu dispositivo",
-    "body": "O SoliNova salva suas estatísticas de jogo, favoritos, configurações e partidas em andamento no armazenamento local do dispositivo. Essas informações nunca saem do seu dispositivo, nunca são enviadas para nós nem para terceiros e são removidas automaticamente se você desinstalar o app ou limpar os dados dele."
+    "body": "O Solitarius salva suas estatísticas de jogo, favoritos, configurações e partidas em andamento no armazenamento local do dispositivo. Essas informações nunca saem do seu dispositivo, nunca são enviadas para nós nem para terceiros e são removidas automaticamente se você desinstalar o app ou limpar os dados dele."
   },
   "collected": {
     "title": "Dados que coletamos",
-    "body": "Nenhum. O SoliNova não usa serviços de análise, de relatório de falhas nem de publicidade, e não pede nem armazena seu nome, endereço de e-mail, localização ou qualquer outra informação pessoal."
+    "body": "Apenas diagnósticos de erro. Quando o app encontra um erro ou trava, ele envia um relatório para o Sentry, um serviço de monitoramento de erros, para que a falha possa ser encontrada e corrigida. O relatório contém o erro e o ponto do código de onde ele veio, o modelo do seu dispositivo, a versão do sistema operacional e a do app, e um breve registro do que aconteceu logo antes, como o jogo que estava aberto. Não contém nome, endereço de e-mail, localização nem qualquer outra informação pessoal, e endereços IP não são armazenados. Desativar “Enviar relatórios de erro” nas configurações interrompe isso por completo."
   },
   "links": {
     "title": "Links externos",
-    "body": "Algumas telas incluem links opcionais para sites externos (por exemplo, créditos de fotos). Tocar em um deles abre o navegador do dispositivo ou o site vinculado diretamente. O SoliNova não tem controle sobre as práticas de privacidade desses sites externos e não é responsável por elas."
+    "body": "Algumas telas incluem links opcionais para sites externos (por exemplo, créditos de fotos). Tocar em um deles abre o navegador do dispositivo ou o site vinculado diretamente. O Solitarius não tem controle sobre as práticas de privacidade desses sites externos e não é responsável por elas."
   },
   "children": {
     "title": "Privacidade de crianças",
-    "body": "O SoliNova não coleta intencionalmente informações de ninguém, incluindo crianças, porque não coleta informações de nenhum usuário."
+    "body": "O Solitarius não coleta intencionalmente informações de ninguém, incluindo crianças. O app não tem sistema de contas nem pede dados pessoais, e os diagnósticos de erro descritos acima não identificam ninguém."
   },
   "changes": {
     "title": "Alterações nesta política",

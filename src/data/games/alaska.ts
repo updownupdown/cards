@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const alaska: GameDefinition = {
@@ -11,8 +12,8 @@ export const alaska: GameDefinition = {
   background: GAME_BACKGROUNDS.alaska,
   animation: GameAnimations.Snow,
   gameColorDark: "#20343e",
-  gameColorMid: "#4a4081",
   gameColorPale: "#e5edf0",
+  cardBack: CardBackColors.Indigo,
   cardDescription:
     "A Yukon expedition where suited cards may climb or descend.",
   quickStart: [

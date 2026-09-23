@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const westcliff: GameDefinition = {
@@ -10,8 +11,8 @@ export const westcliff: GameDefinition = {
   background: GAME_BACKGROUNDS.cliffFields,
   animation: GameAnimations.Pollen,
   gameColorDark: "#27363b",
-  gameColorMid: "#35634c",
   gameColorPale: "#e4ece9",
+  cardBack: CardBackColors.Pine,
   thumbnail: "Westcliff.webp",
   cardDescription:
     "A broad ten-column Klondike relative with generous open-column play.",

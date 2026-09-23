@@ -105,9 +105,9 @@
     "title": "Stats"
   },
   "install": {
-    "titleIos": "Add SoliNova to your Home Screen",
-    "titleInstall": "Install SoliNova",
-    "titleDevice": "Add SoliNova to your device",
+    "titleIos": "Add Solitarius to your Home Screen",
+    "titleInstall": "Install Solitarius",
+    "titleDevice": "Add Solitarius to your device",
     "instructionsIos": "In Safari, tap the Share button, then choose “Add to Home Screen”.",
     "instructionsInstall": "Install for faster launches, a full-screen experience, and offline play.",
     "instructionsBrowser": "Open your browser menu and choose “Install app” or “Add to Home screen”.",

@@ -1,6 +1,6 @@
 import "@/styles/global.css";
 import { darkenHexColor, roundToPixel } from "@/utils/utils";
-import { Platform, StyleSheet } from "react-native";
+import { Platform, StyleSheet, type TextStyle } from "react-native";
 
 export const Colors = {
   // Buttons and progress bars
@@ -232,3 +232,23 @@ export const transitionStyles =
  */
 export const webDropShadow = (value: string) =>
   Platform.OS === "web" ? ({ filter: `drop-shadow(${value})` } as const) : null;
+
+/**
+ * A text shadow in the form each platform understands: react-native-web wants
+ * one CSS `textShadow` string and warns about the separate props, while iOS
+ * and Android only read the separate props.
+ */
+export const textShadow = (
+  color: string,
+  radius: number,
+  offset: { width: number; height: number } = { width: 0, height: 0 },
+): TextStyle =>
+  Platform.OS === "web"
+    ? ({
+        textShadow: `${offset.width}px ${offset.height}px ${radius}px ${color}`,
+      } as TextStyle)
+    : {
+        textShadowColor: color,
+        textShadowOffset: offset,
+        textShadowRadius: radius,
+      };

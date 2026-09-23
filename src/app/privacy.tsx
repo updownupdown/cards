@@ -5,7 +5,7 @@ import { Colors } from "@/styles/styles";
 import { Linking, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const LAST_UPDATED = new Date(2026, 8, 12);
+const LAST_UPDATED = new Date(2026, 8, 21);
 const CONTACT_EMAIL = "updownupdown@gmail.com";
 const SECTIONS = [
   "summary",

@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations/types";
 
 export const threePeaks: GameDefinition = {
@@ -16,8 +17,8 @@ export const threePeaks: GameDefinition = {
   background: GAME_BACKGROUNDS.smokyMountain,
   animation: GameAnimations.Clouds,
   gameColorDark: "#24343a",
-  gameColorMid: "#244661",
   gameColorPale: "#e3fcdd",
+  cardBack: CardBackColors.Ocean,
   cardDescription:
     "Clear the three peaks by playing cards one rank above or below the waste.",
   quickStart: ["Play exposed +/-1 to waste; A<->K wraps; draw when stuck."],

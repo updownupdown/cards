@@ -1,4 +1,5 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 export const josephine: GameDefinition = {
   path: "/josephine",
@@ -8,8 +9,8 @@ export const josephine: GameDefinition = {
   thumbnail: "Josephine.webp",
   background: GAME_BACKGROUNDS.greece,
   gameColorDark: "#332e40",
-  gameColorMid: "#812e4a",
   gameColorPale: "#efe3d2",
+  cardBack: CardBackColors.Burgundy,
   cardDescription:
     "A two-deck Forty Thieves relative where suited sequences move as a unit.",
   quickStart: [

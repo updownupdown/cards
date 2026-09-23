@@ -11,6 +11,7 @@ import {
   type NodeDefinition,
 } from "@/data/nodes-map";
 import { useNodesProgress } from "@/hooks/useNodesProgress";
+import { grantMercySkip } from "@/data/nodes-progress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { useCallback, useEffect, useState } from "react";
@@ -41,12 +42,31 @@ export function NodesTab({ settingsMap, contentPaddingTop }: Props) {
   const [showTao, setShowTao] = useState(false);
   const [showQuotes, setShowQuotes] = useState(false);
   const [showGames, setShowGames] = useState(false);
+  // The rare UFO stays hidden for the first stretch on the map each visit,
+  // so it never appears the instant the tab opens.
+  const [onMapLongEnough, setOnMapLongEnough] = useState(false);
 
   useEffect(() => {
     if (isLoading) return;
     setSelectedPath(progress.lastPlayedPath);
     setIsMapReady(true);
   }, [isLoading, progress.lastPlayedPath]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setOnMapLongEnough(true), 10000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const totalCollectibles = collectedTaoIds.size + collectedQuoteIds.size;
+  const ufoGateOpen =
+    onMapLongEnough &&
+    // Nothing to offer someone who is still holding a skip.
+    progress.mercySkipCount === 0 &&
+    (progress.mercySkipCollectibleCheckpoint === null ||
+      totalCollectibles >= progress.mercySkipCollectibleCheckpoint + 4);
+  const handleUfoCaught = useCallback(() => {
+    void grantMercySkip();
+  }, []);
 
   const selectedNode =
     getNodeDefinition(selectedPath) ?? getNodeDefinition(NODES_START_PATH)!;
@@ -154,6 +174,8 @@ export function NodesTab({ settingsMap, contentPaddingTop }: Props) {
         wonPaths={wonPaths}
         collectedTaoIds={collectedTaoIds}
         collectedQuoteIds={collectedQuoteIds}
+        ufoGateOpen={ufoGateOpen}
+        onUfoCaught={handleUfoCaught}
       />
       <NodeDetailsPanel
         node={selectedNode}

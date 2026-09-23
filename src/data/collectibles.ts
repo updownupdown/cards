@@ -8,7 +8,7 @@ import { TAO_CHAPTERS } from "@/components/Nodes/TaoChapters";
 import { quotes } from "@/components/Collectibles/QuotesText";
 
 export const TAO_CHAPTER_COUNT = 81;
-export const QUOTE_COUNT = 156;
+export const QUOTE_COUNT = 208;
 
 export type TaoId = number;
 export type QuoteId = number;
@@ -16,7 +16,7 @@ export type QuoteId = number;
 export type CollectibleReward =
   { type: "tao"; id: TaoId } | { type: "quote"; id: QuoteId };
 
-export type QuoteDeck = "white" | "black" | "gold";
+export type QuoteDeck = "white" | "black" | "gold" | "red";
 
 export type QuoteCard = {
   deck: QuoteDeck;
@@ -25,7 +25,7 @@ export type QuoteCard = {
 };
 
 const DECK_SIZE = SUITS.length * RANKS.length;
-const QUOTE_DECKS: QuoteDeck[] = ["white", "black", "gold"];
+const QUOTE_DECKS: QuoteDeck[] = ["white", "black", "gold", "red"];
 
 export function getTaoChapter(id: TaoId) {
   return id >= 1 && id <= TAO_CHAPTER_COUNT ? TAO_CHAPTERS[id - 1] : undefined;
@@ -37,8 +37,8 @@ export function getQuote(id: QuoteId) {
 
 /**
  * Each quote is shown on a collectible card: IDs 1-52 are the white deck,
- * 53-104 the black deck and 105-156 the gold deck, each from Ace to King in
- * the suit order in card-utils.ts.
+ * 53-104 the black deck, 105-156 the gold deck and 157-208 the red deck,
+ * each from Ace to King in the suit order in card-utils.ts.
  */
 export function getQuoteCard(id: QuoteId): QuoteCard | undefined {
   if (!Number.isInteger(id) || id < 1 || id > QUOTE_COUNT) return undefined;

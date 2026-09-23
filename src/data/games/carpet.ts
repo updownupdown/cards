@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const carpet: GameDefinition = {
@@ -15,8 +16,8 @@ export const carpet: GameDefinition = {
   background: GAME_BACKGROUNDS.castleIndoors,
   animation: GameAnimations.Dust,
   gameColorDark: "#2b1a14",
-  gameColorMid: "#9a4b2f",
   gameColorPale: "#f6dcc0",
+  cardBack: CardBackColors.Terracotta,
   cardDescription:
     "Lift a twenty-card carpet onto the foundations as the stock patches every gap.",
   quickStart: [

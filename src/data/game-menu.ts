@@ -23,12 +23,7 @@ export type GameSettings = {
   isFavorite: boolean;
   difficulty: "easy" | "difficult";
   memoryDifficulty:
-    | "veryeasy"
-    | "easy"
-    | "medium"
-    | "hard"
-    | "veryhard"
-    | "extreme";
+    "veryeasy" | "easy" | "medium" | "hard" | "veryhard" | "extreme";
   drawCount: 1 | 3;
   islandJokers: boolean;
   lycanMode: "hard" | "medium" | "easy";
@@ -112,6 +107,8 @@ export type GlobalSettings = {
   showTipsForNewGames: boolean;
   hapticFeedback: boolean;
   keepScreenAwake: boolean;
+  /** Send anonymous crash diagnostics to Sentry. */
+  crashReports: boolean;
 };
 
 export type HomeGameEntry = {
@@ -153,6 +150,7 @@ export const DEFAULT_GLOBAL_SETTINGS: GlobalSettings = {
   showTipsForNewGames: true,
   hapticFeedback: false,
   keepScreenAwake: false,
+  crashReports: true,
 };
 
 export const DEFAULT_GAME_SETTINGS: GameSettings = {
@@ -466,12 +464,21 @@ export async function clearGameLaunchPending() {
   await AsyncStorage.removeItem(GAME_LAUNCH_GUARD_STORAGE_KEY);
 }
 
-/** Returns true (and clears the flag) if the last game launch never settled. */
+/**
+ * Returns the game path (and clears the flag) if the last game launch never
+ * settled, or null if it did. The path names the game in a crash report.
+ */
 export async function consumeInterruptedGameLaunch() {
   const raw = await AsyncStorage.getItem(GAME_LAUNCH_GUARD_STORAGE_KEY);
-  if (!raw) return false;
+  if (!raw) return null;
   await clearGameLaunchPending();
-  return true;
+
+  try {
+    const { path } = JSON.parse(raw) as { path?: string };
+    return path ?? "unknown";
+  } catch {
+    return "unknown";
+  }
 }
 
 // ========== Game Settings ========== //

@@ -1,4 +1,5 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const simpleSimon: GameDefinition = {
@@ -9,8 +10,8 @@ export const simpleSimon: GameDefinition = {
   thumbnail: "SimpleSimon.webp",
   background: GAME_BACKGROUNDS.modernStairs,
   gameColorDark: "#312d29",
-  gameColorMid: "#941f1f",
   gameColorPale: "#eadfca",
+  cardBack: CardBackColors.Crimson,
   cardDescription:
     "All 52 cards begin exposed across ten columns in this thoughtful Spider relative.",
   quickStart: [

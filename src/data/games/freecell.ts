@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const freeCell: GameDefinition = {
@@ -16,8 +17,8 @@ export const freeCell: GameDefinition = {
   background: GAME_BACKGROUNDS.cabinInterior,
   animation: GameAnimations.Dust,
   gameColorDark: "#2b231b",
-  gameColorMid: "#af8a5a",
   gameColorPale: "#fff1dd",
+  cardBack: CardBackColors.Bronze,
   cardDescription:
     "An open-information classic where nearly every deal can be won with care.",
   quickStart: [

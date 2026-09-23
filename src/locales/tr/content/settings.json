@@ -289,6 +289,26 @@
       }
     }
   },
+  "jailbreak": {
+    "jailbreakDifficulty": {
+      "hash": "73216ddb",
+      "value": {
+        "description": "Her köşeye kaç kart dağıtılacağını belirler.",
+        "label": "Zorluk",
+        "options": [
+          {
+            "label": "Kolay (köşe başına 4)"
+          },
+          {
+            "label": "Normal (köşe başına 2)"
+          },
+          {
+            "label": "Zor (boş köşeler)"
+          }
+        ]
+      }
+    }
+  },
   "klondike": {
     "drawCount": {
       "hash": "ecd6b2f3",
@@ -377,9 +397,9 @@
   },
   "pocket-poker": {
     "pokerDifficulty": {
-      "hash": "00000000",
+      "hash": "505d7998",
       "value": {
-        "description": "Tüm modlarda 2 yeniden çekiş vardır ve çekilmek 1 puana mal olur. Zor mod 3 puanla başlar ve eşitlikleri rakibe verir. Uzman ayrıca rakibe fazladan bir kart verir.",
+        "description": "Zor mod 5 yerine 3 puanla başlar ve eşitlikleri rakibe verir. Uzman ayrıca rakibe fazladan bir kart verir.",
         "label": "Zorluk",
         "options": [
           {

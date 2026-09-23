@@ -5,7 +5,7 @@ import {
   type CollectibleReward,
 } from "./collectibles";
 import { GAME_DEFINITIONS } from "./games-registry";
-import { NODE_DEFINITIONS } from "./nodes-map.generated";
+import { ARM_DUST, NODE_DEFINITIONS } from "./nodes-map.generated";
 
 export const NODES_START_PATH = "/klondike";
 
@@ -13,9 +13,43 @@ export type NodeDefinition = {
   path: string;
   x: number;
   y: number;
+  /** Which spiral arm this node sits on, or null for a field star between
+   *  them. Two nodes sharing an arm are drawn as one of its thick strands. */
+  arm: number | null;
   connections: string[];
   rewards: CollectibleReward[];
 };
+
+/**
+ * The map's geometry, which must stay in step with the same names in
+ * scripts/generate-nodes-map.mjs; a test asserts the two agree.
+ */
+export const MAP_GEOMETRY = {
+  worldSize: 1800,
+  /** NODE_SIZE * the largest STATE_SIZE_MULTIPLIER in NodesMap. */
+  nodeDotDiameter: 18 * 1.2,
+  /** Node centres stay at least this many dot-diameters apart. */
+  minSpacingInDots: 3,
+  /** Most links one node may hold. */
+  maxConnections: 6,
+  minRewards: 2,
+  maxRewards: 3,
+  /**
+   * No single game may lock more than this share of the map behind it. The
+   * map is not required to survive losing any node (arms are chains, so a
+   * mid-arm game always gates the rest of its arm), only to keep any one
+   * blockage small enough that there is still plenty else to play.
+   */
+  maxGatedShare: 0.2,
+} as const;
+
+/** The minimum gap between two node centres, in map units. */
+export const MIN_NODE_SPACING =
+  (MAP_GEOMETRY.minSpacingInDots * MAP_GEOMETRY.nodeDotDiameter) /
+  (MAP_GEOMETRY.worldSize / 2);
+
+/** A speck of decorative dust: x, y, tint index, opacity. */
+export type ArmDust = [number, number, number, number];
 
 export type NodeVisualState = "locked" | "connected" | "won" | "complete";
 
@@ -59,6 +93,13 @@ export function getNodeVisualState(
 export function validateNodesMap() {
   const errors: string[] = [...validateCollectibleCatalogs()];
   const gamePaths = new Set(GAME_DEFINITIONS.map((game) => game.path));
+  // Local-only games are still in development and are left off the map, so
+  // they are not reported as missing nodes.
+  const mappedGamePaths = new Set(
+    GAME_DEFINITIONS.filter((game) => !game.enabledOnLocalOnly).map(
+      (game) => game.path,
+    ),
+  );
   const nodePaths = new Set<string>();
   const taoIds = new Set<number>();
   const quoteIds = new Set<number>();
@@ -70,11 +111,24 @@ export function validateNodesMap() {
     if (!Number.isFinite(node.x) || !Number.isFinite(node.y)) {
       errors.push(`Invalid coordinates for ${node.path}.`);
     }
-    if (node.connections.length < 2 || node.connections.length > 5) {
-      errors.push(`${node.path} must have 2 to 5 connections.`);
+    if (
+      node.connections.length < 1 ||
+      node.connections.length > MAP_GEOMETRY.maxConnections
+    ) {
+      errors.push(
+        `${node.path} must have 1 to ${MAP_GEOMETRY.maxConnections} connections.`,
+      );
     }
-    if (node.rewards.length < 2 || node.rewards.length > 4) {
-      errors.push(`${node.path} must have 2 to 4 rewards.`);
+    if (
+      node.rewards.length < MAP_GEOMETRY.minRewards ||
+      node.rewards.length > MAP_GEOMETRY.maxRewards
+    ) {
+      errors.push(
+        `${node.path} must have ${MAP_GEOMETRY.minRewards} to ${MAP_GEOMETRY.maxRewards} rewards.`,
+      );
+    }
+    if (node.arm !== null && !Number.isInteger(node.arm)) {
+      errors.push(`${node.path} has an invalid arm ${node.arm}.`);
     }
 
     for (const reward of node.rewards) {
@@ -99,32 +153,30 @@ export function validateNodesMap() {
     }
   }
 
-  for (const gamePath of gamePaths) {
+  for (const gamePath of mappedGamePaths) {
     if (!nodePaths.has(gamePath)) errors.push(`Missing node for ${gamePath}.`);
   }
-  const nearestDistances = NODE_DEFINITIONS.map((node) =>
-    Math.min(
-      ...NODE_DEFINITIONS.filter(
-        (candidate) => candidate.path !== node.path,
-      ).map((candidate) =>
-        Math.hypot(node.x - candidate.x, node.y - candidate.y),
+  const closestPair = Math.min(
+    ...NODE_DEFINITIONS.map((node) =>
+      Math.min(
+        ...NODE_DEFINITIONS.filter(
+          (candidate) => candidate.path !== node.path,
+        ).map((candidate) =>
+          Math.hypot(node.x - candidate.x, node.y - candidate.y),
+        ),
       ),
     ),
   );
-  const minimumSpacing = Math.min(...nearestDistances);
-  const maximumSpacing = Math.max(...nearestDistances);
-  if (minimumSpacing < 0.094) {
-    errors.push(`Node spacing ${minimumSpacing.toFixed(4)} permits overlap.`);
-  }
-  if (maximumSpacing / minimumSpacing < 2.2) {
+  if (closestPair < MIN_NODE_SPACING) {
     errors.push(
-      `Nearest-node spacing ratio ${(maximumSpacing / minimumSpacing).toFixed(2)} is too uniform.`,
+      `Closest node pair ${closestPair.toFixed(4)} is under the ${MIN_NODE_SPACING.toFixed(4)} minimum, so the dots would crowd.`,
     );
   }
-  if (maximumSpacing / minimumSpacing > 3) {
-    errors.push(
-      `Nearest-node spacing ratio ${(maximumSpacing / minimumSpacing).toFixed(2)} exceeds 3.`,
-    );
+
+  // Every Tao chapter has to be collectable somewhere. Quotes deliberately
+  // are not: the pool is larger than the map needs.
+  for (let id = 1; id <= TAO_CHAPTER_COUNT; id += 1) {
+    if (!taoIds.has(id)) errors.push(`Tao chapter ${id} is not awarded.`);
   }
 
   const visited = new Set<string>();
@@ -143,28 +195,29 @@ export function validateNodesMap() {
     );
   }
 
+  // A game nobody can beat should not shut off the rest of the galaxy. Arms
+  // are chains, so some gating is unavoidable and expected; what matters is
+  // that no single game holds back a large share of the map.
+  const gateLimit = Math.ceil(NODE_DEFINITIONS.length * MAP_GEOMETRY.maxGatedShare);
   for (const blockedNode of NODE_DEFINITIONS) {
+    if (blockedNode.path === NODES_START_PATH) continue;
     const reachable = new Set<string>();
-    const pendingWithoutBlocked = [
-      blockedNode.path === NODES_START_PATH
-        ? NODE_DEFINITIONS.find((node) => node.path !== blockedNode.path)?.path
-        : NODES_START_PATH,
-    ].filter((path): path is string => !!path);
-
-    while (pendingWithoutBlocked.length > 0) {
-      const path = pendingWithoutBlocked.pop()!;
+    const queue = [NODES_START_PATH];
+    while (queue.length > 0) {
+      const path = queue.pop()!;
       if (path === blockedNode.path || reachable.has(path)) continue;
       reachable.add(path);
       NODES_BY_PATH.get(path)?.connections.forEach((connection) => {
         if (connection !== blockedNode.path && !reachable.has(connection)) {
-          pendingWithoutBlocked.push(connection);
+          queue.push(connection);
         }
       });
     }
 
-    if (reachable.size !== NODE_DEFINITIONS.length - 1) {
+    const gated = NODE_DEFINITIONS.length - 1 - reachable.size;
+    if (gated > gateLimit) {
       errors.push(
-        `${blockedNode.path} is a progression bottleneck: removing it leaves ${reachable.size}/${NODE_DEFINITIONS.length - 1} nodes reachable.`,
+        `${blockedNode.path} gates ${gated} games, over the ${gateLimit} allowed.`,
       );
     }
   }
@@ -179,4 +232,4 @@ if (__DEV__) {
   }
 }
 
-export { NODE_DEFINITIONS };
+export { ARM_DUST, NODE_DEFINITIONS };

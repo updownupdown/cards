@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const cabinSiege: GameDefinition = {
@@ -15,8 +16,8 @@ export const cabinSiege: GameDefinition = {
   background: GAME_BACKGROUNDS.dampForest,
   animation: GameAnimations.Leaves,
   gameColorDark: "#201207",
-  gameColorMid: "#54665f",
   gameColorPale: "#e9f1d9",
+  cardBack: CardBackColors.Slate,
   cardDescription:
     "Defend your cabin against a siege of zombies, using supporting cards strategically.",
   quickStart: [

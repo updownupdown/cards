@@ -73,6 +73,8 @@ const styles = StyleSheet.create({
     zIndex: LayerZIndexes.loadingOverlay,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Colors.background,
+    // Covers the home screen while a game mounts, so it matches home rather
+    // than flashing a colour the system bars aren't showing.
+    backgroundColor: Colors.starfieldOverlay,
   },
 });

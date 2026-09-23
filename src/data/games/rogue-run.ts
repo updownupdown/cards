@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const rogueRun: GameDefinition = {
@@ -15,8 +16,8 @@ export const rogueRun: GameDefinition = {
   background: GAME_BACKGROUNDS.stoneTunnel,
   animation: GameAnimations.Embers,
   gameColorDark: "#292116",
-  gameColorMid: "#611e12",
   gameColorPale: "#faefe3",
+  cardBack: CardBackColors.Burgundy,
   cardDescription:
     "A dungeon crawl where you manage weapon strength and potion usage.",
   quickStart: [

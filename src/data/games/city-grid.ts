@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 
 export const cityGrid: GameDefinition = {
   path: "/city-grid",
@@ -13,8 +14,8 @@ export const cityGrid: GameDefinition = {
   thumbnail: "CityGrid.webp",
   background: GAME_BACKGROUNDS.city,
   gameColorDark: "#383d4e",
-  gameColorMid: "#5a83af",
   gameColorPale: "#e3f6ff",
+  cardBack: CardBackColors.Bicycle,
   cardDescription:
     "A tile-laying game where each move can disrupt the precarious grid.",
   quickStart: [

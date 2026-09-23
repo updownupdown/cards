@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 
 export const jailbreak: GameDefinition = {
   path: "/jailbreak",
@@ -14,8 +15,8 @@ export const jailbreak: GameDefinition = {
   thumbnail: "Jailbreak.webp",
   background: GAME_BACKGROUNDS.stoneWall,
   gameColorDark: "#17211d",
-  gameColorMid: "#3d6252",
   gameColorPale: "#d9eee3",
+  cardBack: CardBackColors.Pine,
   cardDescription:
     "Match equal red and black totals to break the Joker through a wall.",
   quickStart: [
@@ -35,7 +36,7 @@ export const jailbreak: GameDefinition = {
     "- The Joker cannot escape until every card stacked on it has been cleared.",
 
     "## Difficulty",
-    "Less corner cards increase difficulty by restricting available options.",
+    "Fewer corner cards increase difficulty by restricting available options.",
     "Easy difficulty places 4 cards in each corner, Normal places 2, and Hard leaves the corners empty.",
   ],
 };

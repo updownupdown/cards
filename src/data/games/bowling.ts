@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 
 export const bowling: GameDefinition = {
   path: "/bowling",
@@ -13,8 +14,8 @@ export const bowling: GameDefinition = {
   thumbnail: "Bowling.webp",
   background: GAME_BACKGROUNDS.bowling,
   gameColorDark: "#331e0f",
-  gameColorMid: "#23947f",
   gameColorPale: "#a9e9f1",
+  cardBack: CardBackColors.Forest,
   cardDescription:
     "Bowl a full game of 10-pin using cards, chasing strikes and spares.",
   quickStart: [

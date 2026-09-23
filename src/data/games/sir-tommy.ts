@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 
 export const sirTommy: GameDefinition = {
   path: "/sir-tommy",
@@ -13,8 +14,8 @@ export const sirTommy: GameDefinition = {
   thumbnail: "SirTommy.webp",
   background: GAME_BACKGROUNDS.london,
   gameColorDark: "#1a2c33",
-  gameColorMid: "#27545f",
   gameColorPale: "#fdf7d9",
+  cardBack: CardBackColors.Teal,
   cardDescription:
     "The granddaddy of solitaire: sort the deck across four piles into four Ace-to-King stacks.",
   quickStart: [

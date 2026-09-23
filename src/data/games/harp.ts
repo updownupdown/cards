@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const harp: GameDefinition = {
@@ -11,8 +12,8 @@ export const harp: GameDefinition = {
   background: GAME_BACKGROUNDS.cliffFields,
   animation: GameAnimations.Leaves,
   gameColorDark: "#293a31",
-  gameColorMid: "#404928",
   gameColorPale: "#e7dfc4",
+  cardBack: CardBackColors.Moss,
   cardDescription:
     "A more forgiving Double Klondike with four passes through the stock.",
   quickStart: [

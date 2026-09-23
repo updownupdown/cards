@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const chapterAndVerse: GameDefinition = {
@@ -11,8 +12,8 @@ export const chapterAndVerse: GameDefinition = {
   background: GAME_BACKGROUNDS.bookstore,
   animation: GameAnimations.Dust,
   gameColorDark: "#2e2d27",
-  gameColorMid: "#796d49",
   gameColorPale: "#f0e9d7",
+  cardBack: CardBackColors.Bronze,
   cardDescription:
     "Match customer offers with available books and offers to maximize your score.",
   quickStart: [

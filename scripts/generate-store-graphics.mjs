@@ -139,7 +139,7 @@ async function makeFeatureGraphic() {
 
   // Wordmark, scaled up, plus tagline, as one vector composition
   const wordmarkSrc = fs.readFileSync(
-    `${ROOT}/assets/images/SoliNovaLogo.svg`,
+    `${ROOT}/assets/images/SolitariusLogo.svg`,
     "utf8",
   );
   const wordmarkInner = wordmarkSrc

@@ -47,10 +47,10 @@
       ]
     },
     "quickStart": {
-      "hash": "0e3e609d",
+      "hash": "f8cf218d",
       "value": [
         "Descarta una carta visible si otra carta más alta del mismo palo también está visible.",
-        "Gana descartando todas las cartas excepto los cuatro A.",
+        "Gana descartando todas las cartas excepto los cuatro Ases.",
         "Mueve cartas a las pilas vacías y reparte cuando no puedas seguir."
       ]
     },
@@ -77,12 +77,12 @@
       ]
     },
     "quickStart": {
-      "hash": "e1d29bc6",
+      "hash": "377b21a0",
       "value": [
         "Sube las fundaciones por palo, de A a K.",
         "Construye las columnas subiendo o bajando un valor, en el mismo palo.",
         "Mueve cualquier grupo de cartas boca arriba.",
-        "Solo los K pueden ocupar las columnas vacías."
+        "Solo los Reyes pueden ocupar las columnas vacías."
       ]
     },
     "title": {
@@ -196,10 +196,10 @@
       ]
     },
     "quickStart": {
-      "hash": "a2c4daeb",
+      "hash": "6ef4e415",
       "value": [
         "Sube las fundaciones por palo.",
-        "Baja las columnas por palo; solo los K ocupan los huecos.",
+        "Baja las columnas por palo; solo los Reyes ocupan los huecos.",
         "Mueve cualquier final de columna visible y recorre el mazo una sola vez."
       ]
     },
@@ -214,14 +214,14 @@
       "value": "Despeja trece columnas compactas hacia cuatro fundaciones por palo."
     },
     "howToPlay": {
-      "hash": "33a6a3c4",
+      "hash": "b7b35342",
       "value": [
         "## Objetivo",
-        "Lleva las 52 cartas a las cuatro fundaciones.",
+        "Lleva las 52 cartas a las cuatro fundaciones, subiendo por palo del As al Rey.",
         "## Reglas",
         "- Las fundaciones suben **por palo** del As al Rey.",
         "- Las columnas bajan **por valor**, sin importar el palo.",
-        "- Mueve solo una carta descubierta cada vez.",
+        "- Mueve solo una carta inferior descubierta cada vez.",
         "- Las columnas vacías se cierran de inmediato y no se pueden volver a llenar.",
         "- Toca una columna para seleccionar su carta inferior y luego toca una columna de destino válida.",
         "- Toca dos veces una carta descubierta para llevarla a su fundación cuando sea posible."
@@ -302,6 +302,40 @@
       "value": "Baronesa"
     }
   },
+  "beehive": {
+    "cardDescription": {
+      "hash": "dbca3d18",
+      "value": "Completa grupos de cuatro cartas en seis huecos del mismo valor usando la colmena, el montón y el mazo."
+    },
+    "howToPlay": {
+      "hash": "c74783f8",
+      "value": [
+        "## Objetivo",
+        "Retira las 52 cartas formando grupos de cuatro cartas del mismo valor.",
+        "## Reglas",
+        "- La colmena tiene 10 cartas; solo su carta superior está activa.",
+        "- Los seis huecos de la mesa guardan cartas de un solo valor, hasta cuatro cada uno.",
+        "- Mueve cartas del mismo valor entre la colmena, el montón y la mesa.",
+        "- Un grupo de cuatro cartas se retira de inmediato.",
+        "- Un hueco vacío sigue vacío hasta que muevas allí una carta de la colmena o del montón.",
+        "- Toca una pila de la mesa para moverla automáticamente sobre otra pila del mismo valor.",
+        "- Las pilas completas pasan boca abajo a la pila de descarte.",
+        "- Pasa hasta tres cartas del mazo al montón, o recicla el montón cuando el mazo esté vacío."
+      ]
+    },
+    "quickStart": {
+      "hash": "1b55dc60",
+      "value": [
+        "Empareja las cartas por valor y completa todos los grupos de cuatro.",
+        "Toca una carta de la colmena o del montón para colocarla automáticamente.",
+        "Pasa tres cartas del mazo cuando necesites nuevas opciones."
+      ]
+    },
+    "title": {
+      "hash": "09da3761",
+      "value": "La colmena"
+    }
+  },
   "beleaguered-castle": {
     "cardDescription": {
       "hash": "f890639b",
@@ -353,9 +387,9 @@
       ]
     },
     "quickStart": {
-      "hash": "ed9ba718",
+      "hash": "db6b2f70",
       "value": [
-        "Sube las fundaciones de A y baja las fundaciones K, por palo.",
+        "Sube las fundaciones de As y baja las de Rey, por palo.",
         "Construye las columnas subiendo o bajando un valor en el mismo palo.",
         "Mueve una carta descubierta cada vez; las columnas vacías quedan cerradas."
       ]
@@ -451,7 +485,7 @@
       "value": "Mantén en movimiento doce columnas cortas de dos barajas, de carta en carta y por palo."
     },
     "howToPlay": {
-      "hash": "f2b1ffa6",
+      "hash": "bf9a5d8b",
       "value": [
         "## Objetivo",
         "Sube las ocho fundaciones por palo, del As al Rey.",
@@ -462,11 +496,11 @@
       ]
     },
     "quickStart": {
-      "hash": "612615e7",
+      "hash": "0cde4d1b",
       "value": [
-        "Sube las fundaciones por palo.",
+        "Sube las ocho fundaciones por palo, de A a K.",
         "Baja las columnas por palo, de carta en carta.",
-        "Cualquier carta ocupa un hueco; el mazo se pasa una sola vez."
+        "Cualquier carta ocupa un hueco. No se vuelve a repartir."
       ]
     },
     "title": {
@@ -552,8 +586,8 @@
   },
   "calculation": {
     "cardDescription": {
-      "hash": "158cca43",
-      "value": "Sube cuatro fundaciones de 1 en 1, de 2 en 2, de 3 en 3 y de 4 en 4, hasta los Reyes."
+      "hash": "35edc39a",
+      "value": "Sube cuatro fundaciones de 1 en 1, de 2 en 2, de 3 en 3 y de 4 en 4, hasta K."
     },
     "howToPlay": {
       "hash": "08af239e",
@@ -590,10 +624,10 @@
       "value": "Sube fundaciones por palo desde un valor base aleatorio, con la ayuda de una reserva de 13 cartas."
     },
     "howToPlay": {
-      "hash": "5bad9813",
+      "hash": "d1f393e8",
       "value": [
         "## Objetivo",
-        "Lleva las 52 cartas a sus fundaciones.",
+        "Lleva las 52 cartas a sus fundaciones, subiendo por palo desde el valor base y pasando del Rey al As.",
         "## Fundaciones",
         "- Sube las fundaciones **por palo** desde el valor base.",
         "- Las fundaciones dan la vuelta del Rey al As, por ejemplo: 10, J, Q, K, A, 2, 3, etc.",
@@ -624,20 +658,21 @@
       "value": "Sube una alfombra de veinte cartas a las fundaciones mientras el mazo tapa cada hueco."
     },
     "howToPlay": {
-      "hash": "e818b0bd",
+      "hash": "0af4a81e",
       "value": [
         "## Objetivo",
         "Lleva las 52 cartas a las cuatro fundaciones, subiendo por palo del As al Rey.",
         "## Reglas",
-        "- Cualquier carta de la alfombra, y la carta superior del montón, se puede jugar en su fundación.",
-        "- Un hueco en la alfombra se rellena en el acto con la carta superior del **montón**, o desde el **mazo** si el montón está vacío.",
-        "- Toca el **mazo** para pasar una carta al montón. No se vuelve a repartir."
+        "- Cualquier carta de la alfombra, y la carta superior del montón, se puede jugar en una fundación.",
+        "- Un hueco en la alfombra se rellena automáticamente con la carta superior del **montón**, o desde el **mazo** si el montón está vacío.",
+        "- Toca el **mazo** para pasar una carta al montón.",
+        "- **No se vuelve a repartir**."
       ]
     },
     "quickStart": {
-      "hash": "750bc703",
+      "hash": "760fc5c7",
       "value": [
-        "Sube las fundaciones por palo desde A.",
+        "Sube las fundaciones por palo desde los Ases.",
         "Toca una carta de la alfombra o del montón para subirla.",
         "Los huecos de la alfombra se rellenan desde el montón y después desde el mazo."
       ]
@@ -833,10 +868,10 @@
       ]
     },
     "quickStart": {
-      "hash": "5303a8fc",
+      "hash": "05cf1462",
       "value": [
         "Lleva las 104 cartas a las fundaciones.",
-        "Sube los A y baja los K por palo.",
+        "Sube los Ases y baja los Reyes, por palo.",
         "Juega una carta de la colcha cuando uno de sus lados cortos quede al descubierto.",
         "Una carta libre que no puede ir a una fundación puede ir al montón, subiendo o bajando en el mismo palo."
       ]
@@ -866,10 +901,10 @@
       ]
     },
     "quickStart": {
-      "hash": "44a61fd6",
+      "hash": "f9edde34",
       "value": [
-        "Sube las fundaciones de A y baja las fundaciones K, por palo.",
-        "Construye las columnas subiendo o bajando un valor en el mismo palo; el A y el K son contiguos.",
+        "Sube las fundaciones de As y baja las de Rey, por palo.",
+        "Construye las columnas subiendo o bajando un valor en el mismo palo; el As y el Rey son contiguos.",
         "Mueve una carta descubierta; reapila cada pila hasta tres veces."
       ]
     },
@@ -966,10 +1001,10 @@
       ]
     },
     "quickStart": {
-      "hash": "e16dc559",
+      "hash": "b3570aa9",
       "value": [
         "Derrota a 12 miembros de la realeza, de uno en uno.",
-        "Los palos tienen poderes; los enemigos son inmunes a su propio palo; los A permiten combos.",
+        "Los palos tienen poderes; los enemigos son inmunes a su propio palo; los Ases permiten combos.",
         "Fase de ataque: juega una o varias cartas para infligir daño.",
         "Fase de defensa: las cartas descartadas deben sumar al menos el ataque del enemigo."
       ]
@@ -997,9 +1032,9 @@
       ]
     },
     "quickStart": {
-      "hash": "8fb57be7",
+      "hash": "fd1b5503",
       "value": [
-        "Sube las fundaciones por palo desde A.",
+        "Sube las fundaciones por palo desde los Ases.",
         "Baja por palo moviendo cartas superiores; los huecos quedan vacíos.",
         "Tras cualquier movimiento, toca la pila de reparto para volver a formar las pilas de cuatro en cuatro."
       ]
@@ -1071,13 +1106,57 @@
       "value": "Delta 21"
     }
   },
+  "devils-grip": {
+    "cardDescription": {
+      "hash": "5790b2dc",
+      "value": "Sube 24 pilas del mismo palo de tres en tres en una cuadrícula de tres filas."
+    },
+    "howToPlay": {
+      "hash": "54a1e92a",
+      "value": [
+        "## Objetivo",
+        "Coloca las **96 cartas** en tantas pilas en secuencia del mismo palo como sea posible. Deja fuera de la cuadrícula el menor número de cartas.",
+        "## Cuadrícula",
+        "Forma secuencias colocando cartas o pilas sobre la carta inmediatamente inferior del mismo palo.",
+        "- La fila superior sube por palo: **2, 5, 8, J**.",
+        "- La fila central sube por palo: **3, 6, 9, Q**.",
+        "- La fila inferior sube por palo: **4, 7, 10, K**.",
+        "Intercambia dos pilas ocupadas de la cuadrícula para reorganizarlas.",
+        "Puedes formar pilas sin su carta base (por ejemplo, 5-8) y completar la secuencia más tarde.",
+        "Cuando una jugada deja un hueco en la cuadrícula, se rellena de inmediato desde el mazo de robo mientras queden cartas.",
+        "## Robo y montón",
+        "Toca el mazo de robo para pasar tres cartas al montón.",
+        "- Solo se puede jugar la carta superior del montón.",
+        "- Se puede volver a repartir sin límite.",
+        "## Puntuación",
+        "La partida termina cuando ya no se puede jugar ninguna carta.",
+        "Tu puntuación es el número de cartas que quedan fuera de la cuadrícula:",
+        "- **10 o menos**: bien",
+        "- **5 o menos**: excelente",
+        "- **2 o menos**: brillante"
+      ]
+    },
+    "quickStart": {
+      "hash": "f85507c3",
+      "value": [
+        "Forma secuencias del mismo palo: 2-5-8-J (fila superior), 3-6-9-Q (fila central) y 4-7-10-K (fila inferior).",
+        "Mueve cartas o pilas para formar secuencias o para intercambiar su posición.",
+        "Toca el mazo de robo para repartir tres cartas al montón.",
+        "La carta superior del montón se puede colocar sobre una pila válida."
+      ]
+    },
+    "title": {
+      "hash": "87ea7989",
+      "value": "La garra del diablo"
+    }
+  },
   "diplomat": {
     "cardDescription": {
       "hash": "1e3f9a93",
       "value": "Negocia ocho columnas abiertas, apiladas solo por valor y con movimientos de una carta."
     },
     "howToPlay": {
-      "hash": "a56f9add",
+      "hash": "ca4c9166",
       "value": [
         "## Objetivo",
         "Lleva las dos barajas a ocho fundaciones, del As al Rey por palo.",
@@ -1085,15 +1164,16 @@
         "- Se reparten boca arriba ocho columnas de cuatro cartas.",
         "- Baja las columnas sin importar el palo.",
         "- Mueve una carta cada vez y llena las columnas vacías con cualquier carta.",
-        "- Pasa el mazo una sola vez, de carta en carta."
+        "- Reparte el mazo de carta en carta. No se vuelve a repartir."
       ]
     },
     "quickStart": {
-      "hash": "2569bb52",
+      "hash": "452bb2bf",
       "value": [
+        "Lleva las dos barajas a ocho fundaciones, subiendo por palo de A a K.",
         "Baja las columnas por valor, sin importar el palo.",
         "Mueve una carta cada vez; cualquier carta ocupa un hueco.",
-        "Sube ocho fundaciones por palo en una sola pasada del mazo."
+        "No se vuelve a repartir."
       ]
     },
     "title": {
@@ -1158,11 +1238,11 @@
       ]
     },
     "quickStart": {
-      "hash": "60a8fd03",
+      "hash": "1d94d89b",
       "value": [
         "Roba y coloca cartas numéricas sobre cartas de la cuadrícula de valor igual o inferior.",
         "Cada colocación dispara a través de las dos cartas situadas frente a un miembro de la realeza adyacente.",
-        "Los A extraen pilas; los Comodines reasignan cartas superiores."
+        "Los Ases extraen pilas; los Comodines reasignan cartas superiores."
       ]
     },
     "title": {
@@ -1206,7 +1286,7 @@
       "value": "Un pariente espacioso de FreeCell, por palo, con ocho celdas y columnas solo para Reyes."
     },
     "howToPlay": {
-      "hash": "aa5d6660",
+      "hash": "014c8f8e",
       "value": [
         "## Objetivo",
         "Lleva las 52 cartas a las cuatro fundaciones, cada una ordenada por palo del As al Rey.",
@@ -1219,9 +1299,11 @@
       ]
     },
     "quickStart": {
-      "hash": "cd009112",
+      "hash": "7d7fc408",
       "value": [
-        "Usa 8 celdas libres; baja las columnas en el mismo palo; solo los K ocupan las columnas vacías."
+        "Lleva las cartas a las fundaciones por palo, de A a K.",
+        "Baja las columnas en el mismo palo.",
+        "Usa 8 celdas libres; solo los Reyes ocupan las columnas vacías."
       ]
     },
     "title": {
@@ -1312,9 +1394,9 @@
       ]
     },
     "quickStart": {
-      "hash": "f330208b",
+      "hash": "2e731eeb",
       "value": [
-        "Ordena las cartas del A al 4 en cada fila: Corazones, Tréboles, Diamantes y Picas.",
+        "Ordena las cartas del As al 4 en cada fila: Corazones, Tréboles, Diamantes y Picas.",
         "Toca una carta junto al espacio vacío para deslizarla."
       ]
     },
@@ -1395,9 +1477,9 @@
       ]
     },
     "quickStart": {
-      "hash": "2a0ca0e4",
+      "hash": "4cb14090",
       "value": [
-        "Sube las fundaciones por palo, de A a K.",
+        "Sube las fundaciones por palo, del As al Rey.",
         "Baja los parterres por valor, sin importar el palo.",
         "Todas las cartas del ramo están disponibles; cualquier carta ocupa un parterre vacío."
       ]
@@ -1425,9 +1507,9 @@
       ]
     },
     "quickStart": {
-      "hash": "549d941c",
+      "hash": "0f1f4350",
       "value": [
-        "Sube las fundaciones por palo, de A a K.",
+        "Sube las fundaciones por palo, del As al Rey.",
         "Construye las calles subiendo o bajando un valor en el mismo palo.",
         "Mueve una carta cada vez; cualquier carta ocupa una calle vacía."
       ]
@@ -1601,7 +1683,7 @@
       "value": "Escala un Klondike de nueve columnas y dos barajas con ocho fundaciones."
     },
     "howToPlay": {
-      "hash": "9dbf8f96",
+      "hash": "b5a0feb8",
       "value": [
         "## Objetivo",
         "Lleva las dos barajas a ocho fundaciones, del As al Rey por palo.",
@@ -1609,15 +1691,15 @@
         "- Se reparten nueve columnas en escalera, como en el Klondike.",
         "- Baja alternando colores y mueve secuencias ordenadas.",
         "- Solo los Reyes pueden ocupar las columnas vacías.",
-        "- Pasa las cartas del mazo de una en una; el mazo se puede repartir dos veces."
+        "- Pasa las cartas del mazo de una en una; 1 nuevo reparto da 2 pasadas en total."
       ]
     },
     "quickStart": {
-      "hash": "87fffab2",
+      "hash": "db912b69",
       "value": [
-        "Baja las columnas alternando colores.",
-        "Mueve secuencias ordenadas; solo los K ocupan las columnas vacías.",
-        "Sube ocho fundaciones por palo; el mazo tiene dos pasadas."
+        "Lleva las dos barajas a ocho fundaciones, subiendo por palo de A a K.",
+        "Baja las columnas alternando colores y mueve secuencias ordenadas.",
+        "Solo los K ocupan las columnas vacías; 1 nuevo reparto da 2 pasadas del mazo."
       ]
     },
     "title": {
@@ -1662,13 +1744,18 @@
       "value": "Da cuerda a doce fundaciones alrededor de una esfera de reloj hasta que cada hora muestre su número."
     },
     "howToPlay": {
-      "hash": "932afb6b",
+      "hash": "d994567d",
       "value": [
         "## Objetivo",
-        "Sube cada fundación del reloj hasta que su carta superior coincida con su hora. Las Jotas cuentan 11 y las Reinas 12.",
+        "Sube cada fundación del reloj hasta que su carta superior coincida con su hora, por ejemplo:",
+        "- la pila de la 1 termina en un As,",
+        "- la pila de las 2, en un 2,",
+        "- la pila de las 11, en una Jota,",
+        "- la pila de las 12, en una Reina.",
+        "- etc.",
         "## Reglas",
         "- Las fundaciones suben **por palo**, pasando del Rey al As, y se detienen en su hora.",
-        "- Mueve las cartas superiores de una en una. Baja las columnas **sin importar el palo**, colocando un Rey sobre un As.",
+        "- Mueve las cartas superiores de una en una. Baja las columnas **sin importar el palo**.",
         "- Cualquier carta puede ocupar una pila vacía.",
         "- **Toca dos veces** una carta, o arrástrala, para jugarla en su fundación."
       ]
@@ -1734,23 +1821,23 @@
       "value": "Un Doble Klondike más indulgente, con cuatro pasadas por el mazo."
     },
     "howToPlay": {
-      "hash": "5c190f4e",
+      "hash": "97cbd1bd",
       "value": [
         "## Objetivo",
-        "Lleva las dos barajas a ocho fundaciones por palo.",
+        "Lleva las dos barajas a ocho fundaciones, subiendo por palo del As al Rey.",
         "## Reglas",
-        "- Arpa usa la disposición Klondike de nueve columnas de Gargantúa.",
-        "- Baja alternando colores y mueve secuencias ordenadas.",
+        "- Baja las columnas alternando colores y mueve secuencias ordenadas.",
         "- Solo los Reyes pueden ocupar las columnas vacías.",
         "- Pasa las cartas del mazo de una en una, con cuatro pasadas en total."
       ]
     },
     "quickStart": {
-      "hash": "dbf48c82",
+      "hash": "78454632",
       "value": [
+        "Lleva todas las cartas a las fundaciones, subiendo por palo de A a K.",
         "Baja las columnas alternando colores.",
         "Solo los K ocupan las columnas vacías.",
-        "Usa cuatro pasadas del mazo para completar ocho fundaciones."
+        "Dispones de hasta cuatro pasadas del mazo."
       ]
     },
     "title": {
@@ -1855,11 +1942,11 @@
       ]
     },
     "quickStart": {
-      "hash": "1ebc8ea3",
+      "hash": "286481af",
       "value": [
         "Gana reclutando a más de la mitad de los Espías clave (J, Q, K).",
         "Construye tu mazo reclutando espías de valor creciente.",
-        "Recluta haciendo coincidir palo y valor (los A son comodines).",
+        "Recluta haciendo coincidir palo y valor (los Ases son comodines).",
         "Contrarresta o asesina cuando sea necesario."
       ]
     },
@@ -1898,6 +1985,40 @@
     "title": {
       "hash": "0a12466f",
       "value": "Invasores"
+    }
+  },
+  "jailbreak": {
+    "cardDescription": {
+      "hash": "d2cc3eee",
+      "value": "Empareja totales iguales de rojas y negras para que el Comodín escape por un muro."
+    },
+    "howToPlay": {
+      "hash": "94b0b650",
+      "value": [
+        "## Objetivo",
+        "Deja escapar al Comodín despejando uno de los cuatro **muros** que lo rodean, sin dejar ninguna carta encima de él.",
+        "## Cómo jugar",
+        "- Selecciona cartas rojas y negras descubiertas cuyos valores sumen totales iguales. Las cartas emparejadas se retiran automáticamente.",
+        "- Los Ases valen 1; las Jotas, 11; las Reinas, 12, y los Reyes, 13.",
+        "- Al despejar una pila de la cárcel se descubre su siguiente carta. Despejar una esquina no libera al Comodín.",
+        "- Toca el mazo de robo para poner su carta superior sobre el Comodín. Allí se pueden apilar como mucho tres cartas, y solo la superior está disponible.",
+        "- El Comodín no puede escapar hasta que se hayan retirado todas las cartas apiladas sobre él.",
+        "## Dificultad",
+        "Cuantas menos cartas haya en las esquinas, más difícil es la partida, porque quedan menos opciones.",
+        "El modo fácil pone 4 cartas en cada esquina, el normal pone 2 y el difícil deja las esquinas vacías."
+      ]
+    },
+    "quickStart": {
+      "hash": "d57ce5d8",
+      "value": [
+        "Despeja uno de los muros laterales para que el Comodín pueda escapar.",
+        "Retira cartas seleccionando cartas rojas y negras descubiertas con totales iguales.",
+        "Cuando no puedas seguir, toca el mazo de robo para poner una carta sobre el Comodín."
+      ]
+    },
+    "title": {
+      "hash": "0e4ec982",
+      "value": "Fuga de prisión"
     }
   },
   "josephine": {
@@ -1949,11 +2070,11 @@
       ]
     },
     "quickStart": {
-      "hash": "4672f616",
+      "hash": "6358aab0",
       "value": [
         "Sube las fundaciones por palo.",
         "Baja las columnas alternando colores.",
-        "Solo los K pueden ocupar las columnas vacías."
+        "Solo los Reyes pueden ocupar las columnas vacías."
       ]
     },
     "title": {
@@ -1997,7 +2118,7 @@
       "value": "Reparte fila tras fila y libera cartas por arriba y por abajo del laberinto."
     },
     "howToPlay": {
-      "hash": "4c8fa7c7",
+      "hash": "d02b7d3c",
       "value": [
         "## Objetivo",
         "Lleva las 52 cartas a las cuatro fundaciones, subiendo por palo del As al Rey.",
@@ -2009,9 +2130,9 @@
       ]
     },
     "quickStart": {
-      "hash": "27f2c4e7",
+      "hash": "1432729b",
       "value": [
-        "Sube las cuatro fundaciones por palo, de A a K.",
+        "Sube las cuatro fundaciones por palo, del As al Rey.",
         "Solo están libres las cartas con un espacio vacío encima o debajo.",
         "Toca el mazo para repartir una fila nueva cuando no puedas seguir."
       ]
@@ -2113,7 +2234,7 @@
       "value": "Trece columnas compactas empiezan bajo ocho Ases ya colocados."
     },
     "howToPlay": {
-      "hash": "da244aaf",
+      "hash": "8b0e3ad9",
       "value": [
         "## Objetivo",
         "Sube las ocho fundaciones del As al Rey por palo.",
@@ -2121,15 +2242,17 @@
         "- Los Ases se retiran antes de repartir trece columnas de tres cartas.",
         "- Baja las columnas por palo.",
         "- Mueve solo una carta descubierta cada vez.",
-        "- Llena las columnas vacías con cualquier carta y reparte el mazo una sola vez."
+        "- Llena las columnas vacías con cualquier carta.",
+        "- Reparte el mazo de carta en carta. No se vuelve a repartir."
       ]
     },
     "quickStart": {
-      "hash": "6522e514",
+      "hash": "15dcb416",
       "value": [
-        "Los ocho A empiezan en las fundaciones.",
+        "Sube las ocho fundaciones de A a K por palo.",
+        "Los ocho Ases empiezan en las fundaciones.",
         "Baja las columnas por palo, de carta en carta.",
-        "Las columnas vacías aceptan cualquier carta; el mazo se pasa una vez."
+        "Las columnas vacías aceptan cualquier carta. No se vuelve a repartir."
       ]
     },
     "title": {
@@ -2192,7 +2315,7 @@
       "value": "Un pariente de Cuarenta ladrones de nueve columnas en el que se apila alternando colores."
     },
     "howToPlay": {
-      "hash": "6c526e2a",
+      "hash": "3ac89609",
       "value": [
         "## Objetivo",
         "Sube ocho fundaciones del As al Rey por palo.",
@@ -2200,15 +2323,16 @@
         "- Se reparten boca arriba nueve columnas de cuatro cartas.",
         "- Baja alternando colores y mueve una carta cada vez.",
         "- Las columnas vacías aceptan cualquier carta.",
-        "- Pasa el mazo una sola vez, de carta en carta."
+        "- Reparte el mazo de carta en carta. No se vuelve a repartir."
       ]
     },
     "quickStart": {
-      "hash": "8771c4fd",
+      "hash": "1b057f34",
       "value": [
+        "Sube ocho fundaciones por palo, de A a K.",
         "Baja las columnas alternando colores.",
         "Mueve una carta cada vez.",
-        "Cualquier carta ocupa una columna vacía; el mazo se pasa una vez."
+        "Cualquier carta ocupa una columna vacía. No se vuelve a repartir."
       ]
     },
     "title": {
@@ -2290,12 +2414,12 @@
       ]
     },
     "quickStart": {
-      "hash": "5a21febe",
+      "hash": "7142a388",
       "value": [
         "Sube las fundaciones por palo, de A a K.",
         "Baja las columnas sobre cualquier palo excepto el mismo.",
         "Mueve cualquier grupo boca arriba.",
-        "Solo los K pueden ocupar las columnas vacías."
+        "Solo los Reyes pueden ocupar las columnas vacías."
       ]
     },
     "title": {
@@ -2378,23 +2502,25 @@
       "value": "Descubre diez columnas y mueve secuencias de colores alternos como bloques completos."
     },
     "howToPlay": {
-      "hash": "eed05a0f",
+      "hash": "1b832fa3",
       "value": [
         "## Objetivo",
-        "Lleva las dos barajas a ocho fundaciones por palo.",
+        "Lleva las dos barajas a las ocho fundaciones, subiendo por palo del As al Rey.",
         "## Reglas",
         "- Se reparten diez columnas de cuatro cartas, cada una con dos boca abajo y dos boca arriba.",
-        "- Baja alternando colores.",
+        "- Baja las columnas alternando colores.",
         "- Mueve juntas las secuencias completas bien apiladas.",
-        "- Cualquier carta o secuencia ocupa un espacio vacío; el mazo se pasa una vez."
+        "- Cualquier carta o secuencia ocupa un hueco; el mazo se pasa una vez.",
+        "- No se vuelve a repartir."
       ]
     },
     "quickStart": {
-      "hash": "021b43ee",
+      "hash": "dcb56508",
       "value": [
-        "Las dos primeras cartas de cada columna empiezan boca abajo.",
-        "Baja alternando colores.",
-        "Mueve secuencias ordenadas; cualquier carta ocupa un hueco."
+        "Lleva todas las cartas a las fundaciones, subiendo por palo de A a K.",
+        "Baja las columnas alternando colores.",
+        "Mueve juntas las secuencias ordenadas; cualquier carta ocupa un hueco.",
+        "No se vuelve a repartir."
       ]
     },
     "title": {
@@ -2444,9 +2570,9 @@
       ]
     },
     "quickStart": {
-      "hash": "76b5f0d2",
+      "hash": "7a29acb2",
       "value": [
-        "Consigue todos los A y sal por el Comodín para ganar.",
+        "Consigue todos los Ases y sal por el Comodín para ganar.",
         "Pierdes si caes en una figura boca arriba.",
         "Usa las cartas numéricas para marcar caminos y explorar."
       ]
@@ -2525,7 +2651,7 @@
       "value": "Un duelo de póker de bolsillo: roba, apuesta y supera a un rival que recibe cartas del mismo mazo."
     },
     "howToPlay": {
-      "hash": "00000000",
+      "hash": "24a831bd",
       "value": [
         "## Objetivo",
         "Llega a **10 puntos** para ganar. Pierdes si una apuesta reduce tu puntuación a 0.",
@@ -2548,7 +2674,7 @@
       ]
     },
     "quickStart": {
-      "hash": "00000000",
+      "hash": "226dffa2",
       "value": [
         "Forma una mano de póker y luego apuesta.",
         "Cuanto más apuestes, más cartas roba tu rival.",
@@ -2617,9 +2743,9 @@
       ]
     },
     "quickStart": {
-      "hash": "48978acc",
+      "hash": "88ac90c8",
       "value": [
-        "Sube las cuatro fundaciones por color, de A a K.",
+        "Sube las cuatro fundaciones por color (rojo o negro), del As al Rey.",
         "Toca un montón para dejar en él la carta del mazo.",
         "Cuando se acabe el mazo, tócalo una vez para volver a repartir."
       ]
@@ -2647,9 +2773,9 @@
       ]
     },
     "quickStart": {
-      "hash": "117f36e4",
+      "hash": "38a2c4ea",
       "value": [
-        "Retira K, o parejas descubiertas que sumen 13. Roba para encontrar más parejas."
+        "Retira los Reyes, o las parejas descubiertas que sumen 13. Roba para encontrar más parejas."
       ]
     },
     "title": {
@@ -2663,7 +2789,7 @@
       "value": "Haz pasar a las parejas reales a la sala de audiencias y deja que cada Jota guíe su palo hacia abajo."
     },
     "howToPlay": {
-      "hash": "d7c16170",
+      "hash": "90bcd31f",
       "value": [
         "## Objetivo",
         "Lleva las 52 cartas a la **sala de audiencias** del centro.",
@@ -2677,11 +2803,11 @@
       ]
     },
     "quickStart": {
-      "hash": "169d71d8",
+      "hash": "4e43eaf2",
       "value": [
         "Lleva las 52 cartas a la sala de audiencias.",
-        "Toca un K o una Q cuando su pareja también esté disponible.",
-        "Toca una J o un A cuando su pareja esté disponible para empezar una fundación."
+        "Toca un Rey o una Reina cuando su pareja también esté disponible.",
+        "Toca una Jota o un As cuando su pareja esté disponible para empezar una fundación."
       ]
     },
     "title": {
@@ -2695,14 +2821,14 @@
       "value": "Un clásico de una baraja que se construye alternando colores, con un ritmo sencillo y cuidadoso."
     },
     "howToPlay": {
-      "hash": "22e39071",
+      "hash": "bbd23062",
       "value": [
         "## Objetivo",
         "Lleva todas las cartas a las cuatro fundaciones por palo, del As al Rey.",
         "## Reglas",
         "- Baja las cartas de la mesa alternando colores.",
         "- Solo los Reyes pueden ocupar los espacios vacíos de la mesa.",
-        "- El mazo se pasa al montón de carta en carta, sin nuevo reparto en esta versión."
+        "- El mazo se pasa al montón de carta en carta. No se vuelve a repartir."
       ]
     },
     "quickStart": {
@@ -2724,23 +2850,26 @@
       "value": "Descubre diez columnas disciplinadas y maniobra formaciones de colores alternos."
     },
     "howToPlay": {
-      "hash": "d1c2c009",
+      "hash": "3e3993d7",
       "value": [
         "## Objetivo",
-        "Lleva las dos barajas a ocho fundaciones por palo.",
+        "Lleva las dos barajas a ocho fundaciones, subiendo por palo del As al Rey.",
         "## Reglas",
         "- Se reparten diez columnas de cuatro cartas, con solo la carta superior descubierta.",
         "- Baja alternando colores.",
         "- Mueve cualquier secuencia bien apilada, completa o parcial.",
-        "- Cualquier carta o secuencia puede ocupar una columna vacía; el mazo se pasa una vez."
+        "- Cualquier carta o secuencia puede ocupar una columna vacía.",
+        "- Reparte el mazo de carta en carta. No se vuelve a repartir."
       ]
     },
     "quickStart": {
-      "hash": "06819848",
+      "hash": "0dbc41d3",
       "value": [
+        "Lleva las dos barajas a ocho fundaciones, subiendo por palo de A a K.",
         "Solo la carta descubierta de cada columna empieza boca arriba.",
         "Baja alternando colores.",
-        "Mueve secuencias ordenadas, completas o parciales."
+        "Mueve secuencias ordenadas, completas o parciales.",
+        "No se vuelve a repartir."
       ]
     },
     "title": {
@@ -2850,10 +2979,10 @@
       ]
     },
     "quickStart": {
-      "hash": "9195fb0f",
+      "hash": "44c5dd4d",
       "value": [
         "Lleva las 104 cartas a las ocho fundaciones, subiendo por palo de dos en dos.",
-        "Las fundaciones A suben A, 3, 5… K, 2, 4… Q por palo.",
+        "Los Ases suben A, 3, 5… K, 2, 4… Q por palo.",
         "Los Doses suben 2, 4, 6… Q, A, 3… K por palo."
       ]
     },
@@ -2923,12 +3052,12 @@
       ]
     },
     "quickStart": {
-      "hash": "7b2de717",
+      "hash": "dcc92fe7",
       "value": [
-        "Forma cuatro pilas de almohada-J-almohada.",
+        "Forma cuatro pilas de almohada-Jota-almohada.",
         "Forma almohadas apilando cuatro cartas del mismo valor.",
-        "Las J pueden ir sobre almohadas, columnas vacías o columnas sin otra J no separada.",
-        "Cualquier carta numérica, pila o almohada puede ir sobre una J."
+        "Las Jotas pueden ir sobre almohadas, columnas vacías o columnas sin otra Jota no separada.",
+        "Cualquier carta numérica, pila o almohada puede ir sobre una Jota."
       ]
     },
     "title": {
@@ -2954,12 +3083,12 @@
       ]
     },
     "quickStart": {
-      "hash": "64f27d09",
+      "hash": "fae453f1",
       "value": [
         "Sube las fundaciones por palo, de A a K.",
         "Baja las columnas por palo.",
         "Mueve cualquier grupo boca arriba.",
-        "Solo los K pueden ocupar las columnas vacías."
+        "Solo los Reyes pueden ocupar las columnas vacías."
       ]
     },
     "title": {
@@ -2987,11 +3116,11 @@
       ]
     },
     "quickStart": {
-      "hash": "0d757832",
+      "hash": "faaa0ff2",
       "value": [
         "Completa las cuatro fundaciones por palo, de K a A.",
         "Mueve cualquier grupo boca arriba, aunque no esté en secuencia.",
-        "Solo los K pueden ocupar las columnas vacías."
+        "Solo los Reyes pueden ocupar las columnas vacías."
       ]
     },
     "title": {
@@ -3005,7 +3134,7 @@
       "value": "Diez columnas abiertas y cuatro torres compactas premian una planificación cuidadosa por palo."
     },
     "howToPlay": {
-      "hash": "86a13dbd",
+      "hash": "1342469d",
       "value": [
         "## Objetivo",
         "Lleva las 52 cartas a cuatro fundaciones, subiendo por palo del As al Rey.",
@@ -3013,16 +3142,16 @@
         "- Diez columnas empiezan con cinco cartas boca arriba cada una.",
         "- Dos de las cuatro celdas libres empiezan ocupadas; cada celda guarda una carta.",
         "- Baja las columnas en el mismo palo.",
-        "- Las secuencias ordenadas del mismo palo se pueden mover si hay suficientes celdas libres.",
+        "- Puedes mover una carta cada vez. Puedes mover grupos de cartas juntas, pero solo si tienes suficientes celdas libres y columnas vacías para hacer el mismo movimiento de carta en carta.",
         "- Solo un Rey o una secuencia encabezada por un Rey puede ocupar una columna vacía."
       ]
     },
     "quickStart": {
-      "hash": "79a87ee5",
+      "hash": "4eb4b58b",
       "value": [
-        "Sube las fundaciones por palo, de A a K.",
+        "Sube las fundaciones por palo, del As al Rey.",
         "Baja las columnas en el mismo palo.",
-        "Usa cuatro celdas; solo los K pueden ocupar las columnas vacías."
+        "Usa cuatro celdas; solo los Reyes pueden ocupar las columnas vacías."
       ]
     },
     "title": {
@@ -3157,11 +3286,11 @@
       ]
     },
     "quickStart": {
-      "hash": "4048cea9",
+      "hash": "3620793d",
       "value": [
         "Baja por valor.",
         "Mueve secuencias descendentes del mismo palo.",
-        "Completa escaleras del mismo palo de K a A."
+        "Completa escaleras del mismo palo del Rey al As."
       ]
     },
     "title": {
@@ -3318,7 +3447,7 @@
       "value": "Forma escaleras del mismo palo del Rey al As en una doble baraja enredada."
     },
     "howToPlay": {
-      "hash": "d87f89fb",
+      "hash": "a5a655cd",
       "value": [
         "## Objetivo",
         "Forma **8 secuencias completas del mismo palo**, cada una del Rey al As. Las escaleras terminadas se retiran de la mesa.",
@@ -3360,10 +3489,10 @@
       ]
     },
     "quickStart": {
-      "hash": "2fb1fe19",
+      "hash": "131e6bea",
       "value": [
-        "Baja por valor.",
-        "Mueve secuencias descendentes del mismo palo.",
+        "Retira cuatro escaleras completas del mismo palo, del Rey al As.",
+        "Baja por valor y mueve secuencias descendentes del mismo palo.",
         "Reparte filas del mazo solo cuando todas las columnas estén ocupadas."
       ]
     },
@@ -3433,9 +3562,9 @@
       ]
     },
     "quickStart": {
-      "hash": "d2f15592",
+      "hash": "7c426ffc",
       "value": [
-        "Sube las ocho fundaciones exteriores por palo hasta Q.",
+        "Sube las ocho fundaciones exteriores por palo hasta las Reinas.",
         "Juega desde el montón o desde cualquiera de las ocho cartas de reserva.",
         "Las cartas de reserva se reponen desde el mazo; el montón se puede volver a repartir dos veces."
       ]
@@ -3509,22 +3638,22 @@
       "value": "Un Klondike flexible en el que las cartas evitan su propio palo y cualquier carta ocupa un hueco."
     },
     "howToPlay": {
-      "hash": "fe290209",
+      "hash": "9a483acf",
       "value": [
         "## Objetivo",
         "Sube cuatro fundaciones del As al Rey por palo.",
         "## Reglas",
-        "- La mesa empieza con la disposición clásica de Klondike de siete columnas.",
+        "- Se reparten siete columnas en escalera, de 1 a 7 cartas.",
         "- Baja por valor, pero nunca coloques una carta sobre el mismo palo.",
         "- Mueve juntas las secuencias apiladas.",
         "- Cualquier carta o secuencia puede ocupar una columna vacía."
       ]
     },
     "quickStart": {
-      "hash": "491a0950",
+      "hash": "a87ab14c",
       "value": [
-        "Baja sobre cualquier palo excepto el mismo.",
-        "Mueve las secuencias bien apiladas.",
+        "Sube cuatro fundaciones por palo, de A a K.",
+        "Baja sobre cualquier palo excepto el mismo; mueve las secuencias bien apiladas.",
         "Cualquier carta o secuencia puede ocupar una columna vacía."
       ]
     },
@@ -3551,11 +3680,11 @@
       ]
     },
     "quickStart": {
-      "hash": "85966837",
+      "hash": "fd272cd3",
       "value": [
         "Mueve solo la carta superior de una pila.",
         "Coloca una carta solo sobre un valor mayor o en una pila vacía.",
-        "Forma una sola pila, del 9 abajo al A arriba."
+        "Forma una sola pila, del 9 abajo al As arriba."
       ]
     },
     "title": {
@@ -3715,9 +3844,9 @@
       ]
     },
     "quickStart": {
-      "hash": "5b3e7587",
+      "hash": "912a5d6b",
       "value": [
-        "Sube las fundaciones por palo, de A a K.",
+        "Sube las fundaciones por palo, del As al Rey.",
         "Baja las columnas alternando colores.",
         "Mueve secuencias ordenadas; cualquier carta puede ocupar una columna vacía."
       ]
@@ -3763,7 +3892,7 @@
       "value": "Alimenta el eje del molino con cuatro escaleras completas mientras sus esquinas cuentan hacia atrás desde los Reyes."
     },
     "howToPlay": {
-      "hash": "44337ae9",
+      "hash": "f5a3d316",
       "value": [
         "## Objetivo",
         "Lleva las 104 cartas a las fundaciones.",
@@ -3779,10 +3908,10 @@
       ]
     },
     "quickStart": {
-      "hash": "13401944",
+      "hash": "d36852ca",
       "value": [
         "Lleva las 104 cartas a las fundaciones.",
-        "Sube el centro de A a K cuatro veces y baja las esquinas de K a A, sin importar el palo.",
+        "Sube el centro del As al Rey cuatro veces y baja las esquinas del Rey al As, sin importar el palo.",
         "Las aspas se reponen desde el montón y después desde el mazo."
       ]
     },
@@ -3809,12 +3938,12 @@
       ]
     },
     "quickStart": {
-      "hash": "fc01b7cb",
+      "hash": "7f7cfdd7",
       "value": [
         "Sube las fundaciones por palo, de A a K.",
         "Baja las columnas alternando colores.",
         "Mueve cualquier grupo boca arriba.",
-        "Solo los K pueden ocupar las columnas vacías."
+        "Solo los Reyes pueden ocupar las columnas vacías."
       ]
     },
     "title": {

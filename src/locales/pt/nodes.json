@@ -17,6 +17,11 @@
   "details": {
     "locked": "Bloqueado"
   },
+  "mercySkip": {
+    "granted": "Um indulto! Salte uma partida difícil ao viajar pelas estrelas (a partir do menu da partida).",
+    "ufoLabel": "Um OVNI passando",
+    "dismiss": "Fechar"
+  },
   "collection": {
     "previous": "Item anterior",
     "next": "Próximo item",

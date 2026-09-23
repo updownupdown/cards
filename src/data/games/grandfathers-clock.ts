@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const grandfathersClock: GameDefinition = {
@@ -15,8 +16,8 @@ export const grandfathersClock: GameDefinition = {
   background: GAME_BACKGROUNDS.bookstore,
   animation: GameAnimations.Dust,
   gameColorDark: "#2a2118",
-  gameColorMid: "#8c6a3f",
   gameColorPale: "#f3e2c2",
+  cardBack: CardBackColors.Bronze,
   cardDescription:
     "Wind twelve foundations around a clock face until every hour shows its number.",
   quickStart: [

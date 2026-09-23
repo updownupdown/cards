@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const acesUp: GameDefinition = {
@@ -15,8 +16,8 @@ export const acesUp: GameDefinition = {
   background: GAME_BACKGROUNDS.castleIndoors,
   animation: GameAnimations.Dust,
   gameColorDark: "#1d0f0a",
-  gameColorMid: "#8b2c28",
   gameColorPale: "#eee0ca",
+  cardBack: CardBackColors.Terracotta,
   cardDescription:
     "Discard low cards of non-unique suits until only the four Aces remain.",
   quickStart: [

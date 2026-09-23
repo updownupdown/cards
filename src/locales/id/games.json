@@ -45,6 +45,7 @@
     "allFourSuitsAreComplete": "Keempat jenis sudah lengkap!"
   },
   "beehive": {
+    "beehive": "Sarang",
     "honeycombComplete": "Sarang lebah sudah lengkap!",
     "noFurtherMovesPossible": "Tidak ada langkah berikutnya yang mungkin."
   },
@@ -618,5 +619,12 @@
   },
   "pussInTheCorner": {
     "allFourCornersFilled": "Keempat sudut sudah terisi!"
+  },
+  "devilsGrip": {
+    "everyCardIsInTheGrid": "Semua kartu ada di kisi.",
+    "cardsRemain": "Tersisa {{count}} kartu.",
+    "cardsRemainGood": "Tersisa {{count}} kartu. Bagus!",
+    "cardsRemainExcellent": "Tersisa {{count}} kartu. Sangat bagus!",
+    "cardsRemainBrilliant": "Tersisa {{count}} kartu. Luar biasa!"
   }
 }

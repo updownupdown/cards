@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const stalker: GameDefinition = {
@@ -15,8 +16,8 @@ export const stalker: GameDefinition = {
   background: GAME_BACKGROUNDS.treeRain,
   animation: GameAnimations.Rain,
   gameColorDark: "#1b2224",
-  gameColorMid: "#0b2441",
   gameColorPale: "#daf1f1",
+  cardBack: CardBackColors.Charcoal,
   cardDescription: "Maintain your precarious lead over an unstoppable pursuer.",
   quickStart: [
     "Reach the end of the stock deck without being caught.",

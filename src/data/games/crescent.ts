@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const crescent: GameDefinition = {
@@ -12,8 +13,8 @@ export const crescent: GameDefinition = {
   background: GAME_BACKGROUNDS.nightSky,
   animation: GameAnimations.Stars,
   gameColorDark: "#182334",
-  gameColorMid: "#173b64",
   gameColorPale: "#e5dfca",
+  cardBack: CardBackColors.Navy,
   cardDescription:
     "Turn sixteen moonlit piles toward foundations growing from both Aces and Kings.",
   quickStart: [

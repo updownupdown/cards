@@ -1,6 +1,7 @@
 import { Image } from "expo-image";
 import { ImageSourcePropType, Platform } from "react-native";
 import { CardSizes } from "./CardStyles";
+import { DEFAULT_CARD_BACK } from "@/data/card-backs";
 
 type ImageLoadSource = Parameters<typeof Image.loadAsync>[0];
 type LoadedImage = Awaited<ReturnType<typeof Image.loadAsync>>;
@@ -40,7 +41,7 @@ const cardContext = require.context(
 const collectibleCardContext = require.context(
   "../../../assets/cards",
   true,
-  /^\.\/(?:pale|dark|gold)\/[^/]+\.webp$/,
+  /^\.\/(?:pale|dark|gold|red)\/[^/]+\.webp$/,
 );
 const cardBackContext = require.context(
   "../../../assets/cards/backs",
@@ -74,15 +75,19 @@ export function getCardImageSource(
   return source;
 }
 
-export function getCardBackImage(gamePath?: string) {
-  const fileName = gamePath?.replace(/^\//, "");
-  return cardBackFiles[fileName ?? ""] ?? cardBackFiles.default;
+/** `cardBackKey` is a card-back ink, lowercased (see src/data/card-backs.ts). */
+export function getCardBackImage(cardBackKey?: string) {
+  return (
+    cardBackFiles[cardBackKey ?? ""] ??
+    cardBackFiles[DEFAULT_CARD_BACK.toLowerCase()]
+  );
 }
 
 const COLLECTIBLE_DECK_FOLDERS = {
   white: "pale",
   black: "dark",
   gold: "gold",
+  red: "red",
 } as const;
 
 export function getCollectibleCardImageSource(
@@ -182,14 +187,14 @@ function buildCardBackFiles() {
 }
 
 function buildCollectibleCardFiles() {
-  type DeckFolder = "pale" | "dark" | "gold";
-  const cardFiles = { pale: {}, dark: {}, gold: {} } as Record<
+  type DeckFolder = "pale" | "dark" | "gold" | "red";
+  const cardFiles = { pale: {}, dark: {}, gold: {}, red: {} } as Record<
     DeckFolder,
     Record<string, ImageSourcePropType>
   >;
 
   for (const key of collectibleCardContext.keys()) {
-    const match = key.match(/^\.\/(pale|dark|gold)\/([^/]+)\.webp$/);
+    const match = key.match(/^\.\/(pale|dark|gold|red)\/([^/]+)\.webp$/);
     if (!match) continue;
 
     const [, deck, cardName] = match as [string, DeckFolder, string];

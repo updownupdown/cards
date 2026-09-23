@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const spiderSolitaire: GameDefinition = {
@@ -15,8 +16,8 @@ export const spiderSolitaire: GameDefinition = {
   background: GAME_BACKGROUNDS.dungeon,
   animation: GameAnimations.Embers,
   gameColorDark: "#25111e",
-  gameColorMid: "#512353",
   gameColorPale: "#f6e6ff",
+  cardBack: CardBackColors.Plum,
   cardDescription:
     "Build same-suit runs from King to Ace across a tangled double deck.",
   quickStart: ["Build down by rank; move same-suit runs; deal when stuck."],

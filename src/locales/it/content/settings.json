@@ -289,6 +289,26 @@
       }
     }
   },
+  "jailbreak": {
+    "jailbreakDifficulty": {
+      "hash": "73216ddb",
+      "value": {
+        "description": "Stabilisce quante carte vengono distribuite in ogni angolo.",
+        "label": "Difficoltà",
+        "options": [
+          {
+            "label": "Facile (4 per angolo)"
+          },
+          {
+            "label": "Normale (2 per angolo)"
+          },
+          {
+            "label": "Difficile (angoli vuoti)"
+          }
+        ]
+      }
+    }
+  },
   "klondike": {
     "drawCount": {
       "hash": "ecd6b2f3",
@@ -377,9 +397,9 @@
   },
   "pocket-poker": {
     "pokerDifficulty": {
-      "hash": "00000000",
+      "hash": "505d7998",
       "value": {
-        "description": "Tutte le modalità consentono 2 pescate e fanno costare 1 punto per lasciare. Difficile parte da 3 punti e assegna i pareggi all'avversario. Esperto dà anche una carta extra all'avversario.",
+        "description": "La modalità Difficile parte da 3 punti (invece di 5) e assegna i pareggi all'avversario. Esperto dà anche una carta extra all'avversario.",
         "label": "Difficoltà",
         "options": [
           {

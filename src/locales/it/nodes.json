@@ -17,6 +17,11 @@
   "details": {
     "locked": "Bloccato"
   },
+  "mercySkip": {
+    "granted": "Una grazia! Salta una partita difficile mentre viaggi tra le stelle (dal menu della partita).",
+    "ufoLabel": "Un UFO di passaggio",
+    "dismiss": "Chiudi"
+  },
   "collection": {
     "previous": "Elemento precedente",
     "next": "Elemento successivo",

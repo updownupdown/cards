@@ -1,4 +1,5 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const indian: GameDefinition = {
@@ -9,8 +10,8 @@ export const indian: GameDefinition = {
   thumbnail: "Indian.webp",
   background: GAME_BACKGROUNDS.indianLandscape,
   gameColorDark: "#49362a",
-  gameColorMid: "#378641",
   gameColorPale: "#ead6ad",
+  cardBack: CardBackColors.Moss,
   cardDescription:
     "Build two-deck columns down while carefully avoiding matching suits.",
   quickStart: [

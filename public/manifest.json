@@ -1,12 +1,12 @@
 {
-  "name": "SoliNova",
-  "short_name": "SoliNova",
+  "name": "Solitarius",
+  "short_name": "Solitarius",
   "description": "A collection of solo playing card games.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "theme_color": "#343f49",
+  "theme_color": "#11181f",
   "background_color": "#C62440",
   "icons": [
     {

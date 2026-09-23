@@ -236,9 +236,10 @@ describe("Pocket Poker", () => {
     await pressButton(renderer, "Fold");
 
     expect(outcome()).toBe("playing");
-    expect(
-      renderer.root.findByProps({ totalValue: 10 }).props.progressValue,
-    ).toBe(4);
+    const progressBar = renderer.root.findAll(
+      (node) => node.props.totalValue === 10,
+    )[0];
+    expect(progressBar.props.progressValue).toBe(4);
     const foldButton = renderer.root.findAll(
       (node) => node.props.text === "Fold",
     )[0];

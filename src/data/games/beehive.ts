@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const beehive: GameDefinition = {
@@ -15,8 +16,8 @@ export const beehive: GameDefinition = {
   background: GAME_BACKGROUNDS.flowerGarden,
   animation: GameAnimations.Firefly,
   gameColorDark: "#1e2b16",
-  gameColorMid: "#af6300",
   gameColorPale: "#f4f9d3",
+  cardBack: CardBackColors.Honey,
   cardDescription:
     "Clear four-card sets from six same-rank tableau slots using the beehive, waste, and stock.",
   quickStart: [

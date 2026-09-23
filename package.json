@@ -10,9 +10,10 @@
     "backgrounds:convert": "node ./scripts/convert-backgrounds.mjs",
     "store-graphics:generate": "node ./scripts/generate-store-graphics.mjs",
     "card-backs:generate": "node ./scripts/generate-card-backs.mjs",
+    "cards:convert": "node ./scripts/convert-card-decks.mjs",
     "nodes:generate": "node ./scripts/generate-nodes-map.mjs",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "expo lint",
     "test": "jest",
@@ -24,6 +25,7 @@
     "@react-navigation/bottom-tabs": "^7.15.5",
     "@react-navigation/elements": "^2.9.10",
     "@react-navigation/native": "^7.1.33",
+    "@sentry/react-native": "~7.11.0",
     "expo": "~55.0.31",
     "expo-build-properties": "~55.0.18",
     "expo-constants": "~55.0.17",
@@ -88,7 +90,7 @@
       "^@/(.*)$": "<rootDir>/src/$1"
     },
     "transformIgnorePatterns": [
-      "/node_modules/(?!(\\.pnpm|react-native|@react-native|@react-native-community|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|react-native-svg|immer|use-immer))"
+      "/node_modules/(?!(\\.pnpm|react-native|@react-native|@react-native-community|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/.*|react-native-svg|immer|use-immer))"
     ],
     "testPathIgnorePatterns": [
       "/node_modules/",

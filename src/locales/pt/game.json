@@ -22,6 +22,11 @@
     "title": "Como jogar",
     "unavailable": "As instruções não estão disponíveis para este jogo."
   },
+  "mercySkip": {
+    "title": "Usar um indulto ({{count}} restantes)",
+    "grantedTitle": "Um indulto!",
+    "grantedBody": "Encontre-o no menu de qualquer partida, aberto a partir do mapa."
+  },
   "settings": {
     "title": "Configurações",
     "none": "Este jogo não tem configurações",

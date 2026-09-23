@@ -45,6 +45,7 @@
     "allFourSuitsAreComplete": "¡Los cuatro palos están completos!"
   },
   "beehive": {
+    "beehive": "Colmena",
     "honeycombComplete": "¡El panal está completo!",
     "noFurtherMovesPossible": "No es posible hacer más movimientos."
   },
@@ -618,5 +619,12 @@
   },
   "pussInTheCorner": {
     "allFourCornersFilled": "¡Las cuatro esquinas están llenas!"
+  },
+  "devilsGrip": {
+    "everyCardIsInTheGrid": "Todas las cartas están en la cuadrícula.",
+    "cardsRemain": "Quedan {{count}} cartas.",
+    "cardsRemainGood": "Quedan {{count}} cartas. ¡Bien!",
+    "cardsRemainExcellent": "Quedan {{count}} cartas. ¡Excelente!",
+    "cardsRemainBrilliant": "Quedan {{count}} cartas. ¡Brillante!"
   }
 }

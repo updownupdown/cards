@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const slyFox: GameDefinition = {
@@ -15,8 +16,8 @@ export const slyFox: GameDefinition = {
   background: GAME_BACKGROUNDS.forestGrasses,
   animation: GameAnimations.Leaves,
   gameColorDark: "#2b1a10",
-  gameColorMid: "#7a4320",
   gameColorPale: "#fde2cc",
+  cardBack: CardBackColors.Copper,
   cardDescription:
     "Stash each twenty-card deal across twenty reserve piles, then dig out what you hid.",
   quickStart: [

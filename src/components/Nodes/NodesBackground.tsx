@@ -1,10 +1,10 @@
-import { rgba } from "@/styles/styles";
 import {
   type ReactNode,
   type RefObject,
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from "react";
 import {
   Animated as RNAnimated,
@@ -17,11 +17,18 @@ import Animated, {
   type SharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
+import { ShootingStar } from "@/components/common/ShootingStar";
+import { NodesUFO } from "@/components/Nodes/NodesUFO";
 
 const STAR_COLORS = ["#ffffff", "#eef8ff", "#d9efff", "#b9ddff", "#91c7ff"];
 
 type NodesBackgroundProps = {
   animationsEnabled: boolean;
+  /** Separately gates the rare UFO: on top of animations being enabled, it
+   * also needs to have been a while since arriving and/or since it last
+   * granted a mercy skip. */
+  ufoEnabled: boolean;
+  onUfoCaught: () => void;
   translateX: SharedValue<number>;
   translateY: SharedValue<number>;
   containerRef: RefObject<View | null>;
@@ -248,6 +255,8 @@ function ParallaxStarLayer({
 
 export function NodesBackground({
   animationsEnabled,
+  ufoEnabled,
+  onUfoCaught,
   translateX,
   translateY,
   containerRef,
@@ -263,8 +272,16 @@ export function NodesBackground({
       stars.slice(117),
     ];
   }, []);
+  const [size, setSize] = useState({ width: 0, height: 0 });
 
   const handleLayout = (event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout;
+    setSize((current) =>
+      Math.abs(current.width - width) > 1 ||
+      Math.abs(current.height - height) > 1
+        ? { width, height }
+        : current,
+    );
     onLayout(event);
   };
 
@@ -274,6 +291,16 @@ export function NodesBackground({
       onLayout={handleLayout}
       style={{ flex: 1, overflow: "hidden" }}
     >
+      <ShootingStar
+        width={size.width}
+        height={size.height}
+        animationsEnabled={animationsEnabled}
+        colors={STAR_COLORS}
+        peakOpacity={0.55}
+        durationScale={1.4}
+        minIntervalMs={9000}
+        maxIntervalMs={22000}
+      />
       <ParallaxStarLayer
         stars={starLayers[0]}
         factor={0.08}
@@ -310,6 +337,13 @@ export function NodesBackground({
         animationsEnabled={animationsEnabled}
         sizeBoost={2}
         maximumOpacity={0.42}
+      />
+
+      <NodesUFO
+        width={size.width}
+        height={size.height}
+        animationsEnabled={ufoEnabled}
+        onCatch={onUfoCaught}
       />
     </View>
   );

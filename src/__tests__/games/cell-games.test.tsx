@@ -9,7 +9,6 @@ import {
 import "../../../jest/game-mocks";
 import {
   card,
-  dropMove,
   outcome,
   renderGame,
   run,
@@ -29,36 +28,15 @@ afterEach(() => {
   jest.useRealTimers();
 });
 
-describe.each<[string, string, ComponentType, number, number, object]>([
-  ["FreeCell", "/freecell", FreeCell, 8, 4, { zone: "cascade", pileIndex: 0 }],
-  [
-    "Baker's Game",
-    "/bakers-game",
-    BakersGame,
-    8,
-    4,
-    { zone: "cascade", pileIndex: 0, startIndex: 0 },
-  ],
-  [
-    "Eight Off",
-    "/eight-off",
-    EightOff,
-    8,
-    8,
-    { zone: "cascade", pileIndex: 0, startIndex: 0 },
-  ],
-  [
-    "Seahaven Towers",
-    "/seahaven-towers",
-    SeahavenTowers,
-    10,
-    4,
-    { zone: "cascade", pileIndex: 0, startIndex: 0 },
-  ],
+describe.each<[string, string, ComponentType, number, number]>([
+  ["FreeCell", "/freecell", FreeCell, 8, 4],
+  ["Baker's Game", "/bakers-game", BakersGame, 8, 4],
+  ["Eight Off", "/eight-off", EightOff, 8, 8],
+  ["Seahaven Towers", "/seahaven-towers", SeahavenTowers, 10, 4],
 ])(
   "%s (no lose condition)",
-  (_name, path, Game, cascadeCount, cellCount, kingSource) => {
-    test("playing the last king to the foundations wins", async () => {
+  (_name, path, Game, cascadeCount, cellCount) => {
+    test("the last king reaching the foundations wins", async () => {
       const cascades = Array.from(
         { length: cascadeCount },
         () => [] as PlayingCard[],
@@ -74,10 +52,9 @@ describe.each<[string, string, ComponentType, number, number, object]>([
           run("spades", "A", "Q"),
         ],
       });
-      expect(outcome()).toBe("playing");
 
-      await dropMove(kingSource, { zone: "foundation", pileIndex: 3 });
-
+      // One card and one legal move: auto-complete sends the king home
+      // during setup, so the outcome is read once that has settled.
       expect(outcome()).toBe("won");
     });
   },

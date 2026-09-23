@@ -17,6 +17,11 @@
   "details": {
     "locked": "Terkunci"
   },
+  "mercySkip": {
+    "granted": "Sebuah pengampunan! Lewati game yang sulit saat menjelajahi bintang-bintang (dari menu game).",
+    "ufoLabel": "UFO yang lewat",
+    "dismiss": "Tutup"
+  },
   "collection": {
     "previous": "Koleksi sebelumnya",
     "next": "Koleksi berikutnya",

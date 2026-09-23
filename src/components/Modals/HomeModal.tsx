@@ -200,6 +200,15 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               }}
             />
           )}
+          <SettingControl
+            label={t("crashReports.label")}
+            description={t("crashReports.description")}
+            value={settings.crashReports}
+            type="boolean"
+            onChange={(val) => {
+              void updateSettings({ crashReports: val });
+            }}
+          />
         </View>
 
         <AddToHomeScreenNotice />

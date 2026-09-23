@@ -28,6 +28,10 @@
     "label": "Resposta tátil",
     "description": "Vibra ao arrastar e soltar cartas e ao vencer. A vibração precisa estar ativada nas configurações do telefone."
   },
+  "crashReports": {
+    "label": "Enviar relatórios de erro",
+    "description": "Envia diagnósticos anônimos quando algo dá errado, para que possa ser corrigido. Nenhuma informação pessoal é incluída."
+  },
   "populateTestProgress": "Preencher progresso de teste",
   "credits": {
     "starfield": {

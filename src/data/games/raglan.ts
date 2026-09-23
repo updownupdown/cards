@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const raglan: GameDefinition = {
@@ -11,8 +12,8 @@ export const raglan: GameDefinition = {
   background: GAME_BACKGROUNDS.aridHill,
   animation: GameAnimations.Leaves,
   gameColorDark: "#2f3d35",
-  gameColorMid: "#516a4f",
   gameColorPale: "#e9e7d3",
+  cardBack: CardBackColors.Pine,
   cardDescription:
     "A classic one-deck tableau built on alternating colors with simple, careful pacing.",
   quickStart: [

@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const twelveTrials: GameDefinition = {
@@ -15,8 +16,8 @@ export const twelveTrials: GameDefinition = {
   background: GAME_BACKGROUNDS.headlessStatue,
   animation: GameAnimations.ManaDust,
   gameColorDark: "#352820",
-  gameColorMid: "#924324",
   gameColorPale: "#fff6dc",
+  cardBack: CardBackColors.Terracotta,
   cardDescription:
     "Defeat twelve dungeon monsters by strategically planning your attacks.",
   quickStart: [

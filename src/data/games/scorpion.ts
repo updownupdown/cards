@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 
 export const scorpion: GameDefinition = {
   path: "/scorpion",
@@ -13,8 +14,8 @@ export const scorpion: GameDefinition = {
   thumbnail: "Scorpion.webp",
   background: GAME_BACKGROUNDS.sahara,
   gameColorDark: "#352b21",
-  gameColorMid: "#aa5743",
   gameColorPale: "#fff3e4",
+  cardBack: CardBackColors.Terracotta,
   cardDescription:
     "Untangle face-up columns into four same-suit runs from King to Ace.",
   quickStart: [

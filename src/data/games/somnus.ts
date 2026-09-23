@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const somnus: GameDefinition = {
@@ -16,8 +17,8 @@ export const somnus: GameDefinition = {
   background: GAME_BACKGROUNDS.painting,
   animation: GameAnimations.Dust,
   gameColorDark: "#1b1f25",
-  gameColorMid: "#543569",
   gameColorPale: "#efd8f0",
+  cardBack: CardBackColors.Plum,
   cardDescription:
     "Build Alice's Guardian deck, defeat the Dream deck's Nightmares, and protect her life.",
   quickStart: [

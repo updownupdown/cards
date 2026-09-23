@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const penguin: GameDefinition = {
@@ -16,8 +17,8 @@ export const penguin: GameDefinition = {
   background: GAME_BACKGROUNDS.antarctica,
   animation: GameAnimations.Snow,
   gameColorDark: "#111b27",
-  gameColorMid: "#91410f",
   gameColorPale: "#ff944d",
+  cardBack: CardBackColors.Terracotta,
   cardDescription:
     "A FreeCell-like game building suit runs from a random beak rank.",
   quickStart: [

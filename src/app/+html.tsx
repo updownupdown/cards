@@ -6,7 +6,7 @@ export default function Root({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>
-        <title>SoliNova</title>
+        <title>Solitarius</title>
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta
@@ -17,16 +17,19 @@ export default function Root({ children }: { children: ReactNode }) {
           name="description"
           content="A collection of solo playing card games."
         />
-        <meta name="application-name" content="SoliNova" />
-        <meta name="apple-mobile-web-app-title" content="SoliNova" />
+        <meta name="application-name" content="Solitarius" />
+        <meta name="apple-mobile-web-app-title" content="Solitarius" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta
           name="apple-mobile-web-app-status-bar-style"
           content="black-translucent"
         />
-        <meta name="theme-color" content="#343f49" />
-        <meta name="msapplication-navbutton-color" content="#343f49" />
+        {/* The splash colour, matching the manifest's background_color. The
+            app switches these to the current screen's colour once it mounts
+            (see the theme-color effect in _layout). */}
+        <meta name="theme-color" content="#C62440" />
+        <meta name="msapplication-navbutton-color" content="#C62440" />
         <meta name="color-scheme" content="dark" />
         <link rel="manifest" href="./manifest.json" />
         <link rel="icon" href="./favicon.ico" sizes="any" />

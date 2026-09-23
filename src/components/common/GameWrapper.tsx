@@ -6,7 +6,12 @@ import {
   recordResult,
   undoRecordedLoss,
 } from "@/data/game-menu";
-import { recordNodesWin, type NodesWinResult } from "@/data/nodes-progress";
+import {
+  recordNodesWin,
+  spendMercySkip,
+  type NodesWinResult,
+} from "@/data/nodes-progress";
+import { useNodesProgress } from "@/hooks/useNodesProgress";
 import { DEFAULT_GAME_BACKGROUND } from "@/data/games-data";
 import { useFade } from "@/hooks/useFade";
 import { useGameSettings } from "@/hooks/useGameSettings";
@@ -19,6 +24,7 @@ import { maybeRequestStoreReview } from "@/utils/review-prompt";
 import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { haptics } from "@/utils/haptics";
+import { addGameBreadcrumb, setCrashContext } from "@/utils/crash-reporting";
 import { selectNodesHomeTab } from "@/components/Home/home-view-state";
 import {
   NodesWinOverlay,
@@ -54,7 +60,7 @@ import { GameHeader } from "./GameHeader";
 import { useStableCallback } from "@/hooks/useStableCallback";
 
 const TIPS_MORPH_DURATION = 350;
-const KEEP_AWAKE_TAG = "solinova-game";
+const KEEP_AWAKE_TAG = "solitarius-game";
 const KEEP_AWAKE_MS = 10 * 60 * 1000;
 // Scene effects start after the game has loaded and its deal has played.
 const SCENE_START_DELAY_MS = 1000;
@@ -141,9 +147,22 @@ export const GameWrapper = ({
       goHome(isNodesMode);
     }
   });
+  const { progress: nodesProgress } = useNodesProgress();
+  const onModalMercySkip = useStableCallback(async () => {
+    try {
+      await spendMercySkip(pathname);
+      await clearLastGameSession();
+    } finally {
+      if (isNodesMode) selectNodesHomeTab();
+      goHome(isNodesMode);
+    }
+  });
   const onHeaderInstantWin = useStableCallback(() => setIsDevWin(true));
   const onHeaderRules = useStableCallback(() => setShowRulesModal(true));
-  const onHeaderUndo = useStableCallback(() => handleUndo?.());
+  const onHeaderUndo = useStableCallback(() => {
+    addGameBreadcrumb("undo");
+    handleUndo?.();
+  });
   const onHeaderReset = useStableCallback(handleReset);
   const onHeaderMenu = useStableCallback(() => setShowMenu(true));
 
@@ -285,7 +304,9 @@ export const GameWrapper = ({
     attemptedPathRef.current = pathname;
 
     recordAttempt(pathname).catch(() => {});
-  }, [pathname]);
+    setCrashContext({ mode: isNodesMode ? "nodes" : "standard" });
+    addGameBreadcrumb("deal");
+  }, [isNodesMode, pathname]);
 
   useEffect(() => {
     let active = true;
@@ -307,6 +328,7 @@ export const GameWrapper = ({
     }
 
     if (displayedOutcome === "won") haptics.win();
+    addGameBreadcrumb(displayedOutcome === "won" ? "win" : "loss");
 
     const sessionId = getActiveGameSessionId(pathname);
     // Only a real win is timed (not the dev instant-win button).
@@ -351,7 +373,11 @@ export const GameWrapper = ({
 
   return (
     <>
-      <LoadingOverlay isLoaded={!!isLoaded} endsGameLaunch />
+      <LoadingOverlay
+        isLoaded={!!isLoaded}
+        endsGameLaunch
+        backgroundColor={backgroundColor}
+      />
 
       {tipsFade.isRendered && (
         <Animated.View
@@ -421,6 +447,12 @@ export const GameWrapper = ({
           }}
           onReloadGame={handleReset}
           showRulesModal={() => setShowRulesModal(true)}
+          mercySkipsAvailable={
+            isNodesMode && !nodesProgress.winsByPath[pathname]
+              ? nodesProgress.mercySkipCount
+              : 0
+          }
+          onMercySkip={isNodesMode ? onModalMercySkip : undefined}
         />
       )}
 

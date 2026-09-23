@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const frog: GameDefinition = {
@@ -16,8 +17,8 @@ export const frog: GameDefinition = {
   background: GAME_BACKGROUNDS.marsh,
   animation: GameAnimations.Firefly,
   gameColorDark: "#15261b",
-  gameColorMid: "#4f8a3c",
   gameColorPale: "#e2f5c6",
+  cardBack: CardBackColors.Moss,
   cardDescription:
     "Hop two decks onto eight foundations, sorting the stock across five lily-pad piles.",
   quickStart: [

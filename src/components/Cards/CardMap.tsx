@@ -2,6 +2,7 @@ import { cardDims, PlayingCard } from "@/components/Cards/card-utils";
 import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { roundToPixel } from "@/utils/utils";
+import { useGameColors } from "@/hooks/useGameColors";
 import { useGamePath } from "@/hooks/useGamePath";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ViewStyle } from "react-native";
@@ -151,8 +152,11 @@ export function useCardMap({
   cardMapper,
   zoneMapper,
 }: MapConfig) {
-  const pathname = useGamePath();
-  const cardBackPath = pathname;
+  const { colorDark: gameColorDark, cardBackKey } = useGameColors();
+  // Named "path" for history: games pass it straight back to DragDrop. It is
+  // the shared card-back ink key, so two games with the same ink reuse one
+  // decoded image instead of loading their own.
+  const cardBackPath = cardBackKey;
   const [cardImagesLoaded, setCardImagesLoaded] = useState(() =>
     isCardImageSetPreloaded(cardSize, cardBackPath),
   );
@@ -618,13 +622,16 @@ export function useCardMap({
   const cardMap = useMemo(
     () => (
       <>
-        <LoadingOverlay isLoaded={cardImagesLoaded} />
+        <LoadingOverlay
+          isLoaded={cardImagesLoaded}
+          backgroundColor={gameColorDark}
+        />
         {mapBackgrounds}
         {mappedCards}
         {mapVisualizer}
       </>
     ),
-    [cardImagesLoaded, mapBackgrounds, mapVisualizer, mappedCards],
+    [cardImagesLoaded, gameColorDark, mapBackgrounds, mapVisualizer, mappedCards],
   );
 
   return {

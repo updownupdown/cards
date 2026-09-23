@@ -22,6 +22,7 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { delay } from "@/utils/utils";
+import { i18n } from "@/i18n";
 
 const GRID_SIZE = 24;
 
@@ -390,7 +391,11 @@ export default function DevilsGrip() {
           maxVisible: 3,
           shadowVisibleCount: 6,
         },
-        placeholder: { text: "Waste", showCount: true, infoPos: "below" },
+        placeholder: {
+          text: i18n.t("cards:waste"),
+          showCount: true,
+          infoPos: "below",
+        },
       },
       {
         id: "draw",
@@ -400,7 +405,11 @@ export default function DevilsGrip() {
         row: 2,
         baseZIndex: 70,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Draw", showCount: true, infoPos: "above" },
+        placeholder: {
+          text: i18n.t("cards:draw"),
+          showCount: true,
+          infoPos: "above",
+        },
       },
     ];
   }, [game]);
@@ -660,8 +669,10 @@ export default function DevilsGrip() {
       showDeviceRotateHint="landscape"
       winLoseMessage={
         won
-          ? "Every card is in the grid."
-          : `${score} cards remain.${rating ? ` ${rating}!` : ""}`
+          ? i18n.t("games:devilsGrip.everyCardIsInTheGrid")
+          : i18n.t(`games:devilsGrip.cardsRemain${rating ?? ""}`, {
+              count: score,
+            })
       }
     >
       <View

@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const bakersGame: GameDefinition = {
@@ -16,8 +17,8 @@ export const bakersGame: GameDefinition = {
   animation: GameAnimations.Dust,
   thumbnail: "BakersGame.webp",
   gameColorDark: "#1b2a24",
-  gameColorMid: "#5a94af",
   gameColorPale: "#dcefe4",
+  cardBack: CardBackColors.Ocean,
   cardDescription:
     "FreeCell's tougher ancestor: build the tableau down in suit, not colour.",
   quickStart: [

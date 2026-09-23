@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 
 export const tripleStack: GameDefinition = {
   path: "/triple-stack",
@@ -13,8 +14,8 @@ export const tripleStack: GameDefinition = {
   thumbnail: "TripleStack.webp",
   background: GAME_BACKGROUNDS.modernStairs,
   gameColorDark: "#102524",
-  gameColorMid: "#4c9e98",
   gameColorPale: "#b0eee9",
+  cardBack: CardBackColors.Teal,
   cardDescription:
     "Serve sandwiches by selecting evenly spaced cards; don't let your ingredients run out!",
   quickStart: [

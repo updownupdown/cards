@@ -335,7 +335,10 @@ export default function Beehive() {
         row: 2.5,
         baseZIndex: 40,
         fan: { maxVisible: 3 },
-        placeholder: { text: "Beehive", infoPos: "above" },
+        placeholder: {
+          text: i18n.t("games:beehive.beehive"),
+          infoPos: "above",
+        },
       },
       {
         id: "waste",

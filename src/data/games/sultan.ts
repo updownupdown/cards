@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const sultan: GameDefinition = {
@@ -12,8 +13,8 @@ export const sultan: GameDefinition = {
   background: GAME_BACKGROUNDS.alhambra,
   animation: GameAnimations.Clouds,
   gameColorDark: "#362d2a",
-  gameColorMid: "#8a4c29",
   gameColorPale: "#f0dfbd",
+  cardBack: CardBackColors.Copper,
   cardDescription:
     "Raise eight royal foundations until the central Sultan is surrounded by Queens.",
   quickStart: [

@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const pocketPoker: GameDefinition = {
@@ -15,8 +16,8 @@ export const pocketPoker: GameDefinition = {
   background: GAME_BACKGROUNDS.casino,
   animation: GameAnimations.Dust,
   gameColorDark: "#142e1f",
-  gameColorMid: "#36691e",
   gameColorPale: "#fff5bd",
+  cardBack: CardBackColors.Moss,
   cardDescription:
     "A pocket poker duel: draw, bet, and out-rank an opponent dealt from the same deck.",
   quickStart: [

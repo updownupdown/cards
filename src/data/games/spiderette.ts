@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const spiderette: GameDefinition = {
@@ -11,8 +12,8 @@ export const spiderette: GameDefinition = {
   background: GAME_BACKGROUNDS.forestGrasses,
   animation: GameAnimations.Firefly,
   gameColorDark: "#202e27",
-  gameColorMid: "#88335a",
   gameColorPale: "#dae6cf",
+  cardBack: CardBackColors.Rose,
   cardDescription:
     "A compact single-deck Spider played across seven Klondike-shaped columns.",
   quickStart: [

@@ -1,4 +1,5 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 import { GameAnimations } from "@/animations";
 
@@ -10,8 +11,8 @@ export const whitehead: GameDefinition = {
   background: GAME_BACKGROUNDS.bloomingTree,
   animation: GameAnimations.Pollen,
   gameColorDark: "#30383a",
-  gameColorMid: "#5a94af",
   gameColorPale: "#edf0e6",
+  cardBack: CardBackColors.Ocean,
   thumbnail: "Whitehead.webp",
   cardDescription:
     "An open Klondike relative built by color, with suited runs moving together.",

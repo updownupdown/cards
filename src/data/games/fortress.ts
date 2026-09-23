@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const fortress: GameDefinition = {
@@ -11,8 +12,8 @@ export const fortress: GameDefinition = {
   background: GAME_BACKGROUNDS.fortress,
   animation: GameAnimations.Clouds,
   gameColorDark: "#302a24",
-  gameColorMid: "#584d37",
   gameColorPale: "#ead9b8",
+  cardBack: CardBackColors.Walnut,
   cardDescription:
     "Maneuver ten open lanes up or down by suit to free every foundation.",
   quickStart: [

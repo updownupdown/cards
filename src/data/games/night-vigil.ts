@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const nightVigil: GameDefinition = {
@@ -15,8 +16,8 @@ export const nightVigil: GameDefinition = {
   animation: GameAnimations.Rain,
   thumbnail: "NightVigil.webp",
   gameColorDark: "#11161a",
-  gameColorMid: "#548fad",
   gameColorPale: "#e7edf0",
+  cardBack: CardBackColors.Ocean,
   cardDescription:
     "Match threats with tactical responses in a noir gauntlet of twelve rogues.",
   quickStart: [

@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations/types";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const dynasty: GameDefinition = {
@@ -11,8 +12,8 @@ export const dynasty: GameDefinition = {
   tags: [GameTag.CardCombat, GameTag.SpatialControl],
   rating: { complexity: 65, difficulty: 70, luck: 35 },
   gameColorDark: "#262f35",
-  gameColorMid: "#389c88",
   gameColorPale: "#b5f4e1",
+  cardBack: CardBackColors.Forest,
   cardDescription:
     "Bring down all twelve royals by placing cards on a 3x3 grid.",
   quickStart: [

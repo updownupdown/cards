@@ -1,4 +1,5 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 import { GameAnimations } from "@/animations";
 
@@ -15,8 +16,8 @@ export const dominion: GameDefinition = {
   animation: GameAnimations.Stars,
   thumbnail: "Dominion.webp",
   gameColorDark: "#1d2231",
-  gameColorMid: "#2b4b66",
   gameColorPale: "#dbe9eb",
+  cardBack: CardBackColors.Ocean,
   cardDescription:
     "Conquer cards of matching rank or suit, until one dominion remains.",
   quickStart: [

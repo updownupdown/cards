@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 
 export const calculation: GameDefinition = {
   path: "/calculation",
@@ -13,8 +14,8 @@ export const calculation: GameDefinition = {
   thumbnail: "Calculation.webp",
   background: GAME_BACKGROUNDS.geometricCeiling,
   gameColorDark: "#12122b",
-  gameColorMid: "#7958ae",
   gameColorPale: "#eccfff",
+  cardBack: CardBackColors.Violet,
   cardDescription:
     "Build four foundations in steps of 1, 2, 3, and 4, up to K.",
   quickStart: [

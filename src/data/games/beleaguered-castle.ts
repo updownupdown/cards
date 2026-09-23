@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const beleagueredCastle: GameDefinition = {
@@ -15,8 +16,8 @@ export const beleagueredCastle: GameDefinition = {
   background: GAME_BACKGROUNDS.castle,
   animation: GameAnimations.Clouds,
   gameColorDark: "#2e2620",
-  gameColorMid: "#384e6b",
   gameColorPale: "#f0e2c4",
+  cardBack: CardBackColors.Slate,
   cardDescription:
     "Storm the castle: build every suit up from Ace to King with open tableau play.",
   quickStart: [

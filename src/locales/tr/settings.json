@@ -28,6 +28,10 @@
     "label": "Dokunsal geri bildirim",
     "description": "Kart sürükleyip bırakırken ve oyun kazanınca titreşir. Titreşimin telefon ayarlarında açık olması gerekir."
   },
+  "crashReports": {
+    "label": "Hata raporları gönder",
+    "description": "Bir sorun çıktığında düzeltilebilmesi için anonim tanılama bilgileri gönderir. Kişisel bilgi içermez."
+  },
   "populateTestProgress": "Test ilerlemesi doldur",
   "credits": {
     "starfield": {

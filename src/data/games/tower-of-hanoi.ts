@@ -1,4 +1,5 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const towerOfHanoi: GameDefinition = {
@@ -13,8 +14,8 @@ export const towerOfHanoi: GameDefinition = {
   background: GAME_BACKGROUNDS.indianLandscape,
   thumbnail: "TowerOfHanoi.webp",
   gameColorDark: "#304f63",
-  gameColorMid: "#266170",
   gameColorPale: "#d8efe8",
+  cardBack: CardBackColors.Teal,
   cardDescription:
     "Rebuild all nine cards into one descending tower using only legal top-card moves.",
   quickStart: [

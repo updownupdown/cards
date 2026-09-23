@@ -1,5 +1,6 @@
 import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const waypoint: GameDefinition = {
@@ -15,8 +16,8 @@ export const waypoint: GameDefinition = {
   animation: GameAnimations.Dust,
   thumbnail: "Waypoint.webp",
   gameColorDark: "#263b38",
-  gameColorMid: "#703f28",
   gameColorPale: "#f5e4ad",
+  cardBack: CardBackColors.Walnut,
   cardDescription:
     "Shift through three rally stages, match every sector exactly, and stay ahead of the clock.",
   quickStart: [

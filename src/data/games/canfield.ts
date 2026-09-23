@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations/types";
 
 export const canfield: GameDefinition = {
@@ -15,8 +16,8 @@ export const canfield: GameDefinition = {
   background: GAME_BACKGROUNDS.cozyRoom3,
   animation: GameAnimations.Dust,
   gameColorDark: "#311a1e",
-  gameColorMid: "#8f4d4b",
   gameColorPale: "#E4F6FF",
+  cardBack: CardBackColors.Burgundy,
   cardDescription:
     "Build suit foundations from a random base rank, fed by a 13-card reserve.",
   quickStart: [

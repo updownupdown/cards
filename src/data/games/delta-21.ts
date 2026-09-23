@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const delta21: GameDefinition = {
@@ -15,8 +16,8 @@ export const delta21: GameDefinition = {
   background: GAME_BACKGROUNDS.river,
   animation: GameAnimations.Birds,
   gameColorDark: "#11343d",
-  gameColorMid: "#5996af",
   gameColorPale: "#c3e9ff",
+  cardBack: CardBackColors.Ocean,
   cardDescription:
     "Balance four river fish populations to exactly 21 and publish your studies.",
   quickStart: [

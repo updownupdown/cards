@@ -1,5 +1,6 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameAnimations } from "@/animations";
 
 export const crownslayer: GameDefinition = {
@@ -15,8 +16,8 @@ export const crownslayer: GameDefinition = {
   background: GAME_BACKGROUNDS.monteCarlo,
   animation: GameAnimations.Clouds,
   gameColorDark: "#1b1727",
-  gameColorMid: "#5a5eaf",
   gameColorPale: "#e2e9ff",
+  cardBack: CardBackColors.Indigo,
   cardDescription: "Topple the 12 royals using suit-powered combos.",
   quickStart: [
     "Defeat 12 royals, one at a time.",

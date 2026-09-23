@@ -28,6 +28,10 @@
     "label": "Retour haptique",
     "description": "Vibre lorsque vous déplacez des cartes et quand vous gagnez. Les vibrations doivent être activées dans les réglages de votre téléphone."
   },
+  "crashReports": {
+    "label": "Envoyer les rapports d'erreur",
+    "description": "Envoie des diagnostics anonymes en cas de problème, afin qu'il puisse être corrigé. Aucune information personnelle n'est incluse."
+  },
   "populateTestProgress": "Remplir la progression de test",
   "credits": {
     "starfield": {

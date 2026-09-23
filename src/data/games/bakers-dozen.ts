@@ -1,4 +1,5 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const bakersDozen: GameDefinition = {
@@ -14,8 +15,8 @@ export const bakersDozen: GameDefinition = {
   thumbnail: "BakersDozen.webp",
   background: GAME_BACKGROUNDS.cozyRoom3,
   gameColorDark: "#253b36",
-  gameColorMid: "#134b70",
   gameColorPale: "#edf7e8",
+  cardBack: CardBackColors.Ocean,
   cardDescription: "Clear thirteen compact columns into four suit foundations.",
   quickStart: [
     "Build foundations up by suit from A to K.",

@@ -1,4 +1,5 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
+import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
 export const seahavenTowers: GameDefinition = {
@@ -11,8 +12,8 @@ export const seahavenTowers: GameDefinition = {
   background: GAME_BACKGROUNDS.shipwreck,
   // animation: GameAnimations.Clouds,
   gameColorDark: "#173946",
-  gameColorMid: "#5a9daf",
   gameColorPale: "#dceff0",
+  cardBack: CardBackColors.Teal,
   cardDescription:
     "Ten open columns and four compact towers reward careful same-suit planning.",
   quickStart: [

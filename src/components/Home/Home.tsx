@@ -141,6 +141,9 @@ export default function Home() {
   const screenHeight = isWeb ? viewportHeight : containerHeight;
   const isScreenReady = !isWeb || screenHeight > 0;
 
+  // The starfield covers this, but it is what fills the system bars for the
+  // frame or two before the image paints, so keep it the colour of the overlay
+  // that sits on top of that image.
   const containerStyle = (
     isWeb
       ? {
@@ -149,14 +152,17 @@ export default function Home() {
           left: 0,
           right: 0,
           height: screenHeight || "100%",
-          backgroundColor: Colors.K950,
+          backgroundColor: Colors.starfieldOverlay,
         }
-      : { flex: 1, backgroundColor: Colors.K950 }
+      : { flex: 1, backgroundColor: Colors.starfieldOverlay }
   ) as Record<string, unknown>;
 
   return (
     <>
-      <LoadingOverlay isLoaded={!!isLoaded} />
+      <LoadingOverlay
+        isLoaded={!!isLoaded}
+        backgroundColor={Colors.starfieldOverlay}
+      />
 
       {showSettingsModal && (
         <HomeModal
@@ -249,7 +255,13 @@ export default function Home() {
           }
         />
 
-        <HomeTabBar activeIndex={activeTab} onSelectTab={onSelectTab} />
+        <HomeTabBar
+          activeIndex={activeTab}
+          onSelectTab={onSelectTab}
+          showBackground={
+            activeTab !== NODES_HOME_TAB_INDEX && showHeaderBackground
+          }
+        />
       </View>
     </>
   );
