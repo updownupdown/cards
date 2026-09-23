@@ -255,10 +255,12 @@ export default function GameModal({
               style={{ marginTop: spacing(30) }}
             />
 
-            {/* Mercy Skip: only offered in nodes mode, with a skip in hand */}
+            {/* Mercy Skip: only offered in nodes mode, with a skip in hand.
+                Only one can be held at a time for now, so no count is shown;
+                the count is still tracked in case that ever changes. */}
             {onMercySkip && mercySkipsAvailable > 0 && (
               <Button
-                text={t("mercySkip.title", { count: mercySkipsAvailable })}
+                text={t("mercySkip.title")}
                 iconName="fast-forward"
                 onPress={() => {
                   handleClose();

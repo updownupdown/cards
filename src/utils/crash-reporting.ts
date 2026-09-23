@@ -14,7 +14,13 @@ import {
 } from "@/data/game-menu";
 
 const extra = Constants.expoConfig?.extra as
-  { sentryDsn?: string; sentryEnvironment?: string } | undefined;
+  | {
+      sentryDsn?: string;
+      sentryEnvironment?: string;
+      // null when the build didn't set SENTRY_RELEASE.
+      sentryRelease?: string | null;
+    }
+  | undefined;
 
 /** Public project identifier. Empty (the default) turns crash reporting off. */
 const DSN = extra?.sentryDsn ?? "";
@@ -34,6 +40,8 @@ export function initCrashReporting() {
     // more than a Sentry issue would.
     enabled: !__DEV__,
     environment: extra?.sentryEnvironment ?? "development",
+    // Left unset on native, where the SDK takes the release from the build.
+    ...(extra?.sentryRelease ? { release: extra.sentryRelease } : {}),
     sendDefaultPii: false,
     tracesSampleRate: 0,
     beforeSend: (event) => (isEnabledBySetting ? event : null),

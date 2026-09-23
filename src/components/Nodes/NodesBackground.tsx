@@ -18,17 +18,11 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 import { ShootingStar } from "@/components/common/ShootingStar";
-import { NodesUFO } from "@/components/Nodes/NodesUFO";
 
 const STAR_COLORS = ["#ffffff", "#eef8ff", "#d9efff", "#b9ddff", "#91c7ff"];
 
 type NodesBackgroundProps = {
   animationsEnabled: boolean;
-  /** Separately gates the rare UFO: on top of animations being enabled, it
-   * also needs to have been a while since arriving and/or since it last
-   * granted a mercy skip. */
-  ufoEnabled: boolean;
-  onUfoCaught: () => void;
   translateX: SharedValue<number>;
   translateY: SharedValue<number>;
   containerRef: RefObject<View | null>;
@@ -255,8 +249,6 @@ function ParallaxStarLayer({
 
 export function NodesBackground({
   animationsEnabled,
-  ufoEnabled,
-  onUfoCaught,
   translateX,
   translateY,
   containerRef,
@@ -337,13 +329,6 @@ export function NodesBackground({
         animationsEnabled={animationsEnabled}
         sizeBoost={2}
         maximumOpacity={0.42}
-      />
-
-      <NodesUFO
-        width={size.width}
-        height={size.height}
-        animationsEnabled={ufoEnabled}
-        onCatch={onUfoCaught}
       />
     </View>
   );

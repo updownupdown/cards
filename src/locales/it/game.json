@@ -23,9 +23,7 @@
     "unavailable": "Le istruzioni non sono disponibili per questo gioco."
   },
   "mercySkip": {
-    "title": "Usa una grazia ({{count}} rimaste)",
-    "grantedTitle": "Una grazia!",
-    "grantedBody": "La trovi nel menu di qualsiasi partita, aperto dalla mappa dei nodi."
+    "title": "Usa una grazia"
   },
   "settings": {
     "title": "Impostazioni",

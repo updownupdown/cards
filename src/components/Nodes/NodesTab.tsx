@@ -14,11 +14,12 @@ import { useNodesProgress } from "@/hooks/useNodesProgress";
 import { grantMercySkip } from "@/data/nodes-progress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
-import { useCallback, useEffect, useState } from "react";
-import { View } from "react-native";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { Platform, View } from "react-native";
 import { NodeDetailsPanel } from "./NodeDetailsPanel";
 import { NodesMap } from "./NodesMap";
 import { NodesProgressItem } from "./NodesProgressItem";
+import { UfoContext } from "./UfoContext";
 import { flexStyles } from "@/styles/flexStyles";
 
 type Props = {
@@ -67,6 +68,46 @@ export function NodesTab({ settingsMap, contentPaddingTop }: Props) {
   const handleUfoCaught = useCallback(() => {
     void grantMercySkip();
   }, []);
+
+  // Easter egg, and a handy way to test the UFO: typing "ufo" on the map
+  // summons one straight away. Web only, since that is where there is a
+  // keyboard. Like a natural visit, it only comes with no skip in hand.
+  const [ufoSummons, setUfoSummons] = useState(0);
+  const mapCovered = showTao || showQuotes || showGames;
+  const canSummonUfo = !mapCovered && progress.mercySkipCount === 0;
+  useEffect(() => {
+    if (Platform.OS !== "web" || typeof window === "undefined") return;
+    if (!canSummonUfo) return;
+
+    let typed = "";
+    const onKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      const typingInField =
+        !!target &&
+        (target.isContentEditable ||
+          /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
+      if (typingInField || event.key.length !== 1) return;
+
+      typed = (typed + event.key.toLowerCase()).slice(-3);
+      if (typed === "ufo") {
+        typed = "";
+        setUfoSummons((count) => count + 1);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [canSummonUfo]);
+
+  // Home draws the UFO, above the header; this tab only says when it may fly.
+  const requestUfo = useContext(UfoContext);
+  useEffect(() => {
+    requestUfo({
+      gateOpen: ufoGateOpen,
+      summons: ufoSummons,
+      onCatch: handleUfoCaught,
+    });
+  }, [handleUfoCaught, requestUfo, ufoGateOpen, ufoSummons]);
+  useEffect(() => () => requestUfo(null), [requestUfo]);
 
   const selectedNode =
     getNodeDefinition(selectedPath) ?? getNodeDefinition(NODES_START_PATH)!;
@@ -174,8 +215,6 @@ export function NodesTab({ settingsMap, contentPaddingTop }: Props) {
         wonPaths={wonPaths}
         collectedTaoIds={collectedTaoIds}
         collectedQuoteIds={collectedQuoteIds}
-        ufoGateOpen={ufoGateOpen}
-        onUfoCaught={handleUfoCaught}
       />
       <NodeDetailsPanel
         node={selectedNode}

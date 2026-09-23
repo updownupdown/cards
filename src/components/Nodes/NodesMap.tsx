@@ -254,10 +254,6 @@ type Props = {
   wonPaths: ReadonlySet<string>;
   collectedTaoIds: ReadonlySet<number>;
   collectedQuoteIds: ReadonlySet<number>;
-  /** False while the rare UFO shouldn't spawn yet (too soon, or on cooldown
-   * until more collectibles are owned). */
-  ufoGateOpen: boolean;
-  onUfoCaught: () => void;
 };
 
 const NodeLabels = memo(function NodeLabels({
@@ -523,8 +519,6 @@ export function NodesMap({
   wonPaths,
   collectedTaoIds,
   collectedQuoteIds,
-  ufoGateOpen,
-  onUfoCaught,
 }: Props) {
   const { settings } = useGlobalSettings();
   const [viewport, setViewport] = useState({ width: 0, height: 0 });
@@ -728,8 +722,6 @@ export function NodesMap({
     <GestureDetector gesture={cameraGesture}>
       <NodesBackground
         animationsEnabled={settings.showAnimations}
-        ufoEnabled={settings.showAnimations && ufoGateOpen}
-        onUfoCaught={onUfoCaught}
         translateX={translateX}
         translateY={translateY}
         containerRef={containerRef}

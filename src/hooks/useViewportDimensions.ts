@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import { Platform, useWindowDimensions } from "react-native";
 
 type WindowDimensions = {
@@ -16,6 +16,9 @@ const INITIAL_WEB_DIMENSIONS: WindowDimensions = {
 };
 
 let currentWebDimensions = INITIAL_WEB_DIMENSIONS;
+const dimensionListeners = new Set<() => void>();
+let teardownWindowListeners: (() => void) | null = null;
+let pendingUpdate: number | null = null;
 
 function readWebDimensions(): WindowDimensions {
   if (typeof window === "undefined") {
@@ -39,62 +42,84 @@ function areDimensionsEqual(a: WindowDimensions, b: WindowDimensions) {
   );
 }
 
-function useWebViewportDimensions(): WindowDimensions {
-  // Keep first render identical between SSR and hydration; real viewport
-  // dimensions are applied immediately after mount. Components mounted later
-  // reuse that committed value so they don't flash through a zero-width layout.
-  const [webDimensions, setWebDimensions] = useState(currentWebDimensions);
-  const timeoutRef = useRef<number | null>(null);
+/** Reads the viewport and wakes every subscriber if it actually moved. */
+function commitDimensions() {
+  const next = readWebDimensions();
+  if (areDimensionsEqual(currentWebDimensions, next)) return;
 
-  const commitDimensions = () => {
-    const next = readWebDimensions();
-    currentWebDimensions = next;
-    setWebDimensions((prev) => (areDimensionsEqual(prev, next) ? prev : next));
-  };
+  currentWebDimensions = next;
+  dimensionListeners.forEach((listener) => listener());
+}
 
-  useEffect(() => {
-    const clearPendingUpdate = () => {
-      if (timeoutRef.current !== null) {
-        window.clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
-    };
+function clearPendingUpdate() {
+  if (pendingUpdate === null) return;
+  window.clearTimeout(pendingUpdate);
+  pendingUpdate = null;
+}
 
-    const scheduleDebouncedUpdate = (delayMs = 90) => {
-      clearPendingUpdate();
-      timeoutRef.current = window.setTimeout(() => {
-        timeoutRef.current = null;
-        commitDimensions();
-      }, delayMs);
-    };
-
-    const onResize = () => {
-      scheduleDebouncedUpdate();
-    };
-
-    const refreshAfterResume = () => {
-      scheduleDebouncedUpdate(0);
-    };
-
+function scheduleDebouncedUpdate(delayMs = 90) {
+  clearPendingUpdate();
+  pendingUpdate = window.setTimeout(() => {
+    pendingUpdate = null;
     commitDimensions();
+  }, delayMs);
+}
 
-    window.addEventListener("resize", onResize, {
-      passive: true,
-    });
-    window.addEventListener("focus", refreshAfterResume);
-    window.addEventListener("pageshow", refreshAfterResume);
-    document.addEventListener("visibilitychange", refreshAfterResume);
+// One set of window listeners for every subscriber, attached with the first
+// and removed with the last.
+function startWindowListeners() {
+  const onResize = () => scheduleDebouncedUpdate();
+  const refreshAfterResume = () => scheduleDebouncedUpdate(0);
 
-    return () => {
-      clearPendingUpdate();
-      window.removeEventListener("resize", onResize);
-      window.removeEventListener("focus", refreshAfterResume);
-      window.removeEventListener("pageshow", refreshAfterResume);
-      document.removeEventListener("visibilitychange", refreshAfterResume);
-    };
-  }, []);
+  window.addEventListener("resize", onResize, { passive: true });
+  window.addEventListener("focus", refreshAfterResume);
+  window.addEventListener("pageshow", refreshAfterResume);
+  document.addEventListener("visibilitychange", refreshAfterResume);
 
-  return webDimensions;
+  return () => {
+    clearPendingUpdate();
+    window.removeEventListener("resize", onResize);
+    window.removeEventListener("focus", refreshAfterResume);
+    window.removeEventListener("pageshow", refreshAfterResume);
+    document.removeEventListener("visibilitychange", refreshAfterResume);
+  };
+}
+
+function subscribeToWebDimensions(listener: () => void) {
+  dimensionListeners.add(listener);
+  if (dimensionListeners.size === 1) {
+    teardownWindowListeners = startWindowListeners();
+  }
+  // The first subscriber runs after mount, which is where the real viewport
+  // replaces the zero-sized snapshot hydration rendered against.
+  commitDimensions();
+
+  return () => {
+    dimensionListeners.delete(listener);
+    if (dimensionListeners.size === 0) {
+      teardownWindowListeners?.();
+      teardownWindowListeners = null;
+    }
+  };
+}
+
+const getWebDimensions = () => currentWebDimensions;
+const getServerWebDimensions = () => INITIAL_WEB_DIMENSIONS;
+
+function useWebViewportDimensions(): WindowDimensions {
+  // useSyncExternalStore, not useState, because the home screen sits behind a
+  // Suspense boundary and hydrates after the rest of the tree. By then an
+  // earlier subscriber has already stored the real viewport, so seeding state
+  // from it rendered 1280x800 against server HTML built at zero width - React
+  // error #418. The server snapshot is what React uses while hydrating, no
+  // matter when a boundary gets to it, and the real value lands immediately
+  // afterwards. Components mounting later still read the live value, so they
+  // don't flash through a zero-width layout.
+  return useSyncExternalStore(
+    subscribeToWebDimensions,
+    getWebDimensions,
+    getServerWebDimensions,
+  );
 }
 
 function useNativeViewportDimensions(): WindowDimensions {

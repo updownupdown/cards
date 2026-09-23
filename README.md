@@ -6,7 +6,7 @@ The app is built with Expo and React Native for web and mobile. The web version 
 
 ## Play
 
-[Play Solitarius at solitarius.site](https://solitarius.site)
+[Play Solitarius at solitarius.app](https://solitarius.app)
 
 ## Features
 

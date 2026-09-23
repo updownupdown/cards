@@ -148,9 +148,17 @@ const config = {
     sentryDsn:
       process.env.SENTRY_DSN ??
       "https://201eca773021e5dd5382dbcae73dfb45@o4512126348623872.ingest.us.sentry.io/4512127229165568",
-    // Separates releases in Sentry: the EAS build profile ("preview" or
-    // "production"), or a local build.
-    sentryEnvironment: process.env.EAS_BUILD_PROFILE ?? "local",
+    // Separates events in Sentry: the web deploy sets SENTRY_ENVIRONMENT, EAS
+    // builds carry their profile ("preview" or "production"), and anything else
+    // is a local build.
+    sentryEnvironment:
+      process.env.SENTRY_ENVIRONMENT ??
+      process.env.EAS_BUILD_PROFILE ??
+      "local",
+    // Ties an event to the exact build its source maps were uploaded for. EAS
+    // builds get one from the native release automatically; the web deploy
+    // passes the commit it built.
+    sentryRelease: process.env.SENTRY_RELEASE ?? null,
     router: {},
     eas: {
       projectId: "a82abc24-6db7-4465-9ad5-ca9ce212447b",

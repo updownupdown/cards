@@ -67,6 +67,20 @@ Screen names come from our own breadcrumbs rather than
 `Sentry.reactNavigationIntegration()`, which exists to create tracing spans and
 would mean turning tracing on.
 
+## Where it reports from
+
+- **The web app, as soon as main is pushed.** `.github/workflows/deploy.yml`
+  builds a production export (`__DEV__` is false) and publishes it to
+  solitarius.app, so real browser errors arrive without waiting for a store
+  release. The deploy tags events `production`, names the release after the
+  commit, builds external source maps, uploads them to Sentry and then deletes
+  them so they aren't served from the site.
+- **EAS preview and production builds**, tagged with their build profile. The
+  SDK takes the release from the native build.
+- **Nothing from a development client.** `enabled: !__DEV__` drops every event,
+  so the dev build on the phone reports nothing by design. Testing the native
+  side means an EAS `preview` build.
+
 ## Privacy and store updates
 
 - **Privacy policy** (`src/locales/*/privacy.json`): done. The summary, "Data we
@@ -87,12 +101,16 @@ would mean turning tracing on.
 
 ## What's left
 
-1. **Auth token,** for uploading source maps: `SENTRY_AUTH_TOKEN` in
-   `.env.local` locally, and an EAS environment variable with sensitive
-   visibility for EAS builds. Make it an organization token
-   (sentry.io -> Settings -> Auth Tokens -> Create New Token) with the
-   `project:releases` and `org:read` scopes. A local release build without one
-   needs `SENTRY_DISABLE_AUTO_UPLOAD=true`.
+1. **Auth token,** for uploading source maps. Make it an organization token
+   (sentry.io -> Settings -> Developer Settings -> Organization Tokens ->
+   Create New Token). Organization tokens carry a fixed set of CI permissions,
+   so there are no scopes to choose, and the value is shown once and never
+   again - copy it before leaving the page. Then put it in three places:
+   `.env.local` for local builds, an EAS environment variable with sensitive
+   visibility for EAS builds, and a `SENTRY_AUTH_TOKEN` repository secret for
+   the web deploy. The deploy's upload step skips itself while the secret is
+   missing, so the site keeps deploying either way - with minified stack traces.
+   A local release build without a token needs `SENTRY_DISABLE_AUTO_UPLOAD=true`.
 2. **Prebuild Android again** so the plugin applies, then re-apply the local
    `applicationIdSuffix` edits in `android/app/build.gradle`, which is
    gitignored.

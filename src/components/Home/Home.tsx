@@ -6,6 +6,8 @@ import { HomeTab } from "@/components/Home/HomeTab";
 import { HomeTabBar } from "@/components/Home/HomeTabBar";
 import { SearchTab } from "@/components/Home/SearchTab";
 import { NodesTab } from "@/components/Nodes/NodesTab";
+import { NodesUFO } from "@/components/Nodes/NodesUFO";
+import { UfoContext, type UfoRequest } from "@/components/Nodes/UfoContext";
 import {
   COLLECT_HOME_TAB_INDEX,
   getActiveHomeTab,
@@ -50,6 +52,8 @@ export default function Home() {
   const pendingTabRef = useRef<HomeTabIndex>(initialActiveTab);
   const tabContentOpacity = useRef(new Animated.Value(1)).current;
   const { settings, updateSettings } = useGlobalSettings();
+  // Set by the Nodes tab while the map is open; the UFO itself is drawn here.
+  const [ufo, setUfo] = useState<UfoRequest | null>(null);
   const cardSize = settings.discoverCardSize ?? "large";
 
   const [containerHeight, setContainerHeight] = useState(0);
@@ -180,89 +184,103 @@ export default function Home() {
         />
       )}
 
-      <View style={containerStyle} onLayout={onContainerLayout}>
-        {isScreenReady && (
-          <View style={{ flex: 1, height: screenHeight || undefined }}>
-            <HomeStarfieldBackground
-              animationsEnabled={settings.showAnimations}
+      <UfoContext.Provider value={setUfo}>
+        <View style={containerStyle} onLayout={onContainerLayout}>
+          {isScreenReady && (
+            <View style={{ flex: 1, height: screenHeight || undefined }}>
+              <HomeStarfieldBackground
+                animationsEnabled={settings.showAnimations}
+                width={viewportWidth}
+                height={viewportHeight}
+              />
+
+              <Animated.View
+                style={{ flex: 1, opacity: tabContentOpacity }}
+                testID="home-tab-content"
+              >
+                {activeTab === HOME_HOME_TAB_INDEX && (
+                  <HomeTab
+                    onSelectTab={onSelectTab}
+                    allEnabledGames={allEnabledGames}
+                    allEnabledGamePaths={allEnabledGamePaths}
+                    favorites={favorites}
+                    recentPaths={recentPaths}
+                    onToggleFavorite={toggleFavorite}
+                    onScrolledChange={setShowHeaderBackground}
+                    contentPaddingTop={contentPaddingTop}
+                    contentPaddingBottom={contentPaddingBottom}
+                  />
+                )}
+                {isFocused && activeTab === NODES_HOME_TAB_INDEX && (
+                  <NodesTab
+                    settingsMap={settingsMap}
+                    contentPaddingTop={contentPaddingTop}
+                  />
+                )}
+                {activeTab === COLLECT_HOME_TAB_INDEX && (
+                  <CollectTab
+                    allEnabledGames={allEnabledGames}
+                    settingsMap={settingsMap}
+                    favorites={favorites}
+                    onToggleFavorite={toggleFavorite}
+                    cardSize={cardSize}
+                    onCardSizeChange={(value) =>
+                      updateSettings({ discoverCardSize: value })
+                    }
+                    onScrolledChange={setShowHeaderBackground}
+                    contentPaddingTop={contentPaddingTop}
+                    contentPaddingBottom={contentPaddingBottom}
+                  />
+                )}
+                {activeTab === SEARCH_HOME_TAB_INDEX && (
+                  <SearchTab
+                    allEnabledGames={allEnabledGames}
+                    unplayedGamePaths={unplayedGamePaths}
+                    favorites={favorites}
+                    onToggleFavorite={toggleFavorite}
+                    cardSize={cardSize}
+                    onCardSizeChange={(value) =>
+                      updateSettings({ discoverCardSize: value })
+                    }
+                    onScrolledChange={setShowHeaderBackground}
+                    contentPaddingTop={contentPaddingTop}
+                    contentPaddingBottom={contentPaddingBottom}
+                    searchControlBottom={searchControlBottom}
+                  />
+                )}
+              </Animated.View>
+            </View>
+          )}
+
+          <HomeHeader
+            onOpenSettings={() => setShowSettingsModal(true)}
+            onOpenStats={() => setShowStatsModal(true)}
+            showBackground={
+              activeTab !== NODES_HOME_TAB_INDEX && showHeaderBackground
+            }
+          />
+
+          <HomeTabBar
+            activeIndex={activeTab}
+            onSelectTab={onSelectTab}
+            showBackground={
+              activeTab !== NODES_HOME_TAB_INDEX && showHeaderBackground
+            }
+          />
+
+          {/* Last, so it flies over the header and tab bar rather than under
+            them. It only exists while the Nodes tab has asked for it. */}
+          {ufo && activeTab === NODES_HOME_TAB_INDEX && (
+            <NodesUFO
               width={viewportWidth}
               height={viewportHeight}
+              animationsEnabled={settings.showAnimations && ufo.gateOpen}
+              summons={ufo.summons}
+              onCatch={ufo.onCatch}
             />
-
-            <Animated.View
-              style={{ flex: 1, opacity: tabContentOpacity }}
-              testID="home-tab-content"
-            >
-              {activeTab === HOME_HOME_TAB_INDEX && (
-                <HomeTab
-                  onSelectTab={onSelectTab}
-                  allEnabledGames={allEnabledGames}
-                  allEnabledGamePaths={allEnabledGamePaths}
-                  favorites={favorites}
-                  recentPaths={recentPaths}
-                  onToggleFavorite={toggleFavorite}
-                  onScrolledChange={setShowHeaderBackground}
-                  contentPaddingTop={contentPaddingTop}
-                  contentPaddingBottom={contentPaddingBottom}
-                />
-              )}
-              {isFocused && activeTab === NODES_HOME_TAB_INDEX && (
-                <NodesTab
-                  settingsMap={settingsMap}
-                  contentPaddingTop={contentPaddingTop}
-                />
-              )}
-              {activeTab === COLLECT_HOME_TAB_INDEX && (
-                <CollectTab
-                  allEnabledGames={allEnabledGames}
-                  settingsMap={settingsMap}
-                  favorites={favorites}
-                  onToggleFavorite={toggleFavorite}
-                  cardSize={cardSize}
-                  onCardSizeChange={(value) =>
-                    updateSettings({ discoverCardSize: value })
-                  }
-                  onScrolledChange={setShowHeaderBackground}
-                  contentPaddingTop={contentPaddingTop}
-                  contentPaddingBottom={contentPaddingBottom}
-                />
-              )}
-              {activeTab === SEARCH_HOME_TAB_INDEX && (
-                <SearchTab
-                  allEnabledGames={allEnabledGames}
-                  unplayedGamePaths={unplayedGamePaths}
-                  favorites={favorites}
-                  onToggleFavorite={toggleFavorite}
-                  cardSize={cardSize}
-                  onCardSizeChange={(value) =>
-                    updateSettings({ discoverCardSize: value })
-                  }
-                  onScrolledChange={setShowHeaderBackground}
-                  contentPaddingTop={contentPaddingTop}
-                  contentPaddingBottom={contentPaddingBottom}
-                  searchControlBottom={searchControlBottom}
-                />
-              )}
-            </Animated.View>
-          </View>
-        )}
-
-        <HomeHeader
-          onOpenSettings={() => setShowSettingsModal(true)}
-          onOpenStats={() => setShowStatsModal(true)}
-          showBackground={
-            activeTab !== NODES_HOME_TAB_INDEX && showHeaderBackground
-          }
-        />
-
-        <HomeTabBar
-          activeIndex={activeTab}
-          onSelectTab={onSelectTab}
-          showBackground={
-            activeTab !== NODES_HOME_TAB_INDEX && showHeaderBackground
-          }
-        />
-      </View>
+          )}
+        </View>
+      </UfoContext.Provider>
     </>
   );
 }
