@@ -85,6 +85,7 @@ describe("Bisley", () => {
       descending: foundations(),
       ended: false,
       won: false,
+      deal: [],
     });
     expect(outcome()).toBe("playing");
 
@@ -107,6 +108,7 @@ describe("Bisley", () => {
       descending: foundations(),
       ended: false,
       won: false,
+      deal: [],
     });
     expect(outcome()).toBe("playing");
 

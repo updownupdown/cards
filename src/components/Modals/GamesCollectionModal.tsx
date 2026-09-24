@@ -1,5 +1,6 @@
 import { Text } from "@/components/common/Text";
 import { GAME_DEFINITIONS } from "@/data/games-registry";
+import { setLastPlayedNode } from "@/data/nodes-progress";
 import { getNodeDefinition, getUnlockedNodePaths } from "@/data/nodes-map";
 import { useNodesProgress } from "@/hooks/useNodesProgress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
@@ -8,7 +9,9 @@ import { localizeGameTitle } from "@/i18n/content";
 import { Icon } from "@/icons";
 import { Colors, rgba } from "@/styles/styles";
 import { useMemo } from "react";
-import { ScrollView, View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
+import { launchGame } from "@/components/common/GameLaunchOverlay";
+import type { Href } from "expo-router";
 import ModalFull from "./ModalFull";
 
 type Props = {
@@ -57,8 +60,18 @@ export function GamesCollectionModal({ onClose }: Props) {
           const unlocked = unlockedPaths.has(game.path);
 
           return (
-            <View
+            <Pressable
               key={game.path}
+              accessibilityRole="button"
+              disabled={!unlocked}
+              onPress={() => {
+                onClose();
+                void setLastPlayedNode(game.path);
+                launchGame({
+                  pathname: game.path,
+                  params: { mode: "nodes" },
+                } as Href);
+              }}
               style={{
                 minHeight: spacing(48),
                 flexDirection: "row",
@@ -105,7 +118,7 @@ export function GamesCollectionModal({ onClose }: Props) {
                   );
                 })}
               </View>
-            </View>
+            </Pressable>
           );
         })}
       </ScrollView>

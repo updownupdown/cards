@@ -1,6 +1,14 @@
 import { useStateManager } from "@/hooks/useStateManager";
 import { useMemo } from "react";
-import { PlayingCard, RANKS, SUITS } from "../Cards/card-utils";
+import {
+  collectCards,
+  flipAllToBack,
+  PlayingCard,
+  RANKS,
+  shuffle,
+  SUITS,
+} from "../Cards/card-utils";
+import { delay } from "@/utils/utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import { GameWrapper } from "../common/GameWrapper";
@@ -13,6 +21,8 @@ type GameState = {
   cards: PlayingCard[];
   moves: number;
   won: boolean;
+  /** Every card, face down, while the grid is being gathered and dealt. */
+  deal: PlayingCard[];
 };
 
 function affectedIndices(index: number) {
@@ -55,7 +65,17 @@ function createInitialState(): GameState {
     cards = toggleAt(cards, index);
   });
 
-  return { cards, moves: 0, won: false };
+  return { cards, moves: 0, won: false, deal: [] };
+}
+
+/** The grid cleared, with every card gathered face down into the deal pile. */
+function gatherState(state: GameState): GameState {
+  return {
+    cards: [],
+    moves: 0,
+    won: false,
+    deal: shuffle(flipAllToBack(collectCards(state))),
+  };
 }
 
 function isSolved(cards: PlayingCard[]) {
@@ -64,23 +84,24 @@ function isSolved(cards: PlayingCard[]) {
 
 export const lightsOutRules = { affectedIndices, toggleAt, isSolved };
 
-const gameStateInitial = createInitialState();
+// Starts with every card in the deal pile, to be dealt out from there.
+const gameStateInitial = gatherState(createInitialState());
 
 export default function LightsOut() {
   const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
     useStateManager<GameState>({
       gameStateInitial,
       resetAndSetup: async () => {
-        const next = createInitialState();
-        setGame((draft) => {
-          Object.assign(draft, next);
-        });
+        // Gather every card into the deal pile, then deal them back out.
+        setGame((draft) => gatherState(draft));
+        await delay();
+        setGame(() => createInitialState());
       },
     });
 
   const zones = useMemo<MapZone[]>(
-    () =>
-      game.cards.map((card, index) => ({
+    () => [
+      ...game.cards.map((card, index) => ({
         id: `cell-${index}`,
         name: "cell",
         pileIndex: index,
@@ -89,7 +110,17 @@ export default function LightsOut() {
         row: Math.floor(index / GRID_SIZE),
         baseZIndex: 5,
       })),
-    [game.cards],
+      {
+        id: "deal",
+        name: "deal",
+        cards: game.deal,
+        col: (GRID_SIZE - 1) / 2,
+        row: (GRID_SIZE - 1) / 2,
+        baseZIndex: 20,
+        fan: { maxVisible: 3 },
+      },
+    ],
+    [game.cards, game.deal],
   );
 
   function pressCard(index: number) {
@@ -104,7 +135,7 @@ export default function LightsOut() {
 
   const cardMapper = (mappedCard: MappedCard): AnimatedCardMapping => ({
     onPress: () => pressCard(mappedCard.pileIndex ?? 0),
-    isDisabled: game.won,
+    isDisabled: game.won || mappedCard.zoneName === "deal",
   });
 
   const { cardMap } = useCardMap({

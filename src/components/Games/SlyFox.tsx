@@ -237,7 +237,7 @@ export default function SlyFox() {
       col: i < 4 ? 0 : kingCol,
       row: tableauRowOffset + (i % 4) * rowStep,
       fan: { maxVisible: 3 },
-      placeholder: {},
+      placeholder: { iconName: i < 4 ? "ace" : "king" },
     }));
 
     const reserveZones: MapZone[] = game.reserves.map((pile, i) => ({
@@ -379,14 +379,11 @@ export default function SlyFox() {
     gap: 0.14,
   });
 
-  const placed = game.foundations.reduce((sum, pile) => sum + pile.length, 0);
-
   return (
     <GameWrapper
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={reset}
       isLoaded={isLoaded}
-      score={placed}
       winLoseMessage={
         game.won
           ? i18n.t("games:slyFox.outfoxedTheDeck")

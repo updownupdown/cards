@@ -7,6 +7,7 @@ import { RandomGameRoller } from "@/components/Home/RandomGameRoller";
 import { GameStatsNames, statKeys } from "@/data/games-data";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useFade } from "@/hooks/useFade";
+import { useKeyboardLift } from "@/hooks/useKeyboardLift";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
@@ -20,7 +21,7 @@ import {
   rgba,
   transitionStyles,
 } from "@/styles/styles";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
   Animated,
   FlatList,
@@ -31,8 +32,15 @@ import {
 } from "react-native";
 import { useImmer } from "use-immer";
 import { HomeCardSizeControl, type HomeCardSize } from "./HomeCardSizeControl";
+import {
+  findCentreEntry,
+  useCardSizeTransition,
+} from "./useCardSizeTransition";
 import { flexStyles } from "@/styles/flexStyles";
-import { DICE_ROLL_DURATION, ROLLING_DICE_COUNT } from "./RollingDice";
+import { RollingDice } from "./RollingDice";
+
+/** How many games a roll of the dice picks. */
+const RANDOM_GAME_COUNT = 2;
 
 type StatsFilters = Record<GameStatsNames, { min: number; max: number }>;
 type Filters = {
@@ -88,9 +96,7 @@ export function SearchTab({
   const [isRandomRolling, setIsRandomRolling] = useState(false);
   const [randomRollKey, setRandomRollKey] = useState(0);
   const [filters, setFilters] = useImmer<Filters>(DEFAULT_FILTERS);
-  const randomRollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null,
-  );
+  const pendingRandomEntriesRef = useRef<HomeGameEntry[]>([]);
   const pageSidePadding = spacing(layoutDims.pagePadding);
   const contentWidth = Math.min(
     ui.contentMaxWidth,
@@ -108,6 +114,12 @@ export function SearchTab({
   );
   const { isRendered: isSearchRendered, opacity: searchOpacity } =
     useFade(!isRandomMode);
+  const keyboardLift = useKeyboardLift();
+  const containerRef = useRef<View>(null);
+  const listRef = useRef<FlatList<HomeGameEntry>>(null);
+  const cardRefs = useRef(new Map<string, View>());
+  const scrollFailedRef = useRef(0);
+  const scrollToAnchorRef = useRef<(attemptsLeft: number) => void>(() => {});
 
   const filteredGames = useMemo(() => {
     const normalizedQuery = foldForSearch(query.trim());
@@ -134,11 +146,41 @@ export function SearchTab({
     });
   }, [allEnabledGames, filters, language, mode, query, unplayedPaths]);
 
+  const { opacity: listOpacity, changeCardSize } = useCardSizeTransition({
+    cardSize,
+    onCardSizeChange,
+    captureAnchor: async () => {
+      if (isRandomMode) return null;
+      const centre = await findCentreEntry(
+        containerRef.current,
+        cardRefs.current,
+      );
+      if (!centre) return null;
+      const index = filteredGames.findIndex(([path]) => path === centre.key);
+      return index < 0 ? null : { index };
+    },
+    restoreAnchor: ({ index }) => {
+      const row = Math.floor(index / cardColumns);
+      const scrollToAnchor = (attemptsLeft: number) => {
+        // Rows that were never rendered have no measured height yet, so the
+        // failure handler jumps near them and retries once they are measured.
+        scrollFailedRef.current = attemptsLeft - 1;
+        listRef.current?.scrollToIndex({
+          index: row,
+          viewPosition: 0.5,
+          animated: false,
+        });
+      };
+      scrollToAnchorRef.current = scrollToAnchor;
+      scrollToAnchor(3);
+    },
+  });
+
   const rollRandomGames = useCallback(() => {
     const available = [...filteredGames];
     const selected: HomeGameEntry[] = [];
 
-    while (available.length > 0 && selected.length < ROLLING_DICE_COUNT) {
+    while (available.length > 0 && selected.length < RANDOM_GAME_COUNT) {
       const index = Math.floor(Math.random() * available.length);
       selected.push(available[index]);
       available.splice(index, 1);
@@ -149,31 +191,19 @@ export function SearchTab({
     setIsRandomMode(true);
     setIsRandomRolling(true);
     setRandomRollKey((current) => current + 1);
-    if (randomRollTimeoutRef.current)
-      clearTimeout(randomRollTimeoutRef.current);
-    randomRollTimeoutRef.current = setTimeout(() => {
-      setRandomEntries(selected);
-      setIsRandomRolling(false);
-      randomRollTimeoutRef.current = null;
-    }, DICE_ROLL_DURATION);
+    pendingRandomEntriesRef.current = selected;
   }, [filteredGames]);
 
+  const showRolledGames = useCallback(() => {
+    setRandomEntries(pendingRandomEntriesRef.current);
+    setIsRandomRolling(false);
+  }, []);
+
   const clearRandomGames = useCallback(() => {
-    if (randomRollTimeoutRef.current)
-      clearTimeout(randomRollTimeoutRef.current);
-    randomRollTimeoutRef.current = null;
     setIsRandomRolling(false);
     setRandomEntries([]);
     setIsRandomMode(false);
   }, []);
-
-  useEffect(
-    () => () => {
-      if (randomRollTimeoutRef.current)
-        clearTimeout(randomRollTimeoutRef.current);
-    },
-    [],
-  );
 
   const clearSearch = () => {
     setQuery("");
@@ -250,193 +280,230 @@ export function SearchTab({
   );
 
   return (
-    <View style={{ flex: 1 }}>
-      <FlatList
-        key={isRandomMode ? "random" : `${cardSize}-${cardColumns}`}
-        data={isRandomMode ? [] : filteredGames}
-        keyExtractor={([path]) => path}
-        numColumns={cardColumns}
-        style={{ flex: 1 }}
-        onScroll={(event) =>
-          onScrolledChange(event.nativeEvent.contentOffset.y > 1)
-        }
-        scrollEventThrottle={16}
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{
-          paddingTop: contentPaddingTop,
-          // Clear the floating search control, then leave the same
-          // comfortable gap after the last card that the other tabs use.
-          paddingBottom: Math.max(
-            contentPaddingBottom,
-            searchControlBottom + controlHeight + spacing(48),
-          ),
-          paddingHorizontal: pageSidePadding,
-          rowGap: cardGap,
+    <View ref={containerRef} style={{ flex: 1 }}>
+      <View
+        pointerEvents="box-none"
+        style={{
+          position: "absolute",
+          top: contentPaddingTop,
+          left: pageSidePadding,
+          right: pageSidePadding,
+          zIndex: 1,
         }}
-        columnWrapperStyle={
-          cardColumns > 1
-            ? {
+      >
+        <HomeCardSizeControl value={cardSize} onChange={changeCardSize} />
+      </View>
+      <Animated.View style={{ flex: 1, opacity: listOpacity }}>
+        <FlatList
+          ref={listRef}
+          onScrollToIndexFailed={({ averageItemLength, index }) => {
+            listRef.current?.scrollToOffset({
+              offset: averageItemLength * index,
+              animated: false,
+            });
+            if (scrollFailedRef.current > 0) {
+              const attemptsLeft = scrollFailedRef.current;
+              setTimeout(() => scrollToAnchorRef.current(attemptsLeft), 50);
+            }
+          }}
+          key={isRandomMode ? "random" : `${cardSize}-${cardColumns}`}
+          data={isRandomMode ? [] : filteredGames}
+          keyExtractor={([path]) => path}
+          numColumns={cardColumns}
+          style={{ flex: 1 }}
+          onScroll={(event) =>
+            onScrolledChange(event.nativeEvent.contentOffset.y > 1)
+          }
+          scrollEventThrottle={16}
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{
+            paddingTop: contentPaddingTop,
+            // Clear the floating search control, then leave the same
+            // comfortable gap after the last card that the other tabs use.
+            paddingBottom: Math.max(
+              contentPaddingBottom,
+              searchControlBottom + controlHeight + spacing(48),
+            ),
+            paddingHorizontal: pageSidePadding,
+            rowGap: cardGap,
+          }}
+          columnWrapperStyle={
+            cardColumns > 1
+              ? {
+                  alignSelf: "center",
+                  gap: cardGap,
+                  justifyContent: "flex-start",
+                }
+              : undefined
+          }
+          showsVerticalScrollIndicator={false}
+          initialNumToRender={8}
+          maxToRenderPerBatch={8}
+          windowSize={5}
+          ListHeaderComponent={
+            <View
+              style={{
+                width: "100%",
+                maxWidth: ui.contentMaxWidth,
                 alignSelf: "center",
-                gap: cardGap,
-                justifyContent: "flex-start",
-              }
-            : undefined
-        }
-        showsVerticalScrollIndicator={false}
-        initialNumToRender={8}
-        maxToRenderPerBatch={8}
-        windowSize={5}
-        ListHeaderComponent={
-          <View
-            style={{
-              width: "100%",
-              maxWidth: ui.contentMaxWidth,
-              alignSelf: "center",
-              gap: spacing(32),
-              marginBottom: spacing(20),
-            }}
-          >
-            <HomeCardSizeControl value={cardSize} onChange={onCardSizeChange} />
+                gap: spacing(32),
+                marginBottom: spacing(20),
+              }}
+            >
+              <View style={{ height: spacing(layoutDims.cardToggleHeight) }} />
 
-            <View style={{ flexDirection: "row", gap: spacing(12) }}>
-              {mode !== "filter" && (
-                <Button
-                  accessibilityLabel={
-                    isRandomMode ? t("random.clear") : t("random.roll")
-                  }
-                  text={isRandomMode ? t("random.clear") : t("random.roll")}
-                  iconName={isRandomMode ? "close" : "dice"}
-                  iconSize={spacing(24)}
-                  size="sm"
-                  uppercase={false}
-                  theme={
-                    isRandomMode ? Colors.suitsRed : rgba(Colors.K900, 0.7)
-                  }
-                  onPress={isRandomMode ? clearRandomGames : rollRandomGames}
-                  disabled={!isRandomMode && filteredGames.length === 0}
-                  style={{
-                    flex: 1,
-                    height: controlHeight,
-                    borderRadius: controlBorderRadius,
-                    ...homeSurfaceShadow(spacing),
-                  }}
-                />
-              )}
-
-              {!isRandomMode && mode !== "filter" && (
-                <Button
-                  accessibilityLabel={t("search.filters")}
-                  text={t("search.filters")}
-                  iconName="filter"
-                  iconSize={spacing(24)}
-                  size="sm"
-                  uppercase={false}
-                  theme={rgba(Colors.K900, 0.7)}
-                  onPress={() => setMode("filter")}
-                  style={{
-                    flex: 1,
-                    height: controlHeight,
-                    borderRadius: controlBorderRadius,
-                    ...homeSurfaceShadow(spacing),
-                  }}
-                />
-              )}
-
-              {mode === "filter" && (
-                <View
-                  style={[
-                    flexStyles.colCentered,
-                    {
-                      width: "100%",
-                      gap: spacing(6),
-                      backgroundColor: rgba(Colors.K900, 0.8),
+              <View style={{ flexDirection: "row", gap: spacing(12) }}>
+                {mode !== "filter" && (
+                  <Button
+                    accessibilityLabel={
+                      isRandomMode ? t("random.clear") : t("random.roll")
+                    }
+                    text={isRandomMode ? t("random.clear") : t("random.roll")}
+                    iconName={isRandomMode ? "close" : "dice"}
+                    iconSize={spacing(24)}
+                    size="sm"
+                    uppercase={false}
+                    theme={
+                      isRandomMode ? Colors.suitsRed : rgba(Colors.K900, 0.7)
+                    }
+                    onPress={isRandomMode ? clearRandomGames : rollRandomGames}
+                    disabled={!isRandomMode && filteredGames.length === 0}
+                    style={{
+                      flex: 1,
+                      height: controlHeight,
                       borderRadius: controlBorderRadius,
                       ...homeSurfaceShadow(spacing),
-                    },
-                  ]}
-                >
-                  <View
-                    style={{
-                      width: "100%",
-                      height: controlHeight,
-                      flexDirection: "row",
-                      alignItems: "center",
-                      paddingRight: spacing(16),
-                      paddingLeft: spacing(20),
-                      gap: spacing(8),
                     }}
-                  >
-                    <Icon
-                      name="filter"
-                      size={spacing(24)}
-                      color={Colors.K300}
-                    />
-                    <Text
-                      size="md"
-                      weight={400}
-                      color={Colors.K200}
-                      style={{ flex: 1 }}
-                    >
-                      {t("search.filters")}
-                    </Text>
+                  />
+                )}
 
-                    <Pressable
-                      accessibilityRole="button"
-                      accessibilityLabel={t("search.resetFilters")}
-                      onPress={resetFilters}
+                {!isRandomMode && mode !== "filter" && (
+                  <Button
+                    accessibilityLabel={t("search.filters")}
+                    text={t("search.filters")}
+                    iconName="filter"
+                    iconSize={spacing(24)}
+                    size="sm"
+                    uppercase={false}
+                    theme={rgba(Colors.K900, 0.7)}
+                    onPress={() => setMode("filter")}
+                    style={{
+                      flex: 1,
+                      height: controlHeight,
+                      borderRadius: controlBorderRadius,
+                      ...homeSurfaceShadow(spacing),
+                    }}
+                  />
+                )}
+
+                {mode === "filter" && (
+                  <View
+                    style={[
+                      flexStyles.colCentered,
+                      {
+                        width: "100%",
+                        gap: spacing(6),
+                        backgroundColor: rgba(Colors.K900, 0.8),
+                        borderRadius: controlBorderRadius,
+                        ...homeSurfaceShadow(spacing),
+                      },
+                    ]}
+                  >
+                    <View
                       style={{
-                        marginLeft: "auto",
+                        width: "100%",
+                        height: controlHeight,
                         flexDirection: "row",
                         alignItems: "center",
-                        gap: spacing(6),
+                        paddingRight: spacing(16),
+                        paddingLeft: spacing(20),
+                        gap: spacing(8),
                       }}
                     >
-                      <Text size="sm" weight={500} color={Colors.K600}>
-                        {t("search.resetFilters")}
-                      </Text>
                       <Icon
-                        name="close"
+                        name="filter"
                         size={spacing(24)}
-                        color={Colors.K600}
+                        color={Colors.K300}
                       />
-                    </Pressable>
-                  </View>
+                      <Text
+                        size="md"
+                        weight={400}
+                        color={Colors.K200}
+                        style={{ flex: 1 }}
+                      >
+                        {t("search.filters")}
+                      </Text>
 
-                  {filtersSection}
-                </View>
+                      <Pressable
+                        accessibilityRole="button"
+                        accessibilityLabel={t("search.resetFilters")}
+                        onPress={resetFilters}
+                        style={{
+                          marginLeft: "auto",
+                          flexDirection: "row",
+                          alignItems: "center",
+                          gap: spacing(6),
+                        }}
+                      >
+                        <Text size="sm" weight={500} color={Colors.K600}>
+                          {t("search.resetFilters")}
+                        </Text>
+                        <Icon
+                          name="close"
+                          size={spacing(24)}
+                          color={Colors.K600}
+                        />
+                      </Pressable>
+                    </View>
+
+                    {filtersSection}
+                  </View>
+                )}
+              </View>
+
+              {isRandomMode && (
+                <RandomGameRoller
+                  entries={randomEntries}
+                  favorites={favorites}
+                  onToggleFavorite={onToggleFavorite}
+                  rolling={isRandomRolling}
+                />
               )}
             </View>
-
-            {isRandomMode && (
-              <RandomGameRoller
-                entries={randomEntries}
-                favorites={favorites}
+          }
+          renderItem={({ item: [path, game] }) => (
+            <View
+              ref={(view) => {
+                if (view) cardRefs.current.set(path, view);
+                else cardRefs.current.delete(path);
+              }}
+              collapsable={false}
+              style={{
+                alignSelf: "center",
+                width: cardColumnWidth,
+                maxWidth: cardColumnWidth,
+              }}
+            >
+              <HomeCard
+                path={path}
+                game={game}
+                size={cardSize}
                 onToggleFavorite={onToggleFavorite}
-                rolling={isRandomRolling}
-                rollKey={randomRollKey}
+                isFavorite={favorites.has(path)}
+                style={{ width: "100%" }}
               />
-            )}
-          </View>
-        }
-        renderItem={({ item: [path, game] }) => (
-          <View
-            style={{
-              alignSelf: "center",
-              width: cardColumnWidth,
-              maxWidth: cardColumnWidth,
-            }}
-          >
-            <HomeCard
-              path={path}
-              game={game}
-              size={cardSize}
-              onToggleFavorite={onToggleFavorite}
-              isFavorite={favorites.has(path)}
-              style={{ width: "100%" }}
-            />
-          </View>
-        )}
-      />
+            </View>
+          )}
+        />
+      </Animated.View>
+
+      {isRandomMode && (
+        <RollingDice
+          rollKey={randomRollKey}
+          floorBottom={searchControlBottom}
+          onSettled={showRolledGames}
+        />
+      )}
 
       {isSearchRendered && (
         <Animated.View
@@ -449,6 +516,7 @@ export function SearchTab({
             paddingHorizontal: spacing(layoutDims.pagePadding * 0.5),
             pointerEvents: isRandomMode ? "none" : "box-none",
             opacity: searchOpacity,
+            transform: [{ translateY: keyboardLift }],
           }}
         >
           <View

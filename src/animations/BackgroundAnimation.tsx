@@ -4,6 +4,11 @@ import {
   animationStyles,
   type SceneProps,
 } from "./BackgroundAnimations";
+import { Bees } from "./Bees";
+import { Lightning } from "./Lightning";
+import { Mist } from "./Mist";
+import { Glints, Glitter } from "./Sparkles";
+import { CandleMotes } from "./CandleMotes";
 import { Birds } from "./Birds";
 import { CherryBlossom } from "./CherryBlossom";
 import { Clouds } from "./Clouds";
@@ -16,6 +21,7 @@ import { Pollen } from "./Pollen";
 import { Rain } from "./Rain";
 import { Sand } from "./Sand";
 import { Snow } from "./Snow";
+import { Spiders } from "./Spiders";
 import { Stars } from "./Stars";
 import { GameAnimation, GameAnimations } from "./types";
 
@@ -52,6 +58,12 @@ export function BackgroundAnimation({
     case GameAnimations.Birds:
       scene = <Birds {...sceneProps} />;
       break;
+    case GameAnimations.Bees:
+      scene = <Bees {...sceneProps} />;
+      break;
+    case GameAnimations.Spiders:
+      scene = <Spiders {...sceneProps} />;
+      break;
     case GameAnimations.Clouds:
       scene = <Clouds {...sceneProps} />;
       break;
@@ -75,6 +87,21 @@ export function BackgroundAnimation({
       break;
     case GameAnimations.Dust:
       scene = <Dust {...sceneProps} />;
+      break;
+    case GameAnimations.Mist:
+      scene = <Mist {...sceneProps} />;
+      break;
+    case GameAnimations.Glitter:
+      scene = <Glitter {...sceneProps} />;
+      break;
+    case GameAnimations.Glints:
+      scene = <Glints {...sceneProps} />;
+      break;
+    case GameAnimations.Lightning:
+      scene = <Lightning {...sceneProps} />;
+      break;
+    case GameAnimations.CandleMotes:
+      scene = <CandleMotes {...sceneProps} />;
       break;
   }
 

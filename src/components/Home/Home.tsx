@@ -276,6 +276,7 @@ export default function Home() {
               height={viewportHeight}
               animationsEnabled={settings.showAnimations && ufo.gateOpen}
               summons={ufo.summons}
+              visits={ufo.visits}
               onCatch={ufo.onCatch}
             />
           )}

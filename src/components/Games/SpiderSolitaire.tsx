@@ -278,10 +278,6 @@ export default function SpiderSolitaire() {
 
   const canDeal = useMemo(() => canDealStock(game), [game]);
 
-  const completedRuns = useMemo(
-    () => game.foundations.filter((foundation) => foundation.length > 0).length,
-    [game.foundations],
-  );
   const won = useMemo(() => isWon(game), [game]);
 
   const zones: MapZone[] = useMemo(() => {
@@ -724,7 +720,6 @@ export default function SpiderSolitaire() {
   return (
     <GameWrapper
       outcome={won ? "won" : "playing"}
-      score={completedRuns * 13}
       reset={() => {
         void reset();
       }}

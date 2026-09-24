@@ -116,9 +116,9 @@ export function HomeCard({
             size === "medium"
               ? [rgba(game.gameColorDark, 0.94), rgba(game.gameColorDark, 0.3)]
               : [
+                  rgba(game.gameColorDark, 0.95),
                   rgba(game.gameColorDark, 0.9),
-                  rgba(game.gameColorDark, 0.8),
-                  rgba(game.gameColorDark, 0.4),
+                  rgba(game.gameColorDark, 0.7),
                 ]
           }
           start={size === "medium" ? { x: 0.5, y: 1 } : { x: 0.2, y: 1 }}

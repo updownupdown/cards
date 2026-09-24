@@ -358,7 +358,6 @@ export default function Seer() {
     setGame((draft) => disposeFreed(draft, returnToDeck));
   }
 
-  const completedCount = game.board.filter(isCompleted).length;
   const stockCards = showBottom
     ? game.stock.map((card, index) =>
         index === game.stock.length - 1 ? flipToFace(card) : card,
@@ -500,7 +499,6 @@ export default function Seer() {
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={reset}
       isLoaded={isLoaded}
-      score={completedCount}
       winLoseMessage={game.winLoseMessage}
       canUndo={canUndo}
       undo={undo}

@@ -239,7 +239,6 @@ export default function TenTwentyThirty() {
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={reset}
       isLoaded={isLoaded}
-      score={game.discard.length}
       winLoseMessage={
         game.won
           ? i18n.t("games:tenTwentyThirty.everyDecadeCounted")

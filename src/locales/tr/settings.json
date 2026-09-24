@@ -1,7 +1,6 @@
 {
   "language": {
     "label": "Dil",
-    "description": "Oyun adları, kurallar, menüler ve koleksiyon öğeleri bu dilde gösterilir.",
     "system": "Otomatik ({{language}})"
   },
   "translateCollectibles": {

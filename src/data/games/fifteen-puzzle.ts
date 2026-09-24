@@ -7,6 +7,8 @@ export const fifteenPuzzle: GameDefinition = {
   path: "/fifteen-puzzle",
   title: "Fifteen Puzzle",
   tags: [GameTag.SpatialControl, GameTag.EasyToLearn],
+  // Scored in moves or guesses: fewer is better.
+  lowerScoreIsBetter: true,
   rating: { complexity: 20, difficulty: 30, luck: 0 },
   thumbnail: "FifteenPuzzle.webp",
   background: GAME_BACKGROUNDS.bookstore,

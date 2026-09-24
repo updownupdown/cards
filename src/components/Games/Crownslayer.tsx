@@ -952,6 +952,8 @@ export default function Crownslayer() {
       isLoaded={isLoaded}
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       winLoseMessage={game.winLoseMessage ?? undefined}
+      // Jesters left unused: 2 is a gold victory, 1 silver, 0 bronze.
+      score={game.won ? game.jestersDeck.length : undefined}
       canUndo={canUndo}
       undo={undo}
     >

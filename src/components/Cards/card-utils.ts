@@ -234,6 +234,56 @@ export type Rect = {
   height: number;
 };
 
+function isPlayingCard(value: unknown): value is PlayingCard {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "id" in value &&
+    "rank" in value &&
+    "suit" in value &&
+    "faceUp" in value
+  );
+}
+
+/** Every card anywhere in a game state, in no particular order. */
+export function collectCards(value: unknown): PlayingCard[] {
+  if (isPlayingCard(value)) return [value];
+  if (Array.isArray(value)) return value.flatMap(collectCards);
+  if (typeof value === "object" && value !== null) {
+    return Object.values(value).flatMap(collectCards);
+  }
+  return [];
+}
+
+/**
+ * A freshly dealt state played with the cards that were gathered up: each
+ * card in `dealt` takes the id of a gathered card of the same rank and suit,
+ * so on screen the gathered cards fly out to their new places rather than new
+ * cards appearing. Everything else about the dealt card (face up or down,
+ * where it lies) is kept.
+ */
+export function redealWith<T>(dealt: T, gathered: PlayingCard[]): T {
+  const pool = new Map<string, string[]>();
+  for (const card of gathered) {
+    const key = `${card.rank}-${card.suit}`;
+    pool.set(key, [...(pool.get(key) ?? []), card.id]);
+  }
+  const swap = (value: unknown): unknown => {
+    if (isPlayingCard(value)) {
+      const id = pool.get(`${value.rank}-${value.suit}`)?.pop();
+      return id ? { ...value, id } : value;
+    }
+    if (Array.isArray(value)) return value.map(swap);
+    if (typeof value === "object" && value !== null) {
+      return Object.fromEntries(
+        Object.entries(value).map(([key, entry]) => [key, swap(entry)]),
+      );
+    }
+    return value;
+  };
+  return swap(dealt) as T;
+}
+
 export const DRAG_MOVE_THRESHOLD = 6;
 
 export function pointInRect(pageX: number, pageY: number, rect: Rect) {

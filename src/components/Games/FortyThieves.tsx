@@ -8,7 +8,7 @@ import { DragGhostCards, DragHandle } from "@/components/Cards/DragDrop";
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useStateManager } from "@/hooks/useStateManager";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
-import { DOUBLE_TAP_MS } from "@/utils/utils";
+import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
@@ -16,9 +16,12 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
   cardDims,
   CardSuit,
+  collectCards,
   createDeck,
+  flipAllToBack,
   PlayingCard,
   RANK_VALUE,
+  redealWith,
   shuffle,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
@@ -103,7 +106,19 @@ function canPlaceOnTableau(card: PlayingCard, destinationTop?: PlayingCard) {
   );
 }
 
-const gameStateInitial = createInitialState();
+/** The board with every card gathered face down into the stock. */
+function gatherState(state: GameState): GameState {
+  return {
+    foundations: Array.from({ length: 8 }, () => []),
+    tableau: Array.from({ length: 10 }, () => []),
+    stock: shuffle(flipAllToBack(collectCards(state))),
+    waste: [],
+    redealsUsed: 0,
+  };
+}
+
+// Starts with every card in the stock, to be dealt out from there.
+const gameStateInitial = gatherState(createInitialState());
 
 export default function FortyThieves() {
   const difficulty = useGameSettingValue("difficulty");
@@ -123,7 +138,10 @@ export default function FortyThieves() {
         clearDragGhost();
       },
       resetAndSetup: async () => {
-        setGame(createInitialState());
+        // Gather every card into the stock, then deal them back out.
+        setGame((draft) => gatherState(draft));
+        await delay();
+        setGame((draft) => redealWith(createInitialState(), draft.stock));
       },
     });
 
@@ -185,7 +203,7 @@ export default function FortyThieves() {
         row: 0,
         baseZIndex: 30,
         fan: { maxVisible: 1 },
-        placeholder: {},
+        placeholder: { iconName: "ace" },
       }),
     );
 

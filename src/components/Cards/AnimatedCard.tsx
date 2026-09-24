@@ -22,6 +22,17 @@ import { CardColor, CardSizes } from "./CardStyles";
 const DROP_FLIGHT_DURATION = 180;
 /** Added to a moving card's zIndex so it passes over resting cards. */
 const MOVING_Z_OFFSET = 500;
+/**
+ * Viewing distance for the flip, in card widths. Without a perspective a
+ * rotateY only squashes the card flat and back; with one, the near edge grows
+ * and the far edge recedes, so the card reads as turning over in 3D. Smaller
+ * is a stronger effect.
+ */
+const FLIP_PERSPECTIVE_IN_CARD_WIDTHS = 5;
+/** How much a card rises towards you at the middle of a flip. */
+const FLIP_LIFT = 0.07;
+/** How much a card rises while it flies from one pile to another. */
+const MOVE_LIFT = 0.035;
 
 export { defaultAnimDuration, bufferedDefaultAnimDuration };
 
@@ -362,17 +373,27 @@ const AnimatedCardComponent = ({
 
     currentRotation.value = rotation;
 
+    // A card rises a little while it flies between piles, the way a real one
+    // is lifted off the table. Zero at rest, so a settled card is back at
+    // exactly its own size and stays pixel-sharp.
+    const lift = Math.sin(moveProgress.value * Math.PI) * MOVE_LIFT;
+
     // Only the transform here. On native, any layout prop (position,
     // left/top, width/height) in an update sends the whole update through a
     // shadow-tree commit instead of Reanimated's direct UI-prop path — once per
     // card per frame. Those values are static, so they're set outside.
+    //
+    // The flip itself is on the faces (see faceTurn), not here: this view is
+    // moved into place by translation from the board's corner, so a
+    // perspective here would project from that corner rather than from the
+    // card, and every flip would swing wildly off-axis.
     return {
       transform: [
         { translateX: finalX },
         { translateY: finalY + finalYOffset },
         { rotate: `${rotation}deg` },
         // { rotateX: `20deg` }, // DON'T DO THIS! It will mess up the card height
-        { rotateY: `${spinY.value}deg` },
+        { scale: 1 + lift },
       ],
     };
   }, [
@@ -385,12 +406,30 @@ const AnimatedCardComponent = ({
     cardHeight,
   ]);
 
+  // The flip, applied to each face so it turns about the card's own centre.
+  // With a perspective the near edge grows and the far edge recedes, so the
+  // card reads as turning over rather than being squashed flat; it also rises
+  // a little at mid-turn. At rest this is the identity, so faces stay sharp.
+  const faceTurn = (angle: number) => {
+    "worklet";
+    const lift = Math.sin((spinY.value / 180) * Math.PI) * FLIP_LIFT;
+    return [
+      // Must come first for React Native to apply it to what follows.
+      { perspective: cardWidth * FLIP_PERSPECTIVE_IN_CARD_WIDTHS },
+      { rotateY: `${angle}deg` },
+      { scale: 1 + lift },
+    ];
+  };
+
   const frontStyle = useAnimatedStyle(() => ({
     opacity: spinY.value >= 90 ? 0 : 1,
+    transform: faceTurn(spinY.value),
   }));
 
+  // Half a turn behind the front, so it faces the viewer once the card is over.
   const backStyle = useAnimatedStyle(() => ({
     opacity: spinY.value >= 90 ? 1 : 0,
+    transform: faceTurn(spinY.value + 180),
   }));
 
   return (
@@ -443,9 +482,7 @@ const AnimatedCardComponent = ({
         )}
 
         {showBack && (
-          <Animated.View
-            style={[StyleSheet.absoluteFill, styles.backFace, backStyle]}
-          >
+          <Animated.View style={[StyleSheet.absoluteFill, backStyle]}>
             <Card
               cardWidth={cardWidth}
               card={{ ...targetState.card, faceUp: false }}
@@ -465,10 +502,6 @@ const AnimatedCardComponent = ({
     </Animated.View>
   );
 };
-
-const styles = StyleSheet.create({
-  backFace: { transform: [{ rotateY: "180deg" }] },
-});
 
 // Every game state change (a hover highlight, a drag starting, one card
 // moving) re-renders the whole card map. Comparing by value lets unchanged

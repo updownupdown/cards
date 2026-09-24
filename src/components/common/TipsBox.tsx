@@ -123,14 +123,31 @@ export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
               { gap: spacing(12), paddingLeft: spacing(4) },
             ]}
           >
-            <Text
-              size="sm"
-              weight={300}
-              color={gameInfo.gameColorPale}
-              style={{ flex: 1 }}
+            <View
+              style={[
+                flexStyles.colCentered,
+                flexStyles.flex1,
+                { alignItems: "flex-start" },
+              ]}
             >
-              {t("tips.quickStart")}
-            </Text>
+              <Text
+                size="md"
+                weight={600}
+                color={gameInfo.gameColorPale}
+                style={{ flex: 1 }}
+              >
+                {t("tips.quickStart")}
+              </Text>
+              <Text
+                size="xs"
+                weight={300}
+                color={rgba(gameInfo.gameColorPale, 0.6)}
+                style={{ flex: 1 }}
+                numberOfLines={1}
+              >
+                {gameInfo.title}
+              </Text>
+            </View>
 
             <Button
               size="sm"

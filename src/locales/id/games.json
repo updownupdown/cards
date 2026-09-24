@@ -286,9 +286,7 @@
     "defenders": "Pembela",
     "attack": "Serang{{value}}",
     "attackersWave": "Penyerang (Gelombang {{wave}})",
-    "noCardsLeftToPlay": "Kartumu habis untuk dimainkan!",
-    "scoreHigherIsBetter": "{{score}} (makin tinggi makin baik)",
-    "scoreCloserToZero": "{{score}} (makin dekat nol makin baik)"
+    "noCardsLeftToPlay": "Kartumu habis untuk dimainkan!"
   },
   "lightsOut": {
     "everyLightIsOut": "Semua lampu padam."

@@ -1,6 +1,7 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
+import { GameAnimations } from "@/animations";
 
 export const seahavenTowers: GameDefinition = {
   path: "/seahaven-towers",
@@ -10,6 +11,7 @@ export const seahavenTowers: GameDefinition = {
   rating: { complexity: 35, difficulty: 50, luck: 25 },
   thumbnail: "SeahavenTowers.webp",
   background: GAME_BACKGROUNDS.shipwreck,
+  animation: GameAnimations.Mist,
   // animation: GameAnimations.Clouds,
   gameColorDark: "#173946",
   gameColorPale: "#dceff0",

@@ -104,17 +104,25 @@ const CONNECTIONS = {
 /**
  * The glow and dust drawn along the arms (see NodesMap). The glow is baked
  * into assets/images/galaxy-glow.webp here, with a real Gaussian blur;
- * widths are in world points, the same units NodesMap draws in.
+ * widths are in world points, the same units NodesMap draws in. The look is
+ * modelled on artists' impressions of the Milky Way seen face-on: lavender
+ * arms over a faint disc, a warm barred bulge, and knots of blue and pink
+ * star-forming light. The dark dust lanes of the real thing are left out: at
+ * map zoom they read as stray dark arcs across the arms.
  */
 const ARM_ART = {
   /** Points sampled along each arm's centre line. */
   spineSamples: 60,
-  /** Glow image size in pixels. The glow has no fine detail, so it is drawn
-   *  well under world resolution and stretched, which keeps it small. */
-  glowResolution: 720,
-  glowColor: "#8fb6ff",
+  /** Glow image size in pixels. The glow has little fine detail, so it is
+   *  drawn under world resolution and stretched, which keeps it small. */
+  glowResolution: 900,
   /** Overall strength of the finished glow, applied after every layer. */
-  glowStrength: 0.75,
+  glowStrength: 0.6,
+  /** The faint disc the arms sit in, so the gaps between them are not bare. */
+  disc: { radius: 640, opacity: 0.1, blur: 150, color: "#6f7fc0" },
+  /** A second, tighter disc that fills the gaps between the arms' roots, so
+   *  the inner galaxy is one glow rather than arms over dark patches. */
+  innerDisc: { radius: 400, opacity: 0.1, blur: 110, color: "#8793d2" },
   /**
    * Each arm is painted in passes, each blurred on its own and then laid over
    * the others. A pass is `core + rim` half-width at the centre, easing to
@@ -124,23 +132,58 @@ const ARM_ART = {
     // Haze: broad, faint and very soft. Where the hazes of neighbouring arms
     // overlap the gap between them fills in a little, so the arms meld at
     // their edges while each keeps its own shape.
-    { core: 40, rim: 175, falloff: 1, opacity: 0.05, blur: 70 },
+    { core: 110, rim: 175, falloff: 1.4, opacity: 0.08, blur: 80, color: "#8391d6" },
     // Body: the arm itself, generous all the way out rather than pinching
     // soon after it leaves the core.
-    { core: 81, rim: 64, falloff: 0.9, opacity: 0.075, blur: 18 },
+    // Its edges are blurred wide so the arms melt into the glow between them.
+    { core: 81, rim: 64, falloff: 0.9, opacity: 0.15, blur: 34, color: "#a9b6ee" },
     // Spine: narrower and brighter, carrying the arm's strength to its tip.
-    { core: 37.5, rim: 30, falloff: 1, opacity: 0.14, blur: 14 },
+    { core: 37.5, rim: 30, falloff: 1, opacity: 0.16, blur: 18, color: "#cbd6ff" },
+    // Ridge: a thin bright line down the middle, which keeps each arm crisp
+    // now that its edges are soft.
+    { core: 12, rim: 9, falloff: 1, opacity: 0.12, blur: 8, color: "#e4eaff" },
   ],
   /** The last share of an arm over which it thins to nothing. */
   tipFade: 0.06,
   /**
-   * Round glows where the arms meet. Without them the arms' roots overlap
-   * into a cross; with them the centre reads as a galaxy's bulge.
+   * The bulge: a warm bar with a bright nucleus, where the arms meet. Without
+   * it the arms' roots overlap into a cross. Radii are the bar's half-length
+   * and half-thickness in world points.
    */
-  core: [
-    { radius: 96, opacity: 0.068, blur: 16 },
-    { radius: 160, opacity: 0.034, blur: 16 },
-  ],
+  bulge: {
+    angle: -0.62,
+    layers: [
+      { radiusX: 260, radiusY: 170, opacity: 0.14, blur: 70, color: "#d9c9b0" },
+      { radiusX: 185, radiusY: 88, opacity: 0.28, blur: 30, color: "#f6dcaa" },
+      { radiusX: 115, radiusY: 52, opacity: 0.32, blur: 18, color: "#ffeac2" },
+      { radiusX: 42, radiusY: 28, opacity: 0.4, blur: 12, color: "#fff7e4" },
+    ],
+  },
+  /**
+   * Knots of light clumped along the arms, which break the smooth glow up
+   * into the mottled, fibrous texture of a real spiral. A few are pink
+   * nebulae, strung along the inside edge of each arm as they are in the sky.
+   */
+  knots: {
+    count: 1500,
+    radius: [0.9, 3.6],
+    opacity: [0.1, 0.3],
+    blur: 3.5,
+    color: "#d5ecff",
+    /** Share by which knots shrink out at the rim, so the thin arm tips are
+     *  finely grained rather than blotchy. */
+    tipShrink: 0.7,
+  },
+  nebulae: {
+    count: 80,
+    radius: [0.9, 3],
+    opacity: [0.25, 0.65],
+    blur: 3,
+    color: "#ff7fa8",
+    /** How far inside the spine they sit, as a share of the arm body's
+     *  half-width. */
+    offset: [0.4, 0.7],
+  },
   /** Specks of dust scattered along the arms. */
   dustCount: 1400,
   /** How far off the spine dust strays, as a share of the arm's half-width.
@@ -149,8 +192,12 @@ const ARM_ART = {
   /** Extra scatter per unit of radius: the glow stays broad further out than
    *  the arm's own half-width does, so the dust has to widen with it. */
   dustFlare: 0.5,
-  /** Distinct dust tints; NodesMap holds the matching colours. */
-  dustTints: 5,
+  /** How often each dust tint is dealt, in the order NodesMap holds the
+   *  matching colours: blue-white, white, cyan, pink, and a warm tint that
+   *  crowds towards the bulge. */
+  dustTintWeights: [0.3, 0.22, 0.32, 0.06, 0.1],
+  /** Inside this radius (map units) dust takes the bulge's warm tint. */
+  dustWarmRadius: 0.22,
 };
 
 const REWARDS = {
@@ -447,27 +494,51 @@ function armOf(point) {
 }
 
 /**
- * Each arm's centre line as a polyline, which the app strokes several times
+ * Each arm's centre line as a polyline, which the glow strokes several times
  * over at decreasing width to give the arm a soft, blurred spine.
  */
-function buildArmSpines() {
+function buildArmSpines(samples = ARM_ART.spineSamples) {
   const spines = [];
   for (let arm = 0; arm < GALAXY.arms; arm += 1) {
     // Every spine starts at the exact centre, so the arms meet there.
     const points = [[0, 0]];
-    for (let step = 0; step <= ARM_ART.spineSamples; step += 1) {
+    for (let step = 0; step <= samples; step += 1) {
       const nodeRadius =
         GALAXY.coreRadius +
-        (GALAXY.rimRadius - GALAXY.coreRadius) * (step / ARM_ART.spineSamples);
+        (GALAXY.rimRadius - GALAXY.coreRadius) * (step / samples);
       const angle = armCentreAngle(arm, nodeRadius);
       points.push([
-        Number((Math.cos(angle) * nodeRadius).toFixed(3)),
-        Number((Math.sin(angle) * nodeRadius).toFixed(3)),
+        Number((Math.cos(angle) * nodeRadius).toFixed(4)),
+        Number((Math.sin(angle) * nodeRadius).toFixed(4)),
       ]);
     }
     spines.push(points);
   }
   return spines;
+}
+
+/** Half-width of a pass, in world points, a share `along` of the way out. */
+function passHalfWidth(pass, along) {
+  const tip = Math.min(1, (1 - along) / ARM_ART.tipFade);
+  return (pass.core * (1 - along) ** pass.falloff + pass.rim) * tip;
+}
+
+/**
+ * A spine point with its unit normal, turned to face the galaxy's centre:
+ * the inside of the arm, where the nebulae sit.
+ */
+function spineFrame(spine, index) {
+  const [x, y] = spine[index];
+  const [previousX, previousY] = spine[Math.max(0, index - 1)];
+  const [nextX, nextY] = spine[Math.min(spine.length - 1, index + 1)];
+  const length = Math.hypot(nextX - previousX, nextY - previousY) || 1;
+  let normalX = -(nextY - previousY) / length;
+  let normalY = (nextX - previousX) / length;
+  if (normalX * x + normalY * y > 0) {
+    normalX = -normalX;
+    normalY = -normalY;
+  }
+  return { x, y, normalX, normalY, along: index / (spine.length - 1) };
 }
 
 /** One arm's outline for a pass: out along one side, back along the other. */
@@ -478,20 +549,8 @@ function armRibbon(spine, pass, size) {
   const right = [];
 
   for (let index = 0; index < spine.length; index += 1) {
-    const [x, y] = spine[index];
-    const [previousX, previousY] = spine[Math.max(0, index - 1)];
-    const [nextX, nextY] = spine[Math.min(spine.length - 1, index + 1)];
-    const length = Math.hypot(nextX - previousX, nextY - previousY) || 1;
-    const normalX = -(nextY - previousY) / length;
-    const normalY = (nextX - previousX) / length;
-
-    const along = index / (spine.length - 1);
-    const tip = Math.min(1, (1 - along) / ARM_ART.tipFade);
-    const halfWidth =
-      (pass.core * (1 - along) ** pass.falloff + pass.rim) *
-      tip *
-      pixelsPerPoint;
-
+    const { x, y, normalX, normalY, along } = spineFrame(spine, index);
+    const halfWidth = passHalfWidth(pass, along) * pixelsPerPoint;
     const px = toPixel(x);
     const py = toPixel(y);
     left.push(`${(px + normalX * halfWidth).toFixed(1)},${(py + normalY * halfWidth).toFixed(1)}`);
@@ -500,77 +559,231 @@ function armRibbon(spine, pass, size) {
   return `M${left.join(" L")} L${right.reverse().join(" L")} Z`;
 }
 
+/** A value between a [low, high] pair. */
+function between(random, [low, high]) {
+  return low + random() * (high - low);
+}
+
 /**
- * Bakes the arms' glow into one soft image. It is painted as a greyscale
- * coverage mask, blurred, and then used as the alpha of a flat colour:
- * blurring coloured pixels over transparency would bleed black into the
- * edges. A real blur is the only way to get arms that fade without visible
- * steps - stacking translucent shapes always bands - and SVG blur filters are
- * not dependable in react-native-svg on Android. At runtime this is a single
- * image instead of dozens of paths, so it is cheaper to draw as well.
+ * Points scattered along the arms, denser near the spines. `spread` scales
+ * how far they stray, as for the dust.
+ */
+function scatterAlongArms(random, count, spread) {
+  const points = [];
+  for (let attempt = 0; points.length < count && attempt < 400000; attempt += 1) {
+    const nodeRadius = Math.sqrt(
+      GALAXY.coreRadius ** 2 +
+        random() * (GALAXY.rimRadius ** 2 - GALAXY.coreRadius ** 2),
+    );
+    const angle = random() * Math.PI * 2;
+    const x = Math.cos(angle) * nodeRadius;
+    const y = Math.sin(angle) * nodeRadius;
+    const across =
+      nearestArm(x, y).offset /
+      (armHalfWidth(nodeRadius) * spread * (1 + nodeRadius * ARM_ART.dustFlare));
+    if (random() > Math.exp(-across * across * 2.2)) continue;
+    points.push({ x, y, nodeRadius });
+  }
+  return points;
+}
+
+/**
+ * Points along the inside edge of each arm, clear of the bulge and short of
+ * the tip, for the nebulae to sit on.
+ */
+function buildNebulaAnchors() {
+  const random = makeRandom("nebula-anchors");
+  const body = ARM_ART.passes[1];
+  const unitsPerPoint = 2 / WORLD_SIZE;
+  const anchors = [];
+
+  for (const spine of buildArmSpines(320)) {
+    const first = Math.round(0.15 * (spine.length - 1));
+    const last = Math.round(0.93 * (spine.length - 1));
+    for (let index = first; index <= last; index += 1) {
+      const frame = spineFrame(spine, index);
+      const inset =
+        passHalfWidth(body, frame.along) *
+        between(random, ARM_ART.nebulae.offset) *
+        unitsPerPoint;
+      anchors.push({
+        x: frame.x + frame.normalX * inset,
+        y: frame.y + frame.normalY * inset,
+      });
+    }
+  }
+  return anchors;
+}
+
+function hexToRgb(hex) {
+  const value = Number.parseInt(hex.slice(1), 16);
+  return [(value >> 16) & 255, (value >> 8) & 255, value & 255].map(
+    (channel) => channel / 255,
+  );
+}
+
+/** Blurs one layer of white-on-black shapes into a 0..1 coverage map. */
+async function renderCoverage(shapes, blur, size) {
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">` +
+    `<rect width="${size}" height="${size}" fill="black"/>${shapes.join("")}</svg>`;
+  const coverage = await sharp(Buffer.from(svg)).extractChannel(0).raw().toBuffer();
+  // Kept single-channel explicitly: sharp otherwise hands a blurred
+  // greyscale buffer back as three-channel sRGB.
+  const blurred = await sharp(coverage, {
+    raw: { width: size, height: size, channels: 1 },
+  })
+    .blur(Math.max(0.3, blur * (size / WORLD_SIZE)))
+    .toColourspace("b-w")
+    .raw()
+    .toBuffer();
+  if (blurred.length !== size * size) {
+    throw new Error(`Glow layer is ${blurred.length} bytes, expected ${size * size}.`);
+  }
+  return blurred;
+}
+
+/**
+ * Bakes the arms' glow into one soft image. Each layer is painted as a
+ * greyscale coverage mask, blurred, and then tinted: blurring coloured pixels
+ * over transparency would bleed black into the edges. A real blur is the
+ * only way to get arms that fade without visible steps - stacking
+ * translucent shapes always bands - and SVG blur filters are not dependable
+ * in react-native-svg on Android. At runtime this is a single image instead
+ * of thousands of shapes, so it is cheaper to draw as well.
  */
 async function renderGalaxyGlow(spines) {
   const size = ARM_ART.glowResolution;
   const pixelsPerPoint = size / WORLD_SIZE;
+  const toPixel = (coordinate) => ((coordinate + 1) * size) / 2;
+  const centre = size / 2;
+  const { bulge, knots, nebulae, disc } = ARM_ART;
+  const nebulaAnchors = buildNebulaAnchors();
 
-  // Each layer is its own set of shapes with its own blur: the haze needs a
-  // far softer edge than the arm itself, or its rim would show as an outline.
-  const layers = [
+  const circle = (x, y, radius, opacity) =>
+    `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(radius * pixelsPerPoint).toFixed(2)}" fill="white" fill-opacity="${opacity.toFixed(3)}"/>`;
+
+  const knotRandom = makeRandom("arm-knots");
+  const knotShapes = scatterAlongArms(knotRandom, knots.count, 1.1).map(
+    ({ x, y, nodeRadius }) => {
+      const shrink = 1 - knots.tipShrink * nodeRadius ** 1.5;
+      return circle(
+        toPixel(x),
+        toPixel(y),
+        between(knotRandom, knots.radius) * shrink,
+        between(knotRandom, knots.opacity) * (0.5 + shrink * 0.5),
+      );
+    },
+  );
+  const nebulaRandom = makeRandom("arm-nebulae");
+  const nebulaShapes = Array.from({ length: nebulae.count }, () => {
+    const anchor =
+      nebulaAnchors[Math.floor(nebulaRandom() * nebulaAnchors.length)];
+    const jitter = 8 / (WORLD_SIZE / 2);
+    return circle(
+      toPixel(anchor.x + (nebulaRandom() - 0.5) * jitter),
+      toPixel(anchor.y + (nebulaRandom() - 0.5) * jitter),
+      between(nebulaRandom, nebulae.radius),
+      between(nebulaRandom, nebulae.opacity),
+    );
+  });
+
+  // Each layer is its own set of shapes with its own blur and colour: the
+  // haze needs a far softer edge than the arm itself, or its rim would show
+  // as an outline.
+  const lights = [
     {
-      blur: ARM_ART.core[0].blur,
-      shapes: ARM_ART.core.map(
-        (glow) =>
-          `<circle cx="${size / 2}" cy="${size / 2}" r="${glow.radius * pixelsPerPoint}" fill="white" fill-opacity="${glow.opacity}"/>`,
-      ),
+      blur: disc.blur,
+      color: disc.color,
+      shapes: [circle(centre, centre, disc.radius, disc.opacity)],
+    },
+    {
+      blur: ARM_ART.innerDisc.blur,
+      color: ARM_ART.innerDisc.color,
+      shapes: [
+        circle(centre, centre, ARM_ART.innerDisc.radius, ARM_ART.innerDisc.opacity),
+      ],
     },
     ...ARM_ART.passes.map((pass) => ({
       blur: pass.blur,
+      color: pass.color,
       shapes: spines.map(
         (spine) =>
           `<path d="${armRibbon(spine, pass, size)}" fill="white" fill-opacity="${pass.opacity}"/>`,
       ),
     })),
+    { blur: knots.blur, color: knots.color, shapes: knotShapes },
+    ...bulge.layers.map((layer) => ({
+      blur: layer.blur,
+      color: layer.color,
+      shapes: [
+        `<ellipse cx="${centre}" cy="${centre}" rx="${layer.radiusX * pixelsPerPoint}" ry="${layer.radiusY * pixelsPerPoint}" transform="rotate(${((bulge.angle * 180) / Math.PI).toFixed(2)} ${centre} ${centre})" fill="white" fill-opacity="${layer.opacity}"/>`,
+      ],
+    })),
   ];
 
-  // Layers are combined as light adds up: each one lets through only what
-  // the others have not already lit, so overlaps brighten without clipping.
-  const unlit = new Float32Array(size * size).fill(1);
-  for (const layer of layers) {
-    const svg =
-      `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">` +
-      `<rect width="${size}" height="${size}" fill="black"/>${layer.shapes.join("")}</svg>`;
-    const coverage = await sharp(Buffer.from(svg))
-      .extractChannel(0)
-      .raw()
-      .toBuffer();
-    // Kept single-channel explicitly: sharp otherwise hands a blurred
-    // greyscale buffer back as three-channel sRGB.
-    const blurred = await sharp(coverage, {
-      raw: { width: size, height: size, channels: 1 },
-    })
-      .blur(layer.blur * pixelsPerPoint)
-      .toColourspace("b-w")
-      .raw()
-      .toBuffer();
-    if (blurred.length !== size * size) {
-      throw new Error(`Glow layer is ${blurred.length} bytes, expected ${size * size}.`);
+  // Light adds up per channel: each layer lets through only what the others
+  // have not already lit, so overlaps brighten without clipping.
+  const unlit = [0, 1, 2].map(() => new Float32Array(size * size).fill(1));
+  const addLight = (coverage, color) => {
+    const rgb = hexToRgb(color);
+    for (let index = 0; index < coverage.length; index += 1) {
+      const amount = coverage[index] / 255;
+      for (let channel = 0; channel < 3; channel += 1) {
+        unlit[channel][index] *= 1 - amount * rgb[channel];
+      }
     }
-    for (let index = 0; index < unlit.length; index += 1) {
-      unlit[index] *= 1 - blurred[index] / 255;
+  };
+  for (const layer of lights) {
+    addLight(await renderCoverage(layer.shapes, layer.blur, size), layer.color);
+  }
+
+  const lit = unlit.map((channel) => channel.map((value) => 1 - value));
+
+  // Nebulae glow over the arm they sit in.
+  const nebulaCoverage = await renderCoverage(nebulaShapes, nebulae.blur, size);
+  const nebulaRgb = hexToRgb(nebulae.color);
+  for (let index = 0; index < nebulaCoverage.length; index += 1) {
+    const amount = nebulaCoverage[index] / 255;
+    for (let channel = 0; channel < 3; channel += 1) {
+      const value = lit[channel][index];
+      lit[channel][index] = 1 - (1 - value) * (1 - amount * nebulaRgb[channel]);
     }
   }
 
-  const mask = Buffer.alloc(size * size);
-  for (let index = 0; index < mask.length; index += 1) {
-    mask[index] = Math.round((1 - unlit[index]) * ARM_ART.glowStrength * 255);
+  // The light is premultiplied; unpremultiply it into colour plus alpha, so
+  // it lays over the dark sky exactly as it was lit.
+  const pixels = Buffer.alloc(size * size * 4);
+  for (let index = 0; index < size * size; index += 1) {
+    const red = lit[0][index] * ARM_ART.glowStrength;
+    const green = lit[1][index] * ARM_ART.glowStrength;
+    const blue = lit[2][index] * ARM_ART.glowStrength;
+    const alpha = Math.max(red, green, blue);
+    const offset = index * 4;
+    if (alpha > 0) {
+      pixels[offset] = Math.round((red / alpha) * 255);
+      pixels[offset + 1] = Math.round((green / alpha) * 255);
+      pixels[offset + 2] = Math.round((blue / alpha) * 255);
+    }
+    pixels[offset + 3] = Math.round(alpha * 255);
   }
 
-  await sharp({
-    create: { width: size, height: size, channels: 3, background: ARM_ART.glowColor },
-  })
-    .joinChannel(mask, { raw: { width: size, height: size, channels: 1 } })
-    .webp({ quality: 90, alphaQuality: 90, effort: 6 })
+  await sharp(pixels, { raw: { width: size, height: size, channels: 4 } })
+    .webp({ quality: 88, alphaQuality: 90, effort: 6 })
     .toFile(glowPath);
+}
+
+/** Deals a dust tint by the weights in ARM_ART. */
+function pickTint(random, nodeRadius) {
+  const weights = ARM_ART.dustTintWeights;
+  const warm = weights.length - 1;
+  if (nodeRadius < ARM_ART.dustWarmRadius && random() < 0.7) return warm;
+  let roll = random() * weights.reduce((sum, weight) => sum + weight, 0);
+  for (let tint = 0; tint < weights.length; tint += 1) {
+    roll -= weights[tint];
+    if (roll <= 0) return tint;
+  }
+  return 0;
 }
 
 /**
@@ -581,34 +794,16 @@ async function renderGalaxyGlow(spines) {
  */
 function buildArmDust() {
   const random = makeRandom("arm-dust");
-  const dust = [];
-
-  for (let attempt = 0; dust.length < ARM_ART.dustCount && attempt < 400000; attempt += 1) {
-    const nodeRadius = Math.sqrt(
-      GALAXY.coreRadius ** 2 +
-        random() * (GALAXY.rimRadius ** 2 - GALAXY.coreRadius ** 2),
-    );
-    const angle = random() * Math.PI * 2;
-    const x = Math.cos(angle) * nodeRadius;
-    const y = Math.sin(angle) * nodeRadius;
-
-    // Dust clings closer to the spine than the nodes do, which is what makes
-    // the arm read as a band of light rather than a scatter.
-    const across =
-      nearestArm(x, y).offset /
-      (armHalfWidth(nodeRadius) *
-        ARM_ART.dustSpread *
-        (1 + nodeRadius * ARM_ART.dustFlare));
-    if (random() > Math.exp(-across * across * 2.2)) continue;
-
-    dust.push([
+  // Dust clings closer to the spine than the nodes do, which is what makes
+  // the arm read as a band of light rather than a scatter.
+  return scatterAlongArms(random, ARM_ART.dustCount, ARM_ART.dustSpread).map(
+    ({ x, y, nodeRadius }) => [
       Number(x.toFixed(3)),
       Number(y.toFixed(3)),
-      Math.floor(random() * ARM_ART.dustTints),
+      pickTint(random, nodeRadius),
       Number((0.35 + random() * 0.65).toFixed(2)),
-    ]);
-  }
-  return dust;
+    ],
+  );
 }
 
 // ── Connections ──────────────────────────────────────────────────────────────

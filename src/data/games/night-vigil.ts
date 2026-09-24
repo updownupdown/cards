@@ -13,7 +13,7 @@ export const nightVigil: GameDefinition = {
     luck: 42,
   },
   background: GAME_BACKGROUNDS.nightCity,
-  animation: GameAnimations.Rain,
+  animation: GameAnimations.Lightning,
   thumbnail: "NightVigil.webp",
   gameColorDark: "#11161a",
   gameColorPale: "#e7edf0",

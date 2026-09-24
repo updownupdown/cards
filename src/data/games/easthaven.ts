@@ -1,6 +1,7 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
+import { GameAnimations } from "@/animations";
 export const easthaven: GameDefinition = {
   path: "/easthaven",
   title: "Easthaven",
@@ -8,6 +9,7 @@ export const easthaven: GameDefinition = {
   rating: { complexity: 35, difficulty: 60, luck: 55 },
   thumbnail: "Easthaven.webp",
   background: GAME_BACKGROUNDS.stonyBeach,
+  animation: GameAnimations.Glints,
   gameColorDark: "#203638",
   gameColorPale: "#dcefed",
   cardBack: CardBackColors.Teal,

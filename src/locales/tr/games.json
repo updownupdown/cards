@@ -286,9 +286,7 @@
     "defenders": "Savunucular",
     "attack": "Saldır{{value}}",
     "attackersWave": "Saldırganlar (Dalga {{wave}})",
-    "noCardsLeftToPlay": "Oynayacak kartın kalmadı!",
-    "scoreHigherIsBetter": "{{score}} (yüksek olan iyidir)",
-    "scoreCloserToZero": "{{score}} (sıfıra yakın olan iyidir)"
+    "noCardsLeftToPlay": "Oynayacak kartın kalmadı!"
   },
   "lightsOut": {
     "everyLightIsOut": "Bütün ışıklar söndü."

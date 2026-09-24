@@ -175,7 +175,7 @@ export default function Carpet() {
       col: 0.5 + i,
       row: 0,
       fan: { maxVisible: 3 },
-      placeholder: {},
+      placeholder: { iconName: "ace" },
     }));
 
     const carpetZones: MapZone[] = game.carpet.map((card, i) => ({
@@ -260,14 +260,11 @@ export default function Carpet() {
     gap: 0.14,
   });
 
-  const placed = game.foundations.reduce((sum, pile) => sum + pile.length, 0);
-
   return (
     <GameWrapper
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={reset}
       isLoaded={isLoaded}
-      score={placed}
       winLoseMessage={
         game.won
           ? i18n.t("games:carpet.theCarpetIsRolledUp")

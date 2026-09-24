@@ -12,15 +12,19 @@ import { Pressable, StyleSheet, View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   cardDims,
+  collectCards,
   createDeck,
+  flipAllToBack,
   flipToBack,
   flipToFace,
   rankValue,
+  redealWith,
   shuffle,
   top,
   zoneFanOffset,
   type PlayingCard,
 } from "../Cards/card-utils";
+import { delay } from "@/utils/utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
@@ -143,6 +147,17 @@ function createInitialState(
   };
 }
 
+/** The board with every card gathered face down into the stock. */
+function gatherState(state: SingleDeckSpiderState): SingleDeckSpiderState {
+  return {
+    tableau: state.tableau.map(() => []),
+    stock: shuffle(flipAllToBack(collectCards(state))),
+    discard: [],
+    ended: false,
+    won: false,
+  };
+}
+
 export const singleDeckSpiderRules = {
   canBuild,
   createInitialState,
@@ -157,7 +172,11 @@ export function SingleDeckSpider({
   variant: SingleDeckSpiderVariant;
 }) {
   const layout = LAYOUTS[variant];
-  const initial = useMemo(() => createInitialState(variant), [variant]);
+  // Starts with every card in the stock, to be dealt out from there.
+  const initial = useMemo(
+    () => gatherState(createInitialState(variant)),
+    [variant],
+  );
   const [selected, setSelected] = useState<Selection>(null);
   const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
     useStateManager<SingleDeckSpiderState>({
@@ -167,7 +186,12 @@ export function SingleDeckSpider({
         clearDragGhost();
       },
       resetAndSetup: async () => {
-        setGame(createInitialState(variant));
+        // Gather every card into the stock, then deal them back out.
+        setGame((draft) => gatherState(draft));
+        await delay();
+        setGame((draft) =>
+          redealWith(createInitialState(variant), draft.stock),
+        );
       },
     });
 
@@ -487,7 +511,6 @@ export function SingleDeckSpider({
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={() => void reset()}
       isLoaded={isLoaded}
-      score={game.discard.length / 13}
       canUndo={canUndo}
       undo={undo}
       winLoseMessage={i18n.t("games:singleDeckSpider.fourCompleteSuits")}

@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const pokerSquares: GameDefinition = {
   path: "/poker-squares",
@@ -17,6 +18,7 @@ export const pokerSquares: GameDefinition = {
   },
   thumbnail: "PokerSquares.webp",
   background: GAME_BACKGROUNDS.casino,
+  animation: GameAnimations.Glitter,
   gameColorDark: "#112c1f",
   gameColorPale: "#fff4ce",
   cardBack: CardBackColors.Moss,

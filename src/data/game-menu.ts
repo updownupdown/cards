@@ -814,6 +814,8 @@ export async function recordResult(
   timeMs?: number | null,
 ) {
   const numericScore = parseNumericScore(score);
+  const lowerIsBetter = !!getGameInfo(pathname)?.lowerScoreIsBetter;
+  const countsTowardsBest = numericScore !== null && (!lowerIsBetter || won);
   const winTimeMs =
     won && typeof timeMs === "number" && timeMs > 0 ? Math.round(timeMs) : null;
 
@@ -830,12 +832,14 @@ export async function recordResult(
         ...settings.stats,
         wins: settings.stats.wins + (won ? 1 : 0),
         losses: settings.stats.losses + (won ? 0 : 1),
-        highestScore:
-          numericScore === null
-            ? settings.stats.highestScore
-            : settings.stats.highestScore === null
-              ? numericScore
-              : Math.max(settings.stats.highestScore, numericScore),
+        highestScore: !countsTowardsBest
+          ? settings.stats.highestScore
+          : settings.stats.highestScore === null
+            ? numericScore
+            : (lowerIsBetter ? Math.min : Math.max)(
+                settings.stats.highestScore,
+                numericScore!,
+              ),
         fastestTimeMs:
           winTimeMs === null
             ? settings.stats.fastestTimeMs

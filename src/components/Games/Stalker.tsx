@@ -495,7 +495,7 @@ export default function Stalker() {
       isLoaded={isLoaded}
       canUndo={canUndo}
       undo={undo}
-      score={32 - game.deck.length}
+      score={game.deck.length}
       winLoseMessage={
         game.won
           ? game.deck.length === 0

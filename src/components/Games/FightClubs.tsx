@@ -610,7 +610,8 @@ export default function FightClubs() {
   return (
     <GameWrapper
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
-      score={game.discard.length}
+      // Clubs left unspent: the fewer a win needed, the better.
+      score={game.clubsDeck.length + game.hand.length}
       reset={reset}
       isLoaded={isLoaded}
       canUndo={canUndo}

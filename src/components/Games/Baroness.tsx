@@ -8,6 +8,7 @@ import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   cardDims,
   createDeck,
+  flipAllToBack,
   flipToBack,
   flipToFace,
   rankValue,
@@ -34,7 +35,7 @@ export type BaronessGameState = GameState;
 
 const gameStateInitial: GameState = {
   piles: Array.from({ length: pileCount }, () => []),
-  draw: [],
+  draw: createDeck(),
   discard: [],
   ended: false,
   won: false,
@@ -43,21 +44,29 @@ const gameStateInitial: GameState = {
 async function resetAndSetup(
   setGame: (updater: (draft: GameState) => void) => void,
 ) {
+  // Gather every card into the draw pile, face down.
   setGame((draft) => {
-    const deck = shuffle(createDeck());
+    draft.draw = shuffle(
+      flipAllToBack([...draft.draw, ...draft.piles.flat(), ...draft.discard]),
+    );
+    draft.piles = Array.from({ length: pileCount }, () => []);
+    draft.discard = [];
+    draft.ended = false;
+    draft.won = false;
+  });
+
+  await delay();
+
+  setGame((draft) => {
     const piles: PlayingCard[][] = Array.from({ length: pileCount }, () => []);
 
     // One card to each pile to start.
     for (let i = 0; i < pileCount; i += 1) {
-      const card = deck.pop();
+      const card = draft.draw.pop();
       if (card) piles[i].push(flipToFace(card));
     }
 
     draft.piles = piles;
-    draft.draw = deck.map(flipToBack);
-    draft.discard = [];
-    draft.ended = false;
-    draft.won = false;
   });
 
   await delay();

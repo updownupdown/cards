@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const golf: GameDefinition = {
   path: "/golf",
@@ -13,6 +14,7 @@ export const golf: GameDefinition = {
   },
   thumbnail: "Golf.webp",
   background: GAME_BACKGROUNDS.golf,
+  animation: GameAnimations.Birds,
   gameColorDark: "#1d301e",
   gameColorPale: "#f2fccc",
   cardBack: CardBackColors.Crimson,

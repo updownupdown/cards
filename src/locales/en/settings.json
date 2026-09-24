@@ -1,7 +1,6 @@
 {
   "language": {
     "label": "Language",
-    "description": "Game names, rules, menus and collectibles use this language.",
     "system": "Auto ({{language}})"
   },
   "translateCollectibles": {

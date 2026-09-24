@@ -20,27 +20,38 @@ export function AddToHomeScreenNotice({
 }: AddToHomeScreenNoticeProps) {
   const { spacing } = useResponsiveMetrics();
   const { t } = useTranslation("home");
-  const { isWeb, isIos, isStandalone, canPromptInstall, promptInstall } =
+  const { isWeb, browser, isStandalone, canPromptInstall, promptInstall } =
     usePwaInstallPrompt();
   const [installState, setInstallState] = useState<
     "idle" | "accepted" | "dismissed"
   >("idle");
 
-  const title = isIos
-    ? t("install.titleIos")
-    : canPromptInstall
-      ? t("install.titleInstall")
-      : t("install.titleDevice");
-
-  const instructions = isIos
-    ? t("install.instructionsIos")
-    : canPromptInstall
-      ? t("install.instructionsInstall")
-      : t("install.instructionsBrowser");
-
-  if (!isWeb || isStandalone) {
+  // Native apps and installed web apps never see this; nor does desktop
+  // Firefox, which can't install web apps at all.
+  if (!isWeb || isStandalone || browser === "unsupported") {
     return null;
   }
+
+  const isIos = browser === "iosSafari" || browser === "iosOther";
+
+  const title = isIos
+    ? t("install.titleIos")
+    : browser === "macSafari"
+      ? t("install.titleMac")
+      : canPromptInstall
+        ? t("install.titleInstall")
+        : t("install.titleDevice");
+
+  const instructions = canPromptInstall
+    ? t("install.instructionsInstall")
+    : {
+        iosSafari: t("install.instructionsIos"),
+        iosOther: t("install.instructionsIosOther"),
+        macSafari: t("install.instructionsMac"),
+        android: t("install.instructionsBrowser"),
+        desktop: t("install.instructionsDesktop"),
+        inApp: t("install.instructionsInApp"),
+      }[browser];
 
   const hideInstallButton = installState === "accepted";
 

@@ -1,6 +1,7 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
+import { GameAnimations } from "@/animations";
 export const josephine: GameDefinition = {
   path: "/josephine",
   title: "Josephine",
@@ -8,6 +9,7 @@ export const josephine: GameDefinition = {
   rating: { complexity: 40, difficulty: 65, luck: 40 },
   thumbnail: "Josephine.webp",
   background: GAME_BACKGROUNDS.greece,
+  animation: GameAnimations.Birds,
   gameColorDark: "#332e40",
   gameColorPale: "#efe3d2",
   cardBack: CardBackColors.Burgundy,

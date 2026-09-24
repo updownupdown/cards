@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const calculation: GameDefinition = {
   path: "/calculation",
@@ -13,6 +14,7 @@ export const calculation: GameDefinition = {
   },
   thumbnail: "Calculation.webp",
   background: GAME_BACKGROUNDS.geometricCeiling,
+  animation: GameAnimations.Dust,
   gameColorDark: "#12122b",
   gameColorPale: "#eccfff",
   cardBack: CardBackColors.Violet,

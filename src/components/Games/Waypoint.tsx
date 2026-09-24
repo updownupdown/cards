@@ -207,6 +207,19 @@ function createInitialState(): WaypointGameState {
   return game;
 }
 
+/** Every card gathered face down into the shuffle pile, ready to deal. */
+function gatherCards(draft: WaypointGameState) {
+  draft.shuffle = shuffle(collectCards(draft).map(flipToBack));
+  draft.gearOne = [];
+  draft.gearTwo = [];
+  draft.gearThree = [];
+  draft.sectors = [];
+  draft.sectorRows = [];
+  draft.boosts = [];
+  draft.brakes = [];
+  draft.completedSectors = 0;
+}
+
 function resetGame(draft: WaypointGameState) {
   draft.bonuses = 0;
   draft.penalties = 0;
@@ -315,7 +328,9 @@ export const waypointRules = {
   setupStage,
 };
 
+// Starts with every card in the shuffle pile, to be dealt out from there.
 const gameStateInitial = createInitialState();
+gatherCards(gameStateInitial);
 
 export default function Waypoint() {
   const { colorDark, colorPale } = useGameColors();
@@ -324,6 +339,9 @@ export default function Waypoint() {
     useStateManager<WaypointGameState>({
       gameStateInitial,
       resetAndSetup: async () => {
+        // Gather every card into the shuffle pile, then deal them back out.
+        setGame((draft) => gatherCards(draft));
+        await delay();
         setGame((draft) => resetGame(draft));
         await delay(400);
       },

@@ -12,6 +12,13 @@ export const GameAnimations = {
   ManaDust: "ManaDust",
   Pollen: "Pollen",
   Dust: "Dust",
+  Bees: "Bees",
+  Spiders: "Spiders",
+  Mist: "Mist",
+  Glitter: "Glitter",
+  Glints: "Glints",
+  Lightning: "Lightning",
+  CandleMotes: "CandleMotes",
 } as const;
 
 export type GameAnimation =

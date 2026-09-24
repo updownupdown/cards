@@ -13,11 +13,15 @@ import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
   CardRank,
+  collectCards,
   createDeck,
+  flipAllToBack,
   PlayingCard,
   RANK_VALUE,
+  redealWith,
   shuffle,
 } from "../Cards/card-utils";
+import { delay } from "@/utils/utils";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
@@ -157,7 +161,18 @@ export const scorpionRules = {
   descendingRanks: DESC_RANKS,
 };
 
-const gameStateInitial = createInitialState();
+/** The board with every card gathered face down into the stock. */
+function gatherState(state: ScorpionState): ScorpionState {
+  return {
+    tableau: Array.from({ length: 7 }, () => []),
+    stock: shuffle(flipAllToBack(collectCards(state))),
+    foundations: Array.from({ length: 4 }, () => []),
+    stockDealt: false,
+  };
+}
+
+// Starts with every card in the stock, to be dealt out from there.
+const gameStateInitial = gatherState(createInitialState());
 
 export default function Scorpion() {
   const [selected, setSelected] = useState<Selection>(null);
@@ -170,7 +185,10 @@ export default function Scorpion() {
         clearDragGhost();
       },
       resetAndSetup: async () => {
-        setGame(createInitialState());
+        // Gather every card into the stock, then deal them back out.
+        setGame((draft) => gatherState(draft));
+        await delay();
+        setGame((draft) => redealWith(createInitialState(), draft.stock));
       },
     });
 

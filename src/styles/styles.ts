@@ -20,6 +20,8 @@ export const Colors = {
   brightOrange: "#ff8b2d",
   brightYellow: "#ffea2d",
   brightGreen: "#26ff93",
+  /** The UFO and its Mercy Skip: a calmer green than brightGreen. */
+  ufoGreen: "#4fb381",
 
   // Accents
   accentBlue: "#86e5fd",

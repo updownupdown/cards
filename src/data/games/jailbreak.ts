@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const jailbreak: GameDefinition = {
   path: "/jailbreak",
@@ -14,6 +15,7 @@ export const jailbreak: GameDefinition = {
   },
   thumbnail: "Jailbreak.webp",
   background: GAME_BACKGROUNDS.stoneWall,
+  animation: GameAnimations.Spiders,
   gameColorDark: "#17211d",
   gameColorPale: "#d9eee3",
   cardBack: CardBackColors.Pine,

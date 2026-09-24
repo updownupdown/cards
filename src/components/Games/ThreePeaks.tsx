@@ -364,6 +364,8 @@ export default function ThreePeaks() {
       outcome={!ended ? "playing" : won ? "won" : "lost"}
       reset={reset}
       isLoaded={isLoaded}
+      // Draw cards left over: the fewer a win needed, the better.
+      score={won ? game.draw.length : undefined}
       canUndo={canUndo}
       undo={undo}
       showDeviceRotateHint="landscape"

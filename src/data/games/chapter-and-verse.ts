@@ -10,7 +10,7 @@ export const chapterAndVerse: GameDefinition = {
   rating: { complexity: 45, difficulty: 55, luck: 50 },
   thumbnail: "ChapterAndVerse.webp",
   background: GAME_BACKGROUNDS.bookstore,
-  animation: GameAnimations.Dust,
+  animation: GameAnimations.CandleMotes,
   gameColorDark: "#2e2d27",
   gameColorPale: "#f0e9d7",
   cardBack: CardBackColors.Bronze,

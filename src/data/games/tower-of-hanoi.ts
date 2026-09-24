@@ -1,6 +1,7 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
+import { GameAnimations } from "@/animations";
 
 export const towerOfHanoi: GameDefinition = {
   path: "/tower-of-hanoi",
@@ -11,7 +12,10 @@ export const towerOfHanoi: GameDefinition = {
     difficulty: 45,
     luck: 0,
   },
+  // Scored in moves: fewer is better.
+  lowerScoreIsBetter: true,
   background: GAME_BACKGROUNDS.indianLandscape,
+  animation: GameAnimations.Birds,
   thumbnail: "TowerOfHanoi.webp",
   gameColorDark: "#304f63",
   gameColorPale: "#d8efe8",

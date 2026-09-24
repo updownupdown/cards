@@ -14,7 +14,7 @@ export const pocketPoker: GameDefinition = {
   },
   thumbnail: "PocketPoker.webp",
   background: GAME_BACKGROUNDS.casino,
-  animation: GameAnimations.Dust,
+  animation: GameAnimations.Glitter,
   gameColorDark: "#142e1f",
   gameColorPale: "#fff5bd",
   cardBack: CardBackColors.Moss,

@@ -20,6 +20,7 @@ import { NodeDetailsPanel } from "./NodeDetailsPanel";
 import { NodesMap } from "./NodesMap";
 import { NodesProgressItem } from "./NodesProgressItem";
 import { UfoContext } from "./UfoContext";
+import { clearMercySkipVisit, isMercySkipVisitOwed } from "./ufo-visit";
 import { flexStyles } from "@/styles/flexStyles";
 
 type Props = {
@@ -64,7 +65,7 @@ export function NodesTab({ settingsMap, contentPaddingTop }: Props) {
     // Nothing to offer someone who is still holding a skip.
     progress.mercySkipCount === 0 &&
     (progress.mercySkipCollectibleCheckpoint === null ||
-      totalCollectibles >= progress.mercySkipCollectibleCheckpoint + 4);
+      totalCollectibles >= progress.mercySkipCollectibleCheckpoint + 3);
   const handleUfoCaught = useCallback(() => {
     void grantMercySkip();
   }, []);
@@ -98,15 +99,28 @@ export function NodesTab({ settingsMap, contentPaddingTop }: Props) {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [canSummonUfo]);
 
+  // Back from spending a Mercy Skip: once the map is up, the UFO drops by
+  // to acknowledge it.
+  const [ufoVisits, setUfoVisits] = useState(0);
+  useEffect(() => {
+    if (!isMapReady || !isMercySkipVisitOwed()) return;
+    const timer = setTimeout(() => {
+      clearMercySkipVisit();
+      setUfoVisits((count) => count + 1);
+    }, 700);
+    return () => clearTimeout(timer);
+  }, [isMapReady]);
+
   // Home draws the UFO, above the header; this tab only says when it may fly.
   const requestUfo = useContext(UfoContext);
   useEffect(() => {
     requestUfo({
       gateOpen: ufoGateOpen,
       summons: ufoSummons,
+      visits: ufoVisits,
       onCatch: handleUfoCaught,
     });
-  }, [handleUfoCaught, requestUfo, ufoGateOpen, ufoSummons]);
+  }, [handleUfoCaught, requestUfo, ufoGateOpen, ufoSummons, ufoVisits]);
   useEffect(() => () => requestUfo(null), [requestUfo]);
 
   const selectedNode =

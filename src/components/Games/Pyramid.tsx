@@ -619,6 +619,8 @@ export default function Pyramid() {
             ? i18n.t("games:pyramid.noMoreMovesAndThe")
             : undefined
       }
+      // Stock cards never drawn: the fewer a win needed, the better.
+      score={won ? game.stockCount : undefined}
       reset={reset}
       isLoaded={isLoaded}
       canUndo={canUndo}

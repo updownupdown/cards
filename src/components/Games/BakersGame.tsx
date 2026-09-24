@@ -12,13 +12,15 @@ import {
   useAutoComplete,
 } from "@/hooks/useAutoComplete";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
-import { DOUBLE_TAP_MS } from "@/utils/utils";
+import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
   cardDims,
+  flipAllToBack,
+  flipAllToFace,
   PlayingCard,
   RANK_VALUE,
   RANKS,
@@ -36,6 +38,8 @@ type GameState = {
   cascades: PlayingCard[][];
   freeCells: (PlayingCard | null)[];
   foundations: PlayingCard[][];
+  /** Every card, face down, while the game is being gathered and dealt. */
+  deal: PlayingCard[];
 };
 
 export type BakersGameState = GameState;
@@ -75,17 +79,29 @@ function canPlaceOnFoundation(
   );
 }
 
-function createInitialState(): GameState {
-  const deck = shuffle(
-    SUITS.flatMap((suit) =>
-      RANKS.map((rank) => ({
-        id: `${suit}-${rank}-${Math.random().toString(36).slice(2, 8)}`,
-        suit,
-        rank,
-        faceUp: true,
-      })),
-    ),
+function createDeck(): PlayingCard[] {
+  return SUITS.flatMap((suit) =>
+    RANKS.map((rank) => ({
+      id: `${suit}-${rank}-${Math.random().toString(36).slice(2, 8)}`,
+      suit,
+      rank,
+      faceUp: false,
+    })),
   );
+}
+
+/** Every card gathered face down into the deal pile, ready to deal. */
+function gatherState(cards: PlayingCard[]): GameState {
+  return {
+    cascades: Array.from({ length: 8 }, () => []),
+    freeCells: [null, null, null, null],
+    foundations: Array.from({ length: 4 }, () => [] as PlayingCard[]),
+    deal: shuffle(flipAllToBack(cards)),
+  };
+}
+
+function createInitialState(cards: PlayingCard[] = createDeck()): GameState {
+  const deck = shuffle(flipAllToFace(cards));
 
   const cascades: PlayingCard[][] = Array.from({ length: 8 }, () => []);
   deck.forEach((card, i) => cascades[i % 8].push(card));
@@ -94,6 +110,7 @@ function createInitialState(): GameState {
     cascades,
     freeCells: [null, null, null, null],
     foundations: Array.from({ length: 4 }, () => [] as PlayingCard[]),
+    deal: [],
   };
 }
 
@@ -125,7 +142,7 @@ export const bakersGameRules = {
   isWon,
 };
 
-const gameStateInitial = createInitialState();
+const gameStateInitial = gatherState(createDeck());
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -153,7 +170,17 @@ export default function BakersGame() {
       clearDragGhostRef.current?.();
     },
     resetAndSetup: async () => {
-      setGame(createInitialState());
+      // Gather every card into the deal pile, then deal them back out.
+      setGame((draft) =>
+        gatherState([
+          ...draft.deal,
+          ...draft.cascades.flat(),
+          ...draft.freeCells.filter((card): card is PlayingCard => !!card),
+          ...draft.foundations.flat(),
+        ]),
+      );
+      await delay();
+      setGame((draft) => createInitialState(draft.deal));
     },
   });
 
@@ -259,7 +286,20 @@ export default function BakersGame() {
       placeholder: {},
     }));
 
-    return [...freeCellZones, ...foundationZones, ...cascadeZones];
+    return [
+      ...freeCellZones,
+      ...foundationZones,
+      ...cascadeZones,
+      {
+        id: "deal",
+        name: "deal",
+        cards: game.deal,
+        col: 3.5,
+        row: 1.5,
+        baseZIndex: 60,
+        fan: { maxVisible: 3 },
+      },
+    ];
   }, [game]);
 
   // ── CardMap callbacks ───────────────────────────────────────────────────────

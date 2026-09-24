@@ -181,7 +181,6 @@ export default function AllInARow() {
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={() => void reset()}
       isLoaded={isLoaded}
-      score={game.foundation.length}
       canUndo={canUndo}
       undo={undo}
       winLoseMessage={

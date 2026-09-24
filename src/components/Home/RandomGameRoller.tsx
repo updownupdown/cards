@@ -4,14 +4,12 @@ import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
 import { Animated, View } from "react-native";
-import { RollingDice } from "./RollingDice";
 
 type RandomGameRollerProps = {
   entries: HomeGameEntry[];
   favorites: Set<string>;
   onToggleFavorite: (path: string) => void;
   rolling: boolean;
-  rollKey: number;
 };
 
 export function RandomGameRoller({
@@ -19,7 +17,6 @@ export function RandomGameRoller({
   favorites,
   onToggleFavorite,
   rolling,
-  rollKey,
 }: RandomGameRollerProps) {
   const { spacing } = useResponsiveMetrics();
   const cardGap = spacing(20);
@@ -68,17 +65,6 @@ export function RandomGameRoller({
               />
             </Animated.View>
           ))}
-
-        {rolling && (
-          <View style={flexStyles.colCentered}>
-            <RollingDice
-              rollKey={rollKey}
-              rolling={rolling}
-              slotHeight={largeCardHeight}
-              gap={cardGap}
-            />
-          </View>
-        )}
       </View>
     </View>
   );

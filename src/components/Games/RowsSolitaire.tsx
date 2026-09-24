@@ -281,7 +281,9 @@ export function RowsSolitaire({ variant }: { variant: RowsVariant }) {
         : (config.columns - 4) / 2 + i,
       row: config.kingFoundations ? (i % 4) * 1.1 : 0,
       fan: { maxVisible: 3 },
-      placeholder: {},
+      placeholder: {
+        iconName: config.kingFoundations && i >= 4 ? "king" : "ace",
+      },
     }));
 
     const cellZones: MapZone[] = game.rows.flatMap((row, r) =>
@@ -354,14 +356,11 @@ export function RowsSolitaire({ variant }: { variant: RowsVariant }) {
     gap: 0.12,
   });
 
-  const placed = game.foundations.reduce((sum, pile) => sum + pile.length, 0);
-
   return (
     <GameWrapper
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={reset}
       isLoaded={isLoaded}
-      score={placed}
       winLoseMessage={game.won ? config.winMessage() : config.loseMessage()}
       canUndo={canUndo}
       undo={undo}

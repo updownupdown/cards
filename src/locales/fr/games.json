@@ -286,9 +286,7 @@
     "defenders": "Défenseurs",
     "attack": "Attaquer{{value}}",
     "attackersWave": "Attaquants (vague {{wave}})",
-    "noCardsLeftToPlay": "Vous n'avez plus de cartes à jouer !",
-    "scoreHigherIsBetter": "{{score}} (plus c'est haut, mieux c'est)",
-    "scoreCloserToZero": "{{score}} (plus c'est proche de zéro, mieux c'est)"
+    "noCardsLeftToPlay": "Vous n'avez plus de cartes à jouer !"
   },
   "lightsOut": {
     "everyLightIsOut": "Toutes les lumières sont éteintes."

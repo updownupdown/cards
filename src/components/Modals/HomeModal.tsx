@@ -86,6 +86,12 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
       : []),
   ];
 
+  // Native can always keep the screen on; browsers need the Screen Wake Lock
+  // API (Chrome, Edge, Safari 16.4+, Firefox 126+, over HTTPS).
+  const canKeepAwake =
+    Platform.OS !== "web" ||
+    (typeof navigator !== "undefined" && "wakeLock" in navigator);
+
   const footerText = { size: "xs", weight: 300, color: Colors.K600 } as const;
   const footerLink = {
     size: "xs",
@@ -125,9 +131,6 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
           >
             <Text weight={500} size="lg" color={Colors.K200}>
               {t("language.label")}
-            </Text>
-            <Text size="sm" weight={400} color={Colors.white}>
-              {t("language.description")}
             </Text>
             <SelectControl
               value={settings.language}
@@ -179,15 +182,18 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               void updateSettings({ showTipsForNewGames: val });
             }}
           />
-          <SettingControl
-            label={t("keepScreenAwake.label")}
-            description={t("keepScreenAwake.description")}
-            value={settings.keepScreenAwake}
-            type="boolean"
-            onChange={(val) => {
-              void updateSettings({ keepScreenAwake: val });
-            }}
-          />
+          {/* Browsers without the Screen Wake Lock API can't keep the screen on. */}
+          {canKeepAwake && (
+            <SettingControl
+              label={t("keepScreenAwake.label")}
+              description={t("keepScreenAwake.description")}
+              value={settings.keepScreenAwake}
+              type="boolean"
+              onChange={(val) => {
+                void updateSettings({ keepScreenAwake: val });
+              }}
+            />
+          )}
           {/* Vibration isn't available in browsers, so native only. */}
           {Platform.OS !== "web" && (
             <SettingControl

@@ -27,6 +27,8 @@ const CARDS_PER_PILE = 3;
 type GameState = {
   deal: PlayingCard[];
   piles: PlayingCard[][];
+  /** Cards moved this game; absent from games saved before it was counted. */
+  moves?: number;
 };
 
 type MoveSource = { pileIndex: number };
@@ -58,7 +60,7 @@ function dealCards(cards: PlayingCard[]) {
 }
 
 function createInitialState(): GameState {
-  return { deal: [], piles: dealCards(createCards(true)) };
+  return { deal: [], piles: dealCards(createCards(true)), moves: 0 };
 }
 
 function pileOffset(count: number) {
@@ -96,6 +98,7 @@ export default function TowerOfHanoi() {
             (card) => ({ ...card, faceUp: false }),
           );
           draft.piles = Array.from({ length: PILE_COUNT }, () => []);
+          draft.moves = 0;
         });
 
         await delay(1000);
@@ -171,6 +174,7 @@ export default function TowerOfHanoi() {
 
         draft.piles[source.pileIndex].pop();
         draft.piles[target.pileIndex].push(moving);
+        draft.moves = (draft.moves ?? 0) + 1;
       });
     },
     getDroppedCardIds: (source) => {
@@ -341,6 +345,7 @@ export default function TowerOfHanoi() {
         void reset();
       }}
       isLoaded={isLoaded}
+      score={won ? game.moves : undefined}
       canUndo={canUndo}
       undo={undo}
     >

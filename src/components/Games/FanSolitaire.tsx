@@ -504,7 +504,7 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
       row: 0,
       baseZIndex: 80 + index,
       fan: { maxVisible: 1 },
-      placeholder: {},
+      placeholder: { iconName: "ace" },
     }));
 
     if (variant === "flower-garden") {
@@ -808,14 +808,11 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
     [cardHitAreas],
   );
 
-  const score = game.foundations.reduce((sum, pile) => sum + pile.length, 0);
-
   return (
     <GameWrapper
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={() => void reset()}
       isLoaded={isLoaded}
-      score={score}
       canUndo={canUndo}
       undo={undo}
       autoCompleting={isAutoCompleting}

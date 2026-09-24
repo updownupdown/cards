@@ -18,9 +18,9 @@ import {
 
 jest.mock("@/icons/Icon", () => ({ Icon: () => null }));
 
-// Flights are scheduled 50-130s apart; with random() pinned to 0.5 the first
-// one leaves after 90s and takes a little under 13s to cross.
-const UNTIL_TAKEOFF = 91_000;
+// Flights are scheduled 10-110s apart; with random() pinned to 0.5 the first
+// one leaves after 60s and takes a little under 13s to cross.
+const UNTIL_TAKEOFF = 61_000;
 const PAST_A_WHOLE_FLIGHT = 14_000;
 
 function advance(ms: number) {
@@ -31,7 +31,8 @@ function advance(ms: number) {
 
 function ufo(renderer: ReactTestRenderer) {
   return renderer.root.findAll(
-    (node) => node.props.testID === "nodes-ufo" && typeof node.type === "string",
+    (node) =>
+      node.props.testID === "nodes-ufo" && typeof node.type === "string",
   )[0];
 }
 
@@ -67,6 +68,7 @@ function render(animationsEnabled: boolean, onCatch = () => {}) {
         height={800}
         animationsEnabled={animationsEnabled}
         summons={0}
+        visits={0}
         onCatch={onCatch}
       />,
     );
@@ -109,7 +111,9 @@ describe("NodesUFO", () => {
     // The only way out is the dismiss button, which is not inside the ship's
     // own button (on web that nests a <button> in a <button>).
     const dismiss = buttons(renderer).find(
-      (button) => button.props.accessibilityLabel !== buttons(renderer)[0].props.accessibilityLabel,
+      (button) =>
+        button.props.accessibilityLabel !==
+        buttons(renderer)[0].props.accessibilityLabel,
     );
     expect(dismiss).toBeDefined();
     act(() => {
@@ -135,6 +139,7 @@ describe("NodesUFO", () => {
           height={800}
           animationsEnabled={false}
           summons={0}
+          visits={0}
           onCatch={() => {}}
         />,
       );
@@ -162,6 +167,7 @@ describe("NodesUFO", () => {
           height={800}
           animationsEnabled={false}
           summons={1}
+          visits={0}
           onCatch={() => {}}
         />,
       );
@@ -169,6 +175,40 @@ describe("NodesUFO", () => {
     advance(1_000);
     expect(ufo(renderer)).toBeDefined();
     expect(opacityOf(ufo(renderer))).toBeGreaterThan(0);
+  });
+
+  test("a Mercy Skip visit flies in, can't be caught, and leaves by itself", () => {
+    const onCatch = jest.fn();
+    const renderer = render(false, onCatch);
+    act(() => {
+      renderer.update(
+        <NodesUFO
+          width={400}
+          height={800}
+          animationsEnabled={false}
+          summons={0}
+          visits={1}
+          onCatch={onCatch}
+        />,
+      );
+    });
+    advance(1_600);
+    expect(ufo(renderer)).toBeDefined();
+    // Hovering in the middle, with nothing to press: no dismiss button, and
+    // the ship itself doesn't respond.
+    const { x, y } = positionOf(ufo(renderer));
+    expect(x).toBeCloseTo(400 / 2, 0);
+    expect(y).toBeCloseTo(800 * 0.44, 0);
+    const ship = renderer.root.findAll(
+      (node) =>
+        node.props.accessibilityLabel !== undefined &&
+        node.props.disabled === true,
+    );
+    expect(ship.length).toBeGreaterThan(0);
+    expect(onCatch).not.toHaveBeenCalled();
+
+    advance(2_000 + 1_200);
+    expect(ufo(renderer)).toBeUndefined();
   });
 
   test("the dismiss button is not nested inside the ship's button", () => {

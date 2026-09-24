@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import Animated, {
   cancelAnimation,
   Easing,
-  useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
@@ -11,9 +10,8 @@ import Animated, {
   withSequence,
   withTiming,
 } from "react-native-reanimated";
+import { ShootingStar } from "@/components/common/ShootingStar";
 import {
-  hash01,
-  loopFrom,
   type SceneProps,
   seeded,
   useAnimationsPaused,
@@ -22,88 +20,8 @@ import {
 const STAR_COLORS = ["#ffffff", "#eef8ff", "#d9efff", "#b9ddff", "#91c7ff"];
 const STAR_COUNT = 60;
 
-// Everything here loops on the UI thread. Previously three "shimmer lanes"
-// were restarted from JS after every twinkle (several times a second), and
-// each shooting star re-rendered React to pick its angle and colour.
-
-const SHOT_FADE_IN = 0.12;
-const SHOT_FADE_OUT = 0.35;
-
-function ShootingStar({ width, height }: SceneProps) {
-  // Picked once at mount (previously re-rolled per shot via a React render).
-  const [appearance] = useState(() => ({
-    color: STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)],
-    trailLength: 28 + Math.random() * 44,
-    wait: 6000 + Math.random() * 14000,
-    travel: 320 + Math.random() * 980,
-  }));
-  const total = appearance.wait + appearance.travel;
-
-  const progress = useSharedValue(0);
-  const cycle = useSharedValue(0);
-
-  const paused = useAnimationsPaused();
-
-  useEffect(() => {
-    if (paused) return;
-    progress.value = loopFrom(progress.value, total);
-    return () => cancelAnimation(progress);
-  }, [paused, progress, total]);
-
-  // A new path for every shot.
-  useAnimatedReaction(
-    () => progress.value,
-    (current, previous) => {
-      if (previous !== null && current < previous) cycle.value += 1;
-    },
-  );
-
-  const animatedStyle = useAnimatedStyle(() => {
-    const shot = (progress.value * total - appearance.wait) / appearance.travel;
-    if (shot <= 0) return { opacity: 0 };
-
-    const random = (salt: number) => hash01(salt, cycle.value + 1);
-    const startX = random(1) * width;
-    const startY = random(2) * height;
-    const angle = random(3) * Math.PI * 2;
-    const length =
-      Math.min(width, height) * 0.3 + random(4) * Math.max(width, height) * 0.4;
-
-    const opacity =
-      shot < SHOT_FADE_IN
-        ? shot / SHOT_FADE_IN
-        : shot > 1 - SHOT_FADE_OUT
-          ? Math.max(0, (1 - shot) / SHOT_FADE_OUT)
-          : 1;
-
-    return {
-      opacity,
-      transform: [
-        { translateX: startX + Math.cos(angle) * length * shot },
-        { translateY: startY + Math.sin(angle) * length * shot },
-        { rotate: `${angle}rad` },
-      ],
-    };
-  });
-
-  return (
-    <Animated.View style={[styles.shootingStar, animatedStyle]}>
-      <View
-        style={[
-          styles.shootingStarTrail,
-          {
-            backgroundColor: appearance.color,
-            width: appearance.trailLength,
-            left: -appearance.trailLength,
-          },
-        ]}
-      />
-      <View
-        style={[styles.shootingStarHead, { backgroundColor: appearance.color }]}
-      />
-    </Animated.View>
-  );
-}
+// The twinkles loop on the UI thread. The shooting stars are the Nodes map's,
+// with the same settings.
 
 function TwinklingStar({
   index,
@@ -174,6 +92,7 @@ function TwinklingStar({
 }
 
 export function Stars({ width, height }: SceneProps) {
+  const paused = useAnimationsPaused();
   return (
     <>
       {Array.from({ length: STAR_COUNT }, (_, index) => (
@@ -184,7 +103,16 @@ export function Stars({ width, height }: SceneProps) {
           height={height}
         />
       ))}
-      <ShootingStar width={width} height={height} />
+      <ShootingStar
+        width={width}
+        height={height}
+        animationsEnabled={!paused}
+        colors={STAR_COLORS}
+        peakOpacity={0.55}
+        durationScale={1.4}
+        minIntervalMs={9000}
+        maxIntervalMs={22000}
+      />
     </>
   );
 }
@@ -192,23 +120,5 @@ export function Stars({ width, height }: SceneProps) {
 const styles = StyleSheet.create({
   star: {
     position: "absolute",
-  },
-  shootingStar: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: 3,
-    height: 3,
-  },
-  shootingStarTrail: {
-    position: "absolute",
-    top: 1,
-    height: 1,
-    opacity: 0.45,
-  },
-  shootingStarHead: {
-    width: 3,
-    height: 3,
-    borderRadius: 1.5,
   },
 });

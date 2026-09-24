@@ -424,16 +424,11 @@ export default function Windmill() {
     gap: 0.14,
   });
 
-  const placed =
-    game.center.length +
-    game.corners.reduce((sum, pile) => sum + pile.length, 0);
-
   return (
     <GameWrapper
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={reset}
       isLoaded={isLoaded}
-      score={placed}
       winLoseMessage={
         game.won
           ? i18n.t("games:windmill.theSailsTurnFreely")

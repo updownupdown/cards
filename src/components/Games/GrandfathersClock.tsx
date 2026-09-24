@@ -512,16 +512,11 @@ export default function GrandfathersClock() {
     [cardHitAreas],
   );
 
-  const completed = game.foundations.filter((pile, index) =>
-    isComplete(pile, index),
-  ).length;
-
   return (
     <GameWrapper
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={() => void reset()}
       isLoaded={isLoaded}
-      score={completed}
       canUndo={canUndo}
       undo={undo}
       winLoseMessage={

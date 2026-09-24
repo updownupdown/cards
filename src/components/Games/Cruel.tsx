@@ -310,7 +310,7 @@ export default function Cruel() {
       col: i,
       row: 0,
       fan: { maxVisible: 3 },
-      placeholder: {},
+      placeholder: { iconName: "ace" },
     }));
     const tableauZones: MapZone[] = game.tableau.map((pile, i) => ({
       id: `tableau-${i}`,
@@ -499,14 +499,11 @@ export default function Cruel() {
     [cardHitAreas],
   );
 
-  const placed = game.foundations.reduce((sum, pile) => sum + pile.length, 0);
-
   return (
     <GameWrapper
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={() => void reset()}
       isLoaded={isLoaded}
-      score={placed}
       canUndo={canUndo}
       undo={undo}
       autoCompleting={isAutoCompleting}

@@ -4,6 +4,7 @@ import { useEffect, useMemo } from "react";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
+  flipAllToBack,
   flipToFace,
   rankValue,
   shuffle,
@@ -35,9 +36,10 @@ type GameState = {
 
 export type SingularityGameState = GameState;
 
+// Every card starts in the singularity, face down, and is dealt out from it.
 const gameStateInitial: GameState = {
   piles: Array.from({ length: pileCount }, () => []),
-  hole: [],
+  hole: createDeck(),
   ended: false,
   won: false,
 };
@@ -79,14 +81,15 @@ export function playableRun(
  * A deal the player can actually open with. About one shuffle in 35 leaves no
  * King or Two on top of any pile, which strands the Ace of Spades and ends the
  * game before the first tap; redealing costs nothing and spares the player a
- * game that was lost on arrival.
+ * game that was lost on arrival. The same cards are reshuffled for each
+ * attempt, so they are dealt from wherever they were gathered.
  */
-export function dealPiles() {
+export function dealPiles(cards: PlayingCard[] = createDeck()) {
   let piles: PlayingCard[][] = [];
   let hole: PlayingCard[] = [];
 
   for (let attempt = 0; attempt < DEAL_ATTEMPTS; attempt += 1) {
-    const deck = shuffle(createDeck({ faceUp: true }));
+    const deck = shuffle(cards);
 
     // The Ace of Spades opens the singularity.
     const startIndex = deck.findIndex(
@@ -114,13 +117,21 @@ export function dealPiles() {
 async function resetAndSetup(
   setGame: (updater: (draft: GameState) => void) => void,
 ) {
-  const { piles, hole } = dealPiles();
-
+  // Gather every card into the singularity, face down.
   setGame((draft) => {
-    draft.piles = piles;
-    draft.hole = hole;
+    draft.hole = shuffle(flipAllToBack([...draft.hole, ...draft.piles.flat()]));
+    draft.piles = Array.from({ length: pileCount }, () => []);
     draft.ended = false;
     draft.won = false;
+  });
+
+  await delay();
+
+  // Deal them back out, leaving the Ace of Spades behind.
+  setGame((draft) => {
+    const { piles, hole } = dealPiles(draft.hole);
+    draft.piles = piles;
+    draft.hole = hole;
   });
 
   await delay();
@@ -226,6 +237,7 @@ export default function Singularity() {
         col: 2.5,
         row: 0,
         baseZIndex: 60,
+        fan: { maxVisible: 2, offset: 0 },
       },
       {
         id: "hole-graphic",
@@ -281,7 +293,12 @@ export default function Singularity() {
       {cardMap}
 
       <View style={[getZoneStylesById("hole-graphic")]}>
-        <SingularityGraphic size={cardWidth} />
+        {/* Only cards swallowed in play count: a gathered deck waits in the
+            hole face down. */}
+        <SingularityGraphic
+          size={cardWidth}
+          absorbed={game.hole.filter((card) => card.faceUp).length}
+        />
       </View>
     </GameWrapper>
   );

@@ -14,7 +14,7 @@ export const beehive: GameDefinition = {
   },
   thumbnail: "Beehive.webp",
   background: GAME_BACKGROUNDS.flowerGarden,
-  animation: GameAnimations.Firefly,
+  animation: GameAnimations.Bees,
   gameColorDark: "#1e2b16",
   gameColorPale: "#f4f9d3",
   cardBack: CardBackColors.Honey,

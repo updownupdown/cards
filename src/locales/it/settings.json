@@ -1,7 +1,6 @@
 {
   "language": {
     "label": "Lingua",
-    "description": "I nomi dei giochi, le regole, i menu e i collezionabili usano questa lingua.",
     "system": "Automatica ({{language}})"
   },
   "translateCollectibles": {

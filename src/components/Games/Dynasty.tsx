@@ -7,12 +7,16 @@ import { View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   cardColor,
+  collectCards,
   createDeck,
+  flipAllToBack,
   isFace,
   PlayingCard,
   rankValue,
+  redealWith,
   shuffle,
 } from "../Cards/card-utils";
+import { delay } from "@/utils/utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
@@ -259,7 +263,30 @@ export const dynastyRules = {
   similarity,
 };
 
-const gameStateInitial = createInitialState();
+/** The board with every card gathered face down into the deck. */
+function gatherState(state: GameState): GameState {
+  return {
+    deck: shuffle(flipAllToBack(collectCards(state))),
+    discard: [],
+    grid: Array.from({ length: 9 }, () => []),
+    royals: Array.from({ length: 12 }, () => ({
+      cards: [],
+      armour: 0,
+      dead: false,
+    })),
+    aces: [],
+    jokers: [],
+    pending: null,
+    lastDrawWasSpecial: false,
+    mode: "place",
+    selectedStack: null,
+    ended: false,
+    won: false,
+  };
+}
+
+// Starts with every card in the deck, to be dealt out from there.
+const gameStateInitial = gatherState(createInitialState());
 
 export default function Dynasty() {
   const { colorDark } = useGameColors();
@@ -267,8 +294,10 @@ export default function Dynasty() {
     useStateManager<GameState>({
       gameStateInitial,
       resetAndSetup: async () => {
-        const next = createInitialState();
-        setGame((draft) => void Object.assign(draft, next));
+        // Gather every card into the deck, then deal them back out.
+        setGame((draft) => gatherState(draft));
+        await delay();
+        setGame((draft) => redealWith(createInitialState(), draft.deck));
       },
     });
 

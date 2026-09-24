@@ -1,6 +1,6 @@
 import { useTranslation } from "@/i18n";
 import { Icon } from "@/icons/Icon";
-import { Colors, rgba, textShadow } from "@/styles/styles";
+import { Colors, FontWeight, rgba, textShadow } from "@/styles/styles";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Animated as RNAnimated,
@@ -11,24 +11,13 @@ import {
   View,
 } from "react-native";
 
-const ALIEN_GLYPHS = [
-  "✦",
-  "✧",
-  "⋆",
-  "✺",
-  "❖",
-  "◈",
-  "⟡",
-  "⬡",
-  "∴",
-  "∵",
-  "※",
-  "⌘",
-  "☄",
-  "✩",
-  "✪",
-  "⌬",
-];
+/**
+ * The alien script, the same in every language: edit freely. Spaces split
+ * words; every other character is shown as it is, punctuation included.
+ */
+const ALIEN_GRANTED = "✦⟡❖◈✧ ⌘✺⬡※☄✩❢ ◈⌬✪❖⟡✧⋆ ◈※ʾ⬡✺☄ ✩⌘✪◈⟡∴ ✦❖⌬✧❢";
+/** Said on the quick visit after a Mercy Skip is spent. */
+const ALIEN_VISIT = "✧⌘❖⟡ ◈✦✺⬡❢";
 
 const SAMPLE_COUNT = 40;
 const SAMPLE_T = Array.from(
@@ -46,26 +35,24 @@ function randomBetween(min: number, max: number) {
 }
 
 /** Neon inks for the alien script; each glyph takes one at random. */
-const ALIEN_INKS = [
-  "#7dffb0",
-  "#6ee7ff",
-  "#ff7ce5",
-  "#c79bff",
-  "#ffe36e",
-  "#ff9f6b",
-];
+const ALIEN_INKS = ["#7dffb0", "#6ee7ff", "#c79bff"];
 /** Roughly this share of glyphs glow in their own ink. */
-const ALIEN_GLOW_SHARE = 0.35;
-/** How long one ripple of light takes to run along the script. */
-const SHIMMER_PERIOD_MS = 2400;
-const SHIMMER_SAMPLES = Array.from({ length: 13 }, (_, index) => index / 12);
+const ALIEN_GLOW_SHARE = 0.3;
+/** Roughly this share of glyphs flicker; the rest hold steady. */
+const ALIEN_FLICKER_SHARE = 0.4;
+/**
+ * One cycle of the shared flicker clock. Each flickering glyph dips at its
+ * own random moments within it, so the effect never lines up into a sweep.
+ */
+const SHIMMER_PERIOD_MS = 4200;
+const SHIMMER_SAMPLES = Array.from({ length: 25 }, (_, index) => index / 24);
 
 type AlienGlyph = {
   char: string;
   ink: string;
   glow: boolean;
-  /** Where this glyph sits in the shimmer's cycle, 0-1. */
-  phase: number;
+  /** Opacity at each of SHIMMER_SAMPLES, or null for a glyph that holds. */
+  flicker: number[] | null;
   /** A small nudge off the baseline, so the line wobbles. */
   lift: number;
 };
@@ -76,23 +63,39 @@ function pick<T>(items: readonly T[]) {
 }
 
 /**
- * Alien script standing in for the line underneath: one word per word, at
- * about half its length, so it reads as a translation without crowding the
- * bubble. Glyph by glyph it runs along the shimmer, which is what makes the
- * light ripple from one end of the line to the other.
+ * A flicker for one glyph: steady for most of the cycle, with one or two
+ * brief, shallow dips at random points. Kept off the cycle's ends so the
+ * loop joins without a jump.
  */
-function generateAlienScript(spokenLine: string): AlienWord[] {
+function randomFlicker() {
+  const levels = SHIMMER_SAMPLES.map(() => 1);
+  const dips = 1 + Math.floor(Math.random() * 2);
+  for (let dip = 0; dip < dips; dip += 1) {
+    const at = 2 + Math.floor(Math.random() * (SHIMMER_SAMPLES.length - 4));
+    const depth = 0.5 + Math.random() * 0.2;
+    levels[at] = Math.min(levels[at], depth);
+    levels[at - 1] = Math.min(levels[at - 1], (1 + depth) / 2);
+    levels[at + 1] = Math.min(levels[at + 1], (1 + depth) / 2);
+  }
+  return levels;
+}
+
+/**
+ * One of the fixed alien lines, dressed for display: each glyph takes a
+ * random ink, and a random few glow or flicker.
+ */
+function parseAlienScript(line: string): AlienWord[] {
   let index = 0;
-  return spokenLine
+  return line
     .split(/\s+/)
     .filter(Boolean)
     .map((word) =>
-      Array.from({ length: Math.max(1, Math.ceil(word.length / 2)) }, () => {
+      Array.from(word).map((char): AlienGlyph => {
         const glyph: AlienGlyph = {
-          char: pick(ALIEN_GLYPHS),
+          char,
           ink: pick(ALIEN_INKS),
           glow: Math.random() < ALIEN_GLOW_SHARE,
-          phase: (index * 0.07) % 1,
+          flicker: Math.random() < ALIEN_FLICKER_SHARE ? randomFlicker() : null,
           lift: Math.sin(index * 1.7) * 1.2,
         };
         index += 1;
@@ -101,7 +104,14 @@ function generateAlienScript(spokenLine: string): AlienWord[] {
     );
 }
 
-/** One glyph of alien script, brightening as the shimmer passes through it. */
+/** The line's text runs, alternating plain and **bold**. */
+function boldRuns(line: string) {
+  return line
+    .split("**")
+    .map((text, index) => ({ text, bold: index % 2 === 1 }));
+}
+
+/** One glyph of alien script; a few of them flicker now and then. */
 function AlienGlyphText({
   glyph,
   shimmer,
@@ -109,12 +119,14 @@ function AlienGlyphText({
   glyph: AlienGlyph;
   shimmer: RNAnimated.Value;
 }) {
-  const opacity = shimmer.interpolate({
-    inputRange: SHIMMER_SAMPLES,
-    outputRange: SHIMMER_SAMPLES.map(
-      (t) => 0.5 + 0.5 * Math.cos((t - glyph.phase) * Math.PI * 2),
-    ),
-  });
+  // Steady glyphs skip the animated value entirely, so only the flickering
+  // few cost anything per frame.
+  const opacity = glyph.flicker
+    ? shimmer.interpolate({
+        inputRange: SHIMMER_SAMPLES,
+        outputRange: glyph.flicker,
+      })
+    : 1;
   return (
     <RNAnimated.Text
       style={[
@@ -129,6 +141,27 @@ function AlienGlyphText({
     >
       {glyph.char}
     </RNAnimated.Text>
+  );
+}
+
+/** A line of alien script, wrapping between words. */
+function AlienLine({
+  message,
+  shimmer,
+}: {
+  message: AlienWord[];
+  shimmer: RNAnimated.Value;
+}) {
+  return (
+    <View style={alienLineStyle}>
+      {message.map((word, wordIndex) => (
+        <View key={wordIndex} style={alienWordStyle}>
+          {word.map((glyph, glyphIndex) => (
+            <AlienGlyphText key={glyphIndex} glyph={glyph} shimmer={shimmer} />
+          ))}
+        </View>
+      ))}
+    </View>
   );
 }
 
@@ -153,10 +186,13 @@ function samplesFromFlight(flight: FlightParams) {
   };
 }
 
-/** True while the UFO is on screen because the player caught it. */
+/** True while the UFO is on screen to talk to the player, not passing by. */
 function isHeld(phase: string) {
-  return phase === "caught" || phase === "fleeing";
+  return phase === "caught" || phase === "fleeing" || phase === "visiting";
 }
+
+/** How long the visiting UFO hangs in the sky with its message. */
+const VISIT_HOVER_MS = 2000;
 
 function positionAt(flight: FlightParams, t: number) {
   return {
@@ -180,6 +216,7 @@ export function NodesUFO({
   height,
   animationsEnabled,
   summons,
+  visits,
   onCatch,
 }: {
   width: number;
@@ -188,6 +225,8 @@ export function NodesUFO({
   animationsEnabled: boolean;
   /** Goes up by one each time a flight is summoned on demand. */
   summons: number;
+  /** Goes up by one each time the UFO should drop by after a Mercy Skip. */
+  visits: number;
   onCatch: () => void;
 }) {
   const { t } = useTranslation("nodes");
@@ -195,8 +234,16 @@ export function NodesUFO({
   const opacity = useRef(new RNAnimated.Value(0)).current;
   const scale = useRef(new RNAnimated.Value(1)).current;
   const [phase, setPhase] = useState<
-    "hidden" | "flying" | "caught" | "fleeing"
+    "hidden" | "flying" | "caught" | "fleeing" | "visiting"
   >("hidden");
+  const [showVisitBubble, setShowVisitBubble] = useState(false);
+  const visitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(
+    () => () => {
+      if (visitTimerRef.current) clearTimeout(visitTimerRef.current);
+    },
+    [],
+  );
   const [message, setMessage] = useState<AlienWord[]>([]);
   const [samples, setSamples] = useState<{ x: number[]; y: number[] } | null>(
     null,
@@ -288,7 +335,9 @@ export function NodesUFO({
             if (!cancelled) schedule();
           });
         },
-        randomBetween(50000, 130000),
+        // On top of the Nodes tab's first 10 seconds with the gate shut, a
+        // flight comes 20 to 120 seconds after opening the map.
+        randomBetween(10000, 110000),
       );
     }
 
@@ -317,11 +366,101 @@ export function NodesUFO({
     startFlight();
   }, [height, startFlight, summons, width]);
 
-  // The caught UFO's script shimmers: one looping value, read by every glyph
-  // at its own phase, so a ripple of light runs through the line.
+  /**
+   * A short visit to acknowledge a Mercy Skip just spent: the UFO flies in,
+   * growing, hovers a moment with a word in its own script, and flies off.
+   * Nothing to tap: it is only saying thanks.
+   */
+  const startVisit = useCallback(() => {
+    const useNative = Platform.OS !== "web";
+    const fromLeft = Math.random() < 0.5;
+    const hover = { x: width / 2, y: height * CAUGHT_POSITION };
+    const arrive: FlightParams = {
+      startX: fromLeft ? -40 : width + 40,
+      startY: height * 0.2,
+      endX: hover.x,
+      endY: hover.y,
+      waveCycles: 0,
+      waveAmplitude: 0,
+    };
+    flightRef.current = arrive;
+    lastProgressRef.current = 1;
+    setSamples(samplesFromFlight(arrive));
+    setMessage(parseAlienScript(ALIEN_VISIT));
+    setShowVisitBubble(false);
+    progress.setValue(0);
+    opacity.setValue(0);
+    scale.setValue(0.5);
+    setPhase("visiting");
+
+    const arriveMs = 1400;
+    RNAnimated.timing(opacity, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: useNative,
+    }).start();
+    RNAnimated.timing(scale, {
+      toValue: 1.35,
+      duration: arriveMs,
+      easing: RNEasing.out(RNEasing.cubic),
+      useNativeDriver: useNative,
+    }).start();
+    RNAnimated.timing(progress, {
+      toValue: 1,
+      duration: arriveMs,
+      easing: RNEasing.out(RNEasing.cubic),
+      useNativeDriver: useNative,
+    }).start(({ finished }) => {
+      if (!finished) return;
+      setShowVisitBubble(true);
+      visitTimerRef.current = setTimeout(() => {
+        setShowVisitBubble(false);
+        const leave: FlightParams = {
+          startX: hover.x,
+          startY: hover.y,
+          endX: fromLeft ? width + 80 : -80,
+          endY: -60,
+          waveCycles: 0,
+          waveAmplitude: 0,
+        };
+        flightRef.current = leave;
+        setSamples(samplesFromFlight(leave));
+        progress.setValue(0);
+        const leaveMs = 900;
+        const leaving = {
+          duration: leaveMs,
+          easing: RNEasing.in(RNEasing.quad),
+          useNativeDriver: useNative,
+        };
+        RNAnimated.timing(progress, { toValue: 1, ...leaving }).start(
+          ({ finished: gone }) => {
+            if (gone) setPhase("hidden");
+          },
+        );
+        RNAnimated.timing(scale, { toValue: 0.4, ...leaving }).start();
+        RNAnimated.timing(opacity, { toValue: 0, ...leaving }).start();
+      }, VISIT_HOVER_MS);
+    });
+  }, [height, opacity, progress, scale, width]);
+
+  // A visit takes over from a UFO merely passing by, but never from one the
+  // player is reading.
+  const handledVisits = useRef(visits);
+  useEffect(() => {
+    if (visits === handledVisits.current) return;
+    handledVisits.current = visits;
+    if (isHeld(phaseRef.current) || width <= 0 || height <= 0) return;
+    progress.stopAnimation();
+    fadeRef.current?.stop();
+    opacity.stopAnimation();
+    startVisit();
+  }, [height, opacity, progress, startVisit, visits, width]);
+
+  // The UFO's script flickers while it is showing: one looping clock, which
+  // each of the few flickering glyphs reads with its own random dips.
   const shimmer = useRef(new RNAnimated.Value(0)).current;
   useEffect(() => {
-    if (phase !== "caught") return;
+    if (phase !== "caught" && phase !== "visiting") return;
     const loop = RNAnimated.loop(
       RNAnimated.timing(shimmer, {
         toValue: 1,
@@ -344,7 +483,7 @@ export function NodesUFO({
     fadeRef.current?.stop();
     opacity.stopAnimation();
     opacity.setValue(1);
-    setMessage(generateAlienScript(t("mercySkip.granted")));
+    setMessage(parseAlienScript(ALIEN_GRANTED));
     setPhase("caught");
     onCatch();
 
@@ -428,6 +567,7 @@ export function NodesUFO({
     ? progress.interpolate({ inputRange: SAMPLE_T, outputRange: samples.y })
     : 0;
   const caught = phase === "caught";
+  const visiting = phase === "visiting";
 
   // The ship and its message are siblings inside one moving container. The
   // dismiss button used to sit inside the ship's own Pressable, and both are
@@ -455,8 +595,8 @@ export function NodesUFO({
         <View style={touchPadStyle} />
         <Text
           style={{
-            fontSize: caught ? 32 : 26,
-            ...textShadow(rgba(Colors.brightGreen, 0.55), 8),
+            fontSize: caught || visiting ? 32 : 26,
+            ...textShadow(rgba(Colors.ufoGreen, 0.55), 8),
           }}
         >
           🛸
@@ -466,20 +606,18 @@ export function NodesUFO({
       {caught && (
         <View style={bubbleContainerStyle}>
           <View style={bubbleStyle}>
-            <View style={alienLineStyle}>
-              {message.map((word, wordIndex) => (
-                <View key={wordIndex} style={alienWordStyle}>
-                  {word.map((glyph, glyphIndex) => (
-                    <AlienGlyphText
-                      key={glyphIndex}
-                      glyph={glyph}
-                      shimmer={shimmer}
-                    />
-                  ))}
-                </View>
-              ))}
-            </View>
-            <Text style={bubbleCaptionStyle}>{t("mercySkip.granted")}</Text>
+            <AlienLine message={message} shimmer={shimmer} />
+            <Text style={bubbleCaptionStyle}>
+              {boldRuns(t("mercySkip.granted")).map(({ text, bold }, index) =>
+                bold ? (
+                  <Text key={index} style={bubbleCaptionBoldStyle}>
+                    {text}
+                  </Text>
+                ) : (
+                  text
+                ),
+              )}
+            </Text>
           </View>
           {/* Outside the bubble's corner and in the ship's own green, so it
               reads as the one way to close the message. Nothing else does:
@@ -493,6 +631,15 @@ export function NodesUFO({
           >
             <Icon name="close" size={DISMISS_ICON_SIZE} color={Colors.K950} />
           </Pressable>
+        </View>
+      )}
+
+      {visiting && showVisitBubble && (
+        <View style={bubbleContainerStyle}>
+          {/* Just the short alien line, so the bubble shrinks to fit it. */}
+          <View style={[bubbleStyle, { alignSelf: "center" }]}>
+            <AlienLine message={message} shimmer={shimmer} />
+          </View>
         </View>
       )}
     </RNAnimated.View>
@@ -523,9 +670,10 @@ const bubbleContainerStyle = {
 
 const bubbleStyle = {
   backgroundColor: rgba(Colors.K950, 0.95),
-  borderColor: rgba(Colors.brightGreen, 0.5),
+  borderColor: rgba(Colors.ufoGreen, 0.5),
   borderWidth: 1,
-  borderRadius: 12,
+  borderRadius: 20,
+  boxShadow: `0 0 24px 6px ${rgba(Colors.ufoGreen, 0.3)}`,
   paddingHorizontal: 12,
   paddingTop: 10,
   paddingBottom: 8,
@@ -535,7 +683,8 @@ const alienLineStyle = {
   flexDirection: "row" as const,
   flexWrap: "wrap" as const,
   justifyContent: "center" as const,
-  columnGap: 4,
+  // Wide enough to read plainly as the spaces between words.
+  columnGap: 8,
   rowGap: 2,
 };
 
@@ -551,9 +700,15 @@ const alienGlyphStyle = {
 
 const bubbleCaptionStyle = {
   color: Colors.K100,
+  fontFamily: FontWeight[400],
   fontSize: 12,
   textAlign: "center" as const,
   marginTop: 5,
+};
+
+const bubbleCaptionBoldStyle = {
+  fontFamily: FontWeight[700],
+  color: Colors.ufoGreen,
 };
 
 /** Big enough to find at a glance on a small, moving, scaled-up ship. */
@@ -569,7 +724,7 @@ const dismissButtonStyle = {
   borderRadius: DISMISS_SIZE / 2,
   alignItems: "center" as const,
   justifyContent: "center" as const,
-  backgroundColor: Colors.brightGreen,
+  backgroundColor: Colors.ufoGreen,
   borderWidth: 2,
   borderColor: Colors.K950,
 };

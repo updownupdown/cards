@@ -440,16 +440,11 @@ export default function Crescent() {
     paddingTop: 0,
     gap: 0.1,
   });
-  const score = [...game.ascending, ...game.descending].reduce(
-    (sum, pile) => sum + pile.length,
-    0,
-  );
   return (
     <GameWrapper
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={() => void reset()}
       isLoaded={isLoaded}
-      score={score}
       canUndo={canUndo}
       undo={undo}
       winLoseMessage={

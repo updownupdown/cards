@@ -13,7 +13,7 @@ export const waypoint: GameDefinition = {
     luck: 48,
   },
   background: GAME_BACKGROUNDS.dirtRoad,
-  animation: GameAnimations.Dust,
+  animation: GameAnimations.Leaves,
   thumbnail: "Waypoint.webp",
   gameColorDark: "#263b38",
   gameColorPale: "#f5e4ad",

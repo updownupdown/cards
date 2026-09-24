@@ -58,6 +58,7 @@ import { TipsBox } from "./TipsBox";
 import { WinLoseBox } from "./WinLoseBox";
 import { GameHeader } from "./GameHeader";
 import { useStableCallback } from "@/hooks/useStableCallback";
+import { requestMercySkipVisit } from "@/components/Nodes/ufo-visit";
 
 const TIPS_MORPH_DURATION = 350;
 const KEEP_AWAKE_TAG = "solitarius-game";
@@ -149,12 +150,16 @@ export const GameWrapper = ({
   });
   const { progress: nodesProgress } = useNodesProgress();
   const onModalMercySkip = useStableCallback(async () => {
+    let applied = false;
     try {
-      await spendMercySkip(pathname);
+      applied = (await spendMercySkip(pathname)).applied;
       await clearLastGameSession();
     } finally {
       if (isNodesMode) selectNodesHomeTab();
       goHome(isNodesMode);
+      // The UFO drops by on the map it lands on, where the skipped node is
+      // now won.
+      if (applied) requestMercySkipVisit();
     }
   });
   const onHeaderInstantWin = useStableCallback(() => setIsDevWin(true));
@@ -213,7 +218,6 @@ export const GameWrapper = ({
     openMenu ||
     showRulesModal ||
     !!nodesWinResult ||
-    tipsFade.isRendered ||
     ended;
 
   useEffect(() => {

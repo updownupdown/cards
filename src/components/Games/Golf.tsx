@@ -307,6 +307,8 @@ export default function Golf() {
           ? i18n.t("games:golf.youClearedTheTableau")
           : i18n.t("games:golf.noMorePlayableCards")
       }
+      // Draw cards left over: the fewer a win needed, the better.
+      score={game.won ? game.draw.length : undefined}
       canUndo={canUndo}
       undo={undo}
     >

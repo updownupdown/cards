@@ -314,7 +314,7 @@ export default function Klondike() {
         row: 0,
         baseZIndex: 20 + pileIndex,
         fan: { maxVisible: 1 },
-        placeholder: {},
+        placeholder: { iconName: "ace" },
       }),
     );
 

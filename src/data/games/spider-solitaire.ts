@@ -14,7 +14,7 @@ export const spiderSolitaire: GameDefinition = {
   },
   thumbnail: "SpiderSolitaire.webp",
   background: GAME_BACKGROUNDS.dungeon,
-  animation: GameAnimations.Embers,
+  animation: GameAnimations.Spiders,
   gameColorDark: "#25111e",
   gameColorPale: "#f6e6ff",
   cardBack: CardBackColors.Plum,

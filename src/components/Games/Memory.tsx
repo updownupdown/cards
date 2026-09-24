@@ -4,7 +4,9 @@ import { delay } from "@/utils/utils";
 import { useMemo, useRef, useState } from "react";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
+  collectCards,
   createDeck,
+  flipAllToBack,
   flipToBack,
   flipToFace,
   shuffle,
@@ -66,9 +68,12 @@ type MatchedPair = {
   secondIndex: number;
 };
 
+// Starts with the cards in the discard pile, to be dealt out from there.
 const gameStateInitial: GameState = {
   grid: [],
-  discard: [],
+  discard: createMemoryDeck(
+    (GRID_CONFIG.easy.cols * GRID_CONFIG.easy.rows) / 2,
+  ),
   ended: false,
   won: false,
 };
@@ -100,11 +105,25 @@ async function resetAndSetup(
   const { cols, rows } = GRID_CONFIG[difficulty];
   const cardCount = cols * rows;
 
+  // Gather every card into the discard pile, face down.
   setGame((draft) => {
-    draft.grid = createMemoryDeck(cardCount / 2);
-    draft.discard = [];
+    draft.discard = shuffle(flipAllToBack(collectCards(draft)));
+    draft.grid = [];
     draft.ended = false;
     draft.won = false;
+  });
+
+  await delay();
+
+  // Deal a new set of pairs from it. The cards are face down, so the gathered
+  // ones stand in for the new pairs; a bigger grid than last time takes the
+  // extra cards fresh.
+  setGame((draft) => {
+    const gathered = draft.discard.map((card) => card.id);
+    draft.grid = createMemoryDeck(cardCount / 2).map((card, index) =>
+      gathered[index] ? { ...card, id: gathered[index] } : card,
+    );
+    draft.discard = [];
   });
 
   await delay();

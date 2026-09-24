@@ -1,7 +1,6 @@
 {
   "language": {
     "label": "Idioma",
-    "description": "Los nombres de los juegos, las reglas, los menús y los coleccionables usan este idioma.",
     "system": "Automático ({{language}})"
   },
   "translateCollectibles": {

@@ -6,6 +6,9 @@ export type UfoRequest = {
   gateOpen: boolean;
   /** Goes up by one each time someone summons a UFO on demand. */
   summons: number;
+  /** Goes up by one each time the UFO should drop by to acknowledge a
+   *  Mercy Skip just spent. */
+  visits: number;
   onCatch: () => void;
 };
 

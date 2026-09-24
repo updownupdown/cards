@@ -12,16 +12,19 @@ import {
   useAutoComplete,
 } from "@/hooks/useAutoComplete";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
-import { DOUBLE_TAP_MS } from "@/utils/utils";
+import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
   cardDims,
+  collectCards,
+  flipAllToBack,
   PlayingCard,
   RANK_VALUE,
   RANKS,
+  redealWith,
   shuffle,
   SUITS,
   zoneFanOffset,
@@ -34,6 +37,8 @@ type GameState = {
   cascades: PlayingCard[][];
   freeCells: (PlayingCard | null)[];
   foundations: PlayingCard[][];
+  /** Every card, face down, while the game is being gathered and dealt. */
+  deal?: PlayingCard[];
 };
 
 export type EightOffGameState = GameState;
@@ -117,6 +122,16 @@ function createEightOffState(): GameState {
   };
 }
 
+/** The board with every card gathered face down into the deal pile. */
+function gatherState(state: GameState): GameState {
+  return {
+    cascades: state.cascades.map(() => []),
+    freeCells: state.freeCells.map(() => null),
+    foundations: state.foundations.map(() => []),
+    deal: shuffle(flipAllToBack(collectCards(state))),
+  };
+}
+
 function isDescendingSameSuitStack(cards: PlayingCard[]): boolean {
   return cards.every((card, index) => {
     if (index === 0) return true;
@@ -170,7 +185,11 @@ export function ReserveCellBoard({
     null,
   );
   const clearDragGhostRef = useRef<(() => void) | null>(null);
-  const gameStateInitial = useMemo(() => createState(), [createState]);
+  // Starts with every card in the deal pile, to be dealt out from there.
+  const gameStateInitial = useMemo(
+    () => gatherState(createState()),
+    [createState],
+  );
 
   const {
     isLoaded,
@@ -189,7 +208,13 @@ export function ReserveCellBoard({
       clearDragGhostRef.current?.();
     },
     resetAndSetup: async () => {
-      setGame(createState());
+      // Gather every card into the deal pile, then deal them back out.
+      setGame((draft) => gatherState(draft));
+      await delay();
+      setGame((draft) => ({
+        ...redealWith(createState(), draft.deal ?? []),
+        deal: [],
+      }));
     },
   });
 
@@ -297,7 +322,20 @@ export function ReserveCellBoard({
       placeholder: {},
     }));
 
-    return [...freeCellZones, ...foundationZones, ...cascadeZones];
+    return [
+      ...freeCellZones,
+      ...foundationZones,
+      ...cascadeZones,
+      {
+        id: "deal",
+        name: "deal",
+        cards: game.deal ?? [],
+        col: (columnCount - 1) / 2,
+        row: cascadeRow,
+        baseZIndex: 60,
+        fan: { maxVisible: 3 },
+      },
+    ];
   }, [
     cascadeHeight,
     cascadeRow,

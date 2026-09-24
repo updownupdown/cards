@@ -7,7 +7,13 @@ import {
   View,
 } from "react-native";
 
-const ORBIT_STAR_COLORS = ["#ffe9a8", "#ffb454", "#fff2c2", "#ff9d3d", "#ffd76a"];
+const ORBIT_STAR_COLORS = [
+  "#ffe9a8",
+  "#ffb454",
+  "#fff2c2",
+  "#ff9d3d",
+  "#ffd76a",
+];
 
 // A real black hole at this scale would be far too small to draw, so nothing
 // is: the centre is implied entirely by the swarm of stars whipping around it.
@@ -15,35 +21,76 @@ const ORBIT_STAR_COLORS = ["#ffe9a8", "#ffb454", "#fff2c2", "#ff9d3d", "#ffd76a"
 // innermost game node.
 const SWARM_RADIUS = 118; // 74, +60%
 const ORBIT_STAR_COUNT = 14;
+/** How close in any star may swing at its nearest approach. */
+const ORBIT_MIN_PERIAPSIS = 12;
 const ORBIT_MIN_RADIUS = 26; // 16, +60%
 const ORBIT_MAX_RADIUS = SWARM_RADIUS;
-const ORBIT_SAMPLES = 28; // interpolation points per lap, for a smooth path
+// Samples per lap, even in time, for a smooth path. Eccentric orbits whip
+// round their nearest point, so they need more of them than a circle would.
+const ORBIT_SAMPLES = 72;
 // Screen y grows downward, so a decreasing angle turns anti-clockwise - the
 // same way the map's spiral arms wind.
 const ORBIT_DIRECTION = -1;
 
-
 // A handful of stars caught in orbit, seeded once for the life of the app
 // (there's only ever one black hole, so this doesn't need to be reproducible
-// the way the per-node seeded data does). Each gets its own radius, speed and
-// roundness so the cluster reads as gravity at work rather than one uniform
-// spinning ring, but they all turn the same way as the galaxy's spiral arms.
+// the way the per-node seeded data does). Each follows its own Kepler orbit:
+// its own size, eccentricity (from near-circular to long and thin), tilt and
+// starting point, all with the black hole at one focus, so the cluster reads
+// as gravity at work rather than one spinning ring. They all still turn the
+// same way as the galaxy's spiral arms.
 const ORBIT_STARS = Array.from({ length: ORBIT_STAR_COUNT }, (_, index) => {
-  const radiusX =
-    ORBIT_MIN_RADIUS + Math.random() * (ORBIT_MAX_RADIUS - ORBIT_MIN_RADIUS);
-  const isElliptical = Math.random() < 0.8;
-  const radiusY = isElliptical ? radiusX * (0.25 + Math.random() * 0.5) : radiusX;
+  // About a quarter keep to near-circular orbits; the rest stretch out.
+  const eccentricity =
+    Math.random() < 0.25 ? Math.random() * 0.12 : 0.2 + Math.random() * 0.62;
+  // Fit the whole orbit inside the swarm: its far point inside the rim, and
+  // its near point clear of the centre.
+  const largest = ORBIT_MAX_RADIUS / (1 + eccentricity);
+  const smallest = Math.min(
+    largest,
+    Math.max(ORBIT_MIN_RADIUS, ORBIT_MIN_PERIAPSIS / (1 - eccentricity)),
+  );
+  const semiMajor = smallest + Math.random() * (largest - smallest);
   return {
-    radiusX,
-    radiusY,
-    startAngle: Math.random() * Math.PI * 2,
-    // Closer-in stars orbit faster, like real gravity, plus some jitter.
-    periodMs: 4200 + (radiusX / ORBIT_MAX_RADIUS) * 14000 + Math.random() * 3500,
+    semiMajor,
+    semiMinor: semiMajor * Math.sqrt(1 - eccentricity ** 2),
+    eccentricity,
+    tilt: Math.random() * Math.PI * 2,
+    startPhase: Math.random(),
+    // Bigger orbits take longer, like real gravity, plus some jitter.
+    periodMs:
+      4200 + (semiMajor / ORBIT_MAX_RADIUS) * 14000 + Math.random() * 3500,
     // 1.1-2.6, +50%.
     size: 1.65 + Math.random() * 2.25,
     color: ORBIT_STAR_COLORS[index % ORBIT_STAR_COLORS.length],
   };
 });
+
+type OrbitStarData = (typeof ORBIT_STARS)[number];
+
+/**
+ * Where a star is a share `phase` of the way through its lap, relative to
+ * the black hole. Solving Kepler's equation makes it sweep equal areas in
+ * equal times: slow at its far point, fast as it swings round the centre.
+ */
+function orbitPosition(star: OrbitStarData, phase: number) {
+  const meanAnomaly = phase * Math.PI * 2;
+  let eccentricAnomaly = meanAnomaly;
+  for (let step = 0; step < 8; step += 1) {
+    eccentricAnomaly -=
+      (eccentricAnomaly -
+        star.eccentricity * Math.sin(eccentricAnomaly) -
+        meanAnomaly) /
+      (1 - star.eccentricity * Math.cos(eccentricAnomaly));
+  }
+  // In the orbit's own frame, with the black hole at the focus.
+  const alongX =
+    star.semiMajor * (Math.cos(eccentricAnomaly) - star.eccentricity);
+  const alongY = ORBIT_DIRECTION * star.semiMinor * Math.sin(eccentricAnomaly);
+  const cos = Math.cos(star.tilt);
+  const sin = Math.sin(star.tilt);
+  return { x: alongX * cos - alongY * sin, y: alongX * sin + alongY * cos };
+}
 
 const ORBIT_SAMPLE_POINTS = Array.from(
   { length: ORBIT_SAMPLES + 1 },
@@ -54,7 +101,7 @@ function OrbitStar({
   star,
   animationsEnabled,
 }: {
-  star: (typeof ORBIT_STARS)[number];
+  star: OrbitStarData;
   animationsEnabled: boolean;
 }) {
   const progress = useRef(new RNAnimated.Value(0)).current;
@@ -97,21 +144,16 @@ function OrbitStar({
     };
   }, [animationsEnabled, progress, star.periodMs]);
 
+  const path = ORBIT_SAMPLE_POINTS.map((t) =>
+    orbitPosition(star, star.startPhase + t),
+  );
   const translateX = progress.interpolate({
     inputRange: ORBIT_SAMPLE_POINTS,
-    outputRange: ORBIT_SAMPLE_POINTS.map(
-      (t) =>
-        Math.cos(star.startAngle + ORBIT_DIRECTION * t * Math.PI * 2) *
-        star.radiusX,
-    ),
+    outputRange: path.map((point) => point.x),
   });
   const translateY = progress.interpolate({
     inputRange: ORBIT_SAMPLE_POINTS,
-    outputRange: ORBIT_SAMPLE_POINTS.map(
-      (t) =>
-        Math.sin(star.startAngle + ORBIT_DIRECTION * t * Math.PI * 2) *
-        star.radiusY,
-    ),
+    outputRange: path.map((point) => point.y),
   });
 
   const dot = (
@@ -127,8 +169,7 @@ function OrbitStar({
   );
 
   if (!animationsEnabled) {
-    const x = Math.cos(star.startAngle) * star.radiusX;
-    const y = Math.sin(star.startAngle) * star.radiusY;
+    const { x, y } = path[0];
     return (
       <View
         style={{
@@ -169,7 +210,6 @@ export function NodesBlackHole({
   size?: number;
   animationsEnabled: boolean;
 }) {
-
   return (
     <View
       style={{
@@ -180,7 +220,6 @@ export function NodesBlackHole({
         height: size,
       }}
     >
-
       <View
         style={{
           position: "absolute",
@@ -196,7 +235,6 @@ export function NodesBlackHole({
           />
         ))}
       </View>
-
     </View>
   );
 }

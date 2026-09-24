@@ -42,7 +42,7 @@ describe("Nodes progress", () => {
     expect(progress.collectedQuoteIds).toEqual([115, 156]);
   });
 
-  test("granting a mercy skip increments the count and checkpoints collectibles owned", async () => {
+  test("granting a mercy skip increments the count; using it checkpoints collectibles owned", async () => {
     await AsyncStorage.setItem(
       NODES_PROGRESS_STORAGE_KEY,
       JSON.stringify({
@@ -53,9 +53,13 @@ describe("Nodes progress", () => {
     );
 
     await grantMercySkip();
-    const progress = await loadNodesProgress();
-
+    let progress = await loadNodesProgress();
     expect(progress.mercySkipCount).toBe(1);
+    expect(progress.mercySkipCollectibleCheckpoint).toBeNull();
+
+    await spendMercySkip(NODES_START_PATH);
+    progress = await loadNodesProgress();
+    expect(progress.mercySkipCount).toBe(0);
     expect(progress.mercySkipCollectibleCheckpoint).toBe(3);
   });
 

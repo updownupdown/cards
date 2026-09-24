@@ -9,18 +9,21 @@ import { DragGhostCards, DragHandle } from "@/components/Cards/DragDrop";
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useStateManager } from "@/hooks/useStateManager";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
-import { DOUBLE_TAP_MS } from "@/utils/utils";
+import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
   cardDims,
+  collectCards,
   createDeck,
+  flipAllToBack,
   isRed,
   PlayingCard,
   RANK_VALUE,
   RANKS,
+  redealWith,
   shuffle,
   StandardRank,
 } from "../Cards/card-utils";
@@ -181,7 +184,21 @@ export const canfieldRules = {
   createInitialState,
 };
 
-const gameStateInitial = createInitialState();
+/** The board with every card gathered face down into the stock. */
+function gatherState(state: GameState): GameState {
+  return {
+    foundations: Array.from({ length: 4 }, () => []),
+    baseRank: state.baseRank,
+    reserve: [],
+    tableau: Array.from({ length: 4 }, () => []),
+    stock: shuffle(flipAllToBack(collectCards(state))),
+    waste: [],
+    drawCount: state.drawCount,
+  };
+}
+
+// Starts with every card in the stock, to be dealt out from there.
+const gameStateInitial = gatherState(createInitialState());
 
 export default function Canfield() {
   const configuredDrawCount = useGameSettingValue("drawCount");
@@ -200,7 +217,12 @@ export default function Canfield() {
         clearDragGhost();
       },
       resetAndSetup: async () => {
-        setGame(createInitialState(configuredDrawCount));
+        // Gather every card into the stock, then deal them back out.
+        setGame((draft) => gatherState(draft));
+        await delay();
+        setGame((draft) =>
+          redealWith(createInitialState(configuredDrawCount), draft.stock),
+        );
       },
     });
 

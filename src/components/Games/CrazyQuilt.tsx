@@ -252,7 +252,7 @@ export default function CrazyQuilt() {
           : 3 * foundationSpacing + foundationGap + (i - 4) * foundationSpacing,
       row: 0,
       fan: { maxVisible: 3 },
-      placeholder: {},
+      placeholder: { iconName: i < 4 ? "ace" : "king" },
     }));
 
     const quiltZones: MapZone[] = game.quilt.map((card, i) => ({
@@ -339,14 +339,11 @@ export default function CrazyQuilt() {
     gap,
   });
 
-  const placed = game.foundations.reduce((sum, pile) => sum + pile.length, 0);
-
   return (
     <GameWrapper
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={reset}
       isLoaded={isLoaded}
-      score={placed}
       winLoseMessage={
         game.won
           ? i18n.t("games:crazyQuilt.theQuiltIsUnstitched")

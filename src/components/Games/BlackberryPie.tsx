@@ -3,7 +3,9 @@ import { useMemo, useState } from "react";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   cardDims,
+  collectCards,
   createDeck,
+  flipAllToBack,
   flipAllToFace,
   flipToFace,
   isFace,
@@ -17,14 +19,14 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { delay } from "@/utils/utils";
 const cardSize = "tableau";
 const BERRY_COUNT = 10;
 const HAND_LIMIT = 3;
 const BOTTOM_ROW = 3.6;
 
 type CardSource =
-  | { type: "hand"; cardId: string }
-  | { type: "retainer"; cardId: string };
+  { type: "hand"; cardId: string } | { type: "retainer"; cardId: string };
 
 export type BlackberryPieGameState = {
   queen: PlayingCard[];
@@ -51,6 +53,14 @@ const gameStateInitial: BlackberryPieGameState = {
   ended: false,
   won: false,
 };
+
+/** The table cleared, with every card gathered face down into the stock. */
+function gatherState(cards: PlayingCard[]): BlackberryPieGameState {
+  return { ...gameStateInitial, stock: shuffle(flipAllToBack(cards)) };
+}
+
+// Starts with every card in the stock, to be dealt out from there.
+const gatheredInitial = gatherState(createDeck({ includeJokers: true }));
 
 function drawToHand(draft: BlackberryPieGameState) {
   while (draft.hand.length < HAND_LIMIT) {
@@ -162,9 +172,12 @@ export default function BlackberryPie() {
   const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
     useStateManager({
       resetAndSetup: async () => {
-        setGame(() => createGame());
+        // Gather every card into the stock, then deal them back out.
+        setGame((draft) => gatherState(collectCards(draft)));
+        await delay();
+        setGame((draft) => createGame(draft.stock));
       },
-      gameStateInitial,
+      gameStateInitial: gatheredInitial,
       resetNonGameStates: () => setSelected(null),
     });
 

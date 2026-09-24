@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const royalEnvoy: GameDefinition = {
   path: "/royal-envoy",
@@ -13,6 +14,7 @@ export const royalEnvoy: GameDefinition = {
   },
   thumbnail: "RoyalEnvoy.webp",
   background: GAME_BACKGROUNDS.castle,
+  animation: GameAnimations.Birds,
   gameColorDark: "#241e33",
   gameColorPale: "#acdeff",
   cardBack: CardBackColors.Bicycle,

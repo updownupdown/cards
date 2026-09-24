@@ -15,10 +15,14 @@ import {
   CardSuit,
   RANK_VALUE,
   SUITS,
+  collectCards,
   createDeck,
+  flipAllToBack,
+  redealWith,
   shuffle,
   type PlayingCard,
 } from "../Cards/card-utils";
+import { delay } from "@/utils/utils";
 import { GameWrapper } from "../common/GameWrapper";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -35,6 +39,8 @@ type GameState = {
   reserves: (PlayingCard | null)[];
   ended: boolean;
   won: boolean;
+  /** Every card, face down, while the game is being gathered and dealt. */
+  deal: PlayingCard[];
 };
 
 export type PenguinGameState = GameState;
@@ -220,6 +226,7 @@ function createInitialState(): GameState {
       reserves: Array.from({ length: 7 }, () => null),
       ended: true,
       won: false,
+      deal: [],
     };
   }
 
@@ -255,6 +262,20 @@ function createInitialState(): GameState {
     reserves: Array.from({ length: 7 }, () => null),
     ended: false,
     won: false,
+    deal: [],
+  };
+}
+
+/** The board with every card gathered face down into the deal pile. */
+function gatherState(state: GameState): GameState {
+  return {
+    foundations: { clubs: [], diamonds: [], hearts: [], spades: [] },
+    beakRank: state.beakRank,
+    tableau: Array.from({ length: 7 }, () => []),
+    reserves: Array.from({ length: 7 }, () => null),
+    ended: false,
+    won: false,
+    deal: shuffle(flipAllToBack(collectCards(state))),
   };
 }
 
@@ -271,7 +292,8 @@ export const penguinRules = {
   createInitialState,
 };
 
-const gameStateInitial = createInitialState();
+// Starts with every card in the deal pile, to be dealt out from there.
+const gameStateInitial = gatherState(createInitialState());
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -286,7 +308,10 @@ export default function Penguin() {
         clearDragGhost();
       },
       resetAndSetup: async () => {
-        setGame(createInitialState());
+        // Gather every card into the deal pile, then deal them back out.
+        setGame((draft) => gatherState(draft));
+        await delay();
+        setGame((draft) => redealWith(createInitialState(), draft.deal));
       },
     });
 
@@ -330,7 +355,10 @@ export default function Penguin() {
       col: i,
       row: 1.2,
       baseZIndex: 50,
-      placeholder: { backgroundColor: zoneBackgroundColor },
+      placeholder: {
+        iconName: "free-cell",
+        backgroundColor: zoneBackgroundColor,
+      },
     }));
 
     const foundationZones: MapZone[] = (SUITS as readonly CardSuit[]).map(
@@ -366,7 +394,20 @@ export default function Penguin() {
       },
     }));
 
-    return [...reserveZones, ...foundationZones, ...tableauZones];
+    return [
+      ...reserveZones,
+      ...foundationZones,
+      ...tableauZones,
+      {
+        id: "deal",
+        name: "deal",
+        cards: game.deal,
+        col: 3,
+        row: 2.4,
+        baseZIndex: 60,
+        fan: { maxVisible: 3 },
+      },
+    ];
   }, [game]);
 
   // ── CardMap callbacks ───────────────────────────────────────────────────────

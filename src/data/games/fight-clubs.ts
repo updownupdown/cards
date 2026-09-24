@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const fightClubs: GameDefinition = {
   path: "/fight-clubs",
@@ -13,6 +14,7 @@ export const fightClubs: GameDefinition = {
   },
   thumbnail: "FightClubs.webp",
   background: GAME_BACKGROUNDS.club,
+  animation: GameAnimations.Dust,
   gameColorDark: "#221b20",
   gameColorPale: "#d6fbff",
   cardBack: CardBackColors.Indigo,

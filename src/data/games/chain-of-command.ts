@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const chainOfCommand: GameDefinition = {
   path: "/chain-of-command",
@@ -13,6 +14,7 @@ export const chainOfCommand: GameDefinition = {
   },
   thumbnail: "ChainOfCommand.webp",
   background: GAME_BACKGROUNDS.brickStreet,
+  animation: GameAnimations.Leaves,
   gameColorDark: "#252220",
   gameColorPale: "#b2eee1",
   cardBack: CardBackColors.Forest,

@@ -866,7 +866,6 @@ export default function Ascent() {
   return (
     <GameWrapper
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
-      score={game.trail.length}
       reset={reset}
       isLoaded={isLoaded}
       winLoseMessage={game.winLoseMessage}

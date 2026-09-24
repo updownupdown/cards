@@ -50,6 +50,7 @@ import InfoIcon from "./Info.svg";
 import InfoOutlineIcon from "./InfoOutline.svg";
 import InstructionsIcon from "./Instructions.svg";
 import JokerIcon from "./Joker.svg";
+import KingIcon from "./King.svg";
 import ListLargeIcon from "./ListLarge.svg";
 import ListMediumIcon from "./ListMedium.svg";
 import ListSmallIcon from "./ListSmall.svg";
@@ -128,6 +129,7 @@ export type IconName =
   | "info-outline"
   | "instructions"
   | "joker"
+  | "king"
   | "list-large"
   | "list-medium"
   | "list-small"
@@ -206,6 +208,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "info-outline": InfoOutlineIcon,
   "instructions": InstructionsIcon,
   "joker": JokerIcon,
+  "king": KingIcon,
   "list-large": ListLargeIcon,
   "list-medium": ListMediumIcon,
   "list-small": ListSmallIcon,

@@ -1,11 +1,14 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const memory: GameDefinition = {
   path: "/memory",
   title: "Memory",
   tags: [GameTag.PairMatching, GameTag.EasyToLearn],
+  // Scored in moves or guesses: fewer is better.
+  lowerScoreIsBetter: true,
   rating: {
     complexity: 15,
     difficulty: 35,
@@ -13,6 +16,7 @@ export const memory: GameDefinition = {
   },
   thumbnail: "Memory.webp",
   background: GAME_BACKGROUNDS.savanah,
+  animation: GameAnimations.Pollen,
   gameColorDark: "#243b35",
   gameColorPale: "#e8f1df",
   cardBack: CardBackColors.Ocean,

@@ -1,11 +1,14 @@
 import { useStateManager } from "@/hooks/useStateManager";
-import { DOUBLE_TAP_MS } from "@/utils/utils";
+import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   cardDims,
+  collectCards,
   createDeck,
+  flipAllToBack,
   rankValue,
+  redealWith,
   shuffle,
   SUITS,
   top,
@@ -25,6 +28,8 @@ export type BisleyGameState = {
   descending: PlayingCard[][];
   ended: boolean;
   won: boolean;
+  /** Every card, face down, while the game is being gathered and dealt. */
+  deal: PlayingCard[];
 };
 
 type FoundationDirection = "ascending" | "descending";
@@ -75,6 +80,19 @@ function createInitialState(): BisleyGameState {
     descending: Array.from({ length: 4 }, () => [] as PlayingCard[]),
     ended: false,
     won: false,
+    deal: [],
+  };
+}
+
+/** The board with every card gathered face down into the deal pile. */
+function gatherState(state: BisleyGameState): BisleyGameState {
+  return {
+    columns: COLUMN_SIZES.map(() => []),
+    ascending: SUITS.map(() => []),
+    descending: SUITS.map(() => []),
+    ended: false,
+    won: false,
+    deal: shuffle(flipAllToBack(collectCards(state))),
   };
 }
 
@@ -120,14 +138,20 @@ export default function Bisley() {
   );
   const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
     useStateManager<BisleyGameState>({
-      gameStateInitial: createInitialState(),
+      // Starts with every card in the deal pile, to be dealt out from there.
+      gameStateInitial: gatherState(createInitialState()),
       resetNonGameStates: () => setSelectedColumn(null),
       resetAndSetup: async () => {
-        setGame(createInitialState());
+        // Gather every card into the deal pile, then deal them back out.
+        setGame((draft) => gatherState(draft));
+        await delay();
+        setGame((draft) => redealWith(createInitialState(), draft.deal));
       },
     });
 
   useEffect(() => {
+    // Nothing is decided while the cards are gathered up for a deal.
+    if (game.deal.length > 0) return;
     const won = game.columns.every((pile) => pile.length === 0);
     const ended = won || !hasMove(game);
     if (won !== game.won || ended !== game.ended) {
@@ -230,7 +254,19 @@ export default function Bisley() {
       fan: { direction: "down" as const, offset: cardDims.tableauOffset },
       placeholder: { hideBackground: pile.length === 0 },
     }));
-    return [...foundations, ...columns];
+    return [
+      ...foundations,
+      ...columns,
+      {
+        id: "deal",
+        name: "deal",
+        cards: game.deal,
+        col: 6,
+        row: 1.2,
+        baseZIndex: 60,
+        fan: { maxVisible: 3 },
+      },
+    ];
   }, [game]);
 
   const cardMapper = (card: MappedCard): AnimatedCardMapping | undefined => {
@@ -273,13 +309,11 @@ export default function Bisley() {
     fixedRows: 5,
     gap: 0.08,
   });
-  const score = 52 - game.columns.reduce((sum, pile) => sum + pile.length, 0);
   return (
     <GameWrapper
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={() => void reset()}
       isLoaded={isLoaded}
-      score={score}
       canUndo={canUndo}
       undo={undo}
       winLoseMessage={

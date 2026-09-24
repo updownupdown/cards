@@ -1,6 +1,7 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
+import { GameAnimations } from "@/animations";
 export const congress: GameDefinition = {
   path: "/congress",
   title: "Congress",
@@ -8,6 +9,7 @@ export const congress: GameDefinition = {
   rating: { complexity: 35, difficulty: 60, luck: 40 },
   thumbnail: "Congress.webp",
   background: GAME_BACKGROUNDS.city3,
+  animation: GameAnimations.Mist,
   gameColorDark: "#292f38",
   gameColorPale: "#e9dfca",
   cardBack: CardBackColors.Bronze,

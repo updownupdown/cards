@@ -204,11 +204,6 @@ export function CastleBoard({
     }
   }, [canStack, game, isSettingUp, setGame]);
 
-  const foundationTotal = useMemo(
-    () => game.foundations.reduce((sum, f) => sum + f.length, 0),
-    [game.foundations],
-  );
-
   function moveToColumn(from: number, to: number) {
     saveUndoState(structuredClone(game));
     setGame((draft) => {
@@ -285,7 +280,7 @@ export function CastleBoard({
       row: i,
       baseZIndex: 40,
       fan: { maxVisible: 3 },
-      placeholder: {},
+      placeholder: { iconName: "ace" },
     }));
 
     const colWidth = 3;
@@ -383,7 +378,6 @@ export function CastleBoard({
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={reset}
       isLoaded={isLoaded}
-      score={foundationTotal}
       winLoseMessage={game.won ? winMessage : i18n.t("cards:noMovesRemain")}
       canUndo={canUndo}
       undo={undo}

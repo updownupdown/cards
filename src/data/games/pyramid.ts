@@ -1,3 +1,4 @@
+import { GameAnimations } from "@/animations";
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
@@ -13,6 +14,7 @@ export const pyramid: GameDefinition = {
   },
   thumbnail: "Pyramid.webp",
   background: GAME_BACKGROUNDS.sahara,
+  animation: GameAnimations.Sand,
   gameColorDark: "#251703",
   gameColorPale: "#FFEACC",
   cardBack: CardBackColors.Walnut,

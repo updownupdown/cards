@@ -332,14 +332,11 @@ export default function RoyalCotillion() {
     gap: 0.14,
   });
 
-  const placed = game.foundations.reduce((sum, pile) => sum + pile.length, 0);
-
   return (
     <GameWrapper
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={reset}
       isLoaded={isLoaded}
-      score={placed}
       winLoseMessage={
         game.won
           ? i18n.t("games:royalCotillion.theLastDanceIsDone")

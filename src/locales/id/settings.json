@@ -1,7 +1,6 @@
 {
   "language": {
     "label": "Bahasa",
-    "description": "Nama permainan, aturan, menu, dan koleksi memakai bahasa ini.",
     "system": "Otomatis ({{language}})"
   },
   "translateCollectibles": {

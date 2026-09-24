@@ -41,6 +41,12 @@ export type GameMenuInfo = {
   enabledOnLocalOnly?: boolean;
   tags: [GameTag, ...GameTag[]];
   rating: GameRating;
+  /**
+   * For games whose score counts something you want less of, such as moves
+   * or guesses: the best score is then the lowest, and only wins count
+   * towards it, since giving up early would otherwise look like a record.
+   */
+  lowerScoreIsBetter?: boolean;
 
   // Images
   thumbnail?: GameThumbnailName;

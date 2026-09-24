@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const sirTommy: GameDefinition = {
   path: "/sir-tommy",
@@ -13,6 +14,7 @@ export const sirTommy: GameDefinition = {
   },
   thumbnail: "SirTommy.webp",
   background: GAME_BACKGROUNDS.london,
+  animation: GameAnimations.Rain,
   gameColorDark: "#1a2c33",
   gameColorPale: "#fdf7d9",
   cardBack: CardBackColors.Teal,

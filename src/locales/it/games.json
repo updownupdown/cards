@@ -286,9 +286,7 @@
     "defenders": "Difensori",
     "attack": "Attacca{{value}}",
     "attackersWave": "Attaccanti (ondata {{wave}})",
-    "noCardsLeftToPlay": "Non hai più carte da giocare!",
-    "scoreHigherIsBetter": "{{score}} (più alto è, meglio è)",
-    "scoreCloserToZero": "{{score}} (più vicino a zero è, meglio è)"
+    "noCardsLeftToPlay": "Non hai più carte da giocare!"
   },
   "lightsOut": {
     "everyLightIsOut": "Tutte le luci sono spente."

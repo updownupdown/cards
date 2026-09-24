@@ -14,7 +14,7 @@ export const lycan: GameDefinition = {
   },
   thumbnail: "Lycan.webp",
   background: GAME_BACKGROUNDS.forest,
-  animation: GameAnimations.Leaves,
+  animation: GameAnimations.Mist,
   gameColorDark: "#311a20",
   gameColorPale: "#f7e2ca",
   cardBack: CardBackColors.Walnut,

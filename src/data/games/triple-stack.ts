@@ -1,6 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const tripleStack: GameDefinition = {
   path: "/triple-stack",
@@ -13,6 +14,7 @@ export const tripleStack: GameDefinition = {
   },
   thumbnail: "TripleStack.webp",
   background: GAME_BACKGROUNDS.modernStairs,
+  animation: GameAnimations.Dust,
   gameColorDark: "#102524",
   gameColorPale: "#b0eee9",
   cardBack: CardBackColors.Teal,

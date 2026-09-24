@@ -1,6 +1,7 @@
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
+import { GameAnimations } from "@/animations";
 export const australianPatience: GameDefinition = {
   path: "/australian-patience",
   title: "Australian Patience",
@@ -8,6 +9,7 @@ export const australianPatience: GameDefinition = {
   rating: { complexity: 35, difficulty: 70, luck: 45 },
   thumbnail: "AustralianPatience.webp",
   background: GAME_BACKGROUNDS.savanah,
+  animation: GameAnimations.Birds,
   gameColorDark: "#29382a",
   gameColorPale: "#f4d88d",
   cardBack: CardBackColors.Copper,

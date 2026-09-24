@@ -36,7 +36,13 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import Svg, { Circle, Path } from "react-native-svg";
+import Svg, {
+  Circle,
+  Defs,
+  Path,
+  RadialGradient,
+  Stop,
+} from "react-native-svg";
 
 // A spiral galaxy needs room: 114 nodes three dot-diameters apart do not fit
 // in a smaller world (see MAP_GEOMETRY in src/data/nodes-map.ts).
@@ -72,8 +78,8 @@ const NODE_EXTENT_Y =
 // reachable-but-unplayed node runs hot red; a won-but-incomplete node is a
 // warm orange main-sequence star; a fully complete node is a blue-white nova.
 const STATE_COLORS = {
-  locked: "#585656",
-  connected: "#ad4ec5",
+  locked: "#746e6e",
+  connected: "#b74ec5",
   won: "#ffda5f",
   complete: "#a2ffa2",
 } as const;
@@ -82,7 +88,7 @@ const STATE_COLORS = {
 const LINE_WIDTH = { arm: 1.9, bridge: 0.77 };
 /** Locked links are drawn a little finer as well as fainter. */
 const LOCKED_LINE_SCALE = 0.85;
-const LOCKED_LINE_COLOR = "#6b5150";
+const LOCKED_LINE_COLOR = "#888483";
 
 /** Glow strength per node state: outer blur radius, spread, and opacity. */
 const NODE_GLOW = {
@@ -101,7 +107,7 @@ const LABEL = {
   fadeFrom: 0.62,
   fadeTo: 1.05,
   fontSize: 7.2,
-  letterSpacing: 1.4,
+  letterSpacing: 0.4,
   /** Wide enough that names are never cut off. */
   maxWidth: 150,
   gap: 7,
@@ -109,14 +115,14 @@ const LABEL = {
 /** Locked games are named more faintly, so the lit ones lead the eye. */
 const LABEL_OPACITY = {
   locked: 0.34,
-  connected: 0.95,
+  connected: 0.85,
   won: 0.8,
-  complete: 0.9,
+  complete: 0.85,
 } as const;
 
 /** How far a label's colour is mixed from its node's colour towards white:
  *  still colour-coded, but legible as text. */
-const LABEL_WHITENESS = 0.65;
+const LABEL_WHITENESS = 0.95;
 
 function paleFor(state: NodeVisualState) {
   const hex = STATE_COLORS[state].replace("#", "");
@@ -138,11 +144,160 @@ function paleFor(state: NodeVisualState) {
  * than the dozens of paths it replaces.
  */
 const GALAXY_GLOW = require("@/assets/images/galaxy-glow.webp");
-const ARM_DUST_TINTS = ["#cfe0ff", "#ffffff", "#ffe9bd", "#ffd0c4", "#d8ccff"];
+/** Blue-white, white, cyan, pink and the bulge's warm tint, in the order
+ *  scripts/generate-nodes-map.mjs deals them. */
+const ARM_DUST_TINTS = ["#d6e6ff", "#ffffff", "#b4e4ff", "#ffb3cf", "#ffe7bf"];
 /** Every seventh speck is a brighter star; the rest are fine dust. */
 const DUST_RADIUS = { star: 1.95, fine: 1 };
 
-const ArmArtwork = memo(function ArmArtwork() {
+/**
+ * Some of the brighter stars flare now and then. They are dealt into a few
+ * groups that each flare together on their own rhythm, so a handful of
+ * animations (not one per star) keep the arms alive; the members of a group
+ * are scattered across the whole galaxy, so they never read as a set.
+ */
+const FLARE_GROUP_COUNT = 6;
+/** World-point radius of a flaring star's halo. */
+const FLARE_RADIUS = 10;
+const FLARE_GROUPS = (() => {
+  const groups: { x: number; y: number; tint: string }[][] = Array.from(
+    { length: FLARE_GROUP_COUNT },
+    () => [],
+  );
+  let dealt = 0;
+  ARM_DUST.forEach(([x, y, tint, opacity], index) => {
+    if (index % 7 !== 0 || opacity < 0.6 || index % 14 !== 0) return;
+    groups[dealt % FLARE_GROUP_COUNT].push({
+      x: toWorld(x),
+      y: toWorld(y),
+      tint: ARM_DUST_TINTS[tint] ?? "#ffffff",
+    });
+    dealt += 1;
+  });
+  return groups.map((stars, group) => ({
+    stars,
+    // Long, uneven rests between short blooms, so a flare is an event.
+    periodMs: 6200 + Math.round(hashUnit(`flare:${group}:period`) * 5200),
+    phaseMs: Math.round(hashUnit(`flare:${group}:phase`) * 6000),
+  }));
+})();
+/** Share of a flare cycle spent brightening, then fading, out of the whole. */
+const FLARE_BLOOM_SHARE = 0.12;
+const FLARE_FADE_SHARE = 0.2;
+
+function FlareStars({
+  stars,
+}: {
+  stars: (typeof FLARE_GROUPS)[number]["stars"];
+}) {
+  return (
+    <Svg
+      width={WORLD_SIZE}
+      height={WORLD_SIZE}
+      style={{ position: "absolute", pointerEvents: "none" }}
+    >
+      <Defs>
+        {ARM_DUST_TINTS.map((tint, index) => (
+          <RadialGradient key={tint} id={`flare-${index}`}>
+            <Stop offset="0" stopColor="#ffffff" stopOpacity={0.95} />
+            <Stop offset="0.18" stopColor={tint} stopOpacity={0.6} />
+            <Stop offset="0.45" stopColor={tint} stopOpacity={0.16} />
+            <Stop offset="1" stopColor={tint} stopOpacity={0} />
+          </RadialGradient>
+        ))}
+      </Defs>
+      {stars.map((star, index) => (
+        <Circle
+          key={index}
+          cx={star.x}
+          cy={star.y}
+          r={FLARE_RADIUS}
+          fill={`url(#flare-${ARM_DUST_TINTS.indexOf(star.tint)})`}
+        />
+      ))}
+    </Svg>
+  );
+}
+
+const flareLayerStyle = {
+  position: "absolute",
+  left: 0,
+  top: 0,
+  width: WORLD_SIZE,
+  height: WORLD_SIZE,
+  pointerEvents: "none",
+} as const;
+
+function NativeFlareGroup({ group }: { group: (typeof FLARE_GROUPS)[number] }) {
+  const glow = useRef(new RNAnimated.Value(0)).current;
+
+  useEffect(() => {
+    const bloomMs = group.periodMs * FLARE_BLOOM_SHARE;
+    const fadeMs = group.periodMs * FLARE_FADE_SHARE;
+    const animation = RNAnimated.loop(
+      RNAnimated.sequence([
+        RNAnimated.delay(group.periodMs - bloomMs - fadeMs),
+        RNAnimated.timing(glow, {
+          toValue: 1,
+          duration: bloomMs,
+          easing: RNEasing.out(RNEasing.quad),
+          useNativeDriver: true,
+        }),
+        RNAnimated.timing(glow, {
+          toValue: 0,
+          duration: fadeMs,
+          easing: RNEasing.inOut(RNEasing.sin),
+          useNativeDriver: true,
+        }),
+      ]),
+    );
+    // Groups start staggered so they never fall into step.
+    const timer = setTimeout(() => animation.start(), group.phaseMs);
+    return () => {
+      clearTimeout(timer);
+      animation.stop();
+    };
+  }, [glow, group]);
+
+  return (
+    <RNAnimated.View style={[flareLayerStyle, { opacity: glow }]}>
+      <FlareStars stars={group.stars} />
+    </RNAnimated.View>
+  );
+}
+
+function WebFlareGroup({ group }: { group: (typeof FLARE_GROUPS)[number] }) {
+  const webFlareStyle = {
+    opacity: 0,
+    animationName: "nodes-arm-star-flare",
+    animationDuration: `${group.periodMs}ms`,
+    animationDelay: `-${group.phaseMs}ms`,
+    animationIterationCount: "infinite",
+    animationTimingFunction: "linear",
+  } as Record<string, unknown>;
+
+  return (
+    <View style={[flareLayerStyle, webFlareStyle]}>
+      <FlareStars stars={group.stars} />
+    </View>
+  );
+}
+
+const ArmFlares = memo(function ArmFlares() {
+  return FLARE_GROUPS.map((group, index) =>
+    Platform.OS === "web" ? (
+      <WebFlareGroup key={index} group={group} />
+    ) : (
+      <NativeFlareGroup key={index} group={group} />
+    ),
+  );
+});
+
+const ArmArtwork = memo(function ArmArtwork({
+  animationsEnabled,
+}: {
+  animationsEnabled: boolean;
+}) {
   return (
     <>
       {/* The wrapper carries pointerEvents, which expo-image's style does not
@@ -175,10 +330,11 @@ const ArmArtwork = memo(function ArmArtwork() {
             cx={toWorld(x)}
             cy={toWorld(y)}
             r={index % 7 === 0 ? DUST_RADIUS.star : DUST_RADIUS.fine}
-            fill={rgba(ARM_DUST_TINTS[tint] ?? "#ffffff", opacity * 0.65)}
+            fill={rgba(ARM_DUST_TINTS[tint] ?? "#ffffff", opacity * 0.7)}
           />
         ))}
       </Svg>
+      {animationsEnabled && <ArmFlares />}
     </>
   );
 });
@@ -297,9 +453,9 @@ const NodeLabels = memo(function NodeLabels({
               textTransform: "uppercase",
               // Names cross the arm glow and the links, so they carry their
               // own dark backing rather than relying on what is behind them.
-              ...textShadow(rgba(Colors.black, 0.9), 3, {
+              ...textShadow(rgba(Colors.black, 0.7), 2, {
                 width: 0,
-                height: 1,
+                height: 0.5,
               }),
             }}
           >
@@ -339,7 +495,7 @@ const NodeConnections = memo(function NodeConnections({
             key={key}
             d={path}
             fill="none"
-            stroke={rgba(strokeColor, locked ? 0.55 : 0.85)}
+            stroke={rgba(strokeColor, locked ? 0.65 : 0.85)}
             strokeWidth={
               LINE_WIDTH[onArm ? "arm" : "bridge"] *
               (locked ? LOCKED_LINE_SCALE : 1)
@@ -619,7 +775,6 @@ export function NodesMap({
     const localY =
       (y - viewport.height / 2 - translateY.value) / s + WORLD_SIZE / 2;
 
-
     let nearest: NodeDefinition | undefined;
     let nearestDistance = Infinity;
     for (const node of NODE_DEFINITIONS) {
@@ -703,7 +858,10 @@ export function NodesMap({
   const blackHoleStyle = useAnimatedStyle(() => {
     const drift = (value: number) => {
       const lag = (-value * BLACK_HOLE_PARALLAX) / scale.value;
-      return Math.max(-BLACK_HOLE_MAX_DRIFT, Math.min(BLACK_HOLE_MAX_DRIFT, lag));
+      return Math.max(
+        -BLACK_HOLE_MAX_DRIFT,
+        Math.min(BLACK_HOLE_MAX_DRIFT, lag),
+      );
     };
     return {
       transform: [
@@ -754,7 +912,7 @@ export function NodesMap({
             <NodesBlackHole animationsEnabled={settings.showAnimations} />
           </Animated.View>
 
-          <ArmArtwork />
+          <ArmArtwork animationsEnabled={settings.showAnimations} />
 
           <NodeConnections nodeStates={nodeStates} />
 

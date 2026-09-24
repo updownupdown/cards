@@ -7,6 +7,8 @@ export const lightsOut: GameDefinition = {
   path: "/lights-out",
   title: "Lights Out",
   tags: [GameTag.EasyToLearn, GameTag.SpatialControl],
+  // Scored in moves or guesses: fewer is better.
+  lowerScoreIsBetter: true,
   rating: { complexity: 20, difficulty: 55, luck: 0 },
   thumbnail: "LightsOut.webp",
   background: GAME_BACKGROUNDS.darkAlley,

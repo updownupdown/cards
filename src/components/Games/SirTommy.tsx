@@ -5,6 +5,7 @@ import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   cardDims,
   createDeck,
+  flipAllToBack,
   flipToBack,
   flipToFace,
   rankValue,
@@ -30,7 +31,7 @@ type GameState = {
 export type SirTommyGameState = GameState;
 
 const gameStateInitial: GameState = {
-  stock: [],
+  stock: createDeck(),
   waste: Array.from({ length: wasteCount }, () => []),
   foundations: Array.from({ length: 4 }, () => []),
   ended: false,
@@ -83,9 +84,15 @@ function revealStockTop(stock: PlayingCard[]) {
 async function resetAndSetup(
   setGame: (updater: (draft: GameState) => void) => void,
 ) {
+  // Gather every card into the stock, face down, then turn up its top card.
   setGame((draft) => {
-    draft.stock = shuffle(createDeck()).map(flipToBack);
-    revealStockTop(draft.stock);
+    draft.stock = shuffle(
+      flipAllToBack([
+        ...draft.stock,
+        ...draft.waste.flat(),
+        ...draft.foundations.flat(),
+      ]),
+    );
     draft.waste = Array.from({ length: wasteCount }, () => []);
     draft.foundations = Array.from({ length: 4 }, () => []);
     draft.ended = false;
@@ -93,6 +100,10 @@ async function resetAndSetup(
   });
 
   await delay();
+
+  setGame((draft) => {
+    revealStockTop(draft.stock);
+  });
 }
 
 function evaluateEnd(state: GameState, isSettingUp = false) {
@@ -241,11 +252,6 @@ export default function SirTommy() {
     }, DOUBLE_TAP_MS);
   }
 
-  const foundationTotal = useMemo(
-    () => game.foundations.reduce((sum, f) => sum + f.length, 0),
-    [game.foundations],
-  );
-
   // ========== Card Mapping ========== //
   const zones: MapZone[] = useMemo(() => {
     const foundationZones: MapZone[] = game.foundations.map((pile, i) => ({
@@ -257,7 +263,7 @@ export default function SirTommy() {
       row: 0,
       baseZIndex: 40,
       fan: { maxVisible: 3 },
-      placeholder: {},
+      placeholder: { iconName: "ace" },
     }));
 
     const wasteZones: MapZone[] = game.waste.map((pile, i) => ({
@@ -345,7 +351,6 @@ export default function SirTommy() {
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={reset}
       isLoaded={isLoaded}
-      score={foundationTotal}
       winLoseMessage={
         game.won
           ? i18n.t("games:sirTommy.allFourSuitsHome")

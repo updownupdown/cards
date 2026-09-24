@@ -522,12 +522,9 @@ export default function Invaders() {
       reset={reset}
       isLoaded={isLoaded}
       winLoseMessage={game.winLoseMessage}
-      score={i18n.t(
-        game.won
-          ? "games:invaders.scoreHigherIsBetter"
-          : "games:invaders.scoreCloserToZero",
-        { score },
-      )}
+      // Defenders left on a win, attackers left (as a negative) on a loss:
+      // one scale where higher is always better.
+      score={score}
       canUndo={canUndo}
       undo={undo}
     >

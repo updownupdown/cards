@@ -262,7 +262,7 @@ export function YukonBoard({
       row: 0,
       baseZIndex: 40,
       fan: { maxVisible: 1 },
-      placeholder: {},
+      placeholder: { iconName: "ace" },
     }));
 
     const setupZone: MapZone = {

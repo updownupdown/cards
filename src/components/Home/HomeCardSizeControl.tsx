@@ -64,7 +64,7 @@ export function HomeCardSizeControl({
           width: "100%",
           height: spacing(layoutDims.cardToggleHeight),
           borderRadius: spacing(layoutDims.cardToggleHeight / 2),
-          backgroundColor: rgba(Colors.K900, 0.7),
+          backgroundColor: rgba(Colors.K900, 0.95),
           ...homeSurfaceShadow(spacing),
         }}
       />

@@ -8,7 +8,9 @@ import { Button } from "../Button/Button";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   cardDims,
+  collectCards,
   createDeck,
+  flipAllToBack,
   flipToBack,
   flipToFace,
   isFace,
@@ -71,7 +73,13 @@ function createEmptyState(): SomnusGameState {
   };
 }
 
-const initialState = createEmptyState();
+/** The table cleared, with every card gathered face down into the dream deck. */
+function gatherState(cards: PlayingCard[]): SomnusGameState {
+  return { ...createEmptyState(), dreamDeck: shuffle(flipAllToBack(cards)) };
+}
+
+// Starts with every card in the dream deck, to be dealt out from there.
+const initialState = gatherState(createDeck({ includeJokers: true }));
 
 function isGuardian(card: PlayingCard) {
   return card.suit === "hearts" || card.suit === "diamonds";
@@ -419,9 +427,10 @@ export default function Somnus() {
       gameStateInitial: initialState,
       resetNonGameStates: clearSelection,
       resetAndSetup: async () => {
-        setGame(createEmptyState());
+        // Gather every card into the dream deck, then deal them back out.
+        setGame((draft) => gatherState(collectCards(draft)));
         await delay();
-        setGame(createGame());
+        setGame((draft) => createGame(draft.dreamDeck));
         await delay(100);
       },
     });

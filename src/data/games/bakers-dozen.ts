@@ -1,3 +1,4 @@
+import { GameAnimations } from "@/animations";
 import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
@@ -14,6 +15,7 @@ export const bakersDozen: GameDefinition = {
   },
   thumbnail: "BakersDozen.webp",
   background: GAME_BACKGROUNDS.cozyRoom3,
+  animation: GameAnimations.Dust,
   gameColorDark: "#253b36",
   gameColorPale: "#edf7e8",
   cardBack: CardBackColors.Ocean,

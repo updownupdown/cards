@@ -40,9 +40,9 @@ export type NodesProgress = {
   /** Unused "skip this game and mark it won" tokens, granted by the rare
    * travelling UFO on the nodes map. */
   mercySkipCount: number;
-  /** Total collectibles owned when a mercy skip was last granted, or null if
-   * one has never been granted. Gates the UFO from reappearing until the
-   * player has collected several more since. */
+  /** Total collectibles owned when a mercy skip was last used, or null if
+   * one has never been used. Gates the UFO from reappearing until the player
+   * has collected several more since. */
   mercySkipCollectibleCheckpoint: number | null;
 };
 
@@ -277,6 +277,8 @@ export async function spendMercySkip(
     progress.winsByPath[path] = 1;
     progress.lastPlayedPath = path;
     progress.mercySkipCount -= 1;
+    progress.mercySkipCollectibleCheckpoint =
+      progress.collectedTaoIds.length + progress.collectedQuoteIds.length;
 
     const unlockedPathsAfterSkip = getUnlockedNodePaths(
       new Set(Object.keys(progress.winsByPath)),
@@ -294,8 +296,6 @@ export async function spendMercySkip(
 export async function grantMercySkip() {
   return mutateNodesProgress((progress) => {
     progress.mercySkipCount += 1;
-    progress.mercySkipCollectibleCheckpoint =
-      progress.collectedTaoIds.length + progress.collectedQuoteIds.length;
     return progress;
   });
 }

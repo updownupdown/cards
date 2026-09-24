@@ -1,3 +1,4 @@
+import { useKeyboardLift } from "@/hooks/useKeyboardLift";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { Icon, type IconName } from "@/icons";
@@ -7,6 +8,7 @@ import { Colors, rgba, layoutDims, transitionStyles } from "@/styles/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect } from "react";
 import {
+  Animated as RNAnimated,
   Platform,
   Pressable,
   StyleSheet,
@@ -45,6 +47,7 @@ export function HomeTabBar({
   const insets = useSafeAreaInsets();
   const { spacing, ui } = useResponsiveMetrics();
   const { t } = useTranslation("home");
+  const keyboardLift = useKeyboardLift();
   const backgroundOpacity = useSharedValue(showBackground ? 1 : 0);
   const backgroundStyle = useAnimatedStyle(() => ({
     opacity: backgroundOpacity.value,
@@ -61,7 +64,7 @@ export function HomeTabBar({
   };
 
   return (
-    <View
+    <RNAnimated.View
       onLayout={onLayout}
       style={{
         position: Platform.OS === "web" ? "fixed" : "absolute",
@@ -70,6 +73,9 @@ export function HomeTabBar({
         bottom: 0,
         zIndex: 8,
         pointerEvents: "box-none",
+        // Rides up above the keyboard with the search box, rather than
+        // being covered by it.
+        transform: [{ translateY: keyboardLift }],
       }}
     >
       {/* The header's fade, mirrored: content scrolling past the floating pill
@@ -156,6 +162,6 @@ export function HomeTabBar({
           })}
         </View>
       </View>
-    </View>
+    </RNAnimated.View>
   );
 }

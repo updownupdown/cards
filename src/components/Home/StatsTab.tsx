@@ -48,7 +48,13 @@ type Persona = {
 type StatsColumn = "game" | "won" | "lost" | "winPercent" | "best" | "time";
 
 type SortKey =
-  "title" | "attempts" | "wins" | "losses" | "winRate" | "best" | "time";
+  | "title"
+  | "attempts"
+  | "wins"
+  | "losses"
+  | "winRate"
+  | "best"
+  | "time";
 
 type SortState = {
   key: SortKey;
@@ -162,7 +168,7 @@ export function StatsTab({
         wins: 0,
         losses: 0,
         attempts: 0,
-        best: null,
+        best: null as number | null,
       },
     );
   }, [playedRows]);
@@ -453,7 +459,7 @@ export function StatsTab({
                           </Text>
                         </Link>
                         <Text
-                          size="sm"
+                          size="xs"
                           weight={500}
                           style={{ flex: 1, textAlign: "right" }}
                           color={
@@ -463,7 +469,7 @@ export function StatsTab({
                           {row.stats.wins}
                         </Text>
                         <Text
-                          size="sm"
+                          size="xs"
                           weight={500}
                           style={{ flex: 1, textAlign: "right" }}
                           color={
@@ -473,7 +479,7 @@ export function StatsTab({
                           {row.stats.losses}
                         </Text>
                         <Text
-                          size="sm"
+                          size="xs"
                           weight={500}
                           style={{ flex: 1, textAlign: "right" }}
                           color={
@@ -485,7 +491,7 @@ export function StatsTab({
                           {calculateWinRate(row.stats)}
                         </Text>
                         <Text
-                          size="sm"
+                          size="xs"
                           weight={500}
                           style={{ flex: 1, textAlign: "right" }}
                           color={
@@ -496,10 +502,10 @@ export function StatsTab({
                         >
                           {row.stats.highestScore === null
                             ? "-"
-                            : row.stats.highestScore}
+                            : row.stats.highestScore.toLocaleString(language)}
                         </Text>
                         <Text
-                          size="sm"
+                          size="xs"
                           weight={500}
                           style={{ flex: 1, textAlign: "right" }}
                           color={
@@ -570,7 +576,7 @@ export function StatsTab({
                       style={{ flex: 1, textAlign: "right" }}
                       color={totals.best === null ? Colors.K700 : Colors.K200}
                     >
-                      {totals.best === null ? "-" : totals.best}
+                      {totals.best === null ? "-" : totals.best.toLocaleString(language)}
                     </Text>
                   </View>
                 </View>

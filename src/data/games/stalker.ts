@@ -14,7 +14,7 @@ export const stalker: GameDefinition = {
   },
   thumbnail: "Stalker.webp",
   background: GAME_BACKGROUNDS.treeRain,
-  animation: GameAnimations.Rain,
+  animation: GameAnimations.Lightning,
   gameColorDark: "#1b2224",
   gameColorPale: "#daf1f1",
   cardBack: CardBackColors.Charcoal,

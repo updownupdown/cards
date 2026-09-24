@@ -10,7 +10,7 @@ export const spiderette: GameDefinition = {
   rating: { complexity: 35, difficulty: 60, luck: 40 },
   thumbnail: "Spiderette.webp",
   background: GAME_BACKGROUNDS.forestGrasses,
-  animation: GameAnimations.Firefly,
+  animation: GameAnimations.Spiders,
   gameColorDark: "#202e27",
   gameColorPale: "#dae6cf",
   cardBack: CardBackColors.Rose,

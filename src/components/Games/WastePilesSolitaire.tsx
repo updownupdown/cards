@@ -367,11 +367,6 @@ export function WastePilesSolitaire({
     });
   }
 
-  const foundationTotal = game.foundations.reduce(
-    (sum, pile) => sum + pile.length,
-    0,
-  );
-
   const zones: MapZone[] = useMemo(() => {
     const foundationCount = config.decks * 4;
     // The stock (and any reserve) sits in its own column on the right.
@@ -506,7 +501,6 @@ export function WastePilesSolitaire({
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={reset}
       isLoaded={isLoaded}
-      score={foundationTotal}
       winLoseMessage={game.won ? config.winMessage() : config.loseMessage()}
       canUndo={canUndo}
       undo={undo}

@@ -286,9 +286,7 @@
     "defenders": "Defenders",
     "attack": "Attack{{value}}",
     "attackersWave": "Attackers (Wave {{wave}})",
-    "noCardsLeftToPlay": "You have no cards left to play!",
-    "scoreHigherIsBetter": "{{score}} (higher is better)",
-    "scoreCloserToZero": "{{score}} (closer to zero is better)"
+    "noCardsLeftToPlay": "You have no cards left to play!"
   },
   "lightsOut": {
     "everyLightIsOut": "Every light is out."

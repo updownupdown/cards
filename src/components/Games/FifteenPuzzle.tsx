@@ -1,7 +1,15 @@
 import { useStateManager } from "@/hooks/useStateManager";
 import { useMemo } from "react";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
-import { CardRank, PlayingCard, SUITS } from "../Cards/card-utils";
+import {
+  CardRank,
+  collectCards,
+  flipAllToBack,
+  PlayingCard,
+  shuffle,
+  SUITS,
+} from "../Cards/card-utils";
+import { delay } from "@/utils/utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
@@ -14,6 +22,8 @@ type GameState = {
   cells: (PlayingCard | null)[];
   moves: number;
   won: boolean;
+  /** Every tile, face down, while the puzzle is being gathered and dealt. */
+  deal: PlayingCard[];
 };
 
 function createSolvedCells(): (PlayingCard | null)[] {
@@ -68,20 +78,33 @@ function createInitialState(): GameState {
     emptyIndex = chosen;
   }
 
-  return { cells, moves: 0, won: false };
+  return { cells, moves: 0, won: false, deal: [] };
+}
+
+/** The grid cleared, with every tile gathered face down into the deal pile. */
+function gatherState(state: GameState): GameState {
+  return {
+    cells: Array.from({ length: CELL_COUNT }, () => null),
+    moves: 0,
+    won: false,
+    deal: shuffle(flipAllToBack(collectCards(state))),
+  };
 }
 
 export const fifteenPuzzleRules = { adjacentIndices, moveCell, isSolved };
 
-const gameStateInitial = createInitialState();
+// Starts with every tile in the deal pile, to be dealt out from there.
+const gameStateInitial = gatherState(createInitialState());
 
 export default function FifteenPuzzle() {
   const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
     useStateManager<GameState>({
       gameStateInitial,
       resetAndSetup: async () => {
-        const next = createInitialState();
-        setGame((draft) => void Object.assign(draft, next));
+        // Gather every tile into the deal pile, then deal them back out.
+        setGame((draft) => gatherState(draft));
+        await delay();
+        setGame(() => createInitialState());
       },
     });
 
@@ -91,8 +114,8 @@ export default function FifteenPuzzle() {
     [emptyIndex],
   );
   const zones = useMemo<MapZone[]>(
-    () =>
-      game.cells.map((card, index) => ({
+    () => [
+      ...game.cells.map((card, index) => ({
         id: `cell-${index}`,
         name: "cell",
         pileIndex: index,
@@ -101,7 +124,17 @@ export default function FifteenPuzzle() {
         row: Math.floor(index / GRID_SIZE),
         baseZIndex: 5,
       })),
-    [game.cells],
+      {
+        id: "deal",
+        name: "deal",
+        cards: game.deal,
+        col: (GRID_SIZE - 1) / 2,
+        row: (GRID_SIZE - 1) / 2,
+        baseZIndex: 20,
+        fan: { maxVisible: 3 },
+      },
+    ],
+    [game.cells, game.deal],
   );
 
   function selectCell(index: number) {

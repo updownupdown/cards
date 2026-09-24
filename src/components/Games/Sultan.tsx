@@ -1,12 +1,15 @@
 import { useStateManager } from "@/hooks/useStateManager";
-import { DOUBLE_TAP_MS } from "@/utils/utils";
+import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
+  collectCards,
   createDeck,
+  flipAllToBack,
   flipToBack,
   flipToFace,
   rankValue,
+  redealWith,
   shuffle,
   top,
   type PlayingCard,
@@ -71,6 +74,34 @@ function createInitialState(): SultanGameState {
   };
 }
 
+/**
+ * The board with every card gathered face down into the stock, except the
+ * King of Hearts in the centre, which never moves.
+ */
+function gatherState(state: SultanGameState): SultanGameState {
+  return {
+    center: { ...state.center },
+    foundations: state.foundations.map(() => []),
+    reserve: state.reserve.map(() => null),
+    stock: shuffle(
+      flipAllToBack(collectCards({ ...state, center: undefined })),
+    ),
+    waste: [],
+    redealsUsed: 0,
+    ended: false,
+    won: false,
+  };
+}
+
+/** A fresh deal played with the gathered cards, the centre King kept. */
+function redealState(state: SultanGameState): SultanGameState {
+  const { center, ...dealt } = createInitialState();
+  return {
+    ...redealWith(dealt, state.stock),
+    center: { ...center, id: state.center.id },
+  };
+}
+
 function getSelectedCard(state: SultanGameState, selected: Selection) {
   if (!selected) return undefined;
   return selected.zone === "waste"
@@ -112,13 +143,17 @@ export default function Sultan() {
   );
   const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
     useStateManager<SultanGameState>({
-      gameStateInitial: createInitialState(),
+      // Starts with every card in the stock, to be dealt out from there.
+      gameStateInitial: gatherState(createInitialState()),
       resetNonGameStates: () => {
         setSelected(null);
         setLastTap(null);
       },
       resetAndSetup: async () => {
-        setGame(createInitialState());
+        // Gather every card into the stock, then deal them back out.
+        setGame((draft) => gatherState(draft));
+        await delay();
+        setGame((draft) => redealState(draft));
       },
     });
 
@@ -340,14 +375,11 @@ export default function Sultan() {
     cardSize: "small",
     gap: 0.2,
   });
-  const score =
-    game.foundations.reduce((sum, pile) => sum + pile.length, 0) + 1;
   return (
     <GameWrapper
       outcome={!game.ended ? "playing" : game.won ? "won" : "lost"}
       reset={() => void reset()}
       isLoaded={isLoaded}
-      score={score}
       canUndo={canUndo}
       undo={undo}
       winLoseMessage={

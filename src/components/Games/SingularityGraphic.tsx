@@ -1,18 +1,159 @@
+import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useEffect, useRef } from "react";
-import { Animated, Easing, Platform, StyleSheet, View } from "react-native";
+import { Animated, Easing, Platform, StyleSheet } from "react-native";
 import Svg, {
   Defs,
   Ellipse,
+  G,
+  LinearGradient,
   Mask,
   RadialGradient,
+  Rect,
   Stop,
 } from "react-native-svg";
 
 type SingularityGraphicProps = {
   size: number;
+  /** Cards swallowed so far, the opening Ace included. Each new one makes the
+   *  hole flare, and it grows a little as it fills. */
+  absorbed?: number;
 };
 
-export function SingularityGraphic({ size }: SingularityGraphicProps) {
+const useNativeDriver = Platform.OS !== "web";
+
+// The artwork is drawn in a 400 x 260 box; the disk is seen almost edge-on.
+const VIEW_WIDTH = 400;
+const VIEW_HEIGHT = 260;
+const CENTRE = { x: 200, y: 130 };
+/** How flat the disk looks: its apparent height over its width. */
+const DISK_TILT = 0.18;
+/** Where a spark vanishes: just inside the shadow's edge. */
+const HORIZON_RADIUS = 70;
+/** The shadow's radii; a spark on the far side is hidden while inside it. */
+const SHADOW = { rx: 73, ry: 69 };
+/** How big the hole is drawn before its first card, and once it has
+ *  swallowed every card. */
+const START_SIZE = 0.5;
+const FULL_SIZE = 1.14;
+/** Roughly how long a card takes to fly from its pile into the hole. */
+const CARD_FLIGHT_MS = 320;
+
+const SPARK_SAMPLES = Array.from({ length: 61 }, (_, index) => index / 60);
+const SPARK_COLORS = ["#fff3c2", "#ffc46b", "#ff8a4c"];
+
+/**
+ * Matter spiralling in: each spark is drawn round the disk, slowly at first
+ * and then faster and faster, stretching out as it nears the horizon, where it
+ * winks out. Picked once for the life of the app, like the other scenery.
+ */
+const SPARKS = Array.from({ length: 7 }, (_, index) => ({
+  startAngle: (index / 7) * Math.PI * 2 + Math.random() * 0.6,
+  turns: 1.1 + Math.random() * 0.7,
+  startRadius: 150 + Math.random() * 45,
+  duration: 7800 + Math.random() * 7200,
+  delay: Math.random() * 12000,
+  size: 1.6 + Math.random() * 1.4,
+  color: SPARK_COLORS[index % SPARK_COLORS.length],
+}));
+
+function Spark({
+  spark,
+  toPixels,
+}: {
+  spark: (typeof SPARKS)[number];
+  toPixels: (x: number, y: number) => { x: number; y: number };
+}) {
+  const progress = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    let stopped = false;
+    let animation: Animated.CompositeAnimation | undefined;
+    const fall = () => {
+      if (stopped) return;
+      progress.setValue(0);
+      animation = Animated.timing(progress, {
+        toValue: 1,
+        duration: spark.duration,
+        easing: Easing.linear,
+        useNativeDriver,
+      });
+      animation.start(({ finished }) => {
+        if (finished) fall();
+      });
+    };
+    const timer = setTimeout(fall, spark.delay);
+    return () => {
+      stopped = true;
+      clearTimeout(timer);
+      animation?.stop();
+    };
+  }, [progress, spark]);
+
+  // Radius shrinks slowly and then all at once; the angle speeds up with it,
+  // the way orbits tighten as they fall inwards. Sparks are drawn over the
+  // hole, so one on the far side of the disk is hidden while the hole is in
+  // front of it; on the near side it crosses in front.
+  const path = SPARK_SAMPLES.map((t) => {
+    const radius =
+      spark.startRadius - (spark.startRadius - HORIZON_RADIUS) * t ** 1.8;
+    const angle = spark.startAngle + spark.turns * Math.PI * 2 * t ** 1.25;
+    const dx = Math.cos(angle) * radius;
+    const dy = Math.sin(angle) * radius * DISK_TILT;
+    const behindHole =
+      Math.sin(angle) < 0 && (dx / SHADOW.rx) ** 2 + (dy / SHADOW.ry) ** 2 < 1;
+    const fade = t < 0.12 ? t / 0.12 : t > 0.88 ? (1 - t) / 0.12 : 1;
+    return {
+      ...toPixels(CENTRE.x + dx, CENTRE.y + dy),
+      opacity: behindHole ? 0 : fade,
+    };
+  });
+
+  return (
+    <Animated.View
+      style={{
+        position: "absolute",
+        left: -spark.size / 2,
+        top: -spark.size / 2,
+        width: spark.size,
+        height: spark.size,
+        borderRadius: spark.size,
+        backgroundColor: spark.color,
+        boxShadow: `0 0 ${spark.size * 3}px ${spark.color}`,
+        opacity: progress.interpolate({
+          inputRange: SPARK_SAMPLES,
+          outputRange: path.map((point) => point.opacity),
+        }),
+        transform: [
+          {
+            translateX: progress.interpolate({
+              inputRange: SPARK_SAMPLES,
+              outputRange: path.map((point) => point.x),
+            }),
+          },
+          {
+            translateY: progress.interpolate({
+              inputRange: SPARK_SAMPLES,
+              outputRange: path.map((point) => point.y),
+            }),
+          },
+          // Stretched along its path as the pull gets stronger.
+          {
+            scaleX: progress.interpolate({
+              inputRange: [0, 0.7, 1],
+              outputRange: [1, 1.6, 3],
+            }),
+          },
+        ],
+      }}
+    />
+  );
+}
+
+export function SingularityGraphic({
+  size,
+  absorbed = 1,
+}: SingularityGraphicProps) {
+  const { settings } = useGlobalSettings();
   const luminosity = useRef(new Animated.Value(0)).current;
   const intensity = useRef(new Animated.Value(0)).current;
   const motion = useRef(new Animated.Value(0)).current;
@@ -80,6 +221,54 @@ export function SingularityGraphic({ size }: SingularityGraphicProps) {
     };
   }, [intensity, luminosity, motion, rotation]);
 
+  // Settled at 1; each swallowed card replays it from 0.
+  const feed = useRef(new Animated.Value(1)).current;
+  const growth = useRef(new Animated.Value(growthFor(absorbed))).current;
+  const lastAbsorbed = useRef(absorbed);
+  useEffect(() => {
+    const previous = lastAbsorbed.current;
+    lastAbsorbed.current = absorbed;
+    Animated.timing(growth, {
+      toValue: growthFor(absorbed),
+      duration: 900,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver,
+    }).start();
+    // Only a card going in makes it flare; an undo just lets it shrink back.
+    if (absorbed <= previous) return;
+    feed.setValue(0);
+    // The new count arrives as the card sets off, so the flare waits for it
+    // to reach the hole.
+    Animated.sequence([
+      Animated.delay(CARD_FLIGHT_MS),
+      Animated.timing(feed, {
+        toValue: 1,
+        duration: 900,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver,
+      }),
+    ]).start();
+  }, [absorbed, feed, growth]);
+
+  // Each swallowed card makes the hole's light swell and brighten for a
+  // moment before settling.
+  const flare = feed.interpolate({
+    inputRange: [0, 0.14, 1],
+    outputRange: [0, 0.85, 0],
+  });
+  const ringSwell = feed.interpolate({
+    inputRange: [0, 0.14, 1],
+    outputRange: [1, 1.1, 1],
+  });
+  const glowSwell = feed.interpolate({
+    inputRange: [0, 0.14, 1],
+    outputRange: [1, 1.16, 1],
+  });
+  const glowFlare = feed.interpolate({
+    inputRange: [0, 0.14, 1],
+    outputRange: [0, 0.3, 0],
+  });
+
   const glowOpacity = luminosity.interpolate({
     inputRange: [0, 1],
     outputRange: [0.78, 1],
@@ -110,16 +299,27 @@ export function SingularityGraphic({ size }: SingularityGraphicProps) {
   });
   const width = size * 6.825;
   const height = size * 4.225;
+  // The artwork's box fits the height; this maps its coordinates to pixels.
+  const unit = height / VIEW_HEIGHT;
+  const inset = (width - VIEW_WIDTH * unit) / 2;
+  const toPixels = (x: number, y: number) => ({
+    x: inset + x * unit,
+    y: y * unit,
+  });
 
   return (
-    <View
+    <Animated.View
       style={[
         styles.container,
         {
           width,
           height,
           pointerEvents: "none",
-          transform: [{ translateX: -width / 2 }, { translateY: -height / 2 }],
+          transform: [
+            { translateX: -width / 2 },
+            { translateY: -height / 2 },
+            { scale: growth },
+          ],
         },
       ]}
     >
@@ -127,8 +327,8 @@ export function SingularityGraphic({ size }: SingularityGraphicProps) {
         style={[
           styles.layer,
           {
-            opacity: glowOpacity,
-            transform: [{ scale: glowScale }],
+            opacity: Animated.add(glowOpacity, glowFlare),
+            transform: [{ scale: Animated.multiply(glowScale, glowSwell) }],
           },
         ]}
       >
@@ -217,7 +417,10 @@ export function SingularityGraphic({ size }: SingularityGraphicProps) {
       <Animated.View
         style={[
           styles.layer,
-          { opacity: photonOpacity, transform: [{ rotate: spin }] },
+          {
+            opacity: photonOpacity,
+            transform: [{ rotate: spin }, { scale: ringSwell }],
+          },
         ]}
       >
         <Svg width="100%" height="100%" viewBox="0 0 400 260">
@@ -271,7 +474,10 @@ export function SingularityGraphic({ size }: SingularityGraphicProps) {
       <Animated.View
         style={[
           styles.layer,
-          { opacity: bloomOpacity, transform: [{ rotate: spin }] },
+          {
+            opacity: Animated.add(bloomOpacity, flare),
+            transform: [{ rotate: spin }, { scale: ringSwell }],
+          },
         ]}
       >
         <Svg width="100%" height="100%" viewBox="0 0 400 260">
@@ -328,8 +534,103 @@ export function SingularityGraphic({ size }: SingularityGraphicProps) {
         </Defs>
         <Ellipse cx="200" cy="130" rx="73" ry="69" fill="url(#shadow)" />
       </Svg>
-    </View>
+
+      {/* Gravitational lensing, the way it is drawn in Interstellar: light
+          from the far side of the disk is bent into a ring round the hole,
+          bright over the top and fainter underneath, while the near side of
+          the disk passes in front of it. Brighter on the left, the side
+          turning towards us. Everything is drawn with soft gradients, a
+          blur that costs nothing to draw. */}
+      <Svg
+        style={styles.layer}
+        width="100%"
+        height="100%"
+        viewBox="0 0 400 260"
+      >
+        <Defs>
+          {/* A soft ring: bright at the photon ring's radius (76 of 86),
+              falling away to either side. */}
+          <RadialGradient id="lensRing" cx="50%" cy="50%" rx="50%" ry="50%">
+            <Stop offset="68%" stopColor="#ffb561" stopOpacity="0" />
+            <Stop offset="79%" stopColor="#ffc877" stopOpacity="0.18" />
+            <Stop offset="85%" stopColor="#ffe3a8" stopOpacity="0.6" />
+            <Stop offset="88.4%" stopColor="#fff6d6" stopOpacity="1" />
+            <Stop offset="91.5%" stopColor="#ffe3a8" stopOpacity="0.55" />
+            <Stop offset="96%" stopColor="#ffb561" stopOpacity="0.14" />
+            <Stop offset="100%" stopColor="#ff8a4c" stopOpacity="0" />
+          </RadialGradient>
+          {/* Fades the ring towards the right and, below the disk, down to
+              a faint echo of its upper arc. */}
+          <LinearGradient
+            id="lensFadeX"
+            x1="114"
+            y1="0"
+            x2="286"
+            y2="0"
+            gradientUnits="userSpaceOnUse"
+          >
+            <Stop offset="0%" stopColor="#ffffff" stopOpacity="0.35" />
+            <Stop offset="22%" stopColor="#ffffff" stopOpacity="0.85" />
+            <Stop offset="45%" stopColor="#ffffff" stopOpacity="1" />
+            <Stop offset="78%" stopColor="#ffffff" stopOpacity="0.6" />
+            <Stop offset="100%" stopColor="#ffffff" stopOpacity="0.25" />
+          </LinearGradient>
+          <LinearGradient
+            id="lensFadeY"
+            x1="0"
+            y1="124"
+            x2="0"
+            y2="146"
+            gradientUnits="userSpaceOnUse"
+          >
+            <Stop offset="0%" stopColor="#000000" stopOpacity="0" />
+            <Stop offset="100%" stopColor="#000000" stopOpacity="0.6" />
+          </LinearGradient>
+          <Mask id="lensMask">
+            <Rect x="0" y="0" width="400" height="260" fill="url(#lensFadeX)" />
+            <Rect
+              x="0"
+              y="124"
+              width="400"
+              height="136"
+              fill="url(#lensFadeY)"
+            />
+          </Mask>
+          {/* The near side of the disk: a soft streak, brightest a little
+              left of centre, fading out along its length and across it. */}
+          <RadialGradient id="nearDisk" cx="44%" cy="50%" rx="56%" ry="50%">
+            <Stop offset="0%" stopColor="#fff3cc" stopOpacity="0.95" />
+            <Stop offset="30%" stopColor="#ffd08a" stopOpacity="0.62" />
+            <Stop offset="62%" stopColor="#ff9a52" stopOpacity="0.26" />
+            <Stop offset="85%" stopColor="#c24a24" stopOpacity="0.08" />
+            <Stop offset="100%" stopColor="#7a1a1c" stopOpacity="0" />
+          </RadialGradient>
+          <RadialGradient id="nearCore" cx="45%" cy="50%" rx="55%" ry="50%">
+            <Stop offset="0%" stopColor="#fffaf0" stopOpacity="0.9" />
+            <Stop offset="40%" stopColor="#ffe6b0" stopOpacity="0.5" />
+            <Stop offset="100%" stopColor="#ffb561" stopOpacity="0" />
+          </RadialGradient>
+        </Defs>
+        <G mask="url(#lensMask)">
+          <Ellipse cx="200" cy="131" rx="86" ry="83" fill="url(#lensRing)" />
+        </G>
+        <Ellipse cx="200" cy="133" rx="190" ry="12" fill="url(#nearDisk)" />
+        <Ellipse cx="196" cy="133" rx="158" ry="4.5" fill="url(#nearCore)" />
+      </Svg>
+
+      {settings.showAnimations &&
+        SPARKS.map((spark, index) => (
+          <Spark key={index} spark={spark} toPixels={toPixels} />
+        ))}
+    </Animated.View>
   );
+}
+
+/** How big the hole is drawn: START_SIZE at the opening Ace, growing
+ *  steadily to FULL_SIZE with the last of the 52 cards. */
+function growthFor(absorbed: number) {
+  const share = Math.min(1, Math.max(0, (absorbed - 1) / 51));
+  return START_SIZE + share * (FULL_SIZE - START_SIZE);
 }
 
 const styles = StyleSheet.create({

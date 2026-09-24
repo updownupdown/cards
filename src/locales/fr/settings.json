@@ -1,7 +1,6 @@
 {
   "language": {
     "label": "Langue",
-    "description": "Les noms des jeux, les règles, les menus et les objets de collection s'affichent dans cette langue.",
     "system": "Automatique ({{language}})"
   },
   "translateCollectibles": {

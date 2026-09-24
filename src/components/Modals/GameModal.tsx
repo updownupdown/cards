@@ -168,65 +168,67 @@ export default function GameModal({
             ]}
           >
             {/* Game Settings */}
-            <ModalHeading
-              color={gameInfo.gameColorPale}
-              title={t("settings.title")}
-              iconName="settings"
-            />
-
-            {localizedSettings.map((setting) => (
+            {gameSpecificSettings.length > 0 && (
               <View
-                key={setting.key}
                 style={[
                   flexStyles.colStart,
                   flexStyles.fullWidth,
-                  {
-                    alignItems: "flex-start",
-                    padding: spacing(16),
-                    borderRadius: spacing(12),
-                    backgroundColor: lightenHexColor(
-                      gameInfo.gameColorDark,
-                      0.08,
-                    ),
-                  },
+                  { gap: spacing(12), marginBottom: spacing(30) },
                 ]}
               >
-                <SettingControl
-                  label={setting.label}
-                  labelColor={gameInfo.gameColorPale}
-                  helpText={setting.description}
-                  applyBehaviorText={t(
-                    setting.applyBehavior === "immediate"
-                      ? "settings.appliesNow"
-                      : "settings.appliesNextGame",
-                  )}
-                  value={settings[setting.key]}
-                  type={setting.type}
-                  options={setting.options}
-                  onChange={(value) =>
-                    onGameSettingChange(
-                      setting.key,
-                      value as GameSettings[typeof setting.key],
-                    )
-                  }
+                <ModalHeading
+                  color={gameInfo.gameColorPale}
+                  title={t("settings.title")}
+                  iconName="settings"
                 />
+
+                {localizedSettings.map((setting) => (
+                  <View
+                    key={setting.key}
+                    style={[
+                      flexStyles.colStart,
+                      flexStyles.fullWidth,
+                      {
+                        alignItems: "flex-start",
+                        padding: spacing(16),
+                        borderRadius: spacing(12),
+                        backgroundColor: lightenHexColor(
+                          gameInfo.gameColorDark,
+                          0.08,
+                        ),
+                      },
+                    ]}
+                  >
+                    <SettingControl
+                      label={setting.label}
+                      labelColor={gameInfo.gameColorPale}
+                      helpText={setting.description}
+                      applyBehaviorText={t(
+                        setting.applyBehavior === "immediate"
+                          ? "settings.appliesNow"
+                          : "settings.appliesNextGame",
+                      )}
+                      value={settings[setting.key]}
+                      type={setting.type}
+                      options={setting.options}
+                      onChange={(value) =>
+                        onGameSettingChange(
+                          setting.key,
+                          value as GameSettings[typeof setting.key],
+                        )
+                      }
+                    />
+                  </View>
+                ))}
               </View>
-            ))}
-
-            {gameSpecificSettings.length === 0 && (
-              <Text size="sm" weight={300} color={rgba(Colors.white, 0.5)}>
-                {t("settings.none")}
-              </Text>
             )}
-
-            {gameInfo.background?.authorName && <CreditsSection />}
 
             {/* Difficulty rating */}
             <View
               style={[
                 flexStyles.colStart,
                 flexStyles.fullWidth,
-                { gap: spacing(2), marginTop: spacing(20) },
+                { gap: spacing(2) },
               ]}
             >
               <ModalHeading
@@ -255,6 +257,8 @@ export default function GameModal({
               style={{ marginTop: spacing(30) }}
             />
 
+            {gameInfo.background?.authorName && <CreditsSection />}
+
             {/* Mercy Skip: only offered in nodes mode, with a skip in hand.
                 Only one can be held at a time for now, so no count is shown;
                 the count is still tracked in case that ever changes. */}
@@ -266,7 +270,7 @@ export default function GameModal({
                   handleClose();
                   onMercySkip();
                 }}
-                theme={rgba(Colors.brightGreen, 0.2)}
+                theme={Colors.ufoGreen}
                 taller
                 fullWidth
               />
