@@ -7,6 +7,7 @@ export const devilsGrip: GameDefinition = {
   path: "/devils-grip",
   title: "Devil's Grip",
   tags: [
+    GameTag.DoubleDeckers,
     GameTag.ScoringPuzzles,
     GameTag.SequenceBuilding,
     GameTag.StockAndWaste,

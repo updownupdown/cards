@@ -1,4 +1,3 @@
-import { Button } from "@/components/Button/Button";
 import { getCollectibleCardImageSource } from "@/components/Cards/CardAssets";
 import { Text } from "@/components/common/Text";
 import ModalFull from "@/components/Modals/ModalFull";
@@ -227,7 +226,6 @@ export function NodesWinRewardPreview({
 
 function RewardDetails({ reward, chapter, quote }: RewardDetailsProps) {
   const { spacing } = useResponsiveMetrics();
-  const { t } = useTranslation("nodes");
   const language = useDisplayLanguage();
   const { translateCollectibles } = useGlobalSettings().settings;
   const [showOriginal, setShowOriginal] = useState(false);

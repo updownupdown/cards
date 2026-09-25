@@ -6,7 +6,11 @@ import { GameDefinition, GameTag } from "../games-data";
 export const alaska: GameDefinition = {
   path: "/alaska",
   title: "Alaska",
-  tags: [GameTag.TableauBuilding, GameTag.SequenceBuilding],
+  tags: [
+    GameTag.YukonFamily,
+    GameTag.TableauBuilding,
+    GameTag.SequenceBuilding,
+  ],
   rating: { complexity: 45, difficulty: 60, luck: 35 },
   thumbnail: "Alaska.webp",
   background: GAME_BACKGROUNDS.alaska,

@@ -7,7 +7,7 @@ export const tenTwentyThirty: GameDefinition = {
   path: "/ten-twenty-thirty",
   title: "Ten Twenty Thirty",
   aliases: ["Decade"],
-  tags: [GameTag.PairMatching, GameTag.EasyToLearn],
+  tags: [GameTag.PairMatching],
   rating: {
     complexity: 20,
     difficulty: 35,

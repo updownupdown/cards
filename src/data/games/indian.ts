@@ -6,7 +6,11 @@ import { GameAnimations } from "@/animations";
 export const indian: GameDefinition = {
   path: "/indian",
   title: "Indian",
-  tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
+  tags: [
+    GameTag.FortyThievesFamily,
+    GameTag.TableauBuilding,
+    GameTag.StockAndWaste,
+  ],
   rating: { complexity: 35, difficulty: 30, luck: 40 },
   thumbnail: "Indian.webp",
   background: GAME_BACKGROUNDS.indianLandscape,

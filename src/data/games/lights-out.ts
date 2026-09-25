@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const lightsOut: GameDefinition = {
   path: "/lights-out",
   title: "Lights Out",
-  tags: [GameTag.EasyToLearn, GameTag.SpatialControl],
+  tags: [GameTag.Puzzles, GameTag.SpatialControl],
   // Scored in moves or guesses: fewer is better.
   lowerScoreIsBetter: true,
   rating: { complexity: 20, difficulty: 55, luck: 0 },

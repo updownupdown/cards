@@ -12,7 +12,6 @@ import {
   doubleTapCardId,
   outcome,
   pressCardId,
-  pressZone,
   renderGame,
   run,
 } from "../../../jest/game-harness";

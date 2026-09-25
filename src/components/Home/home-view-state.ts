@@ -29,3 +29,16 @@ export const subscribeActiveHomeTab = (listener: () => void) => {
 export const selectNodesHomeTab = () => {
   setActiveHomeTab(NODES_HOME_TAB_INDEX);
 };
+
+/** A category the Collect tab should open (and scroll to) when it next shows. */
+let pendingCollectTag: string | null = null;
+
+export const requestCollectTag = (tag: string) => {
+  pendingCollectTag = tag;
+};
+
+export const getPendingCollectTag = () => pendingCollectTag;
+
+export const clearPendingCollectTag = () => {
+  pendingCollectTag = null;
+};

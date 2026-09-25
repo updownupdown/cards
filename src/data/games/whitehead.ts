@@ -6,7 +6,11 @@ import { GameAnimations } from "@/animations";
 export const whitehead: GameDefinition = {
   path: "/whitehead",
   title: "Whitehead",
-  tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
+  tags: [
+    GameTag.KlondikeFamily,
+    GameTag.TableauBuilding,
+    GameTag.StockAndWaste,
+  ],
   rating: { complexity: 35, difficulty: 50, luck: 40 },
   background: GAME_BACKGROUNDS.bloomingTree,
   animation: GameAnimations.Pollen,

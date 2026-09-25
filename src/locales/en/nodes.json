@@ -10,7 +10,7 @@
     "quote": "Quote {{number}}",
     "dismiss": "Dismiss collectible notification",
     "earned": "New collectible earned!",
-    "unlocked": "New nodes unlocked!",
+    "unlocked": "New games unlocked!",
     "unlockedGames_one": "Unlocked game:",
     "unlockedGames_other": "Unlocked games:"
   },
@@ -43,5 +43,15 @@
   },
   "original": {
     "label": "Show original"
+  },
+  "intro": {
+    "title": "Campaign Mode",
+    "paragraphs": [
+      "The Campaign is a journey through every game in Solitarius, laid out as a galaxy. You start at Klondike, near the centre, and the games get harder as you travel outwards.",
+      "Win a game to unlock the games connected to it. Only games played from this map count, so tap a game here and press Play.",
+      "Each game also holds collectibles: chapters of the Tao Te Ching and quote cards. Win a game to collect the next one, and win it again for the rest.",
+      "Stuck on a hard game? Keep an eye on the sky. A passing traveller may offer you a way past it."
+    ],
+    "close": "Close the Campaign introduction"
   }
 }

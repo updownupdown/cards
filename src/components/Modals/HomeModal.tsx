@@ -9,6 +9,7 @@ import {
   resetNodesProgress,
 } from "@/data/nodes-progress";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
+import { getTestNodePaths, getTestWonPaths } from "@/data/test-progress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
@@ -27,6 +28,7 @@ import {
   type LanguagePreference,
 } from "@/i18n/languages";
 import { isLocalDevEnvironment } from "@/utils/utils";
+import Constants from "expo-constants";
 import { router } from "expo-router";
 import React from "react";
 import { Linking, Platform, ScrollView, View } from "react-native";
@@ -36,6 +38,9 @@ import { SelectControl } from "../common/SelectControl";
 import { SettingControl } from "../common/SettingControl";
 import { Text } from "../common/Text";
 import ModalFull from "./ModalFull";
+
+/** App version and build type; not translated, since it's for bug reports. */
+const BUILD_LABEL = `v${Constants.expoConfig?.version ?? "?"} · ${__DEV__ ? "dev" : "release"}`;
 
 interface Props {
   onClose: () => void;
@@ -108,7 +113,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
           flexStyles.fullWidth,
           {
             flexGrow: 1,
-            gap: spacing(30),
+            gap: spacing(40),
             paddingVertical: spacing(30),
           },
         ]}
@@ -118,7 +123,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
           style={[
             flexStyles.colCentered,
             flexStyles.fullWidth,
-            { gap: spacing(24) },
+            { gap: spacing(30) },
           ]}
         >
           {/* Language: follow the phone (Auto), or pick one. */}
@@ -230,9 +235,10 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
             onPress={async () => {
               setIsPopulatingTestData(true);
               try {
+                const nodePaths = getTestNodePaths();
                 await Promise.all([
-                  populateTestGameProgress(),
-                  populateTestNodesProgress(),
+                  populateTestGameProgress(getTestWonPaths(nodePaths)),
+                  populateTestNodesProgress(nodePaths),
                 ]);
                 onHomeDataInvalidated();
                 onClose();
@@ -248,7 +254,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
           style={[
             flexStyles.colCentered,
             flexStyles.fullWidth,
-            { gap: spacing(6), marginTop: "auto" },
+            { gap: spacing(16), marginTop: "auto" },
           ]}
         >
           <Text {...footerText} style={{ textAlign: "center" }}>
@@ -326,6 +332,11 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               onPress={() => setIsResetConfirmationVisible(true)}
             />
           )}
+
+          {/* Which build this is, since dev and release installs look alike. */}
+          <Text {...footerText} style={{ textAlign: "center" }}>
+            {BUILD_LABEL}
+          </Text>
         </View>
       </ScrollView>
     </ModalFull>

@@ -7,7 +7,7 @@ export const jailbreak: GameDefinition = {
   path: "/jailbreak",
   title: "Jailbreak",
   aliases: ["Joker Escape"],
-  tags: [GameTag.PairMatching, GameTag.EasyToLearn],
+  tags: [GameTag.PairMatching],
   rating: {
     complexity: 25,
     difficulty: 40,

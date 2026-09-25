@@ -43,5 +43,15 @@
   },
   "original": {
     "label": "Orijinalini göster"
+  },
+  "intro": {
+    "title": "Kampanya Modu",
+    "paragraphs": [
+      "Kampanya, Solitarius'taki tüm oyunlar arasında bir galaksi gibi dizilmiş bir yolculuktur. Merkeze yakın Klondike'tan başlarsın ve dışarı doğru ilerledikçe oyunlar zorlaşır.",
+      "Bir oyunu kazanarak ona bağlı oyunların kilidini aç. Yalnızca bu haritadan oynanan oyunlar sayılır; bu yüzden buradan bir oyuna dokun ve Oyna'ya bas.",
+      "Her oyunda ayrıca koleksiyon parçaları vardır: Tao Te Ching bölümleri ve alıntı kartları. Sıradakini toplamak için oyunu kazan, geri kalanlar için yeniden kazan.",
+      "Zor bir oyunda takıldın mı? Gözün gökyüzünde olsun. Oradan geçen bir yolcu, onu aşman için sana bir yol sunabilir."
+    ],
+    "close": "Kampanya tanıtımını kapat"
   }
 }

@@ -3,16 +3,12 @@
     "home": "Home",
     "collect": "Collect",
     "search": "Search",
-    "nodes": "Nodes"
+    "nodes": "Campaign"
   },
   "cardSize": {
     "small": "List",
     "medium": "Cards",
     "large": "Details"
-  },
-  "random": {
-    "roll": "Random games",
-    "clear": "Clear random"
   },
   "favorites": {
     "add": "Add to favorites",
@@ -29,26 +25,65 @@
   },
   "sections": {
     "localOnly": "Local-only Games",
-    "startEasy": "Start Easy!",
-    "startEasyIntro": "Here are some easy-to-learn games to get started. You can find more in the Collect tab.",
-    "discoverMore": "Discover more games",
     "gameOfTheDay": "Game of the Day",
     "jumpBackIn": "Jump Back In",
-    "favorites": "Favorites",
-    "becauseYouLiked": "Because you liked \"{{title}}\""
+    "favorites": "Favorites"
+  },
+  "guide": {
+    "easy": {
+      "title": "Start with easy games",
+      "body": "Get started by trying some quick to learn, easy to win games."
+    },
+    "campaign": {
+      "title": "Campaign Mode",
+      "body": "Explore a universe of games: win games to unlock your way to the edge of the galaxy, and collect rewards along the way!",
+      "start": "Start Campaign",
+      "resume": "Resume Campaign"
+    },
+    "genres": {
+      "title": "Collect Them All!",
+      "body": "Explore {{games}} classic and modern games across {{categories}} categories; there's something for everyone!",
+      "gameCount_one": "{{count}} game",
+      "gameCount_other": "{{count}} games"
+    },
+    "dismiss": "Dismiss"
+  },
+  "gameOfTheDay": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "wonToday": "Won today",
+    "won": "Won",
+    "streak_one": "{{count}}-day streak",
+    "streak_other": "{{count}}-day streak"
+  },
+  "deal": {
+    "title": "Random Deal",
+    "intro": "Swipe left or right to pass, or tap to play."
   },
   "collect": {
-    "tagProgress": "{{tag}}, {{percentage}}% won"
+    "title": "Win Them All!",
+    "overall": "{{won}} of {{total}} games won",
+    "tagProgress": "{{tag}}: {{won}} of {{total}} won"
   },
   "tags": {
-    "EasyToLearn": "Easy to Learn",
-    "TableauBuilding": "Tableau Solitaire",
-    "ModernMechanics": "Modern Mechanics",
-    "DungeonCrawler": "Dungeon Crawler",
-    "CardCombat": "Card Combat",
-    "GridPlacement": "Grid Placement",
+    "KlondikeFamily": "Klondike Family",
+    "YukonFamily": "Yukon Family",
+    "FreeCellFamily": "FreeCell Family",
+    "SpiderFamily": "Spider Family",
+    "FortyThievesFamily": "Forty Thieves Family",
+    "CastlesAndFans": "Castles & Fans",
+    "FoundationBuilders": "Foundation Builders",
+    "DoubleDeckers": "Double-Deckers",
+    "ClearTheBoard": "Clear the Board",
+    "PairMatching": "Pairs & Sums",
+    "Puzzles": "Puzzles",
+    "Sports": "Sports",
     "PokerAndCribbage": "Poker & Cribbage",
-    "PairMatching": "Pair Matching",
+    "CardCombat": "Card Combat",
+    "DungeonCrawler": "Dungeon Crawler",
+    "ModernMechanics": "Modern Mechanics",
+    "TableauBuilding": "Tableau Solitaire",
+    "GridPlacement": "Grid Placement",
     "SequenceBuilding": "Sequence Building",
     "StockAndWaste": "Stock & Waste",
     "ScoringPuzzles": "Scoring Puzzles",
@@ -56,26 +91,35 @@
   },
   "statsTab": {
     "personas": {
-      "nemesis": {
-        "title": "The Nemesis",
-        "subtitle": "Lowest win rate"
-      },
       "comfort": {
         "title": "The Comfort Pick",
-        "subtitle": "Highest win rate"
+        "subtitle": "Your highest win rate"
+      },
+      "nemesis": {
+        "title": "The Nemesis",
+        "subtitle": "Your lowest win rate"
       },
       "whale": {
         "title": "The White Whale",
-        "subtitle": "Most attempts without wins"
+        "subtitle": "Most plays without a win"
       },
-      "underdog": {
-        "title": "The Underdog",
-        "subtitle": "High win rate, low attempts"
+      "faithful": {
+        "title": "Old Faithful",
+        "subtitle": "Your most played game"
+      },
+      "rivalry": {
+        "title": "The Rivalry",
+        "subtitle": "Closest to a 50/50 split"
+      },
+      "natural": {
+        "title": "The Natural",
+        "subtitle": "3+ wins in the fewest plays"
       }
     },
     "sortBy": "Sort by {{column}}",
     "columns": {
       "game": "Game",
+      "played": "Played",
       "won": "Won",
       "lost": "Lost",
       "winPercent": "W%",
@@ -94,12 +138,15 @@
       "title": "Uh-oh, no stats to show!",
       "body": "Come back after playing a few games to see your stats here."
     },
-    "fullStats": {
-      "title": "Full Stats",
-      "noStats": "No stats to show",
-      "onlyPlayed": "Only played games are shown"
+    "total": "Total",
+    "headline": {
+      "played": "games played",
+      "won": "games won",
+      "winRate": "win rate",
+      "tried": "games tried"
     },
-    "total": "Total"
+    "top": "Top",
+    "backToTop": "Back to top"
   },
   "statsModal": {
     "title": "Stats"

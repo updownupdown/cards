@@ -395,6 +395,26 @@
       }
     }
   },
+  "pagoda": {
+    "pagodaDifficulty": {
+      "hash": "81b4ccab",
+      "value": {
+        "description": "Stabilisce quante carte può contenere il vassoio.",
+        "label": "Difficoltà",
+        "options": [
+          {
+            "label": "Facile (7 carte)"
+          },
+          {
+            "label": "Normale (6 carte)"
+          },
+          {
+            "label": "Difficile (5 carte)"
+          }
+        ]
+      }
+    }
+  },
   "pocket-poker": {
     "pokerDifficulty": {
       "hash": "505d7998",

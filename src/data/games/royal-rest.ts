@@ -9,7 +9,7 @@ export const royalRest: GameDefinition = {
   thumbnail: "RoyalRest.webp",
   background: GAME_BACKGROUNDS.cabinInterior,
   animation: GameAnimations.Dust,
-  tags: [GameTag.EasyToLearn, GameTag.SequenceBuilding],
+  tags: [GameTag.PairMatching, GameTag.SequenceBuilding],
   rating: {
     complexity: 30,
     difficulty: 45,

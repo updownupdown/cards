@@ -11,6 +11,7 @@ import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
+import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
@@ -287,6 +288,9 @@ export default function FortyThieves() {
         isSelected: isHoverTargetTop,
         isVisible: !isBeingDragged,
         animDuration,
+        // Foundation cards are locked: taps go through to the zone, which
+        // places the selected card.
+        clickThroughCards: true,
       };
     }
 
@@ -860,13 +864,15 @@ export default function FortyThieves() {
           {cardMap}
 
           <View
-            style={{
-              ...StyleSheet.absoluteFill,
-              zIndex: 3000,
-              touchAction: "none",
-              overscrollBehaviorX: "contain",
-              pointerEvents: "box-none",
-            }}
+            style={[
+              pointerEventsStyles.boxNone,
+              {
+                ...StyleSheet.absoluteFill,
+                zIndex: 3000,
+                touchAction: "none",
+                overscrollBehaviorX: "contain",
+              },
+            ]}
           >
             {stockTapRect && (
               <Pressable

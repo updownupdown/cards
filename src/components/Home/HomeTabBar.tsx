@@ -21,12 +21,13 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 
 export type HomeTabKey = "home" | "collect" | "search" | "nodes";
 
 export const HOME_TABS: { key: HomeTabKey; icon: IconName }[] = [
   { key: "home", icon: "home" },
-  { key: "nodes", icon: "nodes" },
+  { key: "nodes", icon: "milky-way" },
   { key: "collect", icon: "trophy" },
   { key: "search", icon: "search" },
 ];
@@ -66,21 +67,24 @@ export function HomeTabBar({
   return (
     <RNAnimated.View
       onLayout={onLayout}
-      style={{
-        position: Platform.OS === "web" ? "fixed" : "absolute",
-        left: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: 8,
-        pointerEvents: "box-none",
-        // Rides up above the keyboard with the search box, rather than
-        // being covered by it.
-        transform: [{ translateY: keyboardLift }],
-      }}
+      style={[
+        pointerEventsStyles.boxNone,
+        {
+          position: Platform.OS === "web" ? "fixed" : "absolute",
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 8,
+          // Rides up above the keyboard with the search box, rather than
+          // being covered by it.
+          transform: [{ translateY: keyboardLift }],
+        },
+      ]}
     >
       {/* The header's fade, mirrored: content scrolling past the floating pill
-          dissolves into the same colour at both ends of the screen, and the
-          fade runs to the very bottom so it covers the safe-area inset too. */}
+          dissolves into the same colour at both ends of the screen. On a
+          phone it runs on under the system navigation buttons, deepening but
+          never solid, so the starfield still shows faintly behind them. */}
       <Animated.View
         testID="home-tab-bar-background"
         style={[
@@ -92,11 +96,26 @@ export function HomeTabBar({
         <LinearGradient
           colors={[
             rgba(Colors.starfieldOverlay, 0),
-            rgba(Colors.starfieldOverlay, 1),
+            rgba(Colors.starfieldOverlay, insets.bottom > 0 ? 0.6 : 1),
           ]}
           start={{ x: 0.5, y: 0 }}
           end={{ x: 0.5, y: 1 }}
-          style={StyleSheet.absoluteFill}
+          style={[StyleSheet.absoluteFill, { bottom: insets.bottom }]}
+        />
+        <LinearGradient
+          colors={[
+            rgba(Colors.starfieldOverlay, 0.6),
+            rgba(Colors.starfieldOverlay, 0.8),
+          ]}
+          start={{ x: 0.5, y: 0 }}
+          end={{ x: 0.5, y: 1 }}
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            bottom: 0,
+            height: insets.bottom,
+          }}
         />
       </Animated.View>
 

@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const singularity: GameDefinition = {
   path: "/singularity",
   title: "Singularity",
-  tags: [GameTag.EasyToLearn, GameTag.SequenceBuilding],
+  tags: [GameTag.FoundationBuilders, GameTag.SequenceBuilding],
   rating: {
     complexity: 25,
     difficulty: 55,

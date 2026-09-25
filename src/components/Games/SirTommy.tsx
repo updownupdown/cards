@@ -6,7 +6,6 @@ import {
   cardDims,
   createDeck,
   flipAllToBack,
-  flipToBack,
   flipToFace,
   rankValue,
   shuffle,

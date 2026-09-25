@@ -6,7 +6,11 @@ import { GameAnimations } from "@/animations";
 export const busyAces: GameDefinition = {
   path: "/busy-aces",
   title: "Busy Aces",
-  tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
+  tags: [
+    GameTag.FortyThievesFamily,
+    GameTag.TableauBuilding,
+    GameTag.StockAndWaste,
+  ],
   rating: { complexity: 35, difficulty: 55, luck: 50 },
   thumbnail: "BusyAces.webp",
   background: GAME_BACKGROUNDS.modernMetal1,

@@ -12,6 +12,7 @@ import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { Button } from "../Button/Button";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
@@ -853,13 +854,15 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
         )}
 
         <View
-          style={{
-            ...StyleSheet.absoluteFillObject,
-            zIndex: 3000,
-            touchAction: "none",
-            overscrollBehaviorX: "contain",
-            pointerEvents: "box-none",
-          }}
+          style={[
+            pointerEventsStyles.boxNone,
+            {
+              ...StyleSheet.absoluteFillObject,
+              zIndex: 3000,
+              touchAction: "none",
+              overscrollBehaviorX: "contain",
+            },
+          ]}
         >
           {interactionTargets}
         </View>

@@ -14,6 +14,11 @@
     "youClearedTheBoard": "Vous avez vidé le plateau !",
     "noAdjacentRankRemains": "Plus aucun rang adjacent."
   },
+  "apothecary": {
+    "dish": "Coupelle",
+    "allSealed": "Tous les bocaux sont scellés en {{count}} coups !",
+    "noPoursLeft": "Plus aucune carte ne peut être versée nulle part."
+  },
   "ascent": {
     "lhotseRoutesNeed2Cards": "Lhotse : les voies exigent au moins 2 cartes.",
     "gasherbrumIAnchorMustBe": "Gasherbrum I : l'ancre doit être paire.",
@@ -366,6 +371,11 @@
     "gotAllJewels": "Vous avez les quatre joyaux et avez trouvé la sortie !",
     "lostWithLoot": "Vous êtes perdu dans le donjon sans issue ! Vous mourez avec votre butin.",
     "lostInDungeon": "Vous êtes perdu dans le donjon sans issue !"
+  },
+  "pagoda": {
+    "shrine": "Sanctuaire",
+    "shrineComplete": "Chaque série repose dans le sanctuaire !",
+    "trayFull": "Le plateau est plein."
   },
   "pocketPoker": {
     "youHit10PointsYou": "Vous atteignez 10 points, vous gagnez !",

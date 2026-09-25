@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const simpleSimon: GameDefinition = {
   path: "/simple-simon",
   title: "Simple Simon",
-  tags: [GameTag.SequenceBuilding],
+  tags: [GameTag.SpiderFamily, GameTag.SequenceBuilding],
   rating: { complexity: 35, difficulty: 55, luck: 25 },
   thumbnail: "SimpleSimon.webp",
   background: GAME_BACKGROUNDS.modernStairs,

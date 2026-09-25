@@ -1,27 +1,38 @@
 import { HomeCard } from "@/components/Home/HomeCard";
-import { COLLECT_HOME_TAB_INDEX } from "@/components/Home/home-view-state";
+import { NODES_HOME_TAB_INDEX } from "@/components/Home/home-view-state";
 import { HomeSectionTitle } from "@/components/Home/HomeSectionTitle";
-import { getGameOfTheDayPath } from "@/data/game-of-the-day";
-import { GameMenuInfo, GameTag, isGameEnabled } from "@/data/games-data";
+import { DealMeAGame } from "@/components/Home/DealMeAGame";
+import { GameOfTheDaySection } from "@/components/Home/GameOfTheDaySection";
+import { HomeCardFact } from "@/components/Home/HomeCardFact";
+import {
+  type GuideBox,
+  StartHereGuide,
+} from "@/components/Home/StartHereGuide";
+import { isGameEnabled } from "@/data/games-data";
 import { GAMES_DATA } from "@/data/games-registry";
+import { getNextNodePaths, NODES_START_PATH } from "@/data/nodes-map";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
+import { useNodesProgress } from "@/hooks/useNodesProgress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle } from "@/i18n/content";
-import { Colors, layoutDims } from "@/styles/styles";
+import { Colors, layoutDims, rgba } from "@/styles/styles";
 import { isLocalDevEnvironment, roundToPixel } from "@/utils/utils";
 import { useMemo } from "react";
 import { ScrollView, View } from "react-native";
-import { Text } from "../common/Text";
 import { Button } from "../Button/Button";
 
 type HomeTabProps = {
   allEnabledGames: HomeGameEntry[];
-  allEnabledGamePaths: string[];
+  unplayedGamePaths: string[];
   favorites: Set<string>;
   recentPaths: string[];
   onToggleFavorite: (path: string) => void;
+  /** The guide waits for settings, so it never flashes up and away. */
+  settingsLoaded: boolean;
+  guideDismissed: Record<GuideBox, boolean>;
+  onDismissGuide: (box: GuideBox) => void;
   contentPaddingTop: number;
   contentPaddingBottom: number;
   onSelectTab: (index: number) => void;
@@ -30,10 +41,13 @@ type HomeTabProps = {
 
 export function HomeTab({
   allEnabledGames,
-  allEnabledGamePaths,
+  unplayedGamePaths,
   favorites,
   recentPaths,
   onToggleFavorite,
+  settingsLoaded,
+  guideDismissed,
+  onDismissGuide,
   contentPaddingTop,
   contentPaddingBottom,
   onSelectTab,
@@ -61,14 +75,6 @@ export function HomeTab({
     ) - 1,
   );
 
-  const gameOfTheDay = useMemo(() => {
-    const path = getGameOfTheDayPath(allEnabledGamePaths);
-    if (!path) return null;
-    const game = GAMES_DATA[path];
-    if (!game) return null;
-    return { path, game } as { path: string; game: GameMenuInfo };
-  }, [allEnabledGamePaths]);
-
   const jumpBackInGames = useMemo(
     () =>
       recentPaths
@@ -92,324 +98,210 @@ export function HomeTab({
     [favorites, language],
   );
 
-  const becauseYouLiked = useMemo(() => {
-    const favoritePaths = Array.from(favorites).filter((path) =>
-      isGameEnabled(GAMES_DATA[path]),
-    );
-    if (favoritePaths.length === 0) {
-      return null;
-    }
-
-    const seedIndex = Math.floor(Math.random() * favoritePaths.length);
-    const likedPath = favoritePaths[seedIndex];
-    const likedGame = GAMES_DATA[likedPath];
-    const likedTags = likedGame?.tags ?? [];
-
-    if (likedTags.length === 0) {
-      return null;
-    }
-
-    const related = allEnabledGames
-      .filter(
-        ([path, game]) =>
-          path !== likedPath &&
-          (game.tags ?? []).some((tag) => likedTags.includes(tag)),
-      )
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 3);
-
-    if (related.length === 0) {
-      return null;
-    }
-
-    return {
-      title: localizeGameTitle(likedGame, likedPath, language),
-      games: related,
-    };
-  }, [allEnabledGames, language]);
-
-  const fewPlayedGames = recentPaths.length < 3;
-
-  const getStartedGames = useMemo(() => {
-    const easyToLearnGames = allEnabledGames.filter(([, game]) =>
-      (game.tags ?? []).includes(GameTag.EasyToLearn),
-    );
-    return easyToLearnGames.sort(() => Math.random() - 0.5).slice(0, 5);
-  }, [allEnabledGames]);
+  const {
+    isLoading: nodesLoading,
+    wonPaths,
+    unlockedPaths,
+  } = useNodesProgress();
+  const nextCampaignPaths = useMemo(
+    () =>
+      getNextNodePaths(wonPaths, unlockedPaths).filter((path) =>
+        isGameEnabled(GAMES_DATA[path]),
+      ),
+    [wonPaths, unlockedPaths],
+  );
+  // The guide's Campaign box is for newcomers; a few games in, the map's
+  // next games take its place.
+  const campaignNewcomer = !nodesLoading && unlockedPaths.size < 3;
+  const showCampaignGuide =
+    settingsLoaded && campaignNewcomer && !guideDismissed.campaign;
+  const showCampaign =
+    settingsLoaded &&
+    !nodesLoading &&
+    !showCampaignGuide &&
+    nextCampaignPaths.length > 0;
 
   const localOnlyGames = Object.entries(GAMES_DATA).filter(
     ([, game]) => game.enabledOnLocalOnly,
   );
 
   return (
-    <ScrollView
-      style={{ flex: 1 }}
-      contentContainerStyle={{
-        paddingTop: contentPaddingTop,
-        paddingBottom: contentPaddingBottom,
-        gap: spacing(40),
-      }}
-      onScroll={(event) =>
-        onScrolledChange(event.nativeEvent.contentOffset.y > 1)
-      }
-      scrollEventThrottle={16}
-      showsVerticalScrollIndicator={false}
-    >
-      {/* Local-only games */}
-      {isLocalDevEnvironment() && localOnlyGames.length > 0 && (
-        <View
-          style={{
-            width: "100%",
-            maxWidth: contentMaxWidth,
-            alignSelf: "center",
-          }}
-        >
-          <HomeSectionTitle
-            title={t("sections.localOnly")}
-            pageSidePadding={scaledPageSidePadding}
-            contentMaxWidth={contentMaxWidth}
-          />
-
+    <View style={{ flex: 1 }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{
+          paddingTop: contentPaddingTop,
+          paddingBottom: contentPaddingBottom,
+          gap: spacing(52),
+        }}
+        onScroll={(event) =>
+          onScrolledChange(event.nativeEvent.contentOffset.y > 1)
+        }
+        scrollEventThrottle={16}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Local-only games */}
+        {isLocalDevEnvironment() && localOnlyGames.length > 0 && (
           <View
             style={{
               width: "100%",
-              paddingHorizontal: scaledPageSidePadding,
-              paddingTop: sectionTopPadding,
-              paddingBottom: sectionBottomPadding,
-              gap: cardGap,
+              maxWidth: contentMaxWidth,
+              alignSelf: "center",
             }}
           >
-            {localOnlyGames.map(([path, game]) => (
-              <HomeCard
-                key={path}
-                path={path}
-                game={game}
-                size="small"
-                onToggleFavorite={onToggleFavorite}
-                isFavorite={favorites.has(path)}
-                style={{ width: "100%" }}
-              />
-            ))}
-          </View>
-        </View>
-      )}
+            <HomeSectionTitle
+              title={t("sections.localOnly")}
+              pageSidePadding={scaledPageSidePadding}
+              contentMaxWidth={contentMaxWidth}
+            />
 
-      {/* No played games */}
-      {fewPlayedGames && (
-        <View
-          style={{
-            width: "100%",
-            maxWidth: contentMaxWidth,
-            alignSelf: "center",
-            paddingHorizontal: scaledPageSidePadding,
-          }}
-        >
-          <HomeSectionTitle
-            title={t("sections.startEasy")}
-            iconName="spades"
-            pageSidePadding={0}
-            contentMaxWidth={contentMaxWidth}
-          />
-
-          {/* Recommend games from the easy to learn tag */}
-          <View
-            style={{
-              width: "100%",
-              paddingTop: sectionTopPadding,
-              paddingBottom: sectionBottomPadding,
-              gap: cardGap,
-            }}
-          >
-            <Text style={{ paddingBottom: spacing(20) }}>
-              {t("sections.startEasyIntro")}
-            </Text>
-
-            {getStartedGames.map(([path, game]) => (
-              <HomeCard
-                key={path}
-                path={path}
-                game={game}
-                size="large"
-                onToggleFavorite={onToggleFavorite}
-                isFavorite={favorites.has(path)}
-                style={{ width: "100%" }}
-              />
-            ))}
-
-            <Button
-              onPress={() => {
-                // Switch to the Collect tab
-                onSelectTab(COLLECT_HOME_TAB_INDEX);
+            <View
+              style={{
+                width: "100%",
+                paddingHorizontal: scaledPageSidePadding,
+                paddingTop: sectionTopPadding,
+                paddingBottom: sectionBottomPadding,
+                gap: cardGap,
               }}
-              text={t("sections.discoverMore")}
-              style={{ marginTop: spacing(20) }}
-              textStyle={{ textTransform: "none" }}
-              theme={Colors.suitsRed}
-              taller
+            >
+              {localOnlyGames.map(([path, game]) => (
+                <HomeCard
+                  key={path}
+                  path={path}
+                  game={game}
+                  size="small"
+                  onToggleFavorite={onToggleFavorite}
+                  isFavorite={favorites.has(path)}
+                  style={{ width: "100%" }}
+                />
+              ))}
+            </View>
+          </View>
+        )}
+
+        {/* Getting started. Held back until the Campaign progress is in,
+            which decides whether its box shows: drawing the others first
+            would shove them down, animated, when it arrives. */}
+        {settingsLoaded && !nodesLoading && (
+          <StartHereGuide
+            allEnabledGames={allEnabledGames}
+            dismissed={guideDismissed}
+            showCampaign={campaignNewcomer}
+            campaignStarted={unlockedPaths.size > 1}
+            campaignNextPath={nextCampaignPaths[0] ?? NODES_START_PATH}
+            favorites={favorites}
+            onToggleFavorite={onToggleFavorite}
+            onSelectTab={onSelectTab}
+            onDismiss={onDismissGuide}
+            pageSidePadding={scaledPageSidePadding}
+            contentMaxWidth={contentMaxWidth}
+          />
+        )}
+
+        <GameOfTheDaySection
+          favorites={favorites}
+          onToggleFavorite={onToggleFavorite}
+          pageSidePadding={scaledPageSidePadding}
+          contentMaxWidth={contentMaxWidth}
+          pageWidth={renderedContentWidth}
+        />
+
+        {/* Jump back in */}
+        {jumpBackInGames.length > 0 && (
+          <View
+            style={{
+              width: "100%",
+              maxWidth: contentMaxWidth,
+              alignSelf: "center",
+            }}
+          >
+            <HomeSectionTitle
+              title={t("sections.jumpBackIn")}
+              iconName="recent"
+              pageSidePadding={scaledPageSidePadding}
+              contentMaxWidth={contentMaxWidth}
             />
+            <View
+              style={{
+                width: "100%",
+                paddingHorizontal: scaledPageSidePadding,
+                paddingTop: sectionTopPadding,
+                paddingBottom: sectionBottomPadding,
+                gap: cardGap,
+                flexDirection: "row",
+                flexWrap: "wrap",
+              }}
+            >
+              {jumpBackInGames.map(([path, game]) => (
+                <HomeCard
+                  key={path}
+                  path={path}
+                  game={game}
+                  size="medium"
+                  onToggleFavorite={onToggleFavorite}
+                  isFavorite={favorites.has(path)}
+                  style={{ width: mediumCardWidth, flexShrink: 0 }}
+                />
+              ))}
+            </View>
           </View>
-        </View>
-      )}
+        )}
 
-      {/* Game of the Day */}
-      {gameOfTheDay && (
-        <View
-          style={{
-            width: "100%",
-            maxWidth: contentMaxWidth,
-            alignSelf: "center",
-          }}
-        >
-          <HomeSectionTitle
-            title={t("sections.gameOfTheDay")}
-            iconName="featured"
-            pageSidePadding={scaledPageSidePadding}
-            contentMaxWidth={contentMaxWidth}
-          />
-
+        {/* Favorites */}
+        {favoriteGames.length > 0 && (
           <View
             style={{
               width: "100%",
-              paddingHorizontal: scaledPageSidePadding,
-              paddingTop: sectionTopPadding,
-              paddingBottom: sectionBottomPadding,
+              maxWidth: contentMaxWidth,
+              alignSelf: "center",
             }}
           >
-            <HomeCard
-              path={gameOfTheDay.path}
-              game={gameOfTheDay.game}
-              size="large"
-              onToggleFavorite={onToggleFavorite}
-              isFavorite={favorites.has(gameOfTheDay.path)}
-              style={{ width: "100%" }}
+            <HomeSectionTitle
+              title={t("sections.favorites")}
+              iconName="star"
+              pageSidePadding={scaledPageSidePadding}
+              contentMaxWidth={contentMaxWidth}
             />
+            <View
+              style={{
+                width: "100%",
+                paddingHorizontal: scaledPageSidePadding,
+                paddingTop: sectionTopPadding,
+                paddingBottom: sectionBottomPadding,
+                gap: cardGap,
+                flexDirection: "row",
+                flexWrap: "wrap",
+              }}
+            >
+              {favoriteGames.map(([path, game]) => (
+                <HomeCard
+                  key={path}
+                  path={path}
+                  game={game}
+                  size="medium"
+                  onToggleFavorite={onToggleFavorite}
+                  isFavorite={favorites.has(path)}
+                  style={{ width: mediumCardWidth, flexShrink: 0 }}
+                />
+              ))}
+            </View>
           </View>
-        </View>
-      )}
+        )}
 
-      {/* Jump back in */}
-      {jumpBackInGames.length > 0 && (
-        <View
-          style={{
-            width: "100%",
-            maxWidth: contentMaxWidth,
-            alignSelf: "center",
-          }}
-        >
-          <HomeSectionTitle
-            title={t("sections.jumpBackIn")}
-            iconName="recent"
-            pageSidePadding={scaledPageSidePadding}
-            contentMaxWidth={contentMaxWidth}
-          />
-          <View
-            style={{
-              width: "100%",
-              paddingHorizontal: scaledPageSidePadding,
-              paddingTop: sectionTopPadding,
-              paddingBottom: sectionBottomPadding,
-              gap: cardGap,
-              flexDirection: "row",
-              flexWrap: "wrap",
-            }}
-          >
-            {jumpBackInGames.map(([path, game]) => (
-              <HomeCard
-                key={path}
-                path={path}
-                game={game}
-                size="medium"
-                onToggleFavorite={onToggleFavorite}
-                isFavorite={favorites.has(path)}
-                style={{ width: mediumCardWidth, flexShrink: 0 }}
-              />
-            ))}
-          </View>
-        </View>
-      )}
+        {/* Random deal */}
+        <DealMeAGame
+          allEnabledGames={allEnabledGames}
+          unplayedGamePaths={unplayedGamePaths}
+          favorites={favorites}
+          pageSidePadding={scaledPageSidePadding}
+          contentMaxWidth={contentMaxWidth}
+        />
 
-      {/* Favorites */}
-      {favoriteGames.length > 0 && (
-        <View
-          style={{
-            width: "100%",
-            maxWidth: contentMaxWidth,
-            alignSelf: "center",
-          }}
-        >
-          <HomeSectionTitle
-            title={t("sections.favorites")}
-            iconName="star"
-            pageSidePadding={scaledPageSidePadding}
-            contentMaxWidth={contentMaxWidth}
-          />
-          <View
-            style={{
-              width: "100%",
-              paddingHorizontal: scaledPageSidePadding,
-              paddingTop: sectionTopPadding,
-              paddingBottom: sectionBottomPadding,
-              gap: cardGap,
-              flexDirection: "row",
-              flexWrap: "wrap",
-            }}
-          >
-            {favoriteGames.map(([path, game]) => (
-              <HomeCard
-                key={path}
-                path={path}
-                game={game}
-                size="medium"
-                onToggleFavorite={onToggleFavorite}
-                isFavorite={favorites.has(path)}
-                style={{ width: mediumCardWidth, flexShrink: 0 }}
-              />
-            ))}
-          </View>
-        </View>
-      )}
-
-      {/* Because you liked ... */}
-      {becauseYouLiked && (
-        <View
-          style={{
-            width: "100%",
-            maxWidth: contentMaxWidth,
-            alignSelf: "center",
-          }}
-        >
-          <HomeSectionTitle
-            title={t("sections.becauseYouLiked", {
-              title: becauseYouLiked.title,
-            })}
-            iconName="star"
-            pageSidePadding={scaledPageSidePadding}
-            contentMaxWidth={contentMaxWidth}
-          />
-
-          <View
-            style={{
-              width: "100%",
-              paddingHorizontal: scaledPageSidePadding,
-              paddingTop: sectionTopPadding,
-              paddingBottom: sectionBottomPadding,
-              gap: cardGap,
-            }}
-          >
-            {becauseYouLiked.games.map(([path, game]) => (
-              <HomeCard
-                key={path}
-                path={path}
-                game={game}
-                size="large"
-                onToggleFavorite={onToggleFavorite}
-                isFavorite={favorites.has(path)}
-                style={{ width: "100%" }}
-              />
-            ))}
-          </View>
-        </View>
-      )}
-    </ScrollView>
+        <HomeCardFact
+          pageSidePadding={scaledPageSidePadding}
+          contentMaxWidth={contentMaxWidth}
+        />
+      </ScrollView>
+    </View>
   );
 }

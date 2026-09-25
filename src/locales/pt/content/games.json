@@ -120,6 +120,40 @@
       "value": "Tudo em fila"
     }
   },
+  "apothecary": {
+    "cardDescription": {
+      "hash": "b66e1d4d",
+      "value": "Passe cartas de um pote para outro até agrupar todos os valores."
+    },
+    "howToPlay": {
+      "hash": "4b2b06d2",
+      "value": [
+        "## Objetivo",
+        "Organize o baralho para agrupar todas as cartas do mesmo valor.",
+        "## Despejar",
+        "- Toque em um pote ou pires para pegar a carta do topo, junto com as cartas iguais logo abaixo dela.",
+        "- Toque em outro pote ou pires para despejá-las ali: você pode despejar sobre uma carta do **mesmo valor**, ou em um pote ou pires vazio.",
+        "- Os **potes** comportam quatro cartas. Se só parte das cartas couber, o resto fica onde está.",
+        "- Os dois **pires** comportam uma única carta cada.",
+        "## Selar",
+        "- Um pote com quatro cartas do mesmo valor é selado e virado para baixo.",
+        "- Você vence quando os 13 potes estiverem selados. Tente conseguir isso com o menor número possível de despejos.",
+        "- A partida está perdida se nenhuma carta puder ser despejada em lugar nenhum."
+      ]
+    },
+    "quickStart": {
+      "hash": "77fe59b7",
+      "value": [
+        "Encha cada pote com quatro cartas do mesmo valor para selá-lo.",
+        "Toque em um pote e depois onde despejar as cartas do topo.",
+        "As cartas são despejadas sobre o mesmo valor, ou em um pote ou pires vazio."
+      ]
+    },
+    "title": {
+      "hash": "f53fdef5",
+      "value": "O boticário"
+    }
+  },
   "ascent": {
     "cardDescription": {
       "hash": "301e448f",
@@ -308,19 +342,15 @@
       "value": "Complete grupos de quatro cartas em seis espaços de mesmo valor usando a colmeia, o descarte e o monte."
     },
     "howToPlay": {
-      "hash": "c74783f8",
+      "hash": "426ee910",
       "value": [
         "## Objetivo",
         "Retire as 52 cartas formando grupos de quatro cartas do mesmo valor.",
         "## Regras",
-        "- A colmeia guarda 10 cartas; só a carta do topo fica ativa.",
-        "- Os seis espaços da mesa guardam cartas de um só valor, até quatro cada um.",
-        "- Mova cartas de mesmo valor entre a colmeia, o descarte e a mesa.",
-        "- Um grupo de quatro cartas é retirado na hora.",
-        "- Um espaço vazio continua vazio até você mover para lá uma carta da colmeia ou do descarte.",
-        "- Toque numa pilha da mesa para movê-la automaticamente sobre outra pilha de mesmo valor.",
-        "- As pilhas completas vão viradas para baixo para a pilha de lixo.",
-        "- Vire até três cartas do monte para o descarte, ou recicle o descarte quando o monte acabar."
+        "- Cada um dos seis espaços da mesa só pode guardar um valor por vez.",
+        "- Reúna as quatro cartas do mesmo valor para formar um grupo e retirá-lo da mesa.",
+        "- Preencha os espaços vazios com cartas da colmeia ou do descarte.",
+        "- Toque em uma carta para movê-la automaticamente sobre uma pilha do mesmo valor."
       ]
     },
     "quickStart": {
@@ -2580,6 +2610,39 @@
     "title": {
       "hash": "7df776c7",
       "value": "Ouroboros"
+    }
+  },
+  "pagoda": {
+    "cardDescription": {
+      "hash": "c1c2c60e",
+      "value": "Pegue cartas dos andares do pagode e ofereça cada trinca no santuário."
+    },
+    "howToPlay": {
+      "hash": "5eb45815",
+      "value": [
+        "## Objetivo",
+        "Remova as **39 cartas** do pagode oferecendo-as no santuário em grupos de três.",
+        "## Regras",
+        "- Falta ao baralho um naipe de cada valor, então há exatamente três cartas de cada valor.",
+        "- Toque em uma carta exposta para movê-la para a bandeja.",
+        "- Assim que a bandeja tiver três cartas do mesmo valor, elas são oferecidas no santuário.",
+        "- Você perde quando a bandeja fica cheia. A capacidade depende da dificuldade:",
+        "-- Fácil: no máximo **7** cartas",
+        "-- Normal: no máximo **6** cartas",
+        "-- Difícil: no máximo **5** cartas"
+      ]
+    },
+    "quickStart": {
+      "hash": "c5feca5f",
+      "value": [
+        "Toque em uma carta exposta para movê-la para a sua bandeja.",
+        "Três cartas do mesmo valor na bandeja são oferecidas no santuário.",
+        "Não deixe a bandeja encher de cartas sem par (Fácil: 7, Normal: 6, Difícil: 5)."
+      ]
+    },
+    "title": {
+      "hash": "125a9287",
+      "value": "Pagode"
     }
   },
   "parallels": {

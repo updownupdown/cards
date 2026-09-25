@@ -402,7 +402,12 @@ export default function Stalker() {
         row: 1,
         cards: game.discard,
         baseZIndex: 10,
-        fan: { maxVisible: 3, direction: "right", offset: 0.1 },
+        fan: {
+          maxVisible: 3,
+          shadowVisibleCount: 6,
+          direction: "right",
+          offset: 0.1,
+        },
         placeholder: { text: i18n.t("cards:dscrd"), infoPos: "above" },
       },
       {
@@ -411,7 +416,12 @@ export default function Stalker() {
         row: 1,
         cards: game.deck,
         baseZIndex: 10,
-        fan: { maxVisible: 3, direction: "left", offset: 0.1 },
+        fan: {
+          maxVisible: 3,
+          shadowVisibleCount: 6,
+          direction: "left",
+          offset: 0.1,
+        },
         placeholder: { text: i18n.t("cards:stock"), infoPos: "above" },
       },
       {

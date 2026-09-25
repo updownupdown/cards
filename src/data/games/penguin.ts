@@ -7,7 +7,7 @@ export const penguin: GameDefinition = {
   path: "/penguin",
   title: "Penguin",
   aliases: ["Penguin"],
-  tags: [GameTag.SequenceBuilding],
+  tags: [GameTag.FreeCellFamily, GameTag.SequenceBuilding],
   rating: {
     complexity: 45,
     difficulty: 60,

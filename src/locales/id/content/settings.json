@@ -395,6 +395,26 @@
       }
     }
   },
+  "pagoda": {
+    "pagodaDifficulty": {
+      "hash": "81b4ccab",
+      "value": {
+        "description": "Mengatur berapa banyak kartu yang bisa ditampung baki.",
+        "label": "Kesulitan",
+        "options": [
+          {
+            "label": "Mudah (7 kartu)"
+          },
+          {
+            "label": "Normal (6 kartu)"
+          },
+          {
+            "label": "Sulit (5 kartu)"
+          }
+        ]
+      }
+    }
+  },
   "pocket-poker": {
     "pokerDifficulty": {
       "hash": "505d7998",

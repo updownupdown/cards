@@ -6,7 +6,6 @@ import {
   type TextSize,
   type TextWeight,
 } from "@/components/common/Text";
-import { getGameSettings, type GameSettingsMap } from "@/data/game-menu";
 import type { GameRating, HexColor } from "@/data/games-data";
 import { CARD_BACK_INKS } from "@/data/card-backs";
 import { GAMES_DATA } from "@/data/games-registry";
@@ -33,6 +32,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 
 const THEME_TRANSITION_DURATION = 420;
 type ReadonlyColorSharedValue = Readonly<Pick<SharedValue<string>, "value">>;
@@ -172,7 +172,6 @@ function AnimatedRatingBar({
 type Props = {
   node: NodeDefinition;
   state: NodeVisualState;
-  settingsMap: GameSettingsMap;
   collectedTaoIds: ReadonlySet<number>;
   collectedQuoteIds: ReadonlySet<number>;
 };
@@ -180,7 +179,6 @@ type Props = {
 export function NodeDetailsPanel({
   node,
   state,
-  settingsMap,
   collectedTaoIds,
   collectedQuoteIds,
 }: Props) {
@@ -272,17 +270,19 @@ export function NodeDetailsPanel({
 
   return (
     <View
-      style={{
-        position: "absolute",
-        right: 0,
-        // The tab bar grows by the bottom safe-area inset (Android button or
-        // gesture navigation), which is 0 on desktop web.
-        bottom: spacing(88) + insets.bottom,
-        left: 0,
-        alignItems: "center",
-        paddingHorizontal: spacing(layoutDims.pagePadding / 2),
-        pointerEvents: "box-none",
-      }}
+      style={[
+        pointerEventsStyles.boxNone,
+        {
+          position: "absolute",
+          right: 0,
+          // The tab bar grows by the bottom safe-area inset (Android button or
+          // gesture navigation), which is 0 on desktop web.
+          bottom: spacing(88) + insets.bottom,
+          left: 0,
+          alignItems: "center",
+          paddingHorizontal: spacing(layoutDims.pagePadding / 2),
+        },
+      ]}
     >
       <Animated.View
         testID="node-details-box"

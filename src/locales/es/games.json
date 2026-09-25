@@ -14,6 +14,11 @@
     "youClearedTheBoard": "¡Has despejado el tablero!",
     "noAdjacentRankRemains": "No queda ningún valor adyacente."
   },
+  "apothecary": {
+    "dish": "Platillo",
+    "allSealed": "¡Todos los tarros sellados en {{count}} vertidos!",
+    "noPoursLeft": "Ninguna carta se puede verter en ningún sitio."
+  },
   "ascent": {
     "lhotseRoutesNeed2Cards": "Lhotse: las rutas necesitan 2 cartas o más.",
     "gasherbrumIAnchorMustBe": "Gasherbrum I: el ancla debe ser par.",
@@ -366,6 +371,11 @@
     "gotAllJewels": "¡Tienes las cuatro joyas y has encontrado la salida!",
     "lostWithLoot": "¡Te has perdido en la mazmorra sin salida! Mueres con tu botín.",
     "lostInDungeon": "¡Te has perdido en la mazmorra sin salida!"
+  },
+  "pagoda": {
+    "shrine": "Santuario",
+    "shrineComplete": "¡Cada trío descansa en el santuario!",
+    "trayFull": "La bandeja está llena."
   },
   "pocketPoker": {
     "youHit10PointsYou": "¡Llegas a 10 puntos y ganas!",

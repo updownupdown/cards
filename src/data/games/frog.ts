@@ -7,7 +7,7 @@ export const frog: GameDefinition = {
   path: "/frog",
   title: "Frog",
   aliases: ["Toad in the Hole"],
-  tags: [GameTag.StockAndWaste],
+  tags: [GameTag.DoubleDeckers, GameTag.StockAndWaste],
   rating: {
     complexity: 30,
     difficulty: 45,

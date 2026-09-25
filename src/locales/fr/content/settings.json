@@ -7,64 +7,64 @@
         "label": "Les huit-mille",
         "options": [
           {
-            "label": "Ascension de base (7 500 m)",
-            "description": "Longueur du parcours : 3. Aucune règle spéciale."
+            "label": "Ascension de base (7\u00a0500\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 3. Aucune règle spéciale."
           },
           {
-            "label": "Cho Oyu (8 188 m)",
-            "description": "Longueur du parcours : 2. Quand vous atteignez un camp, n'ajoutez le jalon de ce camp à votre parcours que s'il contient au moins 6 cartes."
+            "label": "Cho Oyu (8\u00a0188\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 2. Quand vous atteignez un camp, n'ajoutez le jalon de ce camp à votre parcours que s'il contient au moins 6 cartes."
           },
           {
-            "label": "Shishapangma (8 027 m)",
-            "description": "Longueur du parcours : 3. Quand vous jouez une voie avec une approche technique (carreau) ou en escalade libre (pique), piochez une carte de plus. Quand vous jouez une voie avec une approche prudente (cœur) ou téméraire (trèfle), piochez une carte de moins. Vous ne piochez toujours pas plus de cartes que la voie jouée n'en contient."
+            "label": "Shishapangma (8\u00a0027\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 3. Quand vous jouez une voie avec une approche technique (carreau) ou en escalade libre (pique), piochez une carte de plus. Quand vous jouez une voie avec une approche prudente (cœur) ou téméraire (trèfle), piochez une carte de moins. Vous ne piochez toujours pas plus de cartes que la voie jouée n'en contient."
           },
           {
-            "label": "Manaslu (8 163 m)",
-            "description": "Longueur du parcours : 4. Quand vous atteignez un camp, n'ajoutez aucune carte à la pile de fatigue. Quand vous vous reposez, après avoir repris en main les cartes de la pile de fatigue, n'ajoutez qu'une seule carte à la pile de fatigue."
+            "label": "Manaslu (8\u00a0163\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 4. Quand vous atteignez un camp, n'ajoutez aucune carte à la pile de fatigue. Quand vous vous reposez, après avoir repris en main les cartes de la pile de fatigue, n'ajoutez qu'une seule carte à la pile de fatigue."
           },
           {
-            "label": "Broad Peak (8 051 m)",
-            "description": "Longueur du parcours : 3. Vous ne pouvez jouer une voie que si son approche est différente de celle de la voie précédente. Quand vous atteignez un camp, n'ajoutez le jalon de ce camp au parcours que si son approche est différente de celles de toutes les voies précédentes du parcours."
+            "label": "Broad Peak (8\u00a0051\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 3. Vous ne pouvez jouer une voie que si son approche est différente de celle de la voie précédente. Quand vous atteignez un camp, n'ajoutez le jalon de ce camp au parcours que si son approche est différente de celles de toutes les voies précédentes du parcours."
           },
           {
-            "label": "Gasherbrum II (8 035 m)",
-            "description": "Longueur du parcours : 4. Quand vous jouez une voie, réduisez de un le nombre de cartes à piocher avant de piocher. Si ce nombre devenait négatif, piochez plutôt autant de cartes que la voie en contient."
+            "label": "Gasherbrum II (8\u00a0035\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 4. Quand vous jouez une voie, réduisez de un le nombre de cartes à piocher avant de piocher. Si ce nombre devenait négatif, piochez plutôt autant de cartes que la voie en contient."
           },
           {
-            "label": "Mount Everest (8 848 m)",
-            "description": "Longueur du parcours : 5. Lors de la mise en place et chaque fois que vous atteignez un camp, ne piochez que sept cartes au lieu de dix."
+            "label": "Mount Everest (8\u00a0848\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 5. Lors de la mise en place et chaque fois que vous atteignez un camp, ne piochez que sept cartes au lieu de dix."
           },
           {
-            "label": "Dhaulagiri (8 167 m)",
-            "description": "Longueur du parcours : 3. Quand vous atteignez un camp, n'ajoutez le jalon de ce camp à votre parcours que si une traversée d'au moins deux cartes se trouve dans la zone de jeu, le jalon lui-même compris."
+            "label": "Dhaulagiri (8\u00a0167\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 3. Quand vous atteignez un camp, n'ajoutez le jalon de ce camp à votre parcours que si une traversée d'au moins deux cartes se trouve dans la zone de jeu, le jalon lui-même compris."
           },
           {
-            "label": "Gasherbrum I (8 080 m)",
-            "description": "Longueur du parcours : 3. Vous ne pouvez pas jouer de voie dont l'ancre est de valeur impaire, y compris les As, les Valets et les Rois."
+            "label": "Gasherbrum I (8\u00a0080\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 3. Vous ne pouvez pas jouer de voie dont l'ancre est de valeur impaire, y compris les As, les Valets et les Rois."
           },
           {
-            "label": "Kangchenjunga (8 586 m)",
-            "description": "Longueur du parcours : 4. Quand vous jouez une voie, vous n'êtes pas obligé de jouer les cartes dans l'ordre : n'importe quelle carte de la voie peut être l'ancre. Vous ne pouvez toujours pas jouer un Joker comme ancre d'une voie."
+            "label": "Kangchenjunga (8\u00a0586\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 4. Quand vous jouez une voie, vous n'êtes pas obligé de jouer les cartes dans l'ordre\u00a0: n'importe quelle carte de la voie peut être l'ancre. Vous ne pouvez toujours pas jouer un Joker comme ancre d'une voie."
           },
           {
-            "label": "Lhotse (8 516 m)",
-            "description": "Longueur du parcours : 3. Vous ne pouvez jouer une voie que si elle contient au moins deux cartes."
+            "label": "Lhotse (8\u00a0516\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 3. Vous ne pouvez jouer une voie que si elle contient au moins deux cartes."
           },
           {
-            "label": "Makalu (8 481 m)",
-            "description": "Longueur du parcours : 4. Quand vous jouez une voie, vous pouvez aussi défausser n'importe quelle carte de votre main."
+            "label": "Makalu (8\u00a0481\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 4. Quand vous jouez une voie, vous pouvez aussi défausser n'importe quelle carte de votre main."
           },
           {
-            "label": "Nanga Parbat (8 126 m)",
-            "description": "Longueur du parcours : 3. Vous ne pouvez jouer ni traversée ni descente. Les cartes d'une ascension n'ont pas besoin d'être consécutives, mais l'écart entre chaque carte doit être le même."
+            "label": "Nanga Parbat (8\u00a0126\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 3. Vous ne pouvez jouer ni traversée ni descente. Les cartes d'une ascension n'ont pas besoin d'être consécutives, mais l'écart entre chaque carte doit être le même."
           },
           {
-            "label": "K2 (8 611 m)",
-            "description": "Longueur du parcours : 3. Quand vous jouez une voie, le nombre de cartes piochées n'est pas limité par le nombre de cartes de la voie jouée."
+            "label": "K2 (8\u00a0611\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 3. Quand vous jouez une voie, le nombre de cartes piochées n'est pas limité par le nombre de cartes de la voie jouée."
           },
           {
-            "label": "Annapurna I (8 091 m)",
-            "description": "Longueur du parcours : 4. Quand vous piochez des cartes après avoir joué une voie, si l'une des cartes piochées est de la même couleur que l'ancre de la voie, reprenez en main toutes les cartes de la voie jouée. Ne le faites pas quand vous atteignez un camp. Si vous avez 18 cartes ou plus en main, vous perdez immédiatement la partie."
+            "label": "Annapurna I (8\u00a0091\u00a0m)",
+            "description": "Longueur du parcours\u00a0: 4. Quand vous piochez des cartes après avoir joué une voie, si l'une des cartes piochées est de la même couleur que l'ancre de la voie, reprenez en main toutes les cartes de la voie jouée. Ne le faites pas quand vous atteignez un camp. Si vous avez 18 cartes ou plus en main, vous perdez immédiatement la partie."
           }
         ]
       }
@@ -156,7 +156,7 @@
     "chapterAndVerseSuperExclusive": {
       "hash": "3444cc88",
       "value": {
-        "description": "Les livres du même genre ou de la même valeur que le livre d'occasion coûtent 0 $.",
+        "description": "Les livres du même genre ou de la même valeur que le livre d'occasion coûtent 0\u00a0$.",
         "label": "Offre super exclusive",
         "options": [
           {
@@ -172,7 +172,7 @@
       "hash": "bf41e3e4",
       "value": {
         "description": "Les Jokers bloquent le premier rayon disponible de la librairie quand ils arrivent dans la file.",
-        "label": "Vandales !",
+        "label": "Vandales\u00a0!",
         "options": [
           {
             "label": "Désactivé"
@@ -390,6 +390,26 @@
           {
             "label": "Ville dans l'ombre",
             "description": "Les Dames infligent 1 dégât de plus et les Rois 2."
+          }
+        ]
+      }
+    }
+  },
+  "pagoda": {
+    "pagodaDifficulty": {
+      "hash": "81b4ccab",
+      "value": {
+        "description": "Détermine le nombre de cartes que peut contenir le plateau.",
+        "label": "Difficulté",
+        "options": [
+          {
+            "label": "Facile (7 cartes)"
+          },
+          {
+            "label": "Normal (6 cartes)"
+          },
+          {
+            "label": "Difficile (5 cartes)"
           }
         ]
       }

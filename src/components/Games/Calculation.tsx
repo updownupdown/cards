@@ -254,7 +254,7 @@ export default function Calculation() {
 
   // ========== Card Mapping ========== //
   const zones: MapZone[] = useMemo(() => {
-    const wasteZones: MapZone[] = game.wastes.map((pos, i) => ({
+    const wasteZones: MapZone[] = game.wastes.map((_pos, i) => ({
       id: `waste-${i}`,
       name: "waste",
       pileIndex: i,
@@ -265,7 +265,7 @@ export default function Calculation() {
       fan: { maxVisible: 3 },
       placeholder: { infoPos: "above" },
     }));
-    const foundationZones: MapZone[] = game.foundations.map((pos, i) => ({
+    const foundationZones: MapZone[] = game.foundations.map((_pos, i) => ({
       id: `foundation-${i}`,
       name: "foundation",
       pileIndex: i,

@@ -6,7 +6,7 @@ import { CardBackColors } from "../card-backs";
 export const scorpion: GameDefinition = {
   path: "/scorpion",
   title: "Scorpion",
-  tags: [GameTag.SequenceBuilding],
+  tags: [GameTag.SpiderFamily, GameTag.SequenceBuilding],
   rating: {
     complexity: 40,
     difficulty: 75,

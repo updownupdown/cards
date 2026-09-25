@@ -1,4 +1,6 @@
 // Builds src/data/nodes-map.generated.ts and assets/images/galaxy-glow.webp
+// (the arms' glow, with their dust baked in) and the node and flare sprites
+// in assets/images/nodes/
 // from the game catalog.
 //
 //   npm run nodes:generate
@@ -27,6 +29,7 @@ const root = process.cwd();
 const gamesDirectory = path.join(root, "src/data/games");
 const outputPath = path.join(root, "src/data/nodes-map.generated.ts");
 const glowPath = path.join(root, "assets/images/galaxy-glow.webp");
+const spriteDir = path.join(root, "assets/images/nodes");
 const collectiblesPath = path.join(root, "src/data/collectibles.ts");
 const rebuild = process.argv.includes("--rebuild");
 const rebalance = process.argv.includes("--rebalance-rewards");
@@ -117,7 +120,7 @@ const ARM_ART = {
    *  drawn under world resolution and stretched, which keeps it small. */
   glowResolution: 900,
   /** Overall strength of the finished glow, applied after every layer. */
-  glowStrength: 0.6,
+  glowStrength: 0.48,
   /** The faint disc the arms sit in, so the gaps between them are not bare. */
   disc: { radius: 640, opacity: 0.1, blur: 150, color: "#6f7fc0" },
   /** A second, tighter disc that fills the gaps between the arms' roots, so
@@ -186,6 +189,17 @@ const ARM_ART = {
   },
   /** Specks of dust scattered along the arms. */
   dustCount: 1400,
+  /** The dust is baked into the glow image, which is stretched to this size
+   *  for it (one and a half pixels per world point), so the specks stay crisp. */
+  dustResolution: 2700,
+  /** Dust colours, in the order of the tint indices dealt below (and of
+   *  FLARE_SPRITES in NodesMap, which the flaring stars use). */
+  dustTints: ["#d6e6ff", "#ffffff", "#b4e4ff", "#ffb3cf", "#ffe7bf"],
+  /** Every seventh speck is a brighter star; the rest are fine dust. Radii
+   *  in world points. */
+  dustRadius: { star: 1.95, fine: 1 },
+  /** Dust is drawn a little fainter than its dealt opacity. */
+  dustOpacity: 0.56,
   /** How far off the spine dust strays, as a share of the arm's half-width.
    *  Kept in step with the glow's width so the dust fills the arm it sits in. */
   dustSpread: 1.6,
@@ -652,7 +666,7 @@ async function renderCoverage(shapes, blur, size) {
  * in react-native-svg on Android. At runtime this is a single image instead
  * of thousands of shapes, so it is cheaper to draw as well.
  */
-async function renderGalaxyGlow(spines) {
+async function renderGalaxyGlow(spines, dust) {
   const size = ARM_ART.glowResolution;
   const pixelsPerPoint = size / WORLD_SIZE;
   const toPixel = (coordinate) => ((coordinate + 1) * size) / 2;
@@ -768,9 +782,259 @@ async function renderGalaxyGlow(spines) {
     pixels[offset + 3] = Math.round(alpha * 255);
   }
 
-  await sharp(pixels, { raw: { width: size, height: size, channels: 4 } })
+  // The dust goes on top, drawn at a higher resolution than the glow needs
+  // so that the specks are sharp rather than smudges.
+  const dustSize = ARM_ART.dustResolution;
+  const dustScale = dustSize / WORLD_SIZE;
+  const toDustPixel = (coordinate) => ((coordinate + 1) * dustSize) / 2;
+  const specks = dust.map(([x, y, tint, opacity], index) => {
+    const radius =
+      index % 7 === 0 ? ARM_ART.dustRadius.star : ARM_ART.dustRadius.fine;
+    return (
+      `<circle cx="${toDustPixel(x)}" cy="${toDustPixel(y)}" r="${radius * dustScale}" ` +
+      `fill="${ARM_ART.dustTints[tint] ?? "#ffffff"}" fill-opacity="${opacity * ARM_ART.dustOpacity}"/>`
+    );
+  });
+  const dustSvg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${dustSize}" height="${dustSize}">` +
+    `${specks.join("")}</svg>`;
+
+  const glow = await sharp(pixels, {
+    raw: { width: size, height: size, channels: 4 },
+  })
+    .resize(dustSize, dustSize, { kernel: "cubic" })
+    .png()
+    .toBuffer();
+  await sharp(glow, { limitInputPixels: false })
+    .composite([{ input: Buffer.from(dustSvg), limitInputPixels: false }])
     .webp({ quality: 88, alphaQuality: 90, effort: 6 })
     .toFile(glowPath);
+}
+
+/**
+ * Sprites for the map on native (see NodesMap). Android draws blurred box
+ * shadows and full-map SVG layers very slowly, so each node's look (its
+ * halo, dot, glint and shade, the same box shadows the web draws) and each
+ * flaring star's halo are baked into small images here instead. Sizes are
+ * in world points.
+ */
+const SPRITES = {
+  /** Must match NODE_SPRITE_SIZE in NodesMap: room for the widest halo. */
+  nodeSize: 96,
+  /** Must match NODE_SIZE in NodesMap. */
+  nodeDot: 18,
+  /** Enough for a crisp dot at the closest zoom. */
+  pixelsPerPoint: 4,
+  /** Must match STATE_SIZE_MULTIPLIER, STATE_COLORS and NODE_GLOW in
+   *  NodesMap; `glint` is the strength of the highlight along the top. */
+  states: {
+    locked: {
+      size: 0.72,
+      color: "#746e6e",
+      blur: 3,
+      spread: 0,
+      opacity: 0.28,
+      glint: 0.2,
+    },
+    connected: {
+      size: 1.2,
+      color: "#b74ec5",
+      blur: 9,
+      spread: 2,
+      opacity: 0.68,
+      glint: 0.55,
+    },
+    won: {
+      size: 1,
+      color: "#ffda5f",
+      blur: 8,
+      spread: 1,
+      opacity: 0.55,
+      glint: 0.55,
+    },
+    complete: {
+      size: 0.85,
+      color: "#a2ffa2",
+      blur: 13,
+      spread: 3,
+      opacity: 0.75,
+      glint: 0.55,
+    },
+  },
+  /** The shade inside each dot's lower edge. On the web it takes the game's
+   *  own dark colour; one neutral shade serves every sprite. */
+  shade: { color: "#1a1420", opacity: 0.5 },
+  /** Must match FLARE_RADIUS in NodesMap. */
+  flareRadius: 10,
+  flarePixels: 96,
+};
+
+/** A separable Gaussian blur of a single-channel float image. */
+function gaussianBlur(source, size, sigma) {
+  if (sigma < 0.3) return Float32Array.from(source);
+  const reach = Math.ceil(sigma * 3);
+  const kernel = Array.from({ length: reach * 2 + 1 }, (_, index) =>
+    Math.exp(-((index - reach) ** 2) / (2 * sigma * sigma)),
+  );
+  const total = kernel.reduce((sum, value) => sum + value, 0);
+  const weights = kernel.map((value) => value / total);
+  const pass = (input, horizontal) => {
+    const output = new Float32Array(size * size);
+    for (let y = 0; y < size; y += 1) {
+      for (let x = 0; x < size; x += 1) {
+        let sum = 0;
+        for (let step = -reach; step <= reach; step += 1) {
+          const sx = horizontal ? x + step : x;
+          const sy = horizontal ? y : y + step;
+          if (sx < 0 || sy < 0 || sx >= size || sy >= size) continue;
+          sum += input[sy * size + sx] * weights[step + reach];
+        }
+        output[y * size + x] = sum;
+      }
+    }
+    return output;
+  };
+  return pass(pass(source, true), false);
+}
+
+/** Anti-aliased coverage of a disc, in pixels. */
+function discCoverage(size, centreX, centreY, radius) {
+  const coverage = new Float32Array(size * size);
+  for (let y = 0; y < size; y += 1) {
+    for (let x = 0; x < size; x += 1) {
+      const distance = Math.hypot(x + 0.5 - centreX, y + 0.5 - centreY);
+      coverage[y * size + x] = Math.min(
+        1,
+        Math.max(0, radius - distance + 0.5),
+      );
+    }
+  }
+  return coverage;
+}
+
+/** Paints a colour over premultiplied RGBA pixels through a 0..1 mask. */
+function paintOver(pixels, mask, color, opacity) {
+  const rgb = hexToRgb(color);
+  for (let index = 0; index < mask.length; index += 1) {
+    const alpha = mask[index] * opacity;
+    if (alpha <= 0) continue;
+    const offset = index * 4;
+    for (let channel = 0; channel < 3; channel += 1) {
+      pixels[offset + channel] =
+        rgb[channel] * alpha + pixels[offset + channel] * (1 - alpha);
+    }
+    pixels[offset + 3] = alpha + pixels[offset + 3] * (1 - alpha);
+  }
+}
+
+async function writeSprite(pixels, size, filePath) {
+  const bytes = Buffer.alloc(size * size * 4);
+  for (let index = 0; index < size * size; index += 1) {
+    const alpha = pixels[index * 4 + 3];
+    for (let channel = 0; channel < 3; channel += 1) {
+      bytes[index * 4 + channel] =
+        alpha > 0
+          ? Math.round(Math.min(1, pixels[index * 4 + channel] / alpha) * 255)
+          : 0;
+    }
+    bytes[index * 4 + 3] = Math.round(alpha * 255);
+  }
+  await sharp(bytes, { raw: { width: size, height: size, channels: 4 } })
+    .webp({ lossless: true, effort: 6 })
+    .toFile(filePath);
+}
+
+/**
+ * One sprite per node state, drawn the way a browser draws the web's box
+ * shadows: an outer shadow is the dot grown by its spread and blurred (a CSS
+ * blur radius is two standard deviations); an inset one is everything outside
+ * the offset dot, blurred and kept inside the dot.
+ */
+async function renderNodeSprites() {
+  const scale = SPRITES.pixelsPerPoint;
+  const size = SPRITES.nodeSize * scale;
+  const centre = size / 2;
+  for (const [state, look] of Object.entries(SPRITES.states)) {
+    const radius = (SPRITES.nodeDot * look.size * scale) / 2;
+    const pixels = new Float32Array(size * size * 4);
+    const outer = (blur, opacity) =>
+      paintOver(
+        pixels,
+        gaussianBlur(
+          discCoverage(size, centre, centre, radius + look.spread * scale),
+          size,
+          (blur * scale) / 2,
+        ),
+        look.color,
+        opacity,
+      );
+    const dot = discCoverage(size, centre, centre, radius);
+    const inset = (offsetX, offsetY, blur, spread, color, opacity) => {
+      const hole = discCoverage(
+        size,
+        centre + offsetX * scale,
+        centre + offsetY * scale,
+        radius - spread * scale,
+      ).map((value) => 1 - value);
+      const shadow = gaussianBlur(hole, size, (blur * scale) / 2).map(
+        (value, index) => value * dot[index],
+      );
+      paintOver(pixels, shadow, color, opacity);
+    };
+
+    outer(look.blur * 2.2, look.opacity * 0.35);
+    outer(look.blur, look.opacity);
+    paintOver(pixels, dot, look.color, 1);
+    inset(-1, -2, 3, -1, SPRITES.shade.color, SPRITES.shade.opacity);
+    inset(0, 1, 2, 0, "#ffffff", look.glint);
+    await writeSprite(pixels, size, path.join(spriteDir, `node-${state}.webp`));
+  }
+}
+
+/** A soft halo per dust tint, for the stars along the arms that flare. */
+async function renderFlareSprites() {
+  const size = SPRITES.flarePixels;
+  const stops = [
+    [0, null, 0.95],
+    [0.18, "tint", 0.6],
+    [0.45, "tint", 0.16],
+    [1, "tint", 0],
+  ];
+  for (const [tintIndex, tint] of ARM_ART.dustTints.entries()) {
+    const pixels = new Float32Array(size * size * 4);
+    const tintRgb = hexToRgb(tint);
+    for (let y = 0; y < size; y += 1) {
+      for (let x = 0; x < size; x += 1) {
+        const along = Math.min(
+          1,
+          Math.hypot(x + 0.5 - size / 2, y + 0.5 - size / 2) / (size / 2),
+        );
+        const next = stops.findIndex(([offset]) => offset >= along);
+        const [fromOffset, fromColor, fromOpacity] =
+          stops[Math.max(0, next - 1)];
+        const [toOffset, toColor, toOpacity] = stops[next];
+        const share =
+          toOffset > fromOffset
+            ? (along - fromOffset) / (toOffset - fromOffset)
+            : 0;
+        const colorOf = (which) => (which === null ? [1, 1, 1] : tintRgb);
+        const from = colorOf(fromColor);
+        const to = colorOf(toColor);
+        const alpha = fromOpacity + (toOpacity - fromOpacity) * share;
+        const offset = (y * size + x) * 4;
+        for (let channel = 0; channel < 3; channel += 1) {
+          pixels[offset + channel] =
+            (from[channel] + (to[channel] - from[channel]) * share) * alpha;
+        }
+        pixels[offset + 3] = alpha;
+      }
+    }
+    await writeSprite(
+      pixels,
+      size,
+      path.join(spriteDir, `flare-${tintIndex}.webp`),
+    );
+  }
 }
 
 /** Deals a dust tint by the weights in ARM_ART. */
@@ -1308,6 +1572,21 @@ function assignRewards(records, existingByPath, gamesByPath, rebalance) {
     record.rewards.forEach((reward) => used[reward.type].add(reward.id));
   }
 
+  // New games need two rewards each. When the pool is short, every third
+  // reward goes back into it, and the spares are dealt again below to the
+  // gentlest games. Collected rewards are saved by id, so none are lost.
+  const needed = records.reduce(
+    (sum, record) => sum + Math.max(0, REWARDS.min - record.rewards.length),
+    0,
+  );
+  if (buildRewardPool(used).length < needed) {
+    for (const record of records) {
+      for (const reward of record.rewards.splice(REWARDS.min)) {
+        used[reward.type].delete(reward.id);
+      }
+    }
+  }
+
   const pool = buildRewardPool(used);
   let next = 0;
 
@@ -1479,11 +1758,12 @@ validate(records);
 const armed = records.filter((record) => record.arm !== null).length;
 summary += ` (${armed} on arms, ${records.length - armed} between them)`;
 
+const armDust = buildArmDust();
 const output =
   `// Generated by scripts/generate-nodes-map.mjs. Coordinates and entries may be edited manually.\n` +
   `import type { ArmDust, NodeDefinition } from "./nodes-map";\n\n` +
   `/** Decorative specks along the arms: x, y, tint index, opacity. */\n` +
-  `export const ARM_DUST: ArmDust[] = ${JSON.stringify(buildArmDust())};\n\n` +
+  `export const ARM_DUST: ArmDust[] = ${JSON.stringify(armDust)};\n\n` +
   `export const NODE_DEFINITIONS: NodeDefinition[] = ${JSON.stringify(
     records.map(({ path: nodePath, x, y, arm, connections, rewards }) => ({
       path: nodePath,
@@ -1498,5 +1778,8 @@ const output =
   )};\n`;
 
 fs.writeFileSync(outputPath, output);
-await renderGalaxyGlow(buildArmSpines());
+await renderGalaxyGlow(buildArmSpines(), armDust);
+fs.mkdirSync(spriteDir, { recursive: true });
+await renderNodeSprites();
+await renderFlareSprites();
 console.log(`${summary} in ${path.relative(root, outputPath)}.`);

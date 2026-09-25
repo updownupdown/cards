@@ -5,18 +5,30 @@ import type { GameAnimation } from "@/animations/types";
 import type { CardBackColor } from "./card-backs";
 
 export enum GameTag {
-  EasyToLearn = "EasyToLearn",
-  TableauBuilding = "TableauBuilding",
-  ModernMechanics = "ModernMechanics",
-  DungeonCrawler = "DungeonCrawler",
-  CardCombat = "CardCombat",
-  GridPlacement = "GridPlacement",
-  PokerAndCribbage = "PokerAndCribbage",
+  // Categories: a game's first tag is the one it is collected under.
+  KlondikeFamily = "KlondikeFamily",
+  YukonFamily = "YukonFamily",
+  FreeCellFamily = "FreeCellFamily",
+  SpiderFamily = "SpiderFamily",
+  FortyThievesFamily = "FortyThievesFamily",
+  CastlesAndFans = "CastlesAndFans",
+  FoundationBuilders = "FoundationBuilders",
+  DoubleDeckers = "DoubleDeckers",
+  ClearTheBoard = "ClearTheBoard",
   PairMatching = "PairMatching",
+  Puzzles = "Puzzles",
+  Sports = "Sports",
+  PokerAndCribbage = "PokerAndCribbage",
+  CardCombat = "CardCombat",
+  DungeonCrawler = "DungeonCrawler",
+  ModernMechanics = "ModernMechanics",
+  // Mechanics, kept as secondary tags.
+  TableauBuilding = "TableauBuilding",
   SequenceBuilding = "SequenceBuilding",
   StockAndWaste = "StockAndWaste",
-  ScoringPuzzles = "ScoringPuzzles",
   SpatialControl = "SpatialControl",
+  GridPlacement = "GridPlacement",
+  ScoringPuzzles = "ScoringPuzzles",
 }
 
 export type HexColor = `#${string}`;

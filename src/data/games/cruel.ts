@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const cruel: GameDefinition = {
   path: "/cruel",
   title: "Cruel",
-  tags: [GameTag.TableauBuilding],
+  tags: [GameTag.CastlesAndFans, GameTag.TableauBuilding],
   rating: {
     complexity: 30,
     difficulty: 55,

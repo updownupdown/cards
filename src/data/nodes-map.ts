@@ -72,6 +72,27 @@ export function getUnlockedNodePaths(wonPaths: ReadonlySet<string>) {
   return unlocked;
 }
 
+const GAMES_BY_PATH = new Map(
+  GAME_DEFINITIONS.map((game) => [game.path, game]),
+);
+
+/**
+ * The games the player can play next on the map: unlocked but not yet won,
+ * easiest first.
+ */
+export function getNextNodePaths(
+  wonPaths: ReadonlySet<string>,
+  unlockedPaths = getUnlockedNodePaths(wonPaths),
+) {
+  const effort = (path: string) => {
+    const rating = GAMES_BY_PATH.get(path)?.rating;
+    return rating ? rating.difficulty + rating.complexity : Infinity;
+  };
+  return [...unlockedPaths]
+    .filter((path) => !wonPaths.has(path))
+    .sort((left, right) => effort(left) - effort(right));
+}
+
 export function getNodeVisualState(
   node: NodeDefinition,
   wonPaths: ReadonlySet<string>,
@@ -198,7 +219,9 @@ export function validateNodesMap() {
   // A game nobody can beat should not shut off the rest of the galaxy. Arms
   // are chains, so some gating is unavoidable and expected; what matters is
   // that no single game holds back a large share of the map.
-  const gateLimit = Math.ceil(NODE_DEFINITIONS.length * MAP_GEOMETRY.maxGatedShare);
+  const gateLimit = Math.ceil(
+    NODE_DEFINITIONS.length * MAP_GEOMETRY.maxGatedShare,
+  );
   for (const blockedNode of NODE_DEFINITIONS) {
     if (blockedNode.path === NODES_START_PATH) continue;
     const reachable = new Set<string>();

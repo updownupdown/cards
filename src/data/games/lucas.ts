@@ -6,7 +6,11 @@ import { GameDefinition, GameTag } from "../games-data";
 export const lucas: GameDefinition = {
   path: "/lucas",
   title: "Lucas",
-  tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
+  tags: [
+    GameTag.FortyThievesFamily,
+    GameTag.TableauBuilding,
+    GameTag.StockAndWaste,
+  ],
   rating: { complexity: 35, difficulty: 40, luck: 40 },
   thumbnail: "Lucas.webp",
   background: GAME_BACKGROUNDS.oldRoom,

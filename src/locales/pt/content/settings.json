@@ -395,6 +395,26 @@
       }
     }
   },
+  "pagoda": {
+    "pagodaDifficulty": {
+      "hash": "81b4ccab",
+      "value": {
+        "description": "Controla quantas cartas cabem na bandeja.",
+        "label": "Dificuldade",
+        "options": [
+          {
+            "label": "Fácil (7 cartas)"
+          },
+          {
+            "label": "Normal (6 cartas)"
+          },
+          {
+            "label": "Difícil (5 cartas)"
+          }
+        ]
+      }
+    }
+  },
   "pocket-poker": {
     "pokerDifficulty": {
       "hash": "505d7998",

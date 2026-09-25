@@ -6,7 +6,11 @@ import { GameAnimations } from "@/animations";
 export const labyrinth: GameDefinition = {
   path: "/labyrinth",
   title: "Labyrinth",
-  tags: [GameTag.SpatialControl, GameTag.StockAndWaste],
+  tags: [
+    GameTag.FoundationBuilders,
+    GameTag.SpatialControl,
+    GameTag.StockAndWaste,
+  ],
   rating: {
     complexity: 20,
     difficulty: 35,

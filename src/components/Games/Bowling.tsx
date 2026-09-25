@@ -490,7 +490,7 @@ export default function Bowling() {
     await resetAndSetup(setGame, false);
   };
 
-  const endGame = (draft: GameState, message?: string) => {
+  const endGame = (draft: GameState, _message?: string) => {
     updateTotalScore(draft);
     draft.phase = "gameEnd";
     draft.winLoseMessage = i18n.t("games:bowling.finalScore", {

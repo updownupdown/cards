@@ -14,7 +14,7 @@
         "- Seule la carte du dessus de chaque pile compte (les cartes en dessous peuvent être ignorées).",
         "- Après un déplacement, les cartes se décalent vers la gauche pour combler le vide.",
         "## Conseils",
-        "- **Utilisez la technique du « balayeur »** : avant de jouer, repérez quatre cartes de même rang (par exemple quatre 8) vers la fin de la rangée. Protégez-les en ne posant jamais d'autre carte sur un balayeur. Votre but est d'arriver à exactement quatre piles, chacune surmontée d'un balayeur. Comme elles ont le même rang, vous pourrez alors les empiler les unes sur les autres pour gagner."
+        "- **Utilisez la technique du «\u00a0balayeur\u00a0»**\u00a0: avant de jouer, repérez quatre cartes de même rang (par exemple quatre 8) vers la fin de la rangée. Protégez-les en ne posant jamais d'autre carte sur un balayeur. Votre but est d'arriver à exactement quatre piles, chacune surmontée d'un balayeur. Comme elles ont le même rang, vous pourrez alors les empiler les unes sur les autres pour gagner."
       ]
     },
     "quickStart": {
@@ -103,7 +103,7 @@
         "## Règles",
         "- Choisissez n'importe quelle carte visible comme rang de départ.",
         "- Ensuite, jouez un rang au-dessus ou en dessous de la carte du dessus de la fondation, sans tenir compte de la couleur.",
-        "- L'As et le Roi se suivent : Q, K, A, 2, A, K, etc. est donc une suite valide."
+        "- L'As et le Roi se suivent\u00a0: Q, K, A, 2, A, K, etc. est donc une suite valide."
       ]
     },
     "quickStart": {
@@ -120,40 +120,74 @@
       "value": "Tout en ligne"
     }
   },
+  "apothecary": {
+    "cardDescription": {
+      "hash": "b66e1d4d",
+      "value": "Transvasez les cartes d'un bocal à l'autre jusqu'à regrouper tous les rangs."
+    },
+    "howToPlay": {
+      "hash": "4b2b06d2",
+      "value": [
+        "## Objectif",
+        "Triez le paquet pour regrouper toutes les cartes de même rang.",
+        "## Verser",
+        "- Touchez un bocal ou une coupelle pour prendre sa carte du dessus, avec toutes les cartes de même rang juste en dessous.",
+        "- Touchez un autre bocal ou une autre coupelle pour les y verser\u00a0: vous pouvez verser sur une carte de **même rang**, ou dans un bocal ou une coupelle vide.",
+        "- Les **bocaux** contiennent quatre cartes. Si seule une partie des cartes y tient, les autres restent en place.",
+        "- Les deux **coupelles** contiennent une seule carte chacune.",
+        "## Sceller",
+        "- Un bocal contenant quatre cartes de même rang est scellé et retourné face cachée.",
+        "- Vous gagnez quand les 13 bocaux sont scellés. Essayez d'y parvenir en versant le moins de fois possible.",
+        "- La partie est perdue si aucune carte ne peut plus être versée nulle part."
+      ]
+    },
+    "quickStart": {
+      "hash": "77fe59b7",
+      "value": [
+        "Remplissez chaque bocal de quatre cartes de même rang pour le sceller.",
+        "Touchez un bocal, puis l'endroit où verser ses cartes du dessus.",
+        "Les cartes se versent sur le même rang, ou dans un bocal ou une coupelle vide."
+      ]
+    },
+    "title": {
+      "hash": "f53fdef5",
+      "value": "L'Apothicaire"
+    }
+  },
   "ascent": {
     "cardDescription": {
       "hash": "301e448f",
-      "value": "Un jeu d'escalade en solo : jouez des voies toujours plus hautes pour atteindre trois camps avant la fin du paquet."
+      "value": "Un jeu d'escalade en solo\u00a0: jouez des voies toujours plus hautes pour atteindre trois camps avant la fin du paquet."
     },
     "howToPlay": {
       "hash": "acb5c7a2",
       "value": [
         "## Objectif",
-        "Gagnez en franchissant les trois camps ; atteignez un camp en vidant votre main ; videz votre main en jouant des voies.",
+        "Gagnez en franchissant les trois camps\u00a0; atteignez un camp en vidant votre main\u00a0; videz votre main en jouant des voies.",
         "Vous perdez si vous manquez de cartes avant d'atteindre le dernier camp.",
         "## Types de voies",
         "Chaque voie jouée appartient à l'un des trois types, chacun avec une carte ancre.",
         "La **dernière carte sélectionnée est l'ancre**.",
-        "- **Ascension :** deux cartes ou plus qui se suivent en montant (l'ancre est la plus haute) :",
+        "- **Ascension\u00a0:** deux cartes ou plus qui se suivent en montant (l'ancre est la plus haute)\u00a0:",
         "-- {3S} {4S} {5S} (l'ancre est {5S})",
         "-- {8D} {9C} {10H} {JC} (l'ancre est {JC})",
-        "- **Traversée :** une ou plusieurs cartes de même valeur (choisissez n'importe quelle ancre).",
+        "- **Traversée\u00a0:** une ou plusieurs cartes de même valeur (choisissez n'importe quelle ancre).",
         "-- {5S} {5D} {5H} (l'ancre est n'importe quel 5)",
         "-- {9C} {9D} (l'ancre est l'un ou l'autre 9)",
-        "- **Descente :** deux cartes ou plus d'une même couleur en valeur décroissante (l'ancre est la plus basse).",
+        "- **Descente\u00a0:** deux cartes ou plus d'une même couleur en valeur décroissante (l'ancre est la plus basse).",
         "-- {10C} {9C} {8C} (l'ancre est {8C})",
         "-- {KD} {JD} {10D} {2D} (l'ancre est {2D})",
         "## Enchaînement des voies",
-        "Chaque voie doit être plus haute que la précédente :",
+        "Chaque voie doit être plus haute que la précédente\u00a0:",
         "- Plus de cartes = plus haute",
         "- Ascension > Traversée > Descente",
         "- Sinon, c'est l'ancre la plus haute qui départage les voies.",
         "## Pioche de cartes",
-        "Après une voie, le nombre de cartes piochées dépend de la couleur de l'ancre :",
-        "- **♥ Cœur (Prudent) :** une par carte de la main plus haute que l'ancre.",
-        "- **♣ Trèfle (Téméraire) :** une par carte de la main plus basse que l'ancre.",
-        "- **♦ Carreau (Technique) :** une par carreau en main.",
-        "- **♠ Pique (Escalade libre) :** une par couleur autre que pique dans la voie.",
+        "Après une voie, le nombre de cartes piochées dépend de la couleur de l'ancre\u00a0:",
+        "- **♥ Cœur (Prudent)\u00a0:** une par carte de la main plus haute que l'ancre.",
+        "- **♣ Trèfle (Téméraire)\u00a0:** une par carte de la main plus basse que l'ancre.",
+        "- **♦ Carreau (Technique)\u00a0:** une par carreau en main.",
+        "- **♠ Pique (Escalade libre)\u00a0:** une par couleur autre que pique dans la voie.",
         "Vous ne piochez jamais plus de cartes que la voie jouée n'en contient.",
         "## Repos",
         "**Se reposer** défausse votre zone de jeu et place la pile de fatigue dans votre main (puis agrandit la pile de fatigue).",
@@ -161,14 +195,14 @@
         "Quand vous videz votre main, si votre voie est plus haute que la dernière voie jouée au camp précédent, elle devient un jalon et vous atteignez un camp plus haut. Une nouvelle main est distribuée, et vous devez essayer d'atteindre le camp suivant.",
         "Si la dernière voie jouée ne bat pas le jalon du camp précédent, vous n'atteignez pas le camp suivant et devez réessayer avec une nouvelle main.",
         "## Réglages",
-        "- **Difficulté :** Douce, Standard ou Intense modifient les conditions des jalons.",
-        "- **Défis des huit-mille :** quatorze sommets proposent chacun des variantes de règles et des longueurs de parcours différentes."
+        "- **Difficulté\u00a0:** Douce, Standard ou Intense modifient les conditions des jalons.",
+        "- **Défis des huit-mille\u00a0:** quatorze sommets proposent chacun des variantes de règles et des longueurs de parcours différentes."
       ]
     },
     "quickStart": {
       "hash": "fd5b20c9",
       "value": [
-        "Jouez des voies de plus en plus « hautes » pour vider votre main et atteindre un camp.",
+        "Jouez des voies de plus en plus «\u00a0hautes\u00a0» pour vider votre main et atteindre un camp.",
         "Se reposer renouvelle votre main mais augmente la fatigue.",
         "Gagnez en franchissant tous les camps."
       ]
@@ -190,7 +224,7 @@
         "Montez les quatre fondations par couleur, de l'As au Roi.",
         "## Règles",
         "- Sept colonnes commencent avec quatre cartes visibles.",
-        "- Descendez par couleur ; seuls les Rois occupent les colonnes vides.",
+        "- Descendez par couleur\u00a0; seuls les Rois occupent les colonnes vides.",
         "- Déplacez n'importe quelle carte visible avec toutes les cartes qui la recouvrent.",
         "- Retournez la pioche une carte à la fois, sans redistribution."
       ]
@@ -199,7 +233,7 @@
       "hash": "6ef4e415",
       "value": [
         "Montez les fondations par couleur.",
-        "Descendez les colonnes par couleur ; seuls les Rois occupent les espaces vides.",
+        "Descendez les colonnes par couleur\u00a0; seuls les Rois occupent les espaces vides.",
         "Déplacez n'importe quel bout de colonne visible et parcourez la pioche une seule fois."
       ]
     },
@@ -232,7 +266,7 @@
       "value": [
         "Montez les fondations par couleur, de A à K.",
         "Descendez les colonnes par rang, sans tenir compte de la couleur.",
-        "Déplacez une carte à la fois ; les colonnes vides sont inutilisables."
+        "Déplacez une carte à la fois\u00a0; les colonnes vides sont inutilisables."
       ]
     },
     "title": {
@@ -243,7 +277,7 @@
   "bakers-game": {
     "cardDescription": {
       "hash": "07005d70",
-      "value": "L'ancêtre plus difficile du FreeCell : descendez les colonnes dans la même couleur, et non en alternant rouge et noir."
+      "value": "L'ancêtre plus difficile du FreeCell\u00a0: descendez les colonnes dans la même couleur, et non en alternant rouge et noir."
     },
     "howToPlay": {
       "hash": "a01e3e7a",
@@ -255,7 +289,7 @@
         "-- Touchez deux fois une carte pour l'envoyer sur une fondation valide.",
         "- Construisez les colonnes **en descendant d'un rang, dans la même couleur** (par exemple un {9S} sur un {10S}).",
         "- N'importe quelle carte peut aller sur une colonne vide.",
-        "- Déplacez une carte à la fois ; chaque **cellule libre** contient une seule carte.",
+        "- Déplacez une carte à la fois\u00a0; chaque **cellule libre** contient une seule carte.",
         "-- Vous pouvez déplacer une séquence empilée, à condition d'avoir assez de cellules libres et de colonnes vides."
       ]
     },
@@ -308,19 +342,15 @@
       "value": "Complétez des ensembles de quatre cartes dans six emplacements de même rang, à l'aide de la ruche, du talon et de la pioche."
     },
     "howToPlay": {
-      "hash": "c74783f8",
+      "hash": "426ee910",
       "value": [
         "## Objectif",
         "Retirez les 52 cartes en formant des ensembles de quatre cartes de même rang.",
         "## Règles",
-        "- La ruche contient 10 cartes ; seule celle du dessus est active.",
-        "- Les six emplacements du tableau reçoivent des cartes d'un seul rang, quatre au maximum chacun.",
-        "- Déplacez les cartes de même rang entre la ruche, le talon et le tableau.",
-        "- Un ensemble de quatre cartes est retiré aussitôt.",
-        "- Un emplacement vide le reste jusqu'à ce qu'une carte de la ruche ou du talon y soit posée.",
-        "- Touchez une pile du tableau pour la déplacer automatiquement sur une pile de même rang.",
-        "- Les piles terminées sont retournées face cachée sur la défausse.",
-        "- Retournez jusqu'à trois cartes de la pioche sur le talon, ou recyclez le talon quand la pioche est vide."
+        "- Chacun des six emplacements du tableau ne peut contenir qu'un seul rang à la fois.",
+        "- Réunissez les quatre cartes d'un même rang pour former un ensemble et le retirer du tableau.",
+        "- Remplissez les emplacements vides avec des cartes de la ruche ou du talon.",
+        "- Touchez une carte pour la déplacer automatiquement sur une pile de même rang."
       ]
     },
     "quickStart": {
@@ -339,7 +369,7 @@
   "beleaguered-castle": {
     "cardDescription": {
       "hash": "f890639b",
-      "value": "Prenez d'assaut le château : montez chaque couleur de l'As au Roi, avec des colonnes à découvert."
+      "value": "Prenez d'assaut le château\u00a0: montez chaque couleur de l'As au Roi, avec des colonnes à découvert."
     },
     "howToPlay": {
       "hash": "8fb5fdcb",
@@ -377,7 +407,7 @@
       "hash": "9a5911e7",
       "value": [
         "## Objectif",
-        "Placez toutes les cartes sur huit fondations : quatre montent à partir des As et quatre descendent à partir des Rois.",
+        "Placez toutes les cartes sur huit fondations\u00a0: quatre montent à partir des As et quatre descendent à partir des Rois.",
         "## Règles",
         "- Les As commencent sur leurs fondations montantes.",
         "- Construisez les colonnes en montant ou en descendant d'un rang, dans la même couleur.",
@@ -391,7 +421,7 @@
       "value": [
         "Montez les fondations des As et descendez celles des Rois, par couleur.",
         "Construisez les colonnes en montant ou en descendant d'un rang, dans la même couleur.",
-        "Déplacez une carte découverte à la fois ; les colonnes vides restent fermées."
+        "Déplacez une carte découverte à la fois\u00a0; les colonnes vides restent fermées."
       ]
     },
     "title": {
@@ -417,9 +447,9 @@
         "- Un Joker permet de placer votre carte suivante sous n'importe quelle mûre non récoltée, y compris dans la même colonne.",
         "",
         "## Récolter les mûres",
-        "Un ensemble est formé de trois cartes (hors Jokers) sous une mûre, qui comprennent son rang et qui forment :",
-        "- une suite de trois rangs consécutifs ;",
-        "- trois cartes de la même couleur ;",
+        "Un ensemble est formé de trois cartes (hors Jokers) sous une mûre, qui comprennent son rang et qui forment\u00a0:",
+        "- une suite de trois rangs consécutifs\u00a0;",
+        "- trois cartes de la même couleur\u00a0;",
         "- trois figures (Valets, Dames ou Rois).",
         "Des cartes supplémentaires peuvent rester sous une mûre récoltée.",
         "",
@@ -449,21 +479,21 @@
       "hash": "467c3b31",
       "value": [
         "## Objectif",
-        "Maximisez votre score sur dix manches. Vous **gagnez** avec un score final d'au moins **120** ; sinon, c'est une défaite.",
+        "Maximisez votre score sur dix manches. Vous **gagnez** avec un score final d'au moins **120**\u00a0; sinon, c'est une défaite.",
         "## Lancer les boules",
-        "- Choisissez une carte boule face visible et renversez **1, 2 ou 3 quilles adjacentes** dont la somme des valeurs **se termine par le chiffre de la carte boule** :",
+        "- Choisissez une carte boule face visible et renversez **1, 2 ou 3 quilles adjacentes** dont la somme des valeurs **se termine par le chiffre de la carte boule**\u00a0:",
         "-- 2 + 7 + 5 = 14, qui correspond à une boule 4",
         "-- A + 4 = 5, qui correspond à une boule 5",
         "-- 10 + 10 = 20, qui correspond à une boule 10.",
-        "- Quand aucun coup valide ne reste, sélectionnez « Fin de la boule ».",
+        "- Quand aucun coup valide ne reste, sélectionnez «\u00a0Fin de la boule\u00a0».",
         "## Restrictions",
         "- Au **premier lancer d'une manche**, vous ne pouvez pas retirer une quille de la rangée du fond, et la quille centrale ne peut pas être prise seule.",
         "- Après l'ouverture, chaque touche doit inclure **au moins une quille adjacente à un vide** laissé par une touche précédente.",
         "## Score",
-        "Le score fonctionne comme au bowling : une manche permet jusqu'à deux boules et se termine plus tôt en cas de strike. À la manche 10, un strike ou un spare donne 2 ou 1 boule(s) de bonus.",
-        "- **Strike** : 10 plus les deux boules suivantes",
-        "- **Spare** (toutes les quilles en deux boules) : 10 plus la boule suivante",
-        "- **Manche ouverte** : le nombre de quilles renversées"
+        "Le score fonctionne comme au bowling\u00a0: une manche permet jusqu'à deux boules et se termine plus tôt en cas de strike. À la manche 10, un strike ou un spare donne 2 ou 1 boule(s) de bonus.",
+        "- **Strike**\u00a0: 10 plus les deux boules suivantes",
+        "- **Spare** (toutes les quilles en deux boules)\u00a0: 10 plus la boule suivante",
+        "- **Manche ouverte**\u00a0: le nombre de quilles renversées"
       ]
     },
     "quickStart": {
@@ -519,21 +549,21 @@
         "## Objectif",
         "Tuez tous les zombies avant d'être à court de cartes.",
         "## Déroulement du tour",
-        "- **Révéler** : révélez des zombies, s'il en reste.",
-        "- **Jouer** : posez la carte du dessus de la pioche sur une pile valide de la cabane.",
-        "- **Tuer** : si possible, tuez un zombie adjacent à la dernière carte jouée.",
+        "- **Révéler**\u00a0: révélez des zombies, s'il en reste.",
+        "- **Jouer**\u00a0: posez la carte du dessus de la pioche sur une pile valide de la cabane.",
+        "- **Tuer**\u00a0: si possible, tuez un zombie adjacent à la dernière carte jouée.",
         "## Pose des cartes",
-        "Une carte piochée peut être posée sur une pile existante si elle est :",
+        "Une carte piochée peut être posée sur une pile existante si elle est\u00a0:",
         "- de même valeur,",
         "- de la même teinte (rouge ou noire) **et** de valeur supérieure, ou",
         "- de teinte opposée **et** de valeur inférieure.",
         "## Tuer les zombies",
         "Pouvoir tuer un zombie dépend de son rang, de la carte jouée et **des deux cartes de soutien situées sur la même ligne que le zombie et la dernière carte jouée**.",
-        "Un zombie peut être tué si :",
-        "- il est adjacent à la dernière carte jouée ;",
-        "- les deux cartes de soutien totalisent au moins 10 (les As valent 1, les Jokers 0) ;",
-        "- pour les Rois, les deux cartes de soutien sont de la couleur du Roi ;",
-        "- pour les Dames, les deux cartes de soutien sont de la teinte de la Dame ;",
+        "Un zombie peut être tué si\u00a0:",
+        "- il est adjacent à la dernière carte jouée\u00a0;",
+        "- les deux cartes de soutien totalisent au moins 10 (les As valent 1, les Jokers 0)\u00a0;",
+        "- pour les Rois, les deux cartes de soutien sont de la couleur du Roi\u00a0;",
+        "- pour les Dames, les deux cartes de soutien sont de la teinte de la Dame\u00a0;",
         "- les Valets n'ont aucune restriction."
       ]
     },
@@ -542,7 +572,7 @@
       "value": [
         "Tuez les zombies en posant des cartes sur des emplacements adjacents valides.",
         "Les deux autres cartes de cette ligne doivent totaliser au moins 10 et être de la même couleur (K) ou de la même teinte (Q).",
-        "Les A valent 1 ; les Jokers peuvent être posés n'importe où et valent 0."
+        "Les A valent 1\u00a0; les Jokers peuvent être posés n'importe où et valent 0."
       ]
     },
     "title": {
@@ -563,7 +593,7 @@
         "## Placer les clients",
         "- Choisissez une place numérotée dans l'une des files, puis révélez le client suivant.",
         "- Un client ne peut rejoindre la file que si son rang respecte l'ordre décroissant de la file (du plus haut au plus bas).",
-        "- Si le client ne rentre pas, vous pouvez :",
+        "- Si le client ne rentre pas, vous pouvez\u00a0:",
         "-- l'installer en défaussant la file sélectionnée, ou",
         "-- le renvoyer, ainsi que le client suivant.",
         "- Vous perdez immédiatement quand les quatre cartes d'un même rang ont été défaussées.",
@@ -596,10 +626,10 @@
         "**Gagnez** en montant les quatre **fondations** jusqu'aux Rois.",
         "## Fondations",
         "Chaque fondation monte **par pas fixe** (+1, +2, +3 ou +4), en repassant par l'As après le Roi (puis le 2, etc.).",
-        "- **Fondation 1** : A, 2, 3, 4 … K",
-        "- **Fondation 2** : 2, 4, 6, 8, 10, Q, A, 3 … K",
-        "- **Fondation 3** : 3, 6, 9, Q, 2, 5 … K",
-        "- **Fondation 4** : 4, 8, Q, 3, 7 … K",
+        "- **Fondation 1**\u00a0: A, 2, 3, 4 … K",
+        "- **Fondation 2**\u00a0: 2, 4, 6, 8, 10, Q, A, 3 … K",
+        "- **Fondation 3**\u00a0: 3, 6, 9, Q, 2, 5 … K",
+        "- **Fondation 4**\u00a0: 4, 8, Q, 3, 7 … K",
         "## Déroulement",
         "- Jouez la carte du dessus de la pioche ou de n'importe quel talon sur une fondation si elle respecte le pas de cette fondation.",
         "- Vous pouvez jouer la carte piochée sur l'un des 4 talons.",
@@ -630,7 +660,7 @@
         "Envoyez les 52 cartes sur leurs fondations, montées par couleur à partir du rang de base et repassant du Roi à l'As.",
         "## Fondations",
         "- Montez les fondations **par couleur** à partir du rang de base.",
-        "- Les fondations repassent du Roi à l'As, par exemple : 10, J, Q, K, A, 2, 3, etc.",
+        "- Les fondations repassent du Roi à l'As, par exemple\u00a0: 10, J, Q, K, A, 2, 3, etc.",
         "## Colonnes",
         "- Descendez les colonnes **en alternant rouge et noir** (en passant de l'As au Roi).",
         "- Déplacez des cartes seules ou des groupes ordonnés de cartes entre les colonnes.",
@@ -728,20 +758,20 @@
         "Pour chacun des 12 clients, un livre d'occasion est révélé et le client fait une offre.",
         "- La valeur de l'offre est la somme de la valeur du client (J = 11, Q = 12, K = 13) et de celle du livre d'occasion révélé.",
         "- Choisissez des livres du rayon dont le total correspond exactement à cette offre.",
-        "- **Offres exclusives** : les livres du rayon de la même couleur que le livre d'occasion **coûtent 0 $**.",
-        "- **Offres à durée limitée :** les As coûtent normalement 11 $, mais peuvent être proposés pour 1 $ (touchez-les pour changer leur valeur).",
+        "- **Offres exclusives**\u00a0: les livres du rayon de la même couleur que le livre d'occasion **coûtent 0\u00a0$**.",
+        "- **Offres à durée limitée\u00a0:** les As coûtent normalement 11\u00a0$, mais peuvent être proposés pour 1\u00a0$ (touchez-les pour changer leur valeur).",
         "## Améliorer votre réputation auprès de la guilde",
-        "- Après un échange, les **livres sélectionnés de la même couleur que le client** s'ajoutent à votre score ; les autres sont défaussés.",
+        "- Après un échange, les **livres sélectionnés de la même couleur que le client** s'ajoutent à votre score\u00a0; les autres sont défaussés.",
         "## Passer",
-        "- Si vous ne pouvez pas répondre à l'offre, vous pouvez **passer** et perdre des points selon le rang du client : J = 1, Q = 2, K = 3.",
+        "- Si vous ne pouvez pas répondre à l'offre, vous pouvez **passer** et perdre des points selon le rang du client\u00a0: J = 1, Q = 2, K = 3.",
         "## Score",
-        "Votre score détermine votre évaluation en fin de partie :",
-        "- Moins de 10 : pas de livres pour vous ! Vous êtes licencié !",
-        "- 10-11 : 🕮",
-        "- 12-13 : 🕮🕮",
-        "- 14-15 : 🕮🕮🕮",
-        "- 16-17 : 🕮🕮🕮🕮",
-        "- 18+ : 🕮🕮🕮🕮🕮"
+        "Votre score détermine votre évaluation en fin de partie\u00a0:",
+        "- Moins de 10\u00a0: pas de livres pour vous\u00a0! Vous êtes licencié\u00a0!",
+        "- 10-11\u00a0: 🕮",
+        "- 12-13\u00a0: 🕮🕮",
+        "- 14-15\u00a0: 🕮🕮🕮",
+        "- 16-17\u00a0: 🕮🕮🕮🕮",
+        "- 18+\u00a0: 🕮🕮🕮🕮🕮"
       ]
     },
     "quickStart": {
@@ -769,7 +799,7 @@
         "**Vous perdez** si, à un moment quelconque, plus de 4 piles ont leur carte du dessus face cachée.",
         "## Déroulement",
         "La partie se joue avec les cartes de l'As au 10 des quatre couleurs.",
-        "À chaque tour, placez la carte du dessus de la pioche sur une pile de la grille :",
+        "À chaque tour, placez la carte du dessus de la pioche sur une pile de la grille\u00a0:",
         "- vous pouvez commencer une nouvelle pile si elle est adjacente à une pile existante, ou",
         "- vous pouvez ajouter la carte à une pile qui en contient moins de 4.",
         "\nAprès la pose d'une carte, si elle est la plus haute ou la plus basse de sa rangée ou de sa colonne, les cartes de cette rangée ou de cette colonne sont retournées (face visible ou face cachée).",
@@ -793,7 +823,7 @@
   "clock": {
     "cardDescription": {
       "hash": "61261ec5",
-      "value": "Une réussite de pur hasard : suivez les cartes autour de l'horloge avant que tous les Rois soient découverts."
+      "value": "Une réussite de pur hasard\u00a0: suivez les cartes autour de l'horloge avant que tous les Rois soient découverts."
     },
     "howToPlay": {
       "hash": "36c70a77",
@@ -802,7 +832,7 @@
         "Retournez toutes les cartes face visible et rangez les 52 à leur place sur l'horloge, avant que les quatre Rois soient révélés.",
         "## Jouer",
         "- Retournez la carte du dessus de la pile centrale pour commencer.",
-        "- Touchez la pile de l'heure correspondante : les As à 1 heure, les chiffres à leur heure, le Valet à 11 heures, la Dame à 12 heures et les Rois au centre.",
+        "- Touchez la pile de l'heure correspondante\u00a0: les As à 1\u00a0heure, les chiffres à leur heure, le Valet à 11\u00a0heures, la Dame à 12\u00a0heures et les Rois au centre.",
         "## Gagner et perdre",
         "Vous gagnez si toutes les piles sont retournées face visible. Vous perdez dès que le **quatrième Roi** est révélé."
       ]
@@ -840,7 +870,7 @@
       "value": [
         "Montez huit fondations par couleur.",
         "Descendez les colonnes sans tenir compte de la couleur.",
-        "Déplacez une carte à la fois ; n'importe quelle carte comble un espace."
+        "Déplacez une carte à la fois\u00a0; n'importe quelle carte comble un espace."
       ]
     },
     "title": {
@@ -859,7 +889,7 @@
         "## Objectif",
         "Placez les 104 cartes sur les huit fondations.",
         "## Fondations",
-        "- Les As **montent** par couleur jusqu'aux Rois ; les Rois **descendent** par couleur jusqu'aux As.",
+        "- Les As **montent** par couleur jusqu'aux Rois\u00a0; les Rois **descendent** par couleur jusqu'aux As.",
         "## Règles",
         "- Une carte de la courtepointe est **libre** quand au moins l'un de ses **petits côtés** ne touche aucune autre carte.",
         "- Touchez une carte libre pour la jouer sur une fondation ou, à défaut, sur le **talon** si elle est d'un rang au-dessus ou en dessous de la carte du dessus du talon, dans la même couleur.",
@@ -890,22 +920,22 @@
       "hash": "2122d621",
       "value": [
         "## Objectif",
-        "Placez les deux paquets sur huit fondations : quatre montent à partir des As et quatre descendent à partir des Rois.",
+        "Placez les deux paquets sur huit fondations\u00a0: quatre montent à partir des As et quatre descendent à partir des Rois.",
         "## Règles",
         "- Seule la carte découverte de chacune des seize piles est jouable.",
-        "- Construisez les piles en montant ou en descendant d'un rang dans la même couleur ; l'As et le Roi sont voisins et « bouclent ».",
+        "- Construisez les piles en montant ou en descendant d'un rang dans la même couleur\u00a0; l'As et le Roi sont voisins et «\u00a0bouclent\u00a0».",
         "- Déplacez une carte à la fois.",
         "- Les piles vides ne peuvent pas être remplies.",
         "- Les cartes autres que la base peuvent passer d'une fondation à l'autre.",
-        "- Trois fois par partie, vous pouvez « rempiler » pour placer la carte du dessous de chaque pile sur le dessus."
+        "- Trois fois par partie, vous pouvez «\u00a0rempiler\u00a0» pour placer la carte du dessous de chaque pile sur le dessus."
       ]
     },
     "quickStart": {
       "hash": "f9edde34",
       "value": [
         "Montez les fondations des As et descendez celles des Rois, par couleur.",
-        "Construisez les colonnes en montant ou en descendant d'un rang dans la même couleur ; l'As et le Roi se suivent.",
-        "Déplacez une carte découverte ; rempilez chaque pile jusqu'à trois fois."
+        "Construisez les colonnes en montant ou en descendant d'un rang dans la même couleur\u00a0; l'As et le Roi se suivent.",
+        "Déplacez une carte découverte\u00a0; rempilez chaque pile jusqu'à trois fois."
       ]
     },
     "title": {
@@ -928,29 +958,29 @@
         "- Les cartes ne peuvent plus être déplacées une fois posées.",
         "- Une fois les seize cartes posées, une dix-septième carte devient la carte de départ.",
         "## Score",
-        "Chaque rangée et chaque colonne se compte comme une main de cribbage (avec la carte de départ) :",
-        "- **Quinze (2 pts) :**",
+        "Chaque rangée et chaque colonne se compte comme une main de cribbage (avec la carte de départ)\u00a0:",
+        "- **Quinze (2\u00a0pts)\u00a0:**",
         "-- Deux cartes ou plus dont le total fait 15. Les figures valent 10 et les As 1.",
-        "- **Paires (2, 6 ou 12 pts) :**",
-        "-- Paire (2 cartes de même rang) = 2 pts",
-        "-- Paire royale ou brelan (3 cartes) = 6 pts",
-        "-- Double paire royale ou carré (4 cartes) = 12 pts.",
-        "- **Suites (1 pt par carte) :**",
-        "-- Une séquence d'au moins trois cartes consécutives (sans tenir compte de la couleur) rapporte 1 point par carte.",
-        "- **Couleur (4 ou 5 pts) :**",
-        "-- Quatre cartes de la même couleur = 4 pts.",
-        "-- Si la carte de départ est aussi de cette couleur = 5 pts.",
-        "- **His Nobs (1 pt) :**",
-        "-- Si une rangée ou une colonne contient un Valet de la même couleur que la carte de départ, elle marque 1 point de plus.",
-        "- **His Heels (2 pts) :**",
-        "-- Si la carte de départ est un Valet, « his heels » ajoute deux points au score total."
+        "- **Paires (2, 6 ou 12\u00a0pts)\u00a0:**",
+        "-- Paire (2 cartes de même rang) = 2\u00a0pts",
+        "-- Paire royale ou brelan (3 cartes) = 6\u00a0pts",
+        "-- Double paire royale ou carré (4 cartes) = 12\u00a0pts.",
+        "- **Suites (1\u00a0pt par carte)\u00a0:**",
+        "-- Une séquence d'au moins trois cartes consécutives (sans tenir compte de la couleur) rapporte 1\u00a0point par carte.",
+        "- **Couleur (4 ou 5\u00a0pts)\u00a0:**",
+        "-- Quatre cartes de la même couleur = 4\u00a0pts.",
+        "-- Si la carte de départ est aussi de cette couleur = 5\u00a0pts.",
+        "- **His Nobs (1\u00a0pt)\u00a0:**",
+        "-- Si une rangée ou une colonne contient un Valet de la même couleur que la carte de départ, elle marque 1\u00a0point de plus.",
+        "- **His Heels (2\u00a0pts)\u00a0:**",
+        "-- Si la carte de départ est un Valet, «\u00a0his heels\u00a0» ajoute deux points au score total."
       ]
     },
     "quickStart": {
       "hash": "c7bb9e3a",
       "value": [
         "Placez chaque carte à côté d'une autre carte de la grille.",
-        "Une carte de « départ » est révélée une fois les seize cartes posées.",
+        "Une carte de «\u00a0départ\u00a0» est révélée une fois les seize cartes posées.",
         "Les rangées et les colonnes se comptent comme des mains de cribbage."
       ]
     },
@@ -974,39 +1004,39 @@
         "**Attaque**",
         "- Infliger à un ennemi **plus** de dégâts que sa santé l'envoie dans la défausse.",
         "- Ramener sa santé à **exactement 0** l'envoie dans le paquet de la Taverne, ce qui vous permet de le piocher plus tard.",
-        "-- Valeurs d'attaque des ennemis piochés :\nValets = 10, Dames = 15, Rois = 20",
+        "-- Valeurs d'attaque des ennemis piochés\u00a0:\nValets = 10, Dames = 15, Rois = 20",
         "\n**Défense**",
         "- Si l'ennemi survit à votre dernière attaque, il contre-attaque.",
         "- Défaussez des cartes de votre main pour un total d'au moins sa valeur d'attaque.",
         "- Le pouvoir des **♠ Piques** peut servir à réduire la valeur d'attaque.",
         "## Pouvoirs des couleurs",
         "La force du pouvoir dépend du rang de la carte. Les ennemis sont **immunisés contre le pouvoir de leur propre couleur**.",
-        "- **♥ Cœurs** (soin) : mélange autant de cartes de la défausse et les replace sous la pioche.",
-        "- **♦ Carreaux :** piochez autant de cartes.",
-        "- **♣ Trèfles :** doublez les dégâts infligés.",
-        "- **♠ Piques** (bouclier) : réduisez définitivement l'attaque de cet ennemi de cette valeur.",
+        "- **♥ Cœurs** (soin)\u00a0: mélange autant de cartes de la défausse et les replace sous la pioche.",
+        "- **♦ Carreaux\u00a0:** piochez autant de cartes.",
+        "- **♣ Trèfles\u00a0:** doublez les dégâts infligés.",
+        "- **♠ Piques** (bouclier)\u00a0: réduisez définitivement l'attaque de cet ennemi de cette valeur.",
         "## Combos",
         "- Jouez un **As** (compagnon animal) avec une autre carte pour additionner leurs valeurs et déclencher les deux pouvoirs.",
         "- Jouez **deux à quatre cartes de même rang**, dont le total ne dépasse pas 10, en un seul combo.",
         "## Les ennemis",
-        "- **Valets** : 20 de santé, 10 d'attaque.",
-        "- **Dames** : 30 de santé, 15 d'attaque.",
-        "- **Rois** : 40 de santé, 20 d'attaque.",
+        "- **Valets**\u00a0: 20 de santé, 10 d'attaque.",
+        "- **Dames**\u00a0: 30 de santé, 15 d'attaque.",
+        "- **Rois**\u00a0: 40 de santé, 20 d'attaque.",
         "## Bouffons",
         "- Les Bouffons peuvent être activés pour **défausser votre main et la compléter** à 8 cartes.",
-        "- Utilisez moins de Bouffons pour un meilleur score :",
-        "-- Or : 0 Bouffon utilisé",
-        "-- Argent : 1 Bouffon utilisé",
-        "-- Bronze : 2 Bouffons utilisés"
+        "- Utilisez moins de Bouffons pour un meilleur score\u00a0:",
+        "-- Or\u00a0: 0 Bouffon utilisé",
+        "-- Argent\u00a0: 1 Bouffon utilisé",
+        "-- Bronze\u00a0: 2 Bouffons utilisés"
       ]
     },
     "quickStart": {
       "hash": "b3570aa9",
       "value": [
         "Battez 12 têtes couronnées, une à la fois.",
-        "Les couleurs ont des pouvoirs ; les ennemis sont immunisés contre leur propre couleur ; les As permettent des combos.",
-        "Phase d'attaque : jouez une ou plusieurs cartes pour infliger des dégâts.",
-        "Phase de défense : les cartes défaussées doivent totaliser au moins l'attaque de l'ennemi."
+        "Les couleurs ont des pouvoirs\u00a0; les ennemis sont immunisés contre leur propre couleur\u00a0; les As permettent des combos.",
+        "Phase d'attaque\u00a0: jouez une ou plusieurs cartes pour infliger des dégâts.",
+        "Phase de défense\u00a0: les cartes défaussées doivent totaliser au moins l'attaque de l'ennemi."
       ]
     },
     "title": {
@@ -1035,7 +1065,7 @@
       "hash": "fd1b5503",
       "value": [
         "Montez les fondations par couleur à partir des As.",
-        "Descendez par couleur en déplaçant les cartes du dessus ; les espaces restent vides.",
+        "Descendez par couleur en déplaçant les cartes du dessus\u00a0; les espaces restent vides.",
         "Après un coup, touchez la pile de redistribution pour reformer les piles par quatre."
       ]
     },
@@ -1055,43 +1085,43 @@
         "## Objectif",
         "Réalisez des études de rivière en formant des colonnes de population d'**exactement 21 poissons**.",
         "**Maximisez votre score** en réalisant le plus d'études possible et en obtenant des percées scientifiques.",
-        "La **partie se termine** quand la « station de terrain » (la pioche) est vide, ou si une colonne atteint **25 ou plus**.",
+        "La **partie se termine** quand la «\u00a0station de terrain\u00a0» (la pioche) est vide, ou si une colonne atteint **25 ou plus**.",
         "## Types de cartes",
-        "- **Bancs de poissons :**",
+        "- **Bancs de poissons\u00a0:**",
         "-- De l'As au 10, l'As valant 1.",
-        "-- La valeur de la carte représente le nombre de poissons de ce « banc ».",
-        "- **Pêcheurs :**",
+        "-- La valeur de la carte représente le nombre de poissons de ce «\u00a0banc\u00a0».",
+        "- **Pêcheurs\u00a0:**",
         "-- Valets, Dames et Rois",
         "-- Peuvent être ajoutés à un banc de poissons pour réduire sa population **jusqu'à** 1 (Valet), 2 (Dame) ou 3 (Roi). La population d'un banc ne peut pas descendre sous 0.",
         "## Déroulement",
-        "À chaque tour, videz votre main en effectuant l'une des actions suivantes :",
-        "- **Relâcher des poissons :** ajoutez un banc en bas d'une colonne (sélectionnez une carte de la main, puis touchez une colonne).",
-        "- **Pêcher :** placez un pêcheur sur un banc qui n'en a pas encore (sélectionnez une carte de la main, puis touchez un banc).",
-        "- **Transférer des poissons :** transférez des poissons d'une colonne à une autre, au prix d'une carte de votre main. Sans rien sélectionner, touchez le banc du bas d'une colonne pour le soulever, touchez une autre colonne pour viser, puis touchez une carte de la main pour la défausser et déplacer le banc. Vous ne pouvez pas déplacer le seul banc d'une colonne, ni un banc sous un pêcheur.",
-        "\nUne fois votre main vide :",
-        "- toute colonne totalisant **exactement 21** est mise de côté comme étude terminée ;",
-        "- l'espace laissé est rempli par un nouveau banc ;",
+        "À chaque tour, videz votre main en effectuant l'une des actions suivantes\u00a0:",
+        "- **Relâcher des poissons\u00a0:** ajoutez un banc en bas d'une colonne (sélectionnez une carte de la main, puis touchez une colonne).",
+        "- **Pêcher\u00a0:** placez un pêcheur sur un banc qui n'en a pas encore (sélectionnez une carte de la main, puis touchez un banc).",
+        "- **Transférer des poissons\u00a0:** transférez des poissons d'une colonne à une autre, au prix d'une carte de votre main. Sans rien sélectionner, touchez le banc du bas d'une colonne pour le soulever, touchez une autre colonne pour viser, puis touchez une carte de la main pour la défausser et déplacer le banc. Vous ne pouvez pas déplacer le seul banc d'une colonne, ni un banc sous un pêcheur.",
+        "\nUne fois votre main vide\u00a0:",
+        "- toute colonne totalisant **exactement 21** est mise de côté comme étude terminée\u00a0;",
+        "- l'espace laissé est rempli par un nouveau banc\u00a0;",
         "- votre main est complétée depuis la pioche et un nouveau tour commence.",
         "## Percées scientifiques",
-        "- **Spécialisation des espèces :**",
+        "- **Spécialisation des espèces\u00a0:**",
         "-- une étude d'une seule couleur.",
-        "- **Diversité des espèces :**",
+        "- **Diversité des espèces\u00a0:**",
         "-- une étude utilisant les quatre couleurs.",
-        "- **Bancs denses :**",
+        "- **Bancs denses\u00a0:**",
         "-- une étude contenant au moins cinq bancs.",
-        "- **Groupes de population :**",
+        "- **Groupes de population\u00a0:**",
         "-- une étude avec au moins deux bancs de même rang.",
-        "- **Pêche sélective :**",
+        "- **Pêche sélective\u00a0:**",
         "-- un pêcheur qui attrape des poissons de sa propre couleur.",
-        "- **Pression de pêche :**",
+        "- **Pression de pêche\u00a0:**",
         "-- une étude contenant au moins deux pêcheurs.",
         "## Score",
         "- Marquez **1 point** par étude, plus **2 points** par percée scientifique.",
-        "- Contribution scientifique :",
-        "-- **0-8 :** apport minime",
-        "-- **9-13 :** utile à l'étude locale",
-        "-- **14-17 :** fait avancer les connaissances",
-        "-- **18+ :** transforme la science"
+        "- Contribution scientifique\u00a0:",
+        "-- **0-8\u00a0:** apport minime",
+        "-- **9-13\u00a0:** utile à l'étude locale",
+        "-- **14-17\u00a0:** fait avancer les connaissances",
+        "-- **18+\u00a0:** transforme la science"
       ]
     },
     "quickStart": {
@@ -1118,9 +1148,9 @@
         "Placez les **96 cartes** dans le plus grand nombre possible de piles en séquence de même couleur. Laissez le moins de cartes possible hors de la grille.",
         "## Grille",
         "Formez des séquences en posant des cartes ou des piles sur la carte immédiatement inférieure de la même couleur.",
-        "- La rangée du haut se monte par couleur : **2, 5, 8, J**.",
-        "- La rangée du milieu se monte par couleur : **3, 6, 9, Q**.",
-        "- La rangée du bas se monte par couleur : **4, 7, 10, K**.",
+        "- La rangée du haut se monte par couleur\u00a0: **2, 5, 8, J**.",
+        "- La rangée du milieu se monte par couleur\u00a0: **3, 6, 9, Q**.",
+        "- La rangée du bas se monte par couleur\u00a0: **4, 7, 10, K**.",
         "Échangez deux piles occupées de la grille pour les réorganiser.",
         "Vous pouvez former des piles sans leur carte de base (par exemple 5-8) et compléter la séquence plus tard.",
         "Quand une construction laisse une case vide dans la grille, elle est aussitôt comblée depuis la pioche tant qu'il reste des cartes.",
@@ -1130,16 +1160,16 @@
         "- Les redistributions sont illimitées.",
         "## Score",
         "La partie se termine quand plus aucune carte ne peut être jouée.",
-        "Votre score est le nombre de cartes restées hors de la grille :",
-        "- **10 ou moins** : bien",
-        "- **5 ou moins** : excellent",
-        "- **2 ou moins** : brillant"
+        "Votre score est le nombre de cartes restées hors de la grille\u00a0:",
+        "- **10 ou moins**\u00a0: bien",
+        "- **5 ou moins**\u00a0: excellent",
+        "- **2 ou moins**\u00a0: brillant"
       ]
     },
     "quickStart": {
       "hash": "f85507c3",
       "value": [
-        "Formez des séquences de même couleur : 2-5-8-J (rangée du haut), 3-6-9-Q (rangée du milieu) et 4-7-10-K (rangée du bas).",
+        "Formez des séquences de même couleur\u00a0: 2-5-8-J (rangée du haut), 3-6-9-Q (rangée du milieu) et 4-7-10-K (rangée du bas).",
         "Déplacez des cartes ou des piles pour former des séquences ou échanger leur position.",
         "Touchez la pioche pour distribuer trois cartes sur le talon.",
         "La carte du dessus du talon peut être posée sur une pile valide."
@@ -1172,7 +1202,7 @@
       "value": [
         "Placez les deux paquets sur huit fondations, montées par couleur de A à K.",
         "Descendez les colonnes par rang, sans tenir compte de la couleur.",
-        "Déplacez une carte à la fois ; n'importe quelle carte comble un espace.",
+        "Déplacez une carte à la fois\u00a0; n'importe quelle carte comble un espace.",
         "Il n'y a pas de redistribution."
       ]
     },
@@ -1231,8 +1261,8 @@
         "-- Les **Dames** ne peuvent être blessées que par des attaquants **de la même teinte (rouge ou noire)**",
         "-- Les **Rois** ne peuvent être blessés que par des attaquants **de la même couleur**",
         "## Stratagèmes",
-        "- **Extraire** : dépensez un As pour renvoyer une pile de la grille sous le paquet.",
-        "- **Réattribuer** : dépensez un Joker pour déplacer une carte du dessus de la grille vers une autre pile valide.",
+        "- **Extraire**\u00a0: dépensez un As pour renvoyer une pile de la grille sous le paquet.",
+        "- **Réattribuer**\u00a0: dépensez un Joker pour déplacer une carte du dessus de la grille vers une autre pile valide.",
         "## Score",
         "Votre score est le nombre de stratagèmes non utilisés."
       ]
@@ -1242,7 +1272,7 @@
       "value": [
         "Piochez et posez des cartes numérotées sur des cartes de la grille de valeur égale ou inférieure.",
         "Chaque pose tire à travers les deux cartes situées face à une tête couronnée adjacente.",
-        "Les As retirent des piles ; les Jokers déplacent des cartes du dessus."
+        "Les As retirent des piles\u00a0; les Jokers déplacent des cartes du dessus."
       ]
     },
     "title": {
@@ -1272,7 +1302,7 @@
       "value": [
         "Montez les fondations par couleur.",
         "Descendez les colonnes par rang.",
-        "Distribuez une carte de la pioche sur chaque colonne ; les K comblent les espaces."
+        "Distribuez une carte de la pioche sur chaque colonne\u00a0; les K comblent les espaces."
       ]
     },
     "title": {
@@ -1303,7 +1333,7 @@
       "value": [
         "Envoyez les cartes sur les fondations par couleur, de A à K.",
         "Descendez les colonnes par couleur.",
-        "Utilisez 8 cellules libres ; seuls les Rois occupent les colonnes vides."
+        "Utilisez 8 cellules libres\u00a0; seuls les Rois occupent les colonnes vides."
       ]
     },
     "title": {
@@ -1353,10 +1383,10 @@
         "**Vous perdez** si un Valet, une Dame, un Roi ou un As entre dans la pile de capture ennemie.",
         "## Déroulement",
         "Au début d'un tour, vous pouvez défausser autant de cartes de votre main que vous le souhaitez.",
-        "Choisissez ensuite exactement une option de capture :",
-        "- **Capturer une carte ennemie** : sélectionnez une carte ennemie et autant de cartes de votre main de la même couleur que vous voulez, pour une valeur totale égale ou supérieure.",
-        "- **Laisser l'ennemi capturer** : sélectionnez une carte de votre main, qui sera capturée par la carte ennemie la plus à droite.",
-        "- **Sacrifice** : sélectionnez deux cartes de votre main et une carte ennemie (vous ne pouvez pas sélectionner J/Q/K/A, car vous perdriez immédiatement la partie).",
+        "Choisissez ensuite exactement une option de capture\u00a0:",
+        "- **Capturer une carte ennemie**\u00a0: sélectionnez une carte ennemie et autant de cartes de votre main de la même couleur que vous voulez, pour une valeur totale égale ou supérieure.",
+        "- **Laisser l'ennemi capturer**\u00a0: sélectionnez une carte de votre main, qui sera capturée par la carte ennemie la plus à droite.",
+        "- **Sacrifice**\u00a0: sélectionnez deux cartes de votre main et une carte ennemie (vous ne pouvez pas sélectionner J/Q/K/A, car vous perdriez immédiatement la partie).",
         "## As et Jokers",
         "- Les As valent 14",
         "- Les Jokers sont des cartes libres qui peuvent prendre n'importe quelle couleur ou valeur."
@@ -1382,7 +1412,7 @@
       "hash": "dc55b9d9",
       "value": [
         "## Objectif",
-        "Disposez les rangées pour que chacune soit As, 2, 3, 4, par couleur :",
+        "Disposez les rangées pour que chacune soit As, 2, 3, 4, par couleur\u00a0:",
         "- **Cœurs**",
         "- **Trèfles**",
         "- **Carreaux**",
@@ -1396,7 +1426,7 @@
     "quickStart": {
       "hash": "2e731eeb",
       "value": [
-        "Rangez les cartes de l'As au 4 sur chaque rangée : cœurs, trèfles, carreaux, puis piques.",
+        "Rangez les cartes de l'As au 4 sur chaque rangée\u00a0: cœurs, trèfles, carreaux, puis piques.",
         "Touchez une carte à côté de l'espace vide pour la faire glisser."
       ]
     },
@@ -1416,26 +1446,26 @@
         "## Objectif",
         "Videz la grille et sa pioche avant d'avoir utilisé les 13 trèfles.",
         "## Actions",
-        "Certaines actions sont toujours disponibles :",
-        "- **Paire** : retire toutes les cartes du même rang :",
+        "Certaines actions sont toujours disponibles\u00a0:",
+        "- **Paire**\u00a0: retire toutes les cartes du même rang\u00a0:",
         "-- {6C} retire {6D} {6H}",
         "-- {JC} retire {JS} {JD} {6H}",
-        "- **Somme** : retire les cartes sélectionnées dont le total égale la valeur du trèfle :",
+        "- **Somme**\u00a0: retire les cartes sélectionnées dont le total égale la valeur du trèfle\u00a0:",
         "-- {8C} retire {3D} {4H} {AD}",
         "-- {QC} retire {9H} {5H}",
-        "- **Au choix** : retire une carte sélectionnée :",
+        "- **Au choix**\u00a0: retire une carte sélectionnée\u00a0:",
         "-- {5C} retire {7D}",
         "-- {AC} retire un Joker",
-        "\nCertaines actions sont bloquées quand 3 cartes de la même couleur sont présentes dans la grille :",
-        "- **Ligne/Colonne** : retire trois cartes sélectionnées d'une rangée ou d'une colonne contenant le même rang que le trèfle sélectionné.",
+        "\nCertaines actions sont bloquées quand 3 cartes de la même couleur sont présentes dans la grille\u00a0:",
+        "- **Ligne/Colonne**\u00a0: retire trois cartes sélectionnées d'une rangée ou d'une colonne contenant le même rang que le trèfle sélectionné.",
         "-- {7C} retire une rangée {KD} {7H} {JS}",
         "-- {AC} retire une colonne {AH} Joker {3H}",
         "-- Bloquée par 3 carreaux dans la grille.",
-        "- **Haut/Bas** : retire toutes les cartes de la grille de rang supérieur ou inférieur au trèfle sélectionné. Du 2 au 7, retire les plus basses ; du 7 à la Q, les plus hautes.",
+        "- **Haut/Bas**\u00a0: retire toutes les cartes de la grille de rang supérieur ou inférieur au trèfle sélectionné. Du 2 au 7, retire les plus basses\u00a0; du 7 à la Q, les plus hautes.",
         "-- {4C} retire {3D} {3H} {AS}",
         "-- {9C} retire {10H} {10S} {JS} {QD}",
         "-- Bloquée par 3 piques dans la grille.",
-        "- **Suite** : retire les cartes sélectionnées qui forment une suite avec votre trèfle.",
+        "- **Suite**\u00a0: retire les cartes sélectionnées qui forment une suite avec votre trèfle.",
         "-- {5C} retire {4D} {6H} {7S}",
         "-- {KC} retire {8S} {9D} {JD} {QH}",
         "-- Bloquée par 3 cœurs dans la grille.",
@@ -1443,7 +1473,7 @@
         "- Les As valent 1 point.",
         "- Les Jokers n'ont pas de valeur et ne peuvent être retirés que par les actions **Au choix** ou **Ligne/Colonne**.",
         "## Difficulté",
-        "**Facile** utilise un Joker ; **Difficile** ajoute un second Joker au paquet de la grille."
+        "**Facile** utilise un Joker\u00a0; **Difficile** ajoute un second Joker au paquet de la grille."
       ]
     },
     "quickStart": {
@@ -1481,7 +1511,7 @@
       "value": [
         "Montez les fondations par couleur, de l'As au Roi.",
         "Descendez les parterres par rang, sans tenir compte de la couleur.",
-        "Toutes les cartes du bouquet sont disponibles ; n'importe quelle carte occupe un parterre vide."
+        "Toutes les cartes du bouquet sont disponibles\u00a0; n'importe quelle carte occupe un parterre vide."
       ]
     },
     "title": {
@@ -1511,7 +1541,7 @@
       "value": [
         "Montez les fondations par couleur, de l'As au Roi.",
         "Construisez les allées en montant ou en descendant d'un rang dans la même couleur.",
-        "Déplacez une carte à la fois ; n'importe quelle carte occupe une allée vide."
+        "Déplacez une carte à la fois\u00a0; n'importe quelle carte occupe une allée vide."
       ]
     },
     "title": {
@@ -1540,7 +1570,7 @@
       "hash": "59931bd6",
       "value": [
         "Les prédictions de teinte rapportent 1 point.",
-        "Les prédictions « plus haut » ou « plus bas » rapportent 2 points.",
+        "Les prédictions «\u00a0plus haut\u00a0» ou «\u00a0plus bas\u00a0» rapportent 2 points.",
         "Atteignez 12 points avant de vous tromper trois fois."
       ]
     },
@@ -1574,7 +1604,7 @@
       "value": [
         "Montez les 8 fondations par couleur, de A à K.",
         "Descendez les colonnes par couleur, en déplaçant une carte à la fois.",
-        "Retournez les cartes de la pioche sur le talon une à une ; les redistributions dépendent de la difficulté."
+        "Retournez les cartes de la pioche sur le talon une à une\u00a0; les redistributions dépendent de la difficulté."
       ]
     },
     "title": {
@@ -1594,7 +1624,7 @@
         "Placez les 52 cartes sur les quatre **fondations**, chacune montée par couleur de l'As au Roi.",
         "## Règles",
         "- Construisez les colonnes **en descendant par rang, en alternant rouge et noir**.",
-        "- Déplacez une carte à la fois ; chaque **cellule libre** contient une seule carte.",
+        "- Déplacez une carte à la fois\u00a0; chaque **cellule libre** contient une seule carte.",
         "- Vous pouvez déplacer une carte à la fois. Vous pouvez déplacer un groupe de cartes d'un coup, mais seulement si vous avez assez de cellules libres et de colonnes vides pour faire le même déplacement carte par carte.",
         "- N'importe quelle carte peut être posée sur une colonne vide."
       ]
@@ -1661,7 +1691,7 @@
         "## Redistribution",
         "- Quand plus aucun coup n'est possible, vous pouvez redistribuer les cartes qui ne font pas partie d'une séquence correcte.",
         "- Les séquences correctes commençant par un 2 restent en place. S'il n'existe aucune séquence pour cette couleur, le trou de gauche reste vide.",
-        "- Réglage de difficulté : Facile permet 3 redistributions ; Difficile en permet 2."
+        "- Réglage de difficulté\u00a0: Facile permet 3 redistributions\u00a0; Difficile en permet 2."
       ]
     },
     "quickStart": {
@@ -1669,7 +1699,7 @@
       "value": [
         "Remettez les rangées en ordre (du 2 au K).",
         "Une carte peut aller dans un trou si elle est de la même couleur que sa voisine de gauche, et d'un rang au-dessus.",
-        "Redistribuez quand vous êtes bloqué (facile : 3 redistributions, difficile : 2)."
+        "Redistribuez quand vous êtes bloqué (facile\u00a0: 3 redistributions, difficile\u00a0: 2)."
       ]
     },
     "title": {
@@ -1691,7 +1721,7 @@
         "- Neuf colonnes sont distribuées en escalier, comme au Klondike.",
         "- Descendez en alternant rouge et noir et déplacez des séquences ordonnées.",
         "- Seuls les Rois peuvent occuper les colonnes vides.",
-        "- Retournez les cartes de la pioche une à une ; 1 redistribution donne 2 passages en tout."
+        "- Retournez les cartes de la pioche une à une\u00a0; 1 redistribution donne 2 passages en tout."
       ]
     },
     "quickStart": {
@@ -1699,7 +1729,7 @@
       "value": [
         "Placez les deux paquets sur huit fondations, montées par couleur de A à K.",
         "Descendez les colonnes en alternant rouge et noir et déplacez des séquences ordonnées.",
-        "Seuls les K occupent les colonnes vides ; 1 redistribution donne 2 passages de la pioche."
+        "Seuls les K occupent les colonnes vides\u00a0; 1 redistribution donne 2 passages de la pioche."
       ]
     },
     "title": {
@@ -1721,7 +1751,7 @@
         "## Retirer des cartes",
         "- Seule la carte **du bas (découverte)** de chaque colonne est disponible.",
         "- Placez une carte disponible sur le talon si elle est **d'un rang au-dessus ou en dessous** de la carte du talon.",
-        "- Les séquences ne **bouclent pas** : l'As est bas et le Roi est haut, on ne passe donc jamais du Roi à l'As.",
+        "- Les séquences ne **bouclent pas**\u00a0: l'As est bas et le Roi est haut, on ne passe donc jamais du Roi à l'As.",
         "- Quand vous êtes bloqué, retournez une carte de la pioche sur le talon."
       ]
     },
@@ -1747,7 +1777,7 @@
       "hash": "d994567d",
       "value": [
         "## Objectif",
-        "Montez chaque fondation de l'horloge jusqu'à ce que sa carte du dessus corresponde à son heure, par exemple :",
+        "Montez chaque fondation de l'horloge jusqu'à ce que sa carte du dessus corresponde à son heure, par exemple\u00a0:",
         "- la pile de 1 heure se termine par un As,",
         "- la pile de 2 heures par un 2,",
         "- la pile de 11 heures par un Valet,",
@@ -1764,7 +1794,7 @@
       "hash": "7fa8c31a",
       "value": [
         "Montez chaque fondation de l'horloge par couleur jusqu'à ce qu'elle affiche son heure.",
-        "Descendez les colonnes sans tenir compte de la couleur ; le K va sur l'A.",
+        "Descendez les colonnes sans tenir compte de la couleur\u00a0; le K va sur l'A.",
         "N'importe quelle carte occupe une pile vide. Touchez deux fois pour envoyer une carte sur les fondations."
       ]
     },
@@ -1783,9 +1813,9 @@
       "value": [
         "## Objectif",
         "Formez des colonnes de cartes en séquences décroissantes de même couleur, tout en gérant les coups de l'assistant.",
-        "Vous gagnez en construisant des colonnes efficacement : moins vous utilisez de colonnes, mieux c'est.",
+        "Vous gagnez en construisant des colonnes efficacement\u00a0: moins vous utilisez de colonnes, mieux c'est.",
         "## Votre tour",
-        "Au début de votre tour, votre main est complétée. Pour chaque carte, vous pouvez :",
+        "Au début de votre tour, votre main est complétée. Pour chaque carte, vous pouvez\u00a0:",
         "- la garder,",
         "- la défausser, ou",
         "- la jouer sur une colonne, si elle est de la même couleur et que la carte du dessus a une valeur supérieure.",
@@ -1793,12 +1823,12 @@
         "Après votre tour, l'assistant joue la carte suivante du paquet. Vous choisissez la colonne où elle va.",
         "Si la carte de l'assistant ne peut être placée sur aucune colonne et que vous avez déjà 12 colonnes, vous perdez immédiatement.",
         "## Score",
-        "Votre score est le nombre de colonnes construites quand le paquet est épuisé :",
-        "- 12 : Novice",
-        "- 11 : Normal",
-        "- 10 : Avancé",
-        "- 9 : Légendaire",
-        "- 8 : Épique",
+        "Votre score est le nombre de colonnes construites quand le paquet est épuisé\u00a0:",
+        "- 12\u00a0: Novice",
+        "- 11\u00a0: Normal",
+        "- 10\u00a0: Avancé",
+        "- 9\u00a0: Légendaire",
+        "- 8\u00a0: Épique",
         "## Difficulté",
         "Dans les réglages, vous pouvez choisir une main de 5 cartes (Facile) ou de 4 (Difficile). Une main plus petite permet à l'assistant de jouer plus souvent."
       ]
@@ -1866,7 +1896,7 @@
         "- Une créature en bonne santé mange immédiatement toutes les herbes de sa couleur dans sa propre pile.",
         "- Les herbes mangées ne peuvent plus être réparties.",
         "## Écuries ouvertes",
-        "L'extension optionnelle (activable dans les réglages) ajoute une créature en bonne santé, le « Noble », et un Bouffon :",
+        "L'extension optionnelle (activable dans les réglages) ajoute une créature en bonne santé, le «\u00a0Noble\u00a0», et un Bouffon\u00a0:",
         "- Le Noble se trouve dans les Écuries, l'emplacement du milieu. Il mange les herbes déposées à son emplacement si elles sont de sa couleur.",
         "- Le Bouffon mange l'herbe déposée dans les écuries si c'est la dernière herbe déposée, quelle que soit sa couleur."
       ]
@@ -1894,7 +1924,7 @@
         "## Objectif",
         "Montez huit fondations de l'As au Roi par couleur.",
         "## Règles",
-        "- Dix colonnes de trois cartes sont distribuées ; la première carte de chacune est face cachée.",
+        "- Dix colonnes de trois cartes sont distribuées\u00a0; la première carte de chacune est face cachée.",
         "- Descendez par rang sur n'importe quelle couleur, sauf celle de la carte de destination.",
         "- Déplacez une carte découverte à la fois.",
         "- Les colonnes vides acceptent n'importe quelle carte et la pioche n'est distribuée qu'une fois."
@@ -1905,7 +1935,7 @@
       "value": [
         "Descendez sur n'importe quelle couleur, sauf la même.",
         "Déplacez une carte découverte à la fois.",
-        "N'importe quelle carte occupe une colonne vide ; la pioche se parcourt une fois."
+        "N'importe quelle carte occupe une colonne vide\u00a0; la pioche se parcourt une fois."
       ]
     },
     "title": {
@@ -1924,20 +1954,20 @@
         "## Objectif",
         "**Gagnez** en ayant recruté **plus de la moitié** des Espions clés (Valets, Dames et Rois) au moment où le paquet d'espions est épuisé.",
         "## Paquets et déroulement",
-        "- Le paquet d'espions est construit par niveaux : **5-7** au-dessus, puis **8-10**, puis **J-K**.",
+        "- Le paquet d'espions est construit par niveaux\u00a0: **5-7** au-dessus, puis **8-10**, puis **J-K**.",
         "- Votre pioche commence avec les cartes de l'As au 4.",
         "- Votre pioche sera souvent remélangée. Construisez votre paquet en recrutant des espions de forte valeur et en retirant des paires d'espions de faible valeur.",
         "- Les **Espions de soutien** servent seulement à obtenir des Espions clés.",
         "- Les **Espions clés** sont les seules cartes qui comptent dans votre score final.",
         "## Actions",
-        "- **Contrer** :",
+        "- **Contrer**\u00a0:",
         "-- Défaussez autant de cartes que vous voulez pour un total égal à la valeur de l'espion **ou plus**. Vous ne pouvez payer plus que nécessaire que si retirer n'importe laquelle des cartes sélectionnées faisait passer le total sous l'objectif.",
-        "- **Recruter** :",
+        "- **Recruter**\u00a0:",
         "-- Défaussez des cartes totalisant au moins la valeur de l'espion, toutes de sa couleur. Un **As** de la même couleur est un agent double qui convertit toutes les autres cartes jouées à sa couleur pour ce tour.",
-        "- **Retirer** :",
+        "- **Retirer**\u00a0:",
         "-- Après avoir contré ou recruté, vous pouvez retirer définitivement de votre main un ensemble de cartes de même rang.",
         "-- En général, il vaut mieux retirer les cartes de faible valeur au fil de la partie pour augmenter la force moyenne de votre paquet.",
-        "- **Assassiner** :",
+        "- **Assassiner**\u00a0:",
         "-- Quand vous êtes bloqué, vous pouvez sacrifier un **As** de votre main, de votre pioche ou de votre défausse pour assassiner un espion. Vous perdez s'il ne vous reste aucun As."
       ]
     },
@@ -1967,19 +1997,19 @@
         "Gagnez en survivant aux deux vagues d'envahisseurs extraterrestres avant d'être à court de défenseurs.",
         "## Vagues",
         "Chaque vague se compose d'une série d'attaques. À chaque attaque, vous devez affronter l'attaquant de tête.",
-        "La deuxième vague diffère de la première : lors des attaques doubles, les défenseurs de la même teinte que l'attaquant sont perdus.",
+        "La deuxième vague diffère de la première\u00a0: lors des attaques doubles, les défenseurs de la même teinte que l'attaquant sont perdus.",
         "## Actions",
         "- Les **attaques simples** se font avec un défenseur de valeur supérieure et de teinte opposée à l'attaquant. Après une attaque simple, le défenseur est perdu et remplacé par l'attaquant.",
         "- Les **attaques doubles** se font avec deux cartes dont la valeur totale est égale à celle de l'attaquant. Aucun défenseur n'est perdu lors des attaques doubles, sauf pendant la deuxième vague, où les défenseurs de la même teinte que l'attaquant sont perdus.",
-        "- Les **sacrifices** permettent d'envoyer l'attaquant de tête au fond du paquet d'attaquants ; le défenseur sacrifié est perdu."
+        "- Les **sacrifices** permettent d'envoyer l'attaquant de tête au fond du paquet d'attaquants\u00a0; le défenseur sacrifié est perdu."
       ]
     },
     "quickStart": {
       "hash": "b8dff99e",
       "value": [
         "Repoussez 2 vagues d'attaquants à l'aide d'attaques et de sacrifices.",
-        "Attaques simples : teinte opposée et valeur supérieure.",
-        "Attaques doubles : les deux défenseurs doivent totaliser la valeur de l'attaquant."
+        "Attaques simples\u00a0: teinte opposée et valeur supérieure.",
+        "Attaques doubles\u00a0: les deux défenseurs doivent totaliser la valeur de l'attaquant."
       ]
     },
     "title": {
@@ -2054,7 +2084,7 @@
   "klondike": {
     "cardDescription": {
       "hash": "1873d35c",
-      "value": "Le solitaire classique : montez quatre fondations par couleur, de l'As au Roi."
+      "value": "Le solitaire classique\u00a0: montez quatre fondations par couleur, de l'As au Roi."
     },
     "howToPlay": {
       "hash": "6b0bf248",
@@ -2104,7 +2134,7 @@
       "value": [
         "Montez les fondations par couleur, de A à K.",
         "Descendez les éventails par couleur, en déplaçant une carte découverte à la fois.",
-        "Les éventails vides restent vides ; remélangez les éventails jusqu'à deux fois."
+        "Les éventails vides restent vides\u00a0; remélangez les éventails jusqu'à deux fois."
       ]
     },
     "title": {
@@ -2123,7 +2153,7 @@
         "## Objectif",
         "Placez les 52 cartes sur les quatre fondations, montées par couleur de l'As au Roi.",
         "## Règles",
-        "- Une carte est **libre** quand l'espace juste au-dessus ou juste en dessous est vide : les rangées du haut et du bas sont donc toujours libres.",
+        "- Une carte est **libre** quand l'espace juste au-dessus ou juste en dessous est vide\u00a0: les rangées du haut et du bas sont donc toujours libres.",
         "- Touchez une carte libre pour la jouer sur sa fondation.",
         "- Un trou dans la **première rangée** est comblé automatiquement depuis la pioche. Les trous plus bas restent vides.",
         "- Touchez la **pioche** pour distribuer une nouvelle rangée de huit cartes en bas. Il n'y a pas de redistribution."
@@ -2155,7 +2185,7 @@
         "## Déroulement",
         "- Toucher une carte la retourne, ainsi que les cartes situées juste au-dessus, en dessous, à gauche et à droite.",
         "- Les cartes en diagonale ne sont pas affectées.",
-        "- Chaque donne est générée en appliquant des coups valides à une grille résolue : elle a donc toujours une solution."
+        "- Chaque donne est générée en appliquant des coups valides à une grille résolue\u00a0: elle a donc toujours une solution."
       ]
     },
     "quickStart": {
@@ -2181,7 +2211,7 @@
         "## Objectif",
         "Survivez au plus grand nombre de manches possible en atteignant l'objectif de score de chaque manche. L'objectif commence à **25** et augmente de **25** à chaque manche.",
         "- La partie se termine quand vous n'atteignez pas l'objectif d'une manche (et qu'aucun bonus Bouclier n'est disponible).",
-        "- À la fin de la partie, vous **gagnez** si votre score final (total des points excédentaires) est d'au moins **500** ; sinon, c'est une défaite.",
+        "- À la fin de la partie, vous **gagnez** si votre score final (total des points excédentaires) est d'au moins **500**\u00a0; sinon, c'est une défaite.",
         "## Déroulement du tour",
         "- Chaque manche commence en complétant votre main à **8 cartes**, avec **3 mains** et **3 défausses**.",
         "- Vous pouvez **défausser** jusqu'à **5 cartes** dans la défausse, puis compléter votre main jusqu'à sa limite.",
@@ -2190,30 +2220,30 @@
         "## Jokers",
         "Les Jokers sont libres et peuvent être utilisés dans votre main à tout moment. Quand vous en piochez un, il est mis de côté et une carte de remplacement est piochée dans votre main. Si un autre Joker apparaît alors qu'un Joker est déjà de côté, les deux sont perdus.",
         "## Valeur des mains",
-        "- Carte haute : **5**",
-        "- Paire : **10**",
-        "- Double paire : **20**",
-        "- Brelan : **30**",
-        "- Quinte : **40**",
-        "- Couleur : **50**",
-        "- Full : **60**",
-        "- Carré : **100**",
-        "- Quinte flush : **125**",
-        "- Quinte flush royale : **150**",
+        "- Carte haute\u00a0: **5**",
+        "- Paire\u00a0: **10**",
+        "- Double paire\u00a0: **20**",
+        "- Brelan\u00a0: **30**",
+        "- Quinte\u00a0: **40**",
+        "- Couleur\u00a0: **50**",
+        "- Full\u00a0: **60**",
+        "- Carré\u00a0: **100**",
+        "- Quinte flush\u00a0: **125**",
+        "- Quinte flush royale\u00a0: **150**",
         "## Boutique de bonus",
         "Après chaque manche, les points au-delà de l'objectif deviennent des points de boutique. Les points de boutique non dépensés expirent au début de la manche suivante. Vous ne pouvez posséder qu'un exemplaire de chaque bonus à la fois.",
-        "- **+ Carte** (10) : augmente de un la limite de votre main pour cette manche",
-        "- **+ Défausse** (25) : une défausse de plus pour cette manche",
-        "- **+ 25 pts** (50) : ajoute 25 points pour cette manche",
-        "- **+ Main** (75) : une main jouée de plus pour cette manche.",
-        "- **Score x2** (100) : double votre prochaine main",
-        "- **Bouclier** (150) : survivez automatiquement à une manche ratée",
+        "- **+ Carte** (10)\u00a0: augmente de un la limite de votre main pour cette manche",
+        "- **+ Défausse** (25)\u00a0: une défausse de plus pour cette manche",
+        "- **+ 25 pts** (50)\u00a0: ajoute 25 points pour cette manche",
+        "- **+ Main** (75)\u00a0: une main jouée de plus pour cette manche.",
+        "- **Score x2** (100)\u00a0: double votre prochaine main",
+        "- **Bouclier** (150)\u00a0: survivez automatiquement à une manche ratée",
         "## Évaluation du score",
-        "Votre score final est la somme de tous les points excédentaires gagnés. Les évaluations sont :",
-        "- **♠** : 3 manches",
-        "- **♠♠** : 5 manches",
-        "- **♠♠♠** : 7 manches",
-        "- **♠♠♠♠** : 10 manches ou plus"
+        "Votre score final est la somme de tous les points excédentaires gagnés. Les évaluations sont\u00a0:",
+        "- **♠**\u00a0: 3 manches",
+        "- **♠♠**\u00a0: 5 manches",
+        "- **♠♠♠**\u00a0: 7 manches",
+        "- **♠♠♠♠**\u00a0: 10 manches ou plus"
       ]
     },
     "quickStart": {
@@ -2272,19 +2302,19 @@
         "Videz la **main du Loup** à chaque manche et soyez le premier à atteindre **100 points**.",
         "## Déroulement",
         "Gagnez une manche en capturant toutes les cartes du Loup à l'aide de l'une des actions ci-dessous. Le Loup ne joue pas de tour. Quand aucune action n'est possible, ou quand c'est stratégiquement judicieux, vous pouvez vous **coucher** pour terminer la manche.",
-        "- **Parfait :**",
+        "- **Parfait\u00a0:**",
         "-- L'une de vos cartes est **du même rang** qu'une carte du Loup.",
         "-- La carte suivante est piochée dans **votre** main.",
-        "- **Somme :**",
+        "- **Somme\u00a0:**",
         "-- Deux de vos cartes ou plus totalisent une carte du Loup (par exemple, un 6 et un 4 peuvent capturer un 10).",
         "-- La carte suivante est piochée dans **votre** main.",
-        "- **Division :**",
+        "- **Division\u00a0:**",
         "-- Plusieurs cartes du Loup totalisent l'une des vôtres (par exemple, un 9 peut capturer un 6 et un 3).",
         "-- La carte suivante est piochée dans la main du **Loup**.",
-        "- **Dépassement :**",
+        "- **Dépassement\u00a0:**",
         "-- L'une de vos cartes prend une carte du Loup **de rang inférieur**.",
         "-- Le Loup pioche autant de cartes que la **différence** (un 6 qui prend un 4 donne 2 cartes au Loup).",
-        "- **Se coucher :**",
+        "- **Se coucher\u00a0:**",
         "-- Vous pouvez vous coucher à tout moment, ou quand il ne vous reste aucune capture. Cela termine la manche.",
         "## Score",
         "- Si vous videz la main du Loup, vous gagnez la manche et marquez le total des cartes restant dans votre main.",
@@ -2470,19 +2500,19 @@
         "## Chaque rencontre",
         "- Révélez 4 Menaces. Chaque Joker en ajoute une, jusqu'à 6. La rencontre finale en a toujours 6.",
         "- Piochez les Réponses une à une, jusqu'au nombre de Menaces. Un Joker pioché comme Réponse devient une nouvelle Menace.",
-        "- **Standard :** empilez une ou plusieurs Réponses sur une Menace. Leur total doit égaler la Menace ou la dépasser de 3 au plus.",
-        "- **Fumigène :** une fois par manche, jouez une Réponse face cachée pour éliminer une Menace. Impossible sur un Joker ou sur une Menace de la couleur de la Rencontre.",
-        "- **Grappin :** une fois par manche, reliez deux Menaces adjacentes. Les Réponses jouées de travers doivent égaler le total des deux Menaces ou le dépasser de 3 au plus. Un échec inflige 2 dégâts.",
+        "- **Standard\u00a0:** empilez une ou plusieurs Réponses sur une Menace. Leur total doit égaler la Menace ou la dépasser de 3 au plus.",
+        "- **Fumigène\u00a0:** une fois par manche, jouez une Réponse face cachée pour éliminer une Menace. Impossible sur un Joker ou sur une Menace de la couleur de la Rencontre.",
+        "- **Grappin\u00a0:** une fois par manche, reliez deux Menaces adjacentes. Les Réponses jouées de travers doivent égaler le total des deux Menaces ou le dépasser de 3 au plus. Un échec inflige 2 dégâts.",
         "## Agents doubles et chaos",
         "- Un As en Menace vaut la plus haute valeur de Menace de la manche.",
         "- Un As en Réponse vaut la plus basse valeur de Menace de la manche.",
         "- Un Joker en Menace vaut la Menace la plus haute et ne peut pas être éliminé par Fumigène.",
         "## Dégâts et soins",
         "- Chaque Menace non résolue inflige 1 dégât. Un Grappin raté inflige plutôt 2 dégâts pour sa paire.",
-        "- « Niveau de la rue » ajoute 1 dégât pour les Rois. « Affaire du caïd » ajoute 1 pour les Dames et les Rois. « Ville dans l'ombre » ajoute 1 pour les Dames et 2 pour les Rois.",
+        "- «\u00a0Niveau de la rue\u00a0» ajoute 1 dégât pour les Rois. «\u00a0Affaire du caïd\u00a0» ajoute 1 pour les Dames et les Rois. «\u00a0Ville dans l'ombre\u00a0» ajoute 1 pour les Dames et 2 pour les Rois.",
         "- Soignez 1 après une rencontre si vous n'avez pas utilisé Fumigène, ou si vous avez pioché moins de Réponses qu'il n'y avait de Menaces. Les soins et les dégâts s'annulent.",
         "## Score",
-        "Votre score est l'Armure plus la Santé restantes, plus 5 pour « Affaire du caïd » ou 10 pour « Ville dans l'ombre »."
+        "Votre score est l'Armure plus la Santé restantes, plus 5 pour «\u00a0Affaire du caïd\u00a0» ou 10 pour «\u00a0Ville dans l'ombre\u00a0»."
       ]
     },
     "quickStart": {
@@ -2510,7 +2540,7 @@
         "- Dix colonnes de quatre cartes sont distribuées, chacune avec deux cartes face cachée et deux face visible.",
         "- Descendez les colonnes en alternant rouge et noir.",
         "- Déplacez ensemble les séquences complètes correctement empilées.",
-        "- N'importe quelle carte ou séquence occupe un espace vide ; la pioche se parcourt une fois.",
+        "- N'importe quelle carte ou séquence occupe un espace vide\u00a0; la pioche se parcourt une fois.",
         "- Il n'y a pas de redistribution."
       ]
     },
@@ -2519,7 +2549,7 @@
       "value": [
         "Placez toutes les cartes sur les fondations, montées par couleur de A à K.",
         "Descendez en alternant rouge et noir.",
-        "Déplacez ensemble des séquences ordonnées ; n'importe quelle carte comble un espace.",
+        "Déplacez ensemble des séquences ordonnées\u00a0; n'importe quelle carte comble un espace.",
         "Il n'y a pas de redistribution."
       ]
     },
@@ -2545,7 +2575,7 @@
         "- Tomber sur une **carte face cachée est toujours sans danger** et ne déclenche aucune action, quel que soit son rang.",
         "- Tomber sur une **carte face visible déclenche son effet**, s'il y en a un.",
         "## Types de cartes",
-        "- **Joyaux (As)** :",
+        "- **Joyaux (As)**\u00a0:",
         "-- Vous devez récupérer les quatre, en tombant dessus face visible, pour gagner la partie.",
         "-- Tomber sur un As face cachée ne le récupère pas.",
         "- **Pièges (J, Q, K)**",
@@ -2560,12 +2590,12 @@
         "-- Tomber sur le Joker face cachée ne déclenche aucune action.",
         "- Les couleurs des cartes n'ont aucune signification ni aucun effet.",
         "## Actions",
-        "- **Regarder autour :** retournez les deux cartes du dessus du paquet ; possible seulement si la carte du dessus est face cachée.",
-        "- **Explorer** : choisissez l'une des deux cartes du dessus, si elle est face visible et numérotée. Avancez dans la boucle de la valeur de cette carte.",
-        "- **Marquer le chemin** : vous pouvez marquer jusqu'à trois chemins en déplaçant l'une des deux cartes du dessus vers un emplacement de chemin vide, si cette carte est face visible et numérotée.",
-        "- **Revenir au chemin** : vous pouvez sélectionner un chemin marqué et le placer sur le dessus du paquet.",
+        "- **Regarder autour\u00a0:** retournez les deux cartes du dessus du paquet\u00a0; possible seulement si la carte du dessus est face cachée.",
+        "- **Explorer**\u00a0: choisissez l'une des deux cartes du dessus, si elle est face visible et numérotée. Avancez dans la boucle de la valeur de cette carte.",
+        "- **Marquer le chemin**\u00a0: vous pouvez marquer jusqu'à trois chemins en déplaçant l'une des deux cartes du dessus vers un emplacement de chemin vide, si cette carte est face visible et numérotée.",
+        "- **Revenir au chemin**\u00a0: vous pouvez sélectionner un chemin marqué et le placer sur le dessus du paquet.",
         "## Conseils",
-        "- **Marquez des chemins dès que possible !** Si les deux cartes du dessus ne sont pas numérotées et que vous n'avez aucun chemin marqué, **vous perdez instantanément**. Avoir plus de chemins marqués vous donne aussi plus d'options pour avancer d'un nombre précis de cases et éviter les pièges.",
+        "- **Marquez des chemins dès que possible\u00a0!** Si les deux cartes du dessus ne sont pas numérotées et que vous n'avez aucun chemin marqué, **vous perdez instantanément**. Avoir plus de chemins marqués vous donne aussi plus d'options pour avancer d'un nombre précis de cases et éviter les pièges.",
         "- Vous pouvez utiliser les actions **Marquer le chemin** et **Revenir au chemin** plusieurs fois de suite sans explorer. Cela vous permet de manipuler l'ordre des cartes du dessus pour contrôler la distance d'exploration et la carte sur laquelle vous tomberez."
       ]
     },
@@ -2582,6 +2612,39 @@
       "value": "Ouroboros"
     }
   },
+  "pagoda": {
+    "cardDescription": {
+      "hash": "c1c2c60e",
+      "value": "Prenez les cartes sur les étages de la pagode et offrez chaque brelan au sanctuaire."
+    },
+    "howToPlay": {
+      "hash": "5eb45815",
+      "value": [
+        "## Objectif",
+        "Retirez les **39 cartes** de la pagode en les offrant au sanctuaire par séries de trois.",
+        "## Règles",
+        "- Il manque au paquet une couleur de chaque rang\u00a0: il y a donc exactement trois cartes de chaque rang.",
+        "- Touchez une carte découverte pour la placer sur le plateau.",
+        "- Dès que le plateau contient trois cartes de même rang, elles sont offertes au sanctuaire.",
+        "- La partie est perdue quand le plateau est plein. Sa taille dépend du réglage de difficulté\u00a0:",
+        "-- Facile\u00a0: **7** cartes au maximum",
+        "-- Normal\u00a0: **6** cartes au maximum",
+        "-- Difficile\u00a0: **5** cartes au maximum"
+      ]
+    },
+    "quickStart": {
+      "hash": "c5feca5f",
+      "value": [
+        "Touchez une carte découverte pour la placer sur votre plateau.",
+        "Trois cartes de même rang sur le plateau sont offertes au sanctuaire.",
+        "Ne laissez pas le plateau se remplir de cartes non appariées (Facile\u00a0: 7, Normal\u00a0: 6, Difficile\u00a0: 5)."
+      ]
+    },
+    "title": {
+      "hash": "125a9287",
+      "value": "Pagode"
+    }
+  },
   "parallels": {
     "cardDescription": {
       "hash": "31eac556",
@@ -2593,7 +2656,7 @@
         "## Objectif",
         "Placez les 104 cartes sur les huit fondations.",
         "## Fondations",
-        "- Les As **montent** par couleur ; les Rois **descendent** par couleur.",
+        "- Les As **montent** par couleur\u00a0; les Rois **descendent** par couleur.",
         "## Règles",
         "- Tant qu'il y a une ou deux rangées, toutes les cartes sont disponibles.",
         "- À partir de trois rangées, une carte n'est **libre** que si l'espace juste au-dessus ou juste en dessous est vide.",
@@ -2617,13 +2680,13 @@
   "penguin": {
     "cardDescription": {
       "hash": "a45ab2f6",
-      "value": "Un jeu proche du FreeCell, où l'on construit des suites par couleur à partir d'un rang de « bec » aléatoire."
+      "value": "Un jeu proche du FreeCell, où l'on construit des suites par couleur à partir d'un rang de «\u00a0bec\u00a0» aléatoire."
     },
     "howToPlay": {
       "hash": "362cf9e1",
       "value": [
         "## Objectif",
-        "Montez les quatre fondations par couleur à partir du « rang du bec », jusqu'à ce que chacune contienne 13 cartes.",
+        "Montez les quatre fondations par couleur à partir du «\u00a0rang du bec\u00a0», jusqu'à ce que chacune contienne 13 cartes.",
         "## Fondations",
         "- La première fondation commence avec la **carte du bec**, tirée au hasard à chaque partie.",
         "- Montez les fondations **par couleur** à partir du rang du bec, en repassant du Roi à l'As.",
@@ -2648,7 +2711,7 @@
   "pocket-poker": {
     "cardDescription": {
       "hash": "d28135be",
-      "value": "Un duel de poker de poche : piochez, misez et battez un adversaire servi dans le même paquet."
+      "value": "Un duel de poker de poche\u00a0: piochez, misez et battez un adversaire servi dans le même paquet."
     },
     "howToPlay": {
       "hash": "24a831bd",
@@ -2657,18 +2720,18 @@
         "Atteignez **10 points** pour gagner. Vous perdez si une mise fait tomber votre score à 0.",
         "## Déroulement du tour",
         "1. **Piochez 5 cartes**",
-        "2. **Jouez ou couchez-vous :** se coucher coûte **1 point**. Après **deux abandons consécutifs**, ou à 1 point, vous devez jouer. Jouer remet le compteur à zéro.",
+        "2. **Jouez ou couchez-vous\u00a0:** se coucher coûte **1 point**. Après **deux abandons consécutifs**, ou à 1 point, vous devez jouer. Jouer remet le compteur à zéro.",
         "3. **Défaussez et repiochez** jusqu'à **2 fois** pour améliorer votre main.",
-        "4. **Misez :** votre mise minimale est égale au nombre de fois où vous avez pioché :",
+        "4. **Misez\u00a0:** votre mise minimale est égale au nombre de fois où vous avez pioché\u00a0:",
         "- 1 pioche → mise de 1, 2 ou 3",
         "- 2 pioches → mise de 2 ou 3",
         "\n5. **L'adversaire pioche** des cartes selon la difficulté choisie et garde ses **cinq meilleures**.",
         "6. **Comparez les mains** selon le classement habituel du poker. En cas d'égalité, la carte la plus haute départage.",
         "7. **Annuler** n'est plus disponible après qu'une nouvelle pioche, l'abattage ou une nouvelle donne révèle des cartes cachées.",
         "## Difficulté",
-        "- **Normal :** commencez avec 5 points ; les égalités ne changent pas le score ; l'adversaire pioche 5 cartes plus votre mise.",
-        "- **Difficile :** commencez avec 3 points ; la banque gagne les égalités ; l'adversaire pioche 5 cartes plus votre mise.",
-        "- **Expert :** règles du mode Difficile, mais l'adversaire pioche 6 cartes plus votre mise.",
+        "- **Normal\u00a0:** commencez avec 5 points\u00a0; les égalités ne changent pas le score\u00a0; l'adversaire pioche 5 cartes plus votre mise.",
+        "- **Difficile\u00a0:** commencez avec 3 points\u00a0; la banque gagne les égalités\u00a0; l'adversaire pioche 5 cartes plus votre mise.",
+        "- **Expert\u00a0:** règles du mode Difficile, mais l'adversaire pioche 6 cartes plus votre mise.",
         "## Jokers",
         "Activez les **Jokers libres** dans les réglages pour ajouter deux Jokers qui valent n'importe quelle carte absente de la main."
       ]
@@ -2678,7 +2741,7 @@
       "value": [
         "Formez une main de poker, puis misez.",
         "Plus vous misez, plus votre adversaire pioche de cartes.",
-        "Atteignez 10 points pour gagner ; à 0, vous perdez."
+        "Atteignez 10 points pour gagner\u00a0; à 0, vous perdez."
       ]
     },
     "title": {
@@ -2701,22 +2764,22 @@
         "- Les cartes ne peuvent plus être déplacées une fois posées.",
         "- Continuez jusqu'à ce que les 25 cases soient remplies.",
         "## Score",
-        "Les cinq rangées et les cinq colonnes sont comptées selon le barème américain des mains de poker :",
-        "- **Quinte flush royale :** 100",
-        "- **Quinte flush :** 75",
-        "- **Carré :** 50",
-        "- **Full :** 25",
-        "- **Couleur :** 20",
-        "- **Quinte :** 15",
-        "- **Brelan :** 10",
-        "- **Double paire :** 5",
-        "- **Paire :** 2"
+        "Les cinq rangées et les cinq colonnes sont comptées selon le barème américain des mains de poker\u00a0:",
+        "- **Quinte flush royale\u00a0:** 100",
+        "- **Quinte flush\u00a0:** 75",
+        "- **Carré\u00a0:** 50",
+        "- **Full\u00a0:** 25",
+        "- **Couleur\u00a0:** 20",
+        "- **Quinte\u00a0:** 15",
+        "- **Brelan\u00a0:** 10",
+        "- **Double paire\u00a0:** 5",
+        "- **Paire\u00a0:** 2"
       ]
     },
     "quickStart": {
       "hash": "d7e99c35",
       "value": [
-        "Placez chaque carte distribuée avec soin ; les rangées et les colonnes comptent comme des mains de poker."
+        "Placez chaque carte distribuée avec soin\u00a0; les rangées et les colonnes comptent comme des mains de poker."
       ]
     },
     "title": {
@@ -2768,8 +2831,8 @@
         "## Jouer",
         "- Une carte n'est disponible que si elle est **entièrement découverte**, sans aucune carte qui la chevauche.",
         "- Retirez deux cartes disponibles dont les valeurs totalisent 13 (les As valent 1).",
-        "- Un Roi vaut 13 à lui seul : il est donc retiré seul.",
-        "- Quand vous êtes bloqué, retournez des cartes de la pioche sur le talon ; la carte du dessus du talon peut être associée à n'importe quelle carte disponible."
+        "- Un Roi vaut 13 à lui seul\u00a0: il est donc retiré seul.",
+        "- Quand vous êtes bloqué, retournez des cartes de la pioche sur le talon\u00a0; la carte du dessus du talon peut être associée à n'importe quelle carte disponible."
       ]
     },
     "quickStart": {
@@ -2907,8 +2970,8 @@
       "value": [
         "Placez toutes les cartes noires avant d'être à court de carreaux.",
         "Les cartes posées doivent alterner les couleurs.",
-        "Carte centrale : n'importe quelle valeur. Cartes extérieures : valeur exacte.",
-        "Cartes intérieures : valeur de l'un des carreaux adjacents, ou leur somme, différence, produit ou quotient.",
+        "Carte centrale\u00a0: n'importe quelle valeur. Cartes extérieures\u00a0: valeur exacte.",
+        "Cartes intérieures\u00a0: valeur de l'un des carreaux adjacents, ou leur somme, différence, produit ou quotient.",
         "Quand vous êtes bloqué, touchez une pile noire pour la vider, ou remplacez un carreau."
       ]
     },
@@ -2929,16 +2992,16 @@
         "- Résolvez chaque salle avant d'être à court de santé.",
         "- Votre score dépend de la santé restante, avec un bonus si vous finissez avec une potion inutilisée.",
         "## Types de cartes",
-        "- **Les cartes noires sont des Monstres** : éliminez-les en subissant des dégâts égaux à leur valeur.",
-        "- **Les carreaux sont des Armes** : équipez-les pour réduire les dégâts des monstres de la valeur de l'arme. Une arme ne peut servir que contre des monstres de valeur égale ou inférieure au dernier monstre qu'elle a tué.",
-        "- **Les cœurs sont des Potions** : soignez-vous selon la valeur de la potion. Contrairement au jeu original, cette version ne vous limite pas à une potion par salle.",
+        "- **Les cartes noires sont des Monstres**\u00a0: éliminez-les en subissant des dégâts égaux à leur valeur.",
+        "- **Les carreaux sont des Armes**\u00a0: équipez-les pour réduire les dégâts des monstres de la valeur de l'arme. Une arme ne peut servir que contre des monstres de valeur égale ou inférieure au dernier monstre qu'elle a tué.",
+        "- **Les cœurs sont des Potions**\u00a0: soignez-vous selon la valeur de la potion. Contrairement au jeu original, cette version ne vous limite pas à une potion par salle.",
         "## Salles",
         "- Le donjon est divisé en salles de 4 cartes chacune.",
         "- Vous devez résoudre 3 cartes au choix dans une salle pour passer à la suivante. La 4e carte non résolue passe dans la salle suivante.",
-        "- Vous pouvez passer (ou « Fuir ») une salle si vous n'avez pas fui la précédente. Les cartes des salles fuies sont placées sous la pioche : vous devrez donc quand même les résoudre plus tard.",
+        "- Vous pouvez passer (ou «\u00a0Fuir\u00a0») une salle si vous n'avez pas fui la précédente. Les cartes des salles fuies sont placées sous la pioche\u00a0: vous devrez donc quand même les résoudre plus tard.",
         "- Les dégâts des monstres sont réduits de la valeur de l'arme équipée. Après qu'une arme a tué un monstre, elle ne peut servir que contre des monstres de valeur égale ou inférieure au dernier qu'elle a tué.",
         "## Conseils",
-        "- Fuyez les salles trop difficiles, **ou** celles qui sont faciles ou qui contiennent des armes puissantes à garder pour plus tard. N'oubliez pas que les cartes des salles fuies devront être résolues dans des salles futures ; prévoyez en conséquence.",
+        "- Fuyez les salles trop difficiles, **ou** celles qui sont faciles ou qui contiennent des armes puissantes à garder pour plus tard. N'oubliez pas que les cartes des salles fuies devront être résolues dans des salles futures\u00a0; prévoyez en conséquence.",
         "- Optimisez vos armes en les utilisant d'abord sur un monstre de la plus haute valeur possible, puis en réduisant le plus lentement possible la valeur des monstres suivants.",
         "- Attaquez à mains nues quand utiliser votre arme ferait trop baisser sa valeur.",
         "- Touchez la pioche pour voir les cartes restantes du donjon (les cartes sont affichées dans l'ordre, mais remélangées ensuite)."
@@ -2969,8 +3032,8 @@
         "Placez les 104 cartes sur les huit fondations.",
         "## Fondations",
         "- Chaque fondation monte **par couleur, de deux en deux**, en repassant par l'As après le Roi.",
-        "- Fondations des As : A, 3, 5, 7, 9, J, K, 2, 4, 6, 8, 10, Q.",
-        "- Fondations des Deux : 2, 4, 6, 8, 10, Q, A, 3, 5, 7, 9, J, K.",
+        "- Fondations des As\u00a0: A, 3, 5, 7, 9, J, K, 2, 4, 6, 8, 10, Q.",
+        "- Fondations des Deux\u00a0: 2, 4, 6, 8, 10, Q, A, 3, 5, 7, 9, J, K.",
         "## Règles",
         "- Seule la carte du bas de chaque colonne de gauche est disponible, et les espaces ne sont jamais remplis.",
         "- Toutes les cartes de droite sont disponibles.",
@@ -3068,7 +3131,7 @@
   "russian-solitaire": {
     "cardDescription": {
       "hash": "f6e3baba",
-      "value": "Le Yukon dans sa version la plus impitoyable : déplacez des groupes mélangés et descendez les colonnes dans la même couleur."
+      "value": "Le Yukon dans sa version la plus impitoyable\u00a0: déplacez des groupes mélangés et descendez les colonnes dans la même couleur."
     },
     "howToPlay": {
       "hash": "a44626e1",
@@ -3140,7 +3203,7 @@
         "Placez les 52 cartes sur quatre fondations, montées par couleur de l'As au Roi.",
         "## Règles",
         "- Dix colonnes commencent avec cinq cartes face visible chacune.",
-        "- Deux des quatre cellules libres sont occupées au départ ; chaque cellule contient une carte.",
+        "- Deux des quatre cellules libres sont occupées au départ\u00a0; chaque cellule contient une carte.",
         "- Descendez les colonnes dans la même couleur.",
         "- Vous pouvez déplacer une carte à la fois. Vous pouvez déplacer un groupe de cartes d'un coup, mais seulement si vous avez assez de cellules libres et de colonnes vides pour faire le même déplacement carte par carte.",
         "- Seul un Roi ou une séquence commençant par un Roi peut occuper une colonne vide."
@@ -3151,7 +3214,7 @@
       "value": [
         "Montez les fondations par couleur, de l'As au Roi.",
         "Descendez les colonnes dans la même couleur.",
-        "Utilisez quatre cellules ; seuls les Rois peuvent occuper les colonnes vides."
+        "Utilisez quatre cellules\u00a0; seuls les Rois peuvent occuper les colonnes vides."
       ]
     },
     "title": {
@@ -3175,10 +3238,10 @@
         "## Prédictions",
         "- Choisissez Rouge, Rouge impair / Noir pair, Pair, Carreaux / Cœurs, Piques / Trèfles, Impair, Noir impair / Rouge pair, ou Noir.",
         "- En cas de réussite, placez la carte révélée sur cette case.",
-        "- En cas d'échec, placez la carte révélée face visible sur la table, puis posez la carte suivante face cachée sur la prédiction : c'est une pierre.",
+        "- En cas d'échec, placez la carte révélée face visible sur la table, puis posez la carte suivante face cachée sur la prédiction\u00a0: c'est une pierre.",
         "- Une prédiction avec trois pierres est bloquée.",
         "## Libérer les pierres",
-        "- Une réussite libère une pierre découverte de chaque case voisine : en diagonale aussi en Facile, orthogonalement en Normal, ou un seul voisin orthogonal choisi en Difficile.",
+        "- Une réussite libère une pierre découverte de chaque case voisine\u00a0: en diagonale aussi en Facile, orthogonalement en Normal, ou un seul voisin orthogonal choisi en Difficile.",
         "- Choisissez si toutes les pierres libérées par cette réussite sont révélées sur la table ou remises face cachée sous le paquet.",
         "- Les pierres recouvertes par une carte réussie sont piégées.",
         "## Rejouer",
@@ -3190,7 +3253,7 @@
       "hash": "4249e832",
       "value": [
         "Choisissez une case de prédiction pour révéler la carte du dessus.",
-        "Une réussite complète la case et libère les pierres voisines ; un échec ajoute des pierres."
+        "Une réussite complète la case et libère les pierres voisines\u00a0; un échec ajoute des pierres."
       ]
     },
     "title": {
@@ -3220,7 +3283,7 @@
       "value": [
         "Montez les fondations par couleur, de A à K.",
         "Construisez les éventails en montant ou en descendant d'un rang, sans tenir compte de la couleur.",
-        "Les éventails contiennent au plus trois cartes ; les éventails vides restent vides."
+        "Les éventails contiennent au plus trois cartes\u00a0; les éventails vides restent vides."
       ]
     },
     "title": {
@@ -3312,9 +3375,9 @@
         "## Règles",
         "- Placez une carte découverte dans la singularité si elle est **d'un rang au-dessus ou en dessous** de sa carte actuelle.",
         "- Seule la carte **découverte** (du dessus) de chaque pile est disponible.",
-        "- Les rangs **bouclent** : après un Roi, vous pouvez jouer un As, et inversement.",
+        "- Les rangs **bouclent**\u00a0: après un Roi, vous pouvez jouer un As, et inversement.",
         "## Conseils",
-        "- Il n'y a ni pioche ni remélange : planifiez vos coups dans l'ordre et le plus longtemps à l'avance possible.",
+        "- Il n'y a ni pioche ni remélange\u00a0: planifiez vos coups dans l'ordre et le plus longtemps à l'avance possible.",
         "- Évitez les impasses, et les fins de partie avec des cartes dont les rangs ne se suivent pas."
       ]
     },
@@ -3332,7 +3395,7 @@
   "sir-tommy": {
     "cardDescription": {
       "hash": "980ec70d",
-      "value": "L'ancêtre des réussites : triez le paquet sur quatre piles pour former quatre piles de l'As au Roi."
+      "value": "L'ancêtre des réussites\u00a0: triez le paquet sur quatre piles pour former quatre piles de l'As au Roi."
     },
     "howToPlay": {
       "hash": "eadd39e5",
@@ -3373,7 +3436,7 @@
         "## Objectif",
         "Placez les 104 cartes sur les huit fondations.",
         "## Fondations",
-        "- Les As **montent** par couleur ; les Rois **descendent** par couleur.",
+        "- Les As **montent** par couleur\u00a0; les Rois **descendent** par couleur.",
         "## Règles",
         "- Seules les cartes du dessus des piles de **réserve** peuvent être jouées, et jamais les unes sur les autres.",
         "- Au début, une pile de réserve vidée par un coup sur une fondation est remplie depuis la pioche.",
@@ -3411,8 +3474,8 @@
         "2. Affectez autant de cartes de votre main que vous voulez aux cartes Rêve, puis résolvez de droite à gauche.",
         "3. Les cartes Rêve survivantes avancent d'une case vers la droite. La carte la plus à droite quitte le jeu et de nouvelles cartes entrent par la gauche.",
         "## Gardiens et Cauchemars",
-        "- **Façonner un Gardien :** la valeur affectée doit égaler ou dépasser celle de la carte rouge. La carte façonnée va dans votre défausse.",
-        "- **Combattre un Cauchemar :** la valeur affectée doit dépasser celle de la carte noire pour l'éliminer. Sinon, Alice perd la différence en points de vie.",
+        "- **Façonner un Gardien\u00a0:** la valeur affectée doit égaler ou dépasser celle de la carte rouge. La carte façonnée va dans votre défausse.",
+        "- **Combattre un Cauchemar\u00a0:** la valeur affectée doit dépasser celle de la carte noire pour l'éliminer. Sinon, Alice perd la différence en points de vie.",
         "- Au plus deux Gardiens autres que des As peuvent être affectés à un Cauchemar. Un As peut s'y ajouter comme troisième carte.",
         "- Les Cauchemars sans opposition infligent leur valeur totale en dégâts.",
         "## Cartes spéciales",
@@ -3421,9 +3484,9 @@
         "- Éliminer un Cauchemar Valet, Dame ou Roi rend 3 points de vie, jusqu'à 40.",
         "- Les Jokers rouge et noir copient la valeur de la carte du dessus de leur pile retirée correspondante.",
         "## Actions spéciales",
-        "- **Grande inspiration :** si vous n'avez affecté aucune carte ce tour-ci, défaussez une carte de votre main avant de résoudre.",
-        "- **Exiler :** une fois par tour, défaussez une carte de votre main et perdez 5 points de vie pour envoyer un Cauchemar sélectionné dans la défausse des Rêves.",
-        "- **Sommeil REM :** une fois par partie, à 10 points de vie ou moins, remélangez les deux paquets actifs et redistribuez le plateau et la main.",
+        "- **Grande inspiration\u00a0:** si vous n'avez affecté aucune carte ce tour-ci, défaussez une carte de votre main avant de résoudre.",
+        "- **Exiler\u00a0:** une fois par tour, défaussez une carte de votre main et perdez 5 points de vie pour envoyer un Cauchemar sélectionné dans la défausse des Rêves.",
+        "- **Sommeil REM\u00a0:** une fois par partie, à 10 points de vie ou moins, remélangez les deux paquets actifs et redistribuez le plateau et la main.",
         "## Fin de partie",
         "Quand le paquet des Rêves est vide, vous gagnez s'il ne reste aucun Cauchemar autre qu'un As. Vous perdez si tous les Gardiens spéciaux autres que des As ont été retirés."
       ]
@@ -3432,7 +3495,7 @@
       "hash": "cab0b466",
       "value": [
         "Sélectionnez des Gardiens dans votre main, sélectionnez une carte Rêve, puis affectez-les.",
-        "Égalez la valeur d'un Gardien pour le recruter ; dépassez celle d'un Cauchemar pour l'éliminer.",
+        "Égalez la valeur d'un Gardien pour le recruter\u00a0; dépassez celle d'un Cauchemar pour l'éliminer.",
         "Résolvez le plateau avant de finir chaque tour. Gardez la vie d'Alice au-dessus de 0."
       ]
     },
@@ -3463,7 +3526,7 @@
     "quickStart": {
       "hash": "50b8bd5d",
       "value": [
-        "Descendez par rang ; déplacez les suites de même couleur ; distribuez quand vous êtes bloqué."
+        "Descendez par rang\u00a0; déplacez les suites de même couleur\u00a0; distribuez quand vous êtes bloqué."
       ]
     },
     "title": {
@@ -3516,11 +3579,11 @@
         "Au début de chaque tour, le poursuivant défausse la carte la plus à gauche.",
         "Si cette carte était au début d'une suite d'au moins trois rangs consécutifs, le poursuivant continue de prendre des cartes jusqu'à ce qu'il en reste moins de trois de cette suite.",
         "## Actions",
-        "- **Chercher :**",
+        "- **Chercher\u00a0:**",
         "-- Choisissez une carte de la ligne et défaussez toutes les cartes de ce rang.",
         "-- Vous pouvez alors piocher le même nombre de cartes à l'extrémité droite de la ligne.",
         "-- Comme le poursuivant retire une carte, cette action raccourcit toujours la ligne d'une carte.",
-        "- **(Tenter de) Fuir :**",
+        "- **(Tenter de) Fuir\u00a0:**",
         "-- Sélectionnez une carte et déplacez-la à une nouvelle position.",
         "-- Vous ne pouvez pas déplacer une carte qui fait déjà partie d'une suite de trois ou plus.",
         "-- Si le déplacement crée ou prolonge une suite de trois ou plus, piochez deux cartes à l'extrémité droite de la ligne. Sinon, ne piochez aucune carte.",
@@ -3566,7 +3629,7 @@
       "value": [
         "Montez les huit fondations extérieures par couleur jusqu'aux Dames.",
         "Jouez depuis le talon ou l'une des huit cartes de réserve.",
-        "Les cartes de réserve se remplissent depuis la pioche ; le talon peut être redistribué deux fois."
+        "Les cartes de réserve se remplissent depuis la pioche\u00a0; le talon peut être redistribué deux fois."
       ]
     },
     "title": {
@@ -3585,10 +3648,10 @@
         "## Objectif",
         "Défaussez les 52 cartes.",
         "## Règles",
-        "- Les cartes valent leur valeur faciale ; les Valets, Dames et Rois valent **10**.",
+        "- Les cartes valent leur valeur faciale\u00a0; les Valets, Dames et Rois valent **10**.",
         "- Touchez la **pioche** pour ajouter la carte suivante au bout de la ligne.",
         "- **Deux cartes ou plus côte à côte** dans la ligne qui totalisent **10, 20 ou 30** peuvent être défaussées.",
-        "- Touchez la première carte d'une suite, puis la dernière ; la ligne se referme.",
+        "- Touchez la première carte d'une suite, puis la dernière\u00a0; la ligne se referme.",
         "- La partie est perdue quand la pioche est vide et qu'aucune suite ne fait le compte."
       ]
     },
@@ -3617,14 +3680,14 @@
         "Videz les trois pics en retirant les cartes d'un rang au-dessus ou en dessous de la carte du talon.",
         "## Règles",
         "- Une carte découverte d'un pic peut aller sur le talon si elle est **d'un rang au-dessus ou en dessous** de la carte actuelle du talon.",
-        "- Les rangs bouclent : les Rois peuvent être joués sur les As, et inversement.",
+        "- Les rangs bouclent\u00a0: les Rois peuvent être joués sur les As, et inversement.",
         "- Quand plus aucun coup n'est possible, retournez une carte de la pioche sur le talon."
       ]
     },
     "quickStart": {
       "hash": "387e2c46",
       "value": [
-        "Jouez les cartes découvertes à +/-1 sur le talon ; A<->K se suivent ; piochez quand vous êtes bloqué."
+        "Jouez les cartes découvertes à +/-1 sur le talon\u00a0; A<->K se suivent\u00a0; piochez quand vous êtes bloqué."
       ]
     },
     "title": {
@@ -3653,7 +3716,7 @@
       "hash": "a87ab14c",
       "value": [
         "Montez quatre fondations par couleur, de A à K.",
-        "Descendez sur n'importe quelle couleur sauf la même ; déplacez les séquences correctement empilées.",
+        "Descendez sur n'importe quelle couleur sauf la même\u00a0; déplacez les séquences correctement empilées.",
         "N'importe quelle carte ou séquence peut occuper une colonne vide."
       ]
     },
@@ -3695,7 +3758,7 @@
   "triple-stack": {
     "cardDescription": {
       "hash": "ccdd2c75",
-      "value": "Servez des sandwichs en choisissant des cartes régulièrement espacées ; ne tombez pas à court d'ingrédients !"
+      "value": "Servez des sandwichs en choisissant des cartes régulièrement espacées\u00a0; ne tombez pas à court d'ingrédients\u00a0!"
     },
     "howToPlay": {
       "hash": "882965ff",
@@ -3705,9 +3768,9 @@
         "**Vous perdez** quand plus aucun sandwich valide n'est possible alors qu'il reste des cartes dans le paquet.",
         "## Servir",
         "- Sélectionnez trois cartes dont les valeurs de rang sont régulièrement espacées. Les As, Valets, Dames et Rois valent 1, 11, 12 et 13.",
-        "- Les rangs bouclent entre le Roi et l'As : 9, Dame et 2 forment donc un sandwich valide.",
+        "- Les rangs bouclent entre le Roi et l'As\u00a0: 9, Dame et 2 forment donc un sandwich valide.",
         "## Repiocher",
-        "Votre main est complétée après avoir servi un sandwich. Le nombre de cartes repiochées dépend de la qualité du sandwich :",
+        "Votre main est complétée après avoir servi un sandwich. Le nombre de cartes repiochées dépend de la qualité du sandwich\u00a0:",
         "- Quatre cartes pour un sandwich d'une même couleur",
         "- Trois cartes pour un sandwich d'une même teinte (sur deux couleurs)",
         "- Deux cartes pour les autres sandwichs"
@@ -3739,25 +3802,25 @@
         "- **Vous perdez** si votre pioche ou vos points de vie sont épuisés.",
         "- Votre score est le nombre de cartes restant dans la pioche de puissance.",
         "## Attaques",
-        "- Seuls les monstres **découverts** peuvent être attaqués ; les éliminer révèle ceux qui sont derrière.",
-        "- Il faut **trois cartes** pour battre un monstre :",
+        "- Seuls les monstres **découverts** peuvent être attaqués\u00a0; les éliminer révèle ceux qui sont derrière.",
+        "- Il faut **trois cartes** pour battre un monstre\u00a0:",
         "-- deux **attaquants** dont la somme atteint ou dépasse sa puissance (J = 11, Q = 12, K = 13), et",
         "-- un **déclencheur** dont la couleur correspond à celle du monstre (le rang n'a pas d'importance).",
-        "- Les **Jokers** sont libres :",
+        "- Les **Jokers** sont libres\u00a0:",
         "-- ils valent **10** comme attaquants",
         "-- ils prennent n'importe quelle couleur comme déclencheurs",
-        "- Les cartes posées sur un monstre y restent jusqu'à ce qu'il soit battu : vous pouvez donc préparer une attaque sur plusieurs tours.",
-        "- **Défaussez** toute carte que vous ne pouvez ou ne voulez pas jouer ; les défausses vous coûtent des points de vie.",
+        "- Les cartes posées sur un monstre y restent jusqu'à ce qu'il soit battu\u00a0: vous pouvez donc préparer une attaque sur plusieurs tours.",
+        "- **Défaussez** toute carte que vous ne pouvez ou ne voulez pas jouer\u00a0; les défausses vous coûtent des points de vie.",
         "## Variantes",
-        "Vous pouvez jouer avec n'importe quelle combinaison des variantes suivantes (activables dans les réglages) :",
-        "- **Disposition du donjon :** 5 dispositions au choix, de difficulté croissante.",
-        "- **As boomerang :** les As valent 11 et reviennent dans votre main quand ils servent de déclencheur.",
-        "- **Réserve de puissance :** piochez cinq cartes au premier tour et gardez deux cartes face visible utilisables à tout moment (chaque carte restante rapporte un point).",
-        "- **Capacités spéciales :** les Rois battus accordent des pouvoirs à usage unique :",
-        "-- {KH} : placez une carte de votre main sous la pioche",
-        "-- {KD} : regardez la carte du dessous de la pioche et remontez-la sur le dessus si vous le souhaitez",
-        "-- {KS} : doublez la valeur d'une carte d'attaque",
-        "-- {KC} : piochez immédiatement une carte"
+        "Vous pouvez jouer avec n'importe quelle combinaison des variantes suivantes (activables dans les réglages)\u00a0:",
+        "- **Disposition du donjon\u00a0:** 5 dispositions au choix, de difficulté croissante.",
+        "- **As boomerang\u00a0:** les As valent 11 et reviennent dans votre main quand ils servent de déclencheur.",
+        "- **Réserve de puissance\u00a0:** piochez cinq cartes au premier tour et gardez deux cartes face visible utilisables à tout moment (chaque carte restante rapporte un point).",
+        "- **Capacités spéciales\u00a0:** les Rois battus accordent des pouvoirs à usage unique\u00a0:",
+        "-- {KH}\u00a0: placez une carte de votre main sous la pioche",
+        "-- {KD}\u00a0: regardez la carte du dessous de la pioche et remontez-la sur le dessus si vous le souhaitez",
+        "-- {KS}\u00a0: doublez la valeur d'une carte d'attaque",
+        "-- {KC}\u00a0: piochez immédiatement une carte"
       ]
     },
     "quickStart": {
@@ -3798,26 +3861,26 @@
         "- Terminer au-dessus de l'objectif coûte 1 pénalité de temps et 1 dégât. Vous pouvez jouer des Freins avant de terminer pour corriger un dépassement, sans pénalité ni dégât.",
         "- Un secteur As peut être égalé en jouant une Dame, ce qui rapporte le bonus d'une seule carte.",
         "## Le chrono et les dégâts",
-        "- Les Rois rouges comptent jusqu'à 16 bonus ; les Rois noirs jusqu'à 16 pénalités. Chaque rotation de 45 degrés est un cran, et chaque Roi compte 8 crans.",
+        "- Les Rois rouges comptent jusqu'à 16 bonus\u00a0; les Rois noirs jusqu'à 16 pénalités. Chaque rotation de 45 degrés est un cran, et chaque Roi compte 8 crans.",
         "- Votre score correspond aux **bonus moins les pénalités** et se conserve d'une spéciale à l'autre.",
         "- Atteindre 16 pénalités entraîne une **disqualification**.",
         "- Vos deux premiers dépassements non corrigés retournent les Jokers face cachée. Un troisième dépassement non corrigé est un **abandon**.",
         "## Spéciales suivantes",
-        "- La spéciale 2 a 12 secteurs : 2 du rapport 1, 4 du rapport 2 et 6 du rapport 3, avec 3 Gaz et 3 Freins.",
-        "- La spéciale 3 a 10 secteurs : 2 du rapport 1, 3 du rapport 2 et 5 du rapport 3, avec 2 Gaz et 2 Freins.",
+        "- La spéciale 2 a 12 secteurs\u00a0: 2 du rapport 1, 4 du rapport 2 et 6 du rapport 3, avec 3 Gaz et 3 Freins.",
+        "- La spéciale 3 a 10 secteurs\u00a0: 2 du rapport 1, 3 du rapport 2 et 5 du rapport 3, avec 2 Gaz et 2 Freins.",
         "- Les cartes de rapport sont ramassées et remélangées entre les spéciales. Le chrono et les dégâts sont conservés.",
         "## Score final",
-        "- **1 ou plus :** nouveau record du rallye.",
-        "- **0 à -2 :** podium.",
-        "- **-3 à -6 :** milieu de peloton.",
-        "- **-7 ou moins :** fond de peloton."
+        "- **1 ou plus\u00a0:** nouveau record du rallye.",
+        "- **0 à -2\u00a0:** podium.",
+        "- **-3 à -6\u00a0:** milieu de peloton.",
+        "- **-7 ou moins\u00a0:** fond de peloton."
       ]
     },
     "quickStart": {
       "hash": "efaef51d",
       "value": [
         "Choisissez l'une des extrémités de la spéciale, puis touchez les rapports, le gaz et les freins pour égaler le secteur en cours.",
-        "Terminez le secteur quand vous êtes prêt. Les réussites en une seule carte rapportent du temps ; les erreurs et les dépassements non corrigés en coûtent."
+        "Terminez le secteur quand vous êtes prêt. Les réussites en une seule carte rapportent du temps\u00a0; les erreurs et les dépassements non corrigés en coûtent."
       ]
     },
     "title": {
@@ -3836,7 +3899,7 @@
         "## Objectif",
         "Placez les 52 cartes sur quatre fondations, montées par couleur de l'As au Roi.",
         "## Règles",
-        "- Dix colonnes commencent avec trois cartes chacune ; seule la carte du bas est face visible.",
+        "- Dix colonnes commencent avec trois cartes chacune\u00a0; seule la carte du bas est face visible.",
         "- Descendez en alternant rouge et noir.",
         "- Les séquences correctement ordonnées peuvent se déplacer d'un bloc.",
         "- N'importe quelle carte ou séquence peut occuper une colonne vide.",
@@ -3848,7 +3911,7 @@
       "value": [
         "Montez les fondations par couleur, de l'As au Roi.",
         "Descendez les colonnes en alternant rouge et noir.",
-        "Déplacez des séquences ordonnées ; n'importe quelle carte peut occuper une colonne vide."
+        "Déplacez des séquences ordonnées\u00a0; n'importe quelle carte peut occuper une colonne vide."
       ]
     },
     "title": {
@@ -3878,7 +3941,7 @@
       "value": [
         "Montez les fondations par couleur.",
         "Descendez dans la même teinte.",
-        "Déplacez les suites de même couleur ; n'importe quelle carte comble un espace."
+        "Déplacez les suites de même couleur\u00a0; n'importe quelle carte comble un espace."
       ]
     },
     "title": {
@@ -3923,7 +3986,7 @@
   "yukon": {
     "cardDescription": {
       "hash": "81c89142",
-      "value": "Le Klondike sans entraves : déplacez des groupes entiers de cartes, dans n'importe quel ordre, à travers le tableau."
+      "value": "Le Klondike sans entraves\u00a0: déplacez des groupes entiers de cartes, dans n'importe quel ordre, à travers le tableau."
     },
     "howToPlay": {
       "hash": "85f184a6",

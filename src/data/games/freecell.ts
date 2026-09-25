@@ -7,7 +7,7 @@ export const freeCell: GameDefinition = {
   path: "/freecell",
   title: "FreeCell",
   aliases: ["FreeCell"],
-  tags: [GameTag.SequenceBuilding],
+  tags: [GameTag.FreeCellFamily, GameTag.SequenceBuilding],
   rating: {
     complexity: 20,
     difficulty: 40,

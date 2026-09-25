@@ -7,7 +7,7 @@ export const crazyQuilt: GameDefinition = {
   path: "/crazy-quilt",
   title: "Crazy Quilt",
   aliases: ["Japanese Rug", "Indian Carpet"],
-  tags: [GameTag.SpatialControl, GameTag.StockAndWaste],
+  tags: [GameTag.DoubleDeckers, GameTag.SpatialControl, GameTag.StockAndWaste],
   rating: {
     complexity: 40,
     difficulty: 55,

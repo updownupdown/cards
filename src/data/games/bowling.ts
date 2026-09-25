@@ -5,7 +5,7 @@ import { CardBackColors } from "../card-backs";
 export const bowling: GameDefinition = {
   path: "/bowling",
   title: "Bowling",
-  tags: [GameTag.ScoringPuzzles],
+  tags: [GameTag.Sports, GameTag.ScoringPuzzles],
   rating: {
     complexity: 30,
     difficulty: 30,

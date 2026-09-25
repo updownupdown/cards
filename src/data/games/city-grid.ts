@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const cityGrid: GameDefinition = {
   path: "/city-grid",
   title: "City Grid",
-  tags: [GameTag.GridPlacement, GameTag.SpatialControl],
+  tags: [GameTag.Puzzles, GameTag.GridPlacement, GameTag.SpatialControl],
   rating: {
     complexity: 30,
     difficulty: 50,

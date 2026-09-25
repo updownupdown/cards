@@ -7,7 +7,11 @@ export const threePeaks: GameDefinition = {
   path: "/three-peaks",
   title: "Three Peaks",
   aliases: ["TriPeaks", "Tri Peaks"],
-  tags: [GameTag.EasyToLearn, GameTag.SequenceBuilding, GameTag.StockAndWaste],
+  tags: [
+    GameTag.ClearTheBoard,
+    GameTag.SequenceBuilding,
+    GameTag.StockAndWaste,
+  ],
   rating: {
     complexity: 15,
     difficulty: 40,

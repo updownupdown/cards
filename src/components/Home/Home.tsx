@@ -1,6 +1,6 @@
 import { LoadingOverlay } from "@/components/common/LoadingOverlay";
 import { CollectTab } from "@/components/Home/CollectTab";
-import { HomeHeader } from "@/components/Home/HomeHeader";
+import { HomeHeader, HomeHeaderBackground } from "@/components/Home/HomeHeader";
 import { HomeStarfieldBackground } from "@/components/Home/HomeStarfieldBackground";
 import { HomeTab } from "@/components/Home/HomeTab";
 import { HomeTabBar } from "@/components/Home/HomeTabBar";
@@ -8,9 +8,11 @@ import { SearchTab } from "@/components/Home/SearchTab";
 import { NodesTab } from "@/components/Nodes/NodesTab";
 import { NodesUFO } from "@/components/Nodes/NodesUFO";
 import { UfoContext, type UfoRequest } from "@/components/Nodes/UfoContext";
+import { createTabReadyGate, TabReadyContext } from "./TabReady";
 import {
   COLLECT_HOME_TAB_INDEX,
   getActiveHomeTab,
+  getPendingCollectTag,
   HOME_HOME_TAB_INDEX,
   LAST_HOME_TAB_INDEX,
   NODES_HOME_TAB_INDEX,
@@ -25,17 +27,64 @@ import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { Colors, layoutDims } from "@/styles/styles";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Animated, Platform, View, type LayoutChangeEvent } from "react-native";
+import {
+  type ReactNode,
+  useEffect,
+  useEffectEvent,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { flexStyles } from "@/styles/flexStyles";
+import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
+import {
+  ActivityIndicator,
+  Platform,
+  StyleSheet,
+  View,
+  type LayoutChangeEvent,
+  type ViewStyle,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useIsFocused, useLocalSearchParams } from "expo-router";
 
-const TAB_FADE_DURATION = 150;
+/**
+ * Tabs not kept once left: the Campaign map animates while shown and holds a
+ * lot of views. (Anything kept costs GPU memory on Android even while hidden,
+ * and when that runs short every frame slows down, so a heavy tab belongs
+ * here: Collect only fits since its stickers use small thumbnails.)
+ */
+const UNMOUNTED_WHEN_LEFT: HomeTabIndex[] = [NODES_HOME_TAB_INDEX];
+/** How far aside a hidden tab is moved, well clear of any screen. */
+const OUT_OF_VIEW = 10000;
+// CSS visibility, which React Native's style types leave out but the web
+// passes through.
+const HIDDEN_ON_WEB = { visibility: "hidden" } as ViewStyle;
+/**
+ * Built in the background, one after another this far apart, soon after
+ * Home opens, so that even the first visit to one is quick: built on the
+ * spot, Collect took three quarters of a second to appear.
+ */
+const PREBUILT_TABS: HomeTabIndex[] = [
+  COLLECT_HOME_TAB_INDEX,
+  SEARCH_HOME_TAB_INDEX,
+];
+const PREBUILD_INTERVAL = 1500;
+/** A tab still not ready after this long is shown anyway. */
+const MAX_TAB_WAIT = 1500;
+/** Switches to a kept tab quicker than this show no spinner at all. */
+const SPINNER_DELAY = 150;
+const HOME_TAB_INDICES = [
+  HOME_HOME_TAB_INDEX,
+  NODES_HOME_TAB_INDEX,
+  COLLECT_HOME_TAB_INDEX,
+  SEARCH_HOME_TAB_INDEX,
+] as const;
 
 export default function Home() {
   const { tab } = useLocalSearchParams<{ tab?: string }>();
   const isFocused = useIsFocused();
-  const initialActiveTab = useRef(getActiveHomeTab()).current;
+  const [initialActiveTab] = useState(getActiveHomeTab);
   const insets = useSafeAreaInsets();
   const { ui, spacing } = useResponsiveMetrics();
   const { width: viewportWidth, height: viewportHeight } =
@@ -46,12 +95,41 @@ export default function Home() {
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showStatsModal, setShowStatsModal] = useState(false);
   const [homeDataRefreshToken, setHomeDataRefreshToken] = useState(0);
+  // The tab last tapped, lit in the tab bar straight away.
   const [activeTab, setActiveTab] = useState<HomeTabIndex>(initialActiveTab);
-  const [showHeaderBackground, setShowHeaderBackground] = useState(false);
   const activeTabRef = useRef<HomeTabIndex>(initialActiveTab);
-  const pendingTabRef = useRef<HomeTabIndex>(initialActiveTab);
-  const tabContentOpacity = useRef(new Animated.Value(1)).current;
-  const { settings, updateSettings } = useGlobalSettings();
+  // The tab on screen. On a switch the old tab goes at once, and the new one
+  // is built and drawn out of sight until it is complete (see TabLayer),
+  // then shown in a single frame; null in between.
+  const [shownTab, setShownTab] = useState<HomeTabIndex | null>(null);
+  // Tabs stay mounted once visited, so going back to one is quick and keeps
+  // its place, except those in UNMOUNTED_WHEN_LEFT.
+  const [mountedTabs, setMountedTabs] = useState<ReadonlySet<HomeTabIndex>>(
+    () => new Set([initialActiveTab]),
+  );
+  // Bumped to build the Collect tab afresh, when a category is asked for.
+  const [collectTabKey, setCollectTabKey] = useState(0);
+  const [scrolledTabs, setScrolledTabs] = useState<ReadonlySet<HomeTabIndex>>(
+    () => new Set(),
+  );
+  const setTabScrolled = (index: HomeTabIndex, scrolled: boolean) =>
+    setScrolledTabs((current) => {
+      if (current.has(index) === scrolled) return current;
+      const next = new Set(current);
+      if (scrolled) next.add(index);
+      else next.delete(index);
+      return next;
+    });
+  // The header and tab bar fade the page out behind them. On the web they
+  // wait until the page scrolls; on a phone they always show, on every tab,
+  // so the screen's edges never change as the tabs switch.
+  const showHeaderBackgroundFor = (index: HomeTabIndex) =>
+    !isWeb || (index !== NODES_HOME_TAB_INDEX && scrolledTabs.has(index));
+  const {
+    settings,
+    updateSettings,
+    isLoading: settingsLoading,
+  } = useGlobalSettings();
   // Set by the Nodes tab while the map is open; the UFO itself is drawn here.
   const [ufo, setUfo] = useState<UfoRequest | null>(null);
   const cardSize = settings.discoverCardSize ?? "large";
@@ -110,26 +188,72 @@ export default function Home() {
       0,
       Math.min(LAST_HOME_TAB_INDEX, requestedIndex),
     ) as HomeTabIndex;
-    if (index === pendingTabRef.current) return;
-    pendingTabRef.current = index;
-    setShowHeaderBackground(false);
-    tabContentOpacity.stopAnimation();
-    Animated.timing(tabContentOpacity, {
-      toValue: 0,
-      duration: TAB_FADE_DURATION,
-      useNativeDriver: !isWeb,
-    }).start(({ finished }) => {
-      if (!finished || pendingTabRef.current !== index) return;
-      activeTabRef.current = index;
-      setActiveHomeTab(index);
-      setActiveTab(index);
-      Animated.timing(tabContentOpacity, {
-        toValue: 1,
-        duration: TAB_FADE_DURATION,
-        useNativeDriver: !isWeb,
-      }).start();
-    });
+    if (index === activeTabRef.current) return;
+    // The tab being left is hidden from screen readers, so on the web it
+    // must not keep focus (the search box, say).
+    if (isWeb) (document.activeElement as HTMLElement | null)?.blur?.();
+    activeTabRef.current = index;
+    setActiveHomeTab(index);
+    setActiveTab(index);
+    setShownTab(null);
+    // A category asked for from the Home tab needs Collect built afresh,
+    // since it only looks for one as it mounts: the one already built goes
+    // now, so it is not shown instead.
+    const rebuildCollect =
+      index === COLLECT_HOME_TAB_INDEX && getPendingCollectTag() !== null;
+    if (rebuildCollect) {
+      setMountedTabs((current) => {
+        const next = new Set(current);
+        next.delete(COLLECT_HOME_TAB_INDEX);
+        return next;
+      });
+    }
+    // The old tab goes in this render, and anything to build waits for the
+    // next, so a tab slow to build (the Campaign map) never holds up the old
+    // one leaving. After a frame and then a turn, so that the web browser
+    // paints in between as well.
+    requestAnimationFrame(() =>
+      setTimeout(() => {
+        if (activeTabRef.current !== index) return;
+        if (rebuildCollect) setCollectTabKey((key) => key + 1);
+        setMountedTabs((current) => {
+          const next = new Set(current).add(index);
+          UNMOUNTED_WHEN_LEFT.forEach((left) => {
+            if (left !== index) next.delete(left);
+          });
+          return next.size === current.size &&
+            [...next].every((tab) => current.has(tab))
+            ? current
+            : next;
+        });
+      }),
+    );
   };
+
+  useEffect(() => {
+    const timers = PREBUILT_TABS.map((index, order) =>
+      setTimeout(
+        () =>
+          setMountedTabs((current) =>
+            current.has(index) ? current : new Set(current).add(index),
+          ),
+        PREBUILD_INTERVAL * (order + 1),
+      ),
+    );
+    return () => timers.forEach(clearTimeout);
+  }, []);
+
+  const onTabReady = (index: HomeTabIndex) => {
+    if (activeTabRef.current === index) setShownTab(index);
+  };
+
+  // The map is dropped while a game is open over Home, so coming back it is
+  // built again, out of sight like any other switch.
+  useEffect(() => {
+    if (!isFocused && activeTabRef.current === NODES_HOME_TAB_INDEX) {
+      setShownTab(null);
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     if (tab === "nodes" && activeTabRef.current !== NODES_HOME_TAB_INDEX) {
@@ -161,6 +285,93 @@ export default function Home() {
       : { flex: 1, backgroundColor: Colors.starfieldOverlay }
   ) as Record<string, unknown>;
 
+  // Each tab's page, built out here rather than in the loop below, so a
+  // switch between tabs (which re-renders this) leaves them all untouched.
+  // The Search tab draws its own header background, so its toggle can sit
+  // above it.
+  const tabContents: Record<HomeTabIndex, ReactNode> = {
+    [HOME_HOME_TAB_INDEX]: (
+      <>
+        <HomeHeaderBackground
+          showBackground={showHeaderBackgroundFor(HOME_HOME_TAB_INDEX)}
+        />
+        <HomeTab
+          onSelectTab={onSelectTab}
+          allEnabledGames={allEnabledGames}
+          unplayedGamePaths={unplayedGamePaths}
+          favorites={favorites}
+          recentPaths={recentPaths}
+          onToggleFavorite={toggleFavorite}
+          settingsLoaded={!settingsLoading}
+          guideDismissed={{
+            easy: settings.dismissHomeEasyGames,
+            campaign: settings.dismissHomeCampaign,
+            genres: settings.dismissHomeGenres,
+          }}
+          onDismissGuide={(box) =>
+            void updateSettings(
+              box === "easy"
+                ? { dismissHomeEasyGames: true }
+                : box === "campaign"
+                  ? { dismissHomeCampaign: true }
+                  : { dismissHomeGenres: true },
+            )
+          }
+          onScrolledChange={(scrolled) =>
+            setTabScrolled(HOME_HOME_TAB_INDEX, scrolled)
+          }
+          contentPaddingTop={contentPaddingTop}
+          contentPaddingBottom={contentPaddingBottom}
+        />
+      </>
+    ),
+    [NODES_HOME_TAB_INDEX]: (
+      <>
+        <HomeHeaderBackground
+          showBackground={showHeaderBackgroundFor(NODES_HOME_TAB_INDEX)}
+        />
+        <NodesTab contentPaddingTop={contentPaddingTop} />
+      </>
+    ),
+    [COLLECT_HOME_TAB_INDEX]: (
+      <>
+        <HomeHeaderBackground
+          showBackground={showHeaderBackgroundFor(COLLECT_HOME_TAB_INDEX)}
+        />
+        <CollectTab
+          allEnabledGames={allEnabledGames}
+          settingsMap={settingsMap}
+          favorites={favorites}
+          onToggleFavorite={toggleFavorite}
+          onScrolledChange={(scrolled) =>
+            setTabScrolled(COLLECT_HOME_TAB_INDEX, scrolled)
+          }
+          contentPaddingTop={contentPaddingTop}
+          contentPaddingBottom={contentPaddingBottom}
+        />
+      </>
+    ),
+    [SEARCH_HOME_TAB_INDEX]: (
+      <SearchTab
+        allEnabledGames={allEnabledGames}
+        unplayedGamePaths={unplayedGamePaths}
+        favorites={favorites}
+        onToggleFavorite={toggleFavorite}
+        cardSize={cardSize}
+        onCardSizeChange={(value) =>
+          updateSettings({ discoverCardSize: value })
+        }
+        onScrolledChange={(scrolled) =>
+          setTabScrolled(SEARCH_HOME_TAB_INDEX, scrolled)
+        }
+        showHeaderBackground={showHeaderBackgroundFor(SEARCH_HOME_TAB_INDEX)}
+        contentPaddingTop={contentPaddingTop}
+        contentPaddingBottom={contentPaddingBottom}
+        searchControlBottom={searchControlBottom}
+      />
+    ),
+  };
+
   return (
     <>
       <LoadingOverlay
@@ -187,90 +398,70 @@ export default function Home() {
       <UfoContext.Provider value={setUfo}>
         <View style={containerStyle} onLayout={onContainerLayout}>
           {isScreenReady && (
-            <View style={{ flex: 1, height: screenHeight || undefined }}>
+            <View
+              style={{
+                flex: 1,
+                height: screenHeight || undefined,
+                // Clips the tabs moved aside, so they are skipped entirely.
+                overflow: "hidden",
+              }}
+            >
               <HomeStarfieldBackground
                 animationsEnabled={settings.showAnimations}
                 width={viewportWidth}
                 height={viewportHeight}
               />
 
-              <Animated.View
-                style={{ flex: 1, opacity: tabContentOpacity }}
-                testID="home-tab-content"
-              >
-                {activeTab === HOME_HOME_TAB_INDEX && (
-                  <HomeTab
-                    onSelectTab={onSelectTab}
-                    allEnabledGames={allEnabledGames}
-                    allEnabledGamePaths={allEnabledGamePaths}
-                    favorites={favorites}
-                    recentPaths={recentPaths}
-                    onToggleFavorite={toggleFavorite}
-                    onScrolledChange={setShowHeaderBackground}
-                    contentPaddingTop={contentPaddingTop}
-                    contentPaddingBottom={contentPaddingBottom}
-                  />
-                )}
-                {isFocused && activeTab === NODES_HOME_TAB_INDEX && (
-                  <NodesTab
-                    settingsMap={settingsMap}
-                    contentPaddingTop={contentPaddingTop}
-                  />
-                )}
-                {activeTab === COLLECT_HOME_TAB_INDEX && (
-                  <CollectTab
-                    allEnabledGames={allEnabledGames}
-                    settingsMap={settingsMap}
-                    favorites={favorites}
-                    onToggleFavorite={toggleFavorite}
-                    cardSize={cardSize}
-                    onCardSizeChange={(value) =>
-                      updateSettings({ discoverCardSize: value })
+              {HOME_TAB_INDICES.map((index) => {
+                if (!mountedTabs.has(index)) return null;
+                if (index === NODES_HOME_TAB_INDEX && !isFocused) return null;
+                return (
+                  <TabLayer
+                    key={
+                      index === COLLECT_HOME_TAB_INDEX
+                        ? `${index}:${collectTabKey}`
+                        : index
                     }
-                    onScrolledChange={setShowHeaderBackground}
-                    contentPaddingTop={contentPaddingTop}
-                    contentPaddingBottom={contentPaddingBottom}
-                  />
-                )}
-                {activeTab === SEARCH_HOME_TAB_INDEX && (
-                  <SearchTab
-                    allEnabledGames={allEnabledGames}
-                    unplayedGamePaths={unplayedGamePaths}
-                    favorites={favorites}
-                    onToggleFavorite={toggleFavorite}
-                    cardSize={cardSize}
-                    onCardSizeChange={(value) =>
-                      updateSettings({ discoverCardSize: value })
+                    state={
+                      index === shownTab
+                        ? "shown"
+                        : index === activeTab
+                          ? "preparing"
+                          : "away"
                     }
-                    onScrolledChange={setShowHeaderBackground}
-                    contentPaddingTop={contentPaddingTop}
-                    contentPaddingBottom={contentPaddingBottom}
-                    searchControlBottom={searchControlBottom}
-                  />
-                )}
-              </Animated.View>
+                    onReady={() => onTabReady(index)}
+                  >
+                    {tabContents[index]}
+                  </TabLayer>
+                );
+              })}
+
+              {/* Each tab draws its own header fade, so the controls in it can
+                sit above the fade; on a phone this one stands in while no tab
+                is shown, so the fade stays put through a switch. */}
+              {shownTab === null && !isWeb && (
+                <HomeHeaderBackground showBackground />
+              )}
+              {shownTab === null && (
+                <TabSpinner immediate={!mountedTabs.has(activeTab)} />
+              )}
             </View>
           )}
 
           <HomeHeader
             onOpenSettings={() => setShowSettingsModal(true)}
             onOpenStats={() => setShowStatsModal(true)}
-            showBackground={
-              activeTab !== NODES_HOME_TAB_INDEX && showHeaderBackground
-            }
           />
 
           <HomeTabBar
             activeIndex={activeTab}
             onSelectTab={onSelectTab}
-            showBackground={
-              activeTab !== NODES_HOME_TAB_INDEX && showHeaderBackground
-            }
+            showBackground={showHeaderBackgroundFor(activeTab)}
           />
 
           {/* Last, so it flies over the header and tab bar rather than under
             them. It only exists while the Nodes tab has asked for it. */}
-          {ufo && activeTab === NODES_HOME_TAB_INDEX && (
+          {ufo && shownTab === NODES_HOME_TAB_INDEX && (
             <NodesUFO
               width={viewportWidth}
               height={viewportHeight}
@@ -283,5 +474,119 @@ export default function Home() {
         </View>
       </UfoContext.Provider>
     </>
+  );
+}
+
+/**
+ * One tab's page, laid over the others. Only the shown tab takes touches and
+ * is read out; the rest are kept, out of sight, for a quick return.
+ */
+export function TabLayer({
+  state,
+  onReady,
+  children,
+}: {
+  /**
+   * "preparing": being switched to. It is built, laid out and given its
+   * pictures while fully transparent, until nothing in it holds it back
+   * (see TabReady), then onReady is called and it shows at once. Showing it
+   * earlier, or fading it in, showed half-built tabs: bare card shadows,
+   * and pictures popping in. (Exactly zero: Android skips drawing it at
+   * all, whereas at 1% the card shadows still showed at full strength. And
+   * not a zIndex change: Fabric takes and puts back the whole tab for that,
+   * which cost a quarter of a second.)
+   *
+   * "away": moved out of the clipped tab area, so it is not drawn at all (a
+   * transparent tab is still drawn on Android, and a kept Collect tab under
+   * the Campaign map made every frame take ten times as long). Moving it
+   * keeps its layout, and so its scroll position, unlike display: none.
+   */
+  state: "shown" | "preparing" | "away";
+  onReady: () => void;
+  children: ReactNode;
+}) {
+  const [gate] = useState(createTabReadyGate);
+  const onTabReady = useEffectEvent(onReady);
+  const preparing = state === "preparing";
+
+  useEffect(() => {
+    if (!preparing) return;
+    let cancelled = false;
+    let frame = 0;
+    const ready = () => {
+      if (!cancelled) onTabReady();
+    };
+    const settle = () => {
+      if (gate.pending() > 0) return;
+      cancelAnimationFrame(frame);
+      // A frame on, in case anything else still starts loading.
+      frame = requestAnimationFrame(() => {
+        if (gate.pending() === 0) ready();
+      });
+    };
+    gate.setOnSettled(settle);
+    settle();
+    const timer = setTimeout(ready, MAX_TAB_WAIT);
+    return () => {
+      cancelled = true;
+      gate.setOnSettled(null);
+      cancelAnimationFrame(frame);
+      clearTimeout(timer);
+    };
+  }, [gate, preparing]);
+
+  return (
+    <TabReadyContext.Provider value={gate}>
+      <View
+        // Kept as a real view in every state: flattened away in one and not
+        // another, Fabric would move the whole tab between parents.
+        collapsable={false}
+        testID={state === "shown" ? "home-tab-content" : undefined}
+        aria-hidden={state !== "shown"}
+        style={[
+          StyleSheet.absoluteFill,
+          state === "preparing" && { opacity: 0 },
+          state === "away" && { left: OUT_OF_VIEW, right: -OUT_OF_VIEW },
+          // On the web, fixed-position parts of a tab (the search box, the
+          // header fade) ignore the move, and pointerEvents "none" only
+          // reaches a view's direct children there, so a hidden tab's search
+          // box still took clicks (and focus) meant for the Campaign map.
+          // Hidden, nothing in the tab can be seen, clicked or focused. (A
+          // preparing tab still lays out and loads its pictures.)
+          state !== "shown" && Platform.OS === "web" && HIDDEN_ON_WEB,
+          state === "shown"
+            ? pointerEventsStyles.boxNone
+            : pointerEventsStyles.none,
+        ]}
+      >
+        {children}
+      </View>
+    </TabReadyContext.Provider>
+  );
+}
+
+/**
+ * Shown while a tab is being built: from the start when it is built from
+ * scratch (the first visit to a tab, or any to the Campaign map), since
+ * building it keeps the timer below from running on time; otherwise only
+ * if it is slow, as a kept tab takes a couple of frames at most.
+ */
+function TabSpinner({ immediate }: { immediate: boolean }) {
+  const [visible, setVisible] = useState(immediate);
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(true), SPINNER_DELAY);
+    return () => clearTimeout(timer);
+  }, []);
+  if (!visible) return null;
+  return (
+    <View
+      style={[
+        StyleSheet.absoluteFill,
+        flexStyles.rowCentered,
+        pointerEventsStyles.none,
+      ]}
+    >
+      <ActivityIndicator size="large" color={Colors.K400} />
+    </View>
   );
 }

@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const golf: GameDefinition = {
   path: "/golf",
   title: "Golf",
-  tags: [GameTag.EasyToLearn, GameTag.SequenceBuilding, GameTag.StockAndWaste],
+  tags: [GameTag.Sports, GameTag.SequenceBuilding, GameTag.StockAndWaste],
   rating: {
     complexity: 15,
     difficulty: 50,

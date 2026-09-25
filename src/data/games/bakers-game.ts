@@ -7,7 +7,7 @@ export const bakersGame: GameDefinition = {
   path: "/bakers-game",
   title: "Baker's Game",
   aliases: ["Baker's Game"],
-  tags: [GameTag.SequenceBuilding],
+  tags: [GameTag.FreeCellFamily, GameTag.SequenceBuilding],
   rating: {
     complexity: 25,
     difficulty: 55,

@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const monteCarlo: GameDefinition = {
   path: "/monte-carlo",
   title: "Monte Carlo",
-  tags: [GameTag.PairMatching, GameTag.EasyToLearn],
+  tags: [GameTag.PairMatching],
   rating: {
     complexity: 10,
     difficulty: 20,

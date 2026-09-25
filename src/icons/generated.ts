@@ -25,9 +25,11 @@ import ClubsIcon from "./Clubs.svg";
 import DeleteIcon from "./Delete.svg";
 import DiamondsIcon from "./Diamonds.svg";
 import DiceIcon from "./Dice.svg";
+import DoneIcon from "./Done.svg";
 import DoorIcon from "./Door.svg";
 import DragonIcon from "./Dragon.svg";
 import DungeonIcon from "./Dungeon.svg";
+import EasyIcon from "./Easy.svg";
 import EqualOutlineIcon from "./EqualOutline.svg";
 import EquipIcon from "./Equip.svg";
 import ExpandLessIcon from "./ExpandLess.svg";
@@ -38,6 +40,7 @@ import FeaturedIcon from "./Featured.svg";
 import FilterIcon from "./Filter.svg";
 import FistIcon from "./Fist.svg";
 import FreeCellIcon from "./FreeCell.svg";
+import GalaxyIcon from "./Galaxy.svg";
 import GamesIcon from "./Games.svg";
 import GrappleHookIcon from "./GrappleHook.svg";
 import HeartIcon from "./Heart.svg";
@@ -56,13 +59,16 @@ import ListMediumIcon from "./ListMedium.svg";
 import ListSmallIcon from "./ListSmall.svg";
 import LockIcon from "./Lock.svg";
 import MenuIcon from "./Menu.svg";
+import MilkyWayIcon from "./MilkyWay.svg";
 import MoreVerticalIcon from "./MoreVertical.svg";
 import NodesIcon from "./Nodes.svg";
 import OfferIcon from "./Offer.svg";
+import PalmTreeIcon from "./PalmTree.svg";
 import PlayHandIcon from "./PlayHand.svg";
 import PlusOutlineIcon from "./PlusOutline.svg";
 import PotionIcon from "./Potion.svg";
 import QuoteIcon from "./Quote.svg";
+import RainbowIcon from "./Rainbow.svg";
 import RecentIcon from "./Recent.svg";
 import ResetIcon from "./Reset.svg";
 import RotateDeviceIcon from "./RotateDevice.svg";
@@ -73,6 +79,7 @@ import ShieldIcon from "./Shield.svg";
 import SkullIcon from "./Skull.svg";
 import SmokeBombIcon from "./SmokeBomb.svg";
 import SpadesIcon from "./Spades.svg";
+import SpiralIcon from "./Spiral.svg";
 import StarIcon from "./Star.svg";
 import StarOutlineIcon from "./StarOutline.svg";
 import SuitsIcon from "./Suits.svg";
@@ -104,9 +111,11 @@ export type IconName =
   | "delete"
   | "diamonds"
   | "dice"
+  | "done"
   | "door"
   | "dragon"
   | "dungeon"
+  | "easy"
   | "equal-outline"
   | "equip"
   | "expand-less"
@@ -117,6 +126,7 @@ export type IconName =
   | "filter"
   | "fist"
   | "free-cell"
+  | "galaxy"
   | "games"
   | "grapple-hook"
   | "heart"
@@ -135,13 +145,16 @@ export type IconName =
   | "list-small"
   | "lock"
   | "menu"
+  | "milky-way"
   | "more-vertical"
   | "nodes"
   | "offer"
+  | "palm-tree"
   | "play-hand"
   | "plus-outline"
   | "potion"
   | "quote"
+  | "rainbow"
   | "recent"
   | "reset"
   | "rotate-device"
@@ -152,6 +165,7 @@ export type IconName =
   | "skull"
   | "smoke-bomb"
   | "spades"
+  | "spiral"
   | "star"
   | "star-outline"
   | "suits"
@@ -183,9 +197,11 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "delete": DeleteIcon,
   "diamonds": DiamondsIcon,
   "dice": DiceIcon,
+  "done": DoneIcon,
   "door": DoorIcon,
   "dragon": DragonIcon,
   "dungeon": DungeonIcon,
+  "easy": EasyIcon,
   "equal-outline": EqualOutlineIcon,
   "equip": EquipIcon,
   "expand-less": ExpandLessIcon,
@@ -196,6 +212,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "filter": FilterIcon,
   "fist": FistIcon,
   "free-cell": FreeCellIcon,
+  "galaxy": GalaxyIcon,
   "games": GamesIcon,
   "grapple-hook": GrappleHookIcon,
   "heart": HeartIcon,
@@ -214,13 +231,16 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "list-small": ListSmallIcon,
   "lock": LockIcon,
   "menu": MenuIcon,
+  "milky-way": MilkyWayIcon,
   "more-vertical": MoreVerticalIcon,
   "nodes": NodesIcon,
   "offer": OfferIcon,
+  "palm-tree": PalmTreeIcon,
   "play-hand": PlayHandIcon,
   "plus-outline": PlusOutlineIcon,
   "potion": PotionIcon,
   "quote": QuoteIcon,
+  "rainbow": RainbowIcon,
   "recent": RecentIcon,
   "reset": ResetIcon,
   "rotate-device": RotateDeviceIcon,
@@ -231,6 +251,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "skull": SkullIcon,
   "smoke-bomb": SmokeBombIcon,
   "spades": SpadesIcon,
+  "spiral": SpiralIcon,
   "star": StarIcon,
   "star-outline": StarOutlineIcon,
   "suits": SuitsIcon,

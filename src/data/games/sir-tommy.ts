@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const sirTommy: GameDefinition = {
   path: "/sir-tommy",
   title: "Sir Tommy",
-  tags: [GameTag.StockAndWaste],
+  tags: [GameTag.FoundationBuilders, GameTag.StockAndWaste],
   rating: {
     complexity: 30,
     difficulty: 60,

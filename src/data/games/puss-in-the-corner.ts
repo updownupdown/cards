@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const pussInTheCorner: GameDefinition = {
   path: "/puss-in-the-corner",
   title: "Puss in the Corner",
-  tags: [GameTag.StockAndWaste, GameTag.EasyToLearn],
+  tags: [GameTag.FoundationBuilders, GameTag.StockAndWaste],
   rating: {
     complexity: 25,
     difficulty: 40,

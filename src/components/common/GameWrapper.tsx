@@ -12,6 +12,7 @@ import {
   type NodesWinResult,
 } from "@/data/nodes-progress";
 import { useNodesProgress } from "@/hooks/useNodesProgress";
+import { recordDailyWin } from "@/data/game-of-the-day";
 import { DEFAULT_GAME_BACKGROUND } from "@/data/games-data";
 import { useFade } from "@/hooks/useFade";
 import { useGameSettings } from "@/hooks/useGameSettings";
@@ -38,7 +39,7 @@ import {
 } from "@/styles/styles";
 import { router, useLocalSearchParams } from "expo-router";
 import { useGamePath } from "@/hooks/useGamePath";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useEffectEvent, useRef, useState } from "react";
 import {
   Animated,
   BackHandler,
@@ -55,10 +56,11 @@ import { RulesModal } from "../Modals/RulesModal";
 import { DeviceRotateHint } from "./DeviceRotateHint";
 import { LoadingOverlay } from "./LoadingOverlay";
 import { TipsBox } from "./TipsBox";
-import { WinLoseBox } from "./WinLoseBox";
+import { WinLoseBox, type WinTimes } from "./WinLoseBox";
 import { GameHeader } from "./GameHeader";
 import { useStableCallback } from "@/hooks/useStableCallback";
 import { requestMercySkipVisit } from "@/components/Nodes/ufo-visit";
+import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 
 const TIPS_MORPH_DURATION = 350;
 const KEEP_AWAKE_TAG = "solitarius-game";
@@ -190,6 +192,7 @@ export const GameWrapper = ({
     null,
   );
   const [showNodesWinModal, setShowNodesWinModal] = useState(false);
+  const [winTimes, setWinTimes] = useState<WinTimes | null>(null);
   const [tipsDismissed, setTipsDismissed] = useState(false);
   const tipsMorphProgress = useRef(new Animated.Value(0)).current;
   const instructionsHighlight = useRef(new Animated.Value(0)).current;
@@ -214,11 +217,7 @@ export const GameWrapper = ({
     return () => clearTimeout(timer);
   }, [isLoaded]);
   const isScenePaused =
-    showMenu ||
-    openMenu ||
-    showRulesModal ||
-    !!nodesWinResult ||
-    ended;
+    showMenu || openMenu || showRulesModal || !!nodesWinResult || ended;
 
   useEffect(() => {
     setBoardInputLocked(autoCompleting);
@@ -299,6 +298,15 @@ export const GameWrapper = ({
     }).start();
   }, [instructionsHighlight, tipsDismissed]);
 
+  // The time of a win, and the fastest win counting this one.
+  const showWinTime = useEffectEvent((timeMs: number) => {
+    const previous = settings?.stats.fastestTimeMs ?? null;
+    setWinTimes({
+      timeMs,
+      bestMs: previous === null ? timeMs : Math.min(previous, timeMs),
+    });
+  });
+
   // Record stats
   const resultStateRef = useRef({ pathname, outcome: displayedOutcome });
   const attemptedPathRef = useRef<string | null>(null);
@@ -324,6 +332,7 @@ export const GameWrapper = ({
     if (displayedOutcome === "playing") {
       setNodesWinResult(null);
       setShowNodesWinModal(false);
+      setWinTimes(null);
     }
     if (!didEnd) {
       return () => {
@@ -337,6 +346,7 @@ export const GameWrapper = ({
     const sessionId = getActiveGameSessionId(pathname);
     // Only a real win is timed (not the dev instant-win button).
     const winTimeMs = outcome === "won" ? getSessionPlayTimeMs(pathname) : null;
+    if (winTimeMs !== null && winTimeMs > 0) showWinTime(winTimeMs);
     recordResult(
       pathname,
       displayedOutcome === "won",
@@ -348,6 +358,9 @@ export const GameWrapper = ({
         if (displayedOutcome === "won") void maybeRequestStoreReview();
       })
       .catch(() => {});
+    if (displayedOutcome === "won") {
+      recordDailyWin(pathname).catch(() => {});
+    }
     if (isNodesMode && displayedOutcome === "won") {
       recordNodesWin(pathname, sessionId)
         .then((result) => {
@@ -385,15 +398,17 @@ export const GameWrapper = ({
 
       {tipsFade.isRendered && (
         <Animated.View
-          style={{
-            position: "absolute",
-            zIndex: LayerZIndexes.tipsContainer,
-            top: insets.top + spacing(layoutDims.pagePadding / 2),
-            right: 0,
-            left: 0,
-            opacity: tipsFade.opacity,
-            pointerEvents: "box-none",
-          }}
+          style={[
+            pointerEventsStyles.boxNone,
+            {
+              position: "absolute",
+              zIndex: LayerZIndexes.tipsContainer,
+              top: insets.top + spacing(layoutDims.pagePadding / 2),
+              right: 0,
+              left: 0,
+              opacity: tipsFade.opacity,
+            },
+          ]}
         >
           <TipsBox
             onClose={() => setTipsDismissed(true)}
@@ -411,6 +426,7 @@ export const GameWrapper = ({
         gameEnded={ended}
         headerBottom={headerHeight}
         won={won}
+        winTimes={won ? winTimes : null}
         score={score}
         hideScore={hideScore}
         reset={handleReset}
@@ -549,13 +565,13 @@ export const GameWrapper = ({
 
         <View
           style={[
+            pointerEventsStyles.boxNone,
             flexStyles.colCentered,
             flexStyles.fullWidth,
             {
               position: "relative",
               zIndex: LayerZIndexes.boardContent,
               flex: 1,
-              pointerEvents: "box-none",
             },
           ]}
         >

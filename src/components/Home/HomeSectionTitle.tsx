@@ -44,7 +44,7 @@ export function HomeSectionTitle({
         {iconName && (
           <Icon
             name={iconName}
-            size={spacing(24)}
+            size={spacing(27.6)}
             color={Colors.suitsRed}
             shadow
           />
@@ -52,9 +52,9 @@ export function HomeSectionTitle({
         <Text
           weight={400}
           size="md"
+          style={{ marginRight: "auto", fontSize: spacing(18 * 1.15) }}
           color={Colors.white}
           lineHeight={1}
-          style={{ marginRight: "auto" }}
         >
           {title}
         </Text>

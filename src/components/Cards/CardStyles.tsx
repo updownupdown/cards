@@ -98,12 +98,18 @@ export const CardOverlay = (props: {
   selectColor?: CardColor | string;
   isSelected?: boolean;
   forceOverlayColor?: boolean;
+  /**
+   * Empty zones are dark, so a multiplied tint barely shows on them; they are
+   * tinted normally instead, which roughly doubles how bright a highlighted
+   * zone looks.
+   */
+  isPlaceholder?: boolean;
 }) => {
   const targetOpacity =
     props.isSelected || props.forceOverlayColor
       ? props.selectColor === "grey"
         ? 0.5
-        : 0.3
+        : 0.27
       : 0;
 
   // Keep the last visible colour so deselecting fades out rather than the
@@ -149,7 +155,8 @@ export const CardOverlay = (props: {
           borderRadius: props.cardWidth * cardDims.ratioRadius,
           backgroundColor: lastColorRef.current,
           opacity,
-          mixBlendMode: "multiply",
+          // No blend mode on placeholders also spares Android an offscreen layer.
+          mixBlendMode: props.isPlaceholder ? undefined : "multiply",
           pointerEvents: "none",
         },
       ]}
@@ -161,7 +168,7 @@ export const CardOverlay = (props: {
 export const getUnderlayStyle = (
   cardWidth: number,
   colorDark: CardColor | string,
-  colorPale: CardColor | string,
+  _colorPale: CardColor | string,
   customBackground?: CardColor | string,
   hideBackground?: boolean,
   hideShadow?: boolean,

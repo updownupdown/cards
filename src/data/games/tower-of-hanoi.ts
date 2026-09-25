@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const towerOfHanoi: GameDefinition = {
   path: "/tower-of-hanoi",
   title: "Tower of Hanoi",
-  tags: [GameTag.EasyToLearn, GameTag.SpatialControl, GameTag.SequenceBuilding],
+  tags: [GameTag.Puzzles, GameTag.SpatialControl, GameTag.SequenceBuilding],
   rating: {
     complexity: 35,
     difficulty: 45,

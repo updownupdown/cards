@@ -6,7 +6,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const bisley: GameDefinition = {
   path: "/bisley",
   title: "Bisley",
-  tags: [GameTag.SequenceBuilding],
+  tags: [GameTag.CastlesAndFans, GameTag.SequenceBuilding],
   rating: { complexity: 45, difficulty: 55, luck: 25 },
   thumbnail: "Bisley.webp",
   background: GAME_BACKGROUNDS.london,

@@ -48,7 +48,7 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
       },
       {
         "type": "quote",
-        "id": 151
+        "id": 154
       }
     ]
   },
@@ -74,7 +74,7 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
       },
       {
         "type": "quote",
-        "id": 152
+        "id": 155
       }
     ]
   },
@@ -97,10 +97,6 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
       {
         "type": "tao",
         "id": 79
-      },
-      {
-        "type": "quote",
-        "id": 5
       }
     ]
   },
@@ -123,10 +119,6 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
       {
         "type": "quote",
         "id": 7
-      },
-      {
-        "type": "quote",
-        "id": 154
       }
     ]
   },
@@ -149,10 +141,6 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
       {
         "type": "quote",
         "id": 8
-      },
-      {
-        "type": "quote",
-        "id": 153
       }
     ]
   },
@@ -197,10 +185,6 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
       {
         "type": "quote",
         "id": 10
-      },
-      {
-        "type": "quote",
-        "id": 11
       }
     ]
   },
@@ -223,10 +207,6 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
       {
         "type": "quote",
         "id": 12
-      },
-      {
-        "type": "quote",
-        "id": 155
       }
     ]
   },
@@ -249,10 +229,6 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
       {
         "type": "tao",
         "id": 81
-      },
-      {
-        "type": "quote",
-        "id": 13
       }
     ]
   },
@@ -319,10 +295,6 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
       {
         "type": "quote",
         "id": 17
-      },
-      {
-        "type": "quote",
-        "id": 156
       }
     ]
   },
@@ -1403,6 +1375,7 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
     "arm": null,
     "connections": [
       "/herbalist",
+      "/pagoda",
       "/simple-simon",
       "/spiderette"
     ],
@@ -1634,6 +1607,7 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
     "arm": 1,
     "connections": [
       "/alaska",
+      "/apothecary",
       "/fortress",
       "/herbalist"
     ],
@@ -1719,6 +1693,7 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
     "arm": 3,
     "connections": [
       "/flower-garden",
+      "/glazier",
       "/josephine"
     ],
     "rewards": [
@@ -1782,6 +1757,8 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
     "arm": 1,
     "connections": [
       "/alaska",
+      "/apothecary",
+      "/pagoda",
       "/seer",
       "/spiderette"
     ],
@@ -1804,6 +1781,7 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
     "connections": [
       "/australian-patience",
       "/fortunes-call",
+      "/glazier",
       "/gremlin"
     ],
     "rewards": [
@@ -2450,6 +2428,70 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
       {
         "type": "quote",
         "id": 150
+      }
+    ]
+  },
+  {
+    "path": "/apothecary",
+    "x": -0.8013,
+    "y": 0.0909,
+    "arm": null,
+    "connections": [
+      "/herbalist",
+      "/spiderette"
+    ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 5
+      },
+      {
+        "type": "quote",
+        "id": 11
+      },
+      {
+        "type": "quote",
+        "id": 156
+      }
+    ]
+  },
+  {
+    "path": "/pagoda",
+    "x": -0.7012,
+    "y": 0.1558,
+    "arm": null,
+    "connections": [
+      "/alaska",
+      "/herbalist"
+    ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 13
+      },
+      {
+        "type": "quote",
+        "id": 151
+      }
+    ]
+  },
+  {
+    "path": "/glazier",
+    "x": 0.8342,
+    "y": -0.1714,
+    "arm": null,
+    "connections": [
+      "/fortunes-call",
+      "/josephine"
+    ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 152
+      },
+      {
+        "type": "quote",
+        "id": 153
       }
     ]
   }

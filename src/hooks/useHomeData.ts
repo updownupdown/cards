@@ -50,21 +50,15 @@ export function useHomeData(refreshToken?: number) {
     let cancelled = false;
 
     (async () => {
-      try {
-        const [loadedFavorites, loadedRecent, loadedSettings] =
-          await Promise.all([
-            loadFavoriteGames(),
-            loadRecentlyPlayedGames(),
-            loadGameSettingsMap(),
-          ]);
+      const [loadedFavorites, loadedRecent, loadedSettings] = await Promise.all(
+        [loadFavoriteGames(), loadRecentlyPlayedGames(), loadGameSettingsMap()],
+      );
 
-        if (cancelled) return;
+      if (cancelled) return;
 
-        setFavorites(loadedFavorites);
-        setRecentPaths(loadedRecent.map((entry) => entry.path));
-        setSettingsMap(loadedSettings);
-      } finally {
-      }
+      setFavorites(loadedFavorites);
+      setRecentPaths(loadedRecent.map((entry) => entry.path));
+      setSettingsMap(loadedSettings);
     })();
 
     return () => {

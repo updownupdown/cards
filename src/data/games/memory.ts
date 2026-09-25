@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const memory: GameDefinition = {
   path: "/memory",
   title: "Memory",
-  tags: [GameTag.PairMatching, GameTag.EasyToLearn],
+  tags: [GameTag.PairMatching],
   // Scored in moves or guesses: fewer is better.
   lowerScoreIsBetter: true,
   rating: {

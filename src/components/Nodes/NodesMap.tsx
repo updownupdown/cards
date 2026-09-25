@@ -13,8 +13,16 @@ import {
 import { Colors, rgba, textShadow } from "@/styles/styles";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useDisplayLanguage } from "@/i18n";
+import { useTabReadyHold } from "@/components/Home/TabReady";
 import { localizeGameTitle } from "@/i18n/content";
-import React, { memo, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  memo,
+  type ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   Animated as RNAnimated,
   Easing as RNEasing,
@@ -36,13 +44,6 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import Svg, {
-  Circle,
-  Defs,
-  Path,
-  RadialGradient,
-  Stop,
-} from "react-native-svg";
 
 // A spiral galaxy needs room: 114 nodes three dot-diameters apart do not fit
 // in a smaller world (see MAP_GEOMETRY in src/data/nodes-map.ts).
@@ -89,6 +90,20 @@ const LINE_WIDTH = { arm: 1.9, bridge: 0.77 };
 /** Locked links are drawn a little finer as well as fainter. */
 const LOCKED_LINE_SCALE = 0.85;
 const LOCKED_LINE_COLOR = "#888483";
+
+/** Native node sprites, baked by scripts/generate-nodes-map.mjs from the
+ *  sizes, colours and glows here; rebake them when those change. */
+const NODE_SPRITES = {
+  locked: require("@/assets/images/nodes/node-locked.webp"),
+  connected: require("@/assets/images/nodes/node-connected.webp"),
+  won: require("@/assets/images/nodes/node-won.webp"),
+  complete: require("@/assets/images/nodes/node-complete.webp"),
+} as const;
+/** A sprite's size in world points: room for the widest halo. Must match
+ *  SPRITES.nodeSize in scripts/generate-nodes-map.mjs. */
+const NODE_SPRITE_SIZE = 96;
+/** How far the selection rings reach beyond the dot, in world points. */
+const SELECTION_RING_WIDTH = 7;
 
 /** Glow strength per node state: outer blur radius, spread, and opacity. */
 const NODE_GLOW = {
@@ -138,17 +153,24 @@ function paleFor(state: NodeVisualState) {
  * scatter of dust that thins out away from it. Purely decorative, never
  * interactive, and static - it renders once and is never updated.
  *
- * The glow is a pre-blurred image baked by scripts/generate-nodes-map.mjs.
- * A real blur is the only way to get smooth arms (stacked shapes band), SVG
- * blur filters are unreliable on Android, and one image is cheaper to draw
- * than the dozens of paths it replaces.
+ * Glow and dust are one pre-rendered image baked by
+ * scripts/generate-nodes-map.mjs. A real blur is the only way to get smooth
+ * arms (stacked shapes band), SVG blur filters are unreliable on Android,
+ * and one image is far cheaper to draw than the shapes it replaces: Android
+ * draws a map-sized SVG as a bitmap many times the size of the screen.
  */
 const GALAXY_GLOW = require("@/assets/images/galaxy-glow.webp");
-/** Blue-white, white, cyan, pink and the bulge's warm tint, in the order
- *  scripts/generate-nodes-map.mjs deals them. */
-const ARM_DUST_TINTS = ["#d6e6ff", "#ffffff", "#b4e4ff", "#ffb3cf", "#ffe7bf"];
-/** Every seventh speck is a brighter star; the rest are fine dust. */
-const DUST_RADIUS = { star: 1.95, fine: 1 };
+
+/** A soft halo for each dust tint (blue-white, white, cyan, pink and the
+ *  bulge's warm tint), in the order scripts/generate-nodes-map.mjs deals
+ *  them, and bakes these. */
+const FLARE_SPRITES = [
+  require("@/assets/images/nodes/flare-0.webp"),
+  require("@/assets/images/nodes/flare-1.webp"),
+  require("@/assets/images/nodes/flare-2.webp"),
+  require("@/assets/images/nodes/flare-3.webp"),
+  require("@/assets/images/nodes/flare-4.webp"),
+];
 
 /**
  * Some of the brighter stars flare now and then. They are dealt into a few
@@ -160,7 +182,7 @@ const FLARE_GROUP_COUNT = 6;
 /** World-point radius of a flaring star's halo. */
 const FLARE_RADIUS = 10;
 const FLARE_GROUPS = (() => {
-  const groups: { x: number; y: number; tint: string }[][] = Array.from(
+  const groups: { x: number; y: number; tint: number }[][] = Array.from(
     { length: FLARE_GROUP_COUNT },
     () => [],
   );
@@ -170,7 +192,7 @@ const FLARE_GROUPS = (() => {
     groups[dealt % FLARE_GROUP_COUNT].push({
       x: toWorld(x),
       y: toWorld(y),
-      tint: ARM_DUST_TINTS[tint] ?? "#ffffff",
+      tint: FLARE_SPRITES[tint] ? tint : 1,
     });
     dealt += 1;
   });
@@ -190,33 +212,19 @@ function FlareStars({
 }: {
   stars: (typeof FLARE_GROUPS)[number]["stars"];
 }) {
-  return (
-    <Svg
-      width={WORLD_SIZE}
-      height={WORLD_SIZE}
-      style={{ position: "absolute", pointerEvents: "none" }}
-    >
-      <Defs>
-        {ARM_DUST_TINTS.map((tint, index) => (
-          <RadialGradient key={tint} id={`flare-${index}`}>
-            <Stop offset="0" stopColor="#ffffff" stopOpacity={0.95} />
-            <Stop offset="0.18" stopColor={tint} stopOpacity={0.6} />
-            <Stop offset="0.45" stopColor={tint} stopOpacity={0.16} />
-            <Stop offset="1" stopColor={tint} stopOpacity={0} />
-          </RadialGradient>
-        ))}
-      </Defs>
-      {stars.map((star, index) => (
-        <Circle
-          key={index}
-          cx={star.x}
-          cy={star.y}
-          r={FLARE_RADIUS}
-          fill={`url(#flare-${ARM_DUST_TINTS.indexOf(star.tint)})`}
-        />
-      ))}
-    </Svg>
-  );
+  return stars.map((star, index) => (
+    <Image
+      key={index}
+      source={FLARE_SPRITES[star.tint]}
+      style={{
+        position: "absolute",
+        left: star.x - FLARE_RADIUS,
+        top: star.y - FLARE_RADIUS,
+        width: FLARE_RADIUS * 2,
+        height: FLARE_RADIUS * 2,
+      }}
+    />
+  ));
 }
 
 const flareLayerStyle = {
@@ -295,8 +303,10 @@ const ArmFlares = memo(function ArmFlares() {
 
 const ArmArtwork = memo(function ArmArtwork({
   animationsEnabled,
+  onGlowShown,
 }: {
   animationsEnabled: boolean;
+  onGlowShown: () => void;
 }) {
   return (
     <>
@@ -317,23 +327,9 @@ const ArmArtwork = memo(function ArmArtwork({
           source={GALAXY_GLOW}
           contentFit="fill"
           style={{ width: "100%", height: "100%" }}
+          onDisplay={onGlowShown}
         />
       </View>
-      <Svg
-        width={WORLD_SIZE}
-        height={WORLD_SIZE}
-        style={{ position: "absolute", pointerEvents: "none" }}
-      >
-        {ARM_DUST.map(([x, y, tint, opacity], index) => (
-          <Circle
-            key={`dust-${index}`}
-            cx={toWorld(x)}
-            cy={toWorld(y)}
-            r={index % 7 === 0 ? DUST_RADIUS.star : DUST_RADIUS.fine}
-            fill={rgba(ARM_DUST_TINTS[tint] ?? "#ffffff", opacity * 0.7)}
-          />
-        ))}
-      </Svg>
       {animationsEnabled && <ArmFlares />}
     </>
   );
@@ -398,7 +394,10 @@ const NODE_CONNECTIONS = NODE_DEFINITIONS.flatMap((node) =>
         node,
         target,
         onArm,
-        path: `M${x1},${y1} L${x2},${y2}`,
+        centreX: (x1 + x2) / 2,
+        centreY: (y1 + y2) / 2,
+        length: Math.hypot(x2 - x1, y2 - y1),
+        angle: Math.atan2(y2 - y1, x2 - x1),
       };
     }),
 );
@@ -472,39 +471,48 @@ const NodeConnections = memo(function NodeConnections({
 }: {
   nodeStates: ReadonlyMap<string, NodeVisualState>;
 }) {
+  // Each link is a thin view, turned to lie between its nodes, with ends
+  // rounded like a round line cap. An SVG would be simpler, but Android draws
+  // a map-sized SVG as one huge bitmap, which makes the whole map crawl.
   return (
-    <Svg
-      width={WORLD_SIZE}
-      height={WORLD_SIZE}
-      style={{ position: "absolute" }}
-    >
-      {NODE_CONNECTIONS.map(({ key, node, target, onArm, path }) => {
-        const nodeState = nodeStates.get(node.path)!;
-        const targetState = nodeStates.get(target.path)!;
-        const locked = nodeState === "locked" || targetState === "locked";
-        const strokeColor = locked
-          ? LOCKED_LINE_COLOR
-          : nodeState === "complete" && targetState === "complete"
-            ? STATE_COLORS.complete
-            : nodeState === "connected" || targetState === "connected"
-              ? STATE_COLORS.connected
-              : STATE_COLORS.won;
+    <View style={[StyleSheet.absoluteFill, { pointerEvents: "none" }]}>
+      {NODE_CONNECTIONS.map(
+        ({ key, node, target, onArm, centreX, centreY, length, angle }) => {
+          const nodeState = nodeStates.get(node.path)!;
+          const targetState = nodeStates.get(target.path)!;
+          const locked = nodeState === "locked" || targetState === "locked";
+          const strokeColor = locked
+            ? LOCKED_LINE_COLOR
+            : nodeState === "complete" && targetState === "complete"
+              ? STATE_COLORS.complete
+              : nodeState === "connected" || targetState === "connected"
+                ? STATE_COLORS.connected
+                : STATE_COLORS.won;
 
-        return (
-          <Path
-            key={key}
-            d={path}
-            fill="none"
-            stroke={rgba(strokeColor, locked ? 0.65 : 0.85)}
-            strokeWidth={
-              LINE_WIDTH[onArm ? "arm" : "bridge"] *
-              (locked ? LOCKED_LINE_SCALE : 1)
-            }
-            strokeLinecap="round"
-          />
-        );
-      })}
-    </Svg>
+          const width =
+            LINE_WIDTH[onArm ? "arm" : "bridge"] *
+            (locked ? LOCKED_LINE_SCALE : 1);
+          // The caps reach half a line width past each node's centre.
+          const span = length + width;
+
+          return (
+            <View
+              key={key}
+              style={{
+                position: "absolute",
+                left: centreX - span / 2,
+                top: centreY - width / 2,
+                width: span,
+                height: width,
+                borderRadius: width / 2,
+                backgroundColor: rgba(strokeColor, locked ? 0.65 : 0.85),
+                transform: [{ rotate: `${angle}rad` }],
+              }}
+            />
+          );
+        },
+      )}
+    </View>
   );
 });
 
@@ -518,12 +526,14 @@ function NativeTwinklingNode({
   state,
   onPress,
   twinkle,
+  children,
 }: {
   style: Record<string, unknown>;
   title: string;
   state: NodeVisualState;
   onPress: () => void;
   twinkle: TwinkleTiming;
+  children?: ReactNode;
 }) {
   const pulse = useRef(new RNAnimated.Value(0)).current;
 
@@ -572,7 +582,9 @@ function NativeTwinklingNode({
           ],
         },
       ]}
-    />
+    >
+      {children}
+    </AnimatedPressable>
   );
 }
 
@@ -582,6 +594,7 @@ function TwinklingNode(props: {
   state: NodeVisualState;
   onPress: () => void;
   twinkle: TwinkleTiming;
+  children?: ReactNode;
 }) {
   if (Platform.OS === "web") {
     const webTwinkleStyle = {
@@ -631,19 +644,40 @@ const MapNode = memo(function MapNode({
   const glint = `inset 0 1px 2px ${rgba(Colors.white, state === "locked" ? 0.2 : 0.55)}, `;
   const shade = `inset -1px -2px 3px -1px ${rgba(game.gameColorDark, 0.55)}`;
 
-  const style = {
+  const webStyle = {
     position: "absolute",
     outline: "none",
-    // Native taps are handled by the map's tap gesture (see NodesMap).
-    pointerEvents: Platform.OS === "web" ? "auto" : "none",
-    left: (node.x + 1) * WORLD_SIZE * 0.5 - dotSize / 2,
-    top: (node.y + 1) * WORLD_SIZE * 0.5 - dotSize / 2,
+    pointerEvents: "auto",
+    left: toWorld(node.x) - dotSize / 2,
+    top: toWorld(node.y) - dotSize / 2,
     width: dotSize,
     height: dotSize,
     borderRadius: dotSize / 2,
     backgroundColor: color,
     boxShadow: `${selectionRing}${glint}${halo}, ${shade}`,
   } as const;
+  // Android draws blurred box shadows slowly, and a map has over a hundred of
+  // them, so native draws the same look from a sprite baked by
+  // scripts/generate-nodes-map.mjs: one image per node.
+  const nativeStyle = {
+    position: "absolute",
+    // Native taps are handled by the map's tap gesture (see NodesMap).
+    pointerEvents: "none",
+    left: toWorld(node.x) - NODE_SPRITE_SIZE / 2,
+    top: toWorld(node.y) - NODE_SPRITE_SIZE / 2,
+    width: NODE_SPRITE_SIZE,
+    height: NODE_SPRITE_SIZE,
+    alignItems: "center",
+    justifyContent: "center",
+  } as const;
+  const isWeb = Platform.OS === "web";
+  const style = isWeb ? webStyle : nativeStyle;
+  const sprite = isWeb ? undefined : (
+    <>
+      <Image source={NODE_SPRITES[state]} style={StyleSheet.absoluteFill} />
+      {selected && <SelectionRing dotSize={dotSize} color={color} />}
+    </>
+  );
 
   const twinkle = getTwinkleTiming(node.path);
   if (state === "connected" && animationsEnabled && twinkle.enabled) {
@@ -654,7 +688,9 @@ const MapNode = memo(function MapNode({
         state={state}
         onPress={() => onSelectNode(node)}
         twinkle={twinkle}
-      />
+      >
+        {sprite}
+      </TwinklingNode>
     );
   }
 
@@ -664,9 +700,38 @@ const MapNode = memo(function MapNode({
       accessibilityLabel={`${title}, ${state}`}
       onPress={() => onSelectNode(node)}
       style={style}
-    />
+    >
+      {sprite}
+    </Pressable>
   );
 });
+
+/** The selected node's rings, as on the web: dark, then white, then the
+ *  node's own colour, each hugging the one inside it. */
+function SelectionRing({ dotSize, color }: { dotSize: number; color: string }) {
+  const ring = (width: number, inset: number, ringColor: string) => {
+    const size = dotSize + (SELECTION_RING_WIDTH - inset) * 2;
+    return (
+      <View
+        style={{
+          position: "absolute",
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          borderWidth: width,
+          borderColor: ringColor,
+        }}
+      />
+    );
+  };
+  return (
+    <>
+      {ring(2, 0, rgba(color, 0.9))}
+      {ring(3, 2, rgba(Colors.white, 0.9))}
+      {ring(2, 5, rgba(Colors.black, 0.85))}
+    </>
+  );
+}
 
 export function NodesMap({
   selectedPath,
@@ -684,7 +749,12 @@ export function NodesMap({
   const startX = useSharedValue(0);
   const startY = useSharedValue(0);
   const startScale = useSharedValue(1);
-  const worldOpacity = useSharedValue(0);
+  // The tab stays hidden until the map is centred on its node and its big
+  // glow image (slow to decode) is showing, so it appears complete.
+  const [centered, setCentered] = useState(false);
+  const [glowShown, setGlowShown] = useState(false);
+  const onGlowShown = () => setGlowShown(true);
+  useTabReadyHold(!centered || !glowShown);
   const containerRef = useRef<View>(null);
   const hasCenteredInitialNode = useRef(false);
   const unlockedPaths = useMemo(
@@ -726,16 +796,8 @@ export function NodesMap({
 
     centerNode(node, false);
     hasCenteredInitialNode.current = true;
-    worldOpacity.value = settings.showAnimations
-      ? withTiming(1, { duration: 250 })
-      : 1;
-  }, [
-    ready,
-    selectedPath,
-    settings.showAnimations,
-    viewport.width,
-    worldOpacity,
-  ]);
+    setCentered(true);
+  }, [ready, selectedPath, settings.showAnimations, viewport.width]);
 
   useEffect(() => {
     if (Platform.OS !== "web") return;
@@ -845,7 +907,6 @@ export function NodesMap({
   }, [scale, startScale, startX, startY, translateX, translateY]);
 
   const worldStyle = useAnimatedStyle(() => ({
-    opacity: worldOpacity.value,
     transform: [
       { translateX: translateX.value },
       { translateY: translateY.value },
@@ -912,7 +973,10 @@ export function NodesMap({
             <NodesBlackHole animationsEnabled={settings.showAnimations} />
           </Animated.View>
 
-          <ArmArtwork animationsEnabled={settings.showAnimations} />
+          <ArmArtwork
+            animationsEnabled={settings.showAnimations}
+            onGlowShown={onGlowShown}
+          />
 
           <NodeConnections nodeStates={nodeStates} />
 

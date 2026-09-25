@@ -6,7 +6,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const seer: GameDefinition = {
   path: "/seer",
   title: "Seer",
-  tags: [GameTag.EasyToLearn],
+  tags: [GameTag.ModernMechanics],
   rating: {
     complexity: 35,
     difficulty: 55,

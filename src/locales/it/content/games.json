@@ -120,6 +120,40 @@
       "value": "Tutto in fila"
     }
   },
+  "apothecary": {
+    "cardDescription": {
+      "hash": "b66e1d4d",
+      "value": "Travasa le carte da un vaso all'altro finché tutti i valori sono riuniti."
+    },
+    "howToPlay": {
+      "hash": "4b2b06d2",
+      "value": [
+        "## Obiettivo",
+        "Riordina il mazzo per riunire tutte le carte dello stesso valore.",
+        "## Versare",
+        "- Tocca un vaso o un piattino per prendere la carta in cima, insieme alle carte uguali subito sotto.",
+        "- Tocca un altro vaso o piattino per versarle lì: puoi versare su una carta dello **stesso valore**, oppure in un vaso o in un piattino vuoto.",
+        "- I **vasi** contengono quattro carte. Se ci sta solo una parte delle carte, le altre restano dove sono.",
+        "- I due **piattini** contengono una sola carta ciascuno.",
+        "## Sigillare",
+        "- Un vaso con quattro carte dello stesso valore viene sigillato e girato a faccia in giù.",
+        "- Vinci quando tutti i 13 vasi sono sigillati. Cerca di farlo con il minor numero di travasi possibile.",
+        "- La partita è persa se nessuna carta può essere versata da nessuna parte."
+      ]
+    },
+    "quickStart": {
+      "hash": "77fe59b7",
+      "value": [
+        "Riempi ogni vaso con quattro carte dello stesso valore per sigillarlo.",
+        "Tocca un vaso, poi tocca dove versare le sue carte in cima.",
+        "Le carte si versano sullo stesso valore, oppure in un vaso o in un piattino vuoto."
+      ]
+    },
+    "title": {
+      "hash": "f53fdef5",
+      "value": "Lo speziale"
+    }
+  },
   "ascent": {
     "cardDescription": {
       "hash": "301e448f",
@@ -308,19 +342,15 @@
       "value": "Completa gruppi di quattro carte in sei spazi dello stesso valore usando l'alveare, il pozzo e il mazzo."
     },
     "howToPlay": {
-      "hash": "c74783f8",
+      "hash": "426ee910",
       "value": [
         "## Obiettivo",
         "Togli tutte le 52 carte formando gruppi di quattro carte dello stesso valore.",
         "## Regole",
-        "- L'alveare contiene 10 carte; solo la carta in cima è attiva.",
-        "- I sei spazi del tableau contengono carte di un solo valore, fino a quattro ciascuno.",
-        "- Sposta le carte dello stesso valore tra l'alveare, il pozzo e il tableau.",
-        "- Un gruppo di quattro carte viene tolto subito.",
-        "- Uno spazio vuoto resta vuoto finché non ci sposti una carta dell'alveare o del pozzo.",
-        "- Tocca una pila del tableau per spostarla automaticamente su una pila dello stesso valore.",
-        "- Le pile completate passano coperte sulla pila degli scarti.",
-        "- Gira fino a tre carte del mazzo sul pozzo, oppure ricicla il pozzo quando il mazzo è finito."
+        "- Ognuno dei sei spazi del tableau può contenere un solo valore alla volta.",
+        "- Riunisci le quattro carte dello stesso valore per formare un gruppo e toglierlo dal tableau.",
+        "- Riempi gli spazi vuoti con carte dell'alveare o del pozzo.",
+        "- Tocca una carta per spostarla automaticamente su una pila dello stesso valore."
       ]
     },
     "quickStart": {
@@ -2580,6 +2610,39 @@
     "title": {
       "hash": "7df776c7",
       "value": "Uroboro"
+    }
+  },
+  "pagoda": {
+    "cardDescription": {
+      "hash": "c1c2c60e",
+      "value": "Prendi le carte dai piani della pagoda e offri ogni tris al santuario."
+    },
+    "howToPlay": {
+      "hash": "5eb45815",
+      "value": [
+        "## Obiettivo",
+        "Togli tutte le **39 carte** dalla pagoda offrendole al santuario in gruppi di tre.",
+        "## Regole",
+        "- Al mazzo manca un seme di ogni valore, quindi ci sono esattamente tre carte per ogni valore.",
+        "- Tocca una carta scoperta per spostarla nel vassoio.",
+        "- Appena il vassoio contiene tre carte dello stesso valore, vengono offerte al santuario.",
+        "- La partita è persa quando il vassoio è pieno. La sua capienza dipende dalla difficoltà:",
+        "-- Facile: al massimo **7** carte",
+        "-- Normale: al massimo **6** carte",
+        "-- Difficile: al massimo **5** carte"
+      ]
+    },
+    "quickStart": {
+      "hash": "c5feca5f",
+      "value": [
+        "Tocca una carta scoperta per spostarla nel vassoio.",
+        "Tre carte dello stesso valore nel vassoio vengono offerte al santuario.",
+        "Non lasciare che il vassoio si riempia di carte spaiate (Facile: 7, Normale: 6, Difficile: 5)."
+      ]
+    },
+    "title": {
+      "hash": "125a9287",
+      "value": "Pagoda"
     }
   },
   "parallels": {

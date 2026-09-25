@@ -49,6 +49,7 @@ export type GameSettings = {
   jailbreakDifficulty: "easy" | "normal" | "hard";
   gremlinDifficulty: "easy" | "hard";
   nightVigilDifficulty: "street" | "kingpin" | "city";
+  pagodaDifficulty: "easy" | "normal" | "hard";
   lastResultSessionId?: string;
   lastResultWon?: boolean;
   stats: GameStats;
@@ -102,6 +103,12 @@ export type GlobalSettings = {
   translateCollectibles: boolean;
   discoverCardSize: "small" | "medium" | "large";
   dismissHomeInstallPrompt: boolean;
+  /** The new-player boxes on the Home tab, each closed on its own. */
+  dismissHomeEasyGames: boolean;
+  dismissHomeCampaign: boolean;
+  dismissHomeGenres: boolean;
+  /** The Campaign Mode explainer on the Campaign tab was closed. */
+  dismissCampaignIntro: boolean;
   resumeLastGame: boolean;
   showAnimations: boolean;
   showTipsForNewGames: boolean;
@@ -145,6 +152,10 @@ export const DEFAULT_GLOBAL_SETTINGS: GlobalSettings = {
   translateCollectibles: true,
   discoverCardSize: "large",
   dismissHomeInstallPrompt: false,
+  dismissHomeEasyGames: false,
+  dismissHomeCampaign: false,
+  dismissHomeGenres: false,
+  dismissCampaignIntro: false,
   resumeLastGame: true,
   showAnimations: true,
   showTipsForNewGames: true,
@@ -183,6 +194,7 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   jailbreakDifficulty: "normal",
   gremlinDifficulty: "easy",
   nightVigilDifficulty: "kingpin",
+  pagodaDifficulty: "normal",
   stats: {
     attempts: 0,
     wins: 0,
@@ -318,6 +330,10 @@ async function readGlobalSettings(): Promise<GlobalSettings> {
           ? merged.discoverCardSize
           : DEFAULT_GLOBAL_SETTINGS.discoverCardSize,
       dismissHomeInstallPrompt: merged.dismissHomeInstallPrompt === true,
+      dismissHomeEasyGames: merged.dismissHomeEasyGames === true,
+      dismissHomeCampaign: merged.dismissHomeCampaign === true,
+      dismissHomeGenres: merged.dismissHomeGenres === true,
+      dismissCampaignIntro: merged.dismissCampaignIntro === true,
       resumeLastGame: merged.resumeLastGame !== false,
       showAnimations: merged.showAnimations !== false,
       showTipsForNewGames: merged.showTipsForNewGames !== false,
@@ -357,23 +373,32 @@ export async function resetAllSettings() {
   });
 }
 
-export async function populateTestGameProgress() {
+/**
+ * Fills in play stats for testing. Only `wonPaths` get wins; of the rest,
+ * some have been tried and lost and some never played.
+ */
+export async function populateTestGameProgress(wonPaths: ReadonlySet<string>) {
   await runWithGameSettingsMapWriteLock((map) => {
     homeGameList.forEach(({ path }, index) => {
       const current = getGameSettings(map, path);
-      const wins = (index % 7) + 1;
-      const losses = (index * 3) % 6;
+      const won = wonPaths.has(path);
+      const wins = won ? (index % 7) + 1 : 0;
+      const losses = won || index % 2 === 0 ? (index * 3) % 6 : 0;
 
-      map[path] = compactGameSettings({
-        ...current,
-        stats: {
-          attempts: wins + losses + (index % 3),
-          wins,
-          losses,
-          highestScore: index % 4 === 0 ? (index + 1) * 100 : null,
-          fastestTimeMs: index % 3 === 0 ? (95 + index * 7) * 1000 : null,
+      map[path] = compactGameSettings(
+        {
+          ...current,
+          stats: {
+            attempts: wins + losses,
+            wins,
+            losses,
+            highestScore: won && index % 4 === 0 ? (index + 1) * 100 : null,
+            fastestTimeMs:
+              won && index % 3 === 0 ? (95 + index * 7) * 1000 : null,
+          },
         },
-      });
+        path,
+      );
     });
   });
 }
@@ -517,16 +542,32 @@ export async function saveGameSettingsMap(map: GameSettingsMap) {
   await AsyncStorage.setItem(GAME_SETTINGS_STORAGE_KEY, JSON.stringify(map));
 }
 
+/** Defaults that differ for one game, keyed by game path. */
+const GAME_DEFAULT_OVERRIDES: Record<string, Partial<GameSettings>> = {
+  "/klondike": { drawCount: 3 },
+};
+
+/** A game's defaults: the shared defaults plus its own overrides. */
+export function getDefaultGameSettings(pathname?: string): GameSettings {
+  const overrides = pathname
+    ? GAME_DEFAULT_OVERRIDES[normalizeGamePath(pathname)]
+    : undefined;
+  return overrides
+    ? { ...DEFAULT_GAME_SETTINGS, ...overrides }
+    : DEFAULT_GAME_SETTINGS;
+}
+
 export function getGameSettings(
   map: GameSettingsMap,
   pathname: string,
 ): GameSettings {
   const key = normalizeGamePath(pathname);
+  const defaults = getDefaultGameSettings(key);
   const existing = map[key];
-  if (!existing) return DEFAULT_GAME_SETTINGS;
+  if (!existing) return defaults;
 
   const merged = {
-    ...DEFAULT_GAME_SETTINGS,
+    ...defaults,
     ...existing,
   };
 
@@ -538,7 +579,10 @@ export function getGameSettings(
       ? merged.memoryDifficulty
       : DEFAULT_GAME_SETTINGS.memoryDifficulty,
     difficulty: merged.difficulty === "difficult" ? "difficult" : "easy",
-    drawCount: merged.drawCount === 3 ? 3 : 1,
+    drawCount:
+      merged.drawCount === 1 || merged.drawCount === 3
+        ? merged.drawCount
+        : defaults.drawCount,
     islandJokers: merged.islandJokers === true,
     lycanMode:
       merged.lycanMode === "hard" || merged.lycanMode === "easy"
@@ -595,6 +639,10 @@ export function getGameSettings(
       merged.nightVigilDifficulty === "city"
         ? merged.nightVigilDifficulty
         : "kingpin",
+    pagodaDifficulty:
+      merged.pagodaDifficulty === "easy" || merged.pagodaDifficulty === "hard"
+        ? merged.pagodaDifficulty
+        : "normal",
     stats: normalizeStats(existing.stats),
   };
 }
@@ -643,8 +691,10 @@ function normalizeStats(stats: Partial<GameStats> | undefined): GameStats {
  */
 export function compactGameSettings(
   settings: GameSettings,
+  pathname?: string,
 ): Partial<GameSettings> {
   const compact: Partial<GameSettings> = {};
+  const defaults = getDefaultGameSettings(pathname);
 
   (Object.keys(settings) as (keyof GameSettings)[]).forEach((key) => {
     const value = settings[key];
@@ -659,7 +709,7 @@ export function compactGameSettings(
       return;
     }
 
-    if (value !== DEFAULT_GAME_SETTINGS[key]) {
+    if (value !== defaults[key]) {
       (compact as Record<string, unknown>)[key] = value;
     }
   });
@@ -732,7 +782,7 @@ export async function toggleFavoriteGame(pathname: string) {
     const gameSettings = getGameSettings(map, key);
 
     gameSettings.isFavorite = !gameSettings.isFavorite;
-    map[key] = compactGameSettings(gameSettings);
+    map[key] = compactGameSettings(gameSettings, key);
 
     const favorites = new Set<string>();
     Object.keys(map).forEach((path) => {
@@ -770,7 +820,7 @@ export async function updateGameSettings(
   const key = normalizeGamePath(pathname);
   await runWithGameSettingsMapWriteLock((map) => {
     const current = getGameSettings(map, key);
-    map[key] = compactGameSettings(updater(current));
+    map[key] = compactGameSettings(updater(current), key);
   });
 }
 

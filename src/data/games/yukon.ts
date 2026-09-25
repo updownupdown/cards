@@ -6,7 +6,11 @@ import { GameDefinition, GameTag } from "../games-data";
 export const yukon: GameDefinition = {
   path: "/yukon",
   title: "Yukon",
-  tags: [GameTag.TableauBuilding, GameTag.SequenceBuilding],
+  tags: [
+    GameTag.YukonFamily,
+    GameTag.TableauBuilding,
+    GameTag.SequenceBuilding,
+  ],
   rating: { complexity: 35, difficulty: 55, luck: 35 },
   thumbnail: "Yukon.webp",
   background: GAME_BACKGROUNDS.yukon,

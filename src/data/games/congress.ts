@@ -5,7 +5,11 @@ import { GameAnimations } from "@/animations";
 export const congress: GameDefinition = {
   path: "/congress",
   title: "Congress",
-  tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
+  tags: [
+    GameTag.FortyThievesFamily,
+    GameTag.TableauBuilding,
+    GameTag.StockAndWaste,
+  ],
   rating: { complexity: 35, difficulty: 60, luck: 40 },
   thumbnail: "Congress.webp",
   background: GAME_BACKGROUNDS.city3,

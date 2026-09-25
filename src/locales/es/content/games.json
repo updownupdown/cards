@@ -120,6 +120,40 @@
       "value": "Todo en fila"
     }
   },
+  "apothecary": {
+    "cardDescription": {
+      "hash": "b66e1d4d",
+      "value": "Pasa cartas de un tarro a otro hasta agrupar todos los valores."
+    },
+    "howToPlay": {
+      "hash": "4b2b06d2",
+      "value": [
+        "## Objetivo",
+        "Ordena la baraja para agrupar todas las cartas del mismo valor.",
+        "## Verter",
+        "- Toca un tarro o platillo para tomar su carta de arriba, junto con las cartas iguales que haya justo debajo.",
+        "- Toca otro tarro o platillo para verterlas allí: puedes verter sobre una carta del **mismo valor**, o en un tarro o platillo vacío.",
+        "- En los **tarros** caben cuatro cartas. Si solo caben algunas, las demás se quedan donde estaban.",
+        "- Los dos **platillos** admiten una sola carta cada uno.",
+        "## Sellar",
+        "- Un tarro con cuatro cartas del mismo valor se sella y se pone boca abajo.",
+        "- Ganas cuando los 13 tarros están sellados. Intenta lograrlo con el menor número de vertidos posible.",
+        "- La partida se pierde si ninguna carta se puede verter en ningún sitio."
+      ]
+    },
+    "quickStart": {
+      "hash": "77fe59b7",
+      "value": [
+        "Llena cada tarro con cuatro cartas del mismo valor para sellarlo.",
+        "Toca un tarro y luego dónde verter sus cartas de arriba.",
+        "Las cartas se vierten sobre el mismo valor, o en un tarro o platillo vacío."
+      ]
+    },
+    "title": {
+      "hash": "f53fdef5",
+      "value": "El boticario"
+    }
+  },
   "ascent": {
     "cardDescription": {
       "hash": "301e448f",
@@ -308,19 +342,15 @@
       "value": "Completa grupos de cuatro cartas en seis huecos del mismo valor usando la colmena, el montón y el mazo."
     },
     "howToPlay": {
-      "hash": "c74783f8",
+      "hash": "426ee910",
       "value": [
         "## Objetivo",
         "Retira las 52 cartas formando grupos de cuatro cartas del mismo valor.",
         "## Reglas",
-        "- La colmena tiene 10 cartas; solo su carta superior está activa.",
-        "- Los seis huecos de la mesa guardan cartas de un solo valor, hasta cuatro cada uno.",
-        "- Mueve cartas del mismo valor entre la colmena, el montón y la mesa.",
-        "- Un grupo de cuatro cartas se retira de inmediato.",
-        "- Un hueco vacío sigue vacío hasta que muevas allí una carta de la colmena o del montón.",
-        "- Toca una pila de la mesa para moverla automáticamente sobre otra pila del mismo valor.",
-        "- Las pilas completas pasan boca abajo a la pila de descarte.",
-        "- Pasa hasta tres cartas del mazo al montón, o recicla el montón cuando el mazo esté vacío."
+        "- Cada uno de los seis huecos de la mesa solo puede contener un valor a la vez.",
+        "- Reúne las cuatro cartas del mismo valor para formar un grupo y retirarlo de la mesa.",
+        "- Llena los huecos vacíos con cartas de la colmena o del montón.",
+        "- Toca una carta para moverla automáticamente sobre una pila del mismo valor."
       ]
     },
     "quickStart": {
@@ -2580,6 +2610,39 @@
     "title": {
       "hash": "7df776c7",
       "value": "Uróboros"
+    }
+  },
+  "pagoda": {
+    "cardDescription": {
+      "hash": "c1c2c60e",
+      "value": "Toma cartas de los pisos de la pagoda y ofrece cada trío en el santuario."
+    },
+    "howToPlay": {
+      "hash": "5eb45815",
+      "value": [
+        "## Objetivo",
+        "Retira las **39 cartas** de la pagoda ofreciéndolas en el santuario en grupos de tres.",
+        "## Reglas",
+        "- A la baraja le falta un palo de cada valor, así que hay exactamente tres cartas de cada valor.",
+        "- Toca una carta descubierta para llevarla a la bandeja.",
+        "- En cuanto la bandeja tiene tres cartas del mismo valor, se ofrecen en el santuario.",
+        "- Pierdes cuando la bandeja se llena. Su capacidad depende de la dificultad:",
+        "-- Fácil: máximo **7** cartas",
+        "-- Normal: máximo **6** cartas",
+        "-- Difícil: máximo **5** cartas"
+      ]
+    },
+    "quickStart": {
+      "hash": "c5feca5f",
+      "value": [
+        "Toca una carta descubierta para llevarla a tu bandeja.",
+        "Tres cartas del mismo valor en la bandeja se ofrecen en el santuario.",
+        "No dejes que la bandeja se llene de cartas sin emparejar (Fácil: 7, Normal: 6, Difícil: 5)."
+      ]
+    },
+    "title": {
+      "hash": "125a9287",
+      "value": "Pagoda"
     }
   },
   "parallels": {

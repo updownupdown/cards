@@ -7,7 +7,11 @@ export const maria: GameDefinition = {
   path: "/maria",
   title: "Maria",
   aliases: ["Thirty-Six Card Tableau"],
-  tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
+  tags: [
+    GameTag.FortyThievesFamily,
+    GameTag.TableauBuilding,
+    GameTag.StockAndWaste,
+  ],
   rating: { complexity: 30, difficulty: 35, luck: 45 },
   thumbnail: "Maria.webp",
   background: GAME_BACKGROUNDS.painting,

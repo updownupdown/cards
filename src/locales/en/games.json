@@ -14,6 +14,11 @@
     "youClearedTheBoard": "You cleared the board!",
     "noAdjacentRankRemains": "No adjacent rank remains."
   },
+  "apothecary": {
+    "dish": "Dish",
+    "allSealed": "Every jar sealed in {{count}} pours!",
+    "noPoursLeft": "No card can be poured anywhere."
+  },
   "ascent": {
     "lhotseRoutesNeed2Cards": "Lhotse: routes need 2+ cards.",
     "gasherbrumIAnchorMustBe": "Gasherbrum I: anchor must be even.",
@@ -238,6 +243,21 @@
   "grandfathersClock": {
     "everyHourStruck": "Every hour struck!"
   },
+  "glazier": {
+    "paneSet": "Pane set: +{{count}}",
+    "paneShattered": "No room in the window: the pane shatters.",
+    "framesShattered": "A frame can no longer fit its row: its panes shatter.",
+    "shardsPenalty": "Shards: −{{count}}",
+    "windowBonus": "Window bonuses: +{{count}}",
+    "roundStart": "Round {{round}} of {{total}}",
+    "round": "Round",
+    "score": "Score",
+    "tierJourneyman": "Journeyman",
+    "tierMaster": "Master Glazier",
+    "tierCathedral": "Cathedral Window",
+    "wonWithTier": "{{score}} points: {{tier}}!",
+    "lostShortOfTarget": "{{score}} points. You need {{target}} points to win."
+  },
   "gremlin": {
     "helper": "Helper",
     "endTurn": "End Turn",
@@ -366,6 +386,11 @@
     "gotAllJewels": "You got all four jewels and found the exit!",
     "lostWithLoot": "You got lost in the dungeon with no way out! You die with your loot.",
     "lostInDungeon": "You got lost in the dungeon with no way out!"
+  },
+  "pagoda": {
+    "shrine": "Shrine",
+    "shrineComplete": "Every set rests in the shrine!",
+    "trayFull": "The tray is full."
   },
   "pocketPoker": {
     "youHit10PointsYou": "You hit 10 points — you win!",

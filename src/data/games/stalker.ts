@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const stalker: GameDefinition = {
   path: "/stalker",
   title: "Stalker",
-  tags: [GameTag.SequenceBuilding],
+  tags: [GameTag.ModernMechanics, GameTag.SequenceBuilding],
   rating: {
     complexity: 55,
     difficulty: 70,

@@ -6,7 +6,7 @@ import { CardBackColors } from "../card-backs";
 export const clock: GameDefinition = {
   path: "/clock",
   title: "Clock Solitaire",
-  tags: [GameTag.EasyToLearn],
+  tags: [GameTag.FoundationBuilders, GameTag.TableauBuilding],
   rating: {
     complexity: 10,
     difficulty: 10,

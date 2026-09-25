@@ -11,6 +11,7 @@ import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
+import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   cardDims,
@@ -674,14 +675,16 @@ export function StockTableauSolitaire({
       setLastTap(null);
       if (moveToFoundation(next)) return;
     } else setLastTap({ key, at: now });
-    if (!selected) return setSelected(next);
+    // Only a card that can move with the cards on it is selectable.
+    const selectable = isMovableRun(getCards(game, next), config.move, config);
+    if (!selected) return setSelected(selectable ? next : null);
     if (
       selected.zone === "tableau" &&
       selected.pile === pile &&
       selected.card === card
     )
       return setSelected(null);
-    if (!moveToTableau(pile)) setSelected(next);
+    if (!moveToTableau(pile)) setSelected(selectable ? next : null);
   }
 
   function onWastePress() {
@@ -845,6 +848,9 @@ export function StockTableauSolitaire({
         selectColor: isHoverTarget ? "green" : "none",
         isVisible: !isBeingDragged,
         animDuration,
+        // Foundation cards are locked: taps go through to the zone, which
+        // places the selected card.
+        clickThroughCards: true,
       };
     }
     if (card.zoneName === "tableau" && card.pileIndex !== undefined) {
@@ -1122,13 +1128,15 @@ export function StockTableauSolitaire({
       >
         {cardMap}
         <View
-          style={{
-            ...StyleSheet.absoluteFillObject,
-            zIndex: 3000,
-            touchAction: "none",
-            overscrollBehaviorX: "contain",
-            pointerEvents: "box-none",
-          }}
+          style={[
+            pointerEventsStyles.boxNone,
+            {
+              ...StyleSheet.absoluteFillObject,
+              zIndex: 3000,
+              touchAction: "none",
+              overscrollBehaviorX: "contain",
+            },
+          ]}
         >
           {stockRect && (
             <Pressable

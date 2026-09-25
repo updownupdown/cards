@@ -5,11 +5,14 @@ import { jest } from "@jest/globals";
 //   out cards, so tests press cards through the game's own onPress handlers,
 // - GameWrapper records its props (outcome, score) instead of rendering chrome.
 // Import "./game-mocks" at the top of a test file to install the mocks.
+import type { MappedCard, MapZone } from "@/components/Cards/CardMap";
 import type {
-  MappedCard,
-  MapZone,
-} from "@/components/Cards/CardMap";
-import type { CardRank, CardSuit, PlayingCard } from "@/components/Cards/card-utils";
+  CardRank,
+  CardSuit,
+  PlayingCard,
+} from "@/components/Cards/card-utils";
+import type { GameSettings } from "@/data/game-menu";
+import { useGameSettings } from "@/hooks/useGameSettings";
 import React from "react";
 import {
   act,
@@ -24,9 +27,15 @@ type WrapperProps = {
   [key: string]: unknown;
 };
 
+type CardMapping = {
+  onPress?: () => void;
+  isSelected?: boolean;
+  clickThroughCards?: boolean;
+};
+
 type MapConfig = {
   zones: MapZone[];
-  cardMapper: (card: MappedCard) => { onPress?: () => void } | undefined;
+  cardMapper: (card: MappedCard) => CardMapping | undefined;
   zoneMapper?: (zone: MapZone) => { onPress?: () => void } | undefined;
 };
 
@@ -34,6 +43,7 @@ type DragOptions = {
   canDropOnTarget: (source: unknown, target: unknown) => boolean;
   onSuccessfulDrop: (source: unknown, target: unknown) => void | Promise<void>;
   getDropHitAreas?: () => { target: unknown }[];
+  getTapHandler?: (source: unknown) => (() => void) | undefined;
 };
 
 type MakeDragHandlers = (source: unknown, ...rest: unknown[]) => unknown;
@@ -260,6 +270,80 @@ export async function pressZone(match: (zone: MapZone) => boolean) {
     onPress();
   });
   await settle();
+}
+
+/**
+ * Change a game's settings as the game menu does: saved, and broadcast to the
+ * game on screen (if any), which picks them up without a reset.
+ */
+export async function setGameSettings(
+  path: string,
+  updates: Partial<GameSettings>,
+) {
+  let updateSettings!: (updates: Partial<GameSettings>) => Promise<void>;
+  function SettingsMenu() {
+    updateSettings = useGameSettings(path).updateSettings;
+    return null;
+  }
+  let menu!: ReactTestRenderer;
+  await act(async () => {
+    menu = create(<SettingsMenu />);
+  });
+  await act(async () => {
+    await updateSettings(updates);
+  });
+  await act(async () => {
+    menu.unmount();
+  });
+  await settle();
+}
+
+/**
+ * Tap a zone where a finger would: on its top card when that card takes the
+ * tap, or through to the zone when the cards let taps through. Fails when the
+ * top card swallows the tap (no handler, not click-through), as on a device.
+ */
+export async function tapZone(match: (zone: MapZone) => boolean) {
+  const zone = harness.mapConfig?.zones.find(match);
+  if (!zone) throw new Error("No zone matches");
+  const topCard = mappedCards().find(
+    (card) => card.zoneId === zone.id && card.topOfZone,
+  );
+  if (topCard) {
+    const mapping = harness.mapConfig?.cardMapper(topCard);
+    if (mapping?.onPress) {
+      await pressCard((card) => card === topCard);
+      return;
+    }
+    if (!mapping?.clickThroughCards && !topCard.clickThroughCards) {
+      throw new Error(`${describeCard(topCard)} blocks taps on ${zone.id}`);
+    }
+  }
+  await pressZone((candidate) => candidate === zone);
+}
+
+/**
+ * Tap a draggable card (a drag source, as the game passes it to
+ * makeDragHandlers) through the game's tap handler, as a tap on its drag
+ * handle does.
+ */
+export async function tapSource(
+  source: unknown,
+  { settle: shouldSettle = true }: PressOptions = {},
+) {
+  const onTap = harness.dragOptions?.getTapHandler?.(source);
+  if (!onTap) throw new Error(`${JSON.stringify(source)} has no tap handler`);
+  await act(async () => {
+    onTap();
+  });
+  if (shouldSettle) await settle();
+}
+
+/** Ids of the cards currently drawn as selected. */
+export function selectedCardIds() {
+  return mappedCards()
+    .filter((card) => harness.mapConfig?.cardMapper(card)?.isSelected)
+    .map((card) => card.card.id);
 }
 
 /**

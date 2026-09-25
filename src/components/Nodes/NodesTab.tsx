@@ -1,8 +1,9 @@
 import { QuotesCollectionModal } from "@/components/Modals/QuotesCollectionModal";
 import { TaoCollectionModal } from "@/components/Modals/TaoCollectionModal";
 import { GamesCollectionModal } from "@/components/Modals/GamesCollectionModal";
+
+import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { QUOTE_COUNT, TAO_CHAPTER_COUNT } from "@/data/collectibles";
-import type { GameSettingsMap } from "@/data/game-menu";
 import {
   getNodeDefinition,
   getNodeVisualState,
@@ -19,16 +20,17 @@ import { Platform, View } from "react-native";
 import { NodeDetailsPanel } from "./NodeDetailsPanel";
 import { NodesMap } from "./NodesMap";
 import { NodesProgressItem } from "./NodesProgressItem";
+import { CampaignIntroPanel } from "./CampaignIntroPanel";
 import { UfoContext } from "./UfoContext";
 import { clearMercySkipVisit, isMercySkipVisitOwed } from "./ufo-visit";
 import { flexStyles } from "@/styles/flexStyles";
+import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 
 type Props = {
-  settingsMap: GameSettingsMap;
   contentPaddingTop: number;
 };
 
-export function NodesTab({ settingsMap, contentPaddingTop }: Props) {
+export function NodesTab({ contentPaddingTop }: Props) {
   const { spacing, ui } = useResponsiveMetrics();
   const { t } = useTranslation("nodes");
   const {
@@ -44,6 +46,12 @@ export function NodesTab({ settingsMap, contentPaddingTop }: Props) {
   const [showTao, setShowTao] = useState(false);
   const [showQuotes, setShowQuotes] = useState(false);
   const [showGames, setShowGames] = useState(false);
+  const {
+    settings,
+    updateSettings,
+    isLoading: settingsLoading,
+  } = useGlobalSettings();
+  const showIntro = !settingsLoading && !settings.dismissCampaignIntro;
   // The rare UFO stays hidden for the first stretch on the map each visit,
   // so it never appears the instant the tab opens.
   const [onMapLongEnough, setOnMapLongEnough] = useState(false);
@@ -161,26 +169,25 @@ export function NodesTab({ settingsMap, contentPaddingTop }: Props) {
 
       <View
         style={[
-          flexStyles.rowCentered,
+          pointerEventsStyles.boxNone,
           {
             position: "absolute",
             zIndex: 5,
             top: contentPaddingTop,
             left: 0,
             right: 0,
-            flexDirection: "row",
-            justifyContent: "center",
-            pointerEvents: "box-none",
+            alignItems: "center",
+            gap: spacing(12),
           },
         ]}
       >
         <View
           style={[
+            pointerEventsStyles.boxNone,
             flexStyles.rowCentered,
             {
               gap: spacing(14),
               paddingHorizontal: spacing(12),
-              pointerEvents: "box-none",
               width: "100%",
               maxWidth: ui.contentMaxWidth,
             },
@@ -220,6 +227,21 @@ export function NodesTab({ settingsMap, contentPaddingTop }: Props) {
             onPress={() => setShowQuotes(true)}
           />
         </View>
+        {showIntro && (
+          <View
+            style={{
+              width: "100%",
+              maxWidth: ui.contentMaxWidth,
+              paddingHorizontal: spacing(12),
+            }}
+          >
+            <CampaignIntroPanel
+              onClose={() =>
+                void updateSettings({ dismissCampaignIntro: true })
+              }
+            />
+          </View>
+        )}
       </View>
 
       <NodesMap
@@ -233,7 +255,6 @@ export function NodesTab({ settingsMap, contentPaddingTop }: Props) {
       <NodeDetailsPanel
         node={selectedNode}
         state={state}
-        settingsMap={settingsMap}
         collectedTaoIds={collectedTaoIds}
         collectedQuoteIds={collectedQuoteIds}
       />

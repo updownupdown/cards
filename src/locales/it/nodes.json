@@ -43,5 +43,15 @@
   },
   "original": {
     "label": "Mostra l'originale"
+  },
+  "intro": {
+    "title": "Modalità Campagna",
+    "paragraphs": [
+      "La Campagna è un viaggio attraverso tutti i giochi di Solitarius, disposti come una galassia. Parti da Klondike, vicino al centro, e i giochi diventano più difficili man mano che ti allontani.",
+      "Vinci un gioco per sbloccare i giochi collegati. Contano solo le partite giocate da questa mappa, quindi tocca un gioco qui e premi Gioca.",
+      "Ogni gioco custodisce anche degli oggetti da collezione: capitoli del Tao Te Ching e carte con citazioni. Vinci un gioco per ottenere il successivo, e vincilo ancora per gli altri.",
+      "Bloccato su un gioco difficile? Tieni d'occhio il cielo. Un viaggiatore di passaggio potrebbe offrirti un modo per superarlo."
+    ],
+    "close": "Chiudi l'introduzione alla Campagna"
   }
 }

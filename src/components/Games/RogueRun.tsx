@@ -57,6 +57,7 @@ type GameState = {
   health: number;
   lastRoomNumRanFrom: number | null;
   isRunning: boolean;
+  roomsSkipped: number;
   score?: number;
   lastActionType?: RogueRunCardType;
   lastPotionValue?: number;
@@ -96,6 +97,7 @@ const gameStateInitial: GameState = {
   health: MaxHealth,
   lastRoomNumRanFrom: null,
   isRunning: false,
+  roomsSkipped: 0,
   score: undefined,
   lastActionType: undefined,
   lastPotionValue: undefined,
@@ -125,6 +127,7 @@ async function resetAndSetup(
     draft.health = MaxHealth;
     draft.lastRoomNumRanFrom = null;
     draft.isRunning = false;
+    draft.roomsSkipped = 0;
     draft.score = undefined;
     draft.lastActionType = undefined;
     draft.lastPotionValue = undefined;
@@ -392,6 +395,7 @@ function applyRogueRunAction(draft: GameState, action: RogueRunAction) {
     draft.roomCards = [...EmptyRoom];
     draft.lastRoomNumRanFrom = draft.roomNum;
     draft.isRunning = true;
+    draft.roomsSkipped = (draft.roomsSkipped ?? 0) + 1;
     draft.lastActionType = undefined;
     draft.lastPotionValue = undefined;
     return true;
@@ -542,7 +546,7 @@ export default function RogueRun() {
     });
   }
 
-  function heal(roomIndex: number, potion: PlayingCard) {
+  function heal(roomIndex: number, _potion: PlayingCard) {
     if (game.ended) return;
 
     saveUndoState(game);
@@ -552,7 +556,7 @@ export default function RogueRun() {
     });
   }
 
-  function equip(roomIndex: number, weapon: PlayingCard) {
+  function equip(roomIndex: number, _weapon: PlayingCard) {
     if (game.ended) return;
 
     saveUndoState(game);
@@ -562,7 +566,7 @@ export default function RogueRun() {
     });
   }
 
-  function fightBare(roomIndex: number, monster: PlayingCard) {
+  function fightBare(roomIndex: number, _monster: PlayingCard) {
     if (game.ended) return;
 
     saveUndoState(game);
@@ -857,10 +861,10 @@ export default function RogueRun() {
         {/* Room Bar */}
         <ProgressBar
           iconName="door"
-          totalValue={TotalRooms}
-          progressValue={game.roomNum}
+          totalValue={TotalRooms + (game.roomsSkipped ?? 0)}
+          progressValue={game.roomNum + (game.roomsSkipped ?? 0)}
           color="blue"
-          tallyText={game.roomNum}
+          tallyText={game.roomNum + (game.roomsSkipped ?? 0)}
           scaledHeight={cardHeight * 0.3}
         />
 

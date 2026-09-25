@@ -7,7 +7,7 @@ export const crescent: GameDefinition = {
   path: "/crescent",
   title: "Crescent",
   aliases: ["La Demi-Lune"],
-  tags: [GameTag.SequenceBuilding],
+  tags: [GameTag.CastlesAndFans, GameTag.SequenceBuilding],
   rating: { complexity: 45, difficulty: 55, luck: 40 },
   thumbnail: "Crescent.webp",
   background: GAME_BACKGROUNDS.nightSky,

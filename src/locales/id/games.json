@@ -14,6 +14,11 @@
     "youClearedTheBoard": "Kamu membersihkan meja!",
     "noAdjacentRankRemains": "Tidak ada nilai berurutan lagi."
   },
+  "apothecary": {
+    "dish": "Cawan",
+    "allSealed": "Semua toples tersegel dalam {{count}} tuangan!",
+    "noPoursLeft": "Tidak ada kartu yang bisa dituang ke mana pun."
+  },
   "ascent": {
     "lhotseRoutesNeed2Cards": "Lhotse: rute butuh 2+ kartu.",
     "gasherbrumIAnchorMustBe": "Gasherbrum I: jangkar harus genap.",
@@ -366,6 +371,11 @@
     "gotAllJewels": "Kamu mendapat keempat permata dan menemukan pintu keluar!",
     "lostWithLoot": "Kamu tersesat di dungeon tanpa jalan keluar! Kamu mati bersama jarahanmu.",
     "lostInDungeon": "Kamu tersesat di dungeon tanpa jalan keluar!"
+  },
+  "pagoda": {
+    "shrine": "Kuil",
+    "shrineComplete": "Semua set tersimpan di kuil!",
+    "trayFull": "Baki sudah penuh."
   },
   "pocketPoker": {
     "youHit10PointsYou": "Kamu mencapai 10 poin — kamu menang!",

@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const tripleStack: GameDefinition = {
   path: "/triple-stack",
   title: "Triple Stack",
-  tags: [GameTag.EasyToLearn, GameTag.ModernMechanics],
+  tags: [GameTag.ModernMechanics],
   rating: {
     complexity: 20,
     difficulty: 70,

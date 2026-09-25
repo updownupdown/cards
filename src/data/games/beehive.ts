@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const beehive: GameDefinition = {
   path: "/beehive",
   title: "Beehive",
-  tags: [GameTag.EasyToLearn],
+  tags: [GameTag.PairMatching],
   rating: {
     complexity: 15,
     difficulty: 15,
@@ -28,14 +28,11 @@ export const beehive: GameDefinition = {
   howToPlay: [
     "## Objective",
     "Clear all 52 cards by making four-card sets of the same rank.",
+
     "## Rules",
-    "- The beehive holds 10 cards; only its top card is active.",
-    "- The six tableau slots hold cards of one rank, up to four cards each.",
-    "- Move matching ranks between the beehive, waste, and tableau.",
-    "- A four-card tableau set is cleared immediately.",
-    "- Empty tableau slots stay empty until a beehive or waste card is moved there.",
-    "- Tap a tableau stack to move it automatically onto a matching stack.",
-    "- Completed stacks are moved face down to the discard pile.",
-    "- Flip up to three stock cards to the waste, or recycle the waste when the stock is empty.",
+    "- Each of the six tableau slots can only hold one rank at a time.",
+    "- Gather all four cards of the same rank to form a set and clear it from the tableau.",
+    "- Fill empty tableau slots with cards from the beehive or waste.",
+    "- Tap a card to move it automatically onto a matching stack.",
   ],
 };

@@ -3,7 +3,6 @@ import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { roundToPixel } from "@/utils/utils";
 import { useGameColors } from "@/hooks/useGameColors";
-import { useGamePath } from "@/hooks/useGamePath";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

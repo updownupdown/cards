@@ -1,4 +1,4 @@
-import { StatsTab } from "@/components/Home/StatsTab";
+import { StatsList } from "@/components/Home/StatsList";
 import type { GameSettingsMap } from "@/data/game-menu";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
@@ -22,12 +22,15 @@ export function StatsModal({
 
   return (
     <ModalFull title={t("statsModal.title")} iconName="chart" onClose={onClose}>
-      <StatsTab
+      <StatsList
         settingsMap={settingsMap}
         favorites={favorites}
         onToggleFavorite={onToggleFavorite}
-        contentPaddingTop={0}
-        contentPaddingBottom={spacing(30)}
+        onOpenGame={onClose}
+        // Clears the header's shadow, and leaves room below the Total row
+        // for the floating Top button.
+        contentPaddingTop={spacing(24)}
+        contentPaddingBottom={spacing(90)}
       />
     </ModalFull>
   );

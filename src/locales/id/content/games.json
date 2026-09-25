@@ -120,6 +120,40 @@
       "value": "Semua berjajar"
     }
   },
+  "apothecary": {
+    "cardDescription": {
+      "hash": "b66e1d4d",
+      "value": "Pindahkan kartu dari satu toples ke toples lain sampai semua nilai terkumpul."
+    },
+    "howToPlay": {
+      "hash": "4b2b06d2",
+      "value": [
+        "## Tujuan",
+        "Urutkan dek untuk mengumpulkan semua kartu dengan nilai yang sama.",
+        "## Menuang",
+        "- Ketuk toples atau cawan untuk mengambil kartu teratasnya, bersama kartu bernilai sama yang tepat di bawahnya.",
+        "- Ketuk toples atau cawan lain untuk menuangnya di sana: kamu bisa menuang ke kartu dengan **nilai yang sama**, atau ke toples atau cawan kosong.",
+        "- **Toples** memuat empat kartu. Jika hanya sebagian kartu yang muat, sisanya tetap di tempat.",
+        "- Kedua **cawan** masing-masing memuat satu kartu.",
+        "## Menyegel",
+        "- Toples berisi empat kartu bernilai sama disegel dan dibalik tertutup.",
+        "- Kamu menang jika ke-13 toples sudah disegel. Usahakan dengan tuangan sesedikit mungkin.",
+        "- Permainan kalah jika tidak ada kartu yang bisa dituang ke mana pun."
+      ]
+    },
+    "quickStart": {
+      "hash": "77fe59b7",
+      "value": [
+        "Isi setiap toples dengan empat kartu bernilai sama untuk menyegelnya.",
+        "Ketuk toples, lalu ketuk tempat untuk menuang kartu teratasnya.",
+        "Kartu dituang ke nilai yang sama, atau ke toples atau cawan kosong."
+      ]
+    },
+    "title": {
+      "hash": "f53fdef5",
+      "value": "Apoteker"
+    }
+  },
   "ascent": {
     "cardDescription": {
       "hash": "301e448f",
@@ -308,19 +342,15 @@
       "value": "Selesaikan set empat kartu di enam petak bernilai sama dengan memakai sarang lebah, tumpukan terbuka, dan dek."
     },
     "howToPlay": {
-      "hash": "c74783f8",
+      "hash": "426ee910",
       "value": [
         "## Tujuan",
         "Singkirkan ke-52 kartu dengan membuat set empat kartu bernilai sama.",
         "## Aturan",
-        "- Sarang lebah memuat 10 kartu; hanya kartu teratasnya yang aktif.",
-        "- Keenam petak di meja memuat kartu dari satu nilai saja, masing-masing sampai empat kartu.",
-        "- Pindahkan kartu bernilai sama antara sarang lebah, tumpukan terbuka, dan meja.",
-        "- Set empat kartu langsung disingkirkan.",
-        "- Petak kosong tetap kosong sampai kamu memindahkan kartu sarang lebah atau tumpukan terbuka ke sana.",
-        "- Ketuk tumpukan di meja untuk memindahkannya otomatis ke tumpukan bernilai sama.",
-        "- Tumpukan yang selesai dipindah tertutup ke tumpukan buangan.",
-        "- Buka sampai tiga kartu dek ke tumpukan terbuka, atau pakai ulang tumpukan terbuka saat dek habis."
+        "- Masing-masing dari enam petak di meja hanya bisa memuat satu nilai dalam satu waktu.",
+        "- Kumpulkan keempat kartu bernilai sama untuk membentuk set dan menyingkirkannya dari meja.",
+        "- Isi petak kosong dengan kartu dari sarang lebah atau tumpukan terbuka.",
+        "- Ketuk kartu untuk memindahkannya otomatis ke tumpukan bernilai sama."
       ]
     },
     "quickStart": {
@@ -2580,6 +2610,39 @@
     "title": {
       "hash": "7df776c7",
       "value": "Ouroboros"
+    }
+  },
+  "pagoda": {
+    "cardDescription": {
+      "hash": "c1c2c60e",
+      "value": "Ambil kartu dari tingkat-tingkat pagoda, lalu persembahkan setiap tiga kartu kembar di kuil."
+    },
+    "howToPlay": {
+      "hash": "5eb45815",
+      "value": [
+        "## Tujuan",
+        "Bersihkan **39 kartu** dari pagoda dengan mempersembahkannya di kuil, tiga kartu sekaligus.",
+        "## Aturan",
+        "- Dek kehilangan satu jenis dari setiap nilai, jadi ada tepat tiga kartu untuk setiap nilai.",
+        "- Ketuk kartu terbuka untuk memindahkannya ke baki.",
+        "- Begitu baki berisi tiga kartu dengan nilai yang sama, kartu-kartu itu dipersembahkan di kuil.",
+        "- Kamu kalah saat baki penuh. Kapasitasnya bergantung pada tingkat kesulitan:",
+        "-- Mudah: maksimal **7** kartu",
+        "-- Normal: maksimal **6** kartu",
+        "-- Sulit: maksimal **5** kartu"
+      ]
+    },
+    "quickStart": {
+      "hash": "c5feca5f",
+      "value": [
+        "Ketuk kartu terbuka untuk memindahkannya ke bakimu.",
+        "Tiga kartu dengan nilai yang sama di baki dipersembahkan di kuil.",
+        "Jangan biarkan baki penuh oleh kartu yang belum berpasangan (Mudah: 7, Normal: 6, Sulit: 5)."
+      ]
+    },
+    "title": {
+      "hash": "125a9287",
+      "value": "Pagoda"
     }
   },
   "parallels": {

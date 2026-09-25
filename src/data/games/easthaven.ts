@@ -5,7 +5,11 @@ import { GameAnimations } from "@/animations";
 export const easthaven: GameDefinition = {
   path: "/easthaven",
   title: "Easthaven",
-  tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
+  tags: [
+    GameTag.KlondikeFamily,
+    GameTag.TableauBuilding,
+    GameTag.StockAndWaste,
+  ],
   rating: { complexity: 35, difficulty: 60, luck: 55 },
   thumbnail: "Easthaven.webp",
   background: GAME_BACKGROUNDS.stonyBeach,

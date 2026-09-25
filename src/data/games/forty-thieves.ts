@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const fortyThieves: GameDefinition = {
   path: "/forty-thieves",
   title: "Forty Thieves",
-  tags: [GameTag.StockAndWaste],
+  tags: [GameTag.FortyThievesFamily, GameTag.StockAndWaste],
   rating: {
     complexity: 45,
     difficulty: 65,

@@ -3,16 +3,12 @@
     "home": "Beranda",
     "collect": "Koleksi",
     "search": "Cari",
-    "nodes": "Peta"
+    "nodes": "Kampanye"
   },
   "cardSize": {
     "small": "Daftar",
     "medium": "Kartu",
     "large": "Detail"
-  },
-  "random": {
-    "roll": "Permainan acak",
-    "clear": "Hapus permainan acak"
   },
   "favorites": {
     "add": "Tambahkan ke favorit",
@@ -29,26 +25,65 @@
   },
   "sections": {
     "localOnly": "Permainan khusus lokal",
-    "startEasy": "Mulai yang mudah!",
-    "startEasyIntro": "Berikut beberapa permainan yang mudah dipelajari untuk memulai. Kamu bisa menemukan lebih banyak di tab Koleksi.",
-    "discoverMore": "Temukan permainan lain",
     "gameOfTheDay": "Permainan hari ini",
     "jumpBackIn": "Lanjutkan bermain",
-    "favorites": "Favorit",
-    "becauseYouLiked": "Karena kamu menyukai “{{title}}”"
+    "favorites": "Favorit"
+  },
+  "guide": {
+    "easy": {
+      "title": "Mulai dengan permainan mudah",
+      "body": "Awali dengan mencoba beberapa permainan yang cepat dipelajari dan mudah dimenangkan."
+    },
+    "campaign": {
+      "title": "Mode Kampanye",
+      "body": "Jelajahi semesta permainan: menangkan permainan untuk membuka jalanmu hingga ke tepi galaksi, dan kumpulkan hadiah di sepanjang jalan!",
+      "start": "Mulai Kampanye",
+      "resume": "Lanjutkan Kampanye"
+    },
+    "genres": {
+      "title": "Kumpulkan semuanya!",
+      "body": "Jelajahi {{games}} permainan klasik dan modern dalam {{categories}} kategori; ada sesuatu untuk semua orang!",
+      "gameCount_one": "{{count}} permainan",
+      "gameCount_other": "{{count}} permainan"
+    },
+    "dismiss": "Tutup"
+  },
+  "gameOfTheDay": {
+    "today": "Hari ini",
+    "yesterday": "Kemarin",
+    "wonToday": "Menang hari ini",
+    "won": "Menang",
+    "streak_one": "{{count}} hari beruntun",
+    "streak_other": "{{count}} hari beruntun"
+  },
+  "deal": {
+    "title": "Bagi acak",
+    "intro": "Geser ke kiri atau kanan untuk melewati, atau ketuk untuk bermain."
   },
   "collect": {
-    "tagProgress": "{{tag}}, {{percentage}}% dimenangkan"
+    "title": "Menangkan semuanya!",
+    "overall": "{{won}} dari {{total}} permainan dimenangkan",
+    "tagProgress": "{{tag}}: {{won}} dari {{total}} dimenangkan"
   },
   "tags": {
-    "EasyToLearn": "Mudah dipelajari",
-    "TableauBuilding": "Solitaire kolom",
-    "ModernMechanics": "Mekanik modern",
-    "DungeonCrawler": "Penjelajahan dungeon",
-    "CardCombat": "Pertarungan kartu",
-    "GridPlacement": "Penempatan di kisi",
+    "KlondikeFamily": "Keluarga Klondike",
+    "YukonFamily": "Keluarga Yukon",
+    "FreeCellFamily": "Keluarga FreeCell",
+    "SpiderFamily": "Keluarga Laba-laba",
+    "FortyThievesFamily": "Keluarga Empat Puluh Pencuri",
+    "CastlesAndFans": "Kastel & kipas",
+    "FoundationBuilders": "Membangun fondasi",
+    "DoubleDeckers": "Dua dek",
+    "ClearTheBoard": "Kosongkan meja",
+    "PairMatching": "Pasangan & jumlah",
+    "Puzzles": "Teka-teki",
+    "Sports": "Olahraga",
     "PokerAndCribbage": "Poker & cribbage",
-    "PairMatching": "Mencocokkan pasangan",
+    "CardCombat": "Pertarungan kartu",
+    "DungeonCrawler": "Penjelajahan dungeon",
+    "ModernMechanics": "Mekanik modern",
+    "TableauBuilding": "Solitaire kolom",
+    "GridPlacement": "Penempatan di kisi",
     "SequenceBuilding": "Menyusun urutan",
     "StockAndWaste": "Dek & tumpukan terbuka",
     "ScoringPuzzles": "Teka-teki skor",
@@ -56,26 +91,35 @@
   },
   "statsTab": {
     "personas": {
-      "nemesis": {
-        "title": "Musuh bebuyutan",
-        "subtitle": "Tingkat menang terendah"
-      },
       "comfort": {
         "title": "Pilihan nyaman",
-        "subtitle": "Tingkat menang tertinggi"
+        "subtitle": "Tingkat menang tertinggimu"
+      },
+      "nemesis": {
+        "title": "Musuh bebuyutan",
+        "subtitle": "Tingkat menang terendahmu"
       },
       "whale": {
         "title": "Paus putih",
-        "subtitle": "Paling banyak dicoba tanpa menang"
+        "subtitle": "Paling sering dimainkan tanpa menang"
       },
-      "underdog": {
-        "title": "Kuda hitam",
-        "subtitle": "Sering menang, jarang dicoba"
+      "faithful": {
+        "title": "Sahabat setia",
+        "subtitle": "Gim yang paling sering kamu mainkan"
+      },
+      "rivalry": {
+        "title": "Persaingan ketat",
+        "subtitle": "Paling mendekati 50/50"
+      },
+      "natural": {
+        "title": "Bakat alami",
+        "subtitle": "3+ kemenangan dengan permainan paling sedikit"
       }
     },
     "sortBy": "Urutkan menurut {{column}}",
     "columns": {
       "game": "Gim",
+      "played": "Main",
       "won": "Mng.",
       "lost": "Klh.",
       "winPercent": "% M",
@@ -94,12 +138,15 @@
       "title": "Wah, belum ada statistik!",
       "body": "Kembali lagi setelah memainkan beberapa permainan untuk melihat statistikmu di sini."
     },
-    "fullStats": {
-      "title": "Statistik lengkap",
-      "noStats": "Tidak ada statistik",
-      "onlyPlayed": "Hanya permainan yang sudah dimainkan yang ditampilkan"
+    "total": "Total",
+    "headline": {
+      "played": "permainan dimainkan",
+      "won": "permainan dimenangkan",
+      "winRate": "tingkat menang",
+      "tried": "gim dicoba"
     },
-    "total": "Total"
+    "top": "Atas",
+    "backToTop": "Kembali ke atas"
   },
   "statsModal": {
     "title": "Statistik"

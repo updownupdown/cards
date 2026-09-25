@@ -12,6 +12,7 @@ import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
+import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
@@ -313,10 +314,21 @@ export default function Canfield() {
         col: 0,
         row: 3.8,
         baseZIndex: 50,
-        fan: { maxVisible: 3 },
+        // Drawing three, the top three are fanned so the cards under the
+        // playable one can be read; the label moves out of their way.
+        fan: {
+          ...(game.drawCount === 3 && {
+            direction: "right",
+            offset: cardDims.tableauOffsetHorizontal,
+          }),
+          maxVisible: 3,
+          // Cards pushed out of the top three keep their shadows while they
+          // slide under the new ones.
+          shadowVisibleCount: 6,
+        },
         placeholder: {
           text: i18n.t("cards:waste"),
-          infoPos: "right",
+          infoPos: game.drawCount === 3 ? "above" : "right",
           showCount: false,
         },
       },
@@ -374,7 +386,7 @@ export default function Canfield() {
     if (mappedCard.zoneName === "waste") {
       return {
         selectColor: "blue",
-        isSelected: selected?.zone === "waste",
+        isSelected: mappedCard.topOfZone && selected?.zone === "waste",
         isVisible: !isBeingDragged,
         animDuration,
       };
@@ -395,6 +407,9 @@ export default function Canfield() {
         isSelected: isHoverTargetTop,
         isVisible: !isBeingDragged,
         animDuration,
+        // Foundation cards are locked: taps go through to the zone, which
+        // places the selected card.
+        clickThroughCards: true,
       };
     }
 
@@ -405,7 +420,7 @@ export default function Canfield() {
       const isSelected =
         selected?.zone === "tableau" &&
         selected.pileIndex === mappedCard.pileIndex &&
-        selected.cardIndex === mappedCard.cardIndex;
+        mappedCard.cardIndex >= selected.cardIndex;
 
       const isHoverTargetTop =
         !!dragGhost &&
@@ -992,7 +1007,10 @@ export default function Canfield() {
     }
 
     if (!selected) {
-      setSelected({ zone: "tableau", pileIndex, cardIndex });
+      // Only a card that can move with the cards on it is selectable.
+      if (isValidTableauRun(game.tableau[pileIndex].slice(cardIndex))) {
+        setSelected({ zone: "tableau", pileIndex, cardIndex });
+      }
       return;
     }
 
@@ -1108,13 +1126,15 @@ export default function Canfield() {
         {cardMap}
 
         <View
-          style={{
-            ...StyleSheet.absoluteFill,
-            zIndex: 3000,
-            touchAction: "none",
-            overscrollBehaviorX: "contain",
-            pointerEvents: "box-none",
-          }}
+          style={[
+            pointerEventsStyles.boxNone,
+            {
+              ...StyleSheet.absoluteFill,
+              zIndex: 3000,
+              touchAction: "none",
+              overscrollBehaviorX: "contain",
+            },
+          ]}
         >
           {stockTapRect && (
             <Pressable

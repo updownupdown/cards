@@ -6,7 +6,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const allInARow: GameDefinition = {
   path: "/all-in-a-row",
   title: "All in a Row",
-  tags: [GameTag.SequenceBuilding],
+  tags: [GameTag.ClearTheBoard, GameTag.SequenceBuilding],
   rating: { complexity: 10, difficulty: 90, luck: 25 },
   thumbnail: "AllInARow.webp",
   background: GAME_BACKGROUNDS.waterLogs,

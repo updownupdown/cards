@@ -9,7 +9,6 @@ import {
 import "../../../jest/game-mocks";
 import {
   card,
-  doubleTapCardId,
   outcome,
   pressButton,
   pressCardId,

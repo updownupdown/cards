@@ -19,7 +19,6 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { Colors, rgba } from "@/styles/styles";
 import { i18n } from "@/i18n";
-import { flexStyles } from "@/styles/flexStyles";
 import { delay } from "@/utils/utils";
 
 export type JailbreakDifficulty = "easy" | "normal" | "hard";

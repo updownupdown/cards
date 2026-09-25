@@ -12,81 +12,55 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 
 type HomeHeaderProps = {
   onOpenSettings: () => void;
   onOpenStats: () => void;
-  showBackground: boolean;
 };
 
 export function HomeHeader({
   onOpenSettings,
   onOpenStats,
-  showBackground,
 }: HomeHeaderProps) {
   const insets = useSafeAreaInsets();
   const { ui, spacing } = useResponsiveMetrics();
-  const backgroundOpacity = useSharedValue(showBackground ? 1 : 0);
-  const backgroundStyle = useAnimatedStyle(() => ({
-    opacity: backgroundOpacity.value,
-  }));
-
-  useEffect(() => {
-    backgroundOpacity.value = withTiming(showBackground ? 1 : 0, {
-      duration: 350,
-    });
-  }, [backgroundOpacity, showBackground]);
 
   return (
     <View
-      style={{
-        position: Platform.OS === "web" ? "fixed" : "absolute",
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 8,
-        pointerEvents: "box-none",
-      }}
+      style={[
+        pointerEventsStyles.boxNone,
+        {
+          position: Platform.OS === "web" ? "fixed" : "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 8,
+        },
+      ]}
     >
-      <Animated.View
-        testID="home-header-background"
-        style={[
-          StyleSheet.absoluteFill,
-          { pointerEvents: "none" },
-          backgroundStyle,
-        ]}
-      >
-        <LinearGradient
-          colors={[
-            rgba(Colors.starfieldOverlay, 1),
-            rgba(Colors.starfieldOverlay, 0),
-          ]}
-          start={{ x: 0.5, y: 0 }}
-          end={{ x: 0.5, y: 1 }}
-          style={StyleSheet.absoluteFill}
-        />
-      </Animated.View>
-
       <View
-        style={{
-          width: "100%",
-          maxWidth: ui.contentMaxWidth,
-          alignSelf: "center",
-          // Clear the status bar, and in landscape any display cutout at the
-          // sides; the background image still shows behind all of them.
-          paddingTop: insets.top + spacing(layoutDims.pagePadding * 0.5),
-          paddingBottom: spacing(layoutDims.pagePadding * 0.5),
-          paddingLeft: insets.left,
-          paddingRight: insets.right,
-          pointerEvents: "box-none",
-        }}
+        style={[
+          pointerEventsStyles.boxNone,
+          {
+            width: "100%",
+            maxWidth: ui.contentMaxWidth,
+            alignSelf: "center",
+            // Clear the status bar, and in landscape any display cutout at the
+            // sides; the background image still shows behind all of them.
+            paddingTop: insets.top + spacing(layoutDims.pagePadding * 0.5),
+            paddingBottom: spacing(layoutDims.pagePadding * 0.5),
+            paddingLeft: insets.left,
+            paddingRight: insets.right,
+          },
+        ]}
       >
         <View
           style={[
+            pointerEventsStyles.boxNone,
             flexStyles.rowCentered,
             flexStyles.spaceBetween,
             {
-              pointerEvents: "box-none",
               height: spacing(layoutDims.menuBarHeight),
               paddingLeft: spacing(layoutDims.pagePadding),
               paddingRight: spacing(layoutDims.pagePadding * 0.5),
@@ -123,6 +97,65 @@ export function HomeHeader({
         </View>
       </View>
     </View>
+  );
+}
+
+/**
+ * The fade behind the header. It is drawn inside the tab content, not in the
+ * header, so controls within the content (like the card size toggle) can sit
+ * above it.
+ */
+export function HomeHeaderBackground({
+  showBackground,
+}: {
+  showBackground: boolean;
+}) {
+  const insets = useSafeAreaInsets();
+  const { spacing } = useResponsiveMetrics();
+  const backgroundOpacity = useSharedValue(showBackground ? 1 : 0);
+  const backgroundStyle = useAnimatedStyle(() => ({
+    opacity: backgroundOpacity.value,
+  }));
+
+  useEffect(() => {
+    backgroundOpacity.value = withTiming(showBackground ? 1 : 0, {
+      duration: 400,
+    });
+  }, [backgroundOpacity, showBackground]);
+
+  const headerHeight =
+    insets.top +
+    spacing(layoutDims.pagePadding) +
+    spacing(layoutDims.menuBarHeight);
+
+  return (
+    <Animated.View
+      testID="home-header-background"
+      // Runs on past the header by half its height, for a softer fade, and
+      // never takes taps from the content beneath.
+      style={[
+        pointerEventsStyles.none,
+        {
+          position: Platform.OS === "web" ? "fixed" : "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: headerHeight * 1.7,
+          zIndex: 8,
+        },
+        backgroundStyle,
+      ]}
+    >
+      <LinearGradient
+        colors={[
+          rgba(Colors.starfieldOverlay, 0.9),
+          rgba(Colors.starfieldOverlay, 0),
+        ]}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
+        style={StyleSheet.absoluteFill}
+      />
+    </Animated.View>
   );
 }
 

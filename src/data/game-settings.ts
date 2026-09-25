@@ -27,7 +27,8 @@ export type GameSpecificSettingKey =
   | "seerDifficulty"
   | "jailbreakDifficulty"
   | "gremlinDifficulty"
-  | "nightVigilDifficulty";
+  | "nightVigilDifficulty"
+  | "pagodaDifficulty";
 export type GameSpecificSettingApplyBehavior = "immediate" | "next-game";
 
 type GameSpecificSettingOptionValue = GameSettings[GameSpecificSettingKey];
@@ -59,6 +60,20 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
           { label: "Easy (4 per corner)", value: "easy" },
           { label: "Normal (2 per corner)", value: "normal" },
           { label: "Hard (empty corners)", value: "hard" },
+        ],
+      },
+    ],
+    "/pagoda": [
+      {
+        key: "pagodaDifficulty",
+        label: "Difficulty",
+        type: "string",
+        applyBehavior: "next-game",
+        description: "Controls how many cards the tray holds.",
+        options: [
+          { label: "Easy (7 cards)", value: "easy" },
+          { label: "Normal (6 cards)", value: "normal" },
+          { label: "Hard (5 cards)", value: "hard" },
         ],
       },
     ],

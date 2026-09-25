@@ -49,7 +49,6 @@ describe("Klondike (no lose condition)", () => {
       stock: [],
       waste: [],
       foundations: lastKingFoundations(),
-      drawCount: 1,
     });
     expect(outcome()).toBe("playing");
 

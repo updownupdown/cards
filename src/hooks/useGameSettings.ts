@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import {
   GameSettings,
-  DEFAULT_GAME_SETTINGS,
+  getDefaultGameSettings,
   getCachedGameSettingsMap,
   loadGameSettingsMap,
   getGameSettings,
@@ -82,7 +82,7 @@ export function useGameSettings(pathname: string) {
   const updateSettings = async (updates: Partial<GameSettings>) => {
     // Optimistic update, broadcast to every instance for this game path.
     const nextSettings = {
-      ...DEFAULT_GAME_SETTINGS,
+      ...getDefaultGameSettings(normalizedPath),
       ...settingsRef.current,
       ...updates,
     };

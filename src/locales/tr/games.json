@@ -14,6 +14,11 @@
     "youClearedTheBoard": "Masayı temizledin!",
     "noAdjacentRankRemains": "Ardışık değer kalmadı."
   },
+  "apothecary": {
+    "dish": "Çanak",
+    "allSealed": "Tüm kavanozlar {{count}} hamlede mühürlendi!",
+    "noPoursLeft": "Hiçbir kart hiçbir yere dökülemiyor."
+  },
   "ascent": {
     "lhotseRoutesNeed2Cards": "Lhotse: rotalar en az 2 kart ister.",
     "gasherbrumIAnchorMustBe": "Gasherbrum I: çapa çift olmalı.",
@@ -366,6 +371,11 @@
     "gotAllJewels": "Dört mücevheri de aldın ve çıkışı buldun!",
     "lostWithLoot": "Zindanda çıkışsız kayboldun! Ganimetinle birlikte öldün.",
     "lostInDungeon": "Zindanda çıkışsız kayboldun!"
+  },
+  "pagoda": {
+    "shrine": "Tapınak",
+    "shrineComplete": "Tüm setler tapınakta!",
+    "trayFull": "Tepsi doldu."
   },
   "pocketPoker": {
     "youHit10PointsYou": "10 puana ulaştın, kazandın!",

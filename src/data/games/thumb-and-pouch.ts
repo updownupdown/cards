@@ -6,7 +6,11 @@ import { GameDefinition, GameTag } from "../games-data";
 export const thumbAndPouch: GameDefinition = {
   path: "/thumb-and-pouch",
   title: "Thumb and Pouch",
-  tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
+  tags: [
+    GameTag.KlondikeFamily,
+    GameTag.TableauBuilding,
+    GameTag.StockAndWaste,
+  ],
   rating: { complexity: 25, difficulty: 30, luck: 55 },
   background: GAME_BACKGROUNDS.cozyCabin,
   animation: GameAnimations.Dust,

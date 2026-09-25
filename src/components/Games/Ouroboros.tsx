@@ -426,7 +426,7 @@ export default function Ouroboros() {
       deckLength > 0 ? (360 - positioning.gapAngle) / deckLength : 0;
 
     // ---------- Loop Cards ---------- //
-    const loopZones: MapZone[] = game.deck.map((pos, i) => {
+    const loopZones: MapZone[] = game.deck.map((_pos, i) => {
       // Style
       const isSelected = selectedCardIndex === i;
 

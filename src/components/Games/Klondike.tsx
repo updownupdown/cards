@@ -11,7 +11,9 @@ import { useAutoComplete } from "@/hooks/useAutoComplete";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
+import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
+import { infoSize } from "../Cards/CardMapBackgrounds";
 import {
   fitCardWidth,
   MappedCard,
@@ -71,6 +73,51 @@ function boardSize(layout: StockLayout) {
     : { cols: 7, rows: stockRow(layout) + 1 };
 }
 
+/**
+ * The waste. Drawing three at a time, the top three are fanned so the cards
+ * under the playable one can be read: sideways into the room left of the
+ * stock (bottom), or downwards towards it (side, which has no room across).
+ * Either way the top card ends where a single waste card sits. Cards pushed
+ * out of the top three keep their shadows while they slide under the new ones.
+ */
+function wasteZone(layout: StockLayout, drawCount: 1 | 3) {
+  const col = layout === "side" ? 7.5 : 4.5;
+  const row = layout === "side" ? stockRow(layout) - 1.15 : stockRow(layout);
+  if (drawCount === 1) {
+    return { col, row, fan: { maxVisible: 3, shadowVisibleCount: 6 } };
+  }
+
+  if (layout === "side") {
+    const offset = cardDims.tableauOffset;
+    const rowShift = (2 * offset) / (1 + BOARD_GAP * cardDims.aspectRatio);
+    return {
+      col,
+      row: row - rowShift,
+      fan: {
+        direction: "down" as const,
+        offset,
+        maxVisible: 3,
+        shadowVisibleCount: 6,
+      },
+    };
+  }
+
+  // The fanned top card stops one gap short of the stock's label (the stock
+  // is at col 6, its label to its left).
+  const offset = cardDims.tableauOffsetHorizontal;
+  const stockLabelLeft = 6 * (1 + BOARD_GAP) - infoSize.leftRight;
+  return {
+    col: (stockLabelLeft - BOARD_GAP - 1 - 2 * offset) / (1 + BOARD_GAP),
+    row,
+    fan: {
+      direction: "right" as const,
+      offset,
+      maxVisible: 3,
+      shadowVisibleCount: 6,
+    },
+  };
+}
+
 /** A column's fan offset, tightened once it would run past the tableau area. */
 function pileOffset(count: number, layout: StockLayout) {
   return zoneFanOffset(
@@ -86,7 +133,6 @@ type GameState = {
   stock: PlayingCard[];
   waste: PlayingCard[];
   foundations: PlayingCard[][];
-  drawCount: 1 | 3;
 };
 
 type Selection =
@@ -149,7 +195,7 @@ export const klondikeRules = {
   revealLastIfNeeded,
 };
 
-function createInitialState(drawCount: 1 | 3 = 1): GameState {
+function createInitialState(): GameState {
   const fullDeck = shuffle(
     SUITS.flatMap((suit) =>
       RANKS.map((rank) => ({
@@ -166,11 +212,10 @@ function createInitialState(drawCount: 1 | 3 = 1): GameState {
     stock: fullDeck,
     waste: [],
     foundations: Array.from({ length: 4 }, () => [] as PlayingCard[]),
-    drawCount,
   };
 }
 
-function dealFromStock(stock: PlayingCard[], drawCount: 1 | 3): GameState {
+function dealFromStock(stock: PlayingCard[]): GameState {
   const fullDeck = [...stock];
   const tableau: PlayingCard[][] = Array.from({ length: 7 }, () => []);
   let cursor = 0;
@@ -190,14 +235,15 @@ function dealFromStock(stock: PlayingCard[], drawCount: 1 | 3): GameState {
     stock: fullDeck.slice(cursor),
     waste: [],
     foundations: Array.from({ length: 4 }, () => [] as PlayingCard[]),
-    drawCount,
   };
 }
 
 const gameStateInitial = createInitialState();
 
 export default function Klondike() {
-  const configuredDrawCount = useGameSettingValue("drawCount");
+  // Read live rather than kept in the game state, so changing the setting
+  // applies to the game in progress (and undo doesn't bring the old one back).
+  const drawCount = useGameSettingValue("drawCount");
   const boardArea = useBoardArea();
   const layout: StockLayout =
     fitCardWidth(boardArea, { ...boardSize("side"), gap: BOARD_GAP }) >
@@ -240,18 +286,16 @@ export default function Klondike() {
           { length: 4 },
           () => [] as PlayingCard[],
         );
-        draft.drawCount = configuredDrawCount;
       });
 
       await delay();
 
       setGame((draft) => {
-        const next = dealFromStock(shuffle(draft.stock), configuredDrawCount);
+        const next = dealFromStock(shuffle(draft.stock));
         draft.tableau = next.tableau;
         draft.stock = next.stock;
         draft.waste = next.waste;
         draft.foundations = next.foundations;
-        draft.drawCount = next.drawCount;
       });
     },
   });
@@ -320,8 +364,7 @@ export default function Klondike() {
 
     // Stock and waste sit at the bottom right, within easy thumb reach: side by
     // side under the tableau, or stacked in a column beside it.
-    const side = layout === "side";
-    const stockCol = side ? 7.5 : 6;
+    const stockCol = layout === "side" ? 7.5 : 6;
     return [
       {
         id: "stock",
@@ -343,10 +386,8 @@ export default function Klondike() {
         name: "waste",
         cards: game.waste,
         pileIndex: 0,
-        col: side ? stockCol : 4.5,
-        row: stockRow(layout) - (side ? 1.15 : 0),
+        ...wasteZone(layout, drawCount),
         baseZIndex: 30,
-        fan: { maxVisible: 3 },
         placeholder: {
           text: i18n.t("cards:waste"),
           infoPos: "left",
@@ -356,7 +397,7 @@ export default function Klondike() {
       ...foundationZones,
       ...tableauZones,
     ];
-  }, [game, layout]);
+  }, [drawCount, game, layout]);
 
   const cardMapper = (
     mappedCard: MappedCard,
@@ -403,6 +444,9 @@ export default function Klondike() {
         isSelected: isHoverTargetTop,
         isVisible: !isBeingDragged,
         animDuration: animDuration,
+        // Foundation cards are locked: taps go through to the zone, which
+        // places the selected card.
+        clickThroughCards: true,
       };
     }
 
@@ -411,9 +455,9 @@ export default function Klondike() {
       mappedCard.pileIndex !== undefined
     ) {
       const isSelected =
-        mappedCard.topOfZone &&
         selected?.zone === "tableau" &&
-        selected.pileIndex === mappedCard.pileIndex;
+        selected.pileIndex === mappedCard.pileIndex &&
+        mappedCard.cardIndex >= selected.cardIndex;
       const isHoverTargetTop =
         !!dragGhost &&
         mappedCard.topOfZone &&
@@ -457,7 +501,8 @@ export default function Klondike() {
         hoverTarget.pileIndex === zone.pileIndex;
 
       return {
-        isDisabled: !!dragGhost,
+        onPress: () => onFoundationPress(zone.pileIndex!),
+        isDisabled: !selected || !!dragGhost,
         isSelected: isHoverDropTarget,
         selectColor: isHoverDropTarget ? "green" : "none",
       };
@@ -711,7 +756,7 @@ export default function Klondike() {
     saveUndoState(structuredClone(game));
     setGame((draft) => {
       if (draft.stock.length > 0) {
-        const drawTotal = Math.min(draft.drawCount, draft.stock.length);
+        const drawTotal = Math.min(drawCount, draft.stock.length);
         for (let i = 0; i < drawTotal; i += 1) {
           const top = draft.stock[draft.stock.length - 1];
           if (!top) return;
@@ -900,11 +945,29 @@ export default function Klondike() {
     }
 
     if (!selected) {
-      setSelected({ zone: "tableau", pileIndex, cardIndex });
+      // Only a card that can move with the cards on it is selectable.
+      if (isValidTableauRun(game.tableau[pileIndex].slice(cardIndex))) {
+        setSelected({ zone: "tableau", pileIndex, cardIndex });
+      }
       return;
     }
 
     moveSourceToTableau(selected, pileIndex);
+  }
+
+  function onFoundationPress(pileIndex: number) {
+    if (dragGhost) {
+      clearSelection();
+      return;
+    }
+
+    // Foundations are locked: a tap only places the selected card there.
+    if (!selected || selected.zone === "stock") {
+      clearSelection();
+      return;
+    }
+
+    moveSourceToFoundation(selected, pileIndex);
   }
 
   function onEmptyTableauPress(pileIndex: number) {
@@ -1003,12 +1066,12 @@ export default function Klondike() {
 
         <View
           style={[
+            pointerEventsStyles.boxNone,
             {
               ...StyleSheet.absoluteFill,
               zIndex: 3000,
               touchAction: "none",
               overscrollBehaviorX: "contain",
-              pointerEvents: "box-none",
             },
           ]}
         >

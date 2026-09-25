@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const acesUp: GameDefinition = {
   path: "/aces-up",
   title: "Aces Up",
-  tags: [GameTag.EasyToLearn],
+  tags: [GameTag.ClearTheBoard, GameTag.TableauBuilding],
   rating: {
     complexity: 15,
     difficulty: 80,

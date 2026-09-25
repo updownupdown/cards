@@ -10,6 +10,9 @@ import { useGameColors } from "@/hooks/useGameColors";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { ReactNode } from "react";
+import { formatPlayTime } from "@/data/game-menu";
+
+export type WinTimes = { timeMs: number; bestMs: number };
 
 interface Props {
   gameEnded: boolean;
@@ -19,6 +22,8 @@ interface Props {
   hideScore?: boolean;
   message?: string;
   won: boolean;
+  /** How long this win took, and the fastest win so far. */
+  winTimes?: WinTimes | null;
   reset: () => void;
   handleUndo?: () => void;
   isNodesMode?: boolean;
@@ -32,6 +37,7 @@ export const WinLoseBox = ({
   hideScore = false,
   message,
   won,
+  winTimes,
   gameEnded,
   reset,
   handleUndo,
@@ -41,6 +47,7 @@ export const WinLoseBox = ({
 }: Props) => {
   const { ui, spacing } = useResponsiveMetrics();
   const { t } = useTranslation("game");
+  const { t: tCommon } = useTranslation("common");
   const { colorDark } = useGameColors();
   const insets = useSafeAreaInsets();
   const restingBottom = spacing(layoutDims.pagePadding) + insets.bottom;
@@ -158,39 +165,43 @@ export const WinLoseBox = ({
         ]}
       >
         {rewardPreview}
-        <View
-          style={[
-            flexStyles.colCentered,
-            {
-              gap: spacing(8),
-            },
-          ]}
-        >
-          <Text size="xl" weight={400} color={Colors.white}>
-            {won ? t("result.won") : t("result.lost")}
-          </Text>
+        <View style={[flexStyles.fullWidth, { gap: spacing(8) }]}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: spacing(12),
+            }}
+          >
+            <Text
+              size="xl"
+              weight={400}
+              color={Colors.white}
+              style={{ flexShrink: 1 }}
+            >
+              {won ? t("result.won") : t("result.lost")}
+            </Text>
+
+            {won && winTimes && (
+              <View style={{ alignItems: "flex-end" }}>
+                <Text size="md" weight={400} color={Colors.white}>
+                  {formatPlayTime(winTimes.timeMs)}
+                </Text>
+                <Text size="sm" weight={300} color={rgba(Colors.white, 0.75)}>
+                  {`${tCommon("stats.best")} ${formatPlayTime(winTimes.bestMs)}`}
+                </Text>
+              </View>
+            )}
+          </View>
 
           {message && (
-            <Text
-              size="md"
-              weight={300}
-              color={Colors.white}
-              style={{
-                textAlign: "center",
-              }}
-            >
+            <Text size="md" weight={300} color={Colors.white}>
               {message.replace(/\\n/g, "\n")}
             </Text>
           )}
           {!hideScore && score !== undefined && (
-            <Text
-              size="md"
-              weight={300}
-              color={Colors.white}
-              style={{
-                textAlign: "center",
-              }}
-            >
+            <Text size="md" weight={300} color={Colors.white}>
               {t("result.score", { score })}
             </Text>
           )}

@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const slyFox: GameDefinition = {
   path: "/sly-fox",
   title: "Sly Fox",
-  tags: [GameTag.StockAndWaste],
+  tags: [GameTag.DoubleDeckers, GameTag.StockAndWaste],
   rating: {
     complexity: 40,
     difficulty: 55,

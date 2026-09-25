@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations/types";
 export const canfield: GameDefinition = {
   path: "/canfield",
   title: "Canfield",
-  tags: [GameTag.StockAndWaste],
+  tags: [GameTag.FoundationBuilders, GameTag.StockAndWaste],
   rating: {
     complexity: 40,
     difficulty: 65,

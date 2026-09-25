@@ -3,16 +3,12 @@
     "home": "Inicio",
     "collect": "Colección",
     "search": "Buscar",
-    "nodes": "Nodos"
+    "nodes": "Campaña"
   },
   "cardSize": {
     "small": "Lista",
     "medium": "Tarjetas",
     "large": "Detalles"
-  },
-  "random": {
-    "roll": "Juegos al azar",
-    "clear": "Quitar juegos al azar"
   },
   "favorites": {
     "add": "Añadir a favoritos",
@@ -29,26 +25,65 @@
   },
   "sections": {
     "localOnly": "Juegos solo locales",
-    "startEasy": "¡Empieza con lo fácil!",
-    "startEasyIntro": "Aquí tienes algunos juegos fáciles de aprender para empezar. Encontrarás más en la pestaña Colección.",
-    "discoverMore": "Descubrir más juegos",
     "gameOfTheDay": "Juego del día",
     "jumpBackIn": "Retomar",
-    "favorites": "Favoritos",
-    "becauseYouLiked": "Porque te gustó «{{title}}»"
+    "favorites": "Favoritos"
+  },
+  "guide": {
+    "easy": {
+      "title": "Empieza con juegos fáciles",
+      "body": "Para empezar, prueba algunos juegos rápidos de aprender y fáciles de ganar."
+    },
+    "campaign": {
+      "title": "Modo Campaña",
+      "body": "Explora un universo de juegos: gana partidas para abrirte camino hasta el confín de la galaxia, ¡y consigue recompensas por el camino!",
+      "start": "Empezar la campaña",
+      "resume": "Seguir la campaña"
+    },
+    "genres": {
+      "title": "¡Colecciónalos todos!",
+      "body": "Explora {{games}} juegos clásicos y modernos en {{categories}} categorías: ¡hay algo para todos!",
+      "gameCount_one": "{{count}} juego",
+      "gameCount_other": "{{count}} juegos"
+    },
+    "dismiss": "Ocultar"
+  },
+  "gameOfTheDay": {
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "wonToday": "Ganado hoy",
+    "won": "Ganado",
+    "streak_one": "Racha de {{count}} día",
+    "streak_other": "Racha de {{count}} días"
+  },
+  "deal": {
+    "title": "Reparto al azar",
+    "intro": "Desliza a la izquierda o a la derecha para pasar, o toca para jugar."
   },
   "collect": {
-    "tagProgress": "{{tag}}, {{percentage}}\u00a0% ganados"
+    "title": "¡Gánalos todos!",
+    "overall": "{{won}} de {{total}} juegos ganados",
+    "tagProgress": "{{tag}}: {{won}} de {{total}} ganados"
   },
   "tags": {
-    "EasyToLearn": "Fáciles de aprender",
-    "TableauBuilding": "Solitarios de columnas",
-    "ModernMechanics": "Mecánicas modernas",
-    "DungeonCrawler": "Exploración de mazmorras",
-    "CardCombat": "Combate de cartas",
-    "GridPlacement": "Colocación en cuadrícula",
+    "KlondikeFamily": "Familia Klondike",
+    "YukonFamily": "Familia Yukon",
+    "FreeCellFamily": "Familia FreeCell",
+    "SpiderFamily": "Familia Araña",
+    "FortyThievesFamily": "Familia Cuarenta ladrones",
+    "CastlesAndFans": "Castillos y abanicos",
+    "FoundationBuilders": "Construir fundaciones",
+    "DoubleDeckers": "Dos barajas",
+    "ClearTheBoard": "Vaciar el tablero",
+    "PairMatching": "Parejas y sumas",
+    "Puzzles": "Puzles",
+    "Sports": "Deportes",
     "PokerAndCribbage": "Póker y cribbage",
-    "PairMatching": "Parejas",
+    "CardCombat": "Combate de cartas",
+    "DungeonCrawler": "Exploración de mazmorras",
+    "ModernMechanics": "Mecánicas modernas",
+    "TableauBuilding": "Solitarios de columnas",
+    "GridPlacement": "Colocación en cuadrícula",
     "SequenceBuilding": "Secuencias",
     "StockAndWaste": "Mazo y descarte",
     "ScoringPuzzles": "Puzles de puntuación",
@@ -56,26 +91,35 @@
   },
   "statsTab": {
     "personas": {
-      "nemesis": {
-        "title": "El Némesis",
-        "subtitle": "Tasa de victorias más baja"
-      },
       "comfort": {
         "title": "La Apuesta Segura",
-        "subtitle": "Tasa de victorias más alta"
+        "subtitle": "Tu tasa de victorias más alta"
+      },
+      "nemesis": {
+        "title": "El Némesis",
+        "subtitle": "Tu tasa de victorias más baja"
       },
       "whale": {
         "title": "La Ballena Blanca",
-        "subtitle": "Más intentos sin victorias"
+        "subtitle": "Más partidas sin una victoria"
       },
-      "underdog": {
-        "title": "El Tapado",
-        "subtitle": "Buena tasa de victorias, pocos intentos"
+      "faithful": {
+        "title": "El Fiel Compañero",
+        "subtitle": "Tu juego más jugado"
+      },
+      "rivalry": {
+        "title": "La Rivalidad",
+        "subtitle": "Lo más cerca de un 50/50"
+      },
+      "natural": {
+        "title": "El Talento Natural",
+        "subtitle": "3+ victorias en el menor número de partidas"
       }
     },
     "sortBy": "Ordenar por {{column}}",
     "columns": {
       "game": "Juego",
+      "played": "Jug.",
       "won": "Gan.",
       "lost": "Per.",
       "winPercent": "% V",
@@ -94,12 +138,15 @@
       "title": "¡Vaya, no hay estadísticas que mostrar!",
       "body": "Vuelve después de jugar algunas partidas para ver tus estadísticas aquí."
     },
-    "fullStats": {
-      "title": "Estadísticas completas",
-      "noStats": "No hay estadísticas que mostrar",
-      "onlyPlayed": "Solo se muestran los juegos jugados"
+    "total": "Total",
+    "headline": {
+      "played": "partidas jugadas",
+      "won": "partidas ganadas",
+      "winRate": "tasa de victorias",
+      "tried": "juegos probados"
     },
-    "total": "Total"
+    "top": "Arriba",
+    "backToTop": "Volver arriba"
   },
   "statsModal": {
     "title": "Estadísticas"

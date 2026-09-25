@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const dominion: GameDefinition = {
   path: "/dominion",
   title: "Dominion",
-  tags: [GameTag.SpatialControl, GameTag.CardCombat, GameTag.EasyToLearn],
+  tags: [GameTag.Puzzles, GameTag.SpatialControl, GameTag.CardCombat],
   rating: {
     complexity: 35,
     difficulty: 65,

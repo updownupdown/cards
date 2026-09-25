@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const eightOff: GameDefinition = {
   path: "/eight-off",
   title: "Eight Off",
-  tags: [GameTag.SequenceBuilding],
+  tags: [GameTag.FreeCellFamily, GameTag.SequenceBuilding],
   rating: {
     complexity: 25,
     difficulty: 40,

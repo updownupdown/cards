@@ -6,7 +6,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const waypoint: GameDefinition = {
   path: "/waypoint",
   title: "Waypoint",
-  tags: [GameTag.ScoringPuzzles, GameTag.ModernMechanics],
+  tags: [GameTag.Sports, GameTag.ScoringPuzzles, GameTag.ModernMechanics],
   rating: {
     complexity: 38,
     difficulty: 62,

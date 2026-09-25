@@ -3,16 +3,12 @@
     "home": "Ana sayfa",
     "collect": "Koleksiyon",
     "search": "Ara",
-    "nodes": "Harita"
+    "nodes": "Kampanya"
   },
   "cardSize": {
     "small": "Liste",
     "medium": "Kartlar",
     "large": "Ayrıntılar"
-  },
-  "random": {
-    "roll": "Rastgele oyunlar",
-    "clear": "Rastgele oyunları temizle"
   },
   "favorites": {
     "add": "Favorilere ekle",
@@ -29,26 +25,65 @@
   },
   "sections": {
     "localOnly": "Yalnızca yerel oyunlar",
-    "startEasy": "Kolaydan başla!",
-    "startEasyIntro": "Başlamak için öğrenmesi kolay birkaç oyun. Daha fazlasını Koleksiyon sekmesinde bulabilirsin.",
-    "discoverMore": "Daha fazla oyun keşfet",
     "gameOfTheDay": "Günün oyunu",
     "jumpBackIn": "Kaldığın yerden devam et",
-    "favorites": "Favoriler",
-    "becauseYouLiked": "“{{title}}” oyununu sevdiğin için"
+    "favorites": "Favoriler"
+  },
+  "guide": {
+    "easy": {
+      "title": "Kolay oyunlarla başla",
+      "body": "Öğrenmesi hızlı, kazanması kolay birkaç oyunla başla."
+    },
+    "campaign": {
+      "title": "Kampanya Modu",
+      "body": "Oyunlarla dolu bir evreni keşfet: galaksinin ucuna kadar yolunu açmak için oyunları kazan ve yol boyunca ödüller topla!",
+      "start": "Kampanyayı başlat",
+      "resume": "Kampanyaya devam et"
+    },
+    "genres": {
+      "title": "Hepsini topla!",
+      "body": "{{categories}} kategoride {{games}} klasik ve modern oyunu keşfet; herkese göre bir şey var!",
+      "gameCount_one": "{{count}} oyun",
+      "gameCount_other": "{{count}} oyun"
+    },
+    "dismiss": "Kapat"
+  },
+  "gameOfTheDay": {
+    "today": "Bugün",
+    "yesterday": "Dün",
+    "wonToday": "Bugün kazanıldı",
+    "won": "Kazanıldı",
+    "streak_one": "{{count}} günlük seri",
+    "streak_other": "{{count}} günlük seri"
+  },
+  "deal": {
+    "title": "Rastgele dağıtım",
+    "intro": "Geçmek için sola ya da sağa kaydır, oynamak için dokun."
   },
   "collect": {
-    "tagProgress": "{{tag}}, %{{percentage}} kazanıldı"
+    "title": "Hepsini kazan!",
+    "overall": "{{total}} oyundan {{won}} tanesi kazanıldı",
+    "tagProgress": "{{tag}}: {{total}} oyundan {{won}} kazanıldı"
   },
   "tags": {
-    "EasyToLearn": "Öğrenmesi kolay",
-    "TableauBuilding": "Sütunlu pasyans",
-    "ModernMechanics": "Modern mekanikler",
-    "DungeonCrawler": "Zindan macerası",
-    "CardCombat": "Kart savaşı",
-    "GridPlacement": "Izgaraya yerleştirme",
+    "KlondikeFamily": "Klondike ailesi",
+    "YukonFamily": "Yukon ailesi",
+    "FreeCellFamily": "FreeCell ailesi",
+    "SpiderFamily": "Örümcek ailesi",
+    "FortyThievesFamily": "Kırk Haramiler ailesi",
+    "CastlesAndFans": "Kaleler ve yelpazeler",
+    "FoundationBuilders": "Temel kurma",
+    "DoubleDeckers": "Çift desteli",
+    "ClearTheBoard": "Masayı temizle",
+    "PairMatching": "Çiftler ve toplamlar",
+    "Puzzles": "Bulmacalar",
+    "Sports": "Spor",
     "PokerAndCribbage": "Poker ve cribbage",
-    "PairMatching": "Çift eşleştirme",
+    "CardCombat": "Kart savaşı",
+    "DungeonCrawler": "Zindan macerası",
+    "ModernMechanics": "Modern mekanikler",
+    "TableauBuilding": "Sütunlu pasyans",
+    "GridPlacement": "Izgaraya yerleştirme",
     "SequenceBuilding": "Dizi kurma",
     "StockAndWaste": "Deste ve açık deste",
     "ScoringPuzzles": "Puanlı bulmacalar",
@@ -56,26 +91,35 @@
   },
   "statsTab": {
     "personas": {
-      "nemesis": {
-        "title": "Baş düşman",
-        "subtitle": "En düşük kazanma oranı"
-      },
       "comfort": {
         "title": "Güvenli liman",
-        "subtitle": "En yüksek kazanma oranı"
+        "subtitle": "En yüksek kazanma oranın"
+      },
+      "nemesis": {
+        "title": "Baş düşman",
+        "subtitle": "En düşük kazanma oranın"
       },
       "whale": {
         "title": "Beyaz balina",
-        "subtitle": "Kazanmadan en çok deneme"
+        "subtitle": "Hiç kazanmadan en çok oynanan"
       },
-      "underdog": {
-        "title": "Sürpriz aday",
-        "subtitle": "Yüksek kazanma, az deneme"
+      "faithful": {
+        "title": "Eski dost",
+        "subtitle": "En çok oynadığın oyun"
+      },
+      "rivalry": {
+        "title": "Kıyasıya rekabet",
+        "subtitle": "50/50'ye en yakın"
+      },
+      "natural": {
+        "title": "Doğuştan yetenek",
+        "subtitle": "En az oyunda 3+ galibiyet"
       }
     },
     "sortBy": "Sırala: {{column}}",
     "columns": {
       "game": "Oyun",
+      "played": "Oyn.",
       "won": "Kzn.",
       "lost": "Kyb.",
       "winPercent": "% K",
@@ -94,12 +138,15 @@
       "title": "Eyvah, gösterilecek istatistik yok!",
       "body": "Birkaç oyun oynadıktan sonra istatistiklerini burada görebilirsin."
     },
-    "fullStats": {
-      "title": "Tüm istatistikler",
-      "noStats": "Gösterilecek istatistik yok",
-      "onlyPlayed": "Yalnızca oynanan oyunlar gösterilir"
+    "total": "Toplam",
+    "headline": {
+      "played": "oynanan oyunlar",
+      "won": "kazanılan oyunlar",
+      "winRate": "kazanma oranı",
+      "tried": "denenen oyunlar"
     },
-    "total": "Toplam"
+    "top": "Yukarı",
+    "backToTop": "Başa dön"
   },
   "statsModal": {
     "title": "İstatistikler"

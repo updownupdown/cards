@@ -7,7 +7,11 @@ export const rankAndFile: GameDefinition = {
   path: "/rank-and-file",
   title: "Rank and File",
   aliases: ["Dress Parade"],
-  tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
+  tags: [
+    GameTag.FortyThievesFamily,
+    GameTag.TableauBuilding,
+    GameTag.StockAndWaste,
+  ],
   rating: { complexity: 40, difficulty: 30, luck: 35 },
   thumbnail: "RankAndFile.webp",
   background: GAME_BACKGROUNDS.city,

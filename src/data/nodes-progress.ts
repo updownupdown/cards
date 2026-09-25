@@ -306,24 +306,13 @@ export async function resetNodesProgress() {
   });
 }
 
-export async function populateTestNodesProgress() {
+/** Fills in Campaign progress for testing: wins on `paths`, in order. */
+export async function populateTestNodesProgress(paths: string[]) {
   await mutateNodesProgress((progress) => {
-    const queuedPaths = [NODES_START_PATH];
-    const visitedPaths = new Set<string>();
-    const progressedNodes = [];
-
-    while (queuedPaths.length > 0 && progressedNodes.length < 24) {
-      const path = queuedPaths.shift()!;
-      if (visitedPaths.has(path)) continue;
-      visitedPaths.add(path);
-
+    const progressedNodes = paths.flatMap((path) => {
       const node = getNodeDefinition(path);
-      if (!node) continue;
-      progressedNodes.push(node);
-      node.connections.forEach((connection) => {
-        if (!visitedPaths.has(connection)) queuedPaths.push(connection);
-      });
-    }
+      return node ? [node] : [];
+    });
 
     const winsByPath: Record<string, number> = {};
     const collectedTaoIds = new Set<number>();

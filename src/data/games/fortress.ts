@@ -6,7 +6,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const fortress: GameDefinition = {
   path: "/fortress",
   title: "Fortress",
-  tags: [GameTag.SequenceBuilding],
+  tags: [GameTag.CastlesAndFans, GameTag.SequenceBuilding],
   rating: { complexity: 40, difficulty: 70, luck: 25 },
   thumbnail: "Fortress.webp",
   background: GAME_BACKGROUNDS.fortress,

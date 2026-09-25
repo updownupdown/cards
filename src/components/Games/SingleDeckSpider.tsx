@@ -9,6 +9,7 @@ import { DragGhostCards, DragHandle } from "@/components/Cards/DragDrop";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
+import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   cardDims,
@@ -530,13 +531,15 @@ export function SingleDeckSpider({
       >
         {cardMap}
         <View
-          style={{
-            ...StyleSheet.absoluteFillObject,
-            zIndex: 3000,
-            touchAction: "none",
-            overscrollBehaviorX: "contain",
-            pointerEvents: "box-none",
-          }}
+          style={[
+            pointerEventsStyles.boxNone,
+            {
+              ...StyleSheet.absoluteFillObject,
+              zIndex: 3000,
+              touchAction: "none",
+              overscrollBehaviorX: "contain",
+            },
+          ]}
         >
           {stockPosition && (
             <Pressable

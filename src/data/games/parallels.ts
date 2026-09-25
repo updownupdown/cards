@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const parallels: GameDefinition = {
   path: "/parallels",
   title: "Parallels",
-  tags: [GameTag.SpatialControl, GameTag.StockAndWaste],
+  tags: [GameTag.DoubleDeckers, GameTag.SpatialControl, GameTag.StockAndWaste],
   rating: {
     complexity: 30,
     difficulty: 45,

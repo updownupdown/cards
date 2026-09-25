@@ -15,6 +15,7 @@ import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
@@ -389,6 +390,9 @@ export function ReserveCellBoard({
         isSelected: isHoverTargetTop,
         isVisible: !isBeingDragged,
         animDuration: animDuration,
+        // Foundation cards are locked: taps go through to the zone, which
+        // places the selected card.
+        clickThroughCards: true,
       };
     }
 
@@ -904,12 +908,12 @@ export function ReserveCellBoard({
 
           <View
             style={[
+              pointerEventsStyles.boxNone,
               {
                 ...StyleSheet.absoluteFill,
                 zIndex: 3000,
                 touchAction: "none",
                 overscrollBehaviorX: "contain",
-                pointerEvents: "box-none",
               },
             ]}
           >

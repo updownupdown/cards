@@ -14,6 +14,11 @@
     "youClearedTheBoard": "Você limpou a mesa!",
     "noAdjacentRankRemains": "Não há mais valores vizinhos."
   },
+  "apothecary": {
+    "dish": "Pires",
+    "allSealed": "Todos os potes selados em {{count}} despejos!",
+    "noPoursLeft": "Nenhuma carta pode ser despejada em lugar nenhum."
+  },
   "ascent": {
     "lhotseRoutesNeed2Cards": "Lhotse: as rotas precisam de 2 cartas ou mais.",
     "gasherbrumIAnchorMustBe": "Gasherbrum I: a âncora precisa ser par.",
@@ -366,6 +371,11 @@
     "gotAllJewels": "Você pegou as quatro joias e achou a saída!",
     "lostWithLoot": "Você se perdeu na masmorra sem saída! Você morre com o seu tesouro.",
     "lostInDungeon": "Você se perdeu na masmorra sem saída!"
+  },
+  "pagoda": {
+    "shrine": "Santuário",
+    "shrineComplete": "Todas as trincas descansam no santuário!",
+    "trayFull": "A bandeja está cheia."
   },
   "pocketPoker": {
     "youHit10PointsYou": "Você chegou a 10 pontos e venceu!",

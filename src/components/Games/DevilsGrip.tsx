@@ -9,6 +9,7 @@ import { useStateManager } from "@/hooks/useStateManager";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
+import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   cardDims,
@@ -346,7 +347,6 @@ export default function DevilsGrip() {
     dragTranslate,
     boardRef,
     boardPageOffset,
-    clearDragGhost,
     startDrag,
     updateBoardOffset,
     makeDragHandlers,
@@ -686,11 +686,13 @@ export default function DevilsGrip() {
       >
         {cardMap}
         <View
-          style={{
-            ...StyleSheet.absoluteFillObject,
-            zIndex: 3000,
-            pointerEvents: "box-none",
-          }}
+          style={[
+            pointerEventsStyles.boxNone,
+            {
+              ...StyleSheet.absoluteFillObject,
+              zIndex: 3000,
+            },
+          ]}
         >
           {interactionTargets}
           {(game.draw.length > 0 || game.waste.length > 0) &&

@@ -43,5 +43,15 @@
   },
   "original": {
     "label": "Tampilkan aslinya"
+  },
+  "intro": {
+    "title": "Mode Kampanye",
+    "paragraphs": [
+      "Kampanye adalah perjalanan melewati semua permainan di Solitarius, yang disusun seperti sebuah galaksi. Kamu mulai dari Klondike, di dekat pusat, dan permainan makin sulit saat kamu bergerak ke luar.",
+      "Menangkan sebuah permainan untuk membuka permainan yang terhubung dengannya. Hanya permainan yang dimainkan dari peta ini yang dihitung, jadi ketuk permainan di sini lalu tekan Main.",
+      "Setiap permainan juga menyimpan koleksi: bab-bab Tao Te Ching dan kartu kutipan. Menangkan permainan untuk mengumpulkan yang berikutnya, dan menangkan lagi untuk sisanya.",
+      "Terjebak di permainan yang sulit? Perhatikan langit. Seorang pengelana yang lewat mungkin menawarkan jalan untuk melewatinya."
+    ],
+    "close": "Tutup pengantar Kampanye"
   }
 }

@@ -120,6 +120,40 @@
       "value": "Hepsi sırada"
     }
   },
+  "apothecary": {
+    "cardDescription": {
+      "hash": "b66e1d4d",
+      "value": "Tüm değerler bir araya gelene kadar kartları kavanozlar arasında aktar."
+    },
+    "howToPlay": {
+      "hash": "4b2b06d2",
+      "value": [
+        "## Amaç",
+        "Aynı değerdeki tüm kartları bir araya getirmek için desteyi sırala.",
+        "## Dökmek",
+        "- Bir kavanoza ya da çanağa dokunarak üstteki kartı, hemen altındaki aynı değerdeki kartlarla birlikte al.",
+        "- Başka bir kavanoza ya da çanağa dokunarak kartları oraya dök: **aynı değerde** bir kartın üstüne ya da boş bir kavanoza veya çanağa dökebilirsin.",
+        "- **Kavanozlar** dört kart alır. Kartların yalnızca bir kısmı sığarsa geri kalanı yerinde kalır.",
+        "- İki **çanak** birer kart alır.",
+        "## Mühürlemek",
+        "- Aynı değerde dört kart içeren bir kavanoz mühürlenir ve kapalı çevrilir.",
+        "- 13 kavanozun hepsi mühürlendiğinde kazanırsın. Bunu olabildiğince az dökerek yapmaya çalış.",
+        "- Hiçbir kart hiçbir yere dökülemiyorsa oyun kaybedilir."
+      ]
+    },
+    "quickStart": {
+      "hash": "77fe59b7",
+      "value": [
+        "Mühürlemek için her kavanozu aynı değerde dört kartla doldur.",
+        "Bir kavanoza, sonra üstteki kartlarını dökeceğin yere dokun.",
+        "Kartlar aynı değerin üstüne ya da boş bir kavanoza veya çanağa dökülür."
+      ]
+    },
+    "title": {
+      "hash": "f53fdef5",
+      "value": "Eczacı"
+    }
+  },
   "ascent": {
     "cardDescription": {
       "hash": "301e448f",
@@ -308,19 +342,15 @@
       "value": "Kovanı, açık desteyi ve desteyi kullanarak aynı değerdeki altı masa gözünde dörtlü takımlar tamamla."
     },
     "howToPlay": {
-      "hash": "c74783f8",
+      "hash": "426ee910",
       "value": [
         "## Amaç",
         "Aynı değerden dörtlü takımlar yaparak 52 kartın hepsini kaldır.",
         "## Kurallar",
-        "- Kovan 10 kart tutar; yalnızca en üstteki kartı kullanılabilir.",
-        "- Masadaki altı göz tek bir değerden kart alır, her biri en fazla dört kart.",
-        "- Aynı değerdeki kartları kovan, açık deste ve masa arasında taşı.",
-        "- Dört kartlık bir takım hemen kaldırılır.",
-        "- Boş bir göz, oraya kovandan ya da açık desteden bir kart taşınana kadar boş kalır.",
-        "- Masadaki bir yığını aynı değerdeki bir yığının üstüne otomatik taşımak için ona dokun.",
-        "- Tamamlanan yığınlar kapalı olarak ıskarta yığınına gider.",
-        "- Desteden açık desteye en fazla üç kart aç ya da deste bitince açık desteyi yeniden kullan."
+        "- Masadaki altı gözün her biri aynı anda yalnızca tek bir değer tutabilir.",
+        "- Bir takım oluşturup masadan kaldırmak için aynı değerdeki dört kartı bir araya getir.",
+        "- Boş gözleri kovandan ya da açık desteden kartlarla doldur.",
+        "- Bir kartı aynı değerdeki bir yığının üstüne otomatik taşımak için ona dokun."
       ]
     },
     "quickStart": {
@@ -2580,6 +2610,39 @@
     "title": {
       "hash": "7df776c7",
       "value": "Ouroboros"
+    }
+  },
+  "pagoda": {
+    "cardDescription": {
+      "hash": "c1c2c60e",
+      "value": "Pagodanın katlarından kart al ve her üçlüyü tapınağa sun."
+    },
+    "howToPlay": {
+      "hash": "5eb45815",
+      "value": [
+        "## Amaç",
+        "**39 kartın** hepsini üçerli setler hâlinde tapınağa sunarak pagodayı temizle.",
+        "## Kurallar",
+        "- Destede her değerden bir kart (rastgele bir takımdan) eksiktir, bu yüzden her değerden tam üç kart vardır.",
+        "- Açık bir kartı tepsiye taşımak için ona dokun.",
+        "- Tepside aynı değerde üç kart olur olmaz tapınağa sunulur.",
+        "- Tepsi dolunca kaybedersin. Tepsinin kapasitesi zorluk ayarına bağlıdır:",
+        "-- Kolay: en fazla **7** kart",
+        "-- Normal: en fazla **6** kart",
+        "-- Zor: en fazla **5** kart"
+      ]
+    },
+    "quickStart": {
+      "hash": "c5feca5f",
+      "value": [
+        "Açık bir kartı tepsine taşımak için ona dokun.",
+        "Tepsideki aynı değerde üç kart tapınağa sunulur.",
+        "Tepsinin eşleşmemiş kartlarla dolmasına izin verme (Kolay: 7, Normal: 6, Zor: 5)."
+      ]
+    },
+    "title": {
+      "hash": "125a9287",
+      "value": "Pagoda"
     }
   },
   "parallels": {

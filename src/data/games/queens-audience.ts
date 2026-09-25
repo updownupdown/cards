@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const queensAudience: GameDefinition = {
   path: "/queens-audience",
   title: "Queen's Audience",
-  tags: [GameTag.PairMatching, GameTag.EasyToLearn],
+  tags: [GameTag.PairMatching],
   rating: {
     complexity: 20,
     difficulty: 25,

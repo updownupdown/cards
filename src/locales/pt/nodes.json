@@ -43,5 +43,15 @@
   },
   "original": {
     "label": "Mostrar original"
+  },
+  "intro": {
+    "title": "Modo Campanha",
+    "paragraphs": [
+      "A Campanha é uma viagem por todos os jogos do Solitarius, dispostos como uma galáxia. Você começa em Klondike, perto do centro, e os jogos ficam mais difíceis à medida que você se afasta.",
+      "Vença um jogo para desbloquear os jogos ligados a ele. Só contam as partidas jogadas a partir deste mapa, então toque em um jogo aqui e pressione Jogar.",
+      "Cada jogo também guarda colecionáveis: capítulos do Tao Te Ching e cartas de citações. Vença um jogo para ganhar o próximo, e vença de novo para ganhar o resto.",
+      "Travou em um jogo difícil? Fique de olho no céu. Um viajante de passagem pode oferecer um jeito de passar por ele."
+    ],
+    "close": "Fechar a introdução da Campanha"
   }
 }

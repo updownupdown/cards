@@ -3,16 +3,12 @@
     "home": "Accueil",
     "collect": "Collection",
     "search": "Recherche",
-    "nodes": "Nœuds"
+    "nodes": "Campagne"
   },
   "cardSize": {
     "small": "Liste",
     "medium": "Cartes",
     "large": "Détails"
-  },
-  "random": {
-    "roll": "Jeux au hasard",
-    "clear": "Effacer les jeux au hasard"
   },
   "favorites": {
     "add": "Ajouter aux favoris",
@@ -29,26 +25,65 @@
   },
   "sections": {
     "localOnly": "Jeux locaux uniquement",
-    "startEasy": "Commencez en douceur\u00a0!",
-    "startEasyIntro": "Voici quelques jeux faciles à apprendre pour débuter. Vous en trouverez d'autres dans l'onglet Collection.",
-    "discoverMore": "Découvrir d'autres jeux",
     "gameOfTheDay": "Jeu du jour",
     "jumpBackIn": "Reprendre",
-    "favorites": "Favoris",
-    "becauseYouLiked": "Parce que vous avez aimé «\u00a0{{title}}\u00a0»"
+    "favorites": "Favoris"
+  },
+  "guide": {
+    "easy": {
+      "title": "Commencez par des jeux faciles",
+      "body": "Lancez-vous avec quelques jeux rapides à apprendre et faciles à gagner."
+    },
+    "campaign": {
+      "title": "Mode Campagne",
+      "body": "Explorez un univers de jeux : gagnez des parties pour vous frayer un chemin jusqu'aux confins de la galaxie, et collectionnez des récompenses en route !",
+      "start": "Commencer la campagne",
+      "resume": "Reprendre la campagne"
+    },
+    "genres": {
+      "title": "Collectionnez-les tous !",
+      "body": "Explorez {{games}} jeux classiques et modernes répartis en {{categories}} catégories ; il y en a pour tous les goûts !",
+      "gameCount_one": "{{count}} jeu",
+      "gameCount_other": "{{count}} jeux"
+    },
+    "dismiss": "Masquer"
+  },
+  "gameOfTheDay": {
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "wonToday": "Gagné aujourd'hui",
+    "won": "Gagné",
+    "streak_one": "{{count}} jour d'affilée",
+    "streak_other": "{{count}} jours d'affilée"
+  },
+  "deal": {
+    "title": "Donne au hasard",
+    "intro": "Glissez à gauche ou à droite pour passer, ou touchez pour jouer."
   },
   "collect": {
-    "tagProgress": "{{tag}}, {{percentage}}\u00a0% gagnés"
+    "title": "Gagnez-les tous !",
+    "overall": "{{won}} jeux gagnés sur {{total}}",
+    "tagProgress": "{{tag}} : {{won}} gagnés sur {{total}}"
   },
   "tags": {
-    "EasyToLearn": "Faciles à apprendre",
-    "TableauBuilding": "Solitaires à colonnes",
-    "ModernMechanics": "Mécaniques modernes",
-    "DungeonCrawler": "Exploration de donjon",
-    "CardCombat": "Combat de cartes",
-    "GridPlacement": "Placement sur grille",
+    "KlondikeFamily": "Famille Klondike",
+    "YukonFamily": "Famille Yukon",
+    "FreeCellFamily": "Famille FreeCell",
+    "SpiderFamily": "Famille Araignée",
+    "FortyThievesFamily": "Famille Quarante Voleurs",
+    "CastlesAndFans": "Châteaux et éventails",
+    "FoundationBuilders": "Montée aux fondations",
+    "DoubleDeckers": "Deux jeux de cartes",
+    "ClearTheBoard": "Vider le plateau",
+    "PairMatching": "Paires et sommes",
+    "Puzzles": "Casse-têtes",
+    "Sports": "Sports",
     "PokerAndCribbage": "Poker et cribbage",
-    "PairMatching": "Paires",
+    "CardCombat": "Combat de cartes",
+    "DungeonCrawler": "Exploration de donjon",
+    "ModernMechanics": "Mécaniques modernes",
+    "TableauBuilding": "Solitaires à colonnes",
+    "GridPlacement": "Placement sur grille",
     "SequenceBuilding": "Suites",
     "StockAndWaste": "Pioche et défausse",
     "ScoringPuzzles": "Casse-têtes à score",
@@ -56,26 +91,35 @@
   },
   "statsTab": {
     "personas": {
-      "nemesis": {
-        "title": "La Bête noire",
-        "subtitle": "Taux de victoire le plus bas"
-      },
       "comfort": {
         "title": "La Valeur sûre",
-        "subtitle": "Taux de victoire le plus élevé"
+        "subtitle": "Votre meilleur taux de victoire"
+      },
+      "nemesis": {
+        "title": "La Bête noire",
+        "subtitle": "Votre pire taux de victoire"
       },
       "whale": {
         "title": "La Baleine blanche",
         "subtitle": "Le plus de parties sans victoire"
       },
-      "underdog": {
-        "title": "L'Outsider",
-        "subtitle": "Bon taux de victoire, peu de parties"
+      "faithful": {
+        "title": "Le Fidèle",
+        "subtitle": "Votre jeu le plus joué"
+      },
+      "rivalry": {
+        "title": "Le Duel serré",
+        "subtitle": "Le plus proche du 50/50"
+      },
+      "natural": {
+        "title": "Le Don naturel",
+        "subtitle": "3 victoires ou plus en un minimum de parties"
       }
     },
     "sortBy": "Trier par {{column}}",
     "columns": {
       "game": "Jeu",
+      "played": "Jouées",
       "won": "Vic.",
       "lost": "Déf.",
       "winPercent": "% V",
@@ -91,15 +135,18 @@
       "time": "Meilleur temps"
     },
     "empty": {
-      "title": "Oups, aucune statistique à afficher\u00a0!",
+      "title": "Oups, aucune statistique à afficher !",
       "body": "Revenez après quelques parties pour voir vos statistiques ici."
     },
-    "fullStats": {
-      "title": "Statistiques complètes",
-      "noStats": "Aucune statistique à afficher",
-      "onlyPlayed": "Seuls les jeux joués sont affichés"
+    "total": "Total",
+    "headline": {
+      "played": "parties jouées",
+      "won": "parties gagnées",
+      "winRate": "taux de victoire",
+      "tried": "jeux essayés"
     },
-    "total": "Total"
+    "top": "Haut",
+    "backToTop": "Revenir en haut"
   },
   "statsModal": {
     "title": "Statistiques"
@@ -109,14 +156,14 @@
     "titleInstall": "Installer Solitarius",
     "titleDevice": "Ajouter Solitarius à votre appareil",
     "titleMac": "Ajouter Solitarius au Dock",
-    "instructionsIos": "Dans Safari, touchez le bouton Partager, puis choisissez «\u00a0Sur l'écran d'accueil\u00a0».",
+    "instructionsIos": "Dans Safari, touchez le bouton Partager, puis choisissez « Sur l'écran d'accueil ».",
     "instructionsInstall": "Installez l'application pour un lancement plus rapide, un affichage plein écran et le jeu hors ligne.",
-    "instructionsBrowser": "Ouvrez le menu de votre navigateur et choisissez «\u00a0Installer l'application\u00a0» ou «\u00a0Ajouter à l'écran d'accueil\u00a0».",
-    "instructionsIosOther": "Touchez le bouton Partager, puis choisissez «\u00a0Sur l'écran d'accueil\u00a0». Si l'option n'apparaît pas, ouvrez cette page dans Safari.",
+    "instructionsBrowser": "Ouvrez le menu de votre navigateur et choisissez « Installer l'application » ou « Ajouter à l'écran d'accueil ».",
+    "instructionsIosOther": "Touchez le bouton Partager, puis choisissez « Sur l'écran d'accueil ». Si l'option n'apparaît pas, ouvrez cette page dans Safari.",
     "instructionsMac": "Dans Safari, choisissez Fichier › Ajouter au Dock.",
-    "instructionsDesktop": "Cliquez sur l'icône d'installation dans la barre d'adresse, ou ouvrez le menu de votre navigateur et choisissez «\u00a0Installer\u00a0».",
+    "instructionsDesktop": "Cliquez sur l'icône d'installation dans la barre d'adresse, ou ouvrez le menu de votre navigateur et choisissez « Installer ».",
     "instructionsInApp": "Pour l'installer, ouvrez d'abord cette page dans votre navigateur (Safari ou Chrome) depuis le menu de cette application.",
-    "accepted": "Parfait\u00a0! Votre navigateur termine l'installation en arrière-plan.",
+    "accepted": "Parfait ! Votre navigateur termine l'installation en arrière-plan.",
     "dismissed": "Pas de problème, vous pouvez l'installer à tout moment depuis le menu de votre navigateur.",
     "installNow": "Installer",
     "notNow": "Plus tard"

@@ -11,6 +11,7 @@ import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { delay } from "@/utils/utils";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
@@ -639,12 +640,14 @@ export default function RoyalRest() {
       >
         {cardMap}
         <View
-          style={{
-            ...StyleSheet.absoluteFillObject,
-            zIndex: 3000,
-            pointerEvents: "box-none",
-            touchAction: "none",
-          }}
+          style={[
+            pointerEventsStyles.boxNone,
+            {
+              ...StyleSheet.absoluteFillObject,
+              zIndex: 3000,
+              touchAction: "none",
+            },
+          ]}
         >
           {interactionTargets}
         </View>

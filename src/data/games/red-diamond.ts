@@ -6,7 +6,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const redDiamond: GameDefinition = {
   path: "/red-diamond",
   title: "Red Diamond",
-  tags: [GameTag.GridPlacement, GameTag.ScoringPuzzles],
+  tags: [GameTag.Puzzles, GameTag.GridPlacement, GameTag.ScoringPuzzles],
   rating: {
     complexity: 35,
     difficulty: 55,

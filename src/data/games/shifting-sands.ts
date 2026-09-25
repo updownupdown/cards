@@ -6,7 +6,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const shiftingSands: GameDefinition = {
   path: "/shifting-sands",
   title: "Shifting Sands",
-  tags: [GameTag.SequenceBuilding],
+  tags: [GameTag.ModernMechanics, GameTag.SequenceBuilding],
   rating: {
     complexity: 45,
     difficulty: 60,

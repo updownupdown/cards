@@ -5,7 +5,7 @@ import { GameAnimations } from "@/animations";
 export const australianPatience: GameDefinition = {
   path: "/australian-patience",
   title: "Australian Patience",
-  tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
+  tags: [GameTag.YukonFamily, GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 35, difficulty: 70, luck: 45 },
   thumbnail: "AustralianPatience.webp",
   background: GAME_BACKGROUNDS.savanah,

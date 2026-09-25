@@ -6,7 +6,7 @@ import { CardBackColors } from "../card-backs";
 export const pyramid: GameDefinition = {
   path: "/pyramid",
   title: "Pyramid",
-  tags: [GameTag.EasyToLearn, GameTag.PairMatching, GameTag.StockAndWaste],
+  tags: [GameTag.PairMatching, GameTag.StockAndWaste],
   rating: {
     complexity: 15,
     difficulty: 65,

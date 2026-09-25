@@ -2,6 +2,7 @@ import { describe, expect, test } from "@jest/globals";
 import {
   compactGameSettings,
   DEFAULT_GAME_SETTINGS,
+  getDefaultGameSettings,
   getGameSettings,
   type GameSettings,
 } from "@/data/game-menu";
@@ -10,7 +11,13 @@ const path = "/klondike";
 
 describe("getGameSettings", () => {
   test("returns defaults for a game with no stored entry", () => {
-    expect(getGameSettings({}, path)).toEqual(DEFAULT_GAME_SETTINGS);
+    expect(getGameSettings({}, "/canfield")).toEqual(DEFAULT_GAME_SETTINGS);
+    expect(getGameSettings({}, path)).toEqual(getDefaultGameSettings(path));
+  });
+
+  test("Klondike draws three by default; other games keep one", () => {
+    expect(getGameSettings({}, path).drawCount).toBe(3);
+    expect(getGameSettings({}, "/canfield").drawCount).toBe(1);
   });
 
   test("replaces invalid stored values with defaults", () => {
@@ -33,7 +40,8 @@ describe("getGameSettings", () => {
       path,
     );
 
-    expect(settings.drawCount).toBe(1);
+    // Klondike's own default, not the shared one.
+    expect(settings.drawCount).toBe(3);
     expect(settings.pyramidDifficulty).toBe(
       DEFAULT_GAME_SETTINGS.pyramidDifficulty,
     );
@@ -63,6 +71,15 @@ describe("getGameSettings", () => {
 });
 
 describe("compactGameSettings", () => {
+  test("keeps a choice that differs from the game's own default", () => {
+    const drawOne = { ...getDefaultGameSettings(path), drawCount: 1 as const };
+    const stored = compactGameSettings(drawOne, path);
+
+    expect(stored).toEqual({ drawCount: 1 });
+    expect(getGameSettings({ [path]: stored }, path).drawCount).toBe(1);
+    expect(compactGameSettings(getDefaultGameSettings(path), path)).toEqual({});
+  });
+
   test("stores nothing for default settings", () => {
     expect(compactGameSettings(DEFAULT_GAME_SETTINGS)).toEqual({});
   });
@@ -108,7 +125,7 @@ describe("compactGameSettings", () => {
       },
     };
 
-    const stored = compactGameSettings(settings);
+    const stored = compactGameSettings(settings, path);
     expect(getGameSettings({ [path]: stored }, path)).toEqual(settings);
   });
 });

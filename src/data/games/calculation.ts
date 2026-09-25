@@ -6,7 +6,11 @@ import { GameAnimations } from "@/animations";
 export const calculation: GameDefinition = {
   path: "/calculation",
   title: "Calculation",
-  tags: [GameTag.SequenceBuilding, GameTag.StockAndWaste],
+  tags: [
+    GameTag.FoundationBuilders,
+    GameTag.SequenceBuilding,
+    GameTag.StockAndWaste,
+  ],
   rating: {
     complexity: 60,
     difficulty: 80,

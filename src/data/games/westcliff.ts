@@ -6,7 +6,11 @@ import { GameDefinition, GameTag } from "../games-data";
 export const westcliff: GameDefinition = {
   path: "/westcliff",
   title: "Westcliff",
-  tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
+  tags: [
+    GameTag.KlondikeFamily,
+    GameTag.TableauBuilding,
+    GameTag.StockAndWaste,
+  ],
   rating: { complexity: 25, difficulty: 35, luck: 55 },
   background: GAME_BACKGROUNDS.cliffFields,
   animation: GameAnimations.Pollen,

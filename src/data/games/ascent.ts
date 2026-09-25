@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const ascent: GameDefinition = {
   path: "/ascent",
   title: "Ascent",
-  tags: [GameTag.ModernMechanics],
+  tags: [GameTag.Sports, GameTag.ModernMechanics],
   rating: {
     complexity: 75,
     difficulty: 85,

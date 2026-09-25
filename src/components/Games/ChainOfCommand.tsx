@@ -528,7 +528,7 @@ export default function ChainOfCommand() {
       </View>
 
       {/* Rank Rows */}
-      {game.ranks.map((band, rankIndex) => {
+      {game.ranks.map((_band, rankIndex) => {
         return (
           <View
             key={`rank-${rankIndex}`}

@@ -11,10 +11,13 @@ declare module "react-test-renderer" {
     findAll(
       predicate: (node: ReactTestInstance) => boolean,
     ): ReactTestInstance[];
+    find(predicate: (node: ReactTestInstance) => boolean): ReactTestInstance;
+    findAllByType(type: ComponentType): ReactTestInstance[];
   }
 
   export interface ReactTestRenderer {
     root: ReactTestInstance;
+    toJSON(): unknown;
     update(element: ReactElement): void;
     unmount(): void;
   }

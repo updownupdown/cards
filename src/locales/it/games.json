@@ -14,6 +14,11 @@
     "youClearedTheBoard": "Hai liberato il tavolo!",
     "noAdjacentRankRemains": "Nessun valore vicino rimasto."
   },
+  "apothecary": {
+    "dish": "Piattino",
+    "allSealed": "Tutti i vasi sigillati in {{count}} travasi!",
+    "noPoursLeft": "Nessuna carta può essere versata da nessuna parte."
+  },
   "ascent": {
     "lhotseRoutesNeed2Cards": "Lhotse: le vie richiedono almeno 2 carte.",
     "gasherbrumIAnchorMustBe": "Gasherbrum I: l'ancora deve essere pari.",
@@ -366,6 +371,11 @@
     "gotAllJewels": "Hai preso tutti e quattro i gioielli e trovato l'uscita!",
     "lostWithLoot": "Ti sei perso nel dungeon senza via d'uscita! Muori con il tuo bottino.",
     "lostInDungeon": "Ti sei perso nel dungeon senza via d'uscita!"
+  },
+  "pagoda": {
+    "shrine": "Santuario",
+    "shrineComplete": "Ogni tris riposa nel santuario!",
+    "trayFull": "Il vassoio è pieno."
   },
   "pocketPoker": {
     "youHit10PointsYou": "Hai raggiunto 10 punti: hai vinto!",

@@ -251,6 +251,7 @@ const ZoneBackgroundComponent = ({
         isSelected={isSelected}
         forceOverlayColor={forceOverlayColor}
         selectColor={selectColor}
+        isPlaceholder
       />
 
       {infoPos && (

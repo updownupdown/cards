@@ -6,7 +6,11 @@ import { GameDefinition, GameTag } from "../games-data";
 export const raglan: GameDefinition = {
   path: "/raglan",
   title: "Raglan",
-  tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
+  tags: [
+    GameTag.KlondikeFamily,
+    GameTag.TableauBuilding,
+    GameTag.StockAndWaste,
+  ],
   rating: { complexity: 35, difficulty: 55, luck: 25 },
   thumbnail: "Raglan.webp",
   background: GAME_BACKGROUNDS.aridHill,

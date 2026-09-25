@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const spiderSolitaire: GameDefinition = {
   path: "/spider-solitaire",
   title: "Spider Solitaire",
-  tags: [GameTag.SequenceBuilding],
+  tags: [GameTag.SpiderFamily, GameTag.SequenceBuilding],
   rating: {
     complexity: 50,
     difficulty: 85,

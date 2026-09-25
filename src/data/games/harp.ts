@@ -6,7 +6,11 @@ import { GameDefinition, GameTag } from "../games-data";
 export const harp: GameDefinition = {
   path: "/harp",
   title: "Harp",
-  tags: [GameTag.TableauBuilding, GameTag.StockAndWaste],
+  tags: [
+    GameTag.KlondikeFamily,
+    GameTag.TableauBuilding,
+    GameTag.StockAndWaste,
+  ],
   rating: { complexity: 35, difficulty: 35, luck: 40 },
   thumbnail: "Harp.webp",
   background: GAME_BACKGROUNDS.cliffFields,

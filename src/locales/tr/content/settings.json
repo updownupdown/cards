@@ -395,6 +395,26 @@
       }
     }
   },
+  "pagoda": {
+    "pagodaDifficulty": {
+      "hash": "81b4ccab",
+      "value": {
+        "description": "Tepsinin kaç kart alabileceğini belirler.",
+        "label": "Zorluk",
+        "options": [
+          {
+            "label": "Kolay (7 kart)"
+          },
+          {
+            "label": "Normal (6 kart)"
+          },
+          {
+            "label": "Zor (5 kart)"
+          }
+        ]
+      }
+    }
+  },
   "pocket-poker": {
     "pokerDifficulty": {
       "hash": "505d7998",

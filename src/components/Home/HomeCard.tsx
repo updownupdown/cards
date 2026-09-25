@@ -7,6 +7,7 @@ import { localizeGame } from "@/i18n/content";
 import { Colors, rgba } from "@/styles/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import { launchGame } from "@/components/common/GameLaunchOverlay";
+import { setLastPlayedNode } from "@/data/nodes-progress";
 import { type Href } from "expo-router";
 import { Image } from "expo-image";
 import { Platform, Pressable, View, type ViewStyle } from "react-native";
@@ -15,6 +16,7 @@ import { RatingsBars } from "./RatingBars";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { homeSurfaceShadow } from "@/styles/homeSurfaceShadow";
+import { useTabReadyImage } from "./TabReady";
 
 function getGameThumbnail(game: GameMenuInfo) {
   return GAME_THUMBNAIL_ASSETS[game.thumbnail || DEFAULT_GAME_THUMBNAIL];
@@ -29,7 +31,11 @@ type Props = {
   isLarge?: boolean;
   style?: ViewStyle;
   showCompleted?: boolean;
+  /** Launch in Campaign mode, so a win counts on the map. */
+  campaign?: boolean;
   onOpen?: () => void;
+  /** False shows only the game's colour where the thumbnail goes, for now. */
+  showThumbnail?: boolean;
 };
 
 export function HomeCard({
@@ -40,9 +46,13 @@ export function HomeCard({
   size = "medium",
   style,
   showCompleted,
+  campaign,
   onOpen,
+  showThumbnail = true,
 }: Props) {
   const { spacing } = useResponsiveMetrics();
+  const thumbnail = showThumbnail ? getGameThumbnail(game) : null;
+  const thumbnailReady = useTabReadyImage(thumbnail);
   const { title, cardDescription } = localizeGame(
     game,
     path,
@@ -51,6 +61,11 @@ export function HomeCard({
 
   const handleOpen = () => {
     onOpen?.();
+    if (campaign) {
+      void setLastPlayedNode(path);
+      launchGame({ pathname: path, params: { mode: "nodes" } } as Href);
+      return;
+    }
     launchGame(path as Href);
   };
 
@@ -96,19 +111,24 @@ export function HomeCard({
           borderRadius,
           width: "100%",
           height: size === "large" ? undefined : "100%",
+          // A large card sizes to its content, unless given a height, which
+          // it then fills.
+          flexGrow: size === "large" ? 1 : undefined,
         }}
       >
         {/* Thumbnail */}
         <Image
-          source={getGameThumbnail(game)}
+          source={thumbnail}
           style={{
             position: "absolute",
             top: 0,
             left: 0,
             width: "100%",
             height: "100%",
+            backgroundColor: game.gameColorDark,
           }}
           contentFit="cover"
+          {...thumbnailReady}
         />
 
         <LinearGradient
@@ -146,9 +166,11 @@ export function HomeCard({
               flexDirection: "column",
               alignItems: size === "medium" ? "center" : "flex-start",
               height: size === "large" ? undefined : "100%",
-              minHeight: size === "large" ? spacing(100) : undefined,
+              minHeight: size === "large" ? spacing(80) : undefined,
               gap: spacing(8),
-              flex: 1,
+              // Grows from its content, not from nothing: on native, flex: 1
+              // squeezes the text down to minHeight in a card given a height.
+              flexGrow: 1,
               justifyContent: size === "medium" ? "flex-end" : "center",
             }}
           >
@@ -217,11 +239,7 @@ export function HomeCard({
                 },
               ]}
             >
-              <Icon
-                name="trophy"
-                size={spacing(14)}
-                color={Colors.trophyGold}
-              />
+              <Icon name="done" size={spacing(18)} color={Colors.win} />
             </View>
           </View>
         )}

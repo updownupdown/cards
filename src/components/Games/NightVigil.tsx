@@ -845,7 +845,7 @@ export default function NightVigil() {
           color="blue"
           autoTallyText
           scaledHeight={cardHeight * trackerHeight}
-          iconName="spades"
+          iconName="shield"
         />
         <ProgressBar
           totalValue={MAX_TRACK}
@@ -907,7 +907,7 @@ export default function NightVigil() {
               { gap: spacing(4), height: spacing(30) },
             ]}
           >
-            {game.threats.map((threat, index) => (
+            {game.threats.map((_threat, index) => (
               <View
                 key={`draw-dot-${index}`}
                 style={{
