@@ -16,7 +16,7 @@
   --font-serif: Georgia, "Times New Roman", serif;
 }
 
-@keyframes nodes-star-flicker {
+@keyframes campaign-star-flicker {
   0%,
   72%,
   100% {
@@ -30,7 +30,7 @@
 
 /* A flaring star on the Nodes map: a long rest, a quick bloom, a slower
    fade. The shares match FLARE_BLOOM_SHARE and FLARE_FADE_SHARE. */
-@keyframes nodes-arm-star-flare {
+@keyframes campaign-arm-star-flare {
   0%,
   68%,
   100% {
@@ -42,7 +42,7 @@
   }
 }
 
-@keyframes nodes-node-pulse {
+@keyframes campaign-game-dot-pulse {
   0%,
   65%,
   100% {

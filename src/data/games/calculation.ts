@@ -17,6 +17,14 @@ export const calculation: GameDefinition = {
     luck: 40,
   },
   thumbnail: "Calculation.webp",
+  thumbnailCredit: {
+    title: "Portrait of Luca Pacioli",
+    artistName: "Attributed to Jacopo de' Barbari",
+    date: "1495",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Jacopo_de%27_Barbari_(attributed_to)_Portrait_of_Luca_Pacioli_(1445_1517)_with_a_student_(Guidobaldo_da_Montefeltro)_(2).jpg",
+  },
   background: GAME_BACKGROUNDS.geometricCeiling,
   animation: GameAnimations.Dust,
   gameColorDark: "#12122b",

@@ -1,12 +1,13 @@
 import { useTranslation } from "@/i18n";
 import { Icon } from "@/icons";
-import { Colors } from "@/styles/styles";
+import { Colors, rgba } from "@/styles/styles";
 import { useEffect, useRef, useState } from "react";
 import {
   Animated,
   Easing,
   Platform,
   Pressable,
+  View,
   type ViewStyle,
 } from "react-native";
 
@@ -18,6 +19,8 @@ type Props = {
   activeColor?: string;
   inactiveColor?: string;
   disabled?: boolean;
+  /** A soft dark glow behind the star, to keep it clear on pale pictures. */
+  backdrop?: boolean;
   style?: ViewStyle | ViewStyle[];
 };
 
@@ -29,6 +32,7 @@ export function FavButton({
   activeColor = Colors.favoriteStar,
   inactiveColor = Colors.accentBlue,
   disabled = false,
+  backdrop = false,
   style,
 }: Props) {
   const { t } = useTranslation("home");
@@ -102,6 +106,19 @@ export function FavButton({
         style,
       ]}
     >
+      {backdrop && (
+        <View
+          style={{
+            pointerEvents: "none",
+            position: "absolute",
+            width: iconSize * 0.6,
+            height: iconSize * 0.6,
+            borderRadius: iconSize * 0.3,
+            backgroundColor: rgba(Colors.black, 0.35),
+            boxShadow: `0 0 ${iconSize * 0.4}px ${iconSize * 0.2}px ${rgba(Colors.black, 0.4)}`,
+          }}
+        />
+      )}
       <Animated.View
         style={{
           pointerEvents: "none",

@@ -36,8 +36,8 @@ describe("Golf", () => {
     const piles = emptyPiles(7);
     piles[0] = [two];
     await renderGame("/golf", Golf, {
-      draw: [],
-      discard: [card("A", "hearts")],
+      stock: [],
+      waste: [card("A", "hearts")],
       piles,
       ended: false,
       won: false,
@@ -55,8 +55,8 @@ describe("Golf", () => {
     piles[0] = [two];
     piles[1] = [card("9", "hearts")];
     await renderGame("/golf", Golf, {
-      draw: [],
-      discard: [card("A", "clubs")],
+      stock: [],
+      waste: [card("A", "clubs")],
       piles,
       ended: false,
       won: false,

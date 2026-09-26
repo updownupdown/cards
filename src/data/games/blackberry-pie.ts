@@ -15,6 +15,13 @@ export const blackberryPie: GameDefinition = {
   background: GAME_BACKGROUNDS.forestGrasses,
   animation: GameAnimations.Leaves,
   thumbnail: "BlackberryPie.webp",
+  thumbnailCredit: {
+    title: "Just Dessert",
+    artistName: "William Michael Harnett",
+    date: "1891",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/44065",
+  },
   cardDescription:
     "Build matching trios under berry cards to help the Queen bake her pie.",
   gameColorDark: "#2a1c33",

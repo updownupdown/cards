@@ -13,6 +13,13 @@ export const scorpion: GameDefinition = {
     luck: 40,
   },
   thumbnail: "Scorpion.webp",
+  thumbnailCredit: {
+    title: "Scorpion",
+    artistName: "Unknown Moche artist",
+    date: "6th–7th century",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/314462",
+  },
   background: GAME_BACKGROUNDS.sahara,
   animation: GameAnimations.Sand,
   gameColorDark: "#352b21",
@@ -37,5 +44,8 @@ export const scorpion: GameDefinition = {
 
     "## Stock",
     "When no useful move remains, deal the three stock cards, one onto each of the first three columns.",
+
+    "## Wasp",
+    "In the Wasp variant, any card (with the cards on it) may move to an empty column.",
   ],
 };

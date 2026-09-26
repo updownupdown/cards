@@ -594,13 +594,13 @@ export default function TwelveTrials() {
         width: 2.5,
       },
       {
-        id: "clear",
-        name: "clear",
+        id: "discard",
+        name: "discard",
         cards: game.discard,
         col: 5,
         row: 0,
         fan: { maxVisible: 3 },
-        placeholder: { text: i18n.t("cards:dscrd"), infoPos: "left" },
+        placeholder: { text: i18n.t("cards:discard"), infoPos: "left" },
       },
     );
 

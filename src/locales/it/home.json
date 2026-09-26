@@ -3,7 +3,7 @@
     "home": "Home",
     "collect": "Collezione",
     "search": "Cerca",
-    "nodes": "Campagna"
+    "campaign": "Campagna"
   },
   "cardSize": {
     "small": "Elenco",
@@ -26,27 +26,9 @@
   "sections": {
     "localOnly": "Giochi solo in locale",
     "gameOfTheDay": "Gioco del giorno",
+    "easyGames": "Giochi facili per iniziare",
     "jumpBackIn": "Riprendi",
     "favorites": "Preferiti"
-  },
-  "guide": {
-    "easy": {
-      "title": "Inizia con i giochi facili",
-      "body": "Per cominciare, prova qualche gioco veloce da imparare e facile da vincere."
-    },
-    "campaign": {
-      "title": "Modalità Campagna",
-      "body": "Esplora un universo di giochi: vinci partite per farti strada fino ai confini della galassia, e raccogli ricompense lungo il cammino!",
-      "start": "Inizia la campagna",
-      "resume": "Riprendi la campagna"
-    },
-    "genres": {
-      "title": "Collezionali tutti!",
-      "body": "Esplora {{games}} giochi classici e moderni in {{categories}} categorie: ce n'è per tutti i gusti!",
-      "gameCount_one": "{{count}} gioco",
-      "gameCount_other": "{{count}} giochi"
-    },
-    "dismiss": "Nascondi"
   },
   "gameOfTheDay": {
     "today": "Oggi",
@@ -61,9 +43,14 @@
     "intro": "Scorri a sinistra o a destra per passare, o tocca per giocare."
   },
   "collect": {
-    "title": "Vincili tutti!",
-    "overall": "{{won}} giochi vinti su {{total}}",
-    "tagProgress": "{{tag}}: {{won}} vinti su {{total}}"
+    "games": "Giochi: {{won}}/{{total}}",
+    "categories": "Categorie: {{won}}/{{total}}",
+    "tagProgress": "{{tag}}: {{won}} vinti su {{total}}",
+    "intro": {
+      "title": "Diario di viaggio",
+      "text": "Vinci un gioco per ottenere il suo timbro. Esplora meccaniche simili e prova a completare tutte le serie!",
+      "close": "Chiudi"
+    }
   },
   "tags": {
     "KlondikeFamily": "Famiglia Klondike",

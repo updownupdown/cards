@@ -15,6 +15,13 @@ export const redDiamond: GameDefinition = {
   background: GAME_BACKGROUNDS.cozyRoom4,
   animation: GameAnimations.ManaDust,
   thumbnail: "RedDiamond.webp",
+  thumbnailCredit: {
+    title: "Sheet with Red Diamond and Zigzag Pattern",
+    artistName: "Unknown artist",
+    date: "18th century",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/824628",
+  },
   gameColorDark: "#220a12",
   gameColorPale: "#ffeaea",
   cardBack: CardBackColors.Crimson,

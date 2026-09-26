@@ -1,7 +1,7 @@
 {
   "menu": {
     "home": "Inicio",
-    "nodes": "Nodos",
+    "campaign": "Campaña",
     "instantWin": "Victoria instantánea"
   },
   "result": {
@@ -36,7 +36,9 @@
   },
   "credits": {
     "title": "Créditos",
-    "backgroundImage": "Imagen de fondo:"
+    "backgroundImage": "Imagen de fondo (difuminada):",
+    "gameArt": "Ilustración de portada:",
+    "artSource": "Dominio público, procedente de"
   },
   "deckPreview": {
     "title": "Vista previa del mazo",
@@ -50,5 +52,10 @@
   "errors": {
     "gameCrashed": "Algo salió mal con ese juego.",
     "resumeFailed": "No se pudo reanudar tu última partida."
+  },
+  "autoComplete": {
+    "start": "Autocompletar",
+    "settings": "Ajustes de autocompletar",
+    "dismiss": "Cerrar"
   }
 }

@@ -18,6 +18,13 @@ export const westcliff: GameDefinition = {
   gameColorPale: "#e4ece9",
   cardBack: CardBackColors.Pine,
   thumbnail: "Westcliff.webp",
+  thumbnailCredit: {
+    title: "Cliff Walk at Pourville",
+    artistName: "Claude Monet",
+    date: "1882",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/14620",
+  },
   cardDescription:
     "A broad ten-column Klondike relative with generous open-column play.",
   quickStart: [

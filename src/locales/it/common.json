@@ -15,6 +15,7 @@
     "winRate": "Percentuale di vittorie",
     "winPercent": "% vittorie",
     "best": "Record",
+    "bestTime": "Record: {{time}}",
     "fastest": "Più veloce"
   }
 }

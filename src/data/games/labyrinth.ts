@@ -17,6 +17,13 @@ export const labyrinth: GameDefinition = {
     luck: 65,
   },
   thumbnail: "Labyrinth.webp",
+  thumbnailCredit: {
+    title: "The Cretan Labyrinth",
+    artistName: "Hieronymus Cock",
+    date: "1558",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/268119",
+  },
   background: GAME_BACKGROUNDS.stoneTunnel,
   animation: GameAnimations.ManaDust,
   gameColorDark: "#1c1f26",

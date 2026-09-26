@@ -13,6 +13,13 @@ export const beehive: GameDefinition = {
     luck: 25,
   },
   thumbnail: "Beehive.webp",
+  thumbnailCredit: {
+    title: "Flowers and Bees",
+    artistName: "Unknown Chinese artist",
+    date: "18th century",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/51410",
+  },
   background: GAME_BACKGROUNDS.flowerGarden,
   animation: GameAnimations.Bees,
   gameColorDark: "#1e2b16",

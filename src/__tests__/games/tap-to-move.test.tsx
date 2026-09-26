@@ -11,6 +11,7 @@ import {
   card,
   harness,
   renderGame,
+  renderVariant,
   run,
   pressZone,
   selectedCardIds,
@@ -20,11 +21,10 @@ import {
 } from "../../../jest/game-harness";
 import type { PlayingCard } from "@/components/Cards/card-utils";
 import type { ComponentType } from "react";
-import BakersGame from "@/components/Games/BakersGame";
 import Canfield from "@/components/Games/Canfield";
 import EightOff from "@/components/Games/EightOff";
 import FortyThieves from "@/components/Games/FortyThieves";
-import Josephine from "@/components/Games/Josephine";
+import FreeCell from "@/components/Games/FreeCell";
 import Klondike from "@/components/Games/Klondike";
 import Yukon from "@/components/Games/Yukon";
 
@@ -302,12 +302,14 @@ describe("tapping onto a foundation that holds cards", () => {
     foundations[0] = [card("A", "spades")];
     const tableau = emptyPiles(10);
     tableau[0] = [card("9", "hearts")];
-    await renderGame("/forty-thieves", FortyThieves, {
+    await renderVariant("/forty-thieves", "forty-thieves", FortyThieves, {
       foundations,
       tableau,
       stock: [card("5", "clubs", false)],
       waste: [two],
       redealsUsed: 0,
+      ended: false,
+      won: false,
     });
 
     await tapSource({ zone: "waste" });
@@ -337,17 +339,17 @@ describe("tapping onto a foundation that holds cards", () => {
     expect(foundation && zoneCardIds(foundation.id)).toContain(two.id);
   });
 
-  test.each<[string, string, ComponentType, number, number]>([
-    ["Baker's Game", "/bakers-game", BakersGame, 8, 4],
-    ["Eight Off", "/eight-off", EightOff, 8, 8],
-  ])("%s", async (_name, path, Game, cascadeCount, cellCount) => {
+  test.each<[string, string, string, ComponentType, number, number]>([
+    ["Baker's Game", "/freecell", "bakers-game", FreeCell, 8, 4],
+    ["Eight Off", "/eight-off", "", EightOff, 8, 8],
+  ])("%s", async (_name, path, variant, Game, cascadeCount, cellCount) => {
     const two = card("2", "spades");
     const cascades = emptyPiles(cascadeCount);
     // An unplayable card keeps auto-complete from moving the two first.
     cascades[0] = [card("9", "hearts")];
     const freeCells: (PlayingCard | null)[] = Array(cellCount).fill(null);
     freeCells[0] = two;
-    await renderGame(path, Game, {
+    await renderVariant(path, variant, Game, {
       cascades,
       freeCells,
       foundations: [[card("A", "spades")], [], [], []],
@@ -360,11 +362,11 @@ describe("tapping onto a foundation that holds cards", () => {
   });
 });
 
-describe("stock-and-tableau games (Josephine)", () => {
+describe("stock-and-tableau games (Forty Thieves: Josephine)", () => {
   function josephine(tableau: PlayingCard[][], foundations = emptyPiles(8)) {
     const piles = emptyPiles(10);
     tableau.forEach((pile, index) => (piles[index] = pile));
-    return renderGame("/josephine", Josephine, {
+    return renderVariant("/forty-thieves", "josephine", FortyThieves, {
       tableau: piles,
       stock: [card("5", "clubs", false)],
       waste: [],

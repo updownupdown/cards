@@ -6,6 +6,7 @@ import { GameAnimations } from "@/animations";
 export const sirTommy: GameDefinition = {
   path: "/sir-tommy",
   title: "Sir Tommy",
+  aliases: ["Old Patience", "Puss in the Corner"],
   tags: [GameTag.FoundationBuilders, GameTag.StockAndWaste],
   rating: {
     complexity: 30,
@@ -13,6 +14,14 @@ export const sirTommy: GameDefinition = {
     luck: 55,
   },
   thumbnail: "SirTommy.webp",
+  thumbnailCredit: {
+    title: "Sir Thomas More",
+    artistName: "Hans Holbein the Younger",
+    date: "1527",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Hans_Holbein,_the_Younger_-_Sir_Thomas_More_-_Google_Art_Project.jpg",
+  },
   background: GAME_BACKGROUNDS.london,
   animation: GameAnimations.Rain,
   gameColorDark: "#1a2c33",
@@ -23,8 +32,8 @@ export const sirTommy: GameDefinition = {
   quickStart: [
     "Build foundations up from A to K, regardless of suit.",
     "Cards in the waste piles cannot be moved.",
-    "Single-tap to place stock card on waste pile.",
-    "Double-tap an exposed stock or waste card to move it to a foundation.",
+    "Tap a waste pile to place the stock card there.",
+    "Double-tap the stock card or a waste pile's top card to play it to a foundation.",
   ],
   howToPlay: [
     "## Objective",
@@ -35,7 +44,11 @@ export const sirTommy: GameDefinition = {
     "- Each flipped card from the stock must be dropped onto one of the four waste piles.",
     "- You may **not** rearrange the waste piles.",
     "- Only the **top** card of each waste pile can be moved to foundations.",
-    "- **Single-tap** a waste pile to place the stock card there.",
-    "- **Double-tap** an exposed stock or waste card to move it to a valid foundation.",
+    "- Tap a waste pile to place the stock card there.",
+    "- **Double-tap** the stock card or a waste pile's top card to play it to a foundation.",
+    "- There is no redeal.",
+
+    "## Puss in the Corner",
+    "In this variant, the Aces start on the foundations, which build up **by color** (either suit of the same color), and the waste piles can be gathered for one redeal.",
   ],
 };

@@ -14,6 +14,14 @@ export const somnus: GameDefinition = {
     luck: 45,
   },
   thumbnail: "Somnus.webp",
+  thumbnailCredit: {
+    title: "The Nightmare",
+    artistName: "Henry Fuseli",
+    date: "1781",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:John_Henry_Fuseli_-_The_NightmareFXD.jpg",
+  },
   background: GAME_BACKGROUNDS.painting,
   animation: GameAnimations.Dust,
   gameColorDark: "#1b1f25",

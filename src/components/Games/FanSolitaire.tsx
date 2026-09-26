@@ -30,7 +30,8 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
-export type FanVariant = "la-belle-lucie" | "shamrocks" | "flower-garden";
+export type FanVariant =
+  "la-belle-lucie" | "trefoil" | "shamrocks" | "flower-garden";
 
 /**
  * A fan's offset, tightened once it would run into the next row of fans (or,
@@ -53,6 +54,8 @@ type FanConfig = {
   maxPileSize?: number;
   emptyPile: "blocked" | "any";
   build: "down-suit" | "adjacent" | "down-any";
+  /** The Aces start on the foundations. */
+  seedAces?: boolean;
 };
 
 export type FanGameState = {
@@ -72,8 +75,7 @@ type Selection =
 
 type MoveSource = Exclude<Selection, null>;
 type DropTarget =
-  | { zone: "tableau"; index: number }
-  | { zone: "foundation"; index: number };
+  { zone: "tableau"; index: number } | { zone: "foundation"; index: number };
 
 const CONFIGS: Record<FanVariant, FanConfig> = {
   "la-belle-lucie": {
@@ -83,6 +85,15 @@ const CONFIGS: Record<FanVariant, FanConfig> = {
     redeals: 2,
     emptyPile: "blocked",
     build: "down-suit",
+  },
+  trefoil: {
+    tableauCount: 16,
+    tableauCards: 48,
+    reserveCards: 0,
+    redeals: 2,
+    emptyPile: "blocked",
+    build: "down-suit",
+    seedAces: true,
   },
   shamrocks: {
     tableauCount: 18,
@@ -157,7 +168,14 @@ function createInitialState(variant: FanVariant): FanGameState {
 
 function dealFan(stock: PlayingCard[], variant: FanVariant): FanGameState {
   const config = CONFIGS[variant];
-  const deck = stock.map(flipToFace);
+  const foundations = Array.from({ length: 4 }, () => [] as PlayingCard[]);
+  let deck = stock.map(flipToFace);
+  if (config.seedAces) {
+    deck
+      .filter((card) => card.rank === "A")
+      .forEach((ace, index) => foundations[index].push(ace));
+    deck = deck.filter((card) => card.rank !== "A");
+  }
   const tableauCards = deck.slice(0, config.tableauCards);
   const tableau =
     variant === "flower-garden"
@@ -173,7 +191,7 @@ function dealFan(stock: PlayingCard[], variant: FanVariant): FanGameState {
       config.tableauCards,
       config.tableauCards + config.reserveCards,
     ),
-    foundations: Array.from({ length: 4 }, () => [] as PlayingCard[]),
+    foundations,
     redealsUsed: 0,
     ended: false,
     won: false,

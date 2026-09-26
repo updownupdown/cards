@@ -13,6 +13,13 @@ export const acesUp: GameDefinition = {
     luck: 75,
   },
   thumbnail: "AcesUp.webp",
+  thumbnailCredit: {
+    title: "Playing Card: Ace of Spades",
+    artistName: "Unknown artist",
+    date: "n.d.",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/82929",
+  },
   background: GAME_BACKGROUNDS.castleIndoors,
   animation: GameAnimations.Dust,
   gameColorDark: "#1d0f0a",

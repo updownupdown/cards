@@ -106,6 +106,24 @@
       }
     }
   },
+  "black-hole": {
+    "variant": {
+      "hash": "c6feb450",
+      "value": {
+        "label": "Varyant",
+        "options": [
+          {
+            "label": "Kara Delik",
+            "description": "Maça As'ının çevresinde üçer kartlık on yedi yelpaze."
+          },
+          {
+            "label": "Hepsi sırada",
+            "description": "Dörder kartlık on üç sütun; temele herhangi bir kartla başla."
+          }
+        ]
+      }
+    }
+  },
   "canfield": {
     "drawCount": {
       "hash": "ecd6b2f3",
@@ -206,17 +224,55 @@
   },
   "forty-thieves": {
     "difficulty": {
-      "hash": "7161d2c1",
+      "hash": "2e2bd5c9",
       "value": {
-        "label": "Zorluk",
+        "label": "Yeniden dağıtma",
         "options": [
           {
-            "label": "Kolay",
-            "description": "Sınırsız yeniden dağıtma."
+            "label": "Yok"
           },
           {
-            "label": "Zor",
-            "description": "Yeniden dağıtma yok."
+            "label": "Sınırsız (Kolay)"
+          }
+        ]
+      }
+    },
+    "variant": {
+      "hash": "4477be27",
+      "value": {
+        "label": "Varyant",
+        "options": [
+          {
+            "label": "Kırk Haramiler",
+            "description": "Dörder kartlık on sütun; her seferinde tek kart taşı."
+          },
+          {
+            "label": "Josephine",
+            "description": "Aynı takımdan diziler birlikte taşınır."
+          },
+          {
+            "label": "Lucas",
+            "description": "Üçer kartlık on üç sütun; Aslar temellerde başlar."
+          },
+          {
+            "label": "Meşgul aslar",
+            "description": "İkişer kartlık on iki sütun."
+          }
+        ]
+      }
+    }
+  },
+  "freecell": {
+    "variant": {
+      "hash": "c2d73114",
+      "value": {
+        "label": "Diziliş",
+        "options": [
+          {
+            "label": "Kırmızı-siyah sırayla (FreeCell)"
+          },
+          {
+            "label": "Aynı takım (Fırıncı oyunu)"
           }
         ]
       }
@@ -234,6 +290,22 @@
           },
           {
             "label": "Zor (2 yeniden dağıtma)"
+          }
+        ]
+      }
+    }
+  },
+  "gargantua": {
+    "variant": {
+      "hash": "0efea48a",
+      "value": {
+        "label": "Yeniden dağıtma",
+        "options": [
+          {
+            "label": "1 (Gargantua)"
+          },
+          {
+            "label": "3 (Arp)"
           }
         ]
       }
@@ -309,6 +381,24 @@
       }
     }
   },
+  "king-albert": {
+    "variant": {
+      "hash": "169819fa",
+      "value": {
+        "label": "Varyant",
+        "options": [
+          {
+            "label": "Kral Albert",
+            "description": "Dokuz sütun ve yedi kartlık bir yedek."
+          },
+          {
+            "label": "Raglan",
+            "description": "Aslar temellerde başlar; yedekte altı kart vardır."
+          }
+        ]
+      }
+    }
+  },
   "klondike": {
     "drawCount": {
       "hash": "ecd6b2f3",
@@ -320,6 +410,28 @@
           },
           {
             "label": "3 kart"
+          }
+        ]
+      }
+    }
+  },
+  "la-belle-lucie": {
+    "variant": {
+      "hash": "9ec03636",
+      "value": {
+        "label": "Varyant",
+        "options": [
+          {
+            "label": "Güzel Lucie",
+            "description": "Takıma göre azalan sırayla diz; iki yeniden dağıtma."
+          },
+          {
+            "label": "Üçgül",
+            "description": "Aslar temellerde başlar."
+          },
+          {
+            "label": "Yoncalar",
+            "description": "Herhangi bir takımda artan ya da azalan diz; yelpaze başına en fazla üç kart; yeniden dağıtma yok."
           }
         ]
       }
@@ -368,6 +480,24 @@
           },
           {
             "label": "Aşırı zor (8 x 9)"
+          }
+        ]
+      }
+    }
+  },
+  "miss-milligan": {
+    "variant": {
+      "hash": "1a6e1313",
+      "value": {
+        "label": "Varyant",
+        "options": [
+          {
+            "label": "Miss Milligan",
+            "description": "Boş sütunlara yalnızca Papazlar konur; deste bitince her seferinde bir kart ya da dizi cepte bekleyebilir."
+          },
+          {
+            "label": "Dev",
+            "description": "Boş bir sütuna herhangi bir kart konabilir, ama cep yoktur."
           }
         ]
       }
@@ -467,6 +597,22 @@
       }
     }
   },
+  "rank-and-file": {
+    "variant": {
+      "hash": "aa2b7203",
+      "value": {
+        "label": "Dağıtım",
+        "options": [
+          {
+            "label": "3 kapalı (Sıra sıra)"
+          },
+          {
+            "label": "2 kapalı (On numara)"
+          }
+        ]
+      }
+    }
+  },
   "royal-rest": {
     "royalRestHardMode": {
       "hash": "9895d840",
@@ -479,6 +625,24 @@
           },
           {
             "label": "Açık"
+          }
+        ]
+      }
+    }
+  },
+  "scorpion": {
+    "variant": {
+      "hash": "c37cfca5",
+      "value": {
+        "label": "Varyant",
+        "options": [
+          {
+            "label": "Akrep",
+            "description": "Boş sütunlara yalnızca Papazlar konur."
+          },
+          {
+            "label": "Eşek arısı",
+            "description": "Boş bir sütuna herhangi bir kart konabilir."
           }
         ]
       }
@@ -499,6 +663,69 @@
           },
           {
             "label": "Zor (birini seç)"
+          }
+        ]
+      }
+    }
+  },
+  "sir-tommy": {
+    "variant": {
+      "hash": "a1adf9a0",
+      "value": {
+        "label": "Varyant",
+        "options": [
+          {
+            "label": "Sir Tommy",
+            "description": "Temeller takımı fark etmeksizin artan sırayla dizilir."
+          },
+          {
+            "label": "Köşe kapmaca",
+            "description": "Aslar temellerde başlar ve temeller renge göre dizilir; bir yeniden dağıtma."
+          }
+        ]
+      }
+    }
+  },
+  "spider-solitaire": {
+    "spiderSuits": {
+      "hash": "0fd48479",
+      "value": {
+        "label": "Takımlar",
+        "options": [
+          {
+            "label": "4 takım"
+          },
+          {
+            "label": "2 takım"
+          },
+          {
+            "label": "1 takım"
+          }
+        ]
+      }
+    }
+  },
+  "terrace": {
+    "variant": {
+      "hash": "dafb9ee3",
+      "value": {
+        "label": "Varyant",
+        "options": [
+          {
+            "label": "Teras",
+            "description": "On bir kartlık bir teras; temel değerini sen seçersin; temeller kırmızı ve siyah sırayla dizilir."
+          },
+          {
+            "label": "General'in pasyansı",
+            "description": "On üç kartlık bir teras; temeller takıma göre dizilir."
+          },
+          {
+            "label": "Sarışınlar ve esmerler",
+            "description": "On kartlık bir teras; temel değerini dağıtım belirler."
+          },
+          {
+            "label": "Kayan yıldız",
+            "description": "On bir kartlık bir teras, sekiz sütun; temel değerini dağıtım belirler."
           }
         ]
       }
@@ -569,6 +796,28 @@
           },
           {
             "label": "Açık"
+          }
+        ]
+      }
+    }
+  },
+  "yukon": {
+    "variant": {
+      "hash": "71cf5c1a",
+      "value": {
+        "label": "Diziliş",
+        "options": [
+          {
+            "label": "Kırmızı-siyah sırayla (Yukon)"
+          },
+          {
+            "label": "Aynı takım (Rus pasyansı)"
+          },
+          {
+            "label": "Aynı takım, artan ya da azalan (Alaska)"
+          },
+          {
+            "label": "Başka herhangi bir takım (Geyik derisi)"
           }
         ]
       }

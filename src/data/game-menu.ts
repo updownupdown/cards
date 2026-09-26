@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
-import { NODES_PROGRESS_STORAGE_KEY } from "./storage-keys";
+import { CAMPAIGN_PROGRESS_STORAGE_KEY } from "./storage-keys";
 import { formatPercent } from "@/i18n/format";
 import {
   isLanguagePreference,
@@ -8,6 +8,13 @@ import {
 } from "@/i18n/languages";
 import { GameMenuInfo, isGameEnabled } from "./games-data";
 import { GAMES_DATA } from "./games-registry";
+import {
+  currentGamePath,
+  GAME_VARIANTS,
+  isVariantGamePath,
+  MOVED_GAME_PATHS,
+  pickVariant,
+} from "./game-variants";
 
 export type GameStats = {
   attempts: number;
@@ -23,7 +30,12 @@ export type GameSettings = {
   isFavorite: boolean;
   difficulty: "easy" | "difficult";
   memoryDifficulty:
-    "veryeasy" | "easy" | "medium" | "hard" | "veryhard" | "extreme";
+    | "veryeasy"
+    | "easy"
+    | "medium"
+    | "hard"
+    | "veryhard"
+    | "extreme";
   drawCount: 1 | 3;
   islandJokers: boolean;
   lycanMode: "hard" | "medium" | "easy";
@@ -50,6 +62,10 @@ export type GameSettings = {
   gremlinDifficulty: "easy" | "hard";
   nightVigilDifficulty: "street" | "kingpin" | "city";
   pagodaDifficulty: "easy" | "normal" | "hard";
+  ebbAndFlowDifficulty: "easy" | "normal" | "hard";
+  /** Which classic variant to deal, for games listed in GAME_VARIANTS. */
+  variant: string;
+  spiderSuits: 1 | 2 | 4;
   lastResultSessionId?: string;
   lastResultWon?: boolean;
   stats: GameStats;
@@ -97,23 +113,27 @@ export const ASCENT_CHALLENGES: AscentChallenge[] = [
  */
 export type GameSettingsMap = Record<string, Partial<GameSettings>>;
 
+export const AUTO_COMPLETE_MODES = ["ask", "always", "never"] as const;
+export type AutoCompleteMode = (typeof AUTO_COMPLETE_MODES)[number];
+
 export type GlobalSettings = {
   language: LanguagePreference;
   /** Show quotes and Tao Te Ching chapters translated, when a translation exists. */
   translateCollectibles: boolean;
   discoverCardSize: "small" | "medium" | "large";
   dismissHomeInstallPrompt: boolean;
-  /** The new-player boxes on the Home tab, each closed on its own. */
-  dismissHomeEasyGames: boolean;
-  dismissHomeCampaign: boolean;
-  dismissHomeGenres: boolean;
-  /** The Campaign Mode explainer on the Campaign tab was closed. */
+  /** The intro panel on the Campaign tab was closed. */
   dismissCampaignIntro: boolean;
+  /** The intro panel on the Collect tab was closed. */
+  dismissCollectIntro: boolean;
   resumeLastGame: boolean;
   showAnimations: boolean;
   showTipsForNewGames: boolean;
   hapticFeedback: boolean;
   keepScreenAwake: boolean;
+  /** When a game that can finish itself on the foundations does so: from a
+   *  button in a panel under the header, right away, or never. */
+  autoComplete: AutoCompleteMode;
   /** Send anonymous crash diagnostics to Sentry. */
   crashReports: boolean;
 };
@@ -128,7 +148,15 @@ export type RecentGameEntry = {
   playedAt: number;
 };
 
-export type GameLaunchMode = "standard" | "nodes";
+export type GameLaunchMode = "standard" | "campaign";
+
+/**
+ * Whether a game's `mode` param launches it in Campaign mode. "nodes" is the
+ * mode's old name, still in saved links.
+ */
+export function isCampaignModeParam(mode: string | undefined) {
+  return mode === "campaign" || mode === "nodes";
+}
 
 export const GLOBAL_SETTINGS_STORAGE_KEY = "cards.globalSettings.v1";
 export const GAME_SETTINGS_STORAGE_KEY = "cards.gameSettings.v1";
@@ -144,6 +172,10 @@ export type SavedGameSession<T = unknown> = {
   path: string;
   launchMode?: GameLaunchMode;
   savedAt: number;
+  /** Play time so far; missing when the session wasn't timed. */
+  playTimeMs?: number | null;
+  /** The classic variant it was dealt as, for games in GAME_VARIANTS. */
+  variant?: string;
   state: T;
 };
 
@@ -152,15 +184,14 @@ export const DEFAULT_GLOBAL_SETTINGS: GlobalSettings = {
   translateCollectibles: true,
   discoverCardSize: "large",
   dismissHomeInstallPrompt: false,
-  dismissHomeEasyGames: false,
-  dismissHomeCampaign: false,
-  dismissHomeGenres: false,
   dismissCampaignIntro: false,
+  dismissCollectIntro: false,
   resumeLastGame: true,
   showAnimations: true,
   showTipsForNewGames: true,
   hapticFeedback: false,
   keepScreenAwake: false,
+  autoComplete: "ask",
   crashReports: true,
 };
 
@@ -195,6 +226,9 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   gremlinDifficulty: "easy",
   nightVigilDifficulty: "kingpin",
   pagodaDifficulty: "normal",
+  ebbAndFlowDifficulty: "normal",
+  variant: "",
+  spiderSuits: 4,
   stats: {
     attempts: 0,
     wins: 0,
@@ -330,15 +364,16 @@ async function readGlobalSettings(): Promise<GlobalSettings> {
           ? merged.discoverCardSize
           : DEFAULT_GLOBAL_SETTINGS.discoverCardSize,
       dismissHomeInstallPrompt: merged.dismissHomeInstallPrompt === true,
-      dismissHomeEasyGames: merged.dismissHomeEasyGames === true,
-      dismissHomeCampaign: merged.dismissHomeCampaign === true,
-      dismissHomeGenres: merged.dismissHomeGenres === true,
       dismissCampaignIntro: merged.dismissCampaignIntro === true,
+      dismissCollectIntro: merged.dismissCollectIntro === true,
       resumeLastGame: merged.resumeLastGame !== false,
       showAnimations: merged.showAnimations !== false,
       showTipsForNewGames: merged.showTipsForNewGames !== false,
       hapticFeedback: merged.hapticFeedback === true,
       keepScreenAwake: merged.keepScreenAwake === true,
+      autoComplete: AUTO_COMPLETE_MODES.includes(merged.autoComplete)
+        ? merged.autoComplete
+        : DEFAULT_GLOBAL_SETTINGS.autoComplete,
     };
   } catch {
     return DEFAULT_GLOBAL_SETTINGS;
@@ -363,7 +398,7 @@ export async function resetAllSettings() {
     AsyncStorage.setItem(GLOBAL_SETTINGS_STORAGE_KEY, ""),
     AsyncStorage.setItem(RECENT_GAMES_STORAGE_KEY, ""),
     clearLastGameSession(),
-    AsyncStorage.removeItem(NODES_PROGRESS_STORAGE_KEY),
+    AsyncStorage.removeItem(CAMPAIGN_PROGRESS_STORAGE_KEY),
   ]);
 
   await runWithGameSettingsMapWriteLock((map) => {
@@ -436,8 +471,17 @@ export async function loadLastGameSession<T = unknown>() {
       version: GAME_SESSION_VERSION,
       sessionId: parsed.sessionId,
       path: normalizeGamePath(parsed.path),
-      launchMode: parsed.launchMode === "nodes" ? "nodes" : "standard",
+      launchMode: isCampaignModeParam(parsed.launchMode)
+        ? "campaign"
+        : "standard",
       savedAt: parsed.savedAt,
+      playTimeMs:
+        typeof parsed.playTimeMs === "number" &&
+        Number.isFinite(parsed.playTimeMs) &&
+        parsed.playTimeMs >= 0
+          ? parsed.playTimeMs
+          : null,
+      variant: typeof parsed.variant === "string" ? parsed.variant : undefined,
       state: parsed.state as T,
     };
   } catch {
@@ -450,6 +494,8 @@ export async function saveLastGameSession<T = unknown>(
   state: T,
   sessionId: string,
   launchMode: GameLaunchMode = "standard",
+  playTimeMs: number | null = null,
+  variant?: string,
 ) {
   const path = normalizeGamePath(pathname);
   if (!isGamePath(path) || !sessionId) return;
@@ -460,6 +506,8 @@ export async function saveLastGameSession<T = unknown>(
     path,
     launchMode,
     savedAt: Date.now(),
+    playTimeMs,
+    ...(variant ? { variant } : {}),
     state,
   };
 
@@ -532,9 +580,56 @@ async function readGameSettingsMap(): Promise<GameSettingsMap> {
   const raw = await AsyncStorage.getItem(GAME_SETTINGS_STORAGE_KEY);
   if (!raw) return {};
   try {
-    return JSON.parse(raw) as GameSettingsMap;
+    return moveGameSettings(JSON.parse(raw) as GameSettingsMap);
   } catch {}
   return {};
+}
+
+function mergeStats(
+  target: Partial<GameStats> | undefined,
+  source: Partial<GameStats> | undefined,
+): GameStats {
+  const a = normalizeStats(target);
+  const b = normalizeStats(source);
+  const pick = (
+    x: number | null,
+    y: number | null,
+    best: (...values: number[]) => number,
+  ) => (x === null ? y : y === null ? x : best(x, y));
+
+  return {
+    attempts: a.attempts + b.attempts,
+    wins: a.wins + b.wins,
+    losses: a.losses + b.losses,
+    highestScore: pick(a.highestScore, b.highestScore, Math.max),
+    fastestTimeMs: pick(a.fastestTimeMs, b.fastestTimeMs, Math.min),
+  };
+}
+
+/**
+ * Moves the saved settings of games that were folded into another game or
+ * renamed (see MOVED_GAME_PATHS): stats add up, and a favourite stays one. The
+ * new game's own settings win. Exported for tests.
+ */
+export function moveGameSettings(map: GameSettingsMap): GameSettingsMap {
+  if (!Object.keys(map).some((path) => MOVED_GAME_PATHS[path])) return map;
+
+  const next: GameSettingsMap = {};
+  for (const [path, entry] of Object.entries(map)) {
+    if (!MOVED_GAME_PATHS[path]) next[path] = { ...next[path], ...entry };
+  }
+  for (const [path, entry] of Object.entries(map)) {
+    const moved = MOVED_GAME_PATHS[path];
+    if (!moved || !entry) continue;
+    const target = next[moved.path] ?? {};
+    next[moved.path] = {
+      ...target,
+      isFavorite: target.isFavorite || entry.isFavorite || undefined,
+      stats: mergeStats(target.stats, entry.stats),
+    };
+    if (!next[moved.path].isFavorite) delete next[moved.path].isFavorite;
+  }
+  return next;
 }
 
 export async function saveGameSettingsMap(map: GameSettingsMap) {
@@ -545,6 +640,14 @@ export async function saveGameSettingsMap(map: GameSettingsMap) {
 /** Defaults that differ for one game, keyed by game path. */
 const GAME_DEFAULT_OVERRIDES: Record<string, Partial<GameSettings>> = {
   "/klondike": { drawCount: 3 },
+  // Forty Thieves proper has no redeal; unlimited redeals are the easy option.
+  "/forty-thieves": { difficulty: "difficult" },
+  ...Object.fromEntries(
+    Object.entries(GAME_VARIANTS).map(([path, variants]) => [
+      path,
+      { variant: variants[0] },
+    ]),
+  ),
 };
 
 /** A game's defaults: the shared defaults plus its own overrides. */
@@ -578,7 +681,10 @@ export function getGameSettings(
     memoryDifficulty: MEMORY_DIFFICULTIES.includes(merged.memoryDifficulty)
       ? merged.memoryDifficulty
       : DEFAULT_GAME_SETTINGS.memoryDifficulty,
-    difficulty: merged.difficulty === "difficult" ? "difficult" : "easy",
+    difficulty:
+      merged.difficulty === "difficult" || merged.difficulty === "easy"
+        ? merged.difficulty
+        : defaults.difficulty,
     drawCount:
       merged.drawCount === 1 || merged.drawCount === 3
         ? merged.drawCount
@@ -643,6 +749,18 @@ export function getGameSettings(
       merged.pagodaDifficulty === "easy" || merged.pagodaDifficulty === "hard"
         ? merged.pagodaDifficulty
         : "normal",
+    ebbAndFlowDifficulty:
+      merged.ebbAndFlowDifficulty === "easy" ||
+      merged.ebbAndFlowDifficulty === "hard"
+        ? merged.ebbAndFlowDifficulty
+        : "normal",
+    variant: isVariantGamePath(key)
+      ? pickVariant(key, merged.variant)
+      : defaults.variant,
+    spiderSuits:
+      merged.spiderSuits === 1 || merged.spiderSuits === 2
+        ? merged.spiderSuits
+        : 4,
     stats: normalizeStats(existing.stats),
   };
 }
@@ -735,7 +853,13 @@ function parseRecentGames(raw: string | null): RecentGameEntry[] {
     const parsed = JSON.parse(raw) as Partial<RecentGameEntry>[];
     if (!Array.isArray(parsed)) return [];
 
+    const seen = new Set<string>();
     return parsed
+      .map((entry) =>
+        typeof entry?.path === "string"
+          ? { ...entry, path: currentGamePath(entry.path) }
+          : entry,
+      )
       .filter(
         (entry): entry is RecentGameEntry =>
           typeof entry?.path === "string" &&
@@ -743,7 +867,8 @@ function parseRecentGames(raw: string | null): RecentGameEntry[] {
           Number.isFinite(entry.playedAt) &&
           !!GAMES_DATA[entry.path],
       )
-      .sort((a, b) => b.playedAt - a.playedAt);
+      .sort((a, b) => b.playedAt - a.playedAt)
+      .filter((entry) => !seen.has(entry.path) && !!seen.add(entry.path));
   } catch {
     return [];
   }

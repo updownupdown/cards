@@ -5,15 +5,15 @@ import {
   resetAllSettings,
 } from "@/data/game-menu";
 import {
-  populateTestNodesProgress,
-  resetNodesProgress,
-} from "@/data/nodes-progress";
+  populateTestCampaignProgress,
+  resetCampaignProgress,
+} from "@/data/campaign-progress";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
-import { getTestNodePaths, getTestWonPaths } from "@/data/test-progress";
+import { getTestGameDotPaths, getTestWonPaths } from "@/data/test-progress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
-import { Colors } from "@/styles/styles";
+import { Colors, rgba } from "@/styles/styles";
 import {
   getDeviceLanguageCodes,
   useDisplayLanguage,
@@ -36,6 +36,7 @@ import { Button } from "../Button/Button";
 import { AddToHomeScreenNotice } from "../common/AddToHomeScreenNotice";
 import { SelectControl } from "../common/SelectControl";
 import { SettingControl } from "../common/SettingControl";
+import { AutoCompleteModeRadio } from "../common/AutoCompletePanel";
 import { Text } from "../common/Text";
 import ModalFull from "./ModalFull";
 
@@ -211,6 +212,22 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               }}
             />
           )}
+          <View style={{ width: "100%", gap: spacing(10) }}>
+            <View style={{ gap: spacing(4) }}>
+              <Text weight={500} size="lg" color={Colors.K200}>
+                {t("autoComplete.label")}
+              </Text>
+              <Text size="sm" weight={300} color={rgba(Colors.white, 0.6)}>
+                {t("autoComplete.description")}
+              </Text>
+            </View>
+            <AutoCompleteModeRadio
+              value={settings.autoComplete}
+              onChange={(value) => {
+                void updateSettings({ autoComplete: value });
+              }}
+            />
+          </View>
           <SettingControl
             label={t("crashReports.label")}
             description={t("crashReports.description")}
@@ -229,16 +246,16 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
             size="md"
             uppercase={false}
             text={t("populateTestProgress")}
-            iconName="nodes"
+            iconName="milky-way"
             theme="blue"
             disabled={isPopulatingTestData}
             onPress={async () => {
               setIsPopulatingTestData(true);
               try {
-                const nodePaths = getTestNodePaths();
+                const gameDotPaths = getTestGameDotPaths();
                 await Promise.all([
-                  populateTestGameProgress(getTestWonPaths(nodePaths)),
-                  populateTestNodesProgress(nodePaths),
+                  populateTestGameProgress(getTestWonPaths(gameDotPaths)),
+                  populateTestCampaignProgress(gameDotPaths),
                 ]);
                 onHomeDataInvalidated();
                 onClose();
@@ -312,7 +329,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                   try {
                     updateSettings(DEFAULT_GLOBAL_SETTINGS);
                     await resetAllSettings();
-                    await resetNodesProgress();
+                    await resetCampaignProgress();
                     onHomeDataInvalidated();
                     setIsResetConfirmationVisible(false);
                     onClose();

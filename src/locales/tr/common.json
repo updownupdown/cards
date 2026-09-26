@@ -15,6 +15,7 @@
     "winRate": "Kazanma oranı",
     "winPercent": "Kazanma %",
     "best": "En iyi",
+    "bestTime": "En iyi: {{time}}",
     "fastest": "En hızlı"
   }
 }

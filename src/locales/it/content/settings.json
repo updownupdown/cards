@@ -106,6 +106,24 @@
       }
     }
   },
+  "black-hole": {
+    "variant": {
+      "hash": "c6feb450",
+      "value": {
+        "label": "Variante",
+        "options": [
+          {
+            "label": "Buco Nero",
+            "description": "Diciassette ventagli da tre attorno all'Asso di Picche."
+          },
+          {
+            "label": "Tutto in fila",
+            "description": "Tredici colonne da quattro; inizia la fondazione con qualsiasi carta."
+          }
+        ]
+      }
+    }
+  },
   "canfield": {
     "drawCount": {
       "hash": "ecd6b2f3",
@@ -206,17 +224,55 @@
   },
   "forty-thieves": {
     "difficulty": {
-      "hash": "7161d2c1",
+      "hash": "2e2bd5c9",
       "value": {
-        "label": "Difficoltà",
+        "label": "Ridistribuzioni",
         "options": [
           {
-            "label": "Facile",
-            "description": "Ridistribuzioni illimitate."
+            "label": "Nessuna"
           },
           {
-            "label": "Difficile",
-            "description": "Nessuna ridistribuzione."
+            "label": "Illimitate (Facile)"
+          }
+        ]
+      }
+    },
+    "variant": {
+      "hash": "4477be27",
+      "value": {
+        "label": "Variante",
+        "options": [
+          {
+            "label": "Quaranta ladroni",
+            "description": "Dieci colonne da quattro; sposta una carta alla volta."
+          },
+          {
+            "label": "Giuseppina",
+            "description": "Le sequenze dello stesso seme si spostano insieme."
+          },
+          {
+            "label": "Lucas",
+            "description": "Tredici colonne da tre; gli Assi partono sulle fondazioni."
+          },
+          {
+            "label": "Assi indaffarati",
+            "description": "Dodici colonne da due."
+          }
+        ]
+      }
+    }
+  },
+  "freecell": {
+    "variant": {
+      "hash": "c2d73114",
+      "value": {
+        "label": "Costruzione",
+        "options": [
+          {
+            "label": "Rosso e nero alternati (FreeCell)"
+          },
+          {
+            "label": "Stesso seme (Gioco del fornaio)"
           }
         ]
       }
@@ -234,6 +290,22 @@
           },
           {
             "label": "Difficile (2 ridistribuzioni)"
+          }
+        ]
+      }
+    }
+  },
+  "gargantua": {
+    "variant": {
+      "hash": "0efea48a",
+      "value": {
+        "label": "Ridistribuzioni",
+        "options": [
+          {
+            "label": "1 (Gargantua)"
+          },
+          {
+            "label": "3 (Arpa)"
           }
         ]
       }
@@ -309,6 +381,24 @@
       }
     }
   },
+  "king-albert": {
+    "variant": {
+      "hash": "169819fa",
+      "value": {
+        "label": "Variante",
+        "options": [
+          {
+            "label": "Re Alberto",
+            "description": "Nove colonne e una riserva di sette carte."
+          },
+          {
+            "label": "Raglan",
+            "description": "Gli Assi partono sulle fondazioni, con una riserva di sei carte."
+          }
+        ]
+      }
+    }
+  },
   "klondike": {
     "drawCount": {
       "hash": "ecd6b2f3",
@@ -320,6 +410,28 @@
           },
           {
             "label": "Gira 3"
+          }
+        ]
+      }
+    }
+  },
+  "la-belle-lucie": {
+    "variant": {
+      "hash": "9ec03636",
+      "value": {
+        "label": "Variante",
+        "options": [
+          {
+            "label": "La bella Lucia",
+            "description": "Costruisci in ordine decrescente per seme; due ridistribuzioni."
+          },
+          {
+            "label": "Trilobo",
+            "description": "Gli Assi partono sulle fondazioni."
+          },
+          {
+            "label": "Trifogli",
+            "description": "Costruisci su o giù con qualsiasi seme, al massimo tre carte per ventaglio e nessuna ridistribuzione."
           }
         ]
       }
@@ -368,6 +480,24 @@
           },
           {
             "label": "Estrema (8 x 9)"
+          }
+        ]
+      }
+    }
+  },
+  "miss-milligan": {
+    "variant": {
+      "hash": "1a6e1313",
+      "value": {
+        "label": "Variante",
+        "options": [
+          {
+            "label": "Miss Milligan",
+            "description": "Solo i Re riempiono le colonne vuote; quando il mazzo è finito, una carta o una sequenza alla volta può aspettare nella tasca."
+          },
+          {
+            "label": "Gigante",
+            "description": "Qualsiasi carta riempie una colonna vuota, ma non c'è la tasca."
           }
         ]
       }
@@ -467,6 +597,22 @@
       }
     }
   },
+  "rank-and-file": {
+    "variant": {
+      "hash": "aa2b7203",
+      "value": {
+        "label": "Distribuzione",
+        "options": [
+          {
+            "label": "3 coperte (Ranghi serrati)"
+          },
+          {
+            "label": "2 coperte (Numero dieci)"
+          }
+        ]
+      }
+    }
+  },
   "royal-rest": {
     "royalRestHardMode": {
       "hash": "9895d840",
@@ -479,6 +625,24 @@
           },
           {
             "label": "Sì"
+          }
+        ]
+      }
+    }
+  },
+  "scorpion": {
+    "variant": {
+      "hash": "c37cfca5",
+      "value": {
+        "label": "Variante",
+        "options": [
+          {
+            "label": "Scorpione",
+            "description": "Solo i Re riempiono le colonne vuote."
+          },
+          {
+            "label": "Vespa",
+            "description": "Qualsiasi carta riempie una colonna vuota."
           }
         ]
       }
@@ -499,6 +663,69 @@
           },
           {
             "label": "Difficile (una a scelta)"
+          }
+        ]
+      }
+    }
+  },
+  "sir-tommy": {
+    "variant": {
+      "hash": "a1adf9a0",
+      "value": {
+        "label": "Variante",
+        "options": [
+          {
+            "label": "Sir Tommy",
+            "description": "Le fondazioni salgono a prescindere dal seme."
+          },
+          {
+            "label": "I quattro cantoni",
+            "description": "Gli Assi partono sulle fondazioni, che salgono per colore; una ridistribuzione."
+          }
+        ]
+      }
+    }
+  },
+  "spider-solitaire": {
+    "spiderSuits": {
+      "hash": "0fd48479",
+      "value": {
+        "label": "Semi",
+        "options": [
+          {
+            "label": "4 semi"
+          },
+          {
+            "label": "2 semi"
+          },
+          {
+            "label": "1 seme"
+          }
+        ]
+      }
+    }
+  },
+  "terrace": {
+    "variant": {
+      "hash": "dafb9ee3",
+      "value": {
+        "label": "Variante",
+        "options": [
+          {
+            "label": "Terrazza",
+            "description": "Una terrazza di undici carte; scegli tu il valore delle fondazioni; le fondazioni alternano rosso e nero."
+          },
+          {
+            "label": "Pazienza del Generale",
+            "description": "Una terrazza di tredici carte, e le fondazioni si costruiscono per seme."
+          },
+          {
+            "label": "Bionde e brune",
+            "description": "Una terrazza di dieci carte, e la distribuzione sceglie il valore delle fondazioni."
+          },
+          {
+            "label": "Stella cadente",
+            "description": "Una terrazza di undici carte, otto colonne, e la distribuzione sceglie il valore delle fondazioni."
           }
         ]
       }
@@ -569,6 +796,28 @@
           },
           {
             "label": "Sì"
+          }
+        ]
+      }
+    }
+  },
+  "yukon": {
+    "variant": {
+      "hash": "71cf5c1a",
+      "value": {
+        "label": "Costruzione",
+        "options": [
+          {
+            "label": "Rosso e nero alternati (Yukon)"
+          },
+          {
+            "label": "Stesso seme (Solitario russo)"
+          },
+          {
+            "label": "Stesso seme, su o giù (Alaska)"
+          },
+          {
+            "label": "Qualsiasi altro seme (Pelle d'alce)"
           }
         ]
       }

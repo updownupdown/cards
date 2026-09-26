@@ -1,7 +1,7 @@
 {
   "menu": {
     "home": "Início",
-    "nodes": "Mapa",
+    "campaign": "Campanha",
     "instantWin": "Vitória instantânea"
   },
   "result": {
@@ -36,7 +36,9 @@
   },
   "credits": {
     "title": "Créditos",
-    "backgroundImage": "Imagem de fundo:"
+    "backgroundImage": "Imagem de fundo (desfocada):",
+    "gameArt": "Arte da capa:",
+    "artSource": "Domínio público, de"
   },
   "deckPreview": {
     "title": "Prévia do baralho",
@@ -50,5 +52,10 @@
   "errors": {
     "gameCrashed": "Algo deu errado com esse jogo.",
     "resumeFailed": "Não foi possível retomar sua última partida."
+  },
+  "autoComplete": {
+    "start": "Completar",
+    "settings": "Configurações de completar automaticamente",
+    "dismiss": "Fechar"
   }
 }

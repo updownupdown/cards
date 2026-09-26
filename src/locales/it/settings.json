@@ -27,6 +27,13 @@
     "label": "Feedback aptico",
     "description": "Vibra quando trascini e rilasci le carte e quando vinci. La vibrazione deve essere attiva nelle impostazioni del telefono."
   },
+  "autoComplete": {
+    "label": "Completamento automatico",
+    "description": "Quando il resto di una partita si può finire spostando le carte sulle fondazioni.",
+    "ask": "Chiedi",
+    "always": "Sempre",
+    "never": "Mai"
+  },
   "crashReports": {
     "label": "Invia segnalazioni di errore",
     "description": "Invia diagnostica anonima quando qualcosa va storto, così può essere corretto. Non include nessuna informazione personale."

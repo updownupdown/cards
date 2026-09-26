@@ -13,6 +13,13 @@ export const carpet: GameDefinition = {
     luck: 70,
   },
   thumbnail: "Carpet.webp",
+  thumbnailCredit: {
+    title: "Lotto Carpet",
+    artistName: "Unknown Turkish weaver",
+    date: "17th century",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/447571",
+  },
   background: GAME_BACKGROUNDS.castleIndoors,
   animation: GameAnimations.Dust,
   gameColorDark: "#2b1a14",

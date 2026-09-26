@@ -15,6 +15,14 @@ export const infiltrator: GameDefinition = {
   background: GAME_BACKGROUNDS.darkAlley,
   animation: GameAnimations.Dust,
   thumbnail: "Infiltrator.webp",
+  thumbnailCredit: {
+    title:
+      "Misbah the Grocer Brings the Spy Parran to His House, from the Hamzanama",
+    artistName: "Dasavanta",
+    date: "ca. 1570",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/447752",
+  },
   gameColorDark: "#182326",
   gameColorPale: "#dce8df",
   cardBack: CardBackColors.Forest,
@@ -32,8 +40,8 @@ export const infiltrator: GameDefinition = {
 
     "## Decks and Gameplay",
     "- The Spy Deck is built in tiers: **5-7** on top, then **8-10**, then **J-K**.",
-    "- Your draw deck begins with the Aces through 4s.",
-    "- Your draw deck will reshuffle frequently. Build your deck by recruiting high-value spies and retiring low-value pairs of spies.",
+    "- Your stock begins with the Aces through 4s.",
+    "- Your discard pile is shuffled back into your stock frequently. Build your deck by recruiting high-value spies and retiring low-value pairs of spies.",
     "- The **Supporting Spies** only help towards acquiring Key Spies.",
     "- The **Key Spies** are the only cards that count toward your final score.",
 
@@ -49,6 +57,6 @@ export const infiltrator: GameDefinition = {
     "-- You generally want to remove low-value cards as you progress through the game, to increase the average strength of your deck.",
 
     "- **Assassinate**:",
-    "-- When stuck, you can sacrifice an **Ace** from your hand, Draw deck, or Discard deck to assassinate a spy. You lose if you have no Aces left.",
+    "-- When stuck, you can sacrifice an **Ace** from your hand, stock, or discard pile to assassinate a spy. You lose if you have no Aces left.",
   ],
 };

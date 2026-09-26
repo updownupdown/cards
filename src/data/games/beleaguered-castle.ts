@@ -13,6 +13,13 @@ export const beleagueredCastle: GameDefinition = {
     luck: 30,
   },
   thumbnail: "BeleagueredCastle.webp",
+  thumbnailCredit: {
+    title: "A Fifteenth-Century Siege",
+    artistName: "Unknown illuminator",
+    date: "15th century",
+    sourceName: "Wikimedia Commons",
+    sourceLink: "https://commons.wikimedia.org/wiki/File:15jh_castle_siege.jpg",
+  },
   background: GAME_BACKGROUNDS.castle,
   animation: GameAnimations.Clouds,
   gameColorDark: "#2e2620",

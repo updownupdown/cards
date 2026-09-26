@@ -17,6 +17,13 @@ export const cribbageSquares: GameDefinition = {
     luck: 40,
   },
   thumbnail: "CribbageSquares.webp",
+  thumbnailCredit: {
+    title: "Two Penny Cribbage",
+    artistName: "Thomas Rowlandson",
+    date: "1810",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/392704",
+  },
   background: GAME_BACKGROUNDS.cozyCabin,
   animation: GameAnimations.Snow,
   gameColorDark: "#15221c",

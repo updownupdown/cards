@@ -13,6 +13,14 @@ export const pyramid: GameDefinition = {
     luck: 65,
   },
   thumbnail: "Pyramid.webp",
+  thumbnailCredit: {
+    title: "The Great Sphinx, Pyramids of Giza",
+    artistName: "David Roberts",
+    date: "1839",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:The_Great_Sphinx,_Pyramids_of_Gizeh-1839)_by_David_Roberts,_RA.jpg",
+  },
   background: GAME_BACKGROUNDS.sahara,
   animation: GameAnimations.Sand,
   gameColorDark: "#251703",

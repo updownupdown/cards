@@ -17,6 +17,7 @@ export function useHomeData(refreshToken?: number) {
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [recentPaths, setRecentPaths] = useState<string[]>([]);
   const [settingsMap, setSettingsMap] = useState<GameSettingsMap>({});
+  const [isLoaded, setIsLoaded] = useState(false);
   const language = useDisplayLanguage();
 
   // Alphabetical by the title the player sees.
@@ -59,6 +60,7 @@ export function useHomeData(refreshToken?: number) {
       setFavorites(loadedFavorites);
       setRecentPaths(loadedRecent.map((entry) => entry.path));
       setSettingsMap(loadedSettings);
+      setIsLoaded(true);
     })();
 
     return () => {
@@ -89,6 +91,7 @@ export function useHomeData(refreshToken?: number) {
   }
 
   return {
+    isLoaded,
     favorites,
     recentPaths,
     settingsMap,

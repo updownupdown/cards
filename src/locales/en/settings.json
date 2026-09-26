@@ -27,6 +27,13 @@
     "label": "Haptic feedback",
     "description": "Vibrates on card drag and drop, and game wins. Haptics must be enabled in your phone settings."
   },
+  "autoComplete": {
+    "label": "Auto-complete",
+    "description": "When the rest of a game can be finished by moving cards to the foundations.",
+    "ask": "Ask",
+    "always": "Always",
+    "never": "Never"
+  },
   "crashReports": {
     "label": "Send crash reports",
     "description": "Sends anonymous diagnostics when something goes wrong, so it can be fixed. No personal information is included."

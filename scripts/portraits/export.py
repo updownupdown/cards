@@ -1,0 +1,125 @@
+"""Writes src/data/quote-authors.generated.ts: every quote author, their year
+of birth and their portrait, from the author files here.
+
+    python3 scripts/portraits/export.py
+
+Each author file draws one unbroken line (draw() -> points) with the helpers
+in dsl.py, face.py and parts.py: face on, in a 200 x 240 box, from the bottom
+left to the bottom right. See docs/quotes.md.
+"""
+
+import importlib
+import math
+import os
+import sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+OUT = os.path.join(HERE, "../../src/data/quote-authors.generated.ts")
+sys.path.insert(0, HERE)
+
+# Module (file name) -> author (as written in QuotesText.ts), year of birth
+# (an estimate is fine; negative is BC), year of death (None while living) and
+# what the drawing is based on. The quotes collection lays authors out by year
+# of birth and shows both years under the name.
+AUTHORS = {
+    "dhammapada": ("Dhammapada", -563, -483, "The Buddha: curls, the knot of wisdom, long earlobes, eyes closed."),
+    "zhuangzi": ("Zhuangzi", -369, -286, "Topknot with a pin, long thin moustache and wisp of beard, crossed robe."),
+    "epicurus": ("Epicurus", -341, -270, "Short curls and a full curly beard (Hellenistic busts)."),
+    "seneca": ("Seneca", -4, 65, "Thin unruly hair, short beard, gaunt (the pseudo-Seneca bust)."),
+    "epictetus": ("Epictetus", 50, 135, "Bald crown, heavy brows, long pointed beard."),
+    "aurelius": ("Marcus Aurelius", 121, 180, "Curls all round, and a curly beard (the Capitoline bust)."),
+    "montaigne": ("Michel de Montaigne", 1533, 1592, "Bald crown, moustache and short beard, a ruff."),
+    "shakespeare": ("William Shakespeare", 1564, 1616, "Bald dome, bushy sides, moustache, pointed beard, wide collar (Droeshout engraving)."),
+    "wollstonecraft": ("Mary Wollstonecraft", 1759, 1797, "Loose curls framing the face, a fichu crossed at the neck."),
+    "austen": ("Jane Austen", 1775, 1817, "A frilled cap, curls at the forehead."),
+    "emerson": ("Ralph Waldo Emerson", 1803, 1882, "Side-parted hair over the ears, clean-shaven, high collar and cravat."),
+    "mill": ("John Stuart Mill", 1806, 1873, "Bald crown, hair over the ears, high collar and cravat."),
+    "thoreau": ("Henry David Thoreau", 1817, 1862, "Parted hair, clean-shaven face with a beard under the jaw."),
+    "douglass": ("Frederick Douglass", 1818, 1895, "A great swept-back mane, full beard, bow tie."),
+    "whitman": ("Walt Whitman", 1819, 1892, "Slouch hat and a long curling beard (1880s photographs)."),
+    "dickinson": ("Emily Dickinson", 1830, 1886, "Hair parted and drawn smooth over the ears (the 1847 daguerreotype)."),
+    "wilde": ("Oscar Wilde", 1854, 1900, "Centre-parted wavy hair to the jaw, a flower in his lapel."),
+    "washington": ("Booker T. Washington", 1856, 1915, "Close-cropped hair, moustache, suit and tie."),
+    "shaw": ("George Bernard Shaw", 1856, 1950, "Bald crown, bushy brows, long pointed beard."),
+    "curie": ("Marie Curie", 1867, 1934, "Hair drawn up into a knot, soft fringe, high-necked dress."),
+    "dubois": ("W. E. B. Du Bois", 1868, 1963, "Bald crown, moustache and pointed goatee, suit and tie."),
+    "russell": ("Bertrand Russell", 1872, 1970, "Thick swept-back hair and his pipe."),
+    "keller": ("Helen Keller", 1880, 1968, "Softly waved hair, parted, a lace collar."),
+    "gibran": ("Kahlil Gibran", 1883, 1931, "Side-parted hair and a moustache."),
+    "bohr": ("Niels Bohr", 1885, 1962, "Receding swept-back hair, heavy brows, broad mouth."),
+    "fuller": ("Buckminster Fuller", 1895, 1983, "Bald, thick round glasses, bow tie."),
+    "suzuki": ("Shunryu Suzuki", 1904, 1971, "Shaven head, calm eyes, a Zen robe."),
+    "watts": ("Alan Watts", 1915, 1973, "Swept-back hair, a trimmed beard, a robe."),
+    "feynman": ("Richard Feynman", 1918, 1988, "Swept-back wavy hair, a wide grin, open collar and jacket."),
+    "hanh": ("Thich Nhat Hanh", 1926, 2022, "Shaven head, gentle smile, high-collared robe."),
+    "sagan": ("Carl Sagan", 1934, 1996, "Swept hair and his turtleneck under a jacket."),
+    "dalailama": ("Dalai Lama XIV", 1935, None, "Close-cropped hair, square glasses, a broad smile, robe."),
+}
+
+# Authors whose years are only known roughly; shown as "c. ...".
+CIRCA = {"dhammapada", "zhuangzi", "seneca", "epictetus", "douglass"}
+
+
+def simplify(points, tolerance=0.5):
+    if len(points) < 3:
+        return points
+    (ax, ay), (bx, by) = points[0], points[-1]
+    length = math.hypot(bx - ax, by - ay)
+    worst, index = 0.0, 0
+    for i, (px, py) in enumerate(points[1:-1], 1):
+        if length:
+            d = abs((bx - ax) * (py - ay) - (by - ay) * (px - ax)) / length
+        else:
+            d = math.hypot(px - ax, py - ay)
+        if d > worst:
+            worst, index = d, i
+    if worst <= tolerance:
+        return [points[0], points[-1]]
+    return simplify(points[: index + 1], tolerance)[:-1] + simplify(points[index:], tolerance)
+
+
+def main():
+    lines = [
+        "// Generated by scripts/portraits/export.py - do not edit. To add an",
+        "// author or change a portrait, see docs/quotes.md.",
+        "",
+        "export type QuoteAuthor = {",
+        "  /** As written in QuotesText.ts. */",
+        "  name: string;",
+        "  /** Year of birth, roughly (negative is BC); authors are in this order. */",
+        "  born: number;",
+        "  /** Year of death, or null while living. */",
+        "  died: number | null;",
+        "  /** Whether the years are only known roughly. */",
+        "  circa: boolean;",
+        "  /**",
+        '   * One unbroken line in the "one-line drawing" style: face on, in a',
+        "   * 200 x 240 box, from the bottom left to the bottom right.",
+        "   */",
+        "  portrait: string;",
+        "};",
+        "",
+        "export const QUOTE_AUTHORS: QuoteAuthor[] = [",
+    ]
+    entries = sorted(AUTHORS.items(), key=lambda item: item[1][1])
+    for module, (name, born, died, note) in entries:
+        points = simplify(importlib.import_module(module).draw())
+        d = "M" + "L".join(f"{x:.1f} {y:.1f}" for x, y in points)
+        lines += [
+            f"  // {note}",
+            "  {",
+            f'    name: "{name}",',
+            f"    born: {born},",
+            f"    died: {'null' if died is None else died},",
+            f"    circa: {'true' if module in CIRCA else 'false'},",
+            f'    portrait: "{d}",',
+            "  },",
+        ]
+    lines.append("];")
+    with open(OUT, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
+    print(f"Wrote {os.path.relpath(OUT)} ({len(entries)} authors)")
+
+
+if __name__ == "__main__":
+    main()

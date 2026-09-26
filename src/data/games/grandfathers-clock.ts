@@ -17,6 +17,13 @@ export const grandfathersClock: GameDefinition = {
     luck: 35,
   },
   thumbnail: "GrandfatherClock.webp",
+  thumbnailCredit: {
+    title: "Tall Case Clock",
+    artistName: "Uriah Dyer",
+    date: "1820–84",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/145682",
+  },
   background: GAME_BACKGROUNDS.bookstore,
   animation: GameAnimations.Dust,
   gameColorDark: "#2a2118",

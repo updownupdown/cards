@@ -55,8 +55,13 @@ type ReserveCellBoardProps = {
   foundationStartColumn?: number;
   foundationRow?: number;
   freeCellRow?: number;
+  freeCellStartColumn?: number;
   cascadeRow?: number;
   fixedRows?: number;
+  /** Only one card moves at a time (no runs), as in King Albert. */
+  singleCardMoves?: boolean;
+  /** False for a reserve: its cards play out, but nothing goes back in. */
+  cellsAcceptCards?: boolean;
 };
 
 type Selection = { zone: "free"; slotIndex: number } | null;
@@ -169,6 +174,18 @@ export const eightOffRules = {
   isDescendingSameSuitStack,
 };
 
+const KING_PROBE: PlayingCard = {
+  id: "probe-king",
+  suit: "spades",
+  rank: "K",
+  faceUp: true,
+};
+const QUEEN_PROBE: PlayingCard = {
+  ...KING_PROBE,
+  id: "probe-queen",
+  rank: "Q",
+};
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function ReserveCellBoard({
@@ -178,8 +195,11 @@ export function ReserveCellBoard({
   foundationStartColumn = (columnCount - 4) / 2,
   foundationRow = 0,
   freeCellRow = 1.2,
+  freeCellStartColumn = 0,
   cascadeRow = 2.4,
   fixedRows = 7,
+  singleCardMoves = false,
+  cellsAcceptCards = true,
 }: ReserveCellBoardProps) {
   const [selected, setSelected] = useState<Selection>(null);
   const [lastTap, setLastTap] = useState<{ key: string; at: number } | null>(
@@ -271,6 +291,9 @@ export function ReserveCellBoard({
     [game.foundations],
   );
   const cascadeHeight = fixedRows - cascadeRow;
+  // Empty columns show a King when nothing else may start one.
+  const kingsOnlyInEmptyColumns =
+    canPlaceOnCascadeRule(KING_PROBE) && !canPlaceOnCascadeRule(QUEEN_PROBE);
 
   // ── CardMap zones ───────────────────────────────────────────────────────────
 
@@ -294,12 +317,10 @@ export function ReserveCellBoard({
       name: "free",
       pileIndex: i,
       cards: card ? [card] : [],
-      col: i,
+      col: freeCellStartColumn + i,
       row: freeCellRow,
       baseZIndex: 50,
-      placeholder: {
-        iconName: "free-cell",
-      },
+      placeholder: cellsAcceptCards ? { iconName: "free-cell" } : {},
     }));
 
     const cascadeZones: MapZone[] = game.cascades.map((pile, i) => ({
@@ -320,7 +341,7 @@ export function ReserveCellBoard({
         ),
         center: false,
       },
-      placeholder: {},
+      placeholder: kingsOnlyInEmptyColumns ? { iconName: "king" } : {},
     }));
 
     return [
@@ -340,10 +361,13 @@ export function ReserveCellBoard({
   }, [
     cascadeHeight,
     cascadeRow,
+    cellsAcceptCards,
     foundationRow,
     foundationStartColumn,
     freeCellRow,
+    freeCellStartColumn,
     game,
+    kingsOnlyInEmptyColumns,
   ]);
 
   // ── CardMap callbacks ───────────────────────────────────────────────────────
@@ -613,8 +637,23 @@ export function ReserveCellBoard({
     return card ? [card] : [];
   }
 
-  function getMaxMovableStackSize(snapshot: GameState): number {
-    return snapshot.freeCells.filter((card) => card === null).length + 1;
+  /**
+   * The longest run that could be moved one card at a time: each free cell
+   * doubles as a stop, and each empty column (other than the destination)
+   * doubles the whole count.
+   */
+  function getMaxMovableStackSize(
+    snapshot: GameState,
+    targetPileIndex?: number,
+  ): number {
+    if (singleCardMoves) return 1;
+    const freeCells = cellsAcceptCards
+      ? snapshot.freeCells.filter((card) => card === null).length
+      : 0;
+    const emptyColumns = snapshot.cascades.filter(
+      (pile, index) => pile.length === 0 && index !== targetPileIndex,
+    ).length;
+    return (freeCells + 1) * 2 ** emptyColumns;
   }
 
   function isValidCascadeStack(cards: PlayingCard[]): boolean {
@@ -627,10 +666,17 @@ export function ReserveCellBoard({
   function canDropOnTarget(source: MoveSource, target: DropTarget): boolean {
     const cards = getDraggedCards(source, game);
     const card = cards[0];
-    if (!card || cards.length > getMaxMovableStackSize(game)) return false;
+    const targetPileIndex =
+      target.zone === "cascade" ? target.pileIndex : undefined;
+    if (!card || cards.length > getMaxMovableStackSize(game, targetPileIndex))
+      return false;
 
     if (target.zone === "free") {
-      return cards.length === 1 && game.freeCells[target.slotIndex] === null;
+      return (
+        cellsAcceptCards &&
+        cards.length === 1 &&
+        game.freeCells[target.slotIndex] === null
+      );
     }
 
     if (target.zone === "foundation") {
@@ -648,7 +694,7 @@ export function ReserveCellBoard({
       game.cascades[target.pileIndex][
         game.cascades[target.pileIndex].length - 1
       ];
-    return isDescendingSameSuitStack(cards) && canPlaceOnCascadeRule(card, top);
+    return isValidCascadeStack(cards) && canPlaceOnCascadeRule(card, top);
   }
 
   function applyMove(source: MoveSource, target: DropTarget) {

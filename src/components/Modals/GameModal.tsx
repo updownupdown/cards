@@ -1,3 +1,4 @@
+import { CoverArt } from "@/components/common/CoverArt";
 import { Text } from "@/components/common/Text";
 import {
   useGameSettings,
@@ -13,6 +14,7 @@ import { darkenHexColor, isValidLink, lightenHexColor } from "@/utils/utils";
 import { useGamePath } from "@/hooks/useGamePath";
 import { useRef } from "react";
 import { Linking, ScrollView, View, ViewStyle } from "react-native";
+import type { GameMenuInfo } from "../../data/games-data";
 import {
   calculateWinRate,
   getGameInfo,
@@ -29,7 +31,7 @@ type Props = {
   onClose: () => void;
   onReloadGame?: () => void;
   showRulesModal: () => void;
-  /** Only offered in nodes mode, and only while the player holds an unused
+  /** Only offered in Campaign mode, and only while the player holds an unused
    * mercy skip and hasn't already won this game. */
   mercySkipsAvailable?: number;
   onMercySkip?: () => void;
@@ -257,9 +259,9 @@ export default function GameModal({
               style={{ marginTop: spacing(30) }}
             />
 
-            {gameInfo.background?.authorName && <CreditsSection />}
+            {hasCredits(gameInfo) && <CreditsSection />}
 
-            {/* Mercy Skip: only offered in nodes mode, with a skip in hand.
+            {/* Mercy Skip: only offered in Campaign mode, with a skip in hand.
                 Only one can be held at a time for now, so no count is shown;
                 the count is still tracked in case that ever changes. */}
             {onMercySkip && mercySkipsAvailable > 0 && (
@@ -286,6 +288,31 @@ type CreditsSectionProps = {
   style?: ViewStyle | ViewStyle[];
 };
 
+/** Whether a game has anything for CreditsSection to show. */
+export function hasCredits(gameInfo: GameMenuInfo) {
+  return Boolean(gameInfo.background?.authorName || gameInfo.thumbnailCredit);
+}
+
+type CreditLinkProps = {
+  name: string;
+  link?: string;
+};
+
+/** A credited name, linked to its page when it has a valid one. */
+const CreditLink = ({ name, link }: CreditLinkProps) =>
+  isValidLink(link) ? (
+    <Text
+      size="sm"
+      weight={500}
+      color={Colors.accentBlue}
+      onPress={() => void Linking.openURL(link)}
+    >
+      {name}
+    </Text>
+  ) : (
+    name
+  );
+
 export const CreditsSection = ({ style }: CreditsSectionProps) => {
   const pathname = useGamePath();
   const gameInfo = getGameInfo(pathname);
@@ -293,11 +320,9 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
   const { t } = useTranslation("game");
 
   const background = gameInfo.background;
-  const backgroundAuthorLink = isValidLink(background?.authorLink)
-    ? background.authorLink
-    : undefined;
+  const art = gameInfo.thumbnailCredit;
 
-  if (!background?.authorName) return null;
+  if (!hasCredits(gameInfo)) return null;
 
   return (
     <View
@@ -323,21 +348,34 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
         iconName="attribution"
       />
 
+      {art && gameInfo.thumbnail && (
+        <CoverArt
+          thumbnail={gameInfo.thumbnail}
+          maxHeight={spacing(240)}
+          borderRadius={spacing(6)}
+          style={{ marginTop: spacing(4) }}
+        />
+      )}
+
+      {art && (
+        <Text size="sm" weight={300} color={Colors.white}>
+          {t("credits.gameArt")}{" "}
+          <Text size="sm" weight={500} color={Colors.white}>
+            {art.title}
+          </Text>
+          {`, ${art.artistName}${art.date ? ` (${art.date})` : ""}. `}
+          {t("credits.artSource")}{" "}
+          <CreditLink name={art.sourceName} link={art.sourceLink} />
+        </Text>
+      )}
+
       {background?.authorName && (
         <Text size="sm" weight={300} color={Colors.white}>
           {t("credits.backgroundImage")}{" "}
-          {backgroundAuthorLink ? (
-            <Text
-              size="sm"
-              weight={500}
-              color={Colors.accentBlue}
-              onPress={() => void Linking.openURL(backgroundAuthorLink)}
-            >
-              {background.authorName}
-            </Text>
-          ) : (
-            background.authorName
-          )}
+          <CreditLink
+            name={background.authorName}
+            link={background.authorLink}
+          />
         </Text>
       )}
     </View>

@@ -13,6 +13,13 @@ export const clock: GameDefinition = {
     luck: 100,
   },
   thumbnail: "Clock.webp",
+  thumbnailCredit: {
+    title: "Table Clock",
+    artistName: "Johann Reinhold the Elder",
+    date: "late 16th century",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/196392",
+  },
   background: GAME_BACKGROUNDS.oldRoom,
   animation: GameAnimations.CandleMotes,
   gameColorDark: "#1d1610",

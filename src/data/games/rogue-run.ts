@@ -13,6 +13,13 @@ export const rogueRun: GameDefinition = {
     luck: 35,
   },
   thumbnail: "RogueRun.webp",
+  thumbnailCredit: {
+    title: "Stela",
+    artistName: "Unknown Maya sculptor",
+    date: "ca. 702",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/75645",
+  },
   background: GAME_BACKGROUNDS.stoneTunnel,
   animation: GameAnimations.Embers,
   gameColorDark: "#292116",

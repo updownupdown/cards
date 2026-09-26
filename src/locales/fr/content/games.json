@@ -59,67 +59,6 @@
       "value": "As en tête"
     }
   },
-  "alaska": {
-    "cardDescription": {
-      "hash": "ddd9f660",
-      "value": "Une expédition Yukon où les cartes de même couleur peuvent monter ou descendre."
-    },
-    "howToPlay": {
-      "hash": "f9800a76",
-      "value": [
-        "## Objectif",
-        "Montez les quatre fondations par couleur, de l'As au Roi.",
-        "## Règles",
-        "- Déplacez n'importe quelle carte visible ou **pile** de cartes sur une carte, **en descendant ou en montant d'un rang, dans la même couleur**.",
-        "- Les cartes déplacées ne doivent **pas** forcément être en séquence.",
-        "- Seuls les Rois peuvent occuper les colonnes vides.",
-        "- Touchez deux fois une carte ou faites-la glisser pour l'envoyer sur les fondations."
-      ]
-    },
-    "quickStart": {
-      "hash": "377b21a0",
-      "value": [
-        "Montez les fondations par couleur, de A à K.",
-        "Construisez les colonnes en montant ou en descendant d'un rang, dans la même couleur.",
-        "Déplacez n'importe quel groupe de cartes visibles.",
-        "Seuls les Rois peuvent occuper les colonnes vides."
-      ]
-    },
-    "title": {
-      "hash": "9a8eab96",
-      "value": "Alaska"
-    }
-  },
-  "all-in-a-row": {
-    "cardDescription": {
-      "hash": "cf60e740",
-      "value": "Videz treize colonnes en choisissant des rangs voisins."
-    },
-    "howToPlay": {
-      "hash": "535c19cf",
-      "value": [
-        "## Objectif",
-        "Placez les 52 cartes des treize colonnes sur une seule fondation.",
-        "## Règles",
-        "- Choisissez n'importe quelle carte visible comme rang de départ.",
-        "- Ensuite, jouez un rang au-dessus ou en dessous de la carte du dessus de la fondation, sans tenir compte de la couleur.",
-        "- L'As et le Roi se suivent\u00a0: Q, K, A, 2, A, K, etc. est donc une suite valide."
-      ]
-    },
-    "quickStart": {
-      "hash": "f679df79",
-      "value": [
-        "Videz les treize colonnes pour gagner.",
-        "Choisissez n'importe quelle carte découverte pour commencer.",
-        "Jouez un rang au-dessus ou en dessous, sans tenir compte de la couleur.",
-        "A et K se suivent."
-      ]
-    },
-    "title": {
-      "hash": "408219ba",
-      "value": "Tout en ligne"
-    }
-  },
   "apothecary": {
     "cardDescription": {
       "hash": "b66e1d4d",
@@ -274,38 +213,6 @@
       "value": "Douzaine du boulanger"
     }
   },
-  "bakers-game": {
-    "cardDescription": {
-      "hash": "07005d70",
-      "value": "L'ancêtre plus difficile du FreeCell\u00a0: descendez les colonnes dans la même couleur, et non en alternant rouge et noir."
-    },
-    "howToPlay": {
-      "hash": "a01e3e7a",
-      "value": [
-        "## Objectif",
-        "Placez les 52 cartes sur les quatre **fondations**, chacune montée par couleur de l'As au Roi.",
-        "## Règles",
-        "- Montez les fondations par couleur, de l'As au Roi.",
-        "-- Touchez deux fois une carte pour l'envoyer sur une fondation valide.",
-        "- Construisez les colonnes **en descendant d'un rang, dans la même couleur** (par exemple un {9S} sur un {10S}).",
-        "- N'importe quelle carte peut aller sur une colonne vide.",
-        "- Déplacez une carte à la fois\u00a0; chaque **cellule libre** contient une seule carte.",
-        "-- Vous pouvez déplacer une séquence empilée, à condition d'avoir assez de cellules libres et de colonnes vides."
-      ]
-    },
-    "quickStart": {
-      "hash": "aba9ed00",
-      "value": [
-        "Montez les fondations par couleur (de A à K).",
-        "Descendez les colonnes par couleur.",
-        "Utilisez 4 cellules libres pour déplacer des cartes."
-      ]
-    },
-    "title": {
-      "hash": "315c84d0",
-      "value": "Jeu du boulanger"
-    }
-  },
   "baroness": {
     "cardDescription": {
       "hash": "32a23d8a",
@@ -429,6 +336,40 @@
       "value": "Bisley"
     }
   },
+  "black-hole": {
+    "cardDescription": {
+      "hash": "64debd9d",
+      "value": "Attirez les 52 cartes dans un trou noir central, un rang à la fois."
+    },
+    "howToPlay": {
+      "hash": "f8156c21",
+      "value": [
+        "## Objectif",
+        "- **Gagnez** en attirant toutes les cartes dans le trou noir.",
+        "- **Vous perdez** si aucune carte découverte ne peut être jouée.",
+        "## Règles",
+        "- L'As de Pique commence dans le trou noir.",
+        "- Placez une carte découverte dans le trou noir si elle est **d'un rang au-dessus ou en dessous** de sa carte actuelle.",
+        "- Seule la carte **découverte** (du dessus) de chaque pile est disponible.",
+        "- Les rangs **bouclent**\u00a0: après un Roi, vous pouvez jouer un As, et inversement.",
+        "## Tout en ligne",
+        "Dans la variante Tout en ligne, les cartes sont distribuées en treize colonnes de quatre, et le trou noir est vide au départ\u00a0: n'importe quelle carte découverte peut y entrer en premier.",
+        "## Conseils",
+        "- Il n'y a ni pioche ni remélange\u00a0: planifiez vos coups dans l'ordre et le plus longtemps à l'avance possible.",
+        "- Évitez les impasses, et les fins de partie avec des cartes dont les rangs ne se suivent pas."
+      ]
+    },
+    "quickStart": {
+      "hash": "f703e406",
+      "value": [
+        "Les cartes de valeur voisine de la carte du trou peuvent être retirées. Retirez-les toutes pour gagner. A<->K se suivent."
+      ]
+    },
+    "title": {
+      "hash": "2ef02914",
+      "value": "Trou Noir"
+    }
+  },
   "blackberry-pie": {
     "cardDescription": {
       "hash": "efcdf8a7",
@@ -509,33 +450,38 @@
       "value": "Bowling"
     }
   },
-  "busy-aces": {
+  "bristol": {
     "cardDescription": {
-      "hash": "86e347ed",
-      "value": "Faites avancer douze courtes colonnes de deux paquets, carte par carte et couleur par couleur."
+      "hash": "9b1c2517",
+      "value": "Huit petits éventails et trois piles de réserve alimentées par la pioche, où la couleur ne compte jamais."
     },
     "howToPlay": {
-      "hash": "bf9a5d8b",
+      "hash": "21ddab2f",
       "value": [
         "## Objectif",
-        "Montez les huit fondations par couleur, de l'As au Roi.",
+        "Placez les 52 cartes sur les quatre fondations, chacune montée de l'As au Roi **sans tenir compte de la couleur**.",
+        "## Donne",
+        "- Huit éventails de trois cartes sont distribués, et chaque Roi est placé au bas de son éventail.",
+        "- Trois piles de réserve commencent avec une carte chacune.",
         "## Règles",
-        "- Descendez les colonnes par couleur, en déplaçant une carte à la fois.",
-        "- N'importe quelle carte peut occuper une colonne vide.",
-        "- Retournez la pioche une carte à la fois, sans redistribution."
+        "- La carte du dessus de chaque éventail et de chaque pile de réserve est disponible.",
+        "- Construisez les éventails **en descendant, sans tenir compte de la couleur**, une carte à la fois.",
+        "- Un éventail vide n'est jamais rempli.",
+        "- Touchez la **pioche** pour distribuer trois cartes, une sur chaque pile de réserve. Aucune carte ne peut être jouée sur les piles de réserve.",
+        "- Il n'y a pas de redistribution."
       ]
     },
     "quickStart": {
-      "hash": "0cde4d1b",
+      "hash": "949d0103",
       "value": [
-        "Montez les huit fondations par couleur, de A à K.",
-        "Descendez les colonnes par couleur, une carte à la fois.",
-        "N'importe quelle carte comble un espace. Il n'y a pas de redistribution."
+        "Montez les fondations de A à K, sans tenir compte de la couleur.",
+        "Descendez les éventails sans tenir compte de la couleur, une carte à la fois.",
+        "Touchez la pioche pour distribuer une carte sur chaque pile de réserve."
       ]
     },
     "title": {
-      "hash": "a2f312a2",
-      "value": "As affairés"
+      "hash": "fde0e2ee",
+      "value": "Bristol"
     }
   },
   "cabin-siege": {
@@ -854,11 +800,12 @@
       "value": "Guidez deux paquets à travers huit colonnes, avec des déplacements d'une carte et un seul passage de pioche."
     },
     "howToPlay": {
-      "hash": "a237b48a",
+      "hash": "686ea922",
       "value": [
         "## Objectif",
         "Montez huit fondations par couleur, de l'As au Roi.",
         "## Règles",
+        "- Huit colonnes commencent avec une carte chacune.",
         "- Descendez les colonnes par rang, sans tenir compte de la couleur.",
         "- Déplacez une carte découverte à la fois.",
         "- N'importe quelle carte peut occuper une colonne vide.",
@@ -1142,7 +1089,7 @@
       "value": "Montez 24 piles de même couleur de trois en trois, dans une grille de trois rangées."
     },
     "howToPlay": {
-      "hash": "54a1e92a",
+      "hash": "23ce0cda",
       "value": [
         "## Objectif",
         "Placez les **96 cartes** dans le plus grand nombre possible de piles en séquence de même couleur. Laissez le moins de cartes possible hors de la grille.",
@@ -1167,7 +1114,7 @@
       ]
     },
     "quickStart": {
-      "hash": "f85507c3",
+      "hash": "5929eb26",
       "value": [
         "Formez des séquences de même couleur\u00a0: 2-5-8-J (rangée du haut), 3-6-9-Q (rangée du milieu) et 4-7-10-K (rangée du bas).",
         "Déplacez des cartes ou des piles pour former des séquences ou échanger leur position.",
@@ -1251,7 +1198,7 @@
       "value": "Faites tomber les douze têtes couronnées en posant des cartes sur une grille de 3x3."
     },
     "howToPlay": {
-      "hash": "5c37ed1c",
+      "hash": "2c41141f",
       "value": [
         "## Objectif",
         "Battez les douze Valets, Dames et Rois autour de la grille avant d'épuiser la pioche.",
@@ -1261,7 +1208,7 @@
         "-- Les **Dames** ne peuvent être blessées que par des attaquants **de la même teinte (rouge ou noire)**",
         "-- Les **Rois** ne peuvent être blessés que par des attaquants **de la même couleur**",
         "## Stratagèmes",
-        "- **Extraire**\u00a0: dépensez un As pour renvoyer une pile de la grille sous le paquet.",
+        "- **Extraire** : dépensez un As pour renvoyer une pile de la grille sous la pioche.",
         "- **Réattribuer**\u00a0: dépensez un Joker pour déplacer une carte du dessus de la grille vers une autre pile valide.",
         "## Score",
         "Votre score est le nombre de stratagèmes non utilisés."
@@ -1286,22 +1233,22 @@
       "value": "Construisez sept colonnes compactes, puis distribuez chaque nouvelle rangée de la pioche directement sur les colonnes."
     },
     "howToPlay": {
-      "hash": "e0fd6ce1",
+      "hash": "0253c855",
       "value": [
         "## Objectif",
         "Montez quatre fondations par couleur, de l'As au Roi.",
         "## Règles",
-        "- Descendez les colonnes par rang.",
-        "- Déplacez ensemble les séquences descendantes de même couleur.",
+        "- Construisez les colonnes **en descendant, en alternant rouge et noir**.",
+        "- Les séquences correctement construites se déplacent ensemble.",
         "- Seuls les Rois peuvent occuper les colonnes vides.",
         "- Chaque toucher de la pioche distribue une carte sur chaque colonne."
       ]
     },
     "quickStart": {
-      "hash": "d8a3426c",
+      "hash": "9d17fc0b",
       "value": [
         "Montez les fondations par couleur.",
-        "Descendez les colonnes par rang.",
+        "Descendez les colonnes en alternant rouge et noir.",
         "Distribuez une carte de la pioche sur chaque colonne\u00a0; les K comblent les espaces."
       ]
     },
@@ -1585,7 +1532,7 @@
       "value": "Une réussite exigeante à deux paquets, où il faut monter les fondations."
     },
     "howToPlay": {
-      "hash": "a424bb2d",
+      "hash": "327ab3c4",
       "value": [
         "## Objectif",
         "Placez les 104 cartes sur les huit fondations, chacune montée par couleur de l'As au Roi.",
@@ -1595,21 +1542,58 @@
         "- Ne déplacez qu'une carte à la fois entre les colonnes.",
         "- N'importe quelle carte seule peut être posée sur une colonne vide.",
         "- Retournez les cartes de la pioche une à une sur le talon. La carte du dessus du talon est jouable.",
-        "-- Le mode facile permet des redistributions illimitées.",
-        "-- Le mode difficile n'en permet aucune."
+        "- Il n'y a pas de redistribution, sauf si vous autorisez les redistributions illimitées dans les réglages.",
+        "## Variantes",
+        "- **Joséphine**\u00a0: les séquences de même couleur se déplacent d'un bloc.",
+        "- **Lucas**\u00a0: treize colonnes de trois, et les As commencent sur les fondations.",
+        "- **As affairés**\u00a0: douze colonnes de deux, la carte du bas face cachée."
       ]
     },
     "quickStart": {
-      "hash": "4355938b",
+      "hash": "10a685b4",
       "value": [
         "Montez les 8 fondations par couleur, de A à K.",
         "Descendez les colonnes par couleur, en déplaçant une carte à la fois.",
-        "Retournez les cartes de la pioche sur le talon une à une\u00a0; les redistributions dépendent de la difficulté."
+        "Retournez les cartes de la pioche sur le talon une à une, sans redistribution."
       ]
     },
     "title": {
       "hash": "f7d2814b",
       "value": "Quarante Voleurs"
+    }
+  },
+  "four-seasons": {
+    "cardDescription": {
+      "hash": "caddc762",
+      "value": "Cinq cartes en croix et quatre coins\u00a0: faites tourner les saisons à partir de la première carte de coin."
+    },
+    "howToPlay": {
+      "hash": "baf2850a",
+      "value": [
+        "## Objectif",
+        "Placez les 52 cartes sur les quatre fondations des coins.",
+        "## Fondations",
+        "- La première carte de coin fixe le **rang de base**. Les trois autres fondations commencent avec les autres cartes de ce rang.",
+        "- Montez chaque fondation **par couleur**, en passant du Roi à l'As, jusqu'à ce qu'elle compte 13 cartes.",
+        "## La croix",
+        "- Construisez les cinq piles de la croix **en descendant, sans tenir compte de la couleur**. Les rangs bouclent\u00a0: un Roi peut aller sur un As, sauf si les As sont le rang de base.",
+        "- Seule la carte du dessus de chaque pile est disponible, et les cartes se déplacent une à une.",
+        "- N'importe quelle carte disponible peut remplir une place vide de la croix.",
+        "## Pioche",
+        "Retournez les cartes de la pioche une à une sur le talon. Il n'y a pas de redistribution."
+      ]
+    },
+    "quickStart": {
+      "hash": "5b92f9b8",
+      "value": [
+        "La carte de coin fixe le rang de départ de chaque fondation.",
+        "Les fondations montent par couleur, en passant du Roi à l'As.",
+        "Descendez la croix sans tenir compte de la couleur, une carte à la fois."
+      ]
+    },
+    "title": {
+      "hash": "7bc4dacb",
+      "value": "Quatre Saisons"
     }
   },
   "freecell": {
@@ -1618,7 +1602,7 @@
       "value": "Un classique à information ouverte, où presque chaque donne peut être gagnée avec de la réflexion."
     },
     "howToPlay": {
-      "hash": "3add4428",
+      "hash": "1d797da4",
       "value": [
         "## Objectif",
         "Placez les 52 cartes sur les quatre **fondations**, chacune montée par couleur de l'As au Roi.",
@@ -1626,7 +1610,9 @@
         "- Construisez les colonnes **en descendant par rang, en alternant rouge et noir**.",
         "- Déplacez une carte à la fois\u00a0; chaque **cellule libre** contient une seule carte.",
         "- Vous pouvez déplacer une carte à la fois. Vous pouvez déplacer un groupe de cartes d'un coup, mais seulement si vous avez assez de cellules libres et de colonnes vides pour faire le même déplacement carte par carte.",
-        "- N'importe quelle carte peut être posée sur une colonne vide."
+        "- N'importe quelle carte peut être posée sur une colonne vide.",
+        "## Jeu du boulanger",
+        "L'ancêtre du FreeCell, à choisir dans les réglages\u00a0: les colonnes se construisent en descendant **dans la même couleur** au lieu d'alterner rouge et noir."
       ]
     },
     "quickStart": {
@@ -1713,7 +1699,7 @@
       "value": "Gravissez un Klondike à neuf colonnes et deux paquets, avec huit fondations."
     },
     "howToPlay": {
-      "hash": "b5a0feb8",
+      "hash": "4a898796",
       "value": [
         "## Objectif",
         "Placez les deux paquets sur huit fondations, de l'As au Roi par couleur.",
@@ -1721,15 +1707,17 @@
         "- Neuf colonnes sont distribuées en escalier, comme au Klondike.",
         "- Descendez en alternant rouge et noir et déplacez des séquences ordonnées.",
         "- Seuls les Rois peuvent occuper les colonnes vides.",
-        "- Retournez les cartes de la pioche une à une\u00a0; 1 redistribution donne 2 passages en tout."
+        "- Retournez les cartes de la pioche une à une\u00a0; 1 redistribution donne 2 passages en tout.",
+        "## Harpe",
+        "Harpe est le même jeu avec 3 redistributions, soit 4 passages de la pioche."
       ]
     },
     "quickStart": {
-      "hash": "db912b69",
+      "hash": "b3a33e8e",
       "value": [
         "Placez les deux paquets sur huit fondations, montées par couleur de A à K.",
         "Descendez les colonnes en alternant rouge et noir et déplacez des séquences ordonnées.",
-        "Seuls les K occupent les colonnes vides\u00a0; 1 redistribution donne 2 passages de la pioche."
+        "Seuls les K occupent les colonnes vides\u00a0; 1 redistribution (3 dans Harpe)."
       ]
     },
     "title": {
@@ -1845,36 +1833,6 @@
       "value": "Gremlin"
     }
   },
-  "harp": {
-    "cardDescription": {
-      "hash": "70db0dcf",
-      "value": "Un Double Klondike plus clément, avec quatre passages dans la pioche."
-    },
-    "howToPlay": {
-      "hash": "97cbd1bd",
-      "value": [
-        "## Objectif",
-        "Placez les deux paquets sur huit fondations, montées par couleur de l'As au Roi.",
-        "## Règles",
-        "- Descendez les colonnes en alternant rouge et noir et déplacez des séquences ordonnées.",
-        "- Seuls les Rois peuvent occuper les colonnes vides.",
-        "- Retournez une carte de la pioche à la fois, avec quatre passages au total."
-      ]
-    },
-    "quickStart": {
-      "hash": "78454632",
-      "value": [
-        "Placez toutes les cartes sur les fondations, montées par couleur de A à K.",
-        "Descendez les colonnes en alternant rouge et noir.",
-        "Seuls les K occupent les colonnes vides.",
-        "Vous disposez de quatre passages de la pioche."
-      ]
-    },
-    "title": {
-      "hash": "f8e78326",
-      "value": "Harpe"
-    }
-  },
   "herbalist": {
     "cardDescription": {
       "hash": "820b189b",
@@ -1949,14 +1907,14 @@
       "value": "Capturez la majorité des Espions clés en recrutant, en contrant et en assassinant avec soin."
     },
     "howToPlay": {
-      "hash": "a0f2ce9e",
+      "hash": "b297c489",
       "value": [
         "## Objectif",
         "**Gagnez** en ayant recruté **plus de la moitié** des Espions clés (Valets, Dames et Rois) au moment où le paquet d'espions est épuisé.",
         "## Paquets et déroulement",
         "- Le paquet d'espions est construit par niveaux\u00a0: **5-7** au-dessus, puis **8-10**, puis **J-K**.",
         "- Votre pioche commence avec les cartes de l'As au 4.",
-        "- Votre pioche sera souvent remélangée. Construisez votre paquet en recrutant des espions de forte valeur et en retirant des paires d'espions de faible valeur.",
+        "- Votre défausse est souvent remélangée dans votre pioche. Construisez votre paquet en recrutant des espions de forte valeur et en retirant des paires d'espions de faible valeur.",
         "- Les **Espions de soutien** servent seulement à obtenir des Espions clés.",
         "- Les **Espions clés** sont les seules cartes qui comptent dans votre score final.",
         "## Actions",
@@ -2023,7 +1981,7 @@
       "value": "Associez des totaux rouges et noirs égaux pour faire évader le Joker par un mur."
     },
     "howToPlay": {
-      "hash": "94b0b650",
+      "hash": "aad3689d",
       "value": [
         "## Objectif",
         "Permettez au Joker de s'évader en dégageant l'un des quatre **murs** qui l'entourent, sans laisser aucune carte sur le Joker.",
@@ -2039,7 +1997,7 @@
       ]
     },
     "quickStart": {
-      "hash": "d57ce5d8",
+      "hash": "91f0cb6f",
       "value": [
         "Dégagez l'un des murs latéraux pour permettre au Joker de s'évader.",
         "Retirez des cartes en sélectionnant des cartes rouges et noires découvertes dont les totaux sont égaux.",
@@ -2051,34 +2009,39 @@
       "value": "Évasion"
     }
   },
-  "josephine": {
+  "king-albert": {
     "cardDescription": {
-      "hash": "7308e533",
-      "value": "Un cousin de Quarante Voleurs à deux paquets, où les séquences de même couleur se déplacent d'un bloc."
+      "hash": "43b55724",
+      "value": "Toutes les cartes sont distribuées face visible\u00a0: neuf colonnes, une petite réserve, et une seule carte déplacée à la fois."
     },
     "howToPlay": {
-      "hash": "1631d117",
+      "hash": "6c0f25fe",
       "value": [
         "## Objectif",
-        "Montez huit fondations par couleur, de l'As au Roi.",
+        "Placez toutes les cartes sur les quatre fondations par couleur, de l'As au Roi.",
+        "## Donne",
+        "- Neuf colonnes sont distribuées face visible, d'une à neuf cartes.",
+        "- Les sept cartes restantes forment la **réserve**. Chacune peut être jouée.",
         "## Règles",
-        "- Descendez les colonnes par couleur.",
-        "- Déplacez ensemble les séquences descendantes complètes de même couleur.",
-        "- N'importe quelle carte peut occuper une colonne vide.",
-        "- Retournez la pioche une carte à la fois, sans redistribution."
+        "- Construisez les colonnes **en descendant, en alternant rouge et noir**.",
+        "- Déplacez **une carte à la fois**\u00a0; les séquences ne se déplacent jamais d'un bloc.",
+        "- Les cartes de la réserve peuvent aller sur une fondation ou une colonne, mais aucune carte ne peut être remise dans la réserve.",
+        "- N'importe quelle carte peut remplir une colonne vide.",
+        "## Raglan",
+        "Dans la variante Raglan, les As commencent sur les fondations, les plus longues colonnes comptent sept cartes et la réserve en compte six."
       ]
     },
     "quickStart": {
-      "hash": "4a41664c",
+      "hash": "04c12855",
       "value": [
-        "Montez huit fondations par couleur.",
-        "Descendez les colonnes par couleur.",
-        "Déplacez les séquences de même couleur et parcourez la pioche une fois."
+        "Placez toutes les cartes sur les quatre fondations par couleur, de A à K.",
+        "Descendez en alternant rouge et noir, une carte à la fois.",
+        "Les cartes de la réserve peuvent être jouées, mais rien ne retourne dans la réserve."
       ]
     },
     "title": {
-      "hash": "b4ef5342",
-      "value": "Joséphine"
+      "hash": "a2e394be",
+      "value": "Roi Albert"
     }
   },
   "klondike": {
@@ -2118,7 +2081,7 @@
       "value": "Découvrez un champ compact d'éventails, avec deux remélanges pour démêler les nœuds."
     },
     "howToPlay": {
-      "hash": "3c31ae43",
+      "hash": "64ab3a33",
       "value": [
         "## Objectif",
         "Placez les 52 cartes sur quatre fondations, montées par couleur de l'As au Roi.",
@@ -2126,7 +2089,10 @@
         "- Seule la carte découverte du bas de chaque éventail est jouable.",
         "- Descendez par couleur, une carte à la fois.",
         "- Les éventails vides ne peuvent pas être remplis.",
-        "- Deux fois par partie, remélangez toutes les cartes encore dans les éventails et redistribuez-les par groupes de trois."
+        "- Deux fois par partie, remélangez toutes les cartes encore dans les éventails et redistribuez-les par groupes de trois.",
+        "## Variantes",
+        "- **Trilobe**\u00a0: les As commencent sur les fondations, ce qui laisse seize éventails.",
+        "- **Trèfles irlandais**\u00a0: montez ou descendez sans tenir compte de la couleur\u00a0; aucun éventail ne peut dépasser trois cartes, et il n'y a pas de redistribution."
       ]
     },
     "quickStart": {
@@ -2258,38 +2224,6 @@
       "value": "Joker solitaire"
     }
   },
-  "lucas": {
-    "cardDescription": {
-      "hash": "a20338dd",
-      "value": "Treize colonnes compactes commencent sous huit As déjà placés."
-    },
-    "howToPlay": {
-      "hash": "8b0e3ad9",
-      "value": [
-        "## Objectif",
-        "Montez les huit fondations de l'As au Roi par couleur.",
-        "## Règles",
-        "- Les As sont retirés avant la distribution de treize colonnes de trois cartes.",
-        "- Descendez les colonnes par couleur.",
-        "- Ne déplacez qu'une carte découverte à la fois.",
-        "- Remplissez les colonnes vides avec n'importe quelle carte.",
-        "- Retournez la pioche une carte à la fois. Il n'y a pas de redistribution."
-      ]
-    },
-    "quickStart": {
-      "hash": "15dcb416",
-      "value": [
-        "Montez les huit fondations par couleur, de A à K.",
-        "Les huit As commencent sur les fondations.",
-        "Descendez les colonnes par couleur, une carte à la fois.",
-        "Les colonnes vides acceptent n'importe quelle carte. Il n'y a pas de redistribution."
-      ]
-    },
-    "title": {
-      "hash": "6c1095df",
-      "value": "Lucas"
-    }
-  },
   "lycan": {
     "cardDescription": {
       "hash": "9561f249",
@@ -2398,6 +2332,41 @@
       "value": "Mémoire"
     }
   },
+  "miss-milligan": {
+    "cardDescription": {
+      "hash": "2fafaca0",
+      "value": "Partez de huit cartes isolées et distribuez une rangée sur chaque colonne quand vous le souhaitez."
+    },
+    "howToPlay": {
+      "hash": "d8f2b41f",
+      "value": [
+        "## Objectif",
+        "Placez les deux paquets sur les huit fondations, chacune montée par couleur de l'As au Roi.",
+        "## Règles",
+        "- La partie commence avec une carte dans chacune des huit colonnes.",
+        "- Construisez les colonnes **en descendant, en alternant rouge et noir**. Une séquence correctement construite se déplace d'un bloc.",
+        "- Seul un **Roi** (ou une séquence commençant par un Roi) peut remplir une colonne vide.",
+        "- Touchez la **pioche** pour distribuer une carte sur chaque colonne, vide ou non.",
+        "## Mise de côté",
+        "- Une fois la pioche vide, vous pouvez mettre une carte ou une séquence de côté dans la **poche**.",
+        "- La poche contient une carte ou une séquence à la fois. Rejouez-la sur une colonne ou une fondation avant de réutiliser la poche.",
+        "## Géant",
+        "Dans la variante Géant, n'importe quelle carte ou séquence peut remplir une colonne vide, mais il n'y a pas de poche."
+      ]
+    },
+    "quickStart": {
+      "hash": "94b68883",
+      "value": [
+        "Montez huit fondations par couleur, de A à K.",
+        "Descendez les colonnes en alternant rouge et noir\u00a0; déplacez les séquences construites.",
+        "Touchez la pioche pour distribuer une carte sur chaque colonne."
+      ]
+    },
+    "title": {
+      "hash": "71a70424",
+      "value": "Miss Milligan"
+    }
+  },
   "monte-carlo": {
     "cardDescription": {
       "hash": "752d12bd",
@@ -2424,37 +2393,6 @@
     "title": {
       "hash": "7b4538a5",
       "value": "Monte-Carlo"
-    }
-  },
-  "moosehide": {
-    "cardDescription": {
-      "hash": "30dc2d60",
-      "value": "Un cousin du Yukon qui descend sur toutes les couleurs sauf la sienne."
-    },
-    "howToPlay": {
-      "hash": "15907878",
-      "value": [
-        "## Objectif",
-        "Montez les quatre fondations par couleur, de l'As au Roi.",
-        "## Règles",
-        "- Déplacez n'importe quelle carte face visible ou **pile** de cartes **en descendant par rang, sur une carte d'une autre couleur**.",
-        "- Les cartes déplacées ne doivent **pas** forcément être en séquence.",
-        "- Seuls les Rois peuvent occuper les colonnes vides.",
-        "- Touchez deux fois ou faites glisser une carte seule vers les fondations."
-      ]
-    },
-    "quickStart": {
-      "hash": "7142a388",
-      "value": [
-        "Montez les fondations par couleur, de A à K.",
-        "Descendez les colonnes sur n'importe quelle couleur, sauf la même.",
-        "Déplacez n'importe quelle pile face visible.",
-        "Seuls les Rois peuvent occuper les colonnes vides."
-      ]
-    },
-    "title": {
-      "hash": "ace36eec",
-      "value": "Peau d'orignal"
     }
   },
   "nestor": {
@@ -2524,38 +2462,6 @@
     "title": {
       "hash": "01d23c78",
       "value": "Veille nocturne"
-    }
-  },
-  "number-ten": {
-    "cardDescription": {
-      "hash": "e3d8f8d0",
-      "value": "Découvrez dix colonnes et déplacez d'un seul bloc les séquences alternant rouge et noir."
-    },
-    "howToPlay": {
-      "hash": "1b832fa3",
-      "value": [
-        "## Objectif",
-        "Placez les deux paquets sur les huit fondations, montées par couleur de l'As au Roi.",
-        "## Règles",
-        "- Dix colonnes de quatre cartes sont distribuées, chacune avec deux cartes face cachée et deux face visible.",
-        "- Descendez les colonnes en alternant rouge et noir.",
-        "- Déplacez ensemble les séquences complètes correctement empilées.",
-        "- N'importe quelle carte ou séquence occupe un espace vide\u00a0; la pioche se parcourt une fois.",
-        "- Il n'y a pas de redistribution."
-      ]
-    },
-    "quickStart": {
-      "hash": "dcb56508",
-      "value": [
-        "Placez toutes les cartes sur les fondations, montées par couleur de A à K.",
-        "Descendez en alternant rouge et noir.",
-        "Déplacez ensemble des séquences ordonnées\u00a0; n'importe quelle carte comble un espace.",
-        "Il n'y a pas de redistribution."
-      ]
-    },
-    "title": {
-      "hash": "1a6aecb7",
-      "value": "Numéro Dix"
     }
   },
   "ouroboros": {
@@ -2787,37 +2693,6 @@
       "value": "Carrés de poker"
     }
   },
-  "puss-in-the-corner": {
-    "cardDescription": {
-      "hash": "2b9e278c",
-      "value": "Dirigez la pioche vers quatre piles d'angle, en montant par teinte, avec une redistribution."
-    },
-    "howToPlay": {
-      "hash": "fa562a1b",
-      "value": [
-        "## Objectif",
-        "Placez les 52 cartes sur les quatre fondations, montées de l'As au Roi **par teinte (rouge ou noire)**.",
-        "## Règles",
-        "- Une fondation accepte le rang suivant dans **l'une ou l'autre des deux couleurs de sa teinte**.",
-        "- Chaque carte de la pioche doit être posée sur l'un des **quatre talons** ou jouée sur une fondation.",
-        "- N'importe quelle carte peut aller sur n'importe quel talon, mais les cartes ne peuvent jamais passer d'un talon à l'autre.",
-        "- **Touchez deux fois** la carte de la pioche ou la carte du dessus d'un talon pour la jouer sur une fondation.",
-        "- Quand la pioche est vide, touchez-la pour ramasser les talons dans l'ordre et faire **une redistribution**."
-      ]
-    },
-    "quickStart": {
-      "hash": "88ac90c8",
-      "value": [
-        "Montez les quatre fondations par teinte (rouge ou noire), de l'As au Roi.",
-        "Touchez un talon pour y poser la carte de la pioche.",
-        "Quand la pioche est épuisée, touchez-la une fois pour redistribuer."
-      ]
-    },
-    "title": {
-      "hash": "6e4b050d",
-      "value": "Les Quatre Coins"
-    }
-  },
   "pyramid": {
     "cardDescription": {
       "hash": "659fff1e",
@@ -2878,42 +2753,13 @@
       "value": "L'Audience de la Reine"
     }
   },
-  "raglan": {
-    "cardDescription": {
-      "hash": "2a08f282",
-      "value": "Un classique à un paquet, construit en alternant rouge et noir, à un rythme simple et réfléchi."
-    },
-    "howToPlay": {
-      "hash": "bbd23062",
-      "value": [
-        "## Objectif",
-        "Placez toutes les cartes sur les quatre fondations par couleur, de l'As au Roi.",
-        "## Règles",
-        "- Descendez les colonnes en alternant rouge et noir.",
-        "- Seuls les Rois peuvent occuper les espaces vides du tableau.",
-        "- Retournez la pioche sur le talon une carte à la fois. Il n'y a pas de redistribution."
-      ]
-    },
-    "quickStart": {
-      "hash": "0b04b422",
-      "value": [
-        "Placez toutes les cartes sur les quatre fondations par couleur, de A à K.",
-        "Formez des séquences descendantes en alternant rouge et noir.",
-        "Déplacez des groupes valides du tableau et n'utilisez les colonnes vides que pour les K."
-      ]
-    },
-    "title": {
-      "hash": "1dfbe9f2",
-      "value": "Raglan"
-    }
-  },
   "rank-and-file": {
     "cardDescription": {
       "hash": "54303353",
       "value": "Découvrez dix colonnes disciplinées et manœuvrez des formations alternant rouge et noir."
     },
     "howToPlay": {
-      "hash": "3e3993d7",
+      "hash": "544745e3",
       "value": [
         "## Objectif",
         "Placez les deux paquets sur huit fondations, montées par couleur de l'As au Roi.",
@@ -2922,7 +2768,9 @@
         "- Descendez en alternant rouge et noir.",
         "- Déplacez n'importe quelle séquence correctement empilée, complète ou partielle.",
         "- N'importe quelle carte ou séquence peut occuper une colonne vide.",
-        "- Retournez la pioche une carte à la fois. Il n'y a pas de redistribution."
+        "- Retournez la pioche une carte à la fois. Il n'y a pas de redistribution.",
+        "## Numéro Dix",
+        "Numéro Dix est le même jeu avec deux cartes face cachée et deux face visible dans chaque colonne."
       ]
     },
     "quickStart": {
@@ -3128,44 +2976,13 @@
       "value": "Repos royal"
     }
   },
-  "russian-solitaire": {
-    "cardDescription": {
-      "hash": "f6e3baba",
-      "value": "Le Yukon dans sa version la plus impitoyable\u00a0: déplacez des groupes mélangés et descendez les colonnes dans la même couleur."
-    },
-    "howToPlay": {
-      "hash": "a44626e1",
-      "value": [
-        "## Objectif",
-        "Montez les quatre fondations par couleur, de l'As au Roi.",
-        "## Règles",
-        "- Déplacez n'importe quelle carte face visible ou **pile** de cartes **en descendant par rang, dans la même couleur**.",
-        "- Les cartes déplacées ne doivent **pas** forcément être en séquence.",
-        "- Seuls les Rois peuvent occuper les colonnes vides.",
-        "- Touchez deux fois ou faites glisser une carte seule vers les fondations."
-      ]
-    },
-    "quickStart": {
-      "hash": "fae453f1",
-      "value": [
-        "Montez les fondations par couleur, de A à K.",
-        "Descendez les colonnes par couleur.",
-        "Déplacez n'importe quelle pile face visible.",
-        "Seuls les Rois peuvent occuper les colonnes vides."
-      ]
-    },
-    "title": {
-      "hash": "3d081f1c",
-      "value": "Réussite russe"
-    }
-  },
   "scorpion": {
     "cardDescription": {
       "hash": "959e0b20",
       "value": "Démêlez des colonnes face visible pour former quatre suites de même couleur, du Roi à l'As."
     },
     "howToPlay": {
-      "hash": "3a69ad79",
+      "hash": "6cabf38a",
       "value": [
         "## Objectif",
         "Formez **quatre séquences complètes de même couleur**, chacune du Roi à l'As.",
@@ -3175,7 +2992,9 @@
         "- Seul un **Roi** (avec les cartes qu'il porte) peut aller dans une **colonne vide**.",
         "- Les séquences terminées sont retirées du tableau et placées sur les fondations.",
         "## Pioche",
-        "Quand plus aucun coup utile n'est possible, distribuez les trois cartes de la pioche, une sur chacune des trois premières colonnes."
+        "Quand plus aucun coup utile n'est possible, distribuez les trois cartes de la pioche, une sur chacune des trois premières colonnes.",
+        "## Guêpe",
+        "Dans la variante Guêpe, n'importe quelle carte (avec les cartes posées dessus) peut aller sur une colonne vide."
       ]
     },
     "quickStart": {
@@ -3228,13 +3047,13 @@
       "value": "Lisez un petit paquet, réalisez huit prédictions et empêchez les pierres de bloquer le plateau."
     },
     "howToPlay": {
-      "hash": "4094b088",
+      "hash": "3824f461",
       "value": [
         "## Objectif",
-        "Réalisez les huit prédictions avant que le paquet de 24 cartes soit épuisé ou que toutes les cases soient bloquées.",
+        "Réalisez les huit prédictions avant que la pioche de 24 cartes soit épuisée ou que toutes les cases soient bloquées.",
         "## Mise en place",
         "- Utilisez les cartes de l'As au 6 dans les quatre couleurs.",
-        "- Les cartes mélangées forment un paquet face cachée. Touchez-le pour afficher ou masquer sa carte du dessous.",
+        "- Les cartes mélangées forment une pioche face cachée. Touchez-la pour afficher ou masquer sa carte du dessous.",
         "## Prédictions",
         "- Choisissez Rouge, Rouge impair / Noir pair, Pair, Carreaux / Cœurs, Piques / Trèfles, Impair, Noir impair / Rouge pair, ou Noir.",
         "- En cas de réussite, placez la carte révélée sur cette case.",
@@ -3242,7 +3061,7 @@
         "- Une prédiction avec trois pierres est bloquée.",
         "## Libérer les pierres",
         "- Une réussite libère une pierre découverte de chaque case voisine\u00a0: en diagonale aussi en Facile, orthogonalement en Normal, ou un seul voisin orthogonal choisi en Difficile.",
-        "- Choisissez si toutes les pierres libérées par cette réussite sont révélées sur la table ou remises face cachée sous le paquet.",
+        "- Choisissez si toutes les pierres libérées par cette réussite sont révélées sur la table ou remises face cachée sous la pioche.",
         "- Les pierres recouvertes par une carte réussie sont piégées.",
         "## Rejouer",
         "- Les prédictions terminées peuvent être choisies à nouveau pour libérer plus de pierres.",
@@ -3259,36 +3078,6 @@
     "title": {
       "hash": "e33b153c",
       "value": "Le Voyant"
-    }
-  },
-  "shamrocks": {
-    "cardDescription": {
-      "hash": "8c7ab364",
-      "value": "Construisez dix-huit petits éventails sans jamais les laisser dépasser trois cartes."
-    },
-    "howToPlay": {
-      "hash": "4d892287",
-      "value": [
-        "## Objectif",
-        "Placez les 52 cartes sur quatre fondations, montées par couleur de l'As au Roi.",
-        "## Éventails",
-        "- Seule la carte découverte du bas de chaque éventail est jouable.",
-        "- Construisez en montant ou en descendant d'un rang, sans tenir compte de la couleur.",
-        "- Aucun éventail ne peut contenir plus de trois cartes.",
-        "- Les éventails vides ne peuvent pas être remplis, et il n'y a pas de redistribution."
-      ]
-    },
-    "quickStart": {
-      "hash": "8ae918a3",
-      "value": [
-        "Montez les fondations par couleur, de A à K.",
-        "Construisez les éventails en montant ou en descendant d'un rang, sans tenir compte de la couleur.",
-        "Les éventails contiennent au plus trois cartes\u00a0; les éventails vides restent vides."
-      ]
-    },
-    "title": {
-      "hash": "07f9f314",
-      "value": "Trèfles irlandais"
     }
   },
   "shifting-sands": {
@@ -3361,44 +3150,13 @@
       "value": "Simon le Simplet"
     }
   },
-  "singularity": {
-    "cardDescription": {
-      "hash": "6bb9e80b",
-      "value": "Attirez les 52 cartes dans une singularité centrale, un rang à la fois."
-    },
-    "howToPlay": {
-      "hash": "b20ca939",
-      "value": [
-        "## Objectif",
-        "- **Gagnez** en attirant toutes les cartes dans la singularité.",
-        "- **Vous perdez** si aucune carte découverte ne peut être jouée.",
-        "## Règles",
-        "- Placez une carte découverte dans la singularité si elle est **d'un rang au-dessus ou en dessous** de sa carte actuelle.",
-        "- Seule la carte **découverte** (du dessus) de chaque pile est disponible.",
-        "- Les rangs **bouclent**\u00a0: après un Roi, vous pouvez jouer un As, et inversement.",
-        "## Conseils",
-        "- Il n'y a ni pioche ni remélange\u00a0: planifiez vos coups dans l'ordre et le plus longtemps à l'avance possible.",
-        "- Évitez les impasses, et les fins de partie avec des cartes dont les rangs ne se suivent pas."
-      ]
-    },
-    "quickStart": {
-      "hash": "f703e406",
-      "value": [
-        "Les cartes de valeur voisine de la carte du trou peuvent être retirées. Retirez-les toutes pour gagner. A<->K se suivent."
-      ]
-    },
-    "title": {
-      "hash": "4d136a3a",
-      "value": "Singularité"
-    }
-  },
   "sir-tommy": {
     "cardDescription": {
       "hash": "980ec70d",
       "value": "L'ancêtre des réussites\u00a0: triez le paquet sur quatre piles pour former quatre piles de l'As au Roi."
     },
     "howToPlay": {
-      "hash": "eadd39e5",
+      "hash": "95c0ca0b",
       "value": [
         "## Objectif",
         "Montez quatre fondations de l'As au Roi, **sans tenir compte de la couleur**.",
@@ -3407,17 +3165,20 @@
         "- Chaque carte retournée de la pioche doit être posée sur l'un des quatre talons.",
         "- Vous ne pouvez **pas** réorganiser les talons.",
         "- Seule la carte **du dessus** de chaque talon peut aller sur les fondations.",
-        "- **Touchez une fois** un talon pour y poser la carte de la pioche.",
-        "- **Touchez deux fois** une carte découverte de la pioche ou d'un talon pour l'envoyer sur une fondation valide."
+        "- Touchez un talon pour y poser la carte de la pioche.",
+        "- **Touchez deux fois** la carte de la pioche ou la carte du dessus d'un talon pour la jouer sur une fondation.",
+        "- Il n'y a pas de redistribution.",
+        "## Les Quatre Coins",
+        "Dans cette variante, les As commencent sur les fondations, qui montent **par teinte** (l'une ou l'autre des deux couleurs de même teinte), et les talons peuvent être ramassés pour une redistribution."
       ]
     },
     "quickStart": {
-      "hash": "33592120",
+      "hash": "ea2f7d47",
       "value": [
         "Montez les fondations de A à K, sans tenir compte de la couleur.",
         "Les cartes des talons ne peuvent pas être déplacées.",
-        "Touchez une fois un talon pour y poser la carte de la pioche.",
-        "Touchez deux fois une carte découverte de la pioche ou d'un talon pour l'envoyer sur une fondation."
+        "Touchez un talon pour y poser la carte de la pioche.",
+        "Touchez deux fois la carte de la pioche ou la carte du dessus d'un talon pour la jouer sur une fondation."
       ]
     },
     "title": {
@@ -3510,7 +3271,7 @@
       "value": "Formez des suites de même couleur du Roi à l'As dans un double paquet emmêlé."
     },
     "howToPlay": {
-      "hash": "a5a655cd",
+      "hash": "349fc938",
       "value": [
         "## Objectif",
         "Formez **8 séquences complètes de même couleur**, chacune du Roi à l'As. Les suites terminées sont retirées de la table.",
@@ -3520,7 +3281,9 @@
         "- N'importe quelle carte ou suite valide peut être posée sur une colonne vide.",
         "- Quand une séquence complète **du Roi à l'As** de même couleur se forme, elle est retirée automatiquement.",
         "## Pioche",
-        "Touchez la pioche pour distribuer une carte sur chaque colonne. Vous ne pouvez distribuer que si aucune colonne n'est vide."
+        "Touchez la pioche pour distribuer une carte sur chaque colonne. Vous ne pouvez distribuer que si aucune colonne n'est vide.",
+        "## Couleurs",
+        "Jouez avec quatre couleurs, ou facilitez la partie avec deux (Pique et Cœur) ou une seule (Pique) dans les réglages."
       ]
     },
     "quickStart": {
@@ -3666,6 +3429,46 @@
     "title": {
       "hash": "e0db7d2f",
       "value": "Dix, vingt, trente"
+    }
+  },
+  "terrace": {
+    "cardDescription": {
+      "hash": "adb8e1e5",
+      "value": "Choisissez le rang des fondations, puis videz une longue terrasse de cartes avant la fin de la pioche."
+    },
+    "howToPlay": {
+      "hash": "885ccd26",
+      "value": [
+        "## Objectif",
+        "Placez les 104 cartes sur les huit fondations.",
+        "## Départ",
+        "- Quatre cartes sont distribuées sur le tableau. Touchez-en une pour commencer la première fondation\u00a0: son rang devient le **rang de base** de toutes les fondations.",
+        "- Les autres colonnes sont ensuite distribuées, une carte chacune.",
+        "## Fondations",
+        "- Chaque fondation commence par une carte du rang de base.",
+        "- Montez-les **en alternant rouge et noir**, en passant du Roi à l'As, jusqu'à ce que chaque fondation compte 13 cartes.",
+        "## Règles",
+        "- Seule la carte découverte de la **terrasse** (la réserve) est disponible, et elle ne peut aller que sur une fondation.",
+        "- Construisez les colonnes **en descendant, en alternant rouge et noir**, en passant de l'As au Roi. Déplacez une carte à la fois.",
+        "- Une colonne vide doit être remplie depuis le talon, ou en touchant la pioche, qui distribue alors directement dedans.",
+        "- Retournez les cartes de la pioche une à une. Il n'y a pas de redistribution.",
+        "## Variantes",
+        "- **Patience du Général**\u00a0: une terrasse de treize cartes, et les fondations montent par couleur.",
+        "- **Blondes et Brunes**\u00a0: une terrasse de dix cartes, et la première carte distribuée fixe le rang de base.",
+        "- **Étoile filante**\u00a0: comme Blondes et Brunes, avec une terrasse de onze cartes et huit colonnes."
+      ]
+    },
+    "quickStart": {
+      "hash": "ccae7220",
+      "value": [
+        "Touchez l'une des quatre cartes en surbrillance pour choisir le rang des fondations.",
+        "Les fondations montent en alternant rouge et noir, en passant du Roi à l'As.",
+        "La carte découverte de la terrasse ne peut aller que sur une fondation."
+      ]
+    },
+    "title": {
+      "hash": "fd1a8865",
+      "value": "Terrasse"
     }
   },
   "three-peaks": {
@@ -3989,7 +3792,7 @@
       "value": "Le Klondike sans entraves\u00a0: déplacez des groupes entiers de cartes, dans n'importe quel ordre, à travers le tableau."
     },
     "howToPlay": {
-      "hash": "85f184a6",
+      "hash": "e8b97b81",
       "value": [
         "## Objectif",
         "Montez les quatre fondations par couleur, de l'As au Roi.",
@@ -3997,7 +3800,13 @@
         "- Déplacez n'importe quelle carte face visible ou **pile** de cartes **en descendant par rang, en alternant rouge et noir**.",
         "- Les cartes déplacées ne doivent **pas** forcément être en séquence.",
         "- Seuls les Rois peuvent occuper les colonnes vides.",
-        "- Touchez deux fois ou faites glisser une carte seule vers les fondations."
+        "- Touchez deux fois ou faites glisser une carte seule vers les fondations.",
+        "## Variantes",
+        "Choisissez dans les réglages du jeu comment se construisent les colonnes\u00a0:",
+        "- **Yukon**\u00a0: en descendant, en alternant rouge et noir.",
+        "- **Réussite russe**\u00a0: en descendant, dans la même couleur.",
+        "- **Alaska**\u00a0: en montant ou en descendant, dans la même couleur.",
+        "- **Peau d'orignal**\u00a0: en descendant, sur toute couleur autre que la sienne."
       ]
     },
     "quickStart": {

@@ -27,8 +27,8 @@ import { GameWrapper } from "../common/GameWrapper";
 import { i18n } from "@/i18n";
 type GameState = {
   grid: (PlayingCard | null)[];
-  draw: PlayingCard[];
-  trash: PlayingCard[];
+  stock: PlayingCard[];
+  discard: PlayingCard[];
   ended: boolean;
   won: boolean;
 };
@@ -37,8 +37,8 @@ export type MonteCarloGameState = GameState;
 
 const gameStateInitial: GameState = {
   grid: Array(25).fill(null),
-  draw: createDeck(),
-  trash: [],
+  stock: createDeck(),
+  discard: [],
   ended: false,
   won: false,
 };
@@ -47,13 +47,13 @@ async function resetAndSetup(
   setGame: (updater: (draft: GameState) => void) => void,
 ) {
   setGame((draft) => {
-    const allCards = [...draft.draw, ...draft.grid, ...draft.trash].filter(
+    const allCards = [...draft.stock, ...draft.grid, ...draft.discard].filter(
       (card): card is PlayingCard => card !== null,
     );
 
     draft.grid = Array(25).fill(null);
-    draft.draw = flipAllToBack(allCards);
-    draft.trash = [];
+    draft.stock = flipAllToBack(allCards);
+    draft.discard = [];
     draft.ended = false;
     draft.won = false;
   });
@@ -61,9 +61,9 @@ async function resetAndSetup(
   await delay();
 
   setGame((draft) => {
-    const dealt = createGame(draft.draw);
+    const dealt = createGame(draft.stock);
     draft.grid = dealt.grid;
-    draft.draw = dealt.draw;
+    draft.stock = dealt.stock;
     draft.ended = dealt.ended;
     draft.won = dealt.won;
   });
@@ -121,7 +121,7 @@ function hasPair(grid: (PlayingCard | null)[]) {
 }
 
 function evaluateEnd(state: GameState) {
-  const cardsInPlay = countCards(state.grid) + state.draw.length;
+  const cardsInPlay = countCards(state.grid) + state.stock.length;
   if (cardsInPlay === 0) return { ended: true, won: true };
 
   const noFaceDownCards = !hasFaceDownCards(state.grid);
@@ -148,15 +148,15 @@ function createGame(
 }
 
 function dealGame(cards: PlayingCard[], random: () => number): GameState {
-  const draw = shuffle(flipAllToBack(cards), random);
+  const stock = shuffle(flipAllToBack(cards), random);
   const grid = [
-    ...flipAllToFace(draw.splice(-25)),
+    ...flipAllToFace(stock.splice(-25)),
     ...Array<null>(Math.max(0, 25 - cards.length)).fill(null),
   ];
   const state: GameState = {
     grid,
-    draw,
-    trash: [],
+    stock,
+    discard: [],
     ended: false,
     won: false,
   };
@@ -208,11 +208,11 @@ function consolidateAndDealAction(draft: GameState) {
   for (const card of draft.grid) {
     if (!card) continue;
     if (card.faceUp) remaining.push(card);
-    else draft.trash.push(card);
+    else draft.discard.push(card);
   }
 
   while (remaining.length < 25) {
-    const next = draft.draw.pop();
+    const next = draft.stock.pop();
     if (!next) break;
     remaining.push(flipToFace(next));
   }
@@ -324,7 +324,7 @@ export default function MonteCarlo() {
         if (!faceDownCard) return;
 
         draft.grid[faceDownCardIndex] = null;
-        draft.trash.push(faceDownCard);
+        draft.discard.push(faceDownCard);
       });
 
       await delay(50);
@@ -354,14 +354,14 @@ export default function MonteCarlo() {
 
     // Deal new cards from stock to fill empty spaces
     while (
-      gameState.draw.length > 0 &&
+      gameState.stock.length > 0 &&
       gameState.grid.some((card) => card === null)
     ) {
       gameState = produce(gameState, (draft) => {
         const emptyIndex = draft.grid.findIndex((card) => card === null);
         if (emptyIndex === -1) return;
 
-        const newCard = draft.draw.pop();
+        const newCard = draft.stock.pop();
         if (!newCard) return;
 
         draft.grid[emptyIndex] = flipToFace(newCard);
@@ -409,7 +409,7 @@ export default function MonteCarlo() {
         id: "stock",
         name: "stock",
 
-        cards: game.draw,
+        cards: game.stock,
         col: 1,
         row: 0,
         fan: { maxVisible: 3 },
@@ -417,14 +417,14 @@ export default function MonteCarlo() {
         placeholder: { text: i18n.t("cards:stock"), infoPos: "left" },
       },
       {
-        id: "trash",
-        name: "trash",
-        cards: game.trash,
+        id: "discard",
+        name: "discard",
+        cards: game.discard,
         col: 3,
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: i18n.t("cards:dscrd"), infoPos: "right" },
+        placeholder: { text: i18n.t("cards:discard"), infoPos: "right" },
       },
       ...gridZones,
       {

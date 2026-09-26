@@ -13,6 +13,13 @@ export const delta21: GameDefinition = {
     luck: 30,
   },
   thumbnail: "Delta21.webp",
+  thumbnailCredit: {
+    title: "Life-Size Black Bass",
+    artistName: "Winslow Homer",
+    date: "1904",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/189152",
+  },
   background: GAME_BACKGROUNDS.river,
   animation: GameAnimations.Birds,
   gameColorDark: "#11343d",

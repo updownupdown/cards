@@ -28,7 +28,7 @@ export type JailbreakSource =
 
 export type JailbreakGameState = {
   piles: PlayingCard[][];
-  remainder: PlayingCard[];
+  stock: PlayingCard[];
   jokerPile: PlayingCard[];
   discard: PlayingCard[];
   ended: boolean;
@@ -64,7 +64,7 @@ const JAIL_POSITIONS = [
 function createEmptyState(): JailbreakGameState {
   return {
     piles: Array.from({ length: 8 }, () => []),
-    remainder: createDeck().map(flipToBack),
+    stock: createDeck().map(flipToBack),
     jokerPile: [],
     discard: [],
     ended: false,
@@ -82,7 +82,7 @@ function createJailbreakState(
 
   return {
     piles,
-    remainder: deck.map(flipToBack),
+    stock: deck.map(flipToBack),
     jokerPile: [],
     discard: [],
     ended: false,
@@ -113,12 +113,12 @@ async function resetAndSetup(
 ) {
   setGame((draft) => {
     const allCards = [
-      ...draft.remainder,
+      ...draft.stock,
       ...draft.discard,
       ...draft.jokerPile,
       ...draft.piles.flat(),
     ];
-    draft.remainder = shuffle(allCards).map(flipToBack);
+    draft.stock = shuffle(allCards).map(flipToBack);
     draft.piles = Array.from({ length: 8 }, () => []);
     draft.jokerPile = [];
     draft.discard = [];
@@ -129,9 +129,9 @@ async function resetAndSetup(
   await delay();
 
   setGame((draft) => {
-    const drawPile = [...draft.remainder];
+    const drawPile = [...draft.stock];
     draft.piles = dealJailbreakPiles(drawPile, difficulty);
-    draft.remainder = drawPile;
+    draft.stock = drawPile;
   });
 }
 
@@ -191,7 +191,7 @@ function hasMatchingCards(state: JailbreakGameState) {
 }
 
 function hasAvailableMove(state: JailbreakGameState) {
-  if (state.remainder.length > 0 && state.jokerPile.length < MAX_JOKER_CARDS) {
+  if (state.stock.length > 0 && state.jokerPile.length < MAX_JOKER_CARDS) {
     return true;
   }
   return hasMatchingCards(state);
@@ -306,14 +306,14 @@ export default function Jailbreak() {
   function drawRemainder() {
     if (
       game.ended ||
-      game.remainder.length === 0 ||
+      game.stock.length === 0 ||
       game.jokerPile.length >= MAX_JOKER_CARDS
     ) {
       return;
     }
     saveUndoState(structuredClone(game));
     setGame((draft) => {
-      const card = draft.remainder.pop();
+      const card = draft.stock.pop();
       if (card) draft.jokerPile.push(flipToFace(card));
     });
     setSelected([]);
@@ -359,14 +359,14 @@ export default function Jailbreak() {
         },
       },
       {
-        id: "remainder",
-        name: "remainder",
-        cards: game.remainder,
+        id: "stock",
+        name: "stock",
+        cards: game.stock,
         col: 0,
         row: 2.4,
         fan: { maxVisible: 3 },
         placeholder: {
-          text: i18n.t("games:jailbreak.remainder"),
+          text: i18n.t("cards:stock"),
           showCount: true,
           infoPos: "below",
         },
@@ -382,7 +382,7 @@ export default function Jailbreak() {
   );
 
   const cardMapper = (card: MappedCard): AnimatedCardMapping | undefined => {
-    if (card.zoneName === "remainder" || card.zoneName === "discard") {
+    if (card.zoneName === "stock" || card.zoneName === "discard") {
       return { clickThroughCards: true };
     }
     if (card.zoneName === "joker" && card.card.rank === "Joker") {
@@ -402,12 +402,12 @@ export default function Jailbreak() {
   };
 
   const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined =>
-    zone.name === "remainder"
+    zone.name === "stock"
       ? {
           onPress: drawRemainder,
           isDisabled:
             game.ended ||
-            game.remainder.length === 0 ||
+            game.stock.length === 0 ||
             game.jokerPile.length >= MAX_JOKER_CARDS,
         }
       : undefined;

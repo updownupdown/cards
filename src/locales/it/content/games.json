@@ -59,67 +59,6 @@
       "value": "Assi in alto"
     }
   },
-  "alaska": {
-    "cardDescription": {
-      "hash": "ddd9f660",
-      "value": "Una spedizione nello Yukon in cui le carte dello stesso seme possono salire o scendere."
-    },
-    "howToPlay": {
-      "hash": "f9800a76",
-      "value": [
-        "## Obiettivo",
-        "Costruisci le quattro fondazioni per seme in ordine crescente, dall'Asso al Re.",
-        "## Regole",
-        "- Sposta qualsiasi carta scoperta o **gruppo** di carte su una carta, **in ordine crescente o decrescente, nello stesso seme**.",
-        "- Le carte trasportate **non** devono essere in sequenza.",
-        "- Le colonne vuote si possono occupare solo con i Re.",
-        "- Tocca due volte o trascina le singole carte sulle fondazioni."
-      ]
-    },
-    "quickStart": {
-      "hash": "377b21a0",
-      "value": [
-        "Costruisci le fondazioni per seme in ordine crescente, da A a K.",
-        "Costruisci le colonne di un valore sopra o sotto, nello stesso seme.",
-        "Sposta qualsiasi gruppo di carte scoperte.",
-        "Solo i Re possono occupare le colonne vuote."
-      ]
-    },
-    "title": {
-      "hash": "9a8eab96",
-      "value": "Alaska"
-    }
-  },
-  "all-in-a-row": {
-    "cardDescription": {
-      "hash": "cf60e740",
-      "value": "Svuota tredici colonne scegliendo valori consecutivi."
-    },
-    "howToPlay": {
-      "hash": "535c19cf",
-      "value": [
-        "## Obiettivo",
-        "Sposta tutte le 52 carte dalle tredici colonne su un'unica fondazione.",
-        "## Regole",
-        "- Scegli una qualsiasi carta scoperta come valore di partenza.",
-        "- Poi gioca una carta di un valore più alto o più basso di quella in cima alla fondazione, a prescindere dal seme.",
-        "- Asso e Re sono consecutivi, quindi Q, K, A, 2, A, K ecc. è una sequenza valida."
-      ]
-    },
-    "quickStart": {
-      "hash": "f679df79",
-      "value": [
-        "Svuota tutte e tredici le colonne per vincere.",
-        "Scegli una qualsiasi carta scoperta per iniziare.",
-        "Gioca un valore più alto o più basso, a prescindere dal seme.",
-        "A e K sono consecutivi."
-      ]
-    },
-    "title": {
-      "hash": "408219ba",
-      "value": "Tutto in fila"
-    }
-  },
   "apothecary": {
     "cardDescription": {
       "hash": "b66e1d4d",
@@ -274,38 +213,6 @@
       "value": "Dozzina del fornaio"
     }
   },
-  "bakers-game": {
-    "cardDescription": {
-      "hash": "07005d70",
-      "value": "L'antenato più difficile di FreeCell: costruisci le colonne in ordine decrescente per seme, non per colore."
-    },
-    "howToPlay": {
-      "hash": "a01e3e7a",
-      "value": [
-        "## Obiettivo",
-        "Porta tutte le 52 carte sulle quattro **fondazioni**, ognuna costruita per seme dall'Asso al Re.",
-        "## Regole",
-        "- Costruisci le fondazioni per seme in ordine crescente, dall'Asso al Re.",
-        "-- Tocca due volte una carta per mandarla su una fondazione valida.",
-        "- Costruisci le colonne **in ordine decrescente e nello stesso seme** (per esempio un {9S} su un {10S}).",
-        "- Qualsiasi carta può andare in una colonna vuota.",
-        "- Sposta una carta alla volta; ogni **cella libera** contiene una sola carta.",
-        "-- Puoi spostare una sequenza di carte impilate, se hai abbastanza celle libere e colonne vuote."
-      ]
-    },
-    "quickStart": {
-      "hash": "aba9ed00",
-      "value": [
-        "Costruisci le fondazioni per seme (da A a K).",
-        "Costruisci le colonne in ordine decrescente per seme.",
-        "Usa le 4 celle libere per spostare le carte."
-      ]
-    },
-    "title": {
-      "hash": "315c84d0",
-      "value": "Gioco del fornaio"
-    }
-  },
   "baroness": {
     "cardDescription": {
       "hash": "32a23d8a",
@@ -429,6 +336,40 @@
       "value": "Bisley"
     }
   },
+  "black-hole": {
+    "cardDescription": {
+      "hash": "64debd9d",
+      "value": "Attira tutte le 52 carte in un buco nero centrale, un valore alla volta."
+    },
+    "howToPlay": {
+      "hash": "f8156c21",
+      "value": [
+        "## Obiettivo",
+        "- **Vinci** attirando tutte le carte nel buco nero.",
+        "- **Perdi** se nessuna carta scoperta può essere giocata.",
+        "## Regole",
+        "- L'Asso di Picche parte nel buco nero.",
+        "- Sposta una carta scoperta nel buco nero se è **di un valore sopra o sotto** la sua carta attuale.",
+        "- È disponibile solo la carta **scoperta** (in cima) di ogni pila.",
+        "- I valori **ricominciano da capo**: dopo un Re puoi giocare un Asso, e viceversa.",
+        "## Tutto in fila",
+        "Nella variante Tutto in fila, le carte vengono distribuite in tredici colonne da quattro e il buco nero parte vuoto: qualsiasi carta scoperta può entrare per prima.",
+        "## Consigli",
+        "- Non c'è mazzo né rimescolamento, quindi pianifica le mosse in ordine e con il maggiore anticipo possibile.",
+        "- Evita i vicoli ciechi, o di arrivare al finale con carte di valori non consecutivi."
+      ]
+    },
+    "quickStart": {
+      "hash": "f703e406",
+      "value": [
+        "Puoi togliere le carte di valore adiacente alla carta del buco nero. Toglile tutte per vincere. A<->K sono collegati."
+      ]
+    },
+    "title": {
+      "hash": "2ef02914",
+      "value": "Buco Nero"
+    }
+  },
   "blackberry-pie": {
     "cardDescription": {
       "hash": "efcdf8a7",
@@ -509,33 +450,38 @@
       "value": "Bowling"
     }
   },
-  "busy-aces": {
+  "bristol": {
     "cardDescription": {
-      "hash": "86e347ed",
-      "value": "Tieni in movimento dodici colonne corte a due mazzi, una carta dello stesso seme alla volta."
+      "hash": "9b1c2517",
+      "value": "Otto piccoli ventagli e tre pile di riserva alimentate dal mazzo, dove il seme non conta mai."
     },
     "howToPlay": {
-      "hash": "bf9a5d8b",
+      "hash": "21ddab2f",
       "value": [
         "## Obiettivo",
-        "Costruisci tutte e otto le fondazioni per seme, dall'Asso al Re.",
+        "Porta tutte le 52 carte sulle quattro fondazioni, ognuna costruita dall'Asso al Re **a prescindere dal seme**.",
+        "## Distribuzione",
+        "- Vengono distribuiti otto ventagli di tre carte, e ogni Re viene spostato in fondo al suo ventaglio.",
+        "- Tre pile di riserva partono con una carta ciascuna.",
         "## Regole",
-        "- Costruisci in ordine decrescente per seme, spostando una carta alla volta.",
-        "- Qualsiasi carta può occupare una colonna vuota.",
-        "- Gira il mazzo una carta alla volta, senza ridistribuire."
+        "- È disponibile la carta in cima a ogni ventaglio e a ogni pila di riserva.",
+        "- Costruisci i ventagli **in ordine decrescente, a prescindere dal seme**, spostando una carta alla volta.",
+        "- Un ventaglio vuoto non viene mai riempito.",
+        "- Tocca il **mazzo** per distribuire tre carte, una su ogni pila di riserva. Non si possono giocare carte sulle pile di riserva.",
+        "- Non si ridistribuisce."
       ]
     },
     "quickStart": {
-      "hash": "0cde4d1b",
+      "hash": "949d0103",
       "value": [
-        "Costruisci tutte e otto le fondazioni per seme in ordine crescente, da A a K.",
-        "Costruisci le colonne in ordine decrescente per seme, una carta alla volta.",
-        "Qualsiasi carta occupa uno spazio vuoto. Non si ridistribuisce."
+        "Costruisci le fondazioni da A a K, a prescindere dal seme.",
+        "Costruisci i ventagli in ordine decrescente, a prescindere dal seme, una carta alla volta.",
+        "Tocca il mazzo per distribuire una carta su ogni pila di riserva."
       ]
     },
     "title": {
-      "hash": "a2f312a2",
-      "value": "Assi indaffarati"
+      "hash": "fde0e2ee",
+      "value": "Bristol"
     }
   },
   "cabin-siege": {
@@ -854,11 +800,12 @@
       "value": "Guida due mazzi attraverso otto colonne, con mosse di una carta e un solo giro del mazzo."
     },
     "howToPlay": {
-      "hash": "a237b48a",
+      "hash": "686ea922",
       "value": [
         "## Obiettivo",
         "Costruisci otto fondazioni per seme, dall'Asso al Re.",
         "## Regole",
+        "- Otto colonne partono con una carta ciascuna.",
         "- Costruisci le colonne in ordine decrescente, a prescindere dal seme.",
         "- Sposta una carta scoperta alla volta.",
         "- Qualsiasi carta può occupare una colonna vuota.",
@@ -1142,7 +1089,7 @@
       "value": "Costruisci 24 pile dello stesso seme di tre in tre in una griglia di tre file."
     },
     "howToPlay": {
-      "hash": "54a1e92a",
+      "hash": "23ce0cda",
       "value": [
         "## Obiettivo",
         "Sposta tutte le **96 carte** nel maggior numero possibile di pile in sequenza dello stesso seme. Lascia fuori dalla griglia il minor numero di carte.",
@@ -1153,9 +1100,9 @@
         "- La fila in basso si costruisce per seme: **4, 7, 10, K**.",
         "Scambia due pile occupate della griglia per riorganizzarle.",
         "Puoi formare pile senza la carta di base (per esempio 5-8) e completare la sequenza più tardi.",
-        "Quando una mossa lascia uno spazio vuoto nella griglia, viene subito riempito dal mazzo di pesca finché restano carte.",
-        "## Pesca e pozzo",
-        "Tocca il mazzo di pesca per girare tre carte sul pozzo.",
+        "Quando una mossa lascia uno spazio vuoto nella griglia, viene subito riempito dal mazzo finché restano carte.",
+        "## Mazzo e pozzo",
+        "Tocca il mazzo per girare tre carte sul pozzo.",
         "- Si può giocare solo la carta in cima al pozzo.",
         "- Le ridistribuzioni sono illimitate.",
         "## Punteggio",
@@ -1167,11 +1114,11 @@
       ]
     },
     "quickStart": {
-      "hash": "f85507c3",
+      "hash": "5929eb26",
       "value": [
         "Forma sequenze dello stesso seme: 2-5-8-J (fila in alto), 3-6-9-Q (fila centrale) e 4-7-10-K (fila in basso).",
         "Sposta carte o pile per formare sequenze o per scambiarne la posizione.",
-        "Tocca il mazzo di pesca per distribuire tre carte sul pozzo.",
+        "Tocca il mazzo per distribuire tre carte sul pozzo.",
         "La carta in cima al pozzo si può spostare su una pila valida."
       ]
     },
@@ -1251,10 +1198,10 @@
       "value": "Abbatti tutte e dodici le figure piazzando carte su una griglia 3x3."
     },
     "howToPlay": {
-      "hash": "5c37ed1c",
+      "hash": "2c41141f",
       "value": [
         "## Obiettivo",
-        "Sconfiggi tutti e dodici i Fanti, le Donne e i Re intorno alla griglia prima di finire le carte da pescare.",
+        "Sconfiggi tutti e dodici i Fanti, le Donne e i Re intorno alla griglia prima che finisca il mazzo.",
         "## Attacchi",
         "- Una carta appena piazzata colpisce ogni figura che ha di fronte. Solo le due carte della griglia in mezzo infliggono danni.",
         "-- I **Fanti** non hanno limitazioni di attacco",
@@ -1286,22 +1233,22 @@
       "value": "Costruisci sette colonne compatte, poi distribuisci ogni nuova fila del mazzo direttamente sulle colonne."
     },
     "howToPlay": {
-      "hash": "e0fd6ce1",
+      "hash": "0253c855",
       "value": [
         "## Obiettivo",
         "Costruisci quattro fondazioni per seme, dall'Asso al Re.",
         "## Regole",
-        "- Costruisci le colonne in ordine decrescente.",
-        "- Sposta insieme le sequenze decrescenti dello stesso seme.",
+        "- Costruisci le colonne **in ordine decrescente, alternando rosso e nero**.",
+        "- Le sequenze costruite correttamente si spostano insieme.",
         "- Solo i Re occupano le colonne vuote.",
         "- Ogni tocco sul mazzo distribuisce una carta su ogni colonna."
       ]
     },
     "quickStart": {
-      "hash": "d8a3426c",
+      "hash": "9d17fc0b",
       "value": [
         "Costruisci le fondazioni per seme in ordine crescente.",
-        "Costruisci le colonne in ordine decrescente.",
+        "Costruisci le colonne in ordine decrescente alternando rosso e nero.",
         "Distribuisci una carta del mazzo su ogni colonna; i K occupano gli spazi vuoti."
       ]
     },
@@ -1585,7 +1532,7 @@
       "value": "Un impegnativo solitario a due mazzi in cui si costruiscono le fondazioni."
     },
     "howToPlay": {
-      "hash": "a424bb2d",
+      "hash": "327ab3c4",
       "value": [
         "## Obiettivo",
         "Porta tutte le 104 carte sulle otto fondazioni, ognuna costruita per seme dall'Asso al Re.",
@@ -1595,21 +1542,58 @@
         "- Sposta una sola carta alla volta tra le colonne.",
         "- Qualsiasi carta singola può andare in una colonna vuota.",
         "- Gira le carte dal mazzo al pozzo una alla volta. La carta in cima al pozzo si può giocare.",
-        "-- In modalità facile le ridistribuzioni sono illimitate.",
-        "-- In modalità difficile non si ridistribuisce."
+        "- Non si ridistribuisce, a meno che tu non attivi le ridistribuzioni illimitate nelle impostazioni.",
+        "## Varianti",
+        "- **Giuseppina**: le sequenze dello stesso seme si spostano insieme.",
+        "- **Lucas**: tredici colonne da tre, con gli Assi che partono sulle fondazioni.",
+        "- **Assi indaffarati**: dodici colonne da due, con la carta in fondo coperta."
       ]
     },
     "quickStart": {
-      "hash": "4355938b",
+      "hash": "10a685b4",
       "value": [
         "Costruisci tutte le 8 fondazioni per seme, da A a K.",
         "Costruisci le colonne in ordine decrescente per seme, spostando una carta alla volta.",
-        "Gira le carte dal mazzo al pozzo una alla volta; le ridistribuzioni dipendono dalla difficoltà."
+        "Gira le carte dal mazzo al pozzo una alla volta, senza ridistribuzione."
       ]
     },
     "title": {
       "hash": "f7d2814b",
       "value": "Quaranta ladroni"
+    }
+  },
+  "four-seasons": {
+    "cardDescription": {
+      "hash": "caddc762",
+      "value": "Cinque carte a croce e quattro angoli: fai girare le stagioni a partire dalla prima carta d'angolo."
+    },
+    "howToPlay": {
+      "hash": "baf2850a",
+      "value": [
+        "## Obiettivo",
+        "Porta tutte le 52 carte sulle quattro fondazioni negli angoli.",
+        "## Fondazioni",
+        "- La prima carta d'angolo fissa il **valore base**. Le altre tre fondazioni partono con le altre carte di quel valore.",
+        "- Costruisci ogni fondazione **per seme**, passando dal Re all'Asso, finché non contiene 13 carte.",
+        "## La croce",
+        "- Costruisci le cinque pile della croce **in ordine decrescente, a prescindere dal seme**. I valori ricominciano da capo, quindi un Re può andare su un Asso, a meno che gli Assi non siano il valore base.",
+        "- È disponibile solo la carta in cima a ogni pila, e le carte si spostano una alla volta.",
+        "- Qualsiasi carta disponibile può riempire uno spazio vuoto della croce.",
+        "## Mazzo",
+        "Gira le carte dal mazzo al pozzo una alla volta. Non si ridistribuisce."
+      ]
+    },
+    "quickStart": {
+      "hash": "5b92f9b8",
+      "value": [
+        "La carta d'angolo fissa il valore di partenza di ogni fondazione.",
+        "Le fondazioni salgono per seme, passando dal Re all'Asso.",
+        "Costruisci la croce in ordine decrescente con qualsiasi seme, una carta alla volta."
+      ]
+    },
+    "title": {
+      "hash": "7bc4dacb",
+      "value": "Quattro Stagioni"
     }
   },
   "freecell": {
@@ -1618,7 +1602,7 @@
       "value": "Un classico a carte scoperte in cui quasi ogni partita si può vincere con un po' di attenzione."
     },
     "howToPlay": {
-      "hash": "3add4428",
+      "hash": "1d797da4",
       "value": [
         "## Obiettivo",
         "Porta tutte le 52 carte sulle quattro **fondazioni**, ognuna costruita per seme dall'Asso al Re.",
@@ -1626,7 +1610,9 @@
         "- Costruisci le colonne **in ordine decrescente, alternando rosso e nero**.",
         "- Sposta una carta alla volta; ogni **cella libera** contiene una sola carta.",
         "- Puoi spostare una carta alla volta. Puoi spostare gruppi di carte insieme, ma solo se hai abbastanza celle libere e colonne vuote per fare la stessa mossa una carta alla volta.",
-        "- Qualsiasi carta può andare in una colonna vuota."
+        "- Qualsiasi carta può andare in una colonna vuota.",
+        "## Gioco del fornaio",
+        "L'antenato del FreeCell, da scegliere nelle impostazioni: le colonne si costruiscono in ordine decrescente **nello stesso seme** invece che alternando rosso e nero."
       ]
     },
     "quickStart": {
@@ -1713,7 +1699,7 @@
       "value": "Scala un Klondike a nove colonne e due mazzi, con otto fondazioni."
     },
     "howToPlay": {
-      "hash": "b5a0feb8",
+      "hash": "4a898796",
       "value": [
         "## Obiettivo",
         "Porta entrambi i mazzi su otto fondazioni, costruite dall'Asso al Re per seme.",
@@ -1721,15 +1707,17 @@
         "- Le nove colonne vengono distribuite a scala, come nel Klondike.",
         "- Costruisci in ordine decrescente alternando rosso e nero e sposta sequenze ordinate.",
         "- Solo i Re possono occupare le colonne vuote.",
-        "- Gira le carte del mazzo una alla volta; 1 ridistribuzione dà 2 giri in tutto."
+        "- Gira le carte del mazzo una alla volta; 1 ridistribuzione dà 2 giri in tutto.",
+        "## Arpa",
+        "Arpa è lo stesso gioco con 3 ridistribuzioni, cioè 4 giri del mazzo."
       ]
     },
     "quickStart": {
-      "hash": "db912b69",
+      "hash": "b3a33e8e",
       "value": [
         "Porta entrambi i mazzi su otto fondazioni, costruite per seme da A a K.",
         "Costruisci le colonne in ordine decrescente alternando rosso e nero e sposta sequenze ordinate.",
-        "Solo i K occupano le colonne vuote; 1 ridistribuzione dà 2 giri del mazzo."
+        "Solo i K occupano le colonne vuote; 1 ridistribuzione (3 in Arpa)."
       ]
     },
     "title": {
@@ -1845,36 +1833,6 @@
       "value": "Gremlin"
     }
   },
-  "harp": {
-    "cardDescription": {
-      "hash": "70db0dcf",
-      "value": "Un Doppio Klondike più indulgente, con quattro giri del mazzo."
-    },
-    "howToPlay": {
-      "hash": "97cbd1bd",
-      "value": [
-        "## Obiettivo",
-        "Porta entrambi i mazzi su otto fondazioni, costruite per seme dall'Asso al Re.",
-        "## Regole",
-        "- Costruisci le colonne in ordine decrescente alternando rosso e nero e sposta sequenze ordinate.",
-        "- Solo i Re possono occupare le colonne vuote.",
-        "- Gira una carta del mazzo alla volta, con quattro giri in tutto."
-      ]
-    },
-    "quickStart": {
-      "hash": "78454632",
-      "value": [
-        "Porta tutte le carte sulle fondazioni, costruite per seme da A a K.",
-        "Costruisci le colonne in ordine decrescente alternando rosso e nero.",
-        "Solo i K occupano le colonne vuote.",
-        "Hai a disposizione fino a quattro giri del mazzo."
-      ]
-    },
-    "title": {
-      "hash": "f8e78326",
-      "value": "Arpa"
-    }
-  },
   "herbalist": {
     "cardDescription": {
       "hash": "820b189b",
@@ -1949,14 +1907,14 @@
       "value": "Conquista la maggioranza delle spie chiave con reclutamenti, contromosse e assassinii ben calcolati."
     },
     "howToPlay": {
-      "hash": "a0f2ce9e",
+      "hash": "b297c489",
       "value": [
         "## Obiettivo",
         "**Vinci** se, quando il mazzo delle spie è esaurito, hai reclutato **più della metà** di tutte le spie chiave (Fanti, Donne e Re).",
         "## Mazzi e gioco",
         "- Il mazzo delle spie è costruito a livelli: **5-7** in cima, poi **8-10**, poi **J-K**.",
-        "- Il tuo mazzo di pesca inizia con le carte dall'Asso al 4.",
-        "- Il tuo mazzo di pesca verrà rimescolato spesso. Costruiscilo reclutando spie di valore alto e ritirando coppie di spie di valore basso.",
+        "- Il tuo mazzo inizia con le carte dall'Asso al 4.",
+        "- I tuoi scarti vengono spesso rimescolati nel tuo mazzo. Costruiscilo reclutando spie di valore alto e ritirando coppie di spie di valore basso.",
         "- Le **spie di supporto** servono solo ad acquisire le spie chiave.",
         "- Le **spie chiave** sono le uniche carte che contano per il punteggio finale.",
         "## Azioni",
@@ -1968,7 +1926,7 @@
         "-- Dopo aver contrastato o reclutato, puoi togliere per sempre dalla mano un set di carte dello stesso valore.",
         "-- Di solito conviene togliere le carte di valore basso man mano che la partita avanza, per aumentare la forza media del tuo mazzo.",
         "- **Assassina**:",
-        "-- Quando sei bloccato, puoi sacrificare un **Asso** dalla mano, dal mazzo di pesca o dagli scarti per assassinare una spia. Perdi se non ti restano Assi."
+        "-- Quando sei bloccato, puoi sacrificare un **Asso** dalla mano, dal mazzo o dagli scarti per assassinare una spia. Perdi se non ti restano Assi."
       ]
     },
     "quickStart": {
@@ -2023,7 +1981,7 @@
       "value": "Abbina totali uguali di rosse e nere per far evadere il Jolly attraverso un muro."
     },
     "howToPlay": {
-      "hash": "94b0b650",
+      "hash": "aad3689d",
       "value": [
         "## Obiettivo",
         "Fai evadere il Jolly liberando uno dei quattro **muri** che lo circondano, senza lasciare nessuna carta sopra di lui.",
@@ -2031,7 +1989,7 @@
         "- Seleziona carte rosse e nere scoperte i cui valori danno totali uguali. Le carte abbinate vengono tolte automaticamente.",
         "- Gli Assi valgono 1, i Fanti 11, le Donne 12 e i Re 13.",
         "- Quando una pila della prigione viene liberata, mostra la carta successiva. Liberare un angolo non libera il Jolly.",
-        "- Tocca il mazzo di pesca per mettere la sua carta in cima sul Jolly. Lì si possono impilare al massimo tre carte, e solo quella in cima è disponibile.",
+        "- Tocca il mazzo per mettere la sua carta in cima sul Jolly. Lì si possono impilare al massimo tre carte, e solo quella in cima è disponibile.",
         "- Il Jolly non può evadere finché non sono state tolte tutte le carte impilate su di lui.",
         "## Difficoltà",
         "Meno carte ci sono negli angoli, più la partita è difficile, perché restano meno possibilità.",
@@ -2039,11 +1997,11 @@
       ]
     },
     "quickStart": {
-      "hash": "d57ce5d8",
+      "hash": "91f0cb6f",
       "value": [
         "Libera uno dei muri laterali per far evadere il Jolly.",
         "Togli le carte selezionando carte rosse e nere scoperte con totali uguali.",
-        "Quando sei bloccato, tocca il mazzo di pesca per aggiungere una carta sul Jolly."
+        "Quando sei bloccato, tocca il mazzo per aggiungere una carta sul Jolly."
       ]
     },
     "title": {
@@ -2051,34 +2009,39 @@
       "value": "Evasione"
     }
   },
-  "josephine": {
+  "king-albert": {
     "cardDescription": {
-      "hash": "7308e533",
-      "value": "Un parente a due mazzi di Quaranta ladroni, in cui le sequenze dello stesso seme si spostano in blocco."
+      "hash": "43b55724",
+      "value": "Tutte le carte sono distribuite scoperte: nove colonne, una piccola riserva e una sola carta spostata alla volta."
     },
     "howToPlay": {
-      "hash": "1631d117",
+      "hash": "6c0f25fe",
       "value": [
         "## Obiettivo",
-        "Costruisci otto fondazioni per seme, dall'Asso al Re.",
+        "Porta tutte le carte sulle quattro fondazioni per seme, dall'Asso al Re.",
+        "## Distribuzione",
+        "- Vengono distribuite nove colonne scoperte, da una a nove carte.",
+        "- Le sette carte rimaste formano la **riserva**. Ognuna si può giocare.",
         "## Regole",
-        "- Costruisci le colonne in ordine decrescente per seme.",
-        "- Sposta insieme intere sequenze decrescenti dello stesso seme.",
-        "- Qualsiasi carta può occupare una colonna vuota.",
-        "- Gira il mazzo una carta alla volta, senza ridistribuire."
+        "- Costruisci le colonne **in ordine decrescente, alternando rosso e nero**.",
+        "- Sposta **una carta alla volta**; le sequenze non si spostano mai insieme.",
+        "- Le carte della riserva possono andare su una fondazione o su una colonna, ma nessuna carta può tornare nella riserva.",
+        "- Qualsiasi carta può riempire una colonna vuota.",
+        "## Raglan",
+        "Nella variante Raglan, gli Assi partono sulle fondazioni, le colonne più lunghe hanno sette carte e la riserva ne ha sei."
       ]
     },
     "quickStart": {
-      "hash": "4a41664c",
+      "hash": "04c12855",
       "value": [
-        "Costruisci otto fondazioni per seme in ordine crescente.",
-        "Costruisci le colonne in ordine decrescente per seme.",
-        "Sposta sequenze dello stesso seme e gira il mazzo una sola volta."
+        "Porta tutte le carte sulle quattro fondazioni per seme, da A a K.",
+        "Costruisci in ordine decrescente alternando rosso e nero, una carta alla volta.",
+        "Le carte della riserva si possono giocare, ma niente torna nella riserva."
       ]
     },
     "title": {
-      "hash": "b4ef5342",
-      "value": "Giuseppina"
+      "hash": "a2e394be",
+      "value": "Re Alberto"
     }
   },
   "klondike": {
@@ -2118,7 +2081,7 @@
       "value": "Scopri un campo compatto di ventagli, con due rimescolate per sciogliere i nodi."
     },
     "howToPlay": {
-      "hash": "3c31ae43",
+      "hash": "64ab3a33",
       "value": [
         "## Obiettivo",
         "Porta tutte le 52 carte su quattro fondazioni, costruite per seme dall'Asso al Re.",
@@ -2126,7 +2089,10 @@
         "- Si può giocare solo l'ultima carta scoperta di ogni ventaglio.",
         "- Costruisci in ordine decrescente per seme, una carta alla volta.",
         "- I ventagli vuoti non si possono riempire.",
-        "- Due volte per partita, rimescola tutte le carte rimaste nei ventagli e ridistribuiscile a gruppi di tre."
+        "- Due volte per partita, rimescola tutte le carte rimaste nei ventagli e ridistribuiscile a gruppi di tre.",
+        "## Varianti",
+        "- **Trilobo**: gli Assi partono sulle fondazioni, lasciando sedici ventagli.",
+        "- **Trifogli**: costruisci in ordine crescente o decrescente a prescindere dal seme; nessun ventaglio può avere più di tre carte e non ci sono ridistribuzioni."
       ]
     },
     "quickStart": {
@@ -2258,38 +2224,6 @@
       "value": "Jolly solitario"
     }
   },
-  "lucas": {
-    "cardDescription": {
-      "hash": "a20338dd",
-      "value": "Tredici colonne compatte iniziano sotto otto Assi già piazzati."
-    },
-    "howToPlay": {
-      "hash": "8b0e3ad9",
-      "value": [
-        "## Obiettivo",
-        "Costruisci tutte e otto le fondazioni per seme, dall'Asso al Re.",
-        "## Regole",
-        "- Gli Assi vengono tolti prima di distribuire tredici colonne da tre.",
-        "- Costruisci le colonne in ordine decrescente per seme.",
-        "- Sposta una sola carta scoperta alla volta.",
-        "- Occupa le colonne vuote con qualsiasi carta.",
-        "- Distribuisci il mazzo una carta alla volta. Non si ridistribuisce."
-      ]
-    },
-    "quickStart": {
-      "hash": "15dcb416",
-      "value": [
-        "Costruisci tutte e otto le fondazioni per seme, da A a K.",
-        "Gli otto Assi partono sulle fondazioni.",
-        "Costruisci le colonne in ordine decrescente per seme, una carta alla volta.",
-        "Le colonne vuote accettano qualsiasi carta. Non si ridistribuisce."
-      ]
-    },
-    "title": {
-      "hash": "6c1095df",
-      "value": "Lucas"
-    }
-  },
   "lycan": {
     "cardDescription": {
       "hash": "9561f249",
@@ -2398,6 +2332,41 @@
       "value": "Memory"
     }
   },
+  "miss-milligan": {
+    "cardDescription": {
+      "hash": "2fafaca0",
+      "value": "Parti da otto carte isolate e distribuisci una fila su ogni colonna quando vuoi."
+    },
+    "howToPlay": {
+      "hash": "d8f2b41f",
+      "value": [
+        "## Obiettivo",
+        "Porta entrambi i mazzi sulle otto fondazioni, ognuna costruita per seme dall'Asso al Re.",
+        "## Regole",
+        "- La partita inizia con una carta in ognuna delle otto colonne.",
+        "- Costruisci le colonne **in ordine decrescente, alternando rosso e nero**. Una sequenza costruita correttamente si sposta in blocco.",
+        "- Solo un **Re** (o una sequenza che inizia con un Re) può riempire una colonna vuota.",
+        "- Tocca il **mazzo** per distribuire una carta su ogni colonna, vuota o no.",
+        "## Mettere da parte",
+        "- Quando il mazzo è finito, puoi mettere da parte una carta o una sequenza nella **tasca**.",
+        "- La tasca contiene una carta o una sequenza alla volta. Rigiocala su una colonna o una fondazione prima di usare di nuovo la tasca.",
+        "## Gigante",
+        "Nella variante Gigante, qualsiasi carta o sequenza può riempire una colonna vuota, ma non c'è la tasca."
+      ]
+    },
+    "quickStart": {
+      "hash": "94b68883",
+      "value": [
+        "Costruisci otto fondazioni per seme, da A a K.",
+        "Costruisci le colonne in ordine decrescente alternando rosso e nero; sposta le sequenze costruite.",
+        "Tocca il mazzo per distribuire una carta su ogni colonna."
+      ]
+    },
+    "title": {
+      "hash": "71a70424",
+      "value": "Miss Milligan"
+    }
+  },
   "monte-carlo": {
     "cardDescription": {
       "hash": "752d12bd",
@@ -2424,37 +2393,6 @@
     "title": {
       "hash": "7b4538a5",
       "value": "Montecarlo"
-    }
-  },
-  "moosehide": {
-    "cardDescription": {
-      "hash": "30dc2d60",
-      "value": "Un parente dello Yukon che scende su ogni seme tranne il proprio."
-    },
-    "howToPlay": {
-      "hash": "15907878",
-      "value": [
-        "## Obiettivo",
-        "Costruisci le quattro fondazioni per seme in ordine crescente, dall'Asso al Re.",
-        "## Regole",
-        "- Sposta qualsiasi carta scoperta o **gruppo** di carte **in ordine decrescente, su una carta di un seme diverso**.",
-        "- Le carte trasportate **non** devono essere in sequenza.",
-        "- Le colonne vuote si possono occupare solo con i Re.",
-        "- Tocca due volte o trascina le singole carte sulle fondazioni."
-      ]
-    },
-    "quickStart": {
-      "hash": "7142a388",
-      "value": [
-        "Costruisci le fondazioni per seme in ordine crescente, da A a K.",
-        "Costruisci le colonne in ordine decrescente su qualsiasi seme tranne lo stesso.",
-        "Sposta qualsiasi gruppo di carte scoperte.",
-        "Solo i Re possono occupare le colonne vuote."
-      ]
-    },
-    "title": {
-      "hash": "ace36eec",
-      "value": "Pelle d'alce"
     }
   },
   "nestor": {
@@ -2524,38 +2462,6 @@
     "title": {
       "hash": "01d23c78",
       "value": "Veglia notturna"
-    }
-  },
-  "number-ten": {
-    "cardDescription": {
-      "hash": "e3d8f8d0",
-      "value": "Scopri dieci colonne e sposta in blocco le sequenze a colori alterni."
-    },
-    "howToPlay": {
-      "hash": "1b832fa3",
-      "value": [
-        "## Obiettivo",
-        "Porta entrambi i mazzi sulle otto fondazioni, costruite per seme dall'Asso al Re.",
-        "## Regole",
-        "- Si distribuiscono dieci colonne da quattro, ognuna con due carte coperte e due scoperte.",
-        "- Costruisci le colonne in ordine decrescente alternando rosso e nero.",
-        "- Sposta insieme intere sequenze ordinate correttamente.",
-        "- Qualsiasi carta o sequenza occupa uno spazio vuoto; il mazzo si gira una sola volta.",
-        "- Non si ridistribuisce."
-      ]
-    },
-    "quickStart": {
-      "hash": "dcb56508",
-      "value": [
-        "Porta tutte le carte sulle fondazioni, costruite per seme da A a K.",
-        "Costruisci le colonne in ordine decrescente alternando rosso e nero.",
-        "Sposta insieme le sequenze ordinate; qualsiasi carta occupa uno spazio vuoto.",
-        "Non si ridistribuisce."
-      ]
-    },
-    "title": {
-      "hash": "1a6aecb7",
-      "value": "Numero dieci"
     }
   },
   "ouroboros": {
@@ -2787,37 +2693,6 @@
       "value": "Quadrati di poker"
     }
   },
-  "puss-in-the-corner": {
-    "cardDescription": {
-      "hash": "2b9e278c",
-      "value": "Guida il mazzo verso quattro pile d'angolo, costruendo per colore con una sola ridistribuzione."
-    },
-    "howToPlay": {
-      "hash": "fa562a1b",
-      "value": [
-        "## Obiettivo",
-        "Porta tutte le 52 carte sulle quattro fondazioni, costruite dall'Asso al Re **per colore**.",
-        "## Regole",
-        "- Una fondazione accetta il valore successivo di **uno qualsiasi dei due semi del suo colore**.",
-        "- Ogni carta del mazzo va messa su uno dei **quattro pozzi** o giocata su una fondazione.",
-        "- Qualsiasi carta può andare su qualsiasi pozzo, ma le carte non possono mai passare da un pozzo all'altro.",
-        "- **Tocca due volte** la carta del mazzo o la carta in cima a un pozzo per giocarla su una fondazione.",
-        "- Quando il mazzo è vuoto, toccalo per raccogliere i pozzi in ordine e fare **una ridistribuzione**."
-      ]
-    },
-    "quickStart": {
-      "hash": "88ac90c8",
-      "value": [
-        "Costruisci tutte e quattro le fondazioni per colore (rosso o nero), dall'Asso al Re.",
-        "Tocca un pozzo per posarvi la carta del mazzo.",
-        "Quando il mazzo finisce, toccalo una volta per ridistribuire."
-      ]
-    },
-    "title": {
-      "hash": "6e4b050d",
-      "value": "I quattro cantoni"
-    }
-  },
   "pyramid": {
     "cardDescription": {
       "hash": "659fff1e",
@@ -2878,42 +2753,13 @@
       "value": "L'udienza della Regina"
     }
   },
-  "raglan": {
-    "cardDescription": {
-      "hash": "2a08f282",
-      "value": "Un classico a un mazzo con colonne a colori alterni e un ritmo semplice e ragionato."
-    },
-    "howToPlay": {
-      "hash": "bbd23062",
-      "value": [
-        "## Obiettivo",
-        "Porta tutte le carte sulle quattro fondazioni per seme, dall'Asso al Re.",
-        "## Regole",
-        "- Costruisci le colonne in ordine decrescente alternando rosso e nero.",
-        "- Solo i Re possono occupare le colonne vuote.",
-        "- Il mazzo si gira sul pozzo una carta alla volta. Non si ridistribuisce."
-      ]
-    },
-    "quickStart": {
-      "hash": "0b04b422",
-      "value": [
-        "Sposta ogni carta sulle quattro fondazioni per seme, da A a K.",
-        "Costruisci sequenze discendenti alternando rosso e nero.",
-        "Sposta i gruppi validi del tableau e usa le colonne vuote solo per i K."
-      ]
-    },
-    "title": {
-      "hash": "1dfbe9f2",
-      "value": "Raglan"
-    }
-  },
   "rank-and-file": {
     "cardDescription": {
       "hash": "54303353",
       "value": "Scopri dieci colonne disciplinate e manovra formazioni a colori alterni."
     },
     "howToPlay": {
-      "hash": "3e3993d7",
+      "hash": "544745e3",
       "value": [
         "## Obiettivo",
         "Porta entrambi i mazzi su otto fondazioni, costruite per seme dall'Asso al Re.",
@@ -2922,7 +2768,9 @@
         "- Costruisci in ordine decrescente alternando rosso e nero.",
         "- Sposta qualsiasi sequenza ordinata correttamente, intera o in parte.",
         "- Qualsiasi carta o sequenza può occupare una colonna vuota.",
-        "- Distribuisci il mazzo una carta alla volta. Non si ridistribuisce."
+        "- Distribuisci il mazzo una carta alla volta. Non si ridistribuisce.",
+        "## Numero dieci",
+        "Numero dieci è lo stesso gioco con due carte coperte e due scoperte in ogni colonna."
       ]
     },
     "quickStart": {
@@ -3128,44 +2976,13 @@
       "value": "Riposo reale"
     }
   },
-  "russian-solitaire": {
-    "cardDescription": {
-      "hash": "f6e3baba",
-      "value": "Lo Yukon nella sua versione più spietata: trasporta gruppi misti e costruisci le colonne in ordine decrescente per seme."
-    },
-    "howToPlay": {
-      "hash": "a44626e1",
-      "value": [
-        "## Obiettivo",
-        "Costruisci le quattro fondazioni per seme in ordine crescente, dall'Asso al Re.",
-        "## Regole",
-        "- Sposta qualsiasi carta scoperta o **gruppo** di carte **in ordine decrescente, nello stesso seme**.",
-        "- Le carte trasportate **non** devono essere in sequenza.",
-        "- Le colonne vuote si possono occupare solo con i Re.",
-        "- Tocca due volte o trascina le singole carte sulle fondazioni."
-      ]
-    },
-    "quickStart": {
-      "hash": "fae453f1",
-      "value": [
-        "Costruisci le fondazioni per seme in ordine crescente, da A a K.",
-        "Costruisci le colonne in ordine decrescente per seme.",
-        "Sposta qualsiasi gruppo di carte scoperte.",
-        "Solo i Re possono occupare le colonne vuote."
-      ]
-    },
-    "title": {
-      "hash": "3d081f1c",
-      "value": "Solitario russo"
-    }
-  },
   "scorpion": {
     "cardDescription": {
       "hash": "959e0b20",
       "value": "Districa colonne scoperte in quattro sequenze dello stesso seme, dal Re all'Asso."
     },
     "howToPlay": {
-      "hash": "3a69ad79",
+      "hash": "6cabf38a",
       "value": [
         "## Obiettivo",
         "Forma **quattro sequenze complete dello stesso seme**, ognuna dal Re all'Asso.",
@@ -3175,7 +2992,9 @@
         "- Solo un **Re** (con le carte che ha sopra) può andare in una **colonna vuota**.",
         "- Le sequenze completate vengono tolte dalle colonne e messe sulle fondazioni.",
         "## Mazzo",
-        "Quando non restano mosse utili, distribuisci le tre carte del mazzo, una su ognuna delle prime tre colonne."
+        "Quando non restano mosse utili, distribuisci le tre carte del mazzo, una su ognuna delle prime tre colonne.",
+        "## Vespa",
+        "Nella variante Vespa, qualsiasi carta (con le carte che ha sopra) può andare in una colonna vuota."
       ]
     },
     "quickStart": {
@@ -3228,7 +3047,7 @@
       "value": "Leggi un mazzo corto, completa otto previsioni e non lasciare che le pietre blocchino il tavolo."
     },
     "howToPlay": {
-      "hash": "4094b088",
+      "hash": "3824f461",
       "value": [
         "## Obiettivo",
         "Completa tutte e otto le previsioni prima che finisca il mazzo da 24 carte o che tutti gli spazi siano bloccati.",
@@ -3259,36 +3078,6 @@
     "title": {
       "hash": "e33b153c",
       "value": "Il veggente"
-    }
-  },
-  "shamrocks": {
-    "cardDescription": {
-      "hash": "8c7ab364",
-      "value": "Costruisci diciotto ventaglietti senza mai farne crescere uno oltre le tre carte."
-    },
-    "howToPlay": {
-      "hash": "4d892287",
-      "value": [
-        "## Obiettivo",
-        "Porta tutte le 52 carte su quattro fondazioni, costruite per seme dall'Asso al Re.",
-        "## Ventagli",
-        "- Si può giocare solo l'ultima carta scoperta di ogni ventaglio.",
-        "- Costruisci di un valore sopra o sotto, a prescindere dal seme.",
-        "- Nessun ventaglio può contenere più di tre carte.",
-        "- I ventagli vuoti non si possono riempire e non si ridistribuisce."
-      ]
-    },
-    "quickStart": {
-      "hash": "8ae918a3",
-      "value": [
-        "Costruisci le fondazioni per seme da A a K.",
-        "Costruisci i ventagli di un valore sopra o sotto, a prescindere dal seme.",
-        "I ventagli contengono al massimo tre carte; quelli vuoti restano vuoti."
-      ]
-    },
-    "title": {
-      "hash": "07f9f314",
-      "value": "Trifogli"
     }
   },
   "shifting-sands": {
@@ -3361,44 +3150,13 @@
       "value": "Simone il sempliciotto"
     }
   },
-  "singularity": {
-    "cardDescription": {
-      "hash": "6bb9e80b",
-      "value": "Attira tutte le 52 carte in una singolarità centrale, un valore alla volta."
-    },
-    "howToPlay": {
-      "hash": "b20ca939",
-      "value": [
-        "## Obiettivo",
-        "- **Vinci** attirando tutte le carte nella singolarità.",
-        "- **Perdi** se nessuna carta scoperta si può giocare.",
-        "## Regole",
-        "- Sposta una carta scoperta nella singolarità se è **di un valore sopra o sotto** la carta attuale.",
-        "- È disponibile solo la carta **scoperta** (in cima) di ogni pila.",
-        "- I valori **sono circolari**: dopo un Re puoi giocare un Asso, e viceversa.",
-        "## Consigli",
-        "- Non ci sono mazzo né rimescolate, quindi pianifica le mosse in ordine e il più possibile in anticipo.",
-        "- Evita i vicoli ciechi e di arrivare al finale con carte di valori non consecutivi."
-      ]
-    },
-    "quickStart": {
-      "hash": "f703e406",
-      "value": [
-        "Puoi togliere le carte di valore adiacente alla carta del buco nero. Toglile tutte per vincere. A<->K sono collegati."
-      ]
-    },
-    "title": {
-      "hash": "4d136a3a",
-      "value": "Singolarità"
-    }
-  },
   "sir-tommy": {
     "cardDescription": {
       "hash": "980ec70d",
       "value": "Il capostipite dei solitari: smista il mazzo su quattro pile per formare quattro pile dall'Asso al Re."
     },
     "howToPlay": {
-      "hash": "eadd39e5",
+      "hash": "95c0ca0b",
       "value": [
         "## Obiettivo",
         "Costruisci quattro fondazioni dall'Asso al Re, **a prescindere dal seme**.",
@@ -3407,17 +3165,20 @@
         "- Ogni carta girata dal mazzo deve andare su uno dei quattro pozzi.",
         "- **Non** puoi riordinare i pozzi.",
         "- Solo la carta **in cima** a ogni pozzo può andare sulle fondazioni.",
-        "- **Tocca una volta** un pozzo per metterci la carta del mazzo.",
-        "- **Tocca due volte** una carta scoperta del mazzo o di un pozzo per mandarla su una fondazione valida."
+        "- Tocca un pozzo per metterci la carta del mazzo.",
+        "- **Tocca due volte** la carta del mazzo o quella in cima a un pozzo per giocarla su una fondazione.",
+        "- Non si ridistribuisce.",
+        "## I quattro cantoni",
+        "In questa variante, gli Assi partono sulle fondazioni, che si costruiscono **per colore** (uno qualsiasi dei due semi dello stesso colore), e i pozzi possono essere raccolti per una ridistribuzione."
       ]
     },
     "quickStart": {
-      "hash": "33592120",
+      "hash": "ea2f7d47",
       "value": [
         "Costruisci le fondazioni da A a K, a prescindere dal seme.",
         "Le carte nei pozzi non si possono spostare.",
-        "Tocca una volta per mettere la carta del mazzo su un pozzo.",
-        "Tocca due volte una carta scoperta del mazzo o di un pozzo per mandarla su una fondazione."
+        "Tocca un pozzo per metterci la carta del mazzo.",
+        "Tocca due volte la carta del mazzo o quella in cima a un pozzo per giocarla su una fondazione."
       ]
     },
     "title": {
@@ -3510,7 +3271,7 @@
       "value": "Costruisci sequenze dello stesso seme dal Re all'Asso in un intricato doppio mazzo."
     },
     "howToPlay": {
-      "hash": "a5a655cd",
+      "hash": "349fc938",
       "value": [
         "## Obiettivo",
         "Forma **8 sequenze complete dello stesso seme**, ognuna dal Re all'Asso. Le sequenze completate vengono tolte dal tavolo.",
@@ -3520,7 +3281,9 @@
         "- Qualsiasi carta o sequenza valida può andare in una colonna vuota.",
         "- Quando si forma una sequenza completa **dal Re all'Asso** dello stesso seme, viene tolta automaticamente.",
         "## Mazzo",
-        "Tocca il mazzo per distribuire una carta su ogni colonna contemporaneamente. Puoi distribuire solo se nessuna colonna è vuota."
+        "Tocca il mazzo per distribuire una carta su ogni colonna contemporaneamente. Puoi distribuire solo se nessuna colonna è vuota.",
+        "## Semi",
+        "Gioca con quattro semi, oppure rendi il gioco più facile con due (Picche e Cuori) o uno (Picche) nelle impostazioni."
       ]
     },
     "quickStart": {
@@ -3666,6 +3429,46 @@
     "title": {
       "hash": "e0db7d2f",
       "value": "Dieci, venti, trenta"
+    }
+  },
+  "terrace": {
+    "cardDescription": {
+      "hash": "adb8e1e5",
+      "value": "Scegli il valore delle fondazioni, poi svuota una lunga terrazza di carte prima che finisca il mazzo."
+    },
+    "howToPlay": {
+      "hash": "885ccd26",
+      "value": [
+        "## Obiettivo",
+        "Porta tutte le 104 carte sulle otto fondazioni.",
+        "## Inizio",
+        "- Vengono distribuite quattro carte sul tavolo. Toccane una per iniziare la prima fondazione: il suo valore diventa il **valore base** di tutte le fondazioni.",
+        "- Poi vengono distribuite le altre colonne, una carta ciascuna.",
+        "## Fondazioni",
+        "- Ogni fondazione inizia con una carta del valore base.",
+        "- Costruiscile in ordine crescente **alternando rosso e nero**, passando dal Re all'Asso, finché ogni fondazione non contiene 13 carte.",
+        "## Regole",
+        "- È disponibile solo la carta scoperta della **terrazza** (la riserva), e può andare solo su una fondazione.",
+        "- Costruisci le colonne **in ordine decrescente, alternando rosso e nero**, passando dall'Asso al Re. Sposta una carta alla volta.",
+        "- Una colonna vuota va riempita dal pozzo, oppure toccando il mazzo, che allora distribuisce direttamente lì.",
+        "- Gira le carte dal mazzo una alla volta. Non si ridistribuisce.",
+        "## Varianti",
+        "- **Pazienza del Generale**: una terrazza di tredici carte, e le fondazioni si costruiscono per seme.",
+        "- **Bionde e brune**: una terrazza di dieci carte, e la prima carta distribuita fissa il valore base.",
+        "- **Stella cadente**: come Bionde e brune, con una terrazza di undici carte e otto colonne."
+      ]
+    },
+    "quickStart": {
+      "hash": "ccae7220",
+      "value": [
+        "Tocca una delle quattro carte evidenziate per scegliere il valore delle fondazioni.",
+        "Le fondazioni salgono alternando rosso e nero, passando dal Re all'Asso.",
+        "La carta scoperta della terrazza può andare solo su una fondazione."
+      ]
+    },
+    "title": {
+      "hash": "fd1a8865",
+      "value": "Terrazza"
     }
   },
   "three-peaks": {
@@ -3989,7 +3792,7 @@
       "value": "Il Klondike senza freni: sposta interi gruppi di carte, in qualsiasi ordine, tra le colonne."
     },
     "howToPlay": {
-      "hash": "85f184a6",
+      "hash": "e8b97b81",
       "value": [
         "## Obiettivo",
         "Costruisci le quattro fondazioni per seme in ordine crescente, dall'Asso al Re.",
@@ -3997,7 +3800,13 @@
         "- Sposta qualsiasi carta scoperta o **gruppo** di carte **in ordine decrescente, alternando rosso e nero**.",
         "- Le carte trasportate **non** devono essere in sequenza.",
         "- Le colonne vuote si possono occupare solo con i Re.",
-        "- Tocca due volte o trascina le singole carte sulle fondazioni."
+        "- Tocca due volte o trascina le singole carte sulle fondazioni.",
+        "## Varianti",
+        "Scegli nelle impostazioni del gioco come si costruiscono le colonne:",
+        "- **Yukon**: in ordine decrescente, alternando rosso e nero.",
+        "- **Solitario russo**: in ordine decrescente, nello stesso seme.",
+        "- **Alaska**: in ordine crescente o decrescente, nello stesso seme.",
+        "- **Pelle d'alce**: in ordine decrescente, su qualsiasi seme diverso dal proprio."
       ]
     },
     "quickStart": {

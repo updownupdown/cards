@@ -13,6 +13,14 @@ export const monteCarlo: GameDefinition = {
     luck: 55,
   },
   thumbnail: "MonteCarlo.webp",
+  thumbnailCredit: {
+    title: "Monaco Monte-Carlo",
+    artistName: "Alphonse Mucha",
+    date: "1897",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Alfons_Mucha_-_Monaco_Monte_Carlo.jpg",
+  },
   background: GAME_BACKGROUNDS.monteCarlo,
   animation: GameAnimations.Birds,
   gameColorDark: "#152635",

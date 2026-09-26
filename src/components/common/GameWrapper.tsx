@@ -1,22 +1,34 @@
+import { CARD_BACK_INKS } from "@/data/card-backs";
 import { BackgroundAnimation } from "@/animations/BackgroundAnimation";
 import {
   clearLastGameSession,
   getGameInfo,
+  isCampaignModeParam,
   recordAttempt,
   recordResult,
   undoRecordedLoss,
 } from "@/data/game-menu";
 import {
-  recordNodesWin,
+  recordCampaignWin,
   spendMercySkip,
-  type NodesWinResult,
-} from "@/data/nodes-progress";
-import { useNodesProgress } from "@/hooks/useNodesProgress";
+  type CampaignWinResult,
+} from "@/data/campaign-progress";
+import { useCampaignProgress } from "@/hooks/useCampaignProgress";
 import { recordDailyWin } from "@/data/game-of-the-day";
 import { DEFAULT_GAME_BACKGROUND } from "@/data/games-data";
 import { useFade } from "@/hooks/useFade";
 import { useGameSettings } from "@/hooks/useGameSettings";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
+import { TaoReveal } from "@/components/TaoReveal/TaoReveal";
+import { QuoteReveal } from "@/components/QuoteReveal/QuoteReveal";
+import { getQuote, getTaoChapter } from "@/data/collectibles";
+import { useDisplayLanguage } from "@/i18n";
+import {
+  isQuoteTranslated,
+  isTaoChapterTranslated,
+  localizeQuote,
+  localizeTaoChapter,
+} from "@/i18n/content";
 import {
   getActiveGameSessionId,
   getSessionPlayTimeMs,
@@ -26,11 +38,8 @@ import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { haptics } from "@/utils/haptics";
 import { addGameBreadcrumb, setCrashContext } from "@/utils/crash-reporting";
-import { selectNodesHomeTab } from "@/components/Home/home-view-state";
-import {
-  NodesWinOverlay,
-  NodesWinRewardPreview,
-} from "@/components/Nodes/NodesWinOverlay";
+import { selectCampaignHomeTab } from "@/components/Home/home-view-state";
+import { CampaignWinRewardPreview } from "@/components/Campaign/CampaignWinRewardPreview";
 import { flexStyles } from "@/styles/flexStyles";
 import {
   getHeaderHeightWithInset,
@@ -57,9 +66,11 @@ import { DeviceRotateHint } from "./DeviceRotateHint";
 import { LoadingOverlay } from "./LoadingOverlay";
 import { TipsBox } from "./TipsBox";
 import { WinLoseBox, type WinTimes } from "./WinLoseBox";
+import { AutoCompletePanel } from "./AutoCompletePanel";
+import { useAutoCompleteOffer } from "@/hooks/auto-complete-offer";
 import { GameHeader } from "./GameHeader";
 import { useStableCallback } from "@/hooks/useStableCallback";
-import { requestMercySkipVisit } from "@/components/Nodes/ufo-visit";
+import { requestMercySkipVisit } from "@/components/Campaign/ufo-visit";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 
 const TIPS_MORPH_DURATION = 350;
@@ -75,8 +86,8 @@ export type GameOutcome = "playing" | "won" | "lost";
  * new one: pushing stacked another home (and kept the finished game mounted)
  * on every round trip, which added memory and background work over a session.
  */
-function goHome(isNodesMode: boolean) {
-  const href = isNodesMode ? "/?tab=nodes" : "/";
+function goHome(isCampaignMode: boolean) {
+  const href = isCampaignMode ? "/?tab=campaign" : "/";
   if (router.canGoBack()) {
     router.dismissTo(href);
   } else {
@@ -120,7 +131,7 @@ export const GameWrapper = ({
 }: Props) => {
   const pathname = useGamePath();
   const { mode } = useLocalSearchParams<{ mode?: string }>();
-  const isNodesMode = mode === "nodes";
+  const isCampaignMode = isCampaignModeParam(mode);
   const gameInfo = getGameInfo(pathname);
   const insets = useSafeAreaInsets();
   const { width: viewportWidth, height: viewportHeight } =
@@ -146,20 +157,20 @@ export const GameWrapper = ({
     try {
       await clearLastGameSession();
     } finally {
-      if (isNodesMode) selectNodesHomeTab();
-      goHome(isNodesMode);
+      if (isCampaignMode) selectCampaignHomeTab();
+      goHome(isCampaignMode);
     }
   });
-  const { progress: nodesProgress } = useNodesProgress();
+  const { progress: campaignProgress } = useCampaignProgress();
   const onModalMercySkip = useStableCallback(async () => {
     let applied = false;
     try {
       applied = (await spendMercySkip(pathname)).applied;
       await clearLastGameSession();
     } finally {
-      if (isNodesMode) selectNodesHomeTab();
-      goHome(isNodesMode);
-      // The UFO drops by on the map it lands on, where the skipped node is
+      if (isCampaignMode) selectCampaignHomeTab();
+      goHome(isCampaignMode);
+      // The UFO drops by on the map it lands on, where the skipped game dot is
       // now won.
       if (applied) requestMercySkipVisit();
     }
@@ -188,11 +199,59 @@ export const GameWrapper = ({
 
   const [showMenu, setShowMenu] = useState(false);
   const [showRulesModal, setShowRulesModal] = useState(false);
-  const [nodesWinResult, setNodesWinResult] = useState<NodesWinResult | null>(
-    null,
-  );
-  const [showNodesWinModal, setShowNodesWinModal] = useState(false);
+  const [campaignWinResult, setCampaignWinResult] =
+    useState<CampaignWinResult | null>(null);
+  // A newly earned Tao chapter or quote is revealed over the whole screen,
+  // which locks the game (and leaves out the win box's buttons) until it
+  // finishes.
+  const [revealedWinResult, setRevealedWinResult] =
+    useState<CampaignWinResult | null>(null);
+  // The buttons come back while the sky still hides the win box, so the
+  // player never sees it change size.
+  const [uncoveredWinResult, setUncoveredWinResult] =
+    useState<CampaignWinResult | null>(null);
+  const displayLanguage = useDisplayLanguage();
+  const taoReward =
+    campaignWinResult?.awardedReward?.type === "tao"
+      ? campaignWinResult.awardedReward
+      : null;
+  const taoRevealChapter =
+    taoReward && revealedWinResult !== campaignWinResult
+      ? getTaoChapter(taoReward.id)
+      : undefined;
+  const taoRevealText =
+    taoReward && taoRevealChapter
+      ? globalSettings.translateCollectibles &&
+        isTaoChapterTranslated(taoReward.id, taoRevealChapter, displayLanguage)
+        ? localizeTaoChapter(taoReward.id, taoRevealChapter, displayLanguage)
+            .text
+        : taoRevealChapter.text
+      : null;
+  const quoteReward =
+    campaignWinResult?.awardedReward?.type === "quote"
+      ? campaignWinResult.awardedReward
+      : null;
+  const quoteRevealEnglish =
+    quoteReward && revealedWinResult !== campaignWinResult
+      ? getQuote(quoteReward.id)
+      : undefined;
+  const quoteReveal =
+    quoteReward && quoteRevealEnglish
+      ? globalSettings.translateCollectibles &&
+        isQuoteTranslated(quoteReward.id, quoteRevealEnglish, displayLanguage)
+        ? localizeQuote(quoteReward.id, quoteRevealEnglish, displayLanguage)
+        : quoteRevealEnglish
+      : null;
+  const revealing = !!taoRevealText || !!quoteReveal;
   const [winTimes, setWinTimes] = useState<WinTimes | null>(null);
+  const autoCompleteOffer = useAutoCompleteOffer();
+  // Kept after the offer goes, so the panel can fade out showing it.
+  const [lastAutoCompleteOffer, setLastAutoCompleteOffer] =
+    useState(autoCompleteOffer);
+  if (autoCompleteOffer && autoCompleteOffer !== lastAutoCompleteOffer) {
+    setLastAutoCompleteOffer(autoCompleteOffer);
+  }
+  const autoCompleteFade = useFade(!!autoCompleteOffer && !ended, 500);
   const [tipsDismissed, setTipsDismissed] = useState(false);
   const tipsMorphProgress = useRef(new Animated.Value(0)).current;
   const instructionsHighlight = useRef(new Animated.Value(0)).current;
@@ -217,7 +276,7 @@ export const GameWrapper = ({
     return () => clearTimeout(timer);
   }, [isLoaded]);
   const isScenePaused =
-    showMenu || openMenu || showRulesModal || !!nodesWinResult || ended;
+    showMenu || openMenu || showRulesModal || !!campaignWinResult || ended;
 
   useEffect(() => {
     setBoardInputLocked(autoCompleting);
@@ -316,9 +375,9 @@ export const GameWrapper = ({
     attemptedPathRef.current = pathname;
 
     recordAttempt(pathname).catch(() => {});
-    setCrashContext({ mode: isNodesMode ? "nodes" : "standard" });
+    setCrashContext({ mode: isCampaignMode ? "campaign" : "standard" });
     addGameBreadcrumb("deal");
-  }, [isNodesMode, pathname]);
+  }, [isCampaignMode, pathname]);
 
   useEffect(() => {
     let active = true;
@@ -330,8 +389,7 @@ export const GameWrapper = ({
 
     resultStateRef.current = { pathname, outcome: displayedOutcome };
     if (displayedOutcome === "playing") {
-      setNodesWinResult(null);
-      setShowNodesWinModal(false);
+      setCampaignWinResult(null);
       setWinTimes(null);
     }
     if (!didEnd) {
@@ -344,9 +402,12 @@ export const GameWrapper = ({
     addGameBreadcrumb(displayedOutcome === "won" ? "win" : "loss");
 
     const sessionId = getActiveGameSessionId(pathname);
-    // Only a real win is timed (not the dev instant-win button).
-    const winTimeMs = outcome === "won" ? getSessionPlayTimeMs(pathname) : null;
-    if (winTimeMs !== null && winTimeMs > 0) showWinTime(winTimeMs);
+    // Only a real win records its time; the dev instant-win button still
+    // shows it, so the box can be checked.
+    const playTimeMs =
+      displayedOutcome === "won" ? getSessionPlayTimeMs(pathname) : null;
+    if (playTimeMs !== null && playTimeMs > 0) showWinTime(playTimeMs);
+    const winTimeMs = outcome === "won" ? playTimeMs : null;
     recordResult(
       pathname,
       displayedOutcome === "won",
@@ -361,16 +422,15 @@ export const GameWrapper = ({
     if (displayedOutcome === "won") {
       recordDailyWin(pathname).catch(() => {});
     }
-    if (isNodesMode && displayedOutcome === "won") {
-      recordNodesWin(pathname, sessionId)
+    if (isCampaignMode && displayedOutcome === "won") {
+      recordCampaignWin(pathname, sessionId)
         .then((result) => {
           if (
             active &&
             !result.duplicate &&
             (result.awardedReward || result.newlyUnlockedPaths.length > 0)
           ) {
-            setShowNodesWinModal(false);
-            setNodesWinResult(result);
+            setCampaignWinResult(result);
           }
         })
         .catch(() => {});
@@ -379,7 +439,7 @@ export const GameWrapper = ({
     return () => {
       active = false;
     };
-  }, [displayedOutcome, isNodesMode, pathname, score]);
+  }, [displayedOutcome, isCampaignMode, pathname, score]);
 
   if (!gameInfo) return null;
 
@@ -432,32 +492,23 @@ export const GameWrapper = ({
         reset={handleReset}
         message={winLoseMessage}
         handleUndo={handleLossUndo}
-        isNodesMode={isNodesMode}
-        rewardPreview={
-          nodesWinResult?.awardedReward ? (
-            <NodesWinRewardPreview
-              result={nodesWinResult}
-              onPress={() => setShowNodesWinModal(true)}
-            />
+        isCampaignMode={isCampaignMode}
+        actionsHidden={revealing && uncoveredWinResult !== campaignWinResult}
+        topPanel={
+          campaignWinResult?.awardedReward ? (
+            <CampaignWinRewardPreview result={campaignWinResult} />
           ) : null
         }
         onExit={async () => {
-          setNodesWinResult(null);
+          setCampaignWinResult(null);
           try {
             await clearLastGameSession();
           } finally {
-            if (isNodesMode) selectNodesHomeTab();
-            goHome(isNodesMode);
+            if (isCampaignMode) selectCampaignHomeTab();
+            goHome(isCampaignMode);
           }
         }}
       />
-      {nodesWinResult && showNodesWinModal && (
-        <NodesWinOverlay
-          path={pathname}
-          result={nodesWinResult}
-          onClose={() => setShowNodesWinModal(false)}
-        />
-      )}
 
       {(showMenu || openMenu) && (
         <GameModal
@@ -468,11 +519,11 @@ export const GameWrapper = ({
           onReloadGame={handleReset}
           showRulesModal={() => setShowRulesModal(true)}
           mercySkipsAvailable={
-            isNodesMode && !nodesProgress.winsByPath[pathname]
-              ? nodesProgress.mercySkipCount
+            isCampaignMode && !campaignProgress.winsByPath[pathname]
+              ? campaignProgress.mercySkipCount
               : 0
           }
-          onMercySkip={isNodesMode ? onModalMercySkip : undefined}
+          onMercySkip={isCampaignMode ? onModalMercySkip : undefined}
         />
       )}
 
@@ -541,7 +592,7 @@ export const GameWrapper = ({
 
         {/* Game header */}
         <GameHeader
-          isNodesMode={isNodesMode}
+          isCampaignMode={isCampaignMode}
           titleColor={titleColor}
           backgroundColor={backgroundColor}
           scale={ui.scale}
@@ -562,6 +613,18 @@ export const GameWrapper = ({
           onReset={onHeaderReset}
           onMenu={onHeaderMenu}
         />
+
+        {autoCompleteFade.isRendered && lastAutoCompleteOffer && (
+          <AutoCompletePanel
+            offer={lastAutoCompleteOffer}
+            active={!!autoCompleteOffer && !ended}
+            opacity={autoCompleteFade.opacity}
+            top={headerHeight}
+            backgroundColor={backgroundColor}
+            color={titleColor}
+            buttonTheme={CARD_BACK_INKS[gameInfo.cardBack]}
+          />
+        )}
 
         <View
           style={[
@@ -594,6 +657,29 @@ export const GameWrapper = ({
           )}
         </View>
       </View>
+
+      {taoReward && taoRevealText && (
+        <TaoReveal
+          key={taoReward.id}
+          chapter={taoReward.id}
+          text={taoRevealText}
+          onUncover={() => setUncoveredWinResult(campaignWinResult)}
+          onDone={() => setRevealedWinResult(campaignWinResult)}
+        />
+      )}
+
+      {quoteReward && quoteReveal && (
+        <QuoteReveal
+          key={quoteReward.id}
+          text={quoteReveal.text}
+          author={quoteReveal.author}
+          source={quoteReveal.source}
+          background={background.source}
+          overlayColor={backgroundColor}
+          onUncover={() => setUncoveredWinResult(campaignWinResult)}
+          onDone={() => setRevealedWinResult(campaignWinResult)}
+        />
+      )}
     </>
   );
 };

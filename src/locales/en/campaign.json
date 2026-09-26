@@ -1,0 +1,64 @@
+{
+  "progress": {
+    "games": "Games",
+    "chapters": "Chapters",
+    "quotes": "Quotes",
+    "summary": "{{label}}: {{collected}} of {{total}}"
+  },
+  "reward": {
+    "taoChapter": "Tao Te Ching: Chapter {{number}}",
+    "quoteBy": "A quote by {{author}}",
+    "unlockedGames_one": "{{count}} unlocked game:",
+    "unlockedGames_other": "{{count}} unlocked games:"
+  },
+  "details": {
+    "locked": "Locked"
+  },
+  "mercySkip": {
+    "granted": "A kind traveller offers you a **Mercy Skip**! Skip a difficult game from that game's menu.",
+    "ufoLabel": "A passing UFO",
+    "dismiss": "Dismiss"
+  },
+  "collection": {
+    "previous": "Previous collected item",
+    "next": "Next collected item",
+    "select": "Select item {{id}}",
+    "locked": "Locked item {{id}}"
+  },
+  "quotes": {
+    "title": "Quotes",
+    "subtitle": "{{collected}}/{{total}} collected quotes",
+    "empty": "Win games in the Celestial Odyssey to collect all {{quotes}} quotes, from {{authors}} thinkers, writers and scientists.",
+    "about": "Each author's portrait appears here once you have collected one of their quotes.",
+    "count": "{{collected}}/{{total}}",
+    "previousAuthor": "Previous author",
+    "nextAuthor": "Next author",
+    "previousQuote": "Previous quote",
+    "nextQuote": "Next quote",
+    "yearsBC": "{{from}}–{{to}} BC",
+    "yearsBCtoAD": "{{from}} BC – AD {{to}}",
+    "circa": "c. {{years}}"
+  },
+  "tao": {
+    "title": "Tao Te Ching",
+    "subtitle": "{{collected}}/{{total}} collected chapters",
+    "chapter": "Chapter {{number}}",
+    "viewAll": "View all",
+    "previous": "Previous chapter",
+    "next": "Next chapter",
+    "empty": "Win games in the Celestial Odyssey to collect all 81 chapters of the Tao Te Ching.",
+    "about": "The Tao Te Ching is a foundational ancient Chinese text traditionally attributed to the sage Laozi. It teaches individuals to live in harmony with the Tao, the natural flow and rhythm of the universe. By practicing wu wei (effortless action) and embracing humility, simplicity, and flexibility, it is said that one can find lasting peace and balance."
+  },
+  "games": {
+    "title": "Games",
+    "subtitle": "{{unlocked}}/{{total}} unlocked games"
+  },
+  "original": {
+    "label": "Show original"
+  },
+  "intro": {
+    "title": "Celestial Odyssey",
+    "text": "Chart a path by winning and unlocking games, starting with the classic Klondike. Move outwards to explore new game mechanics, tackle increasingly difficult challenges, and unlock collectibles to create moments of calm and reflection.",
+    "close": "Dismiss"
+  }
+}

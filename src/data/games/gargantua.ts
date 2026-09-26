@@ -6,7 +6,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const gargantua: GameDefinition = {
   path: "/gargantua",
   title: "Gargantua",
-  aliases: ["Double Klondike"],
+  aliases: ["Double Klondike", "Harp"],
   tags: [
     GameTag.KlondikeFamily,
     GameTag.TableauBuilding,
@@ -14,6 +14,14 @@ export const gargantua: GameDefinition = {
   ],
   rating: { complexity: 35, difficulty: 45, luck: 45 },
   thumbnail: "Gargantua.webp",
+  thumbnailCredit: {
+    title: "Gargantua",
+    artistName: "Gustave Doré",
+    date: "1873",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Gustave_Dor%C3%A9_-_Gargantua.jpg",
+  },
   background: GAME_BACKGROUNDS.frozenMountain,
   animation: GameAnimations.Clouds,
   gameColorDark: "#24323a",
@@ -24,7 +32,7 @@ export const gargantua: GameDefinition = {
   quickStart: [
     "Move both decks to eight foundations, built by suit from A to K.",
     "Build tableau down by alternating color and move ordered runs.",
-    "Only Ks fill empty columns; 1 redeal gives 2 stock passes.",
+    "Only Ks fill empty columns; 1 redeal (3 in Harp).",
   ],
   howToPlay: [
     "## Objective",
@@ -34,5 +42,7 @@ export const gargantua: GameDefinition = {
     "- Build down by alternating color and move ordered runs.",
     "- Only Kings may fill empty columns.",
     "- Turn stock cards one at a time; 1 redeal gives 2 passes total.",
+    "## Harp",
+    "Harp is the same game with 3 redeals, for 4 passes through the stock.",
   ],
 };

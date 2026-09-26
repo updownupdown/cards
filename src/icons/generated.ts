@@ -20,6 +20,7 @@ import CheckBoxOffIcon from "./CheckBoxOff.svg";
 import CheckBoxOnIcon from "./CheckBoxOn.svg";
 import CheckCircleIcon from "./CheckCircle.svg";
 import ChevronLeftIcon from "./ChevronLeft.svg";
+import ClockIcon from "./Clock.svg";
 import CloseIcon from "./Close.svg";
 import ClubsIcon from "./Clubs.svg";
 import DeleteIcon from "./Delete.svg";
@@ -35,6 +36,7 @@ import EquipIcon from "./Equip.svg";
 import ExpandLessIcon from "./ExpandLess.svg";
 import ExpandMoreIcon from "./ExpandMore.svg";
 import ExploreIcon from "./Explore.svg";
+import FactIcon from "./Fact.svg";
 import FastForwardIcon from "./FastForward.svg";
 import FeaturedIcon from "./Featured.svg";
 import FilterIcon from "./Filter.svg";
@@ -61,7 +63,6 @@ import LockIcon from "./Lock.svg";
 import MenuIcon from "./Menu.svg";
 import MilkyWayIcon from "./MilkyWay.svg";
 import MoreVerticalIcon from "./MoreVertical.svg";
-import NodesIcon from "./Nodes.svg";
 import OfferIcon from "./Offer.svg";
 import PalmTreeIcon from "./PalmTree.svg";
 import PlayHandIcon from "./PlayHand.svg";
@@ -72,6 +73,7 @@ import RainbowIcon from "./Rainbow.svg";
 import RecentIcon from "./Recent.svg";
 import ResetIcon from "./Reset.svg";
 import RotateDeviceIcon from "./RotateDevice.svg";
+import RoyalIcon from "./Royal.svg";
 import SearchIcon from "./Search.svg";
 import SequenceIcon from "./Sequence.svg";
 import SettingsIcon from "./Settings.svg";
@@ -79,7 +81,7 @@ import ShieldIcon from "./Shield.svg";
 import SkullIcon from "./Skull.svg";
 import SmokeBombIcon from "./SmokeBomb.svg";
 import SpadesIcon from "./Spades.svg";
-import SpiralIcon from "./Spiral.svg";
+import StampIcon from "./Stamp.svg";
 import StarIcon from "./Star.svg";
 import StarOutlineIcon from "./StarOutline.svg";
 import SuitsIcon from "./Suits.svg";
@@ -106,6 +108,7 @@ export type IconName =
   | "check-box-on"
   | "check-circle"
   | "chevron-left"
+  | "clock"
   | "close"
   | "clubs"
   | "delete"
@@ -121,6 +124,7 @@ export type IconName =
   | "expand-less"
   | "expand-more"
   | "explore"
+  | "fact"
   | "fast-forward"
   | "featured"
   | "filter"
@@ -147,7 +151,6 @@ export type IconName =
   | "menu"
   | "milky-way"
   | "more-vertical"
-  | "nodes"
   | "offer"
   | "palm-tree"
   | "play-hand"
@@ -158,6 +161,7 @@ export type IconName =
   | "recent"
   | "reset"
   | "rotate-device"
+  | "royal"
   | "search"
   | "sequence"
   | "settings"
@@ -165,7 +169,7 @@ export type IconName =
   | "skull"
   | "smoke-bomb"
   | "spades"
-  | "spiral"
+  | "stamp"
   | "star"
   | "star-outline"
   | "suits"
@@ -192,6 +196,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "check-box-on": CheckBoxOnIcon,
   "check-circle": CheckCircleIcon,
   "chevron-left": ChevronLeftIcon,
+  "clock": ClockIcon,
   "close": CloseIcon,
   "clubs": ClubsIcon,
   "delete": DeleteIcon,
@@ -207,6 +212,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "expand-less": ExpandLessIcon,
   "expand-more": ExpandMoreIcon,
   "explore": ExploreIcon,
+  "fact": FactIcon,
   "fast-forward": FastForwardIcon,
   "featured": FeaturedIcon,
   "filter": FilterIcon,
@@ -233,7 +239,6 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "menu": MenuIcon,
   "milky-way": MilkyWayIcon,
   "more-vertical": MoreVerticalIcon,
-  "nodes": NodesIcon,
   "offer": OfferIcon,
   "palm-tree": PalmTreeIcon,
   "play-hand": PlayHandIcon,
@@ -244,6 +249,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "recent": RecentIcon,
   "reset": ResetIcon,
   "rotate-device": RotateDeviceIcon,
+  "royal": RoyalIcon,
   "search": SearchIcon,
   "sequence": SequenceIcon,
   "settings": SettingsIcon,
@@ -251,7 +257,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "skull": SkullIcon,
   "smoke-bomb": SmokeBombIcon,
   "spades": SpadesIcon,
-  "spiral": SpiralIcon,
+  "stamp": StampIcon,
   "star": StarIcon,
   "star-outline": StarOutlineIcon,
   "suits": SuitsIcon,

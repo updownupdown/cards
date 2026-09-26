@@ -1,13 +1,13 @@
 import { Text } from "@/components/common/Text";
 import { GAME_THUMBNAIL_ASSETS } from "@/data/game-thumbnails";
-import { DEFAULT_GAME_THUMBNAIL, GameMenuInfo } from "@/data/games-data";
+import { GameMenuInfo } from "@/data/games-data";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage } from "@/i18n";
 import { localizeGame } from "@/i18n/content";
 import { Colors, rgba } from "@/styles/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import { launchGame } from "@/components/common/GameLaunchOverlay";
-import { setLastPlayedNode } from "@/data/nodes-progress";
+import { setLastPlayedGameDot } from "@/data/campaign-progress";
 import { type Href } from "expo-router";
 import { Image } from "expo-image";
 import { Platform, Pressable, View, type ViewStyle } from "react-native";
@@ -18,8 +18,9 @@ import { flexStyles } from "@/styles/flexStyles";
 import { homeSurfaceShadow } from "@/styles/homeSurfaceShadow";
 import { useTabReadyImage } from "./TabReady";
 
+/** A game without art shows its own colour, behind the thumbnail. */
 function getGameThumbnail(game: GameMenuInfo) {
-  return GAME_THUMBNAIL_ASSETS[game.thumbnail || DEFAULT_GAME_THUMBNAIL];
+  return game.thumbnail ? GAME_THUMBNAIL_ASSETS[game.thumbnail] : null;
 }
 
 type Props = {
@@ -62,8 +63,8 @@ export function HomeCard({
   const handleOpen = () => {
     onOpen?.();
     if (campaign) {
-      void setLastPlayedNode(path);
-      launchGame({ pathname: path, params: { mode: "nodes" } } as Href);
+      void setLastPlayedGameDot(path);
+      launchGame({ pathname: path, params: { mode: "campaign" } } as Href);
       return;
     }
     launchGame(path as Href);
@@ -119,6 +120,11 @@ export function HomeCard({
         {/* Thumbnail */}
         <Image
           source={thumbnail}
+          // Every image is bundled, so skip expo-image's disk cache. On Android
+          // it keys bundled images by resource id, which a new build can
+          // reshuffle; while versionCode stays the same, the cache served
+          // other games' thumbnails. Keep cachePolicy="memory" on every Image.
+          cachePolicy="memory"
           style={{
             position: "absolute",
             top: 0,

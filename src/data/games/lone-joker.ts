@@ -15,6 +15,13 @@ export const loneJoker: GameDefinition = {
   background: GAME_BACKGROUNDS.painting2,
   animation: GameAnimations.Firefly,
   thumbnail: "LoneJoker.webp",
+  thumbnailCredit: {
+    title: "Portrait of the Jester Calabazas",
+    artistName: "Diego Velázquez",
+    date: "ca. 1631–32",
+    sourceName: "Cleveland Museum of Art",
+    sourceLink: "https://clevelandart.org/art/1965.15",
+  },
   gameColorDark: "#111e35",
   gameColorPale: "#d8ffeb",
   cardBack: CardBackColors.Violet,

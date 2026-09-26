@@ -6,6 +6,7 @@ import { GameAnimations } from "@/animations";
 export const fortyThieves: GameDefinition = {
   path: "/forty-thieves",
   title: "Forty Thieves",
+  aliases: ["Napoleon at St Helena", "Josephine", "Lucas", "Busy Aces"],
   tags: [GameTag.FortyThievesFamily, GameTag.StockAndWaste],
   rating: {
     complexity: 45,
@@ -13,6 +14,13 @@ export const fortyThieves: GameDefinition = {
     luck: 40,
   },
   thumbnail: "FortyThieves.webp",
+  thumbnailCredit: {
+    title: "Cassim, from The Arabian Nights",
+    artistName: "Maxfield Parrish",
+    date: "1909",
+    sourceName: "Wikimedia Commons",
+    sourceLink: "https://commons.wikimedia.org/wiki/File:Cassim.jpg",
+  },
   background: GAME_BACKGROUNDS.abandonedSand,
   animation: GameAnimations.Birds,
   gameColorDark: "#2E2D34",
@@ -22,7 +30,7 @@ export const fortyThieves: GameDefinition = {
   quickStart: [
     "Build all 8 foundations up by suit from A to K.",
     "Build tableau columns down by suit, moving one card at a time.",
-    "Turn cards from the stock to the waste one at a time; redeals depend on difficulty.",
+    "Turn cards from the stock to the waste one at a time, with no redeal.",
   ],
   howToPlay: [
     "## Objective",
@@ -34,7 +42,11 @@ export const fortyThieves: GameDefinition = {
     "- Move only one card at a time between columns.",
     "- Any single card may be placed onto an empty column.",
     "- Turn cards from the stock one at a time to the waste pile. The top waste card is playable.",
-    "-- Easy mode has infinite redeal.",
-    "-- Hard mode has no redeal.",
+    "- There is no redeal, unless you allow unlimited redeals in the settings.",
+
+    "## Variants",
+    "- **Josephine**: same-suit runs move together.",
+    "- **Lucas**: thirteen columns of three, with the Aces starting on the foundations.",
+    "- **Busy Aces**: twelve columns of two, the bottom card face down.",
   ],
 };

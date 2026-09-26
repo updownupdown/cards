@@ -1,11 +1,7 @@
 import { ShootingStar } from "@/components/common/ShootingStar";
 import { Colors, rgba } from "@/styles/styles";
 import { useRef, useState } from "react";
-import {
-  ImageBackground,
-  View,
-  type LayoutChangeEvent,
-} from "react-native";
+import { ImageBackground, View, type LayoutChangeEvent } from "react-native";
 
 const OVERLAY_COLOR = rgba(Colors.starfieldOverlay, 0.7);
 

@@ -17,6 +17,13 @@ export const ouroboros: GameDefinition = {
     luck: 40,
   },
   thumbnail: "Ouroboros.webp",
+  thumbnailCredit: {
+    title: "Coiled Rattlesnake",
+    artistName: "Unknown Aztec sculptor",
+    date: "ca. 1200–1519",
+    sourceName: "Cleveland Museum of Art",
+    sourceLink: "https://clevelandart.org/art/1950.410",
+  },
   background: GAME_BACKGROUNDS.stoneTunnel,
   animation: GameAnimations.ManaDust,
   gameColorDark: "#1d120e",

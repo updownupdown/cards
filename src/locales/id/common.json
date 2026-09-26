@@ -15,6 +15,7 @@
     "winRate": "Tingkat menang",
     "winPercent": "% Menang",
     "best": "Terbaik",
+    "bestTime": "Terbaik: {{time}}",
     "fastest": "Tercepat"
   }
 }

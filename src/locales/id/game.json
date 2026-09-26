@@ -1,7 +1,7 @@
 {
   "menu": {
     "home": "Beranda",
-    "nodes": "Peta",
+    "campaign": "Kampanye",
     "instantWin": "Menang instan"
   },
   "result": {
@@ -36,7 +36,9 @@
   },
   "credits": {
     "title": "Kredit",
-    "backgroundImage": "Gambar latar:"
+    "backgroundImage": "Gambar latar (diburamkan):",
+    "gameArt": "Gambar sampul:",
+    "artSource": "Domain publik, dari"
   },
   "deckPreview": {
     "title": "Pratinjau dek",
@@ -50,5 +52,10 @@
   "errors": {
     "gameCrashed": "Terjadi masalah pada permainan itu.",
     "resumeFailed": "Permainan terakhirmu tidak bisa dilanjutkan."
+  },
+  "autoComplete": {
+    "start": "Selesaikan",
+    "settings": "Pengaturan selesaikan otomatis",
+    "dismiss": "Tutup"
   }
 }

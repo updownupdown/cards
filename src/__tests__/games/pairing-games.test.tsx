@@ -15,6 +15,7 @@ import {
   pressCardId,
   pressZone,
   renderGame,
+  renderVariant,
   run,
 } from "../../../jest/game-harness";
 import type { PlayingCard } from "@/components/Cards/card-utils";
@@ -130,8 +131,9 @@ describe("Sir Tommy", () => {
     const king = card("K", "spades");
     const waste = emptyPiles(4);
     waste[0] = [king];
-    await renderGame("/sir-tommy", SirTommy, {
+    await renderVariant("/sir-tommy", "sir-tommy", SirTommy, {
       stock: [],
+      reserve: [],
       waste,
       foundations: [
         run("hearts"),
@@ -139,6 +141,7 @@ describe("Sir Tommy", () => {
         run("diamonds"),
         run("spades", "A", "Q"),
       ],
+      redealsUsed: 0,
       ended: false,
       won: false,
     });
@@ -154,10 +157,12 @@ describe("Sir Tommy", () => {
     const waste = emptyPiles(4);
     waste[0] = [six];
     waste[1] = [card("9", "clubs")];
-    await renderGame("/sir-tommy", SirTommy, {
+    await renderVariant("/sir-tommy", "sir-tommy", SirTommy, {
       stock: [],
+      reserve: [],
       waste,
       foundations: [run("spades", "A", "5"), [], [], []],
+      redealsUsed: 0,
       ended: false,
       won: false,
     });

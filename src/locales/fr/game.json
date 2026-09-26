@@ -1,7 +1,7 @@
 {
   "menu": {
     "home": "Accueil",
-    "nodes": "Nœuds",
+    "campaign": "Campagne",
     "instantWin": "Victoire instantanée"
   },
   "result": {
@@ -36,7 +36,9 @@
   },
   "credits": {
     "title": "Crédits",
-    "backgroundImage": "Image de fond :"
+    "backgroundImage": "Image de fond (floutée) :",
+    "gameArt": "Illustration de couverture :",
+    "artSource": "Domaine public, provenant de"
   },
   "deckPreview": {
     "title": "Aperçu du paquet",
@@ -50,5 +52,10 @@
   "errors": {
     "gameCrashed": "Un problème est survenu avec ce jeu.",
     "resumeFailed": "Impossible de reprendre votre dernière partie."
+  },
+  "autoComplete": {
+    "start": "Terminer",
+    "settings": "Réglages de fin automatique",
+    "dismiss": "Fermer"
   }
 }

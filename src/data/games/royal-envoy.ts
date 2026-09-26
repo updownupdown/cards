@@ -13,6 +13,14 @@ export const royalEnvoy: GameDefinition = {
     luck: 35,
   },
   thumbnail: "RoyalEnvoy.webp",
+  thumbnailCredit: {
+    title: "Arrival of the English Ambassadors",
+    artistName: "Vittore Carpaccio",
+    date: "ca. 1495–1500",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Vittore_carpaccio,_Arrival_of_the_English_Ambassadors_02.jpg",
+  },
   background: GAME_BACKGROUNDS.castle,
   animation: GameAnimations.Birds,
   gameColorDark: "#241e33",

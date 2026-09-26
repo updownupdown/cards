@@ -153,7 +153,8 @@ export const layoutDims = {
   menuBarHeight: 58,
   tabBarHeight: 64,
   tabBarPadding: 8,
-  cardToggleHeight: 48,
+  /** Search tab's search input, card size toggle and Filters button. */
+  searchControlHeight: 52,
   menuIconSize: 28,
   menuButtonSize: 52,
   pagePadding: 20,
@@ -167,6 +168,7 @@ export const LayerZIndexes = {
   tipsContainer: 40,
   tipsCard: 41,
   header: 50,
+  autoCompletePanel: 55,
   winLoseCard: 60,
   loadingOverlay: 100,
   toast: 110,

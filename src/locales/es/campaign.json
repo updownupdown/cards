@@ -1,0 +1,64 @@
+{
+  "progress": {
+    "games": "Juegos",
+    "chapters": "Capítulos",
+    "quotes": "Citas",
+    "summary": "{{label}}: {{collected}} de {{total}}"
+  },
+  "reward": {
+    "taoChapter": "Tao Te Ching: capítulo {{number}}",
+    "quoteBy": "Una cita de {{author}}",
+    "unlockedGames_one": "{{count}} juego desbloqueado:",
+    "unlockedGames_other": "{{count}} juegos desbloqueados:"
+  },
+  "details": {
+    "locked": "Bloqueado"
+  },
+  "mercySkip": {
+    "granted": "¡Un viajero amable te ofrece un **indulto**! Salta una partida difícil desde el menú de esa partida.",
+    "ufoLabel": "Un OVNI que pasa",
+    "dismiss": "Cerrar"
+  },
+  "collection": {
+    "previous": "Elemento anterior",
+    "next": "Elemento siguiente",
+    "select": "Seleccionar elemento {{id}}",
+    "locked": "Elemento {{id}} bloqueado"
+  },
+  "quotes": {
+    "title": "Citas",
+    "subtitle": "{{collected}}/{{total}} citas conseguidas",
+    "empty": "Gana juegos en la Odisea celestial para conseguir las {{quotes}} citas de {{authors}} pensadores, escritores y científicos.",
+    "about": "El retrato de cada autor aparece aquí en cuanto consigues una de sus citas.",
+    "count": "{{collected}}/{{total}}",
+    "previousAuthor": "Autor anterior",
+    "nextAuthor": "Autor siguiente",
+    "previousQuote": "Cita anterior",
+    "nextQuote": "Cita siguiente",
+    "yearsBC": "{{from}}–{{to}} a. C.",
+    "yearsBCtoAD": "{{from}} a. C. – {{to}} d. C.",
+    "circa": "c. {{years}}"
+  },
+  "tao": {
+    "title": "Tao Te Ching",
+    "subtitle": "{{collected}}/{{total}} capítulos conseguidos",
+    "chapter": "Capítulo {{number}}",
+    "viewAll": "Ver todo",
+    "previous": "Capítulo anterior",
+    "next": "Capítulo siguiente",
+    "empty": "Gana juegos en la Odisea celestial para conseguir los 81 capítulos del Tao Te Ching.",
+    "about": "El Tao Te Ching es un texto fundamental de la antigua China, atribuido tradicionalmente al sabio Laozi. Enseña a vivir en armonía con el Tao, el flujo y el ritmo naturales del universo. Se dice que, practicando el wu wei (la acción sin esfuerzo) y cultivando la humildad, la sencillez y la flexibilidad, se puede encontrar una paz y un equilibrio duraderos."
+  },
+  "games": {
+    "title": "Juegos",
+    "subtitle": "{{unlocked}}/{{total}} juegos desbloqueados"
+  },
+  "original": {
+    "label": "Mostrar original"
+  },
+  "intro": {
+    "title": "Odisea celestial",
+    "text": "Traza tu camino ganando y desbloqueando juegos, empezando por el clásico Klondike. Avanza hacia fuera para explorar nuevas mecánicas de juego, afrontar retos cada vez más difíciles y desbloquear coleccionables que crean momentos de calma y reflexión.",
+    "close": "Cerrar"
+  }
+}

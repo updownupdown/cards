@@ -13,6 +13,13 @@ export const baroness: GameDefinition = {
     luck: 55,
   },
   thumbnail: "Baroness.webp",
+  thumbnailCredit: {
+    title: "Louise Émilie, Baroness of ***",
+    artistName: "Augustin de Saint-Aubin",
+    date: "1779",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/30274",
+  },
   background: GAME_BACKGROUNDS.cozyRoom2,
   animation: GameAnimations.Dust,
   gameColorDark: "#3a1620",

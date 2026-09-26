@@ -13,6 +13,13 @@ export const spiderSolitaire: GameDefinition = {
     luck: 40,
   },
   thumbnail: "SpiderSolitaire.webp",
+  thumbnailCredit: {
+    title: "Spider",
+    artistName: "Odilon Redon",
+    date: "1887",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/79406",
+  },
   background: GAME_BACKGROUNDS.dungeon,
   animation: GameAnimations.Spiders,
   gameColorDark: "#25111e",
@@ -33,5 +40,8 @@ export const spiderSolitaire: GameDefinition = {
 
     "## Stock",
     "Tap the stock to deal one card onto every column. You may only deal when no column is empty.",
+
+    "## Suits",
+    "Play with four suits, or make the game easier with two (Spades and Hearts) or one (Spades) in the settings.",
   ],
 };

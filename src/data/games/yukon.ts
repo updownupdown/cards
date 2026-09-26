@@ -6,6 +6,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const yukon: GameDefinition = {
   path: "/yukon",
   title: "Yukon",
+  aliases: ["Russian Solitaire", "Alaska", "Moosehide"],
   tags: [
     GameTag.YukonFamily,
     GameTag.TableauBuilding,
@@ -13,6 +14,14 @@ export const yukon: GameDefinition = {
   ],
   rating: { complexity: 35, difficulty: 55, luck: 35 },
   thumbnail: "Yukon.webp",
+  thumbnailCredit: {
+    title: "September Evening, Mount McKinley",
+    artistName: "Sydney Laurence",
+    date: "1925",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:September_Evening,_Mount_McKinley,_Alaska,_by_Sydney_Laurence.jpg",
+  },
   background: GAME_BACKGROUNDS.yukon,
   animation: GameAnimations.Clouds,
   gameColorDark: "#20303a",
@@ -35,5 +44,12 @@ export const yukon: GameDefinition = {
     "- The carried cards do **not** need to be in sequence.",
     "- Empty columns can only be filled with Kings.",
     "- Double-tap or drag single cards to the foundations.",
+
+    "## Variants",
+    "Choose how columns build in the game settings:",
+    "- **Yukon**: down in alternating colors.",
+    "- **Russian Solitaire**: down in the same suit.",
+    "- **Alaska**: up or down in the same suit.",
+    "- **Moosehide**: down on any suit but its own.",
   ],
 };

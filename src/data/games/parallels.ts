@@ -13,6 +13,13 @@ export const parallels: GameDefinition = {
     luck: 55,
   },
   thumbnail: "Parallels.webp",
+  thumbnailCredit: {
+    title: "Sudden Shower over Shin-Ōhashi Bridge and Atake",
+    artistName: "Utagawa Hiroshige",
+    date: "1857",
+    sourceName: "Cleveland Museum of Art",
+    sourceLink: "https://clevelandart.org/art/1921.318",
+  },
   background: GAME_BACKGROUNDS.stoneWall,
   animation: GameAnimations.Rain,
   gameColorDark: "#1a1f24",

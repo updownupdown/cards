@@ -233,17 +233,19 @@ export default function BakersDozen() {
   }
 
   const zones: MapZone[] = useMemo(() => {
-    const foundationZones = game.foundations.map((pile, pileIndex) => ({
-      id: `foundation-${pileIndex}`,
-      name: "foundation",
-      pileIndex,
-      cards: pile,
-      col: 4.5 + pileIndex,
-      row: 0,
-      baseZIndex: 40 + pileIndex,
-      fan: { maxVisible: 1 },
-      placeholder: {},
-    }));
+    const foundationZones: MapZone[] = game.foundations.map(
+      (pile, pileIndex) => ({
+        id: `foundation-${pileIndex}`,
+        name: "foundation",
+        pileIndex,
+        cards: pile,
+        col: 4.5 + pileIndex,
+        row: 0,
+        baseZIndex: 40 + pileIndex,
+        fan: { maxVisible: 1 },
+        placeholder: { iconName: "ace" },
+      }),
+    );
 
     const tableauZones = game.tableau.map((pile, columnIndex) => ({
       id: `tableau-${columnIndex}`,

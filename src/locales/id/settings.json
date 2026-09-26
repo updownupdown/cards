@@ -27,6 +27,13 @@
     "label": "Umpan balik getar",
     "description": "Bergetar saat kartu diseret dan dilepas, dan saat menang. Getaran harus diaktifkan di pengaturan ponsel."
   },
+  "autoComplete": {
+    "label": "Selesaikan otomatis",
+    "description": "Saat sisa permainan bisa diselesaikan dengan memindahkan kartu ke fondasi.",
+    "ask": "Tanya",
+    "always": "Selalu",
+    "never": "Tidak pernah"
+  },
   "crashReports": {
     "label": "Kirim laporan kerusakan",
     "description": "Mengirim diagnostik anonim saat terjadi masalah agar bisa diperbaiki. Tidak ada informasi pribadi yang disertakan."

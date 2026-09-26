@@ -7,6 +7,7 @@ import {
   test,
 } from "@jest/globals";
 import "../../../jest/game-mocks";
+import { act } from "react-test-renderer";
 import {
   card,
   doubleTapCardId,
@@ -15,7 +16,15 @@ import {
   pressCardId,
   renderGame,
   run,
+  acceptAutoCompleteOffer,
+  settle,
 } from "../../../jest/game-harness";
+import {
+  DEFAULT_GLOBAL_SETTINGS,
+  saveGlobalSettings,
+  type AutoCompleteMode,
+} from "@/data/game-menu";
+import { getAutoCompleteOffer } from "@/hooks/auto-complete-offer";
 import type { PlayingCard } from "@/components/Cards/card-utils";
 import Fortress from "@/components/Games/Fortress";
 import Herbalist from "@/components/Games/Herbalist";
@@ -25,9 +34,19 @@ beforeEach(() => {
   jest.useFakeTimers();
 });
 
-afterEach(() => {
+afterEach(async () => {
+  await setAutoCompleteMode("ask");
   jest.useRealTimers();
 });
+
+async function setAutoCompleteMode(value: AutoCompleteMode) {
+  await act(async () => {
+    await saveGlobalSettings({
+      ...DEFAULT_GLOBAL_SETTINGS,
+      autoComplete: value,
+    });
+  });
+}
 
 describe("Herbalist", () => {
   // Location 4 is the stables; the realm creatures sit at 0-3 and 5-8.
@@ -171,7 +190,100 @@ describe("Fortress", () => {
       won: false,
     });
 
+    await acceptAutoCompleteOffer();
+
     expect(outcome()).toBe("won");
+  });
+
+  test("with auto-complete set to always, plays the last king home unasked", async () => {
+    await setAutoCompleteMode("always");
+    const king = card("K", "spades");
+    const columns = emptyColumns();
+    columns[0] = [king];
+    await renderGame("/fortress", Fortress, {
+      columns,
+      foundations: [
+        run("hearts"),
+        run("clubs"),
+        run("diamonds"),
+        run("spades", "A", "Q"),
+      ],
+      ended: false,
+      won: false,
+    });
+
+    expect(getAutoCompleteOffer()).toBeNull();
+    expect(outcome()).toBe("won");
+  });
+
+  test("with auto-complete set to never, neither offers nor plays it", async () => {
+    await setAutoCompleteMode("never");
+    const king = card("K", "spades");
+    const columns = emptyColumns();
+    columns[0] = [king];
+    await renderGame("/fortress", Fortress, {
+      columns,
+      foundations: [
+        run("hearts"),
+        run("clubs"),
+        run("diamonds"),
+        run("spades", "A", "Q"),
+      ],
+      ended: false,
+      won: false,
+    });
+
+    expect(getAutoCompleteOffer()).toBeNull();
+    expect(outcome()).toBe("playing");
+  });
+
+  test("changing the setting from the open panel keeps it open", async () => {
+    const king = card("K", "spades");
+    const columns = emptyColumns();
+    columns[0] = [king];
+    await renderGame("/fortress", Fortress, {
+      columns,
+      foundations: [
+        run("hearts"),
+        run("clubs"),
+        run("diamonds"),
+        run("spades", "A", "Q"),
+      ],
+      ended: false,
+      won: false,
+    });
+
+    await setAutoCompleteMode("always");
+    await setAutoCompleteMode("never");
+    expect(getAutoCompleteOffer()).not.toBeNull();
+    expect(outcome()).toBe("playing");
+
+    await acceptAutoCompleteOffer();
+    expect(getAutoCompleteOffer()).toBeNull();
+    expect(outcome()).toBe("won");
+  });
+
+  test("closing the panel stacks nothing, even after choosing always", async () => {
+    const king = card("K", "spades");
+    const columns = emptyColumns();
+    columns[0] = [king];
+    await renderGame("/fortress", Fortress, {
+      columns,
+      foundations: [
+        run("hearts"),
+        run("clubs"),
+        run("diamonds"),
+        run("spades", "A", "Q"),
+      ],
+      ended: false,
+      won: false,
+    });
+
+    await setAutoCompleteMode("always");
+    await act(async () => getAutoCompleteOffer()!.dismiss());
+    await settle();
+    expect(getAutoCompleteOffer()).toBeNull();
+    expect(outcome()).toBe("playing");
   });
 
   test("no legal move loses", async () => {

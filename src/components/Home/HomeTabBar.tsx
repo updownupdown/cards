@@ -1,4 +1,4 @@
-import { useKeyboardLift } from "@/hooks/useKeyboardLift";
+import { useKeyboardState } from "@/hooks/useKeyboardLift";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { Icon, type IconName } from "@/icons";
@@ -23,12 +23,12 @@ import Animated, {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 
-export type HomeTabKey = "home" | "collect" | "search" | "nodes";
+export type HomeTabKey = "home" | "collect" | "search" | "campaign";
 
 export const HOME_TABS: { key: HomeTabKey; icon: IconName }[] = [
   { key: "home", icon: "home" },
-  { key: "nodes", icon: "milky-way" },
-  { key: "collect", icon: "trophy" },
+  { key: "campaign", icon: "milky-way" },
+  { key: "collect", icon: "stamp" },
   { key: "search", icon: "search" },
 ];
 
@@ -48,7 +48,7 @@ export function HomeTabBar({
   const insets = useSafeAreaInsets();
   const { spacing, ui } = useResponsiveMetrics();
   const { t } = useTranslation("home");
-  const keyboardLift = useKeyboardLift();
+  const keyboard = useKeyboardState();
   const backgroundOpacity = useSharedValue(showBackground ? 1 : 0);
   const backgroundStyle = useAnimatedStyle(() => ({
     opacity: backgroundOpacity.value,
@@ -75,10 +75,11 @@ export function HomeTabBar({
           right: 0,
           bottom: 0,
           zIndex: 8,
-          // Rides up above the keyboard with the search box, rather than
-          // being covered by it.
-          transform: [{ translateY: keyboardLift }],
+          // Out of the way while the keyboard is up, so only the search box
+          // rides above it.
+          opacity: keyboard.visible ? 0 : 1,
         },
+        keyboard.visible && pointerEventsStyles.none,
       ]}
     >
       {/* The header's fade, mirrored: content scrolling past the floating pill
@@ -142,7 +143,7 @@ export function HomeTabBar({
               height: spacing(layoutDims.tabBarHeight),
               borderRadius: spacing(layoutDims.tabBarHeight / 2),
               backgroundColor: rgba(Colors.K950, 0.9),
-              ...homeSurfaceShadow(spacing),
+              ...homeSurfaceShadow(spacing, { translucent: true }),
             },
           ]}
         >
@@ -172,7 +173,7 @@ export function HomeTabBar({
               >
                 <Icon
                   name={tab.icon}
-                  size={spacing(28)}
+                  size={spacing(32)}
                   color={isActive ? Colors.white : Colors.K500}
                   style={{ ...transitionStyles.all02sec }}
                 />

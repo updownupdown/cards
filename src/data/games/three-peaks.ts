@@ -18,6 +18,13 @@ export const threePeaks: GameDefinition = {
     luck: 55,
   },
   thumbnail: "ThreePeaks.webp",
+  thumbnailCredit: {
+    title: "South Wind, Clear Sky, from Thirty-Six Views of Mount Fuji",
+    artistName: "Katsushika Hokusai",
+    date: "early 1830s",
+    sourceName: "Cleveland Museum of Art",
+    sourceLink: "https://clevelandart.org/art/1930.189",
+  },
   background: GAME_BACKGROUNDS.smokyMountain,
   animation: GameAnimations.Clouds,
   gameColorDark: "#24343a",

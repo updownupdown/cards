@@ -9,6 +9,13 @@ export const bisley: GameDefinition = {
   tags: [GameTag.CastlesAndFans, GameTag.SequenceBuilding],
   rating: { complexity: 45, difficulty: 55, luck: 25 },
   thumbnail: "Bisley.webp",
+  thumbnailCredit: {
+    title: "Archery, from Country Sports",
+    artistName: "Aubusson Royal Manufactory",
+    date: "1770–90",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/27847",
+  },
   background: GAME_BACKGROUNDS.london,
   animation: GameAnimations.Rain,
   gameColorDark: "#30343a",

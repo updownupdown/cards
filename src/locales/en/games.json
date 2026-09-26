@@ -2,7 +2,6 @@
   "jailbreak": {
     "red": "Red",
     "black": "Black",
-    "remainder": "Draw",
     "redTotal": "Red: {{count}}",
     "blackTotal": "Black: {{count}}",
     "theJokerEscaped": "The Joker escaped!"
@@ -125,6 +124,35 @@
     "trade": "Trade",
     "offer": "Offer"
   },
+  "charlatan": {
+    "statusStart": "Tap your deck to start brewing.",
+    "statusRisk": "Bust risk {{risk}}% · Stop now: {{points}} points, {{coins}} coins",
+    "statusRiskFinal": "Bust risk {{risk}}% · Stop now: {{points}} points",
+    "statusBoiledOver": "The potion boiled over! Keep its points or its coins.",
+    "statusMarket": "{{coins}} coins · Buy up to {{buys}} more (different suits)",
+    "dudReturned": "The club sends the dud back into your deck.",
+    "strength": "Strength {{strength}}",
+    "strengthWithBonus": "Strength {{strength}} (+{{bonus}} ♦ if you stop)",
+    "duds": "Duds",
+    "effect_hearts": "No effect",
+    "effect_diamonds": "Last card ×2",
+    "effect_clubs": "Returns a dud",
+    "effect_spades": "Shows next card",
+    "costValue": "Cost: value",
+    "costValuePlus": "Cost: value + {{extra}}",
+    "addCard": "Add card",
+    "stop": "Stop",
+    "keepPoints": "+{{value}} points",
+    "keepCoins": "+{{value}} coins",
+    "nextRound": "Round {{round}} / {{total}}",
+    "round": "Round",
+    "score": "Score",
+    "tierVillageHealer": "Village Healer",
+    "tierCourtAlchemist": "Court Alchemist",
+    "tierMiracleWorker": "Miracle Worker",
+    "wonWithTier": "{{score}} points: {{tier}}!",
+    "lostShortOfTarget": "{{score}} points. You need {{target}} points to win."
+  },
   "cityGrid": {
     "pileIsFull": "Pile is full!",
     "mustPlaceOnExistingOr": "Must place on existing or adjacent pile!",
@@ -186,6 +214,17 @@
     "reassign": "Reassign",
     "allTwelveRoyalsAreDown": "All twelve royals are down.",
     "youRanOutOfCards": "You ran out of cards before defeating all twelve royals."
+  },
+  "ebbAndFlow": {
+    "rising": "Rising",
+    "falling": "Falling",
+    "playMore_one": "Play {{count}} more card",
+    "playMore_other": "Play {{count}} more cards",
+    "playOrDraw": "Play on, or tap the deck to draw",
+    "deckEmpty": "Deck empty: play every card you can",
+    "allPlayed": "Every card is played!",
+    "stuck_one": "No card can be played. {{count}} card left.",
+    "stuck_other": "No card can be played. {{count}} cards left."
   },
   "elementaryDetective": {
     "youScored20ToWin": "You scored {{score}} (20 to win)",
@@ -301,8 +340,8 @@
   },
   "invaders": {
     "wave2": "Wave 2",
-    "atks": "Atks",
-    "defs": "Defs",
+    "attacks": "Attacks",
+    "defenses": "Defenses",
     "defenders": "Defenders",
     "attack": "Attack{{value}}",
     "attackersWave": "Attackers (Wave {{wave}})",
@@ -392,6 +431,43 @@
     "shrineComplete": "Every set rests in the shrine!",
     "trayFull": "The tray is full."
   },
+  "picketFence": {
+    "statusChooseHouse": "Choose a card to build as a house.",
+    "statusChooseLot": "Tap a highlighted lot to build there.",
+    "statusChooseEffect": "Choose an effect: {{hearts}} park · {{diamonds}} pool · {{spades}} fence · {{clubs}} house",
+    "statusChooseFence": "Tap where the fence goes.",
+    "statusChooseSecondHouse": "Tap a lot for the second house.",
+    "noLotFits": "This card doesn't fit on any lot.",
+    "effectWasted": "No effect this time: the card is discarded.",
+    "estateBlocked": "✕",
+    "parks": "Parks {{count}}/{{max}} · {{points}}",
+    "pools": "Pools",
+    "score": "Score",
+    "tierGoodNeighbours": "Good Neighbours",
+    "tierModelSuburb": "Model Suburb",
+    "tierPicturePerfect": "Picture Perfect",
+    "tierQuietStreet": "Quiet Street",
+    "tierVacantLots": "Vacant Lots",
+    "wonWithTier": "{{score}} points: {{tier}}!",
+    "lostShortOfTarget": "{{score}} points: {{tier}}. You need {{target}} points to win."
+  },
+  "pickpocket": {
+    "round": "Round",
+    "score": "Coins",
+    "statusStart": "Flip a card to start your purse.",
+    "statusPurse": "Purse: {{purse}}",
+    "cleanSweep": "Clean sweep! You keep {{purse}}.",
+    "walkedAway": "You slipped away with {{purse}}.",
+    "caught": "Caught! The {{purse}} in your purse is lost.",
+    "caughtEmpty": "Caught before you took a coin!",
+    "walkAway": "Walk Away",
+    "nextRound": "Next Round",
+    "tierLightFingers": "Light Fingers",
+    "tierCutpurse": "Cutpurse",
+    "tierPrinceOfThieves": "Prince of Thieves",
+    "wonWithTier": "{{score}} coins: {{tier}}!",
+    "lostShortOfTarget": "{{score}} coins. You need {{target}} coins to win."
+  },
   "pocketPoker": {
     "youHit10PointsYou": "You hit 10 points — you win!",
     "youBustedOut": "You busted out.",
@@ -449,7 +525,6 @@
     "allFourSuitStacksAre": "All four suit stacks are complete."
   },
   "seer": {
-    "deck": "Deck",
     "reveal": "Reveal",
     "return": "Return",
     "predictions": {
@@ -467,7 +542,7 @@
     "complete": ", complete",
     "blocked": ", blocked",
     "allPredictionsComplete": "All eight predictions are complete.",
-    "deckRanOut": "The deck ran out before all predictions were complete.",
+    "deckRanOut": "The stock ran out before all predictions were complete.",
     "allPredictionsBlocked": "All eight predictions are blocked by stones.",
     "chooseHighlightedStone": "Choose one highlighted stone",
     "freedStones_one": "{{count}} freed stone",
@@ -486,9 +561,9 @@
   "singleDeckSpider": {
     "fourCompleteSuits": "Four complete suits!"
   },
-  "singularity": {
+  "blackHole": {
     "everyStarCollapsedIn": "Every star collapsed in!",
-    "noCardCanReachThe": "No card can reach the singularity."
+    "noCardCanReachThe": "No card can reach the black hole."
   },
   "sirTommy": {
     "allFourSuitsHome": "All four suits home!",
@@ -502,7 +577,7 @@
   "somnus": {
     "thatAssignmentDoesNotMeet": "That assignment does not meet the target's rules",
     "dream": "Dream",
-    "rmvd": "Rmvd",
+    "removed": "Removed",
     "guard": "Guard",
     "turn": "Turn",
     "selectNightmareOrGuardian": "Select nightmare or guardian",

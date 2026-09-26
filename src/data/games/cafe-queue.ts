@@ -13,6 +13,13 @@ export const cafeQueue: GameDefinition = {
     luck: 55,
   },
   thumbnail: "CafeQueue.webp",
+  thumbnailCredit: {
+    title: "In the Café",
+    artistName: "Fernand Lungren",
+    date: "1882–84",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/59908",
+  },
   background: GAME_BACKGROUNDS.city2,
   animation: GameAnimations.Clouds,
   gameColorDark: "#2b1c29",

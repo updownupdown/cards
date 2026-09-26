@@ -13,6 +13,13 @@ export const accordion: GameDefinition = {
     luck: 25,
   },
   thumbnail: "Accordion.webp",
+  thumbnailCredit: {
+    title: "Young Man with a Concertina",
+    artistName: "Unknown American photographer",
+    date: "ca. 1861–65",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/504133",
+  },
   background: GAME_BACKGROUNDS.fallLeaves,
   animation: GameAnimations.Leaves,
   gameColorDark: "#351219",

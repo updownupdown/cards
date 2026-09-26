@@ -13,6 +13,14 @@ export const pocketPoker: GameDefinition = {
     luck: 50,
   },
   thumbnail: "PocketPoker.webp",
+  thumbnailCredit: {
+    title: "Poker Game",
+    artistName: "Cassius Marcellus Coolidge",
+    date: "1894",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Cassius_Marcellus_Coolidge_-_Poker_Game_(1894).png",
+  },
   background: GAME_BACKGROUNDS.casino,
   animation: GameAnimations.Glitter,
   gameColorDark: "#142e1f",

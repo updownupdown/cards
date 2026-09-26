@@ -1,4 +1,5 @@
 import { useStateManager } from "@/hooks/useStateManager";
+import { useGameVariant } from "@/hooks/useGameVariant";
 import {
   CardHitArea,
   createRect,
@@ -94,12 +95,14 @@ function normalizeColumn(column: PlayingCard[]) {
   return [...column.slice(0, -1), { ...top, faceUp: true }];
 }
 
+/** In Wasp, any card may fill an empty column; in Scorpion only a King. */
 function canAttachToTableau(
   movingTop: PlayingCard,
   destinationTop?: PlayingCard,
+  anyCardToEmpty = false,
 ) {
   if (!destinationTop) {
-    return movingTop.rank === "K";
+    return anyCardToEmpty || movingTop.rank === "K";
   }
 
   if (!destinationTop.faceUp) {
@@ -176,6 +179,12 @@ function gatherState(state: ScorpionState): ScorpionState {
 const gameStateInitial = gatherState(createInitialState());
 
 export default function Scorpion() {
+  const variant = useGameVariant("/scorpion");
+  if (!variant) return null;
+  return <ScorpionBoard key={variant} anyCardToEmpty={variant === "wasp"} />;
+}
+
+function ScorpionBoard({ anyCardToEmpty }: { anyCardToEmpty: boolean }) {
   const [selected, setSelected] = useState<Selection>(null);
 
   const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
@@ -231,7 +240,9 @@ export default function Scorpion() {
       row: 1.6,
       baseZIndex: 10 + pileIndex,
       fan: { direction: "down", offset: TABLEAU_FAN_OFFSET },
-      placeholder: { showCount: false, text: i18n.t("cards:empty") },
+      placeholder: anyCardToEmpty
+        ? { showCount: false, text: i18n.t("cards:empty") }
+        : { iconName: "king" },
     }));
 
     return [
@@ -571,7 +582,7 @@ export default function Scorpion() {
 
       const destinationPile = draft.tableau[destinationIndex];
       const destinationTop = destinationPile[destinationPile.length - 1];
-      if (!canAttachToTableau(movingCards[0], destinationTop)) {
+      if (!canAttachToTableau(movingCards[0], destinationTop, anyCardToEmpty)) {
         return;
       }
 
@@ -639,7 +650,7 @@ export default function Scorpion() {
 
     const destinationPile = snapshot.tableau[target.pileIndex];
     const destinationTop = destinationPile[destinationPile.length - 1];
-    return canAttachToTableau(movingCards[0], destinationTop);
+    return canAttachToTableau(movingCards[0], destinationTop, anyCardToEmpty);
   }
 
   function makeHandlers(source: MoveSource, onTap?: () => void) {

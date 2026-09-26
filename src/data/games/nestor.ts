@@ -13,6 +13,14 @@ export const nestor: GameDefinition = {
     luck: 65,
   },
   thumbnail: "Nestor.webp",
+  thumbnailCredit: {
+    title: "Achilles Introduced to Nestor",
+    artistName: "Joseph-Désiré Court",
+    date: "1820",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Court_-_Achille_pr%C3%A9sent%C3%A9_%C3%A0_Nestor_lg_white_balanced.png",
+  },
   background: GAME_BACKGROUNDS.greece,
   animation: GameAnimations.Clouds,
   gameColorDark: "#112e49",

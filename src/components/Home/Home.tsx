@@ -5,17 +5,16 @@ import { HomeStarfieldBackground } from "@/components/Home/HomeStarfieldBackgrou
 import { HomeTab } from "@/components/Home/HomeTab";
 import { HomeTabBar } from "@/components/Home/HomeTabBar";
 import { SearchTab } from "@/components/Home/SearchTab";
-import { NodesTab } from "@/components/Nodes/NodesTab";
-import { NodesUFO } from "@/components/Nodes/NodesUFO";
-import { UfoContext, type UfoRequest } from "@/components/Nodes/UfoContext";
+import { CampaignTab } from "@/components/Campaign/CampaignTab";
+import { CampaignUFO } from "@/components/Campaign/CampaignUFO";
+import { UfoContext, type UfoRequest } from "@/components/Campaign/UfoContext";
 import { createTabReadyGate, TabReadyContext } from "./TabReady";
 import {
   COLLECT_HOME_TAB_INDEX,
   getActiveHomeTab,
-  getPendingCollectTag,
   HOME_HOME_TAB_INDEX,
   LAST_HOME_TAB_INDEX,
-  NODES_HOME_TAB_INDEX,
+  CAMPAIGN_HOME_TAB_INDEX,
   SEARCH_HOME_TAB_INDEX,
   setActiveHomeTab,
   type HomeTabIndex,
@@ -54,7 +53,7 @@ import { useIsFocused, useLocalSearchParams } from "expo-router";
  * and when that runs short every frame slows down, so a heavy tab belongs
  * here: Collect only fits since its stickers use small thumbnails.)
  */
-const UNMOUNTED_WHEN_LEFT: HomeTabIndex[] = [NODES_HOME_TAB_INDEX];
+const UNMOUNTED_WHEN_LEFT: HomeTabIndex[] = [CAMPAIGN_HOME_TAB_INDEX];
 /** How far aside a hidden tab is moved, well clear of any screen. */
 const OUT_OF_VIEW = 10000;
 // CSS visibility, which React Native's style types leave out but the web
@@ -76,7 +75,7 @@ const MAX_TAB_WAIT = 1500;
 const SPINNER_DELAY = 150;
 const HOME_TAB_INDICES = [
   HOME_HOME_TAB_INDEX,
-  NODES_HOME_TAB_INDEX,
+  CAMPAIGN_HOME_TAB_INDEX,
   COLLECT_HOME_TAB_INDEX,
   SEARCH_HOME_TAB_INDEX,
 ] as const;
@@ -107,8 +106,6 @@ export default function Home() {
   const [mountedTabs, setMountedTabs] = useState<ReadonlySet<HomeTabIndex>>(
     () => new Set([initialActiveTab]),
   );
-  // Bumped to build the Collect tab afresh, when a category is asked for.
-  const [collectTabKey, setCollectTabKey] = useState(0);
   const [scrolledTabs, setScrolledTabs] = useState<ReadonlySet<HomeTabIndex>>(
     () => new Set(),
   );
@@ -124,19 +121,16 @@ export default function Home() {
   // wait until the page scrolls; on a phone they always show, on every tab,
   // so the screen's edges never change as the tabs switch.
   const showHeaderBackgroundFor = (index: HomeTabIndex) =>
-    !isWeb || (index !== NODES_HOME_TAB_INDEX && scrolledTabs.has(index));
-  const {
-    settings,
-    updateSettings,
-    isLoading: settingsLoading,
-  } = useGlobalSettings();
-  // Set by the Nodes tab while the map is open; the UFO itself is drawn here.
+    !isWeb || (index !== CAMPAIGN_HOME_TAB_INDEX && scrolledTabs.has(index));
+  const { settings, updateSettings } = useGlobalSettings();
+  // Set by the Campaign tab while the map is open; the UFO itself is drawn here.
   const [ufo, setUfo] = useState<UfoRequest | null>(null);
   const cardSize = settings.discoverCardSize ?? "large";
 
   const [containerHeight, setContainerHeight] = useState(0);
 
   const {
+    isLoaded: homeDataLoaded,
     favorites,
     recentPaths,
     settingsMap,
@@ -196,18 +190,6 @@ export default function Home() {
     setActiveHomeTab(index);
     setActiveTab(index);
     setShownTab(null);
-    // A category asked for from the Home tab needs Collect built afresh,
-    // since it only looks for one as it mounts: the one already built goes
-    // now, so it is not shown instead.
-    const rebuildCollect =
-      index === COLLECT_HOME_TAB_INDEX && getPendingCollectTag() !== null;
-    if (rebuildCollect) {
-      setMountedTabs((current) => {
-        const next = new Set(current);
-        next.delete(COLLECT_HOME_TAB_INDEX);
-        return next;
-      });
-    }
     // The old tab goes in this render, and anything to build waits for the
     // next, so a tab slow to build (the Campaign map) never holds up the old
     // one leaving. After a frame and then a turn, so that the web browser
@@ -215,7 +197,6 @@ export default function Home() {
     requestAnimationFrame(() =>
       setTimeout(() => {
         if (activeTabRef.current !== index) return;
-        if (rebuildCollect) setCollectTabKey((key) => key + 1);
         setMountedTabs((current) => {
           const next = new Set(current).add(index);
           UNMOUNTED_WHEN_LEFT.forEach((left) => {
@@ -250,14 +231,16 @@ export default function Home() {
   // The map is dropped while a game is open over Home, so coming back it is
   // built again, out of sight like any other switch.
   useEffect(() => {
-    if (!isFocused && activeTabRef.current === NODES_HOME_TAB_INDEX) {
+    if (!isFocused && activeTabRef.current === CAMPAIGN_HOME_TAB_INDEX) {
       setShownTab(null);
     }
   }, [isFocused]);
 
   useEffect(() => {
-    if (tab === "nodes" && activeTabRef.current !== NODES_HOME_TAB_INDEX) {
-      onSelectTab(NODES_HOME_TAB_INDEX);
+    // "nodes" is the tab's old name, still in saved links.
+    const campaignTab = tab === "campaign" || tab === "nodes";
+    if (campaignTab && activeTabRef.current !== CAMPAIGN_HOME_TAB_INDEX) {
+      onSelectTab(CAMPAIGN_HOME_TAB_INDEX);
     }
   }, [tab]);
 
@@ -296,27 +279,12 @@ export default function Home() {
           showBackground={showHeaderBackgroundFor(HOME_HOME_TAB_INDEX)}
         />
         <HomeTab
-          onSelectTab={onSelectTab}
           allEnabledGames={allEnabledGames}
           unplayedGamePaths={unplayedGamePaths}
           favorites={favorites}
           recentPaths={recentPaths}
           onToggleFavorite={toggleFavorite}
-          settingsLoaded={!settingsLoading}
-          guideDismissed={{
-            easy: settings.dismissHomeEasyGames,
-            campaign: settings.dismissHomeCampaign,
-            genres: settings.dismissHomeGenres,
-          }}
-          onDismissGuide={(box) =>
-            void updateSettings(
-              box === "easy"
-                ? { dismissHomeEasyGames: true }
-                : box === "campaign"
-                  ? { dismissHomeCampaign: true }
-                  : { dismissHomeGenres: true },
-            )
-          }
+          dataLoaded={homeDataLoaded}
           onScrolledChange={(scrolled) =>
             setTabScrolled(HOME_HOME_TAB_INDEX, scrolled)
           }
@@ -325,12 +293,12 @@ export default function Home() {
         />
       </>
     ),
-    [NODES_HOME_TAB_INDEX]: (
+    [CAMPAIGN_HOME_TAB_INDEX]: (
       <>
         <HomeHeaderBackground
-          showBackground={showHeaderBackgroundFor(NODES_HOME_TAB_INDEX)}
+          showBackground={showHeaderBackgroundFor(CAMPAIGN_HOME_TAB_INDEX)}
         />
-        <NodesTab contentPaddingTop={contentPaddingTop} />
+        <CampaignTab contentPaddingTop={contentPaddingTop} />
       </>
     ),
     [COLLECT_HOME_TAB_INDEX]: (
@@ -414,14 +382,11 @@ export default function Home() {
 
               {HOME_TAB_INDICES.map((index) => {
                 if (!mountedTabs.has(index)) return null;
-                if (index === NODES_HOME_TAB_INDEX && !isFocused) return null;
+                if (index === CAMPAIGN_HOME_TAB_INDEX && !isFocused)
+                  return null;
                 return (
                   <TabLayer
-                    key={
-                      index === COLLECT_HOME_TAB_INDEX
-                        ? `${index}:${collectTabKey}`
-                        : index
-                    }
+                    key={index}
                     state={
                       index === shownTab
                         ? "shown"
@@ -460,9 +425,9 @@ export default function Home() {
           />
 
           {/* Last, so it flies over the header and tab bar rather than under
-            them. It only exists while the Nodes tab has asked for it. */}
-          {ufo && shownTab === NODES_HOME_TAB_INDEX && (
-            <NodesUFO
+            them. It only exists while the Campaign tab has asked for it. */}
+          {ufo && shownTab === CAMPAIGN_HOME_TAB_INDEX && (
+            <CampaignUFO
               width={viewportWidth}
               height={viewportHeight}
               animationsEnabled={settings.showAnimations && ufo.gateOpen}

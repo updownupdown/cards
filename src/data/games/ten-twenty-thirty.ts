@@ -14,6 +14,13 @@ export const tenTwentyThirty: GameDefinition = {
     luck: 70,
   },
   thumbnail: "TenTwentyThirty.webp",
+  thumbnailCredit: {
+    title: "Daikoku with an Abacus",
+    artistName: "Keisai Eisen",
+    date: "1828",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/81282",
+  },
   background: GAME_BACKGROUNDS.modernMetal2,
   animation: GameAnimations.Firefly,
   gameColorDark: "#132d35",

@@ -1,10 +1,15 @@
 import { type PlayingCard, RANK_VALUE } from "@/components/Cards/card-utils";
 import { useEffect, useRef, useState } from "react";
+import { setAutoCompleteOffer } from "./auto-complete-offer";
+import { useGlobalSettings } from "./useGlobalSettings";
 
 // Auto-complete for Klondike-style games: once every remaining card can go to
-// the foundations one top card at a time, the game plays those moves itself.
-// Moves are applied STAGGER_MS apart, so the cards fly in overlapping,
-// staggered animations rather than one after another.
+// the foundations one top card at a time, the game can play those moves
+// itself. The autoComplete setting decides when: "always" right away,
+// "ask" once the player asks from a panel under the header (see
+// auto-complete-offer), and "never" not at all. Moves are applied STAGGER_MS
+// apart, so the cards fly in overlapping, staggered animations rather than one
+// after another.
 
 const START_DELAY_MS = 350;
 const STAGGER_MS = 50;
@@ -126,7 +131,15 @@ type Options<T> = {
 
 export function useAutoComplete<T>(options: Options<T>) {
   const { game, isSettingUp, won, isBlocked = false } = options;
+  const { settings, isLoading: isSettingsLoading } = useGlobalSettings();
+  const mode = settings.autoComplete;
   const [isAutoCompleting, setIsAutoCompleting] = useState(false);
+  // The panel is showing. It stays until closed or used, even if the setting
+  // is changed from it meanwhile.
+  const [isOfferOpen, setIsOfferOpen] = useState(false);
+  // The panel was closed: nothing is stacked for the player until the next
+  // deal.
+  const [isOfferDismissed, setIsOfferDismissed] = useState(false);
   const optionsRef = useRef(options);
   optionsRef.current = options;
   // Bumped to cancel a run in progress (new deal, reset or unmount).
@@ -136,62 +149,102 @@ export function useAutoComplete<T>(options: Options<T>) {
     if (!isSettingUp) return;
     runIdRef.current += 1;
     setIsAutoCompleting(false);
+    setIsOfferOpen(false);
+    setIsOfferDismissed(false);
   }, [isSettingUp]);
 
   useEffect(() => {
     return () => {
       runIdRef.current += 1;
+      setAutoCompleteOffer(null);
     };
   }, []);
 
+  const run = async (moves: AutoCompleteMove[]) => {
+    const runId = ++runIdRef.current;
+    setIsAutoCompleting(true);
+    optionsRef.current.onStart?.();
+
+    for (const move of moves) {
+      if (runIdRef.current !== runId) return;
+
+      optionsRef.current.setGame((draft) => {
+        const current = optionsRef.current;
+        if (current.applyMove) {
+          current.applyMove(draft, move);
+          return;
+        }
+        const card = current.getSources(draft)?.[move.source]?.pop();
+        if (card) {
+          current.getFoundations(draft)[move.foundation].push({
+            ...card,
+            faceUp: true,
+          });
+        }
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, STAGGER_MS));
+    }
+
+    if (runIdRef.current === runId) setIsAutoCompleting(false);
+  };
+
   useEffect(() => {
-    if (isAutoCompleting || isSettingUp || won || isBlocked) return;
+    if (
+      isAutoCompleting ||
+      isSettingUp ||
+      won ||
+      isBlocked ||
+      isSettingsLoading ||
+      isOfferDismissed ||
+      (mode === "never" && !isOfferOpen)
+    ) {
+      return;
+    }
 
     const { getSources, getFoundations, canPlaceOnFoundation } =
       optionsRef.current;
     const sources = getSources(game);
-    if (!sources) return;
+    const moves = sources
+      ? planAutoComplete(sources, getFoundations(game), canPlaceOnFoundation)
+      : null;
+    if (!moves) {
+      // An undo can take the game back out of its end state.
+      if (isOfferOpen) setIsOfferOpen(false);
+      return;
+    }
 
-    const moves = planAutoComplete(
-      sources,
-      getFoundations(game),
-      canPlaceOnFoundation,
-    );
-    if (!moves) return;
-
-    const run = async () => {
-      const runId = ++runIdRef.current;
-      setIsAutoCompleting(true);
-      optionsRef.current.onStart?.();
-
-      for (const move of moves) {
-        if (runIdRef.current !== runId) return;
-
-        optionsRef.current.setGame((draft) => {
-          const current = optionsRef.current;
-          if (current.applyMove) {
-            current.applyMove(draft, move);
-            return;
-          }
-          const card = current.getSources(draft)?.[move.source]?.pop();
-          if (card) {
-            current.getFoundations(draft)[move.foundation].push({
-              ...card,
-              faceUp: true,
-            });
-          }
-        });
-
-        await new Promise((resolve) => setTimeout(resolve, STAGGER_MS));
-      }
-
-      if (runIdRef.current === runId) setIsAutoCompleting(false);
-    };
+    if (isOfferOpen || mode === "ask") {
+      if (!isOfferOpen) setIsOfferOpen(true);
+      setAutoCompleteOffer({
+        start: () => {
+          setAutoCompleteOffer(null);
+          setIsOfferOpen(false);
+          void run(moves);
+        },
+        dismiss: () => {
+          setAutoCompleteOffer(null);
+          setIsOfferOpen(false);
+          setIsOfferDismissed(true);
+        },
+      });
+      return () => setAutoCompleteOffer(null);
+    }
 
     // Let the move that made it possible finish animating first.
-    const timer = setTimeout(() => void run(), START_DELAY_MS);
+    const timer = setTimeout(() => void run(moves), START_DELAY_MS);
     return () => clearTimeout(timer);
-  }, [game, isAutoCompleting, isBlocked, isSettingUp, won]);
+  }, [
+    game,
+    isAutoCompleting,
+    isBlocked,
+    isOfferDismissed,
+    isOfferOpen,
+    isSettingUp,
+    isSettingsLoading,
+    mode,
+    won,
+  ]);
 
   return { isAutoCompleting };
 }

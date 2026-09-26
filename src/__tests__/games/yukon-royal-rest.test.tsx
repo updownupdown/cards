@@ -12,14 +12,12 @@ import {
   dropMove,
   outcome,
   renderGame,
+  renderVariant,
   run,
 } from "../../../jest/game-harness";
 import type { PlayingCard } from "@/components/Cards/card-utils";
 import type { ComponentType } from "react";
-import Alaska from "@/components/Games/Alaska";
-import Moosehide from "@/components/Games/Moosehide";
 import RoyalRest from "@/components/Games/RoyalRest";
-import RussianSolitaire from "@/components/Games/RussianSolitaire";
 import Yukon from "@/components/Games/Yukon";
 
 beforeEach(() => {
@@ -30,18 +28,18 @@ afterEach(() => {
   jest.useRealTimers();
 });
 
-describe.each<[string, string, ComponentType]>([
-  ["Yukon", "/yukon", Yukon],
-  ["Alaska", "/alaska", Alaska],
-  ["Moosehide", "/moosehide", Moosehide],
-  ["Russian Solitaire", "/russian-solitaire", RussianSolitaire],
-])("%s (no lose condition)", (_name, path, Game) => {
+describe.each<[string, string, string, ComponentType]>([
+  ["Yukon", "/yukon", "yukon", Yukon],
+  ["Alaska", "/yukon", "alaska", Yukon],
+  ["Moosehide", "/yukon", "moosehide", Yukon],
+  ["Russian Solitaire", "/yukon", "russian", Yukon],
+])("%s (no lose condition)", (_name, path, variant, Game) => {
   test("moving the last king to the foundations wins", async () => {
     const columns = Array.from({ length: 7 }, () => [] as PlayingCard[]);
     columns[0] = [card("K", "spades")];
     // A face-down card keeps auto-complete from finishing the game by itself.
     columns[1] = [card("9", "hearts", false)];
-    await renderGame(path, Game, {
+    await renderVariant(path, variant, Game, {
       setupPile: [],
       columns,
       foundations: [

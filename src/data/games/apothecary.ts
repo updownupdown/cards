@@ -14,6 +14,13 @@ export const apothecary: GameDefinition = {
     luck: 5,
   },
   thumbnail: "Apothecary.webp",
+  thumbnailCredit: {
+    title: "Apothecary's Bottle",
+    artistName: "Unknown Japanese potter, Arita ware",
+    date: "1670s",
+    sourceName: "Cleveland Museum of Art",
+    sourceLink: "https://clevelandart.org/art/1971.169",
+  },
   background: GAME_BACKGROUNDS.headlessStatue,
   animation: GameAnimations.CandleMotes,
   gameColorDark: "#1d2a2a",

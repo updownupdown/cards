@@ -2,7 +2,6 @@
   "jailbreak": {
     "red": "Rouge",
     "black": "Noir",
-    "remainder": "Pioche",
     "redTotal": "Rouge : {{count}}",
     "blackTotal": "Noir : {{count}}",
     "theJokerEscaped": "Le Joker s'est échappé !"
@@ -286,8 +285,8 @@
   },
   "invaders": {
     "wave2": "Vague 2",
-    "atks": "Atq.",
-    "defs": "Déf.",
+    "attacks": "Attaques",
+    "defenses": "Défenses",
     "defenders": "Défenseurs",
     "attack": "Attaquer{{value}}",
     "attackersWave": "Attaquants (vague {{wave}})",
@@ -434,7 +433,6 @@
     "allFourSuitStacksAre": "Les quatre piles par couleur sont complètes."
   },
   "seer": {
-    "deck": "Paquet",
     "reveal": "Révéler",
     "return": "Rendre",
     "predictions": {
@@ -471,7 +469,7 @@
   "singleDeckSpider": {
     "fourCompleteSuits": "Quatre couleurs complètes !"
   },
-  "singularity": {
+  "blackHole": {
     "everyStarCollapsedIn": "Toutes les étoiles se sont effondrées !",
     "noCardCanReachThe": "Aucune carte ne peut atteindre la singularité."
   },
@@ -487,7 +485,7 @@
   "somnus": {
     "thatAssignmentDoesNotMeet": "Cette affectation ne respecte pas les règles de la cible",
     "dream": "Rêve",
-    "rmvd": "Ret.",
+    "removed": "Retirées",
     "guard": "Gard.",
     "turn": "Tour",
     "selectNightmareOrGuardian": "Choisissez un cauchemar ou un gardien",

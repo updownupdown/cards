@@ -2,7 +2,6 @@
   "jailbreak": {
     "red": "Kırmızı",
     "black": "Siyah",
-    "remainder": "Çek",
     "redTotal": "Kırmızı: {{count}}",
     "blackTotal": "Siyah: {{count}}",
     "theJokerEscaped": "Joker kaçtı!"
@@ -286,8 +285,8 @@
   },
   "invaders": {
     "wave2": "2. dalga",
-    "atks": "Sald.",
-    "defs": "Sav.",
+    "attacks": "Saldırılar",
+    "defenses": "Savunmalar",
     "defenders": "Savunucular",
     "attack": "Saldır{{value}}",
     "attackersWave": "Saldırganlar (Dalga {{wave}})",
@@ -434,7 +433,6 @@
     "allFourSuitStacksAre": "Dört takım yığınının hepsi tamamlandı."
   },
   "seer": {
-    "deck": "Deste",
     "reveal": "Aç",
     "return": "Geri koy",
     "predictions": {
@@ -471,7 +469,7 @@
   "singleDeckSpider": {
     "fourCompleteSuits": "Dört takım tamamlandı!"
   },
-  "singularity": {
+  "blackHole": {
     "everyStarCollapsedIn": "Bütün yıldızlar çöktü!",
     "noCardCanReachThe": "Hiçbir kart tekilliğe ulaşamıyor."
   },
@@ -487,7 +485,7 @@
   "somnus": {
     "thatAssignmentDoesNotMeet": "Bu atama hedefin kurallarına uymuyor",
     "dream": "Rüya",
-    "rmvd": "Çkr.",
+    "removed": "Çıkarılan",
     "guard": "Kor.",
     "turn": "Tur",
     "selectNightmareOrGuardian": "Kâbus ya da koruyucu seç",

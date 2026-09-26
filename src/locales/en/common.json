@@ -15,6 +15,7 @@
     "winRate": "Win rate",
     "winPercent": "Win %",
     "best": "Best",
+    "bestTime": "Best: {{time}}",
     "fastest": "Fastest"
   }
 }

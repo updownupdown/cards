@@ -29,6 +29,8 @@ type Props = {
   durationScale?: number;
   minIntervalMs?: number;
   maxIntervalMs?: number;
+  /** Top speed in px/s; a faster streak travels a shorter path instead. */
+  maxSpeed?: number;
   testID?: string;
 };
 
@@ -46,6 +48,7 @@ export function ShootingStar({
   durationScale = 1.25,
   minIntervalMs = 5000,
   maxIntervalMs = 15000,
+  maxSpeed = Infinity,
   testID,
 }: Props) {
   const opacity = useRef(new RNAnimated.Value(0)).current;
@@ -120,6 +123,12 @@ export function ShootingStar({
           const fadeOutDuration = (100 + Math.random() * 300) * durationScale;
           const travelDuration =
             fadeInDuration + holdDuration + fadeOutDuration;
+          const maxDistance = (maxSpeed * travelDuration) / 1000;
+          const distance = Math.hypot(endX - startX, endY - startY);
+          if (distance > maxDistance) {
+            endX = startX + Math.cos(angle) * maxDistance;
+            endY = startY + Math.sin(angle) * maxDistance;
+          }
 
           setAppearance({
             angle,
@@ -180,6 +189,7 @@ export function ShootingStar({
     height,
     isAppActive,
     maxIntervalMs,
+    maxSpeed,
     minIntervalMs,
     opacity,
     peakOpacity,

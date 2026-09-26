@@ -13,9 +13,10 @@ import {
   pressCard,
   pressCardId,
   renderGame,
+  renderVariant,
 } from "../../../jest/game-harness";
 import { SUITS, type PlayingCard } from "@/components/Cards/card-utils";
-import AllInARow from "@/components/Games/AllInARow";
+import BlackHole from "@/components/Games/BlackHole";
 import FifteenPuzzle from "@/components/Games/FifteenPuzzle";
 import LightsOut from "@/components/Games/LightsOut";
 
@@ -73,12 +74,12 @@ describe("Fifteen Puzzle (no lose condition)", () => {
   });
 });
 
-describe("All in a Row", () => {
+describe("All in a Row (Black Hole variant)", () => {
   test("playing the last card wins", async () => {
     const two = card("2", "spades");
-    await renderGame("/all-in-a-row", AllInARow, {
+    await renderVariant("/black-hole", "all-in-a-row", BlackHole, {
       piles: [[two]],
-      foundation: [card("A", "hearts")],
+      hole: [card("A", "hearts")],
       ended: false,
       won: false,
     });
@@ -91,9 +92,9 @@ describe("All in a Row", () => {
 
   test("no adjacent rank left loses", async () => {
     const two = card("2", "spades");
-    await renderGame("/all-in-a-row", AllInARow, {
+    await renderVariant("/black-hole", "all-in-a-row", BlackHole, {
       piles: [[card("9", "hearts")], [two]],
-      foundation: [card("A", "clubs")],
+      hole: [card("A", "clubs")],
       ended: false,
       won: false,
     });

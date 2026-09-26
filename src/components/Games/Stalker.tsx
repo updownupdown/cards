@@ -408,7 +408,7 @@ export default function Stalker() {
           direction: "right",
           offset: 0.1,
         },
-        placeholder: { text: i18n.t("cards:dscrd"), infoPos: "above" },
+        placeholder: { text: i18n.t("cards:discard"), infoPos: "above" },
       },
       {
         id: "deck",

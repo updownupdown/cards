@@ -107,14 +107,14 @@ const CardComponent = ({
         {isFaceDown ? (
           <Image
             source={getCardBackImage(cardBackPath)}
-            cachePolicy="memory-disk"
+            cachePolicy="memory"
             contentFit="fill"
             style={{ width: "100%", height: "100%" }}
           />
         ) : (
           <Image
             source={imageSource}
-            cachePolicy="memory-disk"
+            cachePolicy="memory"
             style={{ width: "100%", height: "100%" }}
             transition={0}
           />

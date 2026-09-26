@@ -13,6 +13,14 @@ export const crownslayer: GameDefinition = {
     luck: 30,
   },
   thumbnail: "Crownslayer.webp",
+  thumbnailCredit: {
+    title: "The King, from The Dance of Death",
+    artistName: "Hans Holbein the Younger",
+    date: "ca. 1526",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:The_King,_from_The_Dance_of_Death_MET_DP-19849-001.jpg",
+  },
   background: GAME_BACKGROUNDS.monteCarlo,
   animation: GameAnimations.Clouds,
   gameColorDark: "#1b1727",

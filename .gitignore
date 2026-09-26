@@ -52,3 +52,7 @@ INSTRUCTIONS.md
 
 # IDE
 .idea/
+
+# Portrait drawing (scripts/portraits)
+scripts/portraits/preview.png
+__pycache__/

@@ -13,6 +13,13 @@ export const stalker: GameDefinition = {
     luck: 45,
   },
   thumbnail: "Stalker.webp",
+  thumbnailCredit: {
+    title: "Deer Stalking in the Adirondacks in Winter",
+    artistName: "Winslow Homer",
+    date: "1871",
+    sourceName: "Cleveland Museum of Art",
+    sourceLink: "https://clevelandart.org/art/1942.1390",
+  },
   background: GAME_BACKGROUNDS.treeRain,
   animation: GameAnimations.Lightning,
   gameColorDark: "#1b2224",

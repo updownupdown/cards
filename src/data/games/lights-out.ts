@@ -11,6 +11,13 @@ export const lightsOut: GameDefinition = {
   lowerScoreIsBetter: true,
   rating: { complexity: 20, difficulty: 55, luck: 0 },
   thumbnail: "LightsOut.webp",
+  thumbnailCredit: {
+    title: "Searching for Fireflies",
+    artistName: "Suzuki Harunobu",
+    date: "1768",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/77297",
+  },
   background: GAME_BACKGROUNDS.darkAlley,
   animation: GameAnimations.Snow,
   gameColorDark: "#2b2117",

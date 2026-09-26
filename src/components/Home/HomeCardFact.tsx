@@ -35,7 +35,7 @@ export function HomeCardFact({
           gap: spacing(6),
         }}
       >
-        <Icon name="rainbow" size={spacing(80)} color={Colors.K500} />
+        <Icon name="fact" size={spacing(80)} color={Colors.K500} />
         <Text
           size="sm"
           weight={300}

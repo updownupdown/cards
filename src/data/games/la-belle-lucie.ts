@@ -6,10 +6,17 @@ import { GameDefinition, GameTag } from "../games-data";
 export const laBelleLucie: GameDefinition = {
   path: "/la-belle-lucie",
   title: "La Belle Lucie",
-  aliases: ["Lovely Lucy", "The Fan"],
+  aliases: ["Lovely Lucy", "The Fan", "Trefoil", "Shamrocks"],
   tags: [GameTag.CastlesAndFans, GameTag.SequenceBuilding],
   rating: { complexity: 30, difficulty: 80, luck: 40 },
   thumbnail: "LaBelleLucie.webp",
+  thumbnailCredit: {
+    title: "Saint Lucy",
+    artistName: "Unknown Cuzco School painter",
+    date: "18th century",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/232204",
+  },
   background: GAME_BACKGROUNDS.sunsetOldCity,
   animation: GameAnimations.CherryBlossom,
   gameColorDark: "#28352d",
@@ -30,5 +37,8 @@ export const laBelleLucie: GameDefinition = {
     "- Build down by suit, one card at a time.",
     "- Empty fans cannot be filled.",
     "- Twice per game, reshuffle all cards still in the fans and redeal them in groups of three.",
+    "## Variants",
+    "- **Trefoil**: the Aces start on the foundations, leaving sixteen fans.",
+    "- **Shamrocks**: build up or down regardless of suit, no fan may hold more than three cards, and there are no redeals.",
   ],
 };

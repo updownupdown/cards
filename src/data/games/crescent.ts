@@ -10,6 +10,13 @@ export const crescent: GameDefinition = {
   tags: [GameTag.CastlesAndFans, GameTag.SequenceBuilding],
   rating: { complexity: 45, difficulty: 55, luck: 40 },
   thumbnail: "Crescent.webp",
+  thumbnailCredit: {
+    title: "Two Men Contemplating the Moon",
+    artistName: "Caspar David Friedrich",
+    date: "ca. 1825–30",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/438417",
+  },
   background: GAME_BACKGROUNDS.nightSky,
   animation: GameAnimations.Stars,
   gameColorDark: "#182334",

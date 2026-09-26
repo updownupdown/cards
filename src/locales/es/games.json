@@ -2,7 +2,6 @@
   "jailbreak": {
     "red": "Rojo",
     "black": "Negro",
-    "remainder": "Robar",
     "redTotal": "Rojo: {{count}}",
     "blackTotal": "Negro: {{count}}",
     "theJokerEscaped": "¡El comodín escapó!"
@@ -286,8 +285,8 @@
   },
   "invaders": {
     "wave2": "Oleada 2",
-    "atks": "Atq.",
-    "defs": "Def.",
+    "attacks": "Ataques",
+    "defenses": "Defensas",
     "defenders": "Defensores",
     "attack": "Atacar{{value}}",
     "attackersWave": "Atacantes (oleada {{wave}})",
@@ -434,7 +433,6 @@
     "allFourSuitStacksAre": "Las cuatro pilas por palo están completas."
   },
   "seer": {
-    "deck": "Mazo",
     "reveal": "Descubrir",
     "return": "Devolver",
     "predictions": {
@@ -471,7 +469,7 @@
   "singleDeckSpider": {
     "fourCompleteSuits": "¡Cuatro palos completos!"
   },
-  "singularity": {
+  "blackHole": {
     "everyStarCollapsedIn": "¡Todas las estrellas han colapsado!",
     "noCardCanReachThe": "Ninguna carta puede llegar a la singularidad."
   },
@@ -487,7 +485,7 @@
   "somnus": {
     "thatAssignmentDoesNotMeet": "Esa asignación no cumple las reglas del objetivo",
     "dream": "Sueño",
-    "rmvd": "Ret.",
+    "removed": "Retiradas",
     "guard": "Guard.",
     "turn": "Turno",
     "selectNightmareOrGuardian": "Elige una pesadilla o un guardián",

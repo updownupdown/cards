@@ -13,6 +13,14 @@ export const slyFox: GameDefinition = {
     luck: 45,
   },
   thumbnail: "SlyFox.webp",
+  thumbnailCredit: {
+    title: "Common Foxes in the Snow",
+    artistName: "Wilhelm Kuhnert",
+    date: "1893",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Common_foxes_in_the_snow.jpg",
+  },
   background: GAME_BACKGROUNDS.forestGrasses,
   animation: GameAnimations.Leaves,
   gameColorDark: "#2b1a10",

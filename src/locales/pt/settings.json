@@ -27,6 +27,13 @@
     "label": "Resposta tátil",
     "description": "Vibra ao arrastar e soltar cartas e ao vencer. A vibração precisa estar ativada nas configurações do telefone."
   },
+  "autoComplete": {
+    "label": "Completar automaticamente",
+    "description": "Quando o resto de uma partida pode ser concluído movendo as cartas para as fundações.",
+    "ask": "Perguntar",
+    "always": "Sempre",
+    "never": "Nunca"
+  },
   "crashReports": {
     "label": "Enviar relatórios de erro",
     "description": "Envia diagnósticos anônimos quando algo dá errado, para que possa ser corrigido. Nenhuma informação pessoal é incluída."

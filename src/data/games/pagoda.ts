@@ -13,6 +13,14 @@ export const pagoda: GameDefinition = {
     luck: 30,
   },
   thumbnail: "Pagoda.webp",
+  thumbnailCredit: {
+    title:
+      "The Thousand Buddha Hall and the Pagoda of the Cloudy Cliff Monastery",
+    artistName: "Shen Zhou",
+    date: "after 1490",
+    sourceName: "Cleveland Museum of Art",
+    sourceLink: "https://clevelandart.org/art/1964.371.7",
+  },
   background: GAME_BACKGROUNDS.forest,
   animation: GameAnimations.Leaves,
   gameColorDark: "#1b2420",

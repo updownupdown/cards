@@ -14,6 +14,13 @@ export const frog: GameDefinition = {
     luck: 55,
   },
   thumbnail: "Frog.webp",
+  thumbnailCredit: {
+    title: "Frogs and Lily Pads Vase",
+    artistName: "René Lalique",
+    date: "1909–12",
+    sourceName: "Cleveland Museum of Art",
+    sourceLink: "https://clevelandart.org/art/2007.180",
+  },
   background: GAME_BACKGROUNDS.marsh,
   animation: GameAnimations.Firefly,
   gameColorDark: "#15261b",

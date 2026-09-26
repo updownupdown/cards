@@ -148,8 +148,7 @@ function zones() {
 
 function zoneEnabled(zone: MapZone) {
   const mapping = harness.mapConfig!.zoneMapper?.(zone) as
-    | { onPress?: () => void; isDisabled?: boolean }
-    | undefined;
+    { onPress?: () => void; isDisabled?: boolean } | undefined;
   return !!mapping?.onPress && !mapping.isDisabled;
 }
 
@@ -215,7 +214,9 @@ describe("Glazier games", () => {
     );
 
     await pressCardId(dealt.id);
-    await pressZone((zone) => zone.name === "frameSlot" && zone.pileIndex === 0);
+    await pressZone(
+      (zone) => zone.name === "frameSlot" && zone.pileIndex === 0,
+    );
 
     // The only legal cell is set automatically: 4 + 4 points for the pane,
     // then four rows and four columns complete.

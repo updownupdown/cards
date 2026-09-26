@@ -1,3 +1,4 @@
+import { useGameVariant } from "@/hooks/useGameVariant";
 import { ReserveCellBoard, type ReserveCellGameState } from "./EightOff";
 import {
   isRed,
@@ -17,6 +18,18 @@ function canPlaceOnCascade(
   if (!destinationTop) return true;
   return (
     isRed(card.suit) !== isRed(destinationTop.suit) &&
+    RANK_VALUE[card.rank] + 1 === RANK_VALUE[destinationTop.rank]
+  );
+}
+
+/** Baker's Game: FreeCell's ancestor, built down in suit. */
+function bakersGameCanPlaceOnCascade(
+  card: PlayingCard,
+  destinationTop?: PlayingCard,
+): boolean {
+  if (!destinationTop) return true;
+  return (
+    card.suit === destinationTop.suit &&
     RANK_VALUE[card.rank] + 1 === RANK_VALUE[destinationTop.rank]
   );
 }
@@ -55,16 +68,24 @@ function createInitialState(): FreeCellGameState {
 
 export const freeCellRules = {
   canPlaceOnCascade,
+  bakersGameCanPlaceOnCascade,
   canPlaceOnFoundation,
   createInitialState,
 };
 
 export default function FreeCell() {
+  const variant = useGameVariant("/freecell");
+  if (!variant) return null;
   return (
     <ReserveCellBoard
+      key={variant}
       columnCount={8}
       createState={createInitialState}
-      canPlaceOnCascade={canPlaceOnCascade}
+      canPlaceOnCascade={
+        variant === "bakers-game"
+          ? bakersGameCanPlaceOnCascade
+          : canPlaceOnCascade
+      }
       foundationStartColumn={4}
       freeCellRow={0}
       cascadeRow={1.2}

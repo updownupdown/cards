@@ -106,6 +106,24 @@
       }
     }
   },
+  "black-hole": {
+    "variant": {
+      "hash": "c6feb450",
+      "value": {
+        "label": "Varian",
+        "options": [
+          {
+            "label": "Lubang Hitam",
+            "description": "Tujuh belas kipas berisi tiga di sekitar As Sekop."
+          },
+          {
+            "label": "Semua berjajar",
+            "description": "Tiga belas kolom berisi empat; mulai fondasi dengan kartu apa pun."
+          }
+        ]
+      }
+    }
+  },
   "canfield": {
     "drawCount": {
       "hash": "ecd6b2f3",
@@ -206,17 +224,55 @@
   },
   "forty-thieves": {
     "difficulty": {
-      "hash": "7161d2c1",
+      "hash": "2e2bd5c9",
       "value": {
-        "label": "Kesulitan",
+        "label": "Bagi ulang",
         "options": [
           {
-            "label": "Mudah",
-            "description": "Bagi ulang tanpa batas."
+            "label": "Tidak ada"
           },
           {
-            "label": "Sulit",
-            "description": "Tanpa bagi ulang."
+            "label": "Tanpa batas (Mudah)"
+          }
+        ]
+      }
+    },
+    "variant": {
+      "hash": "4477be27",
+      "value": {
+        "label": "Varian",
+        "options": [
+          {
+            "label": "Empat Puluh Pencuri",
+            "description": "Sepuluh kolom berisi empat; pindahkan satu kartu setiap kali."
+          },
+          {
+            "label": "Josephine",
+            "description": "Urutan sejenis dipindahkan bersamaan."
+          },
+          {
+            "label": "Lucas",
+            "description": "Tiga belas kolom berisi tiga; As dimulai di fondasi."
+          },
+          {
+            "label": "As yang sibuk",
+            "description": "Dua belas kolom berisi dua."
+          }
+        ]
+      }
+    }
+  },
+  "freecell": {
+    "variant": {
+      "hash": "c2d73114",
+      "value": {
+        "label": "Susunan",
+        "options": [
+          {
+            "label": "Warna berselang (FreeCell)"
+          },
+          {
+            "label": "Jenis sama (Permainan tukang roti)"
           }
         ]
       }
@@ -234,6 +290,22 @@
           },
           {
             "label": "Sulit (2 kali bagi ulang)"
+          }
+        ]
+      }
+    }
+  },
+  "gargantua": {
+    "variant": {
+      "hash": "0efea48a",
+      "value": {
+        "label": "Bagi ulang",
+        "options": [
+          {
+            "label": "1 (Gargantua)"
+          },
+          {
+            "label": "3 (Harpa)"
           }
         ]
       }
@@ -309,6 +381,24 @@
       }
     }
   },
+  "king-albert": {
+    "variant": {
+      "hash": "169819fa",
+      "value": {
+        "label": "Varian",
+        "options": [
+          {
+            "label": "Raja Albert",
+            "description": "Sembilan kolom dan cadangan tujuh kartu."
+          },
+          {
+            "label": "Raglan",
+            "description": "As dimulai di fondasi, dengan cadangan enam kartu."
+          }
+        ]
+      }
+    }
+  },
   "klondike": {
     "drawCount": {
       "hash": "ecd6b2f3",
@@ -320,6 +410,28 @@
           },
           {
             "label": "Ambil 3"
+          }
+        ]
+      }
+    }
+  },
+  "la-belle-lucie": {
+    "variant": {
+      "hash": "9ec03636",
+      "value": {
+        "label": "Varian",
+        "options": [
+          {
+            "label": "Lucie yang cantik",
+            "description": "Susun turun per jenis; dua kali bagi ulang."
+          },
+          {
+            "label": "Daun tiga",
+            "description": "As dimulai di fondasi."
+          },
+          {
+            "label": "Semanggi",
+            "description": "Susun naik atau turun dengan jenis apa pun, paling banyak tiga kartu per kipas, tanpa bagi ulang."
           }
         ]
       }
@@ -368,6 +480,24 @@
           },
           {
             "label": "Ekstrem (8 x 9)"
+          }
+        ]
+      }
+    }
+  },
+  "miss-milligan": {
+    "variant": {
+      "hash": "1a6e1313",
+      "value": {
+        "label": "Varian",
+        "options": [
+          {
+            "label": "Miss Milligan",
+            "description": "Hanya King yang mengisi kolom kosong; setelah dek habis, satu kartu atau urutan setiap kali bisa menunggu di saku."
+          },
+          {
+            "label": "Raksasa",
+            "description": "Kartu apa pun mengisi kolom kosong, tetapi tidak ada saku."
           }
         ]
       }
@@ -467,6 +597,22 @@
       }
     }
   },
+  "rank-and-file": {
+    "variant": {
+      "hash": "aa2b7203",
+      "value": {
+        "label": "Pembagian",
+        "options": [
+          {
+            "label": "3 tertutup (Barisan rapat)"
+          },
+          {
+            "label": "2 tertutup (Nomor sepuluh)"
+          }
+        ]
+      }
+    }
+  },
   "royal-rest": {
     "royalRestHardMode": {
       "hash": "9895d840",
@@ -479,6 +625,24 @@
           },
           {
             "label": "Nyala"
+          }
+        ]
+      }
+    }
+  },
+  "scorpion": {
+    "variant": {
+      "hash": "c37cfca5",
+      "value": {
+        "label": "Varian",
+        "options": [
+          {
+            "label": "Kalajengking",
+            "description": "Hanya King yang mengisi kolom kosong."
+          },
+          {
+            "label": "Tawon",
+            "description": "Kartu apa pun mengisi kolom kosong."
           }
         ]
       }
@@ -499,6 +663,69 @@
           },
           {
             "label": "Sulit (pilih satu)"
+          }
+        ]
+      }
+    }
+  },
+  "sir-tommy": {
+    "variant": {
+      "hash": "a1adf9a0",
+      "value": {
+        "label": "Varian",
+        "options": [
+          {
+            "label": "Sir Tommy",
+            "description": "Fondasi disusun naik apa pun jenisnya."
+          },
+          {
+            "label": "Kucing di sudut",
+            "description": "As dimulai di fondasi, yang disusun per warna; satu kali bagi ulang."
+          }
+        ]
+      }
+    }
+  },
+  "spider-solitaire": {
+    "spiderSuits": {
+      "hash": "0fd48479",
+      "value": {
+        "label": "Jenis",
+        "options": [
+          {
+            "label": "4 jenis"
+          },
+          {
+            "label": "2 jenis"
+          },
+          {
+            "label": "1 jenis"
+          }
+        ]
+      }
+    }
+  },
+  "terrace": {
+    "variant": {
+      "hash": "dafb9ee3",
+      "value": {
+        "label": "Varian",
+        "options": [
+          {
+            "label": "Teras",
+            "description": "Teras sebelas kartu; kamu memilih nilai fondasi; fondasi disusun dengan warna berselang."
+          },
+          {
+            "label": "Kesabaran Sang Jenderal",
+            "description": "Teras tiga belas kartu, dan fondasi disusun per jenis."
+          },
+          {
+            "label": "Pirang dan Brunet",
+            "description": "Teras sepuluh kartu, dan pembagian menentukan nilai fondasi."
+          },
+          {
+            "label": "Bintang jatuh",
+            "description": "Teras sebelas kartu, delapan kolom, dan pembagian menentukan nilai fondasi."
           }
         ]
       }
@@ -569,6 +796,28 @@
           },
           {
             "label": "Nyala"
+          }
+        ]
+      }
+    }
+  },
+  "yukon": {
+    "variant": {
+      "hash": "71cf5c1a",
+      "value": {
+        "label": "Susunan",
+        "options": [
+          {
+            "label": "Warna berselang (Yukon)"
+          },
+          {
+            "label": "Jenis sama (Solitaire Rusia)"
+          },
+          {
+            "label": "Jenis sama, naik atau turun (Alaska)"
+          },
+          {
+            "label": "Jenis lain apa pun (Kulit rusa)"
           }
         ]
       }

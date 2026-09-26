@@ -375,7 +375,7 @@ export default function Seer() {
         row: 0,
         baseZIndex: 30,
         fan: { maxVisible: 3 },
-        placeholder: { text: i18n.t("games:seer.deck"), infoPos: "right" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "right" },
       },
       {
         id: "table",

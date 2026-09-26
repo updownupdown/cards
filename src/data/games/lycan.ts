@@ -13,6 +13,14 @@ export const lycan: GameDefinition = {
     luck: 40,
   },
   thumbnail: "Lycan.webp",
+  thumbnailCredit: {
+    title: "The Werewolf",
+    artistName: "Lucas Cranach the Elder",
+    date: "ca. 1510–15",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Weerwolf_met_kind_en_verscheurde_lichamen,_RP-P-OB-4430.jpg",
+  },
   background: GAME_BACKGROUNDS.forest,
   animation: GameAnimations.Mist,
   gameColorDark: "#311a20",

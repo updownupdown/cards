@@ -7,6 +7,13 @@ export const dynasty: GameDefinition = {
   path: "/dynasty",
   title: "Dynasty",
   thumbnail: "Dynasty.webp",
+  thumbnailCredit: {
+    title: "Portraits of the Qianlong Emperor and His Twelve Consorts",
+    artistName: "Giuseppe Castiglione",
+    date: "1736–70s",
+    sourceName: "Cleveland Museum of Art",
+    sourceLink: "https://clevelandart.org/art/1969.31",
+  },
   background: GAME_BACKGROUNDS.castleIndoors,
   animation: GameAnimations.Dust,
   tags: [GameTag.CardCombat, GameTag.SpatialControl],
@@ -23,7 +30,7 @@ export const dynasty: GameDefinition = {
   ],
   howToPlay: [
     "## Objective",
-    "Defeat all twelve Jacks, Queens, and Kings around the grid before running out of draw cards.",
+    "Defeat all twelve Jacks, Queens, and Kings around the grid before the stock runs out.",
 
     "## Attacks",
     "- A newly placed card fires toward each royal opposite it. Only the two intervening grid cards deal damage.",
@@ -32,7 +39,7 @@ export const dynasty: GameDefinition = {
     "-- **Kings** can only be damaged with **matching-suit** attackers",
 
     "## Ploys",
-    "- **Extract**: Spend an Ace to return a grid stack to the bottom of the deck.",
+    "- **Extract**: Spend an Ace to return a grid stack to the bottom of the stock.",
     "- **Reassign**: Spend a Joker to move one top grid card to another legal stack.",
 
     "## Scoring",

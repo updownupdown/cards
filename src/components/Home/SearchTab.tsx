@@ -99,13 +99,16 @@ export function SearchTab({
   const cardColumns = cardSize === "medium" ? (ui.isTablet ? 3 : 2) : 1;
   const cardColumnWidth =
     (contentWidth - cardGap * (cardColumns - 1)) / cardColumns;
-  const controlHeight = spacing(52);
+  const controlHeight = spacing(layoutDims.searchControlHeight);
   const controlBorderRadius = controlHeight / 2;
   const unplayedPaths = useMemo(
     () => new Set(unplayedGamePaths),
     [unplayedGamePaths],
   );
-  const keyboardLift = useKeyboardLift();
+  const keyboardLift = useKeyboardLift(
+    searchControlBottom,
+    spacing(layoutDims.pagePadding * 0.5),
+  );
   const containerRef = useRef<View>(null);
   const listRef = useRef<FlatList<HomeGameEntry>>(null);
   const cardRefs = useRef(new Map<string, View>());
@@ -298,7 +301,7 @@ export function SearchTab({
                 marginBottom: spacing(20),
               }}
             >
-              <View style={{ height: spacing(layoutDims.cardToggleHeight) }} />
+              <View style={{ height: controlHeight }} />
 
               <View style={{ flexDirection: "row", gap: spacing(12) }}>
                 {mode !== "filter" && (
@@ -453,8 +456,11 @@ export function SearchTab({
               minWidth: 0,
               borderRadius: controlBorderRadius,
               borderWidth: spacing(2),
-              borderColor: mode === "search" ? Colors.K600 : Colors.K800,
-              backgroundColor: rgba(Colors.K950, 0.9),
+              borderColor:
+                mode === "search"
+                  ? rgba(Colors.K500, 0.65)
+                  : rgba(Colors.K800, 0.65),
+              backgroundColor: rgba(Colors.K800, 0.96),
               flexDirection: "row",
               alignItems: "center",
               paddingHorizontal: spacing(12),
@@ -466,7 +472,7 @@ export function SearchTab({
           <Icon
             name="search"
             size={spacing(28)}
-            color={mode === "search" ? Colors.K200 : Colors.K500}
+            color={mode === "search" ? Colors.K100 : Colors.K400}
           />
           <TextInput
             ref={inputRef}
@@ -498,7 +504,7 @@ export function SearchTab({
               { opacity: mode === "search" ? 1 : 0 },
             ]}
           >
-            <Icon name="close" size={spacing(28)} color={Colors.K500} />
+            <Icon name="close" size={spacing(28)} color={Colors.K400} />
           </Pressable>
         </View>
       </Animated.View>

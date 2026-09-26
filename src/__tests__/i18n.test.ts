@@ -105,12 +105,12 @@ describe("Languages", () => {
   });
 
   test("plurals follow each language's rules", () => {
-    const fr = i18n.getFixedT("fr", "nodes");
-    const en = i18n.getFixedT("en", "nodes");
+    const fr = i18n.getFixedT("fr", "campaign");
+    const en = i18n.getFixedT("en", "campaign");
     // French treats zero as singular; English doesn't.
-    expect(fr("reward.unlockedGames", { count: 0 })).toBe("Jeu débloqué :");
-    expect(en("reward.unlockedGames", { count: 0 })).toBe("Unlocked games:");
-    expect(en("reward.unlockedGames", { count: 1 })).toBe("Unlocked game:");
+    expect(fr("reward.unlockedGames", { count: 0 })).toBe("0 jeu débloqué :");
+    expect(en("reward.unlockedGames", { count: 0 })).toBe("0 unlocked games:");
+    expect(en("reward.unlockedGames", { count: 1 })).toBe("1 unlocked game:");
   });
 
   test("the pseudo-locale keeps interpolations and tags", () => {

@@ -1,1 +1,1 @@
-export const NODES_PROGRESS_STORAGE_KEY = "cards.nodesProgress.v1";
+export const CAMPAIGN_PROGRESS_STORAGE_KEY = "cards.campaignProgress.v1";

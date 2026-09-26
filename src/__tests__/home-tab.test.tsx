@@ -1,15 +1,7 @@
 import { DealMeAGame, swipeOpacity } from "@/components/Home/DealMeAGame";
-import {
-  COLLECT_HOME_TAB_INDEX,
-  getPendingCollectTag,
-  NODES_HOME_TAB_INDEX,
-} from "@/components/Home/home-view-state";
-import {
-  type GuideBox,
-  StartHereGuide,
-} from "@/components/Home/StartHereGuide";
+import { HomeTab } from "@/components/Home/HomeTab";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
-import { beforeEach, describe, expect, jest, test } from "@jest/globals";
+import { describe, expect, jest, test } from "@jest/globals";
 import React from "react";
 import { StyleSheet, Text } from "react-native";
 import {
@@ -31,11 +23,6 @@ function mockGame(title: string, difficulty: number, tag: string) {
   };
 }
 
-function mockLaunchGame(...args: unknown[]) {
-  launchCalls.push(args);
-}
-const launchCalls: unknown[][] = [];
-
 // The mock leaves out layout animation config, which only needs to render.
 jest.mock("react-native-reanimated", () => ({
   // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -48,21 +35,26 @@ jest.mock("@/data/games-registry", () => ({
   GAMES_DATA: {
     "/klondike": mockGame("Klondike", 2, "KlondikeFamily"),
     "/yukon": mockGame("Yukon", 3, "YukonFamily"),
+    "/canfield": mockGame("Canfield", 4, "KlondikeFamily"),
+    "/spider": mockGame("Spider", 5, "SpiderFamily"),
+    "/golf": mockGame("Golf", 2, "Sports"),
+    "/freecell": mockGame("FreeCell", 3, "FreeCellFamily"),
+    "/pyramid": mockGame("Pyramid", 2, "PyramidFamily"),
   },
 }));
 
-jest.mock("@/components/Home/CollectTab", () => ({
-  COLLECT_TAGS: ["KlondikeFamily", "YukonFamily", "Sports", "CardCombat"],
+// Stand-ins that only mark where each section sits.
+jest.mock("@/components/Home/GameOfTheDaySection", () => {
+  const { View } = require("react-native") as typeof import("react-native"); // eslint-disable-line @typescript-eslint/no-require-imports
+  return { GameOfTheDaySection: () => <View testID="section gameOfTheDay" /> };
+});
+
+jest.mock("@/components/Home/HomeCardFact", () => ({
+  HomeCardFact: () => null,
 }));
 
-jest.mock("@/data/nodes-map", () => ({ NODES_START_PATH: "/klondike" }));
-
-jest.mock("@/data/nodes-progress", () => ({
-  setLastPlayedNode: () => Promise.resolve(),
-}));
-
-jest.mock("@/components/common/GameLaunchOverlay", () => ({
-  launchGame: mockLaunchGame,
+jest.mock("@/hooks/useViewportDimensions", () => ({
+  useViewportDimensions: () => ({ width: 420, height: 800 }),
 }));
 
 jest.mock("@/components/common/Text", () => {
@@ -113,7 +105,7 @@ jest.mock("@/components/Home/HomeCard", () => {
 jest.mock("@/hooks/useResponsiveMetrics", () => ({
   useResponsiveMetrics: () => ({
     spacing: (value: number) => value,
-    ui: { contentMaxWidth: 420 },
+    ui: { contentMaxWidth: 420, isTablet: false },
   }),
 }));
 
@@ -148,34 +140,26 @@ const GAMES: HomeGameEntry[] = [
   ...Array.from({ length: 7 }, (_, index) => entry(`/easy${index}`, index / 2)),
 ];
 
-const NONE_DISMISSED: Record<GuideBox, boolean> = {
-  easy: false,
-  campaign: false,
-  genres: false,
-};
-
-function renderGuide(
-  overrides: Partial<React.ComponentProps<typeof StartHereGuide>> = {},
+function renderHomeTab(
+  overrides: Partial<React.ComponentProps<typeof HomeTab>> = {},
 ) {
   const props = {
     allEnabledGames: GAMES,
-    dismissed: NONE_DISMISSED,
-    showCampaign: true,
-    campaignStarted: false,
-    campaignNextPath: "/klondike",
+    unplayedGamePaths: [],
     favorites: new Set<string>(),
+    recentPaths: [],
     onToggleFavorite: jest.fn(),
-    onSelectTab: jest.fn<(index: number) => void>(),
-    onDismiss: jest.fn<(box: GuideBox) => void>(),
-    pageSidePadding: 16,
-    contentMaxWidth: 420,
+    dataLoaded: true,
+    contentPaddingTop: 0,
+    contentPaddingBottom: 0,
+    onScrolledChange: jest.fn(),
     ...overrides,
   };
   let renderer!: ReactTestRenderer;
   act(() => {
-    renderer = create(<StartHereGuide {...props} />);
+    renderer = create(<HomeTab {...props} />);
   });
-  return { renderer, props };
+  return renderer;
 }
 
 const texts = (node: ReactTestRenderer | ReactTestInstance) =>
@@ -183,185 +167,111 @@ const texts = (node: ReactTestRenderer | ReactTestInstance) =>
     .findAllByType(Text)
     .map((node) => React.Children.toArray(node.props.children).join(""));
 
-/** Pressables, found by what they do: Pressable itself is a memo wrapper. */
-const pressables = (
-  renderer: ReactTestRenderer,
-  match: (node: ReactTestInstance) => boolean = () => true,
-) =>
-  renderer.root.findAll(
-    (node) =>
-      typeof node.type === "function" &&
-      typeof node.props.onPress === "function" &&
-      match(node),
-  );
-
-const pressableByLabel = (renderer: ReactTestRenderer, label: string) => {
-  const [pressable] = pressables(
-    renderer,
-    (node) => node.props.accessibilityLabel === label,
-  );
-  return pressable;
+type RenderedNode = {
+  type: string;
+  props: Record<string, unknown>;
+  children: (RenderedNode | string)[] | null;
 };
 
-beforeEach(() => {
-  launchCalls.length = 0;
-});
-
-describe("Start here guide", () => {
-  test("shows all three boxes, with titles and bodies but no icons", () => {
-    const { renderer } = renderGuide();
-    const shown = texts(renderer);
-    for (const box of ["easy", "campaign", "genres"]) {
-      expect(shown).toContain(`guide.${box}.title`);
+/** Section titles and stand-ins, top to bottom. */
+const sections = (renderer: ReactTestRenderer) => {
+  const found: string[] = [];
+  const walk = (node: RenderedNode | RenderedNode[] | string | null): void => {
+    if (!node || typeof node === "string") return;
+    if (Array.isArray(node)) return node.forEach(walk);
+    const testID = node.props.testID;
+    if (typeof testID === "string" && testID.startsWith("section ")) {
+      found.push(testID.replace("section ", "sections."));
     }
-    expect(shown).toContain("guide.easy.body");
-    expect(shown).toContain("guide.campaign.body");
-  });
+    const text = (node.children ?? []).join("");
+    if (node.type === "Text" && text.startsWith("sections.")) found.push(text);
+    node.children?.forEach(walk);
+  };
+  walk(renderer.toJSON() as RenderedNode | RenderedNode[] | null);
+  return found;
+};
 
-  test("each heading shares its row with a Dismiss button, text then X", () => {
-    const { renderer, props } = renderGuide();
-    const dismissButtons = pressables(
-      renderer,
-      (node) => node.props.accessibilityLabel === "guide.dismiss",
+/** The paths of the cards in the section with the given title. */
+const cardsUnder = (renderer: ReactTestRenderer, title: string) => {
+  const isCard = (node: ReactTestInstance) =>
+    typeof node.type !== "string" &&
+    String(node.props.testID).startsWith("card ");
+  let section = renderer.root.find(
+    (node) =>
+      node.type === Text &&
+      React.Children.toArray(node.props.children).join("") === title,
+  );
+  while (section.findAll(isCard).length === 0) section = section.parent!;
+  return section
+    .findAll(isCard)
+    .map((node) => String(node.props.testID).replace("card ", ""));
+};
+
+describe("Home tab", () => {
+  test("with nothing played or favorited, offers the six easiest games first", () => {
+    const renderer = renderHomeTab();
+    expect(sections(renderer)).toEqual([
+      "sections.easyGames",
+      "sections.gameOfTheDay",
+    ]);
+    expect(cardsUnder(renderer, "sections.easyGames")).toEqual(
+      Array.from({ length: 6 }, (_, index) => `/easy${index}`),
     );
-    expect(dismissButtons).toHaveLength(3);
+  });
 
-    const [first] = dismissButtons;
-    // The heading is the button's sibling, in a centred row.
-    const row = first.parent!;
-    expect(StyleSheet.flatten(row.props.style)).toMatchObject({
-      flexDirection: "row",
-      alignItems: "center",
-    });
-    expect(texts(row).slice(0, 2)).toEqual([
-      "guide.easy.title",
-      "guide.dismiss",
+  test("shows no easy games until favorites and recent games are in", () => {
+    const renderer = renderHomeTab({ dataLoaded: false });
+    expect(sections(renderer)).not.toContain("sections.easyGames");
+  });
+
+  test("the easy games stay, above both, while either has no games", () => {
+    expect(sections(renderHomeTab({ recentPaths: ["/yukon"] }))).toEqual([
+      "sections.easyGames",
+      "sections.jumpBackIn",
+      "sections.gameOfTheDay",
     ]);
-
-    // No background: the pressed state only dims it.
-    const style = first.props.style({ pressed: false });
-    expect(style.backgroundColor).toBeUndefined();
-
-    act(() => first.props.onPress());
-    expect(props.onDismiss).toHaveBeenCalledWith("easy");
-  });
-
-  test("dismissed boxes stay hidden, and nothing shows once all are", () => {
-    const { renderer } = renderGuide({
-      dismissed: { easy: true, campaign: false, genres: true },
-    });
-    expect(texts(renderer)).not.toContain("guide.easy.title");
-    expect(texts(renderer)).toContain("guide.campaign.title");
-    expect(texts(renderer)).not.toContain("guide.genres.title");
-
-    const { renderer: empty } = renderGuide({
-      dismissed: { easy: true, campaign: true, genres: true },
-    });
-    expect(empty.toJSON()).toBeNull();
-  });
-
-  test("the easy box lists the eight easiest games, easiest first", () => {
-    const { renderer } = renderGuide({
-      dismissed: { easy: false, campaign: true, genres: true },
-    });
-    const cards = renderer.root
-      .findAll((node) => String(node.props.testID).startsWith("card "))
-      .filter((node) => typeof node.type !== "string");
-    expect(cards.map((node) => node.props.testID)).toEqual([
-      ...Array.from({ length: 7 }, (_, index) => `card /easy${index}`),
-      "card /y1",
+    expect(
+      sections(renderHomeTab({ favorites: new Set(["/klondike"]) })),
+    ).toEqual([
+      "sections.easyGames",
+      "sections.favorites",
+      "sections.gameOfTheDay",
     ]);
   });
 
-  describe("Campaign box", () => {
-    const campaignOnly = { easy: true, campaign: false, genres: true };
-
-    test("shows the next Campaign game as a large card that plays in Campaign mode", () => {
-      const { renderer } = renderGuide({
-        dismissed: campaignOnly,
-        campaignNextPath: "/yukon",
-      });
-      const card = renderer.root.find(
-        (node) =>
-          node.props.testID === "card /yukon" && typeof node.type !== "string",
-      );
-      expect(card.props.accessibilityHint).toBe("large campaign");
+  test("the easy games go once both have games, Game of the Day after them", () => {
+    const renderer = renderHomeTab({
+      recentPaths: ["/yukon"],
+      favorites: new Set(["/klondike"]),
     });
-
-    test("before starting, the button starts the Campaign at Klondike", () => {
-      const { renderer } = renderGuide({ dismissed: campaignOnly });
-      expect(texts(renderer)).toContain("guide.campaign.start");
-      expect(texts(renderer)).not.toContain("guide.campaign.resume");
-
-      act(() =>
-        pressableByLabel(
-          renderer,
-          "button guide.campaign.start",
-        ).props.onPress(),
-      );
-      expect(launchCalls).toEqual([
-        [{ pathname: "/klondike", params: { mode: "nodes" } }],
-      ]);
-    });
-
-    test("once started, the button resumes on the Campaign map", () => {
-      const { renderer, props } = renderGuide({
-        dismissed: campaignOnly,
-        campaignStarted: true,
-      });
-      expect(texts(renderer)).toContain("guide.campaign.resume");
-
-      act(() =>
-        pressableByLabel(
-          renderer,
-          "button guide.campaign.resume",
-        ).props.onPress(),
-      );
-      expect(props.onSelectTab).toHaveBeenCalledWith(NODES_HOME_TAB_INDEX);
-      expect(launchCalls).toEqual([]);
-    });
-
-    test("is left out when the player is well into the Campaign", () => {
-      const { renderer } = renderGuide({ showCampaign: false });
-      expect(texts(renderer)).not.toContain("guide.campaign.title");
-    });
+    expect(sections(renderer)).toEqual([
+      "sections.jumpBackIn",
+      "sections.favorites",
+      "sections.gameOfTheDay",
+    ]);
   });
 
-  describe("Collect box", () => {
-    const genresOnly = { easy: true, campaign: true, genres: false };
-
-    test("counts the games and the categories that have any", () => {
-      const { renderer } = renderGuide({ dismissed: genresOnly });
-      expect(texts(renderer)).toContain(
-        `guide.genres.body ${JSON.stringify({ games: 11, categories: 3 })}`,
-      );
+  test("Jump back in shows the six most recent games, skipping removed ones", () => {
+    const renderer = renderHomeTab({
+      recentPaths: [
+        "/spider",
+        "/no-such-game",
+        "/klondike",
+        "/golf",
+        "/yukon",
+        "/canfield",
+        "/freecell",
+        "/pyramid",
+      ],
     });
-
-    test("tiles each category with its game count, alphabetically, without icons", () => {
-      const { renderer } = renderGuide({ dismissed: genresOnly });
-      const tiles = pressables(
-        renderer,
-        (node) =>
-          node.props.accessibilityRole === "button" &&
-          node.props.accessibilityLabel === undefined,
-      );
-      expect(tiles.map((tile) => texts(tile))).toEqual([
-        ["tags.KlondikeFamily", 'guide.genres.gameCount {"count":8}'],
-        ["tags.Sports", 'guide.genres.gameCount {"count":1}'],
-        ["tags.YukonFamily", 'guide.genres.gameCount {"count":2}'],
-      ]);
-    });
-
-    test("a category tile opens that category on the Collect tab", () => {
-      const { renderer, props } = renderGuide({ dismissed: genresOnly });
-      const [sports] = pressables(
-        renderer,
-        (node) => texts(node)[0] === "tags.Sports",
-      );
-      act(() => sports.props.onPress());
-      expect(getPendingCollectTag()).toBe("Sports");
-      expect(props.onSelectTab).toHaveBeenCalledWith(COLLECT_HOME_TAB_INDEX);
-    });
+    expect(cardsUnder(renderer, "sections.jumpBackIn")).toEqual([
+      "/spider",
+      "/klondike",
+      "/golf",
+      "/yukon",
+      "/canfield",
+      "/freecell",
+    ]);
   });
 });
 

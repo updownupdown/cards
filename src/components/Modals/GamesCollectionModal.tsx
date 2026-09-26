@@ -1,8 +1,11 @@
 import { Text } from "@/components/common/Text";
 import { GAME_DEFINITIONS } from "@/data/games-registry";
-import { setLastPlayedNode } from "@/data/nodes-progress";
-import { getNodeDefinition, getUnlockedNodePaths } from "@/data/nodes-map";
-import { useNodesProgress } from "@/hooks/useNodesProgress";
+import { setLastPlayedGameDot } from "@/data/campaign-progress";
+import {
+  getGameDotDefinition,
+  getUnlockedGameDotPaths,
+} from "@/data/campaign-map";
+import { useCampaignProgress } from "@/hooks/useCampaignProgress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle } from "@/i18n/content";
@@ -20,10 +23,11 @@ type Props = {
 
 export function GamesCollectionModal({ onClose }: Props) {
   const { spacing } = useResponsiveMetrics();
-  const { t } = useTranslation("nodes");
+  const { t } = useTranslation("campaign");
   const language = useDisplayLanguage();
-  const { wonPaths, collectedTaoIds, collectedQuoteIds } = useNodesProgress();
-  const unlockedPaths = getUnlockedNodePaths(wonPaths);
+  const { wonPaths, collectedTaoIds, collectedQuoteIds } =
+    useCampaignProgress();
+  const unlockedPaths = getUnlockedGameDotPaths(wonPaths);
   const sortedGames = useMemo(
     () =>
       GAME_DEFINITIONS.map((game) => ({
@@ -56,7 +60,7 @@ export function GamesCollectionModal({ onClose }: Props) {
         }}
       >
         {sortedGames.map((game) => {
-          const node = getNodeDefinition(game.path);
+          const node = getGameDotDefinition(game.path);
           const unlocked = unlockedPaths.has(game.path);
 
           return (
@@ -66,10 +70,10 @@ export function GamesCollectionModal({ onClose }: Props) {
               disabled={!unlocked}
               onPress={() => {
                 onClose();
-                void setLastPlayedNode(game.path);
+                void setLastPlayedGameDot(game.path);
                 launchGame({
                   pathname: game.path,
-                  params: { mode: "nodes" },
+                  params: { mode: "campaign" },
                 } as Href);
               }}
               style={{

@@ -18,6 +18,14 @@ export const whitehead: GameDefinition = {
   gameColorPale: "#edf0e6",
   cardBack: CardBackColors.Ocean,
   thumbnail: "Whitehead.webp",
+  thumbnailCredit: {
+    title: "White-Headed Eagle",
+    artistName: "Robert Havell after John James Audubon",
+    date: "1832",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Robert_Havell_after_John_James_Audubon,_White-Headed_Eagle,_1832,_NGA_32267.jpg",
+  },
   cardDescription:
     "An open Klondike relative built by color, with suited runs moving together.",
   quickStart: [

@@ -17,6 +17,14 @@ export const royalCotillion: GameDefinition = {
     luck: 75,
   },
   thumbnail: "RoyalCotillion.webp",
+  thumbnailCredit: {
+    title: "The Cotillion Dance",
+    artistName: "James Caldwall",
+    date: "1771",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:James_Caldwall_-_The_Cotillion_Dance_-_B1977.14.11242_-_Yale_Center_for_British_Art.jpg",
+  },
   background: GAME_BACKGROUNDS.alhambra,
   animation: GameAnimations.ManaDust,
   gameColorDark: "#211a36",

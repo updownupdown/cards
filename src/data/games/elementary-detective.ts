@@ -13,6 +13,14 @@ export const elementaryDetective: GameDefinition = {
     luck: 65,
   },
   thumbnail: "ElementaryDetective.webp",
+  thumbnailCredit: {
+    title: "Portrait of Sherlock Holmes",
+    artistName: "Sidney Paget",
+    date: "1904",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Portrait_of_Sherlock_Holmes_by_Sidney_Paget-Cropped.jpg",
+  },
   background: GAME_BACKGROUNDS.fallLeaves,
   animation: GameAnimations.Leaves,
   gameColorDark: "#221815",

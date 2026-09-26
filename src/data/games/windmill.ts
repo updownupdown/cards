@@ -17,6 +17,13 @@ export const windmill: GameDefinition = {
     luck: 55,
   },
   thumbnail: "Windmill.webp",
+  thumbnailCredit: {
+    title: "Landscape with a Windmill",
+    artistName: "Jacob van Ruisdael",
+    date: "1646",
+    sourceName: "Cleveland Museum of Art",
+    sourceLink: "https://clevelandart.org/art/1967.19",
+  },
   background: GAME_BACKGROUNDS.dirtRoad,
   animation: GameAnimations.Birds,
   gameColorDark: "#1e2a1f",

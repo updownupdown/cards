@@ -3,7 +3,7 @@
     "home": "Beranda",
     "collect": "Koleksi",
     "search": "Cari",
-    "nodes": "Kampanye"
+    "campaign": "Kampanye"
   },
   "cardSize": {
     "small": "Daftar",
@@ -26,27 +26,9 @@
   "sections": {
     "localOnly": "Permainan khusus lokal",
     "gameOfTheDay": "Permainan hari ini",
+    "easyGames": "Permainan mudah untuk memulai",
     "jumpBackIn": "Lanjutkan bermain",
     "favorites": "Favorit"
-  },
-  "guide": {
-    "easy": {
-      "title": "Mulai dengan permainan mudah",
-      "body": "Awali dengan mencoba beberapa permainan yang cepat dipelajari dan mudah dimenangkan."
-    },
-    "campaign": {
-      "title": "Mode Kampanye",
-      "body": "Jelajahi semesta permainan: menangkan permainan untuk membuka jalanmu hingga ke tepi galaksi, dan kumpulkan hadiah di sepanjang jalan!",
-      "start": "Mulai Kampanye",
-      "resume": "Lanjutkan Kampanye"
-    },
-    "genres": {
-      "title": "Kumpulkan semuanya!",
-      "body": "Jelajahi {{games}} permainan klasik dan modern dalam {{categories}} kategori; ada sesuatu untuk semua orang!",
-      "gameCount_one": "{{count}} permainan",
-      "gameCount_other": "{{count}} permainan"
-    },
-    "dismiss": "Tutup"
   },
   "gameOfTheDay": {
     "today": "Hari ini",
@@ -61,9 +43,14 @@
     "intro": "Geser ke kiri atau kanan untuk melewati, atau ketuk untuk bermain."
   },
   "collect": {
-    "title": "Menangkan semuanya!",
-    "overall": "{{won}} dari {{total}} permainan dimenangkan",
-    "tagProgress": "{{tag}}: {{won}} dari {{total}} dimenangkan"
+    "games": "Permainan: {{won}}/{{total}}",
+    "categories": "Kategori: {{won}}/{{total}}",
+    "tagProgress": "{{tag}}: {{won}} dari {{total}} dimenangkan",
+    "intro": {
+      "title": "Catatan Perjalanan",
+      "text": "Menangkan permainan untuk mengumpulkan capnya. Jelajahi mekanik serupa dan coba lengkapi semua set!",
+      "close": "Tutup"
+    }
   },
   "tags": {
     "KlondikeFamily": "Keluarga Klondike",

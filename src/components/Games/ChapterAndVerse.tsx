@@ -485,7 +485,7 @@ export default function ChapterAndVerse() {
         baseZIndex: 5,
         fan: { maxVisible: 3 },
         placeholder: {
-          text: i18n.t("cards:dscrd"),
+          text: i18n.t("cards:discard"),
           infoPos: "above",
           showCount: false,
         },

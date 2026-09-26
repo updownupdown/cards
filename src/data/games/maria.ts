@@ -14,6 +14,13 @@ export const maria: GameDefinition = {
   ],
   rating: { complexity: 30, difficulty: 35, luck: 45 },
   thumbnail: "Maria.webp",
+  thumbnailCredit: {
+    title: "Virgin and Child",
+    artistName: "Anna Maria Carew",
+    date: "ca. 1662",
+    sourceName: "Cleveland Museum of Art",
+    sourceLink: "https://clevelandart.org/art/2008.148",
+  },
   background: GAME_BACKGROUNDS.painting,
   animation: GameAnimations.CherryBlossom,
   gameColorDark: "#3c2d36",

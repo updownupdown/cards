@@ -24,8 +24,8 @@ const tableauSize = {
 };
 
 type GameState = {
-  draw: PlayingCard[];
-  discard: PlayingCard[];
+  stock: PlayingCard[];
+  waste: PlayingCard[];
   piles: PlayingCard[][];
   ended: boolean;
   won: boolean;
@@ -34,8 +34,8 @@ type GameState = {
 export type GolfGameState = GameState;
 
 const gameStateInitial: GameState = {
-  draw: shuffle(createDeck()),
-  discard: [],
+  stock: shuffle(createDeck()),
+  waste: [],
   piles: Array.from({ length: tableauSize.cols }, () => []),
   ended: false,
   won: false,
@@ -47,13 +47,13 @@ async function resetAndSetup(
   // Gather all cards to draw
   setGame((draft) => {
     const allCards = [
-      ...draft.draw,
-      ...draft.discard,
+      ...draft.stock,
+      ...draft.waste,
       ...draft.piles.flat(),
     ].filter((card): card is PlayingCard => card !== null);
 
-    draft.draw = shuffle(allCards);
-    draft.discard = [];
+    draft.stock = shuffle(allCards);
+    draft.waste = [];
     draft.piles = Array.from({ length: tableauSize.cols }, () => []);
     draft.ended = false;
     draft.won = false;
@@ -63,7 +63,7 @@ async function resetAndSetup(
 
   // Set up piles
   setGame((draft) => {
-    const deck = [...draft.draw];
+    const deck = [...draft.stock];
     const tableau: PlayingCard[][] = Array.from(
       { length: tableauSize.cols },
       () => [],
@@ -77,16 +77,16 @@ async function resetAndSetup(
     }
 
     draft.piles = tableau;
-    draft.draw = deck;
+    draft.stock = deck;
   });
 
   await delay();
 
   // Flip first card to discard
   setGame((draft) => {
-    const firstDiscard = draft.draw.pop();
+    const firstDiscard = draft.stock.pop();
     if (firstDiscard) {
-      draft.discard.push(flipToFace(firstDiscard));
+      draft.waste.push(flipToFace(firstDiscard));
     }
   });
 }
@@ -108,7 +108,7 @@ function canDiscard(
 }
 
 function hasAnyMove(state: GameState, difficulty: GolfDifficulty = "hard") {
-  const wasteTop = state.discard[state.discard.length - 1] ?? null;
+  const wasteTop = state.waste[state.waste.length - 1] ?? null;
   return state.piles.some((col) => {
     const top = col[col.length - 1] ?? null;
     return top ? canDiscard(top, wasteTop, difficulty) : false;
@@ -124,7 +124,7 @@ function evaluateEnd(
 
   const tableauCount = state.piles.reduce((sum, col) => sum + col.length, 0);
   if (tableauCount === 0) return { ended: true, won: true };
-  if (state.draw.length > 0) return { ended: false, won: false };
+  if (state.stock.length > 0) return { ended: false, won: false };
   if (hasAnyMove(state, difficulty)) return { ended: false, won: false };
   return { ended: true, won: false };
 }
@@ -172,7 +172,7 @@ export default function Golf() {
     saveUndoState(structuredClone(game));
 
     setGame((draft) => {
-      const currentDiscard = top(draft.discard);
+      const currentDiscard = top(draft.waste);
       const pile = draft.piles[pileIndex];
       const cardToDiscard = pile[cardIndex];
 
@@ -187,7 +187,7 @@ export default function Golf() {
       }
 
       draft.piles[pileIndex].pop();
-      draft.discard.push(cardToDiscard);
+      draft.waste.push(cardToDiscard);
     });
   }
 
@@ -195,13 +195,13 @@ export default function Golf() {
     saveUndoState(structuredClone(game));
 
     setGame((draft) => {
-      if (draft.ended || draft.draw.length === 0) return;
+      if (draft.ended || draft.stock.length === 0) return;
 
-      const nextCard = draft.draw.pop();
+      const nextCard = draft.stock.pop();
 
       if (!nextCard) return;
 
-      draft.discard.push(flipToFace(nextCard));
+      draft.waste.push(flipToFace(nextCard));
     });
   }
 
@@ -229,10 +229,10 @@ export default function Golf() {
 
     return [
       {
-        id: "draw",
-        name: "draw",
+        id: "stock",
+        name: "stock",
 
-        cards: game.draw,
+        cards: game.stock,
         col: 2,
         row: 0,
         fan: { maxVisible: 3 },
@@ -240,15 +240,15 @@ export default function Golf() {
         placeholder: { text: i18n.t("cards:stock"), infoPos: "left" },
       },
       {
-        id: "discard",
-        name: "discard",
+        id: "waste",
+        name: "waste",
 
-        cards: game.discard,
+        cards: game.waste,
         col: 4,
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: i18n.t("cards:discard"), infoPos: "right" },
+        placeholder: { text: i18n.t("cards:waste"), infoPos: "right" },
       },
       ...pileZones,
       {
@@ -279,7 +279,7 @@ export default function Golf() {
       mappedCard.refIndex === game.piles[mappedCard.pileIndex].length - 1;
     const canPlay =
       isBottomCard &&
-      canDiscard(mappedCard.card, top(game.discard), difficulty);
+      canDiscard(mappedCard.card, top(game.waste), difficulty);
 
     return {
       isDisabled: game.ended || !isBottomCard || !canPlay,
@@ -308,7 +308,7 @@ export default function Golf() {
           : i18n.t("games:golf.noMorePlayableCards")
       }
       // Draw cards left over: the fewer a win needed, the better.
-      score={game.won ? game.draw.length : undefined}
+      score={game.won ? game.stock.length : undefined}
       canUndo={canUndo}
       undo={undo}
     >
@@ -317,7 +317,7 @@ export default function Golf() {
       <View style={[flexStyles.colCentered, getZoneStylesById("button")]}>
         <Button
           onPress={drawCard}
-          disabled={game.draw.length === 0 || game.ended}
+          disabled={game.stock.length === 0 || game.ended}
           text={i18n.t("cards:draw")}
           size="lg"
           fullWidth

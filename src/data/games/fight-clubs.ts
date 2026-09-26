@@ -13,6 +13,13 @@ export const fightClubs: GameDefinition = {
     luck: 35,
   },
   thumbnail: "FightClubs.webp",
+  thumbnailCredit: {
+    title: "Stag at Sharkey's",
+    artistName: "George Bellows",
+    date: "1909",
+    sourceName: "Cleveland Museum of Art",
+    sourceLink: "https://clevelandart.org/art/1922.1133",
+  },
   background: GAME_BACKGROUNDS.club,
   animation: GameAnimations.Dust,
   gameColorDark: "#221b20",

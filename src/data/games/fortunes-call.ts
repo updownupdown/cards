@@ -8,6 +8,13 @@ export const fortunesCall: GameDefinition = {
   path: "/fortunes-call",
   title: "Fortune's Call",
   thumbnail: "FortunesCall.webp",
+  thumbnailCredit: {
+    title: "The Fortune-Teller",
+    artistName: "Georges de La Tour",
+    date: "probably 1630s",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/436838",
+  },
   tags: [GameTag.ModernMechanics, GameTag.ScoringPuzzles],
   rating: { complexity: 20, difficulty: 45, luck: 70 },
   gameColorDark: "#272330",

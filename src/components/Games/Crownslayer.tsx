@@ -844,7 +844,7 @@ export default function Crownslayer() {
         col: 3,
         row: 0.25,
         cards: game.discardPile,
-        placeholder: { infoPos: "above", text: i18n.t("cards:dscrd") },
+        placeholder: { infoPos: "above", text: i18n.t("cards:discard") },
         fan: { maxVisible: 3 },
         baseZIndex: 40,
       },

@@ -18,7 +18,7 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
-export type WastePilesVariant = "frog" | "puss-in-the-corner";
+export type WastePilesVariant = "frog" | "sir-tommy" | "puss-in-the-corner";
 
 type Config = {
   decks: 1 | 2;
@@ -26,8 +26,11 @@ type Config = {
   reserveSize: number;
   /** Foundations build up from Ace in any suit, or keeping to one colour. */
   build: "any-suit" | "same-color";
-  /** "all" starts every Ace on a foundation; "one" guarantees at least one. */
-  seedAces: "all" | "one";
+  /**
+   * "all" starts every Ace on a foundation, "one" guarantees at least one,
+   * and "none" leaves the foundations empty.
+   */
+  seedAces: "all" | "one" | "none";
   redeals: number;
   winMessage: () => string;
   loseMessage: () => string;
@@ -42,6 +45,16 @@ const CONFIGS: Record<WastePilesVariant, Config> = {
     seedAces: "one",
     redeals: 0,
     winMessage: () => i18n.t("games:frog.everyFrogMadeItHome"),
+    loseMessage: () => i18n.t("games:sirTommy.theStockIsSpent"),
+  },
+  "sir-tommy": {
+    decks: 1,
+    wastePiles: 4,
+    reserveSize: 0,
+    build: "any-suit",
+    seedAces: "none",
+    redeals: 0,
+    winMessage: () => i18n.t("games:sirTommy.allFourSuitsHome"),
     loseMessage: () => i18n.t("games:sirTommy.theStockIsSpent"),
   },
   "puss-in-the-corner": {
@@ -382,7 +395,7 @@ export function WastePilesSolitaire({
       row: 0,
       baseZIndex: 40,
       fan: { maxVisible: 3 },
-      placeholder: {},
+      placeholder: { iconName: "ace" },
     }));
 
     const wasteZones: MapZone[] = game.waste.map((pile, i) => ({

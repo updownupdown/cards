@@ -38,11 +38,6 @@ const cardContext = require.context(
   true,
   /^\.\/(?:classic|regular|small|small-colored|tableau)\/[^/]+\.webp$/,
 );
-const collectibleCardContext = require.context(
-  "../../../assets/cards",
-  true,
-  /^\.\/(?:pale|dark|gold|red)\/[^/]+\.webp$/,
-);
 const cardBackContext = require.context(
   "../../../assets/cards/backs",
   false,
@@ -50,7 +45,6 @@ const cardBackContext = require.context(
 );
 
 const cardFilesBySize = buildCardFilesBySize();
-const collectibleCardFiles = buildCollectibleCardFiles();
 const cardBackFiles = buildCardBackFiles();
 
 const preloadPromises = new Map<string, Promise<void>>();
@@ -81,20 +75,6 @@ export function getCardBackImage(cardBackKey?: string) {
     cardBackFiles[cardBackKey ?? ""] ??
     cardBackFiles[DEFAULT_CARD_BACK.toLowerCase()]
   );
-}
-
-const COLLECTIBLE_DECK_FOLDERS = {
-  white: "pale",
-  black: "dark",
-  gold: "gold",
-  red: "red",
-} as const;
-
-export function getCollectibleCardImageSource(
-  deck: keyof typeof COLLECTIBLE_DECK_FOLDERS,
-  cardName: string,
-) {
-  return collectibleCardFiles[COLLECTIBLE_DECK_FOLDERS[deck]][cardName];
 }
 
 export function isCardImageSetPreloaded(
@@ -184,26 +164,6 @@ function buildCardBackFiles() {
   }
 
   return cardBackFiles;
-}
-
-function buildCollectibleCardFiles() {
-  type DeckFolder = "pale" | "dark" | "gold" | "red";
-  const cardFiles = { pale: {}, dark: {}, gold: {}, red: {} } as Record<
-    DeckFolder,
-    Record<string, ImageSourcePropType>
-  >;
-
-  for (const key of collectibleCardContext.keys()) {
-    const match = key.match(/^\.\/(pale|dark|gold|red)\/([^/]+)\.webp$/);
-    if (!match) continue;
-
-    const [, deck, cardName] = match as [string, DeckFolder, string];
-    cardFiles[deck][cardName] = collectibleCardContext(
-      key,
-    ) as ImageSourcePropType;
-  }
-
-  return cardFiles;
 }
 
 function buildCardFilesBySize() {

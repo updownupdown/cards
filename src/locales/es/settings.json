@@ -27,6 +27,13 @@
     "label": "Respuesta háptica",
     "description": "Vibra al arrastrar y soltar cartas y al ganar. La vibración debe estar activada en los ajustes de tu teléfono."
   },
+  "autoComplete": {
+    "label": "Autocompletar",
+    "description": "Cuando el resto de una partida puede terminarse moviendo las cartas a las fundaciones.",
+    "ask": "Preguntar",
+    "always": "Siempre",
+    "never": "Nunca"
+  },
   "crashReports": {
     "label": "Enviar informes de errores",
     "description": "Envía diagnósticos anónimos cuando algo falla, para que pueda corregirse. No se incluye ninguna información personal."

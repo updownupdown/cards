@@ -315,11 +315,13 @@ export default function Canfield() {
         row: 3.8,
         baseZIndex: 50,
         // Drawing three, the top three are fanned so the cards under the
-        // playable one can be read; the label moves out of their way.
+        // playable one can be read; the label moves out of their way. The
+        // first tableau column (col 1.8) limits the fan to the tightest
+        // offset that still shows the suits.
         fan: {
           ...(game.drawCount === 3 && {
             direction: "right",
-            offset: cardDims.tableauOffsetHorizontal,
+            offset: cardDims.tableauOffsetHorizontalSuitMin,
           }),
           maxVisible: 3,
           // Cards pushed out of the top three keep their shadows while they

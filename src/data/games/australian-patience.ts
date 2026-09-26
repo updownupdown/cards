@@ -8,6 +8,14 @@ export const australianPatience: GameDefinition = {
   tags: [GameTag.YukonFamily, GameTag.TableauBuilding, GameTag.StockAndWaste],
   rating: { complexity: 35, difficulty: 70, luck: 45 },
   thumbnail: "AustralianPatience.webp",
+  thumbnailCredit: {
+    title: "Shearing the Rams",
+    artistName: "Tom Roberts",
+    date: "1890",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Tom_Roberts_-_Shearing_the_rams_-_Google_Art_Project.jpg",
+  },
   background: GAME_BACKGROUNDS.savanah,
   animation: GameAnimations.Birds,
   gameColorDark: "#29382a",

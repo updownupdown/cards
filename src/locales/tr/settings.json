@@ -27,6 +27,13 @@
     "label": "Dokunsal geri bildirim",
     "description": "Kart sürükleyip bırakırken ve oyun kazanınca titreşir. Titreşimin telefon ayarlarında açık olması gerekir."
   },
+  "autoComplete": {
+    "label": "Otomatik tamamla",
+    "description": "Oyunun geri kalanı kartlar temellere taşınarak bitirilebildiğinde.",
+    "ask": "Sor",
+    "always": "Her zaman",
+    "never": "Asla"
+  },
   "crashReports": {
     "label": "Hata raporları gönder",
     "description": "Bir sorun çıktığında düzeltilebilmesi için anonim tanılama bilgileri gönderir. Kişisel bilgi içermez."

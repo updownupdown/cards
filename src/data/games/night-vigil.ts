@@ -15,6 +15,14 @@ export const nightVigil: GameDefinition = {
   background: GAME_BACKGROUNDS.nightCity,
   animation: GameAnimations.Lightning,
   thumbnail: "NightVigil.webp",
+  thumbnailCredit: {
+    title: "The Night Watch",
+    artistName: "Rembrandt van Rijn",
+    date: "1642",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:La_ronda_de_noche,_por_Rembrandt_van_Rijn.jpg",
+  },
   gameColorDark: "#11161a",
   gameColorPale: "#e7edf0",
   cardBack: CardBackColors.Ocean,

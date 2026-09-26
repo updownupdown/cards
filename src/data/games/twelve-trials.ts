@@ -13,6 +13,13 @@ export const twelveTrials: GameDefinition = {
     luck: 45,
   },
   thumbnail: "TwelveTrials.webp",
+  thumbnailCredit: {
+    title: "Tlaloc",
+    artistName: "Unknown Aztec sculptor",
+    date: "ca. 1200–1519",
+    sourceName: "Cleveland Museum of Art",
+    sourceLink: "https://clevelandart.org/art/1966.361",
+  },
   background: GAME_BACKGROUNDS.headlessStatue,
   animation: GameAnimations.ManaDust,
   gameColorDark: "#352820",

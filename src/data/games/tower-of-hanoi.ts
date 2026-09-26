@@ -17,6 +17,13 @@ export const towerOfHanoi: GameDefinition = {
   background: GAME_BACKGROUNDS.indianLandscape,
   animation: GameAnimations.Birds,
   thumbnail: "TowerOfHanoi.webp",
+  thumbnailCredit: {
+    title: "Buddhist Pagoda",
+    artistName: "Unknown Korean sculptor",
+    date: "14th–16th century",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/118324",
+  },
   gameColorDark: "#304f63",
   gameColorPale: "#d8efe8",
   cardBack: CardBackColors.Teal,

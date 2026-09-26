@@ -106,6 +106,24 @@
       }
     }
   },
+  "black-hole": {
+    "variant": {
+      "hash": "c6feb450",
+      "value": {
+        "label": "Variante",
+        "options": [
+          {
+            "label": "Trou Noir",
+            "description": "Dix-sept éventails de trois autour de l'As de Pique."
+          },
+          {
+            "label": "Tout en ligne",
+            "description": "Treize colonnes de quatre\u00a0; commencez la fondation avec n'importe quelle carte."
+          }
+        ]
+      }
+    }
+  },
   "canfield": {
     "drawCount": {
       "hash": "ecd6b2f3",
@@ -206,17 +224,55 @@
   },
   "forty-thieves": {
     "difficulty": {
-      "hash": "7161d2c1",
+      "hash": "2e2bd5c9",
       "value": {
-        "label": "Difficulté",
+        "label": "Redistributions",
         "options": [
           {
-            "label": "Facile",
-            "description": "Redistributions illimitées."
+            "label": "Aucune"
           },
           {
-            "label": "Difficile",
-            "description": "Aucune redistribution."
+            "label": "Illimitées (Facile)"
+          }
+        ]
+      }
+    },
+    "variant": {
+      "hash": "4477be27",
+      "value": {
+        "label": "Variante",
+        "options": [
+          {
+            "label": "Quarante Voleurs",
+            "description": "Dix colonnes de quatre\u00a0; déplacez une carte à la fois."
+          },
+          {
+            "label": "Joséphine",
+            "description": "Les séquences de même couleur se déplacent d'un bloc."
+          },
+          {
+            "label": "Lucas",
+            "description": "Treize colonnes de trois\u00a0; les As commencent sur les fondations."
+          },
+          {
+            "label": "As affairés",
+            "description": "Douze colonnes de deux."
+          }
+        ]
+      }
+    }
+  },
+  "freecell": {
+    "variant": {
+      "hash": "c2d73114",
+      "value": {
+        "label": "Construction",
+        "options": [
+          {
+            "label": "Rouge et noir alternés (FreeCell)"
+          },
+          {
+            "label": "Même couleur (Jeu du boulanger)"
           }
         ]
       }
@@ -234,6 +290,22 @@
           },
           {
             "label": "Difficile (2 redistributions)"
+          }
+        ]
+      }
+    }
+  },
+  "gargantua": {
+    "variant": {
+      "hash": "0efea48a",
+      "value": {
+        "label": "Redistributions",
+        "options": [
+          {
+            "label": "1 (Gargantua)"
+          },
+          {
+            "label": "3 (Harpe)"
           }
         ]
       }
@@ -309,6 +381,24 @@
       }
     }
   },
+  "king-albert": {
+    "variant": {
+      "hash": "169819fa",
+      "value": {
+        "label": "Variante",
+        "options": [
+          {
+            "label": "Roi Albert",
+            "description": "Neuf colonnes et une réserve de sept cartes."
+          },
+          {
+            "label": "Raglan",
+            "description": "Les As commencent sur les fondations, avec une réserve de six cartes."
+          }
+        ]
+      }
+    }
+  },
   "klondike": {
     "drawCount": {
       "hash": "ecd6b2f3",
@@ -320,6 +410,28 @@
           },
           {
             "label": "3 cartes"
+          }
+        ]
+      }
+    }
+  },
+  "la-belle-lucie": {
+    "variant": {
+      "hash": "9ec03636",
+      "value": {
+        "label": "Variante",
+        "options": [
+          {
+            "label": "La Belle Lucie",
+            "description": "Descendez par couleur\u00a0; deux redistributions."
+          },
+          {
+            "label": "Trilobe",
+            "description": "Les As commencent sur les fondations."
+          },
+          {
+            "label": "Trèfles irlandais",
+            "description": "Montez ou descendez sans tenir compte de la couleur, trois cartes au plus par éventail, sans redistribution."
           }
         ]
       }
@@ -368,6 +480,24 @@
           },
           {
             "label": "Extrême (8 x 9)"
+          }
+        ]
+      }
+    }
+  },
+  "miss-milligan": {
+    "variant": {
+      "hash": "1a6e1313",
+      "value": {
+        "label": "Variante",
+        "options": [
+          {
+            "label": "Miss Milligan",
+            "description": "Seuls les Rois remplissent les colonnes vides\u00a0; une fois la pioche vide, une carte ou une séquence à la fois peut attendre dans la poche."
+          },
+          {
+            "label": "Géant",
+            "description": "N'importe quelle carte remplit une colonne vide, mais il n'y a pas de poche."
           }
         ]
       }
@@ -467,6 +597,22 @@
       }
     }
   },
+  "rank-and-file": {
+    "variant": {
+      "hash": "aa2b7203",
+      "value": {
+        "label": "Donne",
+        "options": [
+          {
+            "label": "3 faces cachées (Rangs serrés)"
+          },
+          {
+            "label": "2 faces cachées (Numéro Dix)"
+          }
+        ]
+      }
+    }
+  },
   "royal-rest": {
     "royalRestHardMode": {
       "hash": "9895d840",
@@ -479,6 +625,24 @@
           },
           {
             "label": "Activé"
+          }
+        ]
+      }
+    }
+  },
+  "scorpion": {
+    "variant": {
+      "hash": "c37cfca5",
+      "value": {
+        "label": "Variante",
+        "options": [
+          {
+            "label": "Scorpion",
+            "description": "Seuls les Rois remplissent les colonnes vides."
+          },
+          {
+            "label": "Guêpe",
+            "description": "N'importe quelle carte remplit une colonne vide."
           }
         ]
       }
@@ -499,6 +663,69 @@
           },
           {
             "label": "Difficile (une seule au choix)"
+          }
+        ]
+      }
+    }
+  },
+  "sir-tommy": {
+    "variant": {
+      "hash": "a1adf9a0",
+      "value": {
+        "label": "Variante",
+        "options": [
+          {
+            "label": "Sir Tommy",
+            "description": "Les fondations montent sans tenir compte de la couleur."
+          },
+          {
+            "label": "Les Quatre Coins",
+            "description": "Les As commencent sur les fondations, qui montent par teinte\u00a0; une redistribution."
+          }
+        ]
+      }
+    }
+  },
+  "spider-solitaire": {
+    "spiderSuits": {
+      "hash": "0fd48479",
+      "value": {
+        "label": "Couleurs",
+        "options": [
+          {
+            "label": "4 couleurs"
+          },
+          {
+            "label": "2 couleurs"
+          },
+          {
+            "label": "1 couleur"
+          }
+        ]
+      }
+    }
+  },
+  "terrace": {
+    "variant": {
+      "hash": "dafb9ee3",
+      "value": {
+        "label": "Variante",
+        "options": [
+          {
+            "label": "Terrasse",
+            "description": "Une terrasse de onze cartes\u00a0; vous choisissez le rang des fondations\u00a0; les fondations alternent rouge et noir."
+          },
+          {
+            "label": "Patience du Général",
+            "description": "Une terrasse de treize cartes, et les fondations montent par couleur."
+          },
+          {
+            "label": "Blondes et Brunes",
+            "description": "Une terrasse de dix cartes, et la donne choisit le rang des fondations."
+          },
+          {
+            "label": "Étoile filante",
+            "description": "Une terrasse de onze cartes, huit colonnes, et la donne choisit le rang des fondations."
           }
         ]
       }
@@ -569,6 +796,28 @@
           },
           {
             "label": "Activé"
+          }
+        ]
+      }
+    }
+  },
+  "yukon": {
+    "variant": {
+      "hash": "71cf5c1a",
+      "value": {
+        "label": "Construction",
+        "options": [
+          {
+            "label": "Rouge et noir alternés (Yukon)"
+          },
+          {
+            "label": "Même couleur (Réussite russe)"
+          },
+          {
+            "label": "Même couleur, en montant ou en descendant (Alaska)"
+          },
+          {
+            "label": "Toute autre couleur (Peau d'orignal)"
           }
         ]
       }

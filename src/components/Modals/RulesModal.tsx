@@ -14,7 +14,7 @@ import { RichText } from "../common/RichText";
 import { lightenHexColor } from "@/utils/utils";
 import { ScrollView } from "react-native-gesture-handler";
 import { useModalStyles } from "@/styles/modalStyles";
-import { CreditsSection } from "./GameModal";
+import { CreditsSection, hasCredits } from "./GameModal";
 
 export const RulesModal = ({ onClose }: { onClose: () => void }) => {
   const pathname = useGamePath();
@@ -68,7 +68,7 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
             headingColor={headingColor}
           />
 
-          {gameInfo.background?.authorName && (
+          {hasCredits(gameInfo) && (
             <CreditsSection style={{ marginTop: spacing(40) }} />
           )}
         </View>

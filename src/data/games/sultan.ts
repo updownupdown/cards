@@ -7,6 +7,14 @@ export const sultan: GameDefinition = {
   path: "/sultan",
   title: "Sultan",
   thumbnail: "Sultan.webp",
+  thumbnailCredit: {
+    title: "Sultan Mehmet II",
+    artistName: "Gentile Bellini",
+    date: "1480",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Bellini,_Gentile_-_Sultan_Mehmet_II.jpg",
+  },
   aliases: ["Sultan of Turkey", "Emperor of Germany"],
   tags: [
     GameTag.DoubleDeckers,

@@ -507,7 +507,7 @@ export default function Delta21() {
       row: layout.estuaryHeight + layout.handRowTopOffset,
       baseZIndex: 90,
       cards: game.discard,
-      placeholder: { text: i18n.t("cards:dscrd"), infoPos: "above" },
+      placeholder: { text: i18n.t("cards:discard"), infoPos: "above" },
       fan: { maxVisible: 3 },
     };
 

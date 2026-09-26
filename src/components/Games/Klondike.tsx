@@ -104,7 +104,7 @@ function wasteZone(layout: StockLayout, drawCount: 1 | 3) {
 
   // The fanned top card stops one gap short of the stock's label (the stock
   // is at col 6, its label to its left).
-  const offset = cardDims.tableauOffsetHorizontal;
+  const offset = cardDims.tableauOffsetHorizontalSuit;
   const stockLabelLeft = 6 * (1 + BOARD_GAP) - infoSize.leftRight;
   return {
     col: (stockLabelLeft - BOARD_GAP - 1 - 2 * offset) / (1 + BOARD_GAP),
@@ -346,7 +346,7 @@ export default function Klondike() {
       row: TABLEAU_ROW,
       baseZIndex: 10 + pileIndex,
       fan: { direction: "down", offset: pileOffset(pile.length, layout) },
-      placeholder: { showCount: false },
+      placeholder: { showCount: false, iconName: "king" },
     }));
     const foundationZones: MapZone[] = game.foundations.map(
       (pile, pileIndex) => ({

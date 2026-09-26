@@ -9,6 +9,14 @@ export const simpleSimon: GameDefinition = {
   tags: [GameTag.SpiderFamily, GameTag.SequenceBuilding],
   rating: { complexity: 35, difficulty: 55, luck: 25 },
   thumbnail: "SimpleSimon.webp",
+  thumbnailCredit: {
+    title: "Simple Simon",
+    artistName: "Unknown illustrator, McLoughlin Bros.",
+    date: "1899",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Simple-Simon-Nursery-Rhyme-illustration.jpg",
+  },
   background: GAME_BACKGROUNDS.modernStairs,
   animation: GameAnimations.Dust,
   gameColorDark: "#312d29",

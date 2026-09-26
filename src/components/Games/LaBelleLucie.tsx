@@ -1,7 +1,10 @@
 import { FanSolitaire, type FanGameState } from "./FanSolitaire";
+import { useGameVariant } from "@/hooks/useGameVariant";
 
 export type LaBelleLucieGameState = FanGameState;
 
 export default function LaBelleLucie() {
-  return <FanSolitaire variant="la-belle-lucie" />;
+  const variant = useGameVariant("/la-belle-lucie");
+  if (!variant) return null;
+  return <FanSolitaire key={variant} variant={variant} />;
 }

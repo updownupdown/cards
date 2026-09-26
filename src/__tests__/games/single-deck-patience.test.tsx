@@ -14,13 +14,15 @@ import {
   pressCardId,
   pressZone,
   renderGame,
+  renderVariant,
   run,
+  acceptAutoCompleteOffer,
 } from "../../../jest/game-harness";
 import { SUITS, type PlayingCard } from "@/components/Cards/card-utils";
 import BakersDozen from "@/components/Games/BakersDozen";
 import Bisley from "@/components/Games/Bisley";
 import FortunesCall from "@/components/Games/FortunesCall";
-import Singularity from "@/components/Games/Singularity";
+import BlackHole from "@/components/Games/BlackHole";
 
 beforeEach(() => {
   jest.useFakeTimers();
@@ -33,12 +35,12 @@ afterEach(() => {
 const emptyPiles = (count: number) =>
   Array.from({ length: count }, () => [] as PlayingCard[]);
 
-describe("Singularity", () => {
+describe("Black Hole", () => {
   test("absorbing the last card wins", async () => {
     const two = card("2", "spades");
     const piles = emptyPiles(17);
     piles[4] = [two];
-    await renderGame("/singularity", Singularity, {
+    await renderVariant("/black-hole", "black-hole", BlackHole, {
       piles,
       hole: [card("A", "spades")],
       ended: false,
@@ -56,7 +58,7 @@ describe("Singularity", () => {
     const piles = emptyPiles(17);
     piles[0] = [card("9", "hearts")];
     piles[1] = [two];
-    await renderGame("/singularity", Singularity, {
+    await renderVariant("/black-hole", "black-hole", BlackHole, {
       piles,
       hole: [card("A", "clubs")],
       ended: false,
@@ -175,6 +177,8 @@ describe("Baker's Dozen (no lose condition)", () => {
         run("spades", "A", "Q"),
       ],
     });
+
+    await acceptAutoCompleteOffer();
 
     expect(outcome()).toBe("won");
   });

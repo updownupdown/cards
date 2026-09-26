@@ -13,6 +13,13 @@ export const cityGrid: GameDefinition = {
     luck: 40,
   },
   thumbnail: "CityGrid.webp",
+  thumbnailCredit: {
+    title: "Map of Edo",
+    artistName: "Unknown Japanese cartographer",
+    date: "1844–48",
+    sourceName: "Wikimedia Commons",
+    sourceLink: "https://commons.wikimedia.org/wiki/File:Edo_1844-1848_Map.jpg",
+  },
   background: GAME_BACKGROUNDS.city,
   animation: GameAnimations.Birds,
   gameColorDark: "#383d4e",

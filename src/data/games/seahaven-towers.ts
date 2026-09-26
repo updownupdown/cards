@@ -10,6 +10,13 @@ export const seahavenTowers: GameDefinition = {
   tags: [GameTag.FreeCellFamily, GameTag.SequenceBuilding],
   rating: { complexity: 35, difficulty: 50, luck: 25 },
   thumbnail: "SeahavenTowers.webp",
+  thumbnailCredit: {
+    title: "The Port of La Rochelle",
+    artistName: "Paul Signac",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Le_port_de_la_Rochelle_Signac_Nancy.jpg",
+  },
   background: GAME_BACKGROUNDS.shipwreck,
   animation: GameAnimations.Mist,
   // animation: GameAnimations.Clouds,

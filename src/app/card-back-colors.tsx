@@ -41,6 +41,7 @@ export default function CardBackColorsScreen() {
                 <View style={styles.card}>
                   <Image
                     source={getCardBackImage(color.toLowerCase())}
+                    cachePolicy="memory"
                     contentFit="fill"
                     style={styles.image}
                   />

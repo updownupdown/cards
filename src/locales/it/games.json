@@ -2,7 +2,6 @@
   "jailbreak": {
     "red": "Rosso",
     "black": "Nero",
-    "remainder": "Pesca",
     "redTotal": "Rosso: {{count}}",
     "blackTotal": "Nero: {{count}}",
     "theJokerEscaped": "Il jolly è fuggito!"
@@ -286,8 +285,8 @@
   },
   "invaders": {
     "wave2": "Ondata 2",
-    "atks": "Att.",
-    "defs": "Dif.",
+    "attacks": "Attacchi",
+    "defenses": "Difese",
     "defenders": "Difensori",
     "attack": "Attacca{{value}}",
     "attackersWave": "Attaccanti (ondata {{wave}})",
@@ -434,7 +433,6 @@
     "allFourSuitStacksAre": "Tutte e quattro le pile per seme sono complete."
   },
   "seer": {
-    "deck": "Mazzo",
     "reveal": "Rivela",
     "return": "Rimetti",
     "predictions": {
@@ -471,7 +469,7 @@
   "singleDeckSpider": {
     "fourCompleteSuits": "Quattro semi completi!"
   },
-  "singularity": {
+  "blackHole": {
     "everyStarCollapsedIn": "Tutte le stelle sono collassate!",
     "noCardCanReachThe": "Nessuna carta può raggiungere la singolarità."
   },
@@ -487,7 +485,7 @@
   "somnus": {
     "thatAssignmentDoesNotMeet": "Questa assegnazione non rispetta le regole del bersaglio",
     "dream": "Sogno",
-    "rmvd": "Rim.",
+    "removed": "Rimosse",
     "guard": "Guard.",
     "turn": "Turno",
     "selectNightmareOrGuardian": "Scegli un incubo o un guardiano",

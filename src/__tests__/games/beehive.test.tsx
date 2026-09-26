@@ -16,7 +16,7 @@ describe("Beehive", () => {
     expect(state.beehive).toHaveLength(10);
     expect(state.tableau).toHaveLength(6);
     expect(state.tableau.every((pile) => pile.length === 1)).toBe(true);
-    expect(state.draw).toHaveLength(36);
+    expect(state.stock).toHaveLength(36);
     expect(state.waste).toHaveLength(0);
     expect(state.beehive.at(-1)?.faceUp).toBe(true);
   });
@@ -25,7 +25,7 @@ describe("Beehive", () => {
     const state = beehiveRules.createInitialState();
     beehiveRules.dealDraw(state);
 
-    expect(state.draw).toHaveLength(33);
+    expect(state.stock).toHaveLength(33);
     expect(state.waste).toHaveLength(3);
     expect(state.waste.every((card) => card.faceUp)).toBe(true);
   });
@@ -43,7 +43,7 @@ describe("Beehive", () => {
         [cards[7]],
         [cards[8]],
       ],
-      draw: [],
+      stock: [],
       waste: [],
       discard: [],
     };
@@ -61,7 +61,7 @@ describe("Beehive", () => {
     const state: BeehiveGameState = {
       beehive: [],
       tableau: [fives.slice(0, 2), fives.slice(2, 4), [], [], [], []],
-      draw: [],
+      stock: [],
       waste: [],
       discard: [],
     };
@@ -76,7 +76,7 @@ describe("Beehive", () => {
     const state: BeehiveGameState = {
       beehive: [cards.find((card) => card.rank === "5")!],
       tableau: [[], [cards.find((card) => card.rank === "5")!], [], [], [], []],
-      draw: [],
+      stock: [],
       waste: [],
       discard: [],
     };
@@ -98,7 +98,7 @@ describe("Beehive", () => {
         [cards[16]],
         [cards[20]],
       ],
-      draw: [],
+      stock: [],
       waste: [],
       discard: [],
     };
@@ -119,7 +119,7 @@ describe("Beehive", () => {
         cards.slice(16, 20),
         cards.slice(20, 24),
       ],
-      draw: [],
+      stock: [],
       waste: [],
       discard: [],
     };
@@ -138,7 +138,7 @@ describe("Beehive", () => {
     const state: BeehiveGameState = {
       beehive: [],
       tableau: tableauCards.map((card) => [card]),
-      draw: [cards[12], cards[13], matchingCard],
+      stock: [cards[12], cards[13], matchingCard],
       waste: [],
       discard: [],
     };
@@ -154,7 +154,7 @@ describe("Beehive", () => {
     const state: BeehiveGameState = {
       beehive: [],
       tableau: tableauCards.map((card) => [card]),
-      draw: cards.slice(19, 22),
+      stock: cards.slice(19, 22),
       waste: [cards[22]],
       discard: [],
     };
@@ -169,7 +169,7 @@ describe("Beehive", () => {
     const state: BeehiveGameState = {
       beehive: [],
       tableau: [[], [], [], [], [], []],
-      draw: [],
+      stock: [],
       waste: [],
       discard: cards,
     };

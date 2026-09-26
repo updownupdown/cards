@@ -17,14 +17,16 @@ import {
   pressCardId,
   pressZone,
   renderGame,
+  renderVariant,
   run,
+  acceptAutoCompleteOffer,
 } from "../../../jest/game-harness";
 import type { PlayingCard } from "@/components/Cards/card-utils";
 import type { ComponentType } from "react";
 import Carpet from "@/components/Games/Carpet";
 import Cruel from "@/components/Games/Cruel";
 import Frog from "@/components/Games/Frog";
-import PussInTheCorner from "@/components/Games/PussInTheCorner";
+import SirTommy from "@/components/Games/SirTommy";
 import RoyalCotillion from "@/components/Games/RoyalCotillion";
 
 beforeEach(() => {
@@ -177,6 +179,7 @@ describe("Royal Cotillion", () => {
 type WastePilesCase = [
   string,
   string,
+  string,
   ComponentType,
   number,
   number,
@@ -184,9 +187,17 @@ type WastePilesCase = [
 ];
 
 describe.each<WastePilesCase>([
-  ["Frog", "/frog", Frog, 8, 5, "hearts"],
-  ["Puss in the Corner", "/puss-in-the-corner", PussInTheCorner, 4, 4, "clubs"],
-])("%s", (_name, path, Game, foundationCount, wasteCount, sixSuit) => {
+  ["Frog", "/frog", "", Frog, 8, 5, "hearts"],
+  [
+    "Puss in the Corner",
+    "/sir-tommy",
+    "puss-in-the-corner",
+    SirTommy,
+    4,
+    4,
+    "clubs",
+  ],
+])("%s", (_name, path, variant, Game, foundationCount, wasteCount, sixSuit) => {
   const fixture = (overrides: object) => ({
     stock: [],
     reserve: [],
@@ -205,7 +216,7 @@ describe.each<WastePilesCase>([
     const foundations = Array.from({ length: foundationCount }, (_, index) =>
       index === foundationCount - 1 ? run("spades", "A", "Q") : run("clubs"),
     );
-    await renderGame(path, Game, fixture({ waste, foundations }));
+    await renderVariant(path, variant, Game, fixture({ waste, foundations }));
     expect(outcome()).toBe("playing");
 
     await doubleTapCardId(king.id);
@@ -220,7 +231,7 @@ describe.each<WastePilesCase>([
     waste[1] = [card("9", "diamonds")];
     const foundations = emptyPiles(foundationCount);
     foundations[0] = run("spades", "A", "5");
-    await renderGame(path, Game, fixture({ waste, foundations }));
+    await renderVariant(path, variant, Game, fixture({ waste, foundations }));
     expect(outcome()).toBe("playing");
 
     await doubleTapCardId(six.id);
@@ -234,7 +245,7 @@ describe("Puss in the Corner redeal", () => {
     const waste = emptyPiles(4);
     waste[0] = [card("9", "hearts"), card("4", "diamonds")];
     waste[1] = [card("7", "clubs")];
-    await renderGame("/puss-in-the-corner", PussInTheCorner, {
+    await renderVariant("/sir-tommy", "puss-in-the-corner", SirTommy, {
       stock: [],
       reserve: [],
       waste,
@@ -272,6 +283,8 @@ describe("Cruel", () => {
       ended: false,
       won: false,
     });
+
+    await acceptAutoCompleteOffer();
 
     expect(outcome()).toBe("won");
   });

@@ -19,10 +19,7 @@ type HomeHeaderProps = {
   onOpenStats: () => void;
 };
 
-export function HomeHeader({
-  onOpenSettings,
-  onOpenStats,
-}: HomeHeaderProps) {
+export function HomeHeader({ onOpenSettings, onOpenStats }: HomeHeaderProps) {
   const insets = useSafeAreaInsets();
   const { ui, spacing } = useResponsiveMetrics();
 

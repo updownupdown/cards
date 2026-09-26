@@ -8,14 +8,14 @@ import {
 } from "@jest/globals";
 import "../../../jest/game-mocks";
 import {
+  acceptAutoCompleteOffer,
   card,
   outcome,
-  renderGame,
+  renderVariant,
   run,
 } from "../../../jest/game-harness";
 import type { PlayingCard } from "@/components/Cards/card-utils";
 import type { ComponentType } from "react";
-import BakersGame from "@/components/Games/BakersGame";
 import EightOff from "@/components/Games/EightOff";
 import FreeCell from "@/components/Games/FreeCell";
 import SeahavenTowers from "@/components/Games/SeahavenTowers";
@@ -28,21 +28,21 @@ afterEach(() => {
   jest.useRealTimers();
 });
 
-describe.each<[string, string, ComponentType, number, number]>([
-  ["FreeCell", "/freecell", FreeCell, 8, 4],
-  ["Baker's Game", "/bakers-game", BakersGame, 8, 4],
-  ["Eight Off", "/eight-off", EightOff, 8, 8],
-  ["Seahaven Towers", "/seahaven-towers", SeahavenTowers, 10, 4],
+describe.each<[string, string, string, ComponentType, number, number]>([
+  ["FreeCell", "/freecell", "freecell", FreeCell, 8, 4],
+  ["Baker's Game", "/freecell", "bakers-game", FreeCell, 8, 4],
+  ["Eight Off", "/eight-off", "", EightOff, 8, 8],
+  ["Seahaven Towers", "/seahaven-towers", "", SeahavenTowers, 10, 4],
 ])(
   "%s (no lose condition)",
-  (_name, path, Game, cascadeCount, cellCount) => {
+  (_name, path, variant, Game, cascadeCount, cellCount) => {
     test("the last king reaching the foundations wins", async () => {
       const cascades = Array.from(
         { length: cascadeCount },
         () => [] as PlayingCard[],
       );
       cascades[0] = [card("K", "spades")];
-      await renderGame(path, Game, {
+      await renderVariant(path, variant, Game, {
         cascades,
         freeCells: Array(cellCount).fill(null),
         foundations: [
@@ -53,8 +53,8 @@ describe.each<[string, string, ComponentType, number, number]>([
         ],
       });
 
-      // One card and one legal move: auto-complete sends the king home
-      // during setup, so the outcome is read once that has settled.
+      // One card and one legal move: the game offers to send the king home.
+      await acceptAutoCompleteOffer();
       expect(outcome()).toBe("won");
     });
   },

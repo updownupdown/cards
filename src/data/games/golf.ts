@@ -13,6 +13,14 @@ export const golf: GameDefinition = {
     luck: 55,
   },
   thumbnail: "Golf.webp",
+  thumbnailCredit: {
+    title: "Skaters, Kolf Players and Sledges on the Ice",
+    artistName: "Attributed to Barent Avercamp",
+    date: "1630s",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Barend_Avercamp_-_Skaters_and_a_Horse-drawn_sled.jpg",
+  },
   background: GAME_BACKGROUNDS.golf,
   animation: GameAnimations.Birds,
   gameColorDark: "#1d301e",

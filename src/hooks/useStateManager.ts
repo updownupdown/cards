@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { useGamePath } from "./useGamePath";
 import {
+  isCampaignModeParam,
   isGamePath,
   loadLastGameSession,
   normalizeGamePath,
@@ -12,6 +13,12 @@ import { useGlobalSettings } from "./useGlobalSettings";
 import { isLocalDevEnvironment } from "@/utils/utils";
 import { appendUndoState, popUndoState } from "./state-history";
 import { AppState } from "react-native";
+import { useGameSettings } from "./useGameSettings";
+import {
+  getDefaultVariant,
+  isVariantGamePath,
+  pickVariant,
+} from "@/data/game-variants";
 
 const SESSION_SAVE_DELAY_MS = 2000;
 
@@ -28,7 +35,8 @@ export function getActiveGameSessionId(pathname: string) {
 // —— Play clock ————————————————————————
 // Active play time per game session, for the fastest-win stat. It runs from
 // the end of the deal and pauses while the app is in the background. A session
-// resumed from storage isn't timed, since its earlier play time wasn't saved.
+// resumed from storage carries on from the play time saved with it; one saved
+// without a play time isn't timed.
 
 type PlayClock = {
   sessionId: string;
@@ -61,12 +69,17 @@ function watchAppStateForPlayClocks() {
   );
 }
 
-function createPlayClock(pathname: string, sessionId: string, timed: boolean) {
+function createPlayClock(
+  pathname: string,
+  sessionId: string,
+  timed: boolean,
+  elapsedMs = 0,
+) {
   playClocks.set(normalizeGamePath(pathname), {
     sessionId,
     timed,
     started: false,
-    elapsedMs: 0,
+    elapsedMs,
     runningSince: null,
   });
 }
@@ -118,9 +131,19 @@ export function useStateManager<T>({
 }: Props<T>) {
   const pathname = useGamePath();
   const { mode } = useLocalSearchParams<{ mode?: string }>();
-  const launchMode = mode === "nodes" ? "nodes" : "standard";
+  const launchMode = isCampaignModeParam(mode) ? "campaign" : "standard";
   const { settings: globalSettings, isLoading: isGlobalSettingsLoading } =
     useGlobalSettings();
+  // Games with classic variants mount once their settings have loaded, and
+  // again when the variant changes, so the variant at mount is the one dealt.
+  // Sessions remember it, and only resume under the same variant.
+  const normalizedPath = normalizeGamePath(pathname);
+  const { settings: gameSettings } = useGameSettings(pathname);
+  const variantRef = useRef<string | undefined>(undefined);
+  if (variantRef.current === undefined && isVariantGamePath(normalizedPath)) {
+    variantRef.current = pickVariant(normalizedPath, gameSettings?.variant);
+  }
+  const variant = variantRef.current;
 
   // —— Game State ————————————————————————
   const [game, setGame] = useImmer<T>(gameStateInitial);
@@ -145,10 +168,19 @@ export function useStateManager<T>({
   const isDev = isLocalDevEnvironment();
 
   const startSession = useCallback(
-    (sessionId = createGameSessionId(), timed = true) => {
+    (
+      sessionId = createGameSessionId(),
+      /** Play time already spent; null means the session isn't timed. */
+      playTimeMs: number | null = 0,
+    ) => {
       sessionIdRef.current = sessionId;
       activeGameSessionIds.set(pathname, sessionId);
-      createPlayClock(pathname, sessionId, timed);
+      createPlayClock(
+        pathname,
+        sessionId,
+        playTimeMs !== null,
+        playTimeMs ?? 0,
+      );
     },
     [pathname],
   );
@@ -173,12 +205,15 @@ export function useStateManager<T>({
         session &&
         session.path === pathname &&
         session.launchMode === launchMode &&
+        (session.variant ?? getDefaultVariant(normalizedPath)) ===
+          (variant ?? "") &&
         hasExpectedShape(session.state, gameStateInitial)
       ) {
-        startSession(session.sessionId, false);
+        startSession(session.sessionId, session.playTimeMs);
         setGame(session.state);
         hasDealtRef.current = true;
         setIsSettingUp(false);
+        startPlayClock(pathname, session.sessionId);
       }
 
       setIsResumeHydrated(true);
@@ -227,7 +262,14 @@ export function useStateManager<T>({
       pendingSaveRef.current = null;
       const sessionId = sessionIdRef.current;
       if (sessionId) {
-        void saveLastGameSession(pathname, game, sessionId, launchMode);
+        void saveLastGameSession(
+          pathname,
+          game,
+          sessionId,
+          launchMode,
+          getSessionPlayTimeMs(pathname),
+          variant,
+        );
       }
     };
     pendingSaveRef.current = save;

@@ -300,7 +300,7 @@ export default function Windmill() {
         cards: pile,
         ...cellPosition(cornerCells[index]),
         fan: { maxVisible: 3 },
-        placeholder: {},
+        placeholder: { iconName: "king" },
       })),
       ...game.sails.map((card, index) => ({
         id: `sail-${index}`,

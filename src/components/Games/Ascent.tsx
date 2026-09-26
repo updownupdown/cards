@@ -729,7 +729,7 @@ export default function Ascent() {
         col: 6,
         row: 0,
         fan: { maxVisible: 3 },
-        placeholder: { text: i18n.t("cards:dscrd"), infoPos: "below" },
+        placeholder: { text: i18n.t("cards:discard"), infoPos: "below" },
       },
 
       // Trail (milestones)

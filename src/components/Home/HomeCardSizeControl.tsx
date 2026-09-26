@@ -37,6 +37,8 @@ export function HomeCardSizeControl({
 }: HomeCardSizeControlProps) {
   const { ui, spacing } = useResponsiveMetrics();
   const { t } = useTranslation("home");
+  const height = spacing(layoutDims.searchControlHeight);
+  const buttonHeight = height - spacing(12);
 
   return (
     <View
@@ -57,13 +59,13 @@ export function HomeCardSizeControl({
         iconSize={spacing(20)}
         buttonStyle={{
           flex: 1,
-          borderRadius: spacing(layoutDims.cardToggleHeight / 2),
-          height: spacing(layoutDims.cardToggleHeight - 12),
+          borderRadius: buttonHeight / 2,
+          height: buttonHeight,
         }}
         containerStyle={{
           width: "100%",
-          height: spacing(layoutDims.cardToggleHeight),
-          borderRadius: spacing(layoutDims.cardToggleHeight / 2),
+          height,
+          borderRadius: height / 2,
           backgroundColor: rgba(Colors.K900, 0.95),
           ...homeSurfaceShadow(spacing),
         }}

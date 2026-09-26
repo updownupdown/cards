@@ -3,7 +3,7 @@
     "home": "Ana sayfa",
     "collect": "Koleksiyon",
     "search": "Ara",
-    "nodes": "Kampanya"
+    "campaign": "Kampanya"
   },
   "cardSize": {
     "small": "Liste",
@@ -26,27 +26,9 @@
   "sections": {
     "localOnly": "Yalnızca yerel oyunlar",
     "gameOfTheDay": "Günün oyunu",
+    "easyGames": "Başlamak için kolay oyunlar",
     "jumpBackIn": "Kaldığın yerden devam et",
     "favorites": "Favoriler"
-  },
-  "guide": {
-    "easy": {
-      "title": "Kolay oyunlarla başla",
-      "body": "Öğrenmesi hızlı, kazanması kolay birkaç oyunla başla."
-    },
-    "campaign": {
-      "title": "Kampanya Modu",
-      "body": "Oyunlarla dolu bir evreni keşfet: galaksinin ucuna kadar yolunu açmak için oyunları kazan ve yol boyunca ödüller topla!",
-      "start": "Kampanyayı başlat",
-      "resume": "Kampanyaya devam et"
-    },
-    "genres": {
-      "title": "Hepsini topla!",
-      "body": "{{categories}} kategoride {{games}} klasik ve modern oyunu keşfet; herkese göre bir şey var!",
-      "gameCount_one": "{{count}} oyun",
-      "gameCount_other": "{{count}} oyun"
-    },
-    "dismiss": "Kapat"
   },
   "gameOfTheDay": {
     "today": "Bugün",
@@ -61,9 +43,14 @@
     "intro": "Geçmek için sola ya da sağa kaydır, oynamak için dokun."
   },
   "collect": {
-    "title": "Hepsini kazan!",
-    "overall": "{{total}} oyundan {{won}} tanesi kazanıldı",
-    "tagProgress": "{{tag}}: {{total}} oyundan {{won}} kazanıldı"
+    "games": "Oyunlar: {{won}}/{{total}}",
+    "categories": "Kategoriler: {{won}}/{{total}}",
+    "tagProgress": "{{tag}}: {{total}} oyundan {{won}} kazanıldı",
+    "intro": {
+      "title": "Gezgin Günlüğü",
+      "text": "Bir oyunu kazanarak damgasını topla. Benzer mekanikleri keşfet ve tüm setleri tamamlamaya çalış!",
+      "close": "Kapat"
+    }
   },
   "tags": {
     "KlondikeFamily": "Klondike ailesi",

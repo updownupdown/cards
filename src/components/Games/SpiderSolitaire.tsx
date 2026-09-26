@@ -1,4 +1,5 @@
 import { useStateManager } from "@/hooks/useStateManager";
+import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import {
   CardHitArea,
   createRect,
@@ -14,6 +15,7 @@ import { delay } from "@/utils/utils";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import {
+  CardSuit,
   PlayingCard,
   RANK_VALUE,
   cardDims,
@@ -47,15 +49,19 @@ type DropTarget = {
   pileIndex: number;
 };
 
-function createInitialState(): SpiderState {
-  const fullDeck = shuffle(
-    createDeck({
-      deckCount: 2,
-      faceUp: false,
-    }),
-  );
+type SpiderSuits = 1 | 2 | 4;
 
-  return dealSpider(fullDeck);
+/** The 104 cards for 4, 2 (Spades and Hearts) or 1 suit (Spades). */
+function createSpiderDeck(suits: SpiderSuits): PlayingCard[] {
+  if (suits === 4) return createDeck({ deckCount: 2, faceUp: false });
+  const forced: CardSuit[] = suits === 2 ? ["spades", "hearts"] : ["spades"];
+  return forced.flatMap((forceSuit) =>
+    createDeck({ deckCount: 8 / suits, forceSuit, faceUp: false }),
+  );
+}
+
+function createInitialState(suits: SpiderSuits = 4): SpiderState {
+  return dealSpider(shuffle(createSpiderDeck(suits)));
 }
 
 function dealSpider(deckCards: PlayingCard[]): SpiderState {
@@ -86,14 +92,18 @@ function dealSpider(deckCards: PlayingCard[]): SpiderState {
 
 async function resetAndSetup(
   setGame: (next: SpiderState | ((draft: SpiderState) => void)) => void,
+  suits: SpiderSuits,
 ) {
   setGame((draft: SpiderState) => {
+    // The gathered cards take the faces of a deck with the chosen suits.
+    const faces = createSpiderDeck(suits);
     const allCards = [
       ...draft.tableau.flat(),
       ...draft.stock,
       ...draft.foundations.flat(),
-    ].map((card) => ({
-      ...card,
+    ].map((card, index) => ({
+      ...faces[index],
+      id: card.id,
       faceUp: false,
     }));
 
@@ -236,6 +246,7 @@ export const spiderRules = {
 const gameStateInitial = createInitialState();
 
 export default function SpiderSolitaire() {
+  const suits = useGameSettingValue("spiderSuits");
   const [selected, setSelected] = useState<Selection>(null);
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
 
@@ -247,7 +258,7 @@ export default function SpiderSolitaire() {
         clearDragGhost();
       },
       resetAndSetup: async () => {
-        await resetAndSetup(setGame);
+        await resetAndSetup(setGame, suits);
       },
     });
 

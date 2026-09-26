@@ -17,6 +17,13 @@ export const pokerSquares: GameDefinition = {
     luck: 40,
   },
   thumbnail: "PokerSquares.webp",
+  thumbnailCredit: {
+    title: "The Card Players",
+    artistName: "Paul Cézanne",
+    date: "1890–92",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/435868",
+  },
   background: GAME_BACKGROUNDS.casino,
   animation: GameAnimations.Glitter,
   gameColorDark: "#112c1f",

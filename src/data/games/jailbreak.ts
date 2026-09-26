@@ -14,6 +14,13 @@ export const jailbreak: GameDefinition = {
     luck: 50,
   },
   thumbnail: "Jailbreak.webp",
+  thumbnailCredit: {
+    title: "The Giant Wheel, from Imaginary Prisons",
+    artistName: "Giovanni Battista Piranesi",
+    date: "1761",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/7364",
+  },
   background: GAME_BACKGROUNDS.stoneWall,
   animation: GameAnimations.Spiders,
   gameColorDark: "#17211d",
@@ -24,7 +31,7 @@ export const jailbreak: GameDefinition = {
   quickStart: [
     "Expose one of the side walls to allow the Joker to escape.",
     "Clear cards by selecting exposed red and black cards with equal totals.",
-    "When stuck, press the draw deck to add a card on the Joker.",
+    "When stuck, tap the stock to add a card on the Joker.",
   ],
   howToPlay: [
     "## Objective",
@@ -34,7 +41,7 @@ export const jailbreak: GameDefinition = {
     "- Select any exposed red and black cards whose values make equal totals. The matched cards clear automatically.",
     "- Aces count as 1, Jacks as 11, Queens as 12, and Kings as 13.",
     "- Cleared jail piles reveal their next card. Clearing a corner does not free the Joker.",
-    "- Tap the Draw deck to place its top card on the Joker. At most three cards may be stacked there, and only the top one is available.",
+    "- Tap the stock to place its top card on the Joker. At most three cards may be stacked there, and only the top one is available.",
     "- The Joker cannot escape until every card stacked on it has been cleared.",
 
     "## Difficulty",

@@ -15,6 +15,14 @@ export const memory: GameDefinition = {
     luck: 5,
   },
   thumbnail: "Memory.webp",
+  thumbnailCredit: {
+    title: "Mnemosyne",
+    artistName: "Dante Gabriel Rossetti",
+    date: "1875–81",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Gabriel_Dante_Rosetti,_Mnemosyne.jpg",
+  },
   background: GAME_BACKGROUNDS.savanah,
   animation: GameAnimations.Pollen,
   gameColorDark: "#243b35",

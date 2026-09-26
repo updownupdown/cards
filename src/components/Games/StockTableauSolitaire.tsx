@@ -44,7 +44,6 @@ export type StockTableauVariant =
   | "westcliff"
   | "gargantua"
   | "harp"
-  | "raglan"
   | "thumb-and-pouch"
   | "lucas"
   | "rank-and-file"
@@ -52,14 +51,13 @@ export type StockTableauVariant =
   | "diplomat"
   | "maria"
   | "number-ten"
-  | "busy-aces";
+  | "busy-aces"
+  | "forty-thieves"
+  | "miss-milligan"
+  | "giant";
 
 type BuildRule =
-  | "alternating"
-  | "same-color"
-  | "same-suit"
-  | "not-same-suit"
-  | "rank";
+  "alternating" | "same-color" | "same-suit" | "not-same-suit" | "rank";
 type MoveRule = "single" | "suited-run" | "built-run" | "any-tail";
 type DealConfig = {
   columns: number;
@@ -76,6 +74,11 @@ type Config = {
   stock: "waste" | "row";
   redeals: number;
   seedAces?: boolean;
+  /**
+   * Miss Milligan's waiving: once the stock is empty, one card or built run
+   * at a time may be set aside in a pocket and played back later.
+   */
+  pocket?: boolean;
 };
 
 export type StockTableauState = {
@@ -84,6 +87,8 @@ export type StockTableauState = {
   waste: PlayingCard[];
   foundations: PlayingCard[][];
   redealsUsed: number;
+  /** Only in games with waiving, so other games' saved sessions still fit. */
+  pocket?: PlayingCard[];
   ended: boolean;
   won: boolean;
 };
@@ -91,12 +96,15 @@ export type StockTableauState = {
 type Selection =
   | { zone: "tableau"; pile: number; card: number }
   | { zone: "waste" }
+  | { zone: "pocket" }
   | null;
 
 type MoveSource = Exclude<Selection, null>;
 
 const TABLEAU_ROW = 1.2;
 const BOARD_GAP = 0.12;
+/** Row of the pocket above a side stock, leaving room for its label. */
+const SIDE_POCKET_ROW = 0.4;
 
 /**
  * Where the stock and waste sit, both at the bottom right within thumb reach:
@@ -148,7 +156,8 @@ function pileOffset(count: number, config: Config, layout: StockLayout) {
 }
 type DropTarget =
   | { zone: "tableau"; pile: number }
-  | { zone: "foundation"; pile: number };
+  | { zone: "foundation"; pile: number }
+  | { zone: "pocket"; pile: 0 };
 
 const CONFIGS: Record<StockTableauVariant, Config> = {
   "australian-patience": {
@@ -175,8 +184,8 @@ const CONFIGS: Record<StockTableauVariant, Config> = {
     decks: 1,
     foundations: 4,
     deal: { columns: 7, sizes: [3, 3, 3, 3, 3, 3, 3], faceUp: 1 },
-    build: "rank",
-    move: "suited-run",
+    build: "alternating",
+    move: "built-run",
     empty: "king",
     stock: "row",
     redeals: 0,
@@ -194,7 +203,7 @@ const CONFIGS: Record<StockTableauVariant, Config> = {
   congress: {
     decks: 2,
     foundations: 8,
-    deal: { columns: 8, sizes: Array(8).fill(4), faceUp: "all" },
+    deal: { columns: 8, sizes: Array(8).fill(1), faceUp: "all" },
     build: "rank",
     move: "single",
     empty: "any",
@@ -230,17 +239,6 @@ const CONFIGS: Record<StockTableauVariant, Config> = {
     empty: "king",
     stock: "waste",
     redeals: 3,
-  },
-  raglan: {
-    decks: 1,
-    foundations: 4,
-    deal: { columns: 7, sizes: [1, 2, 3, 4, 5, 6, 7], faceUp: 1 },
-    build: "alternating",
-    move: "built-run",
-    empty: "king",
-    stock: "waste",
-    redeals: 0,
-    seedAces: true,
   },
   "thumb-and-pouch": {
     decks: 1,
@@ -323,6 +321,37 @@ const CONFIGS: Record<StockTableauVariant, Config> = {
     stock: "waste",
     redeals: 0,
   },
+  "forty-thieves": {
+    decks: 2,
+    foundations: 8,
+    deal: { columns: 10, sizes: Array(10).fill(4), faceUp: "all" },
+    build: "same-suit",
+    move: "single",
+    empty: "any",
+    stock: "waste",
+    redeals: 0,
+  },
+  "miss-milligan": {
+    decks: 2,
+    foundations: 8,
+    deal: { columns: 8, sizes: Array(8).fill(1), faceUp: "all" },
+    build: "alternating",
+    move: "built-run",
+    empty: "king",
+    stock: "row",
+    redeals: 0,
+    pocket: true,
+  },
+  giant: {
+    decks: 2,
+    foundations: 8,
+    deal: { columns: 8, sizes: Array(8).fill(1), faceUp: "all" },
+    build: "alternating",
+    move: "built-run",
+    empty: "any",
+    stock: "row",
+    redeals: 0,
+  },
 };
 
 function canBuildFoundation(card: PlayingCard, destination?: PlayingCard) {
@@ -380,6 +409,7 @@ function createInitialState(variant: StockTableauVariant): StockTableauState {
       () => [] as PlayingCard[],
     ),
     redealsUsed: 0,
+    ...(config.pocket ? { pocket: [] } : {}),
     ended: false,
     won: false,
   };
@@ -424,6 +454,7 @@ function dealFromStock(
     waste: [],
     foundations,
     redealsUsed: 0,
+    ...(config.pocket ? { pocket: [] } : {}),
     ended: false,
     won: false,
   };
@@ -431,6 +462,7 @@ function dealFromStock(
 
 function getCards(state: StockTableauState, selection: Selection) {
   if (!selection) return [];
+  if (selection.zone === "pocket") return state.pocket ?? [];
   return selection.zone === "waste"
     ? top(state.waste)
       ? [top(state.waste)!]
@@ -443,10 +475,27 @@ function flipExposed(pile: PlayingCard[]) {
   if (card && !card.faceUp) pile[pile.length - 1] = flipToFace(card);
 }
 
+/** The pocket takes a card or built run once the stock is empty, if it is free. */
+function canUsePocket(state: StockTableauState, config: Config) {
+  return !!config.pocket && state.stock.length === 0 && !state.pocket?.length;
+}
+
 function hasMove(state: StockTableauState, config: Config) {
   if (state.stock.length > 0) return true;
   if (state.waste.length > 0 && state.redealsUsed < config.redeals) return true;
+  // Setting a run aside can uncover a card to play.
+  if (
+    canUsePocket(state, config) &&
+    state.tableau.some((pile) =>
+      pile.some(
+        (card, index) =>
+          index > 0 && isMovableRun(pile.slice(index), config.move, config),
+      ),
+    )
+  )
+    return true;
   const sources = [
+    ...(state.pocket?.length ? [{ cards: state.pocket, sourcePile: -1 }] : []),
     ...(top(state.waste)
       ? [{ cards: [top(state.waste)!], sourcePile: -1 }]
       : []),
@@ -483,10 +532,19 @@ export const stockTableauRules = {
 
 export function StockTableauSolitaire({
   variant,
+  redeals,
 }: {
   variant: StockTableauVariant;
+  /** Overrides the variant's number of stock redeals. */
+  redeals?: number;
 }) {
-  const config = CONFIGS[variant];
+  const config = useMemo(
+    () =>
+      redeals === undefined
+        ? CONFIGS[variant]
+        : { ...CONFIGS[variant], redeals },
+    [redeals, variant],
+  );
   const boardArea = useBoardArea();
   const layout: StockLayout =
     fitCardWidth(boardArea, { ...boardSize(config, "side"), gap: BOARD_GAP }) >
@@ -568,6 +626,8 @@ export function StockTableauSolitaire({
     onSuccessfulDrop: (source, target) => {
       if (target.zone === "foundation") {
         moveToFoundation(source, target.pile);
+      } else if (target.zone === "pocket") {
+        moveToPocket(source);
       } else {
         moveToTableau(target.pile, source);
       }
@@ -618,6 +678,7 @@ export function StockTableauSolitaire({
       const card = draft.waste.pop();
       return card ? [card] : [];
     }
+    if (source.zone === "pocket") return draft.pocket?.splice(0) ?? [];
     const cards = draft.tableau[source.pile].splice(source.card);
     flipExposed(draft.tableau[source.pile]);
     return cards;
@@ -664,6 +725,38 @@ export function StockTableauSolitaire({
     });
     setSelected(null);
     return true;
+  }
+
+  function moveToPocket(source: Selection = selected) {
+    const cards = getCards(game, source);
+    if (
+      source?.zone !== "tableau" ||
+      !canUsePocket(game, config) ||
+      !isMovableRun(cards, config.move, config)
+    ) {
+      return false;
+    }
+    saveUndoState(structuredClone(game));
+    setGame((draft) => {
+      draft.pocket = removeSelection(draft, source);
+    });
+    setSelected(null);
+    return true;
+  }
+
+  function onPocketPress() {
+    if (game.ended || !game.pocket?.length) {
+      moveToPocket();
+      return;
+    }
+    const next: Selection = { zone: "pocket" };
+    const now = Date.now();
+    if (lastTap?.key === "pocket" && now - lastTap.at < DOUBLE_TAP_MS) {
+      setLastTap(null);
+      if (moveToFoundation(next)) return;
+    } else setLastTap({ key: "pocket", at: now });
+    if (selected?.zone === "pocket") return setSelected(null);
+    setSelected(next);
   }
 
   function onTableauPress(pile: number, card: number) {
@@ -743,6 +836,14 @@ export function StockTableauSolitaire({
       );
     }
 
+    if (target.zone === "pocket") {
+      return (
+        source.zone === "tableau" &&
+        canUsePocket(snapshot, config) &&
+        isMovableRun(cards, config.move, config)
+      );
+    }
+
     return (
       !(source.zone === "tableau" && source.pile === target.pile) &&
       isMovableRun(cards, config.move, config) &&
@@ -759,7 +860,7 @@ export function StockTableauSolitaire({
       col: index,
       row: 0,
       fan: { maxVisible: 3 },
-      placeholder: {},
+      placeholder: { iconName: "ace" },
     }));
     const tableau: MapZone[] = game.tableau.map((pile, index) => ({
       id: `tableau-${index}`,
@@ -772,7 +873,7 @@ export function StockTableauSolitaire({
         direction: "down",
         offset: pileOffset(pile.length, config, layout),
       },
-      placeholder: {},
+      placeholder: config.empty === "king" ? { iconName: "king" } : {},
     }));
     // Stock and waste sit at the bottom right, within easy thumb reach: side by
     // side under the tableau, or stacked in a column beside it.
@@ -809,6 +910,43 @@ export function StockTableauSolitaire({
             } as MapZone,
           ]
         : []),
+      ...(config.pocket
+        ? [
+            {
+              id: "pocket",
+              name: "pocket",
+              cards: game.pocket ?? [],
+              // Portrait: bottom left, fanned right. Landscape: top of the
+              // stock's column, fanned down towards the stock.
+              ...(side
+                ? {
+                    col: stockCol,
+                    row: SIDE_POCKET_ROW,
+                    fan: {
+                      direction: "down",
+                      offset: zoneFanOffset(
+                        game.pocket?.length ?? 0,
+                        stockRow(config, layout) - SIDE_POCKET_ROW - 0.4,
+                        cardDims.tableauOffsetMin,
+                        cardDims.tableauOffset,
+                      ),
+                    },
+                  }
+                : {
+                    col: 0,
+                    row: stockRow(config, layout),
+                    fan: {
+                      direction: "right",
+                      offset: cardDims.tableauOffsetHorizontal,
+                    },
+                  }),
+              placeholder: {
+                text: i18n.t("cards:pocket"),
+                infoPos: "above",
+              },
+            } as MapZone,
+          ]
+        : []),
       ...foundations,
       ...tableau,
     ];
@@ -833,6 +971,14 @@ export function StockTableauSolitaire({
       return {
         onPress: onWastePress,
         isSelected: selected?.zone === "waste",
+        selectColor: "blue",
+        isVisible: !isBeingDragged,
+        animDuration,
+      };
+    if (card.zoneName === "pocket")
+      return {
+        onPress: onPocketPress,
+        isSelected: selected?.zone === "pocket",
         selectColor: "blue",
         isVisible: !isBeingDragged,
         animDuration,
@@ -888,6 +1034,13 @@ export function StockTableauSolitaire({
         onPress: onWastePress,
         isDisabled: game.waste.length === 0,
       };
+    if (zone.name === "pocket")
+      return {
+        onPress: onPocketPress,
+        isDisabled: !canUsePocket(game, config) || !selectedCard || !!dragGhost,
+        isSelected: !!dragGhost && hoverTarget?.zone === "pocket",
+        selectColor: "green",
+      };
     if (zone.name === "foundation" && zone.pileIndex !== undefined)
       return {
         onPress: () => moveToFoundation(selected, zone.pileIndex),
@@ -926,11 +1079,16 @@ export function StockTableauSolitaire({
 
   function getSourceRect(source: MoveSource) {
     const zone = zones.find((entry) =>
-      source.zone === "waste"
-        ? entry.name === "waste"
-        : entry.name === "tableau" && entry.pileIndex === source.pile,
+      source.zone === "tableau"
+        ? entry.name === "tableau" && entry.pileIndex === source.pile
+        : entry.name === source.zone,
     );
     if (!zone) return null;
+
+    if (source.zone === "pocket") {
+      const first = getCardPos(zone, 0);
+      return createRect(first.x, first.y, cardWidth, cardHeight);
+    }
 
     if (source.zone === "waste") {
       const top = getCardPos(zone, game.waste.length - 1);
@@ -959,6 +1117,22 @@ export function StockTableauSolitaire({
         areas.push({
           source: { zone: "waste" },
           rect: createRect(top.x, top.y, cardWidth, cardHeight),
+          priority: 100,
+        });
+        return;
+      }
+
+      if (zone.name === "pocket" && game.pocket?.length) {
+        const first = getCardPos(zone, 0);
+        const last = getCardPos(zone, game.pocket.length - 1);
+        areas.push({
+          source: { zone: "pocket" },
+          rect: createRect(
+            first.x,
+            first.y,
+            last.x - first.x + cardWidth,
+            last.y - first.y + cardHeight,
+          ),
           priority: 100,
         });
         return;
@@ -1003,6 +1177,20 @@ export function StockTableauSolitaire({
     const areas: DropHitArea<DropTarget>[] = [];
 
     zones.forEach((zone) => {
+      if (zone.name === "pocket") {
+        const base = getZoneBasePos(zone);
+        areas.push({
+          target: { zone: "pocket", pile: 0 },
+          rect: createRect(
+            base.x + boardPageOffset.x,
+            base.y + boardPageOffset.y,
+            cardWidth,
+            cardHeight,
+          ),
+          priority: 80,
+        });
+        return;
+      }
       if (
         (zone.name !== "foundation" && zone.name !== "tableau") ||
         zone.pileIndex === undefined
@@ -1024,7 +1212,10 @@ export function StockTableauSolitaire({
           : cardHeight;
 
       areas.push({
-        target: { zone: zone.name, pile: zone.pileIndex },
+        target: {
+          zone: zone.name as "tableau" | "foundation",
+          pile: zone.pileIndex,
+        },
         rect: createRect(
           base.x + boardPageOffset.x,
           base.y + boardPageOffset.y,
@@ -1064,6 +1255,7 @@ export function StockTableauSolitaire({
   }
 
   function getTapHandler(source: MoveSource) {
+    if (source.zone === "pocket") return onPocketPress;
     return source.zone === "waste"
       ? onWastePress
       : () => onTableauPress(source.pile, source.card);
@@ -1074,9 +1266,9 @@ export function StockTableauSolitaire({
       cardHitAreas.map(({ source, rect }) => (
         <DragHandle
           key={
-            source.zone === "waste"
-              ? "waste"
-              : `tableau-${source.pile}-${source.card}`
+            source.zone === "tableau"
+              ? `tableau-${source.pile}-${source.card}`
+              : source.zone
           }
           collapsable={false}
           style={{

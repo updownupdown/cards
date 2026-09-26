@@ -10,6 +10,13 @@ export const gaps: GameDefinition = {
   tags: [GameTag.Puzzles, GameTag.SpatialControl, GameTag.SequenceBuilding],
   rating: { complexity: 30, difficulty: 60, luck: 40 },
   thumbnail: "Gaps.webp",
+  thumbnailCredit: {
+    title: "Crossing the Monkey Bridge",
+    artistName: "Totoya Hokkei",
+    date: "1824",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/23628",
+  },
   background: GAME_BACKGROUNDS.mountain1,
   animation: GameAnimations.Mist,
   gameColorDark: "#2c322f",

@@ -28,7 +28,10 @@ export type GameSpecificSettingKey =
   | "jailbreakDifficulty"
   | "gremlinDifficulty"
   | "nightVigilDifficulty"
-  | "pagodaDifficulty";
+  | "pagodaDifficulty"
+  | "ebbAndFlowDifficulty"
+  | "variant"
+  | "spiderSuits";
 export type GameSpecificSettingApplyBehavior = "immediate" | "next-game";
 
 type GameSpecificSettingOptionValue = GameSettings[GameSpecificSettingKey];
@@ -49,6 +52,234 @@ export type GameSpecificSettingDefinition = {
 
 const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
   {
+    "/miss-milligan": [
+      {
+        key: "variant",
+        label: "Variant",
+        type: "string",
+        applyBehavior: "next-game",
+        options: [
+          {
+            label: "Miss Milligan",
+            value: "miss-milligan",
+            description:
+              "Only Kings fill empty columns; once the stock is empty, one card or run at a time can wait in the pocket.",
+          },
+          {
+            label: "Giant",
+            value: "giant",
+            description:
+              "Any card fills an empty column, but there is no pocket.",
+          },
+        ],
+      },
+    ],
+    "/terrace": [
+      {
+        key: "variant",
+        label: "Variant",
+        type: "string",
+        applyBehavior: "next-game",
+        options: [
+          {
+            label: "Terrace",
+            value: "terrace",
+            description:
+              "An eleven-card terrace; you choose the foundation rank; foundations build in alternating colors.",
+          },
+          {
+            label: "General's Patience",
+            value: "generals-patience",
+            description:
+              "A thirteen-card terrace, and foundations build by suit.",
+          },
+          {
+            label: "Blondes and Brunettes",
+            value: "blondes-and-brunettes",
+            description:
+              "A ten-card terrace, and the deal chooses the foundation rank.",
+          },
+          {
+            label: "Falling Star",
+            value: "falling-star",
+            description:
+              "An eleven-card terrace, eight columns, and the deal chooses the foundation rank.",
+          },
+        ],
+      },
+    ],
+    "/gargantua": [
+      {
+        key: "variant",
+        label: "Redeals",
+        type: "string",
+        applyBehavior: "next-game",
+        options: [
+          { label: "1 (Gargantua)", value: "gargantua" },
+          { label: "3 (Harp)", value: "harp" },
+        ],
+      },
+    ],
+    "/yukon": [
+      {
+        key: "variant",
+        label: "Build",
+        type: "string",
+        applyBehavior: "next-game",
+        options: [
+          { label: "Alternating colors (Yukon)", value: "yukon" },
+          { label: "Same suit (Russian Solitaire)", value: "russian" },
+          { label: "Same suit, up or down (Alaska)", value: "alaska" },
+          { label: "Any other suit (Moosehide)", value: "moosehide" },
+        ],
+      },
+    ],
+    "/rank-and-file": [
+      {
+        key: "variant",
+        label: "Deal",
+        type: "string",
+        applyBehavior: "next-game",
+        options: [
+          { label: "3 face-down (Rank and File)", value: "rank-and-file" },
+          { label: "2 face-down (Number Ten)", value: "number-ten" },
+        ],
+      },
+    ],
+    "/freecell": [
+      {
+        key: "variant",
+        label: "Build",
+        type: "string",
+        applyBehavior: "next-game",
+        options: [
+          { label: "Alternating colors (FreeCell)", value: "freecell" },
+          { label: "Same suit (Baker's Game)", value: "bakers-game" },
+        ],
+      },
+    ],
+    "/la-belle-lucie": [
+      {
+        key: "variant",
+        label: "Variant",
+        type: "string",
+        applyBehavior: "next-game",
+        options: [
+          {
+            label: "La Belle Lucie",
+            value: "la-belle-lucie",
+            description: "Build down by suit; two redeals.",
+          },
+          {
+            label: "Trefoil",
+            value: "trefoil",
+            description: "The Aces start on the foundations.",
+          },
+          {
+            label: "Shamrocks",
+            value: "shamrocks",
+            description:
+              "Build up or down in any suit, at most three cards per fan, and no redeals.",
+          },
+        ],
+      },
+    ],
+    "/sir-tommy": [
+      {
+        key: "variant",
+        label: "Variant",
+        type: "string",
+        applyBehavior: "next-game",
+        options: [
+          {
+            label: "Sir Tommy",
+            value: "sir-tommy",
+            description: "Foundations build up regardless of suit.",
+          },
+          {
+            label: "Puss in the Corner",
+            value: "puss-in-the-corner",
+            description:
+              "The Aces start on the foundations, which build up by color; one redeal.",
+          },
+        ],
+      },
+    ],
+    "/black-hole": [
+      {
+        key: "variant",
+        label: "Variant",
+        type: "string",
+        applyBehavior: "next-game",
+        options: [
+          {
+            label: "Black Hole",
+            value: "black-hole",
+            description: "Seventeen fans of three around the Ace of Spades.",
+          },
+          {
+            label: "All in a Row",
+            value: "all-in-a-row",
+            description:
+              "Thirteen columns of four; start the foundation with any card.",
+          },
+        ],
+      },
+    ],
+    "/king-albert": [
+      {
+        key: "variant",
+        label: "Variant",
+        type: "string",
+        applyBehavior: "next-game",
+        options: [
+          {
+            label: "King Albert",
+            value: "king-albert",
+            description: "Nine columns and a seven-card reserve.",
+          },
+          {
+            label: "Raglan",
+            value: "raglan",
+            description:
+              "The Aces start on the foundations, with a six-card reserve.",
+          },
+        ],
+      },
+    ],
+    "/scorpion": [
+      {
+        key: "variant",
+        label: "Variant",
+        type: "string",
+        applyBehavior: "next-game",
+        options: [
+          {
+            label: "Scorpion",
+            value: "scorpion",
+            description: "Only Kings fill empty columns.",
+          },
+          {
+            label: "Wasp",
+            value: "wasp",
+            description: "Any card fills an empty column.",
+          },
+        ],
+      },
+    ],
+    "/spider-solitaire": [
+      {
+        key: "spiderSuits",
+        label: "Suits",
+        type: "string",
+        applyBehavior: "next-game",
+        options: [
+          { label: "4 suits", value: 4 },
+          { label: "2 suits", value: 2 },
+          { label: "1 suit", value: 1 },
+        ],
+      },
+    ],
     "/jailbreak": [
       {
         key: "jailbreakDifficulty",
@@ -74,6 +305,20 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
           { label: "Easy (7 cards)", value: "easy" },
           { label: "Normal (6 cards)", value: "normal" },
           { label: "Hard (5 cards)", value: "hard" },
+        ],
+      },
+    ],
+    "/ebb-and-flow": [
+      {
+        key: "ebbAndFlowDifficulty",
+        label: "Difficulty",
+        type: "string",
+        applyBehavior: "next-game",
+        description: "Controls how many cards you hold.",
+        options: [
+          { label: "Easy (8 cards)", value: "easy" },
+          { label: "Normal (7 cards)", value: "normal" },
+          { label: "Hard (6 cards)", value: "hard" },
         ],
       },
     ],
@@ -226,21 +471,42 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
     ],
     "/forty-thieves": [
       {
-        key: "difficulty",
-        label: "Difficulty",
+        key: "variant",
+        label: "Variant",
         type: "string",
         applyBehavior: "next-game",
         options: [
           {
-            label: "Easy",
-            value: "easy",
-            description: "Allows infinite redeals.",
+            label: "Forty Thieves",
+            value: "forty-thieves",
+            description: "Ten columns of four; move one card at a time.",
           },
           {
-            label: "Difficult",
-            value: "difficult",
-            description: "No redeals allowed.",
+            label: "Josephine",
+            value: "josephine",
+            description: "Same-suit runs move together.",
           },
+          {
+            label: "Lucas",
+            value: "lucas",
+            description:
+              "Thirteen columns of three; the Aces start on the foundations.",
+          },
+          {
+            label: "Busy Aces",
+            value: "busy-aces",
+            description: "Twelve columns of two.",
+          },
+        ],
+      },
+      {
+        key: "difficulty",
+        label: "Redeals",
+        type: "string",
+        applyBehavior: "next-game",
+        options: [
+          { label: "None", value: "difficult" },
+          { label: "Unlimited (Easy)", value: "easy" },
         ],
       },
     ],

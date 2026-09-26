@@ -11,6 +11,13 @@ export const fifteenPuzzle: GameDefinition = {
   lowerScoreIsBetter: true,
   rating: { complexity: 20, difficulty: 30, luck: 0 },
   thumbnail: "FifteenPuzzle.webp",
+  thumbnailCredit: {
+    title: "Solving a Puzzle",
+    artistName: "Okumura Masanobu",
+    date: "early to mid-18th century",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/21405",
+  },
   background: GAME_BACKGROUNDS.bookstore,
   animation: GameAnimations.Dust,
   gameColorDark: "#293b32",

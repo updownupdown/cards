@@ -14,6 +14,7 @@ import {
   pressCardId,
   renderGame,
   run,
+  acceptAutoCompleteOffer,
 } from "../../../jest/game-harness";
 import type { CardSuit, PlayingCard } from "@/components/Cards/card-utils";
 import BeleagueredCastle from "@/components/Games/BeleagueredCastle";
@@ -167,6 +168,7 @@ describe("Beleaguered Castle", () => {
 
     // One card and one legal move: auto-complete sends the king home
     // during setup, so the outcome is read once that has settled.
+    await acceptAutoCompleteOffer();
     expect(outcome()).toBe("won");
   });
 

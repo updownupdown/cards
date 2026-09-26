@@ -13,6 +13,14 @@ export const eightOff: GameDefinition = {
     luck: 25,
   },
   thumbnail: "EightOff.webp",
+  thumbnailCredit: {
+    title: "Composition VIII",
+    artistName: "Wassily Kandinsky",
+    date: "1923",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Wassily_Kandinsky_Composition_VIII.jpg",
+  },
   background: GAME_BACKGROUNDS.cherryBlossoms,
   animation: GameAnimations.CherryBlossom,
   gameColorDark: "#0e2741",

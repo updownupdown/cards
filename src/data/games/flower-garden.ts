@@ -10,6 +10,13 @@ export const flowerGarden: GameDefinition = {
   tags: [GameTag.CastlesAndFans, GameTag.SequenceBuilding],
   rating: { complexity: 30, difficulty: 65, luck: 35 },
   thumbnail: "FlowerGarden.webp",
+  thumbnailCredit: {
+    title: "The Artist's House at Argenteuil",
+    artistName: "Claude Monet",
+    date: "1873",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/16554",
+  },
   background: GAME_BACKGROUNDS.flowerGarden,
   animation: GameAnimations.Pollen,
   gameColorDark: "#24402f",

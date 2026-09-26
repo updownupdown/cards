@@ -116,7 +116,7 @@ export function SettingControl<T>({
                   height: 32,
                   borderRadius: 16,
                   backgroundColor: isTrue
-                    ? Colors.win
+                    ? Colors.suitsRed
                     : darkenHexColor(labelColor, 0.56),
                   justifyContent: "center",
                   paddingHorizontal: 2,

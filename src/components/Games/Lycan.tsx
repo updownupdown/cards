@@ -573,7 +573,7 @@ export default function Lycan() {
         row: 0,
         fan: { maxVisible: 3 },
         baseZIndex: 40,
-        placeholder: { text: i18n.t("cards:dscrd"), infoPos: "below" },
+        placeholder: { text: i18n.t("cards:discard"), infoPos: "below" },
       },
 
       { id: "buttons", col: 0, row: 5.1, width: "full", height: 0.9 },

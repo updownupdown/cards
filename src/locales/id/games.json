@@ -2,7 +2,6 @@
   "jailbreak": {
     "red": "Merah",
     "black": "Hitam",
-    "remainder": "Ambil",
     "redTotal": "Merah: {{count}}",
     "blackTotal": "Hitam: {{count}}",
     "theJokerEscaped": "Joker berhasil kabur!"
@@ -286,8 +285,8 @@
   },
   "invaders": {
     "wave2": "Gelombang 2",
-    "atks": "Srg.",
-    "defs": "Thn.",
+    "attacks": "Serangan",
+    "defenses": "Pertahanan",
     "defenders": "Pembela",
     "attack": "Serang{{value}}",
     "attackersWave": "Penyerang (Gelombang {{wave}})",
@@ -434,7 +433,6 @@
     "allFourSuitStacksAre": "Keempat tumpukan jenis sudah lengkap."
   },
   "seer": {
-    "deck": "Dek",
     "reveal": "Buka",
     "return": "Kembalikan",
     "predictions": {
@@ -471,7 +469,7 @@
   "singleDeckSpider": {
     "fourCompleteSuits": "Empat jenis lengkap!"
   },
-  "singularity": {
+  "blackHole": {
     "everyStarCollapsedIn": "Semua bintang telah runtuh!",
     "noCardCanReachThe": "Tidak ada kartu yang bisa mencapai singularitas."
   },
@@ -487,7 +485,7 @@
   "somnus": {
     "thatAssignmentDoesNotMeet": "Penugasan itu tidak memenuhi aturan target",
     "dream": "Mimpi",
-    "rmvd": "Hps.",
+    "removed": "Dihapus",
     "guard": "Pjg.",
     "turn": "Giliran",
     "selectNightmareOrGuardian": "Pilih mimpi buruk atau penjaga",

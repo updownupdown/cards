@@ -13,6 +13,14 @@ export const fieldCommand: GameDefinition = {
     luck: 40,
   },
   thumbnail: "FieldCommand.webp",
+  thumbnailCredit: {
+    title: "Niccolò da Tolentino at the Battle of San Romano",
+    artistName: "Paolo Uccello",
+    date: "ca. 1438–40",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:San_Romano_Battle_(Paolo_Uccello,_London)_02.jpg",
+  },
   background: GAME_BACKGROUNDS.field,
   animation: GameAnimations.Clouds,
   gameColorDark: "#2b2d42",

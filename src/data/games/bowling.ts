@@ -12,6 +12,14 @@ export const bowling: GameDefinition = {
     luck: 35,
   },
   thumbnail: "Bowling.webp",
+  thumbnailCredit: {
+    title: "Skittle Players outside an Inn",
+    artistName: "Jan Steen",
+    date: "ca. 1660–63",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Jan_Steen_-_Skittles_Players_Outside_an_Inn.jpg",
+  },
   background: GAME_BACKGROUNDS.bowling,
   gameColorDark: "#331e0f",
   gameColorPale: "#a9e9f1",

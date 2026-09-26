@@ -1,0 +1,253 @@
+import { describe, expect, jest, test } from "@jest/globals";
+import fs from "fs";
+import path from "path";
+import {
+  MAP_GEOMETRY,
+  MIN_GAME_DOT_SPACING,
+  CAMPAIGN_START_PATH,
+  GAME_DOT_DEFINITIONS,
+  validateCampaignMap,
+} from "@/data/campaign-map";
+import { GAMES_DATA } from "@/data/games-registry";
+import { TAO_CHAPTER_COUNT } from "@/data/collectibles";
+
+const generatorSource = fs.readFileSync(
+  path.join(__dirname, "../../scripts/generate-campaign-map.mjs"),
+  "utf8",
+);
+
+/** Reads a plain numeric constant out of the generator. */
+function generatorNumber(name: string) {
+  const match = generatorSource.match(
+    new RegExp(`${name}:?\\s*=?\\s*([0-9.]+(?:\\s*\\*\\s*[0-9.]+)?)\\s*[,;]`),
+  );
+  expect(match).not.toBeNull();
+  return Function(`return ${match![1]}`)() as number;
+}
+
+const distance = (
+  left: { x: number; y: number },
+  right: { x: number; y: number },
+) => Math.hypot(left.x - right.x, left.y - right.y);
+
+/** How hard a game is to beat repeatedly, matching the generator's grindScore. */
+function grind(gamePath: string) {
+  const rating = GAMES_DATA[gamePath]?.rating;
+  if (!rating) return 0;
+  return (
+    0.5 * Math.max(rating.difficulty, rating.luck) +
+    0.25 * (rating.difficulty + rating.luck)
+  );
+}
+
+describe("Campaign map", () => {
+  test("covers every game with a valid graph and rewards", () => {
+    expect(validateCampaignMap()).toEqual([]);
+  });
+
+  test("the generator and the app agree on the map's geometry", () => {
+    expect(generatorNumber("const WORLD_SIZE")).toBe(MAP_GEOMETRY.worldSize);
+    expect(generatorNumber("const GAME_DOT_DIAMETER")).toBe(
+      MAP_GEOMETRY.gameDotDiameter,
+    );
+    expect(generatorNumber("const MIN_SPACING_IN_DOTS")).toBe(
+      MAP_GEOMETRY.minSpacingInDots,
+    );
+    expect(generatorNumber("  max")).toBe(MAP_GEOMETRY.maxConnections);
+    expect(generatorNumber("  min")).toBe(MAP_GEOMETRY.minRewards);
+  });
+
+  test("no two nodes are closer than three dot diameters", () => {
+    for (const gameDot of GAME_DOT_DEFINITIONS) {
+      for (const other of GAME_DOT_DEFINITIONS) {
+        if (gameDot.path === other.path) continue;
+        expect(distance(gameDot, other)).toBeGreaterThanOrEqual(
+          MIN_GAME_DOT_SPACING,
+        );
+      }
+    }
+  });
+
+  test("Klondike is the centre of the galaxy", () => {
+    const start = GAME_DOT_DEFINITIONS.find(
+      (gameDot) => gameDot.path === CAMPAIGN_START_PATH,
+    );
+    expect(start).toBeDefined();
+    expect(Math.hypot(start!.x, start!.y)).toBe(0);
+  });
+
+  test("the nodes form spiral arms with field stars between them", () => {
+    const arms = new Set(
+      GAME_DOT_DEFINITIONS.map((gameDot) => gameDot.arm).filter(
+        (arm): arm is number => arm !== null,
+      ),
+    );
+    expect(arms.size).toBeGreaterThanOrEqual(4);
+
+    // Each arm has to be substantial, or it reads as a stray cluster.
+    for (const arm of arms) {
+      const members = GAME_DOT_DEFINITIONS.filter(
+        (gameDot) => gameDot.arm === arm,
+      );
+      expect(members.length).toBeGreaterThanOrEqual(8);
+    }
+    // And some game dots sit between the arms, so the gaps are not empty.
+    expect(
+      GAME_DOT_DEFINITIONS.filter((gameDot) => gameDot.arm === null).length,
+    ).toBeGreaterThan(5);
+  });
+
+  test("gentler games sit nearer the centre than punishing ones", () => {
+    const withRadius = GAME_DOT_DEFINITIONS.map((gameDot) => ({
+      radius: Math.hypot(gameDot.x, gameDot.y),
+      grind: grind(gameDot.path),
+    })).sort((left, right) => left.radius - right.radius);
+
+    const half = Math.floor(withRadius.length / 2);
+    const inner = withRadius.slice(0, half);
+    const outer = withRadius.slice(half);
+    const mean = (list: { grind: number }[]) =>
+      list.reduce((total, item) => total + item.grind, 0) / list.length;
+
+    expect(mean(inner)).toBeLessThan(mean(outer));
+  });
+
+  test("every Tao chapter is awarded exactly once", () => {
+    const chapters = GAME_DOT_DEFINITIONS.flatMap((gameDot) =>
+      gameDot.rewards
+        .filter((reward) => reward.type === "tao")
+        .map((r) => r.id),
+    );
+    expect(new Set(chapters).size).toBe(chapters.length);
+    expect(chapters.length).toBe(TAO_CHAPTER_COUNT);
+  });
+
+  test("third rewards go to the games that are kindest to replay", () => {
+    const three = GAME_DOT_DEFINITIONS.filter(
+      (gameDot) => gameDot.rewards.length === 3,
+    );
+    const two = GAME_DOT_DEFINITIONS.filter(
+      (gameDot) => gameDot.rewards.length === 2,
+    );
+    expect(three.length).toBeGreaterThan(0);
+
+    // A third reward means beating the game three times, so none of them
+    // should be harder than the gentlest game that only has two.
+    const hardestWithThree = Math.max(...three.map((n) => grind(n.path)));
+    const gentlestWithTwo = Math.min(...two.map((n) => grind(n.path)));
+    expect(hardestWithThree).toBeLessThanOrEqual(gentlestWithTwo);
+  });
+
+  test("no single game locks away much of the map", () => {
+    const byPath = new Map(
+      GAME_DOT_DEFINITIONS.map((gameDot) => [gameDot.path, gameDot]),
+    );
+    const limit = Math.ceil(
+      GAME_DOT_DEFINITIONS.length * MAP_GEOMETRY.maxGatedShare,
+    );
+
+    for (const blocked of GAME_DOT_DEFINITIONS) {
+      if (blocked.path === CAMPAIGN_START_PATH) continue;
+      const reached = new Set<string>();
+      const queue = [CAMPAIGN_START_PATH];
+      while (queue.length > 0) {
+        const current = queue.pop()!;
+        if (current === blocked.path || reached.has(current)) continue;
+        reached.add(current);
+        for (const next of byPath.get(current)!.connections) {
+          if (next !== blocked.path && !reached.has(next)) queue.push(next);
+        }
+      }
+      expect(
+        GAME_DOT_DEFINITIONS.length - 1 - reached.size,
+      ).toBeLessThanOrEqual(limit);
+    }
+  });
+
+  test("flags authoring mistakes instead of always passing", () => {
+    jest.resetModules();
+    jest.doMock("@/data/games-registry", () => {
+      const games = [
+        { path: "/klondike" },
+        { path: "/beehive" },
+        { path: "/freecell" },
+      ];
+      return {
+        GAME_DEFINITIONS: games,
+        GAMES_DATA: Object.fromEntries(games.map((game) => [game.path, game])),
+      };
+    });
+    jest.doMock("@/data/campaign-map.generated", () => ({
+      GAME_DOT_DEFINITIONS: [
+        {
+          path: "/klondike",
+          x: 0,
+          y: 0,
+          arm: null,
+          // One link over whatever the limit currently is.
+          connections: [
+            "/beehive",
+            ...Array.from(
+              { length: MAP_GEOMETRY.maxConnections },
+              (_, index) => `/filler-${index}`,
+            ),
+          ],
+          // Duplicate reward id: should trip the duplicate-reward rule.
+          rewards: [
+            { type: "tao", id: 1 },
+            { type: "tao", id: 1 },
+          ],
+        },
+        {
+          path: "/beehive",
+          x: 0.004,
+          y: 0,
+          // Not a whole number, and far too close to /klondike.
+          arm: 1.5,
+          // /klondike lists /beehive, but not the other way about.
+          connections: ["/does-not-exist"],
+          rewards: [
+            { type: "quote", id: 1 },
+            { type: "quote", id: 99999 },
+          ],
+        },
+        // /freecell is a real game left off the map entirely.
+      ],
+    }));
+
+    // campaign-map.ts throws at import time in dev if the map is invalid; this
+    // test's whole point is to feed it an invalid map, so disable that
+    // self-check just for this import.
+    const devGlobal = globalThis as typeof globalThis & { __DEV__: boolean };
+    const originalDev = devGlobal.__DEV__;
+    devGlobal.__DEV__ = false;
+    let errors: string[];
+    try {
+      const { validateCampaignMap: validateBrokenMap } = jest.requireActual<
+        typeof import("@/data/campaign-map")
+      >("@/data/campaign-map");
+      errors = validateBrokenMap();
+    } finally {
+      devGlobal.__DEV__ = originalDev;
+      jest.dontMock("@/data/games-registry");
+      jest.dontMock("@/data/campaign-map.generated");
+      jest.resetModules();
+    }
+
+    expect(errors).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining(
+          `must have 1 to ${MAP_GEOMETRY.maxConnections} connections`,
+        ),
+        expect.stringContaining("Duplicate tao reward"),
+        expect.stringContaining("connects to unknown game dot"),
+        expect.stringContaining("is not symmetric"),
+        expect.stringContaining("has an unknown quote 99999"),
+        expect.stringContaining("Missing game dot for /freecell"),
+        expect.stringContaining("has an invalid arm"),
+        expect.stringContaining("is under the"),
+        expect.stringContaining("Tao chapter 2 is not awarded"),
+      ]),
+    );
+  });
+});

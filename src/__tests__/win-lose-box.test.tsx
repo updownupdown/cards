@@ -25,11 +25,15 @@ afterEach(() => {
   jest.useRealTimers();
 });
 
-async function render(won: boolean) {
+async function render(
+  won: boolean,
+  extra: Partial<React.ComponentProps<typeof WinLoseBox>> = {},
+) {
   let renderer!: ReactTestRenderer;
   await act(async () => {
     renderer = create(
       <WinLoseBox
+        {...extra}
         gameEnded
         headerBottom={0}
         won={won}
@@ -53,7 +57,7 @@ describe("WinLoseBox", () => {
   test("a win shows its time, with the best time under it", async () => {
     const shown = texts(await render(true));
     expect(shown).toEqual(
-      expect.arrayContaining(["You won!", "3:05", "Best 1:32"]),
+      expect.arrayContaining(["You won!", "3:05", "Best: 1:32"]),
     );
   });
 
@@ -62,5 +66,19 @@ describe("WinLoseBox", () => {
     expect(shown).toContain("You lost");
     expect(shown).not.toContain("3:05");
     expect(shown.some((text) => text.startsWith("Best"))).toBe(false);
+  });
+
+  test("hidden buttons are left out, and the top panel sits above", async () => {
+    const renderer = await render(true, {
+      actionsHidden: true,
+      topPanel: <Text>Chapter 21</Text>,
+    });
+    const shown = texts(renderer);
+    expect(shown).toContain("Chapter 21");
+    expect(shown.indexOf("Chapter 21")).toBeLessThan(shown.indexOf("You won!"));
+    expect(shown).not.toContain("Play again");
+
+    const withButtons = texts(await render(true));
+    expect(withButtons).toContain("Play again");
   });
 });

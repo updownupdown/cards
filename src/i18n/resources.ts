@@ -3,7 +3,7 @@ import enCommon from "@/locales/en/common.json";
 import enGame from "@/locales/en/game.json";
 import enGames from "@/locales/en/games.json";
 import enHome from "@/locales/en/home.json";
-import enNodes from "@/locales/en/nodes.json";
+import enCampaign from "@/locales/en/campaign.json";
 import enPrivacy from "@/locales/en/privacy.json";
 import enSettings from "@/locales/en/settings.json";
 import esCards from "@/locales/es/cards.json";
@@ -11,7 +11,7 @@ import esCommon from "@/locales/es/common.json";
 import esGame from "@/locales/es/game.json";
 import esGames from "@/locales/es/games.json";
 import esHome from "@/locales/es/home.json";
-import esNodes from "@/locales/es/nodes.json";
+import esCampaign from "@/locales/es/campaign.json";
 import esPrivacy from "@/locales/es/privacy.json";
 import esSettings from "@/locales/es/settings.json";
 import frCards from "@/locales/fr/cards.json";
@@ -19,7 +19,7 @@ import frCommon from "@/locales/fr/common.json";
 import frGame from "@/locales/fr/game.json";
 import frGames from "@/locales/fr/games.json";
 import frHome from "@/locales/fr/home.json";
-import frNodes from "@/locales/fr/nodes.json";
+import frCampaign from "@/locales/fr/campaign.json";
 import frPrivacy from "@/locales/fr/privacy.json";
 import frSettings from "@/locales/fr/settings.json";
 import idCards from "@/locales/id/cards.json";
@@ -27,7 +27,7 @@ import idCommon from "@/locales/id/common.json";
 import idGame from "@/locales/id/game.json";
 import idGames from "@/locales/id/games.json";
 import idHome from "@/locales/id/home.json";
-import idNodes from "@/locales/id/nodes.json";
+import idCampaign from "@/locales/id/campaign.json";
 import idPrivacy from "@/locales/id/privacy.json";
 import idSettings from "@/locales/id/settings.json";
 import itCards from "@/locales/it/cards.json";
@@ -35,7 +35,7 @@ import itCommon from "@/locales/it/common.json";
 import itGame from "@/locales/it/game.json";
 import itGames from "@/locales/it/games.json";
 import itHome from "@/locales/it/home.json";
-import itNodes from "@/locales/it/nodes.json";
+import itCampaign from "@/locales/it/campaign.json";
 import itPrivacy from "@/locales/it/privacy.json";
 import itSettings from "@/locales/it/settings.json";
 import ptCards from "@/locales/pt/cards.json";
@@ -43,7 +43,7 @@ import ptCommon from "@/locales/pt/common.json";
 import ptGame from "@/locales/pt/game.json";
 import ptGames from "@/locales/pt/games.json";
 import ptHome from "@/locales/pt/home.json";
-import ptNodes from "@/locales/pt/nodes.json";
+import ptCampaign from "@/locales/pt/campaign.json";
 import ptPrivacy from "@/locales/pt/privacy.json";
 import ptSettings from "@/locales/pt/settings.json";
 import trCards from "@/locales/tr/cards.json";
@@ -51,7 +51,7 @@ import trCommon from "@/locales/tr/common.json";
 import trGame from "@/locales/tr/game.json";
 import trGames from "@/locales/tr/games.json";
 import trHome from "@/locales/tr/home.json";
-import trNodes from "@/locales/tr/nodes.json";
+import trCampaign from "@/locales/tr/campaign.json";
 import trPrivacy from "@/locales/tr/privacy.json";
 import trSettings from "@/locales/tr/settings.json";
 import type { AppLanguage } from "./languages";
@@ -66,7 +66,7 @@ export const NAMESPACES = [
   "game",
   "games",
   "home",
-  "nodes",
+  "campaign",
   "privacy",
   "settings",
 ] as const;
@@ -78,7 +78,7 @@ const EN = {
   game: enGame,
   games: enGames,
   home: enHome,
-  nodes: enNodes,
+  campaign: enCampaign,
   privacy: enPrivacy,
   settings: enSettings,
 };
@@ -93,7 +93,7 @@ export const RESOURCES: Record<AppLanguage, Record<Namespace, object>> & {
     game: frGame,
     games: frGames,
     home: frHome,
-    nodes: frNodes,
+    campaign: frCampaign,
     privacy: frPrivacy,
     settings: frSettings,
   },
@@ -103,7 +103,7 @@ export const RESOURCES: Record<AppLanguage, Record<Namespace, object>> & {
     game: esGame,
     games: esGames,
     home: esHome,
-    nodes: esNodes,
+    campaign: esCampaign,
     privacy: esPrivacy,
     settings: esSettings,
   },
@@ -113,7 +113,7 @@ export const RESOURCES: Record<AppLanguage, Record<Namespace, object>> & {
     game: idGame,
     games: idGames,
     home: idHome,
-    nodes: idNodes,
+    campaign: idCampaign,
     privacy: idPrivacy,
     settings: idSettings,
   },
@@ -123,7 +123,7 @@ export const RESOURCES: Record<AppLanguage, Record<Namespace, object>> & {
     game: itGame,
     games: itGames,
     home: itHome,
-    nodes: itNodes,
+    campaign: itCampaign,
     privacy: itPrivacy,
     settings: itSettings,
   },
@@ -133,7 +133,7 @@ export const RESOURCES: Record<AppLanguage, Record<Namespace, object>> & {
     game: ptGame,
     games: ptGames,
     home: ptHome,
-    nodes: ptNodes,
+    campaign: ptCampaign,
     privacy: ptPrivacy,
     settings: ptSettings,
   },
@@ -143,7 +143,7 @@ export const RESOURCES: Record<AppLanguage, Record<Namespace, object>> & {
     game: trGame,
     games: trGames,
     home: trHome,
-    nodes: trNodes,
+    campaign: trCampaign,
     privacy: trPrivacy,
     settings: trSettings,
   },

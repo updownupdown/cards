@@ -14,6 +14,13 @@ export const crazyQuilt: GameDefinition = {
     luck: 45,
   },
   thumbnail: "CrazyQuilt.webp",
+  thumbnailCredit: {
+    title: "Quilt Top, Crazy Pattern",
+    artistName: "Unknown American quilter",
+    date: "ca. 1885",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/13647",
+  },
   background: GAME_BACKGROUNDS.cozyCabin,
   animation: GameAnimations.Snow,
   gameColorDark: "#2c1d26",

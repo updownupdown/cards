@@ -1,7 +1,7 @@
 {
   "menu": {
     "home": "Home",
-    "nodes": "Campaign",
+    "campaign": "Campaign",
     "instantWin": "Instant win"
   },
   "result": {
@@ -36,7 +36,9 @@
   },
   "credits": {
     "title": "Credits",
-    "backgroundImage": "Background image:"
+    "backgroundImage": "Background image (blurred):",
+    "gameArt": "Cover art:",
+    "artSource": "Public domain, from"
   },
   "deckPreview": {
     "title": "Deck Preview",
@@ -50,5 +52,10 @@
   "errors": {
     "gameCrashed": "Something went wrong with that game.",
     "resumeFailed": "Your last game couldn't be resumed."
+  },
+  "autoComplete": {
+    "start": "Auto-complete",
+    "settings": "Auto-complete settings",
+    "dismiss": "Close"
   }
 }

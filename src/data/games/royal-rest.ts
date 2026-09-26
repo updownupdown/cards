@@ -7,6 +7,13 @@ export const royalRest: GameDefinition = {
   path: "/royal-rest",
   title: "Royal Rest",
   thumbnail: "RoyalRest.webp",
+  thumbnailCredit: {
+    title: "The State Bed Chamber, Stowe",
+    artistName: "Joseph Nash",
+    date: "1838",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/824878",
+  },
   background: GAME_BACKGROUNDS.cabinInterior,
   animation: GameAnimations.Dust,
   tags: [GameTag.PairMatching, GameTag.SequenceBuilding],

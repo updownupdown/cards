@@ -22,7 +22,7 @@ const TABLEAU_CAPACITY = 4;
 export type BeehiveGameState = {
   beehive: PlayingCard[];
   tableau: PlayingCard[][];
-  draw: PlayingCard[];
+  stock: PlayingCard[];
   waste: PlayingCard[];
   discard: PlayingCard[];
 };
@@ -50,11 +50,11 @@ function popVisible(pile: PlayingCard[]) {
 }
 
 function dealFromDraw(state: BeehiveGameState) {
-  const beehive = state.draw.splice(0, BEEHIVE_SIZE);
+  const beehive = state.stock.splice(0, BEEHIVE_SIZE);
   revealTop(beehive);
   state.beehive = beehive;
   state.tableau = Array.from({ length: TABLEAU_COUNT }, () => {
-    const card = state.draw.shift();
+    const card = state.stock.shift();
     return card ? [flipToFace(card)] : [];
   });
 }
@@ -63,7 +63,7 @@ function createInitialState(): BeehiveGameState {
   const state: BeehiveGameState = {
     beehive: [],
     tableau: Array.from({ length: TABLEAU_COUNT }, () => []),
-    draw: shuffle(createDeck({ faceUp: false })),
+    stock: shuffle(createDeck({ faceUp: false })),
     waste: [],
     discard: [],
   };
@@ -152,14 +152,14 @@ function hasFutureDrawMove(state: BeehiveGameState) {
     ...state,
     beehive: [...state.beehive],
     tableau: state.tableau.map((pile) => [...pile]),
-    draw: [...state.draw],
+    stock: [...state.stock],
     waste: [...state.waste],
     discard: [...state.discard],
   };
   let recycled = false;
 
-  while (probe.draw.length > 0 || probe.waste.length > 0) {
-    if (probe.draw.length === 0) {
+  while (probe.stock.length > 0 || probe.waste.length > 0) {
+    if (probe.stock.length === 0) {
       if (recycled) return false;
       resetDraw(probe);
       recycled = true;
@@ -180,7 +180,7 @@ function hasFutureDrawMove(state: BeehiveGameState) {
 function isWon(state: BeehiveGameState) {
   return (
     state.beehive.length === 0 &&
-    state.draw.length === 0 &&
+    state.stock.length === 0 &&
     state.waste.length === 0 &&
     state.tableau.every((pile) => pile.length === 0) &&
     state.discard.length === 52
@@ -192,14 +192,14 @@ function isLost(state: BeehiveGameState) {
 }
 
 function dealDraw(state: BeehiveGameState) {
-  for (let index = 0; index < Math.min(3, state.draw.length); index += 1) {
-    const card = state.draw.pop();
+  for (let index = 0; index < Math.min(3, state.stock.length); index += 1) {
+    const card = state.stock.pop();
     if (card) state.waste.push(flipToFace(card));
   }
 }
 
 function resetDraw(state: BeehiveGameState) {
-  state.draw = state.waste.reverse().map(flipToBack);
+  state.stock = state.waste.reverse().map(flipToBack);
   state.waste = [];
 }
 
@@ -207,9 +207,9 @@ async function resetAndSetup(
   setGame: (updater: (draft: BeehiveGameState) => void) => void,
 ) {
   setGame((draft) => {
-    draft.draw = shuffle(
+    draft.stock = shuffle(
       flipAllToBack([
-        ...draft.draw,
+        ...draft.stock,
         ...draft.beehive,
         ...draft.tableau.flat(),
         ...draft.waste,
@@ -310,7 +310,7 @@ export default function Beehive() {
     if (won || lost) return;
     saveUndoState(structuredClone(game));
     setGame((draft) => {
-      if (draft.draw.length > 0) dealDraw(draft);
+      if (draft.stock.length > 0) dealDraw(draft);
       else resetDraw(draft);
     });
   }
@@ -349,21 +349,21 @@ export default function Beehive() {
         baseZIndex: 50,
         fan: {
           direction: "right",
-          offset: cardDims.tableauOffsetHorizontal,
+          offset: cardDims.tableauOffsetHorizontalSuit,
           maxVisible: 3,
           shadowVisibleCount: 6,
         },
         placeholder: { text: i18n.t("cards:waste"), infoPos: "above" },
       },
       {
-        id: "draw",
-        name: "draw",
-        cards: game.draw,
+        id: "stock",
+        name: "stock",
+        cards: game.stock,
         col: 3.5,
         row: 2.5,
         baseZIndex: 30,
         fan: { maxVisible: 3 },
-        placeholder: { text: i18n.t("cards:draw"), infoPos: "above" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "above" },
       },
       ...game.tableau.map((pile, pileIndex) => ({
         id: `tableau-${pileIndex}`,
@@ -383,7 +383,7 @@ export default function Beehive() {
   const cardMapper = (
     mappedCard: MappedCard,
   ): AnimatedCardMapping | undefined => {
-    if (mappedCard.zoneName === "draw")
+    if (mappedCard.zoneName === "stock")
       return {
         clickThroughCards: true,
         isDisabled: won || lost,
@@ -411,7 +411,7 @@ export default function Beehive() {
   };
 
   const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
-    if (zone.name === "draw")
+    if (zone.name === "stock")
       return { onPress: onDrawPress, isDisabled: won || lost };
     if (zone.name === "waste")
       return {

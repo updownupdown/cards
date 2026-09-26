@@ -18,6 +18,13 @@ export const thumbAndPouch: GameDefinition = {
   gameColorPale: "#ead9b8",
   cardBack: CardBackColors.Terracotta,
   thumbnail: "ThumbAndPouch.webp",
+  thumbnailCredit: {
+    title: "Pouch",
+    artistName: "Unknown American beadworker",
+    date: "1830–60",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/170340",
+  },
   cardDescription:
     "A flexible Klondike where cards avoid their own suit and any card fills a gap.",
   quickStart: [

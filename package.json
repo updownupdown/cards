@@ -10,14 +10,14 @@
     "backgrounds:convert": "node ./scripts/convert-backgrounds.mjs",
     "store-graphics:generate": "node ./scripts/generate-store-graphics.mjs",
     "card-backs:generate": "node ./scripts/generate-card-backs.mjs",
-    "cards:convert": "node ./scripts/convert-card-decks.mjs",
-    "nodes:generate": "node ./scripts/generate-nodes-map.mjs",
+    "campaign:generate": "node ./scripts/generate-campaign-map.mjs",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "expo lint",
     "test": "jest",
-    "i18n": "node ./scripts/i18n.mjs"
+    "i18n": "node ./scripts/i18n.mjs",
+    "pen-font:generate": "node ./scripts/generate-pen-font.mjs"
   },
   "dependencies": {
     "@expo-google-fonts/outfit": "^0.4.3",

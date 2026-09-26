@@ -28,7 +28,7 @@ const shieldColor = "#ffc671";
 type RoyalSlot = { cards: PlayingCard[]; armour: number; dead: boolean };
 type Mode = "place" | "extract" | "reassign-source" | "reassign-target";
 type GameState = {
-  deck: PlayingCard[];
+  stock: PlayingCard[];
   discard: PlayingCard[];
   grid: PlayingCard[][];
   royals: RoyalSlot[];
@@ -194,7 +194,7 @@ function addArmour(state: GameState, card: PlayingCard) {
 
 function processDraw(state: GameState) {
   if (state.pending || state.ended || state.mode !== "place") return;
-  const card = state.deck.pop();
+  const card = state.stock.pop();
   if (!card) {
     state.lastDrawWasSpecial = false;
     state.ended =
@@ -225,7 +225,7 @@ function processDraw(state: GameState) {
 
 function createInitialState(): GameState {
   const state: GameState = {
-    deck: shuffle(createDeck({ includeJokers: true })),
+    stock: shuffle(createDeck({ includeJokers: true })),
     discard: [],
     grid: Array.from({ length: 9 }, () => []),
     royals: Array.from({ length: 12 }, () => ({
@@ -244,8 +244,8 @@ function createInitialState(): GameState {
   };
   let gridIndex = 0;
   const setAsideRoyals: PlayingCard[] = [];
-  while (gridIndex < 9 && state.deck.length) {
-    const card = state.deck.pop()!;
+  while (gridIndex < 9 && state.stock.length) {
+    const card = state.stock.pop()!;
     if (card.rank === "A") state.aces.push({ ...card, faceUp: true });
     else if (card.rank === "Joker")
       state.jokers.push({ ...card, faceUp: true });
@@ -266,7 +266,7 @@ export const dynastyRules = {
 /** The board with every card gathered face down into the deck. */
 function gatherState(state: GameState): GameState {
   return {
-    deck: shuffle(flipAllToBack(collectCards(state))),
+    stock: shuffle(flipAllToBack(collectCards(state))),
     discard: [],
     grid: Array.from({ length: 9 }, () => []),
     royals: Array.from({ length: 12 }, () => ({
@@ -297,7 +297,7 @@ export default function Dynasty() {
         // Gather every card into the deck, then deal them back out.
         setGame((draft) => gatherState(draft));
         await delay();
-        setGame((draft) => redealWith(createInitialState(), draft.deck));
+        setGame((draft) => redealWith(createInitialState(), draft.stock));
       },
     });
 
@@ -316,7 +316,7 @@ export default function Dynasty() {
         }));
         if (!cards.length) return;
         draft.grid[index] = [];
-        draft.deck.unshift(...cards);
+        draft.stock.unshift(...cards);
         const ace = draft.aces.pop();
         if (ace) draft.aces.unshift({ ...ace, faceUp: false });
         draft.mode = "place";
@@ -378,7 +378,7 @@ export default function Dynasty() {
     const timeout = setTimeout(() => setGame(processDraw), 1000);
     return () => clearTimeout(timeout);
   }, [
-    game.deck,
+    game.stock,
     game.ended,
     game.lastDrawWasSpecial,
     game.mode,
@@ -443,14 +443,14 @@ export default function Dynasty() {
         placeholder: { showCount: cards.length > 1 },
       })),
       {
-        id: "deck",
-        name: "deck",
-        cards: game.deck,
+        id: "stock",
+        name: "stock",
+        cards: game.stock,
         col: 4,
         row: 5.5,
         baseZIndex: 30,
         fan: { maxVisible: 3 },
-        placeholder: { text: i18n.t("cards:draw"), infoPos: "above" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "above" },
       },
       {
         id: "pending",

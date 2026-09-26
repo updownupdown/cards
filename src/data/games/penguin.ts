@@ -14,6 +14,15 @@ export const penguin: GameDefinition = {
     luck: 25,
   },
   thumbnail: "Penguin.webp",
+  thumbnailCredit: {
+    title:
+      "Rockhopper and Little Penguins, from A History of the Birds of New Zealand",
+    artistName: "John Gerrard Keulemans",
+    date: "1873",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:History_of_the_birds_of_NZ_1st_ed_p344.jpg",
+  },
   background: GAME_BACKGROUNDS.antarctica,
   animation: GameAnimations.Snow,
   gameColorDark: "#111b27",

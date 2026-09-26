@@ -42,9 +42,20 @@ export type GameRating = {
 export type GameStatsNames = keyof GameRating;
 export const statKeys: GameStatsNames[] = ["complexity", "difficulty", "luck"];
 
-export const DEFAULT_GAME_THUMBNAIL: GameThumbnailName =
-  "DefaultThumbnail.webp";
 export const DEFAULT_GAME_BACKGROUND: GameBackground = city;
+
+/** Where a game's public domain thumbnail art comes from. */
+export type ArtCredit = {
+  /** The artwork's title, as its source gives it. */
+  title: string;
+  artistName: string;
+  /** When it was made, as its source gives it, e.g. "1890–95" or "ca. 1800". */
+  date?: string;
+  /** The collection or archive the image was taken from. */
+  sourceName: string;
+  /** The artwork's page at that source. */
+  sourceLink: string;
+};
 
 export type GameMenuInfo = {
   // Basic
@@ -62,6 +73,9 @@ export type GameMenuInfo = {
 
   // Images
   thumbnail?: GameThumbnailName;
+  /** Credit for the thumbnail's art. npm run thumbnails:convert won't
+   *  assign a new thumbnail to a game without one. */
+  thumbnailCredit?: ArtCredit;
   background?: GameBackground;
   animation?: GameAnimation;
 

@@ -2,7 +2,6 @@
   "jailbreak": {
     "red": "Vermelho",
     "black": "Preto",
-    "remainder": "Comprar",
     "redTotal": "Vermelho: {{count}}",
     "blackTotal": "Preto: {{count}}",
     "theJokerEscaped": "O curinga escapou!"
@@ -286,8 +285,8 @@
   },
   "invaders": {
     "wave2": "Onda 2",
-    "atks": "Atq.",
-    "defs": "Def.",
+    "attacks": "Ataques",
+    "defenses": "Defesas",
     "defenders": "Defensores",
     "attack": "Atacar{{value}}",
     "attackersWave": "Atacantes (onda {{wave}})",
@@ -434,7 +433,6 @@
     "allFourSuitStacksAre": "As quatro pilhas de naipe estão completas."
   },
   "seer": {
-    "deck": "Baralho",
     "reveal": "Revelar",
     "return": "Devolver",
     "predictions": {
@@ -452,7 +450,7 @@
     "complete": ", completa",
     "blocked": ", bloqueada",
     "allPredictionsComplete": "As oito previsões estão completas.",
-    "deckRanOut": "O baralho acabou antes de todas as previsões serem completadas.",
+    "deckRanOut": "O monte acabou antes de todas as previsões serem completadas.",
     "allPredictionsBlocked": "As oito previsões estão bloqueadas por pedras.",
     "chooseHighlightedStone": "Escolha uma pedra destacada",
     "freedStones_one": "{{count}} pedra liberada",
@@ -471,7 +469,7 @@
   "singleDeckSpider": {
     "fourCompleteSuits": "Quatro naipes completos!"
   },
-  "singularity": {
+  "blackHole": {
     "everyStarCollapsedIn": "Todas as estrelas colapsaram!",
     "noCardCanReachThe": "Nenhuma carta consegue alcançar a singularidade."
   },
@@ -487,7 +485,7 @@
   "somnus": {
     "thatAssignmentDoesNotMeet": "Essa atribuição não cumpre as regras do alvo",
     "dream": "Sonho",
-    "rmvd": "Rem.",
+    "removed": "Removidas",
     "guard": "Guard.",
     "turn": "Turno",
     "selectNightmareOrGuardian": "Escolha um pesadelo ou um guardião",

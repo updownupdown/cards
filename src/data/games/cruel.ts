@@ -13,6 +13,14 @@ export const cruel: GameDefinition = {
     luck: 35,
   },
   thumbnail: "Cruel.webp",
+  thumbnailCredit: {
+    title: "La Belle Dame sans Merci",
+    artistName: "John William Waterhouse",
+    date: "1893",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:John_William_Waterhouse_-_La_Belle_Dame_sans_Merci_(1893).jpg",
+  },
   background: GAME_BACKGROUNDS.darkAlley,
   animation: GameAnimations.Embers,
   gameColorDark: "#2c1919",

@@ -13,6 +13,14 @@ export const invaders: GameDefinition = {
     luck: 30,
   },
   thumbnail: "Invaders.webp",
+  thumbnailCredit: {
+    title: "The War of the Worlds",
+    artistName: "Henrique Alvim Corrêa",
+    date: "1906",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:The_War_of_the_Worlds_by_Henrique_Alvim_Corr%C3%AAa,_original_graphic_15.jpg",
+  },
   background: GAME_BACKGROUNDS.nightSky,
   animation: GameAnimations.Stars,
   gameColorDark: "#2a2836",

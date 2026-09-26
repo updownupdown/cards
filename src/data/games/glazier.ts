@@ -13,6 +13,13 @@ export const glazier: GameDefinition = {
     luck: 30,
   },
   thumbnail: "Glazier.webp",
+  thumbnailCredit: {
+    title: "Saints and Worshippers in Adoration",
+    artistName: "Unknown Parisian glazier",
+    date: "1510–15",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/6607",
+  },
   background: GAME_BACKGROUNDS.geometricCeiling,
   animation: GameAnimations.Embers,
   gameColorDark: "#1c2033",

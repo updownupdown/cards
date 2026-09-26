@@ -7,7 +7,7 @@ import { Button } from "../Button/Button";
 import { ResetButton } from "./ResetButton";
 
 type Props = {
-  isNodesMode: boolean;
+  isCampaignMode: boolean;
   titleColor: string;
   backgroundColor: string;
   /** UI scale factor (see useResponsiveUiLayoutFromWidth). */
@@ -34,7 +34,7 @@ type Props = {
  * doesn't re-render on every move.
  */
 export const GameHeader = memo(function GameHeader({
-  isNodesMode,
+  isCampaignMode,
   titleColor,
   backgroundColor,
   scale,
@@ -89,9 +89,11 @@ export const GameHeader = memo(function GameHeader({
       >
         <Button
           headerButton
-          accessibilityLabel={isNodesMode ? t("menu.nodes") : t("menu.home")}
+          accessibilityLabel={
+            isCampaignMode ? t("menu.campaign") : t("menu.home")
+          }
           onPress={onHome}
-          iconName={isNodesMode ? "nodes" : "home"}
+          iconName={isCampaignMode ? "milky-way" : "home"}
           iconColor={titleColor}
           style={{ flex: 1, paddingHorizontal: 0 }}
         />

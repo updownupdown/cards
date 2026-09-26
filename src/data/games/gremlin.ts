@@ -13,6 +13,13 @@ export const gremlin: GameDefinition = {
     luck: 35,
   },
   thumbnail: "Gremlin.webp",
+  thumbnailCredit: {
+    title: "The Gargoyle, from Etchings of Paris",
+    artistName: "Charles Meryon",
+    date: "1853",
+    sourceName: "Cleveland Museum of Art",
+    sourceLink: "https://clevelandart.org/art/1941.298",
+  },
   background: GAME_BACKGROUNDS.treeRain,
   animation: GameAnimations.Firefly,
   gameColorDark: "#1c423f",

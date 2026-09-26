@@ -5,9 +5,9 @@ import {
 } from "@/components/Games/DevilsGrip";
 import { PlayingCard } from "@/components/Cards/card-utils";
 
-jest.mock("@/data/nodes-map", () => ({
-  NODE_DEFINITIONS: [],
-  NODES_BY_PATH: new Map(),
+jest.mock("@/data/campaign-map", () => ({
+  GAME_DOT_DEFINITIONS: [],
+  GAME_DOTS_BY_PATH: new Map(),
 }));
 
 function card(rank: PlayingCard["rank"], suit: PlayingCard["suit"] = "spades") {
@@ -17,7 +17,7 @@ function card(rank: PlayingCard["rank"], suit: PlayingCard["suit"] = "spades") {
 function state(grid: PlayingCard[][]): DevilsGripGameState {
   return {
     grid: [...grid, ...Array.from({ length: 24 - grid.length }, () => [])],
-    draw: [],
+    stock: [],
     waste: [],
   };
 }
@@ -27,9 +27,9 @@ describe("Devil's Grip rules", () => {
     const game = devilsGripRules.createInitialState(() => 0.5);
     expect(game.grid).toHaveLength(24);
     expect(game.grid.flat()).toHaveLength(0);
-    expect(game.draw).toHaveLength(96);
-    expect(game.draw.every((item) => !item.faceUp)).toBe(true);
-    expect(game.draw.some((item) => item.rank === "A")).toBe(false);
+    expect(game.stock).toHaveLength(96);
+    expect(game.stock.every((item) => !item.faceUp)).toBe(true);
+    expect(game.stock.some((item) => item.rank === "A")).toBe(false);
   });
 
   test("deals all opening cards from the draw pile", () => {
@@ -37,18 +37,18 @@ describe("Devil's Grip rules", () => {
     devilsGripRules.dealInitialGridAction(game);
     expect(game.grid.flat()).toHaveLength(24);
     expect(game.grid.flat().every((item) => item.faceUp)).toBe(true);
-    expect(game.draw).toHaveLength(72);
+    expect(game.stock).toHaveLength(72);
   });
 
   test("gathers every card face down into draw before a reset deal", () => {
     const game = state([[card("2"), card("5")]]);
-    game.draw = [{ ...card("6"), faceUp: false }];
+    game.stock = [{ ...card("6"), faceUp: false }];
     game.waste = [card("9")];
     devilsGripRules.gatherToDrawAction(game, () => 0.5);
     expect(game.grid.flat()).toHaveLength(0);
     expect(game.waste).toHaveLength(0);
-    expect(game.draw).toHaveLength(4);
-    expect(game.draw.every((item) => !item.faceUp)).toBe(true);
+    expect(game.stock).toHaveLength(4);
+    expect(game.stock.every((item) => !item.faceUp)).toBe(true);
   });
 
   test("recognizes row sequences and same-suit builds", () => {
@@ -65,7 +65,7 @@ describe("Devil's Grip rules", () => {
 
   test("moves a single card and refills an emptied grid pile from draw", () => {
     const game = state([[card("5")], [card("2")]]);
-    game.draw = [{ ...card("4", "hearts"), faceUp: false }];
+    game.stock = [{ ...card("4", "hearts"), faceUp: false }];
     expect(
       devilsGripRules.moveAction(
         game,
@@ -90,8 +90,8 @@ describe("Devil's Grip rules", () => {
     ).toBe(true);
 
     expect(game.grid[0][0]).toMatchObject({ rank: "K", faceUp: true });
-    expect(game.draw.map((item) => item.rank)).toEqual(["4"]);
-    expect(game.draw.every((item) => !item.faceUp)).toBe(true);
+    expect(game.stock.map((item) => item.rank)).toEqual(["4"]);
+    expect(game.stock.every((item) => !item.faceUp)).toBe(true);
     expect(game.waste).toEqual([]);
   });
 
@@ -174,9 +174,9 @@ describe("Devil's Grip rules", () => {
 
   test("deals up to three draw cards to the waste", () => {
     const game = state([]);
-    game.draw = [card("2"), card("3")];
+    game.stock = [card("2"), card("3")];
     expect(devilsGripRules.dealThreeAction(game)).toBe(true);
-    expect(game.draw).toHaveLength(0);
+    expect(game.stock).toHaveLength(0);
     expect(game.waste).toHaveLength(2);
   });
 
@@ -185,8 +185,8 @@ describe("Devil's Grip rules", () => {
     game.waste = [card("2"), card("5"), card("8")];
     expect(devilsGripRules.redealWasteAction(game)).toBe(true);
     expect(game.waste).toEqual([]);
-    expect(game.draw.map((item) => item.rank)).toEqual(["8", "5", "2"]);
-    expect(game.draw.every((item) => !item.faceUp)).toBe(true);
+    expect(game.stock.map((item) => item.rank)).toEqual(["8", "5", "2"]);
+    expect(game.stock.every((item) => !item.faceUp)).toBe(true);
 
     devilsGripRules.dealThreeAction(game);
     expect(game.waste.map((item) => item.rank)).toEqual(["2", "5", "8"]);
@@ -199,19 +199,19 @@ describe("Devil's Grip rules", () => {
 
   test("checks only cards exposed during an infinite draw-three cycle", () => {
     const game = state([[card("2")]]);
-    game.draw = [card("5"), card("K"), card("Q"), card("J")];
+    game.stock = [card("5"), card("K"), card("Q"), card("J")];
     expect(
       devilsGripRules.getReachableDrawThreeCards(game).map((item) => item.rank),
     ).toEqual(["K", "5"]);
     expect(devilsGripRules.hasPlayableDrawMove(game)).toBe(true);
 
-    game.draw = [card("7"), card("K"), card("5"), card("J")];
+    game.stock = [card("7"), card("K"), card("5"), card("J")];
     expect(devilsGripRules.hasPlayableDrawMove(game)).toBe(false);
   });
 
   test("checks both the current pass and the shifted redeal pass", () => {
     const game = state([[card("2")]]);
-    game.draw = [card("7"), card("5"), card("Q"), card("J")];
+    game.stock = [card("7"), card("5"), card("Q"), card("J")];
     game.waste = [card("10"), card("K")];
     expect(
       devilsGripRules.getReachableDrawThreeCards(game).map((item) => item.rank),
@@ -227,9 +227,9 @@ describe("Devil's Grip rules", () => {
 
   test("allows a loss with stock and waste remaining when no draw cycle can build", () => {
     const game = state([[card("2")]]);
-    game.draw = [card("7"), card("K"), card("Q"), card("J")];
+    game.stock = [card("7"), card("K"), card("Q"), card("J")];
     game.waste = [card("10"), card("9")];
-    expect(game.draw.length + game.waste.length).toBeGreaterThan(0);
+    expect(game.stock.length + game.waste.length).toBeGreaterThan(0);
     expect(devilsGripRules.hasAnyProgressMove(game)).toBe(false);
   });
 

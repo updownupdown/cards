@@ -11,6 +11,11 @@ export const cardDims = {
   // Tightest a tableau fan may overlap while each card's index stays readable.
   tableauOffsetMin: 0.22,
   tableauOffsetHorizontal: 0.37,
+  // A sideways fan that clears the whole corner index: the tableau art puts
+  // the suit beside the rank, reaching 0.57 of the card width.
+  tableauOffsetHorizontalSuit: 0.6,
+  // Tightest sideways fan that still shows enough of the suit to read it.
+  tableauOffsetHorizontalSuitMin: 0.54,
   smallCardOffset: 0.45,
 };
 

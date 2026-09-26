@@ -13,6 +13,14 @@ export const canfield: GameDefinition = {
     luck: 55,
   },
   thumbnail: "Canfield.webp",
+  thumbnailCredit: {
+    title: "The Cardsharps",
+    artistName: "Caravaggio",
+    date: "ca. 1595",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Caravaggio_(Michelangelo_Merisi)_-_The_Cardsharps_-_Google_Art_Project.jpg",
+  },
   background: GAME_BACKGROUNDS.cozyRoom3,
   animation: GameAnimations.Dust,
   gameColorDark: "#311a1e",

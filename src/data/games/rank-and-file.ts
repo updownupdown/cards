@@ -6,7 +6,7 @@ import { GameDefinition, GameTag } from "../games-data";
 export const rankAndFile: GameDefinition = {
   path: "/rank-and-file",
   title: "Rank and File",
-  aliases: ["Dress Parade"],
+  aliases: ["Dress Parade", "Number Ten"],
   tags: [
     GameTag.FortyThievesFamily,
     GameTag.TableauBuilding,
@@ -14,6 +14,14 @@ export const rankAndFile: GameDefinition = {
   ],
   rating: { complexity: 40, difficulty: 30, luck: 35 },
   thumbnail: "RankAndFile.webp",
+  thumbnailCredit: {
+    title:
+      "Soldiers Marching with Trophies of War, from The Triumph of Julius Caesar",
+    artistName: "Andrea Andreani",
+    date: "1593–99",
+    sourceName: "Cleveland Museum of Art",
+    sourceLink: "https://clevelandart.org/art/1930.583.4",
+  },
   background: GAME_BACKGROUNDS.city,
   animation: GameAnimations.Clouds,
   gameColorDark: "#26343b",
@@ -37,5 +45,7 @@ export const rankAndFile: GameDefinition = {
     "- Move any complete or partial correctly packed sequence.",
     "- Any card or sequence may fill an empty column.",
     "- Deal the stock one card at a time. There is no stock redeal.",
+    "## Number Ten",
+    "Number Ten is the same game with two face-down and two face-up cards in each column.",
   ],
 };

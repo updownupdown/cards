@@ -1,3 +1,4 @@
+import { getAutoCompleteOffer } from "@/hooks/auto-complete-offer";
 import { jest } from "@jest/globals";
 // Test harness for game screens. Games render for real, but:
 // - useStateManager can start from a fixture position instead of dealing,
@@ -56,6 +57,7 @@ export const harness = {
   dragOptions: null as DragOptions | null,
   /** Sources the latest render passed to makeDragHandlers: what can be dragged now. */
   dragSources: [] as unknown[],
+  renderer: null as ReactTestRenderer | null,
 };
 
 const noopSetup = async () => {};
@@ -180,6 +182,13 @@ export async function renderGame(
   Game: React.ComponentType,
   fixture?: unknown,
 ) {
+  // The previous test's game would otherwise stay mounted, and games that
+  // remount when a setting changes would pick up this test's fixture.
+  if (harness.renderer) {
+    const previous = harness.renderer;
+    harness.renderer = null;
+    await act(async () => previous.unmount());
+  }
   harness.path = path;
   harness.fixture = fixture;
   harness.wrapperProps = null;
@@ -191,8 +200,31 @@ export async function renderGame(
   await act(async () => {
     renderer = create(<Game />);
   });
+  harness.renderer = renderer;
   await settle();
   return renderer;
+}
+
+/**
+ * Renders a game that bundles classic variants (see GAME_VARIANTS) as the
+ * given variant. The setting is saved first, as the game menu would.
+ */
+export async function renderVariant(
+  path: string,
+  variant: string,
+  Game: React.ComponentType,
+  fixture?: unknown,
+) {
+  await setGameSettings(path, { variant });
+  return renderGame(path, Game, fixture);
+}
+
+/** Taps "Auto-complete" on the offer panel, which must be showing. */
+export async function acceptAutoCompleteOffer() {
+  const offer = getAutoCompleteOffer();
+  if (!offer) throw new Error("No auto-complete offer is showing");
+  await act(async () => offer.start());
+  await settle();
 }
 
 export function outcome() {

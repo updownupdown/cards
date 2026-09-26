@@ -13,6 +13,13 @@ export const chainOfCommand: GameDefinition = {
     luck: 30,
   },
   thumbnail: "ChainOfCommand.webp",
+  thumbnailCredit: {
+    title: "Circassian Cavalry Awaiting Their Commanding Officer",
+    artistName: "Alberto Pasini",
+    date: "1880",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/111736",
+  },
   background: GAME_BACKGROUNDS.brickStreet,
   animation: GameAnimations.Leaves,
   gameColorDark: "#252220",

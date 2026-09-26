@@ -29,7 +29,7 @@ const GRID_SIZE = 24;
 
 export type DevilsGripGameState = {
   grid: PlayingCard[][];
-  draw: PlayingCard[];
+  stock: PlayingCard[];
   waste: PlayingCard[];
 };
 
@@ -89,7 +89,7 @@ function pileOverlayColor(pile: PlayingCard[], pileIndex: number) {
 }
 
 function createInitialState(random: () => number = Math.random) {
-  const draw = shuffle(
+  const stock = shuffle(
     createDeck({ deckCount: 2, faceUp: false }).filter(
       (card) => card.rank !== "A",
     ),
@@ -97,7 +97,7 @@ function createInitialState(random: () => number = Math.random) {
   );
   return {
     grid: Array.from({ length: GRID_SIZE }, () => [] as PlayingCard[]),
-    draw,
+    stock,
     waste: [],
   };
 }
@@ -106,8 +106,8 @@ function gatherToDrawAction(
   state: DevilsGripGameState,
   random: () => number = Math.random,
 ) {
-  state.draw = shuffle(
-    flipAllToBack([...state.draw, ...state.grid.flat(), ...state.waste]),
+  state.stock = shuffle(
+    flipAllToBack([...state.stock, ...state.grid.flat(), ...state.waste]),
     random,
   );
   state.grid = Array.from({ length: GRID_SIZE }, () => [] as PlayingCard[]);
@@ -116,7 +116,7 @@ function gatherToDrawAction(
 
 function dealInitialGridAction(state: DevilsGripGameState) {
   for (let index = 0; index < GRID_SIZE; index += 1) {
-    const card = state.draw.pop();
+    const card = state.stock.pop();
     if (card) state.grid[index].push(flipToFace(card));
   }
 }
@@ -191,24 +191,24 @@ function moveAction(
 
   if (source.zone === "grid" && state.grid[source.pileIndex].length === 0) {
     redealWasteAction(state);
-    const replacement = state.draw.pop();
+    const replacement = state.stock.pop();
     if (replacement) state.grid[source.pileIndex].push(flipToFace(replacement));
   }
   return true;
 }
 
 function dealThreeAction(state: DevilsGripGameState) {
-  if (state.draw.length === 0) return false;
-  for (let count = 0; count < 3 && state.draw.length > 0; count += 1) {
-    const card = state.draw.pop();
+  if (state.stock.length === 0) return false;
+  for (let count = 0; count < 3 && state.stock.length > 0; count += 1) {
+    const card = state.stock.pop();
     if (card) state.waste.push(flipToFace(card));
   }
   return true;
 }
 
 function redealWasteAction(state: DevilsGripGameState) {
-  if (state.draw.length > 0 || state.waste.length === 0) return false;
-  state.draw = flipAllToBack(state.waste.slice().reverse());
+  if (state.stock.length > 0 || state.waste.length === 0) return false;
+  state.stock = flipAllToBack(state.waste.slice().reverse());
   state.waste = [];
   return true;
 }
@@ -251,8 +251,8 @@ function getReachableDrawThreeCards(state: DevilsGripGameState) {
   const wasteTop = state.waste[state.waste.length - 1];
   if (wasteTop) reachable.push(wasteTop);
 
-  addExposedCards(state.draw);
-  const fullDraw = [...state.draw, ...state.waste.slice().reverse()];
+  addExposedCards(state.stock);
+  const fullDraw = [...state.stock, ...state.waste.slice().reverse()];
   addExposedCards(fullDraw);
   return reachable;
 }
@@ -398,15 +398,15 @@ export default function DevilsGrip() {
         },
       },
       {
-        id: "draw",
-        name: "draw",
-        cards: game.draw,
+        id: "stock",
+        name: "stock",
+        cards: game.stock,
         col: 8.4,
         row: 2,
         baseZIndex: 70,
         fan: { maxVisible: 3 },
         placeholder: {
-          text: i18n.t("cards:draw"),
+          text: i18n.t("cards:stock"),
           showCount: true,
           infoPos: "above",
         },
@@ -456,7 +456,7 @@ export default function DevilsGrip() {
         ? 0
         : undefined,
       isDisabled:
-        source === null || mappedCard.zoneName === "draw" || !movableSource,
+        source === null || mappedCard.zoneName === "stock" || !movableSource,
       isSelected: isSelected || isHoverTarget,
       selectColor: isHoverTarget
         ? hoverColor
@@ -468,10 +468,10 @@ export default function DevilsGrip() {
   };
 
   const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
-    if (zone.name === "draw") {
+    if (zone.name === "stock") {
       return {
         onPress: onDrawPress,
-        isDisabled: game.draw.length === 0 && game.waste.length === 0,
+        isDisabled: game.stock.length === 0 && game.waste.length === 0,
       };
     }
     if (zone.name === "grid" && zone.pileIndex !== undefined) {
@@ -608,10 +608,10 @@ export default function DevilsGrip() {
   }
 
   function onDrawPress() {
-    if ((!game.draw.length && !game.waste.length) || dragGhost) return;
+    if ((!game.stock.length && !game.waste.length) || dragGhost) return;
     saveUndoState(structuredClone(game));
     setGame((draft) => {
-      if (draft.draw.length > 0) {
+      if (draft.stock.length > 0) {
         dealThreeAction(draft);
       } else {
         redealWasteAction(draft);
@@ -650,9 +650,9 @@ export default function DevilsGrip() {
     [cardHitAreas],
   );
 
-  const won = game.draw.length === 0 && game.waste.length === 0;
+  const won = game.stock.length === 0 && game.waste.length === 0;
   const ended = !isSettingUp && (won || !hasAnyProgressMove(game));
-  const score = game.draw.length + game.waste.length;
+  const score = game.stock.length + game.waste.length;
   const rating = scoreRating(score);
   const hoverMoveType =
     dragGhost && hoverTarget
@@ -695,10 +695,10 @@ export default function DevilsGrip() {
           ]}
         >
           {interactionTargets}
-          {(game.draw.length > 0 || game.waste.length > 0) &&
+          {(game.stock.length > 0 || game.waste.length > 0) &&
             (() => {
-              const draw = zones.find((zone) => zone.name === "draw")!;
-              const position = getZoneBasePos(draw);
+              const stock = zones.find((zone) => zone.name === "stock")!;
+              const position = getZoneBasePos(stock);
               return (
                 <Pressable
                   style={{

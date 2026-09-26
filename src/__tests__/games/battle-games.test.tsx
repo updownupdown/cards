@@ -38,7 +38,7 @@ describe("Dynasty", () => {
 
   function baseState() {
     return {
-      deck: [] as PlayingCard[],
+      stock: [] as PlayingCard[],
       discard: [],
       grid: Array.from({ length: 9 }, () => [] as PlayingCard[]),
       aces: [],

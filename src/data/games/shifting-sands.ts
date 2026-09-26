@@ -15,6 +15,14 @@ export const shiftingSands: GameDefinition = {
   background: GAME_BACKGROUNDS.sahara,
   animation: GameAnimations.Sand,
   thumbnail: "ShiftingSands.webp",
+  thumbnailCredit: {
+    title: "Building a Sand Castle",
+    artistName: "Unknown trade card artist",
+    date: "ca. 1885",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Building_a_Sand_Castle,_about_1885_..._(52189746220).jpg",
+  },
   gameColorDark: "#645641",
   gameColorPale: "#f4d99b",
   cardBack: CardBackColors.Terracotta,

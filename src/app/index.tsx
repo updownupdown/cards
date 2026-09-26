@@ -44,8 +44,8 @@ export default function HomeScreen() {
         // Pushed (not replaced) so Android's back button from the resumed game
         // returns to the home screen instead of leaving the app.
         router.push(
-          session.launchMode === "nodes"
-            ? ({ pathname: session.path, params: { mode: "nodes" } } as Href)
+          session.launchMode === "campaign"
+            ? ({ pathname: session.path, params: { mode: "campaign" } } as Href)
             : (session.path as Href),
         );
       } catch {

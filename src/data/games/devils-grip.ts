@@ -18,6 +18,13 @@ export const devilsGrip: GameDefinition = {
     luck: 45,
   },
   thumbnail: "DevilsGrip.webp",
+  thumbnailCredit: {
+    title: "Glass Fragment of a Devil",
+    artistName: "Unknown French glazier",
+    date: "1200–1215",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/467263",
+  },
   background: GAME_BACKGROUNDS.abandonedSand,
   animation: GameAnimations.Embers,
   gameColorDark: "#4e211e",
@@ -28,7 +35,7 @@ export const devilsGrip: GameDefinition = {
   quickStart: [
     "Build same-suit sequences: 2-5-8-J (top row), 3-6-9-Q (middle row), and 4-7-10-K (bottom row).",
     "Move cards or stacks to create sequences or to swap their position.",
-    "Tap the draw deck to deal three cards to the waste.",
+    "Tap the stock to deal three cards to the waste.",
     "The top waste card can be moved onto a valid stack.",
   ],
   howToPlay: [
@@ -42,10 +49,10 @@ export const devilsGrip: GameDefinition = {
     "- The bottom row builds by suit: **4, 7, 10, K**.",
     "Swap two occupied grid piles to rearrange them.",
     "You can create stacks without the base number (e.g. 5-8), and complete the sequence later.",
-    "When building leaves an empty grid space, it is immediately filled from Draw while cards remain.",
+    "When building leaves an empty grid space, it is immediately filled from the stock while cards remain.",
 
-    "## Draw and waste",
-    "Tap the Draw deck to turn up three cards onto the waste.",
+    "## Stock and waste",
+    "Tap the stock to turn up three cards onto the waste.",
     "- Only the top waste card can be played.",
     "- Redeals are unlimited.",
 

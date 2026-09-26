@@ -13,6 +13,14 @@ export const cabinSiege: GameDefinition = {
     luck: 20,
   },
   thumbnail: "CabinSiege.webp",
+  thumbnailCredit: {
+    title: "The Triumph of Death",
+    artistName: "Pieter Bruegel the Elder",
+    date: "ca. 1562",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:The_Triumph_of_Death_by_Pieter_Bruegel_the_Elder.jpg",
+  },
   background: GAME_BACKGROUNDS.dampForest,
   animation: GameAnimations.Leaves,
   gameColorDark: "#201207",

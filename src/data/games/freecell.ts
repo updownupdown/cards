@@ -6,7 +6,7 @@ import { GameAnimations } from "@/animations";
 export const freeCell: GameDefinition = {
   path: "/freecell",
   title: "FreeCell",
-  aliases: ["FreeCell"],
+  aliases: ["Baker's Game"],
   tags: [GameTag.FreeCellFamily, GameTag.SequenceBuilding],
   rating: {
     complexity: 20,
@@ -14,6 +14,13 @@ export const freeCell: GameDefinition = {
     luck: 25,
   },
   thumbnail: "FreeCell.webp",
+  thumbnailCredit: {
+    title: "Composition with Red, Yellow, and Blue",
+    artistName: "Piet Mondrian",
+    date: "1927",
+    sourceName: "Cleveland Museum of Art",
+    sourceLink: "https://clevelandart.org/art/1967.215",
+  },
   background: GAME_BACKGROUNDS.cabinInterior,
   animation: GameAnimations.Dust,
   gameColorDark: "#2b231b",
@@ -35,5 +42,8 @@ export const freeCell: GameDefinition = {
     "- Move one card at a time; each **free cell** holds a single card.",
     "- You can move one card at a time. You may move groups of cards together, but only if you have enough free cells and empty columns to have been able to make the equivalent move one card at a time.",
     "- Any card may be placed onto an empty column.",
+
+    "## Baker's Game",
+    "FreeCell's ancestor, chosen in the settings: columns build down **in the same suit** instead of in alternating colors.",
   ],
 };

@@ -9,6 +9,13 @@ export const fortress: GameDefinition = {
   tags: [GameTag.CastlesAndFans, GameTag.SequenceBuilding],
   rating: { complexity: 40, difficulty: 70, luck: 25 },
   thumbnail: "Fortress.webp",
+  thumbnailCredit: {
+    title: "Landscape with Rock and Fortress",
+    artistName: "Micco Spadaro",
+    date: "ca. 1645",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/8097",
+  },
   background: GAME_BACKGROUNDS.fortress,
   animation: GameAnimations.Clouds,
   gameColorDark: "#302a24",

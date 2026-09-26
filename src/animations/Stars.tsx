@@ -20,7 +20,7 @@ import {
 const STAR_COLORS = ["#ffffff", "#eef8ff", "#d9efff", "#b9ddff", "#91c7ff"];
 const STAR_COUNT = 60;
 
-// The twinkles loop on the UI thread. The shooting stars are the Nodes map's,
+// The twinkles loop on the UI thread. The shooting stars are the Campaign map's,
 // with the same settings.
 
 function TwinklingStar({

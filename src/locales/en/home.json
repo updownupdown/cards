@@ -3,7 +3,7 @@
     "home": "Home",
     "collect": "Collect",
     "search": "Search",
-    "nodes": "Campaign"
+    "campaign": "Campaign"
   },
   "cardSize": {
     "small": "List",
@@ -26,27 +26,9 @@
   "sections": {
     "localOnly": "Local-only Games",
     "gameOfTheDay": "Game of the Day",
+    "easyGames": "Easy games to get started",
     "jumpBackIn": "Jump Back In",
     "favorites": "Favorites"
-  },
-  "guide": {
-    "easy": {
-      "title": "Start with easy games",
-      "body": "Get started by trying some quick to learn, easy to win games."
-    },
-    "campaign": {
-      "title": "Campaign Mode",
-      "body": "Explore a universe of games: win games to unlock your way to the edge of the galaxy, and collect rewards along the way!",
-      "start": "Start Campaign",
-      "resume": "Resume Campaign"
-    },
-    "genres": {
-      "title": "Collect Them All!",
-      "body": "Explore {{games}} classic and modern games across {{categories}} categories; there's something for everyone!",
-      "gameCount_one": "{{count}} game",
-      "gameCount_other": "{{count}} games"
-    },
-    "dismiss": "Dismiss"
   },
   "gameOfTheDay": {
     "today": "Today",
@@ -61,9 +43,14 @@
     "intro": "Swipe left or right to pass, or tap to play."
   },
   "collect": {
-    "title": "Win Them All!",
-    "overall": "{{won}} of {{total}} games won",
-    "tagProgress": "{{tag}}: {{won}} of {{total}} won"
+    "games": "Games: {{won}}/{{total}}",
+    "categories": "Categories: {{won}}/{{total}}",
+    "tagProgress": "{{tag}}: {{won}} of {{total}} won",
+    "intro": {
+      "title": "Traveler's Log",
+      "text": "Win a game to collect its stamp. Explore similar mechanics and try to complete all the sets!",
+      "close": "Dismiss"
+    }
   },
   "tags": {
     "KlondikeFamily": "Klondike Family",

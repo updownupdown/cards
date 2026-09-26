@@ -15,6 +15,7 @@ import {
   pressCard,
   pressCardId,
   renderGame,
+  renderVariant,
   run,
 } from "../../../jest/game-harness";
 import type { PlayingCard } from "@/components/Cards/card-utils";
@@ -284,7 +285,7 @@ describe("Forty Thieves", () => {
   test("building the last foundation card wins", async () => {
     const tableau = Array.from({ length: 10 }, () => [] as PlayingCard[]);
     tableau[0] = [card("K", "spades")];
-    await renderGame("/forty-thieves", FortyThieves, {
+    await renderVariant("/forty-thieves", "forty-thieves", FortyThieves, {
       foundations: [
         run("spades"),
         run("hearts"),
@@ -299,12 +300,14 @@ describe("Forty Thieves", () => {
       stock: [],
       waste: [],
       redealsUsed: 0,
+      ended: false,
+      won: false,
     });
     expect(outcome()).toBe("playing");
 
     await dropMove(
-      { zone: "tableau", pileIndex: 0, cardIndex: 0 },
-      { zone: "foundation", pileIndex: 7 },
+      { zone: "tableau", pile: 0, card: 0 },
+      { zone: "foundation", pile: 7 },
     );
 
     expect(outcome()).toBe("won");
@@ -324,18 +327,20 @@ describe("Forty Thieves", () => {
       [card("K", "clubs")],
       [card("2", "diamonds")],
     ];
-    await renderGame("/forty-thieves", FortyThieves, {
+    await renderVariant("/forty-thieves", "forty-thieves", FortyThieves, {
       foundations: Array.from({ length: 8 }, () => []),
       tableau,
       stock: [],
       waste: [],
       redealsUsed: 0,
+      ended: false,
+      won: false,
     });
     expect(outcome()).toBe("playing");
 
     await dropMove(
-      { zone: "tableau", pileIndex: 0, cardIndex: 1 },
-      { zone: "tableau", pileIndex: 1 },
+      { zone: "tableau", pile: 0, card: 1 },
+      { zone: "tableau", pile: 1 },
     );
 
     expect(outcome()).toBe("lost");

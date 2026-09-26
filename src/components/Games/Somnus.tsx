@@ -598,7 +598,7 @@ export default function Somnus() {
         col: 0,
         row: 0.75,
         fan: { maxVisible: 3 },
-        placeholder: { text: i18n.t("cards:dscrd"), infoPos: "below" },
+        placeholder: { text: i18n.t("cards:discard"), infoPos: "below" },
       },
       {
         id: "dream-deck",
@@ -622,7 +622,7 @@ export default function Somnus() {
         row: 0.75,
         fan: { maxVisible: 3 },
         placeholder: {
-          text: i18n.t("games:somnus.rmvd"),
+          text: i18n.t("games:somnus.removed"),
           infoPos: "below",
           showCount: true,
         },
@@ -635,7 +635,7 @@ export default function Somnus() {
         row: 3,
         fan: { maxVisible: 3 },
         placeholder: {
-          text: i18n.t("games:somnus.rmvd"),
+          text: i18n.t("games:somnus.removed"),
           infoPos: "above",
           showCount: true,
         },
@@ -648,7 +648,7 @@ export default function Somnus() {
         col: 0,
         row: 3,
         fan: { maxVisible: 3 },
-        placeholder: { text: i18n.t("cards:dscrd"), infoPos: "above" },
+        placeholder: { text: i18n.t("cards:discard"), infoPos: "above" },
       },
       {
         id: "guardian-deck",

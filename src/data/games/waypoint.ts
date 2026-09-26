@@ -15,6 +15,14 @@ export const waypoint: GameDefinition = {
   background: GAME_BACKGROUNDS.dirtRoad,
   animation: GameAnimations.Leaves,
   thumbnail: "Waypoint.webp",
+  thumbnailCredit: {
+    title: "Indianapolis Motor Speedway",
+    artistName: "Otis Lithograph Co.",
+    date: "1909",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Indianapolis_Motor_Speedway_1909_poster_(color).jpg",
+  },
   gameColorDark: "#263b38",
   gameColorPale: "#f5e4ad",
   cardBack: CardBackColors.Walnut,

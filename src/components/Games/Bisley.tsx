@@ -240,7 +240,8 @@ export default function Bisley() {
               col: 2 + suitIndex + row * 5,
               row: 0,
               fan: { maxVisible: 1 },
-              placeholder: {},
+              placeholder:
+                direction === "descending" ? { iconName: "king" } : {},
             }) as MapZone,
         ),
     );

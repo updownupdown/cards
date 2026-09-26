@@ -32,7 +32,7 @@ afterEach(() => {
 function stateWithPiles(piles: PlayingCard[][]): JailbreakGameState {
   return {
     piles,
-    remainder: [],
+    stock: [],
     jokerPile: [],
     discard: [],
     ended: false,
@@ -60,7 +60,7 @@ describe("Jailbreak rules", () => {
         6,
         cornerSize,
       ]);
-      expect(state.remainder).toHaveLength(remainderSize);
+      expect(state.stock).toHaveLength(remainderSize);
       expect(
         state.piles.every((pile) => pile.length === 0 || pile.at(-1)?.faceUp),
       ).toBe(true);

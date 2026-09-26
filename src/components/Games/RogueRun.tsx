@@ -731,7 +731,7 @@ export default function RogueRun() {
         fan: { maxVisible: 3 },
         placeholder: {
           infoPos: "right",
-          text: i18n.t("cards:dscrd"),
+          text: i18n.t("cards:discard"),
         },
         baseZIndex: 50,
       },

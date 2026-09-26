@@ -9,6 +9,14 @@ export const chapterAndVerse: GameDefinition = {
   tags: [GameTag.ModernMechanics, GameTag.ScoringPuzzles],
   rating: { complexity: 45, difficulty: 55, luck: 50 },
   thumbnail: "ChapterAndVerse.webp",
+  thumbnailCredit: {
+    title: "The Bookworm",
+    artistName: "Carl Spitzweg",
+    date: "ca. 1850",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Carl_Spitzweg_-_%22The_Bookworm%22.jpg",
+  },
   background: GAME_BACKGROUNDS.bookstore,
   animation: GameAnimations.CandleMotes,
   gameColorDark: "#2e2d27",

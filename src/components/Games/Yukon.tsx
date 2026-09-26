@@ -27,6 +27,7 @@ import {
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
+import { useGameVariant } from "@/hooks/useGameVariant";
 
 const columnCount = 7;
 
@@ -44,7 +45,7 @@ type DropTarget =
   | { zone: "cascade"; pileIndex: number }
   | { zone: "foundation"; pileIndex: number };
 
-// ─── Rules (override canPlaceOnCascade in the Russian Solitaire variant) ──────
+// ─── Rules: each variant builds the tableau its own way ───────────────────────
 
 export function yukonCanStack(
   card: PlayingCard,
@@ -53,6 +54,42 @@ export function yukonCanStack(
   if (!destTop) return card.rank === "K"; // only Kings to empty columns
   return (
     isRed(card.suit) !== isRed(destTop.suit) &&
+    RANK_VALUE[card.rank] + 1 === RANK_VALUE[destTop.rank]
+  );
+}
+
+/** Russian Solitaire: down in the same suit. */
+export function russianCanStack(
+  card: PlayingCard,
+  destTop: PlayingCard | undefined,
+): boolean {
+  if (!destTop) return card.rank === "K";
+  return (
+    card.suit === destTop.suit &&
+    RANK_VALUE[card.rank] + 1 === RANK_VALUE[destTop.rank]
+  );
+}
+
+/** Alaska: up or down in the same suit. */
+export function alaskaCanStack(
+  card: PlayingCard,
+  destTop: PlayingCard | undefined,
+): boolean {
+  if (!destTop) return card.rank === "K";
+  return (
+    card.suit === destTop.suit &&
+    Math.abs(RANK_VALUE[card.rank] - RANK_VALUE[destTop.rank]) === 1
+  );
+}
+
+/** Moosehide: down on any suit but its own. */
+export function moosehideCanStack(
+  card: PlayingCard,
+  destTop: PlayingCard | undefined,
+): boolean {
+  if (!destTop) return card.rank === "K";
+  return (
+    card.suit !== destTop.suit &&
     RANK_VALUE[card.rank] + 1 === RANK_VALUE[destTop.rank]
   );
 }
@@ -105,7 +142,7 @@ export const yukonRules = {
   createYukonState,
 };
 
-// ─── Component factory (shared with Russian Solitaire) ────────────────────────
+// ─── Component factory (shared by every variant) ──────────────────────────────
 
 type YukonProps = {
   canStack?: (card: PlayingCard, destTop: PlayingCard | undefined) => boolean;
@@ -289,7 +326,7 @@ export function YukonBoard({
         offset: cardDims.tableauOffset,
         center: false,
       },
-      placeholder: {},
+      placeholder: { iconName: "king" },
     }));
 
     return [sizingZone, setupZone, ...foundationZones, ...columnZones];
@@ -673,6 +710,31 @@ export function YukonBoard({
   );
 }
 
+const VARIANTS = {
+  yukon: { canStack: yukonCanStack, winMessage: undefined },
+  russian: {
+    canStack: russianCanStack,
+    winMessage: "games:stockTableauSolitaire.everySuitIsHome",
+  },
+  alaska: {
+    canStack: alaskaCanStack,
+    winMessage: "games:alaska.everyAlaskanSuitIsHome",
+  },
+  moosehide: {
+    canStack: moosehideCanStack,
+    winMessage: "games:moosehide.everyTrailLeadsHome",
+  },
+} as const;
+
 export default function Yukon() {
-  return <YukonBoard />;
+  const variant = useGameVariant("/yukon");
+  if (!variant) return null;
+  const { canStack, winMessage } = VARIANTS[variant];
+  return (
+    <YukonBoard
+      key={variant}
+      canStack={canStack}
+      winMessage={winMessage && i18n.t(winMessage)}
+    />
+  );
 }

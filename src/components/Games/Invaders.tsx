@@ -422,7 +422,7 @@ export default function Invaders() {
         row: rowOffset * 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: i18n.t("games:invaders.atks"), infoPos: "above" },
+        placeholder: { text: i18n.t("games:invaders.attacks"), infoPos: "above" },
       },
       ...attackers,
       {
@@ -433,7 +433,7 @@ export default function Invaders() {
         row: rowOffset * 1,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: i18n.t("cards:dscrd"), infoPos: "above" },
+        placeholder: { text: i18n.t("cards:discard"), infoPos: "above" },
       },
       {
         id: "defenderDeck",
@@ -443,7 +443,7 @@ export default function Invaders() {
         row: rowOffset * 2,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: i18n.t("games:invaders.defs"), infoPos: "above" },
+        placeholder: { text: i18n.t("games:invaders.defenses"), infoPos: "above" },
       },
       ...defenders,
       {

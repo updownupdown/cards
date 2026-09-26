@@ -15,6 +15,13 @@ export const dominion: GameDefinition = {
   background: GAME_BACKGROUNDS.nightSky,
   animation: GameAnimations.Stars,
   thumbnail: "Dominion.webp",
+  thumbnailCredit: {
+    title: "Procession of a Daimyo",
+    artistName: "Hishikawa Moronobu",
+    date: "ca. 1681–84",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/30113",
+  },
   gameColorDark: "#1d2231",
   gameColorPale: "#dbe9eb",
   cardBack: CardBackColors.Ocean,

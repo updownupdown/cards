@@ -13,6 +13,13 @@ export const herbalist: GameDefinition = {
     luck: 25,
   },
   thumbnail: "Herbalist.webp",
+  thumbnailCredit: {
+    title: "Hanuman Bearing the Mountaintop with Medicinal Herbs",
+    artistName: "Unknown Rajasthani artist",
+    date: "ca. 1800",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/37960",
+  },
   background: GAME_BACKGROUNDS.forest,
   animation: GameAnimations.Firefly,
   gameColorDark: "#1b3a1f",

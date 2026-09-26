@@ -37,8 +37,8 @@ describe("Monte Carlo", () => {
   async function removePairAndConsolidate(grid: (PlayingCard | null)[]) {
     const renderer = await renderGame("/monte-carlo", MonteCarlo, {
       grid,
-      draw: [],
-      trash: [],
+      stock: [],
+      discard: [],
       ended: false,
       won: false,
     });

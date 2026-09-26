@@ -14,6 +14,14 @@ export const bakersDozen: GameDefinition = {
     luck: 40,
   },
   thumbnail: "BakersDozen.webp",
+  thumbnailCredit: {
+    title: "The Baker",
+    artistName: "Job Berckheyde",
+    date: "ca. 1681",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:The_Baker,_circa_1681,_by_Job_Adriaensz_Berckheyde_(1630-1693)_-_IMG_7331.JPG",
+  },
   background: GAME_BACKGROUNDS.cozyRoom3,
   animation: GameAnimations.Dust,
   gameColorDark: "#253b36",

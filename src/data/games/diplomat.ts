@@ -13,6 +13,14 @@ export const diplomat: GameDefinition = {
   ],
   rating: { complexity: 30, difficulty: 25, luck: 35 },
   thumbnail: "Diplomat.webp",
+  thumbnailCredit: {
+    title: "The Ambassadors",
+    artistName: "Hans Holbein the Younger",
+    date: "1533",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Holbein_Ambassadors.jpg",
+  },
   background: GAME_BACKGROUNDS.oldCityAlley,
   animation: GameAnimations.Rain,
   gameColorDark: "#25343a",

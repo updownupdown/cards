@@ -21,6 +21,7 @@ export function HomeSectionTitle({
   contentMaxWidth,
 }: HomeSectionTitleProps) {
   const { spacing } = useResponsiveMetrics();
+  const titleFontSize = spacing(18 * 1.15);
 
   return (
     <View
@@ -52,14 +53,20 @@ export function HomeSectionTitle({
         <Text
           weight={400}
           size="md"
-          style={{ marginRight: "auto", fontSize: spacing(18 * 1.15) }}
+          // The line height is set here, since Text's lineHeight scales the
+          // size prop's font size, not this one; any tighter clips the
+          // descenders on Android.
+          style={{
+            marginRight: "auto",
+            fontSize: titleFontSize,
+            lineHeight: titleFontSize * 1.25,
+          }}
           color={Colors.white}
-          lineHeight={1}
         >
           {title}
         </Text>
         {subtitle && (
-          <Text weight={300} size="xs" color={Colors.K400} lineHeight={1}>
+          <Text weight={300} size="xs" color={Colors.K400}>
             {subtitle}
           </Text>
         )}

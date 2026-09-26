@@ -9,6 +9,14 @@ export const spiderette: GameDefinition = {
   tags: [GameTag.SpiderFamily, GameTag.SequenceBuilding],
   rating: { complexity: 35, difficulty: 60, luck: 40 },
   thumbnail: "Spiderette.webp",
+  thumbnailCredit: {
+    title: "Pink-Toed Tarantula, from Metamorphosis of the Insects of Surinam",
+    artistName: "Maria Sibylla Merian",
+    date: "1705",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Avicularia-avicularia.jpg",
+  },
   background: GAME_BACKGROUNDS.forestGrasses,
   animation: GameAnimations.Spiders,
   gameColorDark: "#202e27",

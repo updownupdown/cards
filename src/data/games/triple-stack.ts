@@ -13,6 +13,13 @@ export const tripleStack: GameDefinition = {
     luck: 40,
   },
   thumbnail: "TripleStack.webp",
+  thumbnailCredit: {
+    title: "Still Life",
+    artistName: "Georg Flegel",
+    date: "ca. 1625–30",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/436305",
+  },
   background: GAME_BACKGROUNDS.modernStairs,
   animation: GameAnimations.Dust,
   gameColorDark: "#102524",
