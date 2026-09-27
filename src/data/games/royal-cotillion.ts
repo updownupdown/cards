@@ -12,9 +12,9 @@ export const royalCotillion: GameDefinition = {
     GameTag.StockAndWaste,
   ],
   rating: {
-    complexity: 45,
+    complexity: 40,
     difficulty: 50,
-    luck: 75,
+    luck: 70,
   },
   thumbnail: "RoyalCotillion.webp",
   thumbnailCredit: {

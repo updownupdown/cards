@@ -12,7 +12,7 @@ export const ouroboros: GameDefinition = {
     GameTag.SpatialControl,
   ],
   rating: {
-    complexity: 45,
+    complexity: 55,
     difficulty: 40,
     luck: 40,
   },

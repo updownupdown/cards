@@ -13,7 +13,7 @@ export const threePeaks: GameDefinition = {
     GameTag.StockAndWaste,
   ],
   rating: {
-    complexity: 15,
+    complexity: 10,
     difficulty: 40,
     luck: 55,
   },

@@ -10,7 +10,7 @@ export const congress: GameDefinition = {
     GameTag.TableauBuilding,
     GameTag.StockAndWaste,
   ],
-  rating: { complexity: 35, difficulty: 60, luck: 40 },
+  rating: { complexity: 25, difficulty: 65, luck: 45 },
   thumbnail: "Congress.webp",
   thumbnailCredit: {
     title: "The Congress of Princes at Vienna",

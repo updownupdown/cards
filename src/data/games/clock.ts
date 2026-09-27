@@ -8,8 +8,8 @@ export const clock: GameDefinition = {
   title: "Clock Solitaire",
   tags: [GameTag.FoundationBuilders, GameTag.TableauBuilding],
   rating: {
-    complexity: 10,
-    difficulty: 10,
+    complexity: 5,
+    difficulty: 90,
     luck: 100,
   },
   thumbnail: "Clock.webp",

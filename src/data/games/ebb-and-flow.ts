@@ -9,7 +9,7 @@ export const ebbAndFlow: GameDefinition = {
   enabledOnLocalOnly: true,
   tags: [GameTag.ModernMechanics, GameTag.SequenceBuilding],
   rating: {
-    complexity: 20,
+    complexity: 30,
     difficulty: 50,
     luck: 40,
   },

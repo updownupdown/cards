@@ -9,8 +9,8 @@ export const klondike: GameDefinition = {
   tags: [GameTag.KlondikeFamily, GameTag.StockAndWaste],
   rating: {
     complexity: 20,
-    difficulty: 40,
-    luck: 45,
+    difficulty: 60,
+    luck: 50,
   },
   thumbnail: "Klondike.webp",
   thumbnailCredit: {

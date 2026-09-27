@@ -8,7 +8,7 @@ export const herbalist: GameDefinition = {
   title: "Herbalist",
   tags: [GameTag.Puzzles, GameTag.SpatialControl],
   rating: {
-    complexity: 75,
+    complexity: 65,
     difficulty: 75,
     luck: 25,
   },

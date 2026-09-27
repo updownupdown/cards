@@ -9,7 +9,7 @@ export const crazyQuilt: GameDefinition = {
   aliases: ["Japanese Rug", "Indian Carpet"],
   tags: [GameTag.DoubleDeckers, GameTag.SpatialControl, GameTag.StockAndWaste],
   rating: {
-    complexity: 40,
+    complexity: 45,
     difficulty: 55,
     luck: 45,
   },

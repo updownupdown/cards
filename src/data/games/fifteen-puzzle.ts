@@ -9,7 +9,7 @@ export const fifteenPuzzle: GameDefinition = {
   tags: [GameTag.Puzzles, GameTag.SpatialControl],
   // Scored in moves or guesses: fewer is better.
   lowerScoreIsBetter: true,
-  rating: { complexity: 20, difficulty: 30, luck: 0 },
+  rating: { complexity: 10, difficulty: 30, luck: 0 },
   thumbnail: "FifteenPuzzle.webp",
   thumbnailCredit: {
     title: "Solving a Puzzle",

@@ -12,9 +12,9 @@ export const grandfathersClock: GameDefinition = {
     GameTag.TableauBuilding,
   ],
   rating: {
-    complexity: 30,
-    difficulty: 30,
-    luck: 35,
+    complexity: 25,
+    difficulty: 25,
+    luck: 25,
   },
   thumbnail: "GrandfatherClock.webp",
   thumbnailCredit: {

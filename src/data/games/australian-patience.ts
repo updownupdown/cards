@@ -6,7 +6,7 @@ export const australianPatience: GameDefinition = {
   path: "/australian-patience",
   title: "Australian Patience",
   tags: [GameTag.YukonFamily, GameTag.TableauBuilding, GameTag.StockAndWaste],
-  rating: { complexity: 35, difficulty: 70, luck: 45 },
+  rating: { complexity: 30, difficulty: 70, luck: 45 },
   thumbnail: "AustralianPatience.webp",
   thumbnailCredit: {
     title: "Shearing the Rams",

@@ -10,7 +10,7 @@ export const apothecary: GameDefinition = {
   lowerScoreIsBetter: true,
   rating: {
     complexity: 15,
-    difficulty: 30,
+    difficulty: 35,
     luck: 5,
   },
   thumbnail: "Apothecary.webp",

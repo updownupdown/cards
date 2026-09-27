@@ -12,7 +12,7 @@ export const yukon: GameDefinition = {
     GameTag.TableauBuilding,
     GameTag.SequenceBuilding,
   ],
-  rating: { complexity: 35, difficulty: 55, luck: 35 },
+  rating: { complexity: 30, difficulty: 60, luck: 35 },
   thumbnail: "Yukon.webp",
   thumbnailCredit: {
     title: "September Evening, Mount McKinley",

@@ -20,7 +20,7 @@ export const royalRest: GameDefinition = {
   rating: {
     complexity: 30,
     difficulty: 45,
-    luck: 55,
+    luck: 40,
   },
   gameColorDark: "#332518",
   gameColorPale: "#def7ff",

@@ -12,9 +12,9 @@ export const calculation: GameDefinition = {
     GameTag.StockAndWaste,
   ],
   rating: {
-    complexity: 60,
-    difficulty: 80,
-    luck: 40,
+    complexity: 45,
+    difficulty: 65,
+    luck: 30,
   },
   thumbnail: "Calculation.webp",
   thumbnailCredit: {

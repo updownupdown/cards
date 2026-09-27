@@ -11,7 +11,7 @@ export const indian: GameDefinition = {
     GameTag.TableauBuilding,
     GameTag.StockAndWaste,
   ],
-  rating: { complexity: 35, difficulty: 30, luck: 40 },
+  rating: { complexity: 25, difficulty: 55, luck: 45 },
   thumbnail: "Indian.webp",
   thumbnailCredit: {
     title:

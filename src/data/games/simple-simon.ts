@@ -7,7 +7,7 @@ export const simpleSimon: GameDefinition = {
   path: "/simple-simon",
   title: "Simple Simon",
   tags: [GameTag.SpiderFamily, GameTag.SequenceBuilding],
-  rating: { complexity: 35, difficulty: 55, luck: 25 },
+  rating: { complexity: 30, difficulty: 50, luck: 15 },
   thumbnail: "SimpleSimon.webp",
   thumbnailCredit: {
     title: "Simple Simon",

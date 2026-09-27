@@ -8,8 +8,8 @@ export const twelveTrials: GameDefinition = {
   title: "Twelve Trials",
   tags: [GameTag.DungeonCrawler, GameTag.CardCombat],
   rating: {
-    complexity: 75,
-    difficulty: 75,
+    complexity: 55,
+    difficulty: 55,
     luck: 45,
   },
   thumbnail: "TwelveTrials.webp",

@@ -12,7 +12,7 @@ export const gargantua: GameDefinition = {
     GameTag.TableauBuilding,
     GameTag.StockAndWaste,
   ],
-  rating: { complexity: 35, difficulty: 45, luck: 45 },
+  rating: { complexity: 25, difficulty: 50, luck: 40 },
   thumbnail: "Gargantua.webp",
   thumbnailCredit: {
     title: "Gargantua",

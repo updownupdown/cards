@@ -9,9 +9,9 @@ export const tenTwentyThirty: GameDefinition = {
   aliases: ["Decade"],
   tags: [GameTag.PairMatching],
   rating: {
-    complexity: 20,
-    difficulty: 35,
-    luck: 70,
+    complexity: 15,
+    difficulty: 45,
+    luck: 75,
   },
   thumbnail: "TenTwentyThirty.webp",
   thumbnailCredit: {

@@ -12,9 +12,9 @@ export const cribbageSquares: GameDefinition = {
     GameTag.ScoringPuzzles,
   ],
   rating: {
-    complexity: 40,
-    difficulty: 60,
-    luck: 40,
+    complexity: 50,
+    difficulty: 55,
+    luck: 50,
   },
   thumbnail: "CribbageSquares.webp",
   thumbnailCredit: {

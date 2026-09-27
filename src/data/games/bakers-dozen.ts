@@ -9,9 +9,9 @@ export const bakersDozen: GameDefinition = {
   aliases: ["Baker's Dozen"],
   tags: [GameTag.CastlesAndFans, GameTag.SequenceBuilding],
   rating: {
-    complexity: 25,
-    difficulty: 70,
-    luck: 40,
+    complexity: 20,
+    difficulty: 45,
+    luck: 15,
   },
   thumbnail: "BakersDozen.webp",
   thumbnailCredit: {

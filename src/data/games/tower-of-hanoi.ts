@@ -8,8 +8,8 @@ export const towerOfHanoi: GameDefinition = {
   title: "Tower of Hanoi",
   tags: [GameTag.Puzzles, GameTag.SpatialControl, GameTag.SequenceBuilding],
   rating: {
-    complexity: 35,
-    difficulty: 45,
+    complexity: 15,
+    difficulty: 40,
     luck: 0,
   },
   // Scored in moves: fewer is better.

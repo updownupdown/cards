@@ -8,9 +8,9 @@ export const beehive: GameDefinition = {
   title: "Beehive",
   tags: [GameTag.PairMatching],
   rating: {
-    complexity: 15,
-    difficulty: 15,
-    luck: 25,
+    complexity: 20,
+    difficulty: 25,
+    luck: 50,
   },
   thumbnail: "Beehive.webp",
   thumbnailCredit: {

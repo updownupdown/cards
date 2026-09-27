@@ -9,8 +9,8 @@ export const gremlin: GameDefinition = {
   tags: [GameTag.ModernMechanics],
   rating: {
     complexity: 40,
-    difficulty: 75,
-    luck: 35,
+    difficulty: 65,
+    luck: 40,
   },
   thumbnail: "Gremlin.webp",
   thumbnailCredit: {

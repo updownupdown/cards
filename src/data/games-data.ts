@@ -33,9 +33,21 @@ export enum GameTag {
 
 export type HexColor = `#${string}`;
 
+/**
+ * Ratings from 0 to 100, for the default settings and a thoughtful adult
+ * with moderate experience of the game. Difficulty and luck place games on
+ * the Campaign map, so keep them on the same scale as the other games.
+ */
 export type GameRating = {
+  /** How much there is to learn and keep track of: 5 for Clock, 20 for
+   *  Klondike, 85 for Royal Envoy. */
   complexity: number;
+  /** How rarely a game is won: about 15 when nearly every game is won, 50
+   *  for about half, 70 for a quarter, 85 for one in ten, 95 for fewer than
+   *  one in twenty. Games that can't be lost rate the effort to finish. */
   difficulty: number;
+  /** How much the deal decides the result rather than your play: 0 for a
+   *  puzzle with no hidden or random cards, 100 for a game with no choices. */
   luck: number;
 };
 

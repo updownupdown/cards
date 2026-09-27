@@ -8,7 +8,7 @@ export const crescent: GameDefinition = {
   title: "Crescent",
   aliases: ["La Demi-Lune"],
   tags: [GameTag.CastlesAndFans, GameTag.SequenceBuilding],
-  rating: { complexity: 45, difficulty: 55, luck: 40 },
+  rating: { complexity: 40, difficulty: 55, luck: 35 },
   thumbnail: "Crescent.webp",
   thumbnailCredit: {
     title: "Two Men Contemplating the Moon",

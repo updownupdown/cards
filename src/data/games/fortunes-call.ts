@@ -16,7 +16,7 @@ export const fortunesCall: GameDefinition = {
     sourceLink: "https://www.metmuseum.org/art/collection/search/436838",
   },
   tags: [GameTag.ModernMechanics, GameTag.ScoringPuzzles],
-  rating: { complexity: 20, difficulty: 45, luck: 70 },
+  rating: { complexity: 10, difficulty: 55, luck: 85 },
   gameColorDark: "#272330",
   gameColorPale: "#b8f1c6",
   cardBack: CardBackColors.Rose,

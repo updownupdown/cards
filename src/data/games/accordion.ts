@@ -8,9 +8,9 @@ export const accordion: GameDefinition = {
   title: "Accordion",
   tags: [GameTag.ClearTheBoard, GameTag.PairMatching],
   rating: {
-    complexity: 10,
+    complexity: 15,
     difficulty: 95,
-    luck: 25,
+    luck: 20,
   },
   thumbnail: "Accordion.webp",
   thumbnailCredit: {

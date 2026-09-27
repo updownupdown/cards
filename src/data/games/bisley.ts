@@ -7,7 +7,7 @@ export const bisley: GameDefinition = {
   path: "/bisley",
   title: "Bisley",
   tags: [GameTag.CastlesAndFans, GameTag.SequenceBuilding],
-  rating: { complexity: 45, difficulty: 55, luck: 25 },
+  rating: { complexity: 30, difficulty: 60, luck: 20 },
   thumbnail: "Bisley.webp",
   thumbnailCredit: {
     title: "Archery, from Country Sports",

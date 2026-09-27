@@ -8,9 +8,9 @@ export const beleagueredCastle: GameDefinition = {
   title: "Beleaguered Castle",
   tags: [GameTag.CastlesAndFans, GameTag.SequenceBuilding],
   rating: {
-    complexity: 45,
-    difficulty: 55,
-    luck: 30,
+    complexity: 25,
+    difficulty: 60,
+    luck: 20,
   },
   thumbnail: "BeleagueredCastle.webp",
   thumbnailCredit: {

@@ -8,7 +8,7 @@ export const bristol: GameDefinition = {
   title: "Bristol",
   enabledOnLocalOnly: true,
   tags: [GameTag.CastlesAndFans, GameTag.TableauBuilding],
-  rating: { complexity: 25, difficulty: 45, luck: 45 },
+  rating: { complexity: 25, difficulty: 60, luck: 40 },
   thumbnail: "Bristol.webp",
   thumbnailCredit: {
     title: "Bristol Harbour",

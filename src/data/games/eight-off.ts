@@ -9,8 +9,8 @@ export const eightOff: GameDefinition = {
   tags: [GameTag.FreeCellFamily, GameTag.SequenceBuilding],
   rating: {
     complexity: 25,
-    difficulty: 40,
-    luck: 25,
+    difficulty: 30,
+    luck: 10,
   },
   thumbnail: "EightOff.webp",
   thumbnailCredit: {

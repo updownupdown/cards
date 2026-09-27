@@ -13,7 +13,7 @@ export const picketFence: GameDefinition = {
     GameTag.GridPlacement,
   ],
   rating: {
-    complexity: 45,
+    complexity: 50,
     difficulty: 40,
     luck: 35,
   },

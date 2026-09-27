@@ -10,7 +10,7 @@ export const crownslayer: GameDefinition = {
   rating: {
     complexity: 70,
     difficulty: 80,
-    luck: 30,
+    luck: 40,
   },
   thumbnail: "Crownslayer.webp",
   thumbnailCredit: {
