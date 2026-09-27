@@ -41,7 +41,7 @@ Once players have progress, the map must not change under them: which games are 
 - a plain run fails rather than move, unlink, drop or re-reward a locked game, so a new game can only be added around the locked ones;
 - a test checks the generated map against the lock, so a manual edit of a locked game fails too.
 
-The map is not locked yet. To change a locked map on purpose, delete the lock file, and migrate saved progress in `src/data/campaign-progress.ts` if it no longer fits.
+The map was locked on 2026-09-27, with the 170 hand-picked quotes. To change a locked map on purpose, delete the lock file, and migrate saved progress in `src/data/campaign-progress.ts` if it no longer fits.
 
 ## Validation
 
