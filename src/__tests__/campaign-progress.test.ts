@@ -25,21 +25,34 @@ describe("Nodes progress", () => {
 
     const progress = await loadCampaignProgress();
 
-    expect(progress.version).toBe(2);
+    expect(progress.version).toBe(3);
     expect(progress.collectedTaoIds).toEqual([1]);
-    // 115 was dropped, 116 moves down one and 168 moves down twelve.
-    expect(progress.collectedQuoteIds).toEqual([3, 104, 105, 115, 156]);
+    // In version 2: 115 was dropped, 116 moved down one and 168 twelve, to
+    // 3, 104, 105, 115 and 156. Of those, version 3 kept 3 and 105.
+    expect(progress.collectedQuoteIds).toEqual([3, 29]);
   });
 
-  test("version 2 quote IDs are kept as they are", async () => {
+  test("version 2 quote IDs follow their quotes into the hand-picked list", async () => {
     await AsyncStorage.setItem(
       CAMPAIGN_PROGRESS_STORAGE_KEY,
-      JSON.stringify({ version: 2, collectedQuoteIds: [115, 156] }),
+      JSON.stringify({ version: 2, collectedQuoteIds: [5, 105, 115, 205] }),
     );
 
     const progress = await loadCampaignProgress();
 
-    expect(progress.collectedQuoteIds).toEqual([115, 156]);
+    // 115 was dropped; the others moved down to close the gaps.
+    expect(progress.collectedQuoteIds).toEqual([4, 29, 66]);
+  });
+
+  test("version 3 quote IDs are kept as they are", async () => {
+    await AsyncStorage.setItem(
+      CAMPAIGN_PROGRESS_STORAGE_KEY,
+      JSON.stringify({ version: 3, collectedQuoteIds: [115, 170] }),
+    );
+
+    const progress = await loadCampaignProgress();
+
+    expect(progress.collectedQuoteIds).toEqual([115, 170]);
   });
 
   test("granting a mercy skip increments the count; using it checkpoints collectibles owned", async () => {

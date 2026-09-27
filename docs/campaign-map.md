@@ -50,7 +50,7 @@ Development validation in `src/data/campaign-map.ts` enforces:
 
 ## Quotes
 
-Quotes are awarded by ID, 1 to `REWARDS.lastAssignableQuote` (156) in `scripts/generate-campaign-map.mjs`; the rest of the 208 are held back for games still to come. See `docs/quotes.md` for the quote reveal, the collection and adding quotes or authors.
+Quotes are awarded by ID, 1 to `REWARDS.lastAssignableQuote` (140) in `scripts/generate-campaign-map.mjs`; the rest of the 170 are held back for games still to come. See `docs/quotes.md` for the quote reveal, the collection and adding quotes or authors.
 
 ## Progress storage
 

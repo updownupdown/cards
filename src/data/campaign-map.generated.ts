@@ -1421,10 +1421,6 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
         type: "quote",
         id: 1,
       },
-      {
-        type: "quote",
-        id: 109,
-      },
     ],
   },
   {
@@ -1444,7 +1440,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 154,
+        id: 130,
       },
     ],
   },
@@ -1461,11 +1457,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 4,
+        id: 6,
       },
       {
         type: "quote",
-        id: 155,
+        id: 131,
       },
     ],
   },
@@ -1491,7 +1487,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 24,
+        id: 133,
       },
     ],
   },
@@ -1508,11 +1504,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 6,
+        id: 5,
       },
       {
         type: "quote",
-        id: 7,
+        id: 135,
       },
     ],
   },
@@ -1529,11 +1525,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 8,
+        id: 7,
       },
       {
         type: "quote",
-        id: 25,
+        id: 134,
       },
     ],
   },
@@ -1552,10 +1548,6 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
         type: "tao",
         id: 32,
       },
-      {
-        type: "quote",
-        id: 9,
-      },
     ],
   },
   {
@@ -1571,11 +1563,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 10,
+        id: 8,
       },
       {
         type: "quote",
-        id: 31,
+        id: 136,
       },
     ],
   },
@@ -1592,11 +1584,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 12,
+        id: 9,
       },
       {
         type: "quote",
-        id: 32,
+        id: 137,
       },
     ],
   },
@@ -1616,8 +1608,8 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
         id: 13,
       },
       {
-        type: "tao",
-        id: 81,
+        type: "quote",
+        id: 138,
       },
     ],
   },
@@ -1634,11 +1626,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 15,
-      },
-      {
-        type: "quote",
-        id: 84,
+        id: 27,
       },
     ],
   },
@@ -1657,10 +1645,6 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
         type: "tao",
         id: 44,
       },
-      {
-        type: "quote",
-        id: 16,
-      },
     ],
   },
   {
@@ -1676,11 +1660,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 17,
+        id: 48,
       },
       {
         type: "quote",
-        id: 36,
+        id: 140,
       },
     ],
   },
@@ -1693,15 +1677,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 18,
+        id: 10,
       },
       {
         type: "quote",
-        id: 19,
-      },
-      {
-        type: "quote",
-        id: 39,
+        id: 49,
       },
     ],
   },
@@ -1718,11 +1698,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 20,
-      },
-      {
-        type: "quote",
-        id: 62,
+        id: 11,
       },
     ],
   },
@@ -1744,11 +1720,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 21,
-      },
-      {
-        type: "quote",
-        id: 40,
+        id: 12,
       },
     ],
   },
@@ -1761,15 +1733,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 22,
+        id: 50,
       },
       {
         type: "quote",
-        id: 23,
-      },
-      {
-        type: "quote",
-        id: 134,
+        id: 51,
       },
     ],
   },
@@ -1791,11 +1759,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 26,
-      },
-      {
-        type: "quote",
-        id: 143,
+        id: 52,
       },
     ],
   },
@@ -1808,15 +1772,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 27,
+        id: 53,
       },
       {
         type: "quote",
-        id: 28,
-      },
-      {
-        type: "quote",
-        id: 131,
+        id: 54,
       },
     ],
   },
@@ -1833,11 +1793,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 29,
-      },
-      {
-        type: "quote",
-        id: 100,
+        id: 13,
       },
     ],
   },
@@ -1861,10 +1817,6 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
         type: "tao",
         id: 70,
       },
-      {
-        type: "quote",
-        id: 30,
-      },
     ],
   },
   {
@@ -1882,10 +1834,6 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
         type: "tao",
         id: 52,
       },
-      {
-        type: "quote",
-        id: 33,
-      },
     ],
   },
   {
@@ -1901,7 +1849,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 34,
+        id: 15,
       },
     ],
   },
@@ -1923,7 +1871,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 37,
+        id: 55,
       },
     ],
   },
@@ -1940,7 +1888,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 38,
+        id: 56,
       },
     ],
   },
@@ -1957,11 +1905,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 41,
-      },
-      {
-        type: "quote",
-        id: 144,
+        id: 57,
       },
     ],
   },
@@ -1978,7 +1922,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 42,
+        id: 58,
       },
     ],
   },
@@ -1991,11 +1935,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 43,
+        id: 59,
       },
       {
         type: "quote",
-        id: 44,
+        id: 60,
       },
     ],
   },
@@ -2012,7 +1956,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 45,
+        id: 16,
       },
     ],
   },
@@ -2029,7 +1973,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 46,
+        id: 17,
       },
     ],
   },
@@ -2042,11 +1986,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 47,
+        id: 18,
       },
       {
         type: "quote",
-        id: 48,
+        id: 61,
       },
     ],
   },
@@ -2063,7 +2007,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 49,
+        id: 62,
       },
     ],
   },
@@ -2080,7 +2024,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 50,
+        id: 63,
       },
     ],
   },
@@ -2097,7 +2041,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 51,
+        id: 64,
       },
     ],
   },
@@ -2115,11 +2059,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 52,
+        id: 19,
       },
       {
         type: "quote",
-        id: 53,
+        id: 65,
       },
     ],
   },
@@ -2136,7 +2080,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 54,
+        id: 66,
       },
     ],
   },
@@ -2153,11 +2097,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 55,
-      },
-      {
-        type: "quote",
-        id: 132,
+        id: 67,
       },
     ],
   },
@@ -2170,11 +2110,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 56,
+        id: 68,
       },
       {
         type: "quote",
-        id: 57,
+        id: 69,
       },
     ],
   },
@@ -2191,7 +2131,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 58,
+        id: 70,
       },
     ],
   },
@@ -2208,7 +2148,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 59,
+        id: 71,
       },
     ],
   },
@@ -2221,11 +2161,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 60,
+        id: 20,
       },
       {
         type: "quote",
-        id: 61,
+        id: 72,
       },
     ],
   },
@@ -2242,7 +2182,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 63,
+        id: 73,
       },
     ],
   },
@@ -2255,11 +2195,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 64,
+        id: 74,
       },
       {
         type: "quote",
-        id: 65,
+        id: 75,
       },
     ],
   },
@@ -2276,7 +2216,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 66,
+        id: 76,
       },
     ],
   },
@@ -2293,7 +2233,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 67,
+        id: 77,
       },
     ],
   },
@@ -2306,11 +2246,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 68,
+        id: 78,
       },
       {
         type: "quote",
-        id: 69,
+        id: 79,
       },
     ],
   },
@@ -2327,7 +2267,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 70,
+        id: 80,
       },
     ],
   },
@@ -2344,7 +2284,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 71,
+        id: 81,
       },
     ],
   },
@@ -2357,11 +2297,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 72,
+        id: 82,
       },
       {
         type: "quote",
-        id: 73,
+        id: 83,
       },
     ],
   },
@@ -2378,7 +2318,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 74,
+        id: 84,
       },
     ],
   },
@@ -2395,7 +2335,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 75,
+        id: 85,
       },
     ],
   },
@@ -2408,11 +2348,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 76,
+        id: 86,
       },
       {
         type: "quote",
-        id: 77,
+        id: 87,
       },
     ],
   },
@@ -2429,7 +2369,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 78,
+        id: 88,
       },
     ],
   },
@@ -2446,7 +2386,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 79,
+        id: 89,
       },
     ],
   },
@@ -2463,7 +2403,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 80,
+        id: 90,
       },
     ],
   },
@@ -2476,11 +2416,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 81,
+        id: 91,
       },
       {
         type: "quote",
-        id: 82,
+        id: 92,
       },
     ],
   },
@@ -2497,7 +2437,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 83,
+        id: 93,
       },
     ],
   },
@@ -2510,11 +2450,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 85,
+        id: 21,
       },
       {
         type: "quote",
-        id: 86,
+        id: 94,
       },
     ],
   },
@@ -2531,7 +2471,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 87,
+        id: 95,
       },
     ],
   },
@@ -2554,7 +2494,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 88,
+        id: 96,
       },
     ],
   },
@@ -2567,11 +2507,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 89,
+        id: 97,
       },
       {
         type: "quote",
-        id: 90,
+        id: 98,
       },
     ],
   },
@@ -2588,7 +2528,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 91,
+        id: 22,
       },
     ],
   },
@@ -2605,7 +2545,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 92,
+        id: 23,
       },
     ],
   },
@@ -2618,11 +2558,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 93,
+        id: 24,
       },
       {
         type: "quote",
-        id: 94,
+        id: 25,
       },
     ],
   },
@@ -2639,7 +2579,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 95,
+        id: 26,
       },
     ],
   },
@@ -2656,7 +2596,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 96,
+        id: 99,
       },
     ],
   },
@@ -2669,11 +2609,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 97,
+        id: 100,
       },
       {
         type: "quote",
-        id: 98,
+        id: 101,
       },
     ],
   },
@@ -2690,7 +2630,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 99,
+        id: 102,
       },
     ],
   },
@@ -2703,11 +2643,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 101,
+        id: 28,
       },
       {
         type: "quote",
-        id: 102,
+        id: 103,
       },
     ],
   },
@@ -2729,7 +2669,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 103,
+        id: 104,
       },
     ],
   },
@@ -2746,7 +2686,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 104,
+        id: 105,
       },
     ],
   },
@@ -2763,7 +2703,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 105,
+        id: 29,
       },
     ],
   },
@@ -2797,7 +2737,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 108,
+        id: 30,
       },
     ],
   },
@@ -2810,11 +2750,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 110,
+        id: 31,
       },
       {
         type: "quote",
-        id: 111,
+        id: 32,
       },
     ],
   },
@@ -2831,7 +2771,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 112,
+        id: 33,
       },
     ],
   },
@@ -2848,7 +2788,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 113,
+        id: 34,
       },
     ],
   },
@@ -2861,11 +2801,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 114,
+        id: 35,
       },
       {
         type: "quote",
-        id: 115,
+        id: 108,
       },
     ],
   },
@@ -2882,7 +2822,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 116,
+        id: 36,
       },
     ],
   },
@@ -2899,7 +2839,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 117,
+        id: 37,
       },
     ],
   },
@@ -2912,11 +2852,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 118,
+        id: 38,
       },
       {
         type: "quote",
-        id: 119,
+        id: 109,
       },
     ],
   },
@@ -2933,7 +2873,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 120,
+        id: 39,
       },
     ],
   },
@@ -2950,7 +2890,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 121,
+        id: 110,
       },
     ],
   },
@@ -2963,11 +2903,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 122,
+        id: 40,
       },
       {
         type: "quote",
-        id: 123,
+        id: 111,
       },
     ],
   },
@@ -2984,7 +2924,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 124,
+        id: 112,
       },
     ],
   },
@@ -3001,7 +2941,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 125,
+        id: 41,
       },
     ],
   },
@@ -3019,11 +2959,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 126,
+        id: 113,
       },
       {
         type: "quote",
-        id: 127,
+        id: 114,
       },
     ],
   },
@@ -3040,7 +2980,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 128,
+        id: 115,
       },
     ],
   },
@@ -3057,7 +2997,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 129,
+        id: 42,
       },
     ],
   },
@@ -3074,7 +3014,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 130,
+        id: 116,
       },
     ],
   },
@@ -3091,7 +3031,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 133,
+        id: 43,
       },
     ],
   },
@@ -3104,11 +3044,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 135,
+        id: 44,
       },
       {
         type: "quote",
-        id: 136,
+        id: 117,
       },
     ],
   },
@@ -3125,7 +3065,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 137,
+        id: 118,
       },
     ],
   },
@@ -3142,7 +3082,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 138,
+        id: 45,
       },
     ],
   },
@@ -3155,11 +3095,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 139,
+        id: 46,
       },
       {
         type: "quote",
-        id: 140,
+        id: 119,
       },
     ],
   },
@@ -3176,7 +3116,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 141,
+        id: 120,
       },
     ],
   },
@@ -3193,7 +3133,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 142,
+        id: 121,
       },
     ],
   },
@@ -3210,7 +3150,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 145,
+        id: 122,
       },
     ],
   },
@@ -3227,7 +3167,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 146,
+        id: 123,
       },
     ],
   },
@@ -3240,11 +3180,11 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 147,
+        id: 124,
       },
       {
         type: "quote",
-        id: 148,
+        id: 125,
       },
     ],
   },
@@ -3261,7 +3201,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 149,
+        id: 126,
       },
     ],
   },
@@ -3278,7 +3218,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 150,
+        id: 127,
       },
     ],
   },
@@ -3291,15 +3231,15 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     rewards: [
       {
         type: "quote",
-        id: 5,
+        id: 4,
       },
       {
         type: "quote",
-        id: 11,
+        id: 128,
       },
       {
         type: "quote",
-        id: 156,
+        id: 132,
       },
     ],
   },
@@ -3311,16 +3251,16 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     connections: ["/herbalist"],
     rewards: [
       {
-        type: "quote",
-        id: 13,
+        type: "tao",
+        id: 81,
       },
       {
         type: "quote",
-        id: 35,
+        id: 129,
       },
       {
         type: "quote",
-        id: 151,
+        id: 139,
       },
     ],
   },
@@ -3337,11 +3277,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       },
       {
         type: "quote",
-        id: 152,
-      },
-      {
-        type: "quote",
-        id: 153,
+        id: 47,
       },
     ],
   },

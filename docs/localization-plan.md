@@ -2,7 +2,7 @@
 
 Solitarius is translated into French, Spanish, Italian, Portuguese, Turkish and Indonesian. English is the source language, more languages can follow, and translations are made by AI with automatic checks.
 
-Status: French, Spanish, Italian, Portuguese, Turkish and Indonesian are complete. The UI, the in-game text, every game's title, description, quick start and rules, the game settings, all 156 quotes and all 81 Tao Te Ching chapters are translated, and the checks pass. Turkish was checked on a phone on 2026-09-16 (all 114 games opened, overflowing labels shortened, remaining hard-coded English strings translated). Italian, Portuguese and Indonesian have not yet been checked on a phone.
+Status: French, Spanish, Italian, Portuguese, Turkish and Indonesian are complete. The UI, the in-game text, every game's title, description, quick start and rules, the game settings, all 170 quotes and all 81 Tao Te Ching chapters are translated, and the checks pass. Turkish was checked on a phone on 2026-09-16 (all 114 games opened, overflowing labels shortened, remaining hard-coded English strings translated). Italian, Portuguese and Indonesian have not yet been checked on a phone.
 
 ## Decisions
 
@@ -57,7 +57,7 @@ Translations live in `src/locales/<language>/content/{games,settings,quotes,tao}
 - When the English changes, the hash no longer matches. The app then shows English for that field, so outdated rules are never shown, and the i18n tests fail and list the stale field.
 - `localizeGame`, `localizeSettingDefinitions`, `localizeQuote` and `localizeTaoChapter` return translated copies, cached per object and language. `localizeGameTitle` is the shortcut for screens that only show a name; every place that shows or sorts game names uses it.
 - `isQuoteTranslated` and `isTaoChapterTranslated` decide whether the "Show original" switch appears.
-- All 456 game fields (114 titles plus descriptions, quick starts and rules), 28 settings, 156 quotes and 81 chapters are translated in every language.
+- All 456 game fields (114 titles plus descriptions, quick starts and rules), 28 settings, 170 quotes and 81 chapters are translated in every language.
 
 ### Glossaries
 

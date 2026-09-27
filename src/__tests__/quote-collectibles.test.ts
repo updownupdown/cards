@@ -207,7 +207,8 @@ describe("Quote authors", () => {
   test("died after they were born, within a plausible lifetime", () => {
     for (const author of QUOTE_AUTHORS) {
       if (author.died === null) continue;
-      expect(author.died - author.born).toBeGreaterThan(20);
+      // Anne Frank, the youngest, died at 15.
+      expect(author.died - author.born).toBeGreaterThan(10);
       expect(author.died - author.born).toBeLessThan(110);
     }
     expect(getQuoteAuthor("Dalai Lama XIV")!.died).toBeNull();
@@ -244,7 +245,7 @@ describe("Quote authors", () => {
 });
 
 describe("Fourier portraits", () => {
-  const author = getQuoteAuthor("Emily Dickinson")!;
+  const author = getQuoteAuthor("Jane Austen")!;
   const model = buildPortrait(author.portrait, 200, 160);
 
   test("fits the portrait to the height asked for", () => {
@@ -367,33 +368,33 @@ describe("Quote reveal plan", () => {
 // --- The gallery ---------------------------------------------------------------------------
 
 describe("Quote gallery", () => {
-  const whitman = QUOTE_AUTHORS.findIndex(
-    (author) => author.name === "Walt Whitman",
+  const shakespeare = QUOTE_AUTHORS.findIndex(
+    (author) => author.name === "William Shakespeare",
   );
-  const dickinson = QUOTE_AUTHORS.findIndex(
-    (author) => author.name === "Emily Dickinson",
+  const austen = QUOTE_AUTHORS.findIndex(
+    (author) => author.name === "Jane Austen",
   );
-  const whitmanIds = QUOTE_IDS_BY_AUTHOR.get("Walt Whitman")!;
-  const dickinsonId = QUOTE_IDS_BY_AUTHOR.get("Emily Dickinson")![0];
+  const shakespeareIds = QUOTE_IDS_BY_AUTHOR.get("William Shakespeare")!;
+  const austenId = QUOTE_IDS_BY_AUTHOR.get("Jane Austen")![0];
   const authors = galleryAuthors(
-    new Set([whitmanIds[0], whitmanIds[2], dickinsonId]),
+    new Set([shakespeareIds[0], shakespeareIds[2], austenId]),
   );
 
   test("lists every author by birth, with the quotes collected of theirs", () => {
     expect(authors.map((author) => author.name)).toEqual(
       QUOTE_AUTHORS.map((author) => author.name),
     );
-    expect(authors[whitman].collectedIds).toEqual([
-      whitmanIds[0],
-      whitmanIds[2],
+    expect(authors[shakespeare].collectedIds).toEqual([
+      shakespeareIds[0],
+      shakespeareIds[2],
     ]);
-    expect(authors[whitman].quoteIds).toEqual(whitmanIds);
+    expect(authors[shakespeare].quoteIds).toEqual(shakespeareIds);
     expect(authors[0].collectedIds).toEqual([]);
   });
 
   test("opens on the first author with a quote, on their portrait", () => {
     expect(firstPosition(authors)).toEqual({
-      author: whitman,
+      author: shakespeare,
       quote: PORTRAIT_FOCUS,
     });
     expect(firstPosition(galleryAuthors(new Set()))).toEqual({
@@ -403,9 +404,9 @@ describe("Quote gallery", () => {
   });
 
   test("steps through every author, round the ends, back on the portrait", () => {
-    const onQuote = { author: whitman, quote: 1 };
+    const onQuote = { author: shakespeare, quote: 1 };
     expect(stepAuthor(onQuote, authors, 1)).toEqual({
-      author: whitman + 1,
+      author: shakespeare + 1,
       quote: PORTRAIT_FOCUS,
     });
     expect(stepAuthor({ author: 0, quote: -1 }, authors, -1)).toEqual({
@@ -421,7 +422,7 @@ describe("Quote gallery", () => {
   });
 
   test("goes down the collected quotes and back up to the portrait, stopping at the ends", () => {
-    let position = { author: whitman, quote: PORTRAIT_FOCUS };
+    let position = { author: shakespeare, quote: PORTRAIT_FOCUS };
     expect(canStepQuote(position, authors, -1)).toBe(false);
     expect(stepQuote(position, authors, -1)).toEqual(position);
     position = stepQuote(position, authors, 1);
@@ -438,8 +439,8 @@ describe("Quote gallery", () => {
   });
 
   test("an author's line is their portrait once collected, else a wavy placeholder", () => {
-    const collected = cellLine(authors[dickinson]);
-    expect(collected).toContain(authors[dickinson].portrait.slice(1));
+    const collected = cellLine(authors[austen]);
+    expect(collected).toContain(authors[austen].portrait.slice(1));
     const empty = cellLine(authors[0]);
     expect(empty).toBe(placeholderLine(authors[0].name));
     for (const d of [collected, empty]) {
@@ -490,7 +491,7 @@ describe("Author years", () => {
 
   test("read naturally across eras", () => {
     expect(years("Henry David Thoreau")).toBe("1817–1862");
-    expect(years("Epicurus")).toBe("341–270 BC");
+    expect(years("Sun Tzu")).toBe("c. 544–496 BC");
     expect(years("Zhuangzi")).toBe("c. 369–286 BC");
     expect(years("Seneca")).toBe("c. 4 BC – AD 65");
     expect(years("Epictetus")).toBe("c. 50–135");

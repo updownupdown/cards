@@ -21,1074 +21,1172 @@
     }
   },
   "4": {
-    "hash": "fc04d5b9",
-    "value": {
-      "source": "Günlük, 30 Ağustos 1856",
-      "text": "Kendimizden uzak bir yabanıllık hayal etmek boşunadır."
-    }
-  },
-  "5": {
     "hash": "8f8acef8",
     "value": {
       "source": "Hamlet, II. perde, 2. sahne (y. 1600-1601)",
       "text": "Hiçbir şey kendi başına iyi ya da kötü değildir; onu öyle yapan düşüncedir."
     }
   },
-  "6": {
+  "5": {
     "hash": "12337d75",
     "value": {
       "source": "Hamlet, I. perde, 3. sahne (y. 1600-1601)",
       "text": "Herkese kulağını ver, ama sesini pek azına."
     }
   },
-  "7": {
+  "6": {
     "hash": "4a8405f3",
     "value": {
       "source": "Macbeth, I. perde, 3. sahne (y. 1606)",
       "text": "Ne olacaksa olsun,\nzaman ve saat en çetin günü de geçip gider."
     }
   },
-  "8": {
+  "7": {
     "hash": "4cae94c2",
     "value": {
       "source": "Emma (1815)",
       "text": "Dünyanın yarısı öbür yarısının zevklerini anlayamaz."
     }
   },
-  "9": {
+  "8": {
     "hash": "648e02e2",
     "value": {
       "source": "İnsan Haklarının Savunusu (1790)",
       "text": "Hiç kimse kötülüğü kötü olduğu için seçmez; onu yalnızca aradığı iyilik olan mutlulukla karıştırır."
     }
   },
-  "10": {
-    "hash": "4a37f8a3",
-    "value": {
-      "source": "T. W. Higginson'a mektup (1872 sonu)",
-      "text": "Yaşamak öyle şaşırtıcı ki başka uğraşlara pek az yer bırakıyor."
-    }
-  },
-  "11": {
-    "hash": "62a994dd",
-    "value": {
-      "source": "“Kendimin Şarkısı”, Çimen Yaprakları (1855)",
-      "text": "Aylaklık ediyor ve ruhumu davet ediyorum."
-    }
-  },
-  "12": {
+  "9": {
     "hash": "cfab5dd9",
     "value": {
       "source": "“Kendimin Şarkısı”, Çimen Yaprakları (1855)",
       "text": "Alayım da tartışmam da yok; tanık olur ve beklerim."
     }
   },
-  "13": {
-    "hash": "ddbe42ee",
-    "value": {
-      "source": "“Kendimin Şarkısı”, Çimen Yaprakları (1855)",
-      "text": "Kadınların ve erkeklerin yüzlerinde Tanrı'yı görüyorum."
-    }
-  },
-  "14": {
-    "hash": "a4f9cf0e",
-    "value": {
-      "source": "“Uyuyanlar”, Çimen Yaprakları (1855)",
-      "text": "Barış her zaman güzeldir."
-    }
-  },
-  "15": {
-    "hash": "4fd4cf5c",
-    "value": {
-      "source": "“Mucizeler”, Çimen Yaprakları (1856)",
-      "text": "Bana göre aydınlığın ve karanlığın her saati bir mucizedir,\nuzayın her santimküpü bir mucizedir."
-    }
-  },
-  "16": {
-    "hash": "db60cfed",
-    "value": {
-      "source": "“Bay W. H.'nin Portresi” (1889)",
-      "text": "Bir insanın uğruna ölmesi, bir şeyin doğru olduğu anlamına gelmez."
-    }
-  },
-  "17": {
-    "hash": "efbc40fc",
-    "value": {
-      "source": "Yalanın Çöküşü (1889)",
-      "text": "Hayat, sanatın hayatı taklit ettiğinden çok daha fazla sanatı taklit eder."
-    }
-  },
-  "18": {
+  "10": {
     "hash": "1bc7a70a",
     "value": {
       "source": "Sanatçı Olarak Eleştirmen (1891)",
       "text": "İnsan kendi adına konuşurken en az kendisidir. Ona bir maske verin, size gerçeği söyleyecektir."
     }
   },
-  "19": {
-    "hash": "8b45fdc8",
-    "value": {
-      "source": "Lady Windermere'in Yelpazesi, III. perde (1892)",
-      "text": "Hepimiz çamurun içindeyiz, ama bazılarımız yıldızlara bakıyor."
-    }
-  },
-  "20": {
+  "11": {
     "hash": "2d56d13f",
     "value": {
       "source": "Ciddi Olmanın Önemi, I. perde (1895)",
       "text": "Gerçek nadiren saftır ve asla basit değildir."
     }
   },
-  "21": {
+  "12": {
     "hash": "752701e7",
     "value": {
       "source": "Batı Hint Adaları'nda köleliğin kaldırılması konuşması (3 Ağustos 1857)",
       "text": "İktidar talep olmadan hiçbir şeyden vazgeçmez. Hiç vazgeçmedi, hiç de vazgeçmeyecek."
     }
   },
-  "22": {
-    "hash": "ea773469",
-    "value": {
-      "source": "Kölelik Karşıtı Dernek konuşması (12 Mayıs 1853)",
-      "text": "Doğruyu yapmak için herkesle birleşirim; yanlışı yapmak için hiç kimseyle."
-    }
-  },
-  "23": {
-    "hash": "59ad4eaf",
-    "value": {
-      "source": "Boston'da Söz Özgürlüğü İçin Bir Çağrı (10 Aralık 1860)",
-      "text": "Söz özgürlüğünü susturmak iki kat haksızlıktır. Konuşanın olduğu kadar dinleyenin de haklarını çiğner."
-    }
-  },
-  "24": {
-    "hash": "21b193dc",
-    "value": {
-      "source": "Amerikan ve Yabancı Kölelik Karşıtı Dernek konuşması (Mayıs 1853)",
-      "text": "Siyah bir adamın bu ülkede tuttuğu toprağın her karışı sert biçimde tartışılır."
-    }
-  },
-  "25": {
-    "hash": "2b7465ae",
-    "value": {
-      "source": "Karma Ulusal Kimliğimiz (7 Aralık 1869)",
-      "text": "İnsanlığın haklarından üstün hiçbir ırk hakkı tanımıyorum."
-    }
-  },
-  "26": {
-    "hash": "b66dffa5",
-    "value": {
-      "source": "Up from Slavery, XI. bölüm (1901)",
-      "text": "Bir insana, ona sorumluluk yüklemekten ve ona güvendiğini bildirmekten daha çok yardım eden az şey vardır."
-    }
-  },
-  "27": {
-    "hash": "68857614",
-    "value": {
-      "source": "Up from Slavery, XII. bölüm (1901)",
-      "text": "Sahip olmaya değer hiçbir şey bana sıkı çalışmanın sonucu olmadan gelmedi."
-    }
-  },
-  "28": {
-    "hash": "c300c4b6",
-    "value": {
-      "source": "Up from Slavery, XI. bölüm (1901)",
-      "text": "Rengi ne olursa olsun hiç kimsenin, beni ondan nefret ettirerek ruhumu daraltmasına ve alçaltmasına izin vermem."
-    }
-  },
-  "29": {
+  "13": {
     "hash": "251e3f0b",
     "value": {
       "source": "Hayatımın ve Çalışmalarımın Hikâyesi (1900)",
       "text": "Sanırım insanın kendini yükseltmesinin en iyi yolunun başkasına yardım etmek olduğunu öğrendim."
     }
   },
-  "30": {
-    "hash": "33302956",
-    "value": {
-      "source": "Boston'da konuşma (30 Temmuz 1903)",
-      "text": "Dünya senin ya da benim ne bildiğimizle pek ilgilenmez, ama ne yaptığımızla çok ilgilenir."
-    }
-  },
-  "31": {
-    "hash": "3486829b",
-    "value": {
-      "source": "Siyahların Sorunlarının İncelenmesi (Ocak 1898)",
-      "text": "Yeryüzünde tek bir korkak vardır: bilmeye cesaret edemeyen korkak."
-    }
-  },
-  "32": {
+  "14": {
     "hash": "ffedfc94",
     "value": {
       "source": "Siyah Halkın Ruhları, V. bölüm (1903)",
       "text": "İşçi yalnızca ücret için değil, eserinin şanı için çalışmalıdır; düşünür şöhret için değil, gerçek için düşünmelidir."
     }
   },
-  "33": {
-    "hash": "b2654494",
-    "value": {
-      "source": "Siyah Halkın Ruhları, XII. bölüm (1903)",
-      "text": "Çağın trajedisi şurada yatıyor: insanların yoksul olmasında değil, - her insan yoksulluğu biraz tanır; insanların kötü olmasında değil, - kim iyi ki? insanların cahil olmasında değil, - Gerçek nedir ki? Hayır, insanların insanları bu kadar az tanımasında."
-    }
-  },
-  "34": {
+  "15": {
     "hash": "d63d8249",
     "value": {
       "source": "John Brown: Bir Biyografi (1909)",
       "text": "Özgürlüğün maliyeti baskının bedelinden azdır."
     }
   },
-  "35": {
-    "hash": "86bc9186",
-    "value": {
-      "source": "John Brown: Bir Biyografi (1909)",
-      "text": "Özgürlük, özgürlüğe hazırlar. Sorumluluk, sorumluluğun ilk adımıdır."
-    }
-  },
-  "36": {
-    "hash": "083287df",
-    "value": {
-      "source": "Özgürlük Üzerine, II. bölüm (1859)",
-      "text": "Bir düşünür olarak ilk görevinin, aklını götüreceği sonuç ne olursa olsun izlemek olduğunu kabul etmeyen hiç kimse büyük bir düşünür olamaz."
-    }
-  },
-  "37": {
-    "hash": "35883278",
-    "value": {
-      "source": "Özgürlük Üzerine, III. bölüm (1859)",
-      "text": "İnsan doğası, bir modele göre yapılıp kendisine tam olarak belirlenen işi yapmaya ayarlanacak bir makine değildir."
-    }
-  },
-  "38": {
-    "hash": "5cbd5f60",
-    "value": {
-      "source": "Temsili Hükümet Üzerine Düşünceler, I. bölüm (1861)",
-      "text": "İnancı olan tek bir kişi, yalnızca çıkarları olan doksan dokuz kişiye eşit bir toplumsal güçtür."
-    }
-  },
-  "39": {
-    "hash": "d600ba53",
-    "value": {
-      "source": "Faydacılık, II. bölüm (1861)",
-      "text": "Daha soylu duygulara yatkınlık, çoğu yaradılışta çok narin bir bitkidir; yalnızca düşmanca etkilerle değil, beslenme eksikliğiyle bile kolayca ölür."
-    }
-  },
-  "40": {
-    "hash": "76823242",
-    "value": {
-      "source": "Kadınların Köleliği, I. bölüm (1869)",
-      "text": "Aklın yüceltilmesinin yerine İçgüdünün yüceltilmesini koyduk; kendimizde bulduğumuz ve akla dayalı bir temelini bulamadığımız her şeye içgüdü diyoruz."
-    }
-  },
-  "41": {
-    "hash": "ab113cc5",
-    "value": {
-      "source": "Toplumsal Yeniden Yapılanmanın İlkeleri (1916)",
-      "text": "İnsanların özgürce ve soylu biçimde yaşamasını her şeyden çok engelleyen, sahip olma kaygısıdır."
-    }
-  },
-  "42": {
-    "hash": "11f50e13",
-    "value": {
-      "source": "İnsanlar Neden Savaşır (1917)",
-      "text": "Düşünce büyük, hızlı ve özgürdür; dünyanın ışığı ve insanın en büyük şanıdır."
-    }
-  },
-  "43": {
-    "hash": "d113c1b8",
-    "value": {
-      "source": "Zihnin Analizi, I. ders (1921)",
-      "text": "Gizem hoştur ama bilimsel değildir, çünkü cehalete dayanır."
-    }
-  },
-  "44": {
-    "hash": "f0fef13f",
-    "value": {
-      "source": "Göreliliğin ABC'si (1925)",
-      "text": "Hepimiz dünyanın önyargılarımıza uyması gerektiğini düşünmeye eğilimliyiz."
-    }
-  },
-  "45": {
+  "16": {
     "hash": "b7e60d1c",
     "value": {
       "source": "Kuşkucu Denemeler (1928)",
       "text": "Gereken şey inanma isteği değil, bunun tam tersi olan öğrenme isteğidir."
     }
   },
-  "46": {
+  "17": {
     "hash": "323ca727",
     "value": {
       "source": "Philadelphia'da konuşma (8 Temmuz 1896)",
       "text": "İnsan uçma dürtüsü duyarken sürünmeye asla razı olamaz."
     }
   },
-  "47": {
+  "18": {
     "hash": "230a1bd7",
     "value": {
       "source": "Hayatımın Hikâyesi, XXI. bölüm (1903)",
       "text": "Edebiyat benim ütopyamdır. Burada haklarımdan yoksun değilim."
     }
   },
-  "48": {
-    "hash": "be427fec",
-    "value": {
-      "source": "İyimserlik (1903)",
-      "text": "Hep iyiyi seyredip kötüyü görmezden gelmek bir hatadır; çünkü insanları gafil kılarak felakete kapı açar."
-    }
-  },
-  "49": {
-    "hash": "cb092235",
-    "value": {
-      "source": "İyimserlik (1903)",
-      "text": "Dünya acıyla dolu olsa da acının üstesinden gelmekle de doludur."
-    }
-  },
-  "50": {
-    "hash": "df437c11",
-    "value": {
-      "source": "İyimserlik (1903)",
-      "text": "Eğitimin en yüksek sonucu hoşgörüdür."
-    }
-  },
-  "51": {
-    "hash": "7a71e66f",
-    "value": {
-      "source": "Dokuz Soruya Yanıtlar (Eylül 1896)",
-      "text": "Yöntemim, söylenecek doğru şeyi bulmak için büyük zahmete girmek ve sonra onu büyük bir hafiflikle söylemektir."
-    }
-  },
-  "52": {
-    "hash": "a63afa92",
-    "value": {
-      "source": "Candida, I. perde (1898)",
-      "text": "Mutluluğu üretmeden tüketmeye, zenginliği üretmeden tüketmekten daha çok hakkımız yoktur."
-    }
-  },
-  "53": {
+  "19": {
     "hash": "6e6f59d7",
     "value": {
       "source": "İnsan ve Üstinsan (1903)",
       "text": "Tanıdığım, aklı başında davranan tek adam terzimdir; beni her gördüğünde ölçümü yeniden alır."
     }
   },
-  "54": {
-    "hash": "27fcfcb9",
-    "value": {
-      "source": "Doktorun İkilemi, önsöz (1911)",
-      "text": "Çok zor bir işle uğraşan ve onu iyi yapan hiç kimse öz saygısını yitirmez."
-    }
-  },
-  "55": {
-    "hash": "18649e85",
-    "value": {
-      "source": "Azize Jeanne, önsöz (1923)",
-      "text": "Çoğu insan için kendi döneminin kalıpları dışında düşünmek zor, hatta imkânsızdır."
-    }
-  },
-  "56": {
-    "hash": "09d1e4d6",
-    "value": {
-      "source": "Deli, “Yüzler” (1918)",
-      "text": "Yüzleri tanırım, çünkü kendi gözümün ördüğü dokunun ötesine bakar ve altındaki gerçeği görürüm."
-    }
-  },
-  "57": {
-    "hash": "bef2979e",
-    "value": {
-      "source": "Öncü (1920)",
-      "text": "Sen kendi öncünsün ve kurduğun kuleler, dev benliğinin temelinden başka bir şey değildir."
-    }
-  },
-  "58": {
-    "hash": "2ce802a0",
-    "value": {
-      "source": "Ermiş (1923)",
-      "text": "“Ruhun yolunu buldum” deme. Daha çok “Ruhu, benim yolumda yürürken buldum” de."
-    }
-  },
-  "59": {
-    "hash": "4877cf43",
-    "value": {
-      "source": "Ermiş (1923)",
-      "text": "Acın, anlayışını saran kabuğun kırılmasıdır."
-    }
-  },
-  "60": {
+  "20": {
     "hash": "e14475d9",
     "value": {
       "source": "Kum ve Köpük (1926)",
       "text": "Bir gerçek her zaman bilinmeli, bazen de söylenmelidir."
     }
   },
-  "61": {
-    "hash": "e146a162",
-    "value": {
-      "source": "Enkheiridion, 1. bölüm, Elizabeth Carter'ın İngilizce çevirisi (1758)",
-      "text": "Bazı şeyler bizim elimizdedir, bazıları değil."
-    }
-  },
-  "62": {
-    "hash": "658b2d36",
-    "value": {
-      "source": "Enkheiridion, 5. bölüm, Elizabeth Carter'ın İngilizce çevirisi (1758)",
-      "text": "İnsanları rahatsız eden şeyler değil, şeyler hakkında oluşturdukları ilkeler ve kanılardır."
-    }
-  },
-  "63": {
-    "hash": "039ea786",
-    "value": {
-      "source": "Enkheiridion, 8. bölüm, Elizabeth Carter'ın İngilizce çevirisi (1758)",
-      "text": "Olayların istediğin gibi olmasını isteme; olduğu gibi olmasını dile, hayatın huzurlu olur."
-    }
-  },
-  "64": {
-    "hash": "4083d68f",
-    "value": {
-      "source": "Enkheiridion, 17. bölüm, Elizabeth Carter'ın İngilizce çevirisi (1758)",
-      "text": "Unutma ki sen, yazarın dilediği türden bir oyunda bir oyuncusun."
-    }
-  },
-  "65": {
-    "hash": "95dc5617",
-    "value": {
-      "source": "Enkheiridion, 13. bölüm, Elizabeth Carter'ın İngilizce çevirisi (1758)",
-      "text": "İlerlemek istiyorsan aptal ve budala sanılmaya razı ol."
-    }
-  },
-  "66": {
-    "hash": "18cce700",
-    "value": {
-      "source": "Enkheiridion, 19. bölüm, Elizabeth Carter'ın İngilizce çevirisi (1758)",
-      "text": "Kazanmanın senin elinde olmadığı hiçbir mücadeleye girmezsen yenilmez olabilirsin."
-    }
-  },
-  "67": {
-    "hash": "2c6ab54b",
-    "value": {
-      "source": "Enkheiridion, 23. bölüm, Elizabeth Carter'ın İngilizce çevirisi (1758)",
-      "text": "Birini memnun etmek isteyecek kadar dışsal şeylere yönelirsen, hayat düzenini bozduğundan emin olabilirsin."
-    }
-  },
-  "68": {
-    "hash": "645ac17b",
-    "value": {
-      "source": "Enkheiridion, 43. bölüm, Elizabeth Carter'ın İngilizce çevirisi (1758)",
-      "text": "Her şeyin iki kulpu vardır: biriyle taşınabilir, öbürüyle taşınamaz."
-    }
-  },
-  "69": {
-    "hash": "d53fa574",
-    "value": {
-      "source": "Enkheiridion, 46. bölüm, Elizabeth Carter'ın İngilizce çevirisi (1758)",
-      "text": "Kendine asla filozof deme, cahiller arasında teoremlerden çok söz etme; onlara uygun davran."
-    }
-  },
-  "70": {
-    "hash": "0a204376",
-    "value": {
-      "source": "Enkheiridion, 52. bölüm, Elizabeth Carter'ın İngilizce çevirisi (1758)",
-      "text": "Her durumda şu özdeyişleri elimizin altında tutmalıyız: Yol göster bana, ey Zeus, ve sen, ey Kader."
-    }
-  },
-  "71": {
-    "hash": "488f5416",
-    "value": {
-      "source": "Kendime Düşünceler, IV. kitap, George Long'un İngilizce çevirisi (1862)",
-      "text": "Evren değişimdir; hayatımız, düşüncelerimizin onu yaptığı şeydir."
-    }
-  },
-  "72": {
-    "hash": "4ddc9636",
-    "value": {
-      "source": "Kendime Düşünceler, VII. kitap, George Long'un İngilizce çevirisi (1862)",
-      "text": "Mutlu bir hayat yaşamak için gerçekten çok az şey gerekir."
-    }
-  },
-  "73": {
-    "hash": "2b61c529",
-    "value": {
-      "source": "Kendime Düşünceler, II. kitap, George Long'un İngilizce çevirisi (1862)",
-      "text": "Hayatındaki her eylemi sonuncusuymuş gibi yap."
-    }
-  },
-  "74": {
-    "hash": "bfd4c5fc",
-    "value": {
-      "source": "Kendime Düşünceler, IV. kitap, George Long'un İngilizce çevirisi (1862)",
-      "text": "İnsan hiçbir yere kendi ruhuna çekildiği kadar sessizce ve dertten uzak çekilemez."
-    }
-  },
-  "75": {
-    "hash": "157c654d",
-    "value": {
-      "source": "Kendime Düşünceler, VI. kitap, George Long'un İngilizce çevirisi (1862)",
-      "text": "İntikam almanın en iyi yolu, sana kötülük edene benzememektir."
-    }
-  },
-  "76": {
-    "hash": "a6aae84b",
-    "value": {
-      "source": "Kendime Düşünceler, VIII. kitap, George Long'un İngilizce çevirisi (1862)",
-      "text": "Serveti ya da refahı kibirlenmeden kabul et ve bırakmaya hazır ol."
-    }
-  },
-  "77": {
-    "hash": "5ee698b7",
-    "value": {
-      "source": "Kendime Düşünceler, VII. kitap, George Long'un İngilizce çevirisi (1862)",
-      "text": "İçine bak. İyiliğin kaynağı içtedir ve sen kazdıkça hep fışkırır."
-    }
-  },
-  "78": {
-    "hash": "2b8a13bd",
-    "value": {
-      "source": "Kendime Düşünceler, IX. kitap, George Long'un İngilizce çevirisi (1862)",
-      "text": "Kayıp, değişimden başka bir şey değildir. Evrensel doğa ise değişimden hoşlanır."
-    }
-  },
-  "79": {
-    "hash": "ebf1a759",
-    "value": {
-      "source": "Kendime Düşünceler, VI. kitap, George Long'un İngilizce çevirisi (1862)",
-      "text": "Kovana iyi gelmeyen, arıya da iyi gelmez."
-    }
-  },
-  "80": {
-    "hash": "be100604",
-    "value": {
-      "source": "Kendime Düşünceler, IV. kitap, George Long'un İngilizce çevirisi (1862)",
-      "text": "Düşün ki çok geçmeden ne biri olacaksın ne de bir yerde."
-    }
-  },
-  "81": {
-    "hash": "43fef62c",
-    "value": {
-      "source": "Lucilius'a Ahlak Mektupları, 84. mektup, Richard M. Gummere'in İngilizce çevirisi (1920)",
-      "text": "Büyüklüğün zirvelerine çıkan yol engebelidir."
-    }
-  },
-  "82": {
-    "hash": "3e583cac",
-    "value": {
-      "source": "Lucilius'a Ahlak Mektupları, 76. mektup, Richard M. Gummere'in İngilizce çevirisi (1920)",
-      "text": "Hiç kimse tesadüfen bilge olmadı."
-    }
-  },
-  "83": {
-    "hash": "da22f339",
-    "value": {
-      "source": "Lucilius'a Ahlak Mektupları, 101. mektup, Richard M. Gummere'in İngilizce çevirisi (1925)",
-      "text": "Hemen yaşamaya başla ve her günü ayrı bir hayat say."
-    }
-  },
-  "84": {
-    "hash": "7e5d5784",
-    "value": {
-      "source": "Lucilius'a Ahlak Mektupları, 7. mektup, Richard M. Gummere'in İngilizce çevirisi (1917)",
-      "text": "Seni daha iyi yapabilecek insanlarla arkadaşlık et."
-    }
-  },
-  "85": {
+  "21": {
     "hash": "46cee3d0",
     "value": {
       "source": "Lucilius'a Ahlak Mektupları, 76. mektup, Richard M. Gummere'in İngilizce çevirisi (1920)",
       "text": "Yaşadığın sürece nasıl yaşanacağını öğrenmeye devam et."
     }
   },
-  "86": {
-    "hash": "5c238bdc",
-    "value": {
-      "source": "Lucilius'a Ahlak Mektupları, 85. mektup, Richard M. Gummere'in İngilizce çevirisi (1920)",
-      "text": "Cesur olan özgürdür."
-    }
-  },
-  "87": {
-    "hash": "0a5113ce",
-    "value": {
-      "source": "Lucilius'a Ahlak Mektupları, 4. mektup, Richard M. Gummere'in İngilizce çevirisi (1917)",
-      "text": "Hayatını uzatmayı fazla düşünen hiç kimse huzurlu bir hayat süremez."
-    }
-  },
-  "88": {
-    "hash": "d537760b",
-    "value": {
-      "source": "Öfke Üzerine, II. kitap, John W. Basore'un İngilizce çevirisi (1928)",
-      "text": "Öfkenin en büyük ilacı beklemektir."
-    }
-  },
-  "89": {
-    "hash": "02b70b25",
-    "value": {
-      "source": "Mutlu Yaşam Üzerine, Aubrey Stewart'ın İngilizce çevirisi (1889)",
-      "text": "Gerçeğin dışında kalan hiç kimseye mutlu denemez."
-    }
-  },
-  "90": {
-    "hash": "fd91a412",
-    "value": {
-      "source": "Lucilius'a Ahlak Mektupları, 23. mektup, Richard M. Gummere'in İngilizce çevirisi (1917)",
-      "text": "Bugünün zevklerini, yarınınkilere zarar vermeyecek şekilde tadını çıkar."
-    }
-  },
-  "91": {
+  "22": {
     "hash": "db06e581",
     "value": {
       "source": "Walden, “Ekonomi” (1854)",
       "text": "İnsanların çoğu sessiz bir umutsuzluk içinde yaşar."
     }
   },
-  "92": {
+  "23": {
     "hash": "7e8e2dc4",
     "value": {
       "source": "Walden, “Nerede ve Ne İçin Yaşadım” (1854)",
       "text": "Sadeleştir, sadeleştir."
     }
   },
-  "93": {
+  "24": {
     "hash": "3b10a246",
     "value": {
       "source": "Walden, “Sonuç” (1854)",
       "text": "Aşktan, paradan, şöhretten çok bana gerçeği verin."
     }
   },
-  "94": {
+  "25": {
     "hash": "150b44fb",
     "value": {
       "source": "Walden, “Sonuç” (1854)",
       "text": "Bir insan arkadaşlarıyla aynı adımla yürümüyorsa, belki farklı bir davulcuyu duyuyordur."
     }
   },
-  "95": {
+  "26": {
     "hash": "c4f0fc53",
     "value": {
       "source": "Walden, “Kışın Göl” (1854)",
       "text": "Cennet başımızın üstünde olduğu kadar ayaklarımızın altındadır da."
     }
   },
-  "96": {
-    "hash": "e9d019b4",
-    "value": {
-      "source": "Walden, “Sonuç” (1854)",
-      "text": "Şeyler değişmez; biz değişiriz."
-    }
-  },
-  "97": {
-    "hash": "8b784e57",
-    "value": {
-      "source": "Walden, “Sonuç” (1854)",
-      "text": "Güneş yalnızca bir sabah yıldızıdır."
-    }
-  },
-  "98": {
-    "hash": "ffbff065",
-    "value": {
-      "source": "Walden, “Sonuç” (1854)",
-      "text": "Yalnızca uyanık olduğumuz gün doğar."
-    }
-  },
-  "99": {
-    "hash": "5480b08e",
-    "value": {
-      "source": "Walden, “Nerede ve Ne İçin Yaşadım” (1854)",
-      "text": "Bir insan, vazgeçmeyi göze alabildiği şeylerin sayısı oranında zengindir."
-    }
-  },
-  "100": {
+  "27": {
     "hash": "55c380c2",
     "value": {
       "source": "Günlük, 5 Ağustos 1851",
       "text": "Mesele neye baktığın değil, ne gördüğündür."
     }
   },
-  "101": {
-    "hash": "a77e2e91",
-    "value": {
-      "source": "“Daireler”, Denemeler: Birinci Seri (1841)",
-      "text": "Coşku olmadan hiçbir büyük şey başarılmadı."
-    }
-  },
-  "102": {
+  "28": {
     "hash": "4848876b",
     "value": {
       "source": "“Kendine Güven”, Denemeler: Birinci Seri (1841)",
       "text": "Aptalca bir tutarlılık küçük zihinlerin öcüsüdür."
     }
   },
-  "103": {
-    "hash": "a5560da7",
-    "value": {
-      "source": "“Dostluk”, Denemeler: Birinci Seri (1841)",
-      "text": "Bir dosta sahip olmanın tek yolu dost olmaktır."
-    }
-  },
-  "104": {
-    "hash": "178af01a",
-    "value": {
-      "source": "“Uygarlık”, Toplum ve Yalnızlık (1870)",
-      "text": "Arabanı bir yıldıza bağla."
-    }
-  },
-  "105": {
+  "29": {
     "hash": "41a9a5e1",
     "value": {
       "source": "Life dergisinde aktarıldığı gibi (21 Nisan 1961)",
       "text": "Kendini tanımlamaya çalışmak, kendi dişlerini ısırmaya çalışmak gibidir."
     }
   },
-  "106": {
-    "hash": "c333237c",
-    "value": {
-      "source": "Nobel konferansı (11 Aralık 1965)",
-      "text": "Kanıtlanabilenden çok daha fazla gerçek bilinebilir."
-    }
-  },
-  "107": {
-    "hash": "45ba58b3",
-    "value": {
-      "source": "4D Timelock (1928)",
-      "text": "Yaşam, zamanda cisimleşmiş ruhtur."
-    }
-  },
-  "108": {
+  "30": {
     "hash": "5390db67",
     "value": {
       "source": "Alan Watts'ın Özü (1977)",
       "text": "İnanmak, kendini suya bırakmaktır. Yüzerken suya tutunmazsın; tutunursan batar ve boğulursun. Onun yerine gevşersin ve suda süzülürsün."
     }
   },
-  "109": {
-    "hash": "b301120f",
-    "value": {
-      "source": "“Bilim Nedir?”, Ulusal Bilim Öğretmenleri Derneği konuşması (1966)",
-      "text": "Bilim, uzmanların cehaletine inanmaktır."
-    }
-  },
-  "110": {
+  "31": {
     "hash": "f80b50af",
     "value": {
       "source": "Shelter (1932)",
       "text": "Güçlerle savaşma, onları kullan."
     }
   },
-  "111": {
+  "32": {
     "hash": "261a9bea",
     "value": {
       "source": "Alan Watts'ın Özü (1977)",
       "text": "Hayatın gerçek sırrı budur: burada ve şimdi yaptığın işe tamamen dalmak. Ve ona iş demek yerine, oyun olduğunu fark etmek."
     }
   },
-  "112": {
+  "33": {
     "hash": "577276bf",
     "value": {
       "source": "“Kargo Kültü Bilimi”, Caltech mezuniyet konuşması (1974)",
       "text": "İlk ilke, kendini kandırmaman gerektiğidir; ve kandırılması en kolay kişi sensin."
     }
   },
-  "113": {
+  "34": {
     "hash": "6b2af24c",
     "value": {
       "source": "No More Secondhand God (1963)",
       "text": "Bana öyle geliyor ki Tanrı özel ya da cins bir isim değil, bir fiildir."
     }
   },
-  "114": {
+  "35": {
     "hash": "942e40b7",
     "value": {
       "source": "Güvensizliğin Bilgeliği (1951)",
       "text": "Yaşam (zevk olarak) için ne kadar çok çabalarsak sevdiğimiz şeyi aslında o kadar çok öldürürüz."
     }
   },
-  "115": {
-    "hash": "3d123616",
-    "value": {
-      "source": "Columbia Üniversitesi'nde halka açık konferans (1965)",
-      "text": "Doğanın karşıtı imkânsızdır."
-    }
-  },
-  "116": {
+  "36": {
     "hash": "f1a9ca32",
     "value": {
       "source": "Güvensizliğin Bilgeliği (1951)",
       "text": "İnsan etkinliğinin büyük kısmı, yalnızca değiştikleri için sevilebilen deneyimleri ve sevinçleri kalıcı kılmaya yöneliktir."
     }
   },
-  "117": {
+  "37": {
     "hash": "25dc7af2",
     "value": {
       "source": "Öldüğü sırada karatahtasında yazılıydı (1988)",
       "text": "Yaratamadığımı anlamam."
     }
   },
-  "118": {
-    "hash": "7182dd85",
-    "value": {
-      "source": "Ütopya mı Yokluk mu: İnsanlığın Geleceği (1969)",
-      "text": "Düşünmek, önemsiz şeyleri bir anlığına bir kenara koymaktır."
-    }
-  },
-  "119": {
+  "38": {
     "hash": "5232b96b",
     "value": {
       "source": "Güvensizliğin Bilgeliği (1951)",
       "text": "Açık olmalı ki... doğası anlık ve akışkan olan bir evrende tamamen güvende olmayı istemek bir çelişkidir."
     }
   },
-  "120": {
+  "39": {
     "hash": "464a0497",
     "value": {
       "source": "“Bilimin Değeri” (1955)",
       "text": "Doğanın hayal gücü, insanınkinden çok ama çok daha büyüktür."
     }
   },
-  "121": {
-    "hash": "250cf93e",
-    "value": {
-      "source": "Bir Fiil Gibiyim (1970)",
-      "text": "Şu anda Dünya'da yaşıyorum ve ne olduğumu bilmiyorum. Bir kategori olmadığımı biliyorum. Bir şey, bir isim değilim. Bir fiil gibiyim; evrimsel bir süreç, evrenin ayrılmaz bir işlevi."
-    }
-  },
-  "122": {
+  "40": {
     "hash": "fe662568",
     "value": {
       "source": "Güvensizliğin Bilgeliği (1951)",
       "text": "Korkudan kaçmak korkudur; acıyla savaşmak acıdır; cesur olmaya çalışmak korkmaktır. Zihin acı çekiyorsa zihin acıdır. Düşünenin, düşüncesinden başka bir biçimi yoktur."
     }
   },
-  "123": {
-    "hash": "b0ff8ad3",
-    "value": {
-      "source": "Feynman'ın Fizik Dersleri (1964)",
-      "text": "“Paradoks”, gerçeklik ile gerçekliğin “nasıl olması gerektiğine” dair hissin arasındaki bir çatışmadan ibarettir."
-    }
-  },
-  "124": {
-    "hash": "57d1e429",
-    "value": {
-      "source": "LIFE dergisinde aktarıldığı gibi (26 Şubat 1971)",
-      "text": "Kirlilik, toplamadığımız kaynaklardan başka bir şey değildir. Değerlerini bilmediğimiz için dağılmalarına izin veriyoruz."
-    }
-  },
-  "125": {
+  "41": {
     "hash": "6d8674ff",
     "value": {
       "source": "Güvensizliğin Bilgeliği (1951)",
       "text": "Sevginin gerçek sıcaklığını üretecek bir formül yoktur. Kopyalanamaz."
     }
   },
-  "126": {
-    "hash": "af4ea359",
-    "value": {
-      "source": "Fizik Yasalarının Karakteri (1965)",
-      "text": "Doğa desenlerini örmek için yalnızca en uzun iplikleri kullanır; bu yüzden kumaşının her küçük parçası bütün dokumanın düzenini ortaya koyar."
-    }
-  },
-  "127": {
-    "hash": "82cff3be",
-    "value": {
-      "source": "People dergisinde aktarıldığı gibi (1974)",
-      "text": "Bütün insanlığın bildiğimizden fazla yetenekle doğduğuna inanıyorum. Çoğu insan dâhi olarak doğar ve hızla dâhiliğinden edilir."
-    }
-  },
-  "128": {
-    "hash": "4b0248a0",
-    "value": {
-      "source": "Zen'in Yolu (1957)",
-      "text": "Geleneklerden özgür olmak onları hor görmek değil, onlara aldanmamaktır. Onlar tarafından kullanılmak yerine onları bir araç olarak kullanabilmektir."
-    }
-  },
-  "129": {
+  "42": {
     "hash": "12644b96",
     "value": {
       "source": "Fizik Yasalarının Karakteri (1965)",
       "text": "Hayal gücümüz, kurmacadaki gibi gerçekte olmayan şeyleri hayal etmek için değil, yalnızca var olan şeyleri kavramak için sonuna kadar zorlanır."
     }
   },
-  "130": {
-    "hash": "826f052a",
-    "value": {
-      "source": "Synergetics: Düşünmenin Geometrisinde Keşifler (1975)",
-      "text": "Saf olmaya cesaret et."
-    }
-  },
-  "131": {
-    "hash": "caafb899",
-    "value": {
-      "source": "Fizik Yasalarının Karakteri (1965)",
-      "text": "Sanırım rahatlıkla şunu söyleyebilirim: kuantum mekaniğini kimse anlamıyor."
-    }
-  },
-  "132": {
-    "hash": "0b2bebaf",
-    "value": {
-      "source": "Synergetics: Düşünmenin Geometrisinde Keşifler (1975)",
-      "text": "Sinerji, bütün sistemlerin, parçalarının tek tek davranışından öngörülemeyen davranışı demektir."
-    }
-  },
-  "133": {
+  "43": {
     "hash": "f337ab78",
     "value": {
       "source": "Doğuda ve Batıda Psikoterapi (1961)",
       "text": "İnsan, başkalarının ona verdiği tanımla kendini karıştırmayı bıraktığında hem evrensel hem eşsiz olur."
     }
   },
-  "134": {
-    "hash": "1ced4f96",
-    "value": {
-      "source": "Synergetics: Düşünmenin Geometrisinde Keşifler (1975)",
-      "text": "Birlik çoğuldur ve en azından ikidir."
-    }
-  },
-  "135": {
-    "hash": "8a54915e",
-    "value": {
-      "source": "Neşeli Kozmoloji (1962)",
-      "text": "Mesajı aldıysan telefonu kapat."
-    }
-  },
-  "136": {
+  "44": {
     "hash": "f8b98b99",
     "value": {
       "source": "QED: Işık ve Maddenin Tuhaf Kuramı (1985)",
       "text": "Kuantum elektrodinamiği kuramı, Doğa'yı sağduyu açısından saçma olarak tanımlar. Ve deneylerle tamamen uyuşur. Umarım Doğa'yı olduğu gibi kabul edersiniz: saçma."
     }
   },
-  "137": {
-    "hash": "ed3d01a5",
-    "value": {
-      "source": "Kim Olduğunu Bilme Tabusu Üzerine Kitap (1966)",
-      "text": "Gözler gibi hassas mücevherlere, kulaklar gibi büyülü çalgılara ve beyin gibi masalsı bir sinir arabeskine sahip bir varlık, kendini nasıl bir tanrıdan daha az bir şey olarak deneyimleyebilir?"
-    }
-  },
-  "138": {
+  "45": {
     "hash": "5f8c9cce",
     "value": {
       "source": "Eminim Şaka Yapıyorsunuz Bay Feynman! (1985)",
       "text": "İnsanların derdi ne bilmiyorum: anlayarak öğrenmiyorlar; başka bir yolla, ezberleyerek falan öğreniyorlar. Bilgileri öyle kırılgan ki!"
     }
   },
-  "139": {
-    "hash": "fe3a3c49",
-    "value": {
-      "source": "Kim Olduğunu Bilme Tabusu Üzerine Kitap (1966)",
-      "text": "Her dal ağacın kendine özgü bir uzantısı olduğu gibi, her birey de Bütün'ün eşsiz bir görünümüdür."
-    }
-  },
-  "140": {
+  "46": {
     "hash": "b1e3ec00",
     "value": {
       "source": "Humans in Universe (1983)",
       "text": "Gerçekçi düşünce ancak hata yaptıktan sonra birikir; hata, kozmik bilgeliğin her birimize nasıl devam edeceğimizi öğretmesinin en ikna edici yoludur."
     }
   },
-  "141": {
-    "hash": "3dacd603",
-    "value": {
-      "source": "Kim Olduğunu Bilme Tabusu Üzerine Kitap (1966)",
-      "text": "Sırf müzik için müzik dinlediğin gibi, sırf meditasyon için meditasyon yapmakta da yanlış bir şey yoktur."
-    }
-  },
-  "142": {
-    "hash": "96446fc7",
-    "value": {
-      "source": "Başkalarının Ne Düşündüğü Seni Neden İlgilendiriyor? (1988)",
-      "text": "Annemin ... harika bir mizah duygusu vardı ve ondan, ulaşabileceğimiz en yüksek anlayış biçimlerinin kahkaha ve insani şefkat olduğunu öğrendim."
-    }
-  },
-  "143": {
-    "hash": "375a8592",
-    "value": {
-      "source": "Critical Path (1981)",
-      "text": "Senin sahip olabileceğin her şeye herkesin sahip olması fikri seni kendiliğinden heyecanlandırıyor mu?"
-    }
-  },
-  "144": {
-    "hash": "05b202e1",
-    "value": {
-      "source": "No Ordinary Genius (1994)",
-      "text": "Ödülleri sevmem. ... Ödülü zaten aldım: ödül, bir şeyi keşfetmenin zevki, buluşun heyecanı, başkalarının onu kullandığını görmek. Asıl olanlar bunlar."
-    }
-  },
-  "145": {
-    "hash": "cc644b9f",
-    "value": {
-      "source": "Critical Path (1981)",
-      "text": "Bütün insanlık için çalışabilmenin ve yaptığın işi iyi yapmanın sevincine eşit bir sevinç yoktur."
-    }
-  },
-  "146": {
-    "hash": "a502a0dd",
-    "value": {
-      "source": "Kim Olduğunu Bilme Tabusu Üzerine Kitap (1966)",
-      "text": "Yaşamak, sevmek, doğal ya da içten olmak; bunların hepsi kendiliğinden davranış biçimleridir: yemeği sindirmek ya da saç uzatmak gibi “kendi kendine” olurlar."
-    }
-  },
-  "147": {
-    "hash": "5f4036a3",
-    "value": {
-      "source": "Her Şeyin Anlamı (1999)",
-      "text": "Bazıları “Bilmeden nasıl yaşayabilirsin?” diyor. Ne demek istediklerini anlamıyorum. Ben hep bilmeden yaşarım. Bu kolay. Benim bilmek istediğim, bilmeye nasıl varıldığı."
-    }
-  },
-  "148": {
-    "hash": "8add6377",
-    "value": {
-      "source": "Critical Path (1981)",
-      "text": "Her birimizin Tanrı'ya en çok yaklaşabileceği yol, gerçeği sevmektir."
-    }
-  },
-  "149": {
-    "hash": "429de0a5",
-    "value": {
-      "source": "Critical Path (1981)",
-      "text": "Sevgi metafizik çekimdir."
-    }
-  },
-  "150": {
-    "hash": "d16ecf87",
-    "value": {
-      "source": "Kurtuluş Yolları (1983)",
-      "text": "Meyvenin ağaçtan, yumurtanın tavuktan ve bebeğin rahimden çıkması gibi, biz de evrenin belirtileriyiz."
-    }
-  },
-  "151": {
-    "hash": "e65c297f",
-    "value": {
-      "source": "Bir Şeyleri Bulup Çıkarmanın Zevki (1999)",
-      "text": "Hiçbir şey bilmiyorum, ama yeterince derine inersen her şeyin ilginç olduğunu biliyorum."
-    }
-  },
-  "152": {
-    "hash": "3b3e0597",
-    "value": {
-      "source": "Alan Watts Meditasyon Öğretiyor (1992)",
-      "text": "Sürekli düşünen biri, düşüncelerden başka düşünecek bir şey bulamaz. Böylece gerçeklikle bağını yitirir ve bir yanılsama dünyasında yaşar."
-    }
-  },
-  "153": {
+  "47": {
     "hash": "8457afca",
     "value": {
       "source": "Alışılmış Yoldan Son Derece Makul Sapmalar (2005)",
       "text": "Seni en çok ilgilendiren şeye, olabildiğince disiplinsiz, saygısız ve özgün bir şekilde sıkı çalış."
     }
   },
-  "154": {
-    "hash": "b2da1740",
+  "48": {
+    "hash": "fe385086",
     "value": {
-      "source": "Alışılmış Yoldan Son Derece Makul Sapmalar (2005)",
-      "text": "Bu kadar çok okuma; etrafına bak ve orada gördüklerini düşün."
+      "source": "Yeni Binyıl İçin Ahlak (1999)",
+      "text": "Şefkat, hayatımızı anlamlı kılan başlıca şeylerden biridir. Kalıcı mutluluğun ve sevincin kaynağıdır."
+    }
+  },
+  "49": {
+    "hash": "f781300a",
+    "value": {
+      "source": "Yeni Binyıl İçin Ahlak (1999)",
+      "text": "Deneyimlerime göre gerçek mutluluğun başlıca özelliği huzurdur: iç huzuru."
+    }
+  },
+  "50": {
+    "hash": "4d6e56ab",
+    "value": {
+      "source": "Yeni Binyıl İçin Ahlak (1999)",
+      "text": "İyilik, sevgi, dürüstlük, herkese karşı doğruluk ve adaletle kendi iyiliğimizi de güvence altına alırız."
+    }
+  },
+  "51": {
+    "hash": "6f1ac119",
+    "value": {
+      "source": "Yeni Binyıl İçin Ahlak (1999)",
+      "text": "Birbirimizin acısını gerçekten hissettiğimizde, ahlakın temeli olan şefkati öğreniriz."
+    }
+  },
+  "52": {
+    "hash": "e5498bde",
+    "value": {
+      "source": "Bilinçli Farkındalık Mucizesi (1975)",
+      "text": "En önemli kişi her zaman birlikte olduğun, tam karşında duran kişidir."
+    }
+  },
+  "53": {
+    "hash": "fed168b7",
+    "value": {
+      "source": "Zen Zihni, Başlangıç Zihni (1970)",
+      "text": "Zen, süslü ve özel bir yaşama sanatı değildir. Öğretimiz sadece yaşamaktır, her zaman gerçeklikte, kelimenin tam anlamıyla."
+    }
+  },
+  "54": {
+    "hash": "f123886d",
+    "value": {
+      "source": "Kendime Düşünceler, X. kitap",
+      "text": "İyi bir insanın nasıl olması gerektiğini tartışarak daha fazla vakit kaybetme. İyi bir insan ol."
+    }
+  },
+  "55": {
+    "hash": "18cf3412",
+    "value": {
+      "source": "Lucilius'a Mektuplar, 13. mektup",
+      "text": "Gerçekte olduğundan daha sık hayalimizde acı çekeriz."
+    }
+  },
+  "56": {
+    "hash": "a520aa8a",
+    "value": {
+      "source": "Söylevler, II. kitap",
+      "text": "Yazar olmak istiyorsan yaz."
+    }
+  },
+  "57": {
+    "hash": "e5898476",
+    "value": {
+      "source": "Kitap: Kim Olduğunu Bilme Tabusu Üzerine (1966)",
+      "text": "Bu dünyaya gelmeyiz; bir ağaçtan çıkan yapraklar gibi ondan çıkarız."
+    }
+  },
+  "58": {
+    "hash": "0ae1fdfb",
+    "value": {
+      "source": "Fizik Yasaları Üzerine (1965)",
+      "text": "Deneyle çelişiyorsa yanlıştır. Bilimin anahtarı bu basit ifadededir."
+    }
+  },
+  "59": {
+    "hash": "648df501",
+    "value": {
+      "source": "Vassar College'daki konuşma (1921)",
+      "text": "Hayatta hiçbir şeyden korkulmamalı, sadece anlaşılmalı. Şimdi daha çok anlamanın zamanı, böylece daha az korkarız."
+    }
+  },
+  "60": {
+    "hash": "d1ff794a",
+    "value": {
+      "source": "BBC Horizon röportajı (1981)",
+      "text": "Bilmeden yaşamanın, yanlış olabilecek cevaplara sahip olmaktan çok daha ilginç olduğunu düşünüyorum."
+    }
+  },
+  "61": {
+    "hash": "ee07bd56",
+    "value": {
+      "source": "I Seem To Be a Verb (1970)",
+      "text": "Ben bir şey, bir isim değilim. Bir fiil gibiyim; evrimsel bir süreç, evrenin ayrılmaz bir işlevi."
+    }
+  },
+  "62": {
+    "hash": "5cc59640",
+    "value": {
+      "source": "Dünya Uzay Gemisi İçin Kullanma Kılavuzu (1969)",
+      "text": "Dünya Uzay Gemimizi, onu bütün bir gemi ve kaderimizi ortak olarak görmedikçe, ne başarıyla ne de çok daha uzun süre yönetebiliriz."
+    }
+  },
+  "63": {
+    "hash": "75a33c97",
+    "value": {
+      "source": "H. G. O. Blake'e mektup (1857)",
+      "text": "Meşgul olmak yetmez. Karıncalar da meşgul. Asıl soru şu: Neyle meşgulüz?"
+    }
+  },
+  "64": {
+    "hash": "05bb4662",
+    "value": {
+      "source": "Zhuangzi, 2. bölüm (MÖ 3. yüzyıl)",
+      "text": "O zaman kelebek olduğunu düşleyen bir adam mıydım, yoksa şimdi adam olduğunu düşleyen bir kelebek miyim, bilmiyorum."
+    }
+  },
+  "65": {
+    "hash": "4385d270",
+    "value": {
+      "source": "Denemeler (1580)",
+      "text": "Hiçbir şey bir şeyi, onu unutma isteği kadar derinden hafızaya kazımaz."
+    }
+  },
+  "66": {
+    "hash": "aff762c3",
+    "value": {
+      "source": "Kozmos (1980)",
+      "text": "Biz, evrenin kendini tanımasının bir yoluyuz."
+    }
+  },
+  "67": {
+    "hash": "6e4ec6d7",
+    "value": {
+      "source": "“Kendine Güven”, Denemeler: Birinci Seri (1841)",
+      "text": "Sana kendinden başka hiçbir şey huzur getiremez."
+    }
+  },
+  "68": {
+    "hash": "ee3fe534",
+    "value": {
+      "source": "Doğa, VIII. bölüm (1836)",
+      "text": "Bilgeliğin değişmez işareti, sıradan olanda mucizevi olanı görmektir."
+    }
+  },
+  "69": {
+    "hash": "deb19354",
+    "value": {
+      "source": "Walden, “Nerede ve Ne İçin Yaşadım” (1854)",
+      "text": "Ormana gittim, çünkü bilinçli yaşamak, hayatın yalnızca temel gerçekleriyle yüzleşmek ve onun öğreteceklerini öğrenip öğrenemeyeceğimi görmek istiyordum."
+    }
+  },
+  "70": {
+    "hash": "4a554cfe",
+    "value": {
+      "source": "Önsöz, Çimen Yaprakları (1855)",
+      "text": "Okulda, kilisede ya da herhangi bir kitapta sana söylenen her şeyi yeniden gözden geçir; ruhunu aşağılayan ne varsa at."
+    }
+  },
+  "71": {
+    "hash": "ce59548e",
+    "value": {
+      "source": "“Aptallığın Zaferi” (1933)",
+      "text": "Sorunun temel nedeni, modern dünyada aptalların kendinden emin, zekilerin ise kuşkuyla dolu olmasıdır."
+    }
+  },
+  "72": {
+    "hash": "3166029b",
+    "value": {
+      "source": "Söylevler, II. kitap, 17. bölüm",
+      "text": "İnsanın zaten bildiğini sandığı şeyi öğrenmesi imkânsızdır."
+    }
+  },
+  "73": {
+    "hash": "47fe6226",
+    "value": {
+      "source": "81. dize, Pandita Vagga, F. Max Müller'in İngilizce çevirisi (1881)",
+      "text": "Sağlam bir kaya rüzgârla sarsılmadığı gibi, bilgeler de kınama ve övgü karşısında sendelemez."
+    }
+  },
+  "74": {
+    "hash": "4e1fae22",
+    "value": {
+      "source": "Her Adımda Barış (1991)",
+      "text": "Şimdiki an neşe ve mutlulukla dolu. Dikkatli olursan bunu görürsün."
+    }
+  },
+  "75": {
+    "hash": "743b2438",
+    "value": {
+      "source": "Zen Zihni, Başlangıç Zihni (1970)",
+      "text": "Bir şey yaptığında, iyi bir şenlik ateşi gibi kendini tümüyle yakmalı, ardında kendinden hiçbir iz bırakmamalısın."
+    }
+  },
+  "76": {
+    "hash": "f03c6f84",
+    "value": {
+      "source": "Denemeler, “Alışkanlık Üzerine” (1580)",
+      "text": "Çocukların oyunları oyun değildir; onlarda en ciddi eylemleri olarak değerlendirilmelidir."
+    }
+  },
+  "77": {
+    "hash": "356a7cc3",
+    "value": {
+      "source": "Ruth Moore'un aktarımıyla, Niels Bohr: The Man, His Science, and the World They Changed (1966)",
+      "text": "Bir paradoksla karşılaşmamız ne harika. Artık ilerleme kaydetmek için biraz umudumuz var."
+    }
+  },
+  "78": {
+    "hash": "e8cdc02b",
+    "value": {
+      "source": "Sonlu ve Sonsuz Oyunlar (1986)",
+      "text": "Sürprize karşı hazırlıklı olmak eğitilmiş olmaktır. Sürprize hazırlıklı olmak ise eğitimli olmaktır."
+    }
+  },
+  "79": {
+    "hash": "efd657b2",
+    "value": {
+      "source": "The Grasshopper: Games, Life and Utopia (1978)",
+      "text": "Bir oyun oynamak, gereksiz engelleri aşmaya yönelik gönüllü bir girişimdir."
+    }
+  },
+  "80": {
+    "hash": "df934af7",
+    "value": {
+      "source": "Oyun ve Gerçeklik (1971)",
+      "text": "Çocuk ya da yetişkin, birey ancak oyun oynarken ve yalnızca oyun oynarken yaratıcı olabilir ve kişiliğinin bütününü kullanabilir."
+    }
+  },
+  "81": {
+    "hash": "f73c193f",
+    "value": {
+      "source": "Yaşam Bilgeliği Üzerine Aforizmalar, T. Bailey Saunders'ın İngilizce çevirisi (1890)",
+      "text": "Kartları karan kaderdir, oynayan bizleriz."
+    }
+  },
+  "82": {
+    "hash": "5d894ed6",
+    "value": {
+      "source": "İstenç ve Tasarım Olarak Dünya, II. cilt (1844)",
+      "text": "Yetenek, kimsenin vuramadığı bir hedefi vurur; deha, kimsenin göremediği bir hedefi vurur."
+    }
+  },
+  "83": {
+    "hash": "9330b8a7",
+    "value": {
+      "source": "Kötümserlik Üzerine İncelemeler, T. Bailey Saunders'ın İngilizce çevirisi (1893)",
+      "text": "Herkes kendi görüş alanının sınırlarını dünyanın sınırları sanır."
+    }
+  },
+  "84": {
+    "hash": "6b9c8059",
+    "value": {
+      "source": "Savaş Sanatı, VI. bölüm, Lionel Giles'ın İngilizce çevirisi (1910)",
+      "text": "Su, akışını üzerinden aktığı toprağın yapısına göre biçimlendirir."
+    }
+  },
+  "85": {
+    "hash": "083b25cf",
+    "value": {
+      "source": "“Jingting Dağı'nda Zazen”, Sam Hamill'in İngilizce çevirisi (1987)",
+      "text": "Birlikte oturuyoruz, dağ ve ben,\nta ki yalnızca dağ kalana dek."
+    }
+  },
+  "86": {
+    "hash": "0a1ea829",
+    "value": {
+      "source": "İnsanın Türeyişi, giriş (1871)",
+      "text": "Cehalet, bilgiden daha sık özgüven doğurur."
+    }
+  },
+  "87": {
+    "hash": "2e9de027",
+    "value": {
+      "source": "Sevme Sanatı (1956)",
+      "text": "Sevgi pasif bir duygulanım değil, bir etkinliktir; bir “içine düşmek” değil, bir “içinde durmak”tır."
+    }
+  },
+  "88": {
+    "hash": "4a5a4a35",
+    "value": {
+      "source": "Kişi Olmaya Doğru (1961)",
+      "text": "İşin tuhaf çelişkisi şu: Kendimi olduğum gibi kabul ettiğimde değişebiliyorum."
+    }
+  },
+  "89": {
+    "hash": "9aae9bcb",
+    "value": {
+      "source": "Emici Zihin (1949)",
+      "text": "Bir öğretmen için en büyük başarı işareti, “Çocuklar artık ben yokmuşum gibi çalışıyor” diyebilmektir."
+    }
+  },
+  "90": {
+    "hash": "73d3ffc8",
+    "value": {
+      "source": "Genç Bir Şaire Mektuplar, M. D. Herter Norton'ın İngilizce çevirisi (1934)",
+      "text": "Kalbinde çözülmemiş ne varsa ona karşı sabırlı ol ve soruların kendisini sevmeye çalış."
+    }
+  },
+  "91": {
+    "hash": "b2dbae0e",
+    "value": {
+      "source": "Genç Bir Şaire Mektuplar, M. D. Herter Norton'ın İngilizce çevirisi (1934)",
+      "text": "Belki de hayatımızdaki bütün ejderhalar, bizi bir kez güzel ve cesur görmeyi bekleyen prenseslerdir."
+    }
+  },
+  "92": {
+    "hash": "b3853374",
+    "value": {
+      "source": "“Üç Reform Yöntemi” (1900)",
+      "text": "Herkes insanlığı değiştirmeyi düşünür, kimse kendini değiştirmeyi düşünmez."
+    }
+  },
+  "93": {
+    "hash": "44f77d69",
+    "value": {
+      "source": "Karamazov Kardeşler, Constance Garnett'in İngilizce çevirisi (1912)",
+      "text": "Çünkü insan varlığının sırrı yalnızca yaşamakta değil, uğruna yaşanacak bir şeye sahip olmaktadır."
+    }
+  },
+  "94": {
+    "hash": "2b2f269f",
+    "value": {
+      "source": "Siddhartha, Hilda Rosner'ın İngilizce çevirisi (1951)",
+      "text": "Bilgelik aktarılamaz. Bilge birinin aktarmaya çalıştığı bilgelik hep saçma gibi gelir."
+    }
+  },
+  "95": {
+    "hash": "2f9d27bc",
+    "value": {
+      "source": "İnsanlar Diyarı (1939)",
+      "text": "Mükemmelliğe, eklenecek bir şey kalmadığında değil, çıkarılacak bir şey kalmadığında ulaşılır."
+    }
+  },
+  "96": {
+    "hash": "0192398e",
+    "value": {
+      "source": "“Köydeki Yabancı”, Bir Yerlinin Notları (1955)",
+      "text": "İnsanlar tarihe hapsolmuştur, tarih de onlara."
+    }
+  },
+  "97": {
+    "hash": "acfdf3da",
+    "value": {
+      "source": "Kafesteki Kuşun Neden Şarkı Söylediğini Biliyorum (1969)",
+      "text": "İçinde anlatılmamış bir hikâye taşımaktan daha büyük bir ıstırap yoktur."
+    }
+  },
+  "98": {
+    "hash": "dfad3907",
+    "value": {
+      "source": "Gözleri Tanrı'yı Seyrediyordu (1937)",
+      "text": "Soru soran yıllar vardır, bir de cevap veren yıllar."
+    }
+  },
+  "99": {
+    "hash": "69617017",
+    "value": {
+      "source": "Dust Tracks on a Road (1942)",
+      "text": "Araştırma, resmîleşmiş meraktır. Bir amaçla kurcalamak ve eşelemektir."
+    }
+  },
+  "100": {
+    "hash": "767dc048",
+    "value": {
+      "source": "Anne Frank'in Hatıra Defteri (15 Temmuz 1944)",
+      "text": "Her şeye rağmen insanların özünde gerçekten iyi olduğuna hâlâ inanıyorum."
+    }
+  },
+  "101": {
+    "hash": "a670d67e",
+    "value": {
+      "source": "“Birmingham Hapishanesinden Mektup” (16 Nisan 1963)",
+      "text": "Herhangi bir yerdeki adaletsizlik, her yerdeki adalet için bir tehdittir."
+    }
+  },
+  "102": {
+    "hash": "8bc47669",
+    "value": {
+      "source": "Theo van Gogh'a mektup (1882)",
+      "text": "Balıkçılar denizin tehlikeli, fırtınanın korkunç olduğunu bilir, ama bu tehlikeleri hiçbir zaman karada kalmak için yeterli bir sebep saymamışlardır."
+    }
+  },
+  "103": {
+    "hash": "5a95a136",
+    "value": {
+      "source": "Theo van Gogh'a mektup (8 Eylül 1888)",
+      "text": "Çoğu zaman gecenin gündüzden daha canlı ve daha zengin renkli olduğunu düşünürüm."
+    }
+  },
+  "104": {
+    "hash": "8041ed00",
+    "value": {
+      "source": "“Yaratıcı İnanç” (1920)",
+      "text": "Sanat görüneni yeniden üretmez; görünür kılar."
+    }
+  },
+  "105": {
+    "hash": "fa072265",
+    "value": {
+      "source": "“Kendim Hakkında”, sergi kataloğu (1939)",
+      "text": "Kimse bir çiçeği gerçekten görmez. Öyle küçüktür ki. Vaktimiz yoktur, ve görmek zaman ister, tıpkı bir dostun olmasının zaman istemesi gibi."
+    }
+  },
+  "106": {
+    "hash": "a38d0d03",
+    "value": {
+      "source": "“Hiçlik Üzerine Konferans”, Silence (1961)",
+      "text": "Söyleyecek hiçbir şeyim yok\nve bunu söylüyorum\nve işte şiir bu."
+    }
+  },
+  "107": {
+    "hash": "dff79657",
+    "value": {
+      "source": "İyi Tasarımın On İlkesi (y. 1980)",
+      "text": "Daha az, ama daha iyi."
+    }
+  },
+  "108": {
+    "hash": "471b5644",
+    "value": {
+      "source": "A Place for My Stuff (1981)",
+      "text": "Hiç fark ettin mi, senden yavaş giden herkes salak, senden hızlı giden herkes de manyaktır?"
+    }
+  },
+  "109": {
+    "hash": "a6c07c27",
+    "value": {
+      "source": "Doin' It Again (1990)",
+      "text": "Ortalama bir insanın ne kadar aptal olduğunu düşün, sonra insanların yarısının ondan da aptal olduğunu fark et."
+    }
+  },
+  "110": {
+    "hash": "0c0bbed5",
+    "value": {
+      "source": "Röportaj, sıkça aktarılır (1990'lar)",
+      "text": "Herhangi bir kinikin yüzeyini kazı, altından hayal kırıklığına uğramış bir idealist çıkar."
+    }
+  },
+  "111": {
+    "hash": "802675e3",
+    "value": {
+      "source": "Mitch All Together (2003)",
+      "text": "Yürüyen merdiven asla bozulamaz: yalnızca merdivene dönüşebilir."
+    }
+  },
+  "112": {
+    "hash": "1222ae04",
+    "value": {
+      "source": "I Have a Pony (1985)",
+      "text": "Büyük bir deniz kabuğu koleksiyonum var; onu dünyanın dört bir yanındaki plajlara dağılmış halde saklıyorum."
+    }
+  },
+  "113": {
+    "hash": "343083f0",
+    "value": {
+      "source": "I Have a Pony (1985)",
+      "text": "Vaktin varsa her yer yürüme mesafesindedir."
+    }
+  },
+  "114": {
+    "hash": "3a70a6c2",
+    "value": {
+      "source": "Live at the Roxy (1978)",
+      "text": "Sana sadece küçük bir delilik kıvılcımı verilir. Onu kaybetmemelisin."
+    }
+  },
+  "115": {
+    "hash": "b5d8fb3a",
+    "value": {
+      "source": "Bossypants (2011)",
+      "text": "Evet de, nasıl yapacağını sonra çözersin."
+    }
+  },
+  "116": {
+    "hash": "5cda2d72",
+    "value": {
+      "source": "Yes Please (2014)",
+      "text": "Harika insanlar işleri hazır olmadan yapar."
+    }
+  },
+  "117": {
+    "hash": "035548d5",
+    "value": {
+      "source": "Yaratıcılık Üzerine Konferans, Video Arts (1991)",
+      "text": "Yaratıcılık bir yetenek değildir. Bir çalışma biçimidir."
+    }
+  },
+  "118": {
+    "hash": "97c1198a",
+    "value": {
+      "source": "The Search for Signs of Intelligent Life in the Universe, yazan Jane Wagner (1985)",
+      "text": "Hayatım boyunca hep biri olmak istedim. Şimdi görüyorum ki daha net olmalıymışım."
+    }
+  },
+  "119": {
+    "hash": "4be836dd",
+    "value": {
+      "source": "Charlie Rose röportajı (Aralık 2007)",
+      "text": "Öyle iyi ol ki seni görmezden gelemesinler."
+    }
+  },
+  "120": {
+    "hash": "7106e61d",
+    "value": {
+      "source": "Stand-up gösterisi (1980'ler)",
+      "text": "Eskiden beynin vücudumdaki en harika organ olduğunu düşünürdüm. Sonra bunu bana kimin söylediğini fark ettim."
+    }
+  },
+  "121": {
+    "hash": "9fca4885",
+    "value": {
+      "source": "Atfedilen söz (1930'lar)",
+      "text": "Doğru yolda olsan bile, orada öylece oturursan ezilirsin."
+    }
+  },
+  "122": {
+    "hash": "7771dbad",
+    "value": {
+      "source": "Atfedilen söz",
+      "text": "Can sıkıntısının çaresi meraktır. Merakın ise çaresi yoktur."
+    }
+  },
+  "123": {
+    "hash": "0d5f45fe",
+    "value": {
+      "source": "Ülkesi Olmayan Adam (2005)",
+      "text": "Dünya'da boş boş takılmak için buradayız; kimsenin sana aksini söylemesine izin verme."
+    }
+  },
+  "124": {
+    "hash": "da8fcb0b",
+    "value": {
+      "source": "Vakıf (1951)",
+      "text": "Şiddet, beceriksizin son sığınağıdır."
+    }
+  },
+  "125": {
+    "hash": "aeb1ea27",
+    "value": {
+      "source": "Isaac Asimov's Book of Science and Nature Quotations (1988)",
+      "text": "Bugün hayatın en üzücü yanı, bilimin bilgiyi toplumun bilgeliği topladığından daha hızlı toplamasıdır."
+    }
+  },
+  "126": {
+    "hash": "a882ff4b",
+    "value": {
+      "source": "Geleceğin Profilleri, gözden geçirilmiş baskı (1973)",
+      "text": "Yeterince gelişmiş her teknoloji sihirden ayırt edilemez."
+    }
+  },
+  "127": {
+    "hash": "6e4f2fd5",
+    "value": {
+      "source": "“İki Gün Sonra Dağılmayan Bir Evren Nasıl Kurulur” (1978)",
+      "text": "Gerçeklik, ona inanmayı bıraktığında ortadan kaybolmayan şeydir."
+    }
+  },
+  "128": {
+    "hash": "4881eafe",
+    "value": {
+      "source": "Atfedilen söz; röportajlarda aktarılır",
+      "text": "Yaratıcı yetişkin, hayatta kalmış çocuktur."
+    }
+  },
+  "129": {
+    "hash": "3f4cab8c",
+    "value": {
+      "source": "“Klasikleri Niçin Okumalı?” (1981)",
+      "text": "Bir klasik, söyleyeceğini söylemeyi hiç bitirmemiş bir kitaptır."
+    }
+  },
+  "130": {
+    "hash": "f7bf20b9",
+    "value": {
+      "source": "İmkânsızın Şarkısı, Jay Rubin'in İngilizce çevirisi (2000)",
+      "text": "Yalnızca herkesin okuduğu kitapları okursan, yalnızca herkesin düşündüğünü düşünebilirsin."
+    }
+  },
+  "131": {
+    "hash": "44a56b24",
+    "value": {
+      "source": "Silahlara Veda (1929)",
+      "text": "Dünya herkesi kırar, ve sonrasında birçoğu kırıldıkları yerlerden güçlenir."
+    }
+  },
+  "132": {
+    "hash": "1bebc20c",
+    "value": {
+      "source": "Cennetin Doğusu (1952)",
+      "text": "Artık mükemmel olmak zorunda olmadığına göre, iyi olabilirsin."
+    }
+  },
+  "133": {
+    "hash": "55e110c9",
+    "value": {
+      "source": "Sırça Fanus (1963)",
+      "text": "Derin bir nefes aldım ve kalbimin o eski böbürlenmesini dinledim. Varım, varım, varım."
+    }
+  },
+  "134": {
+    "hash": "91086f7d",
+    "value": {
+      "source": "Gödel, Escher, Bach (1979)",
+      "text": "Hofstadter Yasası: Bir iş her zaman beklediğinden uzun sürer, Hofstadter Yasası'nı hesaba katsan bile."
+    }
+  },
+  "135": {
+    "hash": "3aa0f03a",
+    "value": {
+      "source": "“Bilgi Açısından Zengin Bir Dünya İçin Örgüt Tasarlamak” (1971)",
+      "text": "Bilgi zenginliği, dikkat yoksulluğu yaratır."
+    }
+  },
+  "136": {
+    "hash": "0154c59f",
+    "value": {
+      "source": "“Managing for Business Effectiveness”, Harvard Business Review (1963)",
+      "text": "Hiç yapılmaması gereken bir şeyi verimli şekilde yapmak kadar faydasız bir şey yoktur."
+    }
+  },
+  "137": {
+    "hash": "e59a2b8f",
+    "value": {
+      "source": "Mister Rogers Talks with Parents (1983)",
+      "text": "Çocukken haberlerde korkutucu şeyler gördüğümde annem bana, “Yardım edenlere bak. Yardım eden insanları her zaman bulursun” derdi."
+    }
+  },
+  "138": {
+    "hash": "07ade6ea",
+    "value": {
+      "source": "It's Not Easy Being Green'deki aktarımıyla (2005)",
+      "text": "[Çocuklar] onlara öğretmeye çalıştığın şeyleri hatırlamaz. Senin ne olduğunu hatırlarlar."
+    }
+  },
+  "139": {
+    "hash": "0cfde4c8",
+    "value": {
+      "source": "Röportajlarda aktarılır",
+      "text": "Kim olduğunu keşfet ve bunu bilerek yap."
+    }
+  },
+  "140": {
+    "hash": "1c1751c7",
+    "value": {
+      "source": "EWD498, “Canımızı yakabilecek gerçekleri nasıl söyleriz?” (1975)",
+      "text": "Sadelik, güvenilirliğin ön koşuludur."
+    }
+  },
+  "141": {
+    "hash": "f53a32d9",
+    "value": {
+      "source": "Wooden: A Lifetime of Observations and Reflections On and Off the Court (1997)",
+      "text": "Hızlı ol, ama acele etme."
+    }
+  },
+  "142": {
+    "hash": "d68cc552",
+    "value": {
+      "source": "Atfedilen söz",
+      "text": "Değerlendirmeden gözlemleyebilmek, zekânın en yüksek biçimidir."
+    }
+  },
+  "143": {
+    "hash": "ba5b0f51",
+    "value": {
+      "source": "Röportajlarda aktarılır (y. 2008)",
+      "text": "Bence komedyenin görevi çizginin nereye çekildiğini bulmak ve onu bilerek aşmaktır."
+    }
+  },
+  "144": {
+    "hash": "db7aef9f",
+    "value": {
+      "source": "Veda sözü, röportajlarda aktarılır",
+      "text": "Kötülük güçleri senin evine giderken yolunu şaşırsın."
+    }
+  },
+  "145": {
+    "hash": "986eecc5",
+    "value": {
+      "source": "Grizzly Man (2005)",
+      "text": "Evrenin ortak paydasının uyum değil, kaos, düşmanlık ve cinayet olduğuna inanıyorum."
+    }
+  },
+  "146": {
+    "hash": "256454a1",
+    "value": {
+      "source": "Mitch All Together (2003)",
+      "text": "Pirinci severim. Açsan ve bir şeyden 2.000 tane istiyorsan pirinç harikadır."
+    }
+  },
+  "147": {
+    "hash": "2a52bed1",
+    "value": {
+      "source": "Yaratıcılık Üzerine Konferans, Video Arts (1991)",
+      "text": "Yaratıcı çalışanlar istiyorsan, onlara oyun oynamak için yeterince zaman ver."
+    }
+  },
+  "148": {
+    "hash": "7dff3835",
+    "value": {
+      "source": "Taranmamış Düşünceler, Jacek Galazka'nın İngilizce çevirisi (1962)",
+      "text": "Bir çığdaki hiçbir kar tanesi kendini asla sorumlu hissetmez."
+    }
+  },
+  "149": {
+    "hash": "51e65f86",
+    "value": {
+      "source": "Düşünceler (1838)",
+      "text": "Öğretmek, iki kez öğrenmektir."
+    }
+  },
+  "150": {
+    "hash": "a11a2be1",
+    "value": {
+      "source": "Şairlerin Hayatları, “Cowley” (1779)",
+      "text": "Dil, düşüncenin giysisidir."
+    }
+  },
+  "151": {
+    "hash": "f8c0fc88",
+    "value": {
+      "source": "Don Kişot Üzerine Düşünceler (1914)",
+      "text": "Ben, ben ve koşullarımım."
+    }
+  },
+  "152": {
+    "hash": "b7f4df92",
+    "value": {
+      "source": "Gulag Takımadaları, Thomas P. Whitney'nin İngilizce çevirisi (1974)",
+      "text": "İyiyle kötüyü ayıran çizgi, her insanın kalbinin ortasından geçer."
+    }
+  },
+  "153": {
+    "hash": "490913eb",
+    "value": {
+      "source": "Saatler Kitabı, I, 59, Anita Barrows ve Joanna Macy'nin İngilizce çevirisi (1996)",
+      "text": "Her şeyin başına gelmesine izin ver: güzellik de, dehşet de. Sadece yürümeye devam et. Hiçbir duygu kalıcı değildir."
+    }
+  },
+  "154": {
+    "hash": "0c078ba2",
+    "value": {
+      "source": "Saatler Kitabı, I, 2, Anita Barrows ve Joanna Macy'nin İngilizce çevirisi (1996)",
+      "text": "Hayatımı dünyaya yayılan\ngenişleyen halkalar içinde yaşıyorum."
     }
   },
   "155": {
-    "hash": "c02a6bd6",
+    "hash": "af081c8d",
     "value": {
-      "source": "Cosmography (1992)",
-      "text": "Doğru şeylerin hepsini yanlış nedenlerle yapmak yerine, doğru şeylerin hepsini doğru nedenlerle yaptığımız aşamaya ilerlemeliyiz."
+      "source": "Genç Bir Şaire Mektuplar, 7. mektup, M. D. Herter Norton'ın İngilizce çevirisi (1934)",
+      "text": "Sevgi şundan ibarettir: İki yalnızlığın birbirini koruması, birbirine sınır olması ve birbirini selamlaması."
     }
   },
   "156": {
-    "hash": "7c3f69ea",
+    "hash": "eef65aea",
     "value": {
-      "source": "Out of Your Mind (2017)",
-      "text": "Hiç bir deniz kabuğuna gerçekten baktın mı? Hiçbir yerinde estetik bir kusur yok; tamamen kusursuz."
+      "source": "“On Yıl Sonra”, Direniş ve Teslimiyet (1942)",
+      "text": "İnsanlara, yaptıkları ya da yapmadıkları şeylerin ışığında değil, daha çok çektikleri acıların ışığında bakmayı öğrenmeliyiz."
+    }
+  },
+  "157": {
+    "hash": "35417bb5",
+    "value": {
+      "source": "Ruhunu Arayan Modern İnsan (1933)",
+      "text": "Birinin ayağına uyan ayakkabı ötekini sıkar; her duruma uyan bir yaşam reçetesi yoktur."
+    }
+  },
+  "158": {
+    "hash": "553378ea",
+    "value": {
+      "source": "İnsanın Anlam Arayışı (1959)",
+      "text": "Bir bakıma acı, bir anlam bulduğu anda acı olmaktan çıkar."
+    }
+  },
+  "159": {
+    "hash": "559fb7df",
+    "value": {
+      "source": "Kişi Olmaya Doğru (1961)",
+      "text": "En kişisel olan, en evrensel olandır."
+    }
+  },
+  "160": {
+    "hash": "3fc4010e",
+    "value": {
+      "source": "Kişi Olmaya Doğru (1961)",
+      "text": "İyi yaşam bir süreçtir, bir varoluş hali değil. Bir yöndür, bir varış noktası değil."
+    }
+  },
+  "161": {
+    "hash": "baab2cfe",
+    "value": {
+      "source": "Beden Kayıt Tutar (2014)",
+      "text": "Başka insanlarla birlikteyken kendini güvende hissedebilmek, muhtemelen ruh sağlığının en önemli yönüdür."
+    }
+  },
+  "162": {
+    "hash": "9c911dfd",
+    "value": {
+      "source": "Kitchen Table Wisdom (1996)",
+      "text": "Başka bir insanla bağ kurmanın en temel ve en güçlü yolu dinlemektir. Sadece dinlemek."
+    }
+  },
+  "163": {
+    "hash": "dd7fd87c",
+    "value": {
+      "source": "Kitchen Table Wisdom (1996)",
+      "text": "Umursamadığımız için değil, yas tutmadığımız için tükeniriz."
+    }
+  },
+  "164": {
+    "hash": "b0367f7b",
+    "value": {
+      "source": "Norman Cousins'in aktarımıyla, Bir Hastalığın Anatomisi (1979)",
+      "text": "Her hasta kendi doktorunu içinde taşır."
+    }
+  },
+  "165": {
+    "hash": "c58f3ec5",
+    "value": {
+      "source": "Phaedra, 249. dize",
+      "text": "İyileşmeyi istemek, tedavinin bir parçasıdır."
+    }
+  },
+  "166": {
+    "hash": "3992b91d",
+    "value": {
+      "source": "Kederin Gözlemi (1961)",
+      "text": "Kimse bana yasın korkuya bu kadar benzediğini söylememişti."
+    }
+  },
+  "167": {
+    "hash": "57b421b5",
+    "value": {
+      "source": "New York'taki anma töreninde okunan mesaj (21 Eylül 2001)",
+      "text": "Yas, sevgi için ödediğimiz bedeldir."
+    }
+  },
+  "168": {
+    "hash": "2913c57f",
+    "value": {
+      "source": "No Mud, No Lotus (2014)",
+      "text": "Çamur olmadan lotus olmaz."
+    }
+  },
+  "169": {
+    "hash": "be7e65bb",
+    "value": {
+      "source": "Her Şey Dağıldığında (1997)",
+      "text": "Hiçbir şey, bilmemiz gerekeni bize öğretmeden gitmez."
+    }
+  },
+  "170": {
+    "hash": "045681f2",
+    "value": {
+      "source": "Buddha's Little Instruction Book (1994)",
+      "text": "Şefkatin kendini kapsamıyorsa, eksiktir."
     }
   }
 }

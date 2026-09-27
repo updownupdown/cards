@@ -21,1074 +21,1172 @@
     }
   },
   "4": {
-    "hash": "fc04d5b9",
-    "value": {
-      "source": "Diário, 30 de agosto de 1856",
-      "text": "É inútil sonhar com uma natureza selvagem distante de nós mesmos."
-    }
-  },
-  "5": {
     "hash": "8f8acef8",
     "value": {
       "source": "Hamlet, ato II, cena II (c. 1600-1601)",
       "text": "Não há nada de bom ou de mau, é o pensamento que o faz assim."
     }
   },
-  "6": {
+  "5": {
     "hash": "12337d75",
     "value": {
       "source": "Hamlet, ato I, cena III (c. 1600-1601)",
       "text": "Dá a todos os teus ouvidos, mas a poucos a tua voz."
     }
   },
-  "7": {
+  "6": {
     "hash": "4a8405f3",
     "value": {
       "source": "Macbeth, ato I, cena III (c. 1606)",
       "text": "Aconteça o que acontecer,\no tempo e a hora passam pelo dia mais duro."
     }
   },
-  "8": {
+  "7": {
     "hash": "4cae94c2",
     "value": {
       "source": "Emma (1815)",
       "text": "Metade do mundo não consegue entender os prazeres da outra metade."
     }
   },
-  "9": {
+  "8": {
     "hash": "648e02e2",
     "value": {
       "source": "Uma defesa dos direitos dos homens (1790)",
       "text": "Ninguém escolhe o mal porque é mal; apenas o confunde com a felicidade, o bem que procura."
     }
   },
-  "10": {
-    "hash": "4a37f8a3",
-    "value": {
-      "source": "Carta a T. W. Higginson (fim de 1872)",
-      "text": "Viver é tão surpreendente que deixa pouco espaço para outras ocupações."
-    }
-  },
-  "11": {
-    "hash": "62a994dd",
-    "value": {
-      "source": "“Canção de mim mesmo”, Folhas de Relva (1855)",
-      "text": "Vadio e convido minha alma."
-    }
-  },
-  "12": {
+  "9": {
     "hash": "cfab5dd9",
     "value": {
       "source": "“Canção de mim mesmo”, Folhas de Relva (1855)",
       "text": "Não tenho zombarias nem argumentos; observo e espero."
     }
   },
-  "13": {
-    "hash": "ddbe42ee",
-    "value": {
-      "source": "“Canção de mim mesmo”, Folhas de Relva (1855)",
-      "text": "Nos rostos de homens e mulheres eu vejo Deus."
-    }
-  },
-  "14": {
-    "hash": "a4f9cf0e",
-    "value": {
-      "source": "“Os adormecidos”, Folhas de Relva (1855)",
-      "text": "A paz é sempre bela."
-    }
-  },
-  "15": {
-    "hash": "4fd4cf5c",
-    "value": {
-      "source": "“Milagres”, Folhas de Relva (1856)",
-      "text": "Para mim, cada hora de luz e de escuridão é um milagre,\ncada centímetro cúbico de espaço é um milagre."
-    }
-  },
-  "16": {
-    "hash": "db60cfed",
-    "value": {
-      "source": "“O retrato do Sr. W. H.” (1889)",
-      "text": "Uma coisa não é necessariamente verdadeira porque um homem morre por ela."
-    }
-  },
-  "17": {
-    "hash": "efbc40fc",
-    "value": {
-      "source": "A decadência da mentira (1889)",
-      "text": "A vida imita a arte muito mais do que a arte imita a vida."
-    }
-  },
-  "18": {
+  "10": {
     "hash": "1bc7a70a",
     "value": {
       "source": "O crítico como artista (1891)",
       "text": "O homem é menos ele mesmo quando fala por si. Dê-lhe uma máscara, e ele lhe dirá a verdade."
     }
   },
-  "19": {
-    "hash": "8b45fdc8",
-    "value": {
-      "source": "O leque de Lady Windermere, ato III (1892)",
-      "text": "Estamos todos na sarjeta, mas alguns de nós estão olhando para as estrelas."
-    }
-  },
-  "20": {
+  "11": {
     "hash": "2d56d13f",
     "value": {
       "source": "A importância de ser prudente, ato I (1895)",
       "text": "A verdade raramente é pura e nunca é simples."
     }
   },
-  "21": {
+  "12": {
     "hash": "752701e7",
     "value": {
       "source": "Discurso sobre a emancipação das Índias Ocidentais (3 de agosto de 1857)",
       "text": "O poder não concede nada sem uma exigência. Nunca concedeu e nunca concederá."
     }
   },
-  "22": {
-    "hash": "ea773469",
-    "value": {
-      "source": "Discurso na Sociedade Antiescravagista (12 de maio de 1853)",
-      "text": "Eu me uniria a qualquer um para fazer o certo, e a ninguém para fazer o errado."
-    }
-  },
-  "23": {
-    "hash": "59ad4eaf",
-    "value": {
-      "source": "Um apelo pela liberdade de expressão em Boston (10 de dezembro de 1860)",
-      "text": "Suprimir a liberdade de expressão é um erro duplo. Viola os direitos de quem ouve e também os de quem fala."
-    }
-  },
-  "24": {
-    "hash": "21b193dc",
-    "value": {
-      "source": "Discurso na Sociedade Antiescravagista Americana e Estrangeira (maio de 1853)",
-      "text": "O terreno que um homem negro ocupa neste país lhe é duramente disputado, centímetro por centímetro."
-    }
-  },
-  "25": {
-    "hash": "2b7465ae",
-    "value": {
-      "source": "Nossa nacionalidade composta (7 de dezembro de 1869)",
-      "text": "Não conheço direitos de raça superiores aos direitos da humanidade."
-    }
-  },
-  "26": {
-    "hash": "b66dffa5",
-    "value": {
-      "source": "Up from Slavery, capítulo XI (1901)",
-      "text": "Poucas coisas ajudam mais uma pessoa do que lhe dar responsabilidade e fazê-la saber que você confia nela."
-    }
-  },
-  "27": {
-    "hash": "68857614",
-    "value": {
-      "source": "Up from Slavery, capítulo XII (1901)",
-      "text": "Nada que valha a pena ter chega até mim, a não ser como resultado de trabalho duro."
-    }
-  },
-  "28": {
-    "hash": "c300c4b6",
-    "value": {
-      "source": "Up from Slavery, capítulo XI (1901)",
-      "text": "Eu não permitiria que nenhum homem, qualquer que fosse sua cor, estreitasse e degradasse minha alma me levando a odiá-lo."
-    }
-  },
-  "29": {
+  "13": {
     "hash": "251e3f0b",
     "value": {
       "source": "A história da minha vida e do meu trabalho (1900)",
       "text": "Acho que aprendi que a melhor maneira de se elevar é ajudar outra pessoa."
     }
   },
-  "30": {
-    "hash": "33302956",
-    "value": {
-      "source": "Discurso em Boston (30 de julho de 1903)",
-      "text": "O mundo se importa muito pouco com o que você ou eu sabemos, mas se importa muito com o que você ou eu fazemos."
-    }
-  },
-  "31": {
-    "hash": "3486829b",
-    "value": {
-      "source": "O estudo dos problemas do negro (janeiro de 1898)",
-      "text": "Só existe um covarde na terra: o covarde que não ousa saber."
-    }
-  },
-  "32": {
+  "14": {
     "hash": "ffedfc94",
     "value": {
       "source": "As almas do povo negro, capítulo V (1903)",
       "text": "O trabalhador deve trabalhar pela glória de sua obra, não apenas pelo pagamento; o pensador deve pensar pela verdade, não pela fama."
     }
   },
-  "33": {
-    "hash": "b2654494",
-    "value": {
-      "source": "As almas do povo negro, capítulo XII (1903)",
-      "text": "Eis a tragédia da nossa época: não que os homens sejam pobres, - todos os homens conhecem um pouco a pobreza; não que os homens sejam maus, - quem é bom? não que os homens sejam ignorantes, - o que é a Verdade? Não, mas que os homens conheçam tão pouco os homens."
-    }
-  },
-  "34": {
+  "15": {
     "hash": "d63d8249",
     "value": {
       "source": "John Brown: uma biografia (1909)",
       "text": "O custo da liberdade é menor que o preço da repressão."
     }
   },
-  "35": {
-    "hash": "86bc9186",
-    "value": {
-      "source": "John Brown: uma biografia (1909)",
-      "text": "A liberdade educa para a liberdade. A responsabilidade é o primeiro passo para a responsabilidade."
-    }
-  },
-  "36": {
-    "hash": "083287df",
-    "value": {
-      "source": "Sobre a liberdade, capítulo II (1859)",
-      "text": "Ninguém pode ser um grande pensador sem reconhecer que, como pensador, seu primeiro dever é seguir o próprio intelecto até quaisquer conclusões a que ele leve."
-    }
-  },
-  "37": {
-    "hash": "35883278",
-    "value": {
-      "source": "Sobre a liberdade, capítulo III (1859)",
-      "text": "A natureza humana não é uma máquina a ser construída segundo um modelo e ajustada para fazer exatamente o trabalho que lhe foi prescrito."
-    }
-  },
-  "38": {
-    "hash": "5cbd5f60",
-    "value": {
-      "source": "Considerações sobre o governo representativo, capítulo I (1861)",
-      "text": "Uma pessoa com uma crença é uma força social igual a noventa e nove que têm apenas interesses."
-    }
-  },
-  "39": {
-    "hash": "d600ba53",
-    "value": {
-      "source": "Utilitarismo, capítulo II (1861)",
-      "text": "Na maioria das naturezas, a capacidade para os sentimentos mais nobres é uma planta muito frágil, facilmente destruída, não só por influências hostis, mas pela simples falta de sustento."
-    }
-  },
-  "40": {
-    "hash": "76823242",
-    "value": {
-      "source": "A sujeição das mulheres, capítulo I (1869)",
-      "text": "Substituímos a apoteose da Razão pela do Instinto; e chamamos de instinto tudo o que encontramos em nós mesmos e para o qual não conseguimos achar nenhum fundamento racional."
-    }
-  },
-  "41": {
-    "hash": "ab113cc5",
-    "value": {
-      "source": "Princípios de reconstrução social (1916)",
-      "text": "É a preocupação com a posse, mais do que qualquer outra coisa, que impede os homens de viver com liberdade e nobreza."
-    }
-  },
-  "42": {
-    "hash": "11f50e13",
-    "value": {
-      "source": "Por que os homens lutam (1917)",
-      "text": "O pensamento é grande, veloz e livre, a luz do mundo e a maior glória do homem."
-    }
-  },
-  "43": {
-    "hash": "d113c1b8",
-    "value": {
-      "source": "A análise da mente, palestra I (1921)",
-      "text": "O mistério é encantador, mas não é científico, pois depende da ignorância."
-    }
-  },
-  "44": {
-    "hash": "f0fef13f",
-    "value": {
-      "source": "O ABC da relatividade (1925)",
-      "text": "Todos temos a tendência de achar que o mundo deve se ajustar aos nossos preconceitos."
-    }
-  },
-  "45": {
+  "16": {
     "hash": "b7e60d1c",
     "value": {
       "source": "Ensaios céticos (1928)",
       "text": "O que falta não é a vontade de acreditar, mas a vontade de descobrir, que é exatamente o oposto."
     }
   },
-  "46": {
+  "17": {
     "hash": "323ca727",
     "value": {
       "source": "Discurso na Filadélfia (8 de julho de 1896)",
       "text": "Ninguém pode aceitar rastejar quando sente o impulso de voar."
     }
   },
-  "47": {
+  "18": {
     "hash": "230a1bd7",
     "value": {
       "source": "A história da minha vida, capítulo XXI (1903)",
       "text": "A literatura é a minha Utopia. Aqui não me privam dos meus direitos."
     }
   },
-  "48": {
-    "hash": "be427fec",
-    "value": {
-      "source": "Otimismo (1903)",
-      "text": "É um erro contemplar sempre o bem e ignorar o mal, porque, ao tornar as pessoas descuidadas, isso abre as portas para o desastre."
-    }
-  },
-  "49": {
-    "hash": "cb092235",
-    "value": {
-      "source": "Otimismo (1903)",
-      "text": "Embora o mundo esteja cheio de sofrimento, também está cheio da superação dele."
-    }
-  },
-  "50": {
-    "hash": "df437c11",
-    "value": {
-      "source": "Otimismo (1903)",
-      "text": "O resultado mais elevado da educação é a tolerância."
-    }
-  },
-  "51": {
-    "hash": "7a71e66f",
-    "value": {
-      "source": "Respostas a nove perguntas (setembro de 1896)",
-      "text": "Meu método é me esforçar ao máximo para encontrar a coisa certa a dizer e depois dizê-la com a maior leveza."
-    }
-  },
-  "52": {
-    "hash": "a63afa92",
-    "value": {
-      "source": "Cândida, ato I (1898)",
-      "text": "Não temos mais direito de consumir felicidade sem produzi-la do que de consumir riqueza sem produzi-la."
-    }
-  },
-  "53": {
+  "19": {
     "hash": "6e6f59d7",
     "value": {
       "source": "Homem e super-homem (1903)",
       "text": "O único homem que conheço que se comporta com sensatez é o meu alfaiate: ele tira minhas medidas de novo cada vez que me vê."
     }
   },
-  "54": {
-    "hash": "27fcfcb9",
-    "value": {
-      "source": "O dilema do médico, prefácio (1911)",
-      "text": "Nenhum homem ocupado em fazer algo muito difícil, e em fazê-lo bem, perde o respeito por si mesmo."
-    }
-  },
-  "55": {
-    "hash": "18649e85",
-    "value": {
-      "source": "Santa Joana, prefácio (1923)",
-      "text": "Para a maioria das pessoas, é difícil, se não impossível, pensar de um jeito diferente do de sua própria época."
-    }
-  },
-  "56": {
-    "hash": "09d1e4d6",
-    "value": {
-      "source": "O louco, “Rostos” (1918)",
-      "text": "Conheço os rostos, porque olho através do tecido que meu próprio olho tece e contemplo a realidade que há por baixo."
-    }
-  },
-  "57": {
-    "hash": "bef2979e",
-    "value": {
-      "source": "O precursor (1920)",
-      "text": "Você é o seu próprio precursor, e as torres que construiu não passam dos alicerces do seu eu gigante."
-    }
-  },
-  "58": {
-    "hash": "2ce802a0",
-    "value": {
-      "source": "O profeta (1923)",
-      "text": "Não diga: “Encontrei o caminho da alma”. Diga antes: “Encontrei a alma caminhando pelo meu caminho”."
-    }
-  },
-  "59": {
-    "hash": "4877cf43",
-    "value": {
-      "source": "O profeta (1923)",
-      "text": "Sua dor é o romper da casca que envolve o seu entendimento."
-    }
-  },
-  "60": {
+  "20": {
     "hash": "e14475d9",
     "value": {
       "source": "Areia e espuma (1926)",
       "text": "Uma verdade deve ser sempre conhecida, e dita apenas algumas vezes."
     }
   },
-  "61": {
-    "hash": "e146a162",
-    "value": {
-      "source": "Enquirídio, seção 1, trad. inglesa de Elizabeth Carter (1758)",
-      "text": "Algumas coisas dependem de nós, e outras não."
-    }
-  },
-  "62": {
-    "hash": "658b2d36",
-    "value": {
-      "source": "Enquirídio, seção 5, trad. inglesa de Elizabeth Carter (1758)",
-      "text": "Os homens não são perturbados pelas coisas, mas pelos princípios e opiniões que formam sobre as coisas."
-    }
-  },
-  "63": {
-    "hash": "039ea786",
-    "value": {
-      "source": "Enquirídio, seção 8, trad. inglesa de Elizabeth Carter (1758)",
-      "text": "Não exija que os acontecimentos aconteçam como você quer; deseje que aconteçam como acontecem, e sua vida será serena."
-    }
-  },
-  "64": {
-    "hash": "4083d68f",
-    "value": {
-      "source": "Enquirídio, seção 17, trad. inglesa de Elizabeth Carter (1758)",
-      "text": "Lembre-se de que você é um ator num drama, do tipo que o autor quiser."
-    }
-  },
-  "65": {
-    "hash": "95dc5617",
-    "value": {
-      "source": "Enquirídio, seção 13, trad. inglesa de Elizabeth Carter (1758)",
-      "text": "Se quer melhorar, contente-se em ser considerado tolo e estúpido."
-    }
-  },
-  "66": {
-    "hash": "18cce700",
-    "value": {
-      "source": "Enquirídio, seção 19, trad. inglesa de Elizabeth Carter (1758)",
-      "text": "Você pode ser invencível, se não entrar em nenhum combate cuja vitória não dependa de você."
-    }
-  },
-  "67": {
-    "hash": "2c6ab54b",
-    "value": {
-      "source": "Enquirídio, seção 23, trad. inglesa de Elizabeth Carter (1758)",
-      "text": "Se algum dia você voltar sua atenção para as coisas externas, a ponto de querer agradar a alguém, saiba que arruinou seu plano de vida."
-    }
-  },
-  "68": {
-    "hash": "645ac17b",
-    "value": {
-      "source": "Enquirídio, seção 43, trad. inglesa de Elizabeth Carter (1758)",
-      "text": "Toda coisa tem duas alças: uma pela qual pode ser carregada, e outra pela qual não pode."
-    }
-  },
-  "69": {
-    "hash": "d53fa574",
-    "value": {
-      "source": "Enquirídio, seção 46, trad. inglesa de Elizabeth Carter (1758)",
-      "text": "Nunca se chame de filósofo nem fale muito sobre teoremas entre os leigos; aja de acordo com eles."
-    }
-  },
-  "70": {
-    "hash": "0a204376",
-    "value": {
-      "source": "Enquirídio, seção 52, trad. inglesa de Elizabeth Carter (1758)",
-      "text": "Em todas as ocasiões, devemos ter à mão estas máximas: Guia-me, ó Júpiter, e tu, ó Destino."
-    }
-  },
-  "71": {
-    "hash": "488f5416",
-    "value": {
-      "source": "Meditações, livro IV, trad. inglesa de George Long (1862)",
-      "text": "O universo é mudança; nossa vida é o que nossos pensamentos fazem dela."
-    }
-  },
-  "72": {
-    "hash": "4ddc9636",
-    "value": {
-      "source": "Meditações, livro VII, trad. inglesa de George Long (1862)",
-      "text": "Muito pouco é realmente necessário para viver uma vida feliz."
-    }
-  },
-  "73": {
-    "hash": "2b61c529",
-    "value": {
-      "source": "Meditações, livro II, trad. inglesa de George Long (1862)",
-      "text": "Pratica cada ato da tua vida como se fosse o último."
-    }
-  },
-  "74": {
-    "hash": "bfd4c5fc",
-    "value": {
-      "source": "Meditações, livro IV, trad. inglesa de George Long (1862)",
-      "text": "Em nenhum lugar o homem se recolhe com mais tranquilidade ou mais livre de aflições do que em sua própria alma."
-    }
-  },
-  "75": {
-    "hash": "157c654d",
-    "value": {
-      "source": "Meditações, livro VI, trad. inglesa de George Long (1862)",
-      "text": "A melhor maneira de te vingares é não te tornares igual a quem te fez mal."
-    }
-  },
-  "76": {
-    "hash": "a6aae84b",
-    "value": {
-      "source": "Meditações, livro VIII, trad. inglesa de George Long (1862)",
-      "text": "Recebe a riqueza ou a prosperidade sem arrogância, e está pronto para deixá-las partir."
-    }
-  },
-  "77": {
-    "hash": "5ee698b7",
-    "value": {
-      "source": "Meditações, livro VII, trad. inglesa de George Long (1862)",
-      "text": "Olha para dentro. Dentro está a fonte do bem, e ela sempre brotará, se sempre cavares."
-    }
-  },
-  "78": {
-    "hash": "2b8a13bd",
-    "value": {
-      "source": "Meditações, livro IX, trad. inglesa de George Long (1862)",
-      "text": "A perda nada mais é que mudança. Mas a natureza universal se deleita com a mudança."
-    }
-  },
-  "79": {
-    "hash": "ebf1a759",
-    "value": {
-      "source": "Meditações, livro VI, trad. inglesa de George Long (1862)",
-      "text": "O que não é bom para o enxame também não é bom para a abelha."
-    }
-  },
-  "80": {
-    "hash": "be100604",
-    "value": {
-      "source": "Meditações, livro IV, trad. inglesa de George Long (1862)",
-      "text": "Considera que, em pouco tempo, não serás ninguém e não estarás em lugar nenhum."
-    }
-  },
-  "81": {
-    "hash": "43fef62c",
-    "value": {
-      "source": "Cartas morais a Lucílio, carta 84, trad. inglesa de Richard M. Gummere (1920)",
-      "text": "É áspero o caminho que leva ao alto da grandeza."
-    }
-  },
-  "82": {
-    "hash": "3e583cac",
-    "value": {
-      "source": "Cartas morais a Lucílio, carta 76, trad. inglesa de Richard M. Gummere (1920)",
-      "text": "Ninguém jamais se tornou sábio por acaso."
-    }
-  },
-  "83": {
-    "hash": "da22f339",
-    "value": {
-      "source": "Cartas morais a Lucílio, carta 101, trad. inglesa de Richard M. Gummere (1925)",
-      "text": "Comece já a viver, e conte cada dia como uma vida à parte."
-    }
-  },
-  "84": {
-    "hash": "7e5d5784",
-    "value": {
-      "source": "Cartas morais a Lucílio, carta 7, trad. inglesa de Richard M. Gummere (1917)",
-      "text": "Conviva com pessoas que possam fazer de você alguém melhor."
-    }
-  },
-  "85": {
+  "21": {
     "hash": "46cee3d0",
     "value": {
       "source": "Cartas morais a Lucílio, carta 76, trad. inglesa de Richard M. Gummere (1920)",
       "text": "Enquanto viver, continue aprendendo a viver."
     }
   },
-  "86": {
-    "hash": "5c238bdc",
-    "value": {
-      "source": "Cartas morais a Lucílio, carta 85, trad. inglesa de Richard M. Gummere (1920)",
-      "text": "Quem é corajoso é livre."
-    }
-  },
-  "87": {
-    "hash": "0a5113ce",
-    "value": {
-      "source": "Cartas morais a Lucílio, carta 4, trad. inglesa de Richard M. Gummere (1917)",
-      "text": "Ninguém pode ter uma vida tranquila se pensa demais em prolongá-la."
-    }
-  },
-  "88": {
-    "hash": "d537760b",
-    "value": {
-      "source": "Sobre a ira, livro II, trad. inglesa de John W. Basore (1928)",
-      "text": "O maior remédio para a ira é a espera."
-    }
-  },
-  "89": {
-    "hash": "02b70b25",
-    "value": {
-      "source": "Sobre a vida feliz, trad. inglesa de Aubrey Stewart (1889)",
-      "text": "Ninguém pode ser chamado de feliz se está fora da verdade."
-    }
-  },
-  "90": {
-    "hash": "fd91a412",
-    "value": {
-      "source": "Cartas morais a Lucílio, carta 23, trad. inglesa de Richard M. Gummere (1917)",
-      "text": "Aproveite os prazeres presentes de modo a não prejudicar os futuros."
-    }
-  },
-  "91": {
+  "22": {
     "hash": "db06e581",
     "value": {
       "source": "Walden, “Economia” (1854)",
       "text": "A maioria dos homens leva uma vida de tranquilo desespero."
     }
   },
-  "92": {
+  "23": {
     "hash": "7e8e2dc4",
     "value": {
       "source": "Walden, “Onde vivi e para que vivi” (1854)",
       "text": "Simplifique, simplifique."
     }
   },
-  "93": {
+  "24": {
     "hash": "3b10a246",
     "value": {
       "source": "Walden, “Conclusão” (1854)",
       "text": "Mais do que amor, dinheiro ou fama, deem-me a verdade."
     }
   },
-  "94": {
+  "25": {
     "hash": "150b44fb",
     "value": {
       "source": "Walden, “Conclusão” (1854)",
       "text": "Se um homem não acompanha o passo dos seus companheiros, talvez seja porque ouve um tambor diferente."
     }
   },
-  "95": {
+  "26": {
     "hash": "c4f0fc53",
     "value": {
       "source": "Walden, “O lago no inverno” (1854)",
       "text": "O céu está sob os nossos pés, assim como sobre as nossas cabeças."
     }
   },
-  "96": {
-    "hash": "e9d019b4",
-    "value": {
-      "source": "Walden, “Conclusão” (1854)",
-      "text": "As coisas não mudam; nós mudamos."
-    }
-  },
-  "97": {
-    "hash": "8b784e57",
-    "value": {
-      "source": "Walden, “Conclusão” (1854)",
-      "text": "O sol não passa de uma estrela da manhã."
-    }
-  },
-  "98": {
-    "hash": "ffbff065",
-    "value": {
-      "source": "Walden, “Conclusão” (1854)",
-      "text": "Só amanhece o dia para o qual estamos despertos."
-    }
-  },
-  "99": {
-    "hash": "5480b08e",
-    "value": {
-      "source": "Walden, “Onde vivi e para que vivi” (1854)",
-      "text": "Um homem é rico na proporção do número de coisas das quais pode se dar ao luxo de abrir mão."
-    }
-  },
-  "100": {
+  "27": {
     "hash": "55c380c2",
     "value": {
       "source": "Diário, 5 de agosto de 1851",
       "text": "A questão não é o que você olha, mas o que você vê."
     }
   },
-  "101": {
-    "hash": "a77e2e91",
-    "value": {
-      "source": "“Círculos”, Ensaios: primeira série (1841)",
-      "text": "Nada de grandioso jamais foi alcançado sem entusiasmo."
-    }
-  },
-  "102": {
+  "28": {
     "hash": "4848876b",
     "value": {
       "source": "“Autoconfiança”, Ensaios: primeira série (1841)",
       "text": "Uma coerência tola é o fantasma das mentes pequenas."
     }
   },
-  "103": {
-    "hash": "a5560da7",
-    "value": {
-      "source": "“Amizade”, Ensaios: primeira série (1841)",
-      "text": "A única maneira de ter um amigo é ser um."
-    }
-  },
-  "104": {
-    "hash": "178af01a",
-    "value": {
-      "source": "“Civilização”, Sociedade e solidão (1870)",
-      "text": "Prenda sua carroça a uma estrela."
-    }
-  },
-  "105": {
+  "29": {
     "hash": "41a9a5e1",
     "value": {
       "source": "Citado na revista Life (21 de abril de 1961)",
       "text": "Tentar definir a si mesmo é como tentar morder os próprios dentes."
     }
   },
-  "106": {
-    "hash": "c333237c",
-    "value": {
-      "source": "Conferência Nobel (11 de dezembro de 1965)",
-      "text": "É possível conhecer muito mais verdades do que é possível provar."
-    }
-  },
-  "107": {
-    "hash": "45ba58b3",
-    "value": {
-      "source": "4D Timelock (1928)",
-      "text": "A vida é o espírito encarnado no tempo."
-    }
-  },
-  "108": {
+  "30": {
     "hash": "5390db67",
     "value": {
       "source": "A essência de Alan Watts (1977)",
       "text": "Ter fé é confiar-se à água. Quando você nada, não se agarra à água, porque, se fizer isso, afunda e se afoga. Em vez disso, você relaxa e flutua."
     }
   },
-  "109": {
-    "hash": "b301120f",
-    "value": {
-      "source": "“O que é ciência?”, discurso à National Science Teachers Association (1966)",
-      "text": "A ciência é a crença na ignorância dos especialistas."
-    }
-  },
-  "110": {
+  "31": {
     "hash": "f80b50af",
     "value": {
       "source": "Shelter (1932)",
       "text": "Não lute contra as forças: use-as."
     }
   },
-  "111": {
+  "32": {
     "hash": "261a9bea",
     "value": {
       "source": "A essência de Alan Watts (1977)",
       "text": "Este é o verdadeiro segredo da vida: estar totalmente envolvido com o que você está fazendo aqui e agora. E, em vez de chamar isso de trabalho, perceber que é brincadeira."
     }
   },
-  "112": {
+  "33": {
     "hash": "577276bf",
     "value": {
       "source": "“Ciência de culto à carga”, discurso de formatura no Caltech (1974)",
       "text": "O primeiro princípio é que você não deve enganar a si mesmo, e você é a pessoa mais fácil de enganar."
     }
   },
-  "113": {
+  "34": {
     "hash": "6b2af24c",
     "value": {
       "source": "No More Secondhand God (1963)",
       "text": "Deus, para mim, parece ser um verbo, não um substantivo, próprio ou comum."
     }
   },
-  "114": {
+  "35": {
     "hash": "942e40b7",
     "value": {
       "source": "A sabedoria da insegurança (1951)",
       "text": "Quanto mais lutamos pela vida (como prazer), mais estamos, na verdade, matando o que amamos."
     }
   },
-  "115": {
-    "hash": "3d123616",
-    "value": {
-      "source": "Palestra pública na Universidade Columbia (1965)",
-      "text": "O oposto da natureza é impossível."
-    }
-  },
-  "116": {
+  "36": {
     "hash": "f1a9ca32",
     "value": {
       "source": "A sabedoria da insegurança (1951)",
       "text": "A maior parte da atividade humana busca tornar permanentes experiências e alegrias que só são amáveis porque mudam."
     }
   },
-  "117": {
+  "37": {
     "hash": "25dc7af2",
     "value": {
       "source": "Escrito em seu quadro-negro na época de sua morte (1988)",
       "text": "O que não consigo criar, não entendo."
     }
   },
-  "118": {
-    "hash": "7182dd85",
-    "value": {
-      "source": "Utopia ou esquecimento: as perspectivas da humanidade (1969)",
-      "text": "Pensar é deixar de lado, por um momento, o que não importa."
-    }
-  },
-  "119": {
+  "38": {
     "hash": "5232b96b",
     "value": {
       "source": "A sabedoria da insegurança (1951)",
       "text": "Deveria ser óbvio... que é uma contradição querer estar perfeitamente seguro num universo cuja própria natureza é a transitoriedade e a fluidez."
     }
   },
-  "120": {
+  "39": {
     "hash": "464a0497",
     "value": {
       "source": "“O valor da ciência” (1955)",
       "text": "A imaginação da natureza é muito, muito maior que a imaginação do homem."
     }
   },
-  "121": {
-    "hash": "250cf93e",
-    "value": {
-      "source": "Pareço ser um verbo (1970)",
-      "text": "No momento, vivo na Terra e não sei o que sou. Sei que não sou uma categoria. Não sou uma coisa, um substantivo. Pareço ser um verbo, um processo evolutivo, uma função integral do universo."
-    }
-  },
-  "122": {
+  "40": {
     "hash": "fe662568",
     "value": {
       "source": "A sabedoria da insegurança (1951)",
       "text": "Fugir do medo é medo; lutar contra a dor é dor; tentar ser corajoso é estar com medo. Se a mente sofre, a mente é sofrimento. O pensador não tem outra forma além do seu pensamento."
     }
   },
-  "123": {
-    "hash": "b0ff8ad3",
-    "value": {
-      "source": "Lições de Física de Feynman (1964)",
-      "text": "O “paradoxo” é só um conflito entre a realidade e a sua sensação de como a realidade “deveria ser”."
-    }
-  },
-  "124": {
-    "hash": "57d1e429",
-    "value": {
-      "source": "Citado na revista LIFE (26 de fevereiro de 1971)",
-      "text": "A poluição nada mais é que recursos que não estamos colhendo. Deixamos que se dispersem porque ignoramos o valor deles."
-    }
-  },
-  "125": {
+  "41": {
     "hash": "6d8674ff",
     "value": {
       "source": "A sabedoria da insegurança (1951)",
       "text": "Não existe fórmula para gerar o calor autêntico do amor. Ele não pode ser copiado."
     }
   },
-  "126": {
-    "hash": "af4ea359",
-    "value": {
-      "source": "O caráter da lei física (1965)",
-      "text": "A natureza usa só os fios mais longos para tecer seus padrões, de modo que cada pequeno pedaço do seu tecido revela a organização da tapeçaria inteira."
-    }
-  },
-  "127": {
-    "hash": "82cff3be",
-    "value": {
-      "source": "Citado na revista People (1974)",
-      "text": "Estou convencido de que toda a humanidade nasce com mais dons do que imaginamos. A maioria nasce genial e logo é “desgenializada”."
-    }
-  },
-  "128": {
-    "hash": "4b0248a0",
-    "value": {
-      "source": "O caminho do Zen (1957)",
-      "text": "Ser livre das convenções não é desprezá-las, mas não ser enganado por elas. É ser capaz de usá-las como instrumento em vez de ser usado por elas."
-    }
-  },
-  "129": {
+  "42": {
     "hash": "12644b96",
     "value": {
       "source": "O caráter da lei física (1965)",
       "text": "Nossa imaginação é levada ao limite não, como na ficção, para imaginar coisas que não existem de fato, mas apenas para compreender as coisas que existem."
     }
   },
-  "130": {
-    "hash": "826f052a",
-    "value": {
-      "source": "Synergetics: explorações na geometria do pensamento (1975)",
-      "text": "Ouse ser ingênuo."
-    }
-  },
-  "131": {
-    "hash": "caafb899",
-    "value": {
-      "source": "O caráter da lei física (1965)",
-      "text": "Acho que posso dizer com segurança que ninguém entende a mecânica quântica."
-    }
-  },
-  "132": {
-    "hash": "0b2bebaf",
-    "value": {
-      "source": "Synergetics: explorações na geometria do pensamento (1975)",
-      "text": "Sinergia é o comportamento de sistemas inteiros que não se pode prever pelo comportamento de suas partes tomadas separadamente."
-    }
-  },
-  "133": {
+  "43": {
     "hash": "f337ab78",
     "value": {
       "source": "Psicoterapia oriental e ocidental (1961)",
       "text": "Quando um homem deixa de se confundir com a definição de si mesmo que os outros lhe deram, ele é ao mesmo tempo universal e único."
     }
   },
-  "134": {
-    "hash": "1ced4f96",
-    "value": {
-      "source": "Synergetics: explorações na geometria do pensamento (1975)",
-      "text": "A unidade é plural e, no mínimo, é dois."
-    }
-  },
-  "135": {
-    "hash": "8a54915e",
-    "value": {
-      "source": "A cosmologia alegre (1962)",
-      "text": "Se recebeu a mensagem, desligue o telefone."
-    }
-  },
-  "136": {
+  "44": {
     "hash": "f8b98b99",
     "value": {
       "source": "QED: a estranha teoria da luz e da matéria (1985)",
       "text": "A teoria da eletrodinâmica quântica descreve a Natureza como absurda do ponto de vista do senso comum. E ela concorda plenamente com os experimentos. Então espero que vocês aceitem a Natureza como Ela é: absurda."
     }
   },
-  "137": {
-    "hash": "ed3d01a5",
-    "value": {
-      "source": "O livro sobre o tabu de saber quem você é (1966)",
-      "text": "Como é possível que um ser com joias tão sensíveis quanto os olhos, instrumentos musicais tão encantados quanto os ouvidos e um arabesco de nervos tão fabuloso quanto o cérebro possa se sentir algo menos que um deus?"
-    }
-  },
-  "138": {
+  "45": {
     "hash": "5f8c9cce",
     "value": {
       "source": "O senhor está brincando, Sr. Feynman! (1985)",
       "text": "Não sei qual é o problema das pessoas: elas não aprendem entendendo; aprendem de algum outro jeito, decorando ou coisa assim. O conhecimento delas é tão frágil!"
     }
   },
-  "139": {
-    "hash": "fe3a3c49",
-    "value": {
-      "source": "O livro sobre o tabu de saber quem você é (1966)",
-      "text": "Cada indivíduo é uma manifestação única do Todo, assim como cada galho é um prolongamento particular da árvore."
-    }
-  },
-  "140": {
+  "46": {
     "hash": "b1e3ec00",
     "value": {
       "source": "Humans in Universe (1983)",
       "text": "O pensamento realista só se acumula depois de cometer erros, que são a forma mais convincente de a sabedoria cósmica ensinar a cada um de nós como seguir em frente."
     }
   },
-  "141": {
-    "hash": "3dacd603",
-    "value": {
-      "source": "O livro sobre o tabu de saber quem você é (1966)",
-      "text": "Não há nada de errado em meditar só por meditar, do mesmo jeito que você ouve música só pela música."
-    }
-  },
-  "142": {
-    "hash": "96446fc7",
-    "value": {
-      "source": "Por que você se importa com o que os outros pensam? (1988)",
-      "text": "Minha mãe... tinha um senso de humor maravilhoso, e aprendi com ela que as formas mais elevadas de compreensão que podemos alcançar são o riso e a compaixão humana."
-    }
-  },
-  "143": {
-    "hash": "375a8592",
-    "value": {
-      "source": "Critical Path (1981)",
-      "text": "Você fica espontaneamente entusiasmado com a ideia de que todos tenham tudo o que você pode ter?"
-    }
-  },
-  "144": {
-    "hash": "05b202e1",
-    "value": {
-      "source": "No Ordinary Genius (1994)",
-      "text": "Não gosto de honrarias. ... Já tenho o prêmio: o prêmio é o prazer de descobrir as coisas, a emoção da descoberta, ver que outras pessoas a usam. Essas são as coisas reais."
-    }
-  },
-  "145": {
-    "hash": "cc644b9f",
-    "value": {
-      "source": "Critical Path (1981)",
-      "text": "Não há alegria igual à de poder trabalhar para toda a humanidade e fazer bem o que você faz."
-    }
-  },
-  "146": {
-    "hash": "a502a0dd",
-    "value": {
-      "source": "O livro sobre o tabu de saber quem você é (1966)",
-      "text": "Viver, amar, ser natural ou sincero: todas essas são formas espontâneas de comportamento; acontecem “por si mesmas”, como digerir a comida ou fazer o cabelo crescer."
-    }
-  },
-  "147": {
-    "hash": "5f4036a3",
-    "value": {
-      "source": "O significado de tudo (1999)",
-      "text": "Algumas pessoas dizem: “Como você consegue viver sem saber?”. Não sei o que querem dizer. Eu sempre vivo sem saber. Isso é fácil. O que quero saber é como se chega a saber."
-    }
-  },
-  "148": {
-    "hash": "8add6377",
-    "value": {
-      "source": "Critical Path (1981)",
-      "text": "O mais perto que cada um de nós pode chegar de Deus é amando a verdade."
-    }
-  },
-  "149": {
-    "hash": "429de0a5",
-    "value": {
-      "source": "Critical Path (1981)",
-      "text": "O amor é gravidade metafísica."
-    }
-  },
-  "150": {
-    "hash": "d16ecf87",
-    "value": {
-      "source": "Caminhos de libertação (1983)",
-      "text": "Assim como o fruto sai da árvore, o ovo da galinha e o bebê do ventre, somos sintomas do universo."
-    }
-  },
-  "151": {
-    "hash": "e65c297f",
-    "value": {
-      "source": "O prazer da descoberta (1999)",
-      "text": "Não sei nada, mas sei que tudo é interessante se você se aprofundar o suficiente."
-    }
-  },
-  "152": {
-    "hash": "3b3e0597",
-    "value": {
-      "source": "Alan Watts ensina meditação (1992)",
-      "text": "Uma pessoa que pensa o tempo todo não tem nada em que pensar além de pensamentos. Assim ela perde o contato com a realidade e vive num mundo de ilusão."
-    }
-  },
-  "153": {
+  "47": {
     "hash": "8457afca",
     "value": {
       "source": "Desvios perfeitamente razoáveis do caminho batido (2005)",
       "text": "Estude com afinco o que mais lhe interessa, da maneira mais indisciplinada, irreverente e original possível."
     }
   },
-  "154": {
-    "hash": "b2da1740",
+  "48": {
+    "hash": "fe385086",
     "value": {
-      "source": "Desvios perfeitamente razoáveis do caminho batido (2005)",
-      "text": "Não leia tanto: olhe ao seu redor e pense no que vê."
+      "source": "Uma ética para o novo milênio (1999)",
+      "text": "A compaixão é uma das principais coisas que dão sentido à nossa vida. É a fonte de toda felicidade e alegria duradouras."
+    }
+  },
+  "49": {
+    "hash": "f781300a",
+    "value": {
+      "source": "Uma ética para o novo milênio (1999)",
+      "text": "Pela minha experiência, a principal característica da felicidade genuína é a paz: a paz interior."
+    }
+  },
+  "50": {
+    "hash": "4d6e56ab",
+    "value": {
+      "source": "Uma ética para o novo milênio (1999)",
+      "text": "Por meio da bondade, do afeto, da honestidade, da verdade e da justiça para com todos os outros, garantimos o nosso próprio bem."
+    }
+  },
+  "51": {
+    "hash": "6f1ac119",
+    "value": {
+      "source": "Uma ética para o novo milênio (1999)",
+      "text": "Quando sentimos de verdade a dor uns dos outros, aprendemos a compaixão, que é a base da moral."
+    }
+  },
+  "52": {
+    "hash": "e5498bde",
+    "value": {
+      "source": "O milagre da atenção plena (1975)",
+      "text": "A pessoa mais importante é sempre aquela com quem você está, a que está bem na sua frente."
+    }
+  },
+  "53": {
+    "hash": "fed168b7",
+    "value": {
+      "source": "Mente zen, mente de principiante (1970)",
+      "text": "O zen não é uma arte de viver sofisticada e especial. Nosso ensinamento é apenas viver, sempre na realidade, em seu sentido exato."
+    }
+  },
+  "54": {
+    "hash": "f123886d",
+    "value": {
+      "source": "Meditações, livro X",
+      "text": "Não perca mais tempo discutindo como deve ser um homem bom. Seja um."
+    }
+  },
+  "55": {
+    "hash": "18cf3412",
+    "value": {
+      "source": "Cartas a Lucílio, carta 13",
+      "text": "Sofremos mais vezes na imaginação do que na realidade."
+    }
+  },
+  "56": {
+    "hash": "a520aa8a",
+    "value": {
+      "source": "Diatribes, livro II",
+      "text": "Se você quer ser escritor, escreva."
+    }
+  },
+  "57": {
+    "hash": "e5898476",
+    "value": {
+      "source": "O livro: sobre o tabu de saber quem você é (1966)",
+      "text": "Não viemos a este mundo; saímos dele, como as folhas de uma árvore."
+    }
+  },
+  "58": {
+    "hash": "0ae1fdfb",
+    "value": {
+      "source": "Sobre as leis da física (1965)",
+      "text": "Se discorda do experimento, está errada. Nessa simples afirmação está a chave da ciência."
+    }
+  },
+  "59": {
+    "hash": "648df501",
+    "value": {
+      "source": "Palestra no Vassar College (1921)",
+      "text": "Nada na vida deve ser temido, apenas compreendido. Agora é hora de compreender mais, para que possamos temer menos."
+    }
+  },
+  "60": {
+    "hash": "d1ff794a",
+    "value": {
+      "source": "Entrevista ao Horizon, BBC (1981)",
+      "text": "Acho muito mais interessante viver sem saber do que ter respostas que podem estar erradas."
+    }
+  },
+  "61": {
+    "hash": "ee07bd56",
+    "value": {
+      "source": "I Seem To Be a Verb (1970)",
+      "text": "Não sou uma coisa, um substantivo. Pareço ser um verbo, um processo evolutivo, uma função integral do universo."
+    }
+  },
+  "62": {
+    "hash": "5cc59640",
+    "value": {
+      "source": "Manual de operação para a espaçonave Terra (1969)",
+      "text": "Não conseguiremos operar com sucesso nossa nave espacial Terra, nem por muito mais tempo, a menos que a vejamos como uma nave inteira e nosso destino como comum."
+    }
+  },
+  "63": {
+    "hash": "75a33c97",
+    "value": {
+      "source": "Carta a H. G. O. Blake (1857)",
+      "text": "Não basta estar ocupado. As formigas também estão. A questão é: com o que estamos ocupados?"
+    }
+  },
+  "64": {
+    "hash": "05bb4662",
+    "value": {
+      "source": "Zhuangzi, capítulo 2 (c. século III a.C.)",
+      "text": "Não sei se eu era então um homem sonhando que era uma borboleta, ou se sou agora uma borboleta sonhando que sou um homem."
+    }
+  },
+  "65": {
+    "hash": "4385d270",
+    "value": {
+      "source": "Ensaios (1580)",
+      "text": "Nada fixa uma coisa com tanta intensidade na memória quanto o desejo de esquecê-la."
+    }
+  },
+  "66": {
+    "hash": "aff762c3",
+    "value": {
+      "source": "Cosmos (1980)",
+      "text": "Somos uma maneira de o cosmos conhecer a si mesmo."
+    }
+  },
+  "67": {
+    "hash": "6e4ec6d7",
+    "value": {
+      "source": "“Autoconfiança”, Ensaios: primeira série (1841)",
+      "text": "Nada pode lhe trazer paz senão você mesmo."
+    }
+  },
+  "68": {
+    "hash": "ee3fe534",
+    "value": {
+      "source": "Natureza, capítulo VIII (1836)",
+      "text": "A marca invariável da sabedoria é ver o milagroso no comum."
+    }
+  },
+  "69": {
+    "hash": "deb19354",
+    "value": {
+      "source": "Walden, “Onde vivi e para que vivi” (1854)",
+      "text": "Fui para a floresta porque queria viver deliberadamente, enfrentar apenas os fatos essenciais da vida, e ver se conseguia aprender o que ela tinha a ensinar."
+    }
+  },
+  "70": {
+    "hash": "4a554cfe",
+    "value": {
+      "source": "Prefácio, Folhas de relva (1855)",
+      "text": "Reexamine tudo o que lhe disseram na escola, na igreja ou em qualquer livro, e descarte o que insultar a sua própria alma."
+    }
+  },
+  "71": {
+    "hash": "ce59548e",
+    "value": {
+      "source": "“O triunfo da estupidez” (1933)",
+      "text": "A causa fundamental do problema é que, no mundo moderno, os estúpidos são cheios de certezas enquanto os inteligentes são cheios de dúvidas."
+    }
+  },
+  "72": {
+    "hash": "3166029b",
+    "value": {
+      "source": "Diatribes, livro II, capítulo 17",
+      "text": "É impossível um homem aprender o que ele acha que já sabe."
+    }
+  },
+  "73": {
+    "hash": "47fe6226",
+    "value": {
+      "source": "Verso 81, Pandita Vagga, trad. inglesa de F. Max Müller (1881)",
+      "text": "Assim como uma rocha sólida não é abalada pelo vento, os sábios não vacilam diante da censura ou do elogio."
+    }
+  },
+  "74": {
+    "hash": "4e1fae22",
+    "value": {
+      "source": "Paz a cada passo (1991)",
+      "text": "O momento presente está cheio de alegria e felicidade. Se você estiver atento, vai perceber."
+    }
+  },
+  "75": {
+    "hash": "743b2438",
+    "value": {
+      "source": "Mente zen, mente de principiante (1970)",
+      "text": "Quando fizer algo, você deve se queimar por completo, como uma boa fogueira, sem deixar nenhum vestígio de si mesmo."
+    }
+  },
+  "76": {
+    "hash": "f03c6f84",
+    "value": {
+      "source": "Ensaios, “Do costume” (1580)",
+      "text": "Os jogos das crianças não são jogos, e devem ser julgados nelas como suas ações mais sérias."
+    }
+  },
+  "77": {
+    "hash": "356a7cc3",
+    "value": {
+      "source": "Citado em Ruth Moore, Niels Bohr: The Man, His Science, and the World They Changed (1966)",
+      "text": "Que maravilha termos encontrado um paradoxo. Agora temos alguma esperança de avançar."
+    }
+  },
+  "78": {
+    "hash": "e8cdc02b",
+    "value": {
+      "source": "Jogos finitos e infinitos (1986)",
+      "text": "Estar preparado contra a surpresa é estar treinado. Estar preparado para a surpresa é ser educado."
+    }
+  },
+  "79": {
+    "hash": "efd657b2",
+    "value": {
+      "source": "A cigarra: jogos, vida e utopia (1978)",
+      "text": "Jogar um jogo é a tentativa voluntária de superar obstáculos desnecessários."
+    }
+  },
+  "80": {
+    "hash": "df934af7",
+    "value": {
+      "source": "O brincar e a realidade (1971)",
+      "text": "É no brincar, e somente no brincar, que o indivíduo, criança ou adulto, é capaz de ser criativo e de usar toda a sua personalidade."
+    }
+  },
+  "81": {
+    "hash": "f73c193f",
+    "value": {
+      "source": "Aforismos para a sabedoria de vida, trad. inglesa de T. Bailey Saunders (1890)",
+      "text": "É o destino que embaralha as cartas, e somos nós que jogamos."
+    }
+  },
+  "82": {
+    "hash": "5d894ed6",
+    "value": {
+      "source": "O mundo como vontade e representação, volume II (1844)",
+      "text": "O talento acerta um alvo que ninguém mais consegue acertar; o gênio acerta um alvo que ninguém mais consegue ver."
+    }
+  },
+  "83": {
+    "hash": "9330b8a7",
+    "value": {
+      "source": "Estudos sobre o pessimismo, trad. inglesa de T. Bailey Saunders (1893)",
+      "text": "Cada um toma os limites do próprio campo de visão pelos limites do mundo."
+    }
+  },
+  "84": {
+    "hash": "6b9c8059",
+    "value": {
+      "source": "A arte da guerra, capítulo VI, trad. inglesa de Lionel Giles (1910)",
+      "text": "A água molda seu curso de acordo com a natureza do terreno por onde corre."
+    }
+  },
+  "85": {
+    "hash": "083b25cf",
+    "value": {
+      "source": "“Zazen no monte Jingting”, trad. inglesa de Sam Hamill (1987)",
+      "text": "Sentamos juntos, a montanha e eu,\naté que só reste a montanha."
+    }
+  },
+  "86": {
+    "hash": "0a1ea829",
+    "value": {
+      "source": "A origem do homem, introdução (1871)",
+      "text": "A ignorância gera confiança com mais frequência do que o conhecimento."
+    }
+  },
+  "87": {
+    "hash": "2e9de027",
+    "value": {
+      "source": "A arte de amar (1956)",
+      "text": "O amor é uma atividade, não um afeto passivo; é um “permanecer em”, não um “cair em”."
+    }
+  },
+  "88": {
+    "hash": "4a5a4a35",
+    "value": {
+      "source": "Tornar-se pessoa (1961)",
+      "text": "O curioso paradoxo é que, quando me aceito exatamente como sou, então posso mudar."
+    }
+  },
+  "89": {
+    "hash": "9aae9bcb",
+    "value": {
+      "source": "A mente absorvente (1949)",
+      "text": "O maior sinal de sucesso para um professor é poder dizer: “As crianças agora estão trabalhando como se eu não existisse”."
+    }
+  },
+  "90": {
+    "hash": "73d3ffc8",
+    "value": {
+      "source": "Cartas a um jovem poeta, trad. inglesa de M. D. Herter Norton (1934)",
+      "text": "Tenha paciência com tudo o que está sem solução em seu coração e procure amar as próprias perguntas."
+    }
+  },
+  "91": {
+    "hash": "b2dbae0e",
+    "value": {
+      "source": "Cartas a um jovem poeta, trad. inglesa de M. D. Herter Norton (1934)",
+      "text": "Talvez todos os dragões da nossa vida sejam princesas que só esperam nos ver, uma vez, belos e corajosos."
+    }
+  },
+  "92": {
+    "hash": "b3853374",
+    "value": {
+      "source": "“Três métodos de reforma” (1900)",
+      "text": "Todos pensam em mudar a humanidade, e ninguém pensa em mudar a si mesmo."
+    }
+  },
+  "93": {
+    "hash": "44f77d69",
+    "value": {
+      "source": "Os irmãos Karamázov, trad. inglesa de Constance Garnett (1912)",
+      "text": "Pois o segredo da existência humana não está apenas em viver, mas em ter algo pelo que viver."
+    }
+  },
+  "94": {
+    "hash": "2b2f269f",
+    "value": {
+      "source": "Sidarta, trad. inglesa de Hilda Rosner (1951)",
+      "text": "A sabedoria não é comunicável. A sabedoria que um sábio tenta comunicar sempre soa como tolice."
+    }
+  },
+  "95": {
+    "hash": "2f9d27bc",
+    "value": {
+      "source": "Terra dos homens (1939)",
+      "text": "A perfeição é alcançada não quando não há mais nada a acrescentar, mas quando não há mais nada a retirar."
+    }
+  },
+  "96": {
+    "hash": "0192398e",
+    "value": {
+      "source": "“Um estranho na aldeia”, Notas de um filho nativo (1955)",
+      "text": "As pessoas estão presas na história, e a história está presa nelas."
+    }
+  },
+  "97": {
+    "hash": "acfdf3da",
+    "value": {
+      "source": "Eu sei por que o pássaro canta na gaiola (1969)",
+      "text": "Não há agonia maior do que carregar dentro de si uma história não contada."
+    }
+  },
+  "98": {
+    "hash": "dfad3907",
+    "value": {
+      "source": "Seus olhos viam Deus (1937)",
+      "text": "Há anos que fazem perguntas e anos que respondem."
+    }
+  },
+  "99": {
+    "hash": "69617017",
+    "value": {
+      "source": "Dust Tracks on a Road (1942)",
+      "text": "Pesquisa é curiosidade formalizada. É bisbilhotar e xeretar com um propósito."
+    }
+  },
+  "100": {
+    "hash": "767dc048",
+    "value": {
+      "source": "O diário de Anne Frank (15 de julho de 1944)",
+      "text": "Apesar de tudo, ainda acredito que as pessoas são realmente boas de coração."
+    }
+  },
+  "101": {
+    "hash": "a670d67e",
+    "value": {
+      "source": "“Carta da prisão de Birmingham” (16 de abril de 1963)",
+      "text": "A injustiça em qualquer lugar é uma ameaça à justiça em todo lugar."
+    }
+  },
+  "102": {
+    "hash": "8bc47669",
+    "value": {
+      "source": "Carta a Theo van Gogh (1882)",
+      "text": "Os pescadores sabem que o mar é perigoso e a tempestade terrível, mas nunca consideraram esses perigos motivo suficiente para ficar em terra."
+    }
+  },
+  "103": {
+    "hash": "5a95a136",
+    "value": {
+      "source": "Carta a Theo van Gogh (8 de setembro de 1888)",
+      "text": "Muitas vezes me parece que a noite é ainda mais viva e mais ricamente colorida do que o dia."
+    }
+  },
+  "104": {
+    "hash": "8041ed00",
+    "value": {
+      "source": "“Credo criativo” (1920)",
+      "text": "A arte não reproduz o visível; ela torna visível."
+    }
+  },
+  "105": {
+    "hash": "fa072265",
+    "value": {
+      "source": "“Sobre mim”, catálogo de exposição (1939)",
+      "text": "Ninguém vê uma flor de verdade. Ela é tão pequena. Não temos tempo, e ver leva tempo, como ter um amigo leva tempo."
+    }
+  },
+  "106": {
+    "hash": "a38d0d03",
+    "value": {
+      "source": "“Palestra sobre nada”, Silence (1961)",
+      "text": "Não tenho nada a dizer\ne estou dizendo\ne isso é poesia."
+    }
+  },
+  "107": {
+    "hash": "dff79657",
+    "value": {
+      "source": "Dez princípios do bom design (c. 1980)",
+      "text": "Menos, porém melhor."
+    }
+  },
+  "108": {
+    "hash": "471b5644",
+    "value": {
+      "source": "A Place for My Stuff (1981)",
+      "text": "Já reparou que qualquer um que dirige mais devagar que você é um idiota, e qualquer um que dirige mais rápido é um maníaco?"
+    }
+  },
+  "109": {
+    "hash": "a6c07c27",
+    "value": {
+      "source": "Doin' It Again (1990)",
+      "text": "Pense em quão burra é a pessoa média, e perceba que metade das pessoas é mais burra que isso."
+    }
+  },
+  "110": {
+    "hash": "0c0bbed5",
+    "value": {
+      "source": "Entrevista, muito citada (anos 1990)",
+      "text": "Raspe qualquer cínico e você vai encontrar um idealista decepcionado."
+    }
+  },
+  "111": {
+    "hash": "802675e3",
+    "value": {
+      "source": "Mitch All Together (2003)",
+      "text": "Uma escada rolante nunca pode quebrar: ela só pode virar escada."
+    }
+  },
+  "112": {
+    "hash": "1222ae04",
+    "value": {
+      "source": "I Have a Pony (1985)",
+      "text": "Tenho uma grande coleção de conchas, que guardo espalhada pelas praias do mundo inteiro."
+    }
+  },
+  "113": {
+    "hash": "343083f0",
+    "value": {
+      "source": "I Have a Pony (1985)",
+      "text": "Tudo fica a uma distância que dá para ir a pé, se você tiver tempo."
+    }
+  },
+  "114": {
+    "hash": "3a70a6c2",
+    "value": {
+      "source": "Live at the Roxy (1978)",
+      "text": "Só nos dão uma pequena centelha de loucura. Não se pode perdê-la."
+    }
+  },
+  "115": {
+    "hash": "b5d8fb3a",
+    "value": {
+      "source": "A poderosa chefona (2011)",
+      "text": "Diga sim, e depois você descobre como."
+    }
+  },
+  "116": {
+    "hash": "5cda2d72",
+    "value": {
+      "source": "Sim, por favor (2014)",
+      "text": "Pessoas incríveis fazem as coisas antes de estarem prontas."
+    }
+  },
+  "117": {
+    "hash": "035548d5",
+    "value": {
+      "source": "Palestra sobre criatividade, Video Arts (1991)",
+      "text": "A criatividade não é um talento. É um modo de funcionar."
+    }
+  },
+  "118": {
+    "hash": "97c1198a",
+    "value": {
+      "source": "The Search for Signs of Intelligent Life in the Universe, escrito por Jane Wagner (1985)",
+      "text": "A vida toda eu quis ser alguém. Agora vejo que deveria ter sido mais específica."
+    }
+  },
+  "119": {
+    "hash": "4be836dd",
+    "value": {
+      "source": "Entrevista a Charlie Rose (dezembro de 2007)",
+      "text": "Seja tão bom que não possam ignorar você."
+    }
+  },
+  "120": {
+    "hash": "7106e61d",
+    "value": {
+      "source": "Número de stand-up (anos 1980)",
+      "text": "Eu achava que o cérebro era o órgão mais maravilhoso do meu corpo. Aí percebi quem estava me dizendo isso."
+    }
+  },
+  "121": {
+    "hash": "9fca4885",
+    "value": {
+      "source": "Atribuída (anos 1930)",
+      "text": "Mesmo que você esteja no caminho certo, vai ser atropelado se ficar só sentado ali."
+    }
+  },
+  "122": {
+    "hash": "7771dbad",
+    "value": {
+      "source": "Atribuída",
+      "text": "A cura para o tédio é a curiosidade. Não há cura para a curiosidade."
+    }
+  },
+  "123": {
+    "hash": "0d5f45fe",
+    "value": {
+      "source": "Um homem sem pátria (2005)",
+      "text": "Estamos na Terra para vadiar, e não deixe ninguém lhe dizer o contrário."
+    }
+  },
+  "124": {
+    "hash": "da8fcb0b",
+    "value": {
+      "source": "Fundação (1951)",
+      "text": "A violência é o último refúgio do incompetente."
+    }
+  },
+  "125": {
+    "hash": "aeb1ea27",
+    "value": {
+      "source": "Isaac Asimov's Book of Science and Nature Quotations (1988)",
+      "text": "O aspecto mais triste da vida atual é que a ciência acumula conhecimento mais rápido do que a sociedade acumula sabedoria."
+    }
+  },
+  "126": {
+    "hash": "a882ff4b",
+    "value": {
+      "source": "Perfis do futuro, edição revista (1973)",
+      "text": "Qualquer tecnologia suficientemente avançada é indistinguível da magia."
+    }
+  },
+  "127": {
+    "hash": "6e4f2fd5",
+    "value": {
+      "source": "“Como construir um universo que não desmorone dois dias depois” (1978)",
+      "text": "Realidade é aquilo que, quando você deixa de acreditar, não desaparece."
+    }
+  },
+  "128": {
+    "hash": "4881eafe",
+    "value": {
+      "source": "Atribuída; citada em entrevistas",
+      "text": "O adulto criativo é a criança que sobreviveu."
+    }
+  },
+  "129": {
+    "hash": "3f4cab8c",
+    "value": {
+      "source": "“Por que ler os clássicos” (1981)",
+      "text": "Um clássico é um livro que nunca terminou de dizer aquilo que tinha para dizer."
+    }
+  },
+  "130": {
+    "hash": "f7bf20b9",
+    "value": {
+      "source": "Norwegian Wood, trad. inglesa de Jay Rubin (2000)",
+      "text": "Se você só lê os livros que todo mundo está lendo, só pode pensar o que todo mundo está pensando."
+    }
+  },
+  "131": {
+    "hash": "44a56b24",
+    "value": {
+      "source": "Adeus às armas (1929)",
+      "text": "O mundo quebra todo mundo, e depois muitos ficam fortes nos lugares quebrados."
+    }
+  },
+  "132": {
+    "hash": "1bebc20c",
+    "value": {
+      "source": "A leste do Éden (1952)",
+      "text": "E agora que você não precisa ser perfeito, pode ser bom."
+    }
+  },
+  "133": {
+    "hash": "55e110c9",
+    "value": {
+      "source": "A redoma de vidro (1963)",
+      "text": "Respirei fundo e escutei a velha bravata do meu coração. Eu sou, eu sou, eu sou."
+    }
+  },
+  "134": {
+    "hash": "91086f7d",
+    "value": {
+      "source": "Gödel, Escher, Bach (1979)",
+      "text": "Lei de Hofstadter: tudo sempre leva mais tempo do que você espera, mesmo levando em conta a Lei de Hofstadter."
+    }
+  },
+  "135": {
+    "hash": "3aa0f03a",
+    "value": {
+      "source": "“Projetar organizações para um mundo rico em informação” (1971)",
+      "text": "Uma riqueza de informação cria uma pobreza de atenção."
+    }
+  },
+  "136": {
+    "hash": "0154c59f",
+    "value": {
+      "source": "“Managing for Business Effectiveness”, Harvard Business Review (1963)",
+      "text": "Não há nada tão inútil quanto fazer com eficiência aquilo que nem deveria ser feito."
+    }
+  },
+  "137": {
+    "hash": "e59a2b8f",
+    "value": {
+      "source": "Mister Rogers Talks with Parents (1983)",
+      "text": "Quando eu era menino e via coisas assustadoras no noticiário, minha mãe me dizia: “Procure quem está ajudando. Você sempre vai encontrar pessoas ajudando”."
+    }
+  },
+  "138": {
+    "hash": "07ade6ea",
+    "value": {
+      "source": "Citado em It's Not Easy Being Green (2005)",
+      "text": "[As crianças] não se lembram do que você tenta ensinar a elas. Elas se lembram de quem você é."
+    }
+  },
+  "139": {
+    "hash": "0cfde4c8",
+    "value": {
+      "source": "Citada em entrevistas",
+      "text": "Descubra quem você é e seja isso de propósito."
+    }
+  },
+  "140": {
+    "hash": "1c1751c7",
+    "value": {
+      "source": "EWD498, “Como dizer verdades que podem machucar?” (1975)",
+      "text": "A simplicidade é pré-requisito da confiabilidade."
+    }
+  },
+  "141": {
+    "hash": "f53a32d9",
+    "value": {
+      "source": "Wooden: A Lifetime of Observations and Reflections On and Off the Court (1997)",
+      "text": "Seja rápido, mas não se apresse."
+    }
+  },
+  "142": {
+    "hash": "d68cc552",
+    "value": {
+      "source": "Atribuída",
+      "text": "A capacidade de observar sem avaliar é a forma mais elevada de inteligência."
+    }
+  },
+  "143": {
+    "hash": "ba5b0f51",
+    "value": {
+      "source": "Citado em entrevistas (c. 2008)",
+      "text": "Acho que o dever do comediante é descobrir onde a linha está traçada e cruzá-la deliberadamente."
+    }
+  },
+  "144": {
+    "hash": "db7aef9f",
+    "value": {
+      "source": "Sua despedida, citada em entrevistas",
+      "text": "Que as forças do mal se confundam no caminho até a sua casa."
+    }
+  },
+  "145": {
+    "hash": "986eecc5",
+    "value": {
+      "source": "O homem urso (2005)",
+      "text": "Acredito que o denominador comum do universo não é a harmonia, mas o caos, a hostilidade e o assassinato."
+    }
+  },
+  "146": {
+    "hash": "256454a1",
+    "value": {
+      "source": "Mitch All Together (2003)",
+      "text": "Eu gosto de arroz. Arroz é ótimo quando você está com fome e quer 2.000 de alguma coisa."
+    }
+  },
+  "147": {
+    "hash": "2a52bed1",
+    "value": {
+      "source": "Palestra sobre criatividade, Video Arts (1991)",
+      "text": "Se você quer funcionários criativos, dê a eles tempo suficiente para brincar."
+    }
+  },
+  "148": {
+    "hash": "7dff3835",
+    "value": {
+      "source": "Pensamentos despenteados, trad. inglesa de Jacek Galazka (1962)",
+      "text": "Nenhum floco de neve numa avalanche jamais se sente responsável."
+    }
+  },
+  "149": {
+    "hash": "51e65f86",
+    "value": {
+      "source": "Pensamentos (1838)",
+      "text": "Ensinar é aprender duas vezes."
+    }
+  },
+  "150": {
+    "hash": "a11a2be1",
+    "value": {
+      "source": "Vidas dos poetas, “Cowley” (1779)",
+      "text": "A linguagem é a roupa do pensamento."
+    }
+  },
+  "151": {
+    "hash": "f8c0fc88",
+    "value": {
+      "source": "Meditações do Quixote (1914)",
+      "text": "Eu sou eu e minha circunstância."
+    }
+  },
+  "152": {
+    "hash": "b7f4df92",
+    "value": {
+      "source": "Arquipélago Gulag, trad. inglesa de Thomas P. Whitney (1974)",
+      "text": "A linha que separa o bem do mal atravessa o coração de todo ser humano."
+    }
+  },
+  "153": {
+    "hash": "490913eb",
+    "value": {
+      "source": "O livro das horas, I, 59, trad. inglesa de Anita Barrows e Joanna Macy (1996)",
+      "text": "Deixe que tudo lhe aconteça: beleza e terror. Apenas siga em frente. Nenhum sentimento é definitivo."
+    }
+  },
+  "154": {
+    "hash": "0c078ba2",
+    "value": {
+      "source": "O livro das horas, I, 2, trad. inglesa de Anita Barrows e Joanna Macy (1996)",
+      "text": "Vivo minha vida em círculos crescentes\nque se estendem pelo mundo."
     }
   },
   "155": {
-    "hash": "c02a6bd6",
+    "hash": "af081c8d",
     "value": {
-      "source": "Cosmography (1992)",
-      "text": "Precisamos avançar até fazer todas as coisas certas por todos os motivos certos, em vez de fazer todas as coisas certas por todos os motivos errados."
+      "source": "Cartas a um jovem poeta, carta 7, trad. inglesa de M. D. Herter Norton (1934)",
+      "text": "O amor consiste nisto: duas solidões que se protegem, se delimitam e se saúdam."
     }
   },
   "156": {
-    "hash": "7c3f69ea",
+    "hash": "eef65aea",
     "value": {
-      "source": "Out of Your Mind (2017)",
-      "text": "Você já olhou de verdade para uma concha? Não há nela um único defeito estético: é absolutamente perfeita."
+      "source": "“Depois de dez anos”, Resistência e submissão (1942)",
+      "text": "Precisamos aprender a ver as pessoas menos à luz do que fazem ou deixam de fazer, e mais à luz do que sofrem."
+    }
+  },
+  "157": {
+    "hash": "35417bb5",
+    "value": {
+      "source": "O homem moderno em busca de uma alma (1933)",
+      "text": "O sapato que serve numa pessoa aperta em outra; não existe receita de vida que sirva para todos os casos."
+    }
+  },
+  "158": {
+    "hash": "553378ea",
+    "value": {
+      "source": "Em busca de sentido (1959)",
+      "text": "De certo modo, o sofrimento deixa de ser sofrimento no momento em que encontra um sentido."
+    }
+  },
+  "159": {
+    "hash": "559fb7df",
+    "value": {
+      "source": "Tornar-se pessoa (1961)",
+      "text": "O que é mais pessoal é o mais universal."
+    }
+  },
+  "160": {
+    "hash": "3fc4010e",
+    "value": {
+      "source": "Tornar-se pessoa (1961)",
+      "text": "A boa vida é um processo, não um estado de ser. É uma direção, não um destino."
+    }
+  },
+  "161": {
+    "hash": "baab2cfe",
+    "value": {
+      "source": "O corpo guarda as marcas (2014)",
+      "text": "Conseguir se sentir seguro com outras pessoas é provavelmente o aspecto mais importante da saúde mental."
+    }
+  },
+  "162": {
+    "hash": "9c911dfd",
+    "value": {
+      "source": "Kitchen Table Wisdom (1996)",
+      "text": "A forma mais básica e poderosa de se conectar com outra pessoa é ouvir. Apenas ouvir."
+    }
+  },
+  "163": {
+    "hash": "dd7fd87c",
+    "value": {
+      "source": "Kitchen Table Wisdom (1996)",
+      "text": "Não nos esgotamos porque não nos importamos, mas porque não vivemos o luto."
+    }
+  },
+  "164": {
+    "hash": "b0367f7b",
+    "value": {
+      "source": "Citado em Norman Cousins, Anatomia de uma doença (1979)",
+      "text": "Cada paciente carrega o próprio médico dentro de si."
+    }
+  },
+  "165": {
+    "hash": "c58f3ec5",
+    "value": {
+      "source": "Fedra, verso 249",
+      "text": "Querer ser curado é parte da cura."
+    }
+  },
+  "166": {
+    "hash": "3992b91d",
+    "value": {
+      "source": "A anatomia de uma dor (1961)",
+      "text": "Ninguém nunca me disse que o luto se parecia tanto com o medo."
+    }
+  },
+  "167": {
+    "hash": "57b421b5",
+    "value": {
+      "source": "Mensagem lida numa cerimônia em memória das vítimas em Nova York (21 de setembro de 2001)",
+      "text": "O luto é o preço que pagamos pelo amor."
+    }
+  },
+  "168": {
+    "hash": "2913c57f",
+    "value": {
+      "source": "Sem lama não há lótus (2014)",
+      "text": "Sem lama, não há lótus."
+    }
+  },
+  "169": {
+    "hash": "be7e65bb",
+    "value": {
+      "source": "Quando tudo se desfaz (1997)",
+      "text": "Nada vai embora até ter nos ensinado o que precisamos saber."
+    }
+  },
+  "170": {
+    "hash": "045681f2",
+    "value": {
+      "source": "Buddha's Little Instruction Book (1994)",
+      "text": "Se a sua compaixão não inclui você mesmo, ela está incompleta."
     }
   }
 }

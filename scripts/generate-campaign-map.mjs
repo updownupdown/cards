@@ -243,10 +243,10 @@ const REWARDS = {
   min: 2,
   max: 3,
   /**
-   * Quotes past this id stay unassigned: the last 52 are held back for games
-   * still to come, so the assignable pool is 81 Tao chapters plus 156 quotes.
+   * Quotes past this id stay unassigned: the last 30 are held back for games
+   * still to come, so the assignable pool is 81 Tao chapters plus 140 quotes.
    */
-  lastAssignableQuote: 156,
+  lastAssignableQuote: 140,
 };
 
 function readCount(name) {

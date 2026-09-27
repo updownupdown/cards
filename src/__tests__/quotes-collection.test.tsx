@@ -54,10 +54,10 @@ jest.mock("@/data/games-registry", () => ({
   GAMES_DATA: { "/unlocked": { title: "Unlocked game" } },
 }));
 
-const WHITMAN = "Walt Whitman";
-const whitmanIds = QUOTE_IDS_BY_AUTHOR.get(WHITMAN)!;
-const whitmanIndex = QUOTE_AUTHORS.findIndex(
-  (author) => author.name === WHITMAN,
+const SHAKESPEARE = "William Shakespeare";
+const shakespeareIds = QUOTE_IDS_BY_AUTHOR.get(SHAKESPEARE)!;
+const shakespeareIndex = QUOTE_AUTHORS.findIndex(
+  (author) => author.name === SHAKESPEARE,
 );
 
 function textsIn(renderer: ReactTestRenderer) {
@@ -156,22 +156,22 @@ describe("Quotes collection modal", () => {
   });
 
   test("shows the title, the count, and every author with their years and how many are theirs", () => {
-    const renderer = renderModal([whitmanIds[0], whitmanIds[1]]);
+    const renderer = renderModal([shakespeareIds[0], shakespeareIds[1]]);
     const texts = textsIn(renderer);
     expect(texts).toContain(en.quotes.title);
     expect(texts).toContain(`2/${QUOTE_COUNT} collected quotes`);
     for (const author of QUOTE_AUTHORS) expect(texts).toContain(author.name);
     expect(texts).toContain("1819–1892");
     expect(texts).toContain("c. 563–483 BC");
-    expect(texts).toContain(`2/${whitmanIds.length}`);
+    expect(texts).toContain(`2/${shakespeareIds.length}`);
     expect(texts).toContain(
       `0/${QUOTE_IDS_BY_AUTHOR.get(QUOTE_AUTHORS[0].name)!.length}`,
     );
   });
 
   test("draws collected authors' portraits in full, and wavy lines for the rest", () => {
-    const renderer = renderModal([whitmanIds[0]]);
-    const authors = galleryAuthors(new Set([whitmanIds[0]]));
+    const renderer = renderModal([shakespeareIds[0]]);
+    const authors = galleryAuthors(new Set([shakespeareIds[0]]));
     // Each author's stretch of the line runs along the bottom of its cell.
     const lines = renderer.root
       .findAll(
@@ -183,25 +183,25 @@ describe("Quotes collection modal", () => {
     authors.forEach((author, index) =>
       expect(lines[index]).toBe(cellLine(author)),
     );
-    expect(lines[whitmanIndex]).toContain(
-      QUOTE_AUTHORS[whitmanIndex].portrait.slice(1),
+    expect(lines[shakespeareIndex]).toContain(
+      QUOTE_AUTHORS[shakespeareIndex].portrait.slice(1),
     );
   });
 
   test("opens on the first author collected, their portrait in view, and lists only their collected quotes", () => {
-    const renderer = renderModal([whitmanIds[0], whitmanIds[2]]);
+    const renderer = renderModal([shakespeareIds[0], shakespeareIds[2]]);
     expect(position(renderer)).toEqual({
-      author: whitmanIndex,
+      author: shakespeareIndex,
       quote: PORTRAIT_FOCUS,
     });
     const texts = textsIn(renderer);
-    expect(texts).toContain(getQuote(whitmanIds[0])!.text);
-    expect(texts).toContain(getQuote(whitmanIds[2])!.text);
-    expect(texts).not.toContain(getQuote(whitmanIds[1])!.text);
+    expect(texts).toContain(getQuote(shakespeareIds[0])!.text);
+    expect(texts).toContain(getQuote(shakespeareIds[2])!.text);
+    expect(texts).not.toContain(getQuote(shakespeareIds[1])!.text);
   });
 
   test("the bar steps down the quotes and back up to the portrait, stopping at the ends", () => {
-    const renderer = renderModal([whitmanIds[0], whitmanIds[2]]);
+    const renderer = renderModal([shakespeareIds[0], shakespeareIds[2]]);
     const disabled = (label: string) =>
       !!button(renderer, label).props.accessibilityState?.disabled;
 
@@ -240,22 +240,22 @@ describe("Quotes collection modal", () => {
   });
 
   test("swipes do what the arrows do", () => {
-    const renderer = renderModal([whitmanIds[0]]);
+    const renderer = renderModal([shakespeareIds[0]]);
     const swipe = (action: string) =>
       act(() => oneOf(renderer, QuoteGallery).props.onAction(action));
     swipe("nextQuote");
-    expect(position(renderer)).toEqual({ author: whitmanIndex, quote: 0 });
+    expect(position(renderer)).toEqual({ author: shakespeareIndex, quote: 0 });
     swipe("previousQuote");
     expect(position(renderer).quote).toBe(PORTRAIT_FOCUS);
     swipe("nextAuthor");
-    expect(position(renderer).author).toBe(whitmanIndex + 1);
+    expect(position(renderer).author).toBe(shakespeareIndex + 1);
     swipe("previousAuthor");
-    expect(position(renderer).author).toBe(whitmanIndex);
+    expect(position(renderer).author).toBe(shakespeareIndex);
   });
 
   test("the close button and the back button close it", () => {
     const onClose = jest.fn();
-    const renderer = renderModal([whitmanIds[0]], onClose);
+    const renderer = renderModal([shakespeareIds[0]], onClose);
     const close = renderer.root.find(
       (node) =>
         typeof node.type !== "string" &&
@@ -266,7 +266,7 @@ describe("Quotes collection modal", () => {
     expect(onClose).toHaveBeenCalledTimes(1);
 
     const onBack = jest.fn();
-    const other = renderModal([whitmanIds[0]], onBack);
+    const other = renderModal([shakespeareIds[0]], onBack);
     act(() => oneOf(other, Modal).props.onRequestClose());
     advance(1000);
     expect(onBack).toHaveBeenCalledTimes(1);
@@ -289,12 +289,12 @@ describe("Reward announcement", () => {
     act(() => {
       renderer = create(
         <CampaignWinRewardPreview
-          result={result({ type: "quote", id: whitmanIds[0] }, ["/unlocked"])}
+          result={result({ type: "quote", id: shakespeareIds[0] }, ["/unlocked"])}
         />,
       );
     });
     const texts = textsIn(renderer);
-    expect(texts).toContain(`A quote by ${WHITMAN}`);
+    expect(texts).toContain(`A quote by ${SHAKESPEARE}`);
     const unlocked = renderer.root.findAll(
       (node) =>
         Array.isArray(node.props.children) &&
@@ -302,7 +302,7 @@ describe("Reward announcement", () => {
     );
     expect(unlocked).not.toHaveLength(0);
     // The quote itself is kept for the reveal.
-    expect(texts).not.toContain(getQuote(whitmanIds[0])!.text);
+    expect(texts).not.toContain(getQuote(shakespeareIds[0])!.text);
   });
 
   test("names a Tao chapter by number, and nothing when there is no reward", () => {
@@ -322,7 +322,7 @@ describe("Reward announcement", () => {
 
 describe("Quote reveal", () => {
   test("covers the game, writes the quote, names the author and source, and finishes", async () => {
-    const quote = getQuote(whitmanIds[0])!;
+    const quote = getQuote(shakespeareIds[0])!;
     const onUncover = jest.fn();
     const onDone = jest.fn();
     let renderer!: ReactTestRenderer;

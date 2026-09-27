@@ -14,7 +14,7 @@ import {
 } from "./campaign-map";
 import { currentGamePath } from "./game-variants";
 
-const CAMPAIGN_PROGRESS_VERSION = 2;
+const CAMPAIGN_PROGRESS_VERSION = 3;
 
 // Version 2 cut the quotes to three 52-card decks: these version 1 quotes were
 // dropped, and the quotes after them moved down to close the gaps.
@@ -29,6 +29,30 @@ function migrateV1QuoteIds(value: unknown) {
       ? []
       : [id - V1_REMOVED_QUOTE_IDS.filter((removed) => removed < id).length],
   );
+}
+
+// Version 3 replaced the quotes with a hand-picked list: only these version 2
+// quotes were kept, in this order, as IDs 1 to 66; the quotes after them are
+// new, and the rest of version 2's were dropped.
+const V2_KEPT_QUOTE_IDS = [
+  1, 2, 3, 5, 6, 7, 8, 9, 12, 18, 20, 21, 29, 32, 34, 45, 46, 47, 53, 60, 85,
+  91, 92, 93, 94, 95, 100, 102, 105, 108, 110, 111, 112, 113, 114, 116, 117,
+  119, 120, 122, 125, 129, 133, 136, 138, 140, 153, 164, 165, 166, 168, 171,
+  175, 176, 181, 187, 189, 192, 193, 194, 197, 198, 200, 202, 204, 205,
+];
+
+function migrateV2QuoteIds(value: unknown) {
+  if (!Array.isArray(value)) return value;
+  return value.flatMap((id) => {
+    const index = V2_KEPT_QUOTE_IDS.indexOf(id);
+    return index === -1 ? [] : [index + 1];
+  });
+}
+
+function migrateQuoteIds(version: unknown, value: unknown) {
+  if (version === 1) return migrateV2QuoteIds(migrateV1QuoteIds(value));
+  if (version === 2) return migrateV2QuoteIds(value);
+  return value;
 }
 
 export type CampaignProgress = {
@@ -142,9 +166,7 @@ function normalizeCampaignProgress(value: unknown): CampaignProgress {
     ),
     collectedTaoIds: validIds(candidate.collectedTaoIds, TAO_CHAPTER_COUNT),
     collectedQuoteIds: validIds(
-      candidate.version === 1
-        ? migrateV1QuoteIds(candidate.collectedQuoteIds)
-        : candidate.collectedQuoteIds,
+      migrateQuoteIds(candidate.version, candidate.collectedQuoteIds),
       QUOTE_COUNT,
     ),
     lastResultSessionIds: validPathRecord(
