@@ -7,7 +7,7 @@ export const KEPT_CURRENT_IDS = [
 
 const q = (id, author, text, source) => ({ id, author, text, source });
 
-// First-round candidates that were kept, with the IDs they were chosen by.
+// Candidates that were kept in earlier rounds, with the IDs they were chosen by.
 export const KEPT_CANDIDATES = [
   q(210, `Ralph Waldo Emerson`, `Nothing can bring you peace but yourself.`, `"Self-Reliance," Essays: First Series (1841)`),
   q(211, `Ralph Waldo Emerson`, `The invariable mark of wisdom is to see the miraculous in the common.`, `Nature, Chapter VIII (1836)`),
@@ -53,4 +53,39 @@ until only the mountain remains.`, `"Zazen on Ching-t'ing Mountain," Sam Hamill 
 and I am saying it
 and that is poetry.`, `"Lecture on Nothing," Silence (1961)`),
   q(500, `Dieter Rams`, `Less, but better.`, `Ten Principles for Good Design (c. 1980)`),
+  q(501, `George Carlin`, `Have you ever noticed that anybody driving slower than you is an idiot, and anyone going faster than you is a maniac?`, `A Place for My Stuff (1981)`),
+  q(502, `George Carlin`, `Think of how stupid the average person is, and realize half of them are stupider than that.`, `Doin' It Again (1990)`),
+  q(504, `George Carlin`, `Scratch any cynic and you will find a disappointed idealist.`, `Interview, as widely quoted (c. 1990s)`),
+  q(508, `Mitch Hedberg`, `An escalator can never break: it can only become stairs.`, `Mitch All Together (2003)`),
+  q(510, `Steven Wright`, `I have a large seashell collection, which I keep scattered on the beaches all over the world.`, `I Have a Pony (1985)`),
+  q(511, `Steven Wright`, `Everywhere is within walking distance if you have the time.`, `I Have a Pony (1985)`),
+  q(512, `Robin Williams`, `You're only given a little spark of madness. You mustn't lose it.`, `Live at the Roxy (1978)`),
+  q(515, `Tina Fey`, `Say yes, and you'll figure it out afterward.`, `Bossypants (2011)`),
+  q(516, `Amy Poehler`, `Great people do things before they're ready.`, `Yes Please (2014)`),
+  q(517, `John Cleese`, `Creativity is not a talent. It is a way of operating.`, `Lecture on Creativity, Video Arts (1991)`),
+  q(520, `Lily Tomlin`, `All my life, I always wanted to be somebody. Now I see that I should have been more specific.`, `The Search for Signs of Intelligent Life in the Universe, written by Jane Wagner (1985)`),
+  q(524, `Steve Martin`, `Be so good they can't ignore you.`, `Interview on Charlie Rose (December 2007)`),
+  q(526, `Emo Philips`, `I used to think that the brain was the most wonderful organ in my body. Then I realized who was telling me this.`, `Stand-up routine (1980s)`),
+  q(528, `Will Rogers`, `Even if you are on the right track, you'll get run over if you just sit there.`, `Attributed (c. 1930s)`),
+  q(529, `Dorothy Parker`, `The cure for boredom is curiosity. There is no cure for curiosity.`, `Attributed`),
+  q(541, `Kurt Vonnegut`, `We are here on Earth to fart around, and don't let anybody tell you different.`, `A Man Without a Country (2005)`),
+  q(544, `Isaac Asimov`, `Violence is the last refuge of the incompetent.`, `Foundation (1951)`),
+  q(545, `Isaac Asimov`, `The saddest aspect of life right now is that science gathers knowledge faster than society gathers wisdom.`, `Isaac Asimov's Book of Science and Nature Quotations (1988)`),
+  q(546, `Arthur C. Clarke`, `Any sufficiently advanced technology is indistinguishable from magic.`, `Profiles of the Future, revised edition (1973)`),
+  q(548, `Philip K. Dick`, `Reality is that which, when you stop believing in it, doesn't go away.`, `"How to Build a Universe That Doesn't Fall Apart Two Days Later" (1978)`),
+  q(549, `Ursula K. Le Guin`, `The creative adult is the child who has survived.`, `Attributed; as quoted in interviews`),
+  q(551, `Italo Calvino`, `A classic is a book that has never finished saying what it has to say.`, `"Why Read the Classics?" (1981)`),
+  q(554, `Haruki Murakami`, `If you only read the books that everyone else is reading, you can only think what everyone else is thinking.`, `Norwegian Wood, Jay Rubin translation (2000)`),
+  q(557, `Ernest Hemingway`, `The world breaks every one and afterward many are strong at the broken places.`, `A Farewell to Arms (1929)`),
+  q(558, `John Steinbeck`, `And now that you don't have to be perfect, you can be good.`, `East of Eden (1952)`),
+  q(562, `Sylvia Plath`, `I took a deep breath and listened to the old brag of my heart. I am, I am, I am.`, `The Bell Jar (1963)`),
+  q(572, `Douglas Hofstadter`, `Hofstadter's Law: It always takes longer than you expect, even when you take into account Hofstadter's Law.`, `Gödel, Escher, Bach (1979)`),
+  q(576, `Herbert A. Simon`, `A wealth of information creates a poverty of attention.`, `"Designing Organizations for an Information-Rich World" (1971)`),
+  q(578, `Peter Drucker`, `There is nothing so useless as doing efficiently that which should not be done at all.`, `"Managing for Business Effectiveness," Harvard Business Review (1963)`),
+  q(602, `Fred Rogers`, `When I was a boy and I would see scary things in the news, my mother would say to me, "Look for the helpers. You will always find people who are helping."`, `Mister Rogers Talks with Parents (1983)`),
+  q(604, `Jim Henson`, `[Kids] don't remember what you try to teach them. They remember what you are.`, `As quoted in It's Not Easy Being Green (2005)`),
+  q(615, `Dolly Parton`, `Find out who you are and do it on purpose.`, `As quoted in interviews`),
+  q(649, `Edsger W. Dijkstra`, `Simplicity is prerequisite for reliability.`, `EWD498, "How do we tell truths that might hurt?" (1975)`),
+  q(680, `John Wooden`, `Be quick, but don't hurry.`, `Wooden: A Lifetime of Observations and Reflections On and Off the Court (1997)`),
+  q(693, `Jiddu Krishnamurti`, `The ability to observe without evaluating is the highest form of intelligence.`, `Attributed`),
 ];

@@ -1,6 +1,6 @@
 // Builds the quote picker into index.html: the quotes kept so far
 // (shortlist.mjs, which points into QuotesText.ts for the app's own quotes)
-// and the second-round candidates (round2.mjs, IDs 501 on).
+// and the current round's candidates (round3.mjs, IDs 701 on).
 //
 //   node scripts/quote-picker/build.mjs
 
@@ -8,7 +8,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import vm from "node:vm";
-import { ROUND_2 } from "./round2.mjs";
+import { CANDIDATES, FIRST_ID } from "./round3.mjs";
 import { KEPT_CANDIDATES, KEPT_CURRENT_IDS } from "./shortlist.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -32,25 +32,26 @@ function readPortraitNames() {
   return new Set([...source.matchAll(/name: "([^"]+)"/g)].map((m) => m[1]));
 }
 
-const ROUND_2_FIRST_ID = 501;
-
 const current = readCurrentQuotes();
 const withPortrait = readPortraitNames();
 
-const entry = (id, quote, round, earlier) => ({
+const roundOf = (id) =>
+  id <= 208 ? "In app" : id <= 500 ? "Round 1" : id < FIRST_ID ? "Round 2" : "New";
+
+const entry = (id, quote, earlier) => ({
   id,
   author: quote.author,
   text: quote.text,
   source: quote.source,
-  round,
+  round: roundOf(id),
   earlier,
   newAuthor: !withPortrait.has(quote.author),
 });
 
 const all = [
-  ...KEPT_CURRENT_IDS.map((id) => entry(id, current[id - 1], "app", true)),
-  ...KEPT_CANDIDATES.map((quote) => entry(quote.id, quote, "round 1", true)),
-  ...ROUND_2.map((quote, i) => entry(ROUND_2_FIRST_ID + i, quote, "round 2", false)),
+  ...KEPT_CURRENT_IDS.map((id) => entry(id, current[id - 1], true)),
+  ...KEPT_CANDIDATES.map((quote) => entry(quote.id, quote, true)),
+  ...CANDIDATES.map((quote, i) => entry(FIRST_ID + i, quote, false)),
 ].sort((a, b) => a.id - b.id);
 
 const ids = new Set();
