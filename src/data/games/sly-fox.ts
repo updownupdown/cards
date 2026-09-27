@@ -10,7 +10,7 @@ export const slyFox: GameDefinition = {
   rating: {
     complexity: 40,
     difficulty: 55,
-    luck: 45,
+    luck: 40,
   },
   thumbnail: "SlyFox.webp",
   thumbnailCredit: {

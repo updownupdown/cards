@@ -8,7 +8,7 @@ export const kingAlbert: GameDefinition = {
   title: "King Albert",
   aliases: ["Raglan"],
   tags: [GameTag.KlondikeFamily, GameTag.TableauBuilding],
-  rating: { complexity: 35, difficulty: 70, luck: 20 },
+  rating: { complexity: 30, difficulty: 70, luck: 20 },
   thumbnail: "KingAlbert.webp",
   thumbnailCredit: {
     title: "Albert, King of the Belgians",

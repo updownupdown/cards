@@ -9,7 +9,7 @@ export const lightsOut: GameDefinition = {
   tags: [GameTag.Puzzles, GameTag.SpatialControl],
   // Scored in moves or guesses: fewer is better.
   lowerScoreIsBetter: true,
-  rating: { complexity: 20, difficulty: 55, luck: 0 },
+  rating: { complexity: 10, difficulty: 50, luck: 0 },
   thumbnail: "LightsOut.webp",
   thumbnailCredit: {
     title: "Searching for Fireflies",

@@ -10,7 +10,7 @@ export const rogueRun: GameDefinition = {
   rating: {
     complexity: 55,
     difficulty: 70,
-    luck: 35,
+    luck: 45,
   },
   thumbnail: "RogueRun.webp",
   thumbnailCredit: {

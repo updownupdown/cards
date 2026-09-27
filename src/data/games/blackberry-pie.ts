@@ -8,9 +8,9 @@ export const blackberryPie: GameDefinition = {
   title: "Blackberry Pie",
   tags: [GameTag.ModernMechanics, GameTag.SequenceBuilding],
   rating: {
-    complexity: 38,
-    difficulty: 62,
-    luck: 52,
+    complexity: 40,
+    difficulty: 60,
+    luck: 50,
   },
   background: GAME_BACKGROUNDS.forestGrasses,
   animation: GameAnimations.Leaves,

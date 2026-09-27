@@ -7,7 +7,7 @@ export const fortress: GameDefinition = {
   path: "/fortress",
   title: "Fortress",
   tags: [GameTag.CastlesAndFans, GameTag.SequenceBuilding],
-  rating: { complexity: 40, difficulty: 70, luck: 25 },
+  rating: { complexity: 30, difficulty: 70, luck: 25 },
   thumbnail: "Fortress.webp",
   thumbnailCredit: {
     title: "Landscape with Rock and Fortress",

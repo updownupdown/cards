@@ -8,7 +8,7 @@ export const seahavenTowers: GameDefinition = {
   title: "Seahaven Towers",
   aliases: ["Sea Towers"],
   tags: [GameTag.FreeCellFamily, GameTag.SequenceBuilding],
-  rating: { complexity: 35, difficulty: 50, luck: 25 },
+  rating: { complexity: 25, difficulty: 45, luck: 15 },
   thumbnail: "SeahavenTowers.webp",
   thumbnailCredit: {
     title: "The Port of La Rochelle",

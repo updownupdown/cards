@@ -8,7 +8,7 @@ export const flowerGarden: GameDefinition = {
   title: "Flower Garden",
   aliases: ["The Bouquet", "The Garden"],
   tags: [GameTag.CastlesAndFans, GameTag.SequenceBuilding],
-  rating: { complexity: 30, difficulty: 65, luck: 35 },
+  rating: { complexity: 25, difficulty: 60, luck: 25 },
   thumbnail: "FlowerGarden.webp",
   thumbnailCredit: {
     title: "The Artist's House at Argenteuil",

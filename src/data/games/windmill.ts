@@ -14,7 +14,7 @@ export const windmill: GameDefinition = {
   rating: {
     complexity: 35,
     difficulty: 45,
-    luck: 55,
+    luck: 65,
   },
   thumbnail: "Windmill.webp",
   thumbnailCredit: {

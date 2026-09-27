@@ -10,7 +10,7 @@ export const dominion: GameDefinition = {
   rating: {
     complexity: 35,
     difficulty: 65,
-    luck: 45,
+    luck: 35,
   },
   background: GAME_BACKGROUNDS.nightSky,
   animation: GameAnimations.Stars,

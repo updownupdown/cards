@@ -8,9 +8,9 @@ export const pagoda: GameDefinition = {
   title: "Pagoda",
   tags: [GameTag.PairMatching],
   rating: {
-    complexity: 10,
-    difficulty: 35,
-    luck: 30,
+    complexity: 15,
+    difficulty: 45,
+    luck: 40,
   },
   thumbnail: "Pagoda.webp",
   thumbnailCredit: {

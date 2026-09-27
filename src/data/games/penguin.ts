@@ -9,9 +9,9 @@ export const penguin: GameDefinition = {
   aliases: ["Penguin"],
   tags: [GameTag.FreeCellFamily, GameTag.SequenceBuilding],
   rating: {
-    complexity: 45,
-    difficulty: 60,
-    luck: 25,
+    complexity: 40,
+    difficulty: 45,
+    luck: 10,
   },
   thumbnail: "Penguin.webp",
   thumbnailCredit: {

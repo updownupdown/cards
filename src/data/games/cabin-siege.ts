@@ -8,9 +8,9 @@ export const cabinSiege: GameDefinition = {
   title: "Cabin Siege",
   tags: [GameTag.CardCombat, GameTag.SpatialControl],
   rating: {
-    complexity: 70,
-    difficulty: 50,
-    luck: 20,
+    complexity: 55,
+    difficulty: 60,
+    luck: 50,
   },
   thumbnail: "CabinSiege.webp",
   thumbnailCredit: {

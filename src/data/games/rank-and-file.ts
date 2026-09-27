@@ -12,7 +12,7 @@ export const rankAndFile: GameDefinition = {
     GameTag.TableauBuilding,
     GameTag.StockAndWaste,
   ],
-  rating: { complexity: 40, difficulty: 30, luck: 35 },
+  rating: { complexity: 30, difficulty: 55, luck: 40 },
   thumbnail: "RankAndFile.webp",
   thumbnailCredit: {
     title:

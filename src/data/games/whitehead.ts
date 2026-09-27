@@ -11,7 +11,7 @@ export const whitehead: GameDefinition = {
     GameTag.TableauBuilding,
     GameTag.StockAndWaste,
   ],
-  rating: { complexity: 35, difficulty: 50, luck: 40 },
+  rating: { complexity: 30, difficulty: 45, luck: 20 },
   background: GAME_BACKGROUNDS.bloomingTree,
   animation: GameAnimations.Pollen,
   gameColorDark: "#30383a",

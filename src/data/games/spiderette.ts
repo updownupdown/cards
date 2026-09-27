@@ -7,7 +7,7 @@ export const spiderette: GameDefinition = {
   path: "/spiderette",
   title: "Spiderette",
   tags: [GameTag.SpiderFamily, GameTag.SequenceBuilding],
-  rating: { complexity: 35, difficulty: 60, luck: 40 },
+  rating: { complexity: 35, difficulty: 70, luck: 40 },
   thumbnail: "Spiderette.webp",
   thumbnailCredit: {
     title: "Pink-Toed Tarantula, from Metamorphosis of the Insects of Surinam",

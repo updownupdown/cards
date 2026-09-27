@@ -13,8 +13,8 @@ export const labyrinth: GameDefinition = {
   ],
   rating: {
     complexity: 20,
-    difficulty: 35,
-    luck: 65,
+    difficulty: 65,
+    luck: 75,
   },
   thumbnail: "Labyrinth.webp",
   thumbnailCredit: {

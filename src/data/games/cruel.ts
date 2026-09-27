@@ -8,9 +8,9 @@ export const cruel: GameDefinition = {
   title: "Cruel",
   tags: [GameTag.CastlesAndFans, GameTag.TableauBuilding],
   rating: {
-    complexity: 30,
-    difficulty: 55,
-    luck: 35,
+    complexity: 25,
+    difficulty: 50,
+    luck: 20,
   },
   thumbnail: "Cruel.webp",
   thumbnailCredit: {

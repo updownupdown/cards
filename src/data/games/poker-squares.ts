@@ -13,8 +13,8 @@ export const pokerSquares: GameDefinition = {
   ],
   rating: {
     complexity: 35,
-    difficulty: 65,
-    luck: 40,
+    difficulty: 80,
+    luck: 45,
   },
   thumbnail: "PokerSquares.webp",
   thumbnailCredit: {

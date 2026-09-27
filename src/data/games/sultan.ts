@@ -21,7 +21,7 @@ export const sultan: GameDefinition = {
     GameTag.SequenceBuilding,
     GameTag.StockAndWaste,
   ],
-  rating: { complexity: 35, difficulty: 35, luck: 55 },
+  rating: { complexity: 30, difficulty: 40, luck: 50 },
   background: GAME_BACKGROUNDS.alhambra,
   animation: GameAnimations.Clouds,
   gameColorDark: "#362d2a",

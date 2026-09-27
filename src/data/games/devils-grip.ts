@@ -13,7 +13,7 @@ export const devilsGrip: GameDefinition = {
     GameTag.StockAndWaste,
   ],
   rating: {
-    complexity: 55,
+    complexity: 45,
     difficulty: 85,
     luck: 45,
   },

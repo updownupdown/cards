@@ -12,7 +12,7 @@ export const maria: GameDefinition = {
     GameTag.TableauBuilding,
     GameTag.StockAndWaste,
   ],
-  rating: { complexity: 30, difficulty: 35, luck: 45 },
+  rating: { complexity: 25, difficulty: 65, luck: 45 },
   thumbnail: "Maria.webp",
   thumbnailCredit: {
     title: "Virgin and Child",

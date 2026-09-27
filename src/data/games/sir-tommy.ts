@@ -9,9 +9,9 @@ export const sirTommy: GameDefinition = {
   aliases: ["Old Patience", "Puss in the Corner"],
   tags: [GameTag.FoundationBuilders, GameTag.StockAndWaste],
   rating: {
-    complexity: 30,
+    complexity: 20,
     difficulty: 60,
-    luck: 55,
+    luck: 60,
   },
   thumbnail: "SirTommy.webp",
   thumbnailCredit: {

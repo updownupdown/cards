@@ -8,7 +8,7 @@ export const spiderSolitaire: GameDefinition = {
   title: "Spider Solitaire",
   tags: [GameTag.SpiderFamily, GameTag.SequenceBuilding],
   rating: {
-    complexity: 50,
+    complexity: 35,
     difficulty: 85,
     luck: 40,
   },

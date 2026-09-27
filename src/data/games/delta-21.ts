@@ -8,9 +8,9 @@ export const delta21: GameDefinition = {
   title: "Delta 21",
   tags: [GameTag.ModernMechanics],
   rating: {
-    complexity: 40,
+    complexity: 50,
     difficulty: 40,
-    luck: 30,
+    luck: 35,
   },
   thumbnail: "Delta21.webp",
   thumbnailCredit: {

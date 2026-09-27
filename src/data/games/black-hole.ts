@@ -9,9 +9,9 @@ export const blackHole: GameDefinition = {
   aliases: ["Singularity", "All in a Row"],
   tags: [GameTag.FoundationBuilders, GameTag.SequenceBuilding],
   rating: {
-    complexity: 25,
-    difficulty: 55,
-    luck: 30,
+    complexity: 15,
+    difficulty: 60,
+    luck: 15,
   },
   thumbnail: "BlackHole.webp",
   thumbnailCredit: {

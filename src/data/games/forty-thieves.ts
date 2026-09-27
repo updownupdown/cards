@@ -9,9 +9,9 @@ export const fortyThieves: GameDefinition = {
   aliases: ["Napoleon at St Helena", "Josephine", "Lucas", "Busy Aces"],
   tags: [GameTag.FortyThievesFamily, GameTag.StockAndWaste],
   rating: {
-    complexity: 45,
-    difficulty: 65,
-    luck: 40,
+    complexity: 35,
+    difficulty: 85,
+    luck: 45,
   },
   thumbnail: "FortyThieves.webp",
   thumbnailCredit: {

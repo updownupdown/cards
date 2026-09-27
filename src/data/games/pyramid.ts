@@ -9,7 +9,7 @@ export const pyramid: GameDefinition = {
   tags: [GameTag.PairMatching, GameTag.StockAndWaste],
   rating: {
     complexity: 15,
-    difficulty: 65,
+    difficulty: 70,
     luck: 65,
   },
   thumbnail: "Pyramid.webp",

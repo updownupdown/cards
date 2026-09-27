@@ -8,8 +8,8 @@ export const golf: GameDefinition = {
   title: "Golf",
   tags: [GameTag.Sports, GameTag.SequenceBuilding, GameTag.StockAndWaste],
   rating: {
-    complexity: 15,
-    difficulty: 50,
+    complexity: 10,
+    difficulty: 55,
     luck: 55,
   },
   thumbnail: "Golf.webp",

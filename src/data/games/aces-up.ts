@@ -9,8 +9,8 @@ export const acesUp: GameDefinition = {
   tags: [GameTag.ClearTheBoard, GameTag.TableauBuilding],
   rating: {
     complexity: 15,
-    difficulty: 80,
-    luck: 75,
+    difficulty: 75,
+    luck: 70,
   },
   thumbnail: "AcesUp.webp",
   thumbnailCredit: {

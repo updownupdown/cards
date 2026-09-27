@@ -11,7 +11,7 @@ export const thumbAndPouch: GameDefinition = {
     GameTag.TableauBuilding,
     GameTag.StockAndWaste,
   ],
-  rating: { complexity: 25, difficulty: 30, luck: 55 },
+  rating: { complexity: 25, difficulty: 35, luck: 45 },
   background: GAME_BACKGROUNDS.cozyCabin,
   animation: GameAnimations.Dust,
   gameColorDark: "#3b3028",

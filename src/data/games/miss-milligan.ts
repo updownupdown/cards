@@ -13,7 +13,7 @@ export const missMilligan: GameDefinition = {
     GameTag.TableauBuilding,
     GameTag.SequenceBuilding,
   ],
-  rating: { complexity: 40, difficulty: 60, luck: 40 },
+  rating: { complexity: 40, difficulty: 70, luck: 45 },
   thumbnail: "MissMilligan.webp",
   thumbnailCredit: {
     title: "Portrait of Dora Wheeler",
