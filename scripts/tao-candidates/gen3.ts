@@ -24,11 +24,11 @@ function rng(seed: number) {
 
 type Style = { tilt: number; warp: number; jitter: number; thin: number; magSpread: number };
 export const STYLES: Record<"organic" | "wild", Style> = {
-  organic: { tilt: 5, warp: 2.2, jitter: 1.4, thin: 0, magSpread: 0.2 },
-  wild: { tilt: 7, warp: 3, jitter: 2.2, thin: 0.4, magSpread: 0.4 },
+  organic: { tilt: 2.5, warp: 1.1, jitter: 0.7, thin: 0, magSpread: 0.2 },
+  wild: { tilt: 3.5, warp: 1.5, jitter: 1.1, thin: 0.4, magSpread: 0.3 },
 };
 
-const MIN_ANGLE = 4; // degrees away from horizontal or vertical
+const MIN_ANGLE = 3; // degrees away from horizontal or vertical
 
 function offAxis(a: ConstellationStar, b: ConstellationStar) {
   const deg = Math.abs((Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI) % 90;
@@ -95,7 +95,7 @@ export function loosen(c: Constellation, style: Style, seed: number): Constellat
         const a = stars[st[i - 1]], b = stars[st[i]];
         if (offAxis(a, b) >= MIN_ANGLE) continue;
         const len = Math.hypot(b.x - a.x, b.y - a.y);
-        const push = Math.tan(((MIN_ANGLE + 2 + r() * 3) * Math.PI) / 180) * len * 0.5;
+        const push = Math.tan(((MIN_ANGLE + 0.5 + r() * 1.5) * Math.PI) / 180) * len * 0.5;
         const px = -(b.y - a.y) / len, py = (b.x - a.x) / len;
         const sgn = r() < 0.5 ? -1 : 1;
         b.x += px * push * sgn; b.y += py * push * sgn;
@@ -141,7 +141,7 @@ for (const { n, e } of round2) {
       c = loosen(pick.c, STYLES[style], n * 97 + i * 13 + 5 + t * 1000);
     }
     check(c, `ch${n} ${style}`);
-    entries.push({ id: String(i + 2), label: style === "organic" ? "Organic" : "Organic, looser", name: pick.name, theme: style === "organic" ? "A slight tilt and bend, no straight lines" : "Looser and sparser: some stars on straight runs dropped", key: pick.key, c });
+    entries.push({ id: String(i + 2), label: style === "organic" ? "Organic" : "Organic, looser", name: pick.name, theme: style === "organic" ? "A very slight tilt and bend, no straight lines" : "Looser and sparser: some stars on straight runs dropped", key: pick.key, c });
   });
   chapters3.push({ n, e: entries });
 }
