@@ -6,14 +6,13 @@ becomes a star map of the 81 constellations.
 
 Implemented for Campaign wins: `src/components/TaoReveal/` (the reveal and a
 still figure for the collection) and `src/data/tao-constellations.ts` (all 81
-figures). In development builds the Tao modal opens every chapter and labels
-each figure with its name and confidence, for review.
+figures). In development builds the Tao modal opens every chapter, for review.
 
 ## Verdict per question
 
 | Question | Verdict | Evidence |
 | --- | --- | --- |
-| Unique, recognisable constellation per chapter | Feasible. Hand-authored, not algorithmic | 5 authored (wheel, yin-yang, tree + sprout, archer, water scene); all read at a glance. Subjects for all 81 below |
+| Unique, recognisable constellation per chapter | Feasible. Hand-authored, not algorithmic | All 81 authored and reviewed; subjects below |
 | Type the text, morph letters into the figure, animate it | Feasible with Reanimated 4 alone | Demo runs 54-60 fps on web (dev build); one shared clock drives every letter on the UI thread |
 | Integrate after the reward is earned | Small change | `WinLoseBox` got `actionsHidden`; the overlay swallows touches (tested: header taps during the reveal = 0); Android back / Escape skip in ~0.5 s |
 | Star-map collection, organic 9x9, pan/zoom | Feasible; renderer choice matters | Variant D already shrinks the figure into its slot on a jittered 9x9 map |
@@ -93,9 +92,15 @@ key lines and captions work in every language.
 Algorithmic generation (tracing icons or images) gives noisy, unrecognisable
 star patterns, so each figure is authored as data:
 
-- 15-40 stars with magnitudes, and strokes in pen order.
-- Optional nebula polygons, weighted per figure (e.g. the yang half of 42).
+- 10-40 stars with magnitudes, and strokes in pen order.
+- Optional nebula polygons, weighted per figure (e.g. the dark half of a moon).
 - The key line(s) the image comes from.
+
+The figures were first drawn as clean shapes, chosen over three review rounds
+(many from astrology and Chinese philosophy: zodiac signs, star groups, the
+Five Elements, the Taijitu). They were then loosened slightly, with a small
+tilt, bend and nudge per star, so that no line is exactly horizontal or
+vertical, as in a real sky. The file stores the resulting coordinates.
 
 Recognisability lessons from the demo:
 
@@ -106,91 +111,86 @@ Recognisability lessons from the demo:
 
 ## Subjects for all 81 chapters
 
-Confidence: **A** the chapter names the image; **B** a symbol drawn from the
-text; **C** an interpretive choice worth your review.
-
-| Ch | Constellation | Drawn from | |
-| --- | --- | --- | --- |
-| 1 | The Gateway | "the hidden mystery ... this source is called darkness" | B |
-| 2 | Sun and Moon | "being and non-being produce each other" | B |
-| 3 | The Closed Chest | "do not display your treasures" | B |
-| 4 | The Bottomless Well | "like an empty container ... infinitely deep" | A |
-| 5 | The Bellows | "the space between Heaven and Earth is like a bellows" | A |
-| 6 | The Valley Mist | "like a vapor, barely seen but always present" | B |
-| 7 | Heaven over Earth | "the Tao of Heaven is eternal, and the earth is long enduring" | B |
-| 8 | Water *(demo)* | "the supreme good is like water ... gathers in unpopular places" | A |
-| 9 | The Brimming Cup | "an empty cup than one that is filled to the brim" | A |
-| 10 | The Inner Eye | "while you cleanse your inner vision" | B |
-| 11 | The Wheel *(demo)* | "it is the center hole that allows the wheel to function" | A |
-| 12 | The Lute | "five notes deafen the ear" | B |
-| 13 | The Ladder | "he who is superior is also someone's subordinate" | C |
-| 14 | The Endless Thread | "follow it and there will be no end" | C |
-| 15 | The Winter Crossing | "careful as someone crossing a frozen stream in winter" | A |
-| 16 | The Ripple | "if you can empty your mind of all thoughts" | B |
-| 17 | The Shepherd | "the best leaders are those the people hardly know exist" | C |
-| 18 | The Mask | "when intellectualism arises, hypocrisy is close behind" | B |
-| 19 | The Centre of the Circle | "keep us at the center of the circle" | A |
-| 20 | The Drifting Boat | "I drift on the waves on the ocean" | A |
-| 21 | The Seed | "secluded and dark, yet there is a vitality within it" | C |
-| 22 | The Crescent Moon | "if you want to become full, first let yourself become empty" | B |
-| 23 | The Passing Storm | "when the gale blows, it will not last long" | A |
-| 24 | The One on Tiptoe | "those who stand on tiptoes do not stand firmly" | A |
-| 25 | The Four Great Things | "Tao, Heaven, Earth, Humanity" | C |
-| 26 | The Laden Wagon | "travels all day without ever leaving her wagon" | A |
-| 27 | The Knot | "a good knot needs no rope and it can not come undone" | A |
-| 28 | The Uncarved Block | "return you to the Uncarved Block" | A |
-| 29 | The Sacred Vessel | "the world is sacred vessel" | A |
-| 30 | The Bramble | "where armies march, thorns and briars bloom" | A |
-| 31 | The Sheathed Sword | "weapons are the bearers of bad news" | A |
-| 32 | Rivers to the Sea | "small streams and the largest rivers flow through valleys to the sea" | A |
-| 33 | The Summit | "those who persist will reach their goal" | B |
-| 34 | The Spring | "the great Tao flows unobstructed in every direction" | B |
-| 35 | The Silent Flute | "where there is music ... there is nothing for them to hear" | B |
-| 36 | The Hidden Fish | "fish remain hidden in deep waters" | A |
-| 37 | Moon on Still Water | "the world would naturally settle into peace" | C |
-| 38 | The Fruit and the Husk | "the master abides in the fruit and not in the husk" | A |
-| 39 | The Common Stone | "do not shine like the precious gem, but be as dull as a common stone" | A |
-| 40 | The Returning Swallow | "all movement returns to the Tao" | C |
-| 41 | The Silent Bell | "the greatest sounds cannot be heard" | B |
-| 42 | Yin and Yang *(demo)* | "all things carry Yin yet embrace Yang" | A |
-| 43 | The Feather | "that which offers no resistance ... enter where there is no space" | C |
-| 44 | The Hourglass | "knowing when to stop will keep you from danger" | B |
-| 45 | The Crooked Staff | "the greatest straightness seems crooked" | B |
-| 46 | The Free Horse | "horses run free to fertilize the fields" | A |
-| 47 | The Window | "without looking out your window" | A |
-| 48 | Falling Leaves | "unlearns something new every day ... less and less remains" | C |
-| 49 | The Nest | "she treats them all as her children" | B |
-| 50 | The Tiger | "walk safely among the wild animals" | B |
-| 51 | Cupped Hands | "cares for them, nurtures them, gives them a place of refuge" | B |
-| 52 | The Lamp | "use your inner light for understanding" | B |
-| 53 | The Plough | "no one out working the fields" | B |
-| 54 | The Well-Built House | "that which is well built will never be torn down" | A |
-| 55 | The Newborn | "like a newborn child ... its grip is firm and strong" | A |
-| 56 | The Silent Sage | "stop talking, meditate in silence" | A |
-| 57 | The Open Palm | "I let go of all my desires" | C |
-| 58 | Lotus in the Mud | "good fortune has its roots in disaster" | B |
-| 59 | The Deep Root | "the deep root and the firm trunk" | A |
-| 60 | The Small Fish | "governing a large country is like frying small fish" | A |
-| 61 | The Bowing Figure | "a large country should take the low place" | B |
-| 62 | The Temple | "the Tao is the tabernacle of creation ... a place of refuge" | A |
-| 63 | The Cairn | "great projects are best started while they are small" | B |
-| 64 | The Tree and the Sprout *(demo)* | "the tallest tree begins as a tiny sprout" | A |
-| 65 | The Loom | "knowing the two alternatives is a pattern" | C |
-| 66 | The Sea | "rivers and seas are rulers of the streams of hundreds of valleys" | A |
-| 67 | The Three Jewels | "three jewels: compassion, moderation, and humility" | A |
-| 68 | The Shield | "the best warriors do not use violence" | B |
-| 69 | Steps Backward | "better to retreat a foot than to advance only an inch" | A |
-| 70 | The Scroll | "my teachings come from the ancients" | B |
-| 71 | The Healing Herb | "recognizing that you have an illness can you move to seek a cure" | C |
-| 72 | The Mirror | "the Master knows herself but is not arrogant" | B |
-| 73 | The Net of Heaven | "the nets of Heaven are wide, but nothing escapes" | A |
-| 74 | The Axe | "trying to take the place of a great lumberjack" | A |
-| 75 | The Open Cage | "only those who do not cling to their life can save it" | B |
-| 76 | The Reed and the Broken Branch | "the soft and yielding will overcome" | A |
-| 77 | The Archer *(demo)* | "like the drawing of a bow" | A |
-| 78 | Water and Stone | "nothing is better than water for overcoming the hard" | A |
-| 79 | The Balance | "the Tao does not choose sides" | B |
-| 80 | The Rooster | "hear their roosters crowing and dogs barking" | A |
-| 81 | The Sage on the Ox | Finale: Lao Tzu leaving through the western pass | C |
-
-Tally: 39 A, 29 B, 13 C.
+| Ch | Constellation | Key line |
+| --- | --- | --- |
+| 1 | The Gateway | "This source is called darkness." |
+| 2 | Gemini | "Being and non-being produce each other." |
+| 3 | Taurus | "If you overvalue possessions," |
+| 4 | The Bottomless Well | "Infinitely deep, it is the source of all things." |
+| 5 | Libra | "The Master doesn't take sides;" |
+| 6 | The Dandelion | "It is like a vapor," |
+| 7 | The Candle | "They do not live for themselves;" |
+| 8 | The Water Drop | "The supreme good is like water," |
+| 9 | The Empty Teacup | "It is easier to carry an empty cup" |
+| 10 | The Lotus | "Nurture the darkness of your soul" |
+| 11 | The Wheel | "but it is the center hole / that allows the wheel to function." |
+| 12 | The Closed Eye | "Five colors blind the eye." |
+| 13 | The Ouroboros | "and we are often our own worst enemy." |
+| 14 | The Endless Thread | "follow it and there will be no end." |
+| 15 | The Snowflake | "as someone crossing a frozen stream in winter." |
+| 16 | The Ripple | "If you can empty your mind of all thoughts" |
+| 17 | Geese in Formation | "we did it, all by ourselves!"" |
+| 18 | The Cracked Vase | "When the great Tao is abandoned," |
+| 19 | The Single Flower | "Desire little." |
+| 20 | The Butterfly Dream | "I am like a fool, my mind is in chaos." |
+| 21 | The Nautilus | "Within it we can find order." |
+| 22 | The Crescent Moon | "If you want to become full," |
+| 23 | The Passing Storm | "when the gale blows, it will not last long;" |
+| 24 | The Peacock | "Those who boast of their accomplishments" |
+| 25 | The Four Images | "Within the universe, these are the four great things." |
+| 26 | The Pagoda | "Heaviness is the basis of lightness." |
+| 27 | Teacher and Student | "What is a good person but a bad person's teacher?" |
+| 28 | The Uncarved Block | "Uncarved Block." |
+| 29 | The Peng and the Quail | "Some are naturally big and strong," |
+| 30 | The Barren Tree | "bad years must always follow." |
+| 31 | The Broken Arrow | "and thus are avoided by the wise." |
+| 32 | Neptune | "flow through valleys to the sea." |
+| 33 | The Arrow in the Target | "Those who persist will reach their goal." |
+| 34 | The Spring | "The great Tao flows unobstructed in every direction." |
+| 35 | The Wind Chime | "When listen for, there is nothing for them to hear." |
+| 36 | The Koi under the Lily Pads | "Just as fish remain hidden in deep waters," |
+| 37 | Moon on Still Water | "the world would naturally settle into peace." |
+| 38 | The Peach | "The master abides in the fruit and not in the husk." |
+| 39 | The Gem and the Stone | "but be as dull as a common stone." |
+| 40 | The Returning Swallow | "All movement returns to the Tao." |
+| 41 | The Owl | "The brightness of the Tao seems like darkness," |
+| 42 | The Triple Swirl | "The Two gave birth to Three." |
+| 43 | The Feather | "That which offers no resistance," |
+| 44 | The Hourglass | "and knowing when to stop will keep you from danger" |
+| 45 | Fire and Water | "Movement overcomes the cold," |
+| 46 | The Free Horse | "horses run free to fertilize the fields." |
+| 47 | The Armillary Sphere | "you can know the whole world." |
+| 48 | The Setting Sun | "Less and less remains until you arrive at non-action." |
+| 49 | The Nest | "Yet she treats them all as her children." |
+| 50 | The Elephant | "walk safely among the wild animals." |
+| 51 | The Hatching Chick | "The Tao gives birth to all of creation." |
+| 52 | The Magnifying Glass | "To understand the small is called clarity." |
+| 53 | The Plough | "because there is no one out working the fields." |
+| 54 | The Well-Built House | "That which is well built" |
+| 55 | The Cradle | "is like a newborn child." |
+| 56 | The Incense Stick | "meditate in silence," |
+| 57 | The Sky Lanterns | "I let go of all my desires," |
+| 58 | The Rainbow after the Storm | "Good fortune has its roots in disaster," |
+| 59 | The Root and Trunk | "This is spoken of as the deep root and the firm trunk," |
+| 60 | Pisces | "Governing a large country" |
+| 61 | The Great and Little Dippers | "If a large country takes the low position," |
+| 62 | The Purple Enclosure | "The Tao is the tabernacle of creation," |
+| 63 | The Cairn | "Great projects are best started while they are small." |
+| 64 | The Tree and the Sprout | "The tallest tree / begins as a tiny sprout." |
+| 65 | The Loom | "Knowing the two alternatives is a pattern." |
+| 66 | The Water Carrier | "you must speak to them like you are their servant." |
+| 67 | The Trillium | "compassion, moderation, and humility." |
+| 68 | The Quiet Camp | "do not destroy indiscriminately." |
+| 69 | The Crab | "It is better to retreat a foot" |
+| 70 | The Scroll | "My teachings come from the ancients," |
+| 71 | The Serpent Bearer | "Thinking you know is a disease." |
+| 72 | The Mirror | "Therefore, the Master knows herself but is not arrogant." |
+| 73 | The Celestial Sphere | "Who can understand the workings of Heaven?" |
+| 74 | The Axe | "trying to take the place of a great lumberjack." |
+| 75 | Falling Blossoms | "Only those who do not cling to their life can save it." |
+| 76 | The Reed and the Broken Branch | "The soft and yielding will overcome." |
+| 77 | The Archer | "The Tao of Heaven works in the world / like the drawing of a bow." |
+| 78 | The Wave on the Cliff | "for overcoming the hard and rigid," |
+| 79 | The Balance | "The Tao does not choose sides," |
+| 80 | The Rooster | "that they can hear their roosters crowing and dogs barking," |
+| 81 | The Ox | "The Tao of the Wise person acts by not competing." |
