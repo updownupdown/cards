@@ -19,3 +19,7 @@ PY
 node --experimental-strip-types --no-warnings gen.ts
 python3 -c "t=open('template.html').read(); d=open('data.json').read(); open('gallery.html','w').write(t.replace('__DATA__', d.replace('</','<\\\\/')))"
 rm -f sheet.html
+# Round two: picks plus two new figures per chapter -> gallery2.html
+node --experimental-strip-types --no-warnings gen2.ts
+python3 -c "t=open('template2.html').read(); d=open('data2.json').read(); open('gallery2.html','w').write(t.replace('__DATA__', d.replace('</','<\\\\/')))"
+rm -f sheet2.html
