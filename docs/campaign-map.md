@@ -4,56 +4,65 @@ The Campaign home tab is a progression mode layered over the existing game catal
 
 ## Authored graph
 
-`src/data/campaign-map.generated.ts` contains the editable node records. Coordinates are normalized around `(0, 0)`, where Klondike must remain. Connections are undirected and must appear in both nodes' `connections` arrays.
+`src/data/campaign-map.generated.ts` holds every game's node: its position, its links and its rewards. Coordinates are normalized around `(0, 0)`, where Klondike must remain. Connections are undirected and must appear in both nodes' `connections` arrays.
 
-`npm run campaign:generate` keeps the existing file as the source of truth, including any manual edits:
+Every game has a node, local-only games included. They sit on the rim as dead ends, and `src/data/campaign-map.ts` leaves them (and the links to them) out of builds where they are off, so the map works either way. Their quotes can only be collected where they are on.
 
-- Every existing node keeps its position, connections, and rewards.
-- Nodes for removed games are dropped, along with their connections.
-- New games are placed around the periphery of the map, in order from easiest to hardest, and linked to their two or three nearest nodes.
-- Each new node gets the next two unused rewards. Quotes past `REWARDS.lastAssignableQuote` are held back; raise it when the pool runs out (see Quotes below).
+## Layout
 
-Existing players keep their progress: wins and collected rewards are stored per game and reward, and a new node only ever adds connections, so nothing already unlocked becomes locked.
+`npm run campaign:generate -- --rebuild` lays out the whole map:
 
-`npm run campaign:generate -- --rebuild` lays out the whole map again. Klondike sits at the centre and Monte Carlo is the second node, next to it. Every other game is placed outwards by a centre score of 60% difficulty and 40% luck, so easy games stay near the middle and hard or luck-heavy games sit at the edges. Positions come from an equal-area golden-angle spiral with deterministic variation. Every game keeps the rewards it already has, but manual coordinate and connection edits are replaced, and connections can change, so a node a player had unlocked may become locked again until they win a neighbour.
+1. Positions come from the galaxy's shape alone (the `GALAXY` parameters): a round bulge, then four spiral arms, with field stars between them. Links follow: each arm chained outwards, then short bridges between arms, then whatever repairs keep every game reachable.
+2. Games are then fitted to those positions by simulated annealing (the `PLACEMENT` parameters), seeded so every rebuild is identical:
+   - Klondike at the centre, and the rest outwards by progression score: 75% difficulty and 25% complexity, so the first games are easy both to win and to learn. Luck is not counted separately, since difficulty already rates how rarely a game is won.
+   - No game is the only way through to an easier one (by difficulty): a hard game may only gate games at least as hard. This is checked on the map as release builds show it, without local-only games.
+   - Linked games of the same category cost more the nearer they are to the centre, and among the games within two steps of Klondike each category appears once, so the first games a player meets are all different.
+   - Local-only games take rim slots in the outer 30% that nothing else depends on.
 
-`npm run campaign:generate -- --rebalance-rewards` deals the rewards again without moving any node (combine it with `--rebuild` to do both). See Reward policy below. Rewards that move to another game leave that game's node incomplete for players who had collected them, so only rebalance when the catalog or ratings change substantially.
+## Reward policy
 
-`npm run campaign:generate -- --sprites-only` only redraws the game dot and flare sprites in `assets/images/campaign/`, for when their look in the script changes.
-
-Development validation in `src/data/campaign-map.ts` enforces:
-
-- Every enabled game has exactly one node.
-- The graph is connected.
-- Every node has two to five connections.
-- Connections are symmetric and contain no unknown paths.
-- Removing any single node leaves every other node connected, so no locked game can block an entire branch of progression.
-- Nodes do not overlap, and the nearest-node spacing ratio stays between 2.2 and 3 so the distribution remains varied without isolating nodes.
-- Every node has two to four rewards.
-- Tao and quote reward IDs are unique and exist in their catalogs.
-
-`src/__tests__/collectibles.test.ts` also checks that every Tao chapter and quote is awarded by exactly one node.
+- Every game has two or three rewards: a Tao chapter and one or two quotes, or two or three quotes.
+- The 81 Tao chapters go one each to the 81 easiest released games, by progression score, so the hardest games and local-only games have none. They are numbered outwards from Klondike (chapter 1), so the chapters are met roughly in order.
+- The quotes are shuffled and dealt: first so every game has two rewards, then the rest to released games at random, up to three each. Every quote is currently assigned.
+- Rewards are awarded one per win, in the order the node lists them: a Tao chapter first.
+- `npm run campaign:generate -- --rebalance-rewards` deals them again without moving any node.
 
 ## Adding a game
 
 1. Add the normal game definition and component.
-2. Run `npm run campaign:generate`. If it reports that it is out of quotes, raise `REWARDS.lastAssignableQuote` (see Quotes below).
+2. Run `npm run campaign:generate`. Existing nodes keep their positions, links and rewards; the new game is placed out on the rim, linked to its nearest nodes, and given two unused quotes. Every quote is assigned now, so first append new quotes to `QuotesText.ts` (appended, so existing IDs keep their quotes).
 3. Run `npx tsc --noEmit`, `npm run lint`, and `npm test`, which validates the map.
 
-## Reward policy
+## Locking the map
 
-- Every node has two or three rewards. Manual edits may add a fourth.
-- Tao chapters and quotes are woven together in proportion, so both turn up across the whole map.
-- Every game gets two rewards; the leftovers go as a third reward to the games that are easiest to beat a third time.
-- A normal run never moves rewards between games, so collected rewards stay complete. Only `--rebalance-rewards` does, and it keeps each game's existing rewards wherever they still fit.
-- Rewards are awarded one per win, in the order the node lists them.
+Once players have progress, the map must not change under them: which games are unlocked comes from the links, and every collected reward belongs to a game. `npm run campaign:lock` records every game's position, links and rewards in `src/data/campaign-map.lock.json`. From then on:
+
+- `--rebuild` and `--rebalance-rewards` are refused;
+- a plain run fails rather than move, unlink, drop or re-reward a locked game, so a new game can only be added around the locked ones;
+- a test checks the generated map against the lock, so a manual edit of a locked game fails too.
+
+The map is not locked yet. To change a locked map on purpose, delete the lock file, and migrate saved progress in `src/data/campaign-progress.ts` if it no longer fits.
+
+## Validation
+
+Development validation in `src/data/campaign-map.ts` enforces:
+
+- Every game has exactly one node, local-only games included.
+- The graph is connected, with and without local-only games.
+- Every node has one to six connections, and connections are symmetric and contain no unknown paths.
+- No single game holds back more than a fifth of the map, with and without local-only games.
+- Nodes do not overlap.
+- Every node has two or three rewards, with at most one Tao chapter, and none on local-only games.
+- Tao and quote reward IDs are unique and exist in their catalogs, and every Tao chapter is awarded.
+
+`src/__tests__/campaign-map.test.ts` also checks the placement rules above, and the lock once it exists.
 
 ## Quotes
 
-Quotes are awarded by ID, 1 to `REWARDS.lastAssignableQuote` (140) in `scripts/generate-campaign-map.mjs`; the rest of the 170 are held back for games still to come. See `docs/quotes.md` for the quote reveal, the collection and adding quotes or authors.
+See `docs/quotes.md` for the quote reveal, the collection and adding quotes or authors.
 
 ## Progress storage
 
 Nodes progress is stored separately under `cards.nodesProgress.v1`. It records the last played node, node-mode win counts, collected IDs, and the last processed game session for each node. Derived unlock state is not persisted: Klondike starts unlocked, and winning a node unlocks its direct neighbors.
 
-Progress version 2 dropped twelve quotes. Version 1 progress is migrated when it loads: dropped quotes are removed from the collection and later quote IDs move down to match.
+Progress version 2 dropped twelve quotes, and version 3 replaced the quotes with a hand-picked list. Older progress is migrated when it loads: dropped quotes are removed from the collection and kept ones follow their new IDs.

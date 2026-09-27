@@ -30,15 +30,43 @@ const distance = (
   right: { x: number; y: number },
 ) => Math.hypot(left.x - right.x, left.y - right.y);
 
-/** How hard a game is to beat repeatedly, matching the generator's grindScore. */
-function grind(gamePath: string) {
-  const rating = GAMES_DATA[gamePath]?.rating;
-  if (!rating) return 0;
-  return (
-    0.5 * Math.max(rating.difficulty, rating.luck) +
-    0.25 * (rating.difficulty + rating.luck)
+/** How far out a game belongs, matching the generator's progressionScore. */
+function progression(gamePath: string) {
+  const rating = GAMES_DATA[gamePath]!.rating;
+  return 0.75 * rating.difficulty + 0.25 * rating.complexity;
+}
+
+const isLocalOnly = (gamePath: string) =>
+  !!GAMES_DATA[gamePath]?.enabledOnLocalOnly;
+
+/** The map as release builds show it, without local-only games. */
+const RELEASED = GAME_DOT_DEFINITIONS.filter(
+  (gameDot) => !isLocalOnly(gameDot.path),
+).map((gameDot) => ({
+  ...gameDot,
+  connections: gameDot.connections.filter((path) => !isLocalOnly(path)),
+}));
+
+/** The games that can only be reached through `gate`. */
+function gatedBy(gameDots: typeof RELEASED, gate: string) {
+  const byPath = new Map(gameDots.map((gameDot) => [gameDot.path, gameDot]));
+  const reached = new Set<string>();
+  const queue = [CAMPAIGN_START_PATH];
+  while (queue.length > 0) {
+    const current = queue.pop()!;
+    if (current === gate || reached.has(current)) continue;
+    reached.add(current);
+    for (const next of byPath.get(current)!.connections) {
+      if (!reached.has(next)) queue.push(next);
+    }
+  }
+  return gameDots.filter(
+    (gameDot) => gameDot.path !== gate && !reached.has(gameDot.path),
   );
 }
+
+const hasTao = (gameDot: (typeof GAME_DOT_DEFINITIONS)[number]) =>
+  gameDot.rewards.some((reward) => reward.type === "tao");
 
 describe("Campaign map", () => {
   test("covers every game with a valid graph and rewards", () => {
@@ -98,18 +126,66 @@ describe("Campaign map", () => {
   });
 
   test("gentler games sit nearer the centre than punishing ones", () => {
-    const withRadius = GAME_DOT_DEFINITIONS.map((gameDot) => ({
+    const withRadius = RELEASED.map((gameDot) => ({
       radius: Math.hypot(gameDot.x, gameDot.y),
-      grind: grind(gameDot.path),
+      score: progression(gameDot.path),
     })).sort((left, right) => left.radius - right.radius);
 
-    const half = Math.floor(withRadius.length / 2);
-    const inner = withRadius.slice(0, half);
-    const outer = withRadius.slice(half);
-    const mean = (list: { grind: number }[]) =>
-      list.reduce((total, item) => total + item.grind, 0) / list.length;
+    const quarter = Math.floor(withRadius.length / 4);
+    const mean = (list: { score: number }[]) =>
+      list.reduce((total, item) => total + item.score, 0) / list.length;
+    const quarters = [0, 1, 2, 3].map((index) =>
+      mean(withRadius.slice(index * quarter, (index + 1) * quarter)),
+    );
+    for (let index = 1; index < quarters.length; index += 1) {
+      expect(quarters[index]).toBeGreaterThan(quarters[index - 1]);
+    }
+  });
 
-    expect(mean(inner)).toBeLessThan(mean(outer));
+  test("no game is the only way through to an easier one", () => {
+    for (const gate of RELEASED) {
+      if (gate.path === CAMPAIGN_START_PATH) continue;
+      const gateDifficulty = GAMES_DATA[gate.path]!.rating.difficulty;
+      for (const blocked of gatedBy(RELEASED, gate.path)) {
+        expect({
+          gate: gate.path,
+          blocked: blocked.path,
+          easier: GAMES_DATA[blocked.path]!.rating.difficulty < gateDifficulty,
+        }).toEqual({ gate: gate.path, blocked: blocked.path, easier: false });
+      }
+    }
+  });
+
+  test("the first games are each of a different category", () => {
+    const byPath = new Map(RELEASED.map((gameDot) => [gameDot.path, gameDot]));
+    const near = new Set([CAMPAIGN_START_PATH]);
+    for (let step = 0; step < 2; step += 1) {
+      for (const path of [...near]) {
+        byPath.get(path)!.connections.forEach((next) => near.add(next));
+      }
+    }
+    const categories = [...near].map((path) => GAMES_DATA[path]!.tags[0]);
+    expect(near.size).toBeGreaterThanOrEqual(6);
+    expect(new Set(categories).size).toBe(categories.length);
+  });
+
+  test("local-only games sit on the rim as dead ends, without Tao chapters", () => {
+    const byRadius = [...GAME_DOT_DEFINITIONS].sort(
+      (left, right) =>
+        Math.hypot(left.x, left.y) - Math.hypot(right.x, right.y),
+    );
+    const local = GAME_DOT_DEFINITIONS.filter((gameDot) =>
+      isLocalOnly(gameDot.path),
+    );
+    expect(local.length).toBeGreaterThan(0);
+    for (const gameDot of local) {
+      expect(byRadius.indexOf(gameDot)).toBeGreaterThanOrEqual(
+        Math.floor(byRadius.length * 0.7),
+      );
+      expect(hasTao(gameDot)).toBe(false);
+      // Nothing else is reached only through it.
+      expect(gatedBy(GAME_DOT_DEFINITIONS, gameDot.path)).toEqual([]);
+    }
   });
 
   test("every Tao chapter is awarded exactly once", () => {
@@ -122,21 +198,51 @@ describe("Campaign map", () => {
     expect(chapters.length).toBe(TAO_CHAPTER_COUNT);
   });
 
-  test("third rewards go to the games that are kindest to replay", () => {
-    const three = GAME_DOT_DEFINITIONS.filter(
-      (gameDot) => gameDot.rewards.length === 3,
+  test("Tao chapters go one each to the easiest games", () => {
+    const withTao = RELEASED.filter(hasTao);
+    const without = RELEASED.filter((gameDot) => !hasTao(gameDot));
+    for (const gameDot of GAME_DOT_DEFINITIONS) {
+      expect(
+        gameDot.rewards.filter((reward) => reward.type === "tao").length,
+      ).toBeLessThanOrEqual(1);
+    }
+    const hardestWithTao = Math.max(
+      ...withTao.map((gameDot) => progression(gameDot.path)),
     );
-    const two = GAME_DOT_DEFINITIONS.filter(
-      (gameDot) => gameDot.rewards.length === 2,
+    const easiestWithout = Math.min(
+      ...without.map((gameDot) => progression(gameDot.path)),
     );
-    expect(three.length).toBeGreaterThan(0);
-
-    // A third reward means beating the game three times, so none of them
-    // should be harder than the gentlest game that only has two.
-    const hardestWithThree = Math.max(...three.map((n) => grind(n.path)));
-    const gentlestWithTwo = Math.min(...two.map((n) => grind(n.path)));
-    expect(hardestWithThree).toBeLessThanOrEqual(gentlestWithTwo);
+    expect(hardestWithTao).toBeLessThanOrEqual(easiestWithout);
   });
+
+  const lockPath = path.join(__dirname, "../data/campaign-map.lock.json");
+  (fs.existsSync(lockPath) ? test : test.skip)(
+    "locked games keep their place, links and rewards",
+    () => {
+      const lock = JSON.parse(fs.readFileSync(lockPath, "utf8")) as {
+        gameDots: Record<string, (typeof GAME_DOT_DEFINITIONS)[number]>;
+      };
+      const byPath = new Map(
+        GAME_DOT_DEFINITIONS.map((gameDot) => [gameDot.path, gameDot]),
+      );
+      for (const [gamePath, locked] of Object.entries(lock.gameDots)) {
+        const gameDot = byPath.get(gamePath);
+        expect(gameDot).toBeDefined();
+        expect({ path: gamePath, x: gameDot!.x, y: gameDot!.y }).toEqual({
+          path: gamePath,
+          x: locked.x,
+          y: locked.y,
+        });
+        expect(gameDot!.connections).toEqual(
+          expect.arrayContaining(locked.connections),
+        );
+        expect({ path: gamePath, rewards: gameDot!.rewards }).toEqual({
+          path: gamePath,
+          rewards: locked.rewards,
+        });
+      }
+    },
+  );
 
   test("no single game locks away much of the map", () => {
     const byPath = new Map(
