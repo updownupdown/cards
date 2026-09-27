@@ -14,7 +14,7 @@ export const fifteenPuzzle: GameDefinition = {
   thumbnailCredit: {
     title: "Solving a Puzzle",
     artistName: "Okumura Masanobu",
-    date: "early to mid-18th century",
+    date: "Early to mid-18th century",
     sourceName: "Art Institute of Chicago",
     sourceLink: "https://www.artic.edu/artworks/21405",
   },

@@ -15,12 +15,11 @@ export const charlatan: GameDefinition = {
   },
   thumbnail: "Charlatan.webp",
   thumbnailCredit: {
-    title: "The Mountebank",
-    artistName: "Pietro Longhi",
-    date: "1757",
-    sourceName: "Wikimedia Commons",
-    sourceLink:
-      "https://commons.wikimedia.org/wiki/File:Pietro_Longhi_-_The_Mountebank_-_WGA13418.jpg",
+    title: "Quae Genus with a Quack Doctor",
+    artistName: "Thomas Rowlandson",
+    date: "October 1, 1821",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/789257",
   },
   background: GAME_BACKGROUNDS.oldRoom,
   animation: GameAnimations.Embers,

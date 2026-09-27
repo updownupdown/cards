@@ -11,12 +11,12 @@ export const bristol: GameDefinition = {
   rating: { complexity: 25, difficulty: 45, luck: 45 },
   thumbnail: "Bristol.webp",
   thumbnailCredit: {
-    title: "Bristol Harbour",
+    title: "Bristol Harbour with St Mary Redcliffe",
     artistName: "Joseph Walter",
-    date: "1836",
-    sourceName: "Wikimedia Commons",
+    date: "c.1835",
+    sourceName: "Art UK",
     sourceLink:
-      "https://commons.wikimedia.org/wiki/File:Joseph_Walter_-_Bristol_Harbour.jpg",
+      "https://artuk.org/discover/artworks/bristol-harbour-with-st-mary-redcliffe-187973",
   },
   background: GAME_BACKGROUNDS.shipwreck,
   animation: GameAnimations.Mist,

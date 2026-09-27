@@ -14,11 +14,12 @@ export const accordion: GameDefinition = {
   },
   thumbnail: "Accordion.webp",
   thumbnailCredit: {
-    title: "Young Man with a Concertina",
-    artistName: "Unknown American photographer",
-    date: "ca. 1861–65",
-    sourceName: "The Metropolitan Museum of Art",
-    sourceLink: "https://www.metmuseum.org/art/collection/search/504133",
+    title: "Pierre Mac Orlan",
+    artistName: "Jules Pascin",
+    date: "1924",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Pierre_Mac_Orlan_MET_DT4183.jpg",
   },
   background: GAME_BACKGROUNDS.fallLeaves,
   animation: GameAnimations.Leaves,

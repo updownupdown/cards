@@ -14,12 +14,12 @@ export const indian: GameDefinition = {
   rating: { complexity: 35, difficulty: 30, luck: 40 },
   thumbnail: "Indian.webp",
   thumbnailCredit: {
-    title:
-      "Posthumous Portrait of the Mughal Emperor Muhammad Shah Holding a Falcon",
-    artistName: "Muhammad Rizavi Hindi",
-    date: "1764",
-    sourceName: "Cleveland Museum of Art",
-    sourceLink: "https://clevelandart.org/art/2013.347.a",
+    title: "Map of the Island of Diu on the Coromandel Coast, India",
+    artistName: "anonymous",
+    date: "1675 - 1725",
+    sourceName: "Rijksmuseum",
+    sourceLink:
+      "https://www.rijksmuseum.nl/en/collection/object/Plattegrond-van-het-eiland-Dieuw-of-Diewij-aan-de-Koromandelkust-India--7366dbd9ee1fd29bf54df254859db4ff",
   },
   background: GAME_BACKGROUNDS.indianLandscape,
   animation: GameAnimations.Mist,

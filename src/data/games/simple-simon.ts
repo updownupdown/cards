@@ -10,12 +10,12 @@ export const simpleSimon: GameDefinition = {
   rating: { complexity: 35, difficulty: 55, luck: 25 },
   thumbnail: "SimpleSimon.webp",
   thumbnailCredit: {
-    title: "Simple Simon",
-    artistName: "Unknown illustrator, McLoughlin Bros.",
-    date: "1899",
+    title: "Simple Simon, from Denslow’s Mother Goose",
+    artistName: "W. W. Denslow",
+    date: "1901",
     sourceName: "Wikimedia Commons",
     sourceLink:
-      "https://commons.wikimedia.org/wiki/File:Simple-Simon-Nursery-Rhyme-illustration.jpg",
+      "https://commons.wikimedia.org/wiki/File:Simple_Simon_1_-_WW_Denslow_-_Project_Gutenberg_etext_18546.jpg",
   },
   background: GAME_BACKGROUNDS.modernStairs,
   animation: GameAnimations.Dust,

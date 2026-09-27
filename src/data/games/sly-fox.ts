@@ -14,12 +14,12 @@ export const slyFox: GameDefinition = {
   },
   thumbnail: "SlyFox.webp",
   thumbnailCredit: {
-    title: "Common Foxes in the Snow",
-    artistName: "Wilhelm Kuhnert",
-    date: "1893",
+    title: "Red Fox",
+    artistName: "Carl Rungius",
+    date: "1933",
     sourceName: "Wikimedia Commons",
     sourceLink:
-      "https://commons.wikimedia.org/wiki/File:Common_foxes_in_the_snow.jpg",
+      "https://commons.wikimedia.org/wiki/File:Red_Fox,_Carl_Rungius,_1933.jpg",
   },
   background: GAME_BACKGROUNDS.forestGrasses,
   animation: GameAnimations.Leaves,

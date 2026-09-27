@@ -15,11 +15,12 @@ export const jailbreak: GameDefinition = {
   },
   thumbnail: "Jailbreak.webp",
   thumbnailCredit: {
-    title: "The Giant Wheel, from Imaginary Prisons",
-    artistName: "Giovanni Battista Piranesi",
-    date: "1761",
-    sourceName: "Art Institute of Chicago",
-    sourceLink: "https://www.artic.edu/artworks/7364",
+    title: "Escape of the Duke of Beaufort, 1648",
+    artistName: "Caspar Luyken",
+    date: "1699",
+    sourceName: "Rijksmuseum",
+    sourceLink:
+      "https://www.rijksmuseum.nl/en/collection/object/Ontsnapping-van-de-hertog-van-Beaufort-1648--c1781418e042ecb22a0cb5c853c988a0",
   },
   background: GAME_BACKGROUNDS.stoneWall,
   animation: GameAnimations.Spiders,

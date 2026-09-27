@@ -8,7 +8,7 @@ export const royalRest: GameDefinition = {
   title: "Royal Rest",
   thumbnail: "RoyalRest.webp",
   thumbnailCredit: {
-    title: "The State Bed Chamber, Stowe",
+    title: "The State Bed Chamber, Stowe Buckinghamshire",
     artistName: "Joseph Nash",
     date: "1838",
     sourceName: "The Metropolitan Museum of Art",

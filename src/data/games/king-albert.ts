@@ -11,12 +11,12 @@ export const kingAlbert: GameDefinition = {
   rating: { complexity: 35, difficulty: 70, luck: 20 },
   thumbnail: "KingAlbert.webp",
   thumbnailCredit: {
-    title: "Albert, King of the Belgians",
-    artistName: "Harris & Ewing",
-    date: "1914",
-    sourceName: "Wikimedia Commons",
+    title: "Albert, King of the Belgians, in Military Uniform",
+    artistName: "Speaight Ltd.",
+    date: "1914 - 1918",
+    sourceName: "Rijksmuseum",
     sourceLink:
-      "https://commons.wikimedia.org/wiki/File:ALBERT,_H.R.H._KING_OF_THE_BELGIANS_LCCN2016865826.jpg",
+      "https://www.rijksmuseum.nl/en/collection/object/Portret-van-Albert-koning-van-Belgie-in-militaire-kleding-tijdens-de-Eerste-Wereldoorlog--7eae4c93311a2a9e06436b5e79fc685d",
   },
   background: GAME_BACKGROUNDS.aridHill,
   animation: GameAnimations.Leaves,

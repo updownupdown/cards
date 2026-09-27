@@ -14,12 +14,12 @@ export const pyramid: GameDefinition = {
   },
   thumbnail: "Pyramid.webp",
   thumbnailCredit: {
-    title: "The Great Sphinx, Pyramids of Giza",
+    title: "The Great Sphinx, Pyramids of Gizeh, July 17th, 1839",
     artistName: "David Roberts",
-    date: "1839",
-    sourceName: "Wikimedia Commons",
+    date: "1846-1849",
+    sourceName: "Artvee",
     sourceLink:
-      "https://commons.wikimedia.org/wiki/File:The_Great_Sphinx,_Pyramids_of_Gizeh-1839)_by_David_Roberts,_RA.jpg",
+      "https://artvee.com/dl/the-great-sphinx-pyramids-of-gizeh-giza-july-17th-1839/",
   },
   background: GAME_BACKGROUNDS.sahara,
   animation: GameAnimations.Sand,

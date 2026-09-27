@@ -12,11 +12,13 @@ export const lightsOut: GameDefinition = {
   rating: { complexity: 20, difficulty: 55, luck: 0 },
   thumbnail: "LightsOut.webp",
   thumbnailCredit: {
-    title: "Searching for Fireflies",
-    artistName: "Suzuki Harunobu",
-    date: "1768",
-    sourceName: "Art Institute of Chicago",
-    sourceLink: "https://www.artic.edu/artworks/77297",
+    title:
+      "Eruption of Mt Vesuvius, Seen from the Ponte della Maddalena in Naples",
+    artistName: "Francesco Piranesi",
+    date: "c. 1783",
+    sourceName: "Rijksmuseum",
+    sourceLink:
+      "https://www.rijksmuseum.nl/en/collection/object/Eruption-of-Mt-Vesuvius-Seen-from-the-Ponte-della-Maddalena-in-Naples--e30197f5500c476812d6b072e2b4186d",
   },
   background: GAME_BACKGROUNDS.darkAlley,
   animation: GameAnimations.Snow,

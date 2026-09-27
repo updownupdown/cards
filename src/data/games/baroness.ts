@@ -14,11 +14,12 @@ export const baroness: GameDefinition = {
   },
   thumbnail: "Baroness.webp",
   thumbnailCredit: {
-    title: "Louise Émilie, Baroness of ***",
-    artistName: "Augustin de Saint-Aubin",
-    date: "1779",
-    sourceName: "Art Institute of Chicago",
-    sourceLink: "https://www.artic.edu/artworks/30274",
+    title: "Portrait of the Baroness of Bernus",
+    artistName: "Philipp Veit",
+    date: "1838",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Portrait_of_the_Baroness_of_Bernus_(SM_1798).png",
   },
   background: GAME_BACKGROUNDS.cozyRoom2,
   animation: GameAnimations.Dust,

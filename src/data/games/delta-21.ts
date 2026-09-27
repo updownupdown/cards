@@ -14,11 +14,12 @@ export const delta21: GameDefinition = {
   },
   thumbnail: "Delta21.webp",
   thumbnailCredit: {
-    title: "Life-Size Black Bass",
-    artistName: "Winslow Homer",
-    date: "1904",
-    sourceName: "Art Institute of Chicago",
-    sourceLink: "https://www.artic.edu/artworks/189152",
+    title: "Nakahara in Sagami Province",
+    artistName: "Katsushika Hokusai",
+    date: "1831 - 1835",
+    sourceName: "Rijksmuseum",
+    sourceLink:
+      "https://www.rijksmuseum.nl/en/collection/object/Nakahara-in-de-provincie-Sagami--85619628311e8b990c85b7efc374e441",
   },
   background: GAME_BACKGROUNDS.river,
   animation: GameAnimations.Birds,

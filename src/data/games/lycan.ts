@@ -14,12 +14,11 @@ export const lycan: GameDefinition = {
   },
   thumbnail: "Lycan.webp",
   thumbnailCredit: {
-    title: "The Werewolf",
-    artistName: "Lucas Cranach the Elder",
-    date: "ca. 1510–15",
+    title: "Lone Wolf",
+    artistName: "Alfred Wierusz-Kowalski",
     sourceName: "Wikimedia Commons",
     sourceLink:
-      "https://commons.wikimedia.org/wiki/File:Weerwolf_met_kind_en_verscheurde_lichamen,_RP-P-OB-4430.jpg",
+      "https://commons.wikimedia.org/wiki/File:Alfred_Wierusz-Kowalski_-_Samotny_wilk.jpg",
   },
   background: GAME_BACKGROUNDS.forest,
   animation: GameAnimations.Mist,

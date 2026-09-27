@@ -14,12 +14,11 @@ export const cabinSiege: GameDefinition = {
   },
   thumbnail: "CabinSiege.webp",
   thumbnailCredit: {
-    title: "The Triumph of Death",
-    artistName: "Pieter Bruegel the Elder",
-    date: "ca. 1562",
-    sourceName: "Wikimedia Commons",
-    sourceLink:
-      "https://commons.wikimedia.org/wiki/File:The_Triumph_of_Death_by_Pieter_Bruegel_the_Elder.jpg",
+    title: "The Cabin",
+    artistName: "Francis Scott King",
+    date: "ca. 1880–1910",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/908836",
   },
   background: GAME_BACKGROUNDS.dampForest,
   animation: GameAnimations.Leaves,

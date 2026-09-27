@@ -16,11 +16,11 @@ export const blackberryPie: GameDefinition = {
   animation: GameAnimations.Leaves,
   thumbnail: "BlackberryPie.webp",
   thumbnailCredit: {
-    title: "Just Dessert",
-    artistName: "William Michael Harnett",
-    date: "1891",
-    sourceName: "Art Institute of Chicago",
-    sourceLink: "https://www.artic.edu/artworks/44065",
+    title: 'Gathering Berries (from "Harper\'s Weekly," Vol. XVIII)',
+    artistName: "Winslow Homer",
+    date: "July 11, 1874",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/348612",
   },
   cardDescription:
     "Build matching trios under berry cards to help the Queen bake her pie.",

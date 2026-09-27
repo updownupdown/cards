@@ -14,11 +14,12 @@ export const parallels: GameDefinition = {
   },
   thumbnail: "Parallels.webp",
   thumbnailCredit: {
-    title: "Sudden Shower over Shin-Ōhashi Bridge and Atake",
+    title:
+      "Sudden Shower over Shin-Ōhashi Bridge and Atake, from One Hundred Famous Views of Edo",
     artistName: "Utagawa Hiroshige",
     date: "1857",
     sourceName: "Cleveland Museum of Art",
-    sourceLink: "https://clevelandart.org/art/1921.318",
+    sourceLink: "https://www.clevelandart.org/art/1921.318",
   },
   background: GAME_BACKGROUNDS.stoneWall,
   animation: GameAnimations.Rain,

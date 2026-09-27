@@ -15,11 +15,11 @@ export const pagoda: GameDefinition = {
   thumbnail: "Pagoda.webp",
   thumbnailCredit: {
     title:
-      "The Thousand Buddha Hall and the Pagoda of the Cloudy Cliff Monastery",
+      'The Thousand Buddha Hall and the Pagoda of the "Cloudy Cliff" Monastery, from Twelve Views of Tiger Hill, Suzhou',
     artistName: "Shen Zhou",
     date: "after 1490",
     sourceName: "Cleveland Museum of Art",
-    sourceLink: "https://clevelandart.org/art/1964.371.7",
+    sourceLink: "https://www.clevelandart.org/art/1964.371.7",
   },
   background: GAME_BACKGROUNDS.forest,
   animation: GameAnimations.Leaves,

@@ -16,11 +16,11 @@ export const rankAndFile: GameDefinition = {
   thumbnail: "RankAndFile.webp",
   thumbnailCredit: {
     title:
-      "Soldiers Marching with Trophies of War, from The Triumph of Julius Caesar",
+      "The Triumph of Julius Caesar: Soldiers Marching with Trophies of War",
     artistName: "Andrea Andreani",
     date: "1593–99",
     sourceName: "Cleveland Museum of Art",
-    sourceLink: "https://clevelandart.org/art/1930.583.4",
+    sourceLink: "https://www.clevelandart.org/art/1930.583.4",
   },
   background: GAME_BACKGROUNDS.city,
   animation: GameAnimations.Clouds,

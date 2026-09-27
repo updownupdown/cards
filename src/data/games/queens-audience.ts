@@ -14,12 +14,12 @@ export const queensAudience: GameDefinition = {
   },
   thumbnail: "QueensAudience.webp",
   thumbnailCredit: {
-    title: "The Secret of England's Greatness",
-    artistName: "Thomas Jones Barker",
-    date: "ca. 1862–63",
-    sourceName: "Wikimedia Commons",
+    title: "Queen Victoria’s Procession to the Guildhall, 9 November 1837",
+    artistName: "James Henry Nixon",
+    date: "1838",
+    sourceName: "Art UK",
     sourceLink:
-      "https://commons.wikimedia.org/wiki/File:The_Secret_of_England%27s_Greatness%27_(Queen_Victoria_presenting_a_Bible_in_the_Audience_Chamber_at_Windsor)_by_Thomas_Jones_Barker.jpg",
+      "https://artuk.org/discover/artworks/queen-victorias-procession-to-the-guildhall-9-november-1837-50960",
   },
   background: GAME_BACKGROUNDS.oldRoom,
   animation: GameAnimations.Dust,

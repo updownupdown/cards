@@ -19,11 +19,12 @@ export const picketFence: GameDefinition = {
   },
   thumbnail: "PicketFence.webp",
   thumbnailCredit: {
-    title: "Homestead with Picket Fence and Flowers",
-    artistName: "Unknown American photographer",
-    date: "ca. 1857–65",
-    sourceName: "Cleveland Museum of Art",
-    sourceLink: "https://clevelandart.org/art/2021.72",
+    title: "Houses at the Edge of a Village in the Dunes",
+    artistName: "Salomon Leonardus Verveer",
+    date: "1875",
+    sourceName: "Rijksmuseum",
+    sourceLink:
+      "https://www.rijksmuseum.nl/en/collection/object/Houses-at-the-Edge-of-a-Village-in-the-Dunes--c15df578ad9247d7f28afa1b153d02c5",
   },
   background: GAME_BACKGROUNDS.oldPath,
   animation: GameAnimations.Pollen,

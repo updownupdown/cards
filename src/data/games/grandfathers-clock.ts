@@ -18,11 +18,12 @@ export const grandfathersClock: GameDefinition = {
   },
   thumbnail: "GrandfatherClock.webp",
   thumbnailCredit: {
-    title: "Tall Case Clock",
-    artistName: "Uriah Dyer",
-    date: "1820–84",
-    sourceName: "Art Institute of Chicago",
-    sourceLink: "https://www.artic.edu/artworks/145682",
+    title: "Pendulum Clock Crowned with a Bust",
+    artistName: "anonymous",
+    date: "in or after 1706",
+    sourceName: "Rijksmuseum",
+    sourceLink:
+      "https://www.rijksmuseum.nl/en/collection/object/Pendule-bekroond-met-buste--95917566038e68f1ebff75e459c0feff",
   },
   background: GAME_BACKGROUNDS.bookstore,
   animation: GameAnimations.Dust,

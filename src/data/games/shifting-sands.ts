@@ -16,12 +16,11 @@ export const shiftingSands: GameDefinition = {
   animation: GameAnimations.Sand,
   thumbnail: "ShiftingSands.webp",
   thumbnailCredit: {
-    title: "Building a Sand Castle",
-    artistName: "Unknown trade card artist",
-    date: "ca. 1885",
-    sourceName: "Wikimedia Commons",
-    sourceLink:
-      "https://commons.wikimedia.org/wiki/File:Building_a_Sand_Castle,_about_1885_..._(52189746220).jpg",
+    title: "Sand Dunes, Harlech, North Wales",
+    artistName: "George Elbert Burr",
+    date: "1899",
+    sourceName: "Artvee",
+    sourceLink: "https://artvee.com/dl/sand-dunes-harlech-north-wales/",
   },
   gameColorDark: "#645641",
   gameColorPale: "#f4d99b",

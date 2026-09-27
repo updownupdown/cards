@@ -14,12 +14,11 @@ export const ascent: GameDefinition = {
   },
   thumbnail: "Ascent.webp",
   thumbnailCredit: {
-    title: "The Ascent of the Matterhorn",
-    artistName: "Gustave Doré",
-    date: "1865",
-    sourceName: "Wikimedia Commons",
-    sourceLink:
-      "https://commons.wikimedia.org/wiki/File:Matterhorn_ascent_Dore.jpg",
+    title: "Mountain Scene",
+    artistName: "Albert Bierstadt",
+    date: "1880–90",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/10151",
   },
   background: GAME_BACKGROUNDS.mountain1,
   animation: GameAnimations.Snow,

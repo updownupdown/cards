@@ -18,12 +18,12 @@ export const royalCotillion: GameDefinition = {
   },
   thumbnail: "RoyalCotillion.webp",
   thumbnailCredit: {
-    title: "The Cotillion Dance",
-    artistName: "James Caldwall",
-    date: "1771",
+    title: "Charles II dancing at a Ball at Court",
+    artistName: "Hieronymus Janssens",
+    date: "1660",
     sourceName: "Wikimedia Commons",
     sourceLink:
-      "https://commons.wikimedia.org/wiki/File:James_Caldwall_-_The_Cotillion_Dance_-_B1977.14.11242_-_Yale_Center_for_British_Art.jpg",
+      "https://commons.wikimedia.org/wiki/File:Hieronymus_Janssens_(Antwerp_1624_-_Antwerp_1693)_-_Charles_II_dancing_at_a_Ball_at_Court_-_RCIN_400525_-_Royal_Collection.jpg",
   },
   background: GAME_BACKGROUNDS.alhambra,
   animation: GameAnimations.ManaDust,

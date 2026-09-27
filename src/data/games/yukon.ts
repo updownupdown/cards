@@ -15,12 +15,11 @@ export const yukon: GameDefinition = {
   rating: { complexity: 35, difficulty: 55, luck: 35 },
   thumbnail: "Yukon.webp",
   thumbnailCredit: {
-    title: "September Evening, Mount McKinley",
-    artistName: "Sydney Laurence",
-    date: "1925",
+    title: "Mountains near Resurrection Bay, Alaska",
+    artistName: "Prescott Jones",
     sourceName: "Wikimedia Commons",
     sourceLink:
-      "https://commons.wikimedia.org/wiki/File:September_Evening,_Mount_McKinley,_Alaska,_by_Sydney_Laurence.jpg",
+      "https://commons.wikimedia.org/wiki/File:Mountains_near_Resurrection_Bay,_Alaska_SAAM-1972.29_1.jpg",
   },
   background: GAME_BACKGROUNDS.yukon,
   animation: GameAnimations.Clouds,
