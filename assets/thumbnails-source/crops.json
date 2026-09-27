@@ -1,26 +1,68 @@
 {
+  "Accordion": {
+    "left": 0.015,
+    "top": 0.015,
+    "right": 0.015,
+    "bottom": 0.015
+  },
+  "Ascent": {
+    "left": 0.01,
+    "top": 0.015,
+    "right": 0.01,
+    "bottom": 0.015
+  },
+  "BakersDozen": {
+    "left": 0.03,
+    "top": 0.03,
+    "right": 0.03,
+    "bottom": 0.03
+  },
+  "Beehive": false,
+  "BeleagueredCastle": false,
+  "BlackHole": {
+    "left": 0,
+    "top": 0,
+    "right": 0,
+    "bottom": 0.5
+  },
   "BlackberryPie": {
     "left": 0.065,
     "top": 0.115,
     "right": 0.095,
     "bottom": 0.075
   },
+  "Bowling": false,
   "Bristol": false,
   "CabinSiege": false,
+  "CafeQueue": false,
   "Carpet": {
     "left": 0.075,
     "top": 0.06,
     "right": 0.1,
     "bottom": 0.13
   },
+  "ChapterAndVerse": {
+    "left": 0,
+    "top": 0.1,
+    "right": 0,
+    "bottom": 0.1
+  },
   "Charlatan": false,
   "CityGrid": false,
+  "Dynasty": {
+    "left": 0,
+    "top": 0.01,
+    "right": 0,
+    "bottom": 0.01
+  },
   "Easthaven": {
-    "left": 0.055,
-    "top": 0.048,
-    "right": 0.052,
+    "left": 0.065,
+    "top": 0.068,
+    "right": 0.062,
     "bottom": 0.085
   },
+  "ElementaryDetective": false,
+  "FifteenPuzzle": false,
   "Fortress": false,
   "FourSeasons": false,
   "FreeCell": {
@@ -39,13 +81,28 @@
   },
   "Golf": false,
   "GrandfatherClock": false,
-  "Herbalist": false,
-  "Indian": false,
-  "Infiltrator": false,
+  "Herbalist": {
+    "left": 0,
+    "top": 0.02,
+    "right": 0,
+    "bottom": 0
+  },
+  "Indian": {
+    "left": 0.025,
+    "top": 0.034,
+    "right": 0.025,
+    "bottom": 0.031
+  },
+  "Infiltrator": {
+    "left": 0.03,
+    "top": 0.03,
+    "right": 0.03,
+    "bottom": 0.03
+  },
   "Jailbreak": {
-    "left": 0.14,
+    "left": 0.15,
     "top": 0.075,
-    "right": 0.145,
+    "right": 0.155,
     "bottom": 0.1
   },
   "KingAlbert": {
@@ -82,6 +139,12 @@
   },
   "Pagoda": false,
   "Parallels": false,
+  "Penguin": {
+    "left": 0.015,
+    "top": 0,
+    "right": 0,
+    "bottom": 0
+  },
   "PicketFence": {
     "left": 0.015,
     "top": 0.014,
@@ -94,6 +157,12 @@
     "top": 0.064,
     "right": 0.069,
     "bottom": 0.145
+  },
+  "PokerSquares": {
+    "left": 0.02,
+    "top": 0.02,
+    "right": 0.02,
+    "bottom": 0.02
   },
   "QueensAudience": {
     "left": 0.02,
@@ -117,7 +186,19 @@
   "SeahavenTowers": false,
   "SimpleSimon": false,
   "Spiderette": false,
+  "Stalker": {
+    "left": 0.015,
+    "top": 0.015,
+    "right": 0.015,
+    "bottom": 0.015
+  },
   "TenTwentyThirty": false,
+  "ThreePeaks": {
+    "left": 0.01,
+    "top": 0.01,
+    "right": 0.01,
+    "bottom": 0.01
+  },
   "ThumbAndPouch": {
     "left": 0.032,
     "top": 0.16,
