@@ -23,3 +23,7 @@ rm -f sheet.html
 node --experimental-strip-types --no-warnings gen2.ts
 python3 -c "t=open('template2.html').read(); d=open('data2.json').read(); open('gallery2.html','w').write(t.replace('__DATA__', d.replace('</','<\\\\/')))"
 rm -f sheet2.html
+# Round three: round-two picks plus two organic versions -> gallery3.html
+node --experimental-strip-types --no-warnings gen3.ts
+python3 -c "t=open('template3.html').read(); d=open('data3.json').read(); open('gallery3.html','w').write(t.replace('__DATA__', d.replace('</','<\\\\/')))"
+rm -f sheet3.html

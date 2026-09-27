@@ -26,7 +26,7 @@ function check(c: Constellation, label: string) {
 const build = (ch: number, cand: Candidate) => { const b = createBuilder(); cand.draw(b); return b.build(ch, cand.name, "B", cand.keyPhrases, cand.nebulaShare ?? 0.25); };
 
 type Entry = { id: string; label: string; name: string; theme: string; key: string[]; c: Constellation; src: string };
-const chapters: { n: number; e: Entry[] }[] = [];
+export const chapters: { n: number; e: Entry[] }[] = [];
 for (let ch = 1; ch <= 81; ch++) {
   const pick = PICKS[ch];
   let first: Entry;
