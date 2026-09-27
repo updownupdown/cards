@@ -1,0 +1,507 @@
+<title>Quote Shortlist</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&family=Oooh+Baby&family=Outfit:wght@300;400;500;600&display=swap">
+<style>
+  :root {
+    --paper: #f3f4ef;
+    --surface: #fbfcf8;
+    --ink: #1c221f;
+    --muted: #646e68;
+    --line: #d9ddd5;
+    --keep: #2c7a54;
+    --keep-wash: #e3f0e7;
+    --drop: #b04a33;
+    --drop-wash: #f6e7e2;
+    --undecided: #c6ccc4;
+    --focus: #3b5f95;
+    --serif: "Newsreader", Georgia, "Times New Roman", serif;
+    --sans: "Outfit", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --pen: "Oooh Baby", "Segoe Script", cursive;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --paper: #141816;
+      --surface: #1c211e;
+      --ink: #e5e9e4;
+      --muted: #97a19b;
+      --line: #313833;
+      --keep: #6cc596;
+      --keep-wash: #1d3327;
+      --drop: #e38269;
+      --drop-wash: #3a231d;
+      --undecided: #444c46;
+      --focus: #8fb0e6;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --paper: #141816;
+    --surface: #1c211e;
+    --ink: #e5e9e4;
+    --muted: #97a19b;
+    --line: #313833;
+    --keep: #6cc596;
+    --keep-wash: #1d3327;
+    --drop: #e38269;
+    --drop-wash: #3a231d;
+    --undecided: #444c46;
+    --focus: #8fb0e6;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font: 400 15px/1.5 var(--sans);
+    padding: 0 16px 64px;
+  }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  .wrap { max-width: 860px; margin: 0 auto; }
+
+  /* ── Top bar ───────────────────────────────── */
+  .bar {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 5;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    margin: 0 -16px;
+    padding: 12px 16px 12px;
+  }
+  .bar-inner { max-width: 860px; margin: 0 auto; display: grid; gap: 10px; }
+  .bar-top { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  h1 {
+    font: 400 34px/1 var(--pen);
+    margin: 0;
+    padding-top: 4px;
+    letter-spacing: 0.01em;
+  }
+  .tally { display: flex; gap: 18px; flex-wrap: wrap; font-variant-numeric: tabular-nums; margin-left: auto; align-items: baseline; }
+  .tally b { font-weight: 600; font-size: 20px; }
+  .tally .kept b { color: var(--keep); }
+  .tally .dropped b { color: var(--drop); }
+  .tally span { color: var(--muted); font-size: 13px; }
+  .tally .target { color: var(--muted); font-size: 13px; }
+  .tally .target.hit { color: var(--keep); font-weight: 500; }
+
+  .meter { position: relative; height: 8px; border-radius: 4px; background: var(--undecided); display: flex; overflow: visible; }
+  .meter i { display: block; height: 100%; }
+  .meter .k { background: var(--keep); border-radius: 4px 0 0 4px; }
+  .meter .d { background: var(--drop); margin-left: auto; border-radius: 0 4px 4px 0; }
+  .meter .mark { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--ink); }
+  .meter .mark::after {
+    content: "250"; position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+    font-size: 10px; color: var(--muted); font-variant-numeric: tabular-nums;
+  }
+  .meter-wrap { padding-bottom: 12px; }
+
+  .filters { margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); }
+  .seg button { border: 0; background: none; padding: 5px 10px; font-size: 13px; cursor: pointer; color: var(--muted); }
+  .seg button + button { border-left: 1px solid var(--line); }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  .filters select, .filters input[type="search"] {
+    border: 1px solid var(--line); border-radius: 8px; background: var(--surface);
+    padding: 5px 8px; font-size: 13px; min-width: 0;
+  }
+  .filters input[type="search"] { flex: 1 1 160px; }
+  .filters select { max-width: 220px; }
+  .export-btn {
+    border: 1px solid var(--ink); background: var(--ink); color: var(--paper);
+    border-radius: 8px; padding: 6px 14px; font-weight: 500; cursor: pointer;
+  }
+
+  /* ── Export panel ─────────────────────────── */
+  .panel {
+    margin-top: 16px; background: var(--surface); border: 1px solid var(--line);
+    border-radius: 10px; padding: 16px; display: grid; gap: 14px;
+  }
+  .panel h2 { margin: 0; font-size: 15px; font-weight: 600; }
+  .panel p { margin: 0; color: var(--muted); font-size: 13px; max-width: 65ch; }
+  .panel textarea {
+    width: 100%; min-height: 96px; resize: vertical; border: 1px solid var(--line);
+    border-radius: 8px; background: var(--paper); padding: 8px 10px;
+    font: 13px/1.5 ui-monospace, "SFMono-Regular", Menlo, monospace;
+  }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .btn {
+    border: 1px solid var(--line); background: var(--paper); border-radius: 8px;
+    padding: 5px 12px; cursor: pointer; font-size: 13px;
+  }
+  .btn.primary { background: var(--keep); border-color: var(--keep); color: var(--surface); }
+  .btn.danger { color: var(--drop); border-color: var(--drop); }
+  .status { font-size: 13px; color: var(--muted); }
+
+  /* ── Quote list ───────────────────────────── */
+  .summary { color: var(--muted); font-size: 13px; margin: 16px 0 8px; font-variant-numeric: tabular-nums; }
+  .list { display: grid; gap: 10px; }
+  .quote {
+    display: grid; grid-template-columns: 1fr auto; gap: 6px 16px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 16px; scroll-margin-top: 110px;
+  }
+  .quote.is-keep { background: var(--keep-wash); border-color: var(--keep); }
+  .quote.is-drop { background: var(--drop-wash); border-color: transparent; }
+  .quote.is-drop .text, .quote.is-drop .who { opacity: 0.55; }
+  .meta { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+  .id { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--ink); }
+  .chip {
+    border: 1px solid var(--line); border-radius: 99px; padding: 0 7px; font-size: 11px;
+    letter-spacing: 0.03em; text-transform: uppercase; background: var(--paper);
+  }
+  .chip.warn { border-color: var(--drop); color: var(--drop); }
+  .text {
+    grid-column: 1; font: 400 19px/1.45 var(--serif); margin: 2px 0 0;
+    white-space: pre-line; text-wrap: pretty; max-width: 62ch;
+  }
+  .who { grid-column: 1; font-size: 14px; }
+  .who b { font-weight: 500; }
+  .who span { color: var(--muted); }
+  .choose { grid-column: 2; grid-row: 1 / span 3; display: flex; flex-direction: column; gap: 6px; align-self: start; }
+  .choose button {
+    width: 76px; border: 1px solid var(--line); background: var(--paper); border-radius: 8px;
+    padding: 6px 0; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--muted);
+  }
+  .choose .keep[aria-pressed="true"] { background: var(--keep); border-color: var(--keep); color: var(--surface); }
+  .choose .drop[aria-pressed="true"] { background: var(--drop); border-color: var(--drop); color: var(--surface); }
+  .choose button:hover { border-color: var(--ink); }
+  .empty { color: var(--muted); padding: 32px 0; text-align: center; }
+  .keys { color: var(--muted); font-size: 12px; margin-top: 24px; }
+  kbd { font: 11px ui-monospace, Menlo, monospace; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; background: var(--surface); }
+
+  @media (max-width: 560px) {
+    h1 { font-size: 28px; }
+    h1 { flex: 1; }
+    .tally { order: 3; flex-basis: 100%; margin-left: 0; gap: 12px; }
+    .bar-top { gap: 8px; }
+    .quote { grid-template-columns: 1fr; }
+    .choose { grid-column: 1; grid-row: auto; flex-direction: row; }
+    .choose button { flex: 1; width: auto; }
+    .text { font-size: 18px; }
+    .filters select { max-width: 100%; flex: 1 1 140px; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .quote { transition: background-color 0.15s, border-color 0.15s; }
+  }
+</style>
+
+<header class="bar">
+  <div class="bar-inner">
+    <div class="bar-top">
+      <h1>Quote shortlist</h1>
+      <div class="tally" aria-live="polite">
+        <div class="kept"><b id="n-keep">0</b> <span>kept</span></div>
+        <div class="dropped"><b id="n-drop">0</b> <span>dropped</span></div>
+        <div><b id="n-open">0</b> <span>to decide</span></div>
+        <div class="target" id="target"></div>
+      </div>
+      <button class="export-btn" id="export-toggle" aria-expanded="false" aria-controls="panel">Export</button>
+    </div>
+    <div class="meter-wrap">
+      <div class="meter" aria-hidden="true">
+        <i class="k" id="m-keep"></i><i class="d" id="m-drop"></i>
+        <span class="mark" id="m-mark"></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="panel" id="panel" hidden>
+    <div>
+      <h2>Quote IDs to keep</h2>
+      <p>Paste this list into a new session to update the quotes library. IDs 1–208 are the quotes in the app now; 209–500 are new.</p>
+    </div>
+    <textarea id="out-keep" readonly aria-label="Kept quote IDs"></textarea>
+    <div class="row">
+      <button class="btn primary" id="copy-keep">Copy kept IDs</button>
+      <button class="btn" id="copy-all">Copy kept and dropped</button>
+      <span class="status" id="copy-status"></span>
+    </div>
+    <div>
+      <h2>Restore</h2>
+      <p>Your choices are saved in this browser only. To continue on another device, copy "kept and dropped" there and paste it here. A plain list of IDs marks those quotes as kept.</p>
+    </div>
+    <textarea id="in-restore" aria-label="Choices to restore" placeholder="keep: 1, 2, 5&#10;drop: 3, 4"></textarea>
+    <div class="row">
+      <button class="btn" id="restore">Restore</button>
+      <button class="btn danger" id="clear">Clear all choices</button>
+      <button class="btn danger" id="clear-yes" hidden>Yes, clear all 500</button>
+      <span class="status" id="restore-status"></span>
+    </div>
+  </section>
+
+    <div class="filters">
+    <div class="seg" role="group" aria-label="Decision">
+      <button data-status="all" aria-pressed="true">All</button>
+      <button data-status="open" aria-pressed="false">To decide</button>
+      <button data-status="keep" aria-pressed="false">Kept</button>
+      <button data-status="drop" aria-pressed="false">Dropped</button>
+    </div>
+    <div class="seg" role="group" aria-label="List">
+      <button data-set="all" aria-pressed="true">1–500</button>
+      <button data-set="current" aria-pressed="false">In app</button>
+      <button data-set="new" aria-pressed="false">New</button>
+    </div>
+    <select id="author" aria-label="Author"></select>
+    <select id="sort" aria-label="Order">
+      <option value="id">By ID</option>
+      <option value="author">By author</option>
+    </select>
+    <input type="search" id="search" placeholder="Search text, author, source" aria-label="Search">
+  </div>
+
+  <p class="summary" id="summary"></p>
+  <div class="list" id="list"></div>
+  <p class="empty" id="empty" hidden>No quotes match these filters.</p>
+  <p class="keys">Keyboard: <kbd>↑</kbd> <kbd>↓</kbd> move between quotes, <kbd>K</kbd> keep, <kbd>X</kbd> drop, <kbd>U</kbd> undecide. Choosing moves to the next quote.</p>
+</main>
+
+<script>
+const QUOTES = __QUOTES__;
+const TARGET = 250;
+const STORE = "quote-picker-v1";
+const byId = new Map(QUOTES.map((q) => [q.id, q]));
+
+let choice = {}; // id -> "keep" | "drop"
+try {
+  const saved = JSON.parse(localStorage.getItem(STORE) || "{}");
+  for (const [id, v] of Object.entries(saved)) {
+    if (byId.has(+id) && (v === "keep" || v === "drop")) choice[id] = v;
+  }
+} catch (e) {}
+function save() {
+  try { localStorage.setItem(STORE, JSON.stringify(choice)); } catch (e) {}
+}
+
+const filters = { status: "all", set: "all", author: "", sort: "id", search: "" };
+const $ = (id) => document.getElementById(id);
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+
+// Author menu, with each author's quote count.
+const authors = new Map();
+for (const q of QUOTES) authors.set(q.author, (authors.get(q.author) || 0) + 1);
+$("author").innerHTML =
+  `<option value="">All ${authors.size} authors</option>` +
+  [...authors].sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([name, n]) => `<option value="${esc(name)}">${esc(name)} (${n})</option>`).join("");
+
+// Cards are built once; filtering only hides them.
+const cards = new Map();
+for (const q of QUOTES) {
+  const el = document.createElement("article");
+  el.className = "quote";
+  el.tabIndex = 0;
+  el.dataset.id = q.id;
+  const chips = [
+    q.isNew ? `<span class="chip">New</span>` : `<span class="chip">In app</span>`,
+    q.newAuthor ? `<span class="chip">Needs portrait</span>` : "",
+    q.similar.length ? `<span class="chip warn">Like #${q.similar.join(", #")}</span>` : "",
+    /^Attributed/.test(q.source) ? `<span class="chip warn">Attributed</span>` : "",
+  ].join("");
+  el.innerHTML = `
+    <div class="meta"><span class="id">#${q.id}</span>${chips}</div>
+    <p class="text">${esc(q.text)}</p>
+    <div class="who"><b>${esc(q.author)}</b> <span>· ${esc(q.source)}</span></div>
+    <div class="choose">
+      <button class="keep" aria-pressed="false">Keep</button>
+      <button class="drop" aria-pressed="false">Drop</button>
+    </div>`;
+  el._search = (q.text + " " + q.author + " " + q.source).toLowerCase();
+  cards.set(q.id, el);
+}
+
+function paintCard(id) {
+  const el = cards.get(id), c = choice[id];
+  el.classList.toggle("is-keep", c === "keep");
+  el.classList.toggle("is-drop", c === "drop");
+  el.querySelector(".keep").setAttribute("aria-pressed", c === "keep");
+  el.querySelector(".drop").setAttribute("aria-pressed", c === "drop");
+}
+
+function visible(q) {
+  const c = choice[q.id];
+  if (filters.status === "open" && c) return false;
+  if (filters.status === "keep" && c !== "keep") return false;
+  if (filters.status === "drop" && c !== "drop") return false;
+  if (filters.set === "current" && q.isNew) return false;
+  if (filters.set === "new" && !q.isNew) return false;
+  if (filters.author && q.author !== filters.author) return false;
+  if (filters.search && !cards.get(q.id)._search.includes(filters.search)) return false;
+  return true;
+}
+
+function renderList() {
+  const order = [...QUOTES];
+  if (filters.sort === "author") order.sort((a, b) => a.author.localeCompare(b.author) || a.id - b.id);
+  const list = $("list");
+  const frag = document.createDocumentFragment();
+  let shown = 0;
+  for (const q of order) {
+    const el = cards.get(q.id);
+    el.hidden = !visible(q);
+    if (!el.hidden) shown++;
+    frag.appendChild(el);
+  }
+  list.appendChild(frag);
+  $("empty").hidden = shown > 0;
+  $("summary").textContent = shown === QUOTES.length
+    ? `Showing all ${QUOTES.length} quotes`
+    : `Showing ${shown} of ${QUOTES.length} quotes`;
+}
+
+function keptIds() {
+  return QUOTES.filter((q) => choice[q.id] === "keep").map((q) => q.id);
+}
+function droppedIds() {
+  return QUOTES.filter((q) => choice[q.id] === "drop").map((q) => q.id);
+}
+
+function renderTally() {
+  const k = keptIds().length, d = droppedIds().length, open = QUOTES.length - k - d;
+  $("n-keep").textContent = k;
+  $("n-drop").textContent = d;
+  $("n-open").textContent = open;
+  const t = $("target");
+  t.classList.toggle("hit", k === TARGET);
+  t.textContent = k === TARGET ? "Exactly 250"
+    : k < TARGET ? `${TARGET - k} more to reach 250`
+    : `${k - TARGET} over 250`;
+  $("m-keep").style.width = (k / QUOTES.length) * 100 + "%";
+  $("m-drop").style.width = (d / QUOTES.length) * 100 + "%";
+  $("m-mark").style.left = (TARGET / QUOTES.length) * 100 + "%";
+  $("out-keep").value = keptIds().join(", ");
+}
+
+function setChoice(id, value) {
+  if (!value || choice[id] === value) delete choice[id];
+  else choice[id] = value;
+  save();
+  paintCard(id);
+  renderTally();
+  // Leave the card in place even if it no longer matches the filter,
+  // so the list doesn't jump while working through it.
+}
+
+// Clicks on Keep / Drop.
+$("list").addEventListener("click", (e) => {
+  const btn = e.target.closest(".choose button");
+  if (!btn) return;
+  const id = +btn.closest(".quote").dataset.id;
+  setChoice(id, btn.classList.contains("keep") ? "keep" : "drop");
+});
+
+// Keyboard: arrows move, K / X / U decide.
+function step(from, dir) {
+  const all = [...$("list").children].filter((el) => !el.hidden);
+  const i = all.indexOf(from);
+  const next = all[i + dir];
+  if (next) { next.focus(); next.scrollIntoView({ block: "nearest" }); }
+}
+$("list").addEventListener("keydown", (e) => {
+  const card = e.target.closest(".quote");
+  if (!card || e.metaKey || e.ctrlKey || e.altKey) return;
+  const id = +card.dataset.id;
+  const key = e.key.toLowerCase();
+  if (key === "arrowdown" || key === "j") { e.preventDefault(); step(card, 1); }
+  else if (key === "arrowup") { e.preventDefault(); step(card, -1); }
+  else if (key === "k" || key === "x") {
+    e.preventDefault();
+    const value = key === "k" ? "keep" : "drop";
+    if (choice[id] !== value) setChoice(id, value);
+    step(card, 1);
+  } else if (key === "u") { e.preventDefault(); setChoice(id, null); }
+});
+
+// Filters.
+document.querySelectorAll(".seg").forEach((seg) => {
+  seg.addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if (!btn) return;
+    const [k, v] = Object.entries(btn.dataset)[0];
+    filters[k] = v;
+    seg.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", b === btn));
+    renderList();
+  });
+});
+$("author").addEventListener("change", (e) => { filters.author = e.target.value; renderList(); });
+$("sort").addEventListener("change", (e) => { filters.sort = e.target.value; renderList(); });
+$("search").addEventListener("input", (e) => { filters.search = e.target.value.trim().toLowerCase(); renderList(); });
+
+// Export panel.
+$("export-toggle").addEventListener("click", () => {
+  const panel = $("panel");
+  panel.hidden = !panel.hidden;
+  $("export-toggle").setAttribute("aria-expanded", !panel.hidden);
+  if (!panel.hidden) { window.scrollTo({ top: 0 }); $("copy-keep").focus(); }
+});
+
+async function copy(text, field, label) {
+  const status = $("copy-status");
+  try {
+    await navigator.clipboard.writeText(text);
+    status.textContent = `Copied ${label}.`;
+  } catch (e) {
+    field.value = text;
+    field.focus();
+    field.select();
+    status.textContent = "Copying is blocked here. The text is selected; copy it yourself.";
+  }
+}
+$("copy-keep").addEventListener("click", () => {
+  const ids = keptIds();
+  copy(ids.join(", "), $("out-keep"), `${ids.length} kept IDs`);
+});
+$("copy-all").addEventListener("click", () => {
+  const text = `keep: ${keptIds().join(", ")}\ndrop: ${droppedIds().join(", ")}`;
+  copy(text, $("in-restore"), "kept and dropped IDs");
+});
+
+function parseIds(s) {
+  return (s.match(/\d+/g) || []).map(Number).filter((n) => byId.has(n));
+}
+$("restore").addEventListener("click", () => {
+  const text = $("in-restore").value;
+  const keepPart = text.match(/keep\s*:([^\n]*)/i);
+  const dropPart = text.match(/drop\s*:([^\n]*)/i);
+  const next = {};
+  let keep, drop = [];
+  if (keepPart || dropPart) {
+    keep = parseIds(keepPart ? keepPart[1] : "");
+    drop = parseIds(dropPart ? dropPart[1] : "");
+  } else {
+    keep = parseIds(text);
+  }
+  if (!keep.length && !drop.length) {
+    $("restore-status").textContent = "No quote IDs found. Paste numbers between 1 and 500.";
+    return;
+  }
+  drop.forEach((id) => (next[id] = "drop"));
+  keep.forEach((id) => (next[id] = "keep"));
+  choice = next;
+  save();
+  QUOTES.forEach((q) => paintCard(q.id));
+  renderTally();
+  renderList();
+  $("restore-status").textContent = `Restored ${keep.length} kept and ${drop.length} dropped.`;
+});
+$("clear").addEventListener("click", () => { $("clear-yes").hidden = false; $("clear-yes").focus(); });
+$("clear-yes").addEventListener("click", () => {
+  choice = {};
+  save();
+  QUOTES.forEach((q) => paintCard(q.id));
+  renderTally();
+  renderList();
+  $("clear-yes").hidden = true;
+  $("restore-status").textContent = "Cleared all choices.";
+});
+
+QUOTES.forEach((q) => paintCard(q.id));
+renderTally();
+renderList();
+</script>
