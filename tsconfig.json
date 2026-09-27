@@ -10,5 +10,5 @@
     }
   },
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"],
-  "exclude": ["src/app/_finish-later", "src/components/Games/_not-ready"]
+  "exclude": ["src/app/_finish-later", "src/components/Games/_not-ready", "scripts/tao-candidates"]
 }

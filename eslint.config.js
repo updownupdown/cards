@@ -6,7 +6,7 @@ const i18next = require("eslint-plugin-i18next");
 module.exports = defineConfig([
   expoConfig,
   {
-    ignores: ["dist/*"],
+    ignores: ["dist/*", "scripts/tao-candidates/*"],
     rules: {
       "no-console": "off",
       "no-unused-vars": "off",

@@ -1,0 +1,252 @@
+<title>Tao Constellation Picker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    color-scheme: dark;
+    --sky: #080d1f;
+    --panel: #10183a;
+    --panel-2: #172150;
+    --rule: #26315e;
+    --text: #e3e8f7;
+    --muted: #8d9bc6;
+    --line: #bedcff;
+    --glow: #9cc9ff;
+    --gold: #f0c36a;
+    --gold-soft: rgba(240, 195, 106, 0.16);
+    --display: "Cormorant Garamond", Georgia, serif;
+    --sans: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--sky);
+    color: var(--text);
+    font: 14px/1.5 var(--sans);
+    padding: 0 16px 64px;
+  }
+  .wrap { max-width: 1240px; margin: 0 auto; }
+  header.top {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 5;
+    background: color-mix(in srgb, var(--sky) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rule);
+    margin: 0 -16px;
+    padding: 12px 16px;
+  }
+  .bar { max-width: 1240px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+  .bar h1 { font: 600 26px/1.1 var(--display); margin: 0; letter-spacing: 0.01em; }
+  .progress { font: 500 13px var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+  .progress b { color: var(--gold); font-weight: 500; }
+  .meter { width: 140px; height: 4px; background: var(--rule); border-radius: 2px; overflow: hidden; }
+  .meter i { display: block; height: 100%; background: var(--gold); width: 0; transition: width .3s; }
+  .spacer { flex: 1; }
+  .seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+  .seg button { background: none; border: 0; color: var(--muted); font: 500 12px var(--sans); padding: 6px 10px; cursor: pointer; }
+  .seg button[aria-pressed="true"] { background: var(--panel-2); color: var(--text); }
+  .btn { background: var(--gold); color: #1b1405; border: 0; border-radius: 6px; font: 600 13px var(--sans); padding: 8px 14px; cursor: pointer; }
+  .btn.ghost { background: none; color: var(--muted); border: 1px solid var(--rule); }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, .card:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  .intro { max-width: 68ch; color: var(--muted); margin: 24px 0 8px; }
+  .intro strong { color: var(--text); font-weight: 500; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .legend span b { color: var(--text); font-weight: 500; }
+
+  section.ch { padding: 28px 0 8px; border-top: 1px solid var(--rule); margin-top: 20px; }
+  .ch-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; margin-bottom: 14px; }
+  .ch-num { font: 600 40px/1 var(--display); color: var(--text); min-width: 1.6em; font-variant-numeric: lining-nums; }
+  .ch-meta { flex: 1; min-width: 220px; }
+  .ch-meta .label { font: 500 11px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .ch-meta .picked { font: italic 500 19px/1.3 var(--display); color: var(--gold); }
+  .ch-meta .picked.none { color: var(--muted); }
+  details.text { flex-basis: 100%; }
+  details.text summary { cursor: pointer; color: var(--muted); font-size: 12px; width: max-content; }
+  details.text pre { white-space: pre-wrap; font: 15px/1.6 var(--display); color: var(--text); background: var(--panel); border-radius: 8px; padding: 14px 18px; max-width: 68ch; margin: 8px 0 0; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+  .card {
+    background: var(--panel);
+    border: 1px solid transparent;
+    border-radius: 10px;
+    padding: 8px 8px 12px;
+    cursor: pointer;
+    text-align: left;
+    color: inherit;
+    font: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: border-color .15s, background .15s;
+  }
+  .card:hover { border-color: var(--rule); }
+  .card[aria-pressed="true"] { border-color: var(--gold); background: linear-gradient(var(--gold-soft), var(--gold-soft)), var(--panel); }
+  .card svg { width: 100%; aspect-ratio: 1; max-width: 100%; display: block; border-radius: 6px; background: radial-gradient(circle at 50% 45%, #121c45, #070b1c 75%); }
+  .card .tag { font: 500 10.5px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; gap: 6px; }
+  .card.cur .tag { color: #c9a4f2; }
+  .card[aria-pressed="true"] .tag { color: var(--gold); }
+  .card .name { font: 600 15px/1.25 var(--sans); text-wrap: balance; }
+  .card .theme { font-size: 12px; color: var(--muted); line-height: 1.4; }
+  .card .key { font: italic 14px/1.35 var(--display); color: #c3cdea; border-top: 1px solid var(--rule); padding-top: 6px; margin-top: auto; }
+
+  .note { margin-top: 10px; display: flex; gap: 8px; align-items: center; }
+  .note label { font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .note input { flex: 1; min-width: 0; background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; color: var(--text); font: 13px var(--sans); padding: 6px 10px; }
+
+  #out { display: block; width: 100%; min-height: 160px; margin-top: 10px; background: var(--panel); color: var(--text); border: 1px solid var(--rule); border-radius: 8px; font: 12px/1.5 var(--mono); padding: 10px; }
+  .toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--panel-2); border: 1px solid var(--gold); color: var(--text); padding: 8px 14px; border-radius: 6px; font-size: 13px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  @media (max-width: 520px) {
+    .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .card .theme { display: none; }
+    .meter { display: none; }
+  }
+</style>
+
+<header class="top">
+  <div class="bar">
+    <h1>Tao Constellations</h1>
+    <div class="progress"><b id="count">0</b> / 81 picked</div>
+    <div class="meter" aria-hidden="true"><i id="meter"></i></div>
+    <div class="spacer"></div>
+    <div class="seg" role="group" aria-label="Show chapters">
+      <button type="button" id="f-all" aria-pressed="true">All</button>
+      <button type="button" id="f-open" aria-pressed="false">Not picked</button>
+    </div>
+    <button type="button" class="btn" id="copy">Copy picks</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="intro">Each chapter shows its <strong>current constellation</strong> and <strong>five new candidates</strong>. Click one card per chapter to pick it; your picks are saved in this browser. When you're done, press <strong>Copy picks</strong> and paste the list back to Claude. Picking “current” keeps the existing figure.</p>
+  <div class="legend">
+    <span><b>Current</b> · confidence A: the text names the image, B: a symbol from the text, C: an interpretive choice</span>
+    <span><b>Key line</b> · the line whose letters become the figure's bright stars</span>
+  </div>
+  <div id="chapters"></div>
+  <section class="ch" id="export" hidden>
+    <div class="ch-meta"><div class="label">Your picks</div></div>
+    <textarea id="out" readonly aria-label="Picks to paste back"></textarea>
+  </section>
+</main>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const DATA = __DATA__;
+const KEY = "tao-constellation-picks-v1";
+let state = { picks: {}, notes: {} };
+try { const raw = localStorage.getItem(KEY); if (raw) state = Object.assign(state, JSON.parse(raw)); } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
+
+const NS = "http://www.w3.org/2000/svg";
+function figure(c) {
+  const size = 200, s = size / 100, gap = 2.8;
+  const rad = (m) => 0.9 * (0.5 + m * 0.7);
+  let d = "";
+  for (const stroke of c.k) for (let i = 1; i < stroke.length; i++) {
+    const a = c.s[stroke[i - 1]], b = c.s[stroke[i]];
+    const dx = (b[0] - a[0]) * s, dy = (b[1] - a[1]) * s, len = Math.hypot(dx, dy);
+    if (len <= gap * 2 + 2) continue;
+    const ux = dx / len, uy = dy / len;
+    d += `M${(a[0] * s + ux * gap).toFixed(1)} ${(a[1] * s + uy * gap).toFixed(1)}L${(b[0] * s - ux * gap).toFixed(1)} ${(b[1] * s - uy * gap).toFixed(1)}`;
+  }
+  const neb = c.b.map((p) => `<polygon points="${p.map(([x, y]) => `${x * s},${y * s}`).join(" ")}" fill="#7fb0ff" fill-opacity="0.13" filter="url(#blur)"/>`).join("");
+  const glow = c.s.map(([x, y, m]) => `<circle cx="${x * s}" cy="${y * s}" r="${(rad(m) * 2.6).toFixed(1)}"/>`).join("");
+  const dots = c.s.map(([x, y, m]) => `<circle cx="${x * s}" cy="${y * s}" r="${rad(m).toFixed(1)}"/>`).join("");
+  return `<svg viewBox="-8 -8 216 216" xmlns="${NS}" role="img" aria-label="${c.name}">${neb}<path d="${d}" stroke="#bedcff" stroke-opacity="0.5" stroke-width="1" stroke-linecap="round" fill="none"/><g fill="#9cc9ff" fill-opacity="0.18">${glow}</g><g fill="#fff">${dots}</g></svg>`;
+}
+const esc = (t) => t.replace(/[&<>"]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[ch]);
+
+const root = document.getElementById("chapters");
+root.insertAdjacentHTML("afterbegin", `<svg width="0" height="0" style="position:absolute"><filter id="blur"><feGaussianBlur stdDeviation="3"/></filter></svg>`);
+for (const ch of DATA) {
+  const sec = document.createElement("section");
+  sec.className = "ch";
+  sec.id = "ch" + ch.n;
+  sec.innerHTML = `
+    <div class="ch-head">
+      <div class="ch-num">${ch.n}</div>
+      <div class="ch-meta"><div class="label">Your pick</div><div class="picked"></div></div>
+      <details class="text"><summary>Read chapter ${ch.n}</summary><pre>${esc(ch.text)}</pre></details>
+    </div>
+    <div class="grid">${ch.e.map((e) => `
+      <button type="button" class="card${e.id === "current" ? " cur" : ""}" data-ch="${ch.n}" data-id="${e.id}" aria-pressed="false">
+        ${figure(e)}
+        <span class="tag"><span>${e.id === "current" ? "Current" : "Option " + e.id}</span><span>${e.id === "current" ? "conf. " + e.conf : e.s.length + " stars"}</span></span>
+        <span class="name">${esc(e.name)}</span>
+        <span class="theme">${esc(e.theme)}</span>
+        <span class="key">“${esc(e.key.join(" / "))}”</span>
+      </button>`).join("")}
+    </div>
+    <div class="note"><label for="note-${ch.n}">Note</label><input id="note-${ch.n}" data-ch="${ch.n}" placeholder="Optional: tweaks, or “none of these, try …”" value="${esc(state.notes[ch.n] || "")}"></div>`;
+  root.appendChild(sec);
+}
+
+let filter = "all";
+function render() {
+  let count = 0;
+  for (const ch of DATA) {
+    const pick = state.picks[ch.n];
+    if (pick) count++;
+    const sec = document.getElementById("ch" + ch.n);
+    sec.querySelectorAll(".card").forEach((el) => el.setAttribute("aria-pressed", String(el.dataset.id === pick)));
+    const label = sec.querySelector(".picked");
+    const entry = ch.e.find((e) => e.id === pick);
+    label.textContent = entry ? (pick === "current" ? "Keep current: " : "Option " + pick + ": ") + entry.name : "Not picked yet";
+    label.classList.toggle("none", !entry);
+    sec.hidden = filter === "open" && !!pick;
+  }
+  document.getElementById("count").textContent = count;
+  document.getElementById("meter").style.width = (count / 81) * 100 + "%";
+}
+root.addEventListener("click", (ev) => {
+  const card = ev.target.closest(".card");
+  if (!card) return;
+  const n = card.dataset.ch;
+  state.picks[n] = state.picks[n] === card.dataset.id ? undefined : card.dataset.id;
+  if (!state.picks[n]) delete state.picks[n];
+  save();
+  render();
+});
+root.addEventListener("input", (ev) => {
+  if (!ev.target.matches(".note input")) return;
+  const v = ev.target.value.trim();
+  if (v) state.notes[ev.target.dataset.ch] = v; else delete state.notes[ev.target.dataset.ch];
+  save();
+});
+for (const [id, f] of [["f-all", "all"], ["f-open", "open"]]) {
+  document.getElementById(id).addEventListener("click", () => {
+    filter = f;
+    document.getElementById("f-all").setAttribute("aria-pressed", String(f === "all"));
+    document.getElementById("f-open").setAttribute("aria-pressed", String(f === "open"));
+    render();
+  });
+}
+function exportText() {
+  const lines = DATA.map((ch) => {
+    const pick = state.picks[ch.n];
+    const entry = ch.e.find((e) => e.id === pick);
+    const note = state.notes[ch.n] ? `  [note: ${state.notes[ch.n]}]` : "";
+    return `${ch.n}: ${entry ? (pick === "current" ? "current" : pick) + " (" + entry.name + ")" : "-"}${note}`;
+  });
+  return lines.join("\n");
+}
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.hidden = false;
+  clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), 2200);
+}
+document.getElementById("copy").addEventListener("click", () => {
+  const text = exportText();
+  const out = document.getElementById("out");
+  out.value = text;
+  document.getElementById("export").hidden = false;
+  const fallback = () => { out.scrollIntoView({ block: "center" }); out.select(); toast("Select the list below and copy it"); };
+  try {
+    navigator.clipboard.writeText(text).then(() => toast("Picks copied. Paste them back to Claude."), fallback);
+  } catch (e) { fallback(); }
+});
+render();
+</script>
