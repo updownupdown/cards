@@ -1,29 +1,35 @@
 #!/usr/bin/env node
 
-// Normalizes game thumbnails and assigns new ones to their games. Drop an
-// image of any common format and size into assets/thumbnails, named after its
-// game (e.g. "Klondike.jpg"), then run:
+// Normalizes game art and assigns new art to its games. Drop an image of any
+// common format and size into assets/thumbnails-source, named after its game
+// (e.g. "Klondike.jpg"), then run:
 //   npm run thumbnails:convert
 //
-// 1. Converts every image that isn't a WebP within the size limits into one,
-//    keeping its aspect ratio, and replaces the original file (and any WebP
-//    of the same name).
-// 2. Assigns each newly converted image to the game whose file name, path,
-//    title or an alias matches its name (e.g. "GrandfatherClock.jpg" ->
-//    grandfathers-clock.ts), and existing images to games without one.
-// 3. A game given newly converted art needs a thumbnailCredit (title,
-//    artistName, sourceName and sourceLink) in its data file. Without one the
-//    assignment is written commented out, with a warning; add the credit and
-//    run again to enable it.
-// 4. Regenerates src/data/game-thumbnails.ts.
+// 1. Converts every source image that isn't a JPEG within the size limit into
+//    one, keeping its aspect ratio, and replaces the original file (and any
+//    JPEG of the same name). Source images aren't bundled with the app; they
+//    are what its thumbnails are made from.
+// 2. Assigns each new image to the game whose file name, path, title or an
+//    alias matches its name (e.g. "GrandfatherClock.jpg" ->
+//    grandfathers-clock.ts), and existing images to games without one. A
+//    game's thumbnail is named after its source, as a WebP.
+// 3. A game given new art needs a thumbnailCredit (title, artistName,
+//    sourceName and sourceLink) in its data file. Without one the assignment
+//    is written commented out, with a warning; add the credit and run again
+//    to enable it.
+// 4. Regenerates the thumbnails, full and cropped to the artwork, and
+//    src/data/game-thumbnails.ts (see scripts/generate-assets.js). Check the
+//    crops with npm run thumbnails:review.
 //
 // Pass --dry-run to only report what would change.
 
 import fs from "fs/promises";
+import { existsSync, statSync } from "fs";
 import path from "path";
 import { execFileSync } from "child_process";
 import { fileURLToPath } from "url";
 import sharp from "sharp";
+import { SOURCE_DIRECTORY } from "./thumbnail-crop.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,13 +37,15 @@ const projectRoot = path.resolve(__dirname, "..");
 const thumbnailsDirectory = path.join(projectRoot, "assets", "thumbnails");
 const gamesDirectory = path.join(projectRoot, "src", "data", "games");
 
-// Thumbnails are shown cropped to fill squares, cards and stamps, so their
-// shorter side is what must stay sharp. Art keeps its own aspect ratio.
-const SHORT_SIDE = 460;
-const MAX_LONG_SIDE = SHORT_SIDE * 2;
+// Enough to make every thumbnail from, cropped or not, without keeping
+// museum-sized scans in the repository.
+const SOURCE_LONG_SIDE = 1400;
+const SOURCE_QUALITY = 88;
+// The cropped thumbnails' shorter side (see scripts/generate-assets.js);
+// smaller sources make blurry cards.
+const MIN_SHORT_SIDE = 460;
 // Art more elongated than this loses too much to the square crops.
 const WARN_ASPECT = 1.6;
-const QUALITY = 80;
 const IMAGE_EXTS = [".png", ".jpg", ".jpeg", ".webp", ".avif", ".tif", ".tiff"];
 const IGNORED_WORDS = new Set(["the", "a", "an"]);
 const CREDIT_FIELDS = ["title", "artistName", "sourceName", "sourceLink"];
@@ -57,71 +65,85 @@ function matchKey(name) {
     .join("");
 }
 
-function isConverted({ format, width, height }) {
+function isConverted(file, { format, width, height }) {
   return (
-    format === "webp" &&
-    Math.min(width, height) <= SHORT_SIDE &&
-    Math.max(width, height) <= MAX_LONG_SIDE
+    format === "jpeg" &&
+    path.extname(file) === ".jpg" &&
+    Math.max(width, height) <= SOURCE_LONG_SIDE
+  );
+}
+
+/** The thumbnail made from a source image. */
+const thumbnailName = (file) => `${path.parse(file).name}.webp`;
+
+/** Whether no thumbnail has been made from this source yet. */
+function isNewArt(source) {
+  const thumbnail = path.join(thumbnailsDirectory, thumbnailName(source));
+  return (
+    !existsSync(thumbnail) ||
+    statSync(thumbnail).mtimeMs < statSync(source).mtimeMs
   );
 }
 
 async function convertThumbnails() {
-  const files = (await fs.readdir(thumbnailsDirectory))
+  await fs.mkdir(SOURCE_DIRECTORY, { recursive: true });
+  const files = (await fs.readdir(SOURCE_DIRECTORY))
     .filter((file) => IMAGE_EXTS.includes(path.extname(file).toLowerCase()))
     .sort((a, b) => a.localeCompare(b));
-  const renames = new Map();
-  // WebP names written this run: new art, which needs a credit.
+  // Thumbnail names of new art, which needs a credit.
   const fresh = new Set();
+  const written = new Set();
 
   for (const file of files) {
-    const source = path.join(thumbnailsDirectory, file);
-    // A WebP just written from an image of the same name.
-    if (fresh.has(file)) continue;
+    const source = path.join(SOURCE_DIRECTORY, file);
+    // A JPEG just written from an image of the same name.
+    if (written.has(file)) continue;
     const metadata = await sharp(source).metadata();
-    if (isConverted(metadata)) continue;
-
     const { format, width, height } = metadata;
-    const outputName = `${path.parse(file).name}.webp`;
-    const output = path.join(thumbnailsDirectory, outputName);
-    const replacesExisting = outputName !== file && files.includes(outputName);
+    const [upright, across] =
+      (metadata.orientation ?? 1) >= 5 ? [width, height] : [height, width];
     const aspect = Math.max(width, height) / Math.min(width, height);
-    console.log(
-      `Convert ${file} (${format} ${width}x${height}) -> ${outputName}` +
-        (replacesExisting ? " (replaces existing file)" : ""),
-    );
+    const shortSide = Math.min(width, height);
+
+    const converted = isConverted(file, metadata);
+    if (converted && !isNewArt(source)) continue;
+    fresh.add(thumbnailName(file));
+    const outputName = `${path.parse(file).name}.jpg`;
+    if (!converted) {
+      const replacesExisting =
+        outputName !== file && files.includes(outputName);
+      console.log(
+        `Convert ${file} (${format} ${width}x${height}) -> ${outputName}` +
+          (replacesExisting ? " (replaces existing file)" : ""),
+      );
+    }
     if (aspect > WARN_ASPECT) {
       console.warn(
         `  ${file} is ${aspect.toFixed(2)}:1; much of it will be cropped away`,
       );
     }
-    if (outputName !== file) renames.set(file, outputName);
-    fresh.add(outputName);
-    if (dryRun) continue;
+    if (shortSide < MIN_SHORT_SIDE) {
+      console.warn(
+        `  ${file} is only ${shortSide}px across; its cards will look soft`,
+      );
+    }
+    if (converted || dryRun) continue;
+    written.add(outputName);
+    const output = path.join(SOURCE_DIRECTORY, outputName);
 
-    // Sharp applies only the last resize, so work out the size here: the
-    // shorter side at SHORT_SIDE, unless that makes the longer one too long.
-    const [upright, across] =
-      (metadata.orientation ?? 1) >= 5 ? [width, height] : [height, width];
-    const scale = Math.min(
-      1,
-      SHORT_SIDE / Math.min(across, upright),
-      MAX_LONG_SIDE / Math.max(across, upright),
-    );
+    const scale = Math.min(1, SOURCE_LONG_SIDE / Math.max(across, upright));
     const buffer = await sharp(source)
       .rotate()
       .resize(Math.round(across * scale), Math.round(upright * scale))
-      .webp({ quality: QUALITY })
+      .flatten({ background: "#ffffff" })
+      .jpeg({ quality: SOURCE_QUALITY, mozjpeg: true })
       .toBuffer();
     await fs.writeFile(output, buffer);
     if (outputName !== file) await fs.unlink(source);
   }
 
-  const available = dryRun
-    ? files.map((file) => renames.get(file) ?? file)
-    : (await fs.readdir(thumbnailsDirectory)).filter(
-        (file) => path.extname(file).toLowerCase() === ".webp",
-      );
-  return { renames, fresh, available: [...new Set(available)] };
+  const available = [...new Set(files.map(thumbnailName))];
+  return { renames: new Map(), fresh, available };
 }
 
 function gameKeys(fileName, source) {

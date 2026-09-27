@@ -56,3 +56,6 @@ INSTRUCTIONS.md
 # Portrait drawing (scripts/portraits)
 scripts/portraits/preview.png
 __pycache__/
+
+# Thumbnail crop review sheets (npm run thumbnails:review)
+.thumbnail-review/
