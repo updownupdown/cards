@@ -18,7 +18,7 @@ export const fightClubs: GameDefinition = {
     artistName: "George Bellows",
     date: "1909",
     sourceName: "Cleveland Museum of Art",
-    sourceLink: "https://clevelandart.org/art/1922.1133",
+    sourceLink: "https://www.clevelandart.org/art/1922.1133",
   },
   background: GAME_BACKGROUNDS.club,
   animation: GameAnimations.Dust,

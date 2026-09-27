@@ -14,11 +14,12 @@ export const beleagueredCastle: GameDefinition = {
   },
   thumbnail: "BeleagueredCastle.webp",
   thumbnailCredit: {
-    title: "A Fifteenth-Century Siege",
-    artistName: "Unknown illuminator",
-    date: "15th century",
-    sourceName: "Wikimedia Commons",
-    sourceLink: "https://commons.wikimedia.org/wiki/File:15jh_castle_siege.jpg",
+    title:
+      'Prise de la Ville de Bone (Capture of the City of Bonne), from "La Vie de Ferdinand Ier de Médicis série appelée aussi Les Batailles des Médicis" (The Life of Ferdinand I de\'Medici also called The Medici Battles)',
+    artistName: "Jacques Callot",
+    date: "1614–20",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/415848",
   },
   background: GAME_BACKGROUNDS.castle,
   animation: GameAnimations.Clouds,

@@ -14,12 +14,12 @@ export const klondike: GameDefinition = {
   },
   thumbnail: "Klondike.webp",
   thumbnailCredit: {
-    title: "Scales and Summit of Chilkoot Pass",
-    artistName: "Eric A. Hegg",
-    date: "1898",
+    title: "September Evening, Mount McKinley",
+    artistName: "Sydney Laurence",
+    date: "1925",
     sourceName: "Wikimedia Commons",
     sourceLink:
-      "https://commons.wikimedia.org/wiki/File:Scales_and_summit_of_Chilkoot_Pass,_1898_(MOHAI_7249).jpg",
+      "https://commons.wikimedia.org/wiki/File:September_Evening,_Mount_McKinley,_Alaska,_by_Sydney_Laurence.jpg",
   },
   background: GAME_BACKGROUNDS.yukon,
   animation: GameAnimations.Clouds,

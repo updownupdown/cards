@@ -15,11 +15,13 @@ export const freeCell: GameDefinition = {
   },
   thumbnail: "FreeCell.webp",
   thumbnailCredit: {
-    title: "Composition with Red, Yellow, and Blue",
-    artistName: "Piet Mondrian",
-    date: "1927",
-    sourceName: "Cleveland Museum of Art",
-    sourceLink: "https://clevelandart.org/art/1967.215",
+    title:
+      "The room of Cornelis de Witt in prison The Gevangenpoort, The Hague, 1844",
+    artistName: "Jacobus Ludovicus Cornet",
+    date: "1844",
+    sourceName: "Rijksmuseum",
+    sourceLink:
+      "https://www.rijksmuseum.nl/en/collection/object/The-room-of-Cornelis-de-Witt-in-prison-The-Gevangenpoort-The-Hague-1844--2ee2ca395f6f78ff00f09456efbd73a5",
   },
   background: GAME_BACKGROUNDS.cabinInterior,
   animation: GameAnimations.Dust,

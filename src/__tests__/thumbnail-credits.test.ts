@@ -1,6 +1,11 @@
 import { describe, expect, test } from "@jest/globals";
+import fs from "fs";
+import path from "path";
 import { GAME_DEFINITIONS } from "@/data/games-registry";
-import { GAME_THUMBNAIL_ASSETS } from "@/data/game-thumbnails";
+import {
+  GAME_FULL_THUMBNAIL_ASSETS,
+  GAME_THUMBNAIL_ASSETS,
+} from "@/data/game-thumbnails";
 import { isValidLink } from "@/utils/utils";
 
 /** Fails with a message that can't be missed in a long test run. */
@@ -26,7 +31,7 @@ describe("Cover art", () => {
     failLoudly(
       "HAVE NO COVER ART",
       GAME_DEFINITIONS.filter((game) => !game.thumbnail).map((g) => g.path),
-      "Drop a JPG named after the game into assets/thumbnails, add a " +
+      "Drop an image named after the game into assets/thumbnails-source, add a " +
         "thumbnailCredit to its file in src/data/games, then run " +
         "npm run thumbnails:convert.",
     );
@@ -46,7 +51,7 @@ describe("Cover art", () => {
       GAME_DEFINITIONS.filter(
         (game) => game.thumbnail && !(game.thumbnail in GAME_THUMBNAIL_ASSETS),
       ).map((game) => game.path),
-      "Check the file name in assets/thumbnails, then run " +
+      "Check the file name in assets/thumbnails-source, then run " +
         "npm run assets:generate.",
     );
   });
@@ -65,6 +70,37 @@ describe("Cover art", () => {
       },
     ).map((game) => game.path);
     expect(incomplete).toEqual([]);
+  });
+
+  test("every game's thumbnail has a full, uncropped version", () => {
+    failLoudly(
+      "HAVE NO FULL THUMBNAIL",
+      GAME_DEFINITIONS.filter(
+        (game) =>
+          game.thumbnail && !(game.thumbnail in GAME_FULL_THUMBNAIL_ASSETS),
+      ).map((game) => game.path),
+      "Check the game's image in assets/thumbnails-source, then run " +
+        "npm run assets:generate.",
+    );
+  });
+
+  test("every game's thumbnail is made from a source image", () => {
+    const sources = new Set(
+      fs
+        .readdirSync(
+          path.join(__dirname, "..", "..", "assets", "thumbnails-source"),
+        )
+        .filter((file) => file !== "crops.json")
+        .map((file) => `${path.parse(file).name}.webp`),
+    );
+    failLoudly(
+      "HAVE NO SOURCE IMAGE",
+      GAME_DEFINITIONS.filter(
+        (game) => game.thumbnail && !sources.has(game.thumbnail),
+      ).map((game) => game.path),
+      "Put the game's image, named after its thumbnail, in " +
+        "assets/thumbnails-source, then run npm run thumbnails:convert.",
+    );
   });
 
   test("each artwork is used by one game only", () => {

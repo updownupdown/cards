@@ -12,7 +12,7 @@ export const dynasty: GameDefinition = {
     artistName: "Giuseppe Castiglione",
     date: "1736–70s",
     sourceName: "Cleveland Museum of Art",
-    sourceLink: "https://clevelandart.org/art/1969.31",
+    sourceLink: "https://www.clevelandart.org/art/1969.31",
   },
   background: GAME_BACKGROUNDS.castleIndoors,
   animation: GameAnimations.Dust,

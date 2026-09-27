@@ -14,12 +14,11 @@ export const invaders: GameDefinition = {
   },
   thumbnail: "Invaders.webp",
   thumbnailCredit: {
-    title: "The War of the Worlds",
-    artistName: "Henrique Alvim Corrêa",
-    date: "1906",
-    sourceName: "Wikimedia Commons",
-    sourceLink:
-      "https://commons.wikimedia.org/wiki/File:The_War_of_the_Worlds_by_Henrique_Alvim_Corr%C3%AAa,_original_graphic_15.jpg",
+    title: "Landscape with Stars",
+    artistName: "Henri-Edmond Cross",
+    date: "ca. 1905–1908",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/459189",
   },
   background: GAME_BACKGROUNDS.nightSky,
   animation: GameAnimations.Stars,

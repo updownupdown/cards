@@ -16,12 +16,11 @@ export const seer: GameDefinition = {
   animation: GameAnimations.Stars,
   thumbnail: "Seer.webp",
   thumbnailCredit: {
-    title: "The Crystal Ball",
-    artistName: "John William Waterhouse",
-    date: "1902",
-    sourceName: "Wikimedia Commons",
-    sourceLink:
-      "https://commons.wikimedia.org/wiki/File:John_William_Waterhouse_-_The_Crystal_Ball.JPG",
+    title: "The Fortune Teller",
+    artistName: "Thomas Stothard",
+    date: "1827",
+    sourceName: "Artvee",
+    sourceLink: "https://artvee.com/dl/the-fortune-teller-22/",
   },
   gameColorDark: "#1b2135",
   gameColorPale: "#d2d3c0",

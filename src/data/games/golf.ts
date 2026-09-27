@@ -14,12 +14,11 @@ export const golf: GameDefinition = {
   },
   thumbnail: "Golf.webp",
   thumbnailCredit: {
-    title: "Skaters, Kolf Players and Sledges on the Ice",
-    artistName: "Attributed to Barent Avercamp",
-    date: "1630s",
-    sourceName: "Wikimedia Commons",
-    sourceLink:
-      "https://commons.wikimedia.org/wiki/File:Barend_Avercamp_-_Skaters_and_a_Horse-drawn_sled.jpg",
+    title: "The Golf-Player",
+    artistName: "Rembrandt van Rijn",
+    date: "1654",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/391981",
   },
   background: GAME_BACKGROUNDS.golf,
   animation: GameAnimations.Birds,

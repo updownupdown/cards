@@ -16,9 +16,8 @@ export const acesUp: GameDefinition = {
   thumbnailCredit: {
     title: "Playing Card: Ace of Spades",
     artistName: "Unknown artist",
-    date: "n.d.",
     sourceName: "Art Institute of Chicago",
-    sourceLink: "https://www.artic.edu/artworks/82929",
+    sourceLink: "https://www.artic.edu/artworks/82930",
   },
   background: GAME_BACKGROUNDS.castleIndoors,
   animation: GameAnimations.Dust,

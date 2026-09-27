@@ -20,7 +20,7 @@ export const missMilligan: GameDefinition = {
     artistName: "William Merritt Chase",
     date: "1882–83",
     sourceName: "Cleveland Museum of Art",
-    sourceLink: "https://clevelandart.org/art/1921.1239",
+    sourceLink: "https://www.clevelandart.org/art/1921.1239",
   },
   background: GAME_BACKGROUNDS.oldRoom,
   animation: GameAnimations.Dust,

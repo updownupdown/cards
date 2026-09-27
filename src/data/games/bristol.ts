@@ -11,12 +11,11 @@ export const bristol: GameDefinition = {
   rating: { complexity: 25, difficulty: 60, luck: 40 },
   thumbnail: "Bristol.webp",
   thumbnailCredit: {
-    title: "Bristol Harbour",
-    artistName: "Joseph Walter",
-    date: "1836",
-    sourceName: "Wikimedia Commons",
-    sourceLink:
-      "https://commons.wikimedia.org/wiki/File:Joseph_Walter_-_Bristol_Harbour.jpg",
+    title: "S.E. Vincent’s Rock near Bristol",
+    artistName: "Charles Joseph Hullmandel",
+    date: "1821",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/13777",
   },
   background: GAME_BACKGROUNDS.shipwreck,
   animation: GameAnimations.Mist,

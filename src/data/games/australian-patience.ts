@@ -9,12 +9,12 @@ export const australianPatience: GameDefinition = {
   rating: { complexity: 30, difficulty: 70, luck: 45 },
   thumbnail: "AustralianPatience.webp",
   thumbnailCredit: {
-    title: "Shearing the Rams",
-    artistName: "Tom Roberts",
-    date: "1890",
+    title: "Down on His Luck",
+    artistName: "Frederick McCubbin",
+    date: "1889",
     sourceName: "Wikimedia Commons",
     sourceLink:
-      "https://commons.wikimedia.org/wiki/File:Tom_Roberts_-_Shearing_the_rams_-_Google_Art_Project.jpg",
+      "https://commons.wikimedia.org/wiki/File:Down_on_his_luck_Frederick_McCubbin.jpg",
   },
   background: GAME_BACKGROUNDS.savanah,
   animation: GameAnimations.Birds,

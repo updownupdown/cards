@@ -15,12 +15,11 @@ export const gargantua: GameDefinition = {
   rating: { complexity: 25, difficulty: 50, luck: 40 },
   thumbnail: "Gargantua.webp",
   thumbnailCredit: {
-    title: "Gargantua",
-    artistName: "Gustave Doré",
-    date: "1873",
-    sourceName: "Wikimedia Commons",
-    sourceLink:
-      "https://commons.wikimedia.org/wiki/File:Gustave_Dor%C3%A9_-_Gargantua.jpg",
+    title: "Mountain Range",
+    artistName: "James M. Hart",
+    date: "1850–55",
+    sourceName: "The Metropolitan Museum of Art",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/11007",
   },
   background: GAME_BACKGROUNDS.frozenMountain,
   animation: GameAnimations.Clouds,

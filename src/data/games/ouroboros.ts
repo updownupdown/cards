@@ -18,11 +18,12 @@ export const ouroboros: GameDefinition = {
   },
   thumbnail: "Ouroboros.webp",
   thumbnailCredit: {
-    title: "Coiled Rattlesnake",
-    artistName: "Unknown Aztec sculptor",
-    date: "ca. 1200–1519",
-    sourceName: "Cleveland Museum of Art",
-    sourceLink: "https://clevelandart.org/art/1950.410",
+    title: "Alchemical Serpent (Ouroboros)",
+    artistName: "Unknown medieval illuminator",
+    date: "1478",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Serpiente_alquimica.jpg",
   },
   background: GAME_BACKGROUNDS.stoneTunnel,
   animation: GameAnimations.ManaDust,
