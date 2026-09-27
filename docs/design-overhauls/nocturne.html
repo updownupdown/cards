@@ -1,0 +1,590 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nocturne</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap">
+<link rel="stylesheet" href="frame.css">
+<style>
+  :root {
+    color-scheme: dark;
+    --page-bg: #050609; --page-ink: #ece7f2; --page-dim: #8e8aa4; --page-line: #23242f; --page-accent: #ffcf87;
+
+    --night: #07080d;
+    --wall: #0d0e15;
+    --surface: #14151f;
+    --raise: #1c1d2a;
+    --glass: #14151fd9;
+    --hair: #ffffff14;
+    --ink: #ece7f2;
+    --dim: #8e8aa4;
+    --faint: #545168;
+    --lamp: #ffcf87;
+    --brass: #b8955a;
+    --ember: #e8907a;
+    --serif: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+    --sans: "Outfit", system-ui, sans-serif;
+  }
+  .app { background: var(--night); color: var(--ink); font: 400 15px/1.45 var(--sans); }
+  .app .ic { stroke-width: 1.7; }
+  .app button { font: inherit; }
+
+  /* ---- Type ---- */
+  .kicker { font: 500 11px/1.2 var(--sans); letter-spacing: .2em; text-transform: uppercase; color: var(--lamp); }
+  .display { font: italic 400 36px/1 var(--serif); margin: 0; letter-spacing: -.005em; }
+  .h2 { font: italic 400 26px/1.05 var(--serif); margin: 0; }
+  .h3 { font: italic 400 21px/1.1 var(--serif); margin: 0; }
+  .meta { font-size: 12.5px; color: var(--dim); }
+  .credit { font: italic 400 14px/1.3 var(--serif); color: var(--dim); }
+
+  /* ---- Controls ---- */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 46px; padding: 0 20px; border-radius: 14px; background: var(--lamp); color: #2a1a05; font-weight: 600; font-size: 15px; box-shadow: 0 0 24px #ffcf8733; }
+  .btn.ghost { background: #ffffff10; color: var(--ink); box-shadow: none; }
+  .btn.sm { height: 36px; padding: 0 14px; border-radius: 11px; font-size: 13.5px; }
+  .btn.wide { width: 100%; }
+  .round { width: 40px; height: 40px; border-radius: 50%; background: #ffffff10; display: grid; place-items: center; flex: none; color: var(--ink); }
+  .round.glass { background: var(--glass); backdrop-filter: blur(10px); box-shadow: inset 0 0 0 1px var(--hair); }
+  .chip { height: 32px; padding: 0 13px; border-radius: 99px; background: #ffffff0c; color: var(--dim); font-size: 13px; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; flex: none; }
+  .chip[aria-pressed="true"] { background: #ffcf871f; color: var(--lamp); box-shadow: inset 0 0 0 1px #ffcf8766; }
+
+  /* A strip of lights: the one progress bar. */
+  .lights { display: flex; gap: 2px; }
+  .lights i { flex: 1; height: 3px; border-radius: 2px; background: #ffffff14; }
+  .lights i.on { background: var(--lamp); box-shadow: 0 0 6px #ffcf8799; }
+  .meter { height: 3px; border-radius: 2px; background: #ffffff14; position: relative; overflow: hidden; }
+  .meter b { position: absolute; inset: 0 auto 0 0; width: var(--v); background: var(--lamp); box-shadow: 0 0 8px var(--lamp); border-radius: 2px; }
+  .ratings { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .ratings small { display: block; font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); margin-bottom: 6px; }
+
+  /* ---- Framed art with its picture light ---- */
+  .frame { position: relative; display: block; border: 2px solid #5f4e33; background: #000 center / cover no-repeat; box-shadow: 0 10px 24px #000c, 0 0 0 1px #000; }
+  .frame.lit::before { content: ""; position: absolute; left: 50%; top: -8px; width: 46%; height: 3px; transform: translateX(-50%); border-radius: 2px; background: linear-gradient(#d9c08e, #6c5a3c); box-shadow: 0 2px 12px var(--lamp); z-index: 2; }
+  .frame.lit::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% -10%, #ffcf8733, #0000 60%); pointer-events: none; }
+  .frame.dark { border-color: #26262e; filter: grayscale(1) brightness(.42); }
+  .frame.sheet { border-color: #1d1d23; background: repeating-linear-gradient(90deg, #22212a 0 7px, #2a2931 7px 12px); }
+  .frame.sheet > * { display: none; }
+
+  /* ---- Tab bar ---- */
+  .tabs { position: absolute; left: 12px; right: 12px; bottom: 14px; z-index: 20; height: 62px; border-radius: 22px; background: var(--glass); backdrop-filter: blur(14px); box-shadow: inset 0 0 0 1px var(--hair), 0 10px 30px #000a; display: grid; grid-template-columns: repeat(4, 1fr); }
+  .tabs button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--faint); font-size: 11px; letter-spacing: .03em; position: relative; }
+  .tabs button[aria-current="page"] { color: var(--ink); }
+  .tabs button[aria-current="page"] .ic { color: var(--lamp); filter: drop-shadow(0 0 6px #ffcf8799); }
+  .tabs button[aria-current="page"]::before { content: ""; position: absolute; top: 0; width: 26px; height: 2px; border-radius: 2px; background: var(--lamp); box-shadow: 0 0 10px var(--lamp); }
+  .pad-bottom { height: 100px; }
+
+  .page-head { padding: 58px 20px 18px; display: flex; align-items: flex-end; gap: 10px; }
+  .page-head .grow { flex: 1; }
+  .page-head .meta { margin-top: 6px; }
+  .section { padding: 0 20px; margin-top: 30px; }
+  .section-title { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; }
+  .section-title a { font-size: 13px; color: var(--dim); text-decoration: none; }
+
+  /* ---- Home ---- */
+  .resume { position: relative; margin: 0 20px; }
+  .resume .frame { aspect-ratio: 16 / 10.5; border-width: 2px; }
+  .resume .over { position: absolute; inset: auto 2px 2px 2px; padding: 44px 16px 14px; background: linear-gradient(#0000, #07080de6 55%); display: grid; gap: 8px; z-index: 3; }
+  .resume .row { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+  .today { display: flex; gap: 14px; align-items: stretch; padding: 14px; border-radius: 18px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--hair); }
+  .today .frame { width: 92px; aspect-ratio: 4 / 5; flex: none; }
+  .today .txt { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .today .nights { margin-top: auto; display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--dim); }
+  .today .nights i { width: 7px; height: 7px; border-radius: 50%; background: #ffffff1a; }
+  .today .nights i.on { background: var(--lamp); box-shadow: 0 0 6px var(--lamp); }
+  .shelf { gap: 16px; padding: 10px 20px 4px; margin: 0 -20px; }
+  .shelf button { flex: none; width: 104px; text-align: left; }
+  .shelf .frame { width: 104px; aspect-ratio: 4 / 5; margin-bottom: 8px; }
+  .shelf b { display: block; font: italic 400 17px/1.1 var(--serif); }
+  .deal { display: flex; align-items: center; gap: 16px; padding: 16px; border-radius: 18px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--hair); }
+  .deal .fanned { position: relative; width: 58px; height: 64px; flex: none; }
+  .deal .fanned .card { position: absolute; width: 40px; top: 4px; left: 8px; }
+  .deal .fanned .card:nth-child(1) { transform: rotate(-12deg) translateX(-8px); }
+  .deal .fanned .card:nth-child(3) { transform: rotate(12deg) translateX(8px); }
+  .deal .grow { flex: 1; }
+  .thought { margin: 36px 20px 0; padding: 22px 20px; text-align: center; border-top: 1px solid var(--hair); }
+  .thought p { font: italic 400 22px/1.25 var(--serif); margin: 10px 0 12px; text-wrap: balance; }
+  .thought .by { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--dim); }
+  .thought .portrait { width: 26px; height: 31px; color: var(--lamp); }
+
+  /* ---- Cards ---- */
+  .card { border-radius: 5px; background: linear-gradient(#f6f1e7, #ebe4d6); box-shadow: 0 1px 0 #fff8 inset, 0 1px 3px #0009; color: #1d1b26; font-family: var(--sans); }
+  .card.red { color: #a3303a; }
+  .card .idx b { font-weight: 600; font-size: 15px; letter-spacing: -.04em; }
+  .card .idx i { font-style: normal; font-size: 11px; margin-top: 1px; }
+  .card .pip { font-size: 22px; line-height: 1; opacity: .9; }
+  .card.back { background:
+      repeating-linear-gradient(45deg, #0000 0 4px, #c9a15a22 4px 5px),
+      repeating-linear-gradient(-45deg, #0000 0 4px, #c9a15a22 4px 5px),
+      radial-gradient(circle at 50% 50%, #252848, #151629);
+    box-shadow: inset 0 0 0 2px #151629, inset 0 0 0 3px #c9a15a88, 0 1px 3px #0009; }
+  .card.hinted { box-shadow: 0 0 0 2px var(--lamp), 0 0 18px #ffcf87aa; }
+  .slot { border-radius: 5px; box-shadow: inset 0 0 0 1px #ffffff1c; color: #ffffff26; font: italic 20px var(--serif); }
+
+  /* ---- Game ---- */
+  .table { position: absolute; inset: 0; background:
+      radial-gradient(ellipse 120% 60% at 50% -5%, color-mix(in srgb, var(--g) 70%, #ffcf87 8%), #0000 70%),
+      radial-gradient(ellipse at 50% 120%, #000, #0000 60%),
+      var(--night); }
+  .table::before { content: ""; position: absolute; inset: 0; background: var(--art) center / cover; opacity: .09; filter: blur(14px) saturate(.6); }
+  .hud { position: relative; z-index: 3; display: flex; align-items: center; gap: 10px; padding: 50px 14px 10px; }
+  .hud .mid { flex: 1; text-align: center; }
+  .hud .mid .h3 { font-size: 22px; }
+  .hud .mid .meta { font-variant-numeric: tabular-nums; margin-top: 2px; }
+  .label-card { position: relative; z-index: 3; margin: 4px 14px 14px; padding: 12px 14px 12px 16px; border-radius: 14px; background: var(--glass); backdrop-filter: blur(10px); box-shadow: inset 0 0 0 1px var(--hair); display: flex; gap: 12px; align-items: flex-start; }
+  .label-card ol { margin: 6px 0 0; padding-left: 18px; font-size: 13px; color: #d9d4e2; display: grid; gap: 2px; }
+  .label-card ol li::marker { color: var(--lamp); font: italic 14px var(--serif); }
+  .label-card .grow { flex: 1; }
+  .game-board { position: relative; z-index: 2; }
+  .game-bar { position: absolute; left: 12px; right: 12px; bottom: 14px; z-index: 5; display: grid; gap: 10px; }
+  .game-bar .progress { display: flex; align-items: center; gap: 10px; padding: 0 6px; font-size: 11.5px; color: var(--dim); font-variant-numeric: tabular-nums; }
+  .game-bar .progress .lights { flex: 1; }
+  .game-bar .tools { display: grid; grid-template-columns: repeat(4, 1fr); height: 62px; border-radius: 20px; background: var(--glass); backdrop-filter: blur(14px); box-shadow: inset 0 0 0 1px var(--hair); }
+  .game-bar .tools button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; color: var(--dim); }
+  .game-bar .tools button.on { color: var(--lamp); }
+
+  /* ---- Win ---- */
+  .win { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 20%, #2a2215, var(--night) 65%); display: flex; flex-direction: column; align-items: center; padding: 62px 26px 26px; text-align: center; }
+  .win .frame { width: 220px; aspect-ratio: var(--ar); margin: 22px 0 18px; animation: lightup 2.6s cubic-bezier(.2,.6,.2,1) both; }
+  .win .frame::before { animation: lamp 2.6s both; }
+  @keyframes lightup { from { filter: brightness(.08) grayscale(1); } 45% { filter: brightness(.35) grayscale(1); } to { filter: none; } }
+  @keyframes lamp { 0%, 40% { opacity: 0; } 100% { opacity: 1; } }
+  .win .stats { display: flex; gap: 22px; margin: 14px 0 0; font-size: 12px; color: var(--dim); }
+  .win .stats b { display: block; font: italic 400 24px/1 var(--serif); color: var(--ink); }
+  .win .gift { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--hair); width: 100%; animation: rise 1s 2.2s both; }
+  .win .gift p { font: italic 400 20px/1.25 var(--serif); margin: 8px 0 6px; text-wrap: balance; }
+  .win .actions { margin-top: auto; display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; width: 100%; animation: rise 1s 2.6s both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } }
+
+  /* ---- Voyage ---- */
+  .sky { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(ellipse at 50% 45%, #141526, var(--night) 70%); cursor: grab; }
+  .sky .world { position: absolute; left: 0; top: 0; }
+  .sky .world svg { display: block; }
+  .node { cursor: pointer; }
+  .node text { font: 500 9px var(--sans); letter-spacing: .12em; fill: var(--dim); text-transform: uppercase; }
+  .node.won text { fill: var(--ink); }
+  .node.sel circle.ring { stroke: var(--lamp); }
+  .voy-head { position: absolute; inset: 0 0 auto; z-index: 4; padding: 56px 20px 30px; background: linear-gradient(#07080df2 50%, #07080d00); pointer-events: none; }
+  .voy-head > * { pointer-events: auto; }
+  .voy-head .rooms { display: flex; gap: 8px; margin-top: 14px; }
+  .voy-head .rooms button { flex: 1; display: flex; gap: 10px; align-items: center; padding: 9px 12px; border-radius: 14px; background: var(--glass); backdrop-filter: blur(10px); box-shadow: inset 0 0 0 1px var(--hair); text-align: left; }
+  .voy-head .rooms svg:not(.ic) { color: var(--lamp); flex: none; }
+  .voy-head .rooms b { display: block; font: italic 400 17px/1.1 var(--serif); }
+  .voy-head .rooms small { font-size: 11.5px; color: var(--dim); }
+  .museum-label { position: absolute; left: 12px; right: 12px; bottom: 88px; z-index: 5; padding: 14px; border-radius: 18px; background: var(--glass); backdrop-filter: blur(14px); box-shadow: inset 0 0 0 1px var(--hair); display: grid; gap: 12px; }
+  .museum-label .top { display: flex; gap: 12px; align-items: center; }
+  .museum-label .frame { width: 54px; height: 54px; flex: none; border-width: 1.5px; }
+  .museum-label .grow { flex: 1; min-width: 0; }
+  .museum-label .gifts { display: flex; gap: 6px; color: var(--dim); }
+  .museum-label .gifts span { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: #ffffff0c; }
+
+  /* ---- Reading rooms (Tao, Voices) ---- */
+  .reading { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 22%, #151735, var(--night) 62%); }
+  .reading .bgstars { position: absolute; inset: 0; fill: #fff; }
+  .rtop { position: absolute; inset: 0 0 auto; z-index: 4; display: flex; align-items: center; gap: 10px; padding: 50px 14px 10px; }
+  .rtop .mid { flex: 1; text-align: center; }
+  .rtop .mid .meta { margin-top: 2px; }
+  .fig { display: grid; place-items: center; padding-top: 100px; color: var(--lamp); }
+  .fig svg { filter: drop-shadow(0 0 6px #ffcf8766); animation: fade 2s both; }
+  @keyframes fade { from { opacity: 0; } }
+  .chapter { padding: 6px 30px 150px; text-align: center; }
+  .chapter .num { font: italic 400 52px/1 var(--serif); color: var(--lamp); opacity: .9; }
+  .chapter p { font: 400 19px/1.45 var(--serif); margin: 0 0 14px; color: #e5dfee; }
+  .chapter mark { background: none; color: var(--lamp); text-shadow: 0 0 12px #ffcf8766; }
+  .strip { position: absolute; left: 0; right: 0; bottom: 0; z-index: 5; padding: 18px 12px 20px; background: linear-gradient(#07080d00, #07080df2 40%); display: flex; align-items: center; gap: 10px; }
+  .strip .dots { flex: 1; gap: 5px; padding: 8px 4px; align-items: center; }
+  .strip .dots button { width: 9px; height: 9px; border-radius: 50%; flex: none; background: #ffffff1a; }
+  .strip .dots button.on { background: #ffcf8799; }
+  .strip .dots button.cur { background: var(--lamp); box-shadow: 0 0 10px var(--lamp); transform: scale(1.35); }
+  .voice { padding: 110px 28px 170px; text-align: center; display: grid; justify-items: center; }
+  .voice .portrait { width: 170px; height: 204px; color: var(--lamp); filter: drop-shadow(0 0 5px #ffcf8799) drop-shadow(0 0 18px #ffcf8744); }
+  .voice .portrait path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 3.2s cubic-bezier(.4,.1,.3,1) forwards; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  .voice blockquote { margin: 26px 0 16px; font: italic 400 25px/1.22 var(--serif); text-wrap: balance; }
+  .voice .who b { display: block; font-weight: 500; font-size: 15px; }
+  .voice .who span { font-size: 12.5px; color: var(--dim); }
+  .authors { flex: 1; gap: 8px; padding: 4px; }
+  .authors button { flex: none; width: 44px; height: 52px; border-radius: 10px; background: #ffffff08; display: grid; place-items: center; color: var(--faint); }
+  .authors button .portrait { width: 34px; height: 41px; }
+  .authors button.on { color: #ffcf87aa; }
+  .authors button.cur { background: #ffcf8718; color: var(--lamp); box-shadow: inset 0 0 0 1px #ffcf8766; }
+  .authors button.q { font: italic 18px var(--serif); }
+
+  /* ---- Gallery ---- */
+  .gallery-sum { margin: 0 20px; display: grid; gap: 8px; }
+  .room { display: block; width: 100%; text-align: left; margin-bottom: 12px; padding: 16px; border-radius: 18px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--hair); }
+  .room.done { background: linear-gradient(#1f1b14, var(--surface)); box-shadow: inset 0 0 0 1px #ffcf8733; }
+  .room .wall { display: flex; gap: 10px; align-items: flex-end; height: 64px; margin: 6px 0 14px; overflow: hidden; }
+  .room .wall .frame { height: 56px; flex: none; border-width: 1.5px; }
+  .room .head { display: flex; justify-content: space-between; align-items: baseline; }
+  .room .head small { font-size: 12px; color: var(--dim); font-variant-numeric: tabular-nums; }
+  .hang { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 18px; padding: 10px 20px 0; }
+  .hang button { text-align: left; }
+  .hang .frame { width: 100%; aspect-ratio: var(--ar); margin-bottom: 10px; }
+  .hang b { display: block; font: italic 400 18px/1.1 var(--serif); }
+  .hang small { font-size: 11.5px; color: var(--dim); }
+  .work { position: absolute; inset: 0; background: #030306; display: flex; flex-direction: column; }
+  .work .stage { flex: 1; display: grid; place-items: center; padding: 90px 24px 10px; }
+  .work .stage img { max-width: 100%; max-height: 430px; box-shadow: 0 30px 70px #000; border: 2px solid #5f4e33; }
+  .work .stage img.dark { filter: grayscale(1) brightness(.5); border-color: #26262e; }
+  .work .plaque { padding: 20px 22px 26px; background: var(--surface); border-top: 1px solid var(--hair); display: grid; gap: 4px; }
+  .work .plaque .row { display: flex; gap: 12px; align-items: center; margin-top: 12px; padding-top: 14px; border-top: 1px solid var(--hair); }
+
+  /* ---- Search ---- */
+  .field { margin: 0 20px; height: 48px; border-radius: 14px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--hair); display: flex; align-items: center; gap: 10px; padding: 0 14px; color: var(--dim); }
+  .field input { flex: 1; background: none; border: 0; outline: 0; color: var(--ink); font: 400 16px var(--sans); }
+  .chips { gap: 8px; padding: 14px 20px 6px; }
+  .results { padding: 6px 20px 0; }
+  .result { display: flex; align-items: center; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--hair); width: 100%; text-align: left; }
+  .result .frame { width: 50px; height: 50px; flex: none; border-width: 1.5px; box-shadow: none; }
+  .result .frame::before, .result .frame::after { display: none; }
+  .result .grow { flex: 1; min-width: 0; }
+  .result b { display: block; font-weight: 500; font-size: 15px; }
+  .result .sub { display: flex; gap: 10px; align-items: center; font-size: 12px; color: var(--dim); margin-top: 3px; }
+  .result .sub .meter { width: 44px; }
+  .result .fav { color: var(--faint); }
+  .result .fav.on { color: var(--lamp); }
+  .result .fav.on svg { fill: currentColor; }
+  .count { padding: 10px 20px 0; font-size: 12px; color: var(--dim); display: flex; justify-content: space-between; }
+</style>
+
+<div class="topline">
+  <b>Design overhauls</b><span>A · Nocturne: the museum after dark</span>
+  <nav><a href="./">Overview</a><a href="nocturne.html" aria-current="page">A · Nocturne</a><a href="folio.html">B · Folio</a><a href="prism.html">C · Prism</a></nav>
+</div>
+
+<div class="deck">
+  <aside class="notes">
+    <h3>Direction A</h3>
+    <h2 style="font: italic 400 40px/1 'Instrument Serif', serif">Nocturne</h2>
+    <p>The Night Gallery's language, grown into the whole app. One idea runs through it: <b>what you've earned is lit</b>. Won games hang in colour under a picture light, unwon ones wait in the dark, and every progress bar is a strip of lamps.</p>
+    <ul>
+      <li><b>One accent.</b> Lamp gold is the only colour the UI owns. Everything else comes from the art. The reds, blues, greens and purples of today's buttons go.</li>
+      <li><b>Two typefaces.</b> Instrument Serif italic for anything with a name (games, works, authors, chapters, quotes); Outfit, the app's current font, for controls and numbers.</li>
+      <li><b>Four tabs, renamed.</b> Tonight · Voyage · Gallery · Search. <b>Collect becomes Gallery</b>: one room per category, no stamps. A lit room is a completed category.</li>
+      <li><b>Reading rooms.</b> The Tao and the quotes open from the top of Voyage. Both are drawn in lamp light: constellations in gold thread, portraits as a single neon-like line.</li>
+      <li><b>The table</b> is dark, with the game's own colour as a warm lamp from above and its art faintly in the weave. Cards are ivory; backs are navy with a brass lattice.</li>
+      <li><b>Winning</b> switches the painting's light on. The quote follows, then the buttons.</li>
+    </ul>
+    <p>Risk: low. It's the closest to today's app and could be rolled out gradually: tokens first, then screens.</p>
+  </aside>
+
+  <div class="phone"><div class="app" id="app"></div></div>
+
+  <aside class="jump">
+    <h3>Screens</h3>
+    <ol>
+      <li><button data-jump="home">Tonight <small>home</small></button></li>
+      <li><button data-jump="game">Game <small>Klondike</small></button></li>
+      <li><button data-jump="win">Win <small>light comes on</small></button></li>
+      <li><button data-jump="voyage">Voyage <small>campaign</small></button></li>
+      <li><button data-jump="tao">Tao Te Ching</button></li>
+      <li><button data-jump="voices">Voices <small>quotes</small></button></li>
+      <li><button data-jump="gallery">Gallery <small>was Collect</small></button></li>
+      <li><button data-jump="room" data-arg="SpiderFamily">A room</button></li>
+      <li><button data-jump="work" data-arg="/klondike">A work</button></li>
+      <li><button data-jump="search">Search</button></li>
+    </ol>
+    <h3>Palette</h3>
+    <div class="palette">
+      <span class="d" style="background:#07080d">night</span>
+      <span class="d" style="background:#14151f">surface</span>
+      <span style="background:#ece7f2">ink</span>
+      <span style="background:#ffcf87">lamp</span>
+    </div>
+  </aside>
+</div>
+
+<script src="data.js"></script>
+<script src="shared.js"></script>
+<script>
+const { esc, icon } = Draw;
+const app = document.getElementById("app");
+const cap = (g) => g.art.title;
+const lightsBar = (n, of, max = 40) => {
+  const k = Math.min(of, max), on = Math.round((n / of) * k);
+  return `<div class="lights">${Array.from({ length: k }, (_, i) => `<i class="${i < on ? "on" : ""}"></i>`).join("")}</div>`;
+};
+const frame = (g, extra = "", style = "") => {
+  const state = g.won ? "lit" : g.unlocked ? "dark" : "sheet";
+  const bg = state === "sheet" ? "" : `background-image:url('${g.img}');`;
+  return `<span class="frame ${state} ${extra}" style="${bg}${style}"></span>`;
+};
+const ar = (g) => `${g.w} / ${g.h}`;
+
+function tabs(active) {
+  const t = [["home", "moon", "Tonight"], ["voyage", "orbit", "Voyage"], ["gallery", "frame", "Gallery"], ["search", "search", "Search"]];
+  return `<nav class="tabs">${t.map(([k, i, l]) => `<button data-go="${k}" ${k === active ? 'aria-current="page"' : ""}>${icon(i, 22)}${l}</button>`).join("")}</nav>`;
+}
+
+const screens = {
+  home() {
+    const c = P.current, d = P.daily;
+    const q = P.quotes.find((q) => q.collected && q.text.length < 110) || P.quotes[0];
+    return `<div class="scroll">
+      <header class="page-head">
+        <div class="grow"><div class="kicker">Saturday evening</div><h1 class="display" style="margin-top:8px">Tonight</h1></div>
+        <button class="round">${icon("stats", 18)}</button><button class="round">${icon("gear", 18)}</button>
+      </header>
+      <div class="resume">
+        ${frame(c.game, "lit", "display:block")}
+        <div class="over">
+          <div class="kicker">Continue</div>
+          <div class="row">
+            <div><div class="h2">${esc(c.game.title)}</div><div class="meta" style="margin-top:4px">${c.moves} moves · ${c.time} · ${Math.round(c.progress * 100)}% home</div></div>
+            <button class="btn sm" data-go="game" data-arg="${c.game.path}">${icon("play", 14)}Resume</button>
+          </div>
+          <div class="meter" style="--v:${c.progress * 100}%"><b></b></div>
+        </div>
+      </div>
+      <section class="section">
+        <div class="section-title"><span class="kicker">Game of the day</span></div>
+        <button class="today" data-go="game" data-arg="${d.path}" style="width:100%;text-align:left">
+          ${frame({ ...d, won: true })}
+          <div class="txt">
+            <div class="h2" style="font-size:24px">${esc(d.title)}</div>
+            <div class="credit">${esc(cap(d))}, ${esc(d.art.artist)}</div>
+            <div class="nights"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i><span>3 nights running</span></div>
+          </div>
+        </button>
+      </section>
+      <section class="section">
+        <div class="section-title"><span class="kicker">Favourites</span><a href="#" data-go="search">All games</a></div>
+        <div class="shelf hscroll">${P.games.filter((g) => g.fav).concat(P.recent).slice(0, 7).map((g) => `<button data-go="game" data-arg="${g.path}">${frame({ ...g, won: true })}<b>${esc(g.title)}</b><span class="meta">${g.tagName}</span></button>`).join("")}</div>
+      </section>
+      <section class="section">
+        <div class="deal">
+          <div class="fanned"><div class="card back"></div><div class="card back"></div><div class="card back"></div></div>
+          <div class="grow"><div class="h3">Deal me a game</div><div class="meta">Something you haven't played yet</div></div>
+          <button class="round" data-go="game" data-arg="/golf">${icon("shuffle", 18)}</button>
+        </div>
+      </section>
+      <div class="thought">
+        <div class="kicker">A thought for tonight</div>
+        <p>“${esc(q.text)}”</p>
+        <span class="by">${Draw.portrait(q.authorData, { width: 3 })}${esc(q.author)}</span>
+      </div>
+      <div class="pad-bottom"></div>
+    </div>${tabs("home")}`;
+  },
+
+  game(path = "/klondike") {
+    const g = P.game(path) || P.game("/klondike");
+    return `<div class="table" style="--g:${g.dark};--art:url('${g.img}')"></div>
+      <header class="hud">
+        <button class="round glass" data-back>${icon("back", 18)}</button>
+        <div class="mid"><div class="h3">${esc(g.title)}</div><div class="meta">Moves 42 · 6:18</div></div>
+        <button class="round glass">${icon("more", 18)}</button>
+      </header>
+      <div class="label-card">
+        <div class="grow"><div class="kicker">Quick start</div>
+          <ol><li>Build foundations up by suit.</li><li>Build columns down in alternating colours.</li><li>Only kings fill empty columns.</li></ol></div>
+        <button class="round" style="width:30px;height:30px">${icon("close", 14)}</button>
+      </div>
+      <div class="game-board">${Draw.board()}</div>
+      <div class="game-bar">
+        <div class="progress"><span>6 of 52 home</span>${lightsBar(6, 52, 52)}</div>
+        <div class="tools">
+          <button>${icon("undo", 20)}Undo</button>
+          <button class="on">${icon("hint", 20)}Hint</button>
+          <button>${icon("restart", 20)}New deal</button>
+          <button data-go="win">${icon("trophy", 20)}Win demo</button>
+        </div>
+      </div>`;
+  },
+
+  win() {
+    const g = P.winning, q = P.newQuote;
+    return `<div class="win">
+      <div class="kicker">Won · ${esc(g.title)}</div>
+      ${frame({ ...g, won: true }, "", `--ar:${ar(g)}`)}
+      <div class="h2">${esc(cap(g))}</div>
+      <div class="credit" style="margin-top:4px">${esc(g.art.artist)}, ${esc(g.art.date)}</div>
+      <div class="meta" style="margin-top:6px">Now hanging in the ${esc(g.tagName)} room</div>
+      <div class="stats"><div><b>6:18</b>time</div><div><b>112</b>moves</div><div><b>4</b>wins</div></div>
+      <div class="gift">
+        <div class="kicker">A voice joins you</div>
+        <p>“${esc(q.text)}”</p>
+        <div class="meta">${esc(q.author)}</div>
+      </div>
+      <div class="actions">
+        <button class="btn ghost" data-go="game" data-arg="${g.path}">Again</button>
+        <button class="btn" data-go="voyage">Continue voyage</button>
+      </div>
+    </div>`;
+  },
+
+  voyage(sel = "/klondike") {
+    const W = 1100, H = 1100;
+    const pts = Draw.mapPoints(W, H, 1.02);
+    const at = new Map(pts.map((p) => [p.g.path, p]));
+    let lines = "";
+    pts.forEach(({ g, x, y }) =>
+      g.links.forEach((l) => {
+        const o = at.get(l);
+        if (!o || l < g.path) return;
+        const lit = g.won && o.g.won;
+        lines += `<line x1="${x}" y1="${y}" x2="${o.x}" y2="${o.y}" stroke="${lit ? "#ffcf87" : "#ffffff"}" stroke-opacity="${lit ? 0.45 : g.unlocked && o.g.unlocked ? 0.12 : 0.05}" stroke-width="${lit ? 1.2 : 0.8}"/>`;
+      }),
+    );
+    const nodes = pts
+      .map(({ g, x, y }) => {
+        const cls = g.won ? "won" : g.unlocked ? "open" : "locked";
+        const dot = g.won
+          ? `<circle r="14" fill="url(#halo)"/><circle r="4.5" fill="#ffcf87"/>`
+          : g.unlocked
+            ? `<circle r="4.5" fill="#07080d" stroke="#ffcf87" stroke-width="1.3"/>`
+            : `<circle r="2.2" fill="#ffffff44"/>`;
+        return `<g class="node ${cls} ${g.path === sel ? "sel" : ""}" data-path="${g.path}" transform="translate(${x},${y})">
+          ${g.path === sel ? `<circle class="ring" r="11" fill="none" stroke-width="1.2"/>` : ""}${dot}
+          ${g.unlocked ? `<text y="20" text-anchor="middle">${esc(g.title)}</text>` : ""}</g>`;
+      })
+      .join("");
+    const g = P.game(sel);
+    const gift = (r) => `<span title="${r.type}">${icon(r.type === "tao" ? "stars" : "quote", 14)}</span>`;
+    return {
+      html: `<div class="sky" id="sky"><div class="world" id="world"><svg width="${W}" height="${H}">
+          <defs><radialGradient id="halo"><stop offset="0" stop-color="#ffcf87" stop-opacity=".45"/><stop offset="1" stop-color="#ffcf87" stop-opacity="0"/></radialGradient></defs>
+          <g fill="#fff">${Draw.starfield(420, W, H)}</g>${lines}${nodes}</svg></div></div>
+        <header class="voy-head">
+          <div class="kicker">Celestial voyage</div>
+          <h1 class="display" style="margin-top:8px;font-size:34px">Voyage</h1>
+          <div class="meta" style="margin-top:6px">${P.counts.won} of ${P.games.length} works lit</div>
+          <div class="rooms">
+            <button data-go="tao">${Draw.constellation(P.tao[0].figure, { size: 30, pad: 2, glow: false, strokeWidth: 2 })}<div><b>Tao Te Ching</b><small>${P.counts.chapters} of 81 chapters</small></div></button>
+            <button data-go="voices"><span style="color:var(--lamp);width:26px;height:31px;display:block">${Draw.portrait(P.authors[3], { width: 5 })}</span><div><b>Voices</b><small>${P.counts.quotes} of ${P.quotes.length} quotes</small></div></button>
+          </div>
+        </header>
+        <div class="museum-label">
+          <div class="top">
+            ${frame(g)}
+            <div class="grow"><div class="h3">${esc(g.title)}</div><div class="meta">${g.won ? `Won ${g.wins}×` : g.unlocked ? "Unlocked" : "Locked"} · ${esc(g.tagName)}</div></div>
+            <div class="gifts">${g.rewards.map(gift).join("")}</div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-end">
+            <div class="ratings" style="flex:1">
+              <div><small>Complexity</small><div class="meter" style="--v:${g.complexity}%"><b></b></div></div>
+              <div><small>Difficulty</small><div class="meter" style="--v:${g.difficulty}%"><b></b></div></div>
+              <div><small>Luck</small><div class="meter" style="--v:${g.luck}%"><b></b></div></div>
+            </div>
+            <button class="btn sm" data-go="game" data-arg="${g.path}" ${g.unlocked ? "" : "disabled style='opacity:.35'"}>Play</button>
+          </div>
+        </div>${tabs("voyage")}`,
+      after(root) {
+        const sky = root.querySelector("#sky"), world = root.querySelector("#world");
+        const p = at.get(sel);
+        let ox = 195 - p.x, oy = 390 - p.y;
+        const place = () => (world.style.transform = `translate(${ox}px,${oy}px)`);
+        place();
+        let drag = null, moved = false;
+        sky.addEventListener("pointerdown", (e) => ((drag = { x: e.clientX - ox, y: e.clientY - oy }), (moved = false)));
+        window.onpointermove = (e) => {
+          if (!drag) return;
+          moved = true;
+          ox = e.clientX - drag.x; oy = e.clientY - drag.y; place();
+        };
+        window.onpointerup = () => (drag = null);
+        sky.addEventListener("click", (e) => {
+          const n = e.target.closest(".node");
+          if (n && !moved) Router.go("voyage", n.dataset.path, { push: false });
+        });
+      },
+    };
+  },
+
+  tao(n) {
+    const got = P.tao.filter((c) => c.collected);
+    const c = n ? P.tao[n - 1] : got[3] || P.tao[0];
+    const key = c.figure.keyPhrases || [];
+    const paras = c.text.split("\n\n").map((p) => {
+      let h = esc(p).replace(/\n/g, "<br>");
+      key.forEach((k) => (h = h.replace(esc(k), `<mark>${esc(k)}</mark>`)));
+      return `<p>${h}</p>`;
+    });
+    return {
+      html: `<div class="reading"><svg class="bgstars" width="390" height="844">${Draw.starfield(160, 390, 844, 7)}</svg>
+        <div class="scroll">
+          <div class="fig">${Draw.constellation(c.figure, { size: 250, stroke: "#ffcf87", star: "#ffe7c2" })}</div>
+          <div class="chapter"><div class="num">${Draw.roman(c.chapter)}</div><div class="credit" style="margin:6px 0 22px">${esc(c.figure.name)}</div>${paras.join("")}</div>
+        </div></div>
+        <header class="rtop"><button class="round glass" data-back>${icon("back", 18)}</button>
+          <div class="mid"><div class="h3">Tao Te Ching</div><div class="meta">${got.length} of 81 chapters</div></div><button class="round glass">${icon("book", 18)}</button></header>
+        <div class="strip"><button class="round glass" data-go="tao" data-arg="${Math.max(1, c.chapter - 1)}">${icon("left", 16)}</button>
+          <div class="dots hscroll">${P.tao.map((t) => `<button class="${t.collected ? "on" : ""} ${t === c ? "cur" : ""}" ${t.collected ? `data-go="tao" data-arg="${t.chapter}"` : ""}></button>`).join("")}</div>
+          <button class="round glass" data-go="tao" data-arg="${Math.min(81, c.chapter + 1)}">${icon("right", 16)}</button></div>`,
+      after(root) { root.querySelector(".dots .cur")?.scrollIntoView({ inline: "center", block: "nearest" }); },
+    };
+  },
+
+  voices(name) {
+    const a = P.authors.find((a) => a.name === name) || P.authors.find((a) => a.collected && a.quotes.length > 1);
+    const q = a.quotes.find((q) => q.collected) || a.quotes[0];
+    return {
+      html: `<div class="reading"><svg class="bgstars" width="390" height="844">${Draw.starfield(90, 390, 844, 5)}</svg>
+        <div class="scroll"><div class="voice">
+          ${Draw.portrait(a, { width: 1.5 })}
+          <blockquote>“${esc(q.text)}”</blockquote>
+          <div class="who"><b>${esc(a.name)}</b><span>${Draw.years(a)} · ${esc(q.source)}</span></div>
+          <div class="meta" style="margin-top:14px">${a.quotes.filter((q) => q.collected).length} of ${a.quotes.length} quotes by ${esc(a.name.split(" ").pop())}</div>
+        </div></div></div>
+        <header class="rtop"><button class="round glass" data-back>${icon("back", 18)}</button>
+          <div class="mid"><div class="h3">Voices</div><div class="meta">${P.counts.authors} of ${P.authors.length} thinkers</div></div><button class="round glass">${icon("grid", 18)}</button></header>
+        <div class="strip"><div class="authors hscroll">${P.authors.map((x) => x.collected ? `<button class="on ${x === a ? "cur" : ""}" data-go="voices" data-arg="${esc(x.name)}" title="${esc(x.name)}">${Draw.portrait(x, { width: 4 })}</button>` : `<button class="q">?</button>`).join("")}</div></div>`,
+      after(root) { root.querySelector(".authors .cur")?.scrollIntoView({ inline: "center", block: "nearest" }); },
+    };
+  },
+
+  gallery() {
+    const done = P.tags.filter((t) => t.won === t.games.length).length;
+    const rooms = [...P.tags].sort((a, b) => b.won / b.games.length - a.won / a.games.length);
+    return `<div class="scroll">
+      <header class="page-head"><div class="grow"><div class="kicker">The collection</div><h1 class="display" style="margin-top:8px">Gallery</h1>
+        <div class="meta">${P.counts.won} of ${P.games.length} works lit · ${done} of ${P.tags.length} rooms complete</div></div></header>
+      <div class="gallery-sum">${lightsBar(P.counts.won, P.games.length, 56)}</div>
+      <div class="section" style="margin-top:22px">${rooms.map((t) => `<button class="room ${t.won === t.games.length ? "done" : ""}" data-go="room" data-arg="${t.tag}">
+          <div class="head"><span class="h3">${esc(t.name)}</span><small>${t.won} / ${t.games.length}</small></div>
+          <div class="wall">${[...t.games].sort((a, b) => b.won - a.won || b.unlocked - a.unlocked).slice(0, 6).map((g) => frame(g, "", `aspect-ratio:${ar(g)}`)).join("")}</div>
+          ${lightsBar(t.won, t.games.length)}</button>`).join("")}</div>
+      <div class="pad-bottom"></div></div>${tabs("gallery")}`;
+  },
+
+  room(tag = "SpiderFamily") {
+    const t = P.tags.find((t) => t.tag === tag);
+    return `<div class="scroll">
+      <header class="page-head" style="padding-top:50px;align-items:center"><button class="round" data-back>${icon("back", 18)}</button><div class="grow"></div></header>
+      <div style="padding:0 20px 14px"><div class="kicker">Room ${P.tags.indexOf(t) + 1}</div><h1 class="display" style="margin:8px 0 6px;font-size:32px">${esc(t.name)}</h1>
+        <div class="meta" style="margin-bottom:12px">${t.won} of ${t.games.length} works lit</div>${lightsBar(t.won, t.games.length)}</div>
+      <div class="hang">${t.games.map((g) => `<button data-go="work" data-arg="${g.path}">${frame(g, "", `--ar:${ar(g)}`)}<b>${esc(g.title)}</b><small>${g.won ? esc(g.art.artist) : g.unlocked ? "Win to light it" : "Not yet reached"}</small></button>`).join("")}</div>
+      <div class="pad-bottom"></div></div>`;
+  },
+
+  work(path = "/klondike") {
+    const g = P.game(path);
+    return `<div class="work">
+      <header class="rtop"><button class="round glass" data-back>${icon("back", 18)}</button><div class="mid"></div><button class="round glass">${icon("search", 18)}</button></header>
+      <div class="stage"><img src="${g.img}" class="${g.won ? "" : "dark"}" alt=""></div>
+      <div class="plaque">
+        <div class="h2">${esc(cap(g))}</div>
+        <div class="credit">${esc(g.art.artist)}, ${esc(g.art.date)}</div>
+        <div class="meta">${esc(g.art.source)}</div>
+        <div class="row"><div style="flex:1"><div class="kicker" style="font-size:10px">The game</div><div class="h3" style="margin-top:4px">${esc(g.title)}</div></div>
+          <button class="btn sm" data-go="game" data-arg="${g.path}">${g.won ? "Play again" : "Play to light it"}</button></div>
+      </div></div>`;
+  },
+
+  search() {
+    const list = [...P.games].filter((g) => g.unlocked || g.plays).sort((a, b) => a.title.localeCompare(b.title)).slice(0, 30);
+    const cats = ["All", "Unplayed", "Favourites", ...P.tags.map((t) => t.name)];
+    return `<div class="scroll">
+      <header class="page-head"><div class="grow"><h1 class="display">Search</h1></div></header>
+      <label class="field">${icon("search", 18)}<input placeholder="Find a game, an artist, a work…"></label>
+      <div class="chips hscroll">${cats.map((c, i) => `<button class="chip" aria-pressed="${i === 0}">${c}</button>`).join("")}</div>
+      <div class="count"><span>${P.games.length} games</span><span>A–Z ▾</span></div>
+      <div class="results">${list.map((g) => `<button class="result" data-go="game" data-arg="${g.path}">${frame({ ...g, won: true })}
+        <div class="grow"><b>${esc(g.title)}</b><div class="sub"><span>${esc(g.tagName)}</span><span class="meter" style="--v:${g.difficulty}%"><b></b></span></div></div>
+        <span class="fav ${g.fav ? "on" : ""}">${icon("star", 18)}</span></button>`).join("")}</div>
+      <div class="pad-bottom"></div></div>${tabs("search")}`;
+  },
+};
+
+Router.init(screens, app);
+</script>

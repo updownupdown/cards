@@ -1,0 +1,467 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Folio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap">
+<link rel="stylesheet" href="frame.css">
+<style>
+  :root {
+    color-scheme: dark;
+    --page-bg: #0a0908; --page-ink: #eae2cf; --page-dim: #a89c86; --page-line: #2c261f; --page-accent: #e0674b;
+
+    --ink: #100e0c;
+    --leaf: #17140f;
+    --leaf-2: #1f1b15;
+    --rule: #3a3228;
+    --rule-2: #57493a;
+    --bone: #eae2cf;
+    --sepia: #a89c86;
+    --faint: #6d6252;
+    --rubric: #e0674b;
+    --gilt: #c9a862;
+    --serif: "EB Garamond", "Iowan Old Style", Garamond, Georgia, serif;
+  }
+  .app { background: var(--ink); color: var(--bone); font: 400 17px/1.4 var(--serif); font-variant-numeric: oldstyle-nums; }
+  .app button { font: inherit; }
+  .app .ic { stroke-width: 1.3; }
+
+  .sc { font-size: 12.5px; letter-spacing: .16em; text-transform: uppercase; font-weight: 500; }
+  .rub { color: var(--rubric); }
+  .gilt { color: var(--gilt); }
+  .dim { color: var(--sepia); }
+  .it { font-style: italic; }
+  .title { font: 500 34px/1.02 var(--serif); letter-spacing: -.01em; margin: 0; }
+  .t2 { font: 500 25px/1.1 var(--serif); margin: 0; }
+  .rule { height: 1px; background: var(--rule); border: 0; margin: 0; }
+  .double { border-top: 1px solid var(--rule-2); border-bottom: 1px solid var(--rule-2); height: 4px; }
+  .orn { text-align: center; color: var(--rubric); font-size: 18px; margin: 22px 0; }
+
+  /* Text buttons: rubric small caps, underlined on hover; one filled kind. */
+  .tbtn { color: var(--rubric); font: 500 13px/1 var(--serif); letter-spacing: .16em; text-transform: uppercase; padding: 12px 0; display: inline-flex; gap: 6px; align-items: center; }
+  .pbtn { height: 46px; padding: 0 22px; border-radius: 2px; background: var(--rubric); color: #1a0d08; font: 600 14px/1 var(--serif); letter-spacing: .16em; text-transform: uppercase; display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; }
+  .pbtn.ghost { background: none; color: var(--bone); box-shadow: inset 0 0 0 1px var(--rule-2); }
+  .pbtn.sm { height: 38px; padding: 0 16px; font-size: 12.5px; }
+
+  /* Running head */
+  .head { position: absolute; inset: 0 0 auto; z-index: 10; padding: 50px 18px 0; background: var(--ink); }
+  .head .row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding-bottom: 10px; }
+  .head .row > :first-child { justify-self: start; }
+  .head .row > :last-child { justify-self: end; }
+  .head .row button { color: var(--sepia); display: inline-flex; align-items: center; gap: 4px; min-height: 36px; font-size: 15px; font-style: italic; }
+  .body { position: absolute; inset: 100px 0 64px; }
+  .body.full { bottom: 0; }
+
+  /* Tabs */
+  .tabs { position: absolute; left: 0; right: 0; bottom: 0; z-index: 10; height: 64px; background: var(--ink); border-top: 1px solid var(--rule); display: grid; grid-template-columns: repeat(5, 1fr); padding-bottom: 6px; }
+  .tabs button { color: var(--faint); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+  .tabs button span { font-size: 11.5px; letter-spacing: .16em; text-transform: uppercase; font-weight: 500; }
+  .tabs button i { font-style: normal; font-size: 13px; height: 16px; opacity: 0; color: var(--rubric); }
+  .tabs button[aria-current="page"] { color: var(--bone); }
+  .tabs button[aria-current="page"] i { opacity: 1; }
+
+  .wrap { padding: 0 22px; }
+
+  /* ---- Play (home) ---- */
+  .epigraph { margin: 26px 22px 28px 70px; text-align: right; font-style: italic; color: var(--sepia); font-size: 17px; line-height: 1.35; }
+  .epigraph cite { display: block; margin-top: 6px; font-style: normal; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--faint); }
+  .continue { display: grid; grid-template-columns: 104px 1fr; gap: 16px; padding: 16px 0; border-top: 1px solid var(--rule-2); border-bottom: 1px solid var(--rule-2); }
+  .plate-img { display: block; width: 100%; background: center / cover; box-shadow: 0 0 0 1px var(--rule-2), 0 0 0 4px var(--ink), 0 0 0 5px var(--rule); }
+  .continue .plate-img { aspect-ratio: 4 / 5; }
+  .continue .info { display: flex; flex-direction: column; gap: 4px; }
+  .continue .info .pbtn { margin-top: auto; align-self: flex-start; }
+  .hair { height: 1px; background: var(--rule); position: relative; margin: 8px 0 2px; }
+  .hair b { position: absolute; inset: 0 auto 0 0; width: var(--v); background: var(--gilt); }
+  .day { margin-top: 30px; }
+  .day p { margin: 10px 0 0; }
+  .day p::first-letter { float: left; font-size: 58px; line-height: .82; padding: 4px 8px 0 0; color: var(--rubric); font-weight: 500; }
+  .toc { list-style: none; margin: 12px 0 0; padding: 0; }
+  .toc li button { width: 100%; display: flex; align-items: baseline; gap: 8px; padding: 9px 0; text-align: left; }
+  .toc li button .n { width: 26px; color: var(--rubric); font-size: 14px; flex: none; }
+  .toc li button .lead { flex: 1; border-bottom: 1px dotted var(--rule-2); transform: translateY(-5px); }
+  .toc li button .r { color: var(--sepia); font-style: italic; font-size: 15px; }
+  .section-h { display: flex; justify-content: space-between; align-items: baseline; margin-top: 30px; padding-bottom: 6px; border-bottom: 1px solid var(--rule); }
+
+  /* ---- Cards ---- */
+  .card { border-radius: 3px; background: #efe6d2; color: #1d1914; box-shadow: 0 1px 2px #0009, inset 0 0 0 1px #d8cbb0; font-family: var(--serif); }
+  .card.red { color: #b8332a; }
+  .card .idx b { font-weight: 600; font-size: 18px; line-height: .9; font-variant-numeric: lining-nums; letter-spacing: -.05em; }
+  .card .idx i { font-style: normal; font-size: 12px; margin-top: 1px; }
+  .card .pip { font-size: 24px; line-height: 1; }
+  .card.back { background:
+      radial-gradient(circle at 50% 50%, #0000 0 6px, #e6c07a55 6.5px 7px, #0000 7.5px),
+      repeating-radial-gradient(circle at 50% 50%, #0000 0 3px, #ffffff10 3px 3.6px),
+      #8e2a1c;
+    box-shadow: inset 0 0 0 2px #8e2a1c, inset 0 0 0 3px #e6c07a99, 0 1px 2px #0009; }
+  .card.hinted { box-shadow: 0 0 0 2px var(--gilt), 0 1px 2px #0009; }
+  .slot { border-radius: 3px; box-shadow: inset 0 0 0 1px var(--rule-2); color: var(--rule-2); font-size: 18px; }
+
+  /* ---- Game ---- */
+  .table { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 30%, #1e1812, #0c0a08 75%); }
+  .ghead { position: relative; z-index: 2; }
+  .gline { display: flex; justify-content: center; gap: 18px; padding: 8px 0 12px; color: var(--sepia); font-style: italic; font-size: 15px; font-variant-numeric: lining-nums tabular-nums; }
+  .margin-note { position: relative; z-index: 2; margin: 0 18px 16px; padding: 10px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); font-size: 15px; line-height: 1.35; color: var(--bone); display: flex; gap: 10px; }
+  .margin-note ol { margin: 0; padding: 0; list-style: none; flex: 1; }
+  .margin-note li b { color: var(--rubric); font-weight: 500; margin-right: 6px; }
+  .game-board { position: relative; z-index: 2; }
+  .gfoot { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; padding: 0 18px 18px; }
+  .gfoot .count { display: flex; justify-content: space-between; font-size: 13px; font-style: italic; color: var(--sepia); margin-bottom: 6px; }
+  .gfoot .acts { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--rule-2); margin-top: 12px; }
+  .gfoot .acts button { padding: 14px 0 4px; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--sepia); }
+  .gfoot .acts button + button { border-left: 1px solid var(--rule); }
+  .gfoot .acts button span { font-size: 11.5px; letter-spacing: .16em; text-transform: uppercase; font-weight: 500; }
+  .gfoot .acts button.on { color: var(--gilt); }
+
+  /* ---- Win ---- */
+  .finis { position: absolute; inset: 0; padding: 56px 26px 24px; text-align: center; display: flex; flex-direction: column; align-items: center; background: radial-gradient(ellipse at 50% 30%, #1f1a12, var(--ink) 70%); }
+  .finis h1 { font: italic 400 56px/1 var(--serif); margin: 6px 0 2px; }
+  .finis .plate-img { width: 190px; aspect-ratio: var(--ar); margin: 22px 0 14px; animation: print 3s ease-out both; }
+  @keyframes print { 0% { filter: sepia(1) brightness(1.8) contrast(.3); opacity: 0; } 30% { opacity: 1; } 100% { filter: none; } }
+  .finis figcaption { font-size: 15px; line-height: 1.35; max-width: 30ch; }
+  .finis .tally { display: flex; gap: 18px; margin-top: 12px; font-style: italic; color: var(--sepia); font-variant-numeric: lining-nums; }
+  .finis .inscribed { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--rule); animation: rise 1s 2.2s both; }
+  .finis .inscribed p { font-style: italic; font-size: 19px; line-height: 1.3; margin: 8px 0 4px; text-wrap: balance; }
+  .finis .acts { margin-top: auto; display: flex; gap: 10px; width: 100%; animation: rise 1s 2.6s both; }
+  .finis .acts > * { flex: 1; }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } }
+
+  /* ---- Atlas ---- */
+  .atlas { position: absolute; inset: 0; overflow: hidden; background: #0e0c0a; cursor: grab; }
+  .atlas .world { position: absolute; left: 0; top: 0; }
+  .atlas text { font: italic 400 12px var(--serif); fill: var(--sepia); }
+  .atlas .won text { fill: var(--bone); }
+  .atlas .locked text { display: none; }
+  .atlas-title { position: absolute; top: 108px; left: 22px; right: 22px; z-index: 4; pointer-events: none; display: flex; justify-content: space-between; align-items: baseline; }
+  .cartouche { position: absolute; left: 14px; right: 14px; bottom: 76px; z-index: 5; background: var(--leaf); padding: 14px 16px; box-shadow: 0 0 0 1px var(--rule-2), 0 0 0 4px var(--leaf), 0 0 0 5px var(--rule), 0 12px 30px #000c; }
+  .cartouche .top { display: flex; gap: 14px; align-items: center; }
+  .cartouche .plate-img { width: 52px; height: 52px; flex: none; }
+  .cartouche .grow { flex: 1; min-width: 0; }
+  .cartouche table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+  .cartouche td { padding: 3px 0; border-top: 1px solid var(--rule); }
+  .cartouche td:last-child { text-align: right; letter-spacing: .15em; color: var(--gilt); }
+  .cartouche .bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+
+  /* ---- Book ---- */
+  .bookswitch { display: flex; justify-content: center; gap: 24px; padding: 4px 0 0; }
+  .bookswitch button { padding: 6px 0; color: var(--faint); border-bottom: 1px solid transparent; }
+  .bookswitch button[aria-pressed="true"] { color: var(--bone); border-color: var(--rubric); }
+  .chapter { padding: 10px 26px 90px; }
+  .chapter .fig { display: grid; place-items: center; color: var(--bone); margin: 8px 0 4px; }
+  .chapter .num { text-align: center; font: 500 15px var(--serif); letter-spacing: .22em; color: var(--rubric); }
+  .chapter h2 { text-align: center; font: italic 400 24px/1.1 var(--serif); margin: 4px 0 18px; }
+  .chapter p { margin: 0 0 12px; font-size: 18px; line-height: 1.42; }
+  .chapter p:first-of-type::first-letter { float: left; font-size: 60px; line-height: .8; padding: 5px 8px 0 0; color: var(--rubric); }
+  .chapter mark { background: none; color: var(--gilt); font-style: italic; }
+  .pager { position: absolute; left: 0; right: 0; bottom: 64px; z-index: 6; display: flex; justify-content: space-between; align-items: center; padding: 10px 22px; background: linear-gradient(#100e0c00, var(--ink) 40%); font-style: italic; color: var(--sepia); font-size: 15px; }
+  .pager button { color: var(--rubric); font-size: 15px; font-style: italic; min-height: 36px; display: inline-flex; align-items: center; gap: 4px; }
+  .saying { padding: 20px 28px 100px; text-align: center; }
+  .saying .portrait { width: 150px; height: 180px; color: var(--bone); }
+  .saying .qm { font-size: 60px; line-height: .5; color: var(--rubric); margin-top: 18px; display: block; }
+  .saying blockquote { margin: 6px 0 16px; font-size: 24px; line-height: 1.25; font-style: italic; text-wrap: balance; }
+  .saying .who { font-size: 13px; letter-spacing: .16em; text-transform: uppercase; }
+  .saying .src { font-style: italic; color: var(--sepia); font-size: 15px; margin-top: 2px; }
+  .saying .more { margin-top: 26px; text-align: left; }
+  .saying .more li { padding: 8px 0; border-top: 1px solid var(--rule); font-size: 16px; font-style: italic; }
+  .saying .more li.no { color: var(--faint); font-style: normal; }
+
+  /* ---- Plates ---- */
+  .cat { margin-top: 26px; }
+  .cat h2 { font: 500 22px/1.1 var(--serif); margin: 4px 0 0; display: flex; justify-content: space-between; align-items: baseline; }
+  .cat h2 small { font: italic 400 15px var(--serif); color: var(--sepia); }
+  .plates { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 14px; margin-top: 16px; }
+  .plates button { text-align: left; width: 100%; min-width: 0; align-self: start; }
+  .plates .plate-img { aspect-ratio: 4 / 5; margin-bottom: 8px; }
+  .plates .plate-img.proof { filter: sepia(.9) brightness(.45) contrast(.8); }
+  .plates .plate-img.blank { background: repeating-linear-gradient(-45deg, #0000 0 5px, #ffffff08 5px 6px), var(--leaf); }
+  .plates .no { font-size: 11px; letter-spacing: .16em; color: var(--rubric); display: block; }
+  .plates .cap { font-size: 14px; line-height: 1.2; display: block; }
+  .plates .cap.dim { color: var(--faint); font-style: italic; }
+  .stamps { display: flex; gap: 3px; margin-top: 6px; }
+  .stamps i { width: 12px; height: 2px; background: var(--rule-2); }
+  .stamps i.on { background: var(--gilt); }
+
+  /* ---- Index ---- */
+  .search { display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--rule-2); padding: 6px 0 10px; color: var(--sepia); }
+  .search input { flex: 1; background: none; border: 0; outline: 0; color: var(--bone); font: italic 400 20px var(--serif); }
+  .search input::placeholder { color: var(--faint); }
+  .filters { gap: 16px; padding: 12px 0 4px; }
+  .filters button { white-space: nowrap; color: var(--faint); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; padding: 6px 0; border-bottom: 1px solid transparent; }
+  .filters button[aria-pressed="true"] { color: var(--bone); border-color: var(--rubric); }
+  .letter { display: grid; grid-template-columns: 34px 1fr; gap: 8px; margin-top: 18px; }
+  .letter > b { font: 500 32px/1 var(--serif); color: var(--rubric); }
+  .entry { display: flex; align-items: baseline; gap: 8px; padding: 6px 0; width: 100%; text-align: left; }
+  .entry .lead { flex: 1; border-bottom: 1px dotted var(--rule-2); transform: translateY(-5px); min-width: 12px; }
+  .entry .dots { font-size: 11px; letter-spacing: .12em; color: var(--gilt); white-space: nowrap; }
+  .dots s, .cartouche s { text-decoration: none; color: var(--rule-2); }
+  .entry em { font-size: 13px; color: var(--sepia); }
+  .alpha { position: absolute; right: 4px; top: 190px; bottom: 80px; z-index: 6; display: flex; flex-direction: column; justify-content: space-between; font-size: 10.5px; color: var(--faint); letter-spacing: .05em; text-align: center; width: 16px; }
+</style>
+
+<div class="topline">
+  <b>Design overhauls</b><span>B · Folio: a book of games</span>
+  <nav><a href="./">Overview</a><a href="nocturne.html">A · Nocturne</a><a href="folio.html" aria-current="page">B · Folio</a><a href="prism.html">C · Prism</a></nav>
+</div>
+
+<div class="deck">
+  <aside class="notes">
+    <h3>Direction B</h3>
+    <h2 style="font: italic 400 44px/1 'EB Garamond', serif">Folio</h2>
+    <p>If the art is from museums and the words are from Laozi, Aurelius and Woolf, the app can be <b>a finely set book</b>: an anthology of games with plates, an atlas and a commonplace book. It's a typographic system rather than a decorative one, so it stays calm and legible.</p>
+    <ul>
+      <li><b>One typeface.</b> EB Garamond everywhere, with small caps for labels, oldstyle figures in text and lining figures in the HUD. Hierarchy comes from size, italics and rules, not from coloured boxes.</li>
+      <li><b>Rubric red</b> (like the red capitals in manuscripts) is the one action colour; <b>gilt</b> marks what's earned.</li>
+      <li><b>Five text tabs:</b> Play · Atlas · Book · Plates · Index. The Tao and the quotes are <b>merged into one "Commonplace Book"</b>, with the chapters and the sayings as its two halves.</li>
+      <li><b>The Atlas</b> is the campaign as an engraved star chart (Uranometria style). The Tao constellations are drawn the same way, so they now belong to the same sky.</li>
+      <li><b>Plates</b> replaces Collect: a catalogue by chapter (category). Winning <i>prints</i> a plate. Unwon plates are faint sepia proofs; unreached ones are blank.</li>
+      <li><b>Index</b> is search as a book's index: letters, dot leaders and difficulty in gilt pips.</li>
+      <li>Every game page opens with <b>an epigraph</b>, one of its reward quotes, so the quotes are around you all the time, not only in a collection.</li>
+    </ul>
+    <p>Risk: medium. It's the most distinctive of the three and the least "gamey". Cards lose some pop, and the tone is quiet.</p>
+  </aside>
+
+  <div class="phone"><div class="app" id="app"></div></div>
+
+  <aside class="jump">
+    <h3>Screens</h3>
+    <ol>
+      <li><button data-jump="home">Play <small>home</small></button></li>
+      <li><button data-jump="game">Game <small>Klondike</small></button></li>
+      <li><button data-jump="win">Finis <small>win</small></button></li>
+      <li><button data-jump="atlas">Atlas <small>campaign</small></button></li>
+      <li><button data-jump="book">Book · Tao</button></li>
+      <li><button data-jump="book" data-arg="sayings">Book · Sayings <small>quotes</small></button></li>
+      <li><button data-jump="plates">Plates <small>was Collect</small></button></li>
+      <li><button data-jump="index">Index <small>search</small></button></li>
+    </ol>
+    <h3>Palette</h3>
+    <div class="palette">
+      <span class="d" style="background:#100e0c">ink</span>
+      <span style="background:#eae2cf">bone</span>
+      <span style="background:#e0674b">rubric</span>
+      <span style="background:#c9a862">gilt</span>
+    </div>
+  </aside>
+</div>
+
+<script src="data.js"></script>
+<script src="shared.js"></script>
+<script>
+const { esc, icon, roman } = Draw;
+const app = document.getElementById("app");
+const img = (g, cls = "", style = "") => `<span class="plate-img ${cls}" style="background-image:url('${g.img}');${style}"></span>`;
+const pips = (v, n = 5) => { const k = Math.max(1, Math.round((v / 100) * n)); return "●".repeat(k) + `<s>${"●".repeat(n - k)}</s>`; };
+const plateNo = (g) => `Pl. ${roman(g.plate)}`;
+
+function head(center, left = "", right = "") {
+  return `<header class="head"><div class="row"><span>${left}</span><span class="sc">${center}</span><span>${right}</span></div><div class="double"></div></header>`;
+}
+function tabs(active) {
+  const t = [["home", "Play"], ["atlas", "Atlas"], ["book", "Book"], ["plates", "Plates"], ["index", "Index"]];
+  return `<nav class="tabs">${t.map(([k, l]) => `<button data-go="${k}" ${k === active ? 'aria-current="page"' : ""}><i>❦</i><span>${l}</span></button>`).join("")}</nav>`;
+}
+
+const screens = {
+  home() {
+    const c = P.current, d = P.daily;
+    const q = P.quotes[d.rewards.find((r) => r.type === "quote")?.id - 1] || P.quotes[3];
+    const favs = P.games.filter((g) => g.fav);
+    return `${head("Solitarius", `<button>Ledger</button>`, `<button>Settings</button>`)}
+      <div class="body"><div class="scroll">
+        <div class="epigraph">${esc(q.text)}<cite>— ${esc(q.author)}</cite></div>
+        <div class="wrap">
+          <div class="sc dim" style="margin-bottom:8px">Continued</div>
+          <div class="continue">
+            ${img(c.game)}
+            <div class="info">
+              <h2 class="t2">${esc(c.game.title)}</h2>
+              <div class="it dim" style="font-size:15px">Move ${c.moves}, ${c.time} in. About half the cards are home.</div>
+              <div class="hair" style="--v:${c.progress * 100}%"><b></b></div>
+              <button class="pbtn sm" data-go="game" data-arg="${c.game.path}">Resume</button>
+            </div>
+          </div>
+          <div class="day">
+            <div class="section-h"><span class="sc rub">The day's game</span><span class="it dim" style="font-size:14px">Saturday, 27 September</span></div>
+            <h2 class="t2" style="margin-top:12px">${esc(d.title)}</h2>
+            <p>${esc(d.desc)} <button class="tbtn" data-go="game" data-arg="${d.path}" style="padding:0">Begin ›</button></p>
+            <div class="it dim" style="font-size:14px;margin-top:8px">Three days running. Plate: <i>${esc(d.art.title)}</i>, ${esc(d.art.artist)}.</div>
+          </div>
+          <div class="section-h"><span class="sc rub">Favourites</span><button class="it dim" style="font-size:14px" data-go="index">The full index ›</button></div>
+          <ol class="toc">${favs.map((g, i) => `<li><button data-go="game" data-arg="${g.path}"><span class="n">${roman(i + 1)}</span><span>${esc(g.title)}</span><span class="lead"></span><span class="r">${g.wins ? `${g.wins} won` : "unplayed"}</span></button></li>`).join("")}</ol>
+          <div class="section-h"><span class="sc rub">Or, at random</span></div>
+          <p style="margin:10px 0 0">Let the book fall open on a game you haven't played. <button class="tbtn" style="padding:0" data-go="game" data-arg="/golf">Deal ›</button></p>
+          <div class="orn">❦</div>
+        </div>
+      </div></div>${tabs("home")}`;
+  },
+
+  game(path = "/klondike") {
+    const g = P.game(path) || P.game("/klondike");
+    return `<div class="table"></div>
+      <div class="ghead">${head(esc(g.title), `<button data-back>${icon("left", 16)}Contents</button>`, `<button>Rules</button>`)}</div>
+      <div style="position:relative;z-index:2;padding-top:100px">
+        <div class="gline"><span>Move 42</span><span>·</span><span>6′ 18″</span><span>·</span><span>Draw three</span></div>
+        <div class="margin-note"><ol><li><b>i.</b>Build the foundations up by suit.</li><li><b>ii.</b>Build columns down, alternating colours.</li><li><b>iii.</b>Only a King may fill an empty column.</li></ol><button class="dim">${icon("close", 16)}</button></div>
+      </div>
+      <div class="game-board">${Draw.board()}</div>
+      <div class="gfoot">
+        <div class="count"><span>Six of fifty-two cards home</span><span>12%</span></div>
+        <div class="hair" style="--v:12%"><b></b></div>
+        <div class="acts">
+          <button>${icon("undo", 18)}<span>Undo</span></button>
+          <button class="on">${icon("hint", 18)}<span>Hint</span></button>
+          <button>${icon("restart", 18)}<span>Deal</span></button>
+          <button data-go="win">${icon("trophy", 18)}<span>Win</span></button>
+        </div>
+      </div>`;
+  },
+
+  win() {
+    const g = P.winning, q = P.newQuote;
+    return `<div class="finis">
+      <div class="sc rub">${esc(g.title)}</div>
+      <h1>Finis.</h1>
+      ${img(g, "", `--ar:${g.w} / ${g.h}`)}
+      <figcaption><span class="sc rub" style="font-size:11px">${plateNo(g)}</span><br><i>${esc(g.art.title)}.</i> ${esc(g.art.artist)}, ${esc(g.art.date)}.</figcaption>
+      <div class="tally"><span>112 moves</span><span>6′ 18″</span><span>fourth win</span></div>
+      <div class="inscribed">
+        <div class="sc gilt" style="font-size:11px">Entered in your Commonplace Book</div>
+        <p>“${esc(q.text)}”</p>
+        <div class="sc dim" style="font-size:11px">${esc(q.author)}</div>
+      </div>
+      <div class="acts"><button class="pbtn ghost" data-go="game" data-arg="${g.path}">Again</button><button class="pbtn" data-go="atlas">To the Atlas</button></div>
+    </div>`;
+  },
+
+  atlas(sel = "/klondike") {
+    const W = 1150, H = 1150;
+    const pts = Draw.mapPoints(W, H, 1.05);
+    const at = new Map(pts.map((p) => [p.g.path, p]));
+    const cx = W / 2, cy = H / 2;
+    let grid = "";
+    for (let r = 120; r < 800; r += 120) grid += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#3a3228" stroke-width="${r % 360 ? 0.6 : 1}"/>`;
+    for (let a = 0; a < 360; a += 15) {
+      const t = (a * Math.PI) / 180;
+      grid += `<line x1="${cx + Math.cos(t) * 40}" y1="${cy + Math.sin(t) * 40}" x2="${cx + Math.cos(t) * 800}" y2="${cy + Math.sin(t) * 800}" stroke="#2c261f" stroke-width="${a % 45 ? 0.5 : 0.9}"/>`;
+    }
+    for (let a = 0; a < 360; a += 3) {
+      const t = (a * Math.PI) / 180, r = 600, k = a % 15 ? 5 : 10;
+      grid += `<line x1="${cx + Math.cos(t) * r}" y1="${cy + Math.sin(t) * r}" x2="${cx + Math.cos(t) * (r + k)}" y2="${cy + Math.sin(t) * (r + k)}" stroke="#57493a" stroke-width=".8"/>`;
+    }
+    let lines = "";
+    pts.forEach(({ g, x, y }) => g.links.forEach((l) => {
+      const o = at.get(l);
+      if (!o || l < g.path) return;
+      const both = g.won && o.g.won;
+      lines += `<line x1="${x}" y1="${y}" x2="${o.x}" y2="${o.y}" stroke="${both ? "#eae2cf" : "#a89c86"}" stroke-opacity="${both ? 0.7 : g.unlocked && o.g.unlocked ? 0.35 : 0.12}" stroke-width="${both ? 1 : 0.7}" ${both ? "" : 'stroke-dasharray="2 3"'}/>`;
+    }));
+    const star = (r) => {
+      let d = "";
+      for (let i = 0; i < 8; i++) { const t = (i * Math.PI) / 4, k = i % 2 ? r * 0.35 : r; d += `${i ? "L" : "M"}${(Math.cos(t) * k).toFixed(1)} ${(Math.sin(t) * k).toFixed(1)}`; }
+      return d + "Z";
+    };
+    const nodes = pts.map(({ g, x, y }) => {
+      const cls = g.won ? "won" : g.unlocked ? "open" : "locked";
+      const mark = g.won ? `<path d="${star(9)}" fill="#c9a862"/><circle r="2.2" fill="#100e0c"/>` : g.unlocked ? `<circle r="4.5" fill="#0e0c0a" stroke="#eae2cf" stroke-width="1"/>` : `<circle r="1.6" fill="#6d6252"/>`;
+      return `<g class="node ${cls}" data-path="${g.path}" transform="translate(${x},${y})" style="cursor:pointer">${g.path === sel ? `<circle r="15" fill="none" stroke="#e0674b" stroke-width="1"/><circle r="19" fill="none" stroke="#e0674b" stroke-width=".5"/>` : ""}${mark}<text x="12" y="4">${esc(g.title)}</text></g>`;
+    }).join("");
+    const g = P.game(sel);
+    return {
+      html: `${head("The Atlas", "", `<button data-go="book">Book ›</button>`)}
+        <div class="atlas" id="sky"><div class="world" id="world"><svg width="${W}" height="${H}"><g fill="#a89c86">${Draw.starfield(380, W, H, 9)}</g>${grid}${lines}${nodes}</svg></div></div>
+        <div class="atlas-title"><span class="it" style="font-size:22px">Tabula I. <span class="dim">The Voyage</span></span><span class="sc dim" style="font-size:11px">${P.counts.won} of ${P.games.length}</span></div>
+        <div class="cartouche">
+          <div class="top">${img(g)}<div class="grow"><div class="sc rub" style="font-size:11px">${esc(g.tagName)}</div><h2 class="t2" style="font-size:23px">${esc(g.title)}</h2></div></div>
+          <table><tr><td>Complexity</td><td>${pips(g.complexity)}</td></tr><tr><td>Difficulty</td><td>${pips(g.difficulty)}</td></tr><tr><td>Luck</td><td>${pips(g.luck)}</td></tr></table>
+          <div class="bottom"><span class="it dim" style="font-size:14px">Yields ${g.rewards.map((r) => (r.type === "tao" ? `chapter ${roman(r.id)}` : "a saying")).join(", ")}</span>
+          <button class="pbtn sm" data-go="game" data-arg="${g.path}">Play</button></div>
+        </div>${tabs("atlas")}`,
+      after(root) {
+        const sky = root.querySelector("#sky"), world = root.querySelector("#world");
+        const p = at.get(sel);
+        let ox = 195 - p.x, oy = 380 - p.y, drag = null, moved = false;
+        const place = () => (world.style.transform = `translate(${ox}px,${oy}px)`);
+        place();
+        sky.addEventListener("pointerdown", (e) => ((drag = { x: e.clientX - ox, y: e.clientY - oy }), (moved = false)));
+        window.onpointermove = (e) => { if (drag) { moved = true; ox = e.clientX - drag.x; oy = e.clientY - drag.y; place(); } };
+        window.onpointerup = () => (drag = null);
+        sky.addEventListener("click", (e) => { const n = e.target.closest(".node"); if (n && !moved) Router.go("atlas", n.dataset.path, { push: false }); });
+      },
+    };
+  },
+
+  book(arg) {
+    const sayings = typeof arg === "string" && !/^\d+$/.test(arg);
+    const sw = `<div class="bookswitch"><button aria-pressed="${!sayings}" data-go="book">Tao Te Ching</button><button aria-pressed="${sayings}" data-go="book" data-arg="sayings">Sayings</button></div>`;
+    if (sayings) {
+      const list = P.authors.filter((a) => a.collected);
+      const a = list.find((x) => x.name === arg) || list.find((x) => x.name === "Virginia Woolf") || list[4];
+      const i = list.indexOf(a);
+      const q = a.quotes.find((q) => q.collected);
+      return `${head("Commonplace Book", "", "")}
+        <div class="body"><div class="scroll">${sw}<div class="saying">
+          ${Draw.portrait(a, { width: 1.1 })}
+          <span class="qm">“</span>
+          <blockquote>${esc(q.text)}</blockquote>
+          <div class="who">${esc(a.name)}</div>
+          <div class="src">${Draw.years(a)} · ${esc(q.source)}</div>
+          <ol class="more" style="list-style:none;padding:0">${a.quotes.filter((x) => x !== q).map((x) => (x.collected ? `<li>“${esc(x.text.length > 70 ? x.text.slice(0, 68) + "…" : x.text)}”</li>` : `<li class="no">A saying yet to be found</li>`)).join("")}</ol>
+        </div></div></div>
+        <div class="pager"><button data-go="book" data-arg="${esc(list[(i - 1 + list.length) % list.length].name)}">‹ ${esc(list[(i - 1 + list.length) % list.length].name.split(" ").pop())}</button><span>${i + 1} of ${list.length} voices</span><button data-go="book" data-arg="${esc(list[(i + 1) % list.length].name)}">${esc(list[(i + 1) % list.length].name.split(" ").pop())} ›</button></div>
+        ${tabs("book")}`;
+    }
+    const got = P.tao.filter((c) => c.collected);
+    const c = arg ? P.tao[Number(arg) - 1] : got[6] || P.tao[0];
+    const key = c.figure.keyPhrases || [];
+    const paras = c.text.split("\n\n").map((p) => {
+      let h = esc(p).replace(/\n/g, "<br>");
+      key.forEach((k) => (h = h.replace(esc(k), `<mark>${esc(k)}</mark>`)));
+      return `<p>${h}</p>`;
+    });
+    const prev = [...got].reverse().find((t) => t.chapter < c.chapter), next = got.find((t) => t.chapter > c.chapter);
+    return `${head("Commonplace Book", "", "")}
+      <div class="body"><div class="scroll">${sw}<div class="chapter">
+        <div class="fig">${Draw.constellation(c.figure, { size: 210, glow: false, strokeWidth: 0.35, stroke: "#eae2cf", star: "#eae2cf" })}</div>
+        <div class="num">CHAPTER ${roman(c.chapter)}</div>
+        <h2>${esc(c.figure.name)}</h2>
+        ${paras.join("")}
+      </div></div></div>
+      <div class="pager"><button ${prev ? `data-go="book" data-arg="${prev.chapter}"` : ""}>‹ ${prev ? roman(prev.chapter) : ""}</button><span>${got.length} of lxxxi chapters</span><button ${next ? `data-go="book" data-arg="${next.chapter}"` : ""}>${next ? roman(next.chapter) : ""} ›</button></div>
+      ${tabs("book")}`;
+  },
+
+  plates() {
+    const cats = [...P.tags].sort((a, b) => b.won / b.games.length - a.won / a.games.length);
+    return `${head("Plates", "", "")}
+      <div class="body"><div class="scroll"><div class="wrap" style="padding-bottom:30px">
+        <p class="it dim" style="margin:20px 0 0;font-size:16px">Each game you win prints its plate. ${P.counts.won} of ${P.games.length} are printed; ${P.tags.filter((t) => t.won === t.games.length).length} of ${P.tags.length} chapters are complete.</p>
+        ${cats.map((t, ci) => `<section class="cat">
+          <div class="sc rub" style="font-size:11px">Chapter ${roman(ci + 1)}</div>
+          <h2>${esc(t.name)}<small>${t.won} of ${t.games.length}${t.won === t.games.length ? " · complete" : ""}</small></h2>
+          <div class="stamps">${t.games.map((g) => `<i class="${g.won ? "on" : ""}"></i>`).join("")}</div>
+          <div class="plates">${t.games.map((g) => `<button data-go="game" data-arg="${g.path}">
+            ${g.won ? img(g) : g.unlocked ? img(g, "proof") : `<span class="plate-img blank"></span>`}
+            <span class="no">${plateNo(g)}</span>
+            ${g.won ? `<span class="cap"><i>${esc(g.art.title.length > 34 ? g.art.title.slice(0, 32) + "…" : g.art.title)}</i></span>` : `<span class="cap dim">${esc(g.title)}${g.unlocked ? "" : " (unreached)"}</span>`}
+          </button>`).join("")}</div></section>`).join("")}
+      </div></div></div>${tabs("plates")}`;
+  },
+
+  index() {
+    const list = [...P.games].sort((a, b) => a.title.localeCompare(b.title));
+    const groups = {};
+    list.forEach((g) => (groups[g.title[0]] ||= []).push(g));
+    return `${head("Index", "", "")}
+      <div class="body"><div class="scroll"><div class="wrap" style="padding:14px 30px 30px 22px">
+        <label class="search">${icon("search", 18)}<input placeholder="Find a game, an artist, a plate…"></label>
+        <div class="filters hscroll"><button aria-pressed="true">All</button><button>Unplayed</button><button>Favourites</button>${P.tags.map((t) => `<button>${t.name}</button>`).join("")}</div>
+        <div class="sc dim" style="font-size:11px;margin-top:10px;display:flex;justify-content:space-between"><span>${list.length} games</span><span>Difficulty</span></div>
+        ${Object.entries(groups).map(([L, gs]) => `<div class="letter"><b>${L}</b><div>${gs.map((g) => `<button class="entry" data-go="game" data-arg="${g.path}"><span>${esc(g.title)}${g.won ? ` <span class="gilt" style="font-size:12px">✶</span>` : ""}</span><span class="lead"></span><span class="dots">${pips(g.difficulty)}</span></button>`).join("")}</div></div>`).join("")}
+      </div></div>
+      <div class="alpha">${Object.keys(groups).map((l) => `<span>${l}</span>`).join("")}</div></div>
+      ${tabs("index")}`;
+  },
+};
+
+Router.init(screens, app);
+</script>

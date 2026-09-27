@@ -1,0 +1,201 @@
+<title>Solitarius Redesigns</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600&family=EB+Garamond:ital@1&family=Manrope:wght@800&display=swap">
+<style>
+  /* One committed dark look, like the app itself. */
+  :root {
+    color-scheme: dark;
+    --bg: #09090d;
+    --surface: #131319;
+    --line: #26252f;
+    --ink: #ece9f1;
+    --dim: #9995a8;
+    --faint: #5f5c6e;
+    --a: #ffcf87;   /* Nocturne's lamp */
+    --b: #e0674b;   /* Folio's rubric */
+    --c: #d9e4ff;   /* Prism's starlight */
+    --serif: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+    --sans: "Outfit", system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--sans); padding-inline: 20px; }
+  .page { max-width: 1120px; margin: 0 auto; padding-block: 56px 80px; display: grid; gap: 64px; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--a); outline-offset: 3px; }
+  h1, h2, h3 { font-weight: 400; text-wrap: balance; margin: 0; }
+  .kicker { font-size: 11.5px; letter-spacing: .2em; text-transform: uppercase; color: var(--dim); font-weight: 500; }
+  p { margin: 0; }
+
+  header { display: grid; gap: 18px; max-width: 70ch; }
+  header h1 { font: italic 400 clamp(44px, 8vw, 76px)/.95 var(--serif); letter-spacing: -.01em; }
+  header p { color: var(--dim); font-size: 17px; }
+  header p b { color: var(--ink); font-weight: 500; }
+
+  /* The three directions */
+  .dirs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  @media (max-width: 900px) { .dirs { grid-template-columns: 1fr; } }
+  .dir { --k: var(--a); display: grid; grid-template-rows: auto auto 1fr auto; gap: 14px; padding: 22px; border-radius: 20px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+  .dir.b { --k: var(--b); } .dir.c { --k: var(--c); }
+  .dir .top { display: flex; justify-content: space-between; align-items: baseline; }
+  .dir .letter { font-size: 12px; letter-spacing: .2em; color: var(--k); font-weight: 600; }
+  .dir .risk { font-size: 12px; color: var(--dim); }
+  .dir h2 { font-size: 40px; line-height: 1; }
+  .dir.a h2 { font-family: var(--serif); font-style: italic; }
+  .dir.b h2 { font-family: "EB Garamond", Garamond, Georgia, serif; font-style: italic; }
+  .dir.c h2 { font-family: "Manrope", system-ui, sans-serif; font-weight: 800; letter-spacing: -.04em; font-size: 36px; }
+  .dir .line { color: var(--dim); margin-top: 6px; }
+  .dir ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 14.5px; color: #d6d2de; }
+  .dir ul li::marker { color: var(--k); }
+  .dir .open { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; border-radius: 12px; background: var(--k); color: #111; font-weight: 600; font-size: 15px; text-decoration: none; }
+
+  /* Screen-by-screen */
+  .section-h { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+  .section-h h2 { font: italic 400 38px/1 var(--serif); }
+  .section-h p { color: var(--dim); max-width: 52ch; font-size: 15px; }
+  .rows { display: grid; gap: 34px; }
+  .row h3 { font: 500 13px/1 var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--dim); margin-bottom: 12px; display: flex; gap: 12px; align-items: baseline; }
+  .row h3 span { text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--faint); font-size: 13.5px; }
+  .shots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  @media (max-width: 700px) {
+    .shots { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; margin-inline: -20px; padding-inline: 20px; }
+    .shots figure { flex: 0 0 72%; scroll-snap-align: center; }
+  }
+  figure { margin: 0; display: grid; gap: 8px; }
+  figure a { display: block; border-radius: 22px; overflow: hidden; box-shadow: 0 0 0 1px var(--line); transition: transform .2s, box-shadow .2s; }
+  figure a:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px var(--faint), 0 16px 40px #0008; }
+  figure img { display: block; width: 100%; max-width: 100%; aspect-ratio: 390 / 844; object-fit: cover; object-position: top; background: #000; }
+  figcaption { font-size: 13.5px; color: var(--dim); line-height: 1.4; }
+  figcaption b { font-weight: 500; }
+  figure.a figcaption b { color: var(--a); } figure.b figcaption b { color: var(--b); } figure.c figcaption b { color: var(--c); }
+
+  /* Decisions table */
+  .table-wrap { overflow-x: auto; border-radius: 18px; box-shadow: inset 0 0 0 1px var(--line); background: var(--surface); }
+  table { width: 100%; border-collapse: collapse; min-width: 760px; font-size: 14.5px; }
+  th, td { text-align: left; vertical-align: top; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+  tr:last-child td { border-bottom: 0; }
+  thead th { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; font-weight: 600; }
+  thead th:nth-child(2) { color: var(--a); } thead th:nth-child(3) { color: var(--b); } thead th:nth-child(4) { color: var(--c); }
+  tbody th { font-weight: 500; color: var(--ink); width: 150px; }
+  td { color: #d2cedb; }
+
+  /* Recommendation */
+  .pick { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 36px; align-items: start; }
+  @media (max-width: 800px) { .pick { grid-template-columns: 1fr; } }
+  .pick h2 { font: italic 400 38px/1.05 var(--serif); }
+  .pick .lede { color: var(--dim); margin-top: 14px; }
+  .pick ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; counter-reset: k; }
+  .pick li { padding: 16px 18px; border-radius: 16px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); display: grid; grid-template-columns: 26px 1fr; gap: 8px; }
+  .pick li::before { counter-increment: k; content: counter(k); font: italic 400 24px/1 var(--serif); color: var(--a); }
+  .pick li b { font-weight: 500; }
+  .pick li span:not(.tag) { color: var(--dim); font-size: 14.5px; display: block; margin-top: 2px; }
+  .tag { display: inline-block; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; margin-left: 6px; }
+  .tag.a { color: var(--a); } .tag.b { color: var(--b); } .tag.c { color: var(--c); }
+
+  footer { color: var(--faint); font-size: 13.5px; border-top: 1px solid var(--line); padding-top: 20px; }
+  @media (prefers-reduced-motion: reduce) { figure a { transition: none; } }
+</style>
+
+<div class="page">
+  <header>
+    <span class="kicker">Solitarius · three design directions</span>
+    <h1>One app, three ways to tie it together</h1>
+    <p>Museum art, quotes from real thinkers, the Tao, a voyage through space and a table of cards all have to feel like <b>one dark, calm, sophisticated app</b> without getting harder to use. Each direction below is a clickable prototype of every part of the app. They use the new cover art and the real quotes, portraits and constellations, with 40 games won.</p>
+  </header>
+
+  <section class="dirs" aria-label="The three directions">
+    <article class="dir a">
+      <div class="top"><span class="letter">A</span><span class="risk">Risk: low</span></div>
+      <div><h2>Nocturne</h2><p class="line">The museum after dark. What you've earned is lit.</p></div>
+      <ul>
+        <li>Grows out of the Night Gallery: Instrument Serif and Outfit, with lamp gold as the only accent</li>
+        <li>Collect becomes <b>Gallery</b>, with a room per category and no stamps</li>
+        <li>The Tao and the quotes are "reading rooms" off the Voyage, drawn in lamp light</li>
+        <li>A win switches the painting's light on</li>
+      </ul>
+      <a class="open" href="nocturne.html">Open Nocturne →</a>
+    </article>
+    <article class="dir b">
+      <div class="top"><span class="letter">B</span><span class="risk">Risk: medium</span></div>
+      <div><h2>Folio</h2><p class="line">A finely set book of games, with plates and an atlas.</p></div>
+      <ul>
+        <li>One typeface (EB Garamond) with rubric red for actions and gilt for rewards</li>
+        <li>The Tao and the quotes <b>merge into one Commonplace Book</b></li>
+        <li>The campaign becomes an engraved star atlas; search becomes an Index</li>
+        <li>Winning prints a plate; games open with an epigraph</li>
+      </ul>
+      <a class="open" href="folio.html">Open Folio →</a>
+    </article>
+    <article class="dir c">
+      <div class="top"><span class="letter">C</span><span class="risk">Risk: medium–high</span></div>
+      <div><h2>Prism</h2><p class="line">The art is the interface, and it sets the colour.</p></div>
+      <ul>
+        <li>Each screen takes its tint and accent from the artwork in front of you</li>
+        <li>Three tabs. <b>Collect and Search merge into Library</b>, and the gallery is the catalogue</li>
+        <li>The table is the painting, blurred; card backs are the art</li>
+        <li>A win un-blurs the painting into full view</li>
+      </ul>
+      <a class="open" href="prism.html">Open Prism →</a>
+    </article>
+  </section>
+
+  <section>
+    <div class="section-h"><h2>Screen by screen</h2><p>Each shot opens its prototype. On a phone, swipe sideways along each row.</p></div>
+    <div class="rows" id="rows"></div>
+  </section>
+
+  <section>
+    <div class="section-h"><h2>The decisions</h2><p>What each direction does with the parts that don't fit together today.</p></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>A · Nocturne</th><th>B · Folio</th><th>C · Prism</th></tr></thead>
+        <tbody>
+          <tr><th>Navigation</th><td>4 tabs: Tonight · Voyage · Gallery · Search</td><td>5 text tabs: Play · Atlas · Book · Plates · Index</td><td>3 tabs in a floating pill: Now · Odyssey · Library</td></tr>
+          <tr><th>Collect &amp; stamps</th><td>Gallery with a room per category. Stamps are gone; a completed category is a lit room.</td><td>Plates, a catalogue by chapter. Stamps become small gilt marks under each chapter.</td><td>No separate collection. The Library is every game as art, in colour once won and grouped into rooms.</td></tr>
+          <tr><th>Quotes</th><td>"Voices": each portrait drawn as a single glowing line, with a strip of authors</td><td>"Sayings" in the Commonplace Book: the portrait as an etching over an epigraph</td><td>"Voices": a grid of portraits with a full-screen quote</td></tr>
+          <tr><th>Tao Te Ching</th><td>Constellation in gold thread, with the chapter in a roman numeral</td><td>An engraved figure from the same atlas as the campaign, with a drop cap</td><td>A glowing figure with a rail of every collected constellation</td></tr>
+          <tr><th>Campaign</th><td>Warm stars; won games glow, and the museum label shows the details</td><td>An engraved planisphere with star symbols and a cartouche</td><td>Games as planets painted with their own art</td></tr>
+          <tr><th>Colour</th><td>One accent: lamp gold</td><td>Rubric red for actions, gilt for rewards</td><td>No house accent; each game's own dark and pale colours</td></tr>
+          <tr><th>Type</th><td>Instrument Serif italic + Outfit</td><td>EB Garamond only</td><td>Manrope heavy + Fraunces italic for quotes</td></tr>
+          <tr><th>Cards &amp; table</th><td>Ivory cards and navy backs with a brass lattice, under a lamp-lit table</td><td>Bone cards with Garamond indices and rubric engraved backs</td><td>Crisp white cards with big bold indices; the backs are the game's art</td></tr>
+          <tr><th>Win moment</th><td>The picture light switches on, then the quote follows</td><td>"Finis." The plate prints and the saying is entered in the book</td><td>The blurred table resolves into the painting, then the quote card rises</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="pick">
+    <div>
+      <span class="kicker">If I were picking</span>
+      <h2 style="margin-top:12px">Nocturne as the base, with the best idea from each of the others</h2>
+      <p class="lede">Nocturne is the safest to ship in steps and already matches the gallery you liked. Two ideas from the other directions solve problems it leaves open.</p>
+    </div>
+    <ol>
+      <li><div><b>Use Nocturne's tokens everywhere first</b> <span class="tag a">A</span><span>Night surfaces, one lamp accent, Instrument Serif for names and Outfit for controls. Then retire the red, blue, green and purple buttons. This alone fixes most of the incoherence.</span></div></li>
+      <li><div><b>Merge Collect into the game browser</b> <span class="tag c">C</span><span>A gallery that is also the catalogue removes a tab and the stamps, and makes the art the reward everywhere. Search stays as a filter bar on top.</span></div></li>
+      <li><div><b>Tint each table with its art</b> <span class="tag c">C</span><span>The game's own dark colour as the lamp over the table, with a faint trace of its painting. It uses data you already have and needs no new backgrounds.</span></div></li>
+      <li><div><b>Epigraphs and one sky</b> <span class="tag b">B</span><span>Show a reward quote where a game opens, so the quotes live in the app and not only in a drawer. Draw the Tao figures and the campaign map in the same style so they read as the same sky.</span></div></li>
+    </ol>
+  </section>
+
+  <footer>Mockups only: plain HTML, separate from the app, with fake progress. The source is in <code>docs/design-overhauls/</code>.</footer>
+</div>
+
+<script>
+  const rows = [
+    ["home", "Home", "where you land and resume", ["Tonight", "Play", "Now"]],
+    ["game", "Game", "Klondike, mid-deal, with a hint showing", ["Lamp-lit table", "Running head and text actions", "The table is the painting"]],
+    ["win", "Win", "art, then a quote", ["The light comes on", "Finis: the plate prints", "The painting un-blurs"]],
+    ["campaign", "Campaign", "the space voyage", ["Voyage", "Atlas", "Odyssey · Map"]],
+    ["collect", "Collect", "now a gallery of the game art", ["Gallery, room by room", "Plates, chapter by chapter", "Library: search + gallery"]],
+    ["quotes", "Quotes", "the portraits in each style", ["Voices", "Commonplace Book · Sayings", "A voice"]],
+    ["tao", "Tao Te Ching", "the constellations", ["Reading room", "Commonplace Book · Tao", "Odyssey · Tao"]],
+    ["search", "Search", "finding a game", ["Search", "Index", "Game detail from the Library"]],
+  ];
+  const dirs = [["a", "nocturne", "Nocturne"], ["b", "folio", "Folio"], ["c", "prism", "Prism"]];
+  document.getElementById("rows").innerHTML = rows.map(([key, name, sub, caps]) => `
+    <div class="row"><h3>${name}<span>${sub}</span></h3><div class="shots">${dirs.map(([k, page, label], i) => `
+      <figure class="${k}"><a href="${page}.html"><img src="shots/${page}-${key}.webp" alt="${label}: ${caps[i]}" loading="lazy" width="585" height="1266"></a>
+      <figcaption><b>${label}</b> · ${caps[i]}</figcaption></figure>`).join("")}</div></div>`).join("");
+</script>
