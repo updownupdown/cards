@@ -61,10 +61,14 @@ directions, see `onEnd` in `QuoteGallery.tsx`.
 1. Keep `QUOTE_COUNT` in `src/data/collectibles.ts` equal to the number of
    quotes. Quote IDs are positions in the list, and players' collections store
    IDs: to keep collections meaningful, replace quotes in place or append new
-   ones rather than removing from the middle.
-2. Campaign rewards hand out quote IDs 1 to `REWARDS.lastAssignableQuote` (156
-   for now) in `scripts/generate-campaign-map.mjs`. After adding quotes you want
-   awarded, raise it and run `npm run campaign:generate -- --rebalance-rewards`.
+   ones rather than removing from the middle. When quotes do have to go (as
+   when the list was cut to 170 hand-picked quotes), raise
+   `CAMPAIGN_PROGRESS_VERSION` in `src/data/campaign-progress.ts` and migrate
+   the saved IDs there, as version 3 does, and remap the campaign's rewards.
+2. Campaign rewards: every quote is assigned to a game at random (see
+   `docs/campaign-map.md`). New quotes stay unassigned until a new game takes
+   them (`npm run campaign:generate`), or until the rewards are dealt again
+   with `--rebalance-rewards`, which a locked map refuses.
 3. Translations: changing a quote's English makes its translations stale (they
    show in English until translated again). Run `npm run i18n -- status`, then
    translate (`npm run i18n -- translate --lang fr --type quotes`, and so on).
@@ -138,5 +142,5 @@ letter and the accent at build time. Anything it still can't write is drawn as
 - The reveal computes the portrait's series when it starts (about 20 ms on a
   desktop); if that shows as a hitch on slow phones, the series can be
   precomputed by `scripts/portraits/export.py` instead.
-- The collection draws all 32 portraits at once (static paths).
+- The collection draws all 101 portraits at once (static paths).
 - Swipes in the collection, and that they don't fight the Android back gesture.

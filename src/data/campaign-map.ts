@@ -4,8 +4,12 @@ import {
   validateCollectibleCatalogs,
   type CollectibleReward,
 } from "./collectibles";
+import { isGameEnabled } from "./games-data";
 import { GAME_DEFINITIONS } from "./games-registry";
-import { ARM_DUST, GAME_DOT_DEFINITIONS } from "./campaign-map.generated";
+import {
+  ARM_DUST,
+  GAME_DOT_DEFINITIONS as ALL_GAME_DOT_DEFINITIONS,
+} from "./campaign-map.generated";
 
 export const CAMPAIGN_START_PATH = "/klondike";
 
@@ -52,6 +56,41 @@ export const MIN_GAME_DOT_SPACING =
 export type ArmDust = [number, number, number, number];
 
 export type GameDotState = "locked" | "connected" | "won" | "complete";
+
+const LOCAL_ONLY_PATHS = new Set(
+  GAME_DEFINITIONS.filter((game) => game.enabledOnLocalOnly).map(
+    (game) => game.path,
+  ),
+);
+
+/**
+ * The map without some of its games, and without links to them. Local-only
+ * games sit on the rim as dead ends, so leaving them out never cuts the map.
+ */
+function withoutGameDots(
+  gameDots: GameDotDefinition[],
+  left: ReadonlySet<string>,
+) {
+  return gameDots
+    .filter((gameDot) => !left.has(gameDot.path))
+    .map((gameDot) => ({
+      ...gameDot,
+      connections: gameDot.connections.filter((path) => !left.has(path)),
+    }));
+}
+
+/**
+ * The game dots this build shows. Every game has one, local-only games
+ * included; builds where those games are off leave them out.
+ */
+export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = withoutGameDots(
+  ALL_GAME_DOT_DEFINITIONS,
+  new Set(
+    GAME_DEFINITIONS.filter((game) => !isGameEnabled(game)).map(
+      (game) => game.path,
+    ),
+  ),
+);
 
 export const GAME_DOTS_BY_PATH = new Map(
   GAME_DOT_DEFINITIONS.map((gameDot) => [gameDot.path, gameDot]),
@@ -111,21 +150,64 @@ export function getGameDotState(
   return hasAllRewards ? "complete" : "won";
 }
 
+/** Every game in the map is reachable from the start, and no one game
+ *  holds back a large share of the map. */
+function checkReach(gameDots: GameDotDefinition[], label: string) {
+  const errors: string[] = [];
+  const byPath = new Map(gameDots.map((gameDot) => [gameDot.path, gameDot]));
+  const visited = new Set<string>();
+  const pending = [CAMPAIGN_START_PATH];
+  while (pending.length > 0) {
+    const path = pending.pop()!;
+    if (visited.has(path)) continue;
+    visited.add(path);
+    byPath.get(path)?.connections.forEach((connection) => {
+      if (!visited.has(connection)) pending.push(connection);
+    });
+  }
+  if (visited.size !== gameDots.length) {
+    errors.push(
+      `${label} is disconnected: reached ${visited.size}/${gameDots.length}.`,
+    );
+  }
+
+  // A game nobody can beat should not shut off the rest of the galaxy. Arms
+  // are chains, so some gating is unavoidable and expected; what matters is
+  // that no single game holds back a large share of the map.
+  const gateLimit = Math.ceil(gameDots.length * MAP_GEOMETRY.maxGatedShare);
+  for (const blockedGameDot of gameDots) {
+    if (blockedGameDot.path === CAMPAIGN_START_PATH) continue;
+    const reachable = new Set<string>();
+    const queue = [CAMPAIGN_START_PATH];
+    while (queue.length > 0) {
+      const path = queue.pop()!;
+      if (path === blockedGameDot.path || reachable.has(path)) continue;
+      reachable.add(path);
+      byPath.get(path)?.connections.forEach((connection) => {
+        if (connection !== blockedGameDot.path && !reachable.has(connection)) {
+          queue.push(connection);
+        }
+      });
+    }
+
+    const gated = gameDots.length - 1 - reachable.size;
+    if (gated > gateLimit) {
+      errors.push(
+        `${label}: ${blockedGameDot.path} gates ${gated} games, over the ${gateLimit} allowed.`,
+      );
+    }
+  }
+  return errors;
+}
+
 export function validateCampaignMap() {
   const errors: string[] = [...validateCollectibleCatalogs()];
   const gamePaths = new Set(GAME_DEFINITIONS.map((game) => game.path));
-  // Local-only games are still in development and are left off the map, so
-  // they are not reported as missing game dots.
-  const mappedGamePaths = new Set(
-    GAME_DEFINITIONS.filter((game) => !game.enabledOnLocalOnly).map(
-      (game) => game.path,
-    ),
-  );
   const gameDotPaths = new Set<string>();
   const taoIds = new Set<number>();
   const quoteIds = new Set<number>();
 
-  for (const gameDot of GAME_DOT_DEFINITIONS) {
+  for (const gameDot of ALL_GAME_DOT_DEFINITIONS) {
     if (gameDotPaths.has(gameDot.path))
       errors.push(`Duplicate game dot ${gameDot.path}.`);
     gameDotPaths.add(gameDot.path);
@@ -154,6 +236,14 @@ export function validateCampaignMap() {
       errors.push(`${gameDot.path} has an invalid arm ${gameDot.arm}.`);
     }
 
+    const chapters = gameDot.rewards.filter((reward) => reward.type === "tao");
+    if (chapters.length > 1) {
+      errors.push(`${gameDot.path} has more than one Tao chapter.`);
+    }
+    if (chapters.length > 0 && LOCAL_ONLY_PATHS.has(gameDot.path)) {
+      errors.push(`${gameDot.path} is local-only but has a Tao chapter.`);
+    }
+
     for (const reward of gameDot.rewards) {
       const ids = reward.type === "tao" ? taoIds : quoteIds;
       const maxId = reward.type === "tao" ? TAO_CHAPTER_COUNT : QUOTE_COUNT;
@@ -169,7 +259,9 @@ export function validateCampaignMap() {
     }
 
     for (const connection of gameDot.connections) {
-      const connectedGameDot = GAME_DOTS_BY_PATH.get(connection);
+      const connectedGameDot = ALL_GAME_DOT_DEFINITIONS.find(
+        (candidate) => candidate.path === connection,
+      );
       if (!connectedGameDot) {
         errors.push(
           `${gameDot.path} connects to unknown game dot ${connection}.`,
@@ -180,14 +272,16 @@ export function validateCampaignMap() {
     }
   }
 
-  for (const gamePath of mappedGamePaths) {
+  // Every game has a dot, local-only games included, so the map is final
+  // whichever of them a release ends up with.
+  for (const gamePath of gamePaths) {
     if (!gameDotPaths.has(gamePath))
       errors.push(`Missing game dot for ${gamePath}.`);
   }
   const closestPair = Math.min(
-    ...GAME_DOT_DEFINITIONS.map((gameDot) =>
+    ...ALL_GAME_DOT_DEFINITIONS.map((gameDot) =>
       Math.min(
-        ...GAME_DOT_DEFINITIONS.filter(
+        ...ALL_GAME_DOT_DEFINITIONS.filter(
           (candidate) => candidate.path !== gameDot.path,
         ).map((candidate) =>
           Math.hypot(gameDot.x - candidate.x, gameDot.y - candidate.y),
@@ -202,56 +296,18 @@ export function validateCampaignMap() {
   }
 
   // Every Tao chapter has to be collectable somewhere. Quotes deliberately
-  // are not: the pool is larger than the map needs.
+  // are not: the pool may run ahead of the games that award it.
   for (let id = 1; id <= TAO_CHAPTER_COUNT; id += 1) {
     if (!taoIds.has(id)) errors.push(`Tao chapter ${id} is not awarded.`);
   }
 
-  const visited = new Set<string>();
-  const pending = [CAMPAIGN_START_PATH];
-  while (pending.length > 0) {
-    const path = pending.pop()!;
-    if (visited.has(path)) continue;
-    visited.add(path);
-    GAME_DOTS_BY_PATH.get(path)?.connections.forEach((connection) => {
-      if (!visited.has(connection)) pending.push(connection);
-    });
-  }
-  if (visited.size !== GAME_DOT_DEFINITIONS.length) {
-    errors.push(
-      `Game dot graph is disconnected: reached ${visited.size}/${GAME_DOT_DEFINITIONS.length}.`,
-    );
-  }
-
-  // A game nobody can beat should not shut off the rest of the galaxy. Arms
-  // are chains, so some gating is unavoidable and expected; what matters is
-  // that no single game holds back a large share of the map.
-  const gateLimit = Math.ceil(
-    GAME_DOT_DEFINITIONS.length * MAP_GEOMETRY.maxGatedShare,
+  errors.push(
+    ...checkReach(ALL_GAME_DOT_DEFINITIONS, "Game dot graph"),
+    ...checkReach(
+      withoutGameDots(ALL_GAME_DOT_DEFINITIONS, LOCAL_ONLY_PATHS),
+      "Game dot graph without local-only games",
+    ),
   );
-  for (const blockedGameDot of GAME_DOT_DEFINITIONS) {
-    if (blockedGameDot.path === CAMPAIGN_START_PATH) continue;
-    const reachable = new Set<string>();
-    const queue = [CAMPAIGN_START_PATH];
-    while (queue.length > 0) {
-      const path = queue.pop()!;
-      if (path === blockedGameDot.path || reachable.has(path)) continue;
-      reachable.add(path);
-      GAME_DOTS_BY_PATH.get(path)?.connections.forEach((connection) => {
-        if (connection !== blockedGameDot.path && !reachable.has(connection)) {
-          queue.push(connection);
-        }
-      });
-    }
-
-    const gated = GAME_DOT_DEFINITIONS.length - 1 - reachable.size;
-    if (gated > gateLimit) {
-      errors.push(
-        `${blockedGameDot.path} gates ${gated} games, over the ${gateLimit} allowed.`,
-      );
-    }
-  }
-
   return errors;
 }
 
@@ -262,4 +318,4 @@ if (__DEV__) {
   }
 }
 
-export { ARM_DUST, GAME_DOT_DEFINITIONS };
+export { ALL_GAME_DOT_DEFINITIONS, ARM_DUST };

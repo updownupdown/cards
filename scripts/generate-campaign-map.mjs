@@ -1,21 +1,27 @@
 // Builds src/data/campaign-map.generated.ts and assets/images/galaxy-glow.webp
 // (the arms' glow, with their dust baked in) and the node and flare sprites
 // in assets/images/campaign/
-// from the game catalog.
+// from the game catalog. See docs/campaign-map.md.
 //
 //   npm run campaign:generate
 //     Keeps every existing node (position, links and rewards), so players'
-//     progress and collected rewards stay put. Removed games are dropped, and
-//     new games are placed out towards the rim and linked in.
+//     progress and collected rewards stay put. New games are placed out
+//     towards the rim, linked in and given unused quotes.
 //
 //   npm run campaign:generate -- --rebuild
-//     Lays out a fresh spiral galaxy: Klondike at the centre, then the rest
-//     outwards from gentle to punishing, with tags spread so no one genre
-//     clumps together. Deals every reward again, and overwrites manual
-//     coordinate and link edits.
+//     Lays out a fresh spiral galaxy and fits the games to it: Klondike at
+//     the centre, the rest outwards by progression score, no game the only
+//     way to an easier one, categories varied near the centre, and
+//     local-only games on the rim as dead ends. Deals every reward again.
 //
 //   npm run campaign:generate -- --rebalance-rewards
 //     Keeps the layout and deals every reward again.
+//
+//   npm run campaign:lock
+//     Records every game's place, links and rewards in
+//     src/data/campaign-map.lock.json. From then on --rebuild and
+//     --rebalance-rewards are refused, and a plain run fails rather than
+//     move, unlink, drop or re-reward a locked game.
 //
 //   npm run campaign:generate -- --sprites-only
 //     Only redraws the node and flare sprites.
@@ -34,16 +40,18 @@ const outputPath = path.join(root, "src/data/campaign-map.generated.ts");
 const glowPath = path.join(root, "assets/images/galaxy-glow.webp");
 const spriteDir = path.join(root, "assets/images/campaign");
 const collectiblesPath = path.join(root, "src/data/collectibles.ts");
+const lockPath = path.join(root, "src/data/campaign-map.lock.json");
 const rebuild = process.argv.includes("--rebuild");
 const rebalance = process.argv.includes("--rebalance-rewards");
 const spritesOnly = process.argv.includes("--sprites-only");
+const lockOnly = process.argv.includes("--lock");
 
 // ── Map parameters ───────────────────────────────────────────────────────────
 // Everything that shapes the galaxy lives here. Retune the map by editing this
 // block and re-running with --rebuild; nothing below needs to change.
 
 /** Klondike anchors the centre; every other game is placed by its score. */
-const FIXED_ORDER = ["/klondike"];
+const CAMPAIGN_START = "/klondike";
 
 /** Must match WORLD_SIZE in src/components/Campaign/CampaignMap.tsx. */
 const WORLD_SIZE = 1800;
@@ -240,13 +248,37 @@ const ARM_ART = {
 };
 
 const REWARDS = {
+  /** Every game has two or three rewards: a Tao chapter and one or two
+   *  quotes, or quotes only. */
   min: 2,
   max: 3,
-  /**
-   * Quotes past this id stay unassigned: the last 52 are held back for games
-   * still to come, so the assignable pool is 81 Tao chapters plus 156 quotes.
-   */
-  lastAssignableQuote: 156,
+};
+
+/**
+ * How games are arranged, by the order they should be met in: a game's
+ * progression score (difficulty, and some complexity, so the first games are
+ * easy to win and to learn) sets how far out it sits.
+ */
+const PLACEMENT = {
+  difficultyWeight: 0.75,
+  complexityWeight: 0.25,
+  /** How far out local-only games sit: among this outer share of the map. */
+  localOnlyRim: 0.3,
+  /** Cost of a game sitting further from its ideal ring, per point squared. */
+  radialWeight: 1,
+  /** Cost per difficulty point by which a game is harder than a game it
+   *  gates (one that can only be reached through it). */
+  gateWeight: 400,
+  /** Cost of two linked games sharing a category, at the centre; it halves
+   *  with every step out, where players have more to choose from. */
+  sameCategoryWeight: 900,
+  /** Among the first games (this many steps from Klondike), each category
+   *  appearing more than once costs this much again. */
+  openingDepth: 2,
+  openingRepeatWeight: 900,
+  /** Simulated annealing: moves tried, and the starting temperature. */
+  iterations: 400000,
+  temperature: 400,
 };
 
 function readCount(name) {
@@ -270,94 +302,44 @@ function hash(value) {
   return result >>> 0;
 }
 
-// Games tagged with any of these lean on newer, non-traditional mechanics
-// (combat, dungeon-crawling, grid placement) rather than classic patience
-// patterns. Used only to spread mechanic variety across the map, never to
-// change a game's actual difficulty or luck rating.
-const MODERN_TAGS = new Set([
-  "ModernMechanics",
-  "DungeonCrawler",
-  "CardCombat",
-  "GridPlacement",
-]);
-// How strongly placement favours mechanic diversity over raw difficulty
-// ranking: 0 places games purely by difficulty/luck (the old behaviour,
-// which let one mechanic category dominate a radius band); 1 spreads each
-// category evenly across every band regardless of its absolute score.
-const DIVERSITY_WEIGHT = 0.65;
-
 function parseGame(filename) {
   const source = fs.readFileSync(path.join(gamesDirectory, filename), "utf8");
   const gamePath = source.match(/path:\s*["']([^"']+)["']/)?.[1];
-  const difficulty = Number(source.match(/difficulty:\s*(\d+)/)?.[1]);
-  const luck = Number(source.match(/luck:\s*(\d+)/)?.[1]);
+  const rating = (name) =>
+    Number(source.match(new RegExp(`${name}:\\s*(\\d+)`))?.[1]);
+  const complexity = rating("complexity");
+  const difficulty = rating("difficulty");
+  const luck = rating("luck");
   const tags = [
     ...(source
       .match(/tags:\s*\[([^\]]+)\]/s)?.[1]
       .matchAll(/GameTag\.(\w+)/g) ?? []),
   ].map((match) => match[1]);
 
-  if (!gamePath || !Number.isFinite(difficulty) || !Number.isFinite(luck)) {
+  if (
+    !gamePath ||
+    !tags.length ||
+    ![complexity, difficulty, luck].every(Number.isFinite)
+  ) {
     throw new Error(`Could not parse node metadata from ${filename}.`);
   }
 
-  const category = tags.some((tag) => MODERN_TAGS.has(tag))
-    ? "modern"
-    : "traditional";
-  const localOnly = /enabledOnLocalOnly:\s*true/.test(source);
-  return { path: gamePath, difficulty, luck, category, localOnly };
+  return {
+    path: gamePath,
+    complexity,
+    difficulty,
+    luck,
+    // A game's first tag is its category, as in the games list.
+    category: tags[0],
+    localOnly: /enabledOnLocalOnly:\s*true/.test(source),
+  };
 }
 
-/** Lower scores sit nearer the centre; hard and luck-heavy games drift out. */
-function centerScore(game) {
-  return 0.6 * game.difficulty + 0.4 * game.luck;
-}
-
-/**
- * Blends each game's difficulty/luck ranking with its ranking among games of
- * the same mechanic category, so traditional and modern-mechanic games are
- * both represented near the centre and near the edge instead of one category
- * settling entirely on one side of the map.
- */
-function assignPlacementScores(games) {
-  const rankable = games.filter((game) => !FIXED_ORDER.includes(game.path));
-  const scores = rankable.map(centerScore);
-  const minScore = Math.min(...scores);
-  const scoreRange = Math.max(...scores) - minScore || 1;
-
-  const byCategory = new Map();
-  for (const game of rankable) {
-    const list = byCategory.get(game.category) ?? [];
-    list.push(game);
-    byCategory.set(game.category, list);
-  }
-  for (const list of byCategory.values()) {
-    list.sort(
-      (left, right) =>
-        centerScore(left) - centerScore(right) ||
-        left.path.localeCompare(right.path),
-    );
-    list.forEach((game, index) => {
-      const globalRank = (centerScore(game) - minScore) / scoreRange;
-      const categoryRank = list.length > 1 ? index / (list.length - 1) : 0.5;
-      game.placementScore =
-        (1 - DIVERSITY_WEIGHT) * globalRank + DIVERSITY_WEIGHT * categoryRank;
-    });
-  }
-}
-
-function compareGames(left, right) {
-  const leftFixed = FIXED_ORDER.indexOf(left.path);
-  const rightFixed = FIXED_ORDER.indexOf(right.path);
-  if (leftFixed !== -1 || rightFixed !== -1) {
-    return (
-      (leftFixed === -1 ? Infinity : leftFixed) -
-      (rightFixed === -1 ? Infinity : rightFixed)
-    );
-  }
+/** Lower scores sit nearer the centre; hard and intricate games drift out. */
+function progressionScore(game) {
   return (
-    left.placementScore - right.placementScore ||
-    left.path.localeCompare(right.path)
+    PLACEMENT.difficultyWeight * game.difficulty +
+    PLACEMENT.complexityWeight * game.complexity
   );
 }
 
@@ -1448,86 +1430,236 @@ function scatterPositions(count) {
   return positions;
 }
 
-/**
- * Swaps games between nearby positions when that separates two neighbours
- * sharing a tag, so no one genre takes over a stretch of the map. Only games
- * close together in the placement order are swapped, so the easy-inwards,
- * hard-outwards gradient survives.
- */
-function spreadTags(records, gamesByPath, neighbours) {
-  const SWAP_WINDOW = 7;
-  const PASSES = 30;
-
-  const clash = (path, others) => {
-    const tags = new Set(gamesByPath.get(path)?.tags ?? []);
-    let cost = 0;
-    for (const other of others) {
-      for (const tag of gamesByPath.get(other)?.tags ?? []) {
-        if (tags.has(tag)) cost += 1;
-      }
+/** Which nodes can only be reached through `gate`: they gate on it. */
+function gatedBy(order, adjacency, gate) {
+  const reached = new Set();
+  const queue = [0];
+  while (queue.length > 0) {
+    const current = queue.pop();
+    if (current === gate || reached.has(current)) continue;
+    reached.add(current);
+    for (const next of adjacency[current]) {
+      if (!reached.has(next) && next !== gate) queue.push(next);
     }
-    return cost;
-  };
-
-  for (let pass = 0; pass < PASSES; pass += 1) {
-    let improved = false;
-    for (let index = 1; index < records.length; index += 1) {
-      const limit = Math.min(index + SWAP_WINDOW, records.length);
-      for (let other = index + 1; other < limit; other += 1) {
-        const here = neighbours[index];
-        const there = neighbours[other];
-        const before =
-          clash(records[index].path, here) + clash(records[other].path, there);
-        const after =
-          clash(records[other].path, here) + clash(records[index].path, there);
-        if (after < before) {
-          const held = records[index].path;
-          records[index].path = records[other].path;
-          records[other].path = held;
-          improved = true;
-        }
-      }
-    }
-    if (!improved) break;
   }
+  return order.filter((slot) => slot !== gate && !reached.has(slot));
 }
 
-/** Every node from scratch, as a spiral galaxy. */
-function layoutAll(games, gamesByPath) {
+/** Steps from the centre along links, for every slot. */
+function depths(adjacency) {
+  const depth = adjacency.map(() => Infinity);
+  depth[0] = 0;
+  const queue = [0];
+  while (queue.length > 0) {
+    const current = queue.shift();
+    for (const next of adjacency[current]) {
+      if (depth[next] !== Infinity) continue;
+      depth[next] = depth[current] + 1;
+      queue.push(next);
+    }
+  }
+  return depth;
+}
+
+/**
+ * Slots for local-only games: out on the rim, and dead ends, so that when a
+ * build leaves them out every other game can still be reached exactly as
+ * before. Prefers slots not beside one another.
+ */
+function pickLocalOnlySlots(slots, adjacency, count) {
+  if (count === 0) return [];
+  const withoutSlots = (removed) =>
+    adjacency.map((links, slot) =>
+      removed.has(slot) ? [] : links.filter((next) => !removed.has(next)),
+    );
+  const reachesAll = (removed) => {
+    const trimmed = withoutSlots(removed);
+    const reached = new Set();
+    const queue = [0];
+    while (queue.length > 0) {
+      const current = queue.pop();
+      if (reached.has(current)) continue;
+      reached.add(current);
+      for (const next of trimmed[current]) queue.push(next);
+    }
+    return reached.size === slots.length - removed.size;
+  };
+
+  const rimFrom = Math.floor(slots.length * (1 - PLACEMENT.localOnlyRim));
+  const outermost = slots
+    .map((slot, index) => ({ index, radius: radius(slot) }))
+    .filter(({ index }) => index !== 0)
+    .sort((left, right) => right.radius - left.radius)
+    .slice(0, slots.length - rimFrom)
+    .map(({ index }) => index);
+
+  const chosen = new Set();
+  for (const apart of [true, false]) {
+    for (const slot of outermost) {
+      if (chosen.size >= count) break;
+      if (chosen.has(slot)) continue;
+      if (apart && adjacency[slot].some((next) => chosen.has(next))) continue;
+      const trial = new Set([...chosen, slot]);
+      if (reachesAll(trial)) chosen.add(slot);
+    }
+  }
+  if (chosen.size < count) {
+    throw new Error(
+      `Only found ${chosen.size} of ${count} rim slots that local-only games ` +
+        `could leave without cutting the map; widen PLACEMENT.localOnlyRim.`,
+    );
+  }
+  return [...chosen];
+}
+
+/**
+ * Every node from scratch, as a spiral galaxy. The positions and links come
+ * from the galaxy's shape alone; games are then fitted to them:
+ *
+ * - Klondike at the centre, and progression scores rising outwards;
+ * - no game the only way through to an easier one (checked on the map as
+ *   release builds show it, without local-only games);
+ * - categories varied between neighbours, most of all near the centre;
+ * - local-only games on the rim, as dead ends.
+ */
+function layoutAll(games) {
   const positions = scatterPositions(games.length);
   const [centre, ...outer] = positions;
   outer.sort((left, right) => radius(left) - radius(right));
-
-  // The hub takes the centre; the rest follow the order they arrive in
-  // (easiest and most varied first) outwards, so difficulty and luck climb
-  // towards the rim.
-  const ordered = [centre, ...outer];
-  const records = games.map((game, index) => ({
-    path: game.path,
-    x: ordered[index].x,
-    y: ordered[index].y,
+  const slots = [centre, ...outer].map((point, index) => ({
+    path: `slot:${String(index).padStart(3, "0")}`,
+    x: point.x,
+    y: point.y,
+    arm: armOf(point),
     connections: [],
     rewards: [],
-    arm: armOf(ordered[index]),
   }));
 
-  // Who sits beside whom, by position, so tag spreading can run before the
-  // links exist and swapping a game never moves a node.
-  const neighbours = records.map((record) =>
-    records
-      .filter((other) => other !== record)
-      .sort((left, right) => distance(record, left) - distance(record, right))
-      .slice(0, 5)
-      .map((other) => other.path),
+  const connections = new Map(slots.map((slot) => [slot.path, new Set()]));
+  wireGalaxy(slots, connections);
+  const indexOf = new Map(slots.map((slot, index) => [slot.path, index]));
+  const adjacency = slots.map((slot) =>
+    [...connections.get(slot.path)].map((next) => indexOf.get(next)),
   );
-  spreadTags(records, gamesByPath, neighbours);
 
-  const connections = new Map(
-    records.map((record) => [record.path, new Set()]),
+  const hub = games.find((game) => game.path === CAMPAIGN_START);
+  const local = games.filter((game) => game.localOnly);
+  const placed = games.filter((game) => game !== hub && !game.localOnly);
+
+  const localSlots = pickLocalOnlySlots(slots, adjacency, local.length);
+  const localSet = new Set(localSlots);
+  const released = adjacency.map((links, slot) =>
+    localSet.has(slot) ? [] : links.filter((next) => !localSet.has(next)),
   );
-  wireGalaxy(records, connections);
-  for (const record of records) {
-    record.connections = [...connections.get(record.path)].sort();
+  const freeSlots = slots
+    .map((_, index) => index)
+    .filter((index) => index !== 0 && !localSet.has(index));
+
+  // Gates, on the map as release builds show it.
+  const gates = [];
+  for (const gate of freeSlots) {
+    const blocked = gatedBy(freeSlots, released, gate);
+    if (blocked.length > 0) gates.push([gate, blocked]);
+  }
+  const depth = depths(released);
+
+  // Each free slot's ideal score: the score of the game at its rank by radius.
+  const sortedScores = placed.map(progressionScore).sort((a, b) => a - b);
+  const target = new Map(
+    freeSlots.map((slot, rank) => [slot, sortedScores[rank]]),
+  );
+  const edges = [];
+  for (const slot of [0, ...freeSlots]) {
+    for (const next of released[slot])
+      if (slot < next) edges.push([slot, next]);
+  }
+  const opening = [0, ...freeSlots].filter(
+    (slot) => depth[slot] <= PLACEMENT.openingDepth,
+  );
+
+  // game at each slot; starts in rank order.
+  const at = new Map([[0, hub]]);
+  const byScore = [...placed].sort(
+    (left, right) =>
+      progressionScore(left) - progressionScore(right) ||
+      left.path.localeCompare(right.path),
+  );
+  freeSlots.forEach((slot, rank) => at.set(slot, byScore[rank]));
+
+  const cost = () => {
+    let total = 0;
+    for (const slot of freeSlots) {
+      const off = progressionScore(at.get(slot)) - target.get(slot);
+      total += PLACEMENT.radialWeight * off * off;
+    }
+    for (const [gate, blocked] of gates) {
+      const gateDifficulty = at.get(gate).difficulty;
+      for (const slot of blocked) {
+        const over = gateDifficulty - at.get(slot).difficulty;
+        if (over > 0) total += PLACEMENT.gateWeight * over;
+      }
+    }
+    for (const [left, right] of edges) {
+      if (at.get(left).category !== at.get(right).category) continue;
+      const steps = Math.min(depth[left], depth[right]);
+      total += PLACEMENT.sameCategoryWeight / 2 ** steps;
+    }
+    const seen = new Map();
+    for (const slot of opening) {
+      const category = at.get(slot).category;
+      seen.set(category, (seen.get(category) ?? 0) + 1);
+    }
+    for (const count of seen.values()) {
+      if (count > 1) total += PLACEMENT.openingRepeatWeight * (count - 1);
+    }
+    return total;
+  };
+
+  // Simulated annealing over swaps, seeded so every rebuild is identical.
+  const random = makeRandom("galaxy-placement");
+  let current = cost();
+  let best = current;
+  let bestAt = new Map(at);
+  for (let step = 0; step < PLACEMENT.iterations; step += 1) {
+    const heat = PLACEMENT.temperature * (1 - step / PLACEMENT.iterations);
+    const left = freeSlots[Math.floor(random() * freeSlots.length)];
+    const right = freeSlots[Math.floor(random() * freeSlots.length)];
+    if (left === right) continue;
+    const held = at.get(left);
+    at.set(left, at.get(right));
+    at.set(right, held);
+    const next = cost();
+    if (next <= current || random() < Math.exp((current - next) / heat)) {
+      current = next;
+      if (current < best) {
+        best = current;
+        bestAt = new Map(at);
+      }
+    } else {
+      at.set(right, at.get(left));
+      at.set(left, held);
+    }
+  }
+
+  // Local-only games take the rim slots, gentlest nearest the centre.
+  const localByScore = [...local].sort(
+    (left, right) => progressionScore(left) - progressionScore(right),
+  );
+  [...localSlots]
+    .sort((left, right) => radius(slots[left]) - radius(slots[right]))
+    .forEach((slot, rank) => bestAt.set(slot, localByScore[rank]));
+
+  const records = slots.map((slot, index) => ({
+    ...slot,
+    path: bestAt.get(index).path,
+  }));
+  const pathOf = new Map(
+    slots.map((slot, index) => [slot.path, records[index].path]),
+  );
+  for (const [index, record] of records.entries()) {
+    record.connections = [...connections.get(slots[index].path)]
+      .map((slotPath) => pathOf.get(slotPath))
+      .sort();
   }
   return records;
 }
@@ -1614,123 +1746,76 @@ function extendMap(existing, games) {
 
 // ── Rewards ──────────────────────────────────────────────────────────────────
 
-/** Higher for games that are hard or luck-heavy, whichever is worse. */
-function grindScore(game) {
-  if (!game) return 0;
-  return (
-    0.5 * Math.max(game.difficulty, game.luck) +
-    0.25 * (game.difficulty + game.luck)
+/**
+ * Deals every reward from scratch:
+ *
+ * - one Tao chapter each for the easiest games (never two, and never on a
+ *   local-only game), numbered outwards from Klondike so the chapters are met
+ *   roughly in order;
+ * - quotes shuffled and dealt so every game has two rewards, then the rest to
+ *   games at random, up to three each (never extra ones to local-only games,
+ *   whose quotes would be lost if they were left out of a release).
+ *
+ * Rewards are awarded one per win, in the order listed: a Tao chapter first.
+ */
+function dealRewards(records, gamesByPath) {
+  const released = records.filter(
+    (record) => !gamesByPath.get(record.path).localOnly,
   );
-}
-
-/**
- * The rewards still to be handed out, with Tao chapters and quotes woven
- * together in proportion so both turn up across the whole map instead of the
- * chapters all landing near the hub.
- */
-function buildRewardPool(used) {
-  const chapters = [];
-  for (let id = 1; id <= TAO_COUNT; id += 1) {
-    if (!used.tao.has(id)) chapters.push({ type: "tao", id });
+  if (released.length < TAO_COUNT) {
+    throw new Error(
+      `${TAO_COUNT} Tao chapters need as many released games; there are ${released.length}.`,
+    );
   }
-  const quotes = [];
-  for (let id = 1; id <= REWARDS.lastAssignableQuote; id += 1) {
-    if (!used.quote.has(id)) quotes.push({ type: "quote", id });
-  }
+  const easiest = [...released]
+    .sort(
+      (left, right) =>
+        (left.path === CAMPAIGN_START ? -1 : 0) -
+          (right.path === CAMPAIGN_START ? -1 : 0) ||
+        progressionScore(gamesByPath.get(left.path)) -
+          progressionScore(gamesByPath.get(right.path)) ||
+        radius(left) - radius(right),
+    )
+    .slice(0, TAO_COUNT)
+    .sort((left, right) => radius(left) - radius(right));
+  for (const record of records) record.rewards = [];
+  easiest.forEach((record, index) =>
+    record.rewards.push({ type: "tao", id: index + 1 }),
+  );
 
-  const pool = [];
-  let chapter = 0;
-  let quote = 0;
-  while (chapter < chapters.length || quote < quotes.length) {
-    const takeChapter =
-      chapter < chapters.length &&
-      (quote >= quotes.length ||
-        (chapter + 1) / chapters.length <= (quote + 1) / quotes.length);
-    pool.push(takeChapter ? chapters[chapter++] : quotes[quote++]);
-  }
-  return pool;
-}
+  const random = makeRandom("quote-rewards");
+  const shuffle = (list) => {
+    for (let index = list.length - 1; index > 0; index -= 1) {
+      const other = Math.floor(random() * (index + 1));
+      [list[index], list[other]] = [list[other], list[index]];
+    }
+    return list;
+  };
+  const quotes = shuffle(
+    Array.from({ length: QUOTE_COUNT }, (_, index) => index + 1),
+  );
 
-/**
- * Every node gets two rewards, and whatever is left over goes to the games
- * that are easiest to beat a third time. Nodes keep the rewards they already
- * have, so anything already collected stays with its node; --rebalance-rewards
- * deals the whole pool again from scratch.
- */
-function assignRewards(records, existingByPath, gamesByPath, rebalance) {
-  const used = { tao: new Set(), quote: new Set() };
-  const assignable = (reward) =>
-    Number.isInteger(reward?.id) &&
-    reward.id >= 1 &&
-    (reward.type === "tao"
-      ? reward.id <= TAO_COUNT
-      : reward.type === "quote" && reward.id <= REWARDS.lastAssignableQuote);
-
-  for (const record of records) {
-    const previous = rebalance
-      ? []
-      : (existingByPath.get(record.path)?.rewards ?? []);
-    record.rewards = previous
-      .filter(
-        (reward) => assignable(reward) && !used[reward.type].has(reward.id),
-      )
-      .slice(0, REWARDS.max);
-    record.rewards.forEach((reward) => used[reward.type].add(reward.id));
-  }
-
-  // New games need two rewards each. When the pool is short, every third
-  // reward goes back into it, and the spares are dealt again below to the
-  // gentlest games. Collected rewards are saved by id, so none are lost.
   const needed = records.reduce(
     (sum, record) => sum + Math.max(0, REWARDS.min - record.rewards.length),
     0,
   );
-  if (buildRewardPool(used).length < needed) {
-    for (const record of records) {
-      for (const reward of record.rewards.splice(REWARDS.min)) {
-        used[reward.type].delete(reward.id);
-      }
-    }
+  if (quotes.length < needed) {
+    throw new Error(
+      `${records.length} games need ${needed} quotes to have ${REWARDS.min} ` +
+        `rewards each, and there are ${quotes.length}. Add quotes.`,
+    );
   }
-
-  const pool = buildRewardPool(used);
-  let next = 0;
-
   for (const record of records) {
     while (record.rewards.length < REWARDS.min) {
-      if (next >= pool.length) {
-        throw new Error(
-          `Out of rewards at ${record.path}. ${records.length} nodes need ` +
-            `${records.length * REWARDS.min}, and the pool holds ` +
-            `${TAO_COUNT} Tao chapters plus ${REWARDS.lastAssignableQuote} ` +
-            `quotes. Raise REWARDS.lastAssignableQuote to hand out more.`,
-        );
-      }
-      record.rewards.push(pool[next]);
-      next += 1;
+      record.rewards.push({ type: "quote", id: quotes.pop() });
     }
   }
-
-  // Spare rewards become third collectibles, handed to the gentlest games
-  // first: a third reward means beating the game three times.
-  const spare = pool.slice(next);
-  const gentlestFirst = [...records].sort(
-    (left, right) =>
-      grindScore(gamesByPath.get(left.path)) -
-      grindScore(gamesByPath.get(right.path)),
+  const roomy = shuffle(
+    released.filter((record) => record.rewards.length < REWARDS.max),
   );
-  for (const record of gentlestFirst) {
-    if (spare.length === 0) break;
-    if (record.rewards.length >= REWARDS.max) continue;
-    record.rewards.push(spare.shift());
-  }
-
-  if (spare.length > 0) {
-    throw new Error(
-      `${spare.length} rewards do not fit: ${records.length} nodes hold at ` +
-        `most ${records.length * REWARDS.max}. Lower ` +
-        `REWARDS.lastAssignableQuote or add games.`,
-    );
+  for (const record of roomy) {
+    if (quotes.length === 0) break;
+    record.rewards.push({ type: "quote", id: quotes.pop() });
   }
 
   for (const record of records) {
@@ -1740,6 +1825,39 @@ function assignRewards(records, existingByPath, gamesByPath, rebalance) {
         left.id - right.id,
     );
   }
+  return quotes.sort((left, right) => left - right);
+}
+
+/**
+ * Rewards for games added to an existing map: unused quotes only, as every
+ * Tao chapter is already out. Existing games keep theirs untouched.
+ */
+function rewardNewGames(records, added) {
+  const used = new Set(
+    records.flatMap((record) =>
+      record.rewards
+        .filter((reward) => reward.type === "quote")
+        .map((reward) => reward.id),
+    ),
+  );
+  const spare = [];
+  for (let id = 1; id <= QUOTE_COUNT; id += 1) {
+    if (!used.has(id)) spare.push(id);
+  }
+  for (const game of added) {
+    const record = records.find((candidate) => candidate.path === game.path);
+    while (record.rewards.length < REWARDS.min) {
+      const id = spare.shift();
+      if (id === undefined) {
+        throw new Error(
+          `No unused quotes left for ${game.path}: add quotes to ` +
+            `QuotesText.ts (appended, so existing IDs keep their quotes).`,
+        );
+      }
+      record.rewards.push({ type: "quote", id });
+    }
+  }
+  return spare;
 }
 
 // ── Validation and output ────────────────────────────────────────────────────
@@ -1749,7 +1867,7 @@ function assignRewards(records, existingByPath, gamesByPath, rebalance) {
  * because breaking it either makes a game unreachable or makes the map look
  * wrong; nothing is checked purely for tidiness.
  */
-function validate(records) {
+function validate(records, gamesByPath) {
   const errors = [];
   const byPath = new Map(records.map((record) => [record.path, record]));
 
@@ -1808,6 +1926,64 @@ function validate(records) {
     if (!chapters.has(id)) errors.push(`Tao chapter ${id} is not awarded`);
   }
 
+  // One Tao chapter at most per game, and none on local-only games.
+  for (const record of records) {
+    const chapterCount = record.rewards.filter(
+      (reward) => reward.type === "tao",
+    ).length;
+    if (chapterCount > 1)
+      errors.push(`${record.path} has ${chapterCount} Tao chapters`);
+    if (chapterCount > 0 && gamesByPath.get(record.path)?.localOnly) {
+      errors.push(`${record.path} is local-only but has a Tao chapter`);
+    }
+    for (const reward of record.rewards) {
+      const max = reward.type === "tao" ? TAO_COUNT : QUOTE_COUNT;
+      if (!(reward.id >= 1 && reward.id <= max)) {
+        errors.push(
+          `${record.path} has an unknown ${reward.type} ${reward.id}`,
+        );
+      }
+    }
+  }
+
+  // Release builds leave local-only games out: the rest must stay whole.
+  const released = records.filter(
+    (record) => !gamesByPath.get(record.path)?.localOnly,
+  );
+  const releasedPaths = new Set(released.map((record) => record.path));
+  const releasedLinks = new Map(
+    released.map((record) => [
+      record.path,
+      new Set(record.connections.filter((next) => releasedPaths.has(next))),
+    ]),
+  );
+  if (components(released, releasedLinks).length > 1) {
+    errors.push("the map comes apart without its local-only games");
+  }
+
+  // No game is the only way through to an easier one.
+  const order = released.map((record) => record.path);
+  const indexOf = new Map(order.map((gamePath, index) => [gamePath, index]));
+  const adjacency = order.map((gamePath) =>
+    [...releasedLinks.get(gamePath)].map((next) => indexOf.get(next)),
+  );
+  const start = indexOf.get(CAMPAIGN_START);
+  const swap = (index) => (index === 0 ? start : index === start ? 0 : index);
+  const rooted = adjacency.map((_, index) => adjacency[swap(index)].map(swap));
+  const indices = order.map((_, index) => index).filter((index) => index !== 0);
+  for (const gate of indices) {
+    const gateGame = gamesByPath.get(order[swap(gate)]);
+    for (const blocked of gatedBy(indices, rooted, gate)) {
+      const blockedGame = gamesByPath.get(order[swap(blocked)]);
+      if (blockedGame.difficulty < gateGame.difficulty) {
+        errors.push(
+          `${gateGame.path} (difficulty ${gateGame.difficulty}) is the only way to ` +
+            `${blockedGame.path} (difficulty ${blockedGame.difficulty})`,
+        );
+      }
+    }
+  }
+
   // No reward may be handed out twice, or it cannot be collected twice over.
   const seen = new Set();
   for (const record of records) {
@@ -1821,45 +1997,110 @@ function validate(records) {
   if (errors.length > 0) throw new Error(errors.join("\n"));
 }
 
-// Games still marked local-only are in development: they stay off the map
-// until they are enabled, so they do not consume quotes or shift the layout.
+/**
+ * Once the map is locked, a player's progress depends on it: which games are
+ * unlocked comes from the links, and every collected reward belongs to a
+ * game. So a locked game must keep its place, its links and its rewards;
+ * new games may only be added around it.
+ */
+function checkLock(lock, records) {
+  const byPath = new Map(records.map((record) => [record.path, record]));
+  const errors = [];
+  for (const [gamePath, before] of Object.entries(lock.gameDots)) {
+    const now = byPath.get(gamePath);
+    if (!now) {
+      errors.push(`${gamePath} is locked and cannot leave the map`);
+      continue;
+    }
+    if (now.x !== before.x || now.y !== before.y) {
+      errors.push(`${gamePath} is locked and cannot move`);
+    }
+    for (const next of before.connections) {
+      if (!now.connections.includes(next)) {
+        errors.push(
+          `${gamePath} is locked and cannot lose its link to ${next}`,
+        );
+      }
+    }
+    if (JSON.stringify(now.rewards) !== JSON.stringify(before.rewards)) {
+      errors.push(`${gamePath} is locked and its rewards cannot change`);
+    }
+  }
+  if (errors.length > 0) throw new Error(errors.join("\n"));
+}
+
+function lockFileFor(records) {
+  return `${JSON.stringify(
+    {
+      note:
+        "Written by npm run campaign:lock. Players' progress depends on these " +
+        "games' places, links and rewards; see docs/campaign-map.md.",
+      gameDots: Object.fromEntries(
+        records.map(({ path: gameDotPath, x, y, connections, rewards }) => [
+          gameDotPath,
+          { x, y, connections, rewards },
+        ]),
+      ),
+    },
+    null,
+    2,
+  )}\n`;
+}
+
+// Every game is on the map, local-only ones included: they sit on the rim as
+// dead ends, and release builds simply leave them out (see campaign-map.ts).
 const games = fs
   .readdirSync(gamesDirectory)
   .filter((filename) => filename.endsWith(".ts"))
   .map(parseGame)
-  .filter((game) => !game.localOnly);
-assignPlacementScores(games);
-games.sort(compareGames);
-
-if (games[0]?.path !== FIXED_ORDER[0]) {
-  throw new Error(`${FIXED_ORDER[0]} must exist as the first node.`);
+  .sort((left, right) => left.path.localeCompare(right.path));
+if (!games.some((game) => game.path === CAMPAIGN_START)) {
+  throw new Error(`${CAMPAIGN_START} must exist as the first node.`);
 }
 
 const existing = readExistingGameDots();
-const existingByPath = new Map(existing.map((record) => [record.path, record]));
 const gamesByPath = new Map(games.map((game) => [game.path, game]));
+const locked = fs.existsSync(lockPath)
+  ? JSON.parse(fs.readFileSync(lockPath, "utf8"))
+  : null;
 let records;
 let summary;
+let unassigned = [];
 
-if (rebuild || existing.length === 0) {
-  records = layoutAll(games, gamesByPath);
-  summary = `Rebuilt ${records.length} nodes`;
+if (lockOnly) {
+  if (locked) throw new Error(`The map is already locked (${lockPath}).`);
+  records = existing;
+  summary = `Locked ${records.length} nodes`;
+} else if (locked && (rebuild || rebalance)) {
+  throw new Error(
+    `The map is locked (${path.relative(root, lockPath)}): players' progress ` +
+      `depends on every game's place, links and rewards, so --rebuild and ` +
+      `--rebalance-rewards are refused. New games can still be added with a ` +
+      `plain run.`,
+  );
+} else if (rebuild || existing.length === 0) {
+  records = layoutAll(games);
+  unassigned = dealRewards(records, gamesByPath);
+  summary = `Rebuilt ${records.length} nodes and dealt every reward`;
+} else if (rebalance) {
+  records = existing;
+  unassigned = dealRewards(records, gamesByPath);
+  summary = `Kept ${records.length} nodes and dealt every reward again`;
 } else {
   const result = extendMap(existing, games);
   records = result.records;
+  unassigned = rewardNewGames(records, result.added);
   summary =
     result.added.length > 0
       ? `Added ${result.added.map((game) => game.path).join(", ")} at the edge (${records.length} nodes)`
       : `No new games; kept all ${records.length} nodes`;
 }
 
-// A complete rebuild moves every node anyway, so it deals the rewards fresh
-// too; only an incremental run preserves them, keeping collected rewards with
-// the game they were earned on.
-const freshRewards = rebalance || rebuild || existing.length === 0;
-assignRewards(records, existingByPath, gamesByPath, freshRewards);
-if (rebalance) summary += "; rebalanced rewards";
-validate(records);
+validate(records, gamesByPath);
+if (locked) checkLock(locked, records);
+if (unassigned.length > 0) {
+  summary += `; ${unassigned.length} quotes left unassigned (${unassigned.join(", ")})`;
+}
 
 const armed = records.filter((record) => record.arm !== null).length;
 summary += ` (${armed} on arms, ${records.length - armed} between them)`;
@@ -1883,15 +2124,21 @@ const output =
     2,
   )};\n`;
 
-if (!spritesOnly) {
+if (lockOnly) {
+  fs.writeFileSync(lockPath, lockFileFor(records));
+} else if (!spritesOnly) {
   fs.writeFileSync(outputPath, output);
   await renderGalaxyGlow(buildArmSpines(), armDust);
 }
-fs.mkdirSync(spriteDir, { recursive: true });
-await renderGameDotSprites();
-await renderFlareSprites();
+if (!lockOnly) {
+  fs.mkdirSync(spriteDir, { recursive: true });
+  await renderGameDotSprites();
+  await renderFlareSprites();
+}
 console.log(
   spritesOnly
     ? `Redrew the sprites in ${path.relative(root, spriteDir)}.`
-    : `${summary} in ${path.relative(root, outputPath)}.`,
+    : lockOnly
+      ? `${summary} in ${path.relative(root, lockPath)}.`
+      : `${summary} in ${path.relative(root, outputPath)}.`,
 );

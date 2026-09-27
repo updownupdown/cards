@@ -12,8 +12,8 @@ Most portraits follow one route, built from the parts below in this order:
                     the right jaw
     right_side()    down the neck, right clothes and shoulder, to END
 
-Portraits with long hair framing the face follow the Dickinson route instead
-(see dickinson.py). Draw a point twice to make a corner; see dsl.catmull.
+Portraits with hair framing the face follow the framed route instead (see
+framed() and the hair_* parts, and keller.py). Draw a point twice to make a corner; see dsl.catmull.
 """
 
 from dsl import curls, loop
@@ -229,6 +229,18 @@ def crown_mane(volume=10):
     )
 
 
+def crown_messy(volume=6):
+    """Thick, unruly hair standing up all over."""
+    v = volume
+    return (
+        [(62, 92)]
+        + waves([(60, 86), (54, 66 - v / 2), (62, 48 - v), (82, 36 - v), (102, 32 - v), (124, 36 - v),
+                 (142, 50 - v), (148, 70 - v / 2), (140, 92)], 7, 3)
+        + [(137, 96)]
+        + EAR_R
+    )
+
+
 def crown_wisps():
     """Thin, unruly hair (the pseudo-Seneca bust)."""
     return (
@@ -376,10 +388,63 @@ def right_side(clothes="plain"):
     raise ValueError(clothes)
 
 
-# --- Framed by hair (the Dickinson route) --------------------------------------------------
+# --- Framed by hair (the framed route) -----------------------------------------------------
 
 
-def framed(outer, inner, clothes_left="plain", clothes_right="plain", lips=11):
+# Hair for framed(): (outer, inner). Inner edges: centre-parted, a fringe, swept.
+INNER_PARTED = [(134, 118), (130, 96), (120, 78), (106, 70), (100, 69), (94, 70), (80, 78), (71, 96),
+                (69, 112)]
+INNER_FRINGE = [(136, 118), (136, 98), (126, 90), (112, 93), (100, 90), (88, 93), (74, 90), (65, 98), (66, 112)]
+INNER_SWEPT = [(134, 116), (128, 92), (112, 84), (90, 86), (74, 94), (68, 112)]
+
+
+def hair_down(bottom=160, spread=12, fringe=False, wave=0):
+    """Straight or wavy hair falling past the jaw: a bob at 150-165, long hair
+    at 180 and over."""
+    lo, hi = 56 - spread, 144 + spread
+    guide = [(lo + 4, bottom - 14), (lo, 110), (lo + 6, 80), (66, 58), (84, 46), (100, 43),
+             (116, 46), (134, 58), (hi - 6, 80), (hi, 110), (hi - 4, bottom - 14)]
+    top = waves(guide, 7, wave) if wave else guide
+    outer = [(58, 132), (lo + 8, bottom - 6), (lo + 2, bottom), (lo + 2, bottom)] + top + [
+        (hi - 2, bottom), (hi - 2, bottom), (hi - 8, bottom - 6), (142, 132), (138, 132), (138, 132)]
+    return outer, INNER_FRINGE if fringe else INNER_PARTED
+
+
+def hair_short(curly=False, swept=True):
+    """Short hair close to the head."""
+    guide = [(58, 128), (52, 104), (56, 78), (70, 58), (100, 48), (130, 58), (144, 78), (148, 104),
+             (142, 128)]
+    top = curls(guide, 12, 4.5) if curly else waves(guide, 6, 1.5)
+    return top + [(136, 132), (136, 132)], INNER_SWEPT if swept else INNER_PARTED
+
+
+def hair_updo(bun=False):
+    """Hair drawn back from the face, with or without a bun on top."""
+    left = waves([(60, 128), (56, 106), (58, 86), (68, 68), (86, 54)], 4, 1.2)
+    right = waves([(114, 54), (130, 64), (140, 80), (144, 104), (140, 128)], 4, 1.2)
+    top = [(92, 50), (90, 40), (96, 32), (104, 32), (110, 40), (108, 50), (108, 50), (92, 50), (92, 50)] if bun \
+        else [(100, 50)]
+    inner = [(134, 116), (130, 92), (118, 76), (100, 72), (82, 76), (70, 92), (68, 112)]
+    return left + top + right + [(136, 132), (136, 132)], inner
+
+
+def hair_big():
+    """Big, teased and curled hair."""
+    outer = curls([(58, 132), (40, 112), (34, 82), (48, 52), (76, 32), (100, 28), (124, 32), (152, 52),
+                   (166, 82), (160, 112), (142, 132)], 13, 7) + [(138, 134), (138, 134)]
+    inner = waves([(134, 118), (132, 94), (120, 80), (100, 76), (84, 80), (72, 94), (68, 112)], 4, 2)
+    return outer, inner
+
+
+def hair_cloche():
+    """A close-fitting hat with a small brim, low over the brow."""
+    outer = [(58, 128), (56, 110), (48, 102), (46, 96), (56, 92), (58, 72), (72, 52), (100, 42), (128, 52),
+             (142, 72), (144, 92), (154, 96), (152, 102), (144, 110), (142, 128), (138, 132), (138, 132)]
+    inner = [(134, 112), (128, 100), (100, 98), (72, 100), (69, 112)]
+    return outer, inner
+
+
+def framed(outer, inner, clothes_left="plain", clothes_right="plain", lips=11, glasses=None):
     """Hair that frames the face: up the left jaw to the ear, the hair's outer
     edge over the top and down to the right, its inner edge back across the
     forehead, the eyes left to right, then the right cheek, chin, lips, and
@@ -388,7 +453,7 @@ def framed(outer, inner, clothes_left="plain", clothes_right="plain", lips=11):
     return (
         [START] + CLOTHES_LEFT[clothes_left]
         + [(83, 196), (84, 186), (84, 178), (78, 170), (71, 156), (67, 140), (65, 130)]
-        + outer + inner + eyes()
+        + outer + inner + eyes(glasses=glasses)
         + [(131, 120), (130, 140), (123, 160), (112, 172), (100, 177), (92, 175), (92, 175),
            (94, 168), (92, 163)]
         + mouth(158, w=lips)

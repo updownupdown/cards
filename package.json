@@ -11,6 +11,7 @@
     "store-graphics:generate": "node ./scripts/generate-store-graphics.mjs",
     "card-backs:generate": "node ./scripts/generate-card-backs.mjs",
     "campaign:generate": "node ./scripts/generate-campaign-map.mjs",
+    "campaign:lock": "node ./scripts/generate-campaign-map.mjs --lock",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
