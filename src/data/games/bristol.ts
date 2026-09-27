@@ -11,12 +11,11 @@ export const bristol: GameDefinition = {
   rating: { complexity: 25, difficulty: 45, luck: 45 },
   thumbnail: "Bristol.webp",
   thumbnailCredit: {
-    title: "Bristol Harbour with St Mary Redcliffe",
-    artistName: "Joseph Walter",
-    date: "c.1835",
-    sourceName: "Art UK",
-    sourceLink:
-      "https://artuk.org/discover/artworks/bristol-harbour-with-st-mary-redcliffe-187973",
+    title: "S.E. Vincent’s Rock near Bristol",
+    artistName: "Charles Joseph Hullmandel",
+    date: "1821",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/13777",
   },
   background: GAME_BACKGROUNDS.shipwreck,
   animation: GameAnimations.Mist,

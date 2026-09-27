@@ -14,12 +14,11 @@ export const queensAudience: GameDefinition = {
   },
   thumbnail: "QueensAudience.webp",
   thumbnailCredit: {
-    title: "Queen Victoria’s Procession to the Guildhall, 9 November 1837",
-    artistName: "James Henry Nixon",
-    date: "1838",
-    sourceName: "Art UK",
-    sourceLink:
-      "https://artuk.org/discover/artworks/queen-victorias-procession-to-the-guildhall-9-november-1837-50960",
+    title:
+      "Her Most Gracious Majesty Queen Victoria Receiving the Sacrament at Her Coronation",
+    artistName: "George Baxter",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/61545",
   },
   background: GAME_BACKGROUNDS.oldRoom,
   animation: GameAnimations.Dust,

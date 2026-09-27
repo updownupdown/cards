@@ -1,51 +1,134 @@
 {
+  "BlackberryPie": {
+    "left": 0.065,
+    "top": 0.115,
+    "right": 0.095,
+    "bottom": 0.075
+  },
+  "Bristol": false,
+  "CabinSiege": false,
   "Carpet": {
     "left": 0.075,
     "top": 0.06,
     "right": 0.1,
     "bottom": 0.13
   },
+  "Charlatan": false,
+  "CityGrid": false,
   "Easthaven": {
-    "left": 0.035,
+    "left": 0.055,
     "top": 0.048,
-    "right": 0.032,
+    "right": 0.052,
     "bottom": 0.085
+  },
+  "Fortress": false,
+  "FourSeasons": false,
+  "FreeCell": {
+    "left": 0.042,
+    "top": 0.037,
+    "right": 0.029,
+    "bottom": 0.045
+  },
+  "Frog": false,
+  "Gaps": false,
+  "Gargantua": {
+    "left": 0.052,
+    "top": 0.053,
+    "right": 0.051,
+    "bottom": 0.052
+  },
+  "Golf": false,
+  "GrandfatherClock": false,
+  "Herbalist": false,
+  "Indian": false,
+  "Infiltrator": false,
+  "Jailbreak": {
+    "left": 0.14,
+    "top": 0.075,
+    "right": 0.145,
+    "bottom": 0.1
+  },
+  "KingAlbert": {
+    "left": 0.075,
+    "top": 0.045,
+    "right": 0.065,
+    "bottom": 0.085
+  },
+  "Klondike": {
+    "left": 0.024,
+    "top": 0.025,
+    "right": 0.021,
+    "bottom": 0.032
   },
   "Labyrinth": {
     "left": 0.13,
-    "top": 0.075,
+    "top": 0.095,
     "right": 0.105,
-    "bottom": 0.16
+    "bottom": 0.18
   },
+  "LoneJoker": false,
   "Memory": {
     "left": 0.15,
-    "top": 0.115,
+    "top": 0.13,
     "right": 0.145,
     "bottom": 0.17
   },
+  "MonteCarlo": false,
+  "Nestor": {
+    "left": 0.045,
+    "top": 0.031,
+    "right": 0.03,
+    "bottom": 0.05
+  },
+  "Pagoda": false,
+  "Parallels": false,
+  "PicketFence": {
+    "left": 0.015,
+    "top": 0.014,
+    "right": 0.011,
+    "bottom": 0.01
+  },
+  "Pickpocket": false,
+  "PocketPoker": {
+    "left": 0.059,
+    "top": 0.064,
+    "right": 0.069,
+    "bottom": 0.145
+  },
+  "QueensAudience": {
+    "left": 0.02,
+    "top": 0.02,
+    "right": 0.03,
+    "bottom": 0.035
+  },
+  "RankAndFile": {
+    "left": 0.036,
+    "top": 0.04,
+    "right": 0.033,
+    "bottom": 0.05
+  },
   "RedDiamond": {
     "left": 0.09,
-    "top": 0.05,
+    "top": 0.065,
     "right": 0.095,
     "bottom": 0.05
   },
+  "Scorpion": false,
   "SeahavenTowers": false,
+  "SimpleSimon": false,
+  "Spiderette": false,
+  "TenTwentyThirty": false,
   "ThumbAndPouch": {
-    "left": 0.11,
-    "top": 0.26,
-    "right": 0.12,
-    "bottom": 0.105
+    "left": 0.032,
+    "top": 0.16,
+    "right": 0.04,
+    "bottom": 0
   },
   "TwelveTrials": {
     "left": 0.105,
     "top": 0.115,
-    "right": 0.06,
+    "right": 0.075,
     "bottom": 0.12
   },
-  "Whitehead": {
-    "left": 0.03,
-    "top": 0.06,
-    "right": 0.05,
-    "bottom": 0
-  }
+  "Whitehead": false
 }
