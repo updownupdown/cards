@@ -1,29 +1,35 @@
 # Quote picker (temporary)
 
-A one-off page for choosing about 250 quotes out of 500 candidates. Delete
-this folder once the quotes library has been updated.
+A page for choosing the final quotes (about 250). Delete this folder once the
+quotes library has been updated.
 
-- IDs 1–208 are the quotes in `src/components/Collectibles/QuotesText.ts`
-  today, in the same order (same IDs as the app).
-- IDs 209–500 are the new candidates in `candidates.mjs`, in order. Don't
-  reorder or remove entries there until the chosen IDs have been applied, or
-  the exported IDs will point at the wrong quotes.
+Quote IDs never change meaning:
+
+- 1–208: the quotes in `src/components/Collectibles/QuotesText.ts` today
+  (same IDs as the app).
+- 209–500: first-round candidates. Only the kept ones remain, in
+  `shortlist.mjs`, with their IDs.
+- 501–700: second-round candidates in `round2.mjs`, numbered in order from
+  501. Don't reorder or remove entries there until the chosen IDs have been
+  applied.
+
+`shortlist.mjs` also lists which of the app's quotes (1–208) were kept. On the
+page, everything in the shortlist starts as kept and the second round starts
+undecided.
 
 `node scripts/quote-picker/build.mjs` rebuilds `index.html` from
-`template.html`, `QuotesText.ts` and `candidates.mjs`. Open `index.html` in a
-browser, or use the published copy.
+`template.html`, `QuotesText.ts`, `shortlist.mjs` and `round2.mjs`.
 
 On the page, "Export" gives the kept IDs as a comma-separated list. Chips
-mark quotes that are new, whose author has no portrait yet ("Needs
-portrait"), that repeat another current quote ("Like #…"), or that are only
-attributed.
+mark where a quote came from, authors with no portrait yet ("Needs
+portrait"), and quotes that are only attributed.
 
-## Applying the chosen IDs (next session)
+## Building the final library (next session)
 
-Given the list of kept IDs:
+Given the final list of kept IDs:
 
-1. Build the new `QuotesText.ts` from the kept quotes (current quotes from
-   `QuotesText.ts`, new ones from `candidates.mjs`).
+1. Build the new `QuotesText.ts` from them: IDs 1–208 from `QuotesText.ts`,
+   the rest from `shortlist.mjs` and `round2.mjs`.
 2. Mind the ID rule in `docs/quotes.md`: players' collections store quote IDs
    (positions in the list), so decide how to keep existing collections
    meaningful before removing current quotes from the middle.

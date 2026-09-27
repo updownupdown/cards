@@ -1,5 +1,6 @@
-// Builds the quote picker: the 208 quotes in QuotesText.ts (IDs 1-208) plus
-// the candidates in candidates.mjs (IDs 209 on), written into index.html.
+// Builds the quote picker into index.html: the quotes kept so far
+// (shortlist.mjs, which points into QuotesText.ts for the app's own quotes)
+// and the second-round candidates (round2.mjs, IDs 501 on).
 //
 //   node scripts/quote-picker/build.mjs
 
@@ -7,7 +8,8 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import vm from "node:vm";
-import { candidates } from "./candidates.mjs";
+import { ROUND_2 } from "./round2.mjs";
+import { KEPT_CANDIDATES, KEPT_CURRENT_IDS } from "./shortlist.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, "..", "..");
@@ -30,35 +32,32 @@ function readPortraitNames() {
   return new Set([...source.matchAll(/name: "([^"]+)"/g)].map((m) => m[1]));
 }
 
-// Pairs of current quotes that say nearly the same thing.
-const SIMILAR = [
-  [62, 185],
-  [63, 186],
-  [75, 177],
-  [77, 179],
-  [78, 180],
-  [92, 199],
-  [121, 197],
-];
+const ROUND_2_FIRST_ID = 501;
 
 const current = readCurrentQuotes();
-if (current.length !== 208) {
-  throw new Error(`Expected 208 current quotes, found ${current.length}.`);
-}
 const withPortrait = readPortraitNames();
 
-const all = [...current, ...candidates].map((quote, index) => ({
-  id: index + 1,
+const entry = (id, quote, round, earlier) => ({
+  id,
   author: quote.author,
   text: quote.text,
   source: quote.source,
-  isNew: index >= current.length,
+  round,
+  earlier,
   newAuthor: !withPortrait.has(quote.author),
-  similar: [],
-}));
-for (const [a, b] of SIMILAR) {
-  all[a - 1].similar.push(b);
-  all[b - 1].similar.push(a);
+});
+
+const all = [
+  ...KEPT_CURRENT_IDS.map((id) => entry(id, current[id - 1], "app", true)),
+  ...KEPT_CANDIDATES.map((quote) => entry(quote.id, quote, "round 1", true)),
+  ...ROUND_2.map((quote, i) => entry(ROUND_2_FIRST_ID + i, quote, "round 2", false)),
+].sort((a, b) => a.id - b.id);
+
+const ids = new Set();
+for (const quote of all) {
+  if (!quote.text) throw new Error(`Quote ${quote.id} not found.`);
+  if (ids.has(quote.id)) throw new Error(`Quote ID ${quote.id} is used twice.`);
+  ids.add(quote.id);
 }
 
 const texts = new Map();

@@ -215,7 +215,7 @@
   <section class="panel" id="panel" hidden>
     <div>
       <h2>Quote IDs to keep</h2>
-      <p>Paste this list into a new session to update the quotes library. IDs 1–208 are the quotes in the app now; 209–500 are new.</p>
+      <p>Paste this list into a new session to build the final quotes library. IDs 1–208 are quotes in the app now, 209–500 were first-round candidates, and 501–700 are this round's.</p>
     </div>
     <textarea id="out-keep" readonly aria-label="Kept quote IDs"></textarea>
     <div class="row">
@@ -231,7 +231,7 @@
     <div class="row">
       <button class="btn" id="restore">Restore</button>
       <button class="btn danger" id="clear">Clear all choices</button>
-      <button class="btn danger" id="clear-yes" hidden>Yes, clear all 500</button>
+      <button class="btn danger" id="clear-yes" hidden>Yes, clear every choice</button>
       <span class="status" id="restore-status"></span>
     </div>
   </section>
@@ -244,9 +244,9 @@
       <button data-status="drop" aria-pressed="false">Dropped</button>
     </div>
     <div class="seg" role="group" aria-label="List">
-      <button data-set="all" aria-pressed="true">1–500</button>
-      <button data-set="current" aria-pressed="false">In app</button>
-      <button data-set="new" aria-pressed="false">New</button>
+      <button data-set="all" aria-pressed="true">All</button>
+      <button data-set="earlier" aria-pressed="false">Chosen earlier</button>
+      <button data-set="new" aria-pressed="false">New (501–700)</button>
     </div>
     <select id="author" aria-label="Author"></select>
     <select id="sort" aria-label="Order">
@@ -265,11 +265,14 @@
 <script>
 const QUOTES = __QUOTES__;
 const TARGET = 250;
-const STORE = "quote-picker-v1";
+const STORE = "quote-picker-v2";
 const byId = new Map(QUOTES.map((q) => [q.id, q]));
 
-let choice = {}; // id -> "keep" | "drop"
+// id -> "keep" | "drop". Quotes chosen in an earlier round start as kept.
+let choice = {};
+QUOTES.forEach((q) => { if (q.earlier) choice[q.id] = "keep"; });
 try {
+  if (localStorage.getItem(STORE)) choice = {};
   const saved = JSON.parse(localStorage.getItem(STORE) || "{}");
   for (const [id, v] of Object.entries(saved)) {
     if (byId.has(+id) && (v === "keep" || v === "drop")) choice[id] = v;
@@ -299,9 +302,10 @@ for (const q of QUOTES) {
   el.tabIndex = 0;
   el.dataset.id = q.id;
   const chips = [
-    q.isNew ? `<span class="chip">New</span>` : `<span class="chip">In app</span>`,
+    q.round === "app" ? `<span class="chip">In app</span>`
+      : q.round === "round 1" ? `<span class="chip">Round 1</span>`
+      : `<span class="chip">New</span>`,
     q.newAuthor ? `<span class="chip">Needs portrait</span>` : "",
-    q.similar.length ? `<span class="chip warn">Like #${q.similar.join(", #")}</span>` : "",
     /^Attributed/.test(q.source) ? `<span class="chip warn">Attributed</span>` : "",
   ].join("");
   el.innerHTML = `
@@ -329,8 +333,8 @@ function visible(q) {
   if (filters.status === "open" && c) return false;
   if (filters.status === "keep" && c !== "keep") return false;
   if (filters.status === "drop" && c !== "drop") return false;
-  if (filters.set === "current" && q.isNew) return false;
-  if (filters.set === "new" && !q.isNew) return false;
+  if (filters.set === "earlier" && !q.earlier) return false;
+  if (filters.set === "new" && q.earlier) return false;
   if (filters.author && q.author !== filters.author) return false;
   if (filters.search && !cards.get(q.id)._search.includes(filters.search)) return false;
   return true;
@@ -478,7 +482,7 @@ $("restore").addEventListener("click", () => {
     keep = parseIds(text);
   }
   if (!keep.length && !drop.length) {
-    $("restore-status").textContent = "No quote IDs found. Paste numbers between 1 and 500.";
+    $("restore-status").textContent = "No quote IDs found. Paste numbers between 1 and 700.";
     return;
   }
   drop.forEach((id) => (next[id] = "drop"));
