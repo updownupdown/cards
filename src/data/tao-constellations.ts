@@ -5,25 +5,25 @@ import { TAO_CHAPTERS } from "@/components/Campaign/TaoChapters";
  * chapter is earned, and its place in the collection.
  *
  * Each figure is drawn on a 100 x 100 grid (y grows downward):
- * - `mag` is a star's brightness, 1 (faint) to 3 (brightest).
- * - Strokes are pen paths through stars, in drawing order.
+ * - A star is `[x, y, mag]`; `mag` is its brightness, 1 (faint) to 3.
+ * - Strokes are pen paths through stars (by index), in drawing order.
  * - Nebulae are optional polygons that draw part of the star dust, to shade
- *   an area (a canopy, a lake, the light half of yin and yang).
+ *   an area (a canopy, a lake, the dark half of the moon).
  * - `keyPhrases` name the line(s) the image comes from. Their letters become
  *   the named stars. Lines are matched in the English text and used by index,
  *   which holds for every translation (they keep the English line breaks).
- * - `name` and `confidence` are for us: what the figure shows, and how
- *   directly the chapter names it (A: the text names it; B: a symbol drawn
- *   from the text; C: an interpretive choice). Neither is shown to players.
+ * - `name` says what the figure shows; it is not shown to players.
+ *
+ * The figures were drawn as clean shapes, then loosened slightly (a small
+ * tilt, bend and nudge per star) so that, like real constellations, no line
+ * is exactly horizontal or vertical.
  */
 
 export type ConstellationStar = { x: number; y: number; mag: number };
-export type Confidence = "A" | "B" | "C";
 
 export type Constellation = {
   chapter: number;
   name: string;
-  confidence: Confidence;
   keyPhrases: string[];
   stars: ConstellationStar[];
   strokes: number[][];
@@ -32,1139 +32,1542 @@ export type Constellation = {
   nebulaShare: number;
 };
 
-type Point = [number, number];
-type StarPoint = [number, number] | [number, number, number];
+type Figure = {
+  name: string;
+  keyPhrases: string[];
+  stars: [number, number, number][];
+  strokes: number[][];
+  nebulae?: [number, number][][];
+  nebulaShare?: number;
+};
 
-function createBuilder() {
-  const stars: ConstellationStar[] = [];
-  const strokes: number[][] = [];
-  const nebulae: Point[][] = [];
-
-  const star = (x: number, y: number, mag = 1.8) => {
-    stars.push({ x, y, mag });
-    return stars.length - 1;
-  };
-  const pts = (points: StarPoint[], mag = 1.8) =>
-    points.map(([x, y, m]) => star(x, y, m ?? mag));
-  const line = (...ids: number[]) => {
-    strokes.push(ids);
-    return ids;
-  };
-  const arcPoints = (
-    cx: number,
-    cy: number,
-    rx: number,
-    ry: number,
-    fromDeg: number,
-    toDeg: number,
-    count: number,
-  ): Point[] =>
-    Array.from({ length: count }, (_, index) => {
-      const t = count === 1 ? 0 : index / (count - 1);
-      const angle = ((fromDeg + (toDeg - fromDeg) * t) * Math.PI) / 180;
-      return [cx + rx * Math.cos(angle), cy + ry * Math.sin(angle)];
-    });
-
-  return {
-    star,
-    starAt: (id: number) => stars[id],
-    pts,
-    line,
-    arcPoints,
-    /** Stars joined by one stroke. */
-    path: (points: StarPoint[], mag?: number) => line(...pts(points, mag)),
-    /** Stars joined by a closed stroke. */
-    loop: (points: StarPoint[], mag?: number) => {
-      const ids = pts(points, mag);
-      line(...ids, ids[0]);
-      return ids;
-    },
-    close: (ids: number[]) => line(...ids, ids[0]),
-    /** `count` stars around an ellipse, the first at `startDeg` (-90 = top). */
-    ring: (
-      cx: number,
-      cy: number,
-      r: number,
-      count: number,
-      mag = 1.8,
-      startDeg = -90,
-      ry = r,
-    ) =>
-      pts(
-        arcPoints(cx, cy, r, ry, startDeg, startDeg + 360, count + 1).slice(
-          0,
-          count,
-        ),
-        mag,
-      ),
-    arc: (
-      cx: number,
-      cy: number,
-      r: number,
-      fromDeg: number,
-      toDeg: number,
-      count: number,
-      mag = 1.8,
-      ry = r,
-    ) => pts(arcPoints(cx, cy, r, ry, fromDeg, toDeg, count), mag),
-    nebula: (points: Point[]) => nebulae.push(points),
-    build: (
-      chapter: number,
-      name: string,
-      confidence: Confidence,
-      keyPhrases: string[],
-      nebulaShare = 0.25,
-    ): Constellation => ({
-      chapter,
-      name,
-      confidence,
-      keyPhrases,
-      stars,
-      strokes,
-      nebulae,
-      nebulaShare: nebulae.length ? nebulaShare : 0,
-    }),
-  };
-}
-
-type Builder = ReturnType<typeof createBuilder>;
-
-const figures: ((b: Builder) => Constellation)[] = [
-  // 1 - "This source is called darkness": a gateway onto the dark.
-  (b) => {
-    b.path([[8, 19, 2.2], [18, 25], [34, 21], [50, 19, 2.4], [66, 21], [82, 25], [92, 19, 2.2]]);
-    const [, beamL, beamR] = b.path([[22, 33, 1.4], [30, 33, 2], [70, 33, 2], [78, 33, 1.4]]);
-    const [lowL, lowR] = b.path([[30, 45, 1.6], [70, 45, 1.6]]);
-    const [footL, footR] = b.pts([[30, 90, 2.2], [70, 90, 2.2]]);
-    b.line(beamL, lowL, footL);
-    b.line(beamR, lowR, footR);
-    return b.build(1, "The Gateway", "B", ["This source is called darkness."]);
-  },
-  // 2 - Being and non-being produce each other: sun and moon.
-  (b) => {
-    const sun = b.ring(32, 34, 11, 8, 2);
-    b.close(sun);
-    const rays = b.ring(32, 34, 19, 8, 1.2);
-    sun.forEach((id, index) => b.line(id, rays[index]));
-    const outer = b.arc(68, 62, 18, -60, -300, 8, 2);
-    const inner = b.arc(78, 62, 15.6, -258, -102, 6, 1.2);
-    b.line(...outer, ...inner, outer[0]);
-    return b.build(2, "Sun and Moon", "B", ["Being and non-being produce each other."]);
-  },
-  // 3 - Do not display your treasures: a closed chest.
-  (b) => {
-    const [lidL, , , , , , lidR] = b.path([[20, 50, 2], [24, 36], [38, 28], [50, 27, 2.2], [62, 28], [76, 36], [80, 50, 2]]);
-    const [strapL, strapR] = b.pts([[32, 50, 1.4], [68, 50, 1.4]]);
-    b.line(lidL, strapL, strapR, lidR);
-    const [botL, strapBL, strapBR, botR] = b.path([[20, 86, 2], [32, 86, 1.4], [68, 86, 1.4], [80, 86, 2]]);
-    b.line(lidL, botL);
-    b.line(lidR, botR);
-    b.line(strapL, strapBL);
-    b.line(strapR, strapBR);
-    b.loop([[45, 53, 1.2], [55, 53, 1.2], [55, 64, 1.2], [45, 64, 1.2]]);
-    b.star(50, 58, 2.8);
-    return b.build(3, "The Closed Chest", "B", ["Do not display your treasures"]);
-  },
-  // 4 - Infinitely deep: a well.
-  (b) => {
-    const rim = b.ring(50, 55, 26, 8, 1.8, 0, 7);
-    b.close(rim);
-    const [, roofL, , roofR] = b.path([[22, 22, 1.6], [31.6, 17.5, 1.8], [50, 9, 2.4], [68.4, 17.5, 1.8], [78, 22, 1.6]]);
-    const [midL, pulley, midR] = b.path([[31.6, 28, 1.4], [50, 28, 2.2], [68.4, 28, 1.4]]);
-    b.line(rim[5], midL, roofL);
-    b.line(rim[7], midR, roofR);
-    const rope = b.star(50, 40, 1.4);
-    b.line(pulley, rope);
-    const bucket = b.loop([[45, 43, 1.6], [55, 43, 1.6], [53, 49, 1.6], [47, 49, 1.6]]);
-    b.line(bucket[0], rope, bucket[1]);
-    b.line(rim[4], ...b.pts([[24, 86, 1.4], [50, 90, 1.6], [76, 86, 1.4]]), rim[0]);
-    return b.build(4, "The Bottomless Well", "A", ["Infinitely deep, it is the source of all things."]);
-  },
-  // 5 - The space between Heaven and Earth is like a bellows.
-  (b) => {
-    const upper = b.path([[18, 36, 2], [34, 30], [52, 33], [68, 43], [79, 48]]);
-    const lower = b.path([[18, 64, 2], [34, 70], [52, 67], [68, 57], [79, 52]]);
-    b.line(upper[0], ...b.pts([[12, 43, 1.4], [10, 50, 1.6], [12, 57, 1.4]]), lower[0]);
-    const nozzle = b.star(94, 50, 2.8);
-    b.line(upper[4], nozzle, lower[4]);
-    b.line(upper[0], b.star(5, 27, 2.2));
-    b.line(lower[0], b.star(5, 73, 2.2));
-    b.close(b.ring(38, 50, 4.5, 5, 1.2));
-    return b.build(5, "The Bellows", "A", ["is like a bellows;"]);
-  },
-  // 6 - Like a vapor: mist rising from a valley.
-  (b) => {
-    b.path([[3, 38, 1.4], [18, 28, 2.2], [30, 46], [44, 74], [50, 80, 2], [56, 74], [70, 44], [82, 26, 2.2], [97, 36, 1.4]]);
-    b.path([[50, 72, 1.2], [44, 62, 1.4], [52, 52, 1.6], [46, 42, 1.8], [54, 32, 2], [48, 22, 2.4]]);
-    b.path([[58, 68, 1.2], [64, 58, 1.4], [58, 48, 1.6], [66, 40, 2]]);
-    b.nebula([[40, 70], [36, 44], [46, 18], [62, 24], [72, 40], [62, 70]]);
-    return b.build(6, "The Valley Mist", "B", ["It is like a vapor,"], 0.3);
-  },
-  // 7 - The Tao of Heaven is eternal, and the earth is long enduring.
-  (b) => {
-    const dome = b.arc(50, 70, 44, 180, 360, 9, 2);
-    b.line(...dome);
-    b.line(dome[0], ...b.pts([[26, 82, 1.4], [50, 87, 1.6], [74, 82, 1.4]]), dome[8]);
-    b.line(dome[0], dome[8]);
-    b.star(50, 56, 3);
-    b.pts([[32, 44, 1], [62, 36, 1], [72, 52, 1]]);
-    return b.build(7, "Heaven over Earth", "B", ["The Tao of Heaven is eternal,"]);
-  },
-  // 8 - The supreme good is like water; it gathers in the low places.
-  (b) => {
-    const ridge = b.path([[3, 66, 1.4], [13, 44, 1.6], [24, 22, 2.6], [36, 40, 1.6], [47, 56, 2], [60, 42, 1.6], [72, 30, 2.6], [85, 50, 1.6], [97, 68, 1.4]]);
-    const lakeRing = b.arcPoints(50, 89, 24, 6.5, -90, 270, 9).slice(0, 8);
-    const lake = b.pts(lakeRing);
-    b.line(ridge[4], ...b.pts([[54, 64, 1.6], [44, 71, 1.6], [53, 78, 1.8]]), lake[0]);
-    b.close(lake);
-    b.nebula(lakeRing);
-    return b.build(8, "Water", "A", ["The supreme good is like water,", "It gathers in unpopular places."]);
-  },
-  // 9 - Easier to carry an empty cup than one filled to the brim.
-  (b) => {
-    const bowl = b.path([[20, 30, 2], [26, 46], [38, 58], [50, 62, 2], [62, 58], [74, 46], [80, 30, 2]]);
-    b.line(bowl[0], ...b.pts([[36, 24, 1.6], [50, 22, 2.2], [64, 24, 1.6]]), bowl[6]);
-    b.line(bowl[6], ...b.pts([[85, 40, 1.4], [84, 49, 1.4]]));
-    b.star(84, 57, 2.6);
-    const stem = b.star(50, 82, 1.6);
-    b.line(bowl[3], stem);
-    b.path([[34, 88, 1.8], [50, 84, 1.4], [66, 88, 1.8]]);
-    return b.build(9, "The Brimming Cup", "A", ["than one that is filled to the brim."]);
-  },
-  // 10 - Cleanse your inner vision: an eye.
-  (b) => {
-    const [cornerL, , , , cornerR] = b.path([[8, 50, 2], [28, 37], [50, 31], [72, 37], [92, 50, 2]]);
-    b.line(cornerL, ...b.pts([[28, 62], [50, 68], [72, 62]]), cornerR);
-    b.close(b.ring(50, 49, 13, 8, 1.6));
-    b.star(50, 49, 3);
-    b.path([[30, 24, 1.2], [26, 16, 1.6]]);
-    b.path([[50, 20, 1.2], [50, 10, 1.8]]);
-    b.path([[70, 24, 1.2], [74, 16, 1.6]]);
-    return b.build(10, "The Inner Eye", "B", ["While you cleanse your inner vision"]);
-  },
-  // 11 - Thirty spokes join at the hub; the hole at the centre is the use.
-  (b) => {
-    const rim = b.ring(50, 50, 42, 12, 2.4);
-    // The hub is a faint ring around an empty centre: the "center hole".
-    const hub = b.ring(50, 50, 9, 12, 1.2);
-    b.close(rim);
-    hub.forEach((id, index) => b.line(id, rim[index]));
-    b.close(hub);
-    return b.build(11, "The Wheel", "A", ["but it is the center hole", "that allows the wheel to function."]);
-  },
-  // 12 - Five notes deafen the ear: a lute.
-  (b) => {
-    const body = b.loop([[45, 42, 1.6], [34, 48], [25, 60], [23, 76], [32, 89], [50, 94, 2.2], [68, 89], [77, 76], [75, 60], [66, 48], [55, 42, 1.6]]);
-    const neckL = b.star(46, 14, 1.6);
-    const neckR = b.star(54, 14, 1.6);
-    b.line(body[0], neckL);
-    b.line(body[10], neckR);
-    b.line(neckL, ...b.pts([[45, 5, 2], [55, 5, 2]]), neckR);
-    b.pts([[39, 8, 1.2], [61, 8, 1.2], [39, 12, 1.2], [61, 12, 1.2]]);
-    b.close(b.ring(50, 64, 6, 6, 1.4));
-    b.path([[40, 81, 1.4], [60, 81, 1.4]]);
-    b.path([[50, 14, 1], [50, 58, 1]]);
-    return b.build(12, "The Lute", "B", ["Five notes deafen the ear."]);
-  },
-  // 13 - The superior is also someone's subordinate: a ladder.
-  (b) => {
-    const left = b.pts([[28, 94, 1.8], [30, 80], [32, 66], [34, 52], [36, 38], [38, 24], [40, 10, 2.2]]);
-    const right = b.pts([[58, 94, 1.8], [60, 80], [62, 66], [64, 52], [66, 38], [68, 24], [70, 10, 2.2]]);
-    b.line(...left);
-    b.line(...right);
-    for (let i = 1; i < 7; i++) b.line(left[i], right[i]);
-    b.star(55, 3, 3);
-    return b.build(13, "The Ladder", "C", ["He who is superior is also someone's subordinate."]);
-  },
-  // 14 - Follow it and there will be no end: an endless spiral.
-  (b) => {
-    const points: StarPoint[] = [];
-    for (let i = 0; i < 22; i++) {
-      const angle = (i * 45 * Math.PI) / 180;
-      const r = 3 + i * 1.95;
-      points.push([50 + r * Math.cos(angle), 50 + r * Math.sin(angle), i === 0 ? 3 : 1.2 + (i % 4 === 0 ? 0.8 : 0)]);
-    }
-    b.path(points);
-    return b.build(14, "The Endless Thread", "C", ["follow it and there will be no end."]);
-  },
-  // 15 - Careful as someone crossing a frozen stream in winter.
-  (b) => {
-    b.close(b.ring(40, 18, 4.5, 5, 1.6));
-    const neck = b.star(40, 26, 2);
-    const cloakL = b.star(29, 60, 1.8);
-    const cloakR = b.star(51, 60, 1.8);
-    b.line(neck, cloakL, cloakR, neck);
-    b.line(b.star(36, 60, 1.2), b.star(30, 78, 2));
-    b.line(b.star(46, 60, 1.2), b.star(55, 75, 2));
-    const staffTop = b.star(52, 24, 2);
-    const hand = b.star(54, 38, 1.4);
-    b.line(neck, hand);
-    b.line(staffTop, hand, b.star(61, 80, 1.6));
-    b.path([[4, 80, 1.2], [18, 76, 1.4], [32, 81, 1.2], [48, 77, 1.4], [64, 82, 1.2], [80, 77, 1.4], [96, 81, 1.2]]);
-    b.path([[10, 90, 1], [30, 87, 1.2], [50, 91, 1], [70, 87, 1.2], [90, 90, 1]]);
-    return b.build(15, "The Winter Crossing", "A", ["as someone crossing a frozen stream in winter."]);
-  },
-  // 16 - Empty your mind: a single drop, and its ripples on still water.
-  (b) => {
-    b.star(50, 22, 2.6);
-    b.star(50, 32, 1.4);
-    b.close(b.ring(50, 60, 10, 6, 2.4, -90, 3.5));
-    b.close(b.ring(50, 60, 24, 10, 1.8, -90, 8));
-    b.close(b.ring(50, 60, 40, 14, 1.2, -90, 13));
-    return b.build(16, "The Ripple", "B", ["If you can empty your mind of all thoughts"]);
-  },
-  // 17 - The best leaders are hardly known: a shepherd behind the flock.
-  (b) => {
-    b.close(b.ring(78, 22, 4, 5, 1.6));
-    const neck = b.star(78, 29, 1.8);
-    const hips = b.star(77, 56, 2);
-    b.line(neck, hips);
-    b.line(hips, b.star(71, 78, 1.8));
-    b.line(hips, b.star(83, 78, 1.8));
-    const hand = b.star(68, 42, 1.4);
-    b.line(neck, hand);
-    b.path([[66, 82, 1.4], [66, 42, 1.2], [66, 16, 1.6], [62, 10, 1.6], [56, 12, 1.4], [55, 18, 1.2]]);
-    for (const [x, y] of [[16, 70], [34, 76], [50, 68]] as Point[]) {
-      b.loop([[x - 6, y, 1.4], [x - 2, y - 4, 1.6], [x + 3, y - 4, 1.6], [x + 6, y, 1.4], [x, y + 3, 1.2]]);
-      b.star(x - 9, y - 3, 2);
-    }
-    return b.build(17, "The Shepherd", "C", ["The best leaders are those the people hardly know exist."]);
-  },
-  // 18 - Hypocrisy is close behind: a smiling mask on a stick.
-  (b) => {
-    const face = b.ring(50, 44, 24, 10, 1.8, -90, 30);
-    b.close(face);
-    b.loop([[32, 38, 1.4], [39, 34, 1.6], [46, 38, 1.4], [39, 41, 1.2]]);
-    b.loop([[54, 38, 1.4], [61, 34, 1.6], [68, 38, 1.4], [61, 41, 1.2]]);
-    b.path([[36, 58, 1.6], [50, 65, 2.2], [64, 58, 1.6]]);
-    b.line(face[5], b.star(52, 96, 1.8));
-    return b.build(18, "The Mask", "B", ["hypocrisy is close behind."]);
-  },
-  // 19 - Keep us at the center of the circle.
-  (b) => {
-    b.close(b.ring(50, 50, 40, 16, 1.8));
-    b.close(b.ring(50, 50, 12, 6, 1.2));
-    b.star(50, 50, 3);
-    return b.build(19, "The Centre of the Circle", "A", ["to keep us at the center of the circle, so we must also:"]);
-  },
-  // 20 - I drift on the waves on the ocean: a boat adrift.
-  (b) => {
-    const hull = b.path([[20, 60, 2], [30, 71], [70, 71], [80, 60, 2]]);
-    b.line(hull[0], hull[3]);
-    b.line(b.star(36, 60, 1.4), b.star(42, 50, 1.8), b.star(58, 49, 1.8), b.star(64, 60, 1.4));
-    b.path([[2, 80, 1.2], [14, 76, 1.4], [26, 81, 1.2], [38, 77, 1.4], [50, 82, 1.2], [62, 77, 1.4], [74, 82, 1.2], [86, 77, 1.4], [98, 81, 1.2]]);
-    b.path([[10, 30, 1.2], [22, 26, 1.6], [34, 30, 1.2]]);
-    b.path([[62, 22, 1.2], [74, 18, 1.6], [86, 22, 1.2]]);
-    return b.build(20, "The Drifting Boat", "A", ["I drift on the waves on the ocean,"]);
-  },
-  // 21 - Secluded and dark, yet there is a vitality within it: a seed.
-  (b) => {
-    b.close(b.ring(50, 60, 16, 10, 1.6, -90, 22));
-    b.star(50, 62, 3);
-    b.path([[50, 38, 1.4], [53, 28, 1.6], [48, 20, 1.8], [40, 16, 2]]);
-    b.path([[53, 28, 1.6], [60, 22, 1.8]]);
-    return b.build(21, "The Seed", "C", ["Secluded and dark, yet there is a vitality within it."]);
-  },
-  // 22 - To become full, first become empty: the crescent.
-  (b) => {
-    const outer = b.arc(50, 50, 38, -70, -290, 7, 2.2);
-    const inner = b.arc(65.8, 50, 35.8, -260, -100, 5, 1.4);
-    b.line(...outer, ...inner, outer[0]);
-    // The rest of the moon, not yet lit.
-    b.pts(b.arcPoints(50, 50, 38, 38, -50, 50, 5), 0.8);
-    return b.build(22, "The Crescent Moon", "B", ["If you want to become full,"]);
-  },
-  // 23 - When the gale blows, it will not last long.
-  (b) => {
-    b.loop([[20, 44, 1.6], [16, 34], [24, 24], [36, 24], [42, 14, 2], [56, 12, 2.2], [66, 20], [78, 20], [86, 30, 2], [82, 42], [66, 46], [50, 46], [34, 46]]);
-    for (const x of [28, 42, 70]) b.path([[x, 52, 1.2], [x - 4, 64, 1.4]]);
-    b.path([[36, 70, 1.2], [32, 82, 1.4]]);
-    b.path([[74, 70, 1.2], [70, 82, 1.4]]);
-    b.path([[56, 50, 2], [48, 64, 2.2], [58, 64, 2.2], [48, 84, 2.8]]);
-    return b.build(23, "The Passing Storm", "A", ["when the gale blows, it will not last long;"]);
-  },
-  // 24 - Those who stand on tiptoes do not stand firmly.
-  (b) => {
-    b.close(b.ring(52, 13, 4.5, 5, 1.6));
-    const neck = b.star(52, 21, 2);
-    const hips = b.star(50, 52, 2);
-    b.line(neck, hips);
-    b.line(neck, ...b.pts([[42, 12, 1.4], [36, 3, 1.8]]));
-    b.line(neck, ...b.pts([[62, 12, 1.4], [68, 3, 1.8]]));
-    b.line(hips, ...b.pts([[45, 71, 1.6], [45, 86, 1.4], [47, 94, 2.2]]));
-    b.line(hips, ...b.pts([[56, 71, 1.6], [56, 86, 1.4], [54, 94, 2.2]]));
-    b.path([[30, 48, 1], [26, 56, 1]]);
-    b.path([[72, 48, 1], [76, 56, 1]]);
-    return b.build(24, "The One on Tiptoe", "A", ["Those who stand on tiptoes"]);
-  },
-  // 25 - Tao, Heaven, Earth, Humanity: the four great things.
-  (b) => {
-    b.close(b.ring(50, 50, 44, 16, 1.2));
-    b.line(...b.arc(50, 72, 30, 180, 360, 7, 1.6));
-    b.path([[16, 72, 1.8], [84, 72, 1.8]]);
-    b.close(b.ring(50, 46, 3.5, 4, 1.6));
-    const neck = b.star(50, 51, 1.6);
-    const hips = b.star(50, 62, 1.8);
-    b.line(neck, hips);
-    b.line(hips, b.star(45, 72, 1.8));
-    b.line(hips, b.star(55, 72, 1.8));
-    b.path([[43, 56, 1.4], [50, 54, 1.2], [57, 56, 1.4]]);
-    return b.build(25, "The Four Great Things", "C", ["Within the universe, these are the four great things."]);
-  },
-  // 26 - She travels all day without ever leaving her wagon.
-  (b) => {
-    const box = b.loop([[18, 40, 2], [72, 40, 2], [72, 62, 1.8], [18, 62, 1.8]]);
-    b.line(box[0], ...b.pts([[26, 30, 1.4], [40, 24, 1.6], [56, 25, 1.6], [66, 31, 1.4]]), box[1]);
-    for (const cx of [32, 60]) {
-      b.close(b.ring(cx, 72, 10, 6, 1.6));
-      b.star(cx, 72, 2.2);
-    }
-    b.line(b.star(72, 50, 1.4), b.star(95, 56, 2.2));
-    return b.build(26, "The Laden Wagon", "A", ["without ever leaving her wagon."]);
-  },
-  // 27 - A good knot needs no rope and can not come undone.
-  (b) => {
-    const top: Point = [50, 12];
-    const right: Point = [88, 50];
-    const left: Point = [12, 50];
-    const at = (u: number, v: number): Point => [
-      top[0] + u * (right[0] - top[0]) + v * (left[0] - top[0]),
-      top[1] + u * (right[1] - top[1]) + v * (left[1] - top[1]),
-    ];
-    const grid: number[][] = [];
-    for (let i = 0; i < 4; i++) {
-      grid.push([]);
-      for (let j = 0; j < 4; j++) {
-        const [x, y] = at(i / 3, j / 3);
-        const corner = (i === 0 || i === 3) && (j === 0 || j === 3);
-        grid[i].push(b.star(x, y, corner ? 2.4 : 1.5));
-      }
-    }
-    for (let i = 0; i < 4; i++) {
-      b.line(...grid[i]);
-      b.line(...grid.map((row) => row[i]));
-    }
-    // A loop at each corner, pointing outward.
-    const loops: [number, Point][] = [
-      [grid[0][0], [50, 2]],
-      [grid[3][0], [98, 50]],
-      [grid[3][3], [50, 98]],
-      [grid[0][3], [2, 50]],
-    ];
-    for (const [corner, [x, y]] of loops) {
-      const { x: cx, y: cy } = b.starAt(corner);
-      const [mx, my] = [(cx + x) / 2, (cy + y) / 2];
-      const [px, py] = [(y - cy) / 2, -(x - cx) / 2];
-      b.line(
-        corner,
-        b.star(mx + px, my + py, 1.2),
-        b.star(x, y, 1.6),
-        b.star(mx - px, my - py, 1.2),
-        corner,
-      );
-    }
-    return b.build(27, "The Knot", "A", ["A good knot needs no rope and it can not come undone."]);
-  },
-  // 28 - Return to the Uncarved Block: a log, end on.
-  (b) => {
-    const end = b.ring(24, 50, 12, 8, 1.8, -90, 20);
-    b.close(end);
-    b.close(b.ring(24, 50, 5, 4, 1.2, -90, 9));
-    b.star(24, 50, 2.6);
-    const right = b.path([[84, 32, 1.8], [89, 50, 1.6], [84, 68, 1.8]]);
-    b.line(end[0], right[0]);
-    b.line(end[4], right[2]);
-    b.path([[44, 42, 1], [64, 44, 1]]);
-    b.path([[48, 58, 1], [72, 56, 1]]);
-    return b.build(28, "The Uncarved Block", "A", ["Uncarved Block."]);
-  },
-  // 29 - The world is a sacred vessel: a bronze ding.
-  (b) => {
-    const rim = b.path([[20, 34, 2], [28, 34, 1.4], [38, 34, 1.4], [62, 34, 1.4], [72, 34, 1.4], [80, 34, 2]]);
-    const belly = b.pts([[18, 48], [26, 62], [40, 68], [60, 68], [74, 62], [82, 48]]);
-    b.line(rim[0], ...belly, rim[5]);
-    b.line(rim[1], ...b.pts([[28, 20, 2], [38, 20, 2]]), rim[2]);
-    b.line(rim[3], ...b.pts([[62, 20, 2], [72, 20, 2]]), rim[4]);
-    b.line(belly[1], b.star(24, 90, 2.2));
-    b.line(belly[4], b.star(76, 90, 2.2));
-    b.line(b.star(50, 68, 1.4), b.star(50, 92, 2.2));
-    return b.build(29, "The Sacred Vessel", "A", ["The world is sacred vessel"]);
-  },
-  // 30 - Where armies march, thorns and briars grow.
-  (b) => {
-    const stem = b.path([[6, 82, 1.8], [20, 72], [34, 66], [46, 56], [58, 50], [70, 38], [82, 30], [94, 20, 1.8]]);
-    const thorns: Point[] = [[16, 64], [34, 74], [44, 48], [60, 58], [66, 30], [86, 40]];
-    thorns.forEach(([x, y], index) => b.line(stem[index + 1], b.star(x, y, 1.2)));
-    const branch = b.pts([[42, 40, 1.4], [36, 28, 1.6]]);
-    b.line(stem[3], ...branch);
-    b.close(b.ring(34, 22, 4, 5, 2));
-    return b.build(30, "The Bramble", "A", ["thorns and briars bloom and grow."]);
-  },
-  // 31 - Weapons are the bearers of bad news: a sword in its scabbard.
-  (b) => {
-    const [ax, ay] = [22, 84];
-    const [tx, ty] = [84, 16];
-    const length = Math.hypot(tx - ax, ty - ay);
-    const [dx, dy] = [(tx - ax) / length, (ty - ay) / length];
-    const [px, py] = [-dy, dx];
-    const along = (d: number, side = 0, mag = 1.6) =>
-      b.star(ax + dx * d + px * side, ay + dy * d + py * side, mag);
-    const pommel = along(0, 0, 2.4);
-    const guard = along(14, 0, 1.4);
-    b.line(pommel, guard);
-    b.line(along(14, -9, 1.8), guard, along(14, 9, 1.8));
-    const sheathL = [along(17, -3.5, 1.4), along(length - 8, -3.5, 1.4)];
-    const sheathR = [along(17, 3.5, 1.4), along(length - 8, 3.5, 1.4)];
-    const tip = along(length, 0, 2.6);
-    b.line(sheathL[0], sheathL[1], tip, sheathR[1], sheathR[0], sheathL[0]);
-    b.line(along(40, -3.5, 1), along(40, 3.5, 1));
-    b.line(pommel, ...b.pts([[16, 90, 1.2], [18, 97, 1.6]]));
-    return b.build(31, "The Sheathed Sword", "A", ["Weapons are the bearers of bad news;"]);
-  },
-  // 32 - Streams and rivers flow through valleys to the sea.
-  (b) => {
-    b.path([[4, 86, 1.2], [16, 82, 1.4], [28, 86, 1.2], [40, 82, 1.4], [52, 86, 1.2], [64, 82, 1.4], [76, 86, 1.2], [88, 82, 1.4], [98, 86, 1.2]]);
-    const main = b.path([[50, 82, 2.4], [46, 70, 1.8], [52, 58, 1.8], [48, 46, 1.8]]);
-    const left = b.pts([[36, 34, 1.6], [26, 20, 1.4]]);
-    b.line(main[3], ...left);
-    b.line(main[3], ...b.pts([[58, 30, 1.6], [66, 16, 1.4]]));
-    b.line(left[0], ...b.pts([[40, 20, 1.2], [38, 8, 1.2]]));
-    b.line(main[2], ...b.pts([[70, 52, 1.4], [86, 40, 1.2]]));
-    b.line(main[1], ...b.pts([[28, 62, 1.4], [12, 54, 1.2]]));
-    b.nebula([[0, 84], [100, 84], [100, 99], [0, 99]]);
-    return b.build(32, "Rivers to the Sea", "A", ["flow through valleys to the sea."]);
-  },
-  // 33 - Those who persist will reach their goal.
-  (b) => {
-    const ridge = b.path([[4, 90, 1.4], [22, 62, 1.6], [32, 66, 1.4], [50, 20, 2.6], [62, 40, 1.6], [72, 34, 1.6], [96, 90, 1.4]]);
-    b.path([[30, 84, 1], [56, 74, 1.2], [42, 58, 1.2], [50, 36, 1.4]]);
-    const flag = b.star(50, 6, 2);
-    b.line(ridge[3], flag, b.star(62, 9, 2.2), b.star(50, 13, 1.4));
-    return b.build(33, "The Summit", "B", ["Those who persist will reach their goal."]);
-  },
-  // 34 - The great Tao flows unobstructed in every direction: a spring.
-  (b) => {
-    const top = b.star(50, 26, 2.8);
-    b.line(b.star(50, 80, 1.6), b.star(50, 52, 1.4), top);
-    b.line(top, ...b.pts([[40, 24], [30, 30], [22, 44], [18, 60, 1.4]]));
-    b.line(top, ...b.pts([[60, 24], [70, 30], [78, 44], [82, 60, 1.4]]));
-    b.path([[46, 38, 1.2], [38, 40, 1.4], [32, 52, 1.4], [30, 64, 1.2]]);
-    b.path([[54, 38, 1.2], [62, 40, 1.4], [68, 52, 1.4], [70, 64, 1.2]]);
-    b.close(b.ring(50, 82, 30, 8, 1.4, 0, 6));
-    return b.build(34, "The Spring", "B", ["The great Tao flows unobstructed in every direction."]);
-  },
-  // 35 - Where there is music ... there is nothing for them to hear.
-  (b) => {
-    b.loop([[10, 80, 1.6], [86, 18, 1.8], [90, 23, 1.8], [14, 85, 1.6]]);
-    const holes: Point[] = [[24, 71], [44, 55], [52, 48.5], [60, 42], [68, 35.5], [76, 29]];
-    holes.forEach(([x, y], index) => b.star(x, y, index === 0 ? 2.6 : 2));
-    b.path([[32, 60, 1], [36, 64, 1]]);
-    b.path([[80, 20, 1.2], [84, 24, 1.2]]);
-    b.line(b.star(12, 83, 1.2), ...b.pts([[8, 92, 1.4], [4, 97, 1.8]]));
-    return b.build(35, "The Silent Flute", "B", ["Where there is music and good food,"]);
-  },
-  // 36 - Just as fish remain hidden in deep waters.
-  (b) => {
-    const body = b.loop([[80, 58, 2.2], [68, 48], [52, 44, 1.6], [38, 48], [28, 56], [16, 46, 2], [20, 58, 1.2], [16, 70, 2], [28, 60], [40, 66], [56, 68, 1.6], [70, 64]]);
-    b.line(body[2], b.star(44, 36, 1.6), body[3]);
-    b.star(73, 55, 2.6);
-    b.path([[6, 26, 1.2], [20, 22, 1.4], [34, 26, 1.2], [48, 22, 1.4], [62, 26, 1.2], [76, 22, 1.4], [94, 26, 1.2]]);
-    b.nebula([[0, 30], [100, 30], [100, 98], [0, 98]]);
-    return b.build(36, "The Hidden Fish", "A", ["Just as fish remain hidden in deep waters,"], 0.3);
-  },
-  // 37 - The world would naturally settle into peace: moon on still water.
-  (b) => {
-    b.close(b.ring(50, 26, 14, 10, 2));
-    b.path([[4, 56, 1.4], [26, 56, 1.4], [50, 56, 1.6], [74, 56, 1.4], [96, 56, 1.4]]);
-    b.path([[38, 64, 1.6], [62, 64, 1.6]]);
-    b.path([[42, 72, 1.4], [58, 72, 1.4]]);
-    b.path([[46, 80, 1.2], [54, 80, 1.2]]);
-    return b.build(37, "Moon on Still Water", "C", ["the world would naturally settle into peace."]);
-  },
-  // 38 - The master abides in the fruit and not in the husk: a peach.
-  (b) => {
-    const peach = b.loop([[50, 34, 1.8], [62, 28], [74, 34], [80, 48, 2], [76, 64], [64, 78], [50, 88, 2.2], [36, 78], [24, 64], [20, 48, 2], [26, 34], [38, 28]]);
-    b.line(peach[0], ...b.pts([[46, 50, 1.2], [48, 68, 1.2]]));
-    const stem = b.star(52, 22, 1.6);
-    b.line(peach[0], stem);
-    b.line(stem, ...b.pts([[62, 13, 1.6], [76, 11, 2], [67, 22, 1.6]]), stem);
-    return b.build(38, "The Fruit and the Husk", "A", ["The master abides in the fruit and not in the husk."]);
-  },
-  // 39 - Be as dull as a common stone, not a precious gem.
-  (b) => {
-    b.loop([[18, 64, 2], [24, 46], [40, 36, 2.2], [60, 36], [76, 44, 2], [84, 60], [76, 76], [54, 82, 2], [32, 80]]);
-    b.pts([[44, 56, 1], [60, 62, 1]]);
-    const gem = b.loop([[80, 16, 1], [86, 10, 1], [94, 16, 1], [86, 28, 1]]);
-    b.line(gem[0], gem[2]);
-    return b.build(39, "The Common Stone", "C", ["but be as dull as a common stone."]);
-  },
-  // 40 - All movement returns to the Tao: a swallow coming home.
-  (b) => {
-    const head = b.star(76, 30, 2.4);
-    const body = b.star(62, 38, 2);
-    const tail = b.star(46, 46, 1.8);
-    b.line(head, body, tail);
-    b.line(body, ...b.pts([[54, 24, 1.6], [40, 8, 2]]));
-    b.line(body, ...b.pts([[70, 52, 1.6], [64, 72, 2]]));
-    b.line(tail, b.star(26, 44, 2));
-    b.line(tail, b.star(32, 58, 2));
-    // Its way home, as a trail of faint stars.
-    b.pts(b.arcPoints(50, 64, 34, 22, 150, 30, 6).map(([x, y]) => [x, y, 1]));
-    return b.build(40, "The Returning Swallow", "C", ["All movement returns to the Tao."]);
-  },
-  // 41 - The greatest sounds cannot be heard: a silent bell.
-  (b) => {
-    b.close(b.ring(50, 8, 4, 4, 1.6));
-    const shoulders = b.path([[38, 16, 1.8], [62, 16, 1.8]]);
-    const lip = b.path([[20, 84, 2.2], [35, 88], [50, 89, 1.6], [65, 88], [80, 84, 2.2]]);
-    b.line(shoulders[0], ...b.pts([[32, 30], [29, 50], [26, 70]]), lip[0]);
-    b.line(shoulders[1], ...b.pts([[68, 30], [71, 50], [74, 70]]), lip[4]);
-    b.path([[30, 40, 1.2], [70, 40, 1.2]]);
-    b.pts([[40, 50, 1.2], [50, 50, 1.2], [60, 50, 1.2], [40, 60, 1.2], [50, 60, 1.2], [60, 60, 1.2]]);
-    return b.build(41, "The Silent Bell", "B", ["the greatest sounds cannot be heard,"]);
-  },
-  // 42 - All things carry yin yet embrace yang.
-  (b) => {
-    const outer = b.ring(50, 50, 42, 16, 2.2);
-    // The S curve, clear of the rim so it doesn't knot into the circle.
-    const upper = b.arc(50, 29, 21, -150, -210, 3, 1.8);
-    const middle = b.star(50, 50, 2.6);
-    const lower = b.arc(50, 71, 21, -30, 30, 3, 1.8);
-    // Dark eye in the light half: a hollow ring. Light eye in the dark half.
-    const hollowEye = b.ring(50, 29, 4, 5, 1);
-    b.star(50, 71, 3);
-    b.close(outer);
-    b.line(outer[0], ...upper, middle, ...lower, outer[8]);
-    b.close(hollowEye);
-    // Half the dust fills the yang half, so the light side reads as light.
-    b.nebula([
-      ...b.arcPoints(50, 50, 42, 42, -90, 90, 14),
-      ...b.arcPoints(50, 71, 21, 21, 90, -90, 8),
-      ...b.arcPoints(50, 29, 21, 21, 90, 270, 8),
-    ]);
-    return b.build(42, "Yin and Yang", "A", ["All things carry Yin", "yet embrace Yang."], 0.5);
-  },
-  // 43 - That which offers no resistance enters where there is no space.
-  (b) => {
-    const shaft = b.path([[26, 92, 1.6], [32, 78], [42, 60], [54, 42], [66, 26], [78, 12, 2.4]]);
-    b.line(shaft[1], ...b.pts([[26, 64], [28, 50], [36, 36], [48, 24], [62, 14]]), shaft[5]);
-    b.line(shaft[1], ...b.pts([[44, 74], [56, 60], [66, 46], [74, 30]]), shaft[5]);
-    return b.build(43, "The Feather", "C", ["That which offers no resistance,"]);
-  },
-  // 44 - Knowing when to stop will keep you from danger.
-  (b) => {
-    b.path([[22, 8, 2], [78, 8, 2]]);
-    b.path([[22, 92, 2], [78, 92, 2]]);
-    b.path([[34, 12], [36, 28], [47, 46, 1.4], [47, 54, 1.4], [36, 72], [34, 88]]);
-    b.path([[66, 12], [64, 28], [53, 46, 1.4], [53, 54, 1.4], [64, 72], [66, 88]]);
-    b.path([[40, 33, 1.4], [60, 33, 1.4]]);
-    b.path([[38, 88, 1.6], [50, 78, 2.4], [62, 88, 1.6]]);
-    b.pts([[50, 58, 1], [50, 66, 1.2]]);
-    return b.build(44, "The Hourglass", "B", ["and knowing when to stop will keep you from danger"]);
-  },
-  // 45 - The greatest straightness seems crooked: a staff and gourd.
-  (b) => {
-    b.path([[30, 94, 1.6], [34, 76], [31, 60], [38, 44], [35, 28], [42, 14], [50, 8, 2.2]]);
-    const knot = b.star(44, 12, 1.2);
-    const gourdTop = b.ring(56, 26, 4, 5, 1.6);
-    b.line(knot, gourdTop[0]);
-    b.close(gourdTop);
-    b.close(b.ring(58, 39, 7.5, 7, 1.8));
-    return b.build(45, "The Crooked Staff", "B", ["The greatest straightness seems crooked."]);
-  },
-  // 46 - Horses run free to fertilize the fields.
-  (b) => {
-    const head = b.loop([[94, 40, 2], [86, 24, 1.6], [82, 13, 2], [77, 22, 1.4], [75, 36, 1.4], [86, 46, 1.6]]);
-    const withers = b.star(60, 34, 1.8);
-    const chest = b.star(68, 54, 1.8);
-    b.line(head[3], withers);
-    b.line(head[4], chest);
-    const croup = b.star(26, 38, 2);
-    b.line(withers, b.star(44, 38, 1.6), croup);
-    const hind = b.star(28, 54, 1.6);
-    b.line(chest, ...b.pts([[54, 58, 1.4], [38, 58, 1.4]]), hind, croup);
-    b.line(croup, ...b.pts([[16, 40, 1.4], [8, 48, 1.4], [6, 62, 1.8]]));
-    b.line(chest, ...b.pts([[80, 64, 1.4], [91, 70, 1.8]]));
-    b.line(chest, ...b.pts([[66, 68, 1.4], [70, 82, 1.8]]));
-    b.line(hind, ...b.pts([[20, 66, 1.4], [8, 72, 1.8]]));
-    b.line(hind, ...b.pts([[36, 70, 1.4], [30, 84, 1.8]]));
-    b.path([[74, 20, 1], [64, 28, 1.2]]);
-    return b.build(46, "The Free Horse", "B", ["horses run free to fertilize the fields."]);
-  },
-  // 47 - Without looking out your window.
-  (b) => {
-    b.loop([[18, 14, 2], [82, 14, 2], [82, 82, 2], [18, 82, 2]]);
-    const [top, bottom] = b.pts([[50, 14, 1.4], [50, 82, 1.4]]);
-    const [left, right] = b.pts([[18, 48, 1.4], [82, 48, 1.4]]);
-    const centre = b.star(50, 48, 1.6);
-    b.line(top, centre, bottom);
-    b.line(left, centre, right);
-    b.path([[12, 90, 1.4], [88, 90, 1.4]]);
-    b.path([[64, 22, 1.4], [70, 28, 2], [64, 36, 1.4]]);
-    return b.build(47, "The Window", "A", ["Without looking out your window,"]);
-  },
-  // 48 - Unlearn something new every day: leaves falling from a branch.
-  (b) => {
-    b.path([[4, 10, 1.6], [30, 14, 1.8], [54, 10, 1.6], [72, 16, 1.4]]);
-    for (const [x, y, angle] of [[32, 38, 20], [62, 58, -30], [40, 82, 10]]) {
-      const rad = (angle * Math.PI) / 180;
-      const rot = (u: number, v: number): StarPoint => [
-        x + u * Math.cos(rad) - v * Math.sin(rad),
-        y + u * Math.sin(rad) + v * Math.cos(rad),
-        1.6,
-      ];
-      const leaf = b.loop([rot(-7, 0), rot(0, -3.5), rot(7, 0), rot(0, 3.5)]);
-      const [sx, sy] = rot(10, 0);
-      b.line(leaf[2], b.star(sx, sy, 1.2));
-    }
-    b.pts([[42, 24, 1], [26, 50, 1], [52, 70, 1]]);
-    return b.build(48, "Falling Leaves", "C", ["One who seeks the Tao unlearns something new every day."]);
-  },
-  // 49 - She treats them all as her children: a nest.
-  (b) => {
-    const bowl = b.path([[14, 62, 1.8], [24, 76], [50, 84, 2], [76, 76], [86, 62, 1.8]]);
-    b.line(bowl[0], bowl[4]);
-    b.path([[26, 70, 1], [44, 78, 1]]);
-    b.path([[56, 78, 1], [74, 70, 1]]);
-    for (const x of [34, 50, 66]) {
-      const head = b.star(x, 55, 2);
-      b.line(b.star(x - 3, 46, 1.4), head, b.star(x + 3, 46, 1.4));
-    }
-    const body = b.star(52, 24, 2);
-    b.line(b.star(34, 22, 1.4), body, b.star(66, 20, 2.2));
-    b.line(body, ...b.pts([[46, 10, 1.6], [40, 4, 1.8]]));
-    b.line(body, ...b.pts([[62, 12, 1.6], [70, 6, 1.8]]));
-    return b.build(49, "The Nest", "B", ["Yet she treats them all as her children."]);
-  },
-  // 50 - Those who celebrate life walk safely among the wild animals.
-  (b) => {
-    const head = b.loop([[84, 30, 1.8], [90, 34, 1.6], [92, 44, 2], [86, 50, 1.6], [78, 44, 1.6]]);
-    b.star(88, 38, 2.4);
-    const back = b.path([[78, 36, 1.4], [66, 36, 1.6], [46, 34, 1.6], [26, 38, 1.8]]);
-    b.line(head[0], back[0]);
-    b.line(back[3], ...b.pts([[16, 34, 1.4], [10, 24, 1.4], [14, 16, 1.8]]));
-    const belly = b.path([[76, 56, 1.4], [52, 58, 1.4], [30, 56, 1.4]]);
-    b.line(head[3], belly[0]);
-    b.line(back[3], belly[2]);
-    b.line(belly[0], b.star(76, 80, 1.8));
-    b.line(b.star(66, 57, 1.2), b.star(62, 80, 1.8));
-    b.line(belly[2], b.star(28, 80, 1.8));
-    b.line(b.star(40, 57, 1.2), b.star(44, 80, 1.8));
-    for (const x of [40, 50, 60]) b.path([[x, 37, 1], [x + 2, 48, 1]]);
-    return b.build(50, "The Tiger", "C", ["walk safely among the wild animals."]);
-  },
-  // 51 - It gives them a place of refuge: cupped hands around a sprout.
-  (b) => {
-    b.path([[28, 44, 2], [20, 56, 1.6], [26, 72], [40, 82], [50, 84, 1.8], [60, 82], [74, 72], [80, 56, 1.6], [72, 44, 2]]);
-    b.path([[40, 82, 1.2], [36, 96, 1.4]]);
-    b.path([[60, 82, 1.2], [64, 96, 1.4]]);
-    const base = b.star(50, 72, 1.6);
-    const top = b.star(50, 52, 2);
-    b.line(base, top);
-    b.line(b.star(50, 60, 1.2), b.star(42, 50, 2.4));
-    b.line(top, b.star(58, 44, 2.4));
-    return b.build(51, "Cupped Hands", "B", ["gives them a place of refuge and peace,"]);
-  },
-  // 52 - Use your inner light for understanding: a lamp.
-  (b) => {
-    b.loop([[50, 14, 2.8], [56, 28, 2], [50, 36, 1.8], [44, 28, 2]]);
-    const dish = b.path([[28, 42, 1.8], [38, 49], [62, 49], [72, 42, 1.8]]);
-    b.line(dish[0], dish[3]);
-    const stand = b.star(50, 78, 1.4);
-    b.line(b.star(50, 49, 1.2), stand);
-    b.line(b.star(36, 86, 1.8), stand, b.star(64, 86, 1.8));
-    for (const angle of [-150, -120, -90, -60, -30]) {
-      const rad = (angle * Math.PI) / 180;
-      b.path([[50 + 17 * Math.cos(rad), 26 + 17 * Math.sin(rad), 1], [50 + 23 * Math.cos(rad), 26 + 23 * Math.sin(rad), 1.2]]);
-    }
-    return b.build(52, "The Lamp", "B", ["To use your inner light for understanding"]);
-  },
-  // 53 - No one out working the fields: a plough.
-  (b) => {
-    const handle = b.star(18, 14, 2);
-    const stilt = b.star(32, 56, 1.6);
-    b.line(handle, b.star(26, 34, 1.4), stilt);
-    b.line(stilt, ...b.pts([[40, 70, 1.8], [60, 72, 2.2]]), stilt);
-    b.line(b.star(28, 36, 1.2), ...b.pts([[50, 34, 1.4], [72, 38, 1.4], [90, 44, 2]]));
-    b.path([[4, 82, 1.2], [36, 80, 1.2], [66, 82, 1.2], [96, 80, 1.2]]);
-    b.path([[10, 91, 1], [50, 90, 1], [90, 91, 1]]);
-    return b.build(53, "The Plough", "B", ["because there is no one out working the fields."]);
-  },
-  // 54 - That which is well built will never be torn down.
-  (b) => {
-    const roof = b.path([[4, 36, 1.6], [12, 40, 1.8], [30, 22], [50, 18, 2], [70, 22], [88, 40, 1.8], [96, 36, 1.6]]);
-    b.line(roof[3], b.star(50, 11, 2.4));
-    const walls = b.pts([[18, 40, 1.4], [18, 84, 1.8], [82, 84, 1.8], [82, 40, 1.4]]);
-    b.line(...walls);
-    b.line(roof[1], walls[0]);
-    b.line(roof[5], walls[3]);
-    b.line(b.star(42, 84, 1.2), ...b.pts([[42, 60, 1.6], [58, 60, 1.6]]), b.star(58, 84, 1.2));
-    b.loop([[25, 50, 1.2], [34, 50, 1.2], [34, 61, 1.2], [25, 61, 1.2]]);
-    b.loop([[66, 50, 1.2], [75, 50, 1.2], [75, 61, 1.2], [66, 61, 1.2]]);
-    return b.build(54, "The Well-Built House", "A", ["That which is well built"]);
-  },
-  // 55 - One who is filled with the Tao is like a newborn child.
-  (b) => {
-    b.close(b.ring(32, 42, 11, 8, 1.8));
-    b.path([[27, 42, 1], [31, 43, 1]]);
-    b.path([[34, 43, 1], [38, 42, 1]]);
-    b.loop([[42, 32, 1.6], [62, 28], [80, 34], [88, 48, 2], [82, 60], [62, 64], [42, 58]]);
-    b.path([[48, 34, 1.2], [56, 62, 1.2]]);
-    b.close(b.ring(46, 70, 3.5, 4, 2.2));
-    b.path([[48, 96, 1.4], [46, 74, 1.4]]);
-    return b.build(55, "The Newborn", "A", ["is like a newborn child."]);
-  },
-  // 56 - Stop talking, meditate in silence: a seated sage.
-  (b) => {
-    b.close(b.ring(50, 18, 6.5, 6, 1.8));
-    const neck = b.star(50, 27, 1.6);
-    const shoulders = b.pts([[38, 33, 1.8], [62, 33, 1.8]]);
-    b.line(shoulders[0], neck, shoulders[1]);
-    const lap = b.star(50, 62, 2.4);
-    b.line(neck, b.star(50, 54, 1.4));
-    b.line(shoulders[0], b.star(31, 50, 1.6), lap);
-    b.line(shoulders[1], b.star(69, 50, 1.6), lap);
-    b.loop([[20, 74, 1.8], [34, 66], [50, 67, 1.4], [66, 66], [80, 74, 1.8], [64, 82], [50, 84, 1.6], [36, 82]]);
-    b.pts(b.arcPoints(50, 18, 15, 15, 200, 340, 5).map(([x, y]) => [x, y, 1]));
-    return b.build(56, "The Silent Sage", "A", ["meditate in silence,"]);
-  },
-  // 57 - I let go of all my desires: an open palm.
-  (b) => {
-    const palm = b.loop([[36, 58, 1.6], [44, 54], [52, 53], [60, 55], [66, 60, 1.6], [64, 80], [52, 88, 1.6], [40, 84]]);
-    b.line(palm[0], ...b.pts([[28, 50, 1.4], [20, 42, 2]]));
-    b.line(palm[1], ...b.pts([[40, 38, 1.4], [38, 24, 2]]));
-    b.line(palm[2], ...b.pts([[50, 34, 1.4], [50, 18, 2.2]]));
-    b.line(palm[3], ...b.pts([[60, 36, 1.4], [62, 22, 2]]));
-    b.line(palm[4], ...b.pts([[70, 44, 1.4], [74, 34, 1.8]]));
-    b.line(palm[6], b.star(52, 98, 1.2));
-    return b.build(57, "The Open Palm", "C", ["I let go of all my desires,"]);
-  },
-  // 58 - Good fortune has its roots in disaster: a lotus from the mud.
-  (b) => {
-    const flower = b.loop([
-      [34, 46, 1.4], [16, 32, 2], [31, 38, 1.2], [30, 17, 2], [42, 31, 1.2],
-      [50, 6, 2.6], [58, 31, 1.2], [70, 17, 2], [69, 38, 1.2], [84, 32, 2],
-      [66, 46, 1.4], [50, 48, 1.6],
-    ]);
-    const root = b.star(50, 86, 1.6);
-    b.line(flower[11], b.star(52, 66, 1.2), root);
-    b.path([[4, 64, 1.2], [26, 62, 1.4], [48, 65, 1.2], [70, 62, 1.4], [96, 64, 1.2]]);
-    b.loop([[62, 64, 1.2], [72, 61, 1.4], [82, 64, 1.2], [72, 67, 1.2]]);
-    b.line(root, b.star(40, 94, 1.2));
-    b.line(root, b.star(60, 94, 1.2));
-    b.nebula([[0, 78], [100, 78], [100, 99], [0, 99]]);
-    return b.build(58, "Lotus in the Mud", "B", ["Good fortune has its roots in disaster,"]);
-  },
-  // 59 - The deep root and the firm trunk.
-  (b) => {
-    const [, trunkBase] = b.path([[8, 50, 1.2], [50, 50, 1.6], [92, 50, 1.2]]);
-    const trunkTop = b.star(50, 32, 1.8);
-    b.line(trunkBase, trunkTop);
-    b.line(trunkTop, ...b.pts([[32, 32], [28, 20], [38, 8, 1.8], [50, 4, 2], [62, 8, 1.8], [72, 20], [68, 32]]), trunkTop);
-    const split = b.star(50, 58, 1.8);
-    b.line(trunkBase, split);
-    b.line(split, ...b.pts([[50, 72, 1.6], [48, 86, 1.4], [50, 98, 2]]));
-    const left = b.pts([[34, 66, 1.6], [22, 80, 1.4], [14, 94, 1.8]]);
-    b.line(split, ...left);
-    const right = b.pts([[66, 66, 1.6], [78, 80, 1.4], [86, 94, 1.8]]);
-    b.line(split, ...right);
-    b.line(left[0], b.star(32, 88, 1.2));
-    b.line(right[0], b.star(68, 88, 1.2));
-    return b.build(59, "The Deep Root", "A", ["This is spoken of as the deep root and the firm trunk,"]);
-  },
-  // 60 - Governing a large country is like frying small fish.
-  (b) => {
-    const pan = b.ring(46, 58, 34, 10, 1.8, 0, 14);
-    b.close(pan);
-    b.line(pan[0], b.star(97, 50, 2.2));
-    for (const [x, flip] of [[36, 1], [58, -1]]) {
-      const fish = b.loop([[x - 7 * flip, 58, 1.6], [x, 54.5, 1.6], [x + 7 * flip, 58, 2], [x, 61.5, 1.6]]);
-      b.line(b.star(x - 11 * flip, 54, 1.2), fish[0], b.star(x - 11 * flip, 62, 1.2));
-    }
-    b.path([[38, 38, 1], [36, 30, 1.2], [39, 22, 1.4]]);
-    b.path([[50, 36, 1], [48, 28, 1.2], [51, 18, 1.4]]);
-    b.path([[62, 38, 1], [60, 30, 1.2], [63, 22, 1.4]]);
-    return b.build(60, "The Small Fish", "A", ["is like frying small fish."]);
-  },
-  // 61 - A large country should take the low place: a figure bowing.
-  (b) => {
-    b.close(b.ring(69, 48, 4.5, 5, 1.6));
-    const shoulders = b.star(63, 41, 2);
-    const hips = b.star(40, 40, 2);
-    b.line(hips, shoulders);
-    b.line(shoulders, ...b.pts([[64, 52, 1.2], [62, 62, 1.8]]));
-    b.line(hips, ...b.pts([[36, 66, 1.4], [34, 90, 1.8]]));
-    b.line(hips, ...b.pts([[44, 66, 1.4], [46, 90, 1.8]]));
-    b.path([[20, 92, 1.2], [62, 92, 1.2]]);
-    return b.build(61, "The Bowing Figure", "B", ["A large country should take the low place like a great watershed,"]);
-  },
-  // 62 - The Tao is the tabernacle of creation: a temple.
-  (b) => {
-    b.path([[22, 20, 1.6], [30, 24], [50, 12, 2.4], [70, 24], [78, 20, 1.6]]);
-    const lower = b.path([[6, 42, 1.6], [16, 46], [28, 40], [72, 40], [84, 46], [94, 42, 1.6]]);
-    b.line(b.star(38, 20, 1.2), lower[2]);
-    b.line(b.star(62, 20, 1.2), lower[3]);
-    b.line(b.star(26, 46, 1.4), b.star(26, 84, 1.8));
-    b.line(b.star(74, 46, 1.4), b.star(74, 84, 1.8));
-    b.line(b.star(44, 84, 1.2), ...b.pts([[44, 62, 1.4], [56, 62, 1.4]]), b.star(56, 84, 1.2));
-    b.path([[16, 86, 1.4], [84, 86, 1.4]]);
-    b.path([[10, 93, 1.4], [90, 93, 1.4]]);
-    return b.build(62, "The Temple", "A", ["The Tao is the tabernacle of creation,"]);
-  },
-  // 63 - Great projects are best started while they are small: a cairn.
-  (b) => {
-    b.close(b.ring(50, 84, 22, 7, 1.8, 0, 8));
-    b.close(b.ring(50, 66, 16, 6, 1.8, 0, 7));
-    b.close(b.ring(50, 51, 11, 5, 1.8, 0, 5.5));
-    b.close(b.ring(50, 40, 6, 4, 2, 0, 4));
-    b.star(50, 32, 3);
-    return b.build(63, "The Cairn", "B", ["Great projects are best started while they are small."]);
-  },
-  // 64 - The tallest tree begins as a tiny sprout.
-  (b) => {
-    const ground = b.path([[6, 90, 1.4], [22, 91, 1.2], [38, 90, 2.2], [58, 91, 1.2], [77, 90, 2], [94, 90, 1.4]]);
-    const fork = b.star(41, 58, 2.4);
-    b.line(ground[2], b.star(39, 74, 1.8), fork);
-    b.line(fork, ...b.pts([[30, 45, 1.6], [21, 35, 1.4]]));
-    b.line(fork, ...b.pts([[43, 38, 1.6], [45, 21, 1.6]]));
-    b.line(fork, ...b.pts([[53, 44, 1.6], [63, 32, 1.4]]));
-    const canopy: Point[] = [[14, 48], [10, 34], [18, 20], [30, 11], [44, 7], [58, 10], [70, 19], [76, 32], [72, 46], [62, 53], [48, 55], [34, 55], [22, 54]];
-    b.close(canopy.map(([x, y], index) => b.star(x, y, index % 3 === 0 ? 2.2 : 1.5)));
-    // The sprout is small but the brightest thing on the ground.
-    const sproutTop = b.star(77, 82, 2.6);
-    b.line(ground[4], sproutTop, b.star(71, 77, 3));
-    b.line(sproutTop, b.star(83, 78, 3));
-    b.nebula(canopy);
-    return b.build(64, "The Tree and the Sprout", "A", ["The tallest tree", "begins as a tiny sprout."]);
-  },
-  // 65 - Knowing the two alternatives is a pattern: a loom.
-  (b) => {
-    b.loop([[16, 12, 2], [84, 12, 2], [84, 88, 2], [16, 88, 2]]);
-    for (const x of [30, 42, 58, 70]) b.path([[x, 12, 1.2], [x, 88, 1.2]]);
-    b.path([[16, 40, 1.4], [30, 36, 1.4], [42, 44, 1.4], [58, 36, 1.4], [70, 44, 1.4], [84, 40, 1.4]]);
-    b.path([[16, 60, 1.4], [30, 64, 1.4], [42, 56, 1.4], [58, 64, 1.4], [70, 56, 1.4], [84, 60, 1.4]]);
-    return b.build(65, "The Loom", "C", ["Knowing the two alternatives is a pattern."]);
-  },
-  // 66 - Rivers and seas rule the streams of a hundred valleys: a great wave.
-  (b) => {
-    b.path([[4, 82, 1.4], [18, 72], [32, 56], [44, 42], [58, 32, 2], [72, 31, 2.2], [83, 38], [86, 50, 2], [79, 57], [71, 52], [73, 44, 2.4]]);
-    b.path([[58, 32, 1.2], [60, 24, 1.4]]);
-    b.path([[72, 31, 1.2], [76, 23, 1.4]]);
-    b.path([[36, 90, 1.2], [52, 84, 1.4], [68, 90, 1.2], [84, 84, 1.4], [98, 88, 1.2]]);
-    b.star(18, 22, 2.6);
-    b.nebula([[4, 84], [32, 58], [58, 34], [80, 36], [86, 54], [98, 90], [4, 96]]);
-    return b.build(66, "The Sea", "A", ["Rivers and seas are rulers"]);
-  },
-  // 67 - Three jewels: compassion, moderation, and humility.
-  (b) => {
-    for (const [x, y] of [[50, 32], [34, 60], [66, 60]] as Point[]) {
-      b.close(b.ring(x, y, 9, 6, 1.6));
-      b.star(x, y, 2.8);
-    }
-    b.path([[22, 78, 1.4], [36, 84, 1.6], [50, 86, 1.8], [64, 84, 1.6], [78, 78, 1.4]]);
-    b.path(b.arcPoints(50, 60, 34, 42, 160, 380, 7).map(([x, y]) => [x, y, 1]));
-    return b.build(67, "The Three Jewels", "A", ["There are three jewels that I cherish:"]);
-  },
-  // 68 - The best warriors do not use violence: a shield.
-  (b) => {
-    b.loop([[22, 14, 2], [50, 10, 1.8], [78, 14, 2], [78, 46], [70, 68], [50, 90, 2.2], [30, 68], [22, 46]]);
-    b.close(b.ring(50, 44, 8, 6, 1.6));
-    b.star(50, 44, 2.6);
-    return b.build(68, "The Shield", "B", ["The best warriors"]);
-  },
-  // 69 - Better to retreat a foot than advance an inch: steps backward.
-  (b) => {
-    for (const [x, y, flip] of [[36, 20, 1], [58, 44, -1], [40, 72, 1]]) {
-      b.loop([[x, y, 1.6], [x + 5 * flip, y + 4], [x + 5 * flip, y + 14], [x + 1 * flip, y + 20, 1.6], [x - 3 * flip, y + 13], [x - 3 * flip, y + 4]]);
-      b.pts([[x - 2 * flip, y - 5, 1.4], [x + 2 * flip, y - 6, 1.4], [x + 6 * flip, y - 4, 1.2]]);
-    }
-    return b.build(69, "Steps Backward", "A", ["It is better to retreat a foot"]);
-  },
-  // 70 - My teachings come from the ancients: a scroll.
-  (b) => {
-    for (const x of [14, 80]) {
-      b.loop([[x, 20, 1.6], [x + 6, 20, 1.6], [x + 6, 80, 1.6], [x, 80, 1.6]]);
-      b.star(x + 3, 14, 2);
-      b.star(x + 3, 86, 2);
-    }
-    b.path([[20, 24, 1.2], [80, 24, 1.2]]);
-    b.path([[20, 76, 1.2], [80, 76, 1.2]]);
-    for (const x of [34, 46, 58, 70]) b.path([[x, 32, 1], [x, 66, 1]]);
-    return b.build(70, "The Scroll", "B", ["My teachings come from the ancients,"]);
-  },
-  // 71 - Recognize the illness to seek a cure: a healing herb.
-  (b) => {
-    b.path([[18, 60, 1.2], [82, 60, 1.2]]);
-    const top = b.star(50, 32, 2);
-    b.line(b.star(50, 60, 1.6), top);
-    for (const [x, y] of [[26, 22], [50, 8], [74, 22]] as Point[]) {
-      const tip = b.star(x, y, 1.8);
-      b.line(top, tip);
-      b.line(b.star(x - 6, y + 6, 1.2), tip, b.star(x + 6, y + 6, 1.2));
-    }
-    b.close(b.ring(50, 26, 3, 4, 2.4));
-    const root = b.star(47, 76, 1.6);
-    b.line(b.star(50, 62, 1.2), root, b.star(40, 92, 1.8));
-    b.line(root, ...b.pts([[58, 84, 1.4], [62, 94, 1.6]]));
-    return b.build(71, "The Healing Herb", "C", ["can you move to seek a cure."]);
-  },
-  // 72 - The Master knows herself but is not arrogant: a hand mirror.
-  (b) => {
-    const glass = b.ring(50, 36, 26, 12, 1.8);
-    b.close(glass);
-    b.path([[50, 62, 1.6], [50, 90, 1.6], [50, 96, 2.2]]);
-    b.path([[34, 30, 1.4], [42, 20, 1.4]]);
-    b.path([[38, 38, 1.2], [48, 26, 1.2]]);
-    return b.build(72, "The Mirror", "B", ["Therefore, the Master knows herself but is not arrogant."]);
-  },
-  // 73 - The nets of Heaven are wide, but nothing escapes.
-  (b) => {
-    const rows = 4;
-    const cols = 7;
-    const grid: number[][] = [];
-    for (let r = 0; r < rows; r++) {
-      grid.push([]);
-      for (let c = 0; c < cols; c++) {
-        const x = 8 + c * 14 + (r % 2) * 7;
-        const sag = 10 * Math.sin((Math.PI * x) / 100);
-        grid[r].push(b.star(x, 20 + r * 18 + sag, r === 0 ? 2 : 1.4));
-      }
-    }
-    b.line(...grid[0]);
-    for (let r = 0; r < rows - 1; r++) {
-      for (let c = 0; c < cols; c++) {
-        const shift = r % 2 === 0 ? -1 : 0;
-        const a = grid[r + 1][c + shift];
-        const d = grid[r + 1][c + shift + 1];
-        if (a !== undefined) b.line(grid[r][c], a);
-        if (d !== undefined) b.line(grid[r][c], d);
-      }
-    }
-    return b.build(73, "The Net of Heaven", "A", ["The nets of Heaven are wide,"]);
-  },
-  // 74 - Taking the place of a great lumberjack: an axe.
-  (b) => {
-    const handle = b.path([[26, 94, 2], [36, 70], [46, 46], [54, 26], [58, 14, 1.6]]);
-    const blade = b.pts([[60, 12, 1.6], [78, 6, 1.8], [88, 14, 2.2], [92, 26, 2.4], [86, 38, 2.2], [66, 30, 1.6]]);
-    b.line(handle[4], ...blade, handle[3]);
-    b.line(handle[4], b.star(46, 10, 1.6), handle[3]);
-    return b.build(74, "The Axe", "A", ["trying to take the place of a great lumberjack."]);
-  },
-  // 75 - Only those who do not cling to their life can save it.
-  (b) => {
-    const dome = b.arc(46, 42, 28, 180, 360, 5, 1.8);
-    b.line(...dome);
-    b.line(dome[2], b.star(46, 6, 2));
-    const base = b.path([[18, 88, 1.8], [74, 88, 1.8]]);
-    b.line(dome[0], base[0]);
-    b.line(dome[4], base[1]);
-    for (const index of [1, 2, 3]) {
-      b.line(dome[index], b.star(18 + index * 14, 88, 1.2));
-    }
-    b.loop([[74, 60, 1.2], [90, 54, 1.4], [90, 80, 1.4], [74, 86, 1.2]]);
-    b.path([[80, 20, 1.6], [86, 25, 2.2], [94, 16, 1.6]]);
-    return b.build(75, "The Open Cage", "B", ["Only those who do not cling to their life can save it."]);
-  },
-  // 76 - The soft and yielding will overcome.
-  (b) => {
-    b.path([[10, 92, 1.2], [90, 92, 1.2]]);
-    const reed = b.path([[30, 92, 1.6], [32, 72], [38, 52], [48, 34], [62, 22], [76, 18, 2.4]]);
-    b.line(reed[1], b.star(18, 60, 1.6));
-    b.line(reed[2], b.star(52, 50, 1.6));
-    b.line(reed[5], b.star(82, 24, 1.8));
-    b.line(b.star(68, 92, 1.8), ...b.pts([[70, 70, 1.4], [72, 62, 1.8], [67, 60, 1.4]]));
-    b.path([[74, 90, 1.4], [92, 84, 1.6]]);
-    b.line(b.star(84, 87, 1), b.star(86, 80, 1.2));
-    return b.build(76, "The Reed and the Broken Branch", "A", ["The soft and yielding will overcome."]);
-  },
-  // 77 - The Tao of Heaven is like the drawing of a bow.
-  (b) => {
-    b.close(b.ring(30, 17, 5.5, 5, 1.8));
-    const shoulder = b.star(34, 31, 2.4);
-    const hips = b.star(35, 57, 2.2);
-    b.line(shoulder, hips);
-    b.line(hips, b.star(45, 72, 1.8), b.star(51, 89, 2));
-    b.line(hips, b.star(29, 73, 1.8), b.star(22, 89, 2));
-    const bowHand = b.star(70, 34, 2.4);
-    const drawHand = b.star(41, 26, 2.2);
-    b.line(shoulder, b.star(52, 33, 1.6), bowHand);
-    b.line(shoulder, b.star(19, 27, 1.8), drawHand);
-    // The top is bent downward; the bottom is bent up.
-    const bowTop = b.star(58, 6, 2.6);
-    const bowBottom = b.star(58, 62, 2.6);
-    b.line(bowTop, ...b.pts([[66, 12, 1.4], [70, 22, 1.4]]), bowHand, ...b.pts([[70, 45, 1.4], [66, 55, 1.4]]), bowBottom);
-    b.line(bowTop, drawHand, bowBottom);
-    const tip = b.star(90, 30, 3);
-    b.line(drawHand, tip);
-    b.line(b.star(85, 26, 1.2), tip, b.star(85, 34, 1.2));
-    return b.build(77, "The Archer", "A", ["The Tao of Heaven works in the world", "like the drawing of a bow."]);
-  },
-  // 78 - Nothing is better than water for overcoming the hard.
-  (b) => {
-    b.loop([[24, 74, 1.6], [28, 58], [40, 48, 1.8], [48, 50], [52, 56, 1.4], [56, 50], [66, 50, 1.8], [76, 60], [78, 74, 1.6]]);
-    b.loop([[52, 22, 2.4], [55, 30, 1.8], [52, 34, 1.6], [49, 30, 1.8]]);
-    b.pts([[52, 8, 1], [52, 14, 1.2]]);
-    b.path([[2, 80, 1.2], [12, 76, 1.4], [24, 80, 1.2]]);
-    b.path([[78, 80, 1.2], [88, 76, 1.4], [98, 80, 1.2]]);
-    b.path([[10, 90, 1], [50, 88, 1.2], [90, 90, 1]]);
-    return b.build(78, "Water and Stone", "A", ["Water is the softest and most yielding substance."]);
-  },
-  // 79 - The Tao does not choose sides: a balance.
-  (b) => {
-    const top = b.star(50, 12, 2.4);
-    const beamL = b.star(16, 24, 2);
-    const beamR = b.star(84, 24, 2);
-    const pivot = b.star(50, 24, 1.8);
-    b.line(beamL, pivot, beamR);
-    b.line(top, pivot, b.star(50, 86, 1.6));
-    b.path([[34, 90, 1.8], [66, 90, 1.8]]);
-    for (const [beam, x] of [[beamL, 16], [beamR, 84]]) {
-      const pan = b.pts([[x - 10, 54, 1.6], [x, 60, 1.8], [x + 10, 54, 1.6]]);
-      b.line(pan[0], beam, pan[2]);
-      b.line(...pan);
-    }
-    return b.build(79, "The Balance", "B", ["The Tao does not choose sides,"]);
-  },
-  // 80 - They can hear their roosters crowing.
-  (b) => {
-    const outline = b.path([
-      [86, 20, 2.4], [80, 14, 1.6], [74, 16, 1.4], [70, 24, 1.4], [66, 36, 1.4],
-      [54, 46, 1.6], [40, 46, 1.8],
-    ]);
-    b.line(outline[1], ...b.pts([[78, 6, 2], [72, 8, 1.6]]), outline[2]);
-    b.line(outline[0], ...b.pts([[84, 26, 1.4], [80, 32, 1.8]]));
-    b.line(outline[6], ...b.pts([[30, 24, 1.4], [22, 18, 1.8]]));
-    b.line(outline[6], ...b.pts([[24, 32, 1.4], [12, 36, 1.8]]));
-    b.line(outline[6], ...b.pts([[22, 48, 1.4], [12, 58, 1.8]]));
-    const belly = b.path([[40, 48, 1.2], [46, 64], [60, 66], [72, 52], [80, 32, 1.4]]);
-    b.line(belly[2], ...b.pts([[56, 80, 1.4], [50, 86, 1.6]]));
-    b.line(belly[2], ...b.pts([[64, 80, 1.4], [68, 86, 1.6]]));
-    b.star(76, 18, 2.2);
-    return b.build(80, "The Rooster", "A", ["that they can hear their roosters crowing and dogs barking,"]);
-  },
-  // 81 - The finale: the sage leaving on an ox, as Lao Tzu is said to have.
-  (b) => {
-    const back = b.path([[20, 50, 1.6], [34, 46, 1.6], [56, 46, 1.8], [74, 48, 1.6], [84, 54, 1.8]]);
-    b.line(back[4], ...b.pts([[88, 60, 1.2], [90, 76, 1.6]]));
-    const head = b.loop([[20, 50], [12, 52, 1.6], [6, 62, 2], [12, 66, 1.6], [22, 60]]);
-    b.line(head[0], b.star(12, 42, 2));
-    b.line(head[0], b.star(24, 40, 2));
-    const belly = b.path([[24, 66, 1.4], [50, 70, 1.4], [78, 66, 1.4]]);
-    b.line(head[4], belly[0]);
-    b.line(back[4], belly[2]);
-    for (const x of [28, 38, 66, 76]) b.line(b.star(x, 68, 1), b.star(x, 88, 1.8));
-    b.close(b.ring(52, 14, 4.5, 5, 1.8));
-    const neck = b.star(52, 21, 1.8);
-    const seat = b.star(54, 42, 1.8);
-    b.line(neck, seat);
-    b.line(seat, b.star(46, 52, 1.6));
-    b.line(neck, b.star(62, 30, 1.4), b.star(70, 20, 2.2));
-    return b.build(81, "The Sage on the Ox", "C", ["The Tao of Heaven nourishes by not forcing."]);
+const figures: Figure[] = [
+  // 1
+  {
+    name: "The Gateway",
+    keyPhrases: ["This source is called darkness."],
+    stars: [
+      [7.6, 16.8, 2.3], [18.4, 21.9, 1.9], [35, 16.6, 1.8],
+      [50.2, 13.9, 2.4], [66.3, 16.9, 2], [82.6, 20.7, 1.7],
+      [92.4, 13.8, 2.2], [21.7, 30.5, 1.3], [29.9, 31, 2.2],
+      [70.2, 27.3, 1.8], [78.1, 29.3, 1.4], [30.6, 41.4, 1.5],
+      [68.9, 43.7, 1.6], [33.1, 86.2, 2.3], [71.8, 85.7, 2.1],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6], [7, 8, 9, 10], [11, 12], [8, 11, 13],
+      [9, 12, 14],
+    ],
+  },
+  // 2
+  {
+    name: "Gemini",
+    keyPhrases: ["Being and non-being produce each other."],
+    stars: [
+      [18, 13, 1.9], [33, 16.9, 1.4], [49.6, 19, 1.3],
+      [65.5, 17.7, 1.4], [81.6, 12.3, 2], [18.5, 87.7, 2.1],
+      [34.8, 81.5, 1.5], [50.2, 79.7, 1.2], [67, 81.5, 1.2],
+      [82, 86.9, 2], [34.8, 39.4, 1.3], [32.8, 60.8, 1.3],
+      [63.9, 39, 1.3], [61.9, 60.6, 1.2],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4], [5, 6, 7, 8, 9], [1, 10, 11, 6], [3, 12, 13, 8],
+    ],
+  },
+  // 3
+  {
+    name: "Taurus",
+    keyPhrases: ["If you overvalue possessions,"],
+    stars: [
+      [51.2, 38.8, 1.9], [62.3, 42.2, 1.9], [69.4, 51.6, 1.7],
+      [70.9, 62, 1.6], [68.8, 73.3, 1.9], [61.4, 80.6, 1.9],
+      [51.1, 83.4, 1.9], [38.8, 80.2, 1.9], [30.8, 72.6, 1.6],
+      [27.6, 62.6, 1.6], [30.9, 51, 1.6], [38.4, 42.3, 1.7],
+      [81, 17.2, 2.5], [76, 26.5, 1.8], [69.3, 33.4, 1.6],
+      [61, 37, 1.6], [40.3, 36.7, 1.5], [30.8, 32.7, 1.6],
+      [23.3, 25.3, 1.5], [19, 16.6, 1.6],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0],
+      [12, 13, 14, 15, 0, 16, 17, 18, 19],
+    ],
+  },
+  // 4
+  {
+    name: "The Bottomless Well",
+    keyPhrases: ["Infinitely deep, it is the source of all things."],
+    stars: [
+      [76.7, 55.7, 1.7], [70.3, 59.7, 1.8], [51.1, 61.2, 2],
+      [32.8, 59.5, 2], [24.2, 56.6, 1.9], [31, 50.7, 1.7],
+      [49.5, 47.9, 1.8], [69.3, 50.7, 2], [20.8, 22.3, 1.8],
+      [29.8, 17.4, 1.8], [48.3, 9.7, 2.3], [67.4, 17.8, 1.7],
+      [77.5, 22.6, 1.8], [32.8, 27, 1.3], [48.4, 27.9, 2],
+      [66.9, 25.8, 1.5], [47.7, 39.4, 1.3], [44, 43.7, 1.5],
+      [53.9, 43.2, 1.8], [52.1, 49, 1.5], [45.8, 48.6, 1.5],
+      [27.6, 87.3, 1.6], [51.9, 90.3, 1.5], [79.2, 86.1, 1.5],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 0], [8, 9, 10, 11, 12], [13, 14, 15],
+      [5, 13, 9], [7, 15, 11], [14, 16], [17, 18, 19, 20, 17], [17, 16, 18],
+      [4, 21, 22, 23, 0],
+    ],
+  },
+  // 5
+  {
+    name: "Libra",
+    keyPhrases: ["The Master doesn't take sides;"],
+    stars: [
+      [11.2, 68.3, 2.1], [29.8, 66.7, 1], [51.4, 67.9, 1.3],
+      [70.4, 64.6, 1.1], [90.8, 67.4, 1.9], [31.7, 47.7, 1.7],
+      [33.7, 38.8, 1.5], [39.5, 33, 1.4], [47.3, 31.7, 1.4],
+      [56.3, 33.1, 1.6], [62, 39.6, 1.8], [64, 46.9, 1.6],
+      [9.2, 49, 2], [22, 48.3, 1], [74, 47.7, 1.1],
+      [89.2, 46.6, 1.9],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4], [12, 13, 5], [5, 6, 7, 8, 9, 10, 11], [11, 14, 15],
+    ],
+  },
+  // 6
+  {
+    name: "The Dandelion",
+    keyPhrases: ["It is like a vapor,"],
+    stars: [
+      [34.6, 35, 2.4], [39.1, 57.3, 1.4], [42.7, 77, 1.2],
+      [44.6, 92.5, 1.5], [35.6, 19.6, 1.4], [45, 22, 1.5],
+      [51, 29.7, 1.2], [51.3, 39.1, 1.2], [45.9, 47.4, 1.5],
+      [36.6, 51.1, 1.2], [26.4, 48.8, 1.2], [20.9, 40.4, 1.5],
+      [19.1, 32.2, 1.6], [25.1, 22.8, 1.6], [56, 27, 1],
+      [62.5, 20.9, 1.7], [69.6, 38.7, 1.4], [74.6, 34.1, 2],
+      [74, 13, 1.1], [80.9, 7.5, 1.7],
+    ],
+    strokes: [
+      [0, 1, 2, 3], [0, 4], [0, 5], [0, 6], [0, 7], [0, 8], [0, 9], [0, 10],
+      [0, 11], [0, 12], [0, 13], [14, 15], [16, 17], [18, 19],
+    ],
+  },
+  // 7
+  {
+    name: "The Candle",
+    keyPhrases: ["They do not live for themselves;"],
+    stars: [
+      [47.1, 9.6, 2.8], [53.3, 22.1, 1.7], [46.8, 32.3, 2],
+      [41.3, 22.5, 1.6], [34.6, 39.9, 1.7], [57.8, 40.7, 2],
+      [43, 42.8, 1.2], [47.9, 38.2, 1.2], [59.2, 53.5, 1.6],
+      [62.4, 59.7, 1.2], [38.3, 84.7, 1.6], [61.9, 86.1, 1.9],
+      [21.6, 83, 1.5], [78.4, 82.8, 1.7], [26.6, 90.4, 1.3],
+      [74.3, 87.4, 1.3],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 0], [4, 6, 7, 5], [5, 8, 9], [4, 10], [5, 11],
+      [12, 10, 11, 13], [14, 15],
+    ],
+  },
+  // 8
+  {
+    name: "The Water Drop",
+    keyPhrases: ["The supreme good is like water,"],
+    stars: [
+      [48.9, 4.4, 2.5], [57.7, 21.3, 2], [66.8, 36.4, 1.6],
+      [72.6, 50.4, 1.7], [68.4, 68.4, 2], [58.4, 78.9, 2],
+      [49.2, 83, 2], [38.7, 80.3, 1.9], [28.5, 71, 1.6],
+      [25, 53.4, 1.9], [31, 38.3, 1.9], [41, 21.9, 1.7],
+      [37.4, 49.7, 1.4], [35.3, 60.5, 1.5], [39.1, 69.3, 1.2],
+      [14, 93.4, 1.1], [50, 95.6, 1.3], [86, 89.6, 1.3],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0], [12, 13, 14], [15, 16, 17],
+    ],
+  },
+  // 9
+  {
+    name: "The Empty Teacup",
+    keyPhrases: ["It is easier to carry an empty cup"],
+    stars: [
+      [77.9, 28.9, 1.7], [74.5, 33.5, 1.7], [64, 36.7, 1.7],
+      [48.3, 37.7, 1.7], [33, 39.2, 1.9], [21.6, 35.1, 1.9],
+      [17.6, 31.1, 1.9], [20.8, 27.3, 1.9], [32.1, 24.7, 1.6],
+      [46.9, 23.7, 2], [63.2, 22.4, 1.6], [74, 25, 1.9],
+      [18.9, 32.4, 1], [77.9, 31.3, 1], [25.5, 52.9, 2],
+      [37.6, 65.8, 1.7], [49.6, 68.6, 1.6], [62.5, 64.9, 1.7],
+      [74.1, 51.9, 1.7], [8.3, 70.7, 1.4], [25.8, 77.6, 1.6],
+      [74.3, 73.8, 1.9], [91.7, 67.9, 1.5],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0],
+      [12, 14, 15, 16, 17, 18, 13], [19, 20, 21, 22],
+    ],
+  },
+  // 10
+  {
+    name: "The Lotus",
+    keyPhrases: ["Nurture the darkness of your soul"],
+    stars: [
+      [50.5, 69.3, 1.9], [38.4, 46.9, 1.7], [46.4, 18.1, 2.4],
+      [58.4, 45.6, 1.8], [27.2, 53.8, 1.6], [22.1, 32.7, 2.2],
+      [71.2, 52.4, 2], [70, 30.1, 2], [17.6, 66.7, 1.6],
+      [10.3, 53.6, 1.9], [81.6, 65.3, 1.7], [87.4, 50.9, 2],
+      [7.8, 81.4, 1.3], [29.7, 78.2, 1.5], [50.6, 81.9, 1.3],
+      [68.5, 76.4, 1.4], [92.2, 79, 1],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 0], [0, 4, 5, 1], [0, 6, 7, 3], [0, 8, 9], [0, 10, 11],
+      [12, 13, 14, 15, 16],
+    ],
+  },
+  // 11
+  {
+    name: "The Wheel",
+    keyPhrases: [
+      "but it is the center hole",
+      "that allows the wheel to function.",
+    ],
+    stars: [
+      [52.3, 8.8, 2.5], [69.2, 10.6, 2.3], [86.3, 26.6, 2.3],
+      [91.5, 46.7, 2.5], [85.9, 68.7, 2.2], [71.5, 83.9, 2.4],
+      [52.7, 91.2, 2.3], [29.2, 88.3, 2.5], [13.2, 72.3, 2.5],
+      [8.5, 49.3, 2.6], [13.3, 31.2, 2.5], [27.3, 14.8, 2.5],
+      [49.5, 41.5, 1.3], [54.6, 42.6, 1.2], [58, 45.5, 1.2],
+      [58.7, 48.6, 1.4], [57.7, 53.5, 1.3], [54.5, 56.8, 1.1],
+      [49.6, 58.4, 1.3], [46.2, 58, 1.3], [42.3, 54.9, 1.2],
+      [41.7, 51.8, 1.2], [43, 47, 1.2], [45.4, 42.7, 1.3],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0], [12, 0], [13, 1], [14, 2],
+      [15, 3], [16, 4], [17, 5], [18, 6], [19, 7], [20, 8], [21, 9],
+      [22, 10], [23, 11],
+      [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 12],
+    ],
+  },
+  // 12
+  {
+    name: "The Closed Eye",
+    keyPhrases: ["Five colors blind the eye."],
+    stars: [
+      [7.8, 41.1, 1.9], [23, 53.4, 1.6], [38.2, 59.4, 1.8],
+      [50.9, 58.6, 2.1], [63.3, 57.5, 1.8], [78.5, 50.3, 1.8],
+      [92.2, 37.8, 2], [26.6, 34.9, 2], [49.7, 29.2, 1.5],
+      [72.6, 30.8, 1.8], [19.6, 66, 1.4], [36.1, 70.8, 1.5],
+      [49.8, 70.6, 1.4], [65, 67.4, 1.3], [82.4, 62, 1.6],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6], [0, 7, 8, 9, 6], [1, 10], [2, 11], [3, 12],
+      [4, 13], [5, 14],
+    ],
+  },
+  // 13
+  {
+    name: "The Ouroboros",
+    keyPhrases: ["and we are often our own worst enemy."],
+    stars: [
+      [64, 17.7, 1.9], [76.6, 25.7, 1.8], [84.2, 42, 1.7],
+      [86.1, 56.4, 1.8], [79.5, 70, 2], [66.2, 80.8, 1.8],
+      [50.3, 86.7, 1.9], [37.2, 84.4, 1.6], [23.4, 76.2, 1.9],
+      [16.2, 63.4, 1.8], [13.9, 48.7, 1.7], [18.3, 33.1, 1.6],
+      [29, 23.4, 1.6], [42.7, 19.4, 1.6], [30.7, 24.7, 1.3],
+      [22.3, 35.2, 1.1], [20.2, 48.8, 1.4], [23.8, 60.9, 1.4],
+      [30, 69.7, 1.3], [40.1, 76.7, 1.1], [50.8, 77.9, 1.3],
+      [62.7, 73, 1.3], [73.2, 65.6, 1.1], [78.3, 55.1, 1.3],
+      [76.7, 43.3, 1.3], [71, 30.7, 1], [60.1, 23.2, 1.2],
+      [56, 13.3, 1.6], [45.7, 16.6, 2.3], [54.3, 22.6, 1.5],
+      [53.2, 18.4, 2.8],
+    ],
+    strokes: [
+      [
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+        16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
+      ],
+      [0, 27, 28, 29, 26],
+    ],
+  },
+  // 14
+  {
+    name: "The Endless Thread",
+    keyPhrases: ["follow it and there will be no end."],
+    stars: [
+      [55.9, 47.1, 2.8], [57, 50, 1.3], [53.8, 53.3, 1.3],
+      [48.1, 52.7, 1.1], [43.4, 47, 1.9], [44.2, 36.6, 1.2],
+      [53, 31.9, 1.3], [63.5, 35, 1.3], [71.5, 47.1, 1.9],
+      [68.1, 60.5, 1.3], [55.4, 68.1, 1.4], [36.6, 62.9, 1.4],
+      [25.7, 46.3, 1.9], [32, 25.5, 1.2], [54.1, 15.4, 1.4],
+      [76.4, 23.4, 1.3], [88.3, 46.1, 1.9], [81.8, 71.5, 1.1],
+      [57, 84.6, 1.3], [26.4, 74.2, 1.1], [11.7, 46.6, 2.1],
+      [22.2, 15.5, 1],
+    ],
+    strokes: [
+      [
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+        16, 17, 18, 19, 20, 21,
+      ],
+    ],
+  },
+  // 15
+  {
+    name: "The Snowflake",
+    keyPhrases: ["as someone crossing a frozen stream in winter."],
+    stars: [
+      [48.7, 49.6, 2.6], [50.6, 24.5, 1.4], [49.7, 8.3, 2.1],
+      [59.2, 16.7, 1.2], [38.3, 18.1, 1.2], [69.9, 36, 1.3],
+      [86.9, 26.6, 2.1], [82.9, 41.9, 1.3], [72.3, 23.1, 1],
+      [69.9, 60.4, 1.3], [85.6, 68.9, 2.2], [72.2, 72.9, 1.4],
+      [82.3, 55.5, 1.2], [50.3, 72.8, 1.5], [52.2, 91.7, 1.9],
+      [39.6, 82.2, 1.1], [61.1, 80.9, 1.1], [28.1, 63.8, 1.5],
+      [13.1, 73.9, 2.1], [15.4, 60.6, 1.4], [27.4, 76.6, 1.2],
+      [28.4, 39.2, 1.6], [13.5, 31.6, 2.1], [25.8, 25.8, 1.3],
+      [15.9, 45.1, 1.3],
+    ],
+    strokes: [
+      [0, 1, 2], [3, 1, 4], [0, 5, 6], [7, 5, 8], [0, 9, 10], [11, 9, 12],
+      [0, 13, 14], [15, 13, 16], [0, 17, 18], [19, 17, 20], [0, 21, 22],
+      [23, 21, 24],
+    ],
+  },
+  // 16
+  {
+    name: "The Ripple",
+    keyPhrases: ["If you can empty your mind of all thoughts"],
+    stars: [
+      [50.9, 24.8, 2.8], [50, 34.7, 1.5], [49.6, 57.4, 2.4],
+      [58.5, 59.3, 2.5], [57.8, 63.1, 2.6], [50.8, 65.8, 2.5],
+      [41, 63.3, 2.3], [41.3, 59.2, 2.6], [50.6, 52.4, 1.9],
+      [63, 53.4, 1.7], [72.7, 57.3, 1.8], [72.4, 62.9, 1.7],
+      [63.1, 67.3, 1.8], [50.6, 69.2, 1.9], [36.1, 70.2, 1.8],
+      [26.1, 64.3, 1.7], [26.7, 59.2, 1.7], [36.4, 55.3, 2],
+      [50.6, 47.6, 1], [66.9, 48.5, 1.3], [80.7, 51.2, 1.4],
+      [89.9, 55.4, 1.1], [89.3, 60.8, 1.1], [81.6, 68.2, 1.1],
+      [66.4, 72.3, 1.2], [50.9, 75.2, 1.2], [33.2, 74.1, 1.1],
+      [18.5, 70.2, 1.1], [10.1, 64.9, 1.1], [11.1, 58.5, 1.2],
+      [18.5, 53, 1.2], [32.6, 49.1, 1.1],
+    ],
+    strokes: [
+      [2, 3, 4, 5, 6, 7, 2], [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 8],
+      [18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 18],
+    ],
+  },
+  // 17
+  {
+    name: "Geese in Formation",
+    keyPhrases: ["we did it, all by ourselves!\""],
+    stars: [
+      [50.1, 29.9, 2.1], [42.7, 26.6, 1.6], [57.7, 24.9, 1.5],
+      [39, 45.2, 1.9], [31.2, 41, 1.5], [46.3, 40.5, 1.5],
+      [26.2, 60.6, 2.1], [17.5, 58.1, 1.3], [34.9, 56, 1.3],
+      [13.7, 75.1, 1.9], [5.2, 72.4, 1.5], [21.8, 71.8, 1.2],
+      [62.1, 43.1, 2], [54.4, 39.5, 1.2], [69.7, 39.2, 1.3],
+      [73.2, 57.6, 2.1], [65.2, 53.9, 1.6], [82.6, 53.4, 1.4],
+      [86.2, 70.7, 2], [78, 67.4, 1.6], [94.8, 67.4, 1.3],
+    ],
+    strokes: [
+      [1, 0, 2], [4, 3, 5], [7, 6, 8], [10, 9, 11], [13, 12, 14],
+      [16, 15, 17], [19, 18, 20],
+    ],
+  },
+  // 18
+  {
+    name: "The Cracked Vase",
+    keyPhrases: ["When the great Tao is abandoned,"],
+    stars: [
+      [34.9, 9.6, 1.7], [32.5, 22.3, 1.9], [20.7, 37.8, 1.8],
+      [18.2, 54.5, 1.9], [25.3, 73.9, 1.9], [35.9, 90.6, 1.7],
+      [51.1, 8.3, 1.6], [53.6, 20.2, 1.8], [64.7, 35.5, 1.9],
+      [69.1, 52.3, 1.7], [66.1, 72, 2], [56.4, 88.5, 1.8],
+      [45.6, 33.6, 1.5], [51.7, 45.8, 1.5], [39.5, 56.8, 1.5],
+      [47.4, 66.4, 1.4], [76.6, 91.7, 1.4], [81.8, 85, 1.3],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5], [6, 7, 8, 9, 10, 11], [0, 6], [5, 11],
+      [7, 12, 13, 14, 15],
+    ],
+  },
+  // 19
+  {
+    name: "The Single Flower",
+    keyPhrases: ["Desire little."],
+    stars: [
+      [39.5, 57.4, 1.7], [60.3, 55.3, 1.8], [66.4, 71.9, 1.6],
+      [61.8, 90.4, 1.7], [40.3, 92.2, 1.8], [33.6, 72.8, 1.3],
+      [49.8, 57, 1], [51.6, 38.7, 1.3], [57.4, 22.1, 1.5],
+      [59.9, 7.8, 1.7], [65.9, 11.6, 1.9], [63.6, 19.7, 1.6],
+      [55.8, 20.4, 1.7], [53.6, 12.4, 1.7], [60.4, 13.6, 2.2],
+      [51.9, 40.9, 1.1], [38.6, 32, 1.4], [44.9, 42.4, 1.4],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 0], [6, 7, 8], [9, 10, 11, 12, 13, 9],
+      [15, 16, 17, 15],
+    ],
+  },
+  // 20
+  {
+    name: "The Butterfly Dream",
+    keyPhrases: ["I am like a fool, my mind is in chaos."],
+    stars: [
+      [49.5, 26.7, 1.9], [50.8, 42.4, 1.7], [49.6, 58.1, 1.5],
+      [50.9, 74.5, 1.9], [41.8, 12.3, 1.8], [58.9, 12.2, 1.7],
+      [36.6, 21, 1.9], [17.3, 19, 2.2], [8.5, 34, 1.7],
+      [16.1, 48.6, 1.7], [36.7, 50.5, 1.8], [64.3, 21.1, 1.8],
+      [84.5, 17.6, 1.8], [91.5, 30.9, 2], [84, 46.3, 1.8],
+      [63.8, 50.4, 2], [33.2, 61.1, 2], [24.1, 76.4, 1.7],
+      [32.8, 87.8, 1.9], [45.9, 80.4, 1.8], [68.3, 60.7, 1.8],
+      [79.9, 74.7, 1.8], [73.4, 86.5, 1.8], [57.3, 80.8, 1.9],
+    ],
+    strokes: [
+      [0, 1, 2, 3], [0, 4], [0, 5], [1, 6, 7, 8, 9, 10, 2],
+      [1, 11, 12, 13, 14, 15, 2], [2, 16, 17, 18, 19, 3],
+      [2, 20, 21, 22, 23, 3],
+    ],
+  },
+  // 21
+  {
+    name: "The Nautilus",
+    keyPhrases: ["Within it we can find order."],
+    stars: [
+      [45.2, 55.3, 2.7], [44.5, 58.3, 1.1], [42, 60.1, 1.5],
+      [38.8, 59.7, 1.3], [36.8, 56.3, 1.4], [37.5, 52.1, 1.4],
+      [40.4, 48.2, 1.5], [48.2, 48.7, 1.4], [52.1, 57.6, 1.7],
+      [51.1, 63.5, 1.6], [42.8, 70, 1.6], [30.3, 68.8, 1.8],
+      [20.9, 57.2, 1.8], [24.5, 42, 2], [41.4, 30, 1.8],
+      [62.1, 34.2, 1.8], [79.1, 55.1, 2.1],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], [8, 0],
+      [9, 1], [10, 2], [11, 3], [12, 4], [13, 5], [14, 6], [15, 7], [16, 8],
+    ],
+  },
+  // 22
+  {
+    name: "The Crescent Moon",
+    keyPhrases: ["If you want to become full,"],
+    stars: [
+      [61.2, 12.3, 2.2], [35.2, 13.9, 2], [18.9, 30.5, 2.2],
+      [12.8, 52.5, 2], [20.2, 75.6, 2.1], [39, 87.7, 2.1],
+      [63.6, 85.7, 2.4], [60.7, 84.8, 1.4], [38.5, 73.7, 1.2],
+      [30, 50.4, 1.6], [36.4, 28.3, 1.4], [57.9, 13.6, 1.5],
+      [71.6, 20.1, 0.7], [82.8, 33.8, 0.7], [87.2, 49.1, 0.9],
+      [84.3, 64.6, 0.7], [74.6, 78, 0.8],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0],
+    ],
+  },
+  // 23
+  {
+    name: "The Passing Storm",
+    keyPhrases: ["when the gale blows, it will not last long;"],
+    stars: [
+      [20.1, 45.8, 1.6], [15.4, 36.7, 1.7], [21.8, 25.8, 1.6],
+      [33.5, 26.6, 1.9], [40.1, 15.2, 1.8], [54, 14, 2],
+      [63.9, 21.7, 2], [75.3, 21.1, 1.6], [84.6, 30.8, 1.9],
+      [80.4, 43.7, 1.8], [66.8, 49.7, 1.8], [50.4, 48.4, 1.9],
+      [33.6, 47, 1.8], [27.7, 53.8, 1], [25.5, 65, 1.2],
+      [43, 55, 1.3], [40.2, 65.3, 1.4], [70, 54.4, 1.3],
+      [68, 65.3, 1.4], [38.4, 72.4, 1.1], [34.9, 84.4, 1.3],
+      [75.9, 71.5, 1.3], [72.8, 84.2, 1.2], [56.4, 53.1, 1.8],
+      [49.4, 66.4, 2.2], [59.9, 65.7, 2.1], [50.5, 86, 2.6],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0], [13, 14], [15, 16],
+      [17, 18], [19, 20], [21, 22], [23, 24, 25, 26],
+    ],
+  },
+  // 24
+  {
+    name: "The Peacock",
+    keyPhrases: ["Those who boast of their accomplishments"],
+    stars: [
+      [49.4, 44.9, 1.9], [56.8, 54.4, 1.6], [51.9, 68.9, 1.8],
+      [45.9, 68, 1.4], [44.3, 54.3, 1.9], [50.2, 34.6, 1.2],
+      [52.5, 27, 1.8], [57, 29.4, 1.5], [50.9, 20.7, 1.3],
+      [11.3, 51.3, 2.1], [16.8, 38.3, 2.3], [24.3, 28.6, 2.1],
+      [36.2, 22.1, 2.3], [51.2, 18.4, 2.4], [64.8, 20.7, 2.1],
+      [76, 27, 2.1], [84.7, 37.5, 2.1], [88.7, 49.3, 2.2],
+      [42.3, 80.7, 1.4], [56.9, 81.6, 1.3],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 0], [0, 5, 6, 7], [6, 8],
+      [9, 10, 11, 12, 13, 14, 15, 16, 17], [0, 9], [0, 10], [0, 11], [0, 12],
+      [0, 13], [0, 14], [0, 15], [0, 16], [0, 17], [3, 18], [2, 19],
+    ],
+  },
+  // 25
+  {
+    name: "The Four Images",
+    keyPhrases: ["Within the universe, these are the four great things."],
+    stars: [
+      [51, 21, 1.3], [63.2, 23.7, 1.4], [73.5, 29.8, 1.3],
+      [80.3, 41.1, 1.5], [79, 54.1, 1.3], [73.5, 67.9, 1.6],
+      [63.7, 76.5, 1.5], [51.8, 81.2, 1.3], [39.1, 78.3, 1.3],
+      [27.5, 69.7, 1.3], [20.6, 56.7, 1.2], [21.7, 43.7, 1.4],
+      [27.2, 32.1, 1.3], [38.4, 24.7, 1.5], [63, 27.3, 1],
+      [63.9, 41.3, 1.3], [50.1, 49.8, 1], [38.6, 57.6, 1],
+      [37.7, 74.1, 1.3], [50.7, 35.6, 2.2], [50.8, 66.3, 1.2],
+      [51, 6.4, 2.5], [94.5, 46.4, 2.4], [53.5, 93.6, 2.4],
+      [5.5, 50.5, 2.8],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 0], [0, 14, 15, 16],
+      [16, 17, 18, 7],
+    ],
+  },
+  // 26
+  {
+    name: "The Pagoda",
+    keyPhrases: ["Heaviness is the basis of lightness."],
+    stars: [
+      [49.9, 4.2, 1.9], [51.1, 15.6, 1.5], [30.9, 23, 2],
+      [38, 26.1, 1.3], [50.3, 19.3, 1.3], [61.6, 26.3, 1.2],
+      [68, 22.7, 1.6], [22.4, 44.4, 1.6], [28.9, 49.4, 1.5],
+      [50.6, 40.7, 1.3], [69.8, 48.6, 1.3], [75, 44.6, 2],
+      [13.7, 68.8, 1.8], [20.6, 72.4, 1.2], [50.9, 66.4, 1.4],
+      [80.2, 71.9, 1.4], [86.3, 67.7, 1.8], [34.7, 26.6, 1.3],
+      [35.5, 40.7, 1], [63.7, 26.6, 1.3], [62.8, 41, 1.4],
+      [31.3, 49, 1.1], [32.8, 66.1, 1], [67.7, 48.3, 1.3],
+      [69, 64.5, 1.3], [23.6, 72.4, 1.1], [26.5, 95.8, 1.6],
+      [77.6, 91.3, 1.8], [76, 72.4, 1],
+    ],
+    strokes: [
+      [0, 1], [2, 3, 4, 5, 6], [7, 8, 9, 10, 11], [12, 13, 14, 15, 16],
+      [17, 18], [19, 20], [21, 22], [23, 24], [25, 26, 27, 28],
+    ],
+  },
+  // 27
+  {
+    name: "Teacher and Student",
+    keyPhrases: ["What is a good person but a bad person's teacher?"],
+    stars: [
+      [31.3, 15.7, 1.7], [36.9, 19.2, 1.8], [35.8, 24.3, 1.7],
+      [31.3, 28.4, 1.9], [25.6, 24, 1.9], [27, 19.2, 2],
+      [30, 31, 1.9], [32.5, 60.3, 2], [28.3, 90.5, 1.9],
+      [40.5, 91.3, 1.8], [45.4, 21.4, 1.3], [58, 10, 1.4],
+      [69.3, 3, 2.6], [61.5, 41.7, 1.6], [66.6, 43.5, 1.5],
+      [64.3, 50.3, 1.6], [58.7, 50.6, 1.4], [57.4, 45.5, 1.6],
+      [62.1, 53.9, 1.5], [63.6, 70.5, 1.8], [60.8, 89.7, 1.7],
+      [68.4, 90.2, 1.8], [47.5, 49.1, 1.1], [3.7, 90.1, 1],
+      [96.3, 97, 1],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 0], [6, 7], [7, 8], [7, 9], [6, 10, 11],
+      [13, 14, 15, 16, 17, 13], [18, 19], [19, 20], [19, 21], [6, 22, 18],
+      [23, 24],
+    ],
+  },
+  // 28
+  {
+    name: "The Uncarved Block",
+    keyPhrases: ["Uncarved Block."],
+    stars: [
+      [21.9, 32.4, 1.9], [30.8, 37.6, 1.7], [35.2, 52.2, 1.8],
+      [33.2, 64.5, 1.8], [25.3, 71.5, 1.8], [16, 66.7, 1.8],
+      [11, 53.7, 1.6], [14.1, 38.1, 1.8], [22.8, 43, 1.4],
+      [28.1, 51.5, 1], [23.3, 61.4, 1], [18, 52, 1.1],
+      [23.9, 52.2, 2.6], [82.7, 28.5, 1.8], [89, 52.2, 1.7],
+      [84.9, 66.6, 1.9], [44.1, 43.8, 1], [62.9, 46.5, 1.1],
+      [49.3, 59.5, 1.2], [71.2, 57.5, 0.8],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 0], [8, 9, 10, 11, 8], [13, 14, 15], [0, 13],
+      [4, 15], [16, 17], [18, 19],
+    ],
+  },
+  // 29
+  {
+    name: "The Peng and the Quail",
+    keyPhrases: ["Some are naturally big and strong,"],
+    stars: [
+      [40.3, 42.5, 1.6], [51.6, 40.7, 2.3], [66.2, 36, 1.5],
+      [74.2, 31.2, 2.2], [39.8, 28, 1.7], [24, 18.6, 1.7],
+      [5.9, 14.9, 2], [60.2, 26, 1.9], [71.7, 11.7, 1.5],
+      [84.9, 5.1, 2.1], [28.4, 45.8, 1.5], [32.3, 54.2, 1.5],
+      [71.3, 78.7, 1.7], [62.5, 74.5, 1], [79.1, 74, 1.2],
+      [4.2, 94.9, 1.1], [40.1, 91.9, 1.1], [95.8, 88.6, 0.8],
+    ],
+    strokes: [
+      [0, 1, 2, 3], [1, 4, 5, 6], [1, 7, 8, 9], [0, 10, 11, 0], [13, 12, 14],
+      [15, 16, 17],
+    ],
+  },
+  // 30
+  {
+    name: "The Barren Tree",
+    keyPhrases: ["bad years must always follow."],
+    stars: [
+      [49.6, 91.7, 2], [48.1, 69.6, 1.6], [46.9, 50.9, 1.5],
+      [48.3, 34, 1.4], [32.1, 38.5, 1.5], [20.1, 26, 1.8],
+      [19.1, 44, 1.3], [65.7, 38.6, 1.5], [78.7, 26.2, 2],
+      [81.1, 43, 1.3], [39.1, 21.2, 1.4], [35.1, 10.1, 1.6],
+      [55.4, 19.9, 1.3], [58.6, 5.9, 1.7], [10.1, 94.1, 1.3],
+      [29.4, 91.3, 1.3], [69.8, 87.1, 1], [89.9, 88.2, 1.2],
+    ],
+    strokes: [
+      [0, 1, 2, 3], [2, 4, 5], [4, 6], [2, 7, 8], [7, 9], [3, 10, 11],
+      [3, 12, 13], [14, 15, 16, 17],
+    ],
+  },
+  // 31
+  {
+    name: "The Broken Arrow",
+    keyPhrases: ["and thus are avoided by the wise."],
+    stars: [
+      [10.7, 75.5, 1.6], [26.7, 63.4, 1.3], [42.8, 51.1, 1.9],
+      [5, 67.1, 1.4], [16.3, 70.7, 1.3], [10.4, 62.6, 1.5],
+      [7.8, 83.9, 1.3], [14.3, 80.4, 1.6], [51.6, 42.9, 1.6],
+      [65.1, 35.8, 1.3], [77.9, 28.9, 1.6], [75, 18, 1.5],
+      [95, 16.1, 2.5], [88.7, 34.3, 1.7], [44.5, 40.9, 1],
+      [49.4, 53.5, 0.9],
+    ],
+    strokes: [
+      [0, 1, 2], [0, 3], [4, 5], [0, 6], [4, 7], [8, 9, 10],
+      [10, 11, 12, 13, 10],
+    ],
+  },
+  // 32
+  {
+    name: "Neptune",
+    keyPhrases: ["flow through valleys to the sea."],
+    stars: [
+      [21.1, 13.1, 2], [22.7, 35.6, 1.7], [31.9, 49.6, 1.7],
+      [53.9, 56.4, 1.6], [72.4, 48.5, 1.9], [78.9, 33, 1.7],
+      [77.2, 11.5, 2.3], [49.5, 10.1, 2.5], [51.7, 34.1, 1.7],
+      [51.9, 89.9, 1.7], [37.4, 73.9, 1.5], [52.8, 72.7, 1.2],
+      [65.8, 71.6, 1.5],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6], [7, 8, 3, 9], [10, 11, 12],
+    ],
+  },
+  // 33
+  {
+    name: "The Arrow in the Target",
+    keyPhrases: ["Those who persist will reach their goal."],
+    stars: [
+      [61.3, 16.5, 1.8], [78.2, 22.3, 1.9], [92.6, 34.6, 1.7],
+      [96.2, 49, 1.9], [91.9, 67.7, 1.9], [78.7, 81.3, 1.8],
+      [62.9, 85.1, 2], [44.6, 79.8, 1.6], [31.8, 69.1, 2],
+      [29, 50, 1.9], [32.9, 34.6, 2], [45, 20.5, 1.6],
+      [63.2, 31.7, 1.4], [76.3, 38, 1.4], [82.3, 51.1, 1.3],
+      [75.5, 65.9, 1.5], [61.6, 72.2, 1.6], [47.3, 65, 1.3],
+      [41.6, 50.4, 1.3], [48.7, 37.4, 1.5], [62.5, 50.3, 2.8],
+      [37.9, 36.6, 1], [10, 22.7, 1.5], [3.8, 25.4, 1.3],
+      [7.3, 14.9, 1.4],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0],
+      [12, 13, 14, 15, 16, 17, 18, 19, 12], [20, 21, 22], [23, 22, 24],
+    ],
+  },
+  // 34
+  {
+    name: "The Spring",
+    keyPhrases: ["The great Tao flows unobstructed in every direction."],
+    stars: [
+      [50.5, 19.9, 2.8], [50.5, 75.7, 1.8], [52.9, 47.2, 1.3],
+      [39.7, 18.7, 1.9], [30, 24.3, 1.7], [21.7, 38.6, 1.7],
+      [17.8, 53.6, 1.3], [59, 17.1, 1.6], [70, 21.9, 1.7],
+      [78.7, 36.8, 1.7], [82.2, 50.7, 1.5], [47.3, 32.9, 1.1],
+      [39.4, 35.8, 1.4], [32, 46.7, 1.3], [29.9, 58.4, 1.2],
+      [54.8, 32.4, 1.3], [62.6, 33.8, 1.5], [68.9, 44, 1.3],
+      [70.6, 55.6, 1.2], [81.6, 73.3, 1.5], [72, 79.5, 1.6],
+      [51.4, 82.9, 1.5], [28.9, 80.7, 1.5], [20, 76.7, 1.5],
+      [29.3, 73.7, 1.3], [51, 70.4, 1.6], [71.6, 71.8, 1.3],
+    ],
+    strokes: [
+      [1, 2, 0], [0, 3, 4, 5, 6], [0, 7, 8, 9, 10], [11, 12, 13, 14],
+      [15, 16, 17, 18], [19, 20, 21, 22, 23, 24, 25, 26, 19],
+    ],
+  },
+  // 35
+  {
+    name: "The Wind Chime",
+    keyPhrases: ["When listen for, there is nothing for them to hear."],
+    stars: [
+      [48.8, 11.5, 1.4], [49.4, 21.3, 1.5], [20.5, 27.6, 1.7],
+      [79.5, 24, 1.8], [25.9, 32.6, 1.1], [28.1, 68.3, 1.9],
+      [39.7, 29.5, 1.1], [43.5, 80.4, 1.8], [60.3, 28.9, 1.4],
+      [64.5, 72.5, 1.9], [75, 28.8, 1.2], [77.4, 59.5, 1.8],
+      [53.6, 68.6, 1.1], [54.8, 88.5, 2.2],
+    ],
+    strokes: [
+      [0, 1], [2, 1, 3], [4, 5], [6, 7], [8, 9], [10, 11], [1, 12, 13],
+    ],
+  },
+  // 36
+  {
+    name: "The Koi under the Lily Pads",
+    keyPhrases: ["Just as fish remain hidden in deep waters,"],
+    stars: [
+      [41.4, 30.4, 1.6], [31.8, 34.8, 1.8], [18.5, 32.1, 1.4],
+      [11.8, 26.4, 1.7], [17.8, 19.3, 1.4], [30.4, 16.9, 1.7],
+      [40.9, 21.9, 1.6], [28.2, 25.2, 1.2], [63, 31.3, 1.7],
+      [71.8, 26.2, 1.5], [82.7, 27.7, 1.7], [88.2, 32.3, 1.5],
+      [82.9, 37.8, 1.5], [72.6, 41.4, 1.4], [62.4, 37.8, 1.5],
+      [74.4, 33.9, 1.3], [23, 74.6, 2.3], [36.1, 65.8, 1.9],
+      [54.7, 64.7, 1.6], [69.3, 71.5, 1.6], [54, 80.9, 1.7],
+      [36.3, 79.8, 1.7], [82.7, 62.3, 1.9], [80, 73.4, 1.2],
+      [81.6, 83.1, 1.8], [30.8, 72.3, 2], [41.7, 58.1, 1.3],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7], [8, 9, 10, 11, 12, 13, 14, 15],
+      [16, 17, 18, 19, 20, 21, 16], [19, 22, 23, 24, 19], [17, 26],
+    ],
+  },
+  // 37
+  {
+    name: "Moon on Still Water",
+    keyPhrases: ["the world would naturally settle into peace."],
+    stars: [
+      [47.1, 15.5, 1.9], [56.1, 17.7, 2.1], [61.9, 24.9, 1.8],
+      [62.7, 33.7, 2], [58, 41, 1.9], [49.6, 44.9, 2],
+      [40.9, 42.2, 1.9], [35, 35.6, 2], [34.1, 27.1, 1.9],
+      [38.9, 19.8, 2.1], [4.7, 62.2, 1.5], [25.8, 60.9, 1.6],
+      [50.3, 59.1, 1.5], [74.9, 57.4, 1.4], [95.3, 55.4, 1.2],
+      [37.3, 68.1, 1.5], [62.6, 66.1, 1.5], [41.7, 77, 1.4],
+      [57.8, 75.1, 1.6], [45.3, 84.5, 1], [54.4, 83.6, 1.2],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0], [10, 11, 12, 13, 14], [15, 16],
+      [17, 18], [19, 20],
+    ],
+  },
+  // 38
+  {
+    name: "The Peach",
+    keyPhrases: ["The master abides in the fruit and not in the husk."],
+    stars: [
+      [48.8, 33.4, 1.7], [61.1, 28.5, 1.8], [76, 33.3, 1.8],
+      [84.2, 48.2, 1.6], [79.6, 66.4, 1.9], [66.4, 81.6, 1.7],
+      [49.2, 91.4, 2.4], [33.6, 84.1, 1.8], [20.4, 70.6, 2],
+      [15.8, 51.4, 1.7], [22.9, 37.3, 1.8], [36.1, 31, 1.9],
+      [47, 52.4, 1.1], [49.7, 73.7, 1.3], [50.1, 21.1, 1.3],
+      [61.1, 10.2, 1.5], [77.1, 8.6, 1.8], [66.4, 19.8, 1.2],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0], [0, 12, 13], [0, 14],
+      [14, 15, 16, 17, 14],
+    ],
+  },
+  // 39
+  {
+    name: "The Gem and the Stone",
+    keyPhrases: ["but be as dull as a common stone."],
+    stars: [
+      [9.7, 25.9, 1.9], [15.9, 14.8, 1.5], [32.3, 16, 1.8],
+      [40.7, 27.8, 1.6], [23.6, 48, 2.9], [19.8, 25.9, 1.2],
+      [28.4, 25.9, 1.2], [48.2, 73.8, 1.3], [53.9, 60.3, 1.2],
+      [68.5, 53.5, 1.3], [81.4, 56.8, 1.4], [90.3, 70.5, 1.6],
+      [83, 82.5, 1.3], [61.8, 85.2, 1.5],
+    ],
+    strokes: [
+      [0, 1, 2, 3], [0, 3], [0, 4, 3], [1, 5, 4], [2, 6, 4],
+      [7, 8, 9, 10, 11, 12, 13, 7],
+    ],
+  },
+  // 40
+  {
+    name: "The Returning Swallow",
+    keyPhrases: ["All movement returns to the Tao."],
+    stars: [
+      [72.5, 31.1, 2.2], [59.5, 38.8, 2], [43.5, 48.5, 2],
+      [50.4, 25.9, 1.4], [36.4, 11.4, 1.9], [68, 53.7, 1.4],
+      [64.9, 72.8, 2], [23.6, 49.6, 2.1], [30.7, 62.2, 1.9],
+      [20.4, 80.3, 1.2], [29.7, 85.5, 0.9], [43.8, 88.6, 0.9],
+      [59.1, 86.6, 1.1], [70.1, 81.6, 1], [79.6, 75.6, 1.1],
+    ],
+    strokes: [
+      [0, 1, 2], [1, 3, 4], [1, 5, 6], [2, 7], [2, 8],
+    ],
+  },
+  // 41
+  {
+    name: "The Owl",
+    keyPhrases: ["The brightness of the Tao seems like darkness,"],
+    stars: [
+      [47.5, 31.1, 1.4], [61, 20.1, 1.6], [69.3, 10.6, 2],
+      [73, 29, 1.7], [75.3, 51.9, 1.7], [69.3, 72.7, 1.9],
+      [50.3, 86.7, 1.9], [29.3, 75.6, 1.6], [22.4, 54.6, 2],
+      [25.1, 31.8, 1.6], [29.7, 12.5, 2.2], [37, 22.5, 1.7],
+      [38.8, 31, 1], [44.6, 33.7, 1.1], [44, 40.7, 1.3],
+      [38.3, 44.4, 1.2], [32.7, 41.3, 1.3], [33.2, 33.6, 1.4],
+      [58.2, 29.4, 1.2], [65.5, 31.3, 1.1], [64.8, 39.3, 1.2],
+      [57.9, 43.6, 1.4], [51.7, 39.6, 1.3], [52.3, 33.4, 1.2],
+      [38.7, 37, 2.9], [58.6, 36.7, 2.8], [45, 48.4, 1.4],
+      [49.8, 47.6, 1.4], [47.8, 53.2, 1.4], [10, 89.4, 1.2],
+      [35.8, 86.5, 1.5], [65.3, 88.1, 1.4], [90, 85.3, 1.4],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0],
+      [12, 13, 14, 15, 16, 17, 12], [18, 19, 20, 21, 22, 23, 18],
+      [26, 27, 28, 26], [29, 30, 31, 32],
+    ],
+  },
+  // 42
+  {
+    name: "The Triple Swirl",
+    keyPhrases: ["The Two gave birth to Three."],
+    stars: [
+      [49.1, 8, 1.1], [65.1, 9, 1], [79.3, 18.8, 1.3],
+      [89.9, 34, 1], [91.1, 51.7, 1.2], [85.7, 67.3, 0.9],
+      [73.1, 82.1, 0.9], [58.8, 90.1, 0.9], [40.9, 92, 1],
+      [24.1, 85.3, 1.1], [13, 72, 1.2], [8.9, 56.7, 1.1],
+      [10.5, 39.4, 0.9], [17.9, 22.4, 1.1], [30.9, 12.1, 1.3],
+      [50.9, 46.2, 1.4], [55.5, 41, 1.6], [64.4, 41.8, 1.4],
+      [72.8, 49.6, 1.5], [71.1, 65.6, 1.3], [61.8, 81.5, 2.4],
+      [54.1, 51.8, 1.3], [55.1, 58.6, 1.3], [48.9, 66.3, 1.4],
+      [36, 68.7, 1.6], [21.4, 62.6, 1.4], [15.1, 45.6, 2.3],
+      [46.9, 51.7, 1.2], [39, 49.8, 1.6], [36.1, 42.1, 1.3],
+      [39.5, 29.5, 1.5], [53.8, 18.8, 1.5], [72.2, 20.7, 2.3],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0],
+      [15, 16, 17, 18, 19, 20], [21, 22, 23, 24, 25, 26],
+      [27, 28, 29, 30, 31, 32],
+    ],
+  },
+  // 43
+  {
+    name: "The Feather",
+    keyPhrases: ["That which offers no resistance,"],
+    stars: [
+      [25.7, 90.4, 1.6], [30.8, 76.4, 1.7], [40.6, 58.2, 2],
+      [53.7, 38.3, 1.7], [64.6, 23.7, 1.8], [74.3, 9.6, 2.3],
+      [25.9, 62.9, 1.8], [28.5, 48.6, 1.7], [34.5, 33.9, 1.9],
+      [45.8, 21, 1.7], [58.5, 10.7, 1.7], [42.2, 71.1, 1.7],
+      [56.1, 56.7, 1.9], [66, 42.4, 1.8], [71.9, 27.4, 1.8],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5], [1, 6, 7, 8, 9, 10, 5], [1, 11, 12, 13, 14, 5],
+    ],
+  },
+  // 44
+  {
+    name: "The Hourglass",
+    keyPhrases: ["and knowing when to stop will keep you from danger"],
+    stars: [
+      [21.2, 6.6, 2], [77.9, 9.8, 2], [23.1, 89.5, 2.1],
+      [78.8, 93.4, 2], [33, 11.5, 1.7], [36.4, 28.4, 1.7],
+      [48.8, 45.3, 1.3], [48.1, 52.7, 1.3], [36.9, 72, 2],
+      [34.2, 87.3, 1.9], [66.4, 12.5, 1.8], [65.3, 27.8, 1.8],
+      [54.6, 44.7, 1.3], [55.4, 54.2, 1.4], [65.1, 72.8, 1.8],
+      [66.9, 87.2, 2], [41.3, 32.8, 1.5], [62.4, 34.1, 1.3],
+      [38.9, 87.4, 1.7], [51.6, 78.5, 2.4], [63, 87.4, 1.8],
+      [51.7, 58.2, 1.1], [51.2, 66.4, 1],
+    ],
+    strokes: [
+      [0, 1], [2, 3], [4, 5, 6, 7, 8, 9], [10, 11, 12, 13, 14, 15], [16, 17],
+      [18, 19, 20],
+    ],
+  },
+  // 45
+  {
+    name: "Fire and Water",
+    keyPhrases: ["Movement overcomes the cold,"],
+    stars: [
+      [24.5, 24.4, 2.5], [33.5, 40.1, 1.6], [38.3, 55.7, 1.6],
+      [32.8, 70.9, 1.6], [25.2, 75.6, 2], [15.2, 70.4, 1.8],
+      [12, 55.4, 1.9], [17.1, 47.6, 1.6], [19.8, 58.2, 1.7],
+      [23, 40.2, 1.8], [68.1, 51.4, 1.9], [66.5, 40.2, 1.2],
+      [65.4, 28.2, 1.8], [76.2, 45.2, 1], [86, 39.7, 1.9],
+      [77.5, 56.1, 1.2], [88, 61.8, 1.6], [69.3, 62.9, 1.4],
+      [70.2, 74, 1.7], [58.6, 57.4, 1.3], [50.3, 64.8, 1.9],
+      [58.8, 46.7, 1.4], [48.2, 41.8, 1.8],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0], [10, 11, 12], [10, 13, 14],
+      [10, 15, 16], [10, 17, 18], [10, 19, 20], [10, 21, 22],
+    ],
+  },
+  // 46
+  {
+    name: "The Free Horse",
+    keyPhrases: ["horses run free to fertilize the fields."],
+    stars: [
+      [93.2, 40.1, 2.1], [86, 23.6, 1.5], [82.2, 12.3, 2.2],
+      [77.4, 21.4, 1.4], [75.7, 37, 1.4], [85.3, 45.9, 1.7],
+      [59.9, 36.5, 1.6], [69, 55.5, 1.6], [26.7, 40.8, 2.2],
+      [42.9, 42.1, 1.8], [28.7, 57.9, 1.4], [54.2, 60, 1.3],
+      [38.6, 61.4, 1.4], [16.5, 44.1, 1.5], [7.8, 52.8, 1.4],
+      [6.8, 65.6, 1.8], [81.4, 63.8, 1.3], [91.7, 68.8, 1.8],
+      [67.6, 67.9, 1.2], [73, 83.6, 1.9], [21.9, 69, 1.3],
+      [9.4, 76.1, 1.7], [38.5, 72.8, 1.2], [34.2, 87.7, 1.9],
+      [74.7, 20.2, 0.9], [64.6, 28.9, 1.2],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 0], [3, 6], [4, 7], [6, 9, 8], [7, 11, 12, 10, 8],
+      [8, 13, 14, 15], [7, 16, 17], [7, 18, 19], [10, 20, 21], [10, 22, 23],
+      [24, 25],
+    ],
+  },
+  // 47
+  {
+    name: "The Armillary Sphere",
+    keyPhrases: ["you can know the whole world."],
+    stars: [
+      [49.2, 11.4, 1.7], [64.9, 14.1, 2], [76.2, 23.1, 1.8],
+      [79.9, 37.7, 1.8], [77, 53, 1.6], [67, 64.8, 1.8],
+      [51.5, 70.1, 1.8], [36.6, 67, 1.7], [25.7, 55.8, 1.6],
+      [20.1, 41.1, 1.8], [23.3, 26.1, 1.6], [35, 15.4, 1.8],
+      [74.8, 44.7, 1.3], [59, 49.3, 1.2], [40.8, 50.6, 1.2],
+      [25.4, 46.8, 0.9], [25.5, 36.3, 1.2], [39, 32.6, 1.3],
+      [59, 31.1, 0.9], [73.2, 33.3, 1.2], [21.2, 27.9, 1.2],
+      [49.5, 43, 1], [77.7, 51, 1.3], [39.2, 8, 1.6],
+      [48.8, 40.8, 2.1], [62.7, 73.1, 1.5], [40.1, 92, 1.5],
+      [52.1, 79.2, 1.4], [68.6, 90.4, 1.6],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0],
+      [3, 12, 13, 14, 15, 9, 16, 17, 18, 19, 3], [20, 21, 22], [23, 24, 25],
+      [26, 27, 28],
+    ],
+  },
+  // 48
+  {
+    name: "The Setting Sun",
+    keyPhrases: ["Less and less remains until you arrive at non-action."],
+    stars: [
+      [26.6, 58.9, 2.2], [29, 46.6, 2.2], [35.6, 38.6, 1.9],
+      [47.5, 34.8, 2.1], [59.8, 37.6, 1.8], [68.3, 44.8, 2],
+      [73.2, 55.3, 1.9], [3, 61.3, 1.4], [97, 57.8, 1.2],
+      [21.3, 49, 1], [12.5, 46.3, 1.8], [29.8, 35.3, 1.2],
+      [25.2, 27.8, 1.7], [47.3, 28.5, 1], [46.1, 17.8, 1.4],
+      [64.2, 33.8, 1], [68.9, 25.7, 1.7], [75.7, 47.5, 1.3],
+      [83.8, 44.8, 1.6], [30.9, 67.7, 1.1], [70.1, 71, 1.2],
+      [37.4, 75.1, 1.2], [61.9, 77.2, 1.1], [45.2, 82.2, 0.9],
+      [53.4, 81.5, 0.8],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6], [7, 0, 6, 8], [9, 10], [11, 12], [13, 14],
+      [15, 16], [17, 18], [19, 20], [21, 22], [23, 24],
+    ],
+  },
+  // 49
+  {
+    name: "The Nest",
+    keyPhrases: ["Yet she treats them all as her children."],
+    stars: [
+      [13.7, 67.8, 1.8], [26.7, 82.7, 1.6], [52.5, 90.1, 1.9],
+      [78.3, 80.1, 1.8], [86.3, 63.7, 1.8], [27.7, 77.1, 0.9],
+      [46.8, 84.7, 0.8], [57.4, 83.9, 1.1], [75.6, 74, 1.1],
+      [34.8, 60.6, 2.2], [31, 51.6, 1.3], [36.9, 52.2, 1.6],
+      [50.3, 61.3, 2], [46.2, 52.6, 1.3], [53, 52.2, 1.4],
+      [66.8, 59.5, 2.1], [63.2, 50.7, 1.5], [69.2, 49.6, 1.4],
+      [51.5, 30.2, 1.9], [35.6, 28.8, 1.5], [67.1, 25.5, 2.1],
+      [46, 16.2, 1.6], [41.2, 9.9, 1.8], [62.8, 17.4, 1.5],
+      [70.9, 10.1, 2],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4], [0, 4], [5, 6], [7, 8], [10, 9, 11], [13, 12, 14],
+      [16, 15, 17], [19, 18, 20], [18, 21, 22], [18, 23, 24],
+    ],
+  },
+  // 50
+  {
+    name: "The Elephant",
+    keyPhrases: ["walk safely among the wild animals."],
+    stars: [
+      [25.7, 33.5, 1.6], [38.9, 23.1, 1.7], [61.7, 20.5, 1.7],
+      [79.3, 28.3, 2], [85, 41.5, 1.8], [79.6, 56.4, 1.8],
+      [67.8, 57.3, 1.9], [57.8, 52.1, 1.9], [38.1, 54, 1.6],
+      [28.3, 59.2, 1.8], [20.8, 57, 1.6], [14.5, 40.8, 1.5],
+      [9.9, 58.5, 1.4], [12.6, 73.1, 2], [18.1, 69.8, 1.3],
+      [32, 33, 1.3], [42.3, 31, 1.6], [40.6, 47, 1.2],
+      [33.5, 45.8, 1], [27.5, 39.8, 2.3], [29.8, 79.5, 1.9],
+      [39.6, 79.3, 1.9], [69.9, 77.6, 2], [80.8, 78.1, 1.9],
+      [90.1, 55.4, 1.3],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0], [0, 11, 12, 13, 14], [14, 10],
+      [15, 16, 17, 18, 15], [9, 20], [8, 21], [6, 22], [5, 23], [4, 24],
+    ],
+  },
+  // 51
+  {
+    name: "The Hatching Chick",
+    keyPhrases: ["The Tao gives birth to all of creation."],
+    stars: [
+      [21.7, 48.9, 1.6], [22.9, 63.1, 1.8], [31.7, 76.8, 1.7],
+      [52.7, 83.6, 2.1], [75.5, 76, 2], [81.5, 62.9, 1.8],
+      [78, 49, 1.7], [30.3, 42.2, 1.3], [38.1, 50.2, 1.5],
+      [45.5, 42.3, 1.6], [53.6, 51, 1.3], [60.7, 42.2, 1.4],
+      [70.7, 50.7, 1.3], [47.8, 16.4, 1.5], [56.1, 20.4, 1.8],
+      [60.6, 28.7, 1.6], [57.5, 36.1, 1.4], [49.3, 40.8, 1.7],
+      [41.1, 36.9, 1.7], [38, 27.7, 1.6], [40.6, 19.5, 1.4],
+      [44.8, 25.5, 2.6], [35.3, 26.8, 1.4], [29.3, 27.6, 1.7],
+      [34.8, 29.6, 1.5], [18.5, 23.3, 0.9], [78.6, 18.9, 1.3],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6], [0, 7, 8, 9, 10, 11, 12, 6],
+      [13, 14, 15, 16, 17, 18, 19, 20, 13], [22, 23, 24, 22],
+    ],
+  },
+  // 52
+  {
+    name: "The Magnifying Glass",
+    keyPhrases: ["To understand the small is called clarity."],
+    stars: [
+      [54.7, 57, 1.8], [43.7, 63.3, 1.7], [28.9, 64.3, 1.8],
+      [15.1, 59.2, 1.8], [7.8, 46.5, 1.9], [8.9, 31.8, 1.6],
+      [15, 19, 1.8], [27.7, 9.9, 1.7], [43.9, 8.9, 2],
+      [54.3, 16.9, 1.8], [61.8, 28.8, 1.8], [61, 43.9, 1.9],
+      [68.2, 68.3, 1.7], [83.3, 81, 1.7], [92.2, 91.1, 2],
+      [34.8, 36.6, 3], [28.4, 30.9, 1.2], [41.2, 32.7, 1],
+      [33.2, 45.2, 1],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0], [0, 12, 13, 14],
+    ],
+  },
+  // 53
+  {
+    name: "The Plough",
+    keyPhrases: ["because there is no one out working the fields."],
+    stars: [
+      [16.3, 11.5, 2], [29.8, 53.6, 1.4], [24.2, 30.7, 1.5],
+      [39.6, 66.7, 1.8], [59.3, 68.3, 2.2], [25.8, 33.7, 1.1],
+      [46.8, 30.2, 1.4], [70.1, 32, 1.5], [87.3, 36.8, 1.9],
+      [4.6, 76.8, 1], [36.1, 80.1, 1.3], [66.7, 78.5, 1.3],
+      [95.4, 72.2, 1.4], [11.7, 88.5, 1], [50.8, 85.7, 0.9],
+      [90.8, 82.5, 0.8],
+    ],
+    strokes: [
+      [0, 2, 1], [1, 3, 4, 1], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15],
+    ],
+  },
+  // 54
+  {
+    name: "The Well-Built House",
+    keyPhrases: ["That which is well built"],
+    stars: [
+      [3.8, 38.6, 1.6], [12.1, 43, 1.7], [29.7, 24.3, 1.9],
+      [50.6, 19.2, 2.2], [69.3, 21.8, 1.6], [87.5, 38.8, 1.8],
+      [96.2, 35.2, 1.7], [51, 12.4, 2.5], [18, 43.8, 1.6],
+      [20.4, 87.6, 1.8], [85.5, 83, 2], [81.2, 39.8, 1.6],
+      [45.5, 85.5, 1.4], [43.5, 61.7, 1.7], [59.5, 60.5, 1.4],
+      [61.8, 83.9, 1], [24.5, 54.2, 1.1], [34.8, 53.4, 1.4],
+      [35.7, 64.5, 1.2], [26.5, 63.8, 1.4], [65.5, 50.1, 1.1],
+      [74.6, 49.3, 1.3], [75.6, 60.6, 1.3], [67.7, 61.7, 1.2],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6], [3, 7], [8, 9, 10, 11], [1, 8], [5, 11],
+      [12, 13, 14, 15], [16, 17, 18, 19, 16], [20, 21, 22, 23, 20],
+    ],
+  },
+  // 55
+  {
+    name: "The Cradle",
+    keyPhrases: ["is like a newborn child."],
+    stars: [
+      [10.1, 81.5, 1.8], [30.4, 89, 2], [49.4, 91, 1.5],
+      [69.4, 87.8, 2], [89.9, 78.1, 1.8], [16.1, 45.3, 1.5],
+      [76.9, 39.4, 1.7], [79.8, 73.5, 1.8], [19.5, 76.7, 1.6],
+      [17.5, 29.1, 1.6], [25.8, 17.9, 2], [36.2, 19.8, 1.5],
+      [39.5, 42.6, 1.6], [47.7, 29.6, 1.9], [52, 32.6, 1.7],
+      [52.6, 39.3, 1.8], [47.8, 42, 1.9], [43.8, 38.6, 1.8],
+      [42.1, 32.6, 1.8], [70.1, 9, 1.4], [82, 16.9, 1.4],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4], [5, 6, 7, 8, 5], [5, 9, 10, 11, 12],
+      [13, 14, 15, 16, 17, 18, 13],
+    ],
+  },
+  // 56
+  {
+    name: "The Incense Stick",
+    keyPhrases: ["meditate in silence,"],
+    stars: [
+      [32.3, 85.1, 1.7], [35.9, 93, 1.7], [63.8, 90.6, 1.7],
+      [67.7, 82.7, 2], [50, 84.5, 1.2], [51.8, 50, 1.3],
+      [51.3, 43.2, 2.7], [51.5, 39.2, 1.4], [46.9, 31.3, 1.3],
+      [51.9, 21.8, 1.5], [47.7, 14.1, 1.3], [53.6, 7, 1],
+    ],
+    strokes: [
+      [0, 1, 2, 3], [0, 3], [4, 5, 6], [7, 8, 9, 10, 11],
+    ],
+    nebulae: [
+      [
+        [44.8, 41.4], [41.6, 18.6], [48.6, 3], [57.3, 10], [56.8, 32.3],
+      ],
+    ],
+    nebulaShare: 0.2,
+  },
+  // 57
+  {
+    name: "The Sky Lanterns",
+    keyPhrases: ["I let go of all my desires,"],
+    stars: [
+      [21, 51.5, 1.5], [36.8, 49.6, 1.7], [38.4, 71.9, 1.3],
+      [24.8, 73.3, 1.5], [30.5, 66.5, 3], [51.9, 28.3, 1.4],
+      [64.8, 26.7, 1.6], [63.7, 43.5, 1.5], [54.8, 45, 1.6],
+      [59.5, 39.6, 2.6], [69.5, 4.4, 1.6], [80.2, 5.1, 1.6],
+      [78.9, 18.2, 1.5], [72.5, 17.7, 1.3], [75.2, 14, 2.1],
+      [3, 95.6, 1.3], [31, 90.2, 1.6], [59.4, 91.8, 1],
+      [97, 86.7, 1.3],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 0], [5, 6, 7, 8, 5], [10, 11, 12, 13, 10],
+      [15, 16, 17, 18],
+    ],
+  },
+  // 58
+  {
+    name: "The Rainbow after the Storm",
+    keyPhrases: ["Good fortune has its roots in disaster,"],
+    stars: [
+      [7, 37.9, 1.5], [5, 27.9, 2], [13.8, 20.5, 1.7],
+      [26.3, 19.5, 1.9], [32.8, 12.8, 2], [47.6, 11.8, 1.9],
+      [52.7, 19.9, 1.7], [62.2, 20.8, 1.9], [65.7, 29.9, 1.5],
+      [53, 37.8, 1.7], [27.2, 35.4, 1.9], [18.9, 46.4, 1.1],
+      [17.1, 54.2, 1.3], [33.3, 45.8, 1], [31.9, 53.3, 1.3],
+      [47.5, 44.4, 1.1], [46.2, 53.4, 1.3], [34.4, 85, 1.8],
+      [40.6, 74.4, 2], [50.3, 66.1, 1.9], [62.5, 63.2, 1.7],
+      [74.3, 64.3, 1.9], [85.7, 72, 1.6], [95, 82.2, 1.8],
+      [44.5, 88.2, 1.2], [51.7, 78.5, 1.5], [62.6, 73.8, 1.3],
+      [75.4, 76.2, 1.3], [85, 85.6, 1.4],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0], [11, 12], [13, 14], [15, 16],
+      [17, 18, 19, 20, 21, 22, 23], [24, 25, 26, 27, 28],
+    ],
+  },
+  // 59
+  {
+    name: "The Root and Trunk",
+    keyPhrases: ["This is spoken of as the deep root and the firm trunk,"],
+    stars: [
+      [21, 29.9, 1.7], [25.9, 14.2, 1.9], [47.7, 4.9, 2.4],
+      [74.8, 11.9, 1.7], [81.6, 25.5, 1.6], [62.4, 32.3, 1.7],
+      [39.7, 35.1, 1.8], [45.3, 35, 1.1], [43.4, 61.5, 1.7],
+      [55.8, 33, 1.4], [58, 59.8, 1.9], [4.5, 63.6, 1.1],
+      [95.5, 56.4, 1.3], [30.7, 73.6, 1.2], [16.5, 91.3, 2],
+      [49.7, 60.8, 1.3], [48, 77.8, 1.5], [52.2, 95.1, 1.9],
+      [70.1, 70.6, 1.5], [83.9, 87.3, 1.6],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 0], [7, 8], [9, 10], [11, 12], [8, 13, 14],
+      [15, 16, 17], [10, 18, 19],
+    ],
+  },
+  // 60
+  {
+    name: "Pisces",
+    keyPhrases: ["Governing a large country"],
+    stars: [
+      [19.4, 20.5, 1.7], [29.1, 31.1, 2], [35.5, 44.6, 1.7],
+      [37.6, 58.3, 1.9], [33.3, 70.8, 2], [23.5, 82.9, 1.9],
+      [80.6, 79, 1.7], [71.5, 67.2, 1.6], [66.6, 55.9, 1.9],
+      [65.2, 41.6, 1.8], [67.9, 27.3, 1.8], [76.9, 17.1, 1.7],
+      [26.5, 52.4, 1.4], [41.4, 51.4, 1.3], [51.3, 50.7, 1.6],
+      [60.6, 49.8, 1.2], [74.4, 47.9, 1.5],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5], [6, 7, 8, 9, 10, 11], [12, 13, 14, 15, 16],
+    ],
+  },
+  // 61
+  {
+    name: "The Great and Little Dippers",
+    keyPhrases: ["If a large country takes the low position,"],
+    stars: [
+      [5.7, 70.8, 2.4], [19.2, 64.9, 2.2], [30.9, 65.6, 2.2],
+      [41.7, 72.4, 1.8], [44.4, 85.5, 2], [62.1, 86.6, 2.4],
+      [61.1, 70.7, 2.3], [58.8, 13.4, 2.6], [68, 19.4, 1.7],
+      [75.3, 26.4, 1.7], [80.5, 34.1, 1.9], [94.3, 31.9, 1.4],
+      [93.5, 42.9, 1.6], [81.2, 45.8, 1.6],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 3], [7, 8, 9, 10, 11, 12, 13, 10],
+    ],
+  },
+  // 62
+  {
+    name: "The Purple Enclosure",
+    keyPhrases: ["The Tao is the tabernacle of creation,"],
+    stars: [
+      [39, 86.5, 1.6], [25.7, 77.6, 1.7], [16, 64.8, 1.5],
+      [12.1, 49.5, 1.8], [15.7, 35.2, 1.6], [23.9, 23.2, 1.6],
+      [37.4, 14.6, 1.6], [63.4, 13.5, 1.5], [76.3, 21.9, 1.5],
+      [85.1, 33.3, 1.7], [87.9, 46.9, 1.8], [85.6, 63.1, 1.6],
+      [77.6, 76.9, 1.7], [65.1, 85.7, 1.5], [49.5, 50.6, 2.9],
+      [41.1, 41.3, 1.5], [58.5, 57.6, 1.6], [43.7, 59.2, 1.2],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6], [7, 8, 9, 10, 11, 12, 13],
+    ],
+  },
+  // 63
+  {
+    name: "The Cairn",
+    keyPhrases: ["Great projects are best started while they are small."],
+    stars: [
+      [70.6, 70.8, 1.8], [63.2, 75.7, 1.8], [45.1, 79.7, 1.8],
+      [29.8, 76.3, 1.8], [29.4, 70.1, 2], [43.4, 64.8, 1.8],
+      [63.1, 63, 1.8], [63.4, 52.4, 1.7], [56.9, 58.8, 2],
+      [38.8, 60.6, 1.7], [32, 55.4, 2], [39, 48.1, 1.6],
+      [55.8, 45.8, 1.8], [59.4, 37.4, 1.7], [51.2, 42.3, 1.7],
+      [38.1, 43.7, 1.6], [38.6, 35.7, 1.7], [51.3, 32.4, 1.9],
+      [54.3, 26.6, 2.1], [48.4, 32, 1.9], [41.6, 28.8, 1.8],
+      [49, 24.3, 1.8], [48.3, 20.3, 3],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 0], [7, 8, 9, 10, 11, 12, 7],
+      [13, 14, 15, 16, 17, 13], [18, 19, 20, 21, 18],
+    ],
+  },
+  // 64
+  {
+    name: "The Tree and the Sprout",
+    keyPhrases: ["The tallest tree", "begins as a tiny sprout."],
+    stars: [
+      [5.3, 90.6, 1.5], [22.4, 92.3, 1.1], [37.8, 89.1, 2.4],
+      [58.2, 90.6, 1], [76, 89.5, 2.1], [94.7, 87.3, 1.2],
+      [38.3, 58, 2.2], [36.5, 75, 1.7], [29.5, 44.3, 1.5],
+      [19.7, 35.6, 1.6], [41, 37.9, 1.7], [42.9, 21.5, 1.4],
+      [51.5, 44.7, 1.5], [62.7, 33.6, 1.5], [11.8, 49, 2.3],
+      [7.8, 35.5, 1.4], [16.7, 20.1, 1.3], [27.4, 11.1, 2.3],
+      [40.3, 7.7, 1.6], [55.9, 9.9, 1.3], [68.3, 19.1, 2.3],
+      [74, 32, 1.3], [70.7, 46.4, 1.5], [60.6, 53, 2.2],
+      [46.4, 55, 1.5], [32.5, 53.9, 1.4], [20.7, 55, 2.4],
+      [76.4, 81.3, 2.4], [69.5, 77.5, 3], [81.5, 76.8, 3],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5], [2, 7, 6], [6, 8, 9], [6, 10, 11], [6, 12, 13],
+      [14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 14], [4, 27, 28],
+      [27, 29],
+    ],
+    nebulae: [
+      [
+        [12.4, 48.3], [8.4, 35.7], [16.4, 20], [27.6, 10.5], [40.2, 7.1],
+        [55.5, 10.3], [68.2, 18.8], [74.4, 32.4], [70.6, 45.9], [60.9, 53],
+        [45.9, 54.8], [32.4, 54.3], [20.8, 53.6],
+      ],
+    ],
+    nebulaShare: 0.25,
+  },
+  // 65
+  {
+    name: "The Loom",
+    keyPhrases: ["Knowing the two alternatives is a pattern."],
+    stars: [
+      [13, 14.3, 2.1], [82.3, 9.8, 1.9], [87, 86, 2],
+      [17.7, 90.2, 2], [28.6, 12.6, 1.2], [33, 89.2, 1.1],
+      [40.9, 12.4, 1.1], [45.1, 87.2, 1.3], [55.1, 10.2, 1.1],
+      [59.9, 86.8, 1.4], [67.5, 10.3, 1], [72.1, 85.5, 1.3],
+      [14.8, 41.4, 1.3], [28.8, 36.2, 1.5], [42.2, 43.9, 1.3],
+      [56.7, 34.7, 1.4], [69.1, 42.5, 1.4], [84.2, 37.6, 1.6],
+      [16.5, 62.6, 1.6], [32.1, 64.9, 1.3], [43.3, 55.9, 1.6],
+      [59, 61.9, 1.3], [70.6, 54.3, 1.3], [85.9, 58.5, 1.6],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 0], [4, 5], [6, 7], [8, 9], [10, 11],
+      [12, 13, 14, 15, 16, 17], [18, 19, 20, 21, 22, 23],
+    ],
+  },
+  // 66
+  {
+    name: "The Water Carrier",
+    keyPhrases: ["you must speak to them like you are their servant."],
+    stars: [
+      [50.5, 13.4, 1.8], [55.3, 15.8, 1.8], [55.9, 21.1, 1.8],
+      [50.9, 24.1, 1.7], [45.6, 22.5, 1.7], [46.1, 16.4, 1.7],
+      [50.2, 26.9, 1.7], [51.9, 54, 1.8], [44.1, 86.6, 1.9],
+      [58.9, 85.6, 1.9], [7.2, 34.9, 1.9], [28.8, 30.1, 1.1],
+      [71.1, 28.3, 1], [93.6, 31.7, 1.7], [5, 59.6, 1],
+      [3, 59.2, 1.4], [17.6, 57.9, 1.5], [16.1, 73.7, 1.5],
+      [5.8, 75.6, 1.8], [14.4, 34.7, 0.9], [16.1, 59.3, 1.4],
+      [85.1, 32.2, 1.2], [83.5, 56.6, 1.2], [81.4, 56.7, 1.5],
+      [97, 55.7, 1.8], [95.3, 71.4, 1.6], [83.2, 72.3, 1.6],
+      [95.1, 56.2, 1.1],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 0], [6, 7], [7, 8], [7, 9], [10, 11, 6, 12, 13],
+      [10, 14], [15, 16, 17, 18, 15], [19, 20], [21, 22],
+      [23, 24, 25, 26, 23], [13, 27],
+    ],
+  },
+  // 67
+  {
+    name: "The Trillium",
+    keyPhrases: ["compassion, moderation, and humility."],
+    stars: [
+      [49.1, 43.2, 2.7], [38.6, 23.9, 1.7], [46.8, 7.6, 2],
+      [59.9, 25, 1.7], [72.4, 45.3, 1.4], [81.2, 61, 2],
+      [61.3, 62.4, 1.6], [38.4, 62.6, 1.5], [18.8, 61.1, 1.9],
+      [29.1, 44.6, 1.8], [53.9, 92.4, 1.4],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 0], [0, 4, 5, 6, 0], [0, 7, 8, 9, 0], [0, 10],
+    ],
+  },
+  // 68
+  {
+    name: "The Quiet Camp",
+    keyPhrases: ["do not destroy indiscriminately."],
+    stars: [
+      [70.2, 30.2, 1.9], [63.5, 24.2, 1.8], [62.9, 16, 1.9],
+      [68.4, 10.8, 1.7], [63.5, 13.4, 1.2], [59.8, 21.2, 1.2],
+      [65.4, 28.2, 1.1], [11.4, 84.1, 1.6], [26.7, 57.2, 2.1],
+      [42.4, 82.9, 1.6], [23.1, 83.4, 1.1], [47.3, 83.3, 1.7],
+      [58.3, 64.2, 1.9], [69.9, 83, 1.4], [55.6, 83.7, 1.3],
+      [3, 83.4, 1.4], [97, 89.5, 1.1], [7.3, 17.8, 1.2],
+      [32.3, 10.5, 1.1], [48.1, 30.3, 1.1],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6], [7, 8, 9], [8, 10], [11, 12, 13], [12, 14],
+      [15, 16],
+    ],
+  },
+  // 69
+  {
+    name: "The Crab",
+    keyPhrases: ["It is better to retreat a foot"],
+    stars: [
+      [73, 60.1, 2], [68.7, 67.2, 1.7], [59.8, 71.3, 1.7],
+      [47.4, 70.5, 1.7], [37.8, 65.7, 1.8], [33.3, 59.4, 1.7],
+      [37.1, 50.7, 2], [46, 46.2, 1.9], [58.2, 45.2, 2],
+      [68.4, 51.3, 1.8], [33.7, 63.2, 0.9], [20.5, 73.1, 1.3],
+      [33.5, 68.7, 1.2], [20, 79.3, 1.3], [25.8, 49.5, 1.2],
+      [20.3, 32.4, 1.2], [23, 20.9, 1.7], [13.4, 23.7, 1.7],
+      [73.5, 63.1, 0.9], [85.3, 72.5, 1.4], [72.5, 68.8, 1],
+      [86.3, 78.8, 1.5], [78.5, 49.1, 1.2], [81.8, 32.2, 1.3],
+      [76.2, 20.7, 1.8], [86.6, 22.5, 1.6], [45.8, 42.5, 1.9],
+      [57.6, 42.5, 2.2],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0], [10, 11], [12, 13], [14, 15],
+      [15, 16, 17, 15], [18, 19], [20, 21], [22, 23], [23, 24, 25, 23],
+    ],
+  },
+  // 70
+  {
+    name: "The Scroll",
+    keyPhrases: ["My teachings come from the ancients,"],
+    stars: [
+      [12.2, 20.9, 1.4], [20.8, 20, 1.6], [24.2, 79.5, 1.6],
+      [17.9, 79.9, 1.7], [18.3, 14.5, 1.8], [20.9, 86.1, 2.1],
+      [77.6, 19.7, 1.5], [87.8, 19, 1.6], [84.4, 78.8, 1.4],
+      [82.9, 78.9, 1.8], [82.3, 13.9, 2], [85.1, 85.8, 1.9],
+      [22, 24.3, 1.3], [81, 20.7, 1.2], [24.4, 76.2, 1],
+      [83.1, 72.6, 1.1], [35.8, 31, 0.9], [39, 64.4, 0.8],
+      [48.8, 31.6, 1], [46.8, 64.8, 0.9], [60.2, 31.3, 0.8],
+      [63.3, 66, 1.1], [71.6, 30.9, 1], [75, 65.1, 1.2],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 0], [6, 7, 8, 9, 6], [12, 13], [14, 15], [16, 17],
+      [18, 19], [20, 21], [22, 23],
+    ],
+  },
+  // 71
+  {
+    name: "The Serpent Bearer",
+    keyPhrases: ["Thinking you know is a disease."],
+    stars: [
+      [46.6, 6, 1.8], [51.1, 50.6, 1.3], [48.2, 94, 1.9],
+      [51.1, 82.5, 1.5], [62, 77.3, 1.6], [63.5, 70.7, 1.5],
+      [53.6, 64.1, 1.5], [42.1, 58.1, 1.8], [36.1, 52, 1.7],
+      [41, 45.5, 1.6], [51.3, 40.3, 1.6], [61, 35.1, 1.5],
+      [58.4, 28.9, 1.6], [46.4, 23.4, 1.6], [55.2, 16.3, 1.8],
+      [63.9, 20.3, 2], [55.3, 25.2, 1.6],
+    ],
+    strokes: [
+      [0, 1, 2], [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], [13, 14, 15, 16, 13],
+    ],
+  },
+  // 72
+  {
+    name: "The Mirror",
+    keyPhrases: ["Therefore, the Master knows herself but is not arrogant."],
+    stars: [
+      [49.4, 6.6, 1.9], [62.6, 9.4, 2], [72.4, 17.8, 1.7],
+      [76.5, 30.6, 2], [71.6, 43.7, 1.7], [62, 53.9, 1.7],
+      [49.5, 58, 1.7], [36.5, 56.3, 1.7], [27.8, 46.6, 1.7],
+      [23.5, 32.9, 1.7], [27.1, 20, 1.9], [38, 10.2, 1.9],
+      [51.8, 87.2, 1.7], [53.3, 93.4, 2.2], [33.6, 25.8, 1.3],
+      [41.9, 17, 1.2], [37.7, 34.1, 1.1], [47.8, 21.8, 1],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0], [6, 12, 13], [14, 15],
+      [16, 17],
+    ],
+  },
+  // 73
+  {
+    name: "The Celestial Sphere",
+    keyPhrases: ["Who can understand the workings of Heaven?"],
+    stars: [
+      [49.6, 9.8, 1.9], [65.8, 12.9, 2], [78.1, 20, 1.9],
+      [85.5, 32.3, 1.8], [89.9, 47.5, 1.6], [88.2, 62.6, 1.6],
+      [81.8, 77.2, 1.6], [69.6, 86.2, 1.9], [52.7, 90.2, 1.7],
+      [39.1, 86.4, 1.7], [25.1, 77.6, 1.6], [14.7, 64.5, 1.6],
+      [10.1, 49, 1.9], [11.8, 34.4, 1.6], [22, 20.5, 1.9],
+      [35.6, 11.9, 1.9], [31.3, 54.3, 1.3], [50.1, 57.6, 1.3],
+      [72, 55.4, 1.1], [17.8, 27, 1.1], [49, 34.6, 1.2],
+      [81.9, 26.5, 1.1], [19.6, 71.2, 1.1], [53, 80.2, 1.1],
+      [84.9, 71.1, 1.1], [63.2, 20.9, 1.4], [68.9, 49, 1.3],
+      [66.5, 78.1, 1.4], [62, 39.8, 2.5], [38.2, 63.7, 2.3],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0],
+      [12, 16, 17, 18, 4], [19, 20, 21], [22, 23, 24], [0, 25, 26, 27, 8],
+    ],
+  },
+  // 74
+  {
+    name: "The Axe",
+    keyPhrases: ["trying to take the place of a great lumberjack."],
+    stars: [
+      [18.2, 93.8, 2.1], [26.4, 71.3, 1.8], [36.2, 45.8, 1.9],
+      [43.5, 27.5, 1.9], [47.4, 15, 1.5], [49.7, 13, 1.6],
+      [67.9, 6.2, 2], [77.3, 12.8, 2.3], [81.8, 25.6, 2.5],
+      [76.6, 36.7, 2.3], [56, 31.4, 1.5], [35.1, 10.8, 1.8],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4], [4, 5, 6, 7, 8, 9, 10, 3], [4, 11, 3],
+    ],
+  },
+  // 75
+  {
+    name: "Falling Blossoms",
+    keyPhrases: ["Only those who do not cling to their life can save it."],
+    stars: [
+      [3, 11.3, 1.5], [24.9, 16.6, 1.3], [47.3, 15.2, 1.2],
+      [70.5, 22, 1.2], [97, 15.2, 1.3], [52.9, 26.5, 1.3],
+      [25.3, 20.5, 1.8], [29.9, 23.9, 1.7], [28.5, 28.1, 2],
+      [22.2, 29.2, 1.6], [19.5, 23.2, 1.9], [58.2, 29, 1.7],
+      [55.3, 34.9, 1.6], [50.8, 35.4, 1.9], [49, 29, 1.7],
+      [61.7, 46.3, 1.7], [65.1, 48.5, 1.3], [61.7, 52.3, 1.2],
+      [58.9, 48.4, 1.2], [40.7, 59.5, 1.7], [43.7, 62.8, 1.4],
+      [40.5, 64.9, 1.3], [38.5, 62.7, 1.2], [74, 71.6, 1.7],
+      [77.7, 74.5, 1.3], [74.5, 78.2, 1.1], [70.5, 74.9, 1.1],
+      [30.7, 83.5, 1.7], [34.2, 86.2, 1.2], [31.1, 88.7, 1.2],
+      [27.7, 86.1, 1.3],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4], [2, 5], [6, 7, 8, 9, 10, 6], [5, 11, 12, 13, 14, 5],
+      [15, 16, 17, 18, 15], [19, 20, 21, 22, 19], [23, 24, 25, 26, 23],
+      [27, 28, 29, 30, 27],
+    ],
+  },
+  // 76
+  {
+    name: "The Reed and the Broken Branch",
+    keyPhrases: ["The soft and yielding will overcome."],
+    stars: [
+      [10.2, 88.4, 1.3], [88.5, 81.5, 1], [28.6, 87.3, 1.7],
+      [30.5, 68.2, 2], [34, 47.8, 1.9], [44.4, 29, 1.7],
+      [59.7, 16.6, 1.9], [73.9, 11.6, 2.4], [15.2, 55.6, 1.4],
+      [48.4, 45.9, 1.6], [79.2, 16.4, 2], [67.7, 85.7, 1.7],
+      [68.8, 65.3, 1.3], [69.5, 56.2, 1.8], [64.1, 55.1, 1.3],
+      [73.8, 84, 1.4], [89.8, 76, 1.7], [82.7, 80, 0.9],
+      [83.8, 72.9, 1.1],
+    ],
+    strokes: [
+      [0, 1], [2, 3, 4, 5, 6, 7], [3, 8], [4, 9], [7, 10], [11, 12, 13, 14],
+      [15, 16], [17, 18],
+    ],
+  },
+  // 77
+  {
+    name: "The Archer",
+    keyPhrases: [
+      "The Tao of Heaven works in the world",
+      "like the drawing of a bow.",
+    ],
+    stars: [
+      [24.4, 14.9, 2], [30.4, 18.1, 1.8], [28, 24.7, 1.8],
+      [21, 25.3, 1.7], [19.2, 17.6, 1.7], [29.4, 34.9, 2.4],
+      [30.8, 59.9, 2.1], [40.3, 75.8, 1.8], [45.5, 91.2, 1.8],
+      [24, 76.8, 1.7], [17.2, 91.9, 2.1], [65.7, 34.8, 2.2],
+      [37.4, 29.4, 2.1], [48.3, 36.6, 1.5], [14.3, 30.9, 1.8],
+      [51.1, 8.1, 2.6], [52.4, 64.4, 2.8], [60, 12.3, 1.2],
+      [64.4, 22.6, 1.5], [66.3, 45.3, 1.6], [60.8, 56.2, 1.5],
+      [85.7, 26.8, 2.9], [81, 26.4, 1.2], [80.6, 34.9, 1.2],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 0], [5, 6], [6, 7, 8], [6, 9, 10], [5, 13, 11],
+      [5, 14, 12], [15, 17, 18, 11, 19, 20, 16], [15, 12, 16], [12, 21],
+      [22, 21, 23],
+    ],
+  },
+  // 78
+  {
+    name: "The Wave on the Cliff",
+    keyPhrases: ["for overcoming the hard and rigid,"],
+    stars: [
+      [95.7, 13, 1.4], [77.7, 15.5, 1.7], [70.2, 34.4, 1.9],
+      [76, 51.8, 1.9], [72.4, 70.8, 1.7], [74.9, 89.6, 1.6],
+      [4.5, 75, 1.4], [20.9, 67.9, 1.7], [35.1, 56, 2],
+      [45.1, 39.9, 1.7], [57, 31.1, 2], [65.9, 38.3, 1.8],
+      [63.2, 47.3, 1.6], [56, 43.7, 1.6], [4.3, 86.4, 1.4],
+      [32.2, 83.6, 1.5], [63.3, 85.4, 1.2], [61.7, 21.5, 1.7],
+      [56.3, 16.3, 1], [68.1, 10.4, 0.9],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5], [6, 7, 8, 9, 10, 11, 12, 13], [14, 15, 16],
+    ],
+  },
+  // 79
+  {
+    name: "The Balance",
+    keyPhrases: ["The Tao does not choose sides,"],
+    stars: [
+      [46.8, 10.4, 2.2], [13.5, 24, 2], [82.8, 19, 2],
+      [49.4, 21.3, 1.7], [46, 85, 1.7], [35.5, 89.6, 1.8],
+      [66.5, 87.8, 1.8], [6, 55.1, 1.5], [16.6, 61.4, 1.7],
+      [27.5, 55, 1.7], [74.2, 51.9, 1.6], [84.9, 56.4, 1.6],
+      [94, 50.3, 1.5],
+    ],
+    strokes: [
+      [1, 3, 2], [0, 3, 4], [5, 6], [7, 1, 9], [7, 8, 9], [10, 2, 12],
+      [10, 11, 12],
+    ],
+  },
+  // 80
+  {
+    name: "The Rooster",
+    keyPhrases: ["that they can hear their roosters crowing and dogs barking,"],
+    stars: [
+      [86.5, 24.2, 2.5], [79.7, 18.7, 1.6], [74.6, 20.4, 1.3],
+      [71.9, 29.6, 1.3], [68.5, 40.3, 1.6], [56.1, 50.2, 1.8],
+      [42.7, 48.9, 1.9], [77, 10.5, 1.9], [71.7, 12.7, 1.8],
+      [85, 30.6, 1.5], [82.2, 37, 1.8], [32, 29.3, 1.3],
+      [23.8, 22.9, 1.9], [26.5, 37.2, 1.2], [14.6, 41.7, 1.9],
+      [25.5, 52.3, 1.4], [13.5, 64.2, 1.9], [42.2, 50.9, 1.3],
+      [47.4, 68.5, 1.8], [62, 70.3, 1.9], [74.6, 55.8, 1.6],
+      [57.7, 84.1, 1.4], [51.3, 89.5, 1.5], [66.6, 84.3, 1.4],
+      [70.1, 89.4, 1.7], [76.1, 21.9, 2.2],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6], [1, 7, 8, 2], [0, 9, 10], [6, 11, 12],
+      [6, 13, 14], [6, 15, 16], [17, 18, 19, 20, 10], [19, 21, 22],
+      [19, 23, 24],
+    ],
+  },
+  // 81
+  {
+    name: "The Ox",
+    keyPhrases: ["The Tao of the Wise person acts by not competing."],
+    stars: [
+      [37, 32.1, 1.7], [64.3, 29.4, 1.6], [72.9, 49.6, 1.9],
+      [66.7, 72.8, 1.9], [59.5, 85.8, 1.9], [47.1, 87.2, 1.9],
+      [39.7, 76, 2], [33, 51.6, 1.9], [22.5, 28.7, 1.8],
+      [9.7, 17.6, 2.3], [78.2, 24.2, 1.7], [90.3, 12.8, 2.2],
+      [31.4, 41.1, 1.3], [19.6, 46, 1.4], [71.3, 38.8, 1.1],
+      [83.9, 41.7, 1.5], [44.9, 51.5, 2.1], [59.6, 50, 2.2],
+      [49.8, 78.9, 1.5], [57.2, 78, 1.6],
+    ],
+    strokes: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 0], [0, 8, 9], [1, 10, 11], [12, 13],
+      [14, 15],
+    ],
   },
 ];
 
-export const TAO_CONSTELLATIONS: readonly Constellation[] = figures.map((draw) =>
-  draw(createBuilder()),
+export const TAO_CONSTELLATIONS: readonly Constellation[] = figures.map(
+  (figure, index) => ({
+    chapter: index + 1,
+    name: figure.name,
+    keyPhrases: figure.keyPhrases,
+    stars: figure.stars.map(([x, y, mag]) => ({ x, y, mag })),
+    strokes: figure.strokes,
+    nebulae: figure.nebulae ?? [],
+    nebulaShare: figure.nebulae?.length ? (figure.nebulaShare ?? 0.25) : 0,
+  }),
 );
 
 export function getTaoConstellation(chapter: number) {

@@ -8,7 +8,7 @@ export const parallels: GameDefinition = {
   title: "Parallels",
   tags: [GameTag.DoubleDeckers, GameTag.SpatialControl, GameTag.StockAndWaste],
   rating: {
-    complexity: 30,
+    complexity: 35,
     difficulty: 45,
     luck: 55,
   },

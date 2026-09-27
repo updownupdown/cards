@@ -9,8 +9,8 @@ export const monteCarlo: GameDefinition = {
   tags: [GameTag.PairMatching],
   rating: {
     complexity: 10,
-    difficulty: 20,
-    luck: 55,
+    difficulty: 70,
+    luck: 60,
   },
   thumbnail: "MonteCarlo.webp",
   thumbnailCredit: {

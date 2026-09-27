@@ -9,9 +9,9 @@ export const freeCell: GameDefinition = {
   aliases: ["Baker's Game"],
   tags: [GameTag.FreeCellFamily, GameTag.SequenceBuilding],
   rating: {
-    complexity: 20,
-    difficulty: 40,
-    luck: 25,
+    complexity: 25,
+    difficulty: 30,
+    luck: 5,
   },
   thumbnail: "FreeCell.webp",
   thumbnailCredit: {

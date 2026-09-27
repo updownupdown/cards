@@ -11,7 +11,7 @@ export const pickpocket: GameDefinition = {
   rating: {
     complexity: 30,
     difficulty: 45,
-    luck: 40,
+    luck: 50,
   },
   thumbnail: "Pickpocket.webp",
   thumbnailCredit: {

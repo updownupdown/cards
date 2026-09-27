@@ -8,9 +8,9 @@ export const canfield: GameDefinition = {
   title: "Canfield",
   tags: [GameTag.FoundationBuilders, GameTag.StockAndWaste],
   rating: {
-    complexity: 40,
-    difficulty: 65,
-    luck: 55,
+    complexity: 35,
+    difficulty: 45,
+    luck: 40,
   },
   thumbnail: "Canfield.webp",
   thumbnailCredit: {

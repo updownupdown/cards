@@ -10,9 +10,9 @@ export const memory: GameDefinition = {
   // Scored in moves or guesses: fewer is better.
   lowerScoreIsBetter: true,
   rating: {
-    complexity: 15,
-    difficulty: 35,
-    luck: 5,
+    complexity: 5,
+    difficulty: 15,
+    luck: 10,
   },
   thumbnail: "Memory.webp",
   thumbnailCredit: {

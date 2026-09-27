@@ -9,7 +9,7 @@ export const fourSeasons: GameDefinition = {
   aliases: ["Corner Card", "Vanishing Cross"],
   enabledOnLocalOnly: true,
   tags: [GameTag.FoundationBuilders, GameTag.StockAndWaste],
-  rating: { complexity: 25, difficulty: 55, luck: 55 },
+  rating: { complexity: 25, difficulty: 65, luck: 55 },
   thumbnail: "FourSeasons.webp",
   thumbnailCredit: {
     title: "The Four Seasons",

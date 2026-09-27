@@ -9,8 +9,8 @@ export const charlatan: GameDefinition = {
   enabledOnLocalOnly: true,
   tags: [GameTag.ModernMechanics, GameTag.ScoringPuzzles],
   rating: {
-    complexity: 35,
-    difficulty: 35,
+    complexity: 50,
+    difficulty: 40,
     luck: 55,
   },
   thumbnail: "Charlatan.webp",

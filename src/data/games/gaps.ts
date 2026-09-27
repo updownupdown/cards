@@ -8,7 +8,7 @@ export const gaps: GameDefinition = {
   title: "Gaps",
   aliases: ["Montana", "Addiction", "Addiction Solitaire"],
   tags: [GameTag.Puzzles, GameTag.SpatialControl, GameTag.SequenceBuilding],
-  rating: { complexity: 30, difficulty: 60, luck: 40 },
+  rating: { complexity: 30, difficulty: 55, luck: 35 },
   thumbnail: "Gaps.webp",
   thumbnailCredit: {
     title: "Crossing the Monkey Bridge",

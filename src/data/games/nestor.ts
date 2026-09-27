@@ -9,8 +9,8 @@ export const nestor: GameDefinition = {
   tags: [GameTag.PairMatching],
   rating: {
     complexity: 15,
-    difficulty: 60,
-    luck: 65,
+    difficulty: 70,
+    luck: 55,
   },
   thumbnail: "Nestor.webp",
   thumbnailCredit: {

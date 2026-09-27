@@ -11,7 +11,7 @@ export const diplomat: GameDefinition = {
     GameTag.TableauBuilding,
     GameTag.StockAndWaste,
   ],
-  rating: { complexity: 30, difficulty: 25, luck: 35 },
+  rating: { complexity: 25, difficulty: 50, luck: 40 },
   thumbnail: "Diplomat.webp",
   thumbnailCredit: {
     title: "The Ambassadors",

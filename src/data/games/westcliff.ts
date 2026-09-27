@@ -11,7 +11,7 @@ export const westcliff: GameDefinition = {
     GameTag.TableauBuilding,
     GameTag.StockAndWaste,
   ],
-  rating: { complexity: 25, difficulty: 35, luck: 55 },
+  rating: { complexity: 25, difficulty: 55, luck: 50 },
   background: GAME_BACKGROUNDS.cliffFields,
   animation: GameAnimations.Pollen,
   gameColorDark: "#27363b",

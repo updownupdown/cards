@@ -8,9 +8,9 @@ export const carpet: GameDefinition = {
   title: "Carpet",
   tags: [GameTag.FoundationBuilders, GameTag.StockAndWaste],
   rating: {
-    complexity: 15,
-    difficulty: 25,
-    luck: 70,
+    complexity: 10,
+    difficulty: 65,
+    luck: 90,
   },
   thumbnail: "Carpet.webp",
   thumbnailCredit: {

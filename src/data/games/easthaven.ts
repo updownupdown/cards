@@ -10,7 +10,7 @@ export const easthaven: GameDefinition = {
     GameTag.TableauBuilding,
     GameTag.StockAndWaste,
   ],
-  rating: { complexity: 35, difficulty: 60, luck: 55 },
+  rating: { complexity: 30, difficulty: 65, luck: 45 },
   thumbnail: "Easthaven.webp",
   thumbnailCredit: {
     title: "Harbor of Boston, with the City in the Distance",

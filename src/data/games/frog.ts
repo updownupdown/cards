@@ -9,9 +9,9 @@ export const frog: GameDefinition = {
   aliases: ["Toad in the Hole"],
   tags: [GameTag.DoubleDeckers, GameTag.StockAndWaste],
   rating: {
-    complexity: 30,
-    difficulty: 45,
-    luck: 55,
+    complexity: 25,
+    difficulty: 50,
+    luck: 50,
   },
   thumbnail: "Frog.webp",
   thumbnailCredit: {

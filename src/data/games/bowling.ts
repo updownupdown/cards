@@ -7,9 +7,9 @@ export const bowling: GameDefinition = {
   title: "Bowling",
   tags: [GameTag.Sports, GameTag.ScoringPuzzles],
   rating: {
-    complexity: 30,
-    difficulty: 30,
-    luck: 35,
+    complexity: 45,
+    difficulty: 40,
+    luck: 40,
   },
   thumbnail: "Bowling.webp",
   thumbnailCredit: {

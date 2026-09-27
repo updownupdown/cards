@@ -9,8 +9,8 @@ export const pocketPoker: GameDefinition = {
   tags: [GameTag.PokerAndCribbage, GameTag.ScoringPuzzles],
   rating: {
     complexity: 30,
-    difficulty: 30,
-    luck: 50,
+    difficulty: 40,
+    luck: 60,
   },
   thumbnail: "PocketPoker.webp",
   thumbnailCredit: {
