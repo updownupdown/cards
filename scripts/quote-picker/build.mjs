@@ -1,6 +1,6 @@
 // Builds the quote picker into index.html: the quotes kept so far
 // (shortlist.mjs, which points into QuotesText.ts for the app's own quotes)
-// and the current round's candidates (round4.mjs, IDs 761 on).
+// and the current round's candidates (round5.mjs, IDs 861 on).
 //
 //   node scripts/quote-picker/build.mjs
 
@@ -8,7 +8,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import vm from "node:vm";
-import { CANDIDATES, FIRST_ID } from "./round4.mjs";
+import { CANDIDATES, FIRST_ID } from "./round5.mjs";
 import { KEPT_CANDIDATES, KEPT_CURRENT_IDS } from "./shortlist.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -39,7 +39,8 @@ const roundOf = (id) =>
   id <= 208 ? "In app"
   : id <= 500 ? "Round 1"
   : id <= 700 ? "Round 2"
-  : id < FIRST_ID ? "Round 3"
+  : id <= 760 ? "Round 3"
+  : id < FIRST_ID ? "Round 4"
   : "New";
 
 const entry = (id, quote, earlier) => ({

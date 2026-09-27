@@ -94,4 +94,8 @@ and that is poetry.`, `"Lecture on Nothing," Silence (1961)`),
   q(727, `Mitch Hedberg`, `I like rice. Rice is great if you're hungry and want 2,000 of something.`, `Mitch All Together (2003)`),
   q(741, `John Cleese`, `If you want creative workers, give them enough time to play.`, `Lecture on Creativity, Video Arts (1991)`),
   q(753, `Stanisław Jerzy Lec`, `No snowflake in an avalanche ever feels responsible.`, `Unkempt Thoughts, Jacek Galazka translation (1962)`),
+  q(766, `Joseph Joubert`, `To teach is to learn twice.`, `Pensées (1838)`),
+  q(770, `Samuel Johnson`, `Language is the dress of thought.`, `Lives of the Poets, "Cowley" (1779)`),
+  q(774, `José Ortega y Gasset`, `I am I and my circumstance.`, `Meditations on Quixote (1914)`),
+  q(777, `Aleksandr Solzhenitsyn`, `The line dividing good and evil cuts through the heart of every human being.`, `The Gulag Archipelago, Thomas P. Whitney translation (1974)`),
 ];
