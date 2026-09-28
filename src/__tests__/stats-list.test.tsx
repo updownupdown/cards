@@ -3,7 +3,6 @@ import {
   NARROW_HEADLINE_SCREEN_WIDTH,
   pickPersonas,
   StatsList,
-  winRateColor,
   type StatsRow,
 } from "@/components/Home/StatsList";
 import { Colors, rgba, theme } from "@/styles/styles";
@@ -309,25 +308,6 @@ const renderList = (
   return renderer;
 };
 
-describe("winRateColor", () => {
-  test("runs from red at 0% through yellow at 50% to green at 100%", () => {
-    expect(winRateColor(0, 4)).toBe(Colors.cardSelectRed);
-    expect(winRateColor(3, 3)).toBe(Colors.cardSelectYellow);
-    expect(winRateColor(5, 0)).toBe(Colors.cardSelectGreen);
-  });
-
-  test("blends between the stops", () => {
-    const quarter = winRateColor(1, 3);
-    expect(quarter).toMatch(/^#[0-9a-f]{6}$/);
-    expect(quarter).not.toBe(Colors.cardSelectRed);
-    expect(quarter).not.toBe(Colors.cardSelectYellow);
-  });
-
-  test("is dim when no game was won or lost", () => {
-    expect(winRateColor(0, 0)).toBe(Colors.K700);
-  });
-});
-
 describe("StatsList", () => {
   test("shows the empty state when nothing has been played", () => {
     const renderer = renderList({} as GameSettingsMap);
@@ -474,21 +454,6 @@ describe("StatsList", () => {
     expect(colorsOf("Delta")).toEqual([Colors.white]);
   });
 
-  test("win % cells are colour coded, and the Total row too", () => {
-    const renderer = renderList();
-    const colorsOf = (value: string) =>
-      byType(renderer, Text)
-        .filter((node) => node.props.children === value)
-        .map((node) => node.props.style.color);
-    // Bravo 5-0, Charlie 0-4, Alpha 6-6; the total is 11 of 21.
-    expect(colorsOf("100%")).toContain(Colors.cardSelectGreen);
-    expect(colorsOf("0%")).toContain(Colors.cardSelectRed);
-    expect(colorsOf("50%")).toContain(Colors.cardSelectYellow);
-    expect(colorsOf("52%")).toContain(winRateColor(11, 10));
-    // Delta has no decided games, so its "-" stays dim.
-    expect(colorsOf("-")).not.toContain(Colors.cardSelectRed);
-  });
-
   test("the table header only casts a shadow while it's pinned", () => {
     const renderer = renderList();
     const [scrollView] = byType(renderer, ScrollView);
@@ -542,10 +507,10 @@ describe("StatsList", () => {
 
     test("award cards get narrower so their stats have room", () => {
       expect(awardCardWidth(renderAtWidth(NARROW_AWARD_SCREEN_WIDTH))).toBe(
-        161,
+        120,
       );
       expect(awardCardWidth(renderAtWidth(NARROW_AWARD_SCREEN_WIDTH - 1))).toBe(
-        135,
+        104,
       );
     });
 

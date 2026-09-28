@@ -8,7 +8,6 @@ import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { isTaoChapterTranslated, localizeTaoChapter } from "@/i18n/content";
 import { parseChapterText } from "@/components/TaoReveal/timeline";
 import { theme } from "@/styles/styles";
-import { toRoman } from "@/utils/roman";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView, View } from "react-native";
 import Animated from "react-native-reanimated";
@@ -170,7 +169,7 @@ export function TaoChapterDetail({
             textAlign: "center",
           }}
         >
-          {t("tao.chapter", { number: toRoman(chapterNumber) })}
+          {t("tao.chapter", { number: chapterNumber })}
         </Text>
       </Animated.View>
 

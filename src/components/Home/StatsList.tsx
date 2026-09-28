@@ -89,37 +89,6 @@ const winRateValue = (stats: GameStats) => {
 const formatWinRate = (wins: number, losses: number) =>
   wins + losses > 0 ? formatPercent(wins / (wins + losses)) : "-";
 
-// Win rate colours, from 0% through 50% to 100%.
-const WIN_RATE_COLORS = [
-  Colors.cardSelectRed,
-  Colors.cardSelectYellow,
-  Colors.cardSelectGreen,
-] as const;
-
-const mixHexColors = (from: string, to: string, amount: number) => {
-  const channel = (hex: string, index: number) =>
-    parseInt(hex.slice(1 + index * 2, 3 + index * 2), 16);
-  return `#${[0, 1, 2]
-    .map((index) =>
-      Math.round(
-        channel(from, index) +
-          (channel(to, index) - channel(from, index)) * amount,
-      )
-        .toString(16)
-        .padStart(2, "0"),
-    )
-    .join("")}`;
-};
-
-/** Red at 0%, yellow at 50%, green at 100%; dim when nothing was decided. */
-export const winRateColor = (wins: number, losses: number) => {
-  if (wins + losses === 0) return Colors.K700;
-  const rate = wins / (wins + losses);
-  return rate < 0.5
-    ? mixHexColors(WIN_RATE_COLORS[0], WIN_RATE_COLORS[1], rate * 2)
-    : mixHexColors(WIN_RATE_COLORS[1], WIN_RATE_COLORS[2], rate * 2 - 1);
-};
-
 /** Rows with no value sort last in either direction. */
 const compareNullable = (
   left: number | null,
@@ -261,7 +230,7 @@ export function StatsList({
     useViewportDimensions();
   const isHeadlineGrid = viewportWidth < NARROW_HEADLINE_SCREEN_WIDTH;
   const awardCardWidth = spacing(
-    viewportWidth < NARROW_AWARD_SCREEN_WIDTH ? 135 : 161,
+    viewportWidth < NARROW_AWARD_SCREEN_WIDTH ? 104 : 120,
   );
 
   const scaledPageSidePadding = spacing(layoutDims.pagePadding);
@@ -595,10 +564,7 @@ export function StatsList({
           </Text>
           <StatCell value={row.stats.wins} />
           <StatCell value={row.stats.losses} />
-          <StatCell
-            value={formatWinRate(row.stats.wins, row.stats.losses)}
-            color={winRateColor(row.stats.wins, row.stats.losses)}
-          />
+          <StatCell value={formatWinRate(row.stats.wins, row.stats.losses)} />
           <StatCell value={row.stats.highestScore?.toLocaleString(language)} />
           <StatCell
             value={
@@ -627,11 +593,7 @@ export function StatsList({
         </Text>
         <StatCell isTotal value={totals.wins} />
         <StatCell isTotal value={totals.losses} />
-        <StatCell
-          isTotal
-          value={formatWinRate(totals.wins, totals.losses)}
-          color={winRateColor(totals.wins, totals.losses)}
-        />
+        <StatCell isTotal value={formatWinRate(totals.wins, totals.losses)} />
         <View style={{ flex: 1 }} />
         <View style={{ flex: 1 }} />
       </View>
@@ -687,11 +649,9 @@ export function StatsList({
 function StatCell({
   value,
   isTotal,
-  color = Colors.K200,
 }: {
   value: string | number | null | undefined;
   isTotal?: boolean;
-  color?: string;
 }) {
   const isEmpty = value == null || value === 0 || value === "-";
 
@@ -700,7 +660,7 @@ function StatCell({
       size={isTotal ? "sm" : "xs"}
       weight={isTotal ? 600 : 500}
       style={{ flex: 1, textAlign: "right" }}
-      color={isEmpty ? Colors.K700 : color}
+      color={isEmpty ? theme.faint : theme.ink}
       numberOfLines={1}
     >
       {value ?? "-"}
@@ -731,7 +691,7 @@ function HeadlineStat({
         isGrid ? { width: "50%" } : { flex: 1 },
       ]}
     >
-      <Icon name={iconName} size={spacing(30)} color={theme.accent} />
+      <Icon name={iconName} size={spacing(22)} color={theme.accent} />
       <Text size="xl" weight={600} lineHeight={1.1} numberOfLines={1}>
         {value}
       </Text>

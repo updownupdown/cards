@@ -13,7 +13,6 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { rgba, theme } from "@/styles/styles";
-import { toRoman } from "@/utils/roman";
 import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
@@ -109,21 +108,21 @@ export function ChaptersView({
         <FloatingBar placement="aboveTabBar">
           <BarButton
             iconName="chevron-left"
-            label={toRoman(wrap(chapter - 1))}
+            label={String(wrap(chapter - 1))}
             accessibilityLabel={t("tao.previous")}
             align="left"
             onPress={() => go(chapter - 1)}
           />
           <BarButton
             iconName={picking ? "expand-more" : "expand-less"}
-            label={toRoman(chapter)}
+            label={t("tao.chapter", { number: chapter })}
             accessibilityLabel={t("tao.pick")}
             accent
             onPress={() => setPicking((open) => !open)}
           />
           <BarButton
             iconName="chevron-right"
-            label={toRoman(wrap(chapter + 1))}
+            label={String(wrap(chapter + 1))}
             accessibilityLabel={t("tao.next")}
             align="right"
             onPress={() => go(chapter + 1)}

@@ -14,6 +14,7 @@ import type { Href } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { useMemo, useRef, useState } from "react";
 import {
+  Animated,
   Platform,
   Pressable,
   ScrollView,
@@ -50,6 +51,14 @@ const RECENT_COUNT = 20;
 const LOW_LUCK = 30;
 /** Width of the index letters' column, in the A–Z order. */
 const INDEX_WIDTH = 44;
+/** Every result row is this tall, so the index knows where sections start. */
+const ROW_HEIGHT = 52;
+/** The list's space above its first row. */
+const LIST_TOP = 8;
+
+const AnimatedSectionList = Animated.createAnimatedComponent(
+  SectionList<HomeGameEntry, Section>,
+);
 
 type SearchTabProps = {
   allEnabledGames: HomeGameEntry[];
@@ -82,6 +91,14 @@ export function SearchTab({
   const [headerHeight, setHeaderHeight] = useState(0);
   const pageSidePadding = spacing(layoutDims.pagePadding);
   const indexed = sort === "az";
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const onScroll = useMemo(
+    () =>
+      Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
+        useNativeDriver: Platform.OS !== "web",
+      }),
+    [scrollY],
+  );
 
   const stats = (path: string) => settingsMap[path]?.stats;
 
@@ -177,43 +194,45 @@ export function SearchTab({
 
   return (
     <View style={{ flex: 1 }}>
-      <SectionList
-        sections={sections}
-        keyExtractor={([path]) => path}
-        // Starts under the header, so the index letters stick just below it.
-        style={{ flex: 1, marginTop: headerHeight }}
-        keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag"
-        stickySectionHeadersEnabled={indexed}
-        contentContainerStyle={{
-          paddingTop: spacing(8),
-          paddingBottom: contentPaddingBottom,
-        }}
-        showsVerticalScrollIndicator={false}
-        initialNumToRender={16}
-        maxToRenderPerBatch={16}
-        windowSize={7}
-        renderSectionHeader={({ section }) =>
-          indexed ? <IndexLetter letter={section.key} /> : null
-        }
-        renderItem={({ item: [path, game] }) => (
-          <View
-            style={[
-              column,
-              indexed && {
-                paddingLeft: pageSidePadding + spacing(INDEX_WIDTH),
-              },
-            ]}
-          >
-            <GameRow
-              path={path}
-              game={game}
-              isFavorite={favorites.has(path)}
-              onToggleFavorite={onToggleFavorite}
-            />
-          </View>
-        )}
-      />
+      {/* Starts under the header, so the index letters stick just below it. */}
+      <View style={{ flex: 1, marginTop: headerHeight }}>
+        <AnimatedSectionList
+          sections={sections}
+          keyExtractor={([path]) => path}
+          style={{ flex: 1 }}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+          stickySectionHeadersEnabled={false}
+          onScroll={onScroll}
+          scrollEventThrottle={16}
+          contentContainerStyle={{
+            paddingTop: spacing(LIST_TOP),
+            paddingBottom: contentPaddingBottom,
+          }}
+          showsVerticalScrollIndicator={false}
+          initialNumToRender={16}
+          maxToRenderPerBatch={16}
+          windowSize={7}
+          renderItem={({ item: [path, game] }) => (
+            <View
+              style={[
+                column,
+                indexed && {
+                  paddingLeft: pageSidePadding + spacing(INDEX_WIDTH),
+                },
+              ]}
+            >
+              <GameRow
+                path={path}
+                game={game}
+                isFavorite={favorites.has(path)}
+                onToggleFavorite={onToggleFavorite}
+              />
+            </View>
+          )}
+        />
+        {indexed && <IndexLetters sections={sections} scrollY={scrollY} />}
+      </View>
 
       {/* The search box, filters, count and order stay at the top. */}
       <View
@@ -467,44 +486,81 @@ function SearchBox({
 }
 
 /**
- * A section's letter in the index down the left, like a printed index: it
- * stays at the top while its games scroll past, until the next one pushes
- * it off. It takes no height itself, so it sits beside the first row.
+ * The index down the left, like a printed index: each section's letter sits
+ * beside its first row, stays at the top while its games scroll past, and is
+ * pushed off by the next letter, so only one is ever at the top. All of it is
+ * worked out from the scroll position, since every row is the same height.
  */
-function IndexLetter({ letter }: { letter: string }) {
+function IndexLetters({
+  sections,
+  scrollY,
+}: {
+  sections: Section[];
+  scrollY: Animated.Value;
+}) {
   const { spacing, font, ui } = useResponsiveMetrics();
+  const letterHeight = font(36);
+  const rowHeight = spacing(ROW_HEIGHT);
+  const starts: number[] = [];
+  let top = spacing(LIST_TOP);
+  for (const section of sections) {
+    starts.push(top);
+    top += section.data.length * rowHeight;
+  }
+  const far = 100000;
   return (
     <View
-      style={{
-        height: 0,
-        zIndex: 1,
-        width: "100%",
-        maxWidth: ui.contentMaxWidth,
-        alignSelf: "center",
-      }}
+      style={[
+        StyleSheet.absoluteFill,
+        { overflow: "hidden", pointerEvents: "none" },
+      ]}
     >
-      {/* Opaque, so a letter covers the one before where both are stuck
-          (the web keeps every passed letter stuck, one over another). */}
       <View
         style={{
-          position: "absolute",
-          left: spacing(layoutDims.pagePadding) - spacing(4),
-          top: 0,
-          width: spacing(INDEX_WIDTH),
-          paddingTop: spacing(6),
-          paddingBottom: spacing(10),
-          paddingLeft: spacing(4),
-          backgroundColor: theme.night,
+          width: "100%",
+          maxWidth: ui.contentMaxWidth,
+          alignSelf: "center",
+          flex: 1,
         }}
       >
-        <Text
-          serif
-          weight={500}
-          color={theme.accent}
-          style={{ fontSize: font(30), lineHeight: font(36) }}
-        >
-          {letter}
-        </Text>
+        {sections.map((section, index) => {
+          const start = starts[index];
+          // Pushed off once the next letter reaches it.
+          const leave = (starts[index + 1] ?? far) - letterHeight - spacing(6);
+          const translateY = scrollY.interpolate({
+            inputRange: [
+              start - far,
+              start,
+              Math.max(start, leave),
+              Math.max(start, leave) + far,
+            ],
+            outputRange: [far, 0, 0, -far],
+          });
+          return (
+            <Animated.View
+              key={section.key}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: spacing(layoutDims.pagePadding),
+                transform: [{ translateY }],
+              }}
+            >
+              <Text
+                serif
+                weight={500}
+                color={theme.accent}
+                style={{
+                  fontSize: font(30),
+                  lineHeight: letterHeight,
+                  paddingTop: spacing(6),
+                }}
+              >
+                {section.key}
+              </Text>
+            </Animated.View>
+          );
+        })}
       </View>
     </View>
   );
@@ -528,10 +584,11 @@ function GameRow({
   return (
     <View
       style={{
+        height: spacing(ROW_HEIGHT),
         flexDirection: "row",
         alignItems: "center",
         gap: spacing(12),
-        borderBottomWidth: StyleSheet.hairlineWidth * 2,
+        borderBottomWidth: 1,
         borderBottomColor: hairline(),
       }}
     >
@@ -539,7 +596,12 @@ function GameRow({
         onPress={() => launchGame(path as Href)}
         accessibilityRole="button"
         accessibilityLabel={title}
-        style={{ flex: 1, paddingVertical: spacing(14), outline: "none" }}
+        style={{
+          flex: 1,
+          alignSelf: "stretch",
+          justifyContent: "center",
+          outline: "none",
+        }}
       >
         <Text size="md" weight={400} numberOfLines={1}>
           {title}
