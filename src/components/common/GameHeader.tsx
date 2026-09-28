@@ -1,8 +1,14 @@
 import { useTranslation } from "@/i18n";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, LayerZIndexes, layoutDims, rgba } from "@/styles/styles";
+import {
+  Colors,
+  LayerZIndexes,
+  layoutDims,
+  rgba,
+  theme,
+} from "@/styles/styles";
 import { memo } from "react";
-import { Animated, View } from "react-native";
+import { Animated, Platform, View } from "react-native";
 import { Button } from "../Button/Button";
 import { ResetButton } from "./ResetButton";
 
@@ -78,12 +84,14 @@ export const GameHeader = memo(function GameHeader({
             width: "100%",
             height: spacing(layoutDims.menuBarHeight),
             paddingHorizontal: spacing(layoutDims.pagePadding / 2),
-            borderRadius: spacing(layoutDims.menuBarHeight / 2),
-            backgroundColor: rgba(backgroundColor, 0.8),
-            boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.black, 0.2)}, ${spacing(2)}px ${spacing(4)}px ${spacing(10)}px ${rgba(
-              Colors.black,
-              0.2,
-            )}`,
+            borderRadius: spacing(20),
+            backgroundColor: rgba(theme.surface, 0.88),
+            borderWidth: 1,
+            borderColor: rgba(theme.ink, 0.08),
+            boxShadow: `0 ${spacing(8)}px ${spacing(24)}px ${rgba(Colors.black, 0.35)}`,
+            ...(Platform.OS === "web"
+              ? ({ backdropFilter: "blur(14px)" } as object)
+              : null),
           },
         ]}
       >
@@ -94,7 +102,8 @@ export const GameHeader = memo(function GameHeader({
           }
           onPress={onHome}
           iconName={isCampaignMode ? "milky-way" : "home"}
-          iconColor={titleColor}
+          label={isCampaignMode ? t("menu.campaign") : t("menu.home")}
+          iconColor={theme.ink}
           style={{ flex: 1, paddingHorizontal: 0 }}
         />
 
@@ -105,7 +114,8 @@ export const GameHeader = memo(function GameHeader({
             accessibilityLabel={t("menu.instantWin")}
             onPress={onInstantWin}
             iconName="trophy"
-            iconColor={titleColor}
+            label={t("menu.win")}
+            iconColor={theme.ink}
             disabled={ended}
             style={{ flex: 1, paddingHorizontal: 0 }}
           />
@@ -138,7 +148,7 @@ export const GameHeader = memo(function GameHeader({
                 width: spacing(layoutDims.menuButtonSize),
                 height: spacing(layoutDims.menuButtonSize),
                 borderRadius: spacing(layoutDims.menuButtonSize / 2),
-                backgroundColor: titleColor,
+                backgroundColor: theme.accent,
                 opacity: instructionsHighlight.interpolate({
                   inputRange: [0, 0.2, 0.7, 1],
                   outputRange: [0, 0.8, 0.7, 0],
@@ -159,7 +169,9 @@ export const GameHeader = memo(function GameHeader({
             headerButton
             onPress={onRules}
             iconName={"instructions"}
-            iconColor={titleColor}
+            label={t("menu.rules")}
+            iconColor={theme.ink}
+            style={{ width: "100%", paddingHorizontal: 0 }}
           />
         </View>
 
@@ -167,22 +179,25 @@ export const GameHeader = memo(function GameHeader({
           headerButton
           onPress={onUndo}
           iconName="undo"
-          iconColor={!ended && canUndo ? titleColor : rgba(Colors.white, 0.3)}
+          label={t("menu.undo")}
+          iconColor={!ended && canUndo ? theme.ink : theme.faint}
           disabled={undoDisabled}
           style={{ flex: 1, paddingHorizontal: 0 }}
         />
 
         <ResetButton
           reset={onReset}
-          iconColor={titleColor}
-          pressedIconColor={rgba(titleColor, 0.7)}
+          label={t("menu.reset")}
+          iconColor={theme.ink}
+          pressedIconColor={theme.accent}
         />
 
         <Button
           headerButton
           onPress={onMenu}
-          iconName="more-vertical"
-          iconColor={titleColor}
+          iconName="more"
+          label={t("menu.menu")}
+          iconColor={theme.ink}
           style={{ flex: 1, paddingHorizontal: 0 }}
         />
       </View>

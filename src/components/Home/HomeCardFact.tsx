@@ -1,8 +1,9 @@
 import { Text } from "@/components/common/Text";
 import { getLaunchCardFact } from "@/data/card-facts";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-import { Icon } from "@/icons";
-import { Colors } from "@/styles/styles";
+import { useTranslation } from "@/i18n";
+import { hairline, Kicker } from "@/components/ui/Nocturne";
+import { theme } from "@/styles/styles";
 import { View } from "react-native";
 
 type HomeCardFactProps = {
@@ -16,6 +17,7 @@ export function HomeCardFact({
   contentMaxWidth,
 }: HomeCardFactProps) {
   const { spacing } = useResponsiveMetrics();
+  const { t } = useTranslation("home");
 
   return (
     <View
@@ -28,19 +30,20 @@ export function HomeCardFact({
     >
       <View
         style={{
-          borderRadius: spacing(16),
-          paddingHorizontal: spacing(32),
-          paddingVertical: spacing(22),
+          paddingTop: spacing(24),
+          paddingHorizontal: spacing(12),
+          borderTopWidth: 1,
+          borderTopColor: hairline(),
           alignItems: "center",
-          gap: spacing(6),
+          gap: spacing(10),
         }}
       >
-        <Icon name="fact" size={spacing(80)} color={Colors.K500} />
+        <Kicker>{t("sections.fact")}</Kicker>
         <Text
-          size="sm"
+          size="md"
           weight={300}
-          color={Colors.K400}
-          lineHeight={1.4}
+          color={theme.ink}
+          lineHeight={1.45}
           style={{ textAlign: "center" }}
         >
           {getLaunchCardFact()}

@@ -1,4 +1,3 @@
-import { CoverArt } from "@/components/common/CoverArt";
 import { Text } from "@/components/common/Text";
 import {
   useGameSettings,
@@ -7,10 +6,10 @@ import {
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle, localizeSettingDefinitions } from "@/i18n/content";
-import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
-import { Colors, rgba } from "@/styles/styles";
-import { darkenHexColor, isValidLink, lightenHexColor } from "@/utils/utils";
+import { rgba, theme } from "@/styles/styles";
+import { ActionButton, RatingMeters } from "@/components/ui/Nocturne";
+import { isValidLink } from "@/utils/utils";
 import { useGamePath } from "@/hooks/useGamePath";
 import { useRef } from "react";
 import { Linking, ScrollView, View, ViewStyle } from "react-native";
@@ -20,8 +19,6 @@ import {
   getGameInfo,
   type GameSettings,
 } from "../../data/game-menu";
-import { Button } from "../Button/Button";
-import { RatingsBars } from "../Home/RatingBars";
 import { SettingControl } from "../common/SettingControl";
 import { FavButton } from "../Home/FavButton";
 import { shouldReloadGameAfterSettingChange } from "./game-modal-policy";
@@ -90,24 +87,49 @@ export default function GameModal({
     onClose();
   }
 
+  const card: ViewStyle = {
+    width: "100%",
+    padding: spacing(16),
+    borderRadius: spacing(14),
+    backgroundColor: theme.raise,
+  };
+  const stat = (label: string, value: string | number) => (
+    <View style={{ alignItems: "center", gap: spacing(2) }}>
+      <Text
+        size="xl"
+        weight={500}
+        style={{ fontVariant: ["tabular-nums", "lining-nums"] }}
+      >
+        {value}
+      </Text>
+      <Text size="xxs" weight={300} color={theme.dim}>
+        {label}
+      </Text>
+    </View>
+  );
+
   return (
     <>
       <ModalFull
         onClose={handleClose}
         title={localizeGameTitle(gameInfo, pathname, displayLanguage)}
-        titleColor={gameInfo.gameColorPale}
-        backgroundColor={gameInfo.gameColorDark}
       >
-        {/* Scroll view */}
         <ScrollView
-          contentContainerStyle={modalStyles.scrollContent}
+          contentContainerStyle={[
+            modalStyles.scrollContent,
+            { gap: spacing(26), justifyContent: "flex-start" },
+          ]}
           showsVerticalScrollIndicator={false}
         >
           {/* Stats and favourite */}
           <View
             style={[
-              modalStyles.statsAndFav,
-              { backgroundColor: darkenHexColor(gameInfo.gameColorDark, 0.2) },
+              card,
+              {
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              },
             ]}
           >
             <FavButton
@@ -115,170 +137,106 @@ export default function GameModal({
               onToggleFavorite={(nextFavorite) => {
                 void updateSettings({ isFavorite: nextFavorite });
               }}
-              size={42}
-              iconSize={42}
+              size={spacing(42)}
+              iconSize={spacing(28)}
+              activeColor={theme.accent}
+              inactiveColor={theme.dim}
             />
-
-            <View style={modalStyles.stats}>
-              <View style={modalStyles.stat}>
-                <Text style={modalStyles.statsTextLabel}>
-                  {tCommon("stats.won")}
-                </Text>
-                <Text style={modalStyles.statsTextValue}>
-                  {settings.stats.wins}
-                </Text>
-              </View>
-
-              <View style={modalStyles.stat}>
-                <Text style={modalStyles.statsTextLabel}>
-                  {tCommon("stats.lost")}
-                </Text>
-                <Text style={modalStyles.statsTextValue}>
-                  {settings.stats.losses}
-                </Text>
-              </View>
-
-              <View style={modalStyles.stat}>
-                <Text style={modalStyles.statsTextLabel}>
-                  {tCommon("stats.winPercent")}
-                </Text>
-                <Text style={modalStyles.statsTextValue}>
-                  {calculateWinRate(settings.stats)}
-                </Text>
-              </View>
-
-              {settings.stats.highestScore !== null && (
-                <View style={modalStyles.stat}>
-                  <Text style={modalStyles.statsTextLabel}>
-                    {tCommon("stats.best")}
-                  </Text>
-                  <Text style={modalStyles.statsTextValue}>
-                    {settings.stats.highestScore}
-                  </Text>
-                </View>
+            <View style={{ flexDirection: "row", gap: spacing(20) }}>
+              {stat(tCommon("stats.won"), settings.stats.wins)}
+              {stat(tCommon("stats.lost"), settings.stats.losses)}
+              {stat(
+                tCommon("stats.winPercent"),
+                calculateWinRate(settings.stats),
               )}
+              {settings.stats.highestScore !== null &&
+                stat(tCommon("stats.best"), settings.stats.highestScore)}
             </View>
           </View>
 
-          <View
-            style={[
-              flexStyles.colStart,
-              flexStyles.fullWidth,
-              {
-                gap: spacing(12),
-              },
-            ]}
-          >
-            {/* Game Settings */}
-            {gameSpecificSettings.length > 0 && (
-              <View
-                style={[
-                  flexStyles.colStart,
-                  flexStyles.fullWidth,
-                  { gap: spacing(12), marginBottom: spacing(30) },
-                ]}
-              >
-                <ModalHeading
-                  color={gameInfo.gameColorPale}
-                  title={t("settings.title")}
-                  iconName="settings"
-                />
+          {/* Game settings */}
+          {gameSpecificSettings.length > 0 && (
+            <View style={{ width: "100%", gap: spacing(10) }}>
+              <ModalHeading title={t("settings.title")} />
+              {localizedSettings.map((setting) => (
+                <View key={setting.key} style={card}>
+                  <SettingControl
+                    label={setting.label}
+                    helpText={setting.description}
+                    applyBehaviorText={t(
+                      setting.applyBehavior === "immediate"
+                        ? "settings.appliesNow"
+                        : "settings.appliesNextGame",
+                    )}
+                    value={settings[setting.key]}
+                    type={setting.type}
+                    options={setting.options}
+                    onChange={(value) =>
+                      onGameSettingChange(
+                        setting.key,
+                        value as GameSettings[typeof setting.key],
+                      )
+                    }
+                  />
+                </View>
+              ))}
+            </View>
+          )}
 
-                {localizedSettings.map((setting) => (
-                  <View
-                    key={setting.key}
-                    style={[
-                      flexStyles.colStart,
-                      flexStyles.fullWidth,
-                      {
-                        alignItems: "flex-start",
-                        padding: spacing(16),
-                        borderRadius: spacing(12),
-                        backgroundColor: lightenHexColor(
-                          gameInfo.gameColorDark,
-                          0.08,
-                        ),
-                      },
-                    ]}
-                  >
-                    <SettingControl
-                      label={setting.label}
-                      labelColor={gameInfo.gameColorPale}
-                      helpText={setting.description}
-                      applyBehaviorText={t(
-                        setting.applyBehavior === "immediate"
-                          ? "settings.appliesNow"
-                          : "settings.appliesNextGame",
-                      )}
-                      value={settings[setting.key]}
-                      type={setting.type}
-                      options={setting.options}
-                      onChange={(value) =>
-                        onGameSettingChange(
-                          setting.key,
-                          value as GameSettings[typeof setting.key],
-                        )
-                      }
-                    />
-                  </View>
-                ))}
-              </View>
-            )}
-
-            {/* Difficulty rating */}
-            <View
-              style={[
-                flexStyles.colStart,
-                flexStyles.fullWidth,
-                { gap: spacing(2) },
-              ]}
-            >
-              <ModalHeading
-                color={gameInfo.gameColorPale}
-                title={t("rating.title")}
-                iconName="chart"
-              />
-
-              <RatingsBars
+          {/* Ratings */}
+          <View style={{ width: "100%", gap: spacing(10) }}>
+            <ModalHeading title={t("rating.title")} />
+            <View style={card}>
+              <RatingMeters
                 rating={gameInfo.rating}
-                gameColor={gameInfo.gameColorPale}
+                labels={{
+                  complexity: tCommon("stats.complexity"),
+                  difficulty: tCommon("stats.difficulty"),
+                  luck: tCommon("stats.luck"),
+                }}
               />
             </View>
+          </View>
 
-            {/* How to Play */}
-            <Button
-              text={t("rules.title")}
-              iconName="instructions"
+          {/* Mercy Skip: only offered in Campaign mode, with a skip in hand.
+              Only one can be held at a time for now, so no count is shown;
+              the count is still tracked in case that ever changes. */}
+          {onMercySkip && mercySkipsAvailable > 0 && (
+            <ActionButton
+              label={t("mercySkip.title")}
+              iconName="fast-forward"
+              secondary
               onPress={() => {
                 handleClose();
-                showRulesModal();
+                onMercySkip();
               }}
-              theme={rgba(gameInfo.gameColorPale, 0.2)}
-              taller
-              fullWidth
-              style={{ marginTop: spacing(30) }}
+              style={{ width: "100%" }}
             />
+          )}
 
-            {hasCredits(gameInfo) && <CreditsSection />}
-
-            {/* Mercy Skip: only offered in Campaign mode, with a skip in hand.
-                Only one can be held at a time for now, so no count is shown;
-                the count is still tracked in case that ever changes. */}
-            {onMercySkip && mercySkipsAvailable > 0 && (
-              <Button
-                text={t("mercySkip.title")}
-                iconName="fast-forward"
-                onPress={() => {
-                  handleClose();
-                  onMercySkip();
-                }}
-                theme={Colors.ufoGreen}
-                taller
-                fullWidth
-              />
-            )}
-          </View>
+          {hasCredits(gameInfo) && <CreditsSection />}
         </ScrollView>
+
+        {/* How to Play stays in reach at the bottom. */}
+        <View
+          style={{
+            paddingHorizontal: spacing(30),
+            paddingTop: spacing(12),
+            paddingBottom: spacing(20),
+            borderTopWidth: 1,
+            borderTopColor: rgba(theme.ink, 0.08),
+          }}
+        >
+          <ActionButton
+            label={t("rules.title")}
+            iconName="instructions"
+            onPress={() => {
+              handleClose();
+              showRulesModal();
+            }}
+            style={{ width: "100%" }}
+          />
+        </View>
       </ModalFull>
     </>
   );
@@ -302,9 +260,9 @@ type CreditLinkProps = {
 const CreditLink = ({ name, link }: CreditLinkProps) =>
   isValidLink(link) ? (
     <Text
-      size="sm"
+      size="xs"
       weight={500}
-      color={Colors.accentBlue}
+      color={theme.accent}
       onPress={() => void Linking.openURL(link)}
     >
       {name}
@@ -325,59 +283,46 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
   if (!hasCredits(gameInfo)) return null;
 
   return (
-    <View
-      style={[
-        flexStyles.colStart,
-        flexStyles.fullWidth,
-        flexStyles.spaceBetween,
-        {
+    <View style={[{ width: "100%", gap: spacing(10) }, style]}>
+      <ModalHeading title={t("credits.title")} />
+      <View
+        style={{
+          width: "100%",
           gap: spacing(12),
-          padding: spacing(20),
-          marginTop: spacing(20),
-          paddingTop: spacing(16),
-          borderRadius: spacing(12),
+          padding: spacing(16),
+          borderRadius: spacing(14),
           borderWidth: 1,
-          borderColor: rgba(gameInfo.gameColorPale, 0.2),
-        },
-        style,
-      ]}
-    >
-      <ModalHeading
-        color={gameInfo.gameColorPale}
-        title={t("credits.title")}
-        iconName="attribution"
-      />
+          borderColor: rgba(theme.ink, 0.08),
+        }}
+      >
+        {art && (
+          <View style={{ gap: spacing(2) }}>
+            <Text size="xxs" weight={400} color={theme.dim}>
+              {t("credits.gameArt")}
+            </Text>
+            <Text serif italic size="lg" color={theme.ink}>
+              {art.title}
+            </Text>
+            <Text serif size="sm" color={theme.dim}>
+              {[art.artistName, art.date].filter(Boolean).join(", ")}
+            </Text>
+            <Text size="xs" weight={300} color={theme.dim}>
+              {t("credits.artSource")}{" "}
+              <CreditLink name={art.sourceName} link={art.sourceLink} />
+            </Text>
+          </View>
+        )}
 
-      {art && gameInfo.thumbnail && (
-        <CoverArt
-          thumbnail={gameInfo.thumbnail}
-          maxHeight={spacing(240)}
-          borderRadius={spacing(6)}
-          style={{ marginTop: spacing(4) }}
-        />
-      )}
-
-      {art && (
-        <Text size="sm" weight={300} color={Colors.white}>
-          {t("credits.gameArt")}{" "}
-          <Text size="sm" weight={500} color={Colors.white}>
-            {art.title}
+        {background?.authorName && (
+          <Text size="xs" weight={300} color={theme.dim}>
+            {t("credits.backgroundImage")}{" "}
+            <CreditLink
+              name={background.authorName}
+              link={background.authorLink}
+            />
           </Text>
-          {`, ${art.artistName}${art.date ? ` (${art.date})` : ""}. `}
-          {t("credits.artSource")}{" "}
-          <CreditLink name={art.sourceName} link={art.sourceLink} />
-        </Text>
-      )}
-
-      {background?.authorName && (
-        <Text size="sm" weight={300} color={Colors.white}>
-          {t("credits.backgroundImage")}{" "}
-          <CreditLink
-            name={background.authorName}
-            link={background.authorLink}
-          />
-        </Text>
-      )}
+        )}
+      </View>
     </View>
   );
 };

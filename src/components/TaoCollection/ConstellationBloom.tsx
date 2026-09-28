@@ -5,7 +5,7 @@ import {
   starTints,
 } from "@/components/TaoReveal/timeline";
 import type { Constellation } from "@/data/tao-constellations";
-import { rgba } from "@/styles/styles";
+import { rgba, theme } from "@/styles/styles";
 import { memo, useMemo } from "react";
 import { View } from "react-native";
 import Animated from "react-native-reanimated";
@@ -36,7 +36,6 @@ const STARS_START = 150;
 const STARS_SPREAD = 850;
 const STAR_POP = 520;
 const LINES_START = 1050;
-const LINE_COLOR = rgba("#bedcff", 0.55);
 
 const FADE_IN = { from: { opacity: 0 }, to: { opacity: 1 } };
 const STAR_IN = {
@@ -173,7 +172,7 @@ export const ConstellationBloom = memo(function ConstellationBloom({
             style={{
               position: "absolute",
               inset: 0,
-              backgroundColor: LINE_COLOR,
+              backgroundColor: rgba(theme.accent, 0.55),
               transformOrigin: "0% 50%",
               animationName: DRAW,
               animationDuration: ms(edge.drawMs),

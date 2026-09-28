@@ -6,15 +6,12 @@ import { useGamePath } from "@/hooks/useGamePath";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGame } from "@/i18n/content";
-import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors } from "@/styles/styles";
+import { theme } from "@/styles/styles";
 import { View, ViewStyle } from "react-native";
 import { RichText } from "../common/RichText";
-import { lightenHexColor } from "@/utils/utils";
 import { ScrollView } from "react-native-gesture-handler";
 import { useModalStyles } from "@/styles/modalStyles";
-import { CreditsSection, hasCredits } from "./GameModal";
 
 export const RulesModal = ({ onClose }: { onClose: () => void }) => {
   const pathname = useGamePath();
@@ -26,17 +23,10 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
   const { t } = useTranslation("game");
   const { spacing } = useResponsiveMetrics();
   const modalStyles = useModalStyles();
-  const headingColor = gameInfo.gameColorPale ?? Colors.white;
+  const headingColor = theme.accent;
 
   return (
-    <ModalFull
-      onClose={onClose}
-      title={t("rules.title")}
-      subtitle={gameInfo.title}
-      titleColor={headingColor}
-      backgroundColor={gameInfo.gameColorDark}
-      iconName="instructions"
-    >
+    <ModalFull onClose={onClose} title={t("rules.title")}>
       <ScrollView
         contentContainerStyle={modalStyles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -58,8 +48,8 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
               paddingRight: spacing(20),
               paddingVertical: spacing(16),
               gap: spacing(8),
-              borderRadius: spacing(12),
-              backgroundColor: lightenHexColor(gameInfo.gameColorDark, 0.1),
+              borderRadius: spacing(14),
+              backgroundColor: theme.raise,
             }}
           />
 
@@ -67,10 +57,6 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
             content={gameInfo.howToPlay ?? [t("rules.unavailable")]}
             headingColor={headingColor}
           />
-
-          {hasCredits(gameInfo) && (
-            <CreditsSection style={{ marginTop: spacing(40) }} />
-          )}
         </View>
       </ScrollView>
     </ModalFull>
@@ -98,17 +84,24 @@ export const QuickStart = ({
             key={`l-${itemIndex}`}
             style={{
               flexDirection: "row",
-              alignItems: "center",
+              alignItems: "baseline",
               gap: spacing(8),
             }}
           >
-            <Icon name="fast-forward" size={16} color={headingColor} />
             <Text
               size="md"
-              weight={400}
-              color={Colors.white}
+              weight={600}
+              color={headingColor}
+              style={{ minWidth: spacing(16) }}
+            >
+              {itemIndex + 1}.
+            </Text>
+            <Text
+              size="md"
+              weight={300}
+              color={theme.ink}
               style={{ flex: 1 }}
-              lineHeight={1.2}
+              lineHeight={1.3}
             >
               {item}
             </Text>

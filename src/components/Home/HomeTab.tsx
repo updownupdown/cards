@@ -1,5 +1,6 @@
-import { HomeCard } from "@/components/Home/HomeCard";
-import { HomeSectionTitle } from "@/components/Home/HomeSectionTitle";
+import { Logo } from "@/components/common/Logo";
+import { ArtShelf, ContinueCard } from "@/components/Home/HomeArt";
+import { RoundButton, SectionTitle } from "@/components/ui/Nocturne";
 import { DealMeAGame } from "@/components/Home/DealMeAGame";
 import { GameOfTheDaySection } from "@/components/Home/GameOfTheDaySection";
 import { HomeCardFact } from "@/components/Home/HomeCardFact";
@@ -10,10 +11,9 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle } from "@/i18n/content";
-import type { IconName } from "@/icons";
 import { layoutDims } from "@/styles/styles";
-import { isLocalDevEnvironment, roundToPixel } from "@/utils/utils";
-import { useMemo } from "react";
+import { isLocalDevEnvironment } from "@/utils/utils";
+import { type ReactNode, useMemo } from "react";
 import { ScrollView, View } from "react-native";
 import { useTabReadyHold } from "./TabReady";
 
@@ -31,6 +31,8 @@ type HomeTabProps = {
   contentPaddingTop: number;
   contentPaddingBottom: number;
   onScrolledChange: (isScrolled: boolean) => void;
+  onOpenStats?: () => void;
+  onOpenSettings?: () => void;
 };
 
 export function HomeTab({
@@ -43,6 +45,8 @@ export function HomeTab({
   contentPaddingTop,
   contentPaddingBottom,
   onScrolledChange,
+  onOpenStats,
+  onOpenSettings,
 }: HomeTabProps) {
   const { t } = useTranslation("home");
   const language = useDisplayLanguage();
@@ -54,20 +58,6 @@ export function HomeTab({
   const scaledPageSidePadding = spacing(layoutDims.pagePadding);
   const contentMaxWidth = ui.contentMaxWidth;
   const renderedContentWidth = Math.min(contentMaxWidth, viewportWidth);
-  const sectionTopPadding = spacing(14);
-  const sectionBottomPadding = spacing(14);
-  const cardGap = spacing(12);
-  const rowInnerWidth = Math.max(
-    0,
-    renderedContentWidth - scaledPageSidePadding * 2,
-  );
-  const mediumCardWidth = Math.max(
-    0,
-    roundToPixel(
-      (rowInnerWidth - cardGap * (ui.isTablet ? 2 : 1)) / (ui.isTablet ? 3 : 2),
-    ) - 1,
-  );
-
   const jumpBackInGames = useMemo(
     () =>
       recentPaths
@@ -111,13 +101,17 @@ export function HomeTab({
     ([, game]) => game.enabledOnLocalOnly,
   );
 
-  const gridProps = {
-    favorites,
-    onToggleFavorite,
-    cardWidth: mediumCardWidth,
-    pageSidePadding: scaledPageSidePadding,
-    contentMaxWidth,
-  };
+  const section = (title: string, children: ReactNode) => (
+    <View
+      style={{ width: "100%", maxWidth: contentMaxWidth, alignSelf: "center" }}
+    >
+      <View style={{ paddingHorizontal: scaledPageSidePadding }}>
+        <SectionTitle>{title}</SectionTitle>
+      </View>
+      {children}
+    </View>
+  );
+  const lastPlayed = jumpBackInGames[0];
 
   return (
     <View style={{ flex: 1 }}>
@@ -126,7 +120,7 @@ export function HomeTab({
         contentContainerStyle={{
           paddingTop: contentPaddingTop,
           paddingBottom: contentPaddingBottom,
-          gap: spacing(52),
+          gap: spacing(36),
         }}
         onScroll={(event) =>
           onScrolledChange(event.nativeEvent.contentOffset.y > 1)
@@ -134,71 +128,68 @@ export function HomeTab({
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
       >
-        {/* Local-only games */}
-        {isLocalDevEnvironment() && localOnlyGames.length > 0 && (
-          <View
-            style={{
-              width: "100%",
-              maxWidth: contentMaxWidth,
-              alignSelf: "center",
-            }}
-          >
-            <HomeSectionTitle
-              title={t("sections.localOnly")}
-              pageSidePadding={scaledPageSidePadding}
-              contentMaxWidth={contentMaxWidth}
-            />
-
-            <View
-              style={{
-                width: "100%",
-                paddingHorizontal: scaledPageSidePadding,
-                paddingTop: sectionTopPadding,
-                paddingBottom: sectionBottomPadding,
-                gap: cardGap,
-              }}
-            >
-              {localOnlyGames.map(([path, game]) => (
-                <HomeCard
-                  key={path}
-                  path={path}
-                  game={game}
-                  size="small"
-                  onToggleFavorite={onToggleFavorite}
-                  isFavorite={favorites.has(path)}
-                  style={{ width: "100%" }}
-                />
-              ))}
-            </View>
+        <View
+          style={{
+            width: "100%",
+            maxWidth: contentMaxWidth,
+            alignSelf: "center",
+            paddingHorizontal: scaledPageSidePadding,
+            flexDirection: "row",
+            alignItems: "center",
+            gap: spacing(10),
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <Logo height={spacing(30)} />
           </View>
-        )}
-
-        {showEasyGames && (
-          <CardGridSection
-            title={t("sections.easyGames")}
-            iconName="easy"
-            games={easyGames}
-            {...gridProps}
+          <RoundButton
+            iconName="chart"
+            accessibilityLabel={t("header.stats")}
+            onPress={() => onOpenStats?.()}
           />
-        )}
-
-        {jumpBackInGames.length > 0 && (
-          <CardGridSection
-            title={t("sections.jumpBackIn")}
-            iconName="recent"
-            games={jumpBackInGames}
-            {...gridProps}
+          <RoundButton
+            iconName="settings"
+            accessibilityLabel={t("header.settings")}
+            onPress={() => onOpenSettings?.()}
           />
-        )}
+        </View>
 
-        {favoriteGames.length > 0 && (
-          <CardGridSection
-            title={t("sections.favorites")}
-            iconName="star"
-            games={favoriteGames}
-            {...gridProps}
-          />
-        )}
+        {/* Local-only games */}
+        {isLocalDevEnvironment() &&
+          localOnlyGames.length > 0 &&
+          section(
+            t("sections.localOnly"),
+            <ArtShelf
+              games={localOnlyGames as HomeGameEntry[]}
+              pageSidePadding={scaledPageSidePadding}
+            />,
+          )}
+
+        {showEasyGames &&
+          section(
+            t("sections.easyGames"),
+            <ArtShelf
+              games={easyGames}
+              pageSidePadding={scaledPageSidePadding}
+            />,
+          )}
+
+        {lastPlayed &&
+          section(
+            t("sections.continue"),
+            <View style={{ paddingHorizontal: scaledPageSidePadding }}>
+              <ContinueCard path={lastPlayed[0]} game={lastPlayed[1]} />
+            </View>,
+          )}
+
+        {favoriteGames.length > 0 &&
+          section(
+            t("sections.favorites"),
+            <ArtShelf
+              games={favoriteGames}
+              pageSidePadding={scaledPageSidePadding}
+            />,
+          )}
 
         <GameOfTheDaySection
           favorites={favorites}
@@ -222,68 +213,6 @@ export function HomeTab({
           contentMaxWidth={contentMaxWidth}
         />
       </ScrollView>
-    </View>
-  );
-}
-
-/** A titled section of medium game cards, wrapping onto new rows. */
-function CardGridSection({
-  title,
-  iconName,
-  games,
-  favorites,
-  onToggleFavorite,
-  cardWidth,
-  pageSidePadding,
-  contentMaxWidth,
-}: {
-  title: string;
-  iconName: IconName;
-  games: HomeGameEntry[];
-  favorites: Set<string>;
-  onToggleFavorite: (path: string) => void;
-  cardWidth: number;
-  pageSidePadding: number;
-  contentMaxWidth: number;
-}) {
-  const { spacing } = useResponsiveMetrics();
-  return (
-    <View
-      style={{
-        width: "100%",
-        maxWidth: contentMaxWidth,
-        alignSelf: "center",
-      }}
-    >
-      <HomeSectionTitle
-        title={title}
-        iconName={iconName}
-        pageSidePadding={pageSidePadding}
-        contentMaxWidth={contentMaxWidth}
-      />
-      <View
-        style={{
-          width: "100%",
-          paddingHorizontal: pageSidePadding,
-          paddingTop: spacing(14),
-          paddingBottom: spacing(14),
-          gap: spacing(12),
-          flexDirection: "row",
-          flexWrap: "wrap",
-        }}
-      >
-        {games.map(([path, game]) => (
-          <HomeCard
-            key={path}
-            path={path}
-            game={game}
-            size="medium"
-            onToggleFavorite={onToggleFavorite}
-            isFavorite={favorites.has(path)}
-            style={{ width: cardWidth, flexShrink: 0 }}
-          />
-        ))}
-      </View>
     </View>
   );
 }

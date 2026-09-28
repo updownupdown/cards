@@ -1,3 +1,4 @@
+import { DEFAULT_COLOR_THEME } from "@/styles/themes";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
 import { CAMPAIGN_PROGRESS_STORAGE_KEY } from "./storage-keys";
@@ -136,6 +137,8 @@ export type GlobalSettings = {
   autoComplete: AutoCompleteMode;
   /** Send anonymous crash diagnostics to Sentry. */
   crashReports: boolean;
+  /** The colour theme's id, from COLOR_THEMES. */
+  colorTheme: string;
 };
 
 export type HomeGameEntry = {
@@ -193,6 +196,7 @@ export const DEFAULT_GLOBAL_SETTINGS: GlobalSettings = {
   keepScreenAwake: false,
   autoComplete: "ask",
   crashReports: true,
+  colorTheme: DEFAULT_COLOR_THEME,
 };
 
 export const DEFAULT_GAME_SETTINGS: GameSettings = {

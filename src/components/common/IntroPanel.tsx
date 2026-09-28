@@ -3,7 +3,8 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { homeSurfaceShadow } from "@/styles/homeSurfaceShadow";
-import { Colors, rgba } from "@/styles/styles";
+import { Colors, rgba, theme } from "@/styles/styles";
+import { Kicker } from "@/components/ui/Nocturne";
 import { Pressable, View } from "react-native";
 
 type IntroPanelProps = {
@@ -30,39 +31,32 @@ export function IntroPanel({
     <View
       style={{
         width: "100%",
-        borderRadius: spacing(12),
-        backgroundColor: rgba(Colors.K950, 0.9),
+        borderRadius: spacing(18),
+        backgroundColor: rgba(theme.surface, 0.92),
         borderWidth: 1,
-        borderColor: Colors.K850,
+        borderColor: rgba(theme.ink, 0.08),
         overflow: "hidden",
         ...homeSurfaceShadow(spacing, { translucent: true }),
       }}
     >
       <View
         style={[
-          flexStyles.colCentered,
+          flexStyles.colStart,
           {
-            gap: spacing(12),
+            gap: spacing(8),
             paddingHorizontal: spacing(20),
             paddingVertical: spacing(20),
           },
         ]}
       >
-        <Text
-          size="xl"
-          weight={500}
-          color={Colors.white}
-          style={{ textAlign: "center" }}
-        >
-          {title}
-        </Text>
+        <Kicker>{title}</Kicker>
 
         <Text
           size="sm"
           weight={300}
-          color={Colors.K200}
-          lineHeight={1.4}
-          style={{ textAlign: "center" }}
+          color={theme.dim}
+          lineHeight={1.45}
+          style={{ paddingRight: spacing(24) }}
         >
           {text}
         </Text>

@@ -1,4 +1,5 @@
 import { Typography } from "@/components/common/Text";
+import { REVEAL_TIMING } from "@/components/common/reveal-timing";
 import { getQuoteAuthor } from "@/data/quote-authors";
 import { rgba } from "@/styles/styles";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -56,9 +57,9 @@ const OVERLAY_OPACITY = 0.85;
 
 export const REVEAL_TIMES = {
   /** The UI fades away as the background is redrawn over it. */
-  backdropMs: 900,
+  backdropMs: REVEAL_TIMING.fadeInMs,
   /** The pen starts writing. */
-  writeAt: 1100,
+  writeAt: REVEAL_TIMING.fadeInMs + 200,
   /** The portrait appears this long after the writing starts... */
   portraitDelayMs: 2000,
   /** ...and takes at least this long to resolve. */
@@ -70,8 +71,8 @@ export const REVEAL_TIMES = {
   authorFadeMs: 900,
   sourceFadeMs: 900,
   /** Everything stays up at least this long once the source is in. */
-  holdMs: 3000,
-  outMs: 1000,
+  holdMs: REVEAL_TIMING.holdMs,
+  outMs: REVEAL_TIMING.fadeOutMs,
 };
 
 // Pen speed, as a share of the font size per millisecond, and the longest

@@ -1,8 +1,9 @@
 import "@/styles/global.css";
 import { darkenHexColor, roundToPixel } from "@/utils/utils";
 import { Platform, StyleSheet, type TextStyle } from "react-native";
+import { DEFAULT_COLOR_THEME, getColorTheme, type ThemeColors } from "./themes";
 
-export const Colors = {
+const BASE_COLORS = {
   // Buttons and progress bars
   buttonRed: "#b43733",
   buttonOrange: "#da8037",
@@ -82,6 +83,11 @@ export const Colors = {
   text: "#DDE5ED",
 } as const;
 
+/** Mutable, so the few greys and accents the colour theme sets can follow it. */
+export const Colors = { ...BASE_COLORS } as {
+  -readonly [K in keyof typeof BASE_COLORS]: `#${string}`;
+};
+
 /**
  * Converts a hex colour (e.g. from the Colors object) into an rgba string.
  * @param hexColor A hex color string starting with "#"
@@ -139,6 +145,41 @@ function parseRgbChannels(color: string): [number, number, number] | null {
   return null;
 }
 
+/**
+ * The active colour theme's tokens (see themes.ts). Read at render time:
+ * applyColorTheme() swaps the values and the app root remounts, so styles
+ * built during render pick up the new theme. (Styles built once at import
+ * keep the default theme.)
+ */
+export const theme: ThemeColors = {
+  ...getColorTheme(DEFAULT_COLOR_THEME).colors,
+};
+let activeColorTheme: string = DEFAULT_COLOR_THEME;
+
+export function getActiveColorTheme() {
+  return activeColorTheme;
+}
+
+export function applyColorTheme(id: string | undefined) {
+  const next = getColorTheme(id);
+  if (next.id === activeColorTheme) return;
+  activeColorTheme = next.id;
+  Object.assign(theme, next.colors);
+  syncLegacyColors();
+}
+
+/** The older greys and accents that most screens still use follow the theme. */
+function syncLegacyColors() {
+  Colors.K950 = theme.surface;
+  Colors.K900 = theme.raise;
+  Colors.starfieldOverlay = theme.night;
+  Colors.background = theme.night;
+  Colors.accentBlue = theme.accent;
+  Colors.brightBlue = theme.accent;
+  Colors.text = theme.ink;
+}
+syncLegacyColors();
+
 export const FontWeight = {
   200: "Outfit_200ExtraLight",
   300: "Outfit_300Light",
@@ -146,6 +187,18 @@ export const FontWeight = {
   500: "Outfit_500Medium",
   600: "Outfit_600SemiBold",
   700: "Outfit_700Bold",
+};
+
+/**
+ * EB Garamond, for everything that belongs to the art, the Tao or the
+ * quotes. Outfit (FontWeight) is for the games and the interface.
+ */
+export const SerifFont = {
+  regular: "EBGaramond_400Regular",
+  italic: "EBGaramond_400Regular_Italic",
+  medium: "EBGaramond_500Medium",
+  mediumItalic: "EBGaramond_500Medium_Italic",
+  semibold: "EBGaramond_600SemiBold",
 };
 
 export const layoutDims = {

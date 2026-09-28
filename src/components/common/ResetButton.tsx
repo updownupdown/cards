@@ -4,7 +4,7 @@ import { useFade } from "@/hooks/useFade";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { flexStyles } from "@/styles/flexStyles";
-import { layoutDims, Colors, rgba } from "@/styles/styles";
+import { layoutDims, Colors, rgba, theme } from "@/styles/styles";
 import React, { useRef, useState } from "react";
 import { Animated, Easing, Platform } from "react-native";
 
@@ -16,12 +16,14 @@ interface Props {
   minHintDuration?: number;
   iconColor?: string;
   pressedIconColor?: string;
+  label?: string;
 }
 
 export function ResetButton({
   reset,
   iconColor = Colors.K200,
   pressedIconColor,
+  label,
 }: Props) {
   const { spacing } = useResponsiveMetrics();
   const { t } = useTranslation("game");
@@ -87,7 +89,7 @@ export function ResetButton({
             borderRadius: spacing(
               layoutDims.menuBarHeight / 2 - layoutDims.menuBarPadding,
             ),
-            backgroundColor: rgba(Colors.black, 0.8),
+            backgroundColor: rgba(theme.surface, 0.96),
             boxShadow: `1px 2px 6px ${rgba(Colors.black, 0.4)}, 2px 4px 20px ${rgba(Colors.black, 0.4)}`,
           }}
         >
@@ -98,7 +100,7 @@ export function ResetButton({
               bottom: 0,
               left: 0,
               right: 0,
-              backgroundColor: rgba(Colors.lose, 0.7),
+              backgroundColor: rgba(theme.accent, 0.35),
               transformOrigin: "left",
               transform: [{ scaleX: resetProgress }],
             }}
@@ -126,6 +128,7 @@ export function ResetButton({
         delayLongPress={holdToResetDuration}
         preventWebLongPressMenu
         iconName="reset"
+        label={label}
         iconColor={isResetPressed ? (pressedIconColor ?? iconColor) : iconColor}
         style={{ flex: 1, paddingHorizontal: 0 }}
       />

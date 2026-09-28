@@ -5,7 +5,7 @@ import { useLanguageSync } from "@/hooks/useLanguageSync";
 import { getGameInfo, isGamePath } from "@/data/game-menu";
 import { useDisplayLanguage } from "@/i18n";
 import { localizeGameTitle } from "@/i18n/content";
-import { Colors } from "@/styles/styles";
+import { applyColorTheme, Colors } from "@/styles/styles";
 import {
   addGameBreadcrumb,
   initCrashReporting,
@@ -22,6 +22,14 @@ import {
   Outfit_600SemiBold,
   Outfit_700Bold,
 } from "@expo-google-fonts/outfit";
+import {
+  EBGaramond_400Regular,
+  EBGaramond_400Regular_Italic,
+  EBGaramond_500Medium,
+  EBGaramond_500Medium_Italic,
+  EBGaramond_600SemiBold,
+} from "@expo-google-fonts/eb-garamond";
+import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useFonts } from "expo-font";
 import { Stack, usePathname, SplashScreen } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -36,6 +44,10 @@ initCrashReporting();
 SplashScreen.preventAutoHideAsync();
 
 function Layout() {
+  // The colour theme is applied before anything below renders, and the app
+  // is rebuilt under a new key when it changes, so every screen restyles.
+  const { settings } = useGlobalSettings();
+  applyColorTheme(settings.colorTheme);
   const { colorDark } = useGameColors();
   const pathname = usePathname();
   // Android embeds the fonts at build time (expo-font plugin in app.config.js),
@@ -52,6 +64,11 @@ function Layout() {
           Outfit_500Medium,
           Outfit_600SemiBold,
           Outfit_700Bold,
+          EBGaramond_400Regular,
+          EBGaramond_400Regular_Italic,
+          EBGaramond_500Medium,
+          EBGaramond_500Medium_Italic,
+          EBGaramond_600SemiBold,
         },
   );
   const fontsLoaded = embedsFonts || fontsLoadedAtRuntime;
@@ -152,6 +169,7 @@ function Layout() {
         <StatusBar style="light" />
         <ToastProvider>
           <View
+            key={settings.colorTheme}
             style={[
               {
                 flex: 1,

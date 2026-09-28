@@ -2,9 +2,10 @@ import { Text } from "@/components/common/Text";
 import { GAME_THUMBNAIL_ASSETS } from "@/data/game-thumbnails";
 import { GameMenuInfo } from "@/data/games-data";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-import { useDisplayLanguage } from "@/i18n";
+import { useDisplayLanguage, useTranslation } from "@/i18n";
+import { hairline, RatingMeters } from "@/components/ui/Nocturne";
 import { localizeGame } from "@/i18n/content";
-import { Colors, rgba } from "@/styles/styles";
+import { Colors, rgba, theme } from "@/styles/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { setLastPlayedGameDot } from "@/data/campaign-progress";
@@ -52,6 +53,7 @@ export function HomeCard({
   showThumbnail = true,
 }: Props) {
   const { spacing } = useResponsiveMetrics();
+  const { t: tCommon } = useTranslation("common");
   const thumbnail = showThumbnail ? getGameThumbnail(game) : null;
   const thumbnailReady = useTabReadyImage(thumbnail);
   const { title, cardDescription } = localizeGame(
@@ -69,6 +71,92 @@ export function HomeCard({
     }
     launchGame(path as Href);
   };
+
+  // Not narrowing `size`: the classic layout below still handles all three.
+  const layout: string = size;
+  if (layout === "large") {
+    return (
+      <View
+        style={[
+          {
+            flexDirection: "row",
+            borderRadius: spacing(18),
+            overflow: "hidden",
+            backgroundColor: theme.surface,
+            borderWidth: 1,
+            borderColor: hairline(),
+          },
+          style,
+        ]}
+      >
+        <Pressable
+          onPress={handleOpen}
+          style={{ flex: 1, flexDirection: "row", alignItems: "stretch" }}
+        >
+          <Image
+            source={thumbnail}
+            cachePolicy="memory"
+            contentFit="cover"
+            style={{
+              width: "34%",
+              minHeight: spacing(150),
+              backgroundColor: game.gameColorDark,
+            }}
+            {...thumbnailReady}
+          />
+          <View
+            style={{
+              flex: 1,
+              padding: spacing(14),
+              paddingRight: spacing(44),
+              gap: spacing(6),
+            }}
+          >
+            <Text size="lg" weight={500} lineHeight={1.2}>
+              {title}
+            </Text>
+            <Text
+              size="xs"
+              weight={300}
+              color={theme.dim}
+              lineHeight={1.35}
+              numberOfLines={3}
+            >
+              {cardDescription}
+            </Text>
+            <View style={{ marginTop: "auto", paddingTop: spacing(8) }}>
+              <RatingMeters
+                rating={game.rating}
+                labels={{
+                  complexity: tCommon("stats.complexity"),
+                  difficulty: tCommon("stats.difficulty"),
+                  luck: tCommon("stats.luck"),
+                }}
+              />
+            </View>
+          </View>
+        </Pressable>
+        <FavButton
+          style={{
+            position: "absolute",
+            top: spacing(4),
+            right: spacing(4),
+            width: spacing(40),
+            height: spacing(40),
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          isFavorite={isFavorite}
+          onToggleFavorite={() => onToggleFavorite?.(path)}
+          size={spacing(40)}
+          iconSize={spacing(22)}
+          activeColor={theme.accent}
+          inactiveColor={theme.dim}
+          disabled={!onToggleFavorite}
+        />
+      </View>
+    );
+  }
 
   const borderRadius = spacing(8);
   const padding = spacing(size === "large" ? 22 : size === "medium" ? 12 : 18);

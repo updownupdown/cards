@@ -20,6 +20,7 @@ import CheckBoxOffIcon from "./CheckBoxOff.svg";
 import CheckBoxOnIcon from "./CheckBoxOn.svg";
 import CheckCircleIcon from "./CheckCircle.svg";
 import ChevronLeftIcon from "./ChevronLeft.svg";
+import ChevronRightIcon from "./ChevronRight.svg";
 import ClockIcon from "./Clock.svg";
 import CloseIcon from "./Close.svg";
 import ClubsIcon from "./Clubs.svg";
@@ -43,6 +44,7 @@ import FilterIcon from "./Filter.svg";
 import FistIcon from "./Fist.svg";
 import FreeCellIcon from "./FreeCell.svg";
 import GalaxyIcon from "./Galaxy.svg";
+import GalleryIcon from "./Gallery.svg";
 import GamesIcon from "./Games.svg";
 import GrappleHookIcon from "./GrappleHook.svg";
 import HeartIcon from "./Heart.svg";
@@ -62,9 +64,11 @@ import ListSmallIcon from "./ListSmall.svg";
 import LockIcon from "./Lock.svg";
 import MenuIcon from "./Menu.svg";
 import MilkyWayIcon from "./MilkyWay.svg";
+import MoreIcon from "./More.svg";
 import MoreVerticalIcon from "./MoreVertical.svg";
 import OfferIcon from "./Offer.svg";
 import PalmTreeIcon from "./PalmTree.svg";
+import PlayIcon from "./Play.svg";
 import PlayHandIcon from "./PlayHand.svg";
 import PlusOutlineIcon from "./PlusOutline.svg";
 import PotionIcon from "./Potion.svg";
@@ -78,6 +82,7 @@ import SearchIcon from "./Search.svg";
 import SequenceIcon from "./Sequence.svg";
 import SettingsIcon from "./Settings.svg";
 import ShieldIcon from "./Shield.svg";
+import ShuffleIcon from "./Shuffle.svg";
 import SkullIcon from "./Skull.svg";
 import SmokeBombIcon from "./SmokeBomb.svg";
 import SpadesIcon from "./Spades.svg";
@@ -91,6 +96,7 @@ import TaoIcon from "./Tao.svg";
 import TouchIcon from "./Touch.svg";
 import TrophyIcon from "./Trophy.svg";
 import UndoIcon from "./Undo.svg";
+import ZoomOutIcon from "./ZoomOut.svg";
 
 export type IconName =
   | "ace"
@@ -108,6 +114,7 @@ export type IconName =
   | "check-box-on"
   | "check-circle"
   | "chevron-left"
+  | "chevron-right"
   | "clock"
   | "close"
   | "clubs"
@@ -131,6 +138,7 @@ export type IconName =
   | "fist"
   | "free-cell"
   | "galaxy"
+  | "gallery"
   | "games"
   | "grapple-hook"
   | "heart"
@@ -150,9 +158,11 @@ export type IconName =
   | "lock"
   | "menu"
   | "milky-way"
+  | "more"
   | "more-vertical"
   | "offer"
   | "palm-tree"
+  | "play"
   | "play-hand"
   | "plus-outline"
   | "potion"
@@ -166,6 +176,7 @@ export type IconName =
   | "sequence"
   | "settings"
   | "shield"
+  | "shuffle"
   | "skull"
   | "smoke-bomb"
   | "spades"
@@ -178,7 +189,8 @@ export type IconName =
   | "tao"
   | "touch"
   | "trophy"
-  | "undo";
+  | "undo"
+  | "zoom-out";
 
 export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "ace": AceIcon,
@@ -196,6 +208,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "check-box-on": CheckBoxOnIcon,
   "check-circle": CheckCircleIcon,
   "chevron-left": ChevronLeftIcon,
+  "chevron-right": ChevronRightIcon,
   "clock": ClockIcon,
   "close": CloseIcon,
   "clubs": ClubsIcon,
@@ -219,6 +232,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "fist": FistIcon,
   "free-cell": FreeCellIcon,
   "galaxy": GalaxyIcon,
+  "gallery": GalleryIcon,
   "games": GamesIcon,
   "grapple-hook": GrappleHookIcon,
   "heart": HeartIcon,
@@ -238,9 +252,11 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "lock": LockIcon,
   "menu": MenuIcon,
   "milky-way": MilkyWayIcon,
+  "more": MoreIcon,
   "more-vertical": MoreVerticalIcon,
   "offer": OfferIcon,
   "palm-tree": PalmTreeIcon,
+  "play": PlayIcon,
   "play-hand": PlayHandIcon,
   "plus-outline": PlusOutlineIcon,
   "potion": PotionIcon,
@@ -254,6 +270,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "sequence": SequenceIcon,
   "settings": SettingsIcon,
   "shield": ShieldIcon,
+  "shuffle": ShuffleIcon,
   "skull": SkullIcon,
   "smoke-bomb": SmokeBombIcon,
   "spades": SpadesIcon,
@@ -267,4 +284,5 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "touch": TouchIcon,
   "trophy": TrophyIcon,
   "undo": UndoIcon,
+  "zoom-out": ZoomOutIcon,
 };

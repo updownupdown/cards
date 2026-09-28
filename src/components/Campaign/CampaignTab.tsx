@@ -1,6 +1,8 @@
-import { QuotesCollectionModal } from "@/components/Modals/QuotesCollectionModal";
-import { TaoCollectionModal } from "@/components/Modals/TaoCollectionModal";
-import { GamesCollectionModal } from "@/components/Modals/GamesCollectionModal";
+import { Text } from "@/components/common/Text";
+import { GameInfoPanel } from "@/components/ui/GameInfoPanel";
+import { hairline } from "@/components/ui/Nocturne";
+import { TaoView } from "./TaoView";
+import { VoicesView } from "./VoicesView";
 
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { QUOTE_COUNT, TAO_CHAPTER_COUNT } from "@/data/collectibles";
@@ -16,10 +18,10 @@ import { grantMercySkip } from "@/data/campaign-progress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { useCallback, useContext, useEffect, useState } from "react";
-import { Platform, View } from "react-native";
-import { GameDetailsPanel } from "./GameDetailsPanel";
+import { Platform, Pressable, View, type ViewStyle } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { layoutDims, rgba, theme } from "@/styles/styles";
 import { CampaignMap } from "./CampaignMap";
-import { CampaignProgressItem } from "./CampaignProgressItem";
 import { CampaignIntroPanel } from "./CampaignIntroPanel";
 import { UfoContext } from "./UfoContext";
 import { clearMercySkipVisit, isMercySkipVisitOwed } from "./ufo-visit";
@@ -43,9 +45,9 @@ export function CampaignTab({ contentPaddingTop }: Props) {
   } = useCampaignProgress();
   const [selectedPath, setSelectedPath] = useState(CAMPAIGN_START_PATH);
   const [isMapReady, setIsMapReady] = useState(false);
-  const [showTao, setShowTao] = useState(false);
-  const [showQuotes, setShowQuotes] = useState(false);
-  const [showGames, setShowGames] = useState(false);
+  const [view, setView] = useState<OdysseyView>("games");
+  const insets = useSafeAreaInsets();
+  const [toggleHeight, setToggleHeight] = useState(0);
   const {
     settings,
     updateSettings,
@@ -82,7 +84,7 @@ export function CampaignTab({ contentPaddingTop }: Props) {
   // summons one straight away. Web only, since that is where there is a
   // keyboard. Like a natural visit, it only comes with no skip in hand.
   const [ufoSummons, setUfoSummons] = useState(0);
-  const mapCovered = showTao || showQuotes || showGames;
+  const mapCovered = view !== "games";
   const canSummonUfo = !mapCovered && progress.mercySkipCount === 0;
   useEffect(() => {
     if (Platform.OS !== "web" || typeof window === "undefined") return;
@@ -146,26 +148,69 @@ export function CampaignTab({ contentPaddingTop }: Props) {
     setSelectedPath(gameDot.path);
   }, []);
 
+  const counts: Record<OdysseyView, string> = {
+    games: `${wonPaths.size}/${GAME_DOT_DEFINITIONS.length}`,
+    tao: `${collectedTaoIds.size}/${TAO_CHAPTER_COUNT}`,
+    voices: `${collectedQuoteIds.size}/${QUOTE_COUNT}`,
+  };
+  const labels: Record<OdysseyView, string> = {
+    games: t("progress.games"),
+    tao: t("progress.chapters"),
+    voices: t("progress.quotes"),
+  };
+  const collectionTop = contentPaddingTop + toggleHeight + spacing(8);
+
   return (
-    <View
-      style={{
-        flex: 1,
-      }}
-    >
-      {showTao && (
-        <TaoCollectionModal
-          collectedIds={collectedTaoIds}
-          onClose={() => setShowTao(false)}
-        />
+    <View style={{ flex: 1 }}>
+      {view === "games" && (
+        <>
+          <CampaignMap
+            selectedPath={selectedGameDot.path}
+            ready={isMapReady}
+            onSelectGameDot={selectGameDot}
+            wonPaths={wonPaths}
+            collectedTaoIds={collectedTaoIds}
+            collectedQuoteIds={collectedQuoteIds}
+          />
+          <View
+            style={[
+              pointerEventsStyles.boxNone,
+              {
+                position: "absolute",
+                left: 0,
+                right: 0,
+                bottom:
+                  insets.bottom +
+                  spacing(layoutDims.tabBarHeight + layoutDims.pagePadding),
+                alignItems: "center",
+                paddingHorizontal: spacing(layoutDims.pagePadding / 2),
+              },
+            ]}
+          >
+            <GameInfoPanel
+              path={selectedGameDot.path}
+              leading="thumbnail"
+              campaign
+              locked={state === "locked"}
+              collectedTaoIds={collectedTaoIds}
+              collectedQuoteIds={collectedQuoteIds}
+              style={{
+                width: "100%",
+                maxWidth: ui.contentMaxWidth - spacing(layoutDims.pagePadding),
+                backgroundColor: rgba(theme.surface, 0.92),
+                ...(Platform.OS === "web"
+                  ? ({ backdropFilter: "blur(14px)" } as ViewStyle)
+                  : null),
+              }}
+            />
+          </View>
+        </>
       )}
-      {showQuotes && (
-        <QuotesCollectionModal
-          collectedIds={collectedQuoteIds}
-          onClose={() => setShowQuotes(false)}
-        />
+      {view === "tao" && (
+        <TaoView collectedIds={collectedTaoIds} topInset={collectionTop} />
       )}
-      {showGames && (
-        <GamesCollectionModal onClose={() => setShowGames(false)} />
+      {view === "voices" && (
+        <VoicesView collectedIds={collectedQuoteIds} topInset={collectionTop} />
       )}
 
       <View
@@ -179,63 +224,73 @@ export function CampaignTab({ contentPaddingTop }: Props) {
             right: 0,
             alignItems: "center",
             gap: spacing(12),
+            paddingHorizontal: spacing(layoutDims.pagePadding / 2),
           },
         ]}
       >
-        {!showIntro && (
-          <View
-            style={[
-              pointerEventsStyles.boxNone,
-              flexStyles.rowCentered,
-              {
-                gap: spacing(14),
-                paddingHorizontal: spacing(12),
-                width: "100%",
-                maxWidth: ui.contentMaxWidth,
-              },
-            ]}
-          >
-            <CampaignProgressItem
-              label={t("progress.games")}
-              iconName="trophy"
-              progress={unlockedGameDotCount / GAME_DOT_DEFINITIONS.length}
-              accessibilityLabel={t("progress.summary", {
-                label: t("progress.games"),
-                collected: unlockedGameDotCount,
-                total: GAME_DOT_DEFINITIONS.length,
-              })}
-              onPress={() => setShowGames(true)}
-            />
-            <CampaignProgressItem
-              label={t("progress.chapters")}
-              iconName="tao"
-              progress={collectedTaoIds.size / TAO_CHAPTER_COUNT}
-              accessibilityLabel={t("progress.summary", {
-                label: t("progress.chapters"),
-                collected: collectedTaoIds.size,
-                total: TAO_CHAPTER_COUNT,
-              })}
-              onPress={() => setShowTao(true)}
-            />
-            <CampaignProgressItem
-              label={t("progress.quotes")}
-              iconName="quote"
-              progress={collectedQuoteIds.size / QUOTE_COUNT}
-              accessibilityLabel={t("progress.summary", {
-                label: t("progress.quotes"),
-                collected: collectedQuoteIds.size,
-                total: QUOTE_COUNT,
-              })}
-              onPress={() => setShowQuotes(true)}
-            />
-          </View>
-        )}
-        {showIntro && (
+        <View
+          onLayout={(event) =>
+            setToggleHeight(Math.ceil(event.nativeEvent.layout.height))
+          }
+          style={{
+            width: "100%",
+            maxWidth: ui.contentMaxWidth - spacing(layoutDims.pagePadding),
+            flexDirection: "row",
+            gap: spacing(4),
+            padding: spacing(4),
+            borderRadius: spacing(18),
+            backgroundColor: rgba(theme.surface, 0.9),
+            borderWidth: 1,
+            borderColor: hairline(),
+            ...(Platform.OS === "web"
+              ? ({ backdropFilter: "blur(14px)" } as ViewStyle)
+              : null),
+          }}
+        >
+          {(["games", "tao", "voices"] as const).map((key) => {
+            const selected = view === key;
+            return (
+              <Pressable
+                key={key}
+                onPress={() => setView(key)}
+                accessibilityRole="button"
+                accessibilityState={{ selected }}
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  paddingVertical: spacing(7),
+                  borderRadius: spacing(14),
+                  backgroundColor: selected
+                    ? rgba(theme.ink, 0.09)
+                    : "transparent",
+                  outline: "none",
+                }}
+              >
+                <Text
+                  size="sm"
+                  weight={500}
+                  color={selected ? theme.ink : theme.dim}
+                >
+                  {labels[key]}
+                </Text>
+                <Text
+                  size="xxs"
+                  weight={400}
+                  color={selected ? theme.accent : theme.faint}
+                  style={{ fontVariant: ["tabular-nums"] }}
+                >
+                  {counts[key]}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+
+        {showIntro && view === "games" && (
           <View
             style={{
               width: "100%",
-              maxWidth: ui.contentMaxWidth,
-              paddingHorizontal: spacing(12),
+              maxWidth: ui.contentMaxWidth - spacing(layoutDims.pagePadding),
             }}
           >
             <CampaignIntroPanel
@@ -246,21 +301,8 @@ export function CampaignTab({ contentPaddingTop }: Props) {
           </View>
         )}
       </View>
-
-      <CampaignMap
-        selectedPath={selectedGameDot.path}
-        ready={isMapReady}
-        onSelectGameDot={selectGameDot}
-        wonPaths={wonPaths}
-        collectedTaoIds={collectedTaoIds}
-        collectedQuoteIds={collectedQuoteIds}
-      />
-      <GameDetailsPanel
-        gameDot={selectedGameDot}
-        state={state}
-        collectedTaoIds={collectedTaoIds}
-        collectedQuoteIds={collectedQuoteIds}
-      />
     </View>
   );
 }
+
+type OdysseyView = "games" | "tao" | "voices";

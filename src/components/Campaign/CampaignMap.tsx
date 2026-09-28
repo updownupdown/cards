@@ -10,7 +10,7 @@ import {
   type GameDotDefinition,
   type GameDotState,
 } from "@/data/campaign-map";
-import { Colors, rgba, textShadow } from "@/styles/styles";
+import { Colors, FontWeight, rgba, textShadow, theme } from "@/styles/styles";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useDisplayLanguage } from "@/i18n";
 import { useTabReadyHold } from "@/components/Home/TabReady";
@@ -78,40 +78,29 @@ const GAME_DOT_EXTENT_Y =
 // Realistic-ish star colours: a locked game dot is a dim, unlit ember; a
 // reachable-but-unplayed game dot runs hot red; a won-but-incomplete game dot is a
 // warm orange main-sequence star; a fully complete game dot is a blue-white nova.
-const STATE_COLORS = {
-  locked: "#746e6e",
-  connected: "#b74ec5",
-  won: "#ffda5f",
-  complete: "#a2ffa2",
-} as const;
+function stateColor(state: GameDotState): string {
+  switch (state) {
+    case "won":
+      return theme.accent;
+    case "complete":
+      return theme.accent2;
+    case "connected":
+      return theme.accent;
+    default:
+      return rgba(theme.ink, 0.35);
+  }
+}
 
 /** Link widths in world points: arm strands heavier than the links between. */
 const LINE_WIDTH = { arm: 1.9, bridge: 0.77 };
 /** Locked links are drawn a little finer as well as fainter. */
 const LOCKED_LINE_SCALE = 0.85;
-const LOCKED_LINE_COLOR = "#888483";
 
-/** Native game dot sprites, baked by scripts/generate-campaign-map.mjs from the
- *  sizes, colours and glows here; rebake them when those change. */
-const GAME_DOT_SPRITES = {
-  locked: require("@/assets/images/campaign/game-dot-locked.webp"),
-  connected: require("@/assets/images/campaign/game-dot-connected.webp"),
-  won: require("@/assets/images/campaign/game-dot-won.webp"),
-  complete: require("@/assets/images/campaign/game-dot-complete.webp"),
-} as const;
 /** A sprite's size in world points: room for the widest halo. Must match
  *  SPRITES.nodeSize in scripts/generate-campaign-map.mjs. */
 const GAME_DOT_SPRITE_SIZE = 96;
-/** How far the selection rings reach beyond the dot, in world points. */
-const SELECTION_RING_WIDTH = 7;
-
-/** Glow strength per game dot state: outer blur radius, spread, and opacity. */
-const GAME_DOT_GLOW = {
-  locked: { blur: 3, spread: 0, opacity: 0.28 },
-  connected: { blur: 9, spread: 2, opacity: 0.68 },
-  won: { blur: 8, spread: 1, opacity: 0.55 },
-  complete: { blur: 13, spread: 3, opacity: 0.75 },
-} as const;
+/** The gap between a selected game dot and its first ring, in world points. */
+const SELECTION_GAP = 4;
 
 /**
  * Game dot names are drawn like the engraving on a star chart: small, spaced
@@ -135,17 +124,8 @@ const LABEL_OPACITY = {
   complete: 0.85,
 } as const;
 
-/** How far a label's colour is mixed from its game dot's colour towards white:
- *  still colour-coded, but legible as text. */
-const LABEL_WHITENESS = 0.95;
-
-function paleFor(state: GameDotState) {
-  const hex = STATE_COLORS[state].replace("#", "");
-  const channel = (at: number) => {
-    const value = parseInt(hex.slice(at, at + 2), 16);
-    return Math.round(value + (255 - value) * LABEL_WHITENESS);
-  };
-  return `rgb(${channel(0)}, ${channel(2)}, ${channel(4)})`;
+function labelColor(state: GameDotState) {
+  return state === "won" || state === "complete" ? theme.ink : theme.dim;
 }
 
 /**
@@ -328,7 +308,7 @@ const ArmArtwork = memo(function ArmArtwork({
           source={GALAXY_GLOW}
           cachePolicy="memory"
           contentFit="fill"
-          style={{ width: "100%", height: "100%" }}
+          style={{ width: "100%", height: "100%", opacity: 0.45 }}
           onDisplay={onGlowShown}
         />
       </View>
@@ -449,8 +429,9 @@ const GameDotLabels = memo(function GameDotLabels({
               width: LABEL.maxWidth,
               textAlign: "center",
               fontSize: LABEL.fontSize,
+              fontFamily: FontWeight[500],
               letterSpacing: LABEL.letterSpacing,
-              color: rgba(paleFor(state), LABEL_OPACITY[state]),
+              color: rgba(labelColor(state), LABEL_OPACITY[state]),
               textTransform: "uppercase",
               // Names cross the arm glow and the links, so they carry their
               // own dark backing rather than relying on what is behind them.
@@ -487,13 +468,11 @@ const GameDotConnections = memo(function GameDotConnections({
           const gameDotState = gameDotStates.get(gameDot.path)!;
           const targetState = gameDotStates.get(target.path)!;
           const locked = gameDotState === "locked" || targetState === "locked";
-          const strokeColor = locked
-            ? LOCKED_LINE_COLOR
-            : gameDotState === "complete" && targetState === "complete"
-              ? STATE_COLORS.complete
-              : gameDotState === "connected" || targetState === "connected"
-                ? STATE_COLORS.connected
-                : STATE_COLORS.won;
+          const lit =
+            (gameDotState === "won" || gameDotState === "complete") &&
+            (targetState === "won" || targetState === "complete");
+          const strokeColor = lit ? theme.accent : theme.ink;
+          const strokeOpacity = lit ? 0.5 : locked ? 0.07 : 0.2;
 
           const width =
             LINE_WIDTH[onArm ? "arm" : "bridge"] *
@@ -511,7 +490,7 @@ const GameDotConnections = memo(function GameDotConnections({
                 width: span,
                 height: width,
                 borderRadius: width / 2,
-                backgroundColor: rgba(strokeColor, locked ? 0.65 : 0.85),
+                backgroundColor: rgba(strokeColor, strokeOpacity),
                 transform: [{ rotate: `${angle}rad` }],
               }}
             />
@@ -640,20 +619,17 @@ const GameDot = memo(function GameDot({
   const dotSize = GAME_DOT_SIZE * STATE_SIZE_MULTIPLIER[state];
   const game = GAMES_DATA[gameDot.path];
   const title = localizeGameTitle(game, gameDot.path, useDisplayLanguage());
-  const color = STATE_COLORS[state];
-  const glow = GAME_DOT_GLOW[state];
-
-  const selectionRing = selected
-    ? `0 0 0 2px ${rgba(Colors.black, 0.85)}, 0 0 0 5px ${rgba(Colors.white, 0.9)}, 0 0 0 7px ${rgba(color, 0.9)}, `
+  const color = stateColor(state);
+  const lit = state === "won" || state === "complete";
+  // Nocturne's stars: a won game is lit, with a soft halo; a reachable one is
+  // an open ring in the accent; a locked one is a faint point. The selected
+  // game is circled twice, like a star picked out on a chart.
+  const fill = lit ? color : state === "connected" ? theme.night : color;
+  const ring = state === "connected" ? `inset 0 0 0 1.5px ${color}` : "";
+  const halo = lit ? `0 0 ${dotSize * 0.9}px ${rgba(color, 0.45)}` : "";
+  const selectionRings = selected
+    ? `0 0 0 ${SELECTION_GAP}px ${theme.night}, 0 0 0 ${SELECTION_GAP + 1}px ${theme.accent}, 0 0 0 ${SELECTION_GAP + 5}px ${theme.night}, 0 0 0 ${SELECTION_GAP + 5.6}px ${rgba(theme.accent, 0.6)}`
     : "";
-  const halo = `0 0 ${glow.blur}px ${glow.spread}px ${rgba(color, glow.opacity)}, 0 0 ${glow.blur * 2.2}px ${glow.spread}px ${rgba(color, glow.opacity * 0.35)}`;
-  // Shaded as a sphere lit from the upper left, like the native sprites
-  // (SPRITES.sphere in scripts/generate-campaign-map.mjs).
-  const glint = state === "locked" ? 0.15 : 0.41;
-  const sphere = [
-    `radial-gradient(circle at 34% 28%, ${rgba(Colors.white, glint)} 0%, ${rgba(Colors.white, 0)} 42%)`,
-    `radial-gradient(circle at 36% 30%, ${rgba(Colors.black, 0)} 25%, ${rgba(Colors.black, 0.26)} 95%)`,
-  ].join(", ");
 
   const webStyle = {
     position: "absolute",
@@ -664,16 +640,15 @@ const GameDot = memo(function GameDot({
     width: dotSize,
     height: dotSize,
     borderRadius: dotSize / 2,
-    backgroundColor: color,
-    backgroundImage: sphere,
-    boxShadow: `${selectionRing}${halo}`,
+    backgroundColor: fill,
+    boxShadow:
+      [ring, selectionRings, halo].filter(Boolean).join(", ") || "none",
   } as const;
-  // Android draws blurred box shadows slowly, and a map has over a hundred of
-  // them, so native draws the same look from a sprite baked by
-  // scripts/generate-campaign-map.mjs: one image per game dot.
+  // Native taps are handled by the map's tap gesture (see CampaignMap), and
+  // native draws the same look from plain views: a map has over a hundred of
+  // these, and Android draws blurred shadows slowly.
   const nativeStyle = {
     position: "absolute",
-    // Native taps are handled by the map's tap gesture (see CampaignMap).
     pointerEvents: "none",
     left: toWorld(gameDot.x) - GAME_DOT_SPRITE_SIZE / 2,
     top: toWorld(gameDot.y) - GAME_DOT_SPRITE_SIZE / 2,
@@ -684,14 +659,26 @@ const GameDot = memo(function GameDot({
   } as const;
   const isWeb = Platform.OS === "web";
   const style = isWeb ? webStyle : nativeStyle;
+  const circle = (size: number, extra: object) => (
+    <View
+      style={{
+        position: "absolute",
+        width: size,
+        height: size,
+        borderRadius: size / 2,
+        ...extra,
+      }}
+    />
+  );
   const sprite = isWeb ? undefined : (
     <>
-      <Image
-        source={GAME_DOT_SPRITES[state]}
-        cachePolicy="memory"
-        style={StyleSheet.absoluteFill}
-      />
-      {selected && <SelectionRing dotSize={dotSize} color={color} />}
+      {lit && circle(dotSize * 2.4, { backgroundColor: rgba(color, 0.14) })}
+      {circle(dotSize, {
+        backgroundColor: fill,
+        borderWidth: state === "connected" ? 1.5 : 0,
+        borderColor: color,
+      })}
+      {selected && <SelectionRing dotSize={dotSize} />}
     </>
   );
 
@@ -722,11 +709,10 @@ const GameDot = memo(function GameDot({
   );
 });
 
-/** The selected game dot's rings, as on the web: dark, then white, then the
- *  game dot's own colour, each hugging the one inside it. */
-function SelectionRing({ dotSize, color }: { dotSize: number; color: string }) {
-  const ring = (width: number, inset: number, ringColor: string) => {
-    const size = dotSize + (SELECTION_RING_WIDTH - inset) * 2;
+/** The selected game dot's two concentric rings, as on the web. */
+function SelectionRing({ dotSize }: { dotSize: number }) {
+  const ring = (gap: number, width: number, opacity: number) => {
+    const size = dotSize + gap * 2;
     return (
       <View
         style={{
@@ -735,16 +721,15 @@ function SelectionRing({ dotSize, color }: { dotSize: number; color: string }) {
           height: size,
           borderRadius: size / 2,
           borderWidth: width,
-          borderColor: ringColor,
+          borderColor: rgba(theme.accent, opacity),
         }}
       />
     );
   };
   return (
     <>
-      {ring(2, 0, rgba(color, 0.9))}
-      {ring(3, 2, rgba(Colors.white, 0.9))}
-      {ring(2, 5, rgba(Colors.black, 0.85))}
+      {ring(SELECTION_GAP + 1, 1, 1)}
+      {ring(SELECTION_GAP + 5.6, 0.6, 0.6)}
     </>
   );
 }

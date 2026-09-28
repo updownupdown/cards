@@ -2,13 +2,13 @@ import { Button } from "@/components/Button/Button";
 import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { Text } from "@/components/common/Text";
 import { HomeCard } from "@/components/Home/HomeCard";
-import { HomeSectionTitle } from "@/components/Home/HomeSectionTitle";
+import { SectionTitle } from "@/components/ui/Nocturne";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStableCallback } from "@/hooks/useStableCallback";
 import { useTranslation } from "@/i18n";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, rgba } from "@/styles/styles";
+import { theme } from "@/styles/styles";
 import { type Href } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { View, type ViewStyle } from "react-native";
@@ -112,20 +112,16 @@ export function DealMeAGame({
         alignSelf: "center",
       }}
     >
-      <HomeSectionTitle
-        title={t("deal.title")}
-        iconName="dice"
-        pageSidePadding={pageSidePadding}
-        contentMaxWidth={contentMaxWidth}
-      />
+      <View style={{ paddingHorizontal: pageSidePadding }}>
+        <SectionTitle>{t("deal.title")}</SectionTitle>
+      </View>
       <View
         style={{
           paddingHorizontal: pageSidePadding,
-          paddingTop: spacing(14),
-          gap: spacing(16),
+          gap: spacing(14),
         }}
       >
-        <Text size="sm" weight={300} color={Colors.K300}>
+        <Text size="sm" weight={300} color={theme.dim}>
           {t("deal.intro")}
         </Text>
 

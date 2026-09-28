@@ -2,7 +2,13 @@ import { Text } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon, IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, FontWeight, rgba, transitionStyles } from "@/styles/styles";
+import {
+  Colors,
+  FontWeight,
+  rgba,
+  transitionStyles,
+  theme,
+} from "@/styles/styles";
 import {
   Pressable,
   type StyleProp,
@@ -58,8 +64,7 @@ export function RadioButtons<T extends string>({
           borderRadius: spacing(8),
           padding: spacing(6),
           gap: spacing(6),
-          backgroundColor: Colors.K900,
-          boxShadow: `inset 0 0 20px ${rgba(Colors.black, 0.2)}`,
+          backgroundColor: theme.raise,
         },
         containerStyle,
       ]}
@@ -68,7 +73,12 @@ export function RadioButtons<T extends string>({
         const isSelected = option.value === selectedValue;
         const selectedBg =
           option.selectedBackgroundColor ?? selectedBackgroundColor;
-        const itemColor = isSelected ? Colors.K100 : Colors.K500;
+        // Text on the accent takes the accent's own ink.
+        const itemColor = isSelected
+          ? selectedBg === theme.accent
+            ? theme.accentInk
+            : theme.ink
+          : theme.dim;
 
         return (
           <Pressable

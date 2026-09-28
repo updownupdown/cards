@@ -1,7 +1,6 @@
 import { LoadingOverlay } from "@/components/common/LoadingOverlay";
-import { CollectTab } from "@/components/Home/CollectTab";
-import { HomeHeader, HomeHeaderBackground } from "@/components/Home/HomeHeader";
-import { HomeStarfieldBackground } from "@/components/Home/HomeStarfieldBackground";
+import { GalleryTab } from "@/components/Home/GalleryTab";
+import { HomeHeaderBackground } from "@/components/Home/HomeHeader";
 import { HomeTab } from "@/components/Home/HomeTab";
 import { HomeTabBar } from "@/components/Home/HomeTabBar";
 import { SearchTab } from "@/components/Home/SearchTab";
@@ -21,11 +20,12 @@ import {
 } from "./home-view-state";
 import { HomeModal } from "@/components/Modals/HomeModal";
 import { StatsModal } from "@/components/Modals/StatsModal";
+import { consumeReopenSettings } from "@/components/common/ThemePicker";
 import { useHomeData } from "@/hooks/useHomeData";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
-import { Colors, layoutDims } from "@/styles/styles";
+import { Colors, layoutDims, theme } from "@/styles/styles";
 import {
   type ReactNode,
   useEffect,
@@ -91,7 +91,9 @@ export default function Home() {
   const isWeb = Platform.OS === "web";
 
   const [isLoaded, setIsLoaded] = useState(false);
-  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(
+    consumeReopenSettings,
+  );
   const [showStatsModal, setShowStatsModal] = useState(false);
   const [homeDataRefreshToken, setHomeDataRefreshToken] = useState(0);
   // The tab last tapped, lit in the tab bar straight away.
@@ -146,12 +148,8 @@ export default function Home() {
     [allEnabledGamePaths, attemptsByPath],
   );
 
-  const headerReserved =
-    insets.top +
-    spacing(layoutDims.pagePadding * 0.5) +
-    ui.gameHeaderHeight +
-    spacing(layoutDims.pagePadding * 0.5);
-  const contentPaddingTop = headerReserved + spacing(10);
+  // No header over the tabs: each page starts under the status bar.
+  const contentPaddingTop = insets.top + spacing(24);
   // Clear the floating tab bar, which grows by the bottom safe-area inset
   // (Android's navigation bar), with a comfortable gap after the last item.
   const contentPaddingBottom =
@@ -285,6 +283,8 @@ export default function Home() {
           recentPaths={recentPaths}
           onToggleFavorite={toggleFavorite}
           dataLoaded={homeDataLoaded}
+          onOpenStats={() => setShowStatsModal(true)}
+          onOpenSettings={() => setShowSettingsModal(true)}
           onScrolledChange={(scrolled) =>
             setTabScrolled(HOME_HOME_TAB_INDEX, scrolled)
           }
@@ -306,7 +306,7 @@ export default function Home() {
         <HomeHeaderBackground
           showBackground={showHeaderBackgroundFor(COLLECT_HOME_TAB_INDEX)}
         />
-        <CollectTab
+        <GalleryTab
           allEnabledGames={allEnabledGames}
           settingsMap={settingsMap}
           favorites={favorites}
@@ -324,18 +324,14 @@ export default function Home() {
         allEnabledGames={allEnabledGames}
         unplayedGamePaths={unplayedGamePaths}
         favorites={favorites}
+        recentPaths={recentPaths}
         onToggleFavorite={toggleFavorite}
-        cardSize={cardSize}
-        onCardSizeChange={(value) =>
-          updateSettings({ discoverCardSize: value })
-        }
         onScrolledChange={(scrolled) =>
           setTabScrolled(SEARCH_HOME_TAB_INDEX, scrolled)
         }
         showHeaderBackground={showHeaderBackgroundFor(SEARCH_HOME_TAB_INDEX)}
         contentPaddingTop={contentPaddingTop}
         contentPaddingBottom={contentPaddingBottom}
-        searchControlBottom={searchControlBottom}
       />
     ),
   };
@@ -374,10 +370,11 @@ export default function Home() {
                 overflow: "hidden",
               }}
             >
-              <HomeStarfieldBackground
-                animationsEnabled={settings.showAnimations}
-                width={viewportWidth}
-                height={viewportHeight}
+              <View
+                style={[
+                  StyleSheet.absoluteFill,
+                  { backgroundColor: theme.night },
+                ]}
               />
 
               {HOME_TAB_INDICES.map((index) => {
@@ -412,11 +409,6 @@ export default function Home() {
               )}
             </View>
           )}
-
-          <HomeHeader
-            onOpenSettings={() => setShowSettingsModal(true)}
-            onOpenStats={() => setShowStatsModal(true)}
-          />
 
           <HomeTabBar
             activeIndex={activeTab}

@@ -1,17 +1,16 @@
 import { Text } from "@/components/common/Text";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
-import { Colors, rgba, layoutDims, webDropShadow } from "@/styles/styles";
-import { lightenHexColor } from "@/utils/utils";
+import { rgba, layoutDims, theme } from "@/styles/styles";
 import React from "react";
 import { Modal, Pressable, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Button } from "../Button/Button";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { IconName } from "@/icons/generated";
 import { Icon } from "@/icons";
-import SolitariusLogo from "@/assets/images/SolitariusLogo.svg";
+import { Logo } from "@/components/common/Logo";
+import { Kicker, RoundButton } from "@/components/ui/Nocturne";
 
 type Props = {
   children: React.ReactNode;
@@ -27,9 +26,9 @@ type Props = {
 export default function ModalFull({
   children,
   title,
-  titleColor = Colors.K200,
+  titleColor = theme.ink,
   subtitle,
-  backgroundColor = Colors.K875,
+  backgroundColor = theme.surface,
   showLogo,
   iconName,
   onClose,
@@ -48,14 +47,24 @@ export default function ModalFull({
           {
             paddingTop: spacing(layoutDims.pagePadding / 2) + insets.top,
             paddingBottom: spacing(layoutDims.pagePadding / 2) + insets.bottom,
-            backgroundColor: rgba(lightenHexColor(backgroundColor, 0.2), 0.8),
+            backgroundColor: rgba(theme.night, 0.82),
           },
         ]}
       >
         {/* The backdrop press sits behind the card instead of wrapping it, so
             it never competes with scrolling inside the card. */}
         <Pressable onPress={onClose} style={StyleSheet.absoluteFill} />
-        <View style={[modalStyles.modalCard, { backgroundColor }]}>
+        <View
+          style={[
+            modalStyles.modalCard,
+            {
+              backgroundColor,
+              borderWidth: 1,
+              borderColor: rgba(theme.ink, 0.08),
+              borderRadius: spacing(22),
+            },
+          ]}
+        >
           <View
             style={[
               modalStyles.modalHeader,
@@ -65,16 +74,7 @@ export default function ModalFull({
             ]}
           >
             {/* Logo */}
-            {showLogo && (
-              <SolitariusLogo
-                width={120}
-                height={28}
-                style={{
-                  marginRight: "auto",
-                  ...webDropShadow("1px 2px 3px rgba(0, 0, 0, 0.12)"),
-                }}
-              />
-            )}
+            {showLogo && <Logo height={spacing(26)} />}
 
             {/* Icon */}
             {iconName && (
@@ -93,12 +93,7 @@ export default function ModalFull({
                   {title}
                 </Text>
                 {subtitle && (
-                  <Text
-                    size="sm"
-                    color={Colors.white}
-                    weight={300}
-                    style={{ opacity: 0.75 }}
-                  >
+                  <Text size="sm" color={theme.dim} weight={300}>
                     {subtitle}
                   </Text>
                 )}
@@ -106,25 +101,10 @@ export default function ModalFull({
             )}
 
             {/* Close button */}
-            <Button
-              style={[
-                flexStyles.rowCentered,
-                {
-                  marginLeft: "auto",
-                  // backgroundColor: rgba(Colors.white, 0.1),
-                  backgroundColor: "transparent",
-                  borderRadius: spacing(layoutDims.menuButtonSize / 2),
-                  padding: 0,
-                  width: spacing(layoutDims.menuButtonSize),
-                  height: spacing(layoutDims.menuButtonSize),
-                  boxShadow: "none",
-                  borderWidth: 0,
-                },
-              ]}
-              onPress={onClose}
+            <RoundButton
               iconName="close"
-              iconSize={28}
-              iconColor={rgba(Colors.white, 0.7)}
+              onPress={onClose}
+              style={{ marginLeft: "auto" }}
             />
           </View>
 
@@ -136,24 +116,13 @@ export default function ModalFull({
 }
 
 type ModalHeadingProps = {
-  color: string;
-  iconName?: IconName;
   title: string;
+  /** Kept for older callers; headings are all in the accent now. */
+  color?: string;
+  iconName?: IconName;
 };
 
-export const ModalHeading = ({ color, iconName, title }: ModalHeadingProps) => {
-  return (
-    <View
-      style={[
-        flexStyles.rowCentered,
-        flexStyles.fullWidth,
-        flexStyles.spaceBetween,
-      ]}
-    >
-      <Text size="xxl" weight={300} color={color} style={{ flexGrow: 1 }}>
-        {title}
-      </Text>
-      {iconName && <Icon name={iconName} size={28} color={color} />}
-    </View>
-  );
-};
+/** A section heading inside a modal: a small label in the accent. */
+export const ModalHeading = ({ title }: ModalHeadingProps) => (
+  <Kicker>{title}</Kicker>
+);
