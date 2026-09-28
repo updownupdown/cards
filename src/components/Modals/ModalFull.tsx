@@ -10,7 +10,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { IconName } from "@/icons/generated";
 import { Icon } from "@/icons";
 import { Logo } from "@/components/common/Logo";
-import { RoundButton } from "@/components/ui/Nocturne";
+import { Kicker, RoundButton } from "@/components/ui/Nocturne";
 
 type Props = {
   children: React.ReactNode;
@@ -116,24 +116,13 @@ export default function ModalFull({
 }
 
 type ModalHeadingProps = {
-  color: string;
-  iconName?: IconName;
   title: string;
+  /** Kept for older callers; headings are all in the accent now. */
+  color?: string;
+  iconName?: IconName;
 };
 
-export const ModalHeading = ({ color, iconName, title }: ModalHeadingProps) => {
-  return (
-    <View
-      style={[
-        flexStyles.rowCentered,
-        flexStyles.fullWidth,
-        flexStyles.spaceBetween,
-      ]}
-    >
-      <Text size="xxl" weight={300} color={color} style={{ flexGrow: 1 }}>
-        {title}
-      </Text>
-      {iconName && <Icon name={iconName} size={28} color={color} />}
-    </View>
-  );
-};
+/** A section heading inside a modal: a small label in the accent. */
+export const ModalHeading = ({ title }: ModalHeadingProps) => (
+  <Kicker>{title}</Kicker>
+);

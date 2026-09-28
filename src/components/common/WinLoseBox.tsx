@@ -1,13 +1,11 @@
-import { getScaledTextSize, Text } from "@/components/common/Text";
-import { Icon } from "@/icons";
+import { Text } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, LayerZIndexes, layoutDims, rgba } from "@/styles/styles";
+import { Colors, LayerZIndexes, layoutDims, rgba, theme } from "@/styles/styles";
+import { ActionButton, Kicker } from "@/components/ui/Nocturne";
 import { useEffect, useRef } from "react";
 import { Animated, Easing, Platform, View } from "react-native";
-import { Button } from "../Button/Button";
-import { useGameColors } from "@/hooks/useGameColors";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { ReactNode } from "react";
@@ -29,10 +27,16 @@ interface Props {
   handleUndo?: () => void;
   isCampaignMode?: boolean;
   rewardPreview?: ReactNode;
-  /** Shown in its own soft panel just above the card. */
-  topPanel?: ReactNode;
-  /** Leave the buttons out, e.g. while a reward plays over the screen. */
+  /** Show the buttons faded and disabled, e.g. until a reward has played. */
+  actionsDisabled?: boolean;
+  /** @deprecated The old name of actionsDisabled. */
   actionsHidden?: boolean;
+  /** @deprecated No longer shown: the reward plays over the whole screen. */
+  topPanel?: ReactNode;
+  /** The game's name, large at the top. */
+  title?: string;
+  /** How many times the game has been won, this win included. */
+  winCount?: number;
   onExit?: () => void;
 }
 
@@ -48,19 +52,35 @@ export const WinLoseBox = ({
   handleUndo,
   isCampaignMode = false,
   rewardPreview,
-  topPanel,
+  actionsDisabled: actionsDisabledProp = false,
   actionsHidden = false,
+  title,
+  winCount,
   onExit,
 }: Props) => {
-  const { ui, spacing, textScale } = useResponsiveMetrics();
+  const { ui, spacing } = useResponsiveMetrics();
+  const actionsDisabled = actionsDisabledProp || actionsHidden;
   const { t } = useTranslation("game");
   const { t: tCommon } = useTranslation("common");
-  const { colorDark } = useGameColors();
+  const stat = (label: string, value: string) => (
+    <View style={{ gap: spacing(2) }}>
+      <Text
+        size="xl"
+        weight={500}
+        style={{ fontVariant: ["tabular-nums", "lining-nums"] }}
+      >
+        {value}
+      </Text>
+      <Text size="xxs" weight={300} color={theme.dim}>
+        {label}
+      </Text>
+    </View>
+  );
   const insets = useSafeAreaInsets();
   const restingBottom = spacing(layoutDims.pagePadding) + insets.bottom;
   const backdropGradientColors = [
-    rgba(colorDark, 0),
-    rgba(colorDark, 0.9),
+    rgba(theme.night, 0),
+    rgba(theme.night, 0.9),
   ] as const;
 
   // Win/lose animations
@@ -146,146 +166,99 @@ export const WinLoseBox = ({
             opacity: wlmAnim,
             position: "absolute",
             zIndex: LayerZIndexes.winLoseCard,
-            gap: spacing(24),
             alignSelf: "center",
-            width: "90%",
+            width: "92%",
             maxWidth: ui.contentMaxWidth - spacing(layoutDims.pagePadding) * 2,
             // Clear of the bottom safe area (Android's navigation bar).
             bottom: restingBottom,
           },
         ]}
       >
-        {topPanel && (
-          <View
-            style={[
-              flexStyles.colCentered,
-              {
-                padding: spacing(20),
-                borderRadius: spacing(20),
-                backgroundColor: rgba(colorDark, 0.75),
-                // Wide and soft, so the panel has no sharp outline.
-                boxShadow: `0 0 ${spacing(32)}px ${spacing(12)}px ${rgba(colorDark, 0.75)}`,
-              },
-            ]}
-          >
-            {topPanel}
-          </View>
-        )}
         <View
-          style={[
-            flexStyles.colCentered,
-            {
-              padding: spacing(20),
-              gap: spacing(20),
-              borderRadius: spacing(20),
-              backgroundColor: won ? rgba(Colors.win, 1) : rgba(Colors.lose, 1),
-              boxShadow: won
-                ? `0 0 20px ${rgba(Colors.win, 0.6)}, 0 0 40px ${rgba(Colors.win, 0.6)}`
-                : `0 0 20px ${rgba(Colors.lose, 0.6)}, 0 0 40px ${rgba(Colors.lose, 0.6)}`,
-            },
-          ]}
+          style={{
+            padding: spacing(20),
+            gap: spacing(18),
+            borderRadius: spacing(22),
+            backgroundColor: rgba(theme.surface, 0.96),
+            borderWidth: 1,
+            borderColor: rgba(theme.ink, 0.08),
+            boxShadow: `0 ${spacing(12)}px ${spacing(40)}px ${rgba(Colors.black, 0.5)}`,
+          }}
         >
           {rewardPreview}
-          <View style={[flexStyles.fullWidth, { gap: spacing(8) }]}>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: spacing(12),
-              }}
-            >
-              <Text
-                size="xl"
-                weight={400}
-                color={Colors.white}
-                style={{ flexShrink: 1 }}
-              >
-                {won ? t("result.won") : t("result.lost")}
-              </Text>
-
-              {won && winTimes && (
-                <View style={{ alignItems: "flex-end" }}>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: spacing(4),
-                    }}
-                  >
-                    {/* As tall as the time beside it. */}
-                    <Icon
-                      name="clock"
-                      size={getScaledTextSize("md", textScale)}
-                      color={Colors.white}
-                    />
-                    <Text size="md" weight={600} color={Colors.white}>
-                      {formatPlayTime(winTimes.timeMs)}
-                    </Text>
-                  </View>
-                  <Text size="sm" weight={300} color={rgba(Colors.white, 0.85)}>
-                    {tCommon("stats.bestTime", {
-                      time: formatPlayTime(winTimes.bestMs),
-                    })}
-                  </Text>
-                </View>
-              )}
-            </View>
-
-            {message ? (
-              <Text size="md" weight={300} color={Colors.white}>
-                {message.replace(/\\n/g, "\n")}
+          <View style={{ gap: spacing(4) }}>
+            <Kicker color={won ? theme.accent : theme.dim}>
+              {won ? t("result.won") : t("result.lost")}
+            </Kicker>
+            {title ? (
+              <Text weight={500} size="xxxl" numberOfLines={2}>
+                {title}
               </Text>
             ) : null}
-            {!hideScore && score !== undefined && (
-              <Text size="md" weight={300} color={Colors.white}>
-                {t("result.score", { score })}
-              </Text>
-            )}
           </View>
 
-          {!actionsHidden && (
-            <View
-              style={[
-                flexStyles.rowCentered,
-                flexStyles.fullWidth,
-                { gap: spacing(12) },
-              ]}
-            >
-              <Button
-                size="md"
-                accessibilityLabel={
-                  isCampaignMode ? t("menu.campaign") : t("menu.home")
-                }
-                onPress={() => fadeOutWLM(onExit)}
-                taller
-                iconName={isCampaignMode ? "milky-way" : "home"}
-                theme={won ? "winDark" : "loseDark"}
-              />
-
-              {handleUndo && !won && (
-                <Button
-                  onPress={() => fadeOutWLM(handleUndo)}
-                  iconName="undo"
-                  size="md"
-                  theme="loseDark"
-                  taller
-                />
-              )}
-
-              <Button
-                onPress={() => fadeOutWLM(reset)}
-                size="md"
-                iconName="reset"
-                text={won ? t("result.playAgain") : t("result.tryAgain")}
-                theme={won ? "winDark" : "loseDark"}
-                taller
-                style={{
-                  flex: 1,
-                }}
-              />
+          {won && (winTimes || winCount !== undefined) && (
+            <View style={{ flexDirection: "row", gap: spacing(24) }}>
+              {winTimes && stat(tCommon("stats.time"), formatPlayTime(winTimes.timeMs))}
+              {winTimes &&
+                stat(tCommon("stats.bestTimeLabel"), formatPlayTime(winTimes.bestMs))}
+              {winCount !== undefined && stat(tCommon("stats.wins"), String(winCount))}
             </View>
           )}
+
+          {message || (!hideScore && score !== undefined) ? (
+            <View style={{ gap: spacing(4) }}>
+              {message ? (
+                <Text size="md" weight={300} color={theme.dim}>
+                  {message.replace(/\\n/g, "\n")}
+                </Text>
+              ) : null}
+              {!hideScore && score !== undefined && (
+                <Text size="md" weight={300} color={theme.dim}>
+                  {t("result.score", { score })}
+                </Text>
+              )}
+            </View>
+          ) : null}
+
+          <View
+            style={{
+              flexDirection: "row",
+              gap: spacing(10),
+              opacity: actionsDisabled ? 0.2 : 1,
+            }}
+            pointerEvents={actionsDisabled ? "none" : "auto"}
+          >
+            {handleUndo && !won && (
+              <ActionButton
+                small
+                secondary
+                iconName="undo"
+                label={tCommon("undo")}
+                disabled={actionsDisabled}
+                onPress={() => fadeOutWLM(handleUndo)}
+              />
+            )}
+            <ActionButton
+              small
+              secondary
+              iconName="reset"
+              label={won ? t("result.playAgain") : t("result.tryAgain")}
+              disabled={actionsDisabled}
+              onPress={() => fadeOutWLM(reset)}
+              style={{ flex: 1 }}
+            />
+            <ActionButton
+              small
+              iconName={isCampaignMode ? "milky-way" : "home"}
+              label={
+                isCampaignMode ? t("result.continueOdyssey") : t("result.home")
+              }
+              disabled={actionsDisabled}
+              onPress={() => fadeOutWLM(onExit)}
+              style={{ flex: 1.2 }}
+            />
+          </View>
         </View>
       </Animated.View>
     </>

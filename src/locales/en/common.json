@@ -16,6 +16,10 @@
     "winPercent": "Win %",
     "best": "Best",
     "bestTime": "Best: {{time}}",
-    "fastest": "Fastest"
-  }
+    "fastest": "Fastest",
+    "time": "Time",
+    "bestTimeLabel": "Best time",
+    "wins": "Wins"
+  },
+  "undo": "Undo"
 }

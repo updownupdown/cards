@@ -1,15 +1,22 @@
 {
   "menu": {
     "home": "Home",
-    "campaign": "Campaign",
-    "instantWin": "Instant win"
+    "campaign": "Odyssey",
+    "instantWin": "Instant win",
+    "win": "Win",
+    "rules": "Rules",
+    "undo": "Undo",
+    "reset": "Reset",
+    "menu": "Menu"
   },
   "result": {
-    "won": "You won!",
+    "won": "You won",
     "lost": "You lost",
     "score": "Score: {{score}}",
     "playAgain": "Play again",
-    "tryAgain": "Try again"
+    "tryAgain": "Try again",
+    "continueOdyssey": "Continue Odyssey",
+    "home": "Home"
   },
   "reset": {
     "hold": "Hold to reset game"

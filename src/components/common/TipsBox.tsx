@@ -5,7 +5,8 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGame } from "@/i18n/content";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, layoutDims, rgba } from "@/styles/styles";
+import { Colors, layoutDims, rgba, theme } from "@/styles/styles";
+import { Kicker } from "@/components/ui/Nocturne";
 import { useEffect, useRef, useState } from "react";
 import { Animated, LayoutChangeEvent, View } from "react-native";
 import { Button } from "../Button/Button";
@@ -82,8 +83,13 @@ export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
               })
             : instructionButtonSize,
           overflow: "hidden",
-          borderRadius: instructionButtonSize / 2,
-          backgroundColor: gameInfo.gameColorDark,
+          borderRadius: morphProgress.interpolate({
+            inputRange: [0, 1],
+            outputRange: [instructionButtonSize / 2, spacing(18)],
+          }),
+          backgroundColor: rgba(theme.surface, 0.95),
+          borderWidth: 1,
+          borderColor: rgba(theme.ink, 0.08),
           transform: [
             {
               translateX: morphProgress.interpolate({
@@ -130,23 +136,7 @@ export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
                 { alignItems: "flex-start" },
               ]}
             >
-              <Text
-                size="md"
-                weight={600}
-                color={gameInfo.gameColorPale}
-                style={{ flex: 1 }}
-              >
-                {t("tips.quickStart")}
-              </Text>
-              <Text
-                size="xs"
-                weight={300}
-                color={rgba(gameInfo.gameColorPale, 0.6)}
-                style={{ flex: 1 }}
-                numberOfLines={1}
-              >
-                {gameInfo.title}
-              </Text>
+              <Kicker>{t("tips.quickStart")}</Kicker>
             </View>
 
             <Button
@@ -157,7 +147,7 @@ export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
                 onClose();
                 showRulesModal();
               }}
-              theme={rgba(gameInfo.gameColorPale, 0.2)}
+              theme={rgba(theme.ink, 0.1)}
               style={{ paddingLeft: spacing(14) }}
             />
 
@@ -166,16 +156,16 @@ export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
               iconName="close"
               text={tCommon("close")}
               autoProgress={AUTO_CLOSE_DELAY}
-              autoProgressColor={rgba(gameInfo.gameColorPale, 0.2)}
+              autoProgressColor={rgba(theme.accent, 0.25)}
               onPress={onClose}
-              theme={rgba(gameInfo.gameColorPale, 0.2)}
+              theme={rgba(theme.ink, 0.1)}
               style={{ paddingRight: spacing(9) }}
             />
           </View>
 
           <QuickStart
             gameInfo={gameInfo}
-            headingColor={gameInfo.gameColorPale}
+            headingColor={theme.accent}
             style={{
               gap: spacing(8),
               paddingRight: spacing(8),

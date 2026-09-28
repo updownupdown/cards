@@ -28,6 +28,7 @@ import {
   isTaoChapterTranslated,
   localizeQuote,
   localizeTaoChapter,
+  localizeGameTitle,
 } from "@/i18n/content";
 import {
   getActiveGameSessionId,
@@ -39,7 +40,7 @@ import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { haptics } from "@/utils/haptics";
 import { addGameBreadcrumb, setCrashContext } from "@/utils/crash-reporting";
 import { selectCampaignHomeTab } from "@/components/Home/home-view-state";
-import { CampaignWinRewardPreview } from "@/components/Campaign/CampaignWinRewardPreview";
+import { REVEAL_TIMING } from "@/components/common/reveal-timing";
 import { flexStyles } from "@/styles/flexStyles";
 import {
   getHeaderHeightWithInset,
@@ -243,7 +244,20 @@ export const GameWrapper = ({
         : quoteRevealEnglish
       : null;
   const revealing = !!taoRevealText || !!quoteReveal;
+  // The win box shows first, its buttons faded, then after a pause the
+  // reward's reveal fades in over it.
+  const [revealStarted, setRevealStarted] =
+    useState<CampaignWinResult | null>(null);
+  useEffect(() => {
+    if (!campaignWinResult?.awardedReward) return;
+    const timer = setTimeout(
+      () => setRevealStarted(campaignWinResult),
+      REVEAL_TIMING.delayMs,
+    );
+    return () => clearTimeout(timer);
+  }, [campaignWinResult]);
   const [winTimes, setWinTimes] = useState<WinTimes | null>(null);
+  const [winCount, setWinCount] = useState<number | undefined>(undefined);
   const autoCompleteOffer = useAutoCompleteOffer();
   // Kept after the offer goes, so the panel can fade out showing it.
   const [lastAutoCompleteOffer, setLastAutoCompleteOffer] =
@@ -360,6 +374,8 @@ export const GameWrapper = ({
   // The time of a win, and the fastest win counting this one.
   const showWinTime = useEffectEvent((timeMs: number) => {
     const previous = settings?.stats.fastestTimeMs ?? null;
+    // This win, on top of those recorded before it.
+    setWinCount((settings?.stats.wins ?? 0) + 1);
     setWinTimes({
       timeMs,
       bestMs: previous === null ? timeMs : Math.min(previous, timeMs),
@@ -493,12 +509,9 @@ export const GameWrapper = ({
         message={winLoseMessage}
         handleUndo={handleLossUndo}
         isCampaignMode={isCampaignMode}
-        actionsHidden={revealing && uncoveredWinResult !== campaignWinResult}
-        topPanel={
-          campaignWinResult?.awardedReward ? (
-            <CampaignWinRewardPreview result={campaignWinResult} />
-          ) : null
-        }
+        title={localizeGameTitle(gameInfo, pathname, displayLanguage)}
+        winCount={won ? winCount : undefined}
+        actionsDisabled={revealing && uncoveredWinResult !== campaignWinResult}
         onExit={async () => {
           setCampaignWinResult(null);
           try {
@@ -658,7 +671,7 @@ export const GameWrapper = ({
         </View>
       </View>
 
-      {taoReward && taoRevealText && (
+      {taoReward && taoRevealText && revealStarted === campaignWinResult && (
         <TaoReveal
           key={taoReward.id}
           chapter={taoReward.id}
@@ -668,7 +681,7 @@ export const GameWrapper = ({
         />
       )}
 
-      {quoteReward && quoteReveal && (
+      {quoteReward && quoteReveal && revealStarted === campaignWinResult && (
         <QuoteReveal
           key={quoteReward.id}
           text={quoteReveal.text}

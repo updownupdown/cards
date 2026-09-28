@@ -1,4 +1,5 @@
 import type { Constellation } from "@/data/tao-constellations";
+import { REVEAL_TIMING } from "@/components/common/reveal-timing";
 
 /**
  * Plans the whole Tao reveal up front: when each letter appears, where it
@@ -34,17 +35,18 @@ export const REVEAL = {
   brightShare: 0.35,
   // Constellation
   linesDrawMs: 3000,
-  holdMs: 5000,
-  // Exit
-  linesOutMs: 1300,
-  starsOutMs: 1300,
-  skyOutMs: 3900,
+  holdMs: REVEAL_TIMING.holdMs,
+  // Exit: together as long as REVEAL_TIMING.fadeOutMs.
+  linesOutMs: REVEAL_TIMING.fadeOutMs * 0.25,
+  starsOutMs: REVEAL_TIMING.fadeOutMs * 0.25,
+  skyOutMs: REVEAL_TIMING.fadeOutMs * 0.5,
   /** The win box is finished off this long before the sky starts to clear. */
   uncoverLeadMs: 300,
 } as const;
 
-export const SKY_IN_AT = 1500;
-export const SKY_IN_MS = 3000;
+// The pause before the reveal is the win box's (REVEAL_TIMING.delayMs).
+export const SKY_IN_AT = 0;
+export const SKY_IN_MS = REVEAL_TIMING.fadeInMs;
 const LINE_GAP = 5;
 
 // --- Text --------------------------------------------------------------------

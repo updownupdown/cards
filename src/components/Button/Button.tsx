@@ -109,6 +109,8 @@ interface Props {
   preventWebLongPressMenu?: boolean;
   autoProgress?: number;
   autoProgressColor?: string;
+  /** A header button's small caption under its icon. */
+  label?: string;
 }
 
 export const Button = ({
@@ -137,6 +139,7 @@ export const Button = ({
   preventWebLongPressMenu = false,
   autoProgress,
   autoProgressColor = rgba(Colors.white, 0.3),
+  label,
 }: Props) => {
   const autoProgressValue = useRef(new Animated.Value(0)).current;
   const { spacing } = useResponsiveMetrics();
@@ -254,6 +257,7 @@ export const Button = ({
     },
     headerButton && {
       ...flexStyles.rowCentered,
+      ...(label ? { flexDirection: "column" as const, gap: 2 } : null),
       flex: 1,
       padding: 0,
       width: spacing(layoutDims.menuButtonSize),
@@ -305,7 +309,7 @@ export const Button = ({
   return (
     <AnimatedPressable
       accessibilityRole="button"
-      accessibilityLabel={accessibilityLabel}
+      accessibilityLabel={accessibilityLabel ?? label}
       style={[pressableStyle, stateTransitionStyle]}
       onPress={() => {
         if (Platform.OS === "web" && typeof document !== "undefined") {
@@ -353,6 +357,19 @@ export const Button = ({
           ]}
         />
       )}
+      {headerButton && label ? (
+        <Text
+          numberOfLines={1}
+          style={{
+            fontSize: roundToPixel(10 * uiScale),
+            lineHeight: roundToPixel(12 * uiScale),
+            fontFamily: FontWeight[400],
+            color: disabled ? appTheme.faint : appTheme.dim,
+          }}
+        >
+          {label}
+        </Text>
+      ) : null}
       {text && (
         <Text
           style={[
