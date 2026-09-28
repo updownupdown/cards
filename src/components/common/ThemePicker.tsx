@@ -2,7 +2,7 @@ import { Text } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { rgba, theme } from "@/styles/styles";
 import { COLOR_THEMES } from "@/styles/themes";
-import { Pressable, View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
 
 /**
  * Asks Home to open Settings again once the app has been rebuilt in a new
@@ -15,17 +15,28 @@ export function consumeReopenSettings() {
   return value;
 }
 
-/** The colour themes as swatches, each drawn in its own colours. */
+/**
+ * The colour themes as a row of swatches that scrolls sideways, each drawn in
+ * its own colours. `bleed` is the padding of the page around it, which the
+ * row runs into so it scrolls from edge to edge.
+ */
 export function ThemePicker({
   value,
   onChange,
+  bleed = 0,
 }: {
   value: string;
   onChange: (id: string) => void;
+  bleed?: number;
 }) {
   const { spacing } = useResponsiveMetrics();
   return (
-    <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing(10) }}>
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      style={{ marginHorizontal: -bleed, alignSelf: "stretch" }}
+      contentContainerStyle={{ paddingHorizontal: bleed, gap: spacing(8) }}
+    >
       {COLOR_THEMES.map(({ id, name, colors }) => {
         const selected = id === value;
         return (
@@ -40,10 +51,10 @@ export function ThemePicker({
               onChange(id);
             }}
             style={{
-              width: "48%",
-              flexGrow: 1,
-              padding: spacing(10),
-              gap: spacing(8),
+              minWidth: spacing(84),
+              paddingVertical: spacing(12),
+              paddingHorizontal: spacing(12),
+              gap: spacing(10),
               borderRadius: spacing(14),
               backgroundColor: colors.night,
               borderWidth: selected ? 2 : 1,
@@ -51,14 +62,14 @@ export function ThemePicker({
               outline: "none",
             }}
           >
-            <View style={{ flexDirection: "row", gap: spacing(4) }}>
+            <View style={{ flexDirection: "row", gap: spacing(3) }}>
               {[colors.accent, colors.accent2, colors.surface, colors.ink].map(
                 (color, index) => (
                   <View
                     key={index}
                     style={{
-                      width: spacing(14),
-                      height: spacing(14),
+                      width: spacing(13),
+                      height: spacing(13),
                       borderRadius: spacing(7),
                       backgroundColor: color,
                       borderWidth: 1,
@@ -68,12 +79,19 @@ export function ThemePicker({
                 ),
               )}
             </View>
-            <Text size="xs" weight={500} color={colors.ink} numberOfLines={1}>
+            <Text
+              size="sm"
+              weight={600}
+              color={colors.ink}
+              textTransform="uppercase"
+              numberOfLines={1}
+              style={{ letterSpacing: spacing(1) }}
+            >
               {name}
             </Text>
           </Pressable>
         );
       })}
-    </View>
+    </ScrollView>
   );
 }
