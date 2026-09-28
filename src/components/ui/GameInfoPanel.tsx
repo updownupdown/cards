@@ -1,6 +1,5 @@
 import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { Text } from "@/components/common/Text";
-import { FavButton } from "@/components/Home/FavButton";
 import { gameArt, useGameCategory } from "@/components/Home/HomeArt";
 import { getGameDotDefinition } from "@/data/campaign-map";
 import { setLastPlayedGameDot } from "@/data/campaign-progress";
@@ -17,10 +16,6 @@ import { ActionButton, hairline, RatingMeters } from "./Nocturne";
 
 type Props = {
   path: string;
-  /** A small thumbnail of the art leads the panel, or the favourite star. */
-  leading: "thumbnail" | "favorite";
-  isFavorite?: boolean;
-  onToggleFavorite?: (path: string) => void;
   collectedTaoIds: ReadonlySet<number>;
   collectedQuoteIds: ReadonlySet<number>;
   locked?: boolean;
@@ -30,15 +25,11 @@ type Props = {
 };
 
 /**
- * A game's label: its name and family, its ratings, the collectibles a
- * Campaign win gives, and a Play button. Shown under the Odyssey map and the
- * Gallery's works.
+ * A game's label: its art, name and family, its ratings, the collectibles a
+ * Campaign win gives, and a Play button. Shown under the Odyssey map.
  */
 export function GameInfoPanel({
   path,
-  leading,
-  isFavorite = false,
-  onToggleFavorite,
   collectedTaoIds,
   collectedQuoteIds,
   locked = false,
@@ -80,30 +71,18 @@ export function GameInfoPanel({
       <View
         style={{ flexDirection: "row", alignItems: "center", gap: spacing(12) }}
       >
-        {leading === "thumbnail" ? (
-          <Image
-            source={gameArt(game)}
-            cachePolicy="memory"
-            contentFit="cover"
-            style={{
-              width: thumbSize * 1.3,
-              height: thumbSize,
-              borderRadius: spacing(6),
-              backgroundColor: game.gameColorDark,
-              opacity: locked ? 0.35 : 1,
-            }}
-          />
-        ) : (
-          <FavButton
-            isFavorite={isFavorite}
-            onToggleFavorite={() => onToggleFavorite?.(path)}
-            size={spacing(44)}
-            iconSize={spacing(26)}
-            activeColor={theme.accent}
-            inactiveColor={theme.dim}
-            disabled={!onToggleFavorite}
-          />
-        )}
+        <Image
+          source={gameArt(game)}
+          cachePolicy="memory"
+          contentFit="cover"
+          style={{
+            width: thumbSize * 1.3,
+            height: thumbSize,
+            borderRadius: spacing(6),
+            backgroundColor: game.gameColorDark,
+            opacity: locked ? 0.35 : 1,
+          }}
+        />
         <View style={{ flex: 1, minWidth: 0, gap: spacing(2) }}>
           <Text size="xl" weight={500} numberOfLines={1}>
             {localizeGameTitle(game, path, language)}

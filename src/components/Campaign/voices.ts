@@ -1,10 +1,8 @@
 import type { QuoteId } from "@/data/collectibles";
 import { QUOTE_AUTHORS, QUOTE_IDS_BY_AUTHOR } from "@/data/quote-authors";
 
-/**
- * The quotes collection by period: the authors grouped by when they were
- * born, each period drawn as a constellation with one star per author.
- */
+/** The quotes collection by period: the authors grouped by when they were
+ * born. */
 
 export type VoicesPeriod = {
   id: string;
@@ -31,8 +29,6 @@ export type VoicesAuthor = {
   circa: boolean;
   quoteIds: QuoteId[];
   collectedIds: QuoteId[];
-  /** The author's star in the period's constellation, on a 100 x 100 grid. */
-  star: { x: number; y: number };
 };
 
 export type VoicesGroup = {
@@ -44,36 +40,6 @@ export type VoicesGroup = {
   to: number | null;
 };
 
-function hashUnit(input: string) {
-  let hash = 2166136261;
-  for (let index = 0; index < input.length; index += 1) {
-    hash ^= input.charCodeAt(index);
-    hash = Math.imul(hash, 16777619);
-  }
-  return (hash >>> 0) / 0xffffffff;
-}
-
-/**
- * The authors' stars: laid out along a loose winding path, oldest first, so
- * joined in order they read as a single figure.
- */
-function placeStars(names: string[]) {
-  const count = names.length;
-  return names.map((name, index) => {
-    const t = count <= 1 ? 0.5 : index / (count - 1);
-    const angle = t * Math.PI * (1.2 + (count > 10 ? 1.4 : 0.6));
-    const radius = 18 + t * 26;
-    const jitter = (key: string) => (hashUnit(`${name}:${key}`) - 0.5) * 12;
-    return {
-      x: Math.max(6, Math.min(94, 50 + Math.cos(angle) * radius + jitter("x"))),
-      y: Math.max(
-        6,
-        Math.min(94, 50 + Math.sin(angle) * radius * 0.85 + jitter("y")),
-      ),
-    };
-  });
-}
-
 export function voicesGroups(collected: ReadonlySet<QuoteId>): VoicesGroup[] {
   let from = -Infinity;
   return VOICES_PERIODS.map((period) => {
@@ -81,8 +47,7 @@ export function voicesGroups(collected: ReadonlySet<QuoteId>): VoicesGroup[] {
       (author) => author.born >= from && author.born < period.until,
     ).sort((a, b) => a.born - b.born);
     from = period.until;
-    const stars = placeStars(members.map((author) => author.name));
-    const authors = members.map((author, index) => {
+    const authors = members.map((author) => {
       const quoteIds = QUOTE_IDS_BY_AUTHOR.get(author.name) ?? [];
       return {
         name: author.name,
@@ -92,7 +57,6 @@ export function voicesGroups(collected: ReadonlySet<QuoteId>): VoicesGroup[] {
         circa: author.circa,
         quoteIds,
         collectedIds: quoteIds.filter((id) => collected.has(id)),
-        star: stars[index],
       };
     });
     const deaths = authors.map((author) => author.died);
@@ -142,4 +106,26 @@ export function portraitLength(path: string) {
     );
   }
   return length;
+}
+
+/** Names that aren't shortened to their last word. */
+const SHORT_NAMES: Record<string, string> = {
+  "Sun Tzu": "Sun Tzu",
+  "Li Bai": "Li Bai",
+  "Marcus Aurelius": "Aurelius",
+  "Michel de Montaigne": "Montaigne",
+  "Vincent van Gogh": "Van Gogh",
+  "José Ortega y Gasset": "Ortega y Gasset",
+  "Antoine de Saint-Exupéry": "Saint-Exupéry",
+  "Martin Luther King Jr.": "King",
+  "Elizabeth II": "Elizabeth II",
+  "Dalai Lama XIV": "Dalai Lama",
+  "Thich Nhat Hanh": "Thich Nhat Hanh",
+  "Bessel van der Kolk": "Van der Kolk",
+  "Ursula K. Le Guin": "Le Guin",
+};
+
+/** An author as the bar names them: usually their last name. */
+export function shortName(name: string) {
+  return SHORT_NAMES[name] ?? name.split(" ").at(-1) ?? name;
 }

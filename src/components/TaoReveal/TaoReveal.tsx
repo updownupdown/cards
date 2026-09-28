@@ -41,6 +41,7 @@ import {
   SKY_IN_AT,
   SKY_IN_MS,
   STAR_TINTS,
+  starGlow,
   type EdgePlan,
   type GlyphPlan,
   type ParsedText,
@@ -405,9 +406,7 @@ const StarGlyph = memo(function StarGlyph({
             height: dotSize,
             borderRadius: dotSize / 2,
             backgroundColor: STAR_TINTS[plan.tint],
-            boxShadow: plan.bright
-              ? `0 0 ${dotSize * 2.6}px ${dotSize * 0.6}px ${rgba(GLOW_COLOR, 0.95)}`
-              : `0 0 ${dotSize * 1.8}px ${dotSize * 0.35}px ${rgba(GLOW_COLOR, 0.75)}`,
+            boxShadow: starGlow(STAR_TINTS[plan.tint], dotSize, !!plan.bright),
           },
           dotStyle,
         ]}

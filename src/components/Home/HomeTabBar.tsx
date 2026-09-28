@@ -1,4 +1,3 @@
-import { useKeyboardState } from "@/hooks/useKeyboardLift";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { Icon, type IconName } from "@/icons";
@@ -55,7 +54,6 @@ export function HomeTabBar({
   const insets = useSafeAreaInsets();
   const { spacing, ui } = useResponsiveMetrics();
   const { t } = useTranslation("home");
-  const keyboard = useKeyboardState();
   const backgroundOpacity = useSharedValue(showBackground ? 1 : 0);
   const backgroundStyle = useAnimatedStyle(() => ({
     opacity: backgroundOpacity.value,
@@ -82,11 +80,7 @@ export function HomeTabBar({
           right: 0,
           bottom: 0,
           zIndex: 8,
-          // Out of the way while the keyboard is up, so only the search box
-          // rides above it.
-          opacity: keyboard.visible ? 0 : 1,
         },
-        keyboard.visible && pointerEventsStyles.none,
       ]}
     >
       {/* The header's fade, mirrored: content scrolling past the floating pill

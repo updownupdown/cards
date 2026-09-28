@@ -10,6 +10,7 @@ import React from "react";
 import { Text } from "react-native";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { WinLoseBox } from "@/components/common/WinLoseBox";
+import { ActionButton } from "@/components/ui/Nocturne";
 
 jest.mock("@/hooks/useGamePath", () => ({ useGamePath: () => "/klondike" }));
 jest.mock("react-native-safe-area-context", () => ({
@@ -54,31 +55,24 @@ function texts(renderer: ReactTestRenderer) {
 }
 
 describe("WinLoseBox", () => {
-  test("a win shows its time, with the best time under it", async () => {
+  test("a win shows its time, with the best time beside it", async () => {
     const shown = texts(await render(true));
     expect(shown).toEqual(
-      expect.arrayContaining(["You won!", "3:05", "Best: 1:32"]),
+      expect.arrayContaining(["YOU WON", "3:05", "TIME", "1:32", "BEST TIME"]),
     );
   });
 
   test("a loss shows no time", async () => {
     const shown = texts(await render(false));
-    expect(shown).toContain("You lost");
+    expect(shown).toContain("YOU LOST");
     expect(shown).not.toContain("3:05");
     expect(shown.some((text) => text.startsWith("Best"))).toBe(false);
   });
 
-  test("hidden buttons are left out, and the top panel sits above", async () => {
-    const renderer = await render(true, {
-      actionsHidden: true,
-      topPanel: <Text>Chapter 21</Text>,
-    });
-    const shown = texts(renderer);
-    expect(shown).toContain("Chapter 21");
-    expect(shown.indexOf("Chapter 21")).toBeLessThan(shown.indexOf("You won!"));
-    expect(shown).not.toContain("Play again");
-
-    const withButtons = texts(await render(true));
-    expect(withButtons).toContain("Play again");
+  test("hidden actions can't be pressed", async () => {
+    const hidden = await render(true, { actionsHidden: true });
+    const buttons = hidden.root.findAll((node) => node.type === ActionButton);
+    expect(buttons.length).toBeGreaterThan(0);
+    for (const button of buttons) expect(button.props.disabled).toBe(true);
   });
 });

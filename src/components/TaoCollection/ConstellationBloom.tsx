@@ -1,6 +1,7 @@
 import {
   STAR_DOT_SCALE,
   STAR_TINTS,
+  starGlow,
   starsInStrokeOrder,
   starTints,
 } from "@/components/TaoReveal/timeline";
@@ -10,13 +11,7 @@ import { memo, useMemo } from "react";
 import { View } from "react-native";
 import Animated from "react-native-reanimated";
 import Svg, { Path } from "react-native-svg";
-import {
-  dustLayers,
-  figureDust,
-  figureSegments,
-  GLOW_COLOR,
-  STAR_COLOR,
-} from "./figure";
+import { dustLayers, figureDust, figureSegments, STAR_COLOR } from "./figure";
 
 /**
  * A chapter's constellation coming into being: the minor stars fade in, the
@@ -206,9 +201,7 @@ export const ConstellationBloom = memo(function ConstellationBloom({
               height: star.dot,
               borderRadius: star.dot / 2,
               backgroundColor: star.color,
-              boxShadow: star.bright
-                ? `0 0 ${star.dot * 2.6}px ${star.dot * 0.6}px ${rgba(GLOW_COLOR, 0.9)}`
-                : `0 0 ${star.dot * 1.8}px ${star.dot * 0.35}px ${rgba(GLOW_COLOR, 0.7)}`,
+              boxShadow: starGlow(star.color, star.dot, star.bright),
               animationName: TWINKLE,
               animationDuration: ms(star.twinkleMs),
               animationDelay: ms(star.twinkleDelay),

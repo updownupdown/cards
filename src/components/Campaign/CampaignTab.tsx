@@ -165,7 +165,6 @@ export function CampaignTab({ contentPaddingTop }: Props) {
       >
         <GameInfoPanel
           path={selectedGameDot.path}
-          leading="thumbnail"
           campaign
           locked={state === "locked"}
           collectedTaoIds={collectedTaoIds}

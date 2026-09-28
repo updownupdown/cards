@@ -8,7 +8,12 @@ import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle, localizeSettingDefinitions } from "@/i18n/content";
 import { useModalStyles } from "@/styles/modalStyles";
 import { rgba, theme } from "@/styles/styles";
-import { ActionButton, RatingMeters } from "@/components/ui/Nocturne";
+import { ActionButton, Caps, RatingMeters } from "@/components/ui/Nocturne";
+import {
+  GAME_FULL_THUMBNAIL_ASSETS,
+  GAME_THUMBNAIL_ASPECTS,
+} from "@/data/game-thumbnails";
+import { Image } from "expo-image";
 import { isValidLink } from "@/utils/utils";
 import { useGamePath } from "@/hooks/useGamePath";
 import { useRef } from "react";
@@ -102,9 +107,7 @@ export default function GameModal({
       >
         {value}
       </Text>
-      <Text size="xxs" weight={300} color={theme.dim}>
-        {label}
-      </Text>
+      <Caps>{label}</Caps>
     </View>
   );
 
@@ -279,6 +282,7 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
 
   const background = gameInfo.background;
   const art = gameInfo.thumbnailCredit;
+  const thumbnail = gameInfo.thumbnail;
 
   if (!hasCredits(gameInfo)) return null;
 
@@ -296,20 +300,40 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
         }}
       >
         {art && (
-          <View style={{ gap: spacing(2) }}>
-            <Text size="xxs" weight={400} color={theme.dim}>
-              {t("credits.gameArt")}
-            </Text>
-            <Text serif italic size="lg" color={theme.ink}>
-              {art.title}
-            </Text>
-            <Text serif size="sm" color={theme.dim}>
-              {[art.artistName, art.date].filter(Boolean).join(", ")}
-            </Text>
-            <Text size="xs" weight={300} color={theme.dim}>
-              {t("credits.artSource")}{" "}
-              <CreditLink name={art.sourceName} link={art.sourceLink} />
-            </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "flex-start",
+              gap: spacing(14),
+            }}
+          >
+            {/* The whole work, uncropped, small beside its label. */}
+            {thumbnail && (
+              <Image
+                source={GAME_FULL_THUMBNAIL_ASSETS[thumbnail]}
+                cachePolicy="memory"
+                contentFit="contain"
+                style={{
+                  height: spacing(84),
+                  width: spacing(84) * GAME_THUMBNAIL_ASPECTS[thumbnail],
+                  maxWidth: spacing(120),
+                  borderRadius: spacing(3),
+                }}
+              />
+            )}
+            <View style={{ flex: 1, gap: spacing(2) }}>
+              <Caps>{t("credits.gameArt")}</Caps>
+              <Text serif italic size="lg" color={theme.ink}>
+                {art.title}
+              </Text>
+              <Text serif size="sm" color={theme.dim}>
+                {[art.artistName, art.date].filter(Boolean).join(", ")}
+              </Text>
+              <Text size="xs" weight={300} color={theme.dim}>
+                {t("credits.artSource")}{" "}
+                <CreditLink name={art.sourceName} link={art.sourceLink} />
+              </Text>
+            </View>
           </View>
         )}
 

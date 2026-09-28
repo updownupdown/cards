@@ -9,7 +9,7 @@ import { isTaoChapterTranslated, localizeTaoChapter } from "@/i18n/content";
 import { parseChapterText } from "@/components/TaoReveal/timeline";
 import { theme } from "@/styles/styles";
 import { toRoman } from "@/utils/roman";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView, View } from "react-native";
 import Animated from "react-native-reanimated";
 import { ChapterText } from "./ChapterText";
@@ -31,6 +31,10 @@ const fadeIn = (delay: number, duration: number) =>
 
 type Props = {
   chapterNumber: number;
+  /** Not collected yet: a faint figure and a note on how to collect it. */
+  collected: boolean;
+  /** Shown under the note while nothing at all is collected. */
+  about?: string;
   width: number;
   height: number;
   /** Room left at the top for the modal's header. */
@@ -41,6 +45,8 @@ type Props = {
 
 export function TaoChapterDetail({
   chapterNumber,
+  collected,
+  about,
   width,
   height,
   topInset,
@@ -54,6 +60,22 @@ export function TaoChapterDetail({
   const [showOriginal, setShowOriginal] = useState(false);
   const [read, setRead] = useState(false);
   const onRead = useCallback(() => setRead(true), []);
+  const scrollRef = useRef<ScrollView>(null);
+  const titleY = useRef<number | null>(null);
+
+  // As the words start, the page rises so the chapter's title sits at the
+  // top, the figure above it scrolled away, leaving the most room to read.
+  useEffect(() => {
+    if (!collected) return;
+    const timer = setTimeout(() => {
+      if (titleY.current === null) return;
+      scrollRef.current?.scrollTo({
+        y: Math.max(0, titleY.current - topInset - spacing(8)),
+        animated: true,
+      });
+    }, TEXT_AT);
+    return () => clearTimeout(timer);
+  }, [collected, spacing, topInset]);
 
   const chapter = getTaoChapter(chapterNumber);
   const constellation = getTaoConstellation(chapterNumber);
@@ -75,8 +97,9 @@ export function TaoChapterDetail({
 
   const pad = spacing(20);
   const contentWidth = Math.min(width - pad * 2, spacing(560));
+  // Kept small, so the chapter's text starts well up the screen.
   const figureSize = Math.round(
-    Math.min(contentWidth, spacing(320), height * 0.42),
+    Math.min(contentWidth, spacing(320), height * 0.42) * 0.7,
   );
   const dustCount = useMemo(
     () =>
@@ -89,9 +112,12 @@ export function TaoChapterDetail({
 
   return (
     <ScrollView
+      ref={scrollRef}
       style={{ flex: 1 }}
       contentContainerStyle={{
         alignItems: "center",
+        // Room to lift even a short chapter's title to the top.
+        minHeight: collected ? height + figureSize + spacing(60) : undefined,
         paddingTop: topInset,
         paddingBottom: bottomInset + spacing(32),
         paddingHorizontal: pad,
@@ -99,7 +125,13 @@ export function TaoChapterDetail({
       showsVerticalScrollIndicator={false}
     >
       {constellation && (
-        <View style={{ marginTop: spacing(12), alignItems: "center" }}>
+        <View
+          style={{
+            marginTop: spacing(12),
+            alignItems: "center",
+            opacity: collected ? 1 : 0.2,
+          }}
+        >
           <ConstellationBloom
             constellation={constellation}
             size={figureSize}
@@ -109,23 +141,14 @@ export function TaoChapterDetail({
       )}
 
       <Animated.View
+        onLayout={(event) => {
+          titleY.current = event.nativeEvent.layout.y;
+        }}
         style={[
           { marginTop: spacing(20), alignItems: "center", gap: spacing(2) },
-          fadeIn(NUMBER_AT, 900),
+          fadeIn(collected ? NUMBER_AT : 0, 900),
         ]}
       >
-        <Text
-          serif
-          weight={500}
-          color={theme.accent}
-          style={{
-            fontSize: font(26),
-            lineHeight: font(32),
-            textAlign: "center",
-          }}
-        >
-          {t("tao.chapter", { number: toRoman(chapterNumber) })}
-        </Text>
         {constellation?.name ? (
           <Text
             serif
@@ -137,9 +160,51 @@ export function TaoChapterDetail({
             {constellation.name}
           </Text>
         ) : null}
+        <Text
+          serif
+          weight={500}
+          color={collected ? theme.accent : theme.dim}
+          style={{
+            fontSize: font(26),
+            lineHeight: font(32),
+            textAlign: "center",
+          }}
+        >
+          {t("tao.chapter", { number: toRoman(chapterNumber) })}
+        </Text>
       </Animated.View>
 
-      {shown && (
+      {!collected && (
+        <View
+          style={{
+            width: contentWidth,
+            marginTop: spacing(18),
+            gap: spacing(16),
+          }}
+        >
+          <Text
+            serif
+            italic
+            size="lg"
+            color={theme.dim}
+            style={{ textAlign: "center" }}
+          >
+            {t("tao.uncollected")}
+          </Text>
+          {about ? (
+            <Text
+              size="sm"
+              weight={300}
+              color={theme.faint}
+              style={{ textAlign: "center" }}
+            >
+              {about}
+            </Text>
+          ) : null}
+        </View>
+      )}
+
+      {collected && shown && (
         <View style={{ width: contentWidth, marginTop: spacing(18) }}>
           <ChapterText
             key={showOriginal ? "original" : "shown"}

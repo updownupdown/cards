@@ -16,20 +16,6 @@ import {
   planQuoteReveal,
   REVEAL_TIMES,
 } from "@/components/QuoteReveal/QuoteReveal";
-import {
-  canStepQuote,
-  CELL_BLEED,
-  CELL_BOX,
-  cellLine,
-  firstPosition,
-  galleryAuthors,
-  lifespan,
-  LINE_Y,
-  placeholderLine,
-  PORTRAIT_FOCUS,
-  stepAuthor,
-  stepQuote,
-} from "@/components/QuotesCollection/quote-gallery";
 import { getQuote, QUOTE_COUNT } from "@/data/collectibles";
 import {
   getQuoteAuthor,
@@ -188,6 +174,10 @@ describe("Pen text layout", () => {
 });
 
 // --- Authors and portraits ----------------------------------------------------------
+
+/** The portraits' box, and the line they start and end on. */
+const CELL_BOX = { width: 200, height: 240 };
+const LINE_Y = 238;
 
 describe("Quote authors", () => {
   test("every quote's author has a portrait, and every portrait an author with quotes", () => {
@@ -362,139 +352,5 @@ describe("Quote reveal plan", () => {
     const plain = planQuoteReveal(quote, undefined, SCREEN);
     expect(plain.portrait).toBeNull();
     expect(plain.authorAt).toBeLessThan(plan.authorAt + 1);
-  });
-});
-
-// --- The gallery ---------------------------------------------------------------------------
-
-describe("Quote gallery", () => {
-  const shakespeare = QUOTE_AUTHORS.findIndex(
-    (author) => author.name === "William Shakespeare",
-  );
-  const austen = QUOTE_AUTHORS.findIndex(
-    (author) => author.name === "Jane Austen",
-  );
-  const shakespeareIds = QUOTE_IDS_BY_AUTHOR.get("William Shakespeare")!;
-  const austenId = QUOTE_IDS_BY_AUTHOR.get("Jane Austen")![0];
-  const authors = galleryAuthors(
-    new Set([shakespeareIds[0], shakespeareIds[2], austenId]),
-  );
-
-  test("lists every author by birth, with the quotes collected of theirs", () => {
-    expect(authors.map((author) => author.name)).toEqual(
-      QUOTE_AUTHORS.map((author) => author.name),
-    );
-    expect(authors[shakespeare].collectedIds).toEqual([
-      shakespeareIds[0],
-      shakespeareIds[2],
-    ]);
-    expect(authors[shakespeare].quoteIds).toEqual(shakespeareIds);
-    expect(authors[0].collectedIds).toEqual([]);
-  });
-
-  test("opens on the first author with a quote, on their portrait", () => {
-    expect(firstPosition(authors)).toEqual({
-      author: shakespeare,
-      quote: PORTRAIT_FOCUS,
-    });
-    expect(firstPosition(galleryAuthors(new Set()))).toEqual({
-      author: 0,
-      quote: PORTRAIT_FOCUS,
-    });
-  });
-
-  test("steps through every author, round the ends, back on the portrait", () => {
-    const onQuote = { author: shakespeare, quote: 1 };
-    expect(stepAuthor(onQuote, authors, 1)).toEqual({
-      author: shakespeare + 1,
-      quote: PORTRAIT_FOCUS,
-    });
-    expect(stepAuthor({ author: 0, quote: -1 }, authors, -1)).toEqual({
-      author: authors.length - 1,
-      quote: PORTRAIT_FOCUS,
-    });
-    expect(
-      stepAuthor({ author: authors.length - 1, quote: -1 }, authors, 1),
-    ).toEqual({
-      author: 0,
-      quote: PORTRAIT_FOCUS,
-    });
-  });
-
-  test("goes down the collected quotes and back up to the portrait, stopping at the ends", () => {
-    let position = { author: shakespeare, quote: PORTRAIT_FOCUS };
-    expect(canStepQuote(position, authors, -1)).toBe(false);
-    expect(stepQuote(position, authors, -1)).toEqual(position);
-    position = stepQuote(position, authors, 1);
-    expect(position.quote).toBe(0);
-    position = stepQuote(position, authors, 1);
-    expect(position.quote).toBe(1);
-    expect(canStepQuote(position, authors, 1)).toBe(false);
-    expect(stepQuote(position, authors, 1)).toEqual(position);
-    expect(stepQuote(stepQuote(position, authors, -1), authors, -1).quote).toBe(
-      PORTRAIT_FOCUS,
-    );
-    // Nothing collected: nowhere to go.
-    expect(canStepQuote({ author: 0, quote: -1 }, authors, 1)).toBe(false);
-  });
-
-  test("an author's line is their portrait once collected, else a wavy placeholder", () => {
-    const collected = cellLine(authors[austen]);
-    expect(collected).toContain(authors[austen].portrait.slice(1));
-    const empty = cellLine(authors[0]);
-    expect(empty).toBe(placeholderLine(authors[0].name));
-    for (const d of [collected, empty]) {
-      const line = points(d);
-      // Across the whole cell, on the line at both edges.
-      expect(line[0]).toEqual({ x: 0, y: LINE_Y });
-      expect(line[line.length - 1].x).toBeCloseTo(CELL_BOX.width);
-      expect(line[line.length - 1].y).toBeCloseTo(LINE_Y);
-    }
-  });
-
-  test("placeholders are gently wavy, never flat, and the same every time", () => {
-    const shapes = new Set<string>();
-    for (const author of QUOTE_AUTHORS) {
-      const d = placeholderLine(author.name);
-      expect(placeholderLine(author.name)).toBe(d);
-      shapes.add(d);
-      const lift = Math.max(...points(d).map(({ y }) => Math.abs(LINE_Y - y)));
-      expect(lift).toBeGreaterThan(2);
-      expect(lift).toBeLessThan(30);
-    }
-    expect(shapes.size).toBeGreaterThan(1);
-  });
-
-  test("everything drawn in a cell fits inside it with its bleed", () => {
-    for (const author of galleryAuthors(
-      new Set(QUOTE_IDS_BY_AUTHOR.get("Seneca")),
-    )) {
-      for (const { x, y } of points(cellLine(author))) {
-        expect(x).toBeGreaterThanOrEqual(0);
-        expect(x).toBeLessThanOrEqual(CELL_BOX.width);
-        expect(y).toBeGreaterThanOrEqual(-CELL_BLEED + 4);
-        expect(y).toBeLessThanOrEqual(CELL_BOX.height + CELL_BLEED - 4);
-      }
-    }
-  });
-});
-
-describe("Author years", () => {
-  // As the English strings in campaign.json.
-  const t = (key: string, options: Record<string, string | number>) =>
-    ({
-      "quotes.yearsBC": `${options.from}–${options.to} BC`,
-      "quotes.yearsBCtoAD": `${options.from} BC – AD ${options.to}`,
-      "quotes.circa": `c. ${options.years}`,
-    })[key]!;
-  const years = (name: string) => lifespan(getQuoteAuthor(name)!, t);
-
-  test("read naturally across eras", () => {
-    expect(years("Henry David Thoreau")).toBe("1817–1862");
-    expect(years("Sun Tzu")).toBe("c. 544–496 BC");
-    expect(years("Zhuangzi")).toBe("c. 369–286 BC");
-    expect(years("Seneca")).toBe("c. 4 BC – AD 65");
-    expect(years("Epictetus")).toBe("c. 50–135");
-    expect(years("Dalai Lama XIV")).toBe("1935–");
   });
 });

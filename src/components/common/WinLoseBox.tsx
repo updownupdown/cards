@@ -9,7 +9,7 @@ import {
   rgba,
   theme,
 } from "@/styles/styles";
-import { ActionButton, Kicker } from "@/components/ui/Nocturne";
+import { ActionButton, Caps, Kicker } from "@/components/ui/Nocturne";
 import { useEffect, useRef } from "react";
 import { Animated, Easing, Platform, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -37,8 +37,6 @@ interface Props {
   actionsDisabled?: boolean;
   /** @deprecated The old name of actionsDisabled. */
   actionsHidden?: boolean;
-  /** @deprecated No longer shown: the reward plays over the whole screen. */
-  topPanel?: ReactNode;
   /** The game's name, large at the top. */
   title?: string;
   /** How many times the game has been won, this win included. */
@@ -77,9 +75,7 @@ export const WinLoseBox = ({
       >
         {value}
       </Text>
-      <Text size="xxs" weight={300} color={theme.dim}>
-        {label}
-      </Text>
+      <Caps>{label}</Caps>
     </View>
   );
   const insets = useSafeAreaInsets();

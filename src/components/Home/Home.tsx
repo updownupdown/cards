@@ -154,8 +154,6 @@ export default function Home() {
   const contentPaddingBottom =
     spacing(layoutDims.tabBarHeight + layoutDims.pagePadding * 0.5 + 48) +
     insets.bottom;
-  const searchControlBottom =
-    spacing(layoutDims.tabBarHeight + layoutDims.pagePadding) + insets.bottom;
 
   const onInvalidateHomeData = () => {
     setHomeDataRefreshToken((current) => current + 1);
@@ -316,8 +314,6 @@ export default function Home() {
         <GalleryTab
           allEnabledGames={allEnabledGames}
           settingsMap={settingsMap}
-          favorites={favorites}
-          onToggleFavorite={toggleFavorite}
           onScrolledChange={(scrolled) =>
             setTabScrolled(COLLECT_HOME_TAB_INDEX, scrolled)
           }
@@ -329,14 +325,10 @@ export default function Home() {
     [SEARCH_HOME_TAB_INDEX]: (
       <SearchTab
         allEnabledGames={allEnabledGames}
-        unplayedGamePaths={unplayedGamePaths}
+        settingsMap={settingsMap}
         favorites={favorites}
         recentPaths={recentPaths}
         onToggleFavorite={toggleFavorite}
-        onScrolledChange={(scrolled) =>
-          setTabScrolled(SEARCH_HOME_TAB_INDEX, scrolled)
-        }
-        showHeaderBackground={showHeaderBackgroundFor(SEARCH_HOME_TAB_INDEX)}
         contentPaddingTop={contentPaddingTop}
         contentPaddingBottom={contentPaddingBottom}
       />

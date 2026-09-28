@@ -4,27 +4,17 @@ import {
   parseChapterText,
   planStarDust,
   SPECK_SCALE,
-  STAR_DOT_SCALE,
-  STAR_TINTS,
-  starTints,
   type DustPoint,
 } from "@/components/TaoReveal/timeline";
 
 /**
- * Geometry shared by the collection's constellation drawings. Every layer of
- * a figure is one SVG path (all the dust of one brightness, all the lines,
- * all the stars), so even the full 9 x 9 sky is only a few hundred elements.
+ * Geometry shared by the collection's constellation drawings: the dust of
+ * one brightness is one SVG path, so a figure is only a few elements.
  */
 
 export const STAR_COLOR = "#ffffff";
-export const GLOW_COLOR = "#9cc9ff";
-export const LINE_COLOR = "#bedcff";
 
 const round = (value: number) => Math.round(value * 10) / 10;
-
-export function starRadius(mag: number, size: number) {
-  return STAR_DOT_SCALE * (0.5 + mag * 0.7) * Math.max(1, size / 300);
-}
 
 /** One path made of many small circles. */
 export function circlesPath(circles: { x: number; y: number; r: number }[]) {
@@ -120,58 +110,4 @@ export function figureSegments(
     }
   }
   return segments;
-}
-
-export type FigurePaths = {
-  dust: { opacity: number; d: string }[];
-  lines: string;
-  glows: string;
-  /** One path per star colour. */
-  stars: { color: string; d: string }[];
-};
-
-const figureCache = new Map<string, FigurePaths>();
-
-/** Every layer of a still figure, cached: the sky redraws them often. */
-export function figurePaths(
-  constellation: Constellation,
-  size: number,
-  dustCount: number,
-): FigurePaths {
-  const key = `${constellation.chapter}:${size}:${dustCount}`;
-  const cached = figureCache.get(key);
-  if (cached) return cached;
-
-  const scale = size / 100;
-  const gap = Math.max(1.5, size * 0.014);
-  const paths: FigurePaths = {
-    dust: dustLayers(figureDust(constellation, dustCount), size),
-    lines: figureSegments(constellation, size, gap)
-      .map(
-        (segment) =>
-          `M${round(segment.x1)} ${round(segment.y1)}L${round(segment.x2)} ${round(segment.y2)}`,
-      )
-      .join(""),
-    glows: circlesPath(
-      constellation.stars.map((star) => ({
-        x: star.x * scale,
-        y: star.y * scale,
-        r: starRadius(star.mag, size) * 2.6,
-      })),
-    ),
-    stars: STAR_TINTS.map((color, tint) => ({
-      color,
-      d: circlesPath(
-        constellation.stars
-          .filter((_, id) => starTints(constellation)[id] === tint)
-          .map((star) => ({
-            x: star.x * scale,
-            y: star.y * scale,
-            r: starRadius(star.mag, size),
-          })),
-      ),
-    })).filter((layer) => layer.d),
-  };
-  figureCache.set(key, paths);
-  return paths;
 }
