@@ -22,9 +22,13 @@ type Props = {
   style?: ViewStyle;
 };
 
+/** The height of a full-width game card, the same wherever it shows. */
+export const HOME_CARD_HEIGHT = 172;
+
 /**
- * A game at full width: its art on the left, fading into the card, with its
- * name, family and ratings beside it (Game of the Day, the Random Deal).
+ * A game at full width: its art on the right, melting into the card, with its
+ * name, family and ratings at the foot on the left (Game of the Day, the
+ * Random Deal).
  */
 export function HomeCard({
   path,
@@ -44,8 +48,8 @@ export function HomeCard({
     <View
       style={[
         {
-          minHeight: spacing(150),
-          borderRadius: spacing(18),
+          height: spacing(HOME_CARD_HEIGHT),
+          borderRadius: spacing(10),
           overflow: "hidden",
           backgroundColor: theme.surface,
           borderWidth: 1,
@@ -58,7 +62,7 @@ export function HomeCard({
         onPress={() => launchGame(path as Href)}
         accessibilityRole="button"
         accessibilityLabel={title}
-        style={{ flex: 1, flexDirection: "row" }}
+        style={{ flex: 1 }}
       >
         {/* The art, melting into the card towards the text. */}
         <View
@@ -66,8 +70,8 @@ export function HomeCard({
             position: "absolute",
             top: 0,
             bottom: 0,
-            left: 0,
-            width: "52%",
+            right: 0,
+            width: "60%",
             backgroundColor: game.gameColorDark,
           }}
         >
@@ -84,11 +88,11 @@ export function HomeCard({
           />
           <LinearGradient
             colors={[
-              rgba(theme.surface, 0),
-              rgba(theme.surface, 0.55),
               theme.surface,
+              rgba(theme.surface, 0.6),
+              rgba(theme.surface, 0),
             ]}
-            locations={[0.3, 0.7, 1]}
+            locations={[0, 0.5, 0.9]}
             start={{ x: 0, y: 0.5 }}
             end={{ x: 1, y: 0.5 }}
             style={StyleSheet.absoluteFill}
@@ -97,29 +101,28 @@ export function HomeCard({
         <View
           style={{
             flex: 1,
-            marginLeft: "40%",
-            padding: spacing(14),
-            paddingRight: spacing(40),
-            gap: spacing(4),
+            width: "80%",
+            justifyContent: "flex-end",
+            padding: spacing(16),
+            gap: spacing(12),
           }}
         >
-          <Text size="lg" weight={500} lineHeight={1.2} numberOfLines={2}>
-            {title}
-          </Text>
-          <Text size="xs" weight={300} color={theme.dim} numberOfLines={1}>
-            {category(game)}
-          </Text>
-          <View style={{ marginTop: "auto", paddingTop: spacing(12) }}>
-            <RatingMeters
-              stacked
-              rating={game.rating}
-              labels={{
-                complexity: tCommon("stats.complexity"),
-                difficulty: tCommon("stats.difficulty"),
-                luck: tCommon("stats.luck"),
-              }}
-            />
+          <View style={{ gap: spacing(2), width: "78%" }}>
+            <Text size="xl" weight={500} lineHeight={1.15} numberOfLines={2}>
+              {title}
+            </Text>
+            <Text size="xs" weight={300} color={theme.dim} numberOfLines={1}>
+              {category(game)}
+            </Text>
           </View>
+          <RatingMeters
+            rating={game.rating}
+            labels={{
+              complexity: tCommon("stats.complexity"),
+              difficulty: tCommon("stats.difficulty"),
+              luck: tCommon("stats.luck"),
+            }}
+          />
         </View>
       </Pressable>
       <FavButton
@@ -129,8 +132,9 @@ export function HomeCard({
         size={spacing(40)}
         iconSize={spacing(22)}
         activeColor={theme.accent}
-        inactiveColor={theme.dim}
+        inactiveColor={theme.ink}
         disabled={!onToggleFavorite}
+        backdrop
       />
     </View>
   );

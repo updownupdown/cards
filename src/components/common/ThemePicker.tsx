@@ -51,7 +51,7 @@ export function ThemePicker({
               onChange(id);
             }}
             style={{
-              minWidth: spacing(84),
+              width: spacing(104),
               paddingVertical: spacing(12),
               paddingHorizontal: spacing(12),
               gap: spacing(10),
@@ -62,15 +62,15 @@ export function ThemePicker({
               outline: "none",
             }}
           >
-            <View style={{ flexDirection: "row", gap: spacing(3) }}>
+            <View style={{ flexDirection: "row", gap: spacing(4) }}>
               {[colors.accent, colors.accent2, colors.surface, colors.ink].map(
                 (color, index) => (
                   <View
                     key={index}
                     style={{
-                      width: spacing(13),
-                      height: spacing(13),
-                      borderRadius: spacing(7),
+                      width: spacing(17),
+                      height: spacing(17),
+                      borderRadius: spacing(9),
                       backgroundColor: color,
                       borderWidth: 1,
                       borderColor: rgba(colors.ink, 0.15),
@@ -80,7 +80,7 @@ export function ThemePicker({
               )}
             </View>
             <Text
-              size="sm"
+              size="xxs"
               weight={600}
               color={colors.ink}
               textTransform="uppercase"

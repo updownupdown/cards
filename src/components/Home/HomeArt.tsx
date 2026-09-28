@@ -67,7 +67,7 @@ export function GameTile({
       style={{
         width: size,
         height: size,
-        borderRadius: spacing(10),
+        borderRadius: spacing(6),
         overflow: "hidden",
         backgroundColor: game.gameColorDark,
         borderWidth: 1,
@@ -98,7 +98,7 @@ export function GameTile({
             paddingBottom: spacing(9),
           }}
         >
-          <Text size="md" weight={500} lineHeight={1.15} numberOfLines={2}>
+          <Text size="lg" weight={500} lineHeight={1.15} numberOfLines={2}>
             {title}
           </Text>
         </View>
@@ -222,7 +222,7 @@ function ContinueCard({
       style={{
         width,
         height,
-        borderRadius: spacing(16),
+        borderRadius: spacing(10),
         overflow: "hidden",
         backgroundColor: game.gameColorDark,
         borderWidth: 1,
@@ -255,7 +255,7 @@ function ContinueCard({
         >
           <Text
             weight={500}
-            size={latest ? "xxl" : "md"}
+            size={latest ? "xxl" : "lg"}
             lineHeight={1.15}
             numberOfLines={2}
           >
