@@ -8,8 +8,9 @@
  * - ink / dim / faint: text, from main to secondary to disabled.
  * - accent: the one colour the interface owns: buttons, the active tab,
  *   progress, and whatever is earned. accentInk is text drawn on it.
- * - accent2: a second, quieter highlight for things already collected
- *   (usually a tint of the accent; a contrasting colour in two-tone themes).
+ * - accent2: a second highlight, which must read apart from the accent: on
+ *   the Odyssey map, the accent marks a finished game and accent2 one won
+ *   (or reachable) with collectibles still to find.
  * - sky: the tint at the heart of the starry backgrounds.
  */
 type Hex = `#${string}`;
@@ -46,7 +47,7 @@ export const COLOR_THEMES = [
       faint: "#545168",
       accent: "#ffcf87",
       accentInk: "#2a1a05",
-      accent2: "#ffcf87",
+      accent2: "#9fb2ff",
       sky: "#161830",
     },
   },
@@ -78,7 +79,7 @@ export const COLOR_THEMES = [
       faint: "#62626c",
       accent: "#d9e4ff",
       accentInk: "#0b0b0d",
-      accent2: "#a9c3ff",
+      accent2: "#8fa9ff",
       sky: "#1b1e2c",
     },
   },

@@ -207,7 +207,7 @@ export function RatingMeters({
   labels: { complexity: string; difficulty: string; luck: string };
   stacked?: boolean;
 }) {
-  const { spacing } = useResponsiveMetrics();
+  const { spacing, font } = useResponsiveMetrics();
   const items = [
     [labels.complexity, rating.complexity],
     [labels.difficulty, rating.difficulty],
@@ -233,10 +233,13 @@ export function RatingMeters({
     );
   }
   return (
-    <View style={{ flexDirection: "row", gap: spacing(14) }}>
+    <View style={{ flexDirection: "row", gap: spacing(10) }}>
       {items.map(([label, value]) => (
         <View key={label} style={{ flex: 1, gap: spacing(6) }}>
-          <Caps>{label}</Caps>
+          {/* Tighter than other caps, so COMPLEXITY fits a third of a card. */}
+          <Caps style={{ fontSize: font(10), letterSpacing: spacing(0.7) }}>
+            {label}
+          </Caps>
           <Meter value={value / 100} />
         </View>
       ))}

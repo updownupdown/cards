@@ -2,7 +2,6 @@ import { GAMES_DATA } from "@/data/games-registry";
 import { CampaignBackground } from "@/components/Campaign/CampaignBackground";
 import { CampaignBlackHole } from "@/components/Campaign/CampaignBlackHole";
 import {
-  ARM_DUST,
   getGameDotState,
   getUnlockedGameDotPaths,
   GAME_DOTS_BY_PATH,
@@ -15,17 +14,8 @@ import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useDisplayLanguage } from "@/i18n";
 import { useTabReadyHold } from "@/components/Home/TabReady";
 import { localizeGameTitle } from "@/i18n/content";
-import React, {
-  memo,
-  type ReactNode,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import {
-  Animated as RNAnimated,
-  Easing as RNEasing,
   Platform,
   Pressable,
   StyleSheet,
@@ -33,33 +23,26 @@ import {
   View,
   type LayoutChangeEvent,
 } from "react-native";
-import { Image } from "expo-image";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { scheduleOnRN } from "react-native-worklets";
 import Animated, {
   Extrapolation,
+  FadeOut,
   interpolate,
   type SharedValue,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
+  ZoomIn,
 } from "react-native-reanimated";
 
 // A spiral galaxy needs room: 114 game dots three dot-diameters apart do not fit
 // in a smaller world (see MAP_GEOMETRY in src/data/campaign-map.ts).
 const WORLD_SIZE = 1800;
-const GAME_DOT_SIZE = 18;
+/** Every game dot is drawn the same size: its state shows in its colours. */
+const GAME_DOT_SIZE = 10;
 /** How close (in screen points) a native tap must be to select a game dot. */
 const GAME_DOT_TAP_RADIUS = 28;
-/** Size reads as a signal, not decoration: a reachable-but-unplayed game dot
- * (the one to head for) is biggest, tapering down through won and complete
- * back to a small, unlit locked game dot. */
-const STATE_SIZE_MULTIPLIER = {
-  locked: 0.72,
-  complete: 0.85,
-  won: 1,
-  connected: 1.2,
-} as const;
 
 // Far enough out to take in the whole galaxy at once, which is most of why
 // the map is worth having.
@@ -75,32 +58,44 @@ const GAME_DOT_EXTENT_Y =
     WORLD_SIZE *
     0.5 +
   GAME_DOT_SIZE;
-// Realistic-ish star colours: a locked game dot is a dim, unlit ember; a
-// reachable-but-unplayed game dot runs hot red; a won-but-incomplete game dot is a
-// warm orange main-sequence star; a fully complete game dot is a blue-white nova.
-function stateColor(state: GameDotState): string {
+
+/**
+ * A game dot's look, as a star on a chart: finished games burn in the accent;
+ * won ones with collectibles still to find, in the second accent; reachable
+ * ones are an open ring in the second accent, and locked ones a pale grey
+ * ring. Lit dots glow.
+ */
+function gameDotLook(state: GameDotState) {
   switch (state) {
-    case "won":
-      return theme.accent;
     case "complete":
-      return theme.accent2;
+      return { fill: theme.accent, border: theme.accent, glow: theme.accent };
+    case "won":
+      return {
+        fill: theme.accent2,
+        border: theme.accent2,
+        glow: theme.accent2,
+      };
     case "connected":
-      return theme.accent;
+      return { fill: undefined, border: theme.accent2, glow: theme.accent2 };
     default:
-      return rgba(theme.ink, 0.35);
+      return {
+        fill: undefined,
+        border: rgba(theme.ink, 0.32),
+        glow: undefined,
+      };
   }
 }
+
+/** How strongly each state glows: lit stars most, reachable ones faintly. */
+const GLOW_OPACITY = { complete: 0.55, won: 0.5, connected: 0.22, locked: 0 };
 
 /** Link widths in world points: arm strands heavier than the links between. */
 const LINE_WIDTH = { arm: 1.9, bridge: 0.77 };
 /** Locked links are drawn a little finer as well as fainter. */
 const LOCKED_LINE_SCALE = 0.85;
 
-/** A sprite's size in world points: room for the widest halo. Must match
- *  SPRITES.nodeSize in scripts/generate-campaign-map.mjs. */
-const GAME_DOT_SPRITE_SIZE = 96;
-/** The gap between a selected game dot and its first ring, in world points. */
-const SELECTION_GAP = 4;
+/** The selected game dot's ring: its gap from the dot, in world points. */
+const SELECTION_GAP = 7;
 
 /**
  * Game dot names are drawn like the engraving on a star chart: small, spaced
@@ -129,213 +124,58 @@ function labelColor(state: GameDotState) {
 }
 
 /**
- * The arms, drawn rather than implied: a soft glow along each spine plus a
- * scatter of dust that thins out away from it. Purely decorative, never
- * interactive, and static - it renders once and is never updated.
- *
- * Glow and dust are one pre-rendered image baked by
- * scripts/generate-campaign-map.mjs. A real blur is the only way to get smooth
- * arms (stacked shapes band), SVG blur filters are unreliable on Android,
- * and one image is far cheaper to draw than the shapes it replaces: Android
- * draws a map-sized SVG as a bitmap many times the size of the screen.
+ * The chart's grid, after the old star atlases (Bayer's Uranometria): rings
+ * around Klondike at the centre, crossed by lines through it. Plain views,
+ * like the links: Android draws a map-sized SVG as one huge bitmap.
  */
-const GALAXY_GLOW = require("@/assets/images/galaxy-glow.webp");
+const CHART_RING_STEP = 110;
+const CHART_RING_COUNT = 8;
+const CHART_SPOKES = 12;
+const CHART_LINE = 0.7;
 
-/** A soft halo for each dust tint (blue-white, white, cyan, pink and the
- *  bulge's warm tint), in the order scripts/generate-campaign-map.mjs deals
- *  them, and bakes these. */
-const FLARE_SPRITES = [
-  require("@/assets/images/campaign/flare-0.webp"),
-  require("@/assets/images/campaign/flare-1.webp"),
-  require("@/assets/images/campaign/flare-2.webp"),
-  require("@/assets/images/campaign/flare-3.webp"),
-  require("@/assets/images/campaign/flare-4.webp"),
-];
-
-/**
- * Some of the brighter stars flare now and then. They are dealt into a few
- * groups that each flare together on their own rhythm, so a handful of
- * animations (not one per star) keep the arms alive; the members of a group
- * are scattered across the whole galaxy, so they never read as a set.
- */
-const FLARE_GROUP_COUNT = 6;
-/** World-point radius of a flaring star's halo. */
-const FLARE_RADIUS = 10;
-const FLARE_GROUPS = (() => {
-  const groups: { x: number; y: number; tint: number }[][] = Array.from(
-    { length: FLARE_GROUP_COUNT },
-    () => [],
-  );
-  let dealt = 0;
-  ARM_DUST.forEach(([x, y, tint, opacity], index) => {
-    if (index % 7 !== 0 || opacity < 0.6 || index % 14 !== 0) return;
-    groups[dealt % FLARE_GROUP_COUNT].push({
-      x: toWorld(x),
-      y: toWorld(y),
-      tint: FLARE_SPRITES[tint] ? tint : 1,
-    });
-    dealt += 1;
-  });
-  return groups.map((stars, group) => ({
-    stars,
-    // Long, uneven rests between short blooms, so a flare is an event.
-    periodMs: 6200 + Math.round(hashUnit(`flare:${group}:period`) * 5200),
-    phaseMs: Math.round(hashUnit(`flare:${group}:phase`) * 6000),
-  }));
-})();
-/** Share of a flare cycle spent brightening, then fading, out of the whole. */
-const FLARE_BLOOM_SHARE = 0.12;
-const FLARE_FADE_SHARE = 0.2;
-
-function FlareStars({
-  stars,
-}: {
-  stars: (typeof FLARE_GROUPS)[number]["stars"];
-}) {
-  return stars.map((star, index) => (
-    <Image
-      key={index}
-      source={FLARE_SPRITES[star.tint]}
-      cachePolicy="memory"
-      style={{
-        position: "absolute",
-        left: star.x - FLARE_RADIUS,
-        top: star.y - FLARE_RADIUS,
-        width: FLARE_RADIUS * 2,
-        height: FLARE_RADIUS * 2,
-      }}
-    />
-  ));
-}
-
-const flareLayerStyle = {
-  position: "absolute",
-  left: 0,
-  top: 0,
-  width: WORLD_SIZE,
-  height: WORLD_SIZE,
-  pointerEvents: "none",
-} as const;
-
-function NativeFlareGroup({ group }: { group: (typeof FLARE_GROUPS)[number] }) {
-  const glow = useRef(new RNAnimated.Value(0)).current;
-
-  useEffect(() => {
-    const bloomMs = group.periodMs * FLARE_BLOOM_SHARE;
-    const fadeMs = group.periodMs * FLARE_FADE_SHARE;
-    const animation = RNAnimated.loop(
-      RNAnimated.sequence([
-        RNAnimated.delay(group.periodMs - bloomMs - fadeMs),
-        RNAnimated.timing(glow, {
-          toValue: 1,
-          duration: bloomMs,
-          easing: RNEasing.out(RNEasing.quad),
-          useNativeDriver: true,
-        }),
-        RNAnimated.timing(glow, {
-          toValue: 0,
-          duration: fadeMs,
-          easing: RNEasing.inOut(RNEasing.sin),
-          useNativeDriver: true,
-        }),
-      ]),
-    );
-    // Groups start staggered so they never fall into step.
-    const timer = setTimeout(() => animation.start(), group.phaseMs);
-    return () => {
-      clearTimeout(timer);
-      animation.stop();
-    };
-  }, [glow, group]);
-
+const ChartGrid = memo(function ChartGrid() {
+  const centre = WORLD_SIZE / 2;
+  const reach = CHART_RING_STEP * CHART_RING_COUNT;
+  const color = rgba(theme.ink, 0.07);
   return (
-    <RNAnimated.View style={[flareLayerStyle, { opacity: glow }]}>
-      <FlareStars stars={group.stars} />
-    </RNAnimated.View>
-  );
-}
-
-function WebFlareGroup({ group }: { group: (typeof FLARE_GROUPS)[number] }) {
-  const webFlareStyle = {
-    opacity: 0,
-    animationName: "campaign-arm-star-flare",
-    animationDuration: `${group.periodMs}ms`,
-    animationDelay: `-${group.phaseMs}ms`,
-    animationIterationCount: "infinite",
-    animationTimingFunction: "linear",
-  } as Record<string, unknown>;
-
-  return (
-    <View style={[flareLayerStyle, webFlareStyle]}>
-      <FlareStars stars={group.stars} />
+    <View style={[StyleSheet.absoluteFill, { pointerEvents: "none" }]}>
+      {Array.from({ length: CHART_RING_COUNT }, (_, index) => {
+        const radius = CHART_RING_STEP * (index + 1);
+        return (
+          <View
+            key={`ring-${index}`}
+            style={{
+              position: "absolute",
+              left: centre - radius,
+              top: centre - radius,
+              width: radius * 2,
+              height: radius * 2,
+              borderRadius: radius,
+              borderWidth: CHART_LINE,
+              // Every other ring a little stronger, as the atlases rule them.
+              borderColor: index % 2 === 1 ? rgba(theme.ink, 0.1) : color,
+            }}
+          />
+        );
+      })}
+      {/* Each spoke is a line right through the centre, so half as many. */}
+      {Array.from({ length: CHART_SPOKES / 2 }, (_, index) => (
+        <View
+          key={`spoke-${index}`}
+          style={{
+            position: "absolute",
+            left: centre - reach,
+            top: centre - CHART_LINE / 2,
+            width: reach * 2,
+            height: CHART_LINE,
+            backgroundColor: color,
+            transform: [{ rotate: `${(index * 360) / CHART_SPOKES}deg` }],
+          }}
+        />
+      ))}
     </View>
   );
-}
-
-const ArmFlares = memo(function ArmFlares() {
-  return FLARE_GROUPS.map((group, index) =>
-    Platform.OS === "web" ? (
-      <WebFlareGroup key={index} group={group} />
-    ) : (
-      <NativeFlareGroup key={index} group={group} />
-    ),
-  );
 });
-
-const ArmArtwork = memo(function ArmArtwork({
-  animationsEnabled,
-  onGlowShown,
-}: {
-  animationsEnabled: boolean;
-  onGlowShown: () => void;
-}) {
-  return (
-    <>
-      {/* The wrapper carries pointerEvents, which expo-image's style does not
-          accept; the image inherits it, so a drag pans the map on web rather
-          than picking the picture up. */}
-      <View
-        style={{
-          position: "absolute",
-          pointerEvents: "none",
-          left: 0,
-          top: 0,
-          width: WORLD_SIZE,
-          height: WORLD_SIZE,
-        }}
-      >
-        <Image
-          source={GALAXY_GLOW}
-          cachePolicy="memory"
-          contentFit="fill"
-          style={{ width: "100%", height: "100%", opacity: 0.45 }}
-          onDisplay={onGlowShown}
-        />
-      </View>
-      {animationsEnabled && <ArmFlares />}
-    </>
-  );
-});
-
-/** Fraction of newly-reachable game dots that twinkle, so the sky isn't uniform. */
-const TWINKLE_CHANCE = 0.7;
-
-/** Deterministic per-game dot twinkle rhythm so game dots don't pulse in lockstep. */
-function getTwinkleTiming(path: string) {
-  const bloomMs = 260 + Math.round(hashUnit(`${path}:bloom`) * 220);
-  const restMs = 1500 + Math.round(hashUnit(`${path}:rest`) * 2800);
-  const durationMs = restMs + bloomMs * 2.3;
-  return {
-    enabled: hashUnit(`${path}:enabled`) < TWINKLE_CHANCE,
-    bloomMs,
-    restMs,
-    durationMs,
-    // One-time delay before a native game dot's first bloom.
-    startDelayMs: Math.round(hashUnit(`${path}:start`) * 1800),
-    // Offsets a web game dot's CSS animation into its own cycle from frame one.
-    phaseMs: Math.round(hashUnit(`${path}:phase`) * durationMs),
-  };
-}
 
 function hashUnit(input: string) {
   let hash = 2166136261;
@@ -418,14 +258,13 @@ const GameDotLabels = memo(function GameDotLabels({
     >
       {GAME_DOT_DEFINITIONS.map((gameDot) => {
         const state = gameDotStates.get(gameDot.path)!;
-        const dotSize = GAME_DOT_SIZE * STATE_SIZE_MULTIPLIER[state];
         return (
           <Text
             key={gameDot.path}
             style={{
               position: "absolute",
               left: toWorld(gameDot.x) - LABEL.maxWidth / 2,
-              top: toWorld(gameDot.y) + dotSize / 2 + LABEL.gap,
+              top: toWorld(gameDot.y) + GAME_DOT_SIZE / 2 + LABEL.gap,
               width: LABEL.maxWidth,
               textAlign: "center",
               fontSize: LABEL.fontSize,
@@ -501,236 +340,111 @@ const GameDotConnections = memo(function GameDotConnections({
   );
 });
 
-const AnimatedPressable = RNAnimated.createAnimatedComponent(Pressable);
-
-type TwinkleTiming = ReturnType<typeof getTwinkleTiming>;
-
-function NativeTwinklingGameDot({
-  style,
-  title,
-  state,
-  onPress,
-  twinkle,
-  children,
-}: {
-  style: Record<string, unknown>;
-  title: string;
-  state: GameDotState;
-  onPress: () => void;
-  twinkle: TwinkleTiming;
-  children?: ReactNode;
-}) {
-  const pulse = useRef(new RNAnimated.Value(0)).current;
-
-  useEffect(() => {
-    const animation = RNAnimated.loop(
-      RNAnimated.sequence([
-        RNAnimated.delay(twinkle.startDelayMs),
-        RNAnimated.timing(pulse, {
-          toValue: 1,
-          duration: twinkle.bloomMs,
-          easing: RNEasing.out(RNEasing.sin),
-          useNativeDriver: Platform.OS !== "web",
-        }),
-        RNAnimated.timing(pulse, {
-          toValue: 0,
-          duration: Math.round(twinkle.bloomMs * 1.3),
-          easing: RNEasing.in(RNEasing.sin),
-          useNativeDriver: Platform.OS !== "web",
-        }),
-        RNAnimated.delay(twinkle.restMs),
-      ]),
-    );
-    animation.start();
-    return () => animation.stop();
-  }, [pulse, twinkle.bloomMs, twinkle.restMs, twinkle.startDelayMs]);
-
-  return (
-    <AnimatedPressable
-      accessibilityRole="button"
-      accessibilityLabel={`${title}, ${state}`}
-      onPress={onPress}
-      style={[
-        style,
-        {
-          opacity: pulse.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0.88, 1],
-          }),
-          transform: [
-            {
-              scale: pulse.interpolate({
-                inputRange: [0, 1],
-                outputRange: [1, 1.16],
-              }),
-            },
-          ],
-        },
-      ]}
-    >
-      {children}
-    </AnimatedPressable>
-  );
-}
-
-function TwinklingGameDot(props: {
-  style: Record<string, unknown>;
-  title: string;
-  state: GameDotState;
-  onPress: () => void;
-  twinkle: TwinkleTiming;
-  children?: ReactNode;
-}) {
-  if (Platform.OS === "web") {
-    const webTwinkleStyle = {
-      animationName: "campaign-game-dot-pulse",
-      animationDuration: `${props.twinkle.durationMs}ms`,
-      animationDelay: `-${props.twinkle.phaseMs}ms`,
-      animationIterationCount: "infinite",
-      animationTimingFunction: "ease-in-out",
-    } as Record<string, unknown>;
-
-    return (
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={`${props.title}, ${props.state}`}
-        onPress={props.onPress}
-        style={[props.style, webTwinkleStyle]}
-      />
-    );
-  }
-
-  return <NativeTwinklingGameDot {...props} />;
-}
-
 const GameDot = memo(function GameDot({
   gameDot,
   state,
-  selected,
-  animationsEnabled,
   onSelectGameDot,
 }: {
   gameDot: GameDotDefinition;
   state: GameDotState;
-  selected: boolean;
-  animationsEnabled: boolean;
   onSelectGameDot: (gameDot: GameDotDefinition) => void;
 }) {
-  const dotSize = GAME_DOT_SIZE * STATE_SIZE_MULTIPLIER[state];
+  const size = GAME_DOT_SIZE;
   const game = GAMES_DATA[gameDot.path];
   const title = localizeGameTitle(game, gameDot.path, useDisplayLanguage());
-  const color = stateColor(state);
-  const lit = state === "won" || state === "complete";
-  // Nocturne's stars: a won game is lit, with a soft halo; a reachable one is
-  // an open ring in the accent; a locked one is a faint point. The selected
-  // game is circled twice, like a star picked out on a chart.
-  const fill = lit ? color : state === "connected" ? theme.night : color;
-  const ring = state === "connected" ? `inset 0 0 0 1.5px ${color}` : "";
-  const halo = lit ? `0 0 ${dotSize * 0.9}px ${rgba(color, 0.45)}` : "";
-  const selectionRings = selected
-    ? `0 0 0 ${SELECTION_GAP}px ${theme.night}, 0 0 0 ${SELECTION_GAP + 1}px ${theme.accent}, 0 0 0 ${SELECTION_GAP + 5}px ${theme.night}, 0 0 0 ${SELECTION_GAP + 5.6}px ${rgba(theme.accent, 0.6)}`
-    : "";
-
-  const webStyle = {
+  const { fill, border, glow } = gameDotLook(state);
+  const glowOpacity = GLOW_OPACITY[state];
+  const left = toWorld(gameDot.x);
+  const top = toWorld(gameDot.y);
+  const dot = {
     position: "absolute",
-    outline: "none",
-    pointerEvents: "auto",
-    left: toWorld(gameDot.x) - dotSize / 2,
-    top: toWorld(gameDot.y) - dotSize / 2,
-    width: dotSize,
-    height: dotSize,
-    borderRadius: dotSize / 2,
+    width: size,
+    height: size,
+    borderRadius: size / 2,
+    borderWidth: 1.2,
+    borderColor: border,
     backgroundColor: fill,
-    boxShadow:
-      [ring, selectionRings, halo].filter(Boolean).join(", ") || "none",
   } as const;
-  // Native taps are handled by the map's tap gesture (see CampaignMap), and
-  // native draws the same look from plain views: a map has over a hundred of
-  // these, and Android draws blurred shadows slowly.
-  const nativeStyle = {
-    position: "absolute",
-    pointerEvents: "none",
-    left: toWorld(gameDot.x) - GAME_DOT_SPRITE_SIZE / 2,
-    top: toWorld(gameDot.y) - GAME_DOT_SPRITE_SIZE / 2,
-    width: GAME_DOT_SPRITE_SIZE,
-    height: GAME_DOT_SPRITE_SIZE,
-    alignItems: "center",
-    justifyContent: "center",
-  } as const;
-  const isWeb = Platform.OS === "web";
-  const style = isWeb ? webStyle : nativeStyle;
-  const circle = (size: number, extra: object) => (
-    <View
-      style={{
-        position: "absolute",
-        width: size,
-        height: size,
-        borderRadius: size / 2,
-        ...extra,
-      }}
-    />
-  );
-  const sprite = isWeb ? undefined : (
-    <>
-      {lit && circle(dotSize * 2.4, { backgroundColor: rgba(color, 0.14) })}
-      {circle(dotSize, {
-        backgroundColor: fill,
-        borderWidth: state === "connected" ? 1.5 : 0,
-        borderColor: color,
-      })}
-      {selected && <SelectionRing dotSize={dotSize} />}
-    </>
-  );
 
-  const twinkle = getTwinkleTiming(gameDot.path);
-  if (state === "connected" && animationsEnabled && twinkle.enabled) {
+  if (Platform.OS === "web") {
     return (
-      <TwinklingGameDot
-        style={style}
-        title={title}
-        state={state}
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`${title}, ${state}`}
         onPress={() => onSelectGameDot(gameDot)}
-        twinkle={twinkle}
-      >
-        {sprite}
-      </TwinklingGameDot>
-    );
-  }
-
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={`${title}, ${state}`}
-      onPress={() => onSelectGameDot(gameDot)}
-      style={style}
-    >
-      {sprite}
-    </Pressable>
-  );
-});
-
-/** The selected game dot's two concentric rings, as on the web. */
-function SelectionRing({ dotSize }: { dotSize: number }) {
-  const ring = (gap: number, width: number, opacity: number) => {
-    const size = dotSize + gap * 2;
-    return (
-      <View
         style={{
-          position: "absolute",
-          width: size,
-          height: size,
-          borderRadius: size / 2,
-          borderWidth: width,
-          borderColor: rgba(theme.accent, opacity),
+          ...dot,
+          outline: "none",
+          pointerEvents: "auto",
+          left: left - size / 2,
+          top: top - size / 2,
+          boxShadow: glow
+            ? `0 0 ${size * 0.9}px ${size * 0.25}px ${rgba(glow, glowOpacity)}`
+            : "none",
         }}
       />
     );
-  };
+  }
+
+  // Native taps are handled by the map's tap gesture (see CampaignMap), and
+  // native draws the glow from plain circles: a map has over a hundred of
+  // these, and Android draws blurred shadows slowly.
+  const box = size * 3;
+  const circle = (scale: number, style: object) => (
+    <View
+      style={{
+        position: "absolute",
+        width: size * scale,
+        height: size * scale,
+        borderRadius: (size * scale) / 2,
+        ...style,
+      }}
+    />
+  );
   return (
-    <>
-      {ring(SELECTION_GAP + 1, 1, 1)}
-      {ring(SELECTION_GAP + 5.6, 0.6, 0.6)}
-    </>
+    <View
+      accessibilityLabel={`${title}, ${state}`}
+      style={{
+        position: "absolute",
+        pointerEvents: "none",
+        left: left - box / 2,
+        top: top - box / 2,
+        width: box,
+        height: box,
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {glow && circle(3, { backgroundColor: rgba(glow, glowOpacity * 0.18) })}
+      {glow && circle(1.9, { backgroundColor: rgba(glow, glowOpacity * 0.35) })}
+      {circle(1, { ...dot, position: "absolute" })}
+    </View>
+  );
+});
+
+/**
+ * The ring around the selected game dot. Only its coming and going is
+ * animated: it grows in around the newly selected dot as the last one's
+ * fades away.
+ */
+function SelectionRing({ gameDot }: { gameDot: GameDotDefinition }) {
+  const size = GAME_DOT_SIZE + SELECTION_GAP * 2;
+  return (
+    <Animated.View
+      entering={ZoomIn.duration(220)}
+      exiting={FadeOut.duration(180)}
+      style={{
+        position: "absolute",
+        pointerEvents: "none",
+        left: toWorld(gameDot.x) - size / 2,
+        top: toWorld(gameDot.y) - size / 2,
+        width: size,
+        height: size,
+        borderRadius: size / 2,
+        borderWidth: 1.2,
+        borderColor: theme.accent,
+      }}
+    />
   );
 }
 
@@ -750,12 +464,10 @@ export function CampaignMap({
   const startX = useSharedValue(0);
   const startY = useSharedValue(0);
   const startScale = useSharedValue(1);
-  // The tab stays hidden until the map is centred on its game dot and its big
-  // glow image (slow to decode) is showing, so it appears complete.
+  // The tab stays hidden until the map is centred on its game dot, so it
+  // appears complete.
   const [centered, setCentered] = useState(false);
-  const [glowShown, setGlowShown] = useState(false);
-  const onGlowShown = () => setGlowShown(true);
-  useTabReadyHold(!centered || !glowShown);
+  useTabReadyHold(!centered);
   const containerRef = useRef<View>(null);
   const hasCenteredInitialGameDot = useRef(false);
   const unlockedPaths = useMemo(
@@ -778,6 +490,8 @@ export function CampaignMap({
       ),
     [collectedQuoteIds, collectedTaoIds, unlockedPaths, wonPaths],
   );
+
+  const selectedGameDot = GAME_DOTS_BY_PATH.get(selectedPath);
 
   const centerGameDot = (gameDot: GameDotDefinition, animated = true) => {
     const nextX = -gameDot.x * WORLD_SIZE * 0.5 * scale.value;
@@ -978,10 +692,7 @@ export function CampaignMap({
             <CampaignBlackHole animationsEnabled={settings.showAnimations} />
           </Animated.View>
 
-          <ArmArtwork
-            animationsEnabled={settings.showAnimations}
-            onGlowShown={onGlowShown}
-          />
+          <ChartGrid />
 
           <GameDotConnections gameDotStates={gameDotStates} />
 
@@ -991,12 +702,17 @@ export function CampaignMap({
                 key={gameDot.path}
                 gameDot={gameDot}
                 state={gameDotStates.get(gameDot.path)!}
-                selected={selectedPath === gameDot.path}
-                animationsEnabled={settings.showAnimations}
                 onSelectGameDot={onSelectGameDot}
               />
             );
           })}
+
+          {selectedGameDot && (
+            <SelectionRing
+              key={selectedGameDot.path}
+              gameDot={selectedGameDot}
+            />
+          )}
 
           <GameDotLabels gameDotStates={gameDotStates} scale={scale} />
         </Animated.View>

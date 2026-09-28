@@ -28,34 +28,6 @@
   }
 }
 
-/* A flaring star on the Nodes map: a long rest, a quick bloom, a slower
-   fade. The shares match FLARE_BLOOM_SHARE and FLARE_FADE_SHARE. */
-@keyframes campaign-arm-star-flare {
-  0%,
-  68%,
-  100% {
-    opacity: 0;
-  }
-
-  80% {
-    opacity: 1;
-  }
-}
-
-@keyframes campaign-game-dot-pulse {
-  0%,
-  65%,
-  100% {
-    transform: scale(1);
-    filter: brightness(1);
-  }
-
-  82% {
-    transform: scale(1.16);
-    filter: brightness(1.4);
-  }
-}
-
 html,
 body {
   margin: 0;
