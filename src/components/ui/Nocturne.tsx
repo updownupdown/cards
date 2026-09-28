@@ -96,6 +96,13 @@ export function PageTitle({ children }: { children: ReactNode }) {
   );
 }
 
+/** A section heading's size: the kicker's, 15% larger. */
+export function useSectionTitleStyle() {
+  const { font } = useResponsiveMetrics();
+  const size = font(11 * 1.15);
+  return { fontSize: size, lineHeight: size * 1.3 };
+}
+
 /** A section heading inside a page, with an optional action on the right. */
 export function SectionTitle({
   children,
@@ -105,6 +112,7 @@ export function SectionTitle({
   action?: ReactNode;
 }) {
   const { spacing } = useResponsiveMetrics();
+  const titleStyle = useSectionTitleStyle();
   return (
     <View
       style={{
@@ -114,7 +122,7 @@ export function SectionTitle({
         marginBottom: spacing(12),
       }}
     >
-      <Kicker>{children}</Kicker>
+      <Kicker style={titleStyle}>{children}</Kicker>
       {action}
     </View>
   );
