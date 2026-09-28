@@ -1,8 +1,8 @@
 {
   "progress": {
     "games": "Games",
-    "chapters": "Chapters",
-    "quotes": "Quotes",
+    "chapters": "Tao",
+    "quotes": "Voices",
     "summary": "{{label}}: {{collected}} of {{total}}"
   },
   "reward": {

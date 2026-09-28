@@ -7,7 +7,8 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { isTaoChapterTranslated, localizeTaoChapter } from "@/i18n/content";
 import { parseChapterText } from "@/components/TaoReveal/timeline";
-import { Colors } from "@/styles/styles";
+import { theme } from "@/styles/styles";
+import { toRoman } from "@/utils/roman";
 import { useCallback, useMemo, useState } from "react";
 import { ScrollView, View } from "react-native";
 import Animated from "react-native-reanimated";
@@ -17,7 +18,6 @@ import { BLOOM_MS, ConstellationBloom } from "./ConstellationBloom";
 /** The chapter number fades in as the figure completes; the text follows. */
 const NUMBER_AT = BLOOM_MS - 150;
 const TEXT_AT = BLOOM_MS + 450;
-const LABEL_COLOR = "#d6e4ff";
 
 const FADE_IN = { from: { opacity: 0 }, to: { opacity: 1 } };
 const fadeIn = (delay: number, duration: number) =>
@@ -109,16 +109,30 @@ export function TaoChapterDetail({
       )}
 
       <Animated.View
-        style={[{ marginTop: spacing(20) }, fadeIn(NUMBER_AT, 900)]}
+        style={[
+          { marginTop: spacing(20), alignItems: "center", gap: spacing(2) },
+          fadeIn(NUMBER_AT, 900),
+        ]}
       >
         <Text
-          size="md"
-          weight={400}
-          color={LABEL_COLOR}
-          style={{ opacity: 0.5, textAlign: "center" }}
+          serif
+          weight={500}
+          color={theme.accent}
+          style={{ fontSize: font(26), lineHeight: font(32), textAlign: "center" }}
         >
-          {t("tao.chapter", { number: chapterNumber })}
+          {t("tao.chapter", { number: toRoman(chapterNumber) })}
         </Text>
+        {constellation?.name ? (
+          <Text
+            serif
+            italic
+            size="lg"
+            color={theme.dim}
+            style={{ textAlign: "center" }}
+          >
+            {constellation.name}
+          </Text>
+        ) : null}
       </Animated.View>
 
       {shown && (

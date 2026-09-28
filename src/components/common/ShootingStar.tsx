@@ -31,6 +31,8 @@ type Props = {
   maxIntervalMs?: number;
   /** Top speed in px/s; a faster streak travels a shorter path instead. */
   maxSpeed?: number;
+  /** Draw the bright head; without it the streak is a single fine line. */
+  head?: boolean;
   testID?: string;
 };
 
@@ -49,6 +51,7 @@ export function ShootingStar({
   minIntervalMs = 5000,
   maxIntervalMs = 15000,
   maxSpeed = Infinity,
+  head = true,
   testID,
 }: Props) {
   const opacity = useRef(new RNAnimated.Value(0)).current;
@@ -230,14 +233,16 @@ export function ShootingStar({
           height: 1,
         }}
       />
-      <View
-        style={{
-          width: 2,
-          height: 2,
-          borderRadius: 1,
-          backgroundColor: "#ffffff",
-        }}
-      />
+      {head && (
+        <View
+          style={{
+            width: 2,
+            height: 2,
+            borderRadius: 1,
+            backgroundColor: "#ffffff",
+          }}
+        />
+      )}
     </RNAnimated.View>
   );
 }

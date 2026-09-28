@@ -18,6 +18,7 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 import { ShootingStar } from "@/components/common/ShootingStar";
+import { theme } from "@/styles/styles";
 
 const STAR_COLORS = ["#ffffff", "#eef8ff", "#d9efff", "#b9ddff", "#91c7ff"];
 
@@ -256,12 +257,12 @@ export function CampaignBackground({
   children,
 }: CampaignBackgroundProps) {
   const starLayers = useMemo(() => {
-    const stars = seededStars(140, 3);
+    const stars = seededStars(240, 3);
     return [
-      stars.slice(0, 45),
-      stars.slice(45, 85),
-      stars.slice(85, 117),
-      stars.slice(117),
+      stars.slice(0, 90),
+      stars.slice(90, 160),
+      stars.slice(160, 210),
+      stars.slice(210),
     ];
   }, []);
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -287,8 +288,9 @@ export function CampaignBackground({
         width={size.width}
         height={size.height}
         animationsEnabled={animationsEnabled}
-        colors={STAR_COLORS}
-        peakOpacity={0.55}
+        colors={[theme.ink]}
+        head={false}
+        peakOpacity={0.4}
         durationScale={2}
         minIntervalMs={18000}
         maxIntervalMs={44000}

@@ -1,4 +1,5 @@
 import { Text } from "@/components/common/Text";
+import { theme } from "@/styles/styles";
 import { ConstellationFigure } from "@/components/TaoReveal/ConstellationFigure";
 import { TAO_CHAPTER_COUNT } from "@/data/collectibles";
 import { getTaoConstellation } from "@/data/tao-constellations";
@@ -36,7 +37,7 @@ const SPAN_Y = GRID + ABOUT_HEIGHT + 2 * PITCH;
 /** The grid's figures draw a sample of the minor stars, not every one. */
 const GRID_DUST = 110;
 const MAX_SCALE = 2.4;
-const LABEL_COLOR = "#d6e4ff";
+
 
 export type Camera = {
   x: SharedValue<number>;
@@ -482,7 +483,7 @@ const SkyCell = memo(function SkyCell({
       <Text
         size="xs"
         weight={400}
-        color={LABEL_COLOR}
+        color={theme.dim}
         allowFontScaling={false}
         style={{
           position: "absolute",
@@ -524,7 +525,7 @@ function SkyAbout({ fade }: { fade: CellFade }) {
           fontFamily: "Outfit_300Light",
           fontSize: ABOUT_FONT,
           lineHeight: ABOUT_FONT * 1.5,
-          color: LABEL_COLOR,
+          color: theme.dim,
           opacity: 0.6,
           textAlign: "center",
         }}

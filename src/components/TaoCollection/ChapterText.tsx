@@ -6,6 +6,7 @@ import {
 } from "@/components/TaoReveal/timeline";
 import { memo, useEffect, useMemo, useState } from "react";
 import { Text, View } from "react-native";
+import { theme } from "@/styles/styles";
 import Animated from "react-native-reanimated";
 
 /**
@@ -15,7 +16,6 @@ import Animated from "react-native-reanimated";
  * word's fade is a CSS animation with a delay: nothing runs per frame.
  */
 
-const TEXT_COLOR = "#e8f1ff";
 const FONT_FAMILY = "Outfit_300Light";
 const LINE_HEIGHT = 1.5;
 // Lines are mounted a chunk (counted in letters) per frame, so opening a long
@@ -29,7 +29,7 @@ const textStyle = (fontSize: number) =>
     fontFamily: FONT_FAMILY,
     fontSize,
     lineHeight: fontSize * LINE_HEIGHT,
-    color: TEXT_COLOR,
+    color: theme.ink,
     includeFontPadding: false,
   }) as const;
 
