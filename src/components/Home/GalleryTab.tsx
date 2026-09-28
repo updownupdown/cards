@@ -1,4 +1,3 @@
-import { Text } from "@/components/common/Text";
 import { ChaptersView } from "@/components/Gallery/ChaptersView";
 import { QuotesView } from "@/components/Gallery/QuotesView";
 import { WorksView } from "@/components/Gallery/WorksView";
@@ -10,10 +9,10 @@ import { useCampaignProgress } from "@/hooks/useCampaignProgress";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
+import { Segmented } from "@/components/ui/Nocturne";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
-import { rgba, theme } from "@/styles/styles";
 import { useState } from "react";
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 
 type GalleryView = "works" | "chapters" | "quotes";
 const VIEWS: GalleryView[] = ["works", "chapters", "quotes"];
@@ -98,52 +97,28 @@ export function GalleryTab({
             {
               width: "100%",
               maxWidth: ui.contentMaxWidth - side * 2,
-              flexDirection: "row",
-              gap: spacing(4),
               padding: spacing(4),
             },
           ]}
         >
-          {VIEWS.map((key) => {
-            const selected = view === key;
-            return (
-              <Pressable
-                key={key}
-                onPress={() => {
-                  setView(key);
-                  onScrolledChange(false);
-                }}
-                accessibilityRole="button"
-                accessibilityState={{ selected }}
-                style={{
-                  flex: 1,
-                  alignItems: "center",
-                  paddingVertical: spacing(7),
-                  borderRadius: spacing(14),
-                  backgroundColor: selected
-                    ? rgba(theme.ink, 0.09)
-                    : "transparent",
-                  outline: "none",
-                }}
-              >
-                <Text
-                  size="sm"
-                  weight={500}
-                  color={selected ? theme.ink : theme.dim}
-                >
-                  {t(`gallery.views.${key}`)}
-                </Text>
-                <Text
-                  size="xxs"
-                  weight={400}
-                  color={selected ? theme.accent : theme.faint}
-                  style={{ fontVariant: ["tabular-nums"] }}
-                >
-                  {counts[key]}
-                </Text>
-              </Pressable>
-            );
-          })}
+          <Segmented
+            options={VIEWS.map((key) => ({
+              value: key,
+              label: t(`gallery.views.${key}`),
+              detail: counts[key],
+            }))}
+            value={view}
+            onChange={(key) => {
+              setView(key);
+              onScrolledChange(false);
+            }}
+            // The glass is the track here.
+            style={{
+              padding: 0,
+              borderWidth: 0,
+              backgroundColor: "transparent",
+            }}
+          />
         </View>
       </View>
 

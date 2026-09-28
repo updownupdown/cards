@@ -2,11 +2,8 @@ import { Text } from "@/components/common/Text";
 import { getLaunchCardFact } from "@/data/card-facts";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
-import {
-  hairline,
-  Kicker,
-  useSectionTitleStyle,
-} from "@/components/ui/Nocturne";
+import { hairline } from "@/components/ui/Nocturne";
+import { Icon } from "@/icons";
 import { theme } from "@/styles/styles";
 import { View } from "react-native";
 
@@ -22,7 +19,6 @@ export function HomeCardFact({
 }: HomeCardFactProps) {
   const { spacing } = useResponsiveMetrics();
   const { t } = useTranslation("home");
-  const titleStyle = useSectionTitleStyle();
 
   return (
     <View
@@ -43,7 +39,13 @@ export function HomeCardFact({
           gap: spacing(10),
         }}
       >
-        <Kicker style={titleStyle}>{t("sections.fact")}</Kicker>
+        {/* Twice a tab bar icon. */}
+        <Icon
+          name="lightbulb"
+          size={spacing(48)}
+          color={theme.accent}
+          accessibilityLabel={t("sections.fact")}
+        />
         <Text
           size="md"
           weight={300}

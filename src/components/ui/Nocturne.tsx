@@ -13,12 +13,13 @@ import {
   Platform,
   Pressable,
   View,
+  type LayoutChangeEvent,
   type StyleProp,
   type ViewStyle,
 } from "react-native";
 
 /** A hairline in the theme's ink. */
-export const hairline = () => rgba(theme.ink, 0.08);
+export const hairline = () => rgba(theme.ink, 0.14);
 
 /** The panel look: a surface with a hairline edge. */
 export function useSurfaceStyle(radius = 18): ViewStyle {
@@ -147,7 +148,8 @@ export function Meter({
         {
           height,
           borderRadius: height,
-          backgroundColor: rgba(theme.ink, 0.1),
+          // The empty part of the track, clear enough to read the fill against.
+          backgroundColor: rgba(theme.ink, 0.18),
           overflow: "hidden",
         },
         style,
@@ -193,7 +195,7 @@ export function SegmentBar({
             flex: 1,
             height,
             borderRadius: height,
-            backgroundColor: index < lit ? theme.accent : rgba(theme.ink, 0.1),
+            backgroundColor: index < lit ? theme.accent : rgba(theme.ink, 0.18),
           }}
         />
       ))}
@@ -283,9 +285,9 @@ export function Pill({
         gap: spacing(6),
         backgroundColor: selected
           ? rgba(theme.accent, 0.14)
-          : rgba(theme.ink, 0.05),
+          : rgba(theme.ink, 0.07),
         borderWidth: 1,
-        borderColor: selected ? rgba(theme.accent, 0.45) : "transparent",
+        borderColor: selected ? rgba(theme.accent, 0.45) : hairline(),
         outline: "none",
       }}
     >
@@ -299,7 +301,7 @@ export function Pill({
       <Text
         size="xs"
         weight={400}
-        color={selected ? theme.accent : theme.dim}
+        color={selected ? theme.accent : theme.ink}
         numberOfLines={1}
       >
         {label}
@@ -401,6 +403,7 @@ export function ActionButton({
   secondary = false,
   small = false,
   disabled = false,
+  onLayout,
   style,
 }: {
   label: string;
@@ -409,6 +412,7 @@ export function ActionButton({
   secondary?: boolean;
   small?: boolean;
   disabled?: boolean;
+  onLayout?: (event: LayoutChangeEvent) => void;
   style?: StyleProp<ViewStyle>;
 }) {
   const { spacing } = useResponsiveMetrics();
@@ -418,6 +422,7 @@ export function ActionButton({
     <Pressable
       onPress={onPress}
       disabled={disabled}
+      onLayout={onLayout}
       accessibilityRole="button"
       style={[
         {
@@ -446,5 +451,89 @@ export function ActionButton({
         {label}
       </Text>
     </Pressable>
+  );
+}
+
+/** The look every segmented toggle shares: its track and its chosen segment. */
+export const segmentTrack = () => ({
+  backgroundColor: rgba(theme.ink, 0.06),
+  borderWidth: 1,
+  borderColor: hairline(),
+});
+export const segmentChosen = () => rgba(theme.ink, 0.14);
+
+/**
+ * A segmented toggle: a few choices side by side in a track, the chosen one
+ * lifted. An option can carry a small line under its label (a count).
+ */
+export function Segmented<T extends string>({
+  options,
+  value,
+  onChange,
+  size = "md",
+  style,
+}: {
+  options: { value: T; label: string; detail?: string }[];
+  value: T;
+  onChange: (value: T) => void;
+  size?: "sm" | "md";
+  style?: StyleProp<ViewStyle>;
+}) {
+  const { spacing } = useResponsiveMetrics();
+  const radius = spacing(size === "md" ? 14 : 12);
+  return (
+    <View
+      style={[
+        {
+          ...segmentTrack(),
+          flexDirection: "row",
+          gap: spacing(4),
+          padding: spacing(4),
+          borderRadius: radius + spacing(4),
+        },
+        style,
+      ]}
+    >
+      {options.map((option) => {
+        const selected = option.value === value;
+        return (
+          <Pressable
+            key={option.value}
+            onPress={() => onChange(option.value)}
+            accessibilityRole="button"
+            accessibilityState={{ selected }}
+            style={{
+              ...transitionStyles.limited02sec,
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+              paddingVertical: spacing(size === "md" ? 8 : 6),
+              borderRadius: radius,
+              backgroundColor: selected ? segmentChosen() : "transparent",
+              outline: "none",
+            }}
+          >
+            <Text
+              size={size === "md" ? "md" : "sm"}
+              weight={500}
+              color={selected ? theme.ink : theme.dim}
+              numberOfLines={1}
+            >
+              {option.label}
+            </Text>
+            {option.detail ? (
+              <Text
+                size="xs"
+                weight={400}
+                color={selected ? theme.accent : theme.dim}
+                style={{ fontVariant: ["tabular-nums"] }}
+              >
+                {option.detail}
+              </Text>
+            ) : null}
+          </Pressable>
+        );
+      })}
+    </View>
   );
 }

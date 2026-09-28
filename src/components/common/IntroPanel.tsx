@@ -34,7 +34,7 @@ export function IntroPanel({
         borderRadius: spacing(18),
         backgroundColor: rgba(theme.surface, 0.92),
         borderWidth: 1,
-        borderColor: rgba(theme.ink, 0.08),
+        borderColor: rgba(theme.ink, 0.14),
         overflow: "hidden",
         ...homeSurfaceShadow(spacing, { translucent: true }),
       }}

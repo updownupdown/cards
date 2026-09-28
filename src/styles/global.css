@@ -16,15 +16,17 @@
   --font-serif: Georgia, "Times New Roman", serif;
 }
 
-@keyframes campaign-star-flicker {
+/* The Odyssey's pulsing stars: a slow swell of light and glow. */
+@keyframes campaign-star-pulse {
   0%,
-  72%,
   100% {
     filter: brightness(1);
+    transform: scale(1);
   }
 
-  82% {
-    filter: brightness(1.8);
+  50% {
+    filter: brightness(2);
+    transform: scale(1.5);
   }
 }
 

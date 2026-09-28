@@ -1,6 +1,6 @@
 import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { Text } from "@/components/common/Text";
-import { hairline, RatingMeters } from "@/components/ui/Nocturne";
+import { RatingMeters } from "@/components/ui/Nocturne";
 import { GameMenuInfo } from "@/data/games-data";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
@@ -11,7 +11,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { type Href } from "expo-router";
 import { Pressable, StyleSheet, View, type ViewStyle } from "react-native";
 import { FavButton } from "./FavButton";
-import { gameArt, useGameCategory } from "./HomeArt";
+import { gameArt, useCardFrame, useGameCategory } from "./HomeArt";
 import { useTabReadyImage } from "./TabReady";
 
 type Props = {
@@ -38,6 +38,7 @@ export function HomeCard({
   style,
 }: Props) {
   const { spacing } = useResponsiveMetrics();
+  const frame = useCardFrame();
   const { t: tCommon } = useTranslation("common");
   const category = useGameCategory();
   const thumbnail = gameArt(game);
@@ -48,12 +49,9 @@ export function HomeCard({
     <View
       style={[
         {
+          ...frame,
           height: spacing(HOME_CARD_HEIGHT),
-          borderRadius: spacing(10),
-          overflow: "hidden",
           backgroundColor: theme.surface,
-          borderWidth: 1,
-          borderColor: hairline(),
         },
         style,
       ]}
@@ -64,14 +62,14 @@ export function HomeCard({
         accessibilityLabel={title}
         style={{ flex: 1 }}
       >
-        {/* The art, melting into the card towards the text. */}
+        {/* The art, melting slowly into the card towards the text. */}
         <View
           style={{
             position: "absolute",
             top: 0,
             bottom: 0,
             right: 0,
-            width: "60%",
+            width: "74%",
             backgroundColor: game.gameColorDark,
           }}
         >
@@ -89,10 +87,12 @@ export function HomeCard({
           <LinearGradient
             colors={[
               theme.surface,
-              rgba(theme.surface, 0.6),
+              rgba(theme.surface, 0.82),
+              rgba(theme.surface, 0.45),
+              rgba(theme.surface, 0.12),
               rgba(theme.surface, 0),
             ]}
-            locations={[0, 0.5, 0.9]}
+            locations={[0, 0.22, 0.5, 0.78, 1]}
             start={{ x: 0, y: 0.5 }}
             end={{ x: 1, y: 0.5 }}
             style={StyleSheet.absoluteFill}
@@ -111,7 +111,7 @@ export function HomeCard({
             <Text size="xl" weight={500} lineHeight={1.15} numberOfLines={2}>
               {title}
             </Text>
-            <Text size="xs" weight={300} color={theme.dim} numberOfLines={1}>
+            <Text size="xs" weight={400} color={theme.dim} numberOfLines={1}>
               {category(game)}
             </Text>
           </View>

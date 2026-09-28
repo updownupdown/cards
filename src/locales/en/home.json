@@ -32,8 +32,12 @@
     "sortEasiest": "Easiest first",
     "sortHardest": "Hardest first",
     "sortRecent": "Recent",
-    "sortMostPlayed": "Most played",
-    "sortLuck": "Least luck",
+    "sortLuck": "Luck",
+    "sortLeastLuck": "Least luck first",
+    "sortMostLuck": "Most luck first",
+    "sortPlays": "Play count",
+    "sortLeastPlayed": "Least played first",
+    "sortMostPlayed": "Most played first",
     "sortBy": "Sort"
   },
   "sections": {
@@ -229,6 +233,7 @@
       "photograph": "Photographs"
     },
     "close": "Close",
+    "back": "Back to Gallery",
     "unknownArtist": "Unknown artist"
   },
   "header": {

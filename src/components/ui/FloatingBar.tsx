@@ -29,20 +29,33 @@ export function useTabBarTop() {
   );
 }
 
+/** How far up the screen a bar stacked over the tab bar has its foot. */
+export function useStackedBarBottom() {
+  const { spacing } = useResponsiveMetrics();
+  return useTabBarTop() + spacing(STACK_GAP);
+}
+
 /** The room a bar stacked over the tab bar takes, the tab bar included. */
 export function useStackedBarHeight() {
   const { spacing } = useResponsiveMetrics();
   return useTabBarTop() + spacing(STACKED_HEIGHT + STACK_GAP * 2);
 }
 
-/** The glassy pill every floating bar and panel shares with the tab bar. */
+/** The glass's fill and edge, shared with the game header. */
+export const glassFill = () => rgba(theme.surface, 0.8);
+export const glassEdge = () => rgba(theme.ink, 0.16);
+
+/**
+ * The glassy pill every floating bar and panel shares with the tab bar and
+ * the search field: a little see-through, with a thin, visible edge.
+ */
 export function useGlassStyle(radius = 22): ViewStyle {
   const { spacing } = useResponsiveMetrics();
   return {
     borderRadius: spacing(radius),
-    backgroundColor: rgba(theme.surface, 0.92),
+    backgroundColor: glassFill(),
     borderWidth: 1,
-    borderColor: rgba(theme.ink, 0.08),
+    borderColor: glassEdge(),
     ...homeSurfaceShadow(spacing, { translucent: true }),
     ...(Platform.OS === "web"
       ? ({ backdropFilter: "blur(14px)" } as ViewStyle)
@@ -157,5 +170,72 @@ export function BarButton({
         </Text>
       ) : null}
     </Pressable>
+  );
+}
+
+/**
+ * The stepping bar the Gallery's readers share: a neutral action on the left
+ * (back, or a picker) and the previous and next chevrons together on the
+ * right, in the accent.
+ */
+export function StepperBar({
+  placement,
+  action,
+  onPrevious,
+  onNext,
+  previousLabel,
+  nextLabel,
+  disabled = false,
+}: {
+  placement: "tabBar" | "aboveTabBar";
+  action: { iconName: IconName; label: string; onPress: () => void };
+  onPrevious: () => void;
+  onNext: () => void;
+  previousLabel: string;
+  nextLabel: string;
+  disabled?: boolean;
+}) {
+  const { spacing } = useResponsiveMetrics();
+  const chevron = (
+    iconName: IconName,
+    accessibilityLabel: string,
+    onPress: () => void,
+  ) => (
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
+      style={{
+        width: spacing(52),
+        height: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        opacity: disabled ? 0.3 : 1,
+        outline: "none",
+      }}
+    >
+      <Icon name={iconName} size={spacing(24)} color={theme.accent} />
+    </Pressable>
+  );
+  return (
+    <FloatingBar placement={placement}>
+      <BarButton
+        iconName={action.iconName}
+        label={action.label}
+        align="left"
+        onPress={action.onPress}
+      />
+      <View
+        style={{
+          flexDirection: "row",
+          height: "100%",
+          paddingRight: spacing(4),
+        }}
+      >
+        {chevron("chevron-left", previousLabel, onPrevious)}
+        {chevron("chevron-right", nextLabel, onNext)}
+      </View>
+    </FloatingBar>
   );
 }

@@ -39,6 +39,9 @@ export function useSavedNumber(
   return [value, save] as const;
 }
 
+/** How long a pick stays on show before its picker closes. */
+export const PICKED_PAUSE_MS = 1000;
+
 /**
  * A panel laid over a Gallery view to choose from (a chapter, an author),
  * with a title and a close button. A tap outside it closes it too.

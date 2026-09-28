@@ -60,7 +60,7 @@ export default function ModalFull({
             {
               backgroundColor,
               borderWidth: 1,
-              borderColor: rgba(theme.ink, 0.08),
+              borderColor: rgba(theme.ink, 0.14),
               borderRadius: spacing(22),
             },
           ]}
@@ -93,7 +93,7 @@ export default function ModalFull({
                   {title}
                 </Text>
                 {subtitle && (
-                  <Text size="sm" color={theme.dim} weight={300}>
+                  <Text size="sm" color={theme.dim} weight={400}>
                     {subtitle}
                   </Text>
                 )}

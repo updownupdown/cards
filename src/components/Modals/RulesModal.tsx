@@ -7,7 +7,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGame } from "@/i18n/content";
 import { flexStyles } from "@/styles/flexStyles";
-import { theme } from "@/styles/styles";
+import { rgba, theme } from "@/styles/styles";
 import { View, ViewStyle } from "react-native";
 import { RichText } from "../common/RichText";
 import { ScrollView } from "react-native-gesture-handler";
@@ -50,6 +50,9 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
               gap: spacing(8),
               borderRadius: spacing(14),
               backgroundColor: theme.raise,
+              // Edged, so the summary stands apart from the rules under it.
+              borderWidth: 1,
+              borderColor: rgba(theme.accent, 0.35),
             }}
           />
 
@@ -89,10 +92,10 @@ export const QuickStart = ({
             }}
           >
             <Text
-              size="md"
+              size="sm"
               weight={600}
               color={headingColor}
-              style={{ minWidth: spacing(16) }}
+              style={{ minWidth: spacing(14) }}
             >
               {itemIndex + 1}.
             </Text>

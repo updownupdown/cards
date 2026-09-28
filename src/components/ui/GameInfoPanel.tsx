@@ -76,7 +76,7 @@ export function GameInfoPanel({
           cachePolicy="memory"
           contentFit="cover"
           style={{
-            width: thumbSize * 1.3,
+            width: thumbSize,
             height: thumbSize,
             borderRadius: spacing(6),
             backgroundColor: game.gameColorDark,
@@ -87,7 +87,7 @@ export function GameInfoPanel({
           <Text size="xl" weight={500} numberOfLines={1}>
             {localizeGameTitle(game, path, language)}
           </Text>
-          <Text size="xs" weight={300} color={theme.dim} numberOfLines={1}>
+          <Text size="xs" weight={400} color={theme.dim} numberOfLines={1}>
             {category(game)}
           </Text>
         </View>

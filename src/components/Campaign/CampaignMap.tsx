@@ -40,7 +40,7 @@ import Animated, {
 // in a smaller world (see MAP_GEOMETRY in src/data/campaign-map.ts).
 const WORLD_SIZE = 1800;
 /** Every game dot is drawn the same size: its state shows in its colours. */
-const GAME_DOT_SIZE = 10;
+const GAME_DOT_SIZE = 12;
 /** How close (in screen points) a native tap must be to select a game dot. */
 const GAME_DOT_TAP_RADIUS = 28;
 
@@ -89,6 +89,22 @@ function gameDotLook(state: GameDotState) {
 /** How strongly each state glows: lit stars most, reachable ones faintly. */
 const GLOW_OPACITY = { complete: 0.55, won: 0.5, connected: 0.22, locked: 0 };
 
+/** The game dot states, least advanced first. */
+const STATE_ORDER: GameDotState[] = ["locked", "connected", "won", "complete"];
+function lessAdvanced(a: GameDotState, b: GameDotState) {
+  return STATE_ORDER.indexOf(a) <= STATE_ORDER.indexOf(b) ? a : b;
+}
+/** A link's colour for the state of its less advanced end. */
+const LINK_LOOK: Record<
+  GameDotState,
+  () => { color: string; opacity: number }
+> = {
+  complete: () => ({ color: theme.accent, opacity: 0.55 }),
+  won: () => ({ color: theme.accent2, opacity: 0.5 }),
+  connected: () => ({ color: theme.ink, opacity: 0.3 }),
+  locked: () => ({ color: theme.ink, opacity: 0.07 }),
+};
+
 /** Link widths in world points: arm strands heavier than the links between. */
 const LINE_WIDTH = { arm: 1.9, bridge: 0.77 };
 /** Locked links are drawn a little finer as well as fainter. */
@@ -131,12 +147,12 @@ function labelColor(state: GameDotState) {
 const CHART_RING_STEP = 110;
 const CHART_RING_COUNT = 8;
 const CHART_SPOKES = 12;
-const CHART_LINE = 0.7;
+const CHART_LINE = 0.9;
 
 const ChartGrid = memo(function ChartGrid() {
   const centre = WORLD_SIZE / 2;
   const reach = CHART_RING_STEP * CHART_RING_COUNT;
-  const color = rgba(theme.ink, 0.07);
+  const color = rgba(theme.ink, 0.12);
   return (
     <View style={[StyleSheet.absoluteFill, { pointerEvents: "none" }]}>
       {Array.from({ length: CHART_RING_COUNT }, (_, index) => {
@@ -153,7 +169,7 @@ const ChartGrid = memo(function ChartGrid() {
               borderRadius: radius,
               borderWidth: CHART_LINE,
               // Every other ring a little stronger, as the atlases rule them.
-              borderColor: index % 2 === 1 ? rgba(theme.ink, 0.1) : color,
+              borderColor: index % 2 === 1 ? rgba(theme.ink, 0.18) : color,
             }}
           />
         );
@@ -168,7 +184,7 @@ const ChartGrid = memo(function ChartGrid() {
             top: centre - CHART_LINE / 2,
             width: reach * 2,
             height: CHART_LINE,
-            backgroundColor: color,
+            backgroundColor: rgba(theme.ink, 0.08),
             transform: [{ rotate: `${(index * 360) / CHART_SPOKES}deg` }],
           }}
         />
@@ -304,14 +320,14 @@ const GameDotConnections = memo(function GameDotConnections({
     <View style={[StyleSheet.absoluteFill, { pointerEvents: "none" }]}>
       {GAME_DOT_CONNECTIONS.map(
         ({ key, gameDot, target, onArm, centreX, centreY, length, angle }) => {
-          const gameDotState = gameDotStates.get(gameDot.path)!;
-          const targetState = gameDotStates.get(target.path)!;
-          const locked = gameDotState === "locked" || targetState === "locked";
-          const lit =
-            (gameDotState === "won" || gameDotState === "complete") &&
-            (targetState === "won" || targetState === "complete");
-          const strokeColor = lit ? theme.accent : theme.ink;
-          const strokeOpacity = lit ? 0.5 : locked ? 0.07 : 0.2;
+          // A link takes the colour of the less advanced of its two ends.
+          const state = lessAdvanced(
+            gameDotStates.get(gameDot.path)!,
+            gameDotStates.get(target.path)!,
+          );
+          const locked = state === "locked";
+          const { color: strokeColor, opacity: strokeOpacity } =
+            LINK_LOOK[state]();
 
           const width =
             LINE_WIDTH[onArm ? "arm" : "bridge"] *

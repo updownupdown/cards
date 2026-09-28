@@ -61,7 +61,7 @@ export function AddToHomeScreenNotice({
         borderRadius: spacing(14),
         backgroundColor: rgba(theme.ink, 0.04),
         borderWidth: 1,
-        borderColor: rgba(theme.ink, 0.08),
+        borderColor: rgba(theme.ink, 0.14),
         padding: spacing(20),
         gap: spacing(8),
       }}

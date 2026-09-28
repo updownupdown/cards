@@ -183,7 +183,7 @@ export const WinLoseBox = ({
             borderRadius: spacing(22),
             backgroundColor: rgba(theme.surface, 0.96),
             borderWidth: 1,
-            borderColor: rgba(theme.ink, 0.08),
+            borderColor: rgba(theme.ink, 0.14),
             boxShadow: `0 ${spacing(12)}px ${spacing(40)}px ${rgba(Colors.black, 0.5)}`,
           }}
         >
@@ -216,12 +216,12 @@ export const WinLoseBox = ({
           {message || (!hideScore && score !== undefined) ? (
             <View style={{ gap: spacing(4) }}>
               {message ? (
-                <Text size="md" weight={300} color={theme.dim}>
+                <Text size="md" weight={400} color={theme.dim}>
                   {message.replace(/\\n/g, "\n")}
                 </Text>
               ) : null}
               {!hideScore && score !== undefined && (
-                <Text size="md" weight={300} color={theme.dim}>
+                <Text size="md" weight={400} color={theme.dim}>
                   {t("result.score", { score })}
                 </Text>
               )}

@@ -17,6 +17,15 @@ import { BLOOM_MS, ConstellationBloom } from "./ConstellationBloom";
 /** The chapter number fades in as the figure completes; the text follows. */
 const NUMBER_AT = BLOOM_MS - 150;
 const TEXT_AT = BLOOM_MS + 450;
+/** The rise to the title as the words start: slow, so it reads as a drift. */
+const RISE_MS = 1600;
+/** Each step down to keep the words being read clear of the bar. */
+const FOLLOW_MS = 1400;
+/** How often the page checks whether the reading needs following. */
+const FOLLOW_CHECK_MS = 250;
+
+const easeInOut = (t: number) =>
+  t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
 
 const FADE_IN = { from: { opacity: 0 }, to: { opacity: 1 } };
 const fadeIn = (delay: number, duration: number) =>
@@ -61,20 +70,79 @@ export function TaoChapterDetail({
   const onRead = useCallback(() => setRead(true), []);
   const scrollRef = useRef<ScrollView>(null);
   const titleY = useRef<number | null>(null);
+  const textY = useRef(0);
+  const lines = useRef<{ y: number; height: number; startsAt: number }[]>([]);
+  const scrollY = useRef(0);
+  const glide = useRef<{ frame: number; to: number } | null>(null);
+  // Once the reader scrolls for themselves, the page stops steering.
+  const steered = useRef(true);
 
-  // As the words start, the page rises so the chapter's title sits at the
+  const glideTo = useCallback((to: number, duration: number) => {
+    if (glide.current) cancelAnimationFrame(glide.current.frame);
+    const from = scrollY.current;
+    const start = Date.now();
+    const step = () => {
+      if (!steered.current) return;
+      const progress = Math.min(1, (Date.now() - start) / duration);
+      scrollRef.current?.scrollTo({
+        y: from + (to - from) * easeInOut(progress),
+        animated: false,
+      });
+      glide.current =
+        progress < 1 ? { frame: requestAnimationFrame(step), to } : null;
+    };
+    glide.current = { frame: requestAnimationFrame(step), to };
+  }, []);
+  useEffect(
+    () => () => {
+      if (glide.current) cancelAnimationFrame(glide.current.frame);
+    },
+    [],
+  );
+
+  // As the words start, the page drifts up so the chapter's title sits at the
   // top, the figure above it scrolled away, leaving the most room to read.
+  // Then it follows the reading down, so a line never appears under the bar.
   useEffect(() => {
     if (!collected) return;
-    const timer = setTimeout(() => {
-      if (titleY.current === null) return;
-      scrollRef.current?.scrollTo({
-        y: Math.max(0, titleY.current - topInset - spacing(8)),
-        animated: true,
-      });
+    const rise = setTimeout(() => {
+      if (titleY.current === null || !steered.current) return;
+      glideTo(Math.max(0, titleY.current - topInset - spacing(8)), RISE_MS);
     }, TEXT_AT);
-    return () => clearTimeout(timer);
-  }, [collected, spacing, topInset]);
+    const follow = setInterval(() => {
+      if (!steered.current || glide.current) return;
+      const now = Date.now() - openedAt;
+      // The lowest line already appearing, or about to.
+      const reading = lines.current.filter(
+        (line) => line && line.startsAt <= now + 400,
+      );
+      const last = reading[reading.length - 1];
+      if (!last) return;
+      const lineBottom = textY.current + last.y + last.height;
+      const visibleBottom =
+        scrollY.current + height - bottomInset - spacing(24);
+      if (lineBottom > visibleBottom) {
+        // Step down far enough for a few more lines at a time.
+        glideTo(
+          scrollY.current + (lineBottom - visibleBottom) + last.height * 3,
+          FOLLOW_MS,
+        );
+      }
+    }, FOLLOW_CHECK_MS);
+    return () => {
+      clearTimeout(rise);
+      clearInterval(follow);
+    };
+  }, [bottomInset, collected, glideTo, height, openedAt, spacing, topInset]);
+  const stopSteering = () => {
+    steered.current = false;
+  };
+  const onLineLayout = useCallback(
+    (index: number, line: { y: number; height: number; startsAt: number }) => {
+      lines.current[index] = line;
+    },
+    [],
+  );
 
   const chapter = getTaoChapter(chapterNumber);
   const constellation = getTaoConstellation(chapterNumber);
@@ -112,6 +180,16 @@ export function TaoChapterDetail({
   return (
     <ScrollView
       ref={scrollRef}
+      onScroll={(event) => {
+        scrollY.current = event.nativeEvent.contentOffset.y;
+      }}
+      scrollEventThrottle={16}
+      onScrollBeginDrag={stopSteering}
+      // On the web, a mouse wheel or a touch takes over as well.
+      {...({
+        onWheel: stopSteering,
+        onTouchStart: stopSteering,
+      } as object)}
       style={{ flex: 1 }}
       contentContainerStyle={{
         alignItems: "center",
@@ -204,13 +282,19 @@ export function TaoChapterDetail({
       )}
 
       {collected && shown && (
-        <View style={{ width: contentWidth, marginTop: spacing(18) }}>
+        <View
+          onLayout={(event) => {
+            textY.current = event.nativeEvent.layout.y;
+          }}
+          style={{ width: contentWidth, marginTop: spacing(18) }}
+        >
           <ChapterText
             key={showOriginal ? "original" : "shown"}
             text={shown.text}
             fontSize={font(19)}
             timing={showOriginal ? undefined : timing}
             onDone={onRead}
+            onLineLayout={onLineLayout}
           />
         </View>
       )}

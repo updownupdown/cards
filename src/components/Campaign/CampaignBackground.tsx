@@ -44,7 +44,8 @@ function seededStars(count: number, salt: number) {
   return Array.from({ length: count }, () => {
     const x = 0.01 + random() * 0.98;
     const y = 0.01 + random() * 0.98;
-    const size = random() < 0.82 ? 1 : 2;
+    // Fine points, 30% under a pixel or two.
+    const size = random() < 0.82 ? 0.7 : 1.4;
     const opacity = 0.24 + random() * 0.4;
     const color = STAR_COLORS[Math.floor(random() * STAR_COLORS.length)];
     const flickers = random() < 0.2;
@@ -75,13 +76,13 @@ function NativeFlickeringStar({
         RNAnimated.delay(500 + ((index * 379) % 2400)),
         RNAnimated.timing(opacity, {
           toValue: Math.min(1, star.opacity + 0.3),
-          duration: 280 + ((index * 97) % 420),
+          duration: 1600 + ((index * 97) % 1200),
           easing: RNEasing.inOut(RNEasing.sin),
           useNativeDriver: Platform.OS !== "web",
         }),
         RNAnimated.timing(opacity, {
           toValue: star.opacity,
-          duration: 360 + ((index * 61) % 500),
+          duration: 2000 + ((index * 61) % 1400),
           easing: RNEasing.inOut(RNEasing.sin),
           useNativeDriver: Platform.OS !== "web",
         }),
@@ -91,6 +92,8 @@ function NativeFlickeringStar({
     return () => animation.stop();
   }, [animationsEnabled, index, opacity, star.opacity]);
 
+  // The pulse brightens the star and swells a soft halo round it.
+  const halo = star.size * 5;
   return (
     <RNAnimated.View
       style={{
@@ -99,11 +102,38 @@ function NativeFlickeringStar({
         top: `${star.y * 100}%`,
         width: star.size,
         height: star.size,
-        borderRadius: star.size,
-        backgroundColor: star.color,
+        alignItems: "center",
+        justifyContent: "center",
         opacity,
       }}
-    />
+    >
+      <RNAnimated.View
+        style={{
+          position: "absolute",
+          width: halo,
+          height: halo,
+          borderRadius: halo / 2,
+          backgroundColor: star.color,
+          opacity: 0.12,
+          transform: [
+            {
+              scale: opacity.interpolate({
+                inputRange: [star.opacity, Math.min(1, star.opacity + 0.3)],
+                outputRange: [0.6, 1],
+              }),
+            },
+          ],
+        }}
+      />
+      <View
+        style={{
+          width: star.size,
+          height: star.size,
+          borderRadius: star.size,
+          backgroundColor: star.color,
+        }}
+      />
+    </RNAnimated.View>
   );
 }
 
@@ -118,9 +148,9 @@ function WebFlickeringStar({
 }) {
   const animationStyle = animationsEnabled
     ? ({
-        animationName: "campaign-star-flicker",
+        animationName: "campaign-star-pulse",
         animationDelay: `${500 + ((index * 379) % 2400)}ms`,
-        animationDuration: `${2600 + ((index * 97) % 1400)}ms`,
+        animationDuration: `${4200 + ((index * 97) % 2400)}ms`,
         animationIterationCount: "infinite",
         animationTimingFunction: "ease-in-out",
       } as Record<string, unknown>)
@@ -138,6 +168,8 @@ function WebFlickeringStar({
           borderRadius: star.size,
           backgroundColor: star.color,
           opacity: star.opacity,
+          // A soft glow, which the pulse swells.
+          boxShadow: `0 0 ${star.size * 2.5}px ${star.size * 0.8}px ${star.color}`,
         },
         animationStyle,
       ]}
@@ -266,6 +298,8 @@ export function CampaignBackground({
     ];
   }, []);
   const [size, setSize] = useState({ width: 0, height: 0 });
+  // Kept stable: a new array each render would restart the comets' timer.
+  const cometColors = useMemo(() => [theme.ink, theme.accent2], []);
 
   const handleLayout = (event: LayoutChangeEvent) => {
     const { width, height } = event.nativeEvent.layout;
@@ -284,16 +318,17 @@ export function CampaignBackground({
       onLayout={handleLayout}
       style={{ flex: 1, overflow: "hidden" }}
     >
+      {/* Comets: a fine, headless streak every so often. */}
       <ShootingStar
         width={size.width}
         height={size.height}
         animationsEnabled={animationsEnabled}
-        colors={[theme.ink]}
+        colors={cometColors}
         head={false}
-        peakOpacity={0.4}
+        peakOpacity={0.55}
         durationScale={2}
-        minIntervalMs={18000}
-        maxIntervalMs={44000}
+        minIntervalMs={7000}
+        maxIntervalMs={16000}
         maxSpeed={700}
       />
       <ParallaxStarLayer
@@ -321,7 +356,7 @@ export function CampaignBackground({
         translateX={translateX}
         translateY={translateY}
         animationsEnabled={animationsEnabled}
-        sizeBoost={1}
+        sizeBoost={0.7}
         maximumOpacity={0.56}
       />
       <ParallaxStarLayer
@@ -330,7 +365,7 @@ export function CampaignBackground({
         translateX={translateX}
         translateY={translateY}
         animationsEnabled={animationsEnabled}
-        sizeBoost={2}
+        sizeBoost={1.4}
         maximumOpacity={0.42}
       />
     </View>

@@ -1,5 +1,6 @@
 import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { Text } from "@/components/common/Text";
+import { glassEdge, glassFill } from "@/components/ui/FloatingBar";
 import { hairline, Meter, Pill } from "@/components/ui/Nocturne";
 import type { GameSettingsMap } from "@/data/game-menu";
 import { isGameEnabled } from "@/data/games-data";
@@ -15,6 +16,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useMemo, useRef, useState } from "react";
 import {
   Animated,
+  Keyboard,
   Platform,
   Pressable,
   ScrollView,
@@ -35,13 +37,16 @@ const FILTERS = [
 ] as const;
 type Filter = (typeof FILTERS)[number];
 
+// Up arrows run low to high, down arrows high to low.
 const SORTS = [
   "az",
   "recent",
-  "mostPlayed",
   "easiest",
   "hardest",
-  "luck",
+  "leastLuck",
+  "mostLuck",
+  "leastPlayed",
+  "mostPlayed",
 ] as const;
 type Sort = (typeof SORTS)[number];
 
@@ -136,10 +141,12 @@ export function SearchTab({
     const by = (value: (entry: HomeGameEntry) => number) =>
       list.sort((a, b) => value(a) - value(b) || byTitle(a, b));
     if (sort === "az") list.sort(byTitle);
-    if (sort === "mostPlayed") by((entry) => -attempts(entry));
     if (sort === "easiest") by(([, game]) => game.rating.difficulty);
     if (sort === "hardest") by(([, game]) => -game.rating.difficulty);
-    if (sort === "luck") by(([, game]) => game.rating.luck);
+    if (sort === "leastLuck") by(([, game]) => game.rating.luck);
+    if (sort === "mostLuck") by(([, game]) => -game.rating.luck);
+    if (sort === "leastPlayed") by((entry) => attempts(entry));
+    if (sort === "mostPlayed") by((entry) => -attempts(entry));
     return list;
   }, [
     allEnabledGames,
@@ -168,13 +175,42 @@ export function SearchTab({
     return [...byLetter].map(([key, data]) => ({ key, data }));
   }, [games, indexed, language]);
 
-  const sortOptions: Record<Sort, { label: string; icon?: IconName }> = {
+  const sortOptions: Record<
+    Sort,
+    { label: string; icon?: IconName; accessibilityLabel?: string }
+  > = {
     az: { label: t("search.sortAZ") },
     recent: { label: t("search.sortRecent") },
-    mostPlayed: { label: t("search.sortMostPlayed") },
-    easiest: { label: t("search.sortDifficulty"), icon: "arrow-up" },
-    hardest: { label: t("search.sortDifficulty"), icon: "arrow-down" },
-    luck: { label: t("search.sortLuck") },
+    easiest: {
+      label: t("search.sortDifficulty"),
+      icon: "arrow-up",
+      accessibilityLabel: t("search.sortEasiest"),
+    },
+    hardest: {
+      label: t("search.sortDifficulty"),
+      icon: "arrow-down",
+      accessibilityLabel: t("search.sortHardest"),
+    },
+    leastLuck: {
+      label: t("search.sortLuck"),
+      icon: "arrow-up",
+      accessibilityLabel: t("search.sortLeastLuck"),
+    },
+    mostLuck: {
+      label: t("search.sortLuck"),
+      icon: "arrow-down",
+      accessibilityLabel: t("search.sortMostLuck"),
+    },
+    leastPlayed: {
+      label: t("search.sortPlays"),
+      icon: "arrow-up",
+      accessibilityLabel: t("search.sortLeastPlayed"),
+    },
+    mostPlayed: {
+      label: t("search.sortPlays"),
+      icon: "arrow-down",
+      accessibilityLabel: t("search.sortMostPlayed"),
+    },
   };
   const filterLabels: Record<Filter, string> = {
     all: t("search.all"),
@@ -201,7 +237,13 @@ export function SearchTab({
           keyExtractor={([path]) => path}
           style={{ flex: 1 }}
           keyboardShouldPersistTaps="handled"
-          keyboardDismissMode="on-drag"
+          // On the web, "on-drag" dismisses on any scroll, and filtering the
+          // list scrolls it: the field lost focus after every letter. A drag
+          // by the finger closes the keyboard there instead.
+          keyboardDismissMode={Platform.OS === "web" ? "none" : "on-drag"}
+          {...(Platform.OS === "web"
+            ? ({ onTouchMove: () => Keyboard.dismiss() } as object)
+            : null)}
           stickySectionHeadersEnabled={false}
           onScroll={onScroll}
           scrollEventThrottle={16}
@@ -250,7 +292,10 @@ export function SearchTab({
         }}
       >
         <View
-          style={[column, { gap: spacing(12), paddingBottom: spacing(10) }]}
+          style={[
+            column,
+            { gap: spacing(16), paddingBottom: spacing(10), zIndex: 2 },
+          ]}
         >
           <SearchBox query={query} onChange={setQuery} />
           <ScrollView
@@ -279,7 +324,7 @@ export function SearchTab({
               justifyContent: "space-between",
             }}
           >
-            <Text size="xs" weight={300} color={theme.dim}>
+            <Text size="xs" weight={400} color={theme.dim}>
               {t("search.count", { count: games.length })}
             </Text>
             <Pressable
@@ -302,51 +347,15 @@ export function SearchTab({
                 color={theme.dim}
               />
             </Pressable>
-          </View>
-        </View>
-        {/* The rows fade out as they pass under the header. */}
-        <LinearGradient
-          colors={[theme.night, rgba(theme.night, 0)]}
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            bottom: -spacing(18),
-            height: spacing(18),
-            pointerEvents: "none",
-          }}
-        />
-
-        {/* Laid over the list, rather than pushing it down. */}
-        {sortOpen && (
-          <>
-            <Pressable
-              accessibilityLabel={t("search.sortBy")}
-              onPress={() => setSortOpen(false)}
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                height: 10000,
-              }}
-            />
-            <View
-              style={[
-                column,
-                {
-                  position: "absolute",
-                  top: "100%",
-                  left: 0,
-                  right: 0,
-                  alignItems: "flex-end",
-                  marginTop: -spacing(6),
-                },
-              ]}
-            >
+            {/* Hangs from the button, its right edge on the chevron's. */}
+            {sortOpen && (
               <View
                 style={{
-                  minWidth: spacing(180),
+                  position: "absolute",
+                  top: "100%",
+                  right: 0,
+                  marginTop: spacing(8),
+                  minWidth: spacing(200),
                   padding: spacing(4),
                   borderRadius: spacing(12),
                   backgroundColor: theme.raise,
@@ -360,11 +369,8 @@ export function SearchTab({
                     key={option}
                     accessibilityRole="button"
                     accessibilityLabel={
-                      option === "easiest"
-                        ? t("search.sortEasiest")
-                        : option === "hardest"
-                          ? t("search.sortHardest")
-                          : sortOptions[option].label
+                      sortOptions[option].accessibilityLabel ??
+                      sortOptions[option].label
                     }
                     accessibilityState={{ selected: option === sort }}
                     onPress={() => {
@@ -388,8 +394,36 @@ export function SearchTab({
                   </Pressable>
                 ))}
               </View>
-            </View>
-          </>
+            )}
+          </View>
+        </View>
+        {/* The rows fade out as they pass under the header. */}
+        <LinearGradient
+          colors={[theme.night, rgba(theme.night, 0)]}
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            bottom: -spacing(18),
+            height: spacing(18),
+            pointerEvents: "none",
+          }}
+        />
+
+        {/* A tap anywhere outside the menu closes it. */}
+        {sortOpen && (
+          <Pressable
+            accessibilityLabel={t("search.sortBy")}
+            onPress={() => setSortOpen(false)}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 10000,
+              zIndex: 1,
+            }}
+          />
         )}
       </View>
     </View>
@@ -439,10 +473,11 @@ function SearchBox({
       accessibilityRole="search"
       style={{
         height: spacing(48),
-        borderRadius: spacing(14),
-        backgroundColor: theme.surface,
+        // The glass of the floating bars, without their shadow.
+        borderRadius: spacing(16),
+        backgroundColor: glassFill(),
         borderWidth: 1,
-        borderColor: query ? rgba(theme.accent, 0.4) : hairline(),
+        borderColor: query ? rgba(theme.accent, 0.5) : glassEdge(),
         flexDirection: "row",
         alignItems: "center",
         paddingHorizontal: spacing(14),
@@ -456,7 +491,7 @@ function SearchBox({
         value={query}
         onChangeText={onChange}
         placeholder={t("search.placeholder")}
-        placeholderTextColor={theme.faint}
+        placeholderTextColor={theme.dim}
         autoCapitalize="none"
         style={{
           flex: 1,
@@ -464,7 +499,7 @@ function SearchBox({
           height: "100%",
           color: theme.ink,
           fontSize: font(16),
-          fontFamily: FontWeight[300],
+          fontFamily: FontWeight[400],
           outline: "none",
         }}
       />
@@ -547,7 +582,6 @@ function IndexLetters({
               }}
             >
               <Text
-                serif
                 weight={500}
                 color={theme.accent}
                 style={{
@@ -617,7 +651,7 @@ function GameRow({
         size={spacing(36)}
         iconSize={spacing(20)}
         activeColor={theme.accent}
-        inactiveColor={theme.faint}
+        inactiveColor={theme.dim}
       />
     </View>
   );

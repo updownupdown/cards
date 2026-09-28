@@ -48,12 +48,7 @@ export type StatsRow = {
 };
 
 type PersonaKey =
-  | "comfort"
-  | "nemesis"
-  | "whale"
-  | "faithful"
-  | "rivalry"
-  | "natural";
+  "comfort" | "nemesis" | "whale" | "faithful" | "rivalry" | "natural";
 
 export type Persona = {
   key: PersonaKey;
@@ -737,7 +732,9 @@ function PersonaCard({
       style={{
         flexGrow: 1,
         flexBasis: spacing(300),
-        gap: spacing(12),
+        flexDirection: "row",
+        alignItems: "center",
+        gap: spacing(16),
         padding: spacing(14.4),
         borderRadius: spacing(14),
         backgroundColor: rgba(theme.ink, 0.035),
@@ -745,44 +742,21 @@ function PersonaCard({
         borderColor: hairline(),
       }}
     >
-      {/* Award name and rule */}
-      <View style={[flexStyles.rowCentered, { gap: spacing(12) }]}>
-        <Text
-          size="md"
-          weight={600}
-          color={Colors.white}
-          lineHeight={1.2}
-          style={{ marginRight: "auto" }}
-        >
-          {title}
-        </Text>
-        <Text
-          size="sm"
-          weight={300}
-          color={Colors.K300}
-          lineHeight={1.2}
-          style={{ flexShrink: 1, textAlign: "right" }}
-        >
-          {subtitle}
-        </Text>
-      </View>
-
-      {/* Game card and stats */}
-      <View style={[flexStyles.rowCentered, { gap: spacing(20) }]}>
-        <GameTile
-          path={row.path}
-          game={game}
-          size={cardWidth}
-          isFavorite={isFavorite}
-          onToggleFavorite={onToggleFavorite}
-          onOpen={onOpenGame}
-        />
+      {/* The award, its rule and the stats on the left; the game on the right. */}
+      <View style={{ flex: 1, gap: spacing(14) }}>
+        <View style={{ gap: spacing(3) }}>
+          <Text size="md" weight={600} color={theme.accent} lineHeight={1.2}>
+            {title}
+          </Text>
+          <Text size="sm" weight={400} color={theme.dim} lineHeight={1.25}>
+            {subtitle}
+          </Text>
+        </View>
         <View
           style={{
-            flex: 1,
             flexDirection: "row",
             flexWrap: "wrap",
-            rowGap: spacing(12),
+            rowGap: spacing(10),
           }}
         >
           <PersonaStat
@@ -803,6 +777,14 @@ function PersonaCard({
           />
         </View>
       </View>
+      <GameTile
+        path={row.path}
+        game={game}
+        size={cardWidth}
+        isFavorite={isFavorite}
+        onToggleFavorite={onToggleFavorite}
+        onOpen={onOpenGame}
+      />
     </View>
   );
 }
@@ -814,19 +796,13 @@ function PersonaStat({
   label: string;
   value: string | number;
 }) {
-  // Half the width, so the four stats form a 2x2 grid, each centred in its
-  // cell.
+  // Half the width, so the four stats form a 2x2 grid.
   return (
-    <View style={{ width: "50%", alignItems: "center" }}>
-      <Text
-        size="md"
-        weight={600}
-        lineHeight={1.1}
-        style={{ textAlign: "center" }}
-      >
+    <View style={{ width: "50%" }}>
+      <Text size="md" weight={600} lineHeight={1.1}>
         {value}
       </Text>
-      <Caps style={{ textAlign: "center" }}>{label}</Caps>
+      <Caps>{label}</Caps>
     </View>
   );
 }

@@ -3,8 +3,7 @@ import { Text } from "@/components/common/Text";
 import { ZoomableImage } from "@/components/common/ZoomableImage";
 import { gameArt, useGameCategory } from "@/components/Home/HomeArt";
 import {
-  BarButton,
-  FloatingBar,
+  StepperBar,
   useBarSideInset,
   useGlassStyle,
 } from "@/components/ui/FloatingBar";
@@ -41,7 +40,7 @@ export function WorkViewer({
   onClose: () => void;
   onStep: (step: 1 | -1) => void;
 }) {
-  const { spacing, ui } = useResponsiveMetrics();
+  const { spacing, font, ui } = useResponsiveMetrics();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation("home");
   const language = useDisplayLanguage();
@@ -51,9 +50,11 @@ export function WorkViewer({
   const aspect = game.thumbnail ? GAME_THUMBNAIL_ASPECTS[game.thumbnail] : 0.8;
   const artWidth = Math.min(artBox.width, artBox.height * aspect);
   const barInset = useBarSideInset();
-  // Clear the bar at the foot, which takes the tab bar's place.
+  // Clear the bar at the foot, which takes the tab bar's place, with room
+  // to spare under the label.
   const bottomReserve =
-    insets.bottom + spacing(layoutDims.tabBarHeight + layoutDims.pagePadding);
+    insets.bottom +
+    spacing(layoutDims.tabBarHeight + layoutDims.pagePadding + 16);
 
   return (
     <Modal visible transparent animationType="fade" onRequestClose={onClose}>
@@ -141,17 +142,23 @@ export function WorkViewer({
               <Text
                 serif
                 italic
-                size="xl"
-                style={{ textAlign: "center" }}
+                style={{
+                  textAlign: "center",
+                  fontSize: font(25),
+                  lineHeight: font(30),
+                }}
                 numberOfLines={2}
               >
                 {credit.title || localizeGameTitle(game, path, language)}
               </Text>
               <Text
                 serif
-                size="sm"
                 color={theme.dim}
-                style={{ textAlign: "center" }}
+                style={{
+                  textAlign: "center",
+                  fontSize: font(19),
+                  lineHeight: font(24),
+                }}
               >
                 {[credit.artistName, credit.date].filter(Boolean).join(", ")}
               </Text>
@@ -164,25 +171,18 @@ export function WorkViewer({
           ) : null}
         </View>
 
-        <FloatingBar placement="tabBar">
-          <BarButton
-            iconName="chevron-left"
-            accessibilityLabel={t("gallery.previous")}
-            align="left"
-            onPress={() => onStep(-1)}
-          />
-          <BarButton
-            iconName="close"
-            label={t("gallery.close")}
-            onPress={onClose}
-          />
-          <BarButton
-            iconName="chevron-right"
-            accessibilityLabel={t("gallery.next")}
-            align="right"
-            onPress={() => onStep(1)}
-          />
-        </FloatingBar>
+        <StepperBar
+          placement="tabBar"
+          action={{
+            iconName: "arrow-back",
+            label: t("gallery.back"),
+            onPress: onClose,
+          }}
+          onPrevious={() => onStep(-1)}
+          onNext={() => onStep(1)}
+          previousLabel={t("gallery.previous")}
+          nextLabel={t("gallery.next")}
+        />
       </GestureHandlerRootView>
     </Modal>
   );
@@ -221,11 +221,9 @@ function WorkGamePanel({ path, onPlay }: { path: string; onPlay: () => void }) {
           backgroundColor: game.gameColorDark,
         }}
       />
+      {/* The game's name is left to the label and the art: only its family. */}
       <View style={{ flex: 1, minWidth: 0 }}>
-        <Text size="lg" weight={500} numberOfLines={1}>
-          {localizeGameTitle(game, path, language)}
-        </Text>
-        <Text size="xs" weight={300} color={theme.dim} numberOfLines={1}>
+        <Text size="md" weight={400} color={theme.dim} numberOfLines={1}>
           {category(game)}
         </Text>
       </View>

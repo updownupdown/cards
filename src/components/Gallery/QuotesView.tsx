@@ -8,18 +8,19 @@ import {
 } from "@/components/Campaign/voices";
 import { ParallaxStars } from "@/components/TaoCollection/ParallaxStars";
 import {
-  BarButton,
-  FloatingBar,
+  StepperBar,
+  useStackedBarBottom,
   useStackedBarHeight,
 } from "@/components/ui/FloatingBar";
+import { Segmented } from "@/components/ui/Nocturne";
 import { getQuote, type QuoteId } from "@/data/collectibles";
 import { GALLERY_LAST_QUOTE_STORAGE_KEY } from "@/data/storage-keys";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-import { useTranslation } from "@/i18n";
+import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { theme } from "@/styles/styles";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import Animated, {
   Easing,
@@ -29,10 +30,19 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import Svg, { Path } from "react-native-svg";
-import { CountRow, PickerPanel, useSavedNumber } from "./shared";
+import {
+  CountRow,
+  PICKED_PAUSE_MS,
+  PickerPanel,
+  useSavedNumber,
+} from "./shared";
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const PORTRAIT_DRAW_MS = 2400;
+
+type AuthorOrder = "eras" | "alphabetical";
+/** Kept for the session, so the picker opens as it was left. */
+let lastAuthorOrder: AuthorOrder = "eras";
 
 /**
  * The quotes, one at a time, by their authors from the oldest on: the
@@ -50,7 +60,11 @@ export function QuotesView({
 }) {
   const { t } = useTranslation("campaign");
   const { settings } = useGlobalSettings();
+  const { spacing } = useResponsiveMetrics();
   const barHeight = useStackedBarHeight();
+  const barBottom = useStackedBarBottom();
+  const language = useDisplayLanguage();
+  const [order, setOrder] = useState<AuthorOrder>(lastAuthorOrder);
   const groups = useMemo(() => voicesGroups(collectedIds), [collectedIds]);
   // Every quote, author by author, oldest first.
   const entries = useMemo(
@@ -82,6 +96,35 @@ export function QuotesView({
     setPicking(false);
     setQuote(quoteId);
   };
+  // An author picked from the list shows as picked for a moment before the
+  // list closes.
+  const closing = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => () => clearTimeout(closing.current), []);
+  const pick = (quoteId: QuoteId) => {
+    setQuote(quoteId);
+    clearTimeout(closing.current);
+    closing.current = setTimeout(() => setPicking(false), PICKED_PAUSE_MS);
+  };
+  const byName = useMemo(
+    () =>
+      groups
+        .flatMap((group) => group.authors)
+        .sort((a, b) =>
+          shortName(a.name).localeCompare(shortName(b.name), language),
+        ),
+    [groups, language],
+  );
+  const authorRow = (author: VoicesAuthor) => (
+    <CountRow
+      key={author.name}
+      label={author.name}
+      count={author.collectedIds.length}
+      total={author.quoteIds.length}
+      selected={author.name === entry?.author.name}
+      // Their first collected quote, or their first.
+      onPress={() => pick(author.collectedIds[0] ?? author.quoteIds[0])}
+    />
+  );
 
   return (
     <View
@@ -119,67 +162,67 @@ export function QuotesView({
           closeLabel={t("quotes.pick")}
           onClose={() => setPicking(false)}
           top={topInset}
-          bottom={barHeight}
+          // Over the bar, which it replaces while open.
+          bottom={barBottom}
           fill
         >
-          <ScrollView contentContainerStyle={{ paddingBottom: 12 }}>
-            {groups.map((group) => {
-              const total = group.authors.reduce(
-                (sum, author) => sum + author.quoteIds.length,
-                0,
-              );
-              return (
-                <View key={group.period.id}>
-                  <CountRow
-                    heading
-                    label={group.period.name}
-                    count={group.collected.length}
-                    total={total}
-                  />
-                  {group.authors.map((author) => (
-                    <CountRow
-                      key={author.name}
-                      label={author.name}
-                      count={author.collectedIds.length}
-                      total={author.quoteIds.length}
-                      selected={author.name === entry.author.name}
-                      // Their first collected quote, or their first.
-                      onPress={() =>
-                        go(author.collectedIds[0] ?? author.quoteIds[0])
-                      }
-                    />
-                  ))}
-                </View>
-              );
-            })}
+          <Segmented
+            size="sm"
+            options={[
+              { value: "eras", label: t("quotes.byEra") },
+              { value: "alphabetical", label: t("quotes.byName") },
+            ]}
+            value={order}
+            onChange={(next) => {
+              lastAuthorOrder = next;
+              setOrder(next);
+            }}
+            style={{
+              marginHorizontal: spacing(14),
+              marginBottom: spacing(6),
+            }}
+          />
+          <ScrollView contentContainerStyle={{ paddingBottom: spacing(12) }}>
+            {order === "alphabetical"
+              ? byName.map(authorRow)
+              : groups.map((group, groupIndex) => {
+                  const total = group.authors.reduce(
+                    (sum, author) => sum + author.quoteIds.length,
+                    0,
+                  );
+                  return (
+                    <View
+                      key={group.period.id}
+                      // Twice the room between eras.
+                      style={{ marginTop: groupIndex > 0 ? spacing(18) : 0 }}
+                    >
+                      <CountRow
+                        heading
+                        label={group.period.name}
+                        count={group.collected.length}
+                        total={total}
+                      />
+                      {group.authors.map(authorRow)}
+                    </View>
+                  );
+                })}
           </ScrollView>
         </PickerPanel>
       )}
 
       {entry && (
-        <FloatingBar placement="aboveTabBar">
-          <BarButton
-            iconName="chevron-left"
-            label={shortName(at(-1).author.name)}
-            accessibilityLabel={t("quotes.previousQuote")}
-            align="left"
-            onPress={() => go(at(-1).quoteId)}
-          />
-          <BarButton
-            iconName={picking ? "expand-more" : "expand-less"}
-            label={t("quotes.authors")}
-            accessibilityLabel={t("quotes.pick")}
-            accent
-            onPress={() => setPicking((open) => !open)}
-          />
-          <BarButton
-            iconName="chevron-right"
-            label={shortName(at(1).author.name)}
-            accessibilityLabel={t("quotes.nextQuote")}
-            align="right"
-            onPress={() => go(at(1).quoteId)}
-          />
-        </FloatingBar>
+        <StepperBar
+          placement="aboveTabBar"
+          action={{
+            iconName: "expand-less",
+            label: t("quotes.pick"),
+            onPress: () => setPicking(true),
+          }}
+          onPrevious={() => go(at(-1).quoteId)}
+          onNext={() => go(at(1).quoteId)}
+          previousLabel={t("quotes.previousQuote")}
+          nextLabel={t("quotes.nextQuote")}
+        />
       )}
     </View>
   );
@@ -207,9 +250,10 @@ function QuoteDetail({
     <ScrollView
       style={{ flex: 1 }}
       contentContainerStyle={{
+        flexGrow: 1,
         alignItems: "center",
         paddingTop: topInset + spacing(8),
-        paddingBottom: bottomInset + spacing(24),
+        paddingBottom: bottomInset + spacing(20),
         paddingHorizontal: spacing(28),
       }}
       showsVerticalScrollIndicator={false}
@@ -224,23 +268,27 @@ function QuoteDetail({
         {author.name}
       </Text>
       <Text
-        size="xs"
-        weight={300}
+        weight={400}
         color={theme.dim}
-        style={{ textAlign: "center" }}
+        style={{
+          textAlign: "center",
+          fontSize: font(15),
+          lineHeight: font(20),
+        }}
       >
         {lifespan(author)}
-        {count > 1
-          ? `  ·  ${author.quoteIds.indexOf(quoteId) + 1} / ${count}`
-          : ""}
       </Text>
+
+      {/* The quote, centred in the room between the author and the count. */}
       <Animated.View
         key={quoteId}
         entering={FadeIn.duration(900).delay(150)}
         style={{
+          flex: 1,
           alignItems: "center",
-          marginTop: spacing(20),
-          gap: spacing(12),
+          justifyContent: "center",
+          paddingVertical: spacing(24),
+          gap: spacing(14),
         }}
       >
         {collected && quote ? (
@@ -250,17 +298,17 @@ function QuoteDetail({
               italic
               color={theme.ink}
               style={{
-                fontSize: font(24),
-                lineHeight: font(31),
+                fontSize: font(28),
+                lineHeight: font(36),
                 textAlign: "center",
-                maxWidth: spacing(520),
+                maxWidth: spacing(560),
               }}
             >
               “{quote.text}”
             </Text>
             <Text
-              size="xs"
-              weight={300}
+              size="md"
+              weight={400}
               color={theme.dim}
               style={{ textAlign: "center" }}
             >
@@ -271,7 +319,7 @@ function QuoteDetail({
           <Text
             serif
             italic
-            size="lg"
+            size="xl"
             color={theme.dim}
             style={{ textAlign: "center", maxWidth: spacing(420) }}
           >
@@ -279,6 +327,20 @@ function QuoteDetail({
           </Text>
         )}
       </Animated.View>
+
+      {/* Which of the author's quotes this is, just above the bar. */}
+      <Text
+        size="sm"
+        weight={400}
+        color={theme.dim}
+        style={{
+          textAlign: "center",
+          fontVariant: ["tabular-nums"],
+          opacity: count > 1 ? 1 : 0,
+        }}
+      >
+        {author.quoteIds.indexOf(quoteId) + 1} / {count}
+      </Text>
     </ScrollView>
   );
 }

@@ -46,7 +46,7 @@ export function SettingControl<T>({
           </Text>
         )}
         {applyBehaviorText && (
-          <Text size="sm" weight={300} color={theme.dim}>
+          <Text size="sm" weight={400} color={theme.dim}>
             {applyBehaviorText}
           </Text>
         )}
@@ -99,7 +99,7 @@ export function SettingControl<T>({
               {label}
             </Text>
             {description && (
-              <Text size="sm" weight={300} color={theme.dim}>
+              <Text size="sm" weight={400} color={theme.dim}>
                 {description}
               </Text>
             )}

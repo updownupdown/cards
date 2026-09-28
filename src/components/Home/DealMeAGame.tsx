@@ -115,7 +115,7 @@ export function DealMeAGame({
       <View style={{ paddingHorizontal: pageSidePadding }}>
         <SectionTitle
           action={
-            <Text size="xs" weight={300} color={theme.dim}>
+            <Text size="xs" weight={400} color={theme.dim}>
               {t("deal.intro")}
             </Text>
           }

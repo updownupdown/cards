@@ -55,9 +55,9 @@ export const WORK_GROUPINGS = [
 export type WorkGrouping = (typeof WORK_GROUPINGS)[number];
 
 /** The height of a work on its shelf. */
-const WORK_HEIGHT = 110;
+const WORK_HEIGHT = 138;
 /** A narrow work's label still gets this much room. */
-const LABEL_MIN_WIDTH = 92;
+const LABEL_MIN_WIDTH = 108;
 
 /** Kept for the session, so coming back finds the shelves as they were. */
 let lastGrouping: WorkGrouping = "era";
@@ -180,7 +180,7 @@ export function WorksView({
       contentContainerStyle={{
         paddingTop: contentPaddingTop,
         paddingBottom: contentPaddingBottom,
-        gap: spacing(28),
+        gap: spacing(45),
       }}
       onScroll={(event) =>
         onScrolledChange(event.nativeEvent.contentOffset.y > 1)

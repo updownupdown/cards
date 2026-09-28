@@ -57,6 +57,8 @@
     "confirm": "Erase all progress and settings?"
   },
   "colorTheme": {
-    "label": "Colour theme"
+    "label": "Colour theme",
+    "expand": "Expand",
+    "collapse": "Collapse"
   }
 }

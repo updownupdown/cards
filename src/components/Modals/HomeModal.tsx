@@ -99,7 +99,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
     Platform.OS !== "web" ||
     (typeof navigator !== "undefined" && "wakeLock" in navigator);
 
-  const footerText = { size: "xs", weight: 300, color: theme.dim } as const;
+  const footerText = { size: "xs", weight: 400, color: theme.dim } as const;
   const footerLink = {
     size: "xs",
     weight: 500,
@@ -139,7 +139,6 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               {t("colorTheme.label")}
             </Text>
             <ThemePicker
-              bleed={spacing(30)}
               value={settings.colorTheme}
               onChange={(colorTheme) => {
                 void updateSettings({ colorTheme });
@@ -206,7 +205,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               <Text weight={500} size="md" color={theme.ink}>
                 {t("autoComplete.label")}
               </Text>
-              <Text size="sm" weight={300} color={theme.dim}>
+              <Text size="sm" weight={400} color={theme.dim}>
                 {t("autoComplete.description")}
               </Text>
             </View>

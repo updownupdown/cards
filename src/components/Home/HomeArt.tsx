@@ -1,6 +1,6 @@
 import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { Text } from "@/components/common/Text";
-import { ActionButton, hairline } from "@/components/ui/Nocturne";
+import { ActionButton } from "@/components/ui/Nocturne";
 import { GAME_THUMBNAIL_ASSETS } from "@/data/game-thumbnails";
 import type { GameMenuInfo } from "@/data/games-data";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
@@ -11,12 +11,23 @@ import { rgba, theme } from "@/styles/styles";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import type { Href } from "expo-router";
+import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { FavButton } from "./FavButton";
 import { useTabReadyImage } from "./TabReady";
 
 export function gameArt(game: GameMenuInfo) {
   return game.thumbnail ? GAME_THUMBNAIL_ASSETS[game.thumbnail] : null;
+}
+
+/**
+ * The frame every game card shares, tile to full width: rounded corners and
+ * no outline, so the art itself makes the edge. The one place to change it.
+ */
+export const CARD_RADIUS = 8;
+export function useCardFrame() {
+  const { spacing } = useResponsiveMetrics();
+  return { borderRadius: spacing(CARD_RADIUS), overflow: "hidden" } as const;
 }
 
 /** The name of a game's family, its first tag. */
@@ -58,6 +69,7 @@ export function GameTile({
   onOpen?: () => void;
 }) {
   const { spacing } = useResponsiveMetrics();
+  const frame = useCardFrame();
   const language = useDisplayLanguage();
   const source = gameArt(game);
   const ready = useTabReadyImage(source);
@@ -65,13 +77,10 @@ export function GameTile({
   return (
     <View
       style={{
+        ...frame,
         width: size,
         height: size,
-        borderRadius: spacing(6),
-        overflow: "hidden",
         backgroundColor: game.gameColorDark,
-        borderWidth: 1,
-        borderColor: hairline(),
       }}
     >
       <Pressable
@@ -119,6 +128,10 @@ export function GameTile({
   );
 }
 
+/** The side of a square game tile, and the gap between tiles in a row. */
+export const TILE_SIZE = 140;
+export const TILE_GAP = 12;
+
 /** A row of games that scrolls sideways, edge to edge. */
 export function ArtShelf({
   games,
@@ -138,7 +151,7 @@ export function ArtShelf({
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={{
         paddingHorizontal: pageSidePadding,
-        gap: spacing(12),
+        gap: spacing(TILE_GAP),
       }}
     >
       {games.map(([path, game]) => (
@@ -146,7 +159,7 @@ export function ArtShelf({
           key={path}
           path={path}
           game={game}
-          size={spacing(140)}
+          size={spacing(TILE_SIZE)}
           isFavorite={favorites.has(path)}
           onToggleFavorite={onToggleFavorite}
         />
@@ -156,25 +169,21 @@ export function ArtShelf({
 }
 
 /**
- * The games played last, to pick up again: the latest large, with a Resume
- * button, and the ones before at half its width. The first card leaves the
- * next one peeking in, so the row reads as one that scrolls.
+ * The games played last, to pick up again: the latest with a Resume button,
+ * as wide as two tiles and their gap, so it lines up with the shelves below,
+ * and the ones before a tile wide.
  */
 export function ContinueShelf({
   games,
   pageSidePadding,
-  pageWidth,
 }: {
   games: HomeGameEntry[];
   pageSidePadding: number;
-  /** The width the shelf is laid out in, padding included. */
-  pageWidth: number;
 }) {
   const { spacing } = useResponsiveMetrics();
-  const gap = spacing(12);
-  const innerWidth = pageWidth - pageSidePadding * 2;
-  const firstWidth =
-    games.length > 1 ? Math.round(innerWidth * 0.74) : innerWidth;
+  const gap = spacing(TILE_GAP);
+  const tile = spacing(TILE_SIZE);
+  const firstWidth = tile * 2 + gap;
   const height = spacing(200);
   return (
     <ScrollView
@@ -187,7 +196,7 @@ export function ContinueShelf({
           key={path}
           path={path}
           game={game}
-          width={index === 0 ? firstWidth : Math.round(firstWidth / 2)}
+          width={index === 0 ? firstWidth : tile}
           height={height}
           latest={index === 0}
         />
@@ -217,17 +226,11 @@ function ContinueCard({
   const ready = useTabReadyImage(source);
   const title = localizeGameTitle(game, path, language);
   const open = () => launchGame(path as Href);
+  const [resumeWidth, setResumeWidth] = useState(0);
+  const frame = useCardFrame();
   return (
     <View
-      style={{
-        width,
-        height,
-        borderRadius: spacing(10),
-        overflow: "hidden",
-        backgroundColor: game.gameColorDark,
-        borderWidth: 1,
-        borderColor: hairline(),
-      }}
+      style={{ ...frame, width, height, backgroundColor: game.gameColorDark }}
     >
       <Pressable
         onPress={open}
@@ -246,21 +249,23 @@ function ContinueCard({
         <View
           style={{
             marginTop: "auto",
-            padding: spacing(latest ? 16 : 12),
-            // Clears the Resume button, which sits beside this.
-            paddingBottom: latest
-              ? spacing(16) + spacing(38) + spacing(10)
-              : undefined,
+            padding: spacing(latest ? 14 : 12),
+            flexDirection: "row",
+            alignItems: "flex-end",
+            gap: spacing(10),
           }}
         >
           <Text
             weight={500}
-            size={latest ? "xxl" : "lg"}
+            size={latest ? "xl" : "lg"}
             lineHeight={1.15}
             numberOfLines={2}
+            style={{ flex: 1 }}
           >
             {title}
           </Text>
+          {/* Room for the Resume button, which sits beside the title. */}
+          {latest && <View style={{ width: resumeWidth }} />}
         </View>
       </Pressable>
       {latest && (
@@ -269,10 +274,13 @@ function ContinueCard({
           iconName="play"
           label={t("sections.resume")}
           onPress={open}
+          onLayout={(event) =>
+            setResumeWidth(Math.ceil(event.nativeEvent.layout.width))
+          }
           style={{
             position: "absolute",
-            left: spacing(16),
-            bottom: spacing(16),
+            right: spacing(14),
+            bottom: spacing(14),
           }}
         />
       )}

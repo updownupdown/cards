@@ -2,8 +2,8 @@ import { Text } from "@/components/common/Text";
 import { ParallaxStars } from "@/components/TaoCollection/ParallaxStars";
 import { TaoChapterDetail } from "@/components/TaoCollection/TaoChapterDetail";
 import {
-  BarButton,
-  FloatingBar,
+  StepperBar,
+  useStackedBarBottom,
   useStackedBarHeight,
 } from "@/components/ui/FloatingBar";
 import { TAO_CHAPTER_COUNT } from "@/data/collectibles";
@@ -13,10 +13,10 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { rgba, theme } from "@/styles/styles";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
-import { PickerPanel, useSavedNumber } from "./shared";
+import { PICKED_PAUSE_MS, PickerPanel, useSavedNumber } from "./shared";
 
 const COLUMNS = 9;
 
@@ -40,6 +40,7 @@ export function ChaptersView({
   const { t } = useTranslation("campaign");
   const { settings } = useGlobalSettings();
   const barHeight = useStackedBarHeight();
+  const barBottom = useStackedBarBottom();
   const firstCollected = Math.min(...collectedIds, Infinity);
   const [chapter, setChapter] = useSavedNumber(
     GALLERY_LAST_CHAPTER_STORAGE_KEY,
@@ -53,6 +54,15 @@ export function ChaptersView({
   const go = (next: number) => {
     setPicking(false);
     setChapter(wrap(next));
+  };
+  // A chapter picked from the grid shows as picked for a moment before the
+  // grid closes.
+  const closing = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => () => clearTimeout(closing.current), []);
+  const pick = (next: number) => {
+    setChapter(next);
+    clearTimeout(closing.current);
+    closing.current = setTimeout(() => setPicking(false), PICKED_PAUSE_MS);
   };
 
   return (
@@ -94,40 +104,30 @@ export function ChaptersView({
           closeLabel={t("tao.pick")}
           onClose={() => setPicking(false)}
           top={topInset}
-          bottom={barHeight}
+          // Over the bar, which it replaces while open.
+          bottom={barBottom}
         >
           <ChapterGrid
             current={chapter}
             collectedIds={collectedIds}
-            onPick={go}
+            onPick={pick}
           />
         </PickerPanel>
       )}
 
       {chapter !== undefined && (
-        <FloatingBar placement="aboveTabBar">
-          <BarButton
-            iconName="chevron-left"
-            label={String(wrap(chapter - 1))}
-            accessibilityLabel={t("tao.previous")}
-            align="left"
-            onPress={() => go(chapter - 1)}
-          />
-          <BarButton
-            iconName={picking ? "expand-more" : "expand-less"}
-            label={t("tao.chapter", { number: chapter })}
-            accessibilityLabel={t("tao.pick")}
-            accent
-            onPress={() => setPicking((open) => !open)}
-          />
-          <BarButton
-            iconName="chevron-right"
-            label={String(wrap(chapter + 1))}
-            accessibilityLabel={t("tao.next")}
-            align="right"
-            onPress={() => go(chapter + 1)}
-          />
-        </FloatingBar>
+        <StepperBar
+          placement="aboveTabBar"
+          action={{
+            iconName: "expand-less",
+            label: t("tao.pick"),
+            onPress: () => setPicking(true),
+          }}
+          onPrevious={() => go(chapter - 1)}
+          onNext={() => go(chapter + 1)}
+          previousLabel={t("tao.previous")}
+          nextLabel={t("tao.next")}
+        />
       )}
     </View>
   );

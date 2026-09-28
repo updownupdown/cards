@@ -220,14 +220,14 @@ export default function GameModal({
           {hasCredits(gameInfo) && <CreditsSection />}
         </ScrollView>
 
-        {/* How to Play stays in reach at the bottom. */}
+        {/* The rules stay in reach at the bottom. */}
         <View
           style={{
             paddingHorizontal: spacing(30),
             paddingTop: spacing(12),
             paddingBottom: spacing(20),
             borderTopWidth: 1,
-            borderTopColor: rgba(theme.ink, 0.08),
+            borderTopColor: rgba(theme.ink, 0.14),
           }}
         >
           <ActionButton
@@ -295,7 +295,7 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
           padding: spacing(16),
           borderRadius: spacing(14),
           borderWidth: 1,
-          borderColor: rgba(theme.ink, 0.08),
+          borderColor: rgba(theme.ink, 0.14),
         }}
       >
         {art && (
@@ -321,14 +321,13 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
               />
             )}
             <View style={{ flex: 1, gap: spacing(2) }}>
-              <Caps>{t("credits.gameArt")}</Caps>
               <Text serif italic size="lg" color={theme.ink}>
                 {art.title}
               </Text>
               <Text serif size="sm" color={theme.dim}>
                 {[art.artistName, art.date].filter(Boolean).join(", ")}
               </Text>
-              <Text size="xs" weight={300} color={theme.dim}>
+              <Text size="xs" weight={400} color={theme.dim}>
                 {t("credits.artSource")}{" "}
                 <CreditLink name={art.sourceName} link={art.sourceLink} />
               </Text>

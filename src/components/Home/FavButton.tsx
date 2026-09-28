@@ -1,6 +1,7 @@
 import { useTranslation } from "@/i18n";
 import { Icon } from "@/icons";
-import { Colors, rgba } from "@/styles/styles";
+import { Colors } from "@/styles/styles";
+import Svg, { Defs, RadialGradient, Rect, Stop } from "react-native-svg";
 import { useEffect, useRef, useState } from "react";
 import {
   Animated,
@@ -107,19 +108,22 @@ export function FavButton({
       ]}
     >
       {backdrop && (
-        // A wide, faint shadow: enough to keep the star clear on a pale
-        // picture without reading as a dark spot.
-        <View
-          style={{
-            pointerEvents: "none",
-            position: "absolute",
-            width: iconSize,
-            height: iconSize,
-            borderRadius: iconSize / 2,
-            backgroundColor: rgba(Colors.black, 0.12),
-            boxShadow: `0 0 ${iconSize * 1.1}px ${iconSize * 0.5}px ${rgba(Colors.black, 0.22)}`,
-          }}
-        />
+        // A soft radial shade that fades to nothing, so it never shows an
+        // edge: enough to keep the star clear on a pale picture.
+        <Svg
+          width={iconSize * 2.6}
+          height={iconSize * 2.6}
+          style={{ position: "absolute", pointerEvents: "none" }}
+        >
+          <Defs>
+            <RadialGradient id="fav-shade" cx="50%" cy="50%" r="50%">
+              <Stop offset="0" stopColor={Colors.black} stopOpacity={0.3} />
+              <Stop offset="0.45" stopColor={Colors.black} stopOpacity={0.14} />
+              <Stop offset="1" stopColor={Colors.black} stopOpacity={0} />
+            </RadialGradient>
+          </Defs>
+          <Rect width="100%" height="100%" fill="url(#fav-shade)" />
+        </Svg>
       )}
       <Animated.View
         style={{

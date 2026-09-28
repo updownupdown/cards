@@ -119,7 +119,7 @@ export function HomeTab({
         contentContainerStyle={{
           paddingTop: contentPaddingTop,
           paddingBottom: contentPaddingBottom,
-          gap: spacing(36),
+          gap: spacing(54),
         }}
         onScroll={(event) =>
           onScrolledChange(event.nativeEvent.contentOffset.y > 1)
@@ -183,7 +183,6 @@ export function HomeTab({
             <ContinueShelf
               games={jumpBackInGames}
               pageSidePadding={scaledPageSidePadding}
-              pageWidth={renderedContentWidth}
             />,
           )}
 

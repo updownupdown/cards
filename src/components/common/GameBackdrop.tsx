@@ -3,8 +3,8 @@ import type { GameMenuInfo } from "@/data/games-data";
 import { Image } from "expo-image";
 import { StyleSheet, View } from "react-native";
 
-/** How soft the artwork is behind a game: a wash of its colours, no detail. */
-const BLUR_RADIUS = 28;
+/** How soft the artwork is behind a game: its shapes still show, softened. */
+const BLUR_RADIUS = 14;
 
 /** The artwork a game's backdrop is drawn from. */
 export function gameBackdropSource(game: GameMenuInfo) {
